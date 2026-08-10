@@ -324,6 +324,8 @@ SETTINGS_RESTORE_DEFAULTS_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "settings_re
 SETTINGS_RESTORE_DEFAULTS_REGRESSION_SCENE_PATH = ROOT / "tests" / "settings_restore_defaults_regression.tscn"
 SETTINGS_DISPLAY_MODE_TRANSACTION_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "settings_display_mode_transaction_regression.gd"
 SETTINGS_DISPLAY_MODE_TRANSACTION_REGRESSION_SCENE_PATH = ROOT / "tests" / "settings_display_mode_transaction_regression.tscn"
+SETTINGS_TRANSACTIONAL_PERSISTENCE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "settings_transactional_persistence_regression.gd"
+SETTINGS_TRANSACTIONAL_PERSISTENCE_REGRESSION_SCENE_PATH = ROOT / "tests" / "settings_transactional_persistence_regression.tscn"
 PACKAGED_RUNTIME_ISSUE_LOG_REPORT_SCRIPT_PATH = ROOT / "tests" / "packaged_runtime_issue_log_report.gd"
 PACKAGED_RUNTIME_ISSUE_LOG_REPORT_SCENE_PATH = ROOT / "tests" / "packaged_runtime_issue_log_report.tscn"
 PACKAGED_RUNTIME_ISSUE_LOG_SMOKE_SCRIPT_PATH = ROOT / "tests" / "packaged_runtime_issue_log_smoke.py"
@@ -23493,6 +23495,8 @@ def validate_packaged_settings_persistence_smoke(errors: list[str]) -> None:
         SETTINGS_RESTORE_DEFAULTS_REGRESSION_SCENE_PATH,
         SETTINGS_DISPLAY_MODE_TRANSACTION_REGRESSION_SCRIPT_PATH,
         SETTINGS_DISPLAY_MODE_TRANSACTION_REGRESSION_SCENE_PATH,
+        SETTINGS_TRANSACTIONAL_PERSISTENCE_REGRESSION_SCRIPT_PATH,
+        SETTINGS_TRANSACTIONAL_PERSISTENCE_REGRESSION_SCENE_PATH,
     )
     for path in required_paths:
         ensure(path.exists(), errors, f"Missing packaged settings persistence smoke file: {path.relative_to(ROOT)}")
@@ -23547,6 +23551,88 @@ def validate_packaged_settings_persistence_smoke(errors: list[str]) -> None:
             "save_failure_restored_exact",
         ):
             ensure(required_token in display_regression_text, errors, f"Settings display-mode transaction regression is missing token: {required_token}")
+
+    if SETTINGS_TRANSACTIONAL_PERSISTENCE_REGRESSION_SCRIPT_PATH.exists():
+        transaction_regression_text = SETTINGS_TRANSACTIONAL_PERSISTENCE_REGRESSION_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "SETTINGS_TRANSACTIONAL_PERSISTENCE_REGRESSION",
+            "HEROES_LIKE_SETTINGS_FAIL_PHASE",
+            "precommit",
+            "after_backup",
+            "validation_settings_transaction_snapshot",
+            "settings_commit_failed",
+            "last_settings_commit_result",
+            "SETTINGS_CANDIDATE_FILE",
+            "SETTINGS_BACKUP_FILE",
+            "empty_config",
+            "meta_only",
+            "unknown_version",
+            "candidate_never_promoted",
+            "invalid_backup_fails_closed",
+            "live_not_regular_file",
+            "full_input_map_rollback",
+            'config.get_value("meta", "version", 0)) == 14',
+        ):
+            ensure(required_token in transaction_regression_text, errors, f"Settings transactional-persistence regression is missing token: {required_token}")
+
+    if SETTINGS_TRANSACTIONAL_PERSISTENCE_REGRESSION_SCENE_PATH.exists():
+        transaction_scene_text = SETTINGS_TRANSACTIONAL_PERSISTENCE_REGRESSION_SCENE_PATH.read_text(encoding="utf-8")
+        ensure(
+            "res://tests/settings_transactional_persistence_regression.gd" in transaction_scene_text,
+            errors,
+            "Settings transactional-persistence scene must load its focused regression script",
+        )
+
+    if SETTINGS_SERVICE_PATH.exists():
+        settings_transaction_text = SETTINGS_SERVICE_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "signal settings_commit_failed(result: Dictionary)",
+            "HEROES_LIKE_SETTINGS_FAIL_PHASE",
+            "SETTINGS_CANDIDATE_FILE",
+            "SETTINGS_BACKUP_FILE",
+            "func last_settings_commit_result",
+            "func validation_settings_transaction_snapshot",
+            "func _persist_settings_transaction",
+            "func _recover_settings_transaction",
+        ):
+            ensure(required_token in settings_transaction_text, errors, f"SettingsService.gd is missing transactional-persistence token: {required_token}")
+
+    if MAIN_MENU_SCRIPT_PATH.exists():
+        settings_menu_text = MAIN_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "func _finish_settings_commit(result: Dictionary) -> bool",
+            "func _settings_commit_failure_text(result: Dictionary) -> String",
+            "Settings not saved; previous settings restored.",
+        ):
+            ensure(required_token in settings_menu_text, errors, f"MainMenu.gd is missing truthful settings-commit UI token: {required_token}")
+
+    for settings_surface_path, required_tokens in (
+        (
+            ROOT / "scenes" / "shared" / "ActivePlaySettingsDialog.gd",
+            (
+                "func _finish_setting_change(result: Dictionary, setting_id: String",
+                "Not saved; previous setting restored.",
+                "setting_changed.emit(setting_id)",
+                "_sync_controls()",
+            ),
+        ),
+        (
+            ROOT / "scenes" / "menus" / "HeroKeybindingsDialog.gd",
+            (
+                "var result: Dictionary = SettingsService.set_hero_movement_key",
+                "var result: Dictionary = SettingsService.reset_hero_movement_bindings()",
+                "Bindings not saved; previous keys restored.",
+                "That key is reserved.",
+                "_refresh_bindings()",
+            ),
+        ),
+    ):
+        ensure(settings_surface_path.exists(), errors, f"Missing transactional settings UI surface: {settings_surface_path.relative_to(ROOT)}")
+        if not settings_surface_path.exists():
+            continue
+        settings_surface_text = settings_surface_path.read_text(encoding="utf-8")
+        for required_token in required_tokens:
+            ensure(required_token in settings_surface_text, errors, f"{settings_surface_path.name} is missing truthful settings-commit token: {required_token}")
 
     if PACKAGED_SETTINGS_PERSISTENCE_REPORT_SCRIPT_PATH.exists():
         report_text = PACKAGED_SETTINGS_PERSISTENCE_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")

@@ -365,7 +365,19 @@ func _write_legacy_large_text_config() -> void:
 		return
 	var config := ConfigFile.new()
 	config.set_value("meta", "version", 5)
+	# Version 5 already required the complete v1-v5 surface. UI scale is
+	# intentionally absent because it was introduced in version 6 and must be
+	# migrated from the legacy Large Text flag below.
+	config.set_value("audio", "master_volume_percent", 80)
+	config.set_value("audio", "music_volume_percent", 65)
+	config.set_value("audio", "effects_volume_percent", 75)
+	config.set_value("presentation", "mode", SettingsService.PRESENTATION_WINDOWED)
+	config.set_value("presentation", "resolution", SettingsService.PRESENTATION_RESOLUTION_DEFAULT)
+	config.set_value("presentation", "vsync_enabled", true)
+	config.set_value("presentation", "frame_rate_limit", 0)
+	config.set_value("presentation", "render_quality", SettingsService.RENDER_QUALITY_BALANCED)
 	config.set_value("accessibility", "large_ui_text", true)
+	config.set_value("accessibility", "reduce_motion", false)
 	var save_error := config.save(SettingsService.SETTINGS_FILE)
 	_expect(save_error == OK, "Legacy Large Text migration fixture could not be saved.")
 

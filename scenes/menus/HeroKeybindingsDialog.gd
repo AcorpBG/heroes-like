@@ -162,9 +162,15 @@ func _begin_capture(action: StringName) -> void:
 
 func _apply_captured_key(keycode: int) -> Dictionary:
 	var action := _waiting_action
-	var result := SettingsService.set_hero_movement_key(action, keycode)
+	var result: Dictionary = SettingsService.set_hero_movement_key(action, keycode)
 	if not bool(result.get("ok", false)):
-		_status_label.text = "That key is reserved."
+		var reason := String(result.get("reason", ""))
+		if reason in ["reserved_key", "unknown_action"]:
+			_status_label.text = "That key is reserved."
+		else:
+			_waiting_action = StringName()
+			_status_label.text = _settings_commit_failure_text(result)
+		_refresh_bindings()
 		return result
 	_waiting_action = StringName()
 	var swapped_action := StringName(result.get("swapped_action", ""))
@@ -183,10 +189,20 @@ func _apply_captured_key(keycode: int) -> Dictionary:
 	return result
 
 func _on_reset_bindings_pressed() -> void:
-	SettingsService.reset_hero_movement_bindings()
+	var result: Dictionary = SettingsService.reset_hero_movement_bindings()
 	_waiting_action = StringName()
-	_status_label.text = "%s preset restored." % SettingsService.keyboard_navigation_layout_label()
+	if bool(result.get("ok", false)):
+		_status_label.text = "%s preset restored." % SettingsService.keyboard_navigation_layout_label()
+	else:
+		_status_label.text = _settings_commit_failure_text(result)
 	_refresh_bindings()
+
+func _settings_commit_failure_text(result: Dictionary) -> String:
+	var detail := String(result.get("message", "")).strip_edges()
+	var message := "Bindings not saved; previous keys restored."
+	if detail != "" and detail.to_lower() not in message.to_lower():
+		message = "%s %s" % [message, detail]
+	return message.substr(0, 180)
 
 func _on_close_bindings_pressed() -> void:
 	close_dialog()

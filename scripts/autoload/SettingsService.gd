@@ -4,11 +4,15 @@ extends Node
 const FrontierVisualKitScript = preload("res://scripts/ui/FrontierVisualKit.gd")
 
 signal settings_changed(settings: Dictionary)
+signal settings_commit_failed(result: Dictionary)
 signal display_change_state_changed(snapshot: Dictionary)
 
 const SETTINGS_VERSION := 14
 const SETTINGS_DIR := "user://config"
 const SETTINGS_FILE := "%s/settings.cfg" % SETTINGS_DIR
+const SETTINGS_CANDIDATE_FILE := "%s.candidate" % SETTINGS_FILE
+const SETTINGS_BACKUP_FILE := "%s.backup" % SETTINGS_FILE
+const SETTINGS_TRANSACTION_FAILURE_ENV := "HEROES_LIKE_SETTINGS_FAIL_PHASE"
 
 const PRESENTATION_WINDOWED := "windowed"
 const PRESENTATION_BORDERLESS := "borderless"
@@ -236,6 +240,8 @@ const HELP_TOPICS := [
 var settings: Dictionary = {}
 var _pending_display_change: Dictionary = {}
 var _display_change_last_countdown := -1
+var _committed_settings: Dictionary = {}
+var _last_settings_commit_result: Dictionary = {}
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -311,69 +317,36 @@ func build_default_settings() -> Dictionary:
 func load_settings() -> void:
 	if display_change_pending():
 		revert_display_change("settings_reload")
+	var recovery := _recover_settings_transaction()
 	var defaults := build_default_settings()
 	settings = defaults.duplicate(true)
-
-	var config := ConfigFile.new()
-	if config.load(SETTINGS_FILE) == OK:
-		var stored_version := int(config.get_value("meta", "version", SETTINGS_VERSION))
-		settings["version"] = max(stored_version, SETTINGS_VERSION)
-		settings["audio"]["master_volume_percent"] = clampi(int(config.get_value("audio", "master_volume_percent", defaults["audio"]["master_volume_percent"])), 0, 100)
-		settings["audio"]["music_volume_percent"] = clampi(int(config.get_value("audio", "music_volume_percent", defaults["audio"]["music_volume_percent"])), 0, 100)
-		settings["audio"]["effects_volume_percent"] = clampi(int(config.get_value("audio", "effects_volume_percent", defaults["audio"]["effects_volume_percent"])), 0, 100)
-		settings["presentation"]["mode"] = _normalize_presentation_mode(String(config.get_value("presentation", "mode", defaults["presentation"]["mode"])))
-		settings["presentation"]["resolution"] = _normalize_presentation_resolution(String(config.get_value("presentation", "resolution", defaults["presentation"]["resolution"])))
-		settings["presentation"]["render_quality"] = _normalize_render_quality(String(config.get_value("presentation", "render_quality", defaults["presentation"]["render_quality"])))
-		settings["presentation"]["vsync_enabled"] = bool(config.get_value("presentation", "vsync_enabled", defaults["presentation"]["vsync_enabled"]))
-		settings["presentation"]["frame_rate_limit"] = _normalize_frame_rate_limit(int(config.get_value("presentation", "frame_rate_limit", defaults["presentation"]["frame_rate_limit"])))
-		settings["gameplay"]["battle_playback_speed"] = _normalize_battle_playback_speed(String(config.get_value("gameplay", "battle_playback_speed", defaults["gameplay"]["battle_playback_speed"])))
-		settings["gameplay"]["keyboard_navigation_layout"] = _normalize_keyboard_navigation_layout(String(config.get_value("gameplay", "keyboard_navigation_layout", defaults["gameplay"]["keyboard_navigation_layout"])))
-		settings["gameplay"]["hero_movement_bindings"] = _normalize_hero_movement_bindings(config.get_value("gameplay", "hero_movement_bindings", defaults["gameplay"]["hero_movement_bindings"]))
-		var legacy_large_text := bool(config.get_value("accessibility", "large_ui_text", defaults["accessibility"]["large_ui_text"]))
-		var migrated_scale := 115 if legacy_large_text else 100
-		settings["accessibility"]["ui_scale_percent"] = _normalize_ui_scale_percent(int(config.get_value("accessibility", "ui_scale_percent", migrated_scale)))
-		settings["accessibility"]["large_ui_text"] = ui_scale_percent() > 100
-		settings["accessibility"]["high_contrast_ui"] = bool(config.get_value("accessibility", "high_contrast_ui", defaults["accessibility"]["high_contrast_ui"]))
-		settings["accessibility"]["color_cue_mode"] = _normalize_color_cue_mode(String(config.get_value("accessibility", "color_cue_mode", defaults["accessibility"]["color_cue_mode"])))
-		settings["accessibility"]["battle_camera_shake"] = _normalize_battle_camera_shake(String(config.get_value("accessibility", "battle_camera_shake", defaults["accessibility"]["battle_camera_shake"])))
-		settings["accessibility"]["reduce_flashes"] = bool(config.get_value("accessibility", "reduce_flashes", defaults["accessibility"]["reduce_flashes"]))
-		settings["accessibility"]["reduce_motion"] = bool(config.get_value("accessibility", "reduce_motion", defaults["accessibility"]["reduce_motion"]))
-		settings["accessibility"]["reduce_repetitive_sounds"] = bool(config.get_value("accessibility", "reduce_repetitive_sounds", defaults["accessibility"]["reduce_repetitive_sounds"]))
+	var live := _read_settings_file(SETTINGS_FILE)
+	if bool(live.get("valid", false)):
+		settings = (live.get("settings", defaults) as Dictionary).duplicate(true)
+	_committed_settings = settings.duplicate(true)
+	_last_settings_commit_result = {
+		"ok": bool(live.get("valid", false)) or not bool(live.get("exists", false)),
+		"path": SETTINGS_FILE if bool(live.get("valid", false)) else "",
+		"changed": false,
+		"reason": "recovered" if bool(recovery.get("recovered", false)) else ("loaded" if bool(live.get("valid", false)) else "defaults"),
+		"message": "",
+		"settings": settings.duplicate(true),
+	}
 
 	apply_settings()
 	settings_changed.emit(settings.duplicate(true))
 
 func save_settings() -> String:
 	ensure_settings()
-	if not _ensure_settings_dir():
-		return ""
-
-	var config := ConfigFile.new()
-	config.set_value("meta", "version", int(settings.get("version", SETTINGS_VERSION)))
-	config.set_value("audio", "master_volume_percent", master_volume_percent())
-	config.set_value("audio", "music_volume_percent", music_volume_percent())
-	config.set_value("audio", "effects_volume_percent", effects_volume_percent())
-	config.set_value("presentation", "mode", presentation_mode_id())
-	config.set_value("presentation", "resolution", presentation_resolution_id())
-	config.set_value("presentation", "render_quality", render_quality_id())
-	config.set_value("presentation", "vsync_enabled", vsync_enabled())
-	config.set_value("presentation", "frame_rate_limit", frame_rate_limit())
-	config.set_value("gameplay", "battle_playback_speed", battle_playback_speed_id())
-	config.set_value("gameplay", "keyboard_navigation_layout", keyboard_navigation_layout_id())
-	config.set_value("gameplay", "hero_movement_bindings", custom_hero_movement_bindings())
-	config.set_value("accessibility", "ui_scale_percent", ui_scale_percent())
-	config.set_value("accessibility", "large_ui_text", large_ui_text_enabled())
-	config.set_value("accessibility", "high_contrast_ui", high_contrast_ui_enabled())
-	config.set_value("accessibility", "color_cue_mode", color_cue_mode_id())
-	config.set_value("accessibility", "battle_camera_shake", battle_camera_shake_mode_id())
-	config.set_value("accessibility", "reduce_flashes", reduced_flashes_enabled())
-	config.set_value("accessibility", "reduce_motion", reduced_motion_enabled())
-	config.set_value("accessibility", "reduce_repetitive_sounds", reduced_repetitive_sounds_enabled())
-	var error := config.save(SETTINGS_FILE)
-	if error != OK:
-		push_error("Unable to save settings file: %s" % SETTINGS_FILE)
-		return ""
-	return SETTINGS_FILE
+	var result := _persist_settings_transaction(settings)
+	if bool(result.get("ok", false)):
+		var persisted_settings: Dictionary = result.get("settings", settings) if result.get("settings", settings) is Dictionary else settings
+		settings = persisted_settings.duplicate(true)
+		_committed_settings = persisted_settings.duplicate(true)
+		_last_settings_commit_result = result.duplicate(true)
+		return SETTINGS_FILE
+	_last_settings_commit_result = result.duplicate(true)
+	return ""
 
 func restore_default_settings(defer_display_change: bool = false) -> Dictionary:
 	if display_change_pending():
@@ -390,12 +363,8 @@ func restore_default_settings(defer_display_change: bool = false) -> Dictionary:
 		default_settings["presentation"]["resolution"] = presentation_resolution_id()
 	var changed := previous_settings != build_default_settings()
 	settings = default_settings.duplicate(true)
-	apply_settings()
-	var saved_path := save_settings()
-	if saved_path == "":
-		settings = previous_settings
-		apply_settings()
-		settings_changed.emit(settings.duplicate(true))
+	var commit := _commit_settings()
+	if not bool(commit.get("ok", false)):
 		return {
 			"ok": false,
 			"path": "",
@@ -405,10 +374,9 @@ func restore_default_settings(defer_display_change: bool = false) -> Dictionary:
 			"display_candidate": display_candidate,
 			"message": "Defaults could not be saved. Your previous settings remain active.",
 		}
-	settings_changed.emit(settings.duplicate(true))
 	return {
 		"ok": true,
-		"path": saved_path,
+		"path": String(commit.get("path", SETTINGS_FILE)),
 		"settings": settings.duplicate(true),
 		"changed": changed,
 		"display_change_deferred": defer_display_change,
@@ -783,27 +751,41 @@ func confirm_display_change() -> Dictionary:
 		}
 	var pending := _pending_display_change.duplicate(true)
 	var previous_settings := ensure_settings().duplicate(true)
-	var previous_file := _settings_file_state()
 	settings["presentation"]["mode"] = String(pending.get("mode", PRESENTATION_WINDOWED))
 	settings["presentation"]["resolution"] = String(pending.get("resolution", PRESENTATION_RESOLUTION_DEFAULT))
 	var forced_failure := OS.get_environment(DISPLAY_CHANGE_FORCE_SAVE_FAILURE_ENV) == "1"
-	var saved_path := "" if forced_failure else save_settings()
-	if saved_path == "":
+	var commit := {
+		"ok": false,
+		"path": "",
+		"changed": false,
+		"reason": "display_forced_failure",
+		"message": "Display settings could not be saved. The previous display has been restored.",
+		"settings": previous_settings.duplicate(true),
+	} if forced_failure else _persist_settings_transaction(settings)
+	if not bool(commit.get("ok", false)):
 		settings = previous_settings
-		_restore_settings_file_state(previous_file)
 		_restore_runtime_display_state(pending.get("prior_runtime", {}))
 		_clear_pending_display_change()
+		_last_settings_commit_result = commit.duplicate(true)
 		var failure := {
 			"ok": false,
+			"path": "",
+			"changed": false,
 			"pending": false,
 			"confirmed": false,
 			"reason": "save_failed",
 			"mode": String(pending.get("mode", PRESENTATION_WINDOWED)),
 			"resolution": String(pending.get("resolution", PRESENTATION_RESOLUTION_DEFAULT)),
+			"settings": settings.duplicate(true),
 			"message": "Display settings could not be saved. The previous display has been restored.",
 		}
+		settings_commit_failed.emit(failure.duplicate(true))
 		display_change_state_changed.emit(failure.duplicate(true))
 		return failure
+	var persisted_settings: Dictionary = commit.get("settings", settings) if commit.get("settings", settings) is Dictionary else settings
+	settings = persisted_settings.duplicate(true)
+	_committed_settings = persisted_settings.duplicate(true)
+	_last_settings_commit_result = commit.duplicate(true)
 	_clear_pending_display_change()
 	settings_changed.emit(settings.duplicate(true))
 	var result := {
@@ -815,7 +797,7 @@ func confirm_display_change() -> Dictionary:
 		"resolution": presentation_resolution_id(),
 		"requested_size": pending.get("requested_size", Vector2i.ZERO),
 		"applied_size": pending.get("applied_size", Vector2i.ZERO),
-		"path": saved_path,
+		"path": String(commit.get("path", SETTINGS_FILE)),
 		"message": "Display settings kept and saved on this device.",
 	}
 	display_change_state_changed.emit(result.duplicate(true))
@@ -891,75 +873,91 @@ func display_change_snapshot() -> Dictionary:
 		"current_runtime": _capture_runtime_display_state(),
 	}
 
-func set_master_volume_percent(value: int) -> void:
+func set_master_volume_percent(value: int) -> Dictionary:
 	ensure_settings()
 	settings["audio"]["master_volume_percent"] = clampi(value, 0, 100)
-	_commit_settings()
+	return _commit_settings()
 
-func set_music_volume_percent(value: int) -> void:
+func set_music_volume_percent(value: int) -> Dictionary:
 	ensure_settings()
 	settings["audio"]["music_volume_percent"] = clampi(value, 0, 100)
-	_commit_settings()
+	return _commit_settings()
 
-func set_effects_volume_percent(value: int) -> void:
+func set_effects_volume_percent(value: int) -> Dictionary:
 	ensure_settings()
 	settings["audio"]["effects_volume_percent"] = clampi(value, 0, 100)
-	_commit_settings()
+	return _commit_settings()
 
-func set_presentation_mode(mode_id: String) -> void:
+func set_presentation_mode(mode_id: String) -> Dictionary:
 	ensure_settings()
 	settings["presentation"]["mode"] = _normalize_presentation_mode(mode_id)
-	_commit_settings()
+	return _commit_settings()
 
-func set_presentation_resolution(resolution_id: String) -> void:
+func set_presentation_resolution(resolution_id: String) -> Dictionary:
 	ensure_settings()
 	settings["presentation"]["resolution"] = _normalize_presentation_resolution(resolution_id)
-	_commit_settings()
+	return _commit_settings()
 
-func set_render_quality_id(quality_id: String) -> void:
+func set_render_quality_id(quality_id: String) -> Dictionary:
 	ensure_settings()
 	settings["presentation"]["render_quality"] = _normalize_render_quality(quality_id)
-	_commit_settings()
+	return _commit_settings()
 
-func set_vsync_enabled(enabled: bool) -> void:
+func set_vsync_enabled(enabled: bool) -> Dictionary:
 	ensure_settings()
 	settings["presentation"]["vsync_enabled"] = enabled
-	_commit_settings()
+	return _commit_settings()
 
-func set_frame_rate_limit(value: int) -> void:
+func set_frame_rate_limit(value: int) -> Dictionary:
 	ensure_settings()
 	settings["presentation"]["frame_rate_limit"] = _normalize_frame_rate_limit(value)
-	_commit_settings()
+	return _commit_settings()
 
-func set_battle_playback_speed_id(speed_id: String) -> void:
+func set_battle_playback_speed_id(speed_id: String) -> Dictionary:
 	ensure_settings()
 	settings["gameplay"]["battle_playback_speed"] = _normalize_battle_playback_speed(speed_id)
-	_commit_settings()
+	return _commit_settings()
 
-func set_keyboard_navigation_layout_id(layout_id: String) -> void:
+func set_keyboard_navigation_layout_id(layout_id: String) -> Dictionary:
 	ensure_settings()
 	settings["gameplay"]["keyboard_navigation_layout"] = _normalize_keyboard_navigation_layout(layout_id)
 	settings["gameplay"]["hero_movement_bindings"] = {}
-	_commit_settings()
+	return _commit_settings()
 
 func set_hero_movement_key(action: StringName, keycode: int) -> Dictionary:
 	ensure_settings()
 	if not KEYBOARD_HERO_MOVEMENT_ACTIONS.has(action):
-		return {"ok": false, "reason": "unknown_action"}
+		return {
+			"ok": false,
+			"path": "",
+			"changed": false,
+			"reason": "unknown_action",
+			"message": "That movement action is unavailable.",
+			"settings": settings.duplicate(true),
+		}
 	if not is_hero_movement_key_allowed(keycode):
-		return {"ok": false, "reason": "reserved_key"}
+		return {
+			"ok": false,
+			"path": "",
+			"changed": false,
+			"reason": "reserved_key",
+			"message": "That key is reserved.",
+			"settings": settings.duplicate(true),
+		}
 	var bindings := _effective_hero_movement_bindings()
 	var action_id := String(action)
 	var previous_keycode := int(bindings.get(action_id, 0))
 	if keycode == previous_keycode:
-		return {
+		var unchanged_commit := _commit_settings()
+		unchanged_commit.merge({
 			"ok": true,
 			"action": action_id,
 			"keycode": keycode,
 			"swapped_action": "",
 			"previous_keycode": previous_keycode,
 			"unchanged": true,
-		}
+		}, false)
+		return unchanged_commit
 	var swapped_action := ""
 	for option in HERO_MOVEMENT_BINDING_OPTIONS:
 		var candidate_action := String(option.get("action", ""))
@@ -973,58 +971,59 @@ func set_hero_movement_key(action: StringName, keycode: int) -> Dictionary:
 		break
 	bindings[action_id] = keycode
 	settings["gameplay"]["hero_movement_bindings"] = _normalize_hero_movement_bindings(bindings)
-	_commit_settings()
-	return {
+	var commit := _commit_settings()
+	commit.merge({
 		"ok": true,
 		"action": action_id,
 		"keycode": keycode,
 		"swapped_action": swapped_action,
 		"previous_keycode": previous_keycode,
-	}
+	}, false)
+	return commit
 
-func reset_hero_movement_bindings() -> void:
+func reset_hero_movement_bindings() -> Dictionary:
 	ensure_settings()
 	settings["gameplay"]["hero_movement_bindings"] = {}
-	_commit_settings()
+	return _commit_settings()
 
-func set_large_ui_text_enabled(enabled: bool) -> void:
-	set_ui_scale_percent(115 if enabled else 100)
+func set_large_ui_text_enabled(enabled: bool) -> Dictionary:
+	return set_ui_scale_percent(115 if enabled else 100)
 
-func set_ui_scale_percent(value: int) -> void:
+func set_ui_scale_percent(value: int) -> Dictionary:
 	ensure_settings()
 	settings["accessibility"]["ui_scale_percent"] = _normalize_ui_scale_percent(value)
 	settings["accessibility"]["large_ui_text"] = ui_scale_percent() > 100
-	_commit_settings()
+	return _commit_settings()
 
-func set_high_contrast_ui_enabled(enabled: bool) -> void:
+func set_high_contrast_ui_enabled(enabled: bool) -> Dictionary:
 	ensure_settings()
 	settings["accessibility"]["high_contrast_ui"] = enabled
-	_commit_settings()
+	return _commit_settings()
 
-func set_color_cue_mode_id(mode_id: String) -> void:
+func set_color_cue_mode_id(mode_id: String) -> Dictionary:
 	ensure_settings()
 	settings["accessibility"]["color_cue_mode"] = _normalize_color_cue_mode(mode_id)
-	_commit_settings()
+	return _commit_settings()
 
-func set_battle_camera_shake_mode_id(mode_id: String) -> void:
+func set_battle_camera_shake_mode_id(mode_id: String) -> Dictionary:
 	ensure_settings()
 	settings["accessibility"]["battle_camera_shake"] = _normalize_battle_camera_shake(mode_id)
-	_commit_settings()
+	return _commit_settings()
 
-func set_reduced_motion_enabled(enabled: bool) -> void:
+func set_reduced_motion_enabled(enabled: bool) -> Dictionary:
 	ensure_settings()
 	settings["accessibility"]["reduce_motion"] = enabled
-	_commit_settings()
+	return _commit_settings()
 
-func set_reduced_flashes_enabled(enabled: bool) -> void:
+func set_reduced_flashes_enabled(enabled: bool) -> Dictionary:
 	ensure_settings()
 	settings["accessibility"]["reduce_flashes"] = enabled
-	_commit_settings()
+	return _commit_settings()
 
-func set_reduced_repetitive_sounds_enabled(enabled: bool) -> void:
+func set_reduced_repetitive_sounds_enabled(enabled: bool) -> Dictionary:
 	ensure_settings()
 	settings["accessibility"]["reduce_repetitive_sounds"] = enabled
-	_commit_settings()
+	return _commit_settings()
 
 func describe_settings() -> String:
 	var accessibility_parts := []
@@ -1090,12 +1089,56 @@ func apply_settings() -> void:
 	_apply_presentation_settings()
 	_apply_audio_settings()
 
-func _commit_settings() -> void:
+func _commit_settings() -> Dictionary:
 	if display_change_pending():
 		revert_display_change("direct_settings_commit")
+	var prior_settings := _committed_settings.duplicate(true) if not _committed_settings.is_empty() else build_default_settings()
+	var candidate := settings.duplicate(true)
+	var prior_runtime := _capture_runtime_display_state()
+	var prior_input_map := _capture_managed_input_map()
 	apply_settings()
-	save_settings()
+	var persisted := _persist_settings_transaction(candidate)
+	if not bool(persisted.get("ok", false)):
+		settings = prior_settings
+		apply_settings()
+		_restore_managed_input_map(prior_input_map)
+		_restore_runtime_display_state(prior_runtime)
+		var failure := persisted.duplicate(true)
+		failure["changed"] = false
+		failure["settings"] = settings.duplicate(true)
+		failure["message"] = "Settings could not be saved. Your previous settings remain active."
+		_last_settings_commit_result = failure.duplicate(true)
+		settings_changed.emit(settings.duplicate(true))
+		settings_commit_failed.emit(failure.duplicate(true))
+		return failure
+	var committed_settings: Dictionary = persisted.get("settings", candidate) if persisted.get("settings", candidate) is Dictionary else candidate
+	settings = committed_settings.duplicate(true)
+	_committed_settings = committed_settings.duplicate(true)
+	var result := persisted.duplicate(true)
+	result["changed"] = committed_settings != prior_settings
+	result["settings"] = committed_settings.duplicate(true)
+	result["message"] = "Settings saved on this device."
+	_last_settings_commit_result = result.duplicate(true)
 	settings_changed.emit(settings.duplicate(true))
+	return result
+
+func last_settings_commit_result() -> Dictionary:
+	return _last_settings_commit_result.duplicate(true)
+
+func validation_settings_transaction_snapshot() -> Dictionary:
+	return {
+		"settings_file": SETTINGS_FILE,
+		"candidate_file": SETTINGS_CANDIDATE_FILE,
+		"backup_file": SETTINGS_BACKUP_FILE,
+		"live_exists": FileAccess.file_exists(SETTINGS_FILE),
+		"candidate_exists": FileAccess.file_exists(SETTINGS_CANDIDATE_FILE),
+		"backup_exists": FileAccess.file_exists(SETTINGS_BACKUP_FILE),
+		"settings": settings.duplicate(true),
+		"committed_settings": _committed_settings.duplicate(true),
+		"last_result": _last_settings_commit_result.duplicate(true),
+		"runtime_display": _capture_runtime_display_state(),
+		"input_map": _capture_managed_input_map(),
+	}
 
 func _apply_accessibility_settings() -> void:
 	var root := get_tree().root
@@ -1377,26 +1420,347 @@ func _clear_pending_display_change() -> void:
 	_display_change_last_countdown = -1
 	set_process(false)
 
-func _settings_file_state() -> Dictionary:
-	var exists := FileAccess.file_exists(SETTINGS_FILE)
+func _persist_settings_transaction(candidate_value: Dictionary) -> Dictionary:
+	if not _ensure_settings_dir():
+		return _settings_transaction_failure("settings_dir_unavailable")
+	var recovery := _recover_settings_transaction()
+	if not bool(recovery.get("ok", false)):
+		return _settings_transaction_failure(String(recovery.get("reason", "recovery_failed")))
+	if _settings_path_exists(SETTINGS_FILE) and not FileAccess.file_exists(SETTINGS_FILE):
+		return _settings_transaction_failure("live_not_regular_file")
+	if not _remove_settings_artifact(SETTINGS_CANDIDATE_FILE):
+		return _settings_transaction_failure("candidate_cleanup_failed")
+	if _settings_path_exists(SETTINGS_BACKUP_FILE) and not _remove_settings_artifact(SETTINGS_BACKUP_FILE):
+		return _settings_transaction_failure("backup_cleanup_failed")
+
+	var canonical := _canonical_settings(candidate_value)
+	var config := _settings_config(canonical)
+	var expected_bytes := config.encode_to_text().to_utf8_buffer()
+	var file := FileAccess.open(SETTINGS_CANDIDATE_FILE, FileAccess.WRITE)
+	if file == null:
+		return _settings_transaction_failure("candidate_open_failed")
+	file.store_buffer(expected_bytes)
+	file.flush()
+	var write_error := file.get_error()
+	var written_bytes := file.get_length()
+	file.close()
+	if write_error != OK or written_bytes != expected_bytes.size():
+		_remove_settings_artifact(SETTINGS_CANDIDATE_FILE)
+		return _settings_transaction_failure("candidate_write_failed")
+	var candidate := _read_settings_file(SETTINGS_CANDIDATE_FILE)
+	if (
+		not bool(candidate.get("valid", false))
+		or candidate.get("bytes", PackedByteArray()) != expected_bytes
+		or candidate.get("settings", {}) != canonical
+	):
+		_remove_settings_artifact(SETTINGS_CANDIDATE_FILE)
+		return _settings_transaction_failure("candidate_verification_failed")
+	var fail_phase := OS.get_environment(SETTINGS_TRANSACTION_FAILURE_ENV).strip_edges().to_lower()
+	if fail_phase == "precommit":
+		_remove_settings_artifact(SETTINGS_CANDIDATE_FILE)
+		return _settings_transaction_failure("precommit")
+
+	var had_live := _settings_path_exists(SETTINGS_FILE)
+	var prior_bytes := FileAccess.get_file_as_bytes(SETTINGS_FILE) if FileAccess.file_exists(SETTINGS_FILE) else PackedByteArray()
+	if had_live:
+		var backup_error := _rename_settings_path(SETTINGS_FILE, SETTINGS_BACKUP_FILE)
+		if backup_error != OK:
+			_remove_settings_artifact(SETTINGS_CANDIDATE_FILE)
+			return _settings_transaction_failure("backup_preserve_failed")
+	if fail_phase == "after_backup":
+		var rolled_back := _rollback_settings_transaction(had_live, prior_bytes)
+		return _settings_transaction_failure("after_backup" if rolled_back else "after_backup_rollback_failed")
+
+	var commit_error := _rename_settings_path(SETTINGS_CANDIDATE_FILE, SETTINGS_FILE)
+	if commit_error != OK:
+		var rolled_back := _rollback_settings_transaction(had_live, prior_bytes)
+		return _settings_transaction_failure("commit_rename_failed" if rolled_back else "commit_rollback_failed")
+	var committed := _read_settings_file(SETTINGS_FILE)
+	if (
+		not bool(committed.get("valid", false))
+		or committed.get("bytes", PackedByteArray()) != expected_bytes
+		or committed.get("settings", {}) != canonical
+	):
+		var rolled_back := _rollback_settings_transaction(had_live, prior_bytes)
+		return _settings_transaction_failure("commit_verification_failed" if rolled_back else "verification_rollback_failed")
+	if not _remove_settings_artifact(SETTINGS_BACKUP_FILE):
+		var rolled_back := _rollback_settings_transaction(had_live, prior_bytes)
+		return _settings_transaction_failure("backup_cleanup_failed" if rolled_back else "cleanup_rollback_failed")
 	return {
-		"exists": exists,
-		"bytes": FileAccess.get_file_as_bytes(SETTINGS_FILE) if exists else PackedByteArray(),
+		"ok": true,
+		"path": SETTINGS_FILE,
+		"changed": true,
+		"reason": "committed",
+		"message": "Settings saved on this device.",
+		"settings": canonical.duplicate(true),
 	}
 
-func _restore_settings_file_state(file_state: Dictionary) -> bool:
-	if bool(file_state.get("exists", false)):
-		if not _ensure_settings_dir():
-			return false
-		var file := FileAccess.open(SETTINGS_FILE, FileAccess.WRITE)
-		if file == null:
-			return false
-		file.store_buffer(file_state.get("bytes", PackedByteArray()))
-		file.close()
+func _recover_settings_transaction() -> Dictionary:
+	var live := _read_settings_file(SETTINGS_FILE)
+	if bool(live.get("valid", false)):
+		if not _remove_settings_artifact(SETTINGS_CANDIDATE_FILE):
+			return {"ok": false, "recovered": false, "reason": "candidate_cleanup_failed"}
+		if not _remove_settings_artifact(SETTINGS_BACKUP_FILE):
+			return {"ok": false, "recovered": false, "reason": "backup_cleanup_failed"}
+		return {"ok": true, "recovered": false, "live_valid": true, "reason": "live_valid"}
+
+	var backup := _read_settings_file(SETTINGS_BACKUP_FILE)
+	if bool(backup.get("valid", false)):
+		if _settings_path_exists(SETTINGS_FILE) and not _remove_settings_artifact(SETTINGS_FILE):
+			return {"ok": false, "recovered": false, "reason": "invalid_live_remove_failed"}
+		var restore_error := _rename_settings_path(SETTINGS_BACKUP_FILE, SETTINGS_FILE)
+		if restore_error != OK:
+			return {"ok": false, "recovered": false, "reason": "backup_restore_failed", "error": restore_error}
+		var restored := _read_settings_file(SETTINGS_FILE)
+		if not bool(restored.get("valid", false)) or restored.get("bytes", PackedByteArray()) != backup.get("bytes", PackedByteArray()):
+			return {"ok": false, "recovered": false, "reason": "backup_restore_verification_failed"}
+		if not _remove_settings_artifact(SETTINGS_CANDIDATE_FILE):
+			return {"ok": false, "recovered": true, "reason": "candidate_cleanup_failed"}
+		return {"ok": true, "recovered": true, "live_valid": true, "reason": "backup_restored"}
+
+	# A candidate is staging only and never recovery authority. Invalid live and
+	# backup bytes remain available for diagnosis until a later explicit commit.
+	if not _remove_settings_artifact(SETTINGS_CANDIDATE_FILE):
+		return {"ok": false, "recovered": false, "reason": "candidate_cleanup_failed"}
+	return {
+		"ok": true,
+		"recovered": false,
+		"live_valid": false,
+		"reason": "no_valid_backup" if bool(live.get("exists", false)) else "live_missing",
+	}
+
+func _read_settings_file(file_path: String) -> Dictionary:
+	var result := {
+		"exists": _settings_path_exists(file_path),
+		"valid": false,
+		"bytes": PackedByteArray(),
+		"settings": {},
+		"reason": "missing",
+	}
+	if not FileAccess.file_exists(file_path):
+		if bool(result.get("exists", false)):
+			result["reason"] = "not_regular_file"
+		return result
+	result["bytes"] = FileAccess.get_file_as_bytes(file_path)
+	var config := ConfigFile.new()
+	var load_error := config.load(file_path)
+	if load_error != OK:
+		result["reason"] = "parse_failed"
+		result["error"] = load_error
+		return result
+	var semantic := _settings_config_semantic_report(config)
+	if not bool(semantic.get("ok", false)):
+		result["reason"] = String(semantic.get("reason", "semantic_invalid"))
+		return result
+	result["valid"] = true
+	result["reason"] = "valid"
+	result["settings"] = _settings_from_config(config)
+	return result
+
+func _settings_config_semantic_report(config: ConfigFile) -> Dictionary:
+	if not config.has_section_key("meta", "version"):
+		return {"ok": false, "reason": "missing_version"}
+	var version_value: Variant = config.get_value("meta", "version", 0)
+	if not (version_value is int):
+		return {"ok": false, "reason": "invalid_version_type"}
+	var version := int(version_value)
+	if version < 1 or version > SETTINGS_VERSION:
+		return {"ok": false, "reason": "unsupported_version"}
+	var required := [
+		[1, "audio", "master_volume_percent", TYPE_INT],
+		[1, "audio", "music_volume_percent", TYPE_INT],
+		[1, "presentation", "mode", TYPE_STRING],
+		[1, "accessibility", "large_ui_text", TYPE_BOOL],
+		[1, "accessibility", "reduce_motion", TYPE_BOOL],
+		[2, "presentation", "resolution", TYPE_STRING],
+		[3, "audio", "effects_volume_percent", TYPE_INT],
+		[4, "presentation", "vsync_enabled", TYPE_BOOL],
+		[4, "presentation", "frame_rate_limit", TYPE_INT],
+		[5, "presentation", "render_quality", TYPE_STRING],
+		[6, "accessibility", "ui_scale_percent", TYPE_INT],
+		[7, "accessibility", "high_contrast_ui", TYPE_BOOL],
+		[8, "accessibility", "color_cue_mode", TYPE_STRING],
+		[9, "gameplay", "battle_playback_speed", TYPE_STRING],
+		[10, "gameplay", "keyboard_navigation_layout", TYPE_STRING],
+		[11, "gameplay", "hero_movement_bindings", TYPE_DICTIONARY],
+		[12, "accessibility", "battle_camera_shake", TYPE_STRING],
+		[13, "accessibility", "reduce_flashes", TYPE_BOOL],
+		[14, "accessibility", "reduce_repetitive_sounds", TYPE_BOOL],
+	]
+	for requirement in required:
+		if version < int(requirement[0]):
+			continue
+		var section := String(requirement[1])
+		var key := String(requirement[2])
+		if not config.has_section_key(section, key):
+			return {"ok": false, "reason": "missing_required_key", "section": section, "key": key}
+		if typeof(config.get_value(section, key)) != int(requirement[3]):
+			return {"ok": false, "reason": "invalid_required_type", "section": section, "key": key}
+	return {"ok": true, "version": version}
+
+func _settings_from_config(config: ConfigFile) -> Dictionary:
+	var defaults := build_default_settings()
+	var loaded := defaults.duplicate(true)
+	loaded["version"] = SETTINGS_VERSION
+	loaded["audio"]["master_volume_percent"] = clampi(int(config.get_value("audio", "master_volume_percent", defaults["audio"]["master_volume_percent"])), 0, 100)
+	loaded["audio"]["music_volume_percent"] = clampi(int(config.get_value("audio", "music_volume_percent", defaults["audio"]["music_volume_percent"])), 0, 100)
+	loaded["audio"]["effects_volume_percent"] = clampi(int(config.get_value("audio", "effects_volume_percent", defaults["audio"]["effects_volume_percent"])), 0, 100)
+	loaded["presentation"]["mode"] = _normalize_presentation_mode(String(config.get_value("presentation", "mode", defaults["presentation"]["mode"])))
+	loaded["presentation"]["resolution"] = _normalize_presentation_resolution(String(config.get_value("presentation", "resolution", defaults["presentation"]["resolution"])))
+	loaded["presentation"]["render_quality"] = _normalize_render_quality(String(config.get_value("presentation", "render_quality", defaults["presentation"]["render_quality"])))
+	loaded["presentation"]["vsync_enabled"] = bool(config.get_value("presentation", "vsync_enabled", defaults["presentation"]["vsync_enabled"]))
+	loaded["presentation"]["frame_rate_limit"] = _normalize_frame_rate_limit(int(config.get_value("presentation", "frame_rate_limit", defaults["presentation"]["frame_rate_limit"])))
+	loaded["gameplay"]["battle_playback_speed"] = _normalize_battle_playback_speed(String(config.get_value("gameplay", "battle_playback_speed", defaults["gameplay"]["battle_playback_speed"])))
+	loaded["gameplay"]["keyboard_navigation_layout"] = _normalize_keyboard_navigation_layout(String(config.get_value("gameplay", "keyboard_navigation_layout", defaults["gameplay"]["keyboard_navigation_layout"])))
+	loaded["gameplay"]["hero_movement_bindings"] = _normalize_hero_movement_bindings(config.get_value("gameplay", "hero_movement_bindings", defaults["gameplay"]["hero_movement_bindings"]))
+	var legacy_large_text := bool(config.get_value("accessibility", "large_ui_text", defaults["accessibility"]["large_ui_text"]))
+	var migrated_scale := 115 if legacy_large_text else 100
+	loaded["accessibility"]["ui_scale_percent"] = _normalize_ui_scale_percent(int(config.get_value("accessibility", "ui_scale_percent", migrated_scale)))
+	loaded["accessibility"]["large_ui_text"] = int(loaded["accessibility"]["ui_scale_percent"]) > 100
+	loaded["accessibility"]["high_contrast_ui"] = bool(config.get_value("accessibility", "high_contrast_ui", defaults["accessibility"]["high_contrast_ui"]))
+	loaded["accessibility"]["color_cue_mode"] = _normalize_color_cue_mode(String(config.get_value("accessibility", "color_cue_mode", defaults["accessibility"]["color_cue_mode"])))
+	loaded["accessibility"]["battle_camera_shake"] = _normalize_battle_camera_shake(String(config.get_value("accessibility", "battle_camera_shake", defaults["accessibility"]["battle_camera_shake"])))
+	loaded["accessibility"]["reduce_flashes"] = bool(config.get_value("accessibility", "reduce_flashes", defaults["accessibility"]["reduce_flashes"]))
+	loaded["accessibility"]["reduce_motion"] = bool(config.get_value("accessibility", "reduce_motion", defaults["accessibility"]["reduce_motion"]))
+	loaded["accessibility"]["reduce_repetitive_sounds"] = bool(config.get_value("accessibility", "reduce_repetitive_sounds", defaults["accessibility"]["reduce_repetitive_sounds"]))
+	return loaded
+
+func _canonical_settings(value: Dictionary) -> Dictionary:
+	var config := _settings_config_unchecked(value)
+	return _settings_from_config(config)
+
+func _settings_config(value: Dictionary) -> ConfigFile:
+	return _settings_config_unchecked(_canonical_settings_unchecked(value))
+
+func _canonical_settings_unchecked(value: Dictionary) -> Dictionary:
+	var defaults := build_default_settings()
+	var canonical := defaults.duplicate(true)
+	for section in ["audio", "presentation", "gameplay", "accessibility"]:
+		var source: Dictionary = value.get(section, {}) if value.get(section, {}) is Dictionary else {}
+		for key in (canonical[section] as Dictionary).keys():
+			if source.has(key):
+				canonical[section][key] = source[key]
+	canonical["version"] = SETTINGS_VERSION
+	return _settings_from_config(_settings_config_unchecked(canonical))
+
+func _settings_config_unchecked(value: Dictionary) -> ConfigFile:
+	var defaults := build_default_settings()
+	var audio: Dictionary = value.get("audio", {}) if value.get("audio", {}) is Dictionary else {}
+	var presentation: Dictionary = value.get("presentation", {}) if value.get("presentation", {}) is Dictionary else {}
+	var gameplay: Dictionary = value.get("gameplay", {}) if value.get("gameplay", {}) is Dictionary else {}
+	var accessibility: Dictionary = value.get("accessibility", {}) if value.get("accessibility", {}) is Dictionary else {}
+	var config := ConfigFile.new()
+	config.set_value("meta", "version", SETTINGS_VERSION)
+	config.set_value("audio", "master_volume_percent", clampi(int(audio.get("master_volume_percent", defaults["audio"]["master_volume_percent"])), 0, 100))
+	config.set_value("audio", "music_volume_percent", clampi(int(audio.get("music_volume_percent", defaults["audio"]["music_volume_percent"])), 0, 100))
+	config.set_value("audio", "effects_volume_percent", clampi(int(audio.get("effects_volume_percent", defaults["audio"]["effects_volume_percent"])), 0, 100))
+	config.set_value("presentation", "mode", _normalize_presentation_mode(String(presentation.get("mode", defaults["presentation"]["mode"]))))
+	config.set_value("presentation", "resolution", _normalize_presentation_resolution(String(presentation.get("resolution", defaults["presentation"]["resolution"]))))
+	config.set_value("presentation", "render_quality", _normalize_render_quality(String(presentation.get("render_quality", defaults["presentation"]["render_quality"]))))
+	config.set_value("presentation", "vsync_enabled", bool(presentation.get("vsync_enabled", defaults["presentation"]["vsync_enabled"])))
+	config.set_value("presentation", "frame_rate_limit", _normalize_frame_rate_limit(int(presentation.get("frame_rate_limit", defaults["presentation"]["frame_rate_limit"]))))
+	config.set_value("gameplay", "battle_playback_speed", _normalize_battle_playback_speed(String(gameplay.get("battle_playback_speed", defaults["gameplay"]["battle_playback_speed"]))))
+	config.set_value("gameplay", "keyboard_navigation_layout", _normalize_keyboard_navigation_layout(String(gameplay.get("keyboard_navigation_layout", defaults["gameplay"]["keyboard_navigation_layout"]))))
+	config.set_value("gameplay", "hero_movement_bindings", _normalize_hero_movement_bindings(gameplay.get("hero_movement_bindings", defaults["gameplay"]["hero_movement_bindings"])))
+	var scale := _normalize_ui_scale_percent(int(accessibility.get("ui_scale_percent", defaults["accessibility"]["ui_scale_percent"])))
+	config.set_value("accessibility", "ui_scale_percent", scale)
+	config.set_value("accessibility", "large_ui_text", scale > 100)
+	config.set_value("accessibility", "high_contrast_ui", bool(accessibility.get("high_contrast_ui", defaults["accessibility"]["high_contrast_ui"])))
+	config.set_value("accessibility", "color_cue_mode", _normalize_color_cue_mode(String(accessibility.get("color_cue_mode", defaults["accessibility"]["color_cue_mode"]))))
+	config.set_value("accessibility", "battle_camera_shake", _normalize_battle_camera_shake(String(accessibility.get("battle_camera_shake", defaults["accessibility"]["battle_camera_shake"]))))
+	config.set_value("accessibility", "reduce_flashes", bool(accessibility.get("reduce_flashes", defaults["accessibility"]["reduce_flashes"])))
+	config.set_value("accessibility", "reduce_motion", bool(accessibility.get("reduce_motion", defaults["accessibility"]["reduce_motion"])))
+	config.set_value("accessibility", "reduce_repetitive_sounds", bool(accessibility.get("reduce_repetitive_sounds", defaults["accessibility"]["reduce_repetitive_sounds"])))
+	return config
+
+func _rollback_settings_transaction(had_live: bool, prior_bytes: PackedByteArray) -> bool:
+	var rolled_back := true
+	if _settings_path_exists(SETTINGS_FILE):
+		rolled_back = _remove_settings_artifact(SETTINGS_FILE) and rolled_back
+	if had_live:
+		if FileAccess.file_exists(SETTINGS_BACKUP_FILE):
+			rolled_back = _rename_settings_path(SETTINGS_BACKUP_FILE, SETTINGS_FILE) == OK and rolled_back
+		else:
+			rolled_back = false
+	elif not had_live:
+		rolled_back = _remove_settings_artifact(SETTINGS_BACKUP_FILE) and rolled_back
+	rolled_back = _remove_settings_artifact(SETTINGS_CANDIDATE_FILE) and rolled_back
+	if had_live and FileAccess.file_exists(SETTINGS_FILE):
+		rolled_back = FileAccess.get_file_as_bytes(SETTINGS_FILE) == prior_bytes and rolled_back
+	elif had_live:
+		rolled_back = false
+	elif _settings_path_exists(SETTINGS_FILE):
+		rolled_back = false
+	if _settings_path_exists(SETTINGS_CANDIDATE_FILE) or _settings_path_exists(SETTINGS_BACKUP_FILE):
+		rolled_back = false
+	return rolled_back
+
+func _settings_transaction_failure(reason: String) -> Dictionary:
+	return {
+		"ok": false,
+		"path": "",
+		"changed": false,
+		"reason": reason,
+		"message": "Settings could not be saved. Your previous settings remain active.",
+		"settings": (_committed_settings if not _committed_settings.is_empty() else settings).duplicate(true),
+	}
+
+func _settings_path_exists(file_path: String) -> bool:
+	var absolute := ProjectSettings.globalize_path(file_path)
+	return FileAccess.file_exists(file_path) or DirAccess.dir_exists_absolute(absolute)
+
+func _remove_settings_artifact(file_path: String) -> bool:
+	if not _settings_path_exists(file_path):
 		return true
-	if not FileAccess.file_exists(SETTINGS_FILE):
-		return true
-	return DirAccess.remove_absolute(ProjectSettings.globalize_path(SETTINGS_FILE)) == OK
+	if not FileAccess.file_exists(file_path):
+		return false
+	return DirAccess.remove_absolute(ProjectSettings.globalize_path(file_path)) == OK
+
+func _rename_settings_path(from_path: String, to_path: String) -> int:
+	return DirAccess.rename_absolute(ProjectSettings.globalize_path(from_path), ProjectSettings.globalize_path(to_path))
+
+func _managed_input_actions() -> Array[StringName]:
+	var actions: Array[StringName] = []
+	for action_value in KEYBOARD_NAVIGATION_ACTIONS.keys():
+		actions.append(StringName(action_value))
+	for action_value in KEYBOARD_HERO_MOVEMENT_ACTIONS.keys():
+		var action := StringName(action_value)
+		if action not in actions:
+			actions.append(action)
+	return actions
+
+func _capture_managed_input_map() -> Dictionary:
+	var snapshot := {}
+	for action in _managed_input_actions():
+		var events := []
+		if InputMap.has_action(action):
+			for input_event in InputMap.action_get_events(action):
+				events.append(input_event.duplicate(true))
+		snapshot[String(action)] = {
+			"exists": InputMap.has_action(action),
+			"deadzone": InputMap.action_get_deadzone(action) if InputMap.has_action(action) else 0.5,
+			"events": events,
+		}
+	return snapshot
+
+func _restore_managed_input_map(snapshot: Dictionary) -> void:
+	for action in _managed_input_actions():
+		var action_id := String(action)
+		var state: Dictionary = snapshot.get(action_id, {}) if snapshot.get(action_id, {}) is Dictionary else {}
+		if not bool(state.get("exists", false)):
+			if InputMap.has_action(action):
+				InputMap.erase_action(action)
+			continue
+		if not InputMap.has_action(action):
+			InputMap.add_action(action, float(state.get("deadzone", 0.5)))
+		else:
+			InputMap.action_set_deadzone(action, float(state.get("deadzone", 0.5)))
+		InputMap.action_erase_events(action)
+		var events: Variant = state.get("events", [])
+		if events is Array:
+			for input_event in events:
+				if input_event is InputEvent:
+					InputMap.action_add_event(action, input_event.duplicate(true))
 
 func _center_window(resolution: Vector2i) -> void:
 	var screen_index := DisplayServer.window_get_current_screen()

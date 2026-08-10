@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Town departure copy integrity is complete: core, cached, and live surfaces now promise only Return to Field, with exact remaining/exhausted guidance and unchanged route-only behavior. Overall release readiness remains open.",
+  "currentNotes": "Transactional device settings persistence is complete: verified commit/recovery, exact runtime and InputMap rollback, truthful UI failure handling, and packaged Linux/Windows-Wine proof all pass. Overall release readiness remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-town-departure-end-turn-copy-integrity-10184",
-  "currentSliceId": "ux-town-departure-end-turn-copy-integrity-10184",
-  "currentSliceNotes": "Completed authoritative Return to Field copy, full cached-surface refresh, exact movement/response guidance, and route-only no-save validation.",
+  "currentSlice": "settings-transactional-cross-platform-persistence-10184",
+  "currentSliceId": "settings-transactional-cross-platform-persistence-10184",
+  "currentSliceNotes": "Completed verified same-directory settings commit/recovery, exact runtime and InputMap rollback, truthful UI failure handling, and packaged cross-platform proof.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Town Departure End-Turn Copy Integrity",
-  "currentSliceUpdatedAt": "2026-08-10T02:46:08Z",
+  "currentSliceTitle": "Transactional Device Settings Persistence",
+  "currentSliceUpdatedAt": "2026-08-10T03:14:32Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -74265,6 +74265,56 @@
       ],
       "remainingWork": "No work remains in this slice. Release signing, native Windows hardware certification, publication, and overall release readiness remain open.",
       "completedAt": "2026-08-10T02:46:08Z"
+    },
+    {
+      "id": "settings-transactional-cross-platform-persistence-10184",
+      "title": "Transactional Device Settings Persistence",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/lessons-learned.md"],
+      "purpose": "Prevent failed or interrupted device-settings writes from silently losing accessibility, audio, gameplay, presentation, or keybinding state.",
+      "implementationTargets": [
+        "scripts/autoload/SettingsService.gd",
+        "scenes/menus/MainMenu.gd",
+        "scenes/shared/ActivePlaySettingsDialog.gd",
+        "scenes/menus/HeroKeybindingsDialog.gd",
+        "tests/settings_transactional_persistence_regression.gd",
+        "tests/settings_transactional_persistence_regression.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {"live_file_write": true, "verified_backup_recovery": false, "ordinary_failure_rollback": false, "ui_failure_truthful": false, "settings_version": 14},
+      "completionCriteria": [
+        "Precommit and after-backup failures preserve exact prior bytes, settings, runtime state, and InputMap with no residue",
+        "Startup recovery accepts only a semantically valid backup and never promotes candidate artifacts",
+        "Successful ordinary, display, Restore Defaults, and keybinding changes persist and reload exactly",
+        "Main Menu and active-play settings/keybinding surfaces report failure and refresh to committed state",
+        "Focused, compatibility, packaged Linux/Windows, core, parse, repository, JSON, Python, and diff gates pass"
+      ],
+      "nonGoals": ["new settings, layout redesign, cloud sync, save/profile schema change, balance, Native RMG, publication, or release-completion claim"],
+      "createdAt": "2026-08-10T02:52:08Z",
+      "startedAt": "2026-08-10T02:52:08Z",
+      "updatedAt": "2026-08-10T03:14:32Z",
+      "notes": "Settings now use verified candidate/backup commit and semantic startup recovery; failed setters restore exact committed runtime/InputMap state and UI consumers report failure truthfully.",
+      "validation": [
+        "godot4 --headless --path . --scene res://tests/settings_transactional_persistence_regression.tscn (passed; both failure phases, exact bytes/settings/runtime/InputMap rollback, recovery matrix, non-regular path guard, candidate rejection, version 14 reload)",
+        "godot4 --headless --path . --scene res://tests/settings_display_mode_transaction_regression.tscn (passed)",
+        "godot4 --headless --path . --scene res://tests/settings_restore_defaults_regression.tscn (passed)",
+        "godot4 --headless --path . --scene res://tests/packaged_settings_persistence_report.tscn (passed; complete v5 Large Text migration and version 14 persistence)",
+        "godot4 --headless --path . --scene res://tests/custom_hero_keybindings_smoke.tscn (passed)",
+        "godot4 --headless --path . --scene res://tests/active_play_settings_runtime_report.tscn and res://tests/main_menu_keyboard_navigation_smoke.tscn (passed)",
+        "fresh Linux Release export and packaged focused transaction run (passed; EXE 71071768 bytes, PCK 190110792 bytes, SO 4067112 bytes)",
+        "fresh Windows Release export and Wine focused transaction run (passed; EXE 104539648 bytes, PCK 190110792 bytes, DLL 4268544 bytes)",
+        "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn (passed)",
+        "godot4 --headless --editor --path . --quit-after 2 (passed; expected timed scan-abort warning only)",
+        "python3 tests/validate_repo.py and python3 -m py_compile tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json and git diff --check (passed)"
+      ],
+      "remainingWork": "No work remains in this slice. Destructive-dialog safe focus, End Turn autosave-failure visibility, release signing, native Windows hardware certification, publication, and overall release readiness remain open.",
+      "completedAt": "2026-08-10T03:14:32Z"
     }
   ],
   "project": "heroes-like",

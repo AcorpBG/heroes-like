@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `settings-transactional-cross-platform-persistence-10184`. Device settings now commit through verified same-directory candidate/backup files with bounded recovery. Failed ordinary changes restore exact config bytes, settings, runtime display/audio/accessibility state, and InputMap; valid live files win, only semantically valid backups recover, and candidate artifacts are never promoted. Main Menu, active-play settings, and keybindings report failure truthfully and refresh to committed values. Focused, compatibility, core, repository, and fresh packaged Linux/Windows-Wine gates pass at settings version 14.
 - Latest completed implementation slice: `ux-town-departure-end-turn-copy-integrity-10184`. Town departure now uses one authoritative `Return to Field` surface across core, cached, and live states. Remaining movement, exhausted movement, and response-order priority are explicit; the unchanged handler still routes only to the overworld without advancing the day, spending movement, or autosaving. Focused town visual/exit/controller, core, parse, repository, JSON, Python, and diff gates pass.
 - Latest completed implementation slice: `campaign-progression-completion-write-failure-atomicity-10184`. Campaign completion now persists a detached profile candidate before publishing it live. A failed write restores the same pre-terminal session object and returns a visible retry message; clearing either injected failure phase lets one reevaluation persist and publish the outcome exactly once. Focused failure/retry, first-defeat, skirmish, campaign replay, core, parse, repository, JSON, Python, and diff gates pass at save version 9.
 - Latest completed implementation slice: `overworld-risk-gated-end-turn-confirmation-10184`. Warned remaining-movement/available-order and unconsumed core-risk End Turn requests now open a compact confirmation with Keep Waiting initially focused. First press, cancel, and stale session/day/status/payload rejection are read-only; valid confirmation consumes the one-shot forecast and enters the unchanged End Turn/autosave path exactly once. Exhausted low-risk turns remain one-click. Focused parity/save, controller, full and targeted 1280x720 visual, generated-profile, core, broad headless, parse, repository, JSON, Python, and diff gates pass at save version 9.
@@ -3171,6 +3172,39 @@ Completion evidence:
 - cached refresh rebuilds the full authoritative departure surface, preventing stale tooltip and next-step copy after movement changes;
 - focused exit proof preserves the same session, day, status, and movement, routes only to overworld, and records no save or autosave;
 - controller activation reaches overworld with the separate End Turn command focusable, and town visual, core, editor parse, repository, JSON, Python, and diff gates pass.
+
+## Transactional Device Settings Persistence
+
+id: `settings-transactional-cross-platform-persistence-10184`
+
+Status: completed.
+
+Selected Phase 6 release-safety slice. Audio, gameplay, accessibility, display-adjacent,
+and keybinding settings currently write the live device config in place. Ordinary setters
+apply runtime state and report success even when persistence fails, while a malformed
+live config has no verified backup recovery on the next launch.
+
+Implementation target:
+- commit settings through a same-directory candidate and backup with verified ConfigFile/schema content, Windows-safe rename/rollback, bounded startup recovery, and deterministic precommit/after-backup failure hooks;
+- publish settings, runtime audio/presentation/accessibility state, and InputMap changes only after commit, restoring the exact prior dictionary/runtime/config on failure;
+- make Main Menu, active-play settings, and hero keybindings surface failure honestly and refresh controls to the committed state.
+
+Completion criteria:
+- both injected failure phases preserve exact prior config bytes, settings dictionary, runtime state, InputMap, and leave no transaction residue;
+- valid live config wins and cleans stale artifacts; missing or malformed live recovers only a semantically valid backup; invalid backup/candidate is never adopted;
+- successful settings and keybinding changes survive reload at settings version 14, while display confirmation and Restore Defaults retain their existing atomic behavior;
+- focused service/UI, settings/display/keybinding compatibility, packaged Linux and Windows/Wine, core, parse, repository, JSON, Python, and diff gates pass.
+
+Non-goals:
+- no new settings, settings layout redesign, cloud/device sync, save/profile schema change, gameplay balance, Native RMG work, public release, signing, or overall release-completion claim.
+
+Completion evidence:
+- SettingsService writes a flushed, byte- and schema-verified same-directory candidate, preserves the prior live file as a bounded backup, verifies the committed live file, and rolls back after precommit or after-backup failures;
+- startup recovery keeps a valid live config authoritative, restores only a semantically complete backup for missing/corrupt/partial/future-version live state, removes staging candidates without promoting them, and rejects non-regular live paths without mutation;
+- failed setters restore the exact committed settings dictionary, runtime display/audio/accessibility state, and serialized managed InputMap, emit a structured failure, and leave no transaction residue;
+- Main Menu, active-play settings, and hero keybindings consume the structured result, show bounded failure copy, and refresh from committed values rather than claiming success;
+- focused transaction, display confirmation, Restore Defaults, packaged persistence, keybinding, active-play, Main Menu, core, editor parse, repository, JSON, Python, and diff gates pass;
+- fresh packaged Linux and Windows/Wine runs execute the full transaction matrix successfully at settings version 14.
 
 ## Phase Roadmap
 

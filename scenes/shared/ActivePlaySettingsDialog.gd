@@ -91,9 +91,23 @@ func _sync_option(picker: OptionButton, options: Array, metadata_key: String, fa
 	if picker.get_item_count() > 0:
 		picker.select(selected_index)
 
-func _mark_changed(setting_id: String) -> void:
+func _finish_setting_change(result: Dictionary, setting_id: String, defer_sync: bool = false) -> bool:
+	if not bool(result.get("ok", false)):
+		_sync_controls()
+		_status.text = _settings_commit_failure_text(result)
+		return false
 	_status.text = "Saved on this device"
 	setting_changed.emit(setting_id)
+	if defer_sync:
+		call_deferred("_sync_controls")
+	return true
+
+func _settings_commit_failure_text(result: Dictionary) -> String:
+	var detail := String(result.get("message", "")).strip_edges()
+	var message := "Not saved; previous setting restored."
+	if detail != "" and detail.to_lower() not in message.to_lower():
+		message = "%s %s" % [message, detail]
+	return message.substr(0, 180)
 
 func _on_close_pressed() -> void:
 	close_dialog()
@@ -101,74 +115,73 @@ func _on_close_pressed() -> void:
 func _on_master_volume_changed(value: float) -> void:
 	if _syncing:
 		return
-	SettingsService.set_master_volume_percent(int(round(value)))
+	var result: Dictionary = SettingsService.set_master_volume_percent(int(round(value)))
 	_master_value.text = "%d%%" % SettingsService.master_volume_percent()
-	_mark_changed("master_volume")
+	_finish_setting_change(result, "master_volume")
 
 func _on_music_volume_changed(value: float) -> void:
 	if _syncing:
 		return
-	SettingsService.set_music_volume_percent(int(round(value)))
+	var result: Dictionary = SettingsService.set_music_volume_percent(int(round(value)))
 	_music_value.text = "%d%%" % SettingsService.music_volume_percent()
-	_mark_changed("music_volume")
+	_finish_setting_change(result, "music_volume")
 
 func _on_effects_volume_changed(value: float) -> void:
 	if _syncing:
 		return
-	SettingsService.set_effects_volume_percent(int(round(value)))
+	var result: Dictionary = SettingsService.set_effects_volume_percent(int(round(value)))
 	_effects_value.text = "%d%%" % SettingsService.effects_volume_percent()
-	_mark_changed("effects_volume")
+	_finish_setting_change(result, "effects_volume")
 
 func _on_battle_playback_speed_selected(index: int) -> void:
 	if _syncing or index < 0 or index >= _battle_speed_picker.get_item_count():
 		return
-	SettingsService.set_battle_playback_speed_id(String(_battle_speed_picker.get_item_metadata(index)))
-	_mark_changed("battle_playback_speed")
+	var result: Dictionary = SettingsService.set_battle_playback_speed_id(String(_battle_speed_picker.get_item_metadata(index)))
+	_finish_setting_change(result, "battle_playback_speed")
 
 func _on_ui_scale_selected(index: int) -> void:
 	if _syncing or index < 0 or index >= _ui_scale_picker.get_item_count():
 		return
-	SettingsService.set_ui_scale_percent(int(_ui_scale_picker.get_item_metadata(index)))
-	_mark_changed("ui_scale")
-	call_deferred("_sync_controls")
+	var result: Dictionary = SettingsService.set_ui_scale_percent(int(_ui_scale_picker.get_item_metadata(index)))
+	_finish_setting_change(result, "ui_scale", true)
 
 func _on_battle_camera_shake_selected(index: int) -> void:
 	if _syncing or index < 0 or index >= _battle_shake_picker.get_item_count():
 		return
-	SettingsService.set_battle_camera_shake_mode_id(String(_battle_shake_picker.get_item_metadata(index)))
-	_mark_changed("battle_camera_shake")
+	var result: Dictionary = SettingsService.set_battle_camera_shake_mode_id(String(_battle_shake_picker.get_item_metadata(index)))
+	_finish_setting_change(result, "battle_camera_shake")
 
 func _on_color_cue_selected(index: int) -> void:
 	if _syncing or index < 0 or index >= _color_cue_picker.get_item_count():
 		return
-	SettingsService.set_color_cue_mode_id(String(_color_cue_picker.get_item_metadata(index)))
-	_mark_changed("color_cues")
+	var result: Dictionary = SettingsService.set_color_cue_mode_id(String(_color_cue_picker.get_item_metadata(index)))
+	_finish_setting_change(result, "color_cues")
 	_apply_visual_theme()
 
 func _on_high_contrast_toggled(enabled: bool) -> void:
 	if _syncing:
 		return
-	SettingsService.set_high_contrast_ui_enabled(enabled)
-	_mark_changed("high_contrast")
+	var result: Dictionary = SettingsService.set_high_contrast_ui_enabled(enabled)
+	_finish_setting_change(result, "high_contrast")
 	_apply_visual_theme()
 
 func _on_reduce_motion_toggled(enabled: bool) -> void:
 	if _syncing:
 		return
-	SettingsService.set_reduced_motion_enabled(enabled)
-	_mark_changed("reduced_motion")
+	var result: Dictionary = SettingsService.set_reduced_motion_enabled(enabled)
+	_finish_setting_change(result, "reduced_motion")
 
 func _on_reduce_flashes_toggled(enabled: bool) -> void:
 	if _syncing:
 		return
-	SettingsService.set_reduced_flashes_enabled(enabled)
-	_mark_changed("reduced_flashes")
+	var result: Dictionary = SettingsService.set_reduced_flashes_enabled(enabled)
+	_finish_setting_change(result, "reduced_flashes")
 
 func _on_reduce_repetitive_sounds_toggled(enabled: bool) -> void:
 	if _syncing:
 		return
-	SettingsService.set_reduced_repetitive_sounds_enabled(enabled)
-	_mark_changed("reduced_repetitive_sounds")
+	var result: Dictionary = SettingsService.set_reduced_repetitive_sounds_enabled(enabled)
+	_finish_setting_change(result, "reduced_repetitive_sounds")
 
 func _apply_visual_theme() -> void:
 	if _panel == null:
@@ -193,6 +206,7 @@ func validation_snapshot() -> Dictionary:
 		"rect": get_global_rect(),
 		"panel_rect": _panel.get_global_rect(),
 		"focus_owner": String(get_viewport().gui_get_focus_owner().name) if get_viewport().gui_get_focus_owner() != null else "",
+		"status": _status.text,
 		"master_volume": SettingsService.master_volume_percent(),
 		"music_volume": SettingsService.music_volume_percent(),
 		"effects_volume": SettingsService.effects_volume_percent(),
