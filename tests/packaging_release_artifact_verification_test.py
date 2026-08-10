@@ -22,7 +22,7 @@ from tools import package_release as package_release_module
 
 
 PACKAGER = ROOT / "tools" / "package_release.py"
-VERSION = "9.9.9-test"
+VERSION = package_release_module.project_version()
 SOURCE_REVISION = "a" * 40
 
 
@@ -55,11 +55,68 @@ class ReleaseArtifactVerificationTest(unittest.TestCase):
         (linux / "heroes-like.pck").write_bytes(b"GDPC" + (b"P" * 128))
         (linux / "libaurelion_map_persistence.linux.template_release.x86_64.so").write_bytes(elf)
 
-        pe = bytearray(b"MZ" + (b"W" * 254))
-        pe[0x3C:0x40] = (0x80).to_bytes(4, "little")
-        pe[0x80:0x84] = b"PE\x00\x00"
-        pe[0x84:0x86] = (0x8664).to_bytes(2, "little")
-        (windows / "heroes-like.exe").write_bytes(pe)
+        numeric_version = package_release_module.windows_numeric_version(VERSION)
+        numeric_commas = ",".join(numeric_version.split("."))
+        source_path = windows / "version-fixture.c"
+        resource_path = windows / "version-fixture.rc"
+        object_path = windows / "version-fixture.res.o"
+        source_path.write_text("int main(void) { return 0; }\n", encoding="ascii")
+        resource_path.write_text(
+            f'''#include <windows.h>
+1 VERSIONINFO
+FILEVERSION {numeric_commas}
+PRODUCTVERSION {numeric_commas}
+FILEFLAGSMASK 0x3fL
+FILEFLAGS 0x0L
+FILEOS 0x40004L
+FILETYPE 0x1L
+FILESUBTYPE 0x0L
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "040904B0"
+    BEGIN
+      VALUE "CompanyName", "Heroes Like"
+      VALUE "FileDescription", "Heroes Like"
+      VALUE "FileVersion", "{numeric_version}"
+      VALUE "ProductName", "Heroes Like"
+      VALUE "ProductVersion", "{numeric_version}"
+    END
+  END
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x0409, 1200
+  END
+END
+''',
+            encoding="ascii",
+        )
+        subprocess.run(
+            ["x86_64-w64-mingw32-windres", str(resource_path), str(object_path)],
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        subprocess.run(
+            [
+                "x86_64-w64-mingw32-gcc",
+                "-Os",
+                "-s",
+                "-mwindows",
+                "-Wl,--no-insert-timestamp",
+                str(source_path),
+                str(object_path),
+                "-o",
+                str(windows / "heroes-like.exe"),
+            ],
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        source_path.unlink()
+        resource_path.unlink()
+        object_path.unlink()
+        pe = (windows / "heroes-like.exe").read_bytes()
         (windows / "heroes-like.pck").write_bytes(b"GDPC" + (b"P" * 128))
         (windows / "aurelion_map_persistence.windows.template_release.x86_64.dll").write_bytes(pe)
 
@@ -148,6 +205,49 @@ class ReleaseArtifactVerificationTest(unittest.TestCase):
                 manifest,
             )
         return captured["script"], captured["ownership"], manifest
+
+    def test_windows_version_mapping_and_pe_resource_verification_fail_closed(self) -> None:
+        self.assertEqual(package_release_module.windows_numeric_version("1.2.3-alpha.4"), "1.2.3.1004")
+        self.assertEqual(package_release_module.windows_numeric_version("1.2.3-beta.4"), "1.2.3.2004")
+        self.assertEqual(package_release_module.windows_numeric_version("1.2.3-rc.4"), "1.2.3.3004")
+        self.assertEqual(package_release_module.windows_numeric_version("1.2.3"), "1.2.3.65535")
+        for invalid in ("1.2", "1.2.3-preview.1", "1.2.3-alpha", "65536.0.0", "1.2.3-alpha.64536"):
+            with self.subTest(version=invalid):
+                with self.assertRaises(ValueError):
+                    package_release_module.windows_numeric_version(invalid)
+
+        expected_numeric = package_release_module.windows_numeric_version(VERSION)
+        exe_path = self.output / "exports" / "windows-x86_64" / "heroes-like.exe"
+        resource = package_release_module.verify_windows_pe_version(exe_path, VERSION)
+        self.assertEqual(resource["file_version"], expected_numeric)
+        self.assertEqual(resource["product_version"], expected_numeric)
+        self.assertEqual(resource["strings"]["FileVersion"], expected_numeric)
+        self.assertEqual(resource["strings"]["ProductVersion"], expected_numeric)
+        self.assertEqual(resource["strings"]["ProductName"], "Heroes Like")
+        self.assertEqual(resource["strings"]["FileDescription"], "Heroes Like")
+        self.assertEqual(
+            package_release_module.validate_windows_export_preset_version(VERSION),
+            expected_numeric,
+        )
+
+        stale_preset_root = Path(self.temp.name) / "stale-preset"
+        stale_preset_root.mkdir()
+        (stale_preset_root / "export_presets.cfg").write_text(
+            'application/file_version="1.0.0.0"\napplication/product_version="1.0.0.0"\n',
+            encoding="utf-8",
+        )
+        with mock.patch.object(package_release_module, "ROOT", stale_preset_root):
+            with self.assertRaisesRegex(RuntimeError, "must equal"):
+                package_release_module.validate_windows_export_preset_version(VERSION)
+
+        tampered = exe_path.with_name("tampered-version.exe")
+        original_pe = exe_path.read_bytes()
+        tampered.write_bytes(
+            original_pe.replace(expected_numeric.encode("utf-16le"), b"9\x00" * len(expected_numeric))
+            + original_pe
+        )
+        with self.assertRaisesRegex(RuntimeError, "version"):
+            package_release_module.verify_windows_pe_version(tampered, VERSION)
 
     def test_generated_archives_verify_and_tampering_is_rejected(self) -> None:
         self._package()
@@ -416,6 +516,15 @@ class ReleaseArtifactVerificationTest(unittest.TestCase):
     def test_generated_nsis_uses_verified_transaction_and_owned_uninstall(self) -> None:
         script, ownership, manifest = self._generated_nsis_sources()
         required_script_tokens = (
+            f'VIProductVersion "{package_release_module.windows_numeric_version(VERSION)}"',
+            f'VIAddVersionKey /LANG=1033 "FileVersion" "{package_release_module.windows_numeric_version(VERSION)}"',
+            f'VIAddVersionKey /LANG=1033 "ProductVersion" "{package_release_module.windows_numeric_version(VERSION)}"',
+            'VIAddVersionKey /LANG=1033 "ProductName" "Heroes Like"',
+            'VIAddVersionKey /LANG=1033 "FileDescription" "Heroes Like"',
+            "SetCompressor zlib",
+            "SetCompress off",
+            "CRCCheck off",
+            "CRCCheck off",
             'SetOutPath "$PLUGINSDIR\\payload"',
             "heroes-like-installer-helper.exe",
             "!insertmacro VERIFY_FILE",
@@ -431,17 +540,115 @@ class ReleaseArtifactVerificationTest(unittest.TestCase):
             'release-manifest.json .heroes-like-install install-ownership.ini uninstall.exe',
             'FileWrite $TxHandle "heroes-like-user-local-install-v1',
             'CreateShortcut "$SMPROGRAMS\\Heroes Like\\Heroes Like.lnk"',
+            'CreateShortcut "$SMPROGRAMS\\Heroes Like\\Uninstall Heroes Like.lnk"',
+            "Function SnapshotRegistration",
+            "Function RestoreRegistration",
+            "Function PublishRegistration",
+            "Call SnapshotRegistration",
+            "Call SnapshotShortcuts",
+            "Call PublishRegistration",
+            "Call RestoreRegistration",
+            "Call RestoreShortcuts",
+            'WriteRegStr HKCU "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Heroes Like" "DisplayName" "Heroes Like"',
+            f'WriteRegStr HKCU "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Heroes Like" "DisplayVersion" "{VERSION}"',
+            'WriteRegStr HKCU "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Heroes Like" "Publisher" "Heroes Like"',
+            'WriteRegStr HKCU "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Heroes Like" "DisplayIcon" \'"$INSTDIR\\heroes-like.exe",0\'',
+            'WriteRegStr HKCU "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Heroes Like" "UninstallString" \'"$INSTDIR\\uninstall.exe"\'',
+            'WriteRegStr HKCU "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Heroes Like" "QuietUninstallString" \'"$INSTDIR\\uninstall.exe" /S\'',
+            'WriteRegDWORD HKCU "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Heroes Like" "NoModify" 1',
+            'WriteRegDWORD HKCU "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Heroes Like" "NoRepair" 1',
+            "registration_publish_failed:",
             'SetOutPath "$TEMP"',
         )
         for token in required_script_tokens:
             self.assertIn(token, script)
+        for function_name in ("VerifyOwnedRoot", "un.VerifyOwnedRoot"):
+            function = script.split(f"Function {function_name}\n", 1)[1].split("FunctionEnd", 1)[0]
+            self.assertIn('verify_owned_invalid:\n  StrCpy $TxActual "invalid"', function)
+            self.assertEqual(function.count('StrCpy $TxActual "ok"'), 1)
+            conditional_done_branches = [
+                line.strip()
+                for line in function.splitlines()
+                if line.strip().startswith(("StrCmp ", "IntCmp ", "IfFileExists ", "IfErrors "))
+                and "verify_owned_done" in line
+            ]
+            self.assertEqual(conditional_done_branches, [], msg=function)
+        for function_name, label in (
+            ("LegacyKeyExists", "legacy_key_exists"),
+            ("ArpKeyExists", "arp_key_exists"),
+            ("un.ArpKeyExists", "arp_key_exists"),
+        ):
+            function = script.split(f"Function {function_name}\n", 1)[1].split("FunctionEnd", 1)[0]
+            bounded = f"IntCmp $TxIndex 4096 {label}_done {label}_query {label}_done"
+            empty_done = f'StrCmp $TxName "" {label}_done'
+            self.assertIn(bounded, function)
+            self.assertIn(empty_done, function)
+            self.assertLess(function.index(bounded), function.index("EnumRegKey"))
+            self.assertLess(function.index("EnumRegKey"), function.index(empty_done))
         self.assertLess(script.index("staged_verification_failed"), script.index('Rename "$INSTDIR" "$2"'))
         self.assertLess(script.index('Rename "$1" "$INSTDIR"'), script.index("CreateShortcut"))
-        self.assertIn('CopyFiles /SILENT "$PLUGINSDIR\\payload\\README.txt" "$1"', script)
-        self.assertNotIn('CopyFiles /SILENT "$PLUGINSDIR\\payload\\README.txt" "$1\\README.txt"', script)
-        self.assertIn('commit_candidate_failed_0:\n  RMDir /r "$1"', script)
+        self.assertLess(script.index("Call SnapshotRegistration"), script.index('Rename "$INSTDIR" "$2"'))
+        publish_index = script.index("Call PublishRegistration")
+        self.assertLess(publish_index, script.index('RMDir /r "$2"', publish_index))
+        publication_failure = script.split("registration_publish_failed:", 1)[1].split("commit_failed:", 1)[0]
+        self.assertIn("Call RestoreShortcuts", publication_failure)
+        self.assertIn("Call RestoreRegistration", publication_failure)
+        install_section = script.split('Section "Install"', 1)[1].split("SectionEnd", 1)[0]
+        pre_prior = install_section.split("prior_verified:", 1)[0]
+        staged_file_lines = [line.strip() for line in pre_prior.splitlines() if line.strip().startswith("File ")]
+        self.assertEqual(len(staged_file_lines), 1, msg=pre_prior)
+        self.assertIn("heroes-like-installer-helper.exe", staged_file_lines[0])
+        self.assertNotIn("CopyFiles", install_section)
+        candidate_out = install_section.index('SetOutPath "$1"')
+        self.assertLess(install_section.index("Call SnapshotRegistration"), candidate_out)
+        self.assertLess(install_section.index("Call SnapshotShortcuts"), candidate_out)
+        self.assertLess(install_section.index('RMDir /r "$INSTDIR.backup"'), candidate_out)
+        candidate_tail = install_section[candidate_out:]
+        for payload_name in [*(str(row["path"]) for row in manifest["files"]), "release-manifest.json"]:
+            direct_file = f"File /oname={payload_name} "
+            direct_index = candidate_tail.index(direct_file)
+            following = candidate_tail[direct_index:].splitlines()[:2]
+            self.assertEqual(following[1].strip(), "IfErrors commit_candidate_metadata_failed")
+        candidate_verify = 'verify "$1\\release-manifest.json" "$1" windows-x86_64 release-manifest.json .heroes-like-install install-ownership.ini uninstall.exe'
+        self.assertIn(candidate_verify, script)
+        candidate_verify_index = script.index(candidate_verify)
+        leave_candidate_index = script.index('SetOutPath "$TEMP"', candidate_verify_index)
+        self.assertLess(candidate_verify_index, leave_candidate_index)
+        self.assertLess(leave_candidate_index, script.index('ReadEnvStr $3 "HEROES_LIKE_INSTALL_FAIL_PHASE"'))
+        self.assertLess(script.index(candidate_verify), script.index('Rename "$INSTDIR" "$2"'))
+        self.assertNotIn("VERIFY_FILE_SIZE", script)
+        self.assertNotIn("commit_candidate_failed_", script)
+        registry_lookup_contracts = (
+            ("LegacyKeyExists", "legacy_key_exists"),
+            ("ArpKeyExists", "arp_key_exists"),
+            ("un.ArpKeyExists", "arp_key_exists"),
+        )
+        for function_name, label_prefix in registry_lookup_contracts:
+            function = script.split(f"Function {function_name}\n", 1)[1].split("FunctionEnd", 1)[0]
+            self.assertIn(
+                f"IntCmp $TxIndex 4096 {label_prefix}_done {label_prefix}_query {label_prefix}_done",
+                function,
+            )
+            self.assertIn(f'StrCmp $TxName "" {label_prefix}_done', function)
+        self.assertIn('commit_candidate_metadata_failed:\n  SetOutPath "$TEMP"\n  RMDir /r "$1"', script)
+        live_probe = 'IfFileExists "$INSTDIR\\*.*" prior_live_root'
+        backup_content_probe = 'IfFileExists "$INSTDIR.backup\\*.*" recovery_backup_refused'
+        backup_path_probe = 'IfFileExists "$INSTDIR.backup" recovery_backup_refused'
+        self.assertLess(script.index(live_probe), script.index(backup_content_probe))
+        self.assertLess(script.index(backup_content_probe), script.index(backup_path_probe))
+        self.assertLess(script.index(backup_path_probe), script.index("prior_verified:"))
+        self.assertLess(script.index("prior_verified:"), script.index('RMDir /r "$INSTDIR.backup"'))
+        recovery_refusal = script.split("recovery_backup_refused:", 1)[1].split("install_done:", 1)[0]
+        self.assertIn("the backup was preserved", recovery_refusal)
+        self.assertIn("SetErrorLevel 30", recovery_refusal)
+        self.assertNotIn("RMDir", recovery_refusal)
+        self.assertNotIn("Delete", recovery_refusal)
+        self.assertNotIn("Rename", recovery_refusal)
         uninstall = script.split('Section "Uninstall"', 1)[1]
         self.assertLess(uninstall.index("Call un.VerifyOwnedRoot"), uninstall.index('Delete "$INSTDIR'))
+        self.assertLess(uninstall.index('RMDir "$INSTDIR"'), uninstall.index('DeleteRegKey HKCU "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Heroes Like"'))
+        self.assertIn("SetRegView 64", uninstall)
+        self.assertIn('Delete "$SMPROGRAMS\\Heroes Like\\Uninstall Heroes Like.lnk"', uninstall)
         self.assertNotIn('RMDir /r "$INSTDIR"', uninstall)
         self.assertIn("Schema=heroes-like-windows-install-ownership-v1", ownership)
         self.assertIn("Marker=heroes-like-user-local-install-v1", ownership)

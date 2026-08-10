@@ -9,6 +9,7 @@ import os
 import re
 import shutil
 import stat
+import struct
 import subprocess
 import sys
 import tarfile
@@ -31,6 +32,15 @@ MAX_ARCHIVE_PAYLOAD_BYTES = 4 * 1024 * 1024 * 1024
 INSTALLER_ROOT = ROOT / "packaging" / "installers"
 WINDOWS_INSTALLER_HELPER_SOURCE = ROOT / "tools" / "windows_installer_helper.c"
 WINDOWS_INSTALLER_HELPER_NAME = "heroes-like-installer-helper.exe"
+WINDOWS_UNINSTALL_REGISTRY_PARENT = r"Software\Microsoft\Windows\CurrentVersion\Uninstall"
+WINDOWS_UNINSTALL_REGISTRY_KEY = r"Software\Microsoft\Windows\CurrentVersion\Uninstall\Heroes Like"
+WINDOWS_PRODUCT_NAME = "Heroes Like"
+WINDOWS_PUBLISHER = "Heroes Like"
+WINDOWS_VERSION_CHANNEL_BASES = {
+    "alpha": 1000,
+    "beta": 2000,
+    "rc": 3000,
+}
 
 
 @dataclass(frozen=True)
@@ -95,6 +105,252 @@ def safe_version(value: str) -> str:
     if not re.fullmatch(r"[0-9A-Za-z][0-9A-Za-z._+-]*", normalized):
         raise ValueError(f"invalid release version: {value!r}")
     return normalized
+
+
+def windows_numeric_version(value: str) -> str:
+    """Map the canonical release SemVer to an ordered Windows four-part version."""
+    normalized = safe_version(value)
+    match = re.fullmatch(
+        r"(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(?:-(alpha|beta|rc)\.([1-9][0-9]*))?",
+        normalized,
+    )
+    if match is None:
+        raise ValueError(f"unsupported Windows release version: {value!r}")
+    major, minor, patch = (int(match.group(index)) for index in range(1, 4))
+    if any(part > 65535 for part in (major, minor, patch)):
+        raise ValueError(f"Windows release version component exceeds 65535: {value!r}")
+    channel = match.group(4)
+    if channel is None:
+        revision = 65535
+    else:
+        sequence = int(match.group(5))
+        if sequence > 999:
+            raise ValueError(f"Windows prerelease sequence exceeds 999: {value!r}")
+        revision = WINDOWS_VERSION_CHANNEL_BASES[channel] + sequence
+    return f"{major}.{minor}.{patch}.{revision}"
+
+
+def _aligned_offset(offset: int) -> int:
+    return (offset + 3) & ~3
+
+
+def _decode_utf16_key(data: bytes, offset: int, limit: int) -> tuple[str, int]:
+    cursor = offset
+    while cursor + 1 < limit and data[cursor : cursor + 2] != b"\x00\x00":
+        cursor += 2
+    if cursor + 1 >= limit:
+        raise ValueError("unterminated PE version-resource key")
+    return data[offset:cursor].decode("utf-16le"), cursor + 2
+
+
+def _read_windows_version_block(data: bytes, offset: int, limit: int) -> dict[str, object]:
+    if offset + 6 > limit:
+        raise ValueError("truncated PE version-resource block")
+    length, value_length, value_type = struct.unpack_from("<HHH", data, offset)
+    block_end = offset + length
+    if length < 6 or block_end > limit:
+        raise ValueError("invalid PE version-resource block length")
+    key, key_end = _decode_utf16_key(data, offset + 6, block_end)
+    value_offset = _aligned_offset(key_end)
+    value_size = value_length * 2 if value_type == 1 else value_length
+    value_end = value_offset + value_size
+    if value_end > block_end:
+        raise ValueError("invalid PE version-resource value length")
+    children = []
+    cursor = _aligned_offset(value_end)
+    while cursor + 6 <= block_end:
+        child_length = int.from_bytes(data[cursor : cursor + 2], "little")
+        if child_length == 0:
+            break
+        child = _read_windows_version_block(data, cursor, block_end)
+        children.append(child)
+        cursor = _aligned_offset(cursor + child_length)
+    return {
+        "key": key,
+        "value_length": value_length,
+        "value_type": value_type,
+        "value_offset": value_offset,
+        "value_end": value_end,
+        "children": children,
+    }
+
+
+def _windows_version_quad(ms: int, ls: int) -> str:
+    return f"{ms >> 16}.{ms & 0xFFFF}.{ls >> 16}.{ls & 0xFFFF}"
+
+
+def _pe_rva_to_offset(data: bytes, section_table: int, section_count: int, rva: int, size: int) -> int:
+    for index in range(section_count):
+        section = section_table + index * 40
+        if section + 40 > len(data):
+            break
+        virtual_size, virtual_address, raw_size, raw_offset = struct.unpack_from("<IIII", data, section + 8)
+        mapped_size = max(virtual_size, raw_size)
+        if virtual_address <= rva and rva + size <= virtual_address + mapped_size:
+            delta = rva - virtual_address
+            offset = raw_offset + delta
+            if delta + size <= raw_size and offset + size <= len(data):
+                return offset
+    raise ValueError(f"PE RVA 0x{rva:x} is not backed by a section")
+
+
+def _pe_resource_entries(data: bytes, resource_root: int, directory_offset: int, resource_limit: int) -> list[tuple[int, int]]:
+    directory = resource_root + directory_offset
+    if directory < resource_root or directory + 16 > resource_limit:
+        raise ValueError("PE resource directory is out of bounds")
+    named_count, id_count = struct.unpack_from("<HH", data, directory + 12)
+    count = named_count + id_count
+    entries_offset = directory + 16
+    if entries_offset + count * 8 > resource_limit:
+        raise ValueError("PE resource entries are out of bounds")
+    return [struct.unpack_from("<II", data, entries_offset + index * 8) for index in range(count)]
+
+
+def _pe_version_resource_blob(path: Path) -> bytes:
+    data = path.read_bytes()
+    if len(data) < 0x40 or data[:2] != b"MZ":
+        raise ValueError("missing DOS header")
+    pe_offset = int.from_bytes(data[0x3C:0x40], "little")
+    if pe_offset + 24 > len(data) or data[pe_offset : pe_offset + 4] != b"PE\x00\x00":
+        raise ValueError("missing PE header")
+    section_count = int.from_bytes(data[pe_offset + 6 : pe_offset + 8], "little")
+    optional_size = int.from_bytes(data[pe_offset + 20 : pe_offset + 22], "little")
+    optional = pe_offset + 24
+    if optional + optional_size > len(data):
+        raise ValueError("truncated PE optional header")
+    magic = int.from_bytes(data[optional : optional + 2], "little")
+    if magic == 0x20B:
+        directory_offset = optional + 112
+    elif magic == 0x10B:
+        directory_offset = optional + 96
+    else:
+        raise ValueError("unsupported PE optional-header format")
+    resource_entry = directory_offset + 2 * 8
+    if resource_entry + 8 > optional + optional_size:
+        raise ValueError("PE resource data directory is missing")
+    resource_rva, resource_size = struct.unpack_from("<II", data, resource_entry)
+    if resource_rva == 0 or resource_size < 16:
+        raise ValueError("PE resource directory is empty")
+    section_table = optional + optional_size
+    resource_root = _pe_rva_to_offset(data, section_table, section_count, resource_rva, resource_size)
+    resource_limit = resource_root + resource_size
+
+    type_entries = [
+        entry
+        for entry in _pe_resource_entries(data, resource_root, 0, resource_limit)
+        if entry[0] & 0x80000000 == 0 and entry[0] & 0xFFFF == 16
+    ]
+    if len(type_entries) != 1 or type_entries[0][1] & 0x80000000 == 0:
+        raise ValueError("PE must contain exactly one RT_VERSION resource directory")
+    name_directory = type_entries[0][1] & 0x7FFFFFFF
+    name_entries = _pe_resource_entries(data, resource_root, name_directory, resource_limit)
+    if len(name_entries) != 1 or name_entries[0][1] & 0x80000000 == 0:
+        raise ValueError("PE RT_VERSION must contain exactly one name entry")
+    language_directory = name_entries[0][1] & 0x7FFFFFFF
+    language_entries = _pe_resource_entries(data, resource_root, language_directory, resource_limit)
+    if len(language_entries) != 1 or language_entries[0][1] & 0x80000000:
+        raise ValueError("PE RT_VERSION must contain exactly one language entry")
+    data_entry = resource_root + language_entries[0][1]
+    if data_entry < resource_root or data_entry + 16 > resource_limit:
+        raise ValueError("PE RT_VERSION data entry is out of bounds")
+    version_rva, version_size = struct.unpack_from("<II", data, data_entry)
+    if version_size < 6 or version_size > resource_size:
+        raise ValueError("PE RT_VERSION payload size is invalid")
+    version_offset = _pe_rva_to_offset(data, section_table, section_count, version_rva, version_size)
+    return data[version_offset : version_offset + version_size]
+
+
+def read_windows_version_resource(path: Path) -> dict[str, object]:
+    try:
+        data = _pe_version_resource_blob(path)
+        root = _read_windows_version_block(data, 0, len(data))
+    except (OSError, UnicodeDecodeError, ValueError) as exc:
+        raise RuntimeError(f"Windows PE version resource is invalid: {path.name}: {exc}") from exc
+    if root.get("key") != "VS_VERSION_INFO":
+        raise RuntimeError(f"Windows PE version resource root is invalid: {path.name}")
+    fixed_offset = int(root["value_offset"])
+    fixed_end = int(root["value_end"])
+    if fixed_end - fixed_offset < 52:
+        raise RuntimeError(f"Windows PE fixed version info is missing: {path.name}")
+    fixed = struct.unpack_from("<13I", data, fixed_offset)
+    if fixed[0] != 0xFEEF04BD:
+        raise RuntimeError(f"Windows PE fixed version signature is invalid: {path.name}")
+    strings: dict[str, str] = {}
+
+    def collect(block: dict[str, object]) -> None:
+        key = str(block.get("key", ""))
+        if int(block.get("value_type", 0)) == 1 and int(block.get("value_length", 0)) > 0:
+            start = int(block["value_offset"])
+            end = int(block["value_end"])
+            value = data[start:end].decode("utf-16le").rstrip("\x00")
+            if key in strings and strings[key] != value:
+                raise RuntimeError(f"Windows PE version resource has conflicting {key} strings: {path.name}")
+            strings[key] = value
+        for child in block.get("children", []):
+            collect(child)
+
+    collect(root)
+    return {
+        "file_version": _windows_version_quad(fixed[2], fixed[3]),
+        "product_version": _windows_version_quad(fixed[4], fixed[5]),
+        "strings": strings,
+    }
+
+
+def verify_windows_pe_version(
+    path: Path,
+    semantic_version: str,
+    string_version: str | None = None,
+    product_name: str = WINDOWS_PRODUCT_NAME,
+    file_description: str = WINDOWS_PRODUCT_NAME,
+) -> dict[str, object]:
+    expected = windows_numeric_version(semantic_version)
+    expected_string = expected if string_version is None else string_version
+    result = read_windows_version_resource(path)
+    strings = result.get("strings", {})
+    if result.get("file_version") != expected or result.get("product_version") != expected:
+        raise RuntimeError(f"Windows PE fixed version mismatch for {path.name}: expected {expected}, got {result}")
+    if strings.get("FileVersion") != expected_string or strings.get("ProductVersion") != expected_string:
+        raise RuntimeError(
+            f"Windows PE string version mismatch for {path.name}: expected {expected_string}, got {strings}"
+        )
+    if strings.get("ProductName") != product_name or strings.get("FileDescription") != file_description:
+        raise RuntimeError(f"Windows PE product identity mismatch for {path.name}: {strings}")
+    return result
+
+
+def validate_windows_export_preset_version(semantic_version: str) -> str:
+    expected = windows_numeric_version(semantic_version)
+    preset_text = (ROOT / "export_presets.cfg").read_text(encoding="utf-8")
+    preset_headers = list(re.finditer(r"(?m)^\[preset\.([0-9]+)\]\s*$", preset_text))
+    windows_ids: list[str] = []
+    for header in preset_headers:
+        next_header = re.search(r"(?m)^\[", preset_text[header.end() :])
+        body_end = header.end() + next_header.start() if next_header is not None else len(preset_text)
+        body = preset_text[header.end() : body_end]
+        if re.search(r'(?m)^name="Windows Release"\s*$', body):
+            windows_ids.append(header.group(1))
+    if len(windows_ids) != 1:
+        raise RuntimeError(f"Windows export preset application/file_version must equal {expected}")
+    options_match = re.search(
+        rf"(?ms)^\[preset\.{windows_ids[0]}\.options\]\s*$(.*?)(?=^\[|\Z)",
+        preset_text,
+    )
+    if options_match is None:
+        raise RuntimeError(f"Windows export preset application/file_version must equal {expected}")
+    options = options_match.group(1)
+    required = {
+        "application/file_version": expected,
+        "application/product_version": expected,
+        "application/company_name": WINDOWS_PUBLISHER,
+        "application/product_name": WINDOWS_PRODUCT_NAME,
+        "application/file_description": WINDOWS_PRODUCT_NAME,
+        "application/copyright": "Copyright 2026 Heroes Like contributors",
+    }
+    for key, value in required.items():
+        if re.search(rf'(?m)^{re.escape(key)}="{re.escape(value)}"\s*$', options) is None:
+            raise RuntimeError(f"Windows export preset {key} must equal {value}")
+    return expected
 
 
 def safe_source_revision(value: str) -> str:
@@ -190,7 +446,7 @@ def export_platform(spec: PlatformSpec, export_dir: Path, godot: str) -> None:
     )
 
 
-def validate_platform_files(spec: PlatformSpec, export_dir: Path) -> list[Path]:
+def validate_platform_files(spec: PlatformSpec, export_dir: Path, version: str) -> list[Path]:
     files = sorted(path for path in export_dir.rglob("*") if path.is_file())
     relative_names = [path.relative_to(export_dir).as_posix() for path in files]
     if relative_names != sorted(spec.required_names):
@@ -206,6 +462,8 @@ def validate_platform_files(spec: PlatformSpec, export_dir: Path) -> list[Path]:
         binary.chmod(binary.stat().st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
     verify_binary_header(spec, binary.read_bytes()[:4096], spec.binary_name)
     verify_binary_header(spec, native.read_bytes()[:4096], spec.native_name)
+    if spec.platform_id.startswith("windows"):
+        verify_windows_pe_version(binary, version)
     return files
 
 
@@ -235,7 +493,7 @@ def stage_platform(
     bundle_name = f"{PRODUCT_ID}-{version}-{spec.platform_id}"
     bundle_root = stage_dir / bundle_name
     bundle_root.mkdir(parents=True)
-    source_files = validate_platform_files(spec, export_dir)
+    source_files = validate_platform_files(spec, export_dir, version)
     for source in source_files:
         shutil.copy2(source, bundle_root / source.name)
     (bundle_root / "README.txt").write_text(release_readme(spec, version), encoding="utf-8", newline="\n")
@@ -406,8 +664,17 @@ def create_windows_nsis_installer(
 ) -> None:
     if not makensis:
         raise RuntimeError("makensis is required to build the Windows setup executable")
+    numeric_version = windows_numeric_version(version)
+    arp_parent = nsis_string(WINDOWS_UNINSTALL_REGISTRY_PARENT)
+    arp_key = nsis_string(WINDOWS_UNINSTALL_REGISTRY_KEY)
     payload_rows = windows_nsis_payload_rows(bundle_root, platform_manifest)
     payload_names = [str(row["path"]) for row in payload_rows]
+    helper_row = next(
+        (row for row in payload_rows if str(row["path"]) == WINDOWS_INSTALLER_HELPER_NAME),
+        None,
+    )
+    if helper_row is None:
+        raise RuntimeError("Windows setup payload is missing the installer helper")
     script_path = bundle_root.parent / "heroes-like-installer.nsi"
     ownership_path = bundle_root.parent / "heroes-like-ownership.ini"
     ownership_lines = [
@@ -430,32 +697,26 @@ def create_windows_nsis_installer(
     ownership_size = ownership_path.stat().st_size
     ownership_sha256 = sha256(ownership_path)
     file_rows = "\n".join(
-        f'  File /oname={nsis_string(name)} "{nsis_string(str(bundle_root / name))}"'
+        f'  File /oname={nsis_string(name)} "{nsis_string(str(bundle_root / name))}"\n'
+        "  IfErrors commit_candidate_metadata_failed"
         for name in payload_names
-    )
-    verify_stage_rows = "\n".join(
-        f'  !insertmacro VERIFY_FILE "$PLUGINSDIR\\payload" "{nsis_string(str(row["path"]))}" "{row["size_bytes"]}" "{row["sha256"]}" staged_verification_failed'
-        for row in payload_rows
-    )
-    copy_commit_rows = "\n".join(
-        f'  CopyFiles /SILENT "$PLUGINSDIR\\payload\\{nsis_string(str(row["path"]))}" "$1"'
-        for row in payload_rows
-    )
-    verify_commit_rows = "\n".join(
-        f'  !insertmacro VERIFY_FILE "$1" "{nsis_string(str(row["path"]))}" "{row["size_bytes"]}" "{row["sha256"]}" commit_candidate_failed_{index}'
-        for index, row in enumerate(payload_rows)
-    )
-    commit_candidate_failure_labels = "\n".join(
-        f"commit_candidate_failed_{index}:\n  RMDir /r \"$1\"\n  SetErrorLevel {40 + index}\n  Quit"
-        for index in range(len(payload_rows))
     )
     script = f"""Unicode True
 !include "LogicLib.nsh"
 Name "heroes-like {nsis_string(version)}"
 OutFile "{nsis_string(str(destination))}"
+VIProductVersion "{numeric_version}"
+VIAddVersionKey /LANG=1033 "FileVersion" "{numeric_version}"
+VIAddVersionKey /LANG=1033 "ProductVersion" "{numeric_version}"
+VIAddVersionKey /LANG=1033 "ProductName" "{WINDOWS_PRODUCT_NAME}"
+VIAddVersionKey /LANG=1033 "FileDescription" "{WINDOWS_PRODUCT_NAME}"
+VIAddVersionKey /LANG=1033 "CompanyName" "{WINDOWS_PUBLISHER}"
+VIAddVersionKey /LANG=1033 "LegalCopyright" "Copyright 2026 Heroes Like contributors"
 InstallDir "$LOCALAPPDATA\\Heroes Like"
 RequestExecutionLevel user
-SetCompressor /SOLID lzma
+SetCompressor zlib
+SetCompress off
+CRCCheck off
 SetDateSave off
 SilentInstall normal
 SilentUnInstall normal
@@ -470,6 +731,33 @@ Var TxIndex
 Var TxCount
 Var TxName
 Var TxFind
+Var RegistrationResult
+Var ArpKeyPresent
+Var LegacyKeyPresent
+Var LegacyOwnershipSha
+Var LegacyOwnershipShaPresent
+Var LegacyOwnershipSize
+Var LegacyOwnershipSizePresent
+Var ArpDisplayName
+Var ArpDisplayNamePresent
+Var ArpDisplayVersion
+Var ArpDisplayVersionPresent
+Var ArpPublisher
+Var ArpPublisherPresent
+Var ArpInstallLocation
+Var ArpInstallLocationPresent
+Var ArpDisplayIcon
+Var ArpDisplayIconPresent
+Var ArpUninstallString
+Var ArpUninstallStringPresent
+Var ArpQuietUninstallString
+Var ArpQuietUninstallStringPresent
+Var ArpNoModify
+Var ArpNoModifyPresent
+Var ArpNoRepair
+Var ArpNoRepairPresent
+Var GameShortcutPresent
+Var UninstallShortcutPresent
 
 !macro VERIFY_FILE ROOT NAME SIZE HASH FAILURE
   StrCpy $TxPath "${{ROOT}}\\${{NAME}}"
@@ -479,6 +767,195 @@ Var TxFind
   StrCmp $TxActual "ok" +2
   Goto ${{FAILURE}}
 !macroend
+
+!macro SNAPSHOT_REG_STR ROOT KEY NAME VALUE PRESENT
+  StrCpy ${{PRESENT}} "0"
+  ClearErrors
+  ReadRegStr ${{VALUE}} ${{ROOT}} "${{KEY}}" "${{NAME}}"
+  IfErrors +2
+  StrCpy ${{PRESENT}} "1"
+!macroend
+
+!macro SNAPSHOT_REG_DWORD ROOT KEY NAME VALUE PRESENT
+  StrCpy ${{PRESENT}} "0"
+  ClearErrors
+  ReadRegDWORD ${{VALUE}} ${{ROOT}} "${{KEY}}" "${{NAME}}"
+  IfErrors +2
+  StrCpy ${{PRESENT}} "1"
+!macroend
+
+!macro RESTORE_REG_STR ROOT KEY NAME VALUE PRESENT
+  DeleteRegValue ${{ROOT}} "${{KEY}}" "${{NAME}}"
+  StrCmp ${{PRESENT}} "1" 0 +2
+  WriteRegStr ${{ROOT}} "${{KEY}}" "${{NAME}}" ${{VALUE}}
+!macroend
+
+!macro RESTORE_REG_DWORD ROOT KEY NAME VALUE PRESENT
+  DeleteRegValue ${{ROOT}} "${{KEY}}" "${{NAME}}"
+  StrCmp ${{PRESENT}} "1" 0 +2
+  WriteRegDWORD ${{ROOT}} "${{KEY}}" "${{NAME}}" ${{VALUE}}
+!macroend
+
+Function SnapshotRegistration
+  SetRegView 32
+  Call LegacyKeyExists
+  StrCpy $LegacyKeyPresent $TxActual
+  !insertmacro SNAPSHOT_REG_STR HKCU "Software\\Heroes Like" "OwnershipSha256" $LegacyOwnershipSha $LegacyOwnershipShaPresent
+  !insertmacro SNAPSHOT_REG_STR HKCU "Software\\Heroes Like" "OwnershipSize" $LegacyOwnershipSize $LegacyOwnershipSizePresent
+  SetRegView 64
+  Call ArpKeyExists
+  StrCpy $ArpKeyPresent $TxActual
+  !insertmacro SNAPSHOT_REG_STR HKCU "{arp_key}" "DisplayName" $ArpDisplayName $ArpDisplayNamePresent
+  !insertmacro SNAPSHOT_REG_STR HKCU "{arp_key}" "DisplayVersion" $ArpDisplayVersion $ArpDisplayVersionPresent
+  !insertmacro SNAPSHOT_REG_STR HKCU "{arp_key}" "Publisher" $ArpPublisher $ArpPublisherPresent
+  !insertmacro SNAPSHOT_REG_STR HKCU "{arp_key}" "InstallLocation" $ArpInstallLocation $ArpInstallLocationPresent
+  !insertmacro SNAPSHOT_REG_STR HKCU "{arp_key}" "DisplayIcon" $ArpDisplayIcon $ArpDisplayIconPresent
+  !insertmacro SNAPSHOT_REG_STR HKCU "{arp_key}" "UninstallString" $ArpUninstallString $ArpUninstallStringPresent
+  !insertmacro SNAPSHOT_REG_STR HKCU "{arp_key}" "QuietUninstallString" $ArpQuietUninstallString $ArpQuietUninstallStringPresent
+  !insertmacro SNAPSHOT_REG_DWORD HKCU "{arp_key}" "NoModify" $ArpNoModify $ArpNoModifyPresent
+  !insertmacro SNAPSHOT_REG_DWORD HKCU "{arp_key}" "NoRepair" $ArpNoRepair $ArpNoRepairPresent
+  SetRegView 32
+FunctionEnd
+
+Function RestoreRegistration
+  SetRegView 32
+  !insertmacro RESTORE_REG_STR HKCU "Software\\Heroes Like" "OwnershipSha256" $LegacyOwnershipSha $LegacyOwnershipShaPresent
+  !insertmacro RESTORE_REG_STR HKCU "Software\\Heroes Like" "OwnershipSize" $LegacyOwnershipSize $LegacyOwnershipSizePresent
+  StrCmp $LegacyKeyPresent "1" +2
+  DeleteRegKey HKCU "Software\\Heroes Like"
+  SetRegView 64
+  StrCmp $ArpKeyPresent "1" restore_arp_values
+  DeleteRegKey HKCU "{arp_key}"
+  Goto restore_registration_done
+restore_arp_values:
+  !insertmacro RESTORE_REG_STR HKCU "{arp_key}" "DisplayName" $ArpDisplayName $ArpDisplayNamePresent
+  !insertmacro RESTORE_REG_STR HKCU "{arp_key}" "DisplayVersion" $ArpDisplayVersion $ArpDisplayVersionPresent
+  !insertmacro RESTORE_REG_STR HKCU "{arp_key}" "Publisher" $ArpPublisher $ArpPublisherPresent
+  !insertmacro RESTORE_REG_STR HKCU "{arp_key}" "InstallLocation" $ArpInstallLocation $ArpInstallLocationPresent
+  !insertmacro RESTORE_REG_STR HKCU "{arp_key}" "DisplayIcon" $ArpDisplayIcon $ArpDisplayIconPresent
+  !insertmacro RESTORE_REG_STR HKCU "{arp_key}" "UninstallString" $ArpUninstallString $ArpUninstallStringPresent
+  !insertmacro RESTORE_REG_STR HKCU "{arp_key}" "QuietUninstallString" $ArpQuietUninstallString $ArpQuietUninstallStringPresent
+  !insertmacro RESTORE_REG_DWORD HKCU "{arp_key}" "NoModify" $ArpNoModify $ArpNoModifyPresent
+  !insertmacro RESTORE_REG_DWORD HKCU "{arp_key}" "NoRepair" $ArpNoRepair $ArpNoRepairPresent
+restore_registration_done:
+  SetRegView 32
+FunctionEnd
+
+Function SnapshotShortcuts
+  StrCpy $RegistrationResult "ok"
+  StrCpy $GameShortcutPresent "0"
+  StrCpy $UninstallShortcutPresent "0"
+  CreateDirectory "$PLUGINSDIR\\shortcut-backup"
+  IfFileExists "$SMPROGRAMS\\Heroes Like\\Heroes Like.lnk" 0 snapshot_uninstall_shortcut
+  CopyFiles /SILENT "$SMPROGRAMS\\Heroes Like\\Heroes Like.lnk" "$PLUGINSDIR\\shortcut-backup"
+  IfFileExists "$PLUGINSDIR\\shortcut-backup\\Heroes Like.lnk" 0 snapshot_shortcuts_failed
+  StrCpy $GameShortcutPresent "1"
+snapshot_uninstall_shortcut:
+  IfFileExists "$SMPROGRAMS\\Heroes Like\\Uninstall Heroes Like.lnk" 0 snapshot_shortcuts_done
+  CopyFiles /SILENT "$SMPROGRAMS\\Heroes Like\\Uninstall Heroes Like.lnk" "$PLUGINSDIR\\shortcut-backup"
+  IfFileExists "$PLUGINSDIR\\shortcut-backup\\Uninstall Heroes Like.lnk" 0 snapshot_shortcuts_failed
+  StrCpy $UninstallShortcutPresent "1"
+  Goto snapshot_shortcuts_done
+snapshot_shortcuts_failed:
+  StrCpy $RegistrationResult "failed"
+snapshot_shortcuts_done:
+FunctionEnd
+
+Function RestoreShortcuts
+  Delete "$SMPROGRAMS\\Heroes Like\\Heroes Like.lnk"
+  Delete "$SMPROGRAMS\\Heroes Like\\Uninstall Heroes Like.lnk"
+  StrCmp $GameShortcutPresent "1" 0 +2
+  CopyFiles /SILENT "$PLUGINSDIR\\shortcut-backup\\Heroes Like.lnk" "$SMPROGRAMS\\Heroes Like"
+  StrCmp $UninstallShortcutPresent "1" 0 +2
+  CopyFiles /SILENT "$PLUGINSDIR\\shortcut-backup\\Uninstall Heroes Like.lnk" "$SMPROGRAMS\\Heroes Like"
+  RMDir "$SMPROGRAMS\\Heroes Like"
+  RMDir /r "$PLUGINSDIR\\shortcut-backup"
+FunctionEnd
+
+Function DiscardShortcutBackup
+  RMDir /r "$PLUGINSDIR\\shortcut-backup"
+FunctionEnd
+
+Function PublishRegistration
+  StrCpy $RegistrationResult "failed"
+  SetRegView 32
+  ClearErrors
+  WriteRegStr HKCU "Software\\Heroes Like" "OwnershipSha256" "{ownership_sha256}"
+  WriteRegStr HKCU "Software\\Heroes Like" "OwnershipSize" "{ownership_size}"
+  IfErrors publish_registration_done
+  ReadRegStr $TxOutput HKCU "Software\\Heroes Like" "OwnershipSha256"
+  StrCmp $TxOutput "{ownership_sha256}" 0 publish_registration_done
+  ReadRegStr $TxOutput HKCU "Software\\Heroes Like" "OwnershipSize"
+  StrCmp $TxOutput "{ownership_size}" 0 publish_registration_done
+  SetRegView 64
+  ClearErrors
+  WriteRegStr HKCU "{arp_key}" "DisplayName" "{WINDOWS_PRODUCT_NAME}"
+  WriteRegStr HKCU "{arp_key}" "DisplayVersion" "{nsis_string(version)}"
+  WriteRegStr HKCU "{arp_key}" "Publisher" "{WINDOWS_PUBLISHER}"
+  WriteRegStr HKCU "{arp_key}" "InstallLocation" "$INSTDIR"
+  WriteRegStr HKCU "{arp_key}" "DisplayIcon" '"$INSTDIR\\heroes-like.exe",0'
+  WriteRegStr HKCU "{arp_key}" "UninstallString" '"$INSTDIR\\uninstall.exe"'
+  WriteRegStr HKCU "{arp_key}" "QuietUninstallString" '"$INSTDIR\\uninstall.exe" /S'
+  WriteRegDWORD HKCU "{arp_key}" "NoModify" 1
+  WriteRegDWORD HKCU "{arp_key}" "NoRepair" 1
+  IfErrors publish_registration_done
+  ReadRegStr $TxOutput HKCU "{arp_key}" "DisplayName"
+  StrCmp $TxOutput "{WINDOWS_PRODUCT_NAME}" 0 publish_registration_done
+  ReadRegStr $TxOutput HKCU "{arp_key}" "DisplayVersion"
+  StrCmp $TxOutput "{nsis_string(version)}" 0 publish_registration_done
+  ReadRegStr $TxOutput HKCU "{arp_key}" "Publisher"
+  StrCmp $TxOutput "{WINDOWS_PUBLISHER}" 0 publish_registration_done
+  ReadRegStr $TxOutput HKCU "{arp_key}" "InstallLocation"
+  StrCmp $TxOutput "$INSTDIR" 0 publish_registration_done
+  ReadRegStr $TxOutput HKCU "{arp_key}" "DisplayIcon"
+  StrCmp $TxOutput '"$INSTDIR\\heroes-like.exe",0' 0 publish_registration_done
+  ReadRegStr $TxOutput HKCU "{arp_key}" "UninstallString"
+  StrCmp $TxOutput '"$INSTDIR\\uninstall.exe"' 0 publish_registration_done
+  ReadRegStr $TxOutput HKCU "{arp_key}" "QuietUninstallString"
+  StrCmp $TxOutput '"$INSTDIR\\uninstall.exe" /S' 0 publish_registration_done
+  ReadRegDWORD $TxOutput HKCU "{arp_key}" "NoModify"
+  IntCmp $TxOutput 1 +2 0 0
+  Goto publish_registration_done
+  ReadRegDWORD $TxOutput HKCU "{arp_key}" "NoRepair"
+  IntCmp $TxOutput 1 +2 0 0
+  Goto publish_registration_done
+  StrCpy $RegistrationResult "ok"
+publish_registration_done:
+  SetRegView 32
+FunctionEnd
+
+Function LegacyKeyExists
+  StrCpy $TxActual "0"
+  StrCpy $TxIndex 0
+legacy_key_exists_loop:
+  IntCmp $TxIndex 4096 legacy_key_exists_done legacy_key_exists_query legacy_key_exists_done
+legacy_key_exists_query:
+  ClearErrors
+  EnumRegKey $TxName HKCU "Software" $TxIndex
+  IfErrors legacy_key_exists_done
+  StrCmp $TxName "" legacy_key_exists_done
+  StrCmp $TxName "Heroes Like" legacy_key_exists_found
+  IntOp $TxIndex $TxIndex + 1
+  Goto legacy_key_exists_loop
+legacy_key_exists_found:
+  StrCpy $TxActual "1"
+legacy_key_exists_done:
+FunctionEnd
+
+Function VerifyCommittedRoot
+  StrCpy $TxActual "invalid"
+  StrCpy $TxPath "$INSTDIR\\.heroes-like-install"
+  Call VerifyMarker
+  StrCmp $TxActual "ok" 0 verify_committed_root_invalid
+  IfFileExists "$INSTDIR\\release-manifest.json" +2
+  Goto verify_committed_root_invalid
+  IfFileExists "$1\\*.*" verify_committed_root_invalid
+  StrCpy $TxActual "ok"
+  Goto verify_committed_root_done
+verify_committed_root_invalid:
+  StrCpy $TxActual "invalid"
+verify_committed_root_done:
+FunctionEnd
 
 Function VerifyFileIdentity
   StrCpy $TxActual "invalid"
@@ -521,32 +998,37 @@ Function VerifyOwnedRoot
   StrCpy $TxActual "invalid"
   StrCpy $TxPath "$INSTDIR\\.heroes-like-install"
   Call VerifyMarker
-  StrCmp $TxActual "ok" 0 verify_owned_done
+  StrCmp $TxActual "ok" 0 verify_owned_invalid
+  StrCpy $TxActual "invalid"
   ReadINIStr $TxOutput "$INSTDIR\\install-ownership.ini" "Ownership" "Schema"
-  StrCmp $TxOutput "heroes-like-windows-install-ownership-v1" 0 verify_owned_done
+  StrCmp $TxOutput "heroes-like-windows-install-ownership-v1" 0 verify_owned_invalid
   ReadINIStr $TxOutput "$INSTDIR\\install-ownership.ini" "Ownership" "Product"
-  StrCmp $TxOutput "heroes-like" 0 verify_owned_done
+  StrCmp $TxOutput "heroes-like" 0 verify_owned_invalid
   ReadINIStr $TxOutput "$INSTDIR\\install-ownership.ini" "Ownership" "Platform"
-  StrCmp $TxOutput "windows-x86_64" 0 verify_owned_done
+  StrCmp $TxOutput "windows-x86_64" 0 verify_owned_invalid
   ReadINIStr $TxCount "$INSTDIR\\install-ownership.ini" "Ownership" "FileCount"
-  IntCmp $TxCount 0 verify_owned_done verify_owned_done verify_owned_count_upper
+  IntCmp $TxCount 0 verify_owned_invalid verify_owned_invalid verify_owned_count_upper
 verify_owned_count_upper:
-  IntCmp $TxCount 64 verify_owned_rows verify_owned_rows verify_owned_done
+  IntCmp $TxCount 64 verify_owned_rows verify_owned_rows verify_owned_invalid
 verify_owned_rows:
   StrCpy $TxIndex 0
 verify_owned_loop:
   IntCmp $TxIndex $TxCount verify_owned_entries verify_owned_row verify_owned_entries
 verify_owned_row:
+  StrCpy $TxActual "invalid"
   ReadINIStr $TxName "$INSTDIR\\install-ownership.ini" "File$TxIndex" "Path"
   ReadINIStr $TxSize "$INSTDIR\\install-ownership.ini" "File$TxIndex" "Size"
   ReadINIStr $TxHash "$INSTDIR\\install-ownership.ini" "File$TxIndex" "Sha256"
-  StrCmp $TxName "" verify_owned_done
+  StrCmp $TxName "" verify_owned_invalid
   StrCpy $TxPath "$INSTDIR\\$TxName"
   Call VerifyFileIdentity
-  StrCmp $TxActual "ok" 0 verify_owned_done
+  StrCmp $TxActual "ok" 0 verify_owned_invalid
   IntOp $TxIndex $TxIndex + 1
   Goto verify_owned_loop
 verify_owned_entries:
+  ; Entry enumeration is a new proof phase. Never carry a prior file's "ok"
+  ; result into an unexpected directory or exact-count failure.
+  StrCpy $TxActual "invalid"
   IntOp $TxCount $TxCount + 3
   StrCpy $TxIndex 0
   FindFirst $TxFind $TxName "$INSTDIR\\*.*"
@@ -554,41 +1036,58 @@ verify_owned_entry_loop:
   StrCmp $TxName "" verify_owned_entry_count
   StrCmp $TxName "." verify_owned_entry_next
   StrCmp $TxName ".." verify_owned_entry_next
-  IfFileExists "$INSTDIR\\$TxName\\*.*" verify_owned_done
+  IfFileExists "$INSTDIR\\$TxName\\*.*" verify_owned_invalid
   IntOp $TxIndex $TxIndex + 1
 verify_owned_entry_next:
   FindNext $TxFind $TxName
   Goto verify_owned_entry_loop
 verify_owned_entry_count:
   FindClose $TxFind
-  IntCmp $TxIndex $TxCount verify_owned_exact verify_owned_done verify_owned_done
+  IntCmp $TxIndex $TxCount verify_owned_exact verify_owned_invalid verify_owned_invalid
 verify_owned_exact:
   nsExec::ExecToStack '"$PLUGINSDIR\\payload\\{WINDOWS_INSTALLER_HELPER_NAME}" verify "$INSTDIR\\release-manifest.json" "$INSTDIR" windows-x86_64 release-manifest.json .heroes-like-install install-ownership.ini uninstall.exe'
   Pop $TxOutput
   Pop $TxActual
-  StrCmp $TxOutput "0" 0 verify_owned_done
+  StrCmp $TxOutput "0" 0 verify_owned_invalid
   StrCpy $TxActual "ok"
+  Goto verify_owned_done
+verify_owned_invalid:
+  StrCpy $TxActual "invalid"
 verify_owned_done:
+FunctionEnd
+
+Function ArpKeyExists
+  StrCpy $TxActual "0"
+  StrCpy $TxIndex 0
+arp_key_exists_loop:
+  IntCmp $TxIndex 4096 arp_key_exists_done arp_key_exists_query arp_key_exists_done
+arp_key_exists_query:
+  ClearErrors
+  EnumRegKey $TxName HKCU "{arp_parent}" $TxIndex
+  IfErrors arp_key_exists_done
+  StrCmp $TxName "" arp_key_exists_done
+  StrCmp $TxName "Heroes Like" arp_key_exists_found
+  IntOp $TxIndex $TxIndex + 1
+  Goto arp_key_exists_loop
+arp_key_exists_found:
+  StrCpy $TxActual "1"
+arp_key_exists_done:
 FunctionEnd
 
 Section "Install"
   InitPluginsDir
+  SetRegView 32
   SetOutPath "$PLUGINSDIR\\payload"
-{file_rows}
-  File /oname=install-ownership.ini "{nsis_string(str(ownership_path))}"
-  FileOpen $TxHandle "$PLUGINSDIR\\payload\\.heroes-like-install" w
-  FileWrite $TxHandle "heroes-like-user-local-install-v1$\\r$\\n"
-  FileClose $TxHandle
-  WriteUninstaller "$PLUGINSDIR\\payload\\uninstall.exe"
+  ClearErrors
+  File /oname={WINDOWS_INSTALLER_HELPER_NAME} "{nsis_string(str(bundle_root / WINDOWS_INSTALLER_HELPER_NAME))}"
   IfErrors staged_verification_failed
-  IfFileExists "$PLUGINSDIR\\payload\\uninstall.exe" +2
-  Goto staged_verification_failed
-{verify_stage_rows}
-  !insertmacro VERIFY_FILE "$PLUGINSDIR\\payload" "install-ownership.ini" "{ownership_size}" "{ownership_sha256}" staged_verification_failed
-  IfFileExists "$PLUGINSDIR\\payload\\.heroes-like-install" +2
-  Goto staged_verification_failed
+  !insertmacro VERIFY_FILE "$PLUGINSDIR\\payload" "{WINDOWS_INSTALLER_HELPER_NAME}" "{helper_row["size_bytes"]}" "{helper_row["sha256"]}" staged_verification_failed
 
-  IfFileExists "$INSTDIR\\*.*" 0 prior_verified
+  IfFileExists "$INSTDIR\\*.*" prior_live_root
+  IfFileExists "$INSTDIR.backup\\*.*" recovery_backup_refused
+  IfFileExists "$INSTDIR.backup" recovery_backup_refused
+  Goto prior_verified
+prior_live_root:
   ; Legacy v1 roots are accepted only after dynamic bounded manifest/hash/exact-root verification.
   IfFileExists "$INSTDIR\\install-ownership.ini" 0 legacy_prior
   ReadRegStr $TxHash HKCU "Software\\Heroes Like" "OwnershipSha256"
@@ -608,16 +1107,40 @@ legacy_prior:
   Pop $TxActual
   StrCmp $TxOutput "0" 0 ownership_refused
 prior_verified:
+  Call SnapshotRegistration
+  Call SnapshotShortcuts
+  StrCmp $RegistrationResult "ok" 0 staged_verification_failed
   StrCpy $1 "$INSTDIR.commit"
   StrCpy $2 "$INSTDIR.backup"
   RMDir /r "$1"
-  RMDir /r "$2"
+  RMDir /r "$INSTDIR.backup"
   CreateDirectory "$1"
-{copy_commit_rows}
-  CopyFiles /SILENT "$PLUGINSDIR\\payload\\install-ownership.ini" "$1"
-  CopyFiles /SILENT "$PLUGINSDIR\\payload\\.heroes-like-install" "$1"
-  CopyFiles /SILENT "$PLUGINSDIR\\payload\\uninstall.exe" "$1"
-{verify_commit_rows}
+  SetOutPath "$1"
+  ClearErrors
+{file_rows}
+  File /oname=install-ownership.ini "{nsis_string(str(ownership_path))}"
+  IfErrors commit_candidate_metadata_failed
+  ClearErrors
+  FileOpen $TxHandle "$1\\.heroes-like-install" w
+  IfErrors commit_candidate_metadata_failed
+  FileWrite $TxHandle "heroes-like-user-local-install-v1$\\r$\\n"
+  FileClose $TxHandle
+  WriteUninstaller "$1\\uninstall.exe"
+  IfErrors commit_candidate_metadata_failed
+  !insertmacro VERIFY_FILE "$1" "install-ownership.ini" "{ownership_size}" "{ownership_sha256}" commit_candidate_metadata_failed
+  StrCpy $TxPath "$1\\.heroes-like-install"
+  Call VerifyMarker
+  StrCmp $TxActual "ok" 0 commit_candidate_metadata_failed
+  IfFileExists "$1\\uninstall.exe" +2
+  Goto commit_candidate_metadata_failed
+  ; This is the one authoritative full-payload hash and exact-membership pass.
+  ; A same-volume atomic rename publishes these verified bytes unchanged.
+  nsExec::ExecToStack '"$PLUGINSDIR\\payload\\{WINDOWS_INSTALLER_HELPER_NAME}" verify "$1\\release-manifest.json" "$1" windows-x86_64 release-manifest.json .heroes-like-install install-ownership.ini uninstall.exe'
+  Pop $TxOutput
+  Pop $TxActual
+  StrCmp $TxOutput "0" +2
+  Goto commit_candidate_metadata_failed
+  SetOutPath "$TEMP"
   ReadEnvStr $3 "HEROES_LIKE_INSTALL_FAIL_PHASE"
   StrCmp $3 "" failure_phase_ok
   StrCmp $3 "precommit" injected_precommit
@@ -634,12 +1157,21 @@ no_backup:
   ClearErrors
   Rename "$1" "$INSTDIR"
   IfErrors commit_rename_failed
-  RMDir /r "$2"
-  WriteRegStr HKCU "Software\\Heroes Like" "OwnershipSha256" "{ownership_sha256}"
-  WriteRegStr HKCU "Software\\Heroes Like" "OwnershipSize" "{ownership_size}"
-  ; User data is external to this manifest-owned root. Publish shortcut only after commit.
+  Call VerifyCommittedRoot
+  StrCmp $TxActual "ok" 0 registration_publish_failed
+  ; User data is external to this manifest-owned root. Publish shortcuts and
+  ; registration only while the prior exact root is still rollback-capable.
   CreateDirectory "$SMPROGRAMS\\Heroes Like"
+  ClearErrors
   CreateShortcut "$SMPROGRAMS\\Heroes Like\\Heroes Like.lnk" "$INSTDIR\\heroes-like.exe"
+  IfErrors registration_publish_failed
+  ClearErrors
+  CreateShortcut "$SMPROGRAMS\\Heroes Like\\Uninstall Heroes Like.lnk" "$INSTDIR\\uninstall.exe"
+  IfErrors registration_publish_failed
+  Call PublishRegistration
+  StrCmp $RegistrationResult "ok" 0 registration_publish_failed
+  RMDir /r "$2"
+  Call DiscardShortcutBackup
   Goto install_done
 injected_precommit:
   DetailPrint "Injected precommit failure; live root was not mutated."
@@ -648,9 +1180,17 @@ injected_after_backup:
   DetailPrint "Injected after_backup failure; restoring prior exact program root."
   RMDir /r "$INSTDIR"
   IfFileExists "$2\\*.*" 0 commit_failed
+  ClearErrors
   Rename "$2" "$INSTDIR"
+  IfErrors rollback_restore_failed
+  IfFileExists "$INSTDIR\\*.*" +2
+  Goto rollback_restore_failed
   Goto commit_failed
-{commit_candidate_failure_labels}
+commit_candidate_metadata_failed:
+  SetOutPath "$TEMP"
+  RMDir /r "$1"
+  SetErrorLevel 39
+  Quit
 backup_rename_failed:
   RMDir /r "$1"
   SetErrorLevel 25
@@ -658,10 +1198,42 @@ backup_rename_failed:
 commit_rename_failed:
   RMDir /r "$INSTDIR"
   IfFileExists "$2\\*.*" 0 commit_rename_failed_done
+  ClearErrors
   Rename "$2" "$INSTDIR"
+  IfErrors rollback_restore_failed
+  IfFileExists "$INSTDIR\\*.*" +2
+  Goto rollback_restore_failed
 commit_rename_failed_done:
   RMDir /r "$1"
   SetErrorLevel 26
+  Quit
+registration_publish_failed:
+  DetailPrint "Install publication failed; restoring prior exact program root and registration."
+  ClearErrors
+  RMDir /r "$INSTDIR"
+  IfErrors registration_rollback_failed
+  IfFileExists "$INSTDIR\\*.*" registration_rollback_failed
+  IfFileExists "$INSTDIR" registration_rollback_failed
+  IfFileExists "$2\\*.*" 0 registration_restore_no_backup
+  ClearErrors
+  Rename "$2" "$INSTDIR"
+  IfErrors registration_rollback_failed
+  IfFileExists "$INSTDIR\\*.*" +2
+  Goto registration_rollback_failed
+registration_restore_no_backup:
+  Call RestoreShortcuts
+  Call RestoreRegistration
+  RMDir /r "$1"
+  SetErrorLevel 27
+  Quit
+registration_rollback_failed:
+  DetailPrint "Install publication failed and the prior program root could not be restored; recovery artifacts were preserved."
+  SetErrorLevel 28
+  Quit
+rollback_restore_failed:
+  DetailPrint "Install rollback could not restore the prior program root; the recovery backup was preserved."
+  RMDir /r "$1"
+  SetErrorLevel 29
   Quit
 commit_failed:
   RMDir /r "$1"
@@ -675,11 +1247,16 @@ ownership_refused:
   DetailPrint "Existing nonempty root lacks valid owned manifest state."
   SetErrorLevel 21
   Quit
+recovery_backup_refused:
+  DetailPrint "Install refused because a prior recovery backup exists without a live program root; the backup was preserved."
+  SetErrorLevel 30
+  Quit
 install_done:
 SectionEnd
 
 Section "Uninstall"
   InitPluginsDir
+  SetRegView 32
   SetOutPath "$PLUGINSDIR\\payload"
   File /oname={WINDOWS_INSTALLER_HELPER_NAME} "{nsis_string(str(bundle_root / WINDOWS_INSTALLER_HELPER_NAME))}"
   StrCpy $TxPath "$INSTDIR\\.heroes-like-install"
@@ -704,13 +1281,45 @@ uninstall_owned_row:
 uninstall_owned_done:
   Delete "$INSTDIR\\install-ownership.ini"
   Delete "$INSTDIR\\.heroes-like-install"
+  IfFileExists "$SMPROGRAMS\\Heroes Like\\Heroes Like.lnk" 0 uninstall_game_shortcut_done
+  ClearErrors
   Delete "$SMPROGRAMS\\Heroes Like\\Heroes Like.lnk"
+  IfErrors uninstall_remove_failed
+uninstall_game_shortcut_done:
+  IfFileExists "$SMPROGRAMS\\Heroes Like\\Uninstall Heroes Like.lnk" 0 uninstall_shortcut_done
+  ClearErrors
+  Delete "$SMPROGRAMS\\Heroes Like\\Uninstall Heroes Like.lnk"
+  IfErrors uninstall_remove_failed
+uninstall_shortcut_done:
+  IfFileExists "$SMPROGRAMS\\Heroes Like\\Heroes Like.lnk" uninstall_remove_failed
+  IfFileExists "$SMPROGRAMS\\Heroes Like\\Uninstall Heroes Like.lnk" uninstall_remove_failed
   RMDir "$SMPROGRAMS\\Heroes Like"
   SetOutPath "$TEMP"
   Delete "$INSTDIR\\uninstall.exe"
+  ClearErrors
   RMDir "$INSTDIR"
+  IfErrors uninstall_remove_failed
+  IfFileExists "$INSTDIR\\*.*" uninstall_remove_failed
+  IfFileExists "$INSTDIR" uninstall_remove_failed
+  SetRegView 64
+  ClearErrors
+  DeleteRegKey HKCU "{arp_key}"
+  IfErrors uninstall_remove_failed_64
+  Call un.ArpKeyExists
+  StrCmp $TxActual "0" +2
+  Goto uninstall_remove_failed_64
+  SetRegView 32
+  ClearErrors
   DeleteRegKey HKCU "Software\\Heroes Like"
+  IfErrors uninstall_remove_failed
   Goto uninstall_done
+uninstall_remove_failed_64:
+  SetRegView 32
+  Goto uninstall_remove_failed
+uninstall_remove_failed:
+  DetailPrint "Uninstall could not fully remove the verified owned install files or registration."
+  SetErrorLevel 24
+  Quit
 uninstall_refused:
   DetailPrint "Uninstall refused invalid or unexpected unowned install entries."
   SetErrorLevel 23
@@ -721,7 +1330,7 @@ SectionEnd
     function_start = script.index("Function VerifyFileIdentity")
     install_section = script.index('Section "Install"')
     uninstall_functions = script[function_start:install_section]
-    for function_name in ("VerifyFileIdentity", "VerifyMarker", "VerifyOwnedRoot"):
+    for function_name in ("VerifyFileIdentity", "VerifyMarker", "VerifyOwnedRoot", "ArpKeyExists"):
         uninstall_functions = uninstall_functions.replace(
             f"Function {function_name}", f"Function un.{function_name}"
         ).replace(f"Call {function_name}", f"Call un.{function_name}")
@@ -729,7 +1338,7 @@ SectionEnd
     uninstall_section = script.index('Section "Uninstall"')
     uninstall_head = script[:uninstall_section]
     uninstall_tail = script[uninstall_section:]
-    for function_name in ("VerifyFileIdentity", "VerifyMarker", "VerifyOwnedRoot"):
+    for function_name in ("VerifyFileIdentity", "VerifyMarker", "VerifyOwnedRoot", "ArpKeyExists"):
         uninstall_tail = uninstall_tail.replace(f"Call {function_name}", f"Call un.{function_name}")
     script = uninstall_head + uninstall_tail
     script_path.write_text(script, encoding="utf-8", newline="\n")
@@ -1034,6 +1643,7 @@ def verify_installer_artifact(
     else:
         with installer_path.open("rb") as handle:
             verify_windows_installer_header(handle.read(4096), installer_path.name)
+        verify_windows_pe_version(installer_path, version)
     return {
         "platform": spec.platform_id,
         "installer": installer_path.name,

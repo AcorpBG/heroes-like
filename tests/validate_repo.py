@@ -23817,6 +23817,16 @@ def validate_packaging_release_artifact_verification(errors: list[str]) -> None:
             "resolve_source_revision",
             "build-info.json",
             "embedded build info identity mismatch",
+            "windows_numeric_version",
+            "read_windows_version_resource",
+            "verify_windows_pe_version",
+            "validate_windows_export_preset_version",
+            "WINDOWS_UNINSTALL_REGISTRY_KEY",
+            "VIProductVersion",
+            "SetCompressor zlib",
+            "CRCCheck off",
+            "DisplayVersion",
+            "QuietUninstallString",
         ):
             ensure(required_token in tool_text, errors, f"Release packager verification is missing required token: {required_token}")
 
@@ -23836,6 +23846,10 @@ def validate_packaging_release_artifact_verification(errors: list[str]) -> None:
             "test_build_info_tampering_is_rejected_with_updated_outer_hashes",
             "test_release_index_source_revision_disagreement_is_rejected",
             "test_source_revision_validation_and_dirty_local_source_rejection",
+            "test_windows_version_mapping_and_pe_resource_verification_fail_closed",
+            "conditional_done_branches",
+            "verify_owned_invalid",
+            "x86_64-w64-mingw32-windres",
             "--verify-only",
         ):
             ensure(required_token in test_text, errors, f"Release artifact verification test is missing required token: {required_token}")
@@ -23844,7 +23858,7 @@ def validate_packaging_release_artifact_verification(errors: list[str]) -> None:
         smoke_text = PACKAGE_INSTALLER_SMOKE_PATH.read_text(encoding="utf-8")
         for required_token in (
             "PACKAGING_USER_LOCAL_INSTALLER_SMOKE",
-            "packaging_user_local_installer_smoke_v5",
+            "packaging_user_local_installer_smoke_v6",
             "linux_lifecycle",
             "windows_lifecycle",
             "windows_archive_lifecycle",
@@ -23852,6 +23866,20 @@ def validate_packaging_release_artifact_verification(errors: list[str]) -> None:
             "make_windows_owned_prior_install",
             "precommit_rollback_exact",
             "commit_rollback_exact",
+            "install_registry_exact",
+            "precommit_registry_preserved",
+            "commit_registry_preserved",
+            "upgrade_unmanaged_registry_preserved",
+            "malformed_uninstall_preserved",
+            "refused_uninstall_root_preserved",
+            "refused_uninstall_registry_preserved",
+            "refused_uninstall_wait",
+            "uninstall_wait",
+            "uninstall_registry_removed",
+            "Uninstall Heroes Like.lnk",
+            "setup_pe_version",
+            "game_pe_version",
+            'f"/reg:{registry_view}"',
             "stale_prior_file_removed",
             "unowned_refused_without_mutation",
             "user_data_preserved",

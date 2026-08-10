@@ -17,6 +17,11 @@ from typing import Sequence
 
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+	sys.path.insert(0, str(ROOT))
+
+from tools.package_release import validate_windows_export_preset_version, windows_numeric_version
+
 SCHEMA_ID = "heroes_like_release_candidate_v1"
 DEFAULT_OUTPUT_DIR = ROOT / ".artifacts" / "release-candidate"
 DEFAULT_BUILD_ROOT = ROOT / ".artifacts" / "release-candidate-native"
@@ -390,9 +395,14 @@ def main() -> int:
 	if args.jobs < 1:
 		raise ValueError("jobs must be positive")
 	revision = safe_revision(args.source_revision) if args.source_revision else git_head_revision()
-	version = args.version.strip() or project_version()
+	configured_version = project_version()
+	version = args.version.strip() or configured_version
 	if not re.fullmatch(r"[0-9A-Za-z][0-9A-Za-z._+-]*", version):
 		raise ValueError("release version is invalid")
+	if version != configured_version:
+		raise RuntimeError("requested release version must match project.godot config/version")
+	windows_numeric_version(version)
+	validate_windows_export_preset_version(version)
 	output_dir = args.output_dir.resolve()
 	build_root = args.build_root.resolve()
 
