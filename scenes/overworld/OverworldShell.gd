@@ -38,6 +38,7 @@ const KEYBOARD_HERO_MOVE_DELTAS := {
 @onready var _frontier_panel: PanelContainer = %FrontierPanel
 @onready var _context_panel: PanelContainer = %ContextPanel
 @onready var _command_band_panel: PanelContainer = %CommandBand
+@onready var _command_row: HBoxContainer = $ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow
 @onready var _orders_panel: PanelContainer = %OrdersPanel
 @onready var _system_panel: PanelContainer = %SystemPanel
 @onready var _header_label: Label = %Header
@@ -347,6 +348,8 @@ func _apply_responsive_layout() -> void:
 	var available_size := _responsive_available_size()
 	var compact_layout := available_size.x < 1360.0 or available_size.y < 760.0
 	var narrow_layout := available_size.x < 1100.0
+	var constrained_desktop_band := not compact_layout and available_size.x <= 1600.0
+	_command_row.add_theme_constant_override("separation", 4 if constrained_desktop_band else 6)
 	_sidebar_shell_panel.visible = not narrow_layout
 	_sidebar_shell_panel.custom_minimum_size.x = 284.0 if compact_layout else 320.0
 	_briefing_panel.visible = not compact_layout

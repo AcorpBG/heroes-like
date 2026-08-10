@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved release-readiness implementation slice"
+    "Reclaim execution-host storage before the next export, then select the next tracker-approved release-readiness implementation slice"
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Ordinary Outcome entry now owns a deterministic enabled keyboard/controller focus target and fits the complete action/save surface at 1280x720. Overall release readiness remains open.",
+  "currentNotes": "The Overworld command band now fits selectable 1600x900 with all controls preserved and cross-platform package proof. The execution host remains at 100 percent filesystem usage and must be reclaimed before more reliable exports. Overall release readiness remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "accessibility-scenario-outcome-normal-entry-focus-10184",
-  "currentSliceId": "accessibility-scenario-outcome-normal-entry-focus-10184",
-  "currentSliceNotes": "Completed normal Outcome primary focus, enabled focus cycling, refresh/recovery/overwrite ownership, and bounded 1280x720 composition with packaged Linux and Windows-Wine proof.",
+  "currentSlice": "ux-overworld-1600-command-band-responsive-fit-10184",
+  "currentSliceId": "ux-overworld-1600-command-band-responsive-fit-10184",
+  "currentSliceNotes": "Completed bounded 1600x900 CommandRow gap compaction plus strict 1024/1280/1600/1920 control containment, focus, and packaged Linux/Windows proof.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Scenario Outcome Normal Entry Focus",
-  "currentSliceUpdatedAt": "2026-08-10T09:44:48Z",
+  "currentSliceTitle": "Overworld 1600 Command Band Responsive Fit",
+  "currentSliceUpdatedAt": "2026-08-10T10:05:32Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -74726,6 +74726,26 @@
       "notes": "Completed one enabled focus cycle and primary normal-entry focus across campaign/skirmish victory/defeat, with exact refresh preservation, recovery Save preference, native overwrite Cancel/origin ownership, real accept-once coverage, and an Outcome-only responsive pass keeping all required controls within 1280x720. Focused, compatibility, repository, Linux package, and Windows/Wine gates pass.",
       "remainingWork": "No work remains in this slice. The pre-existing 1600x900 Overworld command-band geometry debt, Windows numeric version metadata, release signing, native Windows hardware certification, publication, and overall release readiness remain open.",
       "completedAt": "2026-08-10T09:44:48Z"
+    },
+    {
+      "id": "ux-overworld-1600-command-band-responsive-fit-10184",
+      "title": "Overworld 1600 Command Band Responsive Fit",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md"],
+      "purpose": "Keep the complete Overworld command band and core controls inside the selectable 1600x900 frame without regressing map dominance, compact layouts, or controller focus.",
+      "implementationTargets": ["scenes/overworld/OverworldShell.gd", "tests/player_comprehension_layout_smoke.gd", "tests/active_play_keyboard_focus_smoke.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"1600x900_command_band_contained": false, "1024x600_compact_green": true, "1280x720_compact_green": true},
+      "completionCriteria": ["Command band and every core command rect are contained within 1600x900", "Compact and full visual layouts preserve map dominance and all commands", "Keyboard/controller focus and activation remain exact", "Repository, Linux-X11, and packaged Windows-Wine gates pass"],
+      "nonGoals": ["command copy redesign, new panels, gameplay/rules/save changes, global UI-scale redesign, Native RMG, publication, signing, or release-completion claim"],
+      "createdAt": "2026-08-10T09:49:45Z",
+      "startedAt": "2026-08-10T09:49:45Z",
+      "updatedAt": "2026-08-10T10:05:32Z",
+      "notes": "Completed an OverworldShell-only constrained-desktop spacing correction. The 1600x900 band is now P(1,774) S(1598,96), all direct surfaces and Primary/End Turn/slot/Save/Settings/Menu controls are contained, and 1024/1280/1920 plus focus, repository, Linux package, and Windows/Wine package gates pass.",
+      "remainingWork": "No work remains in this slice. Host filesystem usage is 100 percent and must be reclaimed before reliable future exports; Windows numeric version metadata, release signing, native Windows hardware certification, publication, and overall release readiness remain open.",
+      "completedAt": "2026-08-10T10:05:32Z"
     }
   ],
   "project": "heroes-like",
