@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `briefing-consumption-autosave-failure-safety-10184`. Overworld first-turn and Battle tactical briefings now inspect their transactional autosave result. A failed write preserves the visible consumed briefing, emits one bounded issue, shows Save guidance with Save focus, and routes nowhere; one verified manual Save persists `shown=true` so restore does not replay the briefing. Focused failure/recovery, generated-opening defer, Battle/focus/save compatibility, repository, Linux package, and Windows/Wine package gates pass at save version 9.
 - Latest completed implementation slice: `battle-resolution-autosave-failure-route-safety-10184`. Finalized nonterminal battles now checkpoint transactionally before exit animation or Overworld routing. Write failure retains the exact completed result in Battle with combat disabled, Save Battle guidance/focus, and zero route; one Save retry persists the canonical autosave and resumes the stored animation/route without replaying rules or rewards. Focused failure/retry, withdrawal, Quick Resolve, animation, controller, save, core, repository, Linux package, and Windows/Wine package gates pass at save version 9.
 - Latest completed implementation slice: `map-editor-dirty-working-copy-destructive-transition-safety-10184`. Dirty Map Editor working copies now require one captured-action confirmation before Main Menu, package replacement, or native close. `Keep Editing` owns initial focus, Back/Escape preserve the exact working copy and origin focus, confirmed native close reuses transactional safe quit, and clean transitions remain direct. Focused, editor package, keyboard, core, repository, real Linux WM_DELETE, and packaged Windows/Wine WM_CLOSE gates pass.
 - Latest completed implementation slice: `application-scenario-outcome-autosave-failure-recovery-10184`. Failed terminal autosaves now carry a session-bound recovery state into Outcome, surface bounded Save Outcome guidance with Save focus, and block campaign/skirmish follow-up until a verified retry persists the exact terminal session. Return and safe-close recovery remain usable, campaign completion is not replayed, and focused, compatibility, repository, Linux package, and Windows/Wine package gates pass at save/profile versions 9/1.
@@ -3522,6 +3523,30 @@ Completion evidence:
 - precommit and after-backup failure across Quick Resolve victory and confirmed retreat preserve exact prior autosave bytes/cache, leave no transaction artifacts, match direct finalized gameplay state, emit one bounded issue, and route zero times with Save Battle focused;
 - one Save retry makes total checkpoint attempts two, persists a canonical battle-empty Overworld resume payload, and resumes the stored exit animation/route once without another gameplay action, reward, or finalization;
 - ordinary animation checkpoints and routes once, terminal Outcome bypass remains exact, and withdrawal, Quick Resolve, event animation, active focus, save transaction, core, validator, parse, Linux package, and fresh Windows/Wine package gates pass at save version 9.
+
+## Briefing Consumption Autosave Failure Safety
+
+id: `briefing-consumption-autosave-failure-safety-10184`
+
+Status: completed.
+
+Selected Phase 6 checkpoint-truthfulness slice. Authored first-turn command briefings and fresh
+battle tactical briefings mutate their one-shot `shown` state before autosaving, but both shells
+discard the structured save result. A failed write is silent and a crash reloads the unconsumed
+briefing checkpoint.
+
+Implementation target:
+- consume and display the existing briefing exactly once in live state, but inspect the transactional autosave result on both Overworld and Battle entry;
+- on write failure, preserve exact prior bytes/cache and the visible/live consumed briefing, emit one bounded issue, show Save guidance, focus Save, and route nowhere;
+- one Save persists the consumed state so restore does not replay the briefing; ordinary success and generated-opening deferred autosave behavior remain unchanged.
+
+Completion criteria:
+- precommit and after-backup failures on both shells preserve exact prior durable state with no transaction artifacts while live shown state and briefing presentation remain intact;
+- each failure emits one sanitized issue, exposes bounded visible guidance and Save focus, and one verified Save/reload proves the briefing remains consumed without gameplay mutation or route;
+- ordinary authored success, generated-opening defer, active controller, save transaction, core, parse, repository, Linux package, and packaged Windows/Wine gates pass at save version 9.
+
+Non-goals:
+- no briefing copy/content redesign, tutorial system, generated-opening lifecycle change, gameplay rule change, save/schema bump, Native RMG, publication, signing, or overall release-completion claim.
 
 ## Phase Roadmap
 

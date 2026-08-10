@@ -110,6 +110,8 @@ BATTLE_WITHDRAWAL_CONFIRMATION_REPORT_SCRIPT_PATH = ROOT / "tests" / "battle_wit
 BATTLE_WITHDRAWAL_CONFIRMATION_REPORT_SCENE_PATH = ROOT / "tests" / "battle_withdrawal_confirmation_runtime_report.tscn"
 BATTLE_RESOLUTION_AUTOSAVE_FAILURE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "battle_resolution_autosave_failure_route_safety_regression.gd"
 BATTLE_RESOLUTION_AUTOSAVE_FAILURE_REGRESSION_SCENE_PATH = ROOT / "tests" / "battle_resolution_autosave_failure_route_safety_regression.tscn"
+BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "briefing_consumption_autosave_failure_safety_regression.gd"
+BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_REGRESSION_SCENE_PATH = ROOT / "tests" / "briefing_consumption_autosave_failure_safety_regression.tscn"
 HEADLESS_SIMULATION_HARNESS_RULES_PATH = ROOT / "scripts" / "core" / "HeadlessSimulationHarnessRules.gd"
 OUTCOME_SCENE_PATH = ROOT / "scenes" / "results" / "ScenarioOutcomeShell.tscn"
 OUTCOME_SCRIPT_PATH = ROOT / "scenes" / "results" / "ScenarioOutcomeShell.gd"
@@ -14790,6 +14792,54 @@ def validate_battle_resolution_autosave_failure_route_safety(errors: list[str]) 
         ensure(required_token in router_text, errors, f"AppRouter.gd is missing required battle-resolution checkpoint token: {required_token}")
 
 
+def validate_briefing_consumption_autosave_failure_safety(errors: list[str]) -> None:
+    for path in (
+        BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_REGRESSION_SCRIPT_PATH,
+        BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_REGRESSION_SCENE_PATH,
+        OVERWORLD_SCRIPT_PATH,
+        BATTLE_SCRIPT_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing briefing-consumption autosave safety file: {path.relative_to(ROOT)}")
+    if not BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_REGRESSION_SCRIPT_PATH.exists():
+        return
+
+    report_text = BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_REGRESSION_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_SAFETY_REGRESSION",
+        'const FAILURE_PHASES := ["precommit", "after_backup"]',
+        'const SURFACES := ["overworld", "battle"]',
+        "validation_briefing_consumption_autosave_snapshot",
+        "validation_save_to_selected_slot",
+        'String(issue.get("event", "")) != "briefing_consumption_autosave_failed"',
+        'String(snapshot.get("focus_owner", "")) != "Save"',
+        'snapshot.get("autosave_attempt_count", -1)) != 1',
+        'snapshot.get("resolution_route_attempt_count", -1)) != 0',
+        "_file_state(AUTOSAVE_PATH) != autosave_before",
+        "SaveService.validation_summary_cache_snapshot() != cache_before",
+        "_transaction_artifacts_absent(AUTOSAVE_PATH)",
+        "_prove_ordinary_success",
+        "_prove_generated_overworld_defer",
+    ):
+        ensure(required_token in report_text, errors, f"Briefing-consumption autosave safety regression is missing required token: {required_token}")
+
+    scene_text = BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_REGRESSION_SCENE_PATH.read_text(encoding="utf-8")
+    ensure(
+        "res://tests/briefing_consumption_autosave_failure_safety_regression.gd" in scene_text,
+        errors,
+        "Briefing-consumption autosave safety scene must load its regression script",
+    )
+    for shell_path in (OVERWORLD_SCRIPT_PATH, BATTLE_SCRIPT_PATH):
+        shell_text = shell_path.read_text(encoding="utf-8")
+        for required_token in (
+            '"briefing_consumption_autosave_failed"',
+            "func validation_briefing_consumption_autosave_snapshot()",
+            '"autosave_attempt_count"',
+            '"failure_pending"',
+            '"last_runtime_issue"',
+        ):
+            ensure(required_token in shell_text, errors, f"{shell_path.name} is missing required briefing-consumption autosave safety token: {required_token}")
+
+
 def validate_battle_ability_layer(errors: list[str]) -> None:
     required_paths = (
         BATTLE_RULES_PATH,
@@ -26183,6 +26233,7 @@ def main() -> int:
     validate_battle_quick_resolve_runtime(errors)
     validate_battle_withdrawal_confirmation_runtime(errors)
     validate_battle_resolution_autosave_failure_route_safety(errors)
+    validate_briefing_consumption_autosave_failure_safety(errors)
     validate_battle_ability_layer(errors)
     validate_battle_autoplay_balance_diagnostics(errors)
     validate_battle_shell_release_polish(errors)
