@@ -28,6 +28,7 @@ const SAFE_QUIT_FAILURE_TITLE := "Unable to close safely"
 const SAFE_QUIT_FAILURE_MESSAGE := "The current expedition could not be saved, so the game will remain open. Try saving again or export a support bundle from Settings if the problem continues."
 const ACTIVE_PLAY_RETURN_FAILURE_MESSAGE := "Save failed. The expedition remains open; use Save, then try Return to Main Menu again."
 const ACTIVE_PLAY_RETURN_SUCCESS_MESSAGE := "Expedition saved. Returning to Main Menu."
+const BATTLE_ENTRY_AUTOSAVE_FAILURE_MESSAGE := "Battle is ready, but autosave failed. Use Save now to protect it."
 
 var _menu_notice := ""
 var _active_overworld_handoff_profile := {}
@@ -53,6 +54,17 @@ var _active_play_return_last_result := {}
 var _active_play_return_last_route := {}
 var _active_play_return_last_runtime_issue := {}
 var _validation_active_play_return_routing_suppressed := false
+var _battle_entry_request_count := 0
+var _battle_entry_save_attempt_count := 0
+var _battle_entry_save_failure_count := 0
+var _battle_entry_route_attempt_count := 0
+var _battle_entry_suppressed_route_count := 0
+var _battle_entry_skipped_durable_route_count := 0
+var _battle_entry_runtime_issue_count := 0
+var _battle_entry_last_result := {}
+var _battle_entry_last_route := {}
+var _battle_entry_last_runtime_issue := {}
+var _validation_battle_entry_routing_suppressed := false
 
 func _ready() -> void:
 	# Native window close requests must pass through the same transactional save
@@ -442,43 +454,198 @@ func go_to_town() -> void:
 	metadata.merge(autosave_intent, true)
 	ProfileLogScript.emit_general("router", "scene_transition", "go_to_town", ProfileLogScript.elapsed_ms(started), buckets, metadata, session)
 
-func go_to_battle() -> void:
+func go_to_battle(skip_required_save: bool = false) -> Dictionary:
+	_battle_entry_request_count += 1
 	var started := ProfileLogScript.begin_usec()
 	var buckets := {}
 	if not SessionState.has_playable_session():
 		push_warning("Cannot enter battle without an active scenario session.")
 		var scene_started := ProfileLogScript.begin_usec()
-		_change_scene(MAIN_MENU_SCENE)
+		if _record_battle_entry_route(MAIN_MENU_SCENE, "missing_session"):
+			_change_scene(MAIN_MENU_SCENE)
 		buckets["scene_change"] = ProfileLogScript.elapsed_ms(scene_started)
 		ProfileLogScript.emit_general("router", "scene_transition", "go_to_battle_missing_session", ProfileLogScript.elapsed_ms(started), buckets, {"target_scene": MAIN_MENU_SCENE}, null)
-		return
+		_battle_entry_last_result = _battle_entry_result(
+			false,
+			false,
+			true,
+			"missing_session",
+			"Cannot enter battle without an active scenario session.",
+			"",
+			false,
+			{}
+		)
+		return _battle_entry_last_result.duplicate(true)
 	if not SessionState.has_battle_state():
 		push_warning("Cannot enter battle without an active battle payload.")
 		ProfileLogScript.emit_general("router", "scene_transition", "go_to_battle_missing_payload", ProfileLogScript.elapsed_ms(started), buckets, {"target_scene": OVERWORLD_SCENE}, SessionState.ensure_active_session())
-		go_to_overworld()
-		return
+		if _record_battle_entry_route(OVERWORLD_SCENE, "missing_battle_payload"):
+			go_to_overworld()
+		_battle_entry_last_result = _battle_entry_result(
+			false,
+			false,
+			true,
+			"missing_battle_payload",
+			"Cannot enter battle without an active battle payload.",
+			"",
+			false,
+			{}
+		)
+		return _battle_entry_last_result.duplicate(true)
 
 	var session := SessionState.ensure_active_session()
 	if session.scenario_status != "in_progress":
 		ProfileLogScript.emit_general("router", "scene_transition", "go_to_battle_outcome_redirect", ProfileLogScript.elapsed_ms(started), buckets, {"target_scene": SCENARIO_OUTCOME_SCENE}, session)
-		go_to_scenario_outcome()
-		return
+		if _record_battle_entry_route(SCENARIO_OUTCOME_SCENE, "terminal_redirect"):
+			go_to_scenario_outcome()
+		_battle_entry_last_result = _battle_entry_result(
+			true,
+			false,
+			true,
+			"terminal_redirect",
+			"The resolved expedition is opening its outcome review.",
+			"",
+			true,
+			{}
+		)
+		return _battle_entry_last_result.duplicate(true)
+
+	var pre_route_game_state := String(session.game_state)
 	var state_started := ProfileLogScript.begin_usec()
 	session.game_state = "battle"
 	buckets["state_handoff"] = ProfileLogScript.elapsed_ms(state_started)
-	var save_started := ProfileLogScript.begin_usec()
-	var autosave_result := _autosave_active_session(session, false)
-	buckets["save_before_transition"] = ProfileLogScript.elapsed_ms(save_started)
+	var autosave_result := {}
+	if skip_required_save:
+		_battle_entry_skipped_durable_route_count += 1
+		buckets["save_before_transition"] = 0.0
+	else:
+		_battle_entry_save_attempt_count += 1
+		var save_started := ProfileLogScript.begin_usec()
+		autosave_result = _autosave_active_session(session, false)
+		buckets["save_before_transition"] = ProfileLogScript.elapsed_ms(save_started)
+		if not bool(autosave_result.get("ok", false)):
+			session.game_state = pre_route_game_state
+			_battle_entry_save_failure_count += 1
+			_battle_entry_runtime_issue_count += 1
+			_battle_entry_last_runtime_issue = RuntimeIssueLog.emit_error(
+				"router",
+				"battle_entry_autosave_failed",
+				BATTLE_ENTRY_AUTOSAVE_FAILURE_MESSAGE,
+				{
+					"save_reason": String(autosave_result.get("reason", "unknown")).left(80),
+					"save_message": String(autosave_result.get("message", "Save write failed.")).strip_edges().left(180),
+					"game_state": pre_route_game_state.left(40),
+					"battle_pending": not session.battle.is_empty(),
+				},
+				session
+			)
+			_battle_entry_last_result = _battle_entry_result(
+				false,
+				false,
+				false,
+				"autosave_failed",
+				BATTLE_ENTRY_AUTOSAVE_FAILURE_MESSAGE,
+				"manual_save",
+				not session.battle.is_empty(),
+				autosave_result
+			)
+			ProfileLogScript.emit_general("router", "scene_transition", "go_to_battle_autosave_failed", ProfileLogScript.elapsed_ms(started), buckets, {
+				"target_scene": BATTLE_SCENE,
+				"battle_stack_count": _battle_stack_count(session),
+				"autosave_deferred_or_skipped_reason": "forced_save_required_battle",
+				"autosave_forced": true,
+				"autosave_ok": false,
+				"routed": false,
+			}, session)
+			return _battle_entry_last_result.duplicate(true)
+
 	var scene_started := ProfileLogScript.begin_usec()
-	_change_scene(BATTLE_SCENE)
+	var route_reason := "already_saved" if skip_required_save else "saved"
+	if _record_battle_entry_route(BATTLE_SCENE, route_reason):
+		_change_scene(BATTLE_SCENE)
 	buckets["scene_change"] = ProfileLogScript.elapsed_ms(scene_started)
 	ProfileLogScript.emit_general("router", "scene_transition", "go_to_battle", ProfileLogScript.elapsed_ms(started), buckets, {
 		"target_scene": BATTLE_SCENE,
 		"battle_stack_count": _battle_stack_count(session),
-		"autosave_deferred_or_skipped_reason": "forced_save_required_battle",
-		"autosave_forced": true,
-		"autosave_ok": bool(autosave_result.get("ok", false)),
+		"autosave_deferred_or_skipped_reason": "durable_checkpoint_already_saved" if skip_required_save else "forced_save_required_battle",
+		"autosave_forced": not skip_required_save,
+		"autosave_ok": true,
+		"routed": true,
 	}, session)
+	_battle_entry_last_result = _battle_entry_result(
+		true,
+		true,
+		true,
+		route_reason,
+		"Battle checkpoint already saved. Entering battle." if skip_required_save else "Battle checkpoint saved. Entering battle.",
+		"",
+		true,
+		autosave_result
+	)
+	return _battle_entry_last_result.duplicate(true)
+
+func _battle_entry_result(
+	ok: bool,
+	saved: bool,
+	routed: bool,
+	reason: String,
+	message: String,
+	retry_action: String,
+	battle_pending: bool,
+	save_result: Dictionary
+) -> Dictionary:
+	return {
+		"ok": ok,
+		"saved": saved,
+		"routed": routed,
+		"reason": reason,
+		"retry_action": retry_action,
+		"battle_pending": battle_pending,
+		"message": message,
+		"save_result": save_result.duplicate(true),
+	}
+
+func _record_battle_entry_route(scene_path: String, reason: String) -> bool:
+	_battle_entry_route_attempt_count += 1
+	_battle_entry_last_route = {
+		"target_scene": scene_path,
+		"reason": reason,
+		"suppressed": _validation_battle_entry_routing_suppressed,
+	}
+	if _validation_battle_entry_routing_suppressed:
+		_battle_entry_suppressed_route_count += 1
+		return false
+	return true
+
+func validation_set_battle_entry_routing_suppressed(suppressed: bool) -> void:
+	_validation_battle_entry_routing_suppressed = suppressed
+
+func validation_reset_battle_entry_state() -> void:
+	_battle_entry_request_count = 0
+	_battle_entry_save_attempt_count = 0
+	_battle_entry_save_failure_count = 0
+	_battle_entry_route_attempt_count = 0
+	_battle_entry_suppressed_route_count = 0
+	_battle_entry_skipped_durable_route_count = 0
+	_battle_entry_runtime_issue_count = 0
+	_battle_entry_last_result = {}
+	_battle_entry_last_route = {}
+	_battle_entry_last_runtime_issue = {}
+
+func validation_battle_entry_snapshot() -> Dictionary:
+	return {
+		"request_count": _battle_entry_request_count,
+		"save_attempt_count": _battle_entry_save_attempt_count,
+		"save_failure_count": _battle_entry_save_failure_count,
+		"route_attempt_count": _battle_entry_route_attempt_count,
+		"suppressed_route_count": _battle_entry_suppressed_route_count,
+		"skipped_durable_route_count": _battle_entry_skipped_durable_route_count,
+		"runtime_issue_count": _battle_entry_runtime_issue_count,
+		"routing_suppressed": _validation_battle_entry_routing_suppressed,
+		"last_result": _battle_entry_last_result.duplicate(true),
+		"last_route": _battle_entry_last_route.duplicate(true),
+		"last_runtime_issue": _battle_entry_last_runtime_issue.duplicate(true),
+	}
 
 func go_to_scenario_outcome() -> void:
 	if not SessionState.has_playable_session():
@@ -514,7 +681,7 @@ func resume_active_session() -> void:
 
 	match SaveService.resume_target_for_session(session):
 		"battle":
-			go_to_battle()
+			go_to_battle(true)
 		"town":
 			go_to_town()
 		"outcome":

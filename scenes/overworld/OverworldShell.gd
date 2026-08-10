@@ -117,6 +117,7 @@ const OVERWORLD_PROFILE_LOG_PATH := "user://debug/overworld_profile.jsonl"
 const END_TURN_AUTOSAVE_FAILURE_MESSAGE := "Turn completed, but autosave failed. Use Save now to protect the new day."
 const MANUAL_SAVE_FAILURE_MESSAGE := "Save failed. Try Save again before continuing."
 const PENDING_BATTLE_MANUAL_SAVE_FAILURE_MESSAGE := "Save failed. The pending battle remains open; try Save again before continuing."
+const BATTLE_ENTRY_AUTOSAVE_FAILURE_MESSAGE := "Battle is ready, but autosave failed. Use Save now to protect it."
 const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains open; use Save, then try Return to Main Menu again."
 const REFRESH_PHASE_MAP_VIEW := "map_view"
 const REFRESH_PHASE_ACTION_RAILS := "action_rails"
@@ -198,6 +199,11 @@ var _last_end_turn_rule_result: Dictionary = {}
 var _last_end_turn_autosave_result: Dictionary = {}
 var _last_end_turn_runtime_issue: Dictionary = {}
 var _last_manual_save_result: Dictionary = {}
+var _last_battle_entry_result: Dictionary = {}
+var _last_battle_entry_resolution_result: Dictionary = {}
+var _validation_battle_entry_request_count := 0
+var _validation_battle_entry_success_count := 0
+var _validation_battle_entry_failure_count := 0
 var _last_return_to_menu_result: Dictionary = {}
 var _validation_return_to_menu_request_count := 0
 var _end_turn_commit_in_progress := false
@@ -759,9 +765,15 @@ func _commit_end_turn() -> Dictionary:
 		var save_profile_start := _profile_begin("end_turn_autosave")
 		var save_started := ProfileLogScript.begin_usec()
 		_validation_end_turn_autosave_call_count += 1
+		var pre_autosave_game_state := String(_session.game_state)
+		var staged_pending_battle := not _session.battle.is_empty()
+		if staged_pending_battle:
+			_session.game_state = "battle"
 		var autosave_result = SaveService.save_runtime_autosave_session(_session, not bool(_session.flags.get("generated_random_map", false)))
 		_last_end_turn_autosave_result = autosave_result.duplicate(true) if autosave_result is Dictionary else {}
 		autosave_failed = not bool(_last_end_turn_autosave_result.get("ok", false))
+		if autosave_failed and staged_pending_battle:
+			_session.game_state = pre_autosave_game_state
 		general_buckets["autosave"] = ProfileLogScript.elapsed_ms(save_started)
 		_profile_end("end_turn_autosave", save_profile_start, {"save_profile": SaveService.validation_last_runtime_save_profile()})
 		if autosave_failed:
@@ -782,18 +794,23 @@ func _commit_end_turn() -> Dictionary:
 		}, _session)
 		_end_turn_button.call_deferred("grab_focus")
 		return _end_turn_autosave_failure_result(result)
-	if _handle_session_resolution():
-		_profile_end("end_turn", profile_start, {"resolved": true})
+	var resolution := _handle_session_resolution(true)
+	if bool(resolution.get("handled", false)):
+		_profile_end("end_turn", profile_start, {
+			"resolved": bool(resolution.get("routed", false)),
+			"battle_entry_failed": bool(resolution.get("failed", false)),
+		})
 		ProfileLogScript.emit_general("overworld", "end_turn", "end_turn", ProfileLogScript.elapsed_ms(general_profile_start), general_buckets, {
-			"resolved": true,
+			"resolved": bool(resolution.get("routed", false)),
 			"result_ok": bool(result.get("ok", false)),
 			"scenario_status": _session.scenario_status,
 			"save_profile": SaveService.validation_last_runtime_save_profile(),
 		}, _session)
 		return {
-			"ok": bool(result.get("ok", false)),
+			"ok": bool(result.get("ok", false)) and not bool(resolution.get("failed", false)),
 			"committed": true,
-			"resolved": true,
+			"resolved": bool(resolution.get("routed", false)),
+			"resolution": resolution.duplicate(true),
 			"result": result.duplicate(true),
 		}
 	var refresh_started := ProfileLogScript.begin_usec()
@@ -862,6 +879,10 @@ func _on_save_pressed() -> void:
 
 func _commit_manual_save(manual_slot: int) -> Dictionary:
 	_validation_manual_save_attempt_count += 1
+	var pre_save_game_state := String(_session.game_state)
+	var staged_pending_battle := _session.scenario_status == "in_progress" and not _session.battle.is_empty()
+	if staged_pending_battle:
+		_session.game_state = "battle"
 	var save_result: Dictionary = AppRouter.save_active_session_to_manual_slot(manual_slot)
 	var save_ok := bool(save_result.get("ok", false))
 	_last_message = String(save_result.get("message", "")) if save_ok else _manual_save_failure_message()
@@ -869,6 +890,8 @@ func _commit_manual_save(manual_slot: int) -> Dictionary:
 	_last_turn_resolution_text = ""
 	_last_action_recap = {}
 	if not save_ok:
+		if staged_pending_battle:
+			_session.game_state = pre_save_game_state
 		_validation_manual_save_failure_count += 1
 		_last_manual_save_result = _manual_save_commit_result(save_result, false, 0)
 		_record_result_feedback("system", _last_manual_save_result, "Save failed.")
@@ -879,7 +902,8 @@ func _commit_manual_save(manual_slot: int) -> Dictionary:
 	_validation_manual_save_success_count += 1
 	_record_result_feedback("system", save_result, "Save updated.")
 	var route_attempts_before := _validation_end_turn_resolution_attempt_count
-	var routed := _handle_session_resolution()
+	var resolution := _handle_session_resolution(true)
+	var routed := bool(resolution.get("routed", false))
 	var route_attempt_delta := maxi(0, _validation_end_turn_resolution_attempt_count - route_attempts_before)
 	_validation_manual_save_route_attempt_count += route_attempt_delta
 	_last_manual_save_result = _manual_save_commit_result(save_result, routed, route_attempt_delta)
@@ -1015,8 +1039,13 @@ func _on_context_action_pressed(action_id: String) -> void:
 	if bool(result.get("ok", false)):
 		_dismiss_command_briefing()
 		_select_hero_tile()
-	if _handle_session_resolution():
-		_debug_phase_end("context_action_dispatch", dispatch_started_usec, {"action_id": action_id, "resolved": true})
+	var resolution := _handle_session_resolution()
+	if bool(resolution.get("handled", false)):
+		_debug_phase_end("context_action_dispatch", dispatch_started_usec, {
+			"action_id": action_id,
+			"resolved": bool(resolution.get("routed", false)),
+			"battle_entry_failed": bool(resolution.get("failed", false)),
+		})
 		return
 	_refresh()
 	_debug_phase_end("context_action_dispatch", dispatch_started_usec, {"action_id": action_id, "resolved": false})
@@ -1032,7 +1061,8 @@ func _on_artifact_action_pressed(action_id: String) -> void:
 	if bool(result.get("ok", false)):
 		_dismiss_command_briefing()
 		_select_hero_tile()
-	if _handle_session_resolution():
+	var resolution := _handle_session_resolution()
+	if bool(resolution.get("handled", false)):
 		return
 	_refresh()
 
@@ -1050,7 +1080,8 @@ func _on_specialty_action_pressed(action_id: String) -> void:
 	if bool(result.get("ok", false)):
 		_dismiss_command_briefing()
 		_select_hero_tile()
-	if _handle_session_resolution():
+	var resolution := _handle_session_resolution()
+	if bool(resolution.get("handled", false)):
 		return
 	_refresh()
 
@@ -1068,7 +1099,8 @@ func _on_hero_action_pressed(action_id: String) -> void:
 	if bool(result.get("ok", false)):
 		_dismiss_command_briefing()
 		_select_hero_tile()
-	if _handle_session_resolution():
+	var resolution := _handle_session_resolution()
+	if bool(resolution.get("handled", false)):
 		return
 	_refresh()
 
@@ -1097,7 +1129,8 @@ func _on_rendezvous_transfer_pressed() -> void:
 		_dismiss_command_briefing()
 		_select_hero_tile()
 	_active_drawer = "command"
-	if _handle_session_resolution():
+	var resolution := _handle_session_resolution()
+	if bool(resolution.get("handled", false)):
 		return
 	_refresh()
 
@@ -1115,7 +1148,8 @@ func _on_spell_action_pressed(action_id: String) -> void:
 	if bool(result.get("ok", false)):
 		_dismiss_command_briefing()
 		_select_hero_tile()
-	if _handle_session_resolution():
+	var resolution := _handle_session_resolution()
+	if bool(resolution.get("handled", false)):
 		return
 	_refresh()
 
@@ -1225,14 +1259,15 @@ func _handle_move_result(result: Dictionary, preserve_selection: bool, debug_sta
 		_dismiss_command_briefing()
 		if not preserve_selection:
 			_select_hero_tile()
-	if _handle_session_resolution():
+	var resolution := _handle_session_resolution()
+	if bool(resolution.get("handled", false)):
 		if debug_started:
 			_debug_finish_path_command()
 		return
 	if route == "battle":
 		if debug_started:
 			_debug_finish_path_command()
-		AppRouter.go_to_battle()
+		_request_battle_entry("movement_result", false)
 		return
 	if route == "town":
 		if debug_started:
@@ -1409,7 +1444,7 @@ func _start_encounter() -> void:
 		"placement_id": String(placement.get("placement_id", "")),
 		"battle_stack_count": payload.get("stacks", []).size() if payload.get("stacks", []) is Array else 0,
 	}, _session)
-	AppRouter.go_to_battle()
+	_request_battle_entry("selected_encounter", false)
 
 func _render_state() -> void:
 	_map_data = _session.overworld.get("map", []) if _session.overworld.get("map", []) is Array else []
@@ -7490,6 +7525,11 @@ func validation_snapshot() -> Dictionary:
 	return {
 		"scene_path": scene_file_path,
 		"manual_save_overwrite_dialog": _manual_save_overwrite_dialog.validation_snapshot(),
+		"last_battle_entry_result": _last_battle_entry_result.duplicate(true),
+		"last_battle_entry_resolution_result": _last_battle_entry_resolution_result.duplicate(true),
+		"battle_entry_request_count": _validation_battle_entry_request_count,
+		"battle_entry_success_count": _validation_battle_entry_success_count,
+		"battle_entry_failure_count": _validation_battle_entry_failure_count,
 		"last_manual_save_result": _last_manual_save_result.duplicate(true),
 		"manual_save_attempt_count": _validation_manual_save_attempt_count,
 		"manual_save_success_count": _validation_manual_save_success_count,
@@ -7933,6 +7973,33 @@ func validation_save_to_selected_slot() -> Dictionary:
 		"summary": summary,
 	}, true)
 	return result
+
+func validation_request_pending_battle_entry(durable_checkpoint_ready: bool = false) -> Dictionary:
+	return _handle_session_resolution(durable_checkpoint_ready)
+
+func validation_reset_battle_entry_state() -> Dictionary:
+	_last_battle_entry_result = {}
+	_last_battle_entry_resolution_result = {}
+	_validation_battle_entry_request_count = 0
+	_validation_battle_entry_success_count = 0
+	_validation_battle_entry_failure_count = 0
+	return validation_battle_entry_snapshot()
+
+func validation_battle_entry_snapshot() -> Dictionary:
+	var focus_owner := get_viewport().gui_get_focus_owner()
+	return {
+		"request_count": _validation_battle_entry_request_count,
+		"success_count": _validation_battle_entry_success_count,
+		"failure_count": _validation_battle_entry_failure_count,
+		"last_result": _last_battle_entry_result.duplicate(true),
+		"last_resolution_result": _last_battle_entry_resolution_result.duplicate(true),
+		"visible_message": _last_message,
+		"visible_action_feedback": _action_feedback_text(),
+		"focus_owner": String(focus_owner.name) if focus_owner != null else "",
+		"battle_pending": not _session.battle.is_empty(),
+		"scenario_status": _session.scenario_status,
+		"game_state": _session.game_state,
+	}
 
 func validation_request_manual_save() -> Dictionary:
 	_on_save_pressed()
@@ -9230,20 +9297,68 @@ func _dismiss_command_briefing() -> void:
 	_opening_route_suggested = false
 	_opening_route_suggestion_kind = ""
 
-func _handle_session_resolution() -> bool:
+func _request_battle_entry(source: String, durable_checkpoint_ready: bool = false) -> Dictionary:
+	_validation_battle_entry_request_count += 1
+	var router_was_suppressed := false
+	if not _validation_end_turn_resolution_routing_enabled:
+		router_was_suppressed = bool(AppRouter.validation_battle_entry_snapshot().get("routing_suppressed", false))
+	var suppress_for_legacy_validation := not _validation_end_turn_resolution_routing_enabled and not router_was_suppressed
+	if suppress_for_legacy_validation:
+		AppRouter.validation_set_battle_entry_routing_suppressed(true)
+	var result: Dictionary = AppRouter.go_to_battle(durable_checkpoint_ready)
+	if suppress_for_legacy_validation:
+		AppRouter.validation_set_battle_entry_routing_suppressed(false)
+	result["source"] = source
+	result["durable_checkpoint_ready"] = durable_checkpoint_ready
+	_last_battle_entry_result = result.duplicate(true)
+	if bool(result.get("ok", false)) and bool(result.get("routed", false)):
+		_validation_battle_entry_success_count += 1
+		return _last_battle_entry_result.duplicate(true)
+
+	_validation_battle_entry_failure_count += 1
+	var message := String(result.get("message", BATTLE_ENTRY_AUTOSAVE_FAILURE_MESSAGE)).strip_edges()
+	if message == "":
+		message = BATTLE_ENTRY_AUTOSAVE_FAILURE_MESSAGE
+	_last_battle_entry_result["message"] = message
+	_last_message = message
+	_last_enemy_activity_text = ""
+	_last_turn_resolution_text = ""
+	_last_action_recap = {}
+	_record_action_feedback("system", message, "Use Save now.")
+	_refresh()
+	_save_button.call_deferred("grab_focus")
+	return _last_battle_entry_result.duplicate(true)
+
+func _handle_session_resolution(durable_checkpoint_ready: bool = false) -> Dictionary:
 	if _session.scenario_status == "in_progress" and not _session.battle.is_empty():
-		_session.game_state = "battle"
-		_validation_end_turn_resolution_attempt_count += 1
-		_validation_last_end_turn_resolution_route = {
+		var battle_result := _request_battle_entry("session_resolution", durable_checkpoint_ready)
+		var routed := bool(battle_result.get("ok", false)) and bool(battle_result.get("routed", false))
+		var resolution := {
+			"handled": true,
+			"routed": routed,
+			"failed": not bool(battle_result.get("ok", false)),
 			"target": "battle",
-			"scenario_status": _session.scenario_status,
-			"game_state": _session.game_state,
+			"result": battle_result.duplicate(true),
 		}
-		if _validation_end_turn_resolution_routing_enabled:
-			AppRouter.go_to_battle()
-		return true
+		if routed:
+			_validation_end_turn_resolution_attempt_count += 1
+			_validation_last_end_turn_resolution_route = {
+				"target": "battle",
+				"scenario_status": _session.scenario_status,
+				"game_state": _session.game_state,
+			}
+		_last_battle_entry_resolution_result = resolution.duplicate(true)
+		return resolution
 	if _session.scenario_status == "in_progress":
-		return false
+		var unresolved := {
+			"handled": false,
+			"routed": false,
+			"failed": false,
+			"target": "",
+			"result": {},
+		}
+		_last_battle_entry_resolution_result = unresolved.duplicate(true)
+		return unresolved
 	_session.game_state = "outcome"
 	_validation_end_turn_resolution_attempt_count += 1
 	_validation_last_end_turn_resolution_route = {
@@ -9253,4 +9368,12 @@ func _handle_session_resolution() -> bool:
 	}
 	if _validation_end_turn_resolution_routing_enabled:
 		AppRouter.go_to_scenario_outcome()
-	return true
+	var outcome_resolution := {
+		"handled": true,
+		"routed": true,
+		"failed": false,
+		"target": "outcome",
+		"result": {},
+	}
+	_last_battle_entry_resolution_result = outcome_resolution.duplicate(true)
+	return outcome_resolution

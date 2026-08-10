@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `battle-entry-forced-autosave-failure-route-safety-10184`. Required battle-entry autosave failure now restores the exact pre-route state, keeps the pending encounter in Overworld, records one bounded issue, shows Save-now guidance with Save focus, and performs zero routes. End-turn/manual/resume checkpoints avoid redundant writes and route once from already-durable state. Focused failure/recovery/control, compatibility, core, repository, Linux package, and Windows/Wine package gates pass at save version 9.
 - Latest completed implementation slice: `campaign-progression-semantic-storage-fail-closed-10184`. Campaign progression storage is now classified before load or write. Malformed, partial, nested-wrong-shape, and future-version data remains byte-exact and non-overwritable; all campaign mutations fail closed without changing profile/session, while the Main Menu keeps local browsing and non-campaign paths usable. Focused source/live-menu, compatibility, core, repository, Linux package, and Windows/Wine package gates pass at profile version 1 and save version 9.
 - Latest completed implementation slice: `active-play-return-to-menu-autosave-failure-safety-10184`. Return to Menu from Overworld, Town, Battle, and Outcome now fails closed when the forced autosave fails: the exact shell/session/intent and prior durable state remain, one bounded issue and Save/retry message appear, and Menu focus returns. One verified retry saves and routes once; no-session/editor direct controls remain intact. The eight-case failure matrix plus safe-close, save transaction, controller, core, parse, repository, JSON, Python, and diff gates pass at save version 9.
 - Latest completed implementation slice: `overworld-pending-battle-manual-save-failure-route-10184`. Failed overworld manual writes now return before pending-battle resolution routing, preserve exact live battle and durable slot state, keep bounded retry feedback and Save focus, and expose the actual write result instead of inferring success from an occupied slot. One verified retry persists the canonical battle payload and routes exactly once. Both failure phases across empty and occupied slots plus compatibility, core, parse, repository, JSON, Python, and diff gates pass at save version 9.
@@ -3364,6 +3365,38 @@ Completion evidence:
 - the live Main Menu keeps campaign/chapter browsing local, disables and revalidates campaign mutations with one bounded warning, and leaves Skirmish, Saves, Settings, and support usable;
 - the focused regression passes malformed, partial, top-level and nested wrong-type, future-live/current-backup, missing/current/recovered, direct-write, all-mutation, and live-menu cases at profile version 1/save version 9;
 - replay, restart, completion atomicity, menu/controller, core, editor parse, repository validator, JSON, Python, and diff gates pass; fresh packaged Linux and Windows/Wine focused probes also pass.
+
+## Battle-Entry Forced-Autosave Failure Route Safety
+
+id: `battle-entry-forced-autosave-failure-route-safety-10184`
+
+Status: completed.
+
+Selected Phase 6 data-integrity and routing slice. AppRouter currently stages battle
+state, performs an explicitly required autosave, then changes to the Battle scene even
+when the write failed. The prior save remains intact, but the pending encounter and
+preceding movement exist only in memory and no failure guidance reaches the player.
+
+Implementation target:
+- return a structured result from the battle-entry route and make failed required saves produce zero scene transitions plus one bounded runtime issue;
+- keep the exact live pending battle and prior bytes/cache/transaction cleanliness on failure, and surface Save-now retry guidance with Save focus in Overworld;
+- reuse the existing successful manual-save resolution path so one verified retry persists the canonical battle and routes exactly once without replaying gameplay.
+
+Completion criteria:
+- precommit and after-backup failures preserve exact prior bytes/cache/live pending battle with no candidate/backup residue, one save attempt, one issue, and zero battle routes;
+- clearing the hook and using Manual Save persists a loadable canonical battle, performs one route, and does not repeat the action that created the encounter;
+- ordinary battle entry plus missing-session, missing-battle, and terminal/outcome redirects retain correct behavior;
+- focused routing/save, controller, core, editor, repository, JSON, Python, and packaged Linux/Windows-Wine compatible gates pass at save version 9.
+
+Non-goals:
+- no battle rules, combat balance, outcome-transition failure redesign, controller route cursor, save schema/version, Native RMG, publication, or overall release-completion claim.
+
+Completion evidence:
+- AppRouter returns structured battle-entry results, restores pre-route game state on failed required saves, emits one sanitized runtime issue, and records zero scene transitions until a durable checkpoint exists;
+- Overworld movement, direct encounter, session-resolution, End Turn, and Manual Save paths consume the result without falsely reporting resolution; failures remain visible with Save focus, while successful manual/end-turn/resume routes skip redundant writes;
+- precommit and after-backup focused cases preserve exact prior autosave bytes/cache, transaction cleanliness, and full live pending battle, then one actual Manual Save persists the normalized battle and records one route without replaying gameplay;
+- ordinary saved entry, missing session, missing payload, terminal redirect, and durable resume controls pass alongside End Turn, active-play return, safe close, transactional save, controller, core, editor, repository, JSON, Python, and diff gates;
+- fresh packaged Linux and Windows/Wine focused probes pass at save version 9; only deliberate injected-failure/control diagnostics and a Linux fixture-exit resource warning appear.
 
 ## Phase Roadmap
 

@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Campaign progression semantic storage now fails closed and preserves incompatible user data across source and packaged Linux/Windows probes. Overall release readiness remains open.",
+  "currentNotes": "Required battle-entry autosave failure now stays in Overworld with an exact pending encounter and routes only after a verified checkpoint. Overall release readiness remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "campaign-progression-semantic-storage-fail-closed-10184",
-  "currentSliceId": "campaign-progression-semantic-storage-fail-closed-10184",
-  "currentSliceNotes": "Completed semantic storage classification, nested-shape validation, future-version preservation, fail-closed campaign mutation, and live Main Menu warning/non-campaign usability.",
+  "currentSlice": "battle-entry-forced-autosave-failure-route-safety-10184",
+  "currentSliceId": "battle-entry-forced-autosave-failure-route-safety-10184",
+  "currentSliceNotes": "Completed fail-closed required-save routing, exact pending-battle preservation, visible Save retry, durable manual/end-turn/resume route reuse, and cross-platform packaged proof.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Campaign Progression Semantic Storage Fail-Closed Safety",
-  "currentSliceUpdatedAt": "2026-08-10T05:04:18Z",
+  "currentSliceTitle": "Battle-Entry Forced-Autosave Failure Route Safety",
+  "currentSliceUpdatedAt": "2026-08-10T05:30:04Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -74494,6 +74494,39 @@
       "notes": "Completed semantic classification/recovery, nested-shape validation, future-version preservation, detached candidate publication, fail-closed campaign mutations, and live Main Menu warning/non-campaign usability. Focused source/live-menu, compatibility, core, repository, Linux package, and Windows/Wine package gates pass at profile version 1/save version 9.",
       "remainingWork": "No work remains in this slice. Controller map navigation, other forced-transition save-failure paths, release signing, native Windows certification, publication, and overall release readiness remain open.",
       "completedAt": "2026-08-10T05:04:18Z"
+    },
+    {
+      "id": "battle-entry-forced-autosave-failure-route-safety-10184",
+      "title": "Battle-Entry Forced-Autosave Failure Route Safety",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/lessons-learned.md"],
+      "purpose": "Prevent a required battle-entry autosave failure from routing into Battle without a durable pending encounter checkpoint.",
+      "implementationTargets": [
+        "scripts/autoload/AppRouter.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "tests/application_battle_entry_autosave_failure_regression.gd",
+        "tests/application_battle_entry_autosave_failure_regression.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {"failed_battle_entry_route_count": 1, "failure_visible": false},
+      "completionCriteria": [
+        "Both injected failure phases preserve exact prior bytes, cache, transaction cleanliness, and live pending battle with zero routes and one visible issue",
+        "One verified manual-save retry persists the canonical battle and routes exactly once without repeating gameplay",
+        "Ordinary, missing-session, missing-payload, and terminal redirect controls remain correct",
+        "Focused save/routing/controller/core/editor/repository and packaged Linux/Windows-Wine compatible gates pass"
+      ],
+      "nonGoals": ["battle rules, balance, outcome-transition failure redesign, controller route cursor, save version, Native RMG, publication, or release-completion claim"],
+      "createdAt": "2026-08-10T05:09:42Z",
+      "startedAt": "2026-08-10T05:09:42Z",
+      "updatedAt": "2026-08-10T05:30:04Z",
+      "notes": "Completed structured fail-closed battle entry, exact failure preservation, one bounded issue and Save retry surface, already-durable manual/end-turn/resume routing, and deterministic failure/recovery/control coverage. Focused source, compatibility, core, repository, Linux package, and Windows/Wine package gates pass at save version 9.",
+      "remainingWork": "No work remains in this slice. Controller right-stick route selection, outcome-transition save-failure safety, release signing, native Windows certification, publication, and overall release readiness remain open.",
+      "completedAt": "2026-08-10T05:30:04Z"
     }
   ],
   "project": "heroes-like",
