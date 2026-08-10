@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Safe application close autosave is complete: native window close and Main Menu Quit now transactionally preserve active state and remain open on save failure. Overall release readiness remains open.",
+  "currentNotes": "Campaign replay progression preservation is complete: later replay defeats no longer erase banked victories, carryover, exported unlock flags, or downstream chapter access. Overall release readiness remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "application-safe-close-autosave-10184",
-  "currentSliceId": "application-safe-close-autosave-10184",
-  "currentSliceNotes": "Completed centralized root-window/Main Menu close ownership, transactional active-session autosave, exactly-once exit, failure-visible no-exit behavior, and reentrant guards.",
+  "currentSlice": "campaign-replay-defeat-preserves-cleared-progress-10184",
+  "currentSliceId": "campaign-replay-defeat-preserves-cleared-progress-10184",
+  "currentSliceNotes": "Completed banked-victory preservation across later non-victory replays while incrementing attempts and retaining first-defeat, defeat-to-victory, and victory-refresh behavior.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Safe Application Close Autosave",
-  "currentSliceUpdatedAt": "2026-08-10T01:38:42Z",
+  "currentSliceTitle": "Campaign Replay Preserves Cleared Progress",
+  "currentSliceUpdatedAt": "2026-08-10T01:51:54Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -74058,6 +74058,59 @@
       ],
       "remainingWork": "No work remains in this slice. Hard process termination, campaign replay progression preservation, risk-gated End Turn confirmation, signing, native Windows hardware certification, publication, and overall release readiness remain open.",
       "completedAt": "2026-08-10T01:38:42Z"
+    },
+    {
+      "id": "campaign-replay-defeat-preserves-cleared-progress-10184",
+      "title": "Campaign Replay Preserves Cleared Progress",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "purpose": "Prevent a lost campaign replay from erasing a previously banked victory, carryover, exported unlock flags, victory count, or downstream chapter access.",
+      "implementationTargets": [
+        "scripts/core/CampaignRules.gd",
+        "tests/campaign_replay_progress_preservation_regression.gd",
+        "tests/campaign_replay_progress_preservation_regression.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "victory_then_defeat_record_status": "defeat",
+        "victory_then_defeat_exports_preserved": false,
+        "downstream_unlock_preserved": false,
+        "attempts_increment": true
+      },
+      "completionCriteria": [
+        "Victory-to-defeat preserves exact victory record, exports, carryover, victory count, and unlock while attempts increments",
+        "First defeat remains locked with no carryover and defeat-to-victory upgrades normally",
+        "Victory-to-victory refresh and normalized saved/reloaded progression remain valid",
+        "Focused campaign replay, campaign arc/restart/outcome/menu, progression save, core, parse, repository, JSON, Python, and diff gates pass"
+      ],
+      "nonGoals": [
+        "campaign content/copy redesign, attempt-history UI, scenario balance, End Turn confirmation, save version change, Native RMG work, public release, signing, or overall release readiness"
+      ],
+      "createdAt": "2026-08-10T01:40:16Z",
+      "startedAt": "2026-08-10T01:40:16Z",
+      "updatedAt": "2026-08-10T01:51:54Z",
+      "notes": "CampaignRules now preserves an existing normalized victory snapshot and increments only attempts for later non-victory replays; first defeat, defeat-to-victory, and victory refresh retain their prior behavior.",
+      "validation": [
+        "isolated GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/campaign_replay_progress_preservation_regression.tscn (passed; full transition matrix, exact banked victory/carryover/unlock preservation, normalization and progression reload, save version 9)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/map_campaign_replayability_breadth_report.tscn and res://tests/frontier_claims_campaign_report.tscn (passed)",
+        "isolated GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/campaign_arc_restart_regression.tscn (passed)",
+        "isolated GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/player_facing_campaign_menu_smoke.tscn and res://tests/menu_outcome_visual_smoke.tscn (passed)",
+        "isolated GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --editor --path . --quit-after 2 (passed; expected timed scan-abort warning only)",
+        "python3 tests/validate_repo.py and python3 -m py_compile tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json and git diff --check (passed)"
+      ],
+      "remainingWork": "No work remains in this slice. Risk-gated End Turn confirmation, release signing, native Windows hardware certification, publication, and overall release readiness remain open.",
+      "completedAt": "2026-08-10T01:51:54Z"
     }
   ],
   "project": "heroes-like",
