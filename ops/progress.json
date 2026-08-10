@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Transactional cross-platform save commit is complete: shared save paths now verify candidates, preserve and recover a valid prior version, and mutate caches/live intent only after commit. Overall release readiness remains open.",
+  "currentNotes": "Safe application close autosave is complete: native window close and Main Menu Quit now transactionally preserve active state and remain open on save failure. Overall release readiness remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "save-transactional-cross-platform-commit-10184",
-  "currentSliceId": "save-transactional-cross-platform-commit-10184",
-  "currentSliceNotes": "Completed verified same-directory candidate/backup commit, exact rollback, destination-aware recovery, and post-commit-only cache/live-intent mutation across Linux and Windows.",
+  "currentSlice": "application-safe-close-autosave-10184",
+  "currentSliceId": "application-safe-close-autosave-10184",
+  "currentSliceNotes": "Completed centralized root-window/Main Menu close ownership, transactional active-session autosave, exactly-once exit, failure-visible no-exit behavior, and reentrant guards.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Transactional Cross-Platform Save Commit",
-  "currentSliceUpdatedAt": "2026-08-10T01:01:25Z",
+  "currentSliceTitle": "Safe Application Close Autosave",
+  "currentSliceUpdatedAt": "2026-08-10T01:38:42Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -74004,6 +74004,60 @@
       ],
       "remainingWork": "No work remains in this slice. Application close/Alt-F4 autosave, campaign replay progression preservation, risk-gated End Turn confirmation, signing, native Windows hardware certification, publication, and overall release readiness remain open.",
       "completedAt": "2026-08-10T01:01:25Z"
+    },
+    {
+      "id": "application-safe-close-autosave-10184",
+      "title": "Safe Application Close Autosave",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "purpose": "Prevent Windows/Linux window close, Alt-F4, or Main Menu Quit from discarding active battle, town, overworld, or outcome state since the last autosave.",
+      "implementationTargets": [
+        "scripts/autoload/AppRouter.gd",
+        "scenes/menus/MainMenu.gd",
+        "tests/application_safe_close_autosave_regression.gd",
+        "tests/application_safe_close_autosave_regression.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "scene_tree_auto_accept_quit_disabled": false,
+        "window_close_handler": false,
+        "main_menu_quit_direct": true,
+        "active_session_close_autosave": false
+      },
+      "completionCriteria": [
+        "Window close and Main Menu Quit autosave exact active state and attempt one quit only after verified success",
+        "Injected save failure preserves exact live session and prior autosave, attempts no quit, and exposes a visible error",
+        "No-session close exits directly and reentrant requests are idempotent",
+        "Focused lifecycle, active battle/town/overworld, Main Menu, issue-log, Linux package, Windows/Wine package, parse, repository, JSON, Python, and diff gates pass"
+      ],
+      "nonGoals": [
+        "hard-kill recovery, cloud saves, save version change, shutdown prompt redesign, campaign replay, End Turn confirmation, Native RMG work, public release, signing, or overall release readiness"
+      ],
+      "createdAt": "2026-08-10T01:04:02Z",
+      "startedAt": "2026-08-10T01:04:02Z",
+      "updatedAt": "2026-08-10T01:38:42Z",
+      "notes": "AppRouter now disables auto-accepted quit, owns the root Window close signal and Main Menu Quit, transactionally autosaves playable state, exits once after success, and remains open with a logged visible error after save failure.",
+      "validation": [
+        "isolated GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/application_safe_close_autosave_regression.tscn (passed; exact overworld/town/battle save/restore, failure/retry, issue/visible error, reentrancy, no-session, root close signal, Main Menu, explicit quit marker cleanup, save version 9)",
+        "real Linux/X11 root window after main_menu_ready: WM_DELETE_WINDOW advertised, send 0, process exit 0, RuntimeIssueLog marker removed",
+        "fresh packaged Windows/Wine with WINEDLLOVERRIDES=dinput8=d after main_menu_ready: WM_DELETE_WINDOW advertised, send 0, process exit 0, RuntimeIssueLog marker removed (104539648-byte executable, 189510824-byte pack)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/menu_outcome_visual_smoke.tscn (passed)",
+        "GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --editor --path . --quit-after 2 (passed)",
+        "python3 tests/validate_repo.py and python3 -m py_compile tests/validate_repo.py (passed)",
+        "jq empty ops/progress.json and git diff --check (passed)"
+      ],
+      "remainingWork": "No work remains in this slice. Hard process termination, campaign replay progression preservation, risk-gated End Turn confirmation, signing, native Windows hardware certification, publication, and overall release readiness remain open.",
+      "completedAt": "2026-08-10T01:38:42Z"
     }
   ],
   "project": "heroes-like",

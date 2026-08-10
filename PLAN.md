@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `application-safe-close-autosave-10184`. AppRouter now disables native auto-accepted quit and owns root-window close, WM-close fallback, and Main Menu Quit through one guarded request. Active overworld, town, battle, or outcome state is transactionally autosaved before exactly one clean exit; save failure leaves the game open with exact live/prior state, records a runtime issue, and shows a bounded desktop error. Reentrant/completed requests cannot save or quit twice, while explicit harness quits remain unaffected. Focused, real Linux/X11, fresh packaged Windows/Wine, core, menu, parse, repository, JSON, Python, and diff gates pass at save version 9.
 - Latest completed implementation slice: `save-transactional-cross-platform-commit-10184`. Autosave, manual-slot, generated-opening, and campaign-progression writes now use one same-directory candidate/backup transaction. Candidate bytes, length, JSON root, and exact text are verified before commit; the prior valid live file is restored after precommit or after-backup failures; bounded missing/corrupt-live recovery accepts only a semantically valid destination-matched backup and never promotes a candidate. Cache invalidation and live intent clearing occur only after verified success. Focused recovery, ordinary save, core, repository, fresh packaged Linux, and fresh packaged Windows/Wine gates pass at save version 9.
 - Latest completed implementation slice: `battle-player-withdrawal-confirmation-10184`. Retreat and Surrender now open one compact action-bound confirmation populated from their live authored consequence surface. Keep Fighting owns initial focus; cancel, Escape, and controller Back preserve the exact session and return focus to the originating action. Confirm revalidates availability, fails closed when stale, and invokes the existing BattleRules withdrawal path exactly once. Focused direct-rule parity, controller, 1280x720 layout, event-animation, core, parse, repository, JSON, Python, and diff gates pass without changing withdrawal math or save state.
 - Latest completed implementation slice: `save-generated-opening-autosave-completion-persistence-10184`. The generated-map opening fast path now writes a detached post-success payload that removes ordinary transition intent plus generated opening/briefing defer flags and records initial-autosave completion. Only a successful write mirrors that state to the live session; failure preserves the existing autosave bytes and exact live retry intent. Restoring the saved session no longer schedules a second opening autosave. Focused generated route/save/restore/failure/ordinary-control, core, regression, deferred-payload, parse, repository, JSON, Python, and diff gates pass at save version 9. The unrelated legacy random-map replay fixture still stops before saves on its obsolete nonempty template-id assertion.
@@ -3001,6 +3002,41 @@ Completion evidence:
 - successful manual, autosave/generated-opening, and progression paths reload their intended state, clear runtime intent only after commit, retain save version 9, and leave no transaction artifacts;
 - focused transaction, manual overwrite/naming, generated-opening, deferred-summary, campaign restart, core, editor parse, repository, Python, JSON, and diff gates pass under isolated user data;
 - fresh Linux packaged PCK and fresh Windows packaged Wine probes both execute the full transactional regression successfully, including real FileAccess/DirAccess rename behavior.
+
+## Safe Application Close Autosave
+
+id: `application-safe-close-autosave-10184`
+
+Status: complete.
+
+Selected Phase 6 release-safety slice. No production owner disables SceneTree's
+auto-accepted quit behavior or handles `NOTIFICATION_WM_CLOSE_REQUEST`; the Main
+Menu Quit button also exits directly. A player can therefore close the window from
+an active battle, town, or overworld route and lose all state after the last
+autosave even though the now-transactional save path can preserve it safely.
+
+Implementation target:
+- make AppRouter the single production application-close owner, disable auto-accepted quit, and route both window close/Alt-F4 and Main Menu Quit through one request;
+- when a playable session exists, save its current battle/town/overworld/outcome state through the verified autosave primitive and quit exactly once only after success;
+- on save failure, keep the process and exact live session running, retain save intent/prior bytes, log the failure, and show a bounded player-facing error rather than silently exiting;
+- allow immediate clean exit when no playable session exists, prevent reentrant double-close/save calls, and leave test-harness explicit exits unaffected.
+
+Completion criteria:
+- active-session window close and Main Menu Quit both save the exact current state and attempt one clean quit only after a verified autosave;
+- injected save failure attempts no quit, preserves byte-exact active session/prior autosave, and exposes a player-visible failure;
+- no-session close quits directly, repeated close while a request is active is idempotent, and explicit test harness exits remain functional;
+- focused close lifecycle, battle/town/overworld active-session cases, Main Menu integration, RuntimeIssueLog clean-exit behavior, Linux packaged, Windows/Wine packaged, editor parse, repository, JSON, Python, and diff gates pass.
+
+Non-goals:
+- no signal/kill -9 recovery, background/cloud save, save schema/version change, shutdown prompt redesign, campaign replay fix, End Turn confirmation, Native RMG work, public release, signing, or overall release-completion claim.
+
+Completion evidence:
+- AppRouter disables `auto_accept_quit`, connects the root Window `close_requested` signal, retains a WM-close notification fallback, and receives Main Menu Quit after pending display preview is reverted;
+- active overworld, town, and battle fixtures each commit the exact current gameplay payload, clear transition intent only after success, restore to the same route/state, and record exactly one save plus one suppressed validation quit;
+- injected transactional save failure preserves exact prior autosave bytes, summary cache, live session and intent, attempts zero quits, records `safe_quit_autosave_failed`, exposes a visible error, and permits a successful retry;
+- no-session close attempts one direct quit, in-progress/completed repeats are idempotent, and an isolated explicit `SceneTree.quit(37)` child exits 37 while removing its RuntimeIssueLog marker;
+- real Linux/X11 and fresh packaged Windows/Wine windows both advertise/receive `WM_DELETE_WINDOW`, exit zero after Main Menu readiness, and remove the owned runtime session marker;
+- focused lifecycle, core, menu/outcome, editor parse, repository, Python, JSON, and diff gates pass; the focused injected failure intentionally emits one RuntimeIssueLog error while exiting zero.
 
 ## Phase Roadmap
 

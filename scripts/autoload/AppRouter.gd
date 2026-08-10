@@ -24,10 +24,168 @@ const AUTOSAVE_PENDING_ROUTE_FLAG := "runtime_autosave_pending_route"
 const AUTOSAVE_PENDING_GAME_STATE_FLAG := "runtime_autosave_pending_game_state"
 const AUTOSAVE_PENDING_COUNT_FLAG := "runtime_autosave_pending_count"
 const AUTOSAVE_PENDING_UNIX_FLAG := "runtime_autosave_pending_unix"
+const SAFE_QUIT_FAILURE_TITLE := "Unable to close safely"
+const SAFE_QUIT_FAILURE_MESSAGE := "The current expedition could not be saved, so the game will remain open. Try saving again or export a support bundle from Settings if the problem continues."
 
 var _menu_notice := ""
 var _active_overworld_handoff_profile := {}
 var _last_overworld_handoff_profile := {}
+var _safe_quit_in_progress := false
+var _safe_quit_completed := false
+var _safe_quit_request_count := 0
+var _safe_quit_save_attempt_count := 0
+var _safe_quit_attempt_count := 0
+var _safe_quit_suppressed_count := 0
+var _safe_quit_last_source := ""
+var _safe_quit_last_result := {}
+var _safe_quit_visible_error := ""
+var _validation_quit_suppressed := false
+var _validation_safe_quit_reentrant_probe := false
+var _validation_safe_quit_reentrant_result := {}
+
+func _ready() -> void:
+	# Native window close requests must pass through the same transactional save
+	# boundary as the menu Exit command. Explicit SceneTree.quit() calls used by
+	# headless harnesses remain unaffected.
+	get_tree().auto_accept_quit = false
+	var root_window := get_tree().root
+	if root_window != null and not root_window.close_requested.is_connected(_on_root_window_close_requested):
+		root_window.close_requested.connect(_on_root_window_close_requested)
+
+func _exit_tree() -> void:
+	var scene_tree := get_tree()
+	if scene_tree == null:
+		return
+	var root_window := scene_tree.root
+	if root_window != null and root_window.close_requested.is_connected(_on_root_window_close_requested):
+		root_window.close_requested.disconnect(_on_root_window_close_requested)
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_CLOSE_REQUEST:
+		request_safe_quit("window_close")
+
+func _on_root_window_close_requested() -> void:
+	request_safe_quit("window_close")
+
+func request_safe_quit(source: String = "application") -> Dictionary:
+	var normalized_source := source.strip_edges().left(64)
+	if normalized_source == "":
+		normalized_source = "application"
+	_safe_quit_request_count += 1
+	if _safe_quit_in_progress:
+		return {
+			"ok": false,
+			"quit_requested": false,
+			"source": normalized_source,
+			"reason": "in_progress",
+			"message": "Application close is already in progress.",
+		}
+	if _safe_quit_completed:
+		return {
+			"ok": false,
+			"quit_requested": false,
+			"source": normalized_source,
+			"reason": "completed",
+			"message": "Application close was already requested.",
+		}
+
+	_safe_quit_last_source = normalized_source
+	_safe_quit_in_progress = true
+	_safe_quit_visible_error = ""
+	if _validation_safe_quit_reentrant_probe:
+		_validation_safe_quit_reentrant_probe = false
+		_validation_safe_quit_reentrant_result = request_safe_quit("validation_reentrant")
+
+	if SessionState.has_playable_session():
+		var session := SessionState.ensure_active_session()
+		_safe_quit_save_attempt_count += 1
+		var save_result: Dictionary = SaveService.save_runtime_autosave_session(session)
+		if not bool(save_result.get("ok", false)):
+			var save_message := String(save_result.get("message", "Save write failed.")).strip_edges()
+			_safe_quit_visible_error = SAFE_QUIT_FAILURE_MESSAGE
+			RuntimeIssueLog.emit_error(
+				"application",
+				"safe_quit_autosave_failed",
+				SAFE_QUIT_FAILURE_MESSAGE,
+				{
+					"source": normalized_source,
+					"save_message": save_message.left(240),
+				},
+				session
+			)
+			_safe_quit_last_result = {
+				"ok": false,
+				"saved": false,
+				"quit_requested": false,
+				"source": normalized_source,
+				"reason": "autosave_failed",
+				"message": SAFE_QUIT_FAILURE_MESSAGE,
+			}
+			_safe_quit_in_progress = false
+			if DisplayServer.get_name().to_lower() != "headless":
+				OS.alert(SAFE_QUIT_FAILURE_MESSAGE, SAFE_QUIT_FAILURE_TITLE)
+			return _safe_quit_last_result.duplicate(true)
+
+		_safe_quit_last_result = {
+			"ok": true,
+			"saved": true,
+			"quit_requested": true,
+			"source": normalized_source,
+			"reason": "saved",
+			"message": "Expedition saved. Closing game.",
+			"path": String(save_result.get("path", "")),
+		}
+	else:
+		_safe_quit_last_result = {
+			"ok": true,
+			"saved": false,
+			"quit_requested": true,
+			"source": normalized_source,
+			"reason": "no_active_session",
+			"message": "Closing game.",
+		}
+
+	_safe_quit_completed = true
+	_safe_quit_in_progress = false
+	_safe_quit_attempt_count += 1
+	if _validation_quit_suppressed:
+		_safe_quit_suppressed_count += 1
+	else:
+		get_tree().quit()
+	return _safe_quit_last_result.duplicate(true)
+
+func validation_set_quit_suppressed(suppressed: bool) -> void:
+	_validation_quit_suppressed = suppressed
+
+func validation_set_safe_quit_reentrant_probe(enabled: bool) -> void:
+	_validation_safe_quit_reentrant_probe = enabled
+
+func validation_reset_safe_quit_state() -> void:
+	_safe_quit_in_progress = false
+	_safe_quit_completed = false
+	_safe_quit_request_count = 0
+	_safe_quit_save_attempt_count = 0
+	_safe_quit_attempt_count = 0
+	_safe_quit_suppressed_count = 0
+	_safe_quit_last_source = ""
+	_safe_quit_last_result = {}
+	_safe_quit_visible_error = ""
+	_validation_safe_quit_reentrant_probe = false
+	_validation_safe_quit_reentrant_result = {}
+
+func validation_safe_quit_snapshot() -> Dictionary:
+	return {
+		"request_count": _safe_quit_request_count,
+		"save_attempt_count": _safe_quit_save_attempt_count,
+		"quit_attempt_count": _safe_quit_attempt_count,
+		"suppressed_quit_count": _safe_quit_suppressed_count,
+		"in_progress": _safe_quit_in_progress,
+		"completed": _safe_quit_completed,
+		"last_result": _safe_quit_last_result.duplicate(true),
+		"last_source": _safe_quit_last_source,
+		"visible_error": _safe_quit_visible_error,
+		"reentrant_result": _validation_safe_quit_reentrant_result.duplicate(true),
+	}
 
 func go_to_main_menu() -> void:
 	var started := ProfileLogScript.begin_usec()

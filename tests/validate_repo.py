@@ -70,6 +70,8 @@ MANUAL_SAVE_SLOT_NAMING_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "manual_save_s
 MANUAL_SAVE_SLOT_NAMING_REGRESSION_SCENE_PATH = ROOT / "tests" / "manual_save_slot_naming_regression.tscn"
 SAVE_TRANSACTIONAL_COMMIT_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "save_transactional_commit_regression.gd"
 SAVE_TRANSACTIONAL_COMMIT_REGRESSION_SCENE_PATH = ROOT / "tests" / "save_transactional_commit_regression.tscn"
+APPLICATION_SAFE_CLOSE_AUTOSAVE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "application_safe_close_autosave_regression.gd"
+APPLICATION_SAFE_CLOSE_AUTOSAVE_REGRESSION_SCENE_PATH = ROOT / "tests" / "application_safe_close_autosave_regression.tscn"
 MAP_EDITOR_SCENE_PATH = ROOT / "scenes" / "editor" / "MapEditorShell.tscn"
 MAP_EDITOR_SCRIPT_PATH = ROOT / "scenes" / "editor" / "MapEditorShell.gd"
 MAP_EDITOR_SMOKE_SCENE_PATH = ROOT / "tests" / "map_editor_smoke.tscn"
@@ -12525,6 +12527,56 @@ def validate_save_management(errors: list[str]) -> None:
         'OS.get_environment(SAVE_TRANSACTION_FAILURE_ENV) == "after_backup"',
     ):
         ensure(required_token in save_text, errors, f"SaveService.gd is missing required transactional-save token: {required_token}")
+
+    for path in (APPLICATION_SAFE_CLOSE_AUTOSAVE_REGRESSION_SCRIPT_PATH, APPLICATION_SAFE_CLOSE_AUTOSAVE_REGRESSION_SCENE_PATH):
+        ensure(path.exists(), errors, f"Missing application safe-close regression file: {path.relative_to(ROOT)}")
+    if APPLICATION_SAFE_CLOSE_AUTOSAVE_REGRESSION_SCRIPT_PATH.exists():
+        safe_close_text = APPLICATION_SAFE_CLOSE_AUTOSAVE_REGRESSION_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "APPLICATION_SAFE_CLOSE_AUTOSAVE_REGRESSION",
+            "validation_set_quit_suppressed",
+            "validation_reset_safe_quit_state",
+            "validation_set_safe_quit_reentrant_probe",
+            "validation_safe_quit_snapshot",
+            "get_tree().root.close_requested.emit()",
+            "validation_request_safe_quit",
+            'HEROES_LIKE_SAVE_FAIL_PHASE',
+            'safe_quit_autosave_failed',
+            'for game_state in ["overworld", "town", "battle"]',
+            "get_tree().auto_accept_quit",
+            "EXPLICIT_QUIT_PROBE_ARG",
+            "RuntimeIssueLog.SESSION_MARKER_PATH",
+            "SessionState.SAVE_VERSION",
+        ):
+            ensure(required_token in safe_close_text, errors, f"application_safe_close_autosave_regression.gd is missing token: {required_token}")
+    if APPLICATION_SAFE_CLOSE_AUTOSAVE_REGRESSION_SCENE_PATH.exists():
+        safe_close_scene_text = APPLICATION_SAFE_CLOSE_AUTOSAVE_REGRESSION_SCENE_PATH.read_text(encoding="utf-8")
+        ensure(
+            "res://tests/application_safe_close_autosave_regression.gd" in safe_close_scene_text,
+            errors,
+            "Application safe-close regression scene must load its script",
+        )
+
+    app_router_text = APP_ROUTER_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func request_safe_quit",
+        "get_tree().auto_accept_quit = false",
+        "NOTIFICATION_WM_CLOSE_REQUEST",
+        "root_window.close_requested.connect",
+        'request_safe_quit("window_close")',
+        "RuntimeIssueLog.emit_error",
+        '"safe_quit_autosave_failed"',
+        "func validation_set_quit_suppressed",
+        "func validation_reset_safe_quit_state",
+        "func validation_set_safe_quit_reentrant_probe",
+        "func validation_safe_quit_snapshot",
+    ):
+        ensure(required_token in app_router_text, errors, f"AppRouter.gd is missing required application safe-close token: {required_token}")
+    for required_token in (
+        'AppRouter.request_safe_quit("main_menu")',
+        "func validation_request_safe_quit",
+    ):
+        ensure(required_token in main_menu_script_text, errors, f"MainMenu.gd is missing required application safe-close token: {required_token}")
 
 
 def validate_skirmish_setup(errors: list[str]) -> None:
