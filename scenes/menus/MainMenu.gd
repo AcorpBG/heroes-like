@@ -169,6 +169,14 @@ var _settings_restore_pending := false
 var _display_change_ui_active := false
 var _display_change_focus_name := &"PresentationModePicker"
 var _display_change_last_seconds := -1
+var _campaign_restart_return_focus: Control
+var _save_delete_return_focus: Control
+var _settings_restore_return_focus: Control
+var _destructive_confirmation_counts := {
+	"campaign_restart": {"request_count": 0, "cancel_count": 0, "confirm_count": 0},
+	"save_delete": {"request_count": 0, "cancel_count": 0, "confirm_count": 0},
+	"settings_restore": {"request_count": 0, "cancel_count": 0, "confirm_count": 0},
+}
 
 func _ready() -> void:
 	var started := ProfileLogScript.begin_usec()
@@ -180,6 +188,7 @@ func _ready() -> void:
 	SettingsService.ensure_settings()
 	buckets["settings"] = ProfileLogScript.elapsed_ms(phase_started)
 	_configure_display_change_confirmation()
+	_configure_destructive_confirmations()
 	phase_started = ProfileLogScript.begin_usec()
 	_apply_visual_theme()
 	buckets["theme"] = ProfileLogScript.elapsed_ms(phase_started)
@@ -287,7 +296,9 @@ func _on_campaign_restart_pressed() -> void:
 	var action := CampaignProgression.campaign_restart_action(_selected_campaign_id)
 	if bool(action.get("disabled", true)):
 		return
+	_campaign_restart_return_focus = _capture_confirmation_origin(_campaign_restart_button)
 	_pending_campaign_restart_id = String(action.get("campaign_id", ""))
+	_count_destructive_confirmation("campaign_restart", "request_count")
 	_campaign_restart_dialog.title = "Restart %s?" % String(action.get("campaign_name", "campaign arc"))
 	_campaign_restart_dialog.dialog_text = String(action.get("summary", ""))
 	var dialog_label := _campaign_restart_dialog.get_label()
@@ -295,6 +306,7 @@ func _on_campaign_restart_pressed() -> void:
 	dialog_label.custom_minimum_size = Vector2(520.0, 72.0)
 	_campaign_restart_dialog.get_ok_button().text = "Restart Arc"
 	_campaign_restart_dialog.popup_centered(Vector2i(640, 210))
+	_focus_destructive_confirmation_cancel.call_deferred(_campaign_restart_dialog, "campaign_restart")
 
 func _on_campaign_restart_confirmed() -> void:
 	_campaign_restart_dialog.hide()
@@ -302,6 +314,8 @@ func _on_campaign_restart_confirmed() -> void:
 	_pending_campaign_restart_id = ""
 	if campaign_id == "":
 		return
+	_campaign_restart_return_focus = null
+	_count_destructive_confirmation("campaign_restart", "confirm_count")
 	var result := CampaignProgression.restart_campaign(campaign_id)
 	_campaign_restart_notice = String(result.get("message", ""))
 	if not bool(result.get("ok", false)):
@@ -311,9 +325,14 @@ func _on_campaign_restart_confirmed() -> void:
 	_selected_campaign_scenario_id = ""
 	_rebuild_campaign_browser()
 
-func _on_campaign_restart_canceled() -> void:
+func _on_campaign_restart_canceled() -> Dictionary:
+	var had_pending := _pending_campaign_restart_id != ""
 	_campaign_restart_dialog.hide()
 	_pending_campaign_restart_id = ""
+	if had_pending:
+		_count_destructive_confirmation("campaign_restart", "cancel_count")
+		_restore_destructive_confirmation_origin.call_deferred("campaign_restart")
+	return {"ok": true, "canceled": had_pending, "pending": false}
 
 func _launch_campaign_action(action: Dictionary) -> void:
 	var started := ProfileLogScript.begin_usec()
@@ -406,10 +425,12 @@ func _on_delete_selected_save_pressed() -> void:
 	var action := SaveService.build_delete_action(_selected_summary())
 	if bool(action.get("disabled", true)):
 		return
+	_save_delete_return_focus = _capture_confirmation_origin(_delete_selected_save_button)
 	_pending_save_delete_identity = {
 		"slot_type": String(action.get("slot_type", "")),
 		"slot_id": String(action.get("slot_id", "")),
 	}
+	_count_destructive_confirmation("save_delete", "request_count")
 	_save_delete_dialog.title = "Delete %s?" % String(action.get("slot_label", "save"))
 	_save_delete_dialog.dialog_text = String(action.get("summary", ""))
 	var dialog_label := _save_delete_dialog.get_label()
@@ -417,6 +438,7 @@ func _on_delete_selected_save_pressed() -> void:
 	dialog_label.custom_minimum_size = Vector2(520.0, 72.0)
 	_save_delete_dialog.get_ok_button().text = "Delete Save"
 	_save_delete_dialog.popup_centered(Vector2i(640, 210))
+	_focus_destructive_confirmation_cancel.call_deferred(_save_delete_dialog, "save_delete")
 
 func _on_save_name_text_changed(_new_text: String) -> void:
 	_refresh_save_name_action()
@@ -435,13 +457,20 @@ func _on_save_delete_confirmed() -> void:
 	_pending_save_delete_identity = {}
 	if identity.is_empty():
 		return
+	_save_delete_return_focus = null
+	_count_destructive_confirmation("save_delete", "confirm_count")
 	var result := SaveService.delete_session_from_summary(identity)
 	_save_load_notice = String(result.get("message", ""))
 	_rebuild_save_browser()
 
-func _on_save_delete_canceled() -> void:
+func _on_save_delete_canceled() -> Dictionary:
+	var had_pending := not _pending_save_delete_identity.is_empty()
 	_save_delete_dialog.hide()
 	_pending_save_delete_identity = {}
+	if had_pending:
+		_count_destructive_confirmation("save_delete", "cancel_count")
+		_restore_destructive_confirmation_origin.call_deferred("save_delete")
+	return {"ok": true, "canceled": had_pending, "pending": false}
 
 func _on_load_selected_pressed() -> void:
 	var live_summary := SaveService.refresh_summary(_selected_summary())
@@ -593,6 +622,125 @@ func _configure_display_change_confirmation() -> void:
 	var callback := _on_display_change_state_changed
 	if not SettingsService.display_change_state_changed.is_connected(callback):
 		SettingsService.display_change_state_changed.connect(callback)
+
+
+func _configure_destructive_confirmations() -> void:
+	_configure_safe_confirmation(_campaign_restart_dialog, "Keep Progress")
+	_configure_safe_confirmation(_save_delete_dialog, "Keep Save")
+	_configure_safe_confirmation(_settings_restore_defaults_dialog, "Keep Settings")
+
+
+func _configure_safe_confirmation(dialog: ConfirmationDialog, cancel_text: String) -> void:
+	var cancel_button := dialog.get_cancel_button()
+	cancel_button.text = cancel_text
+	var cancel_shortcut := Shortcut.new()
+	var cancel_action := InputEventAction.new()
+	cancel_action.action = "ui_cancel"
+	cancel_shortcut.events = [cancel_action]
+	cancel_button.shortcut = cancel_shortcut
+
+
+func _capture_confirmation_origin(fallback: Control) -> Control:
+	var focus_owner := get_viewport().gui_get_focus_owner() as Control
+	if (
+		is_instance_valid(focus_owner)
+		and focus_owner.is_inside_tree()
+		and focus_owner.is_visible_in_tree()
+		and focus_owner.focus_mode != Control.FOCUS_NONE
+		and is_ancestor_of(focus_owner)
+	):
+		return focus_owner
+	return fallback
+
+
+func _focus_destructive_confirmation_cancel(dialog: ConfirmationDialog, workflow: String) -> void:
+	if not dialog.visible or not _destructive_confirmation_pending(workflow):
+		return
+	dialog.get_cancel_button().grab_focus()
+	await get_tree().process_frame
+	if dialog.visible and _destructive_confirmation_pending(workflow):
+		dialog.get_cancel_button().grab_focus()
+
+
+func _restore_destructive_confirmation_origin(workflow: String) -> void:
+	var target := _destructive_confirmation_return_focus(workflow)
+	_set_destructive_confirmation_return_focus(workflow, null)
+	await get_tree().process_frame
+	if (
+		is_instance_valid(target)
+		and target.is_inside_tree()
+		and target.is_visible_in_tree()
+		and target.focus_mode != Control.FOCUS_NONE
+	):
+		target.grab_focus()
+
+
+func _destructive_confirmation_return_focus(workflow: String) -> Control:
+	match workflow:
+		"campaign_restart":
+			return _campaign_restart_return_focus
+		"save_delete":
+			return _save_delete_return_focus
+		"settings_restore":
+			return _settings_restore_return_focus
+	return null
+
+
+func _set_destructive_confirmation_return_focus(workflow: String, target: Control) -> void:
+	match workflow:
+		"campaign_restart":
+			_campaign_restart_return_focus = target
+		"save_delete":
+			_save_delete_return_focus = target
+		"settings_restore":
+			_settings_restore_return_focus = target
+
+
+func _destructive_confirmation_pending(workflow: String) -> bool:
+	match workflow:
+		"campaign_restart":
+			return _pending_campaign_restart_id != ""
+		"save_delete":
+			return not _pending_save_delete_identity.is_empty()
+		"settings_restore":
+			return _settings_restore_pending
+	return false
+
+
+func _count_destructive_confirmation(workflow: String, field: String) -> void:
+	var counts_value: Variant = _destructive_confirmation_counts.get(workflow, {})
+	var counts: Dictionary = counts_value if counts_value is Dictionary else {}
+	counts[field] = int(counts.get(field, 0)) + 1
+	_destructive_confirmation_counts[workflow] = counts
+
+
+func _confirmation_focus_owner_name(dialog: ConfirmationDialog) -> String:
+	var focus_owner := dialog.get_cancel_button().get_viewport().gui_get_focus_owner()
+	return String(focus_owner.name) if focus_owner != null else ""
+
+
+func _root_focus_owner_name() -> String:
+	var focus_owner := get_viewport().gui_get_focus_owner()
+	return String(focus_owner.name) if focus_owner != null else ""
+
+
+func _destructive_confirmation_snapshot(workflow: String, dialog: ConfirmationDialog) -> Dictionary:
+	var counts_value: Variant = _destructive_confirmation_counts.get(workflow, {})
+	var counts: Dictionary = counts_value if counts_value is Dictionary else {}
+	var return_focus := _destructive_confirmation_return_focus(workflow)
+	return {
+		"pending": _destructive_confirmation_pending(workflow),
+		"dialog_visible": dialog.visible,
+		"cancel_text": dialog.get_cancel_button().text,
+		"focus_owner": _confirmation_focus_owner_name(dialog),
+		"return_focus_name": String(return_focus.name) if is_instance_valid(return_focus) else "",
+		"origin_focus_owner": _root_focus_owner_name(),
+		"request_count": int(counts.get("request_count", 0)),
+		"cancel_count": int(counts.get("cancel_count", 0)),
+		"confirm_count": int(counts.get("confirm_count", 0)),
+		"dialog_position": dialog.position,
+		"dialog_size": dialog.size,
+	}
 
 func _request_display_change_preview(
 	mode_id: String,
@@ -842,19 +990,24 @@ func _on_export_support_bundle_pressed() -> void:
 	_export_support_bundle(true)
 
 func _on_restore_settings_defaults_pressed() -> void:
+	_settings_restore_return_focus = _capture_confirmation_origin(_restore_settings_defaults_button)
 	_settings_restore_pending = true
+	_count_destructive_confirmation("settings_restore", "request_count")
 	_settings_restore_defaults_dialog.dialog_text = "Restore presentation, sound, gameplay, custom movement keys, and readability settings to their defaults? Campaign progress and expedition saves will stay unchanged. Display mode and resolution will be previewed separately before they are kept."
 	var dialog_label := _settings_restore_defaults_dialog.get_label()
 	dialog_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	dialog_label.custom_minimum_size = Vector2(560.0, 86.0)
 	_settings_restore_defaults_dialog.get_ok_button().text = "Restore Defaults"
 	_settings_restore_defaults_dialog.popup_centered(Vector2i(680, 230))
+	_focus_destructive_confirmation_cancel.call_deferred(_settings_restore_defaults_dialog, "settings_restore")
 
 func _on_settings_restore_defaults_confirmed() -> void:
 	_settings_restore_defaults_dialog.hide()
 	if not _settings_restore_pending:
 		return
 	_settings_restore_pending = false
+	_settings_restore_return_focus = null
+	_count_destructive_confirmation("settings_restore", "confirm_count")
 	var result: Dictionary = SettingsService.restore_default_settings(true)
 	_settings_restore_status = (
 		String(result.get("message", "Settings restored and saved.")).strip_edges()
@@ -881,9 +1034,14 @@ func _on_settings_restore_defaults_confirmed() -> void:
 		_settings_restore_status = restore_status
 		_refresh_settings_panel()
 
-func _on_settings_restore_defaults_canceled() -> void:
+func _on_settings_restore_defaults_canceled() -> Dictionary:
+	var had_pending := _settings_restore_pending
 	_settings_restore_defaults_dialog.hide()
 	_settings_restore_pending = false
+	if had_pending:
+		_count_destructive_confirmation("settings_restore", "cancel_count")
+		_restore_destructive_confirmation_origin.call_deferred("settings_restore")
+	return {"ok": true, "canceled": had_pending, "pending": false}
 
 func _export_support_bundle(reveal_in_file_manager: bool) -> Dictionary:
 	var result: Dictionary = RuntimeIssueLog.export_support_bundle(SettingsService.ensure_settings())
@@ -2387,6 +2545,9 @@ func validation_snapshot() -> Dictionary:
 	var latest_summary := _active_save_board_latest_summary()
 	var quit_check := _quit_check_surface()
 	var continue_check := _continue_check_surface()
+	var campaign_restart_confirmation := _destructive_confirmation_snapshot("campaign_restart", _campaign_restart_dialog)
+	var save_delete_confirmation := _destructive_confirmation_snapshot("save_delete", _save_delete_dialog)
+	var settings_restore_confirmation := _destructive_confirmation_snapshot("settings_restore", _settings_restore_defaults_dialog)
 	return {
 		"scene_path": scene_file_path,
 		"music_audio": MusicAudio.validation_summary(),
@@ -2419,6 +2580,14 @@ func validation_snapshot() -> Dictionary:
 		"campaign_restart_dialog_visible": _campaign_restart_dialog.visible,
 		"campaign_restart_pending_id": _pending_campaign_restart_id,
 		"campaign_restart_notice": _campaign_restart_notice,
+		"campaign_restart_cancel_text": String(campaign_restart_confirmation.get("cancel_text", "")),
+		"campaign_restart_dialog_focus_owner": String(campaign_restart_confirmation.get("focus_owner", "")),
+		"campaign_restart_return_focus_name": String(campaign_restart_confirmation.get("return_focus_name", "")),
+		"campaign_restart_origin_focus_owner": String(campaign_restart_confirmation.get("origin_focus_owner", "")),
+		"campaign_restart_request_count": int(campaign_restart_confirmation.get("request_count", 0)),
+		"campaign_restart_cancel_count": int(campaign_restart_confirmation.get("cancel_count", 0)),
+		"campaign_restart_confirm_count": int(campaign_restart_confirmation.get("confirm_count", 0)),
+		"campaign_restart_confirmation": campaign_restart_confirmation,
 		"primary_campaign_action": primary_campaign_action.duplicate(true),
 		"selected_chapter_action": selected_chapter_action.duplicate(true),
 		"campaign_chapter_check": campaign_chapter_check.duplicate(true),
@@ -2510,6 +2679,14 @@ func validation_snapshot() -> Dictionary:
 		"save_delete_tooltip": _delete_selected_save_button.tooltip_text,
 		"save_delete_dialog_visible": _save_delete_dialog.visible,
 		"save_delete_pending_identity": _pending_save_delete_identity.duplicate(true),
+		"save_delete_cancel_text": String(save_delete_confirmation.get("cancel_text", "")),
+		"save_delete_dialog_focus_owner": String(save_delete_confirmation.get("focus_owner", "")),
+		"save_delete_return_focus_name": String(save_delete_confirmation.get("return_focus_name", "")),
+		"save_delete_origin_focus_owner": String(save_delete_confirmation.get("origin_focus_owner", "")),
+		"save_delete_request_count": int(save_delete_confirmation.get("request_count", 0)),
+		"save_delete_cancel_count": int(save_delete_confirmation.get("cancel_count", 0)),
+		"save_delete_confirm_count": int(save_delete_confirmation.get("confirm_count", 0)),
+		"save_delete_confirmation": save_delete_confirmation,
 		"save_name_action": SaveService.build_manual_slot_name_action(selected_save_summary),
 		"save_name_text": _save_name_edit.text,
 		"save_name_edit_visible": _save_name_edit.visible,
@@ -2536,6 +2713,14 @@ func validation_snapshot() -> Dictionary:
 		"settings_restore_dialog_title": _settings_restore_defaults_dialog.title,
 		"settings_restore_dialog_text": _settings_restore_defaults_dialog.dialog_text,
 		"settings_restore_pending": _settings_restore_pending,
+		"settings_restore_cancel_text": String(settings_restore_confirmation.get("cancel_text", "")),
+		"settings_restore_dialog_focus_owner": String(settings_restore_confirmation.get("focus_owner", "")),
+		"settings_restore_return_focus_name": String(settings_restore_confirmation.get("return_focus_name", "")),
+		"settings_restore_origin_focus_owner": String(settings_restore_confirmation.get("origin_focus_owner", "")),
+		"settings_restore_request_count": int(settings_restore_confirmation.get("request_count", 0)),
+		"settings_restore_cancel_count": int(settings_restore_confirmation.get("cancel_count", 0)),
+		"settings_restore_confirm_count": int(settings_restore_confirmation.get("confirm_count", 0)),
+		"settings_restore_confirmation": settings_restore_confirmation,
 		"display_change_dialog_visible": _display_change_confirmation_dialog.visible,
 		"display_change_dialog_title": _display_change_confirmation_dialog.title,
 		"display_change_dialog_text": _display_change_confirmation_dialog.dialog_text,
@@ -2782,16 +2967,18 @@ func validation_export_support_bundle() -> Dictionary:
 func validation_request_settings_restore_defaults() -> Dictionary:
 	validation_open_settings_stage()
 	_on_restore_settings_defaults_pressed()
-	return {
+	var result := {
 		"pending": _settings_restore_pending,
 		"dialog_visible": _settings_restore_defaults_dialog.visible,
 		"title": _settings_restore_defaults_dialog.title,
 		"text": _settings_restore_defaults_dialog.dialog_text,
 	}
+	result.merge(_destructive_confirmation_snapshot("settings_restore", _settings_restore_defaults_dialog), true)
+	return result
 
 func validation_confirm_settings_restore_defaults() -> Dictionary:
 	_on_settings_restore_defaults_confirmed()
-	return {
+	var result := {
 		"pending": _settings_restore_pending,
 		"status": _settings_restore_status,
 		"settings": SettingsService.ensure_settings().duplicate(true),
@@ -2799,9 +2986,13 @@ func validation_confirm_settings_restore_defaults() -> Dictionary:
 		"display_change_snapshot": SettingsService.display_change_snapshot(),
 		"display_dialog_visible": _display_change_confirmation_dialog.visible,
 	}
+	result.merge(_destructive_confirmation_snapshot("settings_restore", _settings_restore_defaults_dialog), true)
+	return result
 
-func validation_cancel_settings_restore_defaults() -> void:
-	_on_settings_restore_defaults_canceled()
+func validation_cancel_settings_restore_defaults() -> Dictionary:
+	var result := _on_settings_restore_defaults_canceled()
+	result.merge(_destructive_confirmation_snapshot("settings_restore", _settings_restore_defaults_dialog), true)
+	return result
 
 func validation_select_skirmish(scenario_id: String) -> bool:
 	for index in range(_skirmish_entries.size()):
@@ -2852,21 +3043,31 @@ func validation_set_campaign_difficulty(difficulty_id: String) -> bool:
 
 func validation_request_campaign_restart() -> Dictionary:
 	_on_campaign_restart_pressed()
-	return {
+	var result := {
 		"pending_campaign_id": _pending_campaign_restart_id,
 		"dialog_visible": _campaign_restart_dialog.visible,
 		"title": _campaign_restart_dialog.title,
 		"text": _campaign_restart_dialog.dialog_text,
 	}
+	result.merge(_destructive_confirmation_snapshot("campaign_restart", _campaign_restart_dialog), true)
+	return result
 
 func validation_confirm_campaign_restart() -> Dictionary:
 	_on_campaign_restart_confirmed()
-	return {
+	var result := {
 		"pending_campaign_id": _pending_campaign_restart_id,
 		"selected_campaign_id": _selected_campaign_id,
 		"selected_scenario_id": _selected_campaign_scenario_id,
 		"notice": _campaign_restart_notice,
 	}
+	result.merge(_destructive_confirmation_snapshot("campaign_restart", _campaign_restart_dialog), true)
+	return result
+
+
+func validation_cancel_campaign_restart() -> Dictionary:
+	var result := _on_campaign_restart_canceled()
+	result.merge(_destructive_confirmation_snapshot("campaign_restart", _campaign_restart_dialog), true)
+	return result
 
 func validation_set_generated_seed(seed: String) -> bool:
 	_generated_seed_edit.text = seed
@@ -3212,25 +3413,31 @@ func validation_select_save_summary(slot_type: String, slot_id: String) -> bool:
 
 func validation_request_selected_save_delete() -> Dictionary:
 	_on_delete_selected_save_pressed()
-	return {
+	var result := {
 		"pending_identity": _pending_save_delete_identity.duplicate(true),
 		"dialog_visible": _save_delete_dialog.visible,
 		"title": _save_delete_dialog.title,
 		"text": _save_delete_dialog.dialog_text,
 	}
+	result.merge(_destructive_confirmation_snapshot("save_delete", _save_delete_dialog), true)
+	return result
 
 func validation_confirm_selected_save_delete() -> Dictionary:
 	var selected_key_before := _selected_save_key
 	_on_save_delete_confirmed()
-	return {
+	var result := {
 		"selected_key_before": selected_key_before,
 		"selected_key_after": _selected_save_key,
 		"pending_identity": _pending_save_delete_identity.duplicate(true),
 		"notice": _save_load_notice,
 	}
+	result.merge(_destructive_confirmation_snapshot("save_delete", _save_delete_dialog), true)
+	return result
 
-func validation_cancel_selected_save_delete() -> void:
-	_on_save_delete_canceled()
+func validation_cancel_selected_save_delete() -> Dictionary:
+	var result := _on_save_delete_canceled()
+	result.merge(_destructive_confirmation_snapshot("save_delete", _save_delete_dialog), true)
+	return result
 
 func validation_set_selected_save_name(name: String) -> Dictionary:
 	_save_name_edit.text = name

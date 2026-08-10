@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `accessibility-destructive-confirmation-safe-cancel-10184`. Manual overwrite plus Restart Arc, Delete Save, and Restore Defaults now enter on named safe actions (`Keep Save`, `Keep Progress`, or `Keep Settings`). Controller Back/Escape cancels without mutation and restores the originating command; deliberate confirmation remains exactly once. Focused persistence/progression/settings, controller, compact 1280x720, core, parse, repository, JSON, Python, and diff gates pass.
 - Latest completed implementation slice: `overworld-end-turn-autosave-failure-surface-10184`. When an in-progress End Turn commits but autosave fails, the live advanced day is retained while the shell now returns `saved:false`, shows bounded Save-now guidance, and records one runtime issue. Pending battles remain on the overworld until a successful manual Save persists the exact battle-ready state, then route once. Both failure phases, direct/warned/terminal controls, pending-battle recovery, core, parse, repository, JSON, Python, and diff gates pass at save version 9.
 - Latest completed implementation slice: `settings-transactional-cross-platform-persistence-10184`. Device settings now commit through verified same-directory candidate/backup files with bounded recovery. Failed ordinary changes restore exact config bytes, settings, runtime display/audio/accessibility state, and InputMap; valid live files win, only semantically valid backups recover, and candidate artifacts are never promoted. Main Menu, active-play settings, and keybindings report failure truthfully and refresh to committed values. Focused, compatibility, core, repository, and fresh packaged Linux/Windows-Wine gates pass at settings version 14.
 - Latest completed implementation slice: `ux-town-departure-end-turn-copy-integrity-10184`. Town departure now uses one authoritative `Return to Field` surface across core, cached, and live states. Remaining movement, exhausted movement, and response-order priority are explicit; the unchanged handler still routes only to the overworld without advancing the day, spending movement, or autosaving. Focused town visual/exit/controller, core, parse, repository, JSON, Python, and diff gates pass.
@@ -3238,6 +3239,37 @@ Completion evidence:
 - a successful existing manual Save reloads the canonical advanced state without a second End Turn or autosave attempt;
 - when enemy resolution leaves a pending battle, failure performs zero routes; manual Save persists the exact battle state and then takes the existing battle route exactly once;
 - direct low-risk, warned confirmation, terminal-unavailable, save transaction, controller, core, editor parse, repository, JSON, Python, and diff gates pass at save version 9.
+
+## Destructive Confirmation Safe Cancel Focus
+
+id: `accessibility-destructive-confirmation-safe-cancel-10184`
+
+Status: complete.
+
+Selected Phase 6 accessibility and input-safety slice. Manual overwrite, campaign
+restart, save deletion, and Restore Defaults confirmations currently open with the
+irreversible accept action focused, so a repeated controller/keyboard accept can
+execute the destructive operation before the player deliberately chooses it.
+
+Implementation target:
+- label each safe cancel action explicitly (`Keep Save`, `Keep Progress`, or `Keep Settings`) and give it initial native-dialog focus after popup;
+- bind controller Back and keyboard Escape to the real cancel button, close without mutation, and restore exact originating-command focus;
+- preserve existing destructive copy, compact layout, persistence transactions, and exactly-once confirm handlers.
+
+Completion criteria:
+- controller/keyboard opening focuses the safe action in the dialog subwindow for shared manual overwrite and Main Menu restart/delete/default dialogs;
+- Back/Escape cancel preserves exact save bytes, campaign profile, settings, active session, and returns focus to the origin command;
+- deliberate confirm invokes the existing action exactly once and all prior atomicity/rollback contracts remain green;
+- focused manual-save/campaign/delete/settings/controller/layout, core, parse, repository, JSON, Python, and diff gates pass.
+
+Non-goals:
+- no destructive-action consequence changes, new modal framework, settings/save/progression schema change, layout redesign, gameplay balance, Native RMG work, publication, or overall release-completion claim.
+
+Completion evidence:
+- shared manual overwrite across Overworld, Town, Battle, and Outcome focuses `Keep Save`; Restart Arc, Delete Save, and Restore Defaults focus `Keep Progress`, `Keep Save`, and `Keep Settings` respectively in the native dialog viewport;
+- controller Back and physical Escape preserve exact save bytes, campaign profile, settings, and active session state while restoring the exact originating control;
+- focused workflows prove deliberate confirmation executes once, dialogs remain compact at 1280x720, and existing persistence/progression/settings consequences remain unchanged;
+- controller suites, core regression, editor parse, repository validator, JSON, Python, and diff gates pass.
 
 ## Phase Roadmap
 

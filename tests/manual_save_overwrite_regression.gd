@@ -69,6 +69,11 @@ func _run() -> void:
 		"occupied_slot_confirmation": true,
 		"corrupt_slot_confirmation": true,
 		"cancel_preserved_exact_bytes": true,
+		"safe_cancel_focus": "Keep Save",
+		"joypad_b_cancel_exact": true,
+		"escape_cancel_exact": true,
+		"origin_focus_restored": true,
+		"confirm_exactly_once": true,
 		"pending_slot_binding_preserved": true,
 		"invalid_slot_rejected": true,
 		"unrelated_manual_slots_preserved": 2,
@@ -101,8 +106,13 @@ func _exercise_route(
 	add_child(shell)
 	await _settle()
 	var active_payload: Dictionary = session.to_dict()
+	var origin_button: Button = shell.get_node("%Save")
+	var dialog: ConfirmationDialog = shell.get_node("ManualSaveOverwriteDialog")
+	origin_button.grab_focus()
+	await get_tree().process_frame
 
 	var request: Dictionary = shell.call("validation_request_manual_save")
+	await _settle()
 	var request_text := "%s\n%s" % [String(request.get("title", "")), String(request.get("text", ""))]
 	if not bool(request.get("visible", false)) or int(request.get("pending_slot", 0)) != 2:
 		return _fail_shell(shell, "%s did not require Manual Slot 2 confirmation: %s." % [route.get("id", "route"), JSON.stringify(request)])
@@ -111,25 +121,42 @@ func _exercise_route(
 			return _fail_shell(shell, "%s overwrite confirmation omitted %s: %s." % [route.get("id", "route"), token, request_text])
 	if _file_state(_manual_slot_path(2)) != slot2_before:
 		return _fail_shell(shell, "%s confirmation request changed Manual Slot 2 before approval." % route.get("id", "route"))
+	if not _safe_dialog_ready(dialog, "Keep Save"):
+		return _fail_shell(shell, "%s overwrite confirmation did not focus its compact Keep Save action." % route.get("id", "route"))
 
 	if String(route.get("id", "")) == "overworld":
 		await _capture("overwrite_confirmation")
-		shell.call("validation_cancel_manual_save_overwrite")
-		if _file_state(_manual_slot_path(2)) != slot2_before:
-			return _fail_shell(shell, "Canceling overwrite changed Manual Slot 2 bytes.")
+		await _press_joypad_button(JOY_BUTTON_B)
+		if dialog.visible or get_viewport().gui_get_focus_owner() != origin_button \
+				or _file_state(_manual_slot_path(2)) != slot2_before \
+				or not _require_preserved_state(protected_states, active_payload, campaign_before, settings_before, _manual_slot_path(2)):
+			return _fail_shell(shell, "Joypad B did not cancel overwrite exactly and restore Save focus.")
 		request = shell.call("validation_request_manual_save")
-		if not bool(request.get("visible", false)):
-			return _fail_shell(shell, "Overwrite confirmation did not reopen after cancellation.")
+		await _settle()
+		if not bool(request.get("visible", false)) or not _safe_dialog_ready(dialog, "Keep Save"):
+			return _fail_shell(shell, "Overwrite confirmation did not reopen safely after joypad cancellation.")
+		await _press_key(KEY_ESCAPE)
+		if dialog.visible or get_viewport().gui_get_focus_owner() != origin_button \
+				or _file_state(_manual_slot_path(2)) != slot2_before \
+				or not _require_preserved_state(protected_states, active_payload, campaign_before, settings_before, _manual_slot_path(2)):
+			return _fail_shell(shell, "Escape did not cancel overwrite exactly and restore Save focus.")
+		request = shell.call("validation_request_manual_save")
+		await _settle()
+		if not bool(request.get("visible", false)) or not _safe_dialog_ready(dialog, "Keep Save"):
+			return _fail_shell(shell, "Overwrite confirmation did not reopen safely for confirmation.")
 
 	if not bool(shell.call("validation_select_save_slot", 3)):
 		return _fail_shell(shell, "%s could not change visible selection while confirmation was pending." % route.get("id", "route"))
 	var slot3_before := _file_state(_manual_slot_path(3))
 	var result: Dictionary = shell.call("validation_confirm_manual_save_overwrite")
+	var dialog_after_confirm: Dictionary = dialog.validation_snapshot()
 	var saved_summary := SaveService.inspect_manual_slot(2)
 	if int(result.get("pending_slot", 0)) != 2 or not SaveService.can_load_summary(saved_summary) or int(saved_summary.get("day", 0)) != int(route.get("day", 0)):
 		return _fail_shell(shell, "%s confirmation did not write the originally bound Manual Slot 2: %s." % [route.get("id", "route"), JSON.stringify(result)])
 	if _file_state(_manual_slot_path(3)) != slot3_before:
 		return _fail_shell(shell, "%s redirected overwrite into the later-selected Manual Slot 3." % route.get("id", "route"))
+	if int(dialog_after_confirm.get("confirm_count", 1)) != 1:
+		return _fail_shell(shell, "%s overwrite confirmation did not execute exactly once: %s." % [route.get("id", "route"), JSON.stringify(dialog_after_confirm)])
 	if not _require_preserved_state(protected_states, active_payload, campaign_before, settings_before, _manual_slot_path(2)):
 		return false
 	shell.queue_free()
@@ -322,6 +349,40 @@ func _settle() -> void:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	await get_tree().process_frame
+
+func _safe_dialog_ready(dialog: ConfirmationDialog, expected_cancel_text: String) -> bool:
+	if dialog == null or not dialog.visible or dialog.get_cancel_button().text != expected_cancel_text:
+		return false
+	var dialog_viewport := dialog.get_cancel_button().get_viewport()
+	if dialog_viewport == null or dialog_viewport.gui_get_focus_owner() != dialog.get_cancel_button():
+		return false
+	return dialog.size.x <= 960 and dialog.size.y <= 540
+
+func _press_key(keycode: Key) -> void:
+	var pressed := InputEventKey.new()
+	pressed.keycode = keycode
+	pressed.physical_keycode = keycode
+	pressed.pressed = true
+	Input.parse_input_event(pressed)
+	await get_tree().process_frame
+	var released := InputEventKey.new()
+	released.keycode = keycode
+	released.physical_keycode = keycode
+	released.pressed = false
+	Input.parse_input_event(released)
+	await _settle()
+
+func _press_joypad_button(button_index: int) -> void:
+	var pressed := InputEventJoypadButton.new()
+	pressed.button_index = button_index
+	pressed.pressed = true
+	Input.parse_input_event(pressed)
+	await get_tree().process_frame
+	var released := InputEventJoypadButton.new()
+	released.button_index = button_index
+	released.pressed = false
+	Input.parse_input_event(released)
+	await _settle()
 
 func _fail_shell(shell, message: String) -> bool:
 	if shell != null:

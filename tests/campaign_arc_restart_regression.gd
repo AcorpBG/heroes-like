@@ -86,8 +86,17 @@ func _run() -> void:
 	if not bool(before_snapshot.get("campaign_restart_visible", false)) or bool(before_snapshot.get("campaign_restart_disabled", true)):
 		_fail("Campaign board did not expose Restart Arc for recorded progress: %s." % JSON.stringify(before_snapshot))
 		return
+	var origin_button: Button = shell.get_node("%RestartCampaignArc")
+	var dialog: ConfirmationDialog = shell.get_node("CampaignRestartDialog")
+	origin_button.grab_focus()
+	var cancel_profile := CampaignProgression.profile.duplicate(true)
+	var cancel_progression_file := _file_state("%s/%s" % [SaveService.SAVE_DIR, SaveService.PROGRESSION_FILE])
+	var cancel_session_saves := _session_save_bytes()
+	var active_session_before = SessionState.active_session
+	var active_payload_before := active_session_before.to_dict() if active_session_before != null else {}
 
 	var request: Dictionary = shell.call("validation_request_campaign_restart")
+	await _settle()
 	if not bool(request.get("dialog_visible", false)) or String(request.get("pending_campaign_id", "")) != TARGET_CAMPAIGN_ID:
 		_fail("Restart Arc did not require a campaign-bound confirmation: %s." % JSON.stringify(request))
 		return
@@ -99,7 +108,30 @@ func _run() -> void:
 	if CampaignRules.get_campaign_state(CampaignProgression.profile, TARGET_CAMPAIGN_ID).get("scenario_records", {}).is_empty():
 		_fail("Opening the restart confirmation mutated campaign progress before confirmation.")
 		return
+	if not _safe_dialog_ready(dialog, "Keep Progress"):
+		_fail("Restart confirmation did not focus its compact Keep Progress action in the native dialog viewport.")
+		return
 	await _capture("restart_confirmation")
+	await _press_joypad_button(JOY_BUTTON_B)
+	var joypad_cancel := _restart_cancel_diagnostic(dialog, origin_button, cancel_profile, cancel_progression_file, cancel_session_saves, settings_before, settings_file_before, active_payload_before)
+	if not bool(joypad_cancel.get("ok", false)):
+		_fail("Joypad B did not cancel Restart Arc exactly and restore Restart Arc focus: %s." % JSON.stringify(joypad_cancel))
+		return
+	request = shell.call("validation_request_campaign_restart")
+	await _settle()
+	if not bool(request.get("dialog_visible", false)) or not _safe_dialog_ready(dialog, "Keep Progress"):
+		_fail("Restart confirmation did not reopen safely after joypad cancellation.")
+		return
+	await _press_key(KEY_ESCAPE)
+	var escape_cancel := _restart_cancel_diagnostic(dialog, origin_button, cancel_profile, cancel_progression_file, cancel_session_saves, settings_before, settings_file_before, active_payload_before)
+	if not bool(escape_cancel.get("ok", false)):
+		_fail("Escape did not cancel Restart Arc exactly and restore Restart Arc focus: %s." % JSON.stringify(escape_cancel))
+		return
+	request = shell.call("validation_request_campaign_restart")
+	await _settle()
+	if not bool(request.get("dialog_visible", false)) or not _safe_dialog_ready(dialog, "Keep Progress"):
+		_fail("Restart confirmation did not reopen safely for confirmation.")
+		return
 
 	var confirmation: Dictionary = shell.call("validation_confirm_campaign_restart")
 	if String(confirmation.get("pending_campaign_id", "")) != "" or String(confirmation.get("selected_campaign_id", "")) != TARGET_CAMPAIGN_ID:
@@ -114,6 +146,9 @@ func _run() -> void:
 		return
 	if bool(after_snapshot.get("campaign_restart_visible", true)) or not bool(after_snapshot.get("campaign_restart_disabled", false)):
 		_fail("Restart command remained active after campaign-local progress was cleared: %s." % JSON.stringify(after_snapshot))
+		return
+	if int(after_snapshot.get("campaign_restart_confirm_count", -1)) != 1:
+		_fail("Restart Arc confirmation did not execute exactly once: %s." % JSON.stringify(after_snapshot.get("campaign_restart_confirm_count", -1)))
 		return
 	await _capture("restart_complete")
 
@@ -150,6 +185,11 @@ func _run() -> void:
 		"expedition_save_files_preserved": save_bytes_before.size(),
 		"device_settings_preserved": true,
 		"difficulty_preserved": "hard",
+		"safe_cancel_focus": "Keep Progress",
+		"joypad_b_cancel_exact": true,
+		"escape_cancel_exact": true,
+		"origin_focus_restored": true,
+		"confirm_exactly_once": true,
 		"save_version": SessionState.SAVE_VERSION,
 	})])
 	get_tree().quit(0)
@@ -169,6 +209,71 @@ func _file_state(path: String) -> Dictionary:
 		"exists": FileAccess.file_exists(path),
 		"bytes": FileAccess.get_file_as_bytes(path) if FileAccess.file_exists(path) else PackedByteArray(),
 	}
+
+func _restart_cancel_diagnostic(
+	dialog: ConfirmationDialog,
+	origin_button: Button,
+	expected_profile: Dictionary,
+	expected_progression_file: Dictionary,
+	expected_session_saves: Dictionary,
+	expected_settings: Dictionary,
+	expected_settings_file: Dictionary,
+	expected_active_payload: Dictionary
+) -> Dictionary:
+	var active_session = SessionState.active_session
+	var active_payload := active_session.to_dict() if active_session != null else {}
+	var checks := {
+		"dialog_hidden": not dialog.visible,
+		"origin_focus": get_viewport().gui_get_focus_owner() == origin_button,
+		"focus_owner": String(get_viewport().gui_get_focus_owner().name) if get_viewport().gui_get_focus_owner() != null else "",
+		"profile_exact": CampaignProgression.profile == expected_profile,
+		"progression_file_exact": _file_state("%s/%s" % [SaveService.SAVE_DIR, SaveService.PROGRESSION_FILE]) == expected_progression_file,
+		"session_saves_exact": _session_save_bytes() == expected_session_saves,
+		"settings_exact": SettingsService.settings == expected_settings,
+		"settings_file_exact": _file_state(SettingsService.SETTINGS_FILE) == expected_settings_file,
+		"active_session_exact": active_payload == expected_active_payload,
+	}
+	checks["ok"] = not checks.values().has(false)
+	return checks
+
+func _safe_dialog_ready(dialog: ConfirmationDialog, expected_cancel_text: String) -> bool:
+	if dialog == null or not dialog.visible or dialog.get_cancel_button().text != expected_cancel_text:
+		return false
+	var dialog_viewport := dialog.get_cancel_button().get_viewport()
+	return dialog_viewport != null \
+		and dialog_viewport.gui_get_focus_owner() == dialog.get_cancel_button() \
+		and dialog.size.x <= 960 and dialog.size.y <= 540
+
+func _press_key(keycode: Key) -> void:
+	var pressed := InputEventKey.new()
+	pressed.keycode = keycode
+	pressed.physical_keycode = keycode
+	pressed.pressed = true
+	Input.parse_input_event(pressed)
+	await get_tree().process_frame
+	var released := InputEventKey.new()
+	released.keycode = keycode
+	released.physical_keycode = keycode
+	released.pressed = false
+	Input.parse_input_event(released)
+	await _settle()
+
+func _press_joypad_button(button_index: int) -> void:
+	var pressed := InputEventJoypadButton.new()
+	pressed.button_index = button_index
+	pressed.pressed = true
+	Input.parse_input_event(pressed)
+	await get_tree().process_frame
+	var released := InputEventJoypadButton.new()
+	released.button_index = button_index
+	released.pressed = false
+	Input.parse_input_event(released)
+	await _settle()
+
+func _settle() -> void:
+	await get_tree().process_frame
+	await get_tree().process_frame
+	await get_tree().process_frame
 
 func _capture(stem: String) -> void:
 	if OS.get_environment("CAMPAIGN_ARC_RESTART_CAPTURE") != "1":

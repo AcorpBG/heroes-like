@@ -2,6 +2,7 @@ extends Node
 
 const REPORT_ID := "SETTINGS_RESTORE_DEFAULTS_REGRESSION"
 const CAPTURE_DIR := "res://.artifacts/settings_restore_defaults_regression"
+# Physical B/Escape exercise the same validation_cancel_settings_restore_defaults production handler.
 
 var _original_settings := {}
 var _original_settings_file := {}
@@ -50,8 +51,14 @@ func _run() -> void:
 	var support_before := RuntimeIssueLog.support_bundle_snapshot().duplicate(true)
 	var custom_memory := SettingsService.settings.duplicate(true)
 	var custom_file := _file_state(SettingsService.SETTINGS_FILE)
+	var origin_button: Button = shell.get_node("%RestoreSettingsDefaults")
+	var dialog: ConfirmationDialog = shell.get_node("SettingsRestoreDefaultsDialog")
+	shell.call("validation_open_settings_stage")
+	await _settle()
+	origin_button.grab_focus()
 
 	var request: Dictionary = shell.call("validation_request_settings_restore_defaults")
+	await _settle()
 	if not bool(request.get("pending", false)) or not bool(request.get("dialog_visible", false)):
 		_fail("Restore Defaults did not open a pending confirmation: %s." % JSON.stringify(request))
 		return
@@ -60,18 +67,35 @@ func _run() -> void:
 		if not confirmation_text.contains(token):
 			_fail("Restore confirmation omitted %s: %s." % [token, confirmation_text])
 			return
+	if not _safe_dialog_ready(dialog, "Keep Settings"):
+		_fail("Restore Defaults confirmation did not focus its compact Keep Settings action in the native dialog viewport.")
+		return
 	await _capture("restore_defaults_confirmation")
 
-	shell.call("validation_cancel_settings_restore_defaults")
-	if SettingsService.settings != custom_memory or _file_state(SettingsService.SETTINGS_FILE) != custom_file:
-		_fail("Canceling Restore Defaults changed settings in memory or on disk.")
+	await _press_joypad_button(JOY_BUTTON_B)
+	if not _restore_cancel_exact(dialog, origin_button, custom_memory, custom_file, protected_files, active_session_payload, campaign_before, support_before):
+		_fail("Joypad B did not cancel Restore Defaults exactly and restore Restore Defaults focus.")
 		return
 
 	request = shell.call("validation_request_settings_restore_defaults")
-	if not bool(request.get("pending", false)):
-		_fail("Restore confirmation could not be reopened after cancellation.")
+	await _settle()
+	if not bool(request.get("pending", false)) or not _safe_dialog_ready(dialog, "Keep Settings"):
+		_fail("Restore confirmation could not reopen safely after joypad cancellation.")
+		return
+	await _press_key(KEY_ESCAPE)
+	if not _restore_cancel_exact(dialog, origin_button, custom_memory, custom_file, protected_files, active_session_payload, campaign_before, support_before):
+		_fail("Escape did not cancel Restore Defaults exactly and restore Restore Defaults focus.")
+		return
+	request = shell.call("validation_request_settings_restore_defaults")
+	await _settle()
+	if not bool(request.get("pending", false)) or not _safe_dialog_ready(dialog, "Keep Settings"):
+		_fail("Restore confirmation could not reopen safely for confirmation.")
 		return
 	var result: Dictionary = shell.call("validation_confirm_settings_restore_defaults")
+	var confirmation_snapshot: Dictionary = shell.call("validation_snapshot")
+	if int(confirmation_snapshot.get("settings_restore_confirm_count", -1)) != 1:
+		_fail("Restore Defaults confirmation did not execute exactly once: %s." % JSON.stringify(confirmation_snapshot.get("settings_restore_confirm_count", -1)))
+		return
 	var defaults := SettingsService.build_default_settings()
 	if bool(result.get("pending", true)):
 		_fail("Confirmed restore left the first confirmation pending: %s." % JSON.stringify(result))
@@ -132,6 +156,11 @@ func _run() -> void:
 		"cancel_preserved_exact_bytes": true,
 		"custom_movement_keys_cleared": true,
 		"player_state_preserved": true,
+		"safe_cancel_focus": "Keep Settings",
+		"joypad_b_cancel_exact": true,
+		"escape_cancel_exact": true,
+		"origin_focus_restored": true,
+		"confirm_exactly_once": true,
 		"save_version": SessionState.SAVE_VERSION,
 	})])
 	get_tree().quit(0)
@@ -159,6 +188,61 @@ func _action_has_key(action: StringName, keycode: Key) -> bool:
 		if event is InputEventKey and (event.physical_keycode == keycode or event.keycode == keycode):
 			return true
 	return false
+
+func _restore_cancel_exact(
+	dialog: ConfirmationDialog,
+	origin_button: Button,
+	expected_settings: Dictionary,
+	expected_settings_file: Dictionary,
+	expected_protected_files: Dictionary,
+	expected_active_payload: Dictionary,
+	expected_campaign_profile: Dictionary,
+	expected_support_snapshot: Dictionary
+) -> bool:
+	var active_session = SessionState.active_session
+	var active_payload := active_session.to_dict() if active_session != null else {}
+	return not dialog.visible \
+		and get_viewport().gui_get_focus_owner() == origin_button \
+		and SettingsService.settings == expected_settings \
+		and _file_state(SettingsService.SETTINGS_FILE) == expected_settings_file \
+		and _protected_file_states() == expected_protected_files \
+		and active_payload == expected_active_payload \
+		and CampaignProgression.ensure_profile() == expected_campaign_profile \
+		and RuntimeIssueLog.support_bundle_snapshot() == expected_support_snapshot
+
+func _safe_dialog_ready(dialog: ConfirmationDialog, expected_cancel_text: String) -> bool:
+	if dialog == null or not dialog.visible or dialog.get_cancel_button().text != expected_cancel_text:
+		return false
+	var dialog_viewport := dialog.get_cancel_button().get_viewport()
+	return dialog_viewport != null \
+		and dialog_viewport.gui_get_focus_owner() == dialog.get_cancel_button() \
+		and dialog.size.x <= 960 and dialog.size.y <= 540
+
+func _press_key(keycode: Key) -> void:
+	var pressed := InputEventKey.new()
+	pressed.keycode = keycode
+	pressed.physical_keycode = keycode
+	pressed.pressed = true
+	Input.parse_input_event(pressed)
+	await get_tree().process_frame
+	var released := InputEventKey.new()
+	released.keycode = keycode
+	released.physical_keycode = keycode
+	released.pressed = false
+	Input.parse_input_event(released)
+	await _settle()
+
+func _press_joypad_button(button_index: int) -> void:
+	var pressed := InputEventJoypadButton.new()
+	pressed.button_index = button_index
+	pressed.pressed = true
+	Input.parse_input_event(pressed)
+	await get_tree().process_frame
+	var released := InputEventJoypadButton.new()
+	released.button_index = button_index
+	released.pressed = false
+	Input.parse_input_event(released)
+	await _settle()
 
 func _capture(stem: String) -> void:
 	if OS.get_environment("SETTINGS_RESTORE_CAPTURE") != "1":
