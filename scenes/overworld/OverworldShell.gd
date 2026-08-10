@@ -232,6 +232,10 @@ var _validation_controller_route_primary_invocation_count := 0
 var _validation_controller_left_move_count := 0
 var _validation_controller_route_last_step: Dictionary = {}
 var _validation_controller_route_last_accept: Dictionary = {}
+var _validation_gameplay_movement_keyboard_blocked_count := 0
+var _validation_gameplay_movement_controller_blocked_count := 0
+var _validation_gameplay_movement_repeat_blocked_count := 0
+var _validation_gameplay_movement_last_blocked: Dictionary = {}
 var _pending_end_turn_confirmation: Dictionary = {}
 var _last_end_turn_confirmation_result: Dictionary = {}
 var _last_end_turn_rule_result: Dictionary = {}
@@ -265,6 +269,7 @@ func _ready() -> void:
 	AppRouter.note_overworld_handoff_step("overworld_ready_enter")
 	_configure_controller_move_repeat_timer()
 	_configure_controller_route_repeat_timer()
+	_configure_gameplay_movement_input_ownership()
 	_configure_end_turn_confirmation()
 	_apply_visual_theme()
 	resized.connect(_apply_responsive_layout)
@@ -382,9 +387,18 @@ func _responsive_available_size() -> Vector2:
 	return available_size
 
 func _input(event: InputEvent) -> void:
-	if _active_play_settings_dialog != null and _active_play_settings_dialog.is_open():
-		return
-	if _end_turn_confirmation_dialog != null and _end_turn_confirmation_dialog.visible:
+	var modal_owner_open: bool = (
+		(_active_play_settings_dialog != null and _active_play_settings_dialog.is_open())
+		or (_end_turn_confirmation_dialog != null and _end_turn_confirmation_dialog.visible)
+	)
+	if modal_owner_open:
+		if event is InputEventJoypadMotion and int(event.axis) in [JOY_AXIS_LEFT_X, JOY_AXIS_LEFT_Y]:
+			if _handle_controller_move_axis_input(event):
+				get_viewport().set_input_as_handled()
+		elif event is InputEventKey and event.pressed and not event.echo:
+			var blocked_move_delta := _keyboard_hero_move_delta(event)
+			if blocked_move_delta != Vector2i.ZERO:
+				_record_gameplay_movement_input_blocked("keyboard", _overworld_gameplay_movement_blocked_reason(), false)
 		return
 	if _handle_controller_route_action_input(event):
 		get_viewport().set_input_as_handled()
@@ -405,6 +419,10 @@ func _input(event: InputEvent) -> void:
 		return
 	var move_delta := _keyboard_hero_move_delta(event)
 	if move_delta == Vector2i.ZERO:
+		return
+	var blocked_reason := _overworld_gameplay_movement_blocked_reason()
+	if blocked_reason != "":
+		_record_gameplay_movement_input_blocked("keyboard", blocked_reason, false)
 		return
 	if event.shift_pressed:
 		_pan_map(move_delta * 3)
@@ -435,7 +453,9 @@ func _handle_controller_move_axis_input(event: InputEvent) -> bool:
 	_controller_move_repeat_timer.stop()
 	if next_direction == Vector2i.ZERO:
 		return true
-	if not _controller_hero_movement_available():
+	var blocked_reason := _overworld_gameplay_movement_blocked_reason()
+	if blocked_reason != "":
+		_record_gameplay_movement_input_blocked("controller", blocked_reason, false)
 		_clear_controller_move_state()
 		return true
 	_move_from_controller_direction(next_direction)
@@ -449,10 +469,20 @@ func _configure_controller_move_repeat_timer() -> void:
 	_controller_move_repeat_timer.timeout.connect(_on_controller_move_repeat_timeout)
 	add_child(_controller_move_repeat_timer)
 
+func _configure_gameplay_movement_input_ownership() -> void:
+	var save_popup := _save_slot_picker.get_popup() if _save_slot_picker != null else null
+	if save_popup != null and not save_popup.about_to_popup.is_connected(_on_overworld_interaction_owner_opened):
+		save_popup.about_to_popup.connect(_on_overworld_interaction_owner_opened)
+
+func _on_overworld_interaction_owner_opened() -> void:
+	_clear_controller_move_state()
+
 func _on_controller_move_repeat_timeout() -> void:
 	if _controller_move_direction == Vector2i.ZERO:
 		return
-	if not _controller_hero_movement_available():
+	var blocked_reason := _overworld_gameplay_movement_blocked_reason()
+	if blocked_reason != "":
+		_record_gameplay_movement_input_blocked("controller", blocked_reason, true)
 		_clear_controller_move_state()
 		return
 	_move_from_controller_direction(_controller_move_direction)
@@ -468,13 +498,20 @@ func _controller_direction_from_axis(axis: Vector2) -> Vector2i:
 		return Vector2i.RIGHT if axis.x > 0.0 else Vector2i.LEFT
 	return Vector2i.DOWN if axis.y > 0.0 else Vector2i.UP
 
-func _controller_hero_movement_available() -> bool:
-	return (
-		_session != null
-		and _session.game_state == "overworld"
-		and _active_drawer == ""
-		and not _debug_command_in_progress
-	)
+func _record_gameplay_movement_input_blocked(input_kind: String, reason: String, repeated: bool) -> void:
+	if reason == "":
+		return
+	if input_kind == "keyboard":
+		_validation_gameplay_movement_keyboard_blocked_count += 1
+	else:
+		_validation_gameplay_movement_controller_blocked_count += 1
+		if repeated:
+			_validation_gameplay_movement_repeat_blocked_count += 1
+	_validation_gameplay_movement_last_blocked = {
+		"input": input_kind,
+		"reason": reason,
+		"repeat": repeated,
+	}
 
 func _move_from_controller_direction(direction: Vector2i) -> void:
 	if _controller_route_cursor_active:
@@ -586,7 +623,7 @@ func _controller_route_direction_from_axis(axis: Vector2) -> Vector2i:
 		return Vector2i.RIGHT if axis.x > 0.0 else Vector2i.LEFT
 	return Vector2i.DOWN if axis.y > 0.0 else Vector2i.UP
 
-func _controller_route_cursor_blocked_reason() -> String:
+func _overworld_gameplay_movement_blocked_reason() -> String:
 	if _session == null:
 		return "missing_session"
 	if _session.game_state != "overworld":
@@ -606,6 +643,9 @@ func _controller_route_cursor_blocked_reason() -> String:
 	if _debug_command_in_progress or _debug_overlay_enabled or _placement_debug_overlay_enabled:
 		return "debug_active"
 	return ""
+
+func _controller_route_cursor_blocked_reason() -> String:
+	return _overworld_gameplay_movement_blocked_reason()
 
 func _move_controller_route_cursor(direction: Vector2i, repeated: bool) -> Dictionary:
 	var before := _selected_tile
@@ -693,24 +733,36 @@ func _unhandled_input(event: InputEvent) -> void:
 				if _activate_primary_action():
 					get_viewport().set_input_as_handled()
 			KEY_UP:
+				if _overworld_gameplay_movement_blocked_reason() != "":
+					get_viewport().set_input_as_handled()
+					return
 				if event.shift_pressed:
 					_pan_map(Vector2i(0, -3))
 				else:
 					_move_north()
 				get_viewport().set_input_as_handled()
 			KEY_DOWN:
+				if _overworld_gameplay_movement_blocked_reason() != "":
+					get_viewport().set_input_as_handled()
+					return
 				if event.shift_pressed:
 					_pan_map(Vector2i(0, 3))
 				else:
 					_move_south()
 				get_viewport().set_input_as_handled()
 			KEY_LEFT:
+				if _overworld_gameplay_movement_blocked_reason() != "":
+					get_viewport().set_input_as_handled()
+					return
 				if event.shift_pressed:
 					_pan_map(Vector2i(-3, 0))
 				else:
 					_move_west()
 				get_viewport().set_input_as_handled()
 			KEY_RIGHT:
+				if _overworld_gameplay_movement_blocked_reason() != "":
+					get_viewport().set_input_as_handled()
+					return
 				if event.shift_pressed:
 					_pan_map(Vector2i(3, 0))
 				else:
@@ -804,6 +856,7 @@ func _request_end_turn() -> Dictionary:
 	var dialog_label := _end_turn_confirmation_dialog.get_label()
 	dialog_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	dialog_label.custom_minimum_size = Vector2(680.0, 0.0)
+	_on_overworld_interaction_owner_opened()
 	_end_turn_confirmation_dialog.popup_centered(Vector2i(760, 300))
 	_end_turn_confirmation_dialog.get_cancel_button().call_deferred("grab_focus")
 	_focus_end_turn_cancel_after_popup()
@@ -979,6 +1032,7 @@ func _commit_end_turn() -> Dictionary:
 			"committed": false,
 			"reason": "end_turn_commit_in_progress",
 		}
+	_on_overworld_interaction_owner_opened()
 	_end_turn_commit_in_progress = true
 	_validation_end_turn_commit_count += 1
 	_last_end_turn_rule_result = {}
@@ -1145,6 +1199,7 @@ func _on_save_pressed() -> Dictionary:
 			"message": _last_message,
 		}
 	if bool(action.get("requires_confirmation", false)):
+		_on_overworld_interaction_owner_opened()
 		_manual_save_overwrite_dialog.open_action(action)
 		return {
 			"ok": true,
@@ -1260,6 +1315,7 @@ func _on_menu_pressed() -> Dictionary:
 	return _last_return_to_menu_result.duplicate(true)
 
 func _on_settings_pressed() -> void:
+	_on_overworld_interaction_owner_opened()
 	_active_play_settings_dialog.open_dialog()
 
 func _on_active_play_settings_closed() -> void:
@@ -1276,26 +1332,26 @@ func _on_primary_action_pressed() -> void:
 	_activate_primary_action()
 
 func _on_open_command_pressed() -> void:
-	_active_drawer = "" if _active_drawer == "command" else "command"
+	_set_active_drawer("" if _active_drawer == "command" else "command")
 	_sync_context_drawers()
 	call_deferred("_configure_overworld_keyboard_focus", true)
 
 func _on_open_frontier_pressed() -> void:
-	_active_drawer = "" if _active_drawer == "frontier" else "frontier"
+	_set_active_drawer("" if _active_drawer == "frontier" else "frontier")
 	if _active_drawer == "frontier":
 		_refresh_frontier_drawer()
 	_sync_context_drawers()
 	call_deferred("_configure_overworld_keyboard_focus", true)
 
 func _on_close_drawers_pressed() -> void:
-	_active_drawer = ""
+	_set_active_drawer("")
 	_sync_context_drawers()
 	call_deferred("_configure_overworld_keyboard_focus", true)
 
 func _on_context_action_pressed(action_id: String) -> void:
 	var dispatch_started_usec := _debug_phase_begin("context_action_dispatch")
 	if action_id == "open_rendezvous":
-		_active_drawer = "command"
+		_set_active_drawer("command")
 		_sync_context_drawers()
 		call_deferred("_configure_overworld_keyboard_focus", true)
 		_debug_phase_end("context_action_dispatch", dispatch_started_usec, {"action_id": action_id})
@@ -1417,7 +1473,7 @@ func _on_rendezvous_transfer_pressed() -> void:
 	if bool(result.get("ok", false)):
 		_dismiss_command_briefing()
 		_select_hero_tile()
-	_active_drawer = "command"
+	_set_active_drawer("command")
 	var resolution := _handle_session_resolution()
 	if bool(resolution.get("handled", false)):
 		return
@@ -1477,7 +1533,7 @@ func _on_map_tile_pressed(tile: Vector2i) -> void:
 			_try_move(route_tile.x - hero_pos.x, route_tile.y - hero_pos.y, true)
 		_debug_finish_path_command()
 		return
-	_active_drawer = ""
+	_set_active_drawer("")
 	_debug_set_path_command_type("select_route")
 	_refresh_selected_route_preview("selected_route_changed")
 	if debug_started:
@@ -1566,7 +1622,7 @@ func _handle_move_result(result: Dictionary, preserve_selection: bool, debug_sta
 		AppRouter.go_to_town()
 		return
 	if route == "rendezvous":
-		_active_drawer = "command"
+		_set_active_drawer("command")
 		_select_hero_tile()
 		_refresh()
 		call_deferred("_configure_overworld_keyboard_focus", true)
@@ -5896,6 +5952,11 @@ func _sync_context_drawers() -> void:
 	_open_frontier_button.button_pressed = show_frontier
 	_refresh_drawer_handoff_cues()
 
+func _set_active_drawer(drawer: String) -> void:
+	if drawer != "":
+		_on_overworld_interaction_owner_opened()
+	_active_drawer = drawer
+
 func _configure_overworld_keyboard_focus(force: bool = false) -> void:
 	if not is_inside_tree() or (_active_play_settings_dialog != null and _active_play_settings_dialog.is_open()) or (_end_turn_confirmation_dialog != null and _end_turn_confirmation_dialog.visible):
 		return
@@ -7101,6 +7162,8 @@ func _build_debug_overlay() -> void:
 	_debug_overlay_panel.move_to_front()
 
 func _set_debug_overlay_enabled(enabled: bool) -> void:
+	if enabled:
+		_on_overworld_interaction_owner_opened()
 	_debug_overlay_enabled = enabled
 	if _debug_overlay_panel != null:
 		_debug_overlay_panel.visible = enabled
@@ -7109,6 +7172,8 @@ func _set_debug_overlay_enabled(enabled: bool) -> void:
 	_debug_update_overlay_text()
 
 func _set_placement_debug_overlay_enabled(enabled: bool) -> void:
+	if enabled:
+		_on_overworld_interaction_owner_opened()
 	_placement_debug_overlay_enabled = enabled
 	if _map_view != null and _map_view.has_method("set_placement_debug_overlay_enabled"):
 		_map_view.call("set_placement_debug_overlay_enabled", enabled)
@@ -8300,12 +8365,12 @@ func _validation_rendezvous_surface() -> Dictionary:
 	}
 
 func validation_open_command_drawer() -> Dictionary:
-	_active_drawer = "command"
+	_set_active_drawer("command")
 	_sync_context_drawers()
 	return _validation_chrome_state()
 
 func validation_open_frontier_drawer() -> Dictionary:
-	_active_drawer = "frontier"
+	_set_active_drawer("frontier")
 	_refresh_frontier_drawer()
 	_sync_context_drawers()
 	return _validation_chrome_state()
@@ -8319,7 +8384,7 @@ func validation_select_tile(x: int, y: int) -> Dictionary:
 	_debug_record_phase_usec("validation_select_entry", Time.get_ticks_usec() - handler_started_usec, {"handler": "validation_select_tile"})
 	_set_selected_tile(tile)
 	_debug_set_path_command_target(_selected_tile)
-	_active_drawer = ""
+	_set_active_drawer("")
 	_refresh_selected_route_preview("validation_selected_route_changed")
 	if debug_started:
 		_debug_finish_path_command()
@@ -8348,6 +8413,72 @@ func validation_reset_controller_route_cursor() -> Dictionary:
 	_validation_controller_route_last_step = {}
 	_validation_controller_route_last_accept = {}
 	return validation_controller_route_cursor_snapshot()
+
+func validation_reset_gameplay_movement_input_state() -> Dictionary:
+	_clear_controller_move_state()
+	_validation_gameplay_movement_keyboard_blocked_count = 0
+	_validation_gameplay_movement_controller_blocked_count = 0
+	_validation_gameplay_movement_repeat_blocked_count = 0
+	_validation_controller_left_move_count = 0
+	_validation_gameplay_movement_last_blocked = {}
+	return validation_gameplay_movement_input_snapshot()
+
+func validation_controller_move_axis(axis: int, value: float) -> Dictionary:
+	var event := InputEventJoypadMotion.new()
+	event.axis = axis as JoyAxis
+	event.axis_value = clampf(value, -1.0, 1.0)
+	var consumed := _handle_controller_move_axis_input(event)
+	var snapshot := validation_gameplay_movement_input_snapshot()
+	snapshot["consumed"] = consumed
+	return snapshot
+
+func validation_controller_move_repeat() -> Dictionary:
+	if _controller_move_repeat_timer != null:
+		_controller_move_repeat_timer.stop()
+	_on_controller_move_repeat_timeout()
+	return validation_gameplay_movement_input_snapshot()
+
+func validation_set_end_turn_commit_in_progress(enabled: bool) -> Dictionary:
+	if enabled:
+		_on_overworld_interaction_owner_opened()
+	_end_turn_commit_in_progress = enabled
+	return validation_gameplay_movement_input_snapshot()
+
+func validation_set_debug_command_in_progress(enabled: bool) -> Dictionary:
+	if enabled:
+		_on_overworld_interaction_owner_opened()
+	_debug_command_in_progress = enabled
+	return validation_gameplay_movement_input_snapshot()
+
+func validation_gameplay_movement_input_snapshot() -> Dictionary:
+	var viewport := get_viewport()
+	var focus_owner := viewport.gui_get_focus_owner() if viewport != null else null
+	var movement_value: Variant = _session.overworld.get("movement", {}) if _session != null else {}
+	var movement: Dictionary = movement_value if movement_value is Dictionary else {}
+	var hero_tile := OverworldRules.hero_position(_session) if _session != null else Vector2i(-1, -1)
+	return {
+		"blocked_reason": _overworld_gameplay_movement_blocked_reason(),
+		"blocked_count": _validation_gameplay_movement_keyboard_blocked_count + _validation_gameplay_movement_controller_blocked_count,
+		"keyboard_blocked_count": _validation_gameplay_movement_keyboard_blocked_count,
+		"controller_blocked_count": _validation_gameplay_movement_controller_blocked_count,
+		"repeat_blocked_count": _validation_gameplay_movement_repeat_blocked_count,
+		"controller_move_count": _validation_controller_left_move_count,
+		"last_blocked": _validation_gameplay_movement_last_blocked.duplicate(true),
+		"controller_axis": {"x": _controller_move_axis.x, "y": _controller_move_axis.y},
+		"controller_direction": _debug_tile_payload(_controller_move_direction),
+		"repeat_timer_active": _controller_move_repeat_timer != null and not _controller_move_repeat_timer.is_stopped(),
+		"hero_tile": _debug_tile_payload(hero_tile),
+		"movement_current": int(movement.get("current", 0)),
+		"movement_max": int(movement.get("max", 0)),
+		"focus_owner": String(focus_owner.name) if focus_owner != null else "",
+		"active_drawer": _active_drawer,
+		"settings_open": _active_play_settings_dialog != null and _active_play_settings_dialog.is_open(),
+		"save_popup_open": _save_slot_picker != null and _save_slot_picker.get_popup().visible,
+		"manual_overwrite_open": _manual_save_overwrite_dialog != null and _manual_save_overwrite_dialog.visible,
+		"end_turn_confirmation_open": _end_turn_confirmation_dialog != null and _end_turn_confirmation_dialog.visible,
+		"end_turn_commit_in_progress": _end_turn_commit_in_progress,
+		"debug_active": _debug_command_in_progress or _debug_overlay_enabled or _placement_debug_overlay_enabled,
+	}
 
 func validation_controller_route_axis(axis: int, value: float) -> Dictionary:
 	var event := InputEventJoypadMotion.new()
