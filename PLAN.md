@@ -24,7 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current implementation slice: `scenario-outcome-new-session-confirmation-safe-cancel-10184` (completed). Campaign/skirmish start, retry, and replay actions now require one captured-action native confirmation before replacing the resolved Outcome session. `Keep Outcome` owns initial focus; controller A/B, Escape, and mouse cancellation preserve the exact review and restore the originating dynamic action; confirm revalidates identity/action/recovery and executes once.
+- Current implementation slice: `accessibility-battle-quick-resolve-safe-cancel-focus-10184` (completed). Quick Resolve now opens with `Keep Fighting` focused, so immediate controller A, B, or Escape cancels byte-exactly and restores Quick Resolve focus. Deliberate navigation to `Resolve Battle` retains direct resolver/checkpoint parity and executes once.
+- Latest completed implementation slice: `accessibility-battle-quick-resolve-safe-cancel-focus-10184`. Physical controller, real mouse, direct-result parity, checkpoint, animation, active focus, 1280 layout, core, repository, Linux package, and fresh non-headless Windows/Wine native-dialog gates pass.
 - Latest completed implementation slice: `scenario-outcome-new-session-confirmation-safe-cancel-10184`. Five campaign/skirmish action rows, immutable duplicate capture, stale identity/action/recovery guards, Save/Menu/overwrite controls, 1280 native-dialog bounds, Outcome compatibility, core, repository, Linux package, and fresh Windows/Wine package gates pass. Save Outcome and Return to Menu remain direct.
 - Latest completed implementation slice: `battle-direct-playback-speed-write-failure-recovery-10184`. Precommit, after-backup, and non-regular-live-file failures preserve exact settings bytes/cache, transaction residue state, session/routes, and control focus; cleared success persists once and a fresh Battle consumes it. Focused, settings, animation, ActivePlay, focus, core, repository, Linux package, and Windows/Wine package gates pass.
 - Latest completed implementation slice: `combat-brasshollow-rivet-hound-breach-skirmisher-10184`. The final Seam-only form preserves the accepted Brasshollow tempo and all 18 active-cohort signatures; the 59-encounter queue remains clear, and the 12,000-battle matrix changes only four outcomes by one sample each with unchanged maximum dominance and side bias. Universal speed/initiative increases were rejected after proving they materially redistributed live matchups.
@@ -3703,6 +3704,31 @@ Completion criteria:
 
 Non-goals:
 - no campaign progression redesign, new autosave policy, Save Outcome behavior change, action copy rewrite, broad Outcome layout redesign, Native RMG work, publication, signing, native Windows hardware certification, or overall release-completion claim.
+
+## Accessibility Battle Quick Resolve Safe-Cancel Focus
+
+id: `accessibility-battle-quick-resolve-safe-cancel-focus-10184`
+
+Status: completed.
+
+Selected Phase 6 destructive-dialog accessibility correction. Quick Resolve is intentionally
+confirmed because it permanently applies casualties, mana, outcome, rewards, and objective
+consequences, but the dialog currently places initial focus on `Resolve Battle`. Controller users
+can therefore open it with A and commit it with the next A before making a deliberate choice.
+
+Implementation target:
+- label the native cancel action `Keep Fighting` and give it stable initial focus after the Quick Resolve popup;
+- preserve existing B/Escape cancellation and exact Quick Resolve origin-focus restoration;
+- leave deliberate navigation to `Resolve Battle`, auto-resolution policy, combat RNG/math, checkpointing, and routing unchanged;
+- validate physical controller A/B, Escape, mouse behavior, native-dialog bounds, and exactly-once deliberate confirmation.
+
+Completion criteria:
+- campaign and skirmish battles open Quick Resolve with `Keep Fighting` focused, and immediate A, B, or Escape cancels with exact session/RNG/save/route preservation and returns focus to Quick Resolve;
+- deliberate navigation to `Resolve Battle` then A invokes the existing confirmed path exactly once with direct-result/checkpoint parity, while mouse confirmation remains unchanged;
+- active controller focus, Quick Resolve runtime, battle animation/checkpoint, 1280 layout, core, repository, and Linux/Windows native-dialog package gates pass.
+
+Non-goals:
+- no Quick Resolve policy, battle math, AI, reward, withdrawal, save-schema, animation, routing, broad Battle layout, Native RMG, publication, signing, native Windows hardware certification, or overall release-completion change.
 
 ## Phase Roadmap
 

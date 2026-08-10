@@ -2,6 +2,8 @@ extends Node
 
 const REPORT_ID := "ACTIVE_PLAY_KEYBOARD_FOCUS_SMOKE"
 const CAPTURE_DIR := "res://.artifacts/active_play_keyboard_focus_smoke"
+const BattleAutoResolveRulesScript = preload("res://scripts/core/BattleAutoResolveRules.gd")
+const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 
 var _failed := false
 
@@ -500,27 +502,12 @@ func _check_battle_keyboard_defend() -> bool:
 			return _fail("Battle target cycling did not preserve focus on the target command: %s." % _focus_name())
 
 	var quick_resolve: Button = shell.get_node("%QuickResolve")
-	var quick_resolve_dialog: ConfirmationDialog = shell.get_node("QuickResolveConfirmationDialog")
 	if quick_resolve.disabled:
 		return _fail("Battle Quick Resolve command is disabled during an active battle.")
-	var quick_resolve_battle_before := JSON.stringify(session.battle)
-	quick_resolve.grab_focus()
-	await _press_joypad_button(JOY_BUTTON_A)
-	await _settle()
-	if not quick_resolve_dialog.visible:
-		return _fail("Controller-confirmed Quick Resolve did not open its confirmation dialog.")
-	var confirmation_copy := quick_resolve_dialog.dialog_text.to_lower()
-	for required_copy in ["permanent casualties", "mana", "outcome", "objective consequences"]:
-		if required_copy not in confirmation_copy:
-			return _fail("Quick Resolve confirmation omitted required consequence copy '%s': %s." % [required_copy, quick_resolve_dialog.dialog_text])
-	await _press_joypad_button(JOY_BUTTON_B)
-	await _settle()
-	if quick_resolve_dialog.visible:
-		return _fail("Controller cancel did not close the Quick Resolve confirmation.")
-	if JSON.stringify(session.battle) != quick_resolve_battle_before:
-		return _fail("Canceling Quick Resolve changed battle state.")
-	if _focus_name() != "QuickResolve":
-		return _fail("Canceling Quick Resolve did not restore focus to its action-strip command: %s." % _focus_name())
+	shell.call("validation_reset_quick_resolve_confirmation_state")
+	for cancel_method in ["accept", "back", "escape"]:
+		if not await _check_quick_resolve_safe_cancel(shell, session, String(cancel_method)):
+			return false
 	if not await _check_battle_withdrawal_controller_cancel(shell, session, "retreat", "Retreat"):
 		return false
 	if not await _check_battle_withdrawal_controller_cancel(shell, session, "surrender", "Surrender"):
@@ -546,6 +533,8 @@ func _check_battle_keyboard_defend() -> bool:
 	var post_expected := _battle_button_name(String(post_forecast.get("action_id", "")))
 	if post_expected != "" and post_owner.name != post_expected:
 		return _fail("Battle post-action focus did not follow the next suggested order: expected=%s got=%s." % [post_expected, post_owner.name])
+	if not await _check_quick_resolve_confirm_parity(shell, session):
+		return false
 	shell.queue_free()
 	await get_tree().process_frame
 	return true
@@ -635,6 +624,166 @@ func _controller_route_file_state(path: String) -> Dictionary:
 		"exists": FileAccess.file_exists(path),
 		"bytes": FileAccess.get_file_as_bytes(path) if FileAccess.file_exists(path) else PackedByteArray(),
 	}
+
+
+func _check_quick_resolve_safe_cancel(shell: Node, session, cancel_method: String) -> bool:
+	var quick_resolve: Button = shell.get_node("%QuickResolve")
+	var dialog: ConfirmationDialog = shell.get_node("QuickResolveConfirmationDialog")
+	var authority_before := _quick_resolve_authority_snapshot(session)
+	quick_resolve.grab_focus()
+	await get_tree().process_frame
+	await _press_joypad_button(JOY_BUTTON_A)
+	await _settle()
+	var opened: Dictionary = shell.call("validation_quick_resolve_confirmation_snapshot")
+	var cancel_button := dialog.get_cancel_button()
+	var dialog_viewport := cancel_button.get_viewport()
+	var dialog_focus_owner := dialog_viewport.gui_get_focus_owner() if dialog_viewport != null else null
+	var dialog_position: Vector2i = opened.get("dialog_position", Vector2i(-1, -1))
+	var dialog_size: Vector2i = opened.get("dialog_size", Vector2i.ZERO)
+	if not bool(opened.get("pending", false)) \
+		or not bool(opened.get("dialog_visible", false)) \
+		or String(opened.get("cancel_text", "")) != "Keep Fighting" \
+		or String(opened.get("dialog_focus_owner", "")) == "" \
+		or dialog_focus_owner != cancel_button \
+		or String(opened.get("return_focus_name", "")) != "QuickResolve" \
+		or dialog_position.x < 0 or dialog_position.y < 0 \
+		or dialog_size.x <= 0 or dialog_size.y <= 0:
+		return _fail("Quick Resolve did not open a bounded native confirmation with Keep Fighting focused: %s." % opened)
+	var confirmation_copy := String(opened.get("text", "")).to_lower()
+	for required_copy in ["permanent casualties", "mana", "outcome", "objective consequences"]:
+		if required_copy not in confirmation_copy:
+			return _fail("Quick Resolve confirmation omitted required consequence copy '%s': %s." % [required_copy, opened.get("text", "")])
+	match cancel_method:
+		"accept":
+			await _press_joypad_button(JOY_BUTTON_A)
+		"back":
+			await _press_joypad_button(JOY_BUTTON_B)
+		_:
+			await _press_key(KEY_ESCAPE)
+	await _settle()
+	var canceled: Dictionary = shell.call("validation_quick_resolve_confirmation_snapshot")
+	if bool(canceled.get("pending", true)) \
+		or bool(canceled.get("dialog_visible", true)) \
+		or int(canceled.get("perform_count", 0)) != 0 \
+		or int(canceled.get("confirm_count", 0)) != 0 \
+		or _quick_resolve_authority_snapshot(session) != authority_before \
+		or get_viewport().gui_get_focus_owner() != quick_resolve:
+		return _fail("Quick Resolve %s cancel changed authority or failed to restore the exact origin: snapshot=%s focus=%s authority_equal=%s." % [
+			cancel_method,
+			canceled,
+			_focus_name(),
+			_quick_resolve_authority_snapshot(session) == authority_before,
+		])
+	return true
+
+
+func _check_quick_resolve_confirm_parity(shell: Node, session) -> bool:
+	var quick_resolve: Button = shell.get_node("%QuickResolve")
+	var dialog: ConfirmationDialog = shell.get_node("QuickResolveConfirmationDialog")
+	var control := SessionStateStoreScript.SessionData.new()
+	control.from_dict(session.to_dict())
+	control.battle[BattleRules.PRESENTATION_SPEED_KEY] = BattleRules.PRESENTATION_SPEED_INSTANT
+	session.battle[BattleRules.PRESENTATION_SPEED_KEY] = BattleRules.PRESENTATION_SPEED_INSTANT
+	var control_result: Dictionary = BattleAutoResolveRulesScript.resolve_active_battle(control)
+	if not bool(control_result.get("ok", false)) or not bool(control_result.get("completed", false)):
+		return _fail("Quick Resolve direct parity control did not reach a terminal result: %s." % control_result)
+	var scenario_terminal: bool = control.scenario_status != "in_progress"
+	AppRouter.validation_reset_battle_resolution_checkpoint_state()
+	AppRouter.validation_set_battle_resolution_checkpoint_routing_suppressed(true)
+	AppRouter.validation_reset_scenario_outcome_route_state()
+	AppRouter.validation_set_scenario_outcome_routing_suppressed(true)
+	shell.call("validation_reset_quick_resolve_confirmation_state")
+	await _click_control(quick_resolve)
+	await _settle()
+	var opened: Dictionary = shell.call("validation_quick_resolve_confirmation_snapshot")
+	if not bool(opened.get("pending", false)) or int(opened.get("request_count", 0)) != 1:
+		AppRouter.validation_set_battle_resolution_checkpoint_routing_suppressed(false)
+		return _fail("Real mouse Quick Resolve did not open exactly one confirmation: %s." % opened)
+	var ok_button := dialog.get_ok_button()
+	await _press_action("ui_focus_next")
+	if ok_button.get_viewport().gui_get_focus_owner() != ok_button:
+		ok_button.grab_focus()
+		await get_tree().process_frame
+	await _press_joypad_button(JOY_BUTTON_A)
+	for _frame in range(180):
+		await get_tree().process_frame
+		var checkpoint_probe: Dictionary = AppRouter.validation_battle_resolution_checkpoint_snapshot()
+		var outcome_probe: Dictionary = AppRouter.validation_scenario_outcome_route_snapshot()
+		if (scenario_terminal and int(outcome_probe.get("route_attempt_count", 0)) >= 1) \
+			or (not scenario_terminal and int(checkpoint_probe.get("route_attempt_count", 0)) >= 1):
+			break
+	var confirmed: Dictionary = shell.call("validation_quick_resolve_confirmation_snapshot")
+	var last_result: Dictionary = confirmed.get("last_result", {}) if confirmed.get("last_result", {}) is Dictionary else {}
+	var checkpoint: Dictionary = confirmed.get("checkpoint", {}) if confirmed.get("checkpoint", {}) is Dictionary else {}
+	var router: Dictionary = checkpoint.get("router_snapshot", {}) if checkpoint.get("router_snapshot", {}) is Dictionary else {}
+	var outcome_router: Dictionary = AppRouter.validation_scenario_outcome_route_snapshot()
+	var common_parity_ok: bool = int(confirmed.get("confirm_count", 0)) == 1 \
+		and int(confirmed.get("perform_count", 0)) == 1 \
+		and bool(last_result.get("performed", false)) \
+		and bool(last_result.get("ok", false)) \
+		and last_result.get("result", {}) == control_result \
+		and session.battle.is_empty() \
+		and control.battle.is_empty() \
+		and session.overworld == control.overworld \
+		and session.flags == control.flags \
+		and session.scenario_status == control.scenario_status
+	var route_parity_ok: bool = false
+	if scenario_terminal:
+		route_parity_ok = int(checkpoint.get("checkpoint_request_count", 0)) == 0 \
+			and int(outcome_router.get("save_attempt_count", 0)) == 1 \
+			and int(outcome_router.get("route_attempt_count", 0)) == 1 \
+			and int(outcome_router.get("suppressed_route_count", 0)) == 1
+	else:
+		route_parity_ok = int(checkpoint.get("checkpoint_request_count", 0)) == 1 \
+			and int(checkpoint.get("checkpoint_success_count", 0)) == 1 \
+			and int(router.get("save_attempt_count", 0)) == 1 \
+			and int(router.get("route_attempt_count", 0)) == 1 \
+			and int(router.get("suppressed_route_count", 0)) == 1
+	if not common_parity_ok \
+		or not route_parity_ok:
+		AppRouter.validation_set_battle_resolution_checkpoint_routing_suppressed(false)
+		AppRouter.validation_set_scenario_outcome_routing_suppressed(false)
+		return _fail("Mouse-opened, controller-confirmed Quick Resolve diverged from direct result/routing parity: terminal=%s confirmation=%s checkpoint=%s outcome=%s." % [scenario_terminal, confirmed, checkpoint, outcome_router])
+	var repeat_result: Dictionary = shell.call("validation_confirm_quick_resolve_confirmation")
+	var repeated: Dictionary = shell.call("validation_quick_resolve_confirmation_snapshot")
+	AppRouter.validation_set_battle_resolution_checkpoint_routing_suppressed(false)
+	AppRouter.validation_set_scenario_outcome_routing_suppressed(false)
+	if String(repeat_result.get("reason", "")) != "no_pending_confirmation" \
+		or int(repeated.get("confirm_count", 0)) != 1 \
+		or int(repeated.get("perform_count", 0)) != 1:
+		return _fail("Repeated Quick Resolve confirmation replayed the resolver: repeat=%s snapshot=%s." % [repeat_result, repeated])
+	return true
+
+
+func _quick_resolve_authority_snapshot(session) -> Dictionary:
+	var settings_snapshot: Dictionary = SettingsService.validation_settings_transaction_snapshot()
+	var files := {}
+	for path in [
+		"user://saves/autosave.json",
+		"user://saves/manual_slot_1.json",
+		"user://saves/manual_slot_2.json",
+		"user://saves/manual_slot_3.json",
+		"user://saves/campaign_progression.json",
+		"user://settings.cfg",
+		"user://settings.cfg.candidate",
+		"user://settings.cfg.backup",
+	]:
+		files[path] = _controller_route_file_state(path)
+	return {
+		"session": session.to_dict(),
+		"active_same": SessionState.active_session == session,
+		"profile": CampaignProgression.profile.duplicate(true),
+		"files": files,
+		"summary_cache": SaveService.validation_summary_cache_snapshot(),
+		"settings": settings_snapshot.get("settings", {}),
+		"committed_settings": settings_snapshot.get("committed_settings", {}),
+		"battle_resolution": AppRouter.validation_battle_resolution_checkpoint_snapshot(),
+		"battle_entry": AppRouter.validation_battle_entry_snapshot(),
+		"outcome": AppRouter.validation_scenario_outcome_route_snapshot(),
+		"return_to_menu": AppRouter.validation_active_play_return_snapshot(),
+		"safe_quit": AppRouter.validation_safe_quit_snapshot(),
+	}
+
 
 func _check_battle_withdrawal_controller_cancel(shell: Node, session, action_id: String, button_name: String) -> bool:
 	var origin_button: Button = shell.get_node_or_null("%%%s" % button_name)
@@ -728,6 +877,35 @@ func _press_action(action: StringName) -> void:
 	released.pressed = false
 	Input.parse_input_event(released)
 	await get_tree().process_frame
+
+
+func _click_control(control: Control) -> void:
+	var center := control.get_global_rect().get_center()
+	var viewport := control.get_viewport()
+	var window_id: int = int(viewport.get_window_id()) if viewport is Window else 0
+	var motion := InputEventMouseMotion.new()
+	motion.window_id = window_id
+	motion.position = center
+	motion.global_position = center
+	viewport.push_input(motion, true)
+	await get_tree().process_frame
+	var pressed := InputEventMouseButton.new()
+	pressed.window_id = window_id
+	pressed.button_index = MOUSE_BUTTON_LEFT
+	pressed.position = center
+	pressed.global_position = center
+	pressed.pressed = true
+	viewport.push_input(pressed, true)
+	await get_tree().process_frame
+	var released := InputEventMouseButton.new()
+	released.window_id = window_id
+	released.button_index = MOUSE_BUTTON_LEFT
+	released.position = center
+	released.global_position = center
+	released.pressed = false
+	viewport.push_input(released, true)
+	await _settle()
+
 
 func _press_key(keycode: Key) -> void:
 	var pressed := InputEventKey.new()

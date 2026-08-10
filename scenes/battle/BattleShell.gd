@@ -114,6 +114,13 @@ var _last_battle_playback_speed_result := {}
 var _validation_battle_playback_speed_request_count := 0
 var _validation_battle_playback_speed_success_count := 0
 var _validation_battle_playback_speed_failure_count := 0
+var _quick_resolve_confirmation_pending := false
+var _quick_resolve_confirmation_focus_origin: Button = null
+var _last_quick_resolve_confirmation_result := {}
+var _validation_quick_resolve_confirmation_request_count := 0
+var _validation_quick_resolve_confirmation_cancel_count := 0
+var _validation_quick_resolve_confirmation_confirm_count := 0
+var _validation_quick_resolve_confirmation_perform_count := 0
 
 func _ready() -> void:
 	var profile_started := ProfileLogScript.begin_usec()
@@ -184,11 +191,15 @@ func _ready() -> void:
 	call_deferred("_configure_battle_keyboard_focus", true)
 
 func _configure_quick_resolve_confirmation() -> void:
+	_quick_resolve_confirmation_dialog.get_cancel_button().text = "Keep Fighting"
 	var cancel_shortcut := Shortcut.new()
 	var cancel_action := InputEventAction.new()
 	cancel_action.action = "ui_cancel"
 	cancel_shortcut.events = [cancel_action]
 	_quick_resolve_confirmation_dialog.get_cancel_button().shortcut = cancel_shortcut
+	var dialog_label := _quick_resolve_confirmation_dialog.get_label()
+	dialog_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	dialog_label.custom_minimum_size = Vector2(620.0, 0.0)
 
 func _configure_withdrawal_confirmation() -> void:
 	_withdrawal_confirmation_dialog.get_cancel_button().text = "Keep Fighting"
@@ -468,30 +479,129 @@ func _on_shoot_pressed() -> void:
 func _on_defend_pressed() -> void:
 	_perform_action("defend")
 
-func _on_quick_resolve_pressed() -> void:
+func _on_quick_resolve_pressed() -> Dictionary:
+	if _quick_resolve_confirmation_pending:
+		return {
+			"ok": false,
+			"pending": true,
+			"performed": false,
+			"reason": "confirmation_already_pending",
+			"message": "Finish the current Quick Resolve confirmation first.",
+		}
 	if _session == null or _session.battle.is_empty() or _session.scenario_status != "in_progress":
 		_last_message = "Quick Resolve is unavailable because there is no active battle to resolve."
 		if _session != null and not _session.battle.is_empty():
 			_refresh()
-		return
-	_quick_resolve_confirmation_dialog.popup_centered()
-	_quick_resolve_confirmation_dialog.get_ok_button().call_deferred("grab_focus")
+		return {
+			"ok": false,
+			"pending": false,
+			"performed": false,
+			"reason": "quick_resolve_unavailable",
+			"message": _last_message,
+		}
+	_quick_resolve_confirmation_pending = true
+	_quick_resolve_confirmation_focus_origin = _quick_resolve_button
+	_validation_quick_resolve_confirmation_request_count += 1
+	_quick_resolve_confirmation_dialog.popup_centered(Vector2i(700, 300))
+	_quick_resolve_confirmation_dialog.get_cancel_button().call_deferred("grab_focus")
+	_focus_quick_resolve_cancel_after_popup()
+	var result := {
+		"ok": true,
+		"pending": true,
+		"confirmation_required": true,
+		"performed": false,
+		"reason": "confirmation_required",
+		"session_id": _session.session_id,
+		"scenario_id": _session.scenario_id,
+		"encounter_id": String(_session.battle.get("encounter_id", "")),
+		"message": "Confirm Quick Resolve or keep fighting.",
+	}
+	_last_quick_resolve_confirmation_result = result.duplicate(true)
+	return result
 
-func _on_quick_resolve_canceled() -> void:
-	_quick_resolve_button.call_deferred("grab_focus")
+func _focus_quick_resolve_cancel_after_popup() -> void:
+	if not _quick_resolve_confirmation_dialog.visible or not _quick_resolve_confirmation_pending:
+		return
+	_quick_resolve_confirmation_dialog.get_cancel_button().grab_focus()
+	await get_tree().process_frame
+	if _quick_resolve_confirmation_dialog.visible and _quick_resolve_confirmation_pending:
+		_quick_resolve_confirmation_dialog.get_cancel_button().grab_focus()
+
+func _restore_quick_resolve_confirmation_focus(origin: Button) -> void:
+	await get_tree().process_frame
+	if (
+		is_instance_valid(origin)
+		and origin.is_inside_tree()
+		and origin.is_visible_in_tree()
+		and not origin.disabled
+	):
+		origin.grab_focus()
+
+func _on_quick_resolve_canceled() -> Dictionary:
+	if not _quick_resolve_confirmation_pending:
+		return {
+			"ok": false,
+			"canceled": false,
+			"pending": false,
+			"performed": false,
+			"reason": "no_pending_confirmation",
+		}
+	var origin := _quick_resolve_confirmation_focus_origin
+	_quick_resolve_confirmation_pending = false
+	_quick_resolve_confirmation_focus_origin = null
+	_validation_quick_resolve_confirmation_cancel_count += 1
+	_quick_resolve_confirmation_dialog.hide()
+	var result := {
+		"ok": true,
+		"canceled": true,
+		"pending": false,
+		"performed": false,
+		"routed": false,
+		"reason": "canceled",
+		"message": "Kept fighting without resolving the battle.",
+	}
+	_last_quick_resolve_confirmation_result = result.duplicate(true)
+	_restore_quick_resolve_confirmation_focus(origin)
+	return result
 
 func _on_quick_resolve_confirmed() -> void:
+	if not _quick_resolve_confirmation_pending:
+		return
+	_quick_resolve_confirmation_pending = false
+	_quick_resolve_confirmation_focus_origin = null
+	_validation_quick_resolve_confirmation_confirm_count += 1
+	_quick_resolve_confirmation_dialog.hide()
 	if not _battle_resolution_checkpoint_pending.is_empty():
+		_last_quick_resolve_confirmation_result = {
+			"ok": false,
+			"confirmed": true,
+			"pending": false,
+			"performed": false,
+			"routed": false,
+			"reason": "battle_resolution_checkpoint_pending",
+		}
 		_apply_battle_resolution_checkpoint_failure_surface()
 		return
 	var profile_started := ProfileLogScript.begin_usec()
+	_validation_quick_resolve_confirmation_perform_count += 1
 	var result: Dictionary = BattleAutoResolveRulesScript.resolve_active_battle(_session)
 	var terminal_value: Variant = result.get("terminal_result", {})
 	var terminal_result: Dictionary = terminal_value if terminal_value is Dictionary else {}
+	_last_quick_resolve_confirmation_result = {
+		"ok": bool(result.get("ok", false)),
+		"confirmed": true,
+		"pending": false,
+		"performed": true,
+		"routed": false,
+		"reason": "resolved" if bool(result.get("completed", false)) else String(result.get("stop_reason", "resolution_incomplete")),
+		"result": result.duplicate(true),
+		"terminal_result": terminal_result.duplicate(true),
+	}
 	if bool(result.get("completed", false)) and not terminal_result.is_empty():
 		_last_message = String(terminal_result.get("message", "Quick Resolve completed the battle."))
 		_dismiss_tactical_briefing()
 		if _handle_battle_resolution(terminal_result):
+			_last_quick_resolve_confirmation_result["routed"] = _last_battle_resolution_routed
 			ProfileLogScript.emit_general("battle", "action", "quick_resolve", ProfileLogScript.elapsed_ms(profile_started), {}, _battle_profile_metadata(false).merged({
 				"result_ok": bool(result.get("ok", false)),
 				"routed": _last_battle_resolution_routed,
@@ -2391,6 +2501,7 @@ func validation_snapshot() -> Dictionary:
 	var action_context_surface := _battle_action_context_surface(dispatch_text, action_confirmation)
 	return {
 		"scene_path": scene_file_path,
+		"quick_resolve_confirmation": validation_quick_resolve_confirmation_snapshot(),
 		"battle_playback_speed": validation_battle_playback_speed_snapshot(),
 		"battle_resolution_checkpoint": validation_battle_resolution_checkpoint_snapshot(),
 		"briefing_consumption_autosave": validation_briefing_consumption_autosave_snapshot(),
@@ -2616,6 +2727,65 @@ func validation_briefing_consumption_autosave_snapshot() -> Dictionary:
 
 func validation_set_battle_presentation_speed(speed: String) -> Dictionary:
 	return _set_battle_presentation_speed(speed)
+
+func validation_request_quick_resolve_confirmation() -> Dictionary:
+	return _on_quick_resolve_pressed()
+
+func validation_cancel_quick_resolve_confirmation() -> Dictionary:
+	return _on_quick_resolve_canceled()
+
+func validation_confirm_quick_resolve_confirmation() -> Dictionary:
+	if not _quick_resolve_confirmation_pending:
+		return {
+			"ok": false,
+			"confirmed": false,
+			"pending": false,
+			"performed": false,
+			"reason": "no_pending_confirmation",
+		}
+	_on_quick_resolve_confirmed()
+	return _last_quick_resolve_confirmation_result.duplicate(true)
+
+func validation_reset_quick_resolve_confirmation_state() -> void:
+	_quick_resolve_confirmation_dialog.hide()
+	_quick_resolve_confirmation_pending = false
+	_quick_resolve_confirmation_focus_origin = null
+	_last_quick_resolve_confirmation_result = {}
+	_validation_quick_resolve_confirmation_request_count = 0
+	_validation_quick_resolve_confirmation_cancel_count = 0
+	_validation_quick_resolve_confirmation_confirm_count = 0
+	_validation_quick_resolve_confirmation_perform_count = 0
+
+func validation_quick_resolve_confirmation_snapshot() -> Dictionary:
+	var cancel_button := _quick_resolve_confirmation_dialog.get_cancel_button()
+	var dialog_viewport := cancel_button.get_viewport() if cancel_button != null else null
+	var dialog_focus_owner := dialog_viewport.gui_get_focus_owner() if dialog_viewport != null else null
+	var root_viewport := get_viewport()
+	var origin_focus_owner := root_viewport.gui_get_focus_owner() if root_viewport != null else null
+	return {
+		"pending": _quick_resolve_confirmation_pending,
+		"dialog_visible": _quick_resolve_confirmation_dialog.visible,
+		"title": _quick_resolve_confirmation_dialog.title,
+		"text": _quick_resolve_confirmation_dialog.dialog_text,
+		"confirm_text": _quick_resolve_confirmation_dialog.get_ok_button().text,
+		"cancel_text": cancel_button.text if cancel_button != null else "",
+		"dialog_focus_owner": String(dialog_focus_owner.name) if dialog_focus_owner != null else "",
+		"focus_owner": String(dialog_focus_owner.name) if dialog_focus_owner != null else "",
+		"origin_focus_owner": String(origin_focus_owner.name) if origin_focus_owner != null else "",
+		"return_focus_name": String(_quick_resolve_confirmation_focus_origin.name) if is_instance_valid(_quick_resolve_confirmation_focus_origin) else "",
+		"dialog_position": _quick_resolve_confirmation_dialog.position,
+		"dialog_size": _quick_resolve_confirmation_dialog.size,
+		"request_count": _validation_quick_resolve_confirmation_request_count,
+		"cancel_count": _validation_quick_resolve_confirmation_cancel_count,
+		"confirm_count": _validation_quick_resolve_confirmation_confirm_count,
+		"perform_count": _validation_quick_resolve_confirmation_perform_count,
+		"session_id": _session.session_id if _session != null else "",
+		"scenario_id": _session.scenario_id if _session != null else "",
+		"encounter_id": String(_session.battle.get("encounter_id", "")) if _session != null else "",
+		"routed": _last_battle_resolution_routed,
+		"last_result": _last_quick_resolve_confirmation_result.duplicate(true),
+		"checkpoint": validation_battle_resolution_checkpoint_snapshot(),
+	}
 
 func validation_reset_battle_playback_speed_state() -> void:
 	_last_battle_playback_speed_result = {}

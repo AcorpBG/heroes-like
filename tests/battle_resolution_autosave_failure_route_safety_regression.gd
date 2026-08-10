@@ -76,6 +76,9 @@ func _require_hooks() -> bool:
 		"validation_perform_action",
 		"validation_request_withdrawal",
 		"validation_confirm_withdrawal",
+		"validation_request_quick_resolve_confirmation",
+		"validation_confirm_quick_resolve_confirmation",
+		"validation_quick_resolve_confirmation_snapshot",
 		"validation_reset_battle_resolution_checkpoint_state",
 		"validation_retry_battle_resolution_save",
 		"validation_battle_resolution_checkpoint_snapshot",
@@ -139,7 +142,24 @@ func _prove_failure_and_retry(phase: String, mode: String) -> Dictionary:
 	OS.set_environment(FAILURE_ENV, phase)
 	var shell_result := {}
 	if mode == "quick_resolve_victory":
-		shell.call("_on_quick_resolve_confirmed")
+		var requested: Dictionary = shell.validation_request_quick_resolve_confirmation()
+		var confirmation_pending: Dictionary = shell.validation_quick_resolve_confirmation_snapshot()
+		if not bool(requested.get("ok", false)) \
+			or not bool(requested.get("pending", false)) \
+			or not bool(confirmation_pending.get("pending", false)) \
+			or not bool(confirmation_pending.get("dialog_visible", false)) \
+			or int(confirmation_pending.get("request_count", 0)) != 1 \
+			or int(confirmation_pending.get("confirm_count", 0)) != 0 \
+			or int(confirmation_pending.get("perform_count", 0)) != 0:
+			OS.unset_environment(FAILURE_ENV)
+			await _discard_shell(shell)
+			return _fail_dictionary("Quick Resolve confirmation could not be requested for %s: %s" % [phase, JSON.stringify({"result": requested, "snapshot": confirmation_pending})])
+		var confirmed: Dictionary = shell.validation_confirm_quick_resolve_confirmation()
+		if not bool(confirmed.get("performed", false)) \
+			or int(shell.validation_quick_resolve_confirmation_snapshot().get("confirm_count", 0)) != 1:
+			OS.unset_environment(FAILURE_ENV)
+			await _discard_shell(shell)
+			return _fail_dictionary("Quick Resolve confirmation did not execute exactly once for %s: %s" % [phase, JSON.stringify(confirmed)])
 	else:
 		var requested: Dictionary = shell.validation_request_withdrawal("retreat")
 		if not bool(requested.get("ok", false)) or not bool(requested.get("pending", false)):
