@@ -5,12 +5,13 @@ const TOWN_SCENE := preload("res://scenes/town/TownShell.tscn")
 const COMPACT_SIZE := Vector2(1280.0, 720.0)
 const NARROW_SIZE := Vector2(1024.0, 600.0)
 const FULL_SIZE := Vector2(1600.0, 900.0)
+const WIDE_SIZE := Vector2(1920.0, 1080.0)
 
 func _ready() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
-	for viewport_size in [COMPACT_SIZE, NARROW_SIZE, FULL_SIZE]:
+	for viewport_size in [COMPACT_SIZE, NARROW_SIZE, FULL_SIZE, WIDE_SIZE]:
 		if not await _check_overworld(viewport_size):
 			return
 		if not await _check_town(viewport_size):
@@ -40,6 +41,8 @@ func _check_overworld(viewport_size: Vector2) -> bool:
 		snapshot = shell.call("validation_snapshot")
 	var ok := _inside(frame, shell.get_node("%Map"), "overworld map", viewport_size)
 	ok = _inside(frame, shell.get_node("%CommandBand"), "overworld command band", viewport_size) and ok
+	for control_name in ["PrimaryAction", "EndTurn", "Save", "Settings", "Menu"]:
+		ok = _inside(frame, shell.get_node("%" + control_name), "overworld %s" % control_name, viewport_size) and ok
 	ok = _expect_visibility(shell.get_node("%SidebarShell"), not narrow, "overworld sidebar", viewport_size) and ok
 	ok = _expect_visibility(shell.get_node("%CommandSpine"), false, "overworld opening context drawer", viewport_size) and ok
 	ok = _expect_visibility(shell.get_node("%BriefingPanel"), not compact, "overworld briefing", viewport_size) and ok
@@ -47,6 +50,18 @@ func _check_overworld(viewport_size: Vector2) -> bool:
 	ok = _expect_visibility(shell.get_node("%CueChip"), not compact, "overworld duplicate cue", viewport_size) and ok
 	ok = _expect_visibility(shell.get_node("%SaveStatus"), not narrow, "overworld save detail", viewport_size) and ok
 	ok = _expect_visibility(shell.get_node("%SaveSlot"), not narrow, "overworld save slot picker", viewport_size) and ok
+	if not narrow:
+		ok = _inside(frame, shell.get_node("%SaveStatus"), "overworld save detail", viewport_size) and ok
+		ok = _inside(frame, shell.get_node("%SaveSlot"), "overworld save slot picker", viewport_size) and ok
+	if viewport_size == FULL_SIZE:
+		print("OVERWORLD_1600_COMMAND_LAYOUT %s" % JSON.stringify({
+			"command_band": str(shell.get_node("%CommandBand").get_global_rect()),
+			"primary_action": str(shell.get_node("%PrimaryAction").get_global_rect()),
+			"end_turn": str(shell.get_node("%EndTurn").get_global_rect()),
+			"save": str(shell.get_node("%Save").get_global_rect()),
+			"settings": str(shell.get_node("%Settings").get_global_rect()),
+			"menu": str(shell.get_node("%Menu").get_global_rect()),
+		}))
 	ok = _expect_opening_order(snapshot, viewport_size) and ok
 	ok = _expect_unchanged_opening_session(session, initial_position, initial_movement, initial_resources, viewport_size) and ok
 	frame.queue_free()

@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `ux-overworld-1600-command-band-responsive-fit-10184`. The selectable 1600x900 Overworld layout now reduces only the four command-row gaps at that constrained noncompact width, moving the full band from x=-3/width1606 to x=1/width1598 while retaining every command, map dominance, focus, and compact/full behavior. Strengthened 1024/1280/1600/1920 containment, active focus, repository, Linux package, and Windows/Wine package gates pass.
 - Latest completed implementation slice: `accessibility-scenario-outcome-normal-entry-focus-10184`. Ordinary campaign and skirmish victory/defeat Outcomes now enter with the existing enabled primary follow-up focused, expose a deterministic six-control keyboard/controller cycle, preserve valid focus through refresh, keep recovery on Save, and never steal native overwrite-dialog focus. The same Outcome-only responsive pass keeps banner, actions, Save panel, and Save inside 1280x720 while retaining full overflow text in tooltips. Focused, recovery, overwrite, visual, active-focus, repository, Linux package, and Windows/Wine gates pass.
 - Latest completed implementation slice: `briefing-consumption-autosave-failure-safety-10184`. Overworld first-turn and Battle tactical briefings now inspect their transactional autosave result. A failed write preserves the visible consumed briefing, emits one bounded issue, shows Save guidance with Save focus, and routes nowhere; one verified manual Save persists `shown=true` so restore does not replay the briefing. Focused failure/recovery, generated-opening defer, Battle/focus/save compatibility, repository, Linux package, and Windows/Wine package gates pass at save version 9.
 - Latest completed implementation slice: `battle-resolution-autosave-failure-route-safety-10184`. Finalized nonterminal battles now checkpoint transactionally before exit animation or Overworld routing. Write failure retains the exact completed result in Battle with combat disabled, Save Battle guidance/focus, and zero route; one Save retry persists the canonical autosave and resumes the stored animation/route without replaying rules or rewards. Focused failure/retry, withdrawal, Quick Resolve, animation, controller, save, core, repository, Linux package, and Windows/Wine package gates pass at save version 9.
@@ -3572,6 +3573,28 @@ Completion criteria:
 
 Non-goals:
 - no Outcome composition/copy redesign, action-policy change, save/router/rules change, broader input remap, Native RMG, publication, signing, or overall release-completion claim.
+
+## Overworld 1600 Command Band Responsive Fit
+
+id: `ux-overworld-1600-command-band-responsive-fit-10184`
+
+Status: completed.
+
+Selected Phase 6 responsive-layout correction. The selectable 1600x900 Overworld frame keeps
+the full command-row policy, but its fixed command surfaces render at x=-3 with width 1606.
+The 1024x600 and 1280x720 compact breakpoints already fit.
+
+Implementation target:
+- fit the entire command band and each End Turn/slot/Save/Settings/Menu control inside the 1600x900 frame using bounded responsive spacing/minimum-width policy;
+- preserve all commands, map dominance, enabled focus order, and existing 1024x600, 1280x720, and 1920x1080 behavior.
+
+Completion criteria:
+- strict geometry asserts the command band and every live command rect start and end inside 1600x900;
+- controller/keyboard navigation and activation remain exact, and compact/full visual contracts remain green;
+- repository, Linux/X11, and packaged Windows/Wine gates pass without gameplay/save/schema changes.
+
+Non-goals:
+- no command copy redesign, new panels, gameplay/rules/save changes, global UI-scale redesign, Native RMG, publication, signing, or overall release-completion claim.
 
 ## Phase Roadmap
 
