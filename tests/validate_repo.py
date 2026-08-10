@@ -344,6 +344,8 @@ SETTINGS_DISPLAY_MODE_TRANSACTION_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "set
 SETTINGS_DISPLAY_MODE_TRANSACTION_REGRESSION_SCENE_PATH = ROOT / "tests" / "settings_display_mode_transaction_regression.tscn"
 SETTINGS_TRANSACTIONAL_PERSISTENCE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "settings_transactional_persistence_regression.gd"
 SETTINGS_TRANSACTIONAL_PERSISTENCE_REGRESSION_SCENE_PATH = ROOT / "tests" / "settings_transactional_persistence_regression.tscn"
+BATTLE_DIRECT_PLAYBACK_SPEED_WRITE_FAILURE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "battle_direct_playback_speed_write_failure_recovery_regression.gd"
+BATTLE_DIRECT_PLAYBACK_SPEED_WRITE_FAILURE_REGRESSION_SCENE_PATH = ROOT / "tests" / "battle_direct_playback_speed_write_failure_recovery_regression.tscn"
 PACKAGED_RUNTIME_ISSUE_LOG_REPORT_SCRIPT_PATH = ROOT / "tests" / "packaged_runtime_issue_log_report.gd"
 PACKAGED_RUNTIME_ISSUE_LOG_REPORT_SCENE_PATH = ROOT / "tests" / "packaged_runtime_issue_log_report.tscn"
 PACKAGED_RUNTIME_ISSUE_LOG_SMOKE_SCRIPT_PATH = ROOT / "tests" / "packaged_runtime_issue_log_smoke.py"
@@ -24212,6 +24214,61 @@ def validate_packaged_settings_persistence_smoke(errors: list[str]) -> None:
             errors,
             "Settings transactional-persistence scene must load its focused regression script",
         )
+
+    ensure(
+        BATTLE_DIRECT_PLAYBACK_SPEED_WRITE_FAILURE_REGRESSION_SCRIPT_PATH.exists(),
+        errors,
+        "Missing Battle direct playback-speed write-failure regression script",
+    )
+    if BATTLE_DIRECT_PLAYBACK_SPEED_WRITE_FAILURE_REGRESSION_SCRIPT_PATH.exists():
+        direct_speed_regression_text = BATTLE_DIRECT_PLAYBACK_SPEED_WRITE_FAILURE_REGRESSION_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "BATTLE_DIRECT_PLAYBACK_SPEED_WRITE_FAILURE_RECOVERY_REGRESSION",
+            "HEROES_LIKE_SETTINGS_FAIL_PHASE",
+            'FAILURE_PHASES := ["precommit", "after_backup"]',
+            "live_not_regular_file",
+            "validation_set_battle_presentation_speed",
+            "validation_reset_battle_playback_speed_state",
+            "validation_battle_playback_speed_snapshot",
+            "validation_settings_transaction_snapshot",
+            "settings_save_failed",
+            "Playback speed not saved. Previous speed restored.",
+            "Not saved; previous setting restored.",
+            "SpeedInstant",
+            "prior_bytes_exact",
+            "committed_cache_exact",
+            "session_exact",
+            "routes_exact",
+            "fresh_shell_speed",
+            "validation_active_play_settings_dialog",
+        ):
+            ensure(required_token in direct_speed_regression_text, errors, f"Battle direct playback-speed regression is missing token: {required_token}")
+
+    ensure(
+        BATTLE_DIRECT_PLAYBACK_SPEED_WRITE_FAILURE_REGRESSION_SCENE_PATH.exists(),
+        errors,
+        "Missing Battle direct playback-speed write-failure regression scene",
+    )
+    if BATTLE_DIRECT_PLAYBACK_SPEED_WRITE_FAILURE_REGRESSION_SCENE_PATH.exists():
+        direct_speed_scene_text = BATTLE_DIRECT_PLAYBACK_SPEED_WRITE_FAILURE_REGRESSION_SCENE_PATH.read_text(encoding="utf-8")
+        ensure(
+            "res://tests/battle_direct_playback_speed_write_failure_recovery_regression.gd" in direct_speed_scene_text,
+            errors,
+            "Battle direct playback-speed regression scene must load its focused script",
+        )
+
+    if BATTLE_SCRIPT_PATH.exists():
+        battle_speed_commit_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "func _set_battle_presentation_speed(speed: String) -> Dictionary",
+            "SettingsService.set_battle_playback_speed_id(requested_speed)",
+            '"reason": "settings_save_failed"',
+            '"settings_result": settings_result.duplicate(true)',
+            "Playback speed not saved. Previous speed restored.",
+            "func validation_set_battle_presentation_speed",
+            "func validation_battle_playback_speed_snapshot",
+        ):
+            ensure(required_token in battle_speed_commit_text, errors, f"BattleShell.gd is missing transactional playback-speed token: {required_token}")
 
     if SETTINGS_SERVICE_PATH.exists():
         settings_transaction_text = SETTINGS_SERVICE_PATH.read_text(encoding="utf-8")
