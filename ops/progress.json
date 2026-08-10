@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Reclaim execution-host storage before the next export, then select the next tracker-approved release-readiness implementation slice"
+    "Select the next tracker-approved release-readiness implementation slice"
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,7 +14324,7 @@
       }
     }
   ],
-  "currentNotes": "The Overworld command band now fits selectable 1600x900 with all controls preserved and cross-platform package proof. The execution host remains at 100 percent filesystem usage and must be reclaimed before more reliable exports. Overall release readiness remains open.",
+  "currentNotes": "The Overworld command band now fits selectable 1600x900 with all controls preserved and cross-platform package proof. Stale temporary validators were removed and execution-host filesystem usage is back to 66 percent. Overall release readiness remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "ux-overworld-1600-command-band-responsive-fit-10184",
   "currentSliceId": "ux-overworld-1600-command-band-responsive-fit-10184",
@@ -74744,7 +74744,7 @@
       "startedAt": "2026-08-10T09:49:45Z",
       "updatedAt": "2026-08-10T10:05:32Z",
       "notes": "Completed an OverworldShell-only constrained-desktop spacing correction. The 1600x900 band is now P(1,774) S(1598,96), all direct surfaces and Primary/End Turn/slot/Save/Settings/Menu controls are contained, and 1024/1280/1920 plus focus, repository, Linux package, and Windows/Wine package gates pass.",
-      "remainingWork": "No work remains in this slice. Host filesystem usage is 100 percent and must be reclaimed before reliable future exports; Windows numeric version metadata, release signing, native Windows hardware certification, publication, and overall release readiness remain open.",
+      "remainingWork": "No work remains in this slice. Windows numeric version metadata, release signing, native Windows hardware certification, publication, and overall release readiness remain open.",
       "completedAt": "2026-08-10T10:05:32Z"
     }
   ],
