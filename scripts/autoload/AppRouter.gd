@@ -26,6 +26,8 @@ const AUTOSAVE_PENDING_COUNT_FLAG := "runtime_autosave_pending_count"
 const AUTOSAVE_PENDING_UNIX_FLAG := "runtime_autosave_pending_unix"
 const SAFE_QUIT_FAILURE_TITLE := "Unable to close safely"
 const SAFE_QUIT_FAILURE_MESSAGE := "The current expedition could not be saved, so the game will remain open. Try saving again or export a support bundle from Settings if the problem continues."
+const ACTIVE_PLAY_RETURN_FAILURE_MESSAGE := "Save failed. The expedition remains open; use Save, then try Return to Main Menu again."
+const ACTIVE_PLAY_RETURN_SUCCESS_MESSAGE := "Expedition saved. Returning to Main Menu."
 
 var _menu_notice := ""
 var _active_overworld_handoff_profile := {}
@@ -42,6 +44,15 @@ var _safe_quit_visible_error := ""
 var _validation_quit_suppressed := false
 var _validation_safe_quit_reentrant_probe := false
 var _validation_safe_quit_reentrant_result := {}
+var _active_play_return_request_count := 0
+var _active_play_return_save_attempt_count := 0
+var _active_play_return_save_failure_count := 0
+var _active_play_return_route_attempt_count := 0
+var _active_play_return_suppressed_route_count := 0
+var _active_play_return_last_result := {}
+var _active_play_return_last_route := {}
+var _active_play_return_last_runtime_issue := {}
+var _validation_active_play_return_routing_suppressed := false
 
 func _ready() -> void:
 	# Native window close requests must pass through the same transactional save
@@ -213,12 +224,133 @@ func go_to_main_menu() -> void:
 	metadata.merge(autosave_metadata, true)
 	ProfileLogScript.emit_general("router", "scene_transition", "go_to_main_menu", ProfileLogScript.elapsed_ms(started), buckets, metadata, SessionState.ensure_active_session())
 
-func return_to_main_menu_from_active_play() -> void:
+func return_to_main_menu_from_active_play() -> Dictionary:
+	_active_play_return_request_count += 1
 	if SessionState.request_editor_return_from_active_play():
 		_menu_notice = ""
-		_change_scene(MAP_EDITOR_SCENE)
+		_route_active_play_return(MAP_EDITOR_SCENE, "editor_return")
+		_active_play_return_last_result = _active_play_return_result(
+			true,
+			false,
+			true,
+			"editor_return",
+			"Returning to Map Editor.",
+			"",
+			{}
+		)
+		return _active_play_return_last_result.duplicate(true)
+
+	if not SessionState.has_playable_session():
+		_menu_notice = ""
+		_route_active_play_return(MAIN_MENU_SCENE, "no_active_session")
+		_active_play_return_last_result = _active_play_return_result(
+			true,
+			false,
+			true,
+			"no_active_session",
+			"Returning to Main Menu.",
+			"",
+			{}
+		)
+		return _active_play_return_last_result.duplicate(true)
+
+	var session := SessionState.ensure_active_session()
+	_active_play_return_save_attempt_count += 1
+	var save_result: Dictionary = _autosave_active_session(session)
+	if not bool(save_result.get("ok", false)):
+		_active_play_return_save_failure_count += 1
+		_menu_notice = ""
+		_active_play_return_last_runtime_issue = RuntimeIssueLog.emit_error(
+			"active_play",
+			"active_play_return_autosave_failed",
+			ACTIVE_PLAY_RETURN_FAILURE_MESSAGE,
+			{
+				"save_reason": String(save_result.get("reason", "unknown")).left(80),
+				"save_message": String(save_result.get("message", "Save write failed.")).strip_edges().left(240),
+				"game_state": String(session.game_state).left(40),
+			},
+			session
+		)
+		_active_play_return_last_result = _active_play_return_result(
+			false,
+			false,
+			false,
+			"autosave_failed",
+			ACTIVE_PLAY_RETURN_FAILURE_MESSAGE,
+			"return_to_menu",
+			save_result
+		)
+		return _active_play_return_last_result.duplicate(true)
+
+	_menu_notice = String(save_result.get("message", ""))
+	_route_active_play_return(MAIN_MENU_SCENE, "saved")
+	_active_play_return_last_result = _active_play_return_result(
+		true,
+		true,
+		true,
+		"saved",
+		ACTIVE_PLAY_RETURN_SUCCESS_MESSAGE,
+		"",
+		save_result
+	)
+	return _active_play_return_last_result.duplicate(true)
+
+func _active_play_return_result(
+	ok: bool,
+	saved: bool,
+	routed: bool,
+	reason: String,
+	message: String,
+	retry_action: String,
+	save_result: Dictionary
+) -> Dictionary:
+	return {
+		"ok": ok,
+		"saved": saved,
+		"routed": routed,
+		"reason": reason,
+		"message": message,
+		"retry_action": retry_action,
+		"save_result": save_result.duplicate(true),
+	}
+
+func _route_active_play_return(scene_path: String, reason: String) -> void:
+	_active_play_return_route_attempt_count += 1
+	_active_play_return_last_route = {
+		"target_scene": scene_path,
+		"reason": reason,
+		"suppressed": _validation_active_play_return_routing_suppressed,
+	}
+	if _validation_active_play_return_routing_suppressed:
+		_active_play_return_suppressed_route_count += 1
 		return
-	go_to_main_menu()
+	_change_scene(scene_path)
+
+func validation_set_active_play_return_routing_suppressed(suppressed: bool) -> void:
+	_validation_active_play_return_routing_suppressed = suppressed
+
+func validation_reset_active_play_return_state() -> void:
+	_active_play_return_request_count = 0
+	_active_play_return_save_attempt_count = 0
+	_active_play_return_save_failure_count = 0
+	_active_play_return_route_attempt_count = 0
+	_active_play_return_suppressed_route_count = 0
+	_active_play_return_last_result = {}
+	_active_play_return_last_route = {}
+	_active_play_return_last_runtime_issue = {}
+
+func validation_active_play_return_snapshot() -> Dictionary:
+	return {
+		"request_count": _active_play_return_request_count,
+		"save_attempt_count": _active_play_return_save_attempt_count,
+		"save_failure_count": _active_play_return_save_failure_count,
+		"route_attempt_count": _active_play_return_route_attempt_count,
+		"suppressed_route_count": _active_play_return_suppressed_route_count,
+		"routing_suppressed": _validation_active_play_return_routing_suppressed,
+		"last_result": _active_play_return_last_result.duplicate(true),
+		"last_route": _active_play_return_last_route.duplicate(true),
+		"last_runtime_issue": _active_play_return_last_runtime_issue.duplicate(true),
+	}
 
 func go_to_overworld() -> void:
 	var started := ProfileLogScript.begin_usec()
@@ -550,7 +682,6 @@ func _autosave_active_session(
 ) -> Dictionary:
 	if session == null or session.scenario_id == "":
 		return {"ok": false, "message": "", "summary": {}}
-	_clear_transition_autosave_intent(session)
 	return SaveService.save_runtime_autosave_session(session, include_summary)
 
 func _record_transition_autosave_intent(

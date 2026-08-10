@@ -9,6 +9,7 @@ const UI_ART_TOWN_PARCHMENT_PANEL := "res://art/ui/runtime/town/parchment_panel.
 const UI_ART_TOWN_RECRUIT_ROW := "res://art/ui/runtime/town/recruit_row.png"
 const UI_ART_TOWN_RESOURCE_LEDGER := "res://art/ui/runtime/town/resource_ledger.png"
 const UI_ART_TOWN_BUILD_PANEL := "res://art/ui/runtime/town/build_panel.png"
+const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains open; use Save, then try Return to Main Menu again."
 
 @onready var _banner_panel: PanelContainer = %Banner
 @onready var _crest_panel: PanelContainer = %CrestFrame
@@ -77,6 +78,8 @@ const UI_ART_TOWN_BUILD_PANEL := "res://art/ui/runtime/town/build_panel.png"
 
 var _session: SessionStateStore.SessionData
 var _last_message := ""
+var _last_return_to_menu_result: Dictionary = {}
+var _validation_return_to_menu_request_count := 0
 var _last_action_recap := {}
 var _last_town_entity_cache_result := {}
 var _last_save_surface_profile := {}
@@ -364,8 +367,20 @@ func _on_leave_pressed() -> void:
 	})
 	AppRouter.go_to_overworld()
 
-func _on_menu_pressed() -> void:
-	AppRouter.return_to_main_menu_from_active_play()
+func _on_menu_pressed() -> Dictionary:
+	_validation_return_to_menu_request_count += 1
+	var result: Dictionary = AppRouter.return_to_main_menu_from_active_play()
+	_last_return_to_menu_result = result.duplicate(true)
+	if bool(result.get("ok", false)):
+		return _last_return_to_menu_result.duplicate(true)
+	var message := String(result.get("message", "")).strip_edges().left(180)
+	if message == "":
+		message = RETURN_TO_MENU_FAILURE_MESSAGE
+	_last_return_to_menu_result["message"] = message
+	_last_message = message
+	_refresh()
+	_menu_button.call_deferred("grab_focus")
+	return _last_return_to_menu_result.duplicate(true)
 
 func _on_settings_pressed() -> void:
 	_active_play_settings_dialog.open_dialog()
@@ -1570,6 +1585,10 @@ func validation_snapshot() -> Dictionary:
 	return {
 		"scene_path": scene_file_path,
 		"manual_save_overwrite_dialog": _manual_save_overwrite_dialog.validation_snapshot(),
+		"return_to_menu_last_result": _last_return_to_menu_result.duplicate(true),
+		"return_to_menu_visible_message": _last_message,
+		"return_to_menu_focus_owner": _return_to_menu_focus_owner_name(),
+		"return_to_menu_request_count": _validation_return_to_menu_request_count,
 		"scenario_id": _session.scenario_id,
 		"difficulty": _session.difficulty,
 		"launch_mode": _session.launch_mode,
@@ -1992,13 +2011,21 @@ func validation_active_play_settings_dialog():
 	return _active_play_settings_dialog
 
 func validation_return_to_menu() -> Dictionary:
-	var town := TownRules.get_active_town(_session)
-	_on_menu_pressed()
+	return _on_menu_pressed()
+
+func validation_active_play_return_snapshot() -> Dictionary:
 	return {
-		"ok": true,
-		"town_placement_id": String(town.get("placement_id", "")),
-		"message": "Town route returned to the main menu.",
+		"last_result": _last_return_to_menu_result.duplicate(true),
+		"visible_message": _last_message,
+		"focus_owner": _return_to_menu_focus_owner_name(),
+		"request_count": _validation_return_to_menu_request_count,
+		"scenario_id": _session.scenario_id,
+		"resume_target": SaveService.resume_target_for_session(_session),
 	}
+
+func _return_to_menu_focus_owner_name() -> String:
+	var focus_owner := get_viewport().gui_get_focus_owner()
+	return String(focus_owner.name) if focus_owner != null else ""
 
 func validation_leave_town() -> Dictionary:
 	var town := TownRules.get_active_town(_session)

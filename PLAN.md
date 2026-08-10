@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `active-play-return-to-menu-autosave-failure-safety-10184`. Return to Menu from Overworld, Town, Battle, and Outcome now fails closed when the forced autosave fails: the exact shell/session/intent and prior durable state remain, one bounded issue and Save/retry message appear, and Menu focus returns. One verified retry saves and routes once; no-session/editor direct controls remain intact. The eight-case failure matrix plus safe-close, save transaction, controller, core, parse, repository, JSON, Python, and diff gates pass at save version 9.
 - Latest completed implementation slice: `overworld-pending-battle-manual-save-failure-route-10184`. Failed overworld manual writes now return before pending-battle resolution routing, preserve exact live battle and durable slot state, keep bounded retry feedback and Save focus, and expose the actual write result instead of inferring success from an occupied slot. One verified retry persists the canonical battle payload and routes exactly once. Both failure phases across empty and occupied slots plus compatibility, core, parse, repository, JSON, Python, and diff gates pass at save version 9.
 - Latest completed implementation slice: `accessibility-destructive-confirmation-safe-cancel-10184`. Manual overwrite plus Restart Arc, Delete Save, and Restore Defaults now enter on named safe actions (`Keep Save`, `Keep Progress`, or `Keep Settings`). Controller Back/Escape cancels without mutation and restores the originating command; deliberate confirmation remains exactly once. Focused persistence/progression/settings, controller, compact 1280x720, core, parse, repository, JSON, Python, and diff gates pass.
 - Latest completed implementation slice: `overworld-end-turn-autosave-failure-surface-10184`. When an in-progress End Turn commits but autosave fails, the live advanced day is retained while the shell now returns `saved:false`, shows bounded Save-now guidance, and records one runtime issue. Pending battles remain on the overworld until a successful manual Save persists the exact battle-ready state, then route once. Both failure phases, direct/warned/terminal controls, pending-battle recovery, core, parse, repository, JSON, Python, and diff gates pass at save version 9.
@@ -3300,6 +3301,37 @@ Completion evidence:
 - failed writes return an honest `manual_save_failed` result, bounded visible retry guidance, and usable Save focus instead of treating an old loadable slot as a successful overwrite;
 - clearing the hook lets one retry persist and reload the canonical battle payload, then records exactly one battle route without another End Turn rule or autosave call;
 - End Turn confirmation, save transaction, controller, core, editor parse, repository validator, JSON, Python, and diff gates pass at save version 9.
+
+## Active-Play Return-to-Menu Autosave Failure Safety
+
+id: `active-play-return-to-menu-autosave-failure-safety-10184`
+
+Status: complete.
+
+Selected Phase 6 cross-screen save-and-route safety slice. The active-play Return to
+Menu path records a failed forced autosave but still opens Main Menu, while its helper
+clears live transition intent before persistence despite SaveService already owning
+success-only intent clearing.
+
+Implementation target:
+- make active-play Return to Menu return a structured result and keep the current Overworld, Town, Battle, or Outcome shell active when the forced autosave fails;
+- preserve exact live session, transition/generated-opening retry flags, prior autosave bytes/cache, and transaction cleanliness while surfacing one bounded runtime issue and visible Save/retry guidance;
+- after clearing the failure hook, let one retry persist the exact canonical state and route to Main Menu exactly once.
+
+Completion criteria:
+- both injected failure phases fail closed on all four active-play shells with exact state/bytes/cache preservation, no scene route, no residue, visible feedback, and origin focus;
+- transition intent is cleared only after verified persistence, generated-opening retry state survives failure, and success performs one save plus one Main Menu route;
+- no-session and editor-return controls retain their existing direct routes;
+- focused router/shell, save transaction, controller, core, editor parse, repository, JSON, Python, and Linux/Windows-compatible gates pass at save version 9.
+
+Non-goals:
+- no new confirmation dialog, save schema, scene redesign, battle-transition policy, Native RMG work, publication, or overall release-completion claim.
+
+Completion evidence:
+- Overworld, Town, Battle, and Outcome preserve exact active shell, session, transition/generated-opening flags, prior autosave bytes/cache, and transaction cleanliness across precommit and after-backup failure with zero routes;
+- each shell surfaces the structured failure and bounded Save/retry guidance, restores Menu focus, and the router emits exactly one sanitized `active_play_return_autosave_failed` issue;
+- clearing the hook lets one retry persist the canonical active-play payload and record one Main Menu route, while no-session and editor-return controls route directly without a save attempt;
+- safe-close, transactional save, controller focus, core, editor parse, repository validator, JSON, Python, and diff gates pass at save version 9.
 
 ## Phase Roadmap
 

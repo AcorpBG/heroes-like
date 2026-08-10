@@ -78,6 +78,8 @@ SAVE_TRANSACTIONAL_COMMIT_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "save_transa
 SAVE_TRANSACTIONAL_COMMIT_REGRESSION_SCENE_PATH = ROOT / "tests" / "save_transactional_commit_regression.tscn"
 APPLICATION_SAFE_CLOSE_AUTOSAVE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "application_safe_close_autosave_regression.gd"
 APPLICATION_SAFE_CLOSE_AUTOSAVE_REGRESSION_SCENE_PATH = ROOT / "tests" / "application_safe_close_autosave_regression.tscn"
+APPLICATION_ACTIVE_PLAY_RETURN_AUTOSAVE_FAILURE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "application_active_play_return_autosave_failure_regression.gd"
+APPLICATION_ACTIVE_PLAY_RETURN_AUTOSAVE_FAILURE_REGRESSION_SCENE_PATH = ROOT / "tests" / "application_active_play_return_autosave_failure_regression.tscn"
 MAP_EDITOR_SCENE_PATH = ROOT / "scenes" / "editor" / "MapEditorShell.tscn"
 MAP_EDITOR_SCRIPT_PATH = ROOT / "scenes" / "editor" / "MapEditorShell.gd"
 MAP_EDITOR_SMOKE_SCENE_PATH = ROOT / "tests" / "map_editor_smoke.tscn"
@@ -12597,6 +12599,46 @@ def validate_save_management(errors: list[str]) -> None:
             "Application safe-close regression scene must load its script",
         )
 
+    for path in (
+        APPLICATION_ACTIVE_PLAY_RETURN_AUTOSAVE_FAILURE_REGRESSION_SCRIPT_PATH,
+        APPLICATION_ACTIVE_PLAY_RETURN_AUTOSAVE_FAILURE_REGRESSION_SCENE_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing active-play return autosave-failure regression file: {path.relative_to(ROOT)}")
+    if APPLICATION_ACTIVE_PLAY_RETURN_AUTOSAVE_FAILURE_REGRESSION_SCRIPT_PATH.exists():
+        active_return_text = APPLICATION_ACTIVE_PLAY_RETURN_AUTOSAVE_FAILURE_REGRESSION_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "APPLICATION_ACTIVE_PLAY_RETURN_AUTOSAVE_FAILURE_REGRESSION",
+            'HEROES_LIKE_SAVE_FAIL_PHASE',
+            'const ACTIVE_STATES := ["overworld", "town", "battle", "outcome"]',
+            'const FAILURE_PHASES := ["precommit", "after_backup"]',
+            "validation_return_to_menu",
+            "validation_active_play_return_snapshot",
+            "validation_set_active_play_return_routing_suppressed",
+            "validation_reset_active_play_return_state",
+            "validation_summary_cache_snapshot",
+            "validation_transaction_artifact_paths",
+            'active_play_return_autosave_failed',
+            'autosave_failed',
+            'return_to_menu',
+            'generated_overworld_deferred_autosave_pending',
+            'generated_overworld_command_briefing_autosave_deferred',
+            'generated_overworld_initial_autosave_completed',
+            'shell.get_node("%Menu")',
+            "AppRouter.MAIN_MENU_SCENE",
+            "AppRouter.MAP_EDITOR_SCENE",
+            "SessionState.editor_return_pending()",
+            "SaveService.restore_autosave_session()",
+            "SessionState.SAVE_VERSION",
+        ):
+            ensure(required_token in active_return_text, errors, f"application_active_play_return_autosave_failure_regression.gd is missing token: {required_token}")
+    if APPLICATION_ACTIVE_PLAY_RETURN_AUTOSAVE_FAILURE_REGRESSION_SCENE_PATH.exists():
+        active_return_scene_text = APPLICATION_ACTIVE_PLAY_RETURN_AUTOSAVE_FAILURE_REGRESSION_SCENE_PATH.read_text(encoding="utf-8")
+        ensure(
+            "res://tests/application_active_play_return_autosave_failure_regression.gd" in active_return_scene_text,
+            errors,
+            "Active-play return autosave-failure regression scene must load its script",
+        )
+
     app_router_text = APP_ROUTER_PATH.read_text(encoding="utf-8")
     for required_token in (
         "func request_safe_quit",
@@ -12610,6 +12652,13 @@ def validate_save_management(errors: list[str]) -> None:
         "func validation_reset_safe_quit_state",
         "func validation_set_safe_quit_reentrant_probe",
         "func validation_safe_quit_snapshot",
+        "func return_to_main_menu_from_active_play() -> Dictionary",
+        '"active_play_return_autosave_failed"',
+        '"autosave_failed"',
+        '"return_to_menu"',
+        "func validation_set_active_play_return_routing_suppressed",
+        "func validation_reset_active_play_return_state",
+        "func validation_active_play_return_snapshot",
     ):
         ensure(required_token in app_router_text, errors, f"AppRouter.gd is missing required application safe-close token: {required_token}")
     for required_token in (
@@ -12617,6 +12666,17 @@ def validate_save_management(errors: list[str]) -> None:
         "func validation_request_safe_quit",
     ):
         ensure(required_token in main_menu_script_text, errors, f"MainMenu.gd is missing required application safe-close token: {required_token}")
+    for shell_path in (OVERWORLD_SCRIPT_PATH, TOWN_SCRIPT_PATH, BATTLE_SCRIPT_PATH, OUTCOME_SCRIPT_PATH):
+        shell_text = shell_path.read_text(encoding="utf-8")
+        for required_token in (
+            "func _on_menu_pressed() -> Dictionary",
+            "AppRouter.return_to_main_menu_from_active_play()",
+            "func validation_return_to_menu() -> Dictionary",
+            "func validation_active_play_return_snapshot() -> Dictionary",
+            'get("message", "")',
+            'call_deferred("grab_focus")',
+        ):
+            ensure(required_token in shell_text, errors, f"{shell_path.name} is missing active-play return safety token: {required_token}")
 
 
 def validate_skirmish_setup(errors: list[str]) -> None:

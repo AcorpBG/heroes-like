@@ -2,6 +2,7 @@ extends Control
 
 const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
+const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains open; use Save, then try Return to Main Menu again."
 
 @onready var _backdrop: ColorRect = %Backdrop
 @onready var _header_label: Label = %Header
@@ -36,6 +37,8 @@ const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRule
 var _session: SessionStateStore.SessionData
 var _model: Dictionary = {}
 var _last_action_message := ""
+var _last_return_to_menu_result: Dictionary = {}
+var _validation_return_to_menu_request_count := 0
 
 func _ready() -> void:
 	_apply_visual_theme()
@@ -285,8 +288,20 @@ func _on_save_slot_selected(index: int) -> void:
 	SaveService.set_selected_manual_slot(_save_slot_picker.get_item_id(index))
 	_refresh_save_surface()
 
-func _on_menu_pressed() -> void:
-	AppRouter.return_to_main_menu_from_active_play()
+func _on_menu_pressed() -> Dictionary:
+	_validation_return_to_menu_request_count += 1
+	var result: Dictionary = AppRouter.return_to_main_menu_from_active_play()
+	_last_return_to_menu_result = result.duplicate(true)
+	if bool(result.get("ok", false)):
+		return _last_return_to_menu_result.duplicate(true)
+	var message := String(result.get("message", "")).strip_edges().left(180)
+	if message == "":
+		message = RETURN_TO_MENU_FAILURE_MESSAGE
+	_last_return_to_menu_result["message"] = message
+	_last_action_message = message
+	_refresh()
+	_menu_button.call_deferred("grab_focus")
+	return _last_return_to_menu_result.duplicate(true)
 
 func _on_guide_pressed() -> void:
 	_guide_panel.visible = not _guide_panel.visible
@@ -305,6 +320,10 @@ func validation_snapshot() -> Dictionary:
 	return {
 		"scene_path": scene_file_path,
 		"manual_save_overwrite_dialog": _manual_save_overwrite_dialog.validation_snapshot(),
+		"return_to_menu_last_result": _last_return_to_menu_result.duplicate(true),
+		"return_to_menu_visible_message": _last_action_message,
+		"return_to_menu_focus_owner": _return_to_menu_focus_owner_name(),
+		"return_to_menu_request_count": _validation_return_to_menu_request_count,
 		"music_audio": MusicAudio.validation_summary(),
 		"scenario_id": _session.scenario_id,
 		"difficulty": _session.difficulty,
@@ -443,13 +462,21 @@ func validation_perform_action(action_id: String) -> Dictionary:
 	}
 
 func validation_return_to_menu() -> Dictionary:
-	_on_menu_pressed()
+	return _on_menu_pressed()
+
+func validation_active_play_return_snapshot() -> Dictionary:
 	return {
-		"ok": true,
+		"last_result": _last_return_to_menu_result.duplicate(true),
+		"visible_message": _last_action_message,
+		"focus_owner": _return_to_menu_focus_owner_name(),
+		"request_count": _validation_return_to_menu_request_count,
 		"scenario_id": _session.scenario_id,
-		"scenario_status": _session.scenario_status,
-		"message": "Outcome route returned to the main menu.",
+		"resume_target": SaveService.resume_target_for_session(_session),
 	}
+
+func _return_to_menu_focus_owner_name() -> String:
+	var focus_owner := get_viewport().gui_get_focus_owner()
+	return String(focus_owner.name) if focus_owner != null else ""
 
 func validation_open_outcome_guide() -> void:
 	if not _guide_panel.visible:

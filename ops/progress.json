@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Pending battles now remain on the overworld after failed manual writes and route only after a verified retry persists the checkpoint. Overall release readiness remains open.",
+  "currentNotes": "Active-play Return to Menu now fails closed on autosave failure across all four shells and routes only after a verified retry. Overall release readiness remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "overworld-pending-battle-manual-save-failure-route-10184",
-  "currentSliceId": "overworld-pending-battle-manual-save-failure-route-10184",
-  "currentSliceNotes": "Completed write-derived failure handling, zero-route retry state, occupied-slot safety, canonical reload, and exactly-once success routing.",
+  "currentSlice": "active-play-return-to-menu-autosave-failure-safety-10184",
+  "currentSliceId": "active-play-return-to-menu-autosave-failure-safety-10184",
+  "currentSliceNotes": "Completed four-shell fail-closed routing, success-only intent clearing, visible retry guidance, exact failure preservation, and one-save/one-route retry.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Pending-Battle Manual Save Failure Route Safety",
-  "currentSliceUpdatedAt": "2026-08-10T04:15:47Z",
+  "currentSliceTitle": "Active-Play Return-to-Menu Autosave Failure Safety",
+  "currentSliceUpdatedAt": "2026-08-10T04:36:02Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -74424,6 +74424,42 @@
       "notes": "Completed write-derived manual-save results, zero-route failure handling, exact empty/occupied-slot preservation, and one verified retry route.",
       "remainingWork": "No work remains in this slice. Broader forced-transition save-failure handling, incompatible campaign-profile protection, controller map navigation, release signing, native Windows certification, publication, and overall release readiness remain open.",
       "completedAt": "2026-08-10T04:15:47Z"
+    },
+    {
+      "id": "active-play-return-to-menu-autosave-failure-safety-10184",
+      "title": "Active-Play Return-to-Menu Autosave Failure Safety",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/screen-wireframes.md", "docs/lessons-learned.md"],
+      "purpose": "Prevent active-play Return to Menu from routing after a failed forced autosave or losing retry intent before persistence.",
+      "implementationTargets": [
+        "scripts/autoload/AppRouter.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/town/TownShell.gd",
+        "scenes/battle/BattleShell.gd",
+        "scenes/results/ScenarioOutcomeShell.gd",
+        "tests/application_active_play_return_autosave_failure_regression.gd",
+        "tests/application_active_play_return_autosave_failure_regression.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {"failed_return_autosave_routes_main_menu": true, "failed_return_preserves_transition_intent": false},
+      "completionCriteria": [
+        "Both injected failure phases preserve exact active shell, session, retry flags, prior autosave bytes/cache, and zero transaction residue across four routes",
+        "Failure emits one bounded issue and visible retry guidance while restoring Menu focus",
+        "One verified retry saves canonical state and routes to Main Menu exactly once",
+        "No-session/editor-return controls and focused save/controller/core/editor/repository/cross-platform-compatible gates pass"
+      ],
+      "nonGoals": ["new confirmation UI, save schema, scene redesign, battle-transition policy, Native RMG, publication, or release-completion claim"],
+      "createdAt": "2026-08-10T04:17:37Z",
+      "startedAt": "2026-08-10T04:17:37Z",
+      "updatedAt": "2026-08-10T04:36:02Z",
+      "notes": "Completed four-shell fail-closed routing, success-only transition-intent clearing, visible retry state, exact failure preservation, and one verified retry route.",
+      "remainingWork": "No work remains in this slice. Incompatible campaign-profile protection, controller map navigation, other forced-transition save-failure paths, release signing, native Windows certification, publication, and overall release readiness remain open.",
+      "completedAt": "2026-08-10T04:36:02Z"
     }
   ],
   "project": "heroes-like",
