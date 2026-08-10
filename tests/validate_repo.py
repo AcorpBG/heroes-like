@@ -68,6 +68,8 @@ SAVE_SLOT_DELETE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "save_slot_delete_reg
 SAVE_SLOT_DELETE_REGRESSION_SCENE_PATH = ROOT / "tests" / "save_slot_delete_regression.tscn"
 MANUAL_SAVE_SLOT_NAMING_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "manual_save_slot_naming_regression.gd"
 MANUAL_SAVE_SLOT_NAMING_REGRESSION_SCENE_PATH = ROOT / "tests" / "manual_save_slot_naming_regression.tscn"
+SAVE_TRANSACTIONAL_COMMIT_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "save_transactional_commit_regression.gd"
+SAVE_TRANSACTIONAL_COMMIT_REGRESSION_SCENE_PATH = ROOT / "tests" / "save_transactional_commit_regression.tscn"
 MAP_EDITOR_SCENE_PATH = ROOT / "scenes" / "editor" / "MapEditorShell.tscn"
 MAP_EDITOR_SCRIPT_PATH = ROOT / "scenes" / "editor" / "MapEditorShell.gd"
 MAP_EDITOR_SMOKE_SCENE_PATH = ROOT / "tests" / "map_editor_smoke.tscn"
@@ -12476,6 +12478,53 @@ def validate_save_management(errors: list[str]) -> None:
     if MANUAL_SAVE_SLOT_NAMING_REGRESSION_SCENE_PATH.exists():
         naming_scene_text = MANUAL_SAVE_SLOT_NAMING_REGRESSION_SCENE_PATH.read_text(encoding="utf-8")
         ensure("res://tests/manual_save_slot_naming_regression.gd" in naming_scene_text, errors, "Manual-save naming regression scene must load its script")
+
+    for path in (SAVE_TRANSACTIONAL_COMMIT_REGRESSION_SCRIPT_PATH, SAVE_TRANSACTIONAL_COMMIT_REGRESSION_SCENE_PATH):
+        ensure(path.exists(), errors, f"Missing transactional-save regression file: {path.relative_to(ROOT)}")
+    if SAVE_TRANSACTIONAL_COMMIT_REGRESSION_SCRIPT_PATH.exists():
+        transaction_text = SAVE_TRANSACTIONAL_COMMIT_REGRESSION_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "SAVE_TRANSACTIONAL_COMMIT_REGRESSION",
+            'HEROES_LIKE_SAVE_FAIL_PHASE',
+            'for phase in ["precommit", "after_backup"]',
+            "validation_summary_cache_snapshot",
+            "validation_transaction_artifact_paths",
+            "_validate_generated_opening_failure_boundary",
+            "_validate_progression_failure_boundary",
+            "_validate_successful_commit_and_reload",
+            "_validate_backup_recovery(false)",
+            "_validate_backup_recovery(true)",
+            "_validate_valid_live_wins",
+            "_validate_semantic_invalid_live_backup_recovery",
+            "_validate_malformed_artifacts_fail_closed",
+            "_validate_semantic_invalid_backup_fail_closed",
+            "_validate_progression_backup_recovery",
+            'generated_overworld_deferred_autosave_pending',
+            'generated_overworld_initial_autosave_completed',
+            "SessionState.SAVE_VERSION",
+        ):
+            ensure(required_token in transaction_text, errors, f"save_transactional_commit_regression.gd is missing required token: {required_token}")
+    if SAVE_TRANSACTIONAL_COMMIT_REGRESSION_SCENE_PATH.exists():
+        transaction_scene_text = SAVE_TRANSACTIONAL_COMMIT_REGRESSION_SCENE_PATH.read_text(encoding="utf-8")
+        ensure(
+            "res://tests/save_transactional_commit_regression.gd" in transaction_scene_text,
+            errors,
+            "Transactional-save regression scene must load its script",
+        )
+
+    for required_token in (
+        'const SAVE_TRANSACTION_FAILURE_ENV := "HEROES_LIKE_SAVE_FAIL_PHASE"',
+        'const SAVE_TRANSACTION_CANDIDATE_SUFFIX := ".candidate"',
+        'const SAVE_TRANSACTION_BACKUP_SUFFIX := ".backup"',
+        "func validation_summary_cache_snapshot",
+        "func validation_clear_summary_cache",
+        "func validation_transaction_artifact_paths",
+        "func _recover_save_transaction",
+        "func _rollback_save_transaction",
+        'OS.get_environment(SAVE_TRANSACTION_FAILURE_ENV) == "precommit"',
+        'OS.get_environment(SAVE_TRANSACTION_FAILURE_ENV) == "after_backup"',
+    ):
+        ensure(required_token in save_text, errors, f"SaveService.gd is missing required transactional-save token: {required_token}")
 
 
 def validate_skirmish_setup(errors: list[str]) -> None:

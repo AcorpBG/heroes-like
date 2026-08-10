@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `save-transactional-cross-platform-commit-10184`. Autosave, manual-slot, generated-opening, and campaign-progression writes now use one same-directory candidate/backup transaction. Candidate bytes, length, JSON root, and exact text are verified before commit; the prior valid live file is restored after precommit or after-backup failures; bounded missing/corrupt-live recovery accepts only a semantically valid destination-matched backup and never promotes a candidate. Cache invalidation and live intent clearing occur only after verified success. Focused recovery, ordinary save, core, repository, fresh packaged Linux, and fresh packaged Windows/Wine gates pass at save version 9.
 - Latest completed implementation slice: `battle-player-withdrawal-confirmation-10184`. Retreat and Surrender now open one compact action-bound confirmation populated from their live authored consequence surface. Keep Fighting owns initial focus; cancel, Escape, and controller Back preserve the exact session and return focus to the originating action. Confirm revalidates availability, fails closed when stale, and invokes the existing BattleRules withdrawal path exactly once. Focused direct-rule parity, controller, 1280x720 layout, event-animation, core, parse, repository, JSON, Python, and diff gates pass without changing withdrawal math or save state.
 - Latest completed implementation slice: `save-generated-opening-autosave-completion-persistence-10184`. The generated-map opening fast path now writes a detached post-success payload that removes ordinary transition intent plus generated opening/briefing defer flags and records initial-autosave completion. Only a successful write mirrors that state to the live session; failure preserves the existing autosave bytes and exact live retry intent. Restoring the saved session no longer schedules a second opening autosave. Focused generated route/save/restore/failure/ordinary-control, core, regression, deferred-payload, parse, repository, JSON, Python, and diff gates pass at save version 9. The unrelated legacy random-map replay fixture still stops before saves on its obsolete nonempty template-id assertion.
 - Latest completed implementation slice: `settings-confirmed-display-mode-rollback-10184`. Player-facing window-mode and resolution changes now enter a SettingsService-owned preview without mutating committed settings or config bytes. A 15-second Keep/Revert modal gives Revert initial focus; Escape/controller Back, timeout, menu exit, replacement preview, and save failure restore the prior runtime display, while Keep persists and survives reload. Windowed/borderless requests clamp uniformly to the active monitor usable rectangle, and Restore Defaults defers its display portion through the same confirmation. Focused service, Main Menu, Restore Defaults, packaged persistence, active-play, Linux/X11, fresh-prefix packaged Windows/Wine, core, parse, repository, JSON, Python, and diff gates pass. Native Windows hardware certification, broader accessibility completion, and overall release readiness remain open.
@@ -2965,6 +2966,41 @@ Completion evidence:
 - confirm re-reads the live action surface: a disabled Surrender is rejected with zero action/route attempts, while valid Retreat and Surrender each match a method-equivalent direct BattleRules result and gameplay payload with exactly one action and one overworld-route attempt;
 - the scoped 1280x720 layout gate exits zero with the modal bounded inside the battle composition, and the 23-case event-animation report retains Retreat/Surrender presentation behavior;
 - focused runtime, active controller, layout, event-animation, core, editor parse, repository, Python, JSON, and diff gates pass.
+
+## Transactional Cross-Platform Save Commit
+
+id: `save-transactional-cross-platform-commit-10184`
+
+Status: complete.
+
+Selected Phase 6 release-safety slice. The shared raw-dictionary save primitive opens
+the live slot with `FileAccess.WRITE`, truncates it, writes once, invalidates the
+summary cache, and returns success without a verified flush/readback. Autosaves,
+manual slots, generated-opening saves, and progression payloads therefore share a
+cross-platform corruption window that can replace the only good player state.
+
+Implementation target:
+- write a complete candidate into the destination directory, flush it, check file errors, and verify exact bytes plus a valid JSON dictionary before touching the live slot;
+- preserve the prior valid live file as a bounded backup, commit with a Windows- and Linux-safe rename sequence, and restore the exact prior bytes after any precommit or after-backup failure;
+- recover deterministic missing/invalid-live plus valid-backup crash states on inspection/load without adopting malformed or unrelated files;
+- invalidate summary caches and let runtime callers clear transition/save intent only after the final live file is verified; successful and rolled-back transactions must leave no stale staging artifacts.
+
+Completion criteria:
+- injected `precommit` and `after_backup` failures preserve exact old live bytes, summary cache behavior, active session save intent, and a loadable prior slot;
+- successful autosave, manual save, generated-opening save, and progression writes reload the intended payload with no temp/backup residue;
+- valid-backup recovery handles missing or corrupt live files deterministically, while malformed backup/staging files fail closed;
+- focused transaction/recovery, existing generated-opening/manual/summary/save-load/core, Linux packaged, Windows/Wine packaged, editor parse, repository, JSON, Python, and diff gates pass.
+
+Non-goals:
+- no save schema/version change, cloud synchronization, application close/Alt-F4 autosave, gameplay mutation, Native RMG recovery, public release, signing, or overall release-completion claim.
+
+Completion evidence:
+- the shared writer flushes and verifies same-directory candidate byte count, exact text, JSON dictionary root, and final live bytes before returning a path; a valid prior live file is moved to a bounded backup and removed only after verified commit;
+- deterministic `precommit` and `after_backup` failures return failure, preserve exact old bytes, loadability, primed summary cache, and active transition/generated-opening intent, and leave no candidate/backup residue after rollback;
+- valid live files win over stale artifacts; missing, corrupt, or parseable-but-semantically-invalid live files recover exact bytes only from a destination-valid backup; malformed or `{}` backups fail closed and candidates are never recovery authority;
+- successful manual, autosave/generated-opening, and progression paths reload their intended state, clear runtime intent only after commit, retain save version 9, and leave no transaction artifacts;
+- focused transaction, manual overwrite/naming, generated-opening, deferred-summary, campaign restart, core, editor parse, repository, Python, JSON, and diff gates pass under isolated user data;
+- fresh Linux packaged PCK and fresh Windows packaged Wine probes both execute the full transactional regression successfully, including real FileAccess/DirAccess rename behavior.
 
 ## Phase Roadmap
 
