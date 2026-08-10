@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `campaign-replay-defeat-preserves-cleared-progress-10184`. Campaign completion now preserves an already-banked victory record, exported flags, carryover, victory count, and downstream unlock when a later replay loses, while incrementing attempts and retaining the live defeat outcome. First defeat, defeat-to-victory upgrade, and later-victory refresh remain unchanged. Focused transition-matrix, normalization/progression reload, campaign breadth/frontier/restart/menu/outcome, core, parse, repository, JSON, Python, and diff gates pass at save version 9.
 - Latest completed implementation slice: `application-safe-close-autosave-10184`. AppRouter now disables native auto-accepted quit and owns root-window close, WM-close fallback, and Main Menu Quit through one guarded request. Active overworld, town, battle, or outcome state is transactionally autosaved before exactly one clean exit; save failure leaves the game open with exact live/prior state, records a runtime issue, and shows a bounded desktop error. Reentrant/completed requests cannot save or quit twice, while explicit harness quits remain unaffected. Focused, real Linux/X11, fresh packaged Windows/Wine, core, menu, parse, repository, JSON, Python, and diff gates pass at save version 9.
 - Latest completed implementation slice: `save-transactional-cross-platform-commit-10184`. Autosave, manual-slot, generated-opening, and campaign-progression writes now use one same-directory candidate/backup transaction. Candidate bytes, length, JSON root, and exact text are verified before commit; the prior valid live file is restored after precommit or after-backup failures; bounded missing/corrupt-live recovery accepts only a semantically valid destination-matched backup and never promotes a candidate. Cache invalidation and live intent clearing occur only after verified success. Focused recovery, ordinary save, core, repository, fresh packaged Linux, and fresh packaged Windows/Wine gates pass at save version 9.
 - Latest completed implementation slice: `battle-player-withdrawal-confirmation-10184`. Retreat and Surrender now open one compact action-bound confirmation populated from their live authored consequence surface. Keep Fighting owns initial focus; cancel, Escape, and controller Back preserve the exact session and return focus to the originating action. Confirm revalidates availability, fails closed when stale, and invokes the existing BattleRules withdrawal path exactly once. Focused direct-rule parity, controller, 1280x720 layout, event-animation, core, parse, repository, JSON, Python, and diff gates pass without changing withdrawal math or save state.
@@ -3037,6 +3038,39 @@ Completion evidence:
 - no-session close attempts one direct quit, in-progress/completed repeats are idempotent, and an isolated explicit `SceneTree.quit(37)` child exits 37 while removing its RuntimeIssueLog marker;
 - real Linux/X11 and fresh packaged Windows/Wine windows both advertise/receive `WM_DELETE_WINDOW`, exit zero after Main Menu readiness, and remove the owned runtime session marker;
 - focused lifecycle, core, menu/outcome, editor parse, repository, Python, JSON, and diff gates pass; the focused injected failure intentionally emits one RuntimeIssueLog error while exiting zero.
+
+## Campaign Replay Preserves Cleared Progress
+
+id: `campaign-replay-defeat-preserves-cleared-progress-10184`
+
+Status: completed.
+
+Selected Phase 6 progression-safety slice. Campaign completion recording currently
+replaces the whole scenario record with the latest attempt. A defeat after an
+already-recorded victory can erase the victory status and exported flags, causing
+campaign progress and downstream unlock requirements to regress while the earlier
+victory carryover bundle remains inconsistently banked.
+
+Implementation target:
+- once a scenario has a recorded victory, a later non-victory replay increments attempts but preserves the exact victory-bearing record, exported flags, and carryover bundle;
+- first-ever defeat remains a defeat with no carryover or unlock, and defeat-to-victory upgrades normally;
+- a later victory may refresh the banked victory record and carryover through the existing path;
+- preserve current campaign profile normalization, save schema/version, outcome copy, and replay launch behavior.
+
+Completion criteria:
+- victory-to-defeat keeps victory count, exported flags, carryover, and downstream unlock exact while attempts increments once;
+- first defeat does not unlock or bank carryover, defeat-to-victory unlocks, and victory-to-victory refresh remains valid;
+- normalized and saved/reloaded campaign progression preserves the transition matrix;
+- focused campaign replay, campaign arc/restart/outcome/menu, progression save, core, editor parse, repository, JSON, Python, and diff gates pass.
+
+Non-goals:
+- no campaign content/copy redesign, attempt-history UI, scenario balance, End Turn confirmation, save version change, Native RMG work, public release, signing, or overall release-completion claim.
+
+Completion evidence:
+- `CampaignRules.record_session_completion()` deep-copies an existing normalized victory record for later non-victory outcomes and changes only its attempt count; the victory-only carryover writer remains the authority for first and refreshed victories;
+- the focused transition matrix proves victory-to-defeat preserves the exact prior victory snapshot except attempts, keeps exported `gate_marshals_broken`, carryover, two-victory progress, completion pointers, and Fen Crown access while the replay session remains defeated;
+- first defeat stays locked without carryover, defeat-to-victory unlocks normally, victory-to-victory refreshes its snapshot and bundle, and normalized transactional progression reload is exact at save version 9;
+- campaign replayability, Frontier Claims, campaign arc restart, player campaign menu, outcome menu, core systems, editor parse, repository, JSON, Python, and diff gates pass.
 
 ## Phase Roadmap
 

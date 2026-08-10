@@ -62,6 +62,8 @@ MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH = ROOT / "tests" / "menu_outcome_visual_sm
 MAIN_MENU_CAMPAIGN_REACTIVATION_DOC_PATH = ROOT / "docs" / "player-facing-campaign-reactivation-smoke-report.md"
 CAMPAIGN_ARC_RESTART_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "campaign_arc_restart_regression.gd"
 CAMPAIGN_ARC_RESTART_REGRESSION_SCENE_PATH = ROOT / "tests" / "campaign_arc_restart_regression.tscn"
+CAMPAIGN_REPLAY_PROGRESS_PRESERVATION_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "campaign_replay_progress_preservation_regression.gd"
+CAMPAIGN_REPLAY_PROGRESS_PRESERVATION_REGRESSION_SCENE_PATH = ROOT / "tests" / "campaign_replay_progress_preservation_regression.tscn"
 MAIN_MENU_LEAN_BOOT_SAVE_GUARD_SCENE_PATH = ROOT / "tests" / "main_menu_lean_boot_save_guard.tscn"
 MAIN_MENU_LEAN_BOOT_SAVE_GUARD_SCRIPT_PATH = ROOT / "tests" / "main_menu_lean_boot_save_guard.gd"
 SAVE_SLOT_DELETE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "save_slot_delete_regression.gd"
@@ -12909,6 +12911,32 @@ def validate_campaign_browser(errors: list[str]) -> None:
     if CAMPAIGN_ARC_RESTART_REGRESSION_SCENE_PATH.exists():
         restart_scene_text = CAMPAIGN_ARC_RESTART_REGRESSION_SCENE_PATH.read_text(encoding="utf-8")
         ensure("res://tests/campaign_arc_restart_regression.gd" in restart_scene_text, errors, "Campaign arc restart regression scene must load its script")
+
+    for path in (
+        CAMPAIGN_REPLAY_PROGRESS_PRESERVATION_REGRESSION_SCRIPT_PATH,
+        CAMPAIGN_REPLAY_PROGRESS_PRESERVATION_REGRESSION_SCENE_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing campaign replay progress preservation regression file: {path.relative_to(ROOT)}")
+    if CAMPAIGN_REPLAY_PROGRESS_PRESERVATION_REGRESSION_SCRIPT_PATH.exists():
+        replay_text = CAMPAIGN_REPLAY_PROGRESS_PRESERVATION_REGRESSION_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "CAMPAIGN_REPLAY_PROGRESS_PRESERVATION_REGRESSION",
+            "_prove_victory_defeat_preserves_clear",
+            "_prove_first_defeat_stays_locked",
+            "_prove_defeat_victory_unlocks",
+            "_prove_victory_victory_refreshes",
+            "SaveService.save_progression",
+            "gate_marshals_broken",
+            "finale_unlocked",
+        ):
+            ensure(required_token in replay_text, errors, f"campaign replay preservation regression is missing required token: {required_token}")
+    if CAMPAIGN_REPLAY_PROGRESS_PRESERVATION_REGRESSION_SCENE_PATH.exists():
+        replay_scene_text = CAMPAIGN_REPLAY_PROGRESS_PRESERVATION_REGRESSION_SCENE_PATH.read_text(encoding="utf-8")
+        ensure(
+            "res://tests/campaign_replay_progress_preservation_regression.gd" in replay_scene_text,
+            errors,
+            "Campaign replay preservation regression scene must load its script",
+        )
 
     ensure(MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH.exists(), errors, "Missing main menu outcome visual smoke script")
     if MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH.exists():

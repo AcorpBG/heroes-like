@@ -846,17 +846,22 @@ static func record_session_completion(profile: Dictionary, session: SessionState
 	var captured_flags := _capture_exported_flags(session, scenario_entry.get("carryover_export", {}))
 	var hero: Dictionary = HeroCommandRulesScript.primary_hero(session)
 
-	var record := {
-		"status": session.scenario_status,
-		"summary": session.scenario_summary,
-		"day": session.day,
-		"attempts": max(0, int(existing_record.get("attempts", 0))) + 1,
-		"hero_level": int(hero.get("level", 1)),
-		"known_spell_ids": _normalize_string_array(hero.get("spellbook", {}).get("known_spell_ids", [])),
-		"artifact_ids": _artifact_ids_from_hero(hero),
-		"specialties": _normalize_string_array(hero.get("specialties", [])),
-		"exported_flags": captured_flags,
-	}
+	var record: Dictionary
+	if session.scenario_status != "victory" and String(existing_record.get("status", "")) == "victory":
+		record = existing_record.duplicate(true)
+		record["attempts"] = max(0, int(existing_record.get("attempts", 0))) + 1
+	else:
+		record = {
+			"status": session.scenario_status,
+			"summary": session.scenario_summary,
+			"day": session.day,
+			"attempts": max(0, int(existing_record.get("attempts", 0))) + 1,
+			"hero_level": int(hero.get("level", 1)),
+			"known_spell_ids": _normalize_string_array(hero.get("spellbook", {}).get("known_spell_ids", [])),
+			"artifact_ids": _artifact_ids_from_hero(hero),
+			"specialties": _normalize_string_array(hero.get("specialties", [])),
+			"exported_flags": captured_flags,
+		}
 	scenario_records[session.scenario_id] = record
 	state["scenario_records"] = scenario_records
 	state["last_completed_scenario_id"] = session.scenario_id
