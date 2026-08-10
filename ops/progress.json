@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Latest-save subsecond recency is complete with precise summary ordering, legacy fallbacks, exact inspection immutability, Main Menu parity, and Linux/Windows package proof. Overall release readiness remains open.",
+  "currentNotes": "Generated-opening alternate-autosave reconciliation is complete with verified canonical authority, honest failure recovery, zero-write stale self-healing, ordinary Save restoration, and Linux/Windows package proof. Overall release readiness remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "save-latest-summary-subsecond-recency-10184",
-  "currentSliceId": "save-latest-summary-subsecond-recency-10184",
-  "currentSliceNotes": "Completed precise summary recency ordering from the existing fractional payload timestamp with legacy integer/mtime fallback, unchanged save bytes/display, and cross-platform package proof.",
+  "currentSlice": "save-generated-opening-alternate-autosave-reconciliation-10184",
+  "currentSliceId": "save-generated-opening-alternate-autosave-reconciliation-10184",
+  "currentSliceNotes": "Completed canonical shell reconciliation after verified alternate autosave, honest failed-End-Turn recovery, zero-write stale retry healing, ordinary Save restoration, and cross-platform package proof.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Latest Save Subsecond Recency",
-  "currentSliceUpdatedAt": "2026-08-10T17:09:51Z",
+  "currentSliceTitle": "Generated Opening Alternate Autosave Reconciliation",
+  "currentSliceUpdatedAt": "2026-08-10T17:37:49Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -74906,6 +74906,26 @@
       "notes": "Completed summary-only precise timestamp capture and shared float recency ordering while retaining the integer recorded timestamp and minute display. Both 1000.1/1000.9 directions, cold/warm cache, Main Menu default and Continue restore parity, integer legacy and missing-timestamp mtime fallback/load, unchanged display, exact bytes+mtime, zero residues/writes, transaction/deferred/menu/focus/core/repository gates, Linux package, and fresh Windows/Wine package pass at save version 9.",
       "remainingWork": "No work remains in this slice. Generated-opening alternate-autosave recovery reconciliation, broader balance/content/accessibility/performance work, signing, native Windows hardware certification, publication, and overall release readiness remain open.",
       "completedAt": "2026-08-10T17:09:51Z"
+    },
+    {
+      "id": "save-generated-opening-alternate-autosave-reconciliation-10184",
+      "title": "Generated Opening Alternate Autosave Reconciliation",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md"],
+      "purpose": "Clear stale Overworld generated-opening recovery state when a verified alternate autosave has already canonically completed the authoritative opening checkpoint.",
+      "implementationTargets": ["scenes/overworld/OverworldShell.gd", "tests/generated_opening_autosave_failure_retry_regression.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"end_turn_canonicalizes_live_flags": true, "shell_recovery_reconciles": false, "next_save_reaches_manual_flow": false},
+      "completionCriteria": ["Initial opening failure followed by one successful nonterminal End Turn applies rules/saves once and leaves live plus restored flags canonical", "Shell retry/warning state clears immediately and next Save reaches ordinary manual or overwrite flow without not_pending", "End Turn save failure preserves honest recovery and exact authority while issue emission remains deduplicated", "Focused opening, End Turn, transaction, focus/visual, core, repository, and Linux/Windows packaged gates pass"],
+      "nonGoals": ["End Turn policy, generated-map rules, SaveService canonicalization, save schema/version, manual-slot redesign, routing, Native RMG, publication, signing, native Windows hardware certification, or release-completion claim"],
+      "createdAt": "2026-08-10T17:10:42Z",
+      "startedAt": "2026-08-10T17:10:42Z",
+      "updatedAt": "2026-08-10T17:37:49Z",
+      "notes": "Completed verified local reconciliation gated by successful save plus canonical live flags, with generated issue history preserved and EndTurn focus restored. All three initial failure origins reconcile through one nonterminal End Turn with rules1/save1/reconcile1/canonical reload; after-backup End Turn failure preserves exact old bytes/cache/live state and reports retry_action save; direct stale retry heals with zero write and the next Save reaches ordinary overwrite flow. Original retry controls, End Turn/transaction/generated timing/focus/visual/core/repository gates, Linux package, and fresh Windows/Wine package pass at save version 9. SaveService remains unchanged.",
+      "remainingWork": "No work remains in this slice. Broader balance/content/accessibility/performance work, signing, native Windows hardware certification, publication, and overall release readiness remain open.",
+      "completedAt": "2026-08-10T17:37:49Z"
     }
   ],
   "project": "heroes-like",
