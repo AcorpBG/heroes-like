@@ -892,9 +892,17 @@ func _export_support_bundle(reveal_in_file_manager: bool) -> Dictionary:
 	_refresh_support_bundle_surface()
 	return result
 
-func _on_quit_pressed() -> void:
+func _on_quit_pressed() -> Dictionary:
 	_revert_pending_display_change("menu_exit", false)
-	get_tree().quit()
+	var result: Dictionary = AppRouter.request_safe_quit("main_menu")
+	if not bool(result.get("ok", false)):
+		_menu_notice = String(result.get("message", "The game could not close safely."))
+		if is_node_ready():
+			_refresh_summary()
+	return result
+
+func validation_request_safe_quit() -> Dictionary:
+	return _on_quit_pressed()
 
 func _rebuild_campaign_browser() -> void:
 	_campaign_entries = CampaignProgression.campaign_browser_entries()
@@ -2319,9 +2327,9 @@ func _refresh_stage_dock_header() -> void:
 	_close_stage_dock_button.tooltip_text = _close_stage_dock_tooltip()
 
 func _quit_check_surface() -> Dictionary:
-	var resume_line := "Quit does not inspect, create, or update save slots from the first-view menu."
-	var visible := "Quit check: closes client; save first for an updated resume."
-	var tooltip := "Quit Check\n- Action: closes the client from the scenic menu.\n- Resume point: %s\n- Save first: use an in-run save or outcome save before quitting when the latest play state must be preserved.\n- Not changed: campaign progress, expedition saves, and device settings are not written by reading this cue." % resume_line
+	var resume_line := "The current expedition is transactionally autosaved before shutdown."
+	var visible := "Quit check: save first automatically, then closes client."
+	var tooltip := "Quit Check\n- Action: safely saves the active expedition, then closes the client.\n- Resume point: %s\n- Save first: automatic through the verified autosave path.\n- Save failure: the game stays open and reports the problem.\n- No active expedition: closes immediately.\n- Not changed: reading this cue does not write campaign progress, expedition saves, or device settings." % resume_line
 	return {
 		"visible_text": visible,
 		"tooltip_text": tooltip,
