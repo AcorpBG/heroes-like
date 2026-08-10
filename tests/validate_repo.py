@@ -14912,6 +14912,7 @@ def validate_briefing_consumption_autosave_failure_safety(errors: list[str]) -> 
         'const FAILURE_PHASES := ["precommit", "after_backup"]',
         'const SURFACES := ["overworld", "battle"]',
         "validation_briefing_consumption_autosave_snapshot",
+        "validation_reconcile_briefing_consumption_autosave_recovery_direct",
         "validation_save_to_selected_slot",
         'String(issue.get("event", "")) != "briefing_consumption_autosave_failed"',
         'String(snapshot.get("focus_owner", "")) != "Save"',
@@ -14922,6 +14923,15 @@ def validate_briefing_consumption_autosave_failure_safety(errors: list[str]) -> 
         "_transaction_artifacts_absent(AUTOSAVE_PATH)",
         "_prove_ordinary_success",
         "_prove_generated_overworld_defer",
+        "_prove_alternate_end_turn_reconciliation",
+        "_prove_alternate_end_turn_failure",
+        'String(end_result.get("retry_action", "")) != "save"',
+        'String(reconciliation.get("reason", "")) != "alternate_autosave_saved"',
+        'String(recovery.get("focus_owner", "")) != "EndTurn"',
+        "verified_alternate_proof_current",
+        "authority_not_canonical",
+        "alternate_save_not_verified",
+        "validation_request_manual_save",
     ):
         ensure(required_token in report_text, errors, f"Briefing-consumption autosave safety regression is missing required token: {required_token}")
 
@@ -14941,6 +14951,18 @@ def validate_briefing_consumption_autosave_failure_safety(errors: list[str]) -> 
             '"last_runtime_issue"',
         ):
             ensure(required_token in shell_text, errors, f"{shell_path.name} is missing required briefing-consumption autosave safety token: {required_token}")
+
+    overworld_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func validation_reconcile_briefing_consumption_autosave_recovery_direct()",
+        '"reconciliation_count"',
+        '"authoritative_briefing_canonical"',
+        '"verified_alternate_proof_current"',
+        '"alternate_autosave_saved"',
+        '"alternate_save_not_verified"',
+        "_briefing_consumption_autosave_authority_canonical()",
+    ):
+        ensure(required_token in overworld_text, errors, f"OverworldShell.gd is missing required briefing alternate-autosave reconciliation token: {required_token}")
 
 
 def validate_scenario_outcome_normal_entry_focus(errors: list[str]) -> None:
@@ -22417,7 +22439,9 @@ def validate_generated_opening_autosave_failure_retry(errors: list[str]) -> None
             '"reconciliation_count"',
             '"last_reconciliation_result"',
             '"authoritative_opening_canonical"',
-            'var retry_action := "save" if _generated_opening_autosave_failure_pending else "manual_save"',
+            'var retry_action := "save" if (',
+            "_generated_opening_autosave_failure_pending",
+            "_briefing_consumption_autosave_failure_pending",
             "generated_opening_autosave_failed",
             "Generated map is ready, but autosave failed. Press Save to protect this checkpoint.",
         ):

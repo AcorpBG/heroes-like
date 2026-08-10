@@ -125,6 +125,7 @@ const PENDING_BATTLE_MANUAL_SAVE_FAILURE_MESSAGE := "Save failed. The pending ba
 const BATTLE_ENTRY_AUTOSAVE_FAILURE_MESSAGE := "Battle is ready, but autosave failed. Use Save now to protect it."
 const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains open; use Save, then try Return to Main Menu again."
 const BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_MESSAGE := "Briefing shown, but autosave failed. Press Save to protect this checkpoint."
+const COMMAND_BRIEFING_STATE_KEY := "command_briefing"
 const GENERATED_OPENING_AUTOSAVE_FAILURE_MESSAGE := "Generated map is ready, but autosave failed. Press Save to protect this checkpoint."
 const GENERATED_OPENING_AUTOSAVE_SUCCESS_MESSAGE := "Generated opening checkpoint saved. Press Save again to use a manual slot."
 const REFRESH_PHASE_MAP_VIEW := "map_view"
@@ -174,6 +175,9 @@ var _validation_briefing_consumption_autosave_attempt_count := 0
 var _validation_briefing_consumption_autosave_success_count := 0
 var _validation_briefing_consumption_autosave_failure_count := 0
 var _validation_briefing_consumption_generated_defer_count := 0
+var _validation_briefing_consumption_autosave_reconciliation_count := 0
+var _last_briefing_consumption_autosave_reconciliation_result: Dictionary = {}
+var _last_briefing_consumption_verified_alternate_identity: Dictionary = {}
 var _generated_opening_autosave_failure_pending := false
 var _last_generated_opening_autosave_result: Dictionary = {}
 var _last_generated_opening_autosave_retry_result: Dictionary = {}
@@ -1077,12 +1081,20 @@ func _commit_end_turn() -> Dictionary:
 		if autosave_failed:
 			_surface_end_turn_autosave_failure()
 		else:
+			var recovery_reconciled := false
 			var opening_reconciliation := _reconcile_generated_opening_autosave_recovery(
 				"end_turn_autosave",
 				_last_end_turn_autosave_result,
 				false
 			)
-			if bool(opening_reconciliation.get("reconciled", false)):
+			recovery_reconciled = bool(opening_reconciliation.get("reconciled", false))
+			var briefing_reconciliation := _reconcile_briefing_consumption_autosave_recovery(
+				"end_turn_autosave",
+				_last_end_turn_autosave_result,
+				false
+			)
+			recovery_reconciled = recovery_reconciled or bool(briefing_reconciliation.get("reconciled", false))
+			if recovery_reconciled:
 				_end_turn_button.call_deferred("grab_focus")
 	_end_turn_commit_in_progress = false
 	if autosave_failed:
@@ -1140,7 +1152,10 @@ func _surface_end_turn_autosave_failure() -> void:
 	_validation_end_turn_autosave_failure_count += 1
 	_last_message = END_TURN_AUTOSAVE_FAILURE_MESSAGE
 	_record_action_feedback("system", _last_message, "Use Save now.")
-	var retry_action := "save" if _generated_opening_autosave_failure_pending else "manual_save"
+	var retry_action := "save" if (
+		_generated_opening_autosave_failure_pending
+		or _briefing_consumption_autosave_failure_pending
+	) else "manual_save"
 	_last_end_turn_runtime_issue = RuntimeIssueLog.emit_error(
 		"overworld",
 		"end_turn_autosave_failed",
@@ -1159,6 +1174,7 @@ func _surface_end_turn_autosave_failure() -> void:
 func _surface_briefing_consumption_autosave_failure() -> void:
 	_validation_briefing_consumption_autosave_failure_count += 1
 	_briefing_consumption_autosave_failure_pending = true
+	_last_briefing_consumption_verified_alternate_identity = {}
 	_last_message = BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_MESSAGE
 	_record_action_feedback("system", _last_message, "Press Save to protect this checkpoint.")
 	_last_briefing_consumption_runtime_issue = RuntimeIssueLog.emit_error(
@@ -1179,7 +1195,10 @@ func _surface_briefing_consumption_autosave_failure() -> void:
 	)
 
 func _end_turn_autosave_failure_result(rule_result: Dictionary) -> Dictionary:
-	var retry_action := "save" if _generated_opening_autosave_failure_pending else "manual_save"
+	var retry_action := "save" if (
+		_generated_opening_autosave_failure_pending
+		or _briefing_consumption_autosave_failure_pending
+	) else "manual_save"
 	return {
 		"ok": false,
 		"committed": true,
@@ -1202,6 +1221,13 @@ func _on_save_pressed() -> Dictionary:
 		_refresh()
 	if _generated_opening_autosave_failure_pending:
 		return _retry_generated_opening_autosave()
+	if (
+		_briefing_consumption_autosave_failure_pending
+		and _briefing_consumption_autosave_authority_canonical()
+		and _briefing_consumption_has_verified_alternate_proof()
+	):
+		_reconcile_briefing_consumption_autosave_recovery("save_preflight", {}, true)
+		_refresh()
 	_validation_generated_opening_manual_fallback_count += 1
 	var action := AppRouter.active_manual_save_action()
 	if bool(action.get("disabled", true)):
@@ -2329,6 +2355,107 @@ func _retry_generated_opening_autosave() -> Dictionary:
 	_refresh()
 	_save_button.call_deferred("grab_focus")
 	return _last_generated_opening_autosave_retry_result.duplicate(true)
+
+func _briefing_consumption_autosave_authority_canonical() -> bool:
+	if _session == null or _session.scenario_id == "":
+		return false
+	var briefing_state_value: Variant = _session.overworld.get(COMMAND_BRIEFING_STATE_KEY, {})
+	if not (briefing_state_value is Dictionary):
+		return false
+	var briefing_state: Dictionary = briefing_state_value
+	var expected_signature := "%s|%s" % [
+		_session.scenario_id,
+		SessionStateStore.normalize_launch_mode(_session.launch_mode),
+	]
+	var shown_day := int(briefing_state.get("shown_day", 0))
+	return (
+		String(briefing_state.get("signature", "")) == expected_signature
+		and bool(briefing_state.get("shown", false))
+		and shown_day > 0
+		and shown_day <= _session.day
+	)
+
+func _briefing_consumption_autosave_identity() -> Dictionary:
+	if _session == null:
+		return {}
+	return {
+		"session_id": _session.session_id,
+		"scenario_id": _session.scenario_id,
+		"launch_mode": SessionStateStore.normalize_launch_mode(_session.launch_mode),
+		"scenario_status": _session.scenario_status,
+		"game_state": _session.game_state,
+		"day": _session.day,
+	}
+
+func _briefing_consumption_has_verified_alternate_proof() -> bool:
+	return (
+		not _last_briefing_consumption_verified_alternate_identity.is_empty()
+		and _last_briefing_consumption_verified_alternate_identity == _briefing_consumption_autosave_identity()
+	)
+
+func _reconcile_briefing_consumption_autosave_recovery(
+	source: String,
+	save_result: Dictionary,
+	allow_retained_verified_alternate_proof: bool
+) -> Dictionary:
+	var had_local_pending := _briefing_consumption_autosave_failure_pending
+	var alternate_save_verified := bool(save_result.get("ok", false))
+	var retained_verified_proof := (
+		allow_retained_verified_alternate_proof
+		and _briefing_consumption_has_verified_alternate_proof()
+	)
+	var canonical := _briefing_consumption_autosave_authority_canonical()
+	if not had_local_pending:
+		return {
+			"ok": false,
+			"reconciled": false,
+			"saved": false,
+			"write_attempted": false,
+			"pending": false,
+			"reason": "not_pending",
+			"source": source,
+			"authoritative_briefing_consumed": canonical,
+			"save_result": save_result.duplicate(true),
+		}
+	if not canonical or (not alternate_save_verified and not retained_verified_proof):
+		_last_briefing_consumption_autosave_reconciliation_result = {
+			"ok": false,
+			"reconciled": false,
+			"saved": false,
+			"write_attempted": false,
+			"pending": true,
+			"reason": "authority_not_canonical" if not canonical else "alternate_save_not_verified",
+			"source": source,
+			"message": BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_MESSAGE,
+			"authoritative_briefing_consumed": canonical,
+			"retained_verified_alternate_proof": retained_verified_proof,
+			"save_result": save_result.duplicate(true),
+		}
+		return _last_briefing_consumption_autosave_reconciliation_result.duplicate(true)
+	if alternate_save_verified:
+		_last_briefing_consumption_verified_alternate_identity = _briefing_consumption_autosave_identity()
+	_briefing_consumption_autosave_failure_pending = false
+	_validation_briefing_consumption_autosave_reconciliation_count += 1
+	if _last_message == BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_MESSAGE:
+		_last_message = ""
+	if String(_action_feedback.get("full_text", "")).contains(BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_MESSAGE):
+		_action_feedback = {}
+	_last_briefing_consumption_autosave_reconciliation_result = {
+		"ok": true,
+		"reconciled": true,
+		"saved": alternate_save_verified,
+		"write_attempted": false,
+		"reconciliation_write_attempted": false,
+		"alternate_save_verified": alternate_save_verified,
+		"retained_verified_alternate_proof": retained_verified_proof,
+		"pending": false,
+		"reason": "not_pending" if not alternate_save_verified else "alternate_autosave_saved",
+		"source": source,
+		"message": "Briefing checkpoint is protected; ordinary Save is available.",
+		"authoritative_briefing_consumed": true,
+		"save_result": save_result.duplicate(true),
+	}
+	return _last_briefing_consumption_autosave_reconciliation_result.duplicate(true)
 
 func _generated_opening_autosave_authority_canonical() -> bool:
 	return (
@@ -8271,6 +8398,12 @@ func _validation_save_surface_snapshot() -> Dictionary:
 func validation_briefing_consumption_autosave_snapshot() -> Dictionary:
 	var viewport := get_viewport()
 	var focus_owner := viewport.gui_get_focus_owner() if viewport != null else null
+	var briefing_state_value: Variant = _session.overworld.get(COMMAND_BRIEFING_STATE_KEY, {})
+	var authoritative_briefing_state: Dictionary = (
+		briefing_state_value.duplicate(true)
+		if briefing_state_value is Dictionary
+		else {}
+	)
 	return {
 		"briefing_consumed": _validation_briefing_consumption_count > 0,
 		"briefing_shown": _command_briefing_text != "",
@@ -8283,9 +8416,16 @@ func validation_briefing_consumption_autosave_snapshot() -> Dictionary:
 		"autosave_success_count": _validation_briefing_consumption_autosave_success_count,
 		"autosave_failure_count": _validation_briefing_consumption_autosave_failure_count,
 		"generated_defer_count": _validation_briefing_consumption_generated_defer_count,
+		"reconciliation_count": _validation_briefing_consumption_autosave_reconciliation_count,
 		"failure_pending": _briefing_consumption_autosave_failure_pending,
 		"last_autosave_result": _last_briefing_consumption_autosave_result.duplicate(true),
+		"last_reconciliation_result": _last_briefing_consumption_autosave_reconciliation_result.duplicate(true),
 		"last_runtime_issue": _last_briefing_consumption_runtime_issue.duplicate(true),
+		"authoritative_briefing_state": authoritative_briefing_state,
+		"authoritative_briefing_shown": bool(authoritative_briefing_state.get("shown", false)),
+		"authoritative_briefing_canonical": _briefing_consumption_autosave_authority_canonical(),
+		"verified_alternate_identity": _last_briefing_consumption_verified_alternate_identity.duplicate(true),
+		"verified_alternate_proof_current": _briefing_consumption_has_verified_alternate_proof(),
 		"visible_message": _last_message,
 		"visible_action_feedback": _action_feedback_text(),
 		"focus_owner": String(focus_owner.name) if focus_owner != null else "",
@@ -8297,6 +8437,12 @@ func validation_briefing_consumption_autosave_snapshot() -> Dictionary:
 		"generated_random_map": bool(_session.flags.get("generated_random_map", false)),
 		"generated_autosave_deferred": bool(_session.flags.get("generated_overworld_command_briefing_autosave_deferred", false)),
 	}
+
+func validation_reconcile_briefing_consumption_autosave_recovery_direct() -> Dictionary:
+	var result := _reconcile_briefing_consumption_autosave_recovery("retry_not_pending", {}, true)
+	if bool(result.get("reconciled", false)):
+		_refresh()
+	return result.duplicate(true)
 
 func validation_retry_generated_opening_autosave() -> Dictionary:
 	return _on_save_pressed()

@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Town management-tab controller navigation is complete across wide/narrow layouts with exact state preservation, read-only market previews, and Linux/Windows package proof. Overall release readiness remains open.",
+  "currentNotes": "Command-briefing alternate-autosave reconciliation is complete with commit-derived identity proof, honest failed-save recovery, preserved issue history, ordinary Save restoration, and Linux/Windows package proof. Overall release readiness remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "accessibility-town-management-tab-controller-navigation-10184",
-  "currentSliceId": "accessibility-town-management-tab-controller-navigation-10184",
-  "currentSliceNotes": "Completed native five-tab keyboard/controller traversal, boundary retention, deterministic command handoff, read-only market readiness simulation, exact Town authority, and cross-platform package proof.",
+  "currentSlice": "save-briefing-consumption-alternate-autosave-reconciliation-10184",
+  "currentSliceId": "save-briefing-consumption-alternate-autosave-reconciliation-10184",
+  "currentSliceNotes": "Completed commit-proven briefing reconciliation after alternate autosave, failed-save honesty, historical issue preservation, zero-write stale refusal, ordinary Save restoration, and cross-platform package proof.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Town Management Tab Controller Navigation",
-  "currentSliceUpdatedAt": "2026-08-10T18:29:06Z",
+  "currentSliceTitle": "Briefing Consumption Alternate Autosave Reconciliation",
+  "currentSliceUpdatedAt": "2026-08-10T18:57:10Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -74946,6 +74946,26 @@
       "notes": "Completed exact native TabBar inclusion in one focus cycle, disabled/hidden-aware boundary retention, sequence-guarded first-enabled action handoff, and wide/narrow keyboard/controller/mouse traversal across all five tabs. Strict authority testing exposed and fixed town_cost_readiness mutating live weekly market_usage during preview by deep-copying town and pool; real market application remains mutating. Focused active-play PASS, market cap persistence, Town visual, core, editor, validator, diff, authoritative Linux export/package, and fresh Windows/Wine export/package pass. The generated-large cache gate remains rc1 at 6477.788ms, but isolated committed HEAD has the identical rc1 at 6533.621ms and is 55.833ms slower, classifying it as pre-existing timing debt rather than slice regression.",
       "remainingWork": "No work remains in this slice. Briefing-consumption alternate-autosave reconciliation, pre-existing generated-large Town cache performance, broader balance/content/accessibility/performance work, signing, native Windows hardware certification, publication, and overall release readiness remain open.",
       "completedAt": "2026-08-10T18:29:06Z"
+    },
+    {
+      "id": "save-briefing-consumption-alternate-autosave-reconciliation-10184",
+      "title": "Briefing Consumption Alternate Autosave Reconciliation",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md"],
+      "purpose": "Clear stale command-briefing recovery after a verified alternate autosave has already durably persisted the consumed briefing state.",
+      "implementationTargets": ["scenes/overworld/OverworldShell.gd", "tests/briefing_consumption_autosave_failure_safety_regression.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"end_turn_persists_consumed_briefing": true, "shell_recovery_reconciles": false, "stale_save_focus": true},
+      "completionCriteria": ["Initial precommit/after-backup failure remains exact with one historical briefing issue", "One successful nonterminal End Turn applies rules/saves once, persists canonical shown state, clears local stale recovery, and restores ordinary Save", "Failed End Turn preserves exact authority and truthful briefing recovery", "Focused briefing, End Turn, transaction, focus/visual, core, repository, and Linux/Windows packaged gates pass"],
+      "nonGoals": ["briefing content or consumption policy, End Turn rules/autosave policy, SaveService canonicalization, save schema/version, manual-slot redesign, Battle briefing, routing, Native RMG, publication, signing, native Windows hardware certification, or release-completion claim"],
+      "createdAt": "2026-08-10T18:29:50Z",
+      "startedAt": "2026-08-10T18:29:50Z",
+      "updatedAt": "2026-08-10T18:57:10Z",
+      "notes": "Completed canonical signature/shown/shown-day validation plus commit-derived exact identity proof so live-only state cannot prematurely clear briefing recovery after initial or failed saves. Successful precommit/after-backup-origin End Turn rows apply rules1/save1 and reconcile with EndTurn focus, canonical reload, issue1, and ordinary next Save; failed after-backup End Turn preserves exact authority, pending state, retry_action save, and separate issue, while unverified/malformed proof refuses zero-write reconciliation. Battle briefing, generated defer/opening recovery, End Turn/transaction/focus/visual/core/repository gates, Linux package, and fresh Windows/Wine package pass at save version 9. SaveService and rules remain unchanged.",
+      "remainingWork": "No work remains in this slice. Pre-existing generated-large Town cache performance, broader balance/content/accessibility/performance work, signing, native Windows hardware certification, publication, and overall release readiness remain open.",
+      "completedAt": "2026-08-10T18:57:10Z"
     }
   ],
   "project": "heroes-like",
