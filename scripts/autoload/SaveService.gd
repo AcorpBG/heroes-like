@@ -513,11 +513,11 @@ func latest_loadable_summary() -> Dictionary:
 	for summary in list_session_summaries():
 		if not can_load_summary(summary):
 			continue
-		if latest.is_empty() or _summary_sort_timestamp(summary) > _summary_sort_timestamp(latest):
+		if latest.is_empty() or summary_recency_timestamp(summary) > summary_recency_timestamp(latest):
 			latest = summary
 	return latest
 
-func summary_recency_timestamp(summary: Dictionary) -> int:
+func summary_recency_timestamp(summary: Dictionary) -> float:
 	return _summary_sort_timestamp(summary)
 
 func build_in_session_save_surface(session: SessionStateStoreScript.SessionData, manual_slot: int = -1) -> Dictionary:
@@ -811,7 +811,7 @@ func describe_slot(summary: Dictionary) -> String:
 		return "%s | Blocked | %s" % [slot_label, String(summary.get("status_text", "Unavailable"))]
 
 	var parts := [slot_label, _summary_status_badge(summary)]
-	var modified_label := format_modified_timestamp(_summary_sort_timestamp(summary))
+	var modified_label := format_modified_timestamp(int(_summary_sort_timestamp(summary)))
 	if modified_label != "":
 		parts.append(modified_label)
 	var scenario_name := String(summary.get("scenario_name", summary.get("scenario_id", "Unknown Scenario")))
@@ -875,7 +875,7 @@ func describe_load_preview(summary: Dictionary) -> String:
 	var hero_name := _safe_player_text(String(summary.get("hero_name", "")), 48)
 	if hero_name != "":
 		lines.append("Commander: %s" % hero_name)
-	var modified_label := format_modified_timestamp(_summary_sort_timestamp(summary))
+	var modified_label := format_modified_timestamp(int(_summary_sort_timestamp(summary)))
 	if modified_label != "":
 		lines.append("Saved: %s" % modified_label)
 	lines.append("Returns to: %s" % _load_destination_label(summary))
@@ -2216,6 +2216,7 @@ func _populate_summary_from_payload(summary: Dictionary, payload: Dictionary) ->
 
 	summary["source_save_version"] = max(0, int(payload.get("save_version", SessionStateStoreScript.SAVE_VERSION)))
 	summary["save_version"] = max(0, int(payload.get("save_version", SessionStateStoreScript.SAVE_VERSION)))
+	summary["recorded_timestamp_precise"] = _recorded_timestamp_precise_from_payload(payload)
 	summary["recorded_timestamp"] = _recorded_timestamp_from_payload(payload, int(summary.get("modified_timestamp", 0)))
 	summary["scenario_id"] = scenario_id
 	summary["scenario_name"] = String(scenario.get("name", scenario_id))
@@ -2333,6 +2334,7 @@ func _empty_summary(slot_type: String, slot_id: String, file_path: String) -> Di
 		"path": file_path,
 		"modified_timestamp": 0,
 		"recorded_timestamp": 0,
+		"recorded_timestamp_precise": 0.0,
 		"source_save_version": 0,
 		"save_version": 0,
 		"scenario_id": "",
@@ -2477,9 +2479,12 @@ func _resume_target_from_payload_summary(payload: Dictionary) -> String:
 		return "town"
 	return "overworld"
 
-func _summary_sort_timestamp(summary: Dictionary) -> int:
+func _summary_sort_timestamp(summary: Dictionary) -> float:
+	var precise_timestamp := float(summary.get("recorded_timestamp_precise", 0.0))
+	if precise_timestamp > 0.0:
+		return precise_timestamp
 	var recorded_timestamp := int(summary.get("recorded_timestamp", 0))
-	return recorded_timestamp if recorded_timestamp > 0 else int(summary.get("modified_timestamp", 0))
+	return float(recorded_timestamp if recorded_timestamp > 0 else int(summary.get("modified_timestamp", 0)))
 
 func _runtime_session_resume_brief(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null or session.scenario_id == "":
@@ -2956,7 +2961,7 @@ func _latest_context_line(latest_summary: Dictionary, current_target: String = "
 		prefix,
 		_slot_label(latest_summary),
 		describe_resume_brief(latest_summary),
-		format_modified_timestamp(_summary_sort_timestamp(latest_summary)),
+		format_modified_timestamp(int(_summary_sort_timestamp(latest_summary))),
 	]
 
 func _return_to_menu_tooltip(
@@ -3062,6 +3067,9 @@ func _resume_target_for_session(session: SessionStateStoreScript.SessionData) ->
 func _recorded_timestamp_from_payload(payload: Dictionary, fallback: int = 0) -> int:
 	var recorded: int = max(0, int(payload.get(SAVE_METADATA_TIMESTAMP_KEY, 0)))
 	return recorded if recorded > 0 else max(0, fallback)
+
+func _recorded_timestamp_precise_from_payload(payload: Dictionary) -> float:
+	return maxf(0.0, float(payload.get(SAVE_METADATA_TIMESTAMP_KEY, 0.0)))
 
 func _payload_structure_report(payload: Dictionary, slot_type: String = "") -> Dictionary:
 	var warnings := []

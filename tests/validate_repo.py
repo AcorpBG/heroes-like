@@ -76,6 +76,8 @@ MANUAL_SAVE_OVERWRITE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "manual_save_ove
 MANUAL_SAVE_OVERWRITE_REGRESSION_SCENE_PATH = ROOT / "tests" / "manual_save_overwrite_regression.tscn"
 MANUAL_SAVE_SLOT_NAMING_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "manual_save_slot_naming_regression.gd"
 MANUAL_SAVE_SLOT_NAMING_REGRESSION_SCENE_PATH = ROOT / "tests" / "manual_save_slot_naming_regression.tscn"
+SAVE_LATEST_SUMMARY_SUBSECOND_RECENCY_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "save_latest_summary_subsecond_recency_regression.gd"
+SAVE_LATEST_SUMMARY_SUBSECOND_RECENCY_REGRESSION_SCENE_PATH = ROOT / "tests" / "save_latest_summary_subsecond_recency_regression.tscn"
 SAVE_TRANSACTIONAL_COMMIT_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "save_transactional_commit_regression.gd"
 SAVE_TRANSACTIONAL_COMMIT_REGRESSION_SCENE_PATH = ROOT / "tests" / "save_transactional_commit_regression.tscn"
 APPLICATION_SAFE_CLOSE_AUTOSAVE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "application_safe_close_autosave_regression.gd"
@@ -12565,6 +12567,55 @@ def validate_save_management(errors: list[str]) -> None:
     if MANUAL_SAVE_SLOT_NAMING_REGRESSION_SCENE_PATH.exists():
         naming_scene_text = MANUAL_SAVE_SLOT_NAMING_REGRESSION_SCENE_PATH.read_text(encoding="utf-8")
         ensure("res://tests/manual_save_slot_naming_regression.gd" in naming_scene_text, errors, "Manual-save naming regression scene must load its script")
+
+    for path in (
+        SAVE_LATEST_SUMMARY_SUBSECOND_RECENCY_REGRESSION_SCRIPT_PATH,
+        SAVE_LATEST_SUMMARY_SUBSECOND_RECENCY_REGRESSION_SCENE_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing latest-save subsecond-recency regression file: {path.relative_to(ROOT)}")
+    if SAVE_LATEST_SUMMARY_SUBSECOND_RECENCY_REGRESSION_SCRIPT_PATH.exists():
+        recency_text = SAVE_LATEST_SUMMARY_SUBSECOND_RECENCY_REGRESSION_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "SAVE_LATEST_SUMMARY_SUBSECOND_RECENCY_REGRESSION",
+            "recorded_timestamp_precise",
+            "summary_recency_timestamp",
+            "1000.1",
+            "1000.9",
+            "validation_clear_summary_cache",
+            "validation_summary_cache_snapshot",
+            "validation_transaction_artifact_paths",
+            "validation_open_saves_stage",
+            "validation_refresh_save_browser",
+            "validation_resume_latest",
+            "selected_save_key",
+            "continue_text",
+            "format_modified_timestamp",
+            "modified_timestamp",
+            "payload.erase(SaveService.SAVE_METADATA_TIMESTAMP_KEY)",
+            "restore_session_from_summary",
+            "SessionState.SAVE_VERSION",
+        ):
+            ensure(required_token in recency_text, errors, f"save_latest_summary_subsecond_recency_regression.gd is missing token: {required_token}")
+        for required_token in (
+            'summary["recorded_timestamp_precise"]',
+            "func _recorded_timestamp_precise_from_payload",
+            "func summary_recency_timestamp(summary: Dictionary) -> float",
+            "summary_recency_timestamp(summary) > summary_recency_timestamp(latest)",
+            "format_modified_timestamp(int(_summary_sort_timestamp(",
+        ):
+            ensure(required_token in save_text, errors, f"SaveService.gd is missing subsecond latest-summary token: {required_token}")
+        ensure(
+            "SaveService.summary_recency_timestamp(summary) > SaveService.summary_recency_timestamp(latest)" in main_menu_script_text,
+            errors,
+            "MainMenu.gd must use SaveService subsecond recency for latest/default save selection",
+        )
+    if SAVE_LATEST_SUMMARY_SUBSECOND_RECENCY_REGRESSION_SCENE_PATH.exists():
+        recency_scene_text = SAVE_LATEST_SUMMARY_SUBSECOND_RECENCY_REGRESSION_SCENE_PATH.read_text(encoding="utf-8")
+        ensure(
+            "res://tests/save_latest_summary_subsecond_recency_regression.gd" in recency_scene_text,
+            errors,
+            "Latest-save subsecond-recency regression scene must load its script",
+        )
 
     for path in (SAVE_TRANSACTIONAL_COMMIT_REGRESSION_SCRIPT_PATH, SAVE_TRANSACTIONAL_COMMIT_REGRESSION_SCENE_PATH):
         ensure(path.exists(), errors, f"Missing transactional-save regression file: {path.relative_to(ROOT)}")
