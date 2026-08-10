@@ -66,6 +66,7 @@ const UI_ART_BATTLE_FOOTER_PANEL := "res://art/ui/runtime/battle/battle_footer_p
 @onready var _settings_button: Button = %Settings
 @onready var _menu_button: Button = %Menu
 @onready var _quick_resolve_confirmation_dialog: ConfirmationDialog = $QuickResolveConfirmationDialog
+@onready var _withdrawal_confirmation_dialog: ConfirmationDialog = $WithdrawalConfirmationDialog
 @onready var _manual_save_overwrite_dialog = $ManualSaveOverwriteDialog
 @onready var _active_play_settings_dialog = %ActivePlaySettingsDialog
 
@@ -81,6 +82,12 @@ var _last_action_recap_payload := {}
 var _last_action_recap_text := ""
 var _battle_exit_handoff_in_progress := false
 var _battle_presentation_stream_text := ""
+var _pending_withdrawal_action := ""
+var _withdrawal_focus_origin: Button = null
+var _last_withdrawal_confirmation_result := {}
+var _validation_perform_action_counts := {}
+var _validation_battle_resolution_attempt_count := 0
+var _validation_last_battle_resolution_route := {}
 
 func _ready() -> void:
 	var profile_started := ProfileLogScript.begin_usec()
@@ -88,6 +95,7 @@ func _ready() -> void:
 	var phase_started := ProfileLogScript.begin_usec()
 	_apply_visual_theme()
 	_configure_quick_resolve_confirmation()
+	_configure_withdrawal_confirmation()
 	resized.connect(_apply_responsive_layout)
 	_apply_responsive_layout()
 	buckets["theme"] = ProfileLogScript.elapsed_ms(phase_started)
@@ -161,6 +169,14 @@ func _configure_quick_resolve_confirmation() -> void:
 	cancel_action.action = "ui_cancel"
 	cancel_shortcut.events = [cancel_action]
 	_quick_resolve_confirmation_dialog.get_cancel_button().shortcut = cancel_shortcut
+
+func _configure_withdrawal_confirmation() -> void:
+	_withdrawal_confirmation_dialog.get_cancel_button().text = "Keep Fighting"
+	var cancel_shortcut := Shortcut.new()
+	var cancel_action := InputEventAction.new()
+	cancel_action.action = "ui_cancel"
+	cancel_shortcut.events = [cancel_action]
+	_withdrawal_confirmation_dialog.get_cancel_button().shortcut = cancel_shortcut
 
 func _battle_music_metadata() -> Dictionary:
 	if _session == null:
@@ -419,10 +435,187 @@ func _quick_resolve_failure_message(result: Dictionary) -> String:
 	return "Quick Resolve stopped before the battle ended (%s). You can continue issuing orders." % stop_reason.replace("_", " ")
 
 func _on_retreat_pressed() -> void:
-	_perform_action("retreat")
+	_request_withdrawal_confirmation("retreat", _retreat_button)
 
 func _on_surrender_pressed() -> void:
-	_perform_action("surrender")
+	_request_withdrawal_confirmation("surrender", _surrender_button)
+
+func _request_withdrawal_confirmation(action_id: String, focus_origin: Button = null) -> Dictionary:
+	if _pending_withdrawal_action != "":
+		return {
+			"ok": false,
+			"pending": true,
+			"performed": false,
+			"action_id": _pending_withdrawal_action,
+			"reason": "withdrawal_confirmation_already_pending",
+			"message": "Finish the current withdrawal confirmation first.",
+		}
+	var availability := _withdrawal_action_availability(action_id)
+	if not bool(availability.get("ok", false)):
+		_last_message = String(availability.get("message", "That withdrawal order is no longer available."))
+		_last_withdrawal_confirmation_result = availability.duplicate(true)
+		if _session != null and not _session.battle.is_empty():
+			_refresh()
+		_restore_withdrawal_focus(focus_origin)
+		return availability
+	var copy := _withdrawal_confirmation_copy(action_id, availability.get("action", {}))
+	_pending_withdrawal_action = action_id
+	_withdrawal_focus_origin = focus_origin if focus_origin != null else _withdrawal_action_button(action_id)
+	_withdrawal_confirmation_dialog.title = String(copy.get("title", "Confirm Withdrawal?"))
+	_withdrawal_confirmation_dialog.dialog_text = String(copy.get("text", "Confirm this withdrawal order?"))
+	_withdrawal_confirmation_dialog.get_ok_button().text = String(copy.get("confirm_text", "Confirm Withdrawal"))
+	_withdrawal_confirmation_dialog.get_cancel_button().text = "Keep Fighting"
+	var dialog_label := _withdrawal_confirmation_dialog.get_label()
+	dialog_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	dialog_label.custom_minimum_size = Vector2(800.0, 0.0)
+	_withdrawal_confirmation_dialog.popup_centered(Vector2i(880, 320))
+	_withdrawal_confirmation_dialog.get_cancel_button().call_deferred("grab_focus")
+	_focus_withdrawal_cancel_after_popup()
+	var result := _withdrawal_confirmation_snapshot(true)
+	_last_withdrawal_confirmation_result = result.duplicate(true)
+	return result
+
+func _withdrawal_action_availability(action_id: String) -> Dictionary:
+	if action_id not in ["retreat", "surrender"]:
+		return _withdrawal_rejection(action_id, "unsupported_withdrawal_action", "Only Retreat or Surrender can use this confirmation.")
+	if _session == null or _session.battle.is_empty():
+		return _withdrawal_rejection(action_id, "battle_missing", "There is no active battle to leave.")
+	if _session.scenario_status != "in_progress" or _battle_exit_handoff_in_progress:
+		return _withdrawal_rejection(action_id, "battle_resolving", "The battle is already resolving and cannot accept another exit order.")
+	var surface := BattleRules.get_action_surface(_session)
+	var action_value: Variant = surface.get(action_id, {})
+	var action: Dictionary = action_value if action_value is Dictionary else {}
+	if action.is_empty():
+		return _withdrawal_rejection(action_id, "action_missing", "%s is not available in this battle." % action_id.capitalize())
+	if bool(action.get("disabled", true)):
+		return _withdrawal_rejection(
+			action_id,
+			"action_no_longer_available",
+			String(action.get("summary", "%s is no longer available." % action_id.capitalize()))
+		)
+	return {
+		"ok": true,
+		"pending": false,
+		"performed": false,
+		"action_id": action_id,
+		"action": action.duplicate(true),
+	}
+
+func _withdrawal_rejection(action_id: String, reason: String, message: String) -> Dictionary:
+	return {
+		"ok": false,
+		"pending": false,
+		"performed": false,
+		"action_id": action_id,
+		"reason": reason,
+		"message": message,
+	}
+
+func _withdrawal_confirmation_copy(action_id: String, action_value: Variant) -> Dictionary:
+	var action: Dictionary = action_value if action_value is Dictionary else {}
+	var label := String(action.get("label", action_id.capitalize()))
+	var surface := BattleRules.get_action_surface(_session)
+	var exit_cue := _battle_exit_order_cue_surface(surface)
+	var lines := [
+		String(action.get("summary", "")),
+		String(action.get("consequence", "")),
+		String(action.get("confirmation", "")),
+		String(exit_cue.get("route", "")),
+		String(exit_cue.get("save", "")),
+	]
+	var compact: Array[String] = []
+	for line_value in lines:
+		var line := String(line_value).strip_edges()
+		if line != "" and line not in compact:
+			compact.append(line)
+	return {
+		"title": "Confirm %s?" % label,
+		"text": "  ".join(compact),
+		"confirm_text": "Confirm %s" % label,
+	}
+
+func _on_withdrawal_confirmation_canceled() -> void:
+	_cancel_withdrawal_confirmation()
+
+func _cancel_withdrawal_confirmation() -> Dictionary:
+	var action_id := _pending_withdrawal_action
+	var focus_origin := _withdrawal_focus_origin
+	_withdrawal_confirmation_dialog.hide()
+	_pending_withdrawal_action = ""
+	_withdrawal_focus_origin = null
+	var result := {
+		"ok": true,
+		"pending": false,
+		"performed": false,
+		"canceled": true,
+		"action_id": action_id,
+	}
+	_last_withdrawal_confirmation_result = result.duplicate(true)
+	_restore_withdrawal_focus(focus_origin)
+	return result
+
+func _on_withdrawal_confirmation_confirmed() -> Dictionary:
+	var action_id := _pending_withdrawal_action
+	var focus_origin := _withdrawal_focus_origin
+	var route_attempts_before := _validation_battle_resolution_attempt_count
+	_withdrawal_confirmation_dialog.hide()
+	_pending_withdrawal_action = ""
+	_withdrawal_focus_origin = null
+	var availability := _withdrawal_action_availability(action_id)
+	if not bool(availability.get("ok", false)):
+		_last_message = "Withdrawal not confirmed: %s" % String(availability.get("message", "the order is no longer available."))
+		var rejected := availability.duplicate(true)
+		rejected["pending"] = false
+		rejected["performed"] = false
+		rejected["routing_attempt_delta"] = _validation_battle_resolution_attempt_count - route_attempts_before
+		rejected["routed"] = false
+		_last_withdrawal_confirmation_result = rejected.duplicate(true)
+		if _session != null and not _session.battle.is_empty():
+			_refresh()
+		_restore_withdrawal_focus(focus_origin)
+		return rejected
+	var action_result := _perform_action(action_id)
+	var route_delta := _validation_battle_resolution_attempt_count - route_attempts_before
+	var result := {
+		"ok": bool(action_result.get("ok", false)),
+		"pending": false,
+		"performed": bool(action_result.get("ok", false)),
+		"invoked": true,
+		"action_id": action_id,
+		"result": action_result.duplicate(true),
+		"routing_attempt_delta": route_delta,
+		"routed": route_delta == 1,
+		"route_target": String(_validation_last_battle_resolution_route.get("target", "")) if route_delta > 0 else "",
+	}
+	_last_withdrawal_confirmation_result = result.duplicate(true)
+	return result
+
+func _withdrawal_confirmation_snapshot(ok: bool) -> Dictionary:
+	return {
+		"ok": ok,
+		"pending": _pending_withdrawal_action != "",
+		"performed": false,
+		"action_id": _pending_withdrawal_action,
+		"dialog_visible": _withdrawal_confirmation_dialog.visible,
+		"title": _withdrawal_confirmation_dialog.title,
+		"text": _withdrawal_confirmation_dialog.dialog_text,
+		"confirm_text": _withdrawal_confirmation_dialog.get_ok_button().text,
+		"cancel_text": _withdrawal_confirmation_dialog.get_cancel_button().text,
+	}
+
+func _withdrawal_action_button(action_id: String) -> Button:
+	return _retreat_button if action_id == "retreat" else _surrender_button if action_id == "surrender" else null
+
+func _focus_withdrawal_cancel_after_popup() -> void:
+	await get_tree().process_frame
+	if _withdrawal_confirmation_dialog.visible and _pending_withdrawal_action != "":
+		_withdrawal_confirmation_dialog.get_cancel_button().grab_focus()
+
+func _restore_withdrawal_focus(focus_origin: Button) -> void:
+	if focus_origin != null and is_instance_valid(focus_origin) and focus_origin.is_visible_in_tree() and not focus_origin.disabled:
+		focus_origin.call_deferred("grab_focus")
+		return
+	call_deferred("_configure_battle_keyboard_focus", true)
 
 func _on_speed_normal_pressed() -> void:
 	_set_battle_presentation_speed(BattleRules.PRESENTATION_SPEED_NORMAL)
@@ -527,7 +720,8 @@ func _on_active_play_setting_changed(setting_id: String) -> void:
 	_apply_responsive_layout()
 	_refresh()
 
-func _perform_action(action: String) -> void:
+func _perform_action(action: String) -> Dictionary:
+	_validation_perform_action_counts[action] = int(_validation_perform_action_counts.get(action, 0)) + 1
 	var profile_started := ProfileLogScript.begin_usec()
 	var buckets := {}
 	var rules_started := ProfileLogScript.begin_usec()
@@ -544,7 +738,7 @@ func _perform_action(action: String) -> void:
 			"result_ok": bool(result.get("ok", false)),
 			"routed": true,
 		}, true), _session)
-		return
+		return result
 	var refresh_started := ProfileLogScript.begin_usec()
 	_refresh()
 	call_deferred("_configure_battle_keyboard_focus", true)
@@ -554,26 +748,38 @@ func _perform_action(action: String) -> void:
 		"result_ok": bool(result.get("ok", false)),
 		"routed": false,
 	}, true), _session)
+	return result
 
 func _handle_battle_resolution(result: Dictionary) -> bool:
 	if _session.scenario_status != "in_progress":
+		_record_validation_battle_resolution_attempt(result, "outcome")
 		if _validation_battle_resolution_routing_enabled:
 			AppRouter.go_to_scenario_outcome()
 		return true
 	match String(result.get("state", "continue")):
 		"victory", "retreat", "surrender", "stalemate", "hero_defeat", "town_lost":
+			_record_validation_battle_resolution_attempt(result, "overworld")
 			if _begin_battle_exit_animation_handoff(result, "overworld"):
 				return true
 			if _validation_battle_resolution_routing_enabled:
 				AppRouter.go_to_overworld()
 			return true
 		"defeat":
+			_record_validation_battle_resolution_attempt(result, "outcome")
 			if _begin_battle_exit_animation_handoff(result, "outcome"):
 				return true
 			if _validation_battle_resolution_routing_enabled:
 				AppRouter.go_to_scenario_outcome()
 			return true
 	return false
+
+func _record_validation_battle_resolution_attempt(result: Dictionary, target: String) -> void:
+	_validation_battle_resolution_attempt_count += 1
+	_validation_last_battle_resolution_route = {
+		"target": target,
+		"state": String(result.get("state", "")),
+		"scenario_status": _session.scenario_status if _session != null else "",
+	}
 
 func _begin_battle_exit_animation_handoff(result: Dictionary, route_target: String) -> bool:
 	if _battle_exit_handoff_in_progress or not _validation_battle_resolution_routing_enabled:
@@ -802,7 +1008,7 @@ func _refresh() -> void:
 	call_deferred("_configure_battle_keyboard_focus", false)
 
 func _configure_battle_keyboard_focus(force: bool = false) -> void:
-	if not is_inside_tree() or _session == null or _session.battle.is_empty() or (_active_play_settings_dialog != null and _active_play_settings_dialog.is_open()) or (_quick_resolve_confirmation_dialog != null and _quick_resolve_confirmation_dialog.visible):
+	if not is_inside_tree() or _session == null or _session.battle.is_empty() or (_active_play_settings_dialog != null and _active_play_settings_dialog.is_open()) or (_quick_resolve_confirmation_dialog != null and _quick_resolve_confirmation_dialog.visible) or (_withdrawal_confirmation_dialog != null and _withdrawal_confirmation_dialog.visible):
 		return
 	var surfaces := [
 		_battle_board_view,
@@ -1849,6 +2055,16 @@ func validation_snapshot() -> Dictionary:
 	return {
 		"scene_path": scene_file_path,
 		"manual_save_overwrite_dialog": _manual_save_overwrite_dialog.validation_snapshot(),
+		"withdrawal_pending_action": _pending_withdrawal_action,
+		"withdrawal_confirmation_visible": _withdrawal_confirmation_dialog.visible,
+		"withdrawal_confirmation_title": _withdrawal_confirmation_dialog.title,
+		"withdrawal_confirmation_text": _withdrawal_confirmation_dialog.dialog_text,
+		"withdrawal_confirmation_ok_text": _withdrawal_confirmation_dialog.get_ok_button().text,
+		"withdrawal_confirmation_cancel_text": _withdrawal_confirmation_dialog.get_cancel_button().text,
+		"withdrawal_last_result": _last_withdrawal_confirmation_result.duplicate(true),
+		"validation_perform_action_counts": _validation_perform_action_counts.duplicate(true),
+		"validation_battle_resolution_attempt_count": _validation_battle_resolution_attempt_count,
+		"validation_last_battle_resolution_route": _validation_last_battle_resolution_route.duplicate(true),
 		"music_audio": MusicAudio.validation_summary(),
 		"scenario_id": _session.scenario_id,
 		"difficulty": _session.difficulty,
@@ -2108,6 +2324,15 @@ func validation_perform_action(action_id: String) -> Dictionary:
 	if not routed:
 		_refresh()
 	return _action_validation_response(action_id, result, routed)
+
+func validation_request_withdrawal(action_id: String) -> Dictionary:
+	return _request_withdrawal_confirmation(action_id, _withdrawal_action_button(action_id))
+
+func validation_cancel_withdrawal() -> Dictionary:
+	return _cancel_withdrawal_confirmation()
+
+func validation_confirm_withdrawal() -> Dictionary:
+	return _on_withdrawal_confirmation_confirmed()
 
 func validation_perform_board_stack_click(battle_id: String) -> Dictionary:
 	if _session.battle.is_empty():

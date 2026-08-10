@@ -86,6 +86,8 @@ BATTLE_AUTO_RESOLVE_RULES_PATH = ROOT / "scripts" / "core" / "BattleAutoResolveR
 BATTLE_QUICK_RESOLVE_REPORT_SCRIPT_PATH = ROOT / "tests" / "battle_quick_resolve_runtime_report.gd"
 BATTLE_QUICK_RESOLVE_REPORT_SCENE_PATH = ROOT / "tests" / "battle_quick_resolve_runtime_report.tscn"
 BATTLE_QUICK_RESOLVE_CANCEL_SMOKE_PATH = ROOT / "tests" / "active_play_keyboard_focus_smoke.gd"
+BATTLE_WITHDRAWAL_CONFIRMATION_REPORT_SCRIPT_PATH = ROOT / "tests" / "battle_withdrawal_confirmation_runtime_report.gd"
+BATTLE_WITHDRAWAL_CONFIRMATION_REPORT_SCENE_PATH = ROOT / "tests" / "battle_withdrawal_confirmation_runtime_report.tscn"
 HEADLESS_SIMULATION_HARNESS_RULES_PATH = ROOT / "scripts" / "core" / "HeadlessSimulationHarnessRules.gd"
 OUTCOME_SCENE_PATH = ROOT / "scenes" / "results" / "ScenarioOutcomeShell.tscn"
 OUTCOME_SCRIPT_PATH = ROOT / "scenes" / "results" / "ScenarioOutcomeShell.gd"
@@ -14166,6 +14168,71 @@ def validate_battle_quick_resolve_runtime(errors: list[str]) -> None:
         ensure(required_token in harness_text, errors, f"Headless simulation harness is missing quick-resolve delegation token: {required_token}")
 
 
+def validate_battle_withdrawal_confirmation_runtime(errors: list[str]) -> None:
+    for path in (
+        BATTLE_WITHDRAWAL_CONFIRMATION_REPORT_SCRIPT_PATH,
+        BATTLE_WITHDRAWAL_CONFIRMATION_REPORT_SCENE_PATH,
+    ):
+        ensure(path.exists(), errors, f"Missing battle withdrawal-confirmation runtime report file: {path.relative_to(ROOT)}")
+    if not BATTLE_WITHDRAWAL_CONFIRMATION_REPORT_SCRIPT_PATH.exists():
+        return
+
+    report_text = BATTLE_WITHDRAWAL_CONFIRMATION_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "BATTLE_WITHDRAWAL_CONFIRMATION_RUNTIME_REPORT",
+        "_validate_request_and_cancel",
+        "_validate_stale_disabled_confirmation",
+        '_validate_confirmed_withdrawal("retreat")',
+        '_validate_confirmed_withdrawal("surrender")',
+        'validation_request_withdrawal", "retreat"',
+        'validation_request_withdrawal", "surrender"',
+        "validation_cancel_withdrawal",
+        "validation_confirm_withdrawal",
+        'BattleRulesScript.perform_player_action(direct_control, action_id)',
+        'JSON.stringify(session.to_dict()) != before',
+        'validation_perform_action_counts',
+        'validation_battle_resolution_attempt_count',
+        'confirmed.get("routing_attempt_delta", -1)',
+        'confirmed.get("route_target", "")',
+        'last_route.get("target", "")',
+        'shell_result != direct_result',
+        '_gameplay_payload_without_shell_presentation(session)',
+        'flags.erase("last_battle_action_recap")',
+        'overworld.erase("command_risk_forecast")',
+        'direct_gameplay_session_match',
+    ):
+        ensure(required_token in report_text, errors, f"Battle withdrawal-confirmation runtime report is missing required token: {required_token}")
+
+    if BATTLE_WITHDRAWAL_CONFIRMATION_REPORT_SCENE_PATH.exists():
+        report_scene_text = BATTLE_WITHDRAWAL_CONFIRMATION_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+        ensure(
+            "res://tests/battle_withdrawal_confirmation_runtime_report.gd" in report_scene_text,
+            errors,
+            "Battle withdrawal-confirmation report scene must load its runtime report script",
+        )
+
+    shell_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func validation_request_withdrawal(",
+        "func validation_cancel_withdrawal(",
+        "func validation_confirm_withdrawal(",
+        '"withdrawal_pending_action"',
+        '"withdrawal_confirmation_visible"',
+        '"withdrawal_last_result"',
+        '"validation_perform_action_counts"',
+        '"validation_battle_resolution_attempt_count"',
+        '"validation_last_battle_resolution_route"',
+    ):
+        ensure(required_token in shell_text, errors, f"BattleShell.gd is missing required withdrawal-confirmation validation token: {required_token}")
+
+    battle_scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        '[node name="WithdrawalConfirmationDialog" type="ConfirmationDialog"',
+        'method="_on_withdrawal_confirmation_canceled"',
+        'method="_on_withdrawal_confirmation_confirmed"',
+    ):
+        ensure(required_token in battle_scene_text, errors, f"BattleShell.tscn is missing required withdrawal-confirmation token: {required_token}")
+
 def validate_battle_ability_layer(errors: list[str]) -> None:
     required_paths = (
         BATTLE_RULES_PATH,
@@ -20334,7 +20401,7 @@ def validate_battle_surrender_pursuit_aftermath(errors: list[str]) -> None:
     for required_token in (
         "@onready var _surrender_button: Button",
         "func _on_surrender_pressed",
-        '_perform_action("surrender")',
+        '_request_withdrawal_confirmation("surrender", _surrender_button)',
         "_apply_action_surface(_surrender_button",
         '"surrender"',
     ):
@@ -25290,6 +25357,7 @@ def main() -> int:
     validate_overworld_fog(errors)
     validate_battle_deterministic_rng_state(errors)
     validate_battle_quick_resolve_runtime(errors)
+    validate_battle_withdrawal_confirmation_runtime(errors)
     validate_battle_ability_layer(errors)
     validate_battle_autoplay_balance_diagnostics(errors)
     validate_battle_shell_release_polish(errors)

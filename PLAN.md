@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `battle-player-withdrawal-confirmation-10184`. Retreat and Surrender now open one compact action-bound confirmation populated from their live authored consequence surface. Keep Fighting owns initial focus; cancel, Escape, and controller Back preserve the exact session and return focus to the originating action. Confirm revalidates availability, fails closed when stale, and invokes the existing BattleRules withdrawal path exactly once. Focused direct-rule parity, controller, 1280x720 layout, event-animation, core, parse, repository, JSON, Python, and diff gates pass without changing withdrawal math or save state.
 - Latest completed implementation slice: `save-generated-opening-autosave-completion-persistence-10184`. The generated-map opening fast path now writes a detached post-success payload that removes ordinary transition intent plus generated opening/briefing defer flags and records initial-autosave completion. Only a successful write mirrors that state to the live session; failure preserves the existing autosave bytes and exact live retry intent. Restoring the saved session no longer schedules a second opening autosave. Focused generated route/save/restore/failure/ordinary-control, core, regression, deferred-payload, parse, repository, JSON, Python, and diff gates pass at save version 9. The unrelated legacy random-map replay fixture still stops before saves on its obsolete nonempty template-id assertion.
 - Latest completed implementation slice: `settings-confirmed-display-mode-rollback-10184`. Player-facing window-mode and resolution changes now enter a SettingsService-owned preview without mutating committed settings or config bytes. A 15-second Keep/Revert modal gives Revert initial focus; Escape/controller Back, timeout, menu exit, replacement preview, and save failure restore the prior runtime display, while Keep persists and survives reload. Windowed/borderless requests clamp uniformly to the active monitor usable rectangle, and Restore Defaults defers its display portion through the same confirmation. Focused service, Main Menu, Restore Defaults, packaged persistence, active-play, Linux/X11, fresh-prefix packaged Windows/Wine, core, parse, repository, JSON, Python, and diff gates pass. Native Windows hardware certification, broader accessibility completion, and overall release readiness remain open.
 - Latest completed implementation slice: `packaging-transactional-cross-platform-upgrade-10184`. Linux, Windows archive, and generated NSIS installers now stage and verify a complete manifest-owned payload before replacing an owned live install, remove obsolete prior-manifest files, and restore the prior bootable program set after an injected commit failure. Fresh install, same-version reinstall, A-to-B upgrade, unowned-directory refusal, user-data preservation, and uninstall behavior are matched across Linux and Wine validation. This does not claim signing, native Windows hardware certification, public release execution, stable-channel completion, or overall release readiness.
@@ -2930,6 +2931,40 @@ Completion evidence:
 - an injected pre-write failure leaves autosave bytes and every live retry flag exact, including completion false, while ordinary authored autosaves remain loadable and free of generated lifecycle flags;
 - the focused generated route remains within its budgets at 278 ms first-visible and 488 ms through the deferred autosave tail;
 - core, balance regression, ordinary deferred-payload, editor parse, repository, Python, JSON, and diff gates pass; save version remains 9.
+
+## Player Withdrawal Confirmation
+
+id: `battle-player-withdrawal-confirmation-10184`
+
+Status: complete.
+
+Selected Phase 6 player-safety slice. Retreat and Surrender immediately call the
+authoritative action resolver from their action-strip buttons. Both commands can
+apply permanent casualties, resource/pressure/logistics aftermath, objective
+loss, and terminal routing, but their authored consequence surfaces currently
+serve only as tooltips.
+
+Implementation target:
+- add one compact BattleShell confirmation dialog shared by Retreat and Surrender, populated from the current live action surface and clearly naming the selected irreversible command;
+- cancel, Escape, or controller Back must close without session mutation and restore focus to the originating action button;
+- confirm must re-read the current action surface, fail closed if the action became unavailable, and otherwise call the existing `_perform_action(action_id)` exactly once;
+- preserve BattleRules withdrawal aftermath, combat math, animation snapshot, outcome routing, and Quick Resolve behavior unchanged.
+
+Completion criteria:
+- Retreat and Surrender never execute from the first press and their confirmation copy contains the authored live consequence/confirmation boundary;
+- cancel is byte-exact and focus-safe for both actions, including controller Back;
+- stale/disabled confirmation fails closed without mutation, while valid confirm matches a method-equivalent direct BattleRules control and routes exactly once;
+- focused runtime/controller, battle layout, event-animation, core, parse, repository, JSON, Python, and diff gates pass.
+
+Non-goals:
+- no withdrawal aftermath, AI withdrawal, combat balance/math, Quick Resolve, save schema, battle exit redesign, or overall release-completion change.
+
+Completion evidence:
+- first press for both Retreat and Surrender opens a shared compact modal whose body contains the current live summary, consequence, confirmation, route, and save cues; no action or route is attempted before confirm;
+- Keep Fighting owns native-dialog focus, Escape/controller Back closes the modal with a byte-exact session snapshot, and focus returns to the exact originating action button;
+- confirm re-reads the live action surface: a disabled Surrender is rejected with zero action/route attempts, while valid Retreat and Surrender each match a method-equivalent direct BattleRules result and gameplay payload with exactly one action and one overworld-route attempt;
+- the scoped 1280x720 layout gate exits zero with the modal bounded inside the battle composition, and the 23-case event-animation report retains Retreat/Surrender presentation behavior;
+- focused runtime, active controller, layout, event-animation, core, editor parse, repository, Python, JSON, and diff gates pass.
 
 ## Phase Roadmap
 
