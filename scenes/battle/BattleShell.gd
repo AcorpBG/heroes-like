@@ -11,6 +11,7 @@ const UI_ART_BATTLE_FOOTER_PANEL := "res://art/ui/runtime/battle/battle_footer_p
 const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains open; use Save, then try Return to Main Menu again."
 const BATTLE_RESOLUTION_AUTOSAVE_FAILURE_MESSAGE := "Battle resolved, but autosave failed. Press Save to retry the checkpoint."
 const BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_MESSAGE := "Briefing shown, but autosave failed. Press Save to protect this checkpoint."
+const BATTLE_PLAYBACK_SPEED_SAVE_FAILURE_MESSAGE := "Playback speed not saved. Previous speed restored."
 
 @onready var _banner_panel: PanelContainer = %Banner
 @onready var _briefing_panel: PanelContainer = %BriefingPanel
@@ -109,6 +110,10 @@ var _last_briefing_consumption_runtime_issue := {}
 var _validation_briefing_consumption_save_attempt_count := 0
 var _validation_briefing_consumption_save_success_count := 0
 var _validation_briefing_consumption_save_failure_count := 0
+var _last_battle_playback_speed_result := {}
+var _validation_battle_playback_speed_request_count := 0
+var _validation_battle_playback_speed_success_count := 0
+var _validation_battle_playback_speed_failure_count := 0
 
 func _ready() -> void:
 	var profile_started := ProfileLogScript.begin_usec()
@@ -706,12 +711,111 @@ func _on_speed_fast_pressed() -> void:
 func _on_speed_instant_pressed() -> void:
 	_set_battle_presentation_speed(BattleRules.PRESENTATION_SPEED_INSTANT)
 
-func _set_battle_presentation_speed(speed: String) -> void:
-	var result := BattleRules.set_battle_presentation_speed(_session, speed)
-	if bool(result.get("ok", false)):
-		SettingsService.set_battle_playback_speed_id(String(result.get("speed", speed)))
-		_last_message = String(result.get("message", ""))
+func _set_battle_presentation_speed(speed: String) -> Dictionary:
+	var requested_speed := _normalize_battle_presentation_speed_id(speed)
+	var requesting_button := _battle_presentation_speed_button(requested_speed)
+	var prior_session_speed := BattleRules.battle_presentation_speed(_session)
+	var prior_committed_speed := SettingsService.battle_playback_speed_id()
+	_validation_battle_playback_speed_request_count += 1
+	if _session == null or _session.battle.is_empty():
+		_validation_battle_playback_speed_failure_count += 1
+		var unavailable := {
+			"ok": false,
+			"saved": false,
+			"applied": false,
+			"changed": false,
+			"reason": "no_active_battle",
+			"settings_reason": "",
+			"requested_speed": requested_speed,
+			"prior_session_speed": prior_session_speed,
+			"prior_committed_speed": prior_committed_speed,
+			"committed_speed": prior_committed_speed,
+			"active_speed": prior_session_speed,
+			"session_speed": prior_session_speed,
+			"message": "No battle is active.",
+			"settings_result": {},
+			"rule_result": {},
+			"resync_result": {},
+		}
+		_last_battle_playback_speed_result = unavailable.duplicate(true)
+		return unavailable
+
+	var settings_result: Dictionary = SettingsService.set_battle_playback_speed_id(requested_speed)
+	var committed_speed := SettingsService.battle_playback_speed_id()
+	if not bool(settings_result.get("ok", false)):
+		var resync_result := BattleRules.set_battle_presentation_speed(_session, committed_speed)
+		_validation_battle_playback_speed_failure_count += 1
+		_last_message = BATTLE_PLAYBACK_SPEED_SAVE_FAILURE_MESSAGE
+		var failure := {
+			"ok": false,
+			"saved": false,
+			"applied": false,
+			"changed": false,
+			"reason": "settings_save_failed",
+			"settings_reason": String(settings_result.get("reason", "settings_save_failed")),
+			"requested_speed": requested_speed,
+			"prior_session_speed": prior_session_speed,
+			"prior_committed_speed": prior_committed_speed,
+			"committed_speed": committed_speed,
+			"active_speed": BattleRules.battle_presentation_speed(_session),
+			"session_speed": BattleRules.battle_presentation_speed(_session),
+			"message": _last_message,
+			"settings_result": settings_result.duplicate(true),
+			"rule_result": {},
+			"resync_result": resync_result.duplicate(true),
+		}
+		_last_battle_playback_speed_result = failure.duplicate(true)
+		_refresh()
+		_restore_battle_presentation_speed_focus(requesting_button)
+		return failure
+
+	var rule_result := BattleRules.set_battle_presentation_speed(_session, committed_speed)
+	var applied := bool(rule_result.get("ok", false))
+	if applied:
+		_validation_battle_playback_speed_success_count += 1
+		_last_message = String(rule_result.get("message", ""))
+	else:
+		_validation_battle_playback_speed_failure_count += 1
+		_last_message = String(rule_result.get("message", "Battle playback speed could not be applied."))
+	var result := {
+		"ok": applied,
+		"saved": true,
+		"applied": applied,
+		"changed": bool(settings_result.get("changed", false)),
+		"reason": "saved" if applied else "apply_failed",
+		"settings_reason": String(settings_result.get("reason", "")),
+		"requested_speed": requested_speed,
+		"prior_session_speed": prior_session_speed,
+		"prior_committed_speed": prior_committed_speed,
+		"committed_speed": committed_speed,
+		"active_speed": BattleRules.battle_presentation_speed(_session),
+		"session_speed": BattleRules.battle_presentation_speed(_session),
+		"message": _last_message,
+		"settings_result": settings_result.duplicate(true),
+		"rule_result": rule_result.duplicate(true),
+		"resync_result": {},
+	}
+	_last_battle_playback_speed_result = result.duplicate(true)
 	_refresh()
+	return result
+
+func _normalize_battle_presentation_speed_id(speed: String) -> String:
+	var normalized := speed.strip_edges().to_lower()
+	if normalized in [BattleRules.PRESENTATION_SPEED_NORMAL, BattleRules.PRESENTATION_SPEED_FAST, BattleRules.PRESENTATION_SPEED_INSTANT]:
+		return normalized
+	return BattleRules.PRESENTATION_SPEED_NORMAL
+
+func _battle_presentation_speed_button(speed: String) -> Button:
+	match _normalize_battle_presentation_speed_id(speed):
+		BattleRules.PRESENTATION_SPEED_FAST:
+			return _speed_fast_button
+		BattleRules.PRESENTATION_SPEED_INSTANT:
+			return _speed_instant_button
+	return _speed_normal_button
+
+func _restore_battle_presentation_speed_focus(button: Button) -> void:
+	if button != null and is_instance_valid(button) and button.is_visible_in_tree() and not button.disabled:
+		button.call_deferred("grab_focus")
 
 func _on_spell_action_pressed(action_id: String) -> void:
 	if not _battle_resolution_checkpoint_pending.is_empty():
@@ -2287,6 +2391,7 @@ func validation_snapshot() -> Dictionary:
 	var action_context_surface := _battle_action_context_surface(dispatch_text, action_confirmation)
 	return {
 		"scene_path": scene_file_path,
+		"battle_playback_speed": validation_battle_playback_speed_snapshot(),
 		"battle_resolution_checkpoint": validation_battle_resolution_checkpoint_snapshot(),
 		"briefing_consumption_autosave": validation_briefing_consumption_autosave_snapshot(),
 		"manual_save_overwrite_dialog": _manual_save_overwrite_dialog.validation_snapshot(),
@@ -2507,6 +2612,44 @@ func validation_briefing_consumption_autosave_snapshot() -> Dictionary:
 		"game_state": _session.game_state if _session != null else "",
 		"day": _session.day if _session != null else 0,
 		"generated_random_map": bool(_session.flags.get("generated_random_map", false)) if _session != null else false,
+	}
+
+func validation_set_battle_presentation_speed(speed: String) -> Dictionary:
+	return _set_battle_presentation_speed(speed)
+
+func validation_reset_battle_playback_speed_state() -> void:
+	_last_battle_playback_speed_result = {}
+	_validation_battle_playback_speed_request_count = 0
+	_validation_battle_playback_speed_success_count = 0
+	_validation_battle_playback_speed_failure_count = 0
+
+func validation_battle_playback_speed_snapshot() -> Dictionary:
+	var active_speed := BattleRules.battle_presentation_speed(_session)
+	var committed_speed := SettingsService.battle_playback_speed_id()
+	var viewport := get_viewport()
+	var focus_owner := viewport.gui_get_focus_owner() if viewport != null else null
+	var button_states := {}
+	for speed_id in [BattleRules.PRESENTATION_SPEED_NORMAL, BattleRules.PRESENTATION_SPEED_FAST, BattleRules.PRESENTATION_SPEED_INSTANT]:
+		var button := _battle_presentation_speed_button(speed_id)
+		button_states[String(speed_id)] = {
+			"name": String(button.name) if button != null else "",
+			"disabled": button.disabled if button != null else true,
+			"selected": String(speed_id) == active_speed,
+			"tooltip": button.tooltip_text if button != null else "",
+		}
+	return {
+		"request_count": _validation_battle_playback_speed_request_count,
+		"success_count": _validation_battle_playback_speed_success_count,
+		"failure_count": _validation_battle_playback_speed_failure_count,
+		"last_result": _last_battle_playback_speed_result.duplicate(true),
+		"requested_speed": String(_last_battle_playback_speed_result.get("requested_speed", "")),
+		"active_speed": active_speed,
+		"session_speed": active_speed,
+		"committed_speed": committed_speed,
+		"settings_speed": committed_speed,
+		"selected_speed": active_speed,
+		"focus_owner": String(focus_owner.name) if focus_owner != null else "",
+		"button_states": button_states,
 	}
 
 func validation_reset_battle_resolution_checkpoint_state() -> void:

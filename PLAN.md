@@ -24,7 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current implementation slice: `combat-brasshollow-rivet-hound-breach-skirmisher-10184` (completed). Rivet Hounds retain their validated speed-4/initiative-6 tempo and Rivet Hide while gaining the once-per-battle supported `Seam Mark`: a primary melee hit on a surviving veteran target exposes one defense for the round. Runtime/AI parity, exact old-content controls, the 59-encounter queue, method-matched faction balance, repository gates, and packaged Linux/Windows content proof pass.
+- Current implementation slice: `battle-direct-playback-speed-write-failure-recovery-10184` (completed). Battle's live Normal/Fast/Instant controls now persist first and apply the committed speed only after success. Transaction failure resynchronizes the session and button selection to the prior committed speed, reports truthful bounded recovery, and restores focus to the still-enabled requested control without changing combat simulation state.
+- Latest completed implementation slice: `battle-direct-playback-speed-write-failure-recovery-10184`. Precommit, after-backup, and non-regular-live-file failures preserve exact settings bytes/cache, transaction residue state, session/routes, and control focus; cleared success persists once and a fresh Battle consumes it. Focused, settings, animation, ActivePlay, focus, core, repository, Linux package, and Windows/Wine package gates pass.
 - Latest completed implementation slice: `combat-brasshollow-rivet-hound-breach-skirmisher-10184`. The final Seam-only form preserves the accepted Brasshollow tempo and all 18 active-cohort signatures; the 59-encounter queue remains clear, and the 12,000-battle matrix changes only four outcomes by one sample each with unchanged maximum dominance and side bias. Universal speed/initiative increases were rejected after proving they materially redistributed live matchups.
 - Latest completed implementation slice: `packaging-windows-uninstall-registration-and-pe-version-coherence-10184`. The per-user Windows setup now publishes a standard transactional HKCU Apps & Features registration plus Play and Uninstall shortcuts only after a verified commit, removes them only after an ownership-verified uninstall, and preserves prior program/registry/shortcut state across injected failures and refused uninstalls. Canonical `0.1.0-alpha.1` maps to coherent `0.1.0.1001` game/setup PE resources. Artifact, candidate, repository, full Linux installer, Windows setup/archive, and fresh Wine lifecycle gates pass; signing, native-Windows certification, publication, and overall release readiness remain open.
 - Latest completed implementation slice: `ux-overworld-1600-command-band-responsive-fit-10184`. The selectable 1600x900 Overworld layout now reduces only the four command-row gaps at that constrained noncompact width, moving the full band from x=-3/width1606 to x=1/width1598 while retaining every command, map dominance, focus, and compact/full behavior. Strengthened 1024/1280/1600/1920 containment, active focus, repository, Linux package, and Windows/Wine package gates pass.
@@ -3650,6 +3651,31 @@ Completion criteria:
 
 Non-goals:
 - no broad Brasshollow ladder redesign, universal speed/initiative retuning, repair/machine-class system, economy/recruitment rebalance, art replacement, final faction-balance claim, Native RMG work, publication, signing, or overall release-completion claim.
+
+## Battle Direct Playback Speed Write-Failure Recovery
+
+id: `battle-direct-playback-speed-write-failure-recovery-10184`
+
+Status: completed.
+
+Selected Phase 6 settings/runtime consistency correction. Battle's shipped Normal, Fast, and
+Instant buttons first mutate the active session, then discard the structured device-settings
+commit result. A failed transactional write restores the committed device setting but leaves the
+current battle and highlighted control on the unsaved choice while showing success.
+
+Implementation target:
+- consume the existing `SettingsService.set_battle_playback_speed_id` result at the direct Battle control boundary;
+- apply the committed speed to the active battle only after success, and resynchronize the session/button state to the prior committed speed on failure;
+- retain safe control focus and show bounded truthful not-saved guidance without mutating round, RNG, stacks, routes, or any battle rule state beyond presentation speed;
+- validate injected precommit, after-backup, and non-regular-live-file failures plus ordinary successful persistence and subsequent-battle restore.
+
+Completion criteria:
+- every failure preserves exact prior settings bytes and transactional residue state, committed/runtime/session speed, battle simulation payload, route state, selected speed, and safe focus;
+- failure feedback cannot claim success, while clearing the failure hook persists and applies the requested speed exactly once and a fresh battle consumes that setting;
+- existing active-play Settings, battle presentation/animation, controller focus, settings transaction, core, repository, and Linux/Windows packaged focused gates remain green.
+
+Non-goals:
+- no battle timing rebalance, animation-system redesign, settings-schema change, display-confirmation redesign, Native RMG work, publication, signing, native Windows hardware certification, or overall release-completion claim.
 
 ## Phase Roadmap
 
