@@ -101,6 +101,8 @@ TERRAIN_GRAMMAR_PATH = CONTENT_DIR / "terrain_grammar.json"
 TERRAIN_LAYERS_PATH = CONTENT_DIR / "terrain_layers.json"
 TOWN_SCENE_PATH = ROOT / "scenes" / "town" / "TownShell.tscn"
 TOWN_SCRIPT_PATH = ROOT / "scenes" / "town" / "TownShell.gd"
+TOWN_ENTITY_CACHE_ACTIVE_REFRESH_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "town_entity_cache_active_refresh_regression.gd"
+TOWN_ENTITY_CACHE_ACTIVE_REFRESH_REGRESSION_SCENE_PATH = ROOT / "tests" / "town_entity_cache_active_refresh_regression.tscn"
 BATTLE_SCENE_PATH = ROOT / "scenes" / "battle" / "BattleShell.tscn"
 BATTLE_SCRIPT_PATH = ROOT / "scenes" / "battle" / "BattleShell.gd"
 BATTLE_BOARD_VIEW_SCRIPT_PATH = ROOT / "scenes" / "battle" / "BattleBoardView.gd"
@@ -26068,6 +26070,63 @@ def validate_town_unique_building_runtime_payoff(errors: list[str]) -> None:
     ensure(len(faction_payoff_domain_rows) >= 6, errors, "Town unique building payoff domain gate must cover all six factions")
 
 
+def validate_town_entity_cache_active_refresh_regression(errors: list[str]) -> None:
+    required_paths = (
+        TOWN_ENTITY_CACHE_ACTIVE_REFRESH_REGRESSION_SCRIPT_PATH,
+        TOWN_ENTITY_CACHE_ACTIVE_REFRESH_REGRESSION_SCENE_PATH,
+        TOWN_SCRIPT_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Town entity-cache active-refresh regression dependency is missing: {path}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    script_text = TOWN_ENTITY_CACHE_ACTIVE_REFRESH_REGRESSION_SCRIPT_PATH.read_text(encoding="utf-8")
+    scene_text = TOWN_ENTITY_CACHE_ACTIVE_REFRESH_REGRESSION_SCENE_PATH.read_text(encoding="utf-8")
+    town_shell_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
+    for token in (
+        "TOWN_ENTITY_CACHE_ACTIVE_REFRESH_REGRESSION",
+        "town-entry-cache-regression-large-10184",
+        "generated Large same-town cache-hit re-entry refresh",
+        "rendered_economy_readability_surface",
+        "direct_economy_readability_surface",
+        "rendered_build_actions",
+        "rendered_recruit_actions",
+        "_assert_economy_ledger_parity",
+        "_assert_rendered_action_copy_parity",
+        "_assert_departure_parity",
+        "_assert_action_invalidates_once_then_hits_fast",
+        "_assert_economy_context_invalidates_once_then_hits_fast",
+        "_first_unresolved_encounter_id",
+        'for lane in ["build", "recruit", "market"]',
+        "_save_authority_snapshot",
+        "_route_authority_snapshot",
+        "_focus_owner_name",
+        'float(record.get("total_ms", 99999.0)) > 1000.0',
+        'float(buckets.get("first_refresh", 99999.0)) > 1000.0',
+    ):
+        ensure(token in script_text, errors, f"Town entity-cache active-refresh regression is missing token {token}")
+    ensure(
+        "res://tests/town_entity_cache_active_refresh_regression.gd" in scene_text,
+        errors,
+        "Town entity-cache active-refresh regression scene must load its focused script",
+    )
+    for token in (
+        'view_state["economy_build_actions"]',
+        'view_state["economy_recruit_actions"]',
+        'view_state["economy_readability_surface"]',
+        '"rendered_economy_readability_surface"',
+        '"economy_readability_surface"',
+        '"rendered_build_actions"',
+        '"rendered_recruit_actions"',
+        'buckets["town_entity_cache_dynamic"]',
+        'parts.append("v5")',
+        'parts.append("economy_context:%s" % _town_economy_context_signature())',
+        'resolved_encounters',
+    ):
+        ensure(token in town_shell_text, errors, f"TownShell cache-hit economy contract is missing token {token}")
+
+
 def validate_town_economy_resource_ui_surface(errors: list[str]) -> None:
     ensure(TOWN_ECONOMY_RESOURCE_UI_SURFACE_REPORT_SCRIPT_PATH.exists(), errors, "Town economy resource UI surface report script is missing")
     ensure(TOWN_ECONOMY_RESOURCE_UI_SURFACE_REPORT_SCENE_PATH.exists(), errors, "Town economy resource UI surface report scene is missing")
@@ -26802,6 +26861,7 @@ def main() -> int:
     validate_active_scenario_ai_town_start_economy(errors)
     validate_town_unit_tier_runtime_surface(errors)
     validate_town_unique_building_runtime_payoff(errors)
+    validate_town_entity_cache_active_refresh_regression(errors)
     validate_town_economy_resource_ui_surface(errors)
     validate_town_recruitment_ui_surface(errors)
     validate_active_scenario_town_development_runway(errors)
