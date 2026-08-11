@@ -15931,6 +15931,10 @@ def validate_town_faction_progression(errors: list[str]) -> None:
         "func next_weekly_growth_day",
         "func describe_town_context",
         "func town_weekly_growth",
+        "func _effective_player_town_weekly_growth",
+        'String(town.get("owner", "neutral")) == "player"',
+        "return _effective_player_town_weekly_growth(session, town)",
+        "var weekly_growth := _effective_player_town_weekly_growth(session, town)",
         "func town_income",
         "func town_reinforcement_quality",
         "func town_battle_readiness",
@@ -16092,6 +16096,36 @@ def validate_town_shell_release_polish(errors: list[str]) -> None:
             ensure(required_token in source_text, errors, f"{source_name} is missing authoritative town-departure copy token: {required_token}")
 
     town_visual_text = town_visual_smoke_path.read_text(encoding="utf-8")
+    for required_token in (
+        "_assert_player_weekly_growth_forecast_parity",
+        "for rank in [0, 1, 2]",
+        "HeroProgressionRules.scale_recruit_growth",
+        "forecast_growth == double_scaled",
+        "forecast_growth[detached_unit]",
+        "OverworldRules._town_weekly_growth(town, session) != raw_growth",
+        "OverworldRules._town_weekly_growth",
+        "OverworldRules.town_weekly_growth(enemy_town, session)",
+        "OverworldRules.town_weekly_growth(neutral_town, session)",
+        "OverworldRules.town_weekly_growth(town)",
+        "OverworldRules.town_development_metrics",
+        "OverworldRules.describe_end_turn_forecast",
+        "OverworldRules.end_turn(realized_session)",
+        'action.get("weekly_growth", -1)',
+        "TownRules.town_action_consequence_signature",
+        "OverworldRules.describe_town_build_projection",
+        'OverworldRules.build_in_active_town(build_session, "building_bowyer_lodge")',
+        "OverworldRules._building_growth_payload",
+        "immediate_delta != expected_immediate",
+        "_weekly_growth_peripheral_authority",
+        "SaveService.validation_summary_cache_snapshot",
+        "SettingsService.settings.duplicate(true)",
+        "SettingsService.SETTINGS_CANDIDATE_FILE",
+        "AppRouter.validation_active_play_return_snapshot",
+        "AppRouter.validation_battle_entry_snapshot",
+        "AppRouter.validation_battle_resolution_checkpoint_snapshot",
+        "AppRouter.validation_scenario_outcome_route_snapshot",
+    ):
+        ensure(required_token in town_visual_text, errors, f"town_battle_visual_smoke.gd is missing effective player weekly-growth parity token: {required_token}")
     for required_token in (
         "_assert_town_departure_movement_copy_matrix",
         "ready response order did not retain departure-copy priority",
