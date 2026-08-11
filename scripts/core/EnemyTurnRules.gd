@@ -1236,11 +1236,19 @@ static func _run_empire_cycle(
 
 	phase_started = _profile_timer(profile_enabled)
 	_spawn_profile_begin(profile_enabled)
+	var launch_policy_context := _launch_policy_context(session, faction_id)
 	var launched_placement_ids := []
 	var launch_scan_cache := {}
-	var launch_candidate := _launchable_spawn_candidate(session, config, state, faction_id, launch_scan_cache)
+	var launch_candidate := _launchable_spawn_candidate(
+		session,
+		config,
+		state,
+		faction_id,
+		launch_scan_cache,
+		launch_policy_context
+	)
 	while not launch_candidate.is_empty():
-		var spawn_result = _spawn_raid(session, config, state, launch_candidate)
+		var spawn_result = _spawn_raid(session, config, state, launch_candidate, launch_policy_context)
 		if spawn_result.is_empty():
 			break
 		messages.append(String(spawn_result.get("message", "")))
@@ -1250,7 +1258,14 @@ static func _run_empire_cycle(
 			launched_placement_ids.append(launched_id)
 		if String(spawn_result.get("spawn_plan_source", "")).begins_with("emergency_"):
 			break
-		launch_candidate = _launchable_spawn_candidate(session, config, state, faction_id, launch_scan_cache)
+		launch_candidate = _launchable_spawn_candidate(
+			session,
+			config,
+			state,
+			faction_id,
+			launch_scan_cache,
+			launch_policy_context
+		)
 	var spawn_loop_profile := _spawn_profile_finish()
 	if profile_enabled and not spawn_loop_profile.is_empty():
 		profile["spawn_loop_profile"] = spawn_loop_profile
@@ -3249,13 +3264,19 @@ static func _launchable_spawn_candidate(
 	config: Dictionary,
 	state: Dictionary,
 	faction_id: String,
-	launch_scan_cache: Dictionary = {}
+	launch_scan_cache: Dictionary = {},
+	launch_policy_context: Dictionary = {}
 ) -> Dictionary:
 	_spawn_profile_count("launchable_candidate_calls")
 	if _owned_town_count(session, faction_id) <= 0:
 		_spawn_profile_count("launchable_no_owned_town")
 		return {}
-	if active_raid_count(session, faction_id) >= _max_active_raids_for_strategy(session, config, faction_id):
+	if active_raid_count(session, faction_id) >= _max_active_raids_for_strategy(
+		session,
+		config,
+		faction_id,
+		launch_policy_context
+	):
 		_spawn_profile_count("launchable_max_active_reached")
 		return {}
 	var started_usec := _spawn_profile_timer()
@@ -3281,7 +3302,7 @@ static func _launchable_spawn_candidate(
 	if decision_open_spawn_points.is_empty():
 		_spawn_profile_count("launchable_no_open_spawn_point")
 		return {}
-	var raid_threshold = _raid_threshold_for_strategy(session, config, faction_id)
+	var raid_threshold = _raid_threshold_for_strategy(session, config, faction_id, launch_policy_context)
 	var pressure_threshold_met: bool = int(state.get("pressure", 0)) >= int(raid_threshold)
 	var emergency_defense_plan := {}
 	if bool(launch_scan_cache.get("emergency_defense_empty", false)):
@@ -3638,7 +3659,8 @@ static func _spawn_raid(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
 	state: Dictionary,
-	preselected_spawn_point: Dictionary = {}
+	preselected_spawn_point: Dictionary = {},
+	launch_policy_context: Dictionary = {}
 ) -> Dictionary:
 	# Compatibility guard: the default live-turn path remains _spawn_raid(session, config, state).
 	var faction_id := String(config.get("faction_id", ""))
@@ -3668,7 +3690,12 @@ static func _spawn_raid(
 	state["raid_counter"] = raid_counter + 1
 	state["commander_counter"] = int(state.get("commander_counter", 0)) + 1
 	var strategy = EnemyAdventureRulesScript.enemy_strategy(config, String(config.get("faction_id", "")))
-	var raid_threshold = _raid_threshold_for_strategy(session, config, String(config.get("faction_id", "")))
+	var raid_threshold = _raid_threshold_for_strategy(
+		session,
+		config,
+		String(config.get("faction_id", "")),
+		launch_policy_context
+	)
 	var commitment_scale = clamp(
 		EnemyAdventureRulesScript.strategy_scalar(strategy, "raid", "pressure_commitment_scale", 1.0),
 		0.55,
@@ -7052,7 +7079,8 @@ static func _empire_capital_pressure_bonus(capital_state: Dictionary, day: int) 
 static func _raid_threshold_for_strategy(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
-	faction_id: String
+	faction_id: String,
+	launch_policy_context: Dictionary = {}
 ) -> int:
 	var strategy = EnemyAdventureRulesScript.enemy_strategy(config, faction_id)
 	var base_threshold = DifficultyRulesScript.adjust_raid_threshold(session, max(1, int(config.get("raid_threshold", 1))))
@@ -7062,9 +7090,9 @@ static func _raid_threshold_for_strategy(
 		1.5
 	)
 	var threshold = max(1, int(round(float(base_threshold) * threshold_scale)))
-	var capital_state = _faction_capital_state(session, faction_id)
+	var capital_state := _launch_policy_capital_state(session, faction_id, launch_policy_context)
 	threshold -= int(capital_state.get("raid_threshold_reduction", 0))
-	threshold -= int(_faction_front_state(session, faction_id).get("threshold_reduction", 0))
+	threshold -= int(_launch_policy_front_state(session, faction_id, launch_policy_context).get("threshold_reduction", 0))
 	if session.day >= 5 and int(capital_state.get("active_projects", 0)) > 0:
 		threshold -= 1
 	return max(1, threshold)
@@ -7072,16 +7100,56 @@ static func _raid_threshold_for_strategy(
 static func _max_active_raids_for_strategy(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
-	faction_id: String
+	faction_id: String,
+	launch_policy_context: Dictionary = {}
 ) -> int:
 	var strategy = EnemyAdventureRulesScript.enemy_strategy(config, faction_id)
-	var capital_state = _faction_capital_state(session, faction_id)
+	var capital_state := _launch_policy_capital_state(session, faction_id, launch_policy_context)
 	return max(
 		1,
 		int(config.get("max_active_raids", 1))
 		+ EnemyAdventureRulesScript.strategy_int(strategy, "raid", "max_active_bonus", 0)
 		+ int(capital_state.get("max_active_raids_bonus", 0))
 	)
+
+static func _launch_policy_context(
+	_session: SessionStateStoreScript.SessionData,
+	_faction_id: String
+) -> Dictionary:
+	_spawn_profile_count("launch_policy_context_created")
+	return {}
+
+static func _launch_policy_capital_state(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	launch_policy_context: Dictionary = {}
+) -> Dictionary:
+	var cached = launch_policy_context.get("capital_state", null)
+	if cached is Dictionary:
+		_spawn_profile_count("launch_policy_capital_state_reused")
+		return cached
+	var started_usec := _spawn_profile_timer()
+	var loaded := _faction_capital_state(session, faction_id)
+	_spawn_profile_add_ms("launch_policy_capital_state_ms", started_usec)
+	_spawn_profile_count("launch_policy_capital_state_loaded")
+	launch_policy_context["capital_state"] = loaded
+	return loaded
+
+static func _launch_policy_front_state(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	launch_policy_context: Dictionary = {}
+) -> Dictionary:
+	var cached = launch_policy_context.get("front_state", null)
+	if cached is Dictionary:
+		_spawn_profile_count("launch_policy_front_state_reused")
+		return cached
+	var started_usec := _spawn_profile_timer()
+	var loaded := _faction_front_state(session, faction_id)
+	_spawn_profile_add_ms("launch_policy_front_state_ms", started_usec)
+	_spawn_profile_count("launch_policy_front_state_loaded")
+	launch_policy_context["front_state"] = loaded
+	return loaded
 
 static func _recruit_priority(unit_id: String, config: Dictionary, faction_id: String) -> float:
 	var unit = ContentService.get_unit(unit_id)

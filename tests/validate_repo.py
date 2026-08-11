@@ -17596,6 +17596,7 @@ def validate_ai_hero_task_spawn_commander_selection(errors: list[str]) -> None:
             "saved_hero_task",
             "hero_task_state_live_persist_no_save_migration",
             "best_goal_tile_reuses_one_path_context",
+            "spawn_launch_policy_context_reuses_phase_local_capital_and_front",
         ):
             ensure(required_token in report_text, errors, f"AI hero task spawn commander selection report is missing token: {required_token}")
     if AI_HERO_TASK_SPAWN_COMMANDER_SELECTION_REPORT_DOC_PATH.exists():
@@ -21203,6 +21204,9 @@ def validate_hostile_empire_personality(errors: list[str]) -> None:
         "EnemyAdventureRulesScript.public_strategy_summary",
         "func _raid_threshold_for_strategy",
         "func _max_active_raids_for_strategy",
+        "func _launch_policy_context",
+        "launch_policy_capital_state_reused",
+        "launch_policy_front_state_reused",
         "func _recruit_priority",
         "Charter columns are pushing measured raids down the lanes",
         "Warbands are spilling forward in staggered packs",

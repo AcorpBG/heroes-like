@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `strategic-ai-spawn-launch-policy-context-reuse-10184`. Each faction spawn loop now lazily loads capital/front launch policy once, reuses it through candidate selection and pressure consumption, preserves no-town short-circuits and exact strict-Small behavior, and passes Linux/Windows package boots.
 - Current implementation slice: `combat-veilmourn-undertow-harpooner-damage-calibration-10184` (completed). Undertow Harpooners now use the common tier-four ranged `5-8` damage band, improving the authoritative matrix from `35 / 200.5 / 5 / 70.0 / 1.13` to `34 / 187.0 / 3 / 68.5 / 0.73` with zero structural failures.
 - Latest completed implementation slice: `combat-veilmourn-undertow-harpooner-damage-calibration-10184`. The exact week-two Mireclaw/Veilmourn row improves from `70/30` to `62.5/37.5`; all non-Veilmourn ordered rows remain exact and the 59-encounter live queue remains clear.
 - Latest completed implementation slice: `combat-brasshollow-foundry-saint-sustain-calibration-10184`. Focused `118/118`, all-live 100-seed balance, 59-encounter breadth, compatibility, editor, and repository gates pass; Veilmourn/Brasshollow remains explicitly unchanged at `67/33`.
