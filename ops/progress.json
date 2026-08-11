@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The strategic-AI best-goal-tile path-context reuse slice is complete. One immutable read context replaces repeated staging-tile path fingerprints, exact generated behavior is preserved, and Linux/Windows packaged boots pass. The full strategic-AI matrix and overall release readiness remain open.",
+  "currentNotes": "The strategic-AI virtual-front path-context reuse slice is complete. Synthetic support probes now share one exact path context, generated behavior and live-raid semantics remain exact, and Linux/Windows packaged boots pass. The full strategic-AI matrix and overall release readiness remain open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "strategic-ai-best-goal-tile-path-context-reuse-10184",
-  "currentSliceId": "strategic-ai-best-goal-tile-path-context-reuse-10184",
-  "currentSliceNotes": "Completed one-context best-goal-tile selection with direct legacy parity, exact two-seed generated behavior, bounded profile improvement, core/repository validation, and Linux/fresh-Wine packaged boot evidence.",
+  "currentSlice": "strategic-ai-virtual-front-path-context-reuse-10184",
+  "currentSliceId": "strategic-ai-virtual-front-path-context-reuse-10184",
+  "currentSliceNotes": "Completed virtual-probe-only path-context reuse with exact legacy candidate/launch-surface parity, exact two-seed behavior, bounded active-front phase improvement, core/repository validation, and Linux/fresh-Wine package boots.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Strategic AI Best Goal Tile Path Context Reuse",
-  "currentSliceUpdatedAt": "2026-08-11T09:04:06Z",
+  "currentSliceTitle": "Strategic AI Virtual Front Path Context Reuse",
+  "currentSliceUpdatedAt": "2026-08-11T09:10:49Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21486,6 +21486,87 @@
       "title": "Veilmourn Maskglass Finisher",
       "updatedAt": "2026-08-03T10:52:10Z",
       "completedAt": "2026-08-03T10:52:10Z"
+    },
+    {
+      "baselineChecks": [
+        "godot4 --headless --path . --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+        "HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=2 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=3 HEROES_STRATEGIC_AI_LONG_RUN_PRESSURE_FLOOR=0 godot4 --headless --path . --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+        "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+        "godot4 --headless --editor --quit --path .",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "Synthetic active-front support probes whose placement ids are absent from live encounter state reuse one path context across candidate fronts, reachability, and staging-tile choice; direct empty-context legacy candidate parity and launch-surface behavior remain exact; strict-Small seeds retain signatures 6a4530a2 and 2beabecf with exact events while active-front support time improves or holds; core, parse, repository, Linux, and Windows gates pass.",
+      "id": "strategic-ai-virtual-front-path-context-reuse-10184",
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_raid_regroup_retreat_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "live raid placement/path semantics, support scoring, target selection, launch thresholds, or public event changes",
+        "persistent path caches, save schema, generated-map generation, or Native RMG changes",
+        "full 100-seed eight-week completion or broad performance/release claims"
+      ],
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md Current strategic AI follow-up / strict Small enemy-turn bottleneck",
+      "purpose": "Remove duplicate equivalent path-surface construction for synthetic active-front support probes while preserving real live-raid path behavior.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "startedAt": "2026-08-11T09:05:53Z",
+      "status": "completed",
+      "title": "Strategic AI Virtual Front Path Context Reuse",
+      "updatedAt": "2026-08-11T09:10:49Z",
+      "completedAt": "2026-08-11T09:10:49Z",
+      "notes": "Synthetic active-front probes now construct one blank-placement path surface only when their reserved probe id is absent from live encounters, then reuse it across every candidate front plus reachability and best-staging-tile selection. Real live encounters keep the prior path calls. The focused regroup fixture matches the explicit empty-context legacy candidate exactly and preserves launch-surface load/reuse/consume behavior. Strict-Small seeds 001 and 002 retain signatures 6a4530a2 and 2beabecf, exact event counts, all six turns, and zero behavior bugs, stalls, unreachable targets, or integrity violations. Across the same six active-front phase samples, candidate time falls from 571 ms to 516 ms (95.2 to 86.0 ms average); broad row wall-clock noise is not claimed. Core, editor, repository, Linux release boot, and fresh-Wine Windows release boot pass. No save schema or Native RMG output changed.",
+      "evidence": {
+        "finding": "Virtual active-front probes reuse one context while exact legacy support candidate and generated behavior remain unchanged.",
+        "metrics": {
+          "virtual_path_context_legacy_match": true,
+          "launch_surface_all_origin_payloads_match": true,
+          "launch_surface_points_reused": 2,
+          "launch_surface_consumed": 1,
+          "generated_seed_count": 2,
+          "generated_turn_count": 3,
+          "generated_turns_completed": 6,
+          "seed_001_signature": "6a4530a2",
+          "seed_002_signature": "2beabecf",
+          "generated_behavior_bug_count": 0,
+          "generated_stalled_turn_count": 0,
+          "generated_unreachable_target_count": 0,
+          "generated_target_integrity_violation_count": 0,
+          "active_front_sample_count": 6,
+          "active_front_baseline_total_msec": 571,
+          "active_front_current_total_msec": 516,
+          "active_front_baseline_average_msec": 95.2,
+          "active_front_current_average_msec": 86.0,
+          "linux_export_boot_ok": true,
+          "windows_wine_export_boot_ok": true,
+          "save_version": 9
+        }
+      },
+      "validation": {
+        "status": "passed",
+        "updatedAt": "2026-08-11T09:10:49Z",
+        "commands": [
+          "godot4 --headless --path . --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+          "HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=2 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=3 HEROES_STRATEGIC_AI_LONG_RUN_PRESSURE_FLOOR=0 godot4 --headless --path . --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+          "godot4 --headless --editor --quit --path .",
+          "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+          "HEROES_PACKAGING_LINUX_ARTIFACT_DIR=/tmp/heroes-virtual-front-linux-package.Ep1hep python3 tests/packaging_linux_export_smoke.py",
+          "HEROES_PACKAGING_WINDOWS_ARTIFACT_DIR=/tmp/heroes-virtual-front-windows-package.HbaVwM python3 tests/packaging_windows_export_smoke.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ]
+      }
     },
     {
       "baselineChecks": [

@@ -1601,6 +1601,10 @@ static func ai_active_front_support_target_selection_plan(
 	var current_placement_id := String(raid.get("placement_id", ""))
 	var origin_pos := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
 	var resolved_encounters = session.overworld.get("resolved_encounters", [])
+	var virtual_probe_path_context := {}
+	if current_placement_id.begins_with("__active_front_support_probe:") \
+			and int(_find_encounter_by_placement(session, current_placement_id).get("index", -1)) < 0:
+		virtual_probe_path_context = _path_distance_surface_context(session, "", faction_id)
 	var best := {}
 	for front_value in session.overworld.get("encounters", []):
 		if not _is_active_raid(front_value, faction_id, resolved_encounters):
@@ -1610,7 +1614,15 @@ static func ai_active_front_support_target_selection_plan(
 			continue
 		if not _active_front_needs_support(front, config, faction_id):
 			continue
-		var candidate := _active_front_support_candidate(session, config, faction_id, front, origin_pos, current_placement_id)
+		var candidate := _active_front_support_candidate(
+			session,
+			config,
+			faction_id,
+			front,
+			origin_pos,
+			current_placement_id,
+			virtual_probe_path_context
+		)
 		if candidate.is_empty():
 			continue
 		if best.is_empty() or _active_front_support_candidate_beats(candidate, best):
@@ -1716,7 +1728,8 @@ static func _active_front_support_candidate(
 	faction_id: String,
 	front: Dictionary,
 	origin_pos: Vector2i,
-	current_placement_id: String
+	current_placement_id: String,
+	path_context: Dictionary = {}
 ) -> Dictionary:
 	var target_kind := String(front.get("target_kind", ""))
 	var target_id := String(front.get("target_placement_id", ""))
@@ -1807,10 +1820,14 @@ static func _active_front_support_candidate(
 			objective_anchor = target_is_objective_anchor(session, "artifact", target_id)
 	if goal_tiles.is_empty():
 		return {}
-	var goal_distance := _path_distance(session, origin_pos, goal_tiles, current_placement_id, faction_id)
+	var goal_distance := _path_distance_with_context(path_context, origin_pos, goal_tiles) \
+		if not path_context.is_empty() \
+		else _path_distance(session, origin_pos, goal_tiles, current_placement_id, faction_id)
 	if goal_distance >= 9999:
 		return {}
-	var goal_tile := _best_goal_tile(session, origin_pos, goal_tiles, faction_id)
+	var goal_tile := _best_goal_tile_with_path_context(path_context, origin_pos, goal_tiles) \
+		if not path_context.is_empty() \
+		else _best_goal_tile(session, origin_pos, goal_tiles, faction_id)
 	var reason_codes := ["active_front_support", "army_consolidation"]
 	for code in [
 		"town_siege",

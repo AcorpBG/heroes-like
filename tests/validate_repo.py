@@ -18565,6 +18565,8 @@ def validate_ai_raid_regroup_retreat(errors: list[str]) -> None:
         "static func _ai_commander_task_fit_context",
         "static func _ai_commander_task_fit_bonus_from_context",
         "_target_candidates(session, config, origin_pos, false, path_context)",
+        'current_placement_id.begins_with("__active_front_support_probe:")',
+        "virtual_probe_path_context",
     ):
         ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing task-planner context reuse token: {required_token}")
     if AI_RAID_REGROUP_RETREAT_REPORT_SCRIPT_PATH.exists():
@@ -18600,6 +18602,7 @@ def validate_ai_raid_regroup_retreat(errors: list[str]) -> None:
             "active_front_support_skips_empty_front_probe_construction",
             "no_active_front_skip_count",
             "commander_probes_loaded",
+            "virtual_path_context_legacy_match",
         ):
             ensure(required_token in report_text, errors, f"AI raid regroup/retreat report is missing token: {required_token}")
     if AI_RAID_REGROUP_RETREAT_REPORT_DOC_PATH.exists():
