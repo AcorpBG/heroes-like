@@ -3524,7 +3524,7 @@ static func describe_end_turn_forecast(session: SessionStateStoreScript.SessionD
 	var lines := [
 		"Next day: Day %d | %s | %s" % [
 			next_day,
-			_end_turn_income_forecast_line(session),
+			_end_turn_income_forecast_line(session, next_day),
 			_end_turn_muster_forecast_line(session, next_day),
 		],
 		"- Movement: %s" % _end_turn_movement_forecast_line(session),
@@ -3542,7 +3542,7 @@ static func describe_end_turn_forecast_compact(session: SessionStateStoreScript.
 	var next_day := session.day + 1
 	var parts := [
 		"Day %d" % next_day,
-		_end_turn_income_forecast_line(session),
+		_end_turn_income_forecast_line(session, next_day),
 		_end_turn_movement_forecast_line(session),
 	]
 	var risk_line := _end_turn_risk_forecast_line(session)
@@ -4318,14 +4318,25 @@ static func _resource_site_control_income_for_day(site: Dictionary, day: int) ->
 static func _resource_site_income_cadence_label(site: Dictionary) -> String:
 	return "Weekly" if String(site.get("control_income_cadence", "daily")) == "weekly" else "Daily"
 
-static func _player_daily_income_projection(session: SessionStateStoreScript.SessionData) -> Dictionary:
+static func _player_daily_income_projection(
+	session: SessionStateStoreScript.SessionData,
+	next_day: int
+) -> Dictionary:
 	var town_income := _empty_live_resource_stockpile()
-	for town in session.overworld.get("towns", []):
+	var towns = session.overworld.get("towns", [])
+	for index in range(towns.size()):
+		var town = towns[index]
 		if not (town is Dictionary) or String(town.get("owner", "neutral")) != "player":
 			continue
+		var projection := _project_player_town_at_daybreak(session, town, index, next_day)
+		var projected_session: SessionStateStoreScript.SessionData = projection.get("session", session)
+		var projected_town: Dictionary = projection.get("town", town)
 		town_income = _add_resource_sets(
 			town_income,
-			DifficultyRulesScript.scale_income_resources(session, _calculate_town_income(town, session))
+			DifficultyRulesScript.scale_income_resources(
+				projected_session,
+				_calculate_town_income(projected_town, projected_session)
+			)
 		)
 	var hero_state = session.overworld.get("hero", {})
 	var artifact_income = DifficultyRulesScript.scale_income_resources(
@@ -4335,15 +4346,15 @@ static func _player_daily_income_projection(session: SessionStateStoreScript.Ses
 	var specialty_income = HeroProgressionRulesScript.daily_income_bonus(hero_state)
 	var site_income = DifficultyRulesScript.scale_income_resources(
 		session,
-		controlled_resource_site_income(session, "player", int(session.day) + 1)
+		controlled_resource_site_income(session, "player", next_day)
 	)
 	return _add_resource_sets(
 		_add_resource_sets(_add_resource_sets(town_income, artifact_income), specialty_income),
 		site_income
 	)
 
-static func _end_turn_income_forecast_line(session: SessionStateStoreScript.SessionData) -> String:
-	var income_summary := _describe_resource_delta(_player_daily_income_projection(session))
+static func _end_turn_income_forecast_line(session: SessionStateStoreScript.SessionData, next_day: int) -> String:
+	var income_summary := _describe_resource_delta(_player_daily_income_projection(session, next_day))
 	if income_summary == "":
 		return "income steady"
 	return "income %s" % income_summary
@@ -4351,10 +4362,15 @@ static func _end_turn_income_forecast_line(session: SessionStateStoreScript.Sess
 static func _end_turn_muster_forecast_line(session: SessionStateStoreScript.SessionData, next_day: int) -> String:
 	if is_weekly_growth_day(next_day):
 		var previews := []
-		for town in session.overworld.get("towns", []):
+		var towns = session.overworld.get("towns", [])
+		for index in range(towns.size()):
+			var town = towns[index]
 			if not (town is Dictionary) or String(town.get("owner", "neutral")) != "player":
 				continue
-			var growth_summary := _describe_recruit_delta(town_weekly_growth(town, session))
+			var projection := _project_player_town_at_daybreak(session, town, index, next_day)
+			var projected_session: SessionStateStoreScript.SessionData = projection.get("session", session)
+			var projected_town: Dictionary = projection.get("town", town)
+			var growth_summary := _describe_recruit_delta(town_weekly_growth(projected_town, projected_session))
 			if growth_summary != "":
 				previews.append("%s %s" % [_town_name(town), growth_summary])
 			if previews.size() >= 2:
@@ -4368,6 +4384,47 @@ static func _end_turn_muster_forecast_line(session: SessionStateStoreScript.Sess
 		days_until,
 		"" if days_until == 1 else "s",
 	]
+
+static func _project_player_town_at_daybreak(
+	session: SessionStateStoreScript.SessionData,
+	town: Dictionary,
+	town_index: int,
+	next_day: int
+) -> Dictionary:
+	var live_towns = session.overworld.get("towns", [])
+	if not (live_towns is Array) or town_index < 0 or town_index >= live_towns.size():
+		return {"session": session, "town": town}
+
+	var projected_session := SessionStateStoreScript.SessionData.new()
+	projected_session.save_version = session.save_version
+	projected_session.session_id = session.session_id
+	projected_session.scenario_id = session.scenario_id
+	projected_session.hero_id = session.hero_id
+	projected_session.day = next_day
+	projected_session.difficulty = session.difficulty
+	projected_session.launch_mode = session.launch_mode
+	projected_session.game_state = session.game_state
+	projected_session.scenario_status = session.scenario_status
+	projected_session.scenario_summary = session.scenario_summary
+	projected_session.overworld = session.overworld.duplicate(false)
+	projected_session.battle = session.battle.duplicate(false)
+	projected_session.flags = session.flags.duplicate(false)
+
+	var projected_towns: Array = live_towns.duplicate(false)
+	var projected_town: Dictionary = town.duplicate(true)
+	projected_towns[town_index] = projected_town
+	projected_session.overworld["towns"] = projected_towns
+
+	var occupation_result := _advance_town_occupation(projected_session, projected_town)
+	projected_town = occupation_result.get("town", projected_town)
+	projected_towns[town_index] = projected_town
+	projected_session.overworld["towns"] = projected_towns
+
+	var recovery_result := _advance_town_recovery(projected_session, projected_town)
+	projected_town = recovery_result.get("town", projected_town)
+	projected_towns[town_index] = projected_town
+	projected_session.overworld["towns"] = projected_towns
+	return {"session": projected_session, "town": projected_town}
 
 static func _end_turn_movement_forecast_line(session: SessionStateStoreScript.SessionData) -> String:
 	var max_movement := _movement_max_from_hero(session.overworld.get("hero", {}), session)

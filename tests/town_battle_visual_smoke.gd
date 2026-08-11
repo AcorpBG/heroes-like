@@ -1328,6 +1328,8 @@ func _assert_player_weekly_growth_forecast_parity() -> bool:
 		"fired_hook_ids": ["riverwatch_relief_column"],
 		"event_log": [],
 	}
+	if not _assert_daybreak_town_forecast_transition_parity(base_session):
+		return false
 
 	var raw_reference := {}
 	var metrics_reference := {}
@@ -1493,6 +1495,389 @@ func _assert_player_weekly_growth_forecast_parity() -> bool:
 		push_error("Town smoke: Build changed save, cache, settings, or route authority.")
 		return false
 	return true
+
+func _assert_daybreak_town_forecast_transition_parity(base_session) -> bool:
+	var transition_cases := [
+		{"label": "recovery-partial", "day": 7, "recovery": 8, "occupation": 0, "locked": 0, "rank": 0},
+		{"label": "recovery-clear", "day": 7, "recovery": 1, "occupation": 0, "locked": 0, "rank": 1},
+		{"label": "occupation-partial", "day": 7, "recovery": 0, "occupation": 20, "locked": 2, "rank": 2},
+		{"label": "occupation-clear", "day": 7, "recovery": 0, "occupation": 1, "locked": 2, "rank": 0},
+		{"label": "combined-occupation-before-recovery", "day": 7, "recovery": 1, "occupation": 3, "locked": 0, "rank": 1},
+		{"label": "next-day-response-expiry", "day": 7, "recovery": 5, "occupation": 0, "locked": 0, "rank": 2, "response_expiry": true},
+		{"label": "nonweekly-transition", "day": 8, "recovery": 1, "occupation": 1, "locked": 2, "rank": 1},
+	]
+	for case_value in transition_cases:
+		var case: Dictionary = case_value
+		var session = _clone_session(base_session)
+		session.day = int(case.get("day", 7))
+		_set_muster_captain_rank(session, int(case.get("rank", 0)))
+		_configure_daybreak_transition_town(
+			session,
+			int(case.get("recovery", 0)),
+			int(case.get("occupation", 0)),
+			int(case.get("locked", 0))
+		)
+		if bool(case.get("response_expiry", false)):
+			_add_daybreak_response_expiry_fixture(session)
+		OverworldRules.normalize_overworld_state(session)
+		var town_index := _first_player_town_index(session)
+		var town := _first_player_town(session)
+		var next_day := int(session.day) + 1
+		var recruits_before: Dictionary = town.get("available_recruits", {}).duplicate(true)
+		var current_growth: Dictionary = OverworldRules.town_weekly_growth(town, session)
+		var recovery_before := OverworldRules.town_recovery_state(session, town)
+		var occupation_before := OverworldRules.town_occupation_state(session, town)
+		var authority_before := JSON.stringify(session.to_dict())
+		var peripheral_before := _weekly_growth_peripheral_authority()
+
+		var projection: Dictionary = OverworldRules._project_player_town_at_daybreak(session, town, town_index, next_day)
+		var projected_session = projection.get("session")
+		var projected_town: Dictionary = projection.get("town", {})
+		var manual_session = _clone_session(session)
+		manual_session.day = next_day
+		OverworldRules._advance_all_town_occupations(manual_session)
+		OverworldRules._advance_all_town_recovery(manual_session)
+		var manual_town := _first_town_by_placement(manual_session, String(town.get("placement_id", "")))
+		if projected_session == null or projected_session == session \
+				or int(projected_session.day) != next_day \
+				or int(projected_session.save_version) != int(session.save_version) \
+				or String(projected_session.session_id) != String(session.session_id) \
+				or String(projected_session.scenario_id) != String(session.scenario_id) \
+				or String(projected_session.hero_id) != String(session.hero_id) \
+				or String(projected_session.difficulty) != String(session.difficulty) \
+				or String(projected_session.launch_mode) != String(session.launch_mode) \
+				or String(projected_session.game_state) != String(session.game_state) \
+				or String(projected_session.scenario_status) != String(session.scenario_status) \
+				or String(projected_session.scenario_summary) != String(session.scenario_summary) \
+				or projected_town != manual_town \
+				or projected_session.overworld.get("towns", [])[town_index] != projected_town:
+			push_error("Town smoke: %s direct daybreak projection did not insert the exact transitioned town into its isolated next-day session: projected=%s manual=%s." % [case.get("label", "case"), projected_town, manual_town])
+			return false
+		var expected_recovery_pressure: int = max(0, int(recovery_before.get("pressure", 0)) - int(recovery_before.get("relief_per_day", 1)))
+		var expected_occupation_pressure: int = max(0, int(occupation_before.get("pressure", 0)) - int(occupation_before.get("relief_per_day", 0)))
+		if int(OverworldRules.town_recovery_state(projected_session, projected_town).get("pressure", -1)) != expected_recovery_pressure \
+				or int(OverworldRules.town_occupation_state(projected_session, projected_town).get("pressure", -1)) != expected_occupation_pressure:
+			push_error("Town smoke: %s daybreak transition pressure/order drifted: recovery=%s occupation=%s projected=%s." % [case.get("label", "case"), recovery_before, occupation_before, projected_town])
+			return false
+		var projected_raw: Dictionary = OverworldRules._town_weekly_growth(projected_town, projected_session)
+		var projected_growth: Dictionary = OverworldRules.town_weekly_growth(projected_town, projected_session)
+		var expected_scaled: Dictionary = HeroProgressionRules.scale_recruit_growth(projected_session.overworld.get("hero", {}), projected_raw)
+		if projected_growth != expected_scaled:
+			push_error("Town smoke: %s projected player growth did not scale its transitioned raw payload exactly once: raw=%s expected=%s actual=%s." % [case.get("label", "case"), projected_raw, expected_scaled, projected_growth])
+			return false
+		for unit_id in projected_raw.keys():
+			var rank := int(case.get("rank", 0))
+			var rounded := int(round(float(int(projected_raw.get(unit_id, 0))) * (1.0 + float(rank) * 0.2)))
+			if int(projected_growth.get(unit_id, -1)) != rounded:
+				push_error("Town smoke: %s rank-%d projected rounding drifted for %s: raw=%s projected=%s." % [case.get("label", "case"), rank, unit_id, projected_raw, projected_growth])
+				return false
+		var transition_delta := _recruit_pool_delta(recruits_before, projected_town.get("available_recruits", {}))
+		if int(case.get("occupation", 0)) <= 0 or expected_occupation_pressure > 0:
+			if not transition_delta.is_empty():
+				push_error("Town smoke: %s released occupation reserves before pacification cleared: %s." % [case.get("label", "case"), transition_delta])
+				return false
+		elif int(transition_delta.get("unit_neutral_hearthbow_carriers", 0)) != int(case.get("locked", 0)):
+			push_error("Town smoke: %s did not separately release its exact locked occupation reserve: %s." % [case.get("label", "case"), transition_delta])
+			return false
+		if bool(case.get("response_expiry", false)):
+			var live_node: Dictionary = session.overworld.get("resource_nodes", [])[0]
+			var projected_node: Dictionary = projected_session.overworld.get("resource_nodes", [])[0]
+			var site := ContentService.get_resource_site(String(live_node.get("site_id", "")))
+			var current_response := OverworldRules._resource_site_response_state(session, live_node, site)
+			var projected_response := OverworldRules._resource_site_response_state(projected_session, projected_node, site)
+			var current_logistics := OverworldRules._town_logistics_state(session, town)
+			var projected_logistics := OverworldRules._town_logistics_state(projected_session, projected_town)
+			if not bool(current_response.get("active", false)) \
+					or bool(projected_response.get("active", true)) \
+					or int(current_logistics.get("response_count", 0)) != 1 \
+					or int(projected_logistics.get("response_count", -1)) != 0 \
+					or int(current_logistics.get("response_growth_bonus_percent", 0)) <= 0 \
+					or int(projected_logistics.get("response_growth_bonus_percent", -1)) != 0 \
+					or current_growth == projected_growth:
+				push_error("Town smoke: next-day response expiry did not remove current-day response growth from the projected payload: current=%s projected=%s." % [current_growth, projected_growth])
+				return false
+
+		var expected_income: Dictionary = _manual_daybreak_income_projection(manual_session)
+		var income_summary := OverworldRules._describe_resource_delta(expected_income)
+		var growth_summary := OverworldRules._describe_recruit_delta(projected_growth)
+		var full_forecast := OverworldRules.describe_end_turn_forecast(session)
+		var compact_forecast := OverworldRules.describe_end_turn_forecast_compact(session)
+		if not full_forecast.contains("income %s" % income_summary) or not compact_forecast.contains("income %s" % income_summary):
+			push_error("Town smoke: %s full/compact forecast did not copy exact projected daybreak income %s: full=%s compact=%s." % [case.get("label", "case"), expected_income, full_forecast, compact_forecast])
+			return false
+		if compact_forecast.to_lower().contains("muster"):
+			push_error("Town smoke: %s compact forecast unexpectedly exposed muster copy: %s." % [case.get("label", "case"), compact_forecast])
+			return false
+		var weekly := OverworldRules.is_weekly_growth_day(next_day)
+		if weekly:
+			if growth_summary == "" and not full_forecast.contains("weekly muster resolves"):
+				push_error("Town smoke: %s zero-growth full forecast omitted the explicit weekly-muster resolution: %s." % [case.get("label", "case"), full_forecast])
+				return false
+			if growth_summary != "" and (not full_forecast.contains("weekly muster") or not full_forecast.contains(growth_summary)):
+				push_error("Town smoke: %s full forecast omitted exact projected town muster %s: %s." % [case.get("label", "case"), projected_growth, full_forecast])
+				return false
+		if not weekly and (full_forecast.contains(growth_summary) or not full_forecast.contains("muster Day")):
+			push_error("Town smoke: %s nonweekly full forecast exposed growth instead of cadence: %s." % [case.get("label", "case"), full_forecast])
+			return false
+		var fallback: Dictionary = OverworldRules._project_player_town_at_daybreak(session, town, -1, next_day)
+		if fallback.keys().size() != 2 or fallback.get("session") != session or fallback.get("town", {}) != town:
+			push_error("Town smoke: %s invalid projection index did not return the exact live fallback pair: %s." % [case.get("label", "case"), fallback])
+			return false
+		if JSON.stringify(session.to_dict()) != authority_before or _weekly_growth_peripheral_authority() != peripheral_before:
+			push_error("Town smoke: %s direct/full/compact forecast mutated live or shared nested authority." % case.get("label", "case"))
+			return false
+		if int(session.save_version) != 9 or int(projected_session.save_version) != 9 or int(SessionState.SAVE_VERSION) != 9:
+			push_error("Town smoke: %s daybreak projection changed save version 9 authority." % case.get("label", "case"))
+			return false
+
+		var realized_session = _clone_session(session)
+		var realized_before: Dictionary = _first_player_town(realized_session).get("available_recruits", {}).duplicate(true)
+		var realized_result: Dictionary = OverworldRules.end_turn(realized_session)
+		var realized_town := _first_town_by_placement(realized_session, String(town.get("placement_id", "")))
+		var realized_delta := _recruit_pool_delta(realized_before, realized_town.get("available_recruits", {}))
+		var expected_delta := OverworldRules._add_recruit_growth(transition_delta, projected_growth) if weekly else transition_delta
+		expected_delta = _recruit_pool_delta({}, expected_delta)
+		var expected_weekly_summary := (
+			"%s (%s)" % [
+				String(ContentService.get_town(String(town.get("town_id", ""))).get("name", "Town")),
+				growth_summary,
+			]
+			if weekly and growth_summary != ""
+			else ""
+		)
+		if realized_delta != expected_delta \
+				or String(realized_result.get("resource_income_summary", "")) != income_summary \
+				or String(realized_result.get("weekly_muster_summary", "")) != expected_weekly_summary:
+			push_error("Town smoke: %s projected income/town growth diverged from live daybreak: income=%s growth=%s delta=%s result=%s." % [case.get("label", "case"), expected_income, projected_growth, realized_delta, realized_result])
+			return false
+
+	if not _assert_two_town_daybreak_preview_order(base_session):
+		return false
+	if not _assert_daybreak_muster_effect_separation(base_session):
+		return false
+	return true
+
+func _configure_daybreak_transition_town(session, recovery_pressure: int, occupation_pressure: int, locked_count: int) -> void:
+	var towns: Array = session.overworld.get("towns", [])
+	for index in range(towns.size()):
+		if not (towns[index] is Dictionary) or String(towns[index].get("owner", "neutral")) != "player":
+			continue
+		var town: Dictionary = towns[index]
+		town["recovery"] = {"pressure": recovery_pressure, "last_event_day": session.day, "source": "daybreak-forecast-test"}
+		town["occupation"] = (
+			{
+				"state": "pacifying",
+				"faction_id": "faction_mireclaw",
+				"pressure": occupation_pressure,
+				"initial_pressure": occupation_pressure,
+				"start_day": max(1, int(session.day) - 1),
+				"last_event_day": int(session.day),
+				"last_owner": "enemy",
+				"source": "daybreak-forecast-test",
+				"locked_recruits": {"unit_neutral_hearthbow_carriers": locked_count} if locked_count > 0 else {},
+			}
+			if occupation_pressure > 0
+			else {}
+		)
+		towns[index] = town
+		break
+	session.overworld["towns"] = towns
+
+func _add_daybreak_response_expiry_fixture(session) -> void:
+	var town := _first_player_town(session)
+	session.overworld["resource_nodes"] = [
+		{
+			"placement_id": "daybreak_response_expiry",
+			"site_id": "site_brightwood_sawmill",
+			"x": int(town.get("x", 0)),
+			"y": int(town.get("y", 0)),
+			"collected_by_faction_id": "player",
+			"response_last_day": int(session.day) - 2,
+			"response_until_day": int(session.day),
+			"response_security_rating": 1,
+		}
+	]
+
+func _manual_daybreak_income_projection(transitioned_session) -> Dictionary:
+	var total := OverworldRules._empty_live_resource_stockpile()
+	for town_value in transitioned_session.overworld.get("towns", []):
+		if not (town_value is Dictionary) or String(town_value.get("owner", "neutral")) != "player":
+			continue
+		var town: Dictionary = town_value
+		total = OverworldRules._add_resource_sets(
+			total,
+			DifficultyRules.scale_income_resources(
+				transitioned_session,
+				OverworldRules.town_income(town, transitioned_session)
+			)
+		)
+	var hero: Dictionary = transitioned_session.overworld.get("hero", {})
+	total = OverworldRules._add_resource_sets(
+		total,
+		DifficultyRules.scale_income_resources(
+			transitioned_session,
+			ArtifactRules.aggregate_bonuses(hero).get("daily_income", {})
+		)
+	)
+	total = OverworldRules._add_resource_sets(total, HeroProgressionRules.daily_income_bonus(hero))
+	total = OverworldRules._add_resource_sets(
+		total,
+		DifficultyRules.scale_income_resources(
+			transitioned_session,
+			OverworldRules.controlled_resource_site_income(transitioned_session, "player", int(transitioned_session.day))
+		)
+	)
+	return total
+
+func _first_player_town_index(session) -> int:
+	var towns: Array = session.overworld.get("towns", [])
+	for index in range(towns.size()):
+		if towns[index] is Dictionary and String(towns[index].get("owner", "")) == "player":
+			return index
+	return -1
+
+func _assert_two_town_daybreak_preview_order(base_session) -> bool:
+	var session = _clone_session(base_session)
+	var towns: Array = session.overworld.get("towns", [])
+	if towns.size() < 2:
+		push_error("Town smoke: two-town daybreak preview fixture is missing its second town.")
+		return false
+	for index in range(towns.size()):
+		if towns[index] is Dictionary:
+			var town: Dictionary = towns[index]
+			town["owner"] = "player"
+			town["recovery"] = {"pressure": index + 1, "source": "preview-order"}
+			town["occupation"] = {}
+			towns[index] = town
+	var third: Dictionary = towns[1].duplicate(true)
+	third["placement_id"] = "daybreak_preview_third"
+	third["town_id"] = "town_prismhearth"
+	third["x"] = 4
+	third["y"] = 4
+	third["recovery"] = {"pressure": 3, "source": "preview-order"}
+	towns.append(third)
+	session.overworld["towns"] = towns
+	OverworldRules.normalize_overworld_state(session)
+	towns = session.overworld.get("towns", [])
+	var authority_before := JSON.stringify(session.to_dict())
+	var peripheral_before := _weekly_growth_peripheral_authority()
+	var forecast := OverworldRules._end_turn_muster_forecast_line(session, int(session.day) + 1)
+	var expected_tokens := []
+	for index in range(3):
+		var town: Dictionary = towns[index]
+		var projection: Dictionary = OverworldRules._project_player_town_at_daybreak(session, town, index, int(session.day) + 1)
+		var projected_session = projection.get("session")
+		var projected_town: Dictionary = projection.get("town", {})
+		var name := String(ContentService.get_town(String(town.get("town_id", ""))).get("name", ""))
+		var summary := OverworldRules._describe_recruit_delta(OverworldRules.town_weekly_growth(projected_town, projected_session))
+		expected_tokens.append("%s %s" % [name, summary])
+	var first_position := forecast.find(String(expected_tokens[0]))
+	var second_position := forecast.find(String(expected_tokens[1]))
+	if first_position < 0 or second_position <= first_position or forecast.contains(String(expected_tokens[2])):
+		push_error("Town smoke: full daybreak muster preview did not preserve town-array order and exact two-town cap: expected=%s forecast=%s." % [expected_tokens, forecast])
+		return false
+	if JSON.stringify(session.to_dict()) != authority_before or _weekly_growth_peripheral_authority() != peripheral_before:
+		push_error("Town smoke: two-town preview order/cap read changed live or shared nested authority.")
+		return false
+	return true
+
+func _assert_daybreak_muster_effect_separation(base_session) -> bool:
+	var session = _clone_session(base_session)
+	session.day = 7
+	_set_muster_captain_rank(session, 1)
+	_configure_daybreak_transition_town(session, 1, 1, 2)
+	session.overworld["scenario_script_state"] = {
+		"fired_hook_ids": [
+			"north_road_salvage",
+			"duskfen_counterstroke",
+			"mire_cleansing_boon",
+			"riverwatch_bell_recall",
+			"reed_totem_host_rallies",
+		],
+		"event_log": [],
+	}
+	var town := _first_player_town(session)
+	var town_id := String(town.get("placement_id", ""))
+	session.overworld["resource_nodes"] = [
+		{
+			"placement_id": "daybreak_effect_separation_site",
+			"site_id": "site_free_company_yard",
+			"x": int(town.get("x", 0)),
+			"y": int(town.get("y", 0)),
+			"collected_by_faction_id": "player",
+			"delivery_controller_id": "player",
+			"delivery_origin_town_id": town_id,
+			"delivery_target_kind": "town",
+			"delivery_target_id": town_id,
+			"delivery_target_label": "Riverwatch Hold",
+			"delivery_arrival_day": 8,
+			"delivery_manifest": {"unit_neutral_cliffhawk_wardens": 2},
+		}
+	]
+	OverworldRules.normalize_overworld_state(session)
+	town = _first_player_town(session)
+	var authority_before := JSON.stringify(session.to_dict())
+	var peripheral_before := _weekly_growth_peripheral_authority()
+	var projection: Dictionary = OverworldRules._project_player_town_at_daybreak(session, town, _first_player_town_index(session), 8)
+	var projected_session = projection.get("session")
+	var projected_town: Dictionary = projection.get("town", {})
+	var town_growth: Dictionary = OverworldRules.town_weekly_growth(projected_town, projected_session)
+	var occupation_release := _recruit_pool_delta(town.get("available_recruits", {}), projected_town.get("available_recruits", {}))
+	var full_forecast := OverworldRules.describe_end_turn_forecast(session)
+	if not full_forecast.contains(OverworldRules._describe_recruit_delta(town_growth)) \
+			or full_forecast.contains("Roadwardens") \
+			or full_forecast.to_lower().contains("relief column"):
+		push_error("Town smoke: full town forecast conflated town growth with site muster or scenario hook effects: %s." % full_forecast)
+		return false
+	if JSON.stringify(session.to_dict()) != authority_before or _weekly_growth_peripheral_authority() != peripheral_before:
+		push_error("Town smoke: separated site/hook/reserve/delivery forecast changed live or shared nested authority.")
+		return false
+
+	var recruits_before: Dictionary = town.get("available_recruits", {}).duplicate(true)
+	var resources_before: Dictionary = session.overworld.get("resources", {}).duplicate(true)
+	var garrison_before := _garrison_unit_count(town, "unit_neutral_cliffhawk_wardens")
+	var result: Dictionary = OverworldRules.end_turn(session)
+	var town_after := _first_town_by_placement(session, town_id)
+	var recruit_delta := _recruit_pool_delta(recruits_before, town_after.get("available_recruits", {}))
+	var expected_delta := OverworldRules._add_recruit_growth(occupation_release, town_growth)
+	expected_delta = OverworldRules._add_recruit_growth(expected_delta, {"unit_neutral_roadwardens": 1})
+	expected_delta = OverworldRules._add_recruit_growth(expected_delta, {"unit_river_guard": 3})
+	var income_projection: Dictionary = _manual_daybreak_income_projection(projected_session)
+	var expected_resource_delta := _resource_pool_delta(
+		{},
+		OverworldRules._add_resource_sets(income_projection, {"gold": 250, "wood": 1, "ore": 1})
+	)
+	var actual_resource_delta := _resource_pool_delta(resources_before, session.overworld.get("resources", {}))
+	var weekly_summary := String(result.get("weekly_muster_summary", ""))
+	var town_summary := String(result.get("town_economy_summary", ""))
+	if recruit_delta != expected_delta \
+			or int(occupation_release.get("unit_neutral_hearthbow_carriers", 0)) != 2 \
+			or int(_garrison_unit_count(town_after, "unit_neutral_cliffhawk_wardens")) - garrison_before != 2 \
+			or actual_resource_delta != expected_resource_delta \
+			or not weekly_summary.contains(OverworldRules._describe_recruit_delta(town_growth)) \
+			or not weekly_summary.contains("Roadwardens") \
+			or weekly_summary.contains("+3 River Guard") \
+			or not town_summary.to_lower().contains("held lev") \
+			or not town_summary.to_lower().contains("convoy reaches") \
+			or not String(result.get("message", "")).to_lower().contains("relief column"):
+		push_error("Town smoke: occupation release, town/site muster, scenario hook, or reserve delivery effects were not separately exact: recruits=%s expected=%s resources=%s expected_resources=%s result=%s." % [recruit_delta, expected_delta, actual_resource_delta, expected_resource_delta, result])
+		return false
+	return true
+
+func _garrison_unit_count(town: Dictionary, unit_id: String) -> int:
+	var total := 0
+	for stack_value in town.get("garrison", []):
+		if stack_value is Dictionary and String(stack_value.get("unit_id", "")) == unit_id:
+			total += int(stack_value.get("count", 0))
+	return total
+
+func _resource_pool_delta(before: Dictionary, after: Dictionary) -> Dictionary:
+	var delta := {}
+	for resource_id in OverworldRules._resource_keys_for_payload(after):
+		var amount := int(after.get(resource_id, 0)) - int(before.get(resource_id, 0))
+		if amount != 0:
+			delta[String(resource_id)] = amount
+	return delta
 
 func _set_muster_captain_rank(session, rank: int) -> void:
 	var specialties := []
