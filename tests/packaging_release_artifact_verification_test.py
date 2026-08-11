@@ -76,10 +76,10 @@ BEGIN
   BEGIN
     BLOCK "040904B0"
     BEGIN
-      VALUE "CompanyName", "Heroes Like"
-      VALUE "FileDescription", "Heroes Like"
+      VALUE "CompanyName", "Aurelion Reach contributors"
+      VALUE "FileDescription", "Aurelion Reach"
       VALUE "FileVersion", "{numeric_version}"
-      VALUE "ProductName", "Heroes Like"
+      VALUE "ProductName", "Aurelion Reach"
       VALUE "ProductVersion", "{numeric_version}"
     END
   END
@@ -223,8 +223,8 @@ END
         self.assertEqual(resource["product_version"], expected_numeric)
         self.assertEqual(resource["strings"]["FileVersion"], expected_numeric)
         self.assertEqual(resource["strings"]["ProductVersion"], expected_numeric)
-        self.assertEqual(resource["strings"]["ProductName"], "Heroes Like")
-        self.assertEqual(resource["strings"]["FileDescription"], "Heroes Like")
+        self.assertEqual(resource["strings"]["ProductName"], "Aurelion Reach")
+        self.assertEqual(resource["strings"]["FileDescription"], "Aurelion Reach")
         self.assertEqual(
             package_release_module.validate_windows_export_preset_version(VERSION),
             expected_numeric,
@@ -509,6 +509,7 @@ END
         self.assertIn("install.cmd", names)
         self.assertIn("uninstall.cmd", names)
         self.assertIn("HEROES_LIKE_INSTALL_DIR", install_cmd)
+        self.assertIn("Aurelion Reach.cmd", install_cmd)
         self.assertIn("Heroes Like.cmd", install_cmd)
         setup_head = windows_installer.read_bytes()[:4096]
         self.assertEqual(setup_head[:2], b"MZ")
@@ -519,8 +520,8 @@ END
             f'VIProductVersion "{package_release_module.windows_numeric_version(VERSION)}"',
             f'VIAddVersionKey /LANG=1033 "FileVersion" "{package_release_module.windows_numeric_version(VERSION)}"',
             f'VIAddVersionKey /LANG=1033 "ProductVersion" "{package_release_module.windows_numeric_version(VERSION)}"',
-            'VIAddVersionKey /LANG=1033 "ProductName" "Heroes Like"',
-            'VIAddVersionKey /LANG=1033 "FileDescription" "Heroes Like"',
+            'VIAddVersionKey /LANG=1033 "ProductName" "Aurelion Reach"',
+            'VIAddVersionKey /LANG=1033 "FileDescription" "Aurelion Reach"',
             "SetCompressor zlib",
             "SetCompress off",
             "CRCCheck off",
@@ -539,8 +540,8 @@ END
             'verify "$INSTDIR\\release-manifest.json" "$INSTDIR" windows-x86_64',
             'release-manifest.json .heroes-like-install install-ownership.ini uninstall.exe',
             'FileWrite $TxHandle "heroes-like-user-local-install-v1',
-            'CreateShortcut "$SMPROGRAMS\\Heroes Like\\Heroes Like.lnk"',
-            'CreateShortcut "$SMPROGRAMS\\Heroes Like\\Uninstall Heroes Like.lnk"',
+            'CreateShortcut "$SMPROGRAMS\\Aurelion Reach\\Aurelion Reach.lnk"',
+            'CreateShortcut "$SMPROGRAMS\\Aurelion Reach\\Uninstall Aurelion Reach.lnk"',
             "Function SnapshotRegistration",
             "Function RestoreRegistration",
             "Function PublishRegistration",
@@ -549,9 +550,9 @@ END
             "Call PublishRegistration",
             "Call RestoreRegistration",
             "Call RestoreShortcuts",
-            'WriteRegStr HKCU "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Heroes Like" "DisplayName" "Heroes Like"',
+            'WriteRegStr HKCU "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Heroes Like" "DisplayName" "Aurelion Reach"',
             f'WriteRegStr HKCU "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Heroes Like" "DisplayVersion" "{VERSION}"',
-            'WriteRegStr HKCU "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Heroes Like" "Publisher" "Heroes Like"',
+            'WriteRegStr HKCU "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Heroes Like" "Publisher" "Aurelion Reach contributors"',
             'WriteRegStr HKCU "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Heroes Like" "DisplayIcon" \'"$INSTDIR\\heroes-like.exe",0\'',
             'WriteRegStr HKCU "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Heroes Like" "UninstallString" \'"$INSTDIR\\uninstall.exe"\'',
             'WriteRegStr HKCU "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Heroes Like" "QuietUninstallString" \'"$INSTDIR\\uninstall.exe" /S\'',
@@ -648,7 +649,7 @@ END
         self.assertLess(uninstall.index("Call un.VerifyOwnedRoot"), uninstall.index('Delete "$INSTDIR'))
         self.assertLess(uninstall.index('RMDir "$INSTDIR"'), uninstall.index('DeleteRegKey HKCU "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Heroes Like"'))
         self.assertIn("SetRegView 64", uninstall)
-        self.assertIn('Delete "$SMPROGRAMS\\Heroes Like\\Uninstall Heroes Like.lnk"', uninstall)
+        self.assertIn('Delete "$SMPROGRAMS\\Aurelion Reach\\Uninstall Aurelion Reach.lnk"', uninstall)
         self.assertNotIn('RMDir /r "$INSTDIR"', uninstall)
         self.assertIn("Schema=heroes-like-windows-install-ownership-v1", ownership)
         self.assertIn("Marker=heroes-like-user-local-install-v1", ownership)

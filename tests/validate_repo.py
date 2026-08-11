@@ -24324,7 +24324,9 @@ def validate_packaging_release_artifact_verification(errors: list[str]) -> None:
             "refused_uninstall_wait",
             "uninstall_wait",
             "uninstall_registry_removed",
+            "Uninstall Aurelion Reach.lnk",
             "Uninstall Heroes Like.lnk",
+            "legacy_shortcuts_removed_on_upgrade",
             "setup_pe_version",
             "game_pe_version",
             'f"/reg:{registry_view}"',
@@ -24344,7 +24346,7 @@ def validate_packaging_release_artifact_verification(errors: list[str]) -> None:
     for path, required_tokens in (
         (PACKAGE_LINUX_INSTALL_PATH, ("HEROES_LIKE_INSTALL_DIR", "heroes-like.desktop", ".heroes-like-install", "build-info.json", "release-manifest.json", "HEROES_LIKE_INSTALL_FAIL_PHASE", "precommit", "after_backup")),
         (PACKAGE_LINUX_UNINSTALL_PATH, ("HEROES_LIKE_INSTALL_DIR", ".heroes-like-install", "release-manifest.json", "were preserved")),
-        (PACKAGE_WINDOWS_INSTALL_PATH, ("HEROES_LIKE_INSTALL_DIR", "HEROES_LIKE_START_MENU_DIR", "Heroes Like.cmd", ".heroes-like-install", "build-info.json", "release-manifest.json", "HEROES_LIKE_INSTALL_FAIL_PHASE", "precommit", "after_backup")),
+        (PACKAGE_WINDOWS_INSTALL_PATH, ("HEROES_LIKE_INSTALL_DIR", "HEROES_LIKE_START_MENU_DIR", "Aurelion Reach.cmd", "Heroes Like.cmd", ".heroes-like-install", "build-info.json", "release-manifest.json", "HEROES_LIKE_INSTALL_FAIL_PHASE", "precommit", "after_backup")),
         (PACKAGE_WINDOWS_UNINSTALL_PATH, ("HEROES_LIKE_INSTALL_DIR", ".heroes-like-install", "release-manifest.json", "were preserved")),
     ):
         if path.exists():

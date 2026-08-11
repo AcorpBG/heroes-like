@@ -105,7 +105,7 @@ write_expected_desktop() {
 	cat > "$1" <<EOF
 [Desktop Entry]
 Type=Application
-Name=Heroes Like
+Name=Aurelion Reach
 Comment=Turn-based fantasy strategy
 Exec=$BIN_DIR/heroes-like
 Terminal=false

@@ -4206,6 +4206,36 @@ Completion evidence:
 - main-menu keyboard/controller navigation passes, and the lean-boot guard reports zero first-view save inspections before the explicit Load action performs the expected six slot inspections;
 - Godot editor parse, repository validation, JSON, Python, progress reconciliation, and diff checks pass. `project.godot`, export presets, installer scripts/ownership keys, executable names, and user-data identity remain unchanged for Linux/Windows compatibility.
 
+## Aurelion Reach Package Public Identity Migration
+
+id: `packaging-aurelion-reach-public-identity-migration-10184`
+
+Status: completed.
+
+Selected Phase 6 cross-platform packaging implementation slice. The live first view now uses the approved public title, but Linux desktop entries, Windows PE metadata, Add/Remove Programs, and shipped launchers still expose `Heroes Like`. Migrate those public package surfaces to Aurelion Reach without renaming compatibility-sensitive program roots or ownership identities.
+
+Implementation target:
+- publish `Aurelion Reach` through Windows executable/setup version resources, Add/Remove Programs display metadata, NSIS shortcuts, archive launcher names, and Linux desktop entries;
+- retain `heroes-like` executable/archive ids, `%LOCALAPPDATA%\Heroes Like` program root, `Software\Heroes Like` ownership key, `...\Uninstall\Heroes Like` registry identity, manifest/marker schemas, environment variables, and Godot `user://` identity;
+- make Windows upgrade transactions recognize legacy `Heroes Like` and public `Aurelion Reach` shortcuts, publish only the public shortcuts on success, and restore the exact prior shortcut/registration state on injected publication rollback;
+- update static and real installer lifecycle proof for install, same-version upgrade, legacy shortcut migration, injected precommit/after-backup rollback, modified/unowned refusal, boot, uninstall, and external user-data preservation.
+
+Completion criteria:
+- Linux desktop entry and Windows PE/ARP/shortcut surfaces display exactly `Aurelion Reach` while technical executable/install/registry/user-data identities remain exact;
+- a verified prior `Heroes Like` installation upgrades in place, removes legacy launchers only after successful publication, and retains one public game/uninstall launcher;
+- precommit and after-backup failures restore exact program, registry, and legacy/public shortcut state; malformed/unowned uninstall refusal and final uninstall preserve external user data;
+- release artifact verification, archive lifecycle, real NSIS/Wine lifecycle, packaged boot, editor, repository, Python, JSON, and diff gates pass.
+
+Non-goals:
+- executable stem, archive id, install-root, ownership-key, registry-key, marker/schema, environment-variable, or `user://` rename; save/settings migration; visual logo generation; gameplay, balance, AI, Native RMG, signing, native Windows hardware certification, publication, or release-completion claims.
+
+Completion evidence:
+- the authoritative package lifecycle reports `ok=true` for Linux, Windows NSIS, and Windows archive installers; Linux desktop metadata is exactly `Name=Aurelion Reach`, and Windows setup/game PE resources expose exact Aurelion Reach product, description, contributor, copyright, and numeric version fields;
+- real fresh-Wine NSIS install/reinstall, legacy shortcut seeding, precommit and after-backup rollback, successful upgrade, packaged Boot/MainMenu/native-DLL load, malformed/unowned refusal, and uninstall pass with exact registry transactions and external user-data preservation;
+- the archive `.cmd` installer independently migrates `Heroes Like.cmd` to `Aurelion Reach.cmd`, restores the legacy launcher through both injected failure phases, boots the packaged game, uninstalls cleanly, and preserves external user data;
+- the stable `heroes-like` executable/archive id, `%LOCALAPPDATA%\Heroes Like` install root, `Software\Heroes Like` ownership key, `...\Uninstall\Heroes Like` registry key, marker/schema/env identities, Godot project name, and `user://` location remain unchanged;
+- release artifact verification `17/17`, platform readiness, Godot editor parse, repository validation, Python, JSON, progress reconciliation, and diff checks pass.
+
 ## Brasshollow Foundry Saint Sustain Calibration
 
 id: `combat-brasshollow-foundry-saint-sustain-calibration-10184`

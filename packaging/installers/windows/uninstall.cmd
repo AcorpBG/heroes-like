@@ -89,8 +89,9 @@ if not exist "%HELPER%" (
 set "TOKEN=%RANDOM%-%RANDOM%-%RANDOM%"
 set "TEMP_HELPER=%TEMP%\heroes-like-installer-helper-%TOKEN%.exe"
 set "TEMP_CLEANUP=%TEMP%\heroes-like-uninstall-cleanup-%TOKEN%.cmd"
-set "EXPECTED_LAUNCHER=%START_MENU_ROOT%\.Heroes Like.cmd.expected-%TOKEN%"
-set "LAUNCHER=%START_MENU_ROOT%\Heroes Like.cmd"
+set "EXPECTED_LAUNCHER=%START_MENU_ROOT%\.Aurelion Reach.cmd.expected-%TOKEN%"
+set "LAUNCHER=%START_MENU_ROOT%\Aurelion Reach.cmd"
+set "LEGACY_LAUNCHER=%START_MENU_ROOT%\Heroes Like.cmd"
 
 call :validate_marker "%INSTALL_ROOT%\.heroes-like-install"
 if errorlevel 1 goto :uninstall_fail
@@ -130,10 +131,29 @@ if exist "%LAUNCHER%" (
     goto :uninstall_fail
   )
 )
+if exist "%LEGACY_LAUNCHER%" (
+  if exist "%EXPECTED_LAUNCHER%" (
+    echo heroes-like uninstaller: launcher validation-file collision 1>&2
+    goto :uninstall_fail
+  )
+  >"%EXPECTED_LAUNCHER%" echo @echo off
+  >>"%EXPECTED_LAUNCHER%" echo start "" "%INSTALL_ROOT%\heroes-like.exe" %%*
+  "%SystemRoot%\System32\fc.exe" /b "%LEGACY_LAUNCHER%" "%EXPECTED_LAUNCHER%" >nul
+  if errorlevel 1 (
+    echo heroes-like uninstaller: refusing to remove a modified legacy Start Menu launcher 1>&2
+    goto :uninstall_fail
+  )
+  del /f /q "%EXPECTED_LAUNCHER%" >nul 2>&1
+)
 
 if exist "%LAUNCHER%" del /f /q "%LAUNCHER%" >nul 2>&1
 if exist "%LAUNCHER%" (
   echo heroes-like uninstaller: could not remove the owned Start Menu launcher 1>&2
+  goto :uninstall_fail
+)
+if exist "%LEGACY_LAUNCHER%" del /f /q "%LEGACY_LAUNCHER%" >nul 2>&1
+if exist "%LEGACY_LAUNCHER%" (
+  echo heroes-like uninstaller: could not remove the owned legacy Start Menu launcher 1>&2
   goto :uninstall_fail
 )
 "%TEMP_HELPER%" remove "%INSTALL_ROOT%\release-manifest.json" "%INSTALL_ROOT%" windows-x86_64 release-manifest.json .heroes-like-install

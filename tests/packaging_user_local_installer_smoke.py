@@ -134,9 +134,9 @@ def windows_registry_values(env: dict[str, str], registry_view: str = "64") -> d
 def expected_windows_uninstall_values(install_dir: str) -> dict[str, dict[str, str]]:
     quoted_uninstaller = f'"{install_dir}\\uninstall.exe"'
     return {
-        "DisplayName": {"type": "REG_SZ", "value": "Heroes Like"},
+        "DisplayName": {"type": "REG_SZ", "value": "Aurelion Reach"},
         "DisplayVersion": {"type": "REG_SZ", "value": VERSION},
-        "Publisher": {"type": "REG_SZ", "value": "Heroes Like"},
+        "Publisher": {"type": "REG_SZ", "value": "Aurelion Reach contributors"},
         "InstallLocation": {"type": "REG_SZ", "value": install_dir},
         "DisplayIcon": {"type": "REG_SZ", "value": f'"{install_dir}\\heroes-like.exe",0'},
         "UninstallString": {"type": "REG_SZ", "value": quoted_uninstaller},
@@ -457,6 +457,15 @@ def windows_lifecycle(installer: Path) -> dict:
         [WINE, wine_path(installer), "/S", "/D=C:\\HeroesLikeInstall"], env=env, timeout=240
     ) if command_ok(install) else {"returncode": None, "output": "initial installer failed", "fatal_matches": []}
     if command_ok(same_version_reinstall):
+        public_game_shortcuts = list(prefix.rglob("Aurelion Reach.lnk"))
+        public_uninstall_shortcuts = list(prefix.rglob("Uninstall Aurelion Reach.lnk"))
+        if len(public_game_shortcuts) == 1 and len(public_uninstall_shortcuts) == 1:
+            public_group = public_game_shortcuts[0].parent
+            legacy_group = public_group.parent / "Heroes Like"
+            legacy_group.mkdir(parents=True, exist_ok=True)
+            public_game_shortcuts[0].replace(legacy_group / "Heroes Like.lnk")
+            public_uninstall_shortcuts[0].replace(legacy_group / "Uninstall Heroes Like.lnk")
+            public_group.rmdir()
         prior_identity, prior_ownership_sha256, prior_ownership_size = make_windows_owned_prior_install(
             install_dir, "legacy-windows-sidecar.dat"
         )
@@ -484,20 +493,33 @@ def windows_lifecycle(installer: Path) -> dict:
             prior_identity = {}
     else:
         prior_identity = {}
+    legacy_shortcut_paths = [
+        *prefix.rglob("Heroes Like.lnk"),
+        *prefix.rglob("Uninstall Heroes Like.lnk"),
+    ]
+    legacy_shortcut_identity_before_failures = {str(path): file_identity(path) for path in legacy_shortcut_paths}
     registry_before_failures = windows_registry_values(env) if prior_identity else {}
     precommit_failure = run(
         [WINE, wine_path(installer), "/S", "/D=C:\\HeroesLikeInstall"],
         env={**env, "HEROES_LIKE_INSTALL_FAIL_PHASE": "precommit"},
         timeout=240,
     ) if prior_identity else {"returncode": None, "output": "prior install unavailable", "fatal_matches": []}
-    precommit_rollback_exact = bool(prior_identity) and program_tree_identity(install_dir) == prior_identity
+    precommit_rollback_exact = (
+        bool(prior_identity)
+        and program_tree_identity(install_dir) == prior_identity
+        and {str(path): file_identity(path) for path in legacy_shortcut_paths} == legacy_shortcut_identity_before_failures
+    )
     precommit_registry_preserved = bool(registry_before_failures) and windows_registry_values(env) == registry_before_failures
     commit_failure = run(
         [WINE, wine_path(installer), "/S", "/D=C:\\HeroesLikeInstall"],
         env={**env, "HEROES_LIKE_INSTALL_FAIL_PHASE": "after_backup"},
         timeout=240,
     ) if prior_identity else {"returncode": None, "output": "prior install unavailable", "fatal_matches": []}
-    commit_rollback_exact = bool(prior_identity) and program_tree_identity(install_dir) == prior_identity
+    commit_rollback_exact = (
+        bool(prior_identity)
+        and program_tree_identity(install_dir) == prior_identity
+        and {str(path): file_identity(path) for path in legacy_shortcut_paths} == legacy_shortcut_identity_before_failures
+    )
     commit_registry_preserved = bool(registry_before_failures) and windows_registry_values(env) == registry_before_failures
     upgrade = run(
         [WINE, wine_path(installer), "/S", "/D=C:\\HeroesLikeInstall"], env=env, timeout=240
@@ -511,8 +533,12 @@ def windows_lifecycle(installer: Path) -> dict:
     }
     game_pe_version = windows_pe_version_summary(install_dir / "heroes-like.exe")
     stale_prior_file_removed = not (install_dir / "legacy-windows-sidecar.dat").exists()
-    game_shortcuts = list(prefix.rglob("Heroes Like.lnk"))
-    uninstall_shortcuts = list(prefix.rglob("Uninstall Heroes Like.lnk"))
+    game_shortcuts = list(prefix.rglob("Aurelion Reach.lnk"))
+    uninstall_shortcuts = list(prefix.rglob("Uninstall Aurelion Reach.lnk"))
+    legacy_shortcuts_removed_on_upgrade = (
+        not list(prefix.rglob("Heroes Like.lnk"))
+        and not list(prefix.rglob("Uninstall Heroes Like.lnk"))
+    )
     shortcut_paths = [*game_shortcuts, *uninstall_shortcuts]
     shortcut_identity_before_refusals = {str(path): file_identity(path) for path in shortcut_paths}
     user_data.parent.mkdir(parents=True, exist_ok=True)
@@ -698,8 +724,9 @@ def windows_lifecycle(installer: Path) -> dict:
         "program_removed": not install_dir.exists(),
         "game_shortcut_created_before_uninstall": len(game_shortcuts) == 1,
         "uninstall_shortcut_created_before_uninstall": len(uninstall_shortcuts) == 1,
-        "game_shortcut_removed": not list(prefix.rglob("Heroes Like.lnk")),
-        "uninstall_shortcut_removed": not list(prefix.rglob("Uninstall Heroes Like.lnk")),
+        "legacy_shortcuts_removed_on_upgrade": legacy_shortcuts_removed_on_upgrade,
+        "game_shortcut_removed": not list(prefix.rglob("Aurelion Reach.lnk")) and not list(prefix.rglob("Heroes Like.lnk")),
+        "uninstall_shortcut_removed": not list(prefix.rglob("Uninstall Aurelion Reach.lnk")) and not list(prefix.rglob("Uninstall Heroes Like.lnk")),
         "user_data_preserved": user_data.read_text(encoding="utf-8") == "preserve-windows",
         "ok": command_ok(prefix_init) and command_ok(prefix_init_wait)
             and command_ok(install) and install_registry_exact and setup_pe_version["ok"]
@@ -714,10 +741,13 @@ def windows_lifecycle(installer: Path) -> dict:
             and upgrade_unmanaged_registry_preserved
             and command_ok(boot, reject_fatal=True) and all(markers.values())
             and len(game_shortcuts) == 1 and len(uninstall_shortcuts) == 1
+            and legacy_shortcuts_removed_on_upgrade
             and malformed_uninstall_preserved
             and refused_uninstall_root_preserved and refused_uninstall_registry_preserved
             and command_ok(uninstall) and command_ok(uninstall_wait)
             and uninstall_registry_removed and not install_dir.exists()
+            and not list(prefix.rglob("Aurelion Reach.lnk"))
+            and not list(prefix.rglob("Uninstall Aurelion Reach.lnk"))
             and not list(prefix.rglob("Heroes Like.lnk"))
             and not list(prefix.rglob("Uninstall Heroes Like.lnk")) and user_data.is_file(),
     }
@@ -738,7 +768,8 @@ def windows_archive_lifecycle(archive: Path) -> dict:
         shutil.rmtree(prefix)
     install_dir = prefix / "drive_c" / "HeroesLikeArchiveInstall"
     start_menu_dir = prefix / "drive_c" / "HeroesLikeArchiveMenu"
-    launcher = start_menu_dir / "Heroes Like.cmd"
+    launcher = start_menu_dir / "Aurelion Reach.cmd"
+    legacy_launcher = start_menu_dir / "Heroes Like.cmd"
     user_data = (
         prefix / "drive_c" / "users" / "root" / "AppData" / "Roaming" / "Godot"
         / "app_userdata" / "Heroes Like" / "archive-save.json"
@@ -776,17 +807,19 @@ def windows_archive_lifecycle(archive: Path) -> dict:
     same_version_reinstall = run_installer() if command_ok(install) else {
         "returncode": None, "output": "initial installer failed", "fatal_matches": []
     }
+    if command_ok(same_version_reinstall) and launcher.is_file():
+        launcher.replace(legacy_launcher)
     prior_identity = make_owned_prior_install(
         install_dir, "legacy-windows-archive-sidecar.dat"
     ) if command_ok(same_version_reinstall) else {}
-    prior_launcher_identity = file_identity(launcher)
+    prior_launcher_identity = file_identity(legacy_launcher)
     precommit_failure = run_installer({"HEROES_LIKE_INSTALL_FAIL_PHASE": "precommit"}) if prior_identity else {
         "returncode": None, "output": "prior install unavailable", "fatal_matches": []
     }
     precommit_rollback_exact = (
         bool(prior_identity)
         and program_tree_identity(install_dir) == prior_identity
-        and file_identity(launcher) == prior_launcher_identity
+        and file_identity(legacy_launcher) == prior_launcher_identity
     )
     commit_failure = run_installer({"HEROES_LIKE_INSTALL_FAIL_PHASE": "after_backup"}) if prior_identity else {
         "returncode": None, "output": "prior install unavailable", "fatal_matches": []
@@ -794,13 +827,14 @@ def windows_archive_lifecycle(archive: Path) -> dict:
     commit_rollback_exact = (
         bool(prior_identity)
         and program_tree_identity(install_dir) == prior_identity
-        and file_identity(launcher) == prior_launcher_identity
+        and file_identity(legacy_launcher) == prior_launcher_identity
     )
     upgrade = run_installer() if prior_identity else {
         "returncode": None, "output": "prior install unavailable", "fatal_matches": []
     }
     payload_verification = verify_installed_payload(install_dir, "windows-x86_64")
     stale_prior_file_removed = not (install_dir / "legacy-windows-archive-sidecar.dat").exists()
+    legacy_launcher_removed_on_upgrade = not legacy_launcher.exists()
     user_data.parent.mkdir(parents=True, exist_ok=True)
     user_data.write_text("preserve-windows-archive", encoding="utf-8")
     boot = run(
@@ -842,6 +876,7 @@ def windows_archive_lifecycle(archive: Path) -> dict:
         "precommit_rollback_exact": precommit_rollback_exact,
         "commit_rollback_exact": commit_rollback_exact,
         "stale_prior_file_removed": stale_prior_file_removed,
+        "legacy_launcher_removed_on_upgrade": legacy_launcher_removed_on_upgrade,
         "unowned_refused_without_mutation": unowned_refused_without_mutation,
         "launcher_created_before_uninstall": bool(prior_launcher_identity),
         "program_removed": not install_dir.exists(),
@@ -850,7 +885,8 @@ def windows_archive_lifecycle(archive: Path) -> dict:
         "ok": command_ok(install) and unowned_refused_without_mutation and command_ok(same_version_reinstall)
             and precommit_failure.get("returncode") not in (None, 0) and precommit_rollback_exact
             and commit_failure.get("returncode") not in (None, 0) and commit_rollback_exact
-            and command_ok(upgrade) and stale_prior_file_removed and payload_verification["ok"]
+            and command_ok(upgrade) and stale_prior_file_removed and legacy_launcher_removed_on_upgrade
+            and payload_verification["ok"]
             and bool(prior_launcher_identity) and command_ok(boot, reject_fatal=True)
             and command_ok(uninstall) and not install_dir.exists() and not launcher.exists()
             and user_data.is_file(),
