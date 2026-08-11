@@ -724,6 +724,9 @@ func _clear_controller_route_motion() -> void:
 		_controller_route_repeat_timer.stop()
 
 func _unhandled_input(event: InputEvent) -> void:
+	if _active_play_settings_dialog != null and _active_play_settings_dialog.is_open():
+		get_viewport().set_input_as_handled()
+		return
 	if event is InputEventKey and event.pressed and not event.echo:
 		match event.keycode:
 			DEBUG_OVERLAY_TOGGLE_KEY:

@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Hero Keybindings live-status announcement slice is complete. BindingStatus is one bounded polite native live region; exact capture, rejection, cancellation, swap, success, reset, and persistence-failure copy is announced without changing focus, input, settings, session, save/cache, or route authority.",
+  "currentNotes": "The Overworld Settings unhandled-command containment slice is complete. Shell commands that survive native GUI ownership are consumed before Overworld primary, debug-overlay, camera, movement, or map handling; native modal controls and fresh post-close commands remain exact.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "accessibility-hero-keybindings-live-status-announcements-10184",
-  "currentSliceId": "accessibility-hero-keybindings-live-status-announcements-10184",
-  "currentSliceNotes": "Register BindingStatus as one bounded polite native live region and prove exact capture/result announcements with unchanged modal focus, settings, session, save, cache, and route authority.",
+  "currentSlice": "accessibility-overworld-settings-unhandled-command-containment-10184",
+  "currentSliceId": "accessibility-overworld-settings-unhandled-command-containment-10184",
+  "currentSliceNotes": "Contain only Overworld shell commands that remain unhandled after native Settings GUI ownership, preserving all modal control semantics and exact post-close command behavior.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Hero Keybindings Live-Status Announcements",
-  "currentSliceUpdatedAt": "2026-08-11T18:00:16Z",
+  "currentSliceTitle": "Overworld Settings Unhandled-Command Containment",
+  "currentSliceUpdatedAt": "2026-08-11T18:37:20Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19849,6 +19849,84 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "id": "accessibility-overworld-settings-unhandled-command-containment-10184",
+      "title": "Overworld Settings Unhandled-Command Containment",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/lessons-learned.md"],
+      "purpose": "Prevent physical shell commands that survive native GUI handling from moving the hero, invoking the primary action, toggling debug overlays, or recentering the camera behind the visible Overworld Settings modal.",
+      "implementationTargets": ["scenes/overworld/OverworldShell.gd", "tests/active_play_settings_runtime_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {
+        "settings_entry_focus": "MasterVolumeSlider",
+        "unhandled_primary_keys": ["Enter", "KP Enter", "Space"],
+        "unhandled_presentation_keys": ["F3", "F4", "Home"],
+        "settings_version": 14,
+        "save_version": 9
+      },
+      "completionCriteria": "At the start of OverworldShell._unhandled_input, a visible shared Settings modal consumes only events that already survived native GUI handling and returns before primary-action, debug-overlay, camera, movement, or map commands; physical Enter, KP Enter, Space, F3, F4, and Home preserve exact dialog visibility/focus plus session/day/hero position/movement, selected tile/route preview, primary invocation count, overlays, camera, save/cache, settings, and route authority while Settings is open; native slider Left/Right, toggle/button Accept, OptionButton popup Accept/Back, scrolling, mouse, Close/Back, and Settings return focus remain exact; after Settings closes, the same shell commands retain their prior behavior and execute at most once; focused Settings, Overworld input/focus, core, repository, Linux, and fresh Windows/Wine gates pass without a save or settings schema change.",
+      "nonGoals": ["changing ActivePlaySettingsDialog control behavior or layout, blocking shell commands when Settings is closed, changing movement rules, route selection, primary-action policy, debug tooling, camera policy, Town or Battle input, save schema, settings schema, Native RMG, or overall release completion"],
+      "baselineChecks": [
+        "godot4 --headless --path . --scene res://tests/active_play_settings_runtime_report.tscn",
+        "godot4 --headless --path . --scene res://tests/active_play_keyboard_focus_smoke.tscn",
+        "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+        "godot4 --headless --editor --quit --path .",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "startedAt": "2026-08-11T18:11:19Z",
+      "updatedAt": "2026-08-11T18:37:20Z",
+      "completedAt": "2026-08-11T18:37:20Z",
+      "notes": "OverworldShell now consumes events at the start of _unhandled_input whenever the shared Settings modal remains open. Native GUI dispatch therefore retains first ownership of sliders, toggles, OptionButton popups, scrolling, mouse input, and cancel/Close, while any surviving background command is contained before it can invoke the primary action, toggle debug overlays, recenter the camera, move the hero, or pan the map. Closed Settings falls through to the existing shell behavior on the next event.",
+      "result": {
+        "contained_physical_command_count": 6,
+        "contained_primary_keys": ["Enter", "KP Enter", "Space"],
+        "contained_presentation_keys": ["F3", "F4", "Home"],
+        "native_slider_arrows_exact": true,
+        "native_toggle_accept_exact": true,
+        "native_option_popup_accept_cancel_exact": true,
+        "native_mouse_exact": true,
+        "modal_close_once_and_focus_restore_exact": true,
+        "background_session_route_camera_overlay_save_cache_settings_authority_exact": true,
+        "post_close_home_exact": true,
+        "post_close_primary_action_exact_once": true,
+        "post_close_debug_overlays_exact": true,
+        "settings_version_before": 14,
+        "settings_version_after": 14,
+        "save_version_before": 9,
+        "save_version_after": 9,
+        "linux_export_boot_passed": true,
+        "windows_export_fresh_wine_boot_passed": true
+      },
+      "validation": {
+        "status": "passed",
+        "updatedAt": "2026-08-11T18:37:20Z",
+        "commands": [
+          "godot4 --headless --path . --scene res://tests/active_play_settings_runtime_report.tscn",
+          "godot4 --headless --path . --scene res://tests/active_play_keyboard_focus_smoke.tscn",
+          "godot4 --headless --path . --scene res://tests/overworld_gameplay_movement_input_ownership_regression.tscn",
+          "godot4 --headless --path . --scene res://tests/overworld_controller_route_selection_regression.tscn",
+          "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+          "godot4 --headless --editor --quit --path .",
+          "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check",
+          "Linux release export plus shipped main-scene boot",
+          "Windows release export plus fresh Wine shipped main-scene boot"
+        ],
+        "artifacts": [
+          "/tmp/heroes-settings-unhandled.P0ELjf/focused-authoritative.log",
+          "/tmp/heroes-settings-unhandled.P0ELjf/editor-authoritative.log",
+          "/tmp/heroes-settings-unhandled-release.1mvi0e"
+        ]
+      },
+      "remainingWork": "Continue the broader release-readiness queue. This bounded modal-input correction does not complete broader accessibility, gameplay balance, strategic-AI performance, content, signing, publication, hardware certification, or overall release readiness."
+    },
     {
       "id": "accessibility-hero-keybindings-live-status-announcements-10184",
       "title": "Hero Keybindings Live-Status Announcements",
