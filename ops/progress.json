@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Aurelion Reach package public-identity migration is complete. Linux desktop and Windows PE/ARP/launcher surfaces now use the public title with exact legacy upgrade, rollback, uninstall, boot, and user-data proof while stable heroes-like technical ownership remains unchanged. Overall release readiness remains open.",
+  "currentNotes": "The Aurelion Reach native window-title slice is complete. Live Boot now sets the public root Window title while application/config/name and every technical/user-data identity remain heroes-like. Overall release readiness remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "packaging-aurelion-reach-public-identity-migration-10184",
-  "currentSliceId": "packaging-aurelion-reach-public-identity-migration-10184",
-  "currentSliceNotes": "Completed Aurelion Reach public package identity across Linux desktop, Windows PE/ARP, NSIS shortcuts, and archive launchers. Real Linux and fresh-Wine lifecycles prove legacy migration, injected rollback, packaged boot, uninstall, registry integrity, and external user-data preservation.",
+  "currentSlice": "presentation-aurelion-reach-native-window-title-10184",
+  "currentSliceId": "presentation-aurelion-reach-native-window-title-10184",
+  "currentSliceNotes": "Completed the public Aurelion Reach root Window title in live Boot while preserving heroes-like project and user-data identity. Platform readiness and real Linux/fresh-Wine package lifecycles prove the production boundary.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Aurelion Reach Package Public Identity Migration",
-  "currentSliceUpdatedAt": "2026-08-11T08:05:06Z",
+  "currentSliceTitle": "Aurelion Reach Native Window Title",
+  "currentSliceUpdatedAt": "2026-08-11T08:16:06Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -75212,6 +75212,28 @@
       "artifacts": [".artifacts/packaging_user_local_installer_smoke/report.json", ".artifacts/packaging_user_local_installer_smoke/archives/heroes-like-0.1.0-alpha.1-linux-x86_64.run", ".artifacts/packaging_user_local_installer_smoke/archives/heroes-like-0.1.0-alpha.1-linux-x86_64.tar.gz", ".artifacts/packaging_user_local_installer_smoke/archives/heroes-like-0.1.0-alpha.1-windows-x86_64.setup.exe", ".artifacts/packaging_user_local_installer_smoke/archives/heroes-like-0.1.0-alpha.1-windows-x86_64.zip"],
       "artifactSha256": {"linux_run": "bd22c27d696e65c7af4ada5cf395a1a0c8bf92ad99c3402a3611d29a0382b6ab", "linux_archive": "ccd83928f7d77148246154e9269dc6f8cd0dd337b4b04fcda214458e53fd1a57", "windows_setup": "bfa5360ee5d4d72a748c89d7b4a54c1a5b4b9607de59068a545ab832cbbdba68", "windows_archive": "6d9eaa0900accc36a871acc292ee37f221c3c8fa13d908227986f7de48791857"},
       "completedAt": "2026-08-11T08:05:06Z"
+    },
+    {
+      "id": "presentation-aurelion-reach-native-window-title-10184",
+      "title": "Aurelion Reach Native Window Title",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md"],
+      "purpose": "Replace the live desktop window's inherited heroes-like placeholder with the Aurelion Reach public title without changing project or user-data identity.",
+      "implementationTargets": ["scenes/boot/Boot.gd", "tests/packaging_platform_readiness_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"inherited_window_title": "heroes-like", "public_title": "Aurelion Reach", "godot_project_name": "heroes-like", "save_version": 9},
+      "completionCriteria": ["Live Boot sets root Window.title to Aurelion Reach before router handoff", "Platform readiness proves public window title and stable technical project identity together", "Boot/MainMenu/package/settings/save/editor/repository/Python/JSON/diff gates pass"],
+      "nonGoals": ["project/executable/install/registry/user-data rename, custom title bar, icon/logo art, menu layout, gameplay, balance, AI, Native RMG, signing, certification, publication, or release-completion claim"],
+      "createdAt": "2026-08-11T08:07:22Z",
+      "startedAt": "2026-08-11T08:07:22Z",
+      "updatedAt": "2026-08-11T08:16:06Z",
+      "notes": "Completed. Boot sets the Aurelion Reach root Window title before profile logging/router handoff. Platform readiness reports the live public title beside the stable heroes-like project identity. The authoritative installer lifecycle passes Linux, Windows NSIS, and Windows archive install/boot/uninstall with fresh-Wine Boot/MainMenu/native DLL proof, exact rollback, registry, and user-data preservation.",
+      "remainingWork": "No work remains in this slice. Icon/logo art, signing, native Windows hardware certification, public release-channel execution, broader balance/AI/content/accessibility/performance work, Native RMG parity, and overall release readiness remain open.",
+      "artifacts": [".artifacts/packaging_platform_readiness_report/report.json", ".artifacts/packaging_user_local_installer_smoke/report.json", ".artifacts/packaging_user_local_installer_smoke/archives/heroes-like-0.1.0-alpha.1-linux-x86_64.run", ".artifacts/packaging_user_local_installer_smoke/archives/heroes-like-0.1.0-alpha.1-linux-x86_64.tar.gz", ".artifacts/packaging_user_local_installer_smoke/archives/heroes-like-0.1.0-alpha.1-windows-x86_64.setup.exe", ".artifacts/packaging_user_local_installer_smoke/archives/heroes-like-0.1.0-alpha.1-windows-x86_64.zip"],
+      "artifactSha256": {"linux_run": "a0eb5f1569dbada6f4498db2a916b22a0d26a41019e2aaedbb7646cbc74d2632", "linux_archive": "bfcac84609e0a052c2d11060a5bccaad64fd4126ac58f6801ad7839ae1c13bb3", "windows_setup": "1427211ba6732081d662ed81a494a99e64e8040d15f1121afa36ee83edfdd30c", "windows_archive": "b520bfc38334cf60eac31950d6ac88eda629c0d9f6645cd7c5ca3a5a445a29a5"},
+      "completedAt": "2026-08-11T08:16:06Z"
     }
   ],
   "project": "heroes-like",

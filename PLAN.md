@@ -4236,6 +4236,33 @@ Completion evidence:
 - the stable `heroes-like` executable/archive id, `%LOCALAPPDATA%\Heroes Like` install root, `Software\Heroes Like` ownership key, `...\Uninstall\Heroes Like` registry key, marker/schema/env identities, Godot project name, and `user://` location remain unchanged;
 - release artifact verification `17/17`, platform readiness, Godot editor parse, repository validation, Python, JSON, progress reconciliation, and diff checks pass.
 
+## Aurelion Reach Native Window Title
+
+id: `presentation-aurelion-reach-native-window-title-10184`
+
+Status: completed.
+
+Selected Phase 6 desktop presentation implementation slice. The public menu, desktop metadata, PE resources, ARP entry, and launchers now say Aurelion Reach, but the native desktop window still inherits the compatibility-sensitive Godot project name `heroes-like`. Set the live root window title from Boot without changing the project or user-data identity.
+
+Implementation target:
+- define the exact public desktop title once in `Boot.gd` and apply it synchronously before router handoff;
+- extend platform readiness to instantiate the real Boot scene, verify the root Window title is exactly `Aurelion Reach`, then remove the fixture before its deferred route executes;
+- retain `application/config/name="heroes-like"`, executable/install/registry/marker/schema identities, and current `user://` paths.
+
+Completion criteria:
+- live Boot sets the native root Window title to exactly `Aurelion Reach` before MainMenu routing;
+- platform readiness proves the public runtime title and stable technical project identity in the same run;
+- Boot/MainMenu routing, profile logging, package boot, Linux/Windows metadata, settings/save paths, editor, repository, Python, JSON, and diff gates remain green.
+
+Non-goals:
+- Godot project name, executable/install/registry/user-data rename; custom title-bar implementation; icon/logo art; menu layout; gameplay, balance, AI, Native RMG, signing, certification, publication, or release-completion claims.
+
+Completion evidence:
+- `Boot.gd` sets the root `Window.title` to exactly `Aurelion Reach` synchronously before profile logging and deferred router handoff;
+- platform readiness instantiates the production Boot scene and reports `window_title="Aurelion Reach"` while proving `application/config/name="heroes-like"`, the stable main scene, icon, export presets, native libraries, and `user://` paths;
+- the authoritative installer lifecycle rebuilds and boots Linux, Windows NSIS, and Windows archive packages, including fresh-Wine Boot/MainMenu/native-DLL proof, exact legacy upgrade rollback, registry ownership, uninstall, and external user-data preservation;
+- release artifact verification `17/17`, Godot editor parse, repository validation, Python, JSON, reconciliation, and diff checks pass.
+
 ## Brasshollow Foundry Saint Sustain Calibration
 
 id: `combat-brasshollow-foundry-saint-sustain-calibration-10184`
