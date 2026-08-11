@@ -55,10 +55,30 @@ func _run() -> void:
 
 func _check_overworld_settings() -> bool:
 	var session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+	_expand_overworld_camera_fixture(session)
 	session = SessionState.set_active_session(session)
 	var shell = load("res://scenes/overworld/OverworldShell.tscn").instantiate()
 	add_child(shell)
 	await _settle()
+	var hero_before := OverworldRules.hero_position(session)
+	var adjacent_target := _first_open_adjacent_tile(session, hero_before)
+	if not _require(adjacent_target.x >= 0, "Overworld Settings containment fixture has no explored adjacent open route target."):
+		return false
+	var route_selection: Dictionary = shell.validation_select_tile(adjacent_target.x, adjacent_target.y)
+	await _settle()
+	var route_before: Dictionary = shell.validation_controller_route_cursor_snapshot()
+	if not _require(
+		bool(route_selection.get("ok", false))
+		and route_before.get("selected_tile", {}) == {"x": adjacent_target.x, "y": adjacent_target.y}
+		and route_before.get("hero_tile", {}) == {"x": hero_before.x, "y": hero_before.y}
+		and not (route_before.get("route_preview", {}) as Dictionary).is_empty()
+		and not (route_before.get("primary_action", {}) as Dictionary).is_empty()
+		and bool(route_before.get("available", false)),
+		"Overworld Settings containment did not establish a live selected adjacent route: %s" % route_before
+	):
+		return false
+	shell.validation_set_debug_overlay_enabled(false)
+	shell.validation_set_placement_debug_overlay_enabled(false)
 	var before := _gameplay_signature(session)
 	var opened: Dictionary = shell.validation_open_active_play_settings()
 	await _settle()
@@ -81,11 +101,21 @@ func _check_overworld_settings() -> bool:
 	if not _require(dialog.validation_set_toggle("HighContrastToggle", true), "Overworld settings could not enable High Contrast."):
 		return false
 	await _settle()
+	var home_focus_fixture: Dictionary = shell.validation_focus_map_on_hero()
+	var home_focus_snapshot: Dictionary = shell.validation_controller_route_cursor_snapshot()
+	var home_camera_expected := {
+		"camera_focus_tile": (home_focus_snapshot.get("camera_focus_tile", {}) as Dictionary).duplicate(true),
+		"camera_focus_tile_precise": (home_focus_snapshot.get("camera_focus_tile_precise", {}) as Dictionary).duplicate(true),
+	}
+	if not _require(bool(home_focus_fixture.get("ok", false)) and _pan_overworld_camera(shell), "Overworld Settings containment could not establish the 130-percent post-close Home camera fixture."):
+		return false
 	if not _require(_gameplay_signature(session) == before, "Overworld settings changed expedition gameplay state."):
 		return false
 	if not _require(_dialog_fits_1280_at_130(dialog), "Overworld settings modal does not fit 1280x720 at 130 percent UI scale: %s" % _dialog_1280_at_130_snapshot(dialog)):
 		return false
 	if not await _check_modal_focus_containment(shell, dialog, session, "Overworld"):
+		return false
+	if not await _check_overworld_unhandled_command_containment(shell, dialog, session):
 		return false
 	if not await _capture_if_requested("overworld_settings_top"):
 		return false
@@ -103,6 +133,8 @@ func _check_overworld_settings() -> bool:
 	if not _require(int(_dialog_closed_counts.get("Overworld", 0)) == close_count_before + 1, "Overworld Back did not emit exactly one modal closed signal."):
 		return false
 	if not _require(_focus_name() == "Settings", "Overworld settings close did not restore focus to the Settings command."):
+		return false
+	if not await _check_overworld_post_close_commands(shell, session, adjacent_target, home_camera_expected):
 		return false
 	shell.queue_free()
 	await _settle()
@@ -302,6 +334,127 @@ func _check_modal_focus_containment(shell, dialog: Control, session, surface_nam
 		return false
 	return true
 
+func _check_overworld_unhandled_command_containment(shell, dialog: Control, session) -> bool:
+	var master_slider: HSlider = dialog.get_node("%MasterVolumeSlider")
+	master_slider.grab_focus()
+	await _settle()
+	var exact_authority := _overworld_unhandled_authority_signature(shell, dialog, session)
+	for command_value in [KEY_ENTER, KEY_KP_ENTER, KEY_SPACE]:
+		var command: Key = command_value
+		await _press_physical_key(command)
+		if not _require(
+			dialog.is_open()
+			and _focus_name() == "MasterVolumeSlider"
+			and _overworld_unhandled_authority_signature(shell, dialog, session) == exact_authority,
+			"Overworld Settings physical %s escaped the modal or changed dialog/focus/session/day/hero/movement/selected-route/camera/overlay/save/cache/settings/routes authority." % OS.get_keycode_string(command)
+		):
+			return false
+	var close_button: Button = dialog.get_node("%Close")
+	close_button.grab_focus()
+	await _settle()
+	var unhandled_authority := _overworld_unhandled_authority_signature(shell, dialog, session)
+	for command_value in [KEY_F3, KEY_F4, KEY_HOME]:
+		var command: Key = command_value
+		await _press_physical_key(command)
+		if not _require(
+			dialog.is_open()
+			and _focus_name() == "Close"
+			and _overworld_unhandled_authority_signature(shell, dialog, session) == unhandled_authority,
+			"Overworld Settings physical %s escaped the modal or changed dialog/focus/session/day/hero/movement/selected-route/camera/overlay/save/cache/settings/routes authority." % OS.get_keycode_string(command)
+		):
+			return false
+
+	master_slider.grab_focus()
+	await _settle()
+	var background_before_arrows := _background_authority_signature(shell, session, "Overworld")
+	await _press_physical_key(KEY_DOWN)
+	if not _require(
+		dialog.is_open()
+		and _focus_name() == "MusicVolumeSlider"
+		and _background_authority_signature(shell, session, "Overworld") == background_before_arrows,
+		"Overworld Settings physical Down did not remain in the modal or changed live background authority."
+	):
+		return false
+	await _press_physical_key(KEY_UP)
+	if not _require(
+		dialog.is_open()
+		and _focus_name() == "MasterVolumeSlider"
+		and _overworld_unhandled_authority_signature(shell, dialog, session) == exact_authority,
+		"Overworld Settings physical Up did not restore exact modal focus and authority."
+	):
+		return false
+
+	var reduce_flashes_toggle: CheckButton = dialog.get_node("%ReduceFlashesToggle")
+	reduce_flashes_toggle.grab_focus()
+	await _settle()
+	var toggle_before := reduce_flashes_toggle.button_pressed
+	var native_background_before := _modal_authority_signature(shell, session, "Overworld", false)
+	await _press_physical_key(KEY_SPACE)
+	if not _require(
+		dialog.is_open()
+		and _focus_name() == "ReduceFlashesToggle"
+		and reduce_flashes_toggle.button_pressed != toggle_before
+		and _modal_authority_signature(shell, session, "Overworld", false) == native_background_before,
+		"Overworld Settings physical Space did not toggle only the focused native modal control."
+	):
+		return false
+	await _press_physical_key(KEY_SPACE)
+	if not _require(reduce_flashes_toggle.button_pressed == toggle_before, "Overworld Settings physical Space did not restore the focused native toggle."):
+		return false
+	await _click_control(reduce_flashes_toggle)
+	if not _require(
+		dialog.is_open()
+		and reduce_flashes_toggle.button_pressed != toggle_before
+		and _modal_authority_signature(shell, session, "Overworld", false) == native_background_before,
+		"Overworld Settings mouse click did not toggle only the visible native modal control."
+	):
+		return false
+	await _click_control(reduce_flashes_toggle)
+	if not _require(reduce_flashes_toggle.button_pressed == toggle_before, "Overworld Settings mouse click did not restore the native toggle."):
+		return false
+	return true
+
+func _check_overworld_post_close_commands(shell, session, adjacent_target: Vector2i, home_camera_expected: Dictionary) -> bool:
+	var home_before: Dictionary = shell.validation_controller_route_cursor_snapshot()
+	await _press_physical_key(KEY_HOME)
+	var home_after: Dictionary = shell.validation_controller_route_cursor_snapshot()
+	if not _require(
+		home_after.get("camera_focus_tile", {}) == home_camera_expected.get("camera_focus_tile", {})
+		and home_after.get("camera_focus_tile_precise", {}) == home_camera_expected.get("camera_focus_tile_precise", {})
+		and (
+			home_after.get("camera_focus_tile", {}) != home_before.get("camera_focus_tile", {})
+			or home_after.get("camera_focus_tile_precise", {}) != home_before.get("camera_focus_tile_precise", {})
+		),
+		"Overworld physical Home did not focus the camera on the hero exactly once after Settings closed: before=%s after=%s" % [home_before, home_after]
+	):
+		return false
+
+	var focus_owner := get_viewport().gui_get_focus_owner()
+	if focus_owner != null:
+		focus_owner.release_focus()
+	await _settle()
+	var movement_before := int(session.overworld.get("movement", {}).get("current", 0))
+	await _press_physical_key(KEY_ENTER)
+	var movement_after := int(session.overworld.get("movement", {}).get("current", 0))
+	if not _require(
+		OverworldRules.hero_position(session) == adjacent_target
+		and movement_after == movement_before - 1,
+		"Overworld physical Enter did not execute the selected adjacent primary command exactly once after Settings closed. hero=%s movement=%d->%d" % [OverworldRules.hero_position(session), movement_before, movement_after]
+	):
+		return false
+
+	var debug_before: Dictionary = shell.validation_debug_overlay_snapshot()
+	await _press_physical_key(KEY_F3)
+	var debug_after: Dictionary = shell.validation_debug_overlay_snapshot()
+	if not _require(not bool(debug_before.get("enabled", true)) and bool(debug_after.get("enabled", false)), "Overworld physical F3 did not toggle the debug overlay exactly once after Settings closed."):
+		return false
+	var placement_before: Dictionary = shell.validation_placement_debug_overlay_snapshot()
+	await _press_physical_key(KEY_F4)
+	var placement_after: Dictionary = shell.validation_placement_debug_overlay_snapshot()
+	if not _require(not bool(placement_before.get("enabled", true)) and bool(placement_after.get("enabled", false)), "Overworld physical F4 did not toggle the placement overlay exactly once after Settings closed."):
+		return false
+	return true
+
 func _check_focus_button_cycle(dialog: Control, surface_name: String, button_index: int, input_label: String, expected_cycle: Array) -> bool:
 	if not _require(_seed_modal_focus(dialog, String(expected_cycle[0])), "%s could not seed %s focus traversal." % [surface_name, input_label]):
 		return false
@@ -388,6 +541,8 @@ func _modal_authority_signature(shell, session, surface_name: String, include_se
 		authority["settings"] = SettingsService.validation_settings_transaction_snapshot()
 	if surface_name == "Overworld":
 		authority["controller_routes"] = _overworld_controller_route_authority(shell)
+		authority["debug_overlay"] = shell.validation_debug_overlay_snapshot()
+		authority["placement_debug_overlay"] = shell.validation_placement_debug_overlay_snapshot()
 	elif surface_name == "Town":
 		authority["town_cache"] = shell.validation_town_entity_cache_snapshot()
 	return JSON.stringify(authority)
@@ -406,6 +561,8 @@ func _background_authority_signature(shell, session, surface_name: String) -> St
 	}
 	if surface_name == "Overworld":
 		authority["controller_routes"] = _overworld_controller_route_authority(shell)
+		authority["debug_overlay"] = shell.validation_debug_overlay_snapshot()
+		authority["placement_debug_overlay"] = shell.validation_placement_debug_overlay_snapshot()
 	elif surface_name == "Town":
 		authority["town_cache"] = shell.validation_town_entity_cache_snapshot()
 	return JSON.stringify(authority)
@@ -414,6 +571,12 @@ func _overworld_controller_route_authority(shell) -> Dictionary:
 	var controller_routes: Dictionary = shell.validation_controller_route_cursor_snapshot()
 	controller_routes.erase("focus_owner")
 	return controller_routes
+
+func _overworld_unhandled_authority_signature(shell, dialog: Control, session) -> String:
+	return JSON.stringify({
+		"dialog": dialog.validation_snapshot(),
+		"background": _background_authority_signature(shell, session, "Overworld"),
+	})
 
 func _surface_gameplay_authority(session, surface_name: String) -> Dictionary:
 	var snapshot: Dictionary = session.to_dict()
@@ -456,6 +619,66 @@ func _first_player_town(session) -> Dictionary:
 		if town is Dictionary and String(town.get("owner", "")) == "player":
 			return town
 	return {}
+
+func _first_open_adjacent_tile(session, origin: Vector2i) -> Vector2i:
+	var map_size := OverworldRules.derive_map_size(session)
+	for direction_value in [
+		Vector2i.RIGHT,
+		Vector2i.DOWN,
+		Vector2i.UP,
+		Vector2i.LEFT,
+		Vector2i(1, 1),
+		Vector2i(1, -1),
+		Vector2i(-1, 1),
+		Vector2i(-1, -1),
+	]:
+		var direction: Vector2i = direction_value
+		var tile := origin + direction
+		if tile.x < 0 or tile.y < 0 or tile.x >= map_size.x or tile.y >= map_size.y:
+			continue
+		if OverworldRules.tile_is_blocked(session, tile.x, tile.y):
+			continue
+		if not OverworldRules.is_tile_explored(session, tile.x, tile.y):
+			continue
+		if _tile_has_overworld_object(session, tile):
+			continue
+		return tile
+	return Vector2i(-1, -1)
+
+func _expand_overworld_camera_fixture(session) -> void:
+	var source_rows: Array = session.overworld.get("map", []) if session.overworld.get("map", []) is Array else []
+	var expanded_rows: Array = []
+	for y in range(16):
+		var row: Array = source_rows[y].duplicate(true) if y < source_rows.size() and source_rows[y] is Array else []
+		while row.size() < 24:
+			row.append("grass")
+		expanded_rows.append(row)
+	session.overworld["map"] = expanded_rows
+	session.overworld["map_size"] = {"width": 24, "height": 16}
+
+func _tile_has_overworld_object(session, tile: Vector2i) -> bool:
+	for collection_name in ["towns", "resource_nodes", "artifact_nodes", "encounters"]:
+		for object_value in session.overworld.get(collection_name, []):
+			if not (object_value is Dictionary):
+				continue
+			var object: Dictionary = object_value
+			if int(object.get("x", -1)) != tile.x or int(object.get("y", -1)) != tile.y:
+				continue
+			if collection_name == "resource_nodes" or collection_name == "artifact_nodes":
+				if bool(object.get("collected", false)):
+					continue
+			elif collection_name == "encounters" and OverworldRules.is_encounter_resolved(session, object):
+				continue
+			return true
+	return false
+
+func _pan_overworld_camera(shell) -> bool:
+	for delta_value in [Vector2i(3, 0), Vector2i(-3, 0), Vector2i(0, 3), Vector2i(0, -3)]:
+		var delta: Vector2i = delta_value
+		var pan_result: Dictionary = shell.validation_pan_map(delta.x, delta.y)
+		if bool(pan_result.get("changed", false)):
+			return true
+	return false
 
 func _move_active_hero_to_town(session, town: Dictionary) -> void:
 	var position := {"x": int(town.get("x", 0)), "y": int(town.get("y", 0))}
@@ -506,6 +729,47 @@ func _press_key(keycode: Key, shift_pressed: bool = false) -> void:
 	released.shift_pressed = shift_pressed
 	released.pressed = false
 	Input.parse_input_event(released)
+	await _settle()
+
+func _press_physical_key(keycode: Key) -> void:
+	var pressed := InputEventKey.new()
+	pressed.keycode = keycode
+	pressed.physical_keycode = keycode
+	pressed.pressed = true
+	Input.parse_input_event(pressed)
+	await get_tree().process_frame
+	var released := InputEventKey.new()
+	released.keycode = keycode
+	released.physical_keycode = keycode
+	released.pressed = false
+	Input.parse_input_event(released)
+	await _settle()
+
+func _click_control(control: Control) -> void:
+	var click_position := control.get_global_rect().get_center()
+	var viewport := control.get_viewport()
+	var window_id: int = int(viewport.get_window_id()) if viewport is Window else 0
+	var motion := InputEventMouseMotion.new()
+	motion.window_id = window_id
+	motion.position = click_position
+	motion.global_position = click_position
+	viewport.push_input(motion, true)
+	await get_tree().process_frame
+	var pressed := InputEventMouseButton.new()
+	pressed.window_id = window_id
+	pressed.button_index = MOUSE_BUTTON_LEFT
+	pressed.position = click_position
+	pressed.global_position = click_position
+	pressed.pressed = true
+	viewport.push_input(pressed, true)
+	await get_tree().process_frame
+	var released := InputEventMouseButton.new()
+	released.window_id = window_id
+	released.button_index = MOUSE_BUTTON_LEFT
+	released.position = click_position
+	released.global_position = click_position
+	released.pressed = false
+	viewport.push_input(released, true)
 	await _settle()
 
 func _settle() -> void:

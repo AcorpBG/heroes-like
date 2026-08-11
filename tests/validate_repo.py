@@ -13419,6 +13419,7 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         SETTINGS_SERVICE_PATH,
         MAIN_MENU_SCENE_PATH,
         MAIN_MENU_SCRIPT_PATH,
+        OVERWORLD_SCRIPT_PATH,
         active_play_dialog_path,
         active_play_report_path,
     )
@@ -13550,8 +13551,42 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         "shell.validation_active_play_return_snapshot()",
         "shell.validation_controller_route_cursor_snapshot()",
         "shell.validation_town_entity_cache_snapshot()",
+        "func _check_overworld_unhandled_command_containment",
+        "func _check_overworld_post_close_commands",
+        "func _overworld_unhandled_authority_signature",
+        "func _first_open_adjacent_tile",
+        "shell.validation_select_tile(adjacent_target.x, adjacent_target.y)",
+        "shell.validation_focus_map_on_hero()",
+        "shell.validation_pan_map(delta.x, delta.y)",
+        "KEY_ENTER",
+        "KEY_KP_ENTER",
+        "KEY_SPACE",
+        "KEY_F3",
+        "KEY_F4",
+        "KEY_HOME",
+        "func _press_physical_key",
+        "pressed.physical_keycode = keycode",
+        "func _click_control",
+        "InputEventMouseMotion.new()",
+        "InputEventMouseButton.new()",
+        "viewport.push_input",
+        "MOUSE_BUTTON_LEFT",
+        'dialog.get_node("%ReduceFlashesToggle")',
+        'shell.validation_debug_overlay_snapshot()',
+        'shell.validation_placement_debug_overlay_snapshot()',
+        'home_after.get("camera_focus_tile", {})',
+        "OverworldRules.hero_position(session) == adjacent_target",
+        "movement_after == movement_before - 1",
     ):
         ensure(required_token in active_play_report_text, errors, f"active_play_settings_runtime_report.gd is missing focus-containment coverage token: {required_token}")
+
+    overworld_script_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+    ensure(
+        "func _unhandled_input(event: InputEvent) -> void:\n\tif _active_play_settings_dialog != null and _active_play_settings_dialog.is_open():\n\t\tget_viewport().set_input_as_handled()\n\t\treturn"
+        in overworld_script_text,
+        errors,
+        "OverworldShell.gd must consume unhandled commands while the active-play Settings modal owns input",
+    )
 
     resolution_options = extract_settings_resolution_options(settings_text, errors)
     expected_resolutions = {"1280x720", "1600x900", "1920x1080", "2560x1440"}
