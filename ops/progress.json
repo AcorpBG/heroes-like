@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Battle information-tab controller slice is complete with exact source, Linux package, and fresh Windows/Wine proof. Overall release readiness remains open.",
+  "currentNotes": "The Outcome recap-tab controller slice is complete with exact source, Linux package, and fresh Windows/Wine proof. Overall release readiness remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "accessibility-battle-info-tab-controller-navigation-10184",
-  "currentSliceId": "accessibility-battle-info-tab-controller-navigation-10184",
-  "currentSliceNotes": "Completed native four-tab keyboard/controller/mouse traversal, boundary retention, command return, Defend-refresh persistence, exact authority, and Linux/fresh Windows-Wine package proof.",
+  "currentSlice": "accessibility-scenario-outcome-recap-tab-controller-navigation-10184",
+  "currentSliceId": "accessibility-scenario-outcome-recap-tab-controller-navigation-10184",
+  "currentSliceNotes": "Completed native five-page keyboard/controller/mouse traversal, boundary retention, refresh/recovery-modal persistence, exact terminal/save authority, and Linux/fresh Windows-Wine package proof.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Battle Information Tab Controller Navigation",
-  "currentSliceUpdatedAt": "2026-08-11T03:30:00Z",
+  "currentSliceTitle": "Scenario Outcome Recap Tab Controller Navigation",
+  "currentSliceUpdatedAt": "2026-08-11T05:15:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -75046,6 +75046,26 @@
       "notes": "Completed exact native TabBar inclusion once in Battle's authoritative focus cycle, disabled/hidden-aware boundary retention, selected-tooltip synchronization, and selected-tab persistence through refresh. Full active-play focus PASS proves real shoulder reach; D-pad/keyboard forward and reverse traversal across Order, Focus, Spells, and Timing; mouse parity; return to the original command; real Defend refresh; and exact battle/session/save/settings/routes authority. Corrected isolated core, editor, validator, pycompile, diff, exact Linux package, and fresh Windows/Wine package pass. The broad Battle layout harness is explicitly pre-existing test debt: current and isolated committed HEAD both time out at the same detached routed-resolution null viewport/tree teardown before any tab assertion.",
       "remainingWork": "No work remains in this slice. Broader release work, faction balance, Native RMG parity, signing, native Windows hardware certification, publication, and overall release readiness remain open.",
       "completedAt": "2026-08-11T03:30:00Z"
+    },
+    {
+      "id": "accessibility-scenario-outcome-recap-tab-controller-navigation-10184",
+      "title": "Scenario Outcome Recap Tab Controller Navigation",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md"],
+      "purpose": "Make the existing Progress, Arc, Carryover, Aftermath, and Journal Outcome recap pages reachable through real keyboard/controller focus navigation without mutating terminal authority.",
+      "implementationTargets": ["scenes/results/ScenarioOutcomeShell.gd", "tests/scenario_outcome_normal_entry_focus_regression.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"tab_count": 5, "controller_reachable_tabs": 1, "mouse_reachable_tabs": 5, "observed_focus_cycle_size": 6, "save_version": 9},
+      "completionCriteria": ["Real shoulder/D-pad/keyboard input reaches the native Outcome TabBar and selects all five recap pages in both directions with boundary retention", "Traversal returns to legal actions and mouse selection remains exact without changing session/progression/save/cache/settings/routes/action authority", "Selected recap page and valid focus persist across refresh/save and overwrite/new-session confirmation cancel paths", "Campaign/skirmish victory/defeat, normal/recovery focus, 1280/1920 layout, core/repository, and Linux/Windows packaged controller gates pass"],
+      "nonGoals": ["Outcome content/copy redesign, new pages, progression/reward/routing changes, save schema/version, broad focus-system rewrite, layout expansion, generated-map or Native RMG behavior, publication, signing, native Windows hardware certification, or release-completion claim"],
+      "createdAt": "2026-08-11T04:00:00Z",
+      "startedAt": "2026-08-11T04:00:00Z",
+      "updatedAt": "2026-08-11T05:15:00Z",
+      "notes": "Completed exact native Recap TabBar inclusion once in Outcome's authoritative focus cycle, disabled/hidden-aware boundary retention, selected-tooltip synchronization, and selected-page persistence. All four campaign/skirmish victory/defeat focused rows prove real shoulder/D-pad/keyboard/mouse traversal across Progress, Arc, Carryover, Aftermath, and Journal; reverse traversal; action return; Journal refresh persistence; and exact session/progression/files/cache/settings/routes/actions/recap authority at 1280 and 1920. Recovery Save retains Arc through occupied-slot overwrite and Escape cancel with exact prior bytes. Recovery, safe new-session confirmation, visual, core, editor, validator, diff, exact Linux package, and fresh Windows/Wine package pass.",
+      "remainingWork": "No work remains in this slice. Broader release work, faction balance, strategic-AI/content breadth, Native RMG parity, signing, native Windows hardware certification, publication, and overall release readiness remain open.",
+      "completedAt": "2026-08-11T05:15:00Z"
     }
   ],
   "project": "heroes-like",

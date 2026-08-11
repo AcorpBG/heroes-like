@@ -72,7 +72,16 @@ var _validation_outcome_focus_accept_count := 0
 var _validation_outcome_focus_action_execution_suppressed := false
 var _last_outcome_focus_accept_result: Dictionary = {}
 var _last_outcome_focus_cycle: Array = []
+var _last_outcome_focus_cycle_names: Array[String] = []
+var _last_outcome_focus_tab_bar_occurrences := 0
 var _last_outcome_focus_preferred_action_id := ""
+var _last_outcome_recap_tab_index := 0
+var _validation_outcome_recap_tab_change_sequence := 0
+var _validation_outcome_recap_tab_change_count := 0
+var _validation_outcome_recap_tab_focus_retention_count := 0
+var _validation_outcome_recap_tab_boundary_retain_count := 0
+var _last_outcome_recap_tab_change_result: Dictionary = {}
+var _validation_outcome_recap_tab_resetting := false
 var _pending_outcome_new_session_confirmation: Dictionary = {}
 var _outcome_new_session_source_session: SessionStateStore.SessionData
 var _outcome_new_session_return_focus: Control = null
@@ -89,6 +98,10 @@ var _compact_layout_active := false
 
 func _ready() -> void:
 	_apply_visual_theme()
+	_last_outcome_recap_tab_index = _recap_tabs.current_tab
+	_configure_outcome_recap_tab_accessibility()
+	if not _recap_tabs.tab_changed.is_connected(_on_outcome_recap_tab_changed):
+		_recap_tabs.tab_changed.connect(_on_outcome_recap_tab_changed)
 	_configure_outcome_new_session_confirmation()
 	resized.connect(_apply_responsive_layout)
 	_apply_responsive_layout()
@@ -116,6 +129,91 @@ func _configure_outcome_new_session_confirmation() -> void:
 	var dialog_label := _new_session_confirmation_dialog.get_label()
 	dialog_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	dialog_label.custom_minimum_size = Vector2(620.0, 0.0)
+
+func _configure_outcome_recap_tab_accessibility() -> void:
+	var tab_bar := _recap_tabs.get_tab_bar()
+	if tab_bar == null:
+		return
+	tab_bar.focus_mode = Control.FOCUS_ALL
+	if not tab_bar.gui_input.is_connected(_on_outcome_recap_tab_bar_gui_input):
+		tab_bar.gui_input.connect(_on_outcome_recap_tab_bar_gui_input)
+	_sync_outcome_recap_tab_tooltip()
+
+func _on_outcome_recap_tab_changed(tab: int) -> void:
+	if _validation_outcome_recap_tab_resetting:
+		_last_outcome_recap_tab_index = tab
+		_sync_outcome_recap_tab_tooltip()
+		return
+	var previous_tab := _last_outcome_recap_tab_index
+	_last_outcome_recap_tab_index = tab
+	_validation_outcome_recap_tab_change_sequence += 1
+	_validation_outcome_recap_tab_change_count += 1
+	var change_sequence := _validation_outcome_recap_tab_change_sequence
+	_last_outcome_recap_tab_change_result = {
+		"ok": true,
+		"from_tab": previous_tab,
+		"to_tab": tab,
+		"tab_title": _recap_tabs.get_tab_title(tab) if tab >= 0 and tab < _recap_tabs.get_tab_count() else "",
+		"focus_retained": false,
+		"focus_owner": "",
+		"sequence": change_sequence,
+	}
+	_sync_outcome_recap_tab_tooltip()
+	call_deferred("_complete_outcome_recap_tab_focus_retention", tab, change_sequence)
+
+func _complete_outcome_recap_tab_focus_retention(tab: int, change_sequence: int) -> void:
+	if (
+		not is_inside_tree()
+		or tab != _recap_tabs.current_tab
+		or change_sequence != _validation_outcome_recap_tab_change_sequence
+	):
+		return
+	var tab_bar := _recap_tabs.get_tab_bar()
+	var viewport := get_viewport()
+	var focus_owner := viewport.gui_get_focus_owner() if viewport != null else null
+	var retained := tab_bar != null and focus_owner == tab_bar
+	if retained:
+		_validation_outcome_recap_tab_focus_retention_count += 1
+	_last_outcome_recap_tab_change_result["focus_retained"] = retained
+	_last_outcome_recap_tab_change_result["focus_owner"] = String(focus_owner.name) if focus_owner != null else ""
+
+func _on_outcome_recap_tab_bar_gui_input(event: InputEvent) -> void:
+	var direction := 0
+	if event.is_action_pressed("ui_left", true):
+		direction = -1
+	elif event.is_action_pressed("ui_right", true):
+		direction = 1
+	if direction == 0:
+		return
+	var tab_bar := _recap_tabs.get_tab_bar()
+	var viewport := get_viewport()
+	if tab_bar == null or viewport == null or viewport.gui_get_focus_owner() != tab_bar:
+		return
+	if _selectable_outcome_recap_tab_in_direction(tab_bar, _recap_tabs.current_tab, direction) >= 0:
+		return
+	_validation_outcome_recap_tab_boundary_retain_count += 1
+	tab_bar.accept_event()
+	tab_bar.grab_focus()
+
+func _selectable_outcome_recap_tab_in_direction(tab_bar: TabBar, from_tab: int, direction: int) -> int:
+	var candidate := from_tab + direction
+	while candidate >= 0 and candidate < tab_bar.tab_count:
+		if not tab_bar.is_tab_disabled(candidate) and not tab_bar.is_tab_hidden(candidate):
+			return candidate
+		candidate += direction
+	return -1
+
+func _sync_outcome_recap_tab_tooltip() -> void:
+	var tab_bar := _recap_tabs.get_tab_bar()
+	if tab_bar == null:
+		return
+	var selected_title := "Outcome recap"
+	if _recap_tabs.current_tab >= 0 and _recap_tabs.current_tab < _recap_tabs.get_tab_count():
+		selected_title = _recap_tabs.get_tab_title(_recap_tabs.current_tab)
+	tab_bar.tooltip_text = _join_tooltip_sections([
+		"Outcome recap tabs. Use Left and Right while the tabs are focused.",
+		"Selected: %s." % selected_title,
+	])
 
 func _apply_responsive_layout() -> void:
 	if _content_margin == null:
@@ -394,7 +492,7 @@ func _configure_outcome_keyboard_focus(
 		return
 	var surfaces := [
 		_actions_bar,
-		_recap_tabs,
+		_recap_tabs.get_tab_bar(),
 		_save_slot_picker,
 		_save_button,
 		_menu_button,
@@ -402,12 +500,19 @@ func _configure_outcome_keyboard_focus(
 	]
 	var controls := FrontierVisualKit.configure_focus_cycle(surfaces)
 	_last_outcome_focus_cycle = []
+	_last_outcome_focus_cycle_names = []
+	_last_outcome_focus_tab_bar_occurrences = 0
+	var tab_bar := _recap_tabs.get_tab_bar()
 	for control in controls:
 		if control is Control:
+			_last_outcome_focus_cycle_names.append(String(control.name))
+			if control == tab_bar:
+				_last_outcome_focus_tab_bar_occurrences += 1
 			_last_outcome_focus_cycle.append({
 				"node_name": String(control.name),
 				"action_id": String(control.get_meta("outcome_action_id", "")),
 				"disabled": bool(control.disabled) if control is BaseButton else false,
+				"is_recap_tab_bar": control == tab_bar,
 			})
 	var preferred: Control = null
 	_last_outcome_focus_preferred_action_id = ""
@@ -924,6 +1029,7 @@ func validation_snapshot() -> Dictionary:
 	return {
 		"scene_path": scene_file_path,
 		"outcome_focus": validation_outcome_focus_snapshot(),
+		"outcome_recap_tab_navigation": validation_outcome_recap_tab_navigation_snapshot(),
 		"new_session_confirmation": validation_outcome_new_session_confirmation_snapshot(),
 		"manual_save_overwrite_dialog": _manual_save_overwrite_dialog.validation_snapshot(),
 		"return_to_menu_last_result": _last_return_to_menu_result.duplicate(true),
@@ -1116,6 +1222,48 @@ func validation_reset_outcome_focus_state() -> Dictionary:
 func validation_refresh_outcome_focus() -> Dictionary:
 	_refresh()
 	return validation_outcome_focus_snapshot()
+
+func validation_reset_outcome_recap_tab_navigation_state() -> Dictionary:
+	_validation_outcome_recap_tab_resetting = true
+	_recap_tabs.current_tab = 0
+	_last_outcome_recap_tab_index = _recap_tabs.current_tab
+	_validation_outcome_recap_tab_resetting = false
+	_validation_outcome_recap_tab_change_sequence = 0
+	_validation_outcome_recap_tab_change_count = 0
+	_validation_outcome_recap_tab_focus_retention_count = 0
+	_validation_outcome_recap_tab_boundary_retain_count = 0
+	_last_outcome_recap_tab_change_result = {}
+	_sync_outcome_recap_tab_tooltip()
+	return validation_outcome_recap_tab_navigation_snapshot()
+
+func validation_outcome_recap_tab_navigation_snapshot() -> Dictionary:
+	var tab_bar := _recap_tabs.get_tab_bar()
+	var viewport := get_viewport()
+	var focus_owner := viewport.gui_get_focus_owner() if viewport != null else null
+	var tab_titles: Array[String] = []
+	for tab_index in range(_recap_tabs.get_tab_count()):
+		tab_titles.append(_recap_tabs.get_tab_title(tab_index))
+	return {
+		"active_tab": _recap_tabs.current_tab,
+		"tab_count": _recap_tabs.get_tab_count(),
+		"tab_titles": tab_titles,
+		"selected_tab_title": _recap_tabs.get_tab_title(_recap_tabs.current_tab) if _recap_tabs.current_tab >= 0 and _recap_tabs.current_tab < _recap_tabs.get_tab_count() else "",
+		"tab_bar_name": String(tab_bar.name) if tab_bar != null else "",
+		"tab_bar_focus_mode": tab_bar.focus_mode if tab_bar != null else Control.FOCUS_NONE,
+		"tab_bar_boundary_policy": "retain",
+		"tab_bar_has_focus": focus_owner == tab_bar,
+		"tab_bar_focus_owner": String(focus_owner.name) if focus_owner == tab_bar else "",
+		"tab_bar_tooltip": tab_bar.tooltip_text if tab_bar != null else "",
+		"focus_owner": String(focus_owner.name) if focus_owner != null else "",
+		"change_sequence": _validation_outcome_recap_tab_change_sequence,
+		"change_count": _validation_outcome_recap_tab_change_count,
+		"focus_retention_count": _validation_outcome_recap_tab_focus_retention_count,
+		"boundary_retain_count": _validation_outcome_recap_tab_boundary_retain_count,
+		"last_change_result": _last_outcome_recap_tab_change_result.duplicate(true),
+		"focus_cycle_names": _last_outcome_focus_cycle_names.duplicate(),
+		"focus_cycle_count": _last_outcome_focus_cycle_names.size(),
+		"tab_bar_occurrences": _last_outcome_focus_tab_bar_occurrences,
+	}
 
 func validation_outcome_focus_snapshot() -> Dictionary:
 	var viewport := get_viewport()

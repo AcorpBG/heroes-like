@@ -24,7 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current implementation slice: `accessibility-battle-info-tab-controller-navigation-10184` (completed). The native Battle information TabBar now joins the authoritative focus cycle so keyboard/controller players can reach Order, Focus, Spells, and Timing without changing gameplay authority.
+- Current implementation slice: `accessibility-scenario-outcome-recap-tab-controller-navigation-10184` (completed). The native Outcome recap TabBar now joins the authoritative focus cycle so keyboard/controller players can inspect Progress, Arc, Carryover, Aftermath, and Journal without changing terminal/save authority.
+- Latest completed implementation slice: `accessibility-scenario-outcome-recap-tab-controller-navigation-10184`. Campaign/skirmish victory/defeat, real shoulder/D-pad/keyboard/mouse traversal, boundary retention, refresh/recovery-modal persistence, exact terminal/save authority, and Linux plus fresh Windows/Wine packages pass.
 - Latest completed implementation slice: `accessibility-battle-info-tab-controller-navigation-10184`. Real shoulder, D-pad, keyboard, and mouse traversal reaches all four tabs with boundary retention, command return, selected-tab persistence through Defend refresh, exact authority, and Linux plus fresh Windows/Wine packaged PASS.
 - Latest completed implementation slice: `performance-generated-large-transactional-manual-save-10184`. Generated-Large 20.28MB empty-slot and overwrite saves retain one semantic normalization and exact transactional verification while completing in 2302/2462ms in the Linux package and 2863/3830ms in fresh Windows/Wine.
 - Latest completed implementation slice: `performance-generated-large-town-explicit-save-surface-10184`. Exact save-surface copy, authority, recovery, rollback, overwrite, command-risk, Town/core/repository, and Linux plus fresh Windows/Wine packaged gates pass; the separate large transactional-write latency remains follow-up performance debt.
@@ -4009,6 +4010,37 @@ Completion evidence:
 - real shoulder, D-pad, keyboard, and mouse traversal covers Order, Focus, Spells, and Timing in both directions, returns to the original legal command, and preserves Timing through a real Defend refresh;
 - strict battle/session/save/settings/routes/target/initiative/event authority, active-focus, core, editor, validator, repository, Linux package, and fresh Windows/Wine package gates pass;
 - the broad Battle layout harness remains pre-existing test debt: current and isolated committed HEAD both time out at the same detached routed-resolution null viewport/tree teardown before any tab assertion.
+
+## Scenario Outcome Recap Tab Controller Navigation
+
+id: `accessibility-scenario-outcome-recap-tab-controller-navigation-10184`
+
+Status: completed.
+
+Selected Phase 6 accessibility correction. The mandatory terminal Outcome screen exposes five recap pages—Progress,
+Arc, Carryover, Aftermath, and Journal—but its focus cycle supplies the TabContainer rather than the internal native
+TabBar. Keyboard/controller traversal loops through ordinary actions while the recap remains on Progress; mouse selection works.
+
+Implementation target:
+- include the exact native Outcome recap TabBar once in the authoritative focus cycle while preserving primary-action, recovery Save, overwrite, new-session confirmation, Menu, and Guide focus policies;
+- retain native left/right selection across all five informational pages, hold focus at first/last selectable boundaries, and immediately synchronize selected-page accessibility copy;
+- preserve the selected recap page and a legal focus owner across Outcome refresh/save flows without adding page actions;
+- keep outcome rules, progression, save schema/version, routing, layout composition, and mouse behavior unchanged.
+
+Completion criteria:
+- real shoulder/D-pad/keyboard input reaches the native TabBar, selects all five recap pages in both directions, retains both boundaries, returns to legal actions, and preserves mouse selection;
+- selected recap page and valid focus persist across refresh/save and confirmation cancel paths;
+- browsing leaves session/progression/save/cache/settings/routes/action authority and recap copy exact;
+- campaign and skirmish victory/defeat, overwrite and new-session confirmation, normal/recovery focus, 1280/1920 layout, core, editor, validator, repository, Linux package, and fresh Windows/Wine package gates pass.
+
+Non-goals:
+- no Outcome content/copy redesign, new recap pages, progression/reward/routing changes, save schema/version, broad focus-system rewrite, layout expansion, generated-map or Native RMG work, publication, signing, native Windows hardware certification, or release-completion claim.
+
+Completion evidence:
+- the exact native Outcome recap TabBar appears once in the authoritative focus cycle, retains both selectable boundaries, updates selected-page accessibility copy, and preserves primary/recovery/modal focus policy;
+- all four campaign/skirmish victory/defeat rows prove real shoulder/D-pad/keyboard/mouse traversal across five pages, reverse traversal, action return, Journal refresh persistence, and exact session/progression/files/cache/settings/routes/actions/recap authority at 1280 and 1920;
+- recovery Save physically selects Arc and retains it through an occupied-slot overwrite dialog plus Escape cancel while preserving prior manual bytes;
+- Outcome recovery, new-session confirmation, visual, core, editor, validator, repository, Linux package, and fresh Windows/Wine package gates pass.
 
 ## Phase Roadmap
 
