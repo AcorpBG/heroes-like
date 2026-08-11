@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Outcome recap-tab controller slice is complete with exact source, Linux package, and fresh Windows/Wine proof. Overall release readiness remains open.",
+  "currentNotes": "The Drowned Antler wounded-apex slice is complete with exact live-rule, corrected-RNG control, 59-encounter breadth, and repository proof. Overall release readiness remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "accessibility-scenario-outcome-recap-tab-controller-navigation-10184",
-  "currentSliceId": "accessibility-scenario-outcome-recap-tab-controller-navigation-10184",
-  "currentSliceNotes": "Completed native five-page keyboard/controller/mouse traversal, boundary retention, refresh/recovery-modal persistence, exact terminal/save authority, and Linux/fresh Windows-Wine package proof.",
+  "currentSlice": "combat-mireclaw-drowned-antler-wounded-apex-10184",
+  "currentSliceId": "combat-mireclaw-drowned-antler-wounded-apex-10184",
+  "currentSliceNotes": "Completed Drowned Antler Rout live/AI/summary behavior and improved the exact prior-screen corrected-RNG control from 38 / 332.5 / 13 / 79.0 / 1.6 to 37 / 229.0 / 7 / 73.5 / 1.13 with a clear 59-encounter queue.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Scenario Outcome Recap Tab Controller Navigation",
-  "currentSliceUpdatedAt": "2026-08-11T05:15:00Z",
+  "currentSliceTitle": "Mireclaw Drowned Antler Wounded Apex",
+  "currentSliceUpdatedAt": "2026-08-11T06:30:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -75066,6 +75066,26 @@
       "notes": "Completed exact native Recap TabBar inclusion once in Outcome's authoritative focus cycle, disabled/hidden-aware boundary retention, selected-tooltip synchronization, and selected-page persistence. All four campaign/skirmish victory/defeat focused rows prove real shoulder/D-pad/keyboard/mouse traversal across Progress, Arc, Carryover, Aftermath, and Journal; reverse traversal; action return; Journal refresh persistence; and exact session/progression/files/cache/settings/routes/actions/recap authority at 1280 and 1920. Recovery Save retains Arc through occupied-slot overwrite and Escape cancel with exact prior bytes. Recovery, safe new-session confirmation, visual, core, editor, validator, diff, exact Linux package, and fresh Windows/Wine package pass.",
       "remainingWork": "No work remains in this slice. Broader release work, faction balance, strategic-AI/content breadth, Native RMG parity, signing, native Windows hardware certification, publication, and overall release readiness remain open.",
       "completedAt": "2026-08-11T05:15:00Z"
+    },
+    {
+      "id": "combat-mireclaw-drowned-antler-wounded-apex-10184",
+      "title": "Mireclaw Drowned Antler Wounded Apex",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/factions-content-bible.md"],
+      "purpose": "Replace the generic Drowned Sovereign ranged screen with the authored Mireclaw tier-seven wounded/disrupted apex role and improve corrected-RNG late-week balance without matchup-specific logic.",
+      "implementationTargets": ["content/units.json", "tests/battle_faction_fast_balance_benchmark.py", "tests/unit_ability_runtime_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"corrected_rng_outliers": 38, "corrected_rng_excess_severity": 332.5, "corrected_rng_severe_rows": 13, "corrected_rng_max_dominance_pct": 79.0, "corrected_rng_max_side_bias_points": 1.6, "week4_mireclaw_pair_wins": 5, "save_version": 9},
+      "completionCriteria": ["Drowned Antler Sovereign executes one content-owned clean-line penalty plus wounded/listed-status/rooted primary-melee payoff with exact live/AI/summary parity", "Method-matched prior-screen control and production use identical corrected-RNG formation, hero, seed, week, and tie policies", "The all-live 100-seed matrix improves at least one control metric without worsening 38 outliers, 332.5 severity, 13 severe rows, 79 percent dominance, 1.6 side bias, or zero structural failures", "The 59-encounter queue remains clear and ability/autoplay/balance/core/editor/repository/JSON/Python/diff gates pass"],
+      "nonGoals": ["base stats, growth, costs, buildings, army groups, other units, heroes, spells, economy, encounters, saves, campaigns, packaging, Native RMG, benchmark thresholds, faction/matchup/week/seed branches, or release-completion claims"],
+      "createdAt": "2026-08-11T06:00:00Z",
+      "startedAt": "2026-08-11T06:00:00Z",
+      "updatedAt": "2026-08-11T06:30:00Z",
+      "notes": "Completed content-owned Drowned Antler Rout on shared Bloodrush rules with focused 118/118 live consequence proof. The method-matched exact prior-screen control reproduces 38 outliers / 332.5 severity / 13 severe / 79.0 maximum dominance / 1.6 side bias, while production improves to 37 / 229.0 / 7 / 73.5 / 1.13 with zero structural failures. Active breadth completes 59/59 with zero stalls or invalid orders and a clear zero-item queue at repeated signature 829808c9. Balance regression, core, editor, validator, JSON, Python, and diff gates pass; Native RMG deferral is unchanged.",
+      "remainingWork": "No work remains in this slice. Broader faction balance, strategic-AI/content breadth, Native RMG parity, signing, native Windows hardware certification, publication, and overall release readiness remain open.",
+      "completedAt": "2026-08-11T06:30:00Z"
     }
   ],
   "project": "heroes-like",

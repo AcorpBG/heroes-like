@@ -67,6 +67,17 @@ GOREFEN_SCREEN_CONTROL_ABILITIES = [
         "cohesion_hold_bonus": 1,
     }
 ]
+DROWNED_SOVEREIGN_SCREEN_CONTROL_ABILITIES = [
+    {
+        "id": "shielding",
+        "name": "Drowned Sovereign Screen",
+        "description": "A drowned antler canopy breaks volleys and keeps the Mireclaw apex stack alive through ranged tempo.",
+        "cohesion_hold_bonus": 2,
+        "ranged_damage_multiplier": 0.84,
+        "engaged_damage_multiplier": 1.06,
+        "harried_damage_multiplier": 1.06,
+    }
+]
 
 
 def load_items(filename: str) -> dict[str, dict[str, Any]]:
@@ -102,12 +113,23 @@ def import_town_balance_module():
 
 
 class FastBattleBenchmark:
-    def __init__(self, gorefen_screen_control: bool = False) -> None:
+    def __init__(
+        self,
+        gorefen_screen_control: bool = False,
+        drowned_sovereign_screen_control: bool = False,
+    ) -> None:
+        if gorefen_screen_control and drowned_sovereign_screen_control:
+            raise ValueError("Only one method-matched ability control may be active")
         self.gorefen_screen_control = gorefen_screen_control
+        self.drowned_sovereign_screen_control = drowned_sovereign_screen_control
         self.units = load_items("units.json")
         if self.gorefen_screen_control:
             self.units["unit_mireclaw_gorefen_rippers"]["abilities"] = [
                 dict(ability) for ability in GOREFEN_SCREEN_CONTROL_ABILITIES
+            ]
+        if self.drowned_sovereign_screen_control:
+            self.units["unit_mireclaw_drowned_antler_sovereign"]["abilities"] = [
+                dict(ability) for ability in DROWNED_SOVEREIGN_SCREEN_CONTROL_ABILITIES
             ]
         self.buildings = load_items("buildings.json")
         self.towns = load_items("towns.json")
@@ -445,11 +467,20 @@ class FastBattleBenchmark:
             "ok": not structural_failures,
             "balance_status": "needs_tuning" if outliers else "within_target",
             "policy": "python_fast_faction_battle_benchmark",
-            "content_variant": "gorefen_screen_control" if self.gorefen_screen_control else "current_content",
+            "content_variant": (
+                "gorefen_screen_control"
+                if self.gorefen_screen_control
+                else "drowned_sovereign_screen_control"
+                if self.drowned_sovereign_screen_control
+                else "current_content"
+            ),
             "control_policy": (
                 "method-matched control using current benchmark methods with only "
                 "unit_mireclaw_gorefen_rippers abilities replaced by the exact pre-slice Gorefen Screen contract"
                 if self.gorefen_screen_control
+                else "method-matched control using current benchmark methods with only "
+                "unit_mireclaw_drowned_antler_sovereign abilities replaced by the exact pre-slice Drowned Sovereign Screen contract"
+                if self.drowned_sovereign_screen_control
                 else "current content with no in-memory ability override"
             ),
             "initiative_tie_policy": "paired ordered matchups keep the same seeded faction tie owner when internal sides reverse",
@@ -3023,10 +3054,16 @@ def main() -> int:
     parser.add_argument("--json", action="store_true", help="Emit raw JSON without the report prefix.")
     parser.add_argument("--gate", action="store_true", help="Return non-zero on structural benchmark failure.")
     parser.add_argument("--include-contexts", action="store_true", help="Add report-only terrain/tag context rows.")
-    parser.add_argument(
+    control_group = parser.add_mutually_exclusive_group()
+    control_group.add_argument(
         "--gorefen-screen-control",
         action="store_true",
         help="Run a method-matched control with only Gorefen Rippers abilities restored in memory to the pre-slice Gorefen Screen contract.",
+    )
+    control_group.add_argument(
+        "--drowned-sovereign-screen-control",
+        action="store_true",
+        help="Run a method-matched control with only Drowned Antler Sovereign abilities restored in memory to the exact pre-slice Drowned Sovereign Screen contract.",
     )
     parser.add_argument(
         "--hero-policy",
@@ -3038,7 +3075,10 @@ def main() -> int:
 
     seeds = 10 if args.quick else max(1, int(args.seeds))
     weeks = [1] if args.quick else args.weeks
-    report = FastBattleBenchmark(gorefen_screen_control=bool(args.gorefen_screen_control)).run(
+    report = FastBattleBenchmark(
+        gorefen_screen_control=bool(args.gorefen_screen_control),
+        drowned_sovereign_screen_control=bool(args.drowned_sovereign_screen_control),
+    ).run(
         weeks=weeks,
         seeds=seeds,
         include_contexts=bool(args.include_contexts),

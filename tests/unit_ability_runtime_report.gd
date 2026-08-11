@@ -2523,6 +2523,12 @@ func _probe_bloodrush(unit_id: String) -> Dictionary:
 	var clean_ai_retaliation_modifier := BattleAiRulesScript._ability_damage_modifier(clean_attacker, clean_target, clean_battle, false, true, 0)
 	var clean_role := BattleRulesScript._ability_role_sentence(clean_attacker, _ability_by_id(clean_attacker, "bloodrush"), clean_battle, clean_target)
 	var clean_window := BattleRulesScript._active_ability_window_summary(clean_attacker, clean_battle, clean_target)
+	var dead_attacker := clean_attacker.duplicate(true)
+	dead_attacker["count"] = 0
+	dead_attacker["total_health"] = 0
+	var dead_battle := _battle_for_stacks([dead_attacker, clean_target.duplicate(true), clean_supporter.duplicate(true)])
+	var dead_target := BattleRulesScript._get_stack_by_id(dead_battle, String(clean_target.get("battle_id", "")))
+	var dead_source_attack_blocked := not BattleRulesScript._can_make_melee_attack(dead_attacker, dead_battle, dead_target)
 	var disrupted_defender := _defender_stack()
 	_set_hex(disrupted_defender, 5, 3)
 	_add_effect(disrupted_defender, "status_staggered")
@@ -2538,6 +2544,18 @@ func _probe_bloodrush(unit_id: String) -> Dictionary:
 	var disrupted_ai_ranged_modifier := BattleAiRulesScript._ability_damage_modifier(disrupted_attacker, disrupted_target, disrupted_battle, true, false, 1)
 	var disrupted_ai_retaliation_modifier := BattleAiRulesScript._ability_damage_modifier(disrupted_attacker, disrupted_target, disrupted_battle, false, true, 0)
 	var disrupted_role := BattleRulesScript._ability_role_sentence(disrupted_attacker, _ability_by_id(disrupted_attacker, "bloodrush"), disrupted_battle, disrupted_target)
+	var rooted_defender := _defender_stack()
+	_set_hex(rooted_defender, 5, 3)
+	_add_effect(rooted_defender, "status_rooted")
+	var rooted_supporter := _defender_stack("enemy", 1)
+	_set_hex(rooted_supporter, 5, 2)
+	var rooted_battle := _battle_for_stacks([attacker.duplicate(true), rooted_defender, rooted_supporter])
+	var rooted_attacker := BattleRulesScript._get_stack_by_id(rooted_battle, String(attacker.get("battle_id", "")))
+	var rooted_target := BattleRulesScript._get_stack_by_id(rooted_battle, String(rooted_defender.get("battle_id", "")))
+	var rooted_modifier := BattleRulesScript._ability_damage_modifier(rooted_attacker, rooted_target, rooted_battle, false, false, 0)
+	var rooted_ranged_modifier := BattleRulesScript._ability_damage_modifier(rooted_attacker, rooted_target, rooted_battle, true, false, 1)
+	var rooted_retaliation_modifier := BattleRulesScript._ability_damage_modifier(rooted_attacker, rooted_target, rooted_battle, false, true, 0)
+	var rooted_ai_modifier := BattleAiRulesScript._ability_damage_modifier(rooted_attacker, rooted_target, rooted_battle, false, false, 0)
 	var isolated_defender := _defender_stack()
 	_set_hex(isolated_defender, 5, 3)
 	var distant_supporter := _defender_stack("enemy", 1)
@@ -2585,7 +2603,7 @@ func _probe_bloodrush(unit_id: String) -> Dictionary:
 		and clean_role.contains("15%")
 		and disrupted_role.contains("now")
 	)
-	var legacy_optional_field_preservation_ok := unit_id == "unit_mireclaw_gorefen_rippers" or (
+	var legacy_optional_field_preservation_ok := unit_id in ["unit_mireclaw_gorefen_rippers", "unit_mireclaw_drowned_antler_sovereign"] or (
 		not _ability_by_id(attacker, "bloodrush").has("primary_melee_only")
 		and not _ability_by_id(attacker, "bloodrush").has("isolated_damage_multiplier")
 		and not _ability_by_id(attacker, "bloodrush").has("isolated_ai_target_priority_bonus")
@@ -2624,7 +2642,32 @@ func _probe_bloodrush(unit_id: String) -> Dictionary:
 		and retaliation_momentum_with == retaliation_momentum_without
 		and kill_momentum_with > kill_momentum_without
 	)
-	var ok := modifier_with > modifier_without and prepared_breach_contract_ok and legacy_optional_field_preservation_ok and gorefen_finisher_contract_ok
+	var sovereign_apex_contract_ok := unit_id != "unit_mireclaw_drowned_antler_sovereign" or (
+		String(_ability_by_id(attacker, "bloodrush").get("name", "")) == "Drowned Antler Rout"
+		and bool(_ability_by_id(attacker, "bloodrush").get("primary_melee_only", false))
+		and is_equal_approx(clean_modifier, 0.9)
+		and modifier_with > 1.0
+		and disrupted_modifier > 1.0
+		and rooted_modifier > 1.0
+		and is_equal_approx(clean_ranged_modifier, 1.0)
+		and is_equal_approx(clean_retaliation_modifier, 1.0)
+		and is_equal_approx(disrupted_ranged_modifier, 1.0)
+		and is_equal_approx(disrupted_retaliation_modifier, 1.0)
+		and is_equal_approx(rooted_ranged_modifier, 1.0)
+		and is_equal_approx(rooted_retaliation_modifier, 1.0)
+		and is_equal_approx(clean_ai_modifier, clean_modifier)
+		and is_equal_approx(disrupted_ai_modifier, disrupted_modifier)
+		and is_equal_approx(rooted_ai_modifier, rooted_modifier)
+		and dead_source_attack_blocked
+		and clean_role.contains("clean primary attacks lose 10% damage")
+		and disrupted_role.contains("now")
+		and wounded_initiative_with > wounded_initiative_without
+		and momentum_with == momentum_without
+		and ranged_momentum_with == ranged_momentum_without
+		and retaliation_momentum_with == retaliation_momentum_without
+		and kill_momentum_with > kill_momentum_without
+	)
+	var ok := modifier_with > modifier_without and prepared_breach_contract_ok and legacy_optional_field_preservation_ok and gorefen_finisher_contract_ok and sovereign_apex_contract_ok
 	return {
 		"ok": ok,
 		"probe": "bloodrush_prepared_breach_damage_modifier",
@@ -2639,6 +2682,7 @@ func _probe_bloodrush(unit_id: String) -> Dictionary:
 		"clean_ai_retaliation_modifier": clean_ai_retaliation_modifier,
 		"clean_role": clean_role,
 		"clean_window": clean_window,
+		"dead_source_attack_blocked": dead_source_attack_blocked,
 		"disrupted_modifier": disrupted_modifier,
 		"disrupted_ranged_modifier": disrupted_ranged_modifier,
 		"disrupted_retaliation_modifier": disrupted_retaliation_modifier,
@@ -2646,6 +2690,10 @@ func _probe_bloodrush(unit_id: String) -> Dictionary:
 		"disrupted_ai_ranged_modifier": disrupted_ai_ranged_modifier,
 		"disrupted_ai_retaliation_modifier": disrupted_ai_retaliation_modifier,
 		"disrupted_role": disrupted_role,
+		"rooted_modifier": rooted_modifier,
+		"rooted_ranged_modifier": rooted_ranged_modifier,
+		"rooted_retaliation_modifier": rooted_retaliation_modifier,
+		"rooted_ai_modifier": rooted_ai_modifier,
 		"isolated_modifier": isolated_modifier,
 		"isolated_ranged_modifier": isolated_ranged_modifier,
 		"isolated_retaliation_modifier": isolated_retaliation_modifier,
@@ -2671,7 +2719,8 @@ func _probe_bloodrush(unit_id: String) -> Dictionary:
 		"prepared_breach_contract_ok": prepared_breach_contract_ok,
 		"legacy_optional_field_preservation_ok": legacy_optional_field_preservation_ok,
 		"gorefen_finisher_contract_ok": gorefen_finisher_contract_ok,
-		"reason": "" if ok else "bloodrush did not preserve its wounded payoff, prepared-breach contract, or Gorefen primary-melee isolated-prey scope",
+		"sovereign_apex_contract_ok": sovereign_apex_contract_ok,
+		"reason": "" if ok else "bloodrush did not preserve its wounded payoff, prepared-breach contract, Gorefen finisher scope, or Drowned Sovereign wounded/disrupted apex scope",
 	}
 
 func _probe_overheat(unit_id: String) -> Dictionary:

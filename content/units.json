@@ -1192,13 +1192,25 @@
       },
       "abilities": [
         {
-          "id": "shielding",
-          "name": "Drowned Sovereign Screen",
-          "description": "A drowned antler canopy breaks volleys and keeps the Mireclaw apex stack alive through ranged tempo.",
-          "cohesion_hold_bonus": 2,
-          "ranged_damage_multiplier": 0.84,
-          "engaged_damage_multiplier": 1.06,
-          "harried_damage_multiplier": 1.06
+          "id": "bloodrush",
+          "name": "Drowned Antler Rout",
+          "description": "The sovereign yields ground before an intact line, then tramples wounded, harried, staggered, or rooted prey and carries a kill into the next collapse.",
+          "primary_melee_only": true,
+          "clean_target_damage_multiplier": 0.9,
+          "wounded_threshold_ratio": 0.5,
+          "wounded_damage_multiplier": 1.12,
+          "status_ids": [
+            "status_mire_harried",
+            "status_harried",
+            "status_staggered",
+            "status_rooted"
+          ],
+          "status_damage_multiplier": 1.06,
+          "wounded_initiative_bonus": 1,
+          "max_initiative_bonus": 1,
+          "momentum_gain": 0,
+          "kill_momentum_gain": 1,
+          "late_round_initiative_bonus": 0
         }
       ],
       "content_status": "six_faction_scaffold",
