@@ -47,6 +47,8 @@ func _run() -> void:
 
 	if not await _exercise_town_cancel_ownership(protected_states, campaign_before, settings_before):
 		return
+	if not await _exercise_overworld_drawer_cancel_ownership(protected_states, campaign_before, settings_before):
+		return
 
 	var route_specs := [
 		{"id": "overworld", "scene": "res://scenes/overworld/OverworldShell.tscn", "day": 11},
@@ -87,6 +89,18 @@ func _run() -> void:
 		"town_save_slot_popup_cancel_unchanged": true,
 		"town_settings_cancel_unchanged": true,
 		"town_mouse_confirm_exact": true,
+		"overworld_command_drawer_joypad_cancel_exact": true,
+		"overworld_command_drawer_escape_cancel_exact": true,
+		"overworld_frontier_drawer_joypad_cancel_exact": true,
+		"overworld_frontier_drawer_escape_cancel_exact": true,
+		"overworld_drawer_fresh_back_closes_only_drawer": true,
+		"overworld_drawer_joypad_confirm_exact": true,
+		"overworld_drawer_enter_confirm_exact": true,
+		"overworld_drawer_route_camera_debug_authority_exact": true,
+		"overworld_save_slot_popup_cancel_unchanged": true,
+		"overworld_settings_cancel_unchanged": true,
+		"overworld_end_turn_cancel_unchanged": true,
+		"overworld_no_drawer_cancel_route_exact": true,
 		"origin_focus_restored": true,
 		"confirm_exactly_once": true,
 		"pending_slot_binding_preserved": true,
@@ -125,6 +139,9 @@ func _exercise_route(
 	var dialog: ConfirmationDialog = shell.get_node("ManualSaveOverwriteDialog")
 	origin_button.grab_focus()
 	await get_tree().process_frame
+	var no_drawer_authority := ""
+	if String(route.get("id", "")) == "overworld":
+		no_drawer_authority = _overworld_drawer_authority_signature(shell, session)
 
 	var request: Dictionary = shell.call("validation_request_manual_save")
 	await _settle()
@@ -143,6 +160,8 @@ func _exercise_route(
 		await _capture("overwrite_confirmation")
 		await _press_joypad_button(JOY_BUTTON_B)
 		if dialog.visible or get_viewport().gui_get_focus_owner() != origin_button \
+				or String(_overworld_chrome_state(shell).get("active_drawer", "")) != "" \
+				or _overworld_drawer_authority_signature(shell, session) != no_drawer_authority \
 				or _file_state(_manual_slot_path(2)) != slot2_before \
 				or not _require_preserved_state(protected_states, active_payload, campaign_before, settings_before, _manual_slot_path(2)):
 			return _fail_shell(shell, "Joypad B did not cancel overwrite exactly and restore Save focus.")
@@ -152,6 +171,8 @@ func _exercise_route(
 			return _fail_shell(shell, "Overwrite confirmation did not reopen safely after joypad cancellation.")
 		await _press_key(KEY_ESCAPE)
 		if dialog.visible or get_viewport().gui_get_focus_owner() != origin_button \
+				or String(_overworld_chrome_state(shell).get("active_drawer", "")) != "" \
+				or _overworld_drawer_authority_signature(shell, session) != no_drawer_authority \
 				or _file_state(_manual_slot_path(2)) != slot2_before \
 				or not _require_preserved_state(protected_states, active_payload, campaign_before, settings_before, _manual_slot_path(2)):
 			return _fail_shell(shell, "Escape did not cancel overwrite exactly and restore Save focus.")
@@ -207,6 +228,249 @@ func _exercise_town_cancel_ownership(
 		await _settle()
 		return false
 	get_window().size = original_window_size
+	await _settle()
+	return true
+
+func _exercise_overworld_drawer_cancel_ownership(
+	protected_states: Dictionary,
+	campaign_before: Dictionary,
+	settings_before: Dictionary
+) -> bool:
+	var cases := [
+		{"id": "command_joypad", "drawer": "command", "joypad": true, "day": 36, "confirm": "joypad"},
+		{"id": "command_escape", "drawer": "command", "joypad": false, "day": 37},
+		{"id": "frontier_joypad", "drawer": "frontier", "joypad": true, "day": 38},
+		{"id": "frontier_escape", "drawer": "frontier", "joypad": false, "day": 39, "confirm": "enter"},
+	]
+	for case_value in cases:
+		var case: Dictionary = case_value
+		if not await _exercise_overworld_drawer_cancel_case(case, protected_states, campaign_before, settings_before):
+			return false
+	return await _exercise_overworld_neighbor_modal_owners(protected_states, campaign_before, settings_before)
+
+func _exercise_overworld_drawer_cancel_case(
+	case: Dictionary,
+	protected_states: Dictionary,
+	campaign_before: Dictionary,
+	settings_before: Dictionary
+) -> bool:
+	var old_fixture = ScenarioFactory.create_session("river-pass", "hard", SessionState.LAUNCH_MODE_SKIRMISH)
+	old_fixture.day = 3
+	if SaveService.save_manual_session(old_fixture.to_dict(), 2) == "":
+		return _fail_bool("Could not seed occupied Overworld drawer Manual Slot 2 fixture.")
+	SaveService.validation_clear_summary_cache()
+	var slot2_before := _file_state(_manual_slot_path(2))
+	var session = _session_for_route("overworld", int(case.get("day", 36)))
+	session = SessionState.set_active_session(session)
+	SaveService.set_selected_manual_slot(2)
+	var shell = load("res://scenes/overworld/OverworldShell.tscn").instantiate()
+	add_child(shell)
+	await _settle()
+	var save_button: Button = shell.get_node("%Save")
+	var dialog: ConfirmationDialog = shell.get_node("ManualSaveOverwriteDialog")
+	save_button.grab_focus()
+	await get_tree().process_frame
+	var baseline_authority := _overworld_drawer_authority_signature(shell, session)
+	var drawer := String(case.get("drawer", ""))
+	var drawer_state: Dictionary = shell.validation_open_command_drawer() if drawer == "command" else shell.validation_open_frontier_drawer()
+	if not _overworld_drawer_state_exact(drawer_state, drawer):
+		return _fail_shell(shell, "Overworld overwrite fixture did not open the exact %s drawer: %s." % [drawer, JSON.stringify(drawer_state)])
+	save_button.grab_focus()
+	await get_tree().process_frame
+	var drawer_authority := _overworld_drawer_authority_signature(shell, session)
+	var request: Dictionary = shell.validation_request_manual_save()
+	await _settle()
+	var request_snapshot: Dictionary = dialog.validation_snapshot()
+	if not bool(request.get("visible", false)) \
+			or int(request_snapshot.get("pending_slot", 0)) != 2 \
+			or int(request_snapshot.get("request_count", 0)) <= 0 \
+			or String(request_snapshot.get("return_focus_name", "")) != "Save" \
+			or not _safe_dialog_ready(dialog, "Keep Save"):
+		return _fail_shell(shell, "Overworld %s drawer did not open the exact occupied overwrite confirmation: %s." % [drawer, JSON.stringify(request_snapshot)])
+	if bool(case.get("joypad", false)):
+		await _press_joypad_button(JOY_BUTTON_B)
+	else:
+		await _press_key(KEY_ESCAPE)
+	var after: Dictionary = dialog.validation_snapshot()
+	var focus_owner := get_viewport().gui_get_focus_owner()
+	var after_drawer := _overworld_chrome_state(shell)
+	if bool(after.get("visible", true)) \
+			or int(after.get("pending_slot", -1)) != 0 \
+			or not (after.get("action", null) is Dictionary) \
+			or not after.get("action", {}).is_empty() \
+			or int(after.get("request_count", -1)) != int(request_snapshot.get("request_count", 0)) \
+			or int(after.get("cancel_count", -1)) != int(request_snapshot.get("cancel_count", 0)) + 1 \
+			or int(after.get("confirm_count", -1)) != int(request_snapshot.get("confirm_count", 0)) \
+			or focus_owner != save_button \
+			or not _overworld_drawer_state_exact(after_drawer, drawer) \
+			or _file_state(_manual_slot_path(2)) != slot2_before \
+			or _overworld_drawer_authority_signature(shell, session) != drawer_authority \
+			or not _require_preserved_state(protected_states, session.to_dict(), campaign_before, settings_before, _manual_slot_path(2)):
+		return _fail_shell(shell, "Overworld physical overwrite cancel escaped %s drawer ownership: case=%s before=%s after=%s drawer=%s focus=%s." % [drawer, JSON.stringify(case), JSON.stringify(request_snapshot), JSON.stringify(after), JSON.stringify(after_drawer), String(focus_owner.name) if focus_owner != null else ""])
+	await _press_joypad_button(JOY_BUTTON_B)
+	var closed_drawer := _overworld_chrome_state(shell)
+	var after_fresh_back: Dictionary = dialog.validation_snapshot()
+	if not _overworld_drawer_state_exact(closed_drawer, "") \
+			or _manual_dialog_transaction_state(after_fresh_back) != _manual_dialog_transaction_state(after) \
+			or _overworld_drawer_authority_signature(shell, session) != baseline_authority:
+		return _fail_shell(shell, "Fresh post-overwrite Back did not close only the %s drawer: dialog=%s chrome=%s." % [drawer, JSON.stringify(after_fresh_back), JSON.stringify(closed_drawer)])
+	var confirm_input := String(case.get("confirm", ""))
+	if confirm_input != "" and not await _exercise_overworld_drawer_confirm(shell, session, drawer, confirm_input, protected_states, campaign_before, settings_before):
+		return false
+	shell.queue_free()
+	await _settle()
+	return true
+
+func _exercise_overworld_drawer_confirm(
+	shell,
+	session,
+	drawer: String,
+	confirm_input: String,
+	protected_states: Dictionary,
+	campaign_before: Dictionary,
+	settings_before: Dictionary
+) -> bool:
+	var save_button: Button = shell.get_node("%Save")
+	var dialog: ConfirmationDialog = shell.get_node("ManualSaveOverwriteDialog")
+	var drawer_state: Dictionary = shell.validation_open_command_drawer() if drawer == "command" else shell.validation_open_frontier_drawer()
+	if not _overworld_drawer_state_exact(drawer_state, drawer):
+		return _fail_shell(shell, "Overworld %s confirm fixture could not reopen its drawer." % drawer)
+	save_button.grab_focus()
+	await get_tree().process_frame
+	var authority_before := _overworld_confirm_authority_signature(shell, session)
+	var request: Dictionary = shell.validation_request_manual_save()
+	await _settle()
+	if not bool(request.get("visible", false)) or not _safe_dialog_ready(dialog, "Keep Save"):
+		return _fail_shell(shell, "Overworld %s drawer could not reopen overwrite confirmation for %s." % [drawer, confirm_input])
+	if not bool(shell.validation_select_save_slot(3)):
+		return _fail_shell(shell, "Overworld %s drawer confirm fixture could not change visible selection to Manual Slot 3." % drawer)
+	var slot3_before := _file_state(_manual_slot_path(3))
+	var dialog_before: Dictionary = dialog.validation_snapshot()
+	var ok_button: Button = dialog.get_ok_button()
+	ok_button.grab_focus()
+	await get_tree().process_frame
+	if confirm_input == "joypad":
+		await _press_joypad_button(JOY_BUTTON_A)
+	else:
+		await _press_key(KEY_ENTER)
+	var dialog_after: Dictionary = dialog.validation_snapshot()
+	var summary: Dictionary = SaveService.inspect_manual_slot(2)
+	var profile: Dictionary = SaveService.validation_last_runtime_save_profile()
+	var step_counts := {}
+	for step_value in profile.get("steps", []):
+		if step_value is Dictionary:
+			var step_name := String(step_value.get("name", ""))
+			step_counts[step_name] = int(step_counts.get(step_name, 0)) + 1
+	var chrome := _overworld_chrome_state(shell)
+	if bool(dialog_after.get("visible", true)) \
+			or int(dialog_after.get("pending_slot", -1)) != 0 \
+			or not (dialog_after.get("action", null) is Dictionary) \
+			or not dialog_after.get("action", {}).is_empty() \
+			or int(dialog_after.get("request_count", -1)) != int(dialog_before.get("request_count", 0)) \
+			or int(dialog_after.get("confirm_count", -1)) != int(dialog_before.get("confirm_count", 0)) + 1 \
+			or int(dialog_after.get("cancel_count", -1)) != int(dialog_before.get("cancel_count", 0)) \
+			or not _overworld_drawer_state_exact(chrome, drawer) \
+			or not SaveService.can_load_summary(summary) \
+			or int(summary.get("day", 0)) != int(session.day) \
+			or _file_state(_manual_slot_path(3)) != slot3_before \
+			or String(profile.get("slot_type", "")) != SaveService.SLOT_TYPE_MANUAL \
+			or String(profile.get("path", "")) != _manual_slot_path(2) \
+			or int(profile.get("written_bytes", 0)) != FileAccess.get_size(_manual_slot_path(2)) \
+			or int(profile.get("recovery_count", 0)) != 1 \
+			or int(step_counts.get("write_payload_start", 0)) != 1 \
+			or int(step_counts.get("finished", 0)) != 1 \
+			or _overworld_confirm_authority_signature(shell, session) != authority_before \
+			or not _require_preserved_state(protected_states, session.to_dict(), campaign_before, settings_before, _manual_slot_path(2)):
+		return _fail_shell(shell, "Overworld %s drawer %s overwrite did not remain slot-bound and execute once: before=%s after=%s summary=%s profile=%s chrome=%s." % [drawer, confirm_input, JSON.stringify(dialog_before), JSON.stringify(dialog_after), JSON.stringify(summary), JSON.stringify(profile), JSON.stringify(chrome)])
+	await _press_joypad_button(JOY_BUTTON_B)
+	if not _overworld_drawer_state_exact(_overworld_chrome_state(shell), ""):
+		return _fail_shell(shell, "Fresh Back did not close the %s drawer after %s overwrite confirmation." % [drawer, confirm_input])
+	return true
+
+func _exercise_overworld_neighbor_modal_owners(
+	protected_states: Dictionary,
+	campaign_before: Dictionary,
+	settings_before: Dictionary
+) -> bool:
+	var session = _session_for_route("overworld", 40)
+	session = SessionState.set_active_session(session)
+	SaveService.set_selected_manual_slot(2)
+	var shell = load("res://scenes/overworld/OverworldShell.tscn").instantiate()
+	add_child(shell)
+	await _settle()
+	var baseline_authority := _overworld_drawer_authority_signature(shell, session)
+
+	var command_state: Dictionary = shell.validation_open_command_drawer()
+	var picker: OptionButton = shell.get_node("%SaveSlot")
+	picker.grab_focus()
+	var command_authority := _overworld_drawer_authority_signature(shell, session)
+	picker.show_popup()
+	await _settle()
+	if not picker.get_popup().visible or not _overworld_drawer_state_exact(command_state, "command"):
+		return _fail_shell(shell, "Overworld SaveSlot neighbor fixture did not open above Command drawer.")
+	await _press_joypad_button(JOY_BUTTON_B)
+	if picker.get_popup().visible \
+			or not _overworld_drawer_state_exact(_overworld_chrome_state(shell), "command") \
+			or _overworld_drawer_authority_signature(shell, session) != command_authority:
+		return _fail_shell(shell, "Overworld SaveSlot popup cancel escaped into Command drawer ownership.")
+	await _press_joypad_button(JOY_BUTTON_B)
+	if not _overworld_drawer_state_exact(_overworld_chrome_state(shell), "") \
+			or _overworld_drawer_authority_signature(shell, session) != baseline_authority:
+		return _fail_shell(shell, "Fresh Back did not close Command drawer after SaveSlot popup cancellation.")
+
+	var frontier_state: Dictionary = shell.validation_open_frontier_drawer()
+	var settings_button: Button = shell.get_node("%Settings")
+	settings_button.grab_focus()
+	await get_tree().process_frame
+	var frontier_authority := _overworld_drawer_authority_signature(shell, session)
+	var settings_open: Dictionary = shell.validation_open_active_play_settings()
+	var settings_dialog = shell.validation_active_play_settings_dialog()
+	await _settle()
+	if not bool(settings_open.get("visible", false)) or not _overworld_drawer_state_exact(frontier_state, "frontier"):
+		return _fail_shell(shell, "Overworld Settings neighbor fixture did not open above Frontier drawer.")
+	await _press_key(KEY_ESCAPE)
+	if settings_dialog.is_open() \
+			or get_viewport().gui_get_focus_owner() != settings_button \
+			or not _overworld_drawer_state_exact(_overworld_chrome_state(shell), "frontier") \
+			or _overworld_drawer_authority_signature(shell, session) != frontier_authority:
+		return _fail_shell(shell, "Overworld Settings cancel escaped into Frontier drawer ownership.")
+	await _press_joypad_button(JOY_BUTTON_B)
+	if not _overworld_drawer_state_exact(_overworld_chrome_state(shell), "") \
+			or _overworld_drawer_authority_signature(shell, session) != baseline_authority:
+		return _fail_shell(shell, "Fresh Back did not close Frontier drawer after Settings cancellation.")
+
+	command_state = shell.validation_open_command_drawer()
+	var end_turn_button: Button = shell.get_node("%EndTurn")
+	end_turn_button.grab_focus()
+	await get_tree().process_frame
+	command_authority = _overworld_drawer_authority_signature(shell, session)
+	var end_before: Dictionary = shell.validation_end_turn_confirmation_snapshot()
+	var end_request: Dictionary = shell.validation_request_end_turn()
+	await _settle()
+	if not bool(end_request.get("confirmation_required", false)) \
+			or not bool(end_request.get("dialog_visible", false)) \
+			or not _overworld_drawer_state_exact(command_state, "command"):
+		return _fail_shell(shell, "Overworld End Turn neighbor fixture did not open a confirmation above Command drawer: %s." % JSON.stringify(end_request))
+	await _press_joypad_button(JOY_BUTTON_B)
+	var end_after: Dictionary = shell.validation_end_turn_confirmation_snapshot()
+	if bool(end_after.get("dialog_visible", true)) \
+			or bool(end_after.get("pending", true)) \
+			or int(end_after.get("request_count", -1)) != int(end_before.get("request_count", 0)) + 1 \
+			or int(end_after.get("cancel_count", -1)) != int(end_before.get("cancel_count", 0)) + 1 \
+			or int(end_after.get("confirm_count", -1)) != int(end_before.get("confirm_count", 0)) \
+			or int(end_after.get("commit_count", -1)) != int(end_before.get("commit_count", 0)) \
+			or int(end_after.get("rules_end_turn_call_count", -1)) != int(end_before.get("rules_end_turn_call_count", 0)) \
+			or int(end_after.get("autosave_call_count", -1)) != int(end_before.get("autosave_call_count", 0)) \
+			or get_viewport().gui_get_focus_owner() != end_turn_button \
+			or not _overworld_drawer_state_exact(_overworld_chrome_state(shell), "command") \
+			or _overworld_drawer_authority_signature(shell, session) != command_authority:
+		return _fail_shell(shell, "Overworld End Turn cancel escaped into Command drawer ownership: before=%s after=%s." % [JSON.stringify(end_before), JSON.stringify(end_after)])
+	await _press_joypad_button(JOY_BUTTON_B)
+	if not _overworld_drawer_state_exact(_overworld_chrome_state(shell), "") \
+			or _overworld_drawer_authority_signature(shell, session) != baseline_authority \
+			or not _require_preserved_state(protected_states, session.to_dict(), campaign_before, settings_before, _manual_slot_path(2)):
+		return _fail_shell(shell, "Fresh Back did not close Command drawer after End Turn cancellation without changing authority.")
+	shell.queue_free()
 	await _settle()
 	return true
 
@@ -542,6 +806,90 @@ func _exercise_town_native_modal_controls(shell, session) -> bool:
 			or _town_modal_authority_signature(shell, session) != settings_authority:
 		return _fail_shell(shell, "Town Settings cancel no longer remained owned by the native modal.")
 	return true
+
+func _overworld_chrome_state(shell) -> Dictionary:
+	var snapshot: Dictionary = shell.validation_snapshot()
+	var chrome_value: Variant = snapshot.get("chrome", {})
+	return chrome_value.duplicate(true) if chrome_value is Dictionary else {}
+
+func _manual_dialog_transaction_state(snapshot: Dictionary) -> Dictionary:
+	var action_value: Variant = snapshot.get("action", {})
+	var action: Dictionary = action_value.duplicate(true) if action_value is Dictionary else {}
+	return {
+		"visible": bool(snapshot.get("visible", false)),
+		"pending_slot": int(snapshot.get("pending_slot", 0)),
+		"action": action,
+		"request_count": int(snapshot.get("request_count", 0)),
+		"cancel_count": int(snapshot.get("cancel_count", 0)),
+		"confirm_count": int(snapshot.get("confirm_count", 0)),
+	}
+
+func _overworld_drawer_state_exact(state: Dictionary, drawer: String) -> bool:
+	if String(state.get("active_drawer", "")) != drawer:
+		return false
+	if drawer == "command":
+		return bool(state.get("command_drawer_visible", false)) \
+				and not bool(state.get("frontier_drawer_visible", true)) \
+				and bool(state.get("command_spine_visible", false))
+	if drawer == "frontier":
+		return not bool(state.get("command_drawer_visible", true)) \
+				and bool(state.get("frontier_drawer_visible", false)) \
+				and bool(state.get("command_spine_visible", false))
+	return not bool(state.get("command_drawer_visible", true)) \
+			and not bool(state.get("frontier_drawer_visible", true))
+
+func _overworld_drawer_authority_signature(shell, session) -> String:
+	var shell_route: Dictionary = shell.validation_active_play_return_snapshot()
+	shell_route.erase("focus_owner")
+	var controller_routes: Dictionary = shell.validation_controller_route_cursor_snapshot()
+	controller_routes.erase("focus_owner")
+	var shell_snapshot: Dictionary = shell.validation_snapshot()
+	return JSON.stringify({
+		"session": session.to_dict(),
+		"files": _capture_file_states(_tracked_paths()),
+		"save_profile": SaveService.validation_last_runtime_save_profile(),
+		"save_cache": SaveService.validation_summary_cache_snapshot(),
+		"settings": _settings_transaction_route_authority(),
+		"shell_route": shell_route,
+		"app_route": AppRouter.validation_active_play_return_snapshot(),
+		"overworld_handoff": AppRouter.validation_latest_overworld_handoff_profile(),
+		"controller_routes": controller_routes,
+		"map_viewport": shell_snapshot.get("map_viewport", {}),
+		"debug_overlay": shell.validation_debug_overlay_snapshot(),
+		"placement_debug_overlay": shell.validation_placement_debug_overlay_snapshot(),
+	})
+
+func _overworld_confirm_authority_signature(shell, session) -> String:
+	var shell_route: Dictionary = shell.validation_active_play_return_snapshot()
+	shell_route.erase("focus_owner")
+	# A successful save intentionally changes the visible system message. Preserve
+	# every route field that cannot change as part of the accepted write.
+	shell_route.erase("visible_message")
+	var controller_routes: Dictionary = shell.validation_controller_route_cursor_snapshot()
+	controller_routes.erase("focus_owner")
+	var shell_snapshot: Dictionary = shell.validation_snapshot()
+	var map_view_value: Variant = shell_snapshot.get("map_viewport", {})
+	var map_view: Dictionary = map_view_value.duplicate(true) if map_view_value is Dictionary else {}
+	# The accepted save refresh deliberately advances renderer generations while
+	# camera, route preview, geometry, and presentation authority stay exact.
+	map_view.erase("render_cache")
+	var placement_debug: Dictionary = shell.validation_placement_debug_overlay_snapshot()
+	var placement_map_value: Variant = placement_debug.get("map_view", {})
+	var placement_map: Dictionary = placement_map_value.duplicate(true) if placement_map_value is Dictionary else {}
+	# The same refresh updates only the renderer-owned diagnostic reason.
+	placement_map.erase("dynamic_reason")
+	placement_debug["map_view"] = placement_map
+	return JSON.stringify({
+		"session": session.to_dict(),
+		"settings": _settings_transaction_route_authority(),
+		"shell_route": shell_route,
+		"app_route": AppRouter.validation_active_play_return_snapshot(),
+		"overworld_handoff": AppRouter.validation_latest_overworld_handoff_profile(),
+		"controller_routes": controller_routes,
+		"map_viewport": map_view,
+		"debug_overlay": shell.validation_debug_overlay_snapshot(),
+		"placement_debug_overlay": placement_debug,
+	})
 
 func _town_modal_authority_signature(shell, session) -> String:
 	var shell_route: Dictionary = shell.validation_active_play_return_snapshot()

@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `accessibility-overworld-drawer-overwrite-cancel-ownership-10184`. A visible manual-overwrite confirmation now outranks Command/Frontier drawer cancel handling, so the first physical Back/Escape activates native Keep Save, preserves the open drawer and background authority, and restores Save focus before a fresh Back closes the drawer.
 - Latest completed implementation slice: `accessibility-town-manual-overwrite-cancel-ownership-10184`. Physical Back/Escape on Town's visible manual-overwrite confirmation is now owned by the native Keep Save action, canceling once, preserving the Town route and save bytes, and restoring Save focus before ordinary Town Back navigation resumes.
 - Latest completed implementation slice: `accessibility-overworld-settings-unhandled-command-containment-10184`. Overworld Settings now consumes shell commands that survive native GUI handling, so Enter, Space, debug-overlay keys, and camera recenter cannot mutate gameplay behind the visible modal while native Settings controls and fresh post-close shell commands remain unchanged.
 - Latest completed implementation slice: `accessibility-hero-keybindings-live-status-announcements-10184`. The Hero Keybindings capture/result status is now one bounded polite native screen-reader live region, announcing capture prompts, cancellation, rejection, swap, success, reset, and failure updates without changing focus or input behavior.
