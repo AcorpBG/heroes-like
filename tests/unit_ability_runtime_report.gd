@@ -2645,7 +2645,7 @@ func _probe_bloodrush(unit_id: String) -> Dictionary:
 	var sovereign_apex_contract_ok := unit_id != "unit_mireclaw_drowned_antler_sovereign" or (
 		String(_ability_by_id(attacker, "bloodrush").get("name", "")) == "Drowned Antler Rout"
 		and bool(_ability_by_id(attacker, "bloodrush").get("primary_melee_only", false))
-		and is_equal_approx(clean_modifier, 0.9)
+		and is_equal_approx(clean_modifier, 0.85)
 		and modifier_with > 1.0
 		and disrupted_modifier > 1.0
 		and rooted_modifier > 1.0
@@ -2659,7 +2659,7 @@ func _probe_bloodrush(unit_id: String) -> Dictionary:
 		and is_equal_approx(disrupted_ai_modifier, disrupted_modifier)
 		and is_equal_approx(rooted_ai_modifier, rooted_modifier)
 		and dead_source_attack_blocked
-		and clean_role.contains("clean primary attacks lose 10% damage")
+		and clean_role.contains("clean primary attacks lose 15% damage")
 		and disrupted_role.contains("now")
 		and wounded_initiative_with > wounded_initiative_without
 		and momentum_with == momentum_without

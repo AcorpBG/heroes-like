@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Drowned Antler wounded-apex slice is complete with exact live-rule, corrected-RNG control, 59-encounter breadth, and repository proof. Overall release readiness remains open.",
+  "currentNotes": "The Drowned Antler apex calibration is complete with exact live-rule, method-matched 100-seed production/control, 59-encounter breadth, compatibility, and repository proof. Overall release readiness remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "combat-mireclaw-drowned-antler-wounded-apex-10184",
-  "currentSliceId": "combat-mireclaw-drowned-antler-wounded-apex-10184",
-  "currentSliceNotes": "Completed Drowned Antler Rout live/AI/summary behavior and improved the exact prior-screen corrected-RNG control from 38 / 332.5 / 13 / 79.0 / 1.6 to 37 / 229.0 / 7 / 73.5 / 1.13 with a clear 59-encounter queue.",
+  "currentSlice": "combat-mireclaw-drowned-antler-apex-calibration-10184",
+  "currentSliceId": "combat-mireclaw-drowned-antler-apex-calibration-10184",
+  "currentSliceNotes": "Completed the authored 0.85/1.10/1.05 calibration. Production improves from 37 / 229.0 / 7 / 73.5 / 1.13 to 36 / 214.5 / 6 / 71.0 / 1.13; the exact prior-screen control remains 38 / 332.5 / 13 / 79.0 / 1.6, structural failures remain zero, and the 59-encounter queue remains clear.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Mireclaw Drowned Antler Wounded Apex",
-  "currentSliceUpdatedAt": "2026-08-11T06:30:00Z",
+  "currentSliceTitle": "Mireclaw Drowned Antler Apex Calibration",
+  "currentSliceUpdatedAt": "2026-08-11T07:30:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -75086,6 +75086,27 @@
       "notes": "Completed content-owned Drowned Antler Rout on shared Bloodrush rules with focused 118/118 live consequence proof. The method-matched exact prior-screen control reproduces 38 outliers / 332.5 severity / 13 severe / 79.0 maximum dominance / 1.6 side bias, while production improves to 37 / 229.0 / 7 / 73.5 / 1.13 with zero structural failures. Active breadth completes 59/59 with zero stalls or invalid orders and a clear zero-item queue at repeated signature 829808c9. Balance regression, core, editor, validator, JSON, Python, and diff gates pass; Native RMG deferral is unchanged.",
       "remainingWork": "No work remains in this slice. Broader faction balance, strategic-AI/content breadth, Native RMG parity, signing, native Windows hardware certification, publication, and overall release readiness remain open.",
       "completedAt": "2026-08-11T06:30:00Z"
+    },
+    {
+      "id": "combat-mireclaw-drowned-antler-apex-calibration-10184",
+      "title": "Mireclaw Drowned Antler Apex Calibration",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/factions-content-bible.md"],
+      "purpose": "Retain Drowned Antler Rout's authored wounded/disrupted apex identity while calibrating only its three damage multipliers to reduce the accepted corrected-RNG Mireclaw balance pressure.",
+      "implementationTargets": ["content/units.json", "tests/battle_faction_fast_balance_benchmark.py", "tests/unit_ability_runtime_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"corrected_rng_outliers": 37, "corrected_rng_excess_severity": 229.0, "corrected_rng_severe_rows": 7, "corrected_rng_max_dominance_pct": 73.5, "corrected_rng_max_side_bias_points": 1.13, "late_week_outliers": 18, "late_week_excess_severity": 119.5, "late_week_severe_rows": 4, "late_week_max_dominance_pct": 73.5, "late_week_max_side_bias_points": 1.0},
+      "candidate": {"clean_target_damage_multiplier": 0.85, "wounded_damage_multiplier": 1.10, "status_damage_multiplier": 1.05, "late_week_outliers": 17, "late_week_excess_severity": 105.0, "late_week_severe_rows": 3, "late_week_max_dominance_pct": 71.0, "late_week_max_side_bias_points": 0.73},
+      "completionCriteria": ["Focused runtime proof retains every Drowned Antler Rout consequence and exclusion at the calibrated authored values", "The corrected-RNG all-live 100-seed matrix keeps weeks one/two exact and improves the accepted 37/229/7/73.5/1.13 production surface with zero structural failures", "The exact prior-screen control remains 38/332.5/13/79.0/1.6 under identical methods", "The active 59-encounter queue remains clear and ability/autoplay/balance/core/editor/repository/JSON/Python/diff gates pass"],
+      "nonGoals": ["Bloodrush rule-shape, base-stat, growth, cost, building, army-group, other-unit, hero, spell, economy, encounter, save, campaign, packaging, Native RMG, or benchmark-threshold changes", "faction, opponent, week, army-count, encounter, seed, or benchmark hard-coding", "final Mireclaw, faction-balance, or release-completion claims"],
+      "createdAt": "2026-08-11T07:00:00Z",
+      "startedAt": "2026-08-11T07:00:00Z",
+      "updatedAt": "2026-08-11T07:30:00Z",
+      "notes": "Completed content-only Drowned Antler Rout calibration at 0.85/1.10/1.05. Focused runtime passes 118/118. The authoritative all-live 100-seed matrix improves production from 37 outliers / 229.0 severity / seven severe / 73.5 maximum / 1.13 side bias to 36 / 214.5 / six / 71.0 / 1.13 with zero structural failures; the identical prior-screen control remains 38 / 332.5 / 13 / 79.0 / 1.6. Active breadth completes 59/59 with zero stalls or invalid orders and a clear queue at repeated signature 829808c9. Autoplay balance, balance regression, core, editor, validator, JSON, Python, and diff gates pass; Native RMG deferral is unchanged.",
+      "remainingWork": "No work remains in this slice. Broader faction balance, strategic-AI/content breadth, Native RMG parity, signing, native Windows hardware certification, publication, and overall release readiness remain open.",
+      "completedAt": "2026-08-11T07:30:00Z"
     }
   ],
   "project": "heroes-like",

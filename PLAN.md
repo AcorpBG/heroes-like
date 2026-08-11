@@ -24,7 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current implementation slice: `combat-mireclaw-drowned-antler-wounded-apex-10184` (completed). Drowned Antler Sovereigns now execute their authored wounded/disrupted apex role through shared live combat, AI, summaries, and the corrected-RNG benchmark instead of acting as a generic ranged screen.
+- Current implementation slice: `combat-mireclaw-drowned-antler-apex-calibration-10184` (completed). Drowned Antler Rout retains its wounded/disrupted apex contract while the calibrated `0.85/1.10/1.05` multipliers reduce the accepted production matrix to `36 / 214.5 / 6 / 71.0 / 1.13` with zero structural failures.
+- Latest completed implementation slice: `combat-mireclaw-drowned-antler-apex-calibration-10184`. The exact prior-screen control remains `38 / 332.5 / 13 / 79.0 / 1.6`; the 59-encounter live queue remains clear at repeated signature `829808c9`, and focused ability, autoplay, balance, core, editor, and repository gates pass.
 - Latest completed implementation slice: `combat-mireclaw-drowned-antler-wounded-apex-10184`. The exact prior-screen control reproduces `38 / 332.5 / 13 / 79.0 / 1.6`, while production improves to `37 / 229.0 / 7 / 73.5 / 1.13` with zero structural failures and a clear 59-encounter live queue.
 - Latest completed implementation slice: `accessibility-scenario-outcome-recap-tab-controller-navigation-10184`. Campaign/skirmish victory/defeat, real shoulder/D-pad/keyboard/mouse traversal, boundary retention, refresh/recovery-modal persistence, exact terminal/save authority, and Linux plus fresh Windows/Wine packages pass.
 - Latest completed implementation slice: `accessibility-battle-info-tab-controller-navigation-10184`. Real shoulder, D-pad, keyboard, and mouse traversal reaches all four tabs with boundary retention, command return, selected-tab persistence through Defend refresh, exact authority, and Linux plus fresh Windows/Wine packaged PASS.
@@ -4078,6 +4079,37 @@ Completion evidence:
 - the prior-screen control reproduces 38 outliers / 332.5 excess severity / 13 severe rows / 79.0 maximum dominance / 1.6 side bias, while production improves to 37 / 229.0 / 7 / 73.5 / 1.13 with zero structural failures;
 - the active scenario breadth report completes `59/59` encounters with zero stalls or invalid orders and a clear zero-item queue at repeated signature `829808c9`;
 - balance regression, core systems, Godot editor parse, repository validation, JSON, Python, and diff checks pass; the existing Native RMG exact-state-chain deferral remains explicitly unchanged.
+
+## Mireclaw Drowned Antler Apex Calibration
+
+id: `combat-mireclaw-drowned-antler-apex-calibration-10184`
+
+Status: completed.
+
+Selected Phase 6 faction-balance implementation slice. Drowned Antler Rout restores the source-authored wounded/disrupted apex role and materially improves its exact prior-screen control, but the accepted production matrix still has 37 outliers / `229.0` excess severity / seven rows at or above 65 percent / `73.5` maximum dominance. Mireclaw leads 15 outlier rows, including every week-three pairing.
+
+Implementation target:
+- retain the existing content-owned primary-melee Bloodrush contract, clean-line weakness, wounded/listed-status/rooted windows, initiative, and kill-only momentum;
+- calibrate only the clean-target, wounded-target, and listed-status damage multipliers from `0.90/1.12/1.06` to the method-matched `0.85/1.10/1.05` candidate;
+- keep live BattleRules, tactical AI, player summaries, normalization, focused ability proof, and the fast benchmark on the same authored fields;
+- keep the exact prior Drowned Sovereign Screen benchmark control unchanged.
+
+Completion criteria:
+- focused runtime proof keeps clean, wounded, disrupted, rooted, ranged, retaliation, initiative, kill-momentum, dead/stripped-source, live/AI parity, and readable-summary behavior exact at the calibrated authored values;
+- the corrected-RNG all-live 100-seed four-week matrix keeps weeks one/two exact and improves the accepted `37 / 229.0 / 7 / 73.5 / 1.13` production surface without structural failures or transferring the loss into a worse side-bias row;
+- the exact prior-screen control remains `38 / 332.5 / 13 / 79.0 / 1.6` under identical formation, hero, seed, week, and tie methods;
+- the active 59-encounter breadth queue remains clear, and focused ability, autoplay, balance-regression, core, editor parse, repository, JSON, Python, and diff gates pass.
+
+Non-goals:
+- do not change the Bloodrush rule shape, unit base stats, growth, costs, buildings, army groups, other units, heroes, spells, economy, encounters, saves, campaigns, packaging, Native RMG, or benchmark thresholds;
+- do not hard-code factions, opponents, weeks, army counts, encounter ids, seeds, or benchmark identity into combat behavior;
+- do not claim final Mireclaw identity, final faction balance, or overall release completion.
+
+Completion evidence:
+- focused runtime proof passes `118/118` consequences and exclusions for Drowned Antler Rout at `0.85/1.10/1.05` without changing Bloodrush rule shape, ranged attacks, retaliation, initiative, or kill-only momentum;
+- the authoritative all-live 100-seed matrix improves production from `37 / 229.0 / 7 / 73.5 / 1.13` to `36 / 214.5 / 6 / 71.0 / 1.13` with zero structural failures, while the identical prior-screen control remains `38 / 332.5 / 13 / 79.0 / 1.6`;
+- the active scenario breadth report completes `59/59` encounters with zero stalls or invalid orders and a clear queue at repeated signature `829808c9`;
+- autoplay balance, balance regression, core systems, Godot editor parse, repository validation, JSON, Python, and diff checks pass. The content-only calibration is platform-neutral and introduces no Linux/Windows-specific runtime or packaging path.
 
 ## Phase Roadmap
 
