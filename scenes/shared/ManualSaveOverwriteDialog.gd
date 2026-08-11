@@ -7,6 +7,7 @@ var _return_focus: Control
 var _request_count := 0
 var _cancel_count := 0
 var _confirm_count := 0
+var _forwarding_root_physical_input := false
 
 
 func _ready() -> void:
@@ -16,6 +17,32 @@ func _ready() -> void:
 	cancel_action.action = "ui_cancel"
 	cancel_shortcut.events = [cancel_action]
 	get_cancel_button().shortcut = cancel_shortcut
+	var root_window := get_tree().root
+	if root_window != null and not root_window.window_input.is_connected(_on_root_window_input):
+		root_window.window_input.connect(_on_root_window_input)
+
+
+func _on_root_window_input(event: InputEvent) -> void:
+	if (
+		not visible
+		or _pending_slot <= 0
+		or _forwarding_root_physical_input
+		or not (event is InputEventKey or event is InputEventJoypadButton)
+	):
+		return
+	get_tree().root.set_input_as_handled()
+	var detached_event := event.duplicate() as InputEvent
+	if detached_event == null:
+		return
+	call_deferred("_forward_root_physical_input", detached_event)
+
+
+func _forward_root_physical_input(event: InputEvent) -> void:
+	if not visible or _pending_slot <= 0 or _forwarding_root_physical_input:
+		return
+	_forwarding_root_physical_input = true
+	push_input(event)
+	_forwarding_root_physical_input = false
 
 func open_action(action: Dictionary) -> bool:
 	if bool(action.get("disabled", true)) or not bool(action.get("requires_confirmation", false)):

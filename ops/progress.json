@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld drawer-plus-overwrite cancel ownership slice is complete. Visible manual-overwrite confirmation now joins the existing modal-owner path before route and drawer handling, so native Keep Save cancels on the first B/Escape without changing the open drawer or background authority.",
+  "currentNotes": "The shared manual-save overwrite confirmation is now exclusive across Overworld, Town, Battle, and Outcome. Real parent-window clicks are blocked, while root-routed physical keyboard/controller events are deferred into the child dialog without double-routing into background shell input.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "accessibility-overworld-drawer-overwrite-cancel-ownership-10184",
-  "currentSliceId": "accessibility-overworld-drawer-overwrite-cancel-ownership-10184",
-  "currentSliceNotes": "Compose Overworld drawer and manual-overwrite ownership so the visible native confirmation receives physical cancel before background drawer handling, with exact save/focus/route authority.",
+  "currentSlice": "accessibility-manual-overwrite-exclusive-parent-input-10184",
+  "currentSliceId": "accessibility-manual-overwrite-exclusive-parent-input-10184",
+  "currentSliceNotes": "The shared overwrite confirmation is exclusive at the native Window boundary; parent mouse input is contained across Overworld, Town, Battle, and Outcome, and deferred exact physical keyboard/controller forwarding preserves native confirm, cancel, focus, and save authority without root-event fallthrough.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Drawer-Overwrite Cancel Ownership",
-  "currentSliceUpdatedAt": "2026-08-11T20:22:38Z",
+  "currentSliceTitle": "Manual Overwrite Exclusive Parent Input",
+  "currentSliceUpdatedAt": "2026-08-11T22:56:13Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19849,6 +19849,119 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "id": "accessibility-manual-overwrite-exclusive-parent-input-10184",
+      "title": "Manual Overwrite Exclusive Parent Input",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "purpose": "Prevent real mouse input from activating parent gameplay or navigation controls behind the shared pending manual-save overwrite confirmation on every supported route.",
+      "implementationTargets": [
+        "scenes/shared/ManualSaveOverwriteDialog.gd",
+        "scenes/shared/ManualSaveOverwriteDialog.tscn",
+        "tests/manual_save_overwrite_regression.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "supported_route_count": 4,
+        "manual_overwrite_dialog_exclusive": false,
+        "background_parent_mouse_containment_case_count": 0,
+        "settings_version": 14,
+        "save_version": 9
+      },
+      "completionCriteria": "The shared ManualSaveOverwriteDialog is an exclusive native ConfirmationDialog; on Overworld, Town, Battle, and Scenario Outcome at representative 1280 and 1920 layouts with an occupied or unreadable manual slot pending, real root-window mouse clicks on enabled unobscured parent controls leave the dialog visible, its exact pending slot/action/request/cancel/confirm counts and Keep Save focus unchanged, and preserve exact session/day/hero/movement/town resources/buildings/battle turn and RNG/outcome actions/routes/save bytes and cache/settings authority; native mouse Keep Save and Overwrite Save, physical B/Escape/A/Enter/controller input, original-slot binding, Overworld drawer retention, Town narrow Back behavior, neighboring SaveSlot/Settings modal ownership, return focus, and layout remain exact; focused overwrite, input/focus, core, repository, Linux, and fresh Windows/Wine package gates pass without save or settings schema changes.",
+      "nonGoals": [
+        "changing overwrite transaction semantics, closing parent drawers or panels when Save opens, changing shell input policy, changing save or settings schema, gameplay balance, strategic AI, Native RMG, signing, publication, hardware certification, or overall release completion"
+      ],
+      "baselineChecks": [
+        "godot4 --headless --path . --scene res://tests/manual_save_overwrite_regression.tscn",
+        "godot4 --headless --path . --scene res://tests/active_play_keyboard_focus_smoke.tscn",
+        "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+        "godot4 --headless --editor --quit --path .",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check",
+        "Linux release export plus shipped main-scene boot",
+        "Windows release export plus fresh Wine shipped main-scene boot"
+      ],
+      "startedAt": "2026-08-11T20:34:29Z",
+      "updatedAt": "2026-08-11T22:56:13Z",
+      "completedAt": "2026-08-11T22:56:13Z",
+      "notes": "The shared ConfirmationDialog is exclusive on all four routes. Because an attempted parent click can leave subsequent physical keyboard/controller events routed through the root Window in embedded-window compositions, the shared script observes only root-received physical Key/Joypad events while visible and pending, marks the root copy handled, duplicates it, and defers unchanged delivery into the child Viewport. Deferral keeps the dialog visible throughout the original shell dispatch and prevents the same cancel from falling through into Town narrow Back or other background handlers. Mouse, motion, and synthetic action events are never forwarded.",
+      "result": {
+        "supported_route_count": 4,
+        "confirmed_routes": ["overworld", "town", "battle", "outcome"],
+        "layout_widths": [1280, 1920],
+        "occupied_and_unreadable_slots_covered": true,
+        "shared_dialog_exclusive": true,
+        "real_parent_mouse_click_blocked": true,
+        "same_parent_control_positive_after_cancel": true,
+        "dialog_pending_action_and_focus_exact": true,
+        "deferred_root_physical_input_forwarding": true,
+        "physical_cancel_inputs_exact": ["controller_b", "escape", "mouse_keep_save"],
+        "physical_confirm_inputs_exact": ["controller_a", "enter", "mouse_overwrite_save"],
+        "town_narrow_back_double_route_prevented": true,
+        "battle_deferred_focus_exact": true,
+        "original_slot_binding_and_write_once_exact": true,
+        "session_route_shell_save_cache_settings_authority_exact": true,
+        "settings_version_before": 14,
+        "settings_version_after": 14,
+        "save_version_before": 9,
+        "save_version_after": 9,
+        "linux_export_boot_passed": true,
+        "windows_export_fresh_wine_boot_passed": true
+      },
+      "validation": {
+        "status": "passed",
+        "updatedAt": "2026-08-11T22:56:13Z",
+        "commands": [
+          "godot4 --headless --path . --scene res://tests/manual_save_overwrite_regression.tscn",
+          "godot4 --headless --path . --scene res://tests/save_transactional_commit_regression.tscn",
+          "godot4 --headless --path . --scene res://tests/active_play_keyboard_focus_smoke.tscn",
+          "godot4 --headless --path . --scene res://tests/overworld_gameplay_movement_input_ownership_regression.tscn",
+          "godot4 --headless --path . --scene res://tests/overworld_controller_route_selection_regression.tscn",
+          "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+          "godot4 --headless --editor --quit --path .",
+          "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check",
+          "Linux release export plus shipped main-scene boot",
+          "Windows release export plus fresh Wine shipped main-scene boot"
+        ],
+        "artifacts": [
+          "/tmp/heroes-manual-exclusive-authoritative6.DHNyov/focused.log",
+          "/tmp/heroes-manual-exclusive-release.7QV5MW",
+          "/tmp/heroes-manual-exclusive-release.7QV5MW/linux-package/report.json"
+        ],
+        "linux": {
+          "executable_size_bytes": 71071768,
+          "executable_sha256": "bb4d6dad39cbcfba1e1e033d29cdbec2fb679619b7d6eceb9687935f8b7839b3",
+          "pck_size_bytes": 189709016,
+          "pck_sha256": "900a3b07106896076aedc759041204f0fc237e0772321d8a559945651a788d47",
+          "native_library_size_bytes": 4067112,
+          "native_library_sha256": "5e0bc4b2400d7af9b1d2943fe30b2baad18516334b92924430cb4f2772832dcc"
+        },
+        "windows": {
+          "executable_size_bytes": 104540160,
+          "executable_sha256": "bcc679d5fca25949ed44a3db843e51e34bd0de4cac98a22875858b92b2ef571b",
+          "pck_size_bytes": 189709016,
+          "pck_sha256": "e2bde54028958dcde9f56491ca57f8b43298f92f24ea37e62953dbfc164fcb0b",
+          "native_library_size_bytes": 4268544,
+          "native_library_sha256": "e739d20f7c610801895dacf0a5818b35b994422788d121dddf33a392b2af0a05"
+        }
+      },
+      "remainingWork": "Continue the broader release-readiness queue. This shared modal-input correction does not complete strategic-AI correctness, gameplay balance, content breadth, signing, publication, hardware certification, or overall release readiness."
+    },
     {
       "id": "accessibility-overworld-drawer-overwrite-cancel-ownership-10184",
       "title": "Overworld Drawer-Overwrite Cancel Ownership",

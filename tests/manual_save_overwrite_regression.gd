@@ -2,11 +2,23 @@ extends Node
 
 const REPORT_ID := "MANUAL_SAVE_OVERWRITE_REGRESSION"
 const CAPTURE_DIR := "res://.artifacts/manual_save_overwrite_regression"
+const EXCLUSIVE_SNAPSHOT_OBSERVER_PROFILE_KEYS := [
+	"field_readiness_simple_current_route_fast_path",
+	"field_readiness_simple_route_fast_path",
+	"hero_actions_cache_hits",
+	"selected_route_cache_hits",
+]
+const EXCLUSIVE_BACKGROUND_CONTROLLER_MODAL_KEYS := [
+	"available",
+	"blocked_reason",
+	"manual_overwrite_open",
+]
 
 var _original_file_states := {}
 var _original_active_session = null
 var _original_campaign_profile := {}
 var _original_settings := {}
+var _exclusive_parent_click_counts := {}
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -51,15 +63,19 @@ func _run() -> void:
 		return
 
 	var route_specs := [
-		{"id": "overworld", "scene": "res://scenes/overworld/OverworldShell.tscn", "day": 11},
-		{"id": "town", "scene": "res://scenes/town/TownShell.tscn", "day": 12},
-		{"id": "battle", "scene": "res://scenes/battle/BattleShell.tscn", "day": 13},
-		{"id": "outcome", "scene": "res://scenes/results/ScenarioOutcomeShell.tscn", "day": 14},
+		{"id": "overworld", "scene": "res://scenes/overworld/OverworldShell.tscn", "day": 11, "width": 1280, "corrupt": false, "cancel_input": "joypad_b", "confirm_input": "joypad_a"},
+		{"id": "town", "scene": "res://scenes/town/TownShell.tscn", "day": 12, "width": 1280, "corrupt": true, "cancel_input": "escape", "confirm_input": "enter"},
+		{"id": "battle", "scene": "res://scenes/battle/BattleShell.tscn", "day": 13, "width": 1920, "corrupt": false, "cancel_input": "mouse", "confirm_input": "mouse"},
+		{"id": "outcome", "scene": "res://scenes/results/ScenarioOutcomeShell.tscn", "day": 14, "width": 1920, "corrupt": true, "cancel_input": "joypad_b", "confirm_input": "enter"},
 	]
+	var route_window_size := get_window().size
 	for route_value in route_specs:
 		var route: Dictionary = route_value
 		if not await _exercise_route(route, protected_states, campaign_before, settings_before):
+			get_window().size = route_window_size
 			return
+	get_window().size = route_window_size
+	await _settle()
 
 	if not await _exercise_empty_slot(protected_states, campaign_before, settings_before):
 		return
@@ -104,6 +120,16 @@ func _run() -> void:
 		"origin_focus_restored": true,
 		"confirm_exactly_once": true,
 		"pending_slot_binding_preserved": true,
+		"exclusive_parent_mouse_routes_exact": ["overworld", "town", "battle", "outcome"],
+		"exclusive_parent_mouse_widths_exact": [1280, 1920],
+		"exclusive_parent_mouse_occupied_unreadable_exact": true,
+		"exclusive_parent_mouse_outside_dialog_exact": true,
+		"exclusive_parent_mouse_dialog_focus_retained": true,
+		"exclusive_native_mouse_cancel_confirm_exact": true,
+		"exclusive_native_b_escape_a_enter_exact": true,
+		"exclusive_reopened_parent_accept_guard_exact": true,
+		"exclusive_battle_deferred_focus_exact": true,
+		"exclusive_full_authority_exact": true,
 		"invalid_slot_rejected": true,
 		"unrelated_manual_slots_preserved": 2,
 		"autosave_preserved": true,
@@ -122,88 +148,307 @@ func _exercise_route(
 ) -> bool:
 	var old_fixture = ScenarioFactory.create_session("river-pass", "hard", SessionState.LAUNCH_MODE_SKIRMISH)
 	old_fixture.day = 3
-	if SaveService.save_manual_session(old_fixture.to_dict(), 2) == "":
-		return _fail_bool("Could not seed occupied Manual Slot 2 for %s." % String(route.get("id", "route")))
+	var route_id := String(route.get("id", ""))
+	var corrupt := bool(route.get("corrupt", false))
+	if corrupt:
+		var corrupt_file := FileAccess.open(_manual_slot_path(2), FileAccess.WRITE)
+		if corrupt_file == null:
+			return _fail_bool("Could not seed unreadable Manual Slot 2 for %s." % route_id)
+		corrupt_file.store_string(JSON.stringify({"not_a_session": true, "exclusive_route": route_id}))
+		corrupt_file.close()
+	elif SaveService.save_manual_session(old_fixture.to_dict(), 2) == "":
+		return _fail_bool("Could not seed occupied Manual Slot 2 for %s." % route_id)
+	SaveService.validation_clear_summary_cache()
 	var slot2_before := _file_state(_manual_slot_path(2))
 
-	var session = _session_for_route(String(route.get("id", "")), int(route.get("day", 1)))
+	var session = _session_for_route(route_id, int(route.get("day", 1)))
 	if session == null:
-		return _fail_bool("Could not create %s route fixture." % String(route.get("id", "route")))
+		return _fail_bool("Could not create %s route fixture." % route_id)
 	session = SessionState.set_active_session(session)
 	SaveService.set_selected_manual_slot(2)
-	var shell = load(String(route.get("scene", ""))).instantiate()
-	add_child(shell)
+	var route_width := int(route.get("width", 1280))
+	get_window().size = Vector2i(route_width, 720)
 	await _settle()
+	# Headless window geometry can lag the assignment. Give responsive production
+	# code an exact positive parent Control size while retaining the physical window
+	# assignment and runner-viewport mouse dispatch.
+	var layout_host := Control.new()
+	layout_host.name = "ExclusiveRouteLayoutHost_%s" % route_id
+	layout_host.size = Vector2(float(route_width), 720.0)
+	add_child(layout_host)
+	var shell = load(String(route.get("scene", ""))).instantiate()
+	layout_host.add_child(shell)
+	var parent_probe := Button.new()
+	parent_probe.name = "ExclusiveParentClickProbe_%s" % route_id
+	parent_probe.text = "Parent input probe"
+	parent_probe.position = Vector2(16.0, 16.0)
+	parent_probe.size = Vector2(176.0, 40.0)
+	parent_probe.focus_mode = Control.FOCUS_NONE
+	parent_probe.z_index = 100
+	_exclusive_parent_click_counts[route_id] = 0
+	parent_probe.pressed.connect(_on_exclusive_parent_probe_pressed.bind(route_id))
+	layout_host.add_child(parent_probe)
+	await _settle_route_dialog(route_id)
+	var layout_host_checks := {
+		"shell_parent_exact": shell.get_parent() == layout_host,
+		"width_exact": int(layout_host.size.x) == route_width,
+		"height_exact": int(layout_host.size.y) == 720,
+	}
+	if not _checks_exact(layout_host_checks):
+		return _fail_shell(shell, "%s exclusive-parent fixture did not retain its exact %dx720 Control host: checks=%s." % [route_id, route_width, JSON.stringify(layout_host_checks)])
 	var active_payload: Dictionary = session.to_dict()
 	var origin_button: Button = shell.get_node("%Save")
 	var dialog: ConfirmationDialog = shell.get_node("ManualSaveOverwriteDialog")
 	origin_button.grab_focus()
 	await get_tree().process_frame
-	var no_drawer_authority := ""
-	if String(route.get("id", "")) == "overworld":
-		no_drawer_authority = _overworld_drawer_authority_signature(shell, session)
 
 	var request: Dictionary = shell.call("validation_request_manual_save")
-	await _settle()
+	await _settle_route_dialog(route_id)
 	var request_text := "%s\n%s" % [String(request.get("title", "")), String(request.get("text", ""))]
-	if not bool(request.get("visible", false)) or int(request.get("pending_slot", 0)) != 2:
-		return _fail_shell(shell, "%s did not require Manual Slot 2 confirmation: %s." % [route.get("id", "route"), JSON.stringify(request)])
-	for token in ["Manual Slot 2", "Day 3", "Day %d" % int(route.get("day", 1)), "Other manual saves", "autosave"]:
+	var request_checks := {
+		"visible_exact": bool(request.get("visible", false)),
+		"pending_slot2_exact": int(request.get("pending_slot", 0)) == 2,
+	}
+	if not _checks_exact(request_checks):
+		return _fail_shell(shell, "%s did not require Manual Slot 2 confirmation: checks=%s request=%s." % [route.get("id", "route"), JSON.stringify(request_checks), JSON.stringify(request)])
+	var required_tokens := ["Manual Slot 2", "Day %d" % int(route.get("day", 1)), "Other manual saves", "autosave"]
+	if corrupt:
+		required_tokens.append("Unreadable expedition save")
+	else:
+		required_tokens.append("Day 3")
+	for token in required_tokens:
 		if not request_text.contains(token):
 			return _fail_shell(shell, "%s overwrite confirmation omitted %s: %s." % [route.get("id", "route"), token, request_text])
 	if _file_state(_manual_slot_path(2)) != slot2_before:
 		return _fail_shell(shell, "%s confirmation request changed Manual Slot 2 before approval." % route.get("id", "route"))
-	if not _safe_dialog_ready(dialog, "Keep Save"):
-		return _fail_shell(shell, "%s overwrite confirmation did not focus its compact Keep Save action." % route.get("id", "route"))
+	var initial_dialog_checks := {
+		"exclusive_exact": dialog.exclusive,
+		"safe_dialog_ready_exact": _safe_dialog_ready(dialog, "Keep Save"),
+	}
+	if not _checks_exact(initial_dialog_checks):
+		return _fail_shell(shell, "%s overwrite confirmation did not focus its compact Keep Save action: checks=%s." % [route.get("id", "route"), JSON.stringify(initial_dialog_checks)])
+	var parent_geometry := _exclusive_parent_click_geometry(parent_probe, dialog)
+	if not bool(parent_geometry.get("exact", false)):
+		return _fail_shell(shell, "%s parent click was not mapped to a real root point outside the exclusive dialog: %s." % [route_id, JSON.stringify(parent_geometry)])
+	var dialog_before_parent: Dictionary = dialog.validation_snapshot()
+	var authority_before_parent := _exclusive_route_authority_snapshot(shell, session, route_id)
+	var background_authority_before := _exclusive_route_background_authority(authority_before_parent)
+	var initial_manual_fallback_count := _exclusive_manual_fallback_count(authority_before_parent)
+	var tracks_manual_fallback_count := route_id == "overworld"
+	var initial_manual_fallback_count_exact := initial_manual_fallback_count >= 0 if tracks_manual_fallback_count else initial_manual_fallback_count == -1
+	var parent_click_count_before := int(_exclusive_parent_click_counts.get(route_id, 0))
+	await _click_control(parent_probe)
+	var dialog_after_parent: Dictionary = dialog.validation_snapshot()
+	var authority_after_parent := _exclusive_route_authority_snapshot(shell, session, route_id)
+	var authority_component_checks := _authority_component_checks(authority_before_parent, authority_after_parent)
+	var blocked_parent_checks := {
+		"dialog_exact": dialog_after_parent == dialog_before_parent,
+		"dialog_visible_exact": bool(dialog_before_parent.get("visible", false)) and bool(dialog_after_parent.get("visible", false)),
+		"full_authority_exact": authority_after_parent == authority_before_parent,
+		"dialog_focus_exact": dialog.get_cancel_button().get_viewport().gui_get_focus_owner() == dialog.get_cancel_button(),
+		"parent_count_exact": int(_exclusive_parent_click_counts.get(route_id, -1)) == parent_click_count_before,
+		"slot_bytes_exact": _file_state(_manual_slot_path(2)) == slot2_before,
+		"manual_fallback_count_captured_or_absent_exact": initial_manual_fallback_count_exact,
+		"manual_fallback_count_unchanged": _exclusive_manual_fallback_count(authority_after_parent) == initial_manual_fallback_count,
+	}
+	var blocked_parent_exact := true
+	for check_value in blocked_parent_checks.values():
+		blocked_parent_exact = blocked_parent_exact and bool(check_value)
+	if not blocked_parent_exact:
+		return _fail_shell(shell, "%s exclusive blocked-parent check failed: checks=%s authority_components=%s count_before=%d count_after=%d geometry=%s dialog_before=%s dialog_after=%s authority_before=%s authority_after=%s." % [route_id, JSON.stringify(blocked_parent_checks), JSON.stringify(authority_component_checks), parent_click_count_before, int(_exclusive_parent_click_counts.get(route_id, -1)), JSON.stringify(parent_geometry), JSON.stringify(dialog_before_parent), JSON.stringify(dialog_after_parent), JSON.stringify(authority_before_parent), JSON.stringify(authority_after_parent)])
 
-	if String(route.get("id", "")) == "overworld":
-		await _capture("overwrite_confirmation")
-		await _press_joypad_button(JOY_BUTTON_B)
-		if dialog.visible or get_viewport().gui_get_focus_owner() != origin_button \
-				or String(_overworld_chrome_state(shell).get("active_drawer", "")) != "" \
-				or _overworld_drawer_authority_signature(shell, session) != no_drawer_authority \
-				or _file_state(_manual_slot_path(2)) != slot2_before \
-				or not _require_preserved_state(protected_states, active_payload, campaign_before, settings_before, _manual_slot_path(2)):
-			return _fail_shell(shell, "Joypad B did not cancel overwrite exactly and restore Save focus.")
-		request = shell.call("validation_request_manual_save")
-		await _settle()
-		if not bool(request.get("visible", false)) or not _safe_dialog_ready(dialog, "Keep Save"):
-			return _fail_shell(shell, "Overwrite confirmation did not reopen safely after joypad cancellation.")
-		await _press_key(KEY_ESCAPE)
-		if dialog.visible or get_viewport().gui_get_focus_owner() != origin_button \
-				or String(_overworld_chrome_state(shell).get("active_drawer", "")) != "" \
-				or _overworld_drawer_authority_signature(shell, session) != no_drawer_authority \
-				or _file_state(_manual_slot_path(2)) != slot2_before \
-				or not _require_preserved_state(protected_states, active_payload, campaign_before, settings_before, _manual_slot_path(2)):
-			return _fail_shell(shell, "Escape did not cancel overwrite exactly and restore Save focus.")
-		request = shell.call("validation_request_manual_save")
-		await _settle()
-		if not bool(request.get("visible", false)) or not _safe_dialog_ready(dialog, "Keep Save"):
-			return _fail_shell(shell, "Overwrite confirmation did not reopen safely for confirmation.")
+	if not await _cancel_manual_dialog_with_input(dialog, String(route.get("cancel_input", "escape"))):
+		return false
+	await _settle_route_dialog(route_id)
+	var dialog_after_cancel: Dictionary = dialog.validation_snapshot()
+	var dialog_cancel_checks := {
+		"hidden_exact": not bool(dialog_after_cancel.get("visible", true)),
+		"pending_cleared_exact": int(dialog_after_cancel.get("pending_slot", -1)) == 0,
+		"action_dictionary_exact": dialog_after_cancel.get("action", {}) is Dictionary,
+		"action_cleared_exact": dialog_after_cancel.get("action", {}) is Dictionary and dialog_after_cancel.get("action", {}).is_empty(),
+		"request_count_exact": int(dialog_after_cancel.get("request_count", -1)) == int(dialog_before_parent.get("request_count", 0)),
+		"cancel_count_exact": int(dialog_after_cancel.get("cancel_count", -1)) == int(dialog_before_parent.get("cancel_count", 0)) + 1,
+		"confirm_count_exact": int(dialog_after_cancel.get("confirm_count", -1)) == int(dialog_before_parent.get("confirm_count", 0)),
+	}
+	var dialog_transaction_exact := true
+	for check_value in dialog_cancel_checks.values():
+		dialog_transaction_exact = dialog_transaction_exact and bool(check_value)
+	var full_authority_after_cancel := _exclusive_route_authority_snapshot(shell, session, route_id)
+	var background_authority_after_cancel := _exclusive_route_background_authority(full_authority_after_cancel)
+	var full_shell_before_cancel: Dictionary = authority_before_parent.get("shell", {}) if authority_before_parent.get("shell", {}) is Dictionary else {}
+	var full_shell_after_cancel: Dictionary = full_authority_after_cancel.get("shell", {}) if full_authority_after_cancel.get("shell", {}) is Dictionary else {}
+	var outcome_focus_before_cancel: Dictionary = authority_before_parent.get("outcome_focus", {}) if authority_before_parent.get("outcome_focus", {}) is Dictionary else {}
+	var outcome_focus_after_cancel: Dictionary = full_authority_after_cancel.get("outcome_focus", {}) if full_authority_after_cancel.get("outcome_focus", {}) is Dictionary else {}
+	var shell_outcome_focus_before_cancel: Dictionary = full_shell_before_cancel.get("outcome_focus", {}) if full_shell_before_cancel.get("outcome_focus", {}) is Dictionary else {}
+	var shell_outcome_focus_after_cancel: Dictionary = full_shell_after_cancel.get("outcome_focus", {}) if full_shell_after_cancel.get("outcome_focus", {}) is Dictionary else {}
+	var outcome_modal_transition_exact := route_id != "outcome"
+	var shell_outcome_modal_transition_exact := route_id != "outcome"
+	if route_id == "outcome":
+		outcome_modal_transition_exact = bool(outcome_focus_before_cancel.get("manual_overwrite_visible", false)) and not bool(outcome_focus_after_cancel.get("manual_overwrite_visible", true))
+		shell_outcome_modal_transition_exact = bool(shell_outcome_focus_before_cancel.get("manual_overwrite_visible", false)) and not bool(shell_outcome_focus_after_cancel.get("manual_overwrite_visible", true))
+	var preserved_state_checks := _preserved_state_component_checks(protected_states, active_payload, campaign_before, settings_before, _manual_slot_path(2))
+	var preserved_state_exact := true
+	for check_value in preserved_state_checks.values():
+		preserved_state_exact = preserved_state_exact and bool(check_value)
+	var cancel_authority_checks := {
+		"dialog_transaction_exact": dialog_transaction_exact,
+		"root_origin_control_identity_exact": get_viewport().gui_get_focus_owner() == origin_button,
+		"slot2_bytes_exact": _file_state(_manual_slot_path(2)) == slot2_before,
+		"normalized_background_authority_exact": background_authority_after_cancel == background_authority_before,
+		"preserved_state_exact": preserved_state_exact,
+		"manual_fallback_count_unchanged": _exclusive_manual_fallback_count(full_authority_after_cancel) == initial_manual_fallback_count,
+		"outcome_manual_overwrite_visible_transition_exact": outcome_modal_transition_exact,
+		"shell_outcome_manual_overwrite_visible_transition_exact": shell_outcome_modal_transition_exact,
+	}
+	var cancel_authority_exact := true
+	for check_value in cancel_authority_checks.values():
+		cancel_authority_exact = cancel_authority_exact and bool(check_value)
+	if not cancel_authority_exact:
+		var controller_routes_before: Dictionary = background_authority_before.get("controller_routes", {}) if background_authority_before.get("controller_routes", {}) is Dictionary else {}
+		var controller_routes_after: Dictionary = background_authority_after_cancel.get("controller_routes", {}) if background_authority_after_cancel.get("controller_routes", {}) is Dictionary else {}
+		var outcome_focus_before: Dictionary = {}
+		var outcome_focus_after: Dictionary = {}
+		var cancel_shell_before: Dictionary = {}
+		var cancel_shell_after: Dictionary = {}
+		var shell_outcome_focus_before: Dictionary = {}
+		var shell_outcome_focus_after: Dictionary = {}
+		if route_id == "outcome":
+			outcome_focus_before = background_authority_before.get("outcome_focus", {}) if background_authority_before.get("outcome_focus", {}) is Dictionary else {}
+			outcome_focus_after = background_authority_after_cancel.get("outcome_focus", {}) if background_authority_after_cancel.get("outcome_focus", {}) is Dictionary else {}
+			cancel_shell_before = background_authority_before.get("shell", {}) if background_authority_before.get("shell", {}) is Dictionary else {}
+			cancel_shell_after = background_authority_after_cancel.get("shell", {}) if background_authority_after_cancel.get("shell", {}) is Dictionary else {}
+			shell_outcome_focus_before = cancel_shell_before.get("outcome_focus", {}) if cancel_shell_before.get("outcome_focus", {}) is Dictionary else {}
+			shell_outcome_focus_after = cancel_shell_after.get("outcome_focus", {}) if cancel_shell_after.get("outcome_focus", {}) is Dictionary else {}
+		return _fail_shell(shell, "%s native %s cancel authority failed: checks=%s dialog_components=%s background_components=%s preserved_components=%s controller_route_components=%s controller_route_differences=%s outcome_focus_components=%s outcome_focus_differences=%s shell_components=%s shell_differences=%s shell_outcome_focus_components=%s shell_outcome_focus_differences=%s." % [route_id, route.get("cancel_input", ""), JSON.stringify(cancel_authority_checks), JSON.stringify(dialog_cancel_checks), JSON.stringify(_authority_component_checks(background_authority_before, background_authority_after_cancel)), JSON.stringify(preserved_state_checks), JSON.stringify(_authority_component_checks(controller_routes_before, controller_routes_after)), JSON.stringify(_differing_component_values(controller_routes_before, controller_routes_after)), JSON.stringify(_authority_component_checks(outcome_focus_before, outcome_focus_after)), JSON.stringify(_differing_component_values(outcome_focus_before, outcome_focus_after)), JSON.stringify(_authority_component_checks(cancel_shell_before, cancel_shell_after)), JSON.stringify(_differing_component_values(cancel_shell_before, cancel_shell_after)), JSON.stringify(_authority_component_checks(shell_outcome_focus_before, shell_outcome_focus_after)), JSON.stringify(_differing_component_values(shell_outcome_focus_before, shell_outcome_focus_after))])
+
+	# Use the exact same enabled parent control and root-mouse path as the blocked
+	# click. Once the exclusive window is closed its native pressed signal must fire
+	# exactly once, proving the preceding modal click was not a no-op fixture.
+	await _click_control(parent_probe)
+	var dialog_after_positive_parent: Dictionary = dialog.validation_snapshot()
+	var positive_parent_full_authority_after := _exclusive_route_authority_snapshot(shell, session, route_id)
+	var positive_parent_background_after := _exclusive_route_background_authority(positive_parent_full_authority_after)
+	var positive_parent_checks := {
+		"parent_count_increment_exact": int(_exclusive_parent_click_counts.get(route_id, -1)) == parent_click_count_before + 1,
+		"dialog_transaction_exact": _manual_dialog_transaction_state(dialog_after_positive_parent) == _manual_dialog_transaction_state(dialog_after_cancel),
+		"normalized_background_authority_exact": positive_parent_background_after == background_authority_before,
+		"manual_fallback_count_unchanged": _exclusive_manual_fallback_count(positive_parent_full_authority_after) == initial_manual_fallback_count,
+	}
+	if not _checks_exact(positive_parent_checks):
+		return _fail_shell(shell, "%s same parent probe click did not fire exactly once after cancel: checks=%s background_components=%s count=%d dialog=%s." % [route_id, JSON.stringify(positive_parent_checks), JSON.stringify(_authority_component_checks(background_authority_before, positive_parent_background_after)), int(_exclusive_parent_click_counts.get(route_id, -1)), JSON.stringify(dialog_after_positive_parent)])
+	request = shell.call("validation_request_manual_save")
+	await _settle_route_dialog(route_id)
+	var reopened_snapshot: Dictionary = dialog.validation_snapshot()
+	var reopened_full_authority := _exclusive_route_authority_snapshot(shell, session, route_id)
+	var reopened_background_authority := _exclusive_route_background_authority(reopened_full_authority)
+	var reopened_cancel_button := dialog.get_cancel_button()
+	var reopened_dialog_viewport := reopened_cancel_button.get_viewport()
+	var reopened_safe_checks := {
+		"cancel_text_exact": reopened_cancel_button.text == "Keep Save",
+		"dialog_viewport_present": reopened_dialog_viewport != null,
+		"cancel_focus_exact": reopened_dialog_viewport != null and reopened_dialog_viewport.gui_get_focus_owner() == reopened_cancel_button,
+		"bounded_width_exact": dialog.size.x <= 960,
+		"bounded_height_exact": dialog.size.y <= 540,
+	}
+	var reopen_checks := {
+		"visible_exact": bool(reopened_snapshot.get("visible", false)),
+		"pending_slot2_exact": int(reopened_snapshot.get("pending_slot", 0)) == 2,
+		"request_increment_exact": int(reopened_snapshot.get("request_count", 0)) == int(dialog_after_cancel.get("request_count", 0)) + 1,
+		"cancel_count_unchanged": int(reopened_snapshot.get("cancel_count", 0)) == int(dialog_after_cancel.get("cancel_count", 0)),
+		"confirm_count_unchanged": int(reopened_snapshot.get("confirm_count", 0)) == int(dialog_after_cancel.get("confirm_count", 0)),
+		"normalized_background_authority_exact": reopened_background_authority == background_authority_before,
+		"exclusive_exact": dialog.exclusive,
+		"safe_dialog_ready_exact": _safe_dialog_ready(dialog, "Keep Save"),
+		"manual_fallback_count_increment_or_absent_exact": _exclusive_manual_fallback_count(reopened_full_authority) == initial_manual_fallback_count + 1 if tracks_manual_fallback_count else _exclusive_manual_fallback_count(reopened_full_authority) == -1,
+	}
+	var reopen_exact := true
+	for check_value in reopen_checks.values():
+		reopen_exact = reopen_exact and bool(check_value)
+	if not reopen_exact:
+		var background_shell_before: Dictionary = background_authority_before.get("shell", {}) if background_authority_before.get("shell", {}) is Dictionary else {}
+		var background_shell_after: Dictionary = reopened_background_authority.get("shell", {}) if reopened_background_authority.get("shell", {}) is Dictionary else {}
+		return _fail_shell(shell, "%s overwrite confirmation did not reopen exactly once after the positive parent probe: checks=%s safe_components=%s background_components=%s shell_components=%s shell_differences=%s after_cancel=%s reopened=%s." % [route_id, JSON.stringify(reopen_checks), JSON.stringify(reopened_safe_checks), JSON.stringify(_authority_component_checks(background_authority_before, reopened_background_authority)), JSON.stringify(_authority_component_checks(background_shell_before, background_shell_after)), JSON.stringify(_differing_component_values(background_shell_before, background_shell_after)), JSON.stringify(dialog_after_cancel), JSON.stringify(reopened_snapshot)])
+	var reopened_parent_count_before := int(_exclusive_parent_click_counts.get(route_id, -1))
+	var reopened_parent_authority_before := _exclusive_route_authority_snapshot(shell, session, route_id)
+	var reopened_parent_background_before := _exclusive_route_background_authority(reopened_parent_authority_before)
+	await _click_control(parent_probe)
+	var reopened_after_parent: Dictionary = dialog.validation_snapshot()
+	var reopened_parent_authority_after := _exclusive_route_authority_snapshot(shell, session, route_id)
+	var reopened_parent_background_after := _exclusive_route_background_authority(reopened_parent_authority_after)
+	var reopened_parent_checks := {
+		"parent_count_exact": int(_exclusive_parent_click_counts.get(route_id, -1)) == reopened_parent_count_before,
+		"dialog_exact": reopened_after_parent == reopened_snapshot,
+		"full_authority_exact": reopened_parent_authority_after == reopened_parent_authority_before,
+		"background_authority_exact": reopened_parent_background_after == reopened_parent_background_before,
+		"dialog_focus_exact": dialog.get_cancel_button().get_viewport().gui_get_focus_owner() == dialog.get_cancel_button(),
+		"slot_bytes_exact": _file_state(_manual_slot_path(2)) == slot2_before,
+		"manual_fallback_count_at_increment_or_absent_exact": _exclusive_manual_fallback_count(reopened_parent_authority_before) == initial_manual_fallback_count + 1 if tracks_manual_fallback_count else _exclusive_manual_fallback_count(reopened_parent_authority_before) == -1,
+		"manual_fallback_count_unchanged": _exclusive_manual_fallback_count(reopened_parent_authority_after) == initial_manual_fallback_count + 1 if tracks_manual_fallback_count else _exclusive_manual_fallback_count(reopened_parent_authority_after) == -1,
+	}
+	var reopened_parent_exact := true
+	for check_value in reopened_parent_checks.values():
+		reopened_parent_exact = reopened_parent_exact and bool(check_value)
+	if not reopened_parent_exact:
+		var reopened_parent_shell_before: Dictionary = reopened_parent_authority_before.get("shell", {}) if reopened_parent_authority_before.get("shell", {}) is Dictionary else {}
+		var reopened_parent_shell_after: Dictionary = reopened_parent_authority_after.get("shell", {}) if reopened_parent_authority_after.get("shell", {}) is Dictionary else {}
+		var reopened_parent_recovery_before: Dictionary = reopened_parent_shell_before.get("generated_opening_autosave_recovery", {}) if reopened_parent_shell_before.get("generated_opening_autosave_recovery", {}) is Dictionary else {}
+		var reopened_parent_recovery_after: Dictionary = reopened_parent_shell_after.get("generated_opening_autosave_recovery", {}) if reopened_parent_shell_after.get("generated_opening_autosave_recovery", {}) is Dictionary else {}
+		return _fail_shell(shell, "%s reopened exclusive dialog did not block the parent click before native confirm: checks=%s count_before=%d count_after=%d dialog_before=%s dialog_after=%s authority_components=%s shell_components=%s shell_differences=%s recovery_components=%s recovery_differences=%s." % [route_id, JSON.stringify(reopened_parent_checks), reopened_parent_count_before, int(_exclusive_parent_click_counts.get(route_id, -1)), JSON.stringify(reopened_snapshot), JSON.stringify(reopened_after_parent), JSON.stringify(_authority_component_checks(reopened_parent_authority_before, reopened_parent_authority_after)), JSON.stringify(_authority_component_checks(reopened_parent_shell_before, reopened_parent_shell_after)), JSON.stringify(_differing_component_values(reopened_parent_shell_before, reopened_parent_shell_after)), JSON.stringify(_authority_component_checks(reopened_parent_recovery_before, reopened_parent_recovery_after)), JSON.stringify(_differing_component_values(reopened_parent_recovery_before, reopened_parent_recovery_after))])
 
 	if not bool(shell.call("validation_select_save_slot", 3)):
 		return _fail_shell(shell, "%s could not change visible selection while confirmation was pending." % route.get("id", "route"))
 	var slot3_before := _file_state(_manual_slot_path(3))
-	var result := {"pending_slot": 2}
-	if String(route.get("id", "")) == "town":
-		dialog.get_ok_button().grab_focus()
-		await get_tree().process_frame
-		await _press_joypad_button(JOY_BUTTON_A)
-	else:
-		result = shell.call("validation_confirm_manual_save_overwrite")
+	var dialog_before_confirm: Dictionary = dialog.validation_snapshot()
+	var route_authority_before_confirm := {
+		"app_route": AppRouter.validation_active_play_return_snapshot(),
+		"overworld_handoff": AppRouter.validation_latest_overworld_handoff_profile(),
+		"settings": _settings_transaction_route_authority(),
+	}
+	if not await _confirm_manual_dialog_with_input(dialog, String(route.get("confirm_input", "enter"))):
+		return false
+	await _settle_route_dialog(route_id)
 	var dialog_after_confirm: Dictionary = dialog.validation_snapshot()
 	var saved_summary := SaveService.inspect_manual_slot(2)
-	if int(result.get("pending_slot", 0)) != 2 or not SaveService.can_load_summary(saved_summary) or int(saved_summary.get("day", 0)) != int(route.get("day", 0)):
-		return _fail_shell(shell, "%s confirmation did not write the originally bound Manual Slot 2: %s." % [route.get("id", "route"), JSON.stringify(result)])
+	var profile: Dictionary = SaveService.validation_last_runtime_save_profile()
+	var step_counts := {}
+	for step_value in profile.get("steps", []):
+		if step_value is Dictionary:
+			var step_name := String(step_value.get("name", ""))
+			step_counts[step_name] = int(step_counts.get(step_name, 0)) + 1
+	var confirm_checks := {
+		"dialog_hidden_exact": not bool(dialog_after_confirm.get("visible", true)),
+		"pending_cleared_exact": int(dialog_after_confirm.get("pending_slot", -1)) == 0,
+		"action_dictionary_exact": dialog_after_confirm.get("action", {}) is Dictionary,
+		"action_cleared_exact": dialog_after_confirm.get("action", {}) is Dictionary and dialog_after_confirm.get("action", {}).is_empty(),
+		"request_count_exact": int(dialog_after_confirm.get("request_count", -1)) == int(dialog_before_confirm.get("request_count", 0)),
+		"confirm_count_increment_exact": int(dialog_after_confirm.get("confirm_count", -1)) == int(dialog_before_confirm.get("confirm_count", 0)) + 1,
+		"cancel_count_unchanged": int(dialog_after_confirm.get("cancel_count", -1)) == int(dialog_before_confirm.get("cancel_count", 0)),
+		"summary_loadable_exact": SaveService.can_load_summary(saved_summary),
+		"summary_day_exact": int(saved_summary.get("day", 0)) == int(route.get("day", 0)),
+		"profile_slot_type_exact": String(profile.get("slot_type", "")) == SaveService.SLOT_TYPE_MANUAL,
+		"profile_path_exact": String(profile.get("path", "")) == _manual_slot_path(2),
+		"profile_written_bytes_exact": int(profile.get("written_bytes", 0)) == FileAccess.get_size(_manual_slot_path(2)),
+		"profile_recovery_count_exact": int(profile.get("recovery_count", 0)) == 1,
+		"profile_payload_prepared_exact": bool(profile.get("prepared_payload", false)),
+		"write_payload_start_once": int(step_counts.get("write_payload_start", 0)) == 1,
+		"finished_once": int(step_counts.get("finished", 0)) == 1,
+		"summary_cache_exact": _summary_cache_contains_exact_summary(SaveService.validation_summary_cache_snapshot(), saved_summary),
+		"app_route_exact": AppRouter.validation_active_play_return_snapshot() == route_authority_before_confirm.get("app_route", {}),
+		"overworld_handoff_exact": AppRouter.validation_latest_overworld_handoff_profile() == route_authority_before_confirm.get("overworld_handoff", {}),
+		"settings_transaction_exact": _settings_transaction_route_authority() == route_authority_before_confirm.get("settings", {}),
+	}
+	if not _checks_exact(confirm_checks):
+		return _fail_shell(shell, "%s native %s confirmation did not write originally bound Manual Slot 2 exactly once: checks=%s before=%s after=%s." % [route_id, route.get("confirm_input", ""), JSON.stringify(confirm_checks), JSON.stringify(dialog_before_confirm), JSON.stringify(dialog_after_confirm)])
 	if _file_state(_manual_slot_path(3)) != slot3_before:
 		return _fail_shell(shell, "%s redirected overwrite into the later-selected Manual Slot 3." % route.get("id", "route"))
-	if int(dialog_after_confirm.get("confirm_count", 1)) != 1:
-		return _fail_shell(shell, "%s overwrite confirmation did not execute exactly once: %s." % [route.get("id", "route"), JSON.stringify(dialog_after_confirm)])
 	if not _require_preserved_state(protected_states, active_payload, campaign_before, settings_before, _manual_slot_path(2)):
 		return false
-	shell.queue_free()
+	layout_host.queue_free()
 	await _settle()
 	return true
+
+func _on_exclusive_parent_probe_pressed(route_id: String) -> void:
+	_exclusive_parent_click_counts[route_id] = int(_exclusive_parent_click_counts.get(route_id, 0)) + 1
 
 func _exercise_town_cancel_ownership(
 	protected_states: Dictionary,
@@ -906,6 +1151,219 @@ func _town_modal_authority_signature(shell, session) -> String:
 		"town_cache": shell.validation_town_entity_cache_snapshot(),
 	})
 
+func _exclusive_route_authority_snapshot(shell, session, route_id: String) -> Dictionary:
+	var shell_snapshot: Dictionary = shell.validation_snapshot()
+	var shell_profile: Dictionary = shell_snapshot.get("profile", {}).duplicate(true) if shell_snapshot.get("profile", {}) is Dictionary else {}
+	for profile_key in EXCLUSIVE_SNAPSHOT_OBSERVER_PROFILE_KEYS:
+		shell_profile.erase(profile_key)
+	shell_snapshot["profile"] = shell_profile
+	if shell_snapshot.get("ambient_audio", {}) is Dictionary:
+		var ambient_audio: Dictionary = shell_snapshot.get("ambient_audio", {}).duplicate(true)
+		ambient_audio.erase("active_player_count")
+		shell_snapshot["ambient_audio"] = ambient_audio
+	var shell_route: Dictionary = shell.validation_active_play_return_snapshot()
+	var authority := {
+		"session": session.to_dict(),
+		"files": _capture_file_states(_tracked_paths()),
+		"campaign": CampaignProgression.ensure_profile(),
+		"save_profile": SaveService.validation_last_runtime_save_profile(),
+		"save_cache": SaveService.validation_summary_cache_snapshot(),
+		"settings": _settings_transaction_route_authority(),
+		"shell": shell_snapshot,
+		"shell_route": shell_route,
+		"app_route": AppRouter.validation_active_play_return_snapshot(),
+		"overworld_handoff": AppRouter.validation_latest_overworld_handoff_profile(),
+	}
+	match route_id:
+		"overworld":
+			authority["controller_routes"] = shell.validation_controller_route_cursor_snapshot()
+			authority["debug_overlay"] = shell.validation_debug_overlay_snapshot()
+			authority["placement_debug_overlay"] = shell.validation_placement_debug_overlay_snapshot()
+		"town":
+			authority["town_cache"] = shell.validation_town_entity_cache_snapshot()
+		"battle":
+			authority["battle_playback"] = shell.validation_battle_playback_speed_snapshot()
+		"outcome":
+			authority["outcome_focus"] = shell.validation_outcome_focus_snapshot()
+	return authority
+
+func _exclusive_route_background_authority(full_authority: Dictionary) -> Dictionary:
+	var background := full_authority.duplicate(true)
+	var shell_snapshot: Dictionary = background.get("shell", {}).duplicate(true) if background.get("shell", {}) is Dictionary else {}
+	shell_snapshot.erase("manual_save_overwrite_dialog")
+	if shell_snapshot.get("generated_opening_autosave_recovery", {}) is Dictionary:
+		var generated_recovery: Dictionary = shell_snapshot.get("generated_opening_autosave_recovery", {}).duplicate(true)
+		generated_recovery.erase("manual_fallback_count")
+		shell_snapshot["generated_opening_autosave_recovery"] = generated_recovery
+	if shell_snapshot.get("outcome_focus", {}) is Dictionary:
+		var shell_outcome_focus: Dictionary = shell_snapshot.get("outcome_focus", {}).duplicate(true)
+		shell_outcome_focus.erase("manual_overwrite_visible")
+		shell_snapshot["outcome_focus"] = shell_outcome_focus
+	background["shell"] = shell_snapshot
+	if background.get("outcome_focus", {}) is Dictionary:
+		var outcome_focus: Dictionary = background.get("outcome_focus", {}).duplicate(true)
+		outcome_focus.erase("manual_overwrite_visible")
+		background["outcome_focus"] = outcome_focus
+	if background.get("controller_routes", {}) is Dictionary:
+		var controller_routes: Dictionary = background.get("controller_routes", {}).duplicate(true)
+		for controller_key in EXCLUSIVE_BACKGROUND_CONTROLLER_MODAL_KEYS:
+			controller_routes.erase(controller_key)
+		background["controller_routes"] = controller_routes
+	return background
+
+func _exclusive_manual_fallback_count(full_authority: Dictionary) -> int:
+	var shell_snapshot: Dictionary = full_authority.get("shell", {}) if full_authority.get("shell", {}) is Dictionary else {}
+	var generated_recovery: Dictionary = shell_snapshot.get("generated_opening_autosave_recovery", {}) if shell_snapshot.get("generated_opening_autosave_recovery", {}) is Dictionary else {}
+	return int(generated_recovery.get("manual_fallback_count", -1))
+
+func _authority_component_checks(before: Dictionary, after: Dictionary) -> Dictionary:
+	var checks := {}
+	var keys := before.keys().duplicate()
+	for key in after.keys():
+		if key not in keys:
+			keys.append(key)
+	keys.sort()
+	for key in keys:
+		checks[String(key)] = before.has(key) and after.has(key) and before.get(key) == after.get(key)
+	return checks
+
+func _checks_exact(checks: Dictionary) -> bool:
+	for check_value in checks.values():
+		if not bool(check_value):
+			return false
+	return true
+
+func _differing_component_values(before: Dictionary, after: Dictionary) -> Dictionary:
+	var differences := {}
+	var keys := before.keys().duplicate()
+	for key in after.keys():
+		if key not in keys:
+			keys.append(key)
+	keys.sort()
+	for key in keys:
+		if not before.has(key) or not after.has(key) or before.get(key) != after.get(key):
+			differences[String(key)] = {
+				"before": before.get(key) if before.has(key) else null,
+				"after": after.get(key) if after.has(key) else null,
+			}
+	return differences
+
+func _exclusive_parent_click_geometry(control: Button, dialog: ConfirmationDialog) -> Dictionary:
+	var runner_viewport := get_viewport()
+	var control_viewport := control.get_viewport()
+	var parent_click := _control_root_click_position(control)
+	var parent_rect := _control_root_rect(control)
+	var dialog_rect := Rect2(Vector2(dialog.position), Vector2(dialog.size))
+	var cancel_button := dialog.get_cancel_button()
+	var child_click := _control_root_click_position(cancel_button)
+	var child_rect := _control_root_rect(cancel_button)
+	var exact := dialog.exclusive \
+			and control_viewport == runner_viewport \
+			and control.is_visible_in_tree() \
+			and not control.disabled \
+			and control.mouse_filter != Control.MOUSE_FILTER_IGNORE \
+			and parent_rect.has_point(parent_click) \
+			and runner_viewport.get_visible_rect().has_point(parent_click) \
+			and not dialog_rect.has_point(parent_click) \
+			and cancel_button.get_viewport() == dialog \
+			and dialog_rect.has_point(child_click) \
+			and child_rect.has_point(child_click) \
+			and runner_viewport.get_visible_rect().encloses(dialog_rect)
+	return {
+		"exact": exact,
+		"exclusive": dialog.exclusive,
+		"parent_enabled": not control.disabled,
+		"parent_visible": control.is_visible_in_tree(),
+		"parent_viewport_is_root": control_viewport == runner_viewport,
+		"parent_rect": parent_rect,
+		"parent_click": parent_click,
+		"parent_outside_dialog": not dialog_rect.has_point(parent_click),
+		"dialog_rect": dialog_rect,
+		"child_rect": child_rect,
+		"child_click": child_click,
+		"child_inside_dialog": dialog_rect.has_point(child_click),
+		"root_rect": runner_viewport.get_visible_rect(),
+	}
+
+func _dialog_child_click_geometry(control: Control, dialog: ConfirmationDialog) -> Dictionary:
+	var runner_viewport := get_viewport()
+	var source_viewport := control.get_viewport()
+	var click_position := _control_root_click_position(control)
+	var control_rect := _control_root_rect(control)
+	var dialog_rect := Rect2(Vector2(dialog.position), Vector2(dialog.size))
+	var exact := source_viewport == dialog \
+			and source_viewport != runner_viewport \
+			and control.is_visible_in_tree() \
+			and control_rect.has_point(click_position) \
+			and dialog_rect.has_point(click_position) \
+			and runner_viewport.get_visible_rect().encloses(dialog_rect)
+	return {
+		"exact": exact,
+		"source_is_dialog": source_viewport == dialog,
+		"source_is_child_window": source_viewport != runner_viewport,
+		"control_rect": control_rect,
+		"click": click_position,
+		"dialog_rect": dialog_rect,
+		"root_rect": runner_viewport.get_visible_rect(),
+	}
+
+func _cancel_manual_dialog_with_input(dialog: ConfirmationDialog, input_id: String) -> bool:
+	match input_id:
+		"joypad_b":
+			await _press_joypad_button(JOY_BUTTON_B)
+		"escape":
+			await _press_key(KEY_ESCAPE)
+		"mouse":
+			var cancel_button := dialog.get_cancel_button()
+			var geometry := _dialog_child_click_geometry(cancel_button, dialog)
+			if not bool(geometry.get("exact", false)):
+				return _fail_bool("Native dialog mouse-cancel geometry was not exact: %s." % JSON.stringify(geometry))
+			await _click_control(cancel_button)
+		_:
+			return _fail_bool("Unsupported exclusive-dialog cancel input %s." % input_id)
+	return true
+
+func _confirm_manual_dialog_with_input(dialog: ConfirmationDialog, input_id: String) -> bool:
+	var ok_button := dialog.get_ok_button()
+	match input_id:
+		"joypad_a":
+			ok_button.grab_focus()
+			await get_tree().process_frame
+			await _press_joypad_button(JOY_BUTTON_A)
+		"enter":
+			ok_button.grab_focus()
+			await get_tree().process_frame
+			await _press_key(KEY_ENTER)
+		"mouse":
+			var geometry := _dialog_child_click_geometry(ok_button, dialog)
+			if not bool(geometry.get("exact", false)):
+				return _fail_bool("Native dialog mouse-confirm geometry was not exact: %s." % JSON.stringify(geometry))
+			await _click_control(ok_button)
+		_:
+			return _fail_bool("Unsupported exclusive-dialog confirm input %s." % input_id)
+	return true
+
+func _settle_route_dialog(route_id: String) -> void:
+	await _settle()
+	if route_id == "battle":
+		# Battle refreshes its tactical focus surfaces through deferred callbacks.
+		# Wait beyond the dialog's own two-stage safe-cancel focus restoration.
+		await get_tree().process_frame
+		await get_tree().process_frame
+		await get_tree().process_frame
+
+func _summary_cache_contains_exact_summary(cache: Dictionary, expected_summary: Dictionary) -> bool:
+	for cache_value in cache.values():
+		if not (cache_value is Dictionary):
+			continue
+		var cached_summary: Variant = cache_value.get("summary", {})
+		if cached_summary is Dictionary \
+				and String(cached_summary.get("slot_type", "")) == SaveService.SLOT_TYPE_MANUAL \
+				and String(cached_summary.get("path", "")) == _manual_slot_path(2) \
+				and cached_summary == expected_summary:
+			return true
+	return false
+
 func _click_control(control: Control) -> void:
 	var source_viewport := control.get_viewport()
 	# Route through the runner viewport so its embedded-window manager can deliver
@@ -943,6 +1401,14 @@ func _control_root_click_position(control: Control) -> Vector2:
 	if source_viewport is Window and source_viewport != runner_viewport:
 		click_position += Vector2((source_viewport as Window).position)
 	return click_position
+
+func _control_root_rect(control: Control) -> Rect2:
+	var control_rect := control.get_global_rect()
+	var source_viewport := control.get_viewport()
+	var runner_viewport := get_viewport()
+	if source_viewport is Window and source_viewport != runner_viewport:
+		control_rect.position += Vector2((source_viewport as Window).position)
+	return control_rect
 
 func _exercise_empty_slot(
 	protected_states: Dictionary,
@@ -1069,6 +1535,27 @@ func _require_preserved_state(
 		return _fail_bool("Manual overwrite changed the save-version contract.")
 	return true
 
+func _preserved_state_component_checks(
+	protected_states: Dictionary,
+	active_payload: Dictionary,
+	campaign_before: Dictionary,
+	settings_before: Dictionary,
+	excluded_path: String
+) -> Dictionary:
+	var protected_files_exact := true
+	for path_value in protected_states.keys():
+		var path := String(path_value)
+		if path == excluded_path:
+			continue
+		protected_files_exact = protected_files_exact and _file_state(path) == protected_states.get(path, {})
+	return {
+		"protected_files_exact": protected_files_exact,
+		"active_session_exact": SessionState.active_session != null and SessionState.active_session.to_dict() == active_payload,
+		"campaign_progression_exact": CampaignProgression.ensure_profile() == campaign_before,
+		"device_settings_exact": SettingsService.settings == settings_before,
+		"save_version_exact": SessionState.SAVE_VERSION == 9,
+	}
+
 func _tracked_paths() -> Array:
 	return [
 		_autosave_path(),
@@ -1168,7 +1655,10 @@ func _press_joypad_button(button_index: int) -> void:
 func _fail_shell(shell, message: String) -> bool:
 	if shell != null:
 		var layout_host: Node = shell.get_parent()
-		if layout_host is Control and String(layout_host.name).begins_with("TownLayoutHost_"):
+		if layout_host is Control and (
+			String(layout_host.name).begins_with("TownLayoutHost_")
+			or String(layout_host.name).begins_with("ExclusiveRouteLayoutHost_")
+		):
 			layout_host.queue_free()
 		else:
 			shell.queue_free()
