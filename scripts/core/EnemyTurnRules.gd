@@ -4971,6 +4971,8 @@ static func _best_open_spawn_point(
 	if consume_active_front_surface:
 		spawn_scan_context.erase("active_front_support_candidate_surface")
 		spawn_scan_context.erase("active_front_support_candidate_surface_complete")
+		spawn_scan_context.erase("active_front_support_path_context")
+		spawn_scan_context.erase("active_front_support_path_context_complete")
 		_spawn_profile_count("active_front_candidate_surface_consumed")
 	return best
 
@@ -5302,7 +5304,8 @@ static func _active_front_support_spawn_candidate_for_point(
 			support_plan = EnemyAdventureRulesScript.ai_active_front_support_target_selection_plan(
 				session,
 				config,
-				probe
+				probe,
+				_active_front_support_path_context(session, faction_id, spawn_scan_context)
 			)
 			support_plan_resolved = true
 		if support_plan.is_empty():
@@ -5322,6 +5325,21 @@ static func _active_front_support_spawn_candidate_for_point(
 		if best.is_empty() or _spawn_point_candidate_beats(candidate, best):
 			best = candidate
 	return best
+
+static func _active_front_support_path_context(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	spawn_scan_context: Dictionary
+) -> Dictionary:
+	if bool(spawn_scan_context.get("active_front_support_path_context_complete", false)):
+		_spawn_profile_count("active_front_support_path_context_reused")
+		var cached = spawn_scan_context.get("active_front_support_path_context", {})
+		return cached if cached is Dictionary else {}
+	var path_context := EnemyAdventureRulesScript._path_distance_surface_context(session, "", faction_id)
+	spawn_scan_context["active_front_support_path_context"] = path_context
+	spawn_scan_context["active_front_support_path_context_complete"] = true
+	_spawn_profile_count("active_front_support_path_context_loaded")
+	return path_context
 
 static func _active_front_support_commander_candidates(
 	session: SessionStateStoreScript.SessionData,
