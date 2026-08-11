@@ -74,6 +74,8 @@ SAVE_SLOT_DELETE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "save_slot_delete_reg
 SAVE_SLOT_DELETE_REGRESSION_SCENE_PATH = ROOT / "tests" / "save_slot_delete_regression.tscn"
 MANUAL_SAVE_OVERWRITE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "manual_save_overwrite_regression.gd"
 MANUAL_SAVE_OVERWRITE_REGRESSION_SCENE_PATH = ROOT / "tests" / "manual_save_overwrite_regression.tscn"
+MANUAL_SAVE_OVERWRITE_DIALOG_SCENE_PATH = ROOT / "scenes" / "shared" / "ManualSaveOverwriteDialog.tscn"
+MANUAL_SAVE_OVERWRITE_DIALOG_SCRIPT_PATH = ROOT / "scenes" / "shared" / "ManualSaveOverwriteDialog.gd"
 MANUAL_SAVE_SLOT_NAMING_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "manual_save_slot_naming_regression.gd"
 MANUAL_SAVE_SLOT_NAMING_REGRESSION_SCENE_PATH = ROOT / "tests" / "manual_save_slot_naming_regression.tscn"
 SAVE_LATEST_SUMMARY_SUBSECOND_RECENCY_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "save_latest_summary_subsecond_recency_regression.gd"
@@ -12566,7 +12568,6 @@ def validate_save_management(errors: list[str]) -> None:
         for required_token in (
             "MANUAL_SAVE_OVERWRITE_REGRESSION",
             "validation_request_manual_save",
-            "validation_confirm_manual_save_overwrite",
             '"Keep Save"',
             "JOY_BUTTON_B",
             "KEY_ESCAPE",
@@ -12598,6 +12599,111 @@ def validate_save_management(errors: list[str]) -> None:
             "overworld_settings_cancel_unchanged",
             "overworld_end_turn_cancel_unchanged",
             "overworld_no_drawer_cancel_route_exact",
+            "exclusive_parent_mouse_routes_exact",
+            "exclusive_parent_mouse_widths_exact",
+            "exclusive_parent_mouse_occupied_unreadable_exact",
+            "exclusive_parent_mouse_outside_dialog_exact",
+            "exclusive_parent_mouse_dialog_focus_retained",
+            "exclusive_native_mouse_cancel_confirm_exact",
+            "exclusive_native_b_escape_a_enter_exact",
+            "exclusive_reopened_parent_accept_guard_exact",
+            "exclusive_battle_deferred_focus_exact",
+            "exclusive_full_authority_exact",
+            "_exclusive_parent_click_geometry",
+            "_exclusive_route_authority_snapshot",
+            "EXCLUSIVE_SNAPSHOT_OBSERVER_PROFILE_KEYS",
+            '"field_readiness_simple_current_route_fast_path"',
+            '"field_readiness_simple_route_fast_path"',
+            '"hero_actions_cache_hits"',
+            '"selected_route_cache_hits"',
+            "shell_profile.erase(profile_key)",
+            'shell_snapshot.get("ambient_audio", {})',
+            'ambient_audio.erase("active_player_count")',
+            "EXCLUSIVE_BACKGROUND_CONTROLLER_MODAL_KEYS",
+            '"available",\n\t"blocked_reason",\n\t"manual_overwrite_open",',
+            "for controller_key in EXCLUSIVE_BACKGROUND_CONTROLLER_MODAL_KEYS:",
+            "controller_routes.erase(controller_key)",
+            "_exclusive_manual_fallback_count",
+            'shell_snapshot.get("generated_opening_autosave_recovery", {})',
+            'generated_recovery.erase("manual_fallback_count")',
+            'route_id == "overworld"',
+            'initial_manual_fallback_count == -1',
+            '"manual_fallback_count_captured_or_absent_exact"',
+            '"manual_fallback_count_unchanged"',
+            '"manual_fallback_count_increment_or_absent_exact"',
+            '"manual_fallback_count_at_increment_or_absent_exact"',
+            'outcome_focus_before_cancel.get("manual_overwrite_visible", false)',
+            'outcome_focus_after_cancel.get("manual_overwrite_visible", true)',
+            'shell_outcome_focus_before_cancel.get("manual_overwrite_visible", false)',
+            'shell_outcome_focus_after_cancel.get("manual_overwrite_visible", true)',
+            '"outcome_manual_overwrite_visible_transition_exact"',
+            '"shell_outcome_manual_overwrite_visible_transition_exact"',
+            'shell_outcome_focus.erase("manual_overwrite_visible")',
+            'outcome_focus.erase("manual_overwrite_visible")',
+            "_exclusive_route_background_authority",
+            "_authority_component_checks",
+            "_checks_exact",
+            "_differing_component_values",
+            "controller_route_components",
+            "controller_route_differences",
+            "shell_components",
+            "shell_differences",
+            "reopened_parent_shell_before",
+            "reopened_parent_shell_after",
+            "reopened_parent_recovery_before",
+            "reopened_parent_recovery_after",
+            "recovery_components",
+            "recovery_differences",
+            '"dialog_exact"',
+            '"dialog_visible_exact"',
+            '"full_authority_exact"',
+            '"background_authority_exact"',
+            '"dialog_focus_exact"',
+            '"parent_count_exact"',
+            '"slot_bytes_exact"',
+            '"dialog_transaction_exact"',
+            '"root_origin_control_identity_exact"',
+            '"slot2_bytes_exact"',
+            '"normalized_background_authority_exact"',
+            '"preserved_state_exact"',
+            '"visible_exact"',
+            '"pending_slot2_exact"',
+            '"request_increment_exact"',
+            '"cancel_count_unchanged"',
+            '"confirm_count_unchanged"',
+            '"exclusive_exact"',
+            '"safe_dialog_ready_exact"',
+            "reopened_safe_checks",
+            "_preserved_state_component_checks",
+            '"protected_files_exact"',
+            '"active_session_exact"',
+            '"campaign_progression_exact"',
+            '"device_settings_exact"',
+            '"save_version_exact"',
+            "_dialog_child_click_geometry",
+            "_control_root_rect",
+            "dialog.exclusive",
+            "not dialog_rect.has_point(parent_click)",
+            "control_viewport == runner_viewport",
+            "not control.disabled",
+            "ExclusiveParentClickProbe_",
+            "parent_probe.pressed.connect(_on_exclusive_parent_probe_pressed.bind(route_id))",
+            "await _click_control(parent_probe)",
+            "reopened_parent_checks",
+            "layout_host_checks",
+            "request_checks",
+            "initial_dialog_checks",
+            "positive_parent_checks",
+            "confirm_checks",
+            "parent_click_count_before + 1",
+            '"cancel_input": "mouse"',
+            '"confirm_input": "mouse"',
+            '"width": 1280',
+            '"width": 1920',
+            "ExclusiveRouteLayoutHost_",
+            "layout_host.size = Vector2(float(route_width), 720.0)",
+            "shell.get_parent() == layout_host",
+            "_summary_cache_contains_exact_summary",
             "_exercise_overworld_drawer_cancel_ownership",
             "_overworld_drawer_authority_signature",
             "validation_open_command_drawer",
@@ -12620,9 +12726,78 @@ def validate_save_management(errors: list[str]) -> None:
             "SessionState.SAVE_VERSION",
         ):
             ensure(required_token in overwrite_text, errors, f"manual_save_overwrite_regression.gd is missing required token: {required_token}")
+        controller_modal_keys_match = re.search(
+            r"const EXCLUSIVE_BACKGROUND_CONTROLLER_MODAL_KEYS := \[(.*?)\n\]",
+            overwrite_text,
+            re.DOTALL,
+        )
+        controller_modal_keys = re.findall(r'"([^"]+)"', controller_modal_keys_match.group(1)) if controller_modal_keys_match else []
+        ensure(
+            controller_modal_keys == ["available", "blocked_reason", "manual_overwrite_open"],
+            errors,
+            "Manual overwrite background authority must normalize exactly the three dialog-derived controller-route keys",
+        )
+        ensure(
+            overwrite_text.count('generated_recovery.erase("manual_fallback_count")') == 1,
+            errors,
+            "Manual overwrite background authority must normalize exactly one nested generated-recovery request counter",
+        )
+        ensure(
+            overwrite_text.count('ambient_audio.erase("active_player_count")') == 1,
+            errors,
+            "Manual overwrite authority must normalize exactly one ephemeral ambient active-player counter",
+        )
+        ensure(
+            overwrite_text.count('erase("manual_overwrite_visible")') == 2,
+            errors,
+            "Manual overwrite background authority must normalize exactly the direct and nested Outcome modal-visibility fields",
+        )
     if MANUAL_SAVE_OVERWRITE_REGRESSION_SCENE_PATH.exists():
         overwrite_scene_text = MANUAL_SAVE_OVERWRITE_REGRESSION_SCENE_PATH.read_text(encoding="utf-8")
         ensure("res://tests/manual_save_overwrite_regression.gd" in overwrite_scene_text, errors, "Manual-save overwrite regression scene must load its script")
+    ensure(MANUAL_SAVE_OVERWRITE_DIALOG_SCENE_PATH.exists(), errors, "Missing shared manual-save overwrite dialog scene")
+    if MANUAL_SAVE_OVERWRITE_DIALOG_SCENE_PATH.exists():
+        overwrite_dialog_scene_text = MANUAL_SAVE_OVERWRITE_DIALOG_SCENE_PATH.read_text(encoding="utf-8")
+        ensure(
+            scene_has_node(overwrite_dialog_scene_text, "ManualSaveOverwriteDialog", "ConfirmationDialog"),
+            errors,
+            "Shared manual-save overwrite dialog must remain a root ConfirmationDialog",
+        )
+        ensure(
+            "exclusive = true" in overwrite_dialog_scene_text,
+            errors,
+            "Shared manual-save overwrite dialog must remain exclusive over its parent shell",
+        )
+    ensure(MANUAL_SAVE_OVERWRITE_DIALOG_SCRIPT_PATH.exists(), errors, "Missing shared manual-save overwrite dialog script")
+    if MANUAL_SAVE_OVERWRITE_DIALOG_SCRIPT_PATH.exists():
+        overwrite_dialog_script_text = MANUAL_SAVE_OVERWRITE_DIALOG_SCRIPT_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "root_window.window_input.is_connected(_on_root_window_input)",
+            "root_window.window_input.connect(_on_root_window_input)",
+            "func _on_root_window_input(event: InputEvent) -> void:",
+            "_forwarding_root_physical_input := false",
+            "not visible",
+            "or _pending_slot <= 0",
+            "or _forwarding_root_physical_input",
+            "or not (event is InputEventKey or event is InputEventJoypadButton)",
+            "get_tree().root.set_input_as_handled()",
+            "var detached_event := event.duplicate() as InputEvent",
+            "if detached_event == null:",
+            'call_deferred("_forward_root_physical_input", detached_event)',
+            "func _forward_root_physical_input(event: InputEvent) -> void:",
+            "if not visible or _pending_slot <= 0 or _forwarding_root_physical_input:",
+            "_forwarding_root_physical_input = true",
+            "push_input(event)",
+            "_forwarding_root_physical_input = false",
+        ):
+            ensure(required_token in overwrite_dialog_script_text, errors, f"ManualSaveOverwriteDialog.gd is missing exclusive root-input forwarding token: {required_token}")
+        forwarding_handler_text = overwrite_dialog_script_text.split("func _on_root_window_input(event: InputEvent) -> void:", 1)[-1].split("\nfunc ", 1)[0]
+        forwarding_helper_text = overwrite_dialog_script_text.split("func _forward_root_physical_input(event: InputEvent) -> void:", 1)[-1].split("\nfunc ", 1)[0]
+        ensure("InputEventMouseButton" not in forwarding_handler_text, errors, "ManualSaveOverwriteDialog root fallback must not forward mouse-button input")
+        ensure("InputEventAction" not in forwarding_handler_text, errors, "ManualSaveOverwriteDialog root fallback must not forward synthetic action input")
+        ensure("push_input(event)" not in forwarding_handler_text, errors, "ManualSaveOverwriteDialog root handler must defer rather than synchronously push physical input")
+        ensure("push_input(event)" in forwarding_helper_text, errors, "ManualSaveOverwriteDialog deferred forwarding helper must push the detached physical input unchanged")
+        ensure(overwrite_dialog_script_text.count("push_input(event)") == 1, errors, "ManualSaveOverwriteDialog must push physical input only inside its deferred forwarding helper")
 
     for path in (MANUAL_SAVE_SLOT_NAMING_REGRESSION_SCRIPT_PATH, MANUAL_SAVE_SLOT_NAMING_REGRESSION_SCENE_PATH):
         ensure(path.exists(), errors, f"Missing manual-save naming regression file: {path.relative_to(ROOT)}")
