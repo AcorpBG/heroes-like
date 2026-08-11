@@ -10621,6 +10621,12 @@ def validate_content(errors: list[str]) -> None:
         ensure(role in {"melee", "ranged"}, errors, f"Unit {unit_id} uses unsupported role {role}")
         if bool(unit.get("ranged", False)):
             ensure(int(unit.get("shots", 0)) > 0, errors, f"Ranged unit {unit_id} must define shots > 0")
+        if unit_id == "unit_veilmourn_undertow_harpooners":
+            ensure(
+                int(unit.get("min_damage", 0)) == 5 and int(unit.get("max_damage", 0)) == 8,
+                errors,
+                "Undertow Harpooners must retain the calibrated tier-four ranged 5-8 damage band",
+            )
 
         abilities = unit.get("abilities", [])
         if "abilities" in unit:

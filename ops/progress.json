@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Foundry Saint sustain calibration is complete with exact focused behavior, all-live 100-seed balance, 59-encounter breadth, compatibility, and repository proof. Overall release readiness remains open.",
+  "currentNotes": "The Undertow Harpooner damage calibration is complete with exact focused behavior, all-live 100-seed balance, 59-encounter breadth, compatibility, and repository proof. Overall release readiness remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "combat-brasshollow-foundry-saint-sustain-calibration-10184",
-  "currentSliceId": "combat-brasshollow-foundry-saint-sustain-calibration-10184",
-  "currentSliceNotes": "Completed Saint's Temper ordinary repair at 0.015 while retaining its 0.01 Overheated bonus. Production improves from 36 / 206.5 / 6 / 70.0 / 1.13 to 35 / 200.5 / 5 / 70.0 / 1.13; all non-Brasshollow pair rows remain exact, structural failures remain zero, and the 59-encounter queue remains clear.",
+  "currentSlice": "combat-veilmourn-undertow-harpooner-damage-calibration-10184",
+  "currentSliceId": "combat-veilmourn-undertow-harpooner-damage-calibration-10184",
+  "currentSliceNotes": "Completed Undertow Harpooners at the exact 5-8 damage band while retaining Mourning Nets and every other field. Production improves from 35 / 200.5 / 5 / 70.0 / 1.13 to 34 / 187.0 / 3 / 68.5 / 0.73; all non-Veilmourn ordered rows remain exact, structural failures remain zero, and the 59-encounter queue remains clear.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Brasshollow Foundry Saint Sustain Calibration",
-  "currentSliceUpdatedAt": "2026-08-11T09:30:00Z",
+  "currentSliceTitle": "Veilmourn Undertow Harpooner Damage Calibration",
+  "currentSliceUpdatedAt": "2026-08-11T07:10:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -75149,6 +75149,27 @@
       "notes": "Completed content-only Saint's Temper ordinary repair calibration at 0.015 while retaining the 0.01 Overheated bonus and every scope boundary. Focused runtime passes 118/118. The authoritative all-live 100-seed matrix improves production from 36 outliers / 206.5 severity / six severe / 70.0 maximum / 1.13 side bias to 35 / 200.5 / five / 70.0 / 1.13 with zero structural failures; only Brasshollow pair rows move, week-three Embercourt dominance falls 65.5 to 62.5, and week-four Mireclaw dominance reaches 55.0. Veilmourn/Brasshollow stays 67/33 and is not claimed. Active breadth completes 59/59 with zero stalls or invalid orders and a clear queue at repeated signature 829808c9. Autoplay balance, balance regression, core, editor, validator, JSON, Python, and diff gates pass; Native RMG deferral is unchanged.",
       "remainingWork": "No work remains in this slice. Broader faction balance, strategic-AI/content breadth, Native RMG parity, signing, native Windows hardware certification, publication, and overall release readiness remain open.",
       "completedAt": "2026-08-11T09:30:00Z"
+    },
+    {
+      "id": "combat-veilmourn-undertow-harpooner-damage-calibration-10184",
+      "title": "Veilmourn Undertow Harpooner Damage Calibration",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/factions-content-bible.md"],
+      "purpose": "Restore Undertow Harpooners to the common tier-four ranged damage band so Veilmourn's authored week-two line can contest Mireclaw without a faction-wide scalar or matchup branch.",
+      "implementationTargets": ["content/units.json", "tests/unit_ability_runtime_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"corrected_rng_outliers": 35, "corrected_rng_excess_severity": 200.5, "corrected_rng_severe_rows": 5, "corrected_rng_max_dominance_pct": 70.0, "corrected_rng_max_side_bias_points": 1.13, "week2_mireclaw_veilmourn_mireclaw_win_rate": 70.0},
+      "candidate": {"undertow_harpooner_min_damage": 5, "undertow_harpooner_max_damage": 8, "method_matched_week2_mireclaw_veilmourn_mireclaw_win_rate": 62.5},
+      "completionCriteria": ["Focused runtime and repository proof bind exact 5-8 Undertow Harpooner damage while retaining Mourning Nets and every unchanged stat", "The corrected-RNG all-live 100-seed matrix improves the 70/30 week-two Mireclaw/Veilmourn row and 35/200.5/5/70.0/1.13 production without structural failures or worse maximum dominance or side bias", "Non-Veilmourn rows remain exact and the active 59-encounter queue plus ability/autoplay/balance/core/editor/repository/JSON/Python/diff gates pass"],
+      "nonGoals": ["Mourning Nets, other ability, other stat, growth, cost, building, army-group, hero, spell, economy, encounter, save, campaign, packaging, Native RMG, or benchmark-threshold changes", "faction, opponent, week, army-count, encounter, seed, or benchmark hard-coding", "final Veilmourn, faction-balance, or release-completion claims"],
+      "createdAt": "2026-08-11T06:55:00Z",
+      "startedAt": "2026-08-11T06:55:00Z",
+      "updatedAt": "2026-08-11T07:10:00Z",
+      "notes": "Completed the content-only Undertow Harpooner calibration from 5-7 to the common tier-four ranged 5-8 damage band while retaining Mourning Nets and every other field. Focused runtime passes 118/118. The authoritative corrected-RNG all-live 100-seed matrix improves production from 35 outliers / 200.5 severity / five severe / 70.0 maximum / 1.13 side bias to 34 / 187.0 / three / 68.5 / 0.73 with zero structural failures. Week-two Mireclaw/Veilmourn improves from 70/30 to 62.5/37.5, week-four Veilmourn/Brasshollow improves from 67/33 to 61/39, and every non-Veilmourn ordered row remains exact. Active breadth completes 59/59 with zero stalls or invalid orders and a clear queue at repeated signature 829808c9. Autoplay balance, balance regression, core, editor, validator, JSON, Python, and diff gates pass; Native RMG deferral is unchanged.",
+      "remainingWork": "No work remains in this slice. Broader faction balance, strategic-AI/content breadth, Native RMG parity, signing, native Windows hardware certification, publication, and overall release readiness remain open.",
+      "completedAt": "2026-08-11T07:10:00Z"
     }
   ],
   "project": "heroes-like",
@@ -75159,7 +75180,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, manual public-prerelease execution, stable publication, signing, and native Windows hardware certification.",
-  "remainingWork": "Continue strategic-AI, accessibility, content, performance, signing, native Windows certification, stable-channel, and remaining faction balance gaps; create/review a current verified draft before manually exercising public prerelease promotion. The accepted faction matrix remains needs_tuning at 27 outliers / 152.0 severity / 67.5 percent maximum dominance / 3.73 side bias.",
+  "remainingWork": "Continue strategic-AI, accessibility, content, performance, signing, native Windows certification, stable-channel, and remaining faction balance gaps; create/review a current verified draft before manually exercising public prerelease promotion. The accepted faction matrix remains needs_tuning at 34 outliers / 187.0 severity / 68.5 percent maximum dominance / 0.73 side bias.",
   "reportOnlyEvidence": [
     {
       "entries": [
