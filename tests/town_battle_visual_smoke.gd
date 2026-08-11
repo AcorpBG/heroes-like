@@ -16,6 +16,9 @@ func _run() -> void:
 	get_tree().quit(0)
 
 func _run_town_smoke() -> bool:
+	if not _assert_player_weekly_growth_forecast_parity():
+		get_tree().quit(1)
+		return false
 	var session = ScenarioFactory.create_session(
 		"river-pass",
 		"normal",
@@ -1283,6 +1286,304 @@ func _clone_session(session):
 		BattleRules.normalize_battle_state(clone)
 	return clone
 
+func _assert_player_weekly_growth_forecast_parity() -> bool:
+	var base_session = ScenarioFactory.create_session(
+		"river-pass",
+		"normal",
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	var base_town := _first_player_town(base_session)
+	if base_town.is_empty():
+		push_error("Town smoke: weekly-growth parity fixture is missing its player town.")
+		return false
+	_move_active_hero_to_town(base_session, base_town)
+	base_session.day = 7
+	base_session.overworld["resource_nodes"] = []
+	var towns: Array = base_session.overworld.get("towns", [])
+	for index in range(towns.size()):
+		var town_value = towns[index]
+		if not (town_value is Dictionary):
+			continue
+		var town: Dictionary = town_value
+		if String(town.get("placement_id", "")) == String(base_town.get("placement_id", "")):
+			var built: Array = town.get("built_buildings", []).duplicate(true) if town.get("built_buildings", []) is Array else []
+			for building_id in ["building_watch_barracks", "building_bowyer_lodge"]:
+				if building_id not in built:
+					built.append(building_id)
+			town["built_buildings"] = built
+			var recovery: Dictionary = town.get("recovery", {}).duplicate(true) if town.get("recovery", {}) is Dictionary else {}
+			recovery["pressure"] = 0
+			town["recovery"] = recovery
+			town["available_recruits"] = {
+				"unit_river_guard": 2,
+				"unit_ember_archer": 3,
+			}
+			towns[index] = town
+		else:
+			town["owner"] = "neutral"
+			towns[index] = town
+	base_session.overworld["towns"] = towns
+	base_session.overworld["encounters"] = []
+	base_session.overworld["scenario_script_state"] = {
+		"fired_hook_ids": ["riverwatch_relief_column"],
+		"event_log": [],
+	}
+
+	var raw_reference := {}
+	var metrics_reference := {}
+	for rank in [0, 1, 2]:
+		var session = _clone_session(base_session)
+		_set_muster_captain_rank(session, rank)
+		var town := _first_player_town(session)
+		var authority_before := JSON.stringify(session.to_dict())
+		var peripheral_before := _weekly_growth_peripheral_authority()
+		var raw_growth: Dictionary = OverworldRules._town_weekly_growth(town, session)
+		var forecast_growth: Dictionary = OverworldRules.town_weekly_growth(town, session)
+		var expected_growth: Dictionary = HeroProgressionRules.scale_recruit_growth(
+			session.overworld.get("hero", {}),
+			raw_growth
+		)
+		if raw_growth.size() < 2 or not raw_growth.has("unit_river_guard") or not raw_growth.has("unit_ember_archer"):
+			push_error("Town smoke: weekly-growth parity fixture did not expose multiple units: %s." % raw_growth)
+			return false
+		if forecast_growth != expected_growth:
+			push_error("Town smoke: rank-%d player forecast did not apply specialty growth exactly once: raw=%s expected=%s actual=%s." % [rank, raw_growth, expected_growth, forecast_growth])
+			return false
+		for unit_id in raw_growth.keys():
+			var expected_rounded := int(round(float(int(raw_growth.get(unit_id, 0))) * (1.0 + (float(rank) * 0.2))))
+			if int(forecast_growth.get(unit_id, -1)) != expected_rounded:
+				push_error("Town smoke: rank-%d weekly-growth rounding drifted for %s: raw=%d expected=%d actual=%d." % [rank, unit_id, int(raw_growth.get(unit_id, 0)), expected_rounded, int(forecast_growth.get(unit_id, -1))])
+				return false
+		if rank == 0 and forecast_growth != raw_growth:
+			push_error("Town smoke: rank-0 player forecast changed raw weekly growth: raw=%s forecast=%s." % [raw_growth, forecast_growth])
+			return false
+		if rank > 0:
+			var double_scaled := HeroProgressionRules.scale_recruit_growth(session.overworld.get("hero", {}), expected_growth)
+			if forecast_growth == raw_growth or forecast_growth == double_scaled:
+				push_error("Town smoke: rank-%d player forecast was unscaled or scaled twice: raw=%s forecast=%s double=%s." % [rank, raw_growth, forecast_growth, double_scaled])
+				return false
+		var detached_unit := String(forecast_growth.keys()[0])
+		forecast_growth[detached_unit] = int(forecast_growth.get(detached_unit, 0)) + 999
+		if OverworldRules.town_weekly_growth(town, session) != expected_growth \
+				or OverworldRules._town_weekly_growth(town, session) != raw_growth:
+			push_error("Town smoke: mutating the public weekly forecast return changed fresh public, raw, live, or cached authority at rank %d." % rank)
+			return false
+		var metrics: Dictionary = OverworldRules.town_development_metrics(town, session)
+		if rank == 0:
+			raw_reference = raw_growth
+			metrics_reference = metrics
+		elif raw_growth != raw_reference or metrics != metrics_reference:
+			push_error("Town smoke: player specialty rank leaked into raw growth or town development metrics at rank %d: raw=%s metrics=%s." % [rank, raw_growth, metrics])
+			return false
+		var enemy_town := town.duplicate(true)
+		enemy_town["owner"] = "enemy"
+		var neutral_town := town.duplicate(true)
+		neutral_town["owner"] = "neutral"
+		if OverworldRules.town_weekly_growth(enemy_town, session) != OverworldRules._town_weekly_growth(enemy_town, session) \
+				or OverworldRules.town_weekly_growth(neutral_town, session) != OverworldRules._town_weekly_growth(neutral_town, session) \
+				or OverworldRules.town_weekly_growth(town) != OverworldRules._town_weekly_growth(town):
+			push_error("Town smoke: enemy, neutral, or sessionless weekly growth did not stay on the raw authority path at rank %d." % rank)
+			return false
+		var authority_after := JSON.stringify(session.to_dict())
+		var peripheral_after := _weekly_growth_peripheral_authority()
+		if authority_after != authority_before or peripheral_after != peripheral_before:
+			push_error("Town smoke: rank-%d forecast reads changed authority: session_exact=%s peripheral_changes=%s." % [
+				rank,
+				authority_after == authority_before,
+				_changed_dictionary_keys(peripheral_before, peripheral_after),
+			])
+			return false
+		var realized_session = _clone_session(session)
+		var realized_town_before := _first_player_town(realized_session)
+		var recruits_before: Dictionary = realized_town_before.get("available_recruits", {}).duplicate(true)
+		var end_turn_forecast := OverworldRules.describe_end_turn_forecast(realized_session)
+		var growth_summary := OverworldRules._describe_recruit_delta(expected_growth)
+		if not end_turn_forecast.contains("weekly muster") or not end_turn_forecast.contains(growth_summary):
+			push_error("Town smoke: rank-%d end-turn forecast omitted exact effective muster %s: %s." % [rank, growth_summary, end_turn_forecast])
+			return false
+		var realized_peripheral_before := _weekly_growth_peripheral_authority()
+		var end_turn_result: Dictionary = OverworldRules.end_turn(realized_session)
+		var realized_town_after := _first_town_by_placement(realized_session, String(realized_town_before.get("placement_id", "")))
+		var realized_delta := _recruit_pool_delta(recruits_before, realized_town_after.get("available_recruits", {}))
+		if realized_delta != expected_growth or not String(end_turn_result.get("weekly_muster_summary", "")).contains(growth_summary):
+			push_error("Town smoke: rank-%d end-turn mutation/result diverged from its public forecast: expected=%s delta=%s result=%s." % [rank, expected_growth, realized_delta, end_turn_result])
+			return false
+		if _weekly_growth_peripheral_authority() != realized_peripheral_before:
+			push_error("Town smoke: rank-%d direct end turn changed save, cache, settings, or route authority." % rank)
+			return false
+
+	var copy_session = _clone_session(base_session)
+	_set_muster_captain_rank(copy_session, 2)
+	var copy_town := _first_player_town(copy_session)
+	var copy_growth: Dictionary = OverworldRules.town_weekly_growth(copy_town, copy_session)
+	var copy_authority_before := JSON.stringify(copy_session.to_dict())
+	var copy_peripheral_before := _weekly_growth_peripheral_authority()
+	var recruit_actions := TownRules.get_recruit_actions(copy_session)
+	var matched_recruit_units := []
+	for action_value in recruit_actions:
+		if not (action_value is Dictionary):
+			continue
+		var action: Dictionary = action_value
+		var unit_id := String(action.get("id", "")).trim_prefix("recruit:")
+		if copy_growth.has(unit_id):
+			if int(action.get("weekly_growth", -1)) != int(copy_growth.get(unit_id, -2)) \
+					or not String(action.get("summary", "")).contains("Weekly +%d" % int(copy_growth.get(unit_id, 0))):
+				push_error("Town smoke: Recruit copy drifted from effective weekly growth for %s: action=%s growth=%s." % [unit_id, action, copy_growth])
+				return false
+			matched_recruit_units.append(unit_id)
+	if matched_recruit_units.size() < 2:
+		push_error("Town smoke: Recruit copy did not cover both effective-growth units: actions=%s growth=%s." % [recruit_actions, copy_growth])
+		return false
+	var consequence_signature := TownRules.town_action_consequence_signature(copy_session)
+	if consequence_signature.get("weekly_growth", {}) != copy_growth:
+		push_error("Town smoke: town consequence copy drifted from effective weekly growth: %s." % consequence_signature)
+		return false
+	if JSON.stringify(copy_session.to_dict()) != copy_authority_before or _weekly_growth_peripheral_authority() != copy_peripheral_before:
+		push_error("Town smoke: Recruit/consequence forecast copies changed session, save, cache, settings, or route authority.")
+		return false
+
+	var build_session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+	_set_muster_captain_rank(build_session, 2)
+	build_session.day = 2
+	var build_town := _first_player_town(build_session)
+	_move_active_hero_to_town(build_session, build_town)
+	var build_towns: Array = build_session.overworld.get("towns", [])
+	for index in range(build_towns.size()):
+		if build_towns[index] is Dictionary and String(build_towns[index].get("placement_id", "")) == String(build_town.get("placement_id", "")):
+			var updated_town: Dictionary = build_towns[index]
+			updated_town["last_build_day"] = 0
+			build_towns[index] = updated_town
+	build_session.overworld["towns"] = build_towns
+	build_session.overworld["resources"] = {
+		"gold": 99999, "wood": 99, "ore": 99, "aetherglass": 99, "embergrain": 99,
+		"peatwax": 99, "verdant_grafts": 99, "brass_scrip": 99, "memory_salt": 99,
+	}
+	build_town = _first_player_town(build_session)
+	var build_growth_before := OverworldRules.town_weekly_growth(build_town, build_session)
+	var projected_town := build_town.duplicate(true)
+	var projected_buildings: Array = projected_town.get("built_buildings", []).duplicate(true) if projected_town.get("built_buildings", []) is Array else []
+	projected_buildings.append("building_bowyer_lodge")
+	projected_town["built_buildings"] = projected_buildings
+	var build_growth_after := OverworldRules.town_weekly_growth(projected_town, build_session)
+	var build_projection := OverworldRules.describe_town_build_projection(build_session, build_town, "building_bowyer_lodge")
+	var bowyer_action := _action_by_id(TownRules.get_build_actions(build_session), "build:building_bowyer_lodge")
+	if bowyer_action.is_empty() or not String(bowyer_action.get("summary", "")).contains(build_projection):
+		push_error("Town smoke: Build copy omitted its exact effective weekly projection: projection=%s action=%s." % [build_projection, bowyer_action])
+		return false
+	var recruits_before_build: Dictionary = build_town.get("available_recruits", {}).duplicate(true)
+	var build_peripheral_before := _weekly_growth_peripheral_authority()
+	var build_result: Dictionary = OverworldRules.build_in_active_town(build_session, "building_bowyer_lodge")
+	var built_town := _first_player_town(build_session)
+	var immediate_delta := _recruit_pool_delta(recruits_before_build, built_town.get("available_recruits", {}))
+	var expected_immediate := HeroProgressionRules.scale_recruit_growth(
+		build_session.overworld.get("hero", {}),
+		OverworldRules._building_growth_payload("building_bowyer_lodge")
+	)
+	var expected_projection := OverworldRules._describe_recruit_projection(build_growth_before, build_growth_after)
+	if not bool(build_result.get("ok", false)) \
+			or immediate_delta != expected_immediate \
+			or int(immediate_delta.get("unit_river_guard", 0)) != 0 \
+			or not String(build_result.get("message", "")).contains("Weekly muster %s" % expected_projection):
+		push_error("Town smoke: Build effective forecast or immediate one-time grant separation drifted: result=%s immediate=%s expected=%s projection=%s." % [build_result, immediate_delta, expected_immediate, expected_projection])
+		return false
+	if OverworldRules.town_weekly_growth(built_town, build_session) != build_growth_after:
+		push_error("Town smoke: post-build effective weekly growth diverged from the pre-build projection.")
+		return false
+	if _weekly_growth_peripheral_authority() != build_peripheral_before:
+		push_error("Town smoke: Build changed save, cache, settings, or route authority.")
+		return false
+	return true
+
+func _set_muster_captain_rank(session, rank: int) -> void:
+	var specialties := []
+	for _index in range(max(0, rank)):
+		specialties.append("mustercaptain")
+	var hero: Dictionary = session.overworld.get("hero", {})
+	hero["specialties"] = specialties.duplicate(true)
+	session.overworld["hero"] = hero
+	var heroes: Array = session.overworld.get("player_heroes", [])
+	for index in range(heroes.size()):
+		if heroes[index] is Dictionary and String(heroes[index].get("id", "")) == String(session.overworld.get("active_hero_id", "")):
+			var roster_hero: Dictionary = heroes[index]
+			roster_hero["specialties"] = specialties.duplicate(true)
+			heroes[index] = roster_hero
+	session.overworld["player_heroes"] = heroes
+
+func _first_town_by_placement(session, placement_id: String) -> Dictionary:
+	for town_value in session.overworld.get("towns", []):
+		if town_value is Dictionary and String(town_value.get("placement_id", "")) == placement_id:
+			return town_value
+	return {}
+
+func _recruit_pool_delta(before: Variant, after: Variant) -> Dictionary:
+	var delta := {}
+	var unit_ids := []
+	if before is Dictionary:
+		unit_ids.append_array(before.keys())
+	if after is Dictionary:
+		for unit_id in after.keys():
+			if unit_id not in unit_ids:
+				unit_ids.append(unit_id)
+	for unit_id_value in unit_ids:
+		var unit_id := String(unit_id_value)
+		var amount := int(after.get(unit_id, 0)) - int(before.get(unit_id, 0)) if after is Dictionary and before is Dictionary else 0
+		if amount != 0:
+			delta[unit_id] = amount
+	return delta
+
+func _action_by_id(actions: Array, action_id: String) -> Dictionary:
+	for action_value in actions:
+		if action_value is Dictionary and String(action_value.get("id", "")) == action_id:
+			return action_value
+	return {}
+
+func _changed_dictionary_keys(before: Dictionary, after: Dictionary) -> Array:
+	var changed := []
+	for key in before.keys():
+		if not after.has(key) or before.get(key) != after.get(key):
+			changed.append(String(key))
+	for key in after.keys():
+		if not before.has(key) and String(key) not in changed:
+			changed.append(String(key))
+	return changed
+
+func _weekly_growth_peripheral_authority() -> Dictionary:
+	return {
+		"save_files": _weekly_growth_save_file_states(),
+		"save_cache": SaveService.validation_summary_cache_snapshot(),
+		"settings": SettingsService.settings.duplicate(true),
+		"settings_files": _weekly_growth_file_states([
+			SettingsService.SETTINGS_FILE,
+			SettingsService.SETTINGS_CANDIDATE_FILE,
+			SettingsService.SETTINGS_BACKUP_FILE,
+		]),
+		"safe_quit_route": AppRouter.validation_safe_quit_snapshot(),
+		"active_play_route": AppRouter.validation_active_play_return_snapshot(),
+		"battle_entry_route": AppRouter.validation_battle_entry_snapshot(),
+		"battle_resolution_route": AppRouter.validation_battle_resolution_checkpoint_snapshot(),
+		"outcome_route": AppRouter.validation_scenario_outcome_route_snapshot(),
+	}
+
+func _weekly_growth_save_file_states() -> Dictionary:
+	return _weekly_growth_file_states([
+		"user://saves/autosave.json",
+		"user://saves/autosave.json.candidate",
+		"user://saves/autosave.json.backup",
+		"user://saves/slot1.json",
+		"user://saves/slot2.json",
+		"user://saves/slot3.json",
+		"user://saves/campaign_progression.json",
+	])
+
+func _weekly_growth_file_states(paths: Array) -> Dictionary:
+	var states := {}
+	for path in paths:
+		states[path] = {
+			"exists": FileAccess.file_exists(path),
+			"bytes": FileAccess.get_file_as_bytes(path) if FileAccess.file_exists(path) else PackedByteArray(),
+		}
+	return states
+
 func _first_player_town(session) -> Dictionary:
 	for town in session.overworld.get("towns", []):
 		if town is Dictionary and String(town.get("owner", "")) == "player":
@@ -1723,7 +2024,12 @@ func _assert_town_departure_movement_copy_matrix(shell: Node) -> bool:
 	var remaining_snapshot: Dictionary = shell.call("validation_snapshot")
 	var remaining: Dictionary = remaining_snapshot.get("town_departure_confirmation", {}) if remaining_snapshot.get("town_departure_confirmation", {}) is Dictionary else {}
 	var expected_remaining := "Ready check: finish town orders, then return to the field with %d/%d move." % [move_max, move_max]
-	var cached_remaining: Dictionary = shell.call("_cached_departure_dynamic", remaining)
+	var cached_remaining_view_state: Dictionary = shell.call(
+		"_active_town_entity_view_state",
+		TownRules.get_active_town(session),
+		true
+	)
+	var cached_remaining: Dictionary = cached_remaining_view_state.get("departure", {}) if cached_remaining_view_state.get("departure", {}) is Dictionary else {}
 	if int(remaining.get("ready_response_action_count", -1)) != 0 \
 			or String(remaining.get("button_label", "")) != "Return to Field" \
 			or String(remaining.get("visible_text", "")) != expected_remaining \
@@ -1740,7 +2046,12 @@ func _assert_town_departure_movement_copy_matrix(shell: Node) -> bool:
 	var exhausted_snapshot: Dictionary = shell.call("validation_snapshot")
 	var exhausted: Dictionary = exhausted_snapshot.get("town_departure_confirmation", {}) if exhausted_snapshot.get("town_departure_confirmation", {}) is Dictionary else {}
 	var expected_exhausted := "Ready check: movement is spent; return to the field, then choose End Turn."
-	var cached_exhausted: Dictionary = shell.call("_cached_departure_dynamic", exhausted)
+	var cached_exhausted_view_state: Dictionary = shell.call(
+		"_active_town_entity_view_state",
+		TownRules.get_active_town(session),
+		true
+	)
+	var cached_exhausted: Dictionary = cached_exhausted_view_state.get("departure", {}) if cached_exhausted_view_state.get("departure", {}) is Dictionary else {}
 	if int(exhausted.get("ready_response_action_count", -1)) != 0 \
 			or String(exhausted.get("button_label", "")) != "Return to Field" \
 			or String(exhausted.get("visible_text", "")) != expected_exhausted \

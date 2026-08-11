@@ -1486,7 +1486,7 @@ static func build_in_active_town(session: SessionStateStoreScript.SessionData, b
 		}
 
 	var income_before := _calculate_town_income(town, session)
-	var growth_before := _town_weekly_growth(town, session)
+	var growth_before := town_weekly_growth(town, session)
 	_spend_resources(session, cost)
 	var built_buildings = _normalize_built_buildings_for_town_state(town)
 	built_buildings.append(building_id)
@@ -1502,7 +1502,7 @@ static func build_in_active_town(session: SessionStateStoreScript.SessionData, b
 	towns[int(town_result.get("index", -1))] = town
 	session.overworld["towns"] = towns
 	var income_after := _calculate_town_income(town, session)
-	var growth_after := _town_weekly_growth(town, session)
+	var growth_after := town_weekly_growth(town, session)
 	var message_parts := ["Built %s in %s." % [String(building.get("name", building_id)), _town_name(town)]]
 	var cost_summary := _describe_resource_delta(cost)
 	if cost_summary != "":
@@ -4189,6 +4189,8 @@ static func _dispatch_context_brief(session: SessionStateStoreScript.SessionData
 			return "Open ground at %d,%d on %s" % [pos.x, pos.y, terrain]
 
 static func town_weekly_growth(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> Dictionary:
+	if session != null and String(town.get("owner", "neutral")) == "player":
+		return _effective_player_town_weekly_growth(session, town)
 	return _town_weekly_growth(town, session)
 
 static func town_income(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> Dictionary:
@@ -4352,7 +4354,7 @@ static func _end_turn_muster_forecast_line(session: SessionStateStoreScript.Sess
 		for town in session.overworld.get("towns", []):
 			if not (town is Dictionary) or String(town.get("owner", "neutral")) != "player":
 				continue
-			var growth_summary := _describe_recruit_delta(_town_weekly_growth(town, session))
+			var growth_summary := _describe_recruit_delta(town_weekly_growth(town, session))
 			if growth_summary != "":
 				previews.append("%s %s" % [_town_name(town), growth_summary])
 			if previews.size() >= 2:
@@ -8234,13 +8236,21 @@ static func _calculate_town_income(town: Dictionary, session: SessionStateStoreS
 	return income
 
 static func _growth_tick_town(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
-	var hero = session.overworld.get("hero", {})
-	var weekly_growth := HeroProgressionRulesScript.scale_recruit_growth(hero, _town_weekly_growth(town, session))
+	var weekly_growth := _effective_player_town_weekly_growth(session, town)
 	town["available_recruits"] = _add_recruit_growth(
 		town.get("available_recruits", {}),
 		weekly_growth
 	)
 	return weekly_growth
+
+static func _effective_player_town_weekly_growth(
+	session: SessionStateStoreScript.SessionData,
+	town: Dictionary
+) -> Dictionary:
+	return HeroProgressionRulesScript.scale_recruit_growth(
+		session.overworld.get("hero", {}),
+		_town_weekly_growth(town, session)
+	)
 
 static func _seed_recruits_for_town(town: Dictionary) -> Dictionary:
 	var normalized_town := town.duplicate(true)
