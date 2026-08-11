@@ -333,6 +333,7 @@ def linux_lifecycle(installer: Path) -> dict:
     prior_identity = make_owned_prior_install(install_dir, "legacy-linux-sidecar.dat") if command_ok(
         same_version_reinstall
     ) else {}
+    prior_desktop_identity = file_identity(applications_dir / "heroes-like.desktop") if prior_identity else ""
     precommit_env = {**env, "HEROES_LIKE_INSTALL_FAIL_PHASE": "precommit"}
     precommit_failure = run([str(installer)], env=precommit_env, timeout=120) if prior_identity else {
         "returncode": None,
@@ -341,7 +342,11 @@ def linux_lifecycle(installer: Path) -> dict:
         "output": "prior install unavailable",
         "output_tail": ["prior install unavailable"],
     }
-    precommit_rollback_exact = bool(prior_identity) and program_tree_identity(install_dir) == prior_identity
+    precommit_rollback_exact = (
+        bool(prior_identity)
+        and program_tree_identity(install_dir) == prior_identity
+        and file_identity(applications_dir / "heroes-like.desktop") == prior_desktop_identity
+    )
     commit_env = {**env, "HEROES_LIKE_INSTALL_FAIL_PHASE": "after_backup"}
     commit_failure = run([str(installer)], env=commit_env, timeout=120) if prior_identity else {
         "returncode": None,
@@ -350,7 +355,11 @@ def linux_lifecycle(installer: Path) -> dict:
         "output": "prior install unavailable",
         "output_tail": ["prior install unavailable"],
     }
-    commit_rollback_exact = bool(prior_identity) and program_tree_identity(install_dir) == prior_identity
+    commit_rollback_exact = (
+        bool(prior_identity)
+        and program_tree_identity(install_dir) == prior_identity
+        and file_identity(applications_dir / "heroes-like.desktop") == prior_desktop_identity
+    )
     upgrade = run([str(installer)], env=env, timeout=120) if prior_identity else {
         "returncode": None,
         "timed_out": False,
@@ -362,7 +371,15 @@ def linux_lifecycle(installer: Path) -> dict:
     payload_installed = (install_dir / "heroes-like.x86_64").is_file()
     payload_verification = verify_installed_payload(install_dir, "linux-x86_64")
     launcher_created = launcher.is_file()
-    desktop_entry_created = (applications_dir / "heroes-like.desktop").is_file()
+    desktop_path = applications_dir / "heroes-like.desktop"
+    desktop_entry_created = desktop_path.is_file()
+    icon_path = install_dir / "aurelion-reach.svg"
+    icon_installed = icon_path.is_file()
+    icon_matches_canonical = icon_installed and icon_path.read_bytes() == (ROOT / "icon.svg").read_bytes()
+    desktop_entry_icon_exact = (
+        desktop_entry_created
+        and f"Icon={icon_path}\n" in desktop_path.read_text(encoding="utf-8")
+    )
     stale_prior_file_removed = not (install_dir / "legacy-linux-sidecar.dat").exists()
     boot = run(
         [str(launcher), "--headless", "--audio-driver", "Dummy", "--quit-after", "20"],
@@ -388,6 +405,9 @@ def linux_lifecycle(installer: Path) -> dict:
         "payload_verification": payload_verification,
         "launcher_created_before_uninstall": launcher_created,
         "desktop_entry_created_before_uninstall": desktop_entry_created,
+        "desktop_entry_icon_exact": desktop_entry_icon_exact,
+        "icon_installed_before_uninstall": icon_installed,
+        "icon_matches_canonical": icon_matches_canonical,
         "precommit_rollback_exact": precommit_rollback_exact,
         "commit_rollback_exact": commit_rollback_exact,
         "stale_prior_file_removed": stale_prior_file_removed,
@@ -401,6 +421,7 @@ def linux_lifecycle(installer: Path) -> dict:
             and commit_failure.get("returncode") not in (None, 0) and commit_rollback_exact
             and command_ok(upgrade) and stale_prior_file_removed
             and payload_installed and payload_verification["ok"] and launcher_created and desktop_entry_created
+            and desktop_entry_icon_exact and icon_matches_canonical
             and command_ok(boot, reject_fatal=True) and command_ok(uninstall)
             and not install_dir.exists() and not launcher.exists() and user_data.is_file(),
     }

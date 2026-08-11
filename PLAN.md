@@ -4263,6 +4263,35 @@ Completion evidence:
 - the authoritative installer lifecycle rebuilds and boots Linux, Windows NSIS, and Windows archive packages, including fresh-Wine Boot/MainMenu/native-DLL proof, exact legacy upgrade rollback, registry ownership, uninstall, and external user-data preservation;
 - release artifact verification `17/17`, Godot editor parse, repository validation, Python, JSON, reconciliation, and diff checks pass.
 
+## Aurelion Reach Linux Desktop Icon
+
+id: `packaging-aurelion-reach-linux-desktop-icon-10184`
+
+Status: completed.
+
+Selected Phase 6 Linux desktop packaging implementation slice. The shipped desktop entry has the public Aurelion Reach name but no `Icon=` key, and the Linux bundle owns no desktop-readable icon file, so desktop shells fall back to a generic application icon even though the game already ships `icon.svg` as its canonical product emblem.
+
+Implementation target:
+- add one manifest-owned `aurelion-reach.svg` payload to Linux release bundles from the canonical project icon;
+- point the installed `heroes-like.desktop` entry at the exact installed icon path while retaining the stable technical desktop filename and executable identity;
+- preserve exact install/upgrade/precommit/after-backup rollback, uninstall ownership, Windows bundle membership, and external user-data behavior.
+
+Completion criteria:
+- Linux tar and runnable installer contain the canonical nonempty SVG under the public asset name and verify its exact manifest identity;
+- a real user-local install publishes `Name=Aurelion Reach` and an absolute `Icon=` path whose manifest-owned file exists and byte-matches `icon.svg`;
+- rollback restores prior desktop-entry/icon state exactly, uninstall removes owned program/desktop assets, and Linux boot remains green;
+- Windows archive/setup membership and PE icon behavior remain unchanged; artifact verification, editor, repository, Python, JSON, reconciliation, and diff gates pass.
+
+Non-goals:
+- emblem redesign or generated art; Windows icon changes; technical executable/install/registry/user-data rename; desktop-file rename; system-wide install; gameplay, balance, AI, Native RMG, signing, certification, publication, or release-completion claims.
+
+Completion evidence:
+- Linux staging copies canonical `icon.svg` to manifest-owned `aurelion-reach.svg`; the release tar payload SHA-256 equals the source icon SHA-256 `18dbdec8d483ba4d5ff8da2534d898a41804ea41464ce7712ed6d85cf800f43a`;
+- the real user-local lifecycle reports `desktop_entry_icon_exact=true`, `icon_installed_before_uninstall=true`, `icon_matches_canonical=true`, and verifies all eight Linux payload files;
+- precommit and after-backup failures restore the exact prior program tree and desktop entry, while successful uninstall removes the owned program, launcher, and desktop entry and preserves external user data;
+- Windows NSIS/archive install, rollback, registry, PE metadata, Boot/MainMenu/native-DLL, uninstall, and user-data gates remain green with unchanged artifact hashes;
+- release artifact verification `17/17`, shell syntax, Python, JSON, repository validation, reconciliation, and diff checks pass.
+
 ## Brasshollow Foundry Saint Sustain Calibration
 
 id: `combat-brasshollow-foundry-saint-sustain-calibration-10184`

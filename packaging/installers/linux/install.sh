@@ -8,7 +8,8 @@ libaurelion_map_persistence.linux.template_release.x86_64.so
 README.txt
 build-info.json
 install.sh
-uninstall.sh'
+uninstall.sh
+aurelion-reach.svg'
 
 SOURCE_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 INSTALL_DIR=${HEROES_LIKE_INSTALL_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/heroes-like}
@@ -210,6 +211,7 @@ Type=Application
 Name=Aurelion Reach
 Comment=Turn-based fantasy strategy
 Exec=$BIN_DIR/heroes-like
+Icon=$INSTALL_DIR/aurelion-reach.svg
 Terminal=false
 Categories=Game;StrategyGame;
 EOF

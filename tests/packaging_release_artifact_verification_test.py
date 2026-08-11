@@ -486,8 +486,11 @@ END
         self.assertEqual(install.returncode, 0, msg=install.stdout)
         self.assertTrue((install_root / "heroes-like.x86_64").is_file())
         self.assertTrue(os.access(install_root / "heroes-like.x86_64", os.X_OK))
+        self.assertEqual((install_root / "aurelion-reach.svg").read_bytes(), (ROOT / "icon.svg").read_bytes())
         self.assertTrue((bin_root / "heroes-like").is_file())
-        self.assertTrue((applications_root / "heroes-like.desktop").is_file())
+        desktop_path = applications_root / "heroes-like.desktop"
+        self.assertTrue(desktop_path.is_file())
+        self.assertIn(f"Icon={install_root / 'aurelion-reach.svg'}\n", desktop_path.read_text(encoding="utf-8"))
 
         uninstall = subprocess.run(
             ["sh", str(linux_bundle / "uninstall.sh")],
@@ -508,6 +511,7 @@ END
             install_cmd = archive.read(f"heroes-like-{VERSION}-windows-x86_64/install.cmd").decode("ascii")
         self.assertIn("install.cmd", names)
         self.assertIn("uninstall.cmd", names)
+        self.assertNotIn("aurelion-reach.svg", names)
         self.assertIn("HEROES_LIKE_INSTALL_DIR", install_cmd)
         self.assertIn("Aurelion Reach.cmd", install_cmd)
         self.assertIn("Heroes Like.cmd", install_cmd)

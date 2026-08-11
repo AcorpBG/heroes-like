@@ -108,6 +108,7 @@ Type=Application
 Name=Aurelion Reach
 Comment=Turn-based fantasy strategy
 Exec=$BIN_DIR/heroes-like
+Icon=$INSTALL_DIR/aurelion-reach.svg
 Terminal=false
 Categories=Game;StrategyGame;
 EOF
