@@ -41,6 +41,8 @@ WINDOWS_PUBLIC_GAME_SHORTCUT = "Aurelion Reach.lnk"
 WINDOWS_PUBLIC_UNINSTALL_SHORTCUT = "Uninstall Aurelion Reach.lnk"
 WINDOWS_LEGACY_GAME_SHORTCUT = "Heroes Like.lnk"
 WINDOWS_LEGACY_UNINSTALL_SHORTCUT = "Uninstall Heroes Like.lnk"
+LINUX_DESKTOP_ICON_NAME = "aurelion-reach.svg"
+LINUX_DESKTOP_ICON_SOURCE = ROOT / "icon.svg"
 WINDOWS_VERSION_CHANNEL_BASES = {
     "alpha": 1000,
     "beta": 2000,
@@ -71,7 +73,8 @@ class PlatformSpec:
     @property
     def staged_names(self) -> tuple[str, ...]:
         platform_helpers = (WINDOWS_INSTALLER_HELPER_NAME,) if self.platform_id.startswith("windows") else ()
-        return (*self.required_names, "README.txt", "build-info.json", *self.installer_names, *platform_helpers)
+        desktop_assets = (LINUX_DESKTOP_ICON_NAME,) if self.platform_id.startswith("linux") else ()
+        return (*self.required_names, "README.txt", "build-info.json", *self.installer_names, *platform_helpers, *desktop_assets)
 
 
 PLATFORMS = (
@@ -512,6 +515,10 @@ def stage_platform(
         if not source.is_file() or source.stat().st_size <= 0:
             raise RuntimeError(f"missing installer payload for {spec.platform_id}: {source}")
         shutil.copy2(source, bundle_root / installer_name)
+    if spec.platform_id.startswith("linux"):
+        if not LINUX_DESKTOP_ICON_SOURCE.is_file() or LINUX_DESKTOP_ICON_SOURCE.stat().st_size <= 0:
+            raise RuntimeError(f"missing Linux desktop icon payload: {LINUX_DESKTOP_ICON_SOURCE}")
+        shutil.copy2(LINUX_DESKTOP_ICON_SOURCE, bundle_root / LINUX_DESKTOP_ICON_NAME)
     if spec.platform_id.startswith("windows"):
         build_windows_installer_helper(bundle_root / WINDOWS_INSTALLER_HELPER_NAME)
     payload_files = sorted(path for path in bundle_root.iterdir() if path.is_file())
