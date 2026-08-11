@@ -24,7 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current implementation slice: `combat-brasshollow-foundry-saint-sustain-calibration-10184` (completed). Saint's Temper ordinary repair is now `0.015`, reducing the production matrix to `35 / 200.5 / 5 / 70.0 / 1.13` while preserving every non-Brasshollow pair and zero structural failures.
+- Current implementation slice: `combat-veilmourn-undertow-harpooner-damage-calibration-10184` (completed). Undertow Harpooners now use the common tier-four ranged `5-8` damage band, improving the authoritative matrix from `35 / 200.5 / 5 / 70.0 / 1.13` to `34 / 187.0 / 3 / 68.5 / 0.73` with zero structural failures.
+- Latest completed implementation slice: `combat-veilmourn-undertow-harpooner-damage-calibration-10184`. The exact week-two Mireclaw/Veilmourn row improves from `70/30` to `62.5/37.5`; all non-Veilmourn ordered rows remain exact and the 59-encounter live queue remains clear.
 - Latest completed implementation slice: `combat-brasshollow-foundry-saint-sustain-calibration-10184`. Focused `118/118`, all-live 100-seed balance, 59-encounter breadth, compatibility, editor, and repository gates pass; Veilmourn/Brasshollow remains explicitly unchanged at `67/33`.
 - Latest completed implementation slice: `combat-mireclaw-drowned-antler-clean-line-pressure-10184`. The exact prior-screen control remains `38 / 332.5 / 13 / 79.0 / 1.6`; focused `118/118`, 59-encounter breadth, compatibility, editor, and repository gates pass.
 - Latest completed implementation slice: `combat-mireclaw-drowned-antler-apex-calibration-10184`. The exact prior-screen control remains `38 / 332.5 / 13 / 79.0 / 1.6`; the 59-encounter live queue remains clear at repeated signature `829808c9`, and focused ability, autoplay, balance, core, editor, and repository gates pass.
@@ -4142,6 +4143,36 @@ Completion evidence:
 - focused runtime proof passes `118/118` consequences and exclusions and reports the exact 18-percent clean-line penalty while the `1.10/1.05` wounded/status payoff, initiative, and kill-only momentum remain unchanged;
 - the authoritative all-live 100-seed matrix keeps weeks one/two exact and improves production from `36 / 214.5 / 6 / 71.0 / 1.13` to `36 / 206.5 / 6 / 70.0 / 1.13` with zero structural failures;
 - the identical pre-apex Drowned Sovereign Screen control remains `38 / 332.5 / 13 / 79.0 / 1.6` with zero structural failures;
+- the active scenario breadth report completes `59/59` encounters with zero stalls or invalid orders and a clear queue at repeated signature `829808c9`;
+- autoplay balance, balance regression, core systems, Godot editor parse, repository validation, JSON, Python, and diff checks pass. This content-only change is platform-neutral and introduces no Linux/Windows-specific runtime or packaging path.
+
+## Veilmourn Undertow Harpooner Damage Calibration
+
+id: `combat-veilmourn-undertow-harpooner-damage-calibration-10184`
+
+Status: completed.
+
+Selected Phase 6 faction-balance implementation slice. The week-two Mireclaw/Veilmourn pair is the production matrix's strongest current row at `70/30`, while Veilmourn remains balanced against Brasshollow and Embercourt. Method-matched pair controls show that removing Veilmourn's tier-four or tier-five ability worsens the row and removing Mireclaw's tier-four or tier-five ability leaves it exact. Undertow Harpooners are instead the only tier-four ranged line below the shipped `5-8` damage band at `5-7`; restoring only their maximum damage to `8` improves the exact pair to `62.5/37.5` before full-matrix validation.
+
+Implementation target:
+- change only Undertow Harpooners' `max_damage` from `7` to the common tier-four ranged baseline of `8`;
+- retain Mourning Nets, ranged role, health, attack, defense, minimum damage, speed, initiative, growth, cost, presentation, AI behavior, and every other Veilmourn unit contract;
+- keep production content, focused runtime expectations, validator ownership, and the fast benchmark on the same authored field.
+
+Completion criteria:
+- focused runtime and repository proof bind Undertow Harpooners to the exact `5-8` damage contract while retaining Mourning Nets and all unchanged stats;
+- the corrected-RNG all-live 100-seed matrix improves the `70/30` Mireclaw/Veilmourn week-two row and the `35 / 200.5 / 5 / 70.0 / 1.13` production baseline without introducing structural failures or worsening maximum dominance or side bias;
+- method-matched non-Veilmourn rows remain exact, the active 59-encounter breadth queue remains clear, and ability/autoplay/balance/core/editor/repository/JSON/Python/diff gates pass.
+
+Non-goals:
+- do not change Mourning Nets, other abilities, any other unit stat, growth, cost, building, army group, hero, spell, economy, encounter, save, campaign, packaging, Native RMG, or benchmark thresholds;
+- do not hard-code factions, opponents, weeks, army counts, encounter ids, seeds, or benchmark identity into combat behavior;
+- do not claim final Veilmourn identity, final faction balance, or overall release completion.
+
+Completion evidence:
+- focused runtime proof passes `118/118` authored ability consequences, binds Undertow Harpooners to the exact `5-8` band, and retains Mourning Nets and every unchanged authored field;
+- the authoritative corrected-RNG all-live 100-seed matrix improves production from `35 / 200.5 / 5 / 70.0 / 1.13` to `34 / 187.0 / 3 / 68.5 / 0.73` with zero structural failures;
+- week-two Mireclaw/Veilmourn improves from `70/30` to `62.5/37.5`, week-four Veilmourn/Brasshollow improves from `67/33` to `61/39`, and all non-Veilmourn ordered rows remain exact;
 - the active scenario breadth report completes `59/59` encounters with zero stalls or invalid orders and a clear queue at repeated signature `829808c9`;
 - autoplay balance, balance regression, core systems, Godot editor parse, repository validation, JSON, Python, and diff checks pass. This content-only change is platform-neutral and introduces no Linux/Windows-specific runtime or packaging path.
 

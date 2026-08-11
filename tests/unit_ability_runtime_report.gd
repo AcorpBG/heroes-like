@@ -32,6 +32,7 @@ const REQUIRED_ABILITY_IDS := [
 ]
 const BASE_DEFENDER_UNIT_ID := "unit_river_guard"
 const RIVET_HOUND_UNIT_ID := "unit_brasshollow_rivet_hounds"
+const UNDERTOW_HARPOONER_UNIT_ID := "unit_veilmourn_undertow_harpooners"
 
 var _errors: Array[String] = []
 var _report := {
@@ -75,6 +76,9 @@ func _validate_unit(unit: Dictionary) -> void:
 	if unit_id == "":
 		_error("Unit record is missing id.")
 		return
+	if unit_id == UNDERTOW_HARPOONER_UNIT_ID:
+		if int(unit.get("min_damage", 0)) != 5 or int(unit.get("max_damage", 0)) != 8:
+			_error("Undertow Harpooners must retain their calibrated tier-four ranged 5-8 damage band.")
 	var ability_summaries := []
 	var abilities: Array = unit.get("abilities", []) if unit.get("abilities", []) is Array else []
 	var player_summary := BattleRulesScript._stack_ability_summary(_stack_for_unit(unit_id, "player", 0)) if not abilities.is_empty() else ""
