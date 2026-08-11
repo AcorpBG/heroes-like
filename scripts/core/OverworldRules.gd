@@ -3495,6 +3495,15 @@ static func consume_command_briefing(session: SessionStateStoreScript.SessionDat
 static func describe_command_risk(session: SessionStateStoreScript.SessionData) -> String:
 	return String(describe_command_risk_surfaces(session).get("risk", ""))
 
+static func describe_command_risk_from_normalized_session(session: SessionStateStoreScript.SessionData) -> String:
+	return String(_command_risk_surfaces_from_forecast(_command_risk_forecast_from_normalized_session(session)).get("risk", ""))
+
+static func describe_command_risk_summary_from_normalized_session(session: SessionStateStoreScript.SessionData) -> String:
+	var reduction := _reduce_command_risk_items(_command_risk_items(session, false))
+	if not bool(reduction.get("has_risk", false)):
+		return "Steady watch | No concrete next-day break is signaled from the current frontier watch."
+	return String(reduction.get("summary", ""))
+
 static func describe_commitment_board(session: SessionStateStoreScript.SessionData) -> String:
 	normalize_overworld_state(session)
 	var lines := [
@@ -3543,7 +3552,9 @@ static func describe_end_turn_forecast_compact(session: SessionStateStoreScript.
 
 static func describe_command_risk_surfaces(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	normalize_overworld_state(session)
-	var forecast := _command_risk_forecast(session)
+	return _command_risk_surfaces_from_forecast(_command_risk_forecast(session))
+
+static func _command_risk_surfaces_from_forecast(forecast: Dictionary) -> Dictionary:
 	if not bool(forecast.get("has_risk", false)):
 		return {
 			"risk": "Command Risk\nSteady watch | No concrete next-day break is signaled from the current frontier watch.",
@@ -12716,14 +12727,45 @@ static func _direction_from_to(origin: Vector2i, target: Vector2i) -> String:
 
 static func _command_risk_forecast(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	_normalize_enemy_states(session)
-	var items := _command_risk_items(session)
-	if items.is_empty():
+	return _command_risk_forecast_from_normalized_session(session)
+
+static func _command_risk_forecast_from_normalized_session(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var reduction := _reduce_command_risk_items(_command_risk_items(session))
+	if not bool(reduction.get("has_risk", false)):
 		return {
 			"has_risk": false,
 			"severity": 0,
 			"summary": "",
 			"lines": [],
 			"signature": "",
+			"gate_end_turn": false,
+		}
+	var selected_items: Array = reduction.get("selected_items", [])
+	var summary_text := String(reduction.get("summary", ""))
+	var lines := ["Next-day posture: %s" % summary_text]
+	var signature_payload := {"day": session.day, "summary": summary_text, "details": []}
+	for item in selected_items:
+		var detail := String(item.get("detail", ""))
+		if detail == "":
+			continue
+		lines.append("- %s" % detail)
+		signature_payload["details"].append(detail)
+	return {
+		"has_risk": true,
+		"severity": int(reduction.get("severity", 0)),
+		"summary": summary_text,
+		"lines": lines,
+		"signature": JSON.stringify(signature_payload),
+		"gate_end_turn": bool(reduction.get("gate_end_turn", false)),
+	}
+
+static func _reduce_command_risk_items(items: Array) -> Dictionary:
+	if items.is_empty():
+		return {
+			"has_risk": false,
+			"severity": 0,
+			"summary": "",
+			"selected_items": [],
 			"gate_end_turn": false,
 		}
 	items.sort_custom(func(a, b):
@@ -12749,53 +12791,45 @@ static func _command_risk_forecast(session: SessionStateStoreScript.SessionData)
 	var summary_text := "%s risk" % _command_risk_grade_label(severity)
 	if not summary_parts.is_empty():
 		summary_text = "%s | %s" % [summary_text, " | ".join(summary_parts)]
-	var lines := ["Next-day posture: %s" % summary_text]
-	var signature_payload := {"day": session.day, "summary": summary_text, "details": []}
-	for item in selected_items:
-		var detail := String(item.get("detail", ""))
-		if detail == "":
-			continue
-		lines.append("- %s" % detail)
-		signature_payload["details"].append(detail)
 	return {
 		"has_risk": true,
 		"severity": severity,
 		"summary": summary_text,
-		"lines": lines,
-		"signature": JSON.stringify(signature_payload),
+		"selected_items": selected_items,
 		"gate_end_turn": gate_end_turn or severity >= 3,
 	}
 
-static func _command_risk_items(session: SessionStateStoreScript.SessionData) -> Array:
+static func _command_risk_items(session: SessionStateStoreScript.SessionData, include_details: bool = true) -> Array:
 	var items := []
 	var pressured_town_ids := {}
-	var town_items := _command_risk_town_items(session)
+	var town_items := _command_risk_town_items(session, include_details)
 	for item in town_items:
 		items.append(item)
 		var town_id := String(item.get("town_placement_id", ""))
 		if town_id != "":
 			pressured_town_ids[town_id] = true
-	items.append_array(_command_risk_logistics_items(session, pressured_town_ids))
-	items.append_array(_command_risk_objective_items(session, pressured_town_ids))
-	items.append_array(_command_risk_posture_items(session))
-	var field_item := _command_risk_field_item(session)
+	items.append_array(_command_risk_logistics_items(session, pressured_town_ids, include_details))
+	items.append_array(_command_risk_objective_items(session, pressured_town_ids, include_details))
+	items.append_array(_command_risk_posture_items(session, include_details))
+	var field_item := _command_risk_field_item(session, include_details)
 	if not field_item.is_empty():
 		items.append(field_item)
 	return items
 
-static func _command_risk_town_items(session: SessionStateStoreScript.SessionData) -> Array:
+static func _command_risk_town_items(session: SessionStateStoreScript.SessionData, include_details: bool = true) -> Array:
 	var items := []
 	for town in session.overworld.get("towns", []):
 		if not (town is Dictionary) or String(town.get("owner", "neutral")) != "player":
 			continue
-		var threat_state := _town_command_risk_state(session, town)
+		var threat_state := _town_command_risk_state(session, town, false)
 		if int(threat_state.get("visible_pressuring", 0)) <= 0 and int(threat_state.get("visible_marching", 0)) <= 0 and not bool(threat_state.get("hidden_targeting", false)) and int(threat_state.get("siege_progress", 0)) <= 0:
 			continue
-		var readiness := town_battle_readiness(town, session)
+		var development := town_development_metrics(town, session)
+		var readiness := int(development.get("battle_readiness", 0))
 		var defense := _town_defense_summary(town)
-		var logistics := town_logistics_state(session, town)
-		var recovery := town_recovery_state(session, town)
-		var capital_project := town_capital_project_state(town, session)
+		var logistics: Dictionary = development.get("logistics", {}) if development.get("logistics", {}) is Dictionary else {}
+		var recovery: Dictionary = development.get("recovery", {}) if development.get("recovery", {}) is Dictionary else {}
+		var capital_project: Dictionary = development.get("capital_project", {}) if development.get("capital_project", {}) is Dictionary else {}
 		var objective_anchor: bool = _raid_target_is_objective_anchor(
 			session,
 			"town",
@@ -12815,62 +12849,62 @@ static func _command_risk_town_items(session: SessionStateStoreScript.SessionDat
 		if objective_anchor or town_strategic_role(town) in ["capital", "stronghold"]:
 			severity += 1
 		severity = clampi(severity, 2, 5)
-		var threat_clauses := []
-		if int(threat_state.get("visible_pressuring", 0)) > 0:
-			threat_clauses.append("%d known raid host%s already press the approaches" % [
-				int(threat_state.get("visible_pressuring", 0)),
-				"" if int(threat_state.get("visible_pressuring", 0)) == 1 else "s",
-			])
-		if int(threat_state.get("visible_marching", 0)) > 0:
-			var days_to_contact = max(1, int(threat_state.get("nearest_goal_distance", 9999)))
-			if days_to_contact <= 2:
-				threat_clauses.append("%d known host%s can reach the town in %d day%s" % [
-					int(threat_state.get("visible_marching", 0)),
-					"" if int(threat_state.get("visible_marching", 0)) == 1 else "s",
-					days_to_contact,
-					"" if days_to_contact == 1 else "s",
+		var item := {
+			"key": "town:%s" % String(town.get("placement_id", "")),
+			"town_placement_id": String(town.get("placement_id", "")),
+			"severity": severity,
+			"gate": severity >= 3,
+			"summary": "%s exposed" % _town_name(town),
+		}
+		if include_details:
+			var threat_clauses := []
+			if int(threat_state.get("visible_pressuring", 0)) > 0:
+				threat_clauses.append("%d known raid host%s already press the approaches" % [
+					int(threat_state.get("visible_pressuring", 0)),
+					"" if int(threat_state.get("visible_pressuring", 0)) == 1 else "s",
 				])
-			else:
-				threat_clauses.append("%d known host%s are marching on the lane" % [
-					int(threat_state.get("visible_marching", 0)),
-					"" if int(threat_state.get("visible_marching", 0)) == 1 else "s",
+			if int(threat_state.get("visible_marching", 0)) > 0:
+				var days_to_contact = max(1, int(threat_state.get("nearest_goal_distance", 9999)))
+				if days_to_contact <= 2:
+					threat_clauses.append("%d known host%s can reach the town in %d day%s" % [
+						int(threat_state.get("visible_marching", 0)),
+						"" if int(threat_state.get("visible_marching", 0)) == 1 else "s",
+						days_to_contact,
+						"" if days_to_contact == 1 else "s",
+					])
+				else:
+					threat_clauses.append("%d known host%s are marching on the lane" % [
+						int(threat_state.get("visible_marching", 0)),
+						"" if int(threat_state.get("visible_marching", 0)) == 1 else "s",
+					])
+			if bool(threat_state.get("hidden_targeting", false)):
+				threat_clauses.append("scouts report hostile movement beyond the fog")
+			if int(threat_state.get("siege_progress", 0)) > 0:
+				threat_clauses.append("siege pressure %d/%d is already building" % [
+					int(threat_state.get("siege_progress", 0)),
+					max(1, int(threat_state.get("siege_capture_progress", 1))),
 				])
-		if bool(threat_state.get("hidden_targeting", false)):
-			threat_clauses.append("scouts report hostile movement beyond the fog")
-		if int(threat_state.get("siege_progress", 0)) > 0:
-			threat_clauses.append("siege pressure %d/%d is already building" % [
-				int(threat_state.get("siege_progress", 0)),
-				max(1, int(threat_state.get("siege_capture_progress", 1))),
-			])
-		var front_parts := ["Readiness %d" % readiness]
-		if defense != "":
-			front_parts.append(defense)
-		if String(logistics.get("summary", "")) != "" and (int(logistics.get("support_gap", 0)) > 0 or int(logistics.get("threatened_count", 0)) > 0 or int(logistics.get("disrupted_count", 0)) > 0):
-			front_parts.append(String(logistics.get("summary", "")))
-		if bool(recovery.get("active", false)):
-			front_parts.append(String(recovery.get("summary", "")))
-		if bool(capital_project.get("vulnerable", false)):
-			front_parts.append("capital project vulnerable")
-		if objective_anchor:
-			front_parts.append("objective anchor")
-		items.append(
-			{
-				"key": "town:%s" % String(town.get("placement_id", "")),
-				"town_placement_id": String(town.get("placement_id", "")),
-				"severity": severity,
-				"gate": severity >= 3,
-				"summary": "%s exposed" % _town_name(town),
-				"detail": "%s: %s | %s. %s" % [
-					_town_name(town),
-					"; ".join(threat_clauses),
-					" | ".join(front_parts),
-					_town_command_risk_consequence(town, readiness, logistics, recovery, capital_project, objective_anchor),
-				],
-			}
-		)
+			var front_parts := ["Readiness %d" % readiness]
+			if defense != "":
+				front_parts.append(defense)
+			if String(logistics.get("summary", "")) != "" and (int(logistics.get("support_gap", 0)) > 0 or int(logistics.get("threatened_count", 0)) > 0 or int(logistics.get("disrupted_count", 0)) > 0):
+				front_parts.append(String(logistics.get("summary", "")))
+			if bool(recovery.get("active", false)):
+				front_parts.append(String(recovery.get("summary", "")))
+			if bool(capital_project.get("vulnerable", false)):
+				front_parts.append("capital project vulnerable")
+			if objective_anchor:
+				front_parts.append("objective anchor")
+			item["detail"] = "%s: %s | %s. %s" % [
+				_town_name(town),
+				"; ".join(threat_clauses),
+				" | ".join(front_parts),
+				_town_command_risk_consequence(town, readiness, logistics, recovery, capital_project, objective_anchor),
+			]
+		items.append(item)
 	return items
 
-static func _command_risk_logistics_items(session: SessionStateStoreScript.SessionData, pressured_town_ids: Dictionary) -> Array:
+static func _command_risk_logistics_items(session: SessionStateStoreScript.SessionData, pressured_town_ids: Dictionary, include_details: bool = true) -> Array:
 	var items := []
 	for town in session.overworld.get("towns", []):
 		if not (town is Dictionary) or String(town.get("owner", "neutral")) != "player":
@@ -12878,11 +12912,11 @@ static func _command_risk_logistics_items(session: SessionStateStoreScript.Sessi
 		var placement_id := String(town.get("placement_id", ""))
 		if pressured_town_ids.has(placement_id):
 			continue
-		var logistics := town_logistics_state(session, town)
+		var logistics := _town_logistics_state(session, town)
 		if int(logistics.get("disrupted_count", 0)) <= 0 and int(logistics.get("threatened_count", 0)) <= 0 and int(logistics.get("support_gap", 0)) <= 0:
 			continue
-		var capital_project := town_capital_project_state(town, session)
-		var recovery := town_recovery_state(session, town)
+		var recovery := _town_recovery_state(session, town, logistics)
+		var capital_project := _town_capital_project_state(town, session, logistics, recovery)
 		var severity_score := int(logistics.get("disrupted_count", 0)) * 2 + int(logistics.get("threatened_count", 0)) + int(logistics.get("support_gap", 0))
 		if int(logistics.get("response_count", 0)) <= 0 and int(logistics.get("threatened_count", 0)) > 0:
 			severity_score += 1
@@ -12897,41 +12931,41 @@ static func _command_risk_logistics_items(session: SessionStateStoreScript.Sessi
 			severity = 4
 		elif severity_score >= 2:
 			severity = 3
-		var route_clause := ""
-		if logistics.get("disrupted_site_labels", []) is Array and not logistics.get("disrupted_site_labels", []).is_empty():
-			route_clause = "Denied routes %s" % ", ".join(logistics.get("disrupted_site_labels", []).slice(0, min(2, logistics.get("disrupted_site_labels", []).size())))
-		elif logistics.get("threatened_site_labels", []) is Array and not logistics.get("threatened_site_labels", []).is_empty():
-			route_clause = "Threatened routes %s" % ", ".join(logistics.get("threatened_site_labels", []).slice(0, min(2, logistics.get("threatened_site_labels", []).size())))
-		elif logistics.get("missing_family_labels", []) is Array and not logistics.get("missing_family_labels", []).is_empty():
-			route_clause = "Missing anchors %s" % ", ".join(logistics.get("missing_family_labels", []).slice(0, min(2, logistics.get("missing_family_labels", []).size())))
-		var consequence_parts := []
-		if int(logistics.get("gap_readiness_penalty", 0)) > 0:
-			consequence_parts.append("readiness -%d" % int(logistics.get("gap_readiness_penalty", 0)))
-		if int(logistics.get("gap_growth_penalty_percent", 0)) > 0:
-			consequence_parts.append("recruits -%d%%" % int(logistics.get("gap_growth_penalty_percent", 0)))
-		if int(logistics.get("gap_pressure_penalty", 0)) > 0:
-			consequence_parts.append("%s -%d" % [_town_pressure_label(town).to_lower(), int(logistics.get("gap_pressure_penalty", 0))])
-		if bool(recovery.get("active", false)):
-			consequence_parts.append("%d recovery pressure remains" % int(recovery.get("pressure", 0)))
-		if bool(capital_project.get("vulnerable", false)) and String(capital_project.get("vulnerability_summary", "")) != "":
-			consequence_parts.append(String(capital_project.get("vulnerability_summary", "")))
-		items.append(
-			{
-				"key": "logistics:%s" % placement_id,
-				"severity": severity,
-				"gate": severity >= 4,
-				"summary": "%s routes straining" % _town_name(town),
-				"detail": "%s logistics: %s%s. Next day holds %s." % [
-					_town_name(town),
-					String(logistics.get("summary", "")),
-					" | %s" % route_clause if route_clause != "" else "",
-					", ".join(consequence_parts) if not consequence_parts.is_empty() else "the same exposed chain unless new response orders go out",
-				],
-			}
-		)
+		var item := {
+			"key": "logistics:%s" % placement_id,
+			"severity": severity,
+			"gate": severity >= 4,
+			"summary": "%s routes straining" % _town_name(town),
+		}
+		if include_details:
+			var route_clause := ""
+			if logistics.get("disrupted_site_labels", []) is Array and not logistics.get("disrupted_site_labels", []).is_empty():
+				route_clause = "Denied routes %s" % ", ".join(logistics.get("disrupted_site_labels", []).slice(0, min(2, logistics.get("disrupted_site_labels", []).size())))
+			elif logistics.get("threatened_site_labels", []) is Array and not logistics.get("threatened_site_labels", []).is_empty():
+				route_clause = "Threatened routes %s" % ", ".join(logistics.get("threatened_site_labels", []).slice(0, min(2, logistics.get("threatened_site_labels", []).size())))
+			elif logistics.get("missing_family_labels", []) is Array and not logistics.get("missing_family_labels", []).is_empty():
+				route_clause = "Missing anchors %s" % ", ".join(logistics.get("missing_family_labels", []).slice(0, min(2, logistics.get("missing_family_labels", []).size())))
+			var consequence_parts := []
+			if int(logistics.get("gap_readiness_penalty", 0)) > 0:
+				consequence_parts.append("readiness -%d" % int(logistics.get("gap_readiness_penalty", 0)))
+			if int(logistics.get("gap_growth_penalty_percent", 0)) > 0:
+				consequence_parts.append("recruits -%d%%" % int(logistics.get("gap_growth_penalty_percent", 0)))
+			if int(logistics.get("gap_pressure_penalty", 0)) > 0:
+				consequence_parts.append("%s -%d" % [_town_pressure_label(town).to_lower(), int(logistics.get("gap_pressure_penalty", 0))])
+			if bool(recovery.get("active", false)):
+				consequence_parts.append("%d recovery pressure remains" % int(recovery.get("pressure", 0)))
+			if bool(capital_project.get("vulnerable", false)) and String(capital_project.get("vulnerability_summary", "")) != "":
+				consequence_parts.append(String(capital_project.get("vulnerability_summary", "")))
+			item["detail"] = "%s logistics: %s%s. Next day holds %s." % [
+				_town_name(town),
+				String(logistics.get("summary", "")),
+				" | %s" % route_clause if route_clause != "" else "",
+				", ".join(consequence_parts) if not consequence_parts.is_empty() else "the same exposed chain unless new response orders go out",
+			]
+		items.append(item)
 	return items
 
-static func _command_risk_objective_items(session: SessionStateStoreScript.SessionData, pressured_town_ids: Dictionary) -> Array:
+static func _command_risk_objective_items(session: SessionStateStoreScript.SessionData, pressured_town_ids: Dictionary, include_details: bool = true) -> Array:
 	var items := []
 	var scenario := ContentService.get_scenario(session.scenario_id)
 	var objectives = scenario.get("objectives", {})
@@ -12942,11 +12976,11 @@ static func _command_risk_objective_items(session: SessionStateStoreScript.Sessi
 			continue
 		match String(objective.get("type", "")):
 			"enemy_pressure_at_least":
-				var pressure_item := _command_risk_pressure_objective_item(session, scenario, objective)
+				var pressure_item := _command_risk_pressure_objective_item(session, scenario, objective, include_details)
 				if not pressure_item.is_empty():
 					items.append(pressure_item)
 			"encounter_resolved":
-				var encounter_item := _command_risk_encounter_objective_item(session, objective)
+				var encounter_item := _command_risk_encounter_objective_item(session, objective, include_details)
 				if not encounter_item.is_empty():
 					items.append(encounter_item)
 			"town_not_owned_by_player", "town_owned_by_player":
@@ -12958,21 +12992,21 @@ static func _command_risk_objective_items(session: SessionStateStoreScript.Sessi
 					continue
 				var town = town_result.get("town", {})
 				if String(town.get("owner", "neutral")) != "player":
-					items.append(
-						{
-							"key": "objective-town:%s" % placement_id,
-							"severity": 5,
-							"gate": true,
-							"summary": "%s objective slipping" % _town_name(town),
-							"detail": "%s is already off the banner line, and the defeat watch %s remains live." % [
-								_town_name(town),
-								String(objective.get("label", objective.get("id", "objective"))),
-							],
-						}
-					)
+					var item := {
+						"key": "objective-town:%s" % placement_id,
+						"severity": 5,
+						"gate": true,
+						"summary": "%s objective slipping" % _town_name(town),
+					}
+					if include_details:
+						item["detail"] = "%s is already off the banner line, and the defeat watch %s remains live." % [
+							_town_name(town),
+							String(objective.get("label", objective.get("id", "objective"))),
+						]
+					items.append(item)
 	return items
 
-static func _command_risk_posture_items(session: SessionStateStoreScript.SessionData) -> Array:
+static func _command_risk_posture_items(session: SessionStateStoreScript.SessionData, include_details: bool = true) -> Array:
 	var items := []
 	var scenario := ContentService.get_scenario(session.scenario_id)
 	for config in scenario.get("enemy_factions", []):
@@ -12995,25 +13029,25 @@ static func _command_risk_posture_items(session: SessionStateStoreScript.Session
 			severity = 4
 		elif posture == "massing" or current_pressure + _public_enemy_pressure_gain(session, config) >= threshold:
 			severity = 3
-		items.append(
-			{
-				"key": "posture:%s" % faction_id,
-				"severity": severity,
-				"gate": false,
-				"summary": "%s raid window opening" % label,
-				"detail": "%s sits at %d/%d pressure with %d/%d active raids. %s posture makes another host likely if the day ends without reducing pressure." % [
-					label,
-					current_pressure,
-					threshold,
-					active_raids,
-					max_raids,
-					_posture_label(posture),
-				],
-			}
-		)
+		var item := {
+			"key": "posture:%s" % faction_id,
+			"severity": severity,
+			"gate": false,
+			"summary": "%s raid window opening" % label,
+		}
+		if include_details:
+			item["detail"] = "%s sits at %d/%d pressure with %d/%d active raids. %s posture makes another host likely if the day ends without reducing pressure." % [
+				label,
+				current_pressure,
+				threshold,
+				active_raids,
+				max_raids,
+				_posture_label(posture),
+			]
+		items.append(item)
 	return items
 
-static func _command_risk_field_item(session: SessionStateStoreScript.SessionData) -> Dictionary:
+static func _command_risk_field_item(session: SessionStateStoreScript.SessionData, include_details: bool = true) -> Dictionary:
 	var pos := hero_position(session)
 	var local_public_contacts := 0
 	var nearest_distance := 9999
@@ -13035,34 +13069,37 @@ static func _command_risk_field_item(session: SessionStateStoreScript.SessionDat
 		return {}
 	if nearest_town_distance <= 2 and local_public_contacts <= 1:
 		return {}
-	var terrain := _terrain_name_at(session, pos.x, pos.y)
 	var severity := 3 if local_public_contacts > 1 or nearest_distance <= 1 else 2
-	var town_clause := "no owned town anchors the current march line"
-	if not nearest_town.is_empty():
-		town_clause = "%s %d tile%s away" % [
-			_town_name(nearest_town),
-			nearest_town_distance,
-			"" if nearest_town_distance == 1 else "s",
-		]
-	return {
+	var item := {
 		"key": "field:%d:%d" % [pos.x, pos.y],
 		"severity": severity,
 		"gate": severity >= 3,
 		"summary": "Active command exposed",
-		"detail": "The active command ends on %s at %d,%d with %d public hostile contact%s inside 2 tiles and %s. Ending here risks a strike on the march line." % [
+	}
+	if include_details:
+		var terrain := _terrain_name_at(session, pos.x, pos.y)
+		var town_clause := "no owned town anchors the current march line"
+		if not nearest_town.is_empty():
+			town_clause = "%s %d tile%s away" % [
+				_town_name(nearest_town),
+				nearest_town_distance,
+				"" if nearest_town_distance == 1 else "s",
+			]
+		item["detail"] = "The active command ends on %s at %d,%d with %d public hostile contact%s inside 2 tiles and %s. Ending here risks a strike on the march line." % [
 			terrain,
 			pos.x,
 			pos.y,
 			local_public_contacts,
 			"" if local_public_contacts == 1 else "s",
 			town_clause,
-		],
-	}
+		]
+	return item
 
 static func _command_risk_pressure_objective_item(
 	session: SessionStateStoreScript.SessionData,
 	scenario: Dictionary,
-	objective: Dictionary
+	objective: Dictionary,
+	include_details: bool = true
 ) -> Dictionary:
 	if _scenario_objective_met(session, objective):
 		return {}
@@ -13077,23 +13114,25 @@ static func _command_risk_pressure_objective_item(
 	if current_pressure + gain < threshold and not (posture == "massing" and threshold - current_pressure <= 2):
 		return {}
 	var label := String(objective.get("label", objective.get("id", "pressure objective")))
-	var faction_label := String(config.get("label", ContentService.get_faction(faction_id).get("name", faction_id)))
-	return {
+	var item := {
 		"key": "objective-pressure:%s:%s" % [faction_id, label],
 		"severity": 4,
 		"gate": true,
 		"summary": "%s near trigger" % label,
-		"detail": "%s sits at %d/%d pressure. %s posture plus roughly +%d public pressure/day makes the defeat watch %s a likely next-day trigger." % [
+	}
+	if include_details:
+		var faction_label := String(config.get("label", ContentService.get_faction(faction_id).get("name", faction_id)))
+		item["detail"] = "%s sits at %d/%d pressure. %s posture plus roughly +%d public pressure/day makes the defeat watch %s a likely next-day trigger." % [
 			faction_label,
 			current_pressure,
 			threshold,
 			_posture_label(posture),
 			gain,
 			label,
-		],
-	}
+		]
+	return item
 
-static func _command_risk_encounter_objective_item(session: SessionStateStoreScript.SessionData, objective: Dictionary) -> Dictionary:
+static func _command_risk_encounter_objective_item(session: SessionStateStoreScript.SessionData, objective: Dictionary, include_details: bool = true) -> Dictionary:
 	if _scenario_objective_met(session, objective):
 		return {}
 	var placement_id := String(objective.get("placement_id", ""))
@@ -13104,34 +13143,42 @@ static func _command_risk_encounter_objective_item(session: SessionStateStoreScr
 			continue
 		var encounter_def := ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
 		if String(encounter.get("contested_by_faction_id", "")) != "":
-			return {
+			var item := {
 				"key": "objective-encounter:%s" % placement_id,
 				"severity": 4,
 				"gate": true,
 				"summary": "%s objective contested" % String(encounter_def.get("name", placement_id)),
-				"detail": "%s is already under hostile contest, and the defeat watch %s stays live until the front is cleared." % [
+			}
+			if include_details:
+				item["detail"] = "%s is already under hostile contest, and the defeat watch %s stays live until the front is cleared." % [
 					String(encounter_def.get("name", placement_id)),
 					String(objective.get("label", objective.get("id", "objective"))),
-				],
-			}
+				]
+			return item
 		for raid in session.overworld.get("encounters", []):
 			if not (raid is Dictionary) or String(raid.get("spawned_by_faction_id", "")) == "":
 				continue
 			if String(raid.get("target_kind", "")) != "encounter" or String(raid.get("target_placement_id", "")) != placement_id:
 				continue
-			return {
+			var item := {
 				"key": "objective-encounter:%s" % placement_id,
 				"severity": 3,
 				"gate": true,
 				"summary": "%s objective pressured" % String(encounter_def.get("name", placement_id)),
-				"detail": "%s is drawing hostile pressure, and leaving the day unresolved risks turning the defeat watch %s into a live front." % [
+			}
+			if include_details:
+				item["detail"] = "%s is drawing hostile pressure, and leaving the day unresolved risks turning the defeat watch %s into a live front." % [
 					String(encounter_def.get("name", placement_id)),
 					String(objective.get("label", objective.get("id", "objective"))),
-				],
-			}
+				]
+			return item
 	return {}
 
-static func _town_command_risk_state(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
+static func _town_command_risk_state(
+	session: SessionStateStoreScript.SessionData,
+	town: Dictionary,
+	include_front: bool = true
+) -> Dictionary:
 	var state := {
 		"visible_marching": 0,
 		"visible_pressuring": 0,
@@ -13192,13 +13239,14 @@ static func _town_command_risk_state(session: SessionStateStoreScript.SessionDat
 		state["siege_capture_progress"] = max(1, int(config.get("siege_capture_progress", 1)))
 	if int(state.get("nearest_goal_distance", 9999)) == 9999 and int(state.get("visible_pressuring", 0)) > 0:
 		state["nearest_goal_distance"] = 0
-	var front_state := _town_front_state(session, town)
-	state["front_active"] = bool(front_state.get("active", false))
-	state["front_mode"] = String(front_state.get("mode", ""))
-	state["front_faction_id"] = String(front_state.get("faction_id", ""))
-	state["front_enemy_label"] = String(front_state.get("enemy_label", ""))
-	state["front_summary"] = String(front_state.get("summary", ""))
-	state["front_public_clause"] = String(front_state.get("public_clause", ""))
+	if include_front:
+		var front_state := _town_front_state(session, town)
+		state["front_active"] = bool(front_state.get("active", false))
+		state["front_mode"] = String(front_state.get("mode", ""))
+		state["front_faction_id"] = String(front_state.get("faction_id", ""))
+		state["front_enemy_label"] = String(front_state.get("enemy_label", ""))
+		state["front_summary"] = String(front_state.get("summary", ""))
+		state["front_public_clause"] = String(front_state.get("public_clause", ""))
 	return state
 
 static func _town_command_risk_consequence(

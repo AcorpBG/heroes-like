@@ -319,8 +319,9 @@ static func describe_command_ledger(session: SessionStateStoreScript.SessionData
 
 static func describe_defense(session: SessionStateStoreScript.SessionData) -> String:
 	var town := get_active_town(session)
+	var headline := _defense_headline_for_town(town)
 	if town.is_empty():
-		return "Defense unavailable."
+		return headline
 
 	var stationed: Array = HeroCommandRulesScript.stationed_heroes(session, town)
 	var active_hero_value: Variant = session.overworld.get("hero", {})
@@ -335,7 +336,7 @@ static func describe_defense(session: SessionStateStoreScript.SessionData) -> St
 		reserve_lines.append(_hero_command_line(hero))
 
 	var lines := [
-		"Defense Posture",
+		headline,
 		"- %s | %d companies | %d total troops" % [
 			_defense_grade(town),
 			_garrison_company_count(town),
@@ -359,6 +360,12 @@ static func describe_defense(session: SessionStateStoreScript.SessionData) -> St
 	else:
 		lines.append("- Reserve commanders %s" % "; ".join(reserve_lines))
 	return "\n".join(lines)
+
+static func describe_defense_headline(session: SessionStateStoreScript.SessionData) -> String:
+	return _defense_headline_for_town(get_active_town(session))
+
+static func _defense_headline_for_town(town: Dictionary) -> String:
+	return "Defense unavailable." if town.is_empty() else "Defense Posture"
 
 static func describe_threats(session: SessionStateStoreScript.SessionData) -> String:
 	var town := get_active_town(session)

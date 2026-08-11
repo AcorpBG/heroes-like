@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Generated-Large Town cache-hit first refresh is complete at roughly 33-35ms across source, Linux package, and fresh Windows/Wine, with exact economy/departure copy and invalidation. Overall release readiness remains open.",
+  "currentNotes": "Generated-Large Town explicit Save surfaces are complete and sub-second on source, Linux package, and fresh Windows/Wine with exact copy/recovery semantics. The separate multi-second 20MB transactional write and overall release readiness remain open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "performance-town-generated-large-cache-hit-first-refresh-10184",
-  "currentSliceId": "performance-town-generated-large-cache-hit-first-refresh-10184",
-  "currentSliceNotes": "Completed context-validated cached economy/departure models, live dynamic refresh, exact parity/invalidation, and cross-platform reduction from about 6.5s to about 34ms.",
+  "currentSlice": "performance-generated-large-town-explicit-save-surface-10184",
+  "currentSliceId": "performance-generated-large-town-explicit-save-surface-10184",
+  "currentSliceNotes": "Completed exact detached summary/context reuse, command-risk summary reduction, Town cache feedback reuse, recovery semantics, and Linux plus fresh Windows/Wine sub-second package proof.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Generated-Large Town Cache-Hit First Refresh Performance",
-  "currentSliceUpdatedAt": "2026-08-10T20:01:57Z",
+  "currentSliceTitle": "Generated-Large Town Explicit Save Surface Performance",
+  "currentSliceUpdatedAt": "2026-08-11T00:44:44Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -74986,6 +74986,26 @@
       "notes": "Completed v5 economy-context signature and immutable cached build/recruit/context models with live resource affordability, action summary/recommendation, response, departure, and movement reconstruction. Resolved encounter/resource-node/logistics changes invalidate; build/recruit/market each miss once then hit below 82ms; exact rendered/direct ledger, Build/Recruit/departure copy and session/town/resources/market/save/routes/focus authority pass. Generated Large source first_refresh34.021ms/refresh33.506ms/entity31.034ms/signature22.623ms/dynamic8.381ms/build0; Linux packaged first_refresh32.703ms; fresh Windows/Wine first_refresh34.959ms. Town economy/transition/focus/core/exit-profile/repository and both package gates pass with clean runtime logs.",
       "remainingWork": "No work remains in this slice. Broader balance/content/accessibility/performance work, signing, native Windows hardware certification, publication, and overall release readiness remain open.",
       "completedAt": "2026-08-10T20:01:57Z"
+    },
+    {
+      "id": "performance-generated-large-town-explicit-save-surface-10184",
+      "title": "Generated-Large Town Explicit Save Surface Performance",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md"],
+      "purpose": "Remove the deterministic roughly ten-second generated-Large Town SaveSlot/post-save freeze by deriving all current-session save copy from one immutable per-call payload and summary.",
+      "implementationTargets": ["scripts/autoload/SaveService.gd", "scripts/core/OverworldRules.gd", "scripts/core/ScenarioRules.gd", "scripts/core/TownRules.gd", "scenes/town/TownShell.gd", "tests/generated_large_town_explicit_save_surface_regression.gd", "tests/generated_large_town_explicit_save_surface_regression.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"map_size": "108x108", "resource_nodes": 592, "surface_ms_min": 9754.562, "surface_ms_max": 9860.766, "current_context_ms": 781.181, "recap_surfaces_ms": 5692.242, "interaction_limit_ms": 1000.0},
+      "completionCriteria": ["Real keyboard/controller slot selection and post-save surface refresh on generated Large each settle below 1000ms", "Every surface field/string matches direct descriptor controls across Town/Overworld/Battle/Outcome and fresh state changes", "Slot selection performs zero writes/session/cache/route/focus mutation", "Success/failure/overwrite transactional behavior remains exact and focused/transaction/Town/core/repository/Linux/Windows package gates pass"],
+      "nonGoals": ["persistent save-surface cache, writer/schema/version, broad summary-cache policy beyond the selected artifact-free verified hit, autosave/manual-slot/overwrite behavior, UI copy/composition, Town rules/content, generated-map or Native RMG behavior, publication, signing, native Windows hardware certification, or release-completion claim"],
+      "createdAt": "2026-08-10T20:09:36Z",
+      "startedAt": "2026-08-10T20:09:36Z",
+      "updatedAt": "2026-08-11T00:44:44Z",
+      "notes": "Completed one detached current-session payload/summary/context, exact shared progress and command-risk summary reducers, trusted normalized read paths, verified summary-cache recovery ordering, selected/latest recap aliasing, Town departure/current-tab cache reuse, and exact dynamic dispatch parity. Source selection is 348ms wall/163.737ms surface; post-save Town refresh816.921ms cache-hit/build0, forced532.308ms, SaveService386.801ms. Linux packaged selection140.898ms/max gated338.306ms; fresh Windows/Wine selection177.893ms/max gated786.099ms. Exact 17-field surface parity, steady/active/nested-enemy risk, canonical reload, candidate/backup recovery, injected rollback, cancel/overwrite, Town transition/focus, command-risk/end-turn, core, editor, validator, and repository integrity pass.",
+      "remainingWork": "No work remains in this slice. The separate generated 20MB transactional write still takes several seconds and should be selected as its own performance boundary if it outranks the next audit candidate. Battle command-tab controller navigation, broader release work, signing, native Windows hardware certification, publication, and overall release readiness remain open.",
+      "completedAt": "2026-08-11T00:44:44Z"
     }
   ],
   "project": "heroes-like",
