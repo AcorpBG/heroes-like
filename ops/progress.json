@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Drowned Antler apex calibration is complete with exact live-rule, method-matched 100-seed production/control, 59-encounter breadth, compatibility, and repository proof. Overall release readiness remains open.",
+  "currentNotes": "The Drowned Antler clean-line-pressure slice is complete with exact focused behavior, method-matched 100-seed production/control, 59-encounter breadth, compatibility, and repository proof. Overall release readiness remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "combat-mireclaw-drowned-antler-apex-calibration-10184",
-  "currentSliceId": "combat-mireclaw-drowned-antler-apex-calibration-10184",
-  "currentSliceNotes": "Completed the authored 0.85/1.10/1.05 calibration. Production improves from 37 / 229.0 / 7 / 73.5 / 1.13 to 36 / 214.5 / 6 / 71.0 / 1.13; the exact prior-screen control remains 38 / 332.5 / 13 / 79.0 / 1.6, structural failures remain zero, and the 59-encounter queue remains clear.",
+  "currentSlice": "combat-mireclaw-drowned-antler-clean-line-pressure-10184",
+  "currentSliceId": "combat-mireclaw-drowned-antler-clean-line-pressure-10184",
+  "currentSliceNotes": "Completed Drowned Antler Rout's 0.82 clean-line pressure while retaining its 1.10/1.05 wounded/status payoff. Production improves from 36 / 214.5 / 6 / 71.0 / 1.13 to 36 / 206.5 / 6 / 70.0 / 1.13; the exact prior-screen control remains 38 / 332.5 / 13 / 79.0 / 1.6, structural failures remain zero, and the 59-encounter queue remains clear.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Mireclaw Drowned Antler Apex Calibration",
-  "currentSliceUpdatedAt": "2026-08-11T07:30:00Z",
+  "currentSliceTitle": "Mireclaw Drowned Antler Clean-Line Pressure",
+  "currentSliceUpdatedAt": "2026-08-11T08:30:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -75107,6 +75107,27 @@
       "notes": "Completed content-only Drowned Antler Rout calibration at 0.85/1.10/1.05. Focused runtime passes 118/118. The authoritative all-live 100-seed matrix improves production from 37 outliers / 229.0 severity / seven severe / 73.5 maximum / 1.13 side bias to 36 / 214.5 / six / 71.0 / 1.13 with zero structural failures; the identical prior-screen control remains 38 / 332.5 / 13 / 79.0 / 1.6. Active breadth completes 59/59 with zero stalls or invalid orders and a clear queue at repeated signature 829808c9. Autoplay balance, balance regression, core, editor, validator, JSON, Python, and diff gates pass; Native RMG deferral is unchanged.",
       "remainingWork": "No work remains in this slice. Broader faction balance, strategic-AI/content breadth, Native RMG parity, signing, native Windows hardware certification, publication, and overall release readiness remain open.",
       "completedAt": "2026-08-11T07:30:00Z"
+    },
+    {
+      "id": "combat-mireclaw-drowned-antler-clean-line-pressure-10184",
+      "title": "Mireclaw Drowned Antler Clean-Line Pressure",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/factions-content-bible.md"],
+      "purpose": "Preserve Drowned Antler Rout's wounded/disrupted apex payoff while increasing only its authored weakness into compact intact lines to reduce the remaining corrected-RNG week-three pressure.",
+      "implementationTargets": ["content/units.json", "tests/unit_ability_runtime_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"corrected_rng_outliers": 36, "corrected_rng_excess_severity": 214.5, "corrected_rng_severe_rows": 6, "corrected_rng_max_dominance_pct": 71.0, "corrected_rng_max_side_bias_points": 1.13, "late_week_outliers": 17, "late_week_excess_severity": 105.0, "late_week_severe_rows": 3, "late_week_max_dominance_pct": 71.0, "late_week_max_side_bias_points": 0.73},
+      "candidate": {"clean_target_damage_multiplier": 0.82, "wounded_damage_multiplier": 1.10, "status_damage_multiplier": 1.05, "late_week_outliers": 17, "late_week_excess_severity": 97.0, "late_week_severe_rows": 3, "late_week_max_dominance_pct": 68.5, "late_week_max_side_bias_points": 0.80},
+      "completionCriteria": ["Focused runtime proof retains every Drowned Antler Rout consequence and exclusion and reports the exact 18-percent clean-line penalty", "The corrected-RNG all-live 100-seed matrix keeps weeks one/two exact and improves 36/214.5/6/71.0/1.13 production with zero structural failures", "The exact prior-screen control remains 38/332.5/13/79.0/1.6 under identical methods", "The active 59-encounter queue remains clear and ability/autoplay/balance/core/editor/repository/JSON/Python/diff gates pass"],
+      "nonGoals": ["wounded/status multiplier, threshold, status, initiative, momentum, Bloodrush rule-shape, base-stat, growth, cost, building, army-group, other-unit, hero, spell, economy, encounter, save, campaign, packaging, Native RMG, or benchmark-threshold changes", "faction, opponent, week, army-count, encounter, seed, or benchmark hard-coding", "final Mireclaw, faction-balance, or release-completion claims"],
+      "createdAt": "2026-08-11T08:00:00Z",
+      "startedAt": "2026-08-11T08:00:00Z",
+      "updatedAt": "2026-08-11T08:30:00Z",
+      "notes": "Completed the content-only 0.82 clean-line calibration while retaining the 1.10/1.05 wounded/status payoff. Focused runtime passes 118/118. The authoritative all-live 100-seed matrix improves production from 36 outliers / 214.5 severity / six severe / 71.0 maximum / 1.13 side bias to 36 / 206.5 / six / 70.0 / 1.13 with zero structural failures; weeks one/two are exact and the identical pre-apex control remains 38 / 332.5 / 13 / 79.0 / 1.6. Active breadth completes 59/59 with zero stalls or invalid orders and a clear queue at repeated signature 829808c9. Autoplay balance, balance regression, core, editor, validator, JSON, Python, and diff gates pass; Native RMG deferral is unchanged.",
+      "remainingWork": "No work remains in this slice. Broader faction balance, strategic-AI/content breadth, Native RMG parity, signing, native Windows hardware certification, publication, and overall release readiness remain open.",
+      "completedAt": "2026-08-11T08:30:00Z"
     }
   ],
   "project": "heroes-like",
