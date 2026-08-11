@@ -19103,13 +19103,26 @@ def validate_ai_raid_assault_grouping(errors: list[str]) -> None:
             "multiple_goal",
             "unreachable_blocked_corner",
             "goal_origin_field_reused_across_steps",
+            "assignment_path_context_matches_direct_paths",
             "live_three_step_raid_uses_shared_path_plan",
             "_path_plan_toward",
             "distance_field_cache",
+            "target_path_context_ms",
+            "target_town_defense_redirect_ms",
+            "target_resource_defense_redirect_ms",
             "ai_raid_moved",
             "get_tree().quit(1)",
         ):
             ensure(required_token in path_plan_text, errors, f"AI raid movement path-plan reuse regression is missing token: {required_token}")
+        for required_token in (
+            "var assignment_path_context := _path_distance_surface_context(",
+            "_redirect_understrength_raid_to_regroup(session, config, encounter, faction_id, assignment_path_context)",
+            "_redirect_raid_to_threatened_town_defense(session, config, encounter, faction_id, assignment_path_context)",
+            "_redirect_raid_to_threatened_resource_defense(session, config, encounter, faction_id, assignment_path_context)",
+            "assign_target(session, config, encounter, assignment_path_context)",
+            "_redirect_unreachable_raid_target(session, config, encounter, faction_id, assignment_path_context)",
+        ):
+            ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing active-raid assignment path-context reuse token: {required_token}")
     if AI_RAID_MOVEMENT_PATH_PLAN_REUSE_SCENE_PATH.exists():
         path_plan_scene_text = AI_RAID_MOVEMENT_PATH_PLAN_REUSE_SCENE_PATH.read_text(encoding="utf-8")
         ensure(

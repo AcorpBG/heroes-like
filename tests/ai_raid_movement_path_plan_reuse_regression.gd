@@ -16,12 +16,14 @@ func _run() -> void:
 	path_cases.append(_multiple_goal_case(failures))
 	path_cases.append(_unreachable_corner_case(failures))
 	var cache_case := _goal_field_reuse_case(failures)
+	var assignment_context_case := _assignment_path_context_equivalence_case(failures)
 	var live_case := _live_three_step_raid_case(failures)
 	var payload := {
 		"ok": failures.is_empty(),
 		"report_id": REPORT_ID,
 		"path_cases": path_cases,
 		"goal_field_reuse_case": cache_case,
+		"assignment_path_context_case": assignment_context_case,
 		"live_raid_case": live_case,
 	}
 	if not failures.is_empty():
@@ -166,6 +168,61 @@ func _goal_field_reuse_case(failures: Array) -> Dictionary:
 		"goal_field_index": goal_index,
 	}
 
+func _assignment_path_context_equivalence_case(failures: Array) -> Dictionary:
+	var session = _path_session(_filled_map(12, 5, "grass"))
+	session.day = 2
+	session.overworld["towns"] = [
+		{
+			"placement_id": "assignment_context_player_town",
+			"name": "Assignment Context Hold",
+			"owner": "player",
+			"x": 10,
+			"y": 2,
+			"garrison": [],
+		},
+		{
+			"placement_id": "assignment_context_regroup_town",
+			"name": "Assignment Context Redoubt",
+			"owner": "enemy",
+			"controlling_faction_id": FACTION_ID,
+			"x": 3,
+			"y": 4,
+			"garrison": [{"unit_id": "unit_bog_brute", "count": 4}],
+		},
+	]
+	var raid := {
+		"placement_id": "assignment_context_raid",
+		"encounter_id": "encounter_mire_raid",
+		"x": 1,
+		"y": 2,
+		"spawned_by_faction_id": FACTION_ID,
+		"target_kind": "town",
+		"target_placement_id": "assignment_context_player_town",
+		"target_reason_codes": ["town_siege"],
+	}
+	session.overworld["encounters"] = [raid]
+	EnemyAdventureRules._path_distance_surface_cache.clear()
+	var direct_refresh := EnemyAdventureRules._refresh_target(session, raid.duplicate(true), FACTION_ID)
+	EnemyAdventureRules._path_distance_surface_cache.clear()
+	var path_context := EnemyAdventureRules._path_distance_surface_context(session, String(raid.get("placement_id", "")), FACTION_ID)
+	var shared_refresh := EnemyAdventureRules._refresh_target(session, raid.duplicate(true), FACTION_ID, path_context)
+	if direct_refresh != shared_refresh:
+		failures.append("Assignment path context changed refreshed target semantics: direct=%s shared=%s" % [JSON.stringify(direct_refresh), JSON.stringify(shared_refresh)])
+	var direct_regroup := EnemyAdventureRules._nearest_regroup_town(session, raid, FACTION_ID)
+	var shared_regroup := EnemyAdventureRules._nearest_regroup_town(session, raid, FACTION_ID, path_context)
+	if direct_regroup != shared_regroup:
+		failures.append("Assignment path context changed regroup selection: direct=%s shared=%s" % [JSON.stringify(direct_regroup), JSON.stringify(shared_regroup)])
+	if String(shared_regroup.get("placement_id", "")) != "assignment_context_regroup_town":
+		failures.append("Assignment path context did not preserve the reachable regroup choice: %s" % JSON.stringify(shared_regroup))
+	return {
+		"case_id": "assignment_path_context_matches_direct_paths",
+		"target_kind": String(shared_refresh.get("target_kind", "")),
+		"target_placement_id": String(shared_refresh.get("target_placement_id", "")),
+		"goal_distance": int(shared_refresh.get("goal_distance", -1)),
+		"regroup_placement_id": String(shared_regroup.get("placement_id", "")),
+		"regroup_match": direct_regroup == shared_regroup,
+	}
+
 func _live_three_step_raid_case(failures: Array) -> Dictionary:
 	var session = _path_session(_filled_map(12, 5, "grass"))
 	session.day = 2
@@ -222,12 +279,17 @@ func _live_three_step_raid_case(failures: Array) -> Dictionary:
 		failures.append("Live tactical-pressure raid did not take three deterministic steps: %s" % JSON.stringify(updated))
 	if int(updated.get("goal_distance", -1)) != 5 or movement_events.size() != 1:
 		failures.append("Live raid movement outcome changed: raid=%s events=%s" % [JSON.stringify(updated), JSON.stringify(movement_events)])
+	var profile: Dictionary = result.get("profile", {}) if result.get("profile", {}) is Dictionary else {}
+	var profile_phases: Dictionary = profile.get("phases_ms", {}) if profile.get("phases_ms", {}) is Dictionary else {}
+	for required_phase in ["target_path_context_ms", "target_assign_ms", "target_town_defense_redirect_ms", "target_resource_defense_redirect_ms", "target_unreachable_redirect_ms"]:
+		if not profile_phases.has(required_phase):
+			failures.append("Live assignment profile is missing %s: %s" % [required_phase, JSON.stringify(profile_phases)])
 	return {
 		"case_id": "live_three_step_raid_uses_shared_path_plan",
 		"position": {"x": int(updated.get("x", -1)), "y": int(updated.get("y", -1))},
 		"goal_distance": int(updated.get("goal_distance", -1)),
 		"movement_event_count": movement_events.size(),
-		"profile": result.get("profile", {}),
+		"profile": profile,
 	}
 
 func _path_session(map: Array):

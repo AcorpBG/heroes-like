@@ -760,13 +760,18 @@ const AI_HERO_TASK_LIVE_ADOPTION_BLOCKED_PUBLIC_TOKENS := [
 ]
 const RAID_RECENT_EXPLORATION_TARGET_LIMIT := 12
 
-static func assign_target(session: SessionStateStoreScript.SessionData, config: Dictionary, raid: Dictionary) -> Dictionary:
+static func assign_target(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	raid: Dictionary,
+	preloaded_path_context: Dictionary = {}
+) -> Dictionary:
 	var previous_target := _current_target_snapshot(raid)
 	var faction_id := String(config.get("faction_id", raid.get("spawned_by_faction_id", "")))
 	var had_memory := not commander_target_memory(raid.get("enemy_commander_state", {})).is_empty()
 	var task_record_for_assignment := {}
 	if _raid_target_valid(session, raid):
-		raid = _refresh_target(session, raid, faction_id)
+		raid = _refresh_target(session, raid, faction_id, preloaded_path_context)
 		raid = _maybe_preempt_for_battle_pressure_floor(session, config, raid, faction_id)
 	else:
 		raid = _clear_delivery_intercept_target(raid)
@@ -787,7 +792,7 @@ static func assign_target(session: SessionStateStoreScript.SessionData, config: 
 			repair_plan.erase("hero_task_id")
 			raid.merge(repair_plan, true)
 			if _raid_target_valid(session, raid):
-				raid = _refresh_target(session, raid, faction_id)
+				raid = _refresh_target(session, raid, faction_id, preloaded_path_context)
 		if _raid_target_points_to_self(raid) or _raid_target_points_to_pressure_host(session, raid, faction_id):
 			raid = _clear_regroup_target(raid)
 	if not bool(raid.get("raid_retired_to_rebuild", false)) and (String(raid.get("target_kind", "")) == "" or not _raid_target_valid(session, raid)):
@@ -795,7 +800,7 @@ static func assign_target(session: SessionStateStoreScript.SessionData, config: 
 		if not fallback_plan.is_empty():
 			raid.merge(fallback_plan, true)
 			if _raid_target_valid(session, raid):
-				raid = _refresh_target(session, raid, faction_id)
+				raid = _refresh_target(session, raid, faction_id, preloaded_path_context)
 	raid.erase("hero_task_record")
 	raid.erase("hero_task_id")
 	var current_target := _current_target_snapshot(raid)
@@ -2131,24 +2136,51 @@ static func advance_raids(
 		var phase_started := _advance_profile_timer(profile_enabled)
 		encounter = ensure_raid_army(encounter, session)
 		var previous_target := _current_target_snapshot(encounter)
-		encounter = _redirect_understrength_raid_to_regroup(session, config, encounter, faction_id)
-		encounter = _redirect_raid_to_threatened_town_defense(session, config, encounter, faction_id)
-		encounter = _redirect_raid_to_threatened_resource_defense(session, config, encounter, faction_id)
+		var assignment_phase_started := _advance_profile_timer(profile_enabled)
+		var assignment_path_context := _path_distance_surface_context(
+			session,
+			String(encounter.get("placement_id", "")),
+			faction_id
+		)
+		_advance_profile_add_ms(profile, "target_path_context_ms", assignment_phase_started)
+		assignment_phase_started = _advance_profile_timer(profile_enabled)
+		encounter = _redirect_understrength_raid_to_regroup(session, config, encounter, faction_id, assignment_path_context)
+		_advance_profile_add_ms(profile, "target_understrength_redirect_ms", assignment_phase_started)
+		assignment_phase_started = _advance_profile_timer(profile_enabled)
+		encounter = _redirect_raid_to_threatened_town_defense(session, config, encounter, faction_id, assignment_path_context)
+		_advance_profile_add_ms(profile, "target_town_defense_redirect_ms", assignment_phase_started)
+		assignment_phase_started = _advance_profile_timer(profile_enabled)
+		encounter = _redirect_raid_to_threatened_resource_defense(session, config, encounter, faction_id, assignment_path_context)
+		_advance_profile_add_ms(profile, "target_resource_defense_redirect_ms", assignment_phase_started)
 		if not _raid_target_valid(session, encounter):
+			assignment_phase_started = _advance_profile_timer(profile_enabled)
 			var scouting_result := _maybe_cast_raid_adventure_scouting_spell(session, config, encounter, faction_id)
 			encounter = scouting_result.get("encounter", encounter)
 			for scouting_event_value in scouting_result.get("events", []):
 				if scouting_event_value is Dictionary and not scouting_event_value.is_empty():
 					event_records.append(scouting_event_value)
-		encounter = assign_target(session, config, encounter)
+			_advance_profile_add_ms(profile, "target_scouting_spell_ms", assignment_phase_started)
+		assignment_phase_started = _advance_profile_timer(profile_enabled)
+		encounter = assign_target(session, config, encounter, assignment_path_context)
+		_advance_profile_add_ms(profile, "target_assign_ms", assignment_phase_started)
+		assignment_phase_started = _advance_profile_timer(profile_enabled)
 		encounter = _redirect_raid_to_nearby_exposed_hero(session, config, encounter, faction_id)
+		_advance_profile_add_ms(profile, "target_exposed_hero_redirect_ms", assignment_phase_started)
+		assignment_phase_started = _advance_profile_timer(profile_enabled)
 		encounter = _redirect_raid_away_from_nearby_player_threat(session, config, encounter, faction_id)
+		_advance_profile_add_ms(profile, "target_player_threat_redirect_ms", assignment_phase_started)
+		assignment_phase_started = _advance_profile_timer(profile_enabled)
 		encounter = _redirect_fragile_raid_for_known_target_risk(session, config, encounter, faction_id)
-		encounter = _redirect_unreachable_raid_target(session, config, encounter, faction_id)
+		_advance_profile_add_ms(profile, "target_fragile_risk_redirect_ms", assignment_phase_started)
+		assignment_phase_started = _advance_profile_timer(profile_enabled)
+		encounter = _redirect_unreachable_raid_target(session, config, encounter, faction_id, assignment_path_context)
+		_advance_profile_add_ms(profile, "target_unreachable_redirect_ms", assignment_phase_started)
+		assignment_phase_started = _advance_profile_timer(profile_enabled)
 		_clear_stale_hero_sighting_after_target_change(session, faction_id, previous_target, encounter)
 		var assignment_event := ai_target_assignment_event(session, config, encounter, previous_target)
 		if not assignment_event.is_empty():
 			event_records.append(assignment_event)
+		_advance_profile_add_ms(profile, "target_event_ms", assignment_phase_started)
 		_advance_profile_add_ms(profile, "target_assignment_ms", phase_started)
 		phase_started = _advance_profile_timer(profile_enabled)
 		var grouping_result := group_nearby_raids_for_town_assault(
@@ -4058,12 +4090,13 @@ static func _redirect_understrength_raid_to_regroup(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
 	raid: Dictionary,
-	faction_id: String
+	faction_id: String,
+	preloaded_path_context: Dictionary = {}
 ) -> Dictionary:
 	if session == null or raid.is_empty() or faction_id == "":
 		return raid
 	if String(raid.get("target_kind", "")) == "regroup":
-		return _refresh_target(session, raid, faction_id)
+		return _refresh_target(session, raid, faction_id, preloaded_path_context)
 	if String(raid.get("target_kind", "")) == "explore":
 		return raid
 	if _raid_should_claim_current_resource_before_regroup(session, config, raid, faction_id):
@@ -4081,8 +4114,8 @@ static func _redirect_understrength_raid_to_regroup(
 		waiting["target_public_importance"] = "high"
 		waiting["target_debug_reason"] = "battle-pressure host below regroup floor but nearby same-target support is committed"
 		waiting["arrived"] = false
-		return _refresh_target(session, waiting, faction_id)
-	var regroup_town := _nearest_regroup_town(session, raid, faction_id)
+		return _refresh_target(session, waiting, faction_id, preloaded_path_context)
+	var regroup_town := _nearest_regroup_town(session, raid, faction_id, preloaded_path_context)
 	if regroup_town.is_empty():
 		return raid
 	raid["previous_target_kind"] = String(raid.get("target_kind", ""))
@@ -4101,7 +4134,7 @@ static func _redirect_understrength_raid_to_regroup(
 	raid["target_debug_reason"] = "raid strength below regroup floor"
 	raid["arrived"] = false
 	raid["regroup_started_day"] = int(session.day)
-	return _refresh_target(session, raid, faction_id)
+	return _refresh_target(session, raid, faction_id, preloaded_path_context)
 
 static func _raid_should_claim_current_resource_before_regroup(
 	session: SessionStateStoreScript.SessionData,
@@ -4141,7 +4174,8 @@ static func _redirect_unreachable_raid_target(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
 	raid: Dictionary,
-	faction_id: String
+	faction_id: String,
+	preloaded_path_context: Dictionary = {}
 ) -> Dictionary:
 	if session == null or raid.is_empty() or faction_id == "":
 		return raid
@@ -4155,7 +4189,9 @@ static func _redirect_unreachable_raid_target(
 	var target_kind := String(raid.get("target_kind", ""))
 	var current := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
 	var goal_tiles := _goal_tiles_from_raid(session, raid, faction_id)
-	var distance := _path_distance(session, current, goal_tiles, String(raid.get("placement_id", "")), faction_id)
+	var distance := _path_distance_with_context(preloaded_path_context, current, goal_tiles) \
+		if not preloaded_path_context.is_empty() \
+		else _path_distance(session, current, goal_tiles, String(raid.get("placement_id", "")), faction_id)
 	if distance < 9999 or current in goal_tiles:
 		return raid
 	if (
@@ -4177,7 +4213,7 @@ static func _redirect_unreachable_raid_target(
 		waiting["target_public_importance"] = "high"
 		waiting["target_debug_reason"] = "temporary same-target traffic blocks route while support consolidates"
 		return waiting
-	var route_guard := _route_blocking_guard_target_for_tactical_pressure(session, raid, faction_id)
+	var route_guard := _route_blocking_guard_target_for_tactical_pressure(session, raid, faction_id, preloaded_path_context)
 	if not route_guard.is_empty():
 		var previous_target := _current_target_snapshot(raid)
 		var redirected := raid.duplicate(true)
@@ -4200,7 +4236,7 @@ static func _redirect_unreachable_raid_target(
 		redirected["target_public_reason"] = "clearing blocked route"
 		redirected["target_public_importance"] = "high"
 		redirected["target_debug_reason"] = "town assault route is blocked; clearing nearby reachable guard"
-		redirected = _refresh_target(session, redirected, faction_id)
+		redirected = _refresh_target(session, redirected, faction_id, preloaded_path_context)
 		_ai_hero_task_record_live_assignment(
 			session,
 			config,
@@ -4227,7 +4263,7 @@ static func _redirect_unreachable_raid_target(
 				redirected_step.merge(stepping_candidate, true)
 				redirected_step["route_unreachable_started_day"] = int(session.day)
 				redirected_step["arrived"] = false
-				redirected_step = _refresh_target(session, redirected_step, faction_id)
+				redirected_step = _refresh_target(session, redirected_step, faction_id, preloaded_path_context)
 				_ai_hero_task_record_live_assignment(
 					session,
 					config,
@@ -4236,7 +4272,7 @@ static func _redirect_unreachable_raid_target(
 					{}
 				)
 				return redirected_step
-	var regroup_town := _nearest_regroup_town(session, raid, faction_id)
+	var regroup_town := _nearest_regroup_town(session, raid, faction_id, preloaded_path_context)
 	if regroup_town.is_empty():
 		var exploration_plan := _no_known_target_frontier_sweep_plan(session, config, current, raid)
 		if exploration_plan.is_empty():
@@ -4294,7 +4330,7 @@ static func _redirect_unreachable_raid_target(
 	redirected["target_debug_reason"] = "current target exists but has no passable route"
 	redirected["arrived"] = false
 	redirected["route_recovery_started_day"] = int(session.day)
-	redirected = _refresh_target(session, redirected, faction_id)
+	redirected = _refresh_target(session, redirected, faction_id, preloaded_path_context)
 	_ai_hero_task_record_live_assignment(
 		session,
 		config,
@@ -4307,7 +4343,8 @@ static func _redirect_unreachable_raid_target(
 static func _route_blocking_guard_target_for_tactical_pressure(
 	session: SessionStateStoreScript.SessionData,
 	raid: Dictionary,
-	faction_id: String
+	faction_id: String,
+	preloaded_path_context: Dictionary = {}
 ) -> Dictionary:
 	if session == null or raid.is_empty() or faction_id == "" or not _raid_is_tactical_pressure_target(raid):
 		return {}
@@ -4345,13 +4382,16 @@ static func _route_blocking_guard_target_for_tactical_pressure(
 				target_distance = min(target_distance, abs(encounter_tile.x - staging_tile.x) + abs(encounter_tile.y - staging_tile.y))
 		if target_distance > 8:
 			continue
-		var route_distance := _path_distance(
-			session,
-			current,
-			_encounter_staging_tiles(session, encounter),
-			String(raid.get("placement_id", "")),
-			faction_id
-		)
+		var guard_staging_tiles := _encounter_staging_tiles(session, encounter)
+		var route_distance := _path_distance_with_context(preloaded_path_context, current, guard_staging_tiles) \
+			if not preloaded_path_context.is_empty() \
+			else _path_distance(
+				session,
+				current,
+				guard_staging_tiles,
+				String(raid.get("placement_id", "")),
+				faction_id
+			)
 		if route_distance >= 9999:
 			continue
 		var guard_strength: int = max(0, _encounter_guard_strength(encounter))
@@ -5512,7 +5552,7 @@ static func _redirect_raid_to_threatened_town_defense(
 	if current_is_town_defense:
 		var refreshed_defense := _refresh_target(session, raid, faction_id, preloaded_path_context)
 		if int(refreshed_defense.get("goal_distance", 9999)) >= 9999:
-			raid = _release_unreachable_town_defense_assignment(session, config, refreshed_defense)
+			raid = _release_unreachable_town_defense_assignment(session, config, refreshed_defense, preloaded_path_context)
 		else:
 			raid = refreshed_defense
 	var defense_town := _best_threatened_defense_town(session, config, raid, faction_id, preloaded_path_context)
@@ -5555,12 +5595,13 @@ static func _redirect_raid_to_threatened_town_defense(
 static func _release_unreachable_town_defense_assignment(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
-	raid: Dictionary
+	raid: Dictionary,
+	preloaded_path_context: Dictionary = {}
 ) -> Dictionary:
 	var released := _clear_regroup_target(raid.duplicate(true))
 	released.erase("town_defense_started_day")
 	released.erase("town_defense_front_id")
-	return assign_target(session, config, released)
+	return assign_target(session, config, released, preloaded_path_context)
 
 static func _best_threatened_defense_town(
 	session: SessionStateStoreScript.SessionData,
@@ -5856,7 +5897,8 @@ static func _committed_resource_defense_strength(
 static func _nearest_regroup_town(
 	session: SessionStateStoreScript.SessionData,
 	raid: Dictionary,
-	faction_id: String
+	faction_id: String,
+	preloaded_path_context: Dictionary = {}
 ) -> Dictionary:
 	var current := Vector2i(int(raid.get("x", 0)), int(raid.get("y", 0)))
 	var fallback := {}
@@ -5875,7 +5917,9 @@ static func _nearest_regroup_town(
 		if _town_faction_id(town) != faction_id:
 			continue
 		var tile := Vector2i(int(town.get("x", 0)), int(town.get("y", 0)))
-		var distance := _path_distance(session, current, [tile], String(raid.get("placement_id", "")), faction_id)
+		var distance := _path_distance_with_context(preloaded_path_context, current, [tile]) \
+			if not preloaded_path_context.is_empty() \
+			else _path_distance(session, current, [tile], String(raid.get("placement_id", "")), faction_id)
 		if distance >= 9999:
 			continue
 		if distance < fallback_distance or (distance == fallback_distance and String(town.get("placement_id", "")) < String(fallback.get("placement_id", ""))):
@@ -19531,7 +19575,9 @@ static func _refresh_target(
 				raid["target_y"] = int(town.get("y", 0))
 				raid["goal_x"] = goal_tile.x
 				raid["goal_y"] = goal_tile.y
-				raid["goal_distance"] = _path_distance(session, origin, [goal_tile], String(raid.get("placement_id", "")), observer_faction_id)
+				raid["goal_distance"] = _path_distance_with_context(preloaded_path_context, origin, [goal_tile]) \
+					if not preloaded_path_context.is_empty() \
+					else _path_distance(session, origin, [goal_tile], String(raid.get("placement_id", "")), observer_faction_id)
 		"explore":
 			var goal_tile := _exploration_target_tile_from_id(String(raid.get("target_placement_id", "")))
 			if goal_tile.x < 0 or goal_tile.y < 0:
@@ -19543,7 +19589,9 @@ static func _refresh_target(
 			raid["target_y"] = goal_tile.y
 			raid["goal_x"] = goal_tile.x
 			raid["goal_y"] = goal_tile.y
-			raid["goal_distance"] = _path_distance(session, origin, [goal_tile], String(raid.get("placement_id", "")), observer_faction_id)
+			raid["goal_distance"] = _path_distance_with_context(preloaded_path_context, origin, [goal_tile]) \
+				if not preloaded_path_context.is_empty() \
+				else _path_distance(session, origin, [goal_tile], String(raid.get("placement_id", "")), observer_faction_id)
 		"resource":
 			var resource_result = _find_resource_by_placement(session, String(raid.get("target_placement_id", "")))
 			if int(resource_result.get("index", -1)) >= 0:
@@ -19572,19 +19620,26 @@ static func _refresh_target(
 				raid["target_y"] = int(node.get("y", 0))
 				raid["goal_x"] = int(node.get("x", 0))
 				raid["goal_y"] = int(node.get("y", 0))
-				raid["goal_distance"] = _path_distance(session, origin, [Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))], String(raid.get("placement_id", "")), observer_faction_id)
+				var artifact_goal_tiles := [Vector2i(int(node.get("x", 0)), int(node.get("y", 0)))]
+				raid["goal_distance"] = _path_distance_with_context(preloaded_path_context, origin, artifact_goal_tiles) \
+					if not preloaded_path_context.is_empty() \
+					else _path_distance(session, origin, artifact_goal_tiles, String(raid.get("placement_id", "")), observer_faction_id)
 		"encounter":
 			var encounter_result = _find_encounter_by_placement(session, String(raid.get("target_placement_id", "")))
 			if int(encounter_result.get("index", -1)) >= 0:
 				var placement = encounter_result.get("encounter", {})
 				var staging_tiles = _encounter_staging_tiles(session, placement)
-				var goal_tile = _best_goal_tile(session, origin, staging_tiles, observer_faction_id)
+				var goal_tile = _best_goal_tile_with_path_context(preloaded_path_context, origin, staging_tiles) \
+					if not preloaded_path_context.is_empty() \
+					else _best_goal_tile(session, origin, staging_tiles, observer_faction_id)
 				raid["target_label"] = _encounter_target_label(session, placement, "Frontier Camp")
 				raid["target_x"] = int(placement.get("x", 0))
 				raid["target_y"] = int(placement.get("y", 0))
 				raid["goal_x"] = goal_tile.x
 				raid["goal_y"] = goal_tile.y
-				raid["goal_distance"] = _path_distance(session, origin, staging_tiles, String(raid.get("placement_id", "")), observer_faction_id)
+				raid["goal_distance"] = _path_distance_with_context(preloaded_path_context, origin, staging_tiles) \
+					if not preloaded_path_context.is_empty() \
+					else _path_distance(session, origin, staging_tiles, String(raid.get("placement_id", "")), observer_faction_id)
 		"hero":
 			var hero_target_id := String(raid.get("target_placement_id", ""))
 			var hero_position := Vector2i(
@@ -19601,13 +19656,15 @@ static func _refresh_target(
 			raid["target_y"] = hero_position.y
 			raid["goal_x"] = hero_position.x
 			raid["goal_y"] = hero_position.y
-			raid["goal_distance"] = _path_distance(
-				session,
-				origin,
-				[hero_position],
-				String(raid.get("placement_id", "")),
-				observer_faction_id
-			)
+			raid["goal_distance"] = _path_distance_with_context(preloaded_path_context, origin, [hero_position]) \
+				if not preloaded_path_context.is_empty() \
+				else _path_distance(
+					session,
+					origin,
+					[hero_position],
+					String(raid.get("placement_id", "")),
+					observer_faction_id
+				)
 	if String(raid.get("delivery_intercept_node_placement_id", "")) != "":
 		var delivery_context: Dictionary = OverworldRulesScript.delivery_interception_context_for_encounter(session, raid)
 		if bool(delivery_context.get("active", false)):
