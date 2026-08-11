@@ -18558,9 +18558,9 @@ def validate_ai_raid_regroup_retreat(errors: list[str]) -> None:
         '"active_front_candidate_surface_point_reused"',
         '"active_front_candidate_surface_consumed"',
         '"active_front_support_no_active_front_skip"',
-        '"active_front_support_path_context_complete"',
         '"active_front_support_path_context_loaded"',
         '"active_front_support_path_context_reused"',
+        "var path_context := _spawn_scan_path_context(session, faction_id, spawn_scan_context)",
         '"ready_saved_task_no_prepared_commander_skip"',
         '"spawn_spell_projection_roster_reused"',
     ):
@@ -18609,8 +18609,12 @@ def validate_ai_raid_regroup_retreat(errors: list[str]) -> None:
             "commander_probes_loaded",
             "path_context_loaded",
             "path_context_reused",
+            "shared_spawn_path_context_loaded",
+            "shared_spawn_path_context_reused",
             "launch_surface_path_context_loaded",
             "launch_surface_path_context_reused",
+            "launch_surface_shared_spawn_path_context_loaded",
+            "launch_surface_shared_spawn_path_context_reused",
             "virtual_path_context_legacy_match",
         ):
             ensure(required_token in report_text, errors, f"AI raid regroup/retreat report is missing token: {required_token}")
