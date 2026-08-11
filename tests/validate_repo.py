@@ -16606,12 +16606,14 @@ def validate_overworld_command_commitment_board(errors: list[str]) -> None:
 
 
 def validate_enemy_empire_management(errors: list[str]) -> None:
+    recruitment_prep_report_path = ROOT / "tests" / "ai_planned_task_recruitment_prep_report.gd"
     required_paths = (
         SESSION_STATE_PATH,
         OVERWORLD_RULES_PATH,
         ENEMY_TURN_RULES_PATH,
         ENEMY_ADVENTURE_RULES_PATH,
         BATTLE_RULES_PATH,
+        recruitment_prep_report_path,
     )
     for path in required_paths:
         ensure(path.exists(), errors, f"Missing enemy empire-management file: {path.relative_to(ROOT)}")
@@ -16662,8 +16664,25 @@ def validate_enemy_empire_management(errors: list[str]) -> None:
         'town_build_profile_count("town_front_development_metrics_reused")',
         '"planned_recruitment_profile_owner": "town_build"',
         "_planned_recruitment_profile_count",
+        'context["normalized_commander_roster"] = normalized_commander_roster',
+        '"destination_commander_roster_loaded"',
+        '"destination_commander_roster_shared_between_scorers"',
+        '"destination_commander_roster_invalidated"',
     ):
-        ensure(required_token in enemy_turn_text, errors, f"EnemyTurnRules.gd is missing town-front context reuse token: {required_token}")
+        ensure(required_token in enemy_turn_text, errors, f"EnemyTurnRules.gd is missing strategic AI context reuse token: {required_token}")
+    if recruitment_prep_report_path.exists():
+        recruitment_prep_report_text = recruitment_prep_report_path.read_text(encoding="utf-8")
+        for required_token in (
+            "recruit_destination_commander_roster_context_reuse",
+            "recruit_destination_commander_roster_invalidation_and_retention",
+            '"rebuild_scoring_exact": true',
+            '"planned_scoring_exact": true',
+            '"full_destination_exact": true',
+            '"scoring_authority_exact": true',
+            '"fresh_current_rescore_exact": true',
+            '"bounded_roster_retained": true',
+        ):
+            ensure(required_token in recruitment_prep_report_text, errors, f"AI planned-task recruitment prep report is missing commander-roster context token: {required_token}")
     for required_token in (
         "precomputed_development_metrics: Dictionary = {}",
         'precomputed_development_metrics.get("logistics", {})',

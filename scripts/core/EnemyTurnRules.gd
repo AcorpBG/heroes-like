@@ -2136,6 +2136,7 @@ static func _mobilize_surplus_garrison_for_field_need(
 				)
 		if accepted <= 0:
 			continue
+		_invalidate_recruit_destination_field_cache(destination_context)
 		town["garrison"] = _remove_stack_units(town.get("garrison", []), unit_id, accepted)
 		surplus_strength -= accepted * unit_strength
 		mobilized_batches += 1
@@ -2344,6 +2345,9 @@ static func _recruit_destination_static_context(
 static func _invalidate_recruit_destination_field_cache(destination_context: Dictionary) -> void:
 	for key in ["best_rebuild", "best_raid", "best_planned", "best_emergency"]:
 		destination_context.erase(key)
+	if destination_context.has("normalized_commander_roster"):
+		destination_context.erase("normalized_commander_roster")
+		_reinforcement_profile_count("destination_commander_roster_invalidated")
 	var faction_context = destination_context.get("faction_recruitment_context", {})
 	if faction_context is Dictionary:
 		# Accepted recruits can change army probes and the best point/commander pairing.
@@ -2370,8 +2374,24 @@ static func _choose_recruit_destination_breakdown(
 	var local_front: Dictionary = context.get("local_front", {})
 	var strategy = context.get("strategy", {})
 	var best_rebuild = context.get("best_rebuild", null)
+	var best_planned = context.get("best_planned", null)
+	var normalized_commander_roster = null
+	if best_rebuild == null or best_planned == null:
+		normalized_commander_roster = context.get("normalized_commander_roster", null)
+		if normalized_commander_roster is Array:
+			_reinforcement_profile_count("destination_commander_roster_reused")
+		else:
+			normalized_commander_roster = EnemyAdventureRulesScript.normalize_commander_roster(
+				session,
+				faction_id,
+				EnemyAdventureRulesScript.commander_roster_for_faction(session, faction_id)
+			)
+			context["normalized_commander_roster"] = normalized_commander_roster
+			_reinforcement_profile_count("destination_commander_roster_loaded")
+		if best_rebuild == null and best_planned == null:
+			_reinforcement_profile_count("destination_commander_roster_shared_between_scorers")
 	if best_rebuild == null:
-		best_rebuild = _best_commander_rebuild_target(session, config, faction_id)
+		best_rebuild = _best_commander_rebuild_target(session, config, faction_id, normalized_commander_roster)
 		context["best_rebuild"] = best_rebuild
 	_reinforcement_profile_add_ms("best_rebuild_ms", started_usec)
 	started_usec = _reinforcement_profile_timer()
@@ -2387,14 +2407,14 @@ static func _choose_recruit_destination_breakdown(
 		context["best_raid"] = best_raid
 	_reinforcement_profile_add_ms("best_raid_ms", started_usec)
 	started_usec = _reinforcement_profile_timer()
-	var best_planned = context.get("best_planned", null)
 	if best_planned == null:
 		best_planned = _best_planned_task_recruitment_target(
 			session,
 			config,
 			faction_id,
 			town,
-			context.get("faction_recruitment_context", {})
+			context.get("faction_recruitment_context", {}),
+			normalized_commander_roster
 		)
 		context["best_planned"] = best_planned
 	_reinforcement_profile_add_ms("best_planned_ms", started_usec)
@@ -2845,14 +2865,15 @@ static func _best_planned_task_recruitment_target(
 	config: Dictionary,
 	faction_id: String,
 	support_town: Dictionary,
-	faction_recruitment_context: Dictionary = {}
+	faction_recruitment_context: Dictionary = {},
+	normalized_commander_roster: Variant = null
 ) -> Dictionary:
 	if session == null or faction_id == "" or support_town.is_empty():
 		return {}
 	var base_encounter_id := _primary_raid_encounter_id(config)
 	if base_encounter_id == "":
 		return {}
-	var roster := EnemyAdventureRulesScript.normalize_commander_roster(
+	var roster: Array = normalized_commander_roster if normalized_commander_roster is Array else EnemyAdventureRulesScript.normalize_commander_roster(
 		session,
 		faction_id,
 		EnemyAdventureRulesScript.commander_roster_for_faction(session, faction_id)
@@ -3142,16 +3163,18 @@ static func _raid_has_nearby_player_threat_recovery_need(encounter: Dictionary, 
 static func _best_commander_rebuild_target(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
-	faction_id: String
+	faction_id: String,
+	normalized_commander_roster: Variant = null
 ) -> Dictionary:
 	var best := {}
 	var best_score := -1.0
 	var strategy = EnemyAdventureRulesScript.enemy_strategy(config, faction_id)
-	for entry_value in EnemyAdventureRulesScript.normalize_commander_roster(
+	var roster: Array = normalized_commander_roster if normalized_commander_roster is Array else EnemyAdventureRulesScript.normalize_commander_roster(
 		session,
 		faction_id,
 		EnemyAdventureRulesScript.commander_roster_for_faction(session, faction_id)
-	):
+	)
+	for entry_value in roster:
 		if not (entry_value is Dictionary):
 			continue
 		if String(entry_value.get("roster_hero_id", "")) == "":
