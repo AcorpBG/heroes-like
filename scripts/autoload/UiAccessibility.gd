@@ -14,6 +14,7 @@ const LIVE_REGION_DESCRIPTIONS := {
 	&"GeneratedMapStatus": "Reports random-map generation progress and results.",
 	&"SupportBundleStatus": "Reports support-bundle export results.",
 	&"SettingsRestoreStatus": "Reports settings restore results.",
+	&"BindingStatus": "Reports hero movement keybinding capture prompts and results.",
 }
 
 var _connected_control_ids := {}
