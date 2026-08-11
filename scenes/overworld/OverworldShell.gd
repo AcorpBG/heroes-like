@@ -395,6 +395,7 @@ func _responsive_available_size() -> Vector2:
 func _input(event: InputEvent) -> void:
 	var modal_owner_open: bool = (
 		(_active_play_settings_dialog != null and _active_play_settings_dialog.is_open())
+		or (_manual_save_overwrite_dialog != null and _manual_save_overwrite_dialog.visible)
 		or (_end_turn_confirmation_dialog != null and _end_turn_confirmation_dialog.visible)
 	)
 	if modal_owner_open:
