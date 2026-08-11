@@ -403,6 +403,18 @@ func _resource_front_risk_requests_support() -> Dictionary:
 	session.overworld["encounters"] = encounters
 	var support_raid := _regroup_probe_raid(session, "hero_sable", "resource_support_sable_probe", {"x": 8, "y": 3})
 	var support_plan := EnemyAdventureRules.ai_active_front_support_target_selection_plan(session, config, support_raid)
+	var legacy_support_plan := EnemyAdventureRules._active_front_support_candidate(
+		session,
+		config,
+		MIRECLAW,
+		redirected,
+		Vector2i(int(support_raid.get("x", 0)), int(support_raid.get("y", 0))),
+		String(support_raid.get("placement_id", "")),
+		{}
+	)
+	if JSON.stringify(support_plan) != JSON.stringify(legacy_support_plan):
+		_fail("Virtual active-front path context changed the legacy support candidate: shared=%s legacy=%s" % [JSON.stringify(support_plan), JSON.stringify(legacy_support_plan)])
+		return {}
 	if String(support_plan.get("target_kind", "")) != "resource" or String(support_plan.get("target_placement_id", "")) != "river_free_company":
 		_fail("Active front support did not resolve regrouped resource target: %s" % JSON.stringify(support_plan))
 		return {}
@@ -428,6 +440,7 @@ func _resource_front_risk_requests_support() -> Dictionary:
 		"support_target_id": String(support_plan.get("target_placement_id", "")),
 		"support_reason_codes": support_reason_codes,
 		"support_strength_gap": int(support_plan.get("support_strength_gap", 0)),
+		"virtual_path_context_legacy_match": true,
 	}
 
 func _resource_front_support_launches_below_pressure() -> Dictionary:
