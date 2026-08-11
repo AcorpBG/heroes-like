@@ -1,4 +1,4 @@
-# heroes-like Project Charter
+# Aurelion Reach Project Charter
 
 Task: #10184  
 Document role: strategic project definition  
@@ -6,7 +6,9 @@ Reset date: 2026-04-27
 
 ## Purpose
 
-Build a full-production, release-bound, original turn-based fantasy strategy game inspired by the feel of Heroes of Might and Magic II/III: exploration, map control, town growth, army management, hero progression, tactical battles, artifacts, magic, campaigns, skirmish play, AI opponents, save/load, and a repeatable content pipeline.
+Build **Aurelion Reach**, a full-production, release-bound, original turn-based fantasy strategy game inspired by the feel of Heroes of Might and Magic II/III: exploration, map control, town growth, army management, hero progression, tactical battles, artifacts, magic, campaigns, skirmish play, AI opponents, save/load, and a repeatable content pipeline.
+
+`Aurelion Reach` is the public product title. The repository, Godot project name, executable stem, installer ownership keys, and existing `user://` location retain the stable technical identifier `heroes-like` until a dedicated compatibility migration proves Linux and Windows upgrades preserve installed files, saves, settings, and uninstall ownership.
 
 This project must be legally and creatively its own game. Use classic Heroes games as readability, scale, and loop inspiration only. Do not copy names, assets, maps, factions, unit art, music, text, or distinctive protected creative expression.
 

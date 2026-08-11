@@ -1,6 +1,6 @@
-# heroes-like
+# Aurelion Reach
 
-This repository is scaffolded for a production-minded Godot 4 foundation.
+This repository contains the production-minded Godot 4 foundation for **Aurelion Reach**. The stable technical project identifier remains `heroes-like` for existing save, settings, executable, and installer compatibility.
 
 Run from the Godot editor by opening `project.godot` and pressing Play.
 

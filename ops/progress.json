@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Undertow Harpooner damage calibration is complete with exact focused behavior, all-live 100-seed balance, 59-encounter breadth, compatibility, and repository proof. Overall release readiness remains open.",
+  "currentNotes": "The Aurelion Reach public-title slice is complete. The live first view now uses the original public title with exact compact-fit, visual, keyboard, and lean-boot proof while heroes-like remains the compatibility-sensitive technical identity. Overall release readiness remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "combat-veilmourn-undertow-harpooner-damage-calibration-10184",
-  "currentSliceId": "combat-veilmourn-undertow-harpooner-damage-calibration-10184",
-  "currentSliceNotes": "Completed Undertow Harpooners at the exact 5-8 damage band while retaining Mourning Nets and every other field. Production improves from 35 / 200.5 / 5 / 70.0 / 1.13 to 34 / 187.0 / 3 / 68.5 / 0.73; all non-Veilmourn ordered rows remain exact, structural failures remain zero, and the 59-encounter queue remains clear.",
+  "currentSlice": "presentation-aurelion-reach-public-title-identity-10184",
+  "currentSliceId": "presentation-aurelion-reach-public-title-identity-10184",
+  "currentSliceNotes": "Completed AURELION REACH on the live first view with exact 1920/default and 1280 compact-pocket fit, full visual composition, keyboard navigation, and zero first-view save-inspection proof. Stable heroes-like Godot, executable, installer, and user-data identities are unchanged.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Veilmourn Undertow Harpooner Damage Calibration",
-  "currentSliceUpdatedAt": "2026-08-11T07:10:00Z",
+  "currentSliceTitle": "Aurelion Reach Public Title Identity",
+  "currentSliceUpdatedAt": "2026-08-11T07:47:51Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -75170,6 +75170,26 @@
       "notes": "Completed the content-only Undertow Harpooner calibration from 5-7 to the common tier-four ranged 5-8 damage band while retaining Mourning Nets and every other field. Focused runtime passes 118/118. The authoritative corrected-RNG all-live 100-seed matrix improves production from 35 outliers / 200.5 severity / five severe / 70.0 maximum / 1.13 side bias to 34 / 187.0 / three / 68.5 / 0.73 with zero structural failures. Week-two Mireclaw/Veilmourn improves from 70/30 to 62.5/37.5, week-four Veilmourn/Brasshollow improves from 67/33 to 61/39, and every non-Veilmourn ordered row remains exact. Active breadth completes 59/59 with zero stalls or invalid orders and a clear queue at repeated signature 829808c9. Autoplay balance, balance regression, core, editor, validator, JSON, Python, and diff gates pass; Native RMG deferral is unchanged.",
       "remainingWork": "No work remains in this slice. Broader faction balance, strategic-AI/content breadth, Native RMG parity, signing, native Windows hardware certification, publication, and overall release readiness remain open.",
       "completedAt": "2026-08-11T07:10:00Z"
+    },
+    {
+      "id": "presentation-aurelion-reach-public-title-identity-10184",
+      "title": "Aurelion Reach Public Title Identity",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/worldbuilding-foundation.md", "docs/screen-wireframes.md"],
+      "purpose": "Replace the visible HEROES-LIKE first-view placeholder with the original Aurelion Reach public title while preserving compatibility-sensitive technical identities.",
+      "implementationTargets": ["project.md", "README.md", "scenes/menus/MainMenu.tscn", "docs/screen-wireframes.md", "tests/menu_outcome_visual_smoke.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"public_world_identity": "Aurelion Reach", "main_menu_title": "HEROES-LIKE", "godot_project_name": "heroes-like", "technical_identity_migration_authorized": false},
+      "completionCriteria": ["The live first-view compact logo pocket renders exactly AURELION REACH with no visible HEROES-LIKE placeholder or overflow", "Scenic composition, command anchors, keyboard behavior, and first-view save inspection remain exact", "Godot project name, executable/install ownership identity, and user-data path remain unchanged", "Focused visual/runtime, keyboard, save guard, editor, repository, Python, JSON, and diff gates pass"],
+      "nonGoals": ["installer or export product metadata rename, executable rename, registry or shortcut migration, user-data migration, logo bitmap generation, menu redesign, gameplay, balance, AI, saves, Native RMG, packaging behavior, publication, or release-completion claim"],
+      "createdAt": "2026-08-11T07:34:33Z",
+      "startedAt": "2026-08-11T07:34:33Z",
+      "updatedAt": "2026-08-11T07:47:51Z",
+      "notes": "Completed the public-title decision and live first-view implementation. MainMenu renders exactly AURELION REACH and runtime proof checks the label bounds plus rendered minimum size inside the compact logo pocket at default presentation and explicit 1280x720. Full menu/outcome visual, keyboard navigation, and lean-boot save guard pass; first view performs zero save inspections and explicit Load performs six. Editor, validator, JSON, Python, reconciliation, and diff gates pass. project.godot, export/installer technical identity, executable stem, ownership keys, and user-data path remain unchanged.",
+      "remainingWork": "No work remains in this slice. A separate future migration must own public installer/export metadata without changing existing user-data or installer ownership semantics. Broader faction balance, strategic-AI/content breadth, Native RMG parity, signing, native Windows hardware certification, publication, and overall release readiness remain open.",
+      "completedAt": "2026-08-11T07:47:51Z"
     }
   ],
   "project": "heroes-like",
@@ -75179,8 +75199,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, manual public-prerelease execution, stable publication, signing, and native Windows hardware certification.",
-  "remainingWork": "Continue strategic-AI, accessibility, content, performance, signing, native Windows certification, stable-channel, and remaining faction balance gaps; create/review a current verified draft before manually exercising public prerelease promotion. The accepted faction matrix remains needs_tuning at 34 outliers / 187.0 severity / 68.5 percent maximum dominance / 0.73 side bias.",
+  "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, public installer/export identity migration, manual public-prerelease execution, stable publication, signing, and native Windows hardware certification.",
+  "remainingWork": "Continue strategic-AI, accessibility, content, performance, compatibility-safe public installer/export identity, signing, native Windows certification, stable-channel, and remaining faction balance gaps; create/review a current verified draft before manually exercising public prerelease promotion. The accepted faction matrix remains needs_tuning at 34 outliers / 187.0 severity / 68.5 percent maximum dominance / 0.73 side bias.",
   "reportOnlyEvidence": [
     {
       "entries": [

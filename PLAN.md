@@ -4176,6 +4176,36 @@ Completion evidence:
 - the active scenario breadth report completes `59/59` encounters with zero stalls or invalid orders and a clear queue at repeated signature `829808c9`;
 - autoplay balance, balance regression, core systems, Godot editor parse, repository validation, JSON, Python, and diff checks pass. This content-only change is platform-neutral and introduces no Linux/Windows-specific runtime or packaging path.
 
+## Aurelion Reach Public Title Identity
+
+id: `presentation-aurelion-reach-public-title-identity-10184`
+
+Status: completed.
+
+Selected Phase 6 first-view product implementation slice. The shipped scenic main menu still exposes the internal placeholder `HEROES-LIKE` even though the authored world, faction, magic, economy, object, and art-direction foundations consistently identify the original setting as Aurelion Reach. Establish Aurelion Reach as the explicit public product title and replace the visible placeholder wordmark without conflating the public title with compatibility-sensitive technical identities.
+
+Implementation target:
+- declare `Aurelion Reach` as the public product title in the strategic charter and repository entry point;
+- render `AURELION REACH` in the compact first-view logo pocket and update the matching screen-composition specification;
+- retain `heroes-like` as the Godot project name, executable stem, installer ownership identity, and current `user://` directory until a separately validated Linux/Windows migration owns existing install, save, settings, shortcut, registry, and uninstall continuity;
+- add focused runtime and repository guards for the exact public title, placeholder removal, and compact logo-pocket fit.
+
+Completion criteria:
+- the live MainMenu first view renders exactly `AURELION REACH`, contains no visible `HEROES-LIKE` placeholder, and keeps the title inside the existing compact logo pocket;
+- scenic composition, first-view command labels/anchors, keyboard navigation, save-inspection guard, and existing menu/outcome visual behavior remain unchanged;
+- `project.godot`, export/installer technical identities, executable names, and user-data paths remain exact, so the presentation-only title slice cannot strand Linux or Windows saves/settings;
+- Godot editor parse, focused visual/runtime, keyboard, repository, Python, JSON, and diff gates pass.
+
+Non-goals:
+- installer/product metadata rename, executable rename, registry-key migration, Start Menu/desktop-entry rename, `user://` migration, logo bitmap generation, broader menu composition changes, gameplay, balance, AI, saves, Native RMG, packaging behavior, or release-completion claims;
+- treating Aurelion Reach title adoption as proof of final logo art, final marketing identity, certification, publication, or overall release readiness.
+
+Completion evidence:
+- the live MainMenu first view renders exactly `AURELION REACH`, rejects the placeholder, and proves both the label rectangle and rendered minimum text size remain inside the compact logo pocket at the default presentation and an explicit `1280x720` control;
+- the full menu/outcome visual smoke passes, preserving the painted backdrop, scenic negative space, plaque commands, anchors, and existing Outcome presentation;
+- main-menu keyboard/controller navigation passes, and the lean-boot guard reports zero first-view save inspections before the explicit Load action performs the expected six slot inspections;
+- Godot editor parse, repository validation, JSON, Python, progress reconciliation, and diff checks pass. `project.godot`, export presets, installer scripts/ownership keys, executable names, and user-data identity remain unchanged for Linux/Windows compatibility.
+
 ## Brasshollow Foundry Saint Sustain Calibration
 
 id: `combat-brasshollow-foundry-saint-sustain-calibration-10184`

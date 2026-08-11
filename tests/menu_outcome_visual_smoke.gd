@@ -80,6 +80,24 @@ func _run_main_menu_smoke() -> bool:
 		push_error("Main menu smoke: painted backdrop command hotspot surface is missing.")
 		get_tree().quit(1)
 		return false
+	var public_title = shell.get_node_or_null("%Title")
+	if not (public_title is Label) or String((public_title as Label).text) != "AURELION REACH":
+		push_error("Main menu smoke: the first-view public title is not AURELION REACH.")
+		get_tree().quit(1)
+		return false
+	var title_rect: Rect2 = (public_title as Label).get_global_rect()
+	var logo_panel: Control = shell.get_node("LogoPocketPanel") as Control
+	var logo_rect: Rect2 = logo_panel.get_global_rect()
+	var title_minimum_size: Vector2 = (public_title as Label).get_combined_minimum_size()
+	if (
+		title_rect.end.x > logo_rect.end.x + 0.5
+		or title_rect.end.y > logo_rect.end.y + 0.5
+		or title_minimum_size.x > title_rect.size.x + 0.5
+		or title_minimum_size.y > title_rect.size.y + 0.5
+	):
+		push_error("Main menu smoke: the AURELION REACH title overflows the compact logo pocket.")
+		get_tree().quit(1)
+		return false
 
 	for removed_node in ["CommandSpinePanel", "SpineStatusPanel", "CommandBlockPanel", "Continue", "OpenGuide", "Menu"]:
 		if shell.get_node_or_null(removed_node) != null or shell.find_child(removed_node, true, false) != null:

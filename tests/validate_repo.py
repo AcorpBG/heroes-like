@@ -13688,6 +13688,18 @@ def validate_main_menu_first_view(errors: list[str]) -> None:
 
     main_menu_scene_text = MAIN_MENU_SCENE_PATH.read_text(encoding="utf-8")
     ensure(
+        re.search(
+            r'\[node name="Title" type="Label" parent="LogoPocketPanel/LogoPocketPad/LogoPocketBox/LogoHeader/LogoText"\]'
+            r'(?:(?!\n\[node ).)*?\ntext = "AURELION REACH"',
+            main_menu_scene_text,
+            flags=re.DOTALL,
+        )
+        is not None,
+        errors,
+        "MainMenu.tscn must expose the approved AURELION REACH public title in the compact logo pocket",
+    )
+    ensure("HEROES-LIKE" not in main_menu_scene_text, errors, "MainMenu.tscn must not expose the placeholder HEROES-LIKE title")
+    ensure(
         scene_has_node(main_menu_scene_text, "BackdropCommandHotspots", "Control"),
         errors,
         "MainMenu.tscn must map first-view commands onto BackdropCommandHotspots instead of a command panel",
