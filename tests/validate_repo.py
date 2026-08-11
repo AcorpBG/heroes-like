@@ -13412,11 +13412,15 @@ def validate_campaign_browser(errors: list[str]) -> None:
 
 def validate_settings_and_onboarding(errors: list[str]) -> None:
     project_path = ROOT / "project.godot"
+    active_play_dialog_path = ROOT / "scenes" / "shared" / "ActivePlaySettingsDialog.gd"
+    active_play_report_path = ROOT / "tests" / "active_play_settings_runtime_report.gd"
     required_paths = (
         project_path,
         SETTINGS_SERVICE_PATH,
         MAIN_MENU_SCENE_PATH,
         MAIN_MENU_SCRIPT_PATH,
+        active_play_dialog_path,
+        active_play_report_path,
     )
     for path in required_paths:
         ensure(path.exists(), errors, f"Missing settings/onboarding integration file: {path.relative_to(ROOT)}")
@@ -13486,6 +13490,68 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         "content_scale_factor",
     ):
         ensure(required_token in settings_text, errors, f"SettingsService.gd is missing required settings/onboarding token: {required_token}")
+
+    active_play_dialog_text = active_play_dialog_path.read_text(encoding="utf-8")
+    for required_token in (
+        "func _focus_cycle_controls() -> Array",
+        "func _configure_focus_cycle() -> void",
+        "FrontierVisualKit.configure_focus_cycle(_focus_cycle_controls())",
+        "func _option_popup_is_open() -> bool",
+        "if _option_popup_is_open():",
+        "func _connect_focus_visibility() -> void",
+        "focus_entered.connect",
+        "_settings_scroll.ensure_control_visible(control)",
+        "_close_button",
+        "_master_slider",
+        "_reduce_repetitive_sounds_toggle",
+    ):
+        ensure(required_token in active_play_dialog_text, errors, f"ActivePlaySettingsDialog.gd is missing focus-containment token: {required_token}")
+
+    active_play_report_text = active_play_report_path.read_text(encoding="utf-8")
+    for required_token in (
+        "func _check_modal_focus_containment",
+        "const FOCUS_CYCLE_NAMES",
+        "func _check_focus_button_cycle",
+        "func _check_focus_key_cycle",
+        "func _check_close_boundary_accept",
+        "InputEventJoypadButton.new()",
+        "InputEventKey.new()",
+        "KEY_TAB",
+        "KEY_UP",
+        "KEY_DOWN",
+        "shift_pressed",
+        "JOY_BUTTON_LEFT_SHOULDER",
+        "JOY_BUTTON_RIGHT_SHOULDER",
+        "JOY_BUTTON_DPAD_UP",
+        "JOY_BUTTON_DPAD_DOWN",
+        "JOY_BUTTON_DPAD_LEFT",
+        "JOY_BUTTON_DPAD_RIGHT",
+        "JOY_BUTTON_A",
+        "JOY_BUTTON_B",
+        "popup.visible",
+        "speed_picker.selected == selection_before",
+        "func _popup_owns_focus",
+        "dialog.closed.connect",
+        "close_count_before + 1",
+        "func _background_authority_signature",
+        '"Overworld"',
+        '"Town"',
+        '"Battle"',
+        '"MasterVolumeSlider"',
+        '"Close"',
+        '"ReduceRepetitiveSoundsToggle"',
+        'SettingsService.set_presentation_resolution("1280x720")',
+        "get_window().size == Vector2i(1280, 720)",
+        "SettingsService.ui_scale_percent() == 130",
+        "SettingsService.validation_settings_transaction_snapshot()",
+        "SaveService.validation_last_runtime_save_profile()",
+        "SaveService.validation_summary_cache_snapshot()",
+        "AppRouter.validation_active_play_return_snapshot()",
+        "shell.validation_active_play_return_snapshot()",
+        "shell.validation_controller_route_cursor_snapshot()",
+        "shell.validation_town_entity_cache_snapshot()",
+    ):
+        ensure(required_token in active_play_report_text, errors, f"active_play_settings_runtime_report.gd is missing focus-containment coverage token: {required_token}")
 
     resolution_options = extract_settings_resolution_options(settings_text, errors)
     expected_resolutions = {"1280x720", "1600x900", "1920x1080", "2560x1440"}

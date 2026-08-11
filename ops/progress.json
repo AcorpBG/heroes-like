@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The town-build raid-capacity context reuse slice is complete. One pre-mutation empire build enumeration now derives raid-capacity availability once and reuses it across later eligible towns, while independent enumerations and direct controls remain fresh. Exact strict-Small behavior is unchanged; the scoped current-town lane improves from 1206 ms to 1188 ms, but broader strategic-AI performance and release readiness remain open.",
+  "currentNotes": "The active-play Settings focus-containment slice is complete. The shared Overworld, Town, and Battle overlay now owns an exact 12-control closed focus cycle, retains native slider and popup input, and prevents wrapped traversal or Accept from activating gameplay behind the modal. Focused, compatibility, Linux, and fresh Windows/Wine gates pass; broader accessibility and release readiness remain open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "strategic-ai-town-build-raid-capacity-context-reuse-10184",
-  "currentSliceId": "strategic-ai-town-build-raid-capacity-context-reuse-10184",
-  "currentSliceNotes": "Completed exact phase-local raid-capacity reuse with below/at-capacity parity, active-host and capital-capacity freshness, direct-call authority, exact strict-Small behavior, and cross-platform validation.",
+  "currentSlice": "accessibility-active-play-settings-focus-containment-10184",
+  "currentSliceId": "accessibility-active-play-settings-focus-containment-10184",
+  "currentSliceNotes": "Completed exact cross-shell Settings focus containment with keyboard/controller cycles, boundary Accept authority, native slider and popup ownership, close-once restoration, and Linux/Windows package validation.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Strategic AI Town-Build Raid-Capacity Context Reuse",
-  "currentSliceUpdatedAt": "2026-08-11T14:22:17Z",
+  "currentSliceTitle": "Active-Play Settings Focus Containment",
+  "currentSliceUpdatedAt": "2026-08-11T14:54:44Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19849,6 +19849,97 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "id": "accessibility-active-play-settings-focus-containment-10184",
+      "title": "Active-Play Settings Focus Containment",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/lessons-learned.md"],
+      "purpose": "Keep keyboard and controller focus inside the visible shared active-play Settings overlay so focus traversal and Accept cannot activate Overworld, Town, or Battle commands behind the modal.",
+      "implementationTargets": ["scenes/shared/ActivePlaySettingsDialog.gd", "tests/active_play_settings_runtime_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {
+        "active_play_shell_count": 3,
+        "settings_focusable_control_count": 12,
+        "entry_focus_owned": true,
+        "forward_boundary_containment_proven": false,
+        "reverse_boundary_containment_proven": false,
+        "accept_after_boundary_authority_proven": false,
+        "save_version": 9
+      },
+      "completionCriteria": "The shared dialog configures exactly one closed focus cycle over Close, three sliders, four option pickers, and four toggles whenever it opens or resynchronizes; physical keyboard/controller forward, reverse, up, and down traversal never leaves the visible dialog; slider left/right and option popup behavior remain native; Accept after both boundaries cannot mutate day, hero position, town resources/buildings, battle turn/RNG, save/cache, settings beyond the focused control, or routes; Back closes once and restores each shell's Settings command; 1280x720 at 130 percent UI scale remains usable; focused settings, active-focus, accessibility, core, repository, Linux, and fresh Windows/Wine gates pass.",
+      "nonGoals": ["changing setting values or persistence semantics, disabling background shell controls, shell focus-cycle redesign, gameplay input remapping, visual layout redesign, save schema, strategic AI, content, Native RMG, or overall release completion"],
+      "baselineChecks": [
+        "godot4 --headless --path . --scene res://tests/active_play_settings_runtime_report.tscn",
+        "godot4 --headless --path . --scene res://tests/active_play_keyboard_focus_smoke.tscn",
+        "godot4 --headless --path . --scene res://tests/accessibility_screen_reader_semantics_report.tscn",
+        "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+        "godot4 --headless --editor --quit --path .",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "startedAt": "2026-08-11T14:28:50Z",
+      "updatedAt": "2026-08-11T14:54:44Z",
+      "completedAt": "2026-08-11T14:54:44Z",
+      "notes": "The shared dialog now configures one exact cycle over Close, three sliders, four pickers, and four toggles after open and visible resynchronization. Physical keyboard and controller traversal covers all controls in both directions across all three active-play shells; wrapped-boundary Accept cannot change gameplay, save/cache, settings, or route authority. Slider left/right and OptionButton A/B ownership remain native, Back closes once, and each shell restores its Settings command. Linux packaged behavior passes with the known shell-fixture PopupMenu disconnect diagnostics reported; fresh Windows/Wine is clean.",
+      "result": {
+        "active_play_shell_count": 3,
+        "settings_focusable_control_count": 12,
+        "exact_unique_focus_cycle": true,
+        "controller_forward_reverse_vertical_cycles_exact": true,
+        "keyboard_forward_reverse_vertical_cycles_exact": true,
+        "wrapped_boundary_accept_authority_exact": true,
+        "slider_left_right_native": true,
+        "option_popup_accept_cancel_owned": true,
+        "popup_cancel_keeps_dialog_open": true,
+        "final_cancel_close_signal_count_each_shell": 1,
+        "originating_settings_focus_restored": true,
+        "resolution_width": 1280,
+        "resolution_height": 720,
+        "ui_scale_percent": 130,
+        "session_save_cache_route_settings_authority_exact": true,
+        "save_version": 9,
+        "active_play_keyboard_focus_compatibility_passed": true,
+        "screen_reader_semantics_passed": true,
+        "core_systems_passed": true,
+        "linux_packaged_focused_passed": true,
+        "linux_known_fixture_disconnect_diagnostic_count": 6,
+        "windows_wine_packaged_focused_passed": true,
+        "windows_godot_error_count": 0
+      },
+      "validation": {
+        "status": "passed",
+        "updatedAt": "2026-08-11T14:54:44Z",
+        "commands": [
+          "godot4 --headless --path . --scene res://tests/active_play_settings_runtime_report.tscn",
+          "godot4 --headless --path . --scene res://tests/active_play_keyboard_focus_smoke.tscn",
+          "godot4 --headless --path . --scene res://tests/accessibility_screen_reader_semantics_report.tscn",
+          "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+          "godot4 --headless --editor --quit --path .",
+          "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+          "godot4 --headless --path /tmp/heroes-settings-focus-package.ukh3Tg/project --export-release 'Linux Release' /tmp/heroes-settings-focus-package.ukh3Tg/linux/heroes-like.x86_64",
+          "godot4 --headless --main-pack /tmp/heroes-settings-focus-package.ukh3Tg/linux/heroes-like.pck --path /tmp/heroes-settings-focus-package.ukh3Tg/project --scene res://tests/active_play_settings_runtime_report.tscn",
+          "godot4 --headless --path /tmp/heroes-settings-focus-package.ukh3Tg/project --export-release 'Windows Release' /tmp/heroes-settings-focus-package.ukh3Tg/windows/heroes-like.exe",
+          "WINEDLLOVERRIDES=dinput8=d wine /tmp/heroes-settings-focus-package.ukh3Tg/windows/heroes-like.exe --scene res://tests/active_play_settings_runtime_report.tscn",
+          "python3 -m py_compile tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ],
+        "artifacts": [
+          "/tmp/heroes-settings-focus-package.ukh3Tg/linux-focused.log",
+          "/tmp/heroes-settings-focus-package.ukh3Tg/windows-focused.log",
+          "/tmp/heroes-settings-focus-package.ukh3Tg/linux/heroes-like.x86_64",
+          "/tmp/heroes-settings-focus-package.ukh3Tg/windows/heroes-like.exe"
+        ],
+        "knownWarnings": [
+          "Linux packaged focused emits one known focus_entered/tree_exited disconnect pair while each of the three temporary shell fixtures is freed; the same fixture-shutdown signature predates this slice and fresh Windows/Wine is clean."
+        ]
+      },
+      "remainingWork": "Continue the broader release-readiness queue. This bounded modal-focus correction does not complete broader accessibility, strategic-AI performance, combat balance, certification, or overall release readiness."
+    },
     {
       "id": "strategic-ai-town-build-raid-capacity-context-reuse-10184",
       "title": "Strategic AI Town-Build Raid-Capacity Context Reuse",

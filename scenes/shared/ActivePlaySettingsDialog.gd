@@ -31,12 +31,14 @@ func _ready() -> void:
 	visible = false
 	set_process_input(false)
 	_apply_visual_theme()
+	_connect_focus_visibility()
 
 func open_dialog() -> void:
 	_sync_controls()
 	visible = true
 	set_process_input(true)
 	move_to_front()
+	_configure_focus_cycle()
 	call_deferred("_focus_first_control")
 
 func close_dialog() -> void:
@@ -52,12 +54,58 @@ func is_open() -> bool:
 func _input(event: InputEvent) -> void:
 	if not visible or not event.is_action_pressed("ui_cancel"):
 		return
+	if _option_popup_is_open():
+		return
 	close_dialog()
 	get_viewport().set_input_as_handled()
+
+func _option_popup_is_open() -> bool:
+	for picker in [_battle_speed_picker, _ui_scale_picker, _battle_shake_picker, _color_cue_picker]:
+		if picker != null and picker.get_popup().visible:
+			return true
+	return false
 
 func _focus_first_control() -> void:
 	if visible and _master_slider != null:
 		_master_slider.grab_focus()
+
+func _focus_cycle_controls() -> Array:
+	return [
+		_close_button,
+		_master_slider,
+		_music_slider,
+		_effects_slider,
+		_battle_speed_picker,
+		_ui_scale_picker,
+		_battle_shake_picker,
+		_color_cue_picker,
+		_high_contrast_toggle,
+		_reduce_motion_toggle,
+		_reduce_flashes_toggle,
+		_reduce_repetitive_sounds_toggle,
+	]
+
+func _configure_focus_cycle() -> void:
+	if not visible:
+		return
+	FrontierVisualKit.configure_focus_cycle(_focus_cycle_controls())
+
+func _connect_focus_visibility() -> void:
+	for control_value in _focus_cycle_controls():
+		var control := control_value as Control
+		if control == null:
+			continue
+		var callback := _on_focus_cycle_control_entered.bind(control)
+		if not control.focus_entered.is_connected(callback):
+			control.focus_entered.connect(callback)
+
+func _on_focus_cycle_control_entered(control: Control) -> void:
+	if visible and control != null and _settings_scroll.is_ancestor_of(control):
+		call_deferred("_ensure_focus_control_visible", control)
+
+func _ensure_focus_control_visible(control: Control) -> void:
+	if visible and is_instance_valid(control) and _settings_scroll.is_ancestor_of(control):
+		_settings_scroll.ensure_control_visible(control)
 
 func _sync_controls() -> void:
 	_syncing = true
@@ -78,6 +126,7 @@ func _sync_controls() -> void:
 	_status.text = "Saved on this device"
 	_syncing = false
 	_apply_visual_theme()
+	_configure_focus_cycle()
 
 func _sync_option(picker: OptionButton, options: Array, metadata_key: String, fallback: Variant) -> void:
 	picker.clear()
