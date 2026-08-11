@@ -621,7 +621,10 @@ func _planned_and_rebuild_roster_invalidation() -> Dictionary:
 	if planned_accepted != 1:
 		_fail("Roster invalidation fixture could not apply a real planned reinforcement: actor=%s accepted=%d" % [planned_actor_id, planned_accepted])
 		return {}
-	EnemyTurnRules._invalidate_recruit_destination_field_cache(destination_context)
+	EnemyTurnRules._invalidate_recruit_destination_field_cache(destination_context, "planned")
+	if not destination_context.has("best_raid"):
+		_fail("Successful planned reinforcement discarded its unaffected best_raid context.")
+		return {}
 	if destination_context.has("normalized_commander_roster"):
 		_fail("Successful planned reinforcement retained a stale normalized commander roster.")
 		return {}
@@ -646,7 +649,10 @@ func _planned_and_rebuild_roster_invalidation() -> Dictionary:
 	if rebuild_accepted != 1:
 		_fail("Roster invalidation fixture could not apply a real rebuild reinforcement: actor=%s accepted=%d" % [rebuild_actor_id, rebuild_accepted])
 		return {}
-	EnemyTurnRules._invalidate_recruit_destination_field_cache(destination_context)
+	EnemyTurnRules._invalidate_recruit_destination_field_cache(destination_context, "rebuild")
+	if not destination_context.has("best_raid"):
+		_fail("Successful rebuild reinforcement discarded its unaffected best_raid context.")
+		return {}
 	if destination_context.has("normalized_commander_roster"):
 		_fail("Successful rebuild reinforcement retained a stale normalized commander roster.")
 		return {}
@@ -709,7 +715,134 @@ func _raid_roster_invalidation() -> Dictionary:
 	if String(raid_before.get("type", "")) != "raid" or not (destination_context.get("normalized_commander_roster", null) is Array):
 		_fail("Raid roster invalidation fixture did not cache the understrength raid destination: %s" % JSON.stringify(raid_before))
 		return {}
+	var primary_best_raid: Dictionary = destination_context.get("best_raid", {}).duplicate(true)
+	var primary_fresh_raid := EnemyTurnRules._best_raid_reinforcement_target(session, config, FACTION_ID, town, {})
+	if primary_best_raid != primary_fresh_raid:
+		_fail("Primary raid retention context differs from exact fresh best_raid: cached=%s fresh=%s" % [JSON.stringify(primary_best_raid), JSON.stringify(primary_fresh_raid)])
+		return {}
+	var secondary_town := town.duplicate(true)
+	secondary_town["placement_id"] = "raid_retention_secondary_town"
+	var secondary_context := {}
+	var secondary_best_raid := {}
+	var secondary_fresh_raid := {}
+	var origin := Vector2i(int(town.get("x", 0)), int(town.get("y", 0)))
+	var secondary_offsets: Array[Vector2i] = [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN, Vector2i(-2, 0), Vector2i(2, 0), Vector2i(0, -2), Vector2i(0, 2)]
+	for offset: Vector2i in secondary_offsets:
+		var candidate_position: Vector2i = origin + offset
+		if candidate_position.x < 0 or candidate_position.y < 0:
+			continue
+		secondary_town["x"] = candidate_position.x
+		secondary_town["y"] = candidate_position.y
+		var candidate_context := EnemyTurnRules._recruit_destination_static_context(session, config, secondary_town, FACTION_ID, {})
+		EnemyTurnRules._choose_recruit_destination_breakdown(session, config, secondary_town, FACTION_ID, candidate_context)
+		var candidate_best: Dictionary = candidate_context.get("best_raid", {}) if candidate_context.get("best_raid", {}) is Dictionary else {}
+		if candidate_best.is_empty() or candidate_best == primary_best_raid:
+			continue
+		secondary_context = candidate_context
+		secondary_best_raid = candidate_best.duplicate(true)
+		secondary_fresh_raid = EnemyTurnRules._best_raid_reinforcement_target(session, config, FACTION_ID, secondary_town, {})
+		break
+	if secondary_best_raid.is_empty() or secondary_best_raid != secondary_fresh_raid or secondary_best_raid == primary_best_raid:
+		_fail("Two simultaneous town contexts did not retain distinct exact fresh best_raid values: primary=%s secondary=%s fresh=%s" % [JSON.stringify(primary_best_raid), JSON.stringify(secondary_best_raid), JSON.stringify(secondary_fresh_raid)])
+		return {}
+	var emergency_context := EnemyTurnRules._recruit_destination_static_context(session, config, town, FACTION_ID, {})
+	EnemyTurnRules._choose_recruit_destination_breakdown(session, config, town, FACTION_ID, emergency_context)
+	var normalized_roster: Array = EnemyAdventureRules.normalize_commander_roster(
+		session,
+		FACTION_ID,
+		EnemyAdventureRules.commander_roster_for_faction(session, FACTION_ID)
+	)
+	if normalized_roster.is_empty() or not (normalized_roster[0] is Dictionary):
+		_fail("Raid retention fixture has no commander transfer target.")
+		return {}
+	var actor_id := String(normalized_roster[0].get("roster_hero_id", ""))
+	var base_encounter_ids: Array = config.get("raid_encounter_ids", []) if config.get("raid_encounter_ids", []) is Array else []
+	var base_encounter_id := String(base_encounter_ids[0]) if not base_encounter_ids.is_empty() else "encounter_mire_raid"
+	var town_before_commander_transfers := JSON.stringify(town)
+	var garrison_before_commander_transfers := JSON.stringify(town.get("garrison", []))
+	var market_before_commander_transfers := JSON.stringify(town.get("market_usage", {}))
+	var treasury_before_commander_transfers := JSON.stringify(_enemy_state(session).get("treasury", {}))
+	var encounters_before_commander_transfers := JSON.stringify(session.overworld.get("encounters", []))
+	var events_before_commander_transfers := JSON.stringify(session.overworld.get("recent_events", []))
+	var retention_cases := [
+		{"type": "planned", "town": town, "context": destination_context, "best_raid": primary_best_raid},
+		{"type": "rebuild", "town": secondary_town, "context": secondary_context, "best_raid": secondary_best_raid},
+		{"type": "emergency", "town": town, "context": emergency_context, "best_raid": primary_best_raid},
+	]
+	var retention_results := []
+	EnemyTurnRules._reinforcement_profile_begin(true)
+	for retention_case in retention_cases:
+		var destination_type := String(retention_case.get("type", ""))
+		var support_town: Dictionary = retention_case.get("town", {})
+		var retained_context: Dictionary = retention_case.get("context", {})
+		var expected_best_raid: Dictionary = retention_case.get("best_raid", {})
+		var faction_context: Dictionary = retained_context.get("faction_recruitment_context", {})
+		faction_context["emergency_defense_recruitment_candidates"] = [{"destination_type": destination_type}]
+		faction_context["emergency_defense_probe_by_commander"] = {actor_id: {"destination_type": destination_type}}
+		var strength_before := _commander_strength(session, actor_id)
+		var commander_accepted := EnemyAdventureRules.reinforce_commander_roster_army(
+			session,
+			FACTION_ID,
+			actor_id,
+			"unit_mire_slinger",
+			1,
+			base_encounter_id,
+			strength_before + 1000
+		)
+		if commander_accepted != 1 or _commander_strength(session, actor_id) <= strength_before:
+			_fail("%s commander retention transfer did not change exact commander strength: actor=%s accepted=%d" % [destination_type, actor_id, commander_accepted])
+			return {}
+		EnemyTurnRules._invalidate_recruit_destination_field_cache(retained_context, destination_type)
+		if retained_context.get("best_raid", {}) != expected_best_raid:
+			_fail("%s commander transfer did not retain its exact town-specific best_raid: retained=%s expected=%s" % [destination_type, JSON.stringify(retained_context.get("best_raid", {})), JSON.stringify(expected_best_raid)])
+			return {}
+		for stale_key in ["best_rebuild", "best_planned", "best_emergency", "normalized_commander_roster"]:
+			if retained_context.has(stale_key):
+				_fail("%s commander transfer retained stale commander-dependent field %s." % [destination_type, stale_key])
+				return {}
+		if faction_context.has("emergency_defense_recruitment_candidates") or faction_context.has("emergency_defense_probe_by_commander"):
+			_fail("%s commander transfer retained stale faction candidate/probe fields: %s" % [destination_type, JSON.stringify(faction_context)])
+			return {}
+		var fresh_raid_after := EnemyTurnRules._best_raid_reinforcement_target(session, config, FACTION_ID, support_town, {})
+		if retained_context.get("best_raid", {}) != fresh_raid_after:
+			_fail("%s commander transfer retained best_raid that differs from fresh current authority: retained=%s fresh=%s" % [destination_type, JSON.stringify(retained_context.get("best_raid", {})), JSON.stringify(fresh_raid_after)])
+			return {}
+		var destination_after := EnemyTurnRules._choose_recruit_destination_breakdown(session, config, support_town, FACTION_ID, retained_context)
+		var destination_fresh_after := EnemyTurnRules._choose_recruit_destination_breakdown(session, config, support_town, FACTION_ID)
+		if destination_after != destination_fresh_after:
+			_fail("%s commander transfer changed exact destination arrays/scores/reasons/order: shared=%s fresh=%s" % [destination_type, JSON.stringify(destination_after), JSON.stringify(destination_fresh_after)])
+			return {}
+		retention_results.append({
+			"destination_type": destination_type,
+			"accepted": commander_accepted,
+			"best_raid_placement_id": String(expected_best_raid.get("encounter", {}).get("placement_id", "")),
+			"best_raid_need": int(expected_best_raid.get("need", 0)),
+			"best_raid_score": float(expected_best_raid.get("score", 0.0)),
+			"destination_after": destination_after,
+		})
+	var retention_profile := EnemyTurnRules._reinforcement_profile_finish()
+	var retention_counts: Dictionary = retention_profile.get("counts", {}) if retention_profile.get("counts", {}) is Dictionary else {}
+	if int(retention_counts.get("destination_best_raid_retained", 0)) != 3 \
+			or int(retention_counts.get("destination_best_raid_invalidated", 0)) != 0:
+		_fail("Commander transfer best_raid retention counters were not exact: %s" % JSON.stringify(retention_profile))
+		return {}
+	if JSON.stringify(town) != town_before_commander_transfers \
+			or JSON.stringify(town.get("garrison", [])) != garrison_before_commander_transfers \
+			or JSON.stringify(town.get("market_usage", {})) != market_before_commander_transfers \
+			or JSON.stringify(_enemy_state(session).get("treasury", {})) != treasury_before_commander_transfers \
+			or JSON.stringify(session.overworld.get("encounters", [])) != encounters_before_commander_transfers \
+			or JSON.stringify(session.overworld.get("recent_events", [])) != events_before_commander_transfers:
+		_fail("Commander retention transfers changed town/garrison/market/treasury/raid/event authority.")
+		return {}
+	destination_context = EnemyTurnRules._recruit_destination_static_context(session, config, town, FACTION_ID, {})
+	raid_before = EnemyTurnRules._choose_recruit_destination_breakdown(session, config, town, FACTION_ID, destination_context)
 	var raid_need_before := int(raid_before.get("raid_need", 0))
+	var raid_strength_before := EnemyAdventureRules.raid_strength(destination_context.get("best_raid", {}).get("encounter", {}))
+	var town_before_raid_transfer := JSON.stringify(town)
+	var garrison_before_raid_transfer := JSON.stringify(town.get("garrison", []))
+	var market_before_raid_transfer := JSON.stringify(town.get("market_usage", {}))
+	var treasury_before_raid_transfer := JSON.stringify(_enemy_state(session).get("treasury", {}))
+	var events_before_raid_transfer := JSON.stringify(session.overworld.get("recent_events", []))
 	var accepted := EnemyTurnRules._apply_reinforcement_to_raid(
 		session,
 		int(raid_before.get("index", -1)),
@@ -719,7 +852,14 @@ func _raid_roster_invalidation() -> Dictionary:
 	if accepted != 1:
 		_fail("Raid roster invalidation fixture could not apply a real raid reinforcement: accepted=%d" % accepted)
 		return {}
-	EnemyTurnRules._invalidate_recruit_destination_field_cache(destination_context)
+	EnemyTurnRules._reinforcement_profile_begin(true)
+	EnemyTurnRules._invalidate_recruit_destination_field_cache(destination_context, "raid")
+	var invalidation_profile := EnemyTurnRules._reinforcement_profile_finish()
+	var invalidation_counts: Dictionary = invalidation_profile.get("counts", {}) if invalidation_profile.get("counts", {}) is Dictionary else {}
+	if destination_context.has("best_raid") or int(invalidation_counts.get("destination_best_raid_invalidated", 0)) != 1 \
+			or int(invalidation_counts.get("destination_best_raid_retained", 0)) != 0:
+		_fail("Actual raid transfer did not invalidate its exact cached best_raid once: context=%s profile=%s" % [JSON.stringify(destination_context), JSON.stringify(invalidation_profile)])
+		return {}
 	if destination_context.has("normalized_commander_roster"):
 		_fail("Successful raid reinforcement retained a stale normalized commander roster.")
 		return {}
@@ -731,6 +871,20 @@ func _raid_roster_invalidation() -> Dictionary:
 	if int(raid_rescored.get("raid_need", 0)) >= raid_need_before:
 		_fail("Fresh raid rescore did not consume current reinforced army strength: before=%d after=%d" % [raid_need_before, int(raid_rescored.get("raid_need", 0))])
 		return {}
+	var raid_strength_after := EnemyAdventureRules.raid_strength(raid_rescored.get("raid", destination_context.get("best_raid", {}).get("encounter", {})))
+	if raid_strength_after <= raid_strength_before:
+		var fresh_best_after: Dictionary = destination_context.get("best_raid", {}) if destination_context.get("best_raid", {}) is Dictionary else {}
+		raid_strength_after = EnemyAdventureRules.raid_strength(fresh_best_after.get("encounter", {}))
+	if raid_strength_after <= raid_strength_before:
+		_fail("Actual raid transfer did not increase current raid strength: before=%d after=%d" % [raid_strength_before, raid_strength_after])
+		return {}
+	if JSON.stringify(town) != town_before_raid_transfer \
+			or JSON.stringify(town.get("garrison", [])) != garrison_before_raid_transfer \
+			or JSON.stringify(town.get("market_usage", {})) != market_before_raid_transfer \
+			or JSON.stringify(_enemy_state(session).get("treasury", {})) != treasury_before_raid_transfer \
+			or JSON.stringify(session.overworld.get("recent_events", [])) != events_before_raid_transfer:
+		_fail("Actual raid transfer changed town/garrison/market/treasury/event authority.")
+		return {}
 	return {
 		"successful_reinforcement": accepted,
 		"placement_id": "recruitment_roster_cache_probe_raid",
@@ -738,6 +892,15 @@ func _raid_roster_invalidation() -> Dictionary:
 		"fresh_current_rescore_exact": true,
 		"raid_need_before": raid_need_before,
 		"raid_need_after": int(raid_rescored.get("raid_need", 0)),
+		"raid_strength_before": raid_strength_before,
+		"raid_strength_after": raid_strength_after,
+		"destination_best_raid_invalidated": int(invalidation_counts.get("destination_best_raid_invalidated", 0)),
+		"commander_transfer_retention_cases": retention_results,
+		"destination_best_raid_retained": int(retention_counts.get("destination_best_raid_retained", 0)),
+		"two_town_best_raid_values_distinct": true,
+		"candidate_probe_fields_evicted": true,
+		"destination_arrays_scores_reasons_order_exact": true,
+		"garrison_treasury_town_market_events_authority_exact": true,
 	}
 
 func _garrison_only_roster_retention() -> Dictionary:
@@ -1051,6 +1214,10 @@ func _planned_task_recruitment_prepares_commander() -> Dictionary:
 	if int(recruit_counts.get("destination_commander_roster_invalidated", 0)) < 1:
 		_fail("Real planned recruitment did not invalidate its destination roster context: %s" % JSON.stringify(recruit_profile))
 		return {}
+	if int(recruit_counts.get("destination_best_raid_retained", 0)) < 1 \
+			or int(recruit_counts.get("destination_best_raid_invalidated", 0)) != 0:
+		_fail("Real purchased planned recruitment did not retain only its unaffected best_raid context: %s" % JSON.stringify(recruit_profile))
+		return {}
 	var after_strength := _commander_strength(session, actor_id)
 	if after_strength <= before_strength:
 		_fail("Planned recruitment did not increase commander continuity: before=%d after=%d actor=%s" % [before_strength, after_strength, actor_id])
@@ -1067,6 +1234,8 @@ func _planned_task_recruitment_prepares_commander() -> Dictionary:
 		"after_strength": after_strength,
 		"planned_batches": int(recruit_result.get("planned_batches", 0)),
 		"destination_commander_roster_invalidated": int(recruit_counts.get("destination_commander_roster_invalidated", 0)),
+		"destination_best_raid_retained": int(recruit_counts.get("destination_best_raid_retained", 0)),
+		"destination_best_raid_invalidated": int(recruit_counts.get("destination_best_raid_invalidated", 0)),
 		"event_type": String(prepared_event.get("event_type", "")),
 	}
 
@@ -1283,6 +1452,10 @@ func _surplus_garrison_prepares_planned_commander_without_recruits() -> Dictiona
 	if int(mobilize_counts.get("destination_commander_roster_invalidated", 0)) < 1:
 		_fail("Real surplus-garrison field transfer did not invalidate its destination roster context: %s" % JSON.stringify(mobilize_profile))
 		return {}
+	if int(mobilize_counts.get("destination_best_raid_retained", 0)) < 1 \
+			or int(mobilize_counts.get("destination_best_raid_invalidated", 0)) != 0:
+		_fail("Real surplus planned transfer did not retain only its unaffected best_raid context: %s" % JSON.stringify(mobilize_profile))
+		return {}
 	var after_strength := _commander_strength(session, actor_id)
 	if after_strength <= before_strength:
 		_fail("Surplus garrison mobilization did not increase commander continuity: before=%d after=%d actor=%s" % [before_strength, after_strength, actor_id])
@@ -1318,6 +1491,8 @@ func _surplus_garrison_prepares_planned_commander_without_recruits() -> Dictiona
 		"defense_target": defense_target,
 		"mobilized_batches": int(recruit_result.get("mobilized_batches", 0)),
 		"destination_commander_roster_invalidated": int(mobilize_counts.get("destination_commander_roster_invalidated", 0)),
+		"destination_best_raid_retained": int(mobilize_counts.get("destination_best_raid_retained", 0)),
+		"destination_best_raid_invalidated": int(mobilize_counts.get("destination_best_raid_invalidated", 0)),
 		"event_type": String(prepared_event.get("event_type", "")),
 		"reason_codes": reason_codes,
 	}
