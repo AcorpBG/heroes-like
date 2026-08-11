@@ -1,6 +1,6 @@
 # Screen Wireframes and Visual Design Target
 
-Project: heroes-like
+Project: Aurelion Reach (`heroes-like` technical id)
 Date: 2026-04-15
 
 ## Why this exists
@@ -79,7 +79,7 @@ A large left-heavy painted hero or world scene, with the controls docked as a se
 
 ```text
 ┌──────────────────────────────────────────────────────────────────────┐
-│ HEROES-LIKE LOGO                                                    │
+│ AURELION REACH LOGO                                                 │
 │ subtitle / campaign tag                                             │
 │                                                                      │
 │  ┌──────────────────────── PAINTED STAGE ───────────────────────┐    │
