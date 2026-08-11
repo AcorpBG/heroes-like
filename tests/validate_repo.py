@@ -13726,6 +13726,12 @@ def validate_native_screen_reader_semantics(errors: list[str]) -> None:
         "DisplayServer.LIVE_POLITE",
         "UiAccessibility.validation_snapshot",
         "res://scenes/menus/MainMenu.tscn",
+        'int(menu_snapshot.get("live_region_count", 0)) != 5',
+        'menu.find_children("BindingStatus", "Label", true, false)',
+        'binding_status.accessibility_live != DisplayServer.LIVE_POLITE',
+        'Reports hero movement keybinding capture prompts and results.',
+        'func _live_region_path_count(snapshot: Dictionary, suffix: String) -> int:',
+        'reentered_binding_status.accessibility_live != DisplayServer.LIVE_POLITE',
     ):
         ensure(required_token in report_text, errors, f"accessibility_screen_reader_semantics_report.gd is missing required token: {required_token}")
     report_scene_text = ACCESSIBILITY_SCREEN_READER_REPORT_SCENE_PATH.read_text(encoding="utf-8")
@@ -25066,6 +25072,19 @@ def validate_packaged_settings_persistence_smoke(errors: list[str]) -> None:
             'SettingsService.set_ui_scale_percent(130)',
             'SettingsService.set_presentation_resolution("1280x720")',
             'get_window().size = Vector2i(1280, 720)',
+            'const BINDING_STATUS_DESCRIPTION := "Reports hero movement keybinding capture prompts and results."',
+            'status.accessibility_live == DisplayServer.LIVE_POLITE',
+            'func _expect_binding_status(dialog: Control, expected_text: String) -> void:',
+            '"That key is reserved."',
+            'await _press_key(KEY_X, true)',
+            '"Modifier chords are reserved."',
+            '"Binding unchanged."',
+            '"Down set to P; Up was swapped."',
+            '"IJKL + Arrows preset restored."',
+            'const SETTINGS_FAILURE_ENV := "HEROES_LIKE_SETTINGS_FAIL_PHASE"',
+            'OS.set_environment(SETTINGS_FAILURE_ENV, "precommit")',
+            '"Bindings not saved; previous keys restored. Settings could not be saved. Your previous settings remain active."',
+            'SettingsService.validation_settings_transaction_snapshot().get("input_map", {})',
         ):
             ensure(required_token in custom_keybindings_smoke_text, errors, f"custom_hero_keybindings_smoke.gd is missing focus-containment coverage token: {required_token}")
 

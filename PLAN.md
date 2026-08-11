@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `accessibility-hero-keybindings-live-status-announcements-10184`. The Hero Keybindings capture/result status is now one bounded polite native screen-reader live region, announcing capture prompts, cancellation, rejection, swap, success, reset, and failure updates without changing focus or input behavior.
 - Latest completed implementation slice: `gameplay-town-daybreak-economy-forecast-parity-10184`. End Turn now previews full and compact player-town income plus full weekly muster from the same next-day occupation-then-recovery state used by live daybreak, without mutating the live session or conflating occupation releases, site musters, deliveries, or scenario hooks with core town growth.
 - Latest completed implementation slice: `gameplay-town-muster-specialty-forecast-parity-10184`. Player-owned Town recruit, build, context, and stable-state end-turn forecasts now use the same hero-specialty-scaled weekly muster payload as the live weekly mutation, while enemy, neutral, sessionless, and strategic-metric growth remain raw.
 - Latest completed implementation slice: `accessibility-main-menu-hero-keybindings-focus-containment-10184`. The Main Menu hero-keybindings overlay now owns exact reset-disabled and reset-enabled keyboard/controller cycles over its eight dynamic bindings plus Close and the enabled Reset action; capture input, close-once behavior, hidden-menu authority, persistence, and return focus remain exact on Linux and Windows.

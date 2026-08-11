@@ -2,6 +2,8 @@ extends Node
 
 const REPORT_ID := "CUSTOM_HERO_KEYBINDINGS_SMOKE"
 const CAPTURE_PATH := "res://.artifacts/custom_hero_keybindings_smoke/dialog-1280x720-130.png"
+const BINDING_STATUS_DESCRIPTION := "Reports hero movement keybinding capture prompts and results."
+const SETTINGS_FAILURE_ENV := "HEROES_LIKE_SETTINGS_FAIL_PHASE"
 
 var _errors: Array[String] = []
 var _dismissed_count := 0
@@ -45,6 +47,9 @@ func _check_custom_bindings() -> void:
 	_expect(bool(dialog_snapshot.get("visible", false)), "Custom movement dialog did not open.")
 	_expect(int(dialog_snapshot.get("button_count", 0)) == 8, "Custom movement dialog must expose all eight directions: %s." % dialog_snapshot)
 	_expect(bool(dialog_snapshot.get("fits_viewport", false)), "Custom movement dialog does not fit a 1280x720 viewport at 130%% UI scaling: %s." % dialog_snapshot)
+	UiAccessibility.refresh_tree(dialog)
+	UiAccessibility.refresh_tree(dialog)
+	_expect_binding_status(dialog, "Select a direction to change its key.")
 	dialog.dismissed.connect(_on_dialog_dismissed)
 	var disabled_cycle := _binding_focus_cycle(false)
 	_expect(disabled_cycle.size() == 9, "Default keybindings cycle must contain eight bindings plus Close: %s." % [disabled_cycle])
@@ -54,16 +59,32 @@ func _check_custom_bindings() -> void:
 	await _check_capture_controller_ownership(menu, dialog, session, &"hero_move_up")
 
 	_expect(bool(menu.call("validation_begin_hero_key_capture", &"hero_move_up")), "Could not begin Up binding capture.")
+	_expect_binding_status(dialog, "Up: press one key.")
 	var unchanged_result: Dictionary = menu.call("validation_capture_hero_key", KEY_I)
 	_expect(bool(unchanged_result.get("ok", false)) and bool(unchanged_result.get("unchanged", false)), "Selecting the current preset key was not treated as unchanged: %s." % unchanged_result)
+	_expect_binding_status(dialog, "Up set to I.")
 	_expect(not SettingsService.has_custom_hero_movement_bindings(), "Selecting the current preset key falsely created a custom binding profile.")
 	_expect(bool(menu.call("validation_begin_hero_key_capture", &"hero_move_up")), "Could not restart Up binding capture.")
+	_expect_binding_status(dialog, "Up: press one key.")
+	var reserved_authority := _background_authority_signature(menu, session)
 	var reserved_result: Dictionary = menu.call("validation_capture_hero_key", KEY_ESCAPE)
 	_expect(not bool(reserved_result.get("ok", false)) and String(reserved_result.get("reason", "")) == "reserved_key", "Escape was not rejected as a reserved key: %s." % reserved_result)
+	_expect_binding_status(dialog, "That key is reserved.")
 	_expect(SettingsService.hero_movement_keycode(&"hero_move_up") == KEY_I, "Reserved-key rejection mutated the Up binding.")
+	_expect(_background_authority_signature(menu, session) == reserved_authority, "Reserved-key rejection changed focus-independent input, settings, session, save-cache, route, or file authority.")
+	var modifier_focus_before := _focus_name()
+	var modifier_authority := _background_authority_signature(menu, session)
+	await _press_key(KEY_X, true)
+	_expect_binding_status(dialog, "Modifier chords are reserved.")
+	var modifier_snapshot: Dictionary = dialog.call("validation_snapshot")
+	_expect(String(modifier_snapshot.get("waiting_action", "")) == "hero_move_up", "Physical Shift+X modifier rejection did not keep Up capture active: %s." % modifier_snapshot)
+	_expect(_focus_name() == modifier_focus_before and _focus_is_inside(dialog), "Physical Shift+X modifier rejection changed capture focus: before=%s after=%s." % [modifier_focus_before, _focus_name()])
+	_expect(SettingsService.hero_movement_keycode(&"hero_move_up") == KEY_I, "Physical Shift+X modifier rejection mutated the Up binding.")
+	_expect(_background_authority_signature(menu, session) == modifier_authority, "Physical Shift+X modifier rejection changed input, settings, session, save-cache, route, or file authority.")
 
 	var first_result: Dictionary = menu.call("validation_capture_hero_key", KEY_P)
 	_expect(bool(first_result.get("ok", false)), "Valid Up reassignment failed: %s." % first_result)
+	_expect_binding_status(dialog, "Up set to P.")
 	_expect(_action_has_key(&"hero_move_up", KEY_P) and not _action_has_key(&"hero_move_up", KEY_I), "Up reassignment did not immediately replace the preset key in InputMap.")
 	_expect(_action_has_key(&"ui_up", KEY_I), "Hero movement reassignment changed independent menu navigation.")
 	_expect(_action_has_joypad_button(&"ui_up", JOY_BUTTON_DPAD_UP), "Hero movement reassignment removed controller D-pad navigation.")
@@ -72,10 +93,13 @@ func _check_custom_bindings() -> void:
 	_expect(enabled_cycle.size() == 10, "Custom keybindings cycle must contain eight bindings, Reset, and Close: %s." % [enabled_cycle])
 	await _check_focus_containment(menu, dialog, session, enabled_cycle, "reset-enabled")
 	await _check_capture_controller_ownership(menu, dialog, session, &"hero_move_up")
+	await _check_injected_failure_status(menu, dialog, session)
 
 	_expect(bool(menu.call("validation_begin_hero_key_capture", &"hero_move_down")), "Could not begin Down binding capture.")
+	_expect_binding_status(dialog, "Down: press one key.")
 	var swap_result: Dictionary = menu.call("validation_capture_hero_key", KEY_P)
 	_expect(bool(swap_result.get("ok", false)) and String(swap_result.get("swapped_action", "")) == "hero_move_up", "Duplicate movement key did not swap directions: %s." % swap_result)
+	_expect_binding_status(dialog, "Down set to P; Up was swapped.")
 	_expect(SettingsService.hero_movement_keycode(&"hero_move_down") == KEY_P and SettingsService.hero_movement_keycode(&"hero_move_up") == KEY_K, "Duplicate-key swap did not preserve a complete unique movement set.")
 
 	var reset_button: Button = dialog.get_node("%ResetBindings")
@@ -83,6 +107,7 @@ func _check_custom_bindings() -> void:
 	await _settle()
 	menu.call("validation_reset_hero_keybindings")
 	await _settle()
+	_expect_binding_status(dialog, "IJKL + Arrows preset restored.")
 	_expect(not SettingsService.has_custom_hero_movement_bindings(), "Reset Preset did not clear custom movement bindings.")
 	_expect(SettingsService.hero_movement_keycode(&"hero_move_up") == KEY_I and SettingsService.hero_movement_keycode(&"hero_move_down") == KEY_K, "Reset Preset did not restore IJKL movement keys.")
 	_expect(reset_button.disabled, "Reset Preset remained enabled after restoring the active preset.")
@@ -90,8 +115,10 @@ func _check_custom_bindings() -> void:
 	await _check_focus_containment(menu, dialog, session, disabled_cycle, "reset-disabled-after-reset")
 
 	_expect(bool(menu.call("validation_begin_hero_key_capture", live_action)), "Could not begin live-direction binding capture for %s." % live_action)
+	_expect_binding_status(dialog, "%s: press one key." % SettingsService.hero_movement_action_label(live_action))
 	var live_result: Dictionary = menu.call("validation_capture_hero_key", KEY_P)
 	_expect(bool(live_result.get("ok", false)), "Live-direction reassignment failed: %s." % live_result)
+	_expect_binding_status(dialog, "%s set to P." % SettingsService.hero_movement_action_label(live_action))
 	_expect(SettingsService.save_settings() == SettingsService.SETTINGS_FILE, "Custom movement settings did not save to the device config.")
 	await _settle()
 	var authority_before_close := _background_authority_signature(menu, session)
@@ -193,6 +220,7 @@ func _check_boundary_accept_capture(menu, dialog: Control, session, control_name
 func _check_capture_controller_ownership(menu, dialog: Control, session, action: StringName) -> void:
 	_expect(bool(menu.call("validation_begin_hero_key_capture", action)), "Could not begin controller-ownership capture for %s." % action)
 	await _settle()
+	_expect_binding_status(dialog, "%s: press one key." % SettingsService.hero_movement_action_label(action))
 	var focus_before := _focus_name()
 	var binding_before := SettingsService.hero_movement_keycode(action)
 	var authority_before := _background_authority_signature(menu, session)
@@ -206,8 +234,38 @@ func _check_capture_controller_ownership(menu, dialog: Control, session, action:
 	await _press_joypad_button(JOY_BUTTON_B)
 	var cancelled_snapshot: Dictionary = dialog.call("validation_snapshot")
 	_expect(bool(cancelled_snapshot.get("visible", false)) and String(cancelled_snapshot.get("waiting_action", "")) == "", "Physical B did not cancel capture while keeping keybindings open: %s." % cancelled_snapshot)
+	_expect_binding_status(dialog, "Binding unchanged.")
 	_expect(_focus_name() == focus_before and _focus_is_inside(dialog), "Physical B capture cancel did not return focus to the pending binding: before=%s after=%s." % [focus_before, _focus_name()])
 	_expect(_background_authority_signature(menu, session) == authority_before, "Physical B capture cancel changed hidden Main Menu page/action, session, save-cache, route, settings, or file authority.")
+
+func _check_injected_failure_status(menu, dialog: Control, session) -> void:
+	_expect(bool(menu.call("validation_begin_hero_key_capture", &"hero_move_left")), "Could not begin injected-failure Left capture.")
+	_expect_binding_status(dialog, "Left: press one key.")
+	var focus_before := _focus_name()
+	var authority_before := _background_authority_signature(menu, session)
+	var prior_failure_env := OS.get_environment(SETTINGS_FAILURE_ENV)
+	OS.set_environment(SETTINGS_FAILURE_ENV, "precommit")
+	var failure_result: Dictionary = menu.call("validation_capture_hero_key", KEY_O)
+	if prior_failure_env == "":
+		OS.unset_environment(SETTINGS_FAILURE_ENV)
+	else:
+		OS.set_environment(SETTINGS_FAILURE_ENV, prior_failure_env)
+	_expect(not bool(failure_result.get("ok", true)) and String(failure_result.get("reason", "")) == "precommit", "Injected keybinding persistence failure did not surface the exact transaction failure: %s." % failure_result)
+	_expect_binding_status(dialog, "Bindings not saved; previous keys restored. Settings could not be saved. Your previous settings remain active.")
+	_expect(String(dialog.call("validation_snapshot").get("waiting_action", "pending")) == "", "Injected persistence failure left capture active.")
+	_expect(_focus_name() == focus_before and _focus_is_inside(dialog), "Injected persistence failure changed capture focus ownership: before=%s after=%s." % [focus_before, _focus_name()])
+	_expect(_background_authority_signature(menu, session) == authority_before, "Injected persistence failure changed focus-independent input, settings, session, save-cache, route, or file authority.")
+
+func _expect_binding_status(dialog: Control, expected_text: String) -> void:
+	var status_nodes := dialog.find_children("BindingStatus", "Label", true, false)
+	_expect(status_nodes.size() == 1, "Keybindings dialog must expose exactly one BindingStatus Label: %s." % [status_nodes])
+	if status_nodes.size() != 1:
+		return
+	var status := status_nodes[0] as Label
+	_expect(status.text == expected_text, "BindingStatus transition mismatch: expected '%s', got '%s'." % [expected_text, status.text])
+	_expect(status.accessibility_live == DisplayServer.LIVE_POLITE, "BindingStatus must remain a polite native live region.")
+	_expect(status.accessibility_description == BINDING_STATUS_DESCRIPTION, "BindingStatus has the wrong bounded accessibility description: %s." % status.accessibility_description)
+	_expect(status.accessibility_description.length() <= HeroesUiAccessibility.MAX_DESCRIPTION_LENGTH, "BindingStatus accessibility description exceeded the shared bound.")
 
 func _binding_focus_cycle(include_reset: bool) -> Array:
 	var cycle := []
@@ -238,6 +296,7 @@ func _background_authority_signature(menu, session) -> String:
 		"session": session.to_dict(),
 		"save_cache": SaveService.validation_summary_cache_snapshot(),
 		"settings": SettingsService.settings.duplicate(true),
+		"input_map": SettingsService.validation_settings_transaction_snapshot().get("input_map", {}),
 		"settings_file": _settings_file_content(),
 		"current_tab": int(menu_snapshot.get("current_tab", -1)),
 		"stage_dock_visible": bool(menu_snapshot.get("stage_dock_visible", false)),

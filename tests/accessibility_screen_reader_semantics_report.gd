@@ -124,6 +124,34 @@ func _run() -> void:
 		return _fail("Visible main-menu controls are missing native semantics: %s" % menu_snapshot)
 	if int(menu_snapshot.get("focusable_control_count", 0)) < 20:
 		return _fail("Main-menu semantic scan covered too few focusable controls: %s" % menu_snapshot)
+	if int(menu_snapshot.get("live_region_count", 0)) != 5:
+		return _fail("Main menu must expose exactly five shared polite live regions: %s" % menu_snapshot.get("live_regions", []))
+	if _live_region_path_count(menu_snapshot, "/BindingStatus") != 1:
+		return _fail("Main menu must expose exactly one BindingStatus live-region entry: %s" % menu_snapshot.get("live_regions", []))
+	var binding_status_nodes: Array = menu.find_children("BindingStatus", "Label", true, false)
+	if binding_status_nodes.size() != 1:
+		return _fail("Main menu must own exactly one BindingStatus Label: %s" % [binding_status_nodes])
+	var binding_status := binding_status_nodes[0] as Label
+	if binding_status.accessibility_live != DisplayServer.LIVE_POLITE:
+		return _fail("BindingStatus is not a polite native live region.")
+	if binding_status.accessibility_description != "Reports hero movement keybinding capture prompts and results." or binding_status.accessibility_description.length() > HeroesUiAccessibility.MAX_DESCRIPTION_LENGTH:
+		return _fail("BindingStatus does not expose the exact bounded shared description: %s" % binding_status.accessibility_description)
+	var rescanned_menu_snapshot: Dictionary = UiAccessibility.validation_snapshot(menu)
+	var keybindings_dialog := menu.get_node("HeroKeybindingsDialog") as HeroKeybindingsDialog
+	menu.call("validation_open_hero_keybindings_dialog")
+	await _settle()
+	keybindings_dialog.close_dialog()
+	await _settle()
+	menu.call("validation_open_hero_keybindings_dialog")
+	await _settle()
+	var reentered_menu_snapshot: Dictionary = UiAccessibility.validation_snapshot(menu)
+	if int(rescanned_menu_snapshot.get("live_region_count", 0)) != 5 or int(reentered_menu_snapshot.get("live_region_count", 0)) != 5:
+		return _fail("Repeated menu scans duplicated or dropped shared live regions: %s / %s" % [rescanned_menu_snapshot.get("live_regions", []), reentered_menu_snapshot.get("live_regions", [])])
+	if _live_region_path_count(reentered_menu_snapshot, "/BindingStatus") != 1 or menu.find_children("BindingStatus", "Label", true, false).size() != 1:
+		return _fail("Repeated menu entry duplicated BindingStatus semantics or nodes.")
+	var reentered_binding_status := menu.find_children("BindingStatus", "Label", true, false)[0] as Label
+	if reentered_binding_status.accessibility_live != DisplayServer.LIVE_POLITE or reentered_binding_status.accessibility_description != "Reports hero movement keybinding capture prompts and results." or reentered_binding_status.accessibility_description.length() > HeroesUiAccessibility.MAX_DESCRIPTION_LENGTH:
+		return _fail("Dialog re-entry or repeated scan replaced BindingStatus live semantics: %s / %s" % [reentered_binding_status.accessibility_live, reentered_binding_status.accessibility_description])
 	for node_name in ["OpenCampaign", "OpenSkirmish", "OpenSaves", "OpenSettings", "OpenEditor", "Quit"]:
 		var control := menu.get_node_or_null("BackdropCommandHotspots/%s" % node_name) as Control
 		if control == null or UiAccessibility.semantic_name(control) == "" or control.accessibility_description == "":
@@ -151,6 +179,8 @@ func _run() -> void:
 		"authored_semantics_preserved": true,
 		"option_field_semantics": true,
 		"reentry_connections_deduplicated": true,
+		"binding_status_polite": true,
+		"binding_status_exact_count": 1,
 	}
 	print("%s PASS %s" % [REPORT_ID, JSON.stringify(result)])
 	menu.queue_free()
@@ -169,6 +199,15 @@ func _connection_count(signal_value: Signal, method_name: String) -> int:
 	for connection in signal_value.get_connections():
 		var callable: Callable = connection.get("callable", Callable())
 		if callable.get_object() == UiAccessibility and callable.get_method() == method_name:
+			count += 1
+	return count
+
+
+func _live_region_path_count(snapshot: Dictionary, suffix: String) -> int:
+	var count := 0
+	for entry_value in snapshot.get("live_regions", []):
+		var entry: Dictionary = entry_value
+		if String(entry.get("path", "")).ends_with(suffix) and int(entry.get("mode", DisplayServer.LIVE_OFF)) == DisplayServer.LIVE_POLITE:
 			count += 1
 	return count
 
