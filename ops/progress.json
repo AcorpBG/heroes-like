@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Drowned Antler clean-line-pressure slice is complete with exact focused behavior, method-matched 100-seed production/control, 59-encounter breadth, compatibility, and repository proof. Overall release readiness remains open.",
+  "currentNotes": "The Foundry Saint sustain calibration is complete with exact focused behavior, all-live 100-seed balance, 59-encounter breadth, compatibility, and repository proof. Overall release readiness remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "combat-mireclaw-drowned-antler-clean-line-pressure-10184",
-  "currentSliceId": "combat-mireclaw-drowned-antler-clean-line-pressure-10184",
-  "currentSliceNotes": "Completed Drowned Antler Rout's 0.82 clean-line pressure while retaining its 1.10/1.05 wounded/status payoff. Production improves from 36 / 214.5 / 6 / 71.0 / 1.13 to 36 / 206.5 / 6 / 70.0 / 1.13; the exact prior-screen control remains 38 / 332.5 / 13 / 79.0 / 1.6, structural failures remain zero, and the 59-encounter queue remains clear.",
+  "currentSlice": "combat-brasshollow-foundry-saint-sustain-calibration-10184",
+  "currentSliceId": "combat-brasshollow-foundry-saint-sustain-calibration-10184",
+  "currentSliceNotes": "Completed Saint's Temper ordinary repair at 0.015 while retaining its 0.01 Overheated bonus. Production improves from 36 / 206.5 / 6 / 70.0 / 1.13 to 35 / 200.5 / 5 / 70.0 / 1.13; all non-Brasshollow pair rows remain exact, structural failures remain zero, and the 59-encounter queue remains clear.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Mireclaw Drowned Antler Clean-Line Pressure",
-  "currentSliceUpdatedAt": "2026-08-11T08:30:00Z",
+  "currentSliceTitle": "Brasshollow Foundry Saint Sustain Calibration",
+  "currentSliceUpdatedAt": "2026-08-11T09:30:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -75128,6 +75128,27 @@
       "notes": "Completed the content-only 0.82 clean-line calibration while retaining the 1.10/1.05 wounded/status payoff. Focused runtime passes 118/118. The authoritative all-live 100-seed matrix improves production from 36 outliers / 214.5 severity / six severe / 71.0 maximum / 1.13 side bias to 36 / 206.5 / six / 70.0 / 1.13 with zero structural failures; weeks one/two are exact and the identical pre-apex control remains 38 / 332.5 / 13 / 79.0 / 1.6. Active breadth completes 59/59 with zero stalls or invalid orders and a clear queue at repeated signature 829808c9. Autoplay balance, balance regression, core, editor, validator, JSON, Python, and diff gates pass; Native RMG deferral is unchanged.",
       "remainingWork": "No work remains in this slice. Broader faction balance, strategic-AI/content breadth, Native RMG parity, signing, native Windows hardware certification, publication, and overall release readiness remain open.",
       "completedAt": "2026-08-11T08:30:00Z"
+    },
+    {
+      "id": "combat-brasshollow-foundry-saint-sustain-calibration-10184",
+      "title": "Brasshollow Foundry Saint Sustain Calibration",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/factions-content-bible.md"],
+      "purpose": "Strengthen only the Foundry Saint's authored ordinary survivor repair enough to remove a narrow week-four Brasshollow deficit without redistributing the rest of the accepted matrix.",
+      "implementationTargets": ["content/units.json", "tests/unit_ability_runtime_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"corrected_rng_outliers": 36, "corrected_rng_excess_severity": 206.5, "corrected_rng_severe_rows": 6, "corrected_rng_max_dominance_pct": 70.0, "corrected_rng_max_side_bias_points": 1.13, "week4_outliers": 6, "week4_excess_severity": 33.0, "week4_severe_rows": 1, "week4_max_dominance_pct": 67.0, "week4_side_bias_points": 0.20},
+      "candidate": {"round_repair_pct": 0.015, "overheated_repair_bonus_pct": 0.01, "week4_outliers": 5, "week4_excess_severity": 31.5, "week4_severe_rows": 1, "week4_max_dominance_pct": 67.0, "week4_side_bias_points": 0.20},
+      "completionCriteria": ["Focused runtime proof retains Saint's Temper scope and exclusions at exact 0.015 ordinary repair", "The corrected-RNG all-live 100-seed matrix keeps weeks one-three exact and improves 36/206.5/6/70.0/1.13 production with zero structural failures", "The active 59-encounter queue remains clear and ability/autoplay/balance/core/editor/repository/JSON/Python/diff gates pass"],
+      "nonGoals": ["Overheated bonus repair, defense hardening, AI priority, other ability, base-stat, growth, cost, building, army-group, other-unit, hero, spell, economy, encounter, save, campaign, packaging, Native RMG, or benchmark-threshold changes", "faction, opponent, week, army-count, encounter, seed, or benchmark hard-coding", "claiming the unchanged Veilmourn/Brasshollow row, final faction balance, or release completion"],
+      "createdAt": "2026-08-11T09:00:00Z",
+      "startedAt": "2026-08-11T09:00:00Z",
+      "updatedAt": "2026-08-11T09:30:00Z",
+      "notes": "Completed content-only Saint's Temper ordinary repair calibration at 0.015 while retaining the 0.01 Overheated bonus and every scope boundary. Focused runtime passes 118/118. The authoritative all-live 100-seed matrix improves production from 36 outliers / 206.5 severity / six severe / 70.0 maximum / 1.13 side bias to 35 / 200.5 / five / 70.0 / 1.13 with zero structural failures; only Brasshollow pair rows move, week-three Embercourt dominance falls 65.5 to 62.5, and week-four Mireclaw dominance reaches 55.0. Veilmourn/Brasshollow stays 67/33 and is not claimed. Active breadth completes 59/59 with zero stalls or invalid orders and a clear queue at repeated signature 829808c9. Autoplay balance, balance regression, core, editor, validator, JSON, Python, and diff gates pass; Native RMG deferral is unchanged.",
+      "remainingWork": "No work remains in this slice. Broader faction balance, strategic-AI/content breadth, Native RMG parity, signing, native Windows hardware certification, publication, and overall release readiness remain open.",
+      "completedAt": "2026-08-11T09:30:00Z"
     }
   ],
   "project": "heroes-like",

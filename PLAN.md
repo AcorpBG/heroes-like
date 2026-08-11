@@ -24,7 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current implementation slice: `combat-mireclaw-drowned-antler-clean-line-pressure-10184` (completed). Drowned Antler Rout's clean-line multiplier is now `0.82` while its wounded/status payoff stays exact, reducing the production matrix to `36 / 206.5 / 6 / 70.0 / 1.13` with zero structural failures.
+- Current implementation slice: `combat-brasshollow-foundry-saint-sustain-calibration-10184` (completed). Saint's Temper ordinary repair is now `0.015`, reducing the production matrix to `35 / 200.5 / 5 / 70.0 / 1.13` while preserving every non-Brasshollow pair and zero structural failures.
+- Latest completed implementation slice: `combat-brasshollow-foundry-saint-sustain-calibration-10184`. Focused `118/118`, all-live 100-seed balance, 59-encounter breadth, compatibility, editor, and repository gates pass; Veilmourn/Brasshollow remains explicitly unchanged at `67/33`.
 - Latest completed implementation slice: `combat-mireclaw-drowned-antler-clean-line-pressure-10184`. The exact prior-screen control remains `38 / 332.5 / 13 / 79.0 / 1.6`; focused `118/118`, 59-encounter breadth, compatibility, editor, and repository gates pass.
 - Latest completed implementation slice: `combat-mireclaw-drowned-antler-apex-calibration-10184`. The exact prior-screen control remains `38 / 332.5 / 13 / 79.0 / 1.6`; the 59-encounter live queue remains clear at repeated signature `829808c9`, and focused ability, autoplay, balance, core, editor, and repository gates pass.
 - Latest completed implementation slice: `combat-mireclaw-drowned-antler-wounded-apex-10184`. The exact prior-screen control reproduces `38 / 332.5 / 13 / 79.0 / 1.6`, while production improves to `37 / 229.0 / 7 / 73.5 / 1.13` with zero structural failures and a clear 59-encounter live queue.
@@ -4141,6 +4142,36 @@ Completion evidence:
 - focused runtime proof passes `118/118` consequences and exclusions and reports the exact 18-percent clean-line penalty while the `1.10/1.05` wounded/status payoff, initiative, and kill-only momentum remain unchanged;
 - the authoritative all-live 100-seed matrix keeps weeks one/two exact and improves production from `36 / 214.5 / 6 / 71.0 / 1.13` to `36 / 206.5 / 6 / 70.0 / 1.13` with zero structural failures;
 - the identical pre-apex Drowned Sovereign Screen control remains `38 / 332.5 / 13 / 79.0 / 1.6` with zero structural failures;
+- the active scenario breadth report completes `59/59` encounters with zero stalls or invalid orders and a clear queue at repeated signature `829808c9`;
+- autoplay balance, balance regression, core systems, Godot editor parse, repository validation, JSON, Python, and diff checks pass. This content-only change is platform-neutral and introduces no Linux/Windows-specific runtime or packaging path.
+
+## Brasshollow Foundry Saint Sustain Calibration
+
+id: `combat-brasshollow-foundry-saint-sustain-calibration-10184`
+
+Status: completed.
+
+Selected Phase 6 faction-balance implementation slice. Saint's Temper is Brasshollow's authored apex sustain mechanic, but its one-percent ordinary round repair leaves week-four Brasshollow/Mireclaw at a narrow `43.5/56.5` outlier. A method-matched 100-seed week-four screen changing only ordinary repair to `0.015` brings that pair inside the target band, reduces week-four outliers from six to five and severity from `33.0` to `31.5`, and leaves all other outlier rows, maximum dominance, side bias, and structural failures exact.
+
+Implementation target:
+- retain Saint's Temper's living-source requirement, survivor-only non-resurrection rule, Overheated-only defense hardening, extra Overheated repair, AI target priority, presentation event, and all existing exclusions;
+- change only `round_repair_pct` from `0.01` to `0.015`, strengthening the source-authored general repair beat without faction, opponent, week, seed, encounter, or benchmark branches;
+- keep live BattleRules, tactical AI, summaries, focused runtime proof, and the fast benchmark on the same authored field.
+
+Completion criteria:
+- focused runtime proof covers the exact `0.015` contract plus ordinary/Overheated repair ordering, survivor-only cap, no resurrection, dead/stripped source, defense scope, event, and AI behavior;
+- the corrected-RNG all-live 100-seed matrix keeps weeks one-three exact, reduces 36 outliers and `206.5` severity without exceeding six severe rows, `70.0` percent dominance, `1.13` side bias, or zero structural failures;
+- the active 59-encounter breadth queue remains clear, and focused ability, autoplay, balance-regression, core, editor parse, repository, JSON, Python, and diff gates pass.
+
+Non-goals:
+- do not change Overheated bonus repair, defense hardening, AI priority, other abilities, unit stats, growth, costs, buildings, army groups, other units, heroes, spells, economy, encounters, saves, campaigns, packaging, Native RMG, or benchmark thresholds;
+- do not hard-code factions, opponents, weeks, army counts, encounter ids, seeds, or benchmark identity into combat behavior;
+- do not claim the unchanged Veilmourn/Brasshollow row improved, final Brasshollow identity, final faction balance, or overall release completion.
+
+Completion evidence:
+- focused runtime proof passes `118/118` consequences and exclusions, binds ordinary repair to exactly `0.015`, and preserves stronger Overheated repair, defense hardening, survivor-only caps, non-resurrection, dead/stripped-source, event, and AI behavior;
+- the authoritative all-live 100-seed matrix improves production from `36 / 206.5 / 6 / 70.0 / 1.13` to `35 / 200.5 / 5 / 70.0 / 1.13` with zero structural failures, while all non-Brasshollow pair rows remain exact;
+- week-three Brasshollow/Embercourt improves from `34.5/65.5` to `37.5/62.5`, week-four Brasshollow/Mireclaw reaches the `45/55` boundary, and the unchanged `33/67` Veilmourn row is not claimed;
 - the active scenario breadth report completes `59/59` encounters with zero stalls or invalid orders and a clear queue at repeated signature `829808c9`;
 - autoplay balance, balance regression, core systems, Godot editor parse, repository validation, JSON, Python, and diff checks pass. This content-only change is platform-neutral and introduces no Linux/Windows-specific runtime or packaging path.
 

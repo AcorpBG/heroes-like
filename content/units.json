@@ -2140,7 +2140,7 @@
           "description": "The living furnace hardens overheated Combine machinery and repairs surviving allied stacks at each pressure cycle, with extra attention for overheated engines.",
           "ally_defense_bonus": 1,
           "hardening_requires_overheated": true,
-          "round_repair_pct": 0.01,
+          "round_repair_pct": 0.015,
           "overheated_repair_bonus_pct": 0.01,
           "ai_target_priority_bonus": 1.5
         }

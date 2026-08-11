@@ -3167,8 +3167,10 @@ func _probe_foundry_aura(unit_id: String) -> Dictionary:
 	var living_saint_aura_bonus := BattleRulesScript._side_max_ability_int(living_saint_battle, "player", "foundry_aura", "ally_defense_bonus")
 	var target_priority_with := BattleAiRulesScript._attack_score(enemy, saint, battle, false)
 	var target_priority_without := BattleAiRulesScript._attack_score(stripped_enemy, stripped_saint, stripped_battle, false)
+	var authored_round_repair_pct := float(_ability_by_id(saint, "foundry_aura").get("round_repair_pct", 0.0))
 	var ok: bool = (
-		allied_defense_with == allied_defense_without
+		is_equal_approx(authored_round_repair_pct, 0.015)
+		and allied_defense_with == allied_defense_without
 		and outsider_defense_with == outsider_defense_without
 		and unbraced_defense_with == unbraced_defense_without
 		and overheated_defense_with == overheated_defense_without + 1
@@ -3197,6 +3199,7 @@ func _probe_foundry_aura(unit_id: String) -> Dictionary:
 		"defense_with_living_saint": defense_with_living_saint,
 		"living_saint_aura_bonus": living_saint_aura_bonus,
 		"dead_saint_aura_bonus": dead_saint_aura_bonus,
+		"authored_round_repair_pct": authored_round_repair_pct,
 		"plain_repair": plain_repair,
 		"overheated_repair": overheated_repair,
 		"hex_health_before": hex_health_before,

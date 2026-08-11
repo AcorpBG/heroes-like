@@ -11319,6 +11319,10 @@ def validate_content(errors: list[str]) -> None:
         if any(isinstance(ability, dict) and str(ability.get("id", "")) == "foundry_aura" for ability in unit.get("abilities", []))
     )
     ensure(foundry_aura_owners == ["unit_brasshollow_foundry_saint"], errors, "Saint's Temper foundry_aura must remain exclusive to the Brasshollow Foundry Saint")
+    foundry_saint = units.get("unit_brasshollow_foundry_saint", {})
+    saint_temper = next((ability for ability in foundry_saint.get("abilities", []) if isinstance(ability, dict) and str(ability.get("id", "")) == "foundry_aura"), {})
+    ensure(float(saint_temper.get("round_repair_pct", 0.0)) == 0.015, errors, "Saint's Temper must retain its calibrated ordinary survivor repair")
+    ensure(float(saint_temper.get("overheated_repair_bonus_pct", 0.0)) == 0.01, errors, "Saint's Temper must retain its stronger Overheated repair bonus")
 
     sporeglass_mend_owners = sorted(
         unit_id
