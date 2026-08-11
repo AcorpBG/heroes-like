@@ -30,6 +30,12 @@ func _run() -> void:
 	var town_build_planned_context_case := _town_build_planned_task_context_reuse()
 	if town_build_planned_context_case.is_empty():
 		return
+	var destination_roster_context_case := _recruit_destination_commander_roster_context_reuse()
+	if destination_roster_context_case.is_empty():
+		return
+	var destination_roster_invalidation_case := _recruit_destination_commander_roster_invalidation()
+	if destination_roster_invalidation_case.is_empty():
+		return
 	var live_turn_case := _live_turn_plans_before_same_turn_recruitment()
 	if live_turn_case.is_empty():
 		return
@@ -81,7 +87,7 @@ func _run() -> void:
 		"schema_status": "planned_task_recruitment_prep_live_behavior",
 		"behavior_policy": "town_building_task_fit_spell_study_template_role_fallback_and_recruitment_prepare_same_turn_saved_commander_tasks_with_destination_fit_ready_tasks_launch_below_generic_pressure_surplus_mobilization_and_phase_scoped_path_reuse",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
-		"cases": [town_front_context_case, town_build_planned_context_case, live_turn_case, spell_study_case, task_fit_spell_study_case, template_role_fallback_case, path_cache_case, planned_case, surplus_garrison_case, post_recruit_surplus_case, unit_fit_case, market_case, garrison_case, ready_launch_case, passive_budget_case, same_turn_launch_case, unplanned_gate_case],
+		"cases": [town_front_context_case, town_build_planned_context_case, destination_roster_context_case, destination_roster_invalidation_case, live_turn_case, spell_study_case, task_fit_spell_study_case, template_role_fallback_case, path_cache_case, planned_case, surplus_garrison_case, post_recruit_surplus_case, unit_fit_case, market_case, garrison_case, ready_launch_case, passive_budget_case, same_turn_launch_case, unplanned_gate_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -266,6 +272,315 @@ func _sort_build_candidates(candidates: Array) -> void:
 			return a_town < b_town
 		return a_score > b_score
 	)
+
+func _recruit_destination_commander_roster_context_reuse() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config()
+	_prepare_safe_recruiting_town(session)
+	_mark_contestable_resources(session)
+	var state := _enemy_state(session)
+	state["pressure"] = 0
+	state["raid_counter"] = 0
+	state["commander_counter"] = 0
+	state.erase("hero_task_state")
+	_update_enemy_state(session, state)
+	var plan_result := EnemyAdventureRules.plan_enemy_hero_task_board(session, config, state)
+	if int(plan_result.get("planned_count", 0)) < 1:
+		_fail("Destination roster-context fixture could not create planned tasks: %s" % JSON.stringify(plan_result))
+		return {}
+	_update_enemy_state(session, plan_result.get("state", {}))
+	var town := _town_by_id(session, DUSKFEN)
+	var scoring_authority_before := JSON.stringify(session.to_dict())
+	var normalized_roster := EnemyAdventureRules.normalize_commander_roster(
+		session,
+		FACTION_ID,
+		EnemyAdventureRules.commander_roster_for_faction(session, FACTION_ID)
+	)
+	var normalized_roster_before := JSON.stringify(normalized_roster)
+	var fresh_rebuild := EnemyTurnRules._best_commander_rebuild_target(session, config, FACTION_ID)
+	var precomputed_rebuild := EnemyTurnRules._best_commander_rebuild_target(
+		session,
+		config,
+		FACTION_ID,
+		normalized_roster
+	)
+	var fresh_planned_context := {}
+	var fresh_planned := EnemyTurnRules._best_planned_task_recruitment_target(
+		session,
+		config,
+		FACTION_ID,
+		town,
+		fresh_planned_context
+	)
+	var precomputed_planned_context := {}
+	var precomputed_planned := EnemyTurnRules._best_planned_task_recruitment_target(
+		session,
+		config,
+		FACTION_ID,
+		town,
+		precomputed_planned_context,
+		normalized_roster
+	)
+	if fresh_rebuild != precomputed_rebuild:
+		_fail("Precomputed commander roster changed exact rebuild scoring: fresh=%s precomputed=%s" % [JSON.stringify(fresh_rebuild), JSON.stringify(precomputed_rebuild)])
+		return {}
+	if fresh_planned != precomputed_planned:
+		_fail("Precomputed commander roster changed exact planned-task scoring: fresh=%s precomputed=%s" % [JSON.stringify(fresh_planned), JSON.stringify(precomputed_planned)])
+		return {}
+	var fresh_destination_context := EnemyTurnRules._recruit_destination_static_context(session, config, town, FACTION_ID, {})
+	fresh_destination_context["best_rebuild"] = fresh_rebuild
+	fresh_destination_context["best_planned"] = fresh_planned
+	var fresh_destination := EnemyTurnRules._choose_recruit_destination_breakdown(
+		session,
+		config,
+		town,
+		FACTION_ID,
+		fresh_destination_context
+	)
+	EnemyTurnRules._reinforcement_profile_begin(true)
+	var shared_destination_context := EnemyTurnRules._recruit_destination_static_context(session, config, town, FACTION_ID, {})
+	var shared_destination := EnemyTurnRules._choose_recruit_destination_breakdown(
+		session,
+		config,
+		town,
+		FACTION_ID,
+		shared_destination_context
+	)
+	var profile := EnemyTurnRules._reinforcement_profile_finish()
+	var counts: Dictionary = profile.get("counts", {}) if profile.get("counts", {}) is Dictionary else {}
+	if fresh_destination != shared_destination:
+		_fail("Shared commander roster changed the full destination payload: fresh=%s shared=%s" % [JSON.stringify(fresh_destination), JSON.stringify(shared_destination)])
+		return {}
+	if int(counts.get("destination_commander_roster_loaded", 0)) != 1 \
+			or int(counts.get("destination_commander_roster_shared_between_scorers", 0)) != 1:
+		_fail("Destination scoring did not load one roster and share it across rebuild/planned scorers: %s" % JSON.stringify(profile))
+		return {}
+	if not (shared_destination_context.get("normalized_commander_roster", null) is Array):
+		_fail("Destination scoring did not retain its normalized commander roster context.")
+		return {}
+	if JSON.stringify(normalized_roster) != normalized_roster_before:
+		_fail("Destination scorers mutated the shared normalized commander roster.")
+		return {}
+	if JSON.stringify(session.to_dict()) != scoring_authority_before:
+		_fail("Fresh/precomputed destination scoring mutated session authority.")
+		return {}
+	return {
+		"case_id": "recruit_destination_commander_roster_context_reuse",
+		"rebuild_scoring_exact": true,
+		"planned_scoring_exact": true,
+		"full_destination_exact": true,
+		"destination_type": String(shared_destination.get("type", "")),
+		"destination_actor_id": String(shared_destination.get("roster_hero_id", "")),
+		"normalized_roster_count": normalized_roster.size(),
+		"destination_commander_roster_loaded": int(counts.get("destination_commander_roster_loaded", 0)),
+		"destination_commander_roster_shared_between_scorers": int(counts.get("destination_commander_roster_shared_between_scorers", 0)),
+		"scoring_authority_exact": true,
+	}
+
+func _recruit_destination_commander_roster_invalidation() -> Dictionary:
+	var field_case := _planned_and_rebuild_roster_invalidation()
+	if field_case.is_empty():
+		return {}
+	var raid_case := _raid_roster_invalidation()
+	if raid_case.is_empty():
+		return {}
+	var garrison_case := _garrison_only_roster_retention()
+	if garrison_case.is_empty():
+		return {}
+	return {
+		"case_id": "recruit_destination_commander_roster_invalidation_and_retention",
+		"planned": field_case.get("planned", {}),
+		"rebuild": field_case.get("rebuild", {}),
+		"raid": raid_case,
+		"garrison": garrison_case,
+	}
+
+func _planned_and_rebuild_roster_invalidation() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config()
+	_prepare_safe_recruiting_town(session)
+	_mark_contestable_resources(session)
+	var state := _enemy_state(session)
+	state["pressure"] = 0
+	state["raid_counter"] = 0
+	state["commander_counter"] = 0
+	state.erase("hero_task_state")
+	_update_enemy_state(session, state)
+	var plan_result := EnemyAdventureRules.plan_enemy_hero_task_board(session, config, state)
+	if int(plan_result.get("planned_count", 0)) < 1:
+		_fail("Roster invalidation fixture could not create planned tasks: %s" % JSON.stringify(plan_result))
+		return {}
+	_update_enemy_state(session, plan_result.get("state", {}))
+	var town := _town_by_id(session, DUSKFEN)
+	var destination_context := EnemyTurnRules._recruit_destination_static_context(session, config, town, FACTION_ID, {})
+	var planned_before := EnemyTurnRules._choose_recruit_destination_breakdown(session, config, town, FACTION_ID, destination_context)
+	if String(planned_before.get("type", "")) != "planned" or not (destination_context.get("normalized_commander_roster", null) is Array):
+		_fail("Roster invalidation fixture did not cache a planned destination: %s" % JSON.stringify(planned_before))
+		return {}
+	var planned_actor_id := String(planned_before.get("roster_hero_id", ""))
+	var planned_accepted := EnemyAdventureRules.reinforce_commander_roster_army(
+		session,
+		FACTION_ID,
+		planned_actor_id,
+		"unit_mire_slinger",
+		1,
+		String(planned_before.get("base_encounter_id", "")),
+		int(planned_before.get("target_strength", 0))
+	)
+	if planned_accepted != 1:
+		_fail("Roster invalidation fixture could not apply a real planned reinforcement: actor=%s accepted=%d" % [planned_actor_id, planned_accepted])
+		return {}
+	EnemyTurnRules._invalidate_recruit_destination_field_cache(destination_context)
+	if destination_context.has("normalized_commander_roster"):
+		_fail("Successful planned reinforcement retained a stale normalized commander roster.")
+		return {}
+	var planned_rescored := EnemyTurnRules._choose_recruit_destination_breakdown(session, config, town, FACTION_ID, destination_context)
+	var planned_fresh_current := EnemyTurnRules._choose_recruit_destination_breakdown(session, config, town, FACTION_ID)
+	if planned_rescored != planned_fresh_current:
+		_fail("Planned reinforcement did not rescore from exact fresh current authority: cached=%s fresh=%s" % [JSON.stringify(planned_rescored), JSON.stringify(planned_fresh_current)])
+		return {}
+	if String(planned_rescored.get("type", "")) != "rebuild":
+		_fail("Planned reinforcement fixture did not expose the real rebuild follow-up: %s" % JSON.stringify(planned_rescored))
+		return {}
+	var rebuild_actor_id := String(planned_rescored.get("roster_hero_id", ""))
+	var rebuild_accepted := EnemyAdventureRules.reinforce_commander_roster_army(
+		session,
+		FACTION_ID,
+		rebuild_actor_id,
+		"unit_mire_slinger",
+		1,
+		String(planned_rescored.get("base_encounter_id", "")),
+		int(planned_rescored.get("target_strength", 0))
+	)
+	if rebuild_accepted != 1:
+		_fail("Roster invalidation fixture could not apply a real rebuild reinforcement: actor=%s accepted=%d" % [rebuild_actor_id, rebuild_accepted])
+		return {}
+	EnemyTurnRules._invalidate_recruit_destination_field_cache(destination_context)
+	if destination_context.has("normalized_commander_roster"):
+		_fail("Successful rebuild reinforcement retained a stale normalized commander roster.")
+		return {}
+	var rebuild_rescored := EnemyTurnRules._choose_recruit_destination_breakdown(session, config, town, FACTION_ID, destination_context)
+	var rebuild_fresh_current := EnemyTurnRules._choose_recruit_destination_breakdown(session, config, town, FACTION_ID)
+	if rebuild_rescored != rebuild_fresh_current:
+		_fail("Rebuild reinforcement did not rescore from exact fresh current authority: cached=%s fresh=%s" % [JSON.stringify(rebuild_rescored), JSON.stringify(rebuild_fresh_current)])
+		return {}
+	return {
+		"planned": {
+			"successful_reinforcement": planned_accepted,
+			"actor_id": planned_actor_id,
+			"stale_roster_evicted": true,
+			"fresh_current_rescore_exact": true,
+			"destination_after": String(planned_rescored.get("type", "")),
+		},
+		"rebuild": {
+			"successful_reinforcement": rebuild_accepted,
+			"actor_id": rebuild_actor_id,
+			"stale_roster_evicted": true,
+			"fresh_current_rescore_exact": true,
+			"destination_after": String(rebuild_rescored.get("type", "")),
+		},
+	}
+
+func _raid_roster_invalidation() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config()
+	_prepare_safe_recruiting_town(session)
+	var state := _enemy_state(session)
+	state["pressure"] = 0
+	state["raid_counter"] = 0
+	state["commander_counter"] = 0
+	state.erase("hero_task_state")
+	_update_enemy_state(session, state)
+	var spawn_points: Array = config.get("spawn_points", []) if config.get("spawn_points", []) is Array else []
+	if spawn_points.is_empty() or not (spawn_points[0] is Dictionary):
+		_fail("Raid roster invalidation fixture has no authored spawn point.")
+		return {}
+	var spawn_point: Dictionary = spawn_points[0]
+	var encounters: Array = session.overworld.get("encounters", [])
+	encounters.append({
+		"placement_id": "recruitment_roster_cache_probe_raid",
+		"encounter_id": "encounter_mire_raid",
+		"spawned_by_faction_id": FACTION_ID,
+		"x": int(spawn_point.get("x", 0)),
+		"y": int(spawn_point.get("y", 0)),
+		"target_kind": "resource",
+		"target_placement_id": "river_free_company",
+		"enemy_army": {
+			"id": "recruitment_roster_cache_probe_army",
+			"name": "Roster Cache Probe",
+			"stacks": [{"unit_id": "unit_bog_brute", "count": 1}],
+		},
+	})
+	session.overworld["encounters"] = encounters
+	var town := _town_by_id(session, DUSKFEN)
+	var destination_context := EnemyTurnRules._recruit_destination_static_context(session, config, town, FACTION_ID, {})
+	var raid_before := EnemyTurnRules._choose_recruit_destination_breakdown(session, config, town, FACTION_ID, destination_context)
+	if String(raid_before.get("type", "")) != "raid" or not (destination_context.get("normalized_commander_roster", null) is Array):
+		_fail("Raid roster invalidation fixture did not cache the understrength raid destination: %s" % JSON.stringify(raid_before))
+		return {}
+	var raid_need_before := int(raid_before.get("raid_need", 0))
+	var accepted := EnemyTurnRules._apply_reinforcement_to_raid(
+		session,
+		int(raid_before.get("index", -1)),
+		"unit_mire_slinger",
+		1
+	)
+	if accepted != 1:
+		_fail("Raid roster invalidation fixture could not apply a real raid reinforcement: accepted=%d" % accepted)
+		return {}
+	EnemyTurnRules._invalidate_recruit_destination_field_cache(destination_context)
+	if destination_context.has("normalized_commander_roster"):
+		_fail("Successful raid reinforcement retained a stale normalized commander roster.")
+		return {}
+	var raid_rescored := EnemyTurnRules._choose_recruit_destination_breakdown(session, config, town, FACTION_ID, destination_context)
+	var raid_fresh_current := EnemyTurnRules._choose_recruit_destination_breakdown(session, config, town, FACTION_ID)
+	if raid_rescored != raid_fresh_current:
+		_fail("Raid reinforcement did not rescore from exact fresh current authority: cached=%s fresh=%s" % [JSON.stringify(raid_rescored), JSON.stringify(raid_fresh_current)])
+		return {}
+	if int(raid_rescored.get("raid_need", 0)) >= raid_need_before:
+		_fail("Fresh raid rescore did not consume current reinforced army strength: before=%d after=%d" % [raid_need_before, int(raid_rescored.get("raid_need", 0))])
+		return {}
+	return {
+		"successful_reinforcement": accepted,
+		"placement_id": "recruitment_roster_cache_probe_raid",
+		"stale_roster_evicted": true,
+		"fresh_current_rescore_exact": true,
+		"raid_need_before": raid_need_before,
+		"raid_need_after": int(raid_rescored.get("raid_need", 0)),
+	}
+
+func _garrison_only_roster_retention() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config()
+	_prepare_critical_recruiting_town(session)
+	_mark_contestable_resources(session)
+	var state := _enemy_state(session)
+	state.erase("hero_task_state")
+	_update_enemy_state(session, state)
+	var plan_result := EnemyAdventureRules.plan_enemy_hero_task_board(session, config, state)
+	_update_enemy_state(session, plan_result.get("state", {}))
+	var town := _town_by_id(session, DUSKFEN)
+	EnemyTurnRules._reinforcement_profile_begin(true)
+	var recruit_result := EnemyTurnRules._recruit_town_forces(session, config, town, TREASURY.duplicate(true), FACTION_ID)
+	var profile := EnemyTurnRules._reinforcement_profile_finish()
+	var counts: Dictionary = profile.get("counts", {}) if profile.get("counts", {}) is Dictionary else {}
+	if not bool(recruit_result.get("garrisoned", false)) or int(recruit_result.get("planned_batches", 0)) != 0 \
+			or int(recruit_result.get("rebuild_batches", 0)) != 0 or int(recruit_result.get("raid_batches", 0)) != 0:
+		_fail("Garrison-only cache-retention fixture delivered a field reinforcement: %s" % JSON.stringify(recruit_result))
+		return {}
+	if int(counts.get("destination_commander_roster_loaded", 0)) != 1 \
+			or int(counts.get("destination_commander_roster_shared_between_scorers", 0)) != 1 \
+			or int(counts.get("destination_commander_roster_invalidated", 0)) != 0:
+		_fail("Garrison-only delivery did not retain its bounded roster context: %s" % JSON.stringify(profile))
+		return {}
+	return {
+		"garrisoned": true,
+		"field_batches": 0,
+		"destination_commander_roster_loaded": int(counts.get("destination_commander_roster_loaded", 0)),
+		"destination_commander_roster_shared_between_scorers": int(counts.get("destination_commander_roster_shared_between_scorers", 0)),
+		"destination_commander_roster_invalidated": int(counts.get("destination_commander_roster_invalidated", 0)),
+		"bounded_roster_retained": true,
+	}
 
 func _live_turn_plans_before_same_turn_recruitment() -> Dictionary:
 	var session = _base_session()
@@ -535,9 +850,15 @@ func _planned_task_recruitment_prepares_commander() -> Dictionary:
 	var actor_id := String(destination.get("roster_hero_id", ""))
 	var before_strength := _commander_strength(session, actor_id)
 	var treasury := TREASURY.duplicate(true)
+	EnemyTurnRules._reinforcement_profile_begin(true)
 	var recruit_result := EnemyTurnRules._recruit_town_forces(session, config, town, treasury, FACTION_ID)
+	var recruit_profile := EnemyTurnRules._reinforcement_profile_finish()
+	var recruit_counts: Dictionary = recruit_profile.get("counts", {}) if recruit_profile.get("counts", {}) is Dictionary else {}
 	if int(recruit_result.get("planned_batches", 0)) < 1:
 		_fail("Expected planned recruitment batch, got %s" % JSON.stringify(recruit_result))
+		return {}
+	if int(recruit_counts.get("destination_commander_roster_invalidated", 0)) < 1:
+		_fail("Real planned recruitment did not invalidate its destination roster context: %s" % JSON.stringify(recruit_profile))
 		return {}
 	var after_strength := _commander_strength(session, actor_id)
 	if after_strength <= before_strength:
@@ -554,6 +875,7 @@ func _planned_task_recruitment_prepares_commander() -> Dictionary:
 		"before_strength": before_strength,
 		"after_strength": after_strength,
 		"planned_batches": int(recruit_result.get("planned_batches", 0)),
+		"destination_commander_roster_invalidated": int(recruit_counts.get("destination_commander_roster_invalidated", 0)),
 		"event_type": String(prepared_event.get("event_type", "")),
 	}
 
@@ -760,9 +1082,15 @@ func _surplus_garrison_prepares_planned_commander_without_recruits() -> Dictiona
 	var before_garrison_strength := EnemyTurnRules._army_strength(town.get("garrison", []))
 	var defense_target := int(destination.get("defense_target", 0))
 	var treasury: Dictionary = _enemy_state(session).get("treasury", {}) if _enemy_state(session).get("treasury", {}) is Dictionary else {}
+	EnemyTurnRules._reinforcement_profile_begin(true)
 	var recruit_result := EnemyTurnRules._recruit_town_forces(session, config, town, treasury, FACTION_ID)
+	var mobilize_profile := EnemyTurnRules._reinforcement_profile_finish()
+	var mobilize_counts: Dictionary = mobilize_profile.get("counts", {}) if mobilize_profile.get("counts", {}) is Dictionary else {}
 	if int(recruit_result.get("mobilized_batches", 0)) < 1:
 		_fail("Expected surplus garrison to mobilize into planned commander prep, got %s" % JSON.stringify(recruit_result))
+		return {}
+	if int(mobilize_counts.get("destination_commander_roster_invalidated", 0)) < 1:
+		_fail("Real surplus-garrison field transfer did not invalidate its destination roster context: %s" % JSON.stringify(mobilize_profile))
 		return {}
 	var after_strength := _commander_strength(session, actor_id)
 	if after_strength <= before_strength:
@@ -798,6 +1126,7 @@ func _surplus_garrison_prepares_planned_commander_without_recruits() -> Dictiona
 		"after_garrison_strength": after_garrison_strength,
 		"defense_target": defense_target,
 		"mobilized_batches": int(recruit_result.get("mobilized_batches", 0)),
+		"destination_commander_roster_invalidated": int(mobilize_counts.get("destination_commander_roster_invalidated", 0)),
 		"event_type": String(prepared_event.get("event_type", "")),
 		"reason_codes": reason_codes,
 	}
