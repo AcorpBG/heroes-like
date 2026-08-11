@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `accessibility-town-manual-overwrite-cancel-ownership-10184`. Physical Back/Escape on Town's visible manual-overwrite confirmation is now owned by the native Keep Save action, canceling once, preserving the Town route and save bytes, and restoring Save focus before ordinary Town Back navigation resumes.
 - Latest completed implementation slice: `accessibility-overworld-settings-unhandled-command-containment-10184`. Overworld Settings now consumes shell commands that survive native GUI handling, so Enter, Space, debug-overlay keys, and camera recenter cannot mutate gameplay behind the visible modal while native Settings controls and fresh post-close shell commands remain unchanged.
 - Latest completed implementation slice: `accessibility-hero-keybindings-live-status-announcements-10184`. The Hero Keybindings capture/result status is now one bounded polite native screen-reader live region, announcing capture prompts, cancellation, rejection, swap, success, reset, and failure updates without changing focus or input behavior.
 - Latest completed implementation slice: `gameplay-town-daybreak-economy-forecast-parity-10184`. End Turn now previews full and compact player-town income plus full weekly muster from the same next-day occupation-then-recovery state used by live daybreak, without mutating the live session or conflating occupation releases, site musters, deliveries, or scenario hooks with core town growth.
