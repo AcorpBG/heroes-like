@@ -24930,6 +24930,65 @@ def validate_packaged_settings_persistence_smoke(errors: list[str]) -> None:
         for required_token in required_tokens:
             ensure(required_token in settings_surface_text, errors, f"{settings_surface_path.name} is missing truthful settings-commit token: {required_token}")
 
+    hero_keybindings_dialog_path = ROOT / "scenes" / "menus" / "HeroKeybindingsDialog.gd"
+    ensure(hero_keybindings_dialog_path.exists(), errors, "Missing Hero Keybindings focus-containment surface")
+    if hero_keybindings_dialog_path.exists():
+        hero_keybindings_dialog_text = hero_keybindings_dialog_path.read_text(encoding="utf-8")
+        for required_token in (
+            "const CAPTURE_OWNED_NON_KEY_ACTIONS := [",
+            'event.is_action_pressed("ui_cancel")',
+            "if _waiting_action != StringName() and not (event is InputEventKey):",
+            "get_viewport().set_input_as_handled()",
+            "if not visible:\n\t\treturn",
+            "func _focus_cycle_controls() -> Array:",
+            "for option in SettingsService.build_hero_movement_binding_options():",
+            "if not _reset_button.disabled:",
+            "controls.append(_close_button)",
+            "func _configure_focus_cycle() -> void:",
+            "FrontierVisualKit.configure_focus_cycle(_focus_cycle_controls())",
+            "if visible and reset_had_focus and _reset_button.disabled:",
+            '_close_button.call_deferred("grab_focus")',
+        ):
+            ensure(required_token in hero_keybindings_dialog_text, errors, f"HeroKeybindingsDialog.gd is missing focus-containment token: {required_token}")
+
+    custom_keybindings_smoke_path = ROOT / "tests" / "custom_hero_keybindings_smoke.gd"
+    ensure(custom_keybindings_smoke_path.exists(), errors, "Missing custom Hero Keybindings focused smoke")
+    if custom_keybindings_smoke_path.exists():
+        custom_keybindings_smoke_text = custom_keybindings_smoke_path.read_text(encoding="utf-8")
+        for required_token in (
+            "func _binding_focus_cycle(include_reset: bool) -> Array:",
+            "for option in SettingsService.build_hero_movement_binding_options():",
+            "disabled_cycle.size() == 9",
+            "enabled_cycle.size() == 10",
+            "func _check_focus_containment",
+            "func _check_key_cycle",
+            "func _check_button_cycle",
+            "func _check_boundary_accept_capture",
+            "func _check_capture_controller_ownership",
+            "KEY_TAB",
+            "KEY_ENTER",
+            "KEY_DOWN",
+            "KEY_UP",
+            "JOY_BUTTON_RIGHT_SHOULDER",
+            "JOY_BUTTON_LEFT_SHOULDER",
+            "JOY_BUTTON_DPAD_DOWN",
+            "JOY_BUTTON_DPAD_UP",
+            "JOY_BUTTON_A",
+            "JOY_BUTTON_B",
+            'dialog.dismissed.connect(_on_dialog_dismissed)',
+            'reset_button.disabled',
+            '"CloseBindings"',
+            '"CustomizeMovementKeys"',
+            "SaveService.validation_summary_cache_snapshot()",
+            "AppRouter.validation_active_play_return_snapshot()",
+            "SettingsService.settings.duplicate(true)",
+            '"settings_file": _settings_file_content()',
+            'SettingsService.set_ui_scale_percent(130)',
+            'SettingsService.set_presentation_resolution("1280x720")',
+            'get_window().size = Vector2i(1280, 720)',
+        ):
+            ensure(required_token in custom_keybindings_smoke_text, errors, f"custom_hero_keybindings_smoke.gd is missing focus-containment coverage token: {required_token}")
+
     if PACKAGED_SETTINGS_PERSISTENCE_REPORT_SCRIPT_PATH.exists():
         report_text = PACKAGED_SETTINGS_PERSISTENCE_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
         for required_token in (
