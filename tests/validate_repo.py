@@ -16660,6 +16660,8 @@ def validate_enemy_empire_management(errors: list[str]) -> None:
         "OverworldRulesScript.town_front_state(session, town, development_metrics)",
         "OverworldRulesScript.town_front_state(session, town, current_metrics)",
         'town_build_profile_count("town_front_development_metrics_reused")',
+        '"planned_recruitment_profile_owner": "town_build"',
+        "_planned_recruitment_profile_count",
     ):
         ensure(required_token in enemy_turn_text, errors, f"EnemyTurnRules.gd is missing town-front context reuse token: {required_token}")
     for required_token in (

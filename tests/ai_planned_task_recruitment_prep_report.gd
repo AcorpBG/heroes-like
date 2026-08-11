@@ -27,6 +27,9 @@ func _run() -> void:
 	var town_front_context_case := _town_front_development_context_reuse()
 	if town_front_context_case.is_empty():
 		return
+	var town_build_planned_context_case := _town_build_planned_task_context_reuse()
+	if town_build_planned_context_case.is_empty():
+		return
 	var live_turn_case := _live_turn_plans_before_same_turn_recruitment()
 	if live_turn_case.is_empty():
 		return
@@ -78,7 +81,7 @@ func _run() -> void:
 		"schema_status": "planned_task_recruitment_prep_live_behavior",
 		"behavior_policy": "town_building_task_fit_spell_study_template_role_fallback_and_recruitment_prepare_same_turn_saved_commander_tasks_with_destination_fit_ready_tasks_launch_below_generic_pressure_surplus_mobilization_and_phase_scoped_path_reuse",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
-		"cases": [town_front_context_case, live_turn_case, spell_study_case, task_fit_spell_study_case, template_role_fallback_case, path_cache_case, planned_case, surplus_garrison_case, post_recruit_surplus_case, unit_fit_case, market_case, garrison_case, ready_launch_case, passive_budget_case, same_turn_launch_case, unplanned_gate_case],
+		"cases": [town_front_context_case, town_build_planned_context_case, live_turn_case, spell_study_case, task_fit_spell_study_case, template_role_fallback_case, path_cache_case, planned_case, surplus_garrison_case, post_recruit_surplus_case, unit_fit_case, market_case, garrison_case, ready_launch_case, passive_budget_case, same_turn_launch_case, unplanned_gate_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -127,6 +130,142 @@ func _town_front_development_context_reuse() -> Dictionary:
 		"town_build_front_metrics_reused": int(build_counts.get("town_front_development_metrics_reused", 0)),
 		"town_build_authority_exact": true,
 	}
+
+func _town_build_planned_task_context_reuse() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config()
+	_prepare_safe_recruiting_town(session)
+	_mark_contestable_resources(session)
+	var state := _enemy_state(session)
+	state["pressure"] = 0
+	state["raid_counter"] = 0
+	state["commander_counter"] = 0
+	state.erase("hero_task_state")
+	_update_enemy_state(session, state)
+	var plan_result := EnemyAdventureRules.plan_enemy_hero_task_board(session, config, state)
+	if int(plan_result.get("planned_count", 0)) < 1:
+		_fail("Town-build planned-context fixture could not create planned tasks: %s" % JSON.stringify(plan_result))
+		return {}
+	_update_enemy_state(session, plan_result.get("state", {}))
+	var towns: Array = session.overworld.get("towns", []).duplicate(true)
+	var primary_index := -1
+	for index in range(towns.size()):
+		var town_value = towns[index]
+		if town_value is Dictionary and String(town_value.get("placement_id", "")) == DUSKFEN:
+			primary_index = index
+			break
+	if primary_index < 0:
+		_fail("Town-build planned-context fixture is missing Duskfen.")
+		return {}
+	var secondary: Dictionary = towns[primary_index].duplicate(true)
+	secondary["placement_id"] = "duskfen_build_context_secondary"
+	secondary["x"] = int(secondary.get("x", 0)) + 1
+	secondary["last_build_day"] = 0
+	towns.append(secondary)
+	session.overworld["towns"] = towns
+	var town_entries := [
+		{"index": primary_index, "town": towns[primary_index]},
+		{"index": towns.size() - 1, "town": towns[towns.size() - 1]},
+	]
+	var treasury := TREASURY.duplicate(true)
+	var fresh_candidates := _fresh_build_candidates(session, town_entries, towns, treasury, config)
+	var explicit_shared_context := {"planned_recruitment_profile_owner": "town_build"}
+	var explicit_shared_candidates := []
+	explicit_shared_candidates.append_array(EnemyTurnRules._enemy_town_build_candidates(session, towns[primary_index], primary_index, treasury, config, FACTION_ID, explicit_shared_context))
+	explicit_shared_candidates.append_array(EnemyTurnRules._enemy_town_build_candidates(session, towns[towns.size() - 1], towns.size() - 1, treasury, config, FACTION_ID, explicit_shared_context))
+	_sort_build_candidates(explicit_shared_candidates)
+	var plans_by_town: Dictionary = explicit_shared_context.get("planned_saved_plans_by_town", {}) if explicit_shared_context.get("planned_saved_plans_by_town", {}) is Dictionary else {}
+	var primary_plans: Dictionary = plans_by_town.get(DUSKFEN, {}) if plans_by_town.get(DUSKFEN, {}) is Dictionary else {}
+	var secondary_plans: Dictionary = plans_by_town.get("duskfen_build_context_secondary", {}) if plans_by_town.get("duskfen_build_context_secondary", {}) is Dictionary else {}
+	if explicit_shared_candidates != fresh_candidates or primary_plans.is_empty() or secondary_plans.is_empty():
+		_fail("Town-build planned context did not preserve distinct town-keyed saved plans: keys=%s primary=%s secondary=%s" % [JSON.stringify(plans_by_town.keys()), JSON.stringify(primary_plans), JSON.stringify(secondary_plans)])
+		return {}
+	var authority_before: String = JSON.stringify(session.to_dict())
+	EnemyTurnRules._town_build_profile_begin(true)
+	var shared_candidates := EnemyTurnRules._enemy_empire_build_candidates(session, town_entries, towns, treasury, FACTION_ID, config)
+	var shared_profile := EnemyTurnRules._town_build_profile_finish()
+	var counts: Dictionary = shared_profile.get("counts", {}) if shared_profile.get("counts", {}) is Dictionary else {}
+	if shared_candidates != fresh_candidates:
+		_fail("Town-build shared planned context changed candidate arrays: fresh=%s shared=%s" % [JSON.stringify(fresh_candidates), JSON.stringify(shared_candidates)])
+		return {}
+	if int(counts.get("planned_live_tasks_loaded", 0)) != 1 \
+			or int(counts.get("planned_live_tasks_reused", 0)) != 1 \
+			or int(counts.get("planned_path_context_loaded", 0)) != 1 \
+			or int(counts.get("planned_path_context_reused", 0)) != 1:
+		_fail("Town-build planned context did not load once and reuse once: %s" % JSON.stringify(shared_profile))
+		return {}
+	if JSON.stringify(session.to_dict()) != authority_before:
+		_fail("Town-build planned-context enumeration mutated session authority.")
+		return {}
+	var mutated_state := _enemy_state(session)
+	var task_state: Dictionary = mutated_state.get("hero_task_state", {}) if mutated_state.get("hero_task_state", {}) is Dictionary else {}
+	var tasks: Array = task_state.get("tasks", []).duplicate(true) if task_state.get("tasks", []) is Array else []
+	if tasks.is_empty() or not (tasks[0] is Dictionary):
+		_fail("Town-build planned-context fixture lost its live planned tasks before mutation.")
+		return {}
+	var first_task: Dictionary = tasks[0]
+	first_task["priority"] = int(first_task.get("priority", 0)) + 17
+	tasks[0] = first_task
+	task_state["tasks"] = tasks
+	mutated_state["hero_task_state"] = task_state
+	_update_enemy_state(session, mutated_state)
+	secondary = towns[towns.size() - 1]
+	secondary["x"] = int(secondary.get("x", 0)) + 1
+	towns[towns.size() - 1] = secondary
+	session.overworld["towns"] = towns
+	town_entries[1] = {"index": towns.size() - 1, "town": towns[towns.size() - 1]}
+	var mutated_fresh_candidates := _fresh_build_candidates(session, town_entries, towns, treasury, config)
+	EnemyTurnRules._town_build_profile_begin(true)
+	var second_candidates := EnemyTurnRules._enemy_empire_build_candidates(session, town_entries, towns, treasury, FACTION_ID, config)
+	var second_profile := EnemyTurnRules._town_build_profile_finish()
+	var second_counts: Dictionary = second_profile.get("counts", {}) if second_profile.get("counts", {}) is Dictionary else {}
+	if second_candidates != mutated_fresh_candidates \
+			or int(second_counts.get("planned_live_tasks_loaded", 0)) != 1 \
+			or int(second_counts.get("planned_live_tasks_reused", 0)) != 1 \
+			or int(second_counts.get("planned_path_context_loaded", 0)) != 1 \
+			or int(second_counts.get("planned_path_context_reused", 0)) != 1:
+		_fail("A fresh town-build enumeration did not reload mutated current planned context: profile=%s fresh=%s shared=%s" % [JSON.stringify(second_profile), JSON.stringify(mutated_fresh_candidates), JSON.stringify(second_candidates)])
+		return {}
+	return {
+		"case_id": "town_build_planned_task_context_reuse",
+		"town_count": town_entries.size(),
+		"candidate_count": shared_candidates.size(),
+		"candidate_arrays_exact": true,
+		"planned_live_tasks_loaded": int(counts.get("planned_live_tasks_loaded", 0)),
+		"planned_live_tasks_reused": int(counts.get("planned_live_tasks_reused", 0)),
+		"planned_path_context_loaded": int(counts.get("planned_path_context_loaded", 0)),
+		"planned_path_context_reused": int(counts.get("planned_path_context_reused", 0)),
+		"town_saved_plan_keys": plans_by_town.keys(),
+		"fresh_enumeration_reloaded": true,
+		"task_and_path_mutation_reloaded": true,
+		"authority_exact": true,
+	}
+
+func _fresh_build_candidates(session, town_entries: Array, towns: Array, treasury: Dictionary, config: Dictionary) -> Array:
+	var candidates := []
+	for entry_value in town_entries:
+		if not (entry_value is Dictionary):
+			continue
+		var entry: Dictionary = entry_value
+		var town_index := int(entry.get("index", -1))
+		if town_index < 0 or town_index >= towns.size() or not (towns[town_index] is Dictionary):
+			continue
+		candidates.append_array(EnemyTurnRules._enemy_town_build_candidates(session, towns[town_index], town_index, treasury, config, FACTION_ID, {}))
+	_sort_build_candidates(candidates)
+	return candidates
+
+func _sort_build_candidates(candidates: Array) -> void:
+	candidates.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		var a_score := float(a.get("final_score", 0.0))
+		var b_score := float(b.get("final_score", 0.0))
+		if is_equal_approx(a_score, b_score):
+			var a_town := String(a.get("town_placement_id", ""))
+			var b_town := String(b.get("town_placement_id", ""))
+			if a_town == b_town:
+				return String(a.get("building_id", "")) < String(b.get("building_id", ""))
+			return a_town < b_town
+		return a_score > b_score
+	)
 
 func _live_turn_plans_before_same_turn_recruitment() -> Dictionary:
 	var session = _base_session()
