@@ -2,6 +2,15 @@ class_name HeroKeybindingsDialog
 extends Control
 
 const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
+const CAPTURE_OWNED_NON_KEY_ACTIONS := [
+	&"ui_accept",
+	&"ui_focus_next",
+	&"ui_focus_prev",
+	&"ui_up",
+	&"ui_down",
+	&"ui_left",
+	&"ui_right",
+]
 
 signal dismissed
 
@@ -31,6 +40,7 @@ func open_dialog(return_focus: Control = null) -> void:
 	_refresh_bindings()
 	visible = true
 	set_process_input(true)
+	_configure_focus_cycle()
 	var first_button := _first_binding_button()
 	if first_button != null:
 		first_button.call_deferred("grab_focus")
@@ -42,6 +52,8 @@ func refresh_theme() -> void:
 	_apply_theme()
 
 func close_dialog() -> void:
+	if not visible:
+		return
 	_waiting_action = StringName()
 	visible = false
 	set_process_input(false)
@@ -94,6 +106,11 @@ func _input(event: InputEvent) -> void:
 			_refresh_bindings()
 		get_viewport().set_input_as_handled()
 		return
+	if _waiting_action != StringName() and not (event is InputEventKey):
+		for action in CAPTURE_OWNED_NON_KEY_ACTIONS:
+			if event.is_action_pressed(action):
+				get_viewport().set_input_as_handled()
+				return
 	if not (event is InputEventKey) or not event.pressed or event.echo:
 		return
 	var key_event := event as InputEventKey
@@ -139,6 +156,7 @@ func _apply_theme() -> void:
 	FrontierVisualKit.apply_button(_close_button, "primary", 110.0, 36.0, 14)
 
 func _refresh_bindings() -> void:
+	var reset_had_focus := _reset_button.has_focus()
 	_preset_label.text = "%s preset%s" % [
 		SettingsService.keyboard_navigation_layout_label(),
 		" + custom movement" if SettingsService.has_custom_hero_movement_bindings() else "",
@@ -154,6 +172,9 @@ func _refresh_bindings() -> void:
 			String(option.get("key_label", "Unbound")),
 		]
 	_reset_button.disabled = not SettingsService.has_custom_hero_movement_bindings()
+	_configure_focus_cycle()
+	if visible and reset_had_focus and _reset_button.disabled:
+		_close_button.call_deferred("grab_focus")
 
 func _begin_capture(action: StringName) -> void:
 	_waiting_action = action
@@ -213,3 +234,19 @@ func _first_binding_button() -> Button:
 		if button != null:
 			return button
 	return null
+
+func _focus_cycle_controls() -> Array:
+	var controls := []
+	for option in SettingsService.build_hero_movement_binding_options():
+		var button := _binding_buttons.get(StringName(option.get("action", ""))) as Button
+		if button != null:
+			controls.append(button)
+	if not _reset_button.disabled:
+		controls.append(_reset_button)
+	controls.append(_close_button)
+	return controls
+
+func _configure_focus_cycle() -> void:
+	if not visible:
+		return
+	FrontierVisualKit.configure_focus_cycle(_focus_cycle_controls())
