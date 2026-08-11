@@ -23,6 +23,9 @@ func _run() -> void:
 	var empty_front_scan_case := _active_front_support_skips_empty_front_scan()
 	if empty_front_scan_case.is_empty():
 		return
+	var empty_support_plan_case := _active_front_support_stops_after_first_empty_plan()
+	if empty_support_plan_case.is_empty():
+		return
 	var resource_support_launch_case := _resource_front_support_launches_below_pressure()
 	if resource_support_launch_case.is_empty():
 		return
@@ -65,6 +68,7 @@ func _run() -> void:
 		"guarded_claim_case": guarded_claim_case,
 		"resource_support_case": resource_support_case,
 		"empty_front_scan_case": empty_front_scan_case,
+		"empty_support_plan_case": empty_support_plan_case,
 		"resource_support_launch_case": resource_support_launch_case,
 		"resource_consolidation_case": resource_consolidation_case,
 		"neutral_town_grouping_case": neutral_town_grouping_case,
@@ -560,6 +564,156 @@ func _active_front_support_skips_empty_front_scan() -> Dictionary:
 		"commander_candidates_loaded": int(counts.get("active_front_support_commander_candidates_loaded", 0)),
 		"commander_probes_loaded": int(counts.get("active_front_support_probe_loaded", 0)),
 	}
+
+
+func _active_front_support_stops_after_first_empty_plan() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config()
+	var state := _enemy_state(session)
+	var resolved_encounters: Array = session.overworld.get("resolved_encounters", []) if session.overworld.get("resolved_encounters", []) is Array else []
+	var retained_encounters := []
+	for encounter_value in session.overworld.get("encounters", []):
+		if EnemyAdventureRules.is_active_pressure_host(encounter_value, MIRECLAW, resolved_encounters):
+			continue
+		retained_encounters.append(encounter_value)
+	var active_host := _fragile_resource_claim_raid(session)
+	active_host["target_reason_codes"] = ["active_front_support"]
+	retained_encounters.append(active_host)
+	session.overworld["encounters"] = retained_encounters
+	if EnemyTurnRules.active_raid_count(session, MIRECLAW) != 1:
+		_fail("Empty support-plan fixture did not retain exactly one active Mireclaw host.")
+		return {}
+	if EnemyAdventureRules._active_front_needs_support(active_host, config, MIRECLAW):
+		_fail("Empty support-plan fixture host unexpectedly requested support: %s" % JSON.stringify(active_host))
+		return {}
+	var points: Array = config.get("spawn_points", []) if config.get("spawn_points", []) is Array else []
+	if points.is_empty() or not (points[0] is Dictionary):
+		_fail("Empty support-plan fixture has no spawn point.")
+		return {}
+	var point: Dictionary = points[0]
+	var occupied := EnemyAdventureRules.occupied_raid_commander_ids(session, MIRECLAW)
+	var roster: Array = state.get("commander_roster", []) if state.get("commander_roster", []) is Array else []
+	var commander_candidates := EnemyAdventureRules._raid_commander_spawn_candidates(
+		session,
+		MIRECLAW,
+		int(state.get("commander_counter", 0)),
+		occupied,
+		roster
+	)
+	if commander_candidates.size() < 2:
+		_fail("Empty support-plan fixture needs at least two available commanders: %s" % JSON.stringify(commander_candidates))
+		return {}
+	var valid_commander_count := 0
+	for commander_value in commander_candidates:
+		if commander_value is Dictionary and String(commander_value.get("roster_hero_id", "")) != "":
+			valid_commander_count += 1
+	if valid_commander_count < 2:
+		_fail("Empty support-plan fixture needs at least two valid commander probes: %s" % JSON.stringify(commander_candidates))
+		return {}
+	var legacy_candidate := _legacy_empty_active_front_support_candidate(
+		session,
+		config,
+		state,
+		point,
+		occupied,
+		commander_candidates
+	)
+	if not legacy_candidate.is_empty():
+		_fail("Legacy active-front scan unexpectedly found support for the quiet host: %s" % JSON.stringify(legacy_candidate))
+		return {}
+	var authority_before: String = JSON.stringify(session.to_dict())
+	EnemyTurnRules._spawn_profile_begin(true)
+	var candidate := EnemyTurnRules._active_front_support_spawn_candidate_for_point(
+		session,
+		config,
+		state,
+		MIRECLAW,
+		point,
+		occupied,
+		0,
+		{}
+	)
+	var profile := EnemyTurnRules._spawn_profile_finish()
+	var counts: Dictionary = profile.get("counts", {}) if profile.get("counts", {}) is Dictionary else {}
+	if JSON.stringify(candidate) != JSON.stringify(legacy_candidate):
+		_fail("Empty support-plan early exit changed the legacy candidate: optimized=%s legacy=%s" % [JSON.stringify(candidate), JSON.stringify(legacy_candidate)])
+		return {}
+	if JSON.stringify(session.to_dict()) != authority_before:
+		_fail("Empty support-plan probe scan mutated session authority.")
+		return {}
+	var expected_skipped: int = valid_commander_count - 1
+	if expected_skipped < 1:
+		_fail("Empty support-plan fixture did not retain a remaining commander probe to skip.")
+		return {}
+	if int(counts.get("active_front_support_no_active_front_skip", 0)) != 0:
+		_fail("Empty support-plan scan took the zero-active-host shortcut: %s" % JSON.stringify(profile))
+		return {}
+	if int(counts.get("active_front_support_commander_candidates_loaded", 0)) != 1 \
+			or int(counts.get("active_front_support_probe_loaded", 0)) != 1 \
+			or int(counts.get("active_front_support_probe_reused", 0)) != 0:
+		_fail("Empty support-plan scan did not construct exactly one commander probe: %s" % JSON.stringify(profile))
+		return {}
+	if int(counts.get("active_front_support_empty_plan_remaining_probe_skipped", 0)) != expected_skipped:
+		_fail("Empty support-plan scan skipped the wrong number of remaining probes: expected=%d profile=%s" % [expected_skipped, JSON.stringify(profile)])
+		return {}
+	if int(counts.get("active_front_support_path_context_loaded", 0)) != 1 \
+			or int(counts.get("active_front_support_path_context_reused", 0)) != 0:
+		_fail("Empty support-plan scan did not load exactly one path context: %s" % JSON.stringify(profile))
+		return {}
+	return {
+		"case_id": "active_front_support_stops_after_first_empty_plan",
+		"active_host_count": EnemyTurnRules.active_raid_count(session, MIRECLAW),
+		"commander_candidate_count": valid_commander_count,
+		"legacy_candidate_empty": legacy_candidate.is_empty(),
+		"optimized_candidate_empty": candidate.is_empty(),
+		"commander_candidates_loaded": int(counts.get("active_front_support_commander_candidates_loaded", 0)),
+		"commander_probes_loaded": int(counts.get("active_front_support_probe_loaded", 0)),
+		"remaining_probes_skipped": int(counts.get("active_front_support_empty_plan_remaining_probe_skipped", 0)),
+		"no_active_front_skip_count": int(counts.get("active_front_support_no_active_front_skip", 0)),
+		"path_context_loaded": int(counts.get("active_front_support_path_context_loaded", 0)),
+		"authority_exact": true,
+	}
+
+
+func _legacy_empty_active_front_support_candidate(
+	session,
+	config: Dictionary,
+	state: Dictionary,
+	point: Dictionary,
+	occupied_commander_ids: Dictionary,
+	commander_candidates: Array
+) -> Dictionary:
+	var base_encounter_id := EnemyTurnRules._primary_raid_encounter_id(config)
+	var roster: Array = state.get("commander_roster", []) if state.get("commander_roster", []) is Array else []
+	var legacy_scan_context := {}
+	for commander_index in range(commander_candidates.size()):
+		var commander_value = commander_candidates[commander_index]
+		if not (commander_value is Dictionary):
+			continue
+		var roster_hero_id := String(commander_value.get("roster_hero_id", ""))
+		if roster_hero_id == "":
+			continue
+		var probe := EnemyTurnRules._active_front_support_prepared_probe(
+			session,
+			MIRECLAW,
+			base_encounter_id,
+			roster_hero_id,
+			point,
+			0,
+			occupied_commander_ids,
+			roster,
+			legacy_scan_context
+		)
+		var support_plan := EnemyAdventureRules.ai_active_front_support_target_selection_plan(
+			session,
+			config,
+			probe,
+			EnemyTurnRules._active_front_support_path_context(session, MIRECLAW, legacy_scan_context)
+		)
+		if not support_plan.is_empty():
+			return support_plan
+	return {}
+
 
 func _active_front_support_scan_reuse_report(session, config: Dictionary, state: Dictionary) -> Dictionary:
 	var points: Array = config.get("spawn_points", []) if config.get("spawn_points", []) is Array else []
