@@ -573,6 +573,8 @@ func _input(event: InputEvent) -> void:
 		return
 	if _save_slot_picker != null and _save_slot_picker.get_popup().visible:
 		return
+	if _manual_save_overwrite_dialog != null and _manual_save_overwrite_dialog.visible:
+		return
 	get_viewport().set_input_as_handled()
 	if _narrow_layout_active and _narrow_orders_open:
 		_narrow_orders_open = false

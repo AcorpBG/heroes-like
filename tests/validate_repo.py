@@ -12574,6 +12574,28 @@ def validate_save_management(errors: list[str]) -> None:
             "confirm_count",
             "cancel_preserved_exact_bytes",
             "confirm_exactly_once",
+            "town_occupied_wide_escape_cancel_exact",
+            "town_occupied_narrow_joypad_cancel_exact",
+            "town_unreadable_wide_joypad_cancel_exact",
+            "town_unreadable_narrow_escape_cancel_exact",
+            "town_modal_pending_action_cleared",
+            "town_modal_cancel_count_exact",
+            "town_modal_route_handoff_preserved",
+            "town_narrow_back_resumed",
+            "town_post_modal_leave_exact",
+            "town_save_slot_popup_cancel_unchanged",
+            "town_settings_cancel_unchanged",
+            "town_mouse_confirm_exact",
+            "SaveService.validation_summary_cache_snapshot()",
+            "SettingsService.validation_settings_transaction_snapshot()",
+            "AppRouter.validation_latest_overworld_handoff_profile()",
+            "shell.validation_town_entity_cache_snapshot()",
+            "picker.show_popup()",
+            "viewport.push_input(motion, true)",
+            "MOUSE_BUTTON_LEFT",
+            "tree.current_scene = shell",
+            "go_to_overworld_change_scene_requested",
+            "JOY_BUTTON_A",
             "SessionState.SAVE_VERSION",
         ):
             ensure(required_token in overwrite_text, errors, f"manual_save_overwrite_regression.gd is missing required token: {required_token}")
@@ -15870,6 +15892,7 @@ def validate_in_session_save_controls(errors: list[str]) -> None:
         "AppRouter.save_active_session_to_manual_slot",
         "AppRouter.active_save_surface",
         "AppRouter.return_to_main_menu_from_active_play",
+        "if _manual_save_overwrite_dialog != null and _manual_save_overwrite_dialog.visible:",
     ):
         ensure(required_token in town_script_text, errors, f"TownShell.gd is missing required in-session save token: {required_token}")
 
