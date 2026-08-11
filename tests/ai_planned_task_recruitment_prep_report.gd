@@ -97,6 +97,21 @@ func _town_front_development_context_reuse() -> Dictionary:
 	if direct_front != reused_front:
 		_fail("Town-front development context changed exact front state: direct=%s reused=%s" % [JSON.stringify(direct_front), JSON.stringify(reused_front)])
 		return {}
+	var authority_before: String = JSON.stringify(session.to_dict())
+	EnemyTurnRules._town_build_profile_begin(true)
+	var build_context := EnemyTurnRules._town_build_score_context(session, town, _enemy_config(), FACTION_ID)
+	var build_profile := EnemyTurnRules._town_build_profile_finish()
+	var build_counts: Dictionary = build_profile.get("counts", {}) if build_profile.get("counts", {}) is Dictionary else {}
+	if build_context.get("town_front", {}) != direct_front:
+		_fail("Town-build scoring did not retain exact direct local front state: %s" % JSON.stringify(build_context))
+		return {}
+	if int(build_counts.get("town_score_context_count", 0)) != 1 \
+			or int(build_counts.get("town_front_development_metrics_reused", 0)) != 1:
+		_fail("Town-build scoring did not consume one current development payload: %s" % JSON.stringify(build_profile))
+		return {}
+	if JSON.stringify(session.to_dict()) != authority_before:
+		_fail("Town-build front-context reuse mutated session authority.")
+		return {}
 	var destination_context := EnemyTurnRules._recruit_destination_static_context(session, _enemy_config(), town, FACTION_ID)
 	if destination_context.get("local_front", {}) != direct_front:
 		_fail("Recruit destination did not retain exact local front state: %s" % JSON.stringify(destination_context))
@@ -107,6 +122,10 @@ func _town_front_development_context_reuse() -> Dictionary:
 		"front_mode": String(reused_front.get("mode", "")),
 		"battle_readiness": int(development_metrics.get("battle_readiness", 0)),
 		"logistics_summary": String(development_metrics.get("logistics", {}).get("summary", "")),
+		"town_build_front_exact": true,
+		"town_build_context_count": int(build_counts.get("town_score_context_count", 0)),
+		"town_build_front_metrics_reused": int(build_counts.get("town_front_development_metrics_reused", 0)),
+		"town_build_authority_exact": true,
 	}
 
 func _live_turn_plans_before_same_turn_recruitment() -> Dictionary:

@@ -16658,8 +16658,10 @@ def validate_enemy_empire_management(errors: list[str]) -> None:
     for required_token in (
         "var development_metrics: Dictionary = OverworldRulesScript.town_development_metrics(town, session)",
         "OverworldRulesScript.town_front_state(session, town, development_metrics)",
+        "OverworldRulesScript.town_front_state(session, town, current_metrics)",
+        'town_build_profile_count("town_front_development_metrics_reused")',
     ):
-        ensure(required_token in enemy_turn_text, errors, f"EnemyTurnRules.gd is missing recruit destination town-front context reuse token: {required_token}")
+        ensure(required_token in enemy_turn_text, errors, f"EnemyTurnRules.gd is missing town-front context reuse token: {required_token}")
     for required_token in (
         "precomputed_development_metrics: Dictionary = {}",
         'precomputed_development_metrics.get("logistics", {})',
