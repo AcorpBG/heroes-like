@@ -14627,6 +14627,55 @@ def validate_battle_deterministic_rng_state(errors: list[str]) -> None:
             ensure(required_text in contract_text, errors, f"Deterministic battle RNG contract is missing required text: {required_text}")
 
 
+def validate_battle_info_tab_controller_navigation(errors: list[str]) -> None:
+    active_play_focus_path = ROOT / "tests" / "active_play_keyboard_focus_smoke.gd"
+    required_paths = (BATTLE_SCRIPT_PATH, BATTLE_SCENE_PATH, active_play_focus_path)
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Battle info-tab controller file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    shell_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "_battle_tabs.get_tab_bar()",
+        "_configure_battle_info_tab_accessibility",
+        "_on_battle_info_tab_bar_gui_input",
+        "_selectable_battle_info_tab_in_direction",
+        "validation_reset_battle_info_tab_navigation_state",
+        "validation_battle_info_tab_navigation_snapshot",
+        '"tab_bar_boundary_policy": "retain"',
+        '"tab_bar_occurrences"',
+        '"focus_retention_count"',
+        '"boundary_retain_count"',
+    ):
+        ensure(required_token in shell_text, errors, f"BattleShell.gd is missing Battle info-tab controller token: {required_token}")
+
+    scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8")
+    ensure(
+        '[node name="BattleTabs" type="TabContainer"' in scene_text,
+        errors,
+        "BattleShell.tscn must retain the native BattleTabs TabContainer",
+    )
+
+    focus_text = active_play_focus_path.read_text(encoding="utf-8")
+    for required_token in (
+        "_check_battle_info_tab_controller_navigation",
+        "_assert_battle_info_tab_state",
+        "_battle_info_tab_authority_snapshot",
+        "_click_battle_info_tab",
+        "JOY_BUTTON_RIGHT_SHOULDER",
+        "JOY_BUTTON_DPAD_RIGHT",
+        "JOY_BUTTON_DPAD_LEFT",
+        "await _press_key(KEY_RIGHT)",
+        "await _press_key(KEY_LEFT)",
+        'expected_titles := ["Order", "Focus", "Spells", "Timing"]',
+        'String(reset.get("tab_bar_boundary_policy", "")) != "retain"',
+        'int(reset.get("tab_bar_occurrences", 0)) != 1',
+        'int(post_tab_snapshot.get("active_tab", -1)) != 3',
+    ):
+        ensure(required_token in focus_text, errors, f"Active-play focus smoke is missing Battle info-tab controller token: {required_token}")
+
+
 def validate_battle_quick_resolve_runtime(errors: list[str]) -> None:
     required_paths = (
         BATTLE_AUTO_RESOLVE_RULES_PATH,
@@ -26881,6 +26930,7 @@ def main() -> int:
     validate_hero_command(errors)
     validate_overworld_fog(errors)
     validate_battle_deterministic_rng_state(errors)
+    validate_battle_info_tab_controller_navigation(errors)
     validate_battle_quick_resolve_runtime(errors)
     validate_battle_withdrawal_confirmation_runtime(errors)
     validate_battle_resolution_autosave_failure_route_safety(errors)

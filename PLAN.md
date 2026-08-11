@@ -24,7 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current implementation slice: none selected. The generated-Large transactional manual-save correction is complete; select the next bounded source-backed release gap before further implementation.
+- Current implementation slice: `accessibility-battle-info-tab-controller-navigation-10184` (completed). The native Battle information TabBar now joins the authoritative focus cycle so keyboard/controller players can reach Order, Focus, Spells, and Timing without changing gameplay authority.
+- Latest completed implementation slice: `accessibility-battle-info-tab-controller-navigation-10184`. Real shoulder, D-pad, keyboard, and mouse traversal reaches all four tabs with boundary retention, command return, selected-tab persistence through Defend refresh, exact authority, and Linux plus fresh Windows/Wine packaged PASS.
 - Latest completed implementation slice: `performance-generated-large-transactional-manual-save-10184`. Generated-Large 20.28MB empty-slot and overwrite saves retain one semantic normalization and exact transactional verification while completing in 2302/2462ms in the Linux package and 2863/3830ms in fresh Windows/Wine.
 - Latest completed implementation slice: `performance-generated-large-town-explicit-save-surface-10184`. Exact save-surface copy, authority, recovery, rollback, overwrite, command-risk, Town/core/repository, and Linux plus fresh Windows/Wine packaged gates pass; the separate large transactional-write latency remains follow-up performance debt.
 - Latest completed implementation slice: `performance-town-generated-large-cache-hit-first-refresh-10184`. Exact ledger/action/departure parity, resource/context/action invalidation, authority, Town economy/transition/focus/core/repository gates, and Linux plus fresh Windows/Wine packaged performance all pass.
@@ -3976,6 +3977,38 @@ Completion evidence:
 - candidate and committed files still receive full JSON parse, dictionary-root, and exact-text verification, while unused parser-tree duplication is eliminated;
 - empty-slot/overwrite runtime saves complete in 2312/2527ms in the authoritative source run, 2302/2462ms in the Linux package, and 2863/3830ms in fresh Windows/Wine;
 - precommit and after-backup rollback, corrupt/candidate/backup/future-version recovery, manual naming, canonical reload, autosave/generated-opening controls, command-risk/core compatibility, editor, validator, repository integrity, and exact Linux/Windows packages pass.
+
+## Battle Information Tab Controller Navigation
+
+id: `accessibility-battle-info-tab-controller-navigation-10184`
+
+Status: completed.
+
+Selected Phase 6 accessibility correction. Battle exposes four live information tabs—Order, Focus, Spells,
+and Timing—but its authoritative keyboard/controller focus cycle omits the native TabBar. Mouse selection works,
+while controller-only traversal remains confined to commands and system controls.
+
+Implementation target:
+- include the exact native Battle TabBar once in the final authoritative focus cycle while preserving suggested-action entry, modal recovery, and failure-recovery Save focus;
+- retain native left/right tab selection, hold focus at the first and last selectable boundaries, and keep informational pages non-actionable;
+- preserve the selected information tab and a legal focus owner across battle refreshes and real command execution;
+- keep Battle rules, content, save schema/version, layout composition, mouse selection, and command behavior unchanged.
+
+Completion criteria:
+- physical keyboard/controller input reaches the native TabBar, selects Order, Focus, Spells, and Timing in both directions, and retains focus at both boundaries;
+- forward/reverse traversal returns to legal Battle commands without trapping focus, and mouse tab selection remains exact;
+- tab traversal and refresh leave battle/session/save/settings/routes/target/initiative/event authority exact;
+- suggested-action focus, board navigation, Defend, Quick Resolve, withdrawal dialogs, Save, Settings, Menu, B/Escape, and post-action focus remain exact;
+- active-focus, Battle layout/visual, event-animation/checkpoint, core, editor, validator, repository, Linux package, and fresh Windows/Wine controller gates pass.
+
+Non-goals:
+- no Battle rules/content/balance changes, tab content redesign, new information panels, layout expansion, save schema/version, broad focus-system rewrite, generated-map or Native RMG work, publication, signing, native Windows hardware certification, or release-completion claim.
+
+Completion evidence:
+- the exact native Battle TabBar appears once in the authoritative focus cycle, preserves suggested-action/Save/modal focus, retains both selectable boundaries, and immediately resyncs the selected information tooltip;
+- real shoulder, D-pad, keyboard, and mouse traversal covers Order, Focus, Spells, and Timing in both directions, returns to the original legal command, and preserves Timing through a real Defend refresh;
+- strict battle/session/save/settings/routes/target/initiative/event authority, active-focus, core, editor, validator, repository, Linux package, and fresh Windows/Wine package gates pass;
+- the broad Battle layout harness remains pre-existing test debt: current and isolated committed HEAD both time out at the same detached routed-resolution null viewport/tree teardown before any tab assertion.
 
 ## Phase Roadmap
 

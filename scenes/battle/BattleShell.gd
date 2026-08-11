@@ -121,6 +121,15 @@ var _validation_quick_resolve_confirmation_request_count := 0
 var _validation_quick_resolve_confirmation_cancel_count := 0
 var _validation_quick_resolve_confirmation_confirm_count := 0
 var _validation_quick_resolve_confirmation_perform_count := 0
+var _last_battle_info_tab_index := 0
+var _validation_battle_info_tab_change_sequence := 0
+var _validation_battle_info_tab_change_count := 0
+var _validation_battle_info_tab_focus_retention_count := 0
+var _validation_battle_info_tab_boundary_retain_count := 0
+var _last_battle_info_tab_change_result: Dictionary = {}
+var _last_battle_keyboard_focus_cycle_names := []
+var _last_battle_keyboard_focus_tab_bar_occurrences := 0
+var _validation_battle_info_tab_resetting := false
 
 func _ready() -> void:
 	var profile_started := ProfileLogScript.begin_usec()
@@ -141,6 +150,10 @@ func _ready() -> void:
 		_battle_board_view.controller_navigation_cancelled.connect(_on_board_controller_navigation_cancelled)
 	buckets["connect_board_signals"] = ProfileLogScript.elapsed_ms(phase_started)
 	_battle_tabs.current_tab = 0
+	_last_battle_info_tab_index = _battle_tabs.current_tab
+	_configure_battle_info_tab_accessibility()
+	if not _battle_tabs.tab_changed.is_connected(_on_battle_info_tab_changed):
+		_battle_tabs.tab_changed.connect(_on_battle_info_tab_changed)
 	_session = SessionState.ensure_active_session()
 	if _session.scenario_id == "":
 		push_warning("Cannot enter battle without an active scenario session.")
@@ -208,6 +221,86 @@ func _configure_withdrawal_confirmation() -> void:
 	cancel_action.action = "ui_cancel"
 	cancel_shortcut.events = [cancel_action]
 	_withdrawal_confirmation_dialog.get_cancel_button().shortcut = cancel_shortcut
+
+func _configure_battle_info_tab_accessibility() -> void:
+	var tab_bar := _battle_tabs.get_tab_bar()
+	if tab_bar == null:
+		return
+	tab_bar.focus_mode = Control.FOCUS_ALL
+	if not tab_bar.gui_input.is_connected(_on_battle_info_tab_bar_gui_input):
+		tab_bar.gui_input.connect(_on_battle_info_tab_bar_gui_input)
+	_sync_battle_info_tab_tooltip()
+
+func _on_battle_info_tab_changed(tab: int) -> void:
+	if _validation_battle_info_tab_resetting:
+		_last_battle_info_tab_index = tab
+		return
+	var previous_tab := _last_battle_info_tab_index
+	_last_battle_info_tab_index = tab
+	_validation_battle_info_tab_change_sequence += 1
+	_validation_battle_info_tab_change_count += 1
+	var change_sequence := _validation_battle_info_tab_change_sequence
+	_last_battle_info_tab_change_result = {
+		"ok": true,
+		"from_tab": previous_tab,
+		"to_tab": tab,
+		"tab_title": _battle_tabs.get_tab_title(tab) if tab >= 0 and tab < _battle_tabs.get_tab_count() else "",
+		"focus_retained": false,
+		"focus_owner": "",
+		"sequence": change_sequence,
+	}
+	_refresh_battle_tab_cues()
+	call_deferred("_complete_battle_info_tab_focus_retention", tab, change_sequence)
+
+func _complete_battle_info_tab_focus_retention(tab: int, change_sequence: int) -> void:
+	if (
+		not is_inside_tree()
+		or tab != _battle_tabs.current_tab
+		or change_sequence != _validation_battle_info_tab_change_sequence
+	):
+		return
+	var tab_bar := _battle_tabs.get_tab_bar()
+	var viewport := get_viewport()
+	var focus_owner := viewport.gui_get_focus_owner() if viewport != null else null
+	var retained := tab_bar != null and focus_owner == tab_bar
+	if retained:
+		_validation_battle_info_tab_focus_retention_count += 1
+	_last_battle_info_tab_change_result["focus_retained"] = retained
+	_last_battle_info_tab_change_result["focus_owner"] = String(focus_owner.name) if focus_owner != null else ""
+
+func _on_battle_info_tab_bar_gui_input(event: InputEvent) -> void:
+	var direction := 0
+	if event.is_action_pressed("ui_left", true):
+		direction = -1
+	elif event.is_action_pressed("ui_right", true):
+		direction = 1
+	if direction == 0:
+		return
+	var tab_bar := _battle_tabs.get_tab_bar()
+	if tab_bar == null or get_viewport().gui_get_focus_owner() != tab_bar:
+		return
+	if _selectable_battle_info_tab_in_direction(tab_bar, _battle_tabs.current_tab, direction) >= 0:
+		return
+	_validation_battle_info_tab_boundary_retain_count += 1
+	tab_bar.accept_event()
+	tab_bar.grab_focus()
+
+func _selectable_battle_info_tab_in_direction(tab_bar: TabBar, from_tab: int, direction: int) -> int:
+	var candidate := from_tab + direction
+	while candidate >= 0 and candidate < tab_bar.tab_count:
+		if not tab_bar.is_tab_disabled(candidate) and not tab_bar.is_tab_hidden(candidate):
+			return candidate
+		candidate += direction
+	return -1
+
+func _sync_battle_info_tab_tooltip() -> void:
+	var tab_bar := _battle_tabs.get_tab_bar()
+	if tab_bar == null:
+		return
+	tab_bar.tooltip_text = _join_tooltip_sections([
+		"Battle information tabs. Use Left and Right while the tabs are focused.",
+		_battle_tabs.tooltip_text,
+	])
 
 func _battle_music_metadata() -> Dictionary:
 	if _session == null:
@@ -1457,6 +1550,7 @@ func _configure_battle_keyboard_focus(force: bool = false) -> void:
 		return
 	var surfaces := [
 		_battle_board_view,
+		_battle_tabs.get_tab_bar(),
 		_prev_target_button,
 		_next_target_button,
 		_advance_button,
@@ -1476,6 +1570,15 @@ func _configure_battle_keyboard_focus(force: bool = false) -> void:
 		_menu_button,
 	]
 	var controls := FrontierVisualKit.configure_focus_cycle(surfaces)
+	_last_battle_keyboard_focus_cycle_names = []
+	_last_battle_keyboard_focus_tab_bar_occurrences = 0
+	var tab_bar := _battle_tabs.get_tab_bar()
+	for control in controls:
+		if not (control is Control):
+			continue
+		_last_battle_keyboard_focus_cycle_names.append(String(control.name))
+		if control == tab_bar:
+			_last_battle_keyboard_focus_tab_bar_occurrences += 1
 	FrontierVisualKit.grab_keyboard_focus(self, _preferred_battle_keyboard_focus(), controls, force)
 
 func _preferred_battle_keyboard_focus() -> Control:
@@ -2502,6 +2605,7 @@ func validation_snapshot() -> Dictionary:
 	return {
 		"scene_path": scene_file_path,
 		"quick_resolve_confirmation": validation_quick_resolve_confirmation_snapshot(),
+		"battle_info_tab_navigation": validation_battle_info_tab_navigation_snapshot(),
 		"battle_playback_speed": validation_battle_playback_speed_snapshot(),
 		"battle_resolution_checkpoint": validation_battle_resolution_checkpoint_snapshot(),
 		"briefing_consumption_autosave": validation_briefing_consumption_autosave_snapshot(),
@@ -2677,6 +2781,42 @@ func validation_snapshot() -> Dictionary:
 		"save_button_tooltip_text": _save_button.tooltip_text,
 		"save_status_visible_text": _system_body_label.text,
 		"save_status_tooltip_text": _system_body_label.tooltip_text,
+	}
+
+func validation_reset_battle_info_tab_navigation_state() -> Dictionary:
+	_validation_battle_info_tab_resetting = true
+	_battle_tabs.current_tab = 0
+	_last_battle_info_tab_index = _battle_tabs.current_tab
+	_validation_battle_info_tab_resetting = false
+	_validation_battle_info_tab_change_sequence = 0
+	_validation_battle_info_tab_change_count = 0
+	_validation_battle_info_tab_focus_retention_count = 0
+	_validation_battle_info_tab_boundary_retain_count = 0
+	_last_battle_info_tab_change_result = {}
+	return validation_battle_info_tab_navigation_snapshot()
+
+func validation_battle_info_tab_navigation_snapshot() -> Dictionary:
+	var tab_bar := _battle_tabs.get_tab_bar()
+	var viewport := get_viewport()
+	var focus_owner := viewport.gui_get_focus_owner() if viewport != null else null
+	return {
+		"active_tab": _battle_tabs.current_tab,
+		"tab_count": _battle_tabs.get_tab_count(),
+		"tab_titles": _battle_tab_titles(),
+		"tab_bar_name": String(tab_bar.name) if tab_bar != null else "",
+		"tab_bar_focus_mode": tab_bar.focus_mode if tab_bar != null else Control.FOCUS_NONE,
+		"tab_bar_boundary_policy": "retain",
+		"tab_bar_has_focus": focus_owner == tab_bar,
+		"tab_bar_focus_owner": String(focus_owner.name) if focus_owner == tab_bar else "",
+		"focus_owner": String(focus_owner.name) if focus_owner != null else "",
+		"change_sequence": _validation_battle_info_tab_change_sequence,
+		"change_count": _validation_battle_info_tab_change_count,
+		"focus_retention_count": _validation_battle_info_tab_focus_retention_count,
+		"boundary_retain_count": _validation_battle_info_tab_boundary_retain_count,
+		"last_change_result": _last_battle_info_tab_change_result.duplicate(true),
+		"focus_cycle_names": _last_battle_keyboard_focus_cycle_names.duplicate(),
+		"focus_cycle_count": _last_battle_keyboard_focus_cycle_names.size(),
+		"tab_bar_occurrences": _last_battle_keyboard_focus_tab_bar_occurrences,
 	}
 
 func validation_briefing_consumption_autosave_snapshot() -> Dictionary:
@@ -3397,6 +3537,7 @@ func _refresh_battle_tab_cues() -> void:
 		var tab: Dictionary = tabs[index]
 		_battle_tabs.set_tab_title(index, String(tab.get("title", "")))
 	_battle_tabs.tooltip_text = String(payload.get("tooltip_text", ""))
+	_sync_battle_info_tab_tooltip()
 
 func _battle_tab_readiness_payload() -> Dictionary:
 	var action_surface := BattleRules.get_action_surface(_session)
