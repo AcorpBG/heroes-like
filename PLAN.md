@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `strategic-ai-town-build-front-context-reuse-10184`. Town-build scoring now passes its exact current development metrics into local-front evaluation; strict-Small behavior remains unchanged while current-town-state work falls from 1363ms to 1241ms.
 - Latest completed implementation slice: `strategic-ai-active-front-empty-plan-probe-cutoff-10184`. Active-front spawn evaluation now stops constructing commander armies after the first probe proves that an origin has no valid support plan; exact strict-Small behavior remains unchanged while support-candidate time falls from 1068ms to 607ms.
 - Latest completed implementation slice: `strategic-ai-recruit-destination-town-front-context-reuse-10184`. Recruitment destination planning now derives the local front from the town-development metrics it already computes; exact strict-Small behavior remains unchanged while reinforcement falls from 4244ms to 2676ms.
 - Latest completed implementation slice: `strategic-ai-active-raid-assignment-path-context-reuse-10184`. Each active raid now builds its current path graph once and reuses it across defense redirection, target refresh, and unreachable-target checks; exact strict-Small behavior remains unchanged and the profiled assignment total falls from 2791ms to 2414ms.

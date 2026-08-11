@@ -4441,7 +4441,8 @@ static func _town_build_score_context(
 	_town_build_profile_count("town_score_context_count")
 	var started_usec := _town_build_profile_timer()
 	var current_metrics: Dictionary = OverworldRulesScript.town_development_metrics(town, session)
-	var town_front: Dictionary = OverworldRulesScript.town_front_state(session, town)
+	var town_front: Dictionary = OverworldRulesScript.town_front_state(session, town, current_metrics)
+	_town_build_profile_count("town_front_development_metrics_reused")
 	var context := {
 		"strategy": EnemyAdventureRulesScript.enemy_strategy(config, faction_id),
 		"current_income": OverworldRulesScript.town_income(town, session),
