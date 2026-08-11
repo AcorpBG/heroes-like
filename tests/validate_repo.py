@@ -18567,6 +18567,7 @@ def validate_ai_raid_regroup_retreat(errors: list[str]) -> None:
         "_target_candidates(session, config, origin_pos, false, path_context)",
         'current_placement_id.begins_with("__active_front_support_probe:")',
         "virtual_probe_path_context",
+        "if step_index > 0:",
     ):
         ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing task-planner context reuse token: {required_token}")
     if AI_RAID_REGROUP_RETREAT_REPORT_SCRIPT_PATH.exists():

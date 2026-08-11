@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The strategic-AI virtual-front path-context reuse slice is complete. Synthetic support probes now share one exact path context, generated behavior and live-raid semantics remain exact, and Linux/Windows packaged boots pass. The full strategic-AI matrix and overall release readiness remain open.",
+  "currentNotes": "The strategic-AI first-movement-step path-plan reuse slice is complete. Step zero reuses the current pre-movement plan while later replans remain live; exact generated behavior and Linux/Windows packaged boots pass. The full strategic-AI matrix and overall release readiness remain open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "strategic-ai-virtual-front-path-context-reuse-10184",
-  "currentSliceId": "strategic-ai-virtual-front-path-context-reuse-10184",
-  "currentSliceNotes": "Completed virtual-probe-only path-context reuse with exact legacy candidate/launch-surface parity, exact two-seed behavior, bounded active-front phase improvement, core/repository validation, and Linux/fresh-Wine package boots.",
+  "currentSlice": "strategic-ai-first-movement-step-path-plan-reuse-10184",
+  "currentSliceId": "strategic-ai-first-movement-step-path-plan-reuse-10184",
+  "currentSliceNotes": "Completed unchanged-step-zero path-plan reuse with exact Trailglyph/regroup/generated behavior, reduced step-path phase time, core/repository validation, and Linux/fresh-Wine package boots.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Strategic AI Virtual Front Path Context Reuse",
-  "currentSliceUpdatedAt": "2026-08-11T09:10:49Z",
+  "currentSliceTitle": "Strategic AI First Movement Step Path Plan Reuse",
+  "currentSliceUpdatedAt": "2026-08-11T09:16:29Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21486,6 +21486,85 @@
       "title": "Veilmourn Maskglass Finisher",
       "updatedAt": "2026-08-03T10:52:10Z",
       "completedAt": "2026-08-03T10:52:10Z"
+    },
+    {
+      "baselineChecks": [
+        "godot4 --headless --path . --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn",
+        "godot4 --headless --path . --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+        "HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=2 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=3 HEROES_STRATEGIC_AI_LONG_RUN_PRESSURE_FLOOR=0 godot4 --headless --path . --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+        "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+        "godot4 --headless --editor --quit --path .",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "Raid movement step zero consumes the pre-movement path plan without a second path-plan build when position, target, and blockers are unchanged; later step replans and final authoritative distance remain live; focused Trailglyph and ordinary regroup/arrival behavior remain exact; strict-Small seeds retain signatures 6a4530a2 and 2beabecf with exact events while step-path work improves or holds; core, parse, repository, Linux, and Windows gates pass.",
+      "id": "strategic-ai-first-movement-step-path-plan-reuse-10184",
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_hero_task_spawn_commander_selection_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "movement allowance, target assignment, redirect, pathfinding, arrival, grouping, spell, or event behavior changes",
+        "persistent path caches, save schema, generated-map generation, or Native RMG changes",
+        "full 100-seed eight-week completion or broad performance/release claims"
+      ],
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md Current strategic AI follow-up / strict Small enemy-turn bottleneck",
+      "purpose": "Remove the immediate duplicate path-plan build at raid movement step zero while retaining every later live replan.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "startedAt": "2026-08-11T09:12:18Z",
+      "status": "completed",
+      "title": "Strategic AI First Movement Step Path Plan Reuse",
+      "updatedAt": "2026-08-11T09:16:29Z",
+      "completedAt": "2026-08-11T09:16:29Z",
+      "notes": "The raid movement loop now consumes its pre-movement path plan at step zero and rebuilds only from step one onward, after live movement or redirect state can change. The post-loop authoritative path calculation is unchanged. Focused coverage preserves Trailglyph selection and three-step movement, regroup/resupply/arrival behavior, and public events. Strict-Small seeds 001 and 002 retain signatures 6a4530a2 and 2beabecf, exact event counts, all six turns, and zero behavior bugs, stalls, unreachable targets, or target-integrity violations. Across the same 16 active-raid lanes, aggregate step_path_plan_ms falls from 40 to 28; broad wall-clock noise is not claimed. Core, editor, repository, Linux release boot, and fresh-Wine Windows release boot pass. No save schema or Native RMG output changed.",
+      "evidence": {
+        "finding": "Movement step zero reuses the exact pre-movement path plan while every later live replan remains unchanged.",
+        "metrics": {
+          "trailglyph_spell_id": "spell_trailglyph",
+          "trailglyph_moved_steps": 3,
+          "active_raid_lane_count": 16,
+          "step_path_baseline_total_msec": 40,
+          "step_path_current_total_msec": 28,
+          "generated_seed_count": 2,
+          "generated_turn_count": 3,
+          "generated_turns_completed": 6,
+          "seed_001_signature": "6a4530a2",
+          "seed_002_signature": "2beabecf",
+          "generated_behavior_bug_count": 0,
+          "generated_stalled_turn_count": 0,
+          "generated_unreachable_target_count": 0,
+          "generated_target_integrity_violation_count": 0,
+          "linux_export_boot_ok": true,
+          "windows_wine_export_boot_ok": true,
+          "save_version": 9
+        }
+      },
+      "validation": {
+        "status": "passed",
+        "updatedAt": "2026-08-11T09:16:29Z",
+        "commands": [
+          "godot4 --headless --path . --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn",
+          "godot4 --headless --path . --scene res://tests/ai_raid_regroup_retreat_report.tscn",
+          "HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=2 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=3 HEROES_STRATEGIC_AI_LONG_RUN_PRESSURE_FLOOR=0 godot4 --headless --path . --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+          "godot4 --headless --editor --quit --path .",
+          "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+          "HEROES_PACKAGING_LINUX_ARTIFACT_DIR=/tmp/heroes-first-step-linux-package.xjJEa7 python3 tests/packaging_linux_export_smoke.py",
+          "HEROES_PACKAGING_WINDOWS_ARTIFACT_DIR=/tmp/heroes-first-step-windows-package.DacxOf python3 tests/packaging_windows_export_smoke.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ]
+      }
     },
     {
       "baselineChecks": [

@@ -2230,14 +2230,15 @@ static func advance_raids(
 			_advance_profile_add_ms(profile, "movement_spell_ms", phase_started)
 		for step_index in range(max(0, movement_steps)):
 			phase_started = _advance_profile_timer(profile_enabled)
-			goal_tiles = _goal_tiles_from_raid(session, encounter, faction_id)
-			movement_path_plan = _path_plan_toward(
-				session,
-				current,
-				goal_tiles,
-				String(encounter.get("placement_id", "")),
-				faction_id
-			)
+			if step_index > 0:
+				goal_tiles = _goal_tiles_from_raid(session, encounter, faction_id)
+				movement_path_plan = _path_plan_toward(
+					session,
+					current,
+					goal_tiles,
+					String(encounter.get("placement_id", "")),
+					faction_id
+				)
 			goal_distance = int(movement_path_plan.get("goal_distance", 9999))
 			_advance_profile_add_ms(profile, "step_path_plan_ms", phase_started)
 			if goal_distance <= 0 or goal_distance >= 9999:
