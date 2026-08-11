@@ -17578,6 +17578,7 @@ def validate_ai_hero_task_spawn_commander_selection(errors: list[str]) -> None:
         "_ai_hero_task_spawn_saved_plan_for_actor",
         "_spawn_saved_task_commander_candidate_beats",
         "saved_task_priority",
+        "return _best_goal_tile_with_path_context(path_context, origin_pos, goal_tiles)",
     ):
         ensure(required_token in enemy_adventure_text, errors, f"AI hero task spawn commander selection implementation is missing token: {required_token}")
     ensure(
@@ -17594,6 +17595,7 @@ def validate_ai_hero_task_spawn_commander_selection(errors: list[str]) -> None:
             "recovering_saved_task_actor_does_not_override_rotation",
             "saved_hero_task",
             "hero_task_state_live_persist_no_save_migration",
+            "best_goal_tile_reuses_one_path_context",
         ):
             ensure(required_token in report_text, errors, f"AI hero task spawn commander selection report is missing token: {required_token}")
     if AI_HERO_TASK_SPAWN_COMMANDER_SELECTION_REPORT_DOC_PATH.exists():

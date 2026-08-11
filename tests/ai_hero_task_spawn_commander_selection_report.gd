@@ -37,18 +37,49 @@ func _run() -> void:
 	var rebuild_target_completion_case := _commander_rebuild_target_stays_fixed_until_complete_case()
 	if rebuild_target_completion_case.is_empty():
 		return
+	var best_goal_tile_path_context_case := _best_goal_tile_path_context_reuse_case()
+	if best_goal_tile_path_context_case.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
 		"schema_status": "saved_tasks_influence_live_commander_deployment_spawn_avoids_all_player_heroes_prefers_deployable_saved_task_commander_spell_tempo_fresh_fit_generated_front_distribution_and_rebuild_launch_readiness",
 		"behavior_policy": "saved_tasks_influence_live_commander_deployment_and_fresh_target_fit_influence_spawn_point_selection_while_spawn_occupancy_respects_all_live_player_heroes_adventure_spell_route_tempo_generated_multi_town_front_distribution_and_rebuilds_wait_for_viable_commanders",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
-		"cases": [saved_task_case, fallback_case, spawn_point_case, multihero_spawn_occupancy_case, spell_tempo_case, fresh_fit_case, generated_front_distribution_case, rebuild_launch_readiness_case, rebuild_target_completion_case],
+		"cases": [saved_task_case, fallback_case, spawn_point_case, multihero_spawn_occupancy_case, spell_tempo_case, fresh_fit_case, generated_front_distribution_case, rebuild_launch_readiness_case, rebuild_target_completion_case, best_goal_tile_path_context_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])
 	get_tree().quit(0)
+
+func _best_goal_tile_path_context_reuse_case() -> Dictionary:
+	var session = _base_session()
+	var origin := Vector2i(7, 1)
+	var goal_tiles := [Vector2i(0, 4), Vector2i(7, 3), Vector2i(6, 3), Vector2i(8, 3)]
+	var legacy_best: Vector2i = goal_tiles[0]
+	var legacy_distance: int = EnemyAdventureRules._path_distance(session, origin, goal_tiles, "", MIRECLAW)
+	for tile_value in goal_tiles:
+		var tile: Vector2i = tile_value
+		var distance: int = EnemyAdventureRules._path_distance(session, origin, [tile], "", MIRECLAW)
+		if distance < legacy_distance:
+			legacy_distance = distance
+			legacy_best = tile
+	var path_context := EnemyAdventureRules._path_distance_surface_context(session, "", MIRECLAW)
+	var context_best: Vector2i = EnemyAdventureRules._best_goal_tile_with_path_context(path_context, origin, goal_tiles)
+	var selected: Vector2i = EnemyAdventureRules._best_goal_tile(session, origin, goal_tiles, MIRECLAW)
+	if legacy_distance >= 9999 or selected != legacy_best or selected != context_best:
+		_fail("Best-goal-tile context reuse changed selection: legacy=%s context=%s selected=%s" % [legacy_best, context_best, selected])
+		return {}
+	return {
+		"case_id": "best_goal_tile_reuses_one_path_context",
+		"goal_tile_count": goal_tiles.size(),
+		"selected_x": selected.x,
+		"selected_y": selected.y,
+		"selected_distance": legacy_distance,
+		"legacy_match": true,
+		"context_match": true,
+	}
 
 func _commander_rebuild_target_stays_fixed_until_complete_case() -> Dictionary:
 	var session = _base_session()
