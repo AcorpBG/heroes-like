@@ -2003,7 +2003,10 @@ static func _recruit_town_forces(
 		OverworldRulesScript.apply_market_cost_coverage(town, treasury, final_cost, int(session.day))
 		_spend_from_pool(treasury, final_cost)
 		if String(destination.get("type", "")) != "garrison":
-			_invalidate_recruit_destination_field_cache(destination_context)
+			_invalidate_recruit_destination_field_cache(
+				destination_context,
+				String(destination.get("type", ""))
+			)
 		destination_breakdown_needs_refresh = true
 		var selected_recruitment := {
 			"unit_id": unit_id,
@@ -2136,7 +2139,10 @@ static func _mobilize_surplus_garrison_for_field_need(
 				)
 		if accepted <= 0:
 			continue
-		_invalidate_recruit_destination_field_cache(destination_context)
+		_invalidate_recruit_destination_field_cache(
+			destination_context,
+			String(destination.get("type", ""))
+		)
 		town["garrison"] = _remove_stack_units(town.get("garrison", []), unit_id, accepted)
 		surplus_strength -= accepted * unit_strength
 		mobilized_batches += 1
@@ -2342,9 +2348,19 @@ static func _recruit_destination_static_context(
 	_reinforcement_profile_add_ms("faction_front_ms", started_usec)
 	return context
 
-static func _invalidate_recruit_destination_field_cache(destination_context: Dictionary) -> void:
-	for key in ["best_rebuild", "best_raid", "best_planned", "best_emergency"]:
+static func _invalidate_recruit_destination_field_cache(
+	destination_context: Dictionary,
+	destination_type: String = ""
+) -> void:
+	for key in ["best_rebuild", "best_planned", "best_emergency"]:
 		destination_context.erase(key)
+	var had_best_raid := destination_context.has("best_raid")
+	if destination_type in ["rebuild", "planned", "emergency"] and had_best_raid:
+		_reinforcement_profile_count("destination_best_raid_retained")
+	else:
+		destination_context.erase("best_raid")
+		if had_best_raid:
+			_reinforcement_profile_count("destination_best_raid_invalidated")
 	if destination_context.has("normalized_commander_roster"):
 		destination_context.erase("normalized_commander_roster")
 		_reinforcement_profile_count("destination_commander_roster_invalidated")
