@@ -5281,7 +5281,8 @@ static func _active_front_support_spawn_candidate_for_point(
 	var best := {}
 	var support_plan := {}
 	var support_plan_resolved := false
-	for commander_value in candidates:
+	for commander_index in range(candidates.size()):
+		var commander_value = candidates[commander_index]
 		if not (commander_value is Dictionary):
 			continue
 		var roster_hero_id := String(commander_value.get("roster_hero_id", ""))
@@ -5308,7 +5309,13 @@ static func _active_front_support_spawn_candidate_for_point(
 			)
 			support_plan_resolved = true
 		if support_plan.is_empty():
-			continue
+			var skipped_remaining_probes := 0
+			for remaining_index in range(commander_index + 1, candidates.size()):
+				var remaining_value = candidates[remaining_index]
+				if remaining_value is Dictionary and String(remaining_value.get("roster_hero_id", "")) != "":
+					skipped_remaining_probes += 1
+			_spawn_profile_count("active_front_support_empty_plan_remaining_probe_skipped", skipped_remaining_probes)
+			return {}
 		var candidate := _spawn_point_candidate_from_plan(
 			point,
 			support_plan,
