@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `strategic-ai-town-build-raid-capacity-context-reuse-10184`. One pre-mutation empire build enumeration now derives active-raid capacity once per faction and reuses it across later eligible town score contexts; the strict-Small matrix removes five duplicate capacity loads with exact behavior and lowers the scoped current-town lane from 1206ms to 1188ms, while no aggregate runtime improvement is claimed.
 - Latest completed implementation slice: `strategic-ai-recruit-destination-commander-roster-context-reuse-10184`. Each recruitment destination context now shares one exact normalized commander roster across rebuild and planned-task scoring, evicts it after every field reinforcement, and lowers method-matched reinforcement time from 2678ms to 2422ms with exact strict-Small behavior.
 - Latest completed implementation slice: `strategic-ai-town-build-planned-task-context-reuse-10184`. One pre-mutation town-build enumeration now shares its immutable planned-task list and path graph across eligible towns, removes five duplicate loads in the strict-Small matrix, preserves per-town saved plans and exact behavior, and holds the method-matched town-build runtime at 2011ms.
 - Latest completed implementation slice: `strategic-ai-town-build-front-context-reuse-10184`. Town-build scoring now passes its exact current development metrics into local-front evaluation; strict-Small behavior remains unchanged while current-town-state work falls from 1363ms to 1241ms.
