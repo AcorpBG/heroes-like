@@ -24,7 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current implementation slice: `accessibility-scenario-outcome-recap-tab-controller-navigation-10184` (completed). The native Outcome recap TabBar now joins the authoritative focus cycle so keyboard/controller players can inspect Progress, Arc, Carryover, Aftermath, and Journal without changing terminal/save authority.
+- Current implementation slice: `combat-mireclaw-drowned-antler-wounded-apex-10184` (completed). Drowned Antler Sovereigns now execute their authored wounded/disrupted apex role through shared live combat, AI, summaries, and the corrected-RNG benchmark instead of acting as a generic ranged screen.
+- Latest completed implementation slice: `combat-mireclaw-drowned-antler-wounded-apex-10184`. The exact prior-screen control reproduces `38 / 332.5 / 13 / 79.0 / 1.6`, while production improves to `37 / 229.0 / 7 / 73.5 / 1.13` with zero structural failures and a clear 59-encounter live queue.
 - Latest completed implementation slice: `accessibility-scenario-outcome-recap-tab-controller-navigation-10184`. Campaign/skirmish victory/defeat, real shoulder/D-pad/keyboard/mouse traversal, boundary retention, refresh/recovery-modal persistence, exact terminal/save authority, and Linux plus fresh Windows/Wine packages pass.
 - Latest completed implementation slice: `accessibility-battle-info-tab-controller-navigation-10184`. Real shoulder, D-pad, keyboard, and mouse traversal reaches all four tabs with boundary retention, command return, selected-tab persistence through Defend refresh, exact authority, and Linux plus fresh Windows/Wine packaged PASS.
 - Latest completed implementation slice: `performance-generated-large-transactional-manual-save-10184`. Generated-Large 20.28MB empty-slot and overwrite saves retain one semantic normalization and exact transactional verification while completing in 2302/2462ms in the Linux package and 2863/3830ms in fresh Windows/Wine.
@@ -4041,6 +4042,42 @@ Completion evidence:
 - all four campaign/skirmish victory/defeat rows prove real shoulder/D-pad/keyboard/mouse traversal across five pages, reverse traversal, action return, Journal refresh persistence, and exact session/progression/files/cache/settings/routes/actions/recap authority at 1280 and 1920;
 - recovery Save physically selects Arc and retains it through an occupied-slot overwrite dialog plus Escape cancel while preserving prior manual bytes;
 - Outcome recovery, new-session confirmation, visual, core, editor, validator, repository, Linux package, and fresh Windows/Wine package gates pass.
+
+## Mireclaw Drowned Antler Wounded Apex
+
+id: `combat-mireclaw-drowned-antler-wounded-apex-10184`
+
+Status: completed.
+
+Selected Phase 6 faction-identity and balance implementation slice. The faction bible defines the tier-seven
+Drowned Antler Sovereign as an apex pressure piece with wounded-stack dominance, but production still gives it
+a generic `0.84` ranged screen, +2 cohesion, and unconditional engaged pressure. Under the corrected-RNG all-live
+matrix, Mireclaw wins every week-four pairing and reaches 79-percent dominance.
+
+Implementation target:
+- replace Drowned Sovereign Screen with one content-owned primary-melee wounded/disrupted apex contract using the shared Bloodrush rule shape, without faction, matchup, week, seed, or benchmark branches;
+- make clean lines resist the apex while wounded, listed-disrupted, or rooted prey open bounded damage and kill-momentum windows;
+- keep live BattleRules, tactical AI, player summaries, normalization, focused ability proof, and the fast benchmark on the same authored fields;
+- add a method-matched benchmark control that restores only the prior Drowned Sovereign Screen in memory while leaving every other unit, hero, spell, army snapshot, seed, and tie policy exact.
+
+Completion criteria:
+- focused runtime proof covers clean, wounded, listed-status, rooted, ranged, retaliation, kill momentum, dead/stripped source, live/AI parity, and readable summaries;
+- the corrected-RNG all-live 100-seed four-week matrix improves at least one current control metric without worsening 38 outliers, `332.5` severity, 13 rows at or above 65 percent, `79.0` maximum dominance, or `1.6` side-bias points, with zero structural failures;
+- method-matched Drowned Sovereign Screen control and production candidate use identical formation isolation, all-live hero pairs, seeds, weeks, and initiative-tie policy;
+- the active 59-encounter breadth queue remains clear, and focused ability, autoplay, balance-regression, core, editor parse, repository, JSON, Python, and diff gates pass.
+
+Non-goals:
+- do not change unit base stats, growth, costs, buildings, army groups, other Mireclaw units, heroes, spells, economy, encounters, saves, campaigns, packaging, Native RMG, or benchmark thresholds;
+- do not hard-code factions, opponents, weeks, army counts, encounter ids, seeds, or benchmark identity into combat behavior;
+- do not claim final Mireclaw identity, final faction balance, or overall release completion.
+
+Completion evidence:
+- Drowned Sovereign Screen is replaced by the content-owned Drowned Antler Rout: a primary-melee clean-line penalty, wounded and harried/staggered/rooted payoff, bounded wounded initiative, and kill-only momentum using the shared Bloodrush rules;
+- the focused live ability report passes `118/118` authored instances with exact clean, wounded, disrupted, rooted, ranged, retaliation, tactical-AI, initiative, kill-momentum, normalization, and readable-role proof;
+- the exact in-memory prior-screen control and production candidate match on 100 seeds, four weeks, all-live heroes, 120 ordered matchups, army snapshots, spellbooks, and initiative-tie policy;
+- the prior-screen control reproduces 38 outliers / 332.5 excess severity / 13 severe rows / 79.0 maximum dominance / 1.6 side bias, while production improves to 37 / 229.0 / 7 / 73.5 / 1.13 with zero structural failures;
+- the active scenario breadth report completes `59/59` encounters with zero stalls or invalid orders and a clear zero-item queue at repeated signature `829808c9`;
+- balance regression, core systems, Godot editor parse, repository validation, JSON, Python, and diff checks pass; the existing Native RMG exact-state-chain deferral remains explicitly unchanged.
 
 ## Phase Roadmap
 

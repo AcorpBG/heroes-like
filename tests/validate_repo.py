@@ -11225,6 +11225,20 @@ def validate_content(errors: list[str]) -> None:
     ensure(not any(isinstance(ability, dict) and str(ability.get("id", "")) == "shielding" for ability in mireclaw_rippers.get("abilities", [])), errors, "Production Gorefen Rippers must not retain the contradictory missile-screen ability")
     ensure("cohesion_hold_bonus" not in gorefen_cull_rush, errors, "Gorefen Cull Rush must not retain cohesion-screen data")
     ensure("ranged_damage_multiplier" not in gorefen_cull_rush, errors, "Gorefen Cull Rush must not retain ranged mitigation")
+    drowned_sovereign = units.get("unit_mireclaw_drowned_antler_sovereign", {})
+    drowned_antler_rout = next((ability for ability in drowned_sovereign.get("abilities", []) if isinstance(ability, dict) and str(ability.get("name", "")) == "Drowned Antler Rout"), {})
+    ensure(str(drowned_antler_rout.get("id", "")) == "bloodrush", errors, "Drowned Antler Sovereigns must own their wounded-line apex role")
+    ensure(drowned_antler_rout.get("primary_melee_only") is True, errors, "Drowned Antler Rout must affect primary melee attacks only")
+    ensure(float(drowned_antler_rout.get("clean_target_damage_multiplier", 1.0)) == 0.9, errors, "Drowned Antler Rout must yield bounded force against intact lines")
+    ensure(float(drowned_antler_rout.get("wounded_threshold_ratio", 0.0)) == 0.5, errors, "Drowned Antler Rout must recognize wounded stacks at half health")
+    ensure(float(drowned_antler_rout.get("wounded_damage_multiplier", 1.0)) == 1.12, errors, "Drowned Antler Rout must punish wounded prey")
+    ensure(float(drowned_antler_rout.get("status_damage_multiplier", 1.0)) == 1.06, errors, "Drowned Antler Rout must punish disrupted prey")
+    ensure({"status_mire_harried", "status_harried", "status_staggered", "status_rooted"}.issubset({str(value) for value in drowned_antler_rout.get("status_ids", [])}), errors, "Drowned Antler Rout must recognize Mireclaw marks, shared disruption, and rooted prey")
+    ensure(int(drowned_antler_rout.get("wounded_initiative_bonus", 0)) == 1 and int(drowned_antler_rout.get("max_initiative_bonus", 0)) == 1, errors, "Drowned Antler Rout must keep one bounded wounded-line initiative tier")
+    ensure(int(drowned_antler_rout.get("momentum_gain", -1)) == 0 and int(drowned_antler_rout.get("kill_momentum_gain", 0)) == 1, errors, "Drowned Antler Rout must reserve its bounded momentum for a kill")
+    ensure(int(drowned_antler_rout.get("late_round_initiative_bonus", -1)) == 0, errors, "Drowned Antler Rout must not gain unconditional late-round initiative")
+    ensure(not any(isinstance(ability, dict) and str(ability.get("id", "")) == "shielding" for ability in drowned_sovereign.get("abilities", [])), errors, "Drowned Antler Sovereigns must not retain the contradictory generic missile screen")
+    ensure("cohesion_hold_bonus" not in drowned_antler_rout and "ranged_damage_multiplier" not in drowned_antler_rout, errors, "Drowned Antler Rout must not retain screen-only fields")
     ensure(int(wake_lantern_mark.get("modifiers", {}).get("cohesion", 0)) < 0, errors, "Wake-Lantern Mark must drain cohesion")
     ensure(int(wake_lantern_mark.get("momentum_gain", -1)) == 0, errors, "Wake-Lantern Mark must not add momentum")
 
@@ -11766,6 +11780,9 @@ def validate_content(errors: list[str]) -> None:
     ensure("hero_snapshots" in battle_benchmark_text and "spellbook_spell_tier" in battle_benchmark_text, errors, "Fast battle benchmark must expose per-week spellbook tier evidence")
     ensure("spell_cast_summary" in battle_benchmark_text, errors, "Fast battle benchmark must report spell cast coverage")
     ensure("spell_resisted_count" in battle_benchmark_text and "spell_resisted_damage_prevented" in battle_benchmark_text, errors, "Fast battle benchmark must report resisted spell and prevented damage evidence")
+    ensure("DROWNED_SOVEREIGN_SCREEN_CONTROL_ABILITIES" in battle_benchmark_text, errors, "Fast battle benchmark must retain the exact pre-slice Drowned Sovereign Screen control")
+    ensure("--drowned-sovereign-screen-control" in battle_benchmark_text, errors, "Fast battle benchmark must expose the Drowned Sovereign method-matched control")
+    ensure("unit_mireclaw_drowned_antler_sovereign abilities replaced by the exact pre-slice Drowned Sovereign Screen contract" in battle_benchmark_text, errors, "Fast battle benchmark must describe the exact Drowned Sovereign control boundary")
     ensure((ROOT / "tests" / "magic_resistance_countercontrol_report.tscn").exists(), errors, "Magic resistance counter-control report scene must exist")
 
     choir_bonuses = artifacts.get("artifact_choir_tuning_fork", {}).get("bonuses", {})
@@ -20675,6 +20692,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "func _probe_fogwake",
         "func _probe_resonance_relay",
         "func _probe_bloodrush",
+        "sovereign_apex_contract_ok",
         "func _probe_overheat",
         "func _probe_foundry_aura",
         "runtime_consequence_count",
