@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Generated-Large Town explicit Save surfaces are complete and sub-second on source, Linux package, and fresh Windows/Wine with exact copy/recovery semantics. The separate multi-second 20MB transactional write and overall release readiness remain open.",
+  "currentNotes": "The generated-Large transactional manual-save slice is complete with exact Linux and fresh Windows/Wine packaged proof. No next implementation slice is selected yet; overall release readiness remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "performance-generated-large-town-explicit-save-surface-10184",
-  "currentSliceId": "performance-generated-large-town-explicit-save-surface-10184",
-  "currentSliceNotes": "Completed exact detached summary/context reuse, command-risk summary reduction, Town cache feedback reuse, recovery semantics, and Linux plus fresh Windows/Wine sub-second package proof.",
+  "currentSlice": "performance-generated-large-transactional-manual-save-10184",
+  "currentSliceId": "performance-generated-large-transactional-manual-save-10184",
+  "currentSliceNotes": "Completed with exact source, Linux package, and fresh Windows/Wine proof; select the next bounded source-backed release gap before further implementation.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Generated-Large Town Explicit Save Surface Performance",
-  "currentSliceUpdatedAt": "2026-08-11T00:44:44Z",
+  "currentSliceTitle": "Generated-Large Transactional Manual Save Performance",
+  "currentSliceUpdatedAt": "2026-08-11T01:30:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -75006,6 +75006,26 @@
       "notes": "Completed one detached current-session payload/summary/context, exact shared progress and command-risk summary reducers, trusted normalized read paths, verified summary-cache recovery ordering, selected/latest recap aliasing, Town departure/current-tab cache reuse, and exact dynamic dispatch parity. Source selection is 348ms wall/163.737ms surface; post-save Town refresh816.921ms cache-hit/build0, forced532.308ms, SaveService386.801ms. Linux packaged selection140.898ms/max gated338.306ms; fresh Windows/Wine selection177.893ms/max gated786.099ms. Exact 17-field surface parity, steady/active/nested-enemy risk, canonical reload, candidate/backup recovery, injected rollback, cancel/overwrite, Town transition/focus, command-risk/end-turn, core, editor, validator, and repository integrity pass.",
       "remainingWork": "No work remains in this slice. The separate generated 20MB transactional write still takes several seconds and should be selected as its own performance boundary if it outranks the next audit candidate. Battle command-tab controller navigation, broader release work, signing, native Windows hardware certification, publication, and overall release readiness remain open.",
       "completedAt": "2026-08-11T00:44:44Z"
+    },
+    {
+      "id": "performance-generated-large-transactional-manual-save-10184",
+      "title": "Generated-Large Transactional Manual Save Performance",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md"],
+      "purpose": "Reduce the deterministic 7.8-8.9 second generated-Large manual-save block by removing repeated whole-graph preparation while preserving verified transaction semantics.",
+      "implementationTargets": ["scripts/autoload/SaveService.gd", "tests/generated_large_town_explicit_save_surface_regression.gd", "tests/generated_large_town_explicit_save_surface_regression.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"payload_bytes": 20277401, "linux_runtime_save_ms": 7808.0, "windows_wine_runtime_save_ms": 8865.0, "windows_restore_normalize_ms": 1434.1, "windows_save_normalize_ms": 2015.0, "windows_stringify_ms": 635.1, "windows_write_ms": 1759.0, "windows_summary_cache_ms": 663.4, "linux_limit_ms": 3000.0, "windows_limit_ms": 4000.0},
+      "completionCriteria": ["Generated-Large empty-slot and overwrite manual saves complete within 3000ms Linux and 4000ms fresh Windows/Wine", "Exactly one verified transactional write with canonical reload, manual name, slot, cache, live, focus, message, and residue authority", "Precommit, after-backup, corrupt-live, candidate, backup, and future-version controls remain exact", "Legacy/unnormalized fallback plus autosave/generated-opening/small-map/overwrite/save-surface/core/repository/Linux/Windows package gates pass"],
+      "nonGoals": ["weakening candidate or committed readback verification, async/background writer, save schema/version, compression format, persistent payload cache, UI copy/composition, generated-map or Native RMG behavior, publication, signing, native Windows hardware certification, or release-completion claim"],
+      "createdAt": "2026-08-11T00:50:35Z",
+      "startedAt": "2026-08-11T00:50:35Z",
+      "updatedAt": "2026-08-11T01:30:00Z",
+      "notes": "Completed one mandatory semantic normalization followed by owned detached payload transfer, prepared writer normalization skip, one reused recovery decision, zero verification payload-tree copies, and direct authoritative summary publication. Authoritative source empty/overwrite saves are 2312/2527ms. Exact Linux package empty/overwrite saves are 2302/2462ms and fresh Windows/Wine saves are 2863/3830ms, within the 3000/4000ms budgets. Precommit/after-backup rollback, malformed/future/candidate/backup/corrupt recovery, autosave/generated-opening controls, command-risk/core, editor, validator, repository integrity, and exact packages pass.",
+      "remainingWork": "No work remains in this slice. Battle command-tab controller navigation, broader release work, signing, native Windows hardware certification, publication, and overall release readiness remain open.",
+      "completedAt": "2026-08-11T01:30:00Z"
     }
   ],
   "project": "heroes-like",

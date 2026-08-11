@@ -6,6 +6,10 @@ const REPORT_ID := "GENERATED_LARGE_TOWN_EXPLICIT_SAVE_SURFACE_REGRESSION"
 const GENERATED_LARGE_SEED := "town-explicit-save-surface-large-10184"
 const FAILURE_ENV := "HEROES_LIKE_SAVE_FAIL_PHASE"
 const PROFILE_ENV := "HEROES_PROFILE_LOG"
+const MANUAL_SAVE_SOURCE_LIMIT_MS := 3000.0
+const MANUAL_SAVE_WINDOWS_LIMIT_MS := 4000.0
+const MANUAL_SAVE_NORMALIZE_METADATA_LIMIT_MS := 100.0
+const GENERATED_MANUAL_NAME := "Large Route"
 const MANUAL_PATHS := [
 	"user://saves/slot1.json",
 	"user://saves/slot2.json",
@@ -56,6 +60,7 @@ func _run() -> void:
 func _assert_required_contract() -> bool:
 	for method_name in [
 		"validation_build_in_session_save_surface_direct_legacy",
+		"validation_last_runtime_save_profile",
 		"validation_clear_general_profile_log",
 		"validation_general_profile_log_last_records",
 		"validation_summary_cache_snapshot",
@@ -68,6 +73,10 @@ func _assert_required_contract() -> bool:
 
 func _assert_context_and_freshness_parity() -> Dictionary:
 	var rows := {}
+	var runtime_save_rows: Dictionary = _assert_runtime_save_path_controls()
+	if runtime_save_rows.is_empty():
+		return {}
+	rows["runtime_save_paths"] = runtime_save_rows
 	var risk_summary_rows: Dictionary = _assert_command_risk_summary_fast_path()
 	if risk_summary_rows.is_empty():
 		return {}
@@ -166,6 +175,143 @@ func _assert_context_and_freshness_parity() -> Dictionary:
 	}
 	return rows
 
+func _assert_runtime_save_path_controls() -> Dictionary:
+	_clear_paths(MANUAL_PATHS + ["user://saves/autosave.json"])
+	SaveService.validation_clear_summary_cache()
+	var rows := {}
+
+	var manual_session = _small_context_session("overworld")
+	if manual_session == null or not OverworldRules.is_runtime_session_normalized(manual_session):
+		_finish_fail("Small manual-save control is not runtime-normalized.")
+		return {}
+	var manual_live_before: Dictionary = manual_session.to_dict().duplicate(true)
+	var manual_result: Dictionary = SaveService.save_runtime_manual_session(manual_session, 3)
+	var manual_profile: Dictionary = SaveService.validation_last_runtime_save_profile()
+	if not bool(manual_result.get("ok", false)) or not _assert_manual_runtime_save_profile(manual_profile, "small manual", false, 2, 0, 1, "live_missing"):
+		return {}
+	var manual_restored = SaveService.restore_manual_session(3)
+	if manual_session.to_dict() != manual_live_before or manual_restored == null or _canonical_dictionary(manual_restored.to_dict()) != _canonical_dictionary(manual_live_before):
+		_finish_fail("Small manual-save prepared path changed live or restored authority.", {
+			"difference": _first_difference(_canonical_dictionary(manual_live_before), _canonical_dictionary(manual_restored.to_dict())) if manual_restored != null else {"restored": false},
+		})
+		return {}
+	rows["small_manual"] = _runtime_save_profile_signature(manual_profile)
+
+	var malformed_session = _small_context_session("overworld")
+	if malformed_session == null:
+		return {}
+	EnemyTurnRules.normalize_enemy_states(malformed_session)
+	OverworldRules.mark_runtime_normalized_transition_state(malformed_session)
+	var states: Array = malformed_session.overworld.get("enemy_states", []) if malformed_session.overworld.get("enemy_states", []) is Array else []
+	if states.is_empty() or not (states[0] is Dictionary):
+		_finish_fail("Nested malformed manual-save control has no enemy state.")
+		return {}
+	var malformed_state: Dictionary = states[0]
+	var malformed_treasury: Dictionary = malformed_state.get("treasury", {}).duplicate(true) if malformed_state.get("treasury", {}) is Dictionary else {}
+	malformed_treasury["gold"] = "17"
+	malformed_state["treasury"] = malformed_treasury
+	states[0] = malformed_state
+	malformed_session.overworld["enemy_states"] = states
+	if not OverworldRules.is_runtime_session_normalized(malformed_session):
+		_finish_fail("Nested malformed value unexpectedly changed the shallow runtime-normalization signature.")
+		return {}
+	SaveService.validation_clear_summary_cache()
+	var malformed_live_before: Dictionary = malformed_session.to_dict().duplicate(true)
+	var malformed_result: Dictionary = SaveService.save_runtime_manual_session(malformed_session, 3)
+	var malformed_profile: Dictionary = SaveService.validation_last_runtime_save_profile()
+	var malformed_restored = SaveService.restore_manual_session(3)
+	var restored_states: Array = malformed_restored.overworld.get("enemy_states", []) if malformed_restored != null and malformed_restored.overworld.get("enemy_states", []) is Array else []
+	var restored_gold: Variant = null
+	if not restored_states.is_empty() and restored_states[0] is Dictionary:
+		var restored_treasury: Dictionary = restored_states[0].get("treasury", {}) if restored_states[0].get("treasury", {}) is Dictionary else {}
+		restored_gold = restored_treasury.get("gold", null)
+	if not bool(malformed_result.get("ok", false)) or not _assert_manual_runtime_save_profile(malformed_profile, "nested malformed manual", false, 2, 0, 1, "verified_live") \
+			or malformed_session.to_dict() != malformed_live_before or malformed_restored == null or typeof(restored_gold) != TYPE_INT or int(restored_gold) != 17:
+		_finish_fail("Nested malformed manual payload bypassed the required semantic normalization pass.", {
+			"profile": malformed_profile,
+			"restored_gold": restored_gold,
+			"restored_gold_type": typeof(restored_gold),
+		})
+		return {}
+	rows["nested_manual_normalization"] = _runtime_save_profile_signature(malformed_profile)
+
+	for fallback_kind in ["unnormalized", "legacy"]:
+		var fallback_session = _small_context_session("overworld")
+		if fallback_session == null:
+			return {}
+		if fallback_kind == "unnormalized":
+			fallback_session.day += 1
+		else:
+			fallback_session.save_version = SessionStateStoreScript.SAVE_VERSION - 1
+		if OverworldRules.is_runtime_session_normalized(fallback_session):
+			_finish_fail("%s manual fallback control unexpectedly retained runtime-normalized identity." % fallback_kind)
+			return {}
+		var fallback_live_before: Dictionary = fallback_session.to_dict().duplicate(true)
+		var fallback_result: Dictionary = SaveService.save_runtime_manual_session(fallback_session, 3)
+		var fallback_profile: Dictionary = SaveService.validation_last_runtime_save_profile()
+		var fallback_restored = SaveService.restore_manual_session(3)
+		if not bool(fallback_result.get("ok", false)) or not _assert_manual_runtime_save_profile(fallback_profile, "%s manual fallback" % fallback_kind, false) \
+				or fallback_session.to_dict() != fallback_live_before or fallback_restored == null or fallback_restored.save_version != SessionStateStoreScript.SAVE_VERSION:
+			_finish_fail("%s manual save did not retain the full semantic fallback and current-version restore." % fallback_kind, {
+				"result": fallback_result,
+				"profile": fallback_profile,
+			})
+			return {}
+		rows["%s_manual_fallback" % fallback_kind] = _runtime_save_profile_signature(fallback_profile)
+
+	var future_session = _small_context_session("overworld")
+	if future_session == null:
+		return {}
+	var protected_before: Dictionary = _file_states(AUTHORITY_PATHS)
+	var cache_before: Dictionary = SaveService.validation_summary_cache_snapshot()
+	future_session.save_version = SessionStateStoreScript.SAVE_VERSION + 1
+	var future_live_before: Dictionary = future_session.to_dict().duplicate(true)
+	var future_result: Dictionary = SaveService.save_runtime_manual_session(future_session, 3)
+	var future_profile: Dictionary = SaveService.validation_last_runtime_save_profile()
+	if bool(future_result.get("ok", false)) or future_session.to_dict() != future_live_before or _file_states(AUTHORITY_PATHS) != protected_before or SaveService.validation_summary_cache_snapshot() != cache_before \
+			or bool(future_profile.get("restore_normalize_skipped", true)) or int(future_profile.get("restore_normalize_pass_count", 0)) != 1 \
+			or bool(future_profile.get("prepared_payload", false)) or int(future_profile.get("recovery_count", -1)) != 0 \
+			or int(future_profile.get("recovery_parse_count", -1)) != 0 or bool(future_profile.get("recovery_cache_hit", true)) \
+			or int(future_profile.get("summary_session_reconstruction_count", -1)) != 0:
+		_finish_fail("Future-version active manual save did not fail before writer/recovery authority.", {"result": future_result, "profile": future_profile})
+		return {}
+	rows["future_manual_refused"] = _runtime_save_profile_signature(future_profile)
+
+	var autosave_session = _small_context_session("overworld")
+	if autosave_session == null:
+		return {}
+	var autosave_live_before: Dictionary = autosave_session.to_dict().duplicate(true)
+	var autosave_result: Dictionary = SaveService.save_runtime_autosave_session(autosave_session, true)
+	var autosave_profile: Dictionary = SaveService.validation_last_runtime_save_profile()
+	if not bool(autosave_result.get("ok", false)) or autosave_session.to_dict() != autosave_live_before \
+			or not bool(autosave_profile.get("restore_normalize_skipped", false)) or String(autosave_profile.get("restore_normalize_skip_reason", "")) != "trusted_live_normalized_autosave" \
+			or int(autosave_profile.get("restore_normalize_pass_count", -1)) != 0 or bool(autosave_profile.get("prepared_payload", false)) \
+			or int(autosave_profile.get("recovery_count", 0)) != 1 or int(autosave_profile.get("recovery_parse_count", 0)) != 1 \
+			or bool(autosave_profile.get("recovery_cache_hit", true)) or not bool(autosave_profile.get("writer_recovery_reused", false)) \
+			or int(autosave_profile.get("summary_session_reconstruction_count", -1)) != 0:
+		_finish_fail("Trusted autosave control changed while optimizing manual saves.", {"result": autosave_result, "profile": autosave_profile})
+		return {}
+	rows["trusted_autosave"] = _runtime_save_profile_signature(autosave_profile)
+
+	var opening_session = _small_context_session("overworld")
+	if opening_session == null:
+		return {}
+	opening_session.flags["generated_random_map"] = true
+	opening_session.flags["generated_overworld_deferred_autosave_pending"] = true
+	opening_session.flags["generated_overworld_command_briefing_autosave_deferred"] = true
+	var opening_result: Dictionary = SaveService.save_runtime_autosave_session(opening_session, false)
+	var opening_profile: Dictionary = SaveService.validation_last_runtime_save_profile()
+	if not bool(opening_result.get("ok", false)) or opening_session.flags.has("generated_overworld_deferred_autosave_pending") \
+			or opening_session.flags.has("generated_overworld_command_briefing_autosave_deferred") \
+			or not bool(opening_session.flags.get("generated_overworld_initial_autosave_completed", false)) or int(opening_profile.get("restore_normalize_pass_count", -1)) != 0 \
+			or int(opening_profile.get("recovery_count", 0)) != 1 or int(opening_profile.get("recovery_parse_count", 0)) != 1 \
+			or bool(opening_profile.get("recovery_cache_hit", true)) or not bool(opening_profile.get("writer_recovery_reused", false)) \
+			or int(opening_profile.get("summary_session_reconstruction_count", -1)) != 0:
+		_finish_fail("Generated-opening fast autosave control changed while optimizing manual saves.", {"result": opening_result, "profile": opening_profile})
+		return {}
+	rows["generated_opening_autosave"] = _runtime_save_profile_signature(opening_profile)
+	return rows
+
 func _assert_stored_recap_alias_profiles() -> Dictionary:
 	_clear_paths(MANUAL_PATHS)
 	SaveService.validation_clear_summary_cache()
@@ -211,12 +357,20 @@ func _assert_stored_recap_alias_profiles() -> Dictionary:
 
 func _assert_summary_recovery_controls() -> Dictionary:
 	var path := MANUAL_PATHS[0]
+	var initial_summary: Dictionary = SaveService.inspect_manual_slot(1)
+	var name_result: Dictionary = SaveService.set_manual_slot_name_from_summary(initial_summary, "Recovered Route")
+	if not bool(name_result.get("ok", false)):
+		_finish_fail("Summary recovery control could not name its valid live authority.", name_result)
+		return {}
 	var live_state: Dictionary = _capture_file(path)
 	var live_bytes: PackedByteArray = live_state.get("bytes", PackedByteArray()) if live_state.get("bytes", PackedByteArray()) is PackedByteArray else PackedByteArray()
 	if not bool(live_state.get("exists", false)) or live_bytes.is_empty():
 		_finish_fail("Summary recovery control is missing its seeded Manual 1 bytes.")
 		return {}
 	var summary_before: Dictionary = SaveService.inspect_manual_slot(1)
+	if String(summary_before.get("manual_slot_name", "")) != "Recovered Route":
+		_finish_fail("Named recovery authority did not retain its manual name.", summary_before)
+		return {}
 	var candidate_path := "%s.candidate" % path
 	if not _write_file_bytes(candidate_path, live_bytes):
 		_finish_fail("Could not seed candidate summary recovery control.")
@@ -226,17 +380,68 @@ func _assert_summary_recovery_controls() -> Dictionary:
 		_finish_fail("Candidate presence did not force exact cleanup before cached summary return.", {"before": summary_before, "after": candidate_summary})
 		return {}
 
+	var backup_name_result: Dictionary = SaveService.set_manual_slot_name_from_summary(candidate_summary, "Backup Authority")
+	var backup_authority_state: Dictionary = _capture_file(path)
+	var backup_authority_bytes: PackedByteArray = backup_authority_state.get("bytes", PackedByteArray()) if backup_authority_state.get("bytes", PackedByteArray()) is PackedByteArray else PackedByteArray()
+	if not bool(backup_name_result.get("ok", false)) or backup_authority_bytes.is_empty() or backup_authority_bytes == live_bytes:
+		_finish_fail("Summary recovery control could not seed a distinct named backup authority.", backup_name_result)
+		return {}
+	if not _write_file_bytes(path, live_bytes):
+		_finish_fail("Summary recovery control could not restore its original live authority before backup recovery.")
+		return {}
+	SaveService.validation_clear_summary_cache()
+	var original_live_summary: Dictionary = SaveService.inspect_manual_slot(1)
 	var cache_before_backup: Dictionary = SaveService.validation_summary_cache_snapshot()
+	if String(original_live_summary.get("manual_slot_name", "")) != "Recovered Route":
+		_finish_fail("Summary recovery control did not restore its original named live authority.", original_live_summary)
+		return {}
 	var backup_path := "%s.backup" % path
-	if not _write_file_bytes(backup_path, live_bytes) or DirAccess.remove_absolute(ProjectSettings.globalize_path(path)) != OK:
-		_finish_fail("Could not seed missing-live valid-backup recovery control.")
+	if not _write_file_bytes(backup_path, backup_authority_bytes) or not _write_file_bytes(path, "{corrupt-live".to_utf8_buffer()):
+		_finish_fail("Could not seed corrupt-live valid-backup recovery control.")
 		return {}
 	var restored_summary: Dictionary = SaveService.inspect_manual_slot(1)
 	var cache_after_backup: Dictionary = SaveService.validation_summary_cache_snapshot()
-	if not SaveService.can_load_summary(restored_summary) or not FileAccess.file_exists(path) or FileAccess.file_exists(backup_path) or _capture_file(path).get("bytes", PackedByteArray()) != live_bytes or cache_after_backup.is_empty() or cache_after_backup == cache_before_backup:
-		_finish_fail("Valid backup recovery did not restore bytes and rebuild a loadable summary cache.", {"summary": restored_summary, "cache_before": cache_before_backup, "cache_after": cache_after_backup})
+	if not SaveService.can_load_summary(restored_summary) or not FileAccess.file_exists(path) or FileAccess.file_exists(backup_path) or _capture_file(path).get("bytes", PackedByteArray()) != backup_authority_bytes or cache_after_backup.is_empty() or cache_after_backup == cache_before_backup or String(restored_summary.get("manual_slot_name", "")) != "Backup Authority":
+		_finish_fail("Valid named backup recovery did not restore bytes/name and rebuild a loadable summary cache.", {
+			"summary_name": String(restored_summary.get("manual_slot_name", "")),
+			"summary_loadable": SaveService.can_load_summary(restored_summary),
+			"backup_absent": not FileAccess.file_exists(backup_path),
+			"bytes_restored": _capture_file(path).get("bytes", PackedByteArray()) == backup_authority_bytes,
+			"cache_changed": cache_after_backup != cache_before_backup,
+		})
 		return {}
-	return {"candidate_cleanup": true, "backup_restored": true, "cache_rebuilt": true, "file_size": live_bytes.size()}
+
+	if not _write_file_bytes(path, "{corrupt-live-no-backup".to_utf8_buffer()):
+		_finish_fail("Could not seed corrupt-live no-valid-backup control.")
+		return {}
+	if FileAccess.file_exists(backup_path):
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(backup_path))
+	SaveService.validation_clear_summary_cache()
+	var replacement_session = _small_context_session("overworld")
+	if replacement_session == null:
+		return {}
+	var replacement_result: Dictionary = SaveService.save_runtime_manual_session(replacement_session, 1)
+	var replacement_profile: Dictionary = SaveService.validation_last_runtime_save_profile()
+	var replacement_summary: Dictionary = SaveService.inspect_manual_slot(1)
+	var replacement_restored = SaveService.restore_manual_session(1)
+	if not bool(replacement_result.get("ok", false)) or not _assert_manual_runtime_save_profile(replacement_profile, "corrupt live no-valid-backup manual", false, 2, 0, 1, "no_valid_backup") \
+			or replacement_restored == null or _canonical_dictionary(replacement_restored.to_dict()) != _canonical_dictionary(replacement_session.to_dict()) \
+			or String(replacement_summary.get("manual_slot_name", "")) != "" or not _artifacts_absent(path):
+		_finish_fail("Explicit save over corrupt live/no valid backup did not publish a clean unnamed manual save.", {
+			"result": replacement_result,
+			"profile": replacement_profile,
+			"summary": replacement_summary,
+		})
+		return {}
+	return {
+		"candidate_cleanup": true,
+		"backup_restored": true,
+		"backup_manual_name": "Backup Authority",
+		"cache_rebuilt": true,
+		"no_valid_backup_replaced": true,
+		"no_valid_backup_name_cleared": true,
+		"file_size": live_bytes.size(),
+	}
 
 func _assert_surface_parity(label: String, session, slot: int) -> Dictionary:
 	_warm_summary_cache()
@@ -353,6 +558,12 @@ func _assert_generated_large_physical_and_transactional_flow() -> Dictionary:
 	var success_row: Dictionary = await _assert_empty_slot_success(shell, session, picker)
 	if success_row.is_empty():
 		return {}
+	var named_summary: Dictionary = SaveService.inspect_manual_slot(2)
+	var name_result: Dictionary = SaveService.set_manual_slot_name_from_summary(named_summary, GENERATED_MANUAL_NAME)
+	if not bool(name_result.get("ok", false)) or String(SaveService.inspect_manual_slot(2).get("manual_slot_name", "")) != GENERATED_MANUAL_NAME:
+		_finish_fail("Generated-Large Manual 2 could not establish its retained overwrite name.", name_result)
+		return {}
+	success_row["manual_name_before_overwrite"] = GENERATED_MANUAL_NAME
 	var cancel_row: Dictionary = await _assert_overwrite_cancel(shell, session, picker)
 	if cancel_row.is_empty():
 		return {}
@@ -402,6 +613,9 @@ func _assert_empty_slot_success(shell: Node, session, picker: OptionButton) -> D
 	if _runtime_save_record_count(records) != 1:
 		_finish_fail("Empty-slot Save did not execute exactly one runtime write.", records)
 		return {}
+	var runtime_profile: Dictionary = SaveService.validation_last_runtime_save_profile()
+	if not _assert_manual_runtime_save_profile(runtime_profile, "generated-Large empty-slot manual", true, 2, 0, 1, "live_missing"):
+		return {}
 	var surface := _last_save_surface_record(records)
 	if not _assert_surface_profile_light(surface, "post-empty-slot-save refresh", 1):
 		return {}
@@ -450,7 +664,7 @@ func _assert_empty_slot_success(shell: Node, session, picker: OptionButton) -> D
 	if picker.get_selected_id() != 2:
 		_finish_fail("Post-save refresh redirected the selected slot.")
 		return {}
-	return {"write_count": 1, "commit_total_ms": float(town_save_record.get("total_ms", 0.0)), "surface_ms": float(surface.get("total_ms", 0.0)), "forced_refresh_ms": float(town_save_buckets.get("save_surface_force", 0.0)), "town_refresh_ms": float(town_save_buckets.get("refresh", 0.0)), "cache_hit": true, "cache_build_ms": 0.0, "bytes": FileAccess.get_size(MANUAL_PATHS[1])}
+	return {"write_count": 1, "runtime_save_profile": _runtime_save_profile_signature(runtime_profile), "commit_total_ms": float(town_save_record.get("total_ms", 0.0)), "surface_ms": float(surface.get("total_ms", 0.0)), "forced_refresh_ms": float(town_save_buckets.get("save_surface_force", 0.0)), "town_refresh_ms": float(town_save_buckets.get("refresh", 0.0)), "cache_hit": true, "cache_build_ms": 0.0, "bytes": FileAccess.get_size(MANUAL_PATHS[1])}
 
 func _assert_overwrite_cancel(shell: Node, session, picker: OptionButton) -> Dictionary:
 	var file_before := _file_state(MANUAL_PATHS[1])
@@ -465,7 +679,7 @@ func _assert_overwrite_cancel(shell: Node, session, picker: OptionButton) -> Dic
 	shell.call("validation_cancel_manual_save_overwrite")
 	await _settle(2)
 	var records: Array = SaveService.validation_general_profile_log_last_records(20)
-	if _runtime_save_record_count(records) != 0 or _file_state(MANUAL_PATHS[1]) != file_before or SaveService.validation_summary_cache_snapshot() != cache_before or session.to_dict() != session_before or picker.get_selected_id() != 2:
+	if _runtime_save_record_count(records) != 0 or _file_state(MANUAL_PATHS[1]) != file_before or SaveService.validation_summary_cache_snapshot() != cache_before or session.to_dict() != session_before or picker.get_selected_id() != 2 or String(SaveService.inspect_manual_slot(2).get("manual_slot_name", "")) != GENERATED_MANUAL_NAME:
 		_finish_fail("Overwrite cancellation mutated write/session/cache/slot authority.", records)
 		return {}
 	return {"write_count": 0, "bytes_exact": true}
@@ -491,6 +705,9 @@ func _assert_overwrite_failure(shell: Node, session, picker: OptionButton, phase
 	if _runtime_save_record_count(records) != 1:
 		_finish_fail("Injected %s overwrite failure did not execute exactly one write attempt." % phase, records)
 		return {}
+	var runtime_profile: Dictionary = SaveService.validation_last_runtime_save_profile()
+	if not _assert_manual_runtime_save_profile(runtime_profile, "generated-Large %s manual failure" % phase, false, 1, 1, 0, "verified_summary_cache"):
+		return {}
 	if _file_state(MANUAL_PATHS[1]) != file_before or SaveService.validation_summary_cache_snapshot() != cache_before or session.to_dict() != session_before or picker.get_selected_id() != 2 or not _artifacts_absent(MANUAL_PATHS[1]):
 		_finish_fail("Injected %s overwrite failure changed prior bytes/cache/live authority or left residue." % phase, {"confirmation": confirmation, "records": records})
 		return {}
@@ -499,7 +716,10 @@ func _assert_overwrite_failure(shell: Node, session, picker: OptionButton, phase
 		return {}
 	if not _assert_current_surface_alias(session, 2, true, "post-%s-failed-save" % phase):
 		return {}
-	return {"phase": phase, "write_attempt_count": 1, "bytes_exact": true, "surface_ms": float(surface.get("total_ms", 0.0))}
+	if String(SaveService.inspect_manual_slot(2).get("manual_slot_name", "")) != GENERATED_MANUAL_NAME:
+		_finish_fail("Injected %s overwrite failure lost the retained manual name." % phase)
+		return {}
+	return {"phase": phase, "write_attempt_count": 1, "bytes_exact": true, "runtime_save_profile": _runtime_save_profile_signature(runtime_profile), "surface_ms": float(surface.get("total_ms", 0.0))}
 
 func _assert_overwrite_success(shell: Node, session, picker: OptionButton) -> Dictionary:
 	var resources: Dictionary = session.overworld.get("resources", {}) if session.overworld.get("resources", {}) is Dictionary else {}
@@ -518,9 +738,12 @@ func _assert_overwrite_success(shell: Node, session, picker: OptionButton) -> Di
 	if _runtime_save_record_count(records) != 1:
 		_finish_fail("Confirmed overwrite did not execute exactly one runtime write.", records)
 		return {}
+	var runtime_profile: Dictionary = SaveService.validation_last_runtime_save_profile()
+	if not _assert_manual_runtime_save_profile(runtime_profile, "generated-Large overwrite manual", true, 2, 1, 0, "verified_summary_cache"):
+		return {}
 	var file_after := _file_state(MANUAL_PATHS[1])
 	var restored = SaveService.restore_manual_session(2)
-	if file_after == file_before or restored == null or _canonical_dictionary(restored.to_dict()) != _canonical_dictionary(session.to_dict()) or picker.get_selected_id() != 2 or not _artifacts_absent(MANUAL_PATHS[1]):
+	if file_after == file_before or restored == null or _canonical_dictionary(restored.to_dict()) != _canonical_dictionary(session.to_dict()) or picker.get_selected_id() != 2 or not _artifacts_absent(MANUAL_PATHS[1]) or String(SaveService.inspect_manual_slot(2).get("manual_slot_name", "")) != GENERATED_MANUAL_NAME:
 		_finish_fail("Confirmed overwrite did not commit the exact current generated session once.", {"before": file_before, "after": file_after})
 		return {}
 	var surface := _last_save_surface_record(records)
@@ -528,7 +751,82 @@ func _assert_overwrite_success(shell: Node, session, picker: OptionButton) -> Di
 		return {}
 	if not _assert_current_surface_alias(session, 2, true, "post-overwrite"):
 		return {}
-	return {"write_count": 1, "surface_ms": float(surface.get("total_ms", 0.0)), "bytes": int(file_after.get("size", -1))}
+	return {"write_count": 1, "manual_name": GENERATED_MANUAL_NAME, "runtime_save_profile": _runtime_save_profile_signature(runtime_profile), "surface_ms": float(surface.get("total_ms", 0.0)), "bytes": int(file_after.get("size", -1))}
+
+func _assert_manual_runtime_save_profile(
+	profile: Dictionary,
+	label: String,
+	require_large_budget: bool,
+	expected_verification_parse_count: int = 2,
+	expected_recovery_cache_hit: int = -1,
+	expected_recovery_parse_count: int = -1,
+	expected_recovery_reason: String = ""
+) -> bool:
+	if profile.is_empty():
+		_finish_fail("%s did not retain its runtime-save profile." % label)
+		return false
+	var buckets: Dictionary = profile.get("buckets_ms", {}) if profile.get("buckets_ms", {}) is Dictionary else {}
+	for bucket in ["to_dict", "restore_normalize", "recovery", "save_normalize", "stringify"]:
+		if not buckets.has(bucket):
+			_finish_fail("%s omitted runtime-save profile bucket %s." % [label, bucket], profile)
+			return false
+	if bool(profile.get("restore_normalize_skipped", true)) \
+			or int(profile.get("restore_normalize_pass_count", 0)) != 1 \
+			or not bool(profile.get("prepared_payload", false)) \
+			or String(profile.get("prepared_payload_reason", "")) != "normalized_detached_manual_session" \
+			or not bool(profile.get("save_normalize_skipped", false)) \
+			or String(profile.get("save_normalize_skip_reason", "")) != "prepared_normalized_manual_payload" \
+			or int(profile.get("recovery_count", 0)) != 1 \
+			or not bool(profile.get("writer_recovery_reused", false)) \
+			or not bool(profile.get("restore_owned_payload_transfer", false)) \
+			or int(profile.get("verification_parse_count", -1)) != expected_verification_parse_count \
+			or int(profile.get("verification_payload_copy_count", -1)) != 0 \
+			or int(profile.get("summary_session_reconstruction_count", -1)) != 0:
+		_finish_fail("%s did not use exactly one semantic normalization/recovery and the owned prepared payload." % label, profile)
+		return false
+	if expected_recovery_cache_hit >= 0 and bool(profile.get("recovery_cache_hit", false)) != (expected_recovery_cache_hit == 1):
+		_finish_fail("%s reported the wrong recovery-cache authority." % label, profile)
+		return false
+	if expected_recovery_parse_count >= 0 and int(profile.get("recovery_parse_count", -1)) != expected_recovery_parse_count:
+		_finish_fail("%s reported the wrong recovery parse count." % label, profile)
+		return false
+	if expected_recovery_reason != "" and String(profile.get("recovery_reason", "")) != expected_recovery_reason:
+		_finish_fail("%s reported the wrong recovery authority reason." % label, profile)
+		return false
+	if float(buckets.get("save_normalize", 99999.0)) >= MANUAL_SAVE_NORMALIZE_METADATA_LIMIT_MS:
+		_finish_fail("%s spent too long in prepared save metadata normalization." % label, profile)
+		return false
+	if require_large_budget:
+		var limit_ms := MANUAL_SAVE_WINDOWS_LIMIT_MS if OS.get_name() == "Windows" else MANUAL_SAVE_SOURCE_LIMIT_MS
+		if float(profile.get("total_ms", 99999.0)) >= limit_ms:
+			_finish_fail("%s exceeded the %.0fms transactional runtime-save budget." % [label, limit_ms], profile)
+			return false
+	return true
+
+func _runtime_save_profile_signature(profile: Dictionary) -> Dictionary:
+	var buckets: Dictionary = profile.get("buckets_ms", {}) if profile.get("buckets_ms", {}) is Dictionary else {}
+	return {
+		"total_ms": float(profile.get("total_ms", 0.0)),
+		"restore_normalize_ms": float(buckets.get("restore_normalize", 0.0)),
+		"save_normalize_ms": float(buckets.get("save_normalize", 0.0)),
+		"stringify_ms": float(buckets.get("stringify", 0.0)),
+		"write_ms": float(buckets.get("write", 0.0)),
+		"restore_normalize_skipped": bool(profile.get("restore_normalize_skipped", false)),
+		"restore_normalize_pass_count": int(profile.get("restore_normalize_pass_count", 0)),
+		"prepared_payload": bool(profile.get("prepared_payload", false)),
+		"prepared_payload_reason": String(profile.get("prepared_payload_reason", "")),
+		"save_normalize_skipped": bool(profile.get("save_normalize_skipped", false)),
+		"save_normalize_skip_reason": String(profile.get("save_normalize_skip_reason", "")),
+		"recovery_count": int(profile.get("recovery_count", 0)),
+		"recovery_parse_count": int(profile.get("recovery_parse_count", 0)),
+		"recovery_cache_hit": bool(profile.get("recovery_cache_hit", false)),
+		"recovery_reason": String(profile.get("recovery_reason", "")),
+		"writer_recovery_reused": bool(profile.get("writer_recovery_reused", false)),
+		"restore_owned_payload_transfer": bool(profile.get("restore_owned_payload_transfer", false)),
+		"verification_parse_count": int(profile.get("verification_parse_count", 0)),
+		"verification_payload_copy_count": int(profile.get("verification_payload_copy_count", 0)),
+		"summary_session_reconstruction_count": int(profile.get("summary_session_reconstruction_count", 0)),
+	}
 
 func _assert_surface_profile_light(record: Dictionary, label: String, expected_alias: int = -1) -> bool:
 	if record.is_empty():
