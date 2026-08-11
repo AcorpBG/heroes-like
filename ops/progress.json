@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Aurelion Reach public-title slice is complete. The live first view now uses the original public title with exact compact-fit, visual, keyboard, and lean-boot proof while heroes-like remains the compatibility-sensitive technical identity. Overall release readiness remains open.",
+  "currentNotes": "The Aurelion Reach package public-identity migration is complete. Linux desktop and Windows PE/ARP/launcher surfaces now use the public title with exact legacy upgrade, rollback, uninstall, boot, and user-data proof while stable heroes-like technical ownership remains unchanged. Overall release readiness remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-aurelion-reach-public-title-identity-10184",
-  "currentSliceId": "presentation-aurelion-reach-public-title-identity-10184",
-  "currentSliceNotes": "Completed AURELION REACH on the live first view with exact 1920/default and 1280 compact-pocket fit, full visual composition, keyboard navigation, and zero first-view save-inspection proof. Stable heroes-like Godot, executable, installer, and user-data identities are unchanged.",
+  "currentSlice": "packaging-aurelion-reach-public-identity-migration-10184",
+  "currentSliceId": "packaging-aurelion-reach-public-identity-migration-10184",
+  "currentSliceNotes": "Completed Aurelion Reach public package identity across Linux desktop, Windows PE/ARP, NSIS shortcuts, and archive launchers. Real Linux and fresh-Wine lifecycles prove legacy migration, injected rollback, packaged boot, uninstall, registry integrity, and external user-data preservation.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Aurelion Reach Public Title Identity",
-  "currentSliceUpdatedAt": "2026-08-11T07:47:51Z",
+  "currentSliceTitle": "Aurelion Reach Package Public Identity Migration",
+  "currentSliceUpdatedAt": "2026-08-11T08:05:06Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -75190,6 +75190,28 @@
       "notes": "Completed the public-title decision and live first-view implementation. MainMenu renders exactly AURELION REACH and runtime proof checks the label bounds plus rendered minimum size inside the compact logo pocket at default presentation and explicit 1280x720. Full menu/outcome visual, keyboard navigation, and lean-boot save guard pass; first view performs zero save inspections and explicit Load performs six. Editor, validator, JSON, Python, reconciliation, and diff gates pass. project.godot, export/installer technical identity, executable stem, ownership keys, and user-data path remain unchanged.",
       "remainingWork": "No work remains in this slice. A separate future migration must own public installer/export metadata without changing existing user-data or installer ownership semantics. Broader faction balance, strategic-AI/content breadth, Native RMG parity, signing, native Windows hardware certification, publication, and overall release readiness remain open.",
       "completedAt": "2026-08-11T07:47:51Z"
+    },
+    {
+      "id": "packaging-aurelion-reach-public-identity-migration-10184",
+      "title": "Aurelion Reach Package Public Identity Migration",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md"],
+      "purpose": "Migrate public Linux/Windows package metadata and launchers from Heroes Like to Aurelion Reach without changing compatibility-sensitive technical ownership.",
+      "implementationTargets": ["export_presets.cfg", "packaging/installers/linux/install.sh", "packaging/installers/linux/uninstall.sh", "packaging/installers/windows/install.cmd", "packaging/installers/windows/uninstall.cmd", "tools/package_release.py", "tests/packaging_release_artifact_verification_test.py", "tests/packaging_user_local_installer_smoke.py", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"public_title": "Aurelion Reach", "linux_desktop_name": "Heroes Like", "windows_product_name": "Heroes Like", "windows_shortcut_name": "Heroes Like", "technical_product_id": "heroes-like", "save_version": 9},
+      "completionCriteria": ["Linux desktop and Windows PE/ARP/shortcut surfaces display Aurelion Reach while executable/install/registry/user-data identities remain exact", "Verified legacy Heroes Like installs upgrade in place to one public shortcut set", "Injected failures restore exact program/registry/legacy-public shortcut state and unowned or malformed uninstall refusal remains non-mutating", "Artifact verification, archive and NSIS/Wine lifecycle, packaged boot, editor, repository, Python, JSON, and diff gates pass"],
+      "nonGoals": ["technical executable/archive/install/registry/marker/schema/environment/user-data rename, save migration, logo generation, gameplay, balance, AI, Native RMG, signing, native Windows hardware certification, publication, or release-completion claim"],
+      "createdAt": "2026-08-11T07:50:46Z",
+      "startedAt": "2026-08-11T07:50:46Z",
+      "updatedAt": "2026-08-11T08:05:06Z",
+      "notes": "Completed public Aurelion Reach identity across Linux desktop entries, Windows export/setup PE resources, ARP DisplayName/Publisher, NSIS shortcuts, and archive launchers while retaining every compatibility-sensitive heroes-like technical identity. The authoritative packaging_user_local_installer_smoke reports ok=true for Linux, Windows NSIS, and Windows archive lifecycles. Real fresh Wine proves exact legacy shortcut migration, precommit/after-backup rollback, registry transaction preservation, Boot/MainMenu/native DLL load, malformed/unowned refusal, uninstall, and external user-data preservation. Release artifact verification passes 17/17; platform readiness, editor, validator, JSON, Python, reconciliation, and diff gates pass.",
+      "remainingWork": "No work remains in this slice. Signing, native Windows hardware certification, release-channel publication, broader faction balance, strategic-AI/content breadth, Native RMG parity, and overall release readiness remain open.",
+      "artifacts": [".artifacts/packaging_user_local_installer_smoke/report.json", ".artifacts/packaging_user_local_installer_smoke/archives/heroes-like-0.1.0-alpha.1-linux-x86_64.run", ".artifacts/packaging_user_local_installer_smoke/archives/heroes-like-0.1.0-alpha.1-linux-x86_64.tar.gz", ".artifacts/packaging_user_local_installer_smoke/archives/heroes-like-0.1.0-alpha.1-windows-x86_64.setup.exe", ".artifacts/packaging_user_local_installer_smoke/archives/heroes-like-0.1.0-alpha.1-windows-x86_64.zip"],
+      "artifactSha256": {"linux_run": "bd22c27d696e65c7af4ada5cf395a1a0c8bf92ad99c3402a3611d29a0382b6ab", "linux_archive": "ccd83928f7d77148246154e9269dc6f8cd0dd337b4b04fcda214458e53fd1a57", "windows_setup": "bfa5360ee5d4d72a748c89d7b4a54c1a5b4b9607de59068a545ab832cbbdba68", "windows_archive": "6d9eaa0900accc36a871acc292ee37f221c3c8fa13d908227986f7de48791857"},
+      "completedAt": "2026-08-11T08:05:06Z"
     }
   ],
   "project": "heroes-like",
@@ -75199,8 +75221,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, public installer/export identity migration, manual public-prerelease execution, stable publication, signing, and native Windows hardware certification.",
-  "remainingWork": "Continue strategic-AI, accessibility, content, performance, compatibility-safe public installer/export identity, signing, native Windows certification, stable-channel, and remaining faction balance gaps; create/review a current verified draft before manually exercising public prerelease promotion. The accepted faction matrix remains needs_tuning at 34 outliers / 187.0 severity / 68.5 percent maximum dominance / 0.73 side bias.",
+  "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, manual public-prerelease execution, stable publication, signing, and native Windows hardware certification.",
+  "remainingWork": "Continue strategic-AI, accessibility, content, performance, signing, native Windows certification, stable-channel, and remaining faction balance gaps; create/review a current verified draft before manually exercising public prerelease promotion. The accepted faction matrix remains needs_tuning at 34 outliers / 187.0 severity / 68.5 percent maximum dominance / 0.73 side bias.",
   "reportOnlyEvidence": [
     {
       "entries": [

@@ -34,8 +34,13 @@ WINDOWS_INSTALLER_HELPER_SOURCE = ROOT / "tools" / "windows_installer_helper.c"
 WINDOWS_INSTALLER_HELPER_NAME = "heroes-like-installer-helper.exe"
 WINDOWS_UNINSTALL_REGISTRY_PARENT = r"Software\Microsoft\Windows\CurrentVersion\Uninstall"
 WINDOWS_UNINSTALL_REGISTRY_KEY = r"Software\Microsoft\Windows\CurrentVersion\Uninstall\Heroes Like"
-WINDOWS_PRODUCT_NAME = "Heroes Like"
-WINDOWS_PUBLISHER = "Heroes Like"
+WINDOWS_TECHNICAL_NAME = "Heroes Like"
+WINDOWS_PRODUCT_NAME = "Aurelion Reach"
+WINDOWS_PUBLISHER = "Aurelion Reach contributors"
+WINDOWS_PUBLIC_GAME_SHORTCUT = "Aurelion Reach.lnk"
+WINDOWS_PUBLIC_UNINSTALL_SHORTCUT = "Uninstall Aurelion Reach.lnk"
+WINDOWS_LEGACY_GAME_SHORTCUT = "Heroes Like.lnk"
+WINDOWS_LEGACY_UNINSTALL_SHORTCUT = "Uninstall Heroes Like.lnk"
 WINDOWS_VERSION_CHANNEL_BASES = {
     "alpha": 1000,
     "beta": 2000,
@@ -345,7 +350,7 @@ def validate_windows_export_preset_version(semantic_version: str) -> str:
         "application/company_name": WINDOWS_PUBLISHER,
         "application/product_name": WINDOWS_PRODUCT_NAME,
         "application/file_description": WINDOWS_PRODUCT_NAME,
-        "application/copyright": "Copyright 2026 Heroes Like contributors",
+        "application/copyright": "Copyright 2026 Aurelion Reach contributors",
     }
     for key, value in required.items():
         if re.search(rf'(?m)^{re.escape(key)}="{re.escape(value)}"\s*$', options) is None:
@@ -703,7 +708,7 @@ def create_windows_nsis_installer(
     )
     script = f"""Unicode True
 !include "LogicLib.nsh"
-Name "heroes-like {nsis_string(version)}"
+Name "{WINDOWS_PRODUCT_NAME} {nsis_string(version)}"
 OutFile "{nsis_string(str(destination))}"
 VIProductVersion "{numeric_version}"
 VIAddVersionKey /LANG=1033 "FileVersion" "{numeric_version}"
@@ -711,7 +716,7 @@ VIAddVersionKey /LANG=1033 "ProductVersion" "{numeric_version}"
 VIAddVersionKey /LANG=1033 "ProductName" "{WINDOWS_PRODUCT_NAME}"
 VIAddVersionKey /LANG=1033 "FileDescription" "{WINDOWS_PRODUCT_NAME}"
 VIAddVersionKey /LANG=1033 "CompanyName" "{WINDOWS_PUBLISHER}"
-VIAddVersionKey /LANG=1033 "LegalCopyright" "Copyright 2026 Heroes Like contributors"
+VIAddVersionKey /LANG=1033 "LegalCopyright" "Copyright 2026 Aurelion Reach contributors"
 InstallDir "$LOCALAPPDATA\\Heroes Like"
 RequestExecutionLevel user
 SetCompressor zlib
@@ -756,8 +761,10 @@ Var ArpNoModify
 Var ArpNoModifyPresent
 Var ArpNoRepair
 Var ArpNoRepairPresent
-Var GameShortcutPresent
-Var UninstallShortcutPresent
+Var LegacyGameShortcutPresent
+Var LegacyUninstallShortcutPresent
+Var PublicGameShortcutPresent
+Var PublicUninstallShortcutPresent
 
 !macro VERIFY_FILE ROOT NAME SIZE HASH FAILURE
   StrCpy $TxPath "${{ROOT}}\\${{NAME}}"
@@ -843,18 +850,31 @@ FunctionEnd
 
 Function SnapshotShortcuts
   StrCpy $RegistrationResult "ok"
-  StrCpy $GameShortcutPresent "0"
-  StrCpy $UninstallShortcutPresent "0"
-  CreateDirectory "$PLUGINSDIR\\shortcut-backup"
-  IfFileExists "$SMPROGRAMS\\Heroes Like\\Heroes Like.lnk" 0 snapshot_uninstall_shortcut
-  CopyFiles /SILENT "$SMPROGRAMS\\Heroes Like\\Heroes Like.lnk" "$PLUGINSDIR\\shortcut-backup"
-  IfFileExists "$PLUGINSDIR\\shortcut-backup\\Heroes Like.lnk" 0 snapshot_shortcuts_failed
-  StrCpy $GameShortcutPresent "1"
-snapshot_uninstall_shortcut:
-  IfFileExists "$SMPROGRAMS\\Heroes Like\\Uninstall Heroes Like.lnk" 0 snapshot_shortcuts_done
-  CopyFiles /SILENT "$SMPROGRAMS\\Heroes Like\\Uninstall Heroes Like.lnk" "$PLUGINSDIR\\shortcut-backup"
-  IfFileExists "$PLUGINSDIR\\shortcut-backup\\Uninstall Heroes Like.lnk" 0 snapshot_shortcuts_failed
-  StrCpy $UninstallShortcutPresent "1"
+  StrCpy $LegacyGameShortcutPresent "0"
+  StrCpy $LegacyUninstallShortcutPresent "0"
+  StrCpy $PublicGameShortcutPresent "0"
+  StrCpy $PublicUninstallShortcutPresent "0"
+  CreateDirectory "$PLUGINSDIR\\shortcut-backup\\legacy"
+  CreateDirectory "$PLUGINSDIR\\shortcut-backup\\public"
+  IfFileExists "$SMPROGRAMS\\{WINDOWS_TECHNICAL_NAME}\\{WINDOWS_LEGACY_GAME_SHORTCUT}" 0 snapshot_legacy_uninstall_shortcut
+  CopyFiles /SILENT "$SMPROGRAMS\\{WINDOWS_TECHNICAL_NAME}\\{WINDOWS_LEGACY_GAME_SHORTCUT}" "$PLUGINSDIR\\shortcut-backup\\legacy"
+  IfFileExists "$PLUGINSDIR\\shortcut-backup\\legacy\\{WINDOWS_LEGACY_GAME_SHORTCUT}" 0 snapshot_shortcuts_failed
+  StrCpy $LegacyGameShortcutPresent "1"
+snapshot_legacy_uninstall_shortcut:
+  IfFileExists "$SMPROGRAMS\\{WINDOWS_TECHNICAL_NAME}\\{WINDOWS_LEGACY_UNINSTALL_SHORTCUT}" 0 snapshot_public_game_shortcut
+  CopyFiles /SILENT "$SMPROGRAMS\\{WINDOWS_TECHNICAL_NAME}\\{WINDOWS_LEGACY_UNINSTALL_SHORTCUT}" "$PLUGINSDIR\\shortcut-backup\\legacy"
+  IfFileExists "$PLUGINSDIR\\shortcut-backup\\legacy\\{WINDOWS_LEGACY_UNINSTALL_SHORTCUT}" 0 snapshot_shortcuts_failed
+  StrCpy $LegacyUninstallShortcutPresent "1"
+snapshot_public_game_shortcut:
+  IfFileExists "$SMPROGRAMS\\{WINDOWS_PRODUCT_NAME}\\{WINDOWS_PUBLIC_GAME_SHORTCUT}" 0 snapshot_public_uninstall_shortcut
+  CopyFiles /SILENT "$SMPROGRAMS\\{WINDOWS_PRODUCT_NAME}\\{WINDOWS_PUBLIC_GAME_SHORTCUT}" "$PLUGINSDIR\\shortcut-backup\\public"
+  IfFileExists "$PLUGINSDIR\\shortcut-backup\\public\\{WINDOWS_PUBLIC_GAME_SHORTCUT}" 0 snapshot_shortcuts_failed
+  StrCpy $PublicGameShortcutPresent "1"
+snapshot_public_uninstall_shortcut:
+  IfFileExists "$SMPROGRAMS\\{WINDOWS_PRODUCT_NAME}\\{WINDOWS_PUBLIC_UNINSTALL_SHORTCUT}" 0 snapshot_shortcuts_done
+  CopyFiles /SILENT "$SMPROGRAMS\\{WINDOWS_PRODUCT_NAME}\\{WINDOWS_PUBLIC_UNINSTALL_SHORTCUT}" "$PLUGINSDIR\\shortcut-backup\\public"
+  IfFileExists "$PLUGINSDIR\\shortcut-backup\\public\\{WINDOWS_PUBLIC_UNINSTALL_SHORTCUT}" 0 snapshot_shortcuts_failed
+  StrCpy $PublicUninstallShortcutPresent "1"
   Goto snapshot_shortcuts_done
 snapshot_shortcuts_failed:
   StrCpy $RegistrationResult "failed"
@@ -862,13 +882,24 @@ snapshot_shortcuts_done:
 FunctionEnd
 
 Function RestoreShortcuts
-  Delete "$SMPROGRAMS\\Heroes Like\\Heroes Like.lnk"
-  Delete "$SMPROGRAMS\\Heroes Like\\Uninstall Heroes Like.lnk"
-  StrCmp $GameShortcutPresent "1" 0 +2
-  CopyFiles /SILENT "$PLUGINSDIR\\shortcut-backup\\Heroes Like.lnk" "$SMPROGRAMS\\Heroes Like"
-  StrCmp $UninstallShortcutPresent "1" 0 +2
-  CopyFiles /SILENT "$PLUGINSDIR\\shortcut-backup\\Uninstall Heroes Like.lnk" "$SMPROGRAMS\\Heroes Like"
-  RMDir "$SMPROGRAMS\\Heroes Like"
+  Delete "$SMPROGRAMS\\{WINDOWS_PRODUCT_NAME}\\{WINDOWS_PUBLIC_GAME_SHORTCUT}"
+  Delete "$SMPROGRAMS\\{WINDOWS_PRODUCT_NAME}\\{WINDOWS_PUBLIC_UNINSTALL_SHORTCUT}"
+  Delete "$SMPROGRAMS\\{WINDOWS_TECHNICAL_NAME}\\{WINDOWS_LEGACY_GAME_SHORTCUT}"
+  Delete "$SMPROGRAMS\\{WINDOWS_TECHNICAL_NAME}\\{WINDOWS_LEGACY_UNINSTALL_SHORTCUT}"
+  RMDir "$SMPROGRAMS\\{WINDOWS_PRODUCT_NAME}"
+  RMDir "$SMPROGRAMS\\{WINDOWS_TECHNICAL_NAME}"
+  StrCmp $LegacyGameShortcutPresent "1" 0 +3
+  CreateDirectory "$SMPROGRAMS\\{WINDOWS_TECHNICAL_NAME}"
+  CopyFiles /SILENT "$PLUGINSDIR\\shortcut-backup\\legacy\\{WINDOWS_LEGACY_GAME_SHORTCUT}" "$SMPROGRAMS\\{WINDOWS_TECHNICAL_NAME}"
+  StrCmp $LegacyUninstallShortcutPresent "1" 0 +3
+  CreateDirectory "$SMPROGRAMS\\{WINDOWS_TECHNICAL_NAME}"
+  CopyFiles /SILENT "$PLUGINSDIR\\shortcut-backup\\legacy\\{WINDOWS_LEGACY_UNINSTALL_SHORTCUT}" "$SMPROGRAMS\\{WINDOWS_TECHNICAL_NAME}"
+  StrCmp $PublicGameShortcutPresent "1" 0 +3
+  CreateDirectory "$SMPROGRAMS\\{WINDOWS_PRODUCT_NAME}"
+  CopyFiles /SILENT "$PLUGINSDIR\\shortcut-backup\\public\\{WINDOWS_PUBLIC_GAME_SHORTCUT}" "$SMPROGRAMS\\{WINDOWS_PRODUCT_NAME}"
+  StrCmp $PublicUninstallShortcutPresent "1" 0 +3
+  CreateDirectory "$SMPROGRAMS\\{WINDOWS_PRODUCT_NAME}"
+  CopyFiles /SILENT "$PLUGINSDIR\\shortcut-backup\\public\\{WINDOWS_PUBLIC_UNINSTALL_SHORTCUT}" "$SMPROGRAMS\\{WINDOWS_PRODUCT_NAME}"
   RMDir /r "$PLUGINSDIR\\shortcut-backup"
 FunctionEnd
 
@@ -1161,15 +1192,26 @@ no_backup:
   StrCmp $TxActual "ok" 0 registration_publish_failed
   ; User data is external to this manifest-owned root. Publish shortcuts and
   ; registration only while the prior exact root is still rollback-capable.
-  CreateDirectory "$SMPROGRAMS\\Heroes Like"
+  CreateDirectory "$SMPROGRAMS\\{WINDOWS_PRODUCT_NAME}"
   ClearErrors
-  CreateShortcut "$SMPROGRAMS\\Heroes Like\\Heroes Like.lnk" "$INSTDIR\\heroes-like.exe"
+  CreateShortcut "$SMPROGRAMS\\{WINDOWS_PRODUCT_NAME}\\{WINDOWS_PUBLIC_GAME_SHORTCUT}" "$INSTDIR\\heroes-like.exe"
   IfErrors registration_publish_failed
   ClearErrors
-  CreateShortcut "$SMPROGRAMS\\Heroes Like\\Uninstall Heroes Like.lnk" "$INSTDIR\\uninstall.exe"
+  CreateShortcut "$SMPROGRAMS\\{WINDOWS_PRODUCT_NAME}\\{WINDOWS_PUBLIC_UNINSTALL_SHORTCUT}" "$INSTDIR\\uninstall.exe"
   IfErrors registration_publish_failed
   Call PublishRegistration
   StrCmp $RegistrationResult "ok" 0 registration_publish_failed
+  IfFileExists "$SMPROGRAMS\\{WINDOWS_TECHNICAL_NAME}\\{WINDOWS_LEGACY_GAME_SHORTCUT}" 0 legacy_game_shortcut_removed
+  ClearErrors
+  Delete "$SMPROGRAMS\\{WINDOWS_TECHNICAL_NAME}\\{WINDOWS_LEGACY_GAME_SHORTCUT}"
+  IfErrors registration_publish_failed
+legacy_game_shortcut_removed:
+  IfFileExists "$SMPROGRAMS\\{WINDOWS_TECHNICAL_NAME}\\{WINDOWS_LEGACY_UNINSTALL_SHORTCUT}" 0 legacy_uninstall_shortcut_removed
+  ClearErrors
+  Delete "$SMPROGRAMS\\{WINDOWS_TECHNICAL_NAME}\\{WINDOWS_LEGACY_UNINSTALL_SHORTCUT}"
+  IfErrors registration_publish_failed
+legacy_uninstall_shortcut_removed:
+  RMDir "$SMPROGRAMS\\{WINDOWS_TECHNICAL_NAME}"
   RMDir /r "$2"
   Call DiscardShortcutBackup
   Goto install_done
@@ -1281,19 +1323,30 @@ uninstall_owned_row:
 uninstall_owned_done:
   Delete "$INSTDIR\\install-ownership.ini"
   Delete "$INSTDIR\\.heroes-like-install"
-  IfFileExists "$SMPROGRAMS\\Heroes Like\\Heroes Like.lnk" 0 uninstall_game_shortcut_done
+  IfFileExists "$SMPROGRAMS\\{WINDOWS_PRODUCT_NAME}\\{WINDOWS_PUBLIC_GAME_SHORTCUT}" 0 uninstall_game_shortcut_done
   ClearErrors
-  Delete "$SMPROGRAMS\\Heroes Like\\Heroes Like.lnk"
+  Delete "$SMPROGRAMS\\{WINDOWS_PRODUCT_NAME}\\{WINDOWS_PUBLIC_GAME_SHORTCUT}"
   IfErrors uninstall_remove_failed
 uninstall_game_shortcut_done:
-  IfFileExists "$SMPROGRAMS\\Heroes Like\\Uninstall Heroes Like.lnk" 0 uninstall_shortcut_done
+  IfFileExists "$SMPROGRAMS\\{WINDOWS_PRODUCT_NAME}\\{WINDOWS_PUBLIC_UNINSTALL_SHORTCUT}" 0 uninstall_shortcut_done
   ClearErrors
-  Delete "$SMPROGRAMS\\Heroes Like\\Uninstall Heroes Like.lnk"
+  Delete "$SMPROGRAMS\\{WINDOWS_PRODUCT_NAME}\\{WINDOWS_PUBLIC_UNINSTALL_SHORTCUT}"
   IfErrors uninstall_remove_failed
 uninstall_shortcut_done:
-  IfFileExists "$SMPROGRAMS\\Heroes Like\\Heroes Like.lnk" uninstall_remove_failed
-  IfFileExists "$SMPROGRAMS\\Heroes Like\\Uninstall Heroes Like.lnk" uninstall_remove_failed
-  RMDir "$SMPROGRAMS\\Heroes Like"
+  IfFileExists "$SMPROGRAMS\\{WINDOWS_PRODUCT_NAME}\\{WINDOWS_PUBLIC_GAME_SHORTCUT}" uninstall_remove_failed
+  IfFileExists "$SMPROGRAMS\\{WINDOWS_PRODUCT_NAME}\\{WINDOWS_PUBLIC_UNINSTALL_SHORTCUT}" uninstall_remove_failed
+  IfFileExists "$SMPROGRAMS\\{WINDOWS_TECHNICAL_NAME}\\{WINDOWS_LEGACY_GAME_SHORTCUT}" 0 uninstall_legacy_game_shortcut_done
+  ClearErrors
+  Delete "$SMPROGRAMS\\{WINDOWS_TECHNICAL_NAME}\\{WINDOWS_LEGACY_GAME_SHORTCUT}"
+  IfErrors uninstall_remove_failed
+uninstall_legacy_game_shortcut_done:
+  IfFileExists "$SMPROGRAMS\\{WINDOWS_TECHNICAL_NAME}\\{WINDOWS_LEGACY_UNINSTALL_SHORTCUT}" 0 uninstall_legacy_shortcut_done
+  ClearErrors
+  Delete "$SMPROGRAMS\\{WINDOWS_TECHNICAL_NAME}\\{WINDOWS_LEGACY_UNINSTALL_SHORTCUT}"
+  IfErrors uninstall_remove_failed
+uninstall_legacy_shortcut_done:
+  RMDir "$SMPROGRAMS\\{WINDOWS_PRODUCT_NAME}"
+  RMDir "$SMPROGRAMS\\{WINDOWS_TECHNICAL_NAME}"
   SetOutPath "$TEMP"
   Delete "$INSTDIR\\uninstall.exe"
   ClearErrors

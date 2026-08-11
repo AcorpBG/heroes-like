@@ -72,9 +72,10 @@ if not exist "%SOURCE_MANIFEST%" (
 set "TOKEN=%RANDOM%-%RANDOM%-%RANDOM%"
 set "STAGE_ROOT=%INSTALL_PARENT%.%INSTALL_LEAF%.stage-%TOKEN%"
 set "BACKUP_ROOT=%INSTALL_PARENT%.%INSTALL_LEAF%.backup-%TOKEN%"
-set "LAUNCHER=%START_MENU_ROOT%\Heroes Like.cmd"
-set "LAUNCHER_NEW=%START_MENU_ROOT%\.Heroes Like.cmd.new-%TOKEN%"
-set "LAUNCHER_BACKUP=%START_MENU_ROOT%\.Heroes Like.cmd.backup-%TOKEN%"
+set "LAUNCHER=%START_MENU_ROOT%\Aurelion Reach.cmd"
+set "LEGACY_LAUNCHER=%START_MENU_ROOT%\Heroes Like.cmd"
+set "LAUNCHER_NEW=%START_MENU_ROOT%\.Aurelion Reach.cmd.new-%TOKEN%"
+set "LAUNCHER_BACKUP=%START_MENU_ROOT%\.Aurelion Reach.cmd.backup-%TOKEN%"
 set "INSTALL_EXISTED=0"
 set "HAS_PRIOR_INSTALL=0"
 set "BACKUP_MOVED=0"
@@ -126,6 +127,19 @@ if exist "%LAUNCHER%" (
   "%SystemRoot%\System32\fc.exe" /b "%LAUNCHER%" "%LAUNCHER_NEW%" >nul
   if errorlevel 1 (
     echo heroes-like installer: refusing to replace a modified Start Menu launcher 1>&2
+    goto :install_fail
+  )
+)
+if exist "%LEGACY_LAUNCHER%" (
+  if not "%HAS_PRIOR_INSTALL%"=="1" (
+    echo heroes-like installer: refusing to replace an unowned legacy Start Menu launcher 1>&2
+    goto :install_fail
+  )
+  >"%LAUNCHER_NEW%" echo @echo off
+  >>"%LAUNCHER_NEW%" echo start "" "%INSTALL_ROOT%\heroes-like.exe" %%*
+  "%SystemRoot%\System32\fc.exe" /b "%LEGACY_LAUNCHER%" "%LAUNCHER_NEW%" >nul
+  if errorlevel 1 (
+    echo heroes-like installer: refusing to replace a modified legacy Start Menu launcher 1>&2
     goto :install_fail
   )
 )
@@ -198,6 +212,9 @@ move "%LAUNCHER_NEW%" "%LAUNCHER%" >nul
 if errorlevel 1 goto :install_fail
 set "LAUNCHER_PUBLISHED=1"
 
+if exist "%LEGACY_LAUNCHER%" del /f /q "%LEGACY_LAUNCHER%" >nul 2>&1
+if exist "%LEGACY_LAUNCHER%" goto :install_fail
+
 rem The new program and launcher are committed. Cleanup failures after this
 rem point must never roll back from a partially removed prior backup.
 if exist "%BACKUP_ROOT%" rmdir /s /q "%BACKUP_ROOT%"
@@ -210,7 +227,7 @@ if exist "%LAUNCHER_BACKUP%" (
   echo heroes-like installer: install committed, but launcher backup cleanup failed 1>&2
   exit /b 1
 )
-echo heroes-like installed in %INSTALL_ROOT%
+echo Aurelion Reach installed in %INSTALL_ROOT%
 echo Launch from "%LAUNCHER%"
 exit /b 0
 
