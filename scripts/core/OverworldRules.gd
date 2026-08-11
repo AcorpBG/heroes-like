@@ -4252,8 +4252,12 @@ static func town_public_threat_state(session: SessionStateStoreScript.SessionDat
 static func town_battlefront_profile(town: Dictionary) -> Dictionary:
 	return _town_battlefront_profile(town)
 
-static func town_front_state(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
-	return _town_front_state(session, town)
+static func town_front_state(
+	session: SessionStateStoreScript.SessionData,
+	town: Dictionary,
+	precomputed_development_metrics: Dictionary = {}
+) -> Dictionary:
+	return _town_front_state(session, town, precomputed_development_metrics)
 
 static func town_occupation_state(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
 	return _town_occupation_state(session, town)
@@ -9098,7 +9102,11 @@ static func _town_occupation_front_proxy(
 		"faction_id": front_faction_id,
 	}
 
-static func _town_front_state(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
+static func _town_front_state(
+	session: SessionStateStoreScript.SessionData,
+	town: Dictionary,
+	precomputed_development_metrics: Dictionary = {}
+) -> Dictionary:
 	var front := _normalize_town_front_state(town.get("front", {}))
 	front = _retake_front_from_legacy_state(session, town, front)
 	var faction_id := _normalized_enemy_front_faction_id(session, front, town)
@@ -9107,9 +9115,21 @@ static func _town_front_state(session: SessionStateStoreScript.SessionData, town
 	var objective_anchor := _town_is_objective_anchor(session, String(town.get("placement_id", "")))
 	var role := _town_strategic_role(town)
 	var enemy_label := String(ContentService.get_faction(faction_id).get("name", faction_id)) if faction_id != "" else ""
-	var logistics := _town_logistics_state(session, town)
-	var recovery := _town_recovery_state(session, town)
-	var capital_project := _town_capital_project_state(town, session)
+	var logistics: Dictionary = precomputed_development_metrics.get("logistics", {}) \
+		if precomputed_development_metrics.get("logistics", {}) is Dictionary \
+		else {}
+	if logistics.is_empty():
+		logistics = _town_logistics_state(session, town)
+	var recovery: Dictionary = precomputed_development_metrics.get("recovery", {}) \
+		if precomputed_development_metrics.get("recovery", {}) is Dictionary \
+		else {}
+	if recovery.is_empty():
+		recovery = _town_recovery_state(session, town, logistics)
+	var capital_project: Dictionary = precomputed_development_metrics.get("capital_project", {}) \
+		if precomputed_development_metrics.get("capital_project", {}) is Dictionary \
+		else {}
+	if capital_project.is_empty():
+		capital_project = _town_capital_project_state(town, session, logistics, recovery)
 	var base_priority := _town_front_priority_seed(role, objective_anchor)
 	var result := {
 		"active": false,
@@ -9135,7 +9155,10 @@ static func _town_front_state(session: SessionStateStoreScript.SessionData, town
 			if owner != "player":
 				return result
 			var recency_bonus: int = max(0, 54 - (int(result.get("days_since_change", 0)) * 8))
-			var weakness_bonus: int = max(0, 34 - _town_battle_readiness(town, session))
+			var battle_readiness := int(precomputed_development_metrics.get("battle_readiness", 0)) \
+				if precomputed_development_metrics.has("battle_readiness") \
+				else _town_battle_readiness(town, session)
+			var weakness_bonus: int = max(0, 34 - battle_readiness)
 			weakness_bonus += int(recovery.get("pressure", 0)) * 8
 			weakness_bonus += int(logistics.get("support_gap", 0)) * 14
 			if bool(capital_project.get("vulnerable", false)):

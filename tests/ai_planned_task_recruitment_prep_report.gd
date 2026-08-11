@@ -24,6 +24,9 @@ func _ready() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	var town_front_context_case := _town_front_development_context_reuse()
+	if town_front_context_case.is_empty():
+		return
 	var live_turn_case := _live_turn_plans_before_same_turn_recruitment()
 	if live_turn_case.is_empty():
 		return
@@ -75,12 +78,36 @@ func _run() -> void:
 		"schema_status": "planned_task_recruitment_prep_live_behavior",
 		"behavior_policy": "town_building_task_fit_spell_study_template_role_fallback_and_recruitment_prepare_same_turn_saved_commander_tasks_with_destination_fit_ready_tasks_launch_below_generic_pressure_surplus_mobilization_and_phase_scoped_path_reuse",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
-		"cases": [live_turn_case, spell_study_case, task_fit_spell_study_case, template_role_fallback_case, path_cache_case, planned_case, surplus_garrison_case, post_recruit_surplus_case, unit_fit_case, market_case, garrison_case, ready_launch_case, passive_budget_case, same_turn_launch_case, unplanned_gate_case],
+		"cases": [town_front_context_case, live_turn_case, spell_study_case, task_fit_spell_study_case, template_role_fallback_case, path_cache_case, planned_case, surplus_garrison_case, post_recruit_surplus_case, unit_fit_case, market_case, garrison_case, ready_launch_case, passive_budget_case, same_turn_launch_case, unplanned_gate_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])
 	get_tree().quit(0)
+
+func _town_front_development_context_reuse() -> Dictionary:
+	var session = _base_session()
+	var town := _town_by_id(session, DUSKFEN)
+	if town.is_empty():
+		_fail("Town-front context fixture is missing Duskfen.")
+		return {}
+	var direct_front := OverworldRules.town_front_state(session, town)
+	var development_metrics := OverworldRules.town_development_metrics(town, session)
+	var reused_front := OverworldRules.town_front_state(session, town, development_metrics)
+	if direct_front != reused_front:
+		_fail("Town-front development context changed exact front state: direct=%s reused=%s" % [JSON.stringify(direct_front), JSON.stringify(reused_front)])
+		return {}
+	var destination_context := EnemyTurnRules._recruit_destination_static_context(session, _enemy_config(), town, FACTION_ID)
+	if destination_context.get("local_front", {}) != direct_front:
+		_fail("Recruit destination did not retain exact local front state: %s" % JSON.stringify(destination_context))
+		return {}
+	return {
+		"case_id": "recruit_destination_reuses_town_development_context",
+		"front_active": bool(reused_front.get("active", false)),
+		"front_mode": String(reused_front.get("mode", "")),
+		"battle_readiness": int(development_metrics.get("battle_readiness", 0)),
+		"logistics_summary": String(development_metrics.get("logistics", {}).get("summary", "")),
+	}
 
 func _live_turn_plans_before_same_turn_recruitment() -> Dictionary:
 	var session = _base_session()

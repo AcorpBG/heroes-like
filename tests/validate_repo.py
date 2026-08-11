@@ -16655,6 +16655,19 @@ def validate_enemy_empire_management(errors: list[str]) -> None:
         errors,
         "EnemyTurnRules.gd must consume shared town reinforcement/development metrics",
     )
+    for required_token in (
+        "var development_metrics: Dictionary = OverworldRulesScript.town_development_metrics(town, session)",
+        "OverworldRulesScript.town_front_state(session, town, development_metrics)",
+    ):
+        ensure(required_token in enemy_turn_text, errors, f"EnemyTurnRules.gd is missing recruit destination town-front context reuse token: {required_token}")
+    for required_token in (
+        "precomputed_development_metrics: Dictionary = {}",
+        'precomputed_development_metrics.get("logistics", {})',
+        'precomputed_development_metrics.get("recovery", {})',
+        'precomputed_development_metrics.get("capital_project", {})',
+        'precomputed_development_metrics.has("battle_readiness")',
+    ):
+        ensure(required_token in overworld_text, errors, f"OverworldRules.gd is missing precomputed town-front context token: {required_token}")
 
     enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (

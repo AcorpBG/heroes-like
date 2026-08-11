@@ -2317,7 +2317,7 @@ static func _recruit_destination_static_context(
 	_reinforcement_profile_count("destination_context_count")
 	var started_usec := _reinforcement_profile_timer()
 	var development_metrics: Dictionary = OverworldRulesScript.town_development_metrics(town, session)
-	var local_front: Dictionary = OverworldRulesScript.town_front_state(session, town)
+	var local_front: Dictionary = OverworldRulesScript.town_front_state(session, town, development_metrics)
 	var context := {
 		"defense_target": _desired_town_strength(session, town, config, development_metrics, local_front),
 		"local_front": local_front,
