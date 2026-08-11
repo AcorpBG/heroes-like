@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The strategic-AI first-movement-step path-plan reuse slice is complete. Step zero reuses the current pre-movement plan while later replans remain live; exact generated behavior and Linux/Windows packaged boots pass. The full strategic-AI matrix and overall release readiness remain open.",
+  "currentNotes": "The strategic-AI spawn launch policy context reuse slice is complete. Each live faction loop lazily loads capital/front policy once and reuses it through selection and spawn pressure consumption; exact generated behavior and Linux/Windows package boots pass. The full strategic-AI matrix and overall release readiness remain open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "strategic-ai-first-movement-step-path-plan-reuse-10184",
-  "currentSliceId": "strategic-ai-first-movement-step-path-plan-reuse-10184",
-  "currentSliceNotes": "Completed unchanged-step-zero path-plan reuse with exact Trailglyph/regroup/generated behavior, reduced step-path phase time, core/repository validation, and Linux/fresh-Wine package boots.",
+  "currentSlice": "strategic-ai-spawn-launch-policy-context-reuse-10184",
+  "currentSliceId": "strategic-ai-spawn-launch-policy-context-reuse-10184",
+  "currentSliceNotes": "Completed lazy phase-local capital/front policy reuse with exact candidate, pressure, generated-seed, short-circuit, core, repository, Linux, and Windows validation.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Strategic AI First Movement Step Path Plan Reuse",
-  "currentSliceUpdatedAt": "2026-08-11T09:16:29Z",
+  "currentSliceTitle": "Strategic AI Spawn Launch Policy Context Reuse",
+  "currentSliceUpdatedAt": "2026-08-11T09:42:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21561,6 +21561,93 @@
           "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
           "HEROES_PACKAGING_LINUX_ARTIFACT_DIR=/tmp/heroes-first-step-linux-package.xjJEa7 python3 tests/packaging_linux_export_smoke.py",
           "HEROES_PACKAGING_WINDOWS_ARTIFACT_DIR=/tmp/heroes-first-step-windows-package.DacxOf python3 tests/packaging_windows_export_smoke.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ]
+      }
+    },
+    {
+      "baselineChecks": [
+        "godot4 --headless --path . --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn",
+        "HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=2 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=3 HEROES_STRATEGIC_AI_LONG_RUN_PRESSURE_FLOOR=0 godot4 --headless --path . --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+        "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+        "godot4 --headless --editor --quit --path .",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "One current faction launch-policy context is created immediately before the live spawn loop, lazily populated on the first required capital/front read, and reused by max-active-raid, raid-threshold, and selected-spawn pressure consumption checks; no-town and max-active short-circuits do not load unused front state; direct empty-context compatibility calls and context-backed calls choose exact candidates and pressure costs; strict-Small generated seeds retain exact behavior while spawn-loop work improves or holds; core, parse, repository, Linux, and Windows gates pass.",
+      "id": "strategic-ai-spawn-launch-policy-context-reuse-10184",
+      "implementationTargets": [
+        "scripts/core/EnemyTurnRules.gd",
+        "tests/ai_hero_task_spawn_commander_selection_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "raid thresholds, active-raid caps, spawn ranking, commander selection, pressure costs, or public event changes",
+        "persistent caches, save schema, generated-map generation, or Native RMG changes",
+        "full 100-seed eight-week completion or broad performance/release claims"
+      ],
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md Current strategic AI follow-up / strict Small enemy-turn bottleneck",
+      "purpose": "Remove repeated full capital-project, recovery, and faction-front reads inside one unchanged raid spawn decision boundary.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "startedAt": "2026-08-11T09:24:05Z",
+      "status": "completed",
+      "title": "Strategic AI Spawn Launch Policy Context Reuse",
+      "updatedAt": "2026-08-11T09:42:00Z",
+      "completedAt": "2026-08-11T09:42:00Z",
+      "notes": "The live faction spawn loop now creates one phase-local context, loads capital/front policy on first use, and reuses those exact dictionaries for max-active, threshold, and selected-spawn pressure consumption. No-town exits leave the context empty. Focused direct-versus-context coverage proves exact cap, threshold, candidate, spawn result, pressure, and full session state. Strict-Small seeds 001 and 002 retain signatures 6a4530a2 and 2beabecf, exact 13/7 event counts, all six turns, and zero behavior bugs, stalls, unreachable targets, or target-integrity violations. The 12 current faction loops measure 49-212 ms; the earlier 147-238 ms selection sample used a different pressure-floor setup and is not claimed as a method-matched benchmark. Core, editor, repository, Linux release boot, and fresh-Wine Windows release boot pass. No save schema or Native RMG output changed.",
+      "evidence": {
+        "finding": "One lazy phase-local launch-policy context replaces repeated capital/front reads without changing launch or pressure semantics.",
+        "metrics": {
+          "focused_capital_state_load_count": 1,
+          "focused_front_state_load_count": 1,
+          "focused_capital_state_reuse_count": 2,
+          "focused_front_state_reuse_count": 1,
+          "focused_no_town_context_size": 0,
+          "generated_seed_count": 2,
+          "generated_turn_count": 3,
+          "generated_turns_completed": 6,
+          "seed_001_signature": "6a4530a2",
+          "seed_002_signature": "2beabecf",
+          "seed_001_enemy_activity_event_count": 13,
+          "seed_002_enemy_activity_event_count": 7,
+          "generated_behavior_bug_count": 0,
+          "generated_stalled_turn_count": 0,
+          "generated_unreachable_target_count": 0,
+          "generated_target_integrity_violation_count": 0,
+          "profiled_faction_loop_count": 12,
+          "profiled_spawn_loop_min_msec": 49,
+          "profiled_spawn_loop_max_msec": 212,
+          "linux_export_boot_ok": true,
+          "linux_binary_size_bytes": 71071768,
+          "linux_pck_size_bytes": 189699416,
+          "windows_wine_export_boot_ok": true,
+          "windows_exe_size_bytes": 104540160,
+          "windows_pck_size_bytes": 189699416,
+          "save_version": 9
+        }
+      },
+      "validation": {
+        "status": "passed",
+        "updatedAt": "2026-08-11T09:42:00Z",
+        "commands": [
+          "godot4 --headless --path . --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn",
+          "HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=2 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=3 HEROES_STRATEGIC_AI_LONG_RUN_PRESSURE_FLOOR=0 godot4 --headless --path . --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+          "godot4 --headless --editor --quit --path .",
+          "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+          "HEROES_PACKAGING_LINUX_ARTIFACT_DIR=/tmp/heroes-ai-policy-linux.0mnyxH python3 tests/packaging_linux_export_smoke.py",
+          "HEROES_PACKAGING_WINDOWS_ARTIFACT_DIR=/tmp/heroes-ai-policy-windows.AGTbQq python3 tests/packaging_windows_export_smoke.py",
+          "python3 -m py_compile tests/validate_repo.py",
           "jq empty ops/progress.json",
           "git diff --check"
         ]

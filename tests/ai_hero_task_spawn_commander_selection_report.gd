@@ -40,18 +40,152 @@ func _run() -> void:
 	var best_goal_tile_path_context_case := _best_goal_tile_path_context_reuse_case()
 	if best_goal_tile_path_context_case.is_empty():
 		return
+	var launch_policy_context_case := _launch_policy_context_reuse_case()
+	if launch_policy_context_case.is_empty():
+		return
 	var payload := {
 		"ok": true,
 		"report_id": REPORT_ID,
-		"schema_status": "saved_tasks_influence_live_commander_deployment_spawn_avoids_all_player_heroes_prefers_deployable_saved_task_commander_spell_tempo_fresh_fit_generated_front_distribution_and_rebuild_launch_readiness",
+		"schema_status": "saved_tasks_influence_live_commander_deployment_spawn_avoids_all_player_heroes_prefers_deployable_saved_task_commander_spell_tempo_fresh_fit_generated_front_distribution_rebuild_launch_readiness_and_launch_policy_context_reuse",
 		"behavior_policy": "saved_tasks_influence_live_commander_deployment_and_fresh_target_fit_influence_spawn_point_selection_while_spawn_occupancy_respects_all_live_player_heroes_adventure_spell_route_tempo_generated_multi_town_front_distribution_and_rebuilds_wait_for_viable_commanders",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
-		"cases": [saved_task_case, fallback_case, spawn_point_case, multihero_spawn_occupancy_case, spell_tempo_case, fresh_fit_case, generated_front_distribution_case, rebuild_launch_readiness_case, rebuild_target_completion_case, best_goal_tile_path_context_case],
+		"cases": [saved_task_case, fallback_case, spawn_point_case, multihero_spawn_occupancy_case, spell_tempo_case, fresh_fit_case, generated_front_distribution_case, rebuild_launch_readiness_case, rebuild_target_completion_case, best_goal_tile_path_context_case, launch_policy_context_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])
 	get_tree().quit(0)
+
+func _launch_policy_context_reuse_case() -> Dictionary:
+	var baseline = _base_session()
+	var config := _enemy_config().duplicate(true)
+	var baseline_state := _enemy_state(baseline)
+	baseline_state["pressure"] = 999
+	_update_enemy_state(baseline, baseline_state)
+	var authority_before: String = JSON.stringify(baseline.to_dict())
+	var direct_max_active: int = EnemyTurnRules._max_active_raids_for_strategy(baseline, config, MIRECLAW)
+	var direct_threshold: int = EnemyTurnRules._raid_threshold_for_strategy(baseline, config, MIRECLAW)
+	var direct_candidate := EnemyTurnRules._launchable_spawn_candidate(
+		baseline,
+		config,
+		baseline_state,
+		MIRECLAW,
+		{}
+	)
+	var context := EnemyTurnRules._launch_policy_context(baseline, MIRECLAW)
+	if not context.is_empty():
+		_fail("Fresh launch-policy context performed eager policy reads: %s" % JSON.stringify(context))
+		return {}
+	var context_max_active: int = EnemyTurnRules._max_active_raids_for_strategy(
+		baseline,
+		config,
+		MIRECLAW,
+		context
+	)
+	var context_threshold: int = EnemyTurnRules._raid_threshold_for_strategy(
+		baseline,
+		config,
+		MIRECLAW,
+		context
+	)
+	var context_candidate := EnemyTurnRules._launchable_spawn_candidate(
+		baseline,
+		config,
+		baseline_state,
+		MIRECLAW,
+		{},
+		context
+	)
+	if direct_max_active != context_max_active or direct_threshold != context_threshold:
+		_fail("Launch-policy context changed cap/threshold: direct=%d/%d context=%d/%d" % [direct_max_active, direct_threshold, context_max_active, context_threshold])
+		return {}
+	if direct_candidate != context_candidate or direct_candidate.is_empty():
+		_fail("Launch-policy context changed the selected candidate: direct=%s context=%s" % [JSON.stringify(direct_candidate), JSON.stringify(context_candidate)])
+		return {}
+	if not (context.get("capital_state", null) is Dictionary) or not (context.get("front_state", null) is Dictionary):
+		_fail("Launch-policy context did not retain both phase-local policy states: %s" % JSON.stringify(context))
+		return {}
+	if JSON.stringify(baseline.to_dict()) != authority_before:
+		_fail("Launch-policy context reads mutated live session authority.")
+		return {}
+
+	var direct_session = _clone_session(baseline)
+	var context_session = _clone_session(baseline)
+	var direct_state := _enemy_state(direct_session)
+	var context_state := _enemy_state(context_session)
+	var direct_spawn_candidate := EnemyTurnRules._launchable_spawn_candidate(direct_session, config, direct_state, MIRECLAW)
+	EnemyTurnRules._spawn_profile_begin(true)
+	var spawn_context := EnemyTurnRules._launch_policy_context(context_session, MIRECLAW)
+	var context_spawn_candidate := EnemyTurnRules._launchable_spawn_candidate(
+		context_session,
+		config,
+		context_state,
+		MIRECLAW,
+		{},
+		spawn_context
+	)
+	var context_spawn_result := EnemyTurnRules._spawn_raid(
+		context_session,
+		config,
+		context_state,
+		context_spawn_candidate,
+		spawn_context
+	)
+	var context_profile := EnemyTurnRules._spawn_profile_finish()
+	var direct_spawn_result := EnemyTurnRules._spawn_raid(
+		direct_session,
+		config,
+		direct_state,
+		direct_spawn_candidate
+	)
+	if direct_spawn_candidate != context_spawn_candidate \
+			or direct_spawn_result != context_spawn_result \
+			or direct_session.to_dict() != context_session.to_dict():
+		_fail("Launch-policy context changed spawn/pressure/session semantics: direct=%s context=%s" % [JSON.stringify(direct_spawn_result), JSON.stringify(context_spawn_result)])
+		return {}
+	var context_counts: Dictionary = context_profile.get("counts", {}) if context_profile.get("counts", {}) is Dictionary else {}
+	if int(context_counts.get("launch_policy_context_created", 0)) != 1 \
+			or int(context_counts.get("launch_policy_capital_state_loaded", 0)) != 1 \
+			or int(context_counts.get("launch_policy_front_state_loaded", 0)) != 1 \
+			or int(context_counts.get("launch_policy_capital_state_reused", 0)) < 2 \
+			or int(context_counts.get("launch_policy_front_state_reused", 0)) < 1:
+		_fail("Launch-policy context did not load once and reuse policy state: %s" % JSON.stringify(context_profile))
+		return {}
+
+	var no_town_session = _clone_session(baseline)
+	var towns: Array = no_town_session.overworld.get("towns", [])
+	for index in range(towns.size()):
+		var town: Dictionary = towns[index] if towns[index] is Dictionary else {}
+		if String(town.get("owner", "neutral")) != "enemy":
+			continue
+		town["owner"] = "neutral"
+		town["controlling_faction_id"] = ""
+		towns[index] = town
+	no_town_session.overworld["towns"] = towns
+	var no_town_context := EnemyTurnRules._launch_policy_context(no_town_session, MIRECLAW)
+	var no_town_candidate := EnemyTurnRules._launchable_spawn_candidate(
+		no_town_session,
+		config,
+		_enemy_state(no_town_session),
+		MIRECLAW,
+		{},
+		no_town_context
+	)
+	if not no_town_candidate.is_empty() or not no_town_context.is_empty():
+		_fail("No-town launch short-circuit populated unused policy context: candidate=%s context=%s" % [JSON.stringify(no_town_candidate), JSON.stringify(no_town_context)])
+		return {}
+	return {
+		"case_id": "spawn_launch_policy_context_reuses_phase_local_capital_and_front",
+		"max_active_raids": context_max_active,
+		"raid_threshold": context_threshold,
+		"candidate_source": String(context_candidate.get("spawn_plan_source", "")),
+		"capital_loads": int(context_counts.get("launch_policy_capital_state_loaded", 0)),
+		"front_loads": int(context_counts.get("launch_policy_front_state_loaded", 0)),
+		"capital_reuses": int(context_counts.get("launch_policy_capital_state_reused", 0)),
+		"front_reuses": int(context_counts.get("launch_policy_front_state_reused", 0)),
+		"no_town_short_circuit_loads": no_town_context.size(),
+		"spawn_semantics_exact": true,
+	}
 
 func _best_goal_tile_path_context_reuse_case() -> Dictionary:
 	var session = _base_session()
@@ -741,6 +875,11 @@ func _base_session():
 	EnemyTurnRules.normalize_enemy_states(session)
 	EnemyAdventureRules.normalize_all_commander_rosters(session)
 	return session
+
+func _clone_session(source):
+	var clone = SessionStateStore.SessionData.new()
+	clone.from_dict(source.to_dict())
+	return clone
 
 func _enemy_config() -> Dictionary:
 	var scenario := ContentService.get_scenario(RIVER_PASS)
