@@ -24,7 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current implementation slice: `performance-generated-large-town-explicit-save-surface-10184` (completed). Generated-Large Town slot selection and post-save feedback now reuse one detached summary/context, exact risk-summary and Town cache surfaces, reducing the old 9.75-9.86 second surface rebuild to sub-second Linux and fresh Windows/Wine interactions.
+- Current implementation slice: none selected. The generated-Large transactional manual-save correction is complete; select the next bounded source-backed release gap before further implementation.
+- Latest completed implementation slice: `performance-generated-large-transactional-manual-save-10184`. Generated-Large 20.28MB empty-slot and overwrite saves retain one semantic normalization and exact transactional verification while completing in 2302/2462ms in the Linux package and 2863/3830ms in fresh Windows/Wine.
 - Latest completed implementation slice: `performance-generated-large-town-explicit-save-surface-10184`. Exact save-surface copy, authority, recovery, rollback, overwrite, command-risk, Town/core/repository, and Linux plus fresh Windows/Wine packaged gates pass; the separate large transactional-write latency remains follow-up performance debt.
 - Latest completed implementation slice: `performance-town-generated-large-cache-hit-first-refresh-10184`. Exact ledger/action/departure parity, resource/context/action invalidation, authority, Town economy/transition/focus/core/repository gates, and Linux plus fresh Windows/Wine packaged performance all pass.
 - Latest completed implementation slice: `save-briefing-consumption-alternate-autosave-reconciliation-10184`. Successful and failed End Turn rows, unverified-authority refusal, zero-write stale checks, Battle/generated controls, transaction/focus/visual/core/repository gates, and Linux plus fresh Windows/Wine packages pass at save version 9.
@@ -3941,6 +3942,40 @@ Completion evidence:
 - Linux packaged selection is 140.898ms and all gated surfaces are at most 338.306ms; fresh Windows/Wine selection is 177.893ms and all gated surfaces are at most 786.099ms;
 - exact 17-field surface parity, steady/active/nested-enemy risk parity, canonical reload, candidate/backup recovery, injected rollback, cancel/overwrite, Town transition/focus, command-risk/end-turn, core, editor, validator, and repository integrity pass;
 - the generated 20MB transactional write still takes several seconds and remains a distinct future performance slice; it is not reported as part of the corrected sub-second surface/feedback budget.
+
+## Generated-Large Transactional Manual Save Performance
+
+id: `performance-generated-large-transactional-manual-save-10184`
+
+Status: completed.
+
+Selected Phase 6 persistence performance correction. The deterministic supported generated-Large fixture
+writes about 20.28MB and blocks a manual save for about 7.8 seconds on Linux and 8.9 seconds under fresh
+packaged Wine even after its visible save surfaces are sub-second. Profiles attribute most of the remaining
+cost to repeated restore/save normalization, deep payload copies, JSON write/readback, and summary-session
+reconstruction.
+
+Implementation target:
+- retain one full manual restore/semantic normalization because the runtime-normalized signature is intentionally shallow, then transfer that already-detached normalized graph into write preparation without another whole-graph `to_dict`, normalization, or deep copy;
+- stamp metadata and clear transition intent on the already-owned prepared payload;
+- recover the destination once before retained-name inspection and reuse that verified commit base in the raw transactional writer;
+- publish the verified runtime summary cache from the already-authoritative resume target instead of reconstructing another SessionData graph;
+- retain candidate and committed-file exact read/parse verification, backup rollback, future-version refusal, timestamps, manual names, and save-version-9 bytes semantics.
+
+Completion criteria:
+- deterministic generated-Large empty-slot and overwrite manual saves complete within 3 seconds on Linux and 4 seconds under fresh packaged Windows/Wine, with exactly one transactional write;
+- canonical reload, manual name, selected slot, summary cache, live session, focus, message, and candidate/backup residue semantics remain exact;
+- precommit, after-backup, corrupt-live, candidate, backup, and future-version recovery/refusal paths preserve prior authority exactly;
+- legacy/unnormalized manual sessions retain the full normalization fallback, while ordinary autosave, generated-opening fast save, small-map save, overwrite/cancel, save-surface, command-risk, core, repository, and Linux/Windows package gates pass.
+
+Non-goals:
+- no removal or weakening of candidate/committed readback verification, async/background writer, save schema/version, compression-format change, persistent payload cache, UI composition/copy, generated-map rules, Native RMG behavior, publication, signing, native Windows hardware certification, or overall release-completion claim.
+
+Completion evidence:
+- manual saves retain one full semantic normalization, then transfer the detached normalized graph through prepared write ownership without a second whole-graph normalization or payload copy;
+- candidate and committed files still receive full JSON parse, dictionary-root, and exact-text verification, while unused parser-tree duplication is eliminated;
+- empty-slot/overwrite runtime saves complete in 2312/2527ms in the authoritative source run, 2302/2462ms in the Linux package, and 2863/3830ms in fresh Windows/Wine;
+- precommit and after-backup rollback, corrupt/candidate/backup/future-version recovery, manual naming, canonical reload, autosave/generated-opening controls, command-risk/core compatibility, editor, validator, repository integrity, and exact Linux/Windows packages pass.
 
 ## Phase Roadmap
 

@@ -1411,14 +1411,25 @@ func _save_payload(
 	file_path: String,
 	slot_type: String = SLOT_TYPE_MANUAL,
 	saved_payload_out: Dictionary = {},
-	profile: Dictionary = {}
+	profile: Dictionary = {},
+	payload_is_prepared: bool = false
 ) -> String:
-	_recover_save_transaction(file_path)
+	var recovery_started := ProfileLogScript.begin_usec()
+	var recovery := _verified_cached_manual_save_recovery(file_path, slot_type)
+	var recovery_cache_hit := not recovery.is_empty()
+	if not recovery_cache_hit:
+		recovery = _recover_save_transaction(file_path)
+	_runtime_save_profile_bucket(profile, "recovery", ProfileLogScript.elapsed_ms(recovery_started))
+	if not profile.is_empty():
+		profile["recovery_count"] = int(profile.get("recovery_count", 0)) + 1
+		profile["recovery_parse_count"] = 0 if recovery_cache_hit else 1
+		profile["recovery_cache_hit"] = recovery_cache_hit
+		profile["recovery_reason"] = String(recovery.get("reason", "verified_live"))
 	var normalize_started := ProfileLogScript.begin_usec()
 	var retained_manual_name := ""
-	if slot_type == SLOT_TYPE_MANUAL and FileAccess.file_exists(file_path):
-		retained_manual_name = _manual_slot_name_from_payload(_load_raw_dictionary(file_path, false))
-	var normalized: Dictionary = SessionStateStoreScript.normalize_payload(payload)
+	if slot_type == SLOT_TYPE_MANUAL and bool(recovery.get("live_valid", false)):
+		retained_manual_name = String(recovery.get("retained_manual_name", ""))
+	var normalized: Dictionary = payload if payload_is_prepared else SessionStateStoreScript.normalize_payload(payload)
 	normalized["save_version"] = SessionStateStoreScript.SAVE_VERSION
 	normalized[SAVE_METADATA_TIMESTAMP_KEY] = Time.get_unix_time_from_system()
 	normalized[SAVE_METADATA_SLOT_TYPE_KEY] = slot_type
@@ -1428,10 +1439,52 @@ func _save_payload(
 	if retained_manual_name != "":
 		normalized[SAVE_METADATA_MANUAL_NAME_KEY] = retained_manual_name
 	_runtime_save_profile_bucket(profile, "save_normalize", ProfileLogScript.elapsed_ms(normalize_started))
+	if not profile.is_empty():
+		profile["save_normalize_skipped"] = payload_is_prepared
+		profile["save_normalize_skip_reason"] = "prepared_normalized_manual_payload" if payload_is_prepared else ""
 	saved_payload_out.clear()
 	for key in normalized.keys():
 		saved_payload_out[key] = normalized[key]
-	return _save_raw_dictionary(normalized, file_path, profile)
+	return _save_raw_dictionary(normalized, file_path, profile, recovery)
+
+func _verified_cached_manual_save_recovery(file_path: String, slot_type: String) -> Dictionary:
+	if slot_type != SLOT_TYPE_MANUAL or file_path == "":
+		return {}
+	if (
+		FileAccess.file_exists(_save_transaction_candidate_path(file_path))
+		or FileAccess.file_exists(_save_transaction_backup_path(file_path))
+	):
+		return {}
+	var slot_id := ""
+	for manual_slot in MANUAL_SLOT_IDS:
+		if file_path == _slot_path(int(manual_slot)):
+			slot_id = str(int(manual_slot))
+			break
+	if slot_id == "":
+		return {}
+	var summary := _cached_slot_summary(SLOT_TYPE_MANUAL, slot_id, file_path)
+	if summary.is_empty():
+		return {}
+	if (
+		not bool(summary.get("valid", false))
+		or not bool(summary.get("loadable", false))
+		or String(summary.get("slot_type", "")) != SLOT_TYPE_MANUAL
+		or String(summary.get("slot_id", "")) != slot_id
+		or String(summary.get("path", "")) != file_path
+	):
+		return {}
+	if (
+		int(summary.get("source_save_version", 0)) > SessionStateStoreScript.SAVE_VERSION
+		or int(summary.get("save_version", 0)) > SessionStateStoreScript.SAVE_VERSION
+	):
+		return {}
+	return {
+		"ok": true,
+		"recovered": false,
+		"live_valid": true,
+		"reason": "verified_summary_cache",
+		"retained_manual_name": String(summary.get("manual_slot_name", "")),
+	}
 
 func _save_runtime_session(
 	session: SessionStateStoreScript.SessionData,
@@ -1449,6 +1502,17 @@ func _save_runtime_session(
 		"started_usec": Time.get_ticks_usec(),
 		"steps": [],
 		"buckets_ms": {},
+		"restore_normalize_pass_count": 0,
+		"recovery_count": 0,
+		"recovery_parse_count": 0,
+		"recovery_cache_hit": false,
+		"recovery_reason": "",
+		"summary_session_reconstruction_count": 0,
+		"verification_parse_count": 0,
+		"verification_payload_copy_count": 0,
+		"restore_owned_payload_transfer": false,
+		"prepared_payload": false,
+		"prepared_payload_reason": "",
 	}
 	_runtime_save_profile_step(profile, "enter")
 	if session == null or session.scenario_id == "":
@@ -1472,12 +1536,14 @@ func _save_runtime_session(
 		sanitized_session = session
 	else:
 		_runtime_save_profile_step(profile, "restore_normalize_start")
+		profile["restore_normalize_pass_count"] = 1
 		var restore_started := ProfileLogScript.begin_usec()
 		var restore_result := _normalize_restore_result(runtime_payload, slot_type)
 		_runtime_save_profile_bucket(profile, "restore_normalize", ProfileLogScript.elapsed_ms(restore_started))
 		_runtime_save_profile_step(profile, "restore_normalize_done")
 		profile["restore_normalize_skipped"] = false
 		profile["restore_normalize_skip_reason"] = ""
+		profile["restore_owned_payload_transfer"] = bool(restore_result.get("owned_payload_transfer", false))
 		if not bool(restore_result.get("ok", false)):
 			_runtime_save_profile_finish(profile)
 			return {
@@ -1491,16 +1557,30 @@ func _save_runtime_session(
 		if sanitized_session == null:
 			_runtime_save_profile_finish(profile)
 			return {"ok": false, "path": "", "summary": {}, "message": "This session could not be prepared for saving."}
-		payload_for_write = sanitized_session.to_dict()
+		if slot_type == SLOT_TYPE_MANUAL:
+			payload_for_write = _owned_payload_from_normalized_detached_session(sanitized_session)
+			profile["prepared_payload"] = true
+			profile["prepared_payload_reason"] = "normalized_detached_manual_session"
+		else:
+			payload_for_write = sanitized_session.to_dict()
 
 	var path := ""
 	var summary := {}
 	var cache_slot_id := ""
 	var saved_payload := {}
-	var write_payload := _payload_without_transition_autosave_intent(payload_for_write)
+	var payload_is_prepared := bool(profile.get("prepared_payload", false))
+	var write_payload := payload_for_write
+	if payload_is_prepared:
+		_clear_transition_autosave_intent_from_owned_payload(write_payload)
+	else:
+		write_payload = _payload_without_transition_autosave_intent(payload_for_write)
 	var generated_opening_pending := _is_generated_opening_autosave_pending(session)
 	if generated_opening_pending:
-		write_payload = _generated_opening_autosave_success_payload_from_payload(write_payload)
+		if payload_is_prepared:
+			_apply_generated_opening_autosave_success_to_owned_payload(write_payload)
+		else:
+			write_payload = _generated_opening_autosave_success_payload_from_payload(write_payload)
+	var authoritative_resume_target := _resume_target_for_session(sanitized_session)
 	match slot_type:
 		SLOT_TYPE_AUTOSAVE:
 			_runtime_save_profile_step(profile, "write_payload_start")
@@ -1513,7 +1593,7 @@ func _save_runtime_session(
 			if path != "" and include_summary:
 				_runtime_save_profile_step(profile, "summary_cache_store_start")
 				var summary_cache_started := ProfileLogScript.begin_usec()
-				_store_runtime_summary_cache(saved_payload, SLOT_TYPE_AUTOSAVE, cache_slot_id, path)
+				_store_runtime_summary_cache(saved_payload, SLOT_TYPE_AUTOSAVE, cache_slot_id, path, authoritative_resume_target, profile)
 				_runtime_save_profile_bucket(profile, "summary_cache", ProfileLogScript.elapsed_ms(summary_cache_started))
 				_runtime_save_profile_step(profile, "summary_cache_store_done")
 			elif path != "":
@@ -1530,14 +1610,14 @@ func _save_runtime_session(
 			var write_to_dict_started := ProfileLogScript.begin_usec()
 			var manual_payload := write_payload
 			_runtime_save_profile_bucket(profile, "write_to_dict", ProfileLogScript.elapsed_ms(write_to_dict_started))
-			path = _save_payload(manual_payload, _slot_path(normalized_slot), SLOT_TYPE_MANUAL, saved_payload, profile)
+			path = _save_payload(manual_payload, _slot_path(normalized_slot), SLOT_TYPE_MANUAL, saved_payload, profile, payload_is_prepared)
 			_runtime_save_profile_step(profile, "write_payload_done")
 			cache_slot_id = str(normalized_slot)
 			if path != "" and include_summary:
 				_selected_manual_slot = normalized_slot
 				_runtime_save_profile_step(profile, "summary_cache_store_start")
 				var summary_cache_started := ProfileLogScript.begin_usec()
-				_store_runtime_summary_cache(saved_payload, SLOT_TYPE_MANUAL, cache_slot_id, path)
+				_store_runtime_summary_cache(saved_payload, SLOT_TYPE_MANUAL, cache_slot_id, path, authoritative_resume_target, profile)
 				_runtime_save_profile_bucket(profile, "summary_cache", ProfileLogScript.elapsed_ms(summary_cache_started))
 				_runtime_save_profile_step(profile, "summary_cache_store_done")
 			elif path != "":
@@ -1611,6 +1691,33 @@ func _payload_without_transition_autosave_intent(payload: Dictionary) -> Diction
 	cleaned["flags"] = flags
 	return cleaned
 
+func _owned_payload_from_normalized_detached_session(
+	session: SessionStateStoreScript.SessionData
+) -> Dictionary:
+	if session == null:
+		return {}
+	return {
+		"save_version": session.save_version,
+		"session_id": session.session_id,
+		"scenario_id": session.scenario_id,
+		"hero_id": session.hero_id,
+		"day": session.day,
+		"difficulty": session.difficulty,
+		"launch_mode": session.launch_mode,
+		"game_state": session.game_state,
+		"scenario_status": session.scenario_status,
+		"scenario_summary": session.scenario_summary,
+		"overworld": session.overworld,
+		"battle": session.battle,
+		"flags": session.flags,
+	}
+
+func _clear_transition_autosave_intent_from_owned_payload(payload: Dictionary) -> void:
+	var flags: Dictionary = payload.get("flags", {}) if payload.get("flags", {}) is Dictionary else {}
+	for key in TRANSITION_AUTOSAVE_INTENT_FLAGS:
+		flags.erase(String(key))
+	payload["flags"] = flags
+
 func _clear_transition_autosave_intent_flags(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null:
 		return
@@ -1677,6 +1784,14 @@ func _generated_opening_autosave_success_payload_from_payload(payload: Dictionar
 	canonical_payload["flags"] = flags
 	return canonical_payload
 
+func _apply_generated_opening_autosave_success_to_owned_payload(payload: Dictionary) -> void:
+	_clear_transition_autosave_intent_from_owned_payload(payload)
+	var flags: Dictionary = payload.get("flags", {}) if payload.get("flags", {}) is Dictionary else {}
+	flags.erase(GENERATED_OPENING_AUTOSAVE_PENDING_FLAG)
+	flags.erase(GENERATED_OPENING_AUTOSAVE_BRIEFING_DEFERRED_FLAG)
+	flags[GENERATED_OPENING_AUTOSAVE_COMPLETED_FLAG] = true
+	payload["flags"] = flags
+
 func _apply_generated_opening_autosave_success_to_session(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null:
 		return
@@ -1733,10 +1848,23 @@ func _runtime_save_profile_finish(profile: Dictionary) -> void:
 		null
 	)
 
-func _save_raw_dictionary(payload: Dictionary, file_path: String, profile: Dictionary = {}) -> String:
+func _save_raw_dictionary(
+	payload: Dictionary,
+	file_path: String,
+	profile: Dictionary = {},
+	prepared_recovery: Dictionary = {}
+) -> String:
 	if not _ensure_save_dir():
 		return ""
-	var recovery := _recover_save_transaction(file_path)
+	var recovery := prepared_recovery
+	if recovery.is_empty():
+		var recovery_started := ProfileLogScript.begin_usec()
+		recovery = _recover_save_transaction(file_path)
+		_runtime_save_profile_bucket(profile, "recovery", ProfileLogScript.elapsed_ms(recovery_started))
+		if not profile.is_empty():
+			profile["recovery_count"] = int(profile.get("recovery_count", 0)) + 1
+	elif not profile.is_empty():
+		profile["writer_recovery_reused"] = true
 	if String(recovery.get("reason", "")) in [
 		"invalid_live_remove_failed",
 		"backup_restore_failed",
@@ -1770,7 +1898,9 @@ func _save_raw_dictionary(payload: Dictionary, file_path: String, profile: Dicti
 		push_error("Save candidate write failed for %s (error %d, bytes %d/%d)." % [candidate_path, write_error, written_bytes, expected_bytes])
 		_remove_save_transaction_artifact(candidate_path)
 		return ""
-	var candidate_read := _read_json_dictionary_unrecovered(candidate_path)
+	var candidate_read := _read_json_dictionary_unrecovered(candidate_path, false)
+	if not profile.is_empty():
+		profile["verification_parse_count"] = int(profile.get("verification_parse_count", 0)) + 1
 	if not bool(candidate_read.get("ok", false)) or String(candidate_read.get("text", "")) != json_text:
 		push_error("Save candidate verification failed: %s" % candidate_path)
 		_remove_save_transaction_artifact(candidate_path)
@@ -1799,7 +1929,9 @@ func _save_raw_dictionary(payload: Dictionary, file_path: String, profile: Dicti
 		push_error("Unable to commit save candidate %s (error %d)." % [candidate_path, commit_error])
 		_rollback_save_transaction(file_path, candidate_path, backup_path, had_live)
 		return ""
-	var committed_read := _read_json_dictionary_unrecovered(file_path)
+	var committed_read := _read_json_dictionary_unrecovered(file_path, false)
+	if not profile.is_empty():
+		profile["verification_parse_count"] = int(profile.get("verification_parse_count", 0)) + 1
 	if not bool(committed_read.get("ok", false)) or String(committed_read.get("text", "")) != json_text:
 		push_error("Committed save verification failed: %s" % file_path)
 		_rollback_save_transaction(file_path, candidate_path, backup_path, had_live)
@@ -1815,7 +1947,7 @@ func _save_transaction_candidate_path(file_path: String) -> String:
 func _save_transaction_backup_path(file_path: String) -> String:
 	return "%s%s" % [file_path, SAVE_TRANSACTION_BACKUP_SUFFIX]
 
-func _read_json_dictionary_unrecovered(file_path: String) -> Dictionary:
+func _read_json_dictionary_unrecovered(file_path: String, include_payload: bool = true) -> Dictionary:
 	var result := {
 		"exists": FileAccess.file_exists(file_path),
 		"readable": false,
@@ -1849,7 +1981,8 @@ func _read_json_dictionary_unrecovered(file_path: String) -> Dictionary:
 		result["error_message"] = "JSON root is not a dictionary."
 		return result
 	result["ok"] = true
-	result["payload"] = (parser.data as Dictionary).duplicate(true)
+	if include_payload:
+		result["payload"] = (parser.data as Dictionary).duplicate(true)
 	return result
 
 func _recover_save_transaction(file_path: String) -> Dictionary:
@@ -1871,12 +2004,14 @@ func _recover_save_transaction(file_path: String) -> Dictionary:
 				"version": int(live_report.get("version", -1)),
 			}
 	if _save_transaction_payload_valid(file_path, live):
+		var live_payload: Dictionary = live.get("payload", {}) if live.get("payload", {}) is Dictionary else {}
 		_remove_save_transaction_artifact(candidate_path)
 		_remove_save_transaction_artifact(backup_path)
 		return {
 			"ok": true,
 			"recovered": false,
 			"live_valid": true,
+			"retained_manual_name": _manual_slot_name_from_payload(live_payload),
 		}
 
 	var backup := _read_json_dictionary_unrecovered(backup_path)
@@ -1911,6 +2046,9 @@ func _recover_save_transaction(file_path: String) -> Dictionary:
 			"ok": true,
 			"recovered": true,
 			"live_valid": true,
+			"retained_manual_name": _manual_slot_name_from_payload(
+				restored.get("payload", {}) if restored.get("payload", {}) is Dictionary else {}
+			),
 		}
 
 	# A candidate is never recovery authority. Without a valid backup, retain any
@@ -2256,7 +2394,7 @@ func _normalize_restore_result(payload: Dictionary, slot_type: String = "") -> D
 			"warnings": [],
 		}
 
-	var session: SessionStateStoreScript.SessionData = _session_from_payload(normalized)
+	var session: SessionStateStoreScript.SessionData = _session_from_owned_detached_payload(normalized)
 	if session == null:
 		return {
 			"ok": false,
@@ -2327,6 +2465,7 @@ func _normalize_restore_result(payload: Dictionary, slot_type: String = "") -> D
 		"warnings": warnings,
 		"session": session,
 		"resume_target": resume_target,
+		"owned_payload_transfer": true,
 	}
 
 func _ensure_generated_random_map_scenario_registered(normalized_payload: Dictionary) -> Dictionary:
@@ -2756,7 +2895,9 @@ func _store_runtime_summary_cache(
 	payload: Dictionary,
 	slot_type: String,
 	slot_id: String,
-	file_path: String
+	file_path: String,
+	authoritative_resume_target: String = "",
+	profile: Dictionary = {}
 ) -> void:
 	if payload.is_empty() or slot_type == "" or slot_id == "" or file_path == "":
 		return
@@ -2773,8 +2914,13 @@ func _store_runtime_summary_cache(
 	summary["valid"] = true
 	summary["validity"] = "ok"
 	summary["warnings"] = []
-	var session := _session_from_payload(payload)
-	summary["resume_target"] = _resume_target_for_session(session) if session != null else "blocked"
+	if authoritative_resume_target != "":
+		summary["resume_target"] = authoritative_resume_target
+	else:
+		var session := _session_from_payload(payload)
+		summary["resume_target"] = _resume_target_for_session(session) if session != null else "blocked"
+		if not profile.is_empty():
+			profile["summary_session_reconstruction_count"] = int(profile.get("summary_session_reconstruction_count", 0)) + 1
 	summary["loadable"] = summary["resume_target"] != "blocked"
 	summary["status_text"] = _status_text_for_summary(summary)
 	_store_slot_summary_cache(_finalize_summary(summary))
