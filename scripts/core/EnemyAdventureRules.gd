@@ -1591,7 +1591,8 @@ static func _explicit_objective_target_view(
 static func ai_active_front_support_target_selection_plan(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
-	raid: Dictionary
+	raid: Dictionary,
+	preloaded_virtual_probe_path_context: Dictionary = {}
 ) -> Dictionary:
 	if session == null or raid.is_empty():
 		return {}
@@ -1604,7 +1605,9 @@ static func ai_active_front_support_target_selection_plan(
 	var virtual_probe_path_context := {}
 	if current_placement_id.begins_with("__active_front_support_probe:") \
 			and int(_find_encounter_by_placement(session, current_placement_id).get("index", -1)) < 0:
-		virtual_probe_path_context = _path_distance_surface_context(session, "", faction_id)
+		virtual_probe_path_context = preloaded_virtual_probe_path_context \
+			if not preloaded_virtual_probe_path_context.is_empty() \
+			else _path_distance_surface_context(session, "", faction_id)
 	var best := {}
 	for front_value in session.overworld.get("encounters", []):
 		if not _is_active_raid(front_value, faction_id, resolved_encounters):

@@ -612,6 +612,10 @@ func _active_front_support_scan_reuse_report(session, config: Dictionary, state:
 			or int(counts.get("active_front_support_commander_candidates_reused", 0)) != 2:
 		_fail("Active-front commander candidates were not shared across three origin checks: %s" % JSON.stringify(counts))
 		return {}
+	if int(counts.get("active_front_support_path_context_loaded", 0)) != 1 \
+			or int(counts.get("active_front_support_path_context_reused", 0)) != 2:
+		_fail("Active-front path context was not loaded once and reused across three origin checks: %s" % JSON.stringify(counts))
+		return {}
 	var uncached_launch_surface := []
 	for point_index in range(points.size()):
 		var launch_point: Dictionary = points[point_index] if points[point_index] is Dictionary else {}
@@ -674,8 +678,14 @@ func _active_front_support_scan_reuse_report(session, config: Dictionary, state:
 			or int(launch_surface_counts.get("active_front_support_probe_loaded", 0)) <= 0:
 		_fail("Final selection rebuilt active-front commanders or probes instead of consuming readiness work: %s" % JSON.stringify(launch_surface_profile))
 		return {}
+	if int(launch_surface_counts.get("active_front_support_path_context_loaded", 0)) != 1 \
+			or int(launch_surface_counts.get("active_front_support_path_context_reused", 0)) != max(0, points.size() - 1):
+		_fail("Active-front launch readiness did not share one path context across every origin: %s" % JSON.stringify(launch_surface_profile))
+		return {}
 	if launch_scan_cache.has("active_front_support_candidate_surface") \
-			or launch_scan_cache.has("active_front_support_candidate_surface_complete"):
+			or launch_scan_cache.has("active_front_support_candidate_surface_complete") \
+			or launch_scan_cache.has("active_front_support_path_context") \
+			or launch_scan_cache.has("active_front_support_path_context_complete"):
 		_fail("Consumed active-front launch surface remained cached: %s" % JSON.stringify(launch_scan_cache))
 		return {}
 	EnemyTurnRules._spawn_profile_begin(true)
@@ -694,7 +704,8 @@ func _active_front_support_scan_reuse_report(session, config: Dictionary, state:
 		return {}
 	if int(recompute_counts.get("active_front_candidate_surface_point_reused", 0)) != 0 \
 			or int(recompute_counts.get("active_front_support_commander_candidates_loaded", 0)) != 1 \
-			or int(recompute_counts.get("active_front_support_probe_loaded", 0)) <= 0:
+			or int(recompute_counts.get("active_front_support_probe_loaded", 0)) <= 0 \
+			or int(recompute_counts.get("active_front_support_path_context_loaded", 0)) != 1:
 		_fail("Post-consumption active-front scan reused stale surface state instead of recomputing: %s" % JSON.stringify(recompute_profile))
 		return {}
 	return {
@@ -704,10 +715,14 @@ func _active_front_support_scan_reuse_report(session, config: Dictionary, state:
 		"commander_candidates_reused": int(counts.get("active_front_support_commander_candidates_reused", 0)),
 		"commander_probes_loaded": probe_loaded,
 		"commander_probes_reused": probe_reused,
+		"path_context_loaded": int(counts.get("active_front_support_path_context_loaded", 0)),
+		"path_context_reused": int(counts.get("active_front_support_path_context_reused", 0)),
 		"launch_surface_candidate_match": true,
 		"launch_surface_all_origin_payloads_match": true,
 		"launch_surface_context_isolated": true,
 		"launch_surface_points_reused": int(launch_surface_counts.get("active_front_candidate_surface_point_reused", 0)),
+		"launch_surface_path_context_loaded": int(launch_surface_counts.get("active_front_support_path_context_loaded", 0)),
+		"launch_surface_path_context_reused": int(launch_surface_counts.get("active_front_support_path_context_reused", 0)),
 		"launch_surface_consumed": int(launch_surface_counts.get("active_front_candidate_surface_consumed", 0)),
 		"post_consumption_recomputed": true,
 	}
