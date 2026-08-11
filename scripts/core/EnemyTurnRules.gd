@@ -358,6 +358,13 @@ static func _reinforcement_profile_count(key: String, amount: int = 1) -> void:
 	counts[key] = int(counts.get(key, 0)) + amount
 	_reinforcement_profile["counts"] = counts
 
+static func _planned_recruitment_profile_count(context: Dictionary, key: String, amount: int = 1) -> void:
+	if String(context.get("planned_recruitment_profile_owner", "")) == "town_build":
+		if key in ["planned_live_tasks_loaded", "planned_live_tasks_reused", "planned_path_context_loaded", "planned_path_context_reused"]:
+			_town_build_profile_count(key, amount)
+		return
+	_reinforcement_profile_count(key, amount)
+
 static func _town_build_profile_begin(enabled: bool) -> void:
 	_town_build_profile_active = enabled
 	_town_build_profile = {"schema_id": "strategic_ai_town_build_profile_v1", "phases_ms": {}, "counts": {}} if enabled else {}
@@ -2947,11 +2954,11 @@ static func _planned_recruitment_live_tasks(
 	faction_recruitment_context: Dictionary
 ) -> Array:
 	if faction_recruitment_context.get("planned_live_tasks", null) is Array:
-		_reinforcement_profile_count("planned_live_tasks_reused")
+		_planned_recruitment_profile_count(faction_recruitment_context, "planned_live_tasks_reused")
 		return faction_recruitment_context["planned_live_tasks"]
 	var live_tasks := EnemyAdventureRulesScript._ai_hero_task_live_tasks_for_faction(session, faction_id)
 	faction_recruitment_context["planned_live_tasks"] = live_tasks
-	_reinforcement_profile_count("planned_live_tasks_loaded")
+	_planned_recruitment_profile_count(faction_recruitment_context, "planned_live_tasks_loaded")
 	return live_tasks
 
 static func _planned_recruitment_path_context(
@@ -2961,11 +2968,11 @@ static func _planned_recruitment_path_context(
 ) -> Dictionary:
 	var cached = faction_recruitment_context.get("planned_path_context", null)
 	if cached is Dictionary and not cached.is_empty():
-		_reinforcement_profile_count("planned_path_context_reused")
+		_planned_recruitment_profile_count(faction_recruitment_context, "planned_path_context_reused")
 		return cached
 	var path_context := EnemyAdventureRulesScript._path_distance_surface_context(session, "", faction_id)
 	faction_recruitment_context["planned_path_context"] = path_context
-	_reinforcement_profile_count("planned_path_context_loaded")
+	_planned_recruitment_profile_count(faction_recruitment_context, "planned_path_context_loaded")
 	return path_context
 
 static func _planned_task_prep_strength(base_strength: int, target_kind: String, task_class: String) -> int:
@@ -4355,6 +4362,7 @@ static func _enemy_empire_build_candidates(
 	config: Dictionary
 ) -> Array:
 	var candidates := []
+	var build_phase_context := {"planned_recruitment_profile_owner": "town_build"}
 	for entry in town_entries:
 		if not (entry is Dictionary):
 			continue
@@ -4368,7 +4376,7 @@ static func _enemy_empire_build_candidates(
 			continue
 		if int(town.get("last_build_day", 0)) == int(session.day):
 			continue
-		candidates.append_array(_enemy_town_build_candidates(session, town, town_index, treasury, config, faction_id))
+		candidates.append_array(_enemy_town_build_candidates(session, town, town_index, treasury, config, faction_id, build_phase_context))
 	candidates.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
 		var a_score := float(a.get("final_score", 0.0))
 		var b_score := float(b.get("final_score", 0.0))
@@ -4388,10 +4396,11 @@ static func _enemy_town_build_candidates(
 	town_index: int,
 	treasury: Dictionary,
 	config: Dictionary,
-	faction_id: String
+	faction_id: String,
+	build_phase_context: Dictionary = {}
 ) -> Array:
 	var candidates := []
-	var score_context := _town_build_score_context(session, town, config, faction_id)
+	var score_context := _town_build_score_context(session, town, config, faction_id, build_phase_context)
 	for building_id in OverworldRulesScript.get_town_build_options(town, int(session.day) if session != null else -1):
 		var status: Dictionary = OverworldRulesScript.get_town_build_status(town, String(building_id))
 		if not bool(status.get("buildable", false)):
@@ -4436,7 +4445,8 @@ static func _town_build_score_context(
 	session: SessionStateStoreScript.SessionData,
 	town: Dictionary,
 	config: Dictionary,
-	faction_id: String
+	faction_id: String,
+	build_phase_context: Dictionary = {}
 ) -> Dictionary:
 	_town_build_profile_count("town_score_context_count")
 	var started_usec := _town_build_profile_timer()
@@ -4455,7 +4465,7 @@ static func _town_build_score_context(
 		"town_role": OverworldRulesScript.town_strategic_role(town),
 		"garrison_below_target": _desired_town_strength(session, town, config, current_metrics, town_front) > _army_strength(town.get("garrison", [])),
 		"raid_capacity_available": active_raid_count(session, faction_id) < _max_active_raids_for_strategy(session, config, faction_id),
-		"planned_target": _best_planned_task_recruitment_target(session, config, faction_id, town),
+		"planned_target": _best_planned_task_recruitment_target(session, config, faction_id, town, build_phase_context),
 	}
 	_town_build_profile_add_ms("current_town_state_ms", started_usec)
 	return context
