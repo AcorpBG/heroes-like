@@ -11229,7 +11229,7 @@ def validate_content(errors: list[str]) -> None:
     drowned_antler_rout = next((ability for ability in drowned_sovereign.get("abilities", []) if isinstance(ability, dict) and str(ability.get("name", "")) == "Drowned Antler Rout"), {})
     ensure(str(drowned_antler_rout.get("id", "")) == "bloodrush", errors, "Drowned Antler Sovereigns must own their wounded-line apex role")
     ensure(drowned_antler_rout.get("primary_melee_only") is True, errors, "Drowned Antler Rout must affect primary melee attacks only")
-    ensure(float(drowned_antler_rout.get("clean_target_damage_multiplier", 1.0)) == 0.85, errors, "Drowned Antler Rout must yield bounded force against intact lines")
+    ensure(float(drowned_antler_rout.get("clean_target_damage_multiplier", 1.0)) == 0.82, errors, "Drowned Antler Rout must yield bounded force against intact lines")
     ensure(float(drowned_antler_rout.get("wounded_threshold_ratio", 0.0)) == 0.5, errors, "Drowned Antler Rout must recognize wounded stacks at half health")
     ensure(float(drowned_antler_rout.get("wounded_damage_multiplier", 1.0)) == 1.1, errors, "Drowned Antler Rout must punish wounded prey")
     ensure(float(drowned_antler_rout.get("status_damage_multiplier", 1.0)) == 1.05, errors, "Drowned Antler Rout must punish disrupted prey")
