@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `strategic-ai-active-front-shared-spawn-path-context-10184`. Active-front support and ordinary spawn planning now consume one phase-local graph, duplicate loads fall to zero, exact strict-Small behavior remains unchanged, and Linux plus fresh Windows/Wine package boots pass.
 - Latest completed implementation slice: `strategic-ai-active-front-path-context-reuse-10184`. One phase-local virtual-probe path graph is now shared across every active-front spawn origin, exact candidates and strict-Small signatures remain unchanged, and Linux plus fresh Windows/Wine package boots pass.
 - Latest completed implementation slice: `strategic-ai-spawn-launch-policy-context-reuse-10184`. Each faction spawn loop now lazily loads capital/front launch policy once, reuses it through candidate selection and pressure consumption, preserves no-town short-circuits and exact strict-Small behavior, and passes Linux/Windows package boots.
 - Current implementation slice: `combat-veilmourn-undertow-harpooner-damage-calibration-10184` (completed). Undertow Harpooners now use the common tier-four ranged `5-8` damage band, improving the authoritative matrix from `35 / 200.5 / 5 / 70.0 / 1.13` to `34 / 187.0 / 3 / 68.5 / 0.73` with zero structural failures.
