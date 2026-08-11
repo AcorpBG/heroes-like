@@ -4487,11 +4487,25 @@ static func _town_build_score_context(
 		"town_front": town_front,
 		"town_role": OverworldRulesScript.town_strategic_role(town),
 		"garrison_below_target": _desired_town_strength(session, town, config, current_metrics, town_front) > _army_strength(town.get("garrison", [])),
-		"raid_capacity_available": active_raid_count(session, faction_id) < _max_active_raids_for_strategy(session, config, faction_id),
+		"raid_capacity_available": _town_build_raid_capacity_available(session, config, faction_id, build_phase_context),
 		"planned_target": _best_planned_task_recruitment_target(session, config, faction_id, town, build_phase_context),
 	}
 	_town_build_profile_add_ms("current_town_state_ms", started_usec)
 	return context
+
+static func _town_build_raid_capacity_available(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	faction_id: String,
+	build_phase_context: Dictionary
+) -> bool:
+	if build_phase_context.has("raid_capacity_available"):
+		_town_build_profile_count("raid_capacity_reused")
+		return bool(build_phase_context.get("raid_capacity_available", false))
+	var available := active_raid_count(session, faction_id) < _max_active_raids_for_strategy(session, config, faction_id)
+	build_phase_context["raid_capacity_available"] = available
+	_town_build_profile_count("raid_capacity_loaded")
+	return available
 
 static func _build_candidate_score_breakdown(
 	session: SessionStateStoreScript.SessionData,

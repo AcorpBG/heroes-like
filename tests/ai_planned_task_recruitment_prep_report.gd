@@ -30,6 +30,9 @@ func _run() -> void:
 	var town_build_planned_context_case := _town_build_planned_task_context_reuse()
 	if town_build_planned_context_case.is_empty():
 		return
+	var town_build_raid_capacity_context_case := _town_build_raid_capacity_context_reuse()
+	if town_build_raid_capacity_context_case.is_empty():
+		return
 	var destination_roster_context_case := _recruit_destination_commander_roster_context_reuse()
 	if destination_roster_context_case.is_empty():
 		return
@@ -87,7 +90,7 @@ func _run() -> void:
 		"schema_status": "planned_task_recruitment_prep_live_behavior",
 		"behavior_policy": "town_building_task_fit_spell_study_template_role_fallback_and_recruitment_prepare_same_turn_saved_commander_tasks_with_destination_fit_ready_tasks_launch_below_generic_pressure_surplus_mobilization_and_phase_scoped_path_reuse",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
-		"cases": [town_front_context_case, town_build_planned_context_case, destination_roster_context_case, destination_roster_invalidation_case, live_turn_case, spell_study_case, task_fit_spell_study_case, template_role_fallback_case, path_cache_case, planned_case, surplus_garrison_case, post_recruit_surplus_case, unit_fit_case, market_case, garrison_case, ready_launch_case, passive_budget_case, same_turn_launch_case, unplanned_gate_case],
+		"cases": [town_front_context_case, town_build_planned_context_case, town_build_raid_capacity_context_case, destination_roster_context_case, destination_roster_invalidation_case, live_turn_case, spell_study_case, task_fit_spell_study_case, template_role_fallback_case, path_cache_case, planned_case, surplus_garrison_case, post_recruit_surplus_case, unit_fit_case, market_case, garrison_case, ready_launch_case, passive_budget_case, same_turn_launch_case, unplanned_gate_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -244,6 +247,194 @@ func _town_build_planned_task_context_reuse() -> Dictionary:
 		"town_saved_plan_keys": plans_by_town.keys(),
 		"fresh_enumeration_reloaded": true,
 		"task_and_path_mutation_reloaded": true,
+		"authority_exact": true,
+	}
+
+func _town_build_raid_capacity_context_reuse() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config().duplicate(true)
+	config["max_active_raids"] = 1
+	_prepare_safe_recruiting_town(session)
+	_remove_active_pressure_hosts(session)
+	var towns: Array = session.overworld.get("towns", []).duplicate(true)
+	var primary_index := -1
+	for index in range(towns.size()):
+		var town_value = towns[index]
+		if town_value is Dictionary and String(town_value.get("placement_id", "")) == DUSKFEN:
+			primary_index = index
+			break
+	if primary_index < 0:
+		_fail("Town-build raid-capacity fixture is missing Duskfen.")
+		return {}
+	var capital: Dictionary = towns[primary_index].duplicate(true)
+	capital["placement_id"] = "nightglass_raid_capacity_capital"
+	capital["town_id"] = "town_nightglass_redoubt"
+	capital["x"] = int(capital.get("x", 0)) + 1
+	capital["last_build_day"] = 0
+	capital["built_buildings"] = [
+		"building_town_hall",
+		"building_blackbranch_den",
+		"building_mire_pens",
+		"building_lantern_archive",
+	]
+	towns.append(capital)
+	session.overworld["towns"] = towns
+	var capital_index := towns.size() - 1
+	var town_entries := [
+		{"index": primary_index, "town": towns[primary_index]},
+		{"index": capital_index, "town": towns[capital_index]},
+	]
+	var treasury := TREASURY.duplicate(true)
+	var base_limit := EnemyTurnRules._max_active_raids_for_strategy(session, config, FACTION_ID)
+	if base_limit < 1 or EnemyTurnRules.active_raid_count(session, FACTION_ID) != 0:
+		_fail("Town-build raid-capacity fixture did not begin below a positive clean limit: limit=%d active=%d" % [base_limit, EnemyTurnRules.active_raid_count(session, FACTION_ID)])
+		return {}
+	var below_capacity := _town_build_raid_capacity_enumeration(
+		session,
+		config,
+		town_entries,
+		treasury,
+		true,
+		"below_capacity"
+	)
+	if below_capacity.is_empty():
+		return {}
+	var added_host_ids := []
+	for host_index in range(base_limit):
+		var host_id := "raid_capacity_context_host_%d" % host_index
+		_append_active_pressure_host(session, host_id, host_index)
+		added_host_ids.append(host_id)
+	if EnemyTurnRules.active_raid_count(session, FACTION_ID) != base_limit:
+		_fail("Town-build raid-capacity fixture did not reach its exact active-host limit after add: limit=%d active=%d" % [base_limit, EnemyTurnRules.active_raid_count(session, FACTION_ID)])
+		return {}
+	var at_capacity := _town_build_raid_capacity_enumeration(
+		session,
+		config,
+		town_entries,
+		treasury,
+		false,
+		"at_capacity_after_active_host_add"
+	)
+	if at_capacity.is_empty():
+		return {}
+	var removed_host_id := String(added_host_ids[added_host_ids.size() - 1])
+	_remove_encounter(session, removed_host_id)
+	if EnemyTurnRules.active_raid_count(session, FACTION_ID) != base_limit - 1:
+		_fail("Town-build raid-capacity fixture did not expose fresh capacity after active-host removal.")
+		return {}
+	var after_remove := _town_build_raid_capacity_enumeration(
+		session,
+		config,
+		town_entries,
+		treasury,
+		true,
+		"below_capacity_after_active_host_remove"
+	)
+	if after_remove.is_empty():
+		return {}
+	_append_active_pressure_host(session, removed_host_id, base_limit - 1)
+	var after_readd := _town_build_raid_capacity_enumeration(
+		session,
+		config,
+		town_entries,
+		treasury,
+		false,
+		"at_capacity_after_active_host_readd"
+	)
+	if after_readd.is_empty():
+		return {}
+	towns = session.overworld.get("towns", []).duplicate(true)
+	capital = towns[capital_index].duplicate(true)
+	var capital_buildings: Array = capital.get("built_buildings", []).duplicate(true) if capital.get("built_buildings", []) is Array else []
+	capital_buildings.append("building_nightglass_dominion")
+	capital["built_buildings"] = capital_buildings
+	towns[capital_index] = capital
+	session.overworld["towns"] = towns
+	town_entries[1] = {"index": capital_index, "town": towns[capital_index]}
+	var capital_project := OverworldRules.town_capital_project_state(capital, session)
+	var expanded_limit := EnemyTurnRules._max_active_raids_for_strategy(session, config, FACTION_ID)
+	if int(capital_project.get("max_active_raids_bonus", 0)) != 1 or expanded_limit != base_limit + 1:
+		_fail("Town-build raid-capacity fixture did not expose the capital max-slot mutation: project=%s base=%d expanded=%d" % [JSON.stringify(capital_project), base_limit, expanded_limit])
+		return {}
+	var after_capital_mutation := _town_build_raid_capacity_enumeration(
+		session,
+		config,
+		town_entries,
+		treasury,
+		true,
+		"below_capacity_after_capital_max_slot_mutation"
+	)
+	if after_capital_mutation.is_empty():
+		return {}
+	return {
+		"case_id": "town_build_raid_capacity_context_reuse",
+		"town_count": town_entries.size(),
+		"base_max_active_raids": base_limit,
+		"expanded_max_active_raids": expanded_limit,
+		"below_capacity_fresh_vs_shared_candidates_exact": true,
+		"at_capacity_fresh_vs_shared_candidates_exact": true,
+		"candidate_order_and_selection_exact": true,
+		"load_once_reuse_once_across_two_towns": true,
+		"fresh_after_active_host_add_remove": true,
+		"fresh_after_capital_max_slot_mutation": true,
+		"single_town_direct_authority_exact": true,
+		"capital_max_active_raids_bonus": int(capital_project.get("max_active_raids_bonus", 0)),
+		"enumerations": [below_capacity, at_capacity, after_remove, after_readd, after_capital_mutation],
+	}
+
+func _town_build_raid_capacity_enumeration(
+	session,
+	config: Dictionary,
+	town_entries: Array,
+	treasury: Dictionary,
+	expected_available: bool,
+	stage: String
+) -> Dictionary:
+	var towns: Array = session.overworld.get("towns", [])
+	var authority_before := JSON.stringify(session.to_dict())
+	var fresh_candidates := _fresh_build_candidates(session, town_entries, towns, treasury, config)
+	EnemyTurnRules._town_build_profile_begin(true)
+	var shared_candidates := EnemyTurnRules._enemy_empire_build_candidates(session, town_entries, towns, treasury, FACTION_ID, config)
+	var shared_profile := EnemyTurnRules._town_build_profile_finish()
+	var counts: Dictionary = shared_profile.get("counts", {}) if shared_profile.get("counts", {}) is Dictionary else {}
+	if fresh_candidates.is_empty() or shared_candidates != fresh_candidates:
+		_fail("Town-build raid-capacity %s enumeration changed exact candidate arrays/order: fresh=%s shared=%s" % [stage, JSON.stringify(fresh_candidates), JSON.stringify(shared_candidates)])
+		return {}
+	if shared_candidates[0] != fresh_candidates[0]:
+		_fail("Town-build raid-capacity %s enumeration changed exact selected candidate." % stage)
+		return {}
+	if int(counts.get("raid_capacity_loaded", 0)) != 1 or int(counts.get("raid_capacity_reused", 0)) != 1:
+		_fail("Town-build raid-capacity %s enumeration did not load once and reuse once across two towns: %s" % [stage, JSON.stringify(shared_profile)])
+		return {}
+	var primary_index := int(town_entries[0].get("index", -1))
+	if primary_index < 0 or primary_index >= towns.size() or not (towns[primary_index] is Dictionary):
+		_fail("Town-build raid-capacity %s enumeration lost its single-town authority fixture." % stage)
+		return {}
+	var primary_town: Dictionary = towns[primary_index]
+	var direct_context := EnemyTurnRules._town_build_score_context(session, primary_town, config, FACTION_ID, {})
+	var single_town_candidates := EnemyTurnRules._enemy_town_build_candidates(session, primary_town, -1, treasury, config, FACTION_ID, {})
+	var direct_best := EnemyTurnRules._best_build_candidate(session, primary_town, treasury, config, FACTION_ID)
+	if bool(direct_context.get("raid_capacity_available", not expected_available)) != expected_available \
+			or single_town_candidates.is_empty() \
+			or direct_best != single_town_candidates[0]:
+		_fail("Town-build raid-capacity %s single-town/direct authority drifted: expected_available=%s context=%s candidates=%s best=%s" % [stage, expected_available, JSON.stringify(direct_context), JSON.stringify(single_town_candidates), JSON.stringify(direct_best)])
+		return {}
+	if JSON.stringify(session.to_dict()) != authority_before:
+		_fail("Town-build raid-capacity %s enumeration mutated session authority." % stage)
+		return {}
+	return {
+		"stage": stage,
+		"raid_capacity_available": expected_available,
+		"active_raid_count": EnemyTurnRules.active_raid_count(session, FACTION_ID),
+		"candidate_count": shared_candidates.size(),
+		"selected_town_id": String(shared_candidates[0].get("town_placement_id", "")),
+		"selected_building_id": String(shared_candidates[0].get("building_id", "")),
+		"candidate_arrays_exact": true,
+		"candidate_order_exact": true,
+		"selected_candidate_exact": true,
+		"raid_capacity_loaded": int(counts.get("raid_capacity_loaded", 0)),
+		"raid_capacity_reused": int(counts.get("raid_capacity_reused", 0)),
+		"single_town_direct_authority_exact": true,
 		"authority_exact": true,
 	}
 
@@ -1744,6 +1935,36 @@ func _append_passive_generated_faction_encounters(session, count: int) -> void:
 				"category": "guard",
 			},
 		})
+	session.overworld["encounters"] = encounters
+
+func _append_active_pressure_host(session, placement_id: String, offset: int) -> void:
+	var encounters: Array = session.overworld.get("encounters", []) if session.overworld.get("encounters", []) is Array else []
+	encounters.append({
+		"placement_id": placement_id,
+		"encounter_id": "encounter_mire_raid",
+		"x": 6 + offset,
+		"y": 1,
+		"difficulty": "pressure",
+		"days_active": 1,
+		"spawned_by_faction_id": FACTION_ID,
+	})
+	session.overworld["encounters"] = encounters
+
+func _remove_active_pressure_hosts(session) -> void:
+	var encounters := []
+	var resolved = session.overworld.get("resolved_encounters", [])
+	for encounter in session.overworld.get("encounters", []):
+		if EnemyAdventureRules.is_active_pressure_host(encounter, FACTION_ID, resolved):
+			continue
+		encounters.append(encounter)
+	session.overworld["encounters"] = encounters
+
+func _remove_encounter(session, placement_id: String) -> void:
+	var encounters := []
+	for encounter in session.overworld.get("encounters", []):
+		if encounter is Dictionary and String(encounter.get("placement_id", "")) == placement_id:
+			continue
+		encounters.append(encounter)
 	session.overworld["encounters"] = encounters
 
 func _first_active_raid_with_days(session, minimum_days: int) -> Dictionary:

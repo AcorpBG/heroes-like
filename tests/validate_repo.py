@@ -16668,6 +16668,10 @@ def validate_enemy_empire_management(errors: list[str]) -> None:
         '"destination_commander_roster_loaded"',
         '"destination_commander_roster_shared_between_scorers"',
         '"destination_commander_roster_invalidated"',
+        "func _town_build_raid_capacity_available",
+        'build_phase_context.has("raid_capacity_available")',
+        '"raid_capacity_loaded"',
+        '"raid_capacity_reused"',
     ):
         ensure(required_token in enemy_turn_text, errors, f"EnemyTurnRules.gd is missing strategic AI context reuse token: {required_token}")
     if recruitment_prep_report_path.exists():
@@ -16681,6 +16685,14 @@ def validate_enemy_empire_management(errors: list[str]) -> None:
             '"scoring_authority_exact": true',
             '"fresh_current_rescore_exact": true',
             '"bounded_roster_retained": true',
+            "town_build_raid_capacity_context_reuse",
+            '"below_capacity_fresh_vs_shared_candidates_exact": true',
+            '"at_capacity_fresh_vs_shared_candidates_exact": true',
+            '"candidate_order_and_selection_exact": true',
+            '"load_once_reuse_once_across_two_towns": true',
+            '"fresh_after_active_host_add_remove": true',
+            '"fresh_after_capital_max_slot_mutation": true',
+            '"single_town_direct_authority_exact": true',
         ):
             ensure(required_token in recruitment_prep_report_text, errors, f"AI planned-task recruitment prep report is missing commander-roster context token: {required_token}")
     for required_token in (
