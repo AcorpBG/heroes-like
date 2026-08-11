@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `strategic-ai-recruit-destination-town-front-context-reuse-10184`. Recruitment destination planning now derives the local front from the town-development metrics it already computes; exact strict-Small behavior remains unchanged while reinforcement falls from 4244ms to 2676ms.
 - Latest completed implementation slice: `strategic-ai-active-raid-assignment-path-context-reuse-10184`. Each active raid now builds its current path graph once and reuses it across defense redirection, target refresh, and unreachable-target checks; exact strict-Small behavior remains unchanged and the profiled assignment total falls from 2791ms to 2414ms.
 - Latest completed implementation slice: `strategic-ai-active-front-shared-spawn-path-context-10184`. Active-front support and ordinary spawn planning now consume one phase-local graph, duplicate loads fall to zero, exact strict-Small behavior remains unchanged, and Linux plus fresh Windows/Wine package boots pass.
 - Latest completed implementation slice: `strategic-ai-active-front-path-context-reuse-10184`. One phase-local virtual-probe path graph is now shared across every active-front spawn origin, exact candidates and strict-Small signatures remain unchanged, and Linux plus fresh Windows/Wine package boots pass.
