@@ -103,6 +103,8 @@ TOWN_SCENE_PATH = ROOT / "scenes" / "town" / "TownShell.tscn"
 TOWN_SCRIPT_PATH = ROOT / "scenes" / "town" / "TownShell.gd"
 TOWN_ENTITY_CACHE_ACTIVE_REFRESH_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "town_entity_cache_active_refresh_regression.gd"
 TOWN_ENTITY_CACHE_ACTIVE_REFRESH_REGRESSION_SCENE_PATH = ROOT / "tests" / "town_entity_cache_active_refresh_regression.tscn"
+GENERATED_LARGE_TOWN_EXPLICIT_SAVE_SURFACE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "generated_large_town_explicit_save_surface_regression.gd"
+GENERATED_LARGE_TOWN_EXPLICIT_SAVE_SURFACE_REGRESSION_SCENE_PATH = ROOT / "tests" / "generated_large_town_explicit_save_surface_regression.tscn"
 BATTLE_SCENE_PATH = ROOT / "scenes" / "battle" / "BattleShell.tscn"
 BATTLE_SCRIPT_PATH = ROOT / "scenes" / "battle" / "BattleShell.gd"
 BATTLE_BOARD_VIEW_SCRIPT_PATH = ROOT / "scenes" / "battle" / "BattleBoardView.gd"
@@ -26127,6 +26129,92 @@ def validate_town_entity_cache_active_refresh_regression(errors: list[str]) -> N
         ensure(token in town_shell_text, errors, f"TownShell cache-hit economy contract is missing token {token}")
 
 
+def validate_generated_large_town_explicit_save_surface_regression(errors: list[str]) -> None:
+    required_paths = (
+        GENERATED_LARGE_TOWN_EXPLICIT_SAVE_SURFACE_REGRESSION_SCRIPT_PATH,
+        GENERATED_LARGE_TOWN_EXPLICIT_SAVE_SURFACE_REGRESSION_SCENE_PATH,
+        SAVE_SERVICE_PATH,
+        TOWN_SCENE_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Generated-Large Town explicit save-surface regression dependency is missing: {path}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    script_text = GENERATED_LARGE_TOWN_EXPLICIT_SAVE_SURFACE_REGRESSION_SCRIPT_PATH.read_text(encoding="utf-8")
+    scene_text = GENERATED_LARGE_TOWN_EXPLICIT_SAVE_SURFACE_REGRESSION_SCENE_PATH.read_text(encoding="utf-8")
+    save_service_text = SAVE_SERVICE_PATH.read_text(encoding="utf-8")
+    for token in (
+        "GENERATED_LARGE_TOWN_EXPLICIT_SAVE_SURFACE_REGRESSION",
+        "town-explicit-save-surface-large-10184",
+        "validation_build_in_session_save_surface_direct_legacy",
+        "build_in_session_save_surface",
+        'for context in ["overworld", "battle", "outcome", "editor", "stale_route"]',
+        "town_resource_change",
+        "town_day_change",
+        "town_action_change",
+        "nested_enemy_state_change",
+        "mark_runtime_normalized_transition_state",
+        "command_risk_summary_fast_path",
+        "describe_command_risk_summary_from_normalized_session",
+        "family_reducer",
+        '"logistics:alpha"',
+        '"objective:beta"',
+        '"posture:delta"',
+        '"field:epsilon"',
+        "JOY_BUTTON_A",
+        "JOY_BUTTON_DPAD_DOWN",
+        'get_node_or_null("%SaveSlot")',
+        'float(record.get("total_ms", 99999.0)) >= 1000.0',
+        "detached_live_payload",
+        "normalized_live_summary",
+        "inspect_selected_slot",
+        "latest_loadable_summary",
+        "current_context",
+        "detached_normalization",
+        "detached_read_scope_begin",
+        "shared_recap_context",
+        "shared_progress_context",
+        "shared_watch_context",
+        "save_copy",
+        "return_copy",
+        "current_save_recap",
+        "play_check",
+        "recap_surfaces",
+        "stored_resume_recaps",
+        "stored_recap_alias_reused",
+        "detached_was_runtime_normalized",
+        "detached_normalization_fallback",
+        "validation_summary_cache_snapshot",
+        "after_backup",
+        "precommit",
+        "_assert_summary_recovery_controls",
+        "candidate_cleanup",
+        "backup_restored",
+        "cache_rebuilt",
+        "_runtime_save_record_count",
+        "_last_town_save_record",
+        "save_surface_force",
+        "departure_reused",
+        "_selection_authority",
+        "_artifacts_absent",
+    ):
+        ensure(token in script_text, errors, f"Generated-Large Town explicit save-surface regression is missing token {token}")
+    ensure(
+        "res://tests/generated_large_town_explicit_save_surface_regression.gd" in scene_text,
+        errors,
+        "Generated-Large Town explicit save-surface scene must load its focused script",
+    )
+    for token in (
+        "func validation_build_in_session_save_surface_direct_legacy",
+        'buckets["detached_live_payload"]',
+        'buckets["normalized_live_summary"]',
+        'buckets["stored_resume_recaps"]',
+        '"stored_recap_alias_reused"',
+    ):
+        ensure(token in save_service_text, errors, f"SaveService optimized explicit save-surface contract is missing token {token}")
+
+
 def validate_town_economy_resource_ui_surface(errors: list[str]) -> None:
     ensure(TOWN_ECONOMY_RESOURCE_UI_SURFACE_REPORT_SCRIPT_PATH.exists(), errors, "Town economy resource UI surface report script is missing")
     ensure(TOWN_ECONOMY_RESOURCE_UI_SURFACE_REPORT_SCENE_PATH.exists(), errors, "Town economy resource UI surface report scene is missing")
@@ -26862,6 +26950,7 @@ def main() -> int:
     validate_town_unit_tier_runtime_surface(errors)
     validate_town_unique_building_runtime_payoff(errors)
     validate_town_entity_cache_active_refresh_regression(errors)
+    validate_generated_large_town_explicit_save_surface_regression(errors)
     validate_town_economy_resource_ui_surface(errors)
     validate_town_recruitment_ui_surface(errors)
     validate_active_scenario_town_development_runway(errors)

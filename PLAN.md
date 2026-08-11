@@ -24,7 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current implementation slice: `performance-town-generated-large-cache-hit-first-refresh-10184` (completed). Generated-Large same-town re-entry now reuses context-validated cached economy and departure models with live affordability/movement refresh, reducing first refresh from about 6.5 seconds to about 34 milliseconds without stale copy or authority drift.
+- Current implementation slice: `performance-generated-large-town-explicit-save-surface-10184` (completed). Generated-Large Town slot selection and post-save feedback now reuse one detached summary/context, exact risk-summary and Town cache surfaces, reducing the old 9.75-9.86 second surface rebuild to sub-second Linux and fresh Windows/Wine interactions.
+- Latest completed implementation slice: `performance-generated-large-town-explicit-save-surface-10184`. Exact save-surface copy, authority, recovery, rollback, overwrite, command-risk, Town/core/repository, and Linux plus fresh Windows/Wine packaged gates pass; the separate large transactional-write latency remains follow-up performance debt.
 - Latest completed implementation slice: `performance-town-generated-large-cache-hit-first-refresh-10184`. Exact ledger/action/departure parity, resource/context/action invalidation, authority, Town economy/transition/focus/core/repository gates, and Linux plus fresh Windows/Wine packaged performance all pass.
 - Latest completed implementation slice: `save-briefing-consumption-alternate-autosave-reconciliation-10184`. Successful and failed End Turn rows, unverified-authority refusal, zero-write stale checks, Battle/generated controls, transaction/focus/visual/core/repository gates, and Linux plus fresh Windows/Wine packages pass at save version 9.
 - Latest completed implementation slice: `accessibility-town-management-tab-controller-navigation-10184`. Wide/narrow five-tab keyboard/controller/mouse traversal, exact Town/save authority, market apply controls, Town visual/core/repository gates, and Linux plus fresh Windows/Wine packages pass; the generated-large cache timing red is method-matched pre-existing at HEAD.
@@ -3906,6 +3907,40 @@ Completion criteria:
 
 Non-goals:
 - no generated-map/RMG rules or parity, Town economy/rules/content change, UI composition redesign, cache-policy rewrite beyond the selected economy model, save schema/version, broad performance tuning, publication, signing, native Windows hardware certification, or overall release-completion claim.
+
+## Generated-Large Town Explicit Save Surface Performance
+
+id: `performance-generated-large-town-explicit-save-surface-10184`
+
+Status: completed.
+
+Selected Phase 6 data-protection interaction performance correction. On a generated Large Town, real
+SaveSlot selection and post-save refresh synchronously build the full in-session save surface in roughly
+9.75-9.86 seconds, repeatedly serializing and summarizing the same live session for equivalent recap copy.
+
+Implementation target:
+- build one detached live payload and one normalized current-session summary/context per save-surface request;
+- derive current context, play/save checks, save/return handoffs, recaps, and menu tooltip from that shared immutable per-call context while retaining exact existing strings;
+- derive the retained command-risk watch through the same exact reducer without rebuilding discarded forecast detail, and reuse exact local town/logistics contexts without stale cross-call state;
+- reuse already-computed return handoff and avoid any persistent cross-call cache, writer, summary-cache, schema, or routing change.
+- reuse Town's already-current cached departure surface during forced slot/post-save refresh instead of re-entering the full generated-map departure projection chain.
+- allow a verified slot-summary cache hit before live-file recovery parsing only when no transaction artifact exists and exists/mtime/size identity matches; artifact and cache-miss paths retain full recovery/read behavior.
+
+Completion criteria:
+- physical keyboard/controller SaveSlot selection and post-manual-save refresh on the deterministic generated-Large fixture each settle below the existing 1000ms interaction budget;
+- every save-surface dictionary field and player-visible string matches direct descriptor controls exactly for Town, Overworld, Battle, and Outcome contexts;
+- resource/day/build/recruit/market changes produce fresh exact copy, while selection performs zero writes/session/cache/route/focus mutation;
+- successful, failed, overwrite-confirmed, and overwrite-canceled manual saves preserve exact transactional bytes/reload semantics and perform one write;
+- focused surface/timing, transaction/overwrite, Town cache/economy/focus, core, repository, and Linux/Windows packaged performance gates pass without save-version change.
+
+Non-goals:
+- no persistent save-surface cache, save writer/schema/version, broad summary-cache policy beyond the selected artifact-free verified hit, autosave/manual-slot/overwrite behavior, UI composition/copy change, Town rules/content, generated-map or Native RMG behavior, publication, signing, native Windows hardware certification, or overall release-completion claim.
+
+Completion evidence:
+- source focused selection is 348ms wall/163.737ms surface; post-save Town refresh is 816.921ms with cache hit/build0, forced surface 532.308ms, and SaveService surface 386.801ms;
+- Linux packaged selection is 140.898ms and all gated surfaces are at most 338.306ms; fresh Windows/Wine selection is 177.893ms and all gated surfaces are at most 786.099ms;
+- exact 17-field surface parity, steady/active/nested-enemy risk parity, canonical reload, candidate/backup recovery, injected rollback, cancel/overwrite, Town transition/focus, command-risk/end-turn, core, editor, validator, and repository integrity pass;
+- the generated 20MB transactional write still takes several seconds and remains a distinct future performance slice; it is not reported as part of the corrected sub-second surface/feedback budget.
 
 ## Phase Roadmap
 

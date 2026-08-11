@@ -96,6 +96,12 @@ func validation_general_profile_log_snapshot() -> Dictionary:
 func validation_general_profile_log_last_records(limit: int = 5) -> Array:
 	return ProfileLogScript.last_general_records(limit)
 
+func validation_build_in_session_save_surface_direct_legacy(
+	session: SessionStateStoreScript.SessionData,
+	manual_slot: int = -1
+) -> Dictionary:
+	return _build_in_session_save_surface_direct_legacy(session, manual_slot)
+
 func _trace_summary_inspection(name: String) -> void:
 	if not _summary_inspection_trace_enabled:
 		return
@@ -530,18 +536,104 @@ func build_in_session_save_surface(session: SessionStateStoreScript.SessionData,
 	var latest_started := ProfileLogScript.begin_usec()
 	var latest_summary := latest_loadable_summary()
 	buckets["latest_loadable_summary"] = ProfileLogScript.elapsed_ms(latest_started)
+	var current_target := _resume_target_for_session(session)
+	var payload_started := ProfileLogScript.begin_usec()
+	var live_payload := session.to_dict() if session != null and session.scenario_id != "" else {}
+	buckets["detached_live_payload"] = ProfileLogScript.elapsed_ms(payload_started)
+	var summary_started := ProfileLogScript.begin_usec()
+	var selected_live_summary := _live_session_summary_from_payload(live_payload, selected_slot, current_target)
+	var default_live_summary := _live_summary_for_manual_slot(selected_live_summary, _selected_manual_slot, false)
+	var detached_live_session := _session_from_owned_detached_payload(live_payload)
+	buckets["normalized_live_summary"] = ProfileLogScript.elapsed_ms(summary_started)
 	var context_started := ProfileLogScript.begin_usec()
+	var current_context := describe_resume_brief(default_live_summary) if not default_live_summary.is_empty() else ""
+	buckets["current_context"] = ProfileLogScript.elapsed_ms(context_started)
+	var normalization_started := ProfileLogScript.begin_usec()
+	var detached_was_runtime_normalized := OverworldRulesScript.is_runtime_session_normalized(detached_live_session)
+	var detached_normalization_fallback := detached_live_session != null and not detached_was_runtime_normalized
+	if detached_normalization_fallback:
+		OverworldRulesScript.normalize_overworld_state(detached_live_session)
+	buckets["detached_normalization"] = ProfileLogScript.elapsed_ms(normalization_started)
+	var read_scope_started := ProfileLogScript.begin_usec()
+	OverworldRulesScript.begin_normalized_read_scope(detached_live_session)
+	TownRulesScript.begin_read_scope(detached_live_session)
+	buckets["detached_read_scope_begin"] = ProfileLogScript.elapsed_ms(read_scope_started)
+	var recap_started := ProfileLogScript.begin_usec()
+	var recap_context_started := ProfileLogScript.begin_usec()
+	var recap_context := _session_save_recap_context(detached_live_session, default_live_summary)
+	buckets["shared_recap_context"] = ProfileLogScript.elapsed_ms(recap_context_started)
+	buckets["shared_progress_context"] = float(recap_context.get("profile_progress_ms", 0.0))
+	buckets["shared_watch_context"] = float(recap_context.get("profile_watch_ms", 0.0))
+	var save_copy_started := ProfileLogScript.begin_usec()
+	var save_check := _describe_session_save_check_from_context(detached_live_session, default_live_summary, recap_context)
+	var save_handoff := _describe_session_save_handoff_from_summary(detached_live_session, selected_live_summary, selected_slot)
+	var save_handoff_brief := _describe_session_save_handoff_brief_from_summary(detached_live_session, selected_live_summary)
+	buckets["save_copy"] = ProfileLogScript.elapsed_ms(save_copy_started)
+	var return_copy_started := ProfileLogScript.begin_usec()
+	var return_handoff := _describe_session_return_handoff_from_summary(detached_live_session, default_live_summary)
+	buckets["return_copy"] = ProfileLogScript.elapsed_ms(return_copy_started)
+	var current_recap_started := ProfileLogScript.begin_usec()
+	var current_save_recap := _session_save_resume_recap_from_context(detached_live_session, default_live_summary, recap_context)
+	buckets["current_save_recap"] = ProfileLogScript.elapsed_ms(current_recap_started)
+	var play_check_started := ProfileLogScript.begin_usec()
+	var play_check := _describe_session_play_check_from_summary(detached_live_session, default_live_summary)
+	buckets["play_check"] = ProfileLogScript.elapsed_ms(play_check_started)
+	buckets["recap_surfaces"] = ProfileLogScript.elapsed_ms(recap_started)
+	TownRulesScript.end_read_scope(detached_live_session)
+	OverworldRulesScript.end_normalized_read_scope(detached_live_session)
+	var stored_recap_started := ProfileLogScript.begin_usec()
+	var slot_resume_recap := describe_summary_resume_recap(slot_summary)
+	var stored_recap_alias_reused := _summaries_share_storage_identity(slot_summary, latest_summary)
+	var latest_resume_recap := slot_resume_recap if stored_recap_alias_reused else describe_summary_resume_recap(latest_summary)
+	buckets["stored_resume_recaps"] = ProfileLogScript.elapsed_ms(stored_recap_started)
+	var result := {
+		"selected_slot": selected_slot,
+		"slot_summary": slot_summary,
+		"latest_summary": latest_summary,
+		"save_button_label": _in_session_save_label(current_target, selected_slot),
+		"save_button_tooltip": _in_session_save_tooltip(current_target, slot_summary, current_context),
+		"latest_context": _latest_context_line(latest_summary, current_target),
+		"current_context": current_context,
+		"play_check": play_check,
+		"save_check": save_check,
+		"save_handoff": save_handoff,
+		"save_handoff_brief": save_handoff_brief,
+		"return_handoff": return_handoff,
+		"current_save_recap": current_save_recap,
+		"slot_resume_recap": slot_resume_recap,
+		"latest_resume_recap": latest_resume_recap,
+		"menu_button_label": _return_to_menu_label(current_target, detached_live_session),
+		"menu_button_tooltip": _return_to_menu_tooltip(
+			current_target,
+			latest_summary,
+			current_context,
+			return_handoff
+		),
+	}
+	ProfileLogScript.emit_general("save", "surface", "build_in_session_save_surface", ProfileLogScript.elapsed_ms(profile_started), buckets, {
+		"selected_slot": selected_slot,
+		"current_target": current_target,
+		"detached_normalization_fallback": detached_normalization_fallback,
+		"detached_was_runtime_normalized": detached_was_runtime_normalized,
+		"stored_recap_alias_reused": stored_recap_alias_reused,
+	}, session)
+	return result
+
+func _build_in_session_save_surface_direct_legacy(
+	session: SessionStateStoreScript.SessionData,
+	manual_slot: int = -1
+) -> Dictionary:
+	var selected_slot := _normalize_manual_slot(manual_slot if manual_slot > 0 else _selected_manual_slot)
+	var slot_summary := inspect_manual_slot(selected_slot)
+	var latest_summary := latest_loadable_summary()
 	var current_target := _resume_target_for_session(session)
 	var current_context := _runtime_session_resume_brief(session)
-	buckets["current_context"] = ProfileLogScript.elapsed_ms(context_started)
-	var recap_started := ProfileLogScript.begin_usec()
 	var save_check := describe_session_save_check(session)
 	var save_handoff := describe_session_save_handoff(session, selected_slot)
 	var save_handoff_brief := describe_session_save_handoff_brief(session, selected_slot)
 	var return_handoff := describe_session_return_handoff(session)
 	var current_save_recap := describe_session_save_recap(session)
-	buckets["recap_surfaces"] = ProfileLogScript.elapsed_ms(recap_started)
-	var result := {
+	return {
 		"selected_slot": selected_slot,
 		"slot_summary": slot_summary,
 		"latest_summary": latest_summary,
@@ -565,18 +657,260 @@ func build_in_session_save_surface(session: SessionStateStoreScript.SessionData,
 			describe_session_return_handoff(session)
 		),
 	}
-	ProfileLogScript.emit_general("save", "surface", "build_in_session_save_surface", ProfileLogScript.elapsed_ms(profile_started), buckets, {
-		"selected_slot": selected_slot,
-		"current_target": current_target,
-	}, session)
-	return result
+
+func _live_session_summary_from_payload(
+	payload: Dictionary,
+	manual_slot: int,
+	resume_target: String
+) -> Dictionary:
+	if payload.is_empty() or String(payload.get("scenario_id", "")) == "":
+		return {}
+	var selected_slot := _normalize_manual_slot(manual_slot)
+	var summary := _empty_summary(SLOT_TYPE_MANUAL, str(selected_slot), _slot_path(selected_slot))
+	summary = _populate_summary_from_payload(summary, payload)
+	summary["payload"] = payload
+	summary["valid"] = true
+	summary["validity"] = "ok"
+	summary["loadable"] = true
+	summary["resume_target"] = resume_target
+	summary["status_text"] = _status_text_for_summary(summary)
+	return summary
+
+func _session_from_owned_detached_payload(payload: Dictionary) -> SessionStateStoreScript.SessionData:
+	if payload.is_empty():
+		return null
+	var session := SessionStateStoreScript.new_session_data()
+	session.save_version = max(0, int(payload.get("save_version", SessionStateStoreScript.SAVE_VERSION)))
+	session.session_id = String(payload.get("session_id", str(Time.get_ticks_msec())))
+	session.scenario_id = String(payload.get("scenario_id", ""))
+	session.hero_id = String(payload.get("hero_id", ""))
+	session.day = max(1, int(payload.get("day", 1)))
+	session.difficulty = String(payload.get("difficulty", "normal"))
+	session.launch_mode = SessionStateStoreScript.normalize_launch_mode(payload.get("launch_mode", SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN))
+	session.game_state = SessionStateStoreScript._normalize_game_state(payload.get("game_state", "overworld"))
+	session.scenario_status = SessionStateStoreScript._normalize_scenario_status(payload.get("scenario_status", "in_progress"))
+	session.scenario_summary = String(payload.get("scenario_summary", ""))
+	session.overworld = payload.get("overworld", {}) if payload.get("overworld", {}) is Dictionary else {}
+	session.battle = payload.get("battle", {}) if payload.get("battle", {}) is Dictionary else {}
+	session.flags = payload.get("flags", {}) if payload.get("flags", {}) is Dictionary else {}
+	return session
+
+func _summaries_share_storage_identity(first: Dictionary, second: Dictionary) -> bool:
+	if first.is_empty() or second.is_empty():
+		return false
+	var first_path := String(first.get("path", ""))
+	if first_path == "" or first_path != String(second.get("path", "")):
+		return false
+	for key in [
+		"slot_type",
+		"slot_id",
+		"validity",
+		"loadable",
+		"modified_timestamp",
+		"recorded_timestamp",
+		"recorded_timestamp_precise",
+		"payload_bytes",
+	]:
+		if first.get(key) != second.get(key):
+			return false
+	return true
+
+func _live_summary_for_manual_slot(source: Dictionary, manual_slot: int, valid_storage: bool) -> Dictionary:
+	if source.is_empty():
+		return {}
+	var selected_slot := _normalize_manual_slot(manual_slot)
+	var summary := source.duplicate(false)
+	summary["slot_type"] = SLOT_TYPE_MANUAL
+	summary["slot_id"] = str(selected_slot)
+	summary["path"] = _slot_path(selected_slot)
+	summary["validity"] = "ok" if valid_storage else "missing"
+	summary["status_text"] = _status_text_for_summary(summary)
+	return summary
+
+func _session_save_recap_context(
+	session: SessionStateStoreScript.SessionData,
+	summary: Dictionary
+) -> Dictionary:
+	if session == null or session.scenario_id == "" or summary.is_empty():
+		return {
+			"changed_line": "",
+			"watch_line": "",
+			"next_decision_line": "",
+			"profile_progress_ms": 0.0,
+			"profile_watch_ms": 0.0,
+		}
+	var progress_started := ProfileLogScript.begin_usec()
+	var resume_target := String(summary.get("resume_target", "overworld"))
+	var preferred_recap := _preferred_recent_action_recap(session, resume_target)
+	var recap_summary := _action_recap_change_summary(preferred_recap)
+	var recap_next := _action_recap_next_step(preferred_recap)
+	var battle_summary := _battle_aftermath_summary(session) if resume_target == "battle" and recap_summary == "" else ""
+	var progress_recap := ""
+	if (recap_summary == "" and battle_summary == "") or recap_next == "":
+		progress_recap = load("res://scripts/core/ScenarioRules.gd").describe_session_progress_recap_from_normalized_session(session, false)
+	var changed_line := recap_summary
+	if changed_line == "":
+		changed_line = battle_summary
+	if changed_line == "":
+		var progress_recent := _line_with_prefix(progress_recap, "Recently resolved:")
+		if progress_recent != "":
+			changed_line = _safe_player_text(progress_recent.trim_prefix("Recently resolved:").strip_edges(), 220)
+	if changed_line == "":
+		var scenario_summary := String(summary.get("scenario_summary", "")).strip_edges()
+		changed_line = _safe_player_text(scenario_summary, 220) if scenario_summary != "" else "No recent action recap is stored; resume to make the next scene order."
+	var next_decision_line := recap_next
+	if next_decision_line == "":
+		var progress_next := _line_with_prefix(progress_recap, "Next step:")
+		if progress_next != "":
+			next_decision_line = _safe_player_text(progress_next.trim_prefix("Next step:").strip_edges(), 220)
+	if next_decision_line == "":
+		var action_line := _summary_resume_action_line(summary)
+		next_decision_line = (
+			_safe_player_text(action_line.trim_prefix("Action:").strip_edges(), 220)
+			if action_line != ""
+			else "Load the save, inspect the resumed scene, then choose the next order."
+		)
+	var progress_ms := ProfileLogScript.elapsed_ms(progress_started)
+	var watch_started := ProfileLogScript.begin_usec()
+	var watch_line := _summary_watch_state_line(session, summary, true)
+	return {
+		"changed_line": changed_line,
+		"watch_line": watch_line,
+		"next_decision_line": next_decision_line,
+		"profile_progress_ms": progress_ms,
+		"profile_watch_ms": ProfileLogScript.elapsed_ms(watch_started),
+	}
+
+func _describe_session_save_check_from_context(
+	session: SessionStateStoreScript.SessionData,
+	summary: Dictionary,
+	recap_context: Dictionary
+) -> String:
+	if session == null or session.scenario_id == "":
+		return "Save check: no active expedition."
+	var resume_context := _safe_player_text(_resume_context_label(summary), 44)
+	var changed := _safe_player_text(String(recap_context.get("changed_line", "")), 74)
+	var next_decision := _safe_player_text(String(recap_context.get("next_decision_line", "")), 74)
+	var parts := []
+	if resume_context != "":
+		parts.append("Resume: %s" % resume_context)
+	if changed != "":
+		parts.append("What changed: %s" % changed)
+	if next_decision != "":
+		parts.append("Next: %s" % next_decision)
+	return "Save check: %s" % " | ".join(parts)
+
+func _describe_session_save_handoff_from_summary(
+	session: SessionStateStoreScript.SessionData,
+	summary: Dictionary,
+	manual_slot: int
+) -> String:
+	if session == null or session.scenario_id == "":
+		return "Save handoff: no active expedition is available to write."
+	if summary.is_empty():
+		return "Save handoff: no active expedition is available to write."
+	return "Save handoff: %s writes %s as %s; Load Selected reopens %s with %s preserved." % [
+		_in_session_save_label(String(summary.get("resume_target", "blocked")), manual_slot),
+		_slot_label(summary),
+		_resume_target_label(summary),
+		_resume_context_label(summary),
+		_resume_preserved_context(summary),
+	]
+
+func _describe_session_save_handoff_brief_from_summary(
+	session: SessionStateStoreScript.SessionData,
+	summary: Dictionary
+) -> String:
+	if session == null or session.scenario_id == "":
+		return "Save handoff: no active expedition."
+	if summary.is_empty():
+		return "Save handoff: no active expedition."
+	return "Save handoff: %s -> %s." % [_slot_label(summary), _resume_target_label(summary)]
+
+func _describe_session_play_check_from_summary(
+	session: SessionStateStoreScript.SessionData,
+	summary: Dictionary
+) -> String:
+	if session == null or session.scenario_id == "":
+		return "Play check: no active expedition."
+	var resume_context := _safe_player_text(_resume_context_label(summary), 34)
+	var next_action := _safe_player_text(
+		describe_summary_next_play_action(summary).trim_prefix("Next play action:").strip_edges(),
+		72
+	)
+	var state_line := ""
+	if String(summary.get("resume_target", "overworld")) == "town":
+		var defense_line := _first_meaningful_line(TownRulesScript.describe_defense_headline(session), ["Defense"])
+		if defense_line != "":
+			state_line = _safe_player_text("Defense: %s" % defense_line.trim_prefix("- ").strip_edges(), 72)
+	else:
+		state_line = _summary_play_check_state_line(session, summary)
+	var parts := []
+	if resume_context != "":
+		parts.append("%s ready" % resume_context)
+	if next_action != "":
+		parts.append(next_action)
+	if state_line != "":
+		parts.append(state_line)
+	return "Play check: %s" % " | ".join(parts.slice(0, min(3, parts.size())))
+
+func _describe_session_return_handoff_from_summary(
+	session: SessionStateStoreScript.SessionData,
+	summary: Dictionary
+) -> String:
+	if session == null or session.scenario_id == "":
+		return "Return handoff: no active expedition is available to preserve."
+	var target := _resume_context_label(summary)
+	var preserved := _resume_preserved_context(summary)
+	if bool(session.flags.get("editor_working_copy", false)):
+		return "Return handoff: Editor restores the Play Copy launch snapshot; %s keeps %s preserved while this copy is active." % [
+			target,
+			preserved,
+		]
+	return "Return handoff: Menu autosaves %s; Continue Latest returns to %s with %s preserved." % [
+		describe_resume_brief(summary),
+		target,
+		preserved,
+	]
+
+func _session_save_resume_recap_from_context(
+	session: SessionStateStoreScript.SessionData,
+	summary: Dictionary,
+	recap_context: Dictionary
+) -> String:
+	if session == null or session.scenario_id == "":
+		return "Saved state: No active expedition is available."
+	var lines := []
+	lines.append("Saved state: %s" % describe_resume_brief(summary))
+	var next_play_action := describe_summary_next_play_action(summary)
+	if next_play_action != "":
+		lines.append(next_play_action)
+	var resume_handoff := describe_summary_resume_handoff(summary)
+	if resume_handoff != "":
+		lines.append(resume_handoff)
+	var changed_line := String(recap_context.get("changed_line", ""))
+	if changed_line != "":
+		lines.append("What changed: %s" % changed_line)
+	lines.append("Resume state: %s | %s" % [
+		_resume_context_label(summary),
+		_humanize_label(String(summary.get("game_state", "overworld"))),
+	])
+	var watch_line := String(recap_context.get("watch_line", ""))
+	if watch_line != "":
+		lines.append("Watch: %s" % watch_line.trim_prefix("Risk watch:").strip_edges())
+	var next_line := String(recap_context.get("next_decision_line", ""))
+	if next_line != "":
+		lines.append("Next decision: %s" % next_line)
+	return "\n".join(lines)
 
 func resume_target_for_session(session: SessionStateStoreScript.SessionData) -> String:
 	return _resume_target_for_session(session)
 
 func can_load_summary(summary: Dictionary) -> bool:
+	var payload = summary.get("payload", {})
+	var has_inline_payload: bool = payload is Dictionary and not (payload as Dictionary).is_empty()
 	return bool(summary.get("valid", false)) and bool(summary.get("loadable", false)) and (
-		not _summary_payload(summary).is_empty()
+		has_inline_payload
 		or bool(summary.get("payload_deferred", false))
 	)
 
@@ -1831,10 +2165,17 @@ func _load_raw_dictionary(file_path: String, warn_if_missing: bool) -> Dictionar
 
 func _inspect_slot(slot_type: String, slot_id: String, file_path: String) -> Dictionary:
 	_trace_summary_inspection("slot_file_inspections")
-	_recover_save_transaction(file_path)
+	var transaction_artifacts_present := (
+		FileAccess.file_exists(_save_transaction_candidate_path(file_path))
+		or FileAccess.file_exists(_save_transaction_backup_path(file_path))
+	)
+	if transaction_artifacts_present:
+		_recover_save_transaction(file_path)
 	var cached_summary := _cached_slot_summary(slot_type, slot_id, file_path)
 	if not cached_summary.is_empty():
 		return cached_summary
+	if not transaction_artifacts_present:
+		_recover_save_transaction(file_path)
 
 	var summary := _empty_summary(slot_type, slot_id, file_path)
 	if not FileAccess.file_exists(file_path):
@@ -2391,6 +2732,8 @@ func _cached_slot_summary(slot_type: String, slot_id: String, file_path: String)
 		return {}
 	if int(cached.get("modified_timestamp", 0)) != int(signature.get("modified_timestamp", 0)):
 		return {}
+	if int(cached.get("file_size", -1)) != int(signature.get("file_size", -1)):
+		return {}
 	var summary = cached.get("summary", {})
 	return summary.duplicate(true) if summary is Dictionary else {}
 
@@ -2405,6 +2748,7 @@ func _store_slot_summary_cache(summary: Dictionary) -> void:
 		"exists": bool(signature.get("exists", false)),
 		"file_path": file_path,
 		"modified_timestamp": int(signature.get("modified_timestamp", 0)),
+		"file_size": int(signature.get("file_size", -1)),
 		"summary": summary.duplicate(true),
 	}
 
@@ -2451,6 +2795,7 @@ func _slot_file_signature(file_path: String) -> Dictionary:
 	return {
 		"exists": exists,
 		"modified_timestamp": FileAccess.get_modified_time(file_path) if exists else 0,
+		"file_size": FileAccess.get_size(file_path) if exists else -1,
 	}
 
 func _summary_payload(summary: Dictionary) -> Dictionary:
@@ -2626,7 +2971,11 @@ func _summary_play_check_state_line(session: SessionStateStoreScript.SessionData
 		return _safe_player_text("Watch: %s" % watch_line, 72)
 	return ""
 
-func _summary_watch_state_line(session: SessionStateStoreScript.SessionData, summary: Dictionary) -> String:
+func _summary_watch_state_line(
+	session: SessionStateStoreScript.SessionData,
+	summary: Dictionary,
+	trusted_normalized_session: bool = false
+) -> String:
 	match String(summary.get("resume_target", "overworld")):
 		"battle":
 			var battle_risk: String = BattleRulesScript.describe_risk_readiness_board(session)
@@ -2641,8 +2990,14 @@ func _summary_watch_state_line(session: SessionStateStoreScript.SessionData, sum
 			if recent_line != "":
 				return "Risk watch: %s" % recent_line.trim_prefix("Recently resolved:").strip_edges()
 		_:
-			var command_risk: String = OverworldRulesScript.describe_command_risk(session)
-			var risk_line := _first_meaningful_line(command_risk, ["Command Risk"])
+			var risk_line := ""
+			if trusted_normalized_session:
+				risk_line = OverworldRulesScript.describe_command_risk_summary_from_normalized_session(session)
+			else:
+				risk_line = _first_meaningful_line(
+					OverworldRulesScript.describe_command_risk(session),
+					["Command Risk"]
+				)
 			if risk_line != "" and not risk_line.begins_with("Steady watch"):
 				return "Risk watch: %s" % risk_line
 			var frontier_watch: String = OverworldRulesScript.describe_frontier_threats(session)

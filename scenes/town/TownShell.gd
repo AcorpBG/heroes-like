@@ -338,7 +338,10 @@ func _commit_manual_save(manual_slot: int) -> void:
 	_last_message = String(result.get("message", ""))
 	_last_action_recap = {}
 	var refresh_started := ProfileLogScript.begin_usec()
-	_refresh()
+	# Saving does not change town gameplay authority. Refresh the visible current
+	# tab through the same bounded cache lane used by entry and tab navigation;
+	# the full lane would rebuild every hidden management surface after each save.
+	_refresh(true)
 	buckets["refresh"] = ProfileLogScript.elapsed_ms(refresh_started)
 	var save_surface_started := ProfileLogScript.begin_usec()
 	_refresh_save_slot_picker(true)
@@ -813,7 +816,7 @@ func _refresh_active_town_dynamic_view_state(view_state: Dictionary, town: Dicti
 	var departure_response_actions := _refresh_cached_response_actions(cached_stage.get("response_actions", []), town)
 	var departure_study_actions := _refresh_cached_cost_actions(cached_stage.get("study_actions", []), town)
 	var departure_market_actions := _refresh_cached_cost_actions(cached_stage.get("market_actions", []), town)
-	view_state["departure"] = _cached_departure_dynamic(
+	var departure := _cached_departure_dynamic(
 		view_state.get("departure", {}),
 		town,
 		departure_build_actions,
@@ -824,7 +827,10 @@ func _refresh_active_town_dynamic_view_state(view_state: Dictionary, town: Dicti
 		String(view_state.get("departure_fallback_next_action", "")),
 		view_state.get("departure_context_surface", {})
 	)
-	view_state["town_context_surface"] = {} if minimal else _town_action_context_surface(String(view_state.get("dispatch_text", "")))
+	view_state["departure"] = departure
+	var dispatch_text := _cached_dispatch_dynamic(String(view_state.get("dispatch_text", "")), departure, town)
+	view_state["dispatch_text"] = dispatch_text
+	view_state["town_context_surface"] = {} if minimal else _town_action_context_surface(dispatch_text)
 	if not minimal:
 		view_state["hero_actions"] = _duplicate_action_array(view_state.get("hero_actions", []))
 		view_state["specialty_actions"] = _duplicate_action_array(view_state.get("specialty_actions", []))
@@ -1146,6 +1152,28 @@ func _cached_departure_dynamic(
 	]
 	_last_departure_confirmation = departure.duplicate(true)
 	return departure
+
+func _cached_dispatch_dynamic(cached_text: String, departure: Dictionary, town: Dictionary) -> String:
+	# Gameplay actions invalidate the town cache, so only the action recap and the
+	# already-refreshed handoff line can differ on a hit. Preserve the invariant
+	# action/logistics lines instead of rebuilding their full rule surfaces.
+	var lines := cached_text.split("\n")
+	if lines.size() < 2:
+		return cached_text
+	var recap_text := String(_last_action_recap.get("text", ""))
+	if recap_text != "":
+		lines[1] = recap_text
+	else:
+		lines[1] = "- Handoff: %s | Why: %s | Next: %s" % [
+			TownRules._short_town_handoff_text(String(departure.get("affected", "")), 58),
+			TownRules._short_town_handoff_text(String(departure.get("why_it_matters", "")), 70),
+			TownRules._short_town_handoff_text(String(departure.get("next_step", "")), 72),
+		]
+	for index in range(lines.size()):
+		if String(lines[index]).begins_with("- Defense readiness: "):
+			lines[index] = "- Defense readiness: %s" % OverworldRules.describe_town_defense_readiness_warning(_session, town)
+			break
+	return "\n".join(lines)
 
 func _cached_town_recommendation_line(town: Dictionary, build_actions: Array, recruit_actions: Array, fallback: String) -> String:
 	var recommendation := {}
@@ -1614,10 +1642,10 @@ func _build_active_town_entity_view_state(minimal: bool = false) -> Dictionary:
 	var study_text := TownRules.describe_spell_access(_session) if (not minimal or current_lanes.has("study")) else ""
 	var artifact_readiness := _artifact_readiness_surface() if (not minimal or current_lanes.has("logistics")) else {}
 	var artifact_text := TownRules.describe_artifacts(_session) if (not minimal or current_lanes.has("logistics")) else ""
-	var dispatch_text := TownRules.describe_event_feed(_session, _last_message, _last_action_recap)
 	var departure := TownRules.town_departure_confirmation(_session)
 	_last_departure_confirmation = departure.duplicate(true)
 	var order_target := TownRules.town_order_target_handoff(_session)
+	var dispatch_text := TownRules.describe_event_feed(_session, _last_message, _last_action_recap)
 	var town_context_surface := {} if minimal else _town_action_context_surface(dispatch_text)
 	return {
 		"header_text": TownRules.describe_header(_session),
@@ -2146,7 +2174,10 @@ func _refresh_save_slot_picker(force_surface: bool = false, view_state: Dictiona
 		save_handoff,
 		save_check,
 	])
-	var departure := TownRules.town_departure_confirmation(_session)
+	var departure := _last_departure_confirmation.duplicate(true)
+	_last_save_surface_profile["departure_reused"] = not departure.is_empty()
+	if departure.is_empty():
+		departure = TownRules.town_departure_confirmation(_session)
 	_last_departure_confirmation = departure.duplicate(true)
 	_leave_button.text = String(departure.get("button_label", "Leave"))
 	_leave_button.tooltip_text = String(departure.get("tooltip_text", "Return to the overworld without leaving the current expedition."))

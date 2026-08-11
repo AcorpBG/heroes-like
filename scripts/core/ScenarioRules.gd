@@ -613,6 +613,14 @@ static func describe_session_progress_recap(
 		return "Progress Recap\nNo active scenario progress is available." if include_header else ""
 	_overworld_rules().normalize_overworld_state(session)
 	normalize_scenario_state(session)
+	return describe_session_progress_recap_from_normalized_session(session, include_header)
+
+static func describe_session_progress_recap_from_normalized_session(
+	session: SessionStateStoreScript.SessionData,
+	include_header: bool = true
+) -> String:
+	if session == null or session.scenario_id == "":
+		return "Progress Recap\nNo active scenario progress is available." if include_header else ""
 	var scenario := scenario_record_for_session(session)
 	if scenario.is_empty():
 		return "Progress Recap\nScenario progress is unavailable." if include_header else ""
