@@ -16356,16 +16356,8 @@ static func _best_goal_tile(
 ) -> Vector2i:
 	if goal_tiles.is_empty():
 		return origin_pos
-	var best_tile: Vector2i = goal_tiles[0]
-	var best_distance = _path_distance(session, origin_pos, goal_tiles, "", observer_faction_id)
-	for tile in goal_tiles:
-		if not (tile is Vector2i):
-			continue
-		var distance = _path_distance(session, origin_pos, [tile], "", observer_faction_id)
-		if distance < best_distance:
-			best_distance = distance
-			best_tile = tile
-	return best_tile
+	var path_context := _path_distance_surface_context(session, "", observer_faction_id)
+	return _best_goal_tile_with_path_context(path_context, origin_pos, goal_tiles)
 
 static func _best_goal_tile_with_path_context(
 	path_context: Dictionary,

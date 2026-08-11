@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Aurelion Reach Linux desktop icon slice is complete. User-local installs now publish a verified canonical icon while heroes-like technical identities remain stable. Overall release readiness remains open.",
+  "currentNotes": "The strategic-AI best-goal-tile path-context reuse slice is complete. One immutable read context replaces repeated staging-tile path fingerprints, exact generated behavior is preserved, and Linux/Windows packaged boots pass. The full strategic-AI matrix and overall release readiness remain open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "packaging-aurelion-reach-linux-desktop-icon-10184",
-  "currentSliceId": "packaging-aurelion-reach-linux-desktop-icon-10184",
-  "currentSliceNotes": "Completed manifest-owned canonical Linux icon staging and an exact installed desktop Icon path. Real lifecycle proof covers byte identity, rollback, boot, uninstall, Windows non-regression, and external user-data preservation.",
+  "currentSlice": "strategic-ai-best-goal-tile-path-context-reuse-10184",
+  "currentSliceId": "strategic-ai-best-goal-tile-path-context-reuse-10184",
+  "currentSliceNotes": "Completed one-context best-goal-tile selection with direct legacy parity, exact two-seed generated behavior, bounded profile improvement, core/repository validation, and Linux/fresh-Wine packaged boot evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Aurelion Reach Linux Desktop Icon",
-  "currentSliceUpdatedAt": "2026-08-11T08:27:26Z",
+  "currentSliceTitle": "Strategic AI Best Goal Tile Path Context Reuse",
+  "currentSliceUpdatedAt": "2026-08-11T09:04:06Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21486,6 +21486,86 @@
       "title": "Veilmourn Maskglass Finisher",
       "updatedAt": "2026-08-03T10:52:10Z",
       "completedAt": "2026-08-03T10:52:10Z"
+    },
+    {
+      "baselineChecks": [
+        "HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=1 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=3 HEROES_STRATEGIC_AI_LONG_RUN_PRESSURE_FLOOR=0 GODOT_SILENCE_ROOT_WARNING=1 godot4 --headless --path . --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+        "godot4 --headless --path . --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn",
+        "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+        "godot4 --headless --editor --quit --path .",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check"
+      ],
+      "classification": "implementation_slice",
+      "completionCriteria": "Best-goal-tile selection obtains one path-distance surface context and reuses it for the full goal set and every candidate tile; focused multi-tile coverage proves exact selected tile and distance parity; the current strict-Small three-turn row preserves signature 6a4530a2 and exact event counts while path-heavy turn runtime improves or holds; core, editor parse, repository, JSON, and diff gates pass.",
+      "id": "strategic-ai-best-goal-tile-path-context-reuse-10184",
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_hero_task_spawn_commander_selection_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "nonGoals": [
+        "target scoring, staging-tile order, reachability, routing, commander behavior, or public event changes",
+        "persistent caches, save schema, generated-map generation, or Native RMG parity changes",
+        "full 100-seed eight-week completion or broad release-readiness claims"
+      ],
+      "phase": "phase-6-production-alpha-layer",
+      "planRef": "PLAN.md Current strategic AI follow-up / strict Small enemy-turn bottleneck",
+      "purpose": "Remove repeated identical path-surface fingerprint and context lookup inside one read-only best-goal-tile selection.",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/lessons-learned.md"
+      ],
+      "startedAt": "2026-08-11T08:58:06Z",
+      "status": "completed",
+      "title": "Strategic AI Best Goal Tile Path Context Reuse",
+      "updatedAt": "2026-08-11T09:04:06Z",
+      "completedAt": "2026-08-11T09:04:06Z",
+      "notes": "Best-goal-tile selection now obtains one immutable path-distance surface context and passes it through the existing context-aware helper. Focused reachable four-tile coverage matches the legacy repeated-call oracle exactly. Strict-Small seeds 001 and 002 complete all six turns with signatures 6a4530a2 and 2beabecf, zero behavior bugs, stalls, unreachable targets, or target-integrity violations. Seed 001 keeps the exact 13-event mix; its path-heavy third turn is 1,849 ms versus the 1,926 ms method-matched baseline and total row time is 7,068 ms versus 7,103 ms. Core, editor, validate_repo, Python, JSON, diff, Linux release export/boot, and fresh-Wine Windows release export/boot pass. No scoring, routing, save schema, or Native RMG output changed; the full 100-seed/eight-week matrix remains open.",
+      "evidence": {
+        "finding": "One read-only best-goal-tile selection now reuses a single path context without changing selected tiles or generated strategic-AI behavior.",
+        "metrics": {
+          "focused_goal_tile_count": 4,
+          "focused_selected_distance": 2,
+          "focused_legacy_match": true,
+          "focused_context_match": true,
+          "generated_seed_count": 2,
+          "generated_turn_count": 3,
+          "generated_turns_completed": 6,
+          "generated_behavior_bug_count": 0,
+          "generated_stalled_turn_count": 0,
+          "generated_unreachable_target_count": 0,
+          "generated_target_integrity_violation_count": 0,
+          "seed_001_signature": "6a4530a2",
+          "seed_002_signature": "2beabecf",
+          "seed_001_baseline_third_turn_msec": 1926,
+          "seed_001_current_third_turn_msec": 1849,
+          "seed_001_baseline_row_msec": 7103,
+          "seed_001_current_row_msec": 7068,
+          "linux_export_boot_ok": true,
+          "windows_wine_export_boot_ok": true,
+          "save_version": 9
+        }
+      },
+      "validation": {
+        "status": "passed",
+        "updatedAt": "2026-08-11T09:04:06Z",
+        "commands": [
+          "godot4 --headless --path . --scene res://tests/ai_hero_task_spawn_commander_selection_report.tscn",
+          "HEROES_STRATEGIC_AI_PROFILE=1 HEROES_STRATEGIC_AI_LONG_RUN_PROGRESS=1 HEROES_STRATEGIC_AI_LONG_RUN_SEEDS=2 HEROES_STRATEGIC_AI_LONG_RUN_TURNS=3 HEROES_STRATEGIC_AI_LONG_RUN_PRESSURE_FLOOR=0 godot4 --headless --path . --scene res://tests/strategic_ai_long_run_seed_matrix_report.tscn",
+          "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+          "godot4 --headless --editor --quit --path .",
+          "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+          "HEROES_PACKAGING_LINUX_ARTIFACT_DIR=/tmp/heroes-goal-context-linux-package.SdtFeJ python3 tests/packaging_linux_export_smoke.py",
+          "HEROES_PACKAGING_WINDOWS_ARTIFACT_DIR=/tmp/heroes-goal-context-windows-package.61Iqyj python3 tests/packaging_windows_export_smoke.py",
+          "jq empty ops/progress.json",
+          "git diff --check"
+        ]
+      }
     },
     {
       "baselineChecks": [
