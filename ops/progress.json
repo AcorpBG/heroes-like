@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The shared manual-save overwrite confirmation is now exclusive across Overworld, Town, Battle, and Outcome. Real parent-window clicks are blocked, while root-routed physical keyboard/controller events are deferred into the child dialog without double-routing into background shell input.",
+  "currentNotes": "Strategic-AI path-surface caching now fingerprints each player hero's exact observer-specific visible-and-unsheltered blocker state, preventing stale same-day routes after resource-controller or town-ownership changes.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "accessibility-manual-overwrite-exclusive-parent-input-10184",
-  "currentSliceId": "accessibility-manual-overwrite-exclusive-parent-input-10184",
-  "currentSliceNotes": "The shared overwrite confirmation is exclusive at the native Window boundary; parent mouse input is contained across Overworld, Town, Battle, and Outcome, and deferred exact physical keyboard/controller forwarding preserves native confirm, cancel, focus, and save authority without root-event fallthrough.",
+  "currentSlice": "strategic-ai-path-surface-observer-visibility-fingerprint-10184",
+  "currentSliceId": "strategic-ai-path-surface-observer-visibility-fingerprint-10184",
+  "currentSliceNotes": "Cached player-hero path blockers are observer-aware; same-day sight-source ownership changes force exact fresh-context route behavior without broad cache invalidation, visibility changes, or AI tuning.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Manual Overwrite Exclusive Parent Input",
-  "currentSliceUpdatedAt": "2026-08-11T22:56:13Z",
+  "currentSliceTitle": "Strategic AI Observer-Visibility Path Fingerprint",
+  "currentSliceUpdatedAt": "2026-08-11T23:23:36Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19849,6 +19849,129 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "id": "strategic-ai-path-surface-observer-visibility-fingerprint-10184",
+      "title": "Strategic AI Observer-Visibility Path Fingerprint",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/lessons-learned.md"],
+      "purpose": "Prevent same-day strategic-AI path-surface cache hits from reusing stale player-hero blockers after observer sighting sources change ownership.",
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_raid_movement_path_plan_reuse_regression.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "path_surface_cache_key_observer_faction_included": true,
+        "hero_fingerprint_observer_visibility_included": false,
+        "resource_controller_in_resource_fingerprint": false,
+        "town_owner_fingerprint_present": false,
+        "same_day_visibility_source_mutation_case_count": 0,
+        "save_version": 9
+      },
+      "completionCriteria": "The path-distance surface cache key derives its player-hero fingerprint for the exact observer faction and mixes each hero's exact blocked-for-observer state (unsheltered and currently visible) alongside stable identity/position; prewarmed same-day contexts change after only a persistent resource site's controlling faction changes with collected=true and after neutral/enemy town ownership changes, and both forward and inverse mutations produce exact fresh-context hero-blocker sets, routes, distances, next steps, and target choices for the affected observer while a second observer, hidden heroes, and sheltered heroes remain exact; no broad cache clear, persistence/schema change, AI scoring/tuning change, or source-visibility heuristic is added; focused path/target/regroup reports, strict two-seed/eight-turn behavior, core, repository, Linux, and fresh Windows/Wine package gates pass, with any behavior signature delta attributed only to the corrected visibility state.",
+      "nonGoals": [
+        "adding persistent cache invalidation, changing hero sight radii or memory, changing path scoring or target priority, broad AI tuning, save schema changes, Native RMG, signing, publication, hardware certification, or overall release completion"
+      ],
+      "baselineChecks": [
+        "godot4 --headless --path . --scene res://tests/ai_raid_movement_path_plan_reuse_regression.tscn",
+        "godot4 --headless --path . --scene res://tests/ai_raid_assault_grouping_report.tscn",
+        "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+        "godot4 --headless --editor --quit --path .",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check",
+        "strict Small 2-seed x 8-turn strategic-AI matrix",
+        "Linux release export plus shipped main-scene boot",
+        "Windows release export plus fresh Wine shipped main-scene boot"
+      ],
+      "startedAt": "2026-08-11T22:58:03Z",
+      "updatedAt": "2026-08-11T23:23:36Z",
+      "completedAt": "2026-08-11T23:23:36Z",
+      "notes": "The path-surface cache key now passes the existing observer faction into the player-hero fingerprint and mixes the exact same visible-and-unsheltered predicate used by the authoritative hero-blocked surface. No sighting-source, visibility-radius, shelter, path-scoring, target-priority, cache-policy, or persistence behavior changed. Same-day resource-controller and town owner/faction mutations now change only affected observer contexts; inverse mutations reuse their exact prewarmed keys and unaffected observers retain identity reuse.",
+      "result": {
+        "observer_aware_hero_fingerprint": true,
+        "resource_controller_forward_and_inverse": true,
+        "town_owner_faction_forward_and_inverse": true,
+        "open_route_distance": 4,
+        "open_route_next_step": {"x": 2, "y": 1},
+        "visible_blocker_route_distance": 6,
+        "visible_blocker_route_next_step": {"x": 1, "y": 2},
+        "warm_and_forced_fresh_parity": true,
+        "inverse_prewarmed_context_reuse": true,
+        "second_observer_namespace_and_identity_reuse": true,
+        "hidden_hero_nonblocking": true,
+        "sheltered_hero_nonblocking": true,
+        "session_ai_save_settings_file_authority_exact": true,
+        "strict_small_seed_001_signature": "e3cfb151",
+        "strict_small_seed_002_signature": "23f16e8d",
+        "strict_small_event_count": 54,
+        "strict_small_turn_count": 16,
+        "strict_small_failure_count": 0,
+        "strict_small_behavior_bug_count": 0,
+        "strict_small_target_integrity_failure_count": 0,
+        "strict_small_unreachable_failure_count": 0,
+        "strict_small_stall_count": 0,
+        "current_runtime_ms": 28490,
+        "control_runtime_ms": 27965,
+        "runtime_delta_percent": 1.88,
+        "performance_improvement_claimed": false,
+        "save_version_before": 9,
+        "save_version_after": 9,
+        "linux_export_boot_passed": true,
+        "windows_export_fresh_wine_boot_passed": true
+      },
+      "validation": {
+        "status": "passed",
+        "updatedAt": "2026-08-11T23:23:36Z",
+        "commands": [
+          "godot4 --headless --path . --scene res://tests/ai_raid_movement_path_plan_reuse_regression.tscn",
+          "strict Small 2-seed x 8-turn strategic-AI matrix on current source",
+          "strict Small 2-seed x 8-turn strategic-AI matrix on isolated 79f6ce89 control",
+          "godot4 --headless --path . --scene res://tests/ai_strategic_planner_report.tscn",
+          "godot4 --headless --path . --scene res://tests/ai_live_target_report.tscn",
+          "godot4 --headless --path . --scene res://tests/ai_raid_assault_grouping_report.tscn",
+          "godot4 --headless --path . --scene res://tests/ai_raid_regroup_report.tscn",
+          "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+          "godot4 --headless --editor --quit --path .",
+          "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check",
+          "Linux release export plus shipped main-scene boot",
+          "Windows release export plus fresh Wine shipped main-scene boot"
+        ],
+        "artifacts": [
+          "/tmp/heroes-ai-observer-surface-focused3.KkRGUA/focused.log",
+          "/tmp/heroes-ai-observer-release.2QXcZU",
+          "/tmp/heroes-ai-observer-release.2QXcZU/current.log",
+          "/tmp/heroes-ai-observer-release.2QXcZU/control.log",
+          "/tmp/heroes-ai-observer-release.2QXcZU/linux-package/report.json"
+        ],
+        "linux": {
+          "executable_size_bytes": 71071768,
+          "executable_sha256": "bb4d6dad39cbcfba1e1e033d29cdbec2fb679619b7d6eceb9687935f8b7839b3",
+          "pck_size_bytes": 189709320,
+          "pck_sha256": "7b57c09fad10262f43246ee921e80823a19e59d38f28691adee414a4ccff8ee3",
+          "native_library_size_bytes": 4067112,
+          "native_library_sha256": "5e0bc4b2400d7af9b1d2943fe30b2baad18516334b92924430cb4f2772832dcc"
+        },
+        "windows": {
+          "executable_size_bytes": 104540160,
+          "executable_sha256": "bcc679d5fca25949ed44a3db843e51e34bd0de4cac98a22875858b92b2ef571b",
+          "pck_size_bytes": 189709320,
+          "pck_sha256": "855f8709fd56ac54279b7a0172348f7d01ddd2d677f1de80bf0262d55017b409",
+          "native_library_size_bytes": 4268544,
+          "native_library_sha256": "e739d20f7c610801895dacf0a5818b35b994422788d121dddf33a392b2af0a05"
+        }
+      },
+      "remainingWork": "Continue the broader release-readiness queue. This cache-correctness fix does not complete strategic-AI breadth/tuning, gameplay balance, content, signing, publication, hardware certification, or overall release readiness."
+    },
     {
       "id": "accessibility-manual-overwrite-exclusive-parent-input-10184",
       "title": "Manual Overwrite Exclusive Parent Input",

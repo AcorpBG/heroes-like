@@ -3,6 +3,7 @@ extends Node
 const REPORT_ID := "AI_RAID_MOVEMENT_PATH_PLAN_REUSE_REGRESSION"
 const SCENARIO_ID := "river-pass"
 const FACTION_ID := "faction_mireclaw"
+const SECOND_FACTION_ID := "faction_embercourt"
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -17,6 +18,7 @@ func _run() -> void:
 	path_cases.append(_unreachable_corner_case(failures))
 	var cache_case := _goal_field_reuse_case(failures)
 	var assignment_context_case := _assignment_path_context_equivalence_case(failures)
+	var observer_visibility_case := _observer_visibility_surface_fingerprint_case(failures)
 	var live_case := _live_three_step_raid_case(failures)
 	var payload := {
 		"ok": failures.is_empty(),
@@ -24,6 +26,7 @@ func _run() -> void:
 		"path_cases": path_cases,
 		"goal_field_reuse_case": cache_case,
 		"assignment_path_context_case": assignment_context_case,
+		"observer_visibility_surface_fingerprint_case": observer_visibility_case,
 		"live_raid_case": live_case,
 	}
 	if not failures.is_empty():
@@ -222,6 +225,289 @@ func _assignment_path_context_equivalence_case(failures: Array) -> Dictionary:
 		"regroup_placement_id": String(shared_regroup.get("placement_id", "")),
 		"regroup_match": direct_regroup == shared_regroup,
 	}
+
+func _observer_visibility_surface_fingerprint_case(failures: Array) -> Dictionary:
+	var surface_map := _filled_map(10, 5, "water")
+	for x in range(1, 6):
+		surface_map[1][x] = "grass"
+		surface_map[3][x] = "grass"
+	surface_map[2][1] = "grass"
+	surface_map[2][5] = "grass"
+	var session = _path_session(surface_map)
+	session.day = 4
+	var start := Vector2i(1, 1)
+	var goals := [Vector2i(5, 1)]
+	var map_size := Vector2i(10, 5)
+	var visible_hero_index := EnemyAdventureRules._tile_index(Vector2i(2, 1), map_size)
+	var hidden_hero_index := EnemyAdventureRules._tile_index(Vector2i(9, 4), map_size)
+	var sheltered_hero_index := EnemyAdventureRules._tile_index(Vector2i(6, 3), map_size)
+	session.overworld["player_heroes"] = [
+		{"id": "surface_visible_hero", "name": "Visible Route Hero", "position": {"x": 2, "y": 1}},
+		{"id": "surface_hidden_hero", "name": "Hidden Route Hero", "position": {"x": 9, "y": 4}},
+		{"id": "surface_sheltered_hero", "name": "Sheltered Route Hero", "position": {"x": 6, "y": 3}},
+	]
+	session.overworld["resource_nodes"] = [{
+		"placement_id": "surface_observer_beacon",
+		"site_id": "site_watchtower_beacon",
+		"x": 0,
+		"y": 3,
+		"collected": true,
+		"collected_by_faction_id": "",
+	}]
+	session.overworld["towns"] = [
+		{
+			"placement_id": "surface_observer_town",
+			"name": "Observer Redoubt",
+			"owner": "neutral",
+			"controlling_faction_id": "",
+			"x": 0,
+			"y": 3,
+			"garrison": [],
+		},
+		{
+			"placement_id": "surface_shelter_town",
+			"name": "Shelter Hold",
+			"owner": "player",
+			"controlling_faction_id": "faction_embercourt",
+			"x": 6,
+			"y": 3,
+			"garrison": [],
+		},
+	]
+	var authority_before := _observer_surface_authority(session)
+	EnemyAdventureRules._path_distance_surface_cache.clear()
+	var baseline_primary := _warm_fresh_surface_phase(failures, "baseline_primary", session, start, goals, FACTION_ID)
+	var baseline_second := _warm_fresh_surface_phase(failures, "baseline_second", session, start, goals, SECOND_FACTION_ID)
+	_assert_surface_phase(failures, "baseline_primary", baseline_primary, visible_hero_index, hidden_hero_index, sheltered_hero_index, false)
+	_assert_surface_phase(failures, "baseline_second", baseline_second, visible_hero_index, hidden_hero_index, sheltered_hero_index, false)
+	var baseline_primary_fresh: Dictionary = baseline_primary.get("fresh", {})
+	var baseline_second_fresh: Dictionary = baseline_second.get("fresh", {})
+	var baseline_observer_isolation_checks := {
+		"observer_cache_keys_distinct": String(baseline_primary_fresh.get("cache_key", "")) != String(baseline_second_fresh.get("cache_key", "")),
+		"observer_context_identity_distinct": not is_same(baseline_primary_fresh.get("context", {}), baseline_second_fresh.get("context", {})),
+	}
+	if not _all_checks_exact(baseline_observer_isolation_checks):
+		failures.append("Baseline observer path contexts were not isolated: %s" % JSON.stringify(baseline_observer_isolation_checks))
+
+	var resource_nodes: Array = session.overworld.get("resource_nodes", [])
+	var resource_node: Dictionary = resource_nodes[0]
+	resource_node["collected_by_faction_id"] = FACTION_ID
+	resource_nodes[0] = resource_node
+	session.overworld["resource_nodes"] = resource_nodes
+	var resource_added_primary := _warm_fresh_surface_phase(failures, "resource_controller_added_primary", session, start, goals, FACTION_ID)
+	var resource_added_second := _warm_fresh_surface_phase(failures, "resource_controller_added_second", session, start, goals, SECOND_FACTION_ID)
+	_assert_surface_phase(failures, "resource_controller_added_primary", resource_added_primary, visible_hero_index, hidden_hero_index, sheltered_hero_index, true)
+	_assert_surface_phase(failures, "resource_controller_added_second", resource_added_second, visible_hero_index, hidden_hero_index, sheltered_hero_index, false)
+	_assert_surface_transition(failures, "resource_controller_added_primary", baseline_primary, resource_added_primary, false)
+	_assert_surface_transition(failures, "resource_controller_added_second", baseline_second, resource_added_second, true)
+
+	resource_nodes = session.overworld.get("resource_nodes", [])
+	resource_node = resource_nodes[0]
+	resource_node["collected_by_faction_id"] = ""
+	resource_nodes[0] = resource_node
+	session.overworld["resource_nodes"] = resource_nodes
+	var resource_removed_primary := _warm_fresh_surface_phase(failures, "resource_controller_removed_primary", session, start, goals, FACTION_ID)
+	var resource_removed_second := _warm_fresh_surface_phase(failures, "resource_controller_removed_second", session, start, goals, SECOND_FACTION_ID)
+	_assert_surface_phase(failures, "resource_controller_removed_primary", resource_removed_primary, visible_hero_index, hidden_hero_index, sheltered_hero_index, false)
+	_assert_surface_phase(failures, "resource_controller_removed_second", resource_removed_second, visible_hero_index, hidden_hero_index, sheltered_hero_index, false)
+	_assert_surface_transition(failures, "resource_controller_removed_primary", baseline_primary, resource_removed_primary, true)
+	_assert_surface_transition(failures, "resource_controller_removed_second", resource_added_second, resource_removed_second, true)
+
+	var towns: Array = session.overworld.get("towns", [])
+	var observer_town: Dictionary = towns[0]
+	observer_town["owner"] = "enemy"
+	observer_town["controlling_faction_id"] = FACTION_ID
+	towns[0] = observer_town
+	session.overworld["towns"] = towns
+	var town_added_primary := _warm_fresh_surface_phase(failures, "town_controller_added_primary", session, start, goals, FACTION_ID)
+	var town_added_second := _warm_fresh_surface_phase(failures, "town_controller_added_second", session, start, goals, SECOND_FACTION_ID)
+	_assert_surface_phase(failures, "town_controller_added_primary", town_added_primary, visible_hero_index, hidden_hero_index, sheltered_hero_index, true)
+	_assert_surface_phase(failures, "town_controller_added_second", town_added_second, visible_hero_index, hidden_hero_index, sheltered_hero_index, false)
+	_assert_surface_transition(failures, "town_controller_added_primary", resource_removed_primary, town_added_primary, false)
+	_assert_surface_transition(failures, "town_controller_added_second", resource_removed_second, town_added_second, true)
+
+	towns = session.overworld.get("towns", [])
+	observer_town = towns[0]
+	observer_town["owner"] = "neutral"
+	observer_town["controlling_faction_id"] = ""
+	towns[0] = observer_town
+	session.overworld["towns"] = towns
+	var town_removed_primary := _warm_fresh_surface_phase(failures, "town_controller_removed_primary", session, start, goals, FACTION_ID)
+	var town_removed_second := _warm_fresh_surface_phase(failures, "town_controller_removed_second", session, start, goals, SECOND_FACTION_ID)
+	_assert_surface_phase(failures, "town_controller_removed_primary", town_removed_primary, visible_hero_index, hidden_hero_index, sheltered_hero_index, false)
+	_assert_surface_phase(failures, "town_controller_removed_second", town_removed_second, visible_hero_index, hidden_hero_index, sheltered_hero_index, false)
+	_assert_surface_transition(failures, "town_controller_removed_primary", resource_removed_primary, town_removed_primary, true)
+	_assert_surface_transition(failures, "town_controller_removed_second", town_added_second, town_removed_second, true)
+	var second_observer_context_reuse_checks := {
+		"resource_add_reused": is_same(resource_added_second.get("warm", {}).get("context", {}), baseline_second.get("fresh", {}).get("context", {})),
+		"resource_remove_reused": is_same(resource_removed_second.get("warm", {}).get("context", {}), resource_added_second.get("fresh", {}).get("context", {})),
+		"town_add_reused": is_same(town_added_second.get("warm", {}).get("context", {}), resource_removed_second.get("fresh", {}).get("context", {})),
+		"town_remove_reused": is_same(town_removed_second.get("warm", {}).get("context", {}), town_added_second.get("fresh", {}).get("context", {})),
+	}
+	if not _all_checks_exact(second_observer_context_reuse_checks):
+		failures.append("Second observer context was not reused across primary source mutations: %s" % JSON.stringify(second_observer_context_reuse_checks))
+	var exact_route_geometry_checks := {
+		"baseline_open_distance4": int(baseline_primary.get("fresh", {}).get("distance", -1)) == 4,
+		"baseline_open_step_exact": baseline_primary.get("fresh", {}).get("next_step", Vector2i.ZERO) == Vector2i(2, 1),
+		"resource_blocked_distance6": int(resource_added_primary.get("fresh", {}).get("distance", -1)) == 6,
+		"resource_blocked_step_exact": resource_added_primary.get("fresh", {}).get("next_step", Vector2i.ZERO) == Vector2i(1, 2),
+		"resource_inverse_distance4": int(resource_removed_primary.get("fresh", {}).get("distance", -1)) == 4,
+		"resource_inverse_step_exact": resource_removed_primary.get("fresh", {}).get("next_step", Vector2i.ZERO) == Vector2i(2, 1),
+		"town_blocked_distance6": int(town_added_primary.get("fresh", {}).get("distance", -1)) == 6,
+		"town_blocked_step_exact": town_added_primary.get("fresh", {}).get("next_step", Vector2i.ZERO) == Vector2i(1, 2),
+		"town_inverse_distance4": int(town_removed_primary.get("fresh", {}).get("distance", -1)) == 4,
+		"town_inverse_step_exact": town_removed_primary.get("fresh", {}).get("next_step", Vector2i.ZERO) == Vector2i(2, 1),
+	}
+	if not _all_checks_exact(exact_route_geometry_checks):
+		failures.append("Observer visibility corridor did not preserve exact open/blocked routes: %s" % JSON.stringify(exact_route_geometry_checks))
+	var authority_after := _observer_surface_authority(session)
+	if authority_after != authority_before:
+		failures.append("Observer visibility path probes changed live session/save/settings/file/AI authority")
+	EnemyAdventureRules._path_distance_surface_cache.clear()
+	return {
+		"case_id": "observer_visibility_surface_fingerprint_same_day_exact",
+		"resource_controller_add_remove_exact": true,
+		"town_owner_faction_add_remove_exact": true,
+		"observer_factions": [FACTION_ID, SECOND_FACTION_ID],
+		"primary_blocked_distance": int(resource_added_primary.get("fresh", {}).get("distance", -1)),
+		"primary_open_distance": int(town_removed_primary.get("fresh", {}).get("distance", -1)),
+		"primary_blocked_next_step": _vector_payload(resource_added_primary.get("fresh", {}).get("next_step", start)),
+		"primary_open_next_step": _vector_payload(town_removed_primary.get("fresh", {}).get("next_step", start)),
+		"hidden_control_nonblocking": true,
+		"sheltered_control_nonblocking": true,
+		"second_observer_isolated": true,
+		"second_observer_context_reused_across_primary_mutations": _all_checks_exact(second_observer_context_reuse_checks),
+		"warm_fresh_parity_exact": true,
+		"inverse_context_reuse_exact": true,
+		"open_distance4_blocked_distance6_exact": _all_checks_exact(exact_route_geometry_checks),
+		"authority_exact": authority_after == authority_before,
+	}
+
+func _warm_fresh_surface_phase(
+	failures: Array,
+	case_id: String,
+	session,
+	start: Vector2i,
+	goals: Array,
+	observer_faction_id: String
+) -> Dictionary:
+	var session_before: Dictionary = session.to_dict()
+	var warm := _surface_phase_snapshot(session, start, goals, observer_faction_id)
+	EnemyAdventureRules._path_distance_surface_cache.erase(String(warm.get("cache_key", "")))
+	var fresh := _surface_phase_snapshot(session, start, goals, observer_faction_id)
+	var parity_checks := {
+		"cache_key_exact": warm.get("cache_key", "") == fresh.get("cache_key", ""),
+		"context_rebuilt_after_exact_key_eviction": not is_same(warm.get("context", {}), fresh.get("context", {})),
+		"hero_fingerprint_exact": warm.get("hero_fingerprint", "") == fresh.get("hero_fingerprint", ""),
+		"hero_blocked_indices_exact": warm.get("hero_blocked_indices", {}) == fresh.get("hero_blocked_indices", {}),
+		"distance_exact": warm.get("distance", -1) == fresh.get("distance", -1),
+		"next_step_exact": warm.get("next_step", start) == fresh.get("next_step", start),
+		"plan_exact": warm.get("plan", {}) == fresh.get("plan", {}),
+		"session_exact": session.to_dict() == session_before,
+	}
+	if not _all_checks_exact(parity_checks):
+		failures.append("%s cached surface diverged from forced fresh parity: %s" % [case_id, JSON.stringify(parity_checks)])
+	return {"warm": warm, "fresh": fresh, "parity": parity_checks}
+
+func _surface_phase_snapshot(session, start: Vector2i, goals: Array, observer_faction_id: String) -> Dictionary:
+	var cache_key := EnemyAdventureRules._path_distance_surface_cache_key(session, "", observer_faction_id)
+	var context := EnemyAdventureRules._path_distance_surface_context(session, "", observer_faction_id)
+	var plan := EnemyAdventureRules._path_plan_toward(session, start, goals, "", observer_faction_id)
+	return {
+		"cache_key": cache_key,
+		"context": context,
+		"hero_fingerprint": EnemyAdventureRules._path_distance_hero_fingerprint(session, observer_faction_id),
+		"hero_blocked_indices": context.get("hero_blocked_indices", {}).duplicate(true),
+		"distance": EnemyAdventureRules._path_distance(session, start, goals, "", observer_faction_id),
+		"next_step": EnemyAdventureRules._next_step_toward(session, start, goals, "", observer_faction_id),
+		"plan": plan.duplicate(true),
+	}
+
+func _assert_surface_phase(
+	failures: Array,
+	case_id: String,
+	phase: Dictionary,
+	visible_hero_index: int,
+	hidden_hero_index: int,
+	sheltered_hero_index: int,
+	expect_visible_blocker: bool
+) -> void:
+	var warm: Dictionary = phase.get("warm", {})
+	var fresh: Dictionary = phase.get("fresh", {})
+	var blocked: Dictionary = fresh.get("hero_blocked_indices", {})
+	var checks := {
+		"visible_blocker_exact": blocked.has(visible_hero_index) == expect_visible_blocker,
+		"hidden_control_nonblocking": not blocked.has(hidden_hero_index),
+		"sheltered_control_nonblocking": not blocked.has(sheltered_hero_index),
+		"warm_fresh_blocker_exact": warm.get("hero_blocked_indices", {}) == blocked,
+		"warm_fresh_distance_exact": warm.get("distance", -1) == fresh.get("distance", -1),
+		"warm_fresh_next_step_exact": warm.get("next_step", Vector2i.ZERO) == fresh.get("next_step", Vector2i.ZERO),
+	}
+	if not _all_checks_exact(checks):
+		failures.append("%s observer blocker surface changed: checks=%s warm=%s fresh=%s" % [case_id, JSON.stringify(checks), JSON.stringify(_surface_phase_summary(warm)), JSON.stringify(_surface_phase_summary(fresh))])
+
+func _assert_surface_transition(
+	failures: Array,
+	case_id: String,
+	previous_phase: Dictionary,
+	current_phase: Dictionary,
+	expect_reuse: bool
+) -> void:
+	var previous_fresh: Dictionary = previous_phase.get("fresh", {})
+	var current_warm: Dictionary = current_phase.get("warm", {})
+	var same_key := String(current_warm.get("cache_key", "")) == String(previous_fresh.get("cache_key", ""))
+	var same_context := is_same(current_warm.get("context", {}), previous_fresh.get("context", {}))
+	var checks := {
+		"cache_key_reuse_exact": same_key == expect_reuse,
+		"context_identity_reuse_exact": same_context == expect_reuse,
+		"hero_fingerprint_reuse_exact": (current_warm.get("hero_fingerprint", "") == previous_fresh.get("hero_fingerprint", "")) == expect_reuse,
+		"blocker_surface_reuse_exact": (current_warm.get("hero_blocked_indices", {}) == previous_fresh.get("hero_blocked_indices", {})) == expect_reuse,
+		"route_distance_reuse_exact": (current_warm.get("distance", -1) == previous_fresh.get("distance", -1)) == expect_reuse,
+		"next_step_reuse_exact": (current_warm.get("next_step", Vector2i.ZERO) == previous_fresh.get("next_step", Vector2i.ZERO)) == expect_reuse,
+		"full_plan_reuse_exact": (current_warm.get("plan", {}) == previous_fresh.get("plan", {})) == expect_reuse,
+	}
+	if not _all_checks_exact(checks):
+		failures.append("%s observer surface transition mismatch: checks=%s previous=%s current=%s" % [case_id, JSON.stringify(checks), JSON.stringify(_surface_phase_summary(previous_fresh)), JSON.stringify(_surface_phase_summary(current_warm))])
+
+func _surface_phase_summary(phase: Dictionary) -> Dictionary:
+	return {
+		"cache_key": String(phase.get("cache_key", "")),
+		"hero_fingerprint": String(phase.get("hero_fingerprint", "")),
+		"hero_blocked_indices": phase.get("hero_blocked_indices", {}),
+		"distance": int(phase.get("distance", -1)),
+		"next_step": _vector_payload(phase.get("next_step", Vector2i.ZERO)),
+	}
+
+func _observer_surface_authority(session) -> Dictionary:
+	return {
+		"session": session.to_dict(),
+		"ai_state": session.flags.duplicate(true),
+		"save_cache": SaveService.validation_summary_cache_snapshot(),
+		"settings": SettingsService.settings.duplicate(true),
+		"files": _observer_authority_file_states(),
+	}
+
+func _observer_authority_file_states() -> Dictionary:
+	var states := {}
+	for path in [
+		"%s/%s" % [SaveService.SAVE_DIR, SaveService.AUTOSAVE_FILE],
+		"%s/%s1.json" % [SaveService.SAVE_DIR, SaveService.SAVE_PREFIX],
+		"%s/%s2.json" % [SaveService.SAVE_DIR, SaveService.SAVE_PREFIX],
+		"%s/%s3.json" % [SaveService.SAVE_DIR, SaveService.SAVE_PREFIX],
+		"user://campaign/progression.json",
+		String(SettingsService.SETTINGS_FILE),
+	]:
+		states[path] = {
+			"exists": FileAccess.file_exists(path),
+			"bytes": FileAccess.get_file_as_bytes(path) if FileAccess.file_exists(path) else PackedByteArray(),
+		}
+	return states
+
+func _all_checks_exact(checks: Dictionary) -> bool:
+	for value in checks.values():
+		if not bool(value):
+			return false
+	return true
 
 func _live_three_step_raid_case(failures: Array) -> Dictionary:
 	var session = _path_session(_filled_map(12, 5, "grass"))

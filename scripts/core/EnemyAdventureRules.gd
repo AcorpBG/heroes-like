@@ -19162,7 +19162,7 @@ static func _path_distance_surface_cache_key(
 		observer_faction_id,
 		_path_distance_encounter_fingerprint(session, ignore_placement_id),
 		_path_distance_resource_fingerprint(session),
-		_path_distance_hero_fingerprint(session),
+		_path_distance_hero_fingerprint(session, observer_faction_id),
 	]
 
 static func _path_distance_encounter_fingerprint(session: SessionStateStoreScript.SessionData, ignore_placement_id: String = "") -> String:
@@ -19208,7 +19208,10 @@ static func _path_distance_resource_fingerprint(session: SessionStateStoreScript
 		fingerprint = _fingerprint_mix(fingerprint, collected_flag)
 	return "%d:%d:%d" % [count, collected_count, fingerprint]
 
-static func _path_distance_hero_fingerprint(session: SessionStateStoreScript.SessionData) -> String:
+static func _path_distance_hero_fingerprint(
+	session: SessionStateStoreScript.SessionData,
+	observer_faction_id: String
+) -> String:
 	var fingerprint := _fingerprint_seed()
 	var count := 0
 	var sheltered_count := 0
@@ -19217,13 +19220,19 @@ static func _path_distance_hero_fingerprint(session: SessionStateStoreScript.Ses
 			continue
 		var hero: Dictionary = hero_value
 		var position: Dictionary = hero.get("position", {}) if hero.get("position", {}) is Dictionary else {}
-		var sheltered_flag := 1 if _player_hero_sheltered_in_town(session, hero) else 0
+		var sheltered := _player_hero_sheltered_in_town(session, hero)
+		var sheltered_flag := 1 if sheltered else 0
+		var blocked_for_observer_flag := 1 if (
+			not sheltered
+			and _player_hero_currently_visible_to_enemy_faction(session, hero, observer_faction_id)
+		) else 0
 		count += 1
 		sheltered_count += sheltered_flag
 		fingerprint = _fingerprint_mix(fingerprint, _stable_string_hash(String(hero.get("hero_id", hero.get("id", "")))))
 		fingerprint = _fingerprint_mix(fingerprint, int(position.get("x", -9999)))
 		fingerprint = _fingerprint_mix(fingerprint, int(position.get("y", -9999)))
 		fingerprint = _fingerprint_mix(fingerprint, sheltered_flag)
+		fingerprint = _fingerprint_mix(fingerprint, blocked_for_observer_flag)
 	return "%d:%d:%d" % [count, sheltered_count, fingerprint]
 
 static func raid_reinforcement_route_distance(
