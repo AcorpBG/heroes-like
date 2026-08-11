@@ -1,8 +1,10 @@
 extends Control
 
 const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
+const PUBLIC_WINDOW_TITLE := "Aurelion Reach"
 
 func _ready() -> void:
+	get_window().title = PUBLIC_WINDOW_TITLE
 	ProfileLogScript.emit_general("boot", "ready", "boot_ready", 0.0, {}, {
 		"handoff": "deferred_router_boot",
 	}, SessionState.ensure_active_session())

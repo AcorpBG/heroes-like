@@ -24343,6 +24343,17 @@ def validate_packaging_release_artifact_verification(errors: list[str]) -> None:
         ):
             ensure(required_token in smoke_text, errors, f"Installer lifecycle smoke is missing required token: {required_token}")
 
+    boot_script_path = ROOT / "scenes" / "boot" / "Boot.gd"
+    platform_report_path = ROOT / "tests" / "packaging_platform_readiness_report.gd"
+    if boot_script_path.exists():
+        boot_text = boot_script_path.read_text(encoding="utf-8")
+        ensure('const PUBLIC_WINDOW_TITLE := "Aurelion Reach"' in boot_text, errors, "Boot.gd must define the approved public window title")
+        ensure("get_window().title = PUBLIC_WINDOW_TITLE" in boot_text, errors, "Boot.gd must apply the public window title before router handoff")
+    if platform_report_path.exists():
+        platform_text = platform_report_path.read_text(encoding="utf-8")
+        ensure('boot_window_title == "Aurelion Reach"' in platform_text, errors, "Platform readiness must prove the live Aurelion Reach window title")
+        ensure('app_name == "heroes-like"' in platform_text, errors, "Platform readiness must retain the stable technical project identity")
+
     for path, required_tokens in (
         (PACKAGE_LINUX_INSTALL_PATH, ("HEROES_LIKE_INSTALL_DIR", "heroes-like.desktop", ".heroes-like-install", "build-info.json", "release-manifest.json", "HEROES_LIKE_INSTALL_FAIL_PHASE", "precommit", "after_backup")),
         (PACKAGE_LINUX_UNINSTALL_PATH, ("HEROES_LIKE_INSTALL_DIR", ".heroes-like-install", "release-manifest.json", "were preserved")),

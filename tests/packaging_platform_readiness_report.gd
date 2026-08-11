@@ -156,12 +156,22 @@ func _validate_project_boot() -> void:
 	var main_scene := String(ProjectSettings.get_setting("application/run/main_scene", ""))
 	var app_name := String(ProjectSettings.get_setting("application/config/name", ""))
 	var icon := String(ProjectSettings.get_setting("application/config/icon", ""))
+	var boot_window_title := ""
+	var boot_resource := load(main_scene) as PackedScene
+	if boot_resource != null:
+		var boot_fixture := boot_resource.instantiate()
+		add_child(boot_fixture)
+		boot_window_title = get_window().title
+		remove_child(boot_fixture)
+		boot_fixture.free()
 	_report["project_boot"] = {
 		"main_scene": main_scene,
 		"app_name": app_name,
 		"icon": icon,
+		"window_title": boot_window_title,
 	}
 	_expect(app_name == "heroes-like", "Project app name must remain heroes-like.")
+	_expect(boot_window_title == "Aurelion Reach", "Live Boot must set the public Aurelion Reach window title.")
 	_expect(main_scene == "res://scenes/boot/Boot.tscn", "Project main scene must boot through Boot.tscn.")
 	_expect(ResourceLoader.exists(main_scene), "Configured main scene does not exist: %s." % main_scene)
 	_expect(icon == "res://icon.svg", "Project icon must point at res://icon.svg.")
@@ -193,6 +203,7 @@ func _summary_payload() -> Dictionary:
 		"settings_file": String((_report.get("runtime_paths", {}) as Dictionary).get("settings_file", "")),
 		"profile_log": String((_report.get("runtime_paths", {}) as Dictionary).get("profile_log", "")),
 		"main_scene": String((_report.get("project_boot", {}) as Dictionary).get("main_scene", "")),
+		"window_title": String((_report.get("project_boot", {}) as Dictionary).get("window_title", "")),
 	}
 
 func _expect(condition: bool, message: String) -> void:
