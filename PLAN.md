@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `strategic-ai-path-surface-observer-visibility-fingerprint-10184`. Cached player-hero blocker surfaces now fingerprint the exact observer-visible and unsheltered state, so same-day resource-controller or town-ownership changes rebuild affected routes while other observers and hidden/sheltered heroes retain exact reuse.
 - Latest completed implementation slice: `accessibility-manual-overwrite-exclusive-parent-input-10184`. The shared four-route overwrite confirmation is now exclusive, blocks real parent-window clicks, and safely forwards only root-routed physical keyboard/controller events into the child dialog after root dispatch, preserving native cancel/confirm and background authority.
 - Latest completed implementation slice: `accessibility-overworld-drawer-overwrite-cancel-ownership-10184`. A visible manual-overwrite confirmation now outranks Command/Frontier drawer cancel handling, so the first physical Back/Escape activates native Keep Save, preserves the open drawer and background authority, and restores Save focus before a fresh Back closes the drawer.
 - Latest completed implementation slice: `accessibility-town-manual-overwrite-cancel-ownership-10184`. Physical Back/Escape on Town's visible manual-overwrite confirmation is now owned by the native Keep Save action, canceling once, preserving the Town route and save bytes, and restoring Save focus before ordinary Town Back navigation resumes.
