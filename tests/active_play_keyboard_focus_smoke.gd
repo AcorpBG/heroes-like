@@ -726,6 +726,8 @@ func _check_battle_keyboard_defend() -> bool:
 	await _press_joypad_button(JOY_BUTTON_DPAD_UP)
 	if get_viewport().gui_get_focus_owner() != battle_entry_focus:
 		return _fail("Battle D-pad did not return to the suggested order: expected=%s got=%s." % [battle_entry_focus, get_viewport().gui_get_focus_owner()])
+	if not await _check_battle_info_tab_controller_navigation(shell, session, battle_entry_focus):
+		return false
 	await _capture_if_requested("battle_suggested_order_focus")
 	var previous_target: Button = shell.get_node("%PrevTarget")
 	if not previous_target.disabled:
@@ -752,6 +754,9 @@ func _check_battle_keyboard_defend() -> bool:
 		return _fail("Battle Defend command is disabled on a player turn.")
 	var battle_before := JSON.stringify(session.battle)
 	var recent_before := int(session.battle.get("recent_events", []).size())
+	var tab_before_action: Dictionary = shell.call("validation_battle_info_tab_navigation_snapshot")
+	if int(tab_before_action.get("active_tab", -1)) != 3:
+		return _fail("Battle info-tab traversal did not retain Timing for the real action refresh: %s." % tab_before_action)
 	defend.grab_focus()
 	await get_tree().process_frame
 	await _capture_if_requested("battle_defend_focus")
@@ -763,6 +768,11 @@ func _check_battle_keyboard_defend() -> bool:
 	if post_owner == null or not shell.is_ancestor_of(post_owner) or (post_owner is BaseButton and post_owner.disabled):
 		return _fail("Battle action refresh did not restore focus to a legal command: %s." % _focus_name())
 	var post_snapshot: Dictionary = shell.call("validation_snapshot")
+	var post_tab_snapshot: Dictionary = shell.call("validation_battle_info_tab_navigation_snapshot")
+	if int(post_tab_snapshot.get("active_tab", -1)) != 3 \
+			or int(post_tab_snapshot.get("change_count", -1)) != int(tab_before_action.get("change_count", -2)) \
+			or String(post_tab_snapshot.get("focus_owner", "")) != String(post_owner.name):
+		return _fail("Battle action refresh did not retain the selected Timing tab and legal refreshed focus: before=%s after=%s." % [tab_before_action, post_tab_snapshot])
 	var post_forecast: Dictionary = post_snapshot.get("intent_forecast", {}) if post_snapshot.get("intent_forecast", {}) is Dictionary else {}
 	var post_expected := _battle_button_name(String(post_forecast.get("action_id", "")))
 	if post_expected != "" and post_owner.name != post_expected:
@@ -772,6 +782,134 @@ func _check_battle_keyboard_defend() -> bool:
 	shell.queue_free()
 	await get_tree().process_frame
 	return true
+
+func _check_battle_info_tab_controller_navigation(shell: Node, session, entry_focus: Control) -> bool:
+	if not shell.has_method("validation_reset_battle_info_tab_navigation_state") \
+			or not shell.has_method("validation_battle_info_tab_navigation_snapshot"):
+		return _fail("Battle info-tab navigation validation API is missing.")
+	var battle_tabs: TabContainer = shell.get_node_or_null("%BattleTabs")
+	if battle_tabs == null:
+		return _fail("Battle info-tab navigation is missing BattleTabs.")
+	var tab_bar: TabBar = battle_tabs.get_tab_bar()
+	if tab_bar == null:
+		return _fail("Battle info-tab navigation is missing its native TabBar.")
+	var authority_before: Dictionary = _battle_info_tab_authority_snapshot(session)
+	var reset: Dictionary = shell.call("validation_reset_battle_info_tab_navigation_state")
+	var expected_titles := ["Order", "Focus", "Spells", "Timing"]
+	var raw_titles: Array = reset.get("tab_titles", []) if reset.get("tab_titles", []) is Array else []
+	var cycle_names: Array = reset.get("focus_cycle_names", []) if reset.get("focus_cycle_names", []) is Array else []
+	var tab_bar_name := String(reset.get("tab_bar_name", ""))
+	if int(reset.get("active_tab", -1)) != 0 \
+			or int(reset.get("tab_count", -1)) != expected_titles.size() \
+			or int(reset.get("tab_bar_focus_mode", Control.FOCUS_NONE)) != Control.FOCUS_ALL \
+			or String(reset.get("tab_bar_boundary_policy", "")) != "retain" \
+			or int(reset.get("tab_bar_occurrences", 0)) != 1 \
+			or int(reset.get("focus_cycle_count", 0)) != cycle_names.size() \
+			or cycle_names.count(tab_bar_name) != 1:
+		return _fail("Battle info tabs did not expose one focusable native TabBar in the authoritative cycle: %s." % reset)
+	if raw_titles.size() != expected_titles.size():
+		return _fail("Battle info-tab navigation exposed the wrong title count: %s." % raw_titles)
+	for index in range(expected_titles.size()):
+		if not String(raw_titles[index]).begins_with(String(expected_titles[index])):
+			return _fail("Battle info tab %d lost its %s title: %s." % [index, expected_titles[index], raw_titles[index]])
+
+	var traversal_count := 0
+	while get_viewport().gui_get_focus_owner() != tab_bar and traversal_count <= cycle_names.size():
+		await _press_joypad_button(JOY_BUTTON_RIGHT_SHOULDER)
+		traversal_count += 1
+	if get_viewport().gui_get_focus_owner() != tab_bar:
+		return _fail("Battle controller shoulder traversal could not reach the native info TabBar: %s." % shell.call("validation_battle_info_tab_navigation_snapshot"))
+	await _press_joypad_button(JOY_BUTTON_DPAD_LEFT)
+	var start_boundary: Dictionary = shell.call("validation_battle_info_tab_navigation_snapshot")
+	if int(start_boundary.get("active_tab", -1)) != 0 \
+			or int(start_boundary.get("change_count", -1)) != 0 \
+			or int(start_boundary.get("boundary_retain_count", -1)) != 1 \
+			or get_viewport().gui_get_focus_owner() != tab_bar:
+		return _fail("Battle info TabBar wrapped left from Order instead of retaining its boundary: %s." % start_boundary)
+
+	for expected_tab in range(1, expected_titles.size()):
+		if expected_tab == 2:
+			await _press_key(KEY_RIGHT)
+		else:
+			await _press_joypad_button(JOY_BUTTON_DPAD_RIGHT)
+		if not _assert_battle_info_tab_state(shell, expected_tab, expected_tab, expected_tab, tab_bar):
+			return false
+		var forward_authority: Dictionary = _battle_info_tab_authority_snapshot(session)
+		if forward_authority != authority_before:
+			return _fail("Battle forward info-tab traversal mutated battle, session, save, settings, or route authority at tab %d: %s." % [expected_tab, _first_town_management_difference(authority_before, forward_authority)])
+
+	await _press_joypad_button(JOY_BUTTON_DPAD_RIGHT)
+	var end_boundary: Dictionary = shell.call("validation_battle_info_tab_navigation_snapshot")
+	if int(end_boundary.get("active_tab", -1)) != 3 \
+			or int(end_boundary.get("change_count", -1)) != 3 \
+			or int(end_boundary.get("boundary_retain_count", -1)) != 2 \
+			or get_viewport().gui_get_focus_owner() != tab_bar:
+		return _fail("Battle info TabBar wrapped right from Timing instead of retaining its boundary: %s." % end_boundary)
+
+	for expected_tab in [2, 1, 0]:
+		if expected_tab == 1:
+			await _press_key(KEY_LEFT)
+		else:
+			await _press_joypad_button(JOY_BUTTON_DPAD_LEFT)
+		var expected_count: int = 6 - int(expected_tab)
+		if not _assert_battle_info_tab_state(shell, expected_tab, expected_count, expected_count, tab_bar):
+			return false
+		var reverse_authority: Dictionary = _battle_info_tab_authority_snapshot(session)
+		if reverse_authority != authority_before:
+			return _fail("Battle reverse info-tab traversal mutated battle, session, save, settings, or route authority at tab %d: %s." % [expected_tab, _first_town_management_difference(authority_before, reverse_authority)])
+
+	await _press_key(KEY_LEFT)
+	var reverse_boundary: Dictionary = shell.call("validation_battle_info_tab_navigation_snapshot")
+	if int(reverse_boundary.get("active_tab", -1)) != 0 \
+			or int(reverse_boundary.get("change_count", -1)) != 6 \
+			or int(reverse_boundary.get("boundary_retain_count", -1)) != 3 \
+			or get_viewport().gui_get_focus_owner() != tab_bar:
+		return _fail("Battle keyboard Left wrapped from Order instead of retaining its boundary: %s." % reverse_boundary)
+
+	await _click_battle_info_tab(tab_bar, 1)
+	if not _assert_battle_info_tab_state(shell, 1, 7, 7, tab_bar):
+		return false
+	if _battle_info_tab_authority_snapshot(session) != authority_before:
+		return _fail("Battle mouse info-tab selection mutated battle, session, save, settings, or route authority.")
+	for expected_tab in [2, 3]:
+		await _press_joypad_button(JOY_BUTTON_DPAD_RIGHT)
+		var expected_count: int = 7 + int(expected_tab) - 1
+		if not _assert_battle_info_tab_state(shell, int(expected_tab), expected_count, expected_count, tab_bar):
+			return false
+
+	traversal_count = 0
+	while get_viewport().gui_get_focus_owner() != entry_focus and traversal_count <= cycle_names.size():
+		await _press_joypad_button(JOY_BUTTON_RIGHT_SHOULDER)
+		traversal_count += 1
+	if get_viewport().gui_get_focus_owner() != entry_focus:
+		return _fail("Battle info-tab traversal did not return to the original suggested command: expected=%s got=%s." % [entry_focus, get_viewport().gui_get_focus_owner()])
+	var final_snapshot: Dictionary = shell.call("validation_battle_info_tab_navigation_snapshot")
+	if int(final_snapshot.get("active_tab", -1)) != 3 \
+			or int(final_snapshot.get("change_count", -1)) != 9 \
+			or _battle_info_tab_authority_snapshot(session) != authority_before:
+		return _fail("Battle info-tab navigation lost selected-tab or authority state when returning to commands: %s." % final_snapshot)
+	return true
+
+func _assert_battle_info_tab_state(shell: Node, expected_tab: int, expected_change_count: int, expected_retention_count: int, tab_bar: TabBar) -> bool:
+	var snapshot: Dictionary = shell.call("validation_battle_info_tab_navigation_snapshot")
+	var last: Dictionary = snapshot.get("last_change_result", {}) if snapshot.get("last_change_result", {}) is Dictionary else {}
+	if int(snapshot.get("active_tab", -1)) != expected_tab \
+			or int(snapshot.get("change_sequence", -1)) != expected_change_count \
+			or int(snapshot.get("change_count", -1)) != expected_change_count \
+			or int(snapshot.get("focus_retention_count", -1)) != expected_retention_count \
+			or not bool(snapshot.get("tab_bar_has_focus", false)) \
+			or get_viewport().gui_get_focus_owner() != tab_bar \
+			or int(last.get("to_tab", -1)) != expected_tab \
+			or not bool(last.get("focus_retained", false)) \
+			or int(last.get("sequence", -1)) != expected_change_count:
+		return _fail("Battle info tab %d did not retain native focus with exact sequencing: %s." % [expected_tab, snapshot])
+	return true
+
+func _click_battle_info_tab(tab_bar: TabBar, tab_index: int) -> void:
+	await _click_town_management_tab(tab_bar, tab_index)
+
+func _battle_info_tab_authority_snapshot(session) -> Dictionary:
+	return _town_management_authority_snapshot(session)
 
 func _check_town_return_to_field_controller() -> bool:
 	_detach_for_scene_transition()

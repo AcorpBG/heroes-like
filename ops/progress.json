@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The generated-Large transactional manual-save slice is complete with exact Linux and fresh Windows/Wine packaged proof. No next implementation slice is selected yet; overall release readiness remains open.",
+  "currentNotes": "The Battle information-tab controller slice is complete with exact source, Linux package, and fresh Windows/Wine proof. Overall release readiness remains open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "performance-generated-large-transactional-manual-save-10184",
-  "currentSliceId": "performance-generated-large-transactional-manual-save-10184",
-  "currentSliceNotes": "Completed with exact source, Linux package, and fresh Windows/Wine proof; select the next bounded source-backed release gap before further implementation.",
+  "currentSlice": "accessibility-battle-info-tab-controller-navigation-10184",
+  "currentSliceId": "accessibility-battle-info-tab-controller-navigation-10184",
+  "currentSliceNotes": "Completed native four-tab keyboard/controller/mouse traversal, boundary retention, command return, Defend-refresh persistence, exact authority, and Linux/fresh Windows-Wine package proof.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Generated-Large Transactional Manual Save Performance",
-  "currentSliceUpdatedAt": "2026-08-11T01:30:00Z",
+  "currentSliceTitle": "Battle Information Tab Controller Navigation",
+  "currentSliceUpdatedAt": "2026-08-11T03:30:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -75026,6 +75026,26 @@
       "notes": "Completed one mandatory semantic normalization followed by owned detached payload transfer, prepared writer normalization skip, one reused recovery decision, zero verification payload-tree copies, and direct authoritative summary publication. Authoritative source empty/overwrite saves are 2312/2527ms. Exact Linux package empty/overwrite saves are 2302/2462ms and fresh Windows/Wine saves are 2863/3830ms, within the 3000/4000ms budgets. Precommit/after-backup rollback, malformed/future/candidate/backup/corrupt recovery, autosave/generated-opening controls, command-risk/core, editor, validator, repository integrity, and exact packages pass.",
       "remainingWork": "No work remains in this slice. Battle command-tab controller navigation, broader release work, signing, native Windows hardware certification, publication, and overall release readiness remain open.",
       "completedAt": "2026-08-11T01:30:00Z"
+    },
+    {
+      "id": "accessibility-battle-info-tab-controller-navigation-10184",
+      "title": "Battle Information Tab Controller Navigation",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md"],
+      "purpose": "Make the existing Order, Focus, Spells, and Timing Battle information tabs reachable through real keyboard/controller focus navigation without mutating gameplay authority.",
+      "implementationTargets": ["scenes/battle/BattleShell.gd", "tests/active_play_keyboard_focus_smoke.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"tab_count": 4, "controller_reachable_tabs": 1, "mouse_reachable_tabs": 4, "save_version": 9},
+      "completionCriteria": ["Real keyboard/controller input reaches the native Battle TabBar and selects Order, Focus, Spells, and Timing in both directions with boundary retention", "Traversal returns to legal Battle commands and mouse selection remains exact without changing battle/session/save/settings/routes authority", "Suggested-action focus, board navigation, actions, Quick Resolve, withdrawal, Save, Settings, Menu, cancel, and refresh focus remain exact", "Battle focus/layout/visual/animation/checkpoint/core/repository and Linux/Windows packaged controller gates pass"],
+      "nonGoals": ["Battle rules/content/balance, tab content redesign, new panels, layout expansion, save schema/version, broad focus-system rewrite, generated-map or Native RMG behavior, publication, signing, native Windows hardware certification, or release-completion claim"],
+      "createdAt": "2026-08-11T02:00:00Z",
+      "startedAt": "2026-08-11T02:00:00Z",
+      "updatedAt": "2026-08-11T03:30:00Z",
+      "notes": "Completed exact native TabBar inclusion once in Battle's authoritative focus cycle, disabled/hidden-aware boundary retention, selected-tooltip synchronization, and selected-tab persistence through refresh. Full active-play focus PASS proves real shoulder reach; D-pad/keyboard forward and reverse traversal across Order, Focus, Spells, and Timing; mouse parity; return to the original command; real Defend refresh; and exact battle/session/save/settings/routes authority. Corrected isolated core, editor, validator, pycompile, diff, exact Linux package, and fresh Windows/Wine package pass. The broad Battle layout harness is explicitly pre-existing test debt: current and isolated committed HEAD both time out at the same detached routed-resolution null viewport/tree teardown before any tab assertion.",
+      "remainingWork": "No work remains in this slice. Broader release work, faction balance, Native RMG parity, signing, native Windows hardware certification, publication, and overall release readiness remain open.",
+      "completedAt": "2026-08-11T03:30:00Z"
     }
   ],
   "project": "heroes-like",
