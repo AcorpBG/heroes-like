@@ -15726,12 +15726,15 @@ def validate_scenario_outcome_new_session_confirmation(errors: list[str]) -> Non
         '"campaign_start:river-pass"',
         '"status": "victory"',
         '"status": "defeat"',
-        '"cancel": "accept"',
-        '"cancel": "back"',
         '"cancel": "escape"',
+        '"cancel": "joypad_b"',
+        '"confirm": "joypad_a"',
+        '"confirm": "enter"',
+        '"confirm": "mouse"',
+        '"width": 1280',
+        '"width": 1920',
         "InputEventMouseButton.new()",
         "MOUSE_BUTTON_LEFT",
-        'await _press_action("ui_accept")',
         'await _press_joypad_button(JOY_BUTTON_A)',
         'await _press_joypad_button(JOY_BUTTON_B)',
         'await _press_key(KEY_ESCAPE)',
@@ -15750,7 +15753,32 @@ def validate_scenario_outcome_new_session_confirmation(errors: list[str]) -> Non
         'shell.validation_request_save_outcome()',
         'shell.validation_return_to_menu()',
         'String(overwrite_snapshot.get("cancel_text", "")) != "Keep Save"',
-        'Vector2i(1280, 720)',
+        'frame.size = Vector2(float(width), 720.0)',
+        'parent_probe.z_index = 100',
+        '_exclusive_parent_click_geometry(parent_probe, dialog)',
+        '"parent_blocked"',
+        '"authority_exact"',
+        '"focus_exact"',
+        '"stale_pending_source_release_noop"',
+        'shell.call("_on_root_window_input", stale_pressed)',
+        'Input.parse_input_event(stale_released)',
+        'Input.parse_input_event(source_stale_released)',
+        'shell.call("_on_root_window_input", rejected_by_outcome_bridge)',
+        '"manual_owner_isolated": true',
+        'SaveService.SAVE_DIR',
+        'SaveService.SAVE_PREFIX',
+        'SaveService.AUTOSAVE_FILE',
+        'SaveService.PROGRESSION_FILE',
+        'SettingsService.SETTINGS_FILE',
+        'SettingsService.SETTINGS_CANDIDATE_FILE',
+        'SettingsService.SETTINGS_BACKUP_FILE',
+        'SaveService.validation_transaction_artifact_paths(path)',
+        '_original_summary_cache = SaveService.validation_summary_cache_snapshot()',
+        'SaveService._slot_summary_cache = _original_summary_cache.duplicate(true)',
+        'SaveService.validation_summary_cache_snapshot() != _original_summary_cache',
+        'func _canonical_settings_transaction() -> Dictionary:',
+        'func _serialize_input_event(input_event: InputEvent) -> Dictionary:',
+        'PROPERTY_USAGE_STORAGE',
     ):
         ensure(required_token in report_text, errors, f"Scenario Outcome new-session confirmation regression is missing required token: {required_token}")
 
@@ -15775,11 +15803,37 @@ def validate_scenario_outcome_new_session_confirmation(errors: list[str]) -> Non
         '"outcome_autosave_recovery_pending"',
         '"stale_request"',
         '"Keep Outcome"',
+        'var _forwarding_outcome_new_session_root_physical_input := false',
+        'root_window.window_input.connect(_on_root_window_input)',
+        'func _on_root_window_input(event: InputEvent) -> void:',
+        'event is InputEventKey or event is InputEventJoypadButton',
+        'get_tree().root.set_input_as_handled()',
+        'event.duplicate() as InputEvent',
+        'call_deferred(',
+        '"_forward_root_physical_input_to_outcome_new_session_confirmation"',
+        'func _forward_root_physical_input_to_outcome_new_session_confirmation(',
+        'not is_same(pending, _pending_outcome_new_session_confirmation)',
+        'not is_same(source_session, _outcome_new_session_source_session)',
+        '_manual_save_overwrite_dialog.visible',
+        'dialog.push_input(event)',
     ):
         ensure(required_token in outcome_text, errors, f"ScenarioOutcomeShell.gd is missing required new-session confirmation token: {required_token}")
+    root_handler_match = re.search(
+        r"func _on_root_window_input\(event: InputEvent\) -> void:(.*?)(?=\n\nfunc )",
+        outcome_text,
+        flags=re.DOTALL,
+    )
+    ensure(root_handler_match is not None, errors, "ScenarioOutcomeShell.gd is missing the root physical-input handler")
+    if root_handler_match is not None:
+        root_handler_body = root_handler_match.group(1)
+        ensure("dialog.push_input(event)" not in root_handler_body, errors, "Outcome root handler must not synchronously push into the child Window")
+        ensure("InputEventMouseButton" not in root_handler_body, errors, "Outcome root bridge must not forward mouse input")
+        ensure("InputEventMouseMotion" not in root_handler_body, errors, "Outcome root bridge must not forward mouse motion")
+        ensure("InputEventAction" not in root_handler_body, errors, "Outcome root bridge must not forward synthetic actions")
     outcome_scene_text = OUTCOME_SCENE_PATH.read_text(encoding="utf-8")
     for required_token in (
         '[node name="NewSessionConfirmationDialog" type="ConfirmationDialog" parent="."]',
+        'exclusive = true',
         'signal="canceled" from="NewSessionConfirmationDialog"',
         'signal="confirmed" from="NewSessionConfirmationDialog"',
     ):

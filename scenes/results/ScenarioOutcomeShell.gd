@@ -85,6 +85,7 @@ var _validation_outcome_recap_tab_resetting := false
 var _pending_outcome_new_session_confirmation: Dictionary = {}
 var _outcome_new_session_source_session: SessionStateStore.SessionData
 var _outcome_new_session_return_focus: Control = null
+var _forwarding_outcome_new_session_root_physical_input := false
 var _last_outcome_new_session_confirmation_result: Dictionary = {}
 var _validation_outcome_new_session_request_count := 0
 var _validation_outcome_new_session_duplicate_request_count := 0
@@ -129,6 +130,56 @@ func _configure_outcome_new_session_confirmation() -> void:
 	var dialog_label := _new_session_confirmation_dialog.get_label()
 	dialog_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	dialog_label.custom_minimum_size = Vector2(620.0, 0.0)
+	var root_window := get_tree().root
+	if root_window != null and not root_window.window_input.is_connected(_on_root_window_input):
+		root_window.window_input.connect(_on_root_window_input)
+
+
+func _on_root_window_input(event: InputEvent) -> void:
+	if (
+		_forwarding_outcome_new_session_root_physical_input
+		or not (event is InputEventKey or event is InputEventJoypadButton)
+		or not _new_session_confirmation_dialog.visible
+		or _pending_outcome_new_session_confirmation.is_empty()
+		or (_manual_save_overwrite_dialog != null and _manual_save_overwrite_dialog.visible)
+	):
+		return
+	get_tree().root.set_input_as_handled()
+	var dialog := _new_session_confirmation_dialog
+	var pending := _pending_outcome_new_session_confirmation
+	var source_session := _outcome_new_session_source_session
+	var detached_event := event.duplicate() as InputEvent
+	if detached_event == null:
+		return
+	call_deferred(
+		"_forward_root_physical_input_to_outcome_new_session_confirmation",
+		dialog,
+		pending,
+		source_session,
+		detached_event
+	)
+
+
+func _forward_root_physical_input_to_outcome_new_session_confirmation(
+	dialog: ConfirmationDialog,
+	pending: Dictionary,
+	source_session: SessionStateStore.SessionData,
+	event: InputEvent
+) -> void:
+	if (
+		_forwarding_outcome_new_session_root_physical_input
+		or not is_instance_valid(dialog)
+		or dialog != _new_session_confirmation_dialog
+		or not dialog.visible
+		or _pending_outcome_new_session_confirmation.is_empty()
+		or not is_same(pending, _pending_outcome_new_session_confirmation)
+		or not is_same(source_session, _outcome_new_session_source_session)
+		or (_manual_save_overwrite_dialog != null and _manual_save_overwrite_dialog.visible)
+	):
+		return
+	_forwarding_outcome_new_session_root_physical_input = true
+	dialog.push_input(event)
+	_forwarding_outcome_new_session_root_physical_input = false
 
 func _configure_outcome_recap_tab_accessibility() -> void:
 	var tab_bar := _recap_tabs.get_tab_bar()
