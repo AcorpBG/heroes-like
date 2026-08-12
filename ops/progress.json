@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Battle Quick Resolve and Withdrawal confirmations are exclusive, block real parent-window clicks, and preserve exact native cancel/confirm, battle/RNG consequence, and route ownership across both layouts.",
+  "currentNotes": "Battle-resolution checkpoints now canonicalize the finalized live session, and command-risk town consequences use one shared daybreak projection per player town so live, saved, and restored forecasts are exact and truthful.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "accessibility-battle-confirmation-exclusive-parent-input-10184",
-  "currentSliceId": "accessibility-battle-confirmation-exclusive-parent-input-10184",
-  "currentSliceNotes": "Quick Resolve and Withdrawal native confirmations are exclusive and preserve exact captured-child deferred physical input ownership without background battle action fallthrough.",
+  "currentSlice": "save-battle-resolution-forecast-checkpoint-parity-10184",
+  "currentSliceId": "save-battle-resolution-forecast-checkpoint-parity-10184",
+  "currentSliceNotes": "Post-battle checkpoint normalization and shared per-town daybreak command-risk metrics pass focused, compatibility, Linux, and fresh Windows/Wine gates; the separately method-matched End Turn stale-forecast defect is the required next slice.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Battle Confirmation Exclusive Parent Input",
-  "currentSliceUpdatedAt": "2026-08-11T23:59:28Z",
+  "currentSliceTitle": "Battle Resolution Forecast Checkpoint Parity",
+  "currentSliceUpdatedAt": "2026-08-12T00:38:36Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19849,6 +19849,130 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "id": "save-battle-resolution-forecast-checkpoint-parity-10184",
+      "title": "Battle Resolution Forecast Checkpoint Parity",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/lessons-learned.md"],
+      "purpose": "Ensure a finalized nonterminal battle checkpoint saves the same canonical derived command-risk forecast state that restore normalization produces after withdrawal recovery mutations.",
+      "implementationTargets": [
+        "scripts/autoload/AppRouter.gd",
+        "scripts/core/OverworldRules.gd",
+        "tests/battle_resolution_autosave_failure_route_safety_regression.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "current_checkpoint_returncode": 1,
+        "clean_head_checkpoint_returncode": 1,
+        "mismatch_path": "$.overworld.command_risk_forecast.signature",
+        "live_recovery_pressure_summary": 1,
+        "restored_recovery_pressure_summary": 2,
+        "authoritative_daybreak_recovery_pressure": 1,
+        "save_version": 9
+      },
+      "completionCriteria": "After Retreat or Surrender mutates recovery/front/resource state and clears battle, the battle-resolution checkpoint prepares an actually normalized Overworld session before the runtime autosave trust check; command-risk town consequences retain current threat facts but reuse one indexed per-town daybreak projection so the explicitly next-day recovery, logistics, readiness, and capital-project text follows the same occupation-then-recovery order as live End Turn without mutating the live session or projecting enemy movement; successful and injected-failure/retry checkpoints preserve exact battle action/outcome/reward counts, route once, save once per attempt, and reload a dictionary exactly equal to the live finalized state, including command-risk forecast signature/shown state; normalization is idempotent and matches a detached forced-normalization control across recovery pressure, occupation, logistics, command briefing, scenario script/enemy state, terminal and nonterminal cases; pressured-town and unpressured-logistics branches both use the projected metrics exactly once per town; existing daybreak income/muster forecasts and live recovery ordering remain exact; no battle, recovery, forecast wording, save schema/version, or generic transition behavior changes; focused checkpoint, withdrawal, Quick Resolve, End Turn/daybreak, save transaction, core, repository, Linux, and fresh Windows/Wine package gates pass.",
+      "nonGoals": [
+        "changing battle consequences, withdrawal recovery amounts, daybreak occupation/recovery order, command-risk wording or selection, generic save schema, transition routing, strategic AI tuning, Native RMG, signing, publication, hardware certification, or overall release completion"
+      ],
+      "baselineChecks": [
+        "godot4 --headless --path . --scene res://tests/battle_resolution_autosave_failure_route_safety_regression.tscn",
+        "godot4 --headless --path . --scene res://tests/battle_withdrawal_confirmation_runtime_report.tscn",
+        "godot4 --headless --path . --scene res://tests/battle_quick_resolve_runtime_report.tscn",
+        "godot4 --headless --path . --scene res://tests/overworld_end_turn_confirmation_runtime_report.tscn",
+        "godot4 --headless --path . --scene res://tests/town_battle_visual_smoke.tscn",
+        "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+        "godot4 --headless --editor --quit --path .",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check",
+        "Linux release export plus shipped main-scene boot",
+        "Windows release export plus fresh Wine shipped main-scene boot"
+      ],
+      "startedAt": "2026-08-12T00:04:08Z",
+      "updatedAt": "2026-08-12T00:38:36Z",
+      "completedAt": "2026-08-12T00:38:36Z",
+      "notes": "The checkpoint now fully normalizes settled post-battle state before trusted autosave. Command-risk construction builds one indexed detached daybreak projection per player town and shares it across pressured-town and standalone-logistics reducers, retaining current threat facts while using projected occupation, recovery, readiness, logistics, and capital consequences. The four injected checkpoint rows, ordinary route, direct controls, idempotence, live authority, Linux, and fresh Windows/Wine pass at save version 9.",
+      "result": {
+        "post_battle_full_normalization": true,
+        "player_town_daybreak_contexts_per_forecast": 1,
+        "shared_town_and_logistics_projection": true,
+        "current_recovery_pressure": 2,
+        "projected_recovery_pressure": 1,
+        "projected_occupation_pressure": 0,
+        "response_count_transition": "1->0",
+        "failed_checkpoint_forecast_rollback_pressure": 0,
+        "retry_forecast_pressure_quick_resolve": 0,
+        "retry_forecast_pressure_retreat": 1,
+        "canonical_reload_exact": true,
+        "normalization_idempotent": true,
+        "live_session_mutated_by_projection": false,
+        "save_version_before": 9,
+        "save_version_after": 9,
+        "linux_export_boot_passed": true,
+        "windows_export_fresh_wine_boot_passed": true,
+        "end_turn_autosave_failure_selected_regression": false,
+        "end_turn_autosave_failure_preexisting_red": true
+      },
+      "validation": {
+        "status": "passed_with_method_matched_preexisting_end_turn_red",
+        "updatedAt": "2026-08-12T00:38:36Z",
+        "commands": [
+          "godot4 --headless --path . --scene res://tests/battle_resolution_autosave_failure_route_safety_regression.tscn",
+          "godot4 --headless --path . --scene res://tests/battle_withdrawal_confirmation_runtime_report.tscn",
+          "godot4 --headless --path . --scene res://tests/battle_quick_resolve_runtime_report.tscn",
+          "godot4 --headless --path . --scene res://tests/overworld_end_turn_confirmation_runtime_report.tscn",
+          "godot4 --headless --path . --scene res://tests/overworld_end_turn_autosave_failure_regression.tscn (known pre-existing red on current and complete 535ad087 control)",
+          "godot4 --headless --path . --scene res://tests/town_battle_visual_smoke.tscn",
+          "godot4 --headless --path . --scene res://tests/save_transactional_commit_regression.tscn",
+          "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+          "godot4 --headless --editor --quit --path . --editor-pid 0",
+          "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+          "python3 -m py_compile tests/validate_repo.py",
+          "jq empty ops/progress.json",
+          "git diff --check",
+          "Linux release export plus shipped main-scene boot",
+          "Windows release export plus fresh Wine shipped main-scene boot"
+        ],
+        "artifacts": [
+          "/tmp/heroes-checkpoint-canonical.vl6aUG",
+          "/tmp/heroes-checkpoint-release.Tyy0FQ",
+          "/tmp/heroes-checkpoint-release.Tyy0FQ/endturn-failure.log",
+          "/tmp/heroes-checkpoint-release.Tyy0FQ/endturn-head-valid.log",
+          "/tmp/heroes-checkpoint-release.Tyy0FQ/linux/report.json"
+        ],
+        "knownPreexistingEndTurnDefect": {
+          "current_returncode": 1,
+          "clean_head_control_returncode": 1,
+          "control_commit": "535ad087",
+          "failure": "Manual Save did not preserve the advanced live state without replaying End Turn",
+          "selected_slice_regression": false,
+          "next_slice_required": true
+        },
+        "linux": {
+          "executable_size_bytes": 71071768,
+          "executable_sha256": "bb4d6dad39cbcfba1e1e033d29cdbec2fb679619b7d6eceb9687935f8b7839b3",
+          "pck_size_bytes": 189711576,
+          "pck_sha256": "eabad7db995fbf1b79964059fc3877c52d46d8a4108d23d902058b8550ba88c5",
+          "native_library_size_bytes": 4067112,
+          "native_library_sha256": "5e0bc4b2400d7af9b1d2943fe30b2baad18516334b92924430cb4f2772832dcc"
+        },
+        "windows": {
+          "executable_size_bytes": 104540160,
+          "executable_sha256": "bcc679d5fca25949ed44a3db843e51e34bd0de4cac98a22875858b92b2ef571b",
+          "pck_size_bytes": 189711576,
+          "pck_sha256": "11bba2a6de39d9120410d6b8706c88ee1b4ba7bb281e87e3c679a428f34dd93e",
+          "native_library_size_bytes": 4268544,
+          "native_library_sha256": "e739d20f7c610801895dacf0a5818b35b994422788d121dddf33a392b2af0a05"
+        }
+      },
+      "remainingWork": "Fix the separately reproduced End Turn tail-normalization defect in a new tracker slice. Continue broader release-readiness work; this checkpoint/forecast correction does not complete signing, publication, hardware certification, content/balance breadth, or overall release readiness."
+    },
     {
       "id": "accessibility-battle-confirmation-exclusive-parent-input-10184",
       "title": "Battle Confirmation Exclusive Parent Input",

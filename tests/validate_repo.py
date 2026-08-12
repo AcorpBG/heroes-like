@@ -15307,6 +15307,7 @@ def validate_battle_resolution_autosave_failure_route_safety(errors: list[str]) 
         BATTLE_RESOLUTION_AUTOSAVE_FAILURE_REGRESSION_SCENE_PATH,
         BATTLE_SCRIPT_PATH,
         APP_ROUTER_PATH,
+        OVERWORLD_RULES_PATH,
     ):
         ensure(path.exists(), errors, f"Missing battle-resolution autosave safety file: {path.relative_to(ROOT)}")
     if not BATTLE_RESOLUTION_AUTOSAVE_FAILURE_REGRESSION_SCRIPT_PATH.exists():
@@ -15339,6 +15340,26 @@ def validate_battle_resolution_autosave_failure_route_safety(errors: list[str]) 
         '_gameplay_payload_without_shell_presentation(live)',
         'flags.erase("last_battle_action_recap")',
         'overworld.erase("command_risk_forecast")',
+        "_prove_command_risk_daybreak_context_alignment",
+        'const PLAYER_TOWN_PLACEMENT_ID := "riverwatch_hold"',
+        '"pressure": 2, "last_event_day": session.day, "source": "checkpoint daybreak alignment"',
+        '"response_until_day": int(session.day)',
+        '"response_security_rating": 1',
+        "OverworldRules._command_risk_player_town_daybreak_contexts(session)",
+        "OverworldRules._command_risk_town_items(session, daybreak_contexts, true)",
+        "OverworldRules._command_risk_logistics_items(session, {}, daybreak_contexts, true)",
+        "OverworldRules._advance_all_town_occupations(manual_session)",
+        "OverworldRules._advance_all_town_recovery(manual_session)",
+        'contains("1 recovery pressure remains")',
+        'contains("2 recovery pressure remains")',
+        '"live_mutation": false',
+        'initial_recovery_forecast.get("current_pressure", -1)) != 1',
+        'initial_recovery_forecast.get("projected_pressure", -1)) != 0',
+        'failed_recovery_forecast.get("forecast_state", {}) != initial_recovery_forecast.get("forecast_state", {})',
+        '"forecast_rollback_pressure": 0',
+        '"forecast_retry_pressure": expected_projected_pressure',
+        'normalized_once != normalized_twice or normalized_twice != normalized_thrice',
+        '"normalization_idempotent": true',
         "_prove_ordinary_success_and_exit_animation",
         "_prove_terminal_outcome_bypass",
         "_prove_nonterminal_control",
@@ -15375,8 +15396,27 @@ def validate_battle_resolution_autosave_failure_route_safety(errors: list[str]) 
         '"battle_resolution_autosave_failed"',
         '"autosave_failed"',
         '"manual_save"',
+        "func _prepare_battle_resolution_overworld_state(",
+        "OverworldRules.normalize_overworld_state(session)",
+        "session.from_dict(pre_route_snapshot)",
     ):
         ensure(required_token in router_text, errors, f"AppRouter.gd is missing required battle-resolution checkpoint token: {required_token}")
+
+    overworld_rules_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "func _command_risk_player_town_daybreak_contexts(",
+        "var daybreak_contexts := _command_risk_player_town_daybreak_contexts(session)",
+        "_command_risk_town_items(session, daybreak_contexts, include_details)",
+        "_command_risk_logistics_items(session, pressured_town_ids, daybreak_contexts, include_details)",
+        "var projected_session: SessionStateStoreScript.SessionData = projection.get(\"session\", session)",
+        "var projected_town: Dictionary = projection.get(\"town\", town)",
+    ):
+        ensure(required_token in overworld_rules_text, errors, f"OverworldRules.gd is missing aligned command-risk daybreak token: {required_token}")
+    ensure(
+        overworld_rules_text.count("var daybreak_contexts := _command_risk_player_town_daybreak_contexts(session)") == 1,
+        errors,
+        "OverworldRules.gd must construct one shared player-town daybreak context array for both command-risk reducers",
+    )
 
 
 def validate_briefing_consumption_autosave_failure_safety(errors: list[str]) -> None:

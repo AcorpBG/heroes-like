@@ -822,7 +822,7 @@ func _battle_resolution_checkpoint_route_after_save(checkpoint_result: Dictionar
 func _prepare_battle_resolution_overworld_state(session: SessionStateStoreScript.SessionData) -> void:
 	session.game_state = "overworld"
 	OverworldRules.clear_active_town_visit(session)
-	OverworldRules.mark_runtime_normalized_transition_state(session)
+	OverworldRules.normalize_overworld_state(session)
 
 func _battle_resolution_checkpoint_result(
 	ok: bool,
