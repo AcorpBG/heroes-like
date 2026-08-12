@@ -14392,6 +14392,8 @@ def validate_map_editor_dirty_transition_regression(errors: list[str]) -> None:
     for path in (
         MAP_EDITOR_DIRTY_TRANSITION_REGRESSION_SCRIPT_PATH,
         MAP_EDITOR_DIRTY_TRANSITION_REGRESSION_SCENE_PATH,
+        MAP_EDITOR_SCRIPT_PATH,
+        MAP_EDITOR_SCENE_PATH,
     ):
         ensure(path.exists(), errors, f"Missing map-editor dirty-transition regression file: {path.relative_to(ROOT)}")
     if not MAP_EDITOR_DIRTY_TRANSITION_REGRESSION_SCRIPT_PATH.exists():
@@ -14421,6 +14423,30 @@ def validate_map_editor_dirty_transition_regression(errors: list[str]) -> None:
         "_package_file_state",
         "_save_file_state",
         "SessionState.SAVE_VERSION",
+        '"width": 1280',
+        '"width": 1920',
+        '"confirm": "mouse"',
+        '_exclusive_parent_click_geometry(parent_probe, dialog)',
+        'shell.call("_on_root_window_input", stale_pressed)',
+        'Input.parse_input_event(stale_released)',
+        '"real_parent_probe": true',
+        '"stale_pending_release_noop": true',
+        'SaveService.SAVE_DIR',
+        'SaveService.SAVE_PREFIX',
+        'SaveService.AUTOSAVE_FILE',
+        'SaveService.PROGRESSION_FILE',
+        'SettingsService.SETTINGS_FILE',
+        'SettingsService.SETTINGS_CANDIDATE_FILE',
+        'SettingsService.SETTINGS_BACKUP_FILE',
+        'SaveService.validation_transaction_artifact_paths(path)',
+        'SaveService.validation_summary_cache_snapshot()',
+        'SaveService._slot_summary_cache = _original_summary_cache.duplicate(true)',
+        'SettingsService.validation_settings_transaction_snapshot()',
+        'PROPERTY_USAGE_STORAGE',
+        'AppRouter.validation_safe_quit_snapshot()',
+        'AppRouter.validation_safe_close_guard_snapshot()',
+        'AppRouter.validation_active_play_return_snapshot()',
+        'AppRouter.validation_scenario_outcome_route_snapshot()',
     ):
         ensure(required_token in report_text, errors, f"Map-editor dirty-transition regression is missing required token: {required_token}")
 
@@ -14431,6 +14457,70 @@ def validate_map_editor_dirty_transition_regression(errors: list[str]) -> None:
             errors,
             "Map-editor dirty-transition regression scene must load its focused script",
         )
+    editor_text = MAP_EDITOR_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'var _forwarding_dirty_transition_root_physical_input := false',
+        'not root_window.window_input.is_connected(_on_root_window_input)',
+        'root_window.window_input.connect(_on_root_window_input)',
+        'func _on_root_window_input(event: InputEvent) -> void:',
+        'event is InputEventKey or event is InputEventJoypadButton',
+        'get_tree().root.set_input_as_handled()',
+        'event.duplicate() as InputEvent',
+        '"_forward_root_physical_input_to_dirty_transition"',
+        'func _forward_root_physical_input_to_dirty_transition(',
+        'not dialog.visible',
+        'not is_same(pending, _pending_dirty_transition)',
+        'dialog.push_input(event)',
+    ):
+        ensure(required_token in editor_text, errors, f"MapEditorShell.gd is missing exclusive dirty-transition root-input token: {required_token}")
+    handler_match = re.search(
+        r"func _on_root_window_input\(event: InputEvent\) -> void:(.*?)(?=\n\nfunc )",
+        editor_text,
+        flags=re.DOTALL,
+    )
+    ensure(handler_match is not None, errors, "MapEditorShell.gd is missing dirty-transition root physical-input handler")
+    if handler_match is not None:
+        handler_body = handler_match.group(1)
+        ensure("dialog.push_input(event)" not in handler_body, errors, "Map Editor root handler must defer rather than synchronously push physical input")
+        ensure("InputEventMouseButton" not in handler_body, errors, "Map Editor root bridge must not forward mouse-button input")
+        ensure("InputEventMouseMotion" not in handler_body, errors, "Map Editor root bridge must not forward mouse-motion input")
+        ensure("InputEventAction" not in handler_body, errors, "Map Editor root bridge must not forward synthetic action input")
+        handled_index = handler_body.find("get_tree().root.set_input_as_handled()")
+        duplicate_index = handler_body.find("event.duplicate() as InputEvent")
+        deferred_index = handler_body.find("call_deferred(")
+        ensure(
+            handled_index >= 0 and handled_index < duplicate_index < deferred_index,
+            errors,
+            "Map Editor root bridge must handle, detach, then defer physical input in exact order",
+        )
+    forwarding_match = re.search(
+        r"func _forward_root_physical_input_to_dirty_transition\(.*?\) -> void:(.*?)(?=\n\nfunc )",
+        editor_text,
+        flags=re.DOTALL,
+    )
+    ensure(forwarding_match is not None, errors, "MapEditorShell.gd is missing deferred dirty-transition forwarding helper")
+    if forwarding_match is not None:
+        ensure(
+            forwarding_match.group(1).count("dialog.push_input(event)") == 1,
+            errors,
+            "Map Editor deferred dirty-transition helper must push the unchanged physical event exactly once",
+        )
+    ensure(
+        editor_text.count("dialog.push_input(event)") == 1,
+        errors,
+        "Map Editor must push dirty-transition physical input only inside the deferred helper",
+    )
+    editor_scene_text = MAP_EDITOR_SCENE_PATH.read_text(encoding="utf-8")
+    dirty_dialog_match = re.search(
+        r'\[node name="DirtyTransitionConfirmationDialog" type="ConfirmationDialog" parent="\."\](.*?)(?=\n\[)',
+        editor_scene_text,
+        flags=re.DOTALL,
+    )
+    ensure(
+        dirty_dialog_match is not None and "exclusive = true" in dirty_dialog_match.group(1),
+        errors,
+        "Map Editor dirty-transition confirmation must remain an exclusive native child Window",
+    )
 
 
 def validate_scenario_outcome_shell(errors: list[str]) -> None:

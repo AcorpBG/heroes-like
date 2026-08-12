@@ -12,6 +12,13 @@ var _original_active_session = null
 var _active_shell: Node = null
 var _source_entry: Dictionary = {}
 var _target_entry: Dictionary = {}
+var _original_profile: Dictionary = {}
+var _original_selected_slot := 1
+var _original_summary_cache: Dictionary = {}
+var _original_settings_transaction: Dictionary = {}
+var _original_file_states: Dictionary = {}
+var _original_window_size := Vector2i.ZERO
+var _parent_probe_count := 0
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -19,6 +26,13 @@ func _ready() -> void:
 func _run() -> void:
 	_report_scene = self
 	_original_active_session = SessionState.active_session
+	_original_profile = CampaignProgression.profile.duplicate(true)
+	_original_selected_slot = SaveService.get_selected_manual_slot()
+	_original_summary_cache = SaveService.validation_summary_cache_snapshot()
+	_original_settings_transaction = _canonical_settings_transaction()
+	_original_window_size = get_window().size
+	for path in _tracked_authority_paths():
+		_original_file_states[path] = _file_state(path)
 	if not ClassDB.class_exists("MapPackageService"):
 		_fail("Native MapPackageService is unavailable.")
 		return
@@ -58,6 +72,10 @@ func _run() -> void:
 	var shell = await _create_editor_shell()
 	if shell == null:
 		return
+	print("%s CASE exclusive_parent_start" % REPORT_ID)
+	var exclusive_result := await _validate_exclusive_parent_matrix(shell, source_id, target_id, original_package_state)
+	if not bool(exclusive_result.get("ok", false)):
+		return
 
 	print("%s CASE menu_start" % REPORT_ID)
 	var menu_result := await _validate_menu_transition(shell, source_id, original_package_state)
@@ -87,11 +105,168 @@ func _run() -> void:
 		"native_close": close_result,
 		"safe_quit_failure_retry": failure_result,
 		"clean_controls": clean_result,
+		"exclusive_parent": exclusive_result,
 		"save_version": SessionState.SAVE_VERSION,
 	})])
 	await _free_shell(shell)
 	_cleanup()
+	if SaveService.validation_summary_cache_snapshot() != _original_summary_cache \
+			or _canonical_settings_transaction() != _original_settings_transaction \
+			or _capture_file_states(_tracked_authority_paths()) != _original_file_states:
+		_fail("Map Editor focused cleanup did not restore exact save/cache/settings authority.")
+		return
 	get_tree().quit(0)
+
+func _validate_exclusive_parent_matrix(shell: Node, source_id: String, target_id: String, package_state: Dictionary) -> Dictionary:
+	var rows := [
+		{"id": "menu_1280", "width": 1280, "action": "menu", "cancel": "joypad_b", "confirm": "joypad_a"},
+		{"id": "menu_1920", "width": 1920, "action": "menu", "cancel": "escape", "confirm": "enter"},
+		{"id": "package_1280", "width": 1280, "action": "package", "cancel": "joypad_b", "confirm": "mouse"},
+		{"id": "package_1920", "width": 1920, "action": "package", "cancel": "escape", "confirm": "joypad_a"},
+		{"id": "quit_1280", "width": 1280, "action": "quit", "cancel": "joypad_b", "confirm": "enter"},
+		{"id": "quit_1920", "width": 1920, "action": "quit", "cancel": "escape", "confirm": "mouse"},
+	]
+	var results: Array[Dictionary] = []
+	for row_value in rows:
+		var row: Dictionary = row_value
+		var result := await _validate_exclusive_parent_row(shell, source_id, target_id, package_state, row)
+		if result.is_empty():
+			return {}
+		results.append(result)
+	return {"ok": true, "rows": results, "widths": [1280, 1920], "real_parent_probe": true, "stale_pending_release_noop": true}
+
+func _validate_exclusive_parent_row(
+	shell: Node,
+	source_id: String,
+	target_id: String,
+	package_state: Dictionary,
+	row: Dictionary
+) -> Dictionary:
+	var width := int(row.get("width", 1280))
+	var action := String(row.get("action", "menu"))
+	var layout_host := shell.get_parent() as Control
+	var parent_probe: Button = shell.get_meta("exclusive_parent_probe") as Button
+	if layout_host == null or parent_probe == null:
+		return _fail_dict("Exclusive Map Editor host/probe is unavailable.")
+	layout_host.size = Vector2(float(width), 720.0)
+	get_window().size = Vector2i(width, 720)
+	await _settle()
+	if not await _reset_case(shell, source_id, true):
+		return {}
+	shell.call("validation_set_dirty_transition_routing_enabled", false)
+	AppRouter.validation_set_quit_suppressed(true)
+	AppRouter.validation_reset_safe_quit_state()
+	AppRouter.validation_set_safe_close_guard_target(shell)
+	if action == "package":
+		var selected: Dictionary = shell.call("validation_select_map_package_id", target_id)
+		if not bool(selected.get("ok", false)):
+			return _fail_dict("Exclusive package row could not select its captured target.")
+	var origin: Button = shell.get_node("%LoadMap") if action == "package" else shell.get_node("%Menu")
+	origin.grab_focus()
+	await _settle()
+	await _open_dirty_transition(shell, action, target_id)
+	var dialog: ConfirmationDialog = shell.get_node("DirtyTransitionConfirmationDialog")
+	var opened: Dictionary = shell.call("validation_dirty_transition_snapshot")
+	var geometry := _exclusive_parent_click_geometry(parent_probe, dialog)
+	if not _dirty_transition_opened_exact(opened, action, target_id, origin, dialog, width) or not bool(geometry.get("exact", false)):
+		return _fail_dict("Exclusive %s row did not open with exact bounded native focus: %s / %s" % [action, JSON.stringify(opened), JSON.stringify(geometry)])
+	var authority_before_block := _full_authority_state(shell)
+	var transaction_before_block := _dirty_transaction_snapshot(shell)
+	var parent_before := _parent_probe_count
+	await _click_control(parent_probe)
+	await _settle()
+	var blocked_checks := {
+		"probe_blocked": _parent_probe_count == parent_before,
+		"transaction_exact": _dirty_transaction_snapshot(shell) == transaction_before_block,
+		"authority_exact": _full_authority_state(shell) == authority_before_block,
+		"safe_focus_exact": dialog.get_cancel_button().get_viewport().gui_get_focus_owner() == dialog.get_cancel_button(),
+	}
+	if not _checks_exact(blocked_checks):
+		return _fail_dict("Exclusive %s first parent click escaped: %s" % [action, JSON.stringify(blocked_checks)])
+	await _send_cancel(String(row.get("cancel", "joypad_b")))
+	var canceled: Dictionary = shell.call("validation_dirty_transition_snapshot")
+	if bool(canceled.get("pending", true)) or bool(canceled.get("dialog_visible", true)) \
+			or int(canceled.get("cancel_count", 0)) != 1 or int(canceled.get("confirm_count", 0)) != 0 \
+			or get_viewport().gui_get_focus_owner() != origin \
+			or _full_authority_state(shell) != authority_before_block:
+		return _fail_dict("Exclusive %s physical cancel was not exact: %s" % [action, JSON.stringify(canceled)])
+	var positive_before := _parent_probe_count
+	var positive_authority := _full_authority_state(shell)
+	await _click_control(parent_probe)
+	await _settle()
+	if _parent_probe_count != positive_before + 1 or _full_authority_state(shell) != positive_authority:
+		return _fail_dict("Exclusive %s identical parent probe was not actionable after close." % action)
+
+	# Queue a physical press into the root bridge, replace the pending Dictionary
+	# synchronously, then deliver the release normally. Both stale events must no-op.
+	await _open_dirty_transition(shell, action, target_id)
+	var stale_pressed := InputEventKey.new()
+	stale_pressed.keycode = KEY_ESCAPE
+	stale_pressed.physical_keycode = KEY_ESCAPE
+	stale_pressed.pressed = true
+	shell.call("_on_root_window_input", stale_pressed)
+	shell.call("validation_cancel_dirty_transition")
+	shell.call("validation_request_dirty_transition", action, target_id if action == "package" else "")
+	await _settle()
+	var replacement_before := _dirty_transaction_snapshot(shell)
+	var stale_released := InputEventKey.new()
+	stale_released.keycode = KEY_ESCAPE
+	stale_released.physical_keycode = KEY_ESCAPE
+	stale_released.pressed = false
+	Input.parse_input_event(stale_released)
+	await _settle()
+	if _dirty_transaction_snapshot(shell) != replacement_before or not dialog.visible \
+			or dialog.get_cancel_button().get_viewport().gui_get_focus_owner() != dialog.get_cancel_button():
+		return _fail_dict("Exclusive %s stale pending/release reached its replacement." % action)
+	var authority_before_second := _full_authority_state(shell)
+	var parent_before_second := _parent_probe_count
+	await _click_control(parent_probe)
+	await _settle()
+	if _parent_probe_count != parent_before_second or _dirty_transaction_snapshot(shell) != replacement_before \
+			or _full_authority_state(shell) != authority_before_second:
+		return _fail_dict("Exclusive %s second parent click changed authority." % action)
+	await _send_confirm(dialog, String(row.get("confirm", "enter")))
+	await _settle()
+	var confirmed: Dictionary = shell.call("validation_dirty_transition_snapshot")
+	var consequence_exact := false
+	match action:
+		"menu":
+			consequence_exact = int(confirmed.get("menu_route_count", 0)) == 1
+		"package":
+			var editor_snapshot: Dictionary = shell.call("validation_snapshot")
+			consequence_exact = int(confirmed.get("package_action_count", 0)) == 1 \
+				and String(editor_snapshot.get("editor_source_package_id", "")) == target_id
+		"quit":
+			var quit_snapshot: Dictionary = AppRouter.validation_safe_quit_snapshot()
+			consequence_exact = int(confirmed.get("quit_attempt_count", 0)) == 1 \
+				and int(quit_snapshot.get("quit_attempt_count", 0)) == 1 \
+				and int(quit_snapshot.get("suppressed_quit_count", 0)) == 1
+	if bool(confirmed.get("pending", true)) or bool(confirmed.get("dialog_visible", true)) \
+			or int(confirmed.get("confirm_count", 0)) != 1 or not consequence_exact \
+			or _package_file_state() != package_state:
+		return _fail_dict("Exclusive %s deliberate confirm was not exact: %s" % [action, JSON.stringify(confirmed)])
+	return {"id": row.get("id"), "width": width, "action": action, "cancel": row.get("cancel"), "confirm": row.get("confirm"), "blocked": true, "stale_noop": true}
+
+func _open_dirty_transition(shell: Node, action: String, target_id: String) -> void:
+	if action == "quit":
+		get_tree().root.close_requested.emit()
+	else:
+		shell.call("validation_request_dirty_transition", action, target_id if action == "package" else "")
+	await _settle()
+
+func _send_cancel(method: String) -> void:
+	if method == "escape":
+		await _press_key(KEY_ESCAPE)
+	else:
+		await _press_joypad_button(JOY_BUTTON_B)
+
+func _send_confirm(dialog: ConfirmationDialog, method: String) -> void:
+	dialog.get_ok_button().grab_focus()
+	await get_tree().process_frame
+	match method:
+		"joypad_a": await _press_joypad_button(JOY_BUTTON_A)
+		"mouse": await _click_control(dialog.get_ok_button())
+		_: await _press_key(KEY_ENTER)
 
 func _validate_menu_transition(shell: Node, source_id: String, package_state: Dictionary) -> Dictionary:
 	if not await _reset_case(shell, source_id, true):
@@ -223,7 +398,7 @@ func _validate_safe_quit_failure_retry(shell: Node, source_id: String, package_s
 		origin.grab_focus()
 		await get_tree().process_frame
 		var before := _protected_state(shell)
-		var autosave_path := "user://saves/autosave.json"
+		var autosave_path := "%s/%s" % [SaveService.SAVE_DIR, SaveService.AUTOSAVE_FILE]
 		var old_bytes := FileAccess.get_file_as_bytes(autosave_path)
 		OS.set_environment(SAVE_FAILURE_ENV, phase)
 		get_tree().root.close_requested.emit()
@@ -276,13 +451,30 @@ func _validate_clean_controls(shell: Node, source_id: String, target_id: String,
 	return {"ok": true, "menu_direct": true, "package_direct": true, "native_close_direct": true}
 
 func _create_editor_shell():
+	var layout_host := Control.new()
+	layout_host.name = "MapEditorExclusiveLayoutHost"
+	layout_host.size = Vector2(1280.0, 720.0)
+	add_child(layout_host)
 	var shell = load("res://scenes/editor/MapEditorShell.tscn").instantiate()
 	shell.set("validation_skip_initial_package_index", true)
 	_active_shell = shell
-	add_child(shell)
+	layout_host.add_child(shell)
+	var parent_probe := Button.new()
+	parent_probe.name = "MapEditorExclusiveParentProbe"
+	parent_probe.text = "Map Editor parent input probe"
+	parent_probe.position = Vector2(16.0, 16.0)
+	parent_probe.size = Vector2(230.0, 40.0)
+	parent_probe.focus_mode = Control.FOCUS_NONE
+	parent_probe.z_index = 100
+	parent_probe.pressed.connect(_on_parent_probe_pressed)
+	layout_host.add_child(parent_probe)
+	shell.set_meta("exclusive_parent_probe", parent_probe)
 	await _settle()
 	AppRouter.validation_set_safe_close_guard_target(shell)
 	return shell
+
+func _on_parent_probe_pressed() -> void:
+	_parent_probe_count += 1
 
 func _reset_case(shell: Node, source_id: String, dirty: bool) -> bool:
 	shell.call("validation_reset_dirty_transition_state")
@@ -403,14 +595,189 @@ func _package_file_state() -> Dictionary:
 
 func _save_file_state() -> Dictionary:
 	var state := {}
-	for filename in ["autosave.json", "slot1.json", "slot2.json", "slot3.json"]:
-		var path := "user://saves/%s" % filename
+	var paths: Array[String] = ["%s/%s" % [SaveService.SAVE_DIR, SaveService.AUTOSAVE_FILE]]
+	for slot in [1, 2, 3]:
+		paths.append("%s/%s%d.json" % [SaveService.SAVE_DIR, SaveService.SAVE_PREFIX, slot])
+	for path in paths:
 		state[path] = FileAccess.get_file_as_bytes(path) if FileAccess.file_exists(path) else PackedByteArray()
 	return state
 
 func _transaction_artifacts_exist(path: String) -> bool:
 	var artifacts: Dictionary = SaveService.validation_transaction_artifact_paths(path)
 	return FileAccess.file_exists(String(artifacts.get("candidate", ""))) or FileAccess.file_exists(String(artifacts.get("backup", "")))
+
+func _dirty_transition_opened_exact(snapshot: Dictionary, action: String, target_id: String, origin: Control, dialog: ConfirmationDialog, width: int) -> bool:
+	var position: Vector2i = snapshot.get("dialog_position", Vector2i(-1, -1))
+	var size: Vector2i = snapshot.get("dialog_size", Vector2i.ZERO)
+	return dialog.exclusive and bool(snapshot.get("pending", false)) and bool(snapshot.get("dialog_visible", false)) \
+		and String(snapshot.get("action", "")) == action \
+		and String(snapshot.get("package_id", "")) == (target_id if action == "package" else "") \
+		and String(snapshot.get("cancel_text", "")) == "Keep Editing" \
+		and String(snapshot.get("return_focus_name", "")) == String(origin.name) \
+		and dialog.get_cancel_button().get_viewport().gui_get_focus_owner() == dialog.get_cancel_button() \
+		and position.x >= 0 and position.y >= 0 and position.x + size.x <= width and position.y + size.y <= 720
+
+func _dirty_transaction_snapshot(shell: Node) -> Dictionary:
+	var snapshot: Dictionary = shell.call("validation_dirty_transition_snapshot")
+	var compact := {}
+	for key in ["pending", "dialog_visible", "action", "package_id", "package_label", "source", "cancel_text", "confirm_text", "dialog_focus_owner", "return_focus_name", "dialog_position", "dialog_size", "dirty", "request_count", "cancel_count", "confirm_count", "duplicate_request_count", "menu_route_count", "package_action_count", "quit_attempt_count", "routing_enabled", "last_result"]:
+		compact[key] = snapshot.get(key)
+	return compact
+
+func _exclusive_parent_click_geometry(control: Button, dialog: ConfirmationDialog) -> Dictionary:
+	var parent_click := _control_root_click_position(control)
+	var parent_rect := _control_root_rect(control)
+	var dialog_rect := Rect2(Vector2(dialog.position), Vector2(dialog.size))
+	var cancel_button := dialog.get_cancel_button()
+	var child_click := _control_root_click_position(cancel_button)
+	var child_rect := _control_root_rect(cancel_button)
+	return {
+		"exact": control.get_viewport() == get_viewport() and control.is_visible_in_tree() and not control.disabled \
+			and parent_rect.has_point(parent_click) and get_viewport().get_visible_rect().has_point(parent_click) \
+			and not dialog_rect.has_point(parent_click) and cancel_button.get_viewport() == dialog \
+			and child_rect.has_point(child_click) and dialog_rect.has_point(child_click) \
+			and get_viewport().get_visible_rect().encloses(dialog_rect),
+		"parent_click": parent_click,
+		"parent_rect": parent_rect,
+		"dialog_rect": dialog_rect,
+		"child_click": child_click,
+	}
+
+func _click_control(control: Control) -> void:
+	var source_viewport := control.get_viewport()
+	var click_position := _control_root_click_position(control)
+	var window_id: int = int(source_viewport.get_window_id()) if source_viewport is Window else 0
+	var motion := InputEventMouseMotion.new()
+	motion.window_id = window_id
+	motion.position = click_position
+	motion.global_position = click_position
+	get_viewport().push_input(motion, true)
+	await get_tree().process_frame
+	for pressed_state in [true, false]:
+		var event := InputEventMouseButton.new()
+		event.window_id = window_id
+		event.button_index = MOUSE_BUTTON_LEFT
+		event.position = click_position
+		event.global_position = click_position
+		event.pressed = pressed_state
+		get_viewport().push_input(event, true)
+		await get_tree().process_frame
+	await _settle()
+
+func _control_root_click_position(control: Control) -> Vector2:
+	var position := control.get_global_rect().get_center()
+	var source_viewport := control.get_viewport()
+	if source_viewport is Window and source_viewport != get_viewport():
+		position += Vector2((source_viewport as Window).position)
+	return position
+
+func _control_root_rect(control: Control) -> Rect2:
+	var rect := control.get_global_rect()
+	var source_viewport := control.get_viewport()
+	if source_viewport is Window and source_viewport != get_viewport():
+		rect.position += Vector2((source_viewport as Window).position)
+	return rect
+
+func _checks_exact(checks: Dictionary) -> bool:
+	for value in checks.values():
+		if not bool(value):
+			return false
+	return true
+
+func _full_authority_state(shell: Node) -> Dictionary:
+	var editor_snapshot: Dictionary = shell.call("validation_snapshot")
+	for key in ["dirty_transition", "focus_owner"]:
+		editor_snapshot.erase(key)
+	return {
+		"protected": _protected_state(shell),
+		"editor": editor_snapshot,
+		"packages": _package_file_state(),
+		"files": _capture_file_states(_tracked_authority_paths()),
+		"summary_cache": SaveService.validation_summary_cache_snapshot(),
+		"settings": _canonical_settings_transaction(),
+		"profile": CampaignProgression.profile.duplicate(true),
+		"selected_slot": SaveService.get_selected_manual_slot(),
+		"safe_quit": AppRouter.validation_safe_quit_snapshot(),
+		"close_guard": AppRouter.validation_safe_close_guard_snapshot(),
+		"return_route": AppRouter.validation_active_play_return_snapshot(),
+		"outcome_route": AppRouter.validation_scenario_outcome_route_snapshot(),
+	}
+
+func _canonical_settings_transaction() -> Dictionary:
+	var transaction: Dictionary = SettingsService.validation_settings_transaction_snapshot()
+	transaction["input_map"] = _canonical_input_map(transaction.get("input_map", {}))
+	var runtime: Dictionary = (transaction.get("runtime_display", {}) as Dictionary).duplicate(true)
+	runtime.erase("size")
+	runtime.erase("position")
+	transaction["runtime_display"] = runtime
+	return transaction
+
+func _canonical_input_map(value: Variant) -> Dictionary:
+	var input_map: Dictionary = value if value is Dictionary else {}
+	var result := {}
+	for action_value in input_map:
+		var row: Dictionary = input_map.get(action_value, {}) if input_map.get(action_value, {}) is Dictionary else {}
+		var events := []
+		for event_value in row.get("events", []):
+			if event_value is InputEvent:
+				events.append(_serialize_input_event(event_value))
+		result[String(action_value)] = {"exists": bool(row.get("exists", false)), "deadzone": float(row.get("deadzone", 0.5)), "events": events}
+	return result
+
+func _serialize_input_event(input_event: InputEvent) -> Dictionary:
+	var properties := {}
+	for property_value in input_event.get_property_list():
+		var property: Dictionary = property_value
+		if (int(property.get("usage", 0)) & PROPERTY_USAGE_STORAGE) == 0:
+			continue
+		var property_name := String(property.get("name", ""))
+		if property_name == "" or property_name == "script":
+			continue
+		properties[property_name] = var_to_str(input_event.get(property_name))
+	return {"class": input_event.get_class(), "text": input_event.as_text(), "properties": properties}
+
+func _tracked_authority_paths() -> Array[String]:
+	var base_paths: Array[String] = [
+		"%s/%s" % [SaveService.SAVE_DIR, SaveService.AUTOSAVE_FILE],
+		"%s/%s" % [SaveService.SAVE_DIR, SaveService.PROGRESSION_FILE],
+		SettingsService.SETTINGS_FILE,
+	]
+	for slot in [1, 2, 3]:
+		base_paths.append("%s/%s%d.json" % [SaveService.SAVE_DIR, SaveService.SAVE_PREFIX, slot])
+	for stem in [SOURCE_STEM, TARGET_STEM]:
+		for extension in ["amap", "ascenario"]:
+			base_paths.append("%s/%s.%s" % [FIXTURE_DIR, stem, extension])
+	var paths: Array[String] = []
+	for path in base_paths:
+		if path not in paths:
+			paths.append(path)
+		for artifact in SaveService.validation_transaction_artifact_paths(path).values():
+			var artifact_path := String(artifact)
+			if artifact_path != "" and artifact_path not in paths:
+				paths.append(artifact_path)
+	for path in [SettingsService.SETTINGS_CANDIDATE_FILE, SettingsService.SETTINGS_BACKUP_FILE]:
+		if path not in paths:
+			paths.append(path)
+	return paths
+
+func _capture_file_states(paths: Array[String]) -> Dictionary:
+	var states := {}
+	for path in paths:
+		states[path] = _file_state(path)
+	return states
+
+func _file_state(path: String) -> Dictionary:
+	return {"exists": FileAccess.file_exists(path), "bytes": FileAccess.get_file_as_bytes(path) if FileAccess.file_exists(path) else PackedByteArray()}
+
+func _restore_file_state(path: String, state: Dictionary) -> void:
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+	if not bool(state.get("exists", false)):
+		return
+	var absolute := ProjectSettings.globalize_path(path)
+	DirAccess.make_dir_recursive_absolute(absolute.get_base_dir())
+	var file := FileAccess.open(path, FileAccess.WRITE)
+	if file != null:
+		file.store_buffer(state.get("bytes", PackedByteArray()))
 
 func _first_difference(expected: Variant, actual: Variant, path: String = "root") -> String:
 	if typeof(expected) != typeof(actual):
@@ -471,8 +838,8 @@ func _settle() -> void:
 
 func _free_shell(shell: Node) -> void:
 	AppRouter.validation_set_safe_close_guard_target(null)
-	if is_instance_valid(shell):
-		shell.queue_free()
+	if is_instance_valid(shell) and is_instance_valid(shell.get_parent()):
+		shell.get_parent().queue_free()
 	await _settle()
 	_active_shell = null
 
@@ -491,10 +858,12 @@ func _cleanup() -> void:
 	AppRouter.validation_reset_safe_quit_state()
 	if is_instance_valid(_active_shell):
 		AppRouter.validation_set_safe_close_guard_target(null)
-		_active_shell.queue_free()
+		if is_instance_valid(_active_shell.get_parent()):
+			_active_shell.get_parent().queue_free()
 	SessionState.active_session = _original_active_session
-	for stem in [SOURCE_STEM, TARGET_STEM]:
-		for extension in ["amap", "ascenario"]:
-			var path := "%s/%s.%s" % [FIXTURE_DIR, stem, extension]
-			if FileAccess.file_exists(path):
-				DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+	CampaignProgression.profile = _original_profile.duplicate(true)
+	SaveService.set_selected_manual_slot(_original_selected_slot)
+	for path in _original_file_states:
+		_restore_file_state(String(path), _original_file_states[path])
+	SaveService._slot_summary_cache = _original_summary_cache.duplicate(true)
+	get_window().size = _original_window_size
