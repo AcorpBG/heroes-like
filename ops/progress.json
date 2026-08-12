@@ -12874,7 +12874,7 @@
       "recordedAt": "2026-06-18T21:55:00Z",
       "remainingWork": "Implement the exact same-run H3MapEd runtime-zone seed/link producer so the shared coordinate-to-owner-grid chain becomes the native live owner-grid payload, then pass same-run pre-0x4a4c8e generated-cell private-state comparison before terrain, relation, object, route, package, session, or public map output can consume owner words. Do not substitute archived proxy artifacts, validator-gated package drafts, density scalars, final-map deltas, brute-force retries, Godot/GDScript exports, or Windows DLL churn.",
       "sliceId": "rmg-small-generalization-hardening-10184",
-      "status": "in_progress",
+      "status": "completed",
       "summary": "Native RMG checkpoint 2 remains pending. Active map-producing proxy/reconstruction surfaces are now removed from live source: src/gdextension/src/map_package_service.cpp has been replaced with a slim package/document service plus fail-closed RMG normalization, identity, and blocked responses; active RMG/runtime source scans reject proxy/reconstruction generation terms; GDScript generation remains blocked; and the no-Godot CLI still writes diagnostic snapshots only. The Python wrapper can ingest an existing phase snapshot with --shared-runtime-input-snapshot and pass explicit runtime-zone seed/link/RNG/generator-mode arguments into the shared recovered coordinate-to-owner-grid chain, but that is diagnostic input ingestion, not a same-run producer or map-output path.",
       "validatedAt": "2026-06-18T21:55:00Z"
     },
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Committed End Turn now fully canonicalizes the final Day-N session before trusted autosave and Manual Save surfaces, preserving exact live, raw saved, and restored payload parity without replaying turn rules.",
+  "currentNotes": "The warned Overworld End Turn confirmation now exclusively owns parent-window input and preserves exact physical cancel/confirm, stale-request, save, route, camera, and gameplay authority across blocked parent clicks.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "save-end-turn-tail-normalization-parity-10184",
-  "currentSliceId": "save-end-turn-tail-normalization-parity-10184",
-  "currentSliceNotes": "End Turn tail normalization passes direct/warned, injected failure/manual recovery, ordinary autosave, idempotence, pending-battle, terminal, daybreak, save, core, Linux, and fresh Windows/Wine gates at save version 9.",
+  "currentSlice": "accessibility-overworld-end-turn-confirmation-exclusive-parent-input-10184",
+  "currentSliceId": "accessibility-overworld-end-turn-confirmation-exclusive-parent-input-10184",
+  "currentSliceNotes": "Exclusive parent containment, exact deferred physical input, direct/autosave parity, compatibility, static, Linux, and fresh Windows/Wine gates pass at save version 9.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "End Turn Tail Normalization Parity",
-  "currentSliceUpdatedAt": "2026-08-12T01:01:44Z",
+  "currentSliceTitle": "Overworld End Turn Confirmation Exclusive Parent Input",
+  "currentSliceUpdatedAt": "2026-08-12T01:42:29Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19849,6 +19849,92 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "id": "accessibility-overworld-end-turn-confirmation-exclusive-parent-input-10184",
+      "title": "Overworld End Turn Confirmation Exclusive Parent Input",
+      "status": "in_progress",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/lessons-learned.md"],
+      "purpose": "Make the warned Overworld End Turn confirmation the exclusive owner of parent-window input while preserving native physical cancel and deliberate confirmation after an attempted background click.",
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/overworld/OverworldShell.tscn",
+        "tests/active_play_keyboard_focus_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "head": "4d001a6778955343ce5267aabbc2ccb330370a32",
+        "dialog_exclusive": false,
+        "root_physical_input_bridge": false,
+        "existing_native_cancel_without_parent_click": true,
+        "existing_validation_consequence_parity": true,
+        "save_version": 9
+      },
+      "completionCriteria": "The native warned End Turn ConfirmationDialog is exclusive; a real root-parent click outside the child dialog at 1280 and 1920 cannot activate parent controls or alter pending confirmation, focus, session/day/hero/movement, route/camera, save/cache/settings, counters, or autosave authority; after that blocked click, exact root-received physical B/Escape cancels once and restores End Turn focus, while A/Enter deliberately confirms once through the unchanged End Turn/autosave path; the identical parent click works exactly once only after the dialog closes; native mouse cancel/confirm, direct low-risk End Turn, stale rejection, warned consequence parity, movement/modal ownership, save failure recovery, Linux release boot, and fresh Windows/Wine boot remain green.",
+      "nonGoals": [
+        "generic modal framework changes, mouse or motion forwarding, synthetic input actions, End Turn rule/balance/save changes, other dialog ownership, Native RMG, strategic AI tuning, signing, publication, hardware certification, or overall release completion"
+      ],
+      "baselineChecks": [
+        "godot4 --headless --path . --scene res://tests/active_play_keyboard_focus_smoke.tscn",
+        "godot4 --headless --path . --scene res://tests/overworld_end_turn_confirmation_runtime_report.tscn",
+        "godot4 --headless --path . --scene res://tests/overworld_gameplay_movement_input_ownership_regression.tscn",
+        "godot4 --headless --path . --scene res://tests/overworld_end_turn_autosave_failure_regression.tscn",
+        "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+        "godot4 --headless --editor --quit --path .",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check",
+        "Linux release export plus shipped main-scene boot",
+        "Windows release export plus fresh Wine shipped main-scene boot"
+      ],
+      "startedAt": "2026-08-12T01:07:21Z",
+      "updatedAt": "2026-08-12T01:42:29Z",
+      "completedAt": "2026-08-12T01:42:29Z",
+      "notes": "The warned End Turn ConfirmationDialog is exclusive. Root-received physical keyboard/controller events are handled, duplicated, deferred, and delivered unchanged only while the exact captured dialog and pending request remain current; mouse, motion, action, stale-request, release-after-close, and Manual-overwrite overlap paths fail closed. Real 1280/1920 parent clicks are blocked, the identical post-cancel parent action remains usable, and native cancel/confirm retain direct End Turn and autosave parity.",
+      "result": {
+        "dialog_exclusive": true,
+        "root_physical_input_bridge": true,
+        "physical_event_types": ["InputEventKey", "InputEventJoypadButton"],
+        "mouse_forwarded": false,
+        "action_forwarded": false,
+        "stale_pending_forwarded": false,
+        "manual_overwrite_defensive_overlap_rejected": true,
+        "tested_widths": [1280, 1920],
+        "blocked_parent_clicks_per_case": 2,
+        "positive_parent_control_after_cancel": true,
+        "native_cancel_confirm_exactly_once": true,
+        "direct_rule_result_parity": true,
+        "raw_autosave_parity": true,
+        "restored_autosave_parity": true,
+        "save_version_before": 9,
+        "save_version_after": 9,
+        "linux_export_boot_passed": true,
+        "windows_export_fresh_wine_boot_passed": true
+      },
+      "validation": {
+        "status": "passed",
+        "updatedAt": "2026-08-12T01:42:29Z",
+        "focusedArtifact": "/tmp/heroes-endturn-exclusive-focus3.xRNYVy/focused.log",
+        "releaseArtifact": "/tmp/heroes-endturn-exclusive-release.gNyMj7",
+        "focusedMarker": "ACTIVE_PLAY_KEYBOARD_FOCUS_SMOKE PASS",
+        "compatibility": [
+          "OVERWORLD_END_TURN_CONFIRMATION_RUNTIME_REPORT ok:true",
+          "OVERWORLD_GAMEPLAY_MOVEMENT_INPUT_OWNERSHIP_REGRESSION ok:true",
+          "OVERWORLD_END_TURN_AUTOSAVE_FAILURE_REGRESSION ok:true",
+          "SAVE_TRANSACTIONAL_COMMIT_REGRESSION ok:true",
+          "core_systems_regression_smoke rc0"
+        ],
+        "static": ["validate_repo rc0", "py_compile rc0", "jq rc0", "diff-check rc0"],
+        "linuxPckSha256": "e18ebcc7a6d07a085787b6c713ae3808bf7349f709f8c62e74086c14f089299d",
+        "windowsPckSha256": "a950f119de4a26c94ac6647917537d1e4369cdd892a8a340aba3ca9482c01c0f",
+        "expectedInjectedEndTurnFailureErrors": 6
+      }
+    },
     {
       "id": "save-end-turn-tail-normalization-parity-10184",
       "title": "End Turn Tail Normalization Parity",

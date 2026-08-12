@@ -16893,6 +16893,94 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
             errors,
             "Overworld End Turn confirmation report scene must load its script",
         )
+    end_turn_dialog_scene_body = overworld_scene_text.split('[node name="EndTurnConfirmationDialog"', 1)[1].split("\n[node ", 1)[0]
+    ensure(
+        "exclusive = true" in end_turn_dialog_scene_body,
+        errors,
+        "End Turn confirmation must be an exclusive native child Window",
+    )
+    for required_token in (
+        "var _forwarding_end_turn_root_physical_input := false",
+        "root_window.window_input.connect(_on_root_window_input)",
+        "func _on_root_window_input(event: InputEvent)",
+        "event is InputEventKey or event is InputEventJoypadButton",
+        "_end_turn_confirmation_dialog.visible",
+        "_pending_end_turn_confirmation.is_empty()",
+        "_manual_save_overwrite_dialog != null and _manual_save_overwrite_dialog.visible",
+        "get_tree().root.set_input_as_handled()",
+        "var dialog := _end_turn_confirmation_dialog",
+        "var pending := _pending_end_turn_confirmation",
+        "event.duplicate() as InputEvent",
+        'call_deferred("_forward_root_physical_input_to_end_turn_confirmation", dialog, pending, detached_event)',
+        "func _forward_root_physical_input_to_end_turn_confirmation(",
+        "dialog != _end_turn_confirmation_dialog",
+        "not is_same(pending, _pending_end_turn_confirmation)",
+        "dialog.push_input(event)",
+    ):
+        ensure(required_token in overworld_script_text, errors, f"OverworldShell.gd is missing required End Turn exclusive-input token: {required_token}")
+    ensure(
+        overworld_script_text.count("_manual_save_overwrite_dialog != null and _manual_save_overwrite_dialog.visible") >= 2,
+        errors,
+        "End Turn physical forwarding must guard ManualSaveOverwrite ownership at both root capture and deferred delivery",
+    )
+    if "func _on_root_window_input(event: InputEvent)" in overworld_script_text:
+        end_turn_root_body = overworld_script_text.split("func _on_root_window_input(event: InputEvent)", 1)[1].split("\nfunc ", 1)[0]
+        ensure(
+            "InputEventMouseButton" not in end_turn_root_body
+            and "InputEventMouseMotion" not in end_turn_root_body
+            and "InputEventAction" not in end_turn_root_body
+            and ".push_input(" not in end_turn_root_body,
+            errors,
+            "End Turn root fallback must defer physical key/joypad input and never forward mouse/action input synchronously",
+        )
+    active_play_end_turn_text = (ROOT / "tests" / "active_play_keyboard_focus_smoke.gd").read_text(encoding="utf-8")
+    for required_token in (
+        "func _exercise_overworld_end_turn_exclusive_case(",
+        '"end_turn_controller_1280"',
+        '"end_turn_keyboard_1920"',
+        '"end_turn_native_mouse_1280"',
+        '"width": 1280',
+        '"width": 1920',
+        '"cancel_input": "joypad_b"',
+        '"cancel_input": "escape"',
+        '"cancel_input": "mouse"',
+        '"confirm_input": "joypad_a"',
+        '"confirm_input": "enter"',
+        '"confirm_input": "mouse"',
+        'layout_host.size = Vector2(float(width), 720.0)',
+        'parent_probe.position = Vector2(16.0, 16.0)',
+        "_exclusive_battle_parent_click_geometry(parent_probe, dialog)",
+        '"full_same_state_authority_exact"',
+        '"background_authority_exact"',
+        '"pending_identity_exact"',
+        '"stale_press_cancel_zero"',
+        '"stale_press_confirm_zero"',
+        '"stale_release_commit_zero"',
+        'shell.call("_on_root_window_input", stale_pressed)',
+        "Input.parse_input_event(stale_released)",
+        '"same_parent_action_once"',
+        '"cancel_signal_once"',
+        '"confirm_signal_once"',
+        '"direct_gameplay_exact"',
+        '"raw_autosave_exact"',
+        '"restored_autosave_exact"',
+        "OverworldRules.consume_command_risk_forecast(direct_control)",
+        "OverworldRules.end_turn(direct_control)",
+        "SaveService.restore_autosave_session()",
+        "func _end_turn_exclusive_authority_snapshot(",
+        "func _end_turn_authority_paths(",
+        '"%s/%s%d.json" % [SaveService.SAVE_DIR, SaveService.SAVE_PREFIX, int(slot)]',
+        "SettingsService.SETTINGS_FILE",
+        '"%s.candidate" % SettingsService.SETTINGS_FILE',
+        '"%s.backup" % SettingsService.SETTINGS_FILE',
+        "func _end_turn_pending_identity_exact(",
+        "func _send_end_turn_confirmation_cancel(",
+        "func _send_end_turn_confirmation_confirm(",
+        'for cancel_kind in ["controller_b", "escape"]',
+        'await _press_joypad_button(JOY_BUTTON_A)',
+        'Inactive End Turn transaction changed during isolated ManualSaveOverwrite physical',
+    ):
+        ensure(required_token in active_play_end_turn_text, errors, f"active_play_keyboard_focus_smoke.gd is missing End Turn exclusive-input token: {required_token}")
     for path in (
         OVERWORLD_CONTROLLER_ROUTE_SELECTION_REGRESSION_SCRIPT_PATH,
         OVERWORLD_CONTROLLER_ROUTE_SELECTION_REGRESSION_SCENE_PATH,
