@@ -51,6 +51,8 @@ const DIRTY_TRANSITION_QUIT := "quit"
 const DIRTY_TRANSITION_CANCEL_TEXT := "Keep Editing"
 const DIRTY_TRANSITION_QUIT_SOURCE := "map_editor_confirmed"
 const DIRTY_TRANSITION_PENDING_MESSAGE := "Finish the current unsaved-work confirmation first."
+const EDITOR_MAP_JOYPAD_REPEAT_INITIAL_DELAY_SECONDS := 0.36
+const EDITOR_MAP_JOYPAD_REPEAT_INTERVAL_SECONDS := 0.09
 
 @onready var _header_label: Label = %Header
 @onready var _map_package_picker: OptionButton = %MapPackagePicker
@@ -119,6 +121,12 @@ var _placement_debug_overlay_enabled := false
 var _last_save_copy_result := {}
 var _pending_dirty_transition := {}
 var _dirty_transition_return_focus: Control = null
+var _last_editor_command_focus: Control = null
+var _editor_map_joypad_repeat_timer: Timer = null
+var _held_editor_map_joypad_direction := Vector2i.ZERO
+var _held_editor_map_joypad_action: StringName = &""
+var _held_editor_map_joypad_button := -1
+var _held_editor_map_joypad_device := -1
 var _forwarding_dirty_transition_root_physical_input := false
 var _safe_close_guard_authorized := false
 var _safe_close_guard_authorized_source := ""
@@ -136,6 +144,7 @@ var validation_skip_initial_package_index := false
 func _ready() -> void:
 	_apply_visual_theme()
 	_configure_dirty_transition_confirmation()
+	_configure_editor_map_keyboard_input()
 	_connect_ui()
 	_connect_editor_focus_visibility()
 	_rebuild_terrain_picker()
@@ -154,6 +163,10 @@ func _ready() -> void:
 		return
 	_refresh_state()
 	call_deferred("_configure_editor_keyboard_focus")
+
+
+func _exit_tree() -> void:
+	_stop_editor_map_joypad_repeat()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if _dirty_transition_dialog != null and _dirty_transition_dialog.visible:
@@ -193,6 +206,215 @@ func _connect_ui() -> void:
 		_map_view.tile_hovered.connect(_on_map_tile_hovered)
 
 
+func _configure_editor_map_keyboard_input() -> void:
+	if _map_view == null:
+		return
+	_map_view.focus_mode = Control.FOCUS_ALL
+	if not _map_view.gui_input.is_connected(_on_editor_map_gui_input):
+		_map_view.gui_input.connect(_on_editor_map_gui_input)
+	if not _map_view.focus_exited.is_connected(_stop_editor_map_joypad_repeat):
+		_map_view.focus_exited.connect(_stop_editor_map_joypad_repeat)
+	if _editor_map_joypad_repeat_timer == null or not is_instance_valid(_editor_map_joypad_repeat_timer):
+		_editor_map_joypad_repeat_timer = Timer.new()
+		_editor_map_joypad_repeat_timer.name = "EditorMapJoypadRepeatTimer"
+		_editor_map_joypad_repeat_timer.one_shot = true
+		add_child(_editor_map_joypad_repeat_timer)
+	if not _editor_map_joypad_repeat_timer.timeout.is_connected(_on_editor_map_joypad_repeat_timeout):
+		_editor_map_joypad_repeat_timer.timeout.connect(_on_editor_map_joypad_repeat_timeout)
+
+
+func _on_editor_map_gui_input(event: InputEvent) -> void:
+	if not (event is InputEventKey or event is InputEventJoypadButton):
+		return
+	if not _editor_map_keyboard_input_owned():
+		_stop_editor_map_joypad_repeat()
+		return
+	if event is InputEventJoypadButton and not event.pressed:
+		if _editor_map_joypad_release_matches(event as InputEventJoypadButton):
+			_stop_editor_map_joypad_repeat()
+			_map_view.accept_event()
+		return
+	var cardinal_action := _editor_map_cardinal_action(event)
+	if cardinal_action != &"":
+		var direction := _editor_map_direction_for_action(cardinal_action)
+		if event is InputEventJoypadButton:
+			var joypad_event := event as InputEventJoypadButton
+			if _editor_map_joypad_hold_matches(joypad_event, cardinal_action, direction):
+				_map_view.accept_event()
+				return
+			_move_editor_map_cursor(direction)
+			_start_editor_map_joypad_repeat(joypad_event, cardinal_action, direction)
+		else:
+			_move_editor_map_cursor(direction)
+		_map_view.accept_event()
+		return
+	if event.is_action_pressed("ui_accept"):
+		_on_map_tile_pressed(_selected_tile)
+		_map_view.accept_event()
+		return
+	if event.is_action_pressed("ui_cancel"):
+		_restore_editor_command_focus()
+		_map_view.accept_event()
+
+
+func _editor_map_keyboard_input_owned() -> bool:
+	if (
+		not is_inside_tree()
+		or _map_view == null
+		or not is_instance_valid(_map_view)
+		or (_dirty_transition_dialog != null and _dirty_transition_dialog.visible)
+		or not _pending_dirty_transition.is_empty()
+	):
+		return false
+	var viewport := get_viewport()
+	return viewport != null and viewport.gui_get_focus_owner() == _map_view
+
+
+func _editor_map_cardinal_action(event: InputEvent) -> StringName:
+	if event.is_action_pressed("ui_left", true):
+		return &"ui_left"
+	if event.is_action_pressed("ui_right", true):
+		return &"ui_right"
+	if event.is_action_pressed("ui_up", true):
+		return &"ui_up"
+	if event.is_action_pressed("ui_down", true):
+		return &"ui_down"
+	return &""
+
+
+func _editor_map_direction_for_action(action: StringName) -> Vector2i:
+	match action:
+		&"ui_left":
+			return Vector2i.LEFT
+		&"ui_right":
+			return Vector2i.RIGHT
+		&"ui_up":
+			return Vector2i.UP
+		&"ui_down":
+			return Vector2i.DOWN
+		_:
+			return Vector2i.ZERO
+
+
+func _start_editor_map_joypad_repeat(
+	event: InputEventJoypadButton,
+	action: StringName,
+	direction: Vector2i
+) -> void:
+	if _editor_map_joypad_repeat_timer == null or direction == Vector2i.ZERO:
+		return
+	_held_editor_map_joypad_direction = direction
+	_held_editor_map_joypad_action = action
+	_held_editor_map_joypad_button = event.button_index
+	_held_editor_map_joypad_device = event.device
+	_editor_map_joypad_repeat_timer.start(EDITOR_MAP_JOYPAD_REPEAT_INITIAL_DELAY_SECONDS)
+
+
+func _editor_map_joypad_hold_matches(
+	event: InputEventJoypadButton,
+	action: StringName,
+	direction: Vector2i
+) -> bool:
+	return (
+		_held_editor_map_joypad_direction == direction
+		and _held_editor_map_joypad_action == action
+		and _held_editor_map_joypad_button == event.button_index
+		and _held_editor_map_joypad_device == event.device
+	)
+
+
+func _editor_map_joypad_release_matches(event: InputEventJoypadButton) -> bool:
+	return (
+		_held_editor_map_joypad_direction != Vector2i.ZERO
+		and _held_editor_map_joypad_action != &""
+		and _held_editor_map_joypad_button == event.button_index
+		and _held_editor_map_joypad_device == event.device
+	)
+
+
+func _on_editor_map_joypad_repeat_timeout() -> void:
+	if (
+		not _editor_map_keyboard_input_owned()
+		or _held_editor_map_joypad_direction == Vector2i.ZERO
+		or _held_editor_map_joypad_action == &""
+		or _held_editor_map_joypad_button < 0
+	):
+		_stop_editor_map_joypad_repeat()
+		return
+	_move_editor_map_cursor(_held_editor_map_joypad_direction)
+	if not _editor_map_keyboard_input_owned():
+		_stop_editor_map_joypad_repeat()
+		return
+	_editor_map_joypad_repeat_timer.start(EDITOR_MAP_JOYPAD_REPEAT_INTERVAL_SECONDS)
+
+
+func _stop_editor_map_joypad_repeat() -> void:
+	if _editor_map_joypad_repeat_timer != null and is_instance_valid(_editor_map_joypad_repeat_timer):
+		_editor_map_joypad_repeat_timer.stop()
+	_held_editor_map_joypad_direction = Vector2i.ZERO
+	_held_editor_map_joypad_action = &""
+	_held_editor_map_joypad_button = -1
+	_held_editor_map_joypad_device = -1
+
+
+func _move_editor_map_cursor(direction: Vector2i) -> void:
+	if _session == null:
+		return
+	var map_size := OverworldRules.derive_map_size(_session)
+	if map_size.x <= 0 or map_size.y <= 0:
+		return
+	var next_tile := Vector2i(
+		clampi(_selected_tile.x + direction.x, 0, map_size.x - 1),
+		clampi(_selected_tile.y + direction.y, 0, map_size.y - 1)
+	)
+	if next_tile == _selected_tile:
+		return
+	_selected_tile = next_tile
+	_hovered_tile = next_tile
+	if _map_view.has_method("pan_tiles"):
+		_map_view.call("pan_tiles", direction)
+	_refresh_state()
+
+
+func _restore_editor_command_focus() -> void:
+	var target := _active_tool_focus_control()
+	if not FrontierVisualKit.is_keyboard_focusable(target):
+		target = _last_editor_command_focus
+	if not FrontierVisualKit.is_keyboard_focusable(target):
+		target = _map_package_picker
+	if FrontierVisualKit.is_keyboard_focusable(target):
+		target.grab_focus()
+		_reveal_editor_focus(target)
+
+
+func _active_tool_focus_control() -> Control:
+	match _tool:
+		TOOL_TERRAIN:
+			return _terrain_tool_button
+		TOOL_TERRAIN_LINE:
+			return _terrain_line_tool_button
+		TOOL_TERRAIN_RECTANGLE:
+			return _terrain_rectangle_tool_button
+		TOOL_ROAD:
+			return _road_tool_button
+		TOOL_ROAD_PATH:
+			return _road_path_tool_button
+		TOOL_HERO_START:
+			return _hero_start_tool_button
+		TOOL_PLACE_OBJECT:
+			return _place_object_tool_button
+		TOOL_REMOVE_OBJECT:
+			return _remove_object_tool_button
+		TOOL_MOVE_OBJECT:
+			return _move_object_tool_button
+		TOOL_DUPLICATE_OBJECT:
+			return _duplicate_object_tool_button
+		TOOL_RETHEME_OBJECT:
+			return _retheme_object_tool_button
+		_:
+			return _inspect_tool_button
+
+
 func _editor_focus_surfaces() -> Array:
 	return [
 		_map_package_picker,
@@ -200,6 +422,7 @@ func _editor_focus_surfaces() -> Array:
 		_save_copy_button,
 		_play_button,
 		_menu_button,
+		_map_view,
 		_inspect_tool_button,
 		_terrain_tool_button,
 		_terrain_line_tool_button,
@@ -262,6 +485,8 @@ func _on_editor_focus_entered(control: Control) -> void:
 		and (_dirty_transition_dialog.visible or not _pending_dirty_transition.is_empty())
 	):
 		return
+	if control != _map_view and FrontierVisualKit.is_keyboard_focusable(control):
+		_last_editor_command_focus = control
 	call_deferred("_reveal_editor_focus", control)
 
 
@@ -6586,6 +6811,7 @@ func _request_dirty_transition(
 			"route_attempt_delta": 0,
 			"load_attempt_delta": 0,
 		}
+	_stop_editor_map_joypad_repeat()
 	_dirty_transition_return_focus = _capture_dirty_transition_origin(origin)
 	_pending_dirty_transition = {
 		"action": action,

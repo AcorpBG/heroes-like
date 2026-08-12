@@ -14610,14 +14610,25 @@ def validate_map_editor_dirty_transition_regression(errors: list[str]) -> None:
         '_assert_focus_links_exact',
         '_property_disabled_state_exact',
         '_focus_background_authority',
-        'source_names.size() != 27',
-        '_unique_strings(source_names).size() != 27',
+        'source_names.size() != 28',
+        '_unique_strings(source_names).size() != 28',
+        'initial_cycle.size() != 18',
+        'loaded_cycle.size() != 26',
         'focus_mode != Control.FOCUS_ALL',
         '"empty_cycle_count"',
         '"loaded_cycle_count"',
         'KEY_TAB, true',
         'JOY_BUTTON_DPAD_DOWN',
-        'JOY_BUTTON_DPAD_UP',
+        '"physical_tab_shift_tab_full_cycle": true',
+        '"map_owned_dpad_entry_cursor_exit": true',
+        'for direction in ["tab", "shift_tab"]:',
+        'Tab did not enter Map from Menu',
+        'Tab did not leave Map for Inspect',
+        'Shift-Tab did not re-enter Map from Inspect',
+        'Shift-Tab did not leave Map for Menu',
+        'D-pad did not enter Map from Menu',
+        'Map did not own D-pad cursor movement exactly/read-only',
+        'Map-owned D-pad path did not exit to active Inspect focus',
         'JOY_BUTTON_A',
         'KEY_ENTER',
         '"scroll_positive": tool_scroll.scroll_vertical > 0',
@@ -14648,8 +14659,214 @@ def validate_map_editor_dirty_transition_regression(errors: list[str]) -> None:
         '_full_authority_state(shell) != empty_authority',
         '_full_authority_state(shell) != loaded_authority',
         '_focus_background_authority(shell) != command_background_before',
+        '_validate_canvas_interaction_row',
+        '_validate_canvas_action_direct_parity',
+        '_validate_canvas_mouse_inspect_parity',
+        '_click_map_tile',
+        '_prepare_canvas_action',
+        'for terrain_value in snapshot.get("terrain_options", [])',
+        '_canvas_action_state',
+        '_canvas_action_state_equality_checks',
+        '"whole_action_state_exact": after == before',
+        'checks["action_state_%s_exact" % String(key)]',
+        'mouse_direct_state != mouse_state or not _checks_exact(mouse_action_checks)',
+        '"differences": _top_level_differences(mouse_state, mouse_direct_state)',
+        'map_view.call("_set_camera_center", Vector2(start), true)',
+        'var click_metrics: Dictionary = map_view.call("validation_view_metrics")',
+        '"center_inside_viewport": viewport_rect.has_point(local_center)',
+        '"center_inside_map": local_map_rect.has_point(local_center)',
+        'var mapped_tile: Vector2i = map_view.call("_tile_from_local", local_center)',
+        '"mapped_tile_exact": mapped_tile == start',
+        'await _click_map_tile(shell, start)',
+        '_canonical_canvas_working_copy',
+        'root_session_id != "" and root_session_id == adoption_session_id',
+        'payload.erase("session_id")',
+        'adoption.erase("session_id")',
+        'overworld["native_random_map_package_session_adoption"] = adoption',
+        '"session_identity_coherent": bool(canonical_working_copy.get("identity_coherent", false))',
+        '"before_session_identity_coherent": bool(before.get("session_identity_coherent", false))',
+        '"after_session_identity_coherent": bool(after.get("session_identity_coherent", false))',
+        'canvas mouse/direct session identity was not internally coherent',
+        '_canvas_setup_equality_checks',
+        '_canvas_setup_differences',
+        '"whole_setup_exact": after == before',
+        '"working_copy_exact": after.get("working_copy") == before.get("working_copy")',
+        'checks["working_copy_%s_exact" % String(key)]',
+        'direct_setup != setup or not _checks_exact(direct_setup_checks)',
+        'direct_setup != setup or not _checks_exact(mouse_setup_checks)',
+        '"differences": _canvas_setup_differences(setup, direct_setup)',
+        '_canvas_selected_tile_visible',
+        '_validate_canvas_camera_follow_and_mouse',
+        '"precise_focus_exact": _vector2_approx(_camera_precise(after), expected_focus)',
+        '"selected_tile_exact": actual_cursor == expected_cursor',
+        '"selected_visible_exact": _canvas_selected_tile_visible(shell)',
+        '"background_authority_exact": authority_after == authority_before',
+        '"dirty_exact": dirty_after == dirty_before',
+        'if not _checks_exact(camera_checks)',
+        '"authority_differences": _top_level_differences(authority_before, authority_after)',
+        '"visible_bounds": after.get("visible_bounds", {}).duplicate(true)',
+        '_top_level_differences',
+        '_choose_camera_pan_probe',
+        '_probe_camera_pan_delta',
+        'map_view.call("pan_tiles", direction * amount)',
+        'map_view.call("_set_camera_center", origin, true)',
+        'var restored_exact := _vector2_approx',
+        'var all_probes_restored_exact := true',
+        'all_probes_restored_exact = all_probes_restored_exact and bool(probe.get("restored_exact", false))',
+        'chosen["all_probes_restored_exact"] = all_probes_restored_exact',
+        'not bool(chosen_probe.get("all_probes_restored_exact", false))',
+        'not bool(wheel_probe.get("all_probes_restored_exact", false))',
+        'orthogonal_component <= 0.001 and signed_component > 0.01',
+        '_camera_precise',
+        '_drag_map_view',
+        '"drag_camera_changed": drag_after.distance_to(drag_before) > 0.01',
+        'var drag_probe := await _choose_camera_pan_probe(map_view, drag_metrics_before, 1)',
+        'var drag_tile_extent := float(drag_metrics_before.get("tile_extent", 0.0))',
+        'not bool(drag_probe.get("all_probes_restored_exact", false))',
+        'await _drag_map_view(map_view, -Vector2(drag_direction) * drag_tile_extent)',
+        '"drag_camera_exact": _vector2_approx(drag_after, drag_before + drag_expected_delta)',
+        '"drag_expected_delta": drag_expected_delta',
+        '"selected_tile_unchanged": selected_after_drag == selected_before_drag',
+        '"background_authority_exact": drag_authority_after == authority_before',
+        '"dirty_exact": drag_dirty_after == dirty_before',
+        'if not _checks_exact(drag_checks)',
+        '"drag_delta": drag_after - drag_before',
+        '"authority_differences": _top_level_differences(authority_before, drag_authority_after)',
+        '_wheel_map_view',
+        '_editor_map_repeat_snapshot',
+        '_editor_map_repeat_stopped',
+        '_send_joypad_button_event(JOY_BUTTON_DPAD_RIGHT, true, 7)',
+        '_send_joypad_button_event(JOY_BUTTON_DPAD_LEFT, false, 7)',
+        '_send_joypad_button_event(JOY_BUTTON_DPAD_RIGHT, false, 7)',
+        'repeat_timer.start(0.21)',
+        'is_equal_approx(float(first_repeat.get("wait_time", 0.0)), 0.36)',
+        'is_equal_approx(float(boundary_repeat.get("wait_time", 0.0)), 0.09)',
+        '_canvas_dirty(shell) != navigation_dirty',
+        '_canvas_dirty(shell) != repeat_dirty',
+        '_canvas_dirty(shell) != dirty_before',
+        '_await_exact_canvas_timer_step',
+        'Time.get_ticks_msec() + timeout_msec',
+        'configured 0.36 Timer did not emit exactly one first repeat',
+        'configured 0.09 Timer did not emit exactly one rate repeat',
+        '"duplicate_press_zero_step_no_restart": true',
+        '"matching_nonmatching_release": true',
+        '"focus_modal_stop": true',
+        '"accept_cancel_nonrepeat": true',
+        '"keyboard_dpad_bounds_read_only": true',
+        '_canvas_selected_tile(shell) != Vector2i(1, 0)',
+        '_canvas_selected_tile(shell) != Vector2i(1, 1)',
+        'canvas keyboard arrow did not move exactly one tile',
+        'canvas D-pad did not move exactly one read-only tile',
+        '"precise_directional_follow": true',
+        'for candidate in [Vector2i.RIGHT, Vector2i.LEFT, Vector2i.DOWN, Vector2i.UP]:',
+        'var probe := await _probe_camera_pan_delta(map_view, origin, candidate, amount)',
+        'chosen_delta.length() <= 0.01',
+        'var expected_focus := before_precise + chosen_delta',
+        '"selected_tile_exact": actual_cursor == expected_cursor',
+        'canvas camera had no deterministic available clamped direction',
+        '"drag_pan_tile_activation_suppressed": true',
+        '"wheel_pan_tiles": 3',
+        '"mouse_picker_dialog_paths_unchanged": true',
+        'var action_modes: Array[String] = []',
+        'action_modes.assign(["inspect", "terrain"])',
+        'action_modes.assign(["road", "road_path"])',
+        'shell.call("_on_map_tile_pressed", start)',
+        'shell.call("_on_map_tile_pressed", finish)',
+        'physical_state != direct_state',
+        '_send_key_event(KEY_ENTER, true, true)',
+        'canvas accepted an echo Enter event',
+        'mouse_direct_state != mouse_state or not _checks_exact(mouse_action_checks)',
+        'get_viewport().push_input(event, true)',
+        'get_viewport().gui_get_focus_owner() != expected_tool_focus',
     ):
         ensure(required_token in report_text, errors, f"Map-editor dirty-transition regression is missing required token: {required_token}")
+    mouse_inspect_match = re.search(
+        r"func _validate_canvas_mouse_inspect_parity\(.*?\) -> bool:(.*?)(?=\n\nfunc )",
+        report_text,
+        flags=re.DOTALL,
+    )
+    ensure(mouse_inspect_match is not None, errors, "Map Editor canvas regression must retain its isolated mouse Inspect parity helper")
+    if mouse_inspect_match is not None:
+        mouse_inspect_body = mouse_inspect_match.group(1)
+        mouse_geometry_order = (
+            'map_view.call("_set_camera_center", Vector2(start), true)',
+            'await _settle()',
+            'var click_metrics: Dictionary = map_view.call("validation_view_metrics")',
+            'if not _checks_exact(click_geometry_checks)',
+            'var authority_before := _focus_background_authority(shell)',
+            'await _click_map_tile(shell, start)',
+        )
+        mouse_geometry_indices = [mouse_inspect_body.find(token) for token in mouse_geometry_order]
+        ensure(
+            all(index >= 0 for index in mouse_geometry_indices)
+            and all(
+                mouse_geometry_indices[index] < mouse_geometry_indices[index + 1]
+                for index in range(len(mouse_geometry_indices) - 1)
+            ),
+            errors,
+            "Map Editor mouse Inspect geometry must align, settle, measure, validate, snapshot authority, then dispatch the real click",
+        )
+        ensure(
+            '"center_inside_viewport": viewport_rect.has_point(local_center)' in mouse_inspect_body
+            and '"center_inside_map": local_map_rect.has_point(local_center)' in mouse_inspect_body
+            and 'var mapped_tile: Vector2i = map_view.call("_tile_from_local", local_center)' in mouse_inspect_body
+            and '"mapped_tile_exact": mapped_tile == start' in mouse_inspect_body,
+            errors,
+            "Map Editor mouse Inspect geometry must remain contained and method-match the selected tile",
+        )
+    ensure(
+        'shell.get("_terrain_options")' not in report_text,
+        errors,
+        "Map Editor canvas regression must use the public validation terrain options rather than a nonexistent private field",
+    )
+    ensure(
+        'var action_modes: Array[String] = ["inspect", "terrain"] if width == 1280 else ["road", "road_path"]' not in report_text,
+        errors,
+        "Map Editor canvas regression must not assign conditional untyped literals to Array[String] at runtime",
+    )
+    ensure(
+        '_camera_clamped_pan_delta' not in report_text
+        and 'visible_columns := float(metrics.get("visible_tile_columns"' not in report_text
+        and 'visible_rows := float(metrics.get("visible_tile_rows"' not in report_text,
+        errors,
+        "Map Editor canvas regression must probe shared pan_tiles rather than reconstruct camera clamp bounds",
+    )
+    canvas_canonical_match = re.search(
+        r"func _canonical_canvas_working_copy\(.*?\) -> Dictionary:(.*?)(?=\n\nfunc )",
+        report_text,
+        flags=re.DOTALL,
+    )
+    ensure(canvas_canonical_match is not None, errors, "Map Editor canvas regression must retain its exact fresh-load identity canonicalizer")
+    if canvas_canonical_match is not None:
+        canonical_body = canvas_canonical_match.group(1)
+        ensure(
+            canonical_body.count('.erase("session_id")') == 2
+            and 'payload.erase("session_id")' in canonical_body
+            and 'adoption.erase("session_id")' in canonical_body,
+            errors,
+            "Map Editor canvas canonicalizer must erase exactly root and nested adoption session identity",
+        )
+        ensure(
+            'root_session_id != "" and root_session_id == adoption_session_id' in canonical_body
+            and 'payload["overworld"] = overworld' in canonical_body,
+            errors,
+            "Map Editor canvas canonicalizer must prove coherent fresh identity before detached nested replacement",
+        )
+    focus_cycle_match = re.search(
+        r"func _exercise_physical_focus_cycles\(.*?\) -> bool:(.*?)(?=\n\nfunc )",
+        report_text,
+        flags=re.DOTALL,
+    )
+    ensure(focus_cycle_match is not None, errors, "Map Editor regression must retain its physical focus-cycle helper")
+    if focus_cycle_match is not None:
+        focus_cycle_body = focus_cycle_match.group(1)
+        ensure(
+            'for direction in ["tab", "shift_tab"]:' in focus_cycle_body
+            and "JOY_BUTTON_DPAD_DOWN" not in focus_cycle_body
+            and "JOY_BUTTON_DPAD_UP" not in focus_cycle_body,
+            errors,
+            "Map Editor full 28-surface traversal must use Tab/Shift-Tab while Map owns D-pad cursor input",
+        )
 
     focus_source_names = (
         "MapPackagePicker",
@@ -14657,6 +14874,7 @@ def validate_map_editor_dirty_transition_regression(errors: list[str]) -> None:
         "SaveCopy",
         "PlayWorkingCopy",
         "Menu",
+        "Map",
         "InspectTool",
         "TerrainTool",
         "TerrainLineTool",
@@ -14685,13 +14903,13 @@ def validate_map_editor_dirty_transition_regression(errors: list[str]) -> None:
         report_text,
         flags=re.DOTALL,
     )
-    ensure(report_focus_source_match is not None, errors, "Map Editor focus regression must declare its exact 27-control source membership")
+    ensure(report_focus_source_match is not None, errors, "Map Editor focus regression must declare its exact 28-control source membership")
     if report_focus_source_match is not None:
         report_focus_names = tuple(re.findall(r'\"([^\"]+)\"', report_focus_source_match.group(1)))
         ensure(
             report_focus_names == focus_source_names,
             errors,
-            "Map Editor focus regression must pin the exact ordered 27-control source membership",
+            "Map Editor focus regression must pin the exact ordered 28-control source membership",
         )
 
     if MAP_EDITOR_DIRTY_TRANSITION_REGRESSION_SCENE_PATH.exists():
@@ -14724,6 +14942,7 @@ def validate_map_editor_dirty_transition_regression(errors: list[str]) -> None:
         "_save_copy_button",
         "_play_button",
         "_menu_button",
+        "_map_view",
         "_inspect_tool_button",
         "_terrain_tool_button",
         "_terrain_line_tool_button",
@@ -14758,7 +14977,90 @@ def validate_map_editor_dirty_transition_regression(errors: list[str]) -> None:
         ensure(
             editor_focus_members == editor_focus_variables,
             errors,
-            "MapEditorShell.gd command-focus source must retain the exact ordered 27 controls",
+            "MapEditorShell.gd command-focus source must retain the exact ordered 28 controls",
+        )
+
+    for required_token in (
+        "const EDITOR_MAP_JOYPAD_REPEAT_INITIAL_DELAY_SECONDS := 0.36",
+        "const EDITOR_MAP_JOYPAD_REPEAT_INTERVAL_SECONDS := 0.09",
+        "_configure_editor_map_keyboard_input()",
+        "_map_view.focus_mode = Control.FOCUS_ALL",
+        "_map_view.gui_input.is_connected(_on_editor_map_gui_input)",
+        "_map_view.focus_exited.is_connected(_stop_editor_map_joypad_repeat)",
+        'Timer.new()',
+        'one_shot = true',
+        'func _on_editor_map_gui_input(event: InputEvent) -> void:',
+        'event is InputEventKey or event is InputEventJoypadButton',
+        'func _editor_map_keyboard_input_owned() -> bool:',
+        'viewport.gui_get_focus_owner() == _map_view',
+        'func _editor_map_joypad_hold_matches(',
+        'func _editor_map_joypad_release_matches(event: InputEventJoypadButton) -> bool:',
+        'func _on_editor_map_joypad_repeat_timeout() -> void:',
+        '_editor_map_joypad_repeat_timer.start(EDITOR_MAP_JOYPAD_REPEAT_INITIAL_DELAY_SECONDS)',
+        '_editor_map_joypad_repeat_timer.start(EDITOR_MAP_JOYPAD_REPEAT_INTERVAL_SECONDS)',
+        'func _stop_editor_map_joypad_repeat() -> void:',
+        'func _move_editor_map_cursor(direction: Vector2i) -> void:',
+        'clampi(_selected_tile.x + direction.x, 0, map_size.x - 1)',
+        'clampi(_selected_tile.y + direction.y, 0, map_size.y - 1)',
+        '_map_view.call("pan_tiles", direction)',
+        '_on_map_tile_pressed(_selected_tile)',
+        'func _restore_editor_command_focus() -> void:',
+        'func _active_tool_focus_control() -> Control:',
+        'control != _map_view',
+        '_map_view.tile_pressed.connect(_on_map_tile_pressed)',
+    ):
+        ensure(required_token in editor_text, errors, f"MapEditorShell.gd is missing canvas keyboard token: {required_token}")
+    canvas_handler_match = re.search(
+        r"func _on_editor_map_gui_input\(event: InputEvent\) -> void:(.*?)(?=\n\nfunc )",
+        editor_text,
+        flags=re.DOTALL,
+    )
+    ensure(canvas_handler_match is not None, errors, "MapEditorShell.gd must retain its bounded canvas physical-input handler")
+    if canvas_handler_match is not None:
+        canvas_handler = canvas_handler_match.group(1)
+        ensure(
+            "_editor_map_joypad_hold_matches(joypad_event, cardinal_action, direction)" in canvas_handler
+            and canvas_handler.find("_editor_map_joypad_hold_matches") < canvas_handler.find("_move_editor_map_cursor(direction)"),
+            errors,
+            "Map Editor duplicate D-pad presses must be rejected before the immediate cursor step",
+        )
+        ensure(
+            'event.is_action_pressed("ui_accept")' in canvas_handler
+            and 'event.is_action_pressed("ui_cancel")' in canvas_handler
+            and "_start_editor_map_joypad_repeat" not in canvas_handler.split('event.is_action_pressed("ui_accept")', 1)[1],
+            errors,
+            "Map Editor accept/cancel must remain edge-triggered and outside held-repeat setup",
+        )
+        accept_index = canvas_handler.find('event.is_action_pressed("ui_accept")')
+        tile_action_index = canvas_handler.find("_on_map_tile_pressed(_selected_tile)")
+        cancel_index = canvas_handler.find('event.is_action_pressed("ui_cancel")')
+        ensure(
+            editor_text.count("_on_map_tile_pressed(_selected_tile)") == 1
+            and canvas_handler.count("_on_map_tile_pressed(_selected_tile)") == 1
+            and 0 <= accept_index < tile_action_index < cancel_index,
+            errors,
+            "Map Editor canvas Accept must invoke its selected-tile action exactly once before the cancel branch",
+        )
+        accept_branch = canvas_handler[accept_index:cancel_index] if 0 <= accept_index < cancel_index else ""
+        ensure(
+            'event.is_action_pressed("ui_accept", true)' not in accept_branch
+            and "event.echo" not in accept_branch,
+            errors,
+            "Map Editor canvas Accept must retain non-echo physical action semantics",
+        )
+    repeat_timeout_match = re.search(
+        r"func _on_editor_map_joypad_repeat_timeout\(\) -> void:(.*?)(?=\n\nfunc )",
+        editor_text,
+        flags=re.DOTALL,
+    )
+    ensure(repeat_timeout_match is not None, errors, "MapEditorShell.gd must retain its D-pad repeat timeout")
+    if repeat_timeout_match is not None:
+        repeat_body = repeat_timeout_match.group(1)
+        ensure(
+            repeat_body.find("_editor_map_keyboard_input_owned()") < repeat_body.find("_move_editor_map_cursor")
+            < repeat_body.find("EDITOR_MAP_JOYPAD_REPEAT_INTERVAL_SECONDS"),
+            errors,
+            "Map Editor repeat must recheck ownership, move once, then schedule its exact interval",
         )
     refresh_match = re.search(
         r"func _refresh_state\(\) -> void:(.*?)(?=\n\nfunc )",
