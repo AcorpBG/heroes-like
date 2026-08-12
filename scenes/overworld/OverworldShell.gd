@@ -87,6 +87,7 @@ const KEYBOARD_HERO_MOVE_DELTAS := {
 @onready var _close_frontier_button: Button = %CloseFrontier
 @onready var _end_turn_button: Button = %EndTurn
 @onready var _save_status_label: Label = %SaveStatus
+@onready var _route_cursor_live_label: Label = %RouteCursorLive
 @onready var _save_slot_picker: OptionButton = %SaveSlot
 @onready var _save_button: Button = %Save
 @onready var _settings_button: Button = %Settings
@@ -118,6 +119,9 @@ const CONTROLLER_ROUTE_DEAD_ZONE := 0.62
 const CONTROLLER_ROUTE_RELEASE_ZONE := 0.34
 const CONTROLLER_ROUTE_INITIAL_REPEAT_MSEC := 360
 const CONTROLLER_ROUTE_REPEAT_MSEC := 180
+const CONTROLLER_ROUTE_SEMANTIC_DEBOUNCE_MSEC := 420
+const CONTROLLER_ROUTE_RESULT_VISIBLE_MSEC := 1200
+const CONTROLLER_ROUTE_SEMANTIC_MAX_CHARS := 320
 const OVERWORLD_PROFILE_LOG_PATH := "user://debug/overworld_profile.jsonl"
 const END_TURN_AUTOSAVE_FAILURE_MESSAGE := "Turn completed, but autosave failed. Use Save now to protect the new day."
 const MANUAL_SAVE_FAILURE_MESSAGE := "Save failed. Try Save again before continuing."
@@ -228,7 +232,10 @@ var _controller_move_repeat_timer: Timer = null
 var _controller_route_axis := Vector2.ZERO
 var _controller_route_direction := Vector2i.ZERO
 var _controller_route_repeat_timer: Timer = null
+var _controller_route_semantic_timer: Timer = null
 var _controller_route_cursor_active := false
+var _controller_route_semantic_generation := 0
+var _controller_route_semantic_pending: Dictionary = {}
 var _validation_controller_route_step_count := 0
 var _validation_controller_route_repeat_count := 0
 var _validation_controller_route_accept_count := 0
@@ -276,6 +283,7 @@ func _ready() -> void:
 	AppRouter.note_overworld_handoff_step("overworld_ready_enter")
 	_configure_controller_move_repeat_timer()
 	_configure_controller_route_repeat_timer()
+	_configure_controller_route_semantic_timer()
 	_configure_gameplay_movement_input_ownership()
 	_configure_end_turn_confirmation()
 	_apply_visual_theme()
@@ -484,6 +492,7 @@ func _configure_gameplay_movement_input_ownership() -> void:
 
 func _on_overworld_interaction_owner_opened() -> void:
 	_clear_controller_move_state()
+	_deactivate_controller_route_cursor(false, false)
 
 func _on_controller_move_repeat_timeout() -> void:
 	if _controller_move_direction == Vector2i.ZERO:
@@ -603,6 +612,13 @@ func _configure_controller_route_repeat_timer() -> void:
 	_controller_route_repeat_timer.timeout.connect(_on_controller_route_repeat_timeout)
 	add_child(_controller_route_repeat_timer)
 
+func _configure_controller_route_semantic_timer() -> void:
+	_controller_route_semantic_timer = Timer.new()
+	_controller_route_semantic_timer.name = "ControllerRouteSemanticTimer"
+	_controller_route_semantic_timer.one_shot = true
+	_controller_route_semantic_timer.timeout.connect(_on_controller_route_semantic_timeout)
+	add_child(_controller_route_semantic_timer)
+
 func _on_controller_route_repeat_timeout() -> void:
 	if _controller_route_direction == Vector2i.ZERO:
 		return
@@ -670,6 +686,7 @@ func _move_controller_route_cursor(direction: Vector2i, repeated: bool) -> Dicti
 		_validation_controller_route_step_count += 1
 		_pan_map(_selected_tile - before)
 		_refresh_selected_route_preview("controller_route_cursor_repeat" if repeated else "controller_route_cursor_step")
+		_schedule_controller_route_semantic_after_refresh()
 	_validation_controller_route_last_step = {
 		"ok": true,
 		"changed": changed,
@@ -686,9 +703,18 @@ func _commit_controller_route_primary_action() -> Dictionary:
 	_validation_controller_route_primary_invocation_count += 1
 	var selected_before := _selected_tile
 	var action := _current_primary_action().duplicate(true)
+	var session_before := _session
 	var activated := _activate_primary_action()
 	if activated:
 		_deactivate_controller_route_cursor(false, false)
+		var action_label := String(action.get("label", "Route order")).strip_edges()
+		var result_text := String(_last_message).strip_edges()
+		if result_text == "":
+			result_text = "%s committed." % action_label
+		_publish_controller_route_semantic_result(
+			"Route order result: %s" % result_text,
+			session_before
+		)
 	_validation_controller_route_last_accept = {
 		"ok": activated,
 		"activated": activated,
@@ -701,7 +727,13 @@ func _commit_controller_route_primary_action() -> Dictionary:
 
 func _cancel_controller_route_cursor() -> Dictionary:
 	_validation_controller_route_cancel_count += 1
+	var canceled_tile := _selected_tile
+	var session_before := _session
 	_deactivate_controller_route_cursor(true, true)
+	_publish_controller_route_semantic_result(
+		"Route cursor canceled from %d,%d. Selection returned to the active hero." % [canceled_tile.x, canceled_tile.y],
+		session_before
+	)
 	return {
 		"ok": true,
 		"canceled": true,
@@ -712,6 +744,7 @@ func _cancel_controller_route_cursor() -> Dictionary:
 func _deactivate_controller_route_cursor(reset_to_hero: bool, refresh_preview: bool) -> void:
 	_controller_route_cursor_active = false
 	_clear_controller_route_motion()
+	_cancel_controller_route_semantic()
 	if not reset_to_hero or _session == null:
 		return
 	_set_selected_tile(OverworldRules.hero_position(_session))
@@ -724,6 +757,146 @@ func _clear_controller_route_motion() -> void:
 	_controller_route_direction = Vector2i.ZERO
 	if _controller_route_repeat_timer != null:
 		_controller_route_repeat_timer.stop()
+
+func _schedule_controller_route_semantic_after_refresh() -> void:
+	_cancel_controller_route_semantic()
+	var text := _controller_route_semantic_context_from_refreshed_action()
+	if text == "":
+		return
+	_controller_route_semantic_pending = {
+		"kind": "context",
+		"generation": _controller_route_semantic_generation,
+		"session_ref": _session,
+		"session_id": String(_session.session_id),
+		"selected_tile": _debug_tile_payload(_selected_tile),
+		"route_generation": int(_selected_route_state.get("generation", _selected_route_state_generation)),
+		"text": text,
+	}
+	_controller_route_semantic_timer.start(float(CONTROLLER_ROUTE_SEMANTIC_DEBOUNCE_MSEC) / 1000.0)
+
+func _controller_route_semantic_context_from_refreshed_action() -> String:
+	if not _controller_route_cursor_active or not _refresh_cache.has("primary_action"):
+		return ""
+	var action_value: Variant = _refresh_cache.get("primary_action", {})
+	if not (action_value is Dictionary):
+		return ""
+	var action: Dictionary = action_value
+	var decision_value: Variant = action.get("route_decision", {})
+	if not (decision_value is Dictionary):
+		return ""
+	var decision: Dictionary = decision_value
+	if decision.is_empty():
+		return ""
+	var x := int(decision.get("x", _selected_tile.x))
+	var y := int(decision.get("y", _selected_tile.y))
+	if Vector2i(x, y) != _selected_tile:
+		return ""
+	var destination := String(decision.get("destination", "%d,%d" % [x, y])).strip_edges()
+	if destination == "":
+		destination = "%d,%d" % [x, y]
+	var action_label := String(action.get("label", decision.get("action_label", "Route order"))).strip_edges()
+	if action_label == "":
+		action_label = "Route order"
+	var steps := int(decision.get("steps", 0))
+	var step_text := "%d step%s" % [steps, "" if steps == 1 else "s"] if steps > 0 else "no path"
+	var movement_current := int(decision.get("movement_current", 0))
+	var movement_after := int(decision.get("movement_after_order", movement_current))
+	var movement_text := "movement %d" % movement_current
+	if int(decision.get("movement_cost", 0)) > 0:
+		movement_text = "movement %d to %d" % [movement_current, movement_after]
+	var commit_text := "A: unavailable"
+	if not bool(action.get("disabled", false)):
+		commit_text = "A: %s" % _short_action_label(action_label, 48)
+	var semantic_text := "%s at %d,%d. %s, %s, %s. %s. B: cancel route cursor." % [
+		_short_action_label(destination, 56),
+		x,
+		y,
+		_route_decision_status_label(decision),
+		step_text,
+		movement_text,
+		commit_text,
+	]
+	return semantic_text.left(CONTROLLER_ROUTE_SEMANTIC_MAX_CHARS)
+
+func _on_controller_route_semantic_timeout() -> void:
+	var pending := _controller_route_semantic_pending
+	if pending.is_empty() or int(pending.get("generation", -1)) != _controller_route_semantic_generation:
+		return
+	_controller_route_semantic_pending = {}
+	var pending_kind := String(pending.get("kind", ""))
+	if pending_kind == "result_clear":
+		_clear_controller_route_semantic_result(pending)
+		return
+	if pending_kind != "context":
+		_cancel_controller_route_semantic()
+		return
+	var selected_payload: Dictionary = pending.get("selected_tile", {}) if pending.get("selected_tile", {}) is Dictionary else {}
+	var pending_tile := Vector2i(int(selected_payload.get("x", -1)), int(selected_payload.get("y", -1)))
+	if (
+		not is_inside_tree()
+		or not _controller_route_cursor_active
+		or _session == null
+		or not is_same(SessionState.active_session, _session)
+		or not is_same(pending.get("session_ref"), _session)
+		or String(pending.get("session_id", "")) != String(_session.session_id)
+		or pending_tile != _selected_tile
+		or int(pending.get("route_generation", -1)) != int(_selected_route_state.get("generation", _selected_route_state_generation))
+	):
+		_cancel_controller_route_semantic()
+		return
+	_route_cursor_live_label.text = String(pending.get("text", "")).left(CONTROLLER_ROUTE_SEMANTIC_MAX_CHARS)
+
+func _cancel_controller_route_semantic() -> void:
+	_controller_route_semantic_generation += 1
+	_controller_route_semantic_pending.clear()
+	if _controller_route_semantic_timer != null:
+		_controller_route_semantic_timer.stop()
+	if _route_cursor_live_label != null:
+		_route_cursor_live_label.text = ""
+
+func _publish_controller_route_semantic_result(text: String, source_session: SessionStateStore.SessionData) -> void:
+	if (
+		text.strip_edges() == ""
+		or not is_inside_tree()
+		or _session == null
+		or not is_same(source_session, _session)
+		or not is_same(SessionState.active_session, _session)
+		or String(source_session.session_id) != String(_session.session_id)
+		or String(_session.game_state) != "overworld"
+	):
+		return
+	_cancel_controller_route_semantic()
+	var bounded_text := text.strip_edges().left(CONTROLLER_ROUTE_SEMANTIC_MAX_CHARS)
+	_route_cursor_live_label.text = bounded_text
+	_controller_route_semantic_pending = {
+		"kind": "result_clear",
+		"generation": _controller_route_semantic_generation,
+		"session_ref": _session,
+		"session_id": String(_session.session_id),
+		"label_text": bounded_text,
+	}
+	_controller_route_semantic_timer.start(float(CONTROLLER_ROUTE_RESULT_VISIBLE_MSEC) / 1000.0)
+
+func _clear_controller_route_semantic_result(pending: Dictionary) -> void:
+	var expected_text := String(pending.get("label_text", ""))
+	var same_session := (
+		is_inside_tree()
+		and not is_same(_session, null)
+		and is_same(SessionState.active_session, _session)
+		and is_same(pending.get("session_ref"), _session)
+		and String(pending.get("session_id", "")) == String(_session.session_id)
+	)
+	_controller_route_semantic_generation += 1
+	if not same_session:
+		if _route_cursor_live_label.text == expected_text:
+			_route_cursor_live_label.text = ""
+		return
+	if _route_cursor_live_label.text == expected_text:
+		_route_cursor_live_label.text = ""
+
+func _exit_tree() -> void:
+	_clear_controller_route_motion()
+	_cancel_controller_route_semantic()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if _active_play_settings_dialog != null and _active_play_settings_dialog.is_open():

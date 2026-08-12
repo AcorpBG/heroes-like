@@ -1,6 +1,13 @@
 extends Node
 
 const REPORT_ID := "ACCESSIBILITY_SCREEN_READER_SEMANTICS_REPORT"
+const OVERWORLD_LIVE_REGIONS: Array[Dictionary] = [
+	{"path": "RouteCursorLive", "mode": DisplayServer.LIVE_POLITE},
+	{"path": "ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/EventPanel/EventPad/EventBox/Event", "mode": DisplayServer.LIVE_POLITE},
+	{"path": "ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/StatusChip/StatusPad/Status", "mode": DisplayServer.LIVE_POLITE},
+	{"path": "ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/SystemPanel/SystemPad/SystemBox/SaveStatus", "mode": DisplayServer.LIVE_POLITE},
+	{"path": "ActivePlaySettingsDialog/Center/DialogPanel/Margin/Content/Header/Status", "mode": DisplayServer.LIVE_POLITE},
+]
 
 var _failed := false
 
@@ -169,6 +176,65 @@ func _run() -> void:
 		if not shipped_option.accessibility_description.contains("Current value:"):
 			return _fail("Shipped option control lacks current-value semantics: %s / %s" % [option_contract["node"], shipped_option.accessibility_description])
 
+	var original_session = SessionState.active_session
+	var original_summary_cache: Dictionary = SaveService.validation_summary_cache_snapshot()
+	var overworld_session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+	OverworldRules.normalize_overworld_state(overworld_session)
+	SessionState.set_active_session(overworld_session)
+	var overworld = load("res://scenes/overworld/OverworldShell.tscn").instantiate()
+	add_child(overworld)
+	await _settle()
+	var route_live_nodes: Array = overworld.find_children("RouteCursorLive", "Label", true, false)
+	if route_live_nodes.size() != 1:
+		overworld.queue_free()
+		await get_tree().process_frame
+		SessionState.active_session = original_session
+		SaveService._slot_summary_cache = original_summary_cache.duplicate(true)
+		return _fail("Overworld must expose exactly one RouteCursorLive Label: %s" % [route_live_nodes])
+	var route_live := route_live_nodes[0] as Label
+	var overworld_snapshot: Dictionary = UiAccessibility.validation_snapshot(overworld)
+	var rescanned_overworld_snapshot: Dictionary = UiAccessibility.validation_snapshot(overworld)
+	var overworld_live_regions: Array[Dictionary] = _relative_live_regions(overworld, overworld_snapshot)
+	var rescanned_overworld_live_regions: Array[Dictionary] = _relative_live_regions(overworld, rescanned_overworld_snapshot)
+	var route_live_relative_path := String(route_live.get_path()).trim_prefix("%s/" % String(overworld.get_path()))
+	var shell_margin := overworld.get_node_or_null("ShellMargin") as Control
+	var route_live_checks := {
+		"snapshot_ok": bool(overworld_snapshot.get("ok", false)),
+		"first_scan_exact_order": overworld_live_regions == OVERWORLD_LIVE_REGIONS,
+		"second_scan_equals_first": rescanned_overworld_live_regions == overworld_live_regions,
+		"total_five": int(overworld_snapshot.get("live_region_count", 0)) == 5 and overworld_live_regions.size() == 5,
+		"one_route_context": overworld_live_regions.count(OVERWORLD_LIVE_REGIONS[0]) == 1,
+		"existing_four": overworld_live_regions.slice(1).size() == 4,
+		"unique_route_find": route_live_nodes.size() == 1,
+		"route_relative_path": route_live_relative_path == String(OVERWORLD_LIVE_REGIONS[0].get("path", "")),
+		"visible_tree": route_live.is_visible_in_tree(),
+		"direct_overworld_parent": route_live.get_parent() == overworld,
+		"layout_mode_zero": route_live.layout_mode == 0,
+		"anchors_zero": is_zero_approx(route_live.anchor_left) and is_zero_approx(route_live.anchor_top) and is_zero_approx(route_live.anchor_right) and is_zero_approx(route_live.anchor_bottom),
+		"position_zero": route_live.position == Vector2.ZERO,
+		"one_pixel_width": is_equal_approx(route_live.size.x, 1.0),
+		"finite_positive_height": is_finite(route_live.size.y) and route_live.size.y >= 1.0,
+		"shell_margin_exists": shell_margin != null,
+		"shell_margin_position_zero": shell_margin != null and shell_margin.position == Vector2.ZERO,
+		"shell_margin_matches_root": shell_margin != null and shell_margin.size == overworld.size,
+		"transparent": is_zero_approx(route_live.self_modulate.a),
+		"mouse_ignored": route_live.mouse_filter == Control.MOUSE_FILTER_IGNORE,
+		"authored_name": route_live.accessibility_name == "Route cursor",
+		"authored_description": route_live.accessibility_description == "Announces the current right-stick route destination after navigation settles.",
+		"polite": route_live.accessibility_live == DisplayServer.LIVE_POLITE,
+		"loaded_inactive_empty": route_live.text == "",
+	}
+	if not _checks_exact(route_live_checks):
+		overworld.queue_free()
+		await get_tree().process_frame
+		SessionState.active_session = original_session
+		SaveService._slot_summary_cache = original_summary_cache.duplicate(true)
+		return _fail("Overworld route-context live semantics were not exact: %s / %s" % [route_live_checks, overworld_snapshot.get("live_regions", [])])
+	overworld.queue_free()
+	await get_tree().process_frame
+	SessionState.active_session = original_session
+	SaveService._slot_summary_cache = original_summary_cache.duplicate(true)
+
 	var result := {
 		"schema": "accessibility_screen_reader_semantics_report_v1",
 		"accessibility_support_mode": 0,
@@ -181,6 +247,10 @@ func _run() -> void:
 		"reentry_connections_deduplicated": true,
 		"binding_status_polite": true,
 		"binding_status_exact_count": 1,
+		"overworld_route_context_live_exact_count": 1,
+		"overworld_existing_live_regions_unchanged": 4,
+		"overworld_route_context_rescan_exact": true,
+		"overworld_route_context_authored_semantics": true,
 	}
 	print("%s PASS %s" % [REPORT_ID, JSON.stringify(result)])
 	menu.queue_free()
@@ -210,6 +280,25 @@ func _live_region_path_count(snapshot: Dictionary, suffix: String) -> int:
 		if String(entry.get("path", "")).ends_with(suffix) and int(entry.get("mode", DisplayServer.LIVE_OFF)) == DisplayServer.LIVE_POLITE:
 			count += 1
 	return count
+
+
+func _relative_live_regions(root: Node, snapshot: Dictionary) -> Array[Dictionary]:
+	var relative_rows: Array[Dictionary] = []
+	var absolute_prefix := "%s/" % String(root.get_path())
+	for entry_value in snapshot.get("live_regions", []):
+		if not (entry_value is Dictionary):
+			continue
+		var detached: Dictionary = (entry_value as Dictionary).duplicate(true)
+		detached["path"] = String(detached.get("path", "")).trim_prefix(absolute_prefix)
+		relative_rows.append(detached)
+	return relative_rows
+
+
+func _checks_exact(checks: Dictionary) -> bool:
+	for value in checks.values():
+		if not bool(value):
+			return false
+	return true
 
 
 func _fail(message: String) -> void:
