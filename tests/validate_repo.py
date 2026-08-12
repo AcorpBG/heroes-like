@@ -17004,6 +17004,37 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
             '"manual_save"',
             '"manual_save_failed"',
             "SaveService.restore_manual_session",
+            "SaveService.load_autosave()",
+            "SaveService.restore_autosave_session()",
+            "_canonical_session_payload_dictionary(SaveService.load_session(1))",
+            "_command_risk_forecast_snapshot",
+            "_normalization_idempotence_check",
+            "_end_turn_transition_authority",
+            'int(initial_forecast.get("signature_day", -1)) != 2',
+            'bool(initial_forecast.get("shown", false)) != not warned',
+            'int(initial_forecast.get("shown_day", -1)) != (0 if warned else 2)',
+            'raw_manual_payload != post_manual_full_payload',
+            'restored_full_payload != post_manual_full_payload',
+            'raw_payload != live_payload',
+            'restored_payload != live_payload',
+            '"day2_forecast_consumed": true',
+            '"day3_forecast_canonical_unconsumed": true',
+            '"normalization_idempotent": true',
+            '"full_raw_manual_exact": true',
+            '"hook_occupation_recovery_income_muster_exact": true',
+            'focus_owner_after_failure != "EndTurn"',
+            'int(post_turn_forecast.get("signature_day", -1)) != 3',
+            'bool(post_turn_forecast.get("shown", true))',
+            'int(post_turn_forecast.get("shown_day", -1)) != 0',
+            '"resource_income_summary"',
+            '"weekly_muster_summary"',
+            '"town_economy_summary"',
+            '"generated_random_map": bool(session.flags.get("generated_random_map", false))',
+            '"generated_map_provenance"',
+            '"scenario_script_state"',
+            '"occupation"',
+            '"recovery"',
+            '"available_recruits"',
             "rules_end_turn_call_count",
             "autosave_call_count",
             "battle_pending",
@@ -17017,8 +17048,40 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
             "live_pending_battle_exact",
             '"target", "")) != "battle"',
             "SessionState.SAVE_VERSION",
+            "SessionState.SAVE_VERSION != 9",
         ):
             ensure(required_token in end_turn_failure_text, errors, f"overworld_end_turn_autosave_failure_regression.gd is missing token: {required_token}")
+
+        end_turn_start = overworld_rules_text.find("static func end_turn(")
+        end_turn_end = overworld_rules_text.find("\nstatic func collect_active_resource(", end_turn_start)
+        end_turn_body = overworld_rules_text[end_turn_start:end_turn_end] if end_turn_start >= 0 and end_turn_end > end_turn_start else ""
+        ensure(bool(end_turn_body), errors, "OverworldRules.gd must retain the bounded End Turn implementation body")
+        ensure(
+            end_turn_body.count("normalize_overworld_state(session)") == 2,
+            errors,
+            "OverworldRules.end_turn must normalize exactly once before mutation and exactly once at the completed transition tail",
+        )
+        finalizer_call_index = end_turn_body.find('var result := _finalize_action_result(session, true, " ".join(messages))')
+        tail_normalize_index = end_turn_body.find("normalize_overworld_state(session)", finalizer_call_index + 1)
+        summary_index = end_turn_body.find('result["enemy_activity_summary"]', finalizer_call_index + 1)
+        ensure(
+            finalizer_call_index >= 0
+            and tail_normalize_index > finalizer_call_index
+            and summary_index > tail_normalize_index,
+            errors,
+            "OverworldRules.end_turn must fully normalize once after finalization and before constructing returned summaries",
+        )
+
+        finalizer_start = overworld_rules_text.find("static func _finalize_action_result(")
+        finalizer_end = overworld_rules_text.find("\nstatic func _normalize_command_briefing(", finalizer_start)
+        finalizer_body = overworld_rules_text[finalizer_start:finalizer_end] if finalizer_start >= 0 and finalizer_end > finalizer_start else ""
+        ensure(bool(finalizer_body), errors, "OverworldRules.gd must retain the generic action finalizer body")
+        ensure(
+            "normalize_overworld_state(session)" not in finalizer_body
+            and "_mark_runtime_normalized(session)" in finalizer_body,
+            errors,
+            "Generic action finalization must remain phase-local and must not broaden full normalization beyond End Turn",
+        )
     if OVERWORLD_END_TURN_AUTOSAVE_FAILURE_REGRESSION_SCENE_PATH.exists():
         end_turn_failure_scene_text = OVERWORLD_END_TURN_AUTOSAVE_FAILURE_REGRESSION_SCENE_PATH.read_text(encoding="utf-8")
         ensure(

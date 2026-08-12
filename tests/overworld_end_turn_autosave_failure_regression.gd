@@ -26,6 +26,9 @@ func _run() -> void:
 	OS.unset_environment(FAILURE_ENV)
 	if not _require_hooks():
 		return
+	if SessionState.SAVE_VERSION != 9:
+		_fail_bool("End Turn autosave recovery must preserve save version 9.")
+		return
 
 	var precommit := await _prove_failure_and_manual_recovery("precommit", false)
 	if precommit.is_empty():
@@ -98,6 +101,16 @@ func _prove_failure_and_manual_recovery(phase: String, warned: bool) -> Dictiona
 	if shell == null:
 		return {}
 	var live_session: SessionStateStoreScript.SessionData = SessionState.ensure_active_session()
+	var initial_forecast := _command_risk_forecast_snapshot(live_session)
+	if int(initial_forecast.get("signature_day", -1)) != 2 \
+			or bool(initial_forecast.get("shown", false)) != not warned \
+			or int(initial_forecast.get("shown_day", -1)) != (0 if warned else 2):
+		await _discard_shell(shell)
+		return _fail_dictionary("The %s fixture did not begin with the exact Day 2 %s command-risk forecast: %s" % [
+			phase,
+			"unconsumed" if warned else "consumed",
+			JSON.stringify(initial_forecast),
+		])
 	SaveService.inspect_autosave()
 	var cache_before: Dictionary = SaveService.validation_summary_cache_snapshot()
 	if cache_before.is_empty():
@@ -110,7 +123,9 @@ func _prove_failure_and_manual_recovery(phase: String, warned: bool) -> Dictiona
 	if warned:
 		var request: Dictionary = shell.validation_request_end_turn()
 		var requested: Dictionary = shell.validation_end_turn_confirmation_snapshot()
-		if not bool(request.get("confirmation_required", false)) or not bool(requested.get("pending", false)):
+		if not bool(request.get("confirmation_required", false)) \
+				or not bool(requested.get("pending", false)) \
+				or not bool(requested.get("risk_unconsumed", false)):
 			OS.unset_environment(FAILURE_ENV)
 			await _discard_shell(shell)
 			return _fail_dictionary("Warned %s fixture did not request confirmation." % phase)
@@ -123,10 +138,16 @@ func _prove_failure_and_manual_recovery(phase: String, warned: bool) -> Dictiona
 
 	var direct_result: Dictionary = OverworldRules.end_turn(control)
 	control.flags["last_action"] = "ended_turn"
+	await get_tree().process_frame
 	var snapshot: Dictionary = shell.validation_end_turn_confirmation_snapshot()
 	var autosave_result: Dictionary = snapshot.get("last_autosave_result", {}) if snapshot.get("last_autosave_result", {}) is Dictionary else {}
 	var live_payload := _gameplay_payload(live_session)
 	var control_payload := _gameplay_payload(control)
+	var transition_authority := _end_turn_transition_authority(live_session)
+	var control_transition_authority := _end_turn_transition_authority(control)
+	var canonical_check := _normalization_idempotence_check(live_session)
+	var post_turn_forecast := _command_risk_forecast_snapshot(live_session)
+	var focus_owner_after_failure := _focus_owner_name()
 	var issue_records: Array = RuntimeIssueLog.last_issue_records(1)
 	var issue: Dictionary = issue_records[0] if not issue_records.is_empty() and issue_records[0] is Dictionary else {}
 	var visible_message := String(snapshot.get("visible_message", snapshot.get("message", "")))
@@ -144,14 +165,38 @@ func _prove_failure_and_manual_recovery(phase: String, warned: bool) -> Dictiona
 			or bool(autosave_result.get("ok", true)):
 		await _discard_shell(shell)
 		return _fail_dictionary("Injected %s failure did not call rules/save exactly once: %s" % [phase, JSON.stringify(_compact_snapshot(snapshot))])
-	if live_session.day <= 2 or live_payload != control_payload or _result_signature(snapshot.get("last_rule_result", {})) != _result_signature(direct_result):
+	if live_session.day != 3 \
+			or live_payload != control_payload \
+			or transition_authority != control_transition_authority \
+			or _result_signature(snapshot.get("last_rule_result", {})) != _result_signature(direct_result) \
+			or int(post_turn_forecast.get("signature_day", -1)) != 3 \
+			or bool(post_turn_forecast.get("shown", true)) \
+			or int(post_turn_forecast.get("shown_day", -1)) != 0 \
+			or not bool(canonical_check.get("runtime_normalized", false)) \
+			or not bool(canonical_check.get("once_exact", false)) \
+			or not bool(canonical_check.get("twice_exact", false)):
 		await _discard_shell(shell)
-		return _fail_dictionary("Injected %s failure did not retain the exact advanced live gameplay state: %s" % [phase, JSON.stringify(_first_difference(control_payload, live_payload))])
+		return _fail_dictionary("Injected %s failure did not retain the exact canonical advanced live gameplay state: %s" % [phase, JSON.stringify({
+			"payload_difference": _first_difference(control_payload, live_payload),
+			"transition_authority_difference": _first_difference(control_transition_authority, transition_authority),
+			"forecast": post_turn_forecast,
+			"canonical": canonical_check,
+		})])
 	if _file_state(AUTOSAVE_PATH) != old_file_state \
 			or SaveService.validation_summary_cache_snapshot() != cache_before \
-			or not _transaction_artifacts_absent(AUTOSAVE_PATH):
+			or not _transaction_artifacts_absent(AUTOSAVE_PATH) \
+			or int(snapshot.get("request_count", -1)) != 1 \
+			or int(snapshot.get("confirm_count", -1)) != (1 if warned else 0) \
+			or int(snapshot.get("commit_count", -1)) != 1 \
+			or int(snapshot.get("autosave_failure_count", -1)) != 1 \
+			or int(snapshot.get("resolution_attempt_count", -1)) != 0 \
+			or not (snapshot.get("last_resolution_route", {}) as Dictionary).is_empty() \
+			or focus_owner_after_failure != "EndTurn":
 		await _discard_shell(shell)
-		return _fail_dictionary("Injected %s failure changed prior bytes/cache or left transaction residue." % phase)
+		return _fail_dictionary("Injected %s failure changed prior authority, route, focus, bytes/cache, or left transaction residue: %s" % [phase, JSON.stringify({
+			"snapshot": _compact_snapshot(snapshot),
+			"focus_owner": focus_owner_after_failure,
+		})])
 	if RuntimeIssueLog.issue_record_count() != issue_count_before + 1 \
 			or String(issue.get("event", "")) != "end_turn_autosave_failed" \
 			or String(issue.get("message", "")).strip_edges() == "" \
@@ -167,15 +212,28 @@ func _prove_failure_and_manual_recovery(phase: String, warned: bool) -> Dictiona
 	var manual_result: Dictionary = shell.validation_save_to_selected_slot()
 	var after_manual: Dictionary = shell.validation_end_turn_confirmation_snapshot()
 	var post_manual_payload := _gameplay_payload(live_session)
+	var post_manual_full_payload := _canonical_session_payload(live_session)
+	var raw_manual_payload := _canonical_session_payload_dictionary(SaveService.load_session(1))
 	var restored = SaveService.restore_manual_session(1)
+	var restored_full_payload := _canonical_session_payload(restored)
 	if not bool(manual_result.get("ok", false)) \
 			or restored == null \
 			or _gameplay_payload(restored) != post_manual_payload \
+			or raw_manual_payload != post_manual_full_payload \
+			or restored_full_payload != post_manual_full_payload \
 			or int(after_manual.get("rules_end_turn_call_count", -1)) != rules_calls_before_manual \
 			or int(after_manual.get("autosave_call_count", -1)) != 1 \
+			or int(after_manual.get("resolution_attempt_count", -1)) != 0 \
+			or not (after_manual.get("last_resolution_route", {}) as Dictionary).is_empty() \
 			or not _transaction_artifacts_absent(MANUAL_PATH):
 		await _discard_shell(shell)
-		return _fail_dictionary("Manual Save did not preserve the advanced %s state without a second End Turn: %s" % [phase, JSON.stringify({"manual": manual_result, "snapshot": _compact_snapshot(after_manual), "restored": restored != null})])
+		return _fail_dictionary("Manual Save did not preserve the advanced %s state without a second End Turn: %s" % [phase, JSON.stringify({
+			"manual": manual_result,
+			"snapshot": _compact_snapshot(after_manual),
+			"restored": restored != null,
+			"raw_difference": _first_difference(post_manual_full_payload, raw_manual_payload),
+			"restored_difference": _first_difference(post_manual_full_payload, restored_full_payload),
+		})])
 
 	await _discard_shell(shell)
 	return {
@@ -186,6 +244,12 @@ func _prove_failure_and_manual_recovery(phase: String, warned: bool) -> Dictiona
 		"rules_calls": 1,
 		"autosave_calls": 1,
 		"advanced_live_state_retained": true,
+		"day2_forecast_consumed": true,
+		"day3_forecast_canonical_unconsumed": true,
+		"normalization_idempotent": true,
+		"hook_occupation_recovery_income_muster_exact": true,
+		"full_raw_manual_exact": true,
+		"focus_owner_after_failure": focus_owner_after_failure,
 		"runtime_issue_event": "end_turn_autosave_failed",
 		"manual_reload_exact": true,
 		"second_end_turn_calls": 0,
@@ -347,32 +411,12 @@ func _prove_pending_battle_manual_save_failure(phase: String, occupied: bool) ->
 
 
 func _prove_controls() -> Dictionary:
-	_clear_tracked_save_files()
-	var direct_shell = await _create_shell(_movement_fixture(2, true))
-	if direct_shell == null:
+	var direct := await _prove_ordinary_end_turn_autosave(false)
+	if direct.is_empty():
 		return {}
-	var direct: Dictionary = direct_shell.validation_request_end_turn()
-	var direct_snapshot: Dictionary = direct_shell.validation_end_turn_confirmation_snapshot()
-	if not bool(direct.get("ok", false)) or bool(direct.get("confirmation_required", true)) \
-			or int(direct_snapshot.get("rules_end_turn_call_count", -1)) != 1 \
-			or int(direct_snapshot.get("autosave_call_count", -1)) != 1:
-		await _discard_shell(direct_shell)
-		return _fail_dictionary("Ordinary direct End Turn control failed: %s" % JSON.stringify(direct))
-	await _discard_shell(direct_shell)
-
-	_clear_tracked_save_files()
-	var warned_shell = await _create_shell(_movement_fixture(2, false))
-	if warned_shell == null:
+	var warned := await _prove_ordinary_end_turn_autosave(true)
+	if warned.is_empty():
 		return {}
-	var warned_request: Dictionary = warned_shell.validation_request_end_turn()
-	var warned: Dictionary = warned_shell.validation_confirm_end_turn()
-	var warned_snapshot: Dictionary = warned_shell.validation_end_turn_confirmation_snapshot()
-	if not bool(warned_request.get("confirmation_required", false)) or not bool(warned.get("ok", false)) \
-			or int(warned_snapshot.get("rules_end_turn_call_count", -1)) != 1 \
-			or int(warned_snapshot.get("autosave_call_count", -1)) != 1:
-		await _discard_shell(warned_shell)
-		return _fail_dictionary("Ordinary warned End Turn control failed: %s" % JSON.stringify(warned))
-	await _discard_shell(warned_shell)
 
 	var terminal: SessionStateStoreScript.SessionData = _movement_fixture(2, true)
 	_stage_river_pass_victory(terminal)
@@ -405,7 +449,86 @@ func _prove_controls() -> Dictionary:
 			"route": terminal_route,
 		}))
 	await _discard_shell(terminal_shell)
-	return {"direct": true, "warned": true, "terminal_no_save": true}
+	return {"direct": direct, "warned": warned, "terminal_no_save": true}
+
+
+func _prove_ordinary_end_turn_autosave(warned: bool) -> Dictionary:
+	_clear_tracked_save_files()
+	var shell = await _create_shell(_movement_fixture(2, not warned))
+	if shell == null:
+		return {}
+	var session: SessionStateStoreScript.SessionData = SessionState.ensure_active_session()
+	var initial_forecast := _command_risk_forecast_snapshot(session)
+	var request: Dictionary = shell.validation_request_end_turn()
+	var result := request
+	if warned:
+		var requested: Dictionary = shell.validation_end_turn_confirmation_snapshot()
+		if not bool(request.get("confirmation_required", false)) \
+				or not bool(requested.get("pending", false)) \
+				or not bool(requested.get("risk_unconsumed", false)):
+			await _discard_shell(shell)
+			return _fail_dictionary("Ordinary warned End Turn did not preserve the exact Day 2 confirmation contract: %s" % JSON.stringify({
+				"request": request,
+				"snapshot": _compact_snapshot(requested),
+				"forecast": initial_forecast,
+			}))
+		result = shell.validation_confirm_end_turn()
+	await get_tree().process_frame
+	var snapshot: Dictionary = shell.validation_end_turn_confirmation_snapshot()
+	var live_payload := _canonical_session_payload(session)
+	var raw_payload := _canonical_session_payload_dictionary(SaveService.load_autosave())
+	var restored = SaveService.restore_autosave_session()
+	var restored_payload := _canonical_session_payload(restored)
+	var forecast := _command_risk_forecast_snapshot(session)
+	var canonical_check := _normalization_idempotence_check(session)
+	if int(initial_forecast.get("signature_day", -1)) != 2 \
+			or bool(initial_forecast.get("shown", false)) != not warned \
+			or int(initial_forecast.get("shown_day", -1)) != (0 if warned else 2) \
+			or not bool(result.get("ok", false)) \
+			or bool(result.get("confirmation_required", not warned)) != warned \
+			or int(snapshot.get("request_count", -1)) != 1 \
+			or int(snapshot.get("confirm_count", -1)) != (1 if warned else 0) \
+			or int(snapshot.get("commit_count", -1)) != 1 \
+			or int(snapshot.get("rules_end_turn_call_count", -1)) != 1 \
+			or int(snapshot.get("autosave_call_count", -1)) != 1 \
+			or int(snapshot.get("autosave_failure_count", -1)) != 0 \
+			or int(snapshot.get("resolution_attempt_count", -1)) != 0 \
+			or not (snapshot.get("last_resolution_route", {}) as Dictionary).is_empty() \
+			or session.day != 3 \
+			or int(forecast.get("signature_day", -1)) != 3 \
+			or bool(forecast.get("shown", true)) \
+			or int(forecast.get("shown_day", -1)) != 0 \
+			or raw_payload != live_payload \
+			or restored == null \
+			or restored_payload != live_payload \
+			or not bool(canonical_check.get("runtime_normalized", false)) \
+			or not bool(canonical_check.get("once_exact", false)) \
+			or not bool(canonical_check.get("twice_exact", false)) \
+			or not _transaction_artifacts_absent(AUTOSAVE_PATH):
+		await _discard_shell(shell)
+		return _fail_dictionary("Ordinary %s End Turn autosave was not canonical and reload-exact: %s" % [
+			"warned" if warned else "direct",
+			JSON.stringify({
+				"result": result,
+				"snapshot": _compact_snapshot(snapshot),
+				"initial_forecast": initial_forecast,
+				"forecast": forecast,
+				"canonical": canonical_check,
+				"raw_difference": _first_difference(live_payload, raw_payload),
+				"restored_difference": _first_difference(live_payload, restored_payload),
+			}),
+		])
+	await _discard_shell(shell)
+	return {
+		"day2_forecast_consumed": true,
+		"day3_forecast_canonical_unconsumed": true,
+		"raw_autosave_exact": true,
+		"restored_autosave_exact": true,
+		"normalization_idempotent": true,
+		"rules_calls": 1,
+		"autosave_calls": 1,
+		"route_attempts": 0,
+	}
 
 
 func _create_shell(session):
@@ -478,12 +601,95 @@ func _gameplay_payload_dictionary(value: Dictionary) -> Dictionary:
 	return payload
 
 
+func _canonical_session_payload(session) -> Dictionary:
+	if session == null:
+		return {}
+	return _canonical_session_payload_dictionary(session.to_dict())
+
+
+func _canonical_session_payload_dictionary(value: Dictionary) -> Dictionary:
+	var payload := _canonical_dictionary(value)
+	for metadata_key in ["saved_at_unix", "save_slot_type", "saved_from_game_state", "saved_from_scenario_status", "saved_from_launch_mode", "manual_slot_name"]:
+		payload.erase(metadata_key)
+	return payload
+
+
+func _command_risk_forecast_snapshot(session) -> Dictionary:
+	if session == null:
+		return {}
+	var state_value: Variant = session.overworld.get(OverworldRules.COMMAND_RISK_FORECAST_KEY, {})
+	var state: Dictionary = state_value if state_value is Dictionary else {}
+	var signature := String(state.get("signature", ""))
+	var signature_value: Variant = JSON.parse_string(signature) if signature != "" else {}
+	var signature_payload: Dictionary = signature_value if signature_value is Dictionary else {}
+	return {
+		"shown": bool(state.get("shown", false)),
+		"shown_day": int(state.get("shown_day", 0)),
+		"signature_day": int(signature_payload.get("day", 0)),
+		"signature": signature,
+	}
+
+
+func _normalization_idempotence_check(session) -> Dictionary:
+	if session == null:
+		return {}
+	var before := _canonical_session_payload(session)
+	var detached := _duplicate_session(session)
+	OverworldRules.normalize_overworld_state(detached)
+	var after_once := _canonical_session_payload(detached)
+	OverworldRules.normalize_overworld_state(detached)
+	var after_twice := _canonical_session_payload(detached)
+	return {
+		"runtime_normalized": OverworldRules.is_runtime_session_normalized(session),
+		"once_exact": after_once == before,
+		"twice_exact": after_twice == after_once,
+		"once_difference": _first_difference(before, after_once),
+		"twice_difference": _first_difference(after_once, after_twice),
+	}
+
+
+func _end_turn_transition_authority(session) -> Dictionary:
+	if session == null:
+		return {}
+	var town_transitions := []
+	var towns: Array = session.overworld.get("towns", []) if session.overworld.get("towns", []) is Array else []
+	for town_value in towns:
+		if not (town_value is Dictionary):
+			continue
+		var town: Dictionary = town_value
+		town_transitions.append({
+			"placement_id": String(town.get("placement_id", "")),
+			"occupation": _canonical_dictionary(town.get("occupation", {}) if town.get("occupation", {}) is Dictionary else {}),
+			"recovery": _canonical_dictionary(town.get("recovery", {}) if town.get("recovery", {}) is Dictionary else {}),
+			"available_recruits": _canonical_dictionary(town.get("available_recruits", {}) if town.get("available_recruits", {}) is Dictionary else {}),
+		})
+	return {
+		"day": session.day,
+		"generated_random_map": bool(session.flags.get("generated_random_map", false)),
+		"generated_map_provenance": _canonical_dictionary(session.flags.get("generated_map_provenance", {}) if session.flags.get("generated_map_provenance", {}) is Dictionary else {}),
+		"scenario_script_state": _canonical_dictionary(session.overworld.get("scenario_script_state", {}) if session.overworld.get("scenario_script_state", {}) is Dictionary else {}),
+		"resources": _canonical_dictionary(session.overworld.get("resources", {}) if session.overworld.get("resources", {}) is Dictionary else {}),
+		"town_transitions": town_transitions,
+	}
+
+
+func _focus_owner_name() -> String:
+	var viewport := get_viewport()
+	var focus_owner := viewport.gui_get_focus_owner() if viewport != null else null
+	return String(focus_owner.name) if focus_owner != null else ""
+
+
 func _result_signature(value: Variant) -> Dictionary:
 	var result: Dictionary = value if value is Dictionary else {}
 	return {
 		"ok": result.get("ok", false),
 		"message": result.get("message", ""),
 		"enemy_activity_summary": result.get("enemy_activity_summary", ""),
+		"enemy_activity_events": result.get("enemy_activity_events", []),
+		"resource_income_summary": result.get("resource_income_summary", ""),
+		"weekly_muster_summary": result.get("weekly_muster_summary", ""),
+		"movement_reset_summary": result.get("movement_reset_summary", ""),
+		"town_economy_summary": result.get("town_economy_summary", ""),
 		"turn_resolution_summary": result.get("turn_resolution_summary", ""),
 	}
 
