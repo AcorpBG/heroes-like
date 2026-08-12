@@ -6,6 +6,8 @@ const BattleAutoResolveRulesScript = preload("res://scripts/core/BattleAutoResol
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 
 var _failed := false
+var _exclusive_battle_parent_click_counts := {}
+var _exclusive_battle_dialog_signal_counts := {}
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -24,6 +26,8 @@ func _run() -> void:
 	if not await _check_town_keyboard_build():
 		return
 	if not await _check_narrow_town_keyboard_entry():
+		return
+	if not await _check_battle_confirmation_exclusive_parent_input():
 		return
 	if not await _check_battle_keyboard_defend():
 		return
@@ -1049,6 +1053,403 @@ func _check_quick_resolve_safe_cancel(shell: Node, session, cancel_method: Strin
 	return true
 
 
+func _check_battle_confirmation_exclusive_parent_input() -> bool:
+	var original_window_size := get_window().size
+	var cases := [
+		{"id": "quick_resolve_1280", "action_id": "quick_resolve", "button_name": "QuickResolve", "dialog_name": "QuickResolveConfirmationDialog", "width": 1280, "cancel_input": "joypad_b", "confirm_input": "joypad_a"},
+		{"id": "quick_resolve_1920", "action_id": "quick_resolve", "button_name": "QuickResolve", "dialog_name": "QuickResolveConfirmationDialog", "width": 1920, "cancel_input": "mouse", "confirm_input": "mouse"},
+		{"id": "retreat_1280", "action_id": "retreat", "button_name": "Retreat", "dialog_name": "WithdrawalConfirmationDialog", "width": 1280, "cancel_input": "escape", "confirm_input": "enter"},
+		{"id": "retreat_1920", "action_id": "retreat", "button_name": "Retreat", "dialog_name": "WithdrawalConfirmationDialog", "width": 1920, "cancel_input": "joypad_b", "confirm_input": "mouse"},
+		{"id": "surrender_1280", "action_id": "surrender", "button_name": "Surrender", "dialog_name": "WithdrawalConfirmationDialog", "width": 1280, "cancel_input": "escape", "confirm_input": "joypad_a"},
+		{"id": "surrender_1920", "action_id": "surrender", "button_name": "Surrender", "dialog_name": "WithdrawalConfirmationDialog", "width": 1920, "cancel_input": "mouse", "confirm_input": "enter"},
+	]
+	for case_value in cases:
+		if not await _exercise_battle_confirmation_exclusive_case(case_value):
+			get_window().size = original_window_size
+			return false
+	get_window().size = original_window_size
+	await _settle()
+	return true
+
+
+func _exercise_battle_confirmation_exclusive_case(case_data: Dictionary) -> bool:
+	var case_id := String(case_data.get("id", "battle_confirmation"))
+	var action_id := String(case_data.get("action_id", ""))
+	var width := int(case_data.get("width", 1280))
+	var session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+	var encounter := _first_encounter(session)
+	if encounter.is_empty():
+		return _fail("%s fixture has no encounter." % case_id)
+	session.battle = BattleRules.create_battle_payload(session, encounter)
+	session.battle["retreat_allowed"] = true
+	session.battle["surrender_allowed"] = true
+	var guard := 0
+	while String(BattleRules.get_active_stack(session.battle).get("side", "")) != "player" and guard < 12:
+		BattleRules.advance_turn(session.battle)
+		guard += 1
+	if String(BattleRules.get_active_stack(session.battle).get("side", "")) != "player":
+		return _fail("%s could not reach a player command turn." % case_id)
+	session = SessionState.set_active_session(session)
+	get_window().size = Vector2i(width, 720)
+	await _settle()
+	var layout_host := Control.new()
+	layout_host.name = "ExclusiveBattleConfirmationHost_%s" % case_id
+	layout_host.size = Vector2(float(width), 720.0)
+	add_child(layout_host)
+	var shell = load("res://scenes/battle/BattleShell.tscn").instantiate()
+	layout_host.add_child(shell)
+	var parent_probe := Button.new()
+	parent_probe.name = "ExclusiveBattleParentProbe_%s" % case_id
+	parent_probe.text = "Battle parent input probe"
+	parent_probe.position = Vector2(16.0, 16.0)
+	parent_probe.size = Vector2(210.0, 40.0)
+	parent_probe.focus_mode = Control.FOCUS_NONE
+	parent_probe.z_index = 100
+	_exclusive_battle_parent_click_counts[case_id] = 0
+	_exclusive_battle_dialog_signal_counts[case_id] = {"canceled": 0, "confirmed": 0}
+	parent_probe.pressed.connect(_on_exclusive_battle_parent_probe_pressed.bind(case_id))
+	layout_host.add_child(parent_probe)
+	await _settle_battle_confirmation()
+	var origin_button: Button = shell.get_node_or_null("%%%s" % String(case_data.get("button_name", "")))
+	var dialog: ConfirmationDialog = shell.get_node_or_null(String(case_data.get("dialog_name", "")))
+	if origin_button == null or dialog == null or origin_button.disabled:
+		return _fail_exclusive_battle_case(layout_host, "%s is missing an actionable origin or confirmation dialog." % case_id)
+	dialog.canceled.connect(_on_exclusive_battle_dialog_canceled.bind(case_id))
+	dialog.confirmed.connect(_on_exclusive_battle_dialog_confirmed.bind(case_id))
+	if action_id == "quick_resolve":
+		shell.call("validation_reset_quick_resolve_confirmation_state")
+		AppRouter.validation_reset_battle_resolution_checkpoint_state()
+		AppRouter.validation_set_battle_resolution_checkpoint_routing_suppressed(true)
+		AppRouter.validation_reset_scenario_outcome_route_state()
+		AppRouter.validation_set_scenario_outcome_routing_suppressed(true)
+	else:
+		shell.call("validation_set_battle_resolution_routing_enabled", false)
+	var fixture_checks := {
+		"host_parent_exact": shell.get_parent() == layout_host,
+		"host_width_exact": int(layout_host.size.x) == width,
+		"host_height_exact": int(layout_host.size.y) == 720,
+		"origin_root_viewport_exact": origin_button.get_viewport() == get_viewport(),
+	}
+	if not _checks_exact(fixture_checks):
+		return _fail_exclusive_battle_case(layout_host, "%s exact-width Battle host failed: %s." % [case_id, JSON.stringify(fixture_checks)])
+	origin_button.grab_focus()
+	await get_tree().process_frame
+	await _click_control(origin_button)
+	await _settle_battle_confirmation()
+	var opened := _battle_confirmation_transaction_snapshot(shell, action_id)
+	var geometry := _exclusive_battle_parent_click_geometry(parent_probe, dialog)
+	var opened_checks := {
+		"exclusive_exact": dialog.exclusive,
+		"pending_exact": bool(opened.get("pending", false)),
+		"visible_exact": bool(opened.get("visible", false)),
+		"safe_focus_exact": dialog.get_cancel_button().get_viewport().gui_get_focus_owner() == dialog.get_cancel_button(),
+		"geometry_exact": bool(geometry.get("exact", false)),
+	}
+	if not _checks_exact(opened_checks):
+		return _fail_exclusive_battle_case(layout_host, "%s did not open an exact exclusive native dialog: checks=%s geometry=%s snapshot=%s." % [case_id, JSON.stringify(opened_checks), JSON.stringify(geometry), JSON.stringify(opened)])
+	var authority_before_block := _quick_resolve_authority_snapshot(session)
+	var transaction_before_block := _battle_confirmation_transaction_snapshot(shell, action_id)
+	var parent_count_before := int(_exclusive_battle_parent_click_counts.get(case_id, 0))
+	await _click_control(parent_probe)
+	await _settle_battle_confirmation()
+	var blocked_checks := {
+		"parent_count_exact": int(_exclusive_battle_parent_click_counts.get(case_id, -1)) == parent_count_before,
+		"dialog_transaction_exact": _battle_confirmation_transaction_snapshot(shell, action_id) == transaction_before_block,
+		"authority_exact": _quick_resolve_authority_snapshot(session) == authority_before_block,
+		"dialog_focus_exact": dialog.get_cancel_button().get_viewport().gui_get_focus_owner() == dialog.get_cancel_button(),
+	}
+	if not _checks_exact(blocked_checks):
+		return _fail_exclusive_battle_case(layout_host, "%s exclusive parent click escaped the first modal: checks=%s." % [case_id, JSON.stringify(blocked_checks)])
+	if not await _send_battle_confirmation_cancel(dialog, String(case_data.get("cancel_input", ""))):
+		_cleanup_exclusive_battle_case(layout_host)
+		return false
+	await _settle_battle_confirmation()
+	var canceled := _battle_confirmation_transaction_snapshot(shell, action_id)
+	var signal_counts: Dictionary = _exclusive_battle_dialog_signal_counts.get(case_id, {})
+	var canceled_checks := {
+		"hidden_exact": not bool(canceled.get("visible", true)),
+		"pending_cleared_exact": not bool(canceled.get("pending", true)),
+		"cancel_signal_once": int(signal_counts.get("canceled", 0)) == 1,
+		"confirm_signal_zero": int(signal_counts.get("confirmed", 0)) == 0,
+		"perform_zero": int(canceled.get("perform_count", 0)) == 0,
+		"route_zero": int(canceled.get("route_count", 0)) == 0,
+		"authority_exact": _quick_resolve_authority_snapshot(session) == authority_before_block,
+		"origin_focus_exact": get_viewport().gui_get_focus_owner() == origin_button,
+	}
+	if not _checks_exact(canceled_checks):
+		return _fail_exclusive_battle_case(layout_host, "%s forwarded/native cancel was not exact: checks=%s snapshot=%s." % [case_id, JSON.stringify(canceled_checks), JSON.stringify(canceled)])
+	var positive_count_before := int(_exclusive_battle_parent_click_counts.get(case_id, 0))
+	await _click_control(parent_probe)
+	if int(_exclusive_battle_parent_click_counts.get(case_id, -1)) != positive_count_before + 1 \
+			or _quick_resolve_authority_snapshot(session) != authority_before_block:
+		return _fail_exclusive_battle_case(layout_host, "%s identical parent probe was not positively actionable after cancel." % case_id)
+	origin_button.grab_focus()
+	await _click_control(origin_button)
+	await _settle_battle_confirmation()
+	var reopened := _battle_confirmation_transaction_snapshot(shell, action_id)
+	var authority_before_second_block := _quick_resolve_authority_snapshot(session)
+	var second_count_before := int(_exclusive_battle_parent_click_counts.get(case_id, 0))
+	await _click_control(parent_probe)
+	await _settle_battle_confirmation()
+	var second_block_checks := {
+		"reopened_pending_exact": bool(reopened.get("pending", false)),
+		"reopened_visible_exact": bool(reopened.get("visible", false)),
+		"parent_count_exact": int(_exclusive_battle_parent_click_counts.get(case_id, -1)) == second_count_before,
+		"dialog_transaction_exact": _battle_confirmation_transaction_snapshot(shell, action_id) == reopened,
+		"authority_exact": _quick_resolve_authority_snapshot(session) == authority_before_second_block,
+	}
+	if not _checks_exact(second_block_checks):
+		return _fail_exclusive_battle_case(layout_host, "%s second blocked parent click changed confirmation authority: checks=%s." % [case_id, JSON.stringify(second_block_checks)])
+	var perform_before := int(reopened.get("perform_count", 0))
+	var route_before := int(reopened.get("route_count", 0))
+	session.battle[BattleRules.PRESENTATION_SPEED_KEY] = BattleRules.PRESENTATION_SPEED_INSTANT
+	var direct_control := SessionStateStoreScript.SessionData.new()
+	direct_control.from_dict(session.to_dict())
+	var direct_result: Dictionary = BattleAutoResolveRulesScript.resolve_active_battle(direct_control) \
+		if action_id == "quick_resolve" \
+		else BattleRules.perform_player_action(direct_control, action_id)
+	if not await _send_battle_confirmation_confirm(dialog, String(case_data.get("confirm_input", ""))):
+		_cleanup_exclusive_battle_case(layout_host)
+		return false
+	for _frame in range(180):
+		await get_tree().process_frame
+		var probe := _battle_confirmation_transaction_snapshot(shell, action_id)
+		if int(probe.get("perform_count", 0)) >= perform_before + 1:
+			break
+	var confirmed := _battle_confirmation_transaction_snapshot(shell, action_id)
+	signal_counts = _exclusive_battle_dialog_signal_counts.get(case_id, {})
+	var confirmation_result: Dictionary = confirmed.get("last_result", {}) if confirmed.get("last_result", {}) is Dictionary else {}
+	var shell_action_result: Dictionary = confirmation_result.get("result", {}) if confirmation_result.get("result", {}) is Dictionary else {}
+	var direct_route_exact := _battle_confirmation_direct_route_exact(shell, action_id, direct_control, confirmed)
+	var confirmed_checks := {
+		"hidden_exact": not bool(confirmed.get("visible", true)),
+		"pending_cleared_exact": not bool(confirmed.get("pending", true)),
+		"cancel_signal_unchanged": int(signal_counts.get("canceled", 0)) == 1,
+		"confirm_signal_once": int(signal_counts.get("confirmed", 0)) == 1,
+		"perform_once": int(confirmed.get("perform_count", 0)) == perform_before + 1,
+		"route_once": int(confirmed.get("route_count", 0)) == route_before + 1,
+		"action_exact": action_id == "quick_resolve" or String(confirmation_result.get("action_id", "")) == action_id,
+		"result_exact": shell_action_result == direct_result,
+		"gameplay_session_rng_exact": _battle_confirmation_gameplay_payload(session) == _battle_confirmation_gameplay_payload(direct_control),
+		"terminal_state_exact": _battle_confirmation_terminal_state_exact(action_id, session, direct_control),
+		"terminal_route_exact": direct_route_exact,
+	}
+	if not _checks_exact(confirmed_checks):
+		return _fail_exclusive_battle_case(layout_host, "%s forwarded/native confirm diverged from its direct consequence: checks=%s snapshot=%s direct_result=%s." % [case_id, JSON.stringify(confirmed_checks), JSON.stringify(confirmed), JSON.stringify(direct_result)])
+	_cleanup_exclusive_battle_case(layout_host)
+	await _settle()
+	return true
+
+
+func _cleanup_exclusive_battle_case(layout_host: Node) -> void:
+	AppRouter.validation_set_battle_resolution_checkpoint_routing_suppressed(false)
+	AppRouter.validation_set_scenario_outcome_routing_suppressed(false)
+	if is_instance_valid(layout_host):
+		layout_host.queue_free()
+
+
+func _fail_exclusive_battle_case(layout_host: Node, message: String) -> bool:
+	_cleanup_exclusive_battle_case(layout_host)
+	return _fail(message)
+
+
+func _on_exclusive_battle_parent_probe_pressed(case_id: String) -> void:
+	_exclusive_battle_parent_click_counts[case_id] = int(_exclusive_battle_parent_click_counts.get(case_id, 0)) + 1
+
+
+func _on_exclusive_battle_dialog_canceled(case_id: String) -> void:
+	var counts: Dictionary = _exclusive_battle_dialog_signal_counts.get(case_id, {}).duplicate(true)
+	counts["canceled"] = int(counts.get("canceled", 0)) + 1
+	_exclusive_battle_dialog_signal_counts[case_id] = counts
+
+
+func _on_exclusive_battle_dialog_confirmed(case_id: String) -> void:
+	var counts: Dictionary = _exclusive_battle_dialog_signal_counts.get(case_id, {}).duplicate(true)
+	counts["confirmed"] = int(counts.get("confirmed", 0)) + 1
+	_exclusive_battle_dialog_signal_counts[case_id] = counts
+
+
+func _battle_confirmation_transaction_snapshot(shell: Node, action_id: String) -> Dictionary:
+	if action_id == "quick_resolve":
+		var snapshot: Dictionary = shell.call("validation_quick_resolve_confirmation_snapshot")
+		return {
+			"pending": bool(snapshot.get("pending", false)),
+			"visible": bool(snapshot.get("dialog_visible", false)),
+			"request_count": int(snapshot.get("request_count", 0)),
+			"cancel_count": int(snapshot.get("cancel_count", 0)),
+			"confirm_count": int(snapshot.get("confirm_count", 0)),
+			"perform_count": int(snapshot.get("perform_count", 0)),
+			"route_count": _quick_resolve_route_count(snapshot),
+			"last_result": snapshot.get("last_result", {}),
+		}
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	return {
+		"pending": String(snapshot.get("withdrawal_pending_action", "")) == action_id,
+		"visible": bool(snapshot.get("withdrawal_confirmation_visible", false)),
+		"pending_action": String(snapshot.get("withdrawal_pending_action", "")),
+		"title": String(snapshot.get("withdrawal_confirmation_title", "")),
+		"confirm_text": String(snapshot.get("withdrawal_confirmation_ok_text", "")),
+		"cancel_text": String(snapshot.get("withdrawal_confirmation_cancel_text", "")),
+		"last_result": snapshot.get("withdrawal_last_result", {}),
+		"perform_count": _action_perform_count(snapshot, action_id),
+		"route_count": int(snapshot.get("validation_battle_resolution_attempt_count", 0)),
+		"last_route": snapshot.get("validation_last_battle_resolution_route", {}),
+	}
+
+
+func _action_perform_count(snapshot: Dictionary, action_id: String) -> int:
+	var counts: Dictionary = snapshot.get("validation_perform_action_counts", {}) if snapshot.get("validation_perform_action_counts", {}) is Dictionary else {}
+	return int(counts.get(action_id, 0))
+
+
+func _quick_resolve_route_count(snapshot: Dictionary) -> int:
+	var checkpoint: Dictionary = snapshot.get("checkpoint", {}) if snapshot.get("checkpoint", {}) is Dictionary else {}
+	var checkpoint_router: Dictionary = checkpoint.get("router_snapshot", {}) if checkpoint.get("router_snapshot", {}) is Dictionary else {}
+	var outcome: Dictionary = AppRouter.validation_scenario_outcome_route_snapshot()
+	return int(checkpoint_router.get("route_attempt_count", 0)) + int(outcome.get("route_attempt_count", 0))
+
+
+func _battle_confirmation_direct_route_exact(shell: Node, action_id: String, direct_control, confirmed: Dictionary) -> bool:
+	if action_id != "quick_resolve":
+		var confirmation_result: Dictionary = confirmed.get("last_result", {}) if confirmed.get("last_result", {}) is Dictionary else {}
+		var last_route: Dictionary = confirmed.get("last_route", {}) if confirmed.get("last_route", {}) is Dictionary else {}
+		return bool(confirmation_result.get("routed", false)) \
+			and String(confirmation_result.get("route_target", "")) == "overworld" \
+			and String(last_route.get("target", "")) == "overworld" \
+			and String(last_route.get("state", "")) == action_id
+	var quick_snapshot: Dictionary = shell.call("validation_quick_resolve_confirmation_snapshot")
+	var checkpoint: Dictionary = quick_snapshot.get("checkpoint", {}) if quick_snapshot.get("checkpoint", {}) is Dictionary else {}
+	var checkpoint_router: Dictionary = checkpoint.get("router_snapshot", {}) if checkpoint.get("router_snapshot", {}) is Dictionary else {}
+	var outcome: Dictionary = AppRouter.validation_scenario_outcome_route_snapshot()
+	if String(direct_control.scenario_status) != "in_progress":
+		return int(checkpoint.get("checkpoint_request_count", 0)) == 0 \
+			and int(outcome.get("save_attempt_count", 0)) == 1 \
+			and int(outcome.get("route_attempt_count", 0)) == 1 \
+			and int(outcome.get("suppressed_route_count", 0)) == 1
+	return int(checkpoint.get("checkpoint_request_count", 0)) == 1 \
+		and int(checkpoint.get("checkpoint_success_count", 0)) == 1 \
+		and int(checkpoint_router.get("save_attempt_count", 0)) == 1 \
+		and int(checkpoint_router.get("route_attempt_count", 0)) == 1 \
+		and int(checkpoint_router.get("suppressed_route_count", 0)) == 1
+
+
+func _battle_confirmation_gameplay_payload(session) -> Dictionary:
+	var payload: Dictionary = session.to_dict()
+	# Scene routing owns this scalar after the rules consequence has completed.
+	# It is asserted independently by _battle_confirmation_terminal_state_exact.
+	payload.erase("game_state")
+	var flags: Dictionary = payload.get("flags", {}) if payload.get("flags", {}) is Dictionary else {}
+	flags.erase("last_battle_action_recap")
+	payload["flags"] = flags
+	var overworld: Dictionary = payload.get("overworld", {}) if payload.get("overworld", {}) is Dictionary else {}
+	overworld.erase("command_risk_forecast")
+	payload["overworld"] = overworld
+	return payload
+
+
+func _battle_confirmation_terminal_state_exact(action_id: String, session, direct_control) -> bool:
+	if String(session.scenario_status) != String(direct_control.scenario_status):
+		return false
+	if action_id != "quick_resolve":
+		return String(session.game_state) == String(direct_control.game_state)
+	var expected_route_state := "outcome" if String(direct_control.scenario_status) != "in_progress" else "overworld"
+	return String(session.game_state) == expected_route_state and String(direct_control.game_state) == "battle"
+
+
+func _send_battle_confirmation_cancel(dialog: ConfirmationDialog, input_id: String) -> bool:
+	match input_id:
+		"joypad_b":
+			await _press_joypad_button(JOY_BUTTON_B)
+		"escape":
+			await _press_key(KEY_ESCAPE)
+		"mouse":
+			var geometry := _battle_dialog_child_click_geometry(dialog.get_cancel_button(), dialog)
+			if not bool(geometry.get("exact", false)):
+				return _fail("Native Battle cancel geometry was not exact: %s." % JSON.stringify(geometry))
+			await _click_control(dialog.get_cancel_button())
+		_:
+			return _fail("Unsupported Battle confirmation cancel input %s." % input_id)
+	return true
+
+
+func _send_battle_confirmation_confirm(dialog: ConfirmationDialog, input_id: String) -> bool:
+	var ok_button := dialog.get_ok_button()
+	match input_id:
+		"joypad_a":
+			ok_button.grab_focus()
+			await get_tree().process_frame
+			await _press_joypad_button(JOY_BUTTON_A)
+		"enter":
+			ok_button.grab_focus()
+			await get_tree().process_frame
+			await _press_key(KEY_ENTER)
+		"mouse":
+			var geometry := _battle_dialog_child_click_geometry(ok_button, dialog)
+			if not bool(geometry.get("exact", false)):
+				return _fail("Native Battle confirm geometry was not exact: %s." % JSON.stringify(geometry))
+			await _click_control(ok_button)
+		_:
+			return _fail("Unsupported Battle confirmation confirm input %s." % input_id)
+	return true
+
+
+func _settle_battle_confirmation() -> void:
+	await _settle()
+	await get_tree().process_frame
+	await get_tree().process_frame
+	await get_tree().process_frame
+
+
+func _checks_exact(checks: Dictionary) -> bool:
+	for check_value in checks.values():
+		if not bool(check_value):
+			return false
+	return true
+
+
+func _exclusive_battle_parent_click_geometry(control: Button, dialog: ConfirmationDialog) -> Dictionary:
+	var runner_viewport := get_viewport()
+	var parent_click := _control_root_click_position(control)
+	var parent_rect := _control_root_rect(control)
+	var dialog_rect := Rect2(Vector2(dialog.position), Vector2(dialog.size))
+	var cancel_button := dialog.get_cancel_button()
+	var child_click := _control_root_click_position(cancel_button)
+	var child_rect := _control_root_rect(cancel_button)
+	return {
+		"exact": dialog.exclusive \
+			and control.get_viewport() == runner_viewport \
+			and control.is_visible_in_tree() \
+			and not control.disabled \
+			and parent_rect.has_point(parent_click) \
+			and runner_viewport.get_visible_rect().has_point(parent_click) \
+			and not dialog_rect.has_point(parent_click) \
+			and cancel_button.get_viewport() == dialog \
+			and dialog_rect.has_point(child_click) \
+			and child_rect.has_point(child_click),
+		"parent_click": parent_click,
+		"parent_rect": parent_rect,
+		"dialog_rect": dialog_rect,
+		"child_click": child_click,
+		"child_rect": child_rect,
+	}
+
+
+func _battle_dialog_child_click_geometry(control: Control, dialog: ConfirmationDialog) -> Dictionary:
+	var click_position := _control_root_click_position(control)
+	var control_rect := _control_root_rect(control)
+	var dialog_rect := Rect2(Vector2(dialog.position), Vector2(dialog.size))
+	return {
+		"exact": control.get_viewport() == dialog \
+			and control.get_viewport() != get_viewport() \
+			and control.is_visible_in_tree() \
+			and control_rect.has_point(click_position) \
+			and dialog_rect.has_point(click_position),
+		"click": click_position,
+		"control_rect": control_rect,
+		"dialog_rect": dialog_rect,
+	}
+
+
 func _check_quick_resolve_confirm_parity(shell: Node, session) -> bool:
 	var quick_resolve: Button = shell.get_node("%QuickResolve")
 	var dialog: ConfirmationDialog = shell.get_node("QuickResolveConfirmationDialog")
@@ -1252,9 +1653,10 @@ func _press_action(action: StringName) -> void:
 
 
 func _click_control(control: Control) -> void:
-	var center := control.get_global_rect().get_center()
-	var viewport := control.get_viewport()
-	var window_id: int = int(viewport.get_window_id()) if viewport is Window else 0
+	var source_viewport := control.get_viewport()
+	var viewport := get_viewport()
+	var center := _control_root_click_position(control)
+	var window_id: int = int(source_viewport.get_window_id()) if source_viewport is Window else 0
 	var motion := InputEventMouseMotion.new()
 	motion.window_id = window_id
 	motion.position = center
@@ -1277,6 +1679,22 @@ func _click_control(control: Control) -> void:
 	released.pressed = false
 	viewport.push_input(released, true)
 	await _settle()
+
+
+func _control_root_click_position(control: Control) -> Vector2:
+	var click_position := control.get_global_rect().get_center()
+	var source_viewport := control.get_viewport()
+	if source_viewport is Window and source_viewport != get_viewport():
+		click_position += Vector2((source_viewport as Window).position)
+	return click_position
+
+
+func _control_root_rect(control: Control) -> Rect2:
+	var control_rect := control.get_global_rect()
+	var source_viewport := control.get_viewport()
+	if source_viewport is Window and source_viewport != get_viewport():
+		control_rect.position += Vector2((source_viewport as Window).position)
+	return control_rect
 
 
 func _press_key(keycode: Key) -> void:

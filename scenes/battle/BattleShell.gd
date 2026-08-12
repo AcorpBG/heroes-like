@@ -116,6 +116,7 @@ var _validation_battle_playback_speed_success_count := 0
 var _validation_battle_playback_speed_failure_count := 0
 var _quick_resolve_confirmation_pending := false
 var _quick_resolve_confirmation_focus_origin: Button = null
+var _forwarding_confirmation_root_physical_input := false
 var _last_quick_resolve_confirmation_result := {}
 var _validation_quick_resolve_confirmation_request_count := 0
 var _validation_quick_resolve_confirmation_cancel_count := 0
@@ -138,6 +139,7 @@ func _ready() -> void:
 	_apply_visual_theme()
 	_configure_quick_resolve_confirmation()
 	_configure_withdrawal_confirmation()
+	_configure_confirmation_input_forwarding()
 	resized.connect(_apply_responsive_layout)
 	_apply_responsive_layout()
 	buckets["theme"] = ProfileLogScript.elapsed_ms(phase_started)
@@ -629,6 +631,45 @@ func _restore_quick_resolve_confirmation_focus(origin: Button) -> void:
 		and not origin.disabled
 	):
 		origin.grab_focus()
+
+func _configure_confirmation_input_forwarding() -> void:
+	var root_window := get_tree().root
+	if root_window != null and not root_window.window_input.is_connected(_on_root_window_input):
+		root_window.window_input.connect(_on_root_window_input)
+
+
+func _on_root_window_input(event: InputEvent) -> void:
+	if _forwarding_confirmation_root_physical_input or not (event is InputEventKey or event is InputEventJoypadButton):
+		return
+	var dialog := _active_exclusive_confirmation_dialog()
+	if dialog == null:
+		return
+	get_tree().root.set_input_as_handled()
+	var detached_event := event.duplicate() as InputEvent
+	if detached_event == null:
+		return
+	call_deferred("_forward_root_physical_input_to_confirmation", dialog, detached_event)
+
+
+func _forward_root_physical_input_to_confirmation(dialog: ConfirmationDialog, event: InputEvent) -> void:
+	if (
+		_forwarding_confirmation_root_physical_input
+		or not is_instance_valid(dialog)
+		or _active_exclusive_confirmation_dialog() != dialog
+	):
+		return
+	_forwarding_confirmation_root_physical_input = true
+	dialog.push_input(event)
+	_forwarding_confirmation_root_physical_input = false
+
+
+func _active_exclusive_confirmation_dialog() -> ConfirmationDialog:
+	var quick_resolve_active := _quick_resolve_confirmation_pending and _quick_resolve_confirmation_dialog.visible
+	var withdrawal_active := _pending_withdrawal_action != "" and _withdrawal_confirmation_dialog.visible
+	if quick_resolve_active == withdrawal_active:
+		return null
+	return _quick_resolve_confirmation_dialog if quick_resolve_active else _withdrawal_confirmation_dialog
+
 
 func _on_quick_resolve_canceled() -> Dictionary:
 	if not _quick_resolve_confirmation_pending:
