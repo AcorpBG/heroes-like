@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `accessibility-outcome-new-session-exclusive-parent-input-10184`. Outcome fresh-expedition confirmations now recover exact native physical cancel/confirm routing after a blocked parent click while preserving resolved-session, save, profile, route, and focus authority.
 - Latest completed implementation slice: `accessibility-main-menu-destructive-confirmation-exclusive-parent-input-10184`. Campaign restart, save deletion, and settings reset confirmations now exclusively own parent-window input and retain exact native physical cancel/confirm after blocked background clicks.
 - Latest completed implementation slice: `accessibility-overworld-end-turn-confirmation-exclusive-parent-input-10184`. The warned End Turn confirmation now exclusively owns parent-window input and defers exact root-routed physical cancel/confirm into the captured child dialog, preserving expedition, save, route, camera, and confirmation authority across blocked parent clicks.
 - Latest completed implementation slice: `save-end-turn-tail-normalization-parity-10184`. A committed End Turn now fully canonicalizes the post-daybreak, hook, enemy, and scenario state before trusted autosave or Manual Save surfaces use it, so live, raw saved, and restored Day-N state remain exact without replaying the turn.
