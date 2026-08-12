@@ -12892,13 +12892,14 @@ static func _reduce_command_risk_items(items: Array) -> Dictionary:
 static func _command_risk_items(session: SessionStateStoreScript.SessionData, include_details: bool = true) -> Array:
 	var items := []
 	var pressured_town_ids := {}
-	var town_items := _command_risk_town_items(session, include_details)
+	var daybreak_contexts := _command_risk_player_town_daybreak_contexts(session)
+	var town_items := _command_risk_town_items(session, daybreak_contexts, include_details)
 	for item in town_items:
 		items.append(item)
 		var town_id := String(item.get("town_placement_id", ""))
 		if town_id != "":
 			pressured_town_ids[town_id] = true
-	items.append_array(_command_risk_logistics_items(session, pressured_town_ids, include_details))
+	items.append_array(_command_risk_logistics_items(session, pressured_town_ids, daybreak_contexts, include_details))
 	items.append_array(_command_risk_objective_items(session, pressured_town_ids, include_details))
 	items.append_array(_command_risk_posture_items(session, include_details))
 	var field_item := _command_risk_field_item(session, include_details)
@@ -12906,17 +12907,47 @@ static func _command_risk_items(session: SessionStateStoreScript.SessionData, in
 		items.append(field_item)
 	return items
 
-static func _command_risk_town_items(session: SessionStateStoreScript.SessionData, include_details: bool = true) -> Array:
+static func _command_risk_player_town_daybreak_contexts(session: SessionStateStoreScript.SessionData) -> Array:
+	var contexts := []
+	var towns = session.overworld.get("towns", [])
+	if not (towns is Array):
+		return contexts
+	contexts.resize(towns.size())
+	for town_index in range(towns.size()):
+		var town = towns[town_index]
+		if not (town is Dictionary) or String(town.get("owner", "neutral")) != "player":
+			contexts[town_index] = {}
+			continue
+		contexts[town_index] = _project_player_town_at_daybreak(
+			session,
+			town,
+			town_index,
+			session.day + 1
+		)
+	return contexts
+
+static func _command_risk_town_items(
+	session: SessionStateStoreScript.SessionData,
+	daybreak_contexts: Array,
+	include_details: bool = true
+) -> Array:
 	var items := []
-	for town in session.overworld.get("towns", []):
+	var towns = session.overworld.get("towns", [])
+	if not (towns is Array):
+		return items
+	for town_index in range(towns.size()):
+		var town = towns[town_index]
 		if not (town is Dictionary) or String(town.get("owner", "neutral")) != "player":
 			continue
 		var threat_state := _town_command_risk_state(session, town, false)
 		if int(threat_state.get("visible_pressuring", 0)) <= 0 and int(threat_state.get("visible_marching", 0)) <= 0 and not bool(threat_state.get("hidden_targeting", false)) and int(threat_state.get("siege_progress", 0)) <= 0:
 			continue
-		var development := town_development_metrics(town, session)
+		var projection: Dictionary = daybreak_contexts[town_index] if town_index < daybreak_contexts.size() and daybreak_contexts[town_index] is Dictionary else {}
+		var projected_session: SessionStateStoreScript.SessionData = projection.get("session", session)
+		var projected_town: Dictionary = projection.get("town", town)
+		var development := town_development_metrics(projected_town, projected_session)
 		var readiness := int(development.get("battle_readiness", 0))
-		var defense := _town_defense_summary(town)
+		var defense := _town_defense_summary(projected_town)
 		var logistics: Dictionary = development.get("logistics", {}) if development.get("logistics", {}) is Dictionary else {}
 		var recovery: Dictionary = development.get("recovery", {}) if development.get("recovery", {}) is Dictionary else {}
 		var capital_project: Dictionary = development.get("capital_project", {}) if development.get("capital_project", {}) is Dictionary else {}
@@ -12936,7 +12967,7 @@ static func _command_risk_town_items(session: SessionStateStoreScript.SessionDat
 			severity += 1
 		if int(logistics.get("support_gap", 0)) > 0 or bool(recovery.get("active", false)) or bool(capital_project.get("vulnerable", false)):
 			severity += 1
-		if objective_anchor or town_strategic_role(town) in ["capital", "stronghold"]:
+		if objective_anchor or town_strategic_role(projected_town) in ["capital", "stronghold"]:
 			severity += 1
 		severity = clampi(severity, 2, 5)
 		var item := {
@@ -12989,28 +13020,40 @@ static func _command_risk_town_items(session: SessionStateStoreScript.SessionDat
 				_town_name(town),
 				"; ".join(threat_clauses),
 				" | ".join(front_parts),
-				_town_command_risk_consequence(town, readiness, logistics, recovery, capital_project, objective_anchor),
+				_town_command_risk_consequence(projected_town, readiness, logistics, recovery, capital_project, objective_anchor),
 			]
 		items.append(item)
 	return items
 
-static func _command_risk_logistics_items(session: SessionStateStoreScript.SessionData, pressured_town_ids: Dictionary, include_details: bool = true) -> Array:
+static func _command_risk_logistics_items(
+	session: SessionStateStoreScript.SessionData,
+	pressured_town_ids: Dictionary,
+	daybreak_contexts: Array,
+	include_details: bool = true
+) -> Array:
 	var items := []
-	for town in session.overworld.get("towns", []):
+	var towns = session.overworld.get("towns", [])
+	if not (towns is Array):
+		return items
+	for town_index in range(towns.size()):
+		var town = towns[town_index]
 		if not (town is Dictionary) or String(town.get("owner", "neutral")) != "player":
 			continue
 		var placement_id := String(town.get("placement_id", ""))
 		if pressured_town_ids.has(placement_id):
 			continue
-		var logistics := _town_logistics_state(session, town)
+		var projection: Dictionary = daybreak_contexts[town_index] if town_index < daybreak_contexts.size() and daybreak_contexts[town_index] is Dictionary else {}
+		var projected_session: SessionStateStoreScript.SessionData = projection.get("session", session)
+		var projected_town: Dictionary = projection.get("town", town)
+		var logistics := _town_logistics_state(projected_session, projected_town)
 		if int(logistics.get("disrupted_count", 0)) <= 0 and int(logistics.get("threatened_count", 0)) <= 0 and int(logistics.get("support_gap", 0)) <= 0:
 			continue
-		var recovery := _town_recovery_state(session, town, logistics)
-		var capital_project := _town_capital_project_state(town, session, logistics, recovery)
+		var recovery := _town_recovery_state(projected_session, projected_town, logistics)
+		var capital_project := _town_capital_project_state(projected_town, projected_session, logistics, recovery)
 		var severity_score := int(logistics.get("disrupted_count", 0)) * 2 + int(logistics.get("threatened_count", 0)) + int(logistics.get("support_gap", 0))
 		if int(logistics.get("response_count", 0)) <= 0 and int(logistics.get("threatened_count", 0)) > 0:
 			severity_score += 1
-		if town_strategic_role(town) in ["capital", "stronghold"]:
+		if town_strategic_role(projected_town) in ["capital", "stronghold"]:
 			severity_score += 1
 		if bool(capital_project.get("vulnerable", false)):
 			severity_score += 1
@@ -13041,7 +13084,7 @@ static func _command_risk_logistics_items(session: SessionStateStoreScript.Sessi
 			if int(logistics.get("gap_growth_penalty_percent", 0)) > 0:
 				consequence_parts.append("recruits -%d%%" % int(logistics.get("gap_growth_penalty_percent", 0)))
 			if int(logistics.get("gap_pressure_penalty", 0)) > 0:
-				consequence_parts.append("%s -%d" % [_town_pressure_label(town).to_lower(), int(logistics.get("gap_pressure_penalty", 0))])
+				consequence_parts.append("%s -%d" % [_town_pressure_label(projected_town).to_lower(), int(logistics.get("gap_pressure_penalty", 0))])
 			if bool(recovery.get("active", false)):
 				consequence_parts.append("%d recovery pressure remains" % int(recovery.get("pressure", 0)))
 			if bool(capital_project.get("vulnerable", false)) and String(capital_project.get("vulnerability_summary", "")) != "":

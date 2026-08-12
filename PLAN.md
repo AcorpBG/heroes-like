@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `save-battle-resolution-forecast-checkpoint-parity-10184`. Battle-resolution checkpoints now canonicalize derived command-risk state before trusting the live autosave payload, while explicitly next-day town consequences reuse the same occupation-then-recovery projection as live daybreak so saved, live, and restored forecasts remain exact and truthful.
 - Latest completed implementation slice: `accessibility-battle-confirmation-exclusive-parent-input-10184`. Battle Quick Resolve and Withdrawal confirmations are exclusive, block real parent clicks, and defer exact root-routed physical input into the captured child dialog without mutating battle/RNG state or double-routing into combat actions.
 - Latest completed implementation slice: `strategic-ai-path-surface-observer-visibility-fingerprint-10184`. Cached player-hero blocker surfaces now fingerprint the exact observer-visible and unsheltered state, so same-day resource-controller or town-ownership changes rebuild affected routes while other observers and hidden/sheltered heroes retain exact reuse.
 - Latest completed implementation slice: `accessibility-manual-overwrite-exclusive-parent-input-10184`. The shared four-route overwrite confirmation is now exclusive, blocks real parent-window clicks, and safely forwards only root-routed physical keyboard/controller events into the child dialog after root dispatch, preserving native cancel/confirm and background authority.
