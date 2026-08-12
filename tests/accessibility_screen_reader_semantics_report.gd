@@ -8,6 +8,9 @@ const OVERWORLD_LIVE_REGIONS: Array[Dictionary] = [
 	{"path": "ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/SystemPanel/SystemPad/SystemBox/SaveStatus", "mode": DisplayServer.LIVE_POLITE},
 	{"path": "ActivePlaySettingsDialog/Center/DialogPanel/Margin/Content/Header/Status", "mode": DisplayServer.LIVE_POLITE},
 ]
+const MAP_EDITOR_LIVE_REGIONS: Array[Dictionary] = [
+	{"path": "EditorMapCursorLive", "mode": DisplayServer.LIVE_POLITE},
+]
 
 var _failed := false
 
@@ -235,6 +238,57 @@ func _run() -> void:
 	SessionState.active_session = original_session
 	SaveService._slot_summary_cache = original_summary_cache.duplicate(true)
 
+	var map_editor = load("res://scenes/editor/MapEditorShell.tscn").instantiate()
+	map_editor.set("validation_skip_initial_package_index", true)
+	add_child(map_editor)
+	await _settle()
+	var editor_live_nodes: Array = map_editor.find_children("EditorMapCursorLive", "Label", true, false)
+	var working_copy_status_nodes: Array = map_editor.find_children("WorkingCopyStatus", "Label", true, false)
+	if editor_live_nodes.size() != 1 or working_copy_status_nodes.size() != 1:
+		map_editor.queue_free()
+		await get_tree().process_frame
+		return _fail("Map Editor must expose exactly one cursor live region and one non-live working-copy status: %s / %s" % [editor_live_nodes, working_copy_status_nodes])
+	var editor_live := editor_live_nodes[0] as Label
+	var working_copy_status := working_copy_status_nodes[0] as Label
+	var editor_snapshot: Dictionary = UiAccessibility.validation_snapshot(map_editor)
+	var rescanned_editor_snapshot: Dictionary = UiAccessibility.validation_snapshot(map_editor)
+	var editor_live_regions: Array[Dictionary] = _relative_live_regions(map_editor, editor_snapshot)
+	var rescanned_editor_live_regions: Array[Dictionary] = _relative_live_regions(map_editor, rescanned_editor_snapshot)
+	var editor_live_relative_path := String(editor_live.get_path()).trim_prefix("%s/" % String(map_editor.get_path()))
+	var working_copy_relative_path := String(working_copy_status.get_path()).trim_prefix("%s/" % String(map_editor.get_path()))
+	var editor_live_checks := {
+		"snapshot_ok": bool(editor_snapshot.get("ok", false)),
+		"first_scan_exact_order": editor_live_regions == MAP_EDITOR_LIVE_REGIONS,
+		"second_scan_equals_first": rescanned_editor_live_regions == editor_live_regions,
+		"total_one": int(editor_snapshot.get("live_region_count", 0)) == 1 and editor_live_regions.size() == 1,
+		"one_cursor_context": editor_live_regions.count(MAP_EDITOR_LIVE_REGIONS[0]) == 1,
+		"unique_cursor_find": editor_live_nodes.size() == 1,
+		"cursor_relative_path": editor_live_relative_path == String(MAP_EDITOR_LIVE_REGIONS[0].get("path", "")),
+		"visible_tree": editor_live.is_visible_in_tree(),
+		"direct_editor_parent": editor_live.get_parent() == map_editor,
+		"layout_mode_zero": editor_live.layout_mode == 0,
+		"anchors_zero": is_zero_approx(editor_live.anchor_left) and is_zero_approx(editor_live.anchor_top) and is_zero_approx(editor_live.anchor_right) and is_zero_approx(editor_live.anchor_bottom),
+		"position_zero": editor_live.position == Vector2.ZERO,
+		"one_pixel_width": is_equal_approx(editor_live.size.x, 1.0),
+		"finite_layout_height": is_finite(editor_live.size.y) and editor_live.size.y >= 1.0,
+		"transparent": is_zero_approx(editor_live.self_modulate.a),
+		"mouse_ignored": editor_live.mouse_filter == Control.MOUSE_FILTER_IGNORE,
+		"authored_name": editor_live.accessibility_name == "Map editor cursor",
+		"authored_description": editor_live.accessibility_description == "Announces the current map editor tile, material, tool, and available keyboard actions after canvas navigation settles.",
+		"polite": editor_live.accessibility_live == DisplayServer.LIVE_POLITE,
+		"loaded_inactive_empty": editor_live.text == "",
+		"working_copy_unique": working_copy_status_nodes.size() == 1,
+		"working_copy_exact_path": working_copy_relative_path == "RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox/WorkingCopyStatus",
+		"working_copy_visible": working_copy_status.is_visible_in_tree(),
+		"working_copy_live_off": working_copy_status.accessibility_live == DisplayServer.LIVE_OFF,
+	}
+	if not _checks_exact(editor_live_checks):
+		map_editor.queue_free()
+		await get_tree().process_frame
+		return _fail("Map Editor cursor and working-copy accessibility semantics were not exact: %s / %s" % [editor_live_checks, editor_snapshot.get("live_regions", [])])
+	map_editor.queue_free()
+	await get_tree().process_frame
+
 	var result := {
 		"schema": "accessibility_screen_reader_semantics_report_v1",
 		"accessibility_support_mode": 0,
@@ -251,6 +305,10 @@ func _run() -> void:
 		"overworld_existing_live_regions_unchanged": 4,
 		"overworld_route_context_rescan_exact": true,
 		"overworld_route_context_authored_semantics": true,
+		"map_editor_cursor_live_exact_count": 1,
+		"map_editor_cursor_rescan_exact": true,
+		"map_editor_cursor_authored_semantics": true,
+		"map_editor_working_copy_status_live_off": true,
 	}
 	print("%s PASS %s" % [REPORT_ID, JSON.stringify(result)])
 	menu.queue_free()

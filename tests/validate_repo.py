@@ -13932,6 +13932,8 @@ def validate_native_screen_reader_semantics(errors: list[str]) -> None:
         ACCESSIBILITY_SCREEN_READER_REPORT_SCRIPT_PATH,
         ACCESSIBILITY_SCREEN_READER_REPORT_SCENE_PATH,
         ROOT / "tests" / "active_play_keyboard_focus_smoke.gd",
+        MAP_EDITOR_SCRIPT_PATH,
+        MAP_EDITOR_SCENE_PATH,
     )
     for path in required_paths:
         ensure(path.exists(), errors, f"Missing native screen-reader semantics file: {path.relative_to(ROOT)}")
@@ -14013,6 +14015,23 @@ def validate_native_screen_reader_semantics(errors: list[str]) -> None:
         'overworld_route_context_live_exact_count',
         'overworld_existing_live_regions_unchanged',
         'overworld_route_context_rescan_exact',
+        'res://scenes/editor/MapEditorShell.tscn',
+        'const MAP_EDITOR_LIVE_REGIONS: Array[Dictionary] = [',
+        'map_editor.find_children("EditorMapCursorLive", "Label", true, false)',
+        'map_editor.find_children("WorkingCopyStatus", "Label", true, false)',
+        'editor_live_regions == MAP_EDITOR_LIVE_REGIONS',
+        'rescanned_editor_live_regions == editor_live_regions',
+        'int(editor_snapshot.get("live_region_count", 0)) == 1 and editor_live_regions.size() == 1',
+        'editor_live.get_parent() == map_editor',
+        'editor_live.layout_mode == 0',
+        'is_equal_approx(editor_live.size.x, 1.0)',
+        'is_finite(editor_live.size.y) and editor_live.size.y >= 1.0',
+        'editor_live.accessibility_live == DisplayServer.LIVE_POLITE',
+        'working_copy_status.is_visible_in_tree()',
+        'working_copy_status.accessibility_live == DisplayServer.LIVE_OFF',
+        'map_editor_cursor_live_exact_count',
+        'map_editor_cursor_rescan_exact',
+        'map_editor_working_copy_status_live_off',
     ):
         ensure(required_token in report_text, errors, f"accessibility_screen_reader_semantics_report.gd is missing required token: {required_token}")
     expected_overworld_live_paths = (
@@ -14107,6 +14126,64 @@ def validate_native_screen_reader_semantics(errors: list[str]) -> None:
             and "is_equal_approx(route_live.size.y, 1.0)" not in overworld_route_access_body,
             errors,
             "Overworld route live-region proof must not use suffix matching or the invalid fixed-height predicate",
+        )
+    map_editor_live_constant_match = re.search(
+        r"const MAP_EDITOR_LIVE_REGIONS: Array\[Dictionary\] = \[(?P<body>.*?)\n\]",
+        report_text,
+        re.S,
+    )
+    ensure(map_editor_live_constant_match is not None, errors, "Could not isolate exact Map Editor live-region row")
+    if map_editor_live_constant_match is not None:
+        map_editor_live_constant_body = map_editor_live_constant_match.group("body")
+        ensure(
+            re.findall(r'\{"path": "([^"]+)", "mode": DisplayServer\.LIVE_POLITE\}', map_editor_live_constant_body) == ["EditorMapCursorLive"]
+            and map_editor_live_constant_body.count("DisplayServer.LIVE_POLITE") == 1,
+            errors,
+            "Map Editor live-region contract must contain exactly one root EditorMapCursorLive polite row",
+        )
+    map_editor_access_match = re.search(
+        r'var editor_live_nodes: Array = map_editor\.find_children\("EditorMapCursorLive", "Label", true, false\)(?P<body>.*?)(?=\n\tmap_editor\.queue_free\(\))',
+        report_text,
+        re.S,
+    )
+    ensure(map_editor_access_match is not None, errors, "Could not isolate Map Editor cursor live-region runtime assertions")
+    if map_editor_access_match is not None:
+        map_editor_access_body = map_editor_access_match.group("body")
+        for required_token in (
+            'map_editor.find_children("WorkingCopyStatus", "Label", true, false)',
+            "editor_live_regions == MAP_EDITOR_LIVE_REGIONS",
+            "rescanned_editor_live_regions == editor_live_regions",
+            'int(editor_snapshot.get("live_region_count", 0)) == 1 and editor_live_regions.size() == 1',
+            "editor_live_regions.count(MAP_EDITOR_LIVE_REGIONS[0]) == 1",
+            "editor_live_nodes.size() == 1",
+            "working_copy_status_nodes.size() == 1",
+            'editor_live_relative_path == String(MAP_EDITOR_LIVE_REGIONS[0].get("path", ""))',
+            'working_copy_relative_path == "RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox/WorkingCopyStatus"',
+            "editor_live.get_parent() == map_editor",
+            "editor_live.layout_mode == 0",
+            "is_zero_approx(editor_live.anchor_left)",
+            "is_zero_approx(editor_live.anchor_top)",
+            "is_zero_approx(editor_live.anchor_right)",
+            "is_zero_approx(editor_live.anchor_bottom)",
+            "editor_live.position == Vector2.ZERO",
+            "is_equal_approx(editor_live.size.x, 1.0)",
+            "is_finite(editor_live.size.y) and editor_live.size.y >= 1.0",
+            "editor_live.is_visible_in_tree()",
+            "is_zero_approx(editor_live.self_modulate.a)",
+            "editor_live.mouse_filter == Control.MOUSE_FILTER_IGNORE",
+            'editor_live.accessibility_name == "Map editor cursor"',
+            'editor_live.accessibility_description == "Announces the current map editor tile, material, tool, and available keyboard actions after canvas navigation settles."',
+            "editor_live.accessibility_live == DisplayServer.LIVE_POLITE",
+            'editor_live.text == ""',
+            "working_copy_status.is_visible_in_tree()",
+            "working_copy_status.accessibility_live == DisplayServer.LIVE_OFF",
+        ):
+            ensure(required_token in map_editor_access_body, errors, f"Map Editor cursor live-region proof is missing exact semantics token: {required_token}")
+        ensure(
+            "editor_live.size == Vector2.ONE" not in map_editor_access_body
+            and "is_equal_approx(editor_live.size.y, 1.0)" not in map_editor_access_body,
+            errors,
+            "Map Editor cursor live-region proof must retain one-pixel width without the invalid fixed-height oracle",
         )
     report_scene_text = ACCESSIBILITY_SCREEN_READER_REPORT_SCENE_PATH.read_text(encoding="utf-8")
     ensure(
@@ -14922,8 +14999,319 @@ def validate_map_editor_dirty_transition_regression(errors: list[str]) -> None:
         'mouse_direct_state != mouse_state or not _checks_exact(mouse_action_checks)',
         'get_viewport().push_input(event, true)',
         'get_viewport().gui_get_focus_owner() != expected_tool_focus',
+        '_validate_editor_map_cursor_semantic_matrix',
+        'shell.get_node("%EditorMapCursorLive")',
+        'String(shell.call("_editor_map_cursor_semantic_context")) != ""',
+        'is_equal_approx(semantic_timer.wait_time, 0.42)',
+        'is_equal_approx(semantic_timer.wait_time, 1.2)',
+        '_await_exact_canvas_timer_step_silent',
+        '_await_editor_map_semantic_text',
+        '_await_editor_map_semantic_clear',
+        '_editor_map_semantic_context_checks',
+        '_semantic_read_only_authority',
+        '_semantic_external_authority',
+        '_stage_editor_map_semantic_pending',
+        '_editor_map_semantic_state',
+        '_first_semantic_empty_tile',
+        '_first_semantic_road_tile',
+        'await _hover_map_tile(shell, Vector2i.ZERO)',
+        'shell.call("_clear_editor_map_cursor_semantic_result", stale_result)',
+        'replacement_after != replacement_before',
+        'Canvas navigation ended at %d,%d. Focus returned to the Terrain command.',
+        'shell.call("_resume_working_copy_from_memory", replacement_session)',
+        'shell.call("_exit_tree")',
+        '"hold_initial_seconds": 0.36',
+        '"hold_rate_seconds": 0.09',
+        '"semantic_debounce_seconds": 0.42',
+        '"result_visible_seconds": 1.2',
+        '"boundary_and_hover_silent": true',
+        '"focus_modal_session_tree_cancellation": true',
     ):
         ensure(required_token in report_text, errors, f"Map-editor dirty-transition regression is missing required token: {required_token}")
+    cursor_semantic_matrix_match = re.search(
+        r"func _validate_editor_map_cursor_semantic_matrix\(.*?\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc _editor_map_semantic_context_checks)",
+        report_text,
+        flags=re.DOTALL,
+    )
+    ensure(cursor_semantic_matrix_match is not None, errors, "Could not isolate Map Editor cursor semantic lifecycle matrix")
+    if cursor_semantic_matrix_match is not None:
+        cursor_semantic_matrix_body = cursor_semantic_matrix_match.group("body")
+        for required_token in (
+            'for row_value in context_rows:',
+            '"id": "empty"',
+            '"id": "road"',
+            '"id": "object"',
+            '"tool": "inspect"',
+            '"tool": "road"',
+            '"tool": "place_object"',
+            '"pending_generation_current"',
+            'is_same(pending.get("session_ref"), session)',
+            'String(pending.get("session_id", "")) == String(session.session_id)',
+            'is_same(pending.get("label_ref"), live)',
+            'await _await_editor_map_semantic_text(live, expected_context, 1000)',
+            'await _send_joypad_button_event(JOY_BUTTON_DPAD_RIGHT, true, 23)',
+            'await _await_exact_canvas_timer_step_silent(shell, immediate_tile + Vector2i.RIGHT, live, 600)',
+            'await _await_exact_canvas_timer_step_silent(shell, immediate_tile + (Vector2i.RIGHT * 2), live, 250)',
+            'await _send_joypad_button_event(JOY_BUTTON_DPAD_RIGHT, false, 23)',
+            'var held_final_tile := _canvas_selected_tile(shell)',
+            'var held_release_checks := {',
+            '"selected_final_exact": _canvas_selected_tile(shell) == held_final_tile',
+            '"final_row_exact": held_final_tile.y == hold_start.y',
+            '"final_progress_after_two_repeats": held_final_tile.x >= immediate_tile.x + 2',
+            '"final_in_bounds": held_final_tile.x >= 0 and held_final_tile.y >= 0 and held_final_tile.x < map_size.x and held_final_tile.y < map_size.y',
+            '"live_empty": live.text == ""',
+            '"pending_context": String(held_pending.get("kind", "")) == "context"',
+            '"pending_tile_exact": held_pending.get("selected_tile", {}) == {"x": held_final_tile.x, "y": held_final_tile.y}',
+            '"semantic_timer_active": not semantic_timer.is_stopped()',
+            '"semantic_timer_wait_exact": is_equal_approx(semantic_timer.wait_time, 0.42)',
+            '"pending_generation_current": int(held_pending.get("generation", -1)) == int(shell.get("_editor_map_cursor_semantic_generation"))',
+            '"pending_session_identity": is_same(held_pending.get("session_ref"), session)',
+            '"pending_session_id_exact": String(held_pending.get("session_id", "")) == String(session.session_id)',
+            '"pending_tool_exact": String(held_pending.get("tool", "")) == "inspect"',
+            '"pending_label_identity": is_same(held_pending.get("label_ref"), live)',
+            '"held_direction_cleared": shell.get("_held_editor_map_joypad_direction") == Vector2i.ZERO',
+            '"held_action_cleared": String(shell.get("_held_editor_map_joypad_action")) == ""',
+            '"held_button_cleared": int(shell.get("_held_editor_map_joypad_button")) == -1',
+            '"held_device_cleared": int(shell.get("_held_editor_map_joypad_device")) == -1',
+            '"repeat_timer_stopped": repeat_timer != null and repeat_timer.is_stopped()',
+            'if not _checks_exact(held_release_checks):',
+            'held_pending_compact.erase("session_ref")',
+            'held_pending_compact.erase("label_ref")',
+            'await _press_key(KEY_LEFT)',
+            'await _hover_map_tile(shell, Vector2i.ZERO)',
+            'await _press_joypad_button(JOY_BUTTON_A)',
+            'await _await_editor_map_semantic_clear(shell, live, 1800)',
+            'shell.call("_clear_editor_map_cursor_semantic_result", stale_result)',
+            'replacement_after != replacement_before',
+            'await _press_key(KEY_ESCAPE)',
+            'var cancel_checks := {',
+            '"live_text_exact": live.text == expected_cancel',
+            '"focus_owner_exact": get_viewport().gui_get_focus_owner() == terrain_focus',
+            '"pending_result_clear": String(cancel_pending.get("kind", "")) == "result_clear"',
+            '"pending_focus_identity": is_same(cancel_pending.get("focus_ref"), terrain_focus)',
+            '"semantic_timer_active": not semantic_timer.is_stopped()',
+            '"semantic_timer_wait_exact": is_equal_approx(semantic_timer.wait_time, 1.2)',
+            '"pending_generation_current": int(cancel_pending.get("generation", -1)) == int(shell.get("_editor_map_cursor_semantic_generation"))',
+            '"pending_session_identity": is_same(cancel_pending.get("session_ref"), session)',
+            '"pending_session_id_exact": String(cancel_pending.get("session_id", "")) == String(session.session_id)',
+            '"pending_label_identity": is_same(cancel_pending.get("label_ref"), live)',
+            '"pending_label_text_exact": String(cancel_pending.get("label_text", "")) == expected_cancel',
+            'if not _checks_exact(cancel_checks):',
+            'shell.call("validation_request_dirty_transition", "menu")',
+            'ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)',
+            'shell.call("_resume_working_copy_from_memory", replacement_session)',
+            'shell.call("_exit_tree")',
+            '_semantic_read_only_authority(shell)',
+            '_semantic_external_authority(shell) != external_authority_before',
+            '_stage_editor_map_semantic_pending(shell, map_view)',
+            '_focus_background_authority(shell)',
+            '_package_file_state() != package_state',
+        ):
+            ensure(required_token in cursor_semantic_matrix_body, errors, f"Map Editor cursor semantic lifecycle matrix is missing exact token: {required_token}")
+        ensure(
+            cursor_semantic_matrix_body.count('_stage_editor_map_semantic_pending(shell, map_view)') == 4,
+            errors,
+            "Map Editor cursor semantic lifecycle matrix must stage exact pending contexts before focus, modal, session, and tree cancellation",
+        )
+        hold_press_index = cursor_semantic_matrix_body.find('await _send_joypad_button_event(JOY_BUTTON_DPAD_RIGHT, true, 23)')
+        first_repeat_index = cursor_semantic_matrix_body.find('await _await_exact_canvas_timer_step_silent(shell, immediate_tile + Vector2i.RIGHT, live, 600)')
+        rate_repeat_index = cursor_semantic_matrix_body.find('await _await_exact_canvas_timer_step_silent(shell, immediate_tile + (Vector2i.RIGHT * 2), live, 250)')
+        hold_release_index = cursor_semantic_matrix_body.find('await _send_joypad_button_event(JOY_BUTTON_DPAD_RIGHT, false, 23)')
+        held_publish_index = cursor_semantic_matrix_body.find('await _await_editor_map_semantic_text(live, held_expected, 1000)')
+        ensure(
+            0 <= hold_press_index < first_repeat_index < rate_repeat_index < hold_release_index < held_publish_index,
+            errors,
+            "Map Editor cursor semantics must exercise the real 0.36/0.09 hold, physical release, then final 0.42 publication in strict order",
+        )
+        held_release_start = cursor_semantic_matrix_body.find('var held_release_checks := {', hold_release_index)
+        held_final_capture = cursor_semantic_matrix_body.find('var held_final_tile := _canvas_selected_tile(shell)', hold_release_index)
+        held_pending_capture = cursor_semantic_matrix_body.find('var held_pending: Dictionary =', held_final_capture)
+        held_release_gate = cursor_semantic_matrix_body.find('if not _checks_exact(held_release_checks):', held_release_start)
+        held_release_failure = cursor_semantic_matrix_body.find('var held_release_failure := {', held_release_gate)
+        held_release_publish = cursor_semantic_matrix_body.find('await _await_editor_map_semantic_text(live, held_expected, 1000)', held_release_failure)
+        ensure(
+            0 <= hold_release_index < held_final_capture < held_pending_capture < held_release_start < held_release_gate < held_release_failure < held_release_publish,
+            errors,
+            "Map Editor held-release diagnostic must capture the dynamic final tile after physical release, capture matching pending identity, enforce every named check, print failure-only values, then await the unchanged 0.42 publication",
+        )
+        held_release_block = cursor_semantic_matrix_body[held_release_start:held_release_publish]
+        for required_token in (
+            '"released_final_tile": held_final_tile',
+            '"actual_tile": _canvas_selected_tile(shell)',
+            '"live_text": live.text',
+            '"pending_compact": held_pending_compact',
+            '"pending_session_identity": is_same(held_pending.get("session_ref"), session)',
+            '"pending_label_identity": is_same(held_pending.get("label_ref"), live)',
+            '"semantic_timer_stopped": semantic_timer.is_stopped()',
+            '"semantic_timer_wait": semantic_timer.wait_time',
+            '"semantic_timer_time_left": semantic_timer.time_left',
+            '"repeat_timer_stopped": repeat_timer == null or repeat_timer.is_stopped()',
+            '"repeat_timer_wait": repeat_timer.wait_time if repeat_timer != null else -1.0',
+            '"repeat_timer_time_left": repeat_timer.time_left if repeat_timer != null else -1.0',
+            '"held_direction": shell.get("_held_editor_map_joypad_direction")',
+            '"held_action": String(shell.get("_held_editor_map_joypad_action"))',
+            '"held_button": int(shell.get("_held_editor_map_joypad_button"))',
+            '"held_device": int(shell.get("_held_editor_map_joypad_device"))',
+        ):
+            ensure(required_token in held_release_block, errors, f"Map Editor held-release diagnostic is missing exact failure value: {required_token}")
+        ensure(
+            "normalize" not in held_release_block
+            and "_on_editor_map_joypad_repeat_timeout" not in held_release_block
+            and "_on_editor_map_cursor_semantic_timeout" not in held_release_block,
+            errors,
+            "Map Editor held-release diagnostic must not normalize state or invoke either Timer callback directly",
+        )
+        ensure(
+            "var held_final_tile := immediate_tile + (Vector2i.RIGHT * 2)" not in cursor_semantic_matrix_body,
+            errors,
+            "Map Editor held-release oracle must not impose a fixed upper repeat count after the physical release",
+        )
+        ensure(
+            '"final_progress_after_two_repeats": held_final_tile.x > immediate_tile.x + 2' not in cursor_semantic_matrix_body,
+            errors,
+            "Map Editor held-release oracle must allow release immediately at the already-proven second repeat milestone",
+        )
+        cancel_tool_index = cursor_semantic_matrix_body.find('shell.call("validation_set_tool", "terrain")')
+        cancel_map_focus_index = cursor_semantic_matrix_body.find('map_view.grab_focus()', cancel_tool_index)
+        cancel_semantic_index = cursor_semantic_matrix_body.find('shell.call("_cancel_editor_map_cursor_semantic")', cancel_map_focus_index)
+        cancel_escape_index = cursor_semantic_matrix_body.find('await _press_key(KEY_ESCAPE)', cancel_semantic_index)
+        cancel_capture_index = cursor_semantic_matrix_body.find('var cancel_pending: Dictionary =', cancel_escape_index)
+        cancel_gate_index = cursor_semantic_matrix_body.find('if not _checks_exact(cancel_checks):', cancel_capture_index)
+        cancel_clear_index = cursor_semantic_matrix_body.find('await _await_editor_map_semantic_clear(shell, live, 1800)', cancel_gate_index)
+        ensure(
+            0 <= cancel_tool_index < cancel_map_focus_index < cancel_semantic_index < cancel_escape_index < cancel_capture_index < cancel_gate_index < cancel_clear_index,
+            errors,
+            "Map Editor B/Escape diagnostic must stage Terrain, focus Map, clear stale semantics, physically Escape, capture and gate exact result identity, then await the real clear Timer",
+        )
+        cancel_block = cursor_semantic_matrix_body[cancel_capture_index:cancel_clear_index]
+        for required_token in (
+            '"held_direction_cleared": shell.get("_held_editor_map_joypad_direction") == Vector2i.ZERO',
+            '"held_action_cleared": String(shell.get("_held_editor_map_joypad_action")) == ""',
+            '"held_button_cleared": int(shell.get("_held_editor_map_joypad_button")) == -1',
+            '"held_device_cleared": int(shell.get("_held_editor_map_joypad_device")) == -1',
+            '"repeat_timer_stopped": cancel_repeat_timer != null and cancel_repeat_timer.is_stopped()',
+            'cancel_pending_compact.erase("session_ref")',
+            'cancel_pending_compact.erase("focus_ref")',
+            'cancel_pending_compact.erase("label_ref")',
+            '"expected_text": expected_cancel',
+            '"actual_text": live.text',
+            '"expected_focus_path": String(terrain_focus.get_path()) if terrain_focus != null else ""',
+            '"actual_focus_path": String(actual_focus.get_path()) if actual_focus != null else ""',
+            '"pending_compact": cancel_pending_compact',
+            '"current_generation": int(shell.get("_editor_map_cursor_semantic_generation"))',
+            '"semantic_timer_time_left": semantic_timer.time_left',
+            '"repeat_timer_time_left": cancel_repeat_timer.time_left if cancel_repeat_timer != null else -1.0',
+            '"held_device": int(shell.get("_held_editor_map_joypad_device"))',
+        ):
+            ensure(required_token in cancel_block, errors, f"Map Editor B/Escape diagnostic is missing exact release/result value: {required_token}")
+        ensure(
+            "normalize" not in cancel_block
+            and "_on_editor_map_joypad_repeat_timeout" not in cancel_block
+            and "_on_editor_map_cursor_semantic_timeout" not in cancel_block,
+            errors,
+            "Map Editor B/Escape diagnostic must not normalize state or invoke either Timer callback directly",
+        )
+        session_replacement_start = cursor_semantic_matrix_body.find('Map Editor %d session replacement did not establish a pending cursor context.')
+        session_prior_index = cursor_semantic_matrix_body.find('var prior_session = shell.get("_session")', session_replacement_start)
+        session_factory_index = cursor_semantic_matrix_body.find('var replacement_session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)', session_prior_index)
+        session_nonnull_index = cursor_semantic_matrix_body.find('replacement_session == null', session_factory_index)
+        session_id_index = cursor_semantic_matrix_body.find('String(replacement_session.session_id) == ""', session_nonnull_index)
+        session_scenario_index = cursor_semantic_matrix_body.find('String(replacement_session.scenario_id) != "river-pass"', session_id_index)
+        session_distinct_index = cursor_semantic_matrix_body.find('is_same(replacement_session, prior_session)', session_scenario_index)
+        session_resume_index = cursor_semantic_matrix_body.find('shell.call("_resume_working_copy_from_memory", replacement_session)', session_distinct_index)
+        session_current_index = cursor_semantic_matrix_body.find('is_same(shell.get("_session"), replacement_session)', session_resume_index)
+        session_inactive_index = cursor_semantic_matrix_body.find('bool(_editor_map_semantic_state(shell).get("inactive", false))', session_current_index)
+        ensure(
+            0 <= session_prior_index < session_factory_index < session_nonnull_index < session_id_index < session_scenario_index < session_distinct_index < session_resume_index < session_current_index < session_inactive_index,
+            errors,
+            "Map Editor semantic session replacement must create an independent authored River Pass session before the real resume and require exact new identity plus inactive semantics",
+        )
+        session_replacement_end = cursor_semantic_matrix_body.find('if not await _reset_case(shell, source_id, false):', session_inactive_index)
+        session_replacement_block = cursor_semantic_matrix_body[session_replacement_start:session_replacement_end]
+        ensure(
+            '_duplicate_session(prior_session)' not in session_replacement_block
+            and 'shell.call("_duplicate_session", prior_session)' not in session_replacement_block,
+            errors,
+            "Map Editor semantic session replacement must not duplicate the generated package session with its non-authored scenario identity",
+        )
+        stale_capture_index = cursor_semantic_matrix_body.find('var stale_result: Dictionary =')
+        replacement_capture_index = cursor_semantic_matrix_body.find('var replacement_before: Dictionary =', stale_capture_index)
+        stale_clear_index = cursor_semantic_matrix_body.find('shell.call("_clear_editor_map_cursor_semantic_result", stale_result)', replacement_capture_index)
+        replacement_compare_index = cursor_semantic_matrix_body.find('replacement_after != replacement_before', stale_clear_index)
+        ensure(
+            0 <= stale_capture_index < replacement_capture_index < stale_clear_index < replacement_compare_index,
+            errors,
+            "Map Editor stale result-clear proof must capture a replacement before invoking and rejecting the stale clear",
+        )
+        ensure(
+            '_on_editor_map_cursor_semantic_timeout' not in cursor_semantic_matrix_body,
+            errors,
+            "Map Editor cursor semantic behavior matrix must poll real Timers without invoking the timeout callback directly",
+        )
+    cursor_external_authority_match = re.search(
+        r"func _semantic_external_authority\(.*?\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc _editor_map_semantic_state)",
+        report_text,
+        flags=re.DOTALL,
+    )
+    ensure(cursor_external_authority_match is not None, errors, "Could not isolate Map Editor cursor semantic external-authority helper")
+    if cursor_external_authority_match is not None:
+        cursor_external_authority_body = cursor_external_authority_match.group("body")
+        ensure(
+            cursor_external_authority_body.count('_focus_background_authority(shell)') == 1
+            and cursor_external_authority_body.count('authority.erase("working_copy")') == 1
+            and cursor_external_authority_body.count("authority.erase(") == 1,
+            errors,
+            "Map Editor cursor semantic external authority must retain every background field except the intentionally mutable working copy",
+        )
+    cursor_pending_stage_match = re.search(
+        r"func _stage_editor_map_semantic_pending\(.*?\) -> bool:\n(?P<body>.*?)(?=\nfunc _first_semantic_empty_tile)",
+        report_text,
+        flags=re.DOTALL,
+    )
+    ensure(cursor_pending_stage_match is not None, errors, "Could not isolate Map Editor cursor semantic pending-stage helper")
+    if cursor_pending_stage_match is not None:
+        cursor_pending_stage_body = cursor_pending_stage_match.group("body")
+        for required_token in (
+            'shell.call("validation_select_tile", start.x, start.y)',
+            'map_view.grab_focus()',
+            'await _settle()',
+            'shell.call("_cancel_editor_map_cursor_semantic")',
+            'await _press_key(KEY_RIGHT)',
+            'String(pending.get("kind", "")) == "context"',
+            'not timer.is_stopped()',
+            'is_equal_approx(timer.wait_time, 0.42)',
+        ):
+            ensure(required_token in cursor_pending_stage_body, errors, f"Map Editor cursor semantic pending-stage helper is missing exact token: {required_token}")
+        select_index = cursor_pending_stage_body.find('shell.call("validation_select_tile", start.x, start.y)')
+        focus_index = cursor_pending_stage_body.find('map_view.grab_focus()', select_index)
+        settle_index = cursor_pending_stage_body.find('await _settle()', focus_index)
+        cancel_index = cursor_pending_stage_body.find('shell.call("_cancel_editor_map_cursor_semantic")', settle_index)
+        press_index = cursor_pending_stage_body.find('await _press_key(KEY_RIGHT)', cancel_index)
+        pending_index = cursor_pending_stage_body.find('var pending: Dictionary =', press_index)
+        ensure(
+            0 <= select_index < focus_index < settle_index < cancel_index < press_index < pending_index,
+            errors,
+            "Map Editor cursor semantic pending-stage helper must select, focus, settle, clear, physically move, then inspect the real pending context",
+        )
+    cursor_context_checks_match = re.search(
+        r"func _editor_map_semantic_context_checks\(.*?\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc _semantic_read_only_authority)",
+        report_text,
+        flags=re.DOTALL,
+    )
+    ensure(cursor_context_checks_match is not None, errors, "Could not isolate Map Editor bounded semantic context oracle")
+    if cursor_context_checks_match is not None:
+        cursor_context_checks_body = cursor_context_checks_match.group("body")
+        for required_token in (
+            'text == String(shell.call("_editor_map_cursor_semantic_context"))',
+            'text != "" and text.length() <= 320',
+            'text.begins_with("Tile %d,%d."',
+            'text.contains("Terrain %s;" % terrain_label)',
+            'text.contains("Tool %s." % tool_label)',
+            'text.contains("A/Enter:")',
+            'text.ends_with("B/Escape: return to tool commands.")',
+            'shell.call("_object_details_at", tile, true)',
+        ):
+            ensure(required_token in cursor_context_checks_body, errors, f"Map Editor bounded semantic context oracle is missing exact token: {required_token}")
     ensure(
         '"preexisting_1280_overflow_exact"' not in report_text
         and '"horizontal_intersection_meaningful"' not in report_text
@@ -15282,6 +15670,46 @@ def validate_map_editor_dirty_transition_regression(errors: list[str]) -> None:
             "Map Editor responsive ToolRail must measure the live inner width before choosing and assigning columns",
         )
     editor_scene_text = MAP_EDITOR_SCENE_PATH.read_text(encoding="utf-8")
+    editor_cursor_live_match = re.search(
+        r'\[node name="EditorMapCursorLive" type="Label" parent="\."\](?P<body>.*?)(?=\n\[node )',
+        editor_scene_text,
+        flags=re.DOTALL,
+    )
+    ensure(editor_cursor_live_match is not None, errors, "MapEditorShell.tscn must own one root EditorMapCursorLive Label")
+    if editor_cursor_live_match is not None:
+        editor_cursor_live_body = editor_cursor_live_match.group("body")
+        for required_token in (
+            "unique_name_in_owner = true",
+            "layout_mode = 0",
+            "offset_right = 1.0",
+            "offset_bottom = 1.0",
+            "mouse_filter = 2",
+            "self_modulate = Color(1, 1, 1, 0)",
+            'accessibility_name = "Map editor cursor"',
+            'accessibility_description = "Announces the current map editor tile, material, tool, and available keyboard actions after canvas navigation settles."',
+            "accessibility_live = 1",
+        ):
+            ensure(required_token in editor_cursor_live_body, errors, f"EditorMapCursorLive is missing exact authored geometry/semantics token: {required_token}")
+    ensure(
+        editor_scene_text.count('[node name="EditorMapCursorLive" type="Label"') == 1,
+        errors,
+        "MapEditorShell.tscn must contain exactly one EditorMapCursorLive Label",
+    )
+    working_copy_status_match = re.search(
+        r'\[node name="WorkingCopyStatus" type="Label".*?\](?P<body>.*?)(?=\n\[node )',
+        editor_scene_text,
+        flags=re.DOTALL,
+    )
+    ensure(
+        working_copy_status_match is not None and "accessibility_live = 0" in working_copy_status_match.group("body"),
+        errors,
+        "Map Editor WorkingCopyStatus must remain explicitly LIVE_OFF",
+    )
+    ensure(
+        '[node name="Status" type="Label" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox"]' not in editor_scene_text,
+        errors,
+        "Map Editor must not retain the ambiguous former working-copy Status node",
+    )
     ensure(
         re.search(r'\[node name="Map" type="Control".*?\].*?custom_minimum_size = Vector2\(820, 560\)', editor_scene_text, flags=re.DOTALL) is not None
         and re.search(r'\[node name="ToolRail" type="PanelContainer".*?\].*?custom_minimum_size = Vector2\(340, 0\)', editor_scene_text, flags=re.DOTALL) is not None,
@@ -15360,11 +15788,12 @@ def validate_map_editor_dirty_transition_regression(errors: list[str]) -> None:
         "_configure_editor_map_keyboard_input()",
         "_map_view.focus_mode = Control.FOCUS_ALL",
         "_map_view.gui_input.is_connected(_on_editor_map_gui_input)",
-        "_map_view.focus_exited.is_connected(_stop_editor_map_joypad_repeat)",
+        "_map_view.focus_exited.is_connected(_on_editor_map_focus_exited)",
         'Timer.new()',
         'one_shot = true',
         'func _on_editor_map_gui_input(event: InputEvent) -> void:',
         'event is InputEventKey or event is InputEventJoypadButton',
+        'func _editor_map_cancel_pressed(event: InputEvent) -> bool:',
         'func _editor_map_keyboard_input_owned() -> bool:',
         'viewport.gui_get_focus_owner() == _map_view',
         'func _editor_map_joypad_hold_matches(',
@@ -15382,6 +15811,22 @@ def validate_map_editor_dirty_transition_regression(errors: list[str]) -> None:
         'func _active_tool_focus_control() -> Control:',
         'control != _map_view',
         '_map_view.tile_pressed.connect(_on_map_tile_pressed)',
+        'const EDITOR_MAP_CURSOR_SEMANTIC_DEBOUNCE_SECONDS := 0.42',
+        'const EDITOR_MAP_CURSOR_RESULT_VISIBLE_SECONDS := 1.20',
+        'const EDITOR_MAP_CURSOR_SEMANTIC_MAX_CHARS := 320',
+        'func _configure_editor_map_cursor_semantic_timer() -> void:',
+        'func _on_editor_map_focus_exited() -> void:',
+        'func _schedule_editor_map_cursor_semantic() -> void:',
+        'func _editor_map_cursor_semantic_context() -> String:',
+        'func _editor_map_action_result_semantic_text() -> String:',
+        'func _publish_editor_map_cursor_semantic_result(',
+        'func _on_editor_map_cursor_semantic_timeout() -> void:',
+        'func _publish_pending_editor_map_cursor_context(pending: Dictionary) -> void:',
+        'func _clear_editor_map_cursor_semantic_result(pending: Dictionary) -> void:',
+        'func _cancel_editor_map_cursor_semantic() -> void:',
+        '_schedule_editor_map_cursor_semantic()',
+        '_publish_editor_map_cursor_semantic_result(',
+        '_cancel_editor_map_cursor_semantic()',
     ):
         ensure(required_token in editor_text, errors, f"MapEditorShell.gd is missing canvas keyboard token: {required_token}")
     canvas_handler_match = re.search(
@@ -15400,20 +15845,21 @@ def validate_map_editor_dirty_transition_regression(errors: list[str]) -> None:
         )
         ensure(
             'event.is_action_pressed("ui_accept")' in canvas_handler
-            and 'event.is_action_pressed("ui_cancel")' in canvas_handler
+            and '_editor_map_cancel_pressed(event)' in canvas_handler
             and "_start_editor_map_joypad_repeat" not in canvas_handler.split('event.is_action_pressed("ui_accept")', 1)[1],
             errors,
             "Map Editor accept/cancel must remain edge-triggered and outside held-repeat setup",
         )
+        cardinal_index = canvas_handler.find("var cardinal_action := _editor_map_cardinal_action(event)")
         accept_index = canvas_handler.find('event.is_action_pressed("ui_accept")')
         tile_action_index = canvas_handler.find("_on_map_tile_pressed(_selected_tile)")
-        cancel_index = canvas_handler.find('event.is_action_pressed("ui_cancel")')
+        cancel_index = canvas_handler.find('_editor_map_cancel_pressed(event)')
         ensure(
             editor_text.count("_on_map_tile_pressed(_selected_tile)") == 1
             and canvas_handler.count("_on_map_tile_pressed(_selected_tile)") == 1
-            and 0 <= accept_index < tile_action_index < cancel_index,
+            and 0 <= cardinal_index < accept_index < tile_action_index < cancel_index,
             errors,
-            "Map Editor canvas Accept must invoke its selected-tile action exactly once before the cancel branch",
+            "Map Editor canvas handler must retain cardinal, exact-once Accept action, then cancel-helper ordering",
         )
         accept_branch = canvas_handler[accept_index:cancel_index] if 0 <= accept_index < cancel_index else ""
         ensure(
@@ -15421,6 +15867,52 @@ def validate_map_editor_dirty_transition_regression(errors: list[str]) -> None:
             and "event.echo" not in accept_branch,
             errors,
             "Map Editor canvas Accept must retain non-echo physical action semantics",
+        )
+        cancel_branch = canvas_handler[cancel_index:] if cancel_index >= 0 else ""
+        cancel_helper_index = cancel_branch.find("_handle_editor_map_cancel()")
+        cancel_accept_index = cancel_branch.find("_map_view.accept_event()")
+        ensure(
+            cancel_branch.count("_handle_editor_map_cancel()") == 1
+            and cancel_branch.count("_map_view.accept_event()") == 1
+            and 0 <= cancel_helper_index < cancel_accept_index,
+            errors,
+            "Map Editor canvas cancel branch must invoke the shared completion and accept the event exactly once",
+        )
+    editor_cancel_match = re.search(
+        r"func _editor_map_cancel_pressed\(event: InputEvent\) -> bool:(?P<body>.*?)(?=\n\nfunc )",
+        editor_text,
+        flags=re.DOTALL,
+    )
+    ensure(editor_cancel_match is not None, errors, "Could not isolate Map Editor physical cancel matcher")
+    if editor_cancel_match is not None:
+        editor_cancel_body = editor_cancel_match.group("body")
+        for required_token in (
+            'if event.is_action_pressed("ui_cancel"):',
+            "return true",
+            "if not (event is InputEventKey):",
+            "return false",
+            "var key_event := event as InputEventKey",
+            "key_event.pressed",
+            "and not key_event.echo",
+            "key_event.keycode == KEY_ESCAPE or key_event.physical_keycode == KEY_ESCAPE",
+        ):
+            ensure(required_token in editor_cancel_body, errors, f"Map Editor physical cancel matcher is missing exact token: {required_token}")
+        action_index = editor_cancel_body.find('if event.is_action_pressed("ui_cancel"):')
+        action_return_index = editor_cancel_body.find("return true", action_index)
+        non_key_index = editor_cancel_body.find("if not (event is InputEventKey):", action_return_index)
+        non_key_return_index = editor_cancel_body.find("return false", non_key_index)
+        key_cast_index = editor_cancel_body.find("var key_event := event as InputEventKey", non_key_return_index)
+        pressed_index = editor_cancel_body.find("key_event.pressed", key_cast_index)
+        echo_index = editor_cancel_body.find("and not key_event.echo", pressed_index)
+        logical_escape_index = editor_cancel_body.find("key_event.keycode == KEY_ESCAPE", echo_index)
+        physical_escape_index = editor_cancel_body.find("key_event.physical_keycode == KEY_ESCAPE", logical_escape_index)
+        ensure(
+            editor_cancel_body.count('event.is_action_pressed("ui_cancel")') == 1
+            and editor_cancel_body.count("return true") == 1
+            and editor_cancel_body.count("return false") == 1
+            and 0 <= action_index < action_return_index < non_key_index < non_key_return_index < key_cast_index < pressed_index < echo_index < logical_escape_index < physical_escape_index,
+            errors,
+            "Map Editor cancel matcher must accept ui_cancel first, reject non-key events, then match non-echo pressed logical or physical Escape",
         )
     repeat_timeout_match = re.search(
         r"func _on_editor_map_joypad_repeat_timeout\(\) -> void:(.*?)(?=\n\nfunc )",
@@ -15436,6 +15928,178 @@ def validate_map_editor_dirty_transition_regression(errors: list[str]) -> None:
             errors,
             "Map Editor repeat must recheck ownership, move once, then schedule its exact interval",
         )
+    cursor_semantic_function_names = (
+        "_move_editor_map_cursor",
+        "_schedule_editor_map_cursor_semantic",
+        "_editor_map_cursor_semantic_context",
+        "_publish_editor_map_cursor_semantic_result",
+        "_on_editor_map_cursor_semantic_timeout",
+        "_publish_pending_editor_map_cursor_context",
+        "_clear_editor_map_cursor_semantic_result",
+        "_cancel_editor_map_cursor_semantic",
+        "_on_editor_map_focus_exited",
+        "_on_map_tile_hovered",
+        "_on_map_tile_pressed",
+        "_select_tool",
+        "_request_dirty_transition",
+        "_exit_tree",
+    )
+    cursor_semantic_bodies: dict[str, str] = {}
+    for function_name in cursor_semantic_function_names:
+        function_match = re.search(
+            rf"func {re.escape(function_name)}\(.*?\)(?: -> [^:]+)?:\n(?P<body>.*?)(?=\n\nfunc )",
+            editor_text,
+            flags=re.DOTALL,
+        )
+        ensure(function_match is not None, errors, f"Could not isolate Map Editor cursor semantic helper {function_name}")
+        if function_match is not None:
+            cursor_semantic_bodies[function_name] = function_match.group("body")
+    cursor_move_body = cursor_semantic_bodies.get("_move_editor_map_cursor", "")
+    ensure(
+        0 <= cursor_move_body.find("if next_tile == _selected_tile:")
+        < cursor_move_body.find("_selected_tile = next_tile")
+        < cursor_move_body.find("_refresh_state()")
+        < cursor_move_body.find("_schedule_editor_map_cursor_semantic()")
+        and cursor_move_body.count("_schedule_editor_map_cursor_semantic()") == 1,
+        errors,
+        "Map Editor cursor semantics must schedule exactly once after a changed cursor refresh and never for a clamped no-op",
+    )
+    cursor_schedule_body = cursor_semantic_bodies.get("_schedule_editor_map_cursor_semantic", "")
+    schedule_order = (
+        cursor_schedule_body.find("_cancel_editor_map_cursor_semantic()"),
+        cursor_schedule_body.find("_editor_map_keyboard_input_owned()"),
+        cursor_schedule_body.find('_editor_map_cursor_semantic_pending = {'),
+        cursor_schedule_body.find("_editor_map_cursor_semantic_timer.start(EDITOR_MAP_CURSOR_SEMANTIC_DEBOUNCE_SECONDS)"),
+    )
+    ensure(
+        all(index >= 0 for index in schedule_order) and list(schedule_order) == sorted(schedule_order),
+        errors,
+        "Map Editor cursor semantic schedule must cancel stale state, validate ownership, capture identity, then start 0.42 seconds",
+    )
+    for required_token in (
+        '"kind": "context"',
+        '"generation": _editor_map_cursor_semantic_generation',
+        '"session_ref": _session',
+        '"session_id": String(_session.session_id)',
+        '"selected_tile": _editor_tile_payload(_selected_tile)',
+        '"tool": _tool',
+        '"label_ref": _editor_map_cursor_live_label',
+    ):
+        ensure(required_token in cursor_schedule_body, errors, f"Map Editor cursor semantic pending identity is missing exact token: {required_token}")
+    cursor_context_body = cursor_semantic_bodies.get("_editor_map_cursor_semantic_context", "")
+    for required_token in (
+        "_terrain_at(_selected_tile)",
+        "_terrain_label_for_id(terrain_id)",
+        "_has_road_at(_selected_tile)",
+        "_road_layer_ids_at(_selected_tile)",
+        "_object_details_at(_selected_tile, true)",
+        "_editor_active_tool_cue_payload()",
+        '"Tile %d,%d. Terrain %s; %s. Tool %s. A/Enter: %s. B/Escape: return to tool commands."',
+        "EDITOR_MAP_CURSOR_SEMANTIC_MAX_CHARS",
+    ):
+        ensure(required_token in cursor_context_body, errors, f"Map Editor cursor semantic context is missing exact bounded source token: {required_token}")
+    ensure(
+        "_refresh_state" not in cursor_context_body
+        and "validation_snapshot" not in cursor_context_body
+        and "_on_map_tile_pressed" not in cursor_context_body,
+        errors,
+        "Map Editor cursor semantic context must read current cached editor state without refresh, mutation, or action dispatch",
+    )
+    cursor_timeout_body = cursor_semantic_bodies.get("_on_editor_map_cursor_semantic_timeout", "")
+    ensure(
+        cursor_timeout_body.find('int(pending.get("generation", -1)) != _editor_map_cursor_semantic_generation')
+        < cursor_timeout_body.find("_editor_map_cursor_semantic_pending = {}")
+        < cursor_timeout_body.find('match String(pending.get("kind", ""))'),
+        errors,
+        "Map Editor cursor semantic timeout must reject stale generations, consume pending identity, then dispatch its exact kind",
+    )
+    cursor_pending_body = cursor_semantic_bodies.get("_publish_pending_editor_map_cursor_context", "")
+    for required_token in (
+        "not _editor_map_keyboard_input_owned()",
+        'not is_same(pending.get("session_ref"), _session)',
+        'String(pending.get("session_id", "")) != String(_session.session_id)',
+        "pending_tile != _selected_tile",
+        'String(pending.get("tool", "")) != _tool',
+        'not is_same(pending.get("label_ref"), _editor_map_cursor_live_label)',
+        "_editor_map_cursor_semantic_context()",
+        "context.left(EDITOR_MAP_CURSOR_SEMANTIC_MAX_CHARS)",
+    ):
+        ensure(required_token in cursor_pending_body, errors, f"Map Editor cursor semantic publish is missing stale-context guard token: {required_token}")
+    cursor_result_body = cursor_semantic_bodies.get("_publish_editor_map_cursor_semantic_result", "")
+    result_order = (
+        cursor_result_body.find("_cancel_editor_map_cursor_semantic()"),
+        cursor_result_body.find("_editor_map_cursor_live_label.text = bounded_text"),
+        cursor_result_body.find('_editor_map_cursor_semantic_pending = {'),
+        cursor_result_body.find("_editor_map_cursor_semantic_timer.start(EDITOR_MAP_CURSOR_RESULT_VISIBLE_SECONDS)"),
+    )
+    ensure(
+        all(index >= 0 for index in result_order) and list(result_order) == sorted(result_order),
+        errors,
+        "Map Editor action results must cancel stale context, publish once, capture clear identity, then start 1.2 seconds",
+    )
+    for required_token in (
+        "not is_same(source_session, _session)",
+        "String(source_session.session_id) != String(_session.session_id)",
+        "get_viewport().gui_get_focus_owner() != expected_focus",
+        "_dirty_transition_dialog.visible",
+        "not _pending_dirty_transition.is_empty()",
+        '"kind": "result_clear"',
+        '"focus_ref": expected_focus',
+        '"label_text": bounded_text',
+    ):
+        ensure(required_token in cursor_result_body, errors, f"Map Editor action result semantic is missing exact owner/identity token: {required_token}")
+    cursor_clear_body = cursor_semantic_bodies.get("_clear_editor_map_cursor_semantic_result", "")
+    stale_generation_guard = 'if int(pending.get("generation", -1)) != _editor_map_cursor_semantic_generation:\n\t\treturn'
+    for required_token in (
+        stale_generation_guard,
+        'not is_same(pending.get("session_ref"), _session)',
+        'String(pending.get("session_id", "")) != String(_session.session_id)',
+        "get_viewport().gui_get_focus_owner() != expected_focus",
+        'not is_same(pending.get("label_ref"), _editor_map_cursor_live_label)',
+        '_editor_map_cursor_live_label.text == String(pending.get("label_text", ""))',
+    ):
+        ensure(required_token in cursor_clear_body, errors, f"Map Editor result clear is missing same-owner/session/label guard: {required_token}")
+    clear_generation_index = cursor_clear_body.find(stale_generation_guard)
+    clear_focus_index = cursor_clear_body.find('var expected_focus: Variant = pending.get("focus_ref")')
+    clear_session_index = cursor_clear_body.find('not is_same(pending.get("session_ref"), _session)')
+    clear_modal_index = cursor_clear_body.find('_dirty_transition_dialog != null and _dirty_transition_dialog.visible')
+    clear_cancel_index = cursor_clear_body.find('_cancel_editor_map_cursor_semantic()')
+    clear_mutation_index = cursor_clear_body.find('_editor_map_cursor_semantic_generation += 1')
+    clear_text_index = cursor_clear_body.find('_editor_map_cursor_live_label.text = ""')
+    ensure(
+        cursor_clear_body.strip().startswith(stale_generation_guard)
+        and 0 <= clear_generation_index < clear_focus_index < clear_session_index < clear_modal_index < clear_cancel_index < clear_mutation_index < clear_text_index,
+        errors,
+        "Map Editor result clear must return on a stale generation before focus, session, modal, cancel, generation, or label access can disturb a replacement context",
+    )
+    cursor_cancel_body = cursor_semantic_bodies.get("_cancel_editor_map_cursor_semantic", "")
+    cancel_order = (
+        cursor_cancel_body.find("_editor_map_cursor_semantic_generation += 1"),
+        cursor_cancel_body.find("_editor_map_cursor_semantic_pending.clear()"),
+        cursor_cancel_body.find("_editor_map_cursor_semantic_timer.stop()"),
+        cursor_cancel_body.find('_editor_map_cursor_live_label.text = ""'),
+    )
+    ensure(
+        all(index >= 0 for index in cancel_order) and list(cancel_order) == sorted(cancel_order),
+        errors,
+        "Map Editor cursor semantic cancel must invalidate generation, clear pending, stop Timer, then clear text",
+    )
+    ensure(
+        "_cancel_editor_map_cursor_semantic()" not in cursor_semantic_bodies.get("_on_map_tile_hovered", ""),
+        errors,
+        "Map Editor mouse hover must not publish or replace keyboard cursor semantics",
+    )
+    for owner_name in ("_on_editor_map_focus_exited", "_select_tool", "_on_map_tile_pressed", "_request_dirty_transition", "_exit_tree"):
+        ensure(
+            "_cancel_editor_map_cursor_semantic()" in cursor_semantic_bodies.get(owner_name, ""),
+            errors,
+            f"Map Editor cursor semantic lifetime must cancel from {owner_name}",
+        )
+    ensure(
+        editor_text.count("_publish_editor_map_cursor_semantic_result(") == 3,
+        errors,
+        "Map Editor cursor semantic result publisher must have one definition and exact A/B call sites only",
+    )
     refresh_match = re.search(
         r"func _refresh_state\(\) -> void:(.*?)(?=\n\nfunc )",
         editor_text,
@@ -15475,7 +16139,7 @@ def validate_map_editor_dirty_transition_regression(errors: list[str]) -> None:
         'root_window.window_input.connect(_on_root_window_input)',
         'func _on_root_window_input(event: InputEvent) -> void:',
         'event is InputEventKey or event is InputEventJoypadButton',
-        'get_tree().root.set_input_as_handled()',
+        'root_window.set_input_as_handled()',
         'event.duplicate() as InputEvent',
         '"_forward_root_physical_input_to_dirty_transition"',
         'func _forward_root_physical_input_to_dirty_transition(',
@@ -15496,14 +16160,93 @@ def validate_map_editor_dirty_transition_regression(errors: list[str]) -> None:
         ensure("InputEventMouseButton" not in handler_body, errors, "Map Editor root bridge must not forward mouse-button input")
         ensure("InputEventMouseMotion" not in handler_body, errors, "Map Editor root bridge must not forward mouse-motion input")
         ensure("InputEventAction" not in handler_body, errors, "Map Editor root bridge must not forward synthetic action input")
-        handled_index = handler_body.find("get_tree().root.set_input_as_handled()")
-        duplicate_index = handler_body.find("event.duplicate() as InputEvent")
-        deferred_index = handler_body.find("call_deferred(")
+        recursion_index = handler_body.find("_forwarding_dirty_transition_root_physical_input")
+        type_index = handler_body.find("not (event is InputEventKey or event is InputEventJoypadButton)", recursion_index)
+        map_cancel_index = handler_body.find("if _editor_map_keyboard_input_owned() and _editor_map_cancel_pressed(event):", type_index)
+        map_handled_index = handler_body.find("root_window.set_input_as_handled()", map_cancel_index)
+        map_helper_index = handler_body.find("_handle_editor_map_cancel()", map_handled_index)
+        map_return_index = handler_body.find("return", map_helper_index)
+        dirty_gate_index = handler_body.find("if not _dirty_transition_dialog.visible or _pending_dirty_transition.is_empty():", map_return_index)
+        ensure(
+            handler_body.count("_handle_editor_map_cancel()") == 1
+            and 0 <= recursion_index <= type_index < map_cancel_index < map_handled_index < map_helper_index < map_return_index < dirty_gate_index,
+            errors,
+            "Map Editor root handler must reject recursion/type, complete an owned canvas cancel exactly once, return, then consider dirty-dialog forwarding",
+        )
+        map_cancel_prefix = handler_body[:dirty_gate_index] if dirty_gate_index >= 0 else handler_body
+        ensure(
+            "dialog" not in map_cancel_prefix
+            and "event.duplicate()" not in map_cancel_prefix
+            and "call_deferred(" not in map_cancel_prefix
+            and "_forward_root_physical_input_to_dirty_transition" not in map_cancel_prefix,
+            errors,
+            "Map Editor root canvas-cancel prefix must not touch or schedule dirty-dialog forwarding",
+        )
+        handled_index = handler_body.find("root_window.set_input_as_handled()", dirty_gate_index)
+        duplicate_index = handler_body.find("event.duplicate() as InputEvent", dirty_gate_index)
+        deferred_index = handler_body.find("call_deferred(", dirty_gate_index)
         ensure(
             handled_index >= 0 and handled_index < duplicate_index < deferred_index,
             errors,
             "Map Editor root bridge must handle, detach, then defer physical input in exact order",
         )
+    gui_cancel_match = re.search(
+        r"func _on_editor_map_gui_input\(event: InputEvent\) -> void:(?P<body>.*?)(?=\n\nfunc )",
+        editor_text,
+        flags=re.DOTALL,
+    )
+    ensure(gui_cancel_match is not None, errors, "Could not isolate Map Editor GUI cancel suffix")
+    if gui_cancel_match is not None:
+        gui_cancel_body = gui_cancel_match.group("body")
+        gui_cancel_index = gui_cancel_body.find("if _editor_map_cancel_pressed(event):")
+        gui_cancel_suffix = gui_cancel_body[gui_cancel_index:] if gui_cancel_index >= 0 else ""
+        ensure(
+            gui_cancel_suffix.count("_handle_editor_map_cancel()") == 1
+            and gui_cancel_suffix.count("_map_view.accept_event()") == 1
+            and gui_cancel_suffix.find("_handle_editor_map_cancel()") < gui_cancel_suffix.find("_map_view.accept_event()"),
+            errors,
+            "Map Editor GUI cancel suffix must complete the shared cancel exactly once before accepting the Map event exactly once",
+        )
+    cancel_helper_match = re.search(
+        r"func _handle_editor_map_cancel\(\) -> void:(?P<body>.*?)(?=\n\nfunc )",
+        editor_text,
+        flags=re.DOTALL,
+    )
+    ensure(cancel_helper_match is not None, errors, "Could not isolate Map Editor shared cancel completion helper")
+    if cancel_helper_match is not None:
+        cancel_helper_body = cancel_helper_match.group("body")
+        source_index = cancel_helper_body.find("var source_session = _session")
+        tile_index = cancel_helper_body.find("var canceled_tile := _selected_tile")
+        restore_index = cancel_helper_body.find("_restore_editor_command_focus()")
+        focus_index = cancel_helper_body.find("var focus_owner := get_viewport().gui_get_focus_owner() as Control")
+        publish_index = cancel_helper_body.find("_publish_editor_map_cursor_semantic_result(")
+        ensure(
+            cancel_helper_body.count("_restore_editor_command_focus()") == 1
+            and cancel_helper_body.count("_publish_editor_map_cursor_semantic_result(") == 1
+            and 0 <= source_index < tile_index < restore_index < focus_index < publish_index,
+            errors,
+            "Map Editor shared cancel helper must capture source/tile, restore focus, capture the owner, then publish exactly once",
+        )
+    ensure(
+        editor_text.count("func _handle_editor_map_cancel() -> void:") == 1
+        and editor_text.count("_handle_editor_map_cancel()") == 3,
+        errors,
+        "Map Editor shared cancel helper must have one definition and exactly two production call sites",
+    )
+    ensure(
+        'await _press_key(KEY_ESCAPE)' in report_text
+        and 'await _press_joypad_button(JOY_BUTTON_B)' in report_text,
+        errors,
+        "Map Editor regression must retain real physical Escape and joypad-B controls",
+    )
+    cursor_semantic_matrix_for_injection = cursor_semantic_matrix_match.group("body") if cursor_semantic_matrix_match is not None else ""
+    ensure(
+        'shell.call("_on_editor_map_gui_input"' not in cursor_semantic_matrix_for_injection
+        and 'shell.call("_on_root_window_input"' not in cursor_semantic_matrix_for_injection
+        and ".push_input(" not in cursor_semantic_matrix_for_injection,
+        errors,
+        "Map Editor cursor semantic behavior matrix must exercise physical delivery without direct handler or GUI injection",
+    )
     forwarding_match = re.search(
         r"func _forward_root_physical_input_to_dirty_transition\(.*?\) -> void:(.*?)(?=\n\nfunc )",
         editor_text,
