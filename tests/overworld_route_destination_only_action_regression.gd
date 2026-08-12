@@ -94,6 +94,29 @@ func _assert_resource_destination_keeps_existing_interaction_semantics() -> bool
 	var selection_simple_paths: Dictionary = selection_command.get("simple_route_fast_paths", {}) if selection_command.get("simple_route_fast_paths", {}) is Dictionary else {}
 	if int(selection_simple_paths.get("context_tile_text_resource_hits", 0)) <= 0:
 		return _fail("Resource route selection did not expose compact interaction context text.", selection_command)
+	if int(selection_simple_paths.get("field_readiness_hits", 0)) <= 0:
+		return _fail("Resource route selection did not use the bounded field-readiness path.", selection_command)
+	if int(selection_simple_paths.get("field_readiness_compact_interaction_hits", 0)) <= 0:
+		return _fail("Resource route selection did not use compact interaction field readiness.", selection_command)
+	if int(selection_simple_paths.get("field_readiness_open_hits", 0)) != 0:
+		return _fail("Resource route selection incorrectly used open-route field readiness.", selection_command)
+	if int(selection_simple_paths.get("field_readiness_current_hits", 0)) != 0:
+		return _fail("Resource route selection incorrectly used current-route field readiness.", selection_command)
+	var readiness_last: Dictionary = selection_simple_paths.get("field_readiness_last", {}) if selection_simple_paths.get("field_readiness_last", {}) is Dictionary else {}
+	var expected_readiness_last := {
+		"destination_interaction_kind": "resource",
+		"route_status": "reachable",
+		"steps": 4,
+		"rich_route_decision_skipped": true,
+		"route_target_handoff_skipped": true,
+		"town_entry_handoff_skipped": true,
+		"active_site_order_skipped": true,
+	}
+	if readiness_last != expected_readiness_last:
+		return _fail("Resource route selection did not retain exact compact field-readiness authority.", {
+			"actual": readiness_last,
+			"expected": expected_readiness_last,
+		})
 
 	var clicked: Dictionary = shell.call("validation_click_tile", 4, 1)
 	if not bool(clicked.get("ok", false)):

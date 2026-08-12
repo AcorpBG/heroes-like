@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `ux-overworld-selected-route-field-readiness-coherence-10184`. Targeted route selection now refreshes the route-owned ObjectiveBrief readiness tooltip, idle Event/action context, End Turn cue, and drawer/handoff cues from the same authoritative cached action and route state while preserving active feedback/recap, compact zero-rich construction, incremental ownership, and all route consequences.
 - Latest completed implementation slice: `map-editor-generated-package-play-copy-restore-tile-baseline-10184`. Generated-package Map Editor Play Copy now carries the immutable loaded-package baseline through the in-memory return handoff, so Restore Tile remains exact without authored-scenario fallback, disk reload, generated-content registration, or Native RMG changes.
 - Latest completed implementation slice: `accessibility-map-editor-canvas-live-context-coalescing-10184`. The Map Editor canvas now exposes one bounded current tile/tool/action live context, keeps the visual working-copy status non-live, and coalesces held keyboard/controller navigation to the final settled destination without changing editor authority.
 - Latest completed implementation slice: `ux-overworld-selected-route-map-cue-coherence-10184`. Targeted Overworld route selection now rematerializes the visible MapCue and tooltip from the same current compact primary action and route decision without stale prior-destination instructions or rich-route construction on compact paths.
