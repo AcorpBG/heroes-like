@@ -244,6 +244,7 @@ var _validation_gameplay_movement_repeat_blocked_count := 0
 var _validation_gameplay_movement_last_blocked: Dictionary = {}
 var _pending_end_turn_confirmation: Dictionary = {}
 var _last_end_turn_confirmation_result: Dictionary = {}
+var _forwarding_end_turn_root_physical_input := false
 var _last_end_turn_rule_result: Dictionary = {}
 var _last_end_turn_autosave_result: Dictionary = {}
 var _last_end_turn_runtime_issue: Dictionary = {}
@@ -814,6 +815,47 @@ func _configure_end_turn_confirmation() -> void:
 	cancel_action.action = "ui_cancel"
 	cancel_shortcut.events = [cancel_action]
 	_end_turn_confirmation_dialog.get_cancel_button().shortcut = cancel_shortcut
+	var root_window := get_tree().root
+	if root_window != null and not root_window.window_input.is_connected(_on_root_window_input):
+		root_window.window_input.connect(_on_root_window_input)
+
+
+func _on_root_window_input(event: InputEvent) -> void:
+	if (
+		_forwarding_end_turn_root_physical_input
+		or not (event is InputEventKey or event is InputEventJoypadButton)
+		or not _end_turn_confirmation_dialog.visible
+		or _pending_end_turn_confirmation.is_empty()
+		or (_manual_save_overwrite_dialog != null and _manual_save_overwrite_dialog.visible)
+	):
+		return
+	get_tree().root.set_input_as_handled()
+	var dialog := _end_turn_confirmation_dialog
+	var pending := _pending_end_turn_confirmation
+	var detached_event := event.duplicate() as InputEvent
+	if detached_event == null:
+		return
+	call_deferred("_forward_root_physical_input_to_end_turn_confirmation", dialog, pending, detached_event)
+
+
+func _forward_root_physical_input_to_end_turn_confirmation(
+	dialog: ConfirmationDialog,
+	pending: Dictionary,
+	event: InputEvent
+) -> void:
+	if (
+		_forwarding_end_turn_root_physical_input
+		or not is_instance_valid(dialog)
+		or dialog != _end_turn_confirmation_dialog
+		or not dialog.visible
+		or _pending_end_turn_confirmation.is_empty()
+		or not is_same(pending, _pending_end_turn_confirmation)
+		or (_manual_save_overwrite_dialog != null and _manual_save_overwrite_dialog.visible)
+	):
+		return
+	_forwarding_end_turn_root_physical_input = true
+	dialog.push_input(event)
+	_forwarding_end_turn_root_physical_input = false
 
 func _on_end_turn_pressed() -> Dictionary:
 	return _request_end_turn()

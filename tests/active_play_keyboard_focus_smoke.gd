@@ -6,6 +6,8 @@ const BattleAutoResolveRulesScript = preload("res://scripts/core/BattleAutoResol
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 
 var _failed := false
+var _exclusive_end_turn_parent_click_counts := {}
+var _exclusive_end_turn_dialog_signal_counts := {}
 var _exclusive_battle_parent_click_counts := {}
 var _exclusive_battle_dialog_signal_counts := {}
 
@@ -264,49 +266,400 @@ func _check_overworld_controller_route_selection() -> bool:
 	return true
 
 func _check_overworld_end_turn_confirmation_cancel() -> bool:
+	var original_window_size := get_window().size
+	var cases := [
+		{"id": "end_turn_controller_1280", "width": 1280, "cancel_input": "joypad_b", "confirm_input": "joypad_a"},
+		{"id": "end_turn_keyboard_1920", "width": 1920, "cancel_input": "escape", "confirm_input": "enter"},
+		{"id": "end_turn_native_mouse_1280", "width": 1280, "cancel_input": "mouse", "confirm_input": "mouse"},
+	]
+	for case_value in cases:
+		if not await _exercise_overworld_end_turn_exclusive_case(case_value):
+			get_window().size = original_window_size
+			return false
+	get_window().size = original_window_size
+	await _settle()
+	return true
+
+
+func _exercise_overworld_end_turn_exclusive_case(case_data: Dictionary) -> bool:
+	var case_id := String(case_data.get("id", "end_turn_exclusive"))
+	var width := int(case_data.get("width", 1280))
+	var autosave_states := {}
+	for path in _end_turn_autosave_paths():
+		autosave_states[path] = _controller_route_file_state(path)
 	var session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
 	session = SessionState.set_active_session(session)
-	var shell = load("res://scenes/overworld/OverworldShell.tscn").instantiate()
-	add_child(shell)
+	get_window().size = Vector2i(width, 720)
 	await _settle()
+	var layout_host := Control.new()
+	layout_host.name = "ExclusiveEndTurnHost_%s" % case_id
+	layout_host.size = Vector2(float(width), 720.0)
+	add_child(layout_host)
+	var shell = load("res://scenes/overworld/OverworldShell.tscn").instantiate()
+	layout_host.add_child(shell)
+	var parent_probe := Button.new()
+	parent_probe.name = "ExclusiveEndTurnParentProbe_%s" % case_id
+	parent_probe.text = "End Turn parent input probe"
+	parent_probe.position = Vector2(16.0, 16.0)
+	parent_probe.size = Vector2(220.0, 40.0)
+	parent_probe.focus_mode = Control.FOCUS_NONE
+	parent_probe.z_index = 100
+	_exclusive_end_turn_parent_click_counts[case_id] = 0
+	_exclusive_end_turn_dialog_signal_counts[case_id] = {"canceled": 0, "confirmed": 0}
+	parent_probe.pressed.connect(_on_exclusive_end_turn_parent_probe_pressed.bind(case_id))
+	layout_host.add_child(parent_probe)
+	await _settle_end_turn_confirmation()
 	var end_turn: Button = shell.get_node_or_null("%EndTurn")
 	var dialog: ConfirmationDialog = shell.get_node_or_null("EndTurnConfirmationDialog")
-	if end_turn == null or dialog == null:
-		return _fail("Overworld End Turn confirmation controls are missing.")
+	if end_turn == null or dialog == null or end_turn.disabled:
+		return _fail_exclusive_end_turn_case(layout_host, autosave_states, "%s is missing an actionable End Turn origin or dialog." % case_id)
+	dialog.canceled.connect(_on_exclusive_end_turn_dialog_canceled.bind(case_id))
+	dialog.confirmed.connect(_on_exclusive_end_turn_dialog_confirmed.bind(case_id))
+	shell.call("validation_reset_end_turn_confirmation_state")
+	shell.call("validation_set_end_turn_resolution_routing_enabled", false)
 	var live_snapshot: Dictionary = shell.call("validation_end_turn_confirmation_snapshot")
-	if not bool(live_snapshot.get("confirmation_required", false)) or not String(live_snapshot.get("surface_button_text", "")).begins_with("End?"):
-		return _fail("Fresh overworld fixture does not expose a live warned End Turn state: %s." % live_snapshot)
-	var session_before := JSON.stringify(session.to_dict())
+	var fixture_checks := {
+		"host_parent_exact": shell.get_parent() == layout_host,
+		"host_width_exact": int(layout_host.size.x) == width,
+		"host_height_exact": int(layout_host.size.y) == 720,
+		"origin_root_viewport_exact": end_turn.get_viewport() == get_viewport(),
+		"warning_required": bool(live_snapshot.get("confirmation_required", false)),
+		"surface_warned": String(live_snapshot.get("surface_button_text", "")).begins_with("End?"),
+	}
+	if not _checks_exact(fixture_checks):
+		return _fail_exclusive_end_turn_case(layout_host, autosave_states, "%s exact-width End Turn fixture failed: %s." % [case_id, JSON.stringify(fixture_checks)])
 	end_turn.grab_focus()
 	await get_tree().process_frame
-	await _press_joypad_button(JOY_BUTTON_A)
-	await _settle()
+	await _click_control(end_turn)
+	await _settle_end_turn_confirmation()
 	if not _assert_overworld_end_turn_dialog(shell, dialog, live_snapshot):
+		_cleanup_exclusive_end_turn_case(layout_host, autosave_states)
 		return false
-	await _press_joypad_button(JOY_BUTTON_B)
-	await _settle()
-	if dialog.visible:
-		return _fail("Controller B did not close the warned End Turn confirmation.")
-	if JSON.stringify(session.to_dict()) != session_before:
-		return _fail("Controller B changed the byte-exact overworld session while canceling End Turn.")
-	if get_viewport().gui_get_focus_owner() != end_turn:
-		return _fail("Controller B did not restore focus to the exact EndTurn command: %s." % _focus_name())
+	var opened := _end_turn_confirmation_transaction_snapshot(shell)
+	var geometry := _exclusive_battle_parent_click_geometry(parent_probe, dialog)
+	var opened_checks := {
+		"exclusive_exact": dialog.exclusive,
+		"pending_identity_exact": _end_turn_pending_identity_exact(opened, session),
+		"request_once": int(opened.get("request_count", -1)) == 1,
+		"safe_focus_exact": dialog.get_cancel_button().get_viewport().gui_get_focus_owner() == dialog.get_cancel_button(),
+		"geometry_exact": bool(geometry.get("exact", false)),
+	}
+	if not _checks_exact(opened_checks):
+		return _fail_exclusive_end_turn_case(layout_host, autosave_states, "%s did not open an exact exclusive End Turn dialog: checks=%s geometry=%s opened=%s." % [case_id, JSON.stringify(opened_checks), JSON.stringify(geometry), JSON.stringify(opened)])
+	var authority_before_block := _end_turn_exclusive_authority_snapshot(shell, session, false)
+	var transaction_before_block := _end_turn_confirmation_transaction_snapshot(shell)
+	var parent_count_before := int(_exclusive_end_turn_parent_click_counts.get(case_id, 0))
+	await _click_control(parent_probe)
+	await _settle_end_turn_confirmation()
+	var first_block_checks := {
+		"parent_count_exact": int(_exclusive_end_turn_parent_click_counts.get(case_id, -1)) == parent_count_before,
+		"dialog_transaction_exact": _end_turn_confirmation_transaction_snapshot(shell) == transaction_before_block,
+		"full_same_state_authority_exact": _end_turn_exclusive_authority_snapshot(shell, session, false) == authority_before_block,
+		"dialog_focus_exact": dialog.get_cancel_button().get_viewport().gui_get_focus_owner() == dialog.get_cancel_button(),
+	}
+	if not _checks_exact(first_block_checks):
+		return _fail_exclusive_end_turn_case(layout_host, autosave_states, "%s exclusive parent click escaped the first End Turn modal: checks=%s." % [case_id, JSON.stringify(first_block_checks)])
+	if not await _send_end_turn_confirmation_cancel(dialog, String(case_data.get("cancel_input", ""))):
+		_cleanup_exclusive_end_turn_case(layout_host, autosave_states)
+		return false
+	await _settle_end_turn_confirmation()
+	var canceled := _end_turn_confirmation_transaction_snapshot(shell)
+	var signal_counts: Dictionary = _exclusive_end_turn_dialog_signal_counts.get(case_id, {})
+	var canceled_checks := {
+		"hidden_exact": not bool(canceled.get("visible", true)),
+		"pending_cleared_exact": not bool(canceled.get("pending", true)),
+		"cancel_signal_once": int(signal_counts.get("canceled", 0)) == 1,
+		"confirm_signal_zero": int(signal_counts.get("confirmed", 0)) == 0,
+		"cancel_count_once": int(canceled.get("cancel_count", 0)) == 1,
+		"commit_zero": int(canceled.get("commit_count", 0)) == 0,
+		"rules_zero": int(canceled.get("rules_end_turn_call_count", 0)) == 0,
+		"autosave_zero": int(canceled.get("autosave_call_count", 0)) == 0,
+		"background_authority_exact": _end_turn_exclusive_authority_snapshot(shell, session, true) == _end_turn_exclusive_authority_snapshot_from_modal(authority_before_block),
+		"origin_focus_exact": get_viewport().gui_get_focus_owner() == end_turn,
+	}
+	if not _checks_exact(canceled_checks):
+		return _fail_exclusive_end_turn_case(layout_host, autosave_states, "%s forwarded/native cancel was not exact: checks=%s snapshot=%s." % [case_id, JSON.stringify(canceled_checks), JSON.stringify(canceled)])
+	var positive_count_before := int(_exclusive_end_turn_parent_click_counts.get(case_id, 0))
+	var authority_before_positive := _end_turn_exclusive_authority_snapshot(shell, session, true)
+	await _click_control(parent_probe)
+	var positive_checks := {
+		"same_parent_action_once": int(_exclusive_end_turn_parent_click_counts.get(case_id, -1)) == positive_count_before + 1,
+		"background_authority_exact": _end_turn_exclusive_authority_snapshot(shell, session, true) == authority_before_positive,
+		"end_turn_transaction_exact": _end_turn_confirmation_transaction_snapshot(shell) == canceled,
+	}
+	if not _checks_exact(positive_checks):
+		return _fail_exclusive_end_turn_case(layout_host, autosave_states, "%s identical parent probe was not positively actionable after cancel: %s." % [case_id, JSON.stringify(positive_checks)])
 
-	await _press_joypad_button(JOY_BUTTON_A)
-	await _settle()
-	if not _assert_overworld_end_turn_dialog(shell, dialog, live_snapshot):
+	# Queue a physical root event against one pending Dictionary, replace that request
+	# synchronously, and prove the deferred bridge cannot affect the new identity. The
+	# matching release is also delivered after replacement and must remain a no-op.
+	end_turn.grab_focus()
+	await _click_control(end_turn)
+	await _settle_end_turn_confirmation()
+	var stale_opened := _end_turn_confirmation_transaction_snapshot(shell)
+	var stale_count_before := int(_exclusive_end_turn_parent_click_counts.get(case_id, 0))
+	await _click_control(parent_probe)
+	if int(_exclusive_end_turn_parent_click_counts.get(case_id, -1)) != stale_count_before:
+		return _fail_exclusive_end_turn_case(layout_host, autosave_states, "%s stale-pending setup parent click escaped the modal." % case_id)
+	var stale_pressed := InputEventKey.new()
+	stale_pressed.keycode = KEY_ESCAPE
+	stale_pressed.physical_keycode = KEY_ESCAPE
+	stale_pressed.pressed = true
+	shell.call("_on_root_window_input", stale_pressed)
+	shell.call("validation_reset_end_turn_confirmation_state")
+	var replacement_request: Dictionary = shell.call("validation_request_end_turn")
+	await _settle_end_turn_confirmation()
+	var stale_released := InputEventKey.new()
+	stale_released.keycode = KEY_ESCAPE
+	stale_released.physical_keycode = KEY_ESCAPE
+	stale_released.pressed = false
+	Input.parse_input_event(stale_released)
+	await _settle_end_turn_confirmation()
+	var reopened := _end_turn_confirmation_transaction_snapshot(shell)
+	var stale_identity_checks := {
+		"original_pending_identity_exact": _end_turn_pending_identity_exact(stale_opened, session),
+		"replacement_requested": bool(replacement_request.get("confirmation_required", false)),
+		"replacement_pending_identity_exact": _end_turn_pending_identity_exact(reopened, session),
+		"request_once_after_reset": int(reopened.get("request_count", -1)) == 1,
+		"stale_press_cancel_zero": int(reopened.get("cancel_count", -1)) == 0,
+		"stale_press_confirm_zero": int(reopened.get("confirm_count", -1)) == 0,
+		"stale_release_commit_zero": int(reopened.get("commit_count", -1)) == 0,
+		"stale_release_rules_zero": int(reopened.get("rules_end_turn_call_count", -1)) == 0,
+		"stale_release_autosave_zero": int(reopened.get("autosave_call_count", -1)) == 0,
+		"dialog_still_visible": dialog.visible,
+	}
+	if not _checks_exact(stale_identity_checks):
+		return _fail_exclusive_end_turn_case(layout_host, autosave_states, "%s deferred stale pending identity or release reached the replacement dialog: checks=%s snapshot=%s." % [case_id, JSON.stringify(stale_identity_checks), JSON.stringify(reopened)])
+	var authority_before_second_block := _end_turn_exclusive_authority_snapshot(shell, session, false)
+	var second_count_before := int(_exclusive_end_turn_parent_click_counts.get(case_id, 0))
+	await _click_control(parent_probe)
+	await _settle_end_turn_confirmation()
+	var second_block_checks := {
+		"parent_count_exact": int(_exclusive_end_turn_parent_click_counts.get(case_id, -1)) == second_count_before,
+		"dialog_transaction_exact": _end_turn_confirmation_transaction_snapshot(shell) == reopened,
+		"full_same_state_authority_exact": _end_turn_exclusive_authority_snapshot(shell, session, false) == authority_before_second_block,
+		"dialog_focus_exact": dialog.get_cancel_button().get_viewport().gui_get_focus_owner() == dialog.get_cancel_button(),
+	}
+	if not _checks_exact(second_block_checks):
+		return _fail_exclusive_end_turn_case(layout_host, autosave_states, "%s second blocked parent click changed End Turn authority: checks=%s." % [case_id, JSON.stringify(second_block_checks)])
+	var direct_control := SessionStateStoreScript.SessionData.new()
+	direct_control.from_dict(session.to_dict())
+	if bool(reopened.get("risk_unconsumed", false)):
+		OverworldRules.consume_command_risk_forecast(direct_control)
+	var direct_result: Dictionary = OverworldRules.end_turn(direct_control)
+	direct_control.flags["last_action"] = "ended_turn"
+	if not await _send_end_turn_confirmation_confirm(dialog, String(case_data.get("confirm_input", ""))):
+		_cleanup_exclusive_end_turn_case(layout_host, autosave_states)
 		return false
-	await _press_key(KEY_ESCAPE)
+	for _frame in range(180):
+		await get_tree().process_frame
+		if int(_end_turn_confirmation_transaction_snapshot(shell).get("commit_count", 0)) >= 1:
+			break
+	var confirmed := _end_turn_confirmation_transaction_snapshot(shell)
+	signal_counts = _exclusive_end_turn_dialog_signal_counts.get(case_id, {})
+	var restored = SaveService.restore_autosave_session()
+	var raw_saved: Dictionary = SessionStateStoreScript.normalize_payload(SaveService.load_autosave())
+	var confirmed_checks := {
+		"hidden_exact": not bool(confirmed.get("visible", true)),
+		"pending_cleared_exact": not bool(confirmed.get("pending", true)),
+		"cancel_signal_once": int(signal_counts.get("canceled", 0)) == 1,
+		"confirm_signal_once": int(signal_counts.get("confirmed", 0)) == 1,
+		"confirm_count_once": int(confirmed.get("confirm_count", 0)) == 1,
+		"commit_once": int(confirmed.get("commit_count", 0)) == 1,
+		"rules_once": int(confirmed.get("rules_end_turn_call_count", 0)) == 1,
+		"autosave_once": int(confirmed.get("autosave_call_count", 0)) == 1,
+		"route_zero": int(confirmed.get("resolution_attempt_count", -1)) == 0,
+		"rule_result_exact": _canonical_test_value(confirmed.get("last_rule_result", {})) == _canonical_test_value(direct_result),
+		"direct_gameplay_exact": _end_turn_gameplay_payload(session) == _end_turn_gameplay_payload(direct_control),
+		"raw_autosave_exact": _end_turn_gameplay_payload_dictionary(raw_saved) == _end_turn_gameplay_payload(session),
+		"restored_autosave_exact": restored != null and _end_turn_gameplay_payload(restored) == _end_turn_gameplay_payload(session),
+		"restored_route_exact": restored != null and SaveService.resume_target_for_session(restored) == "overworld",
+	}
+	if not _checks_exact(confirmed_checks):
+		return _fail_exclusive_end_turn_case(layout_host, autosave_states, "%s forwarded/native confirmation diverged from direct End Turn/autosave parity: checks=%s snapshot=%s." % [case_id, JSON.stringify(confirmed_checks), JSON.stringify(confirmed)])
+	_cleanup_exclusive_end_turn_case(layout_host, autosave_states)
 	await _settle()
-	if dialog.visible:
-		return _fail("Keyboard Escape did not close the warned End Turn confirmation.")
-	if JSON.stringify(session.to_dict()) != session_before:
-		return _fail("Keyboard Escape changed the byte-exact overworld session while canceling End Turn.")
-	if get_viewport().gui_get_focus_owner() != end_turn:
-		return _fail("Keyboard Escape did not restore focus to the exact EndTurn command: %s." % _focus_name())
-	shell.queue_free()
-	await get_tree().process_frame
 	return true
+
+
+func _end_turn_confirmation_transaction_snapshot(shell: Node) -> Dictionary:
+	var snapshot: Dictionary = shell.call("validation_end_turn_confirmation_snapshot")
+	return {
+		"pending": bool(snapshot.get("pending", false)),
+		"visible": bool(snapshot.get("dialog_visible", false)),
+		"requested_session_id": String(snapshot.get("requested_session_id", "")),
+		"requested_day": int(snapshot.get("requested_day", 0)),
+		"requested_status": String(snapshot.get("requested_status", "")),
+		"requested_warning_signature": String(snapshot.get("requested_warning_signature", "")),
+		"risk_unconsumed": bool(snapshot.get("risk_unconsumed", false)),
+		"request_count": int(snapshot.get("request_count", 0)),
+		"cancel_count": int(snapshot.get("cancel_count", 0)),
+		"confirm_count": int(snapshot.get("confirm_count", 0)),
+		"commit_count": int(snapshot.get("commit_count", 0)),
+		"rules_end_turn_call_count": int(snapshot.get("rules_end_turn_call_count", 0)),
+		"autosave_call_count": int(snapshot.get("autosave_call_count", 0)),
+		"resolution_attempt_count": int(snapshot.get("resolution_attempt_count", 0)),
+		"last_result": snapshot.get("last_result", {}),
+		"last_rule_result": snapshot.get("last_rule_result", {}),
+		"last_autosave_result": snapshot.get("last_autosave_result", {}),
+	}
+
+
+func _end_turn_pending_identity_exact(snapshot: Dictionary, session) -> bool:
+	return bool(snapshot.get("pending", false)) \
+		and bool(snapshot.get("visible", false)) \
+		and String(snapshot.get("requested_session_id", "")) == String(session.session_id) \
+		and int(snapshot.get("requested_day", 0)) == int(session.day) \
+		and String(snapshot.get("requested_status", "")) == String(session.scenario_status) \
+		and String(snapshot.get("requested_warning_signature", "")) != ""
+
+
+func _end_turn_exclusive_authority_snapshot(shell: Node, session, normalize_modal_derivations: bool) -> Dictionary:
+	var controller_routes: Dictionary = shell.call("validation_controller_route_cursor_snapshot")
+	if normalize_modal_derivations:
+		for key in ["available", "blocked_reason", "end_turn_confirmation_open", "focus_owner"]:
+			controller_routes.erase(key)
+	var settings_snapshot: Dictionary = SettingsService.validation_settings_transaction_snapshot()
+	var files := {}
+	var authority_paths := _end_turn_authority_paths()
+	for path in authority_paths:
+		files[path] = _controller_route_file_state(path)
+	return {
+		"session": session.to_dict(),
+		"active_same": SessionState.active_session == session,
+		"profile": CampaignProgression.ensure_profile().duplicate(true),
+		"files": files,
+		"summary_cache": SaveService.validation_summary_cache_snapshot(),
+		"settings": settings_snapshot.get("settings", {}),
+		"committed_settings": settings_snapshot.get("committed_settings", {}),
+		"controller_routes": controller_routes,
+		"debug_overlay": shell.call("validation_debug_overlay_snapshot"),
+		"placement_overlay": shell.call("validation_placement_debug_overlay_snapshot"),
+		"battle_resolution": AppRouter.validation_battle_resolution_checkpoint_snapshot(),
+		"battle_entry": AppRouter.validation_battle_entry_snapshot(),
+		"outcome": AppRouter.validation_scenario_outcome_route_snapshot(),
+		"return_to_menu": AppRouter.validation_active_play_return_snapshot(),
+		"safe_quit": AppRouter.validation_safe_quit_snapshot(),
+	}
+
+
+func _end_turn_exclusive_authority_snapshot_from_modal(snapshot: Dictionary) -> Dictionary:
+	var normalized := snapshot.duplicate(true)
+	var controller_routes: Dictionary = normalized.get("controller_routes", {})
+	for key in ["available", "blocked_reason", "end_turn_confirmation_open", "focus_owner"]:
+		controller_routes.erase(key)
+	normalized["controller_routes"] = controller_routes
+	return normalized
+
+
+func _end_turn_gameplay_payload(session) -> Dictionary:
+	return _end_turn_gameplay_payload_dictionary(session.to_dict()) if session != null else {}
+
+
+func _end_turn_gameplay_payload_dictionary(value: Dictionary) -> Dictionary:
+	var payload: Dictionary = _canonical_test_value(value)
+	var flags: Dictionary = payload.get("flags", {}) if payload.get("flags", {}) is Dictionary else {}
+	flags.erase("last_action")
+	payload["flags"] = flags
+	var overworld: Dictionary = payload.get("overworld", {}) if payload.get("overworld", {}) is Dictionary else {}
+	overworld.erase("command_briefing")
+	payload["overworld"] = overworld
+	return payload
+
+
+func _canonical_test_value(value: Variant) -> Variant:
+	return JSON.parse_string(JSON.stringify(value))
+
+
+func _send_end_turn_confirmation_cancel(dialog: ConfirmationDialog, input_id: String) -> bool:
+	match input_id:
+		"joypad_b":
+			await _press_joypad_button(JOY_BUTTON_B)
+		"escape":
+			await _press_key(KEY_ESCAPE)
+		"mouse":
+			var geometry := _battle_dialog_child_click_geometry(dialog.get_cancel_button(), dialog)
+			if not bool(geometry.get("exact", false)):
+				return _fail("Native End Turn cancel geometry was not exact: %s." % JSON.stringify(geometry))
+			await _click_control(dialog.get_cancel_button())
+		_:
+			return _fail("Unsupported End Turn confirmation cancel input %s." % input_id)
+	return true
+
+
+func _send_end_turn_confirmation_confirm(dialog: ConfirmationDialog, input_id: String) -> bool:
+	var ok_button := dialog.get_ok_button()
+	match input_id:
+		"joypad_a":
+			ok_button.grab_focus()
+			await get_tree().process_frame
+			await _press_joypad_button(JOY_BUTTON_A)
+		"enter":
+			ok_button.grab_focus()
+			await get_tree().process_frame
+			await _press_key(KEY_ENTER)
+		"mouse":
+			var geometry := _battle_dialog_child_click_geometry(ok_button, dialog)
+			if not bool(geometry.get("exact", false)):
+				return _fail("Native End Turn confirm geometry was not exact: %s." % JSON.stringify(geometry))
+			await _click_control(ok_button)
+		_:
+			return _fail("Unsupported End Turn confirmation confirm input %s." % input_id)
+	return true
+
+
+func _settle_end_turn_confirmation() -> void:
+	await _settle()
+	await get_tree().process_frame
+	await get_tree().process_frame
+
+
+func _end_turn_autosave_paths() -> Array:
+	var autosave_path := "%s/%s" % [SaveService.SAVE_DIR, SaveService.AUTOSAVE_FILE]
+	return [autosave_path, "%s.candidate" % autosave_path, "%s.backup" % autosave_path]
+
+
+func _end_turn_authority_paths() -> Array:
+	var paths := _end_turn_autosave_paths()
+	for slot in SaveService.MANUAL_SLOT_IDS:
+		var slot_path := "%s/%s%d.json" % [SaveService.SAVE_DIR, SaveService.SAVE_PREFIX, int(slot)]
+		paths.append(slot_path)
+		paths.append("%s.candidate" % slot_path)
+		paths.append("%s.backup" % slot_path)
+	paths.append("%s/%s" % [SaveService.SAVE_DIR, SaveService.PROGRESSION_FILE])
+	paths.append(SettingsService.SETTINGS_FILE)
+	paths.append("%s.candidate" % SettingsService.SETTINGS_FILE)
+	paths.append("%s.backup" % SettingsService.SETTINGS_FILE)
+	return paths
+
+
+func _cleanup_exclusive_end_turn_case(layout_host: Node, autosave_states: Dictionary) -> void:
+	for path in autosave_states:
+		_restore_controller_file_state(String(path), autosave_states[path])
+	SaveService.validation_clear_summary_cache()
+	if is_instance_valid(layout_host):
+		layout_host.queue_free()
+
+
+func _fail_exclusive_end_turn_case(layout_host: Node, autosave_states: Dictionary, message: String) -> bool:
+	_cleanup_exclusive_end_turn_case(layout_host, autosave_states)
+	return _fail(message)
+
+
+func _on_exclusive_end_turn_parent_probe_pressed(case_id: String) -> void:
+	_exclusive_end_turn_parent_click_counts[case_id] = int(_exclusive_end_turn_parent_click_counts.get(case_id, 0)) + 1
+
+
+func _on_exclusive_end_turn_dialog_canceled(case_id: String) -> void:
+	var counts: Dictionary = _exclusive_end_turn_dialog_signal_counts.get(case_id, {}).duplicate(true)
+	counts["canceled"] = int(counts.get("canceled", 0)) + 1
+	_exclusive_end_turn_dialog_signal_counts[case_id] = counts
+
+
+func _on_exclusive_end_turn_dialog_confirmed(case_id: String) -> void:
+	var counts: Dictionary = _exclusive_end_turn_dialog_signal_counts.get(case_id, {}).duplicate(true)
+	counts["confirmed"] = int(counts.get("confirmed", 0)) + 1
+	_exclusive_end_turn_dialog_signal_counts[case_id] = counts
 
 func _check_overworld_manual_save_overwrite_cancel() -> bool:
 	const MANUAL_SLOT := 2
@@ -330,11 +683,13 @@ func _check_overworld_manual_save_overwrite_cancel() -> bool:
 	if save_button == null or dialog == null or save_button.disabled:
 		return _fail("Occupied active-play manual slot did not expose a live Save overwrite origin.")
 	var protected_before := _manual_overwrite_protected_state(session, MANUAL_SLOT)
+	shell.call("validation_reset_end_turn_confirmation_state")
 	for cancel_kind in ["controller_b", "escape"]:
 		save_button.grab_focus()
 		await get_tree().process_frame
 		if get_viewport().gui_get_focus_owner() != save_button:
 			return _fail("Manual overwrite could not establish exact Save origin focus before %s." % cancel_kind)
+		var end_turn_bridge_before := _end_turn_confirmation_transaction_snapshot(shell)
 		await _press_joypad_button(JOY_BUTTON_A)
 		await _settle()
 		var dialog_snapshot_value: Variant = shell.call("validation_snapshot").get("manual_save_overwrite_dialog", {})
@@ -362,6 +717,11 @@ func _check_overworld_manual_save_overwrite_cancel() -> bool:
 			return _fail("Active-play manual overwrite did not close and clear after %s: %s." % [cancel_kind, dialog_snapshot])
 		if _manual_overwrite_protected_state(session, MANUAL_SLOT) != protected_before:
 			return _fail("Canceling active-play manual overwrite with %s mutated live session or save state." % cancel_kind)
+		var end_turn_bridge_after := _end_turn_confirmation_transaction_snapshot(shell)
+		if end_turn_bridge_after != end_turn_bridge_before \
+				or bool(end_turn_bridge_after.get("pending", true)) \
+				or bool(end_turn_bridge_after.get("visible", true)):
+			return _fail("Inactive End Turn transaction changed during isolated ManualSaveOverwrite physical %s ownership: before=%s after=%s." % [cancel_kind, end_turn_bridge_before, end_turn_bridge_after])
 		if get_viewport().gui_get_focus_owner() != save_button:
 			return _fail("Canceling active-play manual overwrite with %s did not restore the exact Save origin: %s." % [cancel_kind, _focus_name()])
 	var final_dialog_value: Variant = shell.call("validation_snapshot").get("manual_save_overwrite_dialog", {})
@@ -397,7 +757,7 @@ func _manual_overwrite_protected_state(session, slot: int) -> Dictionary:
 	}
 
 func _manual_slot_path(slot: int) -> String:
-	return "%s/manual_slot_%d.json" % [SaveService.SAVE_DIR, slot]
+	return "%s/%s%d.json" % [SaveService.SAVE_DIR, SaveService.SAVE_PREFIX, slot]
 
 func _restore_controller_file_state(path: String, state: Dictionary) -> void:
 	if bool(state.get("exists", false)):

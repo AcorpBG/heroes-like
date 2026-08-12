@@ -666,6 +666,7 @@ text = "Menu"
 [node name="EndTurnConfirmationDialog" type="ConfirmationDialog" parent="."]
 title = "Confirm End Turn?"
 initial_position = 1
+exclusive = true
 ok_button_text = "End Turn"
 dialog_text = "End the current day?"
 
