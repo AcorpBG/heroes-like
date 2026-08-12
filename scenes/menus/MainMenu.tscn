@@ -1260,16 +1260,19 @@ text = "Settings"
 [node name="CampaignRestartDialog" type="ConfirmationDialog" parent="."]
 title = "Restart campaign arc?"
 initial_position = 1
+exclusive = true
 dialog_text = "Restart this campaign arc from Chapter I?"
 
 [node name="SaveDeleteDialog" type="ConfirmationDialog" parent="."]
 title = "Delete save?"
 initial_position = 1
+exclusive = true
 dialog_text = "Permanently delete this expedition save?"
 
 [node name="SettingsRestoreDefaultsDialog" type="ConfirmationDialog" parent="."]
 title = "Restore default settings?"
 initial_position = 1
+exclusive = true
 dialog_text = "Restore all device settings to their defaults?"
 
 [node name="DisplayChangeConfirmationDialog" type="ConfirmationDialog" parent="."]

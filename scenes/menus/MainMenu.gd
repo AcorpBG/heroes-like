@@ -171,6 +171,9 @@ var _support_bundle_status := "No bundle exported"
 var _support_bundle_result := {}
 var _settings_restore_status := ""
 var _settings_restore_pending := false
+var _destructive_confirmation_generation := 0
+var _destructive_confirmation_workflow_generations := {}
+var _forwarding_destructive_root_physical_input := false
 var _display_change_ui_active := false
 var _display_change_focus_name := &"PresentationModePicker"
 var _display_change_last_seconds := -1
@@ -334,6 +337,7 @@ func _on_campaign_restart_pressed() -> Dictionary:
 		)
 	_campaign_restart_return_focus = _capture_confirmation_origin(_campaign_restart_button)
 	_pending_campaign_restart_id = String(action.get("campaign_id", ""))
+	_begin_destructive_confirmation_generation("campaign_restart")
 	_count_destructive_confirmation("campaign_restart", "request_count")
 	_campaign_restart_dialog.title = "Restart %s?" % String(action.get("campaign_name", "campaign arc"))
 	_campaign_restart_dialog.dialog_text = String(action.get("summary", ""))
@@ -515,6 +519,7 @@ func _on_delete_selected_save_pressed() -> void:
 		"slot_type": String(action.get("slot_type", "")),
 		"slot_id": String(action.get("slot_id", "")),
 	}
+	_begin_destructive_confirmation_generation("save_delete")
 	_count_destructive_confirmation("save_delete", "request_count")
 	_save_delete_dialog.title = "Delete %s?" % String(action.get("slot_label", "save"))
 	_save_delete_dialog.dialog_text = String(action.get("summary", ""))
@@ -713,6 +718,99 @@ func _configure_destructive_confirmations() -> void:
 	_configure_safe_confirmation(_campaign_restart_dialog, "Keep Progress")
 	_configure_safe_confirmation(_save_delete_dialog, "Keep Save")
 	_configure_safe_confirmation(_settings_restore_defaults_dialog, "Keep Settings")
+	var root_window := get_tree().root
+	if root_window != null and not root_window.window_input.is_connected(_on_root_window_input):
+		root_window.window_input.connect(_on_root_window_input)
+
+
+func _on_root_window_input(event: InputEvent) -> void:
+	if _forwarding_destructive_root_physical_input or not (event is InputEventKey or event is InputEventJoypadButton):
+		return
+	var owner := _active_destructive_confirmation_root_owner()
+	if owner.is_empty():
+		return
+	get_tree().root.set_input_as_handled()
+	var detached_event := event.duplicate() as InputEvent
+	if detached_event == null:
+		return
+	call_deferred(
+		"_forward_root_physical_input_to_destructive_confirmation",
+		owner.get("dialog") as ConfirmationDialog,
+		String(owner.get("workflow", "")),
+		int(owner.get("generation", -1)),
+		owner.get("pending"),
+		detached_event
+	)
+
+
+func _forward_root_physical_input_to_destructive_confirmation(
+	dialog: ConfirmationDialog,
+	workflow: String,
+	generation: int,
+	pending: Variant,
+	event: InputEvent
+) -> void:
+	if _forwarding_destructive_root_physical_input or not is_instance_valid(dialog):
+		return
+	var owner := _active_destructive_confirmation_root_owner()
+	if (
+		owner.is_empty()
+		or owner.get("dialog") != dialog
+		or String(owner.get("workflow", "")) != workflow
+		or int(owner.get("generation", -1)) != generation
+		or not _destructive_confirmation_pending_matches(workflow, pending)
+	):
+		return
+	_forwarding_destructive_root_physical_input = true
+	dialog.push_input(event)
+	_forwarding_destructive_root_physical_input = false
+
+
+func _active_destructive_confirmation_root_owner() -> Dictionary:
+	if (
+		_display_change_confirmation_dialog.visible
+		or _hero_keybindings_dialog.visible
+	):
+		return {}
+	var owners := []
+	if _campaign_restart_dialog.visible and _pending_campaign_restart_id != "":
+		owners.append({
+			"dialog": _campaign_restart_dialog,
+			"workflow": "campaign_restart",
+			"generation": int(_destructive_confirmation_workflow_generations.get("campaign_restart", -1)),
+			"pending": _pending_campaign_restart_id,
+		})
+	if _save_delete_dialog.visible and not _pending_save_delete_identity.is_empty():
+		owners.append({
+			"dialog": _save_delete_dialog,
+			"workflow": "save_delete",
+			"generation": int(_destructive_confirmation_workflow_generations.get("save_delete", -1)),
+			"pending": _pending_save_delete_identity,
+		})
+	if _settings_restore_defaults_dialog.visible and _settings_restore_pending:
+		owners.append({
+			"dialog": _settings_restore_defaults_dialog,
+			"workflow": "settings_restore",
+			"generation": int(_destructive_confirmation_workflow_generations.get("settings_restore", -1)),
+			"pending": true,
+		})
+	return owners[0] if owners.size() == 1 else {}
+
+
+func _begin_destructive_confirmation_generation(workflow: String) -> void:
+	_destructive_confirmation_generation += 1
+	_destructive_confirmation_workflow_generations[workflow] = _destructive_confirmation_generation
+
+
+func _destructive_confirmation_pending_matches(workflow: String, pending: Variant) -> bool:
+	match workflow:
+		"campaign_restart":
+			return String(pending) != "" and String(pending) == _pending_campaign_restart_id
+		"save_delete":
+			return pending is Dictionary and is_same(pending, _pending_save_delete_identity)
+		"settings_restore":
+			return bool(pending) and _settings_restore_pending
+	return false
 
 
 func _configure_safe_confirmation(dialog: ConfirmationDialog, cancel_text: String) -> void:
@@ -1077,6 +1175,7 @@ func _on_export_support_bundle_pressed() -> void:
 func _on_restore_settings_defaults_pressed() -> void:
 	_settings_restore_return_focus = _capture_confirmation_origin(_restore_settings_defaults_button)
 	_settings_restore_pending = true
+	_begin_destructive_confirmation_generation("settings_restore")
 	_count_destructive_confirmation("settings_restore", "request_count")
 	_settings_restore_defaults_dialog.dialog_text = "Restore presentation, sound, gameplay, custom movement keys, and readability settings to their defaults? Campaign progress and expedition saves will stay unchanged. Display mode and resolution will be previewed separately before they are kept."
 	var dialog_label := _settings_restore_defaults_dialog.get_label()

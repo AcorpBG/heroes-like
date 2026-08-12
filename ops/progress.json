@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The warned Overworld End Turn confirmation now exclusively owns parent-window input and preserves exact physical cancel/confirm, stale-request, save, route, camera, and gameplay authority across blocked parent clicks.",
+  "currentNotes": "Main Menu campaign restart, save deletion, and settings reset confirmations now exclusively own parent input and preserve exact campaign, save, settings, focus, and route authority.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "accessibility-overworld-end-turn-confirmation-exclusive-parent-input-10184",
-  "currentSliceId": "accessibility-overworld-end-turn-confirmation-exclusive-parent-input-10184",
-  "currentSliceNotes": "Exclusive parent containment, exact deferred physical input, direct/autosave parity, compatibility, static, Linux, and fresh Windows/Wine gates pass at save version 9.",
+  "currentSlice": "accessibility-main-menu-destructive-confirmation-exclusive-parent-input-10184",
+  "currentSliceId": "accessibility-main-menu-destructive-confirmation-exclusive-parent-input-10184",
+  "currentSliceNotes": "Three destructive workflows, six width/input rows, exact consequences and cleanup, compatibility, static, Linux, and fresh Windows/Wine gates pass at save version 9.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld End Turn Confirmation Exclusive Parent Input",
-  "currentSliceUpdatedAt": "2026-08-12T01:42:29Z",
+  "currentSliceTitle": "Main Menu Destructive Confirmation Exclusive Parent Input",
+  "currentSliceUpdatedAt": "2026-08-12T03:28:14Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19850,9 +19850,98 @@
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
     {
+      "id": "accessibility-main-menu-destructive-confirmation-exclusive-parent-input-10184",
+      "title": "Main Menu Destructive Confirmation Exclusive Parent Input",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/lessons-learned.md"],
+      "purpose": "Make campaign restart, save deletion, and settings restore confirmations exclusive owners of Main Menu parent-window input while retaining exact native cancellation and deliberate confirmation.",
+      "implementationTargets": [
+        "scenes/menus/MainMenu.gd",
+        "scenes/menus/MainMenu.tscn",
+        "tests/main_menu_keyboard_navigation_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "head": "707cc884",
+        "destructive_dialog_count": 3,
+        "exclusive_dialog_count": 0,
+        "display_change_exclusive_control": true,
+        "root_physical_input_bridge": false,
+        "existing_safe_cancel_focus": true,
+        "save_version": 9
+      },
+      "completionCriteria": "Campaign Restart, Save Delete, and Settings Restore Defaults native dialogs are exclusive; real outside-child root clicks at 1280 and 1920 cannot activate parent controls or alter dialog/pending/safe focus/counts, campaign profile/session, save bytes/cache, settings/display preview, selected stage/tab, or route authority; after a blocked click, physical B/Escape cancels exactly once and restores the originating command, while A/Enter and native mouse deliberately confirm the captured workflow exactly once through unchanged production handlers; the identical parent click works only after close; stale/replacement pending and release-after-close fail closed; zero/multiple destructive owners, Display Change, and Hero Keybindings ownership are not forwarded; direct campaign restart, save deletion, settings restore, display confirmation, keyboard navigation, core, Linux release boot, and fresh Windows/Wine boot remain green.",
+      "nonGoals": [
+        "changing destructive consequences, campaign/save/settings schema, generic modal framework, forwarding mouse/motion/InputEventAction, changing Display Change or keybindings behavior, Native RMG, tuning, signing, publication, certification, or overall release completion"
+      ],
+      "baselineChecks": [
+        "godot4 --headless --path . --scene res://tests/main_menu_keyboard_navigation_smoke.tscn",
+        "godot4 --headless --path . --scene res://tests/campaign_arc_restart_regression.tscn",
+        "godot4 --headless --path . --scene res://tests/save_slot_delete_regression.tscn",
+        "godot4 --headless --path . --scene res://tests/settings_restore_defaults_regression.tscn",
+        "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+        "godot4 --headless --editor --quit --path .",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check",
+        "Linux release export plus shipped main-scene boot",
+        "Windows release export plus fresh Wine shipped main-scene boot"
+      ],
+      "startedAt": "2026-08-12T01:47:49Z",
+      "updatedAt": "2026-08-12T03:28:14Z",
+      "completedAt": "2026-08-12T03:28:14Z",
+      "notes": "Campaign Restart, Save Delete, and Settings Restore Defaults are exclusive native child windows. One exactly-one-owner root bridge handles, duplicates, and defers only physical Key/JoypadButton events, then rechecks the captured dialog, workflow, monotonic request generation, and pending authority before unchanged child delivery. Parent clicks, stale generations, queued releases, multiple owners, Display Change, Hero Keybindings, mouse, motion, and InputEventAction paths fail closed. Six real 1280/1920 rows retain exact campaign, save, settings, cache, transaction-residue, stage, route, focus, and cleanup authority.",
+      "result": {
+        "exclusive_destructive_dialog_count": 3,
+        "root_physical_input_bridge": true,
+        "request_generation_guard": true,
+        "tested_workflows": ["campaign_restart", "save_delete", "settings_restore"],
+        "tested_widths": [1280, 1920],
+        "physical_cancel_inputs": ["JOY_BUTTON_B", "Escape"],
+        "deliberate_confirm_inputs": ["JOY_BUTTON_A", "Enter", "native_mouse"],
+        "blocked_parent_clicks": true,
+        "positive_parent_click_after_close": true,
+        "stale_request_release_noop": true,
+        "display_change_rejected": true,
+        "hero_keybindings_rejected": true,
+        "campaign_consequence_exact": true,
+        "save_delete_consequence_exact": true,
+        "settings_restore_consequence_exact": true,
+        "save_version_before": 9,
+        "save_version_after": 9,
+        "linux_export_boot_passed": true,
+        "windows_export_fresh_wine_boot_passed": true
+      },
+      "validation": {
+        "status": "passed",
+        "updatedAt": "2026-08-12T03:28:14Z",
+        "focusedArtifact": "/tmp/heroes-main-menu-exclusive7.6fjcHs/focused.log",
+        "releaseArtifact": "/tmp/heroes-main-menu-destructive-release.gB3Q5i",
+        "focusedMarker": "MAIN_MENU_KEYBOARD_NAVIGATION_SMOKE PASS",
+        "compatibility": [
+          "campaign_arc_restart_regression ok:true",
+          "save_slot_delete_regression ok:true",
+          "settings_restore_defaults_regression ok:true",
+          "display transaction ok:true",
+          "custom keybindings PASS",
+          "settings transactional ok:true",
+          "core_systems_regression_smoke rc0"
+        ],
+        "static": ["validate_repo rc0", "py_compile rc0", "jq rc0", "diff-check rc0"],
+        "linuxPckSha256": "6d7fc0dd0c5e0ff841f8d7512958b7408b088b0ddac52f4af07616e74fb27b4a",
+        "windowsPckSha256": "6812545991d31b137d2769272f336b3f924ee2eb0a493f570e78226440eabfde"
+      }
+    },
+    {
       "id": "accessibility-overworld-end-turn-confirmation-exclusive-parent-input-10184",
       "title": "Overworld End Turn Confirmation Exclusive Parent Input",
-      "status": "in_progress",
+      "status": "completed",
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
