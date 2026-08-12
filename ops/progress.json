@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Outcome fresh-expedition confirmation physical routing is complete. The exclusive child now recovers exact root-routed physical input after blocked parent clicks while resolved-session, save, profile, route, and focus authority remain exact.",
+  "currentNotes": "Map Editor unsaved-working-copy confirmation physical routing is complete. The exclusive child now recovers exact root-routed physical input after blocked parent clicks while working-copy, package, save, route, and native-close authority remain exact.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "accessibility-outcome-new-session-exclusive-parent-input-10184",
-  "currentSliceId": "accessibility-outcome-new-session-exclusive-parent-input-10184",
-  "currentSliceNotes": "The exact pending/source-session identity bridge and five-row 1280/1920 containment matrix passed focused, compatibility, Linux, and fresh Windows/Wine validation.",
+  "currentSlice": "accessibility-map-editor-dirty-confirmation-exclusive-parent-input-10184",
+  "currentSliceId": "accessibility-map-editor-dirty-confirmation-exclusive-parent-input-10184",
+  "currentSliceNotes": "The exact pending-identity bridge and six-row Menu/package/native-close 1280/1920 matrix passed focused, compatibility, Linux WM_DELETE, and fresh Windows/Wine WM_CLOSE validation.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Outcome New Session Exclusive Parent Input",
-  "currentSliceUpdatedAt": "2026-08-12T04:12:40Z",
+  "currentSliceTitle": "Map Editor Dirty Confirmation Exclusive Parent Input",
+  "currentSliceUpdatedAt": "2026-08-12T04:58:11Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19849,6 +19849,88 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "id": "accessibility-map-editor-dirty-confirmation-exclusive-parent-input-10184",
+      "title": "Map Editor Dirty Confirmation Exclusive Parent Input",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/lessons-learned.md"],
+      "purpose": "Restore native physical keyboard/controller ownership to the exclusive dirty-working-copy confirmation after an attempted parent-window click, without changing captured Menu, package replacement, or native-close semantics.",
+      "implementationTargets": [
+        "scenes/editor/MapEditorShell.gd",
+        "tests/map_editor_dirty_working_copy_destructive_transition_regression.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "head": "d86bfbb0",
+        "dialog_exclusive": true,
+        "root_physical_input_bridge": false,
+        "existing_transition_case_count": 3,
+        "existing_test_width": 1280,
+        "save_version": 9
+      },
+      "completionCriteria": "The exclusive dirty-working-copy ConfirmationDialog retains exact native physical ownership after a real blocked root-parent click at 1280 and 1920; root-received physical B/Escape cancels exactly once and restores the exact editor origin, while A/Enter or native mouse deliberately performs the immutable captured Menu, package replacement, or native-close workflow exactly once; the same parent probe becomes actionable only after close; stale/replacement pending identity and queued release fail closed; working copy, tool/selection, package files, active session, save/cache/settings, routes, safe-quit failure/retry, clean transitions, Linux WM_DELETE, and fresh Windows/Wine WM_CLOSE remain exact.",
+      "nonGoals": [
+        "changing editor transition consequences, working-copy or package schema, generic modal framework, forwarding mouse/motion/InputEventAction, synthetic actions, Native RMG, tuning, signing, publication, certification, or overall release completion"
+      ],
+      "baselineChecks": [
+        "godot4 --headless --path . --scene res://tests/map_editor_dirty_working_copy_destructive_transition_regression.tscn",
+        "godot4 --headless --path . --scene res://tests/map_editor_load_map_package_report.tscn",
+        "godot4 --headless --path . --scene res://tests/map_editor_package_save_copy_report.tscn",
+        "godot4 --headless --path . --scene res://tests/map_editor_smoke.tscn",
+        "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+        "godot4 --headless --editor --quit --path .",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check",
+        "Linux release export plus shipped Map Editor WM_DELETE validation",
+        "Windows release export plus fresh Wine shipped Map Editor WM_CLOSE validation"
+      ],
+      "startedAt": "2026-08-12T04:17:05Z",
+      "updatedAt": "2026-08-12T04:58:11Z",
+      "completedAt": "2026-08-12T04:58:11Z",
+      "notes": "The already-exclusive Map Editor dirty-transition child now has one exact root physical-input bridge. It handles, duplicates, and defers only physical Key/JoypadButton events, then rechecks the captured dialog, pending Dictionary identity, and reentrancy before unchanged child delivery. Six 1280/1920 Menu/package/native-close rows retain exact blocked-parent containment, physical/native cancel and confirm, stale pending/release rejection, working-copy, package, save/cache/settings, safe-close, route, focus, and cleanup authority.",
+      "result": {
+        "root_physical_input_bridge": true,
+        "dialog_exclusive": true,
+        "tested_workflows": ["menu", "package", "native_close"],
+        "tested_widths": [1280, 1920],
+        "physical_cancel_inputs": ["JOY_BUTTON_B", "Escape"],
+        "deliberate_confirm_inputs": ["JOY_BUTTON_A", "Enter", "native_mouse"],
+        "blocked_parent_clicks": true,
+        "positive_parent_click_after_close": true,
+        "stale_pending_release_noop": true,
+        "safe_quit_failure_retry_exact": true,
+        "clean_transition_controls_exact": true,
+        "save_version_before": 9,
+        "save_version_after": 9,
+        "linux_export_wm_delete_passed": true,
+        "windows_export_fresh_wine_wm_close_passed": true
+      },
+      "validation": {
+        "status": "passed",
+        "updatedAt": "2026-08-12T04:58:11Z",
+        "focusedArtifact": "/tmp/heroes-map-editor-exclusive-focused.2umExZ",
+        "releaseArtifact": "/tmp/heroes-map-editor-exclusive-release.1MrBgk",
+        "focusedMarker": "MAP_EDITOR_DIRTY_WORKING_COPY_DESTRUCTIVE_TRANSITION_REGRESSION ok:true",
+        "compatibility": [
+          "map_editor_load_map_package_report ok:true",
+          "map_editor_package_save_copy_report ok:true",
+          "map_editor_smoke rc0",
+          "core_systems_regression_smoke rc0"
+        ],
+        "linuxDiagnosticClassification": "Verbose Xvfb audio fallback plus focus_entered/tree_exited teardown disconnects and 37 unclaimed StringNames reproduced identically in a complete d86bfbb0 method-matched control; selected_slice_regression=false.",
+        "windowsDiagnosticClassification": "WASAPI unavailable then dummy fallback only; no script, parse, load, or close error.",
+        "static": ["validate_repo rc0", "py_compile rc0", "jq rc0", "diff-check rc0"],
+        "linuxPckSha256": "9326f313c7520d3c82d78b57da656d8692355f24045b611a72a2dadb46ea202b",
+        "windowsPckSha256": "1f0cdc15d4c4afe98a3c861461bcc63affbcdddb90db33929a649f7d8fe67ebf"
+      }
+    },
     {
       "id": "accessibility-outcome-new-session-exclusive-parent-input-10184",
       "title": "Outcome New Session Exclusive Parent Input",

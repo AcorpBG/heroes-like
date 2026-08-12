@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `accessibility-map-editor-dirty-confirmation-exclusive-parent-input-10184`. The exclusive unsaved-map confirmation now recovers exact native physical cancel/confirm routing after a blocked parent click while preserving working-copy, package, save, route, and native-close authority.
 - Latest completed implementation slice: `accessibility-outcome-new-session-exclusive-parent-input-10184`. Outcome fresh-expedition confirmations now recover exact native physical cancel/confirm routing after a blocked parent click while preserving resolved-session, save, profile, route, and focus authority.
 - Latest completed implementation slice: `accessibility-main-menu-destructive-confirmation-exclusive-parent-input-10184`. Campaign restart, save deletion, and settings reset confirmations now exclusively own parent-window input and retain exact native physical cancel/confirm after blocked background clicks.
 - Latest completed implementation slice: `accessibility-overworld-end-turn-confirmation-exclusive-parent-input-10184`. The warned End Turn confirmation now exclusively owns parent-window input and defers exact root-routed physical cancel/confirm into the captured child dialog, preserving expedition, save, route, camera, and confirmation authority across blocked parent clicks.

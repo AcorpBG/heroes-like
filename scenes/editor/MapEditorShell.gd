@@ -117,6 +117,7 @@ var _placement_debug_overlay_enabled := false
 var _last_save_copy_result := {}
 var _pending_dirty_transition := {}
 var _dirty_transition_return_focus: Control = null
+var _forwarding_dirty_transition_root_physical_input := false
 var _safe_close_guard_authorized := false
 var _safe_close_guard_authorized_source := ""
 var _validation_dirty_transition_routing_enabled := true
@@ -198,6 +199,50 @@ func _configure_dirty_transition_confirmation() -> void:
 	var dialog_label := _dirty_transition_dialog.get_label()
 	dialog_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	dialog_label.custom_minimum_size = Vector2(560.0, 0.0)
+	var root_window := get_tree().root
+	if root_window != null and not root_window.window_input.is_connected(_on_root_window_input):
+		root_window.window_input.connect(_on_root_window_input)
+
+
+func _on_root_window_input(event: InputEvent) -> void:
+	if (
+		_forwarding_dirty_transition_root_physical_input
+		or not (event is InputEventKey or event is InputEventJoypadButton)
+		or not _dirty_transition_dialog.visible
+		or _pending_dirty_transition.is_empty()
+	):
+		return
+	get_tree().root.set_input_as_handled()
+	var dialog := _dirty_transition_dialog
+	var pending := _pending_dirty_transition
+	var detached_event := event.duplicate() as InputEvent
+	if detached_event == null:
+		return
+	call_deferred(
+		"_forward_root_physical_input_to_dirty_transition",
+		dialog,
+		pending,
+		detached_event
+	)
+
+
+func _forward_root_physical_input_to_dirty_transition(
+	dialog: ConfirmationDialog,
+	pending: Dictionary,
+	event: InputEvent
+) -> void:
+	if (
+		_forwarding_dirty_transition_root_physical_input
+		or not is_instance_valid(dialog)
+		or dialog != _dirty_transition_dialog
+		or not dialog.visible
+		or _pending_dirty_transition.is_empty()
+		or not is_same(pending, _pending_dirty_transition)
+	):
+		return
+	_forwarding_dirty_transition_root_physical_input = true
+	dialog.push_input(event)
+	_forwarding_dirty_transition_root_physical_input = false
 
 func _rebuild_map_package_picker() -> void:
 	_map_package_index_status = ScenarioSelectRulesScript.maps_folder_package_index({
