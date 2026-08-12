@@ -12,6 +12,7 @@ const EDITOR_FOCUS_SOURCE_NAMES := [
 	"SaveCopy",
 	"PlayWorkingCopy",
 	"Menu",
+	"Map",
 	"InspectTool",
 	"TerrainTool",
 	"TerrainLineTool",
@@ -184,7 +185,8 @@ func _validate_command_focus_matrix(source_id: String, package_state: Dictionary
 		"source_count": EDITOR_FOCUS_SOURCE_NAMES.size(),
 		"widths": [1280, 1920],
 		"rows": rows,
-		"physical_forward_reverse_up_down": true,
+		"physical_tab_shift_tab_full_cycle": true,
+		"map_owned_dpad_entry_cursor_exit": true,
 		"dynamic_disabled_rehome": true,
 		"native_option_selection": true,
 		"tool_scroll_reveal": true,
@@ -199,8 +201,8 @@ func _validate_command_focus_row(
 ) -> Dictionary:
 	var source_controls := _editor_focus_source_controls(shell)
 	var source_names := _control_names(source_controls)
-	if source_names != EDITOR_FOCUS_SOURCE_NAMES or source_names.size() != 27 \
-			or _unique_strings(source_names).size() != 27:
+	if source_names != EDITOR_FOCUS_SOURCE_NAMES or source_names.size() != 28 \
+			or _unique_strings(source_names).size() != 28:
 		return _fail_dict("Map Editor %d focus source membership was not exact: %s" % [width, JSON.stringify(source_names)])
 	for control in source_controls:
 		if control.focus_mode != Control.FOCUS_ALL:
@@ -217,7 +219,7 @@ func _validate_command_focus_row(
 	shell.call("_configure_editor_keyboard_focus")
 	await _settle()
 	var initial_cycle := _enabled_focus_controls(source_controls)
-	if not _assert_focus_links_exact(initial_cycle):
+	if initial_cycle.size() != 18 or not _assert_focus_links_exact(initial_cycle):
 		return _fail_dict("Map Editor %d empty-state focus links were not an exact closed enabled cycle." % width)
 	var empty_authority := _full_authority_state(shell)
 	if not await _exercise_physical_focus_cycles(initial_cycle, "empty_%d" % width):
@@ -271,7 +273,7 @@ func _validate_command_focus_row(
 		return _fail_dict("Map Editor %d encounter property enabled/disabled state was not exact." % width)
 
 	var loaded_cycle := _enabled_focus_controls(source_controls)
-	if not _assert_focus_links_exact(loaded_cycle):
+	if loaded_cycle.size() != 26 or not _assert_focus_links_exact(loaded_cycle):
 		return _fail_dict("Map Editor %d loaded focus links were not an exact closed enabled cycle." % width)
 	var loaded_authority := _full_authority_state(shell)
 	if not await _exercise_physical_focus_cycles(loaded_cycle, "loaded_%d" % width):
@@ -355,17 +357,348 @@ func _validate_command_focus_row(
 			width,
 			_first_difference(command_background_before, _focus_background_authority(shell)),
 		])
+	var canvas_result := await _validate_canvas_interaction_row(shell, source_id, package_state, width)
+	if canvas_result.is_empty():
+		return {}
 	return {
 		"width": width,
 		"source_count": source_names.size(),
 		"empty_cycle_count": initial_cycle.size(),
 		"loaded_cycle_count": loaded_cycle.size(),
-		"forward_reverse_up_down": true,
+		"tab_shift_tab_full_cycle": true,
+		"map_owned_dpad": true,
 		"disabled_rehome": true,
 		"valid_focus_retained": true,
 		"tool_scroll_revealed": true,
 		"a_enter_once": true,
 		"option_native_refresh": true,
+		"canvas_interaction": canvas_result,
+		"authority_exact": true,
+	}
+
+func _validate_canvas_interaction_row(
+	shell: Node,
+	source_id: String,
+	package_state: Dictionary,
+	width: int
+) -> Dictionary:
+	if not await _reset_case(shell, source_id, false):
+		return {}
+	var map_view: Control = shell.get_node("%Map")
+	var menu_button: Button = shell.get_node("%Menu")
+	var inspect_button: Button = shell.get_node("%InspectTool")
+	var dialog: ConfirmationDialog = shell.get_node("DirtyTransitionConfirmationDialog")
+	var session = shell.get("_session")
+	var map_size := OverworldRules.derive_map_size(session)
+	if map_view.focus_mode != Control.FOCUS_ALL or map_size.x < 3 or map_size.y < 3:
+		return _fail_dict("Map Editor %d canvas fixture was not bounded and focusable." % width)
+	# Tab owns the exact 28-surface traversal even across Map; D-pad may enter
+	# Map from the preceding Menu command, then belongs to the canvas cursor.
+	menu_button.grab_focus()
+	await _press_key(KEY_TAB)
+	if get_viewport().gui_get_focus_owner() != map_view:
+		return _fail_dict("Map Editor %d Tab did not enter Map from Menu." % width)
+	await _press_key(KEY_TAB)
+	if get_viewport().gui_get_focus_owner() != inspect_button:
+		return _fail_dict("Map Editor %d Tab did not leave Map for Inspect." % width)
+	await _press_key(KEY_TAB, true)
+	if get_viewport().gui_get_focus_owner() != map_view:
+		return _fail_dict("Map Editor %d Shift-Tab did not re-enter Map from Inspect." % width)
+	await _press_key(KEY_TAB, true)
+	if get_viewport().gui_get_focus_owner() != menu_button:
+		return _fail_dict("Map Editor %d Shift-Tab did not leave Map for Menu." % width)
+	shell.call("validation_select_tile", 0, 0)
+	var entry_authority := _focus_background_authority(shell)
+	var entry_dirty := _canvas_dirty(shell)
+	menu_button.grab_focus()
+	await _press_joypad_button(JOY_BUTTON_DPAD_DOWN)
+	if get_viewport().gui_get_focus_owner() != map_view:
+		return _fail_dict("Map Editor %d D-pad did not enter Map from Menu." % width)
+	await _press_joypad_button(JOY_BUTTON_DPAD_RIGHT)
+	if get_viewport().gui_get_focus_owner() != map_view or _canvas_selected_tile(shell) != Vector2i(1, 0) \
+			or _focus_background_authority(shell) != entry_authority or _canvas_dirty(shell) != entry_dirty:
+		return _fail_dict("Map Editor %d Map did not own D-pad cursor movement exactly/read-only." % width)
+	await _press_joypad_button(JOY_BUTTON_B)
+	if get_viewport().gui_get_focus_owner() != inspect_button:
+		return _fail_dict("Map Editor %d Map-owned D-pad path did not exit to active Inspect focus." % width)
+
+	# Keyboard arrows and D-pad presses move one clamped tile while leaving the
+	# working copy and all external authority byte-for-byte unchanged.
+	shell.call("validation_select_tile", 0, 0)
+	map_view.grab_focus()
+	await _settle()
+	var navigation_authority := _focus_background_authority(shell)
+	var navigation_dirty := _canvas_dirty(shell)
+	await _press_key(KEY_LEFT)
+	await _press_key(KEY_UP)
+	if _canvas_selected_tile(shell) != Vector2i.ZERO \
+			or _focus_background_authority(shell) != navigation_authority \
+			or _canvas_dirty(shell) != navigation_dirty:
+		return _fail_dict("Map Editor %d canvas keyboard bounds were not clamped/read-only." % width)
+	await _press_key(KEY_RIGHT)
+	if _canvas_selected_tile(shell) != Vector2i(1, 0):
+		return _fail_dict("Map Editor %d canvas keyboard arrow did not move exactly one tile." % width)
+	await _press_joypad_button(JOY_BUTTON_DPAD_DOWN)
+	if _canvas_selected_tile(shell) != Vector2i(1, 1) \
+			or _focus_background_authority(shell) != navigation_authority \
+			or _canvas_dirty(shell) != navigation_dirty:
+		return _fail_dict("Map Editor %d canvas D-pad did not move exactly one read-only tile." % width)
+	var camera_result := await _validate_canvas_camera_follow_and_mouse(shell, map_view, navigation_authority, navigation_dirty, package_state, width)
+	if camera_result.is_empty():
+		return {}
+
+	# A held D-pad direction moves immediately, starts at 0.36 seconds, ignores
+	# duplicate presses without stepping or restarting, ignores a nonmatching
+	# release, repeats at the boundary, then uses the exact 0.09 interval.
+	var repeat_start := Vector2i(clampi(map_size.x / 2, 1, map_size.x - 2), clampi(map_size.y / 2, 1, map_size.y - 2))
+	shell.call("validation_select_tile", repeat_start.x, repeat_start.y)
+	map_view.grab_focus()
+	await _settle()
+	var repeat_authority := _focus_background_authority(shell)
+	var repeat_dirty := _canvas_dirty(shell)
+	await _send_joypad_button_event(JOY_BUTTON_DPAD_RIGHT, true, 7)
+	var first_repeat := _editor_map_repeat_snapshot(shell)
+	if _canvas_selected_tile(shell) != repeat_start + Vector2i.RIGHT \
+			or not is_equal_approx(float(first_repeat.get("wait_time", 0.0)), 0.36) \
+			or first_repeat.get("direction", Vector2i.ZERO) != Vector2i.RIGHT \
+			or int(first_repeat.get("button", -1)) != JOY_BUTTON_DPAD_RIGHT \
+			or int(first_repeat.get("device", -1)) != 7:
+		return _fail_dict("Map Editor %d D-pad initial step/repeat delay was not exact: %s" % [width, JSON.stringify(first_repeat)])
+	var repeat_timer: Timer = shell.get("_editor_map_joypad_repeat_timer") as Timer
+	repeat_timer.start(0.21)
+	var duplicate_tile := _canvas_selected_tile(shell)
+	await _send_joypad_button_event(JOY_BUTTON_DPAD_RIGHT, true, 7)
+	var duplicate_repeat := _editor_map_repeat_snapshot(shell)
+	if _canvas_selected_tile(shell) != duplicate_tile \
+			or not is_equal_approx(float(duplicate_repeat.get("wait_time", 0.0)), 0.21) \
+			or duplicate_repeat.get("direction", Vector2i.ZERO) != Vector2i.RIGHT:
+		return _fail_dict("Map Editor %d duplicate D-pad press stepped or restarted repeat: %s" % [width, JSON.stringify(duplicate_repeat)])
+	await _send_joypad_button_event(JOY_BUTTON_DPAD_LEFT, false, 7)
+	if _editor_map_repeat_snapshot(shell).get("direction", Vector2i.ZERO) != Vector2i.RIGHT:
+		return _fail_dict("Map Editor %d nonmatching D-pad release cleared the held direction." % width)
+	await _send_joypad_button_event(JOY_BUTTON_DPAD_RIGHT, false, 7)
+	if not _editor_map_repeat_stopped(shell):
+		return _fail_dict("Map Editor %d matching D-pad release did not stop the duplicate-repeat fixture." % width)
+	var actual_start := _canvas_selected_tile(shell)
+	await _send_joypad_button_event(JOY_BUTTON_DPAD_RIGHT, true, 7)
+	var actual_immediate := _canvas_selected_tile(shell)
+	if actual_immediate != actual_start + Vector2i.RIGHT:
+		return _fail_dict("Map Editor %d actual Timer fixture missed its immediate D-pad step." % width)
+	await _send_joypad_button_event(JOY_BUTTON_DPAD_LEFT, false, 7)
+	if not await _await_exact_canvas_timer_step(shell, actual_immediate + Vector2i.RIGHT, 600):
+		return _fail_dict("Map Editor %d configured 0.36 Timer did not emit exactly one first repeat." % width)
+	var boundary_repeat := _editor_map_repeat_snapshot(shell)
+	if not is_equal_approx(float(boundary_repeat.get("wait_time", 0.0)), 0.09):
+		return _fail_dict("Map Editor %d actual first repeat did not rearm the 0.09 interval: %s" % [width, JSON.stringify(boundary_repeat)])
+	if not await _await_exact_canvas_timer_step(shell, actual_immediate + (Vector2i.RIGHT * 2), 250):
+		return _fail_dict("Map Editor %d configured 0.09 Timer did not emit exactly one rate repeat." % width)
+	await _send_joypad_button_event(JOY_BUTTON_DPAD_RIGHT, false, 7)
+	if not _editor_map_repeat_stopped(shell):
+		return _fail_dict("Map Editor %d matching D-pad release did not stop repeat." % width)
+	if _focus_background_authority(shell) != repeat_authority or _canvas_dirty(shell) != repeat_dirty \
+			or _package_file_state() != package_state:
+		return _fail_dict("Map Editor %d held D-pad navigation mutated working-copy/background authority." % width)
+
+	# Focus loss and modal ownership both stop a held direction. Accept/cancel
+	# buttons remain edge-triggered and never enter the repeat state.
+	map_view.grab_focus()
+	await _send_joypad_button_event(JOY_BUTTON_DPAD_LEFT, true, 0)
+	inspect_button.grab_focus()
+	await _settle()
+	if not _editor_map_repeat_stopped(shell):
+		return _fail_dict("Map Editor %d canvas focus loss did not stop held D-pad repeat." % width)
+	map_view.grab_focus()
+	await _press_joypad_button(JOY_BUTTON_B)
+	if get_viewport().gui_get_focus_owner() != inspect_button or not _editor_map_repeat_stopped(shell):
+		return _fail_dict("Map Editor %d canvas B did not restore the active Inspect tool without repeat." % width)
+	map_view.grab_focus()
+	var echo_before := _canvas_action_state(shell)
+	await _send_key_event(KEY_ENTER, true, true)
+	if _canvas_action_state(shell) != echo_before:
+		return _fail_dict("Map Editor %d canvas accepted an echo Enter event." % width)
+	await _send_key_event(KEY_ENTER, false)
+	await _press_joypad_button(JOY_BUTTON_A)
+	if not _editor_map_repeat_stopped(shell):
+		return _fail_dict("Map Editor %d canvas A incorrectly entered repeat." % width)
+
+	# Make the existing working copy dirty, then prove opening its native modal
+	# cancels an active hold before the dialog owns input.
+	var dirty_tile := _first_property_empty_tile(shell)
+	var dirty_terrain := _alternate_terrain_id(shell, dirty_tile)
+	if dirty_tile.x < 0 or dirty_terrain == "":
+		return _fail_dict("Map Editor %d canvas modal-stop terrain fixture was unavailable." % width)
+	shell.call("validation_paint_terrain", dirty_tile.x, dirty_tile.y, dirty_terrain)
+	map_view.grab_focus()
+	await _send_joypad_button_event(JOY_BUTTON_DPAD_RIGHT, true, 0)
+	shell.call("validation_request_dirty_transition", "menu")
+	await _settle()
+	if not dialog.visible or not _editor_map_repeat_stopped(shell):
+		return _fail_dict("Map Editor %d dirty modal did not stop canvas repeat." % width)
+	shell.call("validation_cancel_dirty_transition")
+	await _settle()
+
+	var action_modes: Array[String] = []
+	if width == 1280:
+		action_modes.assign(["inspect", "terrain"])
+	else:
+		action_modes.assign(["road", "road_path"])
+	var action_rows: Array[Dictionary] = []
+	for mode in action_modes:
+		var action_result := await _validate_canvas_action_direct_parity(shell, source_id, package_state, width, mode)
+		if action_result.is_empty():
+			return {}
+		action_rows.append(action_result)
+	if width == 1920 and not await _validate_canvas_mouse_inspect_parity(shell, source_id, package_state, width):
+		return {}
+	return {
+		"width": width,
+		"source_count": EDITOR_FOCUS_SOURCE_NAMES.size(),
+		"keyboard_dpad_bounds_read_only": true,
+		"selected_tile_visible": true,
+		"camera_follow_and_native_mouse": camera_result,
+		"duplicate_press_zero_step_no_restart": true,
+		"matching_nonmatching_release": true,
+		"repeat_initial_delay_seconds": 0.36,
+		"repeat_interval_seconds": 0.09,
+		"focus_modal_stop": true,
+		"accept_cancel_nonrepeat": true,
+		"action_rows": action_rows,
+		"mouse_picker_dialog_paths_unchanged": true,
+	}
+
+func _validate_canvas_camera_follow_and_mouse(
+	shell: Node,
+	map_view: Control,
+	authority_before: Dictionary,
+	dirty_before: bool,
+	package_state: Dictionary,
+	width: int
+) -> Dictionary:
+	var initial_metrics: Dictionary = map_view.call("validation_view_metrics")
+	var initial_map_size: Dictionary = initial_metrics.get("map_size", {})
+	map_view.call("_set_camera_center", Vector2(float(initial_map_size.get("x", 1)) * 0.5, float(initial_map_size.get("y", 1)) * 0.5), true)
+	await _settle()
+	var before: Dictionary = map_view.call("validation_view_metrics")
+	if not bool(before.get("pan_supported", false)):
+		return _fail_dict("Map Editor %d canvas camera fixture did not support bounded panning." % width)
+	var chosen_probe := await _choose_camera_pan_probe(map_view, before, 1)
+	var direction: Vector2i = chosen_probe.get("direction", Vector2i.ZERO)
+	var chosen_delta: Vector2 = chosen_probe.get("delta", Vector2.ZERO)
+	if direction == Vector2i.ZERO or chosen_delta.length() <= 0.01 \
+			or not bool(chosen_probe.get("restored_exact", false)) \
+			or not bool(chosen_probe.get("all_probes_restored_exact", false)) \
+			or not bool(chosen_probe.get("axis_aligned", false)):
+		return _fail_dict("Map Editor %d canvas camera had no deterministic available clamped direction." % width)
+	var before_precise := _camera_precise(before)
+	var cursor_start := Vector2i(
+		clampi(roundi(before_precise.x), 1, int(before.get("map_size", {}).get("x", 1)) - 2),
+		clampi(roundi(before_precise.y), 1, int(before.get("map_size", {}).get("y", 1)) - 2)
+	)
+	shell.call("validation_select_tile", cursor_start.x, cursor_start.y)
+	map_view.grab_focus()
+	await _settle()
+	await _press_canvas_direction_key(direction)
+	var after: Dictionary = map_view.call("validation_view_metrics")
+	var expected_focus := before_precise + chosen_delta
+	var actual_cursor := _canvas_selected_tile(shell)
+	var expected_cursor := cursor_start + direction
+	var authority_after := _focus_background_authority(shell)
+	var dirty_after := _canvas_dirty(shell)
+	var camera_checks := {
+		"precise_focus_exact": _vector2_approx(_camera_precise(after), expected_focus),
+		"selected_tile_exact": actual_cursor == expected_cursor,
+		"selected_visible_exact": _canvas_selected_tile_visible(shell),
+		"background_authority_exact": authority_after == authority_before,
+		"dirty_exact": dirty_after == dirty_before,
+	}
+	if not _checks_exact(camera_checks):
+		return _fail_dict("Map Editor %d canvas physical cursor/camera follow was not exact: %s" % [width, JSON.stringify({
+			"checks": camera_checks,
+			"focus_before": before_precise,
+			"chosen_delta": chosen_delta,
+			"focus_expected": expected_focus,
+			"focus_actual": _camera_precise(after),
+			"cursor_start": cursor_start,
+			"cursor_expected": expected_cursor,
+			"cursor_actual": actual_cursor,
+			"visible_bounds": after.get("visible_bounds", {}).duplicate(true),
+			"dirty_before": dirty_before,
+			"dirty_after": dirty_after,
+			"authority_differences": _top_level_differences(authority_before, authority_after) \
+				if not bool(camera_checks.get("background_authority_exact", false)) else {},
+		})])
+
+	# Native mouse drag must pan without releasing a tile activation. The wheel
+	# then pans by the shared MapView three-tile increment. Both remain read-only.
+	var map_size: Dictionary = before.get("map_size", {})
+	map_view.call("_set_camera_center", Vector2(float(map_size.get("x", 1)) * 0.5, float(map_size.get("y", 1)) * 0.5), true)
+	await _settle()
+	var selected_before_drag := _canvas_selected_tile(shell)
+	var drag_metrics_before: Dictionary = map_view.call("validation_view_metrics")
+	var drag_before := _camera_precise(drag_metrics_before)
+	var drag_probe := await _choose_camera_pan_probe(map_view, drag_metrics_before, 1)
+	var drag_direction: Vector2i = drag_probe.get("direction", Vector2i.ZERO)
+	var drag_expected_delta: Vector2 = drag_probe.get("delta", Vector2.ZERO)
+	var drag_tile_extent := float(drag_metrics_before.get("tile_extent", 0.0))
+	if drag_direction == Vector2i.ZERO or drag_expected_delta.length() <= 0.01 \
+			or drag_tile_extent <= 0.0 \
+			or not bool(drag_probe.get("axis_aligned", false)) \
+			or not bool(drag_probe.get("restored_exact", false)) \
+			or not bool(drag_probe.get("all_probes_restored_exact", false)):
+		return _fail_dict("Map Editor %d native drag fixture had no method-matched available camera direction." % width)
+	await _drag_map_view(map_view, -Vector2(drag_direction) * drag_tile_extent)
+	var drag_after := _camera_precise(map_view.call("validation_view_metrics"))
+	var selected_after_drag := _canvas_selected_tile(shell)
+	var drag_authority_after := _focus_background_authority(shell)
+	var drag_dirty_after := _canvas_dirty(shell)
+	var drag_checks := {
+		"drag_camera_changed": drag_after.distance_to(drag_before) > 0.01,
+		"drag_camera_exact": _vector2_approx(drag_after, drag_before + drag_expected_delta),
+		"selected_tile_unchanged": selected_after_drag == selected_before_drag,
+		"background_authority_exact": drag_authority_after == authority_before,
+		"dirty_exact": drag_dirty_after == dirty_before,
+	}
+	if not _checks_exact(drag_checks):
+		return _fail_dict("Map Editor %d native mouse drag did not pan or leaked into tile activation: %s" % [width, JSON.stringify({
+			"checks": drag_checks,
+			"drag_before": drag_before,
+			"drag_after": drag_after,
+			"drag_delta": drag_after - drag_before,
+			"drag_expected_delta": drag_expected_delta,
+			"drag_direction": drag_direction,
+			"drag_tile_extent": drag_tile_extent,
+			"selected_before": selected_before_drag,
+			"selected_after": selected_after_drag,
+			"dirty_before": dirty_before,
+			"dirty_after": drag_dirty_after,
+			"authority_differences": _top_level_differences(authority_before, drag_authority_after) \
+				if not bool(drag_checks.get("background_authority_exact", false)) else {},
+		})])
+	map_view.call("_set_camera_center", Vector2(float(map_size.get("x", 1)) * 0.5, float(map_size.get("y", 1)) * 0.5), true)
+	await _settle()
+	var wheel_metrics_before: Dictionary = map_view.call("validation_view_metrics")
+	var wheel_before := _camera_precise(wheel_metrics_before)
+	var wheel_probe := await _choose_camera_pan_probe(map_view, wheel_metrics_before, 3)
+	var wheel_direction: Vector2i = wheel_probe.get("direction", Vector2i.ZERO)
+	var wheel_delta: Vector2 = wheel_probe.get("delta", Vector2.ZERO)
+	if wheel_direction == Vector2i.ZERO or wheel_delta.length() <= 0.01 \
+			or not bool(wheel_probe.get("restored_exact", false)) \
+			or not bool(wheel_probe.get("all_probes_restored_exact", false)) \
+			or not bool(wheel_probe.get("axis_aligned", false)):
+		return _fail_dict("Map Editor %d wheel fixture had no bounded camera direction." % width)
+	await _wheel_map_view(map_view, _wheel_button_for_direction(wheel_direction))
+	var wheel_after := _camera_precise(map_view.call("validation_view_metrics"))
+	if not _vector2_approx(wheel_after, wheel_before + wheel_delta) \
+			or _canvas_selected_tile(shell) != selected_before_drag \
+			or _focus_background_authority(shell) != authority_before \
+			or _canvas_dirty(shell) != dirty_before \
+			or _package_file_state() != package_state:
+		return _fail_dict("Map Editor %d native wheel pan/read-only authority was not exact: %s" % [width, JSON.stringify({"before": wheel_before, "after": wheel_after})])
+	return {
+		"precise_directional_follow": true,
+		"selected_visible": true,
+		"drag_pan_tile_activation_suppressed": true,
+		"wheel_pan_tiles": 3,
 		"authority_exact": true,
 	}
 
@@ -375,6 +708,499 @@ func _editor_focus_source_controls(shell: Node) -> Array[Control]:
 		if value is Control:
 			controls.append(value)
 	return controls
+
+func _validate_canvas_action_direct_parity(
+	shell: Node,
+	source_id: String,
+	package_state: Dictionary,
+	width: int,
+	mode: String
+) -> Dictionary:
+	if not await _reset_case(shell, source_id, false):
+		return {}
+	var setup := _prepare_canvas_action(shell, mode)
+	if not bool(setup.get("ok", false)):
+		return _fail_dict("Map Editor %d canvas %s action fixture was unavailable: %s" % [width, mode, JSON.stringify(setup)])
+	var map_view: Control = shell.get_node("%Map")
+	var authority_before := _focus_background_authority(shell)
+	map_view.grab_focus()
+	await _settle()
+	var accept_kind := "joypad_a" if mode in ["inspect", "road"] else "enter"
+	await _activate_canvas_action(map_view, setup, accept_kind, false, shell)
+	var physical_state := _canvas_action_state(shell)
+	if _focus_background_authority(shell).duplicate(true).merged({"working_copy": authority_before.get("working_copy", {})}, true) \
+			!= authority_before or _package_file_state() != package_state:
+		return _fail_dict("Map Editor %d canvas %s action changed external authority." % [width, mode])
+
+	if not await _reset_case(shell, source_id, false):
+		return {}
+	var direct_setup := _prepare_canvas_action(shell, mode)
+	var direct_setup_checks := _canvas_setup_equality_checks(setup, direct_setup)
+	if direct_setup != setup or not _checks_exact(direct_setup_checks):
+		return _fail_dict("Map Editor %d canvas %s direct-control fixture was not identical: %s" % [
+			width,
+			mode,
+			JSON.stringify({"checks": direct_setup_checks, "differences": _canvas_setup_differences(setup, direct_setup)}),
+		])
+	await _activate_canvas_action(map_view, direct_setup, accept_kind, true, shell)
+	var direct_state := _canvas_action_state(shell)
+	if _focus_background_authority(shell).duplicate(true).merged({"working_copy": authority_before.get("working_copy", {})}, true) \
+			!= authority_before or _package_file_state() != package_state:
+		return _fail_dict("Map Editor %d canvas %s direct control changed external authority." % [width, mode])
+	if physical_state != direct_state:
+		return _fail_dict("Map Editor %d canvas %s physical/direct action parity failed: %s" % [
+			width,
+			mode,
+			_first_difference(direct_state, physical_state),
+		])
+	if not bool(physical_state.get("session_identity_coherent", false)) \
+			or not bool(direct_state.get("session_identity_coherent", false)):
+		return _fail_dict("Map Editor %d canvas %s action session identity was not internally coherent." % [width, mode])
+	if mode != "inspect" and not bool(physical_state.get("dirty", false)):
+		return _fail_dict("Map Editor %d canvas %s action did not dirty its working copy." % [width, mode])
+	if mode == "inspect" and physical_state.get("working_copy", {}) != setup.get("working_copy", {}):
+		return _fail_dict("Map Editor %d canvas inspect action was not read-only." % width)
+
+	# Cancel always restores the currently active tool, never activates it.
+	map_view.grab_focus()
+	await _press_key(KEY_ESCAPE)
+	var expected_tool_focus: Control = shell.call("_active_tool_focus_control") as Control
+	if get_viewport().gui_get_focus_owner() != expected_tool_focus or not _editor_map_repeat_stopped(shell):
+		return _fail_dict("Map Editor %d canvas %s Escape did not restore exact active-tool focus." % [width, mode])
+	return {
+		"mode": mode,
+		"accept": accept_kind,
+		"direct_parity_exact": true,
+		"two_step": mode == "road_path",
+		"dirty": bool(physical_state.get("dirty", false)),
+		"active_tool_focus_restored": true,
+	}
+
+func _validate_canvas_mouse_inspect_parity(shell: Node, source_id: String, package_state: Dictionary, width: int) -> bool:
+	if not await _reset_case(shell, source_id, false):
+		return false
+	var setup := _prepare_canvas_action(shell, "inspect")
+	if not bool(setup.get("ok", false)):
+		_fail("Map Editor %d mouse-inspect fixture was unavailable." % width)
+		return false
+	var start: Vector2i = setup.get("start", Vector2i.ZERO)
+	var map_view: Control = shell.get_node("%Map")
+	map_view.call("_set_camera_center", Vector2(start), true)
+	await _settle()
+	var click_metrics: Dictionary = map_view.call("validation_view_metrics")
+	var click_board: Dictionary = click_metrics.get("board_rect", {})
+	var click_viewport: Dictionary = click_metrics.get("viewport_rect", {})
+	var click_map_size: Dictionary = click_metrics.get("map_size", {})
+	var click_cell_size := Vector2(
+		float(click_board.get("width", 0.0)) / maxf(float(click_map_size.get("x", 1)), 1.0),
+		float(click_board.get("height", 0.0)) / maxf(float(click_map_size.get("y", 1)), 1.0)
+	)
+	var local_center := Vector2(float(click_board.get("x", 0.0)), float(click_board.get("y", 0.0))) \
+		+ Vector2((float(start.x) + 0.5) * click_cell_size.x, (float(start.y) + 0.5) * click_cell_size.y)
+	var viewport_rect := Rect2(
+		Vector2(float(click_viewport.get("x", 0.0)), float(click_viewport.get("y", 0.0))),
+		Vector2(float(click_viewport.get("width", 0.0)), float(click_viewport.get("height", 0.0)))
+	)
+	var local_map_rect := Rect2(Vector2.ZERO, map_view.size)
+	var mapped_tile: Vector2i = map_view.call("_tile_from_local", local_center)
+	var click_geometry_checks := {
+		"center_inside_viewport": viewport_rect.has_point(local_center),
+		"center_inside_map": local_map_rect.has_point(local_center),
+		"mapped_tile_exact": mapped_tile == start,
+	}
+	if not _checks_exact(click_geometry_checks):
+		_fail("Map Editor %d mouse-inspect fixture did not map the visible tile center exactly: %s" % [width, JSON.stringify({
+			"checks": click_geometry_checks,
+			"start": start,
+			"mapped_tile": mapped_tile,
+			"local_center": local_center,
+			"viewport_rect": viewport_rect,
+			"map_rect": local_map_rect,
+		})])
+		return false
+	var authority_before := _focus_background_authority(shell)
+	await _click_map_tile(shell, start)
+	var mouse_state := _canvas_action_state(shell)
+	if _focus_background_authority(shell) != authority_before or _package_file_state() != package_state:
+		_fail("Map Editor %d canvas mouse inspect mutated background authority." % width)
+		return false
+	if not await _reset_case(shell, source_id, false):
+		return false
+	var direct_setup := _prepare_canvas_action(shell, "inspect")
+	var mouse_setup_checks := _canvas_setup_equality_checks(setup, direct_setup)
+	if direct_setup != setup or not _checks_exact(mouse_setup_checks):
+		_fail("Map Editor %d mouse-inspect direct fixture was not identical: %s" % [
+			width,
+			JSON.stringify({"checks": mouse_setup_checks, "differences": _canvas_setup_differences(setup, direct_setup)}),
+		])
+		return false
+	shell.call("_on_map_tile_pressed", direct_setup.get("start", Vector2i.ZERO))
+	await _settle()
+	var mouse_direct_state := _canvas_action_state(shell)
+	var mouse_action_checks := _canvas_action_state_equality_checks(mouse_state, mouse_direct_state)
+	if mouse_direct_state != mouse_state or not _checks_exact(mouse_action_checks):
+		_fail("Map Editor %d canvas mouse inspect did not retain direct click parity: %s" % [
+			width,
+			JSON.stringify({"checks": mouse_action_checks, "differences": _top_level_differences(mouse_state, mouse_direct_state)}),
+		])
+		return false
+	if not bool(mouse_state.get("session_identity_coherent", false)) \
+			or not bool(mouse_direct_state.get("session_identity_coherent", false)):
+		_fail("Map Editor %d canvas mouse/direct session identity was not internally coherent." % width)
+		return false
+	return true
+
+func _prepare_canvas_action(shell: Node, mode: String) -> Dictionary:
+	var session = shell.get("_session")
+	if session == null:
+		return {}
+	var start := _first_property_empty_tile(shell)
+	if start.x < 0:
+		return {}
+	var map_size := OverworldRules.derive_map_size(session)
+	var finish := Vector2i(mini(start.x + 1, map_size.x - 1), start.y)
+	if finish == start:
+		finish = Vector2i(maxi(start.x - 1, 0), start.y)
+	shell.call("validation_select_tile", start.x, start.y)
+	match mode:
+		"inspect":
+			shell.call("validation_set_tool", "inspect")
+		"terrain":
+			var terrain_id := _alternate_terrain_id(shell, start)
+			if terrain_id == "":
+				return {}
+			shell.call("validation_select_terrain", terrain_id)
+			shell.call("validation_set_tool", "terrain")
+		"road":
+			shell.call("validation_set_tool", "road")
+		"road_path":
+			shell.call("validation_set_tool", "road_path")
+		_:
+			return {}
+	var canonical_working_copy := _canonical_canvas_working_copy(session.to_dict())
+	return {
+		"ok": true,
+		"mode": mode,
+		"start": start,
+		"finish": finish,
+		"working_copy": canonical_working_copy.get("payload", {}),
+		"session_identity_coherent": bool(canonical_working_copy.get("identity_coherent", false)),
+		"selected_terrain_id": String(shell.get("_selected_terrain_id")),
+	}
+
+func _canvas_setup_equality_checks(before: Dictionary, after: Dictionary) -> Dictionary:
+	var checks := {
+		"whole_setup_exact": after == before,
+		"ok_exact": after.get("ok") == before.get("ok"),
+		"mode_exact": after.get("mode") == before.get("mode"),
+		"start_exact": after.get("start") == before.get("start"),
+		"finish_exact": after.get("finish") == before.get("finish"),
+		"selected_terrain_id_exact": after.get("selected_terrain_id") == before.get("selected_terrain_id"),
+		"before_session_identity_coherent": bool(before.get("session_identity_coherent", false)),
+		"after_session_identity_coherent": bool(after.get("session_identity_coherent", false)),
+		"working_copy_exact": after.get("working_copy") == before.get("working_copy"),
+	}
+	var before_working: Dictionary = before.get("working_copy", {})
+	var after_working: Dictionary = after.get("working_copy", {})
+	var working_keys: Array = before_working.keys()
+	for key in after_working.keys():
+		if key not in working_keys:
+			working_keys.append(key)
+	working_keys.sort_custom(func(a, b): return String(a) < String(b))
+	for key in working_keys:
+		checks["working_copy_%s_exact" % String(key)] = before_working.has(key) \
+			and after_working.has(key) and before_working[key] == after_working[key]
+	return checks
+
+func _canvas_setup_differences(before: Dictionary, after: Dictionary) -> Dictionary:
+	var differences := {}
+	for key in ["ok", "mode", "start", "finish", "selected_terrain_id", "session_identity_coherent"]:
+		if before.get(key) != after.get(key):
+			differences[key] = {"before": before.get(key), "after": after.get(key)}
+	var before_working: Dictionary = before.get("working_copy", {})
+	var after_working: Dictionary = after.get("working_copy", {})
+	var working_keys: Array = before_working.keys()
+	for key in after_working.keys():
+		if key not in working_keys:
+			working_keys.append(key)
+	working_keys.sort_custom(func(a, b): return String(a) < String(b))
+	var working_differences := {}
+	for key in working_keys:
+		if not before_working.has(key) or not after_working.has(key) or before_working[key] != after_working[key]:
+			working_differences[String(key)] = {
+				"before": before_working.get(key),
+				"after": after_working.get(key),
+			}
+	if not working_differences.is_empty():
+		differences["working_copy"] = working_differences
+	return differences
+
+func _top_level_differences(before: Dictionary, after: Dictionary) -> Dictionary:
+	var differences := {}
+	var keys: Array = before.keys()
+	for key in after.keys():
+		if key not in keys:
+			keys.append(key)
+	keys.sort_custom(func(a, b): return String(a) < String(b))
+	for key in keys:
+		if not before.has(key) or not after.has(key) or before[key] != after[key]:
+			differences[String(key)] = {
+				"exact": false,
+				"before": before.get(key),
+				"after": after.get(key),
+			}
+	return differences
+
+func _activate_canvas_action(
+	map_view: Control,
+	setup: Dictionary,
+	accept_kind: String,
+	direct: bool,
+	shell: Node
+) -> void:
+	var start: Vector2i = setup.get("start", Vector2i.ZERO)
+	var finish: Vector2i = setup.get("finish", start)
+	if direct:
+		shell.call("_on_map_tile_pressed", start)
+	else:
+		if accept_kind == "joypad_a":
+			await _press_joypad_button(JOY_BUTTON_A)
+		else:
+			await _press_key(KEY_ENTER)
+	if String(setup.get("mode", "")) != "road_path":
+		return
+	if direct:
+		shell.call("_on_map_tile_pressed", finish)
+	else:
+		shell.call("validation_select_tile", finish.x, finish.y)
+		shell.call("validation_set_tool", "road_path")
+		map_view.grab_focus()
+		await _settle()
+		if accept_kind == "joypad_a":
+			await _press_joypad_button(JOY_BUTTON_A)
+		else:
+			await _press_key(KEY_ENTER)
+	await _settle()
+
+func _canvas_action_state(shell: Node) -> Dictionary:
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var session = shell.get("_session")
+	var canonical_working_copy := _canonical_canvas_working_copy(session.to_dict() if session != null else {})
+	return {
+		"working_copy": canonical_working_copy.get("payload", {}),
+		"session_identity_coherent": bool(canonical_working_copy.get("identity_coherent", false)),
+		"dirty": bool(snapshot.get("dirty", false)),
+		"tool": String(snapshot.get("tool", "")),
+		"selected_tile": snapshot.get("selected_tile", {}).duplicate(true),
+		"status_text": String(snapshot.get("status_text", "")),
+		"terrain_placement": snapshot.get("terrain_placement", {}).duplicate(true),
+		"road_tile_count": int(snapshot.get("road_tile_count", -1)),
+		"pending_road_path_start": snapshot.get("pending_road_path_start", {}).duplicate(true),
+	}
+
+func _canvas_action_state_equality_checks(before: Dictionary, after: Dictionary) -> Dictionary:
+	var checks := {"whole_action_state_exact": after == before}
+	var keys: Array = before.keys()
+	for key in after.keys():
+		if key not in keys:
+			keys.append(key)
+	keys.sort_custom(func(a, b): return String(a) < String(b))
+	for key in keys:
+		checks["action_state_%s_exact" % String(key)] = before.has(key) \
+			and after.has(key) and before[key] == after[key]
+	return checks
+
+func _canonical_canvas_working_copy(value: Variant) -> Dictionary:
+	if not (value is Dictionary):
+		return {"identity_coherent": false, "payload": {}}
+	var payload: Dictionary = (value as Dictionary).duplicate(true)
+	var root_session_id := String(payload.get("session_id", ""))
+	var overworld: Dictionary = (payload.get("overworld", {}) as Dictionary).duplicate(true)
+	var adoption: Dictionary = (overworld.get("native_random_map_package_session_adoption", {}) as Dictionary).duplicate(true)
+	var adoption_session_id := String(adoption.get("session_id", ""))
+	var identity_coherent := root_session_id != "" and root_session_id == adoption_session_id
+	payload.erase("session_id")
+	adoption.erase("session_id")
+	overworld["native_random_map_package_session_adoption"] = adoption
+	payload["overworld"] = overworld
+	return {"identity_coherent": identity_coherent, "payload": payload}
+
+func _alternate_terrain_id(shell: Node, tile: Vector2i) -> String:
+	var session = shell.get("_session")
+	if session == null:
+		return ""
+	var current := String(session.overworld.get("map", [])[tile.y][tile.x])
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	for terrain_value in snapshot.get("terrain_options", []):
+		if terrain_value is Dictionary:
+			var terrain_id := String(terrain_value.get("id", ""))
+			if terrain_id != "" and terrain_id != current:
+				return terrain_id
+	return ""
+
+func _canvas_selected_tile(shell: Node) -> Vector2i:
+	var selected: Dictionary = shell.call("validation_snapshot").get("selected_tile", {})
+	return Vector2i(int(selected.get("x", -1)), int(selected.get("y", -1)))
+
+func _canvas_dirty(shell: Node) -> bool:
+	return bool(shell.call("validation_snapshot").get("dirty", true))
+
+func _await_exact_canvas_timer_step(shell: Node, expected_tile: Vector2i, timeout_msec: int) -> bool:
+	var before := _canvas_selected_tile(shell)
+	var deadline := Time.get_ticks_msec() + timeout_msec
+	while Time.get_ticks_msec() <= deadline:
+		await get_tree().process_frame
+		var current := _canvas_selected_tile(shell)
+		if current == expected_tile:
+			return current != before
+		if current != before:
+			return false
+	return false
+
+func _click_map_tile(shell: Node, tile: Vector2i) -> void:
+	var map_view: Control = shell.get_node("%Map")
+	var metrics: Dictionary = map_view.call("validation_view_metrics")
+	var board: Dictionary = metrics.get("board_rect", {})
+	var map_size: Dictionary = metrics.get("map_size", {})
+	var cell_size := Vector2(
+		float(board.get("width", 0.0)) / maxf(float(map_size.get("x", 1)), 1.0),
+		float(board.get("height", 0.0)) / maxf(float(map_size.get("y", 1)), 1.0)
+	)
+	var local_position := Vector2(float(board.get("x", 0.0)), float(board.get("y", 0.0))) \
+		+ Vector2((float(tile.x) + 0.5) * cell_size.x, (float(tile.y) + 0.5) * cell_size.y)
+	var root_position := map_view.get_global_rect().position + local_position
+	var motion := InputEventMouseMotion.new()
+	motion.position = root_position
+	motion.global_position = root_position
+	get_viewport().push_input(motion, true)
+	await get_tree().process_frame
+	for pressed_state in [true, false]:
+		var event := InputEventMouseButton.new()
+		event.button_index = MOUSE_BUTTON_LEFT
+		event.position = root_position
+		event.global_position = root_position
+		event.pressed = pressed_state
+		get_viewport().push_input(event, true)
+		await get_tree().process_frame
+	await _settle()
+
+func _canvas_selected_tile_visible(shell: Node) -> bool:
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var selected: Dictionary = snapshot.get("selected_tile", {})
+	var bounds: Dictionary = snapshot.get("map_viewport", {}).get("visible_bounds", {})
+	var tile := Vector2i(int(selected.get("x", -1)), int(selected.get("y", -1)))
+	return tile.x >= int(bounds.get("x", 0)) and tile.y >= int(bounds.get("y", 0)) \
+		and tile.x < int(bounds.get("x", 0)) + int(bounds.get("width", 0)) \
+		and tile.y < int(bounds.get("y", 0)) + int(bounds.get("height", 0))
+
+func _camera_precise(metrics: Dictionary) -> Vector2:
+	var focus: Dictionary = metrics.get("camera_focus_tile_precise", {})
+	return Vector2(float(focus.get("x", 0.0)), float(focus.get("y", 0.0)))
+
+func _choose_camera_pan_probe(map_view: Control, metrics: Dictionary, amount: int) -> Dictionary:
+	var origin := _camera_precise(metrics)
+	var chosen := {"direction": Vector2i.ZERO, "delta": Vector2.ZERO, "restored_exact": false, "axis_aligned": false}
+	var all_probes_restored_exact := true
+	var chosen_magnitude := 0.0
+	for candidate in [Vector2i.RIGHT, Vector2i.LEFT, Vector2i.DOWN, Vector2i.UP]:
+		var probe := await _probe_camera_pan_delta(map_view, origin, candidate, amount)
+		all_probes_restored_exact = all_probes_restored_exact and bool(probe.get("restored_exact", false))
+		if not all_probes_restored_exact:
+			break
+		var delta: Vector2 = probe.get("delta", Vector2.ZERO)
+		if bool(probe.get("axis_aligned", false)) and delta.length() > chosen_magnitude + 0.0001:
+			chosen = probe
+			chosen_magnitude = delta.length()
+	chosen["all_probes_restored_exact"] = all_probes_restored_exact
+	return chosen
+
+func _probe_camera_pan_delta(map_view: Control, origin: Vector2, direction: Vector2i, amount: int) -> Dictionary:
+	map_view.call("pan_tiles", direction * amount)
+	await _settle()
+	var delta := _camera_precise(map_view.call("validation_view_metrics")) - origin
+	map_view.call("_set_camera_center", origin, true)
+	await _settle()
+	var restored_exact := _vector2_approx(_camera_precise(map_view.call("validation_view_metrics")), origin)
+	var signed_component := delta.dot(Vector2(direction))
+	var orthogonal_component := absf(delta.dot(Vector2(-direction.y, direction.x)))
+	return {
+		"direction": direction,
+		"delta": delta,
+		"restored_exact": restored_exact,
+		"axis_aligned": orthogonal_component <= 0.001 and signed_component > 0.01,
+		"signed_component": signed_component,
+		"orthogonal_component": orthogonal_component,
+	}
+
+func _wheel_button_for_direction(direction: Vector2i) -> MouseButton:
+	match direction:
+		Vector2i.LEFT: return MOUSE_BUTTON_WHEEL_LEFT
+		Vector2i.RIGHT: return MOUSE_BUTTON_WHEEL_RIGHT
+		Vector2i.UP: return MOUSE_BUTTON_WHEEL_UP
+		_: return MOUSE_BUTTON_WHEEL_DOWN
+
+func _press_canvas_direction_key(direction: Vector2i) -> void:
+	match direction:
+		Vector2i.LEFT: await _press_key(KEY_LEFT)
+		Vector2i.RIGHT: await _press_key(KEY_RIGHT)
+		Vector2i.UP: await _press_key(KEY_UP)
+		Vector2i.DOWN: await _press_key(KEY_DOWN)
+
+func _vector2_approx(left: Vector2, right: Vector2) -> bool:
+	return left.distance_to(right) <= 0.001
+
+func _drag_map_view(map_view: Control, delta: Vector2) -> void:
+	var root_center := map_view.get_global_rect().get_center()
+	var press := InputEventMouseButton.new()
+	press.button_index = MOUSE_BUTTON_LEFT
+	press.position = root_center
+	press.global_position = root_center
+	press.pressed = true
+	get_viewport().push_input(press, true)
+	await get_tree().process_frame
+	var motion := InputEventMouseMotion.new()
+	motion.position = root_center + delta
+	motion.global_position = root_center + delta
+	motion.relative = delta
+	motion.button_mask = MOUSE_BUTTON_MASK_LEFT
+	get_viewport().push_input(motion, true)
+	await get_tree().process_frame
+	var release := InputEventMouseButton.new()
+	release.button_index = MOUSE_BUTTON_LEFT
+	release.position = root_center + delta
+	release.global_position = root_center + delta
+	release.pressed = false
+	get_viewport().push_input(release, true)
+	await _settle()
+
+func _wheel_map_view(map_view: Control, button_index: MouseButton) -> void:
+	var root_center := map_view.get_global_rect().get_center()
+	var event := InputEventMouseButton.new()
+	event.button_index = button_index
+	event.position = root_center
+	event.global_position = root_center
+	event.pressed = true
+	get_viewport().push_input(event, true)
+	await _settle()
+
+func _editor_map_repeat_snapshot(shell: Node) -> Dictionary:
+	var timer: Timer = shell.get("_editor_map_joypad_repeat_timer") as Timer
+	return {
+		"direction": shell.get("_held_editor_map_joypad_direction"),
+		"action": String(shell.get("_held_editor_map_joypad_action")),
+		"button": int(shell.get("_held_editor_map_joypad_button")),
+		"device": int(shell.get("_held_editor_map_joypad_device")),
+		"stopped": timer == null or timer.is_stopped(),
+		"wait_time": timer.wait_time if timer != null else -1.0,
+	}
+
+func _editor_map_repeat_stopped(shell: Node) -> bool:
+	var snapshot := _editor_map_repeat_snapshot(shell)
+	return bool(snapshot.get("stopped", false)) \
+		and snapshot.get("direction", Vector2i.ONE) == Vector2i.ZERO \
+		and String(snapshot.get("action", "invalid")) == "" \
+		and int(snapshot.get("button", 0)) == -1 \
+		and int(snapshot.get("device", 0)) == -1
 
 func _enabled_focus_controls(controls: Array[Control]) -> Array[Control]:
 	var enabled: Array[Control] = []
@@ -419,7 +1245,7 @@ func _assert_focus_links_exact(controls: Array[Control]) -> bool:
 	return true
 
 func _exercise_physical_focus_cycles(controls: Array[Control], label: String) -> bool:
-	for direction in ["tab", "shift_tab", "down", "up"]:
+	for direction in ["tab", "shift_tab"]:
 		controls[0].grab_focus()
 		await _settle()
 		var visited: Array[String] = [String(controls[0].name)]
@@ -427,9 +1253,7 @@ func _exercise_physical_focus_cycles(controls: Array[Control], label: String) ->
 			match direction:
 				"tab": await _press_key(KEY_TAB)
 				"shift_tab": await _press_key(KEY_TAB, true)
-				"down": await _press_joypad_button(JOY_BUTTON_DPAD_DOWN)
-				"up": await _press_joypad_button(JOY_BUTTON_DPAD_UP)
-			var expected_index := step % controls.size() if direction in ["tab", "down"] \
+			var expected_index := step % controls.size() if direction == "tab" \
 				else (controls.size() - (step % controls.size())) % controls.size()
 			var expected := controls[expected_index]
 			if get_viewport().gui_get_focus_owner() != expected:
@@ -444,7 +1268,7 @@ func _exercise_physical_focus_cycles(controls: Array[Control], label: String) ->
 			if step < controls.size():
 				visited.append(String(expected.name))
 		var expected_names := _control_names(controls)
-		if direction in ["shift_tab", "up"]:
+		if direction == "shift_tab":
 			var reverse_expected_names: Array[String] = [expected_names[0]]
 			reverse_expected_names.append_array(_reversed_strings(expected_names.slice(1)))
 			expected_names = reverse_expected_names
@@ -1267,6 +2091,23 @@ func _press_joypad_button(button_index: int) -> void:
 	released.pressed = false
 	Input.parse_input_event(released)
 	await _settle()
+
+func _send_joypad_button_event(button_index: int, pressed: bool, device: int) -> void:
+	var event := InputEventJoypadButton.new()
+	event.button_index = button_index
+	event.device = device
+	event.pressed = pressed
+	Input.parse_input_event(event)
+	await get_tree().process_frame
+
+func _send_key_event(keycode: Key, pressed: bool, echo: bool = false) -> void:
+	var event := InputEventKey.new()
+	event.keycode = keycode
+	event.physical_keycode = keycode
+	event.pressed = pressed
+	event.echo = echo
+	Input.parse_input_event(event)
+	await get_tree().process_frame
 
 func _settle() -> void:
 	await get_tree().process_frame
