@@ -18,6 +18,7 @@ var _destructive_expected_default_settings := {}
 var _destructive_expected_default_settings_file := {}
 var _destructive_expected_default_input_map := {}
 var _destructive_expected_default_runtime := {}
+var _display_change_parent_probe_counts := {}
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -75,6 +76,8 @@ func _run() -> void:
 		return
 	_expect_focus("OpenCampaign", "campaign board focus return")
 	if not await _check_destructive_dialog_controller_cancel(shell):
+		return
+	if not await _check_display_change_exclusive_parent_input(shell):
 		return
 	await _press_joypad_button(JOY_BUTTON_B)
 	await _settle()
@@ -137,8 +140,13 @@ func _run() -> void:
 			or _settings_file_state() != settings_file_before:
 		_fail("Display preview changed committed settings before Keep.")
 		return
-	if not (shell.call("_active_destructive_confirmation_root_owner") as Dictionary).is_empty():
-		_fail("Display confirmation incorrectly exposed a destructive root-input owner.")
+	var direct_display_owner: Dictionary = shell.call("_active_destructive_confirmation_root_owner")
+	if String(direct_display_owner.get("workflow", "")) != "display_change" \
+			or direct_display_owner.get("dialog") != display_dialog \
+			or int(direct_display_owner.get("generation", -1)) < 1 \
+			or not (direct_display_owner.get("pending", {}) is Dictionary) \
+			or (direct_display_owner.get("pending", {}) as Dictionary).is_empty():
+		_fail("Display confirmation did not expose its exact physical root-input owner: %s" % direct_display_owner)
 		return
 	await _press_joypad_button(JOY_BUTTON_B)
 	await get_tree().process_frame
@@ -222,6 +230,361 @@ func _check_destructive_dialog_controller_cancel(shell: Node) -> bool:
 	if get_viewport().gui_get_focus_owner() != original_root_focus:
 		return _fail_bool("Destructive dialog matrix did not restore its exact original OpenCampaign focus owner.")
 	return true
+
+
+func _check_display_change_exclusive_parent_input(shell: Node) -> bool:
+	var original_root_focus: Control = get_viewport().gui_get_focus_owner()
+	if original_root_focus == null \
+			or original_root_focus.name != &"OpenCampaign" \
+			or not shell.is_ancestor_of(original_root_focus):
+		return _fail_bool("Display Change matrix did not begin from the exact live OpenCampaign focus owner.")
+	var original_window_size: Vector2i = get_window().size
+	var original_protected_state: Dictionary = _destructive_protected_state()
+	if not _prepare_destructive_fixture():
+		return false
+	var cases: Array = [
+		{"id": "display_mode_1280", "kind": "mode", "width": 1280, "cancel": "joypad_b", "confirm": "joypad_a"},
+		{"id": "display_mode_1920", "kind": "mode", "width": 1920, "cancel": "escape", "confirm": "mouse"},
+		{"id": "display_resolution_1280", "kind": "resolution", "width": 1280, "cancel": "escape", "confirm": "enter"},
+		{"id": "display_resolution_1920", "kind": "resolution", "width": 1920, "cancel": "joypad_b", "confirm": "mouse"},
+	]
+	for case_value in cases:
+		if not _seed_destructive_fixture():
+			get_window().size = original_window_size
+			return false
+		if not await _exercise_display_change_exclusive_case(case_value):
+			get_window().size = original_window_size
+			return false
+	get_window().size = original_window_size
+	await _settle()
+	var final_checks := {
+		"protected_state_exact": _destructive_protected_state() == original_protected_state,
+		"summary_cache_exact": SaveService.validation_summary_cache_snapshot() == _destructive_original_summary_cache,
+		"display_pending_false": not SettingsService.display_change_pending(),
+	}
+	if not _checks_exact(final_checks):
+		return _fail_bool("Display Change matrix cleanup changed global authority: %s." % JSON.stringify(final_checks))
+	if not is_instance_valid(original_root_focus):
+		return _fail_bool("Display Change matrix freed its original OpenCampaign focus owner.")
+	original_root_focus.grab_focus()
+	await _settle()
+	if get_viewport().gui_get_focus_owner() != original_root_focus:
+		return _fail_bool("Display Change matrix did not restore its exact original OpenCampaign focus owner.")
+	return true
+
+
+func _exercise_display_change_exclusive_case(case_data: Dictionary) -> bool:
+	var case_id := String(case_data.get("id", "display_change_exclusive"))
+	var kind := String(case_data.get("kind", "resolution"))
+	var width := int(case_data.get("width", 1280))
+	get_window().size = Vector2i(width, 720)
+	await _settle()
+	var layout_host := Control.new()
+	layout_host.name = "ExclusiveDisplayChangeHost_%s" % case_id
+	layout_host.size = Vector2(float(width), 720.0)
+	add_child(layout_host)
+	var shell = load("res://scenes/menus/MainMenu.tscn").instantiate()
+	layout_host.add_child(shell)
+	var parent_probe := Button.new()
+	parent_probe.name = "ExclusiveDisplayChangeParentProbe_%s" % case_id
+	parent_probe.text = "Display Change parent input probe"
+	parent_probe.position = Vector2(16.0, 16.0)
+	parent_probe.size = Vector2(250.0, 40.0)
+	parent_probe.focus_mode = Control.FOCUS_NONE
+	parent_probe.z_index = 100
+	_display_change_parent_probe_counts[case_id] = 0
+	parent_probe.pressed.connect(_on_display_change_parent_probe_pressed.bind(case_id))
+	layout_host.add_child(parent_probe)
+	await _settle()
+	shell.call("validation_open_settings_stage")
+	await _settle()
+	var origin_name := &"PresentationModePicker" if kind == "mode" else &"ResolutionPicker"
+	var origin := shell.get_node_or_null("%%%s" % String(origin_name)) as Control
+	var dialog := shell.get_node_or_null("DisplayChangeConfirmationDialog") as ConfirmationDialog
+	var candidates := _display_change_candidate_ids(kind)
+	if origin == null or dialog == null or candidates.size() < 2:
+		return _fail_display_change_case(layout_host, "%s has no exact origin/dialog or two distinct display candidates: %s." % [case_id, JSON.stringify(candidates)])
+	var initial_candidate := String(candidates[0])
+	var replacement_candidate := String(candidates[1])
+	var fixture_checks := {
+		"host_parent_exact": shell.get_parent() == layout_host,
+		"host_width_exact": int(layout_host.size.x) == width,
+		"host_height_exact": int(layout_host.size.y) == 720,
+		"origin_root_viewport_exact": origin.get_viewport() == get_viewport(),
+		"probe_root_viewport_exact": parent_probe.get_viewport() == get_viewport(),
+		"settings_open_exact": bool((shell.call("validation_snapshot") as Dictionary).get("stage_dock_visible", false)) \
+			and int((shell.call("validation_snapshot") as Dictionary).get("current_tab", -1)) == 4,
+	}
+	if not _checks_exact(fixture_checks):
+		return _fail_display_change_case(layout_host, "%s exact host failed: %s." % [case_id, JSON.stringify(fixture_checks)])
+	var authority_before_preview := _destructive_authority_snapshot(shell)
+	var committed_settings_before := SettingsService.ensure_settings().duplicate(true)
+	var settings_file_before := _file_state(SettingsService.SETTINGS_FILE)
+	var settings_artifacts_before := _display_change_settings_artifacts()
+	var runtime_before := _display_change_current_runtime()
+	origin.grab_focus()
+	await get_tree().process_frame
+	if not _request_display_change_candidate(shell, kind, initial_candidate):
+		return _fail_display_change_case(layout_host, "%s could not open the initial %s preview %s." % [case_id, kind, initial_candidate])
+	await _settle()
+	var opened := _display_change_transaction_snapshot(shell, dialog)
+	var opened_owner: Dictionary = shell.call("_active_destructive_confirmation_root_owner")
+	var opened_preview: Dictionary = SettingsService.display_change_snapshot()
+	var geometry := _destructive_parent_click_geometry(parent_probe, dialog)
+	var opened_checks := {
+		"exclusive_exact": dialog.exclusive,
+		"visible_exact": dialog.visible,
+		"service_pending_exact": SettingsService.display_change_pending(),
+		"ui_active_exact": bool(opened.get("ui_active", false)),
+		"workflow_owner_exact": String(opened_owner.get("workflow", "")) == "display_change",
+		"dialog_owner_exact": opened_owner.get("dialog") == dialog,
+		"generation_positive": int(opened_owner.get("generation", -1)) >= 1,
+		"fingerprint_exact": opened_owner.get("pending", {}) == opened.get("fingerprint", {}),
+		"candidate_exact": _display_change_candidate_matches(opened_preview, kind, initial_candidate),
+		"committed_settings_exact": SettingsService.ensure_settings() == committed_settings_before,
+		"settings_file_exact": _file_state(SettingsService.SETTINGS_FILE) == settings_file_before,
+		"settings_artifacts_exact": _display_change_settings_artifacts() == settings_artifacts_before,
+		"safe_text_exact": dialog.get_ok_button().text == "Keep" and dialog.get_cancel_button().text == "Revert",
+		"safe_focus_exact": dialog.get_viewport().gui_get_focus_owner() == dialog.get_cancel_button(),
+		"geometry_exact": bool(geometry.get("exact", false)),
+	}
+	if not _checks_exact(opened_checks):
+		return _fail_display_change_case(layout_host, "%s did not open the exact display confirmation: checks=%s geometry=%s owner=%s opened=%s." % [case_id, JSON.stringify(opened_checks), JSON.stringify(geometry), JSON.stringify(opened_owner), JSON.stringify(opened)])
+	var authority_before_block := _destructive_authority_snapshot(shell)
+	var transaction_before_block := _display_change_transaction_snapshot(shell, dialog)
+	var parent_before := int(_display_change_parent_probe_counts.get(case_id, 0))
+	await _click_control(parent_probe)
+	await _settle()
+	var first_block_checks := {
+		"parent_probe_blocked": int(_display_change_parent_probe_counts.get(case_id, -1)) == parent_before,
+		"dialog_transaction_exact": _display_change_transaction_snapshot(shell, dialog) == transaction_before_block,
+		"full_authority_exact": _destructive_authority_snapshot(shell) == authority_before_block,
+		"dialog_focus_exact": dialog.get_viewport().gui_get_focus_owner() == dialog.get_cancel_button(),
+	}
+	if not _checks_exact(first_block_checks):
+		return _fail_display_change_case(layout_host, "%s first parent click escaped Display Change: %s." % [case_id, JSON.stringify(first_block_checks)])
+	if not await _send_destructive_cancel(String(case_data.get("cancel", "")), dialog):
+		return _fail_display_change_case(layout_host, "%s has unsupported display cancel input." % case_id)
+	await _settle()
+	var canceled_snapshot: Dictionary = shell.call("validation_snapshot")
+	var canceled_owner: Dictionary = shell.call("_active_destructive_confirmation_root_owner")
+	var canceled := _display_change_transaction_snapshot(shell, dialog)
+	var canceled_checks := {
+		"hidden_exact": not dialog.visible,
+		"pending_cleared_exact": not SettingsService.display_change_pending(),
+		"owner_cleared_exact": canceled_owner.is_empty(),
+		"ui_inactive_exact": not bool(canceled.get("ui_active", true)),
+		"settings_dock_open_exact": bool(canceled_snapshot.get("stage_dock_visible", false)),
+		"settings_tab_exact": int(canceled_snapshot.get("current_tab", -1)) == 4,
+		"origin_focus_exact": get_viewport().gui_get_focus_owner() == origin,
+		"runtime_restored_exact": _display_change_current_runtime() == runtime_before,
+		"committed_settings_exact": SettingsService.ensure_settings() == committed_settings_before,
+		"settings_file_exact": _file_state(SettingsService.SETTINGS_FILE) == settings_file_before,
+		"settings_artifacts_exact": _display_change_settings_artifacts() == settings_artifacts_before,
+		"full_authority_exact": _destructive_authority_snapshot(shell) == authority_before_preview,
+	}
+	if not _checks_exact(canceled_checks):
+		return _fail_display_change_case(layout_host, "%s physical Revert was not exact: checks=%s canceled=%s." % [case_id, JSON.stringify(canceled_checks), JSON.stringify(canceled)])
+	var positive_before := int(_display_change_parent_probe_counts.get(case_id, 0))
+	var positive_authority := _destructive_authority_snapshot(shell)
+	await _click_control(parent_probe)
+	await _settle()
+	var positive_checks := {
+		"identical_parent_positive_once": int(_display_change_parent_probe_counts.get(case_id, -1)) == positive_before + 1,
+		"background_authority_exact": _destructive_authority_snapshot(shell) == positive_authority,
+		"dialog_transaction_exact": _display_change_transaction_snapshot(shell, dialog) == canceled,
+	}
+	if not _checks_exact(positive_checks):
+		return _fail_display_change_case(layout_host, "%s parent probe was not actionable after Revert: %s." % [case_id, JSON.stringify(positive_checks)])
+
+	# Capture one exact root-routed press, synchronously replace the preview, then
+	# physically deliver its release. Generation plus fingerprint must reject both.
+	origin.grab_focus()
+	await get_tree().process_frame
+	if not _request_display_change_candidate(shell, kind, initial_candidate):
+		return _fail_display_change_case(layout_host, "%s could not open its stale-generation preview." % case_id)
+	await _settle()
+	var stale_owner: Dictionary = shell.call("_active_destructive_confirmation_root_owner")
+	var stale_pressed := InputEventKey.new()
+	stale_pressed.keycode = KEY_ESCAPE
+	stale_pressed.physical_keycode = KEY_ESCAPE
+	stale_pressed.pressed = true
+	shell.call("_on_root_window_input", stale_pressed)
+	shell.call("validation_revert_display_change", "display_stale_replacement")
+	if not _request_display_change_candidate(shell, kind, replacement_candidate):
+		return _fail_display_change_case(layout_host, "%s could not open its replacement preview." % case_id)
+	await _settle()
+	var replacement_before := _display_change_transaction_snapshot(shell, dialog)
+	var replacement_owner: Dictionary = shell.call("_active_destructive_confirmation_root_owner")
+	var replacement_focus_exact := dialog.get_viewport().gui_get_focus_owner() == dialog.get_cancel_button()
+	var stale_released := InputEventKey.new()
+	stale_released.keycode = KEY_ESCAPE
+	stale_released.physical_keycode = KEY_ESCAPE
+	stale_released.pressed = false
+	Input.parse_input_event(stale_released)
+	await _settle()
+	var replacement_after := _display_change_transaction_snapshot(shell, dialog)
+	var stale_checks := {
+		"original_owner_exact": String(stale_owner.get("workflow", "")) == "display_change",
+		"replacement_owner_exact": String(replacement_owner.get("workflow", "")) == "display_change",
+		"generation_changed": int(replacement_owner.get("generation", -1)) > int(stale_owner.get("generation", -1)),
+		"fingerprint_changed": replacement_owner.get("pending", {}) != stale_owner.get("pending", {}),
+		"replacement_candidate_exact": _display_change_candidate_matches(SettingsService.display_change_snapshot(), kind, replacement_candidate),
+		"replacement_safe_focus_exact": replacement_focus_exact,
+		"transaction_exact": replacement_after == replacement_before,
+		"dialog_still_visible": dialog.visible,
+		"pending_exact": SettingsService.display_change_pending(),
+		"settings_dock_open_exact": bool((shell.call("validation_snapshot") as Dictionary).get("stage_dock_visible", false)),
+	}
+	if not _checks_exact(stale_checks):
+		return _fail_display_change_case(layout_host, "%s stale generation/release reached replacement: checks=%s stale=%s replacement=%s." % [case_id, JSON.stringify(stale_checks), JSON.stringify(stale_owner), JSON.stringify(replacement_owner)])
+	var authority_before_second_block := _destructive_authority_snapshot(shell)
+	var parent_before_second := int(_display_change_parent_probe_counts.get(case_id, 0))
+	await _click_control(parent_probe)
+	await _settle()
+	var second_block_checks := {
+		"parent_probe_blocked": int(_display_change_parent_probe_counts.get(case_id, -1)) == parent_before_second,
+		"dialog_transaction_exact": _display_change_transaction_snapshot(shell, dialog) == replacement_after,
+		"full_authority_exact": _destructive_authority_snapshot(shell) == authority_before_second_block,
+		"dialog_focus_exact": dialog.get_viewport().gui_get_focus_owner() == dialog.get_cancel_button(),
+	}
+	if not _checks_exact(second_block_checks):
+		return _fail_display_change_case(layout_host, "%s second parent click escaped Display Change: %s." % [case_id, JSON.stringify(second_block_checks)])
+	var expected_settings := committed_settings_before.duplicate(true)
+	var expected_presentation: Dictionary = (expected_settings.get("presentation", {}) as Dictionary).duplicate(true)
+	if kind == "mode":
+		expected_presentation["mode"] = replacement_candidate
+	else:
+		expected_presentation["resolution"] = replacement_candidate
+	expected_settings["presentation"] = expected_presentation
+	var preview_runtime := _display_change_current_runtime()
+	var input_map_before := _canonical_input_map(SettingsService.validation_settings_transaction_snapshot().get("input_map", {}))
+	var unrelated_before := _display_change_unrelated_authority(authority_before_preview)
+	if not await _send_destructive_confirm(String(case_data.get("confirm", "")), dialog):
+		return _fail_display_change_case(layout_host, "%s has unsupported display confirm input." % case_id)
+	await _settle()
+	var confirmed_snapshot: Dictionary = shell.call("validation_snapshot")
+	var confirmed_owner: Dictionary = shell.call("_active_destructive_confirmation_root_owner")
+	var transaction: Dictionary = SettingsService.validation_settings_transaction_snapshot()
+	var last_result: Dictionary = transaction.get("last_result", {}) if transaction.get("last_result", {}) is Dictionary else {}
+	var persisted: Dictionary = SettingsService.call("_read_settings_file", SettingsService.SETTINGS_FILE)
+	var unrelated_after := _display_change_unrelated_authority(_destructive_authority_snapshot(shell))
+	var confirmed_checks := {
+		"hidden_exact": not dialog.visible,
+		"pending_cleared_exact": not SettingsService.display_change_pending(),
+		"owner_cleared_exact": confirmed_owner.is_empty(),
+		"settings_dock_open_exact": bool(confirmed_snapshot.get("stage_dock_visible", false)),
+		"settings_tab_exact": int(confirmed_snapshot.get("current_tab", -1)) == 4,
+		"origin_focus_exact": get_viewport().gui_get_focus_owner() == origin,
+		"committed_settings_exact": SettingsService.ensure_settings() == expected_settings,
+		"transaction_settings_exact": transaction.get("settings", {}) == expected_settings,
+		"transaction_committed_exact": transaction.get("committed_settings", {}) == expected_settings,
+		"transaction_paths_exact": String(transaction.get("settings_file", "")) == SettingsService.SETTINGS_FILE \
+			and String(transaction.get("candidate_file", "")) == SettingsService.SETTINGS_CANDIDATE_FILE \
+			and String(transaction.get("backup_file", "")) == SettingsService.SETTINGS_BACKUP_FILE,
+		"transaction_file_existence_exact": bool(transaction.get("live_exists", false)) \
+			and not bool(transaction.get("candidate_exists", true)) \
+			and not bool(transaction.get("backup_exists", true)),
+		"transaction_result_exact": bool(last_result.get("ok", false)) \
+			and String(last_result.get("path", "")) == SettingsService.SETTINGS_FILE \
+			and bool(last_result.get("changed", false)) \
+			and last_result.get("settings", {}) == expected_settings,
+		"persisted_settings_exact": bool(persisted.get("valid", false)) and persisted.get("settings", {}) == expected_settings,
+		"settings_file_changed_once": _file_state(SettingsService.SETTINGS_FILE) != settings_file_before,
+		"transaction_artifacts_absent": not FileAccess.file_exists(SettingsService.SETTINGS_CANDIDATE_FILE) \
+			and not FileAccess.file_exists(SettingsService.SETTINGS_BACKUP_FILE),
+		"input_map_exact": _canonical_input_map(transaction.get("input_map", {})) == input_map_before,
+		"runtime_candidate_exact": _display_change_current_runtime() == preview_runtime,
+		"transaction_runtime_exact": _stable_runtime_display(transaction.get("runtime_display", {})) == _stable_runtime_display(preview_runtime),
+		"unrelated_authority_exact": unrelated_after == unrelated_before,
+	}
+	if not _checks_exact(confirmed_checks):
+		return _fail_display_change_case(layout_host, "%s physical/native Keep was not exact: checks=%s expected=%s persisted=%s differences=%s." % [case_id, JSON.stringify(confirmed_checks), JSON.stringify(expected_settings), JSON.stringify(persisted), JSON.stringify(_top_level_differences(unrelated_before, unrelated_after))])
+	_cleanup_display_change_case(layout_host)
+	await _settle()
+	return true
+
+
+func _display_change_candidate_ids(kind: String) -> Array:
+	var current_id := SettingsService.presentation_mode_id() if kind == "mode" else SettingsService.presentation_resolution_id()
+	var options: Array = SettingsService.build_presentation_options() if kind == "mode" else SettingsService.build_resolution_options()
+	var result := []
+	for option_value in options:
+		var option: Dictionary = option_value if option_value is Dictionary else {}
+		var option_id := String(option.get("id", ""))
+		if option_id != "" and option_id != current_id:
+			result.append(option_id)
+	return result
+
+
+func _request_display_change_candidate(shell: Node, kind: String, candidate_id: String) -> bool:
+	if kind == "mode":
+		return bool(shell.call("validation_select_presentation_mode", candidate_id))
+	return bool(shell.call("validation_select_resolution", candidate_id))
+
+
+func _display_change_candidate_matches(snapshot: Dictionary, kind: String, candidate_id: String) -> bool:
+	return String(snapshot.get("mode" if kind == "mode" else "resolution", "")) == candidate_id
+
+
+func _display_change_transaction_snapshot(shell: Node, dialog: ConfirmationDialog) -> Dictionary:
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var pending_value: Variant = snapshot.get("display_change_snapshot", {})
+	var pending: Dictionary = (pending_value as Dictionary).duplicate(true) if pending_value is Dictionary else {}
+	pending.erase("seconds_remaining")
+	var owner: Dictionary = shell.call("_active_destructive_confirmation_root_owner")
+	return {
+		"visible": dialog.visible,
+		"ui_active": bool(snapshot.get("display_change_ui_active", false)),
+		"focus_name": String(snapshot.get("display_change_focus_name", "")),
+		"service_pending": SettingsService.display_change_pending(),
+		"owner_workflow": String(owner.get("workflow", "")),
+		"owner_generation": int(owner.get("generation", -1)),
+		"fingerprint": (owner.get("pending", {}) as Dictionary).duplicate(true) if owner.get("pending", {}) is Dictionary else {},
+		"snapshot": pending,
+	}
+
+
+func _display_change_current_runtime() -> Dictionary:
+	var snapshot: Dictionary = SettingsService.display_change_snapshot()
+	var runtime_value: Variant = snapshot.get("current_runtime", {})
+	return (runtime_value as Dictionary).duplicate(true) if runtime_value is Dictionary else {}
+
+
+func _display_change_settings_artifacts() -> Dictionary:
+	return {
+		SettingsService.SETTINGS_CANDIDATE_FILE: _file_state(SettingsService.SETTINGS_CANDIDATE_FILE),
+		SettingsService.SETTINGS_BACKUP_FILE: _file_state(SettingsService.SETTINGS_BACKUP_FILE),
+	}
+
+
+func _display_change_unrelated_authority(value: Dictionary) -> Dictionary:
+	var authority := value.duplicate(true)
+	authority.erase("settings")
+	authority.erase("settings_transaction")
+	var files_value: Variant = authority.get("files", {})
+	var files: Dictionary = files_value if files_value is Dictionary else {}
+	for path in [SettingsService.SETTINGS_FILE, SettingsService.SETTINGS_CANDIDATE_FILE, SettingsService.SETTINGS_BACKUP_FILE]:
+		files.erase(path)
+	authority["files"] = files
+	return authority
+
+
+func _on_display_change_parent_probe_pressed(case_id: String) -> void:
+	_display_change_parent_probe_counts[case_id] = int(_display_change_parent_probe_counts.get(case_id, 0)) + 1
+
+
+func _cleanup_display_change_case(layout_host: Node) -> void:
+	if SettingsService.display_change_pending():
+		SettingsService.revert_display_change("display_exclusive_fixture_cleanup")
+	_restore_original_destructive_state()
+	if is_instance_valid(layout_host):
+		layout_host.queue_free()
+
+
+func _fail_display_change_case(layout_host: Node, message: String) -> bool:
+	_cleanup_display_change_case(layout_host)
+	return _fail_bool(message)
 
 
 func _exercise_destructive_exclusive_case(case_data: Dictionary) -> bool:

@@ -177,6 +177,8 @@ var _forwarding_destructive_root_physical_input := false
 var _display_change_ui_active := false
 var _display_change_focus_name := &"PresentationModePicker"
 var _display_change_last_seconds := -1
+var _display_change_preview_generation := 0
+var _display_change_pending_fingerprint := {}
 var _campaign_restart_return_focus: Control
 var _save_delete_return_focus: Control
 var _settings_restore_return_focus: Control
@@ -767,12 +769,32 @@ func _forward_root_physical_input_to_destructive_confirmation(
 
 
 func _active_destructive_confirmation_root_owner() -> Dictionary:
-	if (
-		_display_change_confirmation_dialog.visible
-		or _hero_keybindings_dialog.visible
-	):
+	if _hero_keybindings_dialog.visible:
 		return {}
 	var owners := []
+	var display_change_state_present := (
+		_display_change_confirmation_dialog.visible
+		or _display_change_ui_active
+		or SettingsService.display_change_pending()
+	)
+	if display_change_state_present:
+		var current_display_fingerprint := _display_change_snapshot_fingerprint(
+			SettingsService.display_change_snapshot()
+		)
+		if (
+			not _display_change_confirmation_dialog.visible
+			or not _display_change_ui_active
+			or not SettingsService.display_change_pending()
+			or _display_change_pending_fingerprint.is_empty()
+			or current_display_fingerprint != _display_change_pending_fingerprint
+		):
+			return {}
+		owners.append({
+			"dialog": _display_change_confirmation_dialog,
+			"workflow": "display_change",
+			"generation": _display_change_preview_generation,
+			"pending": _display_change_pending_fingerprint,
+		})
 	if _campaign_restart_dialog.visible and _pending_campaign_restart_id != "":
 		owners.append({
 			"dialog": _campaign_restart_dialog,
@@ -810,7 +832,32 @@ func _destructive_confirmation_pending_matches(workflow: String, pending: Varian
 			return pending is Dictionary and is_same(pending, _pending_save_delete_identity)
 		"settings_restore":
 			return bool(pending) and _settings_restore_pending
+		"display_change":
+			return (
+				pending is Dictionary
+				and _display_change_ui_active
+				and _display_change_confirmation_dialog.visible
+				and SettingsService.display_change_pending()
+				and not _display_change_pending_fingerprint.is_empty()
+				and pending == _display_change_pending_fingerprint
+				and _display_change_snapshot_fingerprint(SettingsService.display_change_snapshot()) == pending
+			)
 	return false
+
+
+func _display_change_snapshot_fingerprint(snapshot: Dictionary) -> Dictionary:
+	if not bool(snapshot.get("pending", false)):
+		return {}
+	return {
+		"mode": String(snapshot.get("mode", "")),
+		"resolution": String(snapshot.get("resolution", "")),
+		"requested_size": snapshot.get("requested_size", Vector2i.ZERO),
+		"applied_size": snapshot.get("applied_size", Vector2i.ZERO),
+		"deadline_msec": int(snapshot.get("deadline_msec", 0)),
+		"prior_mode": String(snapshot.get("prior_mode", "")),
+		"prior_resolution": String(snapshot.get("prior_resolution", "")),
+		"prior_runtime": (snapshot.get("prior_runtime", {}) as Dictionary).duplicate(true),
+	}
 
 
 func _configure_safe_confirmation(dialog: ConfirmationDialog, cancel_text: String) -> void:
@@ -930,6 +977,8 @@ func _request_display_change_preview(
 	resolution_id: String,
 	focus_name: StringName
 ) -> Dictionary:
+	_display_change_preview_generation += 1
+	_display_change_pending_fingerprint = {}
 	_display_change_ui_active = true
 	_display_change_focus_name = focus_name
 	_display_change_last_seconds = -1
@@ -937,8 +986,11 @@ func _request_display_change_preview(
 	if not bool(result.get("ok", false)) or not SettingsService.display_change_pending():
 		_finish_display_change_ui(result, true, "Display settings were not changed.")
 		return result
+	_display_change_ui_active = true
+	var snapshot := SettingsService.display_change_snapshot()
+	_display_change_pending_fingerprint = _display_change_snapshot_fingerprint(snapshot)
 	_refresh_settings_panel()
-	_show_display_change_confirmation(SettingsService.display_change_snapshot())
+	_show_display_change_confirmation(snapshot)
 	return result
 
 func _show_display_change_confirmation(snapshot: Dictionary) -> void:
@@ -1013,6 +1065,7 @@ func _finish_display_change_ui(
 	_display_change_confirmation_dialog.hide()
 	_display_change_ui_active = false
 	_display_change_last_seconds = -1
+	_display_change_pending_fingerprint = {}
 	_settings_restore_status = String(result.get("message", fallback_message)).strip_edges()
 	if _settings_restore_status == "":
 		_settings_restore_status = fallback_message

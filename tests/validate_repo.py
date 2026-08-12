@@ -14106,6 +14106,7 @@ def validate_main_menu_destructive_exclusive_parent_input(errors: list[str]) -> 
         CAMPAIGN_ARC_RESTART_REGRESSION_SCRIPT_PATH,
         SAVE_SLOT_DELETE_REGRESSION_SCRIPT_PATH,
         SETTINGS_RESTORE_DEFAULTS_REGRESSION_SCRIPT_PATH,
+        SETTINGS_DISPLAY_MODE_TRANSACTION_REGRESSION_SCRIPT_PATH,
     )
     for path in required_paths:
         ensure(path.exists(), errors, f"Missing Main Menu destructive exclusive-parent dependency: {path.relative_to(ROOT)}")
@@ -14121,15 +14122,34 @@ def validate_main_menu_destructive_exclusive_parent_input(errors: list[str]) -> 
         )
         ensure(dialog_block is not None, errors, f"MainMenu.tscn is missing destructive dialog {dialog_name}")
         ensure(dialog_block is not None and "exclusive = true" in dialog_block.group(1), errors, f"{dialog_name} must remain an exclusive native Window")
+    display_dialog_block = re.search(
+        r'\[node name="DisplayChangeConfirmationDialog" type="ConfirmationDialog" parent="\."\](.*?)(?=\n\[node |\Z)',
+        scene_text,
+        flags=re.DOTALL,
+    )
+    ensure(display_dialog_block is not None, errors, "MainMenu.tscn is missing DisplayChangeConfirmationDialog")
+    ensure(
+        display_dialog_block is not None and "exclusive = true" in display_dialog_block.group(1),
+        errors,
+        "DisplayChangeConfirmationDialog must remain an exclusive native Window",
+    )
 
     script_text = MAIN_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
         "var _destructive_confirmation_generation := 0",
         "var _destructive_confirmation_workflow_generations := {}",
         "var _forwarding_destructive_root_physical_input := false",
+        "var _display_change_preview_generation := 0",
+        "var _display_change_pending_fingerprint := {}",
         "root_window.window_input.connect(_on_root_window_input)",
         "func _active_destructive_confirmation_root_owner() -> Dictionary:",
+        "var display_change_state_present := (",
         "_display_change_confirmation_dialog.visible",
+        "or _display_change_ui_active",
+        "or SettingsService.display_change_pending()",
+        '"workflow": "display_change"',
+        '"generation": _display_change_preview_generation',
+        '"pending": _display_change_pending_fingerprint',
         "_hero_keybindings_dialog.visible",
         "owners.size() == 1",
         "func _begin_destructive_confirmation_generation(workflow: String) -> void:",
@@ -14137,6 +14157,17 @@ def validate_main_menu_destructive_exclusive_parent_input(errors: list[str]) -> 
         'String(pending) == _pending_campaign_restart_id',
         "is_same(pending, _pending_save_delete_identity)",
         "bool(pending) and _settings_restore_pending",
+        '"display_change":',
+        "pending == _display_change_pending_fingerprint",
+        "_display_change_snapshot_fingerprint(SettingsService.display_change_snapshot()) == pending",
+        "func _display_change_snapshot_fingerprint(snapshot: Dictionary) -> Dictionary:",
+        '"requested_size": snapshot.get("requested_size", Vector2i.ZERO)',
+        '"applied_size": snapshot.get("applied_size", Vector2i.ZERO)',
+        '"deadline_msec": int(snapshot.get("deadline_msec", 0))',
+        '"prior_runtime": (snapshot.get("prior_runtime", {}) as Dictionary).duplicate(true)',
+        "_display_change_preview_generation += 1",
+        "_display_change_pending_fingerprint = _display_change_snapshot_fingerprint(snapshot)",
+        "_display_change_pending_fingerprint = {}",
         'call_deferred(\n\t\t"_forward_root_physical_input_to_destructive_confirmation"',
         "event.duplicate() as InputEvent",
         "get_tree().root.set_input_as_handled()",
@@ -14156,6 +14187,69 @@ def validate_main_menu_destructive_exclusive_parent_input(errors: list[str]) -> 
         ensure("InputEventMouseButton" not in handler_body, errors, "MainMenu root handler must not forward mouse buttons")
         ensure("InputEventMouseMotion" not in handler_body, errors, "MainMenu root handler must not forward mouse motion")
         ensure("InputEventAction" not in handler_body, errors, "MainMenu root handler must not forward synthetic actions")
+        handled_index = handler_body.find("get_tree().root.set_input_as_handled()")
+        duplicate_index = handler_body.find("event.duplicate() as InputEvent")
+        deferred_index = handler_body.find("call_deferred(")
+        ensure(
+            0 <= handled_index < duplicate_index < deferred_index,
+            errors,
+            "MainMenu root bridge must handle before duplicating and deferring physical input",
+        )
+    fingerprint_match = re.search(
+        r"func _display_change_snapshot_fingerprint\(snapshot: Dictionary\) -> Dictionary:(.*?)(?=\n\nfunc )",
+        script_text,
+        flags=re.DOTALL,
+    )
+    ensure(fingerprint_match is not None, errors, "MainMenu Display Change fingerprint helper is missing")
+    if fingerprint_match is not None:
+        fingerprint_body = fingerprint_match.group(1)
+        expected_fingerprint_keys = (
+            "mode",
+            "resolution",
+            "requested_size",
+            "applied_size",
+            "deadline_msec",
+            "prior_mode",
+            "prior_resolution",
+            "prior_runtime",
+        )
+        actual_fingerprint_keys = re.findall(r'^\s*"([a-z_]+)"\s*:', fingerprint_body, flags=re.MULTILINE)
+        ensure(
+            actual_fingerprint_keys == list(expected_fingerprint_keys),
+            errors,
+            f"MainMenu Display Change fingerprint keys must remain exact and ordered: expected={expected_fingerprint_keys} actual={actual_fingerprint_keys}",
+        )
+        for forbidden_token in ("seconds_remaining", "current_runtime", "timeout_seconds"):
+            ensure(
+                forbidden_token not in fingerprint_body,
+                errors,
+                f"MainMenu Display Change fingerprint must exclude mutable field: {forbidden_token}",
+            )
+    finish_match = re.search(
+        r"func _finish_display_change_ui\((.*?)\) -> void:(.*?)(?=\n\nfunc )",
+        script_text,
+        flags=re.DOTALL,
+    )
+    ensure(finish_match is not None, errors, "MainMenu Display Change finish helper is missing")
+    if finish_match is not None:
+        ensure(
+            "_display_change_pending_fingerprint = {}" in finish_match.group(2),
+            errors,
+            "MainMenu Display Change finish helper must clear its pending fingerprint",
+        )
+    forward_match = re.search(
+        r"func _forward_root_physical_input_to_destructive_confirmation\((.*?)\) -> void:(.*?)(?=\n\nfunc )",
+        script_text,
+        flags=re.DOTALL,
+    )
+    ensure(forward_match is not None, errors, "MainMenu deferred confirmation forwarding helper is missing")
+    if forward_match is not None:
+        forward_body = forward_match.group(2)
+        ensure('owner.get("dialog") != dialog' in forward_body, errors, "MainMenu deferred forwarding must recheck captured dialog identity")
+        ensure('int(owner.get("generation", -1)) != generation' in forward_body, errors, "MainMenu deferred forwarding must recheck captured generation")
+        ensure("_destructive_confirmation_pending_matches(workflow, pending)" in forward_body, errors, "MainMenu deferred forwarding must recheck captured pending authority")
+        ensure("dialog.push_input(event)" in forward_body, errors, "MainMenu deferred forwarding must deliver the unchanged physical event")
+    ensure(script_text.count("dialog.push_input(event)") == 1, errors, "MainMenu must push physical input only once inside its deferred forwarding helper")
 
     smoke_text = MAIN_MENU_KEYBOARD_NAVIGATION_SMOKE_PATH.read_text(encoding="utf-8")
     for required_token in (
@@ -14166,6 +14260,12 @@ def validate_main_menu_destructive_exclusive_parent_input(errors: list[str]) -> 
         '"save_delete_1920"',
         '"settings_restore_1280"',
         '"settings_restore_1920"',
+        '"display_mode_1280"',
+        '"display_mode_1920"',
+        '"display_resolution_1280"',
+        '"display_resolution_1920"',
+        '"kind": "mode"',
+        '"kind": "resolution"',
         '"width": 1280',
         '"width": 1920',
         '"cancel": "joypad_b"',
@@ -14240,9 +14340,65 @@ def validate_main_menu_destructive_exclusive_parent_input(errors: list[str]) -> 
         'original_root_focus.grab_focus()',
         'get_viewport().gui_get_focus_owner() != original_root_focus',
         "func _cleanup_destructive_case(layout_host: Node) -> void:",
+        "func _check_display_change_exclusive_parent_input(shell: Node) -> bool:",
+        "func _exercise_display_change_exclusive_case(case_data: Dictionary) -> bool:",
+        'layout_host.name = "ExclusiveDisplayChangeHost_%s" % case_id',
+        'layout_host.size = Vector2(float(width), 720.0)',
+        'parent_probe.z_index = 100',
+        "_destructive_parent_click_geometry(parent_probe, dialog)",
+        '"workflow_owner_exact"',
+        '"fingerprint_exact"',
+        '"parent_probe_blocked"',
+        '"settings_dock_open_exact"',
+        '"settings_tab_exact"',
+        '"runtime_restored_exact"',
+        '"identical_parent_positive_once"',
+        'shell.call("_on_root_window_input", stale_pressed)',
+        'shell.call("validation_revert_display_change", "display_stale_replacement")',
+        '"generation_changed"',
+        '"fingerprint_changed"',
+        'Input.parse_input_event(stale_released)',
+        '"replacement_safe_focus_exact"',
+        '"transaction_exact"',
+        '"committed_settings_exact"',
+        '"transaction_committed_exact"',
+        '"transaction_paths_exact"',
+        'String(transaction.get("settings_file", "")) == SettingsService.SETTINGS_FILE',
+        'String(transaction.get("candidate_file", "")) == SettingsService.SETTINGS_CANDIDATE_FILE',
+        'String(transaction.get("backup_file", "")) == SettingsService.SETTINGS_BACKUP_FILE',
+        '"transaction_file_existence_exact"',
+        'bool(transaction.get("live_exists", false))',
+        'not bool(transaction.get("candidate_exists", true))',
+        'not bool(transaction.get("backup_exists", true))',
+        '"transaction_result_exact"',
+        'SettingsService.call("_read_settings_file", SettingsService.SETTINGS_FILE)',
+        '"persisted_settings_exact"',
+        '"transaction_artifacts_absent"',
+        '"input_map_exact"',
+        '"runtime_candidate_exact"',
+        '"unrelated_authority_exact"',
+        "func _display_change_unrelated_authority(value: Dictionary) -> Dictionary:",
+        "func _cleanup_display_change_case(layout_host: Node) -> void:",
+        'SettingsService.revert_display_change("display_exclusive_fixture_cleanup")',
+        '"protected_state_exact"',
+        '"summary_cache_exact"',
+        'String(direct_display_owner.get("workflow", "")) != "display_change"',
+        'shell.call("validation_open_hero_keybindings_dialog")',
     ):
         ensure(required_token in smoke_text, errors, f"Main Menu destructive exclusive-parent smoke is missing token: {required_token}")
     ensure("manual_slot_%d.json" not in smoke_text, errors, "Main Menu smoke must not use the stale manual-slot filename")
+
+    display_control_text = SETTINGS_DISPLAY_MODE_TRANSACTION_REGRESSION_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "SettingsService.revert_display_change",
+        "SettingsService.preview_display_change",
+        "SettingsService.confirm_display_change",
+        "SettingsService.display_change_countdown_seconds() == 1",
+        "Second preview did not safely replace the first",
+        "HEROES_LIKE_DISPLAY_CHANGE_FORCE_SAVE_FAILURE",
+        "Injected save failure did not restore the exact runtime display state",
+    ):
+        ensure(required_token in display_control_text, errors, f"Display Change focused control is missing token: {required_token}")
 
 
 def validate_map_editor_shell_slice(errors: list[str]) -> None:
