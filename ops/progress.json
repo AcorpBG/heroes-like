@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Overworld route-cursor live context is complete. Focused route and accessibility gates proved exact destination/action context, existing-repeat coalescing, A/B result lifecycle, modal/session containment, route consequence parity, and durable authority. Official Linux and fresh Windows/Wine packages passed boot-to-Overworld progression at 1280 and 1920; packaged controller and native AT-SPI/UIA certification remain explicit non-claims.",
+  "currentNotes": "Overworld selected-route MapCue coherence is complete. Focused and compatibility gates proved exact current cue/action/tooltip parity, compact-path rich-decision avoidance, targeted cache behavior, inverse/current/no-movement/generated/feedback policies, route consequences, and durable authority. Official Linux and fresh Windows/Wine packages passed export and boot-to-Overworld progression only; dummy-renderer screenshot capture was unavailable, and packaged Wood selection, controller behavior, native UIA certification, and whole-release readiness remain explicit non-claims.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "accessibility-overworld-route-cursor-live-context-10184",
-  "currentSliceId": "accessibility-overworld-route-cursor-live-context-10184",
-  "currentSliceNotes": "Add one bounded Overworld route-cursor semantic surface that updates current destination/action context, coalesces held right-stick repeats, and clears safely on accept, cancel, modal ownership, session replacement, and tree exit.",
+  "currentSlice": "ux-overworld-selected-route-map-cue-coherence-10184",
+  "currentSliceId": "ux-overworld-selected-route-map-cue-coherence-10184",
+  "currentSliceNotes": "Targeted selected-route refresh now synchronizes MapCue text and tooltip after the existing action cache/button rebuild, preserves generated-opening and feedback priority, and keeps compact route ownership out of rich decision construction.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Route Cursor Live Context",
-  "currentSliceUpdatedAt": "2026-08-12T14:13:03Z",
+  "currentSliceTitle": "Overworld Selected Route Map Cue Coherence",
+  "currentSliceUpdatedAt": "2026-08-12T16:37:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19849,6 +19849,26 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "id": "ux-overworld-selected-route-map-cue-coherence-10184",
+      "title": "Overworld Selected Route Map Cue Coherence",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md"],
+      "purpose": "Keep the visible Overworld MapCue and its tooltip coherent with the authoritative current primary action after targeted route selection, eliminating stale prior-destination instructions without broad refresh or route recomputation.",
+      "implementationTargets": ["scenes/overworld/OverworldShell.gd", "tests/overworld_route_tooltip_smoke.gd", "tests/overworld_incremental_route_preview_refresh_regression.gd", "tests/overworld_selected_route_context_actions_cache_regression.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"head": "9fb46410", "selected_tile": {"x": 1, "y": 0}, "route_action": "Advance to Site", "stale_map_cue": "Try: Visit Town [Enter]", "save_version": 9},
+      "completionCriteria": "At 1280 and 1920, after establishing an owned-town Visit Town cue, one targeted selection of the reachable Wood Wagon at 1,0 exposes move/collect plus an Advance to Site primary action, button, MapCue, and tooltip with no stale Visit Town copy in the same refresh; reverse selection back to the town and destination-to-destination, adjacent/current/blocked, bounded no-op, and active-action-feedback priority controls remain coherent; generated opening and compact policies remain exact; the targeted request executes once and preserves broad status/action/hero/context-drawer skip counts, route generation/cache/profile behavior, activation consequence, session/save/files/cache/settings/routes authority, and unrelated rails; existing tooltip/town/spell, incremental/destination/cache/full-route, route-live, movement, visual, core, repository, Linux release, and fresh Windows/Wine package gates pass, with packaged cue parity claimed only if an actual shipped Wood-Wagon selection probe runs.",
+      "nonGoals": ["changing route rules, route labels or decision wording, primary-action consequences, full or status refresh ownership, broad rails or drawers, action-feedback priority, generated-opening policy, scene/layout, live-region semantics, save/schema/version, Native RMG, tuning, signing, publication, certification, or overall release completion"],
+      "baselineChecks": ["godot4 --headless --path . --scene res://tests/overworld_route_tooltip_smoke.tscn", "godot4 --headless --path . --scene res://tests/overworld_incremental_route_preview_refresh_regression.tscn", "godot4 --headless --path . --scene res://tests/overworld_route_destination_only_action_regression.tscn", "godot4 --headless --path . --scene res://tests/overworld_controller_route_selection_regression.tscn", "godot4 --headless --path . --scene res://tests/overworld_gameplay_movement_input_ownership_regression.tscn", "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn", "godot4 --headless --editor --quit --path .", "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py", "python3 -m py_compile tests/validate_repo.py", "jq empty ops/progress.json", "git diff --check", "Linux and Windows release exports plus shipped boot-to-Overworld controls"],
+      "startedAt": "2026-08-12T14:19:23Z",
+      "updatedAt": "2026-08-12T16:37:00Z",
+      "completedAt": "2026-08-12T16:37:00Z",
+      "notes": "Targeted selected-route refresh now rematerializes MapCue text and tooltip from the current cached primary action after the action/button rebuild. Focused 1280/1920 and compatibility gates passed exact Town, Wood Wagon, adjacent/open, inverse, current, no-movement, bounded no-op, feedback, generated-opening, consequence, authority, incremental, destination-only, cache, full-route, route-live, movement, visual, core, editor, and repository controls; compact/simple paths retain zero rich-route decision construction where required. Official Linux and fresh Windows/Wine release exports and shipped executables passed boot-to-Overworld progression at both widths. The dummy renderer could not capture screenshots, so those package runs do not prove visual cue parity; no packaged Wood Wagon selection, packaged controller behavior, native Windows UIA certification, signing/publication, whole-game release readiness, or whole-release completion is claimed.",
+      "remainingWork": "No work remains in this slice. Select the next tracker-approved release-readiness implementation slice; broader gameplay/content/performance/accessibility work, signing, publication, native Windows hardware certification, Native RMG parity, and overall release readiness remain open."
+    },
     {
       "id": "accessibility-overworld-route-cursor-live-context-10184",
       "title": "Overworld Route Cursor Live Context",
