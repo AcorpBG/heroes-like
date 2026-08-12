@@ -819,6 +819,7 @@ static func end_turn(session: SessionStateStoreScript.SessionData) -> Dictionary
 	if enemy_message != "":
 		messages.append(enemy_message)
 	var result := _finalize_action_result(session, true, " ".join(messages))
+	normalize_overworld_state(session)
 	result["enemy_activity_summary"] = enemy_activity_summary
 	result["enemy_activity_events"] = _compact_enemy_activity_events(enemy_turn_result.get("events", []), 10)
 	if enemy_turn_result.get("profile", {}) is Dictionary and not enemy_turn_result.get("profile", {}).is_empty():
