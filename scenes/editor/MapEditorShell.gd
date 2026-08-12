@@ -5,6 +5,7 @@ const ScenarioFactoryScript = preload("res://scripts/core/ScenarioFactory.gd")
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const TerrainPlacementRulesScript = preload("res://scripts/core/TerrainPlacementRules.gd")
+const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 
 const DEFAULT_TERRAIN_ID := "grass"
 const EDITOR_ROAD_LAYER_ID := "editor_working_road"
@@ -85,6 +86,7 @@ const DIRTY_TRANSITION_PENDING_MESSAGE := "Finish the current unsaved-work confi
 @onready var _property_difficulty_picker: OptionButton = %PropertyDifficultyPicker
 @onready var _property_collected_check: CheckBox = %PropertyCollectedFlag
 @onready var _property_apply_button: Button = %ApplyObjectProperties
+@onready var _tool_scroll: ScrollContainer = $RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll
 
 var _session = null
 var _map_package_entries: Array = []
@@ -135,6 +137,7 @@ func _ready() -> void:
 	_apply_visual_theme()
 	_configure_dirty_transition_confirmation()
 	_connect_ui()
+	_connect_editor_focus_visibility()
 	_rebuild_terrain_picker()
 	_rebuild_object_family_picker()
 	_rebuild_property_option_pickers()
@@ -147,8 +150,10 @@ func _ready() -> void:
 	_select_tool(TOOL_INSPECT)
 	var returned_session = SessionState.consume_editor_return_session()
 	if returned_session != null and _resume_working_copy_from_memory(returned_session):
+		call_deferred("_configure_editor_keyboard_focus")
 		return
 	_refresh_state()
+	call_deferred("_configure_editor_keyboard_focus")
 
 func _unhandled_input(event: InputEvent) -> void:
 	if _dirty_transition_dialog != null and _dirty_transition_dialog.visible:
@@ -186,6 +191,93 @@ func _connect_ui() -> void:
 	if _map_view != null:
 		_map_view.tile_pressed.connect(_on_map_tile_pressed)
 		_map_view.tile_hovered.connect(_on_map_tile_hovered)
+
+
+func _editor_focus_surfaces() -> Array:
+	return [
+		_map_package_picker,
+		_load_map_button,
+		_save_copy_button,
+		_play_button,
+		_menu_button,
+		_inspect_tool_button,
+		_terrain_tool_button,
+		_terrain_line_tool_button,
+		_terrain_rectangle_tool_button,
+		_road_tool_button,
+		_road_path_tool_button,
+		_hero_start_tool_button,
+		_place_object_tool_button,
+		_remove_object_tool_button,
+		_move_object_tool_button,
+		_duplicate_object_tool_button,
+		_retheme_object_tool_button,
+		_fill_terrain_button,
+		_restore_tile_button,
+		_terrain_picker,
+		_object_family_picker,
+		_object_content_picker,
+		_selected_object_picker,
+		_property_owner_picker,
+		_property_difficulty_picker,
+		_property_collected_check,
+		_property_apply_button,
+	]
+
+
+func _connect_editor_focus_visibility() -> void:
+	for control_value in _editor_focus_surfaces():
+		var control := control_value as Control
+		if control == null:
+			continue
+		var callback := _on_editor_focus_entered.bind(control)
+		if not control.focus_entered.is_connected(callback):
+			control.focus_entered.connect(callback)
+
+
+func _configure_editor_keyboard_focus() -> void:
+	if (
+		not is_inside_tree()
+		or (_dirty_transition_dialog != null and _dirty_transition_dialog.visible)
+		or not _pending_dirty_transition.is_empty()
+	):
+		return
+	var controls := FrontierVisualKit.configure_focus_cycle(_editor_focus_surfaces())
+	var current := get_viewport().gui_get_focus_owner() as Control
+	if current != null and controls.has(current) and FrontierVisualKit.is_keyboard_focusable(current):
+		_reveal_editor_focus(current)
+		return
+	var focused := FrontierVisualKit.grab_keyboard_focus(
+		self,
+		_map_package_picker,
+		controls,
+		true
+	)
+	_reveal_editor_focus(focused)
+
+
+func _on_editor_focus_entered(control: Control) -> void:
+	if (
+		_dirty_transition_dialog != null
+		and (_dirty_transition_dialog.visible or not _pending_dirty_transition.is_empty())
+	):
+		return
+	call_deferred("_reveal_editor_focus", control)
+
+
+func _reveal_editor_focus(control: Control) -> void:
+	if (
+		(_dirty_transition_dialog != null and _dirty_transition_dialog.visible)
+		or not _pending_dirty_transition.is_empty()
+	):
+		return
+	if (
+		control != null
+		and is_instance_valid(control)
+		and _tool_scroll != null
+		and _tool_scroll.is_ancestor_of(control)
+	):
+		_tool_scroll.ensure_control_visible(control)
 
 func _configure_dirty_transition_confirmation() -> void:
 	_dirty_transition_dialog.exclusive = true
@@ -3049,6 +3141,7 @@ func _refresh_state() -> void:
 	_sync_terrain_paint_surface()
 	_sync_preview()
 	_refresh_labels()
+	_configure_editor_keyboard_focus()
 
 func _sync_play_handoff_surface() -> void:
 	if _play_button == null:
@@ -7237,14 +7330,11 @@ func _apply_visual_theme() -> void:
 	for button in [_inspect_tool_button, _terrain_tool_button, _terrain_line_tool_button, _terrain_rectangle_tool_button, _road_tool_button, _road_path_tool_button, _hero_start_tool_button, _place_object_tool_button, _remove_object_tool_button, _move_object_tool_button, _duplicate_object_tool_button, _retheme_object_tool_button, _fill_terrain_button, _restore_tile_button, _property_apply_button, _save_copy_button, _play_button, _menu_button]:
 		if button == null:
 			continue
-		button.focus_mode = Control.FOCUS_NONE
+		button.focus_mode = Control.FOCUS_ALL
 		button.add_theme_stylebox_override("normal", button_style.duplicate())
 		button.add_theme_stylebox_override("pressed", button_hover.duplicate())
 		button.add_theme_stylebox_override("hover", button_hover.duplicate())
-	# Destructive transition origins must be controller-focusable so cancellation
-	# can return to the exact command that opened the confirmation.
 	_load_map_button.focus_mode = Control.FOCUS_ALL
-	_menu_button.focus_mode = Control.FOCUS_ALL
 
 func _panel_style(fill: Color, border: Color, border_width: int) -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
