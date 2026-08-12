@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `accessibility-map-editor-command-focus-navigation-10184`. Every enabled Map Editor command now joins one bounded keyboard/controller focus cycle without changing editor layout, map pointer ownership, or command consequences.
 - Latest completed implementation slice: `accessibility-main-menu-display-change-exclusive-parent-input-10184`. The exclusive display preview confirmation now recovers exact native physical Revert/Keep routing after a blocked parent click without closing Settings or changing transaction authority.
 - Latest completed implementation slice: `accessibility-map-editor-dirty-confirmation-exclusive-parent-input-10184`. The exclusive unsaved-map confirmation now recovers exact native physical cancel/confirm routing after a blocked parent click while preserving working-copy, package, save, route, and native-close authority.
 - Latest completed implementation slice: `accessibility-outcome-new-session-exclusive-parent-input-10184`. Outcome fresh-expedition confirmations now recover exact native physical cancel/confirm routing after a blocked parent click while preserving resolved-session, save, profile, route, and focus authority.

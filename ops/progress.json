@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Main Menu display-preview physical routing is complete. The exclusive child now recovers exact root-routed physical Revert/Keep after blocked parent clicks while runtime preview, committed settings, config bytes, Settings dock, focus, and transaction authority remain exact.",
+  "currentNotes": "Map Editor command focus navigation is complete. Every enabled authoring, save, play, picker, and property command is keyboard/controller reachable without changing map pointer ownership or command consequences.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "accessibility-main-menu-display-change-exclusive-parent-input-10184",
-  "currentSliceId": "accessibility-main-menu-display-change-exclusive-parent-input-10184",
-  "currentSliceNotes": "The exact display generation/fingerprint owner and four-row mode/resolution 1280/1920 matrix passed focused, settings compatibility, Linux/X11, and fresh Windows/Wine validation.",
+  "currentSlice": "accessibility-map-editor-command-focus-navigation-10184",
+  "currentSliceId": "accessibility-map-editor-command-focus-navigation-10184",
+  "currentSliceNotes": "The exact 27-control dynamic focus cycle passed focused, compatibility, Linux, and fresh Windows/Wine validation at 1280 and 1920.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Main Menu Display Change Exclusive Parent Input",
-  "currentSliceUpdatedAt": "2026-08-12T05:55:18Z",
+  "currentSliceTitle": "Map Editor Command Focus Navigation",
+  "currentSliceUpdatedAt": "2026-08-12T07:22:10Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19849,6 +19849,90 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "id": "accessibility-map-editor-command-focus-navigation-10184",
+      "title": "Map Editor Command Focus Navigation",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/lessons-learned.md"],
+      "purpose": "Make every enabled shipped Map Editor command reachable through one deterministic keyboard/controller focus cycle while preserving native picker behavior, map pointer ownership, dirty-dialog focus, and existing consequences.",
+      "implementationTargets": [
+        "scenes/editor/MapEditorShell.gd",
+        "tests/map_editor_dirty_working_copy_destructive_transition_regression.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "head": "e43c935e",
+        "styled_action_button_count": 18,
+        "focus_none_action_button_count": 17,
+        "focusable_destructive_origin_count": 2,
+        "map_pointer_owned": true,
+        "save_version": 9
+      },
+      "completionCriteria": "At 1280 and 1920, every visible enabled Map Editor top command, authoring tool, Fill/Restore command, picker/checkbox, and property command appears exactly once in a closed forward/reverse keyboard/controller focus cycle; disabled and hidden controls are skipped; initial and refresh-time focus is deterministic, preserves a valid owner, rehomes an invalid owner, and reveals focused ToolScroll descendants; physical A/Enter activates existing commands exactly once; OptionButton/checkbox native ownership, dirty-transition cancel/confirm origin restoration, working-copy/package/save/cache/settings/routes/files authority, mouse/map click/drag/wheel behavior, Linux release, and fresh Windows/Wine remain exact.",
+      "nonGoals": [
+        "keyboard/controller tile-map interaction, changing editor layout or screen composition, shared OverworldMapView behavior, command consequences, package or save schema, generic focus framework changes, Native RMG, tuning, signing, publication, certification, or overall release completion"
+      ],
+      "baselineChecks": [
+        "godot4 --headless --path . --scene res://tests/map_editor_smoke.tscn",
+        "godot4 --headless --path . --scene res://tests/map_editor_load_map_package_report.tscn",
+        "godot4 --headless --path . --scene res://tests/map_editor_package_save_copy_report.tscn",
+        "godot4 --headless --path . --scene res://tests/map_editor_dirty_working_copy_destructive_transition_regression.tscn",
+        "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn",
+        "godot4 --headless --editor --quit --path .",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check",
+        "Linux release export plus shipped 1280/1920 Map Editor focus/activation validation",
+        "Windows release export plus fresh Wine shipped 1280/1920 Map Editor focus/activation validation"
+      ],
+      "startedAt": "2026-08-12T06:01:24Z",
+      "updatedAt": "2026-08-12T07:22:10Z",
+      "completedAt": "2026-08-12T07:22:10Z",
+      "notes": "Map Editor now uses the shared focus architecture for one exact ordered 27-control command surface. Visible enabled controls receive closed next/previous/up/down links; valid focus is retained, invalid focus rehomes deterministically, ToolScroll descendants are vertically revealed, and dirty confirmation owns focus without reconfiguration. All real command buttons are focusable; the map remains pointer-owned and all command consequences/layout remain unchanged.",
+      "result": {
+        "focus_source_control_count": 27,
+        "empty_enabled_cycle_count": 17,
+        "loaded_enabled_cycle_count": 25,
+        "tested_widths": [1280, 1920],
+        "forward_reverse_up_down_wrap": true,
+        "disabled_controls_skipped": true,
+        "disabled_owner_rehomed": true,
+        "valid_focus_retained": true,
+        "tool_scroll_vertical_reveal": true,
+        "physical_a_enter_activation_once": true,
+        "native_option_button_refresh_exact": true,
+        "dirty_dialog_focus_restoration_exact": true,
+        "map_pointer_owned": true,
+        "save_version_before": 9,
+        "save_version_after": 9,
+        "linux_export_focus_passed": true,
+        "windows_export_fresh_wine_focus_passed": true
+      },
+      "validation": {
+        "status": "passed",
+        "updatedAt": "2026-08-12T07:22:10Z",
+        "focusedArtifact": "/tmp/heroes-map-editor-command-focus-final2.ZjxNWM",
+        "releaseArtifact": "/tmp/heroes-map-editor-command-focus-release.3IM5Ez",
+        "focusedMarker": "MAP_EDITOR_DIRTY_WORKING_COPY_DESTRUCTIVE_TRANSITION_REGRESSION ok:true",
+        "compatibility": [
+          "map_editor_smoke rc0",
+          "map_editor_load_map_package_report ok:true",
+          "map_editor_package_save_copy_report ok:true",
+          "core_systems_regression_smoke rc0"
+        ],
+        "packageProfileLimitation": "Fresh shipped profiles contained no generated packages, so Load Map correctly remained disabled/no-op; packaged gates proved visible forward/reverse focus and physical Enter delivery without claiming a package load.",
+        "preexistingLayoutCaveat": "At 1280, tool content remains wider than the vertical rail; focus reveal is vertically exact with maximal horizontal intersection. The one-script focus slice changes no layout geometry.",
+        "static": ["editor rc0", "validate_repo rc0", "py_compile rc0", "jq rc0", "diff-check rc0"],
+        "linuxPckSha256": "20e82ed015e6d79aa674f4c4441db175d16c8f82f334f6ed97961bff953d4e79",
+        "windowsPckSha256": "31b5ce6ed6df736614426f6b6e7c8487979b7b78d5d4d05d79e5af19621f3380"
+      }
+    },
     {
       "id": "accessibility-main-menu-display-change-exclusive-parent-input-10184",
       "title": "Main Menu Display Change Exclusive Parent Input",

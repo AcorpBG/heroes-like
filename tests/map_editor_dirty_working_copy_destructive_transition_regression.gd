@@ -6,6 +6,47 @@ const TARGET_STEM := "small-thorn-lantern-bend-b78aa337"
 const FIXTURE_DIR := "user://maps"
 const FAILURE_PHASES := ["precommit", "after_backup"]
 const SAVE_FAILURE_ENV := "HEROES_LIKE_SAVE_FAIL_PHASE"
+const EDITOR_FOCUS_SOURCE_NAMES := [
+	"MapPackagePicker",
+	"LoadMap",
+	"SaveCopy",
+	"PlayWorkingCopy",
+	"Menu",
+	"InspectTool",
+	"TerrainTool",
+	"TerrainLineTool",
+	"TerrainRectangleTool",
+	"RoadTool",
+	"RoadPathTool",
+	"HeroStartTool",
+	"PlaceObjectTool",
+	"RemoveObjectTool",
+	"MoveObjectTool",
+	"DuplicateObjectTool",
+	"RethemeObjectTool",
+	"FillTerrain",
+	"RestoreSelectedTile",
+	"TerrainPicker",
+	"ObjectFamilyPicker",
+	"ObjectContentPicker",
+	"SelectedObjectPicker",
+	"PropertyOwnerPicker",
+	"PropertyDifficultyPicker",
+	"PropertyCollectedFlag",
+	"ApplyObjectProperties",
+]
+const INITIAL_DISABLED_FOCUS_NAMES := [
+	"MapPackagePicker",
+	"LoadMap",
+	"SaveCopy",
+	"PlayWorkingCopy",
+	"RestoreSelectedTile",
+	"SelectedObjectPicker",
+	"PropertyOwnerPicker",
+	"PropertyDifficultyPicker",
+	"PropertyCollectedFlag",
+	"ApplyObjectProperties",
+]
 
 var _report_scene: Node
 var _original_active_session = null
@@ -19,6 +60,7 @@ var _original_settings_transaction: Dictionary = {}
 var _original_file_states: Dictionary = {}
 var _original_window_size := Vector2i.ZERO
 var _parent_probe_count := 0
+var _focus_signal_counts := {}
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -69,6 +111,10 @@ func _run() -> void:
 	target_id = String(_target_entry.get("package_id", target_id))
 	print("%s CASE fixture_index_ready" % REPORT_ID)
 	var original_package_state := _package_file_state()
+	print("%s CASE command_focus_start" % REPORT_ID)
+	var command_focus_result := await _validate_command_focus_matrix(source_id, original_package_state)
+	if not bool(command_focus_result.get("ok", false)):
+		return
 	var shell = await _create_editor_shell()
 	if shell == null:
 		return
@@ -106,6 +152,7 @@ func _run() -> void:
 		"safe_quit_failure_retry": failure_result,
 		"clean_controls": clean_result,
 		"exclusive_parent": exclusive_result,
+		"command_focus": command_focus_result,
 		"save_version": SessionState.SAVE_VERSION,
 	})])
 	await _free_shell(shell)
@@ -116,6 +163,394 @@ func _run() -> void:
 		_fail("Map Editor focused cleanup did not restore exact save/cache/settings authority.")
 		return
 	get_tree().quit(0)
+
+func _validate_command_focus_matrix(source_id: String, package_state: Dictionary) -> Dictionary:
+	var rows: Array[Dictionary] = []
+	for width in [1280, 1920]:
+		var shell = await _create_editor_shell()
+		if shell == null:
+			return {}
+		var layout_host := shell.get_parent() as Control
+		layout_host.size = Vector2(float(width), 720.0)
+		get_window().size = Vector2i(width, 720)
+		await _settle()
+		var row := await _validate_command_focus_row(shell, source_id, package_state, width)
+		if row.is_empty():
+			return {}
+		rows.append(row)
+		await _free_shell(shell)
+	return {
+		"ok": true,
+		"source_count": EDITOR_FOCUS_SOURCE_NAMES.size(),
+		"widths": [1280, 1920],
+		"rows": rows,
+		"physical_forward_reverse_up_down": true,
+		"dynamic_disabled_rehome": true,
+		"native_option_selection": true,
+		"tool_scroll_reveal": true,
+		"traversal_authority_exact": true,
+	}
+
+func _validate_command_focus_row(
+	shell: Node,
+	source_id: String,
+	package_state: Dictionary,
+	width: int
+) -> Dictionary:
+	var source_controls := _editor_focus_source_controls(shell)
+	var source_names := _control_names(source_controls)
+	if source_names != EDITOR_FOCUS_SOURCE_NAMES or source_names.size() != 27 \
+			or _unique_strings(source_names).size() != 27:
+		return _fail_dict("Map Editor %d focus source membership was not exact: %s" % [width, JSON.stringify(source_names)])
+	for control in source_controls:
+		if control.focus_mode != Control.FOCUS_ALL:
+			return _fail_dict("Map Editor %d focus source %s was not keyboard/controller focusable." % [width, control.name])
+	var picker: OptionButton = shell.get_node("%MapPackagePicker")
+	# validation_skip_initial_package_index bypasses the real empty-index rebuild,
+	# so reproduce its disabled picker state before validating the empty cycle.
+	picker.disabled = true
+	shell.call("_refresh_state")
+	await _settle()
+	var initial_disabled := _disabled_control_names(source_controls)
+	if initial_disabled != INITIAL_DISABLED_FOCUS_NAMES:
+		return _fail_dict("Map Editor %d empty-state disabled focus controls were not exact: %s" % [width, JSON.stringify(initial_disabled)])
+	shell.call("_configure_editor_keyboard_focus")
+	await _settle()
+	var initial_cycle := _enabled_focus_controls(source_controls)
+	if not _assert_focus_links_exact(initial_cycle):
+		return _fail_dict("Map Editor %d empty-state focus links were not an exact closed enabled cycle." % width)
+	var empty_authority := _full_authority_state(shell)
+	if not await _exercise_physical_focus_cycles(initial_cycle, "empty_%d" % width):
+		return {}
+	if _full_authority_state(shell) != empty_authority:
+		return _fail_dict("Map Editor %d empty-state focus traversal mutated authority: %s" % [width, _first_difference(empty_authority, _full_authority_state(shell))])
+
+	if not await _reset_case(shell, source_id, false):
+		return {}
+	picker.disabled = false
+	shell.call("_refresh_state")
+	await _settle()
+	var empty_tile := _first_property_empty_tile(shell)
+	if empty_tile.x < 0:
+		return _fail_dict("Map Editor %d package fixture had no empty property tile." % width)
+	shell.call("validation_select_tile", empty_tile.x, empty_tile.y)
+	await _settle()
+	if not _property_disabled_state_exact(shell, true, true, true, true, true) \
+			or not _assert_focus_links_exact(_enabled_focus_controls(source_controls)):
+		return _fail_dict("Map Editor %d loaded empty-tile property controls were not disabled exactly." % width)
+
+	var town_tile := _first_placement_tile(shell, "towns")
+	var resource_tile := _first_placement_tile(shell, "resource_nodes")
+	var encounter_tile := _first_placement_tile(shell, "encounters")
+	if town_tile.x < 0 or resource_tile.x < 0 or encounter_tile.x < 0:
+		return _fail_dict("Map Editor %d package fixture missed town/resource/encounter property controls." % width)
+	shell.call("validation_select_tile", town_tile.x, town_tile.y)
+	await _settle()
+	if not _property_disabled_state_exact(shell, false, false, true, true, false) \
+			or not _assert_focus_links_exact(_enabled_focus_controls(source_controls)):
+		return _fail_dict("Map Editor %d town property enabled/disabled state was not exact." % width)
+	var owner_picker: OptionButton = shell.get_node("%PropertyOwnerPicker")
+	owner_picker.grab_focus()
+	await _settle()
+	shell.call("validation_select_tile", resource_tile.x, resource_tile.y)
+	await _settle()
+	if not _property_disabled_state_exact(shell, false, true, true, false, false) \
+			or not _assert_focus_links_exact(_enabled_focus_controls(source_controls)) \
+			or get_viewport().gui_get_focus_owner() != picker:
+		return _fail_dict("Map Editor %d disabled property owner did not rehome focus to MapPackagePicker." % width)
+	var terrain_picker: OptionButton = shell.get_node("%TerrainPicker")
+	terrain_picker.grab_focus()
+	await _settle()
+	shell.call("_refresh_state")
+	await _settle()
+	if get_viewport().gui_get_focus_owner() != terrain_picker:
+		return _fail_dict("Map Editor %d valid focus was not retained across synchronous refresh." % width)
+	shell.call("validation_select_tile", encounter_tile.x, encounter_tile.y)
+	await _settle()
+	if not _property_disabled_state_exact(shell, false, true, false, true, false):
+		return _fail_dict("Map Editor %d encounter property enabled/disabled state was not exact." % width)
+
+	var loaded_cycle := _enabled_focus_controls(source_controls)
+	if not _assert_focus_links_exact(loaded_cycle):
+		return _fail_dict("Map Editor %d loaded focus links were not an exact closed enabled cycle." % width)
+	var loaded_authority := _full_authority_state(shell)
+	if not await _exercise_physical_focus_cycles(loaded_cycle, "loaded_%d" % width):
+		return {}
+	if _full_authority_state(shell) != loaded_authority:
+		return _fail_dict("Map Editor %d loaded focus traversal mutated authority: %s" % [width, _first_difference(loaded_authority, _full_authority_state(shell))])
+
+	var apply_button: Button = shell.get_node("%ApplyObjectProperties")
+	var tool_scroll: ScrollContainer = shell.get_node("RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll")
+	tool_scroll.scroll_vertical = 0
+	await _settle()
+	var reveal_before := _tool_scroll_reveal_snapshot(tool_scroll, apply_button)
+	apply_button.grab_focus()
+	await _settle()
+	var reveal_after := _tool_scroll_reveal_snapshot(tool_scroll, apply_button)
+	var expected_horizontal_intersection: float = min(
+		float(reveal_after.get("button_width", 0.0)),
+		float(reveal_after.get("inner_viewport_width", 0.0))
+	)
+	var reveal_checks := {
+		"focus_owner_exact": get_viewport().gui_get_focus_owner() == apply_button,
+		"scroll_positive": tool_scroll.scroll_vertical > 0,
+		"vertical_fully_visible": bool(reveal_after.get("vertical_fully_visible", false)),
+		"horizontal_intersection_meaningful": float(reveal_after.get("intersection_width", 0.0)) > 0.0,
+		"horizontal_intersection_maximal": absf(float(reveal_after.get("intersection_width", 0.0)) - expected_horizontal_intersection) <= 1.0,
+		"full_height_intersection": absf(float(reveal_after.get("intersection_height", 0.0)) - float(reveal_after.get("button_height", 0.0))) <= 1.0,
+		"button_width_unchanged": is_equal_approx(float(reveal_after.get("button_width", 0.0)), float(reveal_before.get("button_width", -1.0))),
+		"scroll_width_unchanged": is_equal_approx(float(reveal_after.get("scroll_width", 0.0)), float(reveal_before.get("scroll_width", -1.0))),
+		"preexisting_1280_overflow_exact": width != 1280 or float(reveal_before.get("button_width", 0.0)) > float(reveal_before.get("inner_viewport_width", 0.0)),
+		"button_visible": apply_button.is_visible_in_tree(),
+		"scroll_ancestry_exact": tool_scroll.is_ancestor_of(apply_button),
+	}
+	var scroll_changed_or_initially_visible := int(reveal_after.get("scroll_vertical", 0)) > int(reveal_before.get("scroll_vertical", 0)) \
+		or bool(reveal_before.get("vertical_fully_visible", false))
+	if not _checks_exact(reveal_checks):
+		# Failure-only diagnostic: a direct production reveal cannot rescue the
+		# mandatory focus-entered result above; it only localizes callback vs geometry.
+		shell.call("_reveal_editor_focus", apply_button)
+		await _settle()
+		var direct_reveal_diagnostic := _tool_scroll_reveal_snapshot(tool_scroll, apply_button)
+		return _fail_dict("Map Editor %d focused Apply Properties reveal checks failed: %s" % [width, JSON.stringify({
+			"checks": reveal_checks,
+			"before": reveal_before,
+			"after": reveal_after,
+			"scroll_changed_or_initially_visible": scroll_changed_or_initially_visible,
+			"direct_reveal_diagnostic_only": direct_reveal_diagnostic,
+		})])
+
+	_focus_signal_counts = {"terrain": 0, "inspect": 0, "family": 0}
+	var command_background_before := _focus_background_authority(shell)
+	var terrain_button: Button = shell.get_node("%TerrainTool")
+	var inspect_button: Button = shell.get_node("%InspectTool")
+	var family_picker: OptionButton = shell.get_node("%ObjectFamilyPicker")
+	terrain_button.pressed.connect(_on_focus_probe_signal.bind("terrain"), CONNECT_ONE_SHOT)
+	inspect_button.pressed.connect(_on_focus_probe_signal.bind("inspect"), CONNECT_ONE_SHOT)
+	family_picker.item_selected.connect(_on_focus_probe_item_selected.bind("family"), CONNECT_ONE_SHOT)
+	terrain_button.grab_focus()
+	await _press_joypad_button(JOY_BUTTON_A)
+	if int(_focus_signal_counts.get("terrain", 0)) != 1 \
+			or String(shell.call("validation_dirty_transition_snapshot").get("tool", "")) != "terrain" \
+			or get_viewport().gui_get_focus_owner() != terrain_button:
+		return _fail_dict("Map Editor %d physical A did not activate Terrain exactly once and retain focus." % width)
+	inspect_button.grab_focus()
+	await _press_key(KEY_ENTER)
+	if int(_focus_signal_counts.get("inspect", 0)) != 1 \
+			or String(shell.call("validation_dirty_transition_snapshot").get("tool", "")) != "inspect" \
+			or get_viewport().gui_get_focus_owner() != inspect_button:
+		return _fail_dict("Map Editor %d physical Enter did not activate Inspect exactly once and retain focus." % width)
+
+	var family_before := family_picker.selected
+	var family_expected := (family_before + 1) % family_picker.get_item_count()
+	family_picker.grab_focus()
+	await _press_joypad_button(JOY_BUTTON_A)
+	await _press_joypad_button(JOY_BUTTON_DPAD_DOWN)
+	await _press_key(KEY_ENTER)
+	if family_picker.selected != family_expected or int(_focus_signal_counts.get("family", 0)) != 1 \
+			or family_picker.get_popup().visible or get_viewport().gui_get_focus_owner() != family_picker:
+		return _fail_dict("Map Editor %d OptionButton native selection/focus did not survive synchronous item_selected refresh." % width)
+	if _focus_background_authority(shell) != command_background_before or _package_file_state() != package_state:
+		return _fail_dict("Map Editor %d representative command activation changed background authority: %s" % [
+			width,
+			_first_difference(command_background_before, _focus_background_authority(shell)),
+		])
+	return {
+		"width": width,
+		"source_count": source_names.size(),
+		"empty_cycle_count": initial_cycle.size(),
+		"loaded_cycle_count": loaded_cycle.size(),
+		"forward_reverse_up_down": true,
+		"disabled_rehome": true,
+		"valid_focus_retained": true,
+		"tool_scroll_revealed": true,
+		"a_enter_once": true,
+		"option_native_refresh": true,
+		"authority_exact": true,
+	}
+
+func _editor_focus_source_controls(shell: Node) -> Array[Control]:
+	var controls: Array[Control] = []
+	for value in shell.call("_editor_focus_surfaces"):
+		if value is Control:
+			controls.append(value)
+	return controls
+
+func _enabled_focus_controls(controls: Array[Control]) -> Array[Control]:
+	var enabled: Array[Control] = []
+	for control in controls:
+		if control.is_inside_tree() and control.is_visible_in_tree() and control.focus_mode != Control.FOCUS_NONE \
+				and not (control is BaseButton and (control as BaseButton).disabled):
+			enabled.append(control)
+	return enabled
+
+func _control_names(controls: Array[Control]) -> Array[String]:
+	var names: Array[String] = []
+	for control in controls:
+		names.append(String(control.name))
+	return names
+
+func _disabled_control_names(controls: Array[Control]) -> Array[String]:
+	var names: Array[String] = []
+	for control in controls:
+		if control is BaseButton and (control as BaseButton).disabled:
+			names.append(String(control.name))
+	return names
+
+func _unique_strings(values: Array[String]) -> Array[String]:
+	var unique: Array[String] = []
+	for value in values:
+		if value not in unique:
+			unique.append(value)
+	return unique
+
+func _assert_focus_links_exact(controls: Array[Control]) -> bool:
+	if controls.size() < 2:
+		return false
+	for index in range(controls.size()):
+		var control := controls[index]
+		var next_control := controls[(index + 1) % controls.size()]
+		var previous_control := controls[(index - 1 + controls.size()) % controls.size()]
+		if control.get_node_or_null(control.focus_next) != next_control \
+				or control.get_node_or_null(control.focus_previous) != previous_control \
+				or control.get_node_or_null(control.focus_neighbor_bottom) != next_control \
+				or control.get_node_or_null(control.focus_neighbor_top) != previous_control:
+			return false
+	return true
+
+func _exercise_physical_focus_cycles(controls: Array[Control], label: String) -> bool:
+	for direction in ["tab", "shift_tab", "down", "up"]:
+		controls[0].grab_focus()
+		await _settle()
+		var visited: Array[String] = [String(controls[0].name)]
+		for step in range(1, controls.size() + 1):
+			match direction:
+				"tab": await _press_key(KEY_TAB)
+				"shift_tab": await _press_key(KEY_TAB, true)
+				"down": await _press_joypad_button(JOY_BUTTON_DPAD_DOWN)
+				"up": await _press_joypad_button(JOY_BUTTON_DPAD_UP)
+			var expected_index := step % controls.size() if direction in ["tab", "down"] \
+				else (controls.size() - (step % controls.size())) % controls.size()
+			var expected := controls[expected_index]
+			if get_viewport().gui_get_focus_owner() != expected:
+				_fail("Map Editor %s physical %s focus step %d expected %s, got %s." % [
+					label,
+					direction,
+					step,
+					expected.name,
+					get_viewport().gui_get_focus_owner().name if get_viewport().gui_get_focus_owner() != null else "none",
+				])
+				return false
+			if step < controls.size():
+				visited.append(String(expected.name))
+		var expected_names := _control_names(controls)
+		if direction in ["shift_tab", "up"]:
+			var reverse_expected_names: Array[String] = [expected_names[0]]
+			reverse_expected_names.append_array(_reversed_strings(expected_names.slice(1)))
+			expected_names = reverse_expected_names
+		if visited != expected_names or _unique_strings(visited).size() != controls.size():
+			_fail("Map Editor %s physical %s cycle duplicated or skipped controls: %s." % [label, direction, JSON.stringify(visited)])
+			return false
+	return true
+
+func _reversed_strings(values: Array) -> Array[String]:
+	var result: Array[String] = []
+	for index in range(values.size() - 1, -1, -1):
+		result.append(String(values[index]))
+	return result
+
+func _property_disabled_state_exact(
+	shell: Node,
+	selected_disabled: bool,
+	owner_disabled: bool,
+	difficulty_disabled: bool,
+	collected_disabled: bool,
+	apply_disabled: bool
+) -> bool:
+	return (shell.get_node("%SelectedObjectPicker") as OptionButton).disabled == selected_disabled \
+		and (shell.get_node("%PropertyOwnerPicker") as OptionButton).disabled == owner_disabled \
+		and (shell.get_node("%PropertyDifficultyPicker") as OptionButton).disabled == difficulty_disabled \
+		and (shell.get_node("%PropertyCollectedFlag") as CheckBox).disabled == collected_disabled \
+		and (shell.get_node("%ApplyObjectProperties") as Button).disabled == apply_disabled
+
+func _tool_scroll_reveal_snapshot(tool_scroll: ScrollContainer, button: Control) -> Dictionary:
+	var scroll_rect := tool_scroll.get_global_rect()
+	var button_rect := button.get_global_rect()
+	var intersection := scroll_rect.intersection(button_rect)
+	var vscroll := tool_scroll.get_v_scroll_bar()
+	var focus_owner := get_viewport().gui_get_focus_owner()
+	return {
+		"focus_owner": String(focus_owner.name) if focus_owner != null else "",
+		"scroll_vertical": tool_scroll.scroll_vertical,
+		"vbar_value": vscroll.value,
+		"vbar_max": vscroll.max_value,
+		"vbar_page": vscroll.page,
+		"vbar_width": vscroll.size.x if vscroll.visible else 0.0,
+		"inner_viewport_width": scroll_rect.size.x - (vscroll.size.x if vscroll.visible else 0.0),
+		"scroll_rect": scroll_rect,
+		"button_rect": button_rect,
+		"intersection_rect": intersection,
+		"intersection_area": intersection.get_area(),
+		"intersection_width": intersection.size.x,
+		"intersection_height": intersection.size.y,
+		"scroll_width": scroll_rect.size.x,
+		"button_width": button_rect.size.x,
+		"button_height": button_rect.size.y,
+		"vertical_fully_visible": button_rect.position.y >= scroll_rect.position.y - 1.0 \
+			and button_rect.end.y <= scroll_rect.end.y + 1.0,
+		"button_enclosed": scroll_rect.encloses(button_rect),
+		"button_visible": button.is_visible_in_tree(),
+		"scroll_visible": tool_scroll.is_visible_in_tree(),
+		"scroll_ancestry_exact": tool_scroll.is_ancestor_of(button),
+	}
+
+func _first_property_empty_tile(shell: Node) -> Vector2i:
+	var session = shell.get("_session")
+	if session == null:
+		return Vector2i(-1, -1)
+	var occupied := {}
+	for key in ["towns", "resource_nodes", "artifact_nodes", "encounters"]:
+		for placement_value in session.overworld.get(key, []):
+			if placement_value is Dictionary:
+				occupied["%d,%d" % [int(placement_value.get("x", -1)), int(placement_value.get("y", -1))]] = true
+	var map_size := OverworldRules.derive_map_size(session)
+	for y in range(map_size.y):
+		for x in range(map_size.x):
+			if not occupied.has("%d,%d" % [x, y]):
+				return Vector2i(x, y)
+	return Vector2i(-1, -1)
+
+func _first_placement_tile(shell: Node, key: String) -> Vector2i:
+	var session = shell.get("_session")
+	if session == null:
+		return Vector2i(-1, -1)
+	var placements = session.overworld.get(key, [])
+	if not (placements is Array) or placements.is_empty() or not (placements[0] is Dictionary):
+		return Vector2i(-1, -1)
+	return Vector2i(int(placements[0].get("x", -1)), int(placements[0].get("y", -1)))
+
+func _on_focus_probe_signal(signal_id: String) -> void:
+	_focus_signal_counts[signal_id] = int(_focus_signal_counts.get(signal_id, 0)) + 1
+
+func _on_focus_probe_item_selected(_index: int, signal_id: String) -> void:
+	_on_focus_probe_signal(signal_id)
+
+func _focus_background_authority(shell: Node) -> Dictionary:
+	var session = shell.get("_session")
+	return {
+		"working_copy": session.to_dict() if session != null else {},
+		"active_session": SessionState.ensure_active_session().to_dict() if SessionState.has_playable_session() else {},
+		"packages": _package_file_state(),
+		"files": _capture_file_states(_tracked_authority_paths()),
+		"summary_cache": SaveService.validation_summary_cache_snapshot(),
+		"settings": _canonical_settings_transaction(),
+		"profile": CampaignProgression.profile.duplicate(true),
+		"selected_slot": SaveService.get_selected_manual_slot(),
+		"safe_quit": AppRouter.validation_safe_quit_snapshot(),
+		"close_guard": AppRouter.validation_safe_close_guard_snapshot(),
+		"return_route": AppRouter.validation_active_play_return_snapshot(),
+		"outcome_route": AppRouter.validation_scenario_outcome_route_snapshot(),
+	}
 
 func _validate_exclusive_parent_matrix(shell: Node, source_id: String, target_id: String, package_state: Dictionary) -> Dictionary:
 	var rows := [
@@ -805,16 +1240,18 @@ func _first_difference(expected: Variant, actual: Variant, path: String = "root"
 		return ""
 	return "" if expected == actual else "%s differs" % path
 
-func _press_key(keycode: Key) -> void:
+func _press_key(keycode: Key, shift_pressed: bool = false) -> void:
 	var pressed := InputEventKey.new()
 	pressed.keycode = keycode
 	pressed.physical_keycode = keycode
+	pressed.shift_pressed = shift_pressed
 	pressed.pressed = true
 	Input.parse_input_event(pressed)
 	await get_tree().process_frame
 	var released := InputEventKey.new()
 	released.keycode = keycode
 	released.physical_keycode = keycode
+	released.shift_pressed = shift_pressed
 	released.pressed = false
 	Input.parse_input_event(released)
 	await _settle()

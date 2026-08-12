@@ -14603,8 +14603,96 @@ def validate_map_editor_dirty_transition_regression(errors: list[str]) -> None:
         'AppRouter.validation_safe_close_guard_snapshot()',
         'AppRouter.validation_active_play_return_snapshot()',
         'AppRouter.validation_scenario_outcome_route_snapshot()',
+        'const EDITOR_FOCUS_SOURCE_NAMES := [',
+        'const INITIAL_DISABLED_FOCUS_NAMES := [',
+        '_validate_command_focus_matrix',
+        '_exercise_physical_focus_cycles',
+        '_assert_focus_links_exact',
+        '_property_disabled_state_exact',
+        '_focus_background_authority',
+        'source_names.size() != 27',
+        '_unique_strings(source_names).size() != 27',
+        'focus_mode != Control.FOCUS_ALL',
+        '"empty_cycle_count"',
+        '"loaded_cycle_count"',
+        'KEY_TAB, true',
+        'JOY_BUTTON_DPAD_DOWN',
+        'JOY_BUTTON_DPAD_UP',
+        'JOY_BUTTON_A',
+        'KEY_ENTER',
+        '"scroll_positive": tool_scroll.scroll_vertical > 0',
+        '"vertical_fully_visible": bool(reveal_after.get("vertical_fully_visible", false))',
+        '"horizontal_intersection_meaningful": float(reveal_after.get("intersection_width", 0.0)) > 0.0',
+        '"horizontal_intersection_maximal": absf(float(reveal_after.get("intersection_width", 0.0)) - expected_horizontal_intersection) <= 1.0',
+        '"full_height_intersection": absf(float(reveal_after.get("intersection_height", 0.0)) - float(reveal_after.get("button_height", 0.0))) <= 1.0',
+        '"button_width_unchanged": is_equal_approx(float(reveal_after.get("button_width", 0.0)), float(reveal_before.get("button_width", -1.0)))',
+        '"scroll_width_unchanged": is_equal_approx(float(reveal_after.get("scroll_width", 0.0)), float(reveal_before.get("scroll_width", -1.0)))',
+        '"preexisting_1280_overflow_exact": width != 1280 or float(reveal_before.get("button_width", 0.0)) > float(reveal_before.get("inner_viewport_width", 0.0))',
+        '"focus_owner_exact": get_viewport().gui_get_focus_owner() == apply_button',
+        '"button_visible": apply_button.is_visible_in_tree()',
+        '"scroll_ancestry_exact": tool_scroll.is_ancestor_of(apply_button)',
+        '_tool_scroll_reveal_snapshot',
+        '"scroll_changed_or_initially_visible"',
+        '"direct_reveal_diagnostic_only"',
+        'shell.call("_reveal_editor_focus", apply_button)',
+        'tool_scroll.get_v_scroll_bar()',
+        'scroll_rect.intersection(button_rect)',
+        'scroll_rect.size.x - (vscroll.size.x if vscroll.visible else 0.0)',
+        'button_rect.position.y >= scroll_rect.position.y - 1.0',
+        'button_rect.end.y <= scroll_rect.end.y + 1.0',
+        'family_picker.get_popup().visible',
+        'get_viewport().gui_get_focus_owner() != picker',
+        'get_viewport().gui_get_focus_owner() != terrain_picker',
+        'get_viewport().gui_get_focus_owner() != terrain_button',
+        'get_viewport().gui_get_focus_owner() != inspect_button',
+        '_full_authority_state(shell) != empty_authority',
+        '_full_authority_state(shell) != loaded_authority',
+        '_focus_background_authority(shell) != command_background_before',
     ):
         ensure(required_token in report_text, errors, f"Map-editor dirty-transition regression is missing required token: {required_token}")
+
+    focus_source_names = (
+        "MapPackagePicker",
+        "LoadMap",
+        "SaveCopy",
+        "PlayWorkingCopy",
+        "Menu",
+        "InspectTool",
+        "TerrainTool",
+        "TerrainLineTool",
+        "TerrainRectangleTool",
+        "RoadTool",
+        "RoadPathTool",
+        "HeroStartTool",
+        "PlaceObjectTool",
+        "RemoveObjectTool",
+        "MoveObjectTool",
+        "DuplicateObjectTool",
+        "RethemeObjectTool",
+        "FillTerrain",
+        "RestoreSelectedTile",
+        "TerrainPicker",
+        "ObjectFamilyPicker",
+        "ObjectContentPicker",
+        "SelectedObjectPicker",
+        "PropertyOwnerPicker",
+        "PropertyDifficultyPicker",
+        "PropertyCollectedFlag",
+        "ApplyObjectProperties",
+    )
+    report_focus_source_match = re.search(
+        r"const EDITOR_FOCUS_SOURCE_NAMES := \[(.*?)\n\]",
+        report_text,
+        flags=re.DOTALL,
+    )
+    ensure(report_focus_source_match is not None, errors, "Map Editor focus regression must declare its exact 27-control source membership")
+    if report_focus_source_match is not None:
+        report_focus_names = tuple(re.findall(r'\"([^\"]+)\"', report_focus_source_match.group(1)))
+        ensure(
+            report_focus_names == focus_source_names,
+            errors,
+            "Map Editor focus regression must pin the exact ordered 27-control source membership",
+        )
 
     if MAP_EDITOR_DIRTY_TRANSITION_REGRESSION_SCENE_PATH.exists():
         scene_text = MAP_EDITOR_DIRTY_TRANSITION_REGRESSION_SCENE_PATH.read_text(encoding="utf-8")
@@ -14614,6 +14702,97 @@ def validate_map_editor_dirty_transition_regression(errors: list[str]) -> None:
             "Map-editor dirty-transition regression scene must load its focused script",
         )
     editor_text = MAP_EDITOR_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")',
+        "_connect_editor_focus_visibility()",
+        'call_deferred("_configure_editor_keyboard_focus")',
+        "func _editor_focus_surfaces() -> Array:",
+        "func _configure_editor_keyboard_focus() -> void:",
+        "FrontierVisualKit.configure_focus_cycle(_editor_focus_surfaces())",
+        "FrontierVisualKit.is_keyboard_focusable(current)",
+        "FrontierVisualKit.grab_keyboard_focus(",
+        "func _on_editor_focus_entered(control: Control) -> void:",
+        "func _reveal_editor_focus(control: Control) -> void:",
+        "control.focus_entered.is_connected(callback)",
+        "_tool_scroll.ensure_control_visible(control)",
+        "button.focus_mode = Control.FOCUS_ALL",
+    ):
+        ensure(required_token in editor_text, errors, f"MapEditorShell.gd is missing command-focus token: {required_token}")
+    editor_focus_variables = (
+        "_map_package_picker",
+        "_load_map_button",
+        "_save_copy_button",
+        "_play_button",
+        "_menu_button",
+        "_inspect_tool_button",
+        "_terrain_tool_button",
+        "_terrain_line_tool_button",
+        "_terrain_rectangle_tool_button",
+        "_road_tool_button",
+        "_road_path_tool_button",
+        "_hero_start_tool_button",
+        "_place_object_tool_button",
+        "_remove_object_tool_button",
+        "_move_object_tool_button",
+        "_duplicate_object_tool_button",
+        "_retheme_object_tool_button",
+        "_fill_terrain_button",
+        "_restore_tile_button",
+        "_terrain_picker",
+        "_object_family_picker",
+        "_object_content_picker",
+        "_selected_object_picker",
+        "_property_owner_picker",
+        "_property_difficulty_picker",
+        "_property_collected_check",
+        "_property_apply_button",
+    )
+    editor_focus_source_match = re.search(
+        r"func _editor_focus_surfaces\(\) -> Array:(.*?)(?=\n\nfunc )",
+        editor_text,
+        flags=re.DOTALL,
+    )
+    ensure(editor_focus_source_match is not None, errors, "MapEditorShell.gd must expose the bounded command-focus source")
+    if editor_focus_source_match is not None:
+        editor_focus_members = tuple(re.findall(r"\n\t\t(_[a-z0-9_]+),", editor_focus_source_match.group(1)))
+        ensure(
+            editor_focus_members == editor_focus_variables,
+            errors,
+            "MapEditorShell.gd command-focus source must retain the exact ordered 27 controls",
+        )
+    refresh_match = re.search(
+        r"func _refresh_state\(\) -> void:(.*?)(?=\n\nfunc )",
+        editor_text,
+        flags=re.DOTALL,
+    )
+    ensure(refresh_match is not None, errors, "MapEditorShell.gd must retain its refresh function")
+    if refresh_match is not None:
+        refresh_body = refresh_match.group(1)
+        focus_index = refresh_body.find("_configure_editor_keyboard_focus()")
+        disabled_sync_indices = [
+            refresh_body.find("_sync_property_controls()"),
+            refresh_body.find("_sync_map_package_load_surface()"),
+            refresh_body.find("_sync_save_copy_surface()"),
+            refresh_body.find("_sync_play_handoff_surface()"),
+            refresh_body.find("_sync_restore_tile_surface()"),
+        ]
+        ensure(
+            focus_index >= 0 and all(index >= 0 and index < focus_index for index in disabled_sync_indices),
+            errors,
+            "Map Editor must rebuild keyboard focus only after every dynamic disabled-control sync",
+        )
+    visual_theme_match = re.search(
+        r"func _apply_visual_theme\(\) -> void:(.*?)(?=\n\nfunc )",
+        editor_text,
+        flags=re.DOTALL,
+    )
+    ensure(visual_theme_match is not None, errors, "MapEditorShell.gd must retain visual-theme focus setup")
+    if visual_theme_match is not None:
+        ensure(
+            "Control.FOCUS_NONE" not in visual_theme_match.group(1),
+            errors,
+            "Map Editor visual theming must not remove keyboard/controller focus from command buttons",
+        )
     for required_token in (
         'var _forwarding_dirty_transition_root_physical_input := false',
         'not root_window.window_input.is_connected(_on_root_window_input)',
