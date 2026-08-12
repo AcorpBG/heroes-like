@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `map-editor-generated-package-play-copy-restore-tile-baseline-10184`. Generated-package Map Editor Play Copy now carries the immutable loaded-package baseline through the in-memory return handoff, so Restore Tile remains exact without authored-scenario fallback, disk reload, generated-content registration, or Native RMG changes.
 - Latest completed implementation slice: `accessibility-map-editor-canvas-live-context-coalescing-10184`. The Map Editor canvas now exposes one bounded current tile/tool/action live context, keeps the visual working-copy status non-live, and coalesces held keyboard/controller navigation to the final settled destination without changing editor authority.
 - Latest completed implementation slice: `ux-overworld-selected-route-map-cue-coherence-10184`. Targeted Overworld route selection now rematerializes the visible MapCue and tooltip from the same current compact primary action and route decision without stale prior-destination instructions or rich-route construction on compact paths.
 - Latest completed implementation slice: `accessibility-overworld-route-cursor-live-context-10184`. The Overworld right-stick route cursor now exposes bounded current-destination context and coalesced held-repeat announcements before A commits, without changing route selection, movement, or save authority.
