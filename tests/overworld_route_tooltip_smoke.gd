@@ -174,7 +174,7 @@ func _assert_route_cue_width(width: int) -> Dictionary:
 		"status": "reachable", "action_kind": "move/collect", "steps": 2, "cost": 2, "after": 12, "next": {"x": 1, "y": 1},
 		"tooltip": "Advance to Site Wood Wagon. Move to Wood Wagon; 2 steps, Move 14->12. Try Advance to Site with Enter or Space now.",
 		"required": [],
-		"forbidden": ["Riverwatch Hold route", "Visit Town"],
+		"forbidden": ["Route: Riverwatch Hold |", "Visit Town"],
 	}):
 		await _discard_host(host)
 		return {}
@@ -187,7 +187,7 @@ func _assert_route_cue_width(width: int) -> Dictionary:
 		"status": "reachable", "action_kind": "move", "steps": 1, "cost": 1, "after": 13, "next": {"x": 2, "y": 2},
 		"tooltip": "Route: 2,2 | Move | 1 step | reachable today | Move 14->13 | Next step: 2,2 via Grassland (arrives at target). Press Enter or Space to commit this route order. Try March with Enter or Space now.",
 		"required": [],
-		"forbidden": ["Wood Wagon route", "Riverwatch Hold route", "Advance to Site", "Visit Town"],
+		"forbidden": ["Wood Wagon route", "Route: Riverwatch Hold |", "Advance to Site", "Visit Town"],
 	}):
 		await _discard_host(host)
 		return {}
@@ -221,7 +221,7 @@ func _assert_route_cue_width(width: int) -> Dictionary:
 		"button_tooltip": "Current position. Select a mapped destination to plot a route.", "destination": "Frontier Rare Exchange",
 		"status": "current", "action_kind": "hold", "steps": 0, "cost": 0, "after": 14, "next": {"x": -1, "y": -1},
 		"required": ["Route: Frontier Rare Exchange", "current tile", "Select a visible destination or open a command drawer."],
-		"forbidden": ["Wood Wagon route", "Riverwatch Hold route", "Advance to Site", "Visit Town", "Commit March", "Try:"],
+		"forbidden": ["Wood Wagon route", "Route: Riverwatch Hold |", "Advance to Site", "Visit Town", "Commit March", "Try:"],
 	}):
 		await _discard_host(host)
 		return {}
@@ -245,7 +245,7 @@ func _assert_route_cue_width(width: int) -> Dictionary:
 		"status": "no_movement", "action_kind": "move/collect", "steps": 2, "cost": 2, "after": 0, "next": {"x": 1, "y": 1},
 		"reason": "No movement left today.",
 		"required": ["Route: Wood Wagon", "No movement left today.", "Decision Brief"],
-		"forbidden": ["Riverwatch Hold route", "Visit Town", "Try Advance to Site with Enter or Space now."],
+		"forbidden": ["Route: Riverwatch Hold |", "Visit Town", "Try Advance to Site with Enter or Space now."],
 	}):
 		await _discard_host(host)
 		return {}
@@ -263,6 +263,7 @@ func _assert_route_cue_width(width: int) -> Dictionary:
 		await _discard_host(host)
 		return {}
 
+	var feedback_event_before := _rendered_event_payload(normal_route_restored)
 	shell.call("_record_action_feedback", "system", "Route feedback priority")
 	var feedback: Dictionary = shell.call("validation_select_tile", 0, 2)
 	var feedback_checks := {
@@ -270,8 +271,9 @@ func _assert_route_cue_width(width: int) -> Dictionary:
 		"cue_feedback_priority": String(feedback.get("map_cue_text", "")) == "System: Route feedback priority",
 		"tooltip_feedback_priority": String(feedback.get("map_cue_tooltip_text", "")).begins_with("System: Route feedback priority."),
 		"route_not_rendered_over_feedback": not String(feedback.get("map_cue_text", "")).contains("Visit Town"),
+		"event_feedback_byte_exact": _rendered_event_payload(feedback) == feedback_event_before,
 	}
-	if not _checks_exact(feedback_checks):
+	if not _checks_exact(feedback_checks) or not _assert_current_readiness_surfaces(shell, feedback, "%d feedback-preserved Town" % width, ["Wood Wagon route", "Advance to Site"], false):
 		_fail("%d route refresh did not preserve action-feedback cue priority." % width, {"checks": feedback_checks, "snapshot": _route_cue_payload(feedback)})
 		await _discard_host(host)
 		return {}
@@ -279,6 +281,42 @@ func _assert_route_cue_width(width: int) -> Dictionary:
 	var restored_town: Dictionary = shell.call("validation_select_tile", 0, 2)
 	if _route_cue_payload(restored_town) != town_payload:
 		_fail("%d clearing feedback did not restore the exact current Town cue." % width, _route_cue_payload(restored_town))
+		await _discard_host(host)
+		return {}
+
+	var recap := {
+		"happened": "Route recap remains authoritative.",
+		"affected": "The prior order result remains visible.",
+		"why_it_matters": "A destination preview must not overwrite resolved action context.",
+		"next_step": "Review the next route without replacing this recap.",
+		"cue_text": "Route recap remains authoritative",
+		"tooltip_text": "Resolved Route Recap\n- The prior order result remains visible.",
+	}
+	shell.set("_last_action_recap", recap.duplicate(true))
+	shell.call("_refresh")
+	var recap_before: Dictionary = shell.call("validation_snapshot")
+	var recap_event_before := _rendered_event_payload(recap_before)
+	var recap_wood: Dictionary = shell.call("validation_select_tile", 1, 0)
+	var recap_checks := {
+		"action_current": String(recap_wood.get("primary_action_id", "")) == "advance_route",
+		"recap_event_byte_exact": _rendered_event_payload(recap_wood) == recap_event_before,
+		"recap_payload_exact": recap_wood.get("post_action_recap", {}) == recap,
+	}
+	if not _checks_exact(recap_checks) or not _assert_current_readiness_surfaces(shell, recap_wood, "%d recap-preserved Wood" % width, ["Route: Riverwatch Hold |", "Visit Town"], false):
+		_fail("%d targeted route refresh overwrote the active recap Event surface or left other readiness controls stale." % width, {
+			"checks": recap_checks,
+			"before": recap_event_before,
+			"after": _rendered_event_payload(recap_wood),
+		})
+		await _discard_host(host)
+		return {}
+	shell.set("_last_action_recap", {})
+	var recap_released: Dictionary = shell.call("validation_select_tile", 1, 0)
+	if _route_cue_payload(recap_released) != wood_payload:
+		_fail("%d clearing the recap did not restore the exact current Wood readiness surface." % width, {
+			"before": wood_payload,
+			"after": _route_cue_payload(recap_released),
+		})
 		await _discard_host(host)
 		return {}
 
@@ -296,12 +334,14 @@ func _assert_route_cue_width(width: int) -> Dictionary:
 		return {}
 	var opening_text := String(opening.get("map_cue_text", ""))
 	var opening_tooltip := String(opening.get("map_cue_tooltip_text", ""))
+	var opening_readiness_payload := _rendered_readiness_payload(opening)
 	var pending: Dictionary = shell.call("validation_select_tile", 1, 0)
 	var pending_checks := {
 		"action_advanced": String(pending.get("primary_action_id", "")) == "advance_route",
 		"action_label_current": String(pending.get("primary_action", {}).get("label", "")) == "Advance to Site",
 		"cue_opening_byte_exact": String(pending.get("map_cue_text", "")) == opening_text,
 		"tooltip_opening_byte_exact": String(pending.get("map_cue_tooltip_text", "")) == opening_tooltip,
+		"readiness_opening_byte_exact": _rendered_readiness_payload(pending) == opening_readiness_payload,
 	}
 	if not _checks_exact(pending_checks):
 		_fail("%d targeted Wood selection changed the exact full generated-opening MapCue surface." % width, {"checks": pending_checks, "opening": _route_cue_payload(opening), "after": _route_cue_payload(pending)})
@@ -313,6 +353,7 @@ func _assert_route_cue_width(width: int) -> Dictionary:
 		"action_current": String(pending_released.get("primary_action_id", "")) == "advance_route",
 		"wood_cue_current": String(pending_released.get("map_cue_text", "")) == "Try: Advance to Site [Enter]",
 		"compact_tooltip_exact": String(pending_released.get("map_cue_tooltip_text", "")) == GENERATED_COMPACT_MAP_CUE_TOOLTIP,
+		"readiness_compact_byte_exact": _rendered_readiness_payload(pending_released) == opening_readiness_payload,
 	}
 	if not _checks_exact(pending_release_checks):
 		_fail("%d pending release did not publish current Wood text with compact generated tooltip." % width, {"checks": pending_release_checks, "snapshot": _route_cue_payload(pending_released)})
@@ -390,7 +431,90 @@ func _assert_exact_route_surface(shell: Node, snapshot: Dictionary, expected: Di
 			"checks": checks, "snapshot": _route_cue_payload(snapshot),
 		})
 		return false
+	if not _assert_current_readiness_surfaces(shell, snapshot, String(expected.get("label", "route")), expected.get("forbidden", []), true):
+		return false
 	return true
+
+func _assert_current_readiness_surfaces(shell: Node, snapshot: Dictionary, label: String, stale_tokens: Array, expect_event_current: bool) -> bool:
+	var session = shell.get("_session")
+	var readiness: Dictionary = shell.call("_field_readiness_surface")
+	var end_turn: Dictionary = shell.call("_end_turn_confirmation_surface", readiness)
+	var drawer: Dictionary = shell.call("_drawer_handoff_surfaces", readiness)
+	var expected_objective_tooltip := String(shell.call("_join_tooltip_sections", [
+		OverworldRules.describe_objective_stakes_board(session),
+		String(readiness.get("tooltip_text", "")),
+	]))
+	var event_surface: Dictionary = _expected_route_event_surface(shell, readiness)
+	var action_context: Dictionary = shell.call("_action_context_surface", event_surface, readiness)
+	var expected_event_visible := String(shell.call("_trim_rail_visible_text", String(action_context.get("visible_text", "")), 1, 42))
+	var command: Dictionary = drawer.get("command", {}) if drawer.get("command", {}) is Dictionary else {}
+	var frontier: Dictionary = drawer.get("frontier", {}) if drawer.get("frontier", {}) is Dictionary else {}
+	var checks := {
+		"field_readiness_current": snapshot.get("field_readiness", {}) == readiness,
+		"objective_brief_tooltip_current": String(snapshot.get("objective_brief_tooltip_text", "")) == expected_objective_tooltip,
+		"event_visible_current_or_preserved": not expect_event_current or String(snapshot.get("event_visible_text", "")) == expected_event_visible,
+		"event_tooltip_current_or_preserved": not expect_event_current or String(snapshot.get("event_tooltip_text", "")) == String(action_context.get("tooltip_text", "")),
+		"end_turn_payload_current": snapshot.get("end_turn_confirmation", {}) == end_turn,
+		"end_turn_button_current": String(snapshot.get("end_turn_button_text", "")) == String(end_turn.get("button_text", "")),
+		"end_turn_tooltip_current": String(snapshot.get("end_turn_tooltip_text", "")) == String(end_turn.get("tooltip_text", "")),
+		"drawer_payload_current": snapshot.get("drawer_handoff", {}) == drawer,
+		"command_button_current": String(snapshot.get("command_drawer_button_text", "")) == String(command.get("button_text", "")),
+		"command_tooltip_current": String(snapshot.get("command_drawer_tooltip_text", "")) == String(command.get("tooltip_text", "")),
+		"frontier_button_current": String(snapshot.get("frontier_drawer_button_text", "")) == String(frontier.get("button_text", "")),
+		"frontier_tooltip_current": String(snapshot.get("frontier_drawer_tooltip_text", "")) == String(frontier.get("tooltip_text", "")),
+	}
+	var actual_text_parts: Array = [
+		String(snapshot.get("objective_brief_tooltip_text", "")),
+		String(snapshot.get("end_turn_button_text", "")),
+		String(snapshot.get("end_turn_tooltip_text", "")),
+		String(snapshot.get("command_drawer_button_text", "")),
+		String(snapshot.get("command_drawer_tooltip_text", "")),
+		String(snapshot.get("frontier_drawer_button_text", "")),
+		String(snapshot.get("frontier_drawer_tooltip_text", "")),
+	]
+	if expect_event_current:
+		actual_text_parts.append(String(snapshot.get("event_visible_text", "")))
+		actual_text_parts.append(String(snapshot.get("event_tooltip_text", "")))
+	var actual_text := "\n".join(actual_text_parts)
+	for stale_token_value in stale_tokens:
+		var stale_token := String(stale_token_value)
+		checks["stale_absent_%s" % stale_token] = stale_token == "" or not actual_text.contains(stale_token)
+	if not _checks_exact(checks):
+		_fail("Route tooltip %s rendered readiness controls were not current and stale-free." % label, {
+			"checks": checks,
+			"expected": {
+				"readiness": readiness,
+				"objective_tooltip": expected_objective_tooltip,
+				"event": action_context,
+				"end_turn": end_turn,
+				"drawer": drawer,
+			},
+			"actual": _rendered_readiness_payload(snapshot),
+		})
+		return false
+	return true
+
+func _expected_route_event_surface(shell: Node, readiness: Dictionary) -> Dictionary:
+	var session = shell.get("_session")
+	var event_surface := OverworldRules.describe_event_feed_surface(
+		session,
+		String(shell.get("_last_message")),
+		String(shell.get("_last_turn_resolution_text")),
+		String(shell.get("_last_enemy_activity_text")),
+		shell.get("_last_enemy_activity_events"),
+		shell.get("_last_action_recap")
+	)
+	event_surface["field_readiness"] = readiness
+	if bool(shell.call("_field_feed_is_idle")):
+		var visible_text := String(readiness.get("visible_text", "")).strip_edges()
+		if visible_text != "":
+			event_surface["visible_text"] = visible_text
+		event_surface["tooltip_text"] = String(shell.call("_join_tooltip_sections", [
+			String(event_surface.get("tooltip_text", "")),
+			String(readiness.get("tooltip_text", "")),
+		]))
+	event_surface["dispatch_text"] = OverworldRules.describe_dispatch(session, String(shell.get("_last_message")))
+	return event_surface
 
 func _route_cue_payload(snapshot: Dictionary) -> Dictionary:
 	return {
@@ -403,6 +527,25 @@ func _route_cue_payload(snapshot: Dictionary) -> Dictionary:
 		"selected_route_decision": snapshot.get("selected_route_decision", {}).duplicate(true),
 		"map_cue_text": String(snapshot.get("map_cue_text", "")),
 		"map_cue_tooltip_text": String(snapshot.get("map_cue_tooltip_text", "")),
+		"rendered_readiness": _rendered_readiness_payload(snapshot),
+	}
+
+func _rendered_event_payload(snapshot: Dictionary) -> Dictionary:
+	return {
+		"visible_text": String(snapshot.get("event_visible_text", "")),
+		"tooltip_text": String(snapshot.get("event_tooltip_text", "")),
+	}
+
+func _rendered_readiness_payload(snapshot: Dictionary) -> Dictionary:
+	return {
+		"objective_brief_tooltip_text": String(snapshot.get("objective_brief_tooltip_text", "")),
+		"event": _rendered_event_payload(snapshot),
+		"end_turn_button_text": String(snapshot.get("end_turn_button_text", "")),
+		"end_turn_tooltip_text": String(snapshot.get("end_turn_tooltip_text", "")),
+		"command_drawer_button_text": String(snapshot.get("command_drawer_button_text", "")),
+		"command_drawer_tooltip_text": String(snapshot.get("command_drawer_tooltip_text", "")),
+		"frontier_drawer_button_text": String(snapshot.get("frontier_drawer_button_text", "")),
+		"frontier_drawer_tooltip_text": String(snapshot.get("frontier_drawer_tooltip_text", "")),
 	}
 
 func _movement_mirror_checks(session, expected: Dictionary) -> Dictionary:

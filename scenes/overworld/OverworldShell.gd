@@ -2111,6 +2111,7 @@ func _refresh_with_request(request: Dictionary) -> void:
 	if _refresh_request_has_phase(request, REFRESH_PHASE_STATUS_SURFACES):
 		compact_generated = _refresh_status_surfaces(generated_surface_start)
 	elif _refresh_request_has_phase(request, REFRESH_PHASE_CONTEXT_ROUTE):
+		_refresh_selected_route_readiness_surfaces()
 		_refresh_map_cue_surface()
 		_refresh_context_tile_surface()
 		_validation_profile["last_route_tooltip_context_drawers"] = {
@@ -2445,6 +2446,46 @@ func _refresh_map_cue_surface() -> void:
 		_map_cue_label.tooltip_text = GENERATED_COMPACT_MAP_CUE_TOOLTIP
 		return
 	_map_cue_label.tooltip_text = _map_cue_tooltip()
+
+func _refresh_selected_route_readiness_surfaces() -> void:
+	if _generated_initial_open_pending() or _use_generated_compact_refresh():
+		return
+	var readiness_surface := _field_readiness_surface()
+	_objective_brief_label.tooltip_text = _join_tooltip_sections([
+		OverworldRules.describe_objective_stakes_board(_session),
+		String(readiness_surface.get("tooltip_text", "")),
+	])
+	if _field_feed_is_idle() and _action_feedback.is_empty():
+		var event_surface := OverworldRules.describe_event_feed_surface(
+			_session,
+			_last_message,
+			_last_turn_resolution_text,
+			_last_enemy_activity_text,
+			_last_enemy_activity_events,
+			_last_action_recap
+		)
+		event_surface["field_readiness"] = readiness_surface
+		var visible_text := String(readiness_surface.get("visible_text", "")).strip_edges()
+		if visible_text != "":
+			event_surface["visible_text"] = visible_text
+		event_surface["tooltip_text"] = _join_tooltip_sections([
+			String(event_surface.get("tooltip_text", "")),
+			String(readiness_surface.get("tooltip_text", "")),
+		])
+		event_surface["dispatch_text"] = OverworldRules.describe_dispatch(_session, _last_message)
+		var action_context_surface := _action_context_surface(event_surface, readiness_surface)
+		_set_rail_text(
+			_event_label,
+			String(action_context_surface.get("tooltip_text", "")),
+			String(action_context_surface.get("visible_text", _rail_log_text())),
+			1
+		)
+	var end_turn_check := _end_turn_confirmation_surface(readiness_surface)
+	_end_turn_button.text = String(end_turn_check.get("button_text", "End Turn"))
+	var end_turn_tooltip := String(end_turn_check.get("tooltip_text", "")).strip_edges()
+	if end_turn_tooltip != "":
+		_end_turn_button.tooltip_text = end_turn_tooltip
+	_refresh_drawer_handoff_cues(readiness_surface)
 
 func _refresh_context_tile_surface() -> void:
 	var context_tile_profile_start := _debug_refresh_profile_begin("refresh_context_tile_text")
@@ -5866,6 +5907,9 @@ func _field_readiness_surface(base_event_surface: Dictionary = {}) -> Dictionary
 	var simple_destination := _selected_route_simple_destination_surface()
 	if not simple_destination.is_empty() and not _is_selected_owned_town_visit_target():
 		return _field_readiness_simple_route_surface(simple_destination, progress_line, next_step, movement_line)
+	var compact_interaction_destination := _selected_route_compact_interaction_destination_surface()
+	if not compact_interaction_destination.is_empty() and not _is_selected_owned_town_visit_target():
+		return _field_readiness_simple_route_surface(compact_interaction_destination, progress_line, next_step, movement_line)
 	var primary_action := _current_primary_action()
 	var primary_line := "Primary order: select a visible destination."
 	if not primary_action.is_empty():
@@ -5953,8 +5997,10 @@ func _field_readiness_simple_route_surface(simple_destination: Dictionary, progr
 	_profile_add("field_readiness_simple_route_fast_path", 1)
 	if destination_kind == "current":
 		_profile_add("field_readiness_simple_current_route_fast_path", 1)
-	else:
+	elif destination_kind == "open":
 		_profile_add("field_readiness_simple_open_route_fast_path", 1)
+	else:
+		_profile_add("field_readiness_compact_interaction_route_fast_path", 1)
 	_validation_profile["last_field_readiness_simple_route_fast_path"] = {
 		"destination_interaction_kind": destination_kind,
 		"route_status": String(simple_destination.get("route_status", route_decision.get("status", ""))),
@@ -7806,6 +7852,7 @@ func _debug_enrich_command_snapshot(snapshot: Dictionary) -> Dictionary:
 		"field_readiness_hits": int(profile.get("field_readiness_simple_route_fast_path", 0)),
 		"field_readiness_open_hits": int(profile.get("field_readiness_simple_open_route_fast_path", 0)),
 		"field_readiness_current_hits": int(profile.get("field_readiness_simple_current_route_fast_path", 0)),
+		"field_readiness_compact_interaction_hits": int(profile.get("field_readiness_compact_interaction_route_fast_path", 0)),
 		"field_readiness_last": _profile_log_duplicate_dict(profile.get("last_field_readiness_simple_route_fast_path", {})),
 	}
 	enriched["save_observed"] = save_observed

@@ -18932,7 +18932,7 @@ def validate_overworld_route_map_cue_refresh(errors: list[str]) -> None:
         "Overworld MapCue refresh must retain the exact generated compact tooltip policy constant",
     )
     cue_helper_match = re.search(
-        r"func _refresh_map_cue_surface\(\) -> void:\n(?P<body>.*?)(?=\nfunc _refresh_context_tile_surface)",
+        r"func _refresh_map_cue_surface\(\) -> void:\n(?P<body>.*?)(?=\nfunc _refresh_selected_route_readiness_surfaces)",
         overworld_text,
         re.S,
     )
@@ -18966,6 +18966,64 @@ def validate_overworld_route_map_cue_refresh(errors: list[str]) -> None:
             "Focused MapCue helper must hold pending state, then update text, then choose compact or current tooltip in order",
         )
 
+    route_readiness_match = re.search(
+        r"func _refresh_selected_route_readiness_surfaces\(\) -> void:\n(?P<body>.*?)(?=\nfunc _refresh_context_tile_surface)",
+        overworld_text,
+        re.S,
+    )
+    ensure(route_readiness_match is not None, errors, "Could not isolate selected-route rendered-readiness helper")
+    if route_readiness_match is not None:
+        route_readiness_body = route_readiness_match.group("body")
+        generated_guard = "if _generated_initial_open_pending() or _use_generated_compact_refresh():"
+        generated_guard_index = route_readiness_body.find(generated_guard)
+        generated_return_index = route_readiness_body.find("\n\t\treturn", generated_guard_index)
+        readiness_index = route_readiness_body.find("var readiness_surface := _field_readiness_surface()")
+        objective_index = route_readiness_body.find("_objective_brief_label.tooltip_text = _join_tooltip_sections([", readiness_index)
+        event_gate = "if _field_feed_is_idle() and _action_feedback.is_empty():"
+        event_gate_index = route_readiness_body.find(event_gate, objective_index)
+        event_source_index = route_readiness_body.find("var event_surface := OverworldRules.describe_event_feed_surface(", event_gate_index)
+        event_readiness_index = route_readiness_body.find('event_surface["field_readiness"] = readiness_surface', event_source_index)
+        event_context_index = route_readiness_body.find("var action_context_surface := _action_context_surface(event_surface, readiness_surface)", event_readiness_index)
+        event_render_index = route_readiness_body.find("_set_rail_text(", event_context_index)
+        end_turn_index = route_readiness_body.find("var end_turn_check := _end_turn_confirmation_surface(readiness_surface)", event_render_index)
+        drawer_index = route_readiness_body.find("_refresh_drawer_handoff_cues(readiness_surface)", end_turn_index)
+        ensure(
+            route_readiness_body.count("_field_readiness_surface()") == 1
+            and -1 < generated_guard_index < generated_return_index < readiness_index < objective_index
+            < event_gate_index < event_source_index < event_readiness_index < event_context_index < event_render_index
+            < end_turn_index < drawer_index,
+            errors,
+            "Selected-route readiness must return for generated policies, compute readiness once, refresh Objective/Event/EndTurn/drawer in exact order, and gate Event behind idle plus empty feedback",
+        )
+        for required_token in (
+            "OverworldRules.describe_objective_stakes_board(_session)",
+            'String(readiness_surface.get("tooltip_text", ""))',
+            "_last_message",
+            "_last_turn_resolution_text",
+            "_last_enemy_activity_text",
+            "_last_enemy_activity_events",
+            "_last_action_recap",
+            'String(action_context_surface.get("tooltip_text", ""))',
+            'String(action_context_surface.get("visible_text", _rail_log_text()))',
+            '_end_turn_button.text = String(end_turn_check.get("button_text", "End Turn"))',
+            'var end_turn_tooltip := String(end_turn_check.get("tooltip_text", "")).strip_edges()',
+            "if end_turn_tooltip != \"\":",
+            "_end_turn_button.tooltip_text = end_turn_tooltip",
+        ):
+            ensure(required_token in route_readiness_body, errors, f"Selected-route readiness helper is missing exact surface token: {required_token}")
+        for forbidden_token in (
+            "_refresh_status_surfaces(",
+            "_refresh_tooltip_context_drawer_surfaces(",
+            "_refresh_action_rails(",
+            "_refresh_save_surface(",
+            "_selected_route_decision_surface(",
+            "_selected_route_destination_actions(",
+            "_current_primary_action(",
+            "_build_path(",
+            "OverworldRules.route_",
+        ):
+            ensure(forbidden_token not in route_readiness_body, errors, f"Selected-route readiness helper must not broaden or recompute through {forbidden_token}")
+
     status_match = re.search(
         r"func _refresh_status_surfaces\(generated_surface_start: int\) -> bool:\n(?P<body>.*?)(?=\nfunc _refresh_map_cue_surface)",
         overworld_text,
@@ -18995,15 +19053,17 @@ def validate_overworld_route_map_cue_refresh(errors: list[str]) -> None:
     if refresh_match is not None:
         refresh_body = refresh_match.group("body")
         action_index = refresh_body.find("_refresh_selected_route_action_surface()")
+        readiness_index = refresh_body.find("_refresh_selected_route_readiness_surfaces()")
         cue_index = refresh_body.find("_refresh_map_cue_surface()")
         context_index = refresh_body.find("_refresh_context_tile_surface()")
         ensure(
-            0 <= action_index < cue_index < context_index,
+            refresh_body.count("_refresh_selected_route_readiness_surfaces()") == 1
+            and 0 <= action_index < readiness_index < cue_index < context_index,
             errors,
-            "Incremental route refresh must update cached action before MapCue and context tile surfaces",
+            "Incremental route refresh must update cached action, rendered readiness, MapCue, then context tile exactly once in order",
         )
         route_cue_branch_match = re.search(
-            r"elif _refresh_request_has_phase\(request, REFRESH_PHASE_CONTEXT_ROUTE\):\n\s*_refresh_map_cue_surface\(\)\n(?P<body>.*?)(?=\n\s*OverworldRules.end_normalized_read_scope)",
+            r"elif _refresh_request_has_phase\(request, REFRESH_PHASE_CONTEXT_ROUTE\):\n\s*_refresh_selected_route_readiness_surfaces\(\)\n\s*_refresh_map_cue_surface\(\)\n(?P<body>.*?)(?=\n\s*OverworldRules.end_normalized_read_scope)",
             refresh_body,
             re.S,
         )
@@ -19195,15 +19255,66 @@ def validate_overworld_route_map_cue_refresh(errors: list[str]) -> None:
         owned_town_guard = "if not simple_destination.is_empty() and not _is_selected_owned_town_visit_target():"
         owned_town_guard_index = field_readiness_body.find(owned_town_guard)
         simple_return_index = field_readiness_body.find("return _field_readiness_simple_route_surface(simple_destination, progress_line, next_step, movement_line)", owned_town_guard_index)
-        primary_action_index = field_readiness_body.find("var primary_action := _current_primary_action()", simple_return_index)
+        compact_destination_index = field_readiness_body.find("var compact_interaction_destination := _selected_route_compact_interaction_destination_surface()", simple_return_index)
+        compact_owned_town_guard = "if not compact_interaction_destination.is_empty() and not _is_selected_owned_town_visit_target():"
+        compact_owned_town_guard_index = field_readiness_body.find(compact_owned_town_guard, compact_destination_index)
+        compact_return_index = field_readiness_body.find("return _field_readiness_simple_route_surface(compact_interaction_destination, progress_line, next_step, movement_line)", compact_owned_town_guard_index)
+        primary_action_index = field_readiness_body.find("var primary_action := _current_primary_action()", compact_return_index)
         town_handoff_index = field_readiness_body.find("var town_entry_handoff := _town_entry_handoff_surface()", primary_action_index)
         returned_handoff_index = field_readiness_body.find('"town_entry_handoff": town_entry_handoff', town_handoff_index)
         ensure(
             field_readiness_body.count(owned_town_guard) == 1
+            and field_readiness_body.count(compact_owned_town_guard) == 1
             and field_readiness_body.count('"town_entry_handoff": town_entry_handoff') == 1
-            and -1 < simple_destination_index < owned_town_guard_index < simple_return_index < primary_action_index < town_handoff_index < returned_handoff_index,
+            and -1 < simple_destination_index < owned_town_guard_index < simple_return_index < compact_destination_index < compact_owned_town_guard_index < compact_return_index < primary_action_index < town_handoff_index < returned_handoff_index,
             errors,
-            "Field readiness must materialize simple destination, bypass simple return for owned Town, compute primary action and Town handoff, then return that exact handoff",
+            "Field readiness must resolve guarded simple then compact interaction destinations before its unique rich primary-action and Town-handoff path",
+        )
+
+    field_readiness_simple_match = re.search(
+        r"func _field_readiness_simple_route_surface\(simple_destination: Dictionary, progress_line: String, next_step: String, movement_line: String\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc _simple_route_primary_order_line)",
+        overworld_text,
+        re.S,
+    )
+    ensure(field_readiness_simple_match is not None, errors, "Could not isolate simple and compact field-readiness profiling")
+    if field_readiness_simple_match is not None:
+        field_readiness_simple_body = field_readiness_simple_match.group("body")
+        destination_kind_index = field_readiness_simple_body.find('var destination_kind := String(simple_destination.get("kind", "open"))')
+        total_counter_index = field_readiness_simple_body.find('_profile_add("field_readiness_simple_route_fast_path", 1)', destination_kind_index)
+        current_guard_index = field_readiness_simple_body.find('if destination_kind == "current":', total_counter_index)
+        current_counter_index = field_readiness_simple_body.find('_profile_add("field_readiness_simple_current_route_fast_path", 1)', current_guard_index)
+        open_guard_index = field_readiness_simple_body.find('elif destination_kind == "open":', current_counter_index)
+        open_counter_index = field_readiness_simple_body.find('_profile_add("field_readiness_simple_open_route_fast_path", 1)', open_guard_index)
+        compact_else_index = field_readiness_simple_body.find("else:", open_counter_index)
+        compact_counter_index = field_readiness_simple_body.find('_profile_add("field_readiness_compact_interaction_route_fast_path", 1)', compact_else_index)
+        last_payload_index = field_readiness_simple_body.find('_validation_profile["last_field_readiness_simple_route_fast_path"] = {', compact_counter_index)
+        ensure(
+            -1 < destination_kind_index < total_counter_index < current_guard_index < current_counter_index < open_guard_index < open_counter_index < compact_else_index < compact_counter_index < last_payload_index,
+            errors,
+            "Simple field readiness must count total, current, open, or compact-interaction ownership before recording its last payload",
+        )
+        for payload_token in (
+            '"destination_interaction_kind": destination_kind',
+            '"route_status": String(simple_destination.get("route_status", route_decision.get("status", "")))',
+            '"steps": int(route_decision.get("steps", 0))',
+            '"rich_route_decision_skipped": true',
+            '"route_target_handoff_skipped": true',
+            '"town_entry_handoff_skipped": true',
+            '"active_site_order_skipped": true',
+        ):
+            ensure(payload_token in field_readiness_simple_body, errors, f"Simple field-readiness profile is missing exact authority: {payload_token}")
+
+    enrich_command_match = re.search(
+        r"func _debug_enrich_command_snapshot\(snapshot: Dictionary\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc _debug_refresh_phase_counts)",
+        overworld_text,
+        re.S,
+    )
+    ensure(enrich_command_match is not None, errors, "Could not isolate enriched command snapshot ownership")
+    if enrich_command_match is not None:
+        ensure(
+            '"field_readiness_compact_interaction_hits": int(profile.get("field_readiness_compact_interaction_route_fast_path", 0))' in enrich_command_match.group("body"),
+            errors,
+            "Enriched command snapshot must expose the compact-interaction field-readiness counter",
         )
 
     map_cue_tooltip_match = re.search(
@@ -19364,7 +19475,7 @@ def validate_overworld_route_map_cue_refresh(errors: list[str]) -> None:
         '"reason": "No movement left today."',
         '"current_and_no_movement_disabled_rows": true',
         '"forbidden": ["Wood Wagon route", "Advance to Site"]',
-        '"forbidden": ["Riverwatch Hold route", "Visit Town"]',
+        '"forbidden": ["Route: Riverwatch Hold |", "Visit Town"]',
         '"town_wood_open_town_wood_inverse": true',
         'same-tile bound no-op changed the Wood Wagon cue/action/button/route payload',
         'shell.call("_record_action_feedback", "system", "Route feedback priority")',
@@ -19435,6 +19546,12 @@ def validate_overworld_route_map_cue_refresh(errors: list[str]) -> None:
             'session.overworld["movement"] = movement_before_disabled',
             'var normal_route_restored: Dictionary = shell.call("validation_select_tile", 1, 0)',
             'shell.call("_record_action_feedback", "system", "Route feedback priority")',
+            'var restored_town: Dictionary = shell.call("validation_select_tile", 0, 2)',
+            'shell.set("_last_action_recap", recap.duplicate(true))',
+            'var recap_before: Dictionary = shell.call("validation_snapshot")',
+            'var recap_wood: Dictionary = shell.call("validation_select_tile", 1, 0)',
+            'shell.set("_last_action_recap", {})',
+            'var recap_released: Dictionary = shell.call("validation_select_tile", 1, 0)',
             'session.flags["generated_random_map"] = true',
             'session.flags["generated_overworld_deferred_autosave_pending"] = true',
             'shell.call("_refresh")',
@@ -19456,7 +19573,7 @@ def validate_overworld_route_map_cue_refresh(errors: list[str]) -> None:
             all(index >= 0 for index in ordered_indices)
             and all(ordered_indices[index] < ordered_indices[index + 1] for index in range(len(ordered_indices) - 1)),
             errors,
-            "Route MapCue matrix must retain strict town -> Wood -> adjacent open -> inverse/no-op -> current -> movement-zero -> restored Wood -> feedback -> generated opening/pending/release order",
+            "Route matrix must retain strict Town -> Wood -> open -> inverse/no-op -> current -> movement-zero -> feedback -> recap -> generated opening/pending/release order",
         )
         for local_token in (
             '"label": "town", "tile": {"x": 0, "y": 2}, "action_id": "march_selected", "action_label": "Visit Town"',
@@ -19470,6 +19587,11 @@ def validate_overworld_route_map_cue_refresh(errors: list[str]) -> None:
             '"status": "no_movement", "action_kind": "move/collect"',
             '"reason": "No movement left today."',
             '"adjacent_open_2_2_march_selected_step_1": true',
+            '"event_feedback_byte_exact": _rendered_event_payload(feedback) == feedback_event_before',
+            '_assert_current_readiness_surfaces(shell, feedback, "%d feedback-preserved Town" % width, ["Wood Wagon route", "Advance to Site"], false)',
+            '"recap_event_byte_exact": _rendered_event_payload(recap_wood) == recap_event_before',
+            '"readiness_opening_byte_exact": _rendered_readiness_payload(pending) == opening_readiness_payload',
+            '"readiness_compact_byte_exact": _rendered_readiness_payload(pending_released) == opening_readiness_payload',
         ):
             ensure(local_token in route_width_body, errors, f"Isolated route MapCue matrix is missing exact disabled/current/no-movement token: {local_token}")
         ensure(
@@ -19477,6 +19599,12 @@ def validate_overworld_route_map_cue_refresh(errors: list[str]) -> None:
             and 'String(feedback.get("primary_action_id", "")) == "visit_town"' not in route_width_body,
             errors,
             "Width-matrix adjacent Town route must use march_selected and must not restore the stale visit_town action-id oracle",
+        )
+        ensure(
+            route_width_body.count('"Route: Riverwatch Hold |"') == 5
+            and '"Riverwatch Hold route"' not in route_width_body,
+            errors,
+            "Route readiness stale negatives must use exactly five route-line prefixes without colliding with the legitimate Riverwatch Hold routes forecast",
         )
         town_compact_row_match = re.search(
             r'"label": "town".*?\n\t\t"forbidden": .*?\n\t\}',
@@ -19604,7 +19732,7 @@ def validate_overworld_route_map_cue_refresh(errors: list[str]) -> None:
             )
 
     exact_surface_match = re.search(
-        r"func _assert_exact_route_surface\(shell: Node, snapshot: Dictionary, expected: Dictionary\) -> bool:\n(?P<body>.*?)(?=\nfunc _route_cue_payload)",
+        r"func _assert_exact_route_surface\(shell: Node, snapshot: Dictionary, expected: Dictionary\) -> bool:\n(?P<body>.*?)(?=\nfunc _assert_current_readiness_surfaces)",
         route_test_text,
         re.S,
     )
@@ -19621,8 +19749,68 @@ def validate_overworld_route_map_cue_refresh(errors: list[str]) -> None:
             '"button_tooltip_matches_cue": not bool(expected.get("button_tooltip_matches_cue", false)) or String(snapshot.get("primary_action_button_tooltip_text", "")) == tooltip',
             '"tooltip_exact": not expected.has("tooltip") or tooltip == String(expected.get("tooltip", ""))',
             '"route_action_label_exact": not expected.has("route_action_label") or String(decision.get("action_label", "")) == String(expected.get("route_action_label", ""))',
+            'if not _assert_current_readiness_surfaces(shell, snapshot, String(expected.get("label", "route")), expected.get("forbidden", []), true):',
         ):
             ensure(helper_token in exact_surface_body, errors, f"Exact route helper must separate empty action, action-disabled, button-disabled, and button-tooltip authority: {helper_token}")
+
+    readiness_oracle_match = re.search(
+        r"func _assert_current_readiness_surfaces\(shell: Node, snapshot: Dictionary, label: String, stale_tokens: Array, expect_event_current: bool\) -> bool:\n(?P<body>.*?)(?=\nfunc _expected_route_event_surface)",
+        route_test_text,
+        re.S,
+    )
+    ensure(readiness_oracle_match is not None, errors, "Could not isolate rendered Field Readiness route oracle")
+    if readiness_oracle_match is not None:
+        readiness_oracle_body = readiness_oracle_match.group("body")
+        for oracle_token in (
+            'var readiness: Dictionary = shell.call("_field_readiness_surface")',
+            'var end_turn: Dictionary = shell.call("_end_turn_confirmation_surface", readiness)',
+            'var drawer: Dictionary = shell.call("_drawer_handoff_surfaces", readiness)',
+            'OverworldRules.describe_objective_stakes_board(session)',
+            'var event_surface: Dictionary = _expected_route_event_surface(shell, readiness)',
+            'var action_context: Dictionary = shell.call("_action_context_surface", event_surface, readiness)',
+            'shell.call("_trim_rail_visible_text", String(action_context.get("visible_text", "")), 1, 42)',
+            '"field_readiness_current": snapshot.get("field_readiness", {}) == readiness',
+            '"objective_brief_tooltip_current": String(snapshot.get("objective_brief_tooltip_text", "")) == expected_objective_tooltip',
+            '"event_visible_current_or_preserved": not expect_event_current or',
+            '"event_tooltip_current_or_preserved": not expect_event_current or',
+            '"end_turn_payload_current": snapshot.get("end_turn_confirmation", {}) == end_turn',
+            '"end_turn_button_current": String(snapshot.get("end_turn_button_text", "")) == String(end_turn.get("button_text", ""))',
+            '"end_turn_tooltip_current": String(snapshot.get("end_turn_tooltip_text", "")) == String(end_turn.get("tooltip_text", ""))',
+            '"drawer_payload_current": snapshot.get("drawer_handoff", {}) == drawer',
+            '"command_tooltip_current": String(snapshot.get("command_drawer_tooltip_text", "")) == String(command.get("tooltip_text", ""))',
+            '"frontier_tooltip_current": String(snapshot.get("frontier_drawer_tooltip_text", "")) == String(frontier.get("tooltip_text", ""))',
+            'checks["stale_absent_%s" % stale_token]',
+            'if not _checks_exact(checks):',
+        ):
+            ensure(oracle_token in readiness_oracle_body, errors, f"Rendered Field Readiness route oracle is missing exact token: {oracle_token}")
+        ensure(
+            "erase(" not in readiness_oracle_body
+            and "normalize" not in readiness_oracle_body,
+            errors,
+            "Rendered Field Readiness oracle must compare whole current methods and actual controls without erasure or normalization",
+        )
+    route_event_oracle_match = re.search(
+        r"func _expected_route_event_surface\(shell: Node, readiness: Dictionary\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc _route_cue_payload)",
+        route_test_text,
+        re.S,
+    )
+    ensure(route_event_oracle_match is not None, errors, "Could not isolate method-matched route Event oracle")
+    if route_event_oracle_match is not None:
+        route_event_oracle_body = route_event_oracle_match.group("body")
+        for event_token in (
+            "OverworldRules.describe_event_feed_surface(",
+            'String(shell.get("_last_message"))',
+            'String(shell.get("_last_turn_resolution_text"))',
+            'String(shell.get("_last_enemy_activity_text"))',
+            'shell.get("_last_enemy_activity_events")',
+            'shell.get("_last_action_recap")',
+            'event_surface["field_readiness"] = readiness',
+            'if bool(shell.call("_field_feed_is_idle")):',
+            'event_surface["visible_text"] = visible_text',
+            'String(readiness.get("tooltip_text", ""))',
+            'event_surface["dispatch_text"] = OverworldRules.describe_dispatch(session, String(shell.get("_last_message")))',
+        ):
+            ensure(event_token in route_event_oracle_body, errors, f"Method-matched route Event oracle is missing exact token: {event_token}")
 
     movement_mirror_match = re.search(
         r"func _movement_mirror_checks\(session, expected: Dictionary\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc _assert_town_entry_handoff_cue)",
@@ -19732,11 +19920,38 @@ def validate_overworld_route_map_cue_refresh(errors: list[str]) -> None:
         )
 
     destination_only_text = OVERWORLD_ROUTE_DESTINATION_ONLY_ACTION_REGRESSION_SCRIPT_PATH.read_text(encoding="utf-8")
-    ensure(
-        'if float(selection_phases.get("route_decision_construction", 0.0)) != 0.0:' in destination_only_text,
-        errors,
-        "Destination-only resource route selection must retain exact zero rich route-decision construction authority",
+    destination_resource_match = re.search(
+        r"func _assert_resource_destination_keeps_existing_interaction_semantics\(\) -> bool:\n(?P<body>.*?)(?=\nfunc _assert_destination_only_command)",
+        destination_only_text,
+        re.S,
     )
+    ensure(destination_resource_match is not None, errors, "Could not isolate destination-only resource interaction regression")
+    if destination_resource_match is not None:
+        destination_resource_body = destination_resource_match.group("body")
+        rich_zero_index = destination_resource_body.find('if float(selection_phases.get("route_decision_construction", 0.0)) != 0.0:')
+        simple_paths_index = destination_resource_body.find('var selection_simple_paths: Dictionary = selection_command.get("simple_route_fast_paths", {})', rich_zero_index)
+        total_index = destination_resource_body.find('int(selection_simple_paths.get("field_readiness_hits", 0)) <= 0', simple_paths_index)
+        compact_index = destination_resource_body.find('int(selection_simple_paths.get("field_readiness_compact_interaction_hits", 0)) <= 0', total_index)
+        open_index = destination_resource_body.find('int(selection_simple_paths.get("field_readiness_open_hits", 0)) != 0', compact_index)
+        current_index = destination_resource_body.find('int(selection_simple_paths.get("field_readiness_current_hits", 0)) != 0', open_index)
+        last_index = destination_resource_body.find('var readiness_last: Dictionary = selection_simple_paths.get("field_readiness_last", {})', current_index)
+        expected_index = destination_resource_body.find("var expected_readiness_last := {", last_index)
+        exact_index = destination_resource_body.find("if readiness_last != expected_readiness_last:", expected_index)
+        ensure(
+            -1 < rich_zero_index < simple_paths_index < total_index < compact_index < open_index < current_index < last_index < expected_index < exact_index,
+            errors,
+            "Destination-only resource selection must prove zero rich construction, then exact total/compact/open/current counters and last readiness payload in order",
+        )
+        for destination_readiness_token in (
+            '"destination_interaction_kind": "resource"',
+            '"route_status": "reachable"',
+            '"steps": 4',
+            '"rich_route_decision_skipped": true',
+            '"route_target_handoff_skipped": true',
+            '"town_entry_handoff_skipped": true',
+            '"active_site_order_skipped": true',
+        ):
+            ensure(destination_readiness_token in destination_resource_body, errors, f"Destination-only resource regression is missing exact compact readiness authority: {destination_readiness_token}")
 
     context_cache_text = OVERWORLD_SELECTED_ROUTE_CONTEXT_ACTIONS_CACHE_REGRESSION_SCRIPT_PATH.read_text(encoding="utf-8")
     context_cache_run_match = re.search(
@@ -19930,6 +20145,13 @@ def validate_overworld_route_map_cue_refresh(errors: list[str]) -> None:
         '"refresh_tooltip_context_drawers_calls"',
         'Bound same-tile route selection changed the current action, route, button, or map cue.',
         'same_tile_action_cache_hits',
+        'func _assert_current_readiness_surfaces(shell: Node, snapshot: Dictionary, label: String, stale_tokens: Array) -> bool:',
+        '"field_readiness_current": snapshot.get("field_readiness", {}) == readiness',
+        '"objective_brief_tooltip_current": String(snapshot.get("objective_brief_tooltip_text", "")) == expected_objective_tooltip',
+        '"event_visible_current": String(snapshot.get("event_visible_text", "")) == expected_event_visible',
+        '"end_turn_payload_current": snapshot.get("end_turn_confirmation", {}) == end_turn',
+        '"drawer_payload_current": snapshot.get("drawer_handoff", {}) == drawer',
+        'checks["stale_absent_%s" % stale_token]',
     ):
         ensure(required_token in incremental_text, errors, f"Incremental route-preview regression is missing exact MapCue/profile token: {required_token}")
     ensure(
@@ -19942,6 +20164,39 @@ def validate_overworld_route_map_cue_refresh(errors: list[str]) -> None:
         '"cue_tooltip_current": String(snapshot.get("map_cue_tooltip_text", "")) == String(shell.call("_map_cue_tooltip"))' in incremental_text,
         errors,
         "Incremental route-preview regression must retain exact rendered-versus-current MapCue tooltip parity",
+    )
+    incremental_readiness_match = re.search(
+        r"func _assert_current_readiness_surfaces\(shell: Node, snapshot: Dictionary, label: String, stale_tokens: Array\) -> bool:\n(?P<body>.*?)(?=\nfunc _expected_route_event_surface)",
+        incremental_text,
+        re.S,
+    )
+    ensure(incremental_readiness_match is not None, errors, "Could not isolate incremental rendered-readiness oracle")
+    if incremental_readiness_match is not None:
+        incremental_readiness_body = incremental_readiness_match.group("body")
+        ensure(
+            'var readiness: Dictionary = shell.call("_field_readiness_surface")' in incremental_readiness_body
+            and 'var end_turn: Dictionary = shell.call("_end_turn_confirmation_surface", readiness)' in incremental_readiness_body
+            and 'var drawer: Dictionary = shell.call("_drawer_handoff_surfaces", readiness)' in incremental_readiness_body
+            and 'var event_surface: Dictionary = _expected_route_event_surface(shell, readiness)' in incremental_readiness_body
+            and 'var action_context: Dictionary = shell.call("_action_context_surface", event_surface, readiness)' in incremental_readiness_body
+            and "erase(" not in incremental_readiness_body
+            and "normalize" not in incremental_readiness_body,
+            errors,
+            "Incremental rendered-readiness oracle must compare independent current methods to actual controls without normalization",
+        )
+    incremental_event_match = re.search(
+        r"func _expected_route_event_surface\(shell: Node, readiness: Dictionary\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc _route_cue_payload)",
+        incremental_text,
+        re.S,
+    )
+    ensure(
+        incremental_event_match is not None
+        and "OverworldRules.describe_event_feed_surface(" in incremental_event_match.group("body")
+        and 'event_surface["field_readiness"] = readiness' in incremental_event_match.group("body")
+        and 'if bool(shell.call("_field_feed_is_idle")):' in incremental_event_match.group("body")
+        and "OverworldRules.describe_dispatch(" in incremental_event_match.group("body"),
+        errors,
+        "Incremental Event oracle must reproduce the route helper's raw feed, idle readiness, and dispatch construction",
     )
 
 

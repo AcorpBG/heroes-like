@@ -24,6 +24,8 @@ func _run() -> void:
 		return
 	if not _assert_current_map_cue(shell, selection, "first_selection"):
 		return
+	if not _assert_current_readiness_surfaces(shell, selection, "first_selection", []):
+		return
 	if not _assert_incremental_route_request(profile, "first_selection"):
 		return
 	if int(profile.get("route_destination_only_action_path_calls", 0)) != 1:
@@ -51,6 +53,8 @@ func _run() -> void:
 		return
 	if not _assert_current_map_cue(shell, changed_selection, "changed_selection"):
 		return
+	if not _assert_current_readiness_surfaces(shell, changed_selection, "changed_selection", ["8,1"]):
+		return
 	if not _assert_incremental_route_request(changed_profile, "changed_selection"):
 		return
 	if int(changed_profile.get("route_destination_only_action_path_calls", 0)) != 1 \
@@ -70,6 +74,8 @@ func _run() -> void:
 		})
 		return
 	if not _assert_current_map_cue(shell, no_op_selection, "same_tile_no_op"):
+		return
+	if not _assert_current_readiness_surfaces(shell, no_op_selection, "same_tile_no_op", ["8,1"]):
 		return
 	if not _assert_incremental_route_request(no_op_profile, "same_tile_no_op"):
 		return
@@ -160,6 +166,79 @@ func _assert_current_map_cue(shell: Node, snapshot: Dictionary, label: String) -
 			return false
 	return true
 
+func _assert_current_readiness_surfaces(shell: Node, snapshot: Dictionary, label: String, stale_tokens: Array) -> bool:
+	var session = shell.get("_session")
+	var readiness: Dictionary = shell.call("_field_readiness_surface")
+	var end_turn: Dictionary = shell.call("_end_turn_confirmation_surface", readiness)
+	var drawer: Dictionary = shell.call("_drawer_handoff_surfaces", readiness)
+	var expected_objective_tooltip := String(shell.call("_join_tooltip_sections", [
+		OverworldRules.describe_objective_stakes_board(session),
+		String(readiness.get("tooltip_text", "")),
+	]))
+	var event_surface: Dictionary = _expected_route_event_surface(shell, readiness)
+	var action_context: Dictionary = shell.call("_action_context_surface", event_surface, readiness)
+	var expected_event_visible := String(shell.call("_trim_rail_visible_text", String(action_context.get("visible_text", "")), 1, 42))
+	var command: Dictionary = drawer.get("command", {}) if drawer.get("command", {}) is Dictionary else {}
+	var frontier: Dictionary = drawer.get("frontier", {}) if drawer.get("frontier", {}) is Dictionary else {}
+	var checks := {
+		"field_readiness_current": snapshot.get("field_readiness", {}) == readiness,
+		"objective_brief_tooltip_current": String(snapshot.get("objective_brief_tooltip_text", "")) == expected_objective_tooltip,
+		"event_visible_current": String(snapshot.get("event_visible_text", "")) == expected_event_visible,
+		"event_tooltip_current": String(snapshot.get("event_tooltip_text", "")) == String(action_context.get("tooltip_text", "")),
+		"end_turn_payload_current": snapshot.get("end_turn_confirmation", {}) == end_turn,
+		"end_turn_button_current": String(snapshot.get("end_turn_button_text", "")) == String(end_turn.get("button_text", "")),
+		"end_turn_tooltip_current": String(snapshot.get("end_turn_tooltip_text", "")) == String(end_turn.get("tooltip_text", "")),
+		"drawer_payload_current": snapshot.get("drawer_handoff", {}) == drawer,
+		"command_button_current": String(snapshot.get("command_drawer_button_text", "")) == String(command.get("button_text", "")),
+		"command_tooltip_current": String(snapshot.get("command_drawer_tooltip_text", "")) == String(command.get("tooltip_text", "")),
+		"frontier_button_current": String(snapshot.get("frontier_drawer_button_text", "")) == String(frontier.get("button_text", "")),
+		"frontier_tooltip_current": String(snapshot.get("frontier_drawer_tooltip_text", "")) == String(frontier.get("tooltip_text", "")),
+	}
+	var rendered_text := "\n".join([
+		String(snapshot.get("objective_brief_tooltip_text", "")),
+		String(snapshot.get("event_visible_text", "")),
+		String(snapshot.get("event_tooltip_text", "")),
+		String(snapshot.get("end_turn_button_text", "")),
+		String(snapshot.get("end_turn_tooltip_text", "")),
+		String(snapshot.get("command_drawer_button_text", "")),
+		String(snapshot.get("command_drawer_tooltip_text", "")),
+		String(snapshot.get("frontier_drawer_button_text", "")),
+		String(snapshot.get("frontier_drawer_tooltip_text", "")),
+	])
+	for stale_token_value in stale_tokens:
+		var stale_token := String(stale_token_value)
+		checks["stale_absent_%s" % stale_token] = stale_token == "" or not rendered_text.contains(stale_token)
+	if not _checks_exact(checks):
+		_fail("%s did not refresh the rendered Field Readiness controls exactly." % label, {
+			"checks": checks,
+			"expected_readiness": readiness,
+			"actual": _rendered_readiness_payload(snapshot),
+		})
+		return false
+	return true
+
+func _expected_route_event_surface(shell: Node, readiness: Dictionary) -> Dictionary:
+	var session = shell.get("_session")
+	var event_surface := OverworldRules.describe_event_feed_surface(
+		session,
+		String(shell.get("_last_message")),
+		String(shell.get("_last_turn_resolution_text")),
+		String(shell.get("_last_enemy_activity_text")),
+		shell.get("_last_enemy_activity_events"),
+		shell.get("_last_action_recap")
+	)
+	event_surface["field_readiness"] = readiness
+	if bool(shell.call("_field_feed_is_idle")):
+		var visible_text := String(readiness.get("visible_text", "")).strip_edges()
+		if visible_text != "":
+			event_surface["visible_text"] = visible_text
+		event_surface["tooltip_text"] = String(shell.call("_join_tooltip_sections", [
+			String(event_surface.get("tooltip_text", "")),
+			String(readiness.get("tooltip_text", "")),
+		]))
+	event_surface["dispatch_text"] = OverworldRules.describe_dispatch(session, String(shell.get("_last_message")))
+	return event_surface
+
 func _route_cue_payload(snapshot: Dictionary) -> Dictionary:
 	return {
 		"selected_tile": snapshot.get("selected_tile", {}),
@@ -171,6 +250,20 @@ func _route_cue_payload(snapshot: Dictionary) -> Dictionary:
 		"selected_route_decision": snapshot.get("selected_route_decision", {}).duplicate(true),
 		"map_cue_text": String(snapshot.get("map_cue_text", "")),
 		"map_cue_tooltip_text": String(snapshot.get("map_cue_tooltip_text", "")),
+		"rendered_readiness": _rendered_readiness_payload(snapshot),
+	}
+
+func _rendered_readiness_payload(snapshot: Dictionary) -> Dictionary:
+	return {
+		"objective_brief_tooltip_text": String(snapshot.get("objective_brief_tooltip_text", "")),
+		"event_visible_text": String(snapshot.get("event_visible_text", "")),
+		"event_tooltip_text": String(snapshot.get("event_tooltip_text", "")),
+		"end_turn_button_text": String(snapshot.get("end_turn_button_text", "")),
+		"end_turn_tooltip_text": String(snapshot.get("end_turn_tooltip_text", "")),
+		"command_drawer_button_text": String(snapshot.get("command_drawer_button_text", "")),
+		"command_drawer_tooltip_text": String(snapshot.get("command_drawer_tooltip_text", "")),
+		"frontier_drawer_button_text": String(snapshot.get("frontier_drawer_button_text", "")),
+		"frontier_drawer_tooltip_text": String(snapshot.get("frontier_drawer_tooltip_text", "")),
 	}
 
 func _open_shell(session) -> Dictionary:
@@ -257,6 +350,12 @@ func _set_active_hero_movement(session, movement_points: int) -> void:
 			heroes[index] = entry
 			break
 	session.overworld["player_heroes"] = heroes
+
+func _checks_exact(checks: Dictionary) -> bool:
+	for value in checks.values():
+		if not bool(value):
+			return false
+	return true
 
 func _fail(message: String, payload: Variant = {}) -> void:
 	push_error("%s failed: %s %s" % [REPORT_ID, message, JSON.stringify(payload)])
