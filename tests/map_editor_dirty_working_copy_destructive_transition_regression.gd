@@ -60,6 +60,10 @@ const TOOL_RAIL_FAMILY_IDS := ["town", "resource", "artifact", "encounter"]
 
 var _report_scene: Node
 var _original_active_session = null
+var _original_editor_working_copy = null
+var _original_editor_baseline = null
+var _original_editor_package_identity: Dictionary = {}
+var _original_editor_return_pending := false
 var _active_shell: Node = null
 var _source_entry: Dictionary = {}
 var _target_entry: Dictionary = {}
@@ -78,6 +82,10 @@ func _ready() -> void:
 func _run() -> void:
 	_report_scene = self
 	_original_active_session = SessionState.active_session
+	_original_editor_working_copy = SessionState.editor_working_copy_session
+	_original_editor_baseline = SessionState._editor_working_copy_baseline_session
+	_original_editor_package_identity = SessionState._editor_working_copy_package_identity.duplicate(true)
+	_original_editor_return_pending = SessionState.editor_return_pending()
 	_original_profile = CampaignProgression.profile.duplicate(true)
 	_original_selected_slot = SaveService.get_selected_manual_slot()
 	_original_summary_cache = SaveService.validation_summary_cache_snapshot()
@@ -2174,6 +2182,10 @@ func _focus_background_authority(shell: Node) -> Dictionary:
 	return {
 		"working_copy": session.to_dict() if session != null else {},
 		"active_session": SessionState.ensure_active_session().to_dict() if SessionState.has_playable_session() else {},
+		"editor_working_copy": SessionState.editor_working_copy_session.to_dict() if SessionState.editor_working_copy_session != null else {},
+		"editor_baseline": SessionState._editor_working_copy_baseline_session.to_dict() if SessionState._editor_working_copy_baseline_session != null else {},
+		"editor_package_identity": SessionState._editor_working_copy_package_identity.duplicate(true),
+		"editor_return_pending": SessionState.editor_return_pending(),
 		"packages": _package_file_state(),
 		"files": _capture_file_states(_tracked_authority_paths()),
 		"summary_cache": SaveService.validation_summary_cache_snapshot(),
@@ -2613,6 +2625,10 @@ func _protected_state(shell: Node) -> Dictionary:
 		"selected_tile": snapshot.get("selected_tile", {}).duplicate(true),
 		"selected_map_package_id": String(snapshot.get("selected_map_package_id", "")),
 		"active_session": SessionState.ensure_active_session().to_dict() if SessionState.has_playable_session() else {},
+		"editor_working_copy": SessionState.editor_working_copy_session.to_dict() if SessionState.editor_working_copy_session != null else {},
+		"editor_baseline": SessionState._editor_working_copy_baseline_session.to_dict() if SessionState._editor_working_copy_baseline_session != null else {},
+		"editor_package_identity": SessionState._editor_working_copy_package_identity.duplicate(true),
+		"editor_return_pending": SessionState.editor_return_pending(),
 		"save_files": _save_file_state(),
 	}
 
@@ -2949,6 +2965,10 @@ func _cleanup() -> void:
 		if is_instance_valid(_active_shell.get_parent()):
 			_active_shell.get_parent().queue_free()
 	SessionState.active_session = _original_active_session
+	SessionState.editor_working_copy_session = _original_editor_working_copy
+	SessionState._editor_working_copy_baseline_session = _original_editor_baseline
+	SessionState._editor_working_copy_package_identity = _original_editor_package_identity.duplicate(true)
+	SessionState._editor_return_pending = _original_editor_return_pending
 	CampaignProgression.profile = _original_profile.duplicate(true)
 	SaveService.set_selected_manual_slot(_original_selected_slot)
 	for path in _original_file_states:

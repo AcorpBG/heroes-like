@@ -34,6 +34,8 @@ var _original_states: Dictionary = {}
 var _original_failure_env := ""
 var _original_active_session = null
 var _original_editor_working_copy = null
+var _original_editor_working_copy_baseline = null
+var _original_editor_working_copy_package_identity: Dictionary = {}
 var _original_editor_return_pending := false
 
 
@@ -46,6 +48,8 @@ func _run() -> void:
 	_original_failure_env = OS.get_environment(FAILURE_ENV)
 	_original_active_session = SessionState.active_session
 	_original_editor_working_copy = SessionState.editor_working_copy_session
+	_original_editor_working_copy_baseline = SessionState._editor_working_copy_baseline_session
+	_original_editor_working_copy_package_identity = SessionState._editor_working_copy_package_identity.duplicate(true)
 	_original_editor_return_pending = SessionState.editor_return_pending()
 	OS.unset_environment(FAILURE_ENV)
 	if not _require_hooks():
@@ -74,12 +78,16 @@ func _run() -> void:
 	var editor_return: Dictionary = _exercise_editor_return_route()
 	if editor_return.is_empty():
 		return
+	var editor_snapshot_companion: Dictionary = await _exercise_editor_snapshot_companion_contract()
+	if editor_snapshot_companion.is_empty():
+		return
 	_cleanup()
 	print("%s %s" % [REPORT_ID, JSON.stringify({
 		"ok": true,
 		"active_states": active_rows,
 		"no_session": no_session,
 		"editor_return": editor_return,
+		"editor_snapshot_companion": editor_snapshot_companion,
 		"failure_message": FAILURE_MESSAGE,
 		"save_version": SessionState.SAVE_VERSION,
 	})])
@@ -305,7 +313,335 @@ func _exercise_editor_return_route() -> Dictionary:
 			or RuntimeIssueLog.issue_record_count() != issue_before:
 		_fail("Editor active-play return was not a direct Map Editor route: %s" % JSON.stringify(_compact_router(snapshot)))
 		return {}
-	return {"reason": "editor_return", "save_attempts": 0, "routes": 1, "pending": true}
+	var returned: Dictionary = SessionState.consume_editor_return_snapshot()
+	var returned_working_copy = returned.get("working_copy_session", null)
+	if (
+		returned_working_copy == null
+		or returned_working_copy.to_dict() != editor_session.to_dict()
+		or returned.get("authored_baseline_session", null) != null
+		or returned.get("package_identity", {}) != {}
+		or not SessionState.consume_editor_return_snapshot().is_empty()
+	):
+		_fail("Authored one-argument editor return did not preserve its exact fallback snapshot or consume once: %s" % JSON.stringify(returned))
+		return {}
+	return {"reason": "editor_return", "save_attempts": 0, "routes": 1, "pending": true, "consumed_once": true, "authored_one_argument_fallback": true}
+
+
+func _exercise_editor_snapshot_companion_contract() -> Dictionary:
+	var baseline: SessionStateStoreScript.SessionData = _package_editor_session("baseline-companion")
+	var working: SessionStateStoreScript.SessionData = _duplicate_session(baseline)
+	working.day += 3
+	working.flags["working_copy_only_marker"] = "edited-after-baseline"
+	var baseline_before: Dictionary = baseline.to_dict()
+	var working_before: Dictionary = working.to_dict()
+	var expected_identity: Dictionary = SessionState.editor_package_identity(working)
+	var staged = SessionState.set_editor_working_copy_session(working, baseline)
+	var staged_working = SessionState.duplicate_editor_working_copy_session()
+	var staged_baseline = SessionState.duplicate_editor_working_copy_baseline_session()
+	if (
+		staged == null
+		or staged_working == null
+		or staged_baseline == null
+		or staged_working.to_dict() != working_before
+		or staged_baseline.to_dict() != baseline_before
+		or staged_working == working
+		or staged_baseline == baseline
+		or SessionState._editor_working_copy_package_identity != expected_identity
+	):
+		_fail("Package editor snapshot did not stage detached working-copy/baseline companions exactly.")
+		return {}
+	working.day += 9
+	baseline.day += 7
+	if SessionState.duplicate_editor_working_copy_session().to_dict() != working_before \
+			or SessionState.duplicate_editor_working_copy_baseline_session().to_dict() != baseline_before:
+		_fail("Staged package editor snapshots aliased their caller-owned sessions.")
+		return {}
+
+	SessionState.set_active_session(staged_working)
+	if not SessionState.request_editor_return_from_active_play():
+		_fail("Valid package editor snapshot did not request return.")
+		return {}
+	var returned: Dictionary = SessionState.consume_editor_return_snapshot()
+	var returned_working = returned.get("working_copy_session", null)
+	var returned_baseline = returned.get("authored_baseline_session", null)
+	if (
+		returned_working == null
+		or returned_baseline == null
+		or returned_working.to_dict() != working_before
+		or returned_baseline.to_dict() != baseline_before
+		or returned.get("package_identity", {}) != expected_identity
+		or returned_working == staged_working
+		or returned_baseline == staged_baseline
+		or not SessionState.consume_editor_return_snapshot().is_empty()
+		or SessionState.has_editor_working_copy_session()
+		or SessionState.editor_return_pending()
+	):
+		_fail("Package editor snapshot did not consume exactly once into detached companion state: %s" % JSON.stringify(returned.get("package_identity", {})))
+		return {}
+
+	var wrong_baseline: SessionStateStoreScript.SessionData = _duplicate_session(baseline)
+	wrong_baseline.flags["editor_source_map_path"] = "user://maps/wrong.amap"
+	if SessionState.set_editor_working_copy_session(working, wrong_baseline) != null \
+			or SessionState.has_editor_working_copy_session() \
+			or SessionState.editor_return_pending():
+		_fail("Mismatched package baseline did not fail closed at the setter.")
+		return {}
+	if SessionState.set_editor_working_copy_session(working) != null:
+		_fail("Package working copy without its baseline companion did not fail closed.")
+		return {}
+
+	var consume_working: SessionStateStoreScript.SessionData = _package_editor_session("consume-mismatch")
+	var consume_baseline: SessionStateStoreScript.SessionData = _duplicate_session(consume_working)
+	SessionState.set_editor_working_copy_session(consume_working, consume_baseline)
+	SessionState._editor_return_pending = true
+	SessionState._editor_working_copy_package_identity["package_id"] = "maps-folder:tampered"
+	if not SessionState.consume_editor_return_snapshot().is_empty() \
+			or SessionState.has_editor_working_copy_session() \
+			or SessionState.editor_return_pending():
+		_fail("Mismatched stored package companion did not fail closed at consume.")
+		return {}
+
+	var terminal_working: SessionStateStoreScript.SessionData = _duplicate_session(working)
+	var terminal_baseline: SessionStateStoreScript.SessionData = _duplicate_session(baseline)
+	SessionState.set_editor_working_copy_session(terminal_working, terminal_baseline)
+	terminal_working.scenario_status = "completed"
+	SessionState.active_session = terminal_working
+	if SessionState.request_editor_return_from_active_play() \
+			or SessionState.has_editor_working_copy_session() \
+			or SessionState.editor_return_pending():
+		_fail("Terminal package active play did not clear its stale editor companion.")
+		return {}
+
+	var stale_working: SessionStateStoreScript.SessionData = _package_editor_session("stale-active")
+	var stale_baseline: SessionStateStoreScript.SessionData = _duplicate_session(stale_working)
+	SessionState.set_editor_working_copy_session(stale_working, stale_baseline)
+	var replacement: SessionStateStoreScript.SessionData = _duplicate_session(stale_working)
+	replacement.session_id = "%s-replacement" % replacement.session_id
+	SessionState.active_session = replacement
+	if SessionState.request_editor_return_from_active_play() \
+			or SessionState.has_editor_working_copy_session() \
+			or SessionState.editor_return_pending():
+		_fail("Stale package active-session identity did not clear its editor companion.")
+		return {}
+
+	var resume_shell = load("res://scenes/editor/MapEditorShell.tscn").instantiate()
+	resume_shell.set("validation_skip_initial_package_index", true)
+	add_child(resume_shell)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var wrong_identity: Dictionary = expected_identity.duplicate(true)
+	wrong_identity["package_id"] = "maps-folder:wrong"
+	var resumed_wrong: bool = bool(resume_shell.call("_resume_working_copy_from_memory", _duplicate_session(working), _duplicate_session(baseline), wrong_identity))
+	var resumed_missing: bool = bool(resume_shell.call("_resume_working_copy_from_memory", _duplicate_session(working), null, expected_identity))
+	var authored_resume: SessionStateStoreScript.SessionData = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+	authored_resume.flags["editor_working_copy"] = true
+	var authored_expected: SessionStateStoreScript.SessionData = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+	if authored_expected == null:
+		_fail("Independent authored ScenarioFactory control was unavailable.")
+		return {}
+	OverworldRules.normalize_overworld_state(authored_expected)
+	var resumed_authored: bool = bool(resume_shell.call("_resume_working_copy_from_memory", authored_resume))
+	var authored_baseline = resume_shell.call("_authored_baseline_session")
+	var authored_baseline_payload: Dictionary = authored_baseline.to_dict().duplicate(true) if authored_baseline != null else {}
+	var authored_expected_payload: Dictionary = authored_expected.to_dict().duplicate(true) if authored_expected != null else {}
+	var authored_baseline_overworld: Dictionary = authored_baseline_payload.get("overworld", {}).duplicate(true)
+	var authored_expected_overworld: Dictionary = authored_expected_payload.get("overworld", {}).duplicate(true)
+	var authored_overworld_checks: Dictionary = _dictionary_union_exact_checks(
+		authored_baseline_overworld,
+		authored_expected_overworld,
+		"authored_overworld"
+	)
+	var authored_overworld_differences: Array[Dictionary] = _recursive_exact_differences(
+		authored_baseline_overworld,
+		authored_expected_overworld,
+		"$.overworld"
+	)
+	var authored_resume_identity: Dictionary = SessionState.editor_package_identity(authored_resume).duplicate(true) if authored_resume != null else {}
+	var authored_resume_checks := {
+		"wrong_identity_rejected": not resumed_wrong,
+		"missing_baseline_rejected": not resumed_missing,
+		"authored_resume_nonnull": authored_resume != null,
+		"authored_expected_nonnull": authored_expected != null,
+		"authored_resume_accepted": resumed_authored,
+		"authored_baseline_present": authored_baseline != null,
+		"authored_baseline_distinct": authored_baseline != null and authored_resume != null and not is_same(authored_baseline, authored_resume),
+		"authored_scenario_exact": String(authored_baseline_payload.get("scenario_id", "")) == "river-pass",
+		"authored_overworld_exact": authored_baseline_payload.get("overworld", {}) == authored_expected_payload.get("overworld", {}),
+		"authored_package_identity_empty": authored_resume_identity.is_empty(),
+	}
+	resume_shell.queue_free()
+	await get_tree().process_frame
+	if not _checks_exact(authored_resume_checks) or not _checks_exact(authored_overworld_checks):
+		_fail("Map Editor resume companion checks failed: %s values=%s" % [
+			JSON.stringify(_failed_check_names(authored_resume_checks)),
+			JSON.stringify({
+				"authored_overworld_failed_checks": _failed_check_names(authored_overworld_checks),
+				"authored_overworld_differences": authored_overworld_differences,
+				"authored_resume_ref": authored_resume.get_instance_id() if authored_resume != null else -1,
+				"authored_expected_ref": authored_expected.get_instance_id() if authored_expected != null else -1,
+				"authored_baseline_ref": authored_baseline.get_instance_id() if authored_baseline != null else -1,
+				"authored_baseline_overworld_sha": JSON.stringify(authored_baseline_payload.get("overworld", {})).sha256_text(),
+				"authored_expected_overworld_sha": JSON.stringify(authored_expected_payload.get("overworld", {})).sha256_text(),
+				"authored_resume_identity_sha": JSON.stringify(authored_resume_identity).sha256_text(),
+			})
+		])
+		return {}
+	SessionState.set_editor_working_copy_session(null)
+	return {
+		"detached_working_copy": true,
+		"detached_baseline": true,
+		"consume_once": true,
+		"setter_mismatch_failed_closed": true,
+		"consume_mismatch_failed_closed": true,
+		"resume_mismatch_failed_closed": true,
+		"authored_scenario_factory_fallback": true,
+		"terminal_cleared": true,
+		"stale_active_cleared": true,
+	}
+
+func _checks_exact(checks: Dictionary) -> bool:
+	for value in checks.values():
+		if not bool(value):
+			return false
+	return true
+
+func _failed_check_names(checks: Dictionary) -> Array[String]:
+	var failed: Array[String] = []
+	for check_value in checks.keys():
+		if not bool(checks.get(check_value, false)):
+			failed.append(String(check_value))
+	failed.sort()
+	return failed
+
+
+func _dictionary_union_exact_checks(before: Dictionary, after: Dictionary, prefix: String) -> Dictionary:
+	var union_keys: Array = before.keys()
+	for key_value in after.keys():
+		if key_value not in union_keys:
+			union_keys.append(key_value)
+	union_keys.sort()
+	var checks := {}
+	for key_value in union_keys:
+		var check_name := "%s[%s]" % [prefix, JSON.stringify(String(key_value))]
+		checks[check_name] = before.has(key_value) and after.has(key_value) and before[key_value] == after[key_value]
+	return checks
+
+
+func _recursive_exact_differences(before: Variant, after: Variant, path: String = "$") -> Array[Dictionary]:
+	var differences: Array[Dictionary] = []
+	_collect_recursive_exact_differences(before, true, after, true, path, differences)
+	return differences
+
+
+func _collect_recursive_exact_differences(
+	before: Variant,
+	before_present: bool,
+	after: Variant,
+	after_present: bool,
+	path: String,
+	differences: Array[Dictionary]
+) -> void:
+	if not before_present or not after_present:
+		differences.append({
+			"path": path,
+			"before": _compact_diff_value(before, before_present),
+			"after": _compact_diff_value(after, after_present),
+		})
+		return
+	if typeof(before) != typeof(after):
+		differences.append({
+			"path": path,
+			"before": _compact_diff_value(before, true),
+			"after": _compact_diff_value(after, true),
+		})
+		return
+	if before is Dictionary:
+		var before_dictionary: Dictionary = before
+		var after_dictionary: Dictionary = after
+		var union_keys: Array = before_dictionary.keys()
+		for key_value in after_dictionary.keys():
+			if key_value not in union_keys:
+				union_keys.append(key_value)
+		union_keys.sort()
+		for key_value in union_keys:
+			_collect_recursive_exact_differences(
+				before_dictionary.get(key_value),
+				before_dictionary.has(key_value),
+				after_dictionary.get(key_value),
+				after_dictionary.has(key_value),
+				"%s[%s]" % [path, JSON.stringify(String(key_value))],
+				differences
+			)
+		return
+	if before is Array:
+		var before_array: Array = before
+		var after_array: Array = after
+		if before_array.size() != after_array.size():
+			differences.append({
+				"path": "%s.length" % path,
+				"before": _compact_diff_value(before_array.size(), true),
+				"after": _compact_diff_value(after_array.size(), true),
+			})
+		for index in range(min(before_array.size(), after_array.size())):
+			_collect_recursive_exact_differences(
+				before_array[index],
+				true,
+				after_array[index],
+				true,
+				"%s[%d]" % [path, index],
+				differences
+			)
+		for index in range(after_array.size(), before_array.size()):
+			_collect_recursive_exact_differences(before_array[index], true, null, false, "%s[%d]" % [path, index], differences)
+		for index in range(before_array.size(), after_array.size()):
+			_collect_recursive_exact_differences(null, false, after_array[index], true, "%s[%d]" % [path, index], differences)
+		return
+	if before != after:
+		differences.append({
+			"path": path,
+			"before": _compact_diff_value(before, true),
+			"after": _compact_diff_value(after, true),
+		})
+
+
+func _compact_diff_value(value: Variant, present: bool) -> Dictionary:
+	if not present:
+		return {"present": false, "type": "missing"}
+	var encoded := var_to_str(value).replace("\n", "\\n")
+	return {
+		"present": true,
+		"type": type_string(typeof(value)),
+		"preview": encoded.left(160),
+		"sha256": encoded.sha256_text(),
+	}
+
+
+func _package_editor_session(marker: String) -> SessionStateStoreScript.SessionData:
+	var session: SessionStateStoreScript.SessionData = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+	var package_id := "maps-folder:%s" % marker
+	var map_path := "user://maps/%s.amap" % marker
+	var scenario_path := "user://maps/%s.ascenario" % marker
+	var entry := {
+		"package_id": package_id,
+		"package_stem": marker,
+		"map_path": map_path,
+		"scenario_path": scenario_path,
+		"map_ref": {"path": map_path, "marker": marker},
+		"scenario_ref": {"path": scenario_path, "marker": marker},
+	}
+	session.flags["editor_working_copy"] = true
+	session.flags["editor_source_kind"] = "maps_folder_package"
+	session.flags["editor_source_package_id"] = package_id
+	session.flags["editor_source_map_path"] = map_path
+	session.flags["editor_source_scenario_path"] = scenario_path
+	session.flags["maps_folder_package_entry"] = entry
+	return session
+
+
+func _duplicate_session(session: SessionStateStoreScript.SessionData) -> SessionStateStoreScript.SessionData:
+	var duplicate: SessionStateStoreScript.SessionData = SessionStateStoreScript.new_session_data()
+	duplicate.from_dict(session.to_dict())
+	return duplicate
 
 
 func _session_for_state(state: String, day: int) -> SessionStateStoreScript.SessionData:
@@ -587,6 +923,8 @@ func _cleanup() -> void:
 	SaveService.validation_clear_summary_cache()
 	SessionState.active_session = _original_active_session
 	SessionState.editor_working_copy_session = _original_editor_working_copy
+	SessionState._editor_working_copy_baseline_session = _original_editor_working_copy_baseline
+	SessionState._editor_working_copy_package_identity = _original_editor_working_copy_package_identity.duplicate(true)
 	SessionState._editor_return_pending = _original_editor_return_pending
 
 

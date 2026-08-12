@@ -168,8 +168,11 @@ func _ready() -> void:
 		_map_package_index_status = {"ok": true, "entries": [], "message": "Initial package index skipped for focused validation."}
 		_map_package_picker.clear()
 	_select_tool(TOOL_INSPECT)
-	var returned_session = SessionState.consume_editor_return_session()
-	if returned_session != null and _resume_working_copy_from_memory(returned_session):
+	var returned_snapshot: Dictionary = SessionState.consume_editor_return_snapshot()
+	var returned_session = returned_snapshot.get("working_copy_session", null)
+	var returned_baseline = returned_snapshot.get("authored_baseline_session", null)
+	var returned_package_identity: Dictionary = returned_snapshot.get("package_identity", {})
+	if returned_session != null and _resume_working_copy_from_memory(returned_session, returned_baseline, returned_package_identity):
 		call_deferred("_configure_editor_keyboard_focus")
 		return
 	_refresh_state()
@@ -3547,6 +3550,7 @@ func _load_maps_folder_package_entry_working_copy(entry: Dictionary) -> bool:
 		_last_message = "Unable to load package %s into the editor." % package_id
 		_refresh_state()
 		return false
+	SessionState.set_editor_working_copy_session(null)
 	_cancel_editor_map_cursor_semantic()
 	_session = session
 	entry = _session.flags.get("maps_folder_package_entry", entry) if _session.flags.get("maps_folder_package_entry", entry) is Dictionary else entry
@@ -3582,15 +3586,36 @@ func _duplicate_session(session):
 	copy.from_dict(session.to_dict())
 	return copy
 
-func _resume_working_copy_from_memory(session) -> bool:
+func _resume_working_copy_from_memory(session, baseline_session = null, package_identity: Dictionary = {}) -> bool:
 	if session == null or session.scenario_id == "":
 		return false
+	var session_package_identity := SessionState.editor_package_identity(session)
+	var package_companion_present := not package_identity.is_empty() or baseline_session != null
+	if (
+		(not session_package_identity.is_empty() and (
+			package_identity.is_empty()
+			or baseline_session == null
+			or baseline_session.scenario_id != session.scenario_id
+			or session_package_identity != package_identity
+			or SessionState.editor_package_identity(baseline_session) != package_identity
+		))
+		or (session_package_identity.is_empty() and package_companion_present)
+	):
+		return false
+	var resumed_session = _duplicate_session(session) if not session_package_identity.is_empty() else session
+	var resumed_baseline = _duplicate_session(baseline_session) if not session_package_identity.is_empty() else null
+	if resumed_session == null or (not session_package_identity.is_empty() and resumed_baseline == null):
+		return false
 	_cancel_editor_map_cursor_semantic()
-	_session = session
+	_session = resumed_session
 	_authored_baseline_cache = null
 	_authored_baseline_cache_id = ""
-	OverworldRules.normalize_overworld_state(_session)
-	_make_all_tiles_visible(_session)
+	if not session_package_identity.is_empty():
+		_authored_baseline_cache = resumed_baseline
+		_authored_baseline_cache_id = _session.scenario_id
+	else:
+		OverworldRules.normalize_overworld_state(_session)
+		_make_all_tiles_visible(_session)
 	_selected_map_package_id = String(_session.flags.get("editor_source_package_id", ""))
 	_select_map_package_picker_by_id(_selected_map_package_id)
 	_restore_editor_ui_metadata()
@@ -5837,9 +5862,10 @@ func _on_play_working_copy_pressed() -> void:
 	if _session == null:
 		return
 	_prepare_working_copy_snapshot_for_return()
-	SessionState.set_editor_working_copy_session(_session)
+	var staged_session = SessionState.set_editor_working_copy_session(_session, _authored_baseline_session())
 	var play_session = SessionState.duplicate_editor_working_copy_session()
-	if play_session == null:
+	if staged_session == null or play_session == null:
+		SessionState.set_editor_working_copy_session(null)
 		_last_message = "Could not stage the editor working copy for play."
 		_refresh_state()
 		return

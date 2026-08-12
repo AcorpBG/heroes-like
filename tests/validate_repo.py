@@ -12979,8 +12979,185 @@ def validate_save_management(errors: list[str]) -> None:
             "SessionState.editor_return_pending()",
             "SaveService.restore_autosave_session()",
             "SessionState.SAVE_VERSION",
+            "_exercise_editor_snapshot_companion_contract",
+            "SessionState.editor_package_identity(working)",
+            "SessionState.duplicate_editor_working_copy_baseline_session()",
+            "SessionState.consume_editor_return_snapshot()",
+            "SessionState.set_editor_working_copy_session(working, baseline)",
+            "SessionState.set_editor_working_copy_session(working, wrong_baseline)",
+            "SessionState.set_editor_working_copy_session(working) != null",
+            'terminal_working.scenario_status = "completed"',
+            'replacement.session_id = "%s-replacement" % replacement.session_id',
+            'resume_shell.call("_resume_working_copy_from_memory", _duplicate_session(working), _duplicate_session(baseline), wrong_identity)',
+            'resume_shell.call("_resume_working_copy_from_memory", _duplicate_session(working), null, expected_identity)',
+            'resume_shell.call("_resume_working_copy_from_memory", authored_resume)',
+            'resume_shell.call("_authored_baseline_session")',
+            '"wrong_identity_rejected"',
+            '"missing_baseline_rejected"',
+            '"authored_resume_nonnull"',
+            '"authored_expected_nonnull"',
+            '"authored_resume_accepted"',
+            '"authored_baseline_present"',
+            '"authored_baseline_distinct"',
+            '"authored_scenario_exact"',
+            '"authored_overworld_exact"',
+            '"authored_package_identity_empty"',
+            "if not _checks_exact(authored_resume_checks) or not _checks_exact(authored_overworld_checks):",
+            '"authored_one_argument_fallback": true',
+            '"consume_once": true',
+            '"setter_mismatch_failed_closed": true',
+            'SessionState._editor_working_copy_package_identity["package_id"] = "maps-folder:tampered"',
+            '"consume_mismatch_failed_closed": true',
+            '"resume_mismatch_failed_closed": true',
+            '"authored_scenario_factory_fallback": true',
+            '"terminal_cleared": true',
+            '"stale_active_cleared": true',
         ):
             ensure(required_token in active_return_text, errors, f"application_active_play_return_autosave_failure_regression.gd is missing token: {required_token}")
+        companion_match = re.search(
+            r"func _exercise_editor_snapshot_companion_contract\([\s\S]*?(?=^func _checks_exact)",
+            active_return_text,
+            re.MULTILINE,
+        )
+        ensure(companion_match is not None, errors, "Active-play editor snapshot companion proof must remain isolatable")
+        if companion_match is not None:
+            companion_body = companion_match.group(0)
+            control_order = [
+                companion_body.find('resume_shell.call("_resume_working_copy_from_memory", _duplicate_session(working), _duplicate_session(baseline), wrong_identity)'),
+                companion_body.find('resume_shell.call("_resume_working_copy_from_memory", _duplicate_session(working), null, expected_identity)'),
+                companion_body.find('var authored_resume: SessionStateStoreScript.SessionData = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)'),
+                companion_body.find('var authored_expected: SessionStateStoreScript.SessionData = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)'),
+                companion_body.find("if authored_expected == null:"),
+                companion_body.find("OverworldRules.normalize_overworld_state(authored_expected)"),
+                companion_body.find('resume_shell.call("_resume_working_copy_from_memory", authored_resume)'),
+                companion_body.find('var authored_baseline = resume_shell.call("_authored_baseline_session")'),
+                companion_body.find("var authored_baseline_payload: Dictionary = authored_baseline.to_dict().duplicate(true) if authored_baseline != null else {}"),
+                companion_body.find("var authored_expected_payload: Dictionary = authored_expected.to_dict().duplicate(true) if authored_expected != null else {}"),
+                companion_body.find('var authored_baseline_overworld: Dictionary = authored_baseline_payload.get("overworld", {}).duplicate(true)'),
+                companion_body.find('var authored_expected_overworld: Dictionary = authored_expected_payload.get("overworld", {}).duplicate(true)'),
+                companion_body.find("var authored_overworld_checks: Dictionary = _dictionary_union_exact_checks("),
+                companion_body.find("var authored_overworld_differences: Array[Dictionary] = _recursive_exact_differences("),
+                companion_body.find("var authored_resume_identity: Dictionary = SessionState.editor_package_identity(authored_resume).duplicate(true) if authored_resume != null else {}"),
+                companion_body.find("var authored_resume_checks := {"),
+                companion_body.find("resume_shell.queue_free()"),
+                companion_body.find("if not _checks_exact(authored_resume_checks) or not _checks_exact(authored_overworld_checks):"),
+            ]
+            ensure(all(index >= 0 for index in control_order) and control_order == sorted(control_order), errors, "Active-play companion control must retain mismatch calls, independent authored factories, one-argument resume, detached captures, queue-free, then mandatory gate")
+            for required_token in (
+                '"wrong_identity_rejected": not resumed_wrong',
+                '"missing_baseline_rejected": not resumed_missing',
+                '"authored_resume_nonnull": authored_resume != null',
+                '"authored_expected_nonnull": authored_expected != null',
+                '"authored_resume_accepted": resumed_authored',
+                '"authored_baseline_present": authored_baseline != null',
+                '"authored_baseline_distinct": authored_baseline != null and authored_resume != null and not is_same(authored_baseline, authored_resume)',
+                '"authored_scenario_exact": String(authored_baseline_payload.get("scenario_id", "")) == "river-pass"',
+                '"authored_overworld_exact": authored_baseline_payload.get("overworld", {}) == authored_expected_payload.get("overworld", {})',
+                '"authored_package_identity_empty": authored_resume_identity.is_empty()',
+                'if authored_expected == null:',
+                'OverworldRules.normalize_overworld_state(authored_expected)',
+                "if not _checks_exact(authored_resume_checks) or not _checks_exact(authored_overworld_checks):",
+                '"authored_overworld_failed_checks": _failed_check_names(authored_overworld_checks)',
+                '"authored_overworld_differences": authored_overworld_differences',
+                "JSON.stringify(_failed_check_names(authored_resume_checks))",
+                '"authored_resume_ref": authored_resume.get_instance_id() if authored_resume != null else -1',
+                '"authored_expected_ref": authored_expected.get_instance_id() if authored_expected != null else -1',
+                '"authored_baseline_ref": authored_baseline.get_instance_id() if authored_baseline != null else -1',
+                '"authored_baseline_overworld_sha": JSON.stringify(authored_baseline_payload.get("overworld", {})).sha256_text()',
+                '"authored_expected_overworld_sha": JSON.stringify(authored_expected_payload.get("overworld", {})).sha256_text()',
+                '"authored_resume_identity_sha": JSON.stringify(authored_resume_identity).sha256_text()',
+            ):
+                ensure(required_token in companion_body, errors, f"Active-play authored fallback diagnostic is missing exact named evidence: {required_token}")
+            ensure(companion_body.count("OverworldRules.normalize_overworld_state(authored_expected)") == 1, errors, "Active-play independent authored control must normalize exactly once through the production rule")
+            ensure("_make_all_tiles_visible" not in companion_body, errors, "Active-play independent authored control must not copy editor-only visibility mutation")
+            for forbidden in (".erase(", "exclude", "ignore"):
+                ensure(forbidden not in companion_body, errors, f"Active-play authored fallback diagnostic must not normalize or weaken the control: {forbidden}")
+            ensure("Map Editor resume did not reject package mismatches while retaining exact authored ScenarioFactory fallback." not in companion_body, errors, "Active-play authored fallback proof must not retain its opaque aggregate")
+
+        active_union_checks_match = re.search(
+            r"func _dictionary_union_exact_checks\([\s\S]*?(?=^func _recursive_exact_differences)",
+            active_return_text,
+            re.MULTILINE,
+        )
+        ensure(active_union_checks_match is not None, errors, "Active-play authored top-level overworld union-key checker must remain isolatable")
+        if active_union_checks_match is not None:
+            active_union_checks_body = active_union_checks_match.group(0)
+            for required_token in (
+                "var union_keys: Array = before.keys()",
+                "for key_value in after.keys():",
+                "if key_value not in union_keys:",
+                "union_keys.sort()",
+                'var check_name := "%s[%s]" % [prefix, JSON.stringify(String(key_value))]',
+                "before.has(key_value) and after.has(key_value)",
+                "before[key_value] == after[key_value]",
+            ):
+                ensure(required_token in active_union_checks_body, errors, f"Active-play authored top-level overworld checker is missing exact union-key evidence: {required_token}")
+            for forbidden in (".erase(", "normalize", "exclude", "ignore", "skip"):
+                ensure(forbidden not in active_union_checks_body, errors, f"Active-play authored top-level overworld checker must not exclude or normalize keys: {forbidden}")
+
+        active_recursive_diff_match = re.search(
+            r"func _collect_recursive_exact_differences\([\s\S]*?(?=^func _compact_diff_value)",
+            active_return_text,
+            re.MULTILINE,
+        )
+        ensure(active_recursive_diff_match is not None, errors, "Active-play authored recursive overworld diagnostic must remain isolatable")
+        if active_recursive_diff_match is not None:
+            active_recursive_diff_body = active_recursive_diff_match.group(0)
+            for required_token in (
+                "typeof(before) != typeof(after)",
+                "if before is Dictionary:",
+                "var union_keys: Array = before_dictionary.keys()",
+                "before_dictionary.has(key_value)",
+                "after_dictionary.has(key_value)",
+                '"%s[%s]" % [path, JSON.stringify(String(key_value))]',
+                "if before is Array:",
+                "before_array.size() != after_array.size()",
+                '"path": "%s.length" % path',
+                "range(min(before_array.size(), after_array.size()))",
+                '"%s[%d]" % [path, index]',
+                "if before != after:",
+            ):
+                ensure(required_token in active_recursive_diff_body, errors, f"Active-play authored recursive overworld diagnostic is missing type/key/index/scalar evidence: {required_token}")
+            for forbidden in (".erase(", "normalize", "exclude", "ignore", "skip"):
+                ensure(forbidden not in active_recursive_diff_body, errors, f"Active-play authored recursive overworld diagnostic must not exclude or normalize paths: {forbidden}")
+
+        active_compact_diff_match = re.search(
+            r"func _compact_diff_value\([\s\S]*?(?=^func _package_editor_session)",
+            active_return_text,
+            re.MULTILINE,
+        )
+        ensure(active_compact_diff_match is not None, errors, "Active-play authored compact recursive values must remain isolatable")
+        if active_compact_diff_match is not None:
+            active_compact_diff_body = active_compact_diff_match.group(0)
+            for required_token in (
+                'return {"present": false, "type": "missing"}',
+                "var encoded := var_to_str(value).replace(\"\\n\", \"\\\\n\")",
+                '"type": type_string(typeof(value))',
+                '"preview": encoded.left(160)',
+                '"sha256": encoded.sha256_text()',
+            ):
+                ensure(required_token in active_compact_diff_body, errors, f"Active-play authored recursive difference value is missing compact type/preview/hash evidence: {required_token}")
+            for forbidden in (".erase(", "normalize", "exclude", "ignore", "skip"):
+                ensure(forbidden not in active_compact_diff_body, errors, f"Active-play authored compact recursive value must not exclude or normalize data: {forbidden}")
+
+        authored_shell_path = ROOT / "scenes" / "editor" / "MapEditorShell.gd"
+        if authored_shell_path.exists():
+            shell_text = authored_shell_path.read_text(encoding="utf-8")
+            authored_baseline_match = re.search(
+                r"func _authored_baseline_session\(\)[\s\S]*?(?=^func _restore_tile_terrain_from_baseline)",
+                shell_text,
+                re.MULTILINE,
+            )
+            ensure(authored_baseline_match is not None, errors, "Map Editor authored baseline helper must remain isolatable")
+            if authored_baseline_match is not None:
+                authored_baseline_body = authored_baseline_match.group(0)
+                authored_factory = authored_baseline_body.find("var baseline = ScenarioFactoryScript.create_session(")
+                authored_nonnull = authored_baseline_body.find('if baseline == null or baseline.scenario_id == "":')
+                authored_normalize = authored_baseline_body.find("OverworldRules.normalize_overworld_state(baseline)")
+                authored_cache = authored_baseline_body.find("_authored_baseline_cache = baseline")
+                ensure(min(authored_factory, authored_nonnull, authored_normalize, authored_cache) >= 0 and authored_factory < authored_nonnull < authored_normalize < authored_cache, errors, "Map Editor authored baseline helper must create, validate, normalize once, then cache")
+                ensure(authored_baseline_body.count("OverworldRules.normalize_overworld_state(baseline)") == 1, errors, "Map Editor authored baseline helper must normalize its factory session exactly once")
+                ensure("_make_all_tiles_visible" not in authored_baseline_body, errors, "Map Editor authored baseline helper must not mutate visibility")
     if APPLICATION_ACTIVE_PLAY_RETURN_AUTOSAVE_FAILURE_REGRESSION_SCENE_PATH.exists():
         active_return_scene_text = APPLICATION_ACTIVE_PLAY_RETURN_AUTOSAVE_FAILURE_REGRESSION_SCENE_PATH.read_text(encoding="utf-8")
         ensure(
@@ -14807,6 +14984,12 @@ def validate_map_editor_dirty_transition_regression(errors: list[str]) -> None:
         '_assert_focus_links_exact',
         '_property_disabled_state_exact',
         '_focus_background_authority',
+        '"editor_working_copy": SessionState.editor_working_copy_session.to_dict() if SessionState.editor_working_copy_session != null else {}',
+        '"editor_baseline": SessionState._editor_working_copy_baseline_session.to_dict() if SessionState._editor_working_copy_baseline_session != null else {}',
+        '"editor_package_identity": SessionState._editor_working_copy_package_identity.duplicate(true)',
+        '"editor_return_pending": SessionState.editor_return_pending()',
+        'SessionState._editor_working_copy_baseline_session = _original_editor_baseline',
+        'SessionState._editor_working_copy_package_identity = _original_editor_package_identity.duplicate(true)',
         'source_names.size() != 28',
         '_unique_strings(source_names).size() != 28',
         'initial_cycle.size() != 18',
@@ -26649,8 +26832,517 @@ def validate_map_editor_package_save_copy(errors: list[str]) -> None:
             '"opaque_fixture_field"',
             '"opaque_town_fixture_field"',
             '"skirmish_index_count"',
+            "_assert_package_play_copy_baseline_companion",
+            "\t\t1280,",
+            "\t\t1920,",
+            "get_window().size = Vector2i(width, 720)",
+            "get_window().size = _original_window_size",
+            '"play_copy_widths": [1280, 1920]',
+            '"independent_package_paths": true',
+            "ContentService.has_authored_scenario(loaded_scenario_id)",
+            "ContentService.has_generated_scenario_draft(loaded_scenario_id)",
+            'shell.call("validation_launch_working_copy")',
+            'shell.call("_prepare_working_copy_snapshot_for_return")',
+            'overworld.call("validation_return_to_menu")',
+            "AppRouter.validation_active_play_return_snapshot()",
+            "AppRouter.validation_safe_quit_snapshot()",
+            "AppRouter.validation_safe_close_guard_snapshot()",
+            "AppRouter.validation_scenario_outcome_route_snapshot()",
+            '"return_request_plus_one"',
+            '"return_route_plus_one"',
+            '"return_save_unchanged"',
+            '"return_target_editor"',
+            '"return_reason_editor"',
+            '"unrelated_routes_exact"',
+            "SessionState.duplicate_editor_working_copy_baseline_session()",
+            "SessionState.editor_package_identity(staged_working)",
+            "SessionState.editor_package_identity(staged_baseline)",
+            '"working_payload_exact"',
+            '"working_save_version_exact"',
+            '"working_session_id_exact"',
+            '"working_scenario_id_exact"',
+            '"working_hero_id_exact"',
+            '"working_day_exact"',
+            '"working_difficulty_exact"',
+            '"working_launch_mode_exact"',
+            '"working_game_state_exact"',
+            '"working_scenario_status_exact"',
+            '"working_scenario_summary_exact"',
+            '"working_overworld_exact"',
+            '"working_battle_exact"',
+            '"working_flags_exact"',
+            "_dictionary_union_exact_checks",
+            "_recursive_exact_differences",
+            '"working_payload_differences"',
+            '"baseline_payload_exact"',
+            '"working_session_present"',
+            '"baseline_session_present"',
+            '"working_baseline_distinct_refs"',
+            '"working_identity_exact"',
+            '"baseline_identity_exact"',
+            '"restored_from_play_copy"',
+            '"source_map_path_exact"',
+            '"source_scenario_path_exact"',
+            '"restore_cue_changed"',
+            '"stored_working_copy_absent"',
+            '"stored_baseline_absent"',
+            '"stored_package_identity_absent"',
+            '"return_pending_false"',
+            '"second_consume_empty"',
+            '"authored_registry_absent"',
+            '"generated_registry_absent"',
+            "ContentService.has_authored_scenario(returned_session.scenario_id)",
+            "ContentService.has_generated_scenario_draft(returned_session.scenario_id)",
+            "DirAccess.rename_absolute(ProjectSettings.globalize_path(map_path), ProjectSettings.globalize_path(moved_map_path))",
+            '"externally changed package map".to_utf8_buffer()',
+            "_remove_path(scenario_path)",
+            "if not _checks_exact(return_checks)",
+            'returned_shell.call("validation_restore_selected_tile", 0, 2)',
+            '"restore_ok"',
+            '"restore_changed"',
+            '"selected_exact"',
+            '"unrelated_exact"',
+            '"hero_exact"',
+            '"dirty_true"',
+            '"tool_terrain"',
+            '"focus_expected_nonnull"',
+            '"focus_is_same"',
+            "if not _checks_exact(restore_checks):",
+            'returned_shell.call("validation_set_tool", "terrain")',
+            'returned_shell.get("_session").to_dict() != after_first_restore',
+            '"external_package_move_change_remove": true',
+            '"restore_selected_tile_only": true',
+            '"repeat_restore_noop": true',
+            "adopted_session.to_dict() != adopted_baseline.to_dict()",
+            "_durable_authority_exact(final_authority, _expected_authority_after_play)",
+            '"play_entry_only_autosave_changed"',
+            '"play_entry_autosave_present"',
+            '"play_entry_autosave_nonempty"',
+            '"durable_files_exact"',
+            '"summary_cache_exact"',
+            '"save_version_exact"',
+            '"settings_transaction_exact"',
+            "if not _checks_exact(durable_checks):",
+            '"file_differences": _file_state_differences',
+            '"settings_transaction_raw": settings_transaction_raw',
+            '"settings_transaction_canonical": _canonical_settings_transaction(settings_transaction_raw)',
+            "func _canonical_settings_transaction(transaction: Dictionary) -> Dictionary:",
+            "func _canonical_stored_input_event(event: InputEvent) -> Dictionary:",
+            "SessionState.SAVE_VERSION",
         ):
             ensure(required_token in report_text, errors, f"Map Editor Save Copy runtime proof is missing required token: {required_token}")
+        ensure(report_text.count("_assert_package_play_copy_baseline_companion(") == 3, errors, "Map Editor package baseline proof must define one helper and invoke exactly two independent real Play Copy rows")
+        object_helper_match = re.search(
+            r"func _object_for_family\([\s\S]*?(?=^func _detached_tile_content)",
+            report_text,
+            re.MULTILINE,
+        )
+        ensure(object_helper_match is not None, errors, "Map Editor package object-family observer must remain isolatable")
+        if object_helper_match is not None:
+            object_helper_body = object_helper_match.group(0)
+            ensure('String(detail_value.get("kind", "")) == family' in object_helper_body, errors, "Map Editor package object-family observer must use the production object-detail kind field")
+            ensure('detail_value.get("family"' not in object_helper_body, errors, "Map Editor package object-family observer must not use the nonexistent family field")
+        detached_tile_match = re.search(
+            r"func _detached_tile_content\([\s\S]*?(?=^func _durable_authority)",
+            report_text,
+            re.MULTILINE,
+        )
+        ensure(detached_tile_match is not None, errors, "Map Editor package unrelated-tile content observer must remain isolatable")
+        if detached_tile_match is not None:
+            detached_tile_body = detached_tile_match.group(0)
+            for required_token in (
+                '"x": tile.x',
+                '"y": tile.y',
+                '"terrain_id": shell.call("_terrain_at", tile)',
+                '"road": shell.call("_has_road_at", tile)',
+                '"road_layers": shell.call("_road_layer_ids_at", tile).duplicate(true)',
+                '"object_details": shell.call("_object_details_at", tile, true).duplicate(true)',
+            ):
+                ensure(required_token in detached_tile_body, errors, f"Map Editor package unrelated-tile content observer is missing exact direct field: {required_token}")
+            for forbidden in ("_tile_inspection_payload", "_selected_property_object", "_selected_property_handoff", ".erase(", "normalize", "exclude", "ignore"):
+                ensure(forbidden not in detached_tile_body, errors, f"Map Editor package unrelated-tile content observer must not include global UI state or normalize/exempt fields: {forbidden}")
+        durable_authority_match = re.search(
+            r"func _durable_authority\([\s\S]*?(?=^func _checks_exact)",
+            report_text,
+            re.MULTILINE,
+        )
+        ensure(durable_authority_match is not None, errors, "Map Editor package durable/canonical settings helpers must remain isolatable")
+        if durable_authority_match is not None:
+            durable_authority_body = durable_authority_match.group(0)
+            for required_token in (
+                "var settings_transaction_raw: Dictionary = SettingsService.validation_settings_transaction_snapshot()",
+                '"settings_transaction_raw": settings_transaction_raw',
+                '"settings_transaction_canonical": _canonical_settings_transaction(settings_transaction_raw)',
+                'after.get("settings_transaction_canonical", {}) == before.get("settings_transaction_canonical", {})',
+                "var canonical: Dictionary = transaction.duplicate(true)",
+                "var canonical_input_map := {}",
+                'var input_map: Dictionary = transaction.get("input_map", {}) if transaction.get("input_map", {}) is Dictionary else {}',
+                "canonical_events.append(_canonical_stored_input_event(event_value as InputEvent))",
+                '"action": action',
+                '"exists": bool(action_state.get("exists", false))',
+                '"deadzone": float(action_state.get("deadzone", 0.5))',
+                '"events": canonical_events',
+                'canonical["input_map"] = canonical_input_map',
+                "for property_value in event.get_property_list():",
+                'property_name == "script" or (property_usage & PROPERTY_USAGE_STORAGE) == 0',
+                '"value": var_to_str(event.get(property_name))',
+                '"class": event.get_class()',
+                '"as_text": event.as_text()',
+                '"stored_properties": stored_properties',
+            ):
+                ensure(required_token in durable_authority_body, errors, f"Map Editor package canonical settings authority is missing method-matched token: {required_token}")
+            ensure(durable_authority_body.count("SettingsService.validation_settings_transaction_snapshot()") == 1, errors, "Map Editor package durable authority must capture the raw settings transaction exactly once per snapshot")
+            for forbidden in (".erase(", "normalize", "exclude", "ignore"):
+                ensure(forbidden not in durable_authority_body, errors, f"Map Editor package canonical settings authority must replace only InputEvent representations without exclusions: {forbidden}")
+        play_helper_match = re.search(
+            r"func _assert_package_play_copy_baseline_companion\([\s\S]*?(?=^func _object_for_family)",
+            report_text,
+            re.MULTILINE,
+        )
+        ensure(play_helper_match is not None, errors, "Map Editor package Play Copy companion helper must remain isolatable")
+        if play_helper_match is not None:
+            play_helper_body = play_helper_match.group(0)
+            for check_name in (
+                "working_session_present",
+                "baseline_session_present",
+                "working_payload_exact",
+                "baseline_payload_exact",
+                "working_baseline_distinct_refs",
+                "working_identity_exact",
+                "baseline_identity_exact",
+                "restored_from_play_copy",
+                "source_map_path_exact",
+                "source_scenario_path_exact",
+                "restore_cue_changed",
+                "stored_working_copy_absent",
+                "stored_baseline_absent",
+                "stored_package_identity_absent",
+                "return_pending_false",
+                "second_consume_empty",
+                "authored_registry_absent",
+                "generated_registry_absent",
+                "return_request_plus_one",
+                "return_route_plus_one",
+                "return_save_unchanged",
+                "return_target_editor",
+                "return_reason_editor",
+                "unrelated_routes_exact",
+            ):
+                ensure(f'"{check_name}"' in play_helper_body, errors, f"Map Editor package return decomposition is missing mandatory check: {check_name}")
+            for check_name in ("durable_files_exact", "summary_cache_exact", "save_version_exact", "settings_transaction_exact"):
+                ensure(f'"{check_name}"' in play_helper_body, errors, f"Map Editor package durable decomposition is missing mandatory check: {check_name}")
+            for check_name in ("play_entry_only_autosave_changed", "play_entry_autosave_present", "play_entry_autosave_nonempty"):
+                ensure(f'"{check_name}"' in play_helper_body, errors, f"Map Editor package Play-entry autosave boundary is missing mandatory check: {check_name}")
+            play_entry_order = [
+                play_helper_body.find("var overworld := get_tree().current_scene"),
+                play_helper_body.find('if overworld == null or not overworld.has_method("validation_return_to_menu"):'),
+                play_helper_body.find("var play_entry_authority: Dictionary = _durable_authority()"),
+                play_helper_body.find('var play_entry_files: Dictionary = play_entry_authority.get("files", {}).duplicate(true)'),
+                play_helper_body.find("var play_entry_file_differences: Array[String] = _file_state_differences("),
+                play_helper_body.find("var play_entry_checks := {"),
+                play_helper_body.find("if not _checks_exact(play_entry_checks):"),
+                play_helper_body.find("_expected_authority_after_play = play_entry_authority.duplicate(true)"),
+                play_helper_body.find("SessionState.ensure_active_session().day += 4"),
+                play_helper_body.find('var return_result: Dictionary = overworld.call("validation_return_to_menu")'),
+            ]
+            ensure(all(index >= 0 for index in play_entry_order) and play_entry_order == sorted(play_entry_order), errors, "Map Editor package proof must settle into real Overworld, capture the Play-entry autosave checkpoint, then mutate play state and return")
+            for required_token in (
+                'var autosave_path := "%s/%s" % [SaveService.SAVE_DIR, SaveService.AUTOSAVE_FILE]',
+                '"play_entry_only_autosave_changed": play_entry_file_differences == [autosave_path]',
+                '"play_entry_autosave_present": bool(play_entry_autosave.get("exists", false))',
+                '"play_entry_autosave_nonempty": play_entry_autosave.get("bytes", PackedByteArray()) is PackedByteArray and not play_entry_autosave.get("bytes", PackedByteArray()).is_empty()',
+                '"durable_files_exact": row_authority_after.get("files", {}) == play_entry_files',
+                '"file_differences": _file_state_differences(play_entry_files, row_authority_after.get("files", {}))',
+                '"settings_transaction_exact": row_authority_after.get("settings_transaction_canonical", {}) == row_authority_before.get("settings_transaction_canonical", {})',
+                '"settings_raw_equal_diagnostic": row_authority_after.get("settings_transaction_raw", {}) == row_authority_before.get("settings_transaction_raw", {})',
+                '"settings_before_sha": JSON.stringify(row_authority_before.get("settings_transaction_canonical", {})).sha256_text()',
+                '"settings_after_sha": JSON.stringify(row_authority_after.get("settings_transaction_canonical", {})).sha256_text()',
+            ):
+                ensure(required_token in play_helper_body, errors, f"Map Editor package Play-entry autosave authority is missing exact bounded token: {required_token}")
+            ensure(play_helper_body.count("var play_entry_authority: Dictionary = _durable_authority()") == 1, errors, "Map Editor package row must capture Play-entry durable authority exactly once")
+            ensure(play_helper_body.count("var row_authority_after: Dictionary = _durable_authority()") == 1, errors, "Map Editor package row must capture post-return durable authority exactly once")
+            ensure('row_authority_after.get("files", {}) == row_authority_before.get("files", {})' not in play_helper_body, errors, "Map Editor package row must not compare past the exact Play-entry autosave consequence")
+            ensure('row_authority_after.get("settings_transaction_raw", {}) == row_authority_before.get("settings_transaction_raw", {})' not in play_helper_body.split('"settings_raw_equal_diagnostic"')[0], errors, "Map Editor package raw Object-bearing settings transaction must not be an authority predicate")
+            for check_name in (
+                "working_save_version_exact",
+                "working_session_id_exact",
+                "working_scenario_id_exact",
+                "working_hero_id_exact",
+                "working_day_exact",
+                "working_difficulty_exact",
+                "working_launch_mode_exact",
+                "working_game_state_exact",
+                "working_scenario_status_exact",
+                "working_scenario_summary_exact",
+                "working_overworld_exact",
+                "working_battle_exact",
+                "working_flags_exact",
+            ):
+                ensure(f'"{check_name}"' in play_helper_body, errors, f"Map Editor package working-session decomposition is missing mandatory top-level check: {check_name}")
+            for field_name in (
+                "save_version",
+                "session_id",
+                "scenario_id",
+                "hero_id",
+                "day",
+                "difficulty",
+                "launch_mode",
+                "game_state",
+                "scenario_status",
+                "scenario_summary",
+                "overworld",
+                "battle",
+                "flags",
+            ):
+                ensure(
+                    f'working_before_play.has("{field_name}") and returned_working_payload.has("{field_name}")' in play_helper_body,
+                    errors,
+                    f"Map Editor package working-session decomposition must require both payloads to contain top-level field: {field_name}",
+                )
+            return_gate_index = play_helper_body.find("if not _checks_exact(return_checks)")
+            ensure(play_helper_body.find("var return_checks := {") >= 0 and play_helper_body.find("var return_checks := {") < return_gate_index, errors, "Map Editor package return decomposition must gate every named predicate")
+            ensure(play_helper_body.find("var durable_checks := {") < play_helper_body.find("if not _checks_exact(durable_checks):"), errors, "Map Editor package durable decomposition must gate every named predicate")
+            session_checks_index = play_helper_body.find("var working_session_field_checks := {")
+            overworld_checks_index = play_helper_body.find("var working_overworld_checks: Dictionary = _dictionary_union_exact_checks(")
+            ensure(min(session_checks_index, overworld_checks_index, return_gate_index) >= 0 and session_checks_index < overworld_checks_index < return_gate_index, errors, "Map Editor package working-session and overworld decompositions must be captured before the return gate")
+            ensure("or not _checks_exact(working_session_field_checks)" in play_helper_body, errors, "Map Editor package return gate must keep every named top-level working-session predicate mandatory")
+            ensure("or not _checks_exact(working_overworld_checks)" in play_helper_body, errors, "Map Editor package return gate must keep every top-level overworld union-key predicate mandatory")
+            ensure('"working_session_failed_checks": _failed_check_names(working_session_field_checks)' in play_helper_body, errors, "Map Editor package failure output must name differing top-level working-session fields")
+            ensure('"working_overworld_failed_checks": _failed_check_names(working_overworld_checks)' in play_helper_body, errors, "Map Editor package failure output must name differing top-level overworld keys")
+            ensure('"working_payload_differences": _recursive_exact_differences(working_before_play, returned_working_payload)' in play_helper_body, errors, "Map Editor package failure output must recursively diff the detached working payloads")
+            restore_diagnostic_match = re.search(
+                r'\tvar restore: Dictionary = returned_shell\.call\("validation_restore_selected_tile", 0, 2\)[\s\S]*?(?=\tvar after_first_restore: Dictionary)',
+                play_helper_body,
+            )
+            ensure(restore_diagnostic_match is not None, errors, "Map Editor package Restore Tile diagnostic must remain isolatable before the repeat no-op")
+            if restore_diagnostic_match is not None:
+                restore_diagnostic_body = restore_diagnostic_match.group(0)
+                restore_order = [
+                    restore_diagnostic_body.find('var restore: Dictionary = returned_shell.call("validation_restore_selected_tile", 0, 2)'),
+                    restore_diagnostic_body.find('var restored_inspection: Dictionary = restore.get("tile_inspection", {}).duplicate(true)'),
+                    restore_diagnostic_body.find('var restored_snapshot: Dictionary = returned_shell.call("validation_snapshot").duplicate(true)'),
+                    restore_diagnostic_body.find('var unrelated_tile_after: Dictionary = _detached_tile_content(returned_shell, Vector2i(0, 0))'),
+                    restore_diagnostic_body.find('var unrelated_hero_after: Dictionary = restored_snapshot.get("hero_position", {}).duplicate(true)'),
+                    restore_diagnostic_body.find("var returned_focus_after := returned_shell.get_viewport().gui_get_focus_owner()"),
+                    restore_diagnostic_body.find("var restore_checks := {"),
+                    restore_diagnostic_body.find("if not _checks_exact(restore_checks):"),
+                ]
+                ensure(all(index >= 0 for index in restore_order) and restore_order == sorted(restore_order), errors, "Map Editor package Restore Tile must capture every detached post-state once before its mandatory named gate")
+                for required_token in (
+                    '"restore_ok": bool(restore.get("ok", false))',
+                    '"restore_changed": bool(restore.get("changed", false))',
+                    '"selected_exact": restored_inspection == selected_inspection_before',
+                    '"unrelated_exact": unrelated_tile_after == unrelated_tile_before',
+                    '"hero_exact": unrelated_hero_after == unrelated_hero_before',
+                    '"dirty_true": bool(restored_snapshot.get("dirty", false))',
+                    '"tool_terrain": String(restored_snapshot.get("tool", "")) == "terrain"',
+                    '"focus_expected_nonnull": returned_focus != null',
+                    '"focus_is_same": returned_focus != null and returned_focus_after != null and is_same(returned_focus_after, returned_focus)',
+                    "JSON.stringify(_failed_check_names(restore_checks))",
+                    '"selected_before_sha": JSON.stringify(selected_inspection_before).sha256_text()',
+                    '"selected_after_sha": JSON.stringify(restored_inspection).sha256_text()',
+                    '"selected_differences": _recursive_exact_differences(selected_inspection_before, restored_inspection)',
+                    '"unrelated_before_sha": JSON.stringify(unrelated_tile_before).sha256_text()',
+                    '"unrelated_after_sha": JSON.stringify(unrelated_tile_after).sha256_text()',
+                    '"focus_before_id": returned_focus.get_instance_id() if returned_focus != null else -1',
+                    '"focus_after_id": returned_focus_after.get_instance_id() if returned_focus_after != null else -1',
+                ):
+                    ensure(required_token in restore_diagnostic_body, errors, f"Map Editor package Restore Tile diagnostic is missing exact named authority evidence: {required_token}")
+                for forbidden in ("_restore_selected_tile_from_authored", ".erase(", "normalize", "exclude", "ignore"):
+                    ensure(forbidden not in restore_diagnostic_body, errors, f"Map Editor package Restore Tile diagnostic must not bypass, normalize, or exclude public behavior: {forbidden}")
+                ensure('_tile_inspection_payload", Vector2i(0, 0)' not in restore_diagnostic_body, errors, "Map Editor package unrelated-tile authority must not use the selected-property-contaminated inspection observer")
+            ensure(play_helper_body.count("_detached_tile_content(returned_shell, Vector2i(0, 0))") == 2, errors, "Map Editor package unrelated-tile authority must capture exact direct content once before and once after Restore Tile")
+            unrelated_before_index = play_helper_body.find('var unrelated_tile_before: Dictionary = _detached_tile_content(returned_shell, Vector2i(0, 0))')
+            restore_call_index = play_helper_body.find('var restore: Dictionary = returned_shell.call("validation_restore_selected_tile", 0, 2)')
+            unrelated_after_index = play_helper_body.find('var unrelated_tile_after: Dictionary = _detached_tile_content(returned_shell, Vector2i(0, 0))')
+            ensure(min(unrelated_before_index, restore_call_index, unrelated_after_index) >= 0 and unrelated_before_index < restore_call_index < unrelated_after_index, errors, "Map Editor package unrelated-tile direct content captures must bracket the real public Restore Tile call")
+            ensure(play_helper_body.count('returned_shell.call("validation_restore_selected_tile", 0, 2)') == 2, errors, "Map Editor package Restore Tile proof must keep one public restore and one public repeat no-op")
+            restore_gate_index = play_helper_body.find("if not _checks_exact(restore_checks):")
+            repeat_capture_index = play_helper_body.find("var after_first_restore: Dictionary = returned_shell.get(\"_session\").to_dict()")
+            repeated_call_index = play_helper_body.find('var repeated: Dictionary = returned_shell.call("validation_restore_selected_tile", 0, 2)')
+            ensure(min(restore_gate_index, repeat_capture_index, repeated_call_index) >= 0 and restore_gate_index < repeat_capture_index < repeated_call_index, errors, "Map Editor package public Restore Tile named gate must precede the unchanged repeat no-op")
+            ensure('bool(repeated.get("changed", true))' in play_helper_body and 'returned_shell.get("_session").to_dict() != after_first_restore' in play_helper_body, errors, "Map Editor package repeat Restore Tile must remain an exact unchanged no-op")
+            ensure("Restore Tile did not restore only the selected package tile with dirty/tool/focus authority exact." not in play_helper_body, errors, "Map Editor package Restore Tile proof must not retain the opaque aggregate failure")
+            ensure("Returned package editor did not restore exact independent working-copy/baseline companions." not in play_helper_body, errors, "Map Editor package proof must not retain the opaque return aggregate")
+            for forbidden in (".erase(", "normalize", "autosave_exempt", "ignore_autosave"):
+                ensure(forbidden not in play_helper_body, errors, f"Map Editor package diagnostics must not normalize or exempt authority: {forbidden}")
+        recursive_diff_match = re.search(
+            r"func _recursive_exact_differences\([\s\S]*?(?=^func _file_state_differences)",
+            report_text,
+            re.MULTILINE,
+        )
+        ensure(recursive_diff_match is not None, errors, "Map Editor package recursive exact payload diagnostic must remain isolatable")
+        if recursive_diff_match is not None:
+            recursive_diff_body = recursive_diff_match.group(0)
+            for required_token in (
+                "_collect_recursive_exact_differences(before, true, after, true, path, differences)",
+                "typeof(before) != typeof(after)",
+                "var union_keys: Array = before_dictionary.keys()",
+                "for key_value in after_dictionary.keys():",
+                "before_dictionary.has(key_value)",
+                "after_dictionary.has(key_value)",
+                '"%s[%s]" % [path, JSON.stringify(String(key_value))]',
+                "before_array.size() != after_array.size()",
+                '"path": "%s.length" % path',
+                "range(min(before_array.size(), after_array.size()))",
+                '"%s[%d]" % [path, index]',
+                '"type": type_string(typeof(value))',
+                '"preview": encoded.left(160)',
+                '"sha256": encoded.sha256_text()',
+            ):
+                ensure(required_token in recursive_diff_body, errors, f"Map Editor package recursive exact diagnostic is missing type/key/index/value evidence: {required_token}")
+            for forbidden in (".erase(", "normalize", "exclude", "ignore", "skip"):
+                ensure(forbidden not in recursive_diff_body, errors, f"Map Editor package recursive exact diagnostic must not exclude or normalize paths: {forbidden}")
+        union_checks_match = re.search(
+            r"func _dictionary_union_exact_checks\([\s\S]*?(?=^func _recursive_exact_differences)",
+            report_text,
+            re.MULTILINE,
+        )
+        ensure(union_checks_match is not None, errors, "Map Editor package top-level overworld union-key checker must remain isolatable")
+        if union_checks_match is not None:
+            union_checks_body = union_checks_match.group(0)
+            for required_token in (
+                "var union_keys: Array = before.keys()",
+                "for key_value in after.keys():",
+                "before.has(key_value) and after.has(key_value)",
+                "before[key_value] == after[key_value]",
+            ):
+                ensure(required_token in union_checks_body, errors, f"Map Editor package top-level overworld union-key checker is missing exact equality token: {required_token}")
+            for forbidden in (".erase(", "normalize", "exclude", "ignore", "skip"):
+                ensure(forbidden not in union_checks_body, errors, f"Map Editor package top-level overworld checker must not exclude or normalize keys: {forbidden}")
+        run_match = re.search(
+            r"func _run\(\)[\s\S]*?(?=^func _assert_package_play_copy_baseline_companion)",
+            report_text,
+            re.MULTILINE,
+        )
+        ensure(run_match is not None, errors, "Map Editor package baseline run must remain isolatable")
+        if run_match is not None:
+            run_body = run_match.group(0)
+            run_order = [
+                run_body.find("_assert_package_play_copy_baseline_companion(\n\t\tshell,\n\t\t1280,"),
+                run_body.find('shell.call("validation_save_copy", _test_dir, "saved-editor-copy")'),
+                run_body.find("ContentService.has_authored_scenario(adopted_session.scenario_id)"),
+                run_body.find("_assert_package_play_copy_baseline_companion(\n\t\tshell,\n\t\t1920,"),
+                run_body.find('shell.call("validation_save_copy", _test_dir, "saved-editor-copy")', run_body.find("\t\t1920,")),
+                run_body.find("ContentService.has_authored_scenario(second_adopted_session.scenario_id)"),
+            ]
+            ensure(all(index >= 0 for index in run_order) and run_order == sorted(run_order), errors, "Map Editor package baseline proof must run source 1280 return/restore, adopt Save Copy, then independent-path 1920 return/restore and adopt again")
+
+    if shell_path.exists() and SESSION_STATE_PATH.exists():
+        shell_text = shell_path.read_text(encoding="utf-8")
+        session_text = SESSION_STATE_PATH.read_text(encoding="utf-8")
+        for required_token in (
+            "SessionState.consume_editor_return_snapshot()",
+            'returned_snapshot.get("authored_baseline_session", null)',
+            'returned_snapshot.get("package_identity", {})',
+            "func _resume_working_copy_from_memory(session, baseline_session = null, package_identity: Dictionary = {})",
+            "SessionState.editor_package_identity(session)",
+            "SessionState.editor_package_identity(baseline_session) != package_identity",
+            "_authored_baseline_cache = resumed_baseline",
+            "SessionState.set_editor_working_copy_session(null)",
+            "SessionState.set_editor_working_copy_session(_session, _authored_baseline_session())",
+        ):
+            ensure(required_token in shell_text, errors, f"Map Editor package baseline companion source is missing token: {required_token}")
+        for required_token in (
+            "var _editor_working_copy_baseline_session",
+            "var _editor_working_copy_package_identity",
+            "func editor_package_identity",
+            "func duplicate_editor_working_copy_baseline_session",
+            "func consume_editor_return_snapshot",
+            "func _active_session_matches_editor_working_copy",
+            "func _editor_working_copy_baseline_matches_staged_session",
+            "func _clear_editor_working_copy_snapshot",
+        ):
+            ensure(required_token in session_text, errors, f"SessionState package baseline companion is missing token: {required_token}")
+
+        setter_match = re.search(
+            r"func set_editor_working_copy_session\([\s\S]*?(?=^func has_editor_working_copy_session)",
+            session_text,
+            re.MULTILINE,
+        )
+        ensure(setter_match is not None, errors, "SessionState package editor setter must remain isolatable")
+        if setter_match is not None:
+            setter_body = setter_match.group(0)
+            setter_order = [
+                setter_body.find("var working_copy := _normalized_session_copy(session.to_dict())"),
+                setter_body.find("var package_identity := editor_package_identity(working_copy)"),
+                setter_body.find("if not package_identity.is_empty():"),
+                setter_body.find("baseline_session == null"),
+                setter_body.find("editor_package_identity(candidate) != package_identity"),
+                setter_body.find("_editor_working_copy_baseline_session = baseline_copy"),
+                setter_body.find("_editor_working_copy_package_identity = package_identity.duplicate(true) if baseline_copy != null else {}"),
+            ]
+            ensure(all(index >= 0 for index in setter_order) and setter_order == sorted(setter_order), errors, "SessionState package editor setter must validate exact identity before storing detached companion state")
+            for forbidden in ("FileAccess", "DirAccess", "ScenarioFactory", "ContentService"):
+                ensure(forbidden not in setter_body, errors, f"SessionState package editor setter must not use registry/file fallback: {forbidden}")
+
+        consume_match = re.search(
+            r"func consume_editor_return_snapshot\(\)[\s\S]*?(?=^func editor_return_pending)",
+            session_text,
+            re.MULTILINE,
+        )
+        ensure(consume_match is not None, errors, "SessionState package editor snapshot consumer must remain isolatable")
+        if consume_match is not None:
+            consume_body = consume_match.group(0)
+            for required_token in (
+                "captured_package_identity == working_package_identity",
+                "editor_package_identity(_editor_working_copy_baseline_session) == captured_package_identity",
+                "_clear_editor_working_copy_snapshot()",
+                '"working_copy_session": working_copy',
+                '"authored_baseline_session": baseline_copy',
+                '"package_identity": package_identity',
+            ):
+                ensure(required_token in consume_body, errors, f"SessionState package snapshot consumer is missing exact token: {required_token}")
+            ensure(consume_body.find("_clear_editor_working_copy_snapshot()") < consume_body.find('"working_copy_session": working_copy'), errors, "SessionState package snapshot consumer must clear stored ownership before returning detached values")
+
+        resume_match = re.search(
+            r"func _resume_working_copy_from_memory\([\s\S]*?(?=^func _restore_editor_ui_metadata)",
+            shell_text,
+            re.MULTILINE,
+        )
+        ensure(resume_match is not None, errors, "Map Editor package resume helper must remain isolatable")
+        if resume_match is not None:
+            resume_body = resume_match.group(0)
+            resume_identity = resume_body.find("var session_package_identity := SessionState.editor_package_identity(session)")
+            resume_baseline_identity = resume_body.find("SessionState.editor_package_identity(baseline_session) != package_identity")
+            resume_identity_reject = resume_body.find("return false", resume_baseline_identity)
+            resume_working_duplicate = resume_body.find("var resumed_session = _duplicate_session(session) if not session_package_identity.is_empty() else session")
+            resume_baseline_duplicate = resume_body.find("var resumed_baseline = _duplicate_session(baseline_session) if not session_package_identity.is_empty() else null")
+            resume_null_gate = resume_body.find("if resumed_session == null or (not session_package_identity.is_empty() and resumed_baseline == null):")
+            resume_null_reject = resume_body.find("return false", resume_null_gate)
+            resume_first_mutation = resume_body.find("_cancel_editor_map_cursor_semantic()")
+            resume_session_assign = resume_body.find("_session = resumed_session")
+            resume_order = (
+                resume_identity,
+                resume_baseline_identity,
+                resume_identity_reject,
+                resume_working_duplicate,
+                resume_baseline_duplicate,
+                resume_null_gate,
+                resume_null_reject,
+                resume_first_mutation,
+                resume_session_assign,
+            )
+            ensure(all(index >= 0 for index in resume_order) and list(resume_order) == sorted(resume_order), errors, "Map Editor package resume must validate identity, duplicate both companions, and reject null copies before any editor mutation")
+            resume_prefix = resume_body[:resume_first_mutation] if resume_first_mutation >= 0 else resume_body
+            for forbidden in ("\n\t_session =", "\n\t_authored_baseline_cache =", "\n\t_authored_baseline_cache_id =", "\n\t_selected_map_package_id =", "\n\t_restored_from_play_copy ="):
+                ensure(forbidden not in resume_prefix, errors, f"Map Editor package resume must remain mutation-free until identity and duplicate null gates pass: {forbidden}")
+
+            resume_branch_match = re.search(
+                r'\tif not session_package_identity\.is_empty\(\):\n(?P<package>[\s\S]*?)\telse:\n(?P<authored>[\s\S]*?)(?=\t_selected_map_package_id =)',
+                resume_body,
+            )
+            ensure(resume_branch_match is not None, errors, "Map Editor package resume must retain isolatable package and authored adoption branches")
+            if resume_branch_match is not None:
+                package_branch = resume_branch_match.group("package")
+                authored_branch = resume_branch_match.group("authored")
+                ensure("_authored_baseline_cache = resumed_baseline" in package_branch, errors, "Map Editor package resume must adopt the already-detached baseline without rebuilding it")
+                ensure("_authored_baseline_cache_id = _session.scenario_id" in package_branch, errors, "Map Editor package resume must align the baseline id to the resumed package session")
+                for forbidden in ("normalize_overworld_state", "_make_all_tiles_visible", "_duplicate_session"):
+                    ensure(forbidden not in package_branch, errors, f"Map Editor package resume must not rewrite the exact staged package companion: {forbidden}")
+                authored_normalize = authored_branch.find("OverworldRules.normalize_overworld_state(_session)")
+                authored_visible = authored_branch.find("_make_all_tiles_visible(_session)")
+                ensure(min(authored_normalize, authored_visible) >= 0 and authored_normalize < authored_visible, errors, "Map Editor authored one-argument resume must retain normalization followed by full visibility fallback")
 
     if report_scene_path.exists():
         report_scene_text = report_scene_path.read_text(encoding="utf-8")

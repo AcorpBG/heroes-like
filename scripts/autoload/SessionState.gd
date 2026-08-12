@@ -12,6 +12,8 @@ const SUPPORTED_LAUNCH_MODES := [LAUNCH_MODE_CAMPAIGN, LAUNCH_MODE_SKIRMISH, LAU
 
 var active_session: SessionStateStoreScript.SessionData = null
 var editor_working_copy_session: SessionStateStoreScript.SessionData = null
+var _editor_working_copy_baseline_session: SessionStateStoreScript.SessionData = null
+var _editor_working_copy_package_identity := {}
 var _editor_return_pending := false
 
 static func normalize_payload(value: Variant) -> Dictionary:
@@ -71,6 +73,7 @@ func _ready() -> void:
 
 func reset_session() -> void:
 	active_session = SessionStateStoreScript.new_session_data()
+	_clear_editor_working_copy_snapshot()
 
 func ensure_active_session() -> SessionStateStoreScript.SessionData:
 	if active_session == null:
@@ -88,14 +91,33 @@ func set_active_session(session: SessionStateStoreScript.SessionData) -> Session
 		reset_session()
 		return active_session
 	active_session = _normalized_session_copy(session.to_dict())
+	if not _active_session_matches_editor_working_copy(active_session):
+		_clear_editor_working_copy_snapshot()
 	return active_session
 
-func set_editor_working_copy_session(session: SessionStateStoreScript.SessionData) -> SessionStateStoreScript.SessionData:
+func set_editor_working_copy_session(
+	session: SessionStateStoreScript.SessionData,
+	baseline_session: SessionStateStoreScript.SessionData = null
+) -> SessionStateStoreScript.SessionData:
 	if session == null or session.scenario_id == "":
-		editor_working_copy_session = null
-		_editor_return_pending = false
+		_clear_editor_working_copy_snapshot()
 		return null
-	editor_working_copy_session = _normalized_session_copy(session.to_dict())
+	var working_copy := _normalized_session_copy(session.to_dict())
+	var package_identity := editor_package_identity(working_copy)
+	var baseline_copy: SessionStateStoreScript.SessionData = null
+	if not package_identity.is_empty():
+		if baseline_session == null or baseline_session.scenario_id != working_copy.scenario_id:
+			_clear_editor_working_copy_snapshot()
+			return null
+		var candidate := _normalized_session_copy(baseline_session.to_dict())
+		if editor_package_identity(candidate) != package_identity:
+			_clear_editor_working_copy_snapshot()
+			return null
+		baseline_copy = candidate
+	editor_working_copy_session = working_copy
+	_editor_working_copy_baseline_session = baseline_copy
+	_editor_working_copy_package_identity = package_identity.duplicate(true) if baseline_copy != null else {}
+	_editor_return_pending = false
 	return editor_working_copy_session
 
 func has_editor_working_copy_session() -> bool:
@@ -106,29 +128,70 @@ func duplicate_editor_working_copy_session() -> SessionStateStoreScript.SessionD
 		return null
 	return _normalized_session_copy(editor_working_copy_session.to_dict())
 
+func duplicate_editor_working_copy_baseline_session() -> SessionStateStoreScript.SessionData:
+	if not _editor_working_copy_baseline_matches_staged_session():
+		return null
+	return _normalized_session_copy(_editor_working_copy_baseline_session.to_dict())
+
 func request_editor_return_from_active_play() -> bool:
 	if not has_playable_session():
+		_clear_editor_working_copy_snapshot()
 		return false
 	var session := ensure_active_session()
-	if not bool(session.flags.get("editor_working_copy", false)):
-		return false
-	if not has_editor_working_copy_session():
+	if session.scenario_status != "in_progress" or not _active_session_matches_editor_working_copy(session):
+		_clear_editor_working_copy_snapshot()
 		return false
 	_editor_return_pending = true
-	reset_session()
+	active_session = SessionStateStoreScript.new_session_data()
 	return true
 
 func consume_editor_return_session() -> SessionStateStoreScript.SessionData:
+	var snapshot := consume_editor_return_snapshot()
+	return snapshot.get("working_copy_session", null)
+
+func consume_editor_return_snapshot() -> Dictionary:
 	if not _editor_return_pending:
-		return null
+		return {}
 	_editor_return_pending = false
-	return duplicate_editor_working_copy_session()
+	var working_package_identity := editor_package_identity(editor_working_copy_session)
+	var captured_package_identity := _editor_working_copy_package_identity.duplicate(true)
+	var package_companion_present := (
+		not captured_package_identity.is_empty()
+		or _editor_working_copy_baseline_session != null
+	)
+	var package_companion_valid := (
+		not working_package_identity.is_empty()
+		and captured_package_identity == working_package_identity
+		and _editor_working_copy_baseline_session != null
+		and editor_working_copy_session != null
+		and _editor_working_copy_baseline_session.scenario_id == editor_working_copy_session.scenario_id
+		and editor_package_identity(_editor_working_copy_baseline_session) == captured_package_identity
+	)
+	if (
+		(not working_package_identity.is_empty() and not package_companion_valid)
+		or (working_package_identity.is_empty() and package_companion_present)
+	):
+		_clear_editor_working_copy_snapshot()
+		return {}
+	var working_copy := duplicate_editor_working_copy_session()
+	var baseline_copy := duplicate_editor_working_copy_baseline_session()
+	var package_identity := captured_package_identity if baseline_copy != null else {}
+	_clear_editor_working_copy_snapshot()
+	if working_copy == null:
+		return {}
+	return {
+		"working_copy_session": working_copy,
+		"authored_baseline_session": baseline_copy,
+		"package_identity": package_identity,
+	}
 
 func editor_return_pending() -> bool:
 	return _editor_return_pending
 
 func restore_session(payload: Variant) -> SessionStateStoreScript.SessionData:
 	active_session = _normalized_session_copy(payload)
+	if not _active_session_matches_editor_working_copy(active_session):
+		_clear_editor_working_copy_snapshot()
 	return active_session
 
 func duplicate_active_session() -> SessionStateStoreScript.SessionData:
@@ -154,3 +217,56 @@ func _normalized_session_copy(value: Variant) -> SessionStateStoreScript.Session
 	session.from_dict(normalize_payload(value))
 	session.save_version = SAVE_VERSION
 	return session
+
+static func editor_package_identity(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if session == null or session.scenario_id == "":
+		return {}
+	if String(session.flags.get("editor_source_kind", "")) != "maps_folder_package":
+		return {}
+	var entry_value = session.flags.get("maps_folder_package_entry", {})
+	var entry: Dictionary = entry_value if entry_value is Dictionary else {}
+	var package_id := String(session.flags.get("editor_source_package_id", entry.get("package_id", "")))
+	var map_path := String(session.flags.get("editor_source_map_path", entry.get("map_path", "")))
+	var scenario_path := String(session.flags.get("editor_source_scenario_path", entry.get("scenario_path", "")))
+	if package_id == "" or map_path == "" or scenario_path == "":
+		return {}
+	var map_ref_value = entry.get("map_ref", {})
+	var scenario_ref_value = entry.get("scenario_ref", {})
+	return {
+		"session_id": String(session.session_id),
+		"scenario_id": String(session.scenario_id),
+		"package_id": package_id,
+		"package_stem": String(entry.get("package_stem", "")),
+		"map_path": map_path,
+		"scenario_path": scenario_path,
+		"map_ref": map_ref_value.duplicate(true) if map_ref_value is Dictionary else {},
+		"scenario_ref": scenario_ref_value.duplicate(true) if scenario_ref_value is Dictionary else {},
+	}
+
+func _active_session_matches_editor_working_copy(session: SessionStateStoreScript.SessionData) -> bool:
+	if session == null or not bool(session.flags.get("editor_working_copy", false)) or not has_editor_working_copy_session():
+		return false
+	if session.session_id != editor_working_copy_session.session_id or session.scenario_id != editor_working_copy_session.scenario_id:
+		return false
+	if _editor_working_copy_package_identity.is_empty():
+		return true
+	return editor_package_identity(session) == _editor_working_copy_package_identity
+
+func _editor_working_copy_baseline_matches_staged_session() -> bool:
+	if (
+		_editor_working_copy_baseline_session == null
+		or _editor_working_copy_package_identity.is_empty()
+		or not has_editor_working_copy_session()
+	):
+		return false
+	return (
+		_editor_working_copy_baseline_session.scenario_id == editor_working_copy_session.scenario_id
+		and editor_package_identity(editor_working_copy_session) == _editor_working_copy_package_identity
+		and editor_package_identity(_editor_working_copy_baseline_session) == _editor_working_copy_package_identity
+	)
+
+func _clear_editor_working_copy_snapshot() -> void:
+	editor_working_copy_session = null
+	_editor_working_copy_baseline_session = null
+	_editor_working_copy_package_identity = {}
+	_editor_return_pending = false
