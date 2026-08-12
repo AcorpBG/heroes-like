@@ -14631,14 +14631,38 @@ def validate_map_editor_dirty_transition_regression(errors: list[str]) -> None:
         'Map-owned D-pad path did not exit to active Inspect focus',
         'JOY_BUTTON_A',
         'KEY_ENTER',
+        'const TOOL_RAIL_PICKER_NAMES := [',
+        'const TOOL_RAIL_FAMILY_IDS := ["town", "resource", "artifact", "encounter"]',
+        '_tool_rail_layout_snapshot',
+        '_validate_tool_rail_family_layouts',
+        '_select_longest_property_object_fixture',
+        '_validate_tool_rail_resize_roundtrip',
+        '"live_map_minimum_width": map_view.size.x >= 820.0',
+        '"tool_rail_minimum_width": tool_rail.size.x >= 340.0',
+        '"all_visible_descendants_horizontally_contained": descendant_differences.is_empty()',
+        '"horizontal_scroll_range_empty": hbar != null and hbar.max_value <= hbar.page + 1.0',
+        '"horizontal_scroll_zero": hbar != null and absf(hbar.value) <= 0.5 and tool_scroll.scroll_horizontal == 0',
+        'var expected_columns := 2 if two_column_width <= inner_rect.size.x + 0.5 else 1',
+        '"columns_match_measured_fit": tool_buttons.columns == expected_columns',
+        '"six_picker_contracts_exact": TOOL_RAIL_PICKER_NAMES.size() == 6 and _checks_exact(picker_checks)',
+        'and item_texts == popup_texts',
+        'and not picker.fit_to_longest_item',
+        'and picker.clip_text',
+        'family_ids != TOOL_RAIL_FAMILY_IDS',
+        'for key in ["towns", "resource_nodes", "artifact_nodes", "encounters"]:',
+        '"focus_identity_exact": get_viewport().gui_get_focus_owner() == focus_before',
+        '"picker_selection_and_tooltip_exact": picker_state_after == picker_state_before',
+        '"vertical_scroll_exact": tool_scroll.scroll_vertical == vscroll_before',
+        '"background_authority_exact": _focus_background_authority(shell) == authority_before',
+        '"widths": [initial_width, resize_width, initial_width]',
         '"scroll_positive": tool_scroll.scroll_vertical > 0',
         '"vertical_fully_visible": bool(reveal_after.get("vertical_fully_visible", false))',
-        '"horizontal_intersection_meaningful": float(reveal_after.get("intersection_width", 0.0)) > 0.0',
-        '"horizontal_intersection_maximal": absf(float(reveal_after.get("intersection_width", 0.0)) - expected_horizontal_intersection) <= 1.0',
+        '"horizontal_fully_visible": bool(reveal_after.get("horizontal_fully_visible", false))',
         '"full_height_intersection": absf(float(reveal_after.get("intersection_height", 0.0)) - float(reveal_after.get("button_height", 0.0))) <= 1.0',
+        '"full_width_intersection": absf(float(reveal_after.get("intersection_width", 0.0)) - float(reveal_after.get("button_width", 0.0))) <= 1.0',
         '"button_width_unchanged": is_equal_approx(float(reveal_after.get("button_width", 0.0)), float(reveal_before.get("button_width", -1.0)))',
         '"scroll_width_unchanged": is_equal_approx(float(reveal_after.get("scroll_width", 0.0)), float(reveal_before.get("scroll_width", -1.0)))',
-        '"preexisting_1280_overflow_exact": width != 1280 or float(reveal_before.get("button_width", 0.0)) > float(reveal_before.get("inner_viewport_width", 0.0))',
+        '"button_fits_inner_viewport": float(reveal_after.get("button_width", 0.0)) <= float(reveal_after.get("inner_viewport_width", 0.0)) + 1.0',
         '"focus_owner_exact": get_viewport().gui_get_focus_owner() == apply_button',
         '"button_visible": apply_button.is_visible_in_tree()',
         '"scroll_ancestry_exact": tool_scroll.is_ancestor_of(apply_button)',
@@ -14780,6 +14804,177 @@ def validate_map_editor_dirty_transition_regression(errors: list[str]) -> None:
         'get_viewport().gui_get_focus_owner() != expected_tool_focus',
     ):
         ensure(required_token in report_text, errors, f"Map-editor dirty-transition regression is missing required token: {required_token}")
+    ensure(
+        '"preexisting_1280_overflow_exact"' not in report_text
+        and '"horizontal_intersection_meaningful"' not in report_text
+        and '"horizontal_intersection_maximal"' not in report_text,
+        errors,
+        "Map Editor responsive ToolRail regression must reject the superseded partial-horizontal-visibility oracle",
+    )
+    tool_rail_picker_match = re.search(
+        r"const TOOL_RAIL_PICKER_NAMES := \[(.*?)\n\]",
+        report_text,
+        flags=re.DOTALL,
+    )
+    ensure(tool_rail_picker_match is not None, errors, "Map Editor responsive ToolRail regression must declare its six exact pickers")
+    if tool_rail_picker_match is not None:
+        tool_rail_picker_names = tuple(re.findall(r'"([^"]+)"', tool_rail_picker_match.group(1)))
+        ensure(
+            tool_rail_picker_names == (
+                "TerrainPicker",
+                "ObjectFamilyPicker",
+                "ObjectContentPicker",
+                "SelectedObjectPicker",
+                "PropertyOwnerPicker",
+                "PropertyDifficultyPicker",
+            ),
+            errors,
+            "Map Editor responsive ToolRail regression must pin the exact six clipped semantic pickers",
+        )
+    tool_rail_layout_match = re.search(
+        r"func _tool_rail_layout_snapshot\(.*?\) -> Dictionary:(.*?)(?=\n\nfunc )",
+        report_text,
+        flags=re.DOTALL,
+    )
+    ensure(tool_rail_layout_match is not None, errors, "Map Editor responsive regression must retain its isolated ToolRail geometry snapshot")
+    tool_rail_layout_body = ""
+    if tool_rail_layout_match is not None:
+        tool_rail_layout_body = tool_rail_layout_match.group(1)
+        for required_token in (
+            '"live_map_minimum_width": map_view.size.x >= 820.0',
+            '"tool_rail_minimum_width": tool_rail.size.x >= 340.0',
+            '"all_visible_descendants_horizontally_contained": descendant_differences.is_empty()',
+            '"horizontal_scroll_range_empty": hbar != null and hbar.max_value <= hbar.page + 1.0',
+            '"horizontal_scroll_zero": hbar != null and absf(hbar.value) <= 0.5 and tool_scroll.scroll_horizontal == 0',
+            'var expected_columns := 2 if two_column_width <= inner_rect.size.x + 0.5 else 1',
+            '"columns_match_measured_fit": tool_buttons.columns == expected_columns',
+            'and item_texts == popup_texts',
+            'and not picker.fit_to_longest_item',
+            'and picker.clip_text',
+            'and picker.tooltip_text == String(expected_semantic_tooltips.get(String(picker_name), ""))',
+        ):
+            ensure(required_token in tool_rail_layout_body, errors, f"Map Editor ToolRail geometry snapshot is missing exact token: {required_token}")
+    command_focus_row_match = re.search(
+        r"func _validate_command_focus_row\(.*?\) -> Dictionary:(.*?)(?=\n\nfunc )",
+        report_text,
+        flags=re.DOTALL,
+    )
+    ensure(command_focus_row_match is not None, errors, "Map Editor responsive regression must retain its exact command-focus row")
+    if command_focus_row_match is not None:
+        command_focus_row_body = command_focus_row_match.group(1)
+        for required_token in (
+            "var empty_semantic_tooltips := _capture_tool_rail_semantic_tooltips(shell)",
+            "var empty_layout := _tool_rail_layout_snapshot(shell, false, empty_semantic_tooltips)",
+            "var family_layout := await _validate_tool_rail_family_layouts(shell, width)",
+            "var longest_selected_object := await _select_longest_property_object_fixture(shell)",
+            "var loaded_semantic_tooltips := _capture_tool_rail_semantic_tooltips(shell)",
+            "var loaded_layout := _tool_rail_layout_snapshot(shell, true, loaded_semantic_tooltips)",
+            "var roundtrip := await _validate_tool_rail_resize_roundtrip(shell, package_state, width)",
+        ):
+            ensure(required_token in command_focus_row_body, errors, f"Map Editor command-focus row is missing responsive ToolRail phase: {required_token}")
+        for capture_token, snapshot_token in (
+            (
+                "var empty_semantic_tooltips := _capture_tool_rail_semantic_tooltips(shell)",
+                "var empty_layout := _tool_rail_layout_snapshot(shell, false, empty_semantic_tooltips)",
+            ),
+            (
+                "var loaded_semantic_tooltips := _capture_tool_rail_semantic_tooltips(shell)",
+                "var loaded_layout := _tool_rail_layout_snapshot(shell, true, loaded_semantic_tooltips)",
+            ),
+        ):
+            ensure(
+                0 <= command_focus_row_body.find(capture_token) < command_focus_row_body.find(snapshot_token),
+                errors,
+                "Map Editor command-focus row must externally capture settled semantic tooltips before responsive geometry",
+            )
+    tool_rail_resize_match = re.search(
+        r"func _validate_tool_rail_resize_roundtrip\(.*?\) -> Dictionary:(.*?)(?=\n\nfunc )",
+        report_text,
+        flags=re.DOTALL,
+    )
+    ensure(tool_rail_resize_match is not None, errors, "Map Editor responsive regression must retain its resize roundtrip")
+    if tool_rail_resize_match is not None:
+        tool_rail_resize_body = tool_rail_resize_match.group(1)
+        for required_token in (
+            "var resize_width := 1920 if initial_width == 1280 else 1280",
+            '"focus_identity_exact": get_viewport().gui_get_focus_owner() == focus_before',
+            '"picker_selection_and_tooltip_exact": picker_state_after == picker_state_before',
+            '"vertical_scroll_exact": tool_scroll.scroll_vertical == vscroll_before',
+            '"background_authority_exact": _focus_background_authority(shell) == authority_before',
+            '"widths": [initial_width, resize_width, initial_width]',
+        ):
+            ensure(required_token in tool_rail_resize_body, errors, f"Map Editor ToolRail resize roundtrip is missing exact token: {required_token}")
+        ensure(
+            0 <= tool_rail_resize_body.find("var semantic_tooltips_before := _capture_tool_rail_semantic_tooltips(shell)")
+            < tool_rail_resize_body.find("var initial_layout := _tool_rail_layout_snapshot(shell, true, semantic_tooltips_before)"),
+            errors,
+            "Map Editor ToolRail resize must capture settled semantic tooltips before its initial snapshot",
+        )
+    tool_rail_family_match = re.search(
+        r"func _validate_tool_rail_family_layouts\(.*?\) -> Dictionary:(.*?)(?=\n\nfunc )",
+        report_text,
+        flags=re.DOTALL,
+    )
+    ensure(tool_rail_family_match is not None, errors, "Map Editor responsive regression must retain all-family ToolRail coverage")
+    if tool_rail_family_match is not None:
+        tool_rail_family_body = tool_rail_family_match.group(1)
+        family_settle_index = tool_rail_family_body.find("await _settle()")
+        family_capture_index = tool_rail_family_body.find("var semantic_tooltips := _capture_tool_rail_semantic_tooltips(shell)")
+        family_snapshot_index = tool_rail_family_body.find("var snapshot := _tool_rail_layout_snapshot(shell, true, semantic_tooltips)")
+        ensure(
+            0 <= family_settle_index < family_capture_index < family_snapshot_index,
+            errors,
+            "Map Editor family transitions must settle, capture live semantic tooltips, then snapshot responsive geometry",
+        )
+        family_select_handler_pairs = re.findall(
+            r'family_picker\.select\(index\)\n\s+shell\.call\("_on_object_family_selected", index\)',
+            tool_rail_family_body,
+        )
+        ensure(
+            len(family_select_handler_pairs) == 2
+            and tool_rail_family_body.count('shell.call("_on_object_family_selected", index)') == 2,
+            errors,
+            "Map Editor family fixture must select the native picker immediately before every family handler call",
+        )
+        for required_token in (
+            "family_picker.selected != index or family_id != expected_family_id",
+            "String(family_picker.get_item_metadata(family_picker.selected)) != original_family",
+        ):
+            ensure(required_token in tool_rail_family_body, errors, f"Map Editor family fixture is missing exact native picker assertion: {required_token}")
+    tool_rail_picker_state_match = re.search(
+        r"func _tool_rail_picker_state\(.*?\) -> Dictionary:(.*?)(?=\n\nfunc )",
+        report_text,
+        flags=re.DOTALL,
+    )
+    ensure(tool_rail_picker_state_match is not None, errors, "Map Editor responsive regression must retain exact picker state across resize")
+    if tool_rail_picker_state_match is not None:
+        tool_rail_picker_state_body = tool_rail_picker_state_match.group(1)
+        for required_token in (
+            '"tooltip": picker.tooltip_text',
+            '"item_texts": item_texts',
+            '"popup_texts": popup_texts',
+        ):
+            ensure(required_token in tool_rail_picker_state_body, errors, f"Map Editor ToolRail picker resize state is missing exact token: {required_token}")
+    tool_rail_tooltip_capture_match = re.search(
+        r"func _capture_tool_rail_semantic_tooltips\(.*?\) -> Dictionary:(.*?)(?=\n\nfunc )",
+        report_text,
+        flags=re.DOTALL,
+    )
+    ensure(tool_rail_tooltip_capture_match is not None, errors, "Map Editor responsive regression must capture semantic picker tooltips outside its geometry snapshot")
+    if tool_rail_tooltip_capture_match is not None:
+        tool_rail_tooltip_capture_body = tool_rail_tooltip_capture_match.group(1)
+        ensure(
+            'for picker_name in TOOL_RAIL_PICKER_NAMES:' in tool_rail_tooltip_capture_body
+            and 'result[String(picker_name)] = picker.tooltip_text' in tool_rail_tooltip_capture_body,
+            errors,
+            "Map Editor responsive regression must capture all six settled live semantic tooltips exactly",
+        )
+    ensure(
+        'terrain_paint_check_tooltip' not in tool_rail_layout_body
+        and 'shell.call("validation_snapshot")' not in tool_rail_layout_body,
+        errors,
+        "Map Editor ToolRail geometry snapshot must not reconstruct semantic tooltips from validation fields",
+    )
     mouse_inspect_match = re.search(
         r"func _validate_canvas_mouse_inspect_parity\(.*?\) -> bool:(.*?)(?=\n\nfunc )",
         report_text,
@@ -14934,8 +15129,67 @@ def validate_map_editor_dirty_transition_regression(errors: list[str]) -> None:
         "control.focus_entered.is_connected(callback)",
         "_tool_scroll.ensure_control_visible(control)",
         "button.focus_mode = Control.FOCUS_ALL",
+        "_configure_editor_tool_rail_layout()",
+        "func _queue_editor_tool_rail_layout_sync() -> void:",
+        "func _sync_editor_tool_rail_layout() -> void:",
+        "func _editor_tool_buttons_two_column_minimum_width() -> float:",
+        "_tool_scroll.resized.is_connected(_queue_editor_tool_rail_layout_sync)",
+        "_tool_buttons.minimum_size_changed.is_connected(_queue_editor_tool_rail_layout_sync)",
+        "inner_width -= vertical_scroll_bar.size.x",
+        "var desired_columns := 2 if required_two_column_width <= inner_width else 1",
+        "_tool_buttons.columns = desired_columns",
+        "control.get_combined_minimum_size().x",
+        "float(_tool_buttons.get_theme_constant(\"h_separation\"))",
+        "_queue_editor_tool_rail_layout_sync()",
     ):
         ensure(required_token in editor_text, errors, f"MapEditorShell.gd is missing command-focus token: {required_token}")
+    tool_rail_sync_match = re.search(
+        r"func _sync_editor_tool_rail_layout\(\) -> void:(.*?)(?=\n\nfunc )",
+        editor_text,
+        flags=re.DOTALL,
+    )
+    ensure(tool_rail_sync_match is not None, errors, "MapEditorShell.gd must retain its bounded responsive ToolRail sync")
+    if tool_rail_sync_match is not None:
+        tool_rail_sync_body = tool_rail_sync_match.group(1)
+        inner_index = tool_rail_sync_body.find("var inner_width := _tool_scroll.size.x")
+        vertical_index = tool_rail_sync_body.find("inner_width -= vertical_scroll_bar.size.x")
+        measured_index = tool_rail_sync_body.find("_editor_tool_buttons_two_column_minimum_width()")
+        desired_index = tool_rail_sync_body.find("var desired_columns := 2 if required_two_column_width <= inner_width else 1")
+        assign_index = tool_rail_sync_body.find("_tool_buttons.columns = desired_columns")
+        ensure(
+            0 <= inner_index < vertical_index < measured_index < desired_index < assign_index,
+            errors,
+            "Map Editor responsive ToolRail must measure the live inner width before choosing and assigning columns",
+        )
+    editor_scene_text = MAP_EDITOR_SCENE_PATH.read_text(encoding="utf-8")
+    ensure(
+        re.search(r'\[node name="Map" type="Control".*?\].*?custom_minimum_size = Vector2\(820, 560\)', editor_scene_text, flags=re.DOTALL) is not None
+        and re.search(r'\[node name="ToolRail" type="PanelContainer".*?\].*?custom_minimum_size = Vector2\(340, 0\)', editor_scene_text, flags=re.DOTALL) is not None,
+        errors,
+        "Map Editor responsive ToolRail must preserve the live 820px map and 340px rail minima",
+    )
+    for picker_name in (
+        "TerrainPicker",
+        "ObjectFamilyPicker",
+        "ObjectContentPicker",
+        "SelectedObjectPicker",
+        "PropertyOwnerPicker",
+        "PropertyDifficultyPicker",
+    ):
+        picker_scene_match = re.search(
+            rf'\[node name="{picker_name}" type="OptionButton".*?\](.*?)(?=\n\[node )',
+            editor_scene_text,
+            flags=re.DOTALL,
+        )
+        ensure(picker_scene_match is not None, errors, f"MapEditorShell.tscn must retain ToolRail picker {picker_name}")
+        if picker_scene_match is not None:
+            picker_scene_body = picker_scene_match.group(1)
+            ensure(
+                "fit_to_longest_item = false" in picker_scene_body
+                and "clip_text = true" in picker_scene_body,
+                errors,
+                f"Map Editor ToolRail picker {picker_name} must bound its selected display without truncating popup items",
+            )
     editor_focus_variables = (
         "_map_package_picker",
         "_load_map_button",

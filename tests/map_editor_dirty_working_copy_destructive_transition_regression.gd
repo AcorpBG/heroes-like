@@ -48,6 +48,15 @@ const INITIAL_DISABLED_FOCUS_NAMES := [
 	"PropertyCollectedFlag",
 	"ApplyObjectProperties",
 ]
+const TOOL_RAIL_PICKER_NAMES := [
+	"TerrainPicker",
+	"ObjectFamilyPicker",
+	"ObjectContentPicker",
+	"SelectedObjectPicker",
+	"PropertyOwnerPicker",
+	"PropertyDifficultyPicker",
+]
+const TOOL_RAIL_FAMILY_IDS := ["town", "resource", "artifact", "encounter"]
 
 var _report_scene: Node
 var _original_active_session = null
@@ -226,6 +235,10 @@ func _validate_command_focus_row(
 		return {}
 	if _full_authority_state(shell) != empty_authority:
 		return _fail_dict("Map Editor %d empty-state focus traversal mutated authority: %s" % [width, _first_difference(empty_authority, _full_authority_state(shell))])
+	var empty_semantic_tooltips := _capture_tool_rail_semantic_tooltips(shell)
+	var empty_layout := _tool_rail_layout_snapshot(shell, false, empty_semantic_tooltips)
+	if not bool(empty_layout.get("ok", false)):
+		return _fail_dict("Map Editor %d empty-state responsive ToolRail was not exact: %s" % [width, JSON.stringify(empty_layout)])
 
 	if not await _reset_case(shell, source_id, false):
 		return {}
@@ -271,6 +284,16 @@ func _validate_command_focus_row(
 	await _settle()
 	if not _property_disabled_state_exact(shell, false, true, false, true, false):
 		return _fail_dict("Map Editor %d encounter property enabled/disabled state was not exact." % width)
+	var family_layout := await _validate_tool_rail_family_layouts(shell, width)
+	if not bool(family_layout.get("ok", false)):
+		return {}
+	var longest_selected_object := await _select_longest_property_object_fixture(shell)
+	if not bool(longest_selected_object.get("ok", false)):
+		return _fail_dict("Map Editor %d did not expose a long selected-object ToolRail fixture: %s" % [width, JSON.stringify(longest_selected_object)])
+	var loaded_semantic_tooltips := _capture_tool_rail_semantic_tooltips(shell)
+	var loaded_layout := _tool_rail_layout_snapshot(shell, true, loaded_semantic_tooltips)
+	if not bool(loaded_layout.get("ok", false)):
+		return _fail_dict("Map Editor %d loaded responsive ToolRail was not exact: %s" % [width, JSON.stringify(loaded_layout)])
 
 	var loaded_cycle := _enabled_focus_controls(source_controls)
 	if loaded_cycle.size() != 26 or not _assert_focus_links_exact(loaded_cycle):
@@ -289,20 +312,16 @@ func _validate_command_focus_row(
 	apply_button.grab_focus()
 	await _settle()
 	var reveal_after := _tool_scroll_reveal_snapshot(tool_scroll, apply_button)
-	var expected_horizontal_intersection: float = min(
-		float(reveal_after.get("button_width", 0.0)),
-		float(reveal_after.get("inner_viewport_width", 0.0))
-	)
 	var reveal_checks := {
 		"focus_owner_exact": get_viewport().gui_get_focus_owner() == apply_button,
 		"scroll_positive": tool_scroll.scroll_vertical > 0,
 		"vertical_fully_visible": bool(reveal_after.get("vertical_fully_visible", false)),
-		"horizontal_intersection_meaningful": float(reveal_after.get("intersection_width", 0.0)) > 0.0,
-		"horizontal_intersection_maximal": absf(float(reveal_after.get("intersection_width", 0.0)) - expected_horizontal_intersection) <= 1.0,
+		"horizontal_fully_visible": bool(reveal_after.get("horizontal_fully_visible", false)),
 		"full_height_intersection": absf(float(reveal_after.get("intersection_height", 0.0)) - float(reveal_after.get("button_height", 0.0))) <= 1.0,
+		"full_width_intersection": absf(float(reveal_after.get("intersection_width", 0.0)) - float(reveal_after.get("button_width", 0.0))) <= 1.0,
 		"button_width_unchanged": is_equal_approx(float(reveal_after.get("button_width", 0.0)), float(reveal_before.get("button_width", -1.0))),
 		"scroll_width_unchanged": is_equal_approx(float(reveal_after.get("scroll_width", 0.0)), float(reveal_before.get("scroll_width", -1.0))),
-		"preexisting_1280_overflow_exact": width != 1280 or float(reveal_before.get("button_width", 0.0)) > float(reveal_before.get("inner_viewport_width", 0.0)),
+		"button_fits_inner_viewport": float(reveal_after.get("button_width", 0.0)) <= float(reveal_after.get("inner_viewport_width", 0.0)) + 1.0,
 		"button_visible": apply_button.is_visible_in_tree(),
 		"scroll_ancestry_exact": tool_scroll.is_ancestor_of(apply_button),
 	}
@@ -321,6 +340,9 @@ func _validate_command_focus_row(
 			"scroll_changed_or_initially_visible": scroll_changed_or_initially_visible,
 			"direct_reveal_diagnostic_only": direct_reveal_diagnostic,
 		})])
+	var roundtrip := await _validate_tool_rail_resize_roundtrip(shell, package_state, width)
+	if not bool(roundtrip.get("ok", false)):
+		return {}
 
 	_focus_signal_counts = {"terrain": 0, "inspect": 0, "family": 0}
 	var command_background_before := _focus_background_authority(shell)
@@ -370,6 +392,11 @@ func _validate_command_focus_row(
 		"disabled_rehome": true,
 		"valid_focus_retained": true,
 		"tool_scroll_revealed": true,
+		"tool_rail_responsive": true,
+		"tool_rail_columns": int(loaded_layout.get("columns", 0)),
+		"tool_rail_family_ids": family_layout.get("family_ids", []).duplicate(),
+		"tool_rail_long_selected_object": String(longest_selected_object.get("text", "")),
+		"tool_rail_resize_roundtrip": roundtrip,
 		"a_enter_once": true,
 		"option_native_refresh": true,
 		"canvas_interaction": canvas_result,
@@ -1297,6 +1324,282 @@ func _property_disabled_state_exact(
 		and (shell.get_node("%PropertyCollectedFlag") as CheckBox).disabled == collected_disabled \
 		and (shell.get_node("%ApplyObjectProperties") as Button).disabled == apply_disabled
 
+func _tool_rail_layout_snapshot(
+	shell: Node,
+	require_selected_items: bool,
+	expected_semantic_tooltips: Dictionary
+) -> Dictionary:
+	var map_view: Control = shell.get_node("%Map")
+	var tool_rail: Control = shell.get_node("%ToolRail")
+	var tool_scroll: ScrollContainer = shell.get_node("RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll")
+	var tool_box: Control = shell.get_node("RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox")
+	var tool_buttons: GridContainer = shell.get_node("RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox/ToolButtons")
+	var scroll_rect := tool_scroll.get_global_rect()
+	var vbar := tool_scroll.get_v_scroll_bar()
+	var hbar := tool_scroll.get_h_scroll_bar()
+	var inner_rect := scroll_rect
+	if vbar != null and vbar.visible:
+		inner_rect.size.x -= vbar.size.x
+	if hbar != null and hbar.visible:
+		inner_rect.size.y -= hbar.size.y
+	var descendant_differences := {}
+	var visible_descendant_count := 0
+	var controls: Array[Control] = [tool_box]
+	for node_value in tool_box.find_children("*", "Control", true, false):
+		if node_value is Control:
+			controls.append(node_value as Control)
+	for control in controls:
+		if not control.is_visible_in_tree():
+			continue
+		visible_descendant_count += 1
+		var rect := control.get_global_rect()
+		if not _rect_horizontally_contained(inner_rect, rect):
+			descendant_differences[String(control.get_path())] = {
+				"rect": rect,
+				"inner_rect": inner_rect,
+			}
+	var picker_contracts := {}
+	var picker_checks := {}
+	for picker_name in TOOL_RAIL_PICKER_NAMES:
+		var picker: OptionButton = shell.get_node("%%%s" % picker_name)
+		var popup := picker.get_popup()
+		var item_texts: Array[String] = []
+		var popup_texts: Array[String] = []
+		for index in range(picker.get_item_count()):
+			item_texts.append(picker.get_item_text(index))
+		for index in range(popup.get_item_count()):
+			popup_texts.append(popup.get_item_text(index))
+		var selected_valid := picker.selected >= 0 and picker.selected < picker.get_item_count()
+		var selected_text := picker.get_item_text(picker.selected) if selected_valid else ""
+		var contract := {
+			"selected": picker.selected,
+			"selected_text": selected_text,
+			"display_text": picker.text,
+			"selected_metadata": picker.get_item_metadata(picker.selected) if selected_valid else null,
+			"item_texts": item_texts,
+			"popup_texts": popup_texts,
+			"tooltip": picker.tooltip_text,
+			"expected_semantic_tooltip": String(expected_semantic_tooltips.get(String(picker_name), "")),
+			"fit_to_longest_item": picker.fit_to_longest_item,
+			"clip_text": picker.clip_text,
+			"rect": picker.get_global_rect(),
+		}
+		picker_contracts[String(picker_name)] = contract
+		picker_checks[String(picker_name)] = (
+			_rect_horizontally_contained(inner_rect, picker.get_global_rect())
+			and not picker.fit_to_longest_item
+			and picker.clip_text
+			and item_texts == popup_texts
+			and picker.tooltip_text == String(expected_semantic_tooltips.get(String(picker_name), ""))
+			and (not require_selected_items or (selected_valid and selected_text != "" and picker.text == selected_text))
+		)
+	var two_column_width := _measured_two_column_minimum_width(tool_buttons)
+	var expected_columns := 2 if two_column_width <= inner_rect.size.x + 0.5 else 1
+	var checks := {
+		"live_map_minimum_width": map_view.size.x >= 820.0,
+		"tool_rail_minimum_width": tool_rail.size.x >= 340.0,
+		"tool_box_horizontally_contained": _rect_horizontally_contained(inner_rect, tool_box.get_global_rect()),
+		"all_visible_descendants_horizontally_contained": descendant_differences.is_empty(),
+		"horizontal_scroll_range_empty": hbar != null and hbar.max_value <= hbar.page + 1.0,
+		"horizontal_scroll_zero": hbar != null and absf(hbar.value) <= 0.5 and tool_scroll.scroll_horizontal == 0,
+		"columns_match_measured_fit": tool_buttons.columns == expected_columns,
+		"six_picker_contracts_exact": TOOL_RAIL_PICKER_NAMES.size() == 6 and _checks_exact(picker_checks),
+	}
+	return {
+		"ok": _checks_exact(checks),
+		"checks": checks,
+		"map_width": map_view.size.x,
+		"rail_width": tool_rail.size.x,
+		"scroll_rect": scroll_rect,
+		"inner_rect": inner_rect,
+		"tool_box_rect": tool_box.get_global_rect(),
+		"visible_descendant_count": visible_descendant_count,
+		"descendant_differences": descendant_differences,
+		"hbar_value": hbar.value if hbar != null else -1.0,
+		"hbar_max": hbar.max_value if hbar != null else -1.0,
+		"hbar_page": hbar.page if hbar != null else -1.0,
+		"vscroll": tool_scroll.scroll_vertical,
+		"columns": tool_buttons.columns,
+		"expected_columns": expected_columns,
+		"two_column_minimum_width": two_column_width,
+		"picker_checks": picker_checks,
+		"picker_contracts": picker_contracts,
+	}
+
+func _rect_horizontally_contained(outer: Rect2, inner: Rect2, tolerance: float = 1.0) -> bool:
+	return inner.position.x >= outer.position.x - tolerance \
+		and inner.end.x <= outer.end.x + tolerance
+
+func _measured_two_column_minimum_width(tool_buttons: GridContainer) -> float:
+	var column_widths := [0.0, 0.0]
+	var visible_index := 0
+	for child_value in tool_buttons.get_children():
+		if not (child_value is Control) or not (child_value as Control).visible:
+			continue
+		var control := child_value as Control
+		var column_index := visible_index % 2
+		column_widths[column_index] = maxf(float(column_widths[column_index]), control.get_combined_minimum_size().x)
+		visible_index += 1
+	if visible_index < 2:
+		return float(column_widths[0])
+	return float(column_widths[0]) + float(column_widths[1]) + float(tool_buttons.get_theme_constant("h_separation"))
+
+func _tool_rail_picker_state(shell: Node) -> Dictionary:
+	var result := {}
+	for picker_name in TOOL_RAIL_PICKER_NAMES:
+		var picker: OptionButton = shell.get_node("%%%s" % picker_name)
+		var popup := picker.get_popup()
+		var selected_valid := picker.selected >= 0 and picker.selected < picker.get_item_count()
+		var item_texts: Array[String] = []
+		var popup_texts: Array[String] = []
+		for index in range(picker.get_item_count()):
+			item_texts.append(picker.get_item_text(index))
+		for index in range(popup.get_item_count()):
+			popup_texts.append(popup.get_item_text(index))
+		result[String(picker_name)] = {
+			"selected": picker.selected,
+			"text": picker.get_item_text(picker.selected) if selected_valid else "",
+			"metadata": picker.get_item_metadata(picker.selected) if selected_valid else null,
+			"tooltip": picker.tooltip_text,
+			"item_count": picker.get_item_count(),
+			"item_texts": item_texts,
+			"popup_texts": popup_texts,
+		}
+	return result
+
+func _capture_tool_rail_semantic_tooltips(shell: Node) -> Dictionary:
+	var result := {}
+	for picker_name in TOOL_RAIL_PICKER_NAMES:
+		var picker: OptionButton = shell.get_node("%%%s" % picker_name)
+		result[String(picker_name)] = picker.tooltip_text
+	return result
+
+func _validate_tool_rail_family_layouts(shell: Node, width: int) -> Dictionary:
+	var family_picker: OptionButton = shell.get_node("%ObjectFamilyPicker")
+	var original_family := String(family_picker.get_item_metadata(family_picker.selected))
+	var family_ids: Array[String] = []
+	var family_columns := {}
+	for index in range(family_picker.get_item_count()):
+		family_picker.select(index)
+		shell.call("_on_object_family_selected", index)
+		await _settle()
+		var family_id := String(family_picker.get_item_metadata(family_picker.selected))
+		var expected_family_id: String = TOOL_RAIL_FAMILY_IDS[index] if index < TOOL_RAIL_FAMILY_IDS.size() else ""
+		if family_picker.selected != index or family_id != expected_family_id:
+			return _fail_dict("Map Editor %d ToolRail family selection %d was not source-exact: selected=%d actual=%s expected=%s" % [
+				width,
+				index,
+				family_picker.selected,
+				family_id,
+				expected_family_id,
+			])
+		family_ids.append(family_id)
+		var semantic_tooltips := _capture_tool_rail_semantic_tooltips(shell)
+		var snapshot := _tool_rail_layout_snapshot(shell, true, semantic_tooltips)
+		if not bool(snapshot.get("ok", false)):
+			return _fail_dict("Map Editor %d ToolRail family %s was not horizontally exact: %s" % [width, family_id, JSON.stringify(snapshot)])
+		family_columns[family_id] = int(snapshot.get("columns", 0))
+	for index in range(family_picker.get_item_count()):
+		if String(family_picker.get_item_metadata(index)) == original_family:
+			family_picker.select(index)
+			shell.call("_on_object_family_selected", index)
+			await _settle()
+			break
+	if family_picker.selected < 0 \
+			or String(family_picker.get_item_metadata(family_picker.selected)) != original_family:
+		return _fail_dict("Map Editor %d ToolRail family selection did not restore %s exactly." % [width, original_family])
+	if family_ids != TOOL_RAIL_FAMILY_IDS:
+		return _fail_dict("Map Editor %d ToolRail family ids were not exact: %s" % [width, JSON.stringify(family_ids)])
+	return {"ok": true, "family_ids": family_ids, "columns": family_columns}
+
+func _select_longest_property_object_fixture(shell: Node) -> Dictionary:
+	var session = shell.get("_session")
+	if session == null:
+		return {}
+	var selected_picker: OptionButton = shell.get_node("%SelectedObjectPicker")
+	var best := {"text": "", "tile": Vector2i(-1, -1), "index": -1}
+	for key in ["towns", "resource_nodes", "artifact_nodes", "encounters"]:
+		for placement_value in session.overworld.get(key, []):
+			if not (placement_value is Dictionary):
+				continue
+			var tile := Vector2i(int(placement_value.get("x", -1)), int(placement_value.get("y", -1)))
+			shell.call("validation_select_tile", tile.x, tile.y)
+			await _settle()
+			for index in range(selected_picker.get_item_count()):
+				var text := selected_picker.get_item_text(index)
+				if text.length() > String(best.get("text", "")).length():
+					best = {"text": text, "tile": tile, "index": index}
+	var best_tile: Vector2i = best.get("tile", Vector2i(-1, -1))
+	var best_index := int(best.get("index", -1))
+	if best_tile.x < 0 or best_index < 0 or String(best.get("text", "")) == "":
+		return best
+	shell.call("validation_select_tile", best_tile.x, best_tile.y)
+	await _settle()
+	if best_index >= selected_picker.get_item_count():
+		return best
+	shell.call("_on_selected_property_object_selected", best_index)
+	await _settle()
+	best["ok"] = selected_picker.selected == best_index \
+		and selected_picker.text == String(best.get("text", ""))
+	return best
+
+func _validate_tool_rail_resize_roundtrip(shell: Node, package_state: Dictionary, initial_width: int) -> Dictionary:
+	var layout_host := shell.get_parent() as Control
+	var tool_scroll: ScrollContainer = shell.get_node("RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll")
+	var focus_before := get_viewport().gui_get_focus_owner() as Control
+	var picker_state_before := _tool_rail_picker_state(shell)
+	var vscroll_before := tool_scroll.scroll_vertical
+	var authority_before := _focus_background_authority(shell)
+	var semantic_tooltips_before := _capture_tool_rail_semantic_tooltips(shell)
+	var initial_layout := _tool_rail_layout_snapshot(shell, true, semantic_tooltips_before)
+	var resize_width := 1920 if initial_width == 1280 else 1280
+	layout_host.size = Vector2(float(resize_width), 720.0)
+	get_window().size = Vector2i(resize_width, 720)
+	await _settle()
+	var resized_layout := _tool_rail_layout_snapshot(shell, true, semantic_tooltips_before)
+	if not bool(resized_layout.get("ok", false)):
+		return _fail_dict("Map Editor %d->%d ToolRail resize was not exact: %s" % [initial_width, resize_width, JSON.stringify(resized_layout)])
+	layout_host.size = Vector2(float(initial_width), 720.0)
+	get_window().size = Vector2i(initial_width, 720)
+	await _settle()
+	var restored_layout := _tool_rail_layout_snapshot(shell, true, semantic_tooltips_before)
+	var picker_state_after := _tool_rail_picker_state(shell)
+	var checks := {
+		"initial_layout_exact": bool(initial_layout.get("ok", false)),
+		"resized_layout_exact": bool(resized_layout.get("ok", false)),
+		"restored_layout_exact": bool(restored_layout.get("ok", false)),
+		"focus_identity_exact": get_viewport().gui_get_focus_owner() == focus_before,
+		"picker_selection_and_tooltip_exact": picker_state_after == picker_state_before,
+		"vertical_scroll_exact": tool_scroll.scroll_vertical == vscroll_before,
+		"columns_restored_exact": restored_layout.get("columns") == initial_layout.get("columns"),
+		"background_authority_exact": _focus_background_authority(shell) == authority_before,
+		"package_files_exact": _package_file_state() == package_state,
+	}
+	if not _checks_exact(checks):
+		return _fail_dict("Map Editor %d->%d->%d ToolRail resize did not restore exact focus/selection/scroll/authority: %s" % [
+			initial_width,
+			resize_width,
+			initial_width,
+			JSON.stringify({
+				"checks": checks,
+				"initial_layout": initial_layout,
+				"resized_layout": resized_layout,
+				"restored_layout": restored_layout,
+				"picker_before": picker_state_before,
+				"picker_after": picker_state_after,
+				"vscroll_before": vscroll_before,
+				"vscroll_after": tool_scroll.scroll_vertical,
+			}),
+		])
+	return {
+		"ok": true,
+		"widths": [initial_width, resize_width, initial_width],
+		"initial_columns": int(initial_layout.get("columns", 0)),
+		"resized_columns": int(resized_layout.get("columns", 0)),
+		"restored_columns": int(restored_layout.get("columns", 0)),
+		"focus_selection_scroll_authority_exact": true,
+	}
+
 func _tool_scroll_reveal_snapshot(tool_scroll: ScrollContainer, button: Control) -> Dictionary:
 	var scroll_rect := tool_scroll.get_global_rect()
 	var button_rect := button.get_global_rect()
@@ -1320,6 +1623,8 @@ func _tool_scroll_reveal_snapshot(tool_scroll: ScrollContainer, button: Control)
 		"scroll_width": scroll_rect.size.x,
 		"button_width": button_rect.size.x,
 		"button_height": button_rect.size.y,
+		"horizontal_fully_visible": button_rect.position.x >= scroll_rect.position.x - 1.0 \
+			and button_rect.end.x <= scroll_rect.end.x - (vscroll.size.x if vscroll.visible else 0.0) + 1.0,
 		"vertical_fully_visible": button_rect.position.y >= scroll_rect.position.y - 1.0 \
 			and button_rect.end.y <= scroll_rect.end.y + 1.0,
 		"button_enclosed": scroll_rect.encloses(button_rect),

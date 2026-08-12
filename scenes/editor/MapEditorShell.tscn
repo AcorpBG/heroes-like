@@ -288,6 +288,8 @@ text = "Terrain Brush"
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+fit_to_longest_item = false
+clip_text = true
 
 [node name="ObjectPaletteTitle" type="Label" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox"]
 layout_mode = 2
@@ -297,11 +299,15 @@ text = "Object Palette"
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+fit_to_longest_item = false
+clip_text = true
 
 [node name="ObjectContentPicker" type="OptionButton" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+fit_to_longest_item = false
+clip_text = true
 
 [node name="ObjectTaxonomySummary" type="Label" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox"]
 unique_name_in_owner = true
@@ -318,6 +324,8 @@ text = "Object Properties"
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+fit_to_longest_item = false
+clip_text = true
 
 [node name="PropertySummary" type="Label" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox"]
 unique_name_in_owner = true
@@ -330,11 +338,15 @@ text = "Select a tile with an editable object."
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+fit_to_longest_item = false
+clip_text = true
 
 [node name="PropertyDifficultyPicker" type="OptionButton" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
+fit_to_longest_item = false
+clip_text = true
 
 [node name="PropertyCollectedFlag" type="CheckBox" parent="RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox"]
 unique_name_in_owner = true

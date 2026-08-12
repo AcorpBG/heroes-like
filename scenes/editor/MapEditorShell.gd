@@ -89,6 +89,7 @@ const EDITOR_MAP_JOYPAD_REPEAT_INTERVAL_SECONDS := 0.09
 @onready var _property_collected_check: CheckBox = %PropertyCollectedFlag
 @onready var _property_apply_button: Button = %ApplyObjectProperties
 @onready var _tool_scroll: ScrollContainer = $RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll
+@onready var _tool_buttons: GridContainer = $RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox/ToolButtons
 
 var _session = null
 var _map_package_entries: Array = []
@@ -127,6 +128,7 @@ var _held_editor_map_joypad_direction := Vector2i.ZERO
 var _held_editor_map_joypad_action: StringName = &""
 var _held_editor_map_joypad_button := -1
 var _held_editor_map_joypad_device := -1
+var _editor_tool_rail_layout_sync_queued := false
 var _forwarding_dirty_transition_root_physical_input := false
 var _safe_close_guard_authorized := false
 var _safe_close_guard_authorized_source := ""
@@ -146,6 +148,7 @@ func _ready() -> void:
 	_configure_dirty_transition_confirmation()
 	_configure_editor_map_keyboard_input()
 	_connect_ui()
+	_configure_editor_tool_rail_layout()
 	_connect_editor_focus_visibility()
 	_rebuild_terrain_picker()
 	_rebuild_object_family_picker()
@@ -204,6 +207,69 @@ func _connect_ui() -> void:
 	if _map_view != null:
 		_map_view.tile_pressed.connect(_on_map_tile_pressed)
 		_map_view.tile_hovered.connect(_on_map_tile_hovered)
+
+
+func _configure_editor_tool_rail_layout() -> void:
+	if _tool_scroll == null or _tool_buttons == null:
+		return
+	if not _tool_scroll.resized.is_connected(_queue_editor_tool_rail_layout_sync):
+		_tool_scroll.resized.connect(_queue_editor_tool_rail_layout_sync)
+	if not _tool_buttons.minimum_size_changed.is_connected(_queue_editor_tool_rail_layout_sync):
+		_tool_buttons.minimum_size_changed.connect(_queue_editor_tool_rail_layout_sync)
+	_queue_editor_tool_rail_layout_sync()
+
+
+func _queue_editor_tool_rail_layout_sync() -> void:
+	if _editor_tool_rail_layout_sync_queued or not is_inside_tree():
+		return
+	_editor_tool_rail_layout_sync_queued = true
+	call_deferred("_sync_editor_tool_rail_layout")
+
+
+func _sync_editor_tool_rail_layout() -> void:
+	_editor_tool_rail_layout_sync_queued = false
+	if (
+		not is_inside_tree()
+		or _tool_scroll == null
+		or not is_instance_valid(_tool_scroll)
+		or _tool_buttons == null
+		or not is_instance_valid(_tool_buttons)
+	):
+		return
+	var inner_width := _tool_scroll.size.x
+	var vertical_scroll_bar := _tool_scroll.get_v_scroll_bar()
+	if vertical_scroll_bar != null and vertical_scroll_bar.visible:
+		inner_width -= vertical_scroll_bar.size.x
+	if inner_width <= 0.0:
+		return
+	var required_two_column_width := _editor_tool_buttons_two_column_minimum_width()
+	var desired_columns := 2 if required_two_column_width <= inner_width else 1
+	if _tool_buttons.columns == desired_columns:
+		return
+	_tool_buttons.columns = desired_columns
+	_queue_editor_tool_rail_layout_sync()
+
+
+func _editor_tool_buttons_two_column_minimum_width() -> float:
+	var column_widths := [0.0, 0.0]
+	var visible_control_index := 0
+	for child in _tool_buttons.get_children():
+		if not (child is Control) or not (child as Control).visible:
+			continue
+		var control := child as Control
+		var column_index := visible_control_index % 2
+		column_widths[column_index] = maxf(
+			float(column_widths[column_index]),
+			control.get_combined_minimum_size().x
+		)
+		visible_control_index += 1
+	if visible_control_index < 2:
+		return float(column_widths[0])
+	return (
+		float(column_widths[0])
+		+ float(column_widths[1])
+		+ float(_tool_buttons.get_theme_constant("h_separation"))
+	)
 
 
 func _configure_editor_map_keyboard_input() -> void:
@@ -3367,6 +3433,7 @@ func _refresh_state() -> void:
 	_sync_preview()
 	_refresh_labels()
 	_configure_editor_keyboard_focus()
+	_queue_editor_tool_rail_layout_sync()
 
 func _sync_play_handoff_surface() -> void:
 	if _play_button == null:
