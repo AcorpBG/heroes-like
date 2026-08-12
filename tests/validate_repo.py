@@ -58,6 +58,7 @@ ENEMY_TURN_RULES_PATH = ROOT / "scripts" / "core" / "EnemyTurnRules.gd"
 ENEMY_ADVENTURE_RULES_PATH = ROOT / "scripts" / "core" / "EnemyAdventureRules.gd"
 MAIN_MENU_SCENE_PATH = ROOT / "scenes" / "menus" / "MainMenu.tscn"
 MAIN_MENU_SCRIPT_PATH = ROOT / "scenes" / "menus" / "MainMenu.gd"
+MAIN_MENU_KEYBOARD_NAVIGATION_SMOKE_PATH = ROOT / "tests" / "main_menu_keyboard_navigation_smoke.gd"
 MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH = ROOT / "tests" / "menu_outcome_visual_smoke.gd"
 MAIN_MENU_CAMPAIGN_REACTIVATION_DOC_PATH = ROOT / "docs" / "player-facing-campaign-reactivation-smoke-report.md"
 CAMPAIGN_ARC_RESTART_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "campaign_arc_restart_regression.gd"
@@ -14097,6 +14098,153 @@ def validate_main_menu_first_view(errors: list[str]) -> None:
     ensure('"pressed", pressed' not in main_menu_script_text, errors, "MainMenu.gd must not draw a pressed rounded plaque box")
 
 
+def validate_main_menu_destructive_exclusive_parent_input(errors: list[str]) -> None:
+    required_paths = (
+        MAIN_MENU_SCENE_PATH,
+        MAIN_MENU_SCRIPT_PATH,
+        MAIN_MENU_KEYBOARD_NAVIGATION_SMOKE_PATH,
+        CAMPAIGN_ARC_RESTART_REGRESSION_SCRIPT_PATH,
+        SAVE_SLOT_DELETE_REGRESSION_SCRIPT_PATH,
+        SETTINGS_RESTORE_DEFAULTS_REGRESSION_SCRIPT_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Main Menu destructive exclusive-parent dependency: {path.relative_to(ROOT)}")
+    if not MAIN_MENU_SCENE_PATH.exists() or not MAIN_MENU_SCRIPT_PATH.exists() or not MAIN_MENU_KEYBOARD_NAVIGATION_SMOKE_PATH.exists():
+        return
+
+    scene_text = MAIN_MENU_SCENE_PATH.read_text(encoding="utf-8")
+    for dialog_name in ("CampaignRestartDialog", "SaveDeleteDialog", "SettingsRestoreDefaultsDialog"):
+        dialog_block = re.search(
+            rf'\[node name="{dialog_name}" type="ConfirmationDialog" parent="\."\](.*?)(?=\n\[node |\Z)',
+            scene_text,
+            flags=re.DOTALL,
+        )
+        ensure(dialog_block is not None, errors, f"MainMenu.tscn is missing destructive dialog {dialog_name}")
+        ensure(dialog_block is not None and "exclusive = true" in dialog_block.group(1), errors, f"{dialog_name} must remain an exclusive native Window")
+
+    script_text = MAIN_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "var _destructive_confirmation_generation := 0",
+        "var _destructive_confirmation_workflow_generations := {}",
+        "var _forwarding_destructive_root_physical_input := false",
+        "root_window.window_input.connect(_on_root_window_input)",
+        "func _active_destructive_confirmation_root_owner() -> Dictionary:",
+        "_display_change_confirmation_dialog.visible",
+        "_hero_keybindings_dialog.visible",
+        "owners.size() == 1",
+        "func _begin_destructive_confirmation_generation(workflow: String) -> void:",
+        "func _destructive_confirmation_pending_matches(workflow: String, pending: Variant) -> bool:",
+        'String(pending) == _pending_campaign_restart_id',
+        "is_same(pending, _pending_save_delete_identity)",
+        "bool(pending) and _settings_restore_pending",
+        'call_deferred(\n\t\t"_forward_root_physical_input_to_destructive_confirmation"',
+        "event.duplicate() as InputEvent",
+        "get_tree().root.set_input_as_handled()",
+        "dialog.push_input(event)",
+    ):
+        ensure(required_token in script_text, errors, f"MainMenu destructive root-input bridge is missing token: {required_token}")
+    handler_match = re.search(
+        r"func _on_root_window_input\(event: InputEvent\) -> void:(.*?)(?=\n\nfunc )",
+        script_text,
+        flags=re.DOTALL,
+    )
+    ensure(handler_match is not None, errors, "MainMenu destructive root-input handler is missing")
+    if handler_match is not None:
+        handler_body = handler_match.group(1)
+        ensure("event is InputEventKey or event is InputEventJoypadButton" in handler_body, errors, "MainMenu root bridge must accept only physical Key/JoypadButton events")
+        ensure("dialog.push_input(event)" not in handler_body, errors, "MainMenu root handler must not synchronously push into a child Window")
+        ensure("InputEventMouseButton" not in handler_body, errors, "MainMenu root handler must not forward mouse buttons")
+        ensure("InputEventMouseMotion" not in handler_body, errors, "MainMenu root handler must not forward mouse motion")
+        ensure("InputEventAction" not in handler_body, errors, "MainMenu root handler must not forward synthetic actions")
+
+    smoke_text = MAIN_MENU_KEYBOARD_NAVIGATION_SMOKE_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "MAIN_MENU_KEYBOARD_NAVIGATION_SMOKE",
+        '"campaign_restart_1280"',
+        '"campaign_restart_1920"',
+        '"save_delete_1280"',
+        '"save_delete_1920"',
+        '"settings_restore_1280"',
+        '"settings_restore_1920"',
+        '"width": 1280',
+        '"width": 1920',
+        '"cancel": "joypad_b"',
+        '"cancel": "escape"',
+        '"confirm": "joypad_a"',
+        '"confirm": "enter"',
+        '"confirm": "mouse"',
+        'layout_host.size = Vector2(float(width), 720.0)',
+        'parent_probe.z_index = 100',
+        'await _press_joypad_button(JOY_BUTTON_A)',
+        "_destructive_parent_click_geometry(parent_probe, dialog)",
+        '"parent_probe_blocked"',
+        '"identical_parent_positive_once"',
+        'shell.call("_on_root_window_input", stale_pressed)',
+        '"generation_changed"',
+        '"replacement_safe_focus_exact"',
+        'Input.parse_input_event(stale_released)',
+        '"transaction_exact"',
+        '"workflow_consequence_exact"',
+        '"unrelated_authority_exact"',
+        'CampaignRules.reset_campaign(before_profile, RESTART_CAMPAIGN_ID)',
+        'CampaignRules.normalize_profile(SaveService.load_progression()) == expected_profile',
+        'var cache_before_inspection := SaveService.validation_summary_cache_snapshot()',
+        'SaveService._slot_summary_cache = cache_before_inspection.duplicate(true)',
+        '"selected_manual_summary": selected_manual_summary.duplicate(true)',
+        'var selected_manual_summary := SaveService.inspect_manual_slot(DESTRUCTIVE_MANUAL_SLOT)',
+        '"cache_without_slot": _summary_cache_without_path',
+        'String(summary.get("path", "")) == _manual_slot_path(DESTRUCTIVE_MANUAL_SLOT)',
+        'func _summary_cache_entries_for_path(cache_value: Variant, path: String) -> Array:',
+        '"save_cache_slot_wrapper_exact"',
+        'String(summary.get("validity", "")) == "missing"',
+        'slot_cache_wrapper.get("summary") == summary',
+        '"progression_artifacts": _transaction_artifact_states(_progression_path())',
+        '"manual_artifacts": _transaction_artifact_states(_manual_slot_path(DESTRUCTIVE_MANUAL_SLOT))',
+        'SettingsService.SETTINGS_CANDIDATE_FILE: _file_state(SettingsService.SETTINGS_CANDIDATE_FILE)',
+        'SettingsService.SETTINGS_BACKUP_FILE: _file_state(SettingsService.SETTINGS_BACKUP_FILE)',
+        'after.get("progression_artifacts") == expected.get("artifacts")',
+        '"campaign_live_profile_exact"',
+        '"campaign_persisted_profile_exact"',
+        '"campaign_artifacts_exact"',
+        'func _top_level_equality_checks(before: Dictionary, after: Dictionary) -> Dictionary:',
+        'func _top_level_differences(before: Dictionary, after: Dictionary) -> Dictionary:',
+        'after.get("manual_artifacts") == expected.get("artifacts")',
+        'after.get("settings_artifacts") == expected.get("artifacts")',
+        'transaction.get("committed_settings") == expected.get("settings")',
+        'transaction.get("input_map") == expected.get("input_map")',
+        'transaction.get("runtime") == expected.get("runtime")',
+        '"settings_transaction": _settings_transaction_authority()',
+        '"save_profile": SaveService.validation_last_runtime_save_profile()',
+        '_destructive_expected_default_settings_file',
+        'func _serialize_input_event(input_event: InputEvent) -> Dictionary:',
+        'PROPERTY_USAGE_STORAGE',
+        'SaveService.SAVE_PREFIX',
+        'SaveService.validation_transaction_artifact_paths',
+        'SettingsService.SETTINGS_FILE',
+        'SettingsService.SETTINGS_CANDIDATE_FILE',
+        'SettingsService.SETTINGS_BACKUP_FILE',
+        'SaveService.validation_summary_cache_snapshot()',
+        'AppRouter.validation_active_play_return_snapshot()',
+        'AppRouter.validation_battle_entry_snapshot()',
+        'AppRouter.validation_scenario_outcome_route_snapshot()',
+        'AppRouter.validation_safe_quit_snapshot()',
+        'shell.call("_active_destructive_confirmation_root_owner")',
+        'shell.call("validation_open_hero_keybindings_dialog")',
+        '_destructive_original_summary_cache = SaveService.validation_summary_cache_snapshot()',
+        'SaveService._slot_summary_cache = _destructive_original_summary_cache.duplicate(true)',
+        'SaveService.validation_summary_cache_snapshot() != _destructive_original_summary_cache',
+        'var original_root_focus: Control = get_viewport().gui_get_focus_owner()',
+        'original_root_focus.name != &"OpenCampaign"',
+        'not shell.is_ancestor_of(original_root_focus)',
+        'is_instance_valid(original_root_focus)',
+        'original_root_focus.grab_focus()',
+        'get_viewport().gui_get_focus_owner() != original_root_focus',
+        "func _cleanup_destructive_case(layout_host: Node) -> void:",
+    ):
+        ensure(required_token in smoke_text, errors, f"Main Menu destructive exclusive-parent smoke is missing token: {required_token}")
+    ensure("manual_slot_%d.json" not in smoke_text, errors, "Main Menu smoke must not use the stale manual-slot filename")
+
+
 def validate_map_editor_shell_slice(errors: list[str]) -> None:
     required_paths = (
         APP_ROUTER_PATH,
@@ -27871,6 +28019,7 @@ def main() -> int:
     validate_settings_and_onboarding(errors)
     validate_native_screen_reader_semantics(errors)
     validate_main_menu_first_view(errors)
+    validate_main_menu_destructive_exclusive_parent_input(errors)
     validate_map_editor_shell_slice(errors)
     validate_map_editor_dirty_transition_regression(errors)
     validate_scenario_outcome_shell(errors)
