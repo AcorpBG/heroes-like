@@ -20,6 +20,18 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color(0.0392157, 0.0470588, 0.054902, 1)
 
+[node name="RouteCursorLive" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_right = 1.0
+offset_bottom = 1.0
+mouse_filter = 2
+self_modulate = Color(1, 1, 1, 0)
+clip_text = true
+accessibility_name = "Route cursor"
+accessibility_description = "Announces the current right-stick route destination after navigation settles."
+accessibility_live = 1
+
 [node name="ShellMargin" type="MarginContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15

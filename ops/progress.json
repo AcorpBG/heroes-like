@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Map Editor responsive ToolRail containment is complete. Focused and compatibility gates proved live-metric containment, picker labels and popups, resize restoration, focus, canvas, mouse, and authority behavior. Official Linux and fresh Windows/Wine packages proved no horizontal rail scroll plus readable picker/property flows at 1280 and 1920.",
+  "currentNotes": "Overworld route-cursor live context is complete. Focused route and accessibility gates proved exact destination/action context, existing-repeat coalescing, A/B result lifecycle, modal/session containment, route consequence parity, and durable authority. Official Linux and fresh Windows/Wine packages passed boot-to-Overworld progression at 1280 and 1920; packaged controller and native AT-SPI/UIA certification remain explicit non-claims.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-map-editor-responsive-tool-rail-containment-10184",
-  "currentSliceId": "ux-map-editor-responsive-tool-rail-containment-10184",
-  "currentSliceNotes": "Replace the measured 435px-in-304px ToolRail overflow with responsive editor-local control sizing and tool-grid reflow while preserving full value discoverability, map width, focus navigation, canvas input, and native picker behavior.",
+  "currentSlice": "accessibility-overworld-route-cursor-live-context-10184",
+  "currentSliceId": "accessibility-overworld-route-cursor-live-context-10184",
+  "currentSliceNotes": "Add one bounded Overworld route-cursor semantic surface that updates current destination/action context, coalesces held right-stick repeats, and clears safely on accept, cancel, modal ownership, session replacement, and tree exit.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Map Editor Responsive Tool Rail Containment",
-  "currentSliceUpdatedAt": "2026-08-12T11:43:35Z",
+  "currentSliceTitle": "Overworld Route Cursor Live Context",
+  "currentSliceUpdatedAt": "2026-08-12T14:13:03Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19849,6 +19849,25 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "id": "accessibility-overworld-route-cursor-live-context-10184",
+      "title": "Overworld Route Cursor Live Context",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md"],
+      "purpose": "Expose the current right-stick route destination and existing primary-action context to screen-reader users before commit while keeping held navigation concise and preserving all route, movement, modal, session, and save behavior.",
+      "implementationTargets": ["scenes/overworld/OverworldShell.gd", "scenes/overworld/OverworldShell.tscn", "tests/overworld_controller_route_selection_regression.gd", "tests/accessibility_screen_reader_semantics_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"head": "d0563abe", "route_cursor_initial_repeat_msec": 360, "route_cursor_repeat_msec": 180, "route_cursor_live_region_count": 0, "save_version": 9},
+      "completionCriteria": "At 1280 and 1920, inactive and active route-cursor states in a valid loaded Overworld shell expose exactly one bounded polite route-context surface whose current destination, route readiness, primary action, and A/B instructions agree with the authoritative selected route preview before commit; one right-stick step updates current semantic context, held existing 180ms repeats coalesce to one final settled live announcement rather than one per step, bounded no-op movement does not schedule or replace an announcement, and A/B emit one exact canceled or same-shell committed result before clear without stale deferred delivery; drawer/settings/save/end-turn confirmations, session replacement, route deactivation, left-stick movement, D-pad focus, mouse/keyboard controls, save bytes/cache/settings/routes/session authority, and existing route consequences remain exact; native accessibility rescans preserve exactly one route-context live region without changing the other existing Overworld live regions; focused route, live controller, accessibility semantics, movement ownership, route/cache/visual, core, repository, Linux release, and fresh Windows/Wine behavior gates pass without claiming native Windows UIA certification from Wine.",
+      "nonGoals": ["changing route rules, route preview wording authority, primary-action consequences, movement ownership, shared OverworldMapView focus, generic UiAccessibility policy, Map Editor or Battle accessibility, save/schema/version, screen-reader certification, Native RMG, tuning, signing, publication, certification, or overall release completion"],
+      "baselineChecks": ["godot4 --headless --path . --scene res://tests/overworld_controller_route_selection_regression.tscn", "godot4 --headless --path . --scene res://tests/active_play_keyboard_focus_smoke.tscn", "godot4 --headless --path . --scene res://tests/accessibility_screen_reader_semantics_report.tscn", "godot4 --headless --path . --scene res://tests/overworld_gameplay_movement_input_ownership_regression.tscn", "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn", "godot4 --headless --editor --quit --path .", "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py", "python3 -m py_compile tests/validate_repo.py", "jq empty ops/progress.json", "git diff --check", "Linux release export plus shipped 1280/1920 boot-to-Overworld progression validation", "Windows release export plus fresh Wine shipped 1280/1920 boot-to-Overworld progression validation"],
+      "startedAt": "2026-08-12T11:55:33Z",
+      "updatedAt": "2026-08-12T14:13:03Z",
+      "completedAt": "2026-08-12T14:13:03Z",
+      "notes": "Overworld now exposes one route-specific polite live region with bounded cached destination, readiness, action, and A/B context. Changed destinations debounce for 420ms so the existing 360/180ms right-stick repeat announces only after navigation settles; bounded no-ops remain silent. A/B results are observable once and generation/session/label-safely clear, while owner, left-stick, mouse, modal, route-deactivation, session, and tree-exit paths invalidate stale delivery. Focused route and accessibility gates passed at both widths with exact consequence and authority parity. Compatibility, core, static, editor, Linux, and fresh Windows/Wine package gates passed except a Wood Wagon map-cue tooltip red reproduced byte-identically on pushed HEAD d0563abe and classified preexisting selected_slice_regression=false. Packaged right-stick behavior and native AT-SPI/UIA certification remain non-claims."
+    },
     {
       "id": "ux-map-editor-responsive-tool-rail-containment-10184",
       "title": "Map Editor Responsive Tool Rail Containment",

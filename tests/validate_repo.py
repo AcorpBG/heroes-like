@@ -13986,8 +13986,122 @@ def validate_native_screen_reader_semantics(errors: list[str]) -> None:
         'Reports hero movement keybinding capture prompts and results.',
         'func _live_region_path_count(snapshot: Dictionary, suffix: String) -> int:',
         'reentered_binding_status.accessibility_live != DisplayServer.LIVE_POLITE',
+        'res://scenes/overworld/OverworldShell.tscn',
+        'overworld.find_children("RouteCursorLive", "Label", true, false)',
+        'const OVERWORLD_LIVE_REGIONS: Array[Dictionary] = [',
+        'func _relative_live_regions(root: Node, snapshot: Dictionary) -> Array[Dictionary]:',
+        'overworld_live_regions == OVERWORLD_LIVE_REGIONS',
+        'rescanned_overworld_live_regions == overworld_live_regions',
+        'int(overworld_snapshot.get("live_region_count", 0)) == 5 and overworld_live_regions.size() == 5',
+        'overworld_live_regions.count(OVERWORLD_LIVE_REGIONS[0]) == 1',
+        'overworld_live_regions.slice(1).size() == 4',
+        'route_live.get_parent() == overworld',
+        'route_live.layout_mode == 0',
+        'route_live.is_visible_in_tree()',
+        'is_equal_approx(route_live.size.x, 1.0)',
+        'is_finite(route_live.size.y) and route_live.size.y >= 1.0',
+        'is_zero_approx(route_live.self_modulate.a)',
+        'route_live.mouse_filter == Control.MOUSE_FILTER_IGNORE',
+        'route_live.accessibility_name == "Route cursor"',
+        'Announces the current right-stick route destination after navigation settles.',
+        'overworld_route_context_live_exact_count',
+        'overworld_existing_live_regions_unchanged',
+        'overworld_route_context_rescan_exact',
     ):
         ensure(required_token in report_text, errors, f"accessibility_screen_reader_semantics_report.gd is missing required token: {required_token}")
+    expected_overworld_live_paths = (
+        "RouteCursorLive",
+        "ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/EventPanel/EventPad/EventBox/Event",
+        "ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/StatusChip/StatusPad/Status",
+        "ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/SystemPanel/SystemPad/SystemBox/SaveStatus",
+        "ActivePlaySettingsDialog/Center/DialogPanel/Margin/Content/Header/Status",
+    )
+    overworld_live_constant_match = re.search(
+        r"const OVERWORLD_LIVE_REGIONS: Array\[Dictionary\] = \[(?P<body>.*?)\n\]",
+        report_text,
+        re.S,
+    )
+    ensure(overworld_live_constant_match is not None, errors, "Could not isolate exact Overworld live-region rows")
+    if overworld_live_constant_match is not None:
+        overworld_live_constant_body = overworld_live_constant_match.group("body")
+        actual_overworld_live_paths = tuple(re.findall(r'\{"path": "([^"]+)", "mode": DisplayServer\.LIVE_POLITE\}', overworld_live_constant_body))
+        ensure(
+            actual_overworld_live_paths == expected_overworld_live_paths,
+            errors,
+            "Overworld live-region contract must retain the exact ordered five relative path and LIVE_POLITE rows",
+        )
+        ensure(
+            overworld_live_constant_body.count("DisplayServer.LIVE_POLITE") == 5,
+            errors,
+            "Overworld live-region contract must contain exactly five polite rows",
+        )
+    relative_live_helper_match = re.search(
+        r"func _relative_live_regions\(root: Node, snapshot: Dictionary\) -> Array\[Dictionary\]:\n(?P<body>.*?)(?=\nfunc _checks_exact)",
+        report_text,
+        re.S,
+    )
+    ensure(relative_live_helper_match is not None, errors, "Could not isolate relative live-region scan helper")
+    if relative_live_helper_match is not None:
+        relative_live_helper_body = relative_live_helper_match.group("body")
+        for required_token in (
+            'var absolute_prefix := "%s/" % String(root.get_path())',
+            'for entry_value in snapshot.get("live_regions", []):',
+            '(entry_value as Dictionary).duplicate(true)',
+            'String(detached.get("path", "")).trim_prefix(absolute_prefix)',
+            'relative_rows.append(detached)',
+        ):
+            ensure(required_token in relative_live_helper_body, errors, f"Relative live-region helper is missing exact detached path token: {required_token}")
+        ensure(
+            "sort" not in relative_live_helper_body.lower()
+            and "dedup" not in relative_live_helper_body.lower()
+            and ".erase(" not in relative_live_helper_body,
+            errors,
+            "Relative live-region helper must preserve scan order without sorting, deduplication, or erasure",
+        )
+    overworld_route_access_match = re.search(
+        r'var route_live_nodes: Array = overworld\.find_children\("RouteCursorLive", "Label", true, false\)(?P<body>.*?)(?=\n\toverworld\.queue_free\(\))',
+        report_text,
+        re.S,
+    )
+    ensure(overworld_route_access_match is not None, errors, "Could not isolate Overworld route live-region runtime assertions")
+    if overworld_route_access_match is not None:
+        overworld_route_access_body = overworld_route_access_match.group("body")
+        for required_token in (
+            "overworld_live_regions == OVERWORLD_LIVE_REGIONS",
+            "rescanned_overworld_live_regions == overworld_live_regions",
+            'int(overworld_snapshot.get("live_region_count", 0)) == 5 and overworld_live_regions.size() == 5',
+            "overworld_live_regions.count(OVERWORLD_LIVE_REGIONS[0]) == 1",
+            "overworld_live_regions.slice(1).size() == 4",
+            "route_live_nodes.size() == 1",
+            'route_live_relative_path == String(OVERWORLD_LIVE_REGIONS[0].get("path", ""))',
+            "route_live.get_parent() == overworld",
+            "route_live.layout_mode == 0",
+            "is_zero_approx(route_live.anchor_left)",
+            "is_zero_approx(route_live.anchor_top)",
+            "is_zero_approx(route_live.anchor_right)",
+            "is_zero_approx(route_live.anchor_bottom)",
+            "route_live.position == Vector2.ZERO",
+            "is_equal_approx(route_live.size.x, 1.0)",
+            "is_finite(route_live.size.y) and route_live.size.y >= 1.0",
+            'overworld.get_node_or_null("ShellMargin") as Control',
+            "shell_margin.position == Vector2.ZERO",
+            "shell_margin.size == overworld.size",
+            "route_live.is_visible_in_tree()",
+            "is_zero_approx(route_live.self_modulate.a)",
+            "route_live.mouse_filter == Control.MOUSE_FILTER_IGNORE",
+            'route_live.accessibility_name == "Route cursor"',
+            'route_live.accessibility_description == "Announces the current right-stick route destination after navigation settles."',
+            "route_live.accessibility_live == DisplayServer.LIVE_POLITE",
+            'route_live.text == ""',
+        ):
+            ensure(required_token in overworld_route_access_body, errors, f"Overworld route live-region proof is missing exact order/geometry/semantics token: {required_token}")
+        ensure(
+            "OVERWORLD_EXISTING_LIVE_SUFFIXES" not in overworld_route_access_body
+            and "for suffix in" not in overworld_route_access_body
+            and "is_equal_approx(route_live.size.y, 1.0)" not in overworld_route_access_body,
+            errors,
+            "Overworld route live-region proof must not use suffix matching or the invalid fixed-height predicate",
+        )
     report_scene_text = ACCESSIBILITY_SCREEN_READER_REPORT_SCENE_PATH.read_text(encoding="utf-8")
     ensure(
         "res://tests/accessibility_screen_reader_semantics_report.gd" in report_scene_text,
@@ -18193,8 +18307,674 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
             "route_preview",
             "SaveService.save_runtime_autosave_session",
             "SessionState.SAVE_VERSION",
+            "func _validate_route_semantic_matrix() -> Dictionary:",
+            "func _validate_route_semantic_width(width: int) -> Dictionary:",
+            '"widths": [1280, 1920]',
+            'host.size = Vector2(float(width), 720.0)',
+            'const SEMANTIC_DEBOUNCE_SECONDS := 0.42',
+            'const SEMANTIC_RESULT_SECONDS := 1.20',
+            'const SEMANTIC_MAX_CHARS := 320',
+            'await get_tree().create_timer(0.38).timeout',
+            'await get_tree().create_timer(0.20).timeout',
+            'await get_tree().create_timer(SEMANTIC_DEBOUNCE_SECONDS + 0.02).timeout',
+            '"physical_hold_360_180": true',
+            '"coalesced_context_420": true',
+            '"result_immediate_clear_1200": true',
+            'first_pending.get("selected_tile", {})',
+            'first_pending.get("route_generation", -1)',
+            'first_pending.get("session_ref")',
+            'first_pending.get("session_id", "")',
+            'first_text.length() <= SEMANTIC_MAX_CHARS',
+            'first_text.contains("A: %s" % action_text) and first_text.contains("B: cancel route cursor")',
+            'String(shell.call("_route_decision_status_label", first_decision))',
+            'shell.get("_controller_route_semantic_generation")',
+            'bounded no-op replaced a valid route announcement',
+            'shell.validation_open_command_drawer()',
+            'owner-open route deactivation changed selection/visual route or retained semantics',
+            'shell.validation_open_active_play_settings()',
+            'modal owner did not stop semantics while preserving selection/visual route',
+            'shell.validation_click_tile(mouse_target.x, mouse_target.y)',
+            'func _validate_route_semantic_identity_guards(shell: Node, session, live: Label) -> bool:',
+            'generation_pending["generation"]',
+            'route_state["generation"]',
+            'session.session_id = "%s-stale" % original_session_id',
+            'SessionState.set_active_session(replacement)',
+            'reference_pending["session_ref"] = replacement',
+            'shell.call("_exit_tree")',
+            'await _press_joypad_button(JOY_BUTTON_B)',
+            'await _press_joypad_button(JOY_BUTTON_A)',
+            'String(result_pending.get("kind", "")) == "result_clear"',
+            'await get_tree().create_timer(SEMANTIC_RESULT_SECONDS / 2.0).timeout',
+            'await get_tree().create_timer((SEMANTIC_RESULT_SECONDS / 2.0) + 0.05).timeout',
+            'shell.call("_clear_controller_route_semantic_result", stale_result)',
+            'action_id == "march_selected"',
+            'selected_before_action == _tile_payload(hero_before_action + Vector2i.RIGHT)',
+            'OverworldRules.execute_prevalidated_route(',
+            'var direct_recap_value: Variant = direct_result.get("post_action_recap", {})',
+            'direct_control.flags["last_overworld_action_recap"] = direct_recap.duplicate(true)',
+            'String(shell.call("_selected_cached_route_execution_fallback_reason", route_state, route_tiles, route_preview)) == ""',
+            'var expected_result_message := String(shell.get("_last_message")).strip_edges()',
+            '"Route order result: %s" % expected_result_message',
+            'session.to_dict() == direct_control.to_dict()',
+            '_route_semantic_non_session_authority(before_result_authority) == _route_semantic_non_session_authority(after_result_authority)',
+            'func _route_semantic_authority(shell: Node, session) -> Dictionary:',
+            'func _route_semantic_authority_checks(before: Dictionary, after: Dictionary, session) -> Dictionary:',
+            'func _route_semantic_authority_failure_details(',
+            'func _canonical_settings_transaction(transaction: Dictionary) -> Dictionary:',
+            'func _canonical_stored_input_event(event: InputEvent) -> Dictionary:',
+            'var settings_transaction: Dictionary = SettingsService.validation_settings_transaction_snapshot()',
+            '"settings_canonical": _canonical_settings_transaction(settings_transaction)',
+            '_original_settings_canonical = _canonical_settings_transaction(_original_settings_transaction)',
+            'var cleanup_settings_canonical: Dictionary = _canonical_settings_transaction(cleanup_settings_transaction)',
+            'var pre_result_authority_checks: Dictionary = _route_semantic_authority_checks(authority_before, pre_result_authority, session)',
+            'var pre_result_whole_object_aggregate_diagnostic := authority_before == pre_result_authority',
+            'if not _checks_exact(pre_result_authority_checks):',
+            'var cancel_authority_checks: Dictionary = _route_semantic_authority_checks(before_result_authority, after_result_authority, session)',
+            'var cancel_whole_object_aggregate_diagnostic := before_result_authority == after_result_authority',
+            '_checks_exact(cancel_authority_checks) if action_kind == "cancel" else',
+            '"whole_object_aggregate_diagnostic": whole_object_aggregate_diagnostic',
+            'SaveService.validation_summary_cache_snapshot()',
+            'SettingsService.validation_settings_transaction_snapshot()',
+            'SettingsService.SETTINGS_FILE',
+            'SettingsService.SETTINGS_CANDIDATE_FILE',
+            'SettingsService.SETTINGS_BACKUP_FILE',
+            'SaveService.SAVE_DIR, SaveService.SAVE_PREFIX',
+            'SaveService.MANUAL_SLOT_IDS',
+            'SaveService.validation_transaction_artifact_paths',
+            'focused cleanup did not restore named exact session/window/save/cache/settings authority',
+            'get_window().size = _original_window_size',
         ):
             ensure(required_token in controller_route_text, errors, f"overworld_controller_route_selection_regression.gd is missing token: {required_token}")
+        ensure(
+            '"user://saves/manual_%d.json"' not in controller_route_text,
+            errors,
+            "overworld controller route regression must derive manual-save authority paths from SaveService constants",
+        )
+        ensure(
+            "before_session != after_session" not in controller_route_text,
+            errors,
+            "Overworld route semantic accept oracle must use exact direct-control parity, not any-session-mutation",
+        )
+        ensure(
+            "if pre_result_authority != authority_before" not in controller_route_text
+            and "before_result_authority == after_result_authority if action_kind == \"cancel\"" not in controller_route_text,
+            errors,
+            "Object-bearing whole route-authority dictionaries must remain diagnostic and must not be authority predicates",
+        )
+        ensure(
+            'before.get("settings", {}) == after.get("settings", {})' not in controller_route_text,
+            errors,
+            "Raw Object-bearing settings transactions must remain diagnostic and must not be authority predicates",
+        )
+        ensure(
+            'SettingsService.validation_settings_transaction_snapshot() != _original_settings_transaction' not in controller_route_text,
+            errors,
+            "Final cleanup must not use the old raw Object-bearing settings transaction predicate",
+        )
+        route_run_match = re.search(
+            r"func _run\(\) -> void:\n(?P<body>.*?)(?=\nfunc _validate_route_semantic_matrix)",
+            controller_route_text,
+            re.S,
+        )
+        ensure(route_run_match is not None, errors, "Could not isolate route regression cleanup lifecycle")
+        if route_run_match is not None:
+            route_run_body = route_run_match.group("body")
+            cleanup_checks_match = re.search(
+                r"var cleanup_checks := \{(?P<body>.*?)\n\s*\}",
+                route_run_body,
+                re.S,
+            )
+            ensure(cleanup_checks_match is not None, errors, "Could not isolate named route cleanup authority checks")
+            if cleanup_checks_match is not None:
+                cleanup_check_keys = tuple(re.findall(r'^\s*"([^"]+)":', cleanup_checks_match.group("body"), re.M))
+                ensure(
+                    cleanup_check_keys == (
+                        "files_exact",
+                        "save_cache_exact",
+                        "settings_canonical_exact",
+                        "active_session_identity_exact",
+                        "window_size_exact",
+                    ),
+                    errors,
+                    "Route cleanup must retain the exact named five-key authority boundary",
+                )
+            for required_token in (
+                '_original_settings_transaction = SettingsService.validation_settings_transaction_snapshot()',
+                '_original_settings_canonical = _canonical_settings_transaction(_original_settings_transaction)',
+                'var cleanup_files: Dictionary = _capture_file_states(_authority_paths())',
+                'var cleanup_summary_cache: Dictionary = SaveService.validation_summary_cache_snapshot()',
+                'var cleanup_settings_transaction: Dictionary = SettingsService.validation_settings_transaction_snapshot()',
+                'var cleanup_settings_canonical: Dictionary = _canonical_settings_transaction(cleanup_settings_transaction)',
+                'var cleanup_session_ref = SessionState.active_session',
+                'var cleanup_window_size := get_window().size',
+                '"files_exact": cleanup_files == _original_files',
+                '"save_cache_exact": cleanup_summary_cache == _original_summary_cache',
+                '"settings_canonical_exact": cleanup_settings_canonical == _original_settings_canonical',
+                '"active_session_identity_exact": is_same(cleanup_session_ref, _original_session)',
+                '"window_size_exact": cleanup_window_size == _original_window_size',
+                'var cleanup_raw_settings_aggregate_diagnostic := cleanup_settings_transaction == _original_settings_transaction',
+                'if not _checks_exact(cleanup_checks):',
+                'var cleanup_failed: Array[String] = []',
+                '"settings_canonical": {"before": _original_settings_canonical, "after": cleanup_settings_canonical}',
+                '"settings_raw": {"before": _original_settings_transaction, "after": cleanup_settings_transaction}',
+                '"raw_settings_aggregate_diagnostic": cleanup_raw_settings_aggregate_diagnostic',
+            ):
+                ensure(required_token in route_run_body, errors, f"Route cleanup lifecycle is missing exact named authority token: {required_token}")
+            cleanup_call_index = route_run_body.find("\n\t_cleanup()")
+            cleanup_files_index = route_run_body.find("var cleanup_files: Dictionary", cleanup_call_index)
+            cleanup_cache_index = route_run_body.find("var cleanup_summary_cache: Dictionary", cleanup_call_index)
+            cleanup_raw_settings_index = route_run_body.find("var cleanup_settings_transaction: Dictionary", cleanup_call_index)
+            cleanup_canonical_settings_index = route_run_body.find("var cleanup_settings_canonical: Dictionary", cleanup_call_index)
+            cleanup_session_index = route_run_body.find("var cleanup_session_ref", cleanup_call_index)
+            cleanup_window_index = route_run_body.find("var cleanup_window_size", cleanup_call_index)
+            cleanup_checks_index = route_run_body.find("var cleanup_checks :=", cleanup_call_index)
+            ensure(
+                0 <= cleanup_call_index < cleanup_files_index < cleanup_cache_index < cleanup_raw_settings_index < cleanup_canonical_settings_index < cleanup_session_index < cleanup_window_index < cleanup_checks_index,
+                errors,
+                "Route cleanup must restore first, capture each authority surface once, then evaluate named exact checks",
+            )
+            ensure(
+                route_run_body.count("SettingsService.validation_settings_transaction_snapshot()") == 2
+                and route_run_body.count("_canonical_settings_transaction(") == 2
+                and route_run_body.count("SaveService.validation_summary_cache_snapshot()") == 2
+                and route_run_body.count("_capture_file_states(_authority_paths())") == 2,
+                errors,
+                "Route cleanup lifecycle must capture startup/current files, cache, and raw/canonical settings exactly once each",
+            )
+            ensure(
+                "if cleanup_raw_settings_aggregate_diagnostic" not in route_run_body
+                and "or cleanup_raw_settings_aggregate_diagnostic" not in route_run_body
+                and "normalize" not in route_run_body
+                and "erase(" not in route_run_body,
+                errors,
+                "Route cleanup raw settings equality must remain diagnostic-only without normalization or erasure",
+            )
+        canonical_settings_match = re.search(
+            r"func _canonical_settings_transaction\(transaction: Dictionary\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc _canonical_stored_input_event)",
+            controller_route_text,
+            re.S,
+        )
+        ensure(canonical_settings_match is not None, errors, "Could not isolate route authority settings transaction canonicalizer")
+        if canonical_settings_match is not None:
+            canonical_settings_body = canonical_settings_match.group("body")
+            for required_token in (
+                "transaction.duplicate(true)",
+                'transaction.get("input_map", {})',
+                "for action_value in input_map.keys():",
+                'var action := String(action_value)',
+                '"action": action',
+                '"exists": bool(action_state.get("exists", false))',
+                '"deadzone": float(action_state.get("deadzone", 0.5))',
+                "for event_value in events:",
+                "_canonical_stored_input_event(event_value as InputEvent)",
+                '"events": canonical_events',
+                'canonical["input_map"] = canonical_input_map',
+            ):
+                ensure(required_token in canonical_settings_body, errors, f"Route settings canonicalizer is missing exact full-transaction/input-map token: {required_token}")
+            ensure(
+                "erase(" not in canonical_settings_body and "normaliz" not in canonical_settings_body.lower(),
+                errors,
+                "Route settings canonicalizer must replace only input_map without erasing or normalizing unrelated transaction fields",
+            )
+        canonical_event_match = re.search(
+            r"func _canonical_stored_input_event\(event: InputEvent\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc _semantic_pending_compact)",
+            controller_route_text,
+            re.S,
+        )
+        ensure(canonical_event_match is not None, errors, "Could not isolate stored InputEvent canonicalizer")
+        if canonical_event_match is not None:
+            canonical_event_body = canonical_event_match.group("body")
+            for required_token in (
+                "event.get_property_list()",
+                'property_name == "script"',
+                "(property_usage & PROPERTY_USAGE_STORAGE) == 0",
+                '"value": var_to_str(event.get(property_name))',
+                '"class": event.get_class()',
+                '"as_text": event.as_text()',
+                '"stored_properties": stored_properties',
+            ):
+                ensure(required_token in canonical_event_body, errors, f"Stored InputEvent canonicalizer is missing exact class/text/storage token: {required_token}")
+            ensure(
+                "erase(" not in canonical_event_body and "normaliz" not in canonical_event_body.lower(),
+                errors,
+                "Stored InputEvent canonicalizer must not erase or normalize stored properties",
+            )
+        route_authority_checks_match = re.search(
+            r"func _route_semantic_authority_checks\(before: Dictionary, after: Dictionary, session\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc _route_semantic_authority_failure_details)",
+            controller_route_text,
+            re.S,
+        )
+        ensure(route_authority_checks_match is not None, errors, "Could not isolate named route semantic authority checks")
+        if route_authority_checks_match is not None:
+            route_authority_checks_body = route_authority_checks_match.group("body")
+            expected_route_authority_check_keys = (
+                "session_payload_exact",
+                "files_exact",
+                "save_cache_exact",
+                "settings_exact",
+                "session_id_exact",
+                "game_state_exact",
+                "scenario_status_exact",
+                "before_session_ref_is_session",
+                "after_session_ref_is_session",
+                "session_ref_identity_exact",
+                "before_shell_session_ref_is_session",
+                "after_shell_session_ref_is_session",
+                "shell_session_ref_identity_exact",
+            )
+            actual_route_authority_check_keys = tuple(
+                re.findall(r'^\s*"([^"]+)":', route_authority_checks_body, re.M)
+            )
+            ensure(
+                actual_route_authority_check_keys == expected_route_authority_check_keys,
+                errors,
+                "Named route semantic authority checks must retain the exact detached-value and Object-identity key set",
+            )
+            for required_token in (
+                'before.get("session", {}) == after.get("session", {})',
+                'before.get("files", {}) == after.get("files", {})',
+                'before.get("save_cache", {}) == after.get("save_cache", {})',
+                'before.get("settings_canonical", {}) == after.get("settings_canonical", {})',
+                'String(before.get("session_id", "")) == String(after.get("session_id", ""))',
+                'String(before.get("game_state", "")) == String(after.get("game_state", ""))',
+                'String(before.get("scenario_status", "")) == String(after.get("scenario_status", ""))',
+                'is_same(before.get("session_ref"), session)',
+                'is_same(after.get("session_ref"), session)',
+                'is_same(before.get("session_ref"), after.get("session_ref"))',
+                'is_same(before.get("shell_session_ref"), session)',
+                'is_same(after.get("shell_session_ref"), session)',
+                'is_same(before.get("shell_session_ref"), after.get("shell_session_ref"))',
+            ):
+                ensure(required_token in route_authority_checks_body, errors, f"Named route authority checks are missing exact predicate: {required_token}")
+            ensure(
+                "erase(" not in route_authority_checks_body and "normaliz" not in route_authority_checks_body.lower(),
+                errors,
+                "Named route authority checks must not erase or normalize any authority field",
+            )
+        route_authority_capture_match = re.search(
+            r"func _route_semantic_authority\(shell: Node, session\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc _route_semantic_non_session_authority)",
+            controller_route_text,
+            re.S,
+        )
+        ensure(route_authority_capture_match is not None, errors, "Could not isolate route semantic authority capture")
+        if route_authority_capture_match is not None:
+            route_authority_capture_body = route_authority_capture_match.group("body")
+            for required_token in (
+                'var settings_transaction: Dictionary = SettingsService.validation_settings_transaction_snapshot()',
+                '"settings": settings_transaction',
+                '"settings_canonical": _canonical_settings_transaction(settings_transaction)',
+            ):
+                ensure(required_token in route_authority_capture_body, errors, f"Route authority capture is missing raw-diagnostic/canonical-settings token: {required_token}")
+            ensure(
+                route_authority_capture_body.count("SettingsService.validation_settings_transaction_snapshot()") == 1,
+                errors,
+                "Route authority must capture the raw settings transaction exactly once before canonicalizing that same snapshot",
+            )
+        ensure(
+            '"settings": authority.get("settings_canonical", {})' in controller_route_text
+            and '"settings_exact": "settings_canonical"' in controller_route_text,
+            errors,
+            "Route consequence and failure consumers must use the full canonical settings transaction",
+        )
+        route_authority_failure_match = re.search(
+            r"func _route_semantic_authority_failure_details\((?P<body>.*?)(?=\nfunc _semantic_pending_compact)",
+            controller_route_text,
+            re.S,
+        )
+        ensure(route_authority_failure_match is not None, errors, "Could not isolate route semantic authority failure details")
+        if route_authority_failure_match is not None:
+            route_authority_failure_body = route_authority_failure_match.group("body")
+            for required_token in (
+                '"checks": checks',
+                '"failed": failed',
+                '"differing_values": differing_values',
+                '"identity_values": identity_values',
+                '"whole_object_aggregate_diagnostic": whole_object_aggregate_diagnostic',
+            ):
+                ensure(required_token in route_authority_failure_body, errors, f"Route authority failure output is missing exact named diagnostic: {required_token}")
+            ensure(
+                "erase(" not in route_authority_failure_body and "normaliz" not in route_authority_failure_body.lower(),
+                errors,
+                "Route authority failure diagnostics must not erase or normalize captured values",
+            )
+        route_semantic_width_match = re.search(
+            r"func _validate_route_semantic_width\(width: int\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc _validate_route_semantic_identity_guards)",
+            controller_route_text,
+            re.S,
+        )
+        ensure(route_semantic_width_match is not None, errors, "Could not isolate route semantic two-width lifecycle helper")
+        if route_semantic_width_match is not None:
+            route_semantic_width_body = route_semantic_width_match.group("body")
+            for required_token in (
+                'live.text == ""',
+                'shell.get("_controller_route_semantic_pending")',
+                'shell.validation_controller_route_axis(JOY_AXIS_RIGHT_X, 1.0)',
+                'shell.validation_open_command_drawer()',
+                'shell.validation_open_active_play_settings()',
+                'shell.validation_click_tile(mouse_target.x, mouse_target.y)',
+                'shell.call("_exit_tree")',
+            ):
+                ensure(required_token in route_semantic_width_body, errors, f"Route semantic lifecycle helper is missing exact behavior token: {required_token}")
+            direct_accept_match = re.search(
+                r'\n\s*if action_kind == "accept":(?P<body>.*?)(?=\n\s*if action_kind == "cancel":)',
+                route_semantic_width_body,
+                re.S,
+            )
+            ensure(direct_accept_match is not None, errors, "Could not isolate route semantic accept direct control")
+            if direct_accept_match is not None:
+                direct_accept_body = direct_accept_match.group("body")
+                for required_token in (
+                    "OverworldRules.execute_prevalidated_route(",
+                    'direct_control.flags["last_action"]',
+                    'var direct_recap_value: Variant = direct_result.get("post_action_recap", {})',
+                    '(direct_recap_value as Dictionary).duplicate(true) if direct_recap_value is Dictionary else {}',
+                    '"dictionary": direct_recap_value is Dictionary',
+                    '"nonempty": not direct_recap.is_empty()',
+                    'String(direct_recap.get("happened", "")).strip_edges() != ""',
+                    'String(direct_recap.get("affected", "")).strip_edges() != ""',
+                    'String(direct_recap.get("why_it_matters", "")).strip_edges() != ""',
+                    'String(direct_recap.get("next_step", "")).strip_edges() != ""',
+                    'String(direct_result.get("message", "")).strip_edges() != "" or String(direct_recap.get("cue_text", "")).strip_edges() != ""',
+                    'if not _checks_exact(direct_recap_checks):',
+                    'direct_control.flags["last_overworld_action_recap"] = direct_recap.duplicate(true)',
+                    'direct_control.flags.get("last_overworld_action_recap", {}) != direct_recap',
+                ):
+                    ensure(required_token in direct_accept_body, errors, f"Route accept direct control is missing exact detached recap token: {required_token}")
+                rules_index = direct_accept_body.find("OverworldRules.execute_prevalidated_route(")
+                last_action_index = direct_accept_body.find('direct_control.flags["last_action"]')
+                recap_extract_index = direct_accept_body.find('var direct_recap_value: Variant = direct_result.get("post_action_recap", {})')
+                recap_gate_index = direct_accept_body.find('if not _checks_exact(direct_recap_checks):')
+                recap_assign_index = direct_accept_body.find('direct_control.flags["last_overworld_action_recap"] = direct_recap.duplicate(true)')
+                recap_exact_index = direct_accept_body.find('direct_control.flags.get("last_overworld_action_recap", {}) != direct_recap')
+                physical_accept_index = route_semantic_width_body.find("await _press_joypad_button(JOY_BUTTON_A)", direct_accept_match.start())
+                ensure(
+                    0 <= rules_index < last_action_index < recap_extract_index < recap_gate_index < recap_assign_index < recap_exact_index
+                    and direct_accept_match.end() < physical_accept_index,
+                    errors,
+                    "Route accept control must run rules, mirror last_action, validate recap, assign detached recap, then send physical A",
+                )
+                for forbidden_token in (
+                    "_record_result_feedback",
+                    "_record_action_feedback",
+                    "_result_post_action_recap",
+                    "normalize",
+                    "canonical",
+                    "erase(",
+                ):
+                    ensure(forbidden_token not in direct_accept_body, errors, f"Route accept direct control must not call production feedback helpers or normalize/erase via {forbidden_token}")
+            replacement_poll_match = re.search(
+                r"# A new step must invalidate an older result-clear generation and survive the\n\s*# stale clear callback\.(?P<body>.*?)(?=\n\s*if _route_semantic_non_session_authority)",
+                route_semantic_width_body,
+                re.S,
+            )
+            ensure(replacement_poll_match is not None, errors, "Could not isolate stale result-clear replacement Timer proof")
+            if replacement_poll_match is not None:
+                replacement_poll_body = replacement_poll_match.group("body")
+                for required_token in (
+                    'var replacement_pending: Dictionary = (shell.get("_controller_route_semantic_pending") as Dictionary).duplicate(true)',
+                    'var replacement_cursor_before_release: Dictionary = shell.validation_controller_route_cursor_snapshot()',
+                    'await _send_joypad_axis_immediate(JOY_AXIS_RIGHT_X, 0.0)',
+                    'var replacement_cursor_after_release: Dictionary = shell.validation_controller_route_cursor_snapshot()',
+                    'String(replacement_pending.get("kind", "")) == "context"',
+                    'int(replacement_pending.get("generation", -1)) != int(stale_result.get("generation", -1))',
+                    'replacement_cursor_after_release.get("direction", {}) == _tile_payload(Vector2i.ZERO)',
+                    'not bool(replacement_cursor_after_release.get("repeat_timer_active", true))',
+                    'replacement_cursor_after_release.get("selected_tile", {}) == replacement_cursor_before_release.get("selected_tile", {})',
+                    'int(replacement_cursor_after_release.get("step_count", -1)) == int(replacement_cursor_before_release.get("step_count", -1))',
+                    'not semantic_timer.is_stopped()',
+                    'is_equal_approx(semantic_timer.wait_time, SEMANTIC_DEBOUNCE_SECONDS)',
+                    'live.text == ""',
+                    '_semantic_pending_compact(replacement_pending_live) == _semantic_pending_compact(replacement_pending)',
+                    'is_same(replacement_pending_live.get("session_ref"), replacement_pending.get("session_ref"))',
+                    'var replacement_poll_started_msec := Time.get_ticks_msec()',
+                    'var replacement_poll_deadline_msec := replacement_poll_started_msec + 1000',
+                    'while Time.get_ticks_msec() <= replacement_poll_deadline_msec:',
+                    'if current_pending.is_empty() or live.text != "":',
+                    'await get_tree().process_frame',
+                    'var replacement_elapsed_msec := Time.get_ticks_msec() - replacement_poll_started_msec',
+                    'replacement_elapsed_msec <= 1000',
+                    'replacement_after_pending.is_empty()',
+                    'replacement_text == String(replacement_pending.get("text", ""))',
+                    '"timer_stopped": semantic_timer.is_stopped()',
+                    'shell.call("_clear_controller_route_semantic_result", stale_result)',
+                    '"replacement_label_unchanged": live.text == replacement_text',
+                    '"pending_remains_empty": (shell.get("_controller_route_semantic_pending") as Dictionary).is_empty()',
+                    '"timer_remains_stopped": semantic_timer.is_stopped()',
+                    '"elapsed_msec": replacement_elapsed_msec',
+                ):
+                    ensure(required_token in replacement_poll_body, errors, f"Stale result-clear replacement proof is missing exact real-Timer token: {required_token}")
+                publish_gate_index = replacement_poll_body.find('if not _checks_exact(replacement_publish_checks):')
+                stale_clear_index = replacement_poll_body.find('shell.call("_clear_controller_route_semantic_result", stale_result)')
+                stale_gate_index = replacement_poll_body.find('if not _checks_exact(stale_clear_checks):')
+                ensure(
+                    0 <= publish_gate_index < stale_clear_index < stale_gate_index,
+                    errors,
+                    "Stale clear must run only after the bounded real-Timer publish gate and before exact unchanged-state validation",
+                )
+                replacement_capture_index = replacement_poll_body.find('var replacement_pending: Dictionary = (shell.get("_controller_route_semantic_pending") as Dictionary).duplicate(true)')
+                physical_release_index = replacement_poll_body.find('await _send_joypad_axis_immediate(JOY_AXIS_RIGHT_X, 0.0)', replacement_capture_index)
+                release_gate_index = replacement_poll_body.find('if not _checks_exact(replacement_pre_poll_checks):')
+                poll_start_index = replacement_poll_body.find('var replacement_poll_started_msec := Time.get_ticks_msec()')
+                ensure(
+                    0 <= replacement_capture_index < physical_release_index < release_gate_index < poll_start_index,
+                    errors,
+                    "Replacement proof must capture pending, physically release the axis, gate exact released state, then start the real-Timer poll",
+                )
+                post_capture_body = replacement_poll_body[replacement_capture_index:]
+                ensure(
+                    '_on_controller_route_semantic_timeout' not in replacement_poll_body
+                    and 'create_timer(SEMANTIC_DEBOUNCE_SECONDS + 0.02)' not in replacement_poll_body,
+                    errors,
+                    "Stale replacement proof must poll the real semantic Timer without direct callback or nominal one-shot wait",
+                )
+                ensure(
+                    'validation_controller_route_axis(JOY_AXIS_RIGHT_X, 0.0)' not in post_capture_body,
+                    errors,
+                    "Replacement release must use the real physical axis helper rather than the validation hook",
+                )
+    overworld_scene_text = OVERWORLD_SCENE_PATH.read_text(encoding="utf-8") if OVERWORLD_SCENE_PATH.exists() else ""
+    route_live_scene_count = overworld_scene_text.count('[node name="RouteCursorLive" type="Label" parent="."]')
+    ensure(route_live_scene_count == 1, errors, "Overworld scene must author exactly one root RouteCursorLive Label")
+    route_live_scene_match = re.search(
+        r'\[node name="RouteCursorLive" type="Label" parent="\."\]\n(?P<body>.*?)(?=\n\[node )',
+        overworld_scene_text,
+        re.S,
+    )
+    ensure(route_live_scene_match is not None, errors, "Could not isolate Overworld RouteCursorLive scene node")
+    if route_live_scene_match is not None:
+        route_live_body = route_live_scene_match.group("body")
+        for required_token in (
+            "offset_right = 1.0",
+            "offset_bottom = 1.0",
+            "mouse_filter = 2",
+            "self_modulate = Color(1, 1, 1, 0)",
+            'accessibility_name = "Route cursor"',
+            'accessibility_description = "Announces the current right-stick route destination after navigation settles."',
+            "accessibility_live = 1",
+        ):
+            ensure(required_token in route_live_body, errors, f"RouteCursorLive scene node is missing exact authored token: {required_token}")
+    for required_token in (
+        "const CONTROLLER_ROUTE_SEMANTIC_DEBOUNCE_MSEC := 420",
+        "const CONTROLLER_ROUTE_RESULT_VISIBLE_MSEC := 1200",
+        "const CONTROLLER_ROUTE_SEMANTIC_MAX_CHARS := 320",
+        "func _schedule_controller_route_semantic_after_refresh() -> void:",
+        "func _controller_route_semantic_context_from_refreshed_action() -> String:",
+        "func _on_controller_route_semantic_timeout() -> void:",
+        "func _cancel_controller_route_semantic() -> void:",
+        "func _publish_controller_route_semantic_result(text: String, source_session: SessionStateStore.SessionData) -> void:",
+        "func _clear_controller_route_semantic_result(pending: Dictionary) -> void:",
+        '"session_ref": _session',
+        '"session_id": String(_session.session_id)',
+        '"route_generation": int(_selected_route_state.get("generation", _selected_route_state_generation))',
+        'return semantic_text.left(CONTROLLER_ROUTE_SEMANTIC_MAX_CHARS)',
+        "is_same(SessionState.active_session, _session)",
+        "is_same(pending.get(\"session_ref\"), _session)",
+        "_deactivate_controller_route_cursor(false, false)",
+        "_cancel_controller_route_semantic()",
+    ):
+        ensure(required_token in overworld_script_text, errors, f"Overworld controller route semantics are missing production token: {required_token}")
+    route_semantic_function_names = (
+        "_move_controller_route_cursor",
+        "_schedule_controller_route_semantic_after_refresh",
+        "_controller_route_semantic_context_from_refreshed_action",
+        "_on_controller_route_semantic_timeout",
+        "_cancel_controller_route_semantic",
+        "_publish_controller_route_semantic_result",
+        "_clear_controller_route_semantic_result",
+        "_on_overworld_interaction_owner_opened",
+        "_exit_tree",
+    )
+    route_semantic_bodies: dict[str, str] = {}
+    for function_name in route_semantic_function_names:
+        function_match = re.search(
+            rf"func {re.escape(function_name)}\([^\n]*\)(?: -> [^:]+)?:\n(?P<body>.*?)(?=\nfunc )",
+            overworld_script_text,
+            re.S,
+        )
+        ensure(function_match is not None, errors, f"Could not isolate Overworld route semantic helper {function_name}")
+        if function_match is not None:
+            route_semantic_bodies[function_name] = function_match.group("body")
+    move_body = route_semantic_bodies.get("_move_controller_route_cursor", "")
+    changed_index = move_body.find("if changed:")
+    refresh_index = move_body.find('_refresh_selected_route_preview("controller_route_cursor_repeat" if repeated else "controller_route_cursor_step")')
+    schedule_index = move_body.find("_schedule_controller_route_semantic_after_refresh()")
+    last_step_index = move_body.find("_validation_controller_route_last_step = {")
+    ensure(
+        0 <= changed_index < refresh_index < schedule_index < last_step_index
+        and move_body.count("_schedule_controller_route_semantic_after_refresh()") == 1,
+        errors,
+        "Controller route semantic scheduling must occur exactly once after a changed route refresh and before last-step capture",
+    )
+    schedule_body = route_semantic_bodies.get("_schedule_controller_route_semantic_after_refresh", "")
+    schedule_order = (
+        schedule_body.find("_cancel_controller_route_semantic()"),
+        schedule_body.find("_controller_route_semantic_context_from_refreshed_action()"),
+        schedule_body.find('_controller_route_semantic_pending = {'),
+        schedule_body.find('_controller_route_semantic_timer.start(float(CONTROLLER_ROUTE_SEMANTIC_DEBOUNCE_MSEC) / 1000.0)'),
+    )
+    ensure(
+        all(index >= 0 for index in schedule_order) and list(schedule_order) == sorted(schedule_order),
+        errors,
+        "Route semantic schedule must cancel stale state, read refreshed context, cache identity, then start the 420 ms timer",
+    )
+    for required_token in (
+        '"kind": "context"',
+        '"generation": _controller_route_semantic_generation',
+        '"session_ref": _session',
+        '"session_id": String(_session.session_id)',
+        '"selected_tile": _debug_tile_payload(_selected_tile)',
+        '"route_generation": int(_selected_route_state.get("generation", _selected_route_state_generation))',
+        '"text": text',
+    ):
+        ensure(required_token in schedule_body, errors, f"Route semantic schedule cache is missing exact token: {required_token}")
+    context_body = route_semantic_bodies.get("_controller_route_semantic_context_from_refreshed_action", "")
+    for required_token in (
+        '_refresh_cache.has("primary_action")',
+        '_refresh_cache.get("primary_action", {})',
+        'action.get("route_decision", {})',
+        'Vector2i(x, y) != _selected_tile',
+        'var commit_text := "A: unavailable"',
+        '"A: %s"',
+        'B: cancel route cursor.',
+        'semantic_text.left(CONTROLLER_ROUTE_SEMANTIC_MAX_CHARS)',
+    ):
+        ensure(required_token in context_body, errors, f"Route semantic cached context helper is missing token: {required_token}")
+    for forbidden_token in (
+        "_current_primary_action(",
+        "_selected_route_decision_surface(",
+        "_refresh_selected_route_preview(",
+        "_ensure_selected_route_state(",
+        "OverworldRules.",
+    ):
+        ensure(forbidden_token not in context_body, errors, f"Route semantic context must not recompute route/action state via {forbidden_token}")
+    timeout_body = route_semantic_bodies.get("_on_controller_route_semantic_timeout", "")
+    for required_token in (
+        'int(pending.get("generation", -1)) != _controller_route_semantic_generation',
+        'pending_kind == "result_clear"',
+        '_clear_controller_route_semantic_result(pending)',
+        'pending_kind != "context"',
+        'not is_inside_tree()',
+        'not _controller_route_cursor_active',
+        'not is_same(SessionState.active_session, _session)',
+        'not is_same(pending.get("session_ref"), _session)',
+        'String(pending.get("session_id", "")) != String(_session.session_id)',
+        'pending_tile != _selected_tile',
+        'int(pending.get("route_generation", -1)) != int(_selected_route_state.get("generation", _selected_route_state_generation))',
+        '_route_cursor_live_label.text = String(pending.get("text", "")).left(CONTROLLER_ROUTE_SEMANTIC_MAX_CHARS)',
+    ):
+        ensure(required_token in timeout_body, errors, f"Route semantic timeout is missing exact lifetime guard token: {required_token}")
+    cancel_body = route_semantic_bodies.get("_cancel_controller_route_semantic", "")
+    cancel_order = (
+        cancel_body.find("_controller_route_semantic_generation += 1"),
+        cancel_body.find("_controller_route_semantic_pending.clear()"),
+        cancel_body.find("_controller_route_semantic_timer.stop()"),
+        cancel_body.find('_route_cursor_live_label.text = ""'),
+    )
+    ensure(
+        all(index >= 0 for index in cancel_order) and list(cancel_order) == sorted(cancel_order),
+        errors,
+        "Route semantic cancel must increment generation, clear pending, stop timer, then clear live text",
+    )
+    publish_body = route_semantic_bodies.get("_publish_controller_route_semantic_result", "")
+    for required_token in (
+        'not is_same(source_session, _session)',
+        'not is_same(SessionState.active_session, _session)',
+        'String(source_session.session_id) != String(_session.session_id)',
+        'String(_session.game_state) != "overworld"',
+        '"kind": "result_clear"',
+        '"generation": _controller_route_semantic_generation',
+        '"session_ref": _session',
+        '"session_id": String(_session.session_id)',
+        '"label_text": bounded_text',
+    ):
+        ensure(required_token in publish_body, errors, f"Route semantic result publish is missing exact token: {required_token}")
+    publish_order = (
+        publish_body.find("_cancel_controller_route_semantic()"),
+        publish_body.find("var bounded_text :="),
+        publish_body.find("_route_cursor_live_label.text = bounded_text"),
+        publish_body.find('_controller_route_semantic_pending = {'),
+        publish_body.find('_controller_route_semantic_timer.start(float(CONTROLLER_ROUTE_RESULT_VISIBLE_MSEC) / 1000.0)'),
+    )
+    ensure(
+        all(index >= 0 for index in publish_order) and list(publish_order) == sorted(publish_order),
+        errors,
+        "Route semantic result publish must cancel stale state before bounded label, clear identity, and 1200 ms timer",
+    )
+    clear_body = route_semantic_bodies.get("_clear_controller_route_semantic_result", "")
+    for required_token in (
+        'var expected_text := String(pending.get("label_text", ""))',
+        'is_same(SessionState.active_session, _session)',
+        'is_same(pending.get("session_ref"), _session)',
+        'String(pending.get("session_id", "")) == String(_session.session_id)',
+        '_route_cursor_live_label.text == expected_text',
+        '_controller_route_semantic_generation += 1',
+    ):
+        ensure(required_token in clear_body, errors, f"Route semantic result clear is missing same-session/same-label guard: {required_token}")
+    owner_body = route_semantic_bodies.get("_on_overworld_interaction_owner_opened", "")
+    ensure(
+        owner_body.count("_clear_controller_move_state()") == 1
+        and owner_body.count("_deactivate_controller_route_cursor(false, false)") == 1,
+        errors,
+        "Overworld owner-open helper must clear movement and deactivate route cursor exactly once without resetting selection",
+    )
+    exit_body = route_semantic_bodies.get("_exit_tree", "")
+    ensure(
+        exit_body.count("_clear_controller_route_motion()") == 1
+        and exit_body.count("_cancel_controller_route_semantic()") == 1,
+        errors,
+        "Overworld exit must clear route motion and semantic lifetime exactly once",
+    )
+    for token, expected_count in (
+        ("_schedule_controller_route_semantic_after_refresh", 2),
+        ("_publish_controller_route_semantic_result", 3),
+        ("_cancel_controller_route_semantic", 7),
+        ("_clear_controller_route_semantic_result", 2),
+    ):
+        ensure(
+            overworld_script_text.count(token) == expected_count,
+            errors,
+            f"Overworld route semantic token {token} must have exact definition/call count {expected_count}",
+        )
     if OVERWORLD_CONTROLLER_ROUTE_SELECTION_REGRESSION_SCENE_PATH.exists():
         controller_route_scene_text = OVERWORLD_CONTROLLER_ROUTE_SELECTION_REGRESSION_SCENE_PATH.read_text(encoding="utf-8")
         ensure(
