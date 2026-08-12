@@ -15117,6 +15117,18 @@ def validate_battle_quick_resolve_runtime(errors: list[str]) -> None:
         '"return_focus_name"',
         '"confirm_count"',
         '"perform_count"',
+        "func _configure_confirmation_input_forwarding()",
+        "root_window.window_input.connect(_on_root_window_input)",
+        "func _on_root_window_input(event: InputEvent)",
+        "event is InputEventKey or event is InputEventJoypadButton",
+        "get_tree().root.set_input_as_handled()",
+        "event.duplicate() as InputEvent",
+        'call_deferred("_forward_root_physical_input_to_confirmation", dialog, detached_event)',
+        "func _forward_root_physical_input_to_confirmation(dialog: ConfirmationDialog, event: InputEvent)",
+        "_active_exclusive_confirmation_dialog() != dialog",
+        "dialog.push_input(event)",
+        "func _active_exclusive_confirmation_dialog()",
+        "if quick_resolve_active == withdrawal_active:",
     ):
         ensure(required_token in shell_text, errors, f"BattleShell.gd is missing required quick-resolve token: {required_token}")
     if "func _on_quick_resolve_canceled()" in shell_text:
@@ -15125,6 +15137,16 @@ def validate_battle_quick_resolve_runtime(errors: list[str]) -> None:
             "resolve_active_battle" not in cancel_body,
             errors,
             "Canceling the BattleShell quick-resolve confirmation must not invoke the resolver",
+        )
+    if "func _on_root_window_input(event: InputEvent)" in shell_text:
+        root_forward_body = shell_text.split("func _on_root_window_input(event: InputEvent)", 1)[1].split("\nfunc ", 1)[0]
+        ensure(
+            "InputEventMouseButton" not in root_forward_body
+            and "InputEventMouseMotion" not in root_forward_body
+            and "InputEventAction" not in root_forward_body
+            and ".push_input(" not in root_forward_body,
+            errors,
+            "Battle confirmation root fallback must defer only physical key/joypad events and never forward mouse/action input synchronously",
         )
 
     battle_scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8")
@@ -15136,6 +15158,10 @@ def validate_battle_quick_resolve_runtime(errors: list[str]) -> None:
         'method="_on_quick_resolve_confirmed"',
     ):
         ensure(required_token in battle_scene_text, errors, f"BattleShell.tscn is missing required quick-resolve token: {required_token}")
+    quick_dialog_scene_body = battle_scene_text.split('[node name="QuickResolveConfirmationDialog"', 1)[1].split("\n[node ", 1)[0]
+    withdrawal_dialog_scene_body = battle_scene_text.split('[node name="WithdrawalConfirmationDialog"', 1)[1].split("\n[node ", 1)[0]
+    ensure("exclusive = true" in quick_dialog_scene_body, errors, "Quick Resolve confirmation must be an exclusive native child Window")
+    ensure("exclusive = true" in withdrawal_dialog_scene_body, errors, "Withdrawal confirmation must be an exclusive native child Window")
 
     cancel_smoke_text = BATTLE_QUICK_RESOLVE_CANCEL_SMOKE_PATH.read_text(encoding="utf-8")
     for required_token in (
@@ -15156,6 +15182,47 @@ def validate_battle_quick_resolve_runtime(errors: list[str]) -> None:
         'await _press_action("ui_focus_next")',
         'String(repeat_result.get("reason", "")) != "no_pending_confirmation"',
         'int(repeated.get("perform_count", 0)) != 1',
+        "func _check_battle_confirmation_exclusive_parent_input()",
+        '"quick_resolve_1280"',
+        '"quick_resolve_1920"',
+        '"retreat_1280"',
+        '"retreat_1920"',
+        '"surrender_1280"',
+        '"surrender_1920"',
+        '"cancel_input": "joypad_b"',
+        '"cancel_input": "escape"',
+        '"cancel_input": "mouse"',
+        '"confirm_input": "joypad_a"',
+        '"confirm_input": "enter"',
+        '"confirm_input": "mouse"',
+        "func _exclusive_battle_parent_click_geometry(",
+        "not dialog_rect.has_point(parent_click)",
+        "func _battle_dialog_child_click_geometry(",
+        "func _control_root_click_position(",
+        '"parent_count_exact"',
+        '"dialog_transaction_exact"',
+        '"authority_exact"',
+        '"origin_focus_exact"',
+        '"cancel_signal_once"',
+        '"confirm_signal_once"',
+        '"perform_once"',
+        '"route_once"',
+        "BattleAutoResolveRulesScript.resolve_active_battle(direct_control)",
+        "BattleRules.perform_player_action(direct_control, action_id)",
+        '"result_exact"',
+        '"gameplay_session_rng_exact"',
+        '"terminal_state_exact"',
+        '"terminal_route_exact"',
+        "func _battle_confirmation_direct_route_exact(",
+        "func _battle_confirmation_gameplay_payload(",
+        'payload.erase("game_state")',
+        "func _battle_confirmation_terminal_state_exact(",
+        'var expected_route_state := "outcome" if String(direct_control.scenario_status) != "in_progress" else "overworld"',
+        'flags.erase("last_battle_action_recap")',
+        'overworld.erase("command_risk_forecast")',
+        "func _cleanup_exclusive_battle_case(",
+        "AppRouter.validation_set_battle_resolution_checkpoint_routing_suppressed(false)",
+        "AppRouter.validation_set_scenario_outcome_routing_suppressed(false)",
     ):
         ensure(required_token in cancel_smoke_text, errors, f"Active-play quick-resolve cancel smoke is missing required token: {required_token}")
 
