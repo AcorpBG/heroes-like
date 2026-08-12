@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `ux-map-editor-responsive-tool-rail-containment-10184`. The Map Editor tool rail now keeps every visible command and picker horizontally contained at 1280 and 1920 without shrinking the map, hiding overflow, or changing editor behavior.
 - Latest completed implementation slice: `accessibility-map-editor-keyboard-controller-canvas-interaction-10184`. The Map Editor canvas now supports bounded keyboard/controller tile selection, camera follow, and existing-tool activation without changing shared Overworld input or mouse behavior.
 - Latest completed implementation slice: `accessibility-map-editor-command-focus-navigation-10184`. Every enabled Map Editor command now joins one bounded keyboard/controller focus cycle without changing editor layout, map pointer ownership, or command consequences.
 - Latest completed implementation slice: `accessibility-main-menu-display-change-exclusive-parent-input-10184`. The exclusive display preview confirmation now recovers exact native physical Revert/Keep routing after a blocked parent click without closing Settings or changing transaction authority.
