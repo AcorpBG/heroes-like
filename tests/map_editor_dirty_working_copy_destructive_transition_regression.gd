@@ -231,6 +231,13 @@ func _validate_command_focus_row(
 	if initial_cycle.size() != 18 or not _assert_focus_links_exact(initial_cycle):
 		return _fail_dict("Map Editor %d empty-state focus links were not an exact closed enabled cycle." % width)
 	var empty_authority := _full_authority_state(shell)
+	var empty_cursor_live: Label = shell.get_node("%EditorMapCursorLive")
+	var empty_semantic_timer: Timer = shell.get("_editor_map_cursor_semantic_timer") as Timer
+	if String(shell.call("_editor_map_cursor_semantic_context")) != "" \
+			or empty_cursor_live.text != "" \
+			or not (shell.get("_editor_map_cursor_semantic_pending") as Dictionary).is_empty() \
+			or empty_semantic_timer == null or not empty_semantic_timer.is_stopped():
+		return _fail_dict("Map Editor %d empty working-copy cursor semantics were not inactive and empty." % width)
 	if not await _exercise_physical_focus_cycles(initial_cycle, "empty_%d" % width):
 		return {}
 	if _full_authority_state(shell) != empty_authority:
@@ -419,6 +426,11 @@ func _validate_canvas_interaction_row(
 	var map_size := OverworldRules.derive_map_size(session)
 	if map_view.focus_mode != Control.FOCUS_ALL or map_size.x < 3 or map_size.y < 3:
 		return _fail_dict("Map Editor %d canvas fixture was not bounded and focusable." % width)
+	var semantic_result := await _validate_editor_map_cursor_semantic_matrix(shell, source_id, package_state, width)
+	if semantic_result.is_empty():
+		return {}
+	if not await _reset_case(shell, source_id, false):
+		return {}
 	# Tab owns the exact 28-surface traversal even across Map; D-pad may enter
 	# Map from the preceding Menu command, then belongs to the canvas cursor.
 	menu_button.grab_focus()
@@ -589,9 +601,484 @@ func _validate_canvas_interaction_row(
 		"repeat_interval_seconds": 0.09,
 		"focus_modal_stop": true,
 		"accept_cancel_nonrepeat": true,
+		"cursor_semantics": semantic_result,
 		"action_rows": action_rows,
 		"mouse_picker_dialog_paths_unchanged": true,
 	}
+
+func _validate_editor_map_cursor_semantic_matrix(
+	shell: Node,
+	source_id: String,
+	package_state: Dictionary,
+	width: int
+) -> Dictionary:
+	var map_view: Control = shell.get_node("%Map")
+	var live: Label = shell.get_node("%EditorMapCursorLive")
+	var semantic_timer: Timer = shell.get("_editor_map_cursor_semantic_timer") as Timer
+	var session = shell.get("_session")
+	var external_authority_before := _semantic_external_authority(shell)
+	var empty_tile := _first_semantic_empty_tile(shell)
+	var road_tile := _first_semantic_road_tile(shell)
+	var object_tile := _first_placement_tile(shell, "towns")
+	if semantic_timer == null or empty_tile.x < 0 or road_tile.x < 0 or object_tile.x < 0:
+		return _fail_dict("Map Editor %d cursor semantic material fixtures were unavailable." % width)
+	var context_rows := [
+		{"id": "empty", "tile": empty_tile, "tool": "inspect", "material": "no road or objects"},
+		{"id": "road", "tile": road_tile, "tool": "road", "material": "road "},
+		{"id": "object", "tile": object_tile, "tool": "place_object", "material": "object"},
+	]
+	var context_results: Array[Dictionary] = []
+	for row_value in context_rows:
+		var row: Dictionary = row_value
+		var target: Vector2i = row.get("tile", Vector2i(-1, -1))
+		var step := _semantic_step_fixture(shell, target)
+		var start: Vector2i = step.get("start", Vector2i(-1, -1))
+		var direction: Vector2i = step.get("direction", Vector2i.ZERO)
+		if start.x < 0 or direction == Vector2i.ZERO:
+			return _fail_dict("Map Editor %d cursor semantic %s row had no adjacent physical start." % [width, row.get("id", "")])
+		shell.call("validation_select_tile", start.x, start.y)
+		shell.call("validation_set_tool", String(row.get("tool", "inspect")))
+		map_view.grab_focus()
+		await _settle()
+		shell.call("_cancel_editor_map_cursor_semantic")
+		var authority_before := _semantic_read_only_authority(shell)
+		await _press_canvas_direction_key(direction)
+		var pending: Dictionary = (shell.get("_editor_map_cursor_semantic_pending") as Dictionary).duplicate(true)
+		var expected_context := String(shell.call("_editor_map_cursor_semantic_context"))
+		var pending_selected: Dictionary = pending.get("selected_tile", {}) if pending.get("selected_tile", {}) is Dictionary else {}
+		var pending_checks := {
+			"selected_exact": _canvas_selected_tile(shell) == target,
+			"live_empty_before_settle": live.text == "",
+			"pending_context": String(pending.get("kind", "")) == "context",
+			"pending_generation_current": int(pending.get("generation", -1)) == int(shell.get("_editor_map_cursor_semantic_generation")),
+			"pending_session_identity": is_same(pending.get("session_ref"), session),
+			"pending_session_id": String(pending.get("session_id", "")) == String(session.session_id),
+			"pending_tile_exact": pending_selected == {"x": target.x, "y": target.y},
+			"pending_tool_exact": String(pending.get("tool", "")) == String(row.get("tool", "")),
+			"pending_label_identity": is_same(pending.get("label_ref"), live),
+			"timer_active": not semantic_timer.is_stopped(),
+			"timer_wait_exact": is_equal_approx(semantic_timer.wait_time, 0.42),
+			"synchronous_context_current": expected_context != "" and expected_context.begins_with("Tile %d,%d." % [target.x, target.y]),
+		}
+		if not _checks_exact(pending_checks):
+			return _fail_dict("Map Editor %d cursor semantic %s scheduling was not exact: %s" % [width, row.get("id", ""), JSON.stringify(pending_checks)])
+		if not await _await_editor_map_semantic_text(live, expected_context, 1000):
+			return _fail_dict("Map Editor %d cursor semantic %s did not publish through the real 0.42 Timer: %s" % [width, row.get("id", ""), live.text])
+		var context_checks := _editor_map_semantic_context_checks(shell, target, String(row.get("tool", "")), String(row.get("material", "")), expected_context)
+		context_checks["authority_exact"] = _semantic_read_only_authority(shell) == authority_before
+		context_checks["pending_consumed"] = (shell.get("_editor_map_cursor_semantic_pending") as Dictionary).is_empty()
+		context_checks["timer_stopped"] = semantic_timer.is_stopped()
+		if not _checks_exact(context_checks):
+			return _fail_dict("Map Editor %d cursor semantic %s context was not exact: %s / %s" % [width, row.get("id", ""), JSON.stringify(context_checks), live.text])
+		var active_tool_focus: Control = shell.call("_active_tool_focus_control") as Control
+		active_tool_focus.grab_focus()
+		await _settle()
+		if live.text != "" or not (shell.get("_editor_map_cursor_semantic_pending") as Dictionary).is_empty() or not semantic_timer.is_stopped():
+			return _fail_dict("Map Editor %d cursor semantic %s did not cancel on focus loss." % [width, row.get("id", "")])
+		context_results.append({"id": row.get("id", ""), "tile": {"x": target.x, "y": target.y}, "tool": row.get("tool", ""), "bounded": true})
+
+	# The real 0.36/0.09 repeat Timer must keep the polite label silent while
+	# navigation is in flight, then the independent 0.42 Timer publishes only
+	# the final settled tile after the matching physical release.
+	if not await _reset_case(shell, source_id, false):
+		return {}
+	session = shell.get("_session")
+	var map_size := OverworldRules.derive_map_size(session)
+	var hold_start := Vector2i(clampi(map_size.x / 2, 1, map_size.x - 4), clampi(map_size.y / 2, 1, map_size.y - 2))
+	shell.call("validation_select_tile", hold_start.x, hold_start.y)
+	map_view.grab_focus()
+	await _settle()
+	shell.call("_cancel_editor_map_cursor_semantic")
+	var hold_authority := _semantic_read_only_authority(shell)
+	await _send_joypad_button_event(JOY_BUTTON_DPAD_RIGHT, true, 23)
+	var immediate_tile := hold_start + Vector2i.RIGHT
+	if _canvas_selected_tile(shell) != immediate_tile or live.text != "":
+		return _fail_dict("Map Editor %d cursor semantic hold missed its silent immediate step." % width)
+	if not await _await_exact_canvas_timer_step_silent(shell, immediate_tile + Vector2i.RIGHT, live, 600):
+		return _fail_dict("Map Editor %d cursor semantic hold did not keep the 0.36 repeat silent." % width)
+	if not await _await_exact_canvas_timer_step_silent(shell, immediate_tile + (Vector2i.RIGHT * 2), live, 250):
+		return _fail_dict("Map Editor %d cursor semantic hold did not coalesce the 0.09 repeat silently." % width)
+	await _send_joypad_button_event(JOY_BUTTON_DPAD_RIGHT, false, 23)
+	var held_final_tile := _canvas_selected_tile(shell)
+	var held_pending: Dictionary = (shell.get("_editor_map_cursor_semantic_pending") as Dictionary).duplicate(true)
+	var held_expected := String(shell.call("_editor_map_cursor_semantic_context"))
+	var repeat_timer: Timer = shell.get("_editor_map_joypad_repeat_timer") as Timer
+	var held_release_checks := {
+		"selected_final_exact": _canvas_selected_tile(shell) == held_final_tile,
+		"final_row_exact": held_final_tile.y == hold_start.y,
+		"final_progress_after_two_repeats": held_final_tile.x >= immediate_tile.x + 2,
+		"final_in_bounds": held_final_tile.x >= 0 and held_final_tile.y >= 0 and held_final_tile.x < map_size.x and held_final_tile.y < map_size.y,
+		"live_empty": live.text == "",
+		"pending_context": String(held_pending.get("kind", "")) == "context",
+		"pending_tile_exact": held_pending.get("selected_tile", {}) == {"x": held_final_tile.x, "y": held_final_tile.y},
+		"semantic_timer_active": not semantic_timer.is_stopped(),
+		"semantic_timer_wait_exact": is_equal_approx(semantic_timer.wait_time, 0.42),
+		"pending_generation_current": int(held_pending.get("generation", -1)) == int(shell.get("_editor_map_cursor_semantic_generation")),
+		"pending_session_identity": is_same(held_pending.get("session_ref"), session),
+		"pending_session_id_exact": String(held_pending.get("session_id", "")) == String(session.session_id),
+		"pending_tool_exact": String(held_pending.get("tool", "")) == "inspect",
+		"pending_label_identity": is_same(held_pending.get("label_ref"), live),
+		"held_direction_cleared": shell.get("_held_editor_map_joypad_direction") == Vector2i.ZERO,
+		"held_action_cleared": String(shell.get("_held_editor_map_joypad_action")) == "",
+		"held_button_cleared": int(shell.get("_held_editor_map_joypad_button")) == -1,
+		"held_device_cleared": int(shell.get("_held_editor_map_joypad_device")) == -1,
+		"repeat_timer_stopped": repeat_timer != null and repeat_timer.is_stopped(),
+	}
+	if not _checks_exact(held_release_checks):
+		var held_pending_compact := held_pending.duplicate(true)
+		held_pending_compact.erase("session_ref")
+		held_pending_compact.erase("label_ref")
+		var held_release_failure := {
+			"checks": held_release_checks,
+			"released_final_tile": held_final_tile,
+			"actual_tile": _canvas_selected_tile(shell),
+			"live_text": live.text,
+			"pending_compact": held_pending_compact,
+			"pending_session_identity": is_same(held_pending.get("session_ref"), session),
+			"pending_label_identity": is_same(held_pending.get("label_ref"), live),
+			"semantic_timer_stopped": semantic_timer.is_stopped(),
+			"semantic_timer_wait": semantic_timer.wait_time,
+			"semantic_timer_time_left": semantic_timer.time_left,
+			"repeat_timer_stopped": repeat_timer == null or repeat_timer.is_stopped(),
+			"repeat_timer_wait": repeat_timer.wait_time if repeat_timer != null else -1.0,
+			"repeat_timer_time_left": repeat_timer.time_left if repeat_timer != null else -1.0,
+			"held_direction": shell.get("_held_editor_map_joypad_direction"),
+			"held_action": String(shell.get("_held_editor_map_joypad_action")),
+			"held_button": int(shell.get("_held_editor_map_joypad_button")),
+			"held_device": int(shell.get("_held_editor_map_joypad_device")),
+		}
+		return _fail_dict("Map Editor %d held cursor semantic final pending state was not exact: %s" % [width, JSON.stringify(held_release_failure)])
+	if not await _await_editor_map_semantic_text(live, held_expected, 1000) \
+			or _semantic_read_only_authority(shell) != hold_authority:
+		return _fail_dict("Map Editor %d held cursor semantic did not publish only the final read-only context." % width)
+
+	# A clamped boundary and a real mouse hover must not schedule, replace, or
+	# announce keyboard-cursor semantics.
+	shell.call("validation_select_tile", 0, 0)
+	map_view.grab_focus()
+	await _settle()
+	shell.call("_cancel_editor_map_cursor_semantic")
+	var silent_authority := _semantic_read_only_authority(shell)
+	await _press_key(KEY_LEFT)
+	var silent_state := _editor_map_semantic_state(shell)
+	if _canvas_selected_tile(shell) != Vector2i.ZERO or not bool(silent_state.get("inactive", false)) \
+			or _semantic_read_only_authority(shell) != silent_authority:
+		return _fail_dict("Map Editor %d clamped cursor no-op scheduled or mutated semantics." % width)
+	map_view.call("_set_camera_center", Vector2(0, 0), true)
+	await _settle()
+	await _hover_map_tile(shell, Vector2i.ZERO)
+	if not bool(_editor_map_semantic_state(shell).get("inactive", false)) \
+			or _semantic_read_only_authority(shell) != silent_authority:
+		return _fail_dict("Map Editor %d native mouse hover scheduled cursor semantics." % width)
+
+	# A/Enter publishes one immediate bounded result and clears through the real
+	# 1.2 second Timer. An old result clear cannot disturb a replacement context.
+	var accept_tile := empty_tile
+	shell.call("validation_select_tile", accept_tile.x, accept_tile.y)
+	shell.call("validation_set_tool", "inspect")
+	map_view.grab_focus()
+	await _settle()
+	shell.call("_cancel_editor_map_cursor_semantic")
+	var accept_authority := _focus_background_authority(shell)
+	await _press_joypad_button(JOY_BUTTON_A)
+	var accept_result := live.text
+	var accept_pending: Dictionary = (shell.get("_editor_map_cursor_semantic_pending") as Dictionary).duplicate(true)
+	if not accept_result.begins_with("Map action result at %d,%d:" % [accept_tile.x, accept_tile.y]) \
+			or accept_result.length() > 320 \
+			or String(accept_pending.get("kind", "")) != "result_clear" \
+			or accept_pending.get("label_text", "") != accept_result \
+			or not is_same(accept_pending.get("focus_ref"), map_view) \
+			or semantic_timer.is_stopped() or not is_equal_approx(semantic_timer.wait_time, 1.2) \
+			or _focus_background_authority(shell) != accept_authority:
+		return _fail_dict("Map Editor %d physical A result semantic was not immediate, bounded, and exact once." % width)
+	if not await _await_editor_map_semantic_clear(shell, live, 1800):
+		return _fail_dict("Map Editor %d physical A result semantic did not clear through the real 1.2 Timer." % width)
+
+	map_view.grab_focus()
+	await _press_key(KEY_ENTER)
+	var stale_result: Dictionary = (shell.get("_editor_map_cursor_semantic_pending") as Dictionary).duplicate(true)
+	var replacement_step := _semantic_step_fixture(shell, _canvas_selected_tile(shell))
+	var replacement_direction: Vector2i = replacement_step.get("reverse_direction", Vector2i.ZERO)
+	if replacement_direction == Vector2i.ZERO:
+		return _fail_dict("Map Editor %d stale-result replacement had no bounded direction." % width)
+	await _press_canvas_direction_key(replacement_direction)
+	var replacement_before: Dictionary = (shell.get("_editor_map_cursor_semantic_pending") as Dictionary).duplicate(true)
+	var replacement_generation := int(shell.get("_editor_map_cursor_semantic_generation"))
+	var replacement_timer_wait := semantic_timer.wait_time
+	var replacement_label := live.text
+	shell.call("_clear_editor_map_cursor_semantic_result", stale_result)
+	var replacement_after: Dictionary = (shell.get("_editor_map_cursor_semantic_pending") as Dictionary).duplicate(true)
+	if replacement_after != replacement_before \
+			or int(shell.get("_editor_map_cursor_semantic_generation")) != replacement_generation \
+			or semantic_timer.is_stopped() or not is_equal_approx(semantic_timer.wait_time, replacement_timer_wait) \
+			or live.text != replacement_label:
+		return _fail_dict("Map Editor %d stale result clear disturbed its replacement cursor context." % width)
+	var replacement_expected := String(shell.call("_editor_map_cursor_semantic_context"))
+	if not await _await_editor_map_semantic_text(live, replacement_expected, 1000):
+		return _fail_dict("Map Editor %d replacement cursor context did not survive stale clear." % width)
+
+	# B/Escape restores the exact active command, announces the fallback wording
+	# once, and clears on the same bounded result lifetime.
+	shell.call("validation_set_tool", "terrain")
+	map_view.grab_focus()
+	await _settle()
+	shell.call("_cancel_editor_map_cursor_semantic")
+	var cancel_tile := _canvas_selected_tile(shell)
+	await _press_key(KEY_ESCAPE)
+	var terrain_focus: Control = shell.call("_active_tool_focus_control") as Control
+	var expected_cancel := "Canvas navigation ended at %d,%d. Focus returned to the Terrain command." % [cancel_tile.x, cancel_tile.y]
+	var cancel_pending: Dictionary = (shell.get("_editor_map_cursor_semantic_pending") as Dictionary).duplicate(true)
+	var cancel_repeat_timer: Timer = shell.get("_editor_map_joypad_repeat_timer") as Timer
+	var cancel_checks := {
+		"live_text_exact": live.text == expected_cancel,
+		"focus_owner_exact": get_viewport().gui_get_focus_owner() == terrain_focus,
+		"pending_result_clear": String(cancel_pending.get("kind", "")) == "result_clear",
+		"pending_focus_identity": is_same(cancel_pending.get("focus_ref"), terrain_focus),
+		"semantic_timer_active": not semantic_timer.is_stopped(),
+		"semantic_timer_wait_exact": is_equal_approx(semantic_timer.wait_time, 1.2),
+		"pending_generation_current": int(cancel_pending.get("generation", -1)) == int(shell.get("_editor_map_cursor_semantic_generation")),
+		"pending_session_identity": is_same(cancel_pending.get("session_ref"), session),
+		"pending_session_id_exact": String(cancel_pending.get("session_id", "")) == String(session.session_id),
+		"pending_label_identity": is_same(cancel_pending.get("label_ref"), live),
+		"pending_label_text_exact": String(cancel_pending.get("label_text", "")) == expected_cancel,
+		"held_direction_cleared": shell.get("_held_editor_map_joypad_direction") == Vector2i.ZERO,
+		"held_action_cleared": String(shell.get("_held_editor_map_joypad_action")) == "",
+		"held_button_cleared": int(shell.get("_held_editor_map_joypad_button")) == -1,
+		"held_device_cleared": int(shell.get("_held_editor_map_joypad_device")) == -1,
+		"repeat_timer_stopped": cancel_repeat_timer != null and cancel_repeat_timer.is_stopped(),
+	}
+	if not _checks_exact(cancel_checks):
+		var cancel_pending_compact := cancel_pending.duplicate(true)
+		cancel_pending_compact.erase("session_ref")
+		cancel_pending_compact.erase("focus_ref")
+		cancel_pending_compact.erase("label_ref")
+		var actual_focus := get_viewport().gui_get_focus_owner()
+		var cancel_failure := {
+			"checks": cancel_checks,
+			"expected_text": expected_cancel,
+			"actual_text": live.text,
+			"expected_focus_path": String(terrain_focus.get_path()) if terrain_focus != null else "",
+			"expected_focus_name": String(terrain_focus.name) if terrain_focus != null else "",
+			"actual_focus_path": String(actual_focus.get_path()) if actual_focus != null else "",
+			"actual_focus_name": String(actual_focus.name) if actual_focus != null else "",
+			"pending_compact": cancel_pending_compact,
+			"pending_focus_identity": is_same(cancel_pending.get("focus_ref"), terrain_focus),
+			"pending_session_identity": is_same(cancel_pending.get("session_ref"), session),
+			"pending_label_identity": is_same(cancel_pending.get("label_ref"), live),
+			"current_generation": int(shell.get("_editor_map_cursor_semantic_generation")),
+			"semantic_timer_stopped": semantic_timer.is_stopped(),
+			"semantic_timer_wait": semantic_timer.wait_time,
+			"semantic_timer_time_left": semantic_timer.time_left,
+			"repeat_timer_stopped": cancel_repeat_timer == null or cancel_repeat_timer.is_stopped(),
+			"repeat_timer_wait": cancel_repeat_timer.wait_time if cancel_repeat_timer != null else -1.0,
+			"repeat_timer_time_left": cancel_repeat_timer.time_left if cancel_repeat_timer != null else -1.0,
+			"held_direction": shell.get("_held_editor_map_joypad_direction"),
+			"held_action": String(shell.get("_held_editor_map_joypad_action")),
+			"held_button": int(shell.get("_held_editor_map_joypad_button")),
+			"held_device": int(shell.get("_held_editor_map_joypad_device")),
+		}
+		return _fail_dict("Map Editor %d physical B/Escape fallback-focus semantic was not exact: %s" % [width, JSON.stringify(cancel_failure)])
+	if not await _await_editor_map_semantic_clear(shell, live, 1800):
+		return _fail_dict("Map Editor %d physical B/Escape result semantic did not clear through the real Timer." % width)
+
+	# Focus, modal ownership, session replacement, and tree exit all cancel the
+	# pending identity rather than allowing stale text into a new owner/session.
+	if not await _reset_case(shell, source_id, false):
+		return {}
+	if not await _stage_editor_map_semantic_pending(shell, map_view):
+		return _fail_dict("Map Editor %d focus cancellation did not establish a pending cursor context." % width)
+	var inspect_focus: Control = shell.get_node("%InspectTool")
+	inspect_focus.grab_focus()
+	await _settle()
+	if not bool(_editor_map_semantic_state(shell).get("inactive", false)):
+		return _fail_dict("Map Editor %d focus transfer did not cancel pending cursor semantics." % width)
+	var dirty_tile := _first_property_empty_tile(shell)
+	var alternate_terrain := _alternate_terrain_id(shell, dirty_tile)
+	if dirty_tile.x < 0 or alternate_terrain == "":
+		return _fail_dict("Map Editor %d modal semantic cancellation fixture was unavailable." % width)
+	shell.call("validation_paint_terrain", dirty_tile.x, dirty_tile.y, alternate_terrain)
+	if not await _stage_editor_map_semantic_pending(shell, map_view):
+		return _fail_dict("Map Editor %d modal cancellation did not establish a pending cursor context." % width)
+	shell.call("validation_request_dirty_transition", "menu")
+	await _settle()
+	if not shell.get_node("DirtyTransitionConfirmationDialog").visible \
+			or not bool(_editor_map_semantic_state(shell).get("inactive", false)):
+		return _fail_dict("Map Editor %d dirty modal ownership did not cancel cursor semantics." % width)
+	shell.call("validation_cancel_dirty_transition")
+	await _settle()
+	if not await _reset_case(shell, source_id, false):
+		return {}
+	if not await _stage_editor_map_semantic_pending(shell, map_view):
+		return _fail_dict("Map Editor %d session replacement did not establish a pending cursor context." % width)
+	var prior_session = shell.get("_session")
+	var replacement_session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+	if replacement_session == null \
+			or String(replacement_session.session_id) == "" \
+			or String(replacement_session.scenario_id) != "river-pass" \
+			or is_same(replacement_session, prior_session) \
+			or not bool(shell.call("_resume_working_copy_from_memory", replacement_session)) \
+			or not is_same(shell.get("_session"), replacement_session) \
+			or not bool(_editor_map_semantic_state(shell).get("inactive", false)):
+		return _fail_dict("Map Editor %d session replacement did not cancel cursor semantic identity." % width)
+	if not await _reset_case(shell, source_id, false):
+		return {}
+	if not await _stage_editor_map_semantic_pending(shell, map_view):
+		return _fail_dict("Map Editor %d tree cancellation did not establish a pending cursor context." % width)
+	shell.call("_exit_tree")
+	if not bool(_editor_map_semantic_state(shell).get("inactive", false)):
+		return _fail_dict("Map Editor %d tree exit did not cancel cursor semantics." % width)
+	if not await _reset_case(shell, source_id, false) \
+			or _package_file_state() != package_state \
+			or _semantic_external_authority(shell) != external_authority_before \
+			or _canvas_dirty(shell) \
+			or String(shell.call("validation_snapshot").get("tool", "")) != "inspect":
+		return _fail_dict("Map Editor %d cursor semantic lifecycle did not restore package authority." % width)
+	return {
+		"ok": true,
+		"width": width,
+		"context_rows": context_results,
+		"hold_initial_seconds": 0.36,
+		"hold_rate_seconds": 0.09,
+		"semantic_debounce_seconds": 0.42,
+		"result_visible_seconds": 1.2,
+		"final_only": true,
+		"boundary_and_hover_silent": true,
+		"accept_cancel_immediate_once": true,
+		"stale_clear_replacement_safe": true,
+		"focus_modal_session_tree_cancellation": true,
+		"authority_exact": true,
+	}
+
+func _editor_map_semantic_context_checks(shell: Node, tile: Vector2i, tool: String, material: String, text: String) -> Dictionary:
+	var terrain_id := String(shell.call("_terrain_at", tile))
+	var terrain_label := String(shell.call("_terrain_label_for_id", terrain_id))
+	if terrain_label == "":
+		terrain_label = terrain_id if terrain_id != "" else "unknown"
+	var tool_label := String(shell.call("_tool_label", tool))
+	var material_exact := text.contains(material)
+	if material == "object":
+		var details: Array = shell.call("_object_details_at", tile, true)
+		material_exact = not details.is_empty()
+		if material_exact and details[0] is Dictionary:
+			var detail: Dictionary = details[0]
+			var kind := String(shell.call("_humanize_editor_id", String(detail.get("kind", "object"))))
+			var object_name := String(detail.get("name", detail.get("content_id", ""))).strip_edges()
+			material_exact = text.contains("%s %s" % [kind, object_name]) if object_name != "" else text.contains(kind)
+	return {
+		"whole_text_exact": text == String(shell.call("_editor_map_cursor_semantic_context")),
+		"bounded_nonempty": text != "" and text.length() <= 320,
+		"single_line": not text.contains("\n") and not text.contains("\r"),
+		"tile_exact": text.begins_with("Tile %d,%d." % [tile.x, tile.y]),
+		"terrain_exact": text.contains("Terrain %s;" % terrain_label),
+		"material_exact": material_exact,
+		"tool_exact": text.contains("Tool %s." % tool_label),
+		"accept_exact": text.contains("A/Enter:"),
+		"cancel_exact": text.ends_with("B/Escape: return to tool commands."),
+	}
+
+func _semantic_read_only_authority(shell: Node) -> Dictionary:
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	return {
+		"background": _focus_background_authority(shell),
+		"dirty": bool(snapshot.get("dirty", false)),
+		"tool": String(snapshot.get("tool", "")),
+	}
+
+func _semantic_external_authority(shell: Node) -> Dictionary:
+	var authority := _focus_background_authority(shell)
+	authority.erase("working_copy")
+	return authority
+
+func _editor_map_semantic_state(shell: Node) -> Dictionary:
+	var live: Label = shell.get_node("%EditorMapCursorLive")
+	var timer: Timer = shell.get("_editor_map_cursor_semantic_timer") as Timer
+	var pending: Dictionary = shell.get("_editor_map_cursor_semantic_pending") as Dictionary
+	return {
+		"text": live.text,
+		"pending": pending.duplicate(true),
+		"generation": int(shell.get("_editor_map_cursor_semantic_generation")),
+		"timer_stopped": timer != null and timer.is_stopped(),
+		"inactive": live.text == "" and pending.is_empty() and timer != null and timer.is_stopped(),
+	}
+
+func _semantic_step_fixture(shell: Node, target: Vector2i) -> Dictionary:
+	var session = shell.get("_session")
+	var map_size := OverworldRules.derive_map_size(session) if session != null else Vector2i.ZERO
+	for direction_value in [Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT, Vector2i.UP]:
+		var direction: Vector2i = direction_value
+		var start: Vector2i = target - direction
+		if start.x >= 0 and start.y >= 0 and start.x < map_size.x and start.y < map_size.y:
+			return {"start": start, "direction": direction, "reverse_direction": -direction}
+	return {"start": Vector2i(-1, -1), "direction": Vector2i.ZERO, "reverse_direction": Vector2i.ZERO}
+
+func _stage_editor_map_semantic_pending(shell: Node, map_view: Control) -> bool:
+	var session = shell.get("_session")
+	var map_size := OverworldRules.derive_map_size(session) if session != null else Vector2i.ZERO
+	if map_size.x < 3 or map_size.y < 1:
+		return false
+	var start := Vector2i(clampi(map_size.x / 2, 1, map_size.x - 2), clampi(map_size.y / 2, 0, map_size.y - 1))
+	shell.call("validation_select_tile", start.x, start.y)
+	map_view.grab_focus()
+	await _settle()
+	shell.call("_cancel_editor_map_cursor_semantic")
+	await _press_key(KEY_RIGHT)
+	var pending: Dictionary = shell.get("_editor_map_cursor_semantic_pending") as Dictionary
+	var timer: Timer = shell.get("_editor_map_cursor_semantic_timer") as Timer
+	return _canvas_selected_tile(shell) == start + Vector2i.RIGHT \
+		and String(pending.get("kind", "")) == "context" \
+		and timer != null and not timer.is_stopped() \
+		and is_equal_approx(timer.wait_time, 0.42)
+
+func _first_semantic_empty_tile(shell: Node) -> Vector2i:
+	var session = shell.get("_session")
+	var map_size := OverworldRules.derive_map_size(session) if session != null else Vector2i.ZERO
+	for y in range(map_size.y):
+		for x in range(map_size.x):
+			var tile := Vector2i(x, y)
+			if not bool(shell.call("_has_road_at", tile)) and (shell.call("_object_details_at", tile, true) as Array).is_empty():
+				return tile
+	return Vector2i(-1, -1)
+
+func _first_semantic_road_tile(shell: Node) -> Vector2i:
+	var session = shell.get("_session")
+	var map_size := OverworldRules.derive_map_size(session) if session != null else Vector2i.ZERO
+	for y in range(map_size.y):
+		for x in range(map_size.x):
+			var tile := Vector2i(x, y)
+			if bool(shell.call("_has_road_at", tile)):
+				return tile
+	return Vector2i(-1, -1)
+
+func _await_exact_canvas_timer_step_silent(shell: Node, expected_tile: Vector2i, live: Label, timeout_msec: int) -> bool:
+	var before := _canvas_selected_tile(shell)
+	var deadline := Time.get_ticks_msec() + timeout_msec
+	while Time.get_ticks_msec() <= deadline:
+		await get_tree().process_frame
+		if live.text != "":
+			return false
+		var current := _canvas_selected_tile(shell)
+		if current == expected_tile:
+			return current != before
+		if current != before:
+			return false
+	return false
+
+func _await_editor_map_semantic_text(live: Label, expected: String, timeout_msec: int) -> bool:
+	var deadline := Time.get_ticks_msec() + timeout_msec
+	while Time.get_ticks_msec() <= deadline:
+		await get_tree().process_frame
+		if live.text != "":
+			return live.text == expected
+	return false
+
+func _await_editor_map_semantic_clear(shell: Node, live: Label, timeout_msec: int) -> bool:
+	var deadline := Time.get_ticks_msec() + timeout_msec
+	while Time.get_ticks_msec() <= deadline:
+		await get_tree().process_frame
+		if live.text == "" and (shell.get("_editor_map_cursor_semantic_pending") as Dictionary).is_empty():
+			var timer: Timer = shell.get("_editor_map_cursor_semantic_timer") as Timer
+			return timer != null and timer.is_stopped()
+	return false
 
 func _validate_canvas_camera_follow_and_mouse(
 	shell: Node,
@@ -1109,6 +1596,24 @@ func _click_map_tile(shell: Node, tile: Vector2i) -> void:
 		event.pressed = pressed_state
 		get_viewport().push_input(event, true)
 		await get_tree().process_frame
+	await _settle()
+
+func _hover_map_tile(shell: Node, tile: Vector2i) -> void:
+	var map_view: Control = shell.get_node("%Map")
+	var metrics: Dictionary = map_view.call("validation_view_metrics")
+	var board: Dictionary = metrics.get("board_rect", {})
+	var map_size: Dictionary = metrics.get("map_size", {})
+	var cell_size := Vector2(
+		float(board.get("width", 0.0)) / maxf(float(map_size.get("x", 1)), 1.0),
+		float(board.get("height", 0.0)) / maxf(float(map_size.get("y", 1)), 1.0)
+	)
+	var local_position := Vector2(float(board.get("x", 0.0)), float(board.get("y", 0.0))) \
+		+ Vector2((float(tile.x) + 0.5) * cell_size.x, (float(tile.y) + 0.5) * cell_size.y)
+	var root_position := map_view.get_global_rect().position + local_position
+	var motion := InputEventMouseMotion.new()
+	motion.position = root_position
+	motion.global_position = root_position
+	get_viewport().push_input(motion, true)
 	await _settle()
 
 func _canvas_selected_tile_visible(shell: Node) -> bool:

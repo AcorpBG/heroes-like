@@ -53,6 +53,9 @@ const DIRTY_TRANSITION_QUIT_SOURCE := "map_editor_confirmed"
 const DIRTY_TRANSITION_PENDING_MESSAGE := "Finish the current unsaved-work confirmation first."
 const EDITOR_MAP_JOYPAD_REPEAT_INITIAL_DELAY_SECONDS := 0.36
 const EDITOR_MAP_JOYPAD_REPEAT_INTERVAL_SECONDS := 0.09
+const EDITOR_MAP_CURSOR_SEMANTIC_DEBOUNCE_SECONDS := 0.42
+const EDITOR_MAP_CURSOR_RESULT_VISIBLE_SECONDS := 1.20
+const EDITOR_MAP_CURSOR_SEMANTIC_MAX_CHARS := 320
 
 @onready var _header_label: Label = %Header
 @onready var _map_package_picker: OptionButton = %MapPackagePicker
@@ -74,8 +77,9 @@ const EDITOR_MAP_JOYPAD_REPEAT_INTERVAL_SECONDS := 0.09
 @onready var _fill_terrain_button: Button = %FillTerrain
 @onready var _restore_tile_button: Button = %RestoreSelectedTile
 @onready var _tile_info_label: Label = %TileInfo
-@onready var _status_label: Label = %Status
+@onready var _status_label: Label = %WorkingCopyStatus
 @onready var _map_view = %Map
+@onready var _editor_map_cursor_live_label: Label = %EditorMapCursorLive
 @onready var _play_button: Button = %PlayWorkingCopy
 @onready var _menu_button: Button = %Menu
 @onready var _dirty_transition_dialog: ConfirmationDialog = $DirtyTransitionConfirmationDialog
@@ -128,6 +132,9 @@ var _held_editor_map_joypad_direction := Vector2i.ZERO
 var _held_editor_map_joypad_action: StringName = &""
 var _held_editor_map_joypad_button := -1
 var _held_editor_map_joypad_device := -1
+var _editor_map_cursor_semantic_timer: Timer = null
+var _editor_map_cursor_semantic_generation := 0
+var _editor_map_cursor_semantic_pending: Dictionary = {}
 var _editor_tool_rail_layout_sync_queued := false
 var _forwarding_dirty_transition_root_physical_input := false
 var _safe_close_guard_authorized := false
@@ -147,6 +154,7 @@ func _ready() -> void:
 	_apply_visual_theme()
 	_configure_dirty_transition_confirmation()
 	_configure_editor_map_keyboard_input()
+	_configure_editor_map_cursor_semantic_timer()
 	_connect_ui()
 	_configure_editor_tool_rail_layout()
 	_connect_editor_focus_visibility()
@@ -170,6 +178,7 @@ func _ready() -> void:
 
 func _exit_tree() -> void:
 	_stop_editor_map_joypad_repeat()
+	_cancel_editor_map_cursor_semantic()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if _dirty_transition_dialog != null and _dirty_transition_dialog.visible:
@@ -278,8 +287,8 @@ func _configure_editor_map_keyboard_input() -> void:
 	_map_view.focus_mode = Control.FOCUS_ALL
 	if not _map_view.gui_input.is_connected(_on_editor_map_gui_input):
 		_map_view.gui_input.connect(_on_editor_map_gui_input)
-	if not _map_view.focus_exited.is_connected(_stop_editor_map_joypad_repeat):
-		_map_view.focus_exited.connect(_stop_editor_map_joypad_repeat)
+	if not _map_view.focus_exited.is_connected(_on_editor_map_focus_exited):
+		_map_view.focus_exited.connect(_on_editor_map_focus_exited)
 	if _editor_map_joypad_repeat_timer == null or not is_instance_valid(_editor_map_joypad_repeat_timer):
 		_editor_map_joypad_repeat_timer = Timer.new()
 		_editor_map_joypad_repeat_timer.name = "EditorMapJoypadRepeatTimer"
@@ -315,12 +324,47 @@ func _on_editor_map_gui_input(event: InputEvent) -> void:
 		_map_view.accept_event()
 		return
 	if event.is_action_pressed("ui_accept"):
+		var source_session = _session
 		_on_map_tile_pressed(_selected_tile)
+		_publish_editor_map_cursor_semantic_result(
+			_editor_map_action_result_semantic_text(),
+			source_session,
+			_map_view
+		)
 		_map_view.accept_event()
 		return
-	if event.is_action_pressed("ui_cancel"):
-		_restore_editor_command_focus()
+	if _editor_map_cancel_pressed(event):
+		_handle_editor_map_cancel()
 		_map_view.accept_event()
+
+
+func _handle_editor_map_cancel() -> void:
+	var source_session = _session
+	var canceled_tile := _selected_tile
+	_restore_editor_command_focus()
+	var focus_owner := get_viewport().gui_get_focus_owner() as Control
+	_publish_editor_map_cursor_semantic_result(
+		"Canvas navigation ended at %d,%d. Focus returned to the %s command." % [
+			canceled_tile.x,
+			canceled_tile.y,
+			_tool_label(_tool),
+		],
+		source_session,
+		focus_owner
+	)
+
+
+func _editor_map_cancel_pressed(event: InputEvent) -> bool:
+	if event.is_action_pressed("ui_cancel"):
+		return true
+	if not (event is InputEventKey):
+		return false
+	var key_event := event as InputEventKey
+	return (
+		key_event.pressed
+		and not key_event.echo
+		and (key_event.keycode == KEY_ESCAPE or key_event.physical_keycode == KEY_ESCAPE)
+	)
 
 
 func _editor_map_keyboard_input_owned() -> bool:
@@ -440,6 +484,207 @@ func _move_editor_map_cursor(direction: Vector2i) -> void:
 	if _map_view.has_method("pan_tiles"):
 		_map_view.call("pan_tiles", direction)
 	_refresh_state()
+	_schedule_editor_map_cursor_semantic()
+
+
+func _configure_editor_map_cursor_semantic_timer() -> void:
+	if _editor_map_cursor_semantic_timer != null and is_instance_valid(_editor_map_cursor_semantic_timer):
+		return
+	_editor_map_cursor_semantic_timer = Timer.new()
+	_editor_map_cursor_semantic_timer.name = "EditorMapCursorSemanticTimer"
+	_editor_map_cursor_semantic_timer.one_shot = true
+	_editor_map_cursor_semantic_timer.timeout.connect(_on_editor_map_cursor_semantic_timeout)
+	add_child(_editor_map_cursor_semantic_timer)
+
+
+func _on_editor_map_focus_exited() -> void:
+	_stop_editor_map_joypad_repeat()
+	_cancel_editor_map_cursor_semantic()
+
+
+func _schedule_editor_map_cursor_semantic() -> void:
+	_cancel_editor_map_cursor_semantic()
+	if not _editor_map_keyboard_input_owned() or _session == null or not _tile_in_bounds(_selected_tile):
+		return
+	_editor_map_cursor_semantic_pending = {
+		"kind": "context",
+		"generation": _editor_map_cursor_semantic_generation,
+		"session_ref": _session,
+		"session_id": String(_session.session_id),
+		"selected_tile": _editor_tile_payload(_selected_tile),
+		"tool": _tool,
+		"label_ref": _editor_map_cursor_live_label,
+	}
+	_editor_map_cursor_semantic_timer.start(EDITOR_MAP_CURSOR_SEMANTIC_DEBOUNCE_SECONDS)
+
+
+func _editor_map_cursor_semantic_context() -> String:
+	if _session == null or not _tile_in_bounds(_selected_tile):
+		return ""
+	var terrain_id := _terrain_at(_selected_tile)
+	var terrain_label := _terrain_label_for_id(terrain_id)
+	if terrain_label == "":
+		terrain_label = terrain_id if terrain_id != "" else "unknown"
+	terrain_label = _bounded_editor_map_semantic_text(terrain_label, 32)
+	var material_parts := []
+	if _has_road_at(_selected_tile):
+		material_parts.append("road %s" % _bounded_editor_map_semantic_text(", ".join(_road_layer_ids_at(_selected_tile)), 48))
+	var object_details := _object_details_at(_selected_tile, true)
+	var object_labels := []
+	for detail_value in object_details:
+		if not (detail_value is Dictionary):
+			continue
+		var detail: Dictionary = detail_value
+		var kind := _humanize_editor_id(String(detail.get("kind", "object")))
+		var name := String(detail.get("name", detail.get("content_id", ""))).strip_edges()
+		var object_label := "%s %s" % [kind, name] if name != "" else kind
+		object_labels.append(_bounded_editor_map_semantic_text(object_label, 56))
+		if object_labels.size() >= 2:
+			break
+	if not object_labels.is_empty():
+		var object_summary := ", ".join(object_labels)
+		if object_details.size() > object_labels.size():
+			object_summary = "%s, plus %d more" % [object_summary, object_details.size() - object_labels.size()]
+		material_parts.append(object_summary)
+	if material_parts.is_empty():
+		material_parts.append("no road or objects")
+	var material_summary := _bounded_editor_map_semantic_text(", ".join(material_parts), 80)
+	var cue := _editor_active_tool_cue_payload()
+	var next_step := String(cue.get("next_step", cue.get("action", "apply the active tool"))).strip_edges()
+	if next_step.begins_with("click "):
+		next_step = "select " + next_step.substr(6)
+	next_step = _bounded_editor_map_semantic_text(next_step, 72)
+	var tool_label := _bounded_editor_map_semantic_text(_tool_label(_tool), 24)
+	var text := "Tile %d,%d. Terrain %s; %s. Tool %s. A/Enter: %s. B/Escape: return to tool commands." % [
+		_selected_tile.x,
+		_selected_tile.y,
+		terrain_label,
+		material_summary,
+		tool_label,
+		next_step,
+	]
+	return _bounded_editor_map_semantic_text(text, EDITOR_MAP_CURSOR_SEMANTIC_MAX_CHARS)
+
+
+func _editor_map_action_result_semantic_text() -> String:
+	var result_text := _bounded_editor_map_semantic_text(_last_message, 240)
+	if result_text == "":
+		result_text = "%s applied." % _tool_label(_tool)
+	return _bounded_editor_map_semantic_text(
+		"Map action result at %d,%d: %s" % [_selected_tile.x, _selected_tile.y, result_text],
+		EDITOR_MAP_CURSOR_SEMANTIC_MAX_CHARS
+	)
+
+
+func _publish_editor_map_cursor_semantic_result(
+	text: String,
+	source_session,
+	expected_focus: Control
+) -> void:
+	var bounded_text := _bounded_editor_map_semantic_text(text, EDITOR_MAP_CURSOR_SEMANTIC_MAX_CHARS)
+	if (
+		bounded_text == ""
+		or not is_inside_tree()
+		or _session == null
+		or not is_same(source_session, _session)
+		or String(source_session.session_id) != String(_session.session_id)
+		or not is_instance_valid(expected_focus)
+		or get_viewport().gui_get_focus_owner() != expected_focus
+		or (_dirty_transition_dialog != null and _dirty_transition_dialog.visible)
+		or not _pending_dirty_transition.is_empty()
+	):
+		return
+	_cancel_editor_map_cursor_semantic()
+	_editor_map_cursor_live_label.text = bounded_text
+	_editor_map_cursor_semantic_pending = {
+		"kind": "result_clear",
+		"generation": _editor_map_cursor_semantic_generation,
+		"session_ref": _session,
+		"session_id": String(_session.session_id),
+		"focus_ref": expected_focus,
+		"label_ref": _editor_map_cursor_live_label,
+		"label_text": bounded_text,
+	}
+	_editor_map_cursor_semantic_timer.start(EDITOR_MAP_CURSOR_RESULT_VISIBLE_SECONDS)
+
+
+func _on_editor_map_cursor_semantic_timeout() -> void:
+	var pending := _editor_map_cursor_semantic_pending
+	if pending.is_empty() or int(pending.get("generation", -1)) != _editor_map_cursor_semantic_generation:
+		return
+	_editor_map_cursor_semantic_pending = {}
+	match String(pending.get("kind", "")):
+		"context":
+			_publish_pending_editor_map_cursor_context(pending)
+		"result_clear":
+			_clear_editor_map_cursor_semantic_result(pending)
+		_:
+			_cancel_editor_map_cursor_semantic()
+
+
+func _publish_pending_editor_map_cursor_context(pending: Dictionary) -> void:
+	var selected_value: Variant = pending.get("selected_tile", {})
+	var selected_payload: Dictionary = selected_value if selected_value is Dictionary else {}
+	var pending_tile := Vector2i(int(selected_payload.get("x", -1)), int(selected_payload.get("y", -1)))
+	if (
+		not is_inside_tree()
+		or not _editor_map_keyboard_input_owned()
+		or _session == null
+		or not is_same(pending.get("session_ref"), _session)
+		or String(pending.get("session_id", "")) != String(_session.session_id)
+		or pending_tile != _selected_tile
+		or String(pending.get("tool", "")) != _tool
+		or not is_same(pending.get("label_ref"), _editor_map_cursor_live_label)
+	):
+		_cancel_editor_map_cursor_semantic()
+		return
+	var context := _editor_map_cursor_semantic_context()
+	if context == "":
+		_cancel_editor_map_cursor_semantic()
+		return
+	_editor_map_cursor_live_label.text = context.left(EDITOR_MAP_CURSOR_SEMANTIC_MAX_CHARS)
+
+
+func _clear_editor_map_cursor_semantic_result(pending: Dictionary) -> void:
+	if int(pending.get("generation", -1)) != _editor_map_cursor_semantic_generation:
+		return
+	var expected_focus: Variant = pending.get("focus_ref")
+	if (
+		not is_inside_tree()
+		or _session == null
+		or not is_same(pending.get("session_ref"), _session)
+		or String(pending.get("session_id", "")) != String(_session.session_id)
+		or not is_instance_valid(expected_focus)
+		or get_viewport().gui_get_focus_owner() != expected_focus
+		or (_dirty_transition_dialog != null and _dirty_transition_dialog.visible)
+		or not _pending_dirty_transition.is_empty()
+		or not is_same(pending.get("label_ref"), _editor_map_cursor_live_label)
+	):
+		_cancel_editor_map_cursor_semantic()
+		return
+	_editor_map_cursor_semantic_generation += 1
+	if _editor_map_cursor_live_label.text == String(pending.get("label_text", "")):
+		_editor_map_cursor_live_label.text = ""
+
+
+func _cancel_editor_map_cursor_semantic() -> void:
+	_editor_map_cursor_semantic_generation += 1
+	_editor_map_cursor_semantic_pending.clear()
+	if _editor_map_cursor_semantic_timer != null and is_instance_valid(_editor_map_cursor_semantic_timer):
+		_editor_map_cursor_semantic_timer.stop()
+	if _editor_map_cursor_live_label != null and is_instance_valid(_editor_map_cursor_live_label):
+		_editor_map_cursor_live_label.text = ""
+
+
+func _bounded_editor_map_semantic_text(value: String, maximum_characters: int) -> String:
+	var normalized := " ".join(value.replace("\r", "\n").split("\n", false)).strip_edges()
+	while normalized.contains("  "):
+		normalized = normalized.replace("  ", " ")
+	return normalized.left(maximum_characters)
+
+
+func _editor_tile_payload(tile: Vector2i) -> Dictionary:
+	return {"x": tile.x, "y": tile.y}
 
 
 func _restore_editor_command_focus() -> void:
@@ -546,6 +791,7 @@ func _configure_editor_keyboard_focus() -> void:
 
 
 func _on_editor_focus_entered(control: Control) -> void:
+	_cancel_editor_map_cursor_semantic()
 	if (
 		_dirty_transition_dialog != null
 		and (_dirty_transition_dialog.visible or not _pending_dirty_transition.is_empty())
@@ -591,11 +837,16 @@ func _on_root_window_input(event: InputEvent) -> void:
 	if (
 		_forwarding_dirty_transition_root_physical_input
 		or not (event is InputEventKey or event is InputEventJoypadButton)
-		or not _dirty_transition_dialog.visible
-		or _pending_dirty_transition.is_empty()
 	):
 		return
-	get_tree().root.set_input_as_handled()
+	var root_window := get_tree().root
+	if _editor_map_keyboard_input_owned() and _editor_map_cancel_pressed(event):
+		root_window.set_input_as_handled()
+		_handle_editor_map_cancel()
+		return
+	if not _dirty_transition_dialog.visible or _pending_dirty_transition.is_empty():
+		return
+	root_window.set_input_as_handled()
 	var dialog := _dirty_transition_dialog
 	var pending := _pending_dirty_transition
 	var detached_event := event.duplicate() as InputEvent
@@ -3249,6 +3500,7 @@ func _load_legacy_authored_scenario_working_copy_for_dev_validation(scenario_id:
 		_last_message = "Unable to load legacy authored scenario %s into the editor." % scenario_id
 		_refresh_state()
 		return false
+	_cancel_editor_map_cursor_semantic()
 	_session = session
 	_authored_baseline_cache = null
 	_authored_baseline_cache_id = ""
@@ -3295,6 +3547,7 @@ func _load_maps_folder_package_entry_working_copy(entry: Dictionary) -> bool:
 		_last_message = "Unable to load package %s into the editor." % package_id
 		_refresh_state()
 		return false
+	_cancel_editor_map_cursor_semantic()
 	_session = session
 	entry = _session.flags.get("maps_folder_package_entry", entry) if _session.flags.get("maps_folder_package_entry", entry) is Dictionary else entry
 	_session.flags["editor_source_kind"] = "maps_folder_package"
@@ -3332,6 +3585,7 @@ func _duplicate_session(session):
 func _resume_working_copy_from_memory(session) -> bool:
 	if session == null or session.scenario_id == "":
 		return false
+	_cancel_editor_map_cursor_semantic()
 	_session = session
 	_authored_baseline_cache = null
 	_authored_baseline_cache_id = ""
@@ -3727,6 +3981,7 @@ func _tool_label(tool: String) -> String:
 			return "Inspect"
 
 func _select_tool(tool: String) -> void:
+	_cancel_editor_map_cursor_semantic()
 	var valid_tools := [
 		TOOL_INSPECT,
 		TOOL_TERRAIN,
@@ -4080,6 +4335,7 @@ func _on_map_tile_hovered(tile: Vector2i) -> void:
 func _on_map_tile_pressed(tile: Vector2i) -> void:
 	if _session == null or not _tile_in_bounds(tile):
 		return
+	_cancel_editor_map_cursor_semantic()
 	_selected_tile = tile
 	match _tool:
 		TOOL_TERRAIN:
@@ -6879,6 +7135,7 @@ func _request_dirty_transition(
 			"load_attempt_delta": 0,
 		}
 	_stop_editor_map_joypad_repeat()
+	_cancel_editor_map_cursor_semantic()
 	_dirty_transition_return_focus = _capture_dirty_transition_origin(origin)
 	_pending_dirty_transition = {
 		"action": action,
