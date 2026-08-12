@@ -14,35 +14,26 @@ func _run() -> void:
 
 	var first_target := Vector2i(8, 1)
 	var second_target := Vector2i(9, 1)
-	var selection: Dictionary = shell.call("validation_select_tile", first_target.x, first_target.y)
-	if not bool(selection.get("ok", false)):
-		_fail("Initial selected-route setup failed.", selection)
-		return
-	if String(selection.get("primary_action_id", "")) != "advance_route":
-		_fail("Initial selected route did not expose the expected movement action.", selection)
+	shell.call("_set_selected_tile", first_target)
+	shell.call("_refresh_selected_route_preview", "validation_selected_route_changed")
+	var initial_action: Dictionary = shell.call("_current_primary_action").duplicate(true)
+	if String(initial_action.get("id", "")) != "advance_route":
+		_fail("Initial selected route did not expose the expected movement action.", initial_action)
 		return
 
 	shell.call("validation_reset_profile", true)
 	shell.call("_refresh")
 	var reused_profile: Dictionary = shell.call("validation_profile_snapshot")
-	if int(reused_profile.get("selected_route_destination_action_cache_hits", 0)) <= 0:
-		_fail("Unchanged selected-route refresh did not reuse destination-only route actions.", reused_profile)
-		return
-	if int(reused_profile.get("selected_route_decision_surface_cache_hits", 0)) <= 0:
-		_fail("Unchanged selected-route refresh did not reuse the route decision surface.", reused_profile)
+	var reused_action: Dictionary = shell.call("_current_primary_action").duplicate(true)
+	if not _require_compact_cache_phase(reused_profile, reused_action, "unchanged", true, "open", first_target, "reachable"):
 		return
 
 	shell.call("validation_reset_profile", true)
-	var changed_selection: Dictionary = shell.call("validation_select_tile", second_target.x, second_target.y)
+	shell.call("_set_selected_tile", second_target)
+	shell.call("_refresh_selected_route_preview", "validation_selected_route_changed")
 	var selected_tile_profile: Dictionary = shell.call("validation_profile_snapshot")
-	if not bool(changed_selection.get("ok", false)):
-		_fail("Selected tile mutation failed.", changed_selection)
-		return
-	if int(selected_tile_profile.get("selected_route_destination_action_cache_misses", 0)) <= 0:
-		_fail("Selected tile change did not rebuild destination-only route actions.", selected_tile_profile)
-		return
-	if int(selected_tile_profile.get("selected_route_decision_surface_cache_misses", 0)) <= 0:
-		_fail("Selected tile change did not recompute route decision surface.", selected_tile_profile)
+	var selected_tile_action: Dictionary = shell.call("_current_primary_action").duplicate(true)
+	if not _require_compact_cache_phase(selected_tile_profile, selected_tile_action, "selected_tile", false, "open", second_target, "reachable"):
 		return
 
 	shell.call("validation_reset_profile", true)
@@ -50,46 +41,107 @@ func _run() -> void:
 	OverworldRules.refresh_fog_of_war(session)
 	shell.call("_refresh")
 	var hero_position_profile: Dictionary = shell.call("validation_profile_snapshot")
-	if int(hero_position_profile.get("selected_route_destination_action_cache_misses", 0)) <= 0:
-		_fail("Hero position change did not rebuild destination-only route actions.", hero_position_profile)
-		return
-	if int(hero_position_profile.get("selected_route_decision_surface_cache_misses", 0)) <= 0:
-		_fail("Hero position change did not recompute selected-route decision surface.", hero_position_profile)
+	var hero_position_action: Dictionary = shell.call("_current_primary_action").duplicate(true)
+	if not _require_compact_cache_phase(hero_position_profile, hero_position_action, "hero_position", false, "open", second_target, "reachable"):
 		return
 
 	shell.call("validation_reset_profile", true)
 	_set_active_hero_movement(session, 6)
 	shell.call("_refresh")
 	var movement_profile: Dictionary = shell.call("validation_profile_snapshot")
-	if int(movement_profile.get("selected_route_destination_action_cache_misses", 0)) <= 0:
-		_fail("Movement budget change did not rebuild destination-only route actions.", movement_profile)
-		return
-	if int(movement_profile.get("selected_route_decision_surface_cache_misses", 0)) <= 0:
-		_fail("Movement budget change did not recompute selected-route decision surface.", movement_profile)
+	var movement_action: Dictionary = shell.call("_current_primary_action").duplicate(true)
+	if not _require_compact_cache_phase(movement_profile, movement_action, "movement", false, "open", second_target, "not_today"):
 		return
 
 	shell.call("validation_reset_profile", true)
 	_add_route_blocking_encounter(session, second_target)
-	shell.call("_refresh")
+	shell.call("_refresh_selected_route_preview", "validation_selected_route_changed")
 	var topology_profile: Dictionary = shell.call("validation_profile_snapshot")
-	if int(topology_profile.get("selected_route_destination_action_cache_misses", 0)) <= 0:
-		_fail("Destination interaction change did not rebuild destination-only route actions.", topology_profile)
-		return
-	if int(topology_profile.get("selected_route_decision_surface_cache_misses", 0)) <= 0:
-		_fail("Destination interaction change did not recompute selected-route decision surface.", topology_profile)
+	var topology_action: Dictionary = shell.call("_current_primary_action").duplicate(true)
+	if not _require_compact_cache_phase(topology_profile, topology_action, "topology", false, "encounter", second_target, "not_today"):
 		return
 
 	print("%s %s" % [REPORT_ID, JSON.stringify({
 		"ok": true,
 		"reuse_destination_hits": int(reused_profile.get("selected_route_destination_action_cache_hits", 0)),
-		"reuse_route_decision_hits": int(reused_profile.get("selected_route_decision_surface_cache_hits", 0)),
+		"reuse_selected_route_hits": int(reused_profile.get("selected_route_cache_hits", 0)),
 		"selected_tile_destination_misses": int(selected_tile_profile.get("selected_route_destination_action_cache_misses", 0)),
+		"selected_tile_selected_route_misses": int(selected_tile_profile.get("selected_route_cache_misses", 0)),
 		"hero_position_destination_misses": int(hero_position_profile.get("selected_route_destination_action_cache_misses", 0)),
+		"hero_position_selected_route_misses": int(hero_position_profile.get("selected_route_cache_misses", 0)),
 		"movement_destination_misses": int(movement_profile.get("selected_route_destination_action_cache_misses", 0)),
+		"movement_selected_route_misses": int(movement_profile.get("selected_route_cache_misses", 0)),
 		"topology_destination_misses": int(topology_profile.get("selected_route_destination_action_cache_misses", 0)),
+		"topology_selected_route_misses": int(topology_profile.get("selected_route_cache_misses", 0)),
+		"rich_route_decision_hits": int(topology_profile.get("selected_route_decision_surface_cache_hits", 0)),
+		"rich_route_decision_misses": int(topology_profile.get("selected_route_decision_surface_cache_misses", 0)),
 	})])
 	shell.queue_free()
 	get_tree().quit(0)
+
+func _require_compact_cache_phase(profile: Dictionary, action: Dictionary, phase: String, expect_reuse: bool, expected_kind: String, expected_tile: Vector2i, expected_status: String) -> bool:
+	var destination_cache: Dictionary = profile.get("last_selected_route_destination_action_cache", {}) if profile.get("last_selected_route_destination_action_cache", {}) is Dictionary else {}
+	var selected_route_cache: Dictionary = profile.get("last_selected_route_cache", {}) if profile.get("last_selected_route_cache", {}) is Dictionary else {}
+	var context_surface: Dictionary = profile.get("last_context_tile_text_simple_route_fast_path", {}) if profile.get("last_context_tile_text_simple_route_fast_path", {}) is Dictionary else {}
+	var primary_tooltip: Dictionary = profile.get("last_primary_route_action_tooltip", {}) if profile.get("last_primary_route_action_tooltip", {}) is Dictionary else {}
+	var destination_interaction: Dictionary = action.get("destination_interaction", {}) if action.get("destination_interaction", {}) is Dictionary else {}
+	var route_decision: Dictionary = action.get("route_decision", {}) if action.get("route_decision", {}) is Dictionary else {}
+	var expected_simple := expected_kind == "open"
+	var checks := {
+		"destination_cache_reuse_or_invalidation": int(profile.get("selected_route_destination_action_cache_hits" if expect_reuse else "selected_route_destination_action_cache_misses", 0)) > 0,
+		"selected_route_reuse_or_invalidation": int(profile.get("selected_route_cache_hits" if expect_reuse else "selected_route_cache_misses", 0)) > 0,
+		"rich_decision_hits_zero": int(profile.get("selected_route_decision_surface_cache_hits", 0)) == 0,
+		"rich_decision_misses_zero": int(profile.get("selected_route_decision_surface_cache_misses", 0)) == 0,
+		"destination_cache_minimal": String(destination_cache.get("signature_mode", "")) == "destination_minimal",
+		"destination_cache_has_action": int(destination_cache.get("action_count", 0)) > 0,
+		"selected_route_cached": int(selected_route_cache.get("path_tiles", 0)) > 1,
+		"context_kind_exact": String(context_surface.get("destination_interaction_kind", "")) == expected_kind,
+		"context_route_status_exact": String(context_surface.get("route_status", "")) == expected_status,
+		"context_rich_skipped": bool(context_surface.get("rich_route_decision_skipped", false)),
+		"action_id_exact": String(action.get("id", "")) == "advance_route",
+		"action_enabled": not bool(action.get("disabled", false)),
+		"action_destination_only": bool(action.get("destination_only", false)),
+		"action_kind_exact": String(destination_interaction.get("kind", "")) == expected_kind,
+		"action_destination_x_exact": int(destination_interaction.get("x", -1)) == expected_tile.x,
+		"action_destination_y_exact": int(destination_interaction.get("y", -1)) == expected_tile.y,
+		"action_rich_skipped": bool(destination_interaction.get("rich_route_surface_skipped", false)),
+		"action_mode_exact": bool(action.get("simple_route_ui_fast_path", false)) == expected_simple and bool(action.get("compact_interaction_destination_fast_path", false)) == not expected_simple,
+		"action_route_decision_present": not route_decision.is_empty(),
+		"action_route_status_exact": String(route_decision.get("status", "")) == expected_status,
+		"action_route_clear": bool(route_decision.get("route_clear", false)),
+		"reachable_details_exact": expected_status != "reachable" or (bool(route_decision.get("destination_reachable", false)) and int(route_decision.get("unreachable_steps", -1)) == 0),
+		"not_today_details_exact": expected_status != "not_today" or (
+			not bool(route_decision.get("destination_reachable", true))
+			and int(route_decision.get("movement_current", -1)) == 6
+			and int(route_decision.get("movement_cost", -1)) == 8
+			and int(route_decision.get("reachable_steps", -1)) == 6
+			and int(route_decision.get("reachable_cost", -1)) == 6
+			and int(route_decision.get("unreachable_steps", -1)) == 2
+			and int(route_decision.get("movement_after_order", -1)) == 0
+			and String(route_decision.get("blocked_reason", "")) == "Route is clear; 2 steps remain after today's movement."
+		),
+		"primary_mode_exact": String(primary_tooltip.get("mode", "")) == ("simple_route" if expected_simple else "compact_interaction_destination"),
+		"primary_rich_skipped": bool(primary_tooltip.get("rich_commit_check_skipped", false)),
+	}
+	for value in checks.values():
+		if not bool(value):
+			_fail("Selected-route compact cache phase did not retain exact reuse/invalidation and rich-skip ownership.", {
+				"phase": phase,
+				"expect_reuse": expect_reuse,
+				"expected_kind": expected_kind,
+				"expected_tile": {"x": expected_tile.x, "y": expected_tile.y},
+				"expected_status": expected_status,
+				"checks": checks,
+				"destination_cache": destination_cache,
+				"selected_route_cache": selected_route_cache,
+				"context_surface": context_surface,
+				"action": action,
+				"destination_interaction": destination_interaction,
+				"route_decision": route_decision,
+				"primary_tooltip": primary_tooltip,
+			})
+			return false
+	return true
 
 func _open_shell(session) -> Dictionary:
 	var active_session = SessionState.set_active_session(session)

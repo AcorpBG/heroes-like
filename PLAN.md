@@ -24,6 +24,7 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Latest completed implementation slice: `ux-overworld-selected-route-map-cue-coherence-10184`. Targeted Overworld route selection now rematerializes the visible MapCue and tooltip from the same current compact primary action and route decision without stale prior-destination instructions or rich-route construction on compact paths.
 - Latest completed implementation slice: `accessibility-overworld-route-cursor-live-context-10184`. The Overworld right-stick route cursor now exposes bounded current-destination context and coalesced held-repeat announcements before A commits, without changing route selection, movement, or save authority.
 - Latest completed implementation slice: `ux-map-editor-responsive-tool-rail-containment-10184`. The Map Editor tool rail now keeps every visible command and picker horizontally contained at 1280 and 1920 without shrinking the map, hiding overflow, or changing editor behavior.
 - Latest completed implementation slice: `accessibility-map-editor-keyboard-controller-canvas-interaction-10184`. The Map Editor canvas now supports bounded keyboard/controller tile selection, camera follow, and existing-tool activation without changing shared Overworld input or mouse behavior.

@@ -384,6 +384,12 @@ OVERWORLD_END_TURN_AUTOSAVE_FAILURE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "o
 OVERWORLD_END_TURN_AUTOSAVE_FAILURE_REGRESSION_SCENE_PATH = ROOT / "tests" / "overworld_end_turn_autosave_failure_regression.tscn"
 OVERWORLD_CONTROLLER_ROUTE_SELECTION_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "overworld_controller_route_selection_regression.gd"
 OVERWORLD_CONTROLLER_ROUTE_SELECTION_REGRESSION_SCENE_PATH = ROOT / "tests" / "overworld_controller_route_selection_regression.tscn"
+OVERWORLD_ROUTE_TOOLTIP_SMOKE_SCRIPT_PATH = ROOT / "tests" / "overworld_route_tooltip_smoke.gd"
+OVERWORLD_ROUTE_TOOLTIP_SMOKE_SCENE_PATH = ROOT / "tests" / "overworld_route_tooltip_smoke.tscn"
+OVERWORLD_ROUTE_DESTINATION_ONLY_ACTION_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "overworld_route_destination_only_action_regression.gd"
+OVERWORLD_SELECTED_ROUTE_CONTEXT_ACTIONS_CACHE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "overworld_selected_route_context_actions_cache_regression.gd"
+OVERWORLD_INCREMENTAL_ROUTE_PREVIEW_REFRESH_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "overworld_incremental_route_preview_refresh_regression.gd"
+OVERWORLD_INCREMENTAL_ROUTE_PREVIEW_REFRESH_REGRESSION_SCENE_PATH = ROOT / "tests" / "overworld_incremental_route_preview_refresh_regression.tscn"
 OVERWORLD_GAMEPLAY_MOVEMENT_INPUT_OWNERSHIP_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "overworld_gameplay_movement_input_ownership_regression.gd"
 OVERWORLD_GAMEPLAY_MOVEMENT_INPUT_OWNERSHIP_REGRESSION_SCENE_PATH = ROOT / "tests" / "overworld_gameplay_movement_input_ownership_regression.tscn"
 AMBIENT_SFX_MANIFEST_PATH = CONTENT_DIR / "ambient_sfx_manifest.json"
@@ -17963,6 +17969,1056 @@ def validate_town_order_readiness_ledger(errors: list[str]) -> None:
         ensure(required_token in town_script_text, errors, f"TownShell.gd is missing required town order-readiness token: {required_token}")
 
 
+def validate_overworld_route_map_cue_refresh(errors: list[str]) -> None:
+    required_paths = (
+        OVERWORLD_SCRIPT_PATH,
+        HERO_COMMAND_RULES_PATH,
+        OVERWORLD_ROUTE_TOOLTIP_SMOKE_SCRIPT_PATH,
+        OVERWORLD_ROUTE_TOOLTIP_SMOKE_SCENE_PATH,
+        OVERWORLD_ROUTE_DESTINATION_ONLY_ACTION_REGRESSION_SCRIPT_PATH,
+        OVERWORLD_SELECTED_ROUTE_CONTEXT_ACTIONS_CACHE_REGRESSION_SCRIPT_PATH,
+        OVERWORLD_INCREMENTAL_ROUTE_PREVIEW_REFRESH_REGRESSION_SCRIPT_PATH,
+        OVERWORLD_INCREMENTAL_ROUTE_PREVIEW_REFRESH_REGRESSION_SCENE_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing focused overworld route MapCue file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    route_scene_text = OVERWORLD_ROUTE_TOOLTIP_SMOKE_SCENE_PATH.read_text(encoding="utf-8")
+    ensure(
+        'path="res://tests/overworld_route_tooltip_smoke.gd"' in route_scene_text,
+        errors,
+        "Overworld route tooltip smoke scene must remain wired to its focused script",
+    )
+    incremental_scene_text = OVERWORLD_INCREMENTAL_ROUTE_PREVIEW_REFRESH_REGRESSION_SCENE_PATH.read_text(encoding="utf-8")
+    ensure(
+        'path="res://tests/overworld_incremental_route_preview_refresh_regression.gd"' in incremental_scene_text,
+        errors,
+        "Incremental route-preview scene must remain wired to its focused script",
+    )
+
+    overworld_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+    hero_command_text = HERO_COMMAND_RULES_PATH.read_text(encoding="utf-8")
+    ensure(
+        'const GENERATED_COMPACT_MAP_CUE_TOOLTIP := "Map art and controls are loaded; save summary and detailed rails are deferred off routine generated-map frames."' in overworld_text,
+        errors,
+        "Overworld MapCue refresh must retain the exact generated compact tooltip policy constant",
+    )
+    cue_helper_match = re.search(
+        r"func _refresh_map_cue_surface\(\) -> void:\n(?P<body>.*?)(?=\nfunc _refresh_context_tile_surface)",
+        overworld_text,
+        re.S,
+    )
+    ensure(cue_helper_match is not None, errors, "Could not isolate the focused Overworld MapCue refresh helper")
+    if cue_helper_match is not None:
+        cue_body = cue_helper_match.group("body")
+        for required_token in (
+            "if _generated_initial_open_pending():",
+            "return",
+            "_map_cue_label.text = _map_cue_text()",
+            "if _use_generated_compact_refresh():",
+            "_map_cue_label.tooltip_text = GENERATED_COMPACT_MAP_CUE_TOOLTIP",
+            "_map_cue_label.tooltip_text = _map_cue_tooltip()",
+        ):
+            ensure(required_token in cue_body, errors, f"Focused MapCue helper is missing exact policy token: {required_token}")
+        ensure(
+            cue_body.count("_map_cue_label.text = _map_cue_text()") == 1
+            and cue_body.count("_map_cue_label.tooltip_text = GENERATED_COMPACT_MAP_CUE_TOOLTIP") == 1
+            and cue_body.count("_map_cue_label.tooltip_text = _map_cue_tooltip()") == 1,
+            errors,
+            "Focused MapCue helper must assign current text and each normal/compact tooltip exactly once",
+        )
+        pending_index = cue_body.find("if _generated_initial_open_pending():")
+        text_index = cue_body.find("_map_cue_label.text = _map_cue_text()")
+        compact_index = cue_body.find("if _use_generated_compact_refresh():")
+        compact_tooltip_index = cue_body.find("_map_cue_label.tooltip_text = GENERATED_COMPACT_MAP_CUE_TOOLTIP")
+        normal_tooltip_index = cue_body.find("_map_cue_label.tooltip_text = _map_cue_tooltip()")
+        ensure(
+            0 <= pending_index < text_index < compact_index < compact_tooltip_index < normal_tooltip_index,
+            errors,
+            "Focused MapCue helper must hold pending state, then update text, then choose compact or current tooltip in order",
+        )
+
+    status_match = re.search(
+        r"func _refresh_status_surfaces\(generated_surface_start: int\) -> bool:\n(?P<body>.*?)(?=\nfunc _refresh_map_cue_surface)",
+        overworld_text,
+        re.S,
+    )
+    ensure(status_match is not None, errors, "Could not isolate full Overworld status refresh for shared MapCue ownership")
+    if status_match is not None:
+        status_body = status_match.group("body")
+        ensure(
+            status_body.count("_refresh_map_cue_surface()") == 1,
+            errors,
+            "Normal full status refresh must use the shared MapCue helper exactly once",
+        )
+        ensure(
+            "_map_cue_label.text = _map_cue_text()" not in status_body
+            and "_map_cue_label.tooltip_text = _map_cue_tooltip()" not in status_body,
+            errors,
+            "Normal full status refresh must not duplicate direct MapCue assignments outside the shared helper",
+        )
+
+    refresh_match = re.search(
+        r"func _refresh_with_request\(request: Dictionary\) -> void:\n(?P<body>.*?)(?=\nfunc _sync_overworld_ambient_audio)",
+        overworld_text,
+        re.S,
+    )
+    ensure(refresh_match is not None, errors, "Could not isolate incremental Overworld refresh ordering")
+    if refresh_match is not None:
+        refresh_body = refresh_match.group("body")
+        action_index = refresh_body.find("_refresh_selected_route_action_surface()")
+        cue_index = refresh_body.find("_refresh_map_cue_surface()")
+        context_index = refresh_body.find("_refresh_context_tile_surface()")
+        ensure(
+            0 <= action_index < cue_index < context_index,
+            errors,
+            "Incremental route refresh must update cached action before MapCue and context tile surfaces",
+        )
+        route_cue_branch_match = re.search(
+            r"elif _refresh_request_has_phase\(request, REFRESH_PHASE_CONTEXT_ROUTE\):\n\s*_refresh_map_cue_surface\(\)\n(?P<body>.*?)(?=\n\s*OverworldRules.end_normalized_read_scope)",
+            refresh_body,
+            re.S,
+        )
+        ensure(route_cue_branch_match is not None, errors, "Could not isolate the route-only MapCue/context branch")
+        if route_cue_branch_match is not None:
+            route_cue_body = route_cue_branch_match.group("body")
+            ensure("_refresh_context_tile_surface()" in route_cue_body, errors, "Route-only MapCue branch must retain the targeted context-tile refresh")
+            for forbidden_token in (
+                "_refresh_status_surfaces(",
+                "_refresh_tooltip_context_drawer_surfaces(",
+                "_refresh_action_rails(",
+                "_refresh_save_surface(",
+            ):
+                ensure(forbidden_token not in route_cue_body, errors, f"Route-only MapCue branch must not broaden into {forbidden_token}")
+
+    route_preview_match = re.search(
+        r"func _refresh_selected_route_preview\(reason: String = \"selected_route_preview\"\) -> void:\n(?P<body>.*?)(?=\nfunc _refresh_with_request)",
+        overworld_text,
+        re.S,
+    )
+    ensure(route_preview_match is not None, errors, "Could not isolate the selected-route preview request")
+    if route_preview_match is not None:
+        route_preview_body = route_preview_match.group("body")
+        ensure("REFRESH_PHASE_MAP_VIEW" in route_preview_body and "REFRESH_PHASE_CONTEXT_ROUTE" in route_preview_body, errors, "Selected-route preview must retain only its map and route phases")
+        ensure(
+            "true,\n\t\tfalse" in route_preview_body and "_refresh()" not in route_preview_body,
+            errors,
+            "Selected-route preview must remain one non-full targeted request without falling back to full refresh",
+        )
+        for forbidden_phase in (
+            "REFRESH_PHASE_STATUS_SURFACES",
+            "REFRESH_PHASE_ACTION_RAILS",
+            "REFRESH_PHASE_SAVE_SURFACE",
+        ):
+            ensure(forbidden_phase not in route_preview_body, errors, f"Selected-route preview must not broaden into {forbidden_phase}")
+
+    route_action_surface_match = re.search(
+        r"func _refresh_selected_route_action_surface\(\) -> void:\n(?P<body>.*?)(?=\nfunc _render_context_action_buttons)",
+        overworld_text,
+        re.S,
+    )
+    ensure(route_action_surface_match is not None, errors, "Could not isolate selected-route primary-action ownership")
+    if route_action_surface_match is not None:
+        route_action_surface_body = route_action_surface_match.group("body")
+        ensure(
+            "var primary_action := _first_enabled_action(actions)" in route_action_surface_body
+            and '_refresh_cache["primary_action"] = primary_action' in route_action_surface_body
+            and "_refresh_primary_action_button(primary_action)" in route_action_surface_body,
+            errors,
+            "Selected-route surface must keep disabled current-tile actions out of primary ownership before refreshing the button",
+        )
+        ensure(
+            '_validation_profile["last_route_destination_only_action_path"] = profile_payload' in route_action_surface_body,
+            errors,
+            "Incremental route-action ownership must retain its destination-only profile payload while the cache regression uses detached live action state",
+        )
+
+    primary_button_match = re.search(
+        r"func _refresh_primary_action_button\(action: Dictionary\) -> void:\n(?P<body>.*?)(?=\nfunc _activate_primary_action)",
+        overworld_text,
+        re.S,
+    )
+    ensure(primary_button_match is not None, errors, "Could not isolate empty primary-action button behavior")
+    if primary_button_match is not None:
+        primary_button_body = primary_button_match.group("body")
+        ensure(
+            'if action.is_empty():\n\t\t_primary_action_button.text = "Select Site"\n\t\t_primary_action_button.disabled = true' in primary_button_body
+            and "var simple_route_tooltip := _selected_route_simple_tooltip()" in primary_button_body
+            and "_primary_action_button.tooltip_text = simple_route_tooltip" in primary_button_body,
+            errors,
+            "Empty current-tile primary action must retain disabled Select Site with the source-owned simple-route tooltip",
+        )
+        ensure(
+            "var route_decision := _selected_route_decision_surface()" in primary_button_body
+            and "var route_tooltip := _route_decision_tooltip(route_decision)" in primary_button_body
+            and '_primary_action_button.tooltip_text = route_tooltip if route_tooltip != "" else "Select a visible destination or stand on a site to reveal its primary order."' in primary_button_body,
+            errors,
+            "Empty primary button must retain the rich route-tooltip fallback used by no-movement destinations",
+        )
+
+    route_actions_match = re.search(
+        r"func _build_selected_route_destination_actions\(\) -> Array:\n(?P<body>.*?)(?=\nfunc _disabled_route_destination_action)",
+        overworld_text,
+        re.S,
+    )
+    ensure(route_actions_match is not None, errors, "Could not isolate selected-route destination action construction")
+    if route_actions_match is not None:
+        route_actions_body = route_actions_match.group("body")
+        ensure(
+            'var simple_destination := _selected_route_simple_destination_surface()' in route_actions_body
+            and 'if simple_kind == "current":\n\t\t\treturn [_disabled_route_destination_action("hold_position", "Current Position", "The active hero is already on this tile.", simple_decision, simple_destination)]' in route_actions_body,
+            errors,
+            "Simple current-tile branch must retain its distinct disabled Current Position candidate",
+        )
+        ensure(
+            'var compact_destination := _selected_route_compact_interaction_destination_surface()' in route_actions_body
+            and 'var compact_status := String(compact_destination.get("status", ""))' in route_actions_body
+            and '"id": "march_selected" if compact_adjacent else "advance_route"' in route_actions_body
+            and 'if compact_status == "no_movement":\n\t\t\tcompact_action["disabled"] = true\n\t\treturn [compact_action]' in route_actions_body,
+            errors,
+            "Compact Wood route must retain its March/Advance candidate, mark no-movement disabled, and return that candidate",
+        )
+
+    first_enabled_match = re.search(
+        r"func _first_enabled_action\(actions: Array\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc _promote_selected_owned_town_action)",
+        overworld_text,
+        re.S,
+    )
+    ensure(first_enabled_match is not None, errors, "Could not isolate selected-route first-enabled action ownership")
+    if first_enabled_match is not None:
+        first_enabled_body = first_enabled_match.group("body")
+        empty_id_guard = 'if String(action.get("id", "")) == "":\n\t\t\tcontinue'
+        non_disabled_guard = 'if not bool(action.get("disabled", false)):\n\t\t\treturn action'
+        empty_id_index = first_enabled_body.find(empty_id_guard)
+        non_disabled_index = first_enabled_body.find(non_disabled_guard)
+        return_action_index = first_enabled_body.find("return action", non_disabled_index)
+        final_empty_index = first_enabled_body.rfind("return {}")
+        ensure(
+            -1 < empty_id_index < non_disabled_index < return_action_index < final_empty_index
+            and first_enabled_body.count(empty_id_guard) == 1
+            and first_enabled_body.count(non_disabled_guard) == 1
+            and first_enabled_body.count("return action") == 1
+            and first_enabled_body.count("return {}") == 1,
+            errors,
+            "First-enabled ownership must continue past empty IDs, return only a non-disabled action, and otherwise return an empty primary",
+        )
+
+    current_context_match = re.search(
+        r"func _current_context_actions\(\) -> Array:\n(?P<body>.*?)(?=\nfunc _build_selected_route_context_actions)",
+        overworld_text,
+        re.S,
+    )
+    ensure(current_context_match is not None, errors, "Could not isolate current-context owned-town promotion")
+    if current_context_match is not None:
+        current_context_body = current_context_match.group("body")
+        selected_equals_hero_index = current_context_body.find("if _selected_tile == OverworldRules.hero_position(_session):")
+        context_actions_index = current_context_body.find("actions = OverworldRules.get_context_actions(_session)", selected_equals_hero_index)
+        promote_town_index = current_context_body.find("actions = _promote_selected_owned_town_action(actions)", context_actions_index)
+        ensure(
+            -1 < selected_equals_hero_index < context_actions_index < promote_town_index,
+            errors,
+            "Selected tile equal to active hero must build current context actions and then promote the owned-town action",
+        )
+
+    selected_owned_town_match = re.search(
+        r"func _selected_owned_town_visit_action\(\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc _is_selected_owned_town_visit_target)",
+        overworld_text,
+        re.S,
+    )
+    ensure(selected_owned_town_match is not None, errors, "Could not isolate selected owned-town Visit Town action")
+    if selected_owned_town_match is not None:
+        selected_owned_town_body = selected_owned_town_match.group("body")
+        ensure(
+            "if not _is_selected_owned_town_visit_target():\n\t\treturn {}" in selected_owned_town_body
+            and "var handoff := _town_entry_handoff_surface()" in selected_owned_town_body
+            and '"id": "visit_town"' in selected_owned_town_body
+            and '"label": "Visit Town"' in selected_owned_town_body
+            and '"town_entry_handoff": handoff' in selected_owned_town_body,
+            errors,
+            "Selected owned-town action must remain exact Visit Town with its nonempty handoff payload",
+        )
+
+    owned_town_target_match = re.search(
+        r"func _is_selected_owned_town_visit_target\(\) -> bool:\n(?P<body>.*?)(?=\nfunc _town_entry_handoff_surface)",
+        overworld_text,
+        re.S,
+    )
+    ensure(owned_town_target_match is not None, errors, "Could not isolate owned-town Visit target authority")
+    if owned_town_target_match is not None:
+        owned_town_target_body = owned_town_target_match.group("body")
+        ensure(
+            "if not _tile_in_bounds(_selected_tile):" in owned_town_target_body
+            and "if not OverworldRules.is_tile_explored(_session, _selected_tile.x, _selected_tile.y):" in owned_town_target_body
+            and "var town := _town_at(_selected_tile.x, _selected_tile.y)" in owned_town_target_body
+            and 'return not town.is_empty() and String(town.get("owner", "neutral")) == "player"' in owned_town_target_body,
+            errors,
+            "Visit Town promotion must remain bounded to explored player-owned selected towns",
+        )
+
+    field_readiness_match = re.search(
+        r"func _field_readiness_surface\(base_event_surface: Dictionary = \{\}\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc _field_readiness_simple_route_surface)",
+        overworld_text,
+        re.S,
+    )
+    ensure(field_readiness_match is not None, errors, "Could not isolate full field-readiness surface ownership")
+    if field_readiness_match is not None:
+        field_readiness_body = field_readiness_match.group("body")
+        simple_destination_index = field_readiness_body.find("var simple_destination := _selected_route_simple_destination_surface()")
+        owned_town_guard = "if not simple_destination.is_empty() and not _is_selected_owned_town_visit_target():"
+        owned_town_guard_index = field_readiness_body.find(owned_town_guard)
+        simple_return_index = field_readiness_body.find("return _field_readiness_simple_route_surface(simple_destination, progress_line, next_step, movement_line)", owned_town_guard_index)
+        primary_action_index = field_readiness_body.find("var primary_action := _current_primary_action()", simple_return_index)
+        town_handoff_index = field_readiness_body.find("var town_entry_handoff := _town_entry_handoff_surface()", primary_action_index)
+        returned_handoff_index = field_readiness_body.find('"town_entry_handoff": town_entry_handoff', town_handoff_index)
+        ensure(
+            field_readiness_body.count(owned_town_guard) == 1
+            and field_readiness_body.count('"town_entry_handoff": town_entry_handoff') == 1
+            and -1 < simple_destination_index < owned_town_guard_index < simple_return_index < primary_action_index < town_handoff_index < returned_handoff_index,
+            errors,
+            "Field readiness must materialize simple destination, bypass simple return for owned Town, compute primary action and Town handoff, then return that exact handoff",
+        )
+
+    map_cue_tooltip_match = re.search(
+        r"func _map_cue_tooltip\(\) -> String:\n(?P<body>.*?)(?=\nfunc _short_action_label)",
+        overworld_text,
+        re.S,
+    )
+    ensure(map_cue_tooltip_match is not None, errors, "Could not isolate MapCue tooltip ownership")
+    if map_cue_tooltip_match is not None:
+        map_cue_tooltip_body = map_cue_tooltip_match.group("body")
+        feedback_index = map_cue_tooltip_body.find("var feedback := _action_feedback_tooltip()")
+        action_index = map_cue_tooltip_body.find("var action := _current_primary_action()", feedback_index)
+        pan_setup_index = map_cue_tooltip_body.find('var pan_hint := ""', action_index)
+        pan_metrics_index = map_cue_tooltip_body.find('if _map_view != null and _map_view.has_method("validation_view_metrics"):', pan_setup_index)
+        feedback_guard_index = map_cue_tooltip_body.find('if feedback != "":', pan_metrics_index)
+        feedback_return_index = map_cue_tooltip_body.find('return "%s.%s%s" % [feedback, next_hint, pan_hint]', feedback_guard_index)
+        compact_guard = 'if bool(action.get("compact_interaction_destination_fast_path", false)) or bool(action.get("simple_route_ui_fast_path", false)):'
+        compact_guard_index = map_cue_tooltip_body.find(compact_guard, feedback_return_index)
+        compact_match = re.search(
+            r'if bool\(action\.get\("compact_interaction_destination_fast_path", false\)\) or bool\(action\.get\("simple_route_ui_fast_path", false\)\):\n(?P<body>.*?\n\t\treturn "%s%s%s" % \[compact_route_tooltip, compact_commit_hint, pan_hint\])',
+            map_cue_tooltip_body,
+            re.S,
+        )
+        ensure(compact_match is not None, errors, "Could not isolate compact/simple MapCue tooltip exit")
+        if compact_match is not None:
+            compact_body = compact_match.group("body")
+            simple_tooltip_index = compact_body.find("var compact_route_tooltip := _selected_route_simple_tooltip()")
+            empty_fallback_index = compact_body.find('if compact_route_tooltip == "":', simple_tooltip_index)
+            action_summary_index = compact_body.find('compact_route_tooltip = String(action.get("summary", "")).strip_edges()', empty_fallback_index)
+            compact_hint_index = compact_body.find('var compact_commit_hint := " Try %s with Enter or Space now."', action_summary_index)
+            compact_return_index = compact_body.find('return "%s%s%s" % [compact_route_tooltip, compact_commit_hint, pan_hint]', compact_hint_index)
+            ensure(
+                -1 < simple_tooltip_index < empty_fallback_index < action_summary_index < compact_hint_index < compact_return_index
+                and "_selected_route_decision_surface()" not in compact_body,
+                errors,
+                "Compact MapCue tooltip must use simple tooltip, empty action-summary fallback, commit hint, and return without rich decision construction",
+            )
+        rich_route_index = map_cue_tooltip_body.find("var route_tooltip := _route_decision_tooltip(_selected_route_decision_surface())")
+        ensure(
+            map_cue_tooltip_body.count(compact_guard) == 1
+            and map_cue_tooltip_body.count("_selected_route_decision_surface()") == 1
+            and -1 < feedback_index < action_index < pan_setup_index < pan_metrics_index < feedback_guard_index < feedback_return_index < compact_guard_index < rich_route_index,
+            errors,
+            "MapCue tooltip must resolve feedback before compact ownership and reach its unique rich decision construction only after compact exits",
+        )
+
+    map_cue_text_match = re.search(
+        r"func _map_cue_text\(\) -> String:\n(?P<body>.*?)(?=\nfunc _manual_play_acceptance_cue)",
+        overworld_text,
+        re.S,
+    )
+    ensure(map_cue_text_match is not None, errors, "Could not isolate current MapCue text fallback")
+    if map_cue_text_match is not None:
+        map_cue_text_body = map_cue_text_match.group("body")
+        ensure(
+            'if action.is_empty():\n\t\tvar movement = _session.overworld.get("movement", {})' in map_cue_text_body
+            and 'var cue := "Move %d/%d | Select destination"' in map_cue_text_body,
+            errors,
+            "Empty current-tile action must retain the movement/select-destination MapCue fallback",
+        )
+
+    simple_route_tooltip_match = re.search(
+        r"func _selected_route_simple_tooltip\(\) -> String:\n(?P<body>.*?)(?=\nfunc _tile_visibility_tooltip)",
+        overworld_text,
+        re.S,
+    )
+    ensure(simple_route_tooltip_match is not None, errors, "Could not isolate current-route simple tooltip")
+    if simple_route_tooltip_match is not None:
+        ensure(
+            'if String(route_decision.get("status", "")) == "current":\n\t\treturn "Current position. Select a mapped destination to plot a route."' in simple_route_tooltip_match.group("body"),
+            errors,
+            "Current route must retain its exact mapped-destination guidance tooltip",
+        )
+
+    read_scope_match = re.search(
+        r"func _refresh_read_scope_and_map_state\(\) -> void:\n(?P<body>.*?)(?=\nfunc _refresh_map_view)",
+        overworld_text,
+        re.S,
+    )
+    ensure(read_scope_match is not None, errors, "Could not isolate full-refresh read-scope cache invalidation")
+    if read_scope_match is not None:
+        ensure(
+            "_invalidate_refresh_cache(true)" in read_scope_match.group("body"),
+            errors,
+            "Full refresh must invalidate the general refresh cache before fixture route recomputation",
+        )
+
+    route_action_signature_match = re.search(
+        r"func _selected_route_action_surface_signature\(\) -> String:\n(?P<body>.*?)(?=\nfunc _selected_route_signature)",
+        overworld_text,
+        re.S,
+    )
+    ensure(route_action_signature_match is not None, errors, "Could not isolate selected-route action cache signature")
+    if route_action_signature_match is not None:
+        route_action_signature_body = route_action_signature_match.group("body")
+        ensure(
+            'var movement_current := int(movement.get("current", 0))' in route_action_signature_body
+            and 'var movement_max := int(movement.get("max", movement_current))' in route_action_signature_body
+            and '"move:%d/%d" % [movement_current, movement_max]' in route_action_signature_body,
+            errors,
+            "Selected-route action cache signature must retain exact current/max movement authority",
+        )
+
+    commit_active_match = re.search(
+        r"static func commit_active_hero\(session: SessionStateStoreScript\.SessionData\) -> void:\n(?P<body>.*?)(?=\nstatic func set_active_hero)",
+        hero_command_text,
+        re.S,
+    )
+    ensure(commit_active_match is not None, errors, "Could not isolate public active-hero movement commit")
+    if commit_active_match is not None:
+        commit_active_body = commit_active_match.group("body")
+        ensure(
+            'committed["movement"] = _normalize_movement(' in commit_active_body
+            and 'session.overworld.get("movement", committed.get("movement", {}))' in commit_active_body
+            and 'heroes[active_index] = committed' in commit_active_body
+            and 'session.overworld["player_heroes"] = heroes' in commit_active_body
+            and '_sync_active_hero_mirror(session)' in commit_active_body,
+            errors,
+            "Public active-hero commit must consume top-level movement, replace the active roster entry, and sync mirrors",
+        )
+
+    sync_active_match = re.search(
+        r"static func _sync_active_hero_mirror\(session: SessionStateStoreScript\.SessionData\) -> void:\n(?P<body>.*?)(?=\nstatic func _replace_hero_in_array)",
+        hero_command_text,
+        re.S,
+    )
+    ensure(sync_active_match is not None, errors, "Could not isolate active-hero mirror synchronization")
+    if sync_active_match is not None:
+        sync_active_body = sync_active_match.group("body")
+        ensure(
+            'session.overworld["hero"] = hero' in sync_active_body
+            and 'session.overworld["movement"] = hero.get("movement", {})' in sync_active_body,
+            errors,
+            "Active-hero mirror sync must retain exact hero and movement mirrors",
+        )
+
+    route_test_text = OVERWORLD_ROUTE_TOOLTIP_SMOKE_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'const REPORT_ID := "OVERWORLD_ROUTE_TOOLTIP_SMOKE"',
+        'for width in [1280, 1920]:',
+        'host.size = Vector2(float(width), 720.0)',
+        'shell.call("validation_select_tile", 0, 2)',
+        'shell.call("validation_select_tile", 1, 0)',
+        'shell.call("validation_select_tile", 2, 2)',
+        '"cue": "Try: Visit Town [Enter]"',
+        '"cue": "Try: Advance to Site [Enter]"',
+        '"tooltip": "Visit Town Riverwatch Hold. Move to Riverwatch Hold; 1 step, Move 14->13. Try Visit Town with Enter or Space now."',
+        '"tooltip": "Advance to Site Wood Wagon. Move to Wood Wagon; 2 steps, Move 14->12. Try Advance to Site with Enter or Space now."',
+        '"tooltip": "Route: 2,2 | Move | 1 step | reachable today | Move 14->13 | Next step: 2,2 via Grassland (arrives at target). Press Enter or Space to commit this route order. Try March with Enter or Space now."',
+        '"cue": "Try: March [Enter]"',
+        '"adjacent_open_2_2_march_selected_step_1": true',
+        '"action_payload_empty": true',
+        '"cue": "Move 14/14 | Select destination"',
+        '"status": "current"',
+        '"route_action_label": "Advance to Site"',
+        '"cue": "Route: Wood Wagon | no movement | Move 0->0"',
+        '"status": "no_movement"',
+        '"reason": "No movement left today."',
+        '"current_and_no_movement_disabled_rows": true',
+        '"forbidden": ["Wood Wagon route", "Advance to Site"]',
+        '"forbidden": ["Riverwatch Hold route", "Visit Town"]',
+        '"town_wood_open_town_wood_inverse": true',
+        'same-tile bound no-op changed the Wood Wagon cue/action/button/route payload',
+        'shell.call("_record_action_feedback", "system", "Route feedback priority")',
+        'session.flags["generated_overworld_deferred_autosave_pending"] = true',
+        'session.flags["generated_random_map"] = true',
+        'shell.call("_refresh")',
+        '"opening_text_exact": String(opening.get("map_cue_text", "")) == "Opening generated map"',
+        '"opening_tooltip_exact": String(opening.get("map_cue_tooltip_text", "")) == GENERATED_COMPACT_MAP_CUE_TOOLTIP',
+        '"cue_opening_byte_exact"',
+        '"tooltip_opening_byte_exact"',
+        '"wood_cue_current"',
+        '"compact_tooltip_exact"',
+        '"session_payload_exact"',
+        '"files_exact"',
+        '"save_cache_exact"',
+        '"settings_exact"',
+        '"routes_exact"',
+        '"shell_counts_exact"',
+        'SaveService.SAVE_DIR, SaveService.SAVE_PREFIX',
+        'SettingsService.SETTINGS_FILE',
+        'SettingsService.SETTINGS_CANDIDATE_FILE',
+        'SettingsService.SETTINGS_BACKUP_FILE',
+        'SaveService.validation_transaction_artifact_paths',
+        'func _canonical_settings_transaction(transaction: Dictionary) -> Dictionary:',
+        'func _canonical_stored_input_event(event: InputEvent) -> Dictionary:',
+        'func _assert_existing_town_spell_and_action_consequences() -> bool:',
+        'validation_perform_primary_action',
+        'Town entry handoff smoke',
+        'Overworld spell ready check smoke',
+    ):
+        ensure(required_token in route_test_text, errors, f"Overworld route tooltip smoke is missing exact coverage token: {required_token}")
+    ensure(
+        '"cue_tooltip_current": tooltip == String(shell.call("_map_cue_tooltip"))' in route_test_text,
+        errors,
+        "Focused route tooltip matrix must retain exact rendered-versus-current MapCue tooltip parity",
+    )
+    ensure(
+        route_test_text.count('shell.call("validation_select_tile", 1, 0)') >= 4,
+        errors,
+        "Route tooltip smoke must exercise initial, inverse, no-op, and policy Wood Wagon selections",
+    )
+    ensure(
+        route_test_text.find('var opening: Dictionary = shell.call("validation_snapshot")')
+        < route_test_text.find('var pending: Dictionary = shell.call("validation_select_tile", 1, 0)')
+        < route_test_text.find('session.flags.erase("generated_overworld_deferred_autosave_pending")')
+        < route_test_text.find('var pending_released: Dictionary = shell.call("validation_select_tile", 1, 0)'),
+        errors,
+        "Route tooltip smoke must establish the full generated opening, hold it through targeted Wood selection, then publish after pending release",
+    )
+    route_width_match = re.search(
+        r"func _assert_route_cue_width\(width: int\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc _assert_exact_route_surface)",
+        route_test_text,
+        re.S,
+    )
+    ensure(route_width_match is not None, errors, "Could not isolate the exact two-width route MapCue matrix helper")
+    if route_width_match is not None:
+        route_width_body = route_width_match.group("body")
+        ordered_tokens = (
+            'var town: Dictionary = shell.call("validation_select_tile", 0, 2)',
+            'var wood: Dictionary = shell.call("validation_select_tile", 1, 0)',
+            'var open: Dictionary = shell.call("validation_select_tile", 2, 2)',
+            'var town_inverse: Dictionary = shell.call("validation_select_tile", 0, 2)',
+            'var wood_inverse: Dictionary = shell.call("validation_select_tile", 1, 0)',
+            'var bound_no_op: Dictionary = shell.call("validation_select_tile", 1, 0)',
+            'var current: Dictionary = shell.call("validation_select_tile", 1, 2)',
+            'zero_movement["current"] = 0',
+            'var no_movement: Dictionary = shell.call("validation_select_tile", 1, 0)',
+            'session.overworld["movement"] = movement_before_disabled',
+            'var normal_route_restored: Dictionary = shell.call("validation_select_tile", 1, 0)',
+            'shell.call("_record_action_feedback", "system", "Route feedback priority")',
+            'session.flags["generated_random_map"] = true',
+            'session.flags["generated_overworld_deferred_autosave_pending"] = true',
+            'shell.call("_refresh")',
+            'var opening: Dictionary = shell.call("validation_snapshot")',
+            'var pending: Dictionary = shell.call("validation_select_tile", 1, 0)',
+            'session.flags.erase("generated_overworld_deferred_autosave_pending")',
+            'var pending_released: Dictionary = shell.call("validation_select_tile", 1, 0)',
+            'session.flags.erase("generated_random_map")',
+            'var compact_released: Dictionary = shell.call("validation_select_tile", 1, 0)',
+        )
+        ordered_indices: list[int] = []
+        ordered_search_start = 0
+        for token in ordered_tokens:
+            token_index = route_width_body.find(token, ordered_search_start)
+            ordered_indices.append(token_index)
+            if token_index >= 0:
+                ordered_search_start = token_index + len(token)
+        ensure(
+            all(index >= 0 for index in ordered_indices)
+            and all(ordered_indices[index] < ordered_indices[index + 1] for index in range(len(ordered_indices) - 1)),
+            errors,
+            "Route MapCue matrix must retain strict town -> Wood -> adjacent open -> inverse/no-op -> current -> movement-zero -> restored Wood -> feedback -> generated opening/pending/release order",
+        )
+        for local_token in (
+            '"label": "town", "tile": {"x": 0, "y": 2}, "action_id": "march_selected", "action_label": "Visit Town"',
+            '"action_current": String(feedback.get("primary_action_id", "")) == "march_selected"',
+            '"action_id": "", "action_label": "", "action_payload_empty": true',
+            '"cue": "Move 14/14 | Select destination", "button": "Select Site", "action_disabled": false, "button_disabled": true',
+            '"button_tooltip": "Current position. Select a mapped destination to plot a route.", "destination": "Frontier Rare Exchange"',
+            '"status": "current", "action_kind": "hold"',
+            '"cue": "Route: Wood Wagon | no movement | Move 0->0", "button": "Select Site", "action_disabled": false, "button_disabled": true',
+            '"button_tooltip_matches_cue": true, "destination": "Wood Wagon", "route_action_label": "Advance to Site"',
+            '"status": "no_movement", "action_kind": "move/collect"',
+            '"reason": "No movement left today."',
+            '"adjacent_open_2_2_march_selected_step_1": true',
+        ):
+            ensure(local_token in route_width_body, errors, f"Isolated route MapCue matrix is missing exact disabled/current/no-movement token: {local_token}")
+        ensure(
+            '"action_id": "visit_town"' not in route_width_body
+            and 'String(feedback.get("primary_action_id", "")) == "visit_town"' not in route_width_body,
+            errors,
+            "Width-matrix adjacent Town route must use march_selected and must not restore the stale visit_town action-id oracle",
+        )
+        town_compact_row_match = re.search(
+            r'"label": "town".*?\n\t\t"forbidden": .*?\n\t\}',
+            route_width_body,
+            re.S,
+        )
+        wood_compact_row_match = re.search(
+            r'"label": "wood".*?\n\t\t"forbidden": .*?\n\t\}',
+            route_width_body,
+            re.S,
+        )
+        ensure(town_compact_row_match is not None and wood_compact_row_match is not None, errors, "Could not isolate exact compact Town/Wood tooltip rows")
+        if town_compact_row_match is not None:
+            town_compact_row = town_compact_row_match.group(0)
+            ensure(
+                '"tooltip": "Visit Town Riverwatch Hold. Move to Riverwatch Hold; 1 step, Move 14->13. Try Visit Town with Enter or Space now."' in town_compact_row
+                and '"required": []' in town_compact_row
+                and '"required": ["Riverwatch Hold route", "Commit Visit Town"' not in town_compact_row,
+                errors,
+                "Compact Town row must require byte-exact summary/commit tooltip and must not restore rich route-decision tokens",
+            )
+        if wood_compact_row_match is not None:
+            wood_compact_row = wood_compact_row_match.group(0)
+            ensure(
+                '"tooltip": "Advance to Site Wood Wagon. Move to Wood Wagon; 2 steps, Move 14->12. Try Advance to Site with Enter or Space now."' in wood_compact_row
+                and '"required": []' in wood_compact_row
+                and '"required": ["Wood Wagon route", "Move/collect", "Commit Advance to Site"' not in wood_compact_row,
+                errors,
+                "Compact Wood row must require byte-exact summary/commit tooltip and must not restore rich route-decision tokens",
+            )
+        open_compact_row_match = re.search(
+            r'"label": "open".*?\n\t\t"forbidden": .*?\n\t\}',
+            route_width_body,
+            re.S,
+        )
+        ensure(open_compact_row_match is not None, errors, "Could not isolate exact compact open-route tooltip row")
+        if open_compact_row_match is not None:
+            open_compact_row = open_compact_row_match.group(0)
+            ensure(
+                '"tooltip": "Route: 2,2 | Move | 1 step | reachable today | Move 14->13 | Next step: 2,2 via Grassland (arrives at target). Press Enter or Space to commit this route order. Try March with Enter or Space now."' in open_compact_row
+                and '"required": []' in open_compact_row
+                and '"Commit March"' not in open_compact_row,
+                errors,
+                "Compact open-route row must require byte-exact simple-route tooltip and must not restore local Commit March rich wording",
+            )
+        ensure(
+            '"action_id": "hold_position"' not in route_width_body
+            and '"action_label": "Current Position"' not in route_width_body
+            and '"cue": "Action: Current Position [Enter]"' not in route_width_body
+            and '"button": "Current Position [Enter]"' not in route_width_body,
+            errors,
+            "Width-matrix current row must not synthesize a disabled primary action over the source-owned empty action surface",
+        )
+        no_movement_row_match = re.search(
+            r'"label": "no_movement".*?\n\t\t"forbidden": .*?\n\t\}',
+            route_width_body,
+            re.S,
+        )
+        ensure(no_movement_row_match is not None, errors, "Could not isolate exact no-movement route row")
+        if no_movement_row_match is not None:
+            no_movement_row = no_movement_row_match.group(0)
+            ensure(
+                '"action_id": "", "action_label": "", "action_payload_empty": true' in no_movement_row
+                and '"action_id": "advance_route"' not in no_movement_row
+                and '"button": "Advance to Site [Enter]"' not in no_movement_row
+                and '"disabled": true' not in no_movement_row,
+                errors,
+                "No-movement row must not promote the disabled Advance candidate to primary action ownership",
+            )
+        town_surface_index = route_width_body.find('if not _assert_exact_route_surface(shell, town, {')
+        town_payload_index = route_width_body.find('var town_payload := _route_cue_payload(town)')
+        wood_select_index = route_width_body.find('var wood: Dictionary = shell.call("validation_select_tile", 1, 0)')
+        town_inverse_index = route_width_body.find('var town_inverse: Dictionary = shell.call("validation_select_tile", 0, 2)')
+        ensure(
+            -1 < town_surface_index < town_payload_index < wood_select_index < town_inverse_index,
+            errors,
+            "Route MapCue matrix must assert Town, detach its exact payload before Wood selection, then compare the inverse",
+        )
+        ensure(
+            route_width_body.count("_route_cue_payload(town)") == 1
+            and "town_payload.erase(" not in route_width_body
+            and "normalize(town_payload" not in route_width_body
+            and "normalize_town_payload" not in route_width_body,
+            errors,
+            "Town inverse authority must use the one early detached payload without late alias reads, erasure, or normalization",
+        )
+        ensure(
+            'if _route_cue_payload(town_inverse) != town_payload:' in route_width_body
+            and 'if _route_cue_payload(restored_town) != town_payload:' in route_width_body,
+            errors,
+            "Town inverse and feedback-clear restoration must compare their whole payloads to the detached Town authority",
+        )
+        movement_fixture_match = re.search(
+            r"var movement_before_disabled: Dictionary = .*?(?=\n\tshell\.call\(\"_record_action_feedback\")",
+            route_width_body,
+            re.S,
+        )
+        ensure(movement_fixture_match is not None, errors, "Could not isolate movement-zero route fixture")
+        if movement_fixture_match is not None:
+            movement_fixture_body = movement_fixture_match.group(0)
+            zero_assign_index = movement_fixture_body.find('session.overworld["movement"] = zero_movement')
+            zero_commit_index = movement_fixture_body.find("HeroCommandRules.commit_active_hero(session)", zero_assign_index + 1)
+            zero_mirrors_index = movement_fixture_body.find("var zero_movement_mirror_checks := _movement_mirror_checks(session, zero_movement)")
+            zero_refresh_index = movement_fixture_body.find('shell.call("_refresh")', zero_commit_index + 1)
+            no_movement_index = movement_fixture_body.find('var no_movement: Dictionary = shell.call("validation_select_tile", 1, 0)')
+            restore_assign_index = movement_fixture_body.find('session.overworld["movement"] = movement_before_disabled')
+            restore_commit_index = movement_fixture_body.find("HeroCommandRules.commit_active_hero(session)", restore_assign_index + 1)
+            restore_mirrors_index = movement_fixture_body.find("var restored_movement_mirror_checks := _movement_mirror_checks(session, movement_before_disabled)")
+            restore_refresh_index = movement_fixture_body.find('shell.call("_refresh")', restore_commit_index + 1)
+            restored_route_index = movement_fixture_body.find('var normal_route_restored: Dictionary = shell.call("validation_select_tile", 1, 0)')
+            ensure(
+                movement_fixture_body.count('shell.call("_refresh")') == 2
+                and movement_fixture_body.count("HeroCommandRules.commit_active_hero(session)") == 2
+                and -1 < zero_assign_index < zero_commit_index < zero_mirrors_index < zero_refresh_index < no_movement_index
+                < restore_assign_index < restore_commit_index < restore_mirrors_index < restore_refresh_index < restored_route_index,
+                errors,
+                "Movement-zero fixture must use exactly two public commits and full refreshes in assign -> commit -> mirror checks -> refresh -> Wood order",
+            )
+            ensure(
+                "_invalidate_selected_route" not in movement_fixture_body
+                and "normalize" not in movement_fixture_body
+                and 'session.overworld["player_heroes"] =' not in movement_fixture_body,
+                errors,
+                "Movement-zero fixture must not directly edit player heroes or use private invalidators/normalization instead of public commit and refresh",
+            )
+
+    exact_surface_match = re.search(
+        r"func _assert_exact_route_surface\(shell: Node, snapshot: Dictionary, expected: Dictionary\) -> bool:\n(?P<body>.*?)(?=\nfunc _route_cue_payload)",
+        route_test_text,
+        re.S,
+    )
+    ensure(exact_surface_match is not None, errors, "Could not isolate exact route-surface assertion helper")
+    if exact_surface_match is not None:
+        exact_surface_body = exact_surface_match.group("body")
+        for helper_token in (
+            'var expected_action_disabled := bool(expected.get("action_disabled", expected.get("disabled", false)))',
+            'var expected_button_disabled := bool(expected.get("button_disabled", expected.get("disabled", false)))',
+            '"action_payload_empty_exact": action.is_empty() == bool(expected.get("action_payload_empty", false))',
+            '"action_disabled_exact": bool(action.get("disabled", false)) == expected_action_disabled',
+            '"button_disabled_exact": bool(snapshot.get("primary_action_button_disabled", true)) == expected_button_disabled',
+            '"button_tooltip_exact": not expected.has("button_tooltip") or String(snapshot.get("primary_action_button_tooltip_text", "")) == String(expected.get("button_tooltip", ""))',
+            '"button_tooltip_matches_cue": not bool(expected.get("button_tooltip_matches_cue", false)) or String(snapshot.get("primary_action_button_tooltip_text", "")) == tooltip',
+            '"tooltip_exact": not expected.has("tooltip") or tooltip == String(expected.get("tooltip", ""))',
+            '"route_action_label_exact": not expected.has("route_action_label") or String(decision.get("action_label", "")) == String(expected.get("route_action_label", ""))',
+        ):
+            ensure(helper_token in exact_surface_body, errors, f"Exact route helper must separate empty action, action-disabled, button-disabled, and button-tooltip authority: {helper_token}")
+
+    movement_mirror_match = re.search(
+        r"func _movement_mirror_checks\(session, expected: Dictionary\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc _assert_town_entry_handoff_cue)",
+        route_test_text,
+        re.S,
+    )
+    ensure(movement_mirror_match is not None, errors, "Could not isolate canonical movement-mirror assertions")
+    if movement_mirror_match is not None:
+        movement_mirror_body = movement_mirror_match.group("body")
+        for mirror_token in (
+            '"top_level_movement_exact": session.overworld.get("movement", {}) == expected',
+            '"hero_movement_exact": hero.get("movement", {}) == expected',
+            '"one_matching_active_player_hero": matching_active_heroes == 1',
+            '"active_player_hero_movement_exact": active_player_movement == expected',
+        ):
+            ensure(mirror_token in movement_mirror_body, errors, f"Movement fixture must retain exact canonical mirror authority: {mirror_token}")
+        ensure(
+            'session.overworld["player_heroes"] =' not in movement_mirror_body
+            and "normalize" not in movement_mirror_body,
+            errors,
+            "Movement mirror helper must remain read-only and must not normalize or directly edit the roster",
+        )
+
+    town_handoff_match = re.search(
+        r"func _assert_town_entry_handoff_cue\(shell: Node\) -> bool:\n(?P<body>.*?)(?=\nfunc _assert_overworld_spell_check_cue)",
+        route_test_text,
+        re.S,
+    )
+    ensure(town_handoff_match is not None, errors, "Could not isolate the existing Town-entry consequence compatibility control")
+    if town_handoff_match is not None:
+        town_handoff_body = town_handoff_match.group("body")
+        position_index = town_handoff_body.find("_set_active_hero_position(session, Vector2i(0, 2))")
+        fog_index = town_handoff_body.find("OverworldRules.refresh_fog_of_war(session)", position_index)
+        select_index = town_handoff_body.find('shell.call("validation_select_tile", 0, 2)', fog_index)
+        refresh_index = town_handoff_body.find('shell.call("_refresh")', select_index)
+        snapshot_index = town_handoff_body.find('var snapshot: Dictionary = shell.call("validation_snapshot")', refresh_index)
+        ensure(
+            -1 < position_index < fog_index < select_index < refresh_index < snapshot_index,
+            errors,
+            "Town-entry consequence fixture must stage hero on Town, refresh fog, select Town, fully refresh, then capture its snapshot",
+        )
+        consequence_checks_match = re.search(
+            r"\tvar consequence_checks := \{\n(?P<body>.*?)\n\t\}\n\tif not _checks_exact\(consequence_checks\):",
+            town_handoff_body,
+            re.S,
+        )
+        ensure(consequence_checks_match is not None, errors, "Could not isolate exact Town-entry consequence authority checks")
+        if consequence_checks_match is not None:
+            consequence_check_keys = re.findall(r'^\t\t"([^"]+)":', consequence_checks_match.group("body"), re.M)
+            ensure(
+                consequence_check_keys == [
+                    "primary_action_id_exact",
+                    "primary_payload_id_exact",
+                    "primary_label_exact",
+                    "button_text_exact",
+                    "button_enabled_exact",
+                    "handoff_nonempty",
+                    "readiness_nonempty",
+                    "readiness_handoff_exact",
+                    "action_handoff_exact",
+                    "town_name_exact",
+                    "field_position_exact",
+                    "movement_line_exact",
+                    "return_order_exact",
+                    "selected_tile_exact",
+                    "hero_position_exact",
+                ],
+                errors,
+                "Town-entry consequence authority must retain its exact ordered named-check key set",
+            )
+            for consequence_token in (
+                'String(snapshot.get("primary_action_id", "")) == "visit_town"',
+                'String(primary_action.get("id", "")) == "visit_town"',
+                'String(primary_action.get("label", "")) == "Visit Town"',
+                'String(snapshot.get("primary_action_button_text", "")) == "Visit Town [Enter]"',
+                'not bool(snapshot.get("primary_action_button_disabled", true))',
+                'not handoff.is_empty()',
+                'not readiness.is_empty()',
+                'readiness_handoff == handoff',
+                'action_handoff == handoff',
+                'String(handoff.get("town_name", "")) == "Riverwatch Hold"',
+                'String(handoff.get("field_position", "")) == "0,2"',
+                'String(handoff.get("movement_line", "")) == "Move 14/14"',
+                'String(handoff.get("return_order", "")) == "Leave"',
+                'snapshot.get("selected_tile", {}) == {"x": 0, "y": 2}',
+                'session.overworld.get("hero_position", {}) == {"x": 0, "y": 2}',
+            ):
+                ensure(consequence_token in consequence_checks_match.group("body"), errors, f"Town-entry consequence authority is missing exact comparison: {consequence_token}")
+        consequence_checks_index = town_handoff_body.find("var consequence_checks := {")
+        consequence_gate_index = town_handoff_body.find("if not _checks_exact(consequence_checks):", consequence_checks_index)
+        joined_text_index = town_handoff_body.find('var joined := "\\n".join([', consequence_gate_index)
+        ensure(
+            -1 < consequence_checks_index < consequence_gate_index < joined_text_index,
+            errors,
+            "Town-entry exact consequence authority must gate before joined token/text coverage",
+        )
+        ensure(
+            'if String(snapshot.get("primary_action_id", "")) != "visit_town":' in town_handoff_body
+            and 'var handoff: Dictionary = snapshot.get("town_entry_handoff", {})' in town_handoff_body
+            and 'var readiness: Dictionary = snapshot.get("field_readiness", {})' in town_handoff_body
+            and '"Visit Town [Enter]"' in town_handoff_body
+            and '"Field position: active hero remains at 0,2."' in town_handoff_body
+            and '"Leave returns to the field at 0,2"' in town_handoff_body
+            and '"Primary Order Check"' in town_handoff_body,
+            errors,
+            "Existing full Town-entry consequence control must retain distinct Visit Town, handoff, readiness, button, position, and Primary Order Check authority",
+        )
+
+    destination_only_text = OVERWORLD_ROUTE_DESTINATION_ONLY_ACTION_REGRESSION_SCRIPT_PATH.read_text(encoding="utf-8")
+    ensure(
+        'if float(selection_phases.get("route_decision_construction", 0.0)) != 0.0:' in destination_only_text,
+        errors,
+        "Destination-only resource route selection must retain exact zero rich route-decision construction authority",
+    )
+
+    context_cache_text = OVERWORLD_SELECTED_ROUTE_CONTEXT_ACTIONS_CACHE_REGRESSION_SCRIPT_PATH.read_text(encoding="utf-8")
+    context_cache_run_match = re.search(
+        r"func _run\(\) -> void:\n(?P<body>.*?)(?=\nfunc _require_compact_cache_phase)",
+        context_cache_text,
+        re.S,
+    )
+    ensure(context_cache_run_match is not None, errors, "Could not isolate selected-route context cache regression phases")
+    if context_cache_run_match is not None:
+        context_cache_run_body = context_cache_run_match.group("body")
+        phase_tokens = (
+            '_require_compact_cache_phase(reused_profile, reused_action, "unchanged", true, "open", first_target, "reachable")',
+            '_require_compact_cache_phase(selected_tile_profile, selected_tile_action, "selected_tile", false, "open", second_target, "reachable")',
+            '_require_compact_cache_phase(hero_position_profile, hero_position_action, "hero_position", false, "open", second_target, "reachable")',
+            '_require_compact_cache_phase(movement_profile, movement_action, "movement", false, "open", second_target, "not_today")',
+            '_require_compact_cache_phase(topology_profile, topology_action, "topology", false, "encounter", second_target, "not_today")',
+        )
+        phase_indices = [context_cache_run_body.find(token) for token in phase_tokens]
+        ensure(
+            all(index >= 0 for index in phase_indices)
+            and all(phase_indices[index] < phase_indices[index + 1] for index in range(len(phase_indices) - 1)),
+            errors,
+            "Selected-route context cache regression must retain exact unchanged, selected-tile, hero-position, movement, and topology phase order",
+        )
+        ensure(
+            '"reuse_selected_route_hits": int(reused_profile.get("selected_route_cache_hits", 0))' in context_cache_run_body
+            and '"reuse_route_decision_hits"' not in context_cache_run_body,
+            errors,
+            "Selected-route context cache report must name selected-route reuse rather than obsolete rich route-decision reuse",
+        )
+        profile_action_pairs = (
+            ('var reused_profile: Dictionary = shell.call("validation_profile_snapshot")', 'var reused_action: Dictionary = shell.call("_current_primary_action").duplicate(true)'),
+            ('var selected_tile_profile: Dictionary = shell.call("validation_profile_snapshot")', 'var selected_tile_action: Dictionary = shell.call("_current_primary_action").duplicate(true)'),
+            ('var hero_position_profile: Dictionary = shell.call("validation_profile_snapshot")', 'var hero_position_action: Dictionary = shell.call("_current_primary_action").duplicate(true)'),
+            ('var movement_profile: Dictionary = shell.call("validation_profile_snapshot")', 'var movement_action: Dictionary = shell.call("_current_primary_action").duplicate(true)'),
+            ('var topology_profile: Dictionary = shell.call("validation_profile_snapshot")', 'var topology_action: Dictionary = shell.call("_current_primary_action").duplicate(true)'),
+        )
+        profile_action_search_start = 0
+        for profile_token, action_token in profile_action_pairs:
+            profile_index = context_cache_run_body.find(profile_token, profile_action_search_start)
+            action_index = context_cache_run_body.find(action_token, profile_index + len(profile_token))
+            ensure(
+                -1 < profile_index < action_index,
+                errors,
+                "Each selected-route cache phase must capture the profile before duplicating the live primary action",
+            )
+            profile_action_search_start = action_index + len(action_token) if action_index >= 0 else profile_action_search_start
+        ensure(
+            context_cache_run_body.count('shell.call("validation_profile_snapshot")') == 5
+            and context_cache_run_body.count('shell.call("_current_primary_action").duplicate(true)') == 6,
+            errors,
+            "Selected-route cache regression must capture exactly one initial action plus five ordered profile and detached live-action pairs",
+        )
+        initial_sequence = (
+            'shell.call("_set_selected_tile", first_target)',
+            'shell.call("_refresh_selected_route_preview", "validation_selected_route_changed")',
+            'var initial_action: Dictionary = shell.call("_current_primary_action").duplicate(true)',
+            'String(initial_action.get("id", "")) != "advance_route"',
+        )
+        initial_indices = [context_cache_run_body.find(token) for token in initial_sequence]
+        ensure(
+            all(index >= 0 for index in initial_indices)
+            and all(initial_indices[index] < initial_indices[index + 1] for index in range(len(initial_indices) - 1)),
+            errors,
+            "Initial selected-route setup must use exact set -> targeted refresh -> detached live action ordering without a rich validation observer",
+        )
+        selected_tile_sequence = (
+            'shell.call("validation_reset_profile", true)',
+            'shell.call("_set_selected_tile", second_target)',
+            'shell.call("_refresh_selected_route_preview", "validation_selected_route_changed")',
+            'var selected_tile_profile: Dictionary = shell.call("validation_profile_snapshot")',
+            'var selected_tile_action: Dictionary = shell.call("_current_primary_action").duplicate(true)',
+            '_require_compact_cache_phase(selected_tile_profile, selected_tile_action, "selected_tile", false, "open", second_target, "reachable")',
+        )
+        selected_tile_indices: list[int] = []
+        selected_tile_search_start = context_cache_run_body.find('if not _require_compact_cache_phase(reused_profile')
+        for token in selected_tile_sequence:
+            token_index = context_cache_run_body.find(token, selected_tile_search_start)
+            selected_tile_indices.append(token_index)
+            if token_index >= 0:
+                selected_tile_search_start = token_index + len(token)
+        ensure(
+            all(index >= 0 for index in selected_tile_indices)
+            and all(selected_tile_indices[index] < selected_tile_indices[index + 1] for index in range(len(selected_tile_indices) - 1)),
+            errors,
+            "Selected-tile cache mutation must use exact set -> targeted refresh -> profile -> detached live action -> oracle ordering",
+        )
+        topology_sequence = (
+            'shell.call("validation_reset_profile", true)',
+            '_add_route_blocking_encounter(session, second_target)',
+            'shell.call("_refresh_selected_route_preview", "validation_selected_route_changed")',
+            'var topology_profile: Dictionary = shell.call("validation_profile_snapshot")',
+            'var topology_action: Dictionary = shell.call("_current_primary_action").duplicate(true)',
+            '_require_compact_cache_phase(topology_profile, topology_action, "topology", false, "encounter", second_target, "not_today")',
+        )
+        topology_indices: list[int] = []
+        topology_add_index = context_cache_run_body.find('_add_route_blocking_encounter(session, second_target)')
+        topology_search_start = context_cache_run_body.rfind('shell.call("validation_reset_profile", true)', 0, topology_add_index)
+        topology_block_end = context_cache_run_body.find('print("%s %s"', topology_add_index)
+        for token in topology_sequence:
+            token_index = context_cache_run_body.find(token, topology_search_start)
+            topology_indices.append(token_index)
+            if token_index >= 0:
+                topology_search_start = token_index + len(token)
+        ensure(
+            all(index >= 0 for index in topology_indices)
+            and all(topology_indices[index] < topology_indices[index + 1] for index in range(len(topology_indices) - 1)),
+            errors,
+            "Topology cache mutation must use exact reset -> encounter -> targeted refresh -> profile -> detached live action -> oracle ordering",
+        )
+        ensure(
+            topology_block_end > topology_indices[1]
+            and 'shell.call("_refresh")' not in context_cache_run_body[topology_indices[1]:topology_block_end],
+            errors,
+            "Topology cache mutation must not broaden into a full refresh that constructs the rich Field Readiness surface",
+        )
+
+    compact_cache_helper_match = re.search(
+        r"func _require_compact_cache_phase\(profile: Dictionary, action: Dictionary, phase: String, expect_reuse: bool, expected_kind: String, expected_tile: Vector2i, expected_status: String\) -> bool:\n(?P<body>.*?)(?=\nfunc _open_shell)",
+        context_cache_text,
+        re.S,
+    )
+    ensure(compact_cache_helper_match is not None, errors, "Could not isolate compact selected-route cache phase oracle")
+    if compact_cache_helper_match is not None:
+        compact_cache_helper_body = compact_cache_helper_match.group("body")
+        for required_token in (
+            '"selected_route_destination_action_cache_hits" if expect_reuse else "selected_route_destination_action_cache_misses"',
+            '"selected_route_cache_hits" if expect_reuse else "selected_route_cache_misses"',
+            'int(profile.get("selected_route_decision_surface_cache_hits", 0)) == 0',
+            'int(profile.get("selected_route_decision_surface_cache_misses", 0)) == 0',
+            'String(destination_cache.get("signature_mode", "")) == "destination_minimal"',
+            'String(context_surface.get("destination_interaction_kind", "")) == expected_kind',
+            'bool(context_surface.get("rich_route_decision_skipped", false))',
+            'String(context_surface.get("route_status", "")) == expected_status',
+            'String(action.get("id", "")) == "advance_route"',
+            'not bool(action.get("disabled", false))',
+            'bool(action.get("destination_only", false))',
+            'String(destination_interaction.get("kind", "")) == expected_kind',
+            'int(destination_interaction.get("x", -1)) == expected_tile.x',
+            'int(destination_interaction.get("y", -1)) == expected_tile.y',
+            'bool(destination_interaction.get("rich_route_surface_skipped", false))',
+            'bool(action.get("simple_route_ui_fast_path", false)) == expected_simple',
+            'bool(action.get("compact_interaction_destination_fast_path", false)) == not expected_simple',
+            'not route_decision.is_empty()',
+            'String(route_decision.get("status", "")) == expected_status',
+            'bool(route_decision.get("route_clear", false))',
+            'expected_status != "reachable" or (bool(route_decision.get("destination_reachable", false)) and int(route_decision.get("unreachable_steps", -1)) == 0)',
+            'expected_status != "not_today" or (',
+            'not bool(route_decision.get("destination_reachable", true))',
+            'int(route_decision.get("movement_current", -1)) == 6',
+            'int(route_decision.get("movement_cost", -1)) == 8',
+            'int(route_decision.get("reachable_steps", -1)) == 6',
+            'int(route_decision.get("reachable_cost", -1)) == 6',
+            'int(route_decision.get("unreachable_steps", -1)) == 2',
+            'int(route_decision.get("movement_after_order", -1)) == 0',
+            'String(route_decision.get("blocked_reason", "")) == "Route is clear; 2 steps remain after today\'s movement."',
+            '("simple_route" if expected_simple else "compact_interaction_destination")',
+            'bool(primary_tooltip.get("rich_commit_check_skipped", false))',
+        ):
+            ensure(required_token in compact_cache_helper_body, errors, f"Compact selected-route cache oracle is missing exact token: {required_token}")
+        ensure(
+            '"context_route_reachable"' not in compact_cache_helper_body
+            and '"action_route_reachable"' not in compact_cache_helper_body,
+            errors,
+            "Selected-route cache oracle must not retain a global reachable status across movement and topology mutations",
+        )
+    for obsolete_rich_assertion in (
+        'int(reused_profile.get("selected_route_decision_surface_cache_hits", 0)) <= 0',
+        'int(selected_tile_profile.get("selected_route_decision_surface_cache_misses", 0)) <= 0',
+        'int(hero_position_profile.get("selected_route_decision_surface_cache_misses", 0)) <= 0',
+        'int(movement_profile.get("selected_route_decision_surface_cache_misses", 0)) <= 0',
+        'int(topology_profile.get("selected_route_decision_surface_cache_misses", 0)) <= 0',
+        '"reuse_route_decision_hits"',
+        'validation_snapshot',
+        'validation_select_tile',
+        'last_route_destination_only_action_path',
+    ):
+        ensure(obsolete_rich_assertion not in context_cache_text, errors, f"Selected-route context cache regression retains obsolete rich-cache assertion: {obsolete_rich_assertion}")
+
+    incremental_text = OVERWORLD_INCREMENTAL_ROUTE_PREVIEW_REFRESH_REGRESSION_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'const REPORT_ID := "OVERWORLD_INCREMENTAL_ROUTE_PREVIEW_REFRESH_REGRESSION"',
+        '"cue_text_current"',
+        '"cue_tooltip_current"',
+        '"refresh_request_validation_selected_route_changed_calls"',
+        '"route_destination_only_action_path_calls"',
+        '"selected_route_destination_action_cache_hits"',
+        '"selected_route_destination_action_cache_misses"',
+        '"route_tooltip_context_drawers_skipped"',
+        '"refresh_phase_status_surfaces_calls"',
+        '"refresh_tooltip_context_drawers_calls"',
+        'Bound same-tile route selection changed the current action, route, button, or map cue.',
+        'same_tile_action_cache_hits',
+    ):
+        ensure(required_token in incremental_text, errors, f"Incremental route-preview regression is missing exact MapCue/profile token: {required_token}")
+    ensure(
+        'int(profile.get("route_destination_only_action_path_calls", 0)) != 1' in incremental_text
+        and 'int(profile.get("route_tooltip_context_drawers_skipped", 0)) != 1' in incremental_text,
+        errors,
+        "Incremental route-preview regression must require exactly one targeted action path and one drawer skip",
+    )
+    ensure(
+        '"cue_tooltip_current": String(snapshot.get("map_cue_tooltip_text", "")) == String(shell.call("_map_cue_tooltip"))' in incremental_text,
+        errors,
+        "Incremental route-preview regression must retain exact rendered-versus-current MapCue tooltip parity",
+    )
+
+
 def validate_overworld_shell_release_polish(errors: list[str]) -> None:
     required_paths = (OVERWORLD_SCENE_PATH, OVERWORLD_SCRIPT_PATH, OVERWORLD_RULES_PATH)
     for path in required_paths:
@@ -29862,6 +30918,7 @@ def main() -> int:
     validate_town_shell_release_polish(errors)
     validate_town_defense_outlook_board(errors)
     validate_town_order_readiness_ledger(errors)
+    validate_overworld_route_map_cue_refresh(errors)
     validate_overworld_shell_release_polish(errors)
     validate_overworld_command_commitment_board(errors)
     validate_enemy_empire_management(errors)

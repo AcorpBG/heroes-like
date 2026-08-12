@@ -22,18 +22,20 @@ func _run() -> void:
 	if String(selection.get("primary_action_id", "")) != "advance_route":
 		_fail("Route selection did not expose the expected primary route action.", selection)
 		return
+	if not _assert_current_map_cue(shell, selection, "first_selection"):
+		return
 	if not _assert_incremental_route_request(profile, "first_selection"):
 		return
-	if int(profile.get("route_destination_only_action_path_calls", 0)) <= 0:
+	if int(profile.get("route_destination_only_action_path_calls", 0)) != 1:
 		_fail("Incremental route selection did not use the destination-only action path.", profile)
 		return
-	if int(profile.get("selected_route_decision_surface_cache_misses", 0)) <= 0:
+	if int(profile.get("selected_route_decision_surface_cache_misses", 0)) != 1:
 		_fail("Incremental route selection did not build the route decision surface.", profile)
 		return
 	if int(profile.get("selected_context_actions_cache_misses", 0)) != 0:
 		_fail("Incremental route selection recomputed broad selected context actions.", profile)
 		return
-	if int(profile.get("route_tooltip_context_drawers_skipped", 0)) <= 0:
+	if int(profile.get("route_tooltip_context_drawers_skipped", 0)) != 1:
 		_fail("Incremental route selection did not skip tooltip/context drawer rebuild.", profile)
 		return
 	if int(profile.get("hero_actions_cache_misses", 0)) != 0:
@@ -47,15 +49,45 @@ func _run() -> void:
 	if not bool(changed_selection.get("ok", false)):
 		_fail("Second route selection failed.", changed_selection)
 		return
+	if not _assert_current_map_cue(shell, changed_selection, "changed_selection"):
+		return
 	if not _assert_incremental_route_request(changed_profile, "changed_selection"):
+		return
+	if int(changed_profile.get("route_destination_only_action_path_calls", 0)) != 1 \
+			or int(changed_profile.get("selected_route_destination_action_cache_misses", 0)) != 1 \
+			or int(changed_profile.get("route_tooltip_context_drawers_skipped", 0)) != 1:
+		_fail("Changed route selection did not use one exact targeted action/cache/skip path.", changed_profile)
+		return
+
+	var changed_payload := _route_cue_payload(changed_selection)
+	shell.call("validation_reset_profile", false)
+	var no_op_selection: Dictionary = shell.call("validation_select_tile", second_target.x, second_target.y)
+	var no_op_profile: Dictionary = shell.call("validation_profile_snapshot")
+	if not bool(no_op_selection.get("ok", false)) or _route_cue_payload(no_op_selection) != changed_payload:
+		_fail("Bound same-tile route selection changed the current action, route, button, or map cue.", {
+			"before": changed_payload,
+			"after": _route_cue_payload(no_op_selection),
+		})
+		return
+	if not _assert_current_map_cue(shell, no_op_selection, "same_tile_no_op"):
+		return
+	if not _assert_incremental_route_request(no_op_profile, "same_tile_no_op"):
+		return
+	if int(no_op_profile.get("route_destination_only_action_path_calls", 0)) != 1 \
+			or int(no_op_profile.get("selected_route_destination_action_cache_hits", 0)) != 1 \
+			or int(no_op_profile.get("selected_route_destination_action_cache_misses", 0)) != 0 \
+			or int(no_op_profile.get("route_tooltip_context_drawers_skipped", 0)) != 1:
+		_fail("Bound same-tile route selection did not reuse one exact targeted cache/skip path.", no_op_profile)
 		return
 
 	print("%s %s" % [REPORT_ID, JSON.stringify({
 		"ok": true,
 		"first_request": profile.get("last_refresh_request", {}),
 		"changed_request": changed_profile.get("last_refresh_request", {}),
+		"same_tile_no_op_request": no_op_profile.get("last_refresh_request", {}),
 		"destination_only_calls": int(profile.get("route_destination_only_action_path_calls", 0)),
 		"first_route_decision_misses": int(profile.get("selected_route_decision_surface_cache_misses", 0)),
+		"same_tile_action_cache_hits": int(no_op_profile.get("selected_route_destination_action_cache_hits", 0)),
 	})])
 	shell.queue_free()
 	get_tree().quit(0)
@@ -82,10 +114,13 @@ func _assert_incremental_route_request(profile: Dictionary, label: String) -> bo
 		var key := String(key_value)
 		if key.begins_with("refresh_phase_") and key.ends_with("_calls"):
 			phase_counts[key] = int(profile.get(key, 0))
-	if int(profile.get("refresh_phase_map_view_calls", 0)) <= 0:
+	if int(profile.get("refresh_request_validation_selected_route_changed_calls", 0)) != 1:
+		_fail("%s did not record exactly one targeted route-preview request." % label, profile)
+		return false
+	if int(profile.get("refresh_phase_map_view_calls", 0)) != 1:
 		_fail("%s did not run the map-view phase." % label, profile)
 		return false
-	if int(profile.get("refresh_phase_route_preview_calls", 0)) <= 0:
+	if int(profile.get("refresh_phase_route_preview_calls", 0)) != 1:
 		_fail("%s did not run the route-preview phase." % label, profile)
 		return false
 	for skipped_counter in [
@@ -108,6 +143,35 @@ func _assert_incremental_route_request(profile: Dictionary, label: String) -> bo
 			_fail("%s rebuilt an unrelated refresh phase: %s." % [label, skipped_counter], profile)
 			return false
 	return true
+
+func _assert_current_map_cue(shell: Node, snapshot: Dictionary, label: String) -> bool:
+	var checks := {
+		"cue_text_current": String(snapshot.get("map_cue_text", "")) == String(shell.call("_map_cue_text")),
+		"cue_tooltip_current": String(snapshot.get("map_cue_tooltip_text", "")) == String(shell.call("_map_cue_tooltip")),
+		"button_current": String(snapshot.get("primary_action_button_text", "")) == "%s [Enter]" % String(snapshot.get("primary_action", {}).get("label", "")),
+		"button_enabled": not bool(snapshot.get("primary_action_button_disabled", true)),
+	}
+	for value in checks.values():
+		if not bool(value):
+			_fail("%s did not refresh the current map cue/action button exactly." % label, {
+				"checks": checks,
+				"payload": _route_cue_payload(snapshot),
+			})
+			return false
+	return true
+
+func _route_cue_payload(snapshot: Dictionary) -> Dictionary:
+	return {
+		"selected_tile": snapshot.get("selected_tile", {}),
+		"primary_action_id": String(snapshot.get("primary_action_id", "")),
+		"primary_action": snapshot.get("primary_action", {}).duplicate(true),
+		"primary_action_button_text": String(snapshot.get("primary_action_button_text", "")),
+		"primary_action_button_disabled": bool(snapshot.get("primary_action_button_disabled", true)),
+		"primary_action_button_tooltip_text": String(snapshot.get("primary_action_button_tooltip_text", "")),
+		"selected_route_decision": snapshot.get("selected_route_decision", {}).duplicate(true),
+		"map_cue_text": String(snapshot.get("map_cue_text", "")),
+		"map_cue_tooltip_text": String(snapshot.get("map_cue_tooltip_text", "")),
+	}
 
 func _open_shell(session) -> Dictionary:
 	var active_session = SessionState.set_active_session(session)

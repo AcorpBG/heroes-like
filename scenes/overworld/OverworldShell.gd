@@ -132,6 +132,7 @@ const BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_MESSAGE := "Briefing shown, but auto
 const COMMAND_BRIEFING_STATE_KEY := "command_briefing"
 const GENERATED_OPENING_AUTOSAVE_FAILURE_MESSAGE := "Generated map is ready, but autosave failed. Press Save to protect this checkpoint."
 const GENERATED_OPENING_AUTOSAVE_SUCCESS_MESSAGE := "Generated opening checkpoint saved. Press Save again to use a manual slot."
+const GENERATED_COMPACT_MAP_CUE_TOOLTIP := "Map art and controls are loaded; save summary and detailed rails are deferred off routine generated-map frames."
 const REFRESH_PHASE_MAP_VIEW := "map_view"
 const REFRESH_PHASE_ACTION_RAILS := "action_rails"
 const REFRESH_PHASE_HERO_ACTIONS := "hero_actions"
@@ -2110,6 +2111,7 @@ func _refresh_with_request(request: Dictionary) -> void:
 	if _refresh_request_has_phase(request, REFRESH_PHASE_STATUS_SURFACES):
 		compact_generated = _refresh_status_surfaces(generated_surface_start)
 	elif _refresh_request_has_phase(request, REFRESH_PHASE_CONTEXT_ROUTE):
+		_refresh_map_cue_surface()
 		_refresh_context_tile_surface()
 		_validation_profile["last_route_tooltip_context_drawers"] = {
 			"status": "skipped",
@@ -2359,8 +2361,7 @@ func _refresh_status_surfaces(generated_surface_start: int) -> bool:
 	var resource_text := OverworldRules.describe_resources(_session)
 	_resource_label.tooltip_text = resource_text
 	_resource_label.text = resource_text
-	_map_cue_label.text = _map_cue_text()
-	_map_cue_label.tooltip_text = _map_cue_tooltip()
+	_refresh_map_cue_surface()
 	_debug_refresh_profile_end("refresh_header_objective_status_resources", header_profile_start)
 	var commitment_profile_start := _debug_refresh_profile_begin("refresh_commitment_rail")
 	_refresh_commitment_panel()
@@ -2436,6 +2437,15 @@ func _refresh_status_surfaces(generated_surface_start: int) -> bool:
 	_refresh_tooltip_context_drawer_surfaces()
 	return false
 
+func _refresh_map_cue_surface() -> void:
+	if _generated_initial_open_pending():
+		return
+	_map_cue_label.text = _map_cue_text()
+	if _use_generated_compact_refresh():
+		_map_cue_label.tooltip_text = GENERATED_COMPACT_MAP_CUE_TOOLTIP
+		return
+	_map_cue_label.tooltip_text = _map_cue_tooltip()
+
 func _refresh_context_tile_surface() -> void:
 	var context_tile_profile_start := _debug_refresh_profile_begin("refresh_context_tile_text")
 	var context_text := _cached_focus_tile_text()
@@ -2468,7 +2478,7 @@ func _refresh_generated_opening_surfaces() -> void:
 	_resource_label.text = resource_line
 	_resource_label.tooltip_text = resource_line
 	_map_cue_label.text = "Opening generated map" if opening_pending else _map_cue_text()
-	_map_cue_label.tooltip_text = "Map art and controls are loaded; save summary and detailed rails are deferred off routine generated-map frames."
+	_map_cue_label.tooltip_text = GENERATED_COMPACT_MAP_CUE_TOOLTIP
 	_commitment_label.text = ""
 	_commitment_label.tooltip_text = ""
 	_set_rail_text(_hero_label, "%s | %s" % [hero_name, move_line], "%s | %s" % [hero_name, move_line], 2)
@@ -5572,7 +5582,6 @@ func _manual_play_acceptance_cue(action: Dictionary) -> String:
 func _map_cue_tooltip() -> String:
 	var feedback := _action_feedback_tooltip()
 	var action := _current_primary_action()
-	var route_tooltip := _route_decision_tooltip(_selected_route_decision_surface())
 	var pan_hint := ""
 	if _map_view != null and _map_view.has_method("validation_view_metrics"):
 		var metrics: Dictionary = _map_view.call("validation_view_metrics")
@@ -5581,6 +5590,13 @@ func _map_cue_tooltip() -> String:
 	if feedback != "":
 		var next_hint := " Select another destination or press Enter/Space for the current primary order." if not action.is_empty() else " Select a destination or open a command drawer for the next order."
 		return "%s.%s%s" % [feedback, next_hint, pan_hint]
+	if bool(action.get("compact_interaction_destination_fast_path", false)) or bool(action.get("simple_route_ui_fast_path", false)):
+		var compact_route_tooltip := _selected_route_simple_tooltip()
+		if compact_route_tooltip == "":
+			compact_route_tooltip = String(action.get("summary", "")).strip_edges()
+		var compact_commit_hint := " Try %s with Enter or Space now." % String(action.get("label", "the primary order")) if not action.is_empty() and not bool(action.get("disabled", false)) else ""
+		return "%s%s%s" % [compact_route_tooltip, compact_commit_hint, pan_hint]
+	var route_tooltip := _route_decision_tooltip(_selected_route_decision_surface())
 	if route_tooltip != "":
 		var commit_hint := " Try %s with Enter or Space now." % String(action.get("label", "the primary order")) if not action.is_empty() and not bool(action.get("disabled", false)) else ""
 		return "%s%s%s" % [route_tooltip, commit_hint, pan_hint]
@@ -5848,7 +5864,7 @@ func _field_readiness_surface(base_event_surface: Dictionary = {}) -> Dictionary
 	if next_step == "":
 		next_step = "Select the next destination or end the turn when field orders are spent."
 	var simple_destination := _selected_route_simple_destination_surface()
-	if not simple_destination.is_empty():
+	if not simple_destination.is_empty() and not _is_selected_owned_town_visit_target():
 		return _field_readiness_simple_route_surface(simple_destination, progress_line, next_step, movement_line)
 	var primary_action := _current_primary_action()
 	var primary_line := "Primary order: select a visible destination."
