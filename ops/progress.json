@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the bounded strategic-AI phase target descriptor enumeration reuse slice. Exact detached discovery is reused only within one planner invocation or best-open-spawn-point sweep; origin-sensitive projection remains fresh. Focused, ordinal-100, compatibility, static, Linux export/startup, and Windows export/fresh-Wine startup gates passed with bounded claims.",
+  "currentNotes": "Completed the bounded strategic-AI known-world target catalog projection reuse slice. Focused runtime proves exact independent parity, lifecycle, authority, and per-refresh enumeration/projection counts. Ordinal 100 retains signature 6e893020 and exact behavior while combined known-world time falls from 26861 to 7463 ms; compatibility, static, editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass with bounded claims.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "strategic-ai-phase-target-descriptor-enumeration-reuse-10184",
-  "currentSliceId": "strategic-ai-phase-target-descriptor-enumeration-reuse-10184",
-  "currentSliceNotes": "Exact ordered detached descriptors now preserve all ten discovery families and seen timing while route, guard, distance, valuation, priority, reasons, and final payload remain fresh per origin. Ordinal-100 behavior is exact and descriptor-bearing spawn sweeps eliminate eight of thirteen repeated enumerations. Select the next tracker-approved slice; broader strategic-AI breadth and release readiness remain open.",
+  "currentSlice": "strategic-ai-known-world-target-catalog-projection-reuse-10184",
+  "currentSliceId": "strategic-ai-known-world-target-catalog-projection-reuse-10184",
+  "currentSliceNotes": "Exact detached sight-source and eligible-target surfaces are reused only within one known-world refresh; per-source projection and every later refresh remain fresh. Select the next tracker-approved slice; broader strategic-AI breadth and overall release readiness remain open.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Strategic AI Phase Target Descriptor Enumeration Reuse",
-  "currentSliceUpdatedAt": "2026-08-13T08:26:50Z",
+  "currentSliceTitle": "Strategic AI Known-World Target Catalog Projection Reuse",
+  "currentSliceUpdatedAt": "2026-08-13T09:24:52Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19849,6 +19849,55 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "id": "strategic-ai-known-world-target-catalog-projection-reuse-10184",
+      "title": "Strategic AI Known-World Target Catalog Projection Reuse",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/strategic-ai-foundation.md"],
+      "purpose": "Reuse exact detached sight-source and eligible-target discovery only within one known-world refresh while preserving fresh source-specific visibility, distance, priority, and memory projection.",
+      "implementationTargets": ["scripts/core/EnemyAdventureRules.gd", "tests/ai_known_world_memory_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "testOwners": ["tests/ai_known_world_memory_report.gd", "tests/strategic_ai_long_run_seed_matrix_report.gd", "tests/validate_repo.py"],
+      "baseline": {
+        "head": "64b22cb7",
+        "ordinal_100_row_signature": "6e893020",
+        "row_runtime_msec": 205433,
+        "max_turn_runtime_msec": 8992,
+        "turns_completed": 36,
+        "final_day": 37,
+        "final_scenario_status": "defeat",
+        "enemy_activity_event_count": 172,
+        "target_assignment_count": 28,
+        "stalled_turn_count": 1,
+        "target_integrity_violation_count": 0,
+        "unreachable_active_target_total": 0,
+        "known_world_memory_msec": 13549,
+        "deferred_post_move_memory_msec": 13312,
+        "combined_known_world_refresh_msec": 26861
+      },
+      "completionCriteria": [
+        "EnemyAdventureRules builds exact detached ordered sight-source and eligible-target surfaces once per refresh for towns, resources, artifacts, and encounters while preserving current eligibility, labels, priorities, family/source order, and content authority",
+        "Every source projection remains fresh for radius, Manhattan distance, source identity and metadata, and preserves best-by-target minimum-distance then priority tie behavior, normalization, expiry, merge, and enemy-state sync",
+        "Reuse is bounded to one refresh; source movement/removal, day expiry, target mutation, post-move refresh, and every next invocation rebuild exact current state without a day, session, global, faction, or cross-refresh cache",
+        "An independent current-materializer control proves whole ordered record parity across overlapping sources, ties, every family, collected/resolved/pressure-host/contestability exclusions, hero sightings, and empty cases, with detached mutation and save authority exact",
+        "Focused counters prove one catalog enumeration serves multiple source projections without changing memory, target selection, public events, or session authority",
+        "The ordinal-100 Medium row preserves signature 6e893020, event order and counts, tasks, day-37 defeat, world authority, battle outcomes, integrity, and unreachable-target authority while combined known-world refresh time is materially below 26861 ms and row/max-turn runtime is non-regressed",
+        "Known-world, live target selection, hero hunt, neutral-town expansion, multi-scenario delivery, regroup/retreat, core, repository validator, editor parse, JSON, Python, diff, official Linux export/startup, and official Windows/fresh-Wine export/startup gates pass"
+      ],
+      "nonGoals": [
+        "sight-radius, target-eligibility, label, priority, tie-order, visibility/fog, memory-schema, expiry, merge-policy, target-selection, route, movement, combat, economy, content, balance, save-schema, or Native RMG changes",
+        "cache reuse across refreshes, turns, days, sessions, factions, launches, or live mutations",
+        "packaged strategic-AI interaction, controller, AT-SPI/UIA, native-hardware, signing/publication, broad strategic-AI completion, full performance completion, whole-game, or overall release-readiness claims"
+      ],
+      "createdAt": "2026-08-13T08:35:31Z",
+      "startedAt": "2026-08-13T08:35:31Z",
+      "updatedAt": "2026-08-13T09:24:52Z",
+      "completedAt": "2026-08-13T09:24:52Z",
+      "notes": "Completed invocation-local known-world source/catalog reuse while retaining fresh source-specific projection and fresh later invocations. Focused runtime proves exact independent legacy parity across ordered families, ties and exclusions; raw returned surfaces are detached; movement, removal, expiry, memory, enemy-state, save authority, and exact per-refresh counters pass. Exact-current ordinal 100 retains signature 6e893020, day-37 defeat after 36 turns, event/task/world/battle/integrity authority, and lowers combined known-world time from 26861 to 7463 ms with row runtime 186149 ms and maximum-turn runtime 8472 ms. Compatibility, core, repository, Python, JSON, diff, editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. No packaged strategic-AI interaction, controller, AT-SPI/UIA, native-hardware, signing/publication, whole-game, or whole-release claim is made.",
+      "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice; broader strategic-AI breadth, faction balance, accessibility certification, content/performance, signing/publication, Native RMG parity, native Windows certification, and overall release readiness remain open."
+    },
     {
       "id": "ux-map-editor-responsive-top-bar-containment-10184",
       "title": "Map Editor Responsive Top Bar Containment",
@@ -79027,7 +79076,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "strategic_ai_phase_target_descriptor_enumeration_reuse_completed",
+  "result": "strategic_ai_known_world_target_catalog_projection_reuse_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -79128,9 +79177,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The strategic-AI phase target descriptor enumeration reuse slice is complete. Exact ordered discovery is invocation-local, origin projection remains fresh, ordinal-100 behavior is unchanged, repeated descriptor enumeration is materially reduced, and focused, compatibility, static, Linux, and Windows startup gates pass. Select the next tracker-approved slice; broader strategic-AI breadth and overall release readiness remain open.",
+  "summary": "The strategic-AI known-world target catalog projection reuse slice is complete. Exact detached discovery is reused only within one refresh while every source projection and later refresh remain fresh; focused parity, ordinal-100 materiality, compatibility, static, Linux, and Windows startup gates pass. Select the next tracker-approved slice; broader strategic-AI breadth and overall release readiness remain open.",
   "taskId": "10184",
-  "updatedAt": "2026-08-13T08:26:50Z",
+  "updatedAt": "2026-08-13T09:24:52Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

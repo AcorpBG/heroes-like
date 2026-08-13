@@ -14,6 +14,9 @@ func _run() -> void:
 	var preservation_case := _known_world_memory_survives_normalization()
 	if preservation_case.is_empty():
 		return
+	var catalog_projection_case := _known_world_target_catalog_projection_parity()
+	if catalog_projection_case.is_empty():
+		return
 	var sighting_case := _hero_targets_require_ai_sighting()
 	if sighting_case.is_empty():
 		return
@@ -62,7 +65,7 @@ func _run() -> void:
 		"schema_status": "strategic_ai_known_world_memory_live_behavior",
 		"behavior_policy": "enemy_pressure_uses_current_or_recent_ai_sightings_known_world_memory_post_move_scouting_and_faction_scoped_player_hero_route_occupancy_for_movement_and_assignment",
 		"save_policy": "known_world_memory_live_persist_no_save_migration",
-		"cases": [preservation_case, sighting_case, empty_fallback_case, nonhero_case, delivery_case, ordinary_scouting_case, neutral_town_case, persistent_exploration_case, exclusive_frontier_case, rebuild_relaunch_case, exploration_case, post_move_scouting_case, hero_route_occupancy_case, faction_scoped_route_case, assignment_route_case],
+		"cases": [preservation_case, catalog_projection_case, sighting_case, empty_fallback_case, nonhero_case, delivery_case, ordinary_scouting_case, neutral_town_case, persistent_exploration_case, exclusive_frontier_case, rebuild_relaunch_case, exploration_case, post_move_scouting_case, hero_route_occupancy_case, faction_scoped_route_case, assignment_route_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
@@ -114,6 +117,160 @@ func _known_world_memory_survives_normalization() -> Dictionary:
 		"scouted_target_count": scouted.size(),
 		"hero_sighting_count": sightings.size(),
 		"hero_sighting_position": {"x": int(sightings[0].get("x", -1)), "y": int(sightings[0].get("y", -1))},
+	}
+
+func _known_world_target_catalog_projection_parity() -> Dictionary:
+	var session = _base_session()
+	var config := _ordinary_target_config()
+	_configure_known_world_catalog_fixture(session)
+	var save_version_before := int(SessionStateStore.SAVE_VERSION)
+	var initial_authority := _known_world_nonmemory_authority(session)
+	var initial_control := _legacy_known_world_projection_control(session, config, MIRECLAW)
+	var initial_current := _current_known_world_projection_snapshot(session, config, MIRECLAW)
+	if initial_current != initial_control:
+		_fail("Known-world catalog/projection differs from the independent legacy control at initial refresh: current=%s control=%s" % [JSON.stringify(initial_current), JSON.stringify(initial_control)])
+		return {}
+	var expected_source_ids := [
+		"catalog_enemy_town_a",
+		"catalog_enemy_town_b",
+		"catalog_commander_source",
+		"catalog_resource_source",
+	]
+	var expected_catalog_keys := [
+		"town:catalog_player_town",
+		"town:catalog_neutral_town",
+		"resource:catalog_resource_target",
+		"artifact:catalog_artifact_target",
+		"encounter:catalog_encounter_target",
+	]
+	if _known_world_source_ids(initial_current.get("sources", [])) != expected_source_ids:
+		_fail("Known-world sight source order changed: %s" % JSON.stringify(initial_current.get("sources", [])))
+		return {}
+	if _known_world_catalog_keys(initial_current.get("catalog", [])) != expected_catalog_keys:
+		_fail("Known-world target catalog family/order changed: %s" % JSON.stringify(initial_current.get("catalog", [])))
+		return {}
+	var excluded_catalog_keys := [
+		"town:catalog_inactive_town",
+		"resource:catalog_resource_source",
+		"resource:catalog_resource_collected",
+		"artifact:catalog_artifact_collected",
+		"encounter:catalog_commander_source",
+		"encounter:catalog_encounter_resolved",
+	]
+	for excluded_key in excluded_catalog_keys:
+		if excluded_key in _known_world_catalog_keys(initial_current.get("catalog", [])):
+			_fail("Known-world catalog admitted an excluded inactive/controlled/collected/pressure/resolved target: %s" % excluded_key)
+			return {}
+	if _known_world_record_source(initial_current.get("hero_records", []), "hero_lyra") != "catalog_enemy_town_a":
+		_fail("Equal-distance hero source tie no longer preserves the first source.")
+		return {}
+	if _known_world_record_source(initial_current.get("target_records", []), "catalog_player_town") != "catalog_enemy_town_a":
+		_fail("Equal-distance/equal-priority target tie no longer preserves the first source.")
+		return {}
+	if not _known_world_target_source_tie_exact(initial_current.get("visible_by_source", []), "catalog_player_town"):
+		_fail("Known-world overlap fixture did not establish the exact equal-distance/equal-priority source tie.")
+		return {}
+
+	var fixture_authority_before_detach: Dictionary = session.to_dict()
+	var raw_detached_sources: Array = EnemyAdventureRules._enemy_hero_sighting_sources(session, config, MIRECLAW)
+	var raw_detached_catalog: Array = EnemyAdventureRules._enemy_visible_target_catalog(session, config, MIRECLAW)
+	if raw_detached_sources.is_empty() or raw_detached_sources != initial_control.get("sources", []):
+		_fail("Raw known-world source detach surface was empty or differed from the independent control.")
+		return {}
+	if raw_detached_catalog.is_empty() or raw_detached_catalog != initial_control.get("catalog", []):
+		_fail("Raw known-world catalog detach surface was empty or differed from the independent control.")
+		return {}
+	raw_detached_sources[0]["x"] = 99
+	raw_detached_sources[0]["radius"] = 0
+	raw_detached_catalog[0]["target_label"] = "mutated detached catalog"
+	raw_detached_catalog[0]["target_tile"] = Vector2i(99, 99)
+	if session.to_dict() != fixture_authority_before_detach:
+		_fail("Detached known-world source/catalog mutation aliased the live session.")
+		return {}
+	if _current_known_world_projection_snapshot(session, config, MIRECLAW) != initial_control:
+		_fail("Known-world source/catalog mutation leaked into a fresh invocation.")
+		return {}
+
+	var expected_memory := _legacy_known_world_expected_memory_control(
+		{},
+		initial_control.get("hero_records", []),
+		initial_control.get("target_records", []),
+		int(session.day)
+	)
+	var initial_refresh := EnemyAdventureRules.refresh_enemy_known_world_memory(session, config, _enemy_state(session))
+	if not _known_world_refresh_exact(session, initial_refresh, expected_memory, initial_authority, initial_control):
+		return {}
+
+	_move_known_world_catalog_fixture(session)
+	var moved_authority := _known_world_nonmemory_authority(session)
+	var moved_control := _legacy_known_world_projection_control(session, config, MIRECLAW)
+	var moved_current := _current_known_world_projection_snapshot(session, config, MIRECLAW)
+	if moved_current != moved_control or moved_current == initial_control:
+		_fail("Known-world live source/target movement did not rebuild the exact independent projection: current=%s control=%s" % [JSON.stringify(moved_current), JSON.stringify(moved_control)])
+		return {}
+	expected_memory = _legacy_known_world_expected_memory_control(
+		expected_memory,
+		moved_control.get("hero_records", []),
+		moved_control.get("target_records", []),
+		int(session.day)
+	)
+	var moved_refresh := EnemyAdventureRules.refresh_enemy_known_world_memory(session, config, _enemy_state(session))
+	if not _known_world_refresh_exact(session, moved_refresh, expected_memory, moved_authority, moved_control):
+		return {}
+
+	_remove_known_world_catalog_fixture_entries(session)
+	var removed_authority := _known_world_nonmemory_authority(session)
+	var removed_control := _legacy_known_world_projection_control(session, config, MIRECLAW)
+	var removed_current := _current_known_world_projection_snapshot(session, config, MIRECLAW)
+	if removed_current != removed_control:
+		_fail("Known-world source/catalog removal differs from the independent control: current=%s control=%s" % [JSON.stringify(removed_current), JSON.stringify(removed_control)])
+		return {}
+	if "catalog_enemy_town_a" in _known_world_source_ids(removed_current.get("sources", [])) or "town:catalog_neutral_town" in _known_world_catalog_keys(removed_current.get("catalog", [])):
+		_fail("Known-world removed source/catalog entries survived the next invocation.")
+		return {}
+	expected_memory = _legacy_known_world_expected_memory_control(
+		expected_memory,
+		removed_control.get("hero_records", []),
+		removed_control.get("target_records", []),
+		int(session.day)
+	)
+	var removed_refresh := EnemyAdventureRules.refresh_enemy_known_world_memory(session, config, _enemy_state(session))
+	if not _known_world_refresh_exact(session, removed_refresh, expected_memory, removed_authority, removed_control):
+		return {}
+
+	_disable_known_world_catalog_sources(session)
+	session.day = int(session.day) + 8
+	var expiry_authority := _known_world_nonmemory_authority(session)
+	var expiry_control := _legacy_known_world_projection_control(session, config, MIRECLAW)
+	expected_memory = _legacy_known_world_expected_memory_control(
+		expected_memory,
+		expiry_control.get("hero_records", []),
+		expiry_control.get("target_records", []),
+		int(session.day)
+	)
+	var expiry_refresh := EnemyAdventureRules.refresh_enemy_known_world_memory(session, config, _enemy_state(session))
+	if not expected_memory.is_empty() or not _known_world_refresh_exact(session, expiry_refresh, expected_memory, expiry_authority, expiry_control):
+		if not expected_memory.is_empty():
+			_fail("Known-world independent expiry control retained stale records: %s" % JSON.stringify(expected_memory))
+		return {}
+	if int(SessionStateStore.SAVE_VERSION) != save_version_before:
+		_fail("Known-world catalog/projection reuse changed the save version.")
+		return {}
+	return {
+		"case_id": "known_world_target_catalog_projection_parity",
+		"source_order": expected_source_ids,
+		"catalog_order": expected_catalog_keys,
+		"excluded_catalog_keys": excluded_catalog_keys,
+		"initial_profile": initial_refresh.get("target_catalog_profile", {}).duplicate(true),
+		"moved_profile": moved_refresh.get("target_catalog_profile", {}).duplicate(true),
+		"removed_profile": removed_refresh.get("target_catalog_profile", {}).duplicate(true),
+		"expiry_profile": expiry_refresh.get("target_catalog_profile", {}).duplicate(true),
+		"deep_detach_exact": true,
+		"movement_rebuild_exact": true,
+		"removal_rebuild_exact": true,
+		"day_expiry_exact": true,
+		"enemy_state_authority_exact": true,
+		"save_version_exact": true,
 	}
 
 func _hero_targets_require_ai_sighting() -> Dictionary:
@@ -1256,6 +1413,695 @@ func _update_enemy_state(session, updated_state: Dictionary) -> void:
 			session.overworld["enemy_states"] = states
 			return
 	_fail("Could not update Mireclaw enemy state.")
+
+func _configure_known_world_catalog_fixture(session) -> void:
+	_set_primary_hero_position(session, 6, 4)
+	session.overworld["towns"] = [
+		{
+			"placement_id": "catalog_enemy_town_a",
+			"town_id": "town_duskfen",
+			"name": "Catalog Enemy Town A",
+			"x": 4,
+			"y": 4,
+			"owner": "enemy",
+			"controlling_faction_id": MIRECLAW,
+			"garrison": [],
+			"available_recruits": {},
+			"buildings": [],
+		},
+		{
+			"placement_id": "catalog_enemy_town_b",
+			"town_id": "town_duskfen",
+			"name": "Catalog Enemy Town B",
+			"x": 8,
+			"y": 4,
+			"owner": "enemy",
+			"controlling_faction_id": MIRECLAW,
+			"garrison": [],
+			"available_recruits": {},
+			"buildings": [],
+		},
+		{
+			"placement_id": "catalog_player_town",
+			"town_id": "town_riverwatch",
+			"name": "Catalog Player Town",
+			"x": 6,
+			"y": 4,
+			"owner": "player",
+			"controlling_faction_id": "player",
+			"garrison": [],
+			"available_recruits": {},
+			"buildings": [],
+		},
+		{
+			"placement_id": "catalog_neutral_town",
+			"town_id": "town_riverwatch",
+			"name": "Catalog Neutral Town",
+			"x": 6,
+			"y": 5,
+			"owner": "neutral",
+			"controlling_faction_id": "",
+			"garrison": [],
+			"available_recruits": {},
+			"buildings": [],
+		},
+		{
+			"placement_id": "catalog_inactive_town",
+			"town_id": "town_riverwatch",
+			"name": "Catalog Inactive Town",
+			"x": 6,
+			"y": 6,
+			"owner": "inactive",
+			"controlling_faction_id": "",
+			"garrison": [],
+			"available_recruits": {},
+			"buildings": [],
+		},
+	]
+	session.overworld["resource_nodes"] = [
+		{
+			"placement_id": "catalog_resource_target",
+			"site_id": "site_wood_wagon",
+			"x": 6,
+			"y": 3,
+			"collected": true,
+			"collected_by_faction_id": "player",
+		},
+		{
+			"placement_id": "catalog_resource_source",
+			"site_id": "site_ember_signal_post",
+			"x": 6,
+			"y": 7,
+			"collected": true,
+			"collected_by_faction_id": MIRECLAW,
+		},
+		{
+			"placement_id": "catalog_resource_collected",
+			"site_id": "site_waystone_cache",
+			"x": 5,
+			"y": 5,
+			"collected": true,
+			"collected_by_faction_id": "player",
+		},
+	]
+	session.overworld["artifact_nodes"] = [
+		{
+			"placement_id": "catalog_artifact_target",
+			"artifact_id": "artifact_trailsinger_boots",
+			"x": 5,
+			"y": 4,
+			"collected": false,
+		},
+		{
+			"placement_id": "catalog_artifact_collected",
+			"artifact_id": "artifact_quarry_tally_rod",
+			"x": 7,
+			"y": 4,
+			"collected": true,
+		},
+	]
+	session.overworld["encounters"] = [
+		{
+			"placement_id": "catalog_commander_source",
+			"encounter_id": "encounter_mire_raid",
+			"label": "Catalog Commander Source",
+			"x": 6,
+			"y": 2,
+			"spawned_by_faction_id": MIRECLAW,
+			"difficulty": "pressure",
+			"days_active": 0,
+		},
+		{
+			"placement_id": "catalog_encounter_target",
+			"encounter_id": "encounter_ghoul_grove",
+			"label": "Catalog Encounter Target",
+			"x": 6,
+			"y": 6,
+		},
+		{
+			"placement_id": "catalog_encounter_resolved",
+			"encounter_id": "encounter_hollow_mire",
+			"label": "Catalog Resolved Encounter",
+			"x": 7,
+			"y": 5,
+		},
+	]
+	session.overworld["resolved_encounters"] = ["catalog_encounter_resolved"]
+	_patch_enemy_memory(session, {})
+
+func _move_known_world_catalog_fixture(session) -> void:
+	var towns: Array = session.overworld.get("towns", [])
+	for index in range(towns.size()):
+		if not (towns[index] is Dictionary):
+			continue
+		var town: Dictionary = towns[index]
+		if String(town.get("placement_id", "")) == "catalog_enemy_town_a":
+			town["x"] = 0
+			town["y"] = 0
+			towns[index] = town
+	session.overworld["towns"] = towns
+	var resources: Array = session.overworld.get("resource_nodes", [])
+	for index in range(resources.size()):
+		if not (resources[index] is Dictionary):
+			continue
+		var node: Dictionary = resources[index]
+		if String(node.get("placement_id", "")) == "catalog_resource_target":
+			node["x"] = 8
+			node["y"] = 3
+			resources[index] = node
+	session.overworld["resource_nodes"] = resources
+
+func _remove_known_world_catalog_fixture_entries(session) -> void:
+	var kept_towns := []
+	for town_value in session.overworld.get("towns", []):
+		if town_value is Dictionary and String(town_value.get("placement_id", "")) in ["catalog_enemy_town_a", "catalog_neutral_town"]:
+			continue
+		kept_towns.append(town_value)
+	session.overworld["towns"] = kept_towns
+
+func _disable_known_world_catalog_sources(session) -> void:
+	var towns: Array = session.overworld.get("towns", [])
+	for index in range(towns.size()):
+		if not (towns[index] is Dictionary):
+			continue
+		var town: Dictionary = towns[index]
+		if String(town.get("owner", "")) == "enemy":
+			town["owner"] = "inactive"
+			town["controlling_faction_id"] = ""
+			towns[index] = town
+	session.overworld["towns"] = towns
+	var resources: Array = session.overworld.get("resource_nodes", [])
+	for index in range(resources.size()):
+		if not (resources[index] is Dictionary):
+			continue
+		var node: Dictionary = resources[index]
+		if String(node.get("placement_id", "")) == "catalog_resource_source":
+			node["collected_by_faction_id"] = "player"
+			resources[index] = node
+	session.overworld["resource_nodes"] = resources
+	var encounters := []
+	for encounter_value in session.overworld.get("encounters", []):
+		if encounter_value is Dictionary and String(encounter_value.get("placement_id", "")) == "catalog_commander_source":
+			continue
+		encounters.append(encounter_value)
+	session.overworld["encounters"] = encounters
+
+func _known_world_nonmemory_authority(session) -> Dictionary:
+	var payload: Dictionary = session.to_dict()
+	var overworld: Dictionary = payload.get("overworld", {}) if payload.get("overworld", {}) is Dictionary else {}
+	var states: Array = overworld.get("enemy_states", []) if overworld.get("enemy_states", []) is Array else []
+	for index in range(states.size()):
+		if not (states[index] is Dictionary) or String(states[index].get("faction_id", "")) != MIRECLAW:
+			continue
+		var state: Dictionary = states[index]
+		state.erase("known_world_memory")
+		states[index] = state
+	overworld["enemy_states"] = states
+	payload["overworld"] = overworld
+	return payload
+
+func _current_known_world_projection_snapshot(session, config: Dictionary, faction_id: String) -> Dictionary:
+	var sources: Array = EnemyAdventureRules._enemy_hero_sighting_sources(session, config, faction_id).duplicate(true)
+	var catalog: Array = EnemyAdventureRules._enemy_visible_target_catalog(session, config, faction_id).duplicate(true)
+	var visible_by_source := []
+	for source_value in sources:
+		if not (source_value is Dictionary):
+			continue
+		visible_by_source.append({
+			"source_id": String(source_value.get("id", "")),
+			"records": EnemyAdventureRules._current_enemy_visible_target_records_for_source(session, config, faction_id, source_value, catalog).duplicate(true),
+		})
+	return {
+		"sources": sources,
+		"catalog": catalog,
+		"visible_by_source": visible_by_source,
+		"hero_records": EnemyAdventureRules._current_enemy_player_hero_sighting_records(session, config, faction_id, sources).duplicate(true),
+		"target_records": EnemyAdventureRules._current_enemy_scouted_target_records(session, config, faction_id, sources, catalog).duplicate(true),
+	}
+
+func _known_world_source_ids(sources_value: Variant) -> Array:
+	var ids := []
+	if not (sources_value is Array):
+		return ids
+	for source_value in sources_value:
+		if source_value is Dictionary:
+			ids.append(String(source_value.get("id", "")))
+	return ids
+
+func _known_world_catalog_keys(catalog_value: Variant) -> Array:
+	var keys := []
+	if not (catalog_value is Array):
+		return keys
+	for target_value in catalog_value:
+		if target_value is Dictionary:
+			keys.append("%s:%s" % [String(target_value.get("target_kind", "")), String(target_value.get("target_id", ""))])
+	return keys
+
+func _known_world_record_source(records_value: Variant, target_id: String) -> String:
+	if not (records_value is Array):
+		return ""
+	for record_value in records_value:
+		if not (record_value is Dictionary):
+			continue
+		if String(record_value.get("target_id", record_value.get("hero_id", ""))) == target_id:
+			return String(record_value.get("source_id", ""))
+	return ""
+
+func _known_world_target_source_tie_exact(visible_value: Variant, target_id: String) -> bool:
+	if not (visible_value is Array):
+		return false
+	var tied_rows := []
+	for row_value in visible_value:
+		if not (row_value is Dictionary) or String(row_value.get("source_id", "")) not in ["catalog_enemy_town_a", "catalog_enemy_town_b"]:
+			continue
+		for record_value in row_value.get("records", []):
+			if record_value is Dictionary and String(record_value.get("target_id", "")) == target_id:
+				tied_rows.append(record_value)
+	return (
+		tied_rows.size() == 2
+		and int(tied_rows[0].get("_source_distance", -1)) == 2
+		and int(tied_rows[1].get("_source_distance", -1)) == 2
+		and int(tied_rows[0].get("_source_priority", -1)) == int(tied_rows[1].get("_source_priority", -2))
+	)
+
+func _known_world_refresh_exact(session, refresh_result: Dictionary, expected_memory: Dictionary, expected_authority: Dictionary, control: Dictionary) -> bool:
+	var updated_state: Dictionary = refresh_result.get("state", {}) if refresh_result.get("state", {}) is Dictionary else {}
+	var actual_memory: Dictionary = updated_state.get("known_world_memory", {}) if updated_state.get("known_world_memory", {}) is Dictionary else {}
+	var live_state := _enemy_state(session)
+	var live_memory: Dictionary = live_state.get("known_world_memory", {}) if live_state.get("known_world_memory", {}) is Dictionary else {}
+	var profile: Dictionary = refresh_result.get("target_catalog_profile", {}) if refresh_result.get("target_catalog_profile", {}) is Dictionary else {}
+	var source_count: int = control.get("sources", []).size()
+	var catalog_count: int = control.get("catalog", []).size()
+	var hero_input_count := _legacy_known_world_player_hero_input_count_control(session)
+	var exact_checks := {
+		"updated_memory_exact": actual_memory == expected_memory,
+		"live_memory_exact": live_memory == expected_memory,
+		"returned_state_exact": updated_state == live_state,
+		"nonmemory_authority_exact": _known_world_nonmemory_authority(session) == expected_authority,
+		"sighting_count_exact": int(refresh_result.get("sighting_count", -1)) == control.get("hero_records", []).size(),
+		"scouted_target_count_exact": int(refresh_result.get("scouted_target_count", -1)) == control.get("target_records", []).size(),
+		"source_enumeration_once": int(profile.get("sight_source_enumeration_count", 0)) == 1,
+		"catalog_enumeration_once": int(profile.get("target_catalog_enumeration_count", 0)) == 1,
+		"source_count_exact": int(profile.get("sight_source_count", -1)) == source_count,
+		"catalog_count_exact": int(profile.get("target_catalog_count", -1)) == catalog_count,
+		"hero_projection_fresh_exact": int(profile.get("hero_source_projection_count", 0)) == source_count,
+		"hero_comparison_fresh_exact": int(profile.get("hero_source_comparison_count", 0)) == source_count * hero_input_count,
+		"target_projection_fresh_exact": int(profile.get("target_source_projection_count", 0)) == source_count,
+		"catalog_projection_fresh_exact": int(profile.get("target_catalog_projection_count", 0)) == source_count * catalog_count,
+	}
+	for check_name in exact_checks.keys():
+		if bool(exact_checks.get(check_name, false)):
+			continue
+		_fail("Known-world refresh exact check failed %s: expected_memory=%s actual_memory=%s profile=%s" % [check_name, JSON.stringify(expected_memory), JSON.stringify(actual_memory), JSON.stringify(profile)])
+		return false
+	return true
+
+func _legacy_known_world_projection_control(session, config: Dictionary, faction_id: String) -> Dictionary:
+	var sources := _legacy_known_world_sight_sources_control(session, config, faction_id)
+	var catalog := _legacy_known_world_target_catalog_control(session, config, faction_id)
+	var visible_by_source := []
+	for source_value in sources:
+		if not (source_value is Dictionary):
+			continue
+		visible_by_source.append({
+			"source_id": String(source_value.get("id", "")),
+			"records": _legacy_known_world_visible_records_for_source_control(session, config, faction_id, source_value),
+		})
+	return {
+		"sources": sources.duplicate(true),
+		"catalog": catalog.duplicate(true),
+		"visible_by_source": visible_by_source,
+		"hero_records": _legacy_known_world_hero_records_control(session, sources),
+		"target_records": _legacy_known_world_target_records_control(session, config, faction_id, sources),
+	}
+
+func _legacy_known_world_sight_sources_control(session, config: Dictionary, faction_id: String) -> Array:
+	var sources := []
+	if session == null or faction_id == "":
+		return sources
+	for town_value in session.overworld.get("towns", []):
+		if not (town_value is Dictionary):
+			continue
+		var town: Dictionary = town_value
+		if String(town.get("owner", "neutral")) != "enemy" or EnemyAdventureRules._town_faction_id(town) != faction_id:
+			continue
+		var radius := EnemyAdventureRules.AI_HERO_TOWN_SIGHT_RADIUS
+		if OverworldRules.town_strategic_role(town) in ["capital", "stronghold"]:
+			radius += 1
+		sources.append({
+			"kind": "town",
+			"id": String(town.get("placement_id", "")),
+			"x": int(town.get("x", 0)),
+			"y": int(town.get("y", 0)),
+			"radius": radius,
+		})
+	var resolved_encounters = session.overworld.get("resolved_encounters", [])
+	for encounter_value in session.overworld.get("encounters", []):
+		if not _legacy_known_world_active_raid_control(encounter_value, faction_id, resolved_encounters):
+			continue
+		var encounter: Dictionary = encounter_value
+		sources.append({
+			"kind": "commander",
+			"id": String(encounter.get("placement_id", "")),
+			"x": int(encounter.get("x", 0)),
+			"y": int(encounter.get("y", 0)),
+			"radius": EnemyAdventureRules.AI_HERO_RAID_SIGHT_RADIUS,
+		})
+	for node_value in session.overworld.get("resource_nodes", []):
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		if String(node.get("collected_by_faction_id", "")) != faction_id:
+			continue
+		var site: Dictionary = ContentService.get_resource_site(String(node.get("site_id", "")))
+		var site_radius: int = max(0, int(site.get("vision_radius", 0)))
+		if site_radius <= 0:
+			continue
+		sources.append({
+			"kind": "resource_site",
+			"id": String(node.get("placement_id", "")),
+			"x": int(node.get("x", 0)),
+			"y": int(node.get("y", 0)),
+			"radius": max(EnemyAdventureRules.AI_HERO_RESOURCE_SITE_MIN_SIGHT_RADIUS, site_radius),
+		})
+	return sources
+
+func _legacy_known_world_active_raid_control(encounter_value: Variant, faction_id: String, resolved_encounters: Variant) -> bool:
+	if not (encounter_value is Dictionary):
+		return false
+	var encounter: Dictionary = encounter_value
+	if bool(encounter.get("raid_retired_to_rebuild", false)):
+		return false
+	var raid_faction := String(encounter.get("spawned_by_faction_id", ""))
+	if faction_id == "":
+		if raid_faction == "":
+			return false
+	elif raid_faction != faction_id:
+		return false
+	var placement_id := String(encounter.get("placement_id", ""))
+	return not (resolved_encounters is Array and placement_id in resolved_encounters)
+
+func _legacy_known_world_target_catalog_control(session, config: Dictionary, faction_id: String) -> Array:
+	var catalog := []
+	if session == null or faction_id == "":
+		return catalog
+	for town_value in session.overworld.get("towns", []):
+		if not (town_value is Dictionary):
+			continue
+		var town: Dictionary = town_value
+		var owner := String(town.get("owner", "neutral"))
+		if owner not in ["player", "neutral"]:
+			continue
+		catalog.append({
+			"target_kind": "town",
+			"target_id": String(town.get("placement_id", "")),
+			"target_label": EnemyAdventureRules._town_name(town),
+			"target_tile": Vector2i(int(town.get("x", 0)), int(town.get("y", 0))),
+			"priority": 180 if owner == "player" else 145,
+		})
+	for node_value in session.overworld.get("resource_nodes", []):
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		var site: Dictionary = ContentService.get_resource_site(String(node.get("site_id", "")))
+		if not EnemyAdventureRules._resource_node_contestable_by_faction(node, site, faction_id):
+			continue
+		catalog.append({
+			"target_kind": "resource",
+			"target_id": String(node.get("placement_id", "")),
+			"target_label": String(site.get("name", "Resource Site")),
+			"target_tile": Vector2i(int(node.get("x", 0)), int(node.get("y", 0))),
+			"priority": 120 + EnemyAdventureRules._resource_route_pressure_value(site),
+		})
+	for node_value in session.overworld.get("artifact_nodes", []):
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		if bool(node.get("collected", false)):
+			continue
+		catalog.append({
+			"target_kind": "artifact",
+			"target_id": String(node.get("placement_id", "")),
+			"target_label": ArtifactRules.describe_artifact(String(node.get("artifact_id", ""))),
+			"target_tile": Vector2i(int(node.get("x", 0)), int(node.get("y", 0))),
+			"priority": EnemyAdventureRules._artifact_target_priority(session, node),
+		})
+	var resolved_encounters = session.overworld.get("resolved_encounters", [])
+	for encounter_value in session.overworld.get("encounters", []):
+		if not (encounter_value is Dictionary):
+			continue
+		var encounter: Dictionary = encounter_value
+		if EnemyAdventureRules._encounter_is_pressure_host_candidate(encounter, faction_id, resolved_encounters):
+			continue
+		if OverworldRules.is_encounter_resolved(session, encounter):
+			continue
+		catalog.append({
+			"target_kind": "encounter",
+			"target_id": String(encounter.get("placement_id", "")),
+			"target_label": EnemyAdventureRules._encounter_target_label(session, encounter, "Frontier Camp"),
+			"target_tile": Vector2i(int(encounter.get("x", 0)), int(encounter.get("y", 0))),
+			"priority": EnemyAdventureRules._encounter_target_priority(session, encounter),
+		})
+	return catalog
+
+func _legacy_known_world_visible_records_for_source_control(session, config: Dictionary, faction_id: String, source: Dictionary) -> Array:
+	var records := []
+	var radius: int = max(0, int(source.get("radius", 0)))
+	if session == null or faction_id == "" or radius <= 0:
+		return records
+	var origin := Vector2i(int(source.get("x", 0)), int(source.get("y", 0)))
+	for target_value in _legacy_known_world_target_catalog_control(session, config, faction_id):
+		if not (target_value is Dictionary):
+			continue
+		var target: Dictionary = target_value
+		_legacy_known_world_append_visible_record_control(
+			records,
+			source,
+			String(target.get("target_kind", "")),
+			String(target.get("target_id", "")),
+			String(target.get("target_label", target.get("target_id", ""))),
+			target.get("target_tile", Vector2i.ZERO),
+			int(target.get("priority", 0)),
+			origin,
+			radius,
+			int(session.day)
+		)
+	return records
+
+func _legacy_known_world_append_visible_record_control(records: Array, source: Dictionary, target_kind: String, target_id: String, target_label: String, target_tile: Vector2i, priority: int, origin: Vector2i, radius: int, current_day: int) -> void:
+	if target_kind == "" or target_id == "":
+		return
+	var distance: int = abs(origin.x - target_tile.x) + abs(origin.y - target_tile.y)
+	if distance > radius:
+		return
+	records.append({
+		"target_kind": target_kind,
+		"target_id": target_id,
+		"target_label": target_label,
+		"x": target_tile.x,
+		"y": target_tile.y,
+		"scouted_day": current_day,
+		"expires_day": current_day + EnemyAdventureRules.RAID_ADVENTURE_SCOUTING_MEMORY_DAYS,
+		"source_kind": String(source.get("kind", "")),
+		"source_id": String(source.get("id", "")),
+		"source_raid_id": String(source.get("id", "")) if String(source.get("kind", "")) == "commander" else "",
+		"state_policy": "ai_known_world_memory",
+		"_source_distance": distance,
+		"_source_priority": priority,
+	})
+
+func _legacy_known_world_target_records_control(session, config: Dictionary, faction_id: String, sources: Array) -> Array:
+	var best_by_key := {}
+	for source_value in sources:
+		if not (source_value is Dictionary):
+			continue
+		for record_value in _legacy_known_world_visible_records_for_source_control(session, config, faction_id, source_value):
+			if not (record_value is Dictionary):
+				continue
+			var record: Dictionary = record_value
+			var key := "%s:%s" % [String(record.get("target_kind", "")), String(record.get("target_id", ""))]
+			if (
+				not best_by_key.has(key)
+				or int(record.get("_source_distance", 9999)) < int(best_by_key[key].get("_source_distance", 9999))
+				or (
+					int(record.get("_source_distance", 9999)) == int(best_by_key[key].get("_source_distance", 9999))
+					and int(record.get("_source_priority", 0)) > int(best_by_key[key].get("_source_priority", 0))
+				)
+			):
+				best_by_key[key] = record
+	var records := []
+	for key in best_by_key.keys():
+		var record: Dictionary = best_by_key[key]
+		record.erase("_source_distance")
+		record.erase("_source_priority")
+		records.append(record)
+	return _legacy_known_world_normalize_target_records_control(records, int(session.day))
+
+func _legacy_known_world_hero_records_control(session, sources: Array) -> Array:
+	var records := []
+	if sources.is_empty():
+		return records
+	for hero_value in EnemyAdventureRules._player_hero_snapshots_for_intercept(session):
+		if not (hero_value is Dictionary):
+			continue
+		var hero: Dictionary = hero_value
+		var hero_id := String(hero.get("id", ""))
+		if hero_id == "":
+			continue
+		var hero_tile := EnemyAdventureRules._player_hero_goal_tile(hero)
+		var best_source := {}
+		var best_distance := 9999
+		for source_value in sources:
+			if not (source_value is Dictionary):
+				continue
+			var source: Dictionary = source_value
+			var distance: int = abs(hero_tile.x - int(source.get("x", 0))) + abs(hero_tile.y - int(source.get("y", 0)))
+			if distance > int(source.get("radius", 0)):
+				continue
+			if best_source.is_empty() or distance < best_distance:
+				best_source = source
+				best_distance = distance
+		if best_source.is_empty():
+			continue
+		records.append({
+			"hero_id": hero_id,
+			"hero_label": String(hero.get("name", hero_id)),
+			"x": hero_tile.x,
+			"y": hero_tile.y,
+			"army_strength": EnemyAdventureRules._known_player_hero_strength(hero),
+			"seen_day": int(session.day),
+			"expires_day": int(session.day) + EnemyAdventureRules.AI_HERO_SIGHTING_MEMORY_DAYS,
+			"source_kind": String(best_source.get("kind", "")),
+			"source_id": String(best_source.get("id", "")),
+			"confidence": "current",
+			"state_policy": "ai_known_world_memory",
+		})
+	return records
+
+func _legacy_known_world_player_hero_input_count_control(session) -> int:
+	var count := 0
+	for hero_value in EnemyAdventureRules._player_hero_snapshots_for_intercept(session):
+		if hero_value is Dictionary and String(hero_value.get("id", "")) != "":
+			count += 1
+	return count
+
+func _legacy_known_world_expected_memory_control(previous_value: Variant, hero_records: Array, target_records: Array, current_day: int) -> Dictionary:
+	var previous: Dictionary = previous_value if previous_value is Dictionary else {}
+	var merged_heroes := _legacy_known_world_merge_hero_records_control(previous.get("player_hero_sightings", []), hero_records, current_day)
+	var merged_targets := _legacy_known_world_merge_target_records_control(previous.get("scouted_targets", []), target_records, current_day)
+	if merged_heroes.is_empty() and merged_targets.is_empty():
+		return {}
+	var memory := {"schema_version": 1}
+	if not merged_heroes.is_empty():
+		memory["player_hero_sightings"] = merged_heroes
+		memory["last_hero_sighting_day"] = int(merged_heroes[0].get("seen_day", current_day))
+	if not merged_targets.is_empty():
+		memory["scouted_targets"] = merged_targets
+		memory["last_scouted_day"] = int(merged_targets[0].get("scouted_day", current_day))
+	return memory
+
+func _legacy_known_world_merge_hero_records_control(existing_value: Variant, current_value: Variant, current_day: int) -> Array:
+	var by_id := {}
+	for record in _legacy_known_world_normalize_hero_records_control(existing_value, current_day):
+		by_id[String(record.get("hero_id", ""))] = record
+	for record in _legacy_known_world_normalize_hero_records_control(current_value, current_day):
+		var hero_id := String(record.get("hero_id", ""))
+		if hero_id != "" and (not by_id.has(hero_id) or int(record.get("seen_day", 0)) >= int(by_id[hero_id].get("seen_day", 0))):
+			by_id[hero_id] = record
+	var merged := []
+	for hero_id in by_id.keys():
+		merged.append(by_id[hero_id])
+	return _legacy_known_world_normalize_hero_records_control(merged, current_day)
+
+func _legacy_known_world_merge_target_records_control(existing_value: Variant, current_value: Variant, current_day: int) -> Array:
+	var by_key := {}
+	for record in _legacy_known_world_normalize_target_records_control(existing_value, current_day):
+		by_key["%s:%s" % [String(record.get("target_kind", "")), String(record.get("target_id", ""))]] = record
+	for record in _legacy_known_world_normalize_target_records_control(current_value, current_day):
+		var key := "%s:%s" % [String(record.get("target_kind", "")), String(record.get("target_id", ""))]
+		if key != ":":
+			by_key[key] = record
+	var merged := []
+	for key in by_key.keys():
+		merged.append(by_key[key])
+	return _legacy_known_world_normalize_target_records_control(merged, current_day)
+
+func _legacy_known_world_normalize_hero_records_control(value: Variant, current_day: int) -> Array:
+	var normalized := []
+	if not (value is Array):
+		return normalized
+	for record_value in value:
+		if not (record_value is Dictionary):
+			continue
+		var record: Dictionary = record_value
+		var hero_id := String(record.get("hero_id", ""))
+		if hero_id == "":
+			continue
+		var seen_day: int = max(0, int(record.get("seen_day", 0)))
+		var expires_day: int = max(seen_day, int(record.get("expires_day", seen_day + EnemyAdventureRules.AI_HERO_SIGHTING_MEMORY_DAYS)))
+		if current_day > 0 and expires_day < current_day:
+			continue
+		normalized.append({
+			"hero_id": hero_id,
+			"hero_label": String(record.get("hero_label", hero_id)),
+			"x": int(record.get("x", 0)),
+			"y": int(record.get("y", 0)),
+			"army_strength": max(0, int(record.get("army_strength", 0))),
+			"seen_day": seen_day,
+			"expires_day": expires_day,
+			"source_kind": String(record.get("source_kind", "")),
+			"source_id": String(record.get("source_id", "")),
+			"confidence": String(record.get("confidence", "recent")),
+			"state_policy": "ai_known_world_memory",
+		})
+	normalized.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		if int(a.get("seen_day", 0)) == int(b.get("seen_day", 0)):
+			return String(a.get("hero_id", "")) < String(b.get("hero_id", ""))
+		return int(a.get("seen_day", 0)) > int(b.get("seen_day", 0))
+	)
+	while normalized.size() > EnemyAdventureRules.AI_HERO_SIGHTING_MAX_RECORDS:
+		normalized.pop_back()
+	return normalized
+
+func _legacy_known_world_normalize_target_records_control(value: Variant, current_day: int) -> Array:
+	var normalized := []
+	if not (value is Array):
+		return normalized
+	for record_value in value:
+		if not (record_value is Dictionary):
+			continue
+		var record: Dictionary = record_value
+		var target_kind := String(record.get("target_kind", ""))
+		var target_id := String(record.get("target_id", ""))
+		if target_kind == "" or target_id == "":
+			continue
+		var scouted_day: int = max(0, int(record.get("scouted_day", 0)))
+		var expires_day: int = max(scouted_day, int(record.get("expires_day", scouted_day + EnemyAdventureRules.RAID_ADVENTURE_SCOUTING_MEMORY_DAYS)))
+		if current_day > 0 and expires_day < current_day:
+			continue
+		normalized.append({
+			"target_kind": target_kind,
+			"target_id": target_id,
+			"target_label": String(record.get("target_label", target_id)),
+			"x": int(record.get("x", 0)),
+			"y": int(record.get("y", 0)),
+			"scouted_day": scouted_day,
+			"expires_day": expires_day,
+			"source_spell_id": String(record.get("source_spell_id", "")),
+			"source_spell_name": String(record.get("source_spell_name", "")),
+			"source_kind": String(record.get("source_kind", "")),
+			"source_id": String(record.get("source_id", "")),
+			"source_raid_id": String(record.get("source_raid_id", "")),
+			"state_policy": "ai_known_world_memory",
+		})
+	normalized.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		if int(a.get("scouted_day", 0)) == int(b.get("scouted_day", 0)):
+			return String(a.get("target_label", "")) < String(b.get("target_label", ""))
+		return int(a.get("scouted_day", 0)) > int(b.get("scouted_day", 0))
+	)
+	while normalized.size() > EnemyAdventureRules.RAID_ADVENTURE_SCOUTING_MAX_TARGET_RECORDS:
+		normalized.pop_back()
+	return normalized
 
 func _fail(message: String) -> void:
 	var payload := {"ok": false, "report_id": REPORT_ID, "error": message}
