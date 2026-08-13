@@ -24211,6 +24211,262 @@ def validate_ai_known_world_memory_candidate_compatibility(errors: list[str]) ->
     report_path = ROOT / "tests" / "ai_known_world_memory_report.gd"
     ensure(report_path.exists(), errors, "Missing AI known-world memory report owner.")
     report_text = report_path.read_text(encoding="utf-8") if report_path.exists() else ""
+    enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8") if ENEMY_ADVENTURE_RULES_PATH.exists() else ""
+    refresh_match = re.search(
+        r"static func refresh_enemy_known_world_memory\(.*?\n(?P<body>.*?)(?=\nstatic func )",
+        enemy_adventure_text,
+        re.S,
+    )
+    ensure(refresh_match is not None, errors, "Could not isolate production known-world refresh lifecycle.")
+    refresh_body = refresh_match.group("body") if refresh_match else ""
+    refresh_order = (
+        '"sight_source_enumeration_count": 1',
+        '"target_catalog_enumeration_count": 1',
+        "var sight_sources := _enemy_hero_sighting_sources(session, config, faction_id)",
+        'catalog_profile["sight_source_count"] = sight_sources.size()',
+        "var target_catalog := _enemy_visible_target_catalog(session, config, faction_id)",
+        'catalog_profile["target_catalog_count"] = target_catalog.size()',
+        "var records := _current_enemy_player_hero_sighting_records(",
+        "sight_sources,",
+        "var target_records := _current_enemy_scouted_target_records(",
+        "target_catalog,",
+        "var updated_state := state.duplicate(true)",
+        "var merged_sightings := _merge_enemy_hero_sighting_record_arrays(",
+        "var merged_targets := _merge_enemy_scouted_target_record_arrays(",
+        "_sync_enemy_state_known_world_memory(session, faction_id, updated_state.get(\"known_world_memory\", {}))",
+        '"target_catalog_profile": catalog_profile.duplicate(true)',
+    )
+    refresh_positions = [refresh_body.find(token) for token in refresh_order]
+    ensure(
+        all(position >= 0 for position in refresh_positions) and refresh_positions == sorted(refresh_positions),
+        errors,
+        "Production known-world refresh lost source/catalog enumeration, fresh projection, merge, sync, or detached-profile order.",
+    )
+    ensure(refresh_body.count("_enemy_hero_sighting_sources(") == 1, errors, "Known-world refresh must enumerate sight sources exactly once.")
+    ensure(refresh_body.count("_enemy_visible_target_catalog(") == 1, errors, "Known-world refresh must enumerate the target catalog exactly once.")
+    for forbidden_token in (
+        'session.flags["known_world_target_catalog"',
+        'session.overworld["known_world_target_catalog"',
+        'state["known_world_target_catalog"',
+        '"catalog_day"',
+        '"catalog_session_id"',
+        "normalize_overworld_state",
+        "schema_version =",
+    ):
+        ensure(forbidden_token not in refresh_body, errors, f"Known-world catalog reuse must remain invocation-local without cache/schema/behavior mutation: {forbidden_token}")
+    for forbidden_token in (
+        "KNOWN_WORLD_TARGET_CATALOG_CACHE",
+        "_known_world_target_catalog_cache",
+        '"known_world_target_catalog_day"',
+        '"known_world_target_catalog_session_id"',
+    ):
+        ensure(forbidden_token not in enemy_adventure_text, errors, f"Known-world catalog must not add global/day/session cache state: {forbidden_token}")
+
+    catalog_match = re.search(
+        r"static func _enemy_visible_target_catalog\(.*?\n(?P<body>.*?)(?=\nstatic func )",
+        enemy_adventure_text,
+        re.S,
+    )
+    ensure(catalog_match is not None, errors, "Could not isolate production known-world target catalog.")
+    catalog_body = catalog_match.group("body") if catalog_match else ""
+    catalog_order = (
+        'for town_value in session.overworld.get("towns", []):',
+        'if owner != "player" and owner != "neutral":',
+        '"target_kind": "town"',
+        'for node_value in session.overworld.get("resource_nodes", []):',
+        "if not _resource_node_contestable_by_faction(node, site, faction_id):",
+        '"target_kind": "resource"',
+        'for node_value in session.overworld.get("artifact_nodes", []):',
+        'if bool(node.get("collected", false)):',
+        '"target_kind": "artifact"',
+        'for encounter_value in session.overworld.get("encounters", []):',
+        "if _encounter_is_pressure_host_candidate(encounter, faction_id, resolved_encounters):",
+        "if OverworldRulesScript.is_encounter_resolved(session, encounter):",
+        '"target_kind": "encounter"',
+    )
+    catalog_positions = [catalog_body.find(token) for token in catalog_order]
+    ensure(
+        all(position >= 0 for position in catalog_positions) and catalog_positions == sorted(catalog_positions),
+        errors,
+        "Production known-world catalog lost exact town/resource/artifact/encounter order or exclusions.",
+    )
+    ensure(catalog_body.rstrip().endswith("return catalog"), errors, "Production known-world catalog must return its invocation-local ordered catalog.")
+
+    target_projection_match = re.search(
+        r"static func _current_enemy_scouted_target_records\(.*?\n(?P<body>.*?)(?=\nstatic func )",
+        enemy_adventure_text,
+        re.S,
+    )
+    ensure(target_projection_match is not None, errors, "Could not isolate production known-world target projection.")
+    target_projection_body = target_projection_match.group("body") if target_projection_match else ""
+    for required_token in (
+        "preloaded_sources: Variant = null",
+        "preloaded_target_catalog: Variant = null",
+        "projection_profile: Variant = null",
+        "var sources: Array = preloaded_sources if preloaded_sources is Array else _enemy_hero_sighting_sources",
+        "var target_catalog: Array = preloaded_target_catalog if preloaded_target_catalog is Array else _enemy_visible_target_catalog",
+        'profile["target_source_projection_count"] = int(profile.get("target_source_projection_count", 0)) + 1',
+        'profile["target_catalog_projection_count"] = int(profile.get("target_catalog_projection_count", 0)) + target_catalog.size()',
+        "_current_enemy_visible_target_records_for_source(",
+        'record.erase("_source_distance")',
+        'record.erase("_source_priority")',
+    ):
+        ensure(required_token in target_projection_body or required_token in target_projection_match.group(0), errors, f"Production known-world target projection lost exact preloaded/fresh behavior: {required_token}")
+
+    hero_projection_match = re.search(
+        r"static func _current_enemy_player_hero_sighting_records\(.*?\n(?P<body>.*?)(?=\nstatic func )",
+        enemy_adventure_text,
+        re.S,
+    )
+    ensure(hero_projection_match is not None, errors, "Could not isolate production known-world hero projection.")
+    hero_projection_text = hero_projection_match.group(0) if hero_projection_match else ""
+    for required_token in (
+        "preloaded_sources: Variant = null",
+        "projection_profile: Variant = null",
+        'profile["hero_source_projection_count"] = int(profile.get("hero_source_projection_count", 0)) + sources.size()',
+        'profile["hero_source_comparison_count"] = int(profile.get("hero_source_comparison_count", 0)) + 1',
+        "if best_source.is_empty() or distance < best_distance:",
+    ):
+        ensure(required_token in hero_projection_text, errors, f"Production known-world hero projection lost exact source reuse/tie behavior: {required_token}")
+
+    parity_match = re.search(
+        r"func _known_world_target_catalog_projection_parity\(\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc )",
+        report_text,
+        re.S,
+    )
+    ensure(parity_match is not None, errors, "AI known-world report is missing the focused catalog/projection parity case.")
+    parity_body = parity_match.group("body") if parity_match else ""
+    parity_order = (
+        "_configure_known_world_catalog_fixture(session)",
+        "var initial_control := _legacy_known_world_projection_control",
+        "var initial_current := _current_known_world_projection_snapshot",
+        "var fixture_authority_before_detach: Dictionary = session.to_dict()",
+        "var raw_detached_sources: Array = EnemyAdventureRules._enemy_hero_sighting_sources(session, config, MIRECLAW)",
+        "var raw_detached_catalog: Array = EnemyAdventureRules._enemy_visible_target_catalog(session, config, MIRECLAW)",
+        'if raw_detached_sources.is_empty() or raw_detached_sources != initial_control.get("sources", []):',
+        'if raw_detached_catalog.is_empty() or raw_detached_catalog != initial_control.get("catalog", []):',
+        'raw_detached_sources[0]["x"] = 99',
+        'raw_detached_catalog[0]["target_label"] = "mutated detached catalog"',
+        "if session.to_dict() != fixture_authority_before_detach:",
+        "if _current_known_world_projection_snapshot(session, config, MIRECLAW) != initial_control:",
+        "var initial_refresh := EnemyAdventureRules.refresh_enemy_known_world_memory",
+        "_move_known_world_catalog_fixture(session)",
+        "var moved_control := _legacy_known_world_projection_control",
+        "var moved_refresh := EnemyAdventureRules.refresh_enemy_known_world_memory",
+        "_remove_known_world_catalog_fixture_entries(session)",
+        "var removed_control := _legacy_known_world_projection_control",
+        "var removed_refresh := EnemyAdventureRules.refresh_enemy_known_world_memory",
+        "_disable_known_world_catalog_sources(session)",
+        "session.day = int(session.day) + 8",
+        "var expiry_control := _legacy_known_world_projection_control",
+        "var expiry_refresh := EnemyAdventureRules.refresh_enemy_known_world_memory",
+        "if int(SessionStateStore.SAVE_VERSION) != save_version_before:",
+    )
+    parity_positions = [parity_body.find(token) for token in parity_order]
+    ensure(
+        all(position >= 0 for position in parity_positions) and parity_positions == sorted(parity_positions),
+        errors,
+        "Known-world parity case lost fixture/detach/refresh/movement/removal/expiry/save order.",
+    )
+    for required_token in (
+        '"catalog_enemy_town_a"',
+        '"catalog_enemy_town_b"',
+        '"catalog_commander_source"',
+        '"catalog_resource_source"',
+        '"town:catalog_player_town"',
+        '"town:catalog_neutral_town"',
+        '"resource:catalog_resource_target"',
+        '"artifact:catalog_artifact_target"',
+        '"encounter:catalog_encounter_target"',
+        '"town:catalog_inactive_town"',
+        '"resource:catalog_resource_source"',
+        '"resource:catalog_resource_collected"',
+        '"artifact:catalog_artifact_collected"',
+        '"encounter:catalog_commander_source"',
+        '"encounter:catalog_encounter_resolved"',
+        "initial_current != initial_control",
+        "moved_current != moved_control or moved_current == initial_control",
+        "removed_current != removed_control",
+        "_known_world_target_source_tie_exact",
+        "_known_world_nonmemory_authority",
+        "_legacy_known_world_expected_memory_control",
+    ):
+        ensure(required_token in parity_body, errors, f"Known-world focused parity case is missing exact behavior: {required_token}")
+    ensure(parity_body.count("EnemyAdventureRules.refresh_enemy_known_world_memory(") == 4, errors, "Known-world focused lifecycle must perform exactly four real refreshes.")
+    detach_prefix = parity_body[:parity_body.find("var expected_memory :=")]
+    ensure("var fixture_authority_before_detach := session.to_dict()" not in detach_prefix, errors, "Known-world detach authority capture must use an explicit Dictionary type, not inferred Variant typing.")
+    ensure("raw_detached_sources" in detach_prefix and "raw_detached_catalog" in detach_prefix, errors, "Known-world detach proof must use raw production source/catalog returns.")
+    ensure("raw_detached_sources: Array = initial_current" not in detach_prefix and "raw_detached_catalog: Array = initial_current" not in detach_prefix, errors, "Known-world detach proof must not source its mutation rows from the already-detached snapshot.")
+    ensure(not re.search(r"raw_detached_(?:sources|catalog).*duplicate", detach_prefix), errors, "Known-world raw detach captures must not duplicate before nested mutation.")
+    ensure("if not raw_detached_sources.is_empty()" not in detach_prefix and "if not raw_detached_catalog.is_empty()" not in detach_prefix, errors, "Known-world detach mutation must be fail-closed, not conditionally skipped for empty raw surfaces.")
+
+    legacy_match = re.search(
+        r"func _legacy_known_world_projection_control\(.*?\n(?P<body>.*?)(?=\nfunc _fail)",
+        report_text,
+        re.S,
+    )
+    ensure(legacy_match is not None, errors, "AI known-world report is missing its independent copied legacy control block.")
+    legacy_text = legacy_match.group(0) if legacy_match else ""
+    for required_token in (
+        "func _legacy_known_world_sight_sources_control",
+        "func _legacy_known_world_active_raid_control",
+        "func _legacy_known_world_target_catalog_control",
+        "func _legacy_known_world_visible_records_for_source_control",
+        "func _legacy_known_world_append_visible_record_control",
+        "func _legacy_known_world_target_records_control",
+        "func _legacy_known_world_hero_records_control",
+        "func _legacy_known_world_expected_memory_control",
+        "func _legacy_known_world_merge_hero_records_control",
+        "func _legacy_known_world_merge_target_records_control",
+        "func _legacy_known_world_normalize_hero_records_control",
+        "func _legacy_known_world_normalize_target_records_control",
+        'for town_value in session.overworld.get("towns", []):',
+        'for node_value in session.overworld.get("resource_nodes", []):',
+        'for node_value in session.overworld.get("artifact_nodes", []):',
+        'for encounter_value in session.overworld.get("encounters", []):',
+        "EnemyAdventureRules._resource_node_contestable_by_faction",
+        "EnemyAdventureRules._encounter_is_pressure_host_candidate",
+        "OverworldRules.is_encounter_resolved",
+        "best_source.is_empty() or distance < best_distance",
+    ):
+        ensure(required_token in legacy_text, errors, f"Independent known-world legacy control is missing copied behavior: {required_token}")
+    for forbidden_token in (
+        "EnemyAdventureRules._enemy_hero_sighting_sources(",
+        "EnemyAdventureRules._enemy_visible_target_catalog(",
+        "EnemyAdventureRules._current_enemy_visible_target_records_for_source(",
+        "EnemyAdventureRules._current_enemy_scouted_target_records(",
+        "EnemyAdventureRules._current_enemy_player_hero_sighting_records(",
+        "_current_known_world_projection_snapshot(",
+        'erase("known_world_target_catalog")',
+        'session.flags["known_world_target_catalog"',
+    ):
+        ensure(forbidden_token not in legacy_text, errors, f"Independent known-world legacy control must not call catalog/project/cache implementation: {forbidden_token}")
+
+    refresh_exact_match = re.search(
+        r"func _known_world_refresh_exact\(.*?\n(?P<body>.*?)(?=\nfunc )",
+        report_text,
+        re.S,
+    )
+    ensure(refresh_exact_match is not None, errors, "AI known-world report is missing exact refresh/profile authority gates.")
+    refresh_exact_body = refresh_exact_match.group("body") if refresh_exact_match else ""
+    for required_check in (
+        '"updated_memory_exact"',
+        '"live_memory_exact"',
+        '"returned_state_exact"',
+        '"nonmemory_authority_exact"',
+        '"sighting_count_exact"',
+        '"scouted_target_count_exact"',
+        '"source_enumeration_once"',
+        '"catalog_enumeration_once"',
+        '"source_count_exact"',
+        '"catalog_count_exact"',
+        '"hero_projection_fresh_exact"',
+        '"hero_comparison_fresh_exact"',
+        '"target_projection_fresh_exact"',
+        '"catalog_projection_fresh_exact"',
+    ):
+        ensure(required_check in refresh_exact_body, errors, f"Known-world refresh authority/profile gate is missing: {required_check}")
+    ensure("normalize" not in refresh_exact_body and "erase(" not in refresh_exact_body, errors, "Known-world exact refresh oracle must not normalize or erase observed values.")
     helper_match = re.search(
         r"func _hero_target_candidates_for_origin\(session, origin_pos: Vector2i, config: Dictionary\) -> Array:\n(?P<body>.*?)(?=\nfunc )",
         report_text,

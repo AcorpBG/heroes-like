@@ -24,7 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Current selected implementation slice: select the next tracker-approved release-readiness implementation slice.
+- Current selected implementation slice: none. Select the next tracker-approved release-readiness implementation slice.
+- Latest completed implementation slice: `strategic-ai-known-world-target-catalog-projection-reuse-10184`. Strategic AI now enumerates one exact detached sight-source surface and eligible-target catalog per known-world refresh while keeping every source projection and every later refresh fresh.
 - Latest completed implementation slice: `strategic-ai-phase-target-descriptor-enumeration-reuse-10184`. Strategic AI now separates exact ordered detached target descriptors from fresh origin-specific projection and reuses discovery only within one planner invocation or best-open-spawn-point sweep, preserving ordinal-100 behavior while reducing repeated target enumeration.
 - Latest completed implementation slice: `ux-map-editor-responsive-top-bar-containment-10184`. The Map Editor now allocates the live TopPad between the clipped full-tooltip header and native package picker while reserving the exact combined minima of Load Map, Save Copy, Play Copy, Menu, and their separations, preserving the map, ToolRail, focus, package, and editor authority at 1280 and 1920.
 - Latest completed implementation slice: `accessibility-battle-board-cursor-live-context-coalescing-10184`. Battle now exposes one bounded polite live context for the existing keyboard/controller Board cursor, coalesces changed navigation to its final settled hex, and announces exact existing A/B results without changing combat, input timing, mouse behavior, or battle authority.
@@ -4528,6 +4529,70 @@ Completion result:
   DLL startup gates pass. The packaged harnesses did not exercise strategic-AI gameplay, so no packaged
   AI parity, controller, accessibility API, native hardware, Native RMG, signing/publication, whole-game,
   or whole-release claim is made.
+
+## Strategic AI Known-World Target Catalog Projection Reuse
+
+id: `strategic-ai-known-world-target-catalog-projection-reuse-10184`
+
+Status: completed.
+
+Selected Phase 6 strategic-AI performance implementation slice. Exact-current-code ordinal 100 keeps
+signature `6e893020` and exact behavior authority, but initial known-world refresh consumes `13549` ms
+and deferred post-move refresh consumes `13312` ms, or `26861` ms combined (`13.1` percent of the
+`205433` ms row). Within each refresh, every sight source independently re-enumerates all towns,
+resource nodes, artifact nodes, and encounters even though target eligibility and authored metadata are
+source-invariant.
+
+Implementation target:
+- in `EnemyAdventureRules`, build one detached ordered sight-source surface and one detached ordered
+  eligible-target catalog per `refresh_enemy_known_world_memory` invocation, covering towns, resources,
+  artifacts, and encounters in the exact existing family/source order;
+- reuse that invocation-local source surface for current hero and non-hero observation, and freshly
+  project the eligible-target catalog for every source's radius, Manhattan distance, source identity,
+  and memory metadata;
+- preserve exact eligibility, content lookup, labels, priorities, per-source traversal, best-by-target
+  minimum-distance then priority tie behavior, normalization/order, expiry, merge, and enemy-state sync;
+- rebuild both surfaces on every later refresh, including the deferred post-move refresh after session
+  mutation; do not introduce a day, session, global, or cross-refresh cache;
+- expose bounded catalog-enumeration and per-source projection counters/timers without changing AI
+  decisions, visibility, memory, save state, or public events.
+
+Completion criteria:
+- an independent current-materializer control and the catalog/projection path produce byte/value-exact
+  whole ordered records across multiple overlapping sources, distance and priority ties, every family,
+  collected/resolved/pressure-host/contestability exclusions, current hero sightings, and empty cases;
+- detached source/catalog mutation cannot alter the session, and source removal, source movement, day
+  expiry, target mutation, post-move refresh, and the next invocation rebuild exact current state;
+- focused known-world coverage preserves exact memory, enemy-state, target-selection, source metadata,
+  normalization, and save authority while proving one catalog enumeration serves multiple source
+  projections;
+- exact-current ordinal 100 preserves signature `6e893020`, event counts and order, tasks, day-37
+  defeat, world counts/owners, battle outcomes, integrity, and unreachable-target authority; row and
+  maximum-turn runtime do not regress, and combined initial/deferred known-world time is materially
+  lower than the `26861` ms baseline;
+- known-world, target-selection, hero-hunt, neutral-town, delivery, regroup, core, repository-validator,
+  editor-parse, Python, JSON, diff, official Linux export/startup, and official Windows/fresh-Wine
+  export/startup gates pass before completion is claimed.
+
+Non-goals:
+- no change to sight radii, target eligibility, labels, priority, tie order, visibility/fog rules,
+  memory schema, expiry, merge policy, target selection, routing, movement, combat, economy, content,
+  balance, save schema, or Native RMG;
+- no cache across refreshes, turns, days, sessions, factions, or launches, and no reuse across live
+  mutations;
+- no packaged strategic-AI interaction, controller, AT-SPI/UIA, native-hardware, signing/publication,
+  broad strategic-AI completion, full performance completion, whole-game, or whole-release claim.
+
+Completion evidence:
+- focused known-world runtime proves exact independent legacy parity, order, ties, exclusions, detach,
+  movement/removal/expiry rebuilds, memory/session/save authority, and exact enumeration/projection counts;
+- exact-current ordinal 100 retains signature `6e893020`, day-37 defeat after 36 turns, exact behavior,
+  tasks, world/battle/integrity authority, and reduces combined known-world time from `26861` to `7463`
+  ms while row runtime is `186149` ms and maximum-turn runtime is `8472` ms;
+- known-world, target-selection, hero-hunt, neutral-town, delivery, regroup, core, repository, Python,
+  JSON, diff, and editor gates pass; official Linux export/headless startup and Windows export/fresh-Wine
+  Boot/MainMenu/native-DLL startup pass. These are bounded startup claims only, with no packaged AI
+  interaction, controller, AT-SPI/UIA, native-hardware, signing/publication, whole-game, or release claim.
 
 ## Phase Roadmap
 

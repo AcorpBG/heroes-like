@@ -3425,8 +3425,37 @@ static func refresh_enemy_known_world_memory(
 	var faction_id := String(state.get("faction_id", config.get("faction_id", "")))
 	if faction_id == "":
 		return {"state": state, "sighting_count": 0}
-	var records := _current_enemy_player_hero_sighting_records(session, config, faction_id)
-	var target_records := _current_enemy_scouted_target_records(session, config, faction_id)
+	var catalog_profile := {
+		"sight_source_enumeration_count": 1,
+		"target_catalog_enumeration_count": 1,
+	}
+	var started_usec := Time.get_ticks_usec()
+	var sight_sources := _enemy_hero_sighting_sources(session, config, faction_id)
+	catalog_profile["sight_source_enumeration_ms"] = _known_world_elapsed_ms(started_usec)
+	catalog_profile["sight_source_count"] = sight_sources.size()
+	started_usec = Time.get_ticks_usec()
+	var target_catalog := _enemy_visible_target_catalog(session, config, faction_id)
+	catalog_profile["target_catalog_enumeration_ms"] = _known_world_elapsed_ms(started_usec)
+	catalog_profile["target_catalog_count"] = target_catalog.size()
+	started_usec = Time.get_ticks_usec()
+	var records := _current_enemy_player_hero_sighting_records(
+		session,
+		config,
+		faction_id,
+		sight_sources,
+		catalog_profile
+	)
+	catalog_profile["hero_projection_ms"] = _known_world_elapsed_ms(started_usec)
+	started_usec = Time.get_ticks_usec()
+	var target_records := _current_enemy_scouted_target_records(
+		session,
+		config,
+		faction_id,
+		sight_sources,
+		target_catalog,
+		catalog_profile
+	)
+	catalog_profile["target_projection_ms"] = _known_world_elapsed_ms(started_usec)
 	var updated_state := state.duplicate(true)
 	var memory := normalize_enemy_known_world_memory(updated_state.get("known_world_memory", {}), int(session.day))
 	if memory.is_empty():
@@ -3459,7 +3488,16 @@ static func refresh_enemy_known_world_memory(
 		memory["schema_version"] = 1
 		updated_state["known_world_memory"] = memory
 	_sync_enemy_state_known_world_memory(session, faction_id, updated_state.get("known_world_memory", {}))
-	return {"state": updated_state, "sighting_count": records.size(), "scouted_target_count": target_records.size()}
+	return {
+		"state": updated_state,
+		"sighting_count": records.size(),
+		"scouted_target_count": target_records.size(),
+		"target_catalog_profile": catalog_profile.duplicate(true),
+	}
+
+
+static func _known_world_elapsed_ms(started_usec: int) -> int:
+	return int(round(float(max(0, Time.get_ticks_usec() - started_usec)) / 1000.0))
 
 static func _remove_enemy_player_hero_sighting(
 	session: SessionStateStoreScript.SessionData,
@@ -3614,10 +3652,14 @@ static func _sync_enemy_state_known_world_memory(
 static func _current_enemy_player_hero_sighting_records(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
-	faction_id: String
+	faction_id: String,
+	preloaded_sources: Variant = null,
+	projection_profile: Variant = null
 ) -> Array:
 	var records := []
-	var sources := _enemy_hero_sighting_sources(session, config, faction_id)
+	var sources: Array = preloaded_sources if preloaded_sources is Array else _enemy_hero_sighting_sources(session, config, faction_id)
+	var profile: Dictionary = projection_profile if projection_profile is Dictionary else {}
+	profile["hero_source_projection_count"] = int(profile.get("hero_source_projection_count", 0)) + sources.size()
 	if sources.is_empty():
 		return records
 	for hero_value in _player_hero_snapshots_for_intercept(session):
@@ -3633,6 +3675,7 @@ static func _current_enemy_player_hero_sighting_records(
 		for source_value in sources:
 			if not (source_value is Dictionary):
 				continue
+			profile["hero_source_comparison_count"] = int(profile.get("hero_source_comparison_count", 0)) + 1
 			var source: Dictionary = source_value
 			var distance: int = abs(hero_tile.x - int(source.get("x", 0))) + abs(hero_tile.y - int(source.get("y", 0)))
 			if distance > int(source.get("radius", 0)):
@@ -3717,17 +3760,31 @@ static func _enemy_hero_sighting_sources(
 static func _current_enemy_scouted_target_records(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
-	faction_id: String
+	faction_id: String,
+	preloaded_sources: Variant = null,
+	preloaded_target_catalog: Variant = null,
+	projection_profile: Variant = null
 ) -> Array:
 	var records := []
 	if session == null or faction_id == "":
 		return records
+	var sources: Array = preloaded_sources if preloaded_sources is Array else _enemy_hero_sighting_sources(session, config, faction_id)
+	var target_catalog: Array = preloaded_target_catalog if preloaded_target_catalog is Array else _enemy_visible_target_catalog(session, config, faction_id)
+	var profile: Dictionary = projection_profile if projection_profile is Dictionary else {}
 	var best_by_key := {}
-	for source_value in _enemy_hero_sighting_sources(session, config, faction_id):
+	for source_value in sources:
 		if not (source_value is Dictionary):
 			continue
 		var source: Dictionary = source_value
-		for record_value in _current_enemy_visible_target_records_for_source(session, config, faction_id, source):
+		profile["target_source_projection_count"] = int(profile.get("target_source_projection_count", 0)) + 1
+		profile["target_catalog_projection_count"] = int(profile.get("target_catalog_projection_count", 0)) + target_catalog.size()
+		for record_value in _current_enemy_visible_target_records_for_source(
+			session,
+			config,
+			faction_id,
+			source,
+			target_catalog
+		):
 			if not (record_value is Dictionary):
 				continue
 			var record: Dictionary = record_value
@@ -3754,13 +3811,42 @@ static func _current_enemy_visible_target_records_for_source(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
 	faction_id: String,
-	source: Dictionary
+	source: Dictionary,
+	preloaded_target_catalog: Variant = null
 ) -> Array:
 	var records := []
 	var radius: int = max(0, int(source.get("radius", 0)))
 	if session == null or faction_id == "" or radius <= 0:
 		return records
 	var origin := Vector2i(int(source.get("x", 0)), int(source.get("y", 0)))
+	var target_catalog: Array = preloaded_target_catalog if preloaded_target_catalog is Array else _enemy_visible_target_catalog(session, config, faction_id)
+	for target_value in target_catalog:
+		if not (target_value is Dictionary):
+			continue
+		var target: Dictionary = target_value
+		_append_visible_scout_record(
+			records,
+			source,
+			String(target.get("target_kind", "")),
+			String(target.get("target_id", "")),
+			String(target.get("target_label", target.get("target_id", ""))),
+			target.get("target_tile", Vector2i.ZERO),
+			int(target.get("priority", 0)),
+			origin,
+			radius,
+			int(session.day)
+		)
+	return records
+
+
+static func _enemy_visible_target_catalog(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	faction_id: String
+) -> Array:
+	var catalog := []
+	if session == null or faction_id == "":
+		return catalog
 	for town_value in session.overworld.get("towns", []):
 		if not (town_value is Dictionary):
 			continue
@@ -3768,18 +3854,13 @@ static func _current_enemy_visible_target_records_for_source(
 		var owner := String(town.get("owner", "neutral"))
 		if owner != "player" and owner != "neutral":
 			continue
-		_append_visible_scout_record(
-			records,
-			source,
-			"town",
-			String(town.get("placement_id", "")),
-			_town_name(town),
-			Vector2i(int(town.get("x", 0)), int(town.get("y", 0))),
-			180 if owner == "player" else 145,
-			origin,
-			radius,
-			int(session.day)
-		)
+		catalog.append({
+			"target_kind": "town",
+			"target_id": String(town.get("placement_id", "")),
+			"target_label": _town_name(town),
+			"target_tile": Vector2i(int(town.get("x", 0)), int(town.get("y", 0))),
+			"priority": 180 if owner == "player" else 145,
+		})
 	for node_value in session.overworld.get("resource_nodes", []):
 		if not (node_value is Dictionary):
 			continue
@@ -3787,36 +3868,26 @@ static func _current_enemy_visible_target_records_for_source(
 		var site: Dictionary = ContentService.get_resource_site(String(node.get("site_id", "")))
 		if not _resource_node_contestable_by_faction(node, site, faction_id):
 			continue
-		_append_visible_scout_record(
-			records,
-			source,
-			"resource",
-			String(node.get("placement_id", "")),
-			String(site.get("name", "Resource Site")),
-			Vector2i(int(node.get("x", 0)), int(node.get("y", 0))),
-			120 + _resource_route_pressure_value(site),
-			origin,
-			radius,
-			int(session.day)
-		)
+		catalog.append({
+			"target_kind": "resource",
+			"target_id": String(node.get("placement_id", "")),
+			"target_label": String(site.get("name", "Resource Site")),
+			"target_tile": Vector2i(int(node.get("x", 0)), int(node.get("y", 0))),
+			"priority": 120 + _resource_route_pressure_value(site),
+		})
 	for node_value in session.overworld.get("artifact_nodes", []):
 		if not (node_value is Dictionary):
 			continue
 		var node: Dictionary = node_value
 		if bool(node.get("collected", false)):
 			continue
-		_append_visible_scout_record(
-			records,
-			source,
-			"artifact",
-			String(node.get("placement_id", "")),
-			ArtifactRulesScript.describe_artifact(String(node.get("artifact_id", ""))),
-			Vector2i(int(node.get("x", 0)), int(node.get("y", 0))),
-			_artifact_target_priority(session, node),
-			origin,
-			radius,
-			int(session.day)
-		)
+		catalog.append({
+			"target_kind": "artifact",
+			"target_id": String(node.get("placement_id", "")),
+			"target_label": ArtifactRulesScript.describe_artifact(String(node.get("artifact_id", ""))),
+			"target_tile": Vector2i(int(node.get("x", 0)), int(node.get("y", 0))),
+			"priority": _artifact_target_priority(session, node),
+		})
 	var resolved_encounters = session.overworld.get("resolved_encounters", [])
 	for encounter_value in session.overworld.get("encounters", []):
 		if not (encounter_value is Dictionary):
@@ -3826,19 +3897,14 @@ static func _current_enemy_visible_target_records_for_source(
 			continue
 		if OverworldRulesScript.is_encounter_resolved(session, encounter):
 			continue
-		_append_visible_scout_record(
-			records,
-			source,
-			"encounter",
-			String(encounter.get("placement_id", "")),
-			_encounter_target_label(session, encounter, "Frontier Camp"),
-			Vector2i(int(encounter.get("x", 0)), int(encounter.get("y", 0))),
-			_encounter_target_priority(session, encounter),
-			origin,
-			radius,
-			int(session.day)
-		)
-	return records
+		catalog.append({
+			"target_kind": "encounter",
+			"target_id": String(encounter.get("placement_id", "")),
+			"target_label": _encounter_target_label(session, encounter, "Frontier Camp"),
+			"target_tile": Vector2i(int(encounter.get("x", 0)), int(encounter.get("y", 0))),
+			"priority": _encounter_target_priority(session, encounter),
+		})
+	return catalog
 
 static func _append_visible_scout_record(
 	records: Array,
