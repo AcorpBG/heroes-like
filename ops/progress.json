@@ -14324,11 +14324,11 @@
       }
     }
   ],
-  "currentNotes": "Completed the bounded Map Editor responsive TopBar containment slice. Focused 1280/1920 headless coverage and Map Editor compatibility proved exact live containment, native package-picker ownership, full selected-label discoverability, resize round trips, focus, canvas, ToolRail, and editor authority. Linux and Windows release exports and packaged startup passed, but no packaged TopBar interaction, controller, AT-SPI, UIA, native-hardware, signing/publication, whole-game, or whole-release claim is made.",
+  "currentNotes": "Completed the bounded Map Editor responsive TopBar containment slice. The later Bargebow HP 14 candidate was rejected and superseded after its full all-live matrix worsened severity, severe rows, maximum dominance, and side bias; production remains at HP 13 and no active-breadth acceptance run followed.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "ux-map-editor-responsive-top-bar-containment-10184",
   "currentSliceId": "ux-map-editor-responsive-top-bar-containment-10184",
-  "currentSliceNotes": "Header, MapPackagePicker, Load Map, Save Copy, Play Copy, and Menu are contained at 1280 and 1920 with full native package discovery, focus, map/ToolRail geometry, and editor authority preserved. Platform evidence is limited to Linux packaged headless startup and fresh-Wine Boot/MainMenu/native-DLL startup.",
+  "currentSliceNotes": "Header, MapPackagePicker, Load Map, Save Copy, Play Copy, and Menu are contained at 1280 and 1920 with full native package discovery, focus, map/ToolRail geometry, and editor authority preserved. Select the next tracker-approved slice; the rejected Bargebow candidate is not current work.",
   "currentSliceStatus": "completed",
   "currentSliceTitle": "Map Editor Responsive Top Bar Containment",
   "currentSliceUpdatedAt": "2026-08-13T03:58:52Z",
@@ -78543,6 +78543,27 @@
       "artifacts": [".artifacts/packaging_user_local_installer_smoke/report.json", ".artifacts/packaging_user_local_installer_smoke/archives/heroes-like-0.1.0-alpha.1-linux-x86_64.run", ".artifacts/packaging_user_local_installer_smoke/archives/heroes-like-0.1.0-alpha.1-linux-x86_64.tar.gz", ".artifacts/packaging_user_local_installer_smoke/archives/heroes-like-0.1.0-alpha.1-windows-x86_64.setup.exe", ".artifacts/packaging_user_local_installer_smoke/archives/heroes-like-0.1.0-alpha.1-windows-x86_64.zip"],
       "artifactSha256": {"canonical_icon": "18dbdec8d483ba4d5ff8da2534d898a41804ea41464ce7712ed6d85cf800f43a", "linux_run": "81001245577e6bfb7135f61224d9efacb039f5cbb0097a9bddd2703fb30cc8f9", "linux_archive": "a81b778634f110b45fe1c4c8e1b85e0ffb152103818a488579122bc6cb9b6c4d", "windows_setup": "1427211ba6732081d662ed81a494a99e64e8040d15f1121afa36ee83edfdd30c", "windows_archive": "b520bfc38334cf60eac31950d6ac88eda629c0d9f6645cd7c5ca3a5a445a29a5"},
       "completedAt": "2026-08-11T08:27:26Z"
+    },
+    {
+      "id": "combat-embercourt-bargebow-crew-durability-calibration-10184",
+      "title": "Embercourt Bargebow Crew Durability Calibration",
+      "status": "superseded",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/factions-content-bible.md"],
+      "purpose": "Screen and, only if accepted, raise Bargebow Crew HP from 13 to 14 as a bounded content-only durability calibration while preserving the authored protected limited-shot ranged role.",
+      "implementationTargets": ["content/units.json", "tests/battle_faction_fast_balance_benchmark.py", "tests/unit_ability_runtime_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"bargebow_hp": 13, "bogplate_hp": 15, "faction_balance_outlier_count": 34, "faction_balance_excess_severity": 187.0, "faction_balance_rows_at_or_above_65_pct": 3, "faction_balance_max_dominance_pct": 68.5, "faction_balance_max_side_bias_points": 0.73, "faction_balance_structural_failure_count": 0, "week3_embercourt_mireclaw_mireclaw_dominance_pct": 68.5, "active_encounter_queue_count": 0, "active_encounter_queue_signature": "829808c9"},
+      "candidate": {"bargebow_hp": 14, "control": "exact_in_memory_old_13_hp_with_identical_armies_formations_all_live_heroes_spellbooks_seeds_weeks_contexts_and_tie_policy"},
+      "completionCriteria": ["Focused live proof binds Bargebow HP and stack total health to 14, covers casualties and save/normalization round trips, and preserves every other stat, ability, shot, growth, cost, count, formation, and authority", "The corrected-RNG all-live 100-seed weeks-one-through-four matrix improves at least one baseline aggregate without worsening any aggregate, retains zero structural failures, reports every moved row, and keeps every non-Embercourt ordered row exact", "The active 59-encounter queue remains clear at signature 829808c9 and focused, autoplay, balance-regression, core, editor, repository, JSON, Python, and diff gates pass"],
+      "nonGoals": ["Bargebow ability, shots, damage, attack, defense, speed, initiative, resistance, cost, growth, count, formation, recruitment, or economy changes", "Bogplate, Mireclaw, other-unit, BattleRules, BattleAiRules, hero, spell, encounter, save-schema, benchmark-method, threshold, faction/matchup/week/seed branch, Native RMG, packaging, or platform changes", "tuning beyond HP 14 after a failed candidate, final faction-balance, overall-game, or release-readiness claims"],
+      "createdAt": "2026-08-13T04:49:43Z",
+      "startedAt": "2026-08-13T04:49:43Z",
+      "updatedAt": "2026-08-13T05:13:54Z",
+      "notes": "Rejected after the decisive exact full-matrix screen. The old-13 control is 34 outliers / 187.0 severity / three severe rows / 68.5 maximum dominance / 0.73 side bias / zero structural failures. HP 14 improves week-three Embercourt/Mireclaw from 68.5 to 64.5 percent Mireclaw dominance, but regresses the full matrix to 32 / 207.0 / five / 78.0 / 1.07 / zero. All non-Embercourt ordered rows remain exact; 20 Embercourt pair rows move, including week-one Embercourt/Thornwake worsening from 67.5 to 78.0 percent Embercourt dominance. A separate exact week-one audit identifies the Bargebow/Sporeglass maximum-damage gap as causal, but both bounded midpoint screens also fail: Bargebow max damage 5 produces 35 / 180.5 / two / 73.5 / 0.87 / zero, and Sporeglass max damage 5 produces 38 / 204.5 / four / 68.5 / 1.27 / zero. Ownership isolation is exact. Production remains unchanged, active breadth was not run, and no further candidate is registered.",
+      "remainingWork": "No implementation follows from the rejected HP or damage candidates. The separate week-two Mireclaw/Sunvault 65.5-percent row may receive a fresh source-backed attribution audit in a later selection, but it is not registered or actionable work.",
+      "result": {"accepted": false, "production_hp": 13, "candidate_hp": 14, "control_outliers": 34, "control_severity": 187.0, "control_severe_rows": 3, "control_max_dominance_pct": 68.5, "control_max_side_bias_points": 0.73, "candidate_outliers": 32, "candidate_severity": 207.0, "candidate_severe_rows": 5, "candidate_max_dominance_pct": 78.0, "candidate_max_side_bias_points": 1.07, "structural_failure_count": 0, "non_embercourt_ordered_rows_exact": true, "moved_embercourt_pair_row_count": 20, "week3_mireclaw_dominance_control_pct": 68.5, "week3_mireclaw_dominance_candidate_pct": 64.5, "week1_embercourt_thornwake_control_embercourt_dominance_pct": 67.5, "week1_embercourt_thornwake_candidate_embercourt_dominance_pct": 78.0, "bargebow_max_damage_5_outliers": 35, "bargebow_max_damage_5_severity": 180.5, "bargebow_max_damage_5_severe_rows": 2, "bargebow_max_damage_5_max_dominance_pct": 73.5, "bargebow_max_damage_5_max_side_bias_points": 0.87, "bargebow_max_damage_5_structural_failure_count": 0, "bargebow_max_damage_5_week3_mireclaw_dominance_pct": 73.5, "sporeglass_max_damage_5_outliers": 38, "sporeglass_max_damage_5_severity": 204.5, "sporeglass_max_damage_5_severe_rows": 4, "sporeglass_max_damage_5_max_dominance_pct": 68.5, "sporeglass_max_damage_5_max_side_bias_points": 1.27, "sporeglass_max_damage_5_structural_failure_count": 0, "ownership_isolation_exact": true, "active_breadth_run": false}
     }
   ],
   "project": "heroes-like",
@@ -78984,7 +79005,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "map_editor_responsive_top_bar_containment_complete_overall_release_in_progress",
+  "result": "bargebow_hp14_candidate_rejected_production_hp13_unchanged",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -79085,9 +79106,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Charter Lock now projects a bounded living-source retaliation aura to another defending allied veteran melee line through live combat, tactical AI, and player summaries. Focused ability coverage passes 117/117, the 59-encounter queue remains clear, and the all-live matrix improves to 27 outliers / 152.0 severity / 67.5 percent maximum dominance / 3.73 side bias with zero structural failures. Faction balance, Strategic AI, accessibility, content, performance, signing/publication, native Windows certification, Native RMG exact-state parity, release-channel integration, and overall release remain in progress.",
+  "summary": "The Bargebow Crew HP 14 candidate is rejected and superseded: it improves the cited week-three row but worsens full-matrix severity, severe rows, maximum dominance, and side bias. Production remains HP 13, active breadth was not run, and no implementation progress is claimed. Select the next tracker-approved slice; faction balance and overall release readiness remain open.",
   "taskId": "10184",
-  "updatedAt": "2026-08-12T22:12:32Z",
+  "updatedAt": "2026-08-13T05:13:54Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

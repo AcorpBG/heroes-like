@@ -64,7 +64,7 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 - Latest completed implementation slice: `strategic-ai-active-front-shared-spawn-path-context-10184`. Active-front support and ordinary spawn planning now consume one phase-local graph, duplicate loads fall to zero, exact strict-Small behavior remains unchanged, and Linux plus fresh Windows/Wine package boots pass.
 - Latest completed implementation slice: `strategic-ai-active-front-path-context-reuse-10184`. One phase-local virtual-probe path graph is now shared across every active-front spawn origin, exact candidates and strict-Small signatures remain unchanged, and Linux plus fresh Windows/Wine package boots pass.
 - Latest completed implementation slice: `strategic-ai-spawn-launch-policy-context-reuse-10184`. Each faction spawn loop now lazily loads capital/front launch policy once, reuses it through candidate selection and pressure consumption, preserves no-town short-circuits and exact strict-Small behavior, and passes Linux/Windows package boots.
-- Current implementation slice: `combat-veilmourn-undertow-harpooner-damage-calibration-10184` (completed). Undertow Harpooners now use the common tier-four ranged `5-8` damage band, improving the authoritative matrix from `35 / 200.5 / 5 / 70.0 / 1.13` to `34 / 187.0 / 3 / 68.5 / 0.73` with zero structural failures.
+- Latest rejected candidate: `combat-embercourt-bargebow-crew-durability-calibration-10184` (superseded). HP `14` improves week-three Embercourt/Mireclaw but decisively worsens the full all-live matrix, so production remains at `13` and no active-breadth run or implementation follows.
 - Latest completed implementation slice: `combat-veilmourn-undertow-harpooner-damage-calibration-10184`. The exact week-two Mireclaw/Veilmourn row improves from `70/30` to `62.5/37.5`; all non-Veilmourn ordered rows remain exact and the 59-encounter live queue remains clear.
 - Latest completed implementation slice: `combat-brasshollow-foundry-saint-sustain-calibration-10184`. Focused `118/118`, all-live 100-seed balance, 59-encounter breadth, compatibility, editor, and repository gates pass; Veilmourn/Brasshollow remains explicitly unchanged at `67/33`.
 - Latest completed implementation slice: `combat-mireclaw-drowned-antler-clean-line-pressure-10184`. The exact prior-screen control remains `38 / 332.5 / 13 / 79.0 / 1.6`; focused `118/118`, 59-encounter breadth, compatibility, editor, and repository gates pass.
@@ -4425,6 +4425,43 @@ Completion evidence:
 - week-three Brasshollow/Embercourt improves from `34.5/65.5` to `37.5/62.5`, week-four Brasshollow/Mireclaw reaches the `45/55` boundary, and the unchanged `33/67` Veilmourn row is not claimed;
 - the active scenario breadth report completes `59/59` encounters with zero stalls or invalid orders and a clear queue at repeated signature `829808c9`;
 - autoplay balance, balance regression, core systems, Godot editor parse, repository validation, JSON, Python, and diff checks pass. This content-only change is platform-neutral and introduces no Linux/Windows-specific runtime or packaging path.
+
+## Embercourt Bargebow Crew Durability Calibration
+
+id: `combat-embercourt-bargebow-crew-durability-calibration-10184`
+
+Status: superseded.
+
+Selected Phase 6 faction-balance implementation candidate. The authoritative all-live matrix remains
+`needs_tuning` at 34 outliers / `187.0` excess severity / three rows at or above 65 percent / `68.5`
+maximum dominance / `0.73` side bias / zero structural failures. A method-matched week-three
+Embercourt/Mireclaw screen identifies Bargebow Crew HP as a reciprocal causal boundary while exact
+ability strips do not improve Embercourt: raising only Bargebow HP from `13` to `15` moves Mireclaw
+dominance from `68.5` to `46.0` percent, and lowering only Bogplate Mauler HP from `15` to `13` moves
+it to `61.0` percent, with both ordered rows moving in the same direction and all other inputs exact.
+
+Implementation target:
+- screen and, only if accepted, change only `unit_embercourt_bargebow_crews.hp` from `13` to `14`, retaining their source-authored protected limited-shot ranged role and remaining below Bogplate Maulers at `15` HP;
+- compare the candidate against an exact in-memory old-`13` control under identical armies, formations, all-live heroes, spellbooks, seeds, weeks, contexts, and initiative-tie ownership;
+- preserve every other unit field, ability, shot count, rule, tactical-AI path, benchmark threshold, and non-Embercourt ordered row.
+
+Completion criteria:
+- focused live proof binds Bargebow unit HP and stack total health to `14`, covers casualties and save/normalization round trips, and keeps every other stat, ability, shot, growth, cost, count, formation, and authority exact;
+- the corrected-RNG all-live 100-seed weeks-one-through-four matrix improves at least one of 34 outliers / `187.0` severity / three severe rows / `68.5` maximum dominance / `0.73` side bias without worsening any aggregate, keeps zero structural failures, reports every moved row, and keeps every non-Embercourt ordered row exact;
+- the active 59-encounter breadth queue remains clear at signature `829808c9`, and focused, autoplay, balance-regression, core, editor, repository, JSON, Python, and diff gates pass.
+
+Non-goals:
+- no Bargebow ability, shots, damage, attack, defense, speed, initiative, resistance, cost, growth, count, formation, recruitment, or economy change;
+- no Bogplate, Mireclaw, other-unit, BattleRules, BattleAiRules, hero, spell, encounter, save-schema, benchmark-method, threshold, faction/matchup/week/seed branch, Native RMG, packaging, or platform change;
+- do not tune beyond `14` if the bounded candidate fails, or claim final faction balance, overall game completion, or release readiness.
+
+Rejection result:
+- the exact old-`13` control remains 34 outliers / `187.0` severity / three severe rows / `68.5` maximum dominance / `0.73` side bias / zero structural failures;
+- HP `14` improves week-three Embercourt/Mireclaw from `68.5` to `64.5` percent Mireclaw dominance, but the decisive full matrix regresses to 32 outliers / `207.0` severity / five severe rows / `78.0` maximum dominance / `1.07` side bias / zero structural failures;
+- all non-Embercourt ordered rows remain exact, while 20 Embercourt pair rows move and week-one Embercourt/Thornwake worsens from `67.5` to `78.0` percent Embercourt dominance;
+- the candidate violates the registered no-aggregate-regression gate, so no production change, focused acceptance, active 59-encounter run, or tuning beyond `14` is authorized. A separate source-backed attribution audit is required before selecting any further balance candidate.
+- the separate reciprocal week-one Embercourt/Thornwake audit identifies only the tier-three maximum-damage gap as causal, but both bounded midpoint screens also fail the full-matrix gate: Bargebow maximum damage `6` to `5` yields 35 outliers / `180.5` severity / two severe rows / `73.5` maximum dominance / `0.87` side bias / zero structural failures, while Sporeglass maximum damage `4` to `5` yields `38 / 204.5 / 4 / 68.5 / 1.27 / 0`;
+- the Bargebow midpoint worsens outliers, maximum dominance, and side bias and moves week-three Embercourt/Mireclaw to `73.5` percent Mireclaw dominance; the Sporeglass midpoint worsens every aggregate except equal maximum dominance. Ownership isolation is exact, active breadth is intentionally unrun, and neither candidate is registered or implemented.
 
 ## Phase Roadmap
 
