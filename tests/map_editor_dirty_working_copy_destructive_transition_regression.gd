@@ -57,6 +57,15 @@ const TOOL_RAIL_PICKER_NAMES := [
 	"PropertyDifficultyPicker",
 ]
 const TOOL_RAIL_FAMILY_IDS := ["town", "resource", "artifact", "encounter"]
+const TOP_BAR_SURFACE_NAMES := [
+	"Header",
+	"MapPackagePicker",
+	"LoadMap",
+	"SaveCopy",
+	"PlayWorkingCopy",
+	"Menu",
+]
+const TOP_BAR_LONG_PACKAGE_LABEL := "Map Package | The Cartographer's Exceptionally Long Frontier Archive of Riverwatch Holdings and Lantern Marsh Crossings | 128x128 | Inspect Only"
 
 var _report_scene: Node
 var _original_active_session = null
@@ -254,12 +263,28 @@ func _validate_command_focus_row(
 	var empty_layout := _tool_rail_layout_snapshot(shell, false, empty_semantic_tooltips)
 	if not bool(empty_layout.get("ok", false)):
 		return _fail_dict("Map Editor %d empty-state responsive ToolRail was not exact: %s" % [width, JSON.stringify(empty_layout)])
+	var empty_top_bar := await _validate_top_bar_resize_roundtrip(shell, package_state, width, "empty", false)
+	if not bool(empty_top_bar.get("ok", false)):
+		return {}
 
 	if not await _reset_case(shell, source_id, false):
 		return {}
 	picker.disabled = false
 	shell.call("_refresh_state")
 	await _settle()
+	var loaded_top_bar := await _validate_top_bar_resize_roundtrip(shell, package_state, width, "loaded", false)
+	if not bool(loaded_top_bar.get("ok", false)):
+		return {}
+	if not await _reset_case(shell, source_id, true):
+		return {}
+	var dirty_top_bar := await _validate_top_bar_resize_roundtrip(shell, package_state, width, "dirty", true)
+	if not bool(dirty_top_bar.get("ok", false)):
+		return {}
+	if not await _reset_case(shell, source_id, false):
+		return {}
+	var long_top_bar := await _validate_top_bar_long_label_roundtrip(shell, package_state, width)
+	if not bool(long_top_bar.get("ok", false)):
+		return {}
 	var empty_tile := _first_property_empty_tile(shell)
 	if empty_tile.x < 0:
 		return _fail_dict("Map Editor %d package fixture had no empty property tile." % width)
@@ -412,6 +437,10 @@ func _validate_command_focus_row(
 		"tool_rail_family_ids": family_layout.get("family_ids", []).duplicate(),
 		"tool_rail_long_selected_object": String(longest_selected_object.get("text", "")),
 		"tool_rail_resize_roundtrip": roundtrip,
+		"top_bar_empty": empty_top_bar,
+		"top_bar_loaded": loaded_top_bar,
+		"top_bar_dirty": dirty_top_bar,
+		"top_bar_long_label": long_top_bar,
 		"a_enter_once": true,
 		"option_native_refresh": true,
 		"canvas_interaction": canvas_result,
@@ -1836,6 +1865,401 @@ func _property_disabled_state_exact(
 		and (shell.get_node("%PropertyDifficultyPicker") as OptionButton).disabled == difficulty_disabled \
 		and (shell.get_node("%PropertyCollectedFlag") as CheckBox).disabled == collected_disabled \
 		and (shell.get_node("%ApplyObjectProperties") as Button).disabled == apply_disabled
+
+func _capture_top_bar_contract(shell: Node) -> Dictionary:
+	var header: Label = shell.get_node("%Header")
+	var picker: OptionButton = shell.get_node("%MapPackagePicker")
+	var popup := picker.get_popup()
+	var item_texts: Array[String] = []
+	var item_metadata: Array[String] = []
+	var popup_texts: Array[String] = []
+	var popup_metadata: Array[String] = []
+	for index in range(picker.get_item_count()):
+		item_texts.append(picker.get_item_text(index))
+		item_metadata.append(String(picker.get_item_metadata(index)))
+	for index in range(popup.get_item_count()):
+		popup_texts.append(popup.get_item_text(index))
+		popup_metadata.append(String(popup.get_item_metadata(index)))
+	return {
+		"header_text": header.text,
+		"header_tooltip": header.tooltip_text,
+		"selected": picker.selected,
+		"selected_text": picker.get_item_text(picker.selected) if picker.selected >= 0 and picker.selected < picker.get_item_count() else "",
+		"selected_metadata": String(picker.get_item_metadata(picker.selected)) if picker.selected >= 0 and picker.selected < picker.get_item_count() else "",
+		"display_text": picker.text,
+		"item_texts": item_texts,
+		"item_metadata": item_metadata,
+		"popup_texts": popup_texts,
+		"popup_metadata": popup_metadata,
+		"tooltip": picker.tooltip_text,
+		"disabled": picker.disabled,
+	}
+
+func _top_bar_expected_flexible_widths(shell: Node) -> Dictionary:
+	var top_pad: MarginContainer = shell.get_node("RootMargin/Shell/ShellPad/ShellBox/TopPanel/TopPad")
+	var top_bar: HBoxContainer = shell.get_node("RootMargin/Shell/ShellPad/ShellBox/TopPanel/TopPad/TopBar")
+	var header: Label = shell.get_node("%Header")
+	var picker: OptionButton = shell.get_node("%MapPackagePicker")
+	var commands: Array[Control] = [
+		shell.get_node("%LoadMap"),
+		shell.get_node("%SaveCopy"),
+		shell.get_node("%PlayWorkingCopy"),
+		shell.get_node("%Menu"),
+	]
+	var available_width := (
+		top_pad.size.x
+		- float(top_pad.get_theme_constant("margin_left"))
+		- float(top_pad.get_theme_constant("margin_right"))
+	)
+	var command_width := 0.0
+	var visible_surface_count := 2
+	for command in commands:
+		if command.visible:
+			command_width += command.get_combined_minimum_size().x
+			visible_surface_count += 1
+	var separation_width := float(top_bar.get_theme_constant("separation")) * float(maxi(0, visible_surface_count - 1))
+	var flexible_width := maxf(0.0, available_width - command_width - separation_width)
+	var header_floor: float = shell.call("_editor_top_bar_text_minimum_width", header, "Map Editor")
+	var picker_floor: float = shell.call("_editor_top_bar_picker_text_minimum_width", "Map Package")
+	var header_preferred := maxf(
+		float(shell.get("_editor_top_bar_header_preferred_width")),
+		float(shell.call("_editor_top_bar_text_minimum_width", header, header.text))
+	)
+	var picker_preferred := maxf(
+		float(shell.get("_editor_top_bar_picker_preferred_width")),
+		float(shell.call("_editor_top_bar_picker_text_minimum_width", String(shell.call("_selected_map_package_picker_text"))))
+	)
+	var header_width := header_floor
+	var picker_width := picker_floor
+	var floor_total := header_floor + picker_floor
+	var preferred_total := header_preferred + picker_preferred
+	if flexible_width >= preferred_total:
+		header_width = header_preferred
+		picker_width = picker_preferred
+	elif flexible_width >= floor_total:
+		var extra_width := flexible_width - floor_total
+		var header_need := maxf(0.0, header_preferred - header_floor)
+		var picker_need := maxf(0.0, picker_preferred - picker_floor)
+		var need_total := header_need + picker_need
+		var header_share := header_need / need_total if need_total > 0.0 else 0.5
+		header_width += extra_width * header_share
+		picker_width = flexible_width - header_width
+	elif floor_total > 0.0:
+		header_width = flexible_width * (header_floor / floor_total)
+		picker_width = flexible_width - header_width
+	return {
+		"available_width": available_width,
+		"command_width": command_width,
+		"separation_width": separation_width,
+		"flexible_width": flexible_width,
+		"header_floor": header_floor,
+		"picker_floor": picker_floor,
+		"header_preferred": header_preferred,
+		"picker_preferred": picker_preferred,
+		"header_width": floorf(header_width),
+		"picker_width": floorf(picker_width),
+	}
+
+func _top_bar_layout_snapshot(shell: Node, expected_contract: Dictionary, context: String) -> Dictionary:
+	var top_pad: MarginContainer = shell.get_node("RootMargin/Shell/ShellPad/ShellBox/TopPanel/TopPad")
+	var top_bar: HBoxContainer = shell.get_node("RootMargin/Shell/ShellPad/ShellBox/TopPanel/TopPad/TopBar")
+	var header: Label = shell.get_node("%Header")
+	var picker: OptionButton = shell.get_node("%MapPackagePicker")
+	var current_contract := _capture_top_bar_contract(shell)
+	var expected_widths := _top_bar_expected_flexible_widths(shell)
+	var pad_rect := top_pad.get_global_rect()
+	var inner_rect := Rect2(
+		pad_rect.position + Vector2(
+			float(top_pad.get_theme_constant("margin_left")),
+			float(top_pad.get_theme_constant("margin_top"))
+		),
+		pad_rect.size - Vector2(
+			float(top_pad.get_theme_constant("margin_left") + top_pad.get_theme_constant("margin_right")),
+			float(top_pad.get_theme_constant("margin_top") + top_pad.get_theme_constant("margin_bottom"))
+		)
+	)
+	var surface_names: Array[String] = []
+	var surface_rects := {}
+	var commands_exact := true
+	var contained := _rect_contained(inner_rect, top_bar.get_global_rect())
+	var ordered_nonoverlap := true
+	var previous_end := inner_rect.position.x
+	for child_value in top_bar.get_children():
+		if not (child_value is Control) or not (child_value as Control).visible:
+			continue
+		var control := child_value as Control
+		var rect := control.get_global_rect()
+		surface_names.append(String(control.name))
+		surface_rects[String(control.name)] = rect
+		contained = contained and _rect_contained(inner_rect, rect)
+		ordered_nonoverlap = ordered_nonoverlap and rect.position.x >= previous_end - 1.0
+		previous_end = rect.end.x
+		if control.name in [&"LoadMap", &"SaveCopy", &"PlayWorkingCopy", &"Menu"]:
+			commands_exact = commands_exact and control.is_visible_in_tree() \
+				and control.size.x + 0.5 >= control.get_combined_minimum_size().x
+	var selected_text := String(current_contract.get("selected_text", ""))
+	var picker_tooltip := String(current_contract.get("tooltip", ""))
+	var checks := {
+		"queue_settled": not bool(shell.get("_editor_top_bar_layout_sync_queued")),
+		"surface_membership_order_exact": surface_names == TOP_BAR_SURFACE_NAMES,
+		"top_pad_inner_containment_exact": contained,
+		"surface_order_no_overlap": ordered_nonoverlap,
+		"commands_visible_at_combined_minimum": commands_exact,
+		"header_allocator_width_exact": absf(header.custom_minimum_size.x - float(expected_widths.get("header_width", -1.0))) <= 0.5,
+		"picker_allocator_width_exact": absf(picker.custom_minimum_size.x - float(expected_widths.get("picker_width", -1.0))) <= 0.5,
+		"header_clip_and_full_tooltip": header.clip_text and header.tooltip_text == header.text and header.text != "",
+		"picker_bounded_selected_display": not picker.fit_to_longest_item and picker.clip_text,
+		"picker_contract_exact": current_contract == expected_contract,
+		"picker_popup_items_full_exact": current_contract.get("item_texts") == current_contract.get("popup_texts") \
+			and current_contract.get("item_metadata") == current_contract.get("popup_metadata"),
+		"picker_selection_exact": int(current_contract.get("selected", -1)) == int(expected_contract.get("selected", -2)) \
+			and String(current_contract.get("selected_metadata", "")) == String(expected_contract.get("selected_metadata", "")),
+		"picker_full_tooltip_exact": picker_tooltip == String(expected_contract.get("tooltip", "")) \
+			and picker_tooltip != "" and (selected_text == "" or picker_tooltip.contains(selected_text)),
+		"context_dirty_exact": bool(shell.call("validation_dirty_transition_snapshot").get("dirty", false)) == (context == "dirty"),
+	}
+	return {
+		"ok": _checks_exact(checks),
+		"checks": checks,
+		"context": context,
+		"inner_rect": inner_rect,
+		"top_bar_rect": top_bar.get_global_rect(),
+		"surface_names": surface_names,
+		"surface_rects": surface_rects,
+		"expected_widths": expected_widths,
+		"header_custom_minimum": header.custom_minimum_size.x,
+		"picker_custom_minimum": picker.custom_minimum_size.x,
+		"contract": current_contract,
+	}
+
+func _rect_contained(outer: Rect2, inner: Rect2, tolerance: float = 1.0) -> bool:
+	return inner.position.x >= outer.position.x - tolerance \
+		and inner.position.y >= outer.position.y - tolerance \
+		and inner.end.x <= outer.end.x + tolerance \
+		and inner.end.y <= outer.end.y + tolerance
+
+func _top_bar_body_geometry(shell: Node) -> Dictionary:
+	var body_row: HBoxContainer = shell.get_node("RootMargin/Shell/ShellPad/ShellBox/BodyRow")
+	var map_view: Control = shell.get_node("%Map")
+	var tool_rail: Control = shell.get_node("%ToolRail")
+	var body_rect := body_row.get_global_rect()
+	var map_rect := map_view.get_global_rect()
+	var tool_rail_rect := tool_rail.get_global_rect()
+	var map_local_rect := Rect2(map_view.position, map_view.size)
+	var tool_rail_local_rect := Rect2(tool_rail.position, tool_rail.size)
+	var checks := {
+		"map_contained": _rect_contained(body_rect, map_rect),
+		"tool_rail_contained": _rect_contained(body_rect, tool_rail_rect),
+		"map_before_tool_rail": map_rect.position.x <= tool_rail_rect.position.x,
+		"map_tool_rail_no_overlap": map_rect.end.x <= tool_rail_rect.position.x + 1.0,
+		"map_width_minimum": map_view.size.x >= 820.0,
+		"tool_rail_width_minimum": tool_rail.size.x >= 340.0,
+		"map_custom_minimum_exact": map_view.custom_minimum_size == Vector2(640.0, 400.0),
+		"tool_rail_custom_minimum_exact": tool_rail.custom_minimum_size == Vector2(340.0, 0.0),
+		"map_combined_minimum_honored": map_view.size.x + 0.5 >= map_view.get_combined_minimum_size().x,
+		"tool_rail_combined_minimum_honored": tool_rail.size.x + 0.5 >= tool_rail.get_combined_minimum_size().x,
+	}
+	return {
+		"ok": _checks_exact(checks),
+		"checks": checks,
+		"body_global_rect": body_rect,
+		"body_local_rect": Rect2(body_row.position, body_row.size),
+		"body_size": body_row.size,
+		"map_global_rect": map_rect,
+		"map_local_rect": map_local_rect,
+		"map_size": map_view.size,
+		"map_custom_minimum": map_view.custom_minimum_size,
+		"map_combined_minimum": map_view.get_combined_minimum_size(),
+		"tool_rail_global_rect": tool_rail_rect,
+		"tool_rail_local_rect": tool_rail_local_rect,
+		"tool_rail_size": tool_rail.size,
+		"tool_rail_custom_minimum": tool_rail.custom_minimum_size,
+		"tool_rail_combined_minimum": tool_rail.get_combined_minimum_size(),
+	}
+
+func _top_bar_geometry_convergence_snapshot(shell: Node) -> Dictionary:
+	var top_bar: HBoxContainer = shell.get_node("RootMargin/Shell/ShellPad/ShellBox/TopPanel/TopPad/TopBar")
+	var header: Label = shell.get_node("%Header")
+	var picker: OptionButton = shell.get_node("%MapPackagePicker")
+	return {
+		"body_geometry": _top_bar_body_geometry(shell),
+		"top_bar_rect": top_bar.get_global_rect(),
+		"header_custom_minimum": header.custom_minimum_size,
+		"picker_custom_minimum": picker.custom_minimum_size,
+	}
+
+func _top_bar_body_geometry_contract(geometry: Dictionary) -> Dictionary:
+	var tool_rail_size: Vector2 = geometry.get("tool_rail_size", Vector2.ZERO)
+	return {
+		"checks": geometry.get("checks", {}).duplicate(true),
+		"map_custom_minimum": geometry.get("map_custom_minimum"),
+		"map_combined_minimum": geometry.get("map_combined_minimum"),
+		"tool_rail_custom_minimum": geometry.get("tool_rail_custom_minimum"),
+		"tool_rail_combined_minimum": geometry.get("tool_rail_combined_minimum"),
+		"tool_rail_width": tool_rail_size.x,
+	}
+
+func _await_top_bar_geometry_stable(shell: Node, expected_width: int) -> Dictionary:
+	var layout_host := shell.get_parent() as Control
+	var previous := {}
+	for frame_index in range(12):
+		await get_tree().process_frame
+		if get_window().size.x != expected_width \
+			or not is_equal_approx(layout_host.size.x, float(expected_width)) \
+			or bool(shell.get("_editor_top_bar_layout_sync_queued")):
+			previous = {}
+			continue
+		var current := _top_bar_geometry_convergence_snapshot(shell)
+		if not previous.is_empty() and current == previous:
+			return {
+				"ok": true,
+				"frames": frame_index + 1,
+				"expected_width": expected_width,
+				"snapshot": current,
+			}
+		previous = current
+	return _fail_dict("Map Editor TopBar geometry did not converge at requested width %d within 12 process frames: %s" % [
+		expected_width,
+		JSON.stringify({
+			"window_width": get_window().size.x,
+			"host_width": layout_host.size.x,
+			"queue_pending": bool(shell.get("_editor_top_bar_layout_sync_queued")),
+			"last_snapshot": previous,
+		}),
+	])
+
+func _top_bar_nonlayout_state(shell: Node) -> Dictionary:
+	var snapshot: Dictionary = shell.call("validation_dirty_transition_snapshot")
+	var tool_scroll: ScrollContainer = shell.get_node("RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll")
+	var tool_buttons: GridContainer = shell.get_node("RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox/ToolButtons")
+	var actions := {}
+	for name in ["LoadMap", "SaveCopy", "PlayWorkingCopy", "Menu"]:
+		var button: Button = shell.get_node("%%%s" % name)
+		actions[name] = {"text": button.text, "tooltip": button.tooltip_text, "disabled": button.disabled}
+	return {
+		"dirty": bool(snapshot.get("dirty", false)),
+		"tool": String(snapshot.get("tool", "")),
+		"selected_tile": snapshot.get("selected_tile", {}).duplicate(true),
+		"selected_package_id": String(snapshot.get("selected_map_package_id", "")),
+		"top_bar_contract": _capture_top_bar_contract(shell),
+		"actions": actions,
+		"tool_rail_pickers": _tool_rail_picker_state(shell),
+		"tool_rail_vscroll": tool_scroll.scroll_vertical,
+		"tool_rail_columns": tool_buttons.columns,
+	}
+
+func _validate_top_bar_resize_roundtrip(
+	shell: Node,
+	package_state: Dictionary,
+	initial_width: int,
+	context: String,
+	require_dirty: bool
+) -> Dictionary:
+	var layout_host := shell.get_parent() as Control
+	var focus_before := get_viewport().gui_get_focus_owner() as Control
+	var contract_before := _capture_top_bar_contract(shell)
+	var state_before := _top_bar_nonlayout_state(shell)
+	var stable_before := await _await_top_bar_geometry_stable(shell, initial_width)
+	if not bool(stable_before.get("ok", false)):
+		return {}
+	var body_geometry_before: Dictionary = stable_before.get("snapshot", {}).get("body_geometry", {}).duplicate(true)
+	var body_contract_before := _top_bar_body_geometry_contract(body_geometry_before)
+	var authority_before := _focus_background_authority(shell)
+	if bool(state_before.get("dirty", false)) != require_dirty:
+		return _fail_dict("Map Editor %d TopBar %s fixture dirty state was not exact." % [initial_width, context])
+	if not bool(body_geometry_before.get("ok", false)):
+		return _fail_dict("Map Editor %d TopBar %s initial BodyRow/Map/ToolRail geometry was not exact: %s" % [initial_width, context, JSON.stringify(body_geometry_before)])
+	var initial_layout := _top_bar_layout_snapshot(shell, contract_before, context)
+	if not bool(initial_layout.get("ok", false)):
+		return _fail_dict("Map Editor %d TopBar %s initial layout was not exact: %s" % [initial_width, context, JSON.stringify(initial_layout)])
+	var resize_width := 1920 if initial_width == 1280 else 1280
+	layout_host.size = Vector2(float(resize_width), 720.0)
+	get_window().size = Vector2i(resize_width, 720)
+	var stable_resized := await _await_top_bar_geometry_stable(shell, resize_width)
+	if not bool(stable_resized.get("ok", false)):
+		return {}
+	var resized_layout := _top_bar_layout_snapshot(shell, contract_before, context)
+	var resized_state := _top_bar_nonlayout_state(shell)
+	var resized_body_geometry: Dictionary = stable_resized.get("snapshot", {}).get("body_geometry", {}).duplicate(true)
+	var resized_body_contract := _top_bar_body_geometry_contract(resized_body_geometry)
+	var resized_checks := {
+		"layout_exact": bool(resized_layout.get("ok", false)),
+		"body_geometry_exact": bool(resized_body_geometry.get("ok", false)),
+		"body_component_contract_exact": resized_body_contract == body_contract_before,
+		"focus_identity_exact": get_viewport().gui_get_focus_owner() == focus_before,
+		"state_exact": resized_state == state_before,
+		"background_authority_exact": _focus_background_authority(shell) == authority_before,
+		"package_files_exact": _package_file_state() == package_state,
+	}
+	if not _checks_exact(resized_checks):
+		return _fail_dict("Map Editor %d->%d TopBar %s resize drifted layout/focus/action/dirty/package/canvas/ToolRail authority: %s" % [
+			initial_width, resize_width, context, JSON.stringify({"checks": resized_checks, "layout": resized_layout, "body_before": body_geometry_before, "body_resized": resized_body_geometry}),
+		])
+	layout_host.size = Vector2(float(initial_width), 720.0)
+	get_window().size = Vector2i(initial_width, 720)
+	var stable_restored := await _await_top_bar_geometry_stable(shell, initial_width)
+	if not bool(stable_restored.get("ok", false)):
+		return {}
+	var restored_layout := _top_bar_layout_snapshot(shell, contract_before, context)
+	var restored_body_geometry: Dictionary = stable_restored.get("snapshot", {}).get("body_geometry", {}).duplicate(true)
+	var restored_body_contract := _top_bar_body_geometry_contract(restored_body_geometry)
+	var restored_checks := {
+		"layout_exact": bool(restored_layout.get("ok", false)),
+		"body_geometry_exact": bool(restored_body_geometry.get("ok", false)),
+		"body_component_contract_restored_exact": restored_body_contract == body_contract_before,
+		"focus_identity_exact": get_viewport().gui_get_focus_owner() == focus_before,
+		"state_exact": _top_bar_nonlayout_state(shell) == state_before,
+		"background_authority_exact": _focus_background_authority(shell) == authority_before,
+		"package_files_exact": _package_file_state() == package_state,
+	}
+	if not _checks_exact(restored_checks):
+		return _fail_dict("Map Editor %d->%d->%d TopBar %s roundtrip did not restore exact layout/focus/action/dirty/package/canvas/ToolRail authority: %s" % [
+			initial_width, resize_width, initial_width, context, JSON.stringify({"checks": restored_checks, "layout": restored_layout, "body_before": body_geometry_before, "body_restored": restored_body_geometry}),
+		])
+	return {
+		"ok": true,
+		"context": context,
+		"widths": [initial_width, resize_width, initial_width],
+		"initial_widths": initial_layout.get("expected_widths", {}).duplicate(true),
+		"resized_widths": resized_layout.get("expected_widths", {}).duplicate(true),
+		"restored_widths": restored_layout.get("expected_widths", {}).duplicate(true),
+		"initial_body_geometry": body_geometry_before.duplicate(true),
+		"resized_body_geometry": resized_body_geometry.duplicate(true),
+		"restored_body_geometry": restored_body_geometry.duplicate(true),
+		"body_component_contract": body_contract_before.duplicate(true),
+		"stable_frames": [int(stable_before.get("frames", 0)), int(stable_resized.get("frames", 0)), int(stable_restored.get("frames", 0))],
+		"focus_action_dirty_package_canvas_tool_rail_authority_exact": true,
+	}
+
+func _validate_top_bar_long_label_roundtrip(shell: Node, package_state: Dictionary, width: int) -> Dictionary:
+	var picker: OptionButton = shell.get_node("%MapPackagePicker")
+	if picker.selected < 0 or picker.selected >= picker.get_item_count():
+		return _fail_dict("Map Editor %d TopBar long-label fixture had no selected package." % width)
+	var original_contract := _capture_top_bar_contract(shell)
+	var selected_index := picker.selected
+	var original_text := picker.get_item_text(selected_index)
+	picker.set_item_text(selected_index, TOP_BAR_LONG_PACKAGE_LABEL)
+	shell.call("_refresh_state")
+	await _settle()
+	if picker.get_item_text(selected_index) != TOP_BAR_LONG_PACKAGE_LABEL \
+		or picker.text != TOP_BAR_LONG_PACKAGE_LABEL \
+		or not picker.tooltip_text.contains(TOP_BAR_LONG_PACKAGE_LABEL):
+		return _fail_dict("Map Editor %d TopBar did not expose the exact full long selected package label and tooltip." % width)
+	var result := await _validate_top_bar_resize_roundtrip(shell, package_state, width, "long_label", false)
+	picker.set_item_text(selected_index, original_text)
+	shell.call("_refresh_state")
+	var stable_restored := await _await_top_bar_geometry_stable(shell, width)
+	if not bool(stable_restored.get("ok", false)):
+		return {}
+	var restored_contract := _capture_top_bar_contract(shell)
+	if picker.get_item_text(selected_index) != original_text \
+		or picker.text != original_text \
+		or restored_contract != original_contract:
+		return _fail_dict("Map Editor %d TopBar long-label fixture did not restore the exact whole header/picker contract: %s" % [
+			width,
+			JSON.stringify({"original": original_contract, "restored": restored_contract}),
+		])
+	return result
 
 func _tool_rail_layout_snapshot(
 	shell: Node,

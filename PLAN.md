@@ -25,6 +25,7 @@ Rules:
 Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Current selected implementation slice: select the next tracker-approved release-readiness implementation slice.
+- Latest completed implementation slice: `ux-map-editor-responsive-top-bar-containment-10184`. The Map Editor now allocates the live TopPad between the clipped full-tooltip header and native package picker while reserving the exact combined minima of Load Map, Save Copy, Play Copy, Menu, and their separations, preserving the map, ToolRail, focus, package, and editor authority at 1280 and 1920.
 - Latest completed implementation slice: `accessibility-battle-board-cursor-live-context-coalescing-10184`. Battle now exposes one bounded polite live context for the existing keyboard/controller Board cursor, coalesces changed navigation to its final settled hex, and announces exact existing A/B results without changing combat, input timing, mouse behavior, or battle authority.
 - Latest completed implementation slice: `ux-overworld-selected-route-field-readiness-coherence-10184`. Targeted route selection now refreshes the route-owned ObjectiveBrief readiness tooltip, idle Event/action context, End Turn cue, and drawer/handoff cues from the same authoritative cached action and route state while preserving active feedback/recap, compact zero-rich construction, incremental ownership, and all route consequences.
 - Latest completed implementation slice: `map-editor-generated-package-play-copy-restore-tile-baseline-10184`. Generated-package Map Editor Play Copy now carries the immutable loaded-package baseline through the in-memory return handoff, so Restore Tile remains exact without authored-scenario fallback, disk reload, generated-content registration, or Native RMG changes.
@@ -1353,6 +1354,36 @@ Completion evidence:
 - accessibility semantics, independent 1920/1280/1024 battle-layout gates, Quick Resolve, Withdrawal, manual overwrite, active-play focus, deterministic RNG, battle animation, animation cue catalog, repository validation, Python, diff, and editor gates pass;
 - official Linux release export and packaged headless startup pass, but that harness does not expose Boot/MainMenu markers or execute packaged BattleBoard interaction;
 - official Windows release export and fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass, but no packaged BattleBoard interaction, native Linux AT-SPI observation, native Windows UIA, controller or hardware certification, signing/publication, whole-game readiness, or whole-release completion is claimed.
+
+## Map Editor Responsive Top Bar Containment
+
+id: `ux-map-editor-responsive-top-bar-containment-10184`
+
+Status: completed.
+
+Selected Phase 6 UX implementation slice. The completed responsive ToolRail slice explicitly excluded top-bar responsiveness. The shipped TopBar still places the fixed-minimum header, default longest-item MapPackagePicker, and four fixed-minimum commands in one horizontal row; authored package labels can therefore expand the picker and displace commands independently of the contained ToolRail.
+
+Implementation target:
+- keep Header, MapPackagePicker, Load Map, Save Copy, Play Copy, and Menu visible, horizontally contained, non-overlapping, and keyboard/controller reachable inside the live TopPad inner rectangle at 1280 and 1920;
+- bound only the selected package presentation while preserving exact full package labels, metadata, native popup items, and current selection through a semantic tooltip or equivalent existing discoverability surface;
+- derive any compact sizing or reflow from the live TopBar width and current theme/control minima, and preserve exact resize round trips without changing the existing map or ToolRail minimum widths;
+- keep package indexing/loading, Save Copy, Play Copy, Menu, dirty-confirmation, focus, canvas, mouse, session, package, file, save, cache, settings, and route authority unchanged.
+
+Completion criteria:
+- focused 1280 and 1920 empty, loaded, dirty, and longest-package-label rows prove every visible TopBar descendant is fully contained in the TopPad inner rectangle with no overlap, hidden command, clipped command text, or horizontal overflow;
+- MapPackagePicker retains exact item count/order/text/metadata/selection and full current-label discoverability while bounded presentation survives 1280 -> 1920 -> 1280 resize round trips;
+- the existing forward/reverse keyboard/controller focus cycle, native picker ownership, Load Map/Save Copy/Play Copy/Menu activation, dirty-confirmation return focus, canvas geometry, ToolRail containment, mouse behavior, and complete working-copy/package/files/save/cache/settings/routes authority remain exact;
+- focused Map Editor dirty-working-copy, package/load/save-copy, command-focus/canvas, accessibility, editor, repository, Linux release, and fresh Windows/Wine gates pass; packaged TopBar interaction is claimed only when the platform harness actually exercises it.
+
+Non-goals:
+- do not shrink the map below its existing minimum, widen or redesign the ToolRail, hide commands, replace the native OptionButton popup, change package labels or metadata, or change editor information architecture;
+- do not change package indexing/loading, Save Copy, Play Copy, Menu, dirty-confirmation, tool/canvas consequences, shared OverworldMapView, live-region policy, input mappings/timing, save/package schema, or Native RMG;
+- do not claim controller or hardware certification, native Linux AT-SPI, native Windows UIA, signing, publication, whole-game readiness, or overall release completion.
+
+Closure evidence:
+- focused fresh-XDG headless coverage passed the exact 1280/1920 empty, loaded, dirty, longest-label, and resize-roundtrip TopBar containment contract, including native picker items/metadata/selection, full tooltips, focus, canvas, ToolRail, files, cache, settings, routes, and working-copy authority;
+- Map Editor smoke, package load, generated-package Play Copy/Restore Tile/Save Copy, active return, maps-folder browser, accessibility, core, repository, Python, diff, and editor compatibility gates passed;
+- official Linux export and packaged headless startup passed, and official Windows export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup passed. These harnesses did not exercise packaged TopBar interaction, so no packaged TopBar parity, controller, AT-SPI, UIA, native-hardware, signing/publication, whole-game, or whole-release claim is made.
 
 ## Keyboard Navigation Layout Settings
 

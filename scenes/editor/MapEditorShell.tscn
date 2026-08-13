@@ -79,12 +79,15 @@ custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Map Editor"
+clip_text = true
 
 [node name="MapPackagePicker" type="OptionButton" parent="RootMargin/Shell/ShellPad/ShellBox/TopPanel/TopPad/TopBar"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(360, 0)
 layout_mode = 2
 size_flags_horizontal = 3
+fit_to_longest_item = false
+clip_text = true
 
 [node name="LoadMap" type="Button" parent="RootMargin/Shell/ShellPad/ShellBox/TopPanel/TopPad/TopBar"]
 unique_name_in_owner = true
