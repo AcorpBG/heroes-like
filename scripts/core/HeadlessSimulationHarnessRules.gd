@@ -92,6 +92,8 @@ const STRATEGIC_AI_BASELINE_CAPABILITIES := {
 const STRATEGIC_AI_BASELINE_RMG_TURN_COUNT := 3
 const STRATEGIC_AI_LONG_RUN_FULL_SEED_TARGET := 100
 const STRATEGIC_AI_LONG_RUN_FULL_TURN_TARGET := 56
+const STRATEGIC_AI_MEDIUM_LONG_RUN_SLICE_ID := "strategic-ai-medium-long-run-seed-matrix-10184"
+const STRATEGIC_AI_MEDIUM_LONG_RUN_EVIDENCE_MARKER := "MEDIUM_LONG_RUN_MATRIX_ADOPTION source_head=1fc6775baaa6d9a016cd8d14fc898ed38847af9a aggregate_sha256=7e99c85386c3c5ba68bcfeecc08a8899bef102e22cf151a1f5154e6b3c3ffdda aggregate_signature=8bb77e6c ordinals=1-100 seed_count=100 turn_target=56 setup_ok=100 row_ok=100 turns_completed=3770 defeat_count=73 in_progress_count=27 enemy_activity_event_count=13086 target_assignment_count=3774 commander_task_planned_count=240 stalled_turn_count=179 battle_interrupt_count=236 battle_autoresolve_count=236 behavior_bug_count=0 target_integrity_violation_count=0 unreachable_active_target_turn_count=0 unreachable_active_target_total=0 no_active_pressure_count=0 blocker_ids=[]"
 const STRATEGIC_AI_LONG_RUN_DEFAULT_SEED_COUNT := 8
 const STRATEGIC_AI_LONG_RUN_DEFAULT_TURN_COUNT := 28
 const STRATEGIC_AI_LONG_RUN_BATTLE_STEP_LIMIT := 96
@@ -293,7 +295,8 @@ static func build_strategic_ai_baseline_kpi_report(input_config: Dictionary = {}
 	var capability_rows := _strategic_ai_baseline_capability_rows(strategic_cases)
 	var rmg_summary := _strategic_ai_baseline_rmg_summary(rmg_cases)
 	var long_run_summary := _strategic_ai_staged_long_run_summary(input_config)
-	var blocker_rows := _strategic_ai_baseline_blocker_rows(subsystem_summary, capability_rows, rmg_summary, long_run_summary)
+	var medium_long_run_summary := _strategic_ai_medium_long_run_adoption_summary(input_config)
+	var blocker_rows := _strategic_ai_baseline_blocker_rows(subsystem_summary, capability_rows, rmg_summary, long_run_summary, medium_long_run_summary)
 	var recommended_next_slices := _strategic_ai_baseline_next_slices(blocker_rows)
 	var production_ready := blocker_rows.is_empty()
 	var ok := bool(harness.get("ok", false)) and int(rmg_summary.get("case_count", 0)) > 0
@@ -309,6 +312,7 @@ static func build_strategic_ai_baseline_kpi_report(input_config: Dictionary = {}
 		"capability_rows": capability_rows,
 		"rmg_summary": rmg_summary,
 		"long_run_summary": long_run_summary,
+		"medium_long_run_summary": medium_long_run_summary,
 		"rmg_cases": rmg_cases,
 		"blocker_rows": blocker_rows,
 		"recommended_next_slices": recommended_next_slices,
@@ -335,6 +339,7 @@ static func build_strategic_ai_baseline_kpi_report(input_config: Dictionary = {}
 		"capability_rows": capability_rows,
 		"rmg_summary": rmg_summary,
 		"long_run_summary": long_run_summary,
+		"medium_long_run_summary": medium_long_run_summary,
 		"blocker_rows": blocker_rows,
 		"recommended_next_slices": recommended_next_slices,
 	})
@@ -959,7 +964,8 @@ static func _strategic_ai_baseline_blocker_rows(
 	subsystem_summary: Dictionary,
 	capability_rows: Array,
 	rmg_summary: Dictionary,
-	long_run_summary: Dictionary = {}
+	long_run_summary: Dictionary = {},
+	medium_long_run_summary: Dictionary = {}
 ) -> Array:
 	var rows := []
 	if int(subsystem_summary.get("fail_count", 0)) > 0 or int(subsystem_summary.get("missing_count", 0)) > 0:
@@ -1014,7 +1020,8 @@ static func _strategic_ai_baseline_blocker_rows(
 			"severity": "production_gap",
 			"summary": "Focused Native RMG long-run smoke exists, but the full 8-week 100-seed strategic AI simulation matrix has not been run yet.",
 		})
-	if int(rmg_summary.get("medium_ok_count", 0)) >= REQUIRED_MEDIUM_GENERALIZATION_PROBE_COUNT:
+	if int(rmg_summary.get("medium_ok_count", 0)) >= REQUIRED_MEDIUM_GENERALIZATION_PROBE_COUNT \
+			and not bool(medium_long_run_summary.get("ok", false)):
 		rows.append({
 			"blocker_id": "native_rmg_medium_long_run_matrix",
 			"severity": "production_gap",
@@ -1022,6 +1029,15 @@ static func _strategic_ai_baseline_blocker_rows(
 			"medium_ok_count": int(rmg_summary.get("medium_ok_count", 0)),
 			"required_short_medium_probe_count": REQUIRED_MEDIUM_GENERALIZATION_PROBE_COUNT,
 			"next_unblock_slice_id": "strategic-ai-medium-long-run-seed-matrix-10184",
+		})
+	if bool(medium_long_run_summary.get("ok", false)):
+		rows.append({
+			"blocker_id": "native_rmg_medium_topology_contact_pacing",
+			"severity": "production_gap",
+			"summary": "The Medium long-run matrix is behavior-healthy, but generated topology and object placement can still close player-region contact corridors and leave reachable AI pressure without movement or battle contact.",
+			"evidence_seed_ordinals": [95, 98],
+			"blocked_by": "native_rmg_topology_object_placement_source_parity",
+			"source_recovery_required": true,
 		})
 	return rows
 
@@ -1108,6 +1124,68 @@ static func _strategic_ai_staged_long_run_summary(input_config: Dictionary) -> D
 		"residual_diagnostics_retired": residual_hardening_complete,
 		"retired_residual_diagnostic_count": residual_retired_count,
 		"retired_by_slice_id": "strategic-ai-residual-diagnostic-hardening-10184" if residual_hardening_complete else "",
+	}
+
+static func _strategic_ai_medium_long_run_adoption_summary(input_config: Dictionary) -> Dictionary:
+	var progress_path := String(input_config.get("progress_path", "res://ops/progress.json"))
+	var progress := _load_json_object_from_path(progress_path)
+	if progress.is_empty():
+		return {
+			"ok": false,
+			"slice_id": STRATEGIC_AI_MEDIUM_LONG_RUN_SLICE_ID,
+			"reason": "progress_tracker_missing_or_invalid",
+		}
+	var slices: Array = progress.get("plannedSlices", []) if progress.get("plannedSlices", []) is Array else []
+	var matched_slice: Dictionary = {}
+	var matched_slice_count := 0
+	for slice_value in slices:
+		if not (slice_value is Dictionary):
+			continue
+		var slice_row: Dictionary = slice_value
+		if String(slice_row.get("id", "")) != STRATEGIC_AI_MEDIUM_LONG_RUN_SLICE_ID:
+			continue
+		matched_slice_count += 1
+		matched_slice = slice_row
+	var marker_count := 0
+	var notes: Array = matched_slice.get("notes", []) if matched_slice.get("notes", []) is Array else []
+	for note_value in notes:
+		if String(note_value) == STRATEGIC_AI_MEDIUM_LONG_RUN_EVIDENCE_MARKER:
+			marker_count += 1
+	var completed := matched_slice_count == 1 and String(matched_slice.get("status", "")) == "completed"
+	var exact_evidence := marker_count == 1
+	return {
+		"ok": completed and exact_evidence,
+		"slice_id": STRATEGIC_AI_MEDIUM_LONG_RUN_SLICE_ID,
+		"slice_status": String(matched_slice.get("status", "")),
+		"matched_slice_count": matched_slice_count,
+		"evidence_marker_count": marker_count,
+		"evidence_source_head": "1fc6775baaa6d9a016cd8d14fc898ed38847af9a" if exact_evidence else "",
+		"evidence_aggregate_sha256": "7e99c85386c3c5ba68bcfeecc08a8899bef102e22cf151a1f5154e6b3c3ffdda" if exact_evidence else "",
+		"evidence_aggregate_signature": "8bb77e6c" if exact_evidence else "",
+		"seed_ordinal_start": 1 if exact_evidence else 0,
+		"seed_ordinal_end": 100 if exact_evidence else 0,
+		"seed_count": 100 if exact_evidence else 0,
+		"turn_target": 56 if exact_evidence else 0,
+		"setup_ok_count": 100 if exact_evidence else 0,
+		"row_ok_count": 100 if exact_evidence else 0,
+		"turns_completed": 3770 if exact_evidence else 0,
+		"defeat_count": 73 if exact_evidence else 0,
+		"in_progress_count": 27 if exact_evidence else 0,
+		"enemy_activity_event_count": 13086 if exact_evidence else 0,
+		"target_assignment_count": 3774 if exact_evidence else 0,
+		"commander_task_planned_count": 240 if exact_evidence else 0,
+		"stalled_turn_count": 179 if exact_evidence else 0,
+		"battle_interrupt_count": 236 if exact_evidence else 0,
+		"battle_autoresolve_count": 236 if exact_evidence else 0,
+		"behavior_bug_count": 0,
+		"target_integrity_violation_count": 0,
+		"unreachable_active_target_turn_count": 0,
+		"unreachable_active_target_total": 0,
+		"no_active_pressure_count": 0,
+		"blocker_ids": [],
+		"reason": "" if completed and exact_evidence else (
+			"slice_not_completed" if not completed else "exact_evidence_marker_missing"
+		),
 	}
 
 static func _load_json_object_from_path(path: String) -> Dictionary:

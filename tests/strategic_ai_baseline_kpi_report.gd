@@ -88,6 +88,61 @@ func _assert_report(report: Dictionary) -> bool:
 	if not bool(long_run_summary.get("residual_diagnostics_retired", false)):
 		_fail("Strategic AI baseline long-run evidence did not retire residual diagnostics: %s" % JSON.stringify(long_run_summary))
 		return false
+	var medium_long_run_summary: Dictionary = report.get("medium_long_run_summary", {}) if report.get("medium_long_run_summary", {}) is Dictionary else {}
+	if not bool(medium_long_run_summary.get("ok", false)):
+		_fail("Strategic AI baseline did not consume the exact completed Medium long-run matrix evidence: %s" % JSON.stringify(medium_long_run_summary))
+		return false
+	if String(medium_long_run_summary.get("slice_id", "")) != HeadlessSimulationHarnessRulesScript.STRATEGIC_AI_MEDIUM_LONG_RUN_SLICE_ID \
+			or String(medium_long_run_summary.get("slice_status", "")) != "completed" \
+			or int(medium_long_run_summary.get("matched_slice_count", 0)) != 1 \
+			or int(medium_long_run_summary.get("evidence_marker_count", 0)) != 1:
+		_fail("Medium long-run adoption must come from one exact completed tracker slice: %s" % JSON.stringify(medium_long_run_summary))
+		return false
+	if String(medium_long_run_summary.get("evidence_source_head", "")) != "1fc6775baaa6d9a016cd8d14fc898ed38847af9a" \
+			or String(medium_long_run_summary.get("evidence_aggregate_sha256", "")) != "7e99c85386c3c5ba68bcfeecc08a8899bef102e22cf151a1f5154e6b3c3ffdda" \
+			or String(medium_long_run_summary.get("evidence_aggregate_signature", "")) != "8bb77e6c":
+		_fail("Medium long-run adoption evidence provenance is not exact: %s" % JSON.stringify(medium_long_run_summary))
+		return false
+	for expected_pair in [
+		["seed_ordinal_start", 1],
+		["seed_ordinal_end", 100],
+		["seed_count", 100],
+		["turn_target", 56],
+		["setup_ok_count", 100],
+		["row_ok_count", 100],
+		["turns_completed", 3770],
+		["defeat_count", 73],
+		["in_progress_count", 27],
+		["enemy_activity_event_count", 13086],
+		["target_assignment_count", 3774],
+		["commander_task_planned_count", 240],
+		["stalled_turn_count", 179],
+		["battle_interrupt_count", 236],
+		["battle_autoresolve_count", 236],
+	]:
+		if int(medium_long_run_summary.get(String(expected_pair[0]), -1)) != int(expected_pair[1]):
+			_fail("Medium long-run adoption aggregate mismatch for %s: %s" % [String(expected_pair[0]), JSON.stringify(medium_long_run_summary)])
+			return false
+	for zero_key in [
+		"behavior_bug_count",
+		"target_integrity_violation_count",
+		"unreachable_active_target_turn_count",
+		"unreachable_active_target_total",
+		"no_active_pressure_count",
+	]:
+		if int(medium_long_run_summary.get(zero_key, -1)) != 0:
+			_fail("Medium long-run adoption retained failure count %s: %s" % [zero_key, JSON.stringify(medium_long_run_summary)])
+			return false
+	var medium_blocker_ids: Array = medium_long_run_summary.get("blocker_ids", []) if medium_long_run_summary.get("blocker_ids", []) is Array else ["invalid"]
+	if not medium_blocker_ids.is_empty():
+		_fail("Medium long-run adoption retained production blocker ids: %s" % JSON.stringify(medium_long_run_summary))
+		return false
+	var missing_medium_adoption: Dictionary = HeadlessSimulationHarnessRulesScript._strategic_ai_medium_long_run_adoption_summary({
+		"progress_path": "res://tests/fixtures/strategic_ai_missing_progress_tracker.json",
+	})
+	if bool(missing_medium_adoption.get("ok", true)) or String(missing_medium_adoption.get("reason", "")) != "progress_tracker_missing_or_invalid":
+		_fail("Medium long-run adoption must fail closed without its tracker authority: %s" % JSON.stringify(missing_medium_adoption))
+		return false
 	var blocker_rows: Array = report.get("blocker_rows", []) if report.get("blocker_rows", []) is Array else []
 	if blocker_rows.is_empty():
 		_fail("Strategic AI baseline must identify production blockers.")
@@ -101,12 +156,18 @@ func _assert_report(report: Dictionary) -> bool:
 	if not _blocker_row(blocker_rows, "native_rmg_medium_ai_generalization").is_empty():
 		_fail("Strategic AI baseline should retire the short Medium generated-map generalization blocker after three passing probes: %s" % JSON.stringify(blocker_rows))
 		return false
-	var medium_long_run_blocker := _blocker_row(blocker_rows, "native_rmg_medium_long_run_matrix")
-	if medium_long_run_blocker.is_empty():
-		_fail("Strategic AI baseline must preserve the longer Medium generated-map matrix production gap: %s" % JSON.stringify(blocker_rows))
+	if not _blocker_row(blocker_rows, "native_rmg_medium_long_run_matrix").is_empty():
+		_fail("Strategic AI baseline should retire the completed Medium generated-map matrix blocker: %s" % JSON.stringify(blocker_rows))
 		return false
-	if String(medium_long_run_blocker.get("next_unblock_slice_id", "")) != "strategic-ai-medium-long-run-seed-matrix-10184":
-		_fail("Medium long-run blocker should route to the Medium seed-matrix slice: %s" % JSON.stringify(medium_long_run_blocker))
+	var medium_topology_blocker := _blocker_row(blocker_rows, "native_rmg_medium_topology_contact_pacing")
+	if medium_topology_blocker.is_empty():
+		_fail("Strategic AI baseline must retain the observed Medium topology/contact/pacing production gap: %s" % JSON.stringify(blocker_rows))
+		return false
+	var topology_evidence_ordinals: Array = medium_topology_blocker.get("evidence_seed_ordinals", []) if medium_topology_blocker.get("evidence_seed_ordinals", []) is Array else []
+	if topology_evidence_ordinals != [95, 98] \
+			or String(medium_topology_blocker.get("blocked_by", "")) != "native_rmg_topology_object_placement_source_parity" \
+			or not bool(medium_topology_blocker.get("source_recovery_required", false)):
+		_fail("Medium topology/contact/pacing blocker must remain tied to exact rows and source recovery: %s" % JSON.stringify(medium_topology_blocker))
 		return false
 	if not _blocker_row(blocker_rows, "native_rmg_small_ai_turn_probe_coverage").is_empty() or not _blocker_row(blocker_rows, "native_rmg_small_ai_turn_health").is_empty():
 		_fail("Supported Small generated-map AI turn health should be executed and green before this baseline passes: %s" % JSON.stringify(blocker_rows))
@@ -121,8 +182,11 @@ func _assert_report(report: Dictionary) -> bool:
 	if "strategic-ai-rmg-medium-generalization-probe-10184" in recommendations:
 		_fail("Strategic AI baseline should not recommend the completed short Medium generated-map AI generalization slice: %s" % JSON.stringify(recommendations))
 		return false
-	if "strategic-ai-medium-long-run-seed-matrix-10184" not in recommendations:
-		_fail("Strategic AI baseline did not recommend the remaining Medium generated-map long-run matrix slice: %s" % JSON.stringify(recommendations))
+	if "strategic-ai-medium-long-run-seed-matrix-10184" in recommendations:
+		_fail("Strategic AI baseline should not recommend the completed Medium generated-map long-run matrix slice: %s" % JSON.stringify(recommendations))
+		return false
+	if not recommendations.is_empty():
+		_fail("Strategic AI baseline must not invent an implementation slice for the source-recovery-owned topology gap: %s" % JSON.stringify(recommendations))
 		return false
 	var audit_policy: Dictionary = report.get("audit_policy", {}) if report.get("audit_policy", {}) is Dictionary else {}
 	for forbidden_true in ["manual_play_replacement", "automatic_tuning", "runtime_balance_changes", "authored_content_writeback", "campaign_adoption", "production_ready_claim"]:
