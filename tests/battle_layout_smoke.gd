@@ -28,6 +28,7 @@ func _target_viewport_sizes() -> Array:
 	return TARGET_VIEWPORT_SIZES
 
 func _run_layout_case(viewport_size: Vector2) -> bool:
+	_battle_layout_stage("viewport_start", viewport_size, false, false)
 	var session = ScenarioFactory.create_session(
 		"river-pass",
 		"normal",
@@ -294,6 +295,7 @@ func _run_layout_case(viewport_size: Vector2) -> bool:
 			return false
 		if not await _run_direct_actionable_after_move_routed_resolution_case(viewport_size, true, true):
 			return false
+	_battle_layout_stage("viewport_end", viewport_size, false, false)
 	return true
 
 func _run_withdrawal_confirmation_layout_case(shell: Node, session, viewport_size: Vector2) -> bool:
@@ -2297,9 +2299,12 @@ func _run_direct_actionable_after_move_routed_resolution_case(
 			get_tree().quit(1)
 			return false
 
+	_battle_layout_stage("routed_before_action", viewport_size, use_button, complete_scenario_after_kill)
 	var attack_response: Dictionary = shell.call("validation_perform_action", action_id) if use_button else shell.call("validation_perform_board_stack_click", target_id)
-	var immediate_snapshot := {}
-	if is_instance_valid(shell) and shell.has_method("validation_snapshot"):
+	_battle_layout_stage("routed_action_returned", viewport_size, use_button, complete_scenario_after_kill)
+	var immediate_snapshot: Dictionary = {}
+	var snapshot_not_applicable_after_detach: bool = not (is_instance_valid(shell) and shell.is_inside_tree())
+	if not snapshot_not_applicable_after_detach and shell.has_method("validation_snapshot"):
 		immediate_snapshot = shell.call("validation_snapshot")
 	var expected_scene_path := SCENARIO_OUTCOME_SCENE_PATH if session.scenario_status != "in_progress" else OVERWORLD_SCENE_PATH
 	var response_failures := _final_kill_routed_response_failures(attack_response, session, action_id, target_id)
@@ -2307,11 +2312,30 @@ func _run_direct_actionable_after_move_routed_resolution_case(
 		push_error("Battle layout smoke: routed final-kill %s response exposed stale selected-target guidance at %s: failures=%s response=%s." % [route_label, viewport_size, response_failures, attack_response])
 		get_tree().quit(1)
 		return false
-	var immediate_failures := _final_kill_empty_shell_snapshot_failures(immediate_snapshot)
-	if not immediate_failures.is_empty():
-		push_error("Battle layout smoke: routed final-kill %s immediate shell snapshot exposed stale battle guidance at %s: failures=%s snapshot=%s." % [route_label, viewport_size, immediate_failures, immediate_snapshot])
-		get_tree().quit(1)
-		return false
+	if snapshot_not_applicable_after_detach:
+		var immediate_routed_scene = get_tree().current_scene
+		var immediate_routed_scene_path := String(immediate_routed_scene.scene_file_path) if immediate_routed_scene != null else ""
+		var detached_route_checks := {
+			"snapshot_not_applicable_after_detach": immediate_snapshot.is_empty(),
+			"routed_attack_response_exact": response_failures.is_empty(),
+			"routed_attack_ok": bool(attack_response.get("ok", false)),
+			"routed_attack_routed": bool(attack_response.get("routed", false)),
+			"routed_attack_victory": String(attack_response.get("state", "")) == "victory",
+			"session_battle_resolved_empty": session.battle.is_empty(),
+			"session_route_state_exact": (session.scenario_status == "in_progress" and session.game_state == "overworld") if expected_scene_path == OVERWORLD_SCENE_PATH else (session.scenario_status != "in_progress" and session.game_state == "outcome"),
+			"app_router_route_handoff_exact": immediate_routed_scene == null or immediate_routed_scene_path == expected_scene_path,
+		}
+		if false in detached_route_checks.values():
+			push_error("Battle layout smoke: routed final-kill %s detached-shell authority was not exact at %s: checks=%s scene=%s response=%s." % [route_label, viewport_size, detached_route_checks, immediate_routed_scene_path, attack_response])
+			get_tree().quit(1)
+			return false
+	else:
+		var immediate_failures := _final_kill_empty_shell_snapshot_failures(immediate_snapshot)
+		if not immediate_failures.is_empty():
+			push_error("Battle layout smoke: routed final-kill %s immediate shell snapshot exposed stale battle guidance at %s: failures=%s snapshot=%s." % [route_label, viewport_size, immediate_failures, immediate_snapshot])
+			get_tree().quit(1)
+			return false
+	_battle_layout_stage("routed_immediate_authority", viewport_size, use_button, complete_scenario_after_kill)
 
 	await get_tree().process_frame
 	await get_tree().process_frame
@@ -2350,11 +2374,14 @@ func _run_direct_actionable_after_move_routed_resolution_case(
 	for stale_key in ["selected_target_battle_id", "target_stack", "selected_target_board_click_action", "action_guidance", "target_context", "battle_board"]:
 		if routed_snapshot.has(stale_key):
 			routed_failures.append("routed snapshot battle key residue: %s" % stale_key)
+	if routed_failures.is_empty():
+		_battle_layout_stage("routed_three_frame_destination", viewport_size, use_button, complete_scenario_after_kill)
 	routed_failures.append_array(_final_kill_routed_save_resume_failures(routed_scene, routed_snapshot, session, expected_scene_path))
 	if not routed_failures.is_empty():
 		push_error("Battle layout smoke: routed final-kill %s did not land on the truthful routed state at %s: failures=%s scene=%s snapshot=%s response=%s." % [route_label, viewport_size, routed_failures, routed_scene_path, routed_snapshot, attack_response])
 		get_tree().quit(1)
 		return false
+	_battle_layout_stage("routed_save_resume_authority", viewport_size, use_button, complete_scenario_after_kill)
 	var expected_resume_target := "outcome" if expected_scene_path == SCENARIO_OUTCOME_SCENE_PATH else "overworld"
 	var expected_game_state := "outcome" if expected_resume_target == "outcome" else "overworld"
 	var menu_failures := await _final_kill_menu_save_browser_failures(
@@ -2365,15 +2392,21 @@ func _run_direct_actionable_after_move_routed_resolution_case(
 		push_error("Battle layout smoke: routed final-kill %s menu save-browser surface was not truthful at %s: failures=%s." % [route_label, viewport_size, menu_failures])
 		get_tree().quit(1)
 		return false
+	_battle_layout_stage("routed_menu_authority", viewport_size, use_button, complete_scenario_after_kill)
 	if expected_scene_path == SCENARIO_OUTCOME_SCENE_PATH:
 		var outcome_action_failures := await _final_kill_outcome_action_execution_failures(route_label)
 		if not outcome_action_failures.is_empty():
 			push_error("Battle layout smoke: routed final-kill %s outcome action execution was not truthful at %s: failures=%s." % [route_label, viewport_size, outcome_action_failures])
 			get_tree().quit(1)
 			return false
+		_battle_layout_stage("routed_outcome_action", viewport_size, use_button, complete_scenario_after_kill)
 
 	await _restore_layout_current_scene(previous_current)
+	_battle_layout_stage("routed_previous_scene_restored", viewport_size, use_button, complete_scenario_after_kill)
 	return true
+
+func _battle_layout_stage(stage: String, viewport_size: Vector2, use_button: bool, outcome: bool) -> void:
+	print("BATTLE_LAYOUT_STAGE msec=%d stage=%s viewport=%dx%d use_button=%s outcome=%s" % [Time.get_ticks_msec(), stage, int(viewport_size.x), int(viewport_size.y), str(use_button), str(outcome)])
 
 func _stage_river_pass_final_kill_outcome_prereqs(session) -> void:
 	_set_town_owner_for_test(session, "duskfen_bastion", "player")

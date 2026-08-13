@@ -11,6 +11,12 @@ const OVERWORLD_LIVE_REGIONS: Array[Dictionary] = [
 const MAP_EDITOR_LIVE_REGIONS: Array[Dictionary] = [
 	{"path": "EditorMapCursorLive", "mode": DisplayServer.LIVE_POLITE},
 ]
+const BATTLE_LIVE_REGIONS: Array[Dictionary] = [
+	{"path": "BattleBoardCursorLive", "mode": DisplayServer.LIVE_POLITE},
+	{"path": "ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar/Status", "mode": DisplayServer.LIVE_POLITE},
+	{"path": "ContentMargin/Content/Banner/BannerPad/BannerBox/Event", "mode": DisplayServer.LIVE_POLITE},
+	{"path": "ActivePlaySettingsDialog/Center/DialogPanel/Margin/Content/Header/Status", "mode": DisplayServer.LIVE_POLITE},
+]
 
 var _failed := false
 
@@ -289,6 +295,66 @@ func _run() -> void:
 	map_editor.queue_free()
 	await get_tree().process_frame
 
+	var battle_session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+	var battle_encounter := _first_uncleared_encounter(battle_session)
+	if battle_encounter.is_empty():
+		return _fail("Battle accessibility fixture has no encounter.")
+	battle_session.battle = BattleRules.create_battle_payload(battle_session, battle_encounter)
+	SessionState.set_active_session(battle_session)
+	var battle = load("res://scenes/battle/BattleShell.tscn").instantiate()
+	add_child(battle)
+	await _settle()
+	var battle_live_nodes: Array = battle.find_children("BattleBoardCursorLive", "Label", true, false)
+	if battle_live_nodes.size() != 1:
+		battle.queue_free()
+		await get_tree().process_frame
+		SessionState.active_session = original_session
+		SaveService._slot_summary_cache = original_summary_cache.duplicate(true)
+		return _fail("Battle must expose exactly one BattleBoardCursorLive Label: %s" % [battle_live_nodes])
+	var battle_live := battle_live_nodes[0] as Label
+	var battle_snapshot: Dictionary = UiAccessibility.validation_snapshot(battle)
+	var rescanned_battle_snapshot: Dictionary = UiAccessibility.validation_snapshot(battle)
+	var battle_live_regions: Array[Dictionary] = _relative_live_regions(battle, battle_snapshot)
+	var rescanned_battle_live_regions: Array[Dictionary] = _relative_live_regions(battle, rescanned_battle_snapshot)
+	var battle_live_relative_path := String(battle_live.get_path()).trim_prefix("%s/" % String(battle.get_path()))
+	var battle_backdrop := battle.get_node_or_null("Backdrop") as Control
+	var battle_live_checks := {
+		"snapshot_ok": bool(battle_snapshot.get("ok", false)),
+		"first_scan_exact_order": battle_live_regions == BATTLE_LIVE_REGIONS,
+		"second_scan_equals_first": rescanned_battle_live_regions == battle_live_regions,
+		"total_four": int(battle_snapshot.get("live_region_count", 0)) == 4 and battle_live_regions.size() == 4,
+		"one_battle_context": battle_live_regions.count(BATTLE_LIVE_REGIONS[0]) == 1,
+		"existing_three": battle_live_regions.slice(1).size() == 3,
+		"unique_cursor_find": battle_live_nodes.size() == 1,
+		"cursor_relative_path": battle_live_relative_path == String(BATTLE_LIVE_REGIONS[0].get("path", "")),
+		"visible_tree": battle_live.is_visible_in_tree(),
+		"direct_battle_parent": battle_live.get_parent() == battle,
+		"layout_mode_zero": battle_live.layout_mode == 0,
+		"anchors_zero": is_zero_approx(battle_live.anchor_left) and is_zero_approx(battle_live.anchor_top) and is_zero_approx(battle_live.anchor_right) and is_zero_approx(battle_live.anchor_bottom),
+		"position_zero": battle_live.position == Vector2.ZERO,
+		"one_pixel_width": is_equal_approx(battle_live.size.x, 1.0),
+		"finite_layout_height": is_finite(battle_live.size.y) and battle_live.size.y >= 1.0,
+		"backdrop_exists": battle_backdrop != null,
+		"backdrop_position_zero": battle_backdrop != null and battle_backdrop.position == Vector2.ZERO,
+		"backdrop_matches_root": battle_backdrop != null and battle_backdrop.size == battle.size,
+		"transparent": is_zero_approx(battle_live.self_modulate.a),
+		"mouse_ignored": battle_live.mouse_filter == Control.MOUSE_FILTER_IGNORE,
+		"authored_name": battle_live.accessibility_name == "Battle board cursor",
+		"authored_description": battle_live.accessibility_description == "Announces the current keyboard or controller battle-board hex and available action after navigation settles.",
+		"polite": battle_live.accessibility_live == DisplayServer.LIVE_POLITE,
+		"loaded_inactive_empty": battle_live.text == "",
+	}
+	if not _checks_exact(battle_live_checks):
+		battle.queue_free()
+		await get_tree().process_frame
+		SessionState.active_session = original_session
+		SaveService._slot_summary_cache = original_summary_cache.duplicate(true)
+		return _fail("Battle cursor accessibility semantics were not exact: %s / %s" % [battle_live_checks, battle_snapshot.get("live_regions", [])])
+	battle.queue_free()
+	await get_tree().process_frame
+	SessionState.active_session = original_session
+	SaveService._slot_summary_cache = original_summary_cache.duplicate(true)
+
 	var result := {
 		"schema": "accessibility_screen_reader_semantics_report_v1",
 		"accessibility_support_mode": 0,
@@ -309,6 +375,10 @@ func _run() -> void:
 		"map_editor_cursor_rescan_exact": true,
 		"map_editor_cursor_authored_semantics": true,
 		"map_editor_working_copy_status_live_off": true,
+		"battle_board_cursor_live_exact_count": 1,
+		"battle_existing_live_regions_unchanged": 3,
+		"battle_board_cursor_rescan_exact": true,
+		"battle_board_cursor_authored_semantics": true,
 	}
 	print("%s PASS %s" % [REPORT_ID, JSON.stringify(result)])
 	menu.queue_free()
@@ -329,6 +399,13 @@ func _connection_count(signal_value: Signal, method_name: String) -> int:
 		if callable.get_object() == UiAccessibility and callable.get_method() == method_name:
 			count += 1
 	return count
+
+
+func _first_uncleared_encounter(session) -> Dictionary:
+	for encounter_value in session.overworld.get("encounters", []):
+		if encounter_value is Dictionary and not bool(encounter_value.get("cleared", false)):
+			return (encounter_value as Dictionary).duplicate(true)
+	return {}
 
 
 func _live_region_path_count(snapshot: Dictionary, suffix: String) -> int:

@@ -387,7 +387,7 @@ func _on_next_target_pressed() -> void:
 
 func _on_board_stack_focus_requested(battle_id: String) -> Dictionary:
 	if not _battle_resolution_checkpoint_pending.is_empty():
-		return _battle_resolution_checkpoint_block_result("board_target")
+		return _return_board_cursor_action_result(_battle_resolution_checkpoint_block_result("board_target"))
 	if _session == null or _session.battle.is_empty() or battle_id == "":
 		return _reject_board_stack_click(battle_id, "No battle target was clicked.")
 	var active_stack := BattleRules.get_active_stack(_session.battle)
@@ -443,7 +443,7 @@ func _on_board_stack_focus_requested(battle_id: String) -> Dictionary:
 			target_context = BattleRules.describe_target_context(_session)
 			if not handled:
 				board_summary = _validation_battle_board_summary()
-		return {
+		return _return_board_cursor_action_result({
 			"ok": bool(result.get("ok", false)),
 			"action": board_action,
 			"target_battle_id": battle_id,
@@ -473,7 +473,7 @@ func _on_board_stack_focus_requested(battle_id: String) -> Dictionary:
 			"state": String(result.get("state", "")),
 			"message": _last_message,
 			"routed": _last_battle_resolution_routed if handled else false,
-		}
+		})
 
 	var legal_target_ids := BattleRules.legal_attack_target_ids_for_active_stack(_session.battle)
 	var selected_after := BattleRules.get_selected_target(_session.battle)
@@ -483,7 +483,7 @@ func _on_board_stack_focus_requested(battle_id: String) -> Dictionary:
 		_last_message = String(board_intent.get("message", "%s is blocked from this hex. Click a highlighted enemy to attack, or move first." % String(clicked_stack.get("name", "That target"))))
 		_refresh()
 		var blocked_alternative_board_summary := _validation_battle_board_summary()
-		return {
+		return _return_board_cursor_action_result({
 			"ok": false,
 			"action": "blocked_target",
 			"target_battle_id": battle_id,
@@ -498,12 +498,12 @@ func _on_board_stack_focus_requested(battle_id: String) -> Dictionary:
 			"battle_board": blocked_alternative_board_summary,
 			"state": "invalid",
 			"message": _last_message,
-		}
+		})
 
 	_last_message = String(board_intent.get("message", "%s is blocked from this hex. Move to a highlighted hex before attacking." % String(clicked_stack.get("name", "That target"))))
 	_refresh()
 	var blocked_only_board_summary := _validation_battle_board_summary()
-	return {
+	return _return_board_cursor_action_result({
 		"ok": false,
 		"action": "blocked_target",
 		"target_battle_id": battle_id,
@@ -518,7 +518,7 @@ func _on_board_stack_focus_requested(battle_id: String) -> Dictionary:
 		"battle_board": blocked_only_board_summary,
 		"state": "invalid",
 		"message": _last_message,
-	}
+	})
 
 func _reject_board_stack_click(
 	battle_id: String,
@@ -538,11 +538,11 @@ func _reject_board_stack_click(
 	}
 	for key in extra_fields.keys():
 		response[key] = extra_fields[key]
-	return response
+	return _return_board_cursor_action_result(response)
 
 func _on_board_hex_destination_requested(q: int, r: int) -> Dictionary:
 	if not _battle_resolution_checkpoint_pending.is_empty():
-		return _battle_resolution_checkpoint_block_result("board_move")
+		return _return_board_cursor_action_result(_battle_resolution_checkpoint_block_result("board_move"))
 	var movement_intent := BattleRules.movement_intent_for_destination(_session.battle, q, r)
 	var recap_context := BattleRules.post_action_recap_context(_session, "move")
 	var result := BattleRules.move_active_stack_to_hex(_session, q, r)
@@ -554,10 +554,17 @@ func _on_board_hex_destination_requested(q: int, r: int) -> Dictionary:
 	if bool(result.get("ok", false)):
 		_dismiss_tactical_briefing()
 	if _handle_battle_resolution(result):
-		return _movement_click_response(result, movement_intent, q, r, _last_battle_resolution_routed)
+		return _return_board_cursor_action_result(
+			_movement_click_response(result, movement_intent, q, r, _last_battle_resolution_routed)
+		)
 	_refresh()
 	call_deferred("_configure_battle_keyboard_focus", true)
-	return _movement_click_response(result, movement_intent, q, r, false)
+	return _return_board_cursor_action_result(_movement_click_response(result, movement_intent, q, r, false))
+
+func _return_board_cursor_action_result(result: Dictionary) -> Dictionary:
+	if _battle_board_view != null and _battle_board_view.has_method("publish_controller_action_result"):
+		_battle_board_view.call("publish_controller_action_result", result)
+	return result
 
 func _on_board_controller_navigation_cancelled() -> void:
 	call_deferred("_configure_battle_keyboard_focus", true)
@@ -639,7 +646,14 @@ func _configure_confirmation_input_forwarding() -> void:
 
 
 func _on_root_window_input(event: InputEvent) -> void:
-	if _forwarding_confirmation_root_physical_input or not (event is InputEventKey or event is InputEventJoypadButton):
+	if (
+		_forwarding_confirmation_root_physical_input
+		or not (event is InputEventKey or event is InputEventJoypadButton)
+	):
+		return
+	if _battle_board_root_cancel_input_owned() and event.is_action_pressed("ui_cancel"):
+		if bool(_battle_board_view.call("handle_root_controller_navigation_cancel")):
+			get_tree().root.set_input_as_handled()
 		return
 	var dialog := _active_exclusive_confirmation_dialog()
 	if dialog == null:
@@ -649,6 +663,22 @@ func _on_root_window_input(event: InputEvent) -> void:
 	if detached_event == null:
 		return
 	call_deferred("_forward_root_physical_input_to_confirmation", dialog, detached_event)
+
+
+func _battle_board_root_cancel_input_owned() -> bool:
+	if (
+		_battle_board_view == null
+		or not is_instance_valid(_battle_board_view)
+		or not _battle_board_view.has_method("handle_root_controller_navigation_cancel")
+		or not _battle_board_view.is_inside_tree()
+		or not _battle_board_view.is_visible_in_tree()
+		or get_tree().root.gui_get_focus_owner() != _battle_board_view
+		or (_quick_resolve_confirmation_dialog != null and _quick_resolve_confirmation_dialog.visible)
+		or (_withdrawal_confirmation_dialog != null and _withdrawal_confirmation_dialog.visible)
+		or (_manual_save_overwrite_dialog != null and _manual_save_overwrite_dialog.visible)
+	):
+		return false
+	return _active_play_settings_dialog == null or not _active_play_settings_dialog.is_open()
 
 
 func _forward_root_physical_input_to_confirmation(dialog: ConfirmationDialog, event: InputEvent) -> void:

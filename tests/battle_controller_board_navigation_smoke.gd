@@ -2,6 +2,8 @@ extends Node
 
 const REPORT_ID := "BATTLE_CONTROLLER_BOARD_NAVIGATION_SMOKE"
 const CAPTURE_DIR := "res://.artifacts/battle_controller_board_navigation_smoke"
+const SEMANTIC_DEBOUNCE_SECONDS := 0.42
+const RESULT_VISIBLE_SECONDS := 1.20
 
 var _last_dispatched_stack_id := ""
 
@@ -9,6 +11,13 @@ func _ready() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	var original_window_size := get_window().size
+	var original_session = SessionState.active_session
+	for width in [1280, 1920]:
+		if not await _validate_battle_board_semantics_width(width):
+			return
+	get_window().size = Vector2i(1280, 720)
+	await _settle()
 	var session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
 	var encounter := _first_encounter(session)
 	if encounter.is_empty():
@@ -26,6 +35,8 @@ func _run() -> void:
 	await _settle()
 
 	var board: Control = shell.get_node("%BattleBoard")
+	var battle_live: Label = shell.get_node("%BattleBoardCursorLive")
+	var battle_semantic_timer: Timer = board.get("_battle_board_cursor_semantic_timer")
 	board.stack_focus_requested.connect(_on_stack_focus_requested)
 	if get_viewport().gui_get_focus_owner() == board:
 		return _fail("Battle entry must retain preferred command focus instead of auto-entering the board.")
@@ -73,14 +84,24 @@ func _run() -> void:
 	var target_events_before := int(session.battle.get("recent_events", []).size())
 	await _press_joypad_button(JOY_BUTTON_A)
 	await _settle()
+	var blocked_result_message := String(shell.get("_last_message")).strip_edges()
+	var blocked_result_text := _bounded_text("Battle board result: %s" % blocked_result_message, 320)
 	if _last_dispatched_stack_id != String(enemy_target.get("battle_id", "")):
 		return _fail("Controller A did not dispatch the occupied enemy cursor cell through target selection: target=%s emitted=%s." % [enemy_target, _last_dispatched_stack_id])
 	if int(session.battle.get("recent_events", []).size()) != target_events_before:
 		return _fail("Blocked enemy cursor selection executed an unexpected battle action.")
+	if blocked_result_message == "" or not _exact_result_pending(board, battle_live, battle_semantic_timer, blocked_result_text):
+		return _fail("Blocked enemy controller A did not publish its exact independent Shell result: message=%s text=%s expected=%s pending=%s." % [blocked_result_message, battle_live.text, blocked_result_text, _pending_compact(board.get("_battle_board_cursor_semantic_pending"))])
+	if not await _wait_for_result_clear(board, battle_live, battle_semantic_timer):
+		return _fail("Blocked enemy controller result did not clear through the real 1.2 second Timer.")
 	await _press_joypad_button(JOY_BUTTON_B)
 	var cancel_focus := get_viewport().gui_get_focus_owner()
 	if cancel_focus == null or cancel_focus == board or not shell.is_ancestor_of(cancel_focus) or (cancel_focus is BaseButton and cancel_focus.disabled):
 		return _fail("Controller B did not restore a legal battle command focus: %s." % cancel_focus)
+	if not _exact_result_pending(board, battle_live, battle_semantic_timer, "Battle board navigation ended. Focus returned to battle commands."):
+		return _fail("Controller B did not publish its exact guarded navigation result once: text=%s pending=%s." % [battle_live.text, _pending_compact(board.get("_battle_board_cursor_semantic_pending"))])
+	if not await _wait_for_result_clear(board, battle_live, battle_semantic_timer):
+		return _fail("Controller B navigation result did not clear through the real 1.2 second Timer.")
 
 	board.grab_focus()
 	await _settle()
@@ -112,6 +133,8 @@ func _run() -> void:
 	var events_before := int(session.battle.get("recent_events", []).size())
 	await _press_joypad_button(JOY_BUTTON_A)
 	await _settle()
+	var movement_result_message := String(shell.get("_last_message")).strip_edges()
+	var movement_result_text := _bounded_text("Battle board result: %s" % movement_result_message, 320)
 	var post_summary: Dictionary = shell.call("validation_snapshot").get("battle_board", {})
 	var moved_stack_cell := _stack_cell(post_summary, active_battle_id)
 	if moved_stack_cell != destination:
@@ -121,9 +144,736 @@ func _run() -> void:
 	var post_focus := get_viewport().gui_get_focus_owner()
 	if post_focus == null or post_focus == board or not shell.is_ancestor_of(post_focus):
 		return _fail("Controller board move did not restore command focus after refresh: %s." % post_focus)
+	if movement_result_message == "" or not _exact_result_pending(board, battle_live, battle_semantic_timer, movement_result_text):
+		return _fail("Legal controller A did not publish its exact independent Shell movement result: message=%s text=%s expected=%s pending=%s." % [movement_result_message, battle_live.text, movement_result_text, _pending_compact(board.get("_battle_board_cursor_semantic_pending"))])
+	if not await _wait_for_result_clear(board, battle_live, battle_semantic_timer):
+		return _fail("Legal controller movement result did not clear through the real 1.2 second Timer.")
 
+	shell.queue_free()
+	await get_tree().process_frame
+	SessionState.active_session = original_session
+	get_window().size = original_window_size
 	print("%s PASS" % REPORT_ID)
 	get_tree().quit(0)
+
+func _validate_battle_board_semantics_width(width: int) -> bool:
+	get_window().size = Vector2i(width, 720)
+	await _settle()
+	var session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+	var encounter := _first_encounter(session)
+	if encounter.is_empty():
+		return _fail_bool("Battle semantic fixture %d has no encounter." % width)
+	session.battle = BattleRules.create_battle_payload(session, encounter)
+	var guard := 0
+	while String(BattleRules.get_active_stack(session.battle).get("side", "")) != "player" and guard < 8:
+		BattleRules.advance_turn(session.battle)
+		guard += 1
+	if String(BattleRules.get_active_stack(session.battle).get("side", "")) != "player":
+		return _fail_bool("Battle semantic fixture %d could not reach a player turn." % width)
+	session = SessionState.set_active_session(session)
+	var shell = load("res://scenes/battle/BattleShell.tscn").instantiate()
+	add_child(shell)
+	await _settle()
+	var board: Control = shell.get_node("%BattleBoard")
+	var live: Label = shell.get_node("%BattleBoardCursorLive")
+	var semantic_timer: Timer = board.get("_battle_board_cursor_semantic_timer")
+	if semantic_timer == null or not semantic_timer.one_shot or not is_equal_approx(semantic_timer.wait_time, 1.0):
+		shell.queue_free()
+		return _fail_bool("Battle semantic Timer was not a configured one-shot before use at %d: %s." % [width, semantic_timer])
+	board.grab_focus()
+	await _settle()
+	if live.text != "":
+		shell.queue_free()
+		return _fail_bool("Battle semantic label was not inactive before navigation at %d: %s." % [width, live.text])
+
+	var summary: Dictionary = board.call("validation_hex_layout_summary")
+	var active_cell := _active_stack_cell(summary)
+	var friendly_cell := _first_stack_cell(summary, "player", String(session.battle.get("active_stack_id", "")))
+	var enemy_cell := _first_stack_cell(summary, "enemy", "")
+	var legal_cell := _first_legal_destination(summary)
+	var blocked_cell := _first_blocked_empty_cell(summary)
+	if not _cell_in_bounds(active_cell, summary) or not _cell_in_bounds(friendly_cell, summary) or not _cell_in_bounds(enemy_cell, summary) or not _cell_in_bounds(legal_cell, summary) or not _cell_in_bounds(blocked_cell, summary):
+		shell.queue_free()
+		return _fail_bool("Battle semantic fixture lacked active/friendly/enemy/legal/blocked cells at %d: %s." % [width, summary])
+	var semantic_rows: Array[Dictionary] = [
+		{"id": "active", "cell": active_cell},
+		{"id": "friendly", "cell": friendly_cell},
+		{"id": "enemy", "cell": enemy_cell},
+		{"id": "legal", "cell": legal_cell},
+		{"id": "blocked", "cell": blocked_cell},
+	]
+	for row_index in range(semantic_rows.size()):
+		var row: Dictionary = semantic_rows[row_index]
+		if not await _assert_semantic_context_at(
+			shell,
+			board,
+			live,
+			semantic_timer,
+			session,
+			row.get("cell", Vector2i(-1, -1)),
+			width,
+			String(row.get("id", "")),
+			(row_index + width) % 2 == 0
+		):
+			shell.queue_free()
+			return false
+
+	# A clamped physical move and pointer hover must not replace the settled keyboard/controller context.
+	var boundary := Vector2i(0, blocked_cell.y)
+	if not await _move_cursor_to(board, boundary, width % 2 == 0):
+		shell.queue_free()
+		return _fail_bool("Battle semantic cursor could not reach its clamp boundary at %d." % width)
+	await _wait_for_semantic_context(board, live, semantic_timer)
+	var noop_before := _semantic_observer_snapshot(board, live, semantic_timer)
+	var noop_authority := _battle_background_authority(session)
+	await _send_direction(Vector2i.LEFT, width % 2 == 0)
+	var noop_after := _semantic_observer_snapshot(board, live, semantic_timer)
+	var mouse_motion := InputEventMouseMotion.new()
+	mouse_motion.position = board.size * 0.5
+	mouse_motion.global_position = board.get_global_rect().position + mouse_motion.position
+	Input.parse_input_event(mouse_motion)
+	await _settle()
+	if noop_after != noop_before or _semantic_observer_snapshot(board, live, semantic_timer) != noop_before or _battle_background_authority(session) != noop_authority:
+		shell.queue_free()
+		return _fail_bool("Boundary no-op or mouse hover replaced battle semantics/authority at %d: %s / %s." % [width, noop_before, _semantic_observer_snapshot(board, live, semantic_timer)])
+
+	# Existing physical A/B behavior publishes one immediate result and clears only through the real 1.2 Timer.
+	summary = board.call("validation_hex_layout_summary")
+	var result_enemy_cell := _first_blocked_enemy_cell(summary)
+	if not _cell_in_bounds(result_enemy_cell, summary) or not await _move_cursor_to(board, result_enemy_cell, width % 2 != 0):
+		shell.queue_free()
+		return _fail_bool("Battle result fixture has no blocked enemy cell at %d." % width)
+	await _wait_for_semantic_context(board, live, semantic_timer)
+	var result_events_before := int(session.battle.get("recent_events", []).size())
+	await _press_joypad_button(JOY_BUTTON_A)
+	var result_message := String(shell.get("_last_message")).strip_edges()
+	var expected_result_text := _bounded_text("Battle board result: %s" % result_message, 320)
+	if result_message == "" or int(session.battle.get("recent_events", []).size()) != result_events_before or not _exact_result_pending(board, live, semantic_timer, expected_result_text):
+		shell.queue_free()
+		return _fail_bool("Physical A did not publish its exact independent Shell result at %d: message=%s text=%s expected=%s pending=%s." % [width, result_message, live.text, expected_result_text, _pending_compact(board.get("_battle_board_cursor_semantic_pending"))])
+	if not await _wait_for_result_clear(board, live, semantic_timer):
+		shell.queue_free()
+		return _fail_bool("Physical A result did not clear through the real 1.2 Timer at %d." % width)
+	await get_tree().process_frame
+	var cancel_pressed := InputEventJoypadButton.new()
+	cancel_pressed.button_index = JOY_BUTTON_B
+	cancel_pressed.pressed = true
+	var cancel_released := InputEventJoypadButton.new()
+	cancel_released.button_index = JOY_BUTTON_B
+	cancel_released.pressed = false
+	var cancel_delivery := {
+		"root_pressed_count": 0,
+		"root_released_count": 0,
+		"root_pressed_handled": false,
+		"root_released_handled": false,
+		"pressed_gui_count": 0,
+		"released_gui_count": 0,
+		"board_pressed_handled": false,
+		"board_released_handled": false,
+		"focus_exited_count": 0,
+		"cancel_signal_count": 0,
+	}
+	var active_exclusive_before: Variant = shell.call("_active_exclusive_confirmation_dialog")
+	var quick_dialog := shell.get_node("QuickResolveConfirmationDialog") as ConfirmationDialog
+	var withdrawal_dialog := shell.get_node("WithdrawalConfirmationDialog") as ConfirmationDialog
+	var manual_dialog := shell.get_node("ManualSaveOverwriteDialog") as ConfirmationDialog
+	var root_connections_before: Array[Dictionary] = _root_window_input_connection_rows()
+	var battle_root_connection_count := _connection_row_count(root_connections_before, shell, "_on_root_window_input")
+	var manual_root_connection_count := _connection_row_count(root_connections_before, manual_dialog, "_on_root_window_input")
+	var quick_cancel_shortcut := _button_shortcut_snapshot(quick_dialog.get_cancel_button(), cancel_pressed, cancel_released)
+	var withdrawal_cancel_shortcut := _button_shortcut_snapshot(withdrawal_dialog.get_cancel_button(), cancel_pressed, cancel_released)
+	var matching_shell_shortcuts: Array[Dictionary] = _matching_shell_shortcut_rows(shell, cancel_pressed, cancel_released)
+	var dialog_state_before := {
+		"active_exclusive_is_null": active_exclusive_before == null,
+		"quick_pending_false": not bool(shell.get("_quick_resolve_confirmation_pending")),
+		"quick_hidden": not quick_dialog.visible,
+		"withdrawal_pending_empty": String(shell.get("_pending_withdrawal_action")) == "",
+		"withdrawal_hidden": not withdrawal_dialog.visible,
+		"manual_hidden": not manual_dialog.visible,
+		"manual_pending_slot_zero": int(manual_dialog.get("_pending_slot")) == 0,
+		"manual_not_forwarding": not bool(manual_dialog.get("_forwarding_root_physical_input")),
+		"battle_root_connection_exact": battle_root_connection_count == 1,
+		"manual_root_connection_exact": manual_root_connection_count == 1,
+		"quick_cancel_hidden": not bool(quick_cancel_shortcut.get("visible_in_tree", true)),
+		"withdrawal_cancel_hidden": not bool(withdrawal_cancel_shortcut.get("visible_in_tree", true)),
+	}
+	var gui_probe := Callable(self, "_on_cancel_diagnostic_gui_input").bind(cancel_delivery)
+	var focus_probe := Callable(self, "_on_cancel_diagnostic_focus_exited").bind(cancel_delivery)
+	var cancel_probe := Callable(self, "_on_cancel_diagnostic_navigation_cancelled").bind(cancel_delivery)
+	var root_probe := Callable(self, "_on_cancel_diagnostic_root_window_input").bind(cancel_delivery)
+	var cancel_contract_checks := {
+		"board_focus_before": get_viewport().gui_get_focus_owner() == board and board.has_focus(),
+		"active_exclusive_dialog_null": bool(dialog_state_before.get("active_exclusive_is_null", false)),
+		"quick_pending_false": bool(dialog_state_before.get("quick_pending_false", false)),
+		"quick_hidden": bool(dialog_state_before.get("quick_hidden", false)),
+		"withdrawal_pending_empty": bool(dialog_state_before.get("withdrawal_pending_empty", false)),
+		"withdrawal_hidden": bool(dialog_state_before.get("withdrawal_hidden", false)),
+		"manual_hidden": bool(dialog_state_before.get("manual_hidden", false)),
+		"manual_pending_slot_zero": bool(dialog_state_before.get("manual_pending_slot_zero", false)),
+		"manual_not_forwarding": bool(dialog_state_before.get("manual_not_forwarding", false)),
+		"battle_root_connection_exact": bool(dialog_state_before.get("battle_root_connection_exact", false)),
+		"manual_root_connection_exact": bool(dialog_state_before.get("manual_root_connection_exact", false)),
+		"ui_cancel_exists": InputMap.has_action("ui_cancel"),
+		"pressed_maps_to_ui_cancel": InputMap.event_is_action(cancel_pressed, "ui_cancel") and cancel_pressed.is_action_pressed("ui_cancel"),
+		"released_maps_to_ui_cancel": InputMap.event_is_action(cancel_released, "ui_cancel") and cancel_released.is_action_released("ui_cancel"),
+		"exact_one_b_binding": _matching_joypad_binding_count("ui_cancel", JOY_BUTTON_B) == 1,
+	}
+	if not _checks_exact(cancel_contract_checks):
+		shell.queue_free()
+		return _fail_bool("Physical B input contract was not exact before delivery at %d: checks=%s dialogs=%s active=%s root_connections=%s quick=%s withdrawal=%s matching_shortcuts=%s." % [width, cancel_contract_checks, dialog_state_before, active_exclusive_before, root_connections_before, quick_cancel_shortcut, withdrawal_cancel_shortcut, matching_shell_shortcuts])
+	get_tree().root.window_input.connect(root_probe)
+	board.gui_input.connect(gui_probe)
+	board.focus_exited.connect(focus_probe)
+	board.connect("controller_navigation_cancelled", cancel_probe)
+	Input.parse_input_event(cancel_pressed)
+	await get_tree().process_frame
+	Input.parse_input_event(cancel_released)
+	await _settle()
+	get_tree().root.window_input.disconnect(root_probe)
+	board.gui_input.disconnect(gui_probe)
+	board.focus_exited.disconnect(focus_probe)
+	board.disconnect("controller_navigation_cancelled", cancel_probe)
+	var cancel_focus := get_viewport().gui_get_focus_owner()
+	var cancel_delivery_checks := {
+		"root_pressed_once": int(cancel_delivery.get("root_pressed_count", 0)) == 1,
+		"root_released_once": int(cancel_delivery.get("root_released_count", 0)) == 1,
+		"root_pressed_handled": bool(cancel_delivery.get("root_pressed_handled", false)),
+		"root_released_handled": bool(cancel_delivery.get("root_released_handled", false)),
+		"pressed_not_delivered_to_gui": int(cancel_delivery.get("pressed_gui_count", 0)) == 0,
+		"released_delivered_at_most_once": int(cancel_delivery.get("released_gui_count", 0)) <= 1,
+		"cancel_signal_once": int(cancel_delivery.get("cancel_signal_count", 0)) == 1,
+		"focus_exited_once": int(cancel_delivery.get("focus_exited_count", 0)) == 1,
+		"focus_owner_restored": cancel_focus != null and cancel_focus != board and shell.is_ancestor_of(cancel_focus),
+		"exact_result_pending": _exact_result_pending(board, live, semantic_timer, "Battle board navigation ended. Focus returned to battle commands."),
+		"input_released": not Input.is_joy_button_pressed(0, JOY_BUTTON_B),
+	}
+	if not _checks_exact(cancel_delivery_checks):
+		shell.queue_free()
+		return _fail_bool("Physical B delivery was not exact at %d: contract=%s dialogs=%s active=%s root_connections=%s quick=%s withdrawal=%s matching_shortcuts=%s delivery=%s focus=%s text=%s pending=%s timer_stopped=%s timer_wait=%s released=%s." % [width, cancel_contract_checks, dialog_state_before, active_exclusive_before, root_connections_before, quick_cancel_shortcut, withdrawal_cancel_shortcut, matching_shell_shortcuts, cancel_delivery, cancel_focus, live.text, _pending_compact(board.get("_battle_board_cursor_semantic_pending")), semantic_timer.is_stopped(), semantic_timer.wait_time, not Input.is_joy_button_pressed(0, JOY_BUTTON_B)])
+	if not await _wait_for_result_clear(board, live, semantic_timer):
+		shell.queue_free()
+		return _fail_bool("Physical B result did not clear through the real 1.2 Timer at %d." % width)
+	board.grab_focus()
+	await _settle()
+
+	# A later physical cursor step must invalidate an older deferred A result before either publishes.
+	summary = board.call("validation_hex_layout_summary")
+	var stale_enemy_cell := _first_blocked_enemy_cell(summary)
+	if not _cell_in_bounds(stale_enemy_cell, summary) or not await _move_cursor_to(board, stale_enemy_cell, width % 2 == 0):
+		shell.queue_free()
+		return _fail_bool("Battle stale-result fixture has no blocked enemy cursor cell at %d." % width)
+	await _wait_for_semantic_context(board, live, semantic_timer)
+	var stale_events_before := int(session.battle.get("recent_events", []).size())
+	var stale_direction := Vector2i.RIGHT if stale_enemy_cell.x < int(summary.get("columns", 0)) - 1 else Vector2i.LEFT
+	_emit_joypad_tap_sync(JOY_BUTTON_A)
+	_emit_direction_sync(stale_direction, width % 2 == 0)
+	await get_tree().process_frame
+	var replacement_summary_before_publish: Dictionary = board.call("validation_hex_layout_summary")
+	var replacement_cell := Vector2i(
+		int(replacement_summary_before_publish.get("controller_cursor_q", -1)),
+		int(replacement_summary_before_publish.get("controller_cursor_r", -1))
+	)
+	var replacement_pending: Dictionary = (board.get("_battle_board_cursor_semantic_pending") as Dictionary).duplicate(true)
+	var stale_checks := {
+		"blocked_action_no_event": int(session.battle.get("recent_events", []).size()) == stale_events_before,
+		"replacement_cursor_intended": replacement_cell == stale_enemy_cell + stale_direction,
+		"replacement_context_pending": String(replacement_pending.get("kind", "")) == "context",
+		"replacement_cell_exact": replacement_pending.get("cursor_cell", {}) == _cell_payload(replacement_cell),
+		"replacement_generation_current": int(replacement_pending.get("generation", -1)) == int(board.get("_battle_board_cursor_semantic_generation")),
+		"stale_result_not_published": not live.text.begins_with("Battle board result:"),
+		"semantic_timer_active": not semantic_timer.is_stopped(),
+		"semantic_timer_wait_exact": is_equal_approx(semantic_timer.wait_time, SEMANTIC_DEBOUNCE_SECONDS),
+	}
+	if not _checks_exact(stale_checks) or not await _wait_for_semantic_context(board, live, semantic_timer):
+		shell.queue_free()
+		return _fail_bool("Later physical cursor context did not replace the stale deferred A result at %d: %s pending=%s text=%s." % [width, stale_checks, _pending_compact(replacement_pending), live.text])
+	var replacement_summary: Dictionary = board.call("validation_hex_layout_summary")
+	if live.text != _expected_semantic_context(board, session, replacement_summary):
+		shell.queue_free()
+		return _fail_bool("Stale-result replacement did not publish the exact final cursor context at %d: %s." % [width, live.text])
+
+	# A real enemy turn keeps the same exact surface format but changes A/Enter to the input-lock action.
+	guard = 0
+	while String(BattleRules.get_active_stack(session.battle).get("side", "")) == "player" and guard < 16:
+		BattleRules.advance_turn(session.battle)
+		guard += 1
+	shell.call("_refresh")
+	await _settle()
+	board.grab_focus()
+	await _settle()
+	if String(BattleRules.get_active_stack(session.battle).get("side", "")) == "player" or not await _assert_semantic_context_at(shell, board, live, semantic_timer, session, enemy_cell, width, "input_lock_turn", width % 2 != 0):
+		shell.queue_free()
+		return _fail_bool("Battle input-lock semantic row was not exact at %d." % width)
+	var locked_text := live.text
+	if not locked_text.contains("A/Enter: unavailable while input is locked."):
+		shell.queue_free()
+		return _fail_bool("Battle enemy-turn semantic omitted exact input-lock action at %d: %s." % [width, locked_text])
+
+	# Focus, modal ownership, battle identity, turn identity, and tree exit all cancel staged context.
+	var cancellation_cases := ["focus", "modal", "battle", "round", "turn", "active_stack", "session", "tree"]
+	for cancellation_case in cancellation_cases:
+		if not await _assert_staged_context_cancellation(width, String(cancellation_case)):
+			shell.queue_free()
+			return false
+
+	shell.queue_free()
+	await get_tree().process_frame
+	return true
+
+func _assert_staged_context_cancellation(width: int, cancellation_case: String) -> bool:
+	var session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+	var encounter := _first_encounter(session)
+	if encounter.is_empty():
+		return _fail_bool("Battle semantic cancellation fixture %s has no encounter." % cancellation_case)
+	session.battle = BattleRules.create_battle_payload(session, encounter)
+	var guard := 0
+	while String(BattleRules.get_active_stack(session.battle).get("side", "")) != "player" and guard < 8:
+		BattleRules.advance_turn(session.battle)
+		guard += 1
+	session = SessionState.set_active_session(session)
+	var shell = load("res://scenes/battle/BattleShell.tscn").instantiate()
+	add_child(shell)
+	await _settle()
+	var board: Control = shell.get_node("%BattleBoard")
+	var live: Label = shell.get_node("%BattleBoardCursorLive")
+	var timer: Timer = board.get("_battle_board_cursor_semantic_timer")
+	board.grab_focus()
+	await _settle()
+	var summary: Dictionary = board.call("validation_hex_layout_summary")
+	var cursor := Vector2i(int(summary.get("controller_cursor_q", -1)), int(summary.get("controller_cursor_r", -1)))
+	var direction := Vector2i.RIGHT if cursor.x < int(summary.get("columns", 0)) - 1 else Vector2i.LEFT
+	await _send_direction(direction, width % 2 == 0)
+	var staged: Dictionary = (board.get("_battle_board_cursor_semantic_pending") as Dictionary).duplicate(true)
+	if String(staged.get("kind", "")) != "context" or timer.is_stopped() or live.text != "":
+		shell.queue_free()
+		return _fail_bool("Battle semantic cancellation %s did not establish a real staged context: %s." % [cancellation_case, _pending_compact(staged)])
+	match cancellation_case:
+		"focus":
+			var focus_target := _first_enabled_shell_button(shell)
+			if focus_target == null:
+				shell.queue_free()
+				return _fail_bool("Battle semantic focus cancellation has no enabled shell command.")
+			focus_target.grab_focus()
+		"modal":
+			var dialog := shell.get_node("QuickResolveConfirmationDialog") as ConfirmationDialog
+			dialog.popup_centered()
+		"battle":
+			session.battle["encounter_id"] = "%s-stale" % String(session.battle.get("encounter_id", "battle"))
+		"round":
+			session.battle["round"] = int(session.battle.get("round", 0)) + 1
+		"turn":
+			session.battle["turn_index"] = int(session.battle.get("turn_index", 0)) + 1
+		"active_stack":
+			var stacks: Array = session.battle.get("stacks", []) if session.battle.get("stacks", []) is Array else []
+			for stack_value in stacks:
+				if stack_value is Dictionary and String(stack_value.get("battle_id", "")) != String(session.battle.get("active_stack_id", "")):
+					session.battle["active_stack_id"] = String(stack_value.get("battle_id", ""))
+					break
+		"session":
+			var replacement = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+			replacement.battle = BattleRules.create_battle_payload(replacement, _first_encounter(replacement))
+			board.call("set_battle_state", replacement)
+		"tree":
+			var board_parent := board.get_parent()
+			board_parent.remove_child(board)
+	var cancellation_started := Time.get_ticks_msec()
+	while Time.get_ticks_msec() - cancellation_started <= 1000 and not timer.is_stopped():
+		await get_tree().process_frame
+	var detached_from_tree_exact := cancellation_case != "tree" or not board.is_inside_tree()
+	if not detached_from_tree_exact or not timer.is_stopped() or not (board.get("_battle_board_cursor_semantic_pending") as Dictionary).is_empty() or live.text != "":
+		var failure_inside_tree := board.is_inside_tree()
+		var failure_pending := _pending_compact(board.get("_battle_board_cursor_semantic_pending"))
+		var failure_text := live.text
+		var failure_timer_stopped := timer.is_stopped()
+		if cancellation_case == "tree" and not board.is_inside_tree():
+			board.free()
+		shell.queue_free()
+		return _fail_bool("Battle semantic cancellation %s retained tree/pending/text/timer: inside=%s pending=%s text=%s stopped=%s." % [cancellation_case, failure_inside_tree, failure_pending, failure_text, failure_timer_stopped])
+	if cancellation_case == "tree":
+		board.free()
+	shell.queue_free()
+	await get_tree().process_frame
+	return true
+
+func _expected_semantic_context(board: Control, session, summary: Dictionary) -> String:
+	var cell := Vector2i(int(summary.get("controller_cursor_q", -1)), int(summary.get("controller_cursor_r", -1)))
+	var role := String(summary.get("controller_cursor_cell_role", "")).replace("_", " ")
+	var battle_id := String(summary.get("controller_cursor_battle_id", ""))
+	var active_stack: Dictionary = BattleRules.get_active_stack(session.battle)
+	var active_side := String(active_stack.get("side", ""))
+	var detail := ""
+	var action := "check this hex"
+	if battle_id != "":
+		var stack := _stack_by_battle_id(session.battle, battle_id)
+		var stack_row := _summary_stack(summary, battle_id)
+		var active_prefix := "active " if battle_id == String(session.battle.get("active_stack_id", "")) else ""
+		detail = "%s%s stack %s, %d units. %s" % [
+			active_prefix,
+			String(stack.get("side", "unknown")),
+			_bounded_text(String(stack.get("name", stack.get("unit_id", "Stack"))), 48),
+			int(stack_row.get("alive_count", 0)),
+			String(board.call("_stack_board_tooltip", battle_id)),
+		]
+		if active_side == "player" and String(stack.get("side", "")) == "enemy":
+			var attack_intent := BattleRules.board_click_attack_intent_for_target(session.battle, battle_id)
+			var action_label := String(attack_intent.get("label", "")).strip_edges()
+			action = action_label if action_label != "" else "select this target"
+	else:
+		var movement_intent := BattleRules.movement_intent_for_destination(session.battle, cell.x, cell.y)
+		detail = String(movement_intent.get("message", board.call("_movement_board_tooltip", cell)))
+		action = "move here" if bool(movement_intent.get("movable", false)) else "check this blocked hex"
+	if active_side != "player":
+		action = "unavailable while input is locked"
+	return _bounded_text(
+		"Hex %d,%d; %s. %s A/Enter: %s. B/Escape: return to battle commands." % [
+			cell.x,
+			cell.y,
+			role,
+			_bounded_text(detail, 150),
+			_bounded_text(action, 44),
+		],
+		320
+	)
+
+func _wait_for_semantic_context(board: Control, live: Label, timer: Timer) -> bool:
+	var started := Time.get_ticks_msec()
+	while Time.get_ticks_msec() - started <= 1000 and live.text == "":
+		await get_tree().process_frame
+	return live.text != "" and timer.is_stopped() and (board.get("_battle_board_cursor_semantic_pending") as Dictionary).is_empty()
+
+func _exact_result_pending(board: Control, live: Label, timer: Timer, expected_text: String) -> bool:
+	var pending: Dictionary = board.get("_battle_board_cursor_semantic_pending")
+	return (
+		live.text == expected_text
+		and live.text.length() <= 320
+		and String(pending.get("kind", "")) == "result_clear"
+		and int(pending.get("generation", -1)) == int(board.get("_battle_board_cursor_semantic_generation"))
+		and is_same(pending.get("label_ref"), live)
+		and String(pending.get("label_text", "")) == live.text
+		and not timer.is_stopped()
+		and is_equal_approx(timer.wait_time, RESULT_VISIBLE_SECONDS)
+	)
+
+func _wait_for_result_clear(board: Control, live: Label, timer: Timer) -> bool:
+	var started := Time.get_ticks_msec()
+	while Time.get_ticks_msec() - started <= 1800 and (live.text != "" or not timer.is_stopped()):
+		await get_tree().process_frame
+	return live.text == "" and timer.is_stopped() and (board.get("_battle_board_cursor_semantic_pending") as Dictionary).is_empty()
+
+func _move_cursor_to(board: Control, target: Vector2i, use_key: bool) -> bool:
+	var summary: Dictionary = board.call("validation_hex_layout_summary")
+	var cursor := Vector2i(int(summary.get("controller_cursor_q", -1)), int(summary.get("controller_cursor_r", -1)))
+	if cursor == target:
+		var detour := Vector2i.RIGHT if cursor.x < int(summary.get("columns", 0)) - 1 else Vector2i.LEFT
+		await _send_direction(detour, use_key)
+		cursor += detour
+	while cursor.x != target.x:
+		var direction := Vector2i.RIGHT if cursor.x < target.x else Vector2i.LEFT
+		await _send_direction(direction, use_key)
+		cursor += direction
+	while cursor.y != target.y:
+		var direction := Vector2i.DOWN if cursor.y < target.y else Vector2i.UP
+		await _send_direction(direction, use_key)
+		cursor += direction
+	var after: Dictionary = board.call("validation_hex_layout_summary")
+	return Vector2i(int(after.get("controller_cursor_q", -1)), int(after.get("controller_cursor_r", -1))) == target
+
+func _send_direction(direction: Vector2i, use_key: bool) -> void:
+	if use_key:
+		var key_event := InputEventKey.new()
+		key_event.keycode = _key_for_direction(direction)
+		key_event.physical_keycode = key_event.keycode
+		key_event.pressed = true
+		Input.parse_input_event(key_event)
+		var key_release := key_event.duplicate() as InputEventKey
+		key_release.pressed = false
+		Input.parse_input_event(key_release)
+	else:
+		var button := _button_for_direction(direction)
+		var pressed := InputEventJoypadButton.new()
+		pressed.button_index = button
+		pressed.pressed = true
+		Input.parse_input_event(pressed)
+		var released := InputEventJoypadButton.new()
+		released.button_index = button
+		released.pressed = false
+		Input.parse_input_event(released)
+	await get_tree().process_frame
+
+func _emit_direction_sync(direction: Vector2i, use_key: bool) -> void:
+	if use_key:
+		var pressed := InputEventKey.new()
+		pressed.keycode = _key_for_direction(direction)
+		pressed.physical_keycode = pressed.keycode
+		pressed.pressed = true
+		Input.parse_input_event(pressed)
+		var released := pressed.duplicate() as InputEventKey
+		released.pressed = false
+		Input.parse_input_event(released)
+	else:
+		_emit_joypad_tap_sync(_button_for_direction(direction))
+
+func _emit_joypad_tap_sync(button_index: int) -> void:
+	var pressed := InputEventJoypadButton.new()
+	pressed.button_index = button_index
+	pressed.pressed = true
+	Input.parse_input_event(pressed)
+	var released := InputEventJoypadButton.new()
+	released.button_index = button_index
+	released.pressed = false
+	Input.parse_input_event(released)
+
+func _key_for_direction(direction: Vector2i) -> Key:
+	if direction == Vector2i.LEFT:
+		return KEY_LEFT
+	if direction == Vector2i.RIGHT:
+		return KEY_RIGHT
+	if direction == Vector2i.UP:
+		return KEY_UP
+	return KEY_DOWN
+
+func _button_for_direction(direction: Vector2i) -> int:
+	if direction == Vector2i.LEFT:
+		return JOY_BUTTON_DPAD_LEFT
+	if direction == Vector2i.RIGHT:
+		return JOY_BUTTON_DPAD_RIGHT
+	if direction == Vector2i.UP:
+		return JOY_BUTTON_DPAD_UP
+	return JOY_BUTTON_DPAD_DOWN
+
+func _active_stack_cell(summary: Dictionary) -> Vector2i:
+	for entry_value in summary.get("stack_cells", []):
+		if entry_value is Dictionary and bool(entry_value.get("active", false)):
+			return Vector2i(int(entry_value.get("q", -1)), int(entry_value.get("r", -1)))
+	return Vector2i(-1, -1)
+
+func _first_stack_cell(summary: Dictionary, side: String, excluded_id: String) -> Vector2i:
+	for entry_value in summary.get("stack_cells", []):
+		if entry_value is Dictionary and String(entry_value.get("side", "")) == side and String(entry_value.get("battle_id", "")) != excluded_id:
+			return Vector2i(int(entry_value.get("q", -1)), int(entry_value.get("r", -1)))
+	return Vector2i(-1, -1)
+
+func _first_blocked_enemy_cell(summary: Dictionary) -> Vector2i:
+	for entry_value in summary.get("stack_cells", []):
+		if entry_value is Dictionary and String(entry_value.get("side", "")) == "enemy" and not bool(entry_value.get("legal_attack_target", false)):
+			return Vector2i(int(entry_value.get("q", -1)), int(entry_value.get("r", -1)))
+	return Vector2i(-1, -1)
+
+func _first_legal_destination(summary: Dictionary) -> Vector2i:
+	for destination_value in summary.get("legal_destinations", []):
+		if destination_value is Dictionary:
+			return Vector2i(int(destination_value.get("q", -1)), int(destination_value.get("r", -1)))
+	return Vector2i(-1, -1)
+
+func _first_blocked_empty_cell(summary: Dictionary) -> Vector2i:
+	var occupied := {}
+	for entry_value in summary.get("stack_cells", []):
+		if entry_value is Dictionary:
+			occupied[_cell_key(Vector2i(int(entry_value.get("q", -1)), int(entry_value.get("r", -1))))] = true
+	var legal := {}
+	for destination_value in summary.get("legal_destinations", []):
+		if destination_value is Dictionary:
+			legal[_cell_key(Vector2i(int(destination_value.get("q", -1)), int(destination_value.get("r", -1))))] = true
+	for r in range(int(summary.get("rows", 0))):
+		for q in range(int(summary.get("columns", 0))):
+			var cell_key := _cell_key(Vector2i(q, r))
+			if not occupied.has(cell_key) and not legal.has(cell_key):
+				return Vector2i(q, r)
+	return Vector2i(-1, -1)
+
+func _summary_stack(summary: Dictionary, battle_id: String) -> Dictionary:
+	for entry_value in summary.get("stack_cells", []):
+		if entry_value is Dictionary and String(entry_value.get("battle_id", "")) == battle_id:
+			return (entry_value as Dictionary).duplicate(true)
+	return {}
+
+func _stack_by_battle_id(battle: Dictionary, battle_id: String) -> Dictionary:
+	for stack_value in battle.get("stacks", []):
+		if stack_value is Dictionary and String(stack_value.get("battle_id", "")) == battle_id:
+			return stack_value
+	return {}
+
+func _cell_payload(cell: Vector2i) -> Dictionary:
+	return {"q": cell.x, "r": cell.y}
+
+func _cell_key(cell: Vector2i) -> String:
+	return "%d,%d" % [cell.x, cell.y]
+
+func _turn_signature(battle: Dictionary) -> String:
+	var active := _stack_by_battle_id(battle, String(battle.get("active_stack_id", "")))
+	return "%d|%d|%s|%s" % [int(battle.get("round", 0)), int(battle.get("turn_index", -1)), String(battle.get("active_stack_id", "")), String(active.get("side", ""))]
+
+func _bounded_text(value: String, maximum_characters: int) -> String:
+	var normalized := " ".join(value.replace("\r", "\n").split("\n", false)).strip_edges()
+	while normalized.contains("  "):
+		normalized = normalized.replace("  ", " ")
+	return normalized.left(maximum_characters)
+
+func _pending_compact(value: Variant) -> Dictionary:
+	var pending: Dictionary = value if value is Dictionary else {}
+	return {
+		"kind": String(pending.get("kind", "")),
+		"generation": int(pending.get("generation", -1)),
+		"session_id": String(pending.get("session_id", "")),
+		"battle_identity": String(pending.get("battle_identity", "")),
+		"turn_signature": String(pending.get("turn_signature", "")),
+		"cursor_cell": pending.get("cursor_cell", {}),
+		"label_text": String(pending.get("label_text", "")),
+	}
+
+func _semantic_observer_snapshot(board: Control, live: Label, timer: Timer) -> Dictionary:
+	return {
+		"cursor": _cell_payload(Vector2i(int((board.call("validation_hex_layout_summary") as Dictionary).get("controller_cursor_q", -1)), int((board.call("validation_hex_layout_summary") as Dictionary).get("controller_cursor_r", -1)))),
+		"live": live.text,
+		"pending": _pending_compact(board.get("_battle_board_cursor_semantic_pending")),
+		"timer_stopped": timer.is_stopped(),
+		"timer_wait": timer.wait_time,
+	}
+
+func _battle_background_authority(session) -> Dictionary:
+	var files := {}
+	var base_paths: Array[String] = [
+		"%s/%s" % [SaveService.SAVE_DIR, SaveService.AUTOSAVE_FILE],
+		"%s/%s" % [SaveService.SAVE_DIR, SaveService.PROGRESSION_FILE],
+		SettingsService.SETTINGS_FILE,
+	]
+	for slot_id in SaveService.MANUAL_SLOT_IDS:
+		base_paths.append("%s/%s%d.json" % [SaveService.SAVE_DIR, SaveService.SAVE_PREFIX, int(slot_id)])
+	for path in base_paths:
+		files[path] = _file_state(path)
+		files["%s%s" % [path, SaveService.SAVE_TRANSACTION_CANDIDATE_SUFFIX]] = _file_state("%s%s" % [path, SaveService.SAVE_TRANSACTION_CANDIDATE_SUFFIX])
+		files["%s%s" % [path, SaveService.SAVE_TRANSACTION_BACKUP_SUFFIX]] = _file_state("%s%s" % [path, SaveService.SAVE_TRANSACTION_BACKUP_SUFFIX])
+	files[SettingsService.SETTINGS_CANDIDATE_FILE] = _file_state(SettingsService.SETTINGS_CANDIDATE_FILE)
+	files[SettingsService.SETTINGS_BACKUP_FILE] = _file_state(SettingsService.SETTINGS_BACKUP_FILE)
+	return {
+		"session": session.to_dict(),
+		"active_session_same": is_same(SessionState.active_session, session),
+		"battle": session.battle.duplicate(true),
+		"rng_state": String(session.battle.get(BattleRules.DAMAGE_RNG_STATE_KEY, "")),
+		"recent_events": session.battle.get("recent_events", []).duplicate(true),
+		"files": files,
+		"summary_cache": SaveService.validation_summary_cache_snapshot(),
+		"settings": _canonical_settings_transaction(SettingsService.validation_settings_transaction_snapshot()),
+		"battle_resolution_route": AppRouter.validation_battle_resolution_checkpoint_snapshot(),
+		"battle_entry_route": AppRouter.validation_battle_entry_snapshot(),
+		"outcome_route": AppRouter.validation_scenario_outcome_route_snapshot(),
+		"active_return_route": AppRouter.validation_active_play_return_snapshot(),
+		"safe_quit_route": AppRouter.validation_safe_quit_snapshot(),
+	}
+
+func _file_state(path: String) -> Dictionary:
+	var absolute := ProjectSettings.globalize_path(path)
+	if not FileAccess.file_exists(path):
+		return {"exists": false, "path": path}
+	var file := FileAccess.open(path, FileAccess.READ)
+	return {"exists": true, "path": path, "bytes": file.get_buffer(file.get_length()) if file != null else PackedByteArray()}
+
+func _canonical_settings_transaction(transaction: Dictionary) -> Dictionary:
+	var canonical: Dictionary = transaction.duplicate(true)
+	var canonical_input_map := {}
+	var input_map: Dictionary = transaction.get("input_map", {}) if transaction.get("input_map", {}) is Dictionary else {}
+	for action_value in input_map.keys():
+		var action := String(action_value)
+		var action_state: Dictionary = input_map.get(action_value, {}) if input_map.get(action_value, {}) is Dictionary else {}
+		var canonical_events: Array = []
+		var events: Array = action_state.get("events", []) if action_state.get("events", []) is Array else []
+		for event_value in events:
+			if event_value is InputEvent:
+				canonical_events.append(_canonical_stored_input_event(event_value as InputEvent))
+			else:
+				canonical_events.append({"class": "", "as_text": var_to_str(event_value), "stored_properties": []})
+		canonical_input_map[action] = {
+			"action": action,
+			"exists": bool(action_state.get("exists", false)),
+			"deadzone": float(action_state.get("deadzone", 0.5)),
+			"events": canonical_events,
+		}
+	canonical["input_map"] = canonical_input_map
+	return canonical
+
+func _canonical_stored_input_event(event: InputEvent) -> Dictionary:
+	var stored_properties: Array = []
+	for property_value in event.get_property_list():
+		if not (property_value is Dictionary):
+			continue
+		var property: Dictionary = property_value
+		var property_name := String(property.get("name", ""))
+		var property_usage := int(property.get("usage", 0))
+		if property_name == "script" or (property_usage & PROPERTY_USAGE_STORAGE) == 0:
+			continue
+		stored_properties.append({"name": property_name, "value": var_to_str(event.get(property_name))})
+	return {"class": event.get_class(), "as_text": event.as_text(), "stored_properties": stored_properties}
+
+func _first_enabled_shell_button(shell: Node) -> BaseButton:
+	for node_value in shell.find_children("*", "BaseButton", true, false):
+		var button := node_value as BaseButton
+		if button.visible and not button.disabled:
+			return button
+	return null
+
+func _checks_exact(checks: Dictionary) -> bool:
+	for value in checks.values():
+		if not bool(value):
+			return false
+	return true
+
+func _fail_bool(message: String) -> bool:
+	_fail(message)
+	return false
+
+func _assert_semantic_context_at(
+	shell: Node,
+	board: Control,
+	live: Label,
+	semantic_timer: Timer,
+	session,
+	target: Vector2i,
+	width: int,
+	row_id: String,
+	use_key: bool
+) -> bool:
+	var authority_before := _battle_background_authority(session)
+	if not await _move_cursor_to(board, target, use_key):
+		return _fail_bool("Battle semantic row %s could not reach %s at %d." % [row_id, target, width])
+	var pending: Dictionary = (board.get("_battle_board_cursor_semantic_pending") as Dictionary).duplicate(true)
+	var summary: Dictionary = board.call("validation_hex_layout_summary")
+	var expected := _expected_semantic_context(board, session, summary)
+	var pending_checks := {
+		"live_empty_before_publish": live.text == "",
+		"pending_context": String(pending.get("kind", "")) == "context",
+		"pending_generation_current": int(pending.get("generation", -1)) == int(board.get("_battle_board_cursor_semantic_generation")),
+		"pending_session_ref": is_same(pending.get("session_ref"), session),
+		"pending_session_id": String(pending.get("session_id", "")) == String(session.session_id),
+		"pending_battle_dictionary": pending.get("battle_ref") is Dictionary and not (pending.get("battle_ref") as Dictionary).is_empty(),
+		"pending_battle_value_exact": pending.get("battle_ref") == session.battle,
+		"pending_battle_identity": String(pending.get("battle_identity", "")) == String(session.battle.get("encounter_id", "")),
+		"pending_turn_signature": String(pending.get("turn_signature", "")) == _turn_signature(session.battle),
+		"pending_cell": pending.get("cursor_cell", {}) == _cell_payload(target),
+		"pending_label_ref": is_same(pending.get("label_ref"), live),
+		"timer_active": not semantic_timer.is_stopped(),
+		"timer_wait_exact": is_equal_approx(semantic_timer.wait_time, SEMANTIC_DEBOUNCE_SECONDS),
+		"authority_exact_before_publish": _battle_background_authority(session) == authority_before,
+	}
+	if not _checks_exact(pending_checks):
+		return _fail_bool("Battle semantic row %s pending state was not exact at %d: %s pending=%s." % [row_id, width, pending_checks, _pending_compact(pending)])
+	var started := Time.get_ticks_msec()
+	while Time.get_ticks_msec() - started <= 1000 and live.text == "":
+		await get_tree().process_frame
+	var published_checks := {
+		"expected_nonempty": expected != "",
+		"exact_text": live.text == expected,
+		"bounded": live.text.length() <= 320,
+		"exact_hex": live.text.begins_with("Hex %d,%d;" % [target.x, target.y]),
+		"exact_role": live.text.contains("; %s." % String(summary.get("controller_cursor_cell_role", "")).replace("_", " ")),
+		"accept_context": live.text.contains(" A/Enter: "),
+		"cancel_context": live.text.ends_with(" B/Escape: return to battle commands."),
+		"timer_stopped": semantic_timer.is_stopped(),
+		"pending_empty": (board.get("_battle_board_cursor_semantic_pending") as Dictionary).is_empty(),
+		"authority_exact_after_publish": _battle_background_authority(session) == authority_before,
+	}
+	if not _checks_exact(published_checks):
+		return _fail_bool("Battle semantic row %s did not publish exact bounded context at %d: %s expected=%s actual=%s." % [row_id, width, published_checks, expected, live.text])
+	return true
 
 func _stack_cell(board_summary: Dictionary, battle_id: String) -> Vector2i:
 	var entries: Array = board_summary.get("stack_cells", []) if board_summary.get("stack_cells", []) is Array else []
@@ -168,6 +918,97 @@ func _press_joypad_button(button_index: int) -> void:
 	released.pressed = false
 	Input.parse_input_event(released)
 	await _settle()
+
+func _on_cancel_diagnostic_gui_input(event: InputEvent, counters: Dictionary) -> void:
+	if not (event is InputEventJoypadButton) or int((event as InputEventJoypadButton).button_index) != JOY_BUTTON_B:
+		return
+	if (event as InputEventJoypadButton).pressed:
+		counters["pressed_gui_count"] = int(counters.get("pressed_gui_count", 0)) + 1
+		counters["board_pressed_handled"] = get_viewport().is_input_handled()
+	else:
+		counters["released_gui_count"] = int(counters.get("released_gui_count", 0)) + 1
+		counters["board_released_handled"] = get_viewport().is_input_handled()
+
+func _on_cancel_diagnostic_root_window_input(event: InputEvent, counters: Dictionary) -> void:
+	if not (event is InputEventJoypadButton) or int((event as InputEventJoypadButton).button_index) != JOY_BUTTON_B:
+		return
+	if (event as InputEventJoypadButton).pressed:
+		counters["root_pressed_count"] = int(counters.get("root_pressed_count", 0)) + 1
+		counters["root_pressed_handled"] = get_viewport().is_input_handled()
+	else:
+		counters["root_released_count"] = int(counters.get("root_released_count", 0)) + 1
+		counters["root_released_handled"] = get_viewport().is_input_handled()
+
+func _on_cancel_diagnostic_focus_exited(counters: Dictionary) -> void:
+	counters["focus_exited_count"] = int(counters.get("focus_exited_count", 0)) + 1
+
+func _on_cancel_diagnostic_navigation_cancelled(counters: Dictionary) -> void:
+	counters["cancel_signal_count"] = int(counters.get("cancel_signal_count", 0)) + 1
+
+func _matching_joypad_binding_count(action: StringName, button_index: int) -> int:
+	var count := 0
+	for event_value in InputMap.action_get_events(action):
+		if event_value is InputEventJoypadButton and int((event_value as InputEventJoypadButton).button_index) == button_index:
+			count += 1
+	return count
+
+func _root_window_input_connection_rows() -> Array[Dictionary]:
+	var rows: Array[Dictionary] = []
+	for connection_value in get_tree().root.window_input.get_connections():
+		if not (connection_value is Dictionary):
+			continue
+		var connection: Dictionary = connection_value
+		var callable: Callable = connection.get("callable", Callable())
+		var object: Object = callable.get_object()
+		var node := object as Node
+		rows.append({
+			"object_id": object.get_instance_id() if object != null else 0,
+			"path": String(node.get_path()) if node != null and node.is_inside_tree() else "",
+			"class": object.get_class() if object != null else "",
+			"method": String(callable.get_method()),
+			"flags": int(connection.get("flags", 0)),
+		})
+	return rows
+
+func _connection_row_count(rows: Array[Dictionary], object: Object, method_name: String) -> int:
+	var count := 0
+	for row in rows:
+		if int(row.get("object_id", 0)) == object.get_instance_id() and String(row.get("method", "")) == method_name:
+			count += 1
+	return count
+
+func _button_shortcut_snapshot(button: BaseButton, pressed: InputEvent, released: InputEvent) -> Dictionary:
+	var shortcut := button.shortcut
+	var event_rows: Array[Dictionary] = []
+	if shortcut != null:
+		for event_value in shortcut.events:
+			var event := event_value as InputEvent
+			event_rows.append({
+				"class": event.get_class() if event != null else "",
+				"action": String((event as InputEventAction).action) if event is InputEventAction else "",
+				"button_index": int((event as InputEventJoypadButton).button_index) if event is InputEventJoypadButton else -1,
+				"pressed": bool(event.get("pressed")) if event != null else false,
+				"as_text": event.as_text() if event != null else "",
+			})
+	return {
+		"path": String(button.get_path()),
+		"text": button.text,
+		"visible_in_tree": button.is_visible_in_tree(),
+		"disabled": button.disabled,
+		"shortcut_nonnull": shortcut != null,
+		"matches_pressed": shortcut.matches_event(pressed) if shortcut != null else false,
+		"matches_released": shortcut.matches_event(released) if shortcut != null else false,
+		"events": event_rows,
+	}
+
+func _matching_shell_shortcut_rows(shell: Node, pressed: InputEvent, released: InputEvent) -> Array[Dictionary]:
+	var rows: Array[Dictionary] = []
+	for node_value in shell.find_children("*", "BaseButton", true, false):
+		var button := node_value as BaseButton
+		var snapshot := _button_shortcut_snapshot(button, pressed, released)
+		if bool(snapshot.get("matches_pressed", false)):
+			rows.append(snapshot)
+	return rows
 
 func _first_encounter(session) -> Dictionary:
 	for encounter in session.overworld.get("encounters", []):

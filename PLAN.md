@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Current selected implementation slice: select the next tracker-approved release-readiness implementation slice.
+- Latest completed implementation slice: `accessibility-battle-board-cursor-live-context-coalescing-10184`. Battle now exposes one bounded polite live context for the existing keyboard/controller Board cursor, coalesces changed navigation to its final settled hex, and announces exact existing A/B results without changing combat, input timing, mouse behavior, or battle authority.
 - Latest completed implementation slice: `ux-overworld-selected-route-field-readiness-coherence-10184`. Targeted route selection now refreshes the route-owned ObjectiveBrief readiness tooltip, idle Event/action context, End Turn cue, and drawer/handoff cues from the same authoritative cached action and route state while preserving active feedback/recap, compact zero-rich construction, incremental ownership, and all route consequences.
 - Latest completed implementation slice: `map-editor-generated-package-play-copy-restore-tile-baseline-10184`. Generated-package Map Editor Play Copy now carries the immutable loaded-package baseline through the in-memory return handoff, so Restore Tile remains exact without authored-scenario fallback, disk reload, generated-content registration, or Native RMG changes.
 - Latest completed implementation slice: `accessibility-map-editor-canvas-live-context-coalescing-10184`. The Map Editor canvas now exposes one bounded current tile/tool/action live context, keeps the visual working-copy status non-live, and coalesces held keyboard/controller navigation to the final settled destination without changing editor authority.
@@ -1320,6 +1322,37 @@ Non-goals:
 - do not add diagonal stick movement, vibration, rebinding, or a second combat rules path;
 - do not make controller focus auto-select an irreversible action;
 - do not redesign the battle shell or add visible instruction panels.
+
+## Battle Board Cursor Live Context Coalescing
+
+id: `accessibility-battle-board-cursor-live-context-coalescing-10184`
+
+Status: complete.
+
+Selected Phase 6 accessibility implementation slice. The shipped BattleBoard already owns a visible bounded keyboard/controller cursor and exact existing A/B dispatch, but cursor movement has no dedicated bounded native live context for players using screen readers.
+
+Implementation target:
+- author exactly one transparent, non-layout `BattleBoardCursorLive` polite live region and keep its text at or below 320 characters;
+- derive current hex coordinates, role, stack side/name/count when occupied, or legal/blocked action plus A/Enter and B/Escape guidance from the existing BattleBoard state and intent/tooltip methods;
+- publish only changed keyboard/D-pad destinations after navigation settles, keep held movement final-only and mouse hover/click silent, and publish immediate existing A/B results through generation, battle/session/turn/input-lock/focus/tree ownership guards;
+- cancel or clear pending context and guarded results on focus loss, battle or session replacement, turn/input-lock change, modal ownership, and tree exit without changing input timing or action consequences.
+
+Completion criteria:
+- focused 1280 and 1920 proof covers player and enemy turns, empty legal and blocked hexes, friendly/enemy/active stacks, boundaries and bounded no-ops, held and single-step physical keyboard/D-pad input, focus and modal transitions, existing A move/target outcomes, B command-focus return, battle/session replacement, and stale-result replacement/clear;
+- the authored live surface stays unique, polite, transparent, non-layout, bounded, current, and silent for mouse-only hover/click while the visual cursor, focus cycle, exact board dispatch, rules, RNG, animation, saves, files, cache, settings, routes, session, and battle authority remain exact;
+- `battle_controller_board_navigation_smoke`, `accessibility_screen_reader_semantics_report`, battle layout/compatibility, core, editor, repository, Linux release, and fresh Windows/Wine gates pass; native Linux AT-SPI semantics are claimed only when observed, and Wine evidence is limited to packaged behavior/tree validation without native Windows UIA or controller certification.
+
+Non-goals:
+- do not change BattleRules, BattleAiRules, action selection or consequences, RNG, battle state, keyboard/controller mappings, repeat timing, mouse hover/click behavior, shared UiAccessibility policy, layout, visible instruction panels, save/schema/version, or Native RMG;
+- do not add custom narration, arbitrary rebinding, vibration, diagonal-stick behavior, a second battle dispatch path, or automatic irreversible actions;
+- do not claim controller or hardware certification, native Windows UIA, medical/accessibility certification, signing, publication, whole-game readiness, or overall release completion.
+
+Completion evidence:
+- the authored BattleShell owns exactly one transparent, non-layout `BattleBoardCursorLive` polite live region, while standalone BattleBoard fixtures fail closed when that scene-owned label is absent;
+- focused 1280 and 1920 coverage passes the exact bounded context matrix, real keyboard/D-pad coalescing, mouse and no-op silence, exact guarded A/B results and clear lifecycle, stale replacement, focus/modal/session/battle/turn/input-lock/tree cancellation, and full session, battle, RNG, animation, files, settings, routes, and action authority;
+- accessibility semantics, independent 1920/1280/1024 battle-layout gates, Quick Resolve, Withdrawal, manual overwrite, active-play focus, deterministic RNG, battle animation, animation cue catalog, repository validation, Python, diff, and editor gates pass;
+- official Linux release export and packaged headless startup pass, but that harness does not expose Boot/MainMenu markers or execute packaged BattleBoard interaction;
+- official Windows release export and fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass, but no packaged BattleBoard interaction, native Linux AT-SPI observation, native Windows UIA, controller or hardware certification, signing/publication, whole-game readiness, or whole-release completion is claimed.
 
 ## Keyboard Navigation Layout Settings
 
