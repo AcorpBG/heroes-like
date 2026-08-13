@@ -11,6 +11,9 @@ const FrontierVisualKitScript = preload("res://scripts/ui/FrontierVisualKit.gd")
 const HEX_COLUMNS := 11
 const HEX_ROWS := 7
 const SQRT_3 := 1.7320508075688772
+const BATTLE_BOARD_CURSOR_SEMANTIC_MAX_CHARS := 320
+const BATTLE_BOARD_CURSOR_SEMANTIC_DEBOUNCE_SECONDS := 0.42
+const BATTLE_BOARD_CURSOR_RESULT_VISIBLE_SECONDS := 1.20
 
 const FRAME_FILL := Color(0.045, 0.052, 0.061, 1.0)
 const BOARD_FILL := Color(0.072, 0.078, 0.070, 1.0)
@@ -117,6 +120,13 @@ var _audio_mix_counters: Dictionary = {
 	"suppressed_by_reason": {},
 }
 var _presentation_speed := BattleRulesScript.PRESENTATION_SPEED_NORMAL
+var _battle_board_cursor_semantic_timer: Timer = null
+var _battle_board_cursor_semantic_generation := 0
+var _battle_board_cursor_semantic_pending: Dictionary = {}
+var _battle_board_cursor_result_request_generation := 0
+var _controller_dispatch_in_progress := false
+
+@onready var _battle_board_cursor_live_label: Label = get_node_or_null("%BattleBoardCursorLive") as Label
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -125,7 +135,11 @@ func _ready() -> void:
 	tooltip_text = "Outlined hex click moves. Highlighted enemy click attacks; blocked enemies need movement."
 	focus_entered.connect(_on_controller_focus_entered)
 	focus_exited.connect(_on_controller_focus_exited)
+	_configure_battle_board_cursor_semantic_timer()
 	_load_terrain_textures()
+
+func _exit_tree() -> void:
+	_cancel_battle_board_cursor_semantic()
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_RESIZED:
@@ -137,6 +151,8 @@ func _process(_delta: float) -> void:
 		_activate_due_audio_cue_playback()
 		_cleanup_audio_players()
 		queue_redraw()
+	if String(_battle_board_cursor_semantic_pending.get("kind", "")) == "result_clear" and not _battle_board_cursor_result_guard_matches(_battle_board_cursor_semantic_pending):
+		_cancel_battle_board_cursor_semantic()
 
 func _gui_input(event: InputEvent) -> void:
 	if _handle_controller_navigation_input(event):
@@ -164,31 +180,39 @@ func _handle_controller_navigation_input(event: InputEvent) -> bool:
 	if not has_focus():
 		return false
 	if event.is_action_pressed("ui_up"):
-		_move_controller_cursor(Vector2i.UP)
+		_move_controller_cursor(Vector2i.UP, event is InputEventKey or event is InputEventJoypadButton)
 		return true
 	if event.is_action_pressed("ui_down"):
-		_move_controller_cursor(Vector2i.DOWN)
+		_move_controller_cursor(Vector2i.DOWN, event is InputEventKey or event is InputEventJoypadButton)
 		return true
 	if event.is_action_pressed("ui_left"):
-		_move_controller_cursor(Vector2i.LEFT)
+		_move_controller_cursor(Vector2i.LEFT, event is InputEventKey or event is InputEventJoypadButton)
 		return true
 	if event.is_action_pressed("ui_right"):
-		_move_controller_cursor(Vector2i.RIGHT)
+		_move_controller_cursor(Vector2i.RIGHT, event is InputEventKey or event is InputEventJoypadButton)
 		return true
 	if event.is_action_pressed("ui_accept"):
 		return _dispatch_controller_cursor()
 	if event.is_action_pressed("ui_cancel"):
-		release_focus()
-		controller_navigation_cancelled.emit()
-		return true
+		return handle_root_controller_navigation_cancel()
 	return false
 
+func handle_root_controller_navigation_cancel() -> bool:
+	if not is_inside_tree() or not is_visible_in_tree() or not has_focus():
+		return false
+	release_focus()
+	controller_navigation_cancelled.emit()
+	_queue_battle_board_cursor_semantic_result("Battle board navigation ended. Focus returned to battle commands.")
+	return true
+
 func _on_controller_focus_entered() -> void:
+	_cancel_battle_board_cursor_semantic()
 	_ensure_controller_cursor()
 	_sync_controller_cursor_preview()
 	queue_redraw()
 
 func _on_controller_focus_exited() -> void:
+	_cancel_battle_board_cursor_semantic(false)
 	_hover_destination_cell = Vector2i(-1, -1)
 	queue_redraw()
 
@@ -209,14 +233,17 @@ func _ensure_controller_cursor() -> void:
 	var active_cell := _stack_cell_for_battle_id(String(_battle.get("active_stack_id", "")))
 	_controller_cursor_cell = active_cell if _cell_in_bounds(active_cell) else Vector2i(int(HEX_COLUMNS / 2), int(HEX_ROWS / 2))
 
-func _move_controller_cursor(delta: Vector2i) -> void:
+func _move_controller_cursor(delta: Vector2i, announce_semantic: bool = false) -> void:
 	_ensure_controller_cursor()
+	var previous_cell := _controller_cursor_cell
 	_controller_cursor_cell = Vector2i(
 		clampi(_controller_cursor_cell.x + delta.x, 0, HEX_COLUMNS - 1),
 		clampi(_controller_cursor_cell.y + delta.y, 0, HEX_ROWS - 1)
 	)
 	_sync_controller_cursor_preview()
 	queue_redraw()
+	if announce_semantic and _controller_cursor_cell != previous_cell:
+		_schedule_battle_board_cursor_semantic()
 
 func _sync_controller_cursor_preview() -> void:
 	_hover_destination_cell = _controller_cursor_cell if has_focus() and _is_legal_destination_cell(_controller_cursor_cell) else Vector2i(-1, -1)
@@ -226,11 +253,302 @@ func _dispatch_controller_cursor() -> bool:
 	if _battle.is_empty() or not _cell_in_bounds(_controller_cursor_cell):
 		return false
 	var battle_id := _stack_id_at_cell(_controller_cursor_cell)
+	_controller_dispatch_in_progress = true
 	if battle_id != "":
 		stack_focus_requested.emit(battle_id)
 	else:
 		hex_destination_requested.emit(_controller_cursor_cell.x, _controller_cursor_cell.y)
+	_controller_dispatch_in_progress = false
 	return true
+
+func publish_controller_action_result(result: Dictionary) -> void:
+	if not _controller_dispatch_in_progress:
+		return
+	var result_message := String(result.get("message", "")).strip_edges()
+	if result_message == "":
+		result_message = String(result.get("preview_message", "")).strip_edges()
+	if result_message == "":
+		result_message = "The selected battle-board action did not report a result."
+	_queue_battle_board_cursor_semantic_result(
+		"Battle board result: %s" % result_message
+	)
+
+func _configure_battle_board_cursor_semantic_timer() -> void:
+	if _battle_board_cursor_semantic_timer != null and is_instance_valid(_battle_board_cursor_semantic_timer):
+		return
+	_battle_board_cursor_semantic_timer = Timer.new()
+	_battle_board_cursor_semantic_timer.name = "BattleBoardCursorSemanticTimer"
+	_battle_board_cursor_semantic_timer.one_shot = true
+	_battle_board_cursor_semantic_timer.timeout.connect(_on_battle_board_cursor_semantic_timeout)
+	add_child(_battle_board_cursor_semantic_timer)
+
+func _schedule_battle_board_cursor_semantic() -> void:
+	_cancel_battle_board_cursor_semantic()
+	if not _battle_board_cursor_context_owned():
+		return
+	_battle_board_cursor_semantic_pending = {
+		"kind": "context",
+		"generation": _battle_board_cursor_semantic_generation,
+		"session_ref": _session,
+		"session_id": _battle_board_cursor_session_id(),
+		"battle_ref": _battle,
+		"battle_identity": _battle_board_cursor_battle_identity(),
+		"turn_signature": _battle_board_cursor_turn_signature(),
+		"cursor_cell": _battle_board_cursor_cell_payload(_controller_cursor_cell),
+		"label_ref": _battle_board_cursor_live_label,
+	}
+	_battle_board_cursor_semantic_timer.start(BATTLE_BOARD_CURSOR_SEMANTIC_DEBOUNCE_SECONDS)
+
+func _queue_battle_board_cursor_semantic_result(text: String) -> void:
+	var bounded_text := _bounded_battle_board_cursor_semantic_text(
+		text,
+		BATTLE_BOARD_CURSOR_SEMANTIC_MAX_CHARS
+	)
+	if bounded_text == "" or not is_inside_tree() or _session == null or _battle.is_empty():
+		return
+	_cancel_battle_board_cursor_semantic(false)
+	_battle_board_cursor_result_request_generation += 1
+	var request_generation := _battle_board_cursor_result_request_generation
+	call_deferred(
+		"_publish_battle_board_cursor_semantic_result",
+		bounded_text,
+		request_generation,
+		_session,
+		_battle,
+		_battle_board_cursor_session_id(),
+		_battle_board_cursor_battle_identity(),
+		_battle_board_cursor_turn_signature()
+	)
+
+func _publish_battle_board_cursor_semantic_result(
+	text: String,
+	request_generation: int,
+	source_session,
+	source_battle: Dictionary,
+	source_session_id: String,
+	battle_identity: String,
+	turn_signature: String
+) -> void:
+	if (
+		request_generation != _battle_board_cursor_result_request_generation
+		or not is_inside_tree()
+		or _session == null
+		or not is_same(source_session, _session)
+		or source_session_id != _battle_board_cursor_session_id()
+		or not is_same(source_battle, _battle)
+		or battle_identity != _battle_board_cursor_battle_identity()
+		or turn_signature != _battle_board_cursor_turn_signature()
+		or _battle_board_cursor_modal_owner_open()
+		or not is_instance_valid(_battle_board_cursor_live_label)
+	):
+		return
+	var expected_focus := get_viewport().gui_get_focus_owner() as Control
+	if not _battle_board_cursor_focus_owned_by_shell(expected_focus):
+		return
+	_cancel_battle_board_cursor_semantic(false)
+	_battle_board_cursor_live_label.text = text
+	_battle_board_cursor_semantic_pending = {
+		"kind": "result_clear",
+		"generation": _battle_board_cursor_semantic_generation,
+		"session_ref": _session,
+		"session_id": _battle_board_cursor_session_id(),
+		"battle_ref": _battle,
+		"battle_identity": _battle_board_cursor_battle_identity(),
+		"turn_signature": _battle_board_cursor_turn_signature(),
+		"focus_ref": expected_focus,
+		"label_ref": _battle_board_cursor_live_label,
+		"label_text": text,
+	}
+	_battle_board_cursor_semantic_timer.start(BATTLE_BOARD_CURSOR_RESULT_VISIBLE_SECONDS)
+
+func _on_battle_board_cursor_semantic_timeout() -> void:
+	var pending := _battle_board_cursor_semantic_pending
+	if pending.is_empty() or int(pending.get("generation", -1)) != _battle_board_cursor_semantic_generation:
+		return
+	_battle_board_cursor_semantic_pending = {}
+	match String(pending.get("kind", "")):
+		"context":
+			_publish_pending_battle_board_cursor_context(pending)
+		"result_clear":
+			_clear_battle_board_cursor_semantic_result(pending)
+		_:
+			_cancel_battle_board_cursor_semantic()
+
+func _publish_pending_battle_board_cursor_context(pending: Dictionary) -> void:
+	var cursor_value: Variant = pending.get("cursor_cell", {})
+	var cursor_payload: Dictionary = cursor_value if cursor_value is Dictionary else {}
+	var pending_cell := Vector2i(
+		int(cursor_payload.get("q", -1)),
+		int(cursor_payload.get("r", -1))
+	)
+	if (
+		not _battle_board_cursor_context_owned()
+		or not is_same(pending.get("session_ref"), _session)
+		or String(pending.get("session_id", "")) != _battle_board_cursor_session_id()
+		or not is_same(pending.get("battle_ref"), _battle)
+		or String(pending.get("battle_identity", "")) != _battle_board_cursor_battle_identity()
+		or String(pending.get("turn_signature", "")) != _battle_board_cursor_turn_signature()
+		or pending_cell != _controller_cursor_cell
+		or not is_same(pending.get("label_ref"), _battle_board_cursor_live_label)
+	):
+		_cancel_battle_board_cursor_semantic()
+		return
+	var context := _battle_board_cursor_semantic_context()
+	if context == "":
+		_cancel_battle_board_cursor_semantic()
+		return
+	_battle_board_cursor_live_label.text = context
+
+func _clear_battle_board_cursor_semantic_result(pending: Dictionary) -> void:
+	if int(pending.get("generation", -1)) != _battle_board_cursor_semantic_generation:
+		return
+	if not _battle_board_cursor_result_guard_matches(pending):
+		_cancel_battle_board_cursor_semantic()
+		return
+	_battle_board_cursor_semantic_generation += 1
+	if _battle_board_cursor_live_label.text == String(pending.get("label_text", "")):
+		_battle_board_cursor_live_label.text = ""
+
+func _battle_board_cursor_result_guard_matches(pending: Dictionary) -> bool:
+	var expected_focus: Variant = pending.get("focus_ref")
+	return (
+		is_inside_tree()
+		and _session != null
+		and is_same(pending.get("session_ref"), _session)
+		and String(pending.get("session_id", "")) == _battle_board_cursor_session_id()
+		and is_same(pending.get("battle_ref"), _battle)
+		and String(pending.get("battle_identity", "")) == _battle_board_cursor_battle_identity()
+		and String(pending.get("turn_signature", "")) == _battle_board_cursor_turn_signature()
+		and is_instance_valid(expected_focus)
+		and get_viewport().gui_get_focus_owner() == expected_focus
+		and _battle_board_cursor_focus_owned_by_shell(expected_focus)
+		and not _battle_board_cursor_modal_owner_open()
+		and is_same(pending.get("label_ref"), _battle_board_cursor_live_label)
+		and _battle_board_cursor_live_label.text == String(pending.get("label_text", ""))
+	)
+
+func _battle_board_cursor_semantic_context() -> String:
+	if _battle.is_empty() or not _cell_in_bounds(_controller_cursor_cell):
+		return ""
+	var role := _controller_cursor_cell_role().replace("_", " ")
+	var battle_id := _stack_id_at_cell(_controller_cursor_cell)
+	var active_side := String(_active_stack.get("side", ""))
+	var detail := ""
+	var action := "check this hex"
+	if battle_id != "":
+		var stack := _stack_by_id(battle_id)
+		var side := String(stack.get("side", "unknown"))
+		var name := _bounded_battle_board_cursor_semantic_text(
+			String(stack.get("name", stack.get("unit_id", "Stack"))),
+			48
+		)
+		var active_prefix := "active " if battle_id == String(_battle.get("active_stack_id", "")) else ""
+		detail = "%s%s stack %s, %d units. %s" % [
+			active_prefix,
+			side,
+			name,
+			_stack_alive_count(stack),
+			_stack_board_tooltip(battle_id),
+		]
+		if active_side == "player" and side == "enemy":
+			var attack_intent := BattleRulesScript.board_click_attack_intent_for_target(_battle, battle_id)
+			var action_label := String(attack_intent.get("label", "")).strip_edges()
+			action = action_label if action_label != "" else "select this target"
+	else:
+		var movement_intent := BattleRulesScript.movement_intent_for_destination(
+			_battle,
+			_controller_cursor_cell.x,
+			_controller_cursor_cell.y
+		)
+		detail = String(movement_intent.get("message", _movement_board_tooltip(_controller_cursor_cell)))
+		action = "move here" if bool(movement_intent.get("movable", false)) else "check this blocked hex"
+	if active_side != "player":
+		action = "unavailable while input is locked"
+	detail = _bounded_battle_board_cursor_semantic_text(detail, 150)
+	action = _bounded_battle_board_cursor_semantic_text(action, 44)
+	return _bounded_battle_board_cursor_semantic_text(
+		"Hex %d,%d; %s. %s A/Enter: %s. B/Escape: return to battle commands." % [
+			_controller_cursor_cell.x,
+			_controller_cursor_cell.y,
+			role,
+			detail,
+			action,
+		],
+		BATTLE_BOARD_CURSOR_SEMANTIC_MAX_CHARS
+	)
+
+func _battle_board_cursor_context_owned() -> bool:
+	return (
+		is_inside_tree()
+		and has_focus()
+		and _session != null
+		and not _battle.is_empty()
+		and _cell_in_bounds(_controller_cursor_cell)
+		and not _battle_board_cursor_modal_owner_open()
+		and is_instance_valid(_battle_board_cursor_live_label)
+	)
+
+func _battle_board_cursor_modal_owner_open() -> bool:
+	var shell := owner
+	if shell == null or not is_instance_valid(shell):
+		return true
+	for dialog_name in [
+		"QuickResolveConfirmationDialog",
+		"WithdrawalConfirmationDialog",
+		"ManualSaveOverwriteDialog",
+	]:
+		var dialog := shell.get_node_or_null(NodePath(dialog_name))
+		if dialog is Window and dialog.visible:
+			return true
+	var settings_dialog := shell.get_node_or_null(NodePath("ActivePlaySettingsDialog"))
+	return (
+		settings_dialog != null
+		and settings_dialog.has_method("is_open")
+		and bool(settings_dialog.call("is_open"))
+	)
+
+func _battle_board_cursor_focus_owned_by_shell(focus: Control) -> bool:
+	var shell := owner
+	return (
+		focus != null
+		and is_instance_valid(focus)
+		and shell != null
+		and is_instance_valid(shell)
+		and (focus == shell or shell.is_ancestor_of(focus))
+	)
+
+func _battle_board_cursor_session_id() -> String:
+	return String(_session.session_id) if _session != null else ""
+
+func _battle_board_cursor_battle_identity() -> String:
+	return String(_battle.get("encounter_id", ""))
+
+func _battle_board_cursor_turn_signature() -> String:
+	return "%d|%d|%s|%s" % [
+		int(_battle.get("round", 0)),
+		int(_battle.get("turn_index", -1)),
+		String(_battle.get("active_stack_id", "")),
+		String(_active_stack.get("side", "")),
+	]
+
+func _battle_board_cursor_cell_payload(cell: Vector2i) -> Dictionary:
+	return {"q": cell.x, "r": cell.y}
+
+func _cancel_battle_board_cursor_semantic(invalidate_staged_result: bool = true) -> void:
+	_battle_board_cursor_semantic_generation += 1
+	_battle_board_cursor_semantic_pending.clear()
+	if invalidate_staged_result:
+		_battle_board_cursor_result_request_generation += 1
+	if _battle_board_cursor_semantic_timer != null and is_instance_valid(_battle_board_cursor_semantic_timer):
+		_battle_board_cursor_semantic_timer.stop()
+	if _battle_board_cursor_live_label != null and is_instance_valid(_battle_board_cursor_live_label):
+		_battle_board_cursor_live_label.text = ""
+
+func _bounded_battle_board_cursor_semantic_text(value: String, maximum_characters: int) -> String:
+	var normalized := " ".join(value.replace("\r", "\n").split("\n", false)).strip_edges()
+	while normalized.contains("  "):
+		normalized = normalized.replace("  ", " ")
+	return normalized.left(maximum_characters)
 
 func _dispatch_board_click_at_position(position: Vector2) -> Dictionary:
 	var target_cell := _hex_cell_at_position(position)
@@ -339,6 +657,7 @@ func set_battle_presentation_snapshot(battle_snapshot: Dictionary) -> void:
 	_apply_battle_dictionary(battle_snapshot.duplicate(true))
 
 func _apply_battle_dictionary(battle: Dictionary) -> void:
+	_cancel_battle_board_cursor_semantic()
 	_battle = {}
 	_player_stacks = []
 	_enemy_stacks = []

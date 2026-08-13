@@ -113,6 +113,7 @@ BATTLE_SCRIPT_PATH = ROOT / "scenes" / "battle" / "BattleShell.gd"
 BATTLE_BOARD_VIEW_SCRIPT_PATH = ROOT / "scenes" / "battle" / "BattleBoardView.gd"
 BATTLE_AUTO_RESOLVE_RULES_PATH = ROOT / "scripts" / "core" / "BattleAutoResolveRules.gd"
 BATTLE_QUICK_RESOLVE_REPORT_SCRIPT_PATH = ROOT / "tests" / "battle_quick_resolve_runtime_report.gd"
+BATTLE_LAYOUT_SMOKE_SCRIPT_PATH = ROOT / "tests" / "battle_layout_smoke.gd"
 BATTLE_QUICK_RESOLVE_REPORT_SCENE_PATH = ROOT / "tests" / "battle_quick_resolve_runtime_report.tscn"
 BATTLE_QUICK_RESOLVE_CANCEL_SMOKE_PATH = ROOT / "tests" / "active_play_keyboard_focus_smoke.gd"
 BATTLE_WITHDRAWAL_CONFIRMATION_REPORT_SCRIPT_PATH = ROOT / "tests" / "battle_withdrawal_confirmation_runtime_report.gd"
@@ -14209,6 +14210,22 @@ def validate_native_screen_reader_semantics(errors: list[str]) -> None:
         'map_editor_cursor_live_exact_count',
         'map_editor_cursor_rescan_exact',
         'map_editor_working_copy_status_live_off',
+        'res://scenes/battle/BattleShell.tscn',
+        'const BATTLE_LIVE_REGIONS: Array[Dictionary] = [',
+        'battle.find_children("BattleBoardCursorLive", "Label", true, false)',
+        'battle_live_regions == BATTLE_LIVE_REGIONS',
+        'rescanned_battle_live_regions == battle_live_regions',
+        'int(battle_snapshot.get("live_region_count", 0)) == 4 and battle_live_regions.size() == 4',
+        'battle_live.get_parent() == battle',
+        'battle_live.layout_mode == 0',
+        'battle_live.is_visible_in_tree()',
+        'is_equal_approx(battle_live.size.x, 1.0)',
+        'is_finite(battle_live.size.y) and battle_live.size.y >= 1.0',
+        'battle_live.accessibility_live == DisplayServer.LIVE_POLITE',
+        'battle_board_cursor_live_exact_count',
+        'battle_existing_live_regions_unchanged',
+        'battle_board_cursor_rescan_exact',
+        'battle_board_cursor_authored_semantics',
     ):
         ensure(required_token in report_text, errors, f"accessibility_screen_reader_semantics_report.gd is missing required token: {required_token}")
     expected_overworld_live_paths = (
@@ -14362,6 +14379,69 @@ def validate_native_screen_reader_semantics(errors: list[str]) -> None:
             errors,
             "Map Editor cursor live-region proof must retain one-pixel width without the invalid fixed-height oracle",
         )
+    battle_live_constant_match = re.search(
+        r"const BATTLE_LIVE_REGIONS: Array\[Dictionary\] = \[(?P<body>.*?)\n\]",
+        report_text,
+        re.S,
+    )
+    ensure(battle_live_constant_match is not None, errors, "Could not isolate exact Battle live-region row")
+    if battle_live_constant_match is not None:
+        battle_live_constant_body = battle_live_constant_match.group("body")
+        expected_battle_live_paths = [
+            "BattleBoardCursorLive",
+            "ContentMargin/Content/Banner/BannerPad/BannerBox/TopBar/Status",
+            "ContentMargin/Content/Banner/BannerPad/BannerBox/Event",
+            "ActivePlaySettingsDialog/Center/DialogPanel/Margin/Content/Header/Status",
+        ]
+        ensure(
+            re.findall(r'\{"path": "([^"]+)", "mode": DisplayServer\.LIVE_POLITE\}', battle_live_constant_body) == expected_battle_live_paths
+            and battle_live_constant_body.count("DisplayServer.LIVE_POLITE") == 4,
+            errors,
+            "Battle live-region contract must contain the root cursor plus the exact three existing polite rows",
+        )
+    battle_access_match = re.search(
+        r'var battle_live_nodes: Array = battle\.find_children\("BattleBoardCursorLive", "Label", true, false\)(?P<body>.*?)(?=\n\tbattle\.queue_free\(\))',
+        report_text,
+        re.S,
+    )
+    ensure(battle_access_match is not None, errors, "Could not isolate Battle cursor live-region runtime assertions")
+    if battle_access_match is not None:
+        battle_access_body = battle_access_match.group("body")
+        for required_token in (
+            "battle_live_regions == BATTLE_LIVE_REGIONS",
+            "rescanned_battle_live_regions == battle_live_regions",
+            'int(battle_snapshot.get("live_region_count", 0)) == 4 and battle_live_regions.size() == 4',
+            "battle_live_regions.count(BATTLE_LIVE_REGIONS[0]) == 1",
+            "battle_live_regions.slice(1).size() == 3",
+            "battle_live_nodes.size() == 1",
+            'battle_live_relative_path == String(BATTLE_LIVE_REGIONS[0].get("path", ""))',
+            "battle_live.get_parent() == battle",
+            "battle_live.layout_mode == 0",
+            "is_zero_approx(battle_live.anchor_left)",
+            "is_zero_approx(battle_live.anchor_top)",
+            "is_zero_approx(battle_live.anchor_right)",
+            "is_zero_approx(battle_live.anchor_bottom)",
+            "battle_live.position == Vector2.ZERO",
+            "is_equal_approx(battle_live.size.x, 1.0)",
+            "is_finite(battle_live.size.y) and battle_live.size.y >= 1.0",
+            'battle.get_node_or_null("Backdrop") as Control',
+            "battle_backdrop.position == Vector2.ZERO",
+            "battle_backdrop.size == battle.size",
+            "battle_live.is_visible_in_tree()",
+            "is_zero_approx(battle_live.self_modulate.a)",
+            "battle_live.mouse_filter == Control.MOUSE_FILTER_IGNORE",
+            'battle_live.accessibility_name == "Battle board cursor"',
+            'battle_live.accessibility_description == "Announces the current keyboard or controller battle-board hex and available action after navigation settles."',
+            "battle_live.accessibility_live == DisplayServer.LIVE_POLITE",
+            'battle_live.text == ""',
+        ):
+            ensure(required_token in battle_access_body, errors, f"Battle cursor live-region proof is missing exact semantics token: {required_token}")
+        ensure(
+            "battle_live.size == Vector2.ONE" not in battle_access_body
+            and "is_equal_approx(battle_live.size.y, 1.0)" not in battle_access_body,
+            errors,
+            "Battle cursor live-region proof must retain one-pixel width without a fixed-height oracle",
+        )
     report_scene_text = ACCESSIBILITY_SCREEN_READER_REPORT_SCENE_PATH.read_text(encoding="utf-8")
     ensure(
         "res://tests/accessibility_screen_reader_semantics_report.gd" in report_scene_text,
@@ -14378,6 +14458,605 @@ def validate_native_screen_reader_semantics(errors: list[str]) -> None:
         '"battle", 2',
     ):
         ensure(required_token in active_play_text, errors, f"active_play_keyboard_focus_smoke.gd is missing native accessibility coverage token: {required_token}")
+
+
+def validate_battle_layout_detached_route_compatibility(errors: list[str]) -> None:
+    path = BATTLE_LAYOUT_SMOKE_SCRIPT_PATH
+    ensure(path.exists(), errors, "Missing battle layout smoke for detached routed-shell compatibility")
+    if not path.exists():
+        return
+    text = path.read_text(encoding="utf-8")
+    match = re.search(
+        r"func _run_direct_actionable_after_move_routed_resolution_case\([\s\S]*?\) -> bool:\n(?P<body>.*?)(?=\nfunc _stage_river_pass_final_kill_outcome_prereqs)",
+        text,
+        re.S,
+    )
+    ensure(match is not None, errors, "Could not isolate routed final-kill Battle layout compatibility owner")
+    if match is None:
+        return
+    body = match.group("body")
+    order = (
+        body.find('_battle_layout_stage("routed_before_action", viewport_size, use_button, complete_scenario_after_kill)'),
+        body.find('var attack_response: Dictionary = shell.call("validation_perform_action", action_id)'),
+        body.find('_battle_layout_stage("routed_action_returned", viewport_size, use_button, complete_scenario_after_kill)'),
+        body.find("var immediate_snapshot: Dictionary = {}"),
+        body.find("var snapshot_not_applicable_after_detach: bool = not (is_instance_valid(shell) and shell.is_inside_tree())"),
+        body.find('if not snapshot_not_applicable_after_detach and shell.has_method("validation_snapshot"):'),
+        body.find('immediate_snapshot = shell.call("validation_snapshot")'),
+        body.find("var expected_scene_path :="),
+        body.find("var response_failures := _final_kill_routed_response_failures("),
+        body.find("if not response_failures.is_empty():"),
+        body.find("if snapshot_not_applicable_after_detach:"),
+        body.find("var immediate_routed_scene = get_tree().current_scene"),
+        body.find("var detached_route_checks := {"),
+        body.find("if false in detached_route_checks.values():"),
+        body.find("else:", body.find("if false in detached_route_checks.values():")),
+        body.find("var immediate_failures := _final_kill_empty_shell_snapshot_failures(immediate_snapshot)"),
+        body.find('_battle_layout_stage("routed_immediate_authority", viewport_size, use_button, complete_scenario_after_kill)'),
+    )
+    ensure(all(index >= 0 for index in order) and list(order) == sorted(order), errors, "Routed Battle layout compatibility must gate old-Shell observation on tree membership, prove response/route authority when detached, and retain the attached snapshot oracle")
+    detached_checks_match = re.search(
+        r"\t\tvar detached_route_checks := \{\n(?P<body>.*?)\n\t\t\}\n\t\tif false in detached_route_checks\.values\(\):",
+        body,
+        re.S,
+    )
+    ensure(detached_checks_match is not None, errors, "Could not isolate routed Battle layout detached authority checks")
+    if detached_checks_match is not None:
+        keys = re.findall(r'^\t\t\t"([^"]+)":', detached_checks_match.group("body"), re.M)
+        ensure(keys == [
+            "snapshot_not_applicable_after_detach",
+            "routed_attack_response_exact",
+            "routed_attack_ok",
+            "routed_attack_routed",
+            "routed_attack_victory",
+            "session_battle_resolved_empty",
+            "session_route_state_exact",
+            "app_router_route_handoff_exact",
+        ], errors, "Detached routed Battle layout authority must retain its exact named key set")
+        for token in (
+            '"snapshot_not_applicable_after_detach": immediate_snapshot.is_empty()',
+            '"routed_attack_response_exact": response_failures.is_empty()',
+            '"routed_attack_ok": bool(attack_response.get("ok", false))',
+            '"routed_attack_routed": bool(attack_response.get("routed", false))',
+            '"routed_attack_victory": String(attack_response.get("state", "")) == "victory"',
+            '"session_battle_resolved_empty": session.battle.is_empty()',
+            '"session_route_state_exact": (session.scenario_status == "in_progress" and session.game_state == "overworld") if expected_scene_path == OVERWORLD_SCENE_PATH else (session.scenario_status != "in_progress" and session.game_state == "outcome")',
+            '"app_router_route_handoff_exact": immediate_routed_scene == null or immediate_routed_scene_path == expected_scene_path',
+        ):
+            ensure(token in detached_checks_match.group("body"), errors, f"Detached routed Battle layout authority is missing exact token: {token}")
+    ensure('immediate_routed_scene_path == ""' not in body, errors, "Detached routed Battle layout handoff must not accept an arbitrary empty scene path")
+    later_frame_index = body.find("await get_tree().process_frame", body.find("if snapshot_not_applicable_after_detach:"))
+    second_frame_index = body.find("await get_tree().process_frame", later_frame_index + 1)
+    third_frame_index = body.find("await get_tree().process_frame", second_frame_index + 1)
+    routed_scene_index = body.find("var routed_scene = get_tree().current_scene", third_frame_index)
+    routed_path_index = body.find("if routed_scene_path != expected_scene_path:", routed_scene_index)
+    routed_snapshot_index = body.find('var routed_snapshot: Dictionary = routed_scene.call("validation_snapshot")', routed_scene_index)
+    save_resume_index = body.find("routed_failures.append_array(_final_kill_routed_save_resume_failures", routed_snapshot_index)
+    menu_index = body.find("var menu_failures := await _final_kill_menu_save_browser_failures(", save_resume_index)
+    ensure(-1 < later_frame_index < second_frame_index < third_frame_index < routed_scene_index < routed_snapshot_index < routed_path_index < save_resume_index < menu_index, errors, "Detached handoff allowance must retain three process frames then exact destination scene, snapshot, save/resume, and menu authority")
+    ensure('if is_instance_valid(shell) and shell.has_method("validation_snapshot"):' not in body, errors, "Routed Battle layout smoke must not observe a detached old Shell using only is_instance_valid")
+    ensure('var snapshot_not_applicable_after_detach := not (is_instance_valid(shell) and shell.is_inside_tree())' not in body, errors, "Routed Battle layout detached observation must retain its explicit bool annotation")
+    ensure(body.count('shell.call("validation_snapshot")') == 1, errors, "Routed Battle layout smoke must retain exactly one tree-gated old-Shell snapshot call")
+    routed_stage_tokens = (
+        '_battle_layout_stage("routed_before_action", viewport_size, use_button, complete_scenario_after_kill)',
+        '_battle_layout_stage("routed_action_returned", viewport_size, use_button, complete_scenario_after_kill)',
+        '_battle_layout_stage("routed_immediate_authority", viewport_size, use_button, complete_scenario_after_kill)',
+        '_battle_layout_stage("routed_three_frame_destination", viewport_size, use_button, complete_scenario_after_kill)',
+        '_battle_layout_stage("routed_save_resume_authority", viewport_size, use_button, complete_scenario_after_kill)',
+        '_battle_layout_stage("routed_menu_authority", viewport_size, use_button, complete_scenario_after_kill)',
+        '_battle_layout_stage("routed_outcome_action", viewport_size, use_button, complete_scenario_after_kill)',
+        '_battle_layout_stage("routed_previous_scene_restored", viewport_size, use_button, complete_scenario_after_kill)',
+    )
+    for token in routed_stage_tokens:
+        ensure(body.count(token) == 1, errors, f"Battle layout routed diagnostic must contain exact unique stage marker: {token}")
+    routed_stage_order = tuple(body.find(token) for token in routed_stage_tokens[:6]) + (
+        body.find(routed_stage_tokens[7]),
+    )
+    ensure(all(index >= 0 for index in routed_stage_order) and list(routed_stage_order) == sorted(routed_stage_order), errors, "Battle layout routed diagnostics must preserve action, immediate, destination, save, menu, and restoration order")
+    outcome_gate_index = body.find("if expected_scene_path == SCENARIO_OUTCOME_SCENE_PATH:")
+    outcome_stage_index = body.find(routed_stage_tokens[6], outcome_gate_index)
+    restore_index = body.find("await _restore_layout_current_scene(previous_current)", outcome_gate_index)
+    ensure(-1 < outcome_gate_index < outcome_stage_index < restore_index, errors, "Battle layout outcome diagnostic must follow the existing outcome action and precede restoration")
+
+    viewport_match = re.search(r"func _run_layout_case\(viewport_size: Vector2\) -> bool:\n(?P<body>.*?)(?=\nfunc _run_withdrawal_confirmation_layout_case)", text, re.S)
+    stage_helper_match = re.search(r"func _battle_layout_stage\(stage: String, viewport_size: Vector2, use_button: bool, outcome: bool\) -> void:\n(?P<body>.*?)(?=\nfunc _stage_river_pass_final_kill_outcome_prereqs)", text, re.S)
+    ensure(viewport_match is not None and stage_helper_match is not None, errors, "Could not isolate Battle layout viewport/stage diagnostics")
+    if viewport_match is not None:
+        viewport_body = viewport_match.group("body")
+        viewport_start = viewport_body.find('_battle_layout_stage("viewport_start", viewport_size, false, false)')
+        first_fixture = viewport_body.find("ScenarioFactory.create_session", viewport_start)
+        viewport_end = viewport_body.find('_battle_layout_stage("viewport_end", viewport_size, false, false)', first_fixture)
+        final_return = viewport_body.rfind("return true")
+        ensure(-1 < viewport_start < first_fixture < viewport_end < final_return and viewport_body.count('stage("viewport_start"') == 1 and viewport_body.count('stage("viewport_end"') == 1, errors, "Battle layout viewport diagnostics must uniquely bracket the unchanged viewport matrix")
+    if stage_helper_match is not None:
+        stage_helper_body = stage_helper_match.group("body")
+        ensure(stage_helper_body.count("print(") == 1 and 'BATTLE_LAYOUT_STAGE msec=%d stage=%s viewport=%dx%d use_button=%s outcome=%s' in stage_helper_body and "Time.get_ticks_msec()" in stage_helper_body, errors, "Battle layout diagnostic helper must emit one compact monotonic labeled stage line")
+        for forbidden_token in ("await ", "Timer", "create_timer", "call_deferred", "emit_signal", "normalize", "queue_free", "get_tree().quit", "Input."):
+            ensure(forbidden_token not in stage_helper_body, errors, f"Battle layout diagnostic helper must remain observation-only and avoid {forbidden_token}")
+
+
+def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
+    board_path = BATTLE_BOARD_VIEW_SCRIPT_PATH
+    shell_path = BATTLE_SCRIPT_PATH
+    scene_path = BATTLE_SCENE_PATH
+    smoke_path = ROOT / "tests" / "battle_controller_board_navigation_smoke.gd"
+    for path in (board_path, shell_path, scene_path, smoke_path):
+        ensure(path.exists(), errors, f"Missing battle-board cursor semantic file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in (board_path, shell_path, scene_path, smoke_path)):
+        return
+    board_text = board_path.read_text(encoding="utf-8")
+    shell_text = shell_path.read_text(encoding="utf-8")
+    scene_text = scene_path.read_text(encoding="utf-8")
+    smoke_text = smoke_path.read_text(encoding="utf-8")
+
+    nullable_live_lookup = '@onready var _battle_board_cursor_live_label: Label = get_node_or_null("%BattleBoardCursorLive") as Label'
+    ensure(board_text.count(nullable_live_lookup) == 1, errors, "BattleBoardView must use exactly one nullable BattleBoardCursorLive lookup for standalone report fixtures")
+    ensure('@onready var _battle_board_cursor_live_label: Label = %BattleBoardCursorLive' not in board_text, errors, "BattleBoardView must not hard-resolve BattleBoardCursorLive outside the authored BattleShell scene")
+
+    battle_live_match = re.search(
+        r'\[node name="BattleBoardCursorLive" type="Label" parent="\."\]\n(?P<body>.*?)(?=\n\[node )',
+        scene_text,
+        re.S,
+    )
+    ensure(battle_live_match is not None, errors, "BattleShell.tscn must author one root BattleBoardCursorLive Label")
+    ensure(scene_text.count('[node name="BattleBoardCursorLive" type="Label" parent="."]') == 1, errors, "BattleShell.tscn must contain exactly one root BattleBoardCursorLive Label")
+    if battle_live_match is not None:
+        live_body = battle_live_match.group("body")
+        for required_token in (
+            "layout_mode = 0",
+            "offset_right = 1.0",
+            "offset_bottom = 1.0",
+            "mouse_filter = 2",
+            "self_modulate = Color(1, 1, 1, 0)",
+            'accessibility_name = "Battle board cursor"',
+            'accessibility_description = "Announces the current keyboard or controller battle-board hex and available action after navigation settles."',
+            "accessibility_live = 1",
+        ):
+            ensure(required_token in live_body, errors, f"BattleBoardCursorLive is missing exact authored token: {required_token}")
+
+    function_names = (
+        "_gui_input",
+        "_handle_controller_navigation_input",
+        "handle_root_controller_navigation_cancel",
+        "_on_controller_focus_entered",
+        "_on_controller_focus_exited",
+        "_move_controller_cursor",
+        "_dispatch_controller_cursor",
+        "publish_controller_action_result",
+        "_schedule_battle_board_cursor_semantic",
+        "_queue_battle_board_cursor_semantic_result",
+        "_publish_battle_board_cursor_semantic_result",
+        "_on_battle_board_cursor_semantic_timeout",
+        "_publish_pending_battle_board_cursor_context",
+        "_clear_battle_board_cursor_semantic_result",
+        "_battle_board_cursor_result_guard_matches",
+        "_battle_board_cursor_semantic_context",
+        "_battle_board_cursor_context_owned",
+        "_cancel_battle_board_cursor_semantic",
+        "_apply_battle_dictionary",
+        "_exit_tree",
+    )
+    bodies: dict[str, str] = {}
+    for function_name in function_names:
+        match = re.search(
+            rf"func {re.escape(function_name)}\([\s\S]*?\)(?: -> [^:]+)?:\n(?P<body>.*?)(?=\nfunc )",
+            board_text,
+            re.S,
+        )
+        ensure(match is not None, errors, f"Could not isolate BattleBoardView semantic helper {function_name}")
+        if match is not None:
+            bodies[function_name] = match.group("body")
+
+    input_body = bodies.get("_handle_controller_navigation_input", "")
+    gui_input_body = bodies.get("_gui_input", "")
+    gui_delegate_index = gui_input_body.find("if _handle_controller_navigation_input(event):")
+    gui_accept_index = gui_input_body.find("accept_event()", gui_delegate_index)
+    gui_return_index = gui_input_body.find("return", gui_accept_index)
+    ensure(0 <= gui_delegate_index < gui_accept_index < gui_return_index, errors, "Battle board GUI input must delegate controller input, accept handled events, and return before mouse handling")
+    ensure(gui_input_body.count("_handle_controller_navigation_input(event)") == 1, errors, "Battle board GUI input must delegate controller input exactly once")
+    direction_indices = [input_body.find(f'event.is_action_pressed("ui_{direction}")') for direction in ("up", "down", "left", "right")]
+    accept_index = input_body.find('event.is_action_pressed("ui_accept")')
+    cancel_index = input_body.find('event.is_action_pressed("ui_cancel")')
+    ensure(all(index >= 0 for index in direction_indices) and direction_indices == sorted(direction_indices) and direction_indices[-1] < accept_index < cancel_index, errors, "Battle board input must retain cardinal, accept, cancel ownership order")
+    ensure(input_body.count("return handle_root_controller_navigation_cancel()") == 1 and cancel_index < input_body.find("return handle_root_controller_navigation_cancel()", cancel_index), errors, "Battle board GUI cancel branch must delegate exactly once to the public root-cancel method")
+    ensure(input_body.count("event is InputEventKey or event is InputEventJoypadButton") == 4, errors, "Battle board must announce only four physical Key/Joypad cardinal branches")
+    for forbidden_token in ("InputEventMouse", "Timer", "BattleRulesScript."):
+        ensure(forbidden_token not in input_body, errors, f"Battle board input ownership must not mix mouse/timing/rules drift via {forbidden_token}")
+
+    public_cancel_body = bodies.get("handle_root_controller_navigation_cancel", "")
+    public_cancel_order = (
+        public_cancel_body.find("if not is_inside_tree() or not is_visible_in_tree() or not has_focus():"),
+        public_cancel_body.find("return false"),
+        public_cancel_body.find("release_focus()"),
+        public_cancel_body.find("controller_navigation_cancelled.emit()"),
+        public_cancel_body.find('_queue_battle_board_cursor_semantic_result("Battle board navigation ended. Focus returned to battle commands.")'),
+        public_cancel_body.find("return true"),
+    )
+    ensure(all(index >= 0 for index in public_cancel_order) and list(public_cancel_order) == sorted(public_cancel_order), errors, "Battle board public root cancel must fail closed on tree/visibility/focus, then release focus, emit once, publish the exact result once, and return true")
+    ensure(public_cancel_body.count("release_focus()") == 1 and public_cancel_body.count("controller_navigation_cancelled.emit()") == 1 and public_cancel_body.count("_queue_battle_board_cursor_semantic_result(") == 1, errors, "Battle board public root cancel must perform each focus/signal/result consequence exactly once")
+    ensure(public_cancel_body.count("return false") == 1 and public_cancel_body.count("return true") == 1, errors, "Battle board public root cancel must expose one fail-closed and one handled return")
+
+    move_body = bodies.get("_move_controller_cursor", "")
+    changed_index = move_body.find("if announce_semantic and _controller_cursor_cell != previous_cell:")
+    schedule_index = move_body.find("_schedule_battle_board_cursor_semantic()")
+    ensure(0 <= changed_index < schedule_index and move_body.count("_schedule_battle_board_cursor_semantic()") == 1, errors, "Battle cursor semantics must schedule once only after a changed physical cursor move")
+    schedule_body = bodies.get("_schedule_battle_board_cursor_semantic", "")
+    schedule_order = (
+        schedule_body.find("_cancel_battle_board_cursor_semantic()"),
+        schedule_body.find("if not _battle_board_cursor_context_owned():"),
+        schedule_body.find('_battle_board_cursor_semantic_pending = {'),
+        schedule_body.find("_battle_board_cursor_semantic_timer.start(BATTLE_BOARD_CURSOR_SEMANTIC_DEBOUNCE_SECONDS)"),
+    )
+    ensure(all(index >= 0 for index in schedule_order) and list(schedule_order) == sorted(schedule_order), errors, "Battle semantic schedule must cancel, validate ownership, capture exact identity, then start the .42 Timer")
+    for required_token in (
+        '"kind": "context"',
+        '"generation": _battle_board_cursor_semantic_generation',
+        '"session_ref": _session',
+        '"session_id": _battle_board_cursor_session_id()',
+        '"battle_ref": _battle',
+        '"battle_identity": _battle_board_cursor_battle_identity()',
+        '"turn_signature": _battle_board_cursor_turn_signature()',
+        '"cursor_cell": _battle_board_cursor_cell_payload(_controller_cursor_cell)',
+        '"label_ref": _battle_board_cursor_live_label',
+    ):
+        ensure(required_token in schedule_body, errors, f"Battle semantic pending context is missing exact token: {required_token}")
+
+    dispatch_body = bodies.get("_dispatch_controller_cursor", "")
+    dispatch_order = (
+        dispatch_body.find("_controller_dispatch_in_progress = true"),
+        dispatch_body.find("stack_focus_requested.emit"),
+        dispatch_body.find("hex_destination_requested.emit"),
+        dispatch_body.find("_controller_dispatch_in_progress = false"),
+    )
+    ensure(all(index >= 0 for index in dispatch_order) and list(dispatch_order) == sorted(dispatch_order), errors, "Battle controller dispatch flag must wrap only synchronous stack/destination signal delivery")
+    publish_body = bodies.get("publish_controller_action_result", "")
+    flag_guard = publish_body.find("if not _controller_dispatch_in_progress:")
+    flag_return = publish_body.find("return", flag_guard)
+    result_queue = publish_body.find("_queue_battle_board_cursor_semantic_result(")
+    ensure(0 <= flag_guard < flag_return < result_queue and publish_body.count("_queue_battle_board_cursor_semantic_result(") == 1, errors, "Battle result publication must be controller-flag-only before its unique guarded queue")
+
+    queue_body = bodies.get("_queue_battle_board_cursor_semantic_result", "")
+    queue_order = (
+        queue_body.find("_bounded_battle_board_cursor_semantic_text("),
+        queue_body.find("_cancel_battle_board_cursor_semantic(false)"),
+        queue_body.find("_battle_board_cursor_result_request_generation += 1"),
+        queue_body.find("call_deferred("),
+    )
+    ensure(all(index >= 0 for index in queue_order) and list(queue_order) == sorted(queue_order), errors, "Battle result queue must bound, cancel, generate, then defer in FIFO order")
+    publish_result_body = bodies.get("_publish_battle_board_cursor_semantic_result", "")
+    for required_token in (
+        "request_generation != _battle_board_cursor_result_request_generation",
+        "not is_same(source_session, _session)",
+        "source_session_id != _battle_board_cursor_session_id()",
+        "not is_same(source_battle, _battle)",
+        "battle_identity != _battle_board_cursor_battle_identity()",
+        "turn_signature != _battle_board_cursor_turn_signature()",
+        "_battle_board_cursor_modal_owner_open()",
+        '"kind": "result_clear"',
+        '"focus_ref": expected_focus',
+        '"label_text": text',
+        "_battle_board_cursor_semantic_timer.start(BATTLE_BOARD_CURSOR_RESULT_VISIBLE_SECONDS)",
+    ):
+        ensure(required_token in publish_result_body, errors, f"Battle deferred result publisher is missing exact stale-identity token: {required_token}")
+    publish_context_body = bodies.get("_publish_pending_battle_board_cursor_context", "")
+    context_guard_order = (
+        publish_context_body.find('not is_same(pending.get("session_ref"), _session)'),
+        publish_context_body.find('String(pending.get("session_id", "")) != _battle_board_cursor_session_id()'),
+        publish_context_body.find('not is_same(pending.get("battle_ref"), _battle)'),
+        publish_context_body.find('String(pending.get("battle_identity", "")) != _battle_board_cursor_battle_identity()'),
+        publish_context_body.find('String(pending.get("turn_signature", "")) != _battle_board_cursor_turn_signature()'),
+        publish_context_body.find("pending_cell != _controller_cursor_cell"),
+        publish_context_body.find('not is_same(pending.get("label_ref"), _battle_board_cursor_live_label)'),
+    )
+    ensure(
+        all(index >= 0 for index in context_guard_order) and list(context_guard_order) == sorted(context_guard_order),
+        errors,
+        "Battle context publisher must guard session ref/id, internal battle identity, battle id, turn, cell, and label in exact order",
+    )
+    clear_body = bodies.get("_clear_battle_board_cursor_semantic_result", "")
+    generation_guard = clear_body.find('if int(pending.get("generation", -1)) != _battle_board_cursor_semantic_generation:')
+    generation_return = clear_body.find("return", generation_guard)
+    guard_read = clear_body.find("_battle_board_cursor_result_guard_matches(pending)")
+    mutation = clear_body.find("_battle_board_cursor_semantic_generation += 1")
+    ensure(0 <= generation_guard < generation_return < guard_read < mutation, errors, "Battle result clear must reject stale generation before any lifecycle guard read or mutation")
+    guard_body = bodies.get("_battle_board_cursor_result_guard_matches", "")
+    for required_token in (
+        "is_inside_tree()",
+        "is_same(pending.get(\"session_ref\"), _session)",
+        'String(pending.get("session_id", "")) == _battle_board_cursor_session_id()',
+        "is_same(pending.get(\"battle_ref\"), _battle)",
+        'String(pending.get("battle_identity", "")) == _battle_board_cursor_battle_identity()',
+        'String(pending.get("turn_signature", "")) == _battle_board_cursor_turn_signature()',
+        "get_viewport().gui_get_focus_owner() == expected_focus",
+        "_battle_board_cursor_focus_owned_by_shell(expected_focus)",
+        "not _battle_board_cursor_modal_owner_open()",
+        "is_same(pending.get(\"label_ref\"), _battle_board_cursor_live_label)",
+    ):
+        ensure(required_token in guard_body, errors, f"Battle result-clear guard is missing exact lifecycle token: {required_token}")
+
+    context_body = bodies.get("_battle_board_cursor_semantic_context", "")
+    for required_token in (
+        '"Hex %d,%d; %s. %s A/Enter: %s. B/Escape: return to battle commands."',
+        'var role := _controller_cursor_cell_role().replace("_", " ")',
+        '"%s%s stack %s, %d units. %s"',
+        'action = "move here" if bool(movement_intent.get("movable", false)) else "check this blocked hex"',
+        'action = "unavailable while input is locked"',
+        "BATTLE_BOARD_CURSOR_SEMANTIC_MAX_CHARS",
+    ):
+        ensure(required_token in context_body, errors, f"Battle semantic context is missing exact bounded q/r-role-stack-action token: {required_token}")
+    ensure("BattleRulesScript" not in bodies.get("_cancel_battle_board_cursor_semantic", ""), errors, "Battle semantic cancellation must not mutate battle rules")
+    apply_body = bodies.get("_apply_battle_dictionary", "")
+    ensure(apply_body.find("_cancel_battle_board_cursor_semantic()") >= 0 and apply_body.find("_cancel_battle_board_cursor_semantic()") < apply_body.find("_battle = {}"), errors, "Battle state replacement must cancel cursor semantics before replacing battle state")
+    focus_enter_body = bodies.get("_on_controller_focus_entered", "")
+    ensure(0 <= focus_enter_body.find("_cancel_battle_board_cursor_semantic()") < focus_enter_body.find("_ensure_controller_cursor()") < focus_enter_body.find("_sync_controller_cursor_preview()"), errors, "Battle focus entry must cancel stale text before cursor synchronization")
+    ensure("_cancel_battle_board_cursor_semantic(false)" in bodies.get("_on_controller_focus_exited", ""), errors, "Battle focus exit must cancel context while preserving a staged controller result")
+    ensure("_cancel_battle_board_cursor_semantic()" in bodies.get("_exit_tree", ""), errors, "Battle board tree exit must cancel semantic state")
+
+    shell_function_names = ("_on_board_stack_focus_requested", "_reject_board_stack_click", "_on_board_hex_destination_requested", "_return_board_cursor_action_result")
+    shell_bodies: dict[str, str] = {}
+    for function_name in shell_function_names:
+        match = re.search(rf"func {re.escape(function_name)}\([\s\S]*?\)(?: -> [^:]+)?:\n(?P<body>.*?)(?=\nfunc )", shell_text, re.S)
+        ensure(match is not None, errors, f"Could not isolate BattleShell board result helper {function_name}")
+        if match is not None:
+            shell_bodies[function_name] = match.group("body")
+    return_body = shell_bodies.get("_return_board_cursor_action_result", "")
+    ensure(return_body.count('has_method("publish_controller_action_result")') == 1 and return_body.count('_battle_board_view.call("publish_controller_action_result", result)') == 1 and return_body.rstrip().endswith("return result"), errors, "BattleShell result wrapper must notify BattleBoardView exactly once then return the unchanged Dictionary")
+    ensure("return {" not in shell_bodies.get("_on_board_stack_focus_requested", "") and "return _movement_click_response" not in shell_bodies.get("_on_board_hex_destination_requested", "") and shell_bodies.get("_reject_board_stack_click", "").rstrip().endswith("return _return_board_cursor_action_result(response)"), errors, "Every BattleShell board stack/destination result path must converge on the controller-result wrapper")
+
+    root_input_match = re.search(r"func _on_root_window_input\([^\n]*\) -> void:\n(?P<body>.*?)(?=\nfunc _battle_board_root_cancel_input_owned)", shell_text, re.S)
+    board_owned_match = re.search(r"func _battle_board_root_cancel_input_owned\([^\n]*\) -> bool:\n(?P<body>.*?)(?=\nfunc _forward_root_physical_input_to_confirmation)", shell_text, re.S)
+    ensure(root_input_match is not None and board_owned_match is not None, errors, "Could not isolate BattleShell public root-cancel bridge helpers")
+    if root_input_match is not None:
+        root_input_body = root_input_match.group("body")
+        root_bridge_order = (
+            root_input_body.find("_forwarding_confirmation_root_physical_input"),
+            root_input_body.find("not (event is InputEventKey or event is InputEventJoypadButton)"),
+            root_input_body.find('_battle_board_root_cancel_input_owned() and event.is_action_pressed("ui_cancel")'),
+            root_input_body.find('bool(_battle_board_view.call("handle_root_controller_navigation_cancel"))'),
+            root_input_body.find("get_tree().root.set_input_as_handled()"),
+            root_input_body.find("return", root_input_body.find('bool(_battle_board_view.call("handle_root_controller_navigation_cancel"))')),
+            root_input_body.find("var dialog := _active_exclusive_confirmation_dialog()"),
+        )
+        ensure(all(index >= 0 for index in root_bridge_order) and list(root_bridge_order) == sorted(root_bridge_order), errors, "BattleShell root input must gate recursion/type, recognize owned Board cancel, call the public cancel method once, handle, return, then consider exclusive dialogs")
+        ensure(root_input_body.count('_battle_board_view.call("handle_root_controller_navigation_cancel")') == 1, errors, "BattleShell root input must call the Board public root-cancel method exactly once")
+        for forbidden_token in ("_forward_root_cancel_input_to_battle_board", "board.push_input(event)", "_forwarding_battle_board_root_cancel_input"):
+            ensure(forbidden_token not in root_input_body, errors, f"BattleShell public Board cancel branch must not retain invalid deferred/private forwarding via {forbidden_token}")
+        ensure("_forward_root_cancel_input_to_battle_board" not in shell_text and "_forwarding_battle_board_root_cancel_input" not in shell_text and "board.push_input(event)" not in shell_text, errors, "BattleShell must not retain the invalid deferred/private Board cancel bridge")
+    if board_owned_match is not None:
+        board_owned_body = board_owned_match.group("body")
+        for required_token in (
+            "_battle_board_view == null",
+            "not is_instance_valid(_battle_board_view)",
+            'not _battle_board_view.has_method("handle_root_controller_navigation_cancel")',
+            "not _battle_board_view.is_inside_tree()",
+            "not _battle_board_view.is_visible_in_tree()",
+            "get_tree().root.gui_get_focus_owner() != _battle_board_view",
+            "_quick_resolve_confirmation_dialog.visible",
+            "_withdrawal_confirmation_dialog.visible",
+            "_manual_save_overwrite_dialog.visible",
+            "_active_play_settings_dialog == null or not _active_play_settings_dialog.is_open()",
+        ):
+            ensure(required_token in board_owned_body, errors, f"BattleShell Board root-cancel ownership is missing exact focus/tree/modal token: {required_token}")
+
+    for required_token in (
+        "for width in [1280, 1920]:",
+        'var semantic_rows: Array[Dictionary] = [',
+        '"id": "active"',
+        '"id": "friendly"',
+        '"id": "enemy"',
+        '"id": "legal"',
+        '"id": "blocked"',
+        '"input_lock_turn"',
+        "Time.get_ticks_msec() - started <= 1000",
+        "is_equal_approx(semantic_timer.wait_time, SEMANTIC_DEBOUNCE_SECONDS)",
+        'live.text.length() <= 320',
+        'live.text.contains(" A/Enter: ")',
+        'live.text.ends_with(" B/Escape: return to battle commands.")',
+        'Input.parse_input_event(mouse_motion)',
+        '_emit_joypad_tap_sync(JOY_BUTTON_A)',
+        '_emit_direction_sync(stale_direction, width % 2 == 0)',
+        'var replacement_summary_before_publish: Dictionary = board.call("validation_hex_layout_summary")',
+        '"replacement_cursor_intended": replacement_cell == stale_enemy_cell + stale_direction',
+        '"replacement_context_pending": String(replacement_pending.get("kind", "")) == "context"',
+        '"stale_result_not_published": not live.text.begins_with("Battle board result:")',
+        'live.text != _expected_semantic_context(board, session, replacement_summary)',
+        'var cancellation_cases := ["focus", "modal", "battle", "round", "turn", "active_stack", "session", "tree"]',
+        'var blocked_result_message := String(shell.get("_last_message")).strip_edges()',
+        'var movement_result_message := String(shell.get("_last_message")).strip_edges()',
+        'var result_message := String(shell.get("_last_message")).strip_edges()',
+        'var expected_result_text := _bounded_text("Battle board result: %s" % result_message, 320)',
+        'live.text == expected_text',
+        '"pending_battle_dictionary": pending.get("battle_ref") is Dictionary and not (pending.get("battle_ref") as Dictionary).is_empty()',
+        '"pending_battle_value_exact": pending.get("battle_ref") == session.battle',
+        'board_parent.remove_child(board)',
+        'cancellation_case != "tree" or not board.is_inside_tree()',
+        'if cancellation_case == "tree":\n\t\tboard.free()',
+        'is_equal_approx(timer.wait_time, RESULT_VISIBLE_SECONDS)',
+        'await _press_joypad_button(JOY_BUTTON_A)',
+        'await _press_joypad_button(JOY_BUTTON_B)',
+        'InputMap.event_is_action(cancel_pressed, "ui_cancel")',
+        '_matching_joypad_binding_count("ui_cancel", JOY_BUTTON_B) == 1',
+        'board.gui_input.connect(gui_probe)',
+        'get_tree().root.window_input.connect(root_probe)',
+        'board.focus_exited.connect(focus_probe)',
+        'board.connect("controller_navigation_cancelled", cancel_probe)',
+        'Input.parse_input_event(cancel_pressed)',
+        'Input.parse_input_event(cancel_released)',
+        '"pressed_not_delivered_to_gui": int(cancel_delivery.get("pressed_gui_count", 0)) == 0',
+        '"cancel_signal_once": int(cancel_delivery.get("cancel_signal_count", 0)) == 1',
+        '"focus_exited_once": int(cancel_delivery.get("focus_exited_count", 0)) == 1',
+        '"input_released": not Input.is_joy_button_pressed(0, JOY_BUTTON_B)',
+        'var active_exclusive_before: Variant = shell.call("_active_exclusive_confirmation_dialog")',
+        'var root_connections_before: Array[Dictionary] = _root_window_input_connection_rows()',
+        'var quick_cancel_shortcut := _button_shortcut_snapshot(quick_dialog.get_cancel_button(), cancel_pressed, cancel_released)',
+        'var withdrawal_cancel_shortcut := _button_shortcut_snapshot(withdrawal_dialog.get_cancel_button(), cancel_pressed, cancel_released)',
+        'var matching_shell_shortcuts: Array[Dictionary] = _matching_shell_shortcut_rows(shell, cancel_pressed, cancel_released)',
+        '"active_exclusive_dialog_null": bool(dialog_state_before.get("active_exclusive_is_null", false))',
+        '"root_pressed_once": int(cancel_delivery.get("root_pressed_count", 0)) == 1',
+        '"root_released_once": int(cancel_delivery.get("root_released_count", 0)) == 1',
+        '_canonical_settings_transaction(SettingsService.validation_settings_transaction_snapshot())',
+        '"rng_state": String(session.battle.get(BattleRules.DAMAGE_RNG_STATE_KEY, ""))',
+        '"battle_resolution_route": AppRouter.validation_battle_resolution_checkpoint_snapshot()',
+    ):
+        ensure(required_token in smoke_text, errors, f"Battle controller semantic smoke is missing exact runtime authority token: {required_token}")
+
+    stale_row_match = re.search(
+        r'# A later physical cursor step must invalidate an older deferred A result before either publishes\.(?P<body>.*?)(?=\n\t# A real enemy turn)',
+        smoke_text,
+        re.S,
+    )
+    ensure(stale_row_match is not None, errors, "Could not isolate Battle stale-result replacement row")
+    if stale_row_match is not None:
+        stale_row_body = stale_row_match.group("body")
+        stale_row_order = (
+            stale_row_body.find('_emit_joypad_tap_sync(JOY_BUTTON_A)'),
+            stale_row_body.find('_emit_direction_sync(stale_direction, width % 2 == 0)'),
+            stale_row_body.find('await get_tree().process_frame'),
+            stale_row_body.find('var replacement_summary_before_publish: Dictionary = board.call("validation_hex_layout_summary")'),
+            stale_row_body.find('var replacement_cell := Vector2i('),
+            stale_row_body.find('var replacement_pending: Dictionary = (board.get("_battle_board_cursor_semantic_pending") as Dictionary).duplicate(true)'),
+            stale_row_body.find('var stale_checks := {'),
+            stale_row_body.find('if not _checks_exact(stale_checks) or not await _wait_for_semantic_context(board, live, semantic_timer):'),
+        )
+        ensure(all(index >= 0 for index in stale_row_order) and list(stale_row_order) == sorted(stale_row_order), errors, "Battle stale-result row must synchronously emit A then direction, cross one frame, capture actual cursor and detached pending, gate, then await real publication")
+        ensure(stale_row_body.count('await get_tree().process_frame') == 1, errors, "Battle stale-result row must cross exactly one process-frame boundary before its gate")
+        for forbidden_token in ('await _settle()', 'create_timer(', '_on_battle_board_cursor_semantic_timeout(', '_publish_pending_battle_board_cursor_context(', 'var replacement_cell := stale_enemy_cell + stale_direction'):
+            ensure(forbidden_token not in stale_row_body, errors, f"Battle stale-result row must not pre-capture, settle, synthesize timing, or invoke semantic callbacks via {forbidden_token}")
+    ensure("_on_battle_board_cursor_semantic_timeout" not in smoke_text, errors, "Battle controller semantic smoke must poll real Timers without invoking timeout callbacks")
+    ensure('board.call("_exit_tree")' not in smoke_text, errors, "Battle controller semantic smoke must exercise tree cancellation through a real detach instead of invoking _exit_tree directly")
+    ensure('is_same(pending.get("battle_ref"), session.battle)' not in smoke_text, errors, "Battle controller semantic smoke must not assert external Dictionary property identity")
+    ensure('is_same(pending.get("battle_ref"), board.get("_battle"))' not in smoke_text, errors, "Battle controller semantic smoke must not assert reflective Dictionary property identity")
+    ensure(smoke_text.count("session = SessionState.set_active_session(session)") == 3, errors, "Battle controller semantic smoke must retain exactly three canonical active-session assignments")
+    ensure(re.search(r"(?m)^\s*SessionState\.set_active_session\(session\)$", smoke_text) is None, errors, "Battle controller semantic smoke must not discard the canonical active-session return value")
+    ensure("normalize_overworld_state" not in smoke_text and ".erase(" not in smoke_text, errors, "Battle controller semantic smoke must not normalize or erase authority to make comparisons pass")
+    cancel_delivery_match = re.search(
+        r'\n\tvar cancel_pressed := InputEventJoypadButton\.new\(\)(?P<body>.*?)(?=\n\tif not await _wait_for_result_clear\(board, live, semantic_timer\):)',
+        smoke_text,
+        re.S,
+    )
+    ensure(cancel_delivery_match is not None, errors, "Could not isolate physical B delivery diagnostic block")
+    if cancel_delivery_match is not None:
+        cancel_delivery_body = cancel_delivery_match.group("body")
+        cancel_delivery_order = (
+            cancel_delivery_body.find('cancel_pressed.button_index = JOY_BUTTON_B'),
+            cancel_delivery_body.find('cancel_released.button_index = JOY_BUTTON_B'),
+            cancel_delivery_body.find('var active_exclusive_before: Variant = shell.call("_active_exclusive_confirmation_dialog")'),
+            cancel_delivery_body.find('var root_connections_before: Array[Dictionary] = _root_window_input_connection_rows()'),
+            cancel_delivery_body.find('var quick_cancel_shortcut := _button_shortcut_snapshot'),
+            cancel_delivery_body.find('var dialog_state_before := {'),
+            cancel_delivery_body.find('var cancel_contract_checks := {'),
+            cancel_delivery_body.find('if not _checks_exact(cancel_contract_checks):'),
+            cancel_delivery_body.find('get_tree().root.window_input.connect(root_probe)'),
+            cancel_delivery_body.find('board.gui_input.connect(gui_probe)'),
+            cancel_delivery_body.find('board.focus_exited.connect(focus_probe)'),
+            cancel_delivery_body.find('board.connect("controller_navigation_cancelled", cancel_probe)'),
+            cancel_delivery_body.find('Input.parse_input_event(cancel_pressed)'),
+            cancel_delivery_body.find('Input.parse_input_event(cancel_released)'),
+            cancel_delivery_body.find('get_tree().root.window_input.disconnect(root_probe)'),
+            cancel_delivery_body.find('var cancel_delivery_checks := {'),
+            cancel_delivery_body.find('if not _checks_exact(cancel_delivery_checks):'),
+        )
+        ensure(
+            all(index >= 0 for index in cancel_delivery_order) and list(cancel_delivery_order) == sorted(cancel_delivery_order),
+            errors,
+            "Physical B diagnostic must capture/gate dialog and InputMap state, attach passive root/Board counters, physically deliver press/release, disconnect, then gate delivery",
+        )
+        for required_token in (
+            '"board_focus_before": get_viewport().gui_get_focus_owner() == board and board.has_focus()',
+            '"active_exclusive_is_null": active_exclusive_before == null',
+            '"quick_pending_false": not bool(shell.get("_quick_resolve_confirmation_pending"))',
+            '"quick_hidden": not quick_dialog.visible',
+            '"withdrawal_pending_empty": String(shell.get("_pending_withdrawal_action")) == ""',
+            '"withdrawal_hidden": not withdrawal_dialog.visible',
+            '"manual_hidden": not manual_dialog.visible',
+            '"manual_pending_slot_zero": int(manual_dialog.get("_pending_slot")) == 0',
+            '"manual_not_forwarding": not bool(manual_dialog.get("_forwarding_root_physical_input"))',
+            '"battle_root_connection_exact": battle_root_connection_count == 1',
+            '"manual_root_connection_exact": manual_root_connection_count == 1',
+            '"quick_cancel_hidden": not bool(quick_cancel_shortcut.get("visible_in_tree", true))',
+            '"withdrawal_cancel_hidden": not bool(withdrawal_cancel_shortcut.get("visible_in_tree", true))',
+            '"ui_cancel_exists": InputMap.has_action("ui_cancel")',
+            'cancel_pressed.is_action_pressed("ui_cancel")',
+            'cancel_released.is_action_released("ui_cancel")',
+            '"root_pressed_once": int(cancel_delivery.get("root_pressed_count", 0)) == 1',
+            '"root_released_once": int(cancel_delivery.get("root_released_count", 0)) == 1',
+            '"pressed_not_delivered_to_gui": int(cancel_delivery.get("pressed_gui_count", 0)) == 0',
+            '"released_delivered_at_most_once"',
+            '"cancel_signal_once": int(cancel_delivery.get("cancel_signal_count", 0)) == 1',
+            '"focus_exited_once": int(cancel_delivery.get("focus_exited_count", 0)) == 1',
+            '"focus_owner_restored"',
+            '"exact_result_pending"',
+            '"root_pressed_handled": bool(cancel_delivery.get("root_pressed_handled", false))',
+            '"root_released_handled": bool(cancel_delivery.get("root_released_handled", false))',
+            '_pending_compact(board.get("_battle_board_cursor_semantic_pending"))',
+            'semantic_timer.is_stopped()',
+            'semantic_timer.wait_time',
+        ):
+            ensure(required_token in cancel_delivery_body, errors, f"Physical B diagnostic is missing exact named delivery token: {required_token}")
+        for forbidden_token in (
+            'board.call("_handle_controller_navigation_input"',
+            'board.call("_gui_input"',
+            'board.emit_signal(',
+            'controller_navigation_cancelled.emit(',
+            'set_input_as_handled(',
+            'push_input(',
+            '_on_root_window_input(',
+            '_forward_root_physical_input',
+            '_on_battle_board_cursor_semantic_timeout(',
+            'create_timer(',
+        ):
+            ensure(forbidden_token not in cancel_delivery_body, errors, f"Physical B diagnostic must not directly inject handler/signal/timing behavior via {forbidden_token}")
+        clear_index = smoke_text.find("if not await _wait_for_result_clear(board, live, semantic_timer):", smoke_text.find("var result_message :="))
+        frame_index = smoke_text.find("await get_tree().process_frame", clear_index)
+        construct_index = smoke_text.find("var cancel_pressed := InputEventJoypadButton.new()", frame_index)
+        sequencing_slice = smoke_text[clear_index:construct_index]
+        ensure(
+            0 <= clear_index < frame_index < construct_index
+            and sequencing_slice.count("await get_tree().process_frame") == 1,
+            errors,
+            "Physical B diagnostic must cross exactly one process-frame boundary after real A clear and before constructing B events",
+        )
+        for forbidden_token in ("create_timer", "_settle", "delay", "_gui_input", "_handle_controller_navigation_input"):
+            ensure(forbidden_token not in sequencing_slice, errors, f"Physical B sequencing boundary must not add timer/settle/direct behavior via {forbidden_token}")
+    ownership_helper_match = re.search(
+        r'func _root_window_input_connection_rows\(\) -> Array\[Dictionary\]:(?P<body>.*?)(?=\nfunc _first_encounter)',
+        smoke_text,
+        re.S,
+    )
+    ensure(ownership_helper_match is not None, errors, "Could not isolate read-only B input ownership diagnostic helpers")
+    if ownership_helper_match is not None:
+        ownership_helper_body = ownership_helper_match.group("body")
+        for required_token in (
+            'get_tree().root.window_input.get_connections()',
+            'callable.get_object()',
+            '"object_id": object.get_instance_id()',
+            '"path": String(node.get_path())',
+            '"class": object.get_class()',
+            '"method": String(callable.get_method())',
+            '"flags": int(connection.get("flags", 0))',
+            'func _connection_row_count(rows: Array[Dictionary], object: Object, method_name: String) -> int:',
+            'func _button_shortcut_snapshot(button: BaseButton, pressed: InputEvent, released: InputEvent) -> Dictionary:',
+            'shortcut.matches_event(pressed)',
+            'shortcut.matches_event(released)',
+            '"events": event_rows',
+            'func _matching_shell_shortcut_rows(shell: Node, pressed: InputEvent, released: InputEvent) -> Array[Dictionary]:',
+            'shell.find_children("*", "BaseButton", true, false)',
+        ):
+            ensure(required_token in ownership_helper_body, errors, f"B input ownership diagnostic is missing read-only token: {required_token}")
+        for forbidden_token in (
+            ".connect(",
+            ".disconnect(",
+            "sort",
+            "shortcut =",
+            ".disabled =",
+            "set_input_as_handled",
+            "push_input",
+            "emit_signal",
+            "_on_root_window_input(",
+            "_forward_root_physical_input",
+            "create_timer",
+        ):
+            ensure(forbidden_token not in ownership_helper_body, errors, f"B input ownership helpers must remain read-only and preserve order via {forbidden_token}")
 
 
 def validate_main_menu_first_view(errors: list[str]) -> None:
@@ -32579,6 +33258,8 @@ def main() -> int:
     validate_campaign_browser(errors)
     validate_settings_and_onboarding(errors)
     validate_native_screen_reader_semantics(errors)
+    validate_battle_layout_detached_route_compatibility(errors)
+    validate_battle_board_cursor_semantics(errors)
     validate_main_menu_first_view(errors)
     validate_main_menu_destructive_exclusive_parent_input(errors)
     validate_map_editor_shell_slice(errors)

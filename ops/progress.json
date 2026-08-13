@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Selected-route targeted refresh now rebuilds the route-owned ObjectiveBrief readiness tooltip, idle Event/action context, End Turn cue, and drawer/handoff cues from the same authoritative current cached action and route state after the action cache is current. Focused and compatibility proof is exact at 1280 and 1920; official Linux and fresh Windows/Wine evidence is export and boot only and does not claim packaged route interaction parity.",
+  "currentNotes": "Completed the bounded BattleBoard cursor live-context slice with exact focused, accessibility, compatibility, static, editor, Linux export/headless-startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL evidence. Platform evidence does not include packaged BattleBoard interaction, AT-SPI, UIA, controller, or native-hardware certification.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-selected-route-field-readiness-coherence-10184",
-  "currentSliceId": "ux-overworld-selected-route-field-readiness-coherence-10184",
-  "currentSliceNotes": "The bounded route-only refresh now updates ObjectiveBrief, idle Event/action context, End Turn, and drawer/handoff readiness from the current compact route/action authority while retaining feedback, generated, cache, profile, and broad-phase skip policies.",
+  "currentSlice": "accessibility-battle-board-cursor-live-context-coalescing-10184",
+  "currentSliceId": "accessibility-battle-board-cursor-live-context-coalescing-10184",
+  "currentSliceNotes": "Completed the bounded BattleBoard cursor live-context slice with exact focused and compatibility authority. Official Linux evidence is export plus packaged headless startup only; official Windows evidence is export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup only. No packaged BattleBoard interaction, AT-SPI, UIA, controller, hardware, signing, publication, whole-game readiness, or whole-release completion is claimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Selected Route Field Readiness Coherence",
-  "currentSliceUpdatedAt": "2026-08-12T22:04:34Z",
+  "currentSliceTitle": "Battle Board Cursor Live Context Coalescing",
+  "currentSliceUpdatedAt": "2026-08-13T01:29:38Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19849,6 +19849,33 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "id": "accessibility-battle-board-cursor-live-context-coalescing-10184",
+      "title": "Battle Board Cursor Live Context Coalescing",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md"],
+      "purpose": "Give the existing focusable BattleBoard keyboard/controller cursor one bounded native live context for the authoritative current hex and available action while keeping held navigation final-only and mouse interaction silent.",
+      "implementationTargets": ["scenes/battle/BattleBoardView.gd", "scenes/battle/BattleShell.tscn", "scenes/battle/BattleShell.gd", "tests/battle_controller_board_navigation_smoke.gd", "tests/accessibility_screen_reader_semantics_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {
+        "head": "0ea2c169",
+        "existing_controller_navigation_slice": "battle-controller-hex-board-navigation-10184",
+        "battle_board_cursor_live_region_count": 0,
+        "existing_cursor_surface": ["bounded 11x7 visual cursor", "current cell role", "existing stack and movement tooltips", "A exact board dispatch", "B command-focus return"],
+        "maximum_context_characters": 320,
+        "save_version": 9
+      },
+      "completionCriteria": "At 1280 and 1920, Battle exposes exactly one authored transparent non-layout BattleBoardCursorLive label as LIVE_POLITE; a changed real keyboard or D-pad cursor destination settles to one final live announcement of no more than 320 characters containing exact current q/r, role, occupied stack side/name/count when present or legal/blocked action, and A/Enter plus B/Escape guidance derived from existing BattleBoard state and intent/tooltip methods; held navigation is final-only, bounded no-op and mouse hover/click are silent, and A/B publish immediate exact existing move/target/blocked or focus-return results whose clear is guarded by generation, battle/session identity, active turn/input lock, focus, modal ownership, same label, and tree lifecycle; player/enemy turns, active/friendly/enemy stacks, empty legal/blocked/boundary cells, focus/modal transitions, action resolution, battle/session replacement, stale replacement, and tree exit preserve exact visual cursor, focus cycle, board dispatch, action consequences, rules, RNG, animation, save/files/cache/settings/routes/session/battle authority; focused BattleBoard navigation, accessibility semantics, battle layout/compatibility, core, editor, repository, Linux release, and fresh Windows/Wine gates pass, with native Linux AT-SPI claims only when observed and Wine limited to packaged behavior/tree evidence without native Windows UIA or controller certification.",
+      "nonGoals": ["BattleRules, BattleAiRules, action selection or consequence, RNG, battle-state, keyboard/controller mapping or repeat-timing, mouse hover/click, shared UiAccessibility, layout, visible instruction, save/schema/version, or Native RMG changes", "custom narration, arbitrary rebinding, vibration, diagonal-stick behavior, parallel dispatch, or automatic irreversible action", "controller/hardware, native Windows UIA, medical/accessibility, signing, publication, whole-game readiness, or overall release-completion claims"],
+      "baselineChecks": ["godot4 --headless --path . --scene res://tests/battle_controller_board_navigation_smoke.tscn", "godot4 --headless --path . --scene res://tests/accessibility_screen_reader_semantics_report.tscn", "godot4 --headless --path . --scene res://tests/battle_layout_smoke.tscn", "godot4 --headless --path . --scene res://tests/active_play_keyboard_focus_smoke.tscn", "godot4 --headless --path . --scene res://tests/core_systems_regression_smoke.tscn", "godot4 --headless --editor --quit --path .", "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py", "python3 -m py_compile tests/validate_repo.py", "jq empty ops/progress.json", "git diff --check", "Linux release export plus shipped 1280/1920 BattleBoard cursor live-context behavior and native AT-SPI semantic-tree validation when available", "Windows release export plus fresh Wine shipped 1280/1920 BattleBoard cursor behavior/tree validation without native UIA or controller certification"],
+      "startedAt": "2026-08-12T22:12:32Z",
+      "updatedAt": "2026-08-13T01:29:38Z",
+      "completedAt": "2026-08-13T01:29:38Z",
+      "notes": "BattleShell now authors exactly one transparent non-layout BattleBoardCursorLive polite live region, while standalone BattleBoard fixtures fail closed when the scene-owned label is absent. Focused 1280/1920 proof passed the exact bounded context matrix, real keyboard/D-pad final-only coalescing, mouse and no-op silence, exact guarded A/B results and clear lifecycle, stale replacement, focus/modal/session/battle/turn/input-lock/tree cancellation, and full session, battle, RNG, animation, files, settings, routes, and action authority. Accessibility semantics, independent 1920/1280/1024 battle-layout gates, Quick Resolve, Withdrawal, manual overwrite, active-play focus, deterministic RNG, battle animation, animation cue catalog, repository validation, Python, diff, and editor gates passed. Official Linux release export and packaged headless startup passed, but its harness exposed no Boot/MainMenu marker and did not execute packaged BattleBoard interaction. Official Windows release export and fresh-Wine Godot/Boot/MainMenu/native-DLL startup passed. No packaged BattleBoard interaction, native Linux AT-SPI observation, native Windows UIA, controller or hardware certification, signing/publication, whole-game readiness, or whole-release completion is claimed.",
+      "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice; packaged BattleBoard interaction, native AT-SPI/UIA observation, controller and native-hardware certification, signing/publication, broader gameplay/content/performance work, Native RMG parity, and overall release readiness remain open."
+    },
     {
       "id": "ux-overworld-selected-route-field-readiness-coherence-10184",
       "title": "Overworld Selected Route Field Readiness Coherence",
@@ -79008,7 +79035,7 @@
   ],
   "summary": "Charter Lock now projects a bounded living-source retaliation aura to another defending allied veteran melee line through live combat, tactical AI, and player summaries. Focused ability coverage passes 117/117, the 59-encounter queue remains clear, and the all-live matrix improves to 27 outliers / 152.0 severity / 67.5 percent maximum dominance / 3.73 side bias with zero structural failures. Faction balance, Strategic AI, accessibility, content, performance, signing/publication, native Windows certification, Native RMG exact-state parity, release-channel integration, and overall release remain in progress.",
   "taskId": "10184",
-  "updatedAt": "2026-08-12T22:04:34Z",
+  "updatedAt": "2026-08-12T22:12:32Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
