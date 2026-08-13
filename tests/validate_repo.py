@@ -94,6 +94,7 @@ APPLICATION_SCENARIO_OUTCOME_AUTOSAVE_FAILURE_RECOVERY_REGRESSION_SCENE_PATH = R
 MAP_EDITOR_SCENE_PATH = ROOT / "scenes" / "editor" / "MapEditorShell.tscn"
 MAP_EDITOR_SCRIPT_PATH = ROOT / "scenes" / "editor" / "MapEditorShell.gd"
 MAP_EDITOR_SMOKE_SCENE_PATH = ROOT / "tests" / "map_editor_smoke.tscn"
+MAP_EDITOR_SMOKE_SCRIPT_PATH = ROOT / "tests" / "map_editor_smoke.gd"
 MAP_EDITOR_DIRTY_TRANSITION_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "map_editor_dirty_working_copy_destructive_transition_regression.gd"
 MAP_EDITOR_DIRTY_TRANSITION_REGRESSION_SCENE_PATH = ROOT / "tests" / "map_editor_dirty_working_copy_destructive_transition_regression.tscn"
 OVERWORLD_SCENE_PATH = ROOT / "scenes" / "overworld" / "OverworldShell.tscn"
@@ -15462,6 +15463,7 @@ def validate_map_editor_shell_slice(errors: list[str]) -> None:
         MAP_EDITOR_SCENE_PATH,
         MAP_EDITOR_SCRIPT_PATH,
         MAP_EDITOR_SMOKE_SCENE_PATH,
+        MAP_EDITOR_SMOKE_SCRIPT_PATH,
         OVERWORLD_MAP_VIEW_SCRIPT_PATH,
     )
     for path in required_paths:
@@ -15596,6 +15598,198 @@ def validate_map_editor_shell_slice(errors: list[str]) -> None:
     ensure("ScenarioPicker" not in editor_scene_text, errors, "MapEditorShell.tscn must not keep the old scenario dropdown in the active editor UI")
     ensure("Map Package |" in editor_script_text, errors, "MapEditorShell.gd must label active editor load entries as map packages")
 
+    smoke_text = MAP_EDITOR_SMOKE_SCRIPT_PATH.read_text(encoding="utf-8")
+    smoke_stage_names = (
+        "scene_ready",
+        "authored_load_initial",
+        "terrain_transition",
+        "terrain_tools",
+        "road_tools",
+        "hero_restore",
+        "taxonomy_dependency_preview",
+        "property_edits",
+        "move_edits",
+        "duplicate_edits",
+        "retheme_edits",
+        "placement_town",
+        "placement_resource",
+        "placement_artifact",
+        "placement_encounter",
+        "export",
+        "play_copy_launch",
+        "overworld_authority",
+        "editor_return",
+        "returned_property",
+        "final_complete",
+    )
+    for stage_name in smoke_stage_names:
+        stage_call = f'_stage("{stage_name}")'
+        ensure(smoke_text.count(stage_call) == 1, errors, f"Map Editor smoke must emit exactly one {stage_name} diagnostic stage")
+    ensure(
+        len(re.findall(r'^\t_stage\("[a-z_]+"\)$', smoke_text, flags=re.MULTILINE)) == len(smoke_stage_names),
+        errors,
+        "Map Editor smoke must contain only the exact registered diagnostic stage calls",
+    )
+    ensure(
+        smoke_text.count('print("MAP_EDITOR_SMOKE_STAGE %s"') == 1,
+        errors,
+        "Map Editor smoke diagnostic marker must be emitted only by its observation helper",
+    )
+    smoke_ready_match = re.search(
+        r"func _ready\(\) -> void:\n(?P<body>.*?)(?=\nfunc _run)",
+        smoke_text,
+        flags=re.DOTALL,
+    )
+    ensure(smoke_ready_match is not None, errors, "Could not isolate Map Editor smoke ready stage")
+    if smoke_ready_match is not None:
+        smoke_ready_body = smoke_ready_match.group("body")
+        ready_stage_index = smoke_ready_body.find('_stage("scene_ready")')
+        deferred_run_index = smoke_ready_body.find('call_deferred("_run")')
+        ensure(
+            0 <= ready_stage_index < deferred_run_index,
+            errors,
+            "Map Editor smoke must emit scene_ready before deferring its unchanged stateful run",
+        )
+    smoke_run_match = re.search(
+        r"func _run\(\) -> void:\n(?P<body>.*?)(?=\nfunc _stage)",
+        smoke_text,
+        flags=re.DOTALL,
+    )
+    ensure(smoke_run_match is not None, errors, "Could not isolate Map Editor smoke run sequence for diagnostic stages")
+    if smoke_run_match is not None:
+        smoke_run_body = smoke_run_match.group("body")
+        run_stage_names = smoke_stage_names[1:16] + ("final_complete",)
+        run_stage_indices = [smoke_run_body.find(f'_stage("{stage_name}")') for stage_name in run_stage_names]
+        ensure(
+            all(index >= 0 for index in run_stage_indices)
+            and run_stage_indices == sorted(run_stage_indices)
+            and len(set(run_stage_indices)) == len(run_stage_indices),
+            errors,
+            "Map Editor smoke diagnostic stages must follow the authored, tool, object, export, and final sequence exactly",
+        )
+        run_boundary_tokens = (
+            '_assert_editor_restore_tile_cue(snapshot, false',
+            '_stage("authored_load_initial")',
+            'var initial_render_cache := _render_cache_metrics(snapshot)',
+            '_assert_editor_sand_heavy_corner_ownership(shell)',
+            '_stage("terrain_transition")',
+            '_assert_flood_fill_terrain(shell)',
+            '_assert_terrain_rectangle_tool(shell)',
+            '_stage("terrain_tools")',
+            'var add_road_result: Dictionary = shell.call("validation_toggle_road", 2, 2)',
+            '_assert_road_path_tool(shell)',
+            '_stage("road_tools")',
+            'var hero_result: Dictionary = shell.call("validation_set_hero_start", 3, 3)',
+            '_assert_selected_tile_restore(shell)',
+            '_stage("hero_restore")',
+            'var inspect_result: Dictionary = shell.call("validation_select_tile", 23, 26)',
+            '_assert_object_placement_preview_surfaces(shell)',
+            '_stage("taxonomy_dependency_preview")',
+            '_assert_object_property_edits(shell)',
+            '_stage("property_edits")',
+            '_assert_object_move_edits(shell)',
+            '_stage("move_edits")',
+            '_assert_object_duplicate_edits(shell)',
+            '_stage("duplicate_edits")',
+            '_assert_object_retheme_edits(shell)',
+            '_stage("retheme_edits")',
+            '_exercise_object_placement(shell, "town"',
+            '_stage("placement_town")',
+            '_exercise_object_placement(shell, "resource"',
+            '_stage("placement_resource")',
+            '_exercise_object_placement(shell, "artifact"',
+            '_stage("placement_artifact")',
+            '_exercise_object_placement(shell, "encounter"',
+            '_stage("placement_encounter")',
+            'var export_contract_result: Dictionary =',
+            '_assert_authored_scenario_export_contract(export_contract_result',
+            '_stage("export")',
+            'if not await _assert_play_copy_round_trip(shell):',
+            '_stage("final_complete")',
+            'get_tree().quit(0)',
+        )
+        run_boundary_indices = [smoke_run_body.find(token) for token in run_boundary_tokens]
+        ensure(
+            all(index >= 0 for index in run_boundary_indices)
+            and run_boundary_indices == sorted(run_boundary_indices)
+            and len(set(run_boundary_indices)) == len(run_boundary_indices),
+            errors,
+            "Map Editor smoke stages must sit after each successful observed boundary and before the next stateful phase",
+        )
+        play_call_index = smoke_run_body.find("if not await _assert_play_copy_round_trip(shell):")
+        complete_stage_index = smoke_run_body.find('_stage("final_complete")')
+        quit_index = smoke_run_body.find("get_tree().quit(0)", complete_stage_index)
+        ensure(
+            0 <= play_call_index < complete_stage_index < quit_index,
+            errors,
+            "Map Editor smoke final diagnostic stage must follow the successful Play Copy round trip and precede the unchanged clean exit",
+        )
+    smoke_play_match = re.search(
+        r"func _assert_play_copy_round_trip\(.*?\) -> bool:\n(?P<body>.*?)(?=\nfunc _assert_active_session_property_edits)",
+        smoke_text,
+        flags=re.DOTALL,
+    )
+    ensure(smoke_play_match is not None, errors, "Could not isolate Map Editor smoke Play Copy round trip for diagnostic stages")
+    if smoke_play_match is not None:
+        smoke_play_body = smoke_play_match.group("body")
+        play_stage_names = smoke_stage_names[16:20]
+        play_stage_indices = [smoke_play_body.find(f'_stage("{stage_name}")') for stage_name in play_stage_names]
+        ensure(
+            all(index >= 0 for index in play_stage_indices)
+            and play_stage_indices == sorted(play_stage_indices)
+            and len(set(play_stage_indices)) == len(play_stage_indices),
+            errors,
+            "Map Editor smoke Play Copy diagnostic stages must follow launch, Overworld authority, return, and returned-property order",
+        )
+        play_boundary_tokens = (
+            '_assert_editor_play_readiness_gate(launch_result',
+            '_stage("play_copy_launch")',
+            'await get_tree().process_frame',
+            '_assert_active_session_property_edits(SessionState.ensure_active_session())',
+            '_stage("overworld_authority")',
+            '_set_active_hero_position(SessionState.ensure_active_session()',
+            'var returned_editor = get_tree().current_scene',
+            'String(returned_terrain.get("terrain", "")) != "forest"',
+            '_stage("editor_return")',
+            '_assert_returned_editor_property_edits(returned_editor)',
+            '_stage("returned_property")',
+            'SessionState.ensure_active_session().scenario_id != ""',
+        )
+        play_boundary_indices = [smoke_play_body.find(token) for token in play_boundary_tokens]
+        ensure(
+            all(index >= 0 for index in play_boundary_indices)
+            and play_boundary_indices == sorted(play_boundary_indices)
+            and len(set(play_boundary_indices)) == len(play_boundary_indices),
+            errors,
+            "Map Editor smoke Play Copy stages must follow successful launch and authority checks without moving any waits or state changes",
+        )
+    smoke_stage_helper_match = re.search(
+        r"func _stage\(stage: String\) -> void:\n(?P<body>.*?)(?=\nfunc _assert_editor_terrain_option_contract)",
+        smoke_text,
+        flags=re.DOTALL,
+    )
+    ensure(smoke_stage_helper_match is not None, errors, "Could not isolate Map Editor smoke diagnostic stage helper")
+    if smoke_stage_helper_match is not None:
+        smoke_stage_helper_body = smoke_stage_helper_match.group("body")
+        for required_token in (
+            'print("MAP_EDITOR_SMOKE_STAGE %s" % JSON.stringify({',
+            '"ticks_msec": Time.get_ticks_msec()',
+            '"stage": stage',
+        ):
+            ensure(required_token in smoke_stage_helper_body, errors, f"Map Editor smoke diagnostic helper is missing token: {required_token}")
+        for forbidden_token in (
+            "await ",
+            "create_timer",
+            "process_frame",
+            ".call(",
+            ".set(",
+            "get_tree()",
+            "Input.",
+            "SessionState.",
+            "AppRouter.",
+        ):
+            ensure(forbidden_token not in smoke_stage_helper_body, errors, f"Map Editor smoke diagnostic helper must remain observation-only: {forbidden_token}")
+
 
 def validate_map_editor_dirty_transition_regression(errors: list[str]) -> None:
     for path in (
@@ -15692,6 +15886,18 @@ def validate_map_editor_dirty_transition_regression(errors: list[str]) -> None:
         'KEY_ENTER',
         'const TOOL_RAIL_PICKER_NAMES := [',
         'const TOOL_RAIL_FAMILY_IDS := ["town", "resource", "artifact", "encounter"]',
+        'const TOP_BAR_SURFACE_NAMES := [',
+        'const TOP_BAR_LONG_PACKAGE_LABEL := "Map Package | The Cartographer',
+        '_capture_top_bar_contract',
+        '_top_bar_expected_flexible_widths',
+        '_top_bar_layout_snapshot',
+        '_top_bar_body_geometry',
+        '_validate_top_bar_resize_roundtrip',
+        '_validate_top_bar_long_label_roundtrip',
+        '"top_pad_inner_containment_exact": contained',
+        '"commands_visible_at_combined_minimum": commands_exact',
+        '"picker_popup_items_full_exact"',
+        '"focus_action_dirty_package_canvas_tool_rail_authority_exact": true',
         '_tool_rail_layout_snapshot',
         '_validate_tool_rail_family_layouts',
         '_select_longest_property_object_fixture',
@@ -16240,8 +16446,26 @@ def validate_map_editor_dirty_transition_regression(errors: list[str]) -> None:
             "var loaded_semantic_tooltips := _capture_tool_rail_semantic_tooltips(shell)",
             "var loaded_layout := _tool_rail_layout_snapshot(shell, true, loaded_semantic_tooltips)",
             "var roundtrip := await _validate_tool_rail_resize_roundtrip(shell, package_state, width)",
+            'var empty_top_bar := await _validate_top_bar_resize_roundtrip(shell, package_state, width, "empty", false)',
+            'var loaded_top_bar := await _validate_top_bar_resize_roundtrip(shell, package_state, width, "loaded", false)',
+            'var dirty_top_bar := await _validate_top_bar_resize_roundtrip(shell, package_state, width, "dirty", true)',
+            'var long_top_bar := await _validate_top_bar_long_label_roundtrip(shell, package_state, width)',
         ):
             ensure(required_token in command_focus_row_body, errors, f"Map Editor command-focus row is missing responsive ToolRail phase: {required_token}")
+        top_bar_phase_order = [
+            command_focus_row_body.find('var empty_top_bar := await _validate_top_bar_resize_roundtrip(shell, package_state, width, "empty", false)'),
+            command_focus_row_body.find('if not await _reset_case(shell, source_id, false):'),
+            command_focus_row_body.find('var loaded_top_bar := await _validate_top_bar_resize_roundtrip(shell, package_state, width, "loaded", false)'),
+            command_focus_row_body.find('if not await _reset_case(shell, source_id, true):'),
+            command_focus_row_body.find('var dirty_top_bar := await _validate_top_bar_resize_roundtrip(shell, package_state, width, "dirty", true)'),
+            command_focus_row_body.find('var long_top_bar := await _validate_top_bar_long_label_roundtrip(shell, package_state, width)'),
+        ]
+        ensure(
+            all(index >= 0 for index in top_bar_phase_order)
+            and top_bar_phase_order == sorted(top_bar_phase_order),
+            errors,
+            "Map Editor TopBar matrix must cover settled empty, loaded, dirty, and long-label phases in source order",
+        )
         for capture_token, snapshot_token in (
             (
                 "var empty_semantic_tooltips := _capture_tool_rail_semantic_tooltips(shell)",
@@ -16257,6 +16481,287 @@ def validate_map_editor_dirty_transition_regression(errors: list[str]) -> None:
                 errors,
                 "Map Editor command-focus row must externally capture settled semantic tooltips before responsive geometry",
             )
+    top_bar_names_match = re.search(
+        r"const TOP_BAR_SURFACE_NAMES := \[(.*?)\n\]",
+        report_text,
+        flags=re.DOTALL,
+    )
+    ensure(top_bar_names_match is not None, errors, "Map Editor TopBar regression must declare its exact ordered surfaces")
+    if top_bar_names_match is not None:
+        top_bar_names = tuple(re.findall(r'"([^"]+)"', top_bar_names_match.group(1)))
+        ensure(
+            top_bar_names == ("Header", "MapPackagePicker", "LoadMap", "SaveCopy", "PlayWorkingCopy", "Menu"),
+            errors,
+            "Map Editor TopBar regression must pin exact Header/picker/command source order",
+        )
+    top_bar_contract_match = re.search(
+        r"func _capture_top_bar_contract\(.*?\) -> Dictionary:(.*?)(?=\n\nfunc )",
+        report_text,
+        flags=re.DOTALL,
+    )
+    ensure(top_bar_contract_match is not None, errors, "Map Editor TopBar regression must capture its detached picker/header contract")
+    if top_bar_contract_match is not None:
+        top_bar_contract_body = top_bar_contract_match.group(1)
+        for required_token in (
+            '"header_tooltip": header.tooltip_text',
+            '"selected_metadata": String(picker.get_item_metadata(picker.selected))',
+            '"item_texts": item_texts',
+            '"item_metadata": item_metadata',
+            '"popup_texts": popup_texts',
+            '"popup_metadata": popup_metadata',
+            '"tooltip": picker.tooltip_text',
+        ):
+            ensure(required_token in top_bar_contract_body, errors, f"Map Editor TopBar detached contract is missing exact token: {required_token}")
+    top_bar_layout_match = re.search(
+        r"func _top_bar_layout_snapshot\(.*?\) -> Dictionary:(.*?)(?=\n\nfunc )",
+        report_text,
+        flags=re.DOTALL,
+    )
+    ensure(top_bar_layout_match is not None, errors, "Map Editor TopBar regression must isolate responsive geometry")
+    if top_bar_layout_match is not None:
+        top_bar_layout_body = top_bar_layout_match.group(1)
+        for required_token in (
+            '"queue_settled": not bool(shell.get("_editor_top_bar_layout_sync_queued"))',
+            '"surface_membership_order_exact": surface_names == TOP_BAR_SURFACE_NAMES',
+            '"top_pad_inner_containment_exact": contained',
+            '"surface_order_no_overlap": ordered_nonoverlap',
+            '"commands_visible_at_combined_minimum": commands_exact',
+            'control.size.x + 0.5 >= control.get_combined_minimum_size().x',
+            '"header_allocator_width_exact"',
+            '"picker_allocator_width_exact"',
+            '"header_clip_and_full_tooltip"',
+            '"picker_popup_items_full_exact"',
+            '"picker_contract_exact": current_contract == expected_contract',
+            '"picker_full_tooltip_exact"',
+        ):
+            ensure(required_token in top_bar_layout_body, errors, f"Map Editor TopBar geometry oracle is missing exact token: {required_token}")
+        ensure(
+            re.search(r'(?:picker|header)\.tooltip_text\s*=(?!=)', top_bar_layout_body) is None
+            and '.erase(' not in top_bar_layout_body,
+            errors,
+            "Map Editor TopBar geometry oracle must not construct, normalize, or erase its semantic expectations",
+        )
+    top_bar_resize_match = re.search(
+        r"func _validate_top_bar_resize_roundtrip\(.*?\) -> Dictionary:(.*?)(?=\n\nfunc )",
+        report_text,
+        flags=re.DOTALL,
+    )
+    ensure(top_bar_resize_match is not None, errors, "Map Editor TopBar regression must retain exact resize roundtrip authority")
+    top_bar_convergence_snapshot_match = re.search(
+        r"func _top_bar_geometry_convergence_snapshot\(.*?\) -> Dictionary:(.*?)(?=\n\nfunc )",
+        report_text,
+        flags=re.DOTALL,
+    )
+    ensure(top_bar_convergence_snapshot_match is not None, errors, "Map Editor TopBar regression must retain a detached convergence snapshot")
+    if top_bar_convergence_snapshot_match is not None:
+        convergence_snapshot_body = top_bar_convergence_snapshot_match.group(1)
+        for required_token in (
+            '"body_geometry": _top_bar_body_geometry(shell)',
+            '"top_bar_rect": top_bar.get_global_rect()',
+            '"header_custom_minimum": header.custom_minimum_size',
+            '"picker_custom_minimum": picker.custom_minimum_size',
+        ):
+            ensure(required_token in convergence_snapshot_body, errors, f"Map Editor TopBar convergence snapshot is missing exact token: {required_token}")
+    top_bar_stable_match = re.search(
+        r"func _await_top_bar_geometry_stable\(.*?\) -> Dictionary:(.*?)(?=\n\nfunc )",
+        report_text,
+        flags=re.DOTALL,
+    )
+    ensure(top_bar_stable_match is not None, errors, "Map Editor TopBar regression must retain its bounded passive convergence helper")
+    if top_bar_stable_match is not None:
+        top_bar_stable_body = top_bar_stable_match.group(1)
+        stable_order = (
+            top_bar_stable_body.find("for frame_index in range(12):"),
+            top_bar_stable_body.find("await get_tree().process_frame"),
+            top_bar_stable_body.find("get_window().size.x != expected_width"),
+            top_bar_stable_body.find("not is_equal_approx(layout_host.size.x, float(expected_width))"),
+            top_bar_stable_body.find('bool(shell.get("_editor_top_bar_layout_sync_queued"))'),
+            top_bar_stable_body.find("var current := _top_bar_geometry_convergence_snapshot(shell)"),
+            top_bar_stable_body.find("if not previous.is_empty() and current == previous:"),
+            top_bar_stable_body.find('"snapshot": current'),
+        )
+        ensure(
+            all(index >= 0 for index in stable_order) and list(stable_order) == sorted(stable_order),
+            errors,
+            "Map Editor TopBar convergence must bound 12 frames, await a real frame, verify window/host/queue, then require two identical detached snapshots",
+        )
+        ensure(
+            top_bar_stable_body.count("await get_tree().process_frame") == 1
+            and "current == previous" in top_bar_stable_body
+            and "within 12 process frames" in top_bar_stable_body,
+            errors,
+            "Map Editor TopBar convergence must expose one bounded frame wait and fail closed after 12 frames",
+        )
+        for forbidden_token in (
+            "Timer",
+            "create_timer",
+            "delay",
+            "_settle",
+            'shell.call("_sync_editor_top_bar_layout")',
+            "_editor_top_bar.custom_minimum_size =",
+            "layout_host.size =",
+            "get_window().size =",
+            "queue_sort",
+            "minimum_size_changed.emit",
+        ):
+            ensure(forbidden_token not in top_bar_stable_body, errors, f"Map Editor TopBar convergence must remain passive and avoid {forbidden_token}")
+    top_bar_body_match = re.search(
+        r"func _top_bar_body_geometry\(.*?\) -> Dictionary:(.*?)(?=\n\nfunc )",
+        report_text,
+        flags=re.DOTALL,
+    )
+    ensure(top_bar_body_match is not None, errors, "Map Editor TopBar regression must capture detached live BodyRow/Map/ToolRail geometry")
+    if top_bar_body_match is not None:
+        top_bar_body = top_bar_body_match.group(1)
+        for required_token in (
+            'shell.get_node("RootMargin/Shell/ShellPad/ShellBox/BodyRow")',
+            'shell.get_node("%Map")',
+            'shell.get_node("%ToolRail")',
+            '"map_contained": _rect_contained(body_rect, map_rect)',
+            '"tool_rail_contained": _rect_contained(body_rect, tool_rail_rect)',
+            '"map_before_tool_rail": map_rect.position.x <= tool_rail_rect.position.x',
+            '"map_tool_rail_no_overlap": map_rect.end.x <= tool_rail_rect.position.x + 1.0',
+            '"map_width_minimum": map_view.size.x >= 820.0',
+            '"tool_rail_width_minimum": tool_rail.size.x >= 340.0',
+            '"map_custom_minimum_exact": map_view.custom_minimum_size == Vector2(640.0, 400.0)',
+            '"tool_rail_custom_minimum_exact": tool_rail.custom_minimum_size == Vector2(340.0, 0.0)',
+            'map_view.get_combined_minimum_size().x',
+            'tool_rail.get_combined_minimum_size().x',
+            '"body_global_rect": body_rect',
+            '"body_local_rect": Rect2(body_row.position, body_row.size)',
+            '"map_global_rect": map_rect',
+            '"map_local_rect": map_local_rect',
+            '"tool_rail_global_rect": tool_rail_rect',
+            '"tool_rail_local_rect": tool_rail_local_rect',
+        ):
+            ensure(required_token in top_bar_body, errors, f"Map Editor TopBar body geometry is missing exact token: {required_token}")
+        ensure(
+            re.search(r"(?:custom_minimum_size|size|position)\s*=(?!=)", top_bar_body) is None
+            and ".erase(" not in top_bar_body
+            and "shell.call(" not in top_bar_body,
+            errors,
+            "Map Editor TopBar body geometry capture must remain detached/read-only without geometry assignment, erasure, or shell mutation",
+        )
+        ensure(
+            'map_view.custom_minimum_size == Vector2(820.0, 560.0)' not in top_bar_body,
+            errors,
+            "Map Editor live body geometry must not confuse the scene-authored Map preference with OverworldMapView's runtime minimum",
+        )
+    top_bar_body_contract_match = re.search(
+        r"func _top_bar_body_geometry_contract\(.*?\) -> Dictionary:(.*?)(?=\n\nfunc )",
+        report_text,
+        flags=re.DOTALL,
+    )
+    ensure(top_bar_body_contract_match is not None, errors, "Map Editor TopBar regression must compare only stable BodyRow component contracts")
+    if top_bar_body_contract_match is not None:
+        top_bar_body_contract = top_bar_body_contract_match.group(1)
+        for required_token in (
+            '"checks": geometry.get("checks", {}).duplicate(true)',
+            '"map_custom_minimum": geometry.get("map_custom_minimum")',
+            '"map_combined_minimum": geometry.get("map_combined_minimum")',
+            '"tool_rail_custom_minimum": geometry.get("tool_rail_custom_minimum")',
+            '"tool_rail_combined_minimum": geometry.get("tool_rail_combined_minimum")',
+            '"tool_rail_width": tool_rail_size.x',
+        ):
+            ensure(required_token in top_bar_body_contract, errors, f"Map Editor stable BodyRow component contract is missing exact token: {required_token}")
+        for forbidden_token in ("body_global_rect", "body_local_rect", "map_global_rect", "map_local_rect", '"map_size"', "tool_rail_global_rect", "tool_rail_local_rect"):
+            ensure(forbidden_token not in top_bar_body_contract, errors, f"Map Editor stable BodyRow return contract must not require flexible absolute geometry via {forbidden_token}")
+    if top_bar_resize_match is not None:
+        top_bar_resize_body = top_bar_resize_match.group(1)
+        for required_token in (
+            "var resize_width := 1920 if initial_width == 1280 else 1280",
+            "var stable_before := await _await_top_bar_geometry_stable(shell, initial_width)",
+            'var body_geometry_before: Dictionary = stable_before.get("snapshot", {}).get("body_geometry", {}).duplicate(true)',
+            "var body_contract_before := _top_bar_body_geometry_contract(body_geometry_before)",
+            "var stable_resized := await _await_top_bar_geometry_stable(shell, resize_width)",
+            'var resized_body_geometry: Dictionary = stable_resized.get("snapshot", {}).get("body_geometry", {}).duplicate(true)',
+            "var resized_body_contract := _top_bar_body_geometry_contract(resized_body_geometry)",
+            '"body_geometry_exact": bool(resized_body_geometry.get("ok", false))',
+            '"body_component_contract_exact": resized_body_contract == body_contract_before',
+            "var stable_restored := await _await_top_bar_geometry_stable(shell, initial_width)",
+            'var restored_body_geometry: Dictionary = stable_restored.get("snapshot", {}).get("body_geometry", {}).duplicate(true)',
+            "var restored_body_contract := _top_bar_body_geometry_contract(restored_body_geometry)",
+            '"body_component_contract_restored_exact": restored_body_contract == body_contract_before',
+            '"focus_identity_exact": get_viewport().gui_get_focus_owner() == focus_before',
+            '"state_exact": resized_state == state_before',
+            '"background_authority_exact": _focus_background_authority(shell) == authority_before',
+            '"package_files_exact": _package_file_state() == package_state',
+            '"widths": [initial_width, resize_width, initial_width]',
+            '"stable_frames": [int(stable_before.get("frames", 0)), int(stable_resized.get("frames", 0)), int(stable_restored.get("frames", 0))]',
+            '"body_component_contract": body_contract_before.duplicate(true)',
+            '"focus_action_dirty_package_canvas_tool_rail_authority_exact": true',
+        ):
+            ensure(required_token in top_bar_resize_body, errors, f"Map Editor TopBar resize authority is missing exact token: {required_token}")
+        body_geometry_order = (
+            top_bar_resize_body.find("var stable_before := await _await_top_bar_geometry_stable(shell, initial_width)"),
+            top_bar_resize_body.find('var body_geometry_before: Dictionary = stable_before.get("snapshot", {}).get("body_geometry", {}).duplicate(true)'),
+            top_bar_resize_body.find("var body_contract_before := _top_bar_body_geometry_contract(body_geometry_before)"),
+            top_bar_resize_body.find("layout_host.size = Vector2(float(resize_width), 720.0)"),
+            top_bar_resize_body.find("var stable_resized := await _await_top_bar_geometry_stable(shell, resize_width)"),
+            top_bar_resize_body.find('var resized_body_geometry: Dictionary = stable_resized.get("snapshot", {}).get("body_geometry", {}).duplicate(true)'),
+            top_bar_resize_body.find("var resized_body_contract := _top_bar_body_geometry_contract(resized_body_geometry)"),
+            top_bar_resize_body.rfind("layout_host.size = Vector2(float(initial_width), 720.0)"),
+            top_bar_resize_body.find("var stable_restored := await _await_top_bar_geometry_stable(shell, initial_width)"),
+            top_bar_resize_body.find('var restored_body_geometry: Dictionary = stable_restored.get("snapshot", {}).get("body_geometry", {}).duplicate(true)'),
+            top_bar_resize_body.find("var restored_body_contract := _top_bar_body_geometry_contract(restored_body_geometry)"),
+        )
+        ensure(
+            all(index >= 0 for index in body_geometry_order) and list(body_geometry_order) == sorted(body_geometry_order),
+            errors,
+            "Map Editor TopBar resize must capture stable initial geometry, resize+converge opposite geometry, then restore+converge exact geometry",
+        )
+        ensure(
+            top_bar_resize_body.count("_await_top_bar_geometry_stable(") == 3
+            and "await _settle()" not in top_bar_resize_body
+            and 'shell.call("_sync_editor_top_bar_layout")' not in top_bar_resize_body,
+            errors,
+            "Map Editor TopBar resize must use exactly three passive convergence gates without generic settle or direct allocator invocation",
+        )
+        ensure(
+            "resized_body_geometry != body_geometry_before" not in top_bar_resize_body
+            and "restored_body_geometry == body_geometry_before" not in top_bar_resize_body,
+            errors,
+            "Map Editor TopBar resize must not require absolute BodyRow or flexible Map geometry equality across window allocation",
+        )
+    top_bar_long_match = re.search(
+        r"func _validate_top_bar_long_label_roundtrip\(.*?\) -> Dictionary:(.*?)(?=\n\nfunc )",
+        report_text,
+        flags=re.DOTALL,
+    )
+    ensure(top_bar_long_match is not None, errors, "Map Editor TopBar regression must retain a full long-label fixture")
+    if top_bar_long_match is not None:
+        top_bar_long_body = top_bar_long_match.group(1)
+        long_order = (
+            top_bar_long_body.find("var original_contract := _capture_top_bar_contract(shell)"),
+            top_bar_long_body.find("picker.set_item_text(selected_index, TOP_BAR_LONG_PACKAGE_LABEL)"),
+            top_bar_long_body.find('shell.call("_refresh_state")'),
+            top_bar_long_body.find("await _settle()"),
+            top_bar_long_body.find('await _validate_top_bar_resize_roundtrip(shell, package_state, width, "long_label", false)'),
+            top_bar_long_body.find("picker.set_item_text(selected_index, original_text)"),
+            top_bar_long_body.rfind('shell.call("_refresh_state")'),
+            top_bar_long_body.find("var stable_restored := await _await_top_bar_geometry_stable(shell, width)"),
+            top_bar_long_body.find("var restored_contract := _capture_top_bar_contract(shell)"),
+            top_bar_long_body.find("restored_contract != original_contract"),
+        )
+        ensure(
+            all(index >= 0 for index in long_order) and list(long_order) == sorted(long_order),
+            errors,
+            "Map Editor TopBar long label must capture detached contract, stage and resize, then restore, production-refresh, converge, recapture, and compare whole exact",
+        )
+        ensure(
+            "picker.tooltip_text.contains(TOP_BAR_LONG_PACKAGE_LABEL)" in top_bar_long_body,
+            errors,
+            "Map Editor TopBar long-label fixture must retain the exact full semantic tooltip",
+        )
+        ensure(
+            top_bar_long_body.count("_capture_top_bar_contract(shell)") == 2
+            and top_bar_long_body.count('shell.call("_refresh_state")') == 2
+            and ".erase(" not in top_bar_long_body
+            and "normalize" not in top_bar_long_body
+            and re.search(r"(?:tooltip_text|selected|text)\s*=(?!=)", top_bar_long_body) is None,
+            errors,
+            "Map Editor TopBar long-label fixture must compare two detached whole contracts without normalization, erasure, or direct semantic assignment",
+        )
     tool_rail_resize_match = re.search(
         r"func _validate_tool_rail_resize_roundtrip\(.*?\) -> Dictionary:(.*?)(?=\n\nfunc )",
         report_text,
@@ -16485,6 +16990,32 @@ def validate_map_editor_dirty_transition_regression(errors: list[str]) -> None:
             "Map-editor dirty-transition regression scene must load its focused script",
         )
     editor_text = MAP_EDITOR_SCRIPT_PATH.read_text(encoding="utf-8")
+    overworld_map_view_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
+    overworld_map_ready_match = re.search(
+        r"func _ready\(\) -> void:(.*?)(?=\n\nfunc )",
+        overworld_map_view_text,
+        flags=re.DOTALL,
+    )
+    ensure(overworld_map_ready_match is not None, errors, "OverworldMapView.gd must expose its live Map minimum in _ready")
+    if overworld_map_ready_match is not None:
+        overworld_map_ready_body = overworld_map_ready_match.group(1)
+        ready_order = (
+            overworld_map_ready_body.find("mouse_filter = Control.MOUSE_FILTER_STOP"),
+            overworld_map_ready_body.find("focus_mode = Control.FOCUS_NONE"),
+            overworld_map_ready_body.find("clip_contents = true"),
+            overworld_map_ready_body.find("custom_minimum_size = Vector2(640, 400)"),
+            overworld_map_ready_body.find("_ensure_render_layers()"),
+        )
+        ensure(
+            all(index >= 0 for index in ready_order) and list(ready_order) == sorted(ready_order),
+            errors,
+            "OverworldMapView must establish its exact live 640x400 minimum before creating render layers",
+        )
+    ensure(
+        overworld_map_view_text.count("custom_minimum_size = Vector2(640, 400)") == 1,
+        errors,
+        "OverworldMapView must assign its live 640x400 minimum exactly once",
+    )
     for required_token in (
         'const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")',
         "_connect_editor_focus_visibility()",
@@ -16499,6 +17030,16 @@ def validate_map_editor_dirty_transition_regression(errors: list[str]) -> None:
         "control.focus_entered.is_connected(callback)",
         "_tool_scroll.ensure_control_visible(control)",
         "button.focus_mode = Control.FOCUS_ALL",
+        "_configure_editor_top_bar_layout()",
+        "func _queue_editor_top_bar_layout_sync() -> void:",
+        "func _sync_editor_top_bar_layout() -> void:",
+        "func _editor_top_bar_text_minimum_width(control: Control, text: String) -> float:",
+        "func _editor_top_bar_picker_text_minimum_width(text: String) -> float:",
+        "func _selected_map_package_picker_text() -> String:",
+        "_editor_top_pad.resized.is_connected(_queue_editor_top_bar_layout_sync)",
+        "theme_changed.is_connected(_queue_editor_top_bar_layout_sync)",
+        'call_deferred("_sync_editor_top_bar_layout")',
+        '_queue_editor_top_bar_layout_sync()',
         "_configure_editor_tool_rail_layout()",
         "func _queue_editor_tool_rail_layout_sync() -> void:",
         "func _sync_editor_tool_rail_layout() -> void:",
@@ -16513,6 +17054,87 @@ def validate_map_editor_dirty_transition_regression(errors: list[str]) -> None:
         "_queue_editor_tool_rail_layout_sync()",
     ):
         ensure(required_token in editor_text, errors, f"MapEditorShell.gd is missing command-focus token: {required_token}")
+    top_bar_config_match = re.search(
+        r"func _configure_editor_top_bar_layout\(\) -> void:(.*?)(?=\n\nfunc )",
+        editor_text,
+        flags=re.DOTALL,
+    )
+    ensure(top_bar_config_match is not None, errors, "MapEditorShell.gd must retain its responsive TopBar configuration")
+    if top_bar_config_match is not None:
+        top_bar_config_body = top_bar_config_match.group(1)
+        config_order = (
+            top_bar_config_body.find("_editor_top_bar_header_preferred_width = _header_label.custom_minimum_size.x"),
+            top_bar_config_body.find("_editor_top_bar_picker_preferred_width = _map_package_picker.custom_minimum_size.x"),
+            top_bar_config_body.find("_editor_top_pad.resized.connect(_queue_editor_top_bar_layout_sync)"),
+            top_bar_config_body.find("theme_changed.connect(_queue_editor_top_bar_layout_sync)"),
+            top_bar_config_body.rfind("_queue_editor_top_bar_layout_sync()"),
+        )
+        ensure(
+            all(index >= 0 for index in config_order) and list(config_order) == sorted(config_order),
+            errors,
+            "Map Editor TopBar configuration must capture authored preferences, connect resize/theme idempotently, then queue once",
+        )
+    top_bar_queue_match = re.search(
+        r"func _queue_editor_top_bar_layout_sync\(\) -> void:(.*?)(?=\n\nfunc )",
+        editor_text,
+        flags=re.DOTALL,
+    )
+    ensure(top_bar_queue_match is not None, errors, "MapEditorShell.gd must retain its deferred TopBar queue")
+    if top_bar_queue_match is not None:
+        top_bar_queue_body = top_bar_queue_match.group(1)
+        queue_order = (
+            top_bar_queue_body.find("if _editor_top_bar_layout_sync_queued or not is_inside_tree():"),
+            top_bar_queue_body.find("_editor_top_bar_layout_sync_queued = true"),
+            top_bar_queue_body.find('call_deferred("_sync_editor_top_bar_layout")'),
+        )
+        ensure(
+            all(index >= 0 for index in queue_order)
+            and list(queue_order) == sorted(queue_order)
+            and top_bar_queue_body.count('call_deferred("_sync_editor_top_bar_layout")') == 1,
+            errors,
+            "Map Editor TopBar queue must deduplicate, mark queued, and defer exactly one allocator call",
+        )
+    top_bar_sync_match = re.search(
+        r"func _sync_editor_top_bar_layout\(\) -> void:(.*?)(?=\n\nfunc )",
+        editor_text,
+        flags=re.DOTALL,
+    )
+    ensure(top_bar_sync_match is not None, errors, "MapEditorShell.gd must retain its bounded responsive TopBar allocator")
+    if top_bar_sync_match is not None:
+        top_bar_sync_body = top_bar_sync_match.group(1)
+        allocator_order = (
+            top_bar_sync_body.find("_editor_top_bar_layout_sync_queued = false"),
+            top_bar_sync_body.find("var available_width := ("),
+            top_bar_sync_body.find("var commands: Array[Control] = ["),
+            top_bar_sync_body.find("command.get_combined_minimum_size().x"),
+            top_bar_sync_body.find('float(_editor_top_bar.get_theme_constant("separation"))'),
+            top_bar_sync_body.find("var flexible_width := maxf(0.0, available_width - command_width - separation_width)"),
+            top_bar_sync_body.find('var header_floor := _editor_top_bar_text_minimum_width(_header_label, "Map Editor")'),
+            top_bar_sync_body.find('var picker_floor := _editor_top_bar_picker_text_minimum_width("Map Package")'),
+            top_bar_sync_body.find("if flexible_width >= preferred_total:"),
+            top_bar_sync_body.find("elif flexible_width >= floor_total:"),
+            top_bar_sync_body.find("elif floor_total > 0.0:"),
+            top_bar_sync_body.find("header_minimum.x = floorf(header_width)"),
+            top_bar_sync_body.find("picker_minimum.x = floorf(picker_width)"),
+        )
+        ensure(
+            all(index >= 0 for index in allocator_order) and list(allocator_order) == sorted(allocator_order),
+            errors,
+            "Map Editor TopBar allocator must clear queue, measure inner/fixed/separation widths, allocate preferred/floor shares, then floor-assign Header and picker",
+        )
+        ensure(
+            top_bar_sync_body.count("_header_label.custom_minimum_size = header_minimum") == 1
+            and top_bar_sync_body.count("_map_package_picker.custom_minimum_size = picker_minimum") == 1,
+            errors,
+            "Map Editor TopBar allocator must assign only the two flexible surface minima exactly once",
+        )
+        for forbidden_token in ("hide()", "visible = false", "disabled =", "fit_to_longest_item =", "clip_text =", "queue_free", "minimum_size_changed.connect"):
+            ensure(forbidden_token not in top_bar_sync_body, errors, f"Map Editor TopBar allocator must not mutate command/picker semantics via {forbidden_token}")
+    ensure(
+        editor_text.count("\t_queue_editor_top_bar_layout_sync()") == 4,
+        errors,
+        "Map Editor TopBar layout must queue exactly from configuration, package rebuild, state refresh, and package selection",
+    )
     tool_rail_sync_match = re.search(
         r"func _sync_editor_tool_rail_layout\(\) -> void:(.*?)(?=\n\nfunc )",
         editor_text,
@@ -16532,6 +17154,61 @@ def validate_map_editor_dirty_transition_regression(errors: list[str]) -> None:
             "Map Editor responsive ToolRail must measure the live inner width before choosing and assigning columns",
         )
     editor_scene_text = MAP_EDITOR_SCENE_PATH.read_text(encoding="utf-8")
+    top_pad_scene_match = re.search(
+        r'\[node name="TopPad" type="MarginContainer".*?\](?P<body>.*?)(?=\n\[node )',
+        editor_scene_text,
+        flags=re.DOTALL,
+    )
+    ensure(top_pad_scene_match is not None, errors, "MapEditorShell.tscn must retain its bounded TopPad")
+    if top_pad_scene_match is not None:
+        for required_token in (
+            "theme_override_constants/margin_left = 10",
+            "theme_override_constants/margin_top = 8",
+            "theme_override_constants/margin_right = 10",
+            "theme_override_constants/margin_bottom = 8",
+        ):
+            ensure(required_token in top_pad_scene_match.group("body"), errors, f"Map Editor TopPad is missing exact inset: {required_token}")
+    top_bar_scene_order = [
+        editor_scene_text.find('[node name="TopBar" type="HBoxContainer" parent="RootMargin/Shell/ShellPad/ShellBox/TopPanel/TopPad"]'),
+        editor_scene_text.find('[node name="Header" type="Label" parent="RootMargin/Shell/ShellPad/ShellBox/TopPanel/TopPad/TopBar"]'),
+        editor_scene_text.find('[node name="MapPackagePicker" type="OptionButton" parent="RootMargin/Shell/ShellPad/ShellBox/TopPanel/TopPad/TopBar"]'),
+        editor_scene_text.find('[node name="LoadMap" type="Button" parent="RootMargin/Shell/ShellPad/ShellBox/TopPanel/TopPad/TopBar"]'),
+        editor_scene_text.find('[node name="SaveCopy" type="Button" parent="RootMargin/Shell/ShellPad/ShellBox/TopPanel/TopPad/TopBar"]'),
+        editor_scene_text.find('[node name="PlayWorkingCopy" type="Button" parent="RootMargin/Shell/ShellPad/ShellBox/TopPanel/TopPad/TopBar"]'),
+        editor_scene_text.find('[node name="Menu" type="Button" parent="RootMargin/Shell/ShellPad/ShellBox/TopPanel/TopPad/TopBar"]'),
+    ]
+    ensure(
+        all(index >= 0 for index in top_bar_scene_order) and top_bar_scene_order == sorted(top_bar_scene_order),
+        errors,
+        "MapEditorShell.tscn must author TopBar as Header, package picker, Load, Save, Play, Menu in exact order",
+    )
+    header_scene_match = re.search(
+        r'\[node name="Header" type="Label" parent="RootMargin/Shell/ShellPad/ShellBox/TopPanel/TopPad/TopBar"\](?P<body>.*?)(?=\n\[node )',
+        editor_scene_text,
+        flags=re.DOTALL,
+    )
+    map_picker_scene_match = re.search(
+        r'\[node name="MapPackagePicker" type="OptionButton" parent="RootMargin/Shell/ShellPad/ShellBox/TopPanel/TopPad/TopBar"\](?P<body>.*?)(?=\n\[node )',
+        editor_scene_text,
+        flags=re.DOTALL,
+    )
+    ensure(
+        header_scene_match is not None
+        and "custom_minimum_size = Vector2(280, 0)" in header_scene_match.group("body")
+        and "size_flags_horizontal = 3" in header_scene_match.group("body")
+        and "clip_text = true" in header_scene_match.group("body"),
+        errors,
+        "Map Editor Header must remain a flexible clipped TopBar surface with its authored preference",
+    )
+    ensure(
+        map_picker_scene_match is not None
+        and "custom_minimum_size = Vector2(360, 0)" in map_picker_scene_match.group("body")
+        and "size_flags_horizontal = 3" in map_picker_scene_match.group("body")
+        and "fit_to_longest_item = false" in map_picker_scene_match.group("body")
+        and "clip_text = true" in map_picker_scene_match.group("body"),
+        errors,
+        "Map Package picker must remain a flexible clipped selected display with full popup items",
+    )
     editor_cursor_live_match = re.search(
         r'\[node name="EditorMapCursorLive" type="Label" parent="\."\](?P<body>.*?)(?=\n\[node )',
         editor_scene_text,
@@ -27848,7 +28525,7 @@ def validate_map_editor_package_save_copy(errors: list[str]) -> None:
             '"restore_selected_tile_only": true',
             '"repeat_restore_noop": true',
             "adopted_session.to_dict() != adopted_baseline.to_dict()",
-            "_durable_authority_exact(final_authority, _expected_authority_after_play)",
+            '"settings_transaction_exact"',
             '"play_entry_only_autosave_changed"',
             '"play_entry_autosave_present"',
             '"play_entry_autosave_nonempty"',
@@ -27856,7 +28533,7 @@ def validate_map_editor_package_save_copy(errors: list[str]) -> None:
             '"summary_cache_exact"',
             '"save_version_exact"',
             '"settings_transaction_exact"',
-            "if not _checks_exact(durable_checks):",
+            "if not _checks_exact(durable_checks) or not _checks_exact(settings_top_level_checks):",
             '"file_differences": _file_state_differences',
             '"settings_transaction_raw": settings_transaction_raw',
             '"settings_transaction_canonical": _canonical_settings_transaction(settings_transaction_raw)',
@@ -27923,6 +28600,9 @@ def validate_map_editor_package_save_copy(errors: list[str]) -> None:
                 '"class": event.get_class()',
                 '"as_text": event.as_text()',
                 '"stored_properties": stored_properties',
+                'func _settings_transaction_component_hashes(transaction: Dictionary) -> Dictionary:',
+                'for component in ["runtime_display", "settings", "committed_settings", "last_result", "input_map"]:',
+                'hashes[component] = var_to_str(transaction.get(component)).sha256_text()',
             ):
                 ensure(required_token in durable_authority_body, errors, f"Map Editor package canonical settings authority is missing method-matched token: {required_token}")
             ensure(durable_authority_body.count("SettingsService.validation_settings_transaction_snapshot()") == 1, errors, "Map Editor package durable authority must capture the raw settings transaction exactly once per snapshot")
@@ -27967,6 +28647,28 @@ def validate_map_editor_package_save_copy(errors: list[str]) -> None:
                 ensure(f'"{check_name}"' in play_helper_body, errors, f"Map Editor package durable decomposition is missing mandatory check: {check_name}")
             for check_name in ("play_entry_only_autosave_changed", "play_entry_autosave_present", "play_entry_autosave_nonempty"):
                 ensure(f'"{check_name}"' in play_helper_body, errors, f"Map Editor package Play-entry autosave boundary is missing mandatory check: {check_name}")
+            row_before_order = [
+                play_helper_body.find("get_window().size = Vector2i(width, 720)"),
+                play_helper_body.find("await get_tree().process_frame"),
+                play_helper_body.find("await get_tree().process_frame", play_helper_body.find("await get_tree().process_frame") + 1),
+                play_helper_body.find("if get_window().size != Vector2i(width, 720):"),
+                play_helper_body.find("var row_authority_before: Dictionary = _durable_authority()"),
+                play_helper_body.find('var baseline_session = shell.get("_authored_baseline_cache")'),
+                play_helper_body.find('var working_session = shell.get("_session")'),
+                play_helper_body.find('var selected_before: Dictionary = shell.call("validation_select_tile", 0, 2)'),
+            ]
+            ensure(
+                all(index >= 0 for index in row_before_order)
+                and row_before_order == sorted(row_before_order)
+                and len(set(row_before_order)) == len(row_before_order),
+                errors,
+                "Map Editor package durable baseline must be captured after exact requested window convergence and before any baseline/session observation or editor mutation",
+            )
+            ensure(
+                play_helper_body.count("var row_authority_before: Dictionary = _durable_authority()") == 1,
+                errors,
+                "Map Editor package row must capture settled pre-mutation durable authority exactly once",
+            )
             play_entry_order = [
                 play_helper_body.find("var overworld := get_tree().current_scene"),
                 play_helper_body.find('if overworld == null or not overworld.has_method("validation_return_to_menu"):'),
@@ -27987,14 +28689,60 @@ def validate_map_editor_package_save_copy(errors: list[str]) -> None:
                 '"play_entry_autosave_nonempty": play_entry_autosave.get("bytes", PackedByteArray()) is PackedByteArray and not play_entry_autosave.get("bytes", PackedByteArray()).is_empty()',
                 '"durable_files_exact": row_authority_after.get("files", {}) == play_entry_files',
                 '"file_differences": _file_state_differences(play_entry_files, row_authority_after.get("files", {}))',
-                '"settings_transaction_exact": row_authority_after.get("settings_transaction_canonical", {}) == row_authority_before.get("settings_transaction_canonical", {})',
+                'var settings_before_canonical: Dictionary = row_authority_before.get("settings_transaction_canonical", {})',
+                'var settings_after_canonical: Dictionary = row_authority_after.get("settings_transaction_canonical", {})',
+                'var settings_top_level_checks: Dictionary = _dictionary_union_exact_checks(',
+                '"settings_transaction_exact": settings_after_canonical == settings_before_canonical',
+                'if not _checks_exact(durable_checks) or not _checks_exact(settings_top_level_checks):',
                 '"settings_raw_equal_diagnostic": row_authority_after.get("settings_transaction_raw", {}) == row_authority_before.get("settings_transaction_raw", {})',
-                '"settings_before_sha": JSON.stringify(row_authority_before.get("settings_transaction_canonical", {})).sha256_text()',
-                '"settings_after_sha": JSON.stringify(row_authority_after.get("settings_transaction_canonical", {})).sha256_text()',
+                '"settings_top_level_failed": _failed_check_names(settings_top_level_checks)',
+                '"settings_canonical_differences": _recursive_exact_differences(settings_before_canonical, settings_after_canonical)',
+                '"settings_before_sha": JSON.stringify(settings_before_canonical).sha256_text()',
+                '"settings_after_sha": JSON.stringify(settings_after_canonical).sha256_text()',
+                '"settings_raw_component_hashes_before": _settings_transaction_component_hashes(row_authority_before.get("settings_transaction_raw", {}))',
+                '"settings_raw_component_hashes_after": _settings_transaction_component_hashes(row_authority_after.get("settings_transaction_raw", {}))',
+                '"settings_canonical_component_hashes_before": _settings_transaction_component_hashes(settings_before_canonical)',
+                '"settings_canonical_component_hashes_after": _settings_transaction_component_hashes(settings_after_canonical)',
             ):
                 ensure(required_token in play_helper_body, errors, f"Map Editor package Play-entry autosave authority is missing exact bounded token: {required_token}")
             ensure(play_helper_body.count("var play_entry_authority: Dictionary = _durable_authority()") == 1, errors, "Map Editor package row must capture Play-entry durable authority exactly once")
             ensure(play_helper_body.count("var row_authority_after: Dictionary = _durable_authority()") == 1, errors, "Map Editor package row must capture post-return durable authority exactly once")
+            settings_diagnostic_order = [
+                play_helper_body.find("var row_authority_after: Dictionary = _durable_authority()"),
+                play_helper_body.find('var settings_before_canonical: Dictionary = row_authority_before.get("settings_transaction_canonical", {})'),
+                play_helper_body.find('var settings_after_canonical: Dictionary = row_authority_after.get("settings_transaction_canonical", {})'),
+                play_helper_body.find("var settings_top_level_checks: Dictionary = _dictionary_union_exact_checks("),
+                play_helper_body.find("var durable_checks := {"),
+                play_helper_body.find('"settings_transaction_exact": settings_after_canonical == settings_before_canonical'),
+                play_helper_body.find("if not _checks_exact(durable_checks) or not _checks_exact(settings_top_level_checks):"),
+                play_helper_body.find('"settings_top_level_failed": _failed_check_names(settings_top_level_checks)'),
+                play_helper_body.find('"settings_canonical_differences": _recursive_exact_differences(settings_before_canonical, settings_after_canonical)'),
+                play_helper_body.find('"settings_raw_component_hashes_before":'),
+                play_helper_body.find('"settings_canonical_component_hashes_after":'),
+                play_helper_body.find("get_window().size = _original_window_size"),
+            ]
+            ensure(
+                all(index >= 0 for index in settings_diagnostic_order)
+                and settings_diagnostic_order == sorted(settings_diagnostic_order)
+                and len(set(settings_diagnostic_order)) == len(settings_diagnostic_order),
+                errors,
+                "Map Editor package settings diagnostic must capture both canonical transactions once, retain whole equality, gate top-level union checks, print recursive/component evidence only on failure, then preserve window restoration",
+            )
+            settings_failure_start = play_helper_body.find("if not _checks_exact(durable_checks) or not _checks_exact(settings_top_level_checks):")
+            settings_failure_end = play_helper_body.find("get_window().size = _original_window_size", settings_failure_start)
+            settings_failure_block = play_helper_body[settings_failure_start:settings_failure_end]
+            for forbidden in (".erase(", "normalize", "exclude", "ignore", "get_window().size =", "SettingsService."):
+                ensure(forbidden not in settings_failure_block, errors, f"Map Editor package settings failure diagnostic must remain read-only and exact: {forbidden}")
+            for forbidden in (
+                'erase("runtime_display")',
+                "erase('runtime_display')",
+                'erase("size")',
+                "erase('size')",
+                "runtime_display_exempt",
+                "window_size_exempt",
+                "settings_transaction_without_runtime_display",
+            ):
+                ensure(forbidden not in play_helper_body, errors, f"Map Editor package settings authority must not exempt the method-matched runtime display checkpoint: {forbidden}")
             ensure('row_authority_after.get("files", {}) == row_authority_before.get("files", {})' not in play_helper_body, errors, "Map Editor package row must not compare past the exact Play-entry autosave consequence")
             ensure('row_authority_after.get("settings_transaction_raw", {}) == row_authority_before.get("settings_transaction_raw", {})' not in play_helper_body.split('"settings_raw_equal_diagnostic"')[0], errors, "Map Editor package raw Object-bearing settings transaction must not be an authority predicate")
             for check_name in (
@@ -28035,7 +28783,7 @@ def validate_map_editor_package_save_copy(errors: list[str]) -> None:
                 )
             return_gate_index = play_helper_body.find("if not _checks_exact(return_checks)")
             ensure(play_helper_body.find("var return_checks := {") >= 0 and play_helper_body.find("var return_checks := {") < return_gate_index, errors, "Map Editor package return decomposition must gate every named predicate")
-            ensure(play_helper_body.find("var durable_checks := {") < play_helper_body.find("if not _checks_exact(durable_checks):"), errors, "Map Editor package durable decomposition must gate every named predicate")
+            ensure(play_helper_body.find("var durable_checks := {") < play_helper_body.find("if not _checks_exact(durable_checks) or not _checks_exact(settings_top_level_checks):"), errors, "Map Editor package durable decomposition must gate every named predicate and every canonical settings top-level union key")
             session_checks_index = play_helper_body.find("var working_session_field_checks := {")
             overworld_checks_index = play_helper_body.find("var working_overworld_checks: Dictionary = _dictionary_union_exact_checks(")
             ensure(min(session_checks_index, overworld_checks_index, return_gate_index) >= 0 and session_checks_index < overworld_checks_index < return_gate_index, errors, "Map Editor package working-session and overworld decompositions must be captured before the return gate")
@@ -28100,6 +28848,84 @@ def validate_map_editor_package_save_copy(errors: list[str]) -> None:
             ensure("Returned package editor did not restore exact independent working-copy/baseline companions." not in play_helper_body, errors, "Map Editor package proof must not retain the opaque return aggregate")
             for forbidden in (".erase(", "normalize", "autosave_exempt", "ignore_autosave"):
                 ensure(forbidden not in play_helper_body, errors, f"Map Editor package diagnostics must not normalize or exempt authority: {forbidden}")
+        run_match = re.search(
+            r"func _run\(\) -> void:\n(?P<body>[\s\S]*?)(?=^func _assert_package_play_copy_baseline_companion)",
+            report_text,
+            re.MULTILINE,
+        )
+        ensure(run_match is not None, errors, "Could not isolate Map Editor package final authority gate")
+        if run_match is not None:
+            run_body = run_match.group("body")
+            final_authority_tokens = (
+                'var final_authority: Dictionary = _durable_authority()',
+                'var final_settings_expected: Dictionary = final_authority_expected.get("settings_transaction_canonical", {})',
+                'var final_settings_actual: Dictionary = final_authority.get("settings_transaction_canonical", {})',
+                'var final_settings_top_level_checks: Dictionary = _dictionary_union_exact_checks(',
+                'var final_authority_checks := {',
+                '"files_exact": final_authority.get("files", {}) == final_authority_expected.get("files", {})',
+                '"summary_cache_exact": final_authority.get("summary_cache", {}) == final_authority_expected.get("summary_cache", {})',
+                '"save_version_exact": final_authority.get("save_version", -1) == final_authority_expected.get("save_version", -1)',
+                '"settings_transaction_exact": final_settings_actual == final_settings_expected',
+                'if not _checks_exact(final_authority_checks) or not _checks_exact(final_settings_top_level_checks):',
+                '"file_differences": _file_state_differences(',
+                '"settings_top_level_failed": _failed_check_names(final_settings_top_level_checks)',
+                '"settings_canonical_differences": _recursive_exact_differences(final_settings_expected, final_settings_actual)',
+                '"settings_raw_component_hashes_expected": _settings_transaction_component_hashes(',
+                '"settings_canonical_component_hashes_actual": _settings_transaction_component_hashes(final_settings_actual)',
+                '"runtime_display_expected": final_settings_expected.get("runtime_display", {})',
+                '"runtime_display_actual": final_settings_actual.get("runtime_display", {})',
+                '"current_window_size": get_window().size',
+                '"original_window_size": _original_window_size',
+            )
+            for required_token in final_authority_tokens:
+                ensure(required_token in run_body, errors, f"Map Editor package final authority diagnostic is missing exact token: {required_token}")
+            second_row_call_index = run_body.find("shell = await _assert_package_play_copy_baseline_companion(", run_body.find('var first: Dictionary = shell.call("validation_save_copy"'))
+            second_row_width_index = run_body.find("\t\t1920,", second_row_call_index)
+            second_row_success_index = run_body.find("if shell == null:", second_row_width_index)
+            second_row_return_index = run_body.find("\t\treturn", second_row_success_index)
+            final_expected_index = run_body.find("var final_authority_expected: Dictionary = _durable_authority()", second_row_success_index)
+            second_save_index = run_body.find('var second: Dictionary = shell.call("validation_save_copy", _test_dir, "saved-editor-copy")', final_expected_index)
+            invalid_save_index = run_body.find('var failed: Dictionary = shell.call("validation_save_copy", _test_dir, "must-fail")')
+            partial_absent_index = run_body.find('if FileAccess.file_exists("%s/must-fail.amap" % _test_dir)', invalid_save_index)
+            final_capture_index = run_body.find('var final_authority: Dictionary = _durable_authority()', partial_absent_index)
+            final_gate_index = run_body.find('if not _checks_exact(final_authority_checks) or not _checks_exact(final_settings_top_level_checks):', final_capture_index)
+            success_print_index = run_body.find('print("%s %s" % [REPORT_ID', final_gate_index)
+            cleanup_index = run_body.find("_cleanup()", success_print_index)
+            ensure(
+                0 <= second_row_call_index < second_row_width_index < second_row_success_index < second_row_return_index < final_expected_index < second_save_index < invalid_save_index < partial_absent_index < final_capture_index < final_gate_index < success_print_index < cleanup_index,
+                errors,
+                "Map Editor package final authority must capture its own original-window checkpoint after the second real Play return, bracket the second Save Copy/index/fail-closed operations, and gate before success and cleanup",
+            )
+            ensure(
+                run_body.count("var final_authority_expected: Dictionary = _durable_authority()") == 1,
+                errors,
+                "Map Editor package final authority must capture exactly one pre-second-Save-Copy checkpoint at the restored original window",
+            )
+            ensure(
+                report_text.count("_expected_authority_after_play = play_entry_authority.duplicate(true)") == 1
+                and report_text.find("_expected_authority_after_play = play_entry_authority.duplicate(true)") > report_text.find("var play_entry_authority: Dictionary = _durable_authority()"),
+                errors,
+                "Map Editor package helper must replace final expected authority only from each successfully captured real Play-entry checkpoint",
+            )
+            final_failure_end = run_body.find("\t\treturn", final_gate_index)
+            final_failure_block = run_body[final_gate_index:final_failure_end]
+            for forbidden in (".erase(", "normalize", "exclude", "ignore", "_cleanup()", "validation_save_copy", "get_window().size ="):
+                ensure(forbidden not in final_failure_block, errors, f"Map Editor package final-authority diagnostic must remain passive and exact: {forbidden}")
+            for forbidden in (
+                'final_authority_expected.erase(',
+                'erase("runtime_display")',
+                "erase('runtime_display')",
+                'erase("size")',
+                "erase('size')",
+                "runtime_display_exempt",
+                "window_size_exempt",
+            ):
+                ensure(forbidden not in run_body, errors, f"Map Editor package final authority checkpoint must not exempt restored runtime display state: {forbidden}")
+            ensure(
+                "Package Play Copy/Restore Tile/Save Copy changed save, cache, settings, or schema authority." not in run_body,
+                errors,
+                "Map Editor package final authority must not retain the opaque aggregate failure",
+            )
         recursive_diff_match = re.search(
             r"func _recursive_exact_differences\([\s\S]*?(?=^func _file_state_differences)",
             report_text,

@@ -5,6 +5,7 @@ const MAP_EDITOR_SCENE_PATH := "res://scenes/editor/MapEditorShell.tscn"
 const OVERWORLD_SCENE_PATH := "res://scenes/overworld/OverworldShell.tscn"
 
 func _ready() -> void:
+	_stage("scene_ready")
 	call_deferred("_run")
 
 func _run() -> void:
@@ -71,6 +72,7 @@ func _run() -> void:
 		return
 	if not _assert_editor_restore_tile_cue(snapshot, false, ["Tile reset:", "23,26", "already matches loaded map baseline", "Restore Tile", "no-op check"]):
 		return
+	_stage("authored_load_initial")
 	var initial_render_cache := _render_cache_metrics(snapshot)
 	if initial_render_cache.is_empty():
 		_fail("Map editor smoke: reused overworld map view did not expose render-cache metrics: %s." % snapshot)
@@ -138,12 +140,14 @@ func _run() -> void:
 		return
 	if not _assert_editor_sand_heavy_corner_ownership(shell):
 		return
+	_stage("terrain_transition")
 	if not _assert_flood_fill_terrain(shell):
 		return
 	if not _assert_terrain_line_tool(shell):
 		return
 	if not _assert_terrain_rectangle_tool(shell):
 		return
+	_stage("terrain_tools")
 
 	var add_road_result: Dictionary = shell.call("validation_toggle_road", 2, 2)
 	if not _assert_editor_road_check(add_road_result, ["Road check:", "Road Check", "single tile 2,2", "Current road layers:", "Action: remove", "Changes: 1/1 tile", "Scope: in-memory working copy only", "no authored file or campaign progress is written"]):
@@ -166,6 +170,7 @@ func _run() -> void:
 		return
 	if not _assert_road_path_tool(shell):
 		return
+	_stage("road_tools")
 
 	var hero_result: Dictionary = shell.call("validation_set_hero_start", 3, 3)
 	var hero_position: Dictionary = hero_result.get("hero_position", {})
@@ -179,6 +184,7 @@ func _run() -> void:
 
 	if not _assert_selected_tile_restore(shell):
 		return
+	_stage("hero_restore")
 
 	var inspect_result: Dictionary = shell.call("validation_select_tile", 23, 26)
 	var inspect_payload: Dictionary = inspect_result.get("tile_inspection", {})
@@ -203,33 +209,50 @@ func _run() -> void:
 		return
 	if not _assert_object_placement_preview_surfaces(shell):
 		return
+	_stage("taxonomy_dependency_preview")
 	if not _assert_object_property_edits(shell):
 		return
+	_stage("property_edits")
 	if not _assert_object_move_edits(shell):
 		return
+	_stage("move_edits")
 	if not _assert_object_duplicate_edits(shell):
 		return
+	_stage("duplicate_edits")
 	if not _assert_object_retheme_edits(shell):
 		return
+	_stage("retheme_edits")
 	if not _exercise_object_placement(shell, "town", "town_riverwatch", Vector2i(4, 4), "has_town"):
 		return
+	_stage("placement_town")
 	if not _exercise_object_placement(shell, "resource", "site_wood_wagon", Vector2i(5, 4), "has_resource"):
 		return
+	_stage("placement_resource")
 	var artifact_move_seed: Dictionary = shell.call("validation_remove_object", 23, 5, "artifact")
 	if not bool(artifact_move_seed.get("ok", false)):
 		_fail("Map editor smoke: could not remove the authored artifact before exercising artifact relocation: %s." % artifact_move_seed)
 		return
 	if not _exercise_object_placement(shell, "artifact", "artifact_trailsinger_boots", Vector2i(6, 4), "has_artifact"):
 		return
+	_stage("placement_artifact")
 	if not _exercise_object_placement(shell, "encounter", "encounter_mire_raid", Vector2i(7, 4), "has_visible_encounter"):
 		return
+	_stage("placement_encounter")
 	var export_contract_result: Dictionary = shell.call("validation_authored_scenario_export_contract")
 	if not _assert_authored_scenario_export_contract(export_contract_result, true, ["map", "start", "towns", "resource_nodes", "artifact_nodes", "encounters"], ["map", "start", "towns", "resource_nodes", "artifact_nodes", "encounters", "terrain_layers"]):
 		return
+	_stage("export")
 	if not await _assert_play_copy_round_trip(shell):
 		return
 
+	_stage("final_complete")
 	get_tree().quit(0)
+
+func _stage(stage: String) -> void:
+	print("MAP_EDITOR_SMOKE_STAGE %s" % JSON.stringify({
+		"ticks_msec": Time.get_ticks_msec(),
+		"stage": stage,
+	}))
 
 func _assert_editor_terrain_option_contract(shell, snapshot: Dictionary) -> bool:
 	var expected_options := [
@@ -3662,6 +3685,7 @@ func _assert_play_copy_round_trip(shell) -> bool:
 		return false
 	if not _assert_editor_play_readiness_gate(launch_result, true, ["Play gate:", "smoke-test this working copy", "Objectives", "Warnings 0", "Hero 3,3", "Objects"]):
 		return false
+	_stage("play_copy_launch")
 
 	await get_tree().process_frame
 	await get_tree().process_frame
@@ -3690,6 +3714,7 @@ func _assert_play_copy_round_trip(shell) -> bool:
 		return false
 	if not _assert_active_session_property_edits(SessionState.ensure_active_session()):
 		return false
+	_stage("overworld_authority")
 
 	_set_active_hero_position(SessionState.ensure_active_session(), Vector2i(4, 3))
 	overworld.call("validation_return_to_menu")
@@ -3723,8 +3748,10 @@ func _assert_play_copy_round_trip(shell) -> bool:
 	if String(returned_terrain.get("terrain", "")) != "forest":
 		_fail("Map editor smoke: returned editor lost the edited terrain working copy: %s." % returned_tile)
 		return false
+	_stage("editor_return")
 	if not _assert_returned_editor_property_edits(returned_editor):
 		return false
+	_stage("returned_property")
 	if SessionState.ensure_active_session().scenario_id != "":
 		_fail("Map editor smoke: returning to the editor should clear the active playable session.")
 		return false

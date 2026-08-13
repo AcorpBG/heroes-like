@@ -61,6 +61,8 @@ const EDITOR_MAP_CURSOR_SEMANTIC_MAX_CHARS := 320
 @onready var _map_package_picker: OptionButton = %MapPackagePicker
 @onready var _load_map_button: Button = %LoadMap
 @onready var _save_copy_button: Button = %SaveCopy
+@onready var _editor_top_pad: MarginContainer = $RootMargin/Shell/ShellPad/ShellBox/TopPanel/TopPad
+@onready var _editor_top_bar: HBoxContainer = $RootMargin/Shell/ShellPad/ShellBox/TopPanel/TopPad/TopBar
 @onready var _terrain_picker: OptionButton = %TerrainPicker
 @onready var _inspect_tool_button: Button = %InspectTool
 @onready var _terrain_tool_button: Button = %TerrainTool
@@ -135,6 +137,9 @@ var _held_editor_map_joypad_device := -1
 var _editor_map_cursor_semantic_timer: Timer = null
 var _editor_map_cursor_semantic_generation := 0
 var _editor_map_cursor_semantic_pending: Dictionary = {}
+var _editor_top_bar_layout_sync_queued := false
+var _editor_top_bar_header_preferred_width := 0.0
+var _editor_top_bar_picker_preferred_width := 0.0
 var _editor_tool_rail_layout_sync_queued := false
 var _forwarding_dirty_transition_root_physical_input := false
 var _safe_close_guard_authorized := false
@@ -156,6 +161,7 @@ func _ready() -> void:
 	_configure_editor_map_keyboard_input()
 	_configure_editor_map_cursor_semantic_timer()
 	_connect_ui()
+	_configure_editor_top_bar_layout()
 	_configure_editor_tool_rail_layout()
 	_connect_editor_focus_visibility()
 	_rebuild_terrain_picker()
@@ -219,6 +225,141 @@ func _connect_ui() -> void:
 	if _map_view != null:
 		_map_view.tile_pressed.connect(_on_map_tile_pressed)
 		_map_view.tile_hovered.connect(_on_map_tile_hovered)
+
+
+func _configure_editor_top_bar_layout() -> void:
+	if (
+		_editor_top_pad == null
+		or _editor_top_bar == null
+		or _header_label == null
+		or _map_package_picker == null
+	):
+		return
+	_editor_top_bar_header_preferred_width = _header_label.custom_minimum_size.x
+	_editor_top_bar_picker_preferred_width = _map_package_picker.custom_minimum_size.x
+	if not _editor_top_pad.resized.is_connected(_queue_editor_top_bar_layout_sync):
+		_editor_top_pad.resized.connect(_queue_editor_top_bar_layout_sync)
+	if not theme_changed.is_connected(_queue_editor_top_bar_layout_sync):
+		theme_changed.connect(_queue_editor_top_bar_layout_sync)
+	_queue_editor_top_bar_layout_sync()
+
+
+func _queue_editor_top_bar_layout_sync() -> void:
+	if _editor_top_bar_layout_sync_queued or not is_inside_tree():
+		return
+	_editor_top_bar_layout_sync_queued = true
+	call_deferred("_sync_editor_top_bar_layout")
+
+
+func _sync_editor_top_bar_layout() -> void:
+	_editor_top_bar_layout_sync_queued = false
+	if (
+		not is_inside_tree()
+		or _editor_top_pad == null
+		or not is_instance_valid(_editor_top_pad)
+		or _editor_top_bar == null
+		or not is_instance_valid(_editor_top_bar)
+		or _header_label == null
+		or not is_instance_valid(_header_label)
+		or _map_package_picker == null
+		or not is_instance_valid(_map_package_picker)
+	):
+		return
+	var available_width := (
+		_editor_top_pad.size.x
+		- float(_editor_top_pad.get_theme_constant("margin_left"))
+		- float(_editor_top_pad.get_theme_constant("margin_right"))
+	)
+	var commands: Array[Control] = [
+		_load_map_button,
+		_save_copy_button,
+		_play_button,
+		_menu_button,
+	]
+	var command_width := 0.0
+	for command in commands:
+		if command != null and command.visible:
+			command_width += command.get_combined_minimum_size().x
+	var visible_surface_count := 2
+	for command in commands:
+		if command != null and command.visible:
+			visible_surface_count += 1
+	var separation_width := (
+		float(_editor_top_bar.get_theme_constant("separation"))
+		* float(maxi(0, visible_surface_count - 1))
+	)
+	var flexible_width := maxf(0.0, available_width - command_width - separation_width)
+	if flexible_width <= 0.0:
+		return
+	var header_floor := _editor_top_bar_text_minimum_width(_header_label, "Map Editor")
+	var picker_floor := _editor_top_bar_picker_text_minimum_width("Map Package")
+	var header_preferred := maxf(
+		_editor_top_bar_header_preferred_width,
+		_editor_top_bar_text_minimum_width(_header_label, _header_label.text)
+	)
+	var picker_preferred := maxf(
+		_editor_top_bar_picker_preferred_width,
+		_editor_top_bar_picker_text_minimum_width(_selected_map_package_picker_text())
+	)
+	var header_width := header_floor
+	var picker_width := picker_floor
+	var floor_total := header_floor + picker_floor
+	var preferred_total := header_preferred + picker_preferred
+	if flexible_width >= preferred_total:
+		header_width = header_preferred
+		picker_width = picker_preferred
+	elif flexible_width >= floor_total:
+		var extra_width := flexible_width - floor_total
+		var header_need := maxf(0.0, header_preferred - header_floor)
+		var picker_need := maxf(0.0, picker_preferred - picker_floor)
+		var need_total := header_need + picker_need
+		var header_share := header_need / need_total if need_total > 0.0 else 0.5
+		header_width += extra_width * header_share
+		picker_width = flexible_width - header_width
+	elif floor_total > 0.0:
+		header_width = flexible_width * (header_floor / floor_total)
+		picker_width = flexible_width - header_width
+	var header_minimum := _header_label.custom_minimum_size
+	header_minimum.x = floorf(header_width)
+	_header_label.custom_minimum_size = header_minimum
+	var picker_minimum := _map_package_picker.custom_minimum_size
+	picker_minimum.x = floorf(picker_width)
+	_map_package_picker.custom_minimum_size = picker_minimum
+
+
+func _editor_top_bar_text_minimum_width(control: Control, text: String) -> float:
+	if control == null:
+		return 0.0
+	var font := control.get_theme_font("font")
+	var font_size := control.get_theme_font_size("font_size")
+	var text_width := font.get_string_size(
+		text,
+		HORIZONTAL_ALIGNMENT_LEFT,
+		-1.0,
+		font_size
+	).x
+	var normal_style := control.get_theme_stylebox("normal")
+	if normal_style != null:
+		text_width += normal_style.get_minimum_size().x
+	return ceilf(text_width)
+
+
+func _editor_top_bar_picker_text_minimum_width(text: String) -> float:
+	var width := _editor_top_bar_text_minimum_width(_map_package_picker, text)
+	var arrow := _map_package_picker.get_theme_icon("arrow")
+	if arrow != null:
+		width += arrow.get_width()
+	width += float(_map_package_picker.get_theme_constant("arrow_margin"))
+	return ceilf(width)
+
+
+func _selected_map_package_picker_text() -> String:
+	if _map_package_picker == null:
+		return ""
+	var selected_index := _map_package_picker.selected
+	if selected_index < 0 or selected_index >= _map_package_picker.get_item_count():
+		return ""
+	return _map_package_picker.get_item_text(selected_index)
 
 
 func _configure_editor_tool_rail_layout() -> void:
@@ -917,6 +1058,7 @@ func _rebuild_map_package_picker() -> void:
 		_map_package_picker.add_item(empty_label, 0)
 		_map_package_picker.set_item_metadata(0, "")
 	_map_package_picker.disabled = _map_package_entries.is_empty()
+	_queue_editor_top_bar_layout_sync()
 
 func _rebuild_terrain_picker() -> void:
 	_terrain_entries = _terrain_items()
@@ -3712,6 +3854,7 @@ func _refresh_state() -> void:
 	_sync_preview()
 	_refresh_labels()
 	_configure_editor_keyboard_focus()
+	_queue_editor_top_bar_layout_sync()
 	_queue_editor_tool_rail_layout_sync()
 
 func _sync_play_handoff_surface() -> void:
@@ -3753,6 +3896,9 @@ func _sync_map_package_load_surface() -> void:
 		return
 	var check := _editor_scenario_validation_check_payload()
 	var tooltip_lines := [String(check.get("tooltip", "Load a map package working copy to review editor validation."))]
+	var selected_package_text := _selected_map_package_picker_text().strip_edges()
+	if selected_package_text != "":
+		tooltip_lines.push_front("Selected package: %s" % selected_package_text)
 	var load_handoff := String(_editor_map_load_handoff_payload().get("tooltip", "")).strip_edges()
 	if load_handoff != "":
 		tooltip_lines.append(load_handoff)
@@ -3829,6 +3975,7 @@ func _sync_preview() -> void:
 func _refresh_labels() -> void:
 	if _session == null:
 		_header_label.text = "Map Editor"
+		_header_label.tooltip_text = _header_label.text
 		_set_compact_label(_tile_info_label, "No map package loaded.", 4)
 		var empty_lines := []
 		var load_handoff := String(_editor_map_load_handoff_payload().get("text", "")).strip_edges()
@@ -3847,6 +3994,7 @@ func _refresh_labels() -> void:
 		return
 	var map_size := OverworldRules.derive_map_size(_session)
 	_header_label.text = "Map Editor | %s" % _current_scenario_display_name()
+	_header_label.tooltip_text = _header_label.text
 	var state_line := "Working copy | %dx%d | Tool %s | Terrain %s | Roads %d" % [
 		map_size.x,
 		map_size.y,
@@ -8964,6 +9112,7 @@ func _select_map_package_picker_by_id(package_id: String) -> bool:
 	for index in range(_map_package_picker.get_item_count()):
 		if String(_map_package_picker.get_item_metadata(index)) == package_id:
 			_map_package_picker.select(index)
+			_queue_editor_top_bar_layout_sync()
 			return true
 	return false
 

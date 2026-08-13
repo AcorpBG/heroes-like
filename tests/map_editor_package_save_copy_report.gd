@@ -113,6 +113,7 @@ func _run() -> void:
 	)
 	if shell == null:
 		return
+	var final_authority_expected: Dictionary = _durable_authority()
 
 	var second: Dictionary = shell.call("validation_save_copy", _test_dir, "saved-editor-copy")
 	if not _assert_save_result(second, "saved-editor-copy-2"):
@@ -162,8 +163,42 @@ func _run() -> void:
 		_fail("Failed Save Copy left a partial package output.")
 		return
 	var final_authority: Dictionary = _durable_authority()
-	if not _durable_authority_exact(final_authority, _expected_authority_after_play):
-		_fail("Package Play Copy/Restore Tile/Save Copy changed save, cache, settings, or schema authority.")
+	var final_settings_expected: Dictionary = final_authority_expected.get("settings_transaction_canonical", {})
+	var final_settings_actual: Dictionary = final_authority.get("settings_transaction_canonical", {})
+	var final_settings_top_level_checks: Dictionary = _dictionary_union_exact_checks(
+		final_settings_expected,
+		final_settings_actual,
+		"final_settings_transaction_canonical"
+	)
+	var final_authority_checks := {
+		"files_exact": final_authority.get("files", {}) == final_authority_expected.get("files", {}),
+		"summary_cache_exact": final_authority.get("summary_cache", {}) == final_authority_expected.get("summary_cache", {}),
+		"save_version_exact": final_authority.get("save_version", -1) == final_authority_expected.get("save_version", -1),
+		"settings_transaction_exact": final_settings_actual == final_settings_expected,
+	}
+	if not _checks_exact(final_authority_checks) or not _checks_exact(final_settings_top_level_checks):
+		_fail("Package final durable authority failed: %s values=%s" % [
+			JSON.stringify(final_authority_checks),
+			JSON.stringify({
+				"file_differences": _file_state_differences(final_authority_expected.get("files", {}), final_authority.get("files", {})),
+				"cache_expected_sha": JSON.stringify(final_authority_expected.get("summary_cache", {})).sha256_text(),
+				"cache_actual_sha": JSON.stringify(final_authority.get("summary_cache", {})).sha256_text(),
+				"save_version_expected": final_authority_expected.get("save_version", -1),
+				"save_version_actual": final_authority.get("save_version", -1),
+				"settings_top_level_failed": _failed_check_names(final_settings_top_level_checks),
+				"settings_canonical_differences": _recursive_exact_differences(final_settings_expected, final_settings_actual),
+				"settings_expected_sha": JSON.stringify(final_settings_expected).sha256_text(),
+				"settings_actual_sha": JSON.stringify(final_settings_actual).sha256_text(),
+				"settings_raw_component_hashes_expected": _settings_transaction_component_hashes(final_authority_expected.get("settings_transaction_raw", {})),
+				"settings_raw_component_hashes_actual": _settings_transaction_component_hashes(final_authority.get("settings_transaction_raw", {})),
+				"settings_canonical_component_hashes_expected": _settings_transaction_component_hashes(final_settings_expected),
+				"settings_canonical_component_hashes_actual": _settings_transaction_component_hashes(final_settings_actual),
+				"runtime_display_expected": final_settings_expected.get("runtime_display", {}),
+				"runtime_display_actual": final_settings_actual.get("runtime_display", {}),
+				"current_window_size": get_window().size,
+				"original_window_size": _original_window_size,
+			})
+		])
 		return
 
 	print("%s %s" % [REPORT_ID, JSON.stringify({
@@ -195,13 +230,13 @@ func _assert_package_play_copy_baseline_companion(
 	map_bytes: PackedByteArray,
 	scenario_bytes: PackedByteArray
 ):
-	var row_authority_before: Dictionary = _durable_authority()
 	get_window().size = Vector2i(width, 720)
 	await get_tree().process_frame
 	await get_tree().process_frame
 	if get_window().size != Vector2i(width, 720):
 		_fail("Package Play Copy row did not establish exact %d-wide host geometry." % width)
 		return null
+	var row_authority_before: Dictionary = _durable_authority()
 	var baseline_session = shell.get("_authored_baseline_cache")
 	var working_session = shell.get("_session")
 	if baseline_session == null or working_session == null or baseline_session == working_session:
@@ -475,13 +510,20 @@ func _assert_package_play_copy_baseline_companion(
 		_fail("External package fixture restoration did not recover exact original bytes.")
 		return null
 	var row_authority_after: Dictionary = _durable_authority()
+	var settings_before_canonical: Dictionary = row_authority_before.get("settings_transaction_canonical", {})
+	var settings_after_canonical: Dictionary = row_authority_after.get("settings_transaction_canonical", {})
+	var settings_top_level_checks: Dictionary = _dictionary_union_exact_checks(
+		settings_before_canonical,
+		settings_after_canonical,
+		"settings_transaction_canonical"
+	)
 	var durable_checks := {
 		"durable_files_exact": row_authority_after.get("files", {}) == play_entry_files,
 		"summary_cache_exact": row_authority_after.get("summary_cache", {}) == row_authority_before.get("summary_cache", {}),
 		"save_version_exact": row_authority_after.get("save_version", -1) == row_authority_before.get("save_version", -1),
-		"settings_transaction_exact": row_authority_after.get("settings_transaction_canonical", {}) == row_authority_before.get("settings_transaction_canonical", {}),
+		"settings_transaction_exact": settings_after_canonical == settings_before_canonical,
 	}
-	if not _checks_exact(durable_checks):
+	if not _checks_exact(durable_checks) or not _checks_exact(settings_top_level_checks):
 		_fail("Package Play Copy row %d durable authority failed: %s values=%s" % [
 			width,
 			JSON.stringify(durable_checks),
@@ -492,8 +534,14 @@ func _assert_package_play_copy_baseline_companion(
 				"save_version_before": row_authority_before.get("save_version", -1),
 				"save_version_after": row_authority_after.get("save_version", -1),
 				"settings_raw_equal_diagnostic": row_authority_after.get("settings_transaction_raw", {}) == row_authority_before.get("settings_transaction_raw", {}),
-				"settings_before_sha": JSON.stringify(row_authority_before.get("settings_transaction_canonical", {})).sha256_text(),
-				"settings_after_sha": JSON.stringify(row_authority_after.get("settings_transaction_canonical", {})).sha256_text(),
+				"settings_top_level_failed": _failed_check_names(settings_top_level_checks),
+				"settings_canonical_differences": _recursive_exact_differences(settings_before_canonical, settings_after_canonical),
+				"settings_before_sha": JSON.stringify(settings_before_canonical).sha256_text(),
+				"settings_after_sha": JSON.stringify(settings_after_canonical).sha256_text(),
+				"settings_raw_component_hashes_before": _settings_transaction_component_hashes(row_authority_before.get("settings_transaction_raw", {})),
+				"settings_raw_component_hashes_after": _settings_transaction_component_hashes(row_authority_after.get("settings_transaction_raw", {})),
+				"settings_canonical_component_hashes_before": _settings_transaction_component_hashes(settings_before_canonical),
+				"settings_canonical_component_hashes_after": _settings_transaction_component_hashes(settings_after_canonical),
 			})
 		])
 		return null
@@ -600,6 +648,12 @@ func _canonical_stored_input_event(event: InputEvent) -> Dictionary:
 		"as_text": event.as_text(),
 		"stored_properties": stored_properties,
 	}
+
+func _settings_transaction_component_hashes(transaction: Dictionary) -> Dictionary:
+	var hashes := {}
+	for component in ["runtime_display", "settings", "committed_settings", "last_result", "input_map"]:
+		hashes[component] = var_to_str(transaction.get(component)).sha256_text()
+	return hashes
 
 func _checks_exact(checks: Dictionary) -> bool:
 	for value in checks.values():

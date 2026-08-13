@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the bounded BattleBoard cursor live-context slice with exact focused, accessibility, compatibility, static, editor, Linux export/headless-startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL evidence. Platform evidence does not include packaged BattleBoard interaction, AT-SPI, UIA, controller, or native-hardware certification.",
+  "currentNotes": "Completed the bounded Map Editor responsive TopBar containment slice. Focused 1280/1920 headless coverage and Map Editor compatibility proved exact live containment, native package-picker ownership, full selected-label discoverability, resize round trips, focus, canvas, ToolRail, and editor authority. Linux and Windows release exports and packaged startup passed, but no packaged TopBar interaction, controller, AT-SPI, UIA, native-hardware, signing/publication, whole-game, or whole-release claim is made.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "accessibility-battle-board-cursor-live-context-coalescing-10184",
-  "currentSliceId": "accessibility-battle-board-cursor-live-context-coalescing-10184",
-  "currentSliceNotes": "Completed the bounded BattleBoard cursor live-context slice with exact focused and compatibility authority. Official Linux evidence is export plus packaged headless startup only; official Windows evidence is export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup only. No packaged BattleBoard interaction, AT-SPI, UIA, controller, hardware, signing, publication, whole-game readiness, or whole-release completion is claimed.",
+  "currentSlice": "ux-map-editor-responsive-top-bar-containment-10184",
+  "currentSliceId": "ux-map-editor-responsive-top-bar-containment-10184",
+  "currentSliceNotes": "Header, MapPackagePicker, Load Map, Save Copy, Play Copy, and Menu are contained at 1280 and 1920 with full native package discovery, focus, map/ToolRail geometry, and editor authority preserved. Platform evidence is limited to Linux packaged headless startup and fresh-Wine Boot/MainMenu/native-DLL startup.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Battle Board Cursor Live Context Coalescing",
-  "currentSliceUpdatedAt": "2026-08-13T01:29:38Z",
+  "currentSliceTitle": "Map Editor Responsive Top Bar Containment",
+  "currentSliceUpdatedAt": "2026-08-13T03:58:52Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19849,6 +19849,58 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "id": "ux-map-editor-responsive-top-bar-containment-10184",
+      "title": "Map Editor Responsive Top Bar Containment",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md"],
+      "purpose": "Keep the Map Editor header, package picker, and four top commands fully contained and usable at supported widths while preserving the map surface, native package selection, focus, and editor authority.",
+      "implementationTargets": [
+        "scenes/editor/MapEditorShell.gd",
+        "scenes/editor/MapEditorShell.tscn",
+        "tests/map_editor_dirty_working_copy_destructive_transition_regression.gd",
+        "tests/map_editor_package_save_copy_report.gd",
+        "tests/map_editor_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "head": "e7df55cd",
+        "existing_tool_rail_slice": "ux-map-editor-responsive-tool-rail-containment-10184",
+        "top_bar_controls": ["Header", "MapPackagePicker", "LoadMap", "SaveCopy", "PlayWorkingCopy", "Menu"],
+        "top_bar_layout": "single_hbox_fixed_minima_default_longest_item_picker",
+        "supported_widths": [1280, 1920],
+        "save_version": 9
+      },
+      "completionCriteria": "At 1280 and 1920 across empty, loaded, dirty, and longest-package-label states, Header, MapPackagePicker, Load Map, Save Copy, Play Copy, and Menu remain visible, non-overlapping, and fully contained in the live TopPad inner rectangle with no horizontal overflow or clipped command text; the bounded picker preserves exact item count/order/text/metadata/selection, native popup ownership, and full selected-label discoverability through 1280-to-1920-to-1280 resize round trips; the exact forward/reverse keyboard/controller cycle, command activation, dirty-confirmation return focus, canvas/map and ToolRail geometry, mouse behavior, working-copy/package/files/save/cache/settings/routes authority, focused Map Editor compatibility, accessibility, editor, repository, Linux release, and fresh Windows/Wine gates pass, with packaged TopBar interaction claimed only when actually exercised.",
+      "nonGoals": [
+        "shrinking the map below its existing minimum, widening or redesigning the ToolRail, hiding commands, replacing the native OptionButton popup, changing package labels or metadata, or changing editor information architecture",
+        "package indexing/loading, Save Copy, Play Copy, Menu, dirty-confirmation, tool/canvas consequences, shared OverworldMapView, live-region policy, input mappings/timing, save/package schema, or Native RMG changes",
+        "controller/hardware certification, native Linux AT-SPI, native Windows UIA, signing, publication, whole-game readiness, or overall release-completion claims"
+      ],
+      "baselineChecks": [
+        "godot4 --headless --path . --scene res://tests/map_editor_dirty_working_copy_destructive_transition_regression.tscn",
+        "godot4 --headless --path . --scene res://tests/map_editor_smoke.tscn",
+        "godot4 --headless --path . --scene res://tests/map_editor_package_save_copy_report.tscn",
+        "godot4 --headless --path . --scene res://tests/accessibility_screen_reader_semantics_report.tscn",
+        "godot4 --headless --editor --quit --path .",
+        "PYTHONDONTWRITEBYTECODE=1 python3 tests/validate_repo.py",
+        "python3 -m py_compile tests/validate_repo.py",
+        "jq empty ops/progress.json",
+        "git diff --check",
+        "Linux release export plus packaged TopBar interaction only when the harness actually exercises it",
+        "Windows release export plus fresh-Wine packaged TopBar interaction only when the harness actually exercises it, without native UIA or controller certification"
+      ],
+      "startedAt": "2026-08-13T01:41:00Z",
+      "updatedAt": "2026-08-13T03:58:52Z",
+      "completedAt": "2026-08-13T03:58:52Z",
+      "notes": "MapEditorShell now allocates the live TopPad width between a clipped full-tooltip Header and native MapPackagePicker while reserving exact combined minima for Load Map, Save Copy, Play Copy, Menu, and separation. Focused fresh-XDG headless proof passed 1280/1920 empty, loaded, dirty, longest-label, resize-roundtrip containment, native item/order/metadata/selection, focus, canvas, ToolRail, files, cache, settings, routes, and working-copy authority. Map Editor smoke, package load, generated-package Save Copy/Play Copy/Restore Tile, active return, maps-folder browser, accessibility, core, repository, Python, diff, and editor gates passed. Official Linux export and packaged headless startup passed; official Windows export and fresh-Wine Godot/Boot/MainMenu/native-DLL startup passed. Platform harnesses did not exercise packaged TopBar interaction, so no packaged TopBar parity, controller, AT-SPI, UIA, native-hardware, signing/publication, whole-game, or whole-release claim is made.",
+      "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice; packaged TopBar interaction, accessibility and controller certification, signing/publication, broader gameplay/content/performance work, Native RMG parity, and overall release readiness remain open."
+    },
     {
       "id": "accessibility-battle-board-cursor-live-context-coalescing-10184",
       "title": "Battle Board Cursor Live Context Coalescing",
@@ -78932,7 +78984,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "embercourt_charter_colossus_retaliation_aura_complete_overall_release_in_progress",
+  "result": "map_editor_responsive_top_bar_containment_complete_overall_release_in_progress",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
