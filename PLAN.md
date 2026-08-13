@@ -25,6 +25,7 @@ Rules:
 Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Current selected implementation slice: select the next tracker-approved release-readiness implementation slice.
+- Latest completed implementation slice: `strategic-ai-phase-target-descriptor-enumeration-reuse-10184`. Strategic AI now separates exact ordered detached target descriptors from fresh origin-specific projection and reuses discovery only within one planner invocation or best-open-spawn-point sweep, preserving ordinal-100 behavior while reducing repeated target enumeration.
 - Latest completed implementation slice: `ux-map-editor-responsive-top-bar-containment-10184`. The Map Editor now allocates the live TopPad between the clipped full-tooltip header and native package picker while reserving the exact combined minima of Load Map, Save Copy, Play Copy, Menu, and their separations, preserving the map, ToolRail, focus, package, and editor authority at 1280 and 1920.
 - Latest completed implementation slice: `accessibility-battle-board-cursor-live-context-coalescing-10184`. Battle now exposes one bounded polite live context for the existing keyboard/controller Board cursor, coalesces changed navigation to its final settled hex, and announces exact existing A/B results without changing combat, input timing, mouse behavior, or battle authority.
 - Latest completed implementation slice: `ux-overworld-selected-route-field-readiness-coherence-10184`. Targeted route selection now refreshes the route-owned ObjectiveBrief readiness tooltip, idle Event/action context, End Turn cue, and drawer/handoff cues from the same authoritative cached action and route state while preserving active feedback/recap, compact zero-rich construction, incremental ownership, and all route consequences.
@@ -4462,6 +4463,71 @@ Rejection result:
 - the candidate violates the registered no-aggregate-regression gate, so no production change, focused acceptance, active 59-encounter run, or tuning beyond `14` is authorized. A separate source-backed attribution audit is required before selecting any further balance candidate.
 - the separate reciprocal week-one Embercourt/Thornwake audit identifies only the tier-three maximum-damage gap as causal, but both bounded midpoint screens also fail the full-matrix gate: Bargebow maximum damage `6` to `5` yields 35 outliers / `180.5` severity / two severe rows / `73.5` maximum dominance / `0.87` side bias / zero structural failures, while Sporeglass maximum damage `4` to `5` yields `38 / 204.5 / 4 / 68.5 / 1.27 / 0`;
 - the Bargebow midpoint worsens outliers, maximum dominance, and side bias and moves week-three Embercourt/Mireclaw to `73.5` percent Mireclaw dominance; the Sporeglass midpoint worsens every aggregate except equal maximum dominance. Ownership isolation is exact, active breadth is intentionally unrun, and neither candidate is registered or implemented.
+
+## Strategic AI Phase Target Descriptor Enumeration Reuse
+
+id: `strategic-ai-phase-target-descriptor-enumeration-reuse-10184`
+
+Status: completed.
+
+Selected Phase 6 strategic-AI performance implementation slice. The current ordinal-100 Medium row
+passes with exact signature `6e893020`, 36 completed turns, 172 enemy-activity events, zero target
+integrity violations, and zero unreachable active targets, but repeated planning and spawn-origin scans
+re-enumerate the same live target families. The selected boundary separates that immutable discovery
+work from the origin-sensitive route, guard, distance, travel, valuation, and priority projection that
+must remain fresh.
+
+Implementation target:
+- in `EnemyAdventureRules`, expose one detached, ordered descriptor surface covering siege target,
+  defeat-objective towns, victory-objective towns, player towns, neutral towns, resource nodes,
+  artifact nodes, encounters, delivery interceptions, and known heroes;
+- preserve exact family order, source order, descriptor payload, and current seen/deduplication timing,
+  including the existing rule that an eligible earlier duplicate claims its seen key before later
+  reachability projection;
+- keep every origin-sensitive route, staging, guard/reachability, goal tile, distance, travel,
+  valuation, priority, reason, and final task payload calculation in a fresh projection per origin;
+- reuse descriptors only within one `plan_enemy_hero_task_board` invocation and within one
+  `EnemyTurnRules._best_open_spawn_point` sweep; rebuild on the next invocation and after any live
+  mutation instead of introducing a global, day, session, or cross-launch cache;
+- expose separate bounded counters for descriptor enumeration and per-origin projection without
+  changing selection, scoring, rules, topology, content, or save state.
+
+Completion criteria:
+- strategic-planner old-versus-new proof requires byte/value-exact whole candidate arrays, payloads,
+  and ordering across every descriptor family, duplicate identities, known and unscouted targets,
+  unreachable and guarded targets, and multiple origins;
+- spawn-selection proof requires exact selected tasks and spawn points, proves one-sweep reuse, and
+  proves mutation and next-launch invalidation/rebuild while keeping each origin projection fresh;
+- enumeration and projection counters distinguish the removed repeated discovery work from retained
+  origin-dependent work;
+- the ordinal-100 Medium row preserves signature `6e893020`, activity-event count and ordering,
+  selected tasks, battle/outcome behavior, integrity, and unreachable-target authority, while target
+  discovery, planner, and spawn work are materially reduced and row/max-turn runtime is not regressed;
+- strategic-planner, spawn-selection, repository-validator, core, editor-parse, Python, JSON, and diff
+  gates pass before completion is claimed.
+
+Non-goals:
+- no global/day/session cache, cross-invocation reuse, score or priority change, movement/path/guard
+  rule change, topology, AI policy, task schema, content, balance, save migration, or Native RMG change;
+- no broad strategic-AI completion, full performance completion, platform certification, or overall
+  release-readiness claim.
+
+Completion result:
+- strategic-planner and spawn-selection focused reports pass independent legacy whole-array/payload
+  parity across all ten target families, known/unscouted, duplicate, guarded, unreachable, multi-origin,
+  mutation, no-open-point, and next-sweep rebuild cases;
+- ordinal-100 retains exact signature `6e893020`, 36 turns, day-37 defeat, 172 events, two planned
+  commander tasks, zero integrity or unreachable-target failures, and exact world authority;
+- the five descriptor enumerations serve thirteen fresh origin projections with eight sweep-local
+  reuses, removing `61.5` percent of repeated discovery in those descriptor-bearing sweeps; row runtime
+  improves from `207674` to `205433` ms, maximum turn from `9293` to `8992` ms, planner work from
+  `28296` to `26701` ms, spawn work from `14996` to `14297` ms, and fresh target discovery from
+  `5736` to `4997` ms;
+- focused compatibility, core, repository validator, Python, JSON, diff, exact/generic editor, Linux
+  export plus packaged headless startup, and Windows export plus fresh-Wine Godot/Boot/MainMenu/native-
+  DLL startup gates pass. The packaged harnesses did not exercise strategic-AI gameplay, so no packaged
+  AI parity, controller, accessibility API, native hardware, Native RMG, signing/publication, whole-game,
+  or whole-release claim is made.
 
 ## Phase Roadmap
 

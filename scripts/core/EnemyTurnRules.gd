@@ -4984,6 +4984,10 @@ static func _best_open_spawn_point(
 	preloaded_spawn_scan_context: Dictionary = {},
 	preloaded_open_spawn_points: Variant = null
 ) -> Dictionary:
+	var spawn_scan_context := preloaded_spawn_scan_context
+	# The caller can retain this context across launches, but live target
+	# descriptors are valid only for this non-mutating spawn-point sweep.
+	spawn_scan_context.erase("target_candidate_descriptors")
 	var started_usec := _spawn_profile_timer()
 	var points := _launch_decision_open_spawn_points(session, config, preloaded_open_spawn_points)
 	_spawn_profile_add_ms("open_spawn_points_ms", started_usec)
@@ -4996,7 +5000,6 @@ static func _best_open_spawn_point(
 	started_usec = _spawn_profile_timer()
 	var occupied_commander_ids: Dictionary = EnemyAdventureRulesScript.occupied_raid_commander_ids(session, resolved_faction_id)
 	_spawn_profile_add_ms("occupied_commander_lookup_ms", started_usec)
-	var spawn_scan_context := preloaded_spawn_scan_context
 	var consume_active_front_surface := bool(spawn_scan_context.get("active_front_support_candidate_surface_complete", false))
 	# A successful launch mutates commander occupancy before the next sweep.
 	spawn_scan_context.erase("active_front_support_commander_candidates")
@@ -5037,6 +5040,7 @@ static func _best_open_spawn_point(
 		spawn_scan_context.erase("active_front_support_candidate_surface_complete")
 		spawn_scan_context.erase("path_context")
 		_spawn_profile_count("active_front_candidate_surface_consumed")
+	spawn_scan_context.erase("target_candidate_descriptors")
 	return best
 
 static func _apply_generated_multi_town_front_distribution(
@@ -5267,6 +5271,27 @@ static func _spawn_scan_path_context(
 	_spawn_profile_count("spawn_scan_path_context_loaded")
 	return path_context
 
+
+static func _spawn_scan_target_descriptors(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	spawn_scan_context: Dictionary
+) -> Array:
+	if spawn_scan_context.get("target_candidate_descriptors", null) is Array:
+		_spawn_profile_count("target_descriptor_enumeration_reused")
+		return spawn_scan_context["target_candidate_descriptors"]
+	var started_usec := _spawn_profile_timer()
+	var descriptors: Array = EnemyAdventureRulesScript._target_candidate_descriptors(
+		session,
+		config,
+		false
+	)
+	_spawn_profile_add_ms("target_descriptor_enumeration_ms", started_usec)
+	_spawn_profile_count("target_descriptor_enumeration_count")
+	_spawn_profile_count("target_descriptor_count", descriptors.size())
+	spawn_scan_context["target_candidate_descriptors"] = descriptors
+	return descriptors
+
 static func _saved_task_spawn_candidate_for_point(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
@@ -5492,15 +5517,20 @@ static func _fresh_spawn_target_candidate_for_point(
 	if session == null or faction_id == "" or point.is_empty():
 		return {}
 	var rebuild_pressure_active := not _recent_rebuild_pressure_request(session, faction_id, state).is_empty()
+	var fresh_target_started_usec := _spawn_profile_timer()
+	var target_descriptors := _spawn_scan_target_descriptors(session, config, spawn_scan_context)
+	var path_context := _spawn_scan_path_context(session, faction_id, spawn_scan_context)
 	var started_usec := _spawn_profile_timer()
-	var target_candidates: Array = EnemyAdventureRulesScript._target_candidates(
+	var target_candidates: Array = EnemyAdventureRulesScript._target_candidates_from_descriptors(
 		session,
 		config,
 		Vector2i(int(point.get("x", 0)), int(point.get("y", 0))),
-		false,
-		_spawn_scan_path_context(session, faction_id, spawn_scan_context)
+		target_descriptors,
+		path_context
 	)
-	_spawn_profile_add_ms("fresh_target_candidates_ms", started_usec)
+	_spawn_profile_add_ms("target_descriptor_projection_ms", started_usec)
+	_spawn_profile_add_ms("fresh_target_candidates_ms", fresh_target_started_usec)
+	_spawn_profile_count("target_descriptor_projection_count")
 	_spawn_profile_count("fresh_target_candidate_count", target_candidates.size())
 	if target_candidates.is_empty():
 		var fallback_probe := {

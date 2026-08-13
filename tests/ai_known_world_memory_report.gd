@@ -120,19 +120,19 @@ func _hero_targets_require_ai_sighting() -> Dictionary:
 	var session = _base_session()
 	var config := _enemy_config()
 	_set_primary_hero_position(session, 0, 4)
-	var hidden_candidates := EnemyAdventureRules._hero_target_candidates(session, Vector2i(7, 2), config, MIRECLAW)
+	var hidden_candidates: Array = _hero_target_candidates_for_origin(session, Vector2i(7, 2), config)
 	if not hidden_candidates.is_empty():
 		_fail("Hidden player hero should not become a hero target without AI sighting memory: %s" % JSON.stringify(hidden_candidates))
 		return {}
 	_set_primary_hero_position(session, 5, 2)
 	var memory_result := EnemyAdventureRules.refresh_enemy_known_world_memory(session, config, _enemy_state(session))
 	_update_enemy_state(session, memory_result.get("state", _enemy_state(session)))
-	var visible_candidates := EnemyAdventureRules._hero_target_candidates(session, Vector2i(7, 2), config, MIRECLAW)
+	var visible_candidates: Array = _hero_target_candidates_for_origin(session, Vector2i(7, 2), config)
 	if visible_candidates.is_empty():
 		_fail("Currently sighted player hero did not become eligible for hero pressure.")
 		return {}
 	_set_primary_hero_position(session, 0, 4)
-	var remembered_candidates := EnemyAdventureRules._hero_target_candidates(session, Vector2i(7, 2), config, MIRECLAW)
+	var remembered_candidates: Array = _hero_target_candidates_for_origin(session, Vector2i(7, 2), config)
 	if remembered_candidates.is_empty():
 		_fail("Recent remembered player hero sighting did not remain eligible for hero pressure.")
 		return {}
@@ -151,6 +151,15 @@ func _hero_targets_require_ai_sighting() -> Dictionary:
 		},
 		"sighting_count": int(memory_result.get("sighting_count", 0)),
 	}
+
+func _hero_target_candidates_for_origin(session, origin_pos: Vector2i, config: Dictionary) -> Array:
+	var hero_candidates: Array = []
+	var candidates: Array = EnemyAdventureRules._target_candidates(session, config, origin_pos, false)
+	for candidate in candidates:
+		if not (candidate is Dictionary) or String(candidate.get("target_kind", "")) != "hero":
+			continue
+		hero_candidates.append(candidate.duplicate(true))
+	return hero_candidates
 
 func _empty_target_fallback_does_not_hunt_hidden_hero() -> Dictionary:
 	var session = _base_session()
