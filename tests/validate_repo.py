@@ -23013,10 +23013,14 @@ def validate_enemy_strategic_contestation(errors: list[str]) -> None:
         "func _secure_resource_target",
         "func _secure_artifact_target",
         "func _contest_encounter_target",
-        "func _append_resource_candidate",
-        "func _append_artifact_candidate",
-        "func _append_encounter_candidate",
-        "func _hero_target_candidate",
+        "func _append_resource_target_descriptor",
+        "func _project_resource_target_descriptor",
+        "func _append_artifact_target_descriptor",
+        "func _project_artifact_target_descriptor",
+        "func _append_encounter_target_descriptor",
+        "func _project_encounter_target_descriptor",
+        "func _append_hero_target_descriptors",
+        "func _project_hero_target_descriptor",
         "func _encounter_staging_tiles",
         "func _resource_target_priority",
         "func _artifact_target_priority",
@@ -23872,6 +23876,277 @@ def validate_ai_hero_task_spawn_commander_selection(errors: list[str]) -> None:
         errors,
         "Enemy raid spawning does not use saved-task-aware commander selection.",
     )
+    strategic_planner_path = ROOT / "tests" / "ai_hero_task_strategic_planner_report.gd"
+    ensure(strategic_planner_path.exists(), errors, "Missing strategic planner descriptor/projection report owner.")
+    planner_report_text = strategic_planner_path.read_text(encoding="utf-8") if strategic_planner_path.exists() else ""
+    for required_token in (
+        "_target_descriptor_projection_parity_case",
+        '"source_bucket_identities": source_bucket_identities',
+        '["town", "resource", "artifact", "encounter", "delivery", "hero"]',
+        '"descriptor_hidden_unreachable_artifact"',
+        '"river_pass_riverwatch_hold_rare_exchange"',
+        "var delivery_source_position := Vector2i(-1, -1)",
+        "var origins := [",
+        "var unreachable_goal := Vector2i(5, 0)",
+        'var fixture_map: Array = session.overworld.get("map", []).duplicate(true)',
+        "for delta in EnemyAdventureRules.PATH_MOVEMENT_DELTAS:",
+        'map_row[neighbor.x] = "rock"',
+        "OverworldRules.terrain_id_is_passable(terrain_id)",
+        'session.overworld["map"] = fixture_map',
+        'EnemyAdventureRules._path_distance_with_context(path_context, origin_pos, [unreachable_goal]) != 9999',
+        '_descriptor_for_identity(all_descriptors, "artifact", "descriptor_unreachable_artifact").is_empty()',
+        '_candidate_has_target(unreachable_projected, "artifact", "descriptor_unreachable_artifact")',
+        'delivery_source_position = Vector2i(int(node.get("x", -1)), int(node.get("y", -1)))',
+        'known_world_memory["schema_version"] = 1',
+        'known_world_memory["scouted_targets"] = [{',
+        '"target_kind": "resource"',
+        '"target_id": "river_free_company"',
+        '"x": delivery_source_position.x',
+        '"y": delivery_source_position.y',
+        '"expires_day": int(session.day) + 3',
+        '"source_kind": "descriptor_fixture"',
+        'EnemyAdventureRules._enemy_target_scouted(session, MIRECLAW, "resource", "river_free_company")',
+        'defeat_config["siege_target_placement_id"] = ""',
+        'int(siege_descriptor.get("priority", -1)) != 320',
+        'int(victory_descriptor.get("priority", -1)) != 220',
+        'get("priority", -1)) != 260',
+        "_legacy_target_candidates_control(session, config, origin_pos, include_unscouted, path_context)",
+        "EnemyAdventureRules._target_candidates_from_descriptors(session, config, origin_pos, descriptors, path_context)",
+        'JSON.stringify(wrapper) != JSON.stringify(projected)',
+        "EnemyAdventureRules._ai_hero_task_planner_candidates_from_origins(",
+        'int(planner_profile.get("enumeration_count", 0)) != 0',
+        'int(planner_profile.get("projection_count", 0)) != origins.size()',
+        'int(public_profile.get("enumeration_count", 0)) != 1',
+        "var legacy_public_plan := _legacy_plan_enemy_hero_task_board_control",
+        'JSON.stringify(selected_tasks) != JSON.stringify(legacy_selected_tasks)',
+        'JSON.stringify(all_descriptors) != detached_json',
+        'JSON.stringify(rebuilt_descriptors) == detached_json',
+        '"selected_tasks": selected_tasks',
+        '"whole_ordered_payload_parity": true',
+        '"descriptor_deep_detach": true',
+        '"new_invocation_rebuilt_after_mutation": true',
+    ):
+        ensure(required_token in planner_report_text, errors, f"Strategic planner descriptor/projection owner is missing token: {required_token}")
+    planner_case_match = re.search(
+        r"func _target_descriptor_projection_parity_case\(\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc _descriptor_identities\()",
+        planner_report_text,
+        re.DOTALL,
+    )
+    ensure(planner_case_match is not None, errors, "Could not isolate strategic planner descriptor/projection case.")
+    if planner_case_match is not None:
+        planner_case = planner_case_match.group("body")
+        ordered_tokens = (
+            "var origins := [",
+            "var delivery_source_position := Vector2i(-1, -1)",
+            'delivery_source_position = Vector2i(int(node.get("x", -1)), int(node.get("y", -1)))',
+            "var unreachable_goal := Vector2i(5, 0)",
+            'var fixture_map: Array = session.overworld.get("map", []).duplicate(true)',
+            "for delta in EnemyAdventureRules.PATH_MOVEMENT_DELTAS:",
+            'map_row[neighbor.x] = "rock"',
+            "OverworldRules.terrain_id_is_passable(terrain_id)",
+            'session.overworld["map"] = fixture_map',
+            'known_world_memory["schema_version"] = 1',
+            'known_world_memory["scouted_targets"] = [{',
+            'known_world_memory["player_hero_sightings"] = [{',
+            "_update_enemy_state(session, fixture_state)",
+            'EnemyAdventureRules._enemy_target_scouted(session, MIRECLAW, "resource", "river_free_company")',
+            'var path_context := EnemyAdventureRules._path_distance_surface_context(session, "", MIRECLAW)',
+            'EnemyAdventureRules._path_distance_with_context(path_context, origin_pos, [unreachable_goal]) != 9999',
+            "known_descriptors: Array = EnemyAdventureRules._target_candidate_descriptors(session, config, false)",
+            "all_descriptors: Array = EnemyAdventureRules._target_candidate_descriptors(session, config, true)",
+            "var source_bucket_identities := _legacy_source_bucket_identities(session, config)",
+            "JSON.stringify(source_bucket_identities) != JSON.stringify(expected_source_bucket_identities)",
+            "var siege_descriptor :=",
+            "var defeat_config :=",
+            "for include_unscouted in [false, true]:",
+            "var projected_planner: Array =",
+            "var public_plan := EnemyAdventureRules.plan_enemy_hero_task_board",
+            "var legacy_public_plan := _legacy_plan_enemy_hero_task_board_control",
+            "var detached_json := JSON.stringify(all_descriptors)",
+            "var rebuilt_descriptors: Array =",
+            "var rebuilt_wrapper: Array =",
+        )
+        positions = [planner_case.find(token) for token in ordered_tokens]
+        ensure(all(position >= 0 for position in positions) and positions == sorted(positions), errors, "Strategic planner descriptor case lost enumerate/parity/profile/detach/rebuild order.")
+        ensure(planner_case.count("_update_enemy_state(session, fixture_state)") == 1, errors, "Strategic planner scouting and hero memories must use one enemy-state update.")
+        ensure(planner_case.count('var path_context := EnemyAdventureRules._path_distance_surface_context(session, "", MIRECLAW)') == 1, errors, "Strategic planner unreachable fixture must build one fresh shared path context.")
+        ensure(planner_case.count('EnemyAdventureRules._path_distance_with_context(path_context, origin_pos, [unreachable_goal]) != 9999') == 1, errors, "Strategic planner unreachable fixture must use one both-origin distance gate.")
+        for forbidden_token in ("erase(\"", "normalize", "sort()", "sort_custom"):
+            ensure(forbidden_token not in planner_case, errors, f"Strategic planner descriptor parity case must not normalize or erase payload authority: {forbidden_token}")
+        for forbidden_token in (
+            "_enemy_target_currently_visible",
+            'delivery_source_position = Vector2i(0, 4)',
+            'if include_unscouted',
+            '"Unreachable water-tile artifact',
+            'terrain_id == "water"',
+            'erase("descriptor_unreachable_artifact")',
+        ):
+            ensure(forbidden_token not in planner_case, errors, f"Strategic planner delivery fixture must not bypass scouting through visibility, fixed coordinates, or include_unscouted: {forbidden_token}")
+
+    for bucket_token in (
+        '"01_siege_target": ["riverwatch_hold"]',
+        '"02_defeat_objective_towns": ["riverwatch_hold"]',
+        '"03_victory_objective_towns": ["duskfen_bastion"]',
+        '"04_player_towns": ["riverwatch_hold"]',
+        '"05_neutral_towns": ["duskfen_bastion"]',
+        '"06_resource_nodes": ["north_wood", "midway_shrine", "southern_ore", "eastern_cache", "river_signal_post", "river_free_company", "river_sanctum", "riverwatch_embergrain_granary", "duskfen_bastion_peatwax_front", "river_pass_riverwatch_hold_rare_exchange", "river_pass_duskfen_bastion_rare_exchange", "duskfen_bastion_development_source_support"]',
+        '"07_artifact_nodes": ["trailsinger_cache", "warcrest_ruin", "quarry_tally_cache", "bastion_vault", "descriptor_hidden_unreachable_artifact", "descriptor_unreachable_artifact"]',
+        '"08_encounters": ["river_pass_ghoul_grove", "river_pass_hollow_mire", "river_pass_reed_totemists"]',
+        '"09_delivery_interceptions": ["river_free_company"]',
+        '"10_known_player_heroes": ["hero_lyra"]',
+    ):
+        ensure(bucket_token in planner_report_text, errors, f"Strategic planner independent source-bucket oracle is missing exact ordered identities: {bucket_token}")
+    legacy_materializer_match = re.search(
+        r"func _legacy_target_candidates_control\(.*?\n(?P<body>.*?)(?=\nfunc _legacy_append_town_candidate\()",
+        planner_report_text,
+        re.DOTALL,
+    )
+    ensure(legacy_materializer_match is not None, errors, "Could not isolate independent pre-refactor candidate materializer.")
+    if legacy_materializer_match is not None:
+        legacy_materializer = legacy_materializer_match.group("body")
+        for forbidden_token in (
+            "_target_candidate_descriptors",
+            "_target_candidates_from_descriptors",
+            "EnemyAdventureRules._target_candidates(",
+            "EnemyAdventureRules._ai_hero_task_planner_candidates_from_origins(",
+        ):
+            ensure(forbidden_token not in legacy_materializer, errors, f"Independent legacy candidate control depends on the new descriptor/projection path: {forbidden_token}")
+        legacy_source_order = (
+            "_legacy_append_town_candidate(session, candidates, seen, siege_target_id",
+            'for objective in objectives.get("defeat", []):',
+            'for objective in objectives.get("victory", []):',
+            'if String(town.get("owner", "neutral")) != "player":',
+            'if String(town.get("owner", "neutral")) != "neutral":',
+            'for node in session.overworld.get("resource_nodes", []):',
+            'for node in session.overworld.get("artifact_nodes", []):',
+            'for encounter in session.overworld.get("encounters", []):',
+            "_legacy_append_delivery_interception_candidates",
+            "_legacy_hero_target_candidates",
+        )
+        legacy_positions = [legacy_materializer.find(token) for token in legacy_source_order]
+        ensure(all(position >= 0 for position in legacy_positions) and legacy_positions == sorted(legacy_positions), errors, "Independent legacy materializer lost exact pre-refactor ten-source order.")
+    legacy_planner_match = re.search(
+        r"func _legacy_planner_candidates_from_origins_control\(.*?\n(?P<body>.*?)(?=\nfunc _legacy_target_candidates_control\()",
+        planner_report_text,
+        re.DOTALL,
+    )
+    ensure(legacy_planner_match is not None, errors, "Could not isolate independent legacy multi-origin planner control.")
+    if legacy_planner_match is not None:
+        legacy_planner = legacy_planner_match.group("body")
+        ensure("_legacy_target_candidates_control(" in legacy_planner, errors, "Legacy planner control does not consume the independent materializer.")
+        for forbidden_token in ("_target_candidate_descriptors", "_target_candidates_from_descriptors"):
+            ensure(forbidden_token not in legacy_planner, errors, f"Legacy planner control depends on new descriptor helper: {forbidden_token}")
+    legacy_plan_match = re.search(
+        r"func _legacy_plan_enemy_hero_task_board_control\(.*?\n(?P<body>.*?)(?=\nfunc _legacy_planner_candidates_from_origins_control\()",
+        planner_report_text,
+        re.DOTALL,
+    )
+    ensure(legacy_plan_match is not None, errors, "Could not isolate independent selected-task planner control.")
+    if legacy_plan_match is not None:
+        legacy_plan = legacy_plan_match.group("body")
+        ensure("_legacy_planner_candidates_from_origins_control(" in legacy_plan, errors, "Legacy selected-task control does not consume independent candidate materialization.")
+        for forbidden_token in ("_target_candidate_descriptors", "_target_candidates_from_descriptors", "plan_enemy_hero_task_board("):
+            ensure(forbidden_token not in legacy_plan, errors, f"Legacy selected-task control depends on current descriptor planner: {forbidden_token}")
+    legacy_controls_match = re.search(
+        r"func _legacy_plan_enemy_hero_task_board_control\(.*?(?=\nfunc _planner_fit_context_preserves_candidate_scores\()",
+        planner_report_text,
+        re.DOTALL,
+    )
+    ensure(legacy_controls_match is not None, errors, "Could not isolate the complete independent legacy control block.")
+    if legacy_controls_match is not None:
+        legacy_controls = legacy_controls_match.group(0)
+        for helper_name in (
+            "normalize_commander_roster",
+            "commander_roster_for_faction",
+            "ai_hero_task_apply_reservations",
+            "priority_target_bonus",
+            "target_is_objective_anchor",
+            "resource_target_score_breakdown",
+            "artifact_target_valuation_breakdown",
+            "neutral_encounter_object_valuation_breakdown",
+        ):
+            ensure(
+                f"EnemyAdventureRules.{helper_name}(" in legacy_controls,
+                errors,
+                f"Independent legacy control does not explicitly dispatch helper through EnemyAdventureRules: {helper_name}",
+            )
+            ensure(
+                re.search(rf"(?<![\w.]){re.escape(helper_name)}\(", legacy_controls) is None,
+                errors,
+                f"Independent legacy control retains an unqualified Node call that will fail at runtime: {helper_name}",
+            )
+
+    descriptor_match = re.search(
+        r"static func _target_candidate_descriptors\(.*?\n(?P<body>.*?)(?=\n\nstatic func _target_candidates_from_descriptors\()",
+        enemy_adventure_text,
+        re.DOTALL,
+    )
+    ensure(descriptor_match is not None, errors, "Could not isolate ordered target descriptor enumeration.")
+    if descriptor_match is not None:
+        descriptor_body = descriptor_match.group("body")
+        ordered_sources = (
+            "_append_town_target_descriptor(session, descriptors, seen, siege_target_id, 320",
+            'for objective in objectives.get("defeat", []):',
+            'for objective in objectives.get("victory", []):',
+            'if String(town.get("owner", "neutral")) != "player":',
+            'if String(town.get("owner", "neutral")) != "neutral":',
+            "for node in session.overworld.get(\"resource_nodes\", []):",
+            "for node in session.overworld.get(\"artifact_nodes\", []):",
+            "for encounter in session.overworld.get(\"encounters\", []):",
+            "_append_delivery_interception_target_descriptors",
+            "_append_hero_target_descriptors",
+        )
+        source_positions = [descriptor_body.find(token) for token in ordered_sources]
+        ensure(all(position >= 0 for position in source_positions) and source_positions == sorted(source_positions), errors, "Target descriptor enumeration lost its exact ten-source order.")
+        ensure("return descriptors" in descriptor_body, errors, "Target descriptor enumeration does not return the ordered surface.")
+    projection_match = re.search(
+        r"static func _target_candidates_from_descriptors\(.*?\n(?P<body>.*?)(?=\n\nstatic func _append_town_target_descriptor\()",
+        enemy_adventure_text,
+        re.DOTALL,
+    )
+    ensure(projection_match is not None, errors, "Could not isolate target descriptor projection.")
+    if projection_match is not None:
+        projection_body = projection_match.group("body")
+        for family in ("town", "resource", "artifact", "encounter", "delivery", "hero"):
+            ensure(f'"{family}":' in projection_body, errors, f"Target descriptor projection is missing family: {family}")
+        for required_token in ("origin_pos", "path_context", "_path_distance_surface_context", "return candidates"):
+            ensure(required_token in projection_body, errors, f"Target descriptor projection is missing origin-sensitive token: {required_token}")
+    for required_token in (
+        '"town": town.duplicate(true)',
+        '"node": node.duplicate(true)',
+        '"site": site.duplicate(true)',
+        '"encounter": encounter.duplicate(true)',
+        '"delivery_state": delivery_state.duplicate(true)',
+        '"hero": hero.duplicate(true)',
+    ):
+        ensure(required_token in enemy_adventure_text, errors, f"Target descriptor surface is missing deep-detached source payload: {required_token}")
+
+    best_spawn_match = re.search(
+        r"static func _best_open_spawn_point\(.*?\n(?P<body>.*?)(?=\n\nstatic func _apply_generated_multi_town_front_distribution\()",
+        enemy_turn_text,
+        re.DOTALL,
+    )
+    ensure(best_spawn_match is not None, errors, "Could not isolate best-open-spawn descriptor lifecycle.")
+    if best_spawn_match is not None:
+        best_spawn_body = best_spawn_match.group("body")
+        first_erase = best_spawn_body.find('spawn_scan_context.erase("target_candidate_descriptors")')
+        points_load = best_spawn_body.find("var points := _launch_decision_open_spawn_points")
+        empty_return = best_spawn_body.find("if points.is_empty():")
+        point_loop = best_spawn_body.find("for index in range(points.size()):")
+        final_erase = best_spawn_body.rfind('spawn_scan_context.erase("target_candidate_descriptors")')
+        final_return = best_spawn_body.rfind("return best")
+        ensure(0 <= first_erase < points_load < empty_return < point_loop < final_erase < final_return, errors, "Best-open-spawn descriptor cache is not invalidated on entry, no-points, and exit boundaries.")
+        ensure(best_spawn_body.count('spawn_scan_context.erase("target_candidate_descriptors")') == 2, errors, "Best-open-spawn descriptor lifecycle must have exactly entry and successful-exit erasures.")
+    for required_token in (
+        "static func _spawn_scan_target_descriptors",
+        '"target_descriptor_enumeration_reused"',
+        '"target_descriptor_enumeration_count"',
+        '"target_descriptor_count"',
+        '"target_descriptor_projection_count"',
+        '"target_descriptor_projection_ms"',
+        "EnemyAdventureRulesScript._target_candidates_from_descriptors(",
+    ):
+        ensure(required_token in enemy_turn_text, errors, f"Spawn descriptor profile/cache implementation is missing token: {required_token}")
     if AI_HERO_TASK_SPAWN_COMMANDER_SELECTION_REPORT_SCRIPT_PATH.exists():
         report_text = AI_HERO_TASK_SPAWN_COMMANDER_SELECTION_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
         for required_token in (
@@ -23883,8 +24158,45 @@ def validate_ai_hero_task_spawn_commander_selection(errors: list[str]) -> None:
             "hero_task_state_live_persist_no_save_migration",
             "best_goal_tile_reuses_one_path_context",
             "spawn_launch_policy_context_reuses_phase_local_capital_and_front",
+            "_target_descriptor_spawn_sweep_reuse_case",
+            "spawn_sweep_lazily_enumerates_once_projects_three_points_and_invalidates",
+            'config["spawn_points"] = [{"x": 7, "y": 1}, {"x": 7, "y": 3}, {"x": 8, "y": 4}]',
+            '"target_candidate_descriptors": [{"family": "stale_fixture"}]',
+            'int(counts.get("target_descriptor_enumeration_count", 0)) != 1',
+            'int(counts.get("target_descriptor_enumeration_reused", 0)) != 2',
+            'int(counts.get("target_descriptor_projection_count", 0)) != 3',
+            'scan_context.has("target_candidate_descriptors")',
+            'no_points_context.has("target_candidate_descriptors")',
+            "EnemyTurnRules._spawn_point_candidate(",
+            'JSON.stringify(selected) != JSON.stringify(expected)',
+            'int(next_counts.get("target_descriptor_enumeration_count", 0)) != 1',
+            '"selected_spawn_payload_exact": true',
         ):
             ensure(required_token in report_text, errors, f"AI hero task spawn commander selection report is missing token: {required_token}")
+        spawn_case_match = re.search(
+            r"func _target_descriptor_spawn_sweep_reuse_case\(\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc _launch_policy_context_reuse_case\()",
+            report_text,
+            re.DOTALL,
+        )
+        ensure(spawn_case_match is not None, errors, "Could not isolate spawn descriptor sweep report case.")
+        if spawn_case_match is not None:
+            spawn_case = spawn_case_match.group("body")
+            ordered_tokens = (
+                'var scan_context := {"target_candidate_descriptors":',
+                "EnemyTurnRules._spawn_profile_begin(true)",
+                "var selected: Dictionary = EnemyTurnRules._best_open_spawn_point",
+                "var profile := EnemyTurnRules._spawn_profile_finish()",
+                "if scan_context.has(\"target_candidate_descriptors\"):",
+                "var no_points_context :=",
+                'no_points_config["spawn_points"] = []',
+                "var resources: Array =",
+                "var next_context := scan_context",
+                "var next_selected := EnemyTurnRules._best_open_spawn_point",
+            )
+            positions = [spawn_case.find(token) for token in ordered_tokens]
+            ensure(all(position >= 0 for position in positions) and positions == sorted(positions), errors, "Spawn descriptor report lost entry/sweep/exit/no-points/mutation/next-sweep order.")
+            for forbidden_token in ("normalize", 'erase("target_candidate_descriptors")', "_target_candidate_descriptors("):
+                ensure(forbidden_token not in spawn_case, errors, f"Spawn descriptor report must observe production cache lifecycle without normalizing or directly erasing/enumerating: {forbidden_token}")
     if AI_HERO_TASK_SPAWN_COMMANDER_SELECTION_REPORT_DOC_PATH.exists():
         doc_text = AI_HERO_TASK_SPAWN_COMMANDER_SELECTION_REPORT_DOC_PATH.read_text(encoding="utf-8")
         for required_text in (
@@ -23894,6 +24206,60 @@ def validate_ai_hero_task_spawn_commander_selection(errors: list[str]) -> None:
             "No save migration",
         ):
             ensure(required_text in doc_text, errors, f"AI hero task spawn commander selection doc is missing required text: {required_text}")
+
+def validate_ai_known_world_memory_candidate_compatibility(errors: list[str]) -> None:
+    report_path = ROOT / "tests" / "ai_known_world_memory_report.gd"
+    ensure(report_path.exists(), errors, "Missing AI known-world memory report owner.")
+    report_text = report_path.read_text(encoding="utf-8") if report_path.exists() else ""
+    helper_match = re.search(
+        r"func _hero_target_candidates_for_origin\(session, origin_pos: Vector2i, config: Dictionary\) -> Array:\n(?P<body>.*?)(?=\nfunc )",
+        report_text,
+        re.S,
+    )
+    ensure(helper_match is not None, errors, "AI known-world report is missing its typed current candidate compatibility helper.")
+    helper_body = helper_match.group("body") if helper_match else ""
+    for required_token in (
+        "var hero_candidates: Array = []",
+        "var candidates: Array = EnemyAdventureRules._target_candidates(session, config, origin_pos, false)",
+        "for candidate in candidates:",
+        'String(candidate.get("target_kind", "")) != "hero"',
+        "hero_candidates.append(candidate.duplicate(true))",
+        "return hero_candidates",
+    ):
+        ensure(required_token in helper_body, errors, f"AI known-world candidate compatibility helper is missing exact behavior: {required_token}")
+    ensure(
+        helper_body.count("EnemyAdventureRules._target_candidates(") == 1,
+        errors,
+        "AI known-world candidate compatibility helper must materialize the current candidate surface exactly once.",
+    )
+    sighting_match = re.search(
+        r"func _hero_targets_require_ai_sighting\(\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc _hero_target_candidates_for_origin)",
+        report_text,
+        re.S,
+    )
+    ensure(sighting_match is not None, errors, "AI known-world report is missing the isolated hero-sighting compatibility case.")
+    sighting_body = sighting_match.group("body") if sighting_match else ""
+    ensure(
+        sighting_body.count("_hero_target_candidates_for_origin(session, Vector2i(7, 2), config)") == 3,
+        errors,
+        "AI known-world hero-sighting case must use the compatibility helper for hidden, visible, and remembered candidates.",
+    )
+    for candidate_name in ("hidden_candidates", "visible_candidates", "remembered_candidates"):
+        ensure(
+            f"var {candidate_name}: Array = _hero_target_candidates_for_origin" in sighting_body,
+            errors,
+            f"AI known-world hero-sighting candidate must remain explicitly typed: {candidate_name}",
+        )
+    ensure(
+        "EnemyAdventureRules._hero_target_candidates(" not in report_text,
+        errors,
+        "AI known-world report must not call the removed private hero-candidate wrapper.",
+    )
+    ensure(
+        report_text.count("_hero_target_candidates_for_origin(") == 4,
+        errors,
+        "AI known-world report must keep one compatibility helper definition and exactly three consumers.",
+    )
 
 def validate_ai_hero_task_retask_cancellation(errors: list[str]) -> None:
     for path in (
@@ -24854,7 +25220,7 @@ def validate_ai_raid_regroup_retreat(errors: list[str]) -> None:
     for required_token in (
         "static func _ai_commander_task_fit_context",
         "static func _ai_commander_task_fit_bonus_from_context",
-        "_target_candidates(session, config, origin_pos, false, path_context)",
+        "_target_candidates_from_descriptors(",
         'current_placement_id.begins_with("__active_front_support_probe:")',
         "virtual_probe_path_context",
         "if step_index > 0:",
@@ -27514,7 +27880,8 @@ def validate_convoy_interception_clash_slice(errors: list[str]) -> None:
 
     enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
-        "func _append_delivery_interception_candidates",
+        "func _append_delivery_interception_target_descriptors",
+        "func _project_delivery_interception_target_descriptor",
         "func _delivery_town_candidate",
         "func _delivery_hero_candidate",
         '"delivery_intercept_node_placement_id"',
@@ -34131,6 +34498,7 @@ def main() -> int:
     validate_ai_hero_task_actor_lifecycle(errors)
     validate_ai_hero_task_resumption(errors)
     validate_ai_hero_task_spawn_commander_selection(errors)
+    validate_ai_known_world_memory_candidate_compatibility(errors)
     validate_ai_hero_task_retask_cancellation(errors)
     validate_ai_hero_task_encounter_objective(errors)
     validate_ai_hero_task_artifact_objective(errors)

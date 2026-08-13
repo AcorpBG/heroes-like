@@ -10,6 +10,9 @@ func _ready() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	var descriptor_sweep_case := _target_descriptor_spawn_sweep_reuse_case()
+	if descriptor_sweep_case.is_empty():
+		return
 	var saved_task_case := _saved_task_commander_beats_rotation_case()
 	if saved_task_case.is_empty():
 		return
@@ -49,12 +52,151 @@ func _run() -> void:
 		"schema_status": "saved_tasks_influence_live_commander_deployment_spawn_avoids_all_player_heroes_prefers_deployable_saved_task_commander_spell_tempo_fresh_fit_generated_front_distribution_rebuild_launch_readiness_and_launch_policy_context_reuse",
 		"behavior_policy": "saved_tasks_influence_live_commander_deployment_and_fresh_target_fit_influence_spawn_point_selection_while_spawn_occupancy_respects_all_live_player_heroes_adventure_spell_route_tempo_generated_multi_town_front_distribution_and_rebuilds_wait_for_viable_commanders",
 		"save_policy": "hero_task_state_live_persist_no_save_migration",
-		"cases": [saved_task_case, fallback_case, spawn_point_case, multihero_spawn_occupancy_case, spell_tempo_case, fresh_fit_case, generated_front_distribution_case, rebuild_launch_readiness_case, rebuild_target_completion_case, best_goal_tile_path_context_case, launch_policy_context_case],
+		"cases": [descriptor_sweep_case, saved_task_case, fallback_case, spawn_point_case, multihero_spawn_occupancy_case, spell_tempo_case, fresh_fit_case, generated_front_distribution_case, rebuild_launch_readiness_case, rebuild_target_completion_case, best_goal_tile_path_context_case, launch_policy_context_case],
 		"save_version_before": int(SessionStateStore.SAVE_VERSION),
 		"save_version_after": int(SessionStateStore.SAVE_VERSION),
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])
 	get_tree().quit(0)
+
+func _target_descriptor_spawn_sweep_reuse_case() -> Dictionary:
+	var session = _base_session()
+	var config := _enemy_config().duplicate(true)
+	config["generated_package_town_config"] = true
+	config["spawn_points"] = [{"x": 7, "y": 1}, {"x": 7, "y": 3}, {"x": 8, "y": 4}]
+	_set_all_commander_continuity(
+		session,
+		[
+			{"unit_id": "unit_bog_brute", "count": 12},
+			{"unit_id": "unit_mire_slinger", "count": 15},
+		]
+	)
+	var state := _enemy_state(session)
+	state.erase("hero_task_state")
+	state["rebuild_pressure_request"] = {
+		"requested_day": int(session.day),
+		"origin_town_id": "duskfen_bastion",
+		"commander_id": "hero_tarn",
+		"reason": "descriptor_sweep_fixture",
+	}
+	_update_enemy_state(session, state)
+	state = _enemy_state(session)
+	var authority_before := JSON.stringify(session.to_dict())
+	var scan_context := {"target_candidate_descriptors": [{"family": "stale_fixture"}]}
+	EnemyTurnRules._spawn_profile_begin(true)
+	var selected: Dictionary = EnemyTurnRules._best_open_spawn_point(
+		session,
+		config,
+		state,
+		MIRECLAW,
+		false,
+		scan_context
+	)
+	var profile := EnemyTurnRules._spawn_profile_finish()
+	var counts: Dictionary = profile.get("counts", {}) if profile.get("counts", {}) is Dictionary else {}
+	if selected.is_empty():
+		_fail("Three-point descriptor sweep did not select a viable fresh target.")
+		return {}
+	if int(counts.get("target_descriptor_enumeration_count", 0)) != 1 \
+			or int(counts.get("target_descriptor_enumeration_reused", 0)) != 2 \
+			or int(counts.get("target_descriptor_projection_count", 0)) != 3 \
+			or int(counts.get("target_descriptor_count", 0)) <= 0:
+		_fail("Spawn sweep did not separate one lazy enumeration from three projections: %s" % JSON.stringify(profile))
+		return {}
+	if scan_context.has("target_candidate_descriptors"):
+		_fail("Spawn sweep leaked descriptor cache beyond its exit boundary: %s" % JSON.stringify(scan_context))
+		return {}
+
+	var occupied := EnemyAdventureRules.occupied_raid_commander_ids(session, MIRECLAW)
+	var expected := {}
+	var point_candidates := []
+	var points: Array = config.get("spawn_points", [])
+	for index in range(points.size()):
+		var point: Dictionary = points[index]
+		var direct_context := {}
+		var candidate: Dictionary = EnemyTurnRules._spawn_point_candidate(
+			session,
+			config,
+			state,
+			MIRECLAW,
+			point,
+			occupied,
+			index,
+			false,
+			direct_context
+		)
+		if not candidate.is_empty():
+			candidate = EnemyTurnRules._apply_generated_multi_town_front_distribution(
+				session,
+				config,
+				MIRECLAW,
+				point,
+				candidate
+			)
+		point_candidates.append(candidate.duplicate(true))
+		if not candidate.is_empty() and (expected.is_empty() or EnemyTurnRules._spawn_point_candidate_beats(candidate, expected)):
+			expected = candidate
+	if JSON.stringify(selected) != JSON.stringify(expected):
+		_fail("Descriptor-reuse sweep changed selected spawn payload versus independent point controls: selected=%s expected=%s" % [JSON.stringify(selected), JSON.stringify(expected)])
+		return {}
+	if JSON.stringify(session.to_dict()) != authority_before:
+		_fail("Read-only descriptor spawn sweep mutated session authority.")
+		return {}
+
+	var no_points_context := {"target_candidate_descriptors": [{"family": "stale_no_points"}]}
+	var no_points_config := config.duplicate(true)
+	no_points_config["spawn_points"] = []
+	var no_points := EnemyTurnRules._best_open_spawn_point(
+		session,
+		no_points_config,
+		state,
+		MIRECLAW,
+		false,
+		no_points_context
+	)
+	if not no_points.is_empty() or no_points_context.has("target_candidate_descriptors"):
+		_fail("No-points sweep retained stale descriptors or selected a point: point=%s context=%s" % [JSON.stringify(no_points), JSON.stringify(no_points_context)])
+		return {}
+
+	var resources: Array = session.overworld.get("resource_nodes", []).duplicate(true)
+	for index in range(resources.size()):
+		var node: Dictionary = resources[index] if resources[index] is Dictionary else {}
+		if String(node.get("placement_id", "")) == "river_signal_post":
+			node["x"] = int(node.get("x", 0)) + 1
+			resources[index] = node
+	session.overworld["resource_nodes"] = resources
+	var next_context := scan_context
+	EnemyTurnRules._spawn_profile_begin(true)
+	var next_selected := EnemyTurnRules._best_open_spawn_point(
+		session,
+		config,
+		state,
+		MIRECLAW,
+		false,
+		next_context
+	)
+	var next_profile := EnemyTurnRules._spawn_profile_finish()
+	var next_counts: Dictionary = next_profile.get("counts", {}) if next_profile.get("counts", {}) is Dictionary else {}
+	if next_selected.is_empty() \
+			or int(next_counts.get("target_descriptor_enumeration_count", 0)) != 1 \
+			or int(next_counts.get("target_descriptor_enumeration_reused", 0)) != 2 \
+			or int(next_counts.get("target_descriptor_projection_count", 0)) != 3 \
+			or next_context.has("target_candidate_descriptors"):
+		_fail("Next spawn sweep did not rebuild one fresh descriptor cache after live mutation: selected=%s profile=%s context=%s" % [JSON.stringify(next_selected), JSON.stringify(next_profile), JSON.stringify(next_context)])
+		return {}
+	return {
+		"case_id": "spawn_sweep_lazily_enumerates_once_projects_three_points_and_invalidates",
+		"spawn_point_count": points.size(),
+		"selected_spawn": selected,
+		"independent_point_candidates": point_candidates,
+		"profile_counts": counts,
+		"next_sweep_profile_counts": next_counts,
+		"entry_stale_cache_replaced": true,
+		"exit_cache_cleared": true,
+		"no_points_cache_cleared": true,
+		"next_sweep_recomputed_after_mutation": true,
+		"selected_spawn_payload_exact": true,
+	}
 
 func _launch_policy_context_reuse_case() -> Dictionary:
 	var baseline = _base_session()

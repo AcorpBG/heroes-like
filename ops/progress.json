@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the bounded Map Editor responsive TopBar containment slice. The later Bargebow HP 14 candidate was rejected and superseded after its full all-live matrix worsened severity, severe rows, maximum dominance, and side bias; production remains at HP 13 and no active-breadth acceptance run followed.",
+  "currentNotes": "Completed the bounded strategic-AI phase target descriptor enumeration reuse slice. Exact detached discovery is reused only within one planner invocation or best-open-spawn-point sweep; origin-sensitive projection remains fresh. Focused, ordinal-100, compatibility, static, Linux export/startup, and Windows export/fresh-Wine startup gates passed with bounded claims.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-map-editor-responsive-top-bar-containment-10184",
-  "currentSliceId": "ux-map-editor-responsive-top-bar-containment-10184",
-  "currentSliceNotes": "Header, MapPackagePicker, Load Map, Save Copy, Play Copy, and Menu are contained at 1280 and 1920 with full native package discovery, focus, map/ToolRail geometry, and editor authority preserved. Select the next tracker-approved slice; the rejected Bargebow candidate is not current work.",
+  "currentSlice": "strategic-ai-phase-target-descriptor-enumeration-reuse-10184",
+  "currentSliceId": "strategic-ai-phase-target-descriptor-enumeration-reuse-10184",
+  "currentSliceNotes": "Exact ordered detached descriptors now preserve all ten discovery families and seen timing while route, guard, distance, valuation, priority, reasons, and final payload remain fresh per origin. Ordinal-100 behavior is exact and descriptor-bearing spawn sweeps eliminate eight of thirteen repeated enumerations. Select the next tracker-approved slice; broader strategic-AI breadth and release readiness remain open.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Map Editor Responsive Top Bar Containment",
-  "currentSliceUpdatedAt": "2026-08-13T03:58:52Z",
+  "currentSliceTitle": "Strategic AI Phase Target Descriptor Enumeration Reuse",
+  "currentSliceUpdatedAt": "2026-08-13T08:26:50Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -78564,6 +78564,28 @@
       "notes": "Rejected after the decisive exact full-matrix screen. The old-13 control is 34 outliers / 187.0 severity / three severe rows / 68.5 maximum dominance / 0.73 side bias / zero structural failures. HP 14 improves week-three Embercourt/Mireclaw from 68.5 to 64.5 percent Mireclaw dominance, but regresses the full matrix to 32 / 207.0 / five / 78.0 / 1.07 / zero. All non-Embercourt ordered rows remain exact; 20 Embercourt pair rows move, including week-one Embercourt/Thornwake worsening from 67.5 to 78.0 percent Embercourt dominance. A separate exact week-one audit identifies the Bargebow/Sporeglass maximum-damage gap as causal, but both bounded midpoint screens also fail: Bargebow max damage 5 produces 35 / 180.5 / two / 73.5 / 0.87 / zero, and Sporeglass max damage 5 produces 38 / 204.5 / four / 68.5 / 1.27 / zero. Ownership isolation is exact. Production remains unchanged, active breadth was not run, and no further candidate is registered.",
       "remainingWork": "No implementation follows from the rejected HP or damage candidates. The separate week-two Mireclaw/Sunvault 65.5-percent row may receive a fresh source-backed attribution audit in a later selection, but it is not registered or actionable work.",
       "result": {"accepted": false, "production_hp": 13, "candidate_hp": 14, "control_outliers": 34, "control_severity": 187.0, "control_severe_rows": 3, "control_max_dominance_pct": 68.5, "control_max_side_bias_points": 0.73, "candidate_outliers": 32, "candidate_severity": 207.0, "candidate_severe_rows": 5, "candidate_max_dominance_pct": 78.0, "candidate_max_side_bias_points": 1.07, "structural_failure_count": 0, "non_embercourt_ordered_rows_exact": true, "moved_embercourt_pair_row_count": 20, "week3_mireclaw_dominance_control_pct": 68.5, "week3_mireclaw_dominance_candidate_pct": 64.5, "week1_embercourt_thornwake_control_embercourt_dominance_pct": 67.5, "week1_embercourt_thornwake_candidate_embercourt_dominance_pct": 78.0, "bargebow_max_damage_5_outliers": 35, "bargebow_max_damage_5_severity": 180.5, "bargebow_max_damage_5_severe_rows": 2, "bargebow_max_damage_5_max_dominance_pct": 73.5, "bargebow_max_damage_5_max_side_bias_points": 0.87, "bargebow_max_damage_5_structural_failure_count": 0, "bargebow_max_damage_5_week3_mireclaw_dominance_pct": 73.5, "sporeglass_max_damage_5_outliers": 38, "sporeglass_max_damage_5_severity": 204.5, "sporeglass_max_damage_5_severe_rows": 4, "sporeglass_max_damage_5_max_dominance_pct": 68.5, "sporeglass_max_damage_5_max_side_bias_points": 1.27, "sporeglass_max_damage_5_structural_failure_count": 0, "ownership_isolation_exact": true, "active_breadth_run": false}
+    },
+    {
+      "id": "strategic-ai-phase-target-descriptor-enumeration-reuse-10184",
+      "title": "Strategic AI Phase Target Descriptor Enumeration Reuse",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md"],
+      "purpose": "Separate exact ordered live target descriptor enumeration from fresh origin-specific projection so one planner invocation and one best-open-spawn-point sweep can reuse immutable discovery work without changing strategic-AI behavior.",
+      "implementationTargets": ["scripts/core/EnemyAdventureRules.gd", "scripts/core/EnemyTurnRules.gd", "tests/ai_hero_task_strategic_planner_report.gd", "tests/ai_hero_task_spawn_commander_selection_report.gd", "tests/ai_known_world_memory_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "testOwners": ["tests/ai_hero_task_strategic_planner_report.gd", "tests/ai_hero_task_spawn_commander_selection_report.gd", "tests/ai_known_world_memory_report.gd", "tests/validate_repo.py"],
+      "baseline": {"head": "57842a2b", "ordinal_100_row_signature": "6e893020", "row_runtime_msec": 207674, "max_turn_runtime_msec": 9293, "turns_completed": 36, "enemy_activity_event_count": 172, "target_assignment_count": 28, "stalled_turn_count": 1, "target_integrity_violation_count": 0, "unreachable_active_target_total": 0, "initial_town_count": 4, "initial_resource_node_count": 190, "initial_encounter_count": 66, "final_encounter_count": 78, "spawn_scan_context_count": 11, "spawn_origin_projection_count": 23, "fresh_target_candidate_count": 486, "fresh_target_candidates_ms": 5736, "pre_build_task_plan_ms": 18975, "post_raid_task_plan_ms": 9321},
+      "completionCriteria": ["EnemyAdventureRules exposes an exact detached ordered descriptor surface for siege target, defeat-objective towns, victory-objective towns, player towns, neutral towns, resource nodes, artifact nodes, encounters, delivery interceptions, and known heroes while preserving family/source order and current seen-key timing", "Every origin keeps fresh route, staging, guard and reachability, goal tile, distance, travel, valuation, priority, reason, and final payload projection", "Descriptor reuse is bounded to one plan_enemy_hero_task_board invocation and one EnemyTurnRules best-open-spawn-point sweep, and mutation plus the next launch rebuild the surface", "Old-versus-new whole candidate arrays, values, and ordering remain exact across all families, duplicate identities, known and unscouted targets, unreachable and guarded targets, and multiple origins", "Focused proof preserves the exact selected strategic task and spawn point and separates descriptor-enumeration counters from per-origin projection counters", "The ordinal-100 Medium row preserves signature 6e893020, activity-event count and order, tasks, outcome, integrity, and unreachable-target authority while materially reducing target discovery, planner, and spawn work with non-regressed row and maximum-turn runtime", "Strategic-planner, spawn-selection, repository-validator, core, editor-parse, JSON, Python, and diff gates pass"],
+      "nonGoals": ["global, day, session, or cross-invocation target cache", "score, valuation, priority, route, movement, guard, consequence, topology, AI-policy, task-schema, content, balance, save-schema, or Native RMG changes", "broad strategic-AI completion, full performance completion, platform certification, or overall release-readiness claims"],
+      "createdAt": "2026-08-13T06:45:41Z",
+      "startedAt": "2026-08-13T06:45:41Z",
+      "updatedAt": "2026-08-13T08:26:50Z",
+      "completedAt": "2026-08-13T08:26:50Z",
+      "notes": "EnemyAdventureRules now separates exact ordered detached target descriptors from fresh origin-specific projection, and EnemyTurnRules reuses descriptors only within one best-open-spawn-point sweep with entry, exit, no-points, mutation, and next-sweep invalidation proved. Independent legacy parity covers all ten target families, known and unscouted targets, duplicate seen timing, guarded and unreachable targets, multi-origin ordering, and exact selected task/spawn payloads. Ordinal-100 retains signature 6e893020, 36 turns, day-37 defeat, 172 events, two commander tasks, and zero integrity or unreachable-target failures. Five descriptor enumerations serve thirteen origin projections with eight reuses; row, maximum-turn, planner, spawn, and fresh-discovery timings all improve. Compatibility, core, repository, Python, JSON, diff, editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates passed. No packaged strategic-AI interaction, controller, AT-SPI/UIA, native hardware, Native RMG parity, signing/publication, whole-game, or whole-release claim is made.",
+      "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice; broader strategic-AI breadth, faction balance, accessibility certification, content/performance, signing/publication, Native RMG parity, native Windows certification, and overall release readiness remain open.",
+      "result": {"ordinal_100_signature": "6e893020", "turns_completed": 36, "final_day": 37, "final_scenario_status": "defeat", "enemy_activity_event_count": 172, "commander_task_planned_count": 2, "target_integrity_violation_count": 0, "unreachable_active_target_total": 0, "target_descriptor_enumeration_count": 5, "target_descriptor_reuse_count": 8, "target_descriptor_projection_count": 13, "descriptor_enumeration_elimination_pct": 61.5, "row_runtime_msec": 205433, "max_turn_runtime_msec": 8992, "task_plan_runtime_msec": 26701, "spawn_loop_runtime_msec": 14297, "fresh_target_candidates_msec": 4997, "linux_export_headless_startup_passed": true, "windows_export_fresh_wine_startup_passed": true, "packaged_strategic_ai_interaction_tested": false}
     }
   ],
   "project": "heroes-like",
@@ -79005,7 +79027,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "bargebow_hp14_candidate_rejected_production_hp13_unchanged",
+  "result": "strategic_ai_phase_target_descriptor_enumeration_reuse_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -79106,9 +79128,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The Bargebow Crew HP 14 candidate is rejected and superseded: it improves the cited week-three row but worsens full-matrix severity, severe rows, maximum dominance, and side bias. Production remains HP 13, active breadth was not run, and no implementation progress is claimed. Select the next tracker-approved slice; faction balance and overall release readiness remain open.",
+  "summary": "The strategic-AI phase target descriptor enumeration reuse slice is complete. Exact ordered discovery is invocation-local, origin projection remains fresh, ordinal-100 behavior is unchanged, repeated descriptor enumeration is materially reduced, and focused, compatibility, static, Linux, and Windows startup gates pass. Select the next tracker-approved slice; broader strategic-AI breadth and overall release readiness remain open.",
   "taskId": "10184",
-  "updatedAt": "2026-08-13T05:13:54Z",
+  "updatedAt": "2026-08-13T08:26:50Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

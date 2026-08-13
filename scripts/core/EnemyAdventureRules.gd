@@ -8653,7 +8653,14 @@ static func plan_enemy_hero_task_board(
 			"events": [],
 		}
 
-	var candidates := _ai_hero_task_planner_candidates_from_origins(session, config, origins)
+	var target_descriptor_profile := {}
+	var candidates := _ai_hero_task_planner_candidates_from_origins(
+		session,
+		config,
+		origins,
+		null,
+		target_descriptor_profile
+	)
 	var target_claims := _ai_hero_task_planner_target_claims(next_tasks)
 	var planned_count := 0
 	var events := []
@@ -8690,7 +8697,13 @@ static func plan_enemy_hero_task_board(
 			"tasks": _ai_hero_task_prune_live_tasks(next_tasks, int(session.day)),
 		}
 		_ai_hero_task_write_enemy_state_for_faction(session, faction_id, working_state)
-		return {"state": working_state, "planned_count": 0, "task_count": next_tasks.size(), "events": []}
+		return {
+			"state": working_state,
+			"planned_count": 0,
+			"task_count": next_tasks.size(),
+			"events": [],
+			"target_descriptor_profile": target_descriptor_profile.duplicate(true),
+		}
 	working_state["hero_task_state"] = {
 		"schema_version": 1,
 		"planner_epoch": max(0, int(task_state.get("planner_epoch", 0))) + (1 if planned_count > 0 or reservation_recovery_changed else 0),
@@ -8702,6 +8715,7 @@ static func plan_enemy_hero_task_board(
 		"planned_count": planned_count,
 		"task_count": working_state.get("hero_task_state", {}).get("tasks", []).size() if working_state.get("hero_task_state", {}) is Dictionary else next_tasks.size(),
 		"events": events,
+		"target_descriptor_profile": target_descriptor_profile.duplicate(true),
 	}
 
 static func ai_pressure_summary_target_from_task_board(
@@ -9245,10 +9259,20 @@ static func _ai_hero_task_planner_class_for_candidate(candidate: Dictionary) -> 
 static func _ai_hero_task_planner_candidates_from_origins(
 	session: SessionStateStoreScript.SessionData,
 	config: Dictionary,
-	origins: Array
+	origins: Array,
+	preloaded_descriptors: Variant = null,
+	descriptor_profile: Variant = null
 ) -> Array:
 	var best_by_target := {}
 	var exploration_by_target := {}
+	var profile: Dictionary = descriptor_profile if descriptor_profile is Dictionary else {}
+	var descriptors: Array
+	if preloaded_descriptors is Array:
+		descriptors = preloaded_descriptors
+	else:
+		descriptors = _target_candidate_descriptors(session, config, false)
+		profile["enumeration_count"] = int(profile.get("enumeration_count", 0)) + 1
+	profile["descriptor_count"] = descriptors.size()
 	var path_context := _path_distance_surface_context(
 		session,
 		"",
@@ -9259,7 +9283,15 @@ static func _ai_hero_task_planner_candidates_from_origins(
 			continue
 		var origin: Dictionary = origin_value
 		var origin_pos := Vector2i(int(origin.get("x", 0)), int(origin.get("y", 0)))
-		var origin_candidates := _target_candidates(session, config, origin_pos, false, path_context)
+		var origin_candidates := _target_candidates_from_descriptors(
+			session,
+			config,
+			origin_pos,
+			descriptors,
+			path_context
+		)
+		profile["projection_count"] = int(profile.get("projection_count", 0)) + 1
+		profile["projected_candidate_count"] = int(profile.get("projected_candidate_count", 0)) + origin_candidates.size()
 		if origin_candidates.is_empty():
 			var exploration_plan := _no_known_target_exploration_plan(session, config, origin_pos)
 			if not exploration_plan.is_empty():
@@ -9802,25 +9834,37 @@ static func _target_candidates(
 	include_unscouted: bool = false,
 	preloaded_path_context: Dictionary = {}
 ) -> Array:
-	var seen = {}
-	var candidates = []
+	var descriptors := _target_candidate_descriptors(session, config, include_unscouted)
+	return _target_candidates_from_descriptors(
+		session,
+		config,
+		origin_pos,
+		descriptors,
+		preloaded_path_context
+	)
+
+
+static func _target_candidate_descriptors(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	include_unscouted: bool = false
+) -> Array:
+	var seen := {}
+	var descriptors := []
 	var faction_id = String(config.get("faction_id", ""))
-	var path_context := preloaded_path_context
-	if path_context.is_empty():
-		path_context = _path_distance_surface_context(session, "", faction_id)
 	var scenario = ContentService.get_scenario(session.scenario_id)
 	var siege_target_id = String(config.get("siege_target_placement_id", ""))
 	if siege_target_id != "":
-		_append_town_candidate(session, candidates, seen, siege_target_id, origin_pos, 320, config, faction_id, include_unscouted, path_context)
+		_append_town_target_descriptor(session, descriptors, seen, siege_target_id, 320, config, faction_id, include_unscouted)
 
 	var objectives = scenario.get("objectives", {})
 	if objectives is Dictionary:
 		for objective in objectives.get("defeat", []):
 			if objective is Dictionary and String(objective.get("type", "")) in ["town_owned_by_player", "town_not_owned_by_player"]:
-				_append_town_candidate(session, candidates, seen, String(objective.get("placement_id", "")), origin_pos, 260, config, faction_id, include_unscouted, path_context)
+				_append_town_target_descriptor(session, descriptors, seen, String(objective.get("placement_id", "")), 260, config, faction_id, include_unscouted)
 		for objective in objectives.get("victory", []):
 			if objective is Dictionary and String(objective.get("type", "")) in ["town_owned_by_player", "town_not_owned_by_player"]:
-				_append_town_candidate(session, candidates, seen, String(objective.get("placement_id", "")), origin_pos, 220, config, faction_id, include_unscouted, path_context)
+				_append_town_target_descriptor(session, descriptors, seen, String(objective.get("placement_id", "")), 220, config, faction_id, include_unscouted)
 
 	for town in session.overworld.get("towns", []):
 		if not (town is Dictionary):
@@ -9832,7 +9876,7 @@ static func _target_candidates(
 			base_priority += 50
 		if _town_is_objective_anchor(session, String(town.get("placement_id", ""))):
 			base_priority += 20
-		_append_town_candidate(session, candidates, seen, String(town.get("placement_id", "")), origin_pos, base_priority, config, faction_id, include_unscouted, path_context)
+		_append_town_target_descriptor(session, descriptors, seen, String(town.get("placement_id", "")), base_priority, config, faction_id, include_unscouted)
 	for town in session.overworld.get("towns", []):
 		if not (town is Dictionary):
 			continue
@@ -9843,68 +9887,89 @@ static func _target_candidates(
 			base_priority += 25
 		if _town_is_objective_anchor(session, String(town.get("placement_id", ""))):
 			base_priority += 45
-		_append_town_candidate(session, candidates, seen, String(town.get("placement_id", "")), origin_pos, base_priority, config, faction_id, include_unscouted, path_context)
+		_append_town_target_descriptor(session, descriptors, seen, String(town.get("placement_id", "")), base_priority, config, faction_id, include_unscouted)
 
 	for node in session.overworld.get("resource_nodes", []):
-		_append_resource_candidate(
+		_append_resource_target_descriptor(
 			session,
-			candidates,
+			descriptors,
 			seen,
 			node,
-			origin_pos,
 			config,
 			faction_id,
-			include_unscouted,
-			path_context
+			include_unscouted
 		)
 
 	for node in session.overworld.get("artifact_nodes", []):
-		_append_artifact_candidate(
+		_append_artifact_target_descriptor(
 			session,
-			candidates,
+			descriptors,
 			seen,
 			node,
-			origin_pos,
 			_artifact_target_priority(session, node),
 			config,
 			faction_id,
-			include_unscouted,
-			path_context
+			include_unscouted
 		)
 
 	for encounter in session.overworld.get("encounters", []):
-		_append_encounter_candidate(
+		_append_encounter_target_descriptor(
 			session,
-			candidates,
+			descriptors,
 			seen,
 			encounter,
-			origin_pos,
 			_encounter_target_priority(session, encounter),
 			config,
 			faction_id,
-			include_unscouted,
-			path_context
+			include_unscouted
 		)
 
-	_append_delivery_interception_candidates(session, candidates, seen, origin_pos, config, faction_id)
+	_append_delivery_interception_target_descriptors(session, descriptors, seen, config, faction_id)
+	_append_hero_target_descriptors(session, descriptors, config, faction_id)
+	return descriptors
 
-	var hero_candidates = _hero_target_candidates(session, origin_pos, config, faction_id)
-	for hero_candidate in hero_candidates:
-		if hero_candidate is Dictionary and not hero_candidate.is_empty():
-			candidates.append(hero_candidate)
+
+static func _target_candidates_from_descriptors(
+	session: SessionStateStoreScript.SessionData,
+	config: Dictionary,
+	origin_pos: Vector2i,
+	descriptors: Array,
+	preloaded_path_context: Dictionary = {}
+) -> Array:
+	var candidates := []
+	var faction_id := String(config.get("faction_id", ""))
+	var path_context := preloaded_path_context
+	if path_context.is_empty():
+		path_context = _path_distance_surface_context(session, "", faction_id)
+	for descriptor_value in descriptors:
+		if not (descriptor_value is Dictionary):
+			continue
+		var descriptor: Dictionary = descriptor_value
+		match String(descriptor.get("family", "")):
+			"town":
+				_project_town_target_descriptor(session, candidates, descriptor, origin_pos, config, faction_id, path_context)
+			"resource":
+				_project_resource_target_descriptor(session, candidates, descriptor, origin_pos, config, faction_id, path_context)
+			"artifact":
+				_project_artifact_target_descriptor(session, candidates, descriptor, origin_pos, config, faction_id, path_context)
+			"encounter":
+				_project_encounter_target_descriptor(session, candidates, descriptor, origin_pos, config, faction_id, path_context)
+			"delivery":
+				_project_delivery_interception_target_descriptor(session, candidates, descriptor, origin_pos, config, faction_id)
+			"hero":
+				_project_hero_target_descriptor(session, candidates, descriptor, origin_pos, config, faction_id)
 	return candidates
 
-static func _append_town_candidate(
+
+static func _append_town_target_descriptor(
 	session: SessionStateStoreScript.SessionData,
-	candidates: Array,
+	descriptors: Array,
 	seen: Dictionary,
 	placement_id: String,
-	origin_pos: Vector2i,
 	priority: int,
 	config: Dictionary,
 	faction_id: String,
-	include_unscouted: bool = false,
-	path_context: Dictionary = {}
+	include_unscouted: bool = false
 ) -> void:
 	var seen_key = "town:%s" % placement_id
 	if placement_id == "" or seen.has(seen_key):
@@ -9932,6 +9997,30 @@ static func _append_town_candidate(
 		return
 
 	seen[seen_key] = true
+	descriptors.append({
+		"family": "town",
+		"town": town.duplicate(true),
+		"placement_id": placement_id,
+		"priority": priority,
+		"objective_anchor": objective_anchor,
+		"neutral_expansion": neutral_expansion,
+	})
+
+
+static func _project_town_target_descriptor(
+	session: SessionStateStoreScript.SessionData,
+	candidates: Array,
+	descriptor: Dictionary,
+	origin_pos: Vector2i,
+	config: Dictionary,
+	faction_id: String,
+	path_context: Dictionary
+) -> void:
+	var town: Dictionary = descriptor.get("town", {}) if descriptor.get("town", {}) is Dictionary else {}
+	var placement_id := String(descriptor.get("placement_id", ""))
+	var priority := int(descriptor.get("priority", 0))
+	var objective_anchor := bool(descriptor.get("objective_anchor", false))
+	var neutral_expansion := bool(descriptor.get("neutral_expansion", false))
 	var staging_tiles = _town_staging_tiles(session, town)
 	var goal_tile = _best_goal_tile_with_path_context(path_context, origin_pos, staging_tiles)
 	var goal_distance = _path_distance_with_context(path_context, origin_pos, staging_tiles)
@@ -9989,16 +10078,14 @@ static func _append_town_candidate(
 		}
 	)
 
-static func _append_resource_candidate(
+static func _append_resource_target_descriptor(
 	session: SessionStateStoreScript.SessionData,
-	candidates: Array,
+	descriptors: Array,
 	seen: Dictionary,
 	node: Variant,
-	origin_pos: Vector2i,
 	config: Dictionary,
 	faction_id: String,
-	include_unscouted: bool = false,
-	path_context: Dictionary = {}
+	include_unscouted: bool = false
 ) -> void:
 	if not (node is Dictionary):
 		return
@@ -10022,6 +10109,28 @@ static func _append_resource_candidate(
 	):
 		return
 	seen[seen_key] = true
+	descriptors.append({
+		"family": "resource",
+		"node": node.duplicate(true),
+		"site": site.duplicate(true),
+		"placement_id": placement_id,
+		"goal_tile": goal_tile,
+	})
+
+
+static func _project_resource_target_descriptor(
+	session: SessionStateStoreScript.SessionData,
+	candidates: Array,
+	descriptor: Dictionary,
+	origin_pos: Vector2i,
+	config: Dictionary,
+	faction_id: String,
+	path_context: Dictionary
+) -> void:
+	var node: Dictionary = descriptor.get("node", {}) if descriptor.get("node", {}) is Dictionary else {}
+	var site: Dictionary = descriptor.get("site", {}) if descriptor.get("site", {}) is Dictionary else {}
+	var placement_id := String(descriptor.get("placement_id", ""))
+	var goal_tile: Vector2i = descriptor.get("goal_tile", Vector2i.ZERO)
 	var goal_distance = _path_distance_with_context(path_context, origin_pos, [goal_tile])
 	if goal_distance >= 9999:
 		return
@@ -10058,17 +10167,15 @@ static func _append_resource_candidate(
 		}
 	)
 
-static func _append_artifact_candidate(
+static func _append_artifact_target_descriptor(
 	session: SessionStateStoreScript.SessionData,
-	candidates: Array,
+	descriptors: Array,
 	seen: Dictionary,
 	node: Variant,
-	origin_pos: Vector2i,
 	priority: int,
 	config: Dictionary,
 	faction_id: String,
-	include_unscouted: bool = false,
-	path_context: Dictionary = {}
+	include_unscouted: bool = false
 ) -> void:
 	if not (node is Dictionary):
 		return
@@ -10091,6 +10198,28 @@ static func _append_artifact_candidate(
 	):
 		return
 	seen[seen_key] = true
+	descriptors.append({
+		"family": "artifact",
+		"node": node.duplicate(true),
+		"placement_id": placement_id,
+		"goal_tile": goal_tile,
+		"priority": priority,
+	})
+
+
+static func _project_artifact_target_descriptor(
+	session: SessionStateStoreScript.SessionData,
+	candidates: Array,
+	descriptor: Dictionary,
+	origin_pos: Vector2i,
+	config: Dictionary,
+	faction_id: String,
+	path_context: Dictionary
+) -> void:
+	var node: Dictionary = descriptor.get("node", {}) if descriptor.get("node", {}) is Dictionary else {}
+	var placement_id := String(descriptor.get("placement_id", ""))
+	var goal_tile: Vector2i = descriptor.get("goal_tile", Vector2i.ZERO)
+	var priority := int(descriptor.get("priority", 0))
 	var goal_distance = _path_distance_with_context(path_context, origin_pos, [goal_tile])
 	if goal_distance >= 9999:
 		return
@@ -10132,17 +10261,15 @@ static func _append_artifact_candidate(
 		}
 	)
 
-static func _append_encounter_candidate(
+static func _append_encounter_target_descriptor(
 	session: SessionStateStoreScript.SessionData,
-	candidates: Array,
+	descriptors: Array,
 	seen: Dictionary,
 	encounter: Variant,
-	origin_pos: Vector2i,
 	priority: int,
 	config: Dictionary,
 	faction_id: String,
-	include_unscouted: bool = false,
-	path_context: Dictionary = {}
+	include_unscouted: bool = false
 ) -> void:
 	if not (encounter is Dictionary):
 		return
@@ -10169,6 +10296,30 @@ static func _append_encounter_candidate(
 	):
 		return
 	seen[seen_key] = true
+	descriptors.append({
+		"family": "encounter",
+		"encounter": encounter.duplicate(true),
+		"placement_id": placement_id,
+		"priority": priority,
+		"priority_bonus": priority_bonus,
+		"objective_anchor": objective_anchor,
+	})
+
+
+static func _project_encounter_target_descriptor(
+	session: SessionStateStoreScript.SessionData,
+	candidates: Array,
+	descriptor: Dictionary,
+	origin_pos: Vector2i,
+	config: Dictionary,
+	faction_id: String,
+	path_context: Dictionary
+) -> void:
+	var encounter: Dictionary = descriptor.get("encounter", {}) if descriptor.get("encounter", {}) is Dictionary else {}
+	var placement_id := String(descriptor.get("placement_id", ""))
+	var priority := int(descriptor.get("priority", 0))
+	var priority_bonus := int(descriptor.get("priority_bonus", 0))
+	var objective_anchor := bool(descriptor.get("objective_anchor", false))
 	var staging_tiles = _encounter_staging_tiles(session, encounter)
 	var goal_distance = _path_distance_with_context(path_context, origin_pos, staging_tiles)
 	var goal_tile = _best_goal_tile_with_path_context(path_context, origin_pos, staging_tiles)
@@ -10224,11 +10375,10 @@ static func _append_encounter_candidate(
 		}
 	)
 
-static func _append_delivery_interception_candidates(
+static func _append_delivery_interception_target_descriptors(
 	session: SessionStateStoreScript.SessionData,
-	candidates: Array,
+	descriptors: Array,
 	seen: Dictionary,
-	origin_pos: Vector2i,
 	config: Dictionary,
 	faction_id: String
 ) -> void:
@@ -10255,15 +10405,34 @@ static func _append_delivery_interception_candidates(
 		):
 			continue
 		seen[seen_key] = true
-		match String(delivery_state.get("target_kind", "")):
-			"town":
-				var town_candidate: Dictionary = _delivery_town_candidate(session, origin_pos, config, faction_id, node, site, delivery_state)
-				if not town_candidate.is_empty():
-					candidates.append(town_candidate)
-			"hero":
-				var hero_candidate: Dictionary = _delivery_hero_candidate(session, origin_pos, config, faction_id, node, site, delivery_state)
-				if not hero_candidate.is_empty():
-					candidates.append(hero_candidate)
+		descriptors.append({
+			"family": "delivery",
+			"node": node.duplicate(true),
+			"site": site.duplicate(true),
+			"delivery_state": delivery_state.duplicate(true),
+		})
+
+
+static func _project_delivery_interception_target_descriptor(
+	session: SessionStateStoreScript.SessionData,
+	candidates: Array,
+	descriptor: Dictionary,
+	origin_pos: Vector2i,
+	config: Dictionary,
+	faction_id: String
+) -> void:
+	var node: Dictionary = descriptor.get("node", {}) if descriptor.get("node", {}) is Dictionary else {}
+	var site: Dictionary = descriptor.get("site", {}) if descriptor.get("site", {}) is Dictionary else {}
+	var delivery_state: Dictionary = descriptor.get("delivery_state", {}) if descriptor.get("delivery_state", {}) is Dictionary else {}
+	match String(delivery_state.get("target_kind", "")):
+		"town":
+			var town_candidate: Dictionary = _delivery_town_candidate(session, origin_pos, config, faction_id, node, site, delivery_state)
+			if not town_candidate.is_empty():
+				candidates.append(town_candidate)
+		"hero":
+			var hero_candidate: Dictionary = _delivery_hero_candidate(session, origin_pos, config, faction_id, node, site, delivery_state)
+			if not hero_candidate.is_empty():
+				candidates.append(hero_candidate)
 
 static func _delivery_town_candidate(
 	session: SessionStateStoreScript.SessionData,
@@ -10398,13 +10567,12 @@ static func _delivery_hero_candidate(
 		],
 	}
 
-static func _hero_target_candidates(
+static func _append_hero_target_descriptors(
 	session: SessionStateStoreScript.SessionData,
-	origin_pos: Vector2i,
+	descriptors: Array,
 	config: Dictionary,
 	faction_id: String
-) -> Array:
-	var candidates := []
+) -> void:
 	var seen_hero_ids := {}
 	var active_hero_id := String(session.overworld.get("active_hero_id", ""))
 	for hero_value in session.overworld.get("player_heroes", []):
@@ -10417,7 +10585,7 @@ static func _hero_target_candidates(
 		if hero_id == "":
 			continue
 		seen_hero_ids[hero_id] = true
-		_append_hero_target_candidate(session, candidates, hero, origin_pos, config, faction_id, active_hero_id)
+		_append_hero_target_descriptor(descriptors, hero, active_hero_id)
 	if active_hero_id != "" and not seen_hero_ids.has(active_hero_id):
 		var active_hero_value = session.overworld.get("hero", {})
 		if active_hero_value is Dictionary:
@@ -10431,18 +10599,34 @@ static func _hero_target_candidates(
 			active_hero["is_primary"] = true
 			var known_active_hero := _known_player_hero_snapshot_for_ai(session, faction_id, active_hero)
 			if not known_active_hero.is_empty():
-				_append_hero_target_candidate(session, candidates, known_active_hero, origin_pos, config, faction_id, active_hero_id)
-	return candidates
+				_append_hero_target_descriptor(descriptors, known_active_hero, active_hero_id)
 
-static func _append_hero_target_candidate(
-	session: SessionStateStoreScript.SessionData,
-	candidates: Array,
+
+static func _append_hero_target_descriptor(
+	descriptors: Array,
 	hero: Dictionary,
-	origin_pos: Vector2i,
-	config: Dictionary,
-	faction_id: String,
 	active_hero_id: String
 ) -> void:
+	var hero_id := String(hero.get("id", ""))
+	if hero_id == "":
+		return
+	descriptors.append({
+		"family": "hero",
+		"hero": hero.duplicate(true),
+		"active_hero_id": active_hero_id,
+	})
+
+
+static func _project_hero_target_descriptor(
+	session: SessionStateStoreScript.SessionData,
+	candidates: Array,
+	descriptor: Dictionary,
+	origin_pos: Vector2i,
+	config: Dictionary,
+	faction_id: String
+) -> void:
+	var hero: Dictionary = descriptor.get("hero", {}) if descriptor.get("hero", {}) is Dictionary else {}
+	var active_hero_id := String(descriptor.get("active_hero_id", ""))
 	var hero_id := String(hero.get("id", ""))
 	if hero_id == "":
 		return
