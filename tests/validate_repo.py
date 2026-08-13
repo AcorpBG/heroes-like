@@ -130,6 +130,7 @@ SCENARIO_OUTCOME_NORMAL_ENTRY_FOCUS_REGRESSION_SCENE_PATH = ROOT / "tests" / "sc
 SCENARIO_OUTCOME_NEW_SESSION_CONFIRMATION_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "scenario_outcome_new_session_confirmation_safe_cancel_regression.gd"
 SCENARIO_OUTCOME_NEW_SESSION_CONFIRMATION_REGRESSION_SCENE_PATH = ROOT / "tests" / "scenario_outcome_new_session_confirmation_safe_cancel_regression.tscn"
 HEADLESS_SIMULATION_HARNESS_RULES_PATH = ROOT / "scripts" / "core" / "HeadlessSimulationHarnessRules.gd"
+STRATEGIC_AI_BASELINE_KPI_REPORT_SCRIPT_PATH = ROOT / "tests" / "strategic_ai_baseline_kpi_report.gd"
 OUTCOME_SCENE_PATH = ROOT / "scenes" / "results" / "ScenarioOutcomeShell.tscn"
 OUTCOME_SCRIPT_PATH = ROOT / "scenes" / "results" / "ScenarioOutcomeShell.gd"
 UNIT_ART_MANIFEST_PATH = CONTENT_DIR / "unit_art_manifest.json"
@@ -34667,6 +34668,107 @@ def validate_progress_tracker_state(errors: list[str]) -> None:
         )
 
 
+def validate_strategic_ai_medium_long_run_adoption(errors: list[str]) -> None:
+    slice_id = "strategic-ai-medium-long-run-seed-matrix-10184"
+    evidence_marker = "MEDIUM_LONG_RUN_MATRIX_ADOPTION source_head=1fc6775baaa6d9a016cd8d14fc898ed38847af9a aggregate_sha256=7e99c85386c3c5ba68bcfeecc08a8899bef102e22cf151a1f5154e6b3c3ffdda aggregate_signature=8bb77e6c ordinals=1-100 seed_count=100 turn_target=56 setup_ok=100 row_ok=100 turns_completed=3770 defeat_count=73 in_progress_count=27 enemy_activity_event_count=13086 target_assignment_count=3774 commander_task_planned_count=240 stalled_turn_count=179 battle_interrupt_count=236 battle_autoresolve_count=236 behavior_bug_count=0 target_integrity_violation_count=0 unreachable_active_target_turn_count=0 unreachable_active_target_total=0 no_active_pressure_count=0 blocker_ids=[]"
+    ensure(HEADLESS_SIMULATION_HARNESS_RULES_PATH.exists(), errors, "Headless strategic baseline rules are missing")
+    ensure(STRATEGIC_AI_BASELINE_KPI_REPORT_SCRIPT_PATH.exists(), errors, "Strategic AI baseline KPI report is missing")
+    if not HEADLESS_SIMULATION_HARNESS_RULES_PATH.exists() or not STRATEGIC_AI_BASELINE_KPI_REPORT_SCRIPT_PATH.exists() or not PROGRESS_PATH.exists():
+        return
+
+    rules_text = HEADLESS_SIMULATION_HARNESS_RULES_PATH.read_text(encoding="utf-8")
+    report_text = STRATEGIC_AI_BASELINE_KPI_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    progress = load_json(PROGRESS_PATH)
+    planned_slices = progress.get("plannedSlices", []) if isinstance(progress, dict) else []
+    matrix_slices = [
+        row
+        for row in planned_slices
+        if isinstance(row, dict) and str(row.get("id", "")) == slice_id
+    ] if isinstance(planned_slices, list) else []
+    ensure(len(matrix_slices) == 1, errors, "Medium long-run matrix adoption slice must exist exactly once")
+    if len(matrix_slices) == 1:
+        matrix_slice = matrix_slices[0]
+        notes = matrix_slice.get("notes", [])
+        notes = notes if isinstance(notes, list) else []
+        ensure(str(matrix_slice.get("status", "")) == "completed", errors, "Medium long-run matrix adoption slice must be completed")
+        ensure(notes.count(evidence_marker) == 1, errors, "Medium long-run matrix adoption requires one exact pinned evidence marker")
+        ensure("pauseReason" not in matrix_slice, errors, "Completed Medium long-run matrix adoption must not retain a pauseReason")
+
+    for required_token in (
+        'const STRATEGIC_AI_MEDIUM_LONG_RUN_SLICE_ID := "strategic-ai-medium-long-run-seed-matrix-10184"',
+        f'const STRATEGIC_AI_MEDIUM_LONG_RUN_EVIDENCE_MARKER := "{evidence_marker}"',
+        "var medium_long_run_summary := _strategic_ai_medium_long_run_adoption_summary(input_config)",
+        "medium_long_run_summary: Dictionary = {}",
+        'and not bool(medium_long_run_summary.get("ok", false))',
+        '"blocker_id": "native_rmg_medium_topology_contact_pacing"',
+        '"evidence_seed_ordinals": [95, 98]',
+        '"blocked_by": "native_rmg_topology_object_placement_source_parity"',
+        '"source_recovery_required": true',
+        "static func _strategic_ai_medium_long_run_adoption_summary(input_config: Dictionary) -> Dictionary:",
+        'var progress_path := String(input_config.get("progress_path", "res://ops/progress.json"))',
+        'String(slice_row.get("id", "")) != STRATEGIC_AI_MEDIUM_LONG_RUN_SLICE_ID',
+        'String(note_value) == STRATEGIC_AI_MEDIUM_LONG_RUN_EVIDENCE_MARKER',
+        '"ok": completed and exact_evidence',
+        '"matched_slice_count": matched_slice_count',
+        '"evidence_marker_count": marker_count',
+        '"evidence_source_head": "1fc6775baaa6d9a016cd8d14fc898ed38847af9a" if exact_evidence else ""',
+        '"evidence_aggregate_sha256": "7e99c85386c3c5ba68bcfeecc08a8899bef102e22cf151a1f5154e6b3c3ffdda" if exact_evidence else ""',
+        '"evidence_aggregate_signature": "8bb77e6c" if exact_evidence else ""',
+        '"blocker_ids": []',
+    ):
+        ensure(required_token in rules_text, errors, f"Medium long-run baseline adoption is missing source token: {required_token}")
+    ensure(
+        rules_text.count("static func _strategic_ai_medium_long_run_adoption_summary(input_config: Dictionary) -> Dictionary:") == 1,
+        errors,
+        "Medium long-run adoption helper must be unique",
+    )
+    ensure(
+        'if int(rmg_summary.get("medium_ok_count", 0)) >= REQUIRED_MEDIUM_GENERALIZATION_PROBE_COUNT:\n\t\trows.append({' not in rules_text,
+        errors,
+        "Medium long-run blocker must not remain unconditional after short probes pass",
+    )
+    for forbidden_token in (
+        "ProjectSettings.set_setting",
+        "Engine.set_meta",
+        "session[\"medium_long_run",
+        "native_rmg_medium_long_run_matrix_complete = true",
+    ):
+        ensure(forbidden_token not in rules_text, errors, f"Medium long-run adoption must remain tracker-local and result-only: {forbidden_token}")
+
+    for required_token in (
+        'var medium_long_run_summary: Dictionary = report.get("medium_long_run_summary", {})',
+        'String(medium_long_run_summary.get("slice_status", "")) != "completed"',
+        'int(medium_long_run_summary.get("evidence_marker_count", 0)) != 1',
+        'String(medium_long_run_summary.get("evidence_source_head", "")) != "1fc6775baaa6d9a016cd8d14fc898ed38847af9a"',
+        'String(medium_long_run_summary.get("evidence_aggregate_sha256", "")) != "7e99c85386c3c5ba68bcfeecc08a8899bef102e22cf151a1f5154e6b3c3ffdda"',
+        'String(medium_long_run_summary.get("evidence_aggregate_signature", "")) != "8bb77e6c"',
+        '["seed_count", 100]',
+        '["turn_target", 56]',
+        '["turns_completed", 3770]',
+        '["enemy_activity_event_count", 13086]',
+        '["target_assignment_count", 3774]',
+        '"behavior_bug_count"',
+        '"target_integrity_violation_count"',
+        '"unreachable_active_target_turn_count"',
+        '"no_active_pressure_count"',
+        'HeadlessSimulationHarnessRulesScript._strategic_ai_medium_long_run_adoption_summary({',
+        '"progress_path": "res://tests/fixtures/strategic_ai_missing_progress_tracker.json"',
+        'if not _blocker_row(blocker_rows, "native_rmg_medium_long_run_matrix").is_empty():',
+        'var medium_topology_blocker := _blocker_row(blocker_rows, "native_rmg_medium_topology_contact_pacing")',
+        'if topology_evidence_ordinals != [95, 98]',
+        'String(medium_topology_blocker.get("blocked_by", "")) != "native_rmg_topology_object_placement_source_parity"',
+        'not bool(medium_topology_blocker.get("source_recovery_required", false))',
+        'if "strategic-ai-medium-long-run-seed-matrix-10184" in recommendations:',
+        'if not recommendations.is_empty():',
+    ):
+        ensure(required_token in report_text, errors, f"Strategic baseline KPI adoption report is missing token: {required_token}")
+    ensure(
+        'Strategic AI baseline must preserve the longer Medium generated-map matrix production gap' not in report_text,
+        errors,
+        "Strategic baseline KPI report must not require the retired Medium long-run blocker",
+    )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate repository content and scaffolding.")
     parser.add_argument("--economy-resource-report", action="store_true", help="Print the opt-in economy/resource compatibility report.")
@@ -34700,6 +34802,7 @@ def main() -> int:
 
     errors: list[str] = []
     validate_progress_tracker_state(errors)
+    validate_strategic_ai_medium_long_run_adoption(errors)
     validate_content(errors)
     validate_project_and_scenes(errors)
     validate_save_management(errors)
