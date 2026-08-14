@@ -27982,8 +27982,8 @@ def validate_overworld_object_resolution_cue_playback(errors: list[str]) -> None
         "_record_object_resolution_presentation(result, route)",
         "func _record_object_resolution_presentation",
         'result.get("interaction_result", {})',
-        'family not in ["resource_site", "artifact"]',
-        'event_id := "overworld_object_depleted"',
+        'family not in ["resource_site", "artifact", "town_capture"]',
+        'event_id := "overworld_object_captured" if family == "town_capture" else "overworld_object_depleted"',
         'bool(site.get("persistent_control", false))',
         'event_id = "overworld_object_captured"',
         'bool(site.get("repeatable", false)) or String(site.get("family", "")) == "repeatable_service"',
@@ -27998,7 +27998,7 @@ def validate_overworld_object_resolution_cue_playback(errors: list[str]) -> None
     ensure(shell_text.count("func _record_object_resolution_presentation") == 1, errors, "OverworldShell.gd must define one object-resolution presentation producer")
     record_block = gdscript_function_block(shell_text, "_record_object_resolution_presentation")
     ensure('not bool(result.get("ok", false)) or route != ""' in record_block, errors, "Object-result playback must fail closed outside successful non-routing interactions")
-    ensure(record_block.find('family not in ["resource_site", "artifact"]') < record_block.find("_object_resolution_presentation_serial += 1"), errors, "Object-result playback must validate its exact family before issuing a serial")
+    ensure(record_block.find('family not in ["resource_site", "artifact", "town_capture"]') < record_block.find("_object_resolution_presentation_serial += 1"), errors, "Object-result playback must validate its exact family before issuing a serial")
     ensure(record_block.find('bool(site.get("persistent_control", false))') < record_block.find('bool(site.get("repeatable", false))') < record_block.find("cue_playback_policy_for_event"), errors, "Object-result playback must classify persistent capture before repeatable visit and policy resolution")
     ensure(record_block.find("placement_id == \"\"") < record_block.find("cue_playback_policy_for_event") < record_block.find("_object_resolution_presentation_serial += 1"), errors, "Object-result playback must validate placement/tile and resolve catalog policy before serial publication")
     ensure("session.overworld" not in record_block and "session.flags" not in record_block and "OverworldRules." not in record_block, errors, "Object-result presentation must not mutate or recompute gameplay authority")
@@ -28021,7 +28021,7 @@ def validate_overworld_object_resolution_cue_playback(errors: list[str]) -> None
         "func _sync_object_resolution_presentation",
         'serial == _object_resolution_last_serial',
         'not in ["overworld_object_visited", "overworld_object_captured", "overworld_object_depleted"]',
-        'not in ["resource_site", "artifact"]',
+        'not in ["resource_site", "artifact", "town_capture"]',
         "_object_resolution_queued = _hero_movement_active",
         "_object_resolution_active = not _object_resolution_queued",
         "func _sync_presentation_processing",
@@ -28055,11 +28055,16 @@ def validate_overworld_object_resolution_cue_playback(errors: list[str]) -> None
         'const REPORT_ID := "OVERWORLD_OBJECT_RESOLUTION_CUE_PLAYBACK_REPORT"',
         "func _assert_persistent_resource_capture_playback",
         "func _assert_repeatable_service_visited_and_revisit",
+        "func _assert_neutral_town_capture_playback",
         "func _assert_artifact_depletion_playback",
         "func _assert_reduced_motion_capture_and_unsupported_noop",
         'String(queued.get("event_id", "")) != "overworld_object_captured"',
         'String(queued.get("event_id", "")) != "overworld_object_depleted"',
         'String(first_cue.get("event_id", "")) != "overworld_object_visited"',
+        'String(queued.get("family", "")) != "town_capture"',
+        'String(reduced_cue.get("family", "")) != "town_capture"',
+        'OverworldRules.describe_objectives(session) != objective_authority_before',
+        'int(active_viewport.get("spatial_index", {}).get("town_tiles", 0)) != 2',
         'String(revisit_cue.get("fallback_tag", "")) != "visited_check_icon"',
         'int(first_viewport.get("spatial_index", {}).get("resource_tiles", 0)) != 1',
         'int(revisit_viewport.get("spatial_index", {}).get("resource_tiles", 0)) != 1',

@@ -458,7 +458,7 @@ func _sync_object_resolution_presentation(presentation: Dictionary) -> void:
 	_sync_presentation_processing()
 	if _object_resolution_event_id not in ["overworld_object_visited", "overworld_object_captured", "overworld_object_depleted"]:
 		return
-	if _object_resolution_family not in ["resource_site", "artifact"] or _object_resolution_placement_id == "":
+	if _object_resolution_family not in ["resource_site", "artifact", "town_capture"] or _object_resolution_placement_id == "":
 		return
 	var tile_payload: Dictionary = presentation.get("tile", {}) if presentation.get("tile", {}) is Dictionary else {}
 	var tile := Vector2i(int(tile_payload.get("x", -1)), int(tile_payload.get("y", -1)))

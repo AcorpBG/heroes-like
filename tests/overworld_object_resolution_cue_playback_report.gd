@@ -16,6 +16,8 @@ func _run() -> void:
 	if ok:
 		ok = await _assert_repeatable_service_visited_and_revisit()
 	if ok:
+		ok = await _assert_neutral_town_capture_playback()
+	if ok:
 		ok = await _assert_artifact_depletion_playback()
 	if ok:
 		SettingsService.set_reduced_motion_enabled(true)
@@ -173,6 +175,96 @@ func _assert_repeatable_service_visited_and_revisit() -> bool:
 		"reduced_motion_fallback": String(revisit_cue.get("fallback_tag", "")),
 	}
 	shell.queue_free()
+	await get_tree().process_frame
+	return true
+
+func _assert_neutral_town_capture_playback() -> bool:
+	var session = _session_with_map(7, 3, true)
+	session.overworld["towns"].append(_neutral_town("neutral_cue_town", Vector2i(4, 1)))
+	var objective_authority_before := OverworldRules.describe_objectives(session)
+	var opened := await _open_shell(session)
+	var shell: Node = opened.get("shell", null)
+	session = opened.get("session", session)
+	_prepare_shell_state(shell, session, Vector2i(0, 1), 4)
+	var selection: Dictionary = shell.call("validation_select_tile", 4, 1)
+	if String(selection.get("selected_route_decision", {}).get("status", "")) != "reachable":
+		return _fail("Neutral-town capture fixture route was not reachable.", selection)
+	var result: Dictionary = shell.call("validation_click_tile", 4, 1)
+	var queued := _object_resolution(shell)
+	var serial := int(queued.get("serial", 0))
+	var captured_town := _town_by_placement(session, "neutral_cue_town")
+	var authority_after_capture: Dictionary = session.to_dict()
+	if (
+		not bool(result.get("ok", false))
+		or serial <= 0
+		or String(queued.get("event_id", "")) != "overworld_object_captured"
+		or String(queued.get("family", "")) != "town_capture"
+		or String(queued.get("placement_id", "")) != "neutral_cue_town"
+		or queued.get("tile", {}) != {"x": 4, "y": 1}
+		or String(queued.get("animation_state", "")) != "ownership_capture"
+		or not bool(queued.get("queued", false))
+		or int(queued.get("duration_ms", 0)) != 620
+		or String(captured_town.get("owner", "")) != "player"
+		or OverworldRules.describe_objectives(session) != objective_authority_before
+	):
+		return _fail("Neutral-town result did not queue one exact captured cue with ownership authority.", {"cue": queued, "town": captured_town})
+	shell.call("_refresh")
+	await get_tree().process_frame
+	var refreshed := _object_resolution(shell)
+	if int(refreshed.get("serial", -1)) != serial or not bool(refreshed.get("queued", false)) or session.to_dict() != authority_after_capture:
+		return _fail("Neutral-town captured cue replayed or changed authority during refresh.", refreshed)
+	await get_tree().create_timer(0.52).timeout
+	var active := _object_resolution(shell)
+	var active_viewport := _map_viewport(shell)
+	if (
+		not bool(active.get("active", false))
+		or bool(active.get("queued", true))
+		or float(active.get("progress", 0.0)) <= 0.0
+		or int(active_viewport.get("spatial_index", {}).get("town_tiles", 0)) != 2
+		or session.to_dict() != authority_after_capture
+	):
+		return _fail("Neutral-town captured cue did not remain active over the retained town.", {"cue": active, "viewport": active_viewport})
+	_evidence["neutral_town_capture"] = {
+		"serial": serial,
+		"placement_id": String(active.get("placement_id", "")),
+		"town_tiles": int(active_viewport.get("spatial_index", {}).get("town_tiles", 0)),
+		"owner": String(captured_town.get("owner", "")),
+	}
+	shell.queue_free()
+	await get_tree().process_frame
+
+	SettingsService.set_reduced_motion_enabled(true)
+	var reduced_session = _session_with_map(5, 3, true)
+	reduced_session.overworld["towns"].append(_neutral_town("reduced_neutral_town", Vector2i(2, 1)))
+	var reduced_opened := await _open_shell(reduced_session)
+	var reduced_shell: Node = reduced_opened.get("shell", null)
+	reduced_session = reduced_opened.get("session", reduced_session)
+	_prepare_shell_state(reduced_shell, reduced_session, Vector2i(1, 1), 1)
+	var reduced_selection: Dictionary = reduced_shell.call("validation_select_tile", 2, 1)
+	if String(reduced_selection.get("selected_route_decision", {}).get("status", "")) != "reachable":
+		SettingsService.set_reduced_motion_enabled(false)
+		return _fail("Reduced neutral-town capture fixture route was not reachable.", reduced_selection)
+	var reduced_result: Dictionary = reduced_shell.call("validation_click_tile", 2, 1)
+	var reduced_cue := _object_resolution(reduced_shell)
+	SettingsService.set_reduced_motion_enabled(false)
+	if (
+		not bool(reduced_result.get("ok", false))
+		or not bool(reduced_cue.get("active", false))
+		or bool(reduced_cue.get("queued", true))
+		or String(reduced_cue.get("family", "")) != "town_capture"
+		or String(reduced_cue.get("fallback_tag", "")) != "ownership_badge_swap"
+		or String(reduced_cue.get("visual_policy", "")) != "reduced_motion_fallback"
+		or bool(reduced_cue.get("allows_large_motion", true))
+		or int(reduced_cue.get("duration_ms", 0)) != 260
+		or String(_town_by_placement(reduced_session, "reduced_neutral_town").get("owner", "")) != "player"
+	):
+		return _fail("Reduced neutral-town capture did not use the exact ownership badge fallback.", reduced_cue)
+	_evidence["reduced_neutral_town_capture"] = {
+		"serial": int(reduced_cue.get("serial", 0)),
+		"fallback_tag": String(reduced_cue.get("fallback_tag", "")),
+		"duration_ms": int(reduced_cue.get("duration_ms", 0)),
+	}
+	reduced_shell.queue_free()
 	await get_tree().process_frame
 	return true
 
@@ -350,6 +442,25 @@ func _repeatable_service_node(placement_id: String, tile: Vector2i) -> Dictionar
 		"collected": false,
 		"collected_by_faction_id": "",
 	}
+
+func _neutral_town(placement_id: String, tile: Vector2i) -> Dictionary:
+	return {
+		"placement_id": placement_id,
+		"town_id": "town_duskfen",
+		"x": tile.x,
+		"y": tile.y,
+		"owner": "neutral",
+		"controlling_faction_id": "",
+		"garrison": [],
+		"available_recruits": {},
+		"buildings": [],
+	}
+
+func _town_by_placement(session, placement_id: String) -> Dictionary:
+	for town_value in session.overworld.get("towns", []):
+		if town_value is Dictionary and String(town_value.get("placement_id", "")) == placement_id:
+			return town_value
+	return {}
 
 func _object_resolution(shell: Node) -> Dictionary:
 	var snapshot: Dictionary = shell.call("validation_snapshot")
