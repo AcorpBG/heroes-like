@@ -173,6 +173,8 @@ var _last_action_recap: Dictionary = {}
 var _last_route_execution: Dictionary = {}
 var _hero_movement_presentation: Dictionary = {}
 var _hero_movement_presentation_serial := 0
+var _object_resolution_presentation: Dictionary = {}
+var _object_resolution_presentation_serial := 0
 var _post_route_execution_compact_context := false
 var _briefing_title_text := "Command Briefing"
 var _command_briefing_text := ""
@@ -1856,6 +1858,7 @@ func _handle_move_result(result: Dictionary, preserve_selection: bool, debug_sta
 		if route_steps is Array:
 			_last_route_execution["route_steps"] = route_steps.duplicate(true)
 	_record_hero_movement_presentation(result, route)
+	_record_object_resolution_presentation(result, route)
 	if route == "battle":
 		_session.flags["last_action"] = "entered_battle"
 	elif route == "town":
@@ -2288,7 +2291,8 @@ func _refresh_map_view() -> void:
 		_map_size,
 		_selected_tile,
 		_selected_route_cache_for_map_view(),
-		_hero_movement_presentation
+		_hero_movement_presentation,
+		_object_resolution_presentation
 	)
 	if _map_view.has_method("set_placement_debug_overlay_enabled"):
 		_map_view.call("set_placement_debug_overlay_enabled", _placement_debug_overlay_enabled)
@@ -2318,6 +2322,48 @@ func _record_hero_movement_presentation(result: Dictionary, route: String) -> vo
 		"event_id": "overworld_hero_move",
 		"route_tiles": route_tiles.duplicate(true),
 		"route_step_count": route_steps.size(),
+		"selected_animation_state": String(policy.get("selected_animation_state", "")),
+		"selected_visual_policy": String(policy.get("selected_visual_policy", "")),
+		"selected_fallback_tag": String(policy.get("selected_fallback_tag", "")),
+		"allows_large_motion": bool(policy.get("allows_large_motion", true)),
+		"duration_ms": int(round(float(authored_duration_ms) * duration_scale)),
+		"max_duration_ms": max_duration_ms,
+	}
+
+func _record_object_resolution_presentation(result: Dictionary, route: String) -> void:
+	if not bool(result.get("ok", false)) or route != "":
+		return
+	var interaction: Dictionary = result.get("interaction_result", {}) if result.get("interaction_result", {}) is Dictionary else {}
+	var family := String(interaction.get("family", ""))
+	if family not in ["resource_site", "artifact"]:
+		return
+	var placement_id := String(interaction.get("placement_id", "")).strip_edges()
+	var tile_payload: Dictionary = interaction.get("tile", {}) if interaction.get("tile", {}) is Dictionary else {}
+	var tile := Vector2i(int(tile_payload.get("x", -1)), int(tile_payload.get("y", -1)))
+	if placement_id == "" or tile.x < 0 or tile.y < 0 or tile.x >= _map_size.x or tile.y >= _map_size.y:
+		return
+	var event_id := "overworld_object_depleted"
+	if family == "resource_site":
+		var site := ContentService.get_resource_site(String(interaction.get("content_id", "")))
+		if bool(site.get("persistent_control", false)):
+			event_id = "overworld_object_captured"
+	var policy: Dictionary = AnimationCueCatalogScript.cue_playback_policy_for_event(
+		event_id,
+		SettingsService.animation_preferences()
+	)
+	if policy.is_empty():
+		return
+	_object_resolution_presentation_serial += 1
+	var max_duration_ms: int = maxi(0, int(policy.get("max_duration_ms", 700)))
+	var duration_scale := maxf(0.0, float(policy.get("duration_scale", 1.0)))
+	var authored_duration_ms: int = mini(max_duration_ms, 620)
+	_object_resolution_presentation = {
+		"serial": _object_resolution_presentation_serial,
+		"event_id": event_id,
+		"family": family,
+		"placement_id": placement_id,
+		"content_id": String(interaction.get("content_id", "")),
+		"tile": {"x": tile.x, "y": tile.y},
 		"selected_animation_state": String(policy.get("selected_animation_state", "")),
 		"selected_visual_policy": String(policy.get("selected_visual_policy", "")),
 		"selected_fallback_tag": String(policy.get("selected_fallback_tag", "")),

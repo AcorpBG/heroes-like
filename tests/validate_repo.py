@@ -101,6 +101,8 @@ OVERWORLD_SCENE_PATH = ROOT / "scenes" / "overworld" / "OverworldShell.tscn"
 OVERWORLD_SCRIPT_PATH = ROOT / "scenes" / "overworld" / "OverworldShell.gd"
 OVERWORLD_MAP_VIEW_SCRIPT_PATH = ROOT / "scenes" / "overworld" / "OverworldMapView.gd"
 OVERWORLD_FULL_ROUTE_MOVEMENT_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "overworld_full_route_movement_regression.gd"
+OVERWORLD_OBJECT_RESOLUTION_CUE_PLAYBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_object_resolution_cue_playback_report.gd"
+OVERWORLD_OBJECT_RESOLUTION_CUE_PLAYBACK_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_object_resolution_cue_playback_report.tscn"
 OVERWORLD_ART_MANIFEST_PATH = ROOT / "art" / "overworld" / "manifest.json"
 TERRAIN_GRAMMAR_PATH = CONTENT_DIR / "terrain_grammar.json"
 TERRAIN_LAYERS_PATH = CONTENT_DIR / "terrain_layers.json"
@@ -27878,7 +27880,7 @@ def validate_overworld_hero_route_locomotion(errors: list[str]) -> None:
         "serial == _hero_movement_last_serial",
         'path[path.size() - 1] != _hero_tile',
         "func _process(delta: float)",
-        '_invalidate_dynamic_layer("hero_movement_presentation")',
+        '_invalidate_dynamic_layer("overworld_presentation_frame")',
         "func _draw_hero_movement_presentation",
         "func _hero_movement_draw_state",
         "from_rect.get_center().lerp(to_rect.get_center(), segment_progress)",
@@ -27893,7 +27895,8 @@ def validate_overworld_hero_route_locomotion(errors: list[str]) -> None:
     draw_block = gdscript_function_block(map_view_text, "_hero_movement_draw_state")
     ensure(sync_block.find("_hero_movement_last_serial = serial") < sync_block.find("_tiles_from_payloads"), errors, "Map view must consume each movement serial once before validating its detached path")
     ensure(sync_block.find("_hero_movement_reduced_motion") < sync_block.find("if _hero_movement_reduced_motion:"), errors, "Map view must derive reduced-motion policy before choosing endpoint snap")
-    ensure('set_process(true)' in sync_block and 'set_process(false)' in sync_block, errors, "Map view must run per-frame processing only for active locomotion")
+    processing_block = gdscript_function_block(map_view_text, "_sync_presentation_processing")
+    ensure('set_process(_hero_movement_active or _object_resolution_active or _object_resolution_queued)' in processing_block, errors, "Map view must run per-frame processing only while a presentation is active or queued")
     ensure("_invalidate_session_static_cache" not in process_block and "_invalidate_state_cache" not in process_block, errors, "Hero locomotion frames must not invalidate static or state caches")
     ensure("_invalidate_dynamic_layer" in process_block, errors, "Hero locomotion frames must invalidate the dynamic layer")
     ensure("session" not in process_block and "session" not in draw_block, errors, "Hero locomotion frame/draw helpers must not mutate or consult session authority")
@@ -27939,6 +27942,115 @@ def validate_overworld_hero_route_locomotion(errors: list[str]) -> None:
         '"Victory 0/4"',
     ):
         ensure(stale_token not in visual_smoke_text, errors, f"Overworld visual smoke must not retain stale River Pass victory token {stale_token}")
+
+
+def validate_overworld_object_resolution_cue_playback(errors: list[str]) -> None:
+    required_paths = (
+        OVERWORLD_SCRIPT_PATH,
+        OVERWORLD_MAP_VIEW_SCRIPT_PATH,
+        OVERWORLD_OBJECT_RESOLUTION_CUE_PLAYBACK_REPORT_SCRIPT_PATH,
+        OVERWORLD_OBJECT_RESOLUTION_CUE_PLAYBACK_REPORT_SCENE_PATH,
+        ANIMATION_EVENT_CUES_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Overworld object-resolution playback file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    shell_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+    map_view_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
+    test_text = OVERWORLD_OBJECT_RESOLUTION_CUE_PLAYBACK_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    scene_text = OVERWORLD_OBJECT_RESOLUTION_CUE_PLAYBACK_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+
+    def gdscript_function_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}")
+        if start < 0:
+            return ""
+        end = text.find("\nfunc ", start + 1)
+        return text[start:] if end < 0 else text[start:end]
+
+    for required_token in (
+        "var _object_resolution_presentation: Dictionary = {}",
+        "var _object_resolution_presentation_serial := 0",
+        "_record_object_resolution_presentation(result, route)",
+        "func _record_object_resolution_presentation",
+        'result.get("interaction_result", {})',
+        'family not in ["resource_site", "artifact"]',
+        'event_id := "overworld_object_depleted"',
+        'bool(site.get("persistent_control", false))',
+        'event_id = "overworld_object_captured"',
+        "AnimationCueCatalogScript.cue_playback_policy_for_event",
+        "SettingsService.animation_preferences()",
+        '"placement_id": placement_id',
+        '"tile": {"x": tile.x, "y": tile.y}',
+        "_object_resolution_presentation",
+    ):
+        ensure(required_token in shell_text, errors, f"OverworldShell.gd is missing object-resolution playback token {required_token}")
+    ensure(shell_text.count("func _record_object_resolution_presentation") == 1, errors, "OverworldShell.gd must define one object-resolution presentation producer")
+    record_block = gdscript_function_block(shell_text, "_record_object_resolution_presentation")
+    ensure('not bool(result.get("ok", false)) or route != ""' in record_block, errors, "Object-result playback must fail closed outside successful non-routing interactions")
+    ensure(record_block.find('family not in ["resource_site", "artifact"]') < record_block.find("_object_resolution_presentation_serial += 1"), errors, "Object-result playback must validate its exact family before issuing a serial")
+    ensure(record_block.find("placement_id == \"\"") < record_block.find("cue_playback_policy_for_event") < record_block.find("_object_resolution_presentation_serial += 1"), errors, "Object-result playback must validate placement/tile and resolve catalog policy before serial publication")
+    ensure("session.overworld" not in record_block and "session.flags" not in record_block and "OverworldRules." not in record_block, errors, "Object-result presentation must not mutate or recompute gameplay authority")
+    ensure("create_timer" not in record_block and "await " not in record_block and "create_tween" not in record_block, errors, "Object-result producer must not add hidden timing authority")
+    move_handler = gdscript_function_block(shell_text, "_handle_move_result")
+    ensure(move_handler.find("_record_hero_movement_presentation(result, route)") < move_handler.find("_record_object_resolution_presentation(result, route)"), errors, "Object-result playback must queue after the exact route-locomotion producer")
+
+    for required_token in (
+        "OBJECT_RESOLUTION_MIN_DURATION_MSEC := 60",
+        "OBJECT_RESOLUTION_MAX_DURATION_MSEC := 700",
+        "object_resolution_presentation: Dictionary = {}",
+        "func _sync_object_resolution_presentation",
+        'serial == _object_resolution_last_serial',
+        'not in ["overworld_object_captured", "overworld_object_depleted"]',
+        'not in ["resource_site", "artifact"]',
+        "_object_resolution_queued = _hero_movement_active",
+        "_object_resolution_active = not _object_resolution_queued",
+        "func _sync_presentation_processing",
+        "_hero_movement_active or _object_resolution_active or _object_resolution_queued",
+        "if _object_resolution_queued and not _hero_movement_active:",
+        "func _draw_object_resolution_presentation",
+        'if _object_resolution_event_id == "overworld_object_captured":',
+        "var motion_progress := progress if _object_resolution_allows_large_motion else 0.35",
+        "func validation_object_resolution_presentation",
+        '"object_resolution_presentation": validation_object_resolution_presentation()',
+    ):
+        ensure(required_token in map_view_text, errors, f"OverworldMapView.gd is missing object-resolution playback token {required_token}")
+    sync_block = gdscript_function_block(map_view_text, "_sync_object_resolution_presentation")
+    process_block = gdscript_function_block(map_view_text, "_process")
+    draw_block = gdscript_function_block(map_view_text, "_draw_object_resolution_presentation")
+    ensure(sync_block.find("_object_resolution_last_serial = serial") < sync_block.find("_object_resolution_event_id =") < sync_block.find("_object_resolution_tile = tile"), errors, "Map view must consume one serial, validate identity, then retain the exact object tile")
+    queue_index = sync_block.find("_object_resolution_queued = _hero_movement_active")
+    processing_after_queue_index = sync_block.find("_sync_presentation_processing()", queue_index)
+    invalidate_index = sync_block.find('_invalidate_dynamic_layer("object_resolution_started")')
+    ensure(0 <= queue_index < processing_after_queue_index < invalidate_index, errors, "Object-result playback must queue behind route locomotion before dynamic invalidation")
+    ensure(process_block.find("if _hero_movement_active:") < process_block.find("if _object_resolution_queued and not _hero_movement_active:") < process_block.find("if _object_resolution_active:"), errors, "Presentation processing must finish route locomotion before starting and advancing object playback")
+    ensure("_invalidate_session_static_cache" not in process_block + draw_block and "_invalidate_state_cache" not in process_block + draw_block, errors, "Object-result frames must not invalidate static or state caches")
+    ensure("session" not in process_block and "session" not in draw_block, errors, "Object-result frame/draw helpers must not consult or mutate session authority")
+    ensure("create_timer" not in sync_block + process_block + draw_block and "create_tween" not in sync_block + process_block + draw_block and "await " not in sync_block + process_block + draw_block, errors, "Object-result playback must use the bounded shared view process without hidden timers or coroutines")
+
+    for required_token in (
+        'const REPORT_ID := "OVERWORLD_OBJECT_RESOLUTION_CUE_PLAYBACK_REPORT"',
+        "func _assert_persistent_resource_capture_playback",
+        "func _assert_artifact_depletion_playback",
+        "func _assert_reduced_motion_capture_and_unsupported_noop",
+        'String(queued.get("event_id", "")) != "overworld_object_captured"',
+        'String(queued.get("event_id", "")) != "overworld_object_depleted"',
+        'String(active.get("fallback_tag", "")) != "ownership_badge_swap"',
+        'int(active.get("duration_ms", 0)) != 260',
+        'int(queued.get("duration_ms", 0)) != 620',
+        "session.to_dict() != authority_after_action",
+        'int(cache_active.get("session_static_generation", -1))',
+        'int(cache_active.get("state_generation", -1))',
+        'int(cache_active.get("dynamic_generation", -1))',
+        'int(unchanged.get("serial", -1)) != serial',
+        'const CAPTURE_ENV := "HEROES_OVERWORLD_OBJECT_RESOLUTION_CAPTURE"',
+        'for viewport_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        'overworld_object_resolution_%dx%d.png',
+    ):
+        ensure(required_token in test_text, errors, f"Object-resolution focused report is missing exact proof token {required_token}")
+    ensure("validation_set_object_resolution" not in test_text and "_object_resolution_elapsed_sec" not in test_text and "_process(" not in test_text, errors, "Focused object-result report must passively observe production playback rather than mutate its clock")
+    ensure('path="res://tests/overworld_object_resolution_cue_playback_report.gd"' in scene_text, errors, "Object-resolution report scene must own its exact focused script")
 
 
 def validate_neutral_dwelling_unit_slice(errors: list[str]) -> None:
@@ -36473,6 +36585,7 @@ def main() -> int:
     validate_overworld_object_content_batch_001(errors)
     validate_overworld_art_asset_slice(errors)
     validate_overworld_hero_route_locomotion(errors)
+    validate_overworld_object_resolution_cue_playback(errors)
     validate_neutral_dwelling_unit_slice(errors)
     validate_hero_portrait_assets(errors)
     validate_unit_art_assets(errors)
