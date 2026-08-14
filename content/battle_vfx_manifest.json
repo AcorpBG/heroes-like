@@ -48,6 +48,48 @@
       "render_mode": "ward",
       "scale": 1.42,
       "base_rotation_degrees": 45.0
+    },
+    "vfx_spell_cinder_burst": {
+      "texture_path": "res://art/battle/vfx/spell_cinder_burst.png",
+      "render_mode": "spell_target",
+      "scale": 1.78,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_coal_rain": {
+      "texture_path": "res://art/battle/vfx/spell_coal_rain.png",
+      "render_mode": "spell_target",
+      "scale": 1.82,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_sunlance_arc": {
+      "texture_path": "res://art/battle/vfx/spell_sunlance_arc.png",
+      "render_mode": "spell_projectile",
+      "scale": 1.74,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_briar_bind": {
+      "texture_path": "res://art/battle/vfx/spell_briar_bind.png",
+      "render_mode": "spell_target",
+      "scale": 1.62,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_graft_mend": {
+      "texture_path": "res://art/battle/vfx/spell_graft_mend.png",
+      "render_mode": "spell_target",
+      "scale": 1.56,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_prism_bastion": {
+      "texture_path": "res://art/battle/vfx/spell_prism_bastion.png",
+      "render_mode": "spell_target",
+      "scale": 1.60,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_spell_command_ward": {
+      "texture_path": "res://art/battle/vfx/spell_command_ward.png",
+      "render_mode": "spell_target",
+      "scale": 1.58,
+      "base_rotation_degrees": 0.0
     }
   }
 }

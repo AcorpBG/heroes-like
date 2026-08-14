@@ -28343,13 +28343,20 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "vfx_placeholder_status_residue": ("core_ward_ring.png", "ward"),
         "vfx_placeholder_status_clear": ("core_ward_ring.png", "ward"),
         "vfx_placeholder_brace_outline": ("core_ward_ring.png", "ward"),
+        "vfx_spell_cinder_burst": ("spell_cinder_burst.png", "spell_target"),
+        "vfx_spell_coal_rain": ("spell_coal_rain.png", "spell_target"),
+        "vfx_spell_sunlance_arc": ("spell_sunlance_arc.png", "spell_projectile"),
+        "vfx_spell_briar_bind": ("spell_briar_bind.png", "spell_target"),
+        "vfx_spell_graft_mend": ("spell_graft_mend.png", "spell_target"),
+        "vfx_spell_prism_bastion": ("spell_prism_bastion.png", "spell_target"),
+        "vfx_spell_command_ward": ("spell_command_ward.png", "spell_target"),
     }
     if BATTLE_VFX_MANIFEST_PATH.exists():
         battle_vfx_manifest = json.loads(BATTLE_VFX_MANIFEST_PATH.read_text(encoding="utf-8"))
         ensure(battle_vfx_manifest.get("schema_id") == "battle_vfx_manifest_v1", errors, "battle_vfx_manifest.json has the wrong schema")
         battle_vfx_cues = battle_vfx_manifest.get("cues", {})
         ensure(isinstance(battle_vfx_cues, dict), errors, "battle_vfx_manifest.json cues must be an object")
-        ensure(set(battle_vfx_cues) == set(required_battle_vfx_cues), errors, "battle_vfx_manifest.json must map exactly the selected eight core Battle cues")
+        ensure(set(battle_vfx_cues) == set(required_battle_vfx_cues), errors, "battle_vfx_manifest.json must map exactly the selected eight core and seven spell Battle cues")
         observed_vfx_paths = set()
         for cue_id, (filename, render_mode) in required_battle_vfx_cues.items():
             cue = battle_vfx_cues.get(cue_id, {}) if isinstance(battle_vfx_cues, dict) else {}
@@ -28359,7 +28366,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
             ensure(cue.get("render_mode") == render_mode, errors, f"battle VFX cue {cue_id} must use render mode {render_mode}")
             ensure(float(cue.get("scale", 0.0)) > 0.0, errors, f"battle VFX cue {cue_id} needs a positive scale")
             observed_vfx_paths.add(expected_path)
-        ensure(len(observed_vfx_paths) == 3, errors, "battle VFX core layer must use exactly three distinct imported textures")
+        ensure(len(observed_vfx_paths) == 10, errors, "battle VFX asset layer must use exactly three core and seven distinct spell textures")
         for texture_path in sorted(observed_vfx_paths):
             disk_path = ROOT / texture_path.removeprefix("res://")
             ensure(disk_path.exists(), errors, f"battle VFX texture is missing: {texture_path}")
@@ -28493,7 +28500,14 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "func _spell_specific_vfx_cue_ids_for_event",
         "func _spell_specific_audio_cue_ids_for_event",
         "func _draw_spell_cinder_burst_vfx",
+        "func _draw_spell_coal_rain_vfx",
+        "func _draw_spell_sunlance_arc_vfx",
+        "func _draw_spell_briar_bind_vfx",
+        "func _draw_spell_graft_mend_vfx",
         "func _draw_spell_prism_bastion_vfx",
+        "func _draw_spell_command_ward_vfx",
+        '"spell_projectile"',
+        '"spell_target"',
         "status_clear",
         "retaliation_arc",
         "func _draw_retaliation_arc_vfx",
@@ -28525,6 +28539,10 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     for required_token in (
         "if spec.is_empty():\n\t\treturn false",
         "if texture == null:\n\t\treturn false",
+        '"spell_projectile":',
+        "draw_center = start.lerp(end, clampf(progress, 0.12, 0.94))",
+        '"spell_target":',
+        "draw_center = end",
         "draw_texture_rect(texture",
         "draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)",
         "return true",
@@ -28708,16 +28726,33 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "board_vfx_presentation",
         "_validate_core_vfx_asset_manifest",
         "_validate_imported_vfx_live_viewports",
+        "_validate_spell_vfx_asset_surface",
+        "_validate_spell_vfx_live_viewports",
+        "_install_validation_vfx_cues",
+        "_vfx_entry_for_cue",
         "OS.get_environment(\"HEROES_BATTLE_VFX_CAPTURE\") == \"1\"",
         "Vector2i(1280, 720)",
         "Vector2i(1920, 1080)",
         "view.queue_redraw()\n\t\tawait get_tree().process_frame",
         "core_vfx_%dx%d.png",
+        "spell_vfx_%dx%d.png",
         "get_viewport().get_visible_rect().size",
         "battle_vfx_manifest_v1",
         "battle vfx mapped cue count",
         "battle vfx unique texture count",
         "battle vfx loaded texture count",
+        "spell vfx live cue draw count",
+        "spell vfx imported asset draw count",
+        "spell vfx missing mapping fallback kind",
+        "spell vfx missing mapping asset absent",
+        "spell vfx missing mapping procedural count",
+        "spell-specific imported asset",
+        "vfx_spell_coal_rain",
+        "vfx_spell_sunlance_arc",
+        "vfx_spell_briar_bind",
+        "vfx_spell_graft_mend",
+        "vfx_spell_prism_bastion",
+        "vfx_spell_command_ward",
         "death fade procedural fallback",
         "projectile imported vfx",
         "melee imported vfx",
@@ -28880,8 +28915,10 @@ def validate_unit_art_assets(errors: list[str]) -> None:
             "`resolution_type`",
             "`vfx_spell_cinder_burst`",
             "`audio_spell_cinder_burst`",
+            "presentation-battle-spell-vfx-asset-adoption-10184",
+            "all seven spell VFX mappings load as distinct live draw entries",
             "No final sound design.",
-            "No final imported VFX art.",
+            "No particles, shaders, or broad non-spell VFX migration.",
             "No combat balance tuning.",
         ):
             ensure(required_text in spell_impact_doc_text, errors, f"Battle spell impact presentation doc is missing required text: {required_text}")

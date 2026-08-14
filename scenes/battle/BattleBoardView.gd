@@ -2405,6 +2405,11 @@ func _draw_imported_vfx_asset(entry: Dictionary, start: Vector2, end: Vector2, c
 				var head := start.lerp(end, clampf(progress, 0.08, 0.96))
 				draw_center = head - direction * radius * 0.16
 				rotation += direction.angle()
+		"spell_projectile":
+			if start.distance_to(end) > 1.0:
+				var direction := (end - start).normalized()
+				draw_center = start.lerp(end, clampf(progress, 0.12, 0.94))
+				rotation += direction.angle()
 		"slash":
 			if start.distance_to(end) > 1.0:
 				draw_center = start.lerp(end, 0.52)
@@ -2413,6 +2418,9 @@ func _draw_imported_vfx_asset(entry: Dictionary, start: Vector2, end: Vector2, c
 			rotation += progress * TAU * 0.10
 		"ward":
 			rotation += progress * TAU * 0.08
+		"spell_target":
+			draw_center = end
+			rotation += progress * TAU * 0.04
 		_:
 			return false
 	var draw_size := radius * float(spec.get("scale", 1.0))
