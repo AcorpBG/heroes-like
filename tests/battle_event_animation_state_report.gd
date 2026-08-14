@@ -28,6 +28,7 @@ func _run() -> void:
 	SettingsService.settings["audio"]["effects_volume_percent"] = 100
 	SettingsService.apply_settings()
 	_validate_fallback_states()
+	_validate_core_vfx_asset_manifest()
 	_validate_defend_state()
 	_validate_move_state()
 	await _validate_melee_hit_state()
@@ -41,6 +42,8 @@ func _run() -> void:
 	await _validate_exit_action_state("retreat", "battle_unit_retreat", "retreat_withdraw_column")
 	await _validate_exit_action_state("surrender", "battle_unit_surrender", "surrender_stand_down")
 	await _validate_board_runtime_summary()
+	if OS.get_environment("HEROES_BATTLE_VFX_CAPTURE") == "1":
+		await _validate_imported_vfx_live_viewports()
 	await _validate_battle_audio_mix_policy()
 	await _validate_board_playback_lifecycle()
 	await _validate_presentation_event_stream_contract()
@@ -70,6 +73,26 @@ func _validate_fallback_states() -> void:
 	_expect_equal("fallback enemy idle", idle_state, "idle_hold")
 	_report["cases"]["fallback"] = {"ready_state": ready_state, "idle_state": idle_state}
 
+func _validate_core_vfx_asset_manifest() -> void:
+	var view := BattleBoardViewScript.new()
+	view.size = Vector2(960.0, 540.0)
+	add_child(view)
+	var summary: Dictionary = view.validation_vfx_asset_summary()
+	_expect_equal("battle vfx manifest schema", String(summary.get("schema_id", "")), "battle_vfx_manifest_v1")
+	_expect_equal("battle vfx manifest path", String(summary.get("manifest_path", "")), "res://content/battle_vfx_manifest.json")
+	_expect_int("battle vfx mapped cue count", int(summary.get("mapped_cue_count", -1)), 8)
+	_expect_int("battle vfx unique texture count", int(summary.get("unique_texture_count", -1)), 3)
+	_expect_int("battle vfx loaded texture count", int(summary.get("loaded_texture_count", -1)), 3)
+	_expect_equal("battle vfx missing texture paths", JSON.stringify(summary.get("missing_texture_paths", [])), "[]")
+	for expected_path in [
+		"res://art/battle/vfx/core_projectile_impact.png",
+		"res://art/battle/vfx/core_slash_arc.png",
+		"res://art/battle/vfx/core_ward_ring.png",
+	]:
+		_expect_array_contains("battle vfx imported texture", summary.get("loaded_texture_paths", []), expected_path)
+	view.queue_free()
+	_report["cases"]["core_vfx_assets"] = summary
+
 func _validate_defend_state() -> void:
 	var session := _basic_session("unit_river_guard", "unit_bog_brute", 4, 3, 5, 3)
 	var result := BattleRulesScript.perform_player_action(session, "defend")
@@ -82,6 +105,7 @@ func _validate_defend_state() -> void:
 	var brace_vfx := _vfx_entry_for(vfx_playback, "brace_outline")
 	_expect_equal("defend brace vfx cue", String(brace_vfx.get("cue_id", "")), "vfx_placeholder_brace_outline")
 	_expect_equal("defend brace vfx battle id", String(brace_vfx.get("battle_id", "")), "player_0")
+	_expect_equal("defend brace imported vfx", str(bool(brace_vfx.get("asset_loaded", false))), "true")
 	_report["cases"]["defend"] = {
 		"state": state,
 		"events": BattleRulesScript.animation_event_states(session.battle),
@@ -161,6 +185,8 @@ func _validate_melee_hit_state() -> void:
 	_expect_equal("hit target presentation source", String(target_stack.get("presentation_motion_source_battle_id", "")), "player_0")
 	var vfx_playback: Dictionary = board_summary.get("vfx_playback", {}) if board_summary.get("vfx_playback", {}) is Dictionary else {}
 	var melee_arc := _vfx_entry_for(vfx_playback, "melee_arc")
+	_expect_equal("melee imported vfx", str(bool(melee_arc.get("asset_loaded", false))), "true")
+	_expect_equal("melee vfx asset path", String(melee_arc.get("asset_path", "")), "res://art/battle/vfx/core_slash_arc.png")
 	if float(attacker_stack.get("presentation_x", 0.0)) <= float(melee_arc.get("start_x", 0.0)) + 0.05:
 		_error("Melee attacker token did not lunge toward the target: attacker=%s melee_arc=%s." % [attacker_stack, melee_arc])
 	if float(target_stack.get("presentation_x", 0.0)) <= float(melee_arc.get("end_x", 0.0)) + 0.5:
@@ -299,6 +325,7 @@ func _validate_death_state() -> void:
 	_expect_equal("death target presentation source", String(death_stack.get("presentation_motion_source_battle_id", "")), "player_0")
 	_expect_equal("death fade vfx cue", String(fade.get("cue_id", "")), "vfx_placeholder_stack_fade")
 	_expect_equal("death fade vfx battle id", String(fade.get("battle_id", "")), "enemy_0")
+	_expect_equal("death fade procedural fallback", str(bool(fade.get("asset_loaded", true))), "false")
 	_report["cases"]["death"] = {
 		"target_state": target_state,
 		"events": BattleRulesScript.animation_event_states(session.battle),
@@ -584,6 +611,66 @@ func _validate_board_runtime_summary() -> void:
 		"shake_modes": camera_mode_summaries,
 	}
 
+func _validate_imported_vfx_live_viewports() -> void:
+	var original_window_size := get_window().size
+	var results := {}
+	for viewport_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:
+		get_window().size = viewport_size
+		await get_tree().process_frame
+		await get_tree().process_frame
+		_expect_equal("battle vfx requested viewport", str(get_window().size), str(viewport_size))
+		var session := _basic_session("unit_mire_slinger", "unit_bog_brute", 1, 3, 7, 3)
+		_set_stack_field(session.battle, "enemy_0", "total_health", 999)
+		var result := BattleRulesScript.perform_player_action(session, "shoot")
+		_expect_ok("battle vfx live viewport shoot", result)
+		var view := BattleBoardViewScript.new()
+		view.position = Vector2.ZERO
+		view.size = get_viewport().get_visible_rect().size
+		add_child(view)
+		view.set_battle_state(session)
+		await get_tree().process_frame
+		await get_tree().create_timer(0.22).timeout
+		view.queue_redraw()
+		await get_tree().process_frame
+		var summary: Dictionary = view.validation_unit_art_summary()
+		var vfx_playback: Dictionary = summary.get("vfx_playback", {}) if summary.get("vfx_playback", {}) is Dictionary else {}
+		if int(vfx_playback.get("imported_asset_draw_count", 0)) < 2:
+			_error("Battle VFX live viewport did not draw imported projectile and status assets at %s: %s" % [viewport_size, vfx_playback])
+		var projectile := _vfx_entry_for(vfx_playback, "projectile_path")
+		var status := _vfx_entry_for(vfx_playback, "status_residue")
+		_expect_equal("battle vfx viewport projectile imported", str(bool(projectile.get("asset_loaded", false))), "true")
+		_expect_equal("battle vfx viewport status imported", str(bool(status.get("asset_loaded", false))), "true")
+		var viewport_texture: Texture2D = get_viewport().get_texture()
+		if viewport_texture == null:
+			_error("Battle VFX live viewport capture requires a windowed render texture at %s." % viewport_size)
+			view.queue_free()
+			get_window().size = original_window_size
+			return
+		var image: Image = viewport_texture.get_image()
+		if image == null:
+			_error("Battle VFX live viewport capture returned no image at %s." % viewport_size)
+			view.queue_free()
+			get_window().size = original_window_size
+			return
+		_expect_int("battle vfx capture width", image.get_width(), viewport_size.x)
+		_expect_int("battle vfx capture height", image.get_height(), viewport_size.y)
+		var capture_path := "%s/core_vfx_%dx%d.png" % [OUTPUT_DIR, viewport_size.x, viewport_size.y]
+		var save_error := image.save_png(ProjectSettings.globalize_path(capture_path))
+		_expect_int("battle vfx capture save", save_error, OK)
+		results["%dx%d" % [viewport_size.x, viewport_size.y]] = {
+			"capture_path": capture_path,
+			"logical_view_size": [view.size.x, view.size.y],
+			"imported_asset_draw_count": int(vfx_playback.get("imported_asset_draw_count", 0)),
+			"procedural_fallback_draw_count": int(vfx_playback.get("procedural_fallback_draw_count", 0)),
+			"projectile_asset_path": String(projectile.get("asset_path", "")),
+			"status_asset_path": String(status.get("asset_path", "")),
+		}
+		view.queue_free()
+		await get_tree().process_frame
+	get_window().size = original_window_size
+	await get_tree().process_frame
+	_report["cases"]["core_vfx_live_viewports"] = results
+
 func _validate_board_playback_lifecycle() -> void:
 	var session := _basic_session("unit_mire_slinger", "unit_bog_brute", 1, 3, 7, 3)
 	_set_stack_field(session.battle, "enemy_0", "total_health", 999)
@@ -784,13 +871,19 @@ func _validate_active_vfx_presentation(summary: Dictionary) -> Dictionary:
 	var projectile := _vfx_entry_for(vfx_playback, "projectile_path")
 	var status := _vfx_entry_for(vfx_playback, "status_residue")
 	_expect_equal("projectile vfx cue", String(projectile.get("cue_id", "")), "vfx_placeholder_projectile_path")
+	_expect_equal("projectile imported vfx", str(bool(projectile.get("asset_loaded", false))), "true")
+	_expect_equal("projectile vfx asset path", String(projectile.get("asset_path", "")), "res://art/battle/vfx/core_projectile_impact.png")
 	_expect_equal("projectile vfx source", String(projectile.get("battle_id", "")), "player_0")
 	_expect_equal("projectile vfx target", String(projectile.get("target_battle_id", "")), "enemy_0")
 	_expect_equal("status vfx cue", String(status.get("cue_id", "")), "vfx_placeholder_status_residue")
+	_expect_equal("status imported vfx", str(bool(status.get("asset_loaded", false))), "true")
+	_expect_equal("status vfx asset path", String(status.get("asset_path", "")), "res://art/battle/vfx/core_ward_ring.png")
 	_expect_equal("status vfx target battle id", String(status.get("battle_id", "")), "enemy_0")
 	_expect_equal("status vfx source", String(status.get("source_battle_id", "")), "player_0")
 	if int(projectile.get("start_q", -1)) == int(projectile.get("target_q", -1)) and int(projectile.get("start_r", -1)) == int(projectile.get("target_r", -1)):
 		_error("Projectile VFX did not span distinct source and target cells: %s" % projectile)
+	if int(vfx_playback.get("imported_asset_draw_count", 0)) < 2:
+		_error("VFX presentation did not render both active cue records through imported assets: %s" % vfx_playback)
 	return vfx_playback
 
 func _validate_active_audio_playback(summary: Dictionary) -> Dictionary:
