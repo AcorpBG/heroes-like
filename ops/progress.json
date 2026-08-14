@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Overworld field-spell cast cue playback is complete. Successful live movement-restoration and scouting-reveal casts publish one detached authored cue after the authoritative refresh; normal input ownership and Escape skip, reduced-motion fallback, exact independent session authority, refresh stability, failed-cast silence, compatibility, repository/editor, and bounded Linux/Windows startup gates pass. Select the next tracker-approved release-readiness implementation slice.",
+  "currentNotes": "The Overworld artifact-slot cue slice is completed with focused, compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine startup evidence. Select the next tracker-approved release-readiness implementation slice; no whole-release claim is made.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-field-spell-cast-cue-playback-10184",
-  "currentSliceId": "presentation-overworld-field-spell-cast-cue-playback-10184",
-  "currentSliceNotes": "Completed: the live Overworld spell action now starts one exact authored hero-anchored cue after refresh, with bounded normal input ownership, Escape skip, the reduced-motion spell icon, exact independent movement/fog/session authority, and no refresh, failure, or expiry replay.",
+  "currentSlice": "presentation-overworld-artifact-slot-cue-playback-10184",
+  "currentSliceId": "presentation-overworld-artifact-slot-cue-playback-10184",
+  "currentSliceNotes": "Completed: successful live equip and stow buttons publish exact post-refresh nonblocking Artifact rail cues in normal and reduced-motion modes without changing artifact or session authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Field Spell Cast Cue Playback",
-  "currentSliceUpdatedAt": "2026-08-14T22:35:04Z",
+  "currentSliceTitle": "Overworld Artifact Slot Cue Playback",
+  "currentSliceUpdatedAt": "2026-08-14T23:00:38Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -81215,6 +81215,91 @@
         "editor_parse_passed": true,
         "linux_export_headless_startup_passed": true,
         "windows_export_fresh_wine_startup_passed": true
+      }
+    },
+    {
+      "id": "presentation-overworld-artifact-slot-cue-playback-10184",
+      "title": "Overworld Artifact Slot Cue Playback",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/animation-systems-foundation.md", "AGENTS.md"],
+      "purpose": "Make successful live player artifact equip and stow actions visibly confirm their refreshed loadout state through the existing authored nonblocking artifact slot cue contracts.",
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/overworld/OverworldShell.tscn",
+        "tests/overworld_artifact_slot_cue_playback_report.gd",
+        "tests/overworld_artifact_slot_cue_playback_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_artifact_slot_cue_playback_report.tscn",
+        "tests/overworld_visual_smoke.tscn",
+        "tests/artifact_equip_runtime_effects_report.tscn",
+        "tests/animation_validation_smoke_harness_report.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "787bd054",
+        "artifact_equipped_catalog_entry": true,
+        "artifact_unequipped_catalog_entry": true,
+        "slot_cues_nonblocking": true,
+        "live_artifact_management_actions": true,
+        "overworld_artifact_slot_playback": false
+      },
+      "completionCriteria": [
+        "Exactly one successful live equip or stow button publishes one detached artifact_equipped or artifact_unequipped payload with authoritative artifact id/name, slot, action id, existing result message, and exact catalog policy after the authoritative artifact refresh",
+        "The compact Artifact rail cue remains nonblocking and focus-neutral, uses slot_equip_pulse or slot_unequip_pulse in normal mode, and uses slot_badge_added or slot_badge_removed under reduced motion",
+        "Malformed, unsupported, and failed actions publish nothing; refresh does not duplicate or reset the cue; expiry never replays it",
+        "Focused equip/stow runtime at 1280x720 and 1920x1080 proves exact independent loadout, movement, recap, session, focus, action-list, and map authority",
+        "Overworld visual, artifact runtime, animation policy, focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "artifact acquisition, rewards, slots, equip/stow rules, swapping, bonuses, set effects, inventory, movement, hero, content, AI, balance, save, schema, cache, or event-contract changes",
+        "blocking input, map animation, camera, battle/town artifact presentation, final VFX/audio assets or playback, global animation timing, or other-screen changes",
+        "packaged artifact interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "createdAt": "2026-08-14T22:38:36Z",
+      "startedAt": "2026-08-14T22:38:36Z",
+      "updatedAt": "2026-08-14T23:00:38Z",
+      "completedAt": "2026-08-14T23:00:38Z",
+      "notes": "Production now publishes one detached artifact_equipped or artifact_unequipped payload only after a successful live player loadout action and authoritative Artifact rail refresh. The compact rail label remains nonblocking; normal mode uses the exact slot_equip_pulse or slot_unequip_pulse contract and reduced motion uses slot_badge_added or slot_badge_removed. The focused 1280x720 and 1920x1080 report drives real equip and stow buttons, proves stow remains usable while the equip cue is active, matches two sequential independent rule controls and whole session authority exactly, preserves the active cue across refresh, fails closed for malformed and unavailable actions, and settles without replay. Overworld visual, existing artifact runtime, animation policy, active-play focus, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Artifact rules/content/stats/inventory/equipment/movement/save/schema/AI, final audio/VFX assets, packaged artifact interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unchanged or unclaimed.",
+      "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null,
+      "result": {
+        "artifact_equipped_event_id": "artifact_equipped",
+        "artifact_unequipped_event_id": "artifact_unequipped",
+        "normal_equip_state": "slot_equip_pulse",
+        "normal_unequip_state": "slot_unequip_pulse",
+        "reduced_equip_fallback": "slot_badge_added",
+        "reduced_unequip_fallback": "slot_badge_removed",
+        "nonblocking": true,
+        "focused_viewports": [[1280, 720], [1920, 1080]],
+        "equip_control_exact": true,
+        "stow_control_exact": true,
+        "stow_while_equip_active": true,
+        "malformed_payload_fail_closed": true,
+        "failed_action_published_nothing": true,
+        "refresh_replayed": false,
+        "focused_report_passed": true,
+        "overworld_visual_passed": true,
+        "artifact_runtime_passed": true,
+        "animation_policy_passed": true,
+        "active_play_focus_passed": true,
+        "accessibility_passed": true,
+        "core_passed": true,
+        "repository_validation_passed": true,
+        "editor_parse_passed": true,
+        "linux_export_headless_startup_passed": true,
+        "windows_export_fresh_wine_startup_passed": true,
+        "packaged_artifact_interaction_claimed": false,
+        "whole_release_claimed": false
       }
     },
     {
