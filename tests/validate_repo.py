@@ -103,6 +103,8 @@ OVERWORLD_MAP_VIEW_SCRIPT_PATH = ROOT / "scenes" / "overworld" / "OverworldMapVi
 OVERWORLD_FULL_ROUTE_MOVEMENT_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "overworld_full_route_movement_regression.gd"
 OVERWORLD_OBJECT_RESOLUTION_CUE_PLAYBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_object_resolution_cue_playback_report.gd"
 OVERWORLD_OBJECT_RESOLUTION_CUE_PLAYBACK_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_object_resolution_cue_playback_report.tscn"
+OVERWORLD_FIELD_SPELL_CAST_CUE_PLAYBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_field_spell_cast_cue_playback_report.gd"
+OVERWORLD_FIELD_SPELL_CAST_CUE_PLAYBACK_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_field_spell_cast_cue_playback_report.tscn"
 OVERWORLD_ART_MANIFEST_PATH = ROOT / "art" / "overworld" / "manifest.json"
 TERRAIN_GRAMMAR_PATH = CONTENT_DIR / "terrain_grammar.json"
 TERRAIN_LAYERS_PATH = CONTENT_DIR / "terrain_layers.json"
@@ -28308,7 +28310,7 @@ def validate_overworld_hero_route_locomotion(errors: list[str]) -> None:
     ensure(sync_block.find("_hero_movement_last_serial = serial") < sync_block.find("_tiles_from_payloads"), errors, "Map view must consume each movement serial once before validating its detached path")
     ensure(sync_block.find("_hero_movement_reduced_motion") < sync_block.find("if _hero_movement_reduced_motion:"), errors, "Map view must derive reduced-motion policy before choosing endpoint snap")
     processing_block = gdscript_function_block(map_view_text, "_sync_presentation_processing")
-    ensure('set_process(_hero_movement_active or _object_resolution_active or _object_resolution_queued or _route_blocked_active)' in processing_block, errors, "Map view must run per-frame processing only while a presentation is active or queued")
+    ensure('set_process(_hero_movement_active or _object_resolution_active or _object_resolution_queued or _route_blocked_active or _spell_cast_active)' in processing_block, errors, "Map view must run per-frame processing only while a presentation is active or queued")
     ensure("_invalidate_session_static_cache" not in process_block and "_invalidate_state_cache" not in process_block, errors, "Hero locomotion frames must not invalidate static or state caches")
     ensure("_invalidate_dynamic_layer" in process_block, errors, "Hero locomotion frames must invalidate the dynamic layer")
     ensure("session" not in process_block and "session" not in draw_block, errors, "Hero locomotion frame/draw helpers must not mutate or consult session authority")
@@ -28380,6 +28382,176 @@ def validate_overworld_hero_route_locomotion(errors: list[str]) -> None:
         '"Victory 0/4"',
     ):
         ensure(stale_token not in visual_smoke_text, errors, f"Overworld visual smoke must not retain stale River Pass victory token {stale_token}")
+
+
+def validate_overworld_field_spell_cast_cue_playback(errors: list[str]) -> None:
+    required_paths = (
+        OVERWORLD_SCENE_PATH,
+        OVERWORLD_SCRIPT_PATH,
+        OVERWORLD_MAP_VIEW_SCRIPT_PATH,
+        OVERWORLD_FIELD_SPELL_CAST_CUE_PLAYBACK_REPORT_SCRIPT_PATH,
+        OVERWORLD_FIELD_SPELL_CAST_CUE_PLAYBACK_REPORT_SCENE_PATH,
+        ANIMATION_EVENT_CUES_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Overworld field-spell cue owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    shell_scene_text = OVERWORLD_SCENE_PATH.read_text(encoding="utf-8")
+    shell_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+    map_view_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
+    report_text = OVERWORLD_FIELD_SPELL_CAST_CUE_PLAYBACK_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    report_scene_text = OVERWORLD_FIELD_SPELL_CAST_CUE_PLAYBACK_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+
+    def gdscript_function_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}")
+        if start < 0:
+            return ""
+        end = text.find("\nfunc ", start + 1)
+        return text[start:] if end < 0 else text[start:end]
+
+    ensure_scene_nodes(shell_scene_text, errors, "OverworldShell.tscn", [("SpellCastInputBlocker", "Control")])
+    blocker_match = re.search(
+        r'\[node name="SpellCastInputBlocker" type="Control" parent="\."\]\n(?P<body>.*?)(?=\n\[node )',
+        shell_scene_text,
+        re.DOTALL,
+    )
+    ensure(blocker_match is not None, errors, "Overworld spell cue must own one top-level input blocker")
+    if blocker_match is not None:
+        blocker_body = blocker_match.group("body")
+        for token in (
+            "unique_name_in_owner = true",
+            "visible = false",
+            "anchors_preset = 15",
+            "mouse_filter = 0",
+            "focus_mode = 2",
+            "z_index = 45",
+            'tooltip_text = "Field magic is resolving. Press Escape to skip."',
+        ):
+            ensure(token in blocker_body, errors, f"Overworld spell blocker is missing exact ownership token: {token}")
+
+    for token in (
+        '@onready var _spell_cast_input_blocker: Control = %SpellCastInputBlocker',
+        "var _spell_cast_presentation: Dictionary = {}",
+        "var _spell_cast_presentation_serial := 0",
+        "spell_cast_presentation_blocking_changed.connect(_on_spell_cast_presentation_blocking_changed)",
+        "func _record_spell_cast_presentation",
+        'String(recap.get("kind", "")) != "spell"',
+        'cue_playback_policy_for_event(\n\t\t"spell_cast_overworld"',
+        'String(policy.get("cue_id", "")) != "cue_spell_cast_overworld"',
+        'String(policy.get("selected_playback_policy", "")) != "queue_resolved"',
+        '"post_action_recap": recap.duplicate(true)',
+        '"hero_tile": {"x": hero_tile.x, "y": hero_tile.y}',
+        '_map_view.call("present_spell_cast_presentation", _spell_cast_presentation)',
+        "func _on_spell_cast_presentation_blocking_changed",
+        "_spell_cast_input_blocker.visible = blocking",
+        "_spell_cast_input_blocker.call_deferred(\"grab_focus\")",
+        "call_deferred(\"_configure_overworld_keyboard_focus\", true)",
+    ):
+        ensure(token in shell_text, errors, f"OverworldShell.gd is missing field-spell cue ownership token: {token}")
+    ensure(shell_text.count("func _record_spell_cast_presentation") == 1, errors, "Overworld shell must define exactly one field-spell presentation producer")
+    cast_handler = gdscript_function_block(shell_text, "_on_spell_action_pressed")
+    cast_order = [
+        cast_handler.find("OverworldRules.cast_overworld_spell(_session, spell_id)"),
+        cast_handler.find('_record_result_feedback("cast", result, "Spell resolved.")'),
+        cast_handler.find("var resolution := _handle_session_resolution()"),
+        cast_handler.find("\t_refresh()"),
+        cast_handler.find("_record_spell_cast_presentation(result, spell_id)"),
+    ]
+    ensure(all(index >= 0 for index in cast_order) and cast_order == sorted(cast_order), errors, "Live field-spell cue must publish after rule result, feedback, resolution guard, and refresh")
+    record_block = gdscript_function_block(shell_text, "_record_spell_cast_presentation")
+    ensure(record_block.find('not bool(result.get("ok", false))') < record_block.find('String(recap.get("kind", ""))') < record_block.find("cue_playback_policy_for_event") < record_block.find("_spell_cast_presentation_serial += 1"), errors, "Field-spell producer must validate success, spell recap, and catalog policy before publication")
+    ensure("session.overworld[" not in record_block and "session.flags[" not in record_block, errors, "Field-spell presentation producer must not mutate session authority")
+    ensure("await " not in record_block and "create_timer" not in record_block and "create_tween" not in record_block, errors, "Field-spell producer must remain synchronous and timer-free")
+    refresh_map_block = gdscript_function_block(shell_text, "_refresh_map_view")
+    ensure(refresh_map_block.count("_spell_cast_presentation") == 1 and refresh_map_block.find("_spell_cast_presentation") < refresh_map_block.find("set_placement_debug_overlay_enabled"), errors, "Normal map refresh must hand off exactly one detached spell presentation")
+    input_block = gdscript_function_block(shell_text, "_input")
+    ensure(input_block.find("_spell_cast_input_blocker.visible") < input_block.find("modal_owner_open"), errors, "Spell presentation input ownership must precede every other modal and gameplay input path")
+    ensure('get_viewport().set_input_as_handled()' in input_block and 'event.is_action_pressed("ui_cancel")' in input_block and 'dismiss_spell_cast_presentation' in input_block, errors, "Blocking field-spell playback must consume all input and expose only Escape dismissal")
+
+    for token in (
+        "signal spell_cast_presentation_blocking_changed(blocking: bool)",
+        "SPELL_CAST_MIN_DURATION_MSEC := 80",
+        "SPELL_CAST_MAX_DURATION_MSEC := 700",
+        "spell_cast_presentation: Dictionary = {}",
+        "func present_spell_cast_presentation",
+        "func dismiss_spell_cast_presentation",
+        "func _sync_spell_cast_presentation",
+        'event_id != "spell_cast_overworld"',
+        'cue_id != "cue_spell_cast_overworld"',
+        'playback_policy != "queue_resolved"',
+        'blocking_policy not in ["input_blocking_timeout", "nonblocking_reduced_motion", "nonblocking_fast_resolve"]',
+        "spell_tile != _hero_tile",
+        '_invalidate_dynamic_layer("spell_cast_presentation_started")',
+        '_invalidate_dynamic_layer("spell_cast_presentation_dismissed")',
+        "func _draw_spell_cast_presentation",
+        "func validation_spell_cast_presentation",
+        '"spell_cast_presentation": validation_spell_cast_presentation()',
+    ):
+        ensure(token in map_view_text, errors, f"OverworldMapView.gd is missing field-spell playback token: {token}")
+    sync_block = gdscript_function_block(map_view_text, "_sync_spell_cast_presentation")
+    dismiss_block = gdscript_function_block(map_view_text, "dismiss_spell_cast_presentation")
+    draw_block = gdscript_function_block(map_view_text, "_draw_spell_cast_presentation")
+    validation_block = gdscript_function_block(map_view_text, "validation_spell_cast_presentation")
+    process_block = gdscript_function_block(map_view_text, "_process")
+    ensure(sync_block.find("var event_id :=") < sync_block.find("if (\n") < sync_block.find("_spell_cast_last_serial = serial"), errors, "Map view must validate a detached spell payload before consuming its serial or replacing live state")
+    ensure(sync_block.find("spell_tile != _hero_tile") < sync_block.find("var was_blocking :=") < sync_block.find("_spell_cast_active = true"), errors, "Map view must fail closed before replacing blocker and active presentation state")
+    ensure('if _spell_cast_blocking_policy == "input_blocking_timeout":' in sync_block and "spell_cast_presentation_blocking_changed.emit(true)" in sync_block, errors, "Only the exact authored blocking policy may acquire shell input ownership")
+    ensure("spell_cast_presentation_blocking_changed.emit(false)" in dismiss_block and "_spell_cast_active = false" in dismiss_block, errors, "Spell dismissal must release exact shell input ownership")
+    ensure("session" not in sync_block + dismiss_block + draw_block + validation_block, errors, "Field-spell view helpers must not consult or mutate gameplay session authority")
+    ensure("_invalidate_session_static_cache" not in sync_block + dismiss_block + draw_block and "_invalidate_state_cache" not in sync_block + dismiss_block + draw_block, errors, "Field-spell playback must invalidate only the dynamic layer")
+    ensure("await " not in sync_block + dismiss_block + draw_block and "create_timer" not in sync_block + dismiss_block + draw_block and "create_tween" not in sync_block + dismiss_block + draw_block, errors, "Field-spell playback must use the shared bounded frame process without hidden timing")
+    ensure(process_block.find("if _spell_cast_active:") < process_block.find("_sync_presentation_processing()"), errors, "Shared presentation processing must advance and settle the field-spell cue")
+    dynamic_draw_block = gdscript_function_block(map_view_text, "_draw_dynamic_layer")
+    ensure(dynamic_draw_block.count("_draw_spell_cast_presentation(board_rect)") == 1, errors, "Field-spell cue must draw exactly once on the dynamic layer")
+    ensure("_draw_spell_cast_presentation" not in gdscript_function_block(map_view_text, "_draw_session_static_layer") and "_draw_spell_cast_presentation" not in gdscript_function_block(map_view_text, "_draw_state_layer") and "_draw_spell_cast_presentation" not in gdscript_function_block(map_view_text, "_draw_frame_layer"), errors, "Field-spell cue must not draw on static, state, or frame layers")
+
+    ensure_scene_nodes(report_scene_text, errors, "overworld_field_spell_cast_cue_playback_report.tscn", [("OverworldFieldSpellCastCuePlaybackReport", "Node")])
+    for token in (
+        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        '{"id": "normal", "reduced_motion": false, "spell_id": "spell_waystride"}',
+        '{"id": "reduced_motion", "reduced_motion": true, "spell_id": "spell_survey_chain"}',
+        'shell.get_node_or_null("%Map")',
+        "var control = SessionDataScript.SessionData.new()",
+        "var control_result: Dictionary = OverworldRules.cast_overworld_spell(control, spell_id)",
+        'String(control_recap.get("kind", "")) != "spell"',
+        'control.flags["last_overworld_action_recap"] = control_recap.duplicate(true)',
+        'open_command.emit_signal("pressed")',
+        'spell_button.emit_signal("pressed")',
+        'String(active.get("event_id", "")) == "spell_cast_overworld"',
+        'String(active.get("cue_id", "")) == "cue_spell_cast_overworld"',
+        'live_after == control.to_dict()',
+        'await _click_global_position(menu.get_global_rect().get_center())',
+        'int(shell.get("_validation_return_to_menu_request_count")) == return_count_before',
+        'shell.call("_refresh")',
+        'await _press_action("ui_cancel")',
+        "var settle_frames := 0",
+        'and settle_frames < 12:',
+        "settle_frames += 1",
+        'while bool(_spell_presentation(shell).get("active", false))',
+        'shell.validation_cast_overworld_spell("spell_missing")',
+        'print("OVERWORLD_FIELD_SPELL_CAST_CUE_PLAYBACK_REPORT %s"',
+    ):
+        ensure(token in report_text, errors, f"Field-spell cue report is missing method-matched live proof: {token}")
+    ensure(report_text.count('OverworldRules.cast_overworld_spell(control, spell_id)') == 1, errors, "Field-spell report must materialize exactly one independent rules control per row")
+    control_result_index = report_text.find("var control_result: Dictionary = OverworldRules.cast_overworld_spell(control, spell_id)")
+    control_recap_index = report_text.find('String(control_recap.get("kind", "")) != "spell"', control_result_index)
+    control_persist_index = report_text.find('control.flags["last_overworld_action_recap"] = control_recap.duplicate(true)', control_recap_index)
+    button_index = report_text.find('spell_button.emit_signal("pressed")', control_persist_index)
+    ensure(0 <= control_result_index < control_recap_index < control_persist_index < button_index, errors, "Independent spell control must persist the exact complete feedback recap before the live button action")
+    for forbidden in (
+        "_on_spell_action_pressed(",
+        "_record_spell_cast_presentation(",
+        "_sync_spell_cast_presentation(",
+        "_process(",
+        "create_timer",
+        "var deadline := Time.get_ticks_msec()",
+        "session.overworld.erase",
+        "control.overworld.erase",
+        'get_node_or_null("%MapView")',
+    ):
+        ensure(forbidden not in report_text, errors, f"Field-spell cue report must not bypass or weaken production behavior: {forbidden}")
 
 
 def validate_overworld_object_resolution_cue_playback(errors: list[str]) -> None:
@@ -37109,6 +37281,7 @@ def main() -> int:
     validate_overworld_object_content_batch_001(errors)
     validate_overworld_art_asset_slice(errors)
     validate_overworld_hero_route_locomotion(errors)
+    validate_overworld_field_spell_cast_cue_playback(errors)
     validate_overworld_object_resolution_cue_playback(errors)
     validate_neutral_dwelling_unit_slice(errors)
     validate_hero_portrait_assets(errors)

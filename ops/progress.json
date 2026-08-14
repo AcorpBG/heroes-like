@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Town building-complete cue playback is complete. Successful live construction publishes one detached authored cue after the authoritative refresh; normal input ownership and Escape skip, reduced-motion fallback, exact independent session authority, refresh stability, expiry, compatibility, repository/editor, and bounded Linux/Windows startup gates pass. Select the next tracker-approved release-readiness implementation slice.",
+  "currentNotes": "Overworld field-spell cast cue playback is complete. Successful live movement-restoration and scouting-reveal casts publish one detached authored cue after the authoritative refresh; normal input ownership and Escape skip, reduced-motion fallback, exact independent session authority, refresh stability, failed-cast silence, compatibility, repository/editor, and bounded Linux/Windows startup gates pass. Select the next tracker-approved release-readiness implementation slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-town-building-complete-cue-playback-10184",
-  "currentSliceId": "presentation-town-building-complete-cue-playback-10184",
-  "currentSliceNotes": "Completed: the live Town build action now starts one exact authored cue after refresh, with bounded normal input ownership, Escape skip, the reduced-motion building badge, exact independent construction/session authority, and no refresh or expiry replay.",
+  "currentSlice": "presentation-overworld-field-spell-cast-cue-playback-10184",
+  "currentSliceId": "presentation-overworld-field-spell-cast-cue-playback-10184",
+  "currentSliceNotes": "Completed: the live Overworld spell action now starts one exact authored hero-anchored cue after refresh, with bounded normal input ownership, Escape skip, the reduced-motion spell icon, exact independent movement/fog/session authority, and no refresh, failure, or expiry replay.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Town Building Complete Cue Playback",
-  "currentSliceUpdatedAt": "2026-08-14T21:50:03Z",
+  "currentSliceTitle": "Overworld Field Spell Cast Cue Playback",
+  "currentSliceUpdatedAt": "2026-08-14T22:35:04Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -81218,6 +81218,94 @@
       }
     },
     {
+      "id": "presentation-overworld-field-spell-cast-cue-playback-10184",
+      "title": "Overworld Field Spell Cast Cue Playback",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/animation-systems-foundation.md", "AGENTS.md"],
+      "purpose": "Make successful live player field-spell casts visible and skippable on the Overworld map through the existing authored spell_cast_overworld cue contract while preserving exact spell and session authority.",
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/overworld/OverworldShell.tscn",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_field_spell_cast_cue_playback_report.gd",
+        "tests/overworld_field_spell_cast_cue_playback_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_field_spell_cast_cue_playback_report.tscn",
+        "tests/overworld_visual_smoke.tscn",
+        "tests/magic_adventure_spell_hooks_report.tscn",
+        "tests/overworld_full_route_movement_regression.tscn",
+        "tests/overworld_gameplay_movement_input_ownership_regression.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "a391f232",
+        "spell_cast_overworld_catalog_entry": true,
+        "normal_animation_state": "adventure_cast_anchor",
+        "normal_blocking_policy": "input_blocking_timeout",
+        "reduced_motion_fallback": "adventure_spell_icon",
+        "player_field_spell_rule_live": true,
+        "overworld_field_spell_map_playback": false
+      },
+      "completionCriteria": [
+        "Exactly one successful live player cast publishes one detached spell_cast_overworld payload with authoritative hero tile, spell id/name, existing result message and recap, and exact catalog-selected policy after the authoritative map refresh",
+        "Normal playback draws one bounded hero-anchored adventure-cast cue while a transparent full-shell layer blocks background pointer and keyboard commands; ui_cancel skips it and restores the live Overworld focus cycle",
+        "Reduced motion uses the exact adventure_spell_icon static fallback with nonblocking_reduced_motion policy, while malformed and failed casts publish nothing",
+        "Refresh does not duplicate or reset the cue, expiry or skip never replays it, and independent restore-movement and reveal-radius controls prove exact mana, movement, fog, recap, session, save, focus, route, and map authority",
+        "Focused normal/reduced runtime at 1280x720 and 1920x1080, Overworld visual/magic/route/input/focus/accessibility/core compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "spell availability, targeting, mana cost, movement/scouting consequence, fog, hero, route, content, AI, balance, save, schema, cache, or event-contract changes",
+        "battle spells, enemy spell presentation, final VFX/audio assets or playback, global animation timing, camera, other Overworld cues, or other-screen changes",
+        "packaged Overworld interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "createdAt": "2026-08-14T21:54:30Z",
+      "startedAt": "2026-08-14T21:54:30Z",
+      "updatedAt": "2026-08-14T22:35:04Z",
+      "completedAt": "2026-08-14T22:35:04Z",
+      "notes": "Production now publishes one detached spell_cast_overworld payload only after a successful live player cast and authoritative map refresh. Normal mode draws bounded hero-anchored cast rings and an icon while a transparent full-shell blocker owns pointer and keyboard input; ui_cancel skips and focus returns. Reduced motion uses the exact nonblocking adventure_spell_icon fallback. The focused 1280x720 and 1920x1080 report drives real command-drawer buttons for Waystride and Survey Chain, matches independent rule controls exactly across mana, movement, fog, recap and whole session authority, proves refresh stability, malformed fail-closed behavior, failed-cast silence, and clean skip/expiry. Overworld visual, magic hooks, full-route, gameplay-input ownership, active-play focus, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged spell interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null,
+      "result": {
+        "field_spell_event_id": "spell_cast_overworld",
+        "normal_animation_state": "adventure_cast_anchor",
+        "normal_input_blocking": true,
+        "reduced_motion_fallback": "adventure_spell_icon",
+        "focused_viewports": [
+          [1280, 720],
+          [1920, 1080]
+        ],
+        "movement_restore_control_exact": true,
+        "scouting_reveal_control_exact": true,
+        "malformed_payload_fail_closed": true,
+        "failed_cast_published_nothing": true,
+        "refresh_replayed": false,
+        "focused_report_passed": true,
+        "overworld_visual_passed": true,
+        "magic_hooks_passed": true,
+        "full_route_passed": true,
+        "gameplay_input_ownership_passed": true,
+        "active_play_focus_passed": true,
+        "accessibility_passed": true,
+        "core_passed": true,
+        "repository_validation_passed": true,
+        "editor_parse_passed": true,
+        "linux_export_headless_startup_passed": true,
+        "windows_export_fresh_wine_startup_passed": true,
+        "packaged_spell_interaction_claimed": false,
+        "whole_release_claimed": false
+      }
+    },
+    {
       "id": "presentation-town-building-complete-cue-playback-10184",
       "title": "Town Building Complete Cue Playback",
       "status": "completed",
@@ -82340,7 +82428,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
-  "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader gameplay, content, performance, accessibility certification, signing/publication, native Windows hardware certification, Native RMG parity, and overall release readiness remain open.",
+  "remainingWork": "Complete the selected Overworld field-spell cast cue implementation and validation. Broader release gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -82771,8 +82859,8 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "presentation_town_building_complete_cue_playback_completed",
-  "status": "completed",
+  "result": "presentation_overworld_field_spell_cast_cue_playback_completed",
+  "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
       "completed": "Implementation or documentation-only governance work satisfies the PLAN completion criteria and has validation/evidence.",

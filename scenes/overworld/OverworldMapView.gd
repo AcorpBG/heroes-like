@@ -2,6 +2,7 @@ extends Control
 
 signal tile_pressed(tile: Vector2i)
 signal tile_hovered(tile: Vector2i)
+signal spell_cast_presentation_blocking_changed(blocking: bool)
 
 const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
 const OverworldRulesScript = preload("res://scripts/core/OverworldRules.gd")
@@ -183,6 +184,8 @@ const OBJECT_RESOLUTION_MIN_DURATION_MSEC := 60
 const OBJECT_RESOLUTION_MAX_DURATION_MSEC := 700
 const ROUTE_BLOCKED_MIN_DURATION_MSEC := 60
 const ROUTE_BLOCKED_MAX_DURATION_MSEC := 700
+const SPELL_CAST_MIN_DURATION_MSEC := 80
+const SPELL_CAST_MAX_DURATION_MSEC := 700
 
 @export var large_map_visible_tile_span_override := 0.0
 
@@ -315,6 +318,24 @@ var _guarded_site_guard_name := ""
 var _guarded_site_control_inspection := ""
 var _guarded_site_guard_link_surface := ""
 var _guarded_site_allows_large_motion := false
+var _spell_cast_last_serial := 0
+var _spell_cast_tile := Vector2i(-1, -1)
+var _spell_cast_elapsed_sec := 0.0
+var _spell_cast_duration_sec := 0.0
+var _spell_cast_active := false
+var _spell_cast_event_id := ""
+var _spell_cast_cue_id := ""
+var _spell_cast_spell_id := ""
+var _spell_cast_spell_name := ""
+var _spell_cast_result_message := ""
+var _spell_cast_animation_state := ""
+var _spell_cast_visual_policy := ""
+var _spell_cast_fallback_tag := ""
+var _spell_cast_playback_policy := ""
+var _spell_cast_blocking_policy := ""
+var _spell_cast_vfx_cue_ids: Array = []
+var _spell_cast_audio_cue_ids: Array = []
+var _spell_cast_allows_large_motion := false
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -336,7 +357,8 @@ func set_map_state(
 	movement_presentation: Dictionary = {},
 	object_resolution_presentation: Dictionary = {},
 	route_blocked_presentation: Dictionary = {},
-	guarded_site_presentation: Dictionary = {}
+	guarded_site_presentation: Dictionary = {},
+	spell_cast_presentation: Dictionary = {}
 ) -> void:
 	var profile_start := _profile_begin("set_map_state")
 	_ensure_render_layers()
@@ -358,6 +380,7 @@ func set_map_state(
 	_rebuild_road_tiles()
 	_selected_tile = selected_tile
 	_sync_guarded_site_presentation(guarded_site_presentation)
+	_sync_spell_cast_presentation(spell_cast_presentation)
 	var path_profile_start := _profile_begin("path_recompute")
 	var route_cache_reused := _apply_selected_route_state(selected_route_state)
 	if not route_cache_reused:
@@ -433,12 +456,91 @@ func _process(delta: float) -> void:
 		if _route_blocked_elapsed_sec >= _route_blocked_duration_sec:
 			_route_blocked_active = false
 		redraw_dynamic = true
+	if _spell_cast_active:
+		_spell_cast_elapsed_sec = minf(_spell_cast_duration_sec, _spell_cast_elapsed_sec + elapsed_delta)
+		if _spell_cast_elapsed_sec >= _spell_cast_duration_sec:
+			dismiss_spell_cast_presentation()
+			redraw_dynamic = true
 	_sync_presentation_processing()
 	if redraw_dynamic:
 		_invalidate_dynamic_layer("overworld_presentation_frame")
 
 func _sync_presentation_processing() -> void:
-	set_process(_hero_movement_active or _object_resolution_active or _object_resolution_queued or _route_blocked_active)
+	set_process(_hero_movement_active or _object_resolution_active or _object_resolution_queued or _route_blocked_active or _spell_cast_active)
+
+func present_spell_cast_presentation(presentation: Dictionary) -> Dictionary:
+	_sync_spell_cast_presentation(presentation)
+	return validation_spell_cast_presentation()
+
+func dismiss_spell_cast_presentation() -> void:
+	var was_blocking := _spell_cast_active and _spell_cast_blocking_policy == "input_blocking_timeout"
+	_spell_cast_active = false
+	_spell_cast_elapsed_sec = _spell_cast_duration_sec
+	_sync_presentation_processing()
+	_invalidate_dynamic_layer("spell_cast_presentation_dismissed")
+	if was_blocking:
+		spell_cast_presentation_blocking_changed.emit(false)
+
+func _sync_spell_cast_presentation(presentation: Dictionary) -> void:
+	var serial := int(presentation.get("serial", 0))
+	if serial <= 0 or serial == _spell_cast_last_serial:
+		return
+	var event_id := String(presentation.get("event_id", ""))
+	var cue_id := String(presentation.get("cue_id", ""))
+	var spell_id := String(presentation.get("spell_id", ""))
+	var spell_name := String(presentation.get("spell_name", ""))
+	var result_message := String(presentation.get("result_message", ""))
+	var animation_state := String(presentation.get("selected_animation_state", ""))
+	var visual_policy := String(presentation.get("selected_visual_policy", ""))
+	var fallback_tag := String(presentation.get("selected_fallback_tag", ""))
+	var playback_policy := String(presentation.get("selected_playback_policy", ""))
+	var blocking_policy := String(presentation.get("selected_blocking_policy", ""))
+	var vfx_cue_ids: Array = (presentation.get("selected_vfx_cue_ids", []) as Array).duplicate(true)
+	var audio_cue_ids: Array = (presentation.get("selected_audio_cue_ids", []) as Array).duplicate(true)
+	var allows_large_motion := bool(presentation.get("allows_large_motion", true))
+	var tile_payload: Dictionary = presentation.get("hero_tile", {}) if presentation.get("hero_tile", {}) is Dictionary else {}
+	var spell_tile := Vector2i(int(tile_payload.get("x", -1)), int(tile_payload.get("y", -1)))
+	if (
+		event_id != "spell_cast_overworld"
+		or cue_id != "cue_spell_cast_overworld"
+		or spell_id == ""
+		or spell_name == ""
+		or result_message == ""
+		or playback_policy != "queue_resolved"
+		or blocking_policy not in ["input_blocking_timeout", "nonblocking_reduced_motion", "nonblocking_fast_resolve"]
+		or spell_tile != _hero_tile
+	):
+		return
+	var duration_msec := clampi(
+		int(presentation.get("duration_ms", SPELL_CAST_MIN_DURATION_MSEC)),
+		SPELL_CAST_MIN_DURATION_MSEC,
+		SPELL_CAST_MAX_DURATION_MSEC
+	)
+	var was_blocking := _spell_cast_active and _spell_cast_blocking_policy == "input_blocking_timeout"
+	if was_blocking:
+		spell_cast_presentation_blocking_changed.emit(false)
+	_spell_cast_last_serial = serial
+	_spell_cast_elapsed_sec = 0.0
+	_spell_cast_duration_sec = float(duration_msec) / 1000.0
+	_spell_cast_event_id = event_id
+	_spell_cast_cue_id = cue_id
+	_spell_cast_spell_id = spell_id
+	_spell_cast_spell_name = spell_name
+	_spell_cast_result_message = result_message
+	_spell_cast_animation_state = animation_state
+	_spell_cast_visual_policy = visual_policy
+	_spell_cast_fallback_tag = fallback_tag
+	_spell_cast_playback_policy = playback_policy
+	_spell_cast_blocking_policy = blocking_policy
+	_spell_cast_vfx_cue_ids = vfx_cue_ids
+	_spell_cast_audio_cue_ids = audio_cue_ids
+	_spell_cast_allows_large_motion = allows_large_motion
+	_spell_cast_tile = spell_tile
+	_spell_cast_active = true
+	_sync_presentation_processing()
+	_invalidate_dynamic_layer("spell_cast_presentation_started")
+	if _spell_cast_blocking_policy == "input_blocking_timeout":
+		spell_cast_presentation_blocking_changed.emit(true)
 
 func _sync_hero_movement_presentation(presentation: Dictionary) -> void:
 	var serial := int(presentation.get("serial", 0))
@@ -1012,6 +1114,7 @@ func _draw_dynamic_layer() -> void:
 	_draw_object_resolution_presentation(board_rect)
 	_draw_route_blocked_presentation(board_rect)
 	_draw_guarded_site_presentation(board_rect)
+	_draw_spell_cast_presentation(board_rect)
 	_draw_canvas_item = previous_target
 	_profile_add("dynamic_tile_checks", tile_checks)
 	_profile_end("draw_dynamic", profile_start, {
@@ -1564,6 +1667,26 @@ func _draw_guarded_site_presentation(board_rect: Rect2) -> void:
 	]), Color(1.0, 0.82, 0.30, 0.92))
 	_canvas_draw_line(center + Vector2(0.0, -shield_extent * 0.58), center + Vector2(0.0, shield_extent * 0.48), Color(0.31, 0.12, 0.04, 0.92), maxf(2.0, extent * 0.034), true)
 	_canvas_draw_circle(center + Vector2(0.0, shield_extent * 0.72), maxf(1.5, extent * 0.026), Color(0.31, 0.12, 0.04, 0.92))
+
+func _draw_spell_cast_presentation(board_rect: Rect2) -> void:
+	if not _spell_cast_active or _spell_cast_duration_sec <= 0.0:
+		return
+	var rect := _tile_rect(board_rect, _spell_cast_tile)
+	var center := rect.get_center()
+	var extent := minf(rect.size.x, rect.size.y)
+	var progress := clampf(_spell_cast_elapsed_sec / _spell_cast_duration_sec, 0.0, 1.0)
+	var motion_progress := progress if _spell_cast_allows_large_motion else 0.36
+	var alpha := clampf(1.0 - progress * 0.64, 0.30, 1.0)
+	var radius := extent * lerpf(0.28, 0.50, motion_progress)
+	var spell_color := Color(0.44, 0.82, 1.0, alpha)
+	if _spell_cast_visual_policy != "reduced_motion_fallback":
+		_canvas_draw_circle(center, radius, spell_color, false, maxf(2.0, extent * 0.034), true)
+		_canvas_draw_circle(center, radius * 0.66, Color(0.72, 0.94, 1.0, alpha * 0.86), false, maxf(1.5, extent * 0.022), true)
+	var icon_extent := extent * 0.18
+	_canvas_draw_line(center + Vector2(-icon_extent, 0.0), center + Vector2(icon_extent, 0.0), Color(0.94, 0.99, 1.0, alpha), maxf(2.0, extent * 0.036), true)
+	_canvas_draw_line(center + Vector2(0.0, -icon_extent), center + Vector2(0.0, icon_extent), Color(0.94, 0.99, 1.0, alpha), maxf(2.0, extent * 0.036), true)
+	_canvas_draw_line(center + Vector2(-icon_extent * 0.68, -icon_extent * 0.68), center + Vector2(icon_extent * 0.68, icon_extent * 0.68), Color(0.78, 0.94, 1.0, alpha), maxf(1.5, extent * 0.024), true)
+	_canvas_draw_line(center + Vector2(icon_extent * 0.68, -icon_extent * 0.68), center + Vector2(-icon_extent * 0.68, icon_extent * 0.68), Color(0.78, 0.94, 1.0, alpha), maxf(1.5, extent * 0.024), true)
 
 func _draw_resource_sprite(node: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
 	return _draw_object_sprite(_resource_asset_id(node), rect, remembered, _resource_object_profile(node), tile)
@@ -3027,6 +3150,7 @@ func validation_view_metrics() -> Dictionary:
 		"object_resolution_presentation": validation_object_resolution_presentation(),
 		"route_blocked_presentation": validation_route_blocked_presentation(),
 		"guarded_site_presentation": validation_guarded_site_presentation(),
+		"spell_cast_presentation": validation_spell_cast_presentation(),
 	}
 
 func validation_hero_movement_presentation() -> Dictionary:
@@ -3116,6 +3240,34 @@ func validation_guarded_site_presentation() -> Dictionary:
 		"visual_policy": _guarded_site_visual_policy,
 		"fallback_tag": _guarded_site_fallback_tag,
 		"allows_large_motion": _guarded_site_allows_large_motion,
+	}
+
+func validation_spell_cast_presentation() -> Dictionary:
+	var progress := 1.0
+	if _spell_cast_active and _spell_cast_duration_sec > 0.0:
+		progress = clampf(_spell_cast_elapsed_sec / _spell_cast_duration_sec, 0.0, 1.0)
+	var reduced_motion := _spell_cast_visual_policy == "reduced_motion_fallback"
+	return {
+		"serial": _spell_cast_last_serial,
+		"event_id": _spell_cast_event_id,
+		"cue_id": _spell_cast_cue_id,
+		"active": _spell_cast_active,
+		"spell_id": _spell_cast_spell_id,
+		"spell_name": _spell_cast_spell_name,
+		"result_message": _spell_cast_result_message,
+		"hero_tile": {"x": _spell_cast_tile.x, "y": _spell_cast_tile.y},
+		"animation_state": _spell_cast_animation_state,
+		"visual_policy": _spell_cast_visual_policy,
+		"fallback_tag": _spell_cast_fallback_tag,
+		"playback_policy": _spell_cast_playback_policy,
+		"blocking_policy": _spell_cast_blocking_policy,
+		"blocks_input": _spell_cast_active and _spell_cast_blocking_policy == "input_blocking_timeout",
+		"vfx_cue_ids": _spell_cast_vfx_cue_ids.duplicate(true),
+		"audio_cue_ids": _spell_cast_audio_cue_ids.duplicate(true),
+		"allows_large_motion": _spell_cast_allows_large_motion,
+		"duration_ms": int(round(_spell_cast_duration_sec * 1000.0)),
+		"progress": progress,
+		"draw_entries": ["adventure_spell_icon"] if reduced_motion else ["adventure_cast_rings", "adventure_spell_icon"],
 	}
 
 func validation_color_cue_summary() -> Dictionary:
