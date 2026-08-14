@@ -637,6 +637,11 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Leave"
 
+[node name="Guide" type="Button" parent="ContentMargin/Content/FooterPanel/FooterPad/FooterBar"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Guide"
+
 [node name="Settings" type="Button" parent="ContentMargin/Content/FooterPanel/FooterPad/FooterBar"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -647,6 +652,78 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Menu"
 
+[node name="TownGuideOverlay" type="Control" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+z_index = 50
+
+[node name="GuideShade" type="ColorRect" parent="TownGuideOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.015, 0.02, 0.025, 0.32)
+
+[node name="GuideCenter" type="CenterContainer" parent="TownGuideOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TownGuidePanel" type="PanelContainer" parent="TownGuideOverlay/GuideCenter"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(540, 250)
+layout_mode = 2
+
+[node name="GuidePad" type="MarginContainer" parent="TownGuideOverlay/GuideCenter/TownGuidePanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 14
+
+[node name="GuideBox" type="VBoxContainer" parent="TownGuideOverlay/GuideCenter/TownGuidePanel/GuidePad"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="TownGuideTitle" type="Label" parent="TownGuideOverlay/GuideCenter/TownGuidePanel/GuidePad/GuideBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Town Field Manual"
+
+[node name="GuideDivider" type="HSeparator" parent="TownGuideOverlay/GuideCenter/TownGuidePanel/GuidePad/GuideBox"]
+layout_mode = 2
+
+[node name="TownGuideText" type="Label" parent="TownGuideOverlay/GuideCenter/TownGuidePanel/GuidePad/GuideBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+autowrap_mode = 3
+text = "Town guide"
+
+[node name="TownGuideClose" type="Button" parent="TownGuideOverlay/GuideCenter/TownGuidePanel/GuidePad/GuideBox"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 8
+text = "Close Guide"
+
 [node name="ManualSaveOverwriteDialog" parent="." instance=ExtResource("4_save_overwrite")]
 
 [node name="ActivePlaySettingsDialog" parent="." instance=ExtResource("5_active_settings")]
@@ -655,8 +732,10 @@ text = "Menu"
 [connection signal="pressed" from="ContentMargin/Content/FooterPanel/FooterPad/FooterBar/TownOrdersToggle" to="." method="_on_town_orders_toggle_pressed"]
 [connection signal="pressed" from="ContentMargin/Content/FooterPanel/FooterPad/FooterBar/Save" to="." method="_on_save_pressed"]
 [connection signal="pressed" from="ContentMargin/Content/FooterPanel/FooterPad/FooterBar/Leave" to="." method="_on_leave_pressed"]
+[connection signal="pressed" from="ContentMargin/Content/FooterPanel/FooterPad/FooterBar/Guide" to="." method="_on_guide_pressed"]
 [connection signal="pressed" from="ContentMargin/Content/FooterPanel/FooterPad/FooterBar/Settings" to="." method="_on_settings_pressed"]
 [connection signal="pressed" from="ContentMargin/Content/FooterPanel/FooterPad/FooterBar/Menu" to="." method="_on_menu_pressed"]
+[connection signal="pressed" from="TownGuideOverlay/GuideCenter/TownGuidePanel/GuidePad/GuideBox/TownGuideClose" to="." method="_on_town_guide_close_pressed"]
 [connection signal="canceled" from="ManualSaveOverwriteDialog" to="." method="_on_manual_save_overwrite_canceled"]
 [connection signal="confirmed" from="ManualSaveOverwriteDialog" to="." method="_on_manual_save_overwrite_confirmed"]
 [connection signal="closed" from="ActivePlaySettingsDialog" to="." method="_on_active_play_settings_closed"]

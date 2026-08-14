@@ -20588,6 +20588,136 @@ def validate_town_faction_progression(errors: list[str]) -> None:
         ensure(required_token in town_script_text, errors, f"TownShell.gd is missing required town progression token: {required_token}")
 
 
+def validate_town_contextual_guide(errors: list[str]) -> None:
+    report_script_path = ROOT / "tests" / "town_contextual_guide_report.gd"
+    report_scene_path = ROOT / "tests" / "town_contextual_guide_report.tscn"
+    required_paths = (TOWN_SCENE_PATH, TOWN_SCRIPT_PATH, report_script_path, report_scene_path)
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Town contextual-guide owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    town_scene_text = TOWN_SCENE_PATH.read_text(encoding="utf-8")
+    ensure_scene_nodes(
+        town_scene_text,
+        errors,
+        "TownShell.tscn",
+        [
+            ("Guide", "Button"),
+            ("TownGuideOverlay", "Control"),
+            ("TownGuidePanel", "PanelContainer"),
+            ("TownGuideTitle", "Label"),
+            ("TownGuideText", "Label"),
+            ("TownGuideClose", "Button"),
+        ],
+    )
+    footer_tokens = [
+        '[node name="Save" type="Button" parent="ContentMargin/Content/FooterPanel/FooterPad/FooterBar"]',
+        '[node name="Leave" type="Button" parent="ContentMargin/Content/FooterPanel/FooterPad/FooterBar"]',
+        '[node name="Guide" type="Button" parent="ContentMargin/Content/FooterPanel/FooterPad/FooterBar"]',
+        '[node name="Settings" type="Button" parent="ContentMargin/Content/FooterPanel/FooterPad/FooterBar"]',
+        '[node name="Menu" type="Button" parent="ContentMargin/Content/FooterPanel/FooterPad/FooterBar"]',
+    ]
+    footer_positions = [town_scene_text.find(token) for token in footer_tokens]
+    ensure(all(position >= 0 for position in footer_positions), errors, "Town footer is missing a required Save/Leave/Guide/Settings/Menu command")
+    ensure(footer_positions == sorted(footer_positions), errors, "Town Guide must preserve Save -> Leave -> Guide -> Settings -> Menu footer order")
+    overlay_block = scene_node_block(town_scene_text, "TownGuideOverlay", "Control")
+    for required_token in ("visible = false", "anchors_preset = 15", "mouse_filter = 0", "z_index = 50"):
+        ensure(required_token in overlay_block, errors, f"TownGuideOverlay must be hidden, full-screen, and input-owning: {required_token}")
+    panel_block = scene_node_block(town_scene_text, "TownGuidePanel", "PanelContainer")
+    ensure("custom_minimum_size = Vector2(540, 250)" in panel_block, errors, "Town Guide must retain its compact authored panel minimum")
+    for forbidden in ("custom_minimum_size = Vector2(1000", "custom_minimum_size = Vector2(1200", "size_flags_horizontal = 3"):
+        ensure(forbidden not in panel_block, errors, f"Town Guide panel must not expand into a dominant-screen report surface: {forbidden}")
+    for connection in (
+        '[connection signal="pressed" from="ContentMargin/Content/FooterPanel/FooterPad/FooterBar/Guide" to="." method="_on_guide_pressed"]',
+        '[connection signal="pressed" from="TownGuideOverlay/GuideCenter/TownGuidePanel/GuidePad/GuideBox/TownGuideClose" to="." method="_on_town_guide_close_pressed"]',
+    ):
+        ensure(connection in town_scene_text, errors, f"Town Guide scene is missing exact live signal ownership: {connection}")
+
+    town_script_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
+    ensure_script_functions(
+        town_script_text,
+        errors,
+        "TownShell.gd",
+        [
+            "_configure_town_guide_surface",
+            "_town_guide_is_open",
+            "_on_guide_pressed",
+            "_open_town_guide",
+            "_on_town_guide_close_pressed",
+            "_close_town_guide",
+            "_town_guide_validation_snapshot",
+        ],
+    )
+    for required_token in (
+        'var guide_text := SettingsService.describe_help_topic("town")',
+        '_guide_label.text = guide_text',
+        '_guide_label.tooltip_text = guide_text',
+        '_guide_overlay.visible = true',
+        'if _town_guide_is_open():\n\t\tif event.is_action_pressed("ui_cancel"):',
+        'var guide_controls := FrontierVisualKit.configure_focus_cycle([_guide_close_button])',
+        'FrontierVisualKit.grab_keyboard_focus(self, _guide_close_button, guide_controls, true)',
+        '_guide_overlay.visible = false',
+        '_guide_button.call_deferred("grab_focus")',
+        '"town_guide": _town_guide_validation_snapshot()',
+    ):
+        ensure(required_token in town_script_text, errors, f"TownShell.gd is missing contextual-guide ownership token: {required_token}")
+    ensure(
+        town_script_text.find('if _town_guide_is_open():\n\t\tif event.is_action_pressed("ui_cancel"):')
+        < town_script_text.find('if _session == null or not event.is_action_pressed("ui_cancel"):'),
+        errors,
+        "Town Guide must own ui_cancel before Town departure handling",
+    )
+    ensure(
+        "Owned towns are strategic engines rather than generic shop screens." not in town_script_text,
+        errors,
+        "TownShell.gd must consume, not duplicate, authored SettingsService Town help copy",
+    )
+    for forbidden in (
+        "TownRules.build_active_town",
+        "TownRules.recruit_active_town",
+        "SaveService.save",
+        "AppRouter.go_to_overworld",
+        "AppRouter.return_to_main_menu_from_active_play",
+    ):
+        open_start = town_script_text.find("func _open_town_guide()")
+        close_end = town_script_text.find("\nfunc ", town_script_text.find("func _close_town_guide()") + 1)
+        guide_control_block = town_script_text[open_start:close_end if close_end >= 0 else len(town_script_text)]
+        ensure(forbidden not in guide_control_block, errors, f"Town Guide open/close must not mutate gameplay or routing authority: {forbidden}")
+
+    report_scene_text = report_scene_path.read_text(encoding="utf-8")
+    ensure_scene_nodes(report_scene_text, errors, "town_contextual_guide_report.tscn", [("TownContextualGuideReport", "Node")])
+    report_text = report_script_path.read_text(encoding="utf-8")
+    for required_token in (
+        "const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]",
+        '"Save",\n\t"Leave",\n\t"Guide",\n\t"Settings",\n\t"Menu",',
+        'var expected_guide_text := SettingsService.describe_help_topic("town")',
+        'guide_button.emit_signal("pressed")',
+        'int(open_guide.get("overlay_mouse_filter", -1)) == Control.MOUSE_FILTER_STOP',
+        "overlay_rect == host_rect",
+        "host_rect.encloses(panel_rect)",
+        "panel_rect.get_area() < host_rect.get_area() * 0.30",
+        "_layout_snapshot(shell) == initial_layout",
+        "await _click_global_position(menu_button.get_global_rect().get_center())",
+        'await _press_action("ui_cancel")',
+        'String(canceled_guide.get("focus_owner", "")) == "Guide"',
+        "_authority_snapshot(close_snapshot) == initial_authority",
+        "session.to_dict() == session_before",
+        'print("TOWN_CONTEXTUAL_GUIDE_REPORT %s"',
+    ):
+        ensure(required_token in report_text, errors, f"Town contextual-guide report is missing focused runtime proof: {required_token}")
+    for forbidden in (
+        "create_timer(",
+        "await get_tree().create_timer",
+        "_on_menu_pressed(",
+        "_on_leave_pressed(",
+        "_open_town_guide(",
+        "_close_town_guide(",
+        "SettingsService.HELP_TOPICS",
+    ):
+        ensure(forbidden not in report_text, errors, f"Town contextual-guide report must use live UI ownership without direct callbacks or copied help content: {forbidden}")
+
+
 def validate_town_shell_release_polish(errors: list[str]) -> None:
     town_visual_smoke_path = ROOT / "tests" / "town_battle_visual_smoke.gd"
     town_exit_profile_path = ROOT / "tests" / "town_exit_profile_accuracy_regression.gd"
@@ -36680,6 +36810,7 @@ def main() -> int:
     validate_battle_spell_timing_board(errors)
     validate_battle_faction_identity(errors)
     validate_town_faction_progression(errors)
+    validate_town_contextual_guide(errors)
     validate_town_shell_release_polish(errors)
     validate_town_defense_outlook_board(errors)
     validate_town_order_readiness_ledger(errors)

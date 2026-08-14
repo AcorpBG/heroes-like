@@ -72,8 +72,14 @@ const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains ope
 @onready var _save_slot_picker: OptionButton = %SaveSlot
 @onready var _save_button: Button = %Save
 @onready var _leave_button: Button = %Leave
+@onready var _guide_button: Button = %Guide
 @onready var _settings_button: Button = %Settings
 @onready var _menu_button: Button = %Menu
+@onready var _guide_overlay: Control = %TownGuideOverlay
+@onready var _guide_panel: PanelContainer = %TownGuidePanel
+@onready var _guide_title_label: Label = %TownGuideTitle
+@onready var _guide_label: Label = %TownGuideText
+@onready var _guide_close_button: Button = %TownGuideClose
 @onready var _manual_save_overwrite_dialog = $ManualSaveOverwriteDialog
 @onready var _active_play_settings_dialog = %ActivePlaySettingsDialog
 
@@ -115,6 +121,7 @@ func _ready() -> void:
 	_management_tabs.current_tab = 0
 	_last_management_tab_index = _management_tabs.current_tab
 	_configure_management_tab_accessibility()
+	_configure_town_guide_surface()
 	_confirm_build_button.pressed.connect(_on_confirm_build_pressed)
 	if not _management_tabs.tab_changed.is_connected(_on_management_tab_changed):
 		_management_tabs.tab_changed.connect(_on_management_tab_changed)
@@ -571,6 +578,11 @@ func _complete_management_tab_focus_handoff(tab: int, change_sequence: int) -> v
 func _input(event: InputEvent) -> void:
 	if _active_play_settings_dialog != null and _active_play_settings_dialog.is_open():
 		return
+	if _town_guide_is_open():
+		if event.is_action_pressed("ui_cancel"):
+			get_viewport().set_input_as_handled()
+			_close_town_guide()
+		return
 	if _session == null or not event.is_action_pressed("ui_cancel"):
 		return
 	if _save_slot_picker != null and _save_slot_picker.get_popup().visible:
@@ -588,6 +600,10 @@ func _input(event: InputEvent) -> void:
 func _configure_town_keyboard_focus(force: bool = false) -> void:
 	if not is_inside_tree() or (_active_play_settings_dialog != null and _active_play_settings_dialog.is_open()):
 		return
+	if _town_guide_is_open():
+		var guide_controls := FrontierVisualKit.configure_focus_cycle([_guide_close_button])
+		FrontierVisualKit.grab_keyboard_focus(self, _guide_close_button, guide_controls, true)
+		return
 	var tab_surfaces := _town_keyboard_focus_surfaces()
 	var tab_controls := _town_focusable_controls(tab_surfaces)
 	var tab_bar := _management_tabs.get_tab_bar()
@@ -600,6 +616,7 @@ func _configure_town_keyboard_focus(force: bool = false) -> void:
 		_save_slot_picker,
 		_save_button,
 		_leave_button,
+		_guide_button,
 		_settings_button,
 		_menu_button,
 	])
@@ -611,6 +628,38 @@ func _configure_town_keyboard_focus(force: bool = false) -> void:
 		elif FrontierVisualKit.is_keyboard_focusable(tab_bar):
 			preferred = tab_bar
 	FrontierVisualKit.grab_keyboard_focus(self, preferred, controls, force)
+
+func _configure_town_guide_surface() -> void:
+	var guide_text := SettingsService.describe_help_topic("town")
+	_guide_title_label.text = "Town Field Manual"
+	_guide_label.text = guide_text
+	_guide_label.tooltip_text = guide_text
+	_guide_button.text = "Guide"
+	_guide_button.tooltip_text = "Open the Town Field Manual without building, recruiting, saving, routing, or changing the expedition."
+	_guide_close_button.tooltip_text = "Close the Town Field Manual and return focus to Guide."
+	_guide_overlay.visible = false
+
+func _town_guide_is_open() -> bool:
+	return _guide_overlay != null and _guide_overlay.visible
+
+func _on_guide_pressed() -> void:
+	_open_town_guide()
+
+func _open_town_guide() -> void:
+	if _town_guide_is_open():
+		return
+	_configure_town_guide_surface()
+	_guide_overlay.visible = true
+	call_deferred("_configure_town_keyboard_focus", true)
+
+func _on_town_guide_close_pressed() -> void:
+	_close_town_guide()
+
+func _close_town_guide() -> void:
+	if not _town_guide_is_open():
+		return
+	_guide_overlay.visible = false
+	_guide_button.call_deferred("grab_focus")
 
 func _configure_management_tab_accessibility() -> void:
 	var tab_bar := _management_tabs.get_tab_bar()
@@ -2342,6 +2391,7 @@ func validation_snapshot() -> Dictionary:
 		"town_active_tab": _management_tabs.current_tab,
 		"leave_button_text": _leave_button.text,
 		"leave_button_tooltip_text": _leave_button.tooltip_text,
+		"town_guide": _town_guide_validation_snapshot(),
 		"save_surface": AppRouter.active_save_surface(),
 		"save_handoff_visible_text": _save_status_label.text if _save_status_label.text.strip_edges() != "" else String(AppRouter.active_save_surface().get("save_handoff_brief", "")),
 		"save_handoff_visible": _save_status_label.text.strip_edges() != "" or String(AppRouter.active_save_surface().get("save_handoff_brief", "")).strip_edges() != "",
@@ -2362,6 +2412,26 @@ func validation_snapshot() -> Dictionary:
 		"recruit_action_count": TownRules.get_recruit_actions(_session).size(),
 		"study_action_count": TownRules.get_spell_learning_actions(_session).size(),
 		"latest_save_summary": SaveService.latest_loadable_summary(),
+	}
+
+func _town_guide_validation_snapshot() -> Dictionary:
+	var focus_owner := get_viewport().gui_get_focus_owner() if is_inside_tree() else null
+	return {
+		"open": _town_guide_is_open(),
+		"button_text": _guide_button.text,
+		"button_tooltip_text": _guide_button.tooltip_text,
+		"title_text": _guide_title_label.text,
+		"guide_text": _guide_label.text,
+		"guide_tooltip_text": _guide_label.tooltip_text,
+		"expected_guide_text": SettingsService.describe_help_topic("town"),
+		"overlay_mouse_filter": _guide_overlay.mouse_filter,
+		"overlay_rect": _guide_overlay.get_global_rect(),
+		"panel_rect": _guide_panel.get_global_rect(),
+		"close_button_rect": _guide_close_button.get_global_rect(),
+		"focus_owner": String(focus_owner.name) if focus_owner != null else "",
+		"close_has_focus": _guide_close_button.has_focus(),
+		"narrow_layout_active": _narrow_layout_active,
+		"narrow_orders_open": _narrow_orders_open,
 	}
 
 
@@ -4693,8 +4763,10 @@ func _apply_visual_theme() -> void:
 	_management_tabs.set_tab_title(3, "Trade")
 	_management_tabs.set_tab_title(4, "Log")
 
-	for button in [_confirm_build_button, _town_orders_toggle_button, _save_button, _leave_button, _settings_button, _menu_button]:
+	for button in [_confirm_build_button, _town_orders_toggle_button, _save_button, _leave_button, _guide_button, _settings_button, _menu_button]:
 		_style_action_button(button, true)
+	FrontierVisualKit.apply_button(_guide_close_button, "secondary", 108.0, 30.0, 12)
+	FrontierVisualKit.apply_panel(_guide_panel, "ink")
 	_settings_button.tooltip_text = "Adjust sound, battle pace, and readability without leaving the town."
 	FrontierVisualKit.apply_option_button(_save_slot_picker, "secondary", 112.0, 32.0, 12)
 
@@ -4708,6 +4780,8 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_label(_crest_label, "title", 16)
 	FrontierVisualKit.apply_label(_event_label, "body", 12)
 	FrontierVisualKit.apply_label(_save_status_label, "muted", 12)
+	FrontierVisualKit.apply_label(_guide_title_label, "title", 16)
+	FrontierVisualKit.apply_label(_guide_label, "body", 13)
 
 	FrontierVisualKit.apply_labels([
 		_outlook_label,

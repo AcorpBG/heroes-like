@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld guarded-site context cue slice is complete. Exact selected unresolved guards now show one normal or reduced-motion context-only badge that clears on deselection or guard resolution without changing gameplay authority; select the next bounded release-readiness implementation slice from current behavior and source evidence.",
+  "currentNotes": "The Town contextual guide slice is complete. The live Town footer now exposes one compact modal consumer of the existing authored Town help topic with exact responsive containment, focus/input ownership, close-and-return focus, and unchanged gameplay/session/save authority; select the next bounded release-readiness implementation slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-guarded-site-context-cue-10184",
-  "currentSliceId": "presentation-overworld-guarded-site-context-cue-10184",
-  "currentSliceNotes": "Completed: exact selected site/guard/inspection publication, context-only normal and reduced-motion rendering, refresh stability, deselection and guard-resolution removal, dynamic-layer-only ownership, compatibility, static/editor, and bounded Linux/Windows export-startup gates are green.",
+  "currentSlice": "ux-town-contextual-guide-10184",
+  "currentSliceId": "ux-town-contextual-guide-10184",
+  "currentSliceNotes": "Completed: compact Town Guide content, exact 1280/1920 containment, pointer blocking, modal focus, ui_cancel and Close focus return, unchanged layout/session/save authority, compatibility, static/editor, and bounded Linux/Windows export-startup gates are green.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Guarded Site Context Cue",
-  "currentSliceUpdatedAt": "2026-08-14T20:01:33Z",
+  "currentSliceTitle": "Town Contextual Guide",
+  "currentSliceUpdatedAt": "2026-08-14T20:34:24Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -81218,6 +81218,88 @@
       }
     },
     {
+      "id": "ux-town-contextual-guide-10184",
+      "title": "Town Contextual Guide",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "AGENTS.md"
+      ],
+      "purpose": "Expose the existing authored Town help topic through one compact contextual popout owned by the live Town footer, without covering the Town composition or changing gameplay authority.",
+      "implementationTargets": [
+        "scenes/town/TownShell.gd",
+        "scenes/town/TownShell.tscn",
+        "tests/town_contextual_guide_report.gd",
+        "tests/town_contextual_guide_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/town_contextual_guide_report.tscn",
+        "tests/town_battle_visual_smoke.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "78a369cb7d6e97005966f7156619f972a293aa80",
+        "town_help_topic_authored": true,
+        "main_menu_contextual_help_available": true,
+        "battle_action_guide_available": true,
+        "outcome_contextual_guide_available": true,
+        "town_contextual_guide_runtime": false
+      },
+      "completionCriteria": [
+        "The live Town footer exposes one compact Guide command whose popout uses the exact existing SettingsService Town help title and body without duplicating help content",
+        "The popout and every visible child remain contained at 1280x720 and 1920x1080 while preserving the existing footer command order and dominant Town composition",
+        "Opening the Guide moves focus into the popout, blocks background pointer and keyboard action ownership, ui_cancel closes it, and close returns focus to Guide",
+        "Build, recruit, study, market, logistics, save, settings, menu, leave, selected tab, responsive Town orders, session, cache, and save authority remain exact across open and close",
+        "Focused runtime, Town visual/focus/accessibility/core compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "new help copy, help schema, settings persistence, tutorial progression, Town gameplay, economy, recruitment, build, study, market, logistics, save, scenario, content, combat, AI, balance, map, or Native RMG changes",
+        "large text panels, permanent dashboard content, footer action hiding or reordering, global theme, other-screen help redesign, or input timing changes",
+        "packaged Town interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "createdAt": "2026-08-14T20:16:26Z",
+      "startedAt": "2026-08-14T20:16:26Z",
+      "updatedAt": "2026-08-14T20:34:24Z",
+      "completedAt": "2026-08-14T20:34:24Z",
+      "notes": "TownShell now consumes the exact existing SettingsService Town help topic through one compact footer-owned modal popout. The overlay is independent of the Town VBox layout, owns pointer input, moves keyboard focus to its sole Close command, handles ui_cancel before Town departure, and returns focus to Guide. The focused report proves exact 1280x720 and 1920x1080 physical windows, live logical-host containment, compact area, exact footer order, background Return-to-Menu pointer blocking, Escape and Close focus return, unchanged scenic/management/footer geometry, and unchanged session/save/Town authority. Existing Town/Battle visual, active-play focus, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Town Guide interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null,
+      "result": {
+        "authored_town_help_topic_reused": true,
+        "footer_order_exact": true,
+        "focused_viewports": [
+          [1280, 720],
+          [1920, 1080]
+        ],
+        "compact_host_containment_passed": true,
+        "background_pointer_blocked": true,
+        "modal_focus_passed": true,
+        "ui_cancel_close_and_focus_return_passed": true,
+        "close_command_focus_return_passed": true,
+        "layout_authority_exact": true,
+        "session_and_save_authority_exact": true,
+        "focused_report_passed": true,
+        "town_battle_visual_passed": true,
+        "active_play_focus_passed": true,
+        "accessibility_passed": true,
+        "core_passed": true,
+        "repository_validation_passed": true,
+        "editor_parse_passed": true,
+        "linux_export_headless_startup_passed": true,
+        "windows_export_fresh_wine_startup_passed": true
+      }
+    },
+    {
       "id": "presentation-overworld-guarded-site-context-cue-10184",
       "title": "Overworld Guarded Site Context Cue",
       "status": "completed",
@@ -82636,9 +82718,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Overworld hero-route locomotion slice replaces endpoint snapping with a bounded view-only replay over the exact route already resolved by core rules, while preserving movement, interaction, input, cache, and save authority. The game is not release-ready.",
+  "summary": "The completed Town contextual guide slice adds one compact consumer of the existing authored Town help topic while preserving Town gameplay, focus, session, save, and responsive layout authority. The game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-14T17:59:21Z",
+  "updatedAt": "2026-08-14T20:34:24Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
