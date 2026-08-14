@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved release-readiness implementation slice"
+    "Select the next tracker-approved release-readiness implementation slice."
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "TownStageView now selects one of six original faction-specific 1600x900 panoramas, cover-crops it behind every unchanged live overlay, and retains the procedural renderer as a fail-safe. Focused 1280/1920 visuals, Town/focus/menu/core compatibility, a fresh 121-step routed campaign, static/editor checks, and bounded Linux/Windows export-startup gates pass.",
+  "currentNotes": "The Outcome scenic epilogue slice is complete. Victory and defeat use distinct original full-screen scenery with exact cover crop, translucent existing surfaces, a compact action dock, and flat-palette fallback; focused behavior, compatibility, the 121-step campaign, static/editor, and bounded Linux/Windows startup gates pass.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-town-faction-scenic-stage-backdrops-10184",
-  "currentSliceId": "presentation-town-faction-scenic-stage-backdrops-10184",
-  "currentSliceNotes": "Completed with six original mapped 1600x900 panoramas, exact cover-crop and procedural-fallback validation, unchanged live overlay/session authority, inspected 1280x720 and 1920x1080 Town frames, Town/focus/menu/core compatibility, a fresh 121-step routed campaign, static/editor checks, and bounded Linux/Windows export-startup evidence.",
+  "currentSlice": "presentation-scenario-outcome-scenic-epilogue-stage-10184",
+  "currentSliceId": "presentation-scenario-outcome-scenic-epilogue-stage-10184",
+  "currentSliceNotes": "Completed with two original 1600x900 panoramas, focused 1280x720 and 1920x1080 live proof, exact Outcome authority, compatibility, the 121-step routed campaign, repository/editor validation, and bounded official Linux/Windows export-startup evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Town Faction Scenic Stage Backdrops",
-  "currentSliceUpdatedAt": "2026-08-14T13:15:00Z",
+  "currentSliceTitle": "Scenario Outcome Scenic Epilogue Stage",
+  "currentSliceUpdatedAt": "2026-08-14T14:29:07Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -78819,6 +78819,29 @@
       "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
       "blockedReason": null,
       "result": {"scenic_backdrop_count": 6, "backdrop_dimensions": [1600, 900], "mapped_faction_count": 6, "procedural_fallback_preserved": true, "focused_viewports": [[1280, 720], [1920, 1080]], "focused_headless_smoke_passed": true, "focused_xvfb_smoke_passed": true, "town_exit_passed": true, "active_play_focus_passed": true, "menu_outcome_passed": true, "core_passed": true, "full_arc_ok": true, "full_arc_step_count": 121, "full_arc_last_step": "campaign_arc_completed_browser", "linux_export_headless_startup_passed": true, "windows_export_fresh_wine_startup_passed": true, "packaged_texture_count": 6}
+    },
+    {
+      "id": "presentation-scenario-outcome-scenic-epilogue-stage-10184",
+      "title": "Scenario Outcome Scenic Epilogue Stage",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "AGENTS.md"],
+      "purpose": "Replace the flat full-screen Outcome panel farm with original status-specific epilogue scenery and a compact translucent action dock while preserving every existing outcome consequence and authority surface.",
+      "implementationTargets": ["art/results/runtime/backdrops/", "scenes/results/OutcomeScenicBackdropView.gd", "scenes/results/ScenarioOutcomeShell.gd", "scenes/results/ScenarioOutcomeShell.tscn", "tests/menu_outcome_visual_smoke.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "testOwners": ["tests/menu_outcome_visual_smoke.gd", "tests/menu_outcome_visual_smoke.tscn", "tests/scenario_outcome_normal_entry_focus_regression.gd", "tests/scenario_outcome_new_session_confirmation_safe_cancel_regression.gd", "tests/application_scenario_outcome_autosave_failure_recovery_regression.gd", "tests/active_play_keyboard_focus_smoke.gd", "tests/core_systems_regression_smoke.gd", "scripts/autoload/LiveValidationHarness.gd", "tests/validate_repo.py"],
+      "baseline": {"head": "5ff12a086892f4f691160ccb72a5b7e598951500", "outcome_fullscreen_backdrop": "flat_color", "outcome_visual": "small_procedural_geometry_banner", "actions_panel_vertical_fill": true, "live_audit_viewport": [1920, 1080], "live_audit_capture": "/tmp/heroes-outcome-current-1920.png"},
+      "completionCriteria": ["Distinct original victory and defeat 1600x900 epilogue panoramas are imported and mapped one-to-one to terminal status", "Live 1280x720 and 1920x1080 Outcome cover-crops the exact status panorama without stretching, keeps existing information surfaces translucent and readable, and shrinks the action panel to content so scenery owns the central and lower stage", "Unknown or unavailable status assets retain the existing flat palette and procedural Outcome banner", "Outcome model, summaries, tabs, actions, save/overwrite, focus, keyboard/controller navigation, recovery, routing, session, progression, campaign, compatibility, repository, editor, Linux export/headless startup, and Windows export/fresh-Wine startup authority pass"],
+      "nonGoals": ["Outcome rules, progression, rewards, actions, copy, tabs, save format/version, routing, focus order, input timing, campaign, scenario, combat, AI, balance, map, or Native RMG changes", "new character art, animation, video, global theme, UI scale, accessibility semantics, modal, or other screen redesign", "packaged Outcome interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claims"],
+      "createdAt": "2026-08-14T13:23:12Z",
+      "startedAt": "2026-08-14T13:23:12Z",
+      "updatedAt": "2026-08-14T14:29:07Z",
+      "completedAt": "2026-08-14T14:29:07Z",
+      "notes": "Production now ships distinct original victory and defeat epilogue panoramas behind the existing Outcome content. The new backdrop selects exact live terminal status, cover-crops without stretching, retains flat-palette fallback, and leaves the procedural banner and all Outcome authority intact. Existing information surfaces are translucent and the action dock shrinks to content, preserving a dominant scenic stage at 1280x720 and 1920x1080. Focused visual/geometry/session proof, inspected victory/defeat captures, normal-entry focus, new-session safe cancel, autosave recovery, active-play focus, core, and a fresh 121-step routed campaign are green. Static/editor checks and official Linux export/headless startup plus Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass; the packaged PCK contains both textures. No packaged Outcome interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claim is made.",
+      "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null,
+      "result": {"scenic_backdrop_count": 2, "backdrop_dimensions": [1600, 900], "mapped_statuses": ["victory", "defeat"], "flat_fallback_preserved": true, "focused_viewports": [[1280, 720], [1920, 1080]], "scenic_window_min_area_ratio": 0.25, "actions_panel_max_bottom_ratio": 0.65, "focused_smoke_passed": true, "visual_inspection_passed": true, "normal_entry_focus_passed": true, "new_session_safe_cancel_passed": true, "outcome_recovery_passed": true, "active_play_focus_passed": true, "core_passed": true, "full_arc_ok": true, "full_arc_step_count": 121, "full_arc_last_step": "campaign_arc_completed_browser", "linux_export_headless_startup_passed": true, "windows_export_fresh_wine_startup_passed": true, "packaged_texture_count": 2}
     }
   ],
   "project": "heroes-like",
@@ -78829,7 +78852,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
-  "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
+  "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader release gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -79361,9 +79384,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "TownStageView now presents six original faction panoramas behind unchanged live overlays with exact cover-crop mapping and procedural fallback. Focused visuals, compatibility, routed campaign, static/editor, and bounded Linux/Windows export-startup gates pass; broader release readiness remains open.",
+  "summary": "The selected Outcome scenic epilogue slice is in progress from direct current-HEAD source and live-render evidence: replace the flat panel-farm backdrop with exact victory/defeat scenery and compact translucent existing surfaces without changing outcome behavior.",
   "taskId": "10184",
-  "updatedAt": "2026-08-14T13:15:00Z",
+  "updatedAt": "2026-08-14T13:23:12Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

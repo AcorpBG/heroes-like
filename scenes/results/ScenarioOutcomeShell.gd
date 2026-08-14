@@ -6,8 +6,24 @@ const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains ope
 const OUTCOME_AUTOSAVE_RECOVERY_MESSAGE := "Outcome reached, but autosave failed. Use Save Outcome now."
 const OUTCOME_NEW_SESSION_CANCEL_TEXT := "Keep Outcome"
 const OUTCOME_NEW_SESSION_STALE_MESSAGE := "That follow-up changed. Review the outcome and try again."
+const OUTCOME_SCENIC_PANEL_ALPHA_BY_NAME := {
+	"Banner": 0.90,
+	"BannerArtPanel": 0.84,
+	"ActionStatusPanel": 0.84,
+	"HeroPanel": 0.86,
+	"ArmyPanel": 0.86,
+	"ResourcePanel": 0.86,
+	"ActionsPanel": 0.86,
+	"SidebarShell": 0.88,
+	"ProgressionPanel": 0.84,
+	"AftermathPanel": 0.84,
+	"CampaignArcPanel": 0.84,
+	"CarryoverPanel": 0.84,
+	"JournalPanel": 0.84,
+	"SavePanel": 0.86,
+}
 
-@onready var _backdrop: ColorRect = %Backdrop
+@onready var _backdrop: Control = %Backdrop
 @onready var _header_label: Label = %Header
 @onready var _summary_label: Label = %Summary
 @onready var _mode_label: Label = %Mode
@@ -35,6 +51,7 @@ const OUTCOME_NEW_SESSION_STALE_MESSAGE := "That follow-up changed. Review the o
 @onready var _guide_label: Label = %OutcomeGuide
 @onready var _action_status_label: Label = %ActionStatus
 @onready var _actions_bar: HFlowContainer = %Actions
+@onready var _actions_panel: PanelContainer = $ContentMargin/Content/MainRow/CommandColumn/ActionsPanel
 @onready var _manual_save_overwrite_dialog = $ManualSaveOverwriteDialog
 @onready var _new_session_confirmation_dialog: ConfirmationDialog = $NewSessionConfirmationDialog
 @onready var _content_margin: MarginContainer = $ContentMargin
@@ -323,6 +340,7 @@ func _refresh() -> void:
 	_model = ScenarioRules.build_outcome_model(_session)
 	var status := String(_session.scenario_status)
 	_apply_result_palette(status)
+	_sync_scenic_epilogue(status)
 	_header_label.text = String(_model.get("header", "Scenario Outcome"))
 	_set_compact_label(_summary_label, String(_model.get("summary", "Scenario resolution recorded.")), 2 if _compact_layout_active else 4)
 	_mode_label.text = String(_model.get("mode_summary", ""))
@@ -1079,6 +1097,7 @@ func validation_snapshot() -> Dictionary:
 	var outcome_recovery_router_snapshot := _sync_outcome_recovery_state(false, true)
 	return {
 		"scene_path": scene_file_path,
+		"scenic_epilogue": validation_scenic_epilogue_summary(),
 		"outcome_focus": validation_outcome_focus_snapshot(),
 		"outcome_recap_tab_navigation": validation_outcome_recap_tab_navigation_snapshot(),
 		"new_session_confirmation": validation_outcome_new_session_confirmation_snapshot(),
@@ -1162,6 +1181,34 @@ func validation_snapshot() -> Dictionary:
 		"current_save_recap": String(save_surface.get("current_save_recap", "")),
 		"slot_resume_recap": String(save_surface.get("slot_resume_recap", "")),
 	}
+
+
+func validation_scenic_epilogue_summary() -> Dictionary:
+	var backdrop_summary: Dictionary = _backdrop.call("validation_summary") if _backdrop.has_method("validation_summary") else {}
+	var panel_alphas := {}
+	for panel_name in OUTCOME_SCENIC_PANEL_ALPHA_BY_NAME:
+		var matches := find_children(String(panel_name), "PanelContainer", true, false)
+		if not matches.is_empty() and matches[0] is PanelContainer:
+			panel_alphas[String(panel_name)] = (matches[0] as PanelContainer).self_modulate.a
+	var command_rect := Rect2(_command_column.global_position, _command_column.size)
+	var action_rect := Rect2(_actions_panel.global_position, _actions_panel.size)
+	var scenic_window := Rect2(
+		Vector2(command_rect.position.x, action_rect.end.y),
+		Vector2(command_rect.size.x, maxf(0.0, command_rect.end.y - action_rect.end.y))
+	)
+	backdrop_summary.merge({
+		"viewport_size": get_viewport_rect().size,
+		"content_above_backdrop": _content_margin.get_index() > _backdrop.get_index(),
+		"draw_order": ["scenic_backdrop", "scenic_veil", "outcome_content"],
+		"actions_panel_rect": action_rect,
+		"actions_panel_vertical_expand": bool(_actions_panel.size_flags_vertical & Control.SIZE_EXPAND),
+		"command_column_rect": command_rect,
+		"scenic_window_rect": scenic_window,
+		"scenic_window_positive": scenic_window.size.x > 0.0 and scenic_window.size.y > 0.0,
+		"panel_alphas": panel_alphas,
+		"panel_alpha_contract": OUTCOME_SCENIC_PANEL_ALPHA_BY_NAME.duplicate(true),
+	})
+	return backdrop_summary
 
 func validation_select_save_slot(slot: int) -> bool:
 	var normalized_slot := int(slot)
@@ -1477,7 +1524,8 @@ func _apply_result_palette(status: String) -> void:
 			backdrop_color = Color(0.08, 0.08, 0.11, 1.0)
 			accent = Color(0.80, 0.74, 0.52, 1.0)
 
-	_backdrop.color = backdrop_color
+	if _backdrop.has_method("set_fallback_color"):
+		_backdrop.call("set_fallback_color", backdrop_color)
 	_header_label.add_theme_color_override("font_color", Color(0.96, 0.95, 0.90, 1.0))
 	FrontierVisualKit.apply_label(_summary_label, "body", 14)
 	_mode_label.add_theme_color_override("font_color", accent.lightened(0.08))
@@ -1490,6 +1538,11 @@ func _apply_result_palette(status: String) -> void:
 	badge_style.bg_color = Color(accent.r * 0.18, accent.g * 0.18, accent.b * 0.18, 0.95)
 	badge_style.border_color = accent
 	_result_badge_panel.add_theme_stylebox_override("panel", badge_style)
+
+
+func _sync_scenic_epilogue(status: String) -> void:
+	if _backdrop.has_method("set_outcome"):
+		_backdrop.call("set_outcome", status)
 
 func _set_compact_label(label: Label, full_text: String, max_lines: int, max_chars: int = 96) -> void:
 	FrontierVisualKit.set_compact_label(label, full_text, max_lines, max_chars)
@@ -1867,6 +1920,8 @@ func _apply_visual_theme() -> void:
 	for panel in find_children("*", "PanelContainer", true, false):
 		if panel is PanelContainer:
 			FrontierVisualKit.apply_panel(panel, String(panel_tones.get(panel.name, "ink")))
+			if OUTCOME_SCENIC_PANEL_ALPHA_BY_NAME.has(panel.name):
+				panel.self_modulate = Color(1.0, 1.0, 1.0, float(OUTCOME_SCENIC_PANEL_ALPHA_BY_NAME[panel.name]))
 
 	FrontierVisualKit.apply_tab_container(_recap_tabs)
 	_recap_tabs.set_tab_title(0, "Progress")

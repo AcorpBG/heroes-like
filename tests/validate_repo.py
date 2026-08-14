@@ -134,6 +134,7 @@ HEADLESS_SIMULATION_HARNESS_RULES_PATH = ROOT / "scripts" / "core" / "HeadlessSi
 STRATEGIC_AI_BASELINE_KPI_REPORT_SCRIPT_PATH = ROOT / "tests" / "strategic_ai_baseline_kpi_report.gd"
 OUTCOME_SCENE_PATH = ROOT / "scenes" / "results" / "ScenarioOutcomeShell.tscn"
 OUTCOME_SCRIPT_PATH = ROOT / "scenes" / "results" / "ScenarioOutcomeShell.gd"
+OUTCOME_SCENIC_BACKDROP_VIEW_PATH = ROOT / "scenes" / "results" / "OutcomeScenicBackdropView.gd"
 UNIT_ART_MANIFEST_PATH = CONTENT_DIR / "unit_art_manifest.json"
 UNIT_ANIMATION_MANIFEST_PATH = CONTENT_DIR / "unit_animation_manifest.json"
 UNIT_ART_GENERATOR_PATH = ROOT / "tools" / "generate_unit_art_assets.py"
@@ -18486,6 +18487,90 @@ def validate_scenario_outcome_shell(errors: list[str]) -> None:
         "AppRouter.return_to_main_menu_from_active_play()",
     ):
         ensure(required_token in outcome_script_text, errors, f"ScenarioOutcomeShell.gd is missing required outcome-shell token: {required_token}")
+
+    scenic_backdrops = {
+        "victory": "art/results/runtime/backdrops/outcome_victory.png",
+        "defeat": "art/results/runtime/backdrops/outcome_defeat.png",
+    }
+    ensure(OUTCOME_SCENIC_BACKDROP_VIEW_PATH.exists(), errors, "Missing Outcome scenic backdrop view script")
+    scenic_view_text = OUTCOME_SCENIC_BACKDROP_VIEW_PATH.read_text(encoding="utf-8") if OUTCOME_SCENIC_BACKDROP_VIEW_PATH.exists() else ""
+    scenic_asset_bytes = []
+    for status, relative_path in scenic_backdrops.items():
+        asset_path = ROOT / relative_path
+        ensure(asset_path.exists(), errors, f"Outcome scenic backdrop is missing for {status}: {relative_path}")
+        if asset_path.exists():
+            ensure(png_size(asset_path) == (1600, 900), errors, f"Outcome scenic backdrop must be 1600x900 for {status}: {relative_path}")
+            scenic_asset_bytes.append(asset_path.read_bytes())
+        resource_path = f"res://{relative_path}"
+        ensure(scenic_view_text.count(f'\"{status}\": \"{resource_path}\"') == 1, errors, f"OutcomeScenicBackdropView.gd must map exactly one path for {status}")
+        ensure(scenic_view_text.count(f'\"{status}\": preload(\"{resource_path}\")') == 1, errors, f"OutcomeScenicBackdropView.gd must preload exactly one texture for {status}")
+    ensure(len(scenic_asset_bytes) == 2 and scenic_asset_bytes[0] != scenic_asset_bytes[1], errors, "Outcome victory and defeat scenic backdrops must be distinct assets")
+    for required_token in (
+        "func set_outcome(status: String) -> void:",
+        "func set_fallback_color(color: Color) -> void:",
+        "draw_texture_rect_region(texture, destination_rect, _cover_crop_source_rect(texture, size))",
+        "var cover_scale := maxf(destination_size.x / texture_size.x, destination_size.y / texture_size.y)",
+        "var visible_size := destination_size / cover_scale",
+        "return Rect2((texture_size - visible_size) * 0.5, visible_size)",
+        "func validation_summary() -> Dictionary:",
+        '"rendering_mode": "cover_crop_scenic_epilogue" if texture != null else "flat_palette_fallback"',
+        '"stretched": false',
+        '"fallback": texture == null',
+        "SCENIC_VEIL_COLOR",
+    ):
+        ensure(required_token in scenic_view_text, errors, f"OutcomeScenicBackdropView.gd is missing scenic contract token: {required_token}")
+    ensure("draw_texture_rect(" not in scenic_view_text, errors, "Outcome scenic view must cover-crop instead of stretching its texture")
+
+    for required_token in (
+        'const OUTCOME_SCENIC_PANEL_ALPHA_BY_NAME := {',
+        '"ActionsPanel": 0.86',
+        '"SidebarShell": 0.88',
+        '"SavePanel": 0.86',
+        "_sync_scenic_epilogue(status)",
+        "func _sync_scenic_epilogue(status: String) -> void:",
+        'panel.self_modulate = Color(1.0, 1.0, 1.0, float(OUTCOME_SCENIC_PANEL_ALPHA_BY_NAME[panel.name]))',
+        "func validation_scenic_epilogue_summary() -> Dictionary:",
+        '"draw_order": ["scenic_backdrop", "scenic_veil", "outcome_content"]',
+        '"actions_panel_vertical_expand": bool(_actions_panel.size_flags_vertical & Control.SIZE_EXPAND)',
+        '"scenic_window_positive": scenic_window.size.x > 0.0 and scenic_window.size.y > 0.0',
+        '"scenic_epilogue": validation_scenic_epilogue_summary()',
+    ):
+        ensure(required_token in outcome_script_text, errors, f"ScenarioOutcomeShell.gd is missing scenic epilogue token: {required_token}")
+
+    for node_name in ("ActionsPanel", "ActionsBox", "Actions"):
+        node_marker = f'[node name="{node_name}"'
+        ensure(node_marker in outcome_scene_text, errors, f"ScenarioOutcomeShell.tscn is missing {node_name}")
+        if node_marker in outcome_scene_text:
+            node_block = outcome_scene_text.split(node_marker, 1)[1].split("\n[node ", 1)[0]
+            ensure("size_flags_vertical = 3" not in node_block, errors, f"ScenarioOutcomeShell.tscn must not vertically expand {node_name} over the scenic stage")
+    ensure('path="res://scenes/results/OutcomeScenicBackdropView.gd"' in outcome_scene_text, errors, "ScenarioOutcomeShell.tscn must use the scenic backdrop view")
+    ensure('name="Backdrop" type="Control"' in outcome_scene_text, errors, "ScenarioOutcomeShell.tscn Backdrop must be the scenic Control")
+
+    menu_smoke_text = MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH.read_text(encoding="utf-8") if MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH.exists() else ""
+    for required_token in (
+        "func _assert_outcome_scenic_epilogue_contract(shell: Control, session) -> bool:",
+        "var authority_before: Dictionary = session.to_dict()",
+        'String(live_summary.get("status", "")) != "victory"',
+        'not _outcome_panel_alphas_exact(live_summary.get("panel_alphas", {}), OUTCOME_SCENIC_PANEL_ALPHA_BY_NAME)',
+        "for stage_size in OUTCOME_SCENIC_STAGE_SIZES:",
+        "for status in OUTCOME_SCENIC_BACKDROP_PATHS:",
+        'texture_size == Vector2(1600.0, 900.0)',
+        'scenic_window.size.y < viewport_size.y * 0.30',
+        'scenic_window.size.x * scenic_window.size.y < viewport_size.x * viewport_size.y * 0.25',
+        'action_rect.end.y > viewport_size.y * 0.65',
+        'fixture.set_outcome("unmapped_outcome")',
+        'String(fallback_summary.get("rendering_mode", "")) != "flat_palette_fallback"',
+        "if session.to_dict() != authority_before:",
+        "func _outcome_scenic_geometry_exact(summary: Dictionary) -> bool:",
+        "func _outcome_panel_alphas_exact(actual_value, expected: Dictionary) -> bool:",
+        "actual.keys() != expected.keys()",
+        "is_equal_approx(float(actual[panel_name]), float(expected[panel_name]))",
+        "is_equal_approx(source_rect.size.x / source_rect.size.y, destination_rect.size.x / destination_rect.size.y)",
+        "if not await _assert_outcome_scenic_epilogue_contract(shell, session):",
+    ):
+        ensure(required_token in menu_smoke_text, errors, f"menu_outcome_visual_smoke.gd is missing scenic epilogue validation token: {required_token}")
+    ensure(menu_smoke_text.count("for status in OUTCOME_SCENIC_BACKDROP_PATHS:") == 1, errors, "Outcome scenic smoke must traverse the exact status map once")
+    ensure('live_summary.get("panel_alphas", {}) != OUTCOME_SCENIC_PANEL_ALPHA_BY_NAME' not in menu_smoke_text, errors, "Outcome scenic smoke must not use byte-exact float Dictionary equality for rendered panel alphas")
 
     scenario_select_text = SCENARIO_SELECT_RULES_PATH.read_text(encoding="utf-8")
     for required_token in ("ScenarioRulesScript.describe_scenario_briefing", "setup_summary"):
