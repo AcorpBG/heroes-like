@@ -278,6 +278,8 @@ func _assert_reachable_interaction_resolves_only_at_destination() -> bool:
 	return true
 
 func _assert_route_does_not_pass_through_interaction() -> bool:
+	var original_reduced_motion: bool = SettingsService.reduced_motion_enabled()
+	SettingsService.set_reduced_motion_enabled(false)
 	var session = _session_with_map(6, 3, true)
 	session.overworld["resource_nodes"] = [
 		{
@@ -294,13 +296,120 @@ func _assert_route_does_not_pass_through_interaction() -> bool:
 	var shell: Node = opened.get("shell", null)
 	session = opened.get("session", session)
 	_prepare_shell_state(shell, session, Vector2i(0, 1), 6)
+	var authority_before: Dictionary = session.to_dict()
 	var selection: Dictionary = shell.call("validation_select_tile", 5, 1)
 	var route_decision: Dictionary = selection.get("selected_route_decision", {})
 	if String(route_decision.get("status", "")) != "blocked" or bool(route_decision.get("route_clear", true)):
+		SettingsService.set_reduced_motion_enabled(original_reduced_motion)
 		return _fail("Route through an intermediate interaction should not be offered.", selection)
 	if not String(route_decision.get("blocked_reason", "")).contains("No clear route"):
+		SettingsService.set_reduced_motion_enabled(original_reduced_motion)
 		return _fail("Blocked route did not explain that no clean path exists.", selection)
+	var blocked_cue: Dictionary = _route_blocked_presentation(shell)
+	var blocked_serial := int(blocked_cue.get("serial", 0))
+	var start_cache: Dictionary = _render_cache(shell)
+	if (
+		blocked_serial <= 0
+		or not bool(blocked_cue.get("active", false))
+		or String(blocked_cue.get("event_id", "")) != "overworld_route_blocked"
+		or blocked_cue.get("tile", {}) != {"x": 5, "y": 1}
+		or String(blocked_cue.get("blocked_reason", "")) != String(route_decision.get("blocked_reason", ""))
+		or String(blocked_cue.get("animation_state", "")) != "route_blocked"
+		or String(blocked_cue.get("visual_policy", "")) != "authored_animation_state"
+		or not bool(blocked_cue.get("allows_large_motion", false))
+		or int(blocked_cue.get("duration_ms", 0)) != 420
+		or session.to_dict() != authority_before
+	):
+		SettingsService.set_reduced_motion_enabled(original_reduced_motion)
+		return _fail("Blocked route did not publish one exact authored cue at its selected tile.", {"decision": route_decision, "cue": blocked_cue})
+	await get_tree().create_timer(0.14).timeout
+	var mid_cue: Dictionary = _route_blocked_presentation(shell)
+	var mid_cache: Dictionary = _render_cache(shell)
+	if (
+		not bool(mid_cue.get("active", false))
+		or float(mid_cue.get("progress", 0.0)) <= 0.0
+		or int(mid_cache.get("session_static_generation", -1)) != int(start_cache.get("session_static_generation", -2))
+		or int(mid_cache.get("state_generation", -1)) != int(start_cache.get("state_generation", -2))
+		or int(mid_cache.get("dynamic_generation", -1)) <= int(start_cache.get("dynamic_generation", -1))
+		or session.to_dict() != authority_before
+	):
+		SettingsService.set_reduced_motion_enabled(original_reduced_motion)
+		return _fail("Blocked route cue did not advance on only the dynamic layer.", {"cue": mid_cue, "start_cache": start_cache, "mid_cache": mid_cache})
+	shell.call("_refresh")
+	await get_tree().process_frame
+	var refreshed_cue: Dictionary = _route_blocked_presentation(shell)
+	var repeated_selection: Dictionary = shell.call("validation_select_tile", 5, 1)
+	var repeated_cue: Dictionary = _route_blocked_presentation(shell)
+	if (
+		int(refreshed_cue.get("serial", -1)) != blocked_serial
+		or int(repeated_cue.get("serial", -1)) != blocked_serial
+		or String(repeated_selection.get("selected_route_decision", {}).get("status", "")) != "blocked"
+		or session.to_dict() != authority_before
+	):
+		SettingsService.set_reduced_motion_enabled(original_reduced_motion)
+		return _fail("Refresh or identical blocked-route reselection replayed the cue.", {"refreshed": refreshed_cue, "repeated": repeated_cue})
+	await get_tree().create_timer(0.30).timeout
+	var reachable_selection: Dictionary = shell.call("validation_select_tile", 1, 1)
+	var reachable_cue: Dictionary = _route_blocked_presentation(shell)
+	if (
+		String(reachable_selection.get("selected_route_decision", {}).get("status", "")) != "reachable"
+		or int(reachable_cue.get("serial", -1)) != blocked_serial
+		or bool(reachable_cue.get("active", true))
+		or session.to_dict() != authority_before
+	):
+		SettingsService.set_reduced_motion_enabled(original_reduced_motion)
+		return _fail("Reachable route selection published or retained blocked-route playback.", {"selection": reachable_selection, "cue": reachable_cue})
+	_evidence["blocked_route_cue"] = {
+		"serial": blocked_serial,
+		"tile": blocked_cue.get("tile", {}).duplicate(true),
+		"duration_ms": int(blocked_cue.get("duration_ms", 0)),
+		"refresh_replayed": false,
+		"identical_reselection_replayed": false,
+		"dynamic_layer_only": true,
+	}
 	shell.queue_free()
+	await get_tree().process_frame
+
+	SettingsService.set_reduced_motion_enabled(true)
+	var reduced_session = _session_with_map(6, 3, true)
+	reduced_session.overworld["resource_nodes"] = [{
+		"placement_id": "reduced_corridor_blocking_wagon",
+		"site_id": "site_wood_wagon",
+		"x": 2,
+		"y": 1,
+		"collected": false,
+		"collected_by_faction_id": "",
+	}]
+	reduced_session.overworld["fog"] = {}
+	var reduced_opened := await _open_shell(reduced_session)
+	var reduced_shell: Node = reduced_opened.get("shell", null)
+	reduced_session = reduced_opened.get("session", reduced_session)
+	_prepare_shell_state(reduced_shell, reduced_session, Vector2i(0, 1), 6)
+	var reduced_authority_before: Dictionary = reduced_session.to_dict()
+	var reduced_selection: Dictionary = reduced_shell.call("validation_select_tile", 5, 1)
+	var reduced_cue: Dictionary = _route_blocked_presentation(reduced_shell)
+	SettingsService.set_reduced_motion_enabled(original_reduced_motion)
+	if (
+		String(reduced_selection.get("selected_route_decision", {}).get("status", "")) != "blocked"
+		or int(reduced_cue.get("serial", 0)) <= 0
+		or not bool(reduced_cue.get("active", false))
+		or String(reduced_cue.get("event_id", "")) != "overworld_route_blocked"
+		or reduced_cue.get("tile", {}) != {"x": 5, "y": 1}
+		or String(reduced_cue.get("animation_state", "")) != "blocked_route_icon"
+		or String(reduced_cue.get("visual_policy", "")) != "reduced_motion_fallback"
+		or String(reduced_cue.get("fallback_tag", "")) != "blocked_route_icon"
+		or bool(reduced_cue.get("allows_large_motion", true))
+		or int(reduced_cue.get("duration_ms", 0)) != 260
+		or reduced_session.to_dict() != reduced_authority_before
+	):
+		return _fail("Reduced motion did not use the exact blocked-route icon fallback.", {"selection": reduced_selection, "cue": reduced_cue})
+	_evidence["reduced_motion_blocked_route_cue"] = {
+		"serial": int(reduced_cue.get("serial", 0)),
+		"fallback_tag": String(reduced_cue.get("fallback_tag", "")),
+		"duration_ms": int(reduced_cue.get("duration_ms", 0)),
+	}
+	reduced_shell.queue_free()
+	await get_tree().process_frame
 	return true
 
 func _capture_route_locomotion_viewports() -> bool:
@@ -376,6 +485,11 @@ func _hero_movement_presentation(shell: Node) -> Dictionary:
 	var snapshot: Dictionary = shell.call("validation_snapshot")
 	var viewport: Dictionary = snapshot.get("map_viewport", {}) if snapshot.get("map_viewport", {}) is Dictionary else {}
 	return viewport.get("hero_movement_presentation", {}).duplicate(true) if viewport.get("hero_movement_presentation", {}) is Dictionary else {}
+
+func _route_blocked_presentation(shell: Node) -> Dictionary:
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var viewport: Dictionary = snapshot.get("map_viewport", {}) if snapshot.get("map_viewport", {}) is Dictionary else {}
+	return viewport.get("route_blocked_presentation", {}).duplicate(true) if viewport.get("route_blocked_presentation", {}) is Dictionary else {}
 
 func _render_cache(shell: Node) -> Dictionary:
 	var snapshot: Dictionary = shell.call("validation_snapshot")

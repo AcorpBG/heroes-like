@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld neutral-town capture cue slice is complete. Successful captures now play the exact captured cue over the retained town with normal and reduced-motion authority preserved; select the next bounded release-readiness implementation slice from current behavior and source evidence.",
+  "currentNotes": "The Overworld blocked-route cue slice is complete. Exact blocked selections now play one deduped normal or reduced-motion cue without changing route authority or the compact reachable-destination path; select the next bounded release-readiness implementation slice from current behavior and source evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-town-capture-cue-playback-10184",
-  "currentSliceId": "presentation-overworld-town-capture-cue-playback-10184",
-  "currentSliceNotes": "Completed: exact town_capture presentation classification, route-queued retained-town playback, reduced-motion ownership-badge fallback, focused authority proof, compatibility, static/editor, and bounded Linux/Windows export-startup gates are green.",
+  "currentSlice": "presentation-overworld-blocked-route-cue-playback-10184",
+  "currentSliceId": "presentation-overworld-blocked-route-cue-playback-10184",
+  "currentSliceNotes": "Completed: exact blocked tile/reason publication, one-shot normal and reduced-motion playback, dynamic-layer-only rendering, refresh/reselection dedupe, reachable compact-path preservation, compatibility, static/editor, and bounded Linux/Windows export-startup gates are green.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Town Capture Cue Playback",
-  "currentSliceUpdatedAt": "2026-08-14T19:14:26Z",
+  "currentSliceTitle": "Overworld Blocked Route Cue Playback",
+  "currentSliceUpdatedAt": "2026-08-14T19:39:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -81216,6 +81216,87 @@
         "linux_export_headless_startup_passed": true,
         "windows_export_fresh_wine_startup_passed": true
       }
+    },
+    {
+      "id": "presentation-overworld-blocked-route-cue-playback-10184",
+      "title": "Overworld Blocked Route Cue Playback",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/animation-systems-foundation.md",
+        "docs/animation-overworld-object-state-contract-report.md",
+        "AGENTS.md"
+      ],
+      "purpose": "Play the authored blocked-route cue once at the exact selected tile when the live route decision resolves blocked.",
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_full_route_movement_regression.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_full_route_movement_regression.gd",
+        "tests/overworld_route_destination_only_action_regression.tscn",
+        "tests/overworld_controller_route_selection_regression.tscn",
+        "tests/animation_overworld_object_state_contract_report.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "023a04096408e6e37ddbcfc3d3d229430d79f710",
+        "blocked_route_decision_surface_available": true,
+        "blocked_route_cue_authored": true,
+        "blocked_route_playback_runtime": false
+      },
+      "completionCriteria": [
+        "A changed selected-route decision with exact blocked status issues one detached overworld_route_blocked serial at the authoritative selected tile and reason",
+        "The nonblocking cue draws only on the dynamic layer, does not replay on refresh or identical reselection, and a reachable selection does not publish it",
+        "Reduced motion uses the exact blocked-route icon fallback without large motion",
+        "Route decisions, paths, movement, interactions, session/save authority, focus, keyboard/controller navigation, camera, and audio policy remain exact",
+        "Focused runtime, compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "pathfinding, route scoring, movement, destination interaction, object-resolution, session, save, or schema changes",
+        "route-open, route-closed, object-blocked, object-guarded, ambient, or broad map animation changes",
+        "new sprite/VFX/audio assets, particles/shaders, camera, AI/balance, map, content, or Native RMG changes",
+        "packaged Overworld interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "createdAt": "2026-08-14T19:18:04Z",
+      "startedAt": "2026-08-14T19:18:04Z",
+      "updatedAt": "2026-08-14T19:39:00Z",
+      "notes": "Implemented one detached blocked-route presentation per changed selected-route signature. The producer reuses exact selected-tile/path authority, rejects current/reachable/actionable destinations, preserves the compact reachable-destination path without rich decision construction, and resolves the existing catalog policy before publication. The MapView consumes each serial once, draws a bounded blocked marker only on the dynamic layer, and never consults or mutates session authority. Focused proof covers an exact corridor-blocked reason/tile, 420ms normal cue, progress, refresh and identical-reselection dedupe, reachable control, and the 260ms reduced-motion blocked_route_icon fallback. Full-route, destination-only, controller, visual, animation-contract, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Other route/object cues, pathfinding/movement policy, packaged Overworld interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null,
+      "result": {
+        "event_id": "overworld_route_blocked",
+        "normal_duration_msec": 420,
+        "reduced_motion_duration_msec": 260,
+        "reduced_motion_fallback": "blocked_route_icon",
+        "exact_selected_tile_and_reason_passed": true,
+        "dynamic_layer_only_passed": true,
+        "refresh_and_reselection_dedupe_passed": true,
+        "reachable_control_passed": true,
+        "compact_destination_path_preserved": true,
+        "focused_headless_passed": true,
+        "destination_only_compatibility_passed": true,
+        "controller_route_compatibility_passed": true,
+        "visual_smoke_passed": true,
+        "animation_contract_passed": true,
+        "accessibility_passed": true,
+        "core_passed": true,
+        "repository_validation_passed": true,
+        "editor_parse_passed": true,
+        "linux_export_headless_startup_passed": true,
+        "windows_export_fresh_wine_startup_passed": true
+      },
+      "completedAt": "2026-08-14T19:39:00Z"
     },
     {
       "id": "presentation-overworld-town-capture-cue-playback-10184",

@@ -175,6 +175,9 @@ var _hero_movement_presentation: Dictionary = {}
 var _hero_movement_presentation_serial := 0
 var _object_resolution_presentation: Dictionary = {}
 var _object_resolution_presentation_serial := 0
+var _route_blocked_presentation: Dictionary = {}
+var _route_blocked_presentation_serial := 0
+var _route_blocked_presentation_signature := ""
 var _post_route_execution_compact_context := false
 var _briefing_title_text := "Command Briefing"
 var _command_briefing_text := ""
@@ -2086,6 +2089,7 @@ func _refresh() -> void:
 	_refresh_with_request(_make_refresh_request("full_refresh", REFRESH_ALL_PHASES, true, true))
 
 func _refresh_selected_route_preview(reason: String = "selected_route_preview") -> void:
+	_record_route_blocked_presentation(reason)
 	_refresh_with_request(_make_refresh_request(
 		reason,
 		[
@@ -2294,7 +2298,8 @@ func _refresh_map_view() -> void:
 		_selected_tile,
 		_selected_route_cache_for_map_view(),
 		_hero_movement_presentation,
-		_object_resolution_presentation
+		_object_resolution_presentation,
+		_route_blocked_presentation
 	)
 	if _map_view.has_method("set_placement_debug_overlay_enabled"):
 		_map_view.call("set_placement_debug_overlay_enabled", _placement_debug_overlay_enabled)
@@ -2324,6 +2329,56 @@ func _record_hero_movement_presentation(result: Dictionary, route: String) -> vo
 		"event_id": "overworld_hero_move",
 		"route_tiles": route_tiles.duplicate(true),
 		"route_step_count": route_steps.size(),
+		"selected_animation_state": String(policy.get("selected_animation_state", "")),
+		"selected_visual_policy": String(policy.get("selected_visual_policy", "")),
+		"selected_fallback_tag": String(policy.get("selected_fallback_tag", "")),
+		"allows_large_motion": bool(policy.get("allows_large_motion", true)),
+		"duration_ms": int(round(float(authored_duration_ms) * duration_scale)),
+		"max_duration_ms": max_duration_ms,
+	}
+
+func _record_route_blocked_presentation(source_reason: String) -> void:
+	if not _tile_in_bounds(_selected_tile) or _selected_tile == OverworldRules.hero_position(_session):
+		return
+	var tile := _selected_tile
+	var blocked_reason := ""
+	var selected_blocks_travel := OverworldRules.tile_is_blocked(_session, tile.x, tile.y) and not OverworldRules.tile_is_actionable_route_destination(_session, tile.x, tile.y)
+	if selected_blocks_travel:
+		blocked_reason = "%s blocks travel." % _terrain_name_at(tile.x, tile.y)
+	else:
+		var route_state := _ensure_selected_route_state("blocked_presentation")
+		var route_tiles: Array = route_state.get("route_tiles", []) if route_state.get("route_tiles", []) is Array else []
+		if not route_tiles.is_empty():
+			return
+		blocked_reason = "No clear route from the active hero."
+	if blocked_reason == "":
+		return
+	var decision_signature := "%s|blocked|%d,%d|%s" % [
+		_selected_route_action_surface_signature(),
+		tile.x,
+		tile.y,
+		blocked_reason,
+	]
+	if decision_signature == _route_blocked_presentation_signature:
+		return
+	var policy: Dictionary = AnimationCueCatalogScript.cue_playback_policy_for_event(
+		"overworld_route_blocked",
+		SettingsService.animation_preferences()
+	)
+	if policy.is_empty():
+		return
+	_route_blocked_presentation_serial += 1
+	_route_blocked_presentation_signature = decision_signature
+	var max_duration_ms: int = maxi(0, int(policy.get("max_duration_ms", 700)))
+	var duration_scale := maxf(0.0, float(policy.get("duration_scale", 1.0)))
+	var authored_duration_ms: int = mini(max_duration_ms, 420)
+	_route_blocked_presentation = {
+		"serial": _route_blocked_presentation_serial,
+		"event_id": "overworld_route_blocked",
+		"status": "blocked",
+		"tile": {"x": tile.x, "y": tile.y},
+		"blocked_reason": blocked_reason,
+		"source_reason": source_reason,
 		"selected_animation_state": String(policy.get("selected_animation_state", "")),
 		"selected_visual_policy": String(policy.get("selected_visual_policy", "")),
 		"selected_fallback_tag": String(policy.get("selected_fallback_tag", "")),
