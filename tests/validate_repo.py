@@ -105,6 +105,8 @@ OVERWORLD_OBJECT_RESOLUTION_CUE_PLAYBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "
 OVERWORLD_OBJECT_RESOLUTION_CUE_PLAYBACK_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_object_resolution_cue_playback_report.tscn"
 OVERWORLD_FIELD_SPELL_CAST_CUE_PLAYBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_field_spell_cast_cue_playback_report.gd"
 OVERWORLD_FIELD_SPELL_CAST_CUE_PLAYBACK_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_field_spell_cast_cue_playback_report.tscn"
+OVERWORLD_ARTIFACT_SLOT_CUE_PLAYBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_artifact_slot_cue_playback_report.gd"
+OVERWORLD_ARTIFACT_SLOT_CUE_PLAYBACK_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_artifact_slot_cue_playback_report.tscn"
 OVERWORLD_ART_MANIFEST_PATH = ROOT / "art" / "overworld" / "manifest.json"
 TERRAIN_GRAMMAR_PATH = CONTENT_DIR / "terrain_grammar.json"
 TERRAIN_LAYERS_PATH = CONTENT_DIR / "terrain_layers.json"
@@ -28554,6 +28556,178 @@ def validate_overworld_field_spell_cast_cue_playback(errors: list[str]) -> None:
         ensure(forbidden not in report_text, errors, f"Field-spell cue report must not bypass or weaken production behavior: {forbidden}")
 
 
+def validate_overworld_artifact_slot_cue_playback(errors: list[str]) -> None:
+    required_paths = (
+        OVERWORLD_SCENE_PATH,
+        OVERWORLD_SCRIPT_PATH,
+        OVERWORLD_ARTIFACT_SLOT_CUE_PLAYBACK_REPORT_SCRIPT_PATH,
+        OVERWORLD_ARTIFACT_SLOT_CUE_PLAYBACK_REPORT_SCENE_PATH,
+        ANIMATION_EVENT_CUES_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Overworld artifact-slot cue owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    shell_scene_text = OVERWORLD_SCENE_PATH.read_text(encoding="utf-8")
+    shell_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+    report_text = OVERWORLD_ARTIFACT_SLOT_CUE_PLAYBACK_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    report_scene_text = OVERWORLD_ARTIFACT_SLOT_CUE_PLAYBACK_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+
+    def gdscript_function_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}")
+        if start < 0:
+            return ""
+        end = text.find("\nfunc ", start + 1)
+        return text[start:] if end < 0 else text[start:end]
+
+    ensure_scene_nodes(shell_scene_text, errors, "OverworldShell.tscn", [("ArtifactActionCue", "Label")])
+    cue_match = re.search(
+        r'\[node name="ArtifactActionCue" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/CommandPanel/CommandPad/CommandBox"\]\n(?P<body>.*?)(?=\n\[node )',
+        shell_scene_text,
+        re.DOTALL,
+    )
+    ensure(cue_match is not None, errors, "Overworld artifact-slot cue must remain a compact command-spine label")
+    if cue_match is not None:
+        cue_body = cue_match.group("body")
+        for token in (
+            "unique_name_in_owner = true",
+            "visible = false",
+            "layout_mode = 2",
+            "theme_override_font_sizes/font_size = 13",
+            "horizontal_alignment = 1",
+            "autowrap_mode = 2",
+        ):
+            ensure(token in cue_body, errors, f"Artifact-slot cue label is missing exact compact ownership token: {token}")
+    ensure(shell_scene_text.find('[node name="Artifacts"') < shell_scene_text.find('[node name="ArtifactActionCue"') < shell_scene_text.find('[node name="ArtifactActions"'), errors, "Artifact-slot cue must remain directly between the artifact heading and live actions")
+
+    for token in (
+        '@onready var _artifact_action_cue: Label = %ArtifactActionCue',
+        "var _artifact_slot_presentation: Dictionary = {}",
+        "var _artifact_slot_presentation_serial := 0",
+        "var _artifact_slot_presentation_active := false",
+        "func _record_artifact_slot_presentation",
+        "func present_artifact_slot_presentation",
+        "func validation_artifact_slot_presentation",
+        '"artifact_slot_presentation": validation_artifact_slot_presentation()',
+        'cue_playback_policy_for_event(',
+        'String(policy.get("surface", "")) != "artifact"',
+        'String(policy.get("subject_kind", "")) != "artifact_slot"',
+        'String(policy.get("selected_playback_policy", "")) != "queue_resolved"',
+        'String(policy.get("selected_blocking_policy", "")) != "nonblocking"',
+        'var expected_cue_id := "cue_artifact_equipped" if event_id == "artifact_equipped" else ("cue_artifact_unequipped" if event_id == "artifact_unequipped" else "")',
+        '_artifact_action_cue.text = "%s: %s • %s"',
+    ):
+        ensure(token in shell_text, errors, f"OverworldShell.gd is missing artifact-slot cue ownership token: {token}")
+    ensure(shell_text.count("func _record_artifact_slot_presentation") == 1, errors, "Overworld shell must define exactly one artifact-slot presentation producer")
+    ensure(shell_text.count("func present_artifact_slot_presentation") == 1, errors, "Overworld shell must define exactly one public artifact-slot presenter")
+
+    handler_block = gdscript_function_block(shell_text, "_on_artifact_action_pressed")
+    handler_order = [
+        handler_block.find("var before_artifacts: Dictionary"),
+        handler_block.find("OverworldRules.perform_artifact_action(_session, action_id)"),
+        handler_block.find('_record_result_feedback("artifact", result, "Artifact loadout updated.")'),
+        handler_block.find("var resolution := _handle_session_resolution()"),
+        handler_block.find("\t_refresh()"),
+        handler_block.find("_record_artifact_slot_presentation(result, action_id, before_artifacts)"),
+    ]
+    ensure(all(index >= 0 for index in handler_order) and handler_order == sorted(handler_order), errors, "Live artifact-slot cue must publish after rule result, feedback, resolution guard, and refresh using its pre-action artifact snapshot")
+    ensure(handler_block.count("OverworldRules.perform_artifact_action(_session, action_id)") == 1, errors, "Artifact action handler must execute the live rule exactly once")
+
+    record_block = gdscript_function_block(shell_text, "_record_artifact_slot_presentation")
+    record_order = [
+        record_block.find('not bool(result.get("ok", false))'),
+        record_block.find('action_id.begins_with("equip_artifact:")'),
+        record_block.find("ArtifactRules.locate_artifact(hero, artifact_id)"),
+        record_block.find('action_id.begins_with("unequip_artifact:")'),
+        record_block.find("ContentService.get_artifact(artifact_id)"),
+        record_block.find("cue_playback_policy_for_event"),
+        record_block.find("_artifact_slot_presentation_serial += 1"),
+        record_block.find("present_artifact_slot_presentation({"),
+    ]
+    ensure(all(index >= 0 for index in record_order) and record_order == sorted(record_order), errors, "Artifact-slot producer must prove the exact post-action slot transition and catalog policy before serial publication")
+    for token in (
+        'String(location.get("location", "")) != "equipped"',
+        'String(after_equipped.get(slot, "")) != "" or artifact_id not in inventory',
+        'event_id = "artifact_equipped"',
+        'event_id = "artifact_unequipped"',
+        '"selected_animation_state": String(policy.get("selected_animation_state", ""))',
+        '"selected_fallback_tag": String(policy.get("selected_fallback_tag", ""))',
+        '"selected_vfx_cue_ids": (policy.get("selected_vfx_cue_ids", []) as Array).duplicate(true)',
+        '"selected_audio_cue_ids": (policy.get("selected_audio_cue_ids", []) as Array).duplicate(true)',
+    ):
+        ensure(token in record_block, errors, f"Artifact-slot producer is missing exact transition/catalog payload proof: {token}")
+    ensure("session.overworld[" not in record_block and "session.flags[" not in record_block, errors, "Artifact-slot presentation producer must not mutate gameplay authority")
+    ensure("await " not in record_block and "create_timer" not in record_block and "create_tween" not in record_block, errors, "Artifact-slot producer must remain synchronous and timer-free")
+
+    present_block = gdscript_function_block(shell_text, "present_artifact_slot_presentation")
+    ensure(present_block.find("var event_id :=") < present_block.find("if (\n") < present_block.find("_artifact_slot_presentation = presentation.duplicate(true)"), errors, "Artifact-slot presenter must validate the whole detached payload before replacing live presentation state")
+    for token in (
+        'String(presentation.get("cue_id", "")) != expected_cue_id',
+        "or not action_matches",
+        'String(presentation.get("artifact_id", "")) == ""',
+        'String(presentation.get("artifact_name", "")) == ""',
+        'String(presentation.get("slot", "")) == ""',
+        'String(presentation.get("result_message", "")) == ""',
+        'String(presentation.get("selected_playback_policy", "")) != "queue_resolved"',
+        'String(presentation.get("selected_blocking_policy", "")) != "nonblocking"',
+        "_artifact_slot_presentation_active = true",
+        "set_process(true)",
+    ):
+        ensure(token in present_block, errors, f"Artifact-slot presenter is missing fail-closed ownership token: {token}")
+    process_block = gdscript_function_block(shell_text, "_process")
+    ensure(process_block.find("if not _artifact_slot_presentation_active:") < process_block.find("_artifact_slot_presentation_elapsed_sec = minf(") < process_block.find("if progress >= 1.0:"), errors, "Artifact-slot playback must advance and settle through one bounded frame process")
+    ensure("_session" not in process_block and "OverworldRules" not in process_block and "ArtifactRules" not in process_block, errors, "Artifact-slot frame playback must not consult or mutate gameplay authority")
+    ensure("await " not in present_block + process_block and "create_timer" not in present_block + process_block and "create_tween" not in present_block + process_block, errors, "Artifact-slot playback must not own hidden delay or tween timing")
+
+    ensure_scene_nodes(report_scene_text, errors, "overworld_artifact_slot_cue_playback_report.tscn", [("OverworldArtifactSlotCuePlaybackReport", "Node")])
+    for token in (
+        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        '{"id": "normal", "reduced_motion": false}',
+        '{"id": "reduced_motion", "reduced_motion": true}',
+        'const ARTIFACT_ID := "artifact_trailsinger_boots"',
+        'ArtifactRules.normalize_hero_artifacts({"equipped": {}, "inventory": [ARTIFACT_ID]})',
+        'shell.get_node_or_null("%ArtifactActions")',
+        'shell.get_node_or_null("%ArtifactActionCue")',
+        "var control = SessionDataScript.SessionData.new()",
+        "OverworldRules.perform_artifact_action(control, equip_action_id)",
+        "OverworldRules.perform_artifact_action(control, stow_action_id)",
+        'equip_button.emit_signal("pressed")',
+        'var equip_was_still_active := bool(equip_presentation.get("active", false))',
+        'stow_button.emit_signal("pressed")',
+        'String(presentation.get("event_id", "")) == event_id',
+        'String(presentation.get("cue_id", "")) == cue_id',
+        'String(presentation.get("selected_blocking_policy", "")) == "nonblocking"',
+        'and live_after == control.to_dict()',
+        'shell.call("_refresh")',
+        'while bool(_artifact_presentation(shell).get("active", false)) and settle_frames < 90:',
+        'shell.validation_perform_artifact_action("equip_artifact:artifact_missing")',
+        'print("%s %s" % [REPORT_ID, JSON.stringify({"ok": true, "rows": rows})])',
+    ):
+        ensure(token in report_text, errors, f"Artifact-slot cue report is missing method-matched live proof: {token}")
+    ensure(report_text.count("OverworldRules.perform_artifact_action(control, equip_action_id)") == 1, errors, "Artifact-slot report must materialize exactly one independent equip control per row")
+    ensure(report_text.count("OverworldRules.perform_artifact_action(control, stow_action_id)") == 1, errors, "Artifact-slot report must materialize exactly one independent stow control per row")
+    equip_control_index = report_text.find("OverworldRules.perform_artifact_action(control, equip_action_id)")
+    equip_button_index = report_text.find('equip_button.emit_signal("pressed")', equip_control_index)
+    stow_control_index = report_text.find("OverworldRules.perform_artifact_action(control, stow_action_id)", equip_button_index)
+    active_gate_index = report_text.find('var equip_was_still_active := bool(equip_presentation.get("active", false))', stow_control_index)
+    stow_button_index = report_text.find('stow_button.emit_signal("pressed")', active_gate_index)
+    ensure(0 <= equip_control_index < equip_button_index < stow_control_index < active_gate_index < stow_button_index, errors, "Artifact-slot report must prove the real stow action remains available while the real equip cue is active")
+    for forbidden in (
+        "_on_artifact_action_pressed(",
+        "_record_artifact_slot_presentation(",
+        "_process(",
+        "create_timer",
+        "create_tween",
+        "var deadline := Time.get_ticks_msec()",
+        "session.overworld.erase",
+        "control.overworld.erase",
+        "ArtifactRules.equip_artifact(",
+        "ArtifactRules.unequip_artifact(",
+    ):
+        ensure(forbidden not in report_text, errors, f"Artifact-slot cue report must not bypass or weaken production behavior: {forbidden}")
+
+
 def validate_overworld_object_resolution_cue_playback(errors: list[str]) -> None:
     required_paths = (
         OVERWORLD_RULES_PATH,
@@ -37282,6 +37456,7 @@ def main() -> int:
     validate_overworld_art_asset_slice(errors)
     validate_overworld_hero_route_locomotion(errors)
     validate_overworld_field_spell_cast_cue_playback(errors)
+    validate_overworld_artifact_slot_cue_playback(errors)
     validate_overworld_object_resolution_cue_playback(errors)
     validate_neutral_dwelling_unit_slice(errors)
     validate_hero_portrait_assets(errors)
