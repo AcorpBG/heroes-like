@@ -24221,6 +24221,11 @@ def validate_overworld_content_foundation(errors: list[str]) -> None:
     runtime_metadata_report_script = ROOT / "tests" / "overworld_object_runtime_metadata_report.gd"
     ensure(runtime_metadata_report_scene.exists(), errors, "Missing overworld object runtime metadata report scene")
     ensure(runtime_metadata_report_script.exists(), errors, "Missing overworld object runtime metadata report script")
+    if runtime_metadata_report_script.exists():
+        runtime_metadata_text = runtime_metadata_report_script.read_text(encoding="utf-8")
+        ensure('"site_id": "site_waystone_cache"' in runtime_metadata_text, errors, "Runtime metadata pickup fixture must use the current one-time Waystone Cache")
+        ensure('ContentService.get_map_object("object_waystone_cache")' in runtime_metadata_text, errors, "Runtime metadata pickup fixture must inspect the matching safe Waystone Cache object")
+        ensure('"site_id": "site_wood_wagon"' not in runtime_metadata_text, errors, "Runtime metadata pickup fixture must not retain the now-persistent Wood Wagon oracle")
 
 
 def validate_overworld_object_ai_valuation_route_effects(errors: list[str]) -> None:
@@ -27946,6 +27951,7 @@ def validate_overworld_hero_route_locomotion(errors: list[str]) -> None:
 
 def validate_overworld_object_resolution_cue_playback(errors: list[str]) -> None:
     required_paths = (
+        OVERWORLD_RULES_PATH,
         OVERWORLD_SCRIPT_PATH,
         OVERWORLD_MAP_VIEW_SCRIPT_PATH,
         OVERWORLD_OBJECT_RESOLUTION_CUE_PLAYBACK_REPORT_SCRIPT_PATH,
@@ -27958,6 +27964,7 @@ def validate_overworld_object_resolution_cue_playback(errors: list[str]) -> None
         return
 
     shell_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+    overworld_rules_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
     map_view_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
     test_text = OVERWORLD_OBJECT_RESOLUTION_CUE_PLAYBACK_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     scene_text = OVERWORLD_OBJECT_RESOLUTION_CUE_PLAYBACK_REPORT_SCENE_PATH.read_text(encoding="utf-8")
@@ -27979,6 +27986,8 @@ def validate_overworld_object_resolution_cue_playback(errors: list[str]) -> None
         'event_id := "overworld_object_depleted"',
         'bool(site.get("persistent_control", false))',
         'event_id = "overworld_object_captured"',
+        'bool(site.get("repeatable", false)) or String(site.get("family", "")) == "repeatable_service"',
+        'event_id = "overworld_object_visited"',
         "AnimationCueCatalogScript.cue_playback_policy_for_event",
         "SettingsService.animation_preferences()",
         '"placement_id": placement_id',
@@ -27990,11 +27999,20 @@ def validate_overworld_object_resolution_cue_playback(errors: list[str]) -> None
     record_block = gdscript_function_block(shell_text, "_record_object_resolution_presentation")
     ensure('not bool(result.get("ok", false)) or route != ""' in record_block, errors, "Object-result playback must fail closed outside successful non-routing interactions")
     ensure(record_block.find('family not in ["resource_site", "artifact"]') < record_block.find("_object_resolution_presentation_serial += 1"), errors, "Object-result playback must validate its exact family before issuing a serial")
+    ensure(record_block.find('bool(site.get("persistent_control", false))') < record_block.find('bool(site.get("repeatable", false))') < record_block.find("cue_playback_policy_for_event"), errors, "Object-result playback must classify persistent capture before repeatable visit and policy resolution")
     ensure(record_block.find("placement_id == \"\"") < record_block.find("cue_playback_policy_for_event") < record_block.find("_object_resolution_presentation_serial += 1"), errors, "Object-result playback must validate placement/tile and resolve catalog policy before serial publication")
     ensure("session.overworld" not in record_block and "session.flags" not in record_block and "OverworldRules." not in record_block, errors, "Object-result presentation must not mutate or recompute gameplay authority")
     ensure("create_timer" not in record_block and "await " not in record_block and "create_tween" not in record_block, errors, "Object-result producer must not add hidden timing authority")
     move_handler = gdscript_function_block(shell_text, "_handle_move_result")
     ensure(move_handler.find("_record_hero_movement_presentation(result, route)") < move_handler.find("_record_object_resolution_presentation(result, route)"), errors, "Object-result playback must queue after the exact route-locomotion producer")
+    context_handler = gdscript_function_block(shell_text, "_on_context_action_pressed")
+    ensure(context_handler.find("if result.is_empty():") < context_handler.find('if action_id in ["collect_resource", "collect_artifact"]:') < context_handler.find("_record_object_resolution_presentation(result, String(result.get(\"route\", \"\")))") < context_handler.find("_refresh()"), errors, "Direct resource/artifact actions must publish only nonempty object results before the normal refresh")
+
+    context_lookup_start = overworld_rules_text.find("static func _find_context_resource_node")
+    context_lookup_end = overworld_rules_text.find("\nstatic func ", context_lookup_start + 1)
+    context_lookup = overworld_rules_text[context_lookup_start:context_lookup_end]
+    ensure('_resource_site_is_persistent(site) or _resource_site_is_repeatable(site) or not bool(node.get("collected", false))' in context_lookup, errors, "Active context must retain collected repeatable services for exact cooldown and revisit authority")
+    ensure("session.overworld[" not in context_lookup and "node[" not in context_lookup, errors, "Repeatable context retention must not mutate node or session authority")
 
     for required_token in (
         "OBJECT_RESOLUTION_MIN_DURATION_MSEC := 60",
@@ -28002,7 +28020,7 @@ def validate_overworld_object_resolution_cue_playback(errors: list[str]) -> None
         "object_resolution_presentation: Dictionary = {}",
         "func _sync_object_resolution_presentation",
         'serial == _object_resolution_last_serial',
-        'not in ["overworld_object_captured", "overworld_object_depleted"]',
+        'not in ["overworld_object_visited", "overworld_object_captured", "overworld_object_depleted"]',
         'not in ["resource_site", "artifact"]',
         "_object_resolution_queued = _hero_movement_active",
         "_object_resolution_active = not _object_resolution_queued",
@@ -28011,6 +28029,7 @@ def validate_overworld_object_resolution_cue_playback(errors: list[str]) -> None
         "if _object_resolution_queued and not _hero_movement_active:",
         "func _draw_object_resolution_presentation",
         'if _object_resolution_event_id == "overworld_object_captured":',
+        'elif _object_resolution_event_id == "overworld_object_visited":',
         "var motion_progress := progress if _object_resolution_allows_large_motion else 0.35",
         "func validation_object_resolution_presentation",
         '"object_resolution_presentation": validation_object_resolution_presentation()',
@@ -28028,14 +28047,25 @@ def validate_overworld_object_resolution_cue_playback(errors: list[str]) -> None
     ensure("_invalidate_session_static_cache" not in process_block + draw_block and "_invalidate_state_cache" not in process_block + draw_block, errors, "Object-result frames must not invalidate static or state caches")
     ensure("session" not in process_block and "session" not in draw_block, errors, "Object-result frame/draw helpers must not consult or mutate session authority")
     ensure("create_timer" not in sync_block + process_block + draw_block and "create_tween" not in sync_block + process_block + draw_block and "await " not in sync_block + process_block + draw_block, errors, "Object-result playback must use the bounded shared view process without hidden timers or coroutines")
+    index_block = gdscript_function_block(map_view_text, "_rebuild_static_object_indexes")
+    ensure('var repeatable := bool(site.get("repeatable", false)) or String(site.get("family", "")) == "repeatable_service"' in index_block, errors, "Map object indexing must derive the exact authored repeatable service contract")
+    ensure('bool(site.get("persistent_control", false)) or repeatable or not bool(node.get("collected", false))' in index_block, errors, "Collected repeatable services must remain live while one-time collected resources stay excluded")
 
     for required_token in (
         'const REPORT_ID := "OVERWORLD_OBJECT_RESOLUTION_CUE_PLAYBACK_REPORT"',
         "func _assert_persistent_resource_capture_playback",
+        "func _assert_repeatable_service_visited_and_revisit",
         "func _assert_artifact_depletion_playback",
         "func _assert_reduced_motion_capture_and_unsupported_noop",
         'String(queued.get("event_id", "")) != "overworld_object_captured"',
         'String(queued.get("event_id", "")) != "overworld_object_depleted"',
+        'String(first_cue.get("event_id", "")) != "overworld_object_visited"',
+        'String(revisit_cue.get("fallback_tag", "")) != "visited_check_icon"',
+        'int(first_viewport.get("spatial_index", {}).get("resource_tiles", 0)) != 1',
+        'int(revisit_viewport.get("spatial_index", {}).get("resource_tiles", 0)) != 1',
+        'session.day = first_collected_day + 7',
+        'shell.call("validation_perform_context_action", "collect_resource")',
+        'session.to_dict() != authority_before_early_revisit',
         'String(active.get("fallback_tag", "")) != "ownership_badge_swap"',
         'int(active.get("duration_ms", 0)) != 260',
         'int(queued.get("duration_ms", 0)) != 620',

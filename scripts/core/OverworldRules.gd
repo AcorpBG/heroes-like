@@ -5286,7 +5286,7 @@ static func _find_context_resource_node(session: SessionStateStoreScript.Session
 		return {"index": -1, "node": {}}
 	var node = node_result.get("node", {})
 	var site := ContentService.get_resource_site(String(node.get("site_id", "")))
-	if _resource_site_is_persistent(site) or not bool(node.get("collected", false)):
+	if _resource_site_is_persistent(site) or _resource_site_is_repeatable(site) or not bool(node.get("collected", false)):
 		return node_result
 	return {"index": -1, "node": {}}
 

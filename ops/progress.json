@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld object-resolution cue playback slice is complete. Successful persistent-site capture and artifact depletion now play exact bounded view-only cues with unchanged gameplay authority; select the next bounded release-readiness implementation slice from current behavior and source evidence.",
+  "currentNotes": "The Overworld repeatable-site visited-state correction is complete. Authored repeatable services remain live through cooldown and replay the exact visited cue when ready; select the next bounded release-readiness implementation slice from current behavior and source evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-object-resolution-cue-playback-10184",
-  "currentSliceId": "presentation-overworld-object-resolution-cue-playback-10184",
-  "currentSliceNotes": "Completed: exact one-shot captured/depleted cue playback, route-locomotion queueing, dynamic-layer-only redraw, reduced-motion fallback, focused two-viewport proof, compatibility, static/editor, and bounded Linux/Windows export-startup gates are green.",
+  "currentSlice": "presentation-overworld-repeatable-site-visited-state-10184",
+  "currentSliceId": "presentation-overworld-repeatable-site-visited-state-10184",
+  "currentSliceNotes": "Completed: exact visited cue classification, live repeatable-site retention, cooldown-aware context/revisit, reduced-motion fallback, focused authority proof, compatibility, static/editor, and bounded Linux/Windows export-startup gates are green.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Object Resolution Cue Playback",
-  "currentSliceUpdatedAt": "2026-08-14T18:29:00Z",
+  "currentSliceTitle": "Overworld Repeatable Site Visited State",
+  "currentSliceUpdatedAt": "2026-08-14T18:53:31Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -81216,6 +81216,93 @@
         "linux_export_headless_startup_passed": true,
         "windows_export_fresh_wine_startup_passed": true
       }
+    },
+    {
+      "id": "presentation-overworld-repeatable-site-visited-state-10184",
+      "title": "Overworld Repeatable Site Visited State",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/animation-systems-foundation.md",
+        "docs/animation-overworld-object-state-contract-report.md",
+        "AGENTS.md"
+      ],
+      "purpose": "Preserve authored repeatable services after successful visits and present their exact visited state instead of depletion.",
+      "implementationTargets": [
+        "scripts/core/OverworldRules.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_object_resolution_cue_playback_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_object_resolution_cue_playback_report.gd",
+        "tests/overworld_object_runtime_metadata_report.tscn",
+        "tests/overworld_full_route_movement_regression.tscn",
+        "tests/overworld_visual_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "40b76eb7dd25033eab3b772cb8a5f06fd16fdd63",
+        "authored_state_after_visit": "visited",
+        "authored_remains_after_visit": true,
+        "authored_supports_revisit": true,
+        "runtime_success_event": "overworld_object_depleted",
+        "runtime_collected_repeatable_visible": false
+      },
+      "completionCriteria": [
+        "Successful nonpersistent repeatable resource visits issue exactly one detached overworld_object_visited presentation serial from the authoritative interaction result",
+        "Collected repeatable services remain in the live map index through cooldown and after refresh while one-time pickups still disappear and persistent control sites remain unchanged",
+        "An early revisit fails closed without a new serial or authority drift, and advancing to the exact cooldown day permits the authored service again",
+        "Reduced motion uses the exact visited catalog fallback without large motion and normal playback remains dynamic-layer-only",
+        "Focused runtime, compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "repeatable eligibility, rewards, costs, cooldown, content, pathing, movement, interaction, save, or schema changes",
+        "persistent resource, one-time pickup, artifact, town, encounter, blocked, guarded, route, or ambient behavior changes",
+        "new sprite/VFX/audio assets, camera, AI/balance, map, or Native RMG changes",
+        "packaged Overworld interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "createdAt": "2026-08-14T18:33:06Z",
+      "startedAt": "2026-08-14T18:33:06Z",
+      "updatedAt": "2026-08-14T18:53:31Z",
+      "notes": "Implemented the exact authored repeatable-service lifecycle: collected repeatable nodes remain in the live map index, active context retains them for cooldown/readiness surfaces, and successful route or direct context visits publish one overworld_object_visited serial. The Wayfarer Infirmary focused case proves normal visited playback, retained live object, early fail-closed revisit with no serial/state drift, exact seven-day ready revisit, reduced-motion visited_check_icon fallback, exact two 120-gold costs, and unchanged rule/cooldown/session/cache authority. The metadata owner now uses the current one-time Waystone Cache instead of the persistent Wood Wagon. Metadata, route/destination, visual, object-contract, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null,
+      "result": {
+        "fixture_site_id": "site_wayfarer_infirmary",
+        "event_id": "overworld_object_visited",
+        "normal_duration_msec": 620,
+        "cooldown_days": 7,
+        "first_serial": 1,
+        "revisit_serial": 2,
+        "resource_tiles_after_visit": 1,
+        "early_revisit_fail_closed": true,
+        "ready_revisit_passed": true,
+        "reduced_motion_fallback": "visited_check_icon",
+        "cost_per_visit_gold": 120,
+        "authority_and_cache_preservation_passed": true,
+        "focused_headless_passed": true,
+        "metadata_compatibility_passed": true,
+        "route_and_destination_compatibility_passed": true,
+        "visual_smoke_passed": true,
+        "object_state_contract_passed": true,
+        "accessibility_passed": true,
+        "core_passed": true,
+        "repository_validation_passed": true,
+        "editor_parse_passed": true,
+        "linux_export_headless_startup_passed": true,
+        "windows_export_fresh_wine_startup_passed": true
+      },
+      "completedAt": "2026-08-14T18:53:31Z"
     },
     {
       "id": "presentation-overworld-object-resolution-cue-playback-10184",
