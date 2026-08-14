@@ -9,10 +9,12 @@ const TAB_SKIRMISH := 1
 const TAB_SAVES := 2
 const TAB_GUIDE := 3
 const TAB_SETTINGS := 4
+const CAMPAIGN_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.528, 0.600)
+const STANDARD_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.733, 0.620)
 const TAB_STAGE_COPY := {
 	TAB_CAMPAIGN: {
 		"title": "Campaign board",
-		"hint": "Inspect arcs, chapters, and the next campaign push from this summoned board.",
+		"hint": "Choose an arc and chapter; open Intel only when the deeper briefing is needed.",
 	},
 	TAB_SKIRMISH: {
 		"title": "Skirmish charter",
@@ -57,13 +59,17 @@ const TAB_HELP_TOPIC := {
 @onready var _open_settings_button: Button = %OpenSettings
 @onready var _open_editor_button: Button = %OpenEditor
 @onready var _campaign_list: ItemList = %CampaignList
+@onready var _campaign_details_panel: PanelContainer = %CampaignDetailsPanel
 @onready var _campaign_details_label: Label = %CampaignDetails
 @onready var _campaign_arc_status_label: Label = %CampaignArcStatus
 @onready var _chapter_list: ItemList = %ChapterList
+@onready var _chapter_details_panel: PanelContainer = %ChapterDetailsPanel
 @onready var _chapter_details_label: Label = %ChapterDetails
+@onready var _campaign_intel_row: HBoxContainer = %CampaignIntelRow
 @onready var _campaign_commander_preview_label: Label = %CampaignCommanderPreview
 @onready var _campaign_operational_board_label: Label = %CampaignOperationalBoard
 @onready var _campaign_journal_label: Label = %CampaignJournal
+@onready var _campaign_intel_toggle: Button = %CampaignIntelToggle
 @onready var _campaign_difficulty_picker: OptionButton = %CampaignDifficultyPicker
 @onready var _campaign_restart_button: Button = %RestartCampaignArc
 @onready var _campaign_primary_button: Button = %CampaignPrimaryAction
@@ -146,6 +152,7 @@ var _campaign_storage_blocked := false
 var _campaign_storage_warning := ""
 var _campaign_last_mutation_result: Dictionary = {}
 var _validation_campaign_blocked_command_count := 0
+var _campaign_intel_expanded := false
 var _skirmish_entries: Array = []
 var _selected_skirmish_id := ""
 var _selected_difficulty: String = ScenarioSelectRulesScript.default_difficulty_id()
@@ -317,6 +324,21 @@ func _on_chapter_selected(index: int) -> Dictionary:
 		)
 	_refresh_campaign_browser()
 	return result.duplicate(true)
+
+func _on_campaign_intel_toggle_pressed() -> void:
+	_set_campaign_intel_expanded(not _campaign_intel_expanded)
+
+func _set_campaign_intel_expanded(expanded: bool) -> void:
+	_campaign_intel_expanded = expanded
+	_campaign_details_panel.visible = expanded
+	_chapter_details_panel.visible = expanded
+	_campaign_intel_row.visible = expanded
+	_campaign_intel_toggle.text = "Hide Intel" if expanded else "Show Intel"
+	_campaign_intel_toggle.tooltip_text = (
+		"Hide the selected arc, chapter, commander, operational, and journal detail; selection and launch actions stay unchanged."
+		if expanded
+		else "Show selected arc, chapter, commander, operational, and journal detail inside this campaign rail."
+	)
 
 func _on_campaign_primary_pressed() -> Dictionary:
 	return _launch_campaign_action(CampaignProgression.primary_campaign_action(_selected_campaign_id, _selected_difficulty))
@@ -1438,6 +1460,7 @@ func _rebuild_campaign_chapter_browser() -> void:
 
 func _refresh_campaign_browser() -> void:
 	_sync_campaign_storage_state()
+	_refresh_campaign_row_tooltips()
 	if _campaign_entries.is_empty():
 		_set_compact_label(_campaign_details_label, "Campaign board: archived campaign arcs are not active in this build.", 2, 82)
 		_set_compact_label(
@@ -1529,6 +1552,21 @@ func _refresh_campaign_browser() -> void:
 			String(chapter_action.get("summary", "")),
 		])
 	)
+
+func _refresh_campaign_row_tooltips() -> void:
+	for index in range(mini(_campaign_list.item_count, _campaign_entries.size())):
+		var campaign_id := String(_campaign_entries[index].get("campaign_id", ""))
+		_campaign_list.set_item_tooltip(index, _join_nonempty_lines([
+			CampaignProgression.campaign_details(campaign_id),
+			CampaignProgression.campaign_arc_status(campaign_id),
+		]))
+	for index in range(mini(_chapter_list.item_count, _campaign_chapter_entries.size())):
+		var scenario_id := String(_campaign_chapter_entries[index].get("scenario_id", ""))
+		var action := CampaignProgression.chapter_action(_selected_campaign_id, scenario_id, _selected_difficulty)
+		_chapter_list.set_item_tooltip(index, _join_nonempty_lines([
+			CampaignProgression.chapter_details(_selected_campaign_id, scenario_id, _selected_difficulty),
+			String(action.get("summary", "")),
+		]))
 
 func _campaign_chapter_check_payload(chapter_action: Dictionary, primary_action: Dictionary) -> Dictionary:
 	if chapter_action.is_empty():
@@ -2688,6 +2726,7 @@ func _select_menu_tab(index: int) -> void:
 	if index != TAB_GUIDE:
 		_last_context_tab = clampi(index, 0, _menu_tabs.get_tab_count() - 1)
 	_menu_tabs.current_tab = clampi(index, 0, _menu_tabs.get_tab_count() - 1)
+	_apply_stage_dock_layout()
 	_refresh_stage_dock_header()
 	_sync_command_button_styles()
 
@@ -2703,6 +2742,8 @@ func _toggle_stage_dock(index: int) -> void:
 func _show_stage_dock() -> void:
 	_stage_dock_panel.visible = true
 	_footer_pocket_panel.visible = false
+	if _menu_tabs.current_tab == TAB_CAMPAIGN:
+		_set_campaign_intel_expanded(false)
 	if _menu_tabs.current_tab == TAB_SAVES:
 		_ensure_save_browser_loaded()
 	_refresh_stage_dock_header()
@@ -2710,6 +2751,13 @@ func _show_stage_dock() -> void:
 	_sync_command_button_styles()
 	_sync_system_command_buttons()
 	call_deferred("_focus_stage_entry")
+
+func _apply_stage_dock_layout() -> void:
+	var anchors := CAMPAIGN_DOCK_ANCHORS if _menu_tabs.current_tab == TAB_CAMPAIGN else STANDARD_DOCK_ANCHORS
+	_stage_dock_panel.anchor_left = anchors.position.x
+	_stage_dock_panel.anchor_top = anchors.position.y
+	_stage_dock_panel.anchor_right = anchors.end.x
+	_stage_dock_panel.anchor_bottom = anchors.end.y
 
 func _hide_stage_dock() -> void:
 	if SettingsService.display_change_pending() or _display_change_ui_active:
@@ -2871,6 +2919,7 @@ func validation_snapshot() -> Dictionary:
 		"scene_path": scene_file_path,
 		"music_audio": MusicAudio.validation_summary(),
 		"stage_dock_visible": _stage_dock_panel.visible,
+		"campaign_layout": _campaign_layout_snapshot(),
 		"footer_pocket_visible": _footer_pocket_panel.visible,
 		"current_tab": _menu_tabs.current_tab,
 		"first_view_command_surface": "painted_backdrop_hotspots",
@@ -2933,6 +2982,8 @@ func validation_snapshot() -> Dictionary:
 		"campaign_commander_preview_full": _campaign_commander_preview_label.tooltip_text,
 		"campaign_operational_board": _campaign_operational_board_label.text,
 		"campaign_operational_board_full": _campaign_operational_board_label.tooltip_text,
+		"campaign_journal": _campaign_journal_label.text,
+		"campaign_journal_full": _campaign_journal_label.tooltip_text,
 		"save_count": _save_summaries.size(),
 		"help_topic_id": _selected_help_topic_id,
 		"help_items": _help_browser_item_labels(),
@@ -3111,6 +3162,79 @@ func validation_snapshot() -> Dictionary:
 		"summary": _summary_label.text,
 		"active_expedition": _active_expedition_label.text,
 		"active_expedition_full": _active_expedition_label.tooltip_text,
+	}
+
+func _campaign_layout_snapshot() -> Dictionary:
+	var viewport_size := get_viewport().get_visible_rect().size
+	var stage_rect := _stage_dock_panel.get_global_rect()
+	var surface_visibility := {
+		"arc": _campaign_details_label.is_visible_in_tree(),
+		"arc_status": _campaign_arc_status_label.is_visible_in_tree(),
+		"chapter": _chapter_details_label.is_visible_in_tree(),
+		"commander": _campaign_commander_preview_label.is_visible_in_tree(),
+		"operational": _campaign_operational_board_label.is_visible_in_tree(),
+		"journal": _campaign_journal_label.is_visible_in_tree(),
+	}
+	var control_rects := {}
+	for control in [
+		_campaign_list,
+		_chapter_list,
+		_campaign_intel_toggle,
+		_campaign_difficulty_picker,
+		_campaign_restart_button,
+		_campaign_primary_button,
+		_start_chapter_button,
+	]:
+		if control is Control and control.visible:
+			control_rects[String(control.name)] = _control_rect_snapshot(control)
+	return {
+		"viewport_size": {"x": viewport_size.x, "y": viewport_size.y},
+		"stage_rect": _rect_snapshot(stage_rect),
+		"width_ratio": stage_rect.size.x / viewport_size.x if viewport_size.x > 0.0 else 0.0,
+		"height_ratio": stage_rect.size.y / viewport_size.y if viewport_size.y > 0.0 else 0.0,
+		"uncovered_right_ratio": 1.0 - (stage_rect.end.x / viewport_size.x) if viewport_size.x > 0.0 else 0.0,
+		"intel_expanded": _campaign_intel_expanded,
+		"intel_toggle_text": _campaign_intel_toggle.text,
+		"intel_toggle_tooltip": _campaign_intel_toggle.tooltip_text,
+		"detail_surface_visibility": surface_visibility,
+		"control_rects": control_rects,
+		"campaign_items": _campaign_item_rows(),
+		"chapter_items": _chapter_item_rows(),
+	}
+
+func _campaign_item_rows() -> Array:
+	var rows := []
+	for index in range(mini(_campaign_list.item_count, _campaign_entries.size())):
+		rows.append({
+			"id": String(_campaign_entries[index].get("campaign_id", "")),
+			"label": _campaign_list.get_item_text(index),
+			"tooltip": _campaign_list.get_item_tooltip(index),
+			"selected": _campaign_list.is_selected(index),
+		})
+	return rows
+
+func _chapter_item_rows() -> Array:
+	var rows := []
+	for index in range(mini(_chapter_list.item_count, _campaign_chapter_entries.size())):
+		rows.append({
+			"id": String(_campaign_chapter_entries[index].get("scenario_id", "")),
+			"label": _chapter_list.get_item_text(index),
+			"tooltip": _chapter_list.get_item_tooltip(index),
+			"selected": _chapter_list.is_selected(index),
+		})
+	return rows
+
+func _control_rect_snapshot(control: Control) -> Dictionary:
+	return _rect_snapshot(control.get_global_rect())
+
+func _rect_snapshot(rect: Rect2) -> Dictionary:
+	return {
+		"x": rect.position.x,
+		"y": rect.position.y,
+		"width": rect.size.x,
+		"height": rect.size.y,
+		"right": rect.end.x,
+		"bottom": rect.end.y,
 	}
 
 func validation_campaign_storage_snapshot() -> Dictionary:
@@ -4028,6 +4152,7 @@ func _apply_visual_theme() -> void:
 
 	FrontierVisualKit.apply_button(_stage_help_button, "secondary", 96.0, 34.0, 13)
 	FrontierVisualKit.apply_button(_close_stage_dock_button, "secondary", 112.0, 34.0, 13)
+	FrontierVisualKit.apply_button(_campaign_intel_toggle, "secondary", 116.0, 40.0, 13)
 	FrontierVisualKit.apply_button(_campaign_restart_button, "secondary", 136.0, 40.0, 13)
 	FrontierVisualKit.apply_button(_campaign_primary_button, "primary", 208.0, 40.0, 14)
 	FrontierVisualKit.apply_button(_start_chapter_button, "secondary", 176.0, 40.0, 14)

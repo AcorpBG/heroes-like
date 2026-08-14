@@ -13979,25 +13979,42 @@ def validate_campaign_browser(errors: list[str]) -> None:
         ("CampaignScroll", "ScrollContainer"),
         ("CampaignBrowser", "HBoxContainer"),
         ("CampaignList", "ItemList"),
+        ("CampaignDetailsPanel", "PanelContainer"),
         ("CampaignDetails", "Label"),
         ("CampaignArcTitle", "Label"),
         ("CampaignArcStatus", "Label"),
         ("ChapterBrowser", "HBoxContainer"),
         ("ChapterList", "ItemList"),
+        ("ChapterDetailsPanel", "PanelContainer"),
         ("ChapterDetails", "Label"),
+        ("CampaignIntelRow", "HBoxContainer"),
         ("CommanderPreviewTitle", "Label"),
         ("CampaignCommanderPreview", "Label"),
         ("OperationalBoardTitle", "Label"),
         ("CampaignOperationalBoard", "Label"),
         ("JournalTitle", "Label"),
         ("CampaignJournal", "Label"),
-        ("CampaignActions", "HBoxContainer"),
+        ("CampaignActions", "GridContainer"),
+        ("CampaignIntelToggle", "Button"),
         ("RestartCampaignArc", "Button"),
         ("CampaignPrimaryAction", "Button"),
         ("StartChapter", "Button"),
         ("CampaignRestartDialog", "ConfirmationDialog"),
     ):
         ensure(scene_has_node(main_menu_scene_text, node_name, node_type), errors, f"MainMenu.tscn must define {node_name} ({node_type}) for the campaign browser")
+
+    for hidden_node, hidden_type in (
+        ("CampaignDetailsPanel", "PanelContainer"),
+        ("ChapterDetailsPanel", "PanelContainer"),
+        ("CampaignIntelRow", "HBoxContainer"),
+    ):
+        ensure(
+            "visible = false" in scene_node_block(main_menu_scene_text, hidden_node, hidden_type),
+            errors,
+            f"MainMenu campaign rail must keep {hidden_node} collapsed by default",
+        )
+    campaign_actions_block = scene_node_block(main_menu_scene_text, "CampaignActions", "GridContainer")
+    ensure("columns = 2" in campaign_actions_block, errors, "MainMenu CampaignActions must use the bounded two-column command grid")
 
     main_menu_script_text = MAIN_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
@@ -14019,6 +14036,23 @@ def validate_campaign_browser(errors: list[str]) -> None:
         "_campaign_commander_preview_label",
         "_campaign_operational_board_label",
         "_campaign_journal_label",
+        "CAMPAIGN_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.528, 0.600)",
+        "STANDARD_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.733, 0.620)",
+        "_campaign_details_panel",
+        "_chapter_details_panel",
+        "_campaign_intel_row",
+        "_campaign_intel_toggle",
+        "func _on_campaign_intel_toggle_pressed",
+        "func _set_campaign_intel_expanded(expanded: bool)",
+        '"Hide Intel" if expanded else "Show Intel"',
+        "func _apply_stage_dock_layout",
+        "func _refresh_campaign_row_tooltips",
+        "_campaign_list.set_item_tooltip",
+        "_chapter_list.set_item_tooltip",
+        '"campaign_layout": _campaign_layout_snapshot()',
+        "func _campaign_layout_snapshot() -> Dictionary",
+        '"detail_surface_visibility"',
+        '"uncovered_right_ratio"',
         "func _on_campaign_selected",
         "func _on_chapter_selected",
         "func _on_campaign_primary_pressed",
@@ -14228,8 +14262,31 @@ def validate_campaign_browser(errors: list[str]) -> None:
             "latest_loadable_summary",
             "latest_save_resume_target",
             "saved_from_launch_mode",
+            "CAMPAIGN_LAYOUT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]",
+            "func _validate_scenery_first_campaign_layout",
+            "CampaignIntelToggle",
+            'intel_toggle.emit_signal("pressed")',
+            "func _campaign_layout_contract_exact",
+            'float(layout.get("width_ratio", 1.0)) > 0.56',
+            'float(layout.get("height_ratio", 1.0)) > 0.60',
+            'float(layout.get("uncovered_right_ratio", 0.0)) < 0.40',
+            'for key in ["arc", "arc_status", "chapter", "commander", "operational", "journal"]',
+            "func _visible_campaign_controls_contained",
+            "if not expanded and not _visible_campaign_controls_contained(layout):",
+            "func _campaign_authority_exact",
+            "func _expected_campaign_rows",
+            "func _expected_chapter_rows",
+            'get_viewport().gui_get_focus_owner() != intel_toggle',
         ):
             ensure(required_token in smoke_text, errors, f"player_facing_campaign_menu_smoke.gd is missing required token: {required_token}")
+        for forbidden_token in (
+            "CampaignDetailsPanel.visible = true",
+            "ChapterDetailsPanel.visible = true",
+            "CampaignIntelRow.visible = true",
+            "if not _visible_campaign_controls_contained(layout):",
+            "queue_free()",
+        ):
+            ensure(forbidden_token not in smoke_text, errors, f"player-facing campaign layout smoke must remain observation/action-only: {forbidden_token}")
 
     ensure(MAIN_MENU_CAMPAIGN_REACTIVATION_DOC_PATH.exists(), errors, "Missing player-facing campaign reactivation smoke report")
     if MAIN_MENU_CAMPAIGN_REACTIVATION_DOC_PATH.exists():
