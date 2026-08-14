@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Town recruitment cue playback is complete. Successful live recruitment publishes one detached authored cue after the authoritative refresh; normal and reduced-motion playback, exact session authority, refresh stability, expiry, compatibility, repository/editor, and bounded Linux/Windows startup gates pass. Select the next tracker-approved release-readiness implementation slice.",
+  "currentNotes": "Town building-complete cue playback is complete. Successful live construction publishes one detached authored cue after the authoritative refresh; normal input ownership and Escape skip, reduced-motion fallback, exact independent session authority, refresh stability, expiry, compatibility, repository/editor, and bounded Linux/Windows startup gates pass. Select the next tracker-approved release-readiness implementation slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-town-recruitment-cue-playback-10184",
-  "currentSliceId": "presentation-town-recruitment-cue-playback-10184",
-  "currentSliceNotes": "Completed: the live Town recruitment action now starts one exact authored nonblocking cue after refresh, with normal muster rings, the reduced-motion count badge, exact session authority, and no refresh or expiry replay.",
+  "currentSlice": "presentation-town-building-complete-cue-playback-10184",
+  "currentSliceId": "presentation-town-building-complete-cue-playback-10184",
+  "currentSliceNotes": "Completed: the live Town build action now starts one exact authored cue after refresh, with bounded normal input ownership, Escape skip, the reduced-motion building badge, exact independent construction/session authority, and no refresh or expiry replay.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Town Recruitment Cue Playback",
-  "currentSliceUpdatedAt": "2026-08-14T21:19:15Z",
+  "currentSliceTitle": "Town Building Complete Cue Playback",
+  "currentSliceUpdatedAt": "2026-08-14T21:50:03Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -81218,6 +81218,80 @@
       }
     },
     {
+      "id": "presentation-town-building-complete-cue-playback-10184",
+      "title": "Town Building Complete Cue Playback",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/animation-systems-foundation.md", "AGENTS.md"],
+      "purpose": "Make successful live player construction visible and skippable through the existing authored town_building_built cue contract while honoring its input-blocking policy.",
+      "implementationTargets": [
+        "scenes/town/TownShell.gd",
+        "scenes/town/TownShell.tscn",
+        "scenes/town/TownStageView.gd",
+        "tests/town_building_complete_cue_playback_report.gd",
+        "tests/town_building_complete_cue_playback_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/town_building_complete_cue_playback_report.tscn",
+        "tests/town_recruitment_cue_playback_report.tscn",
+        "tests/town_battle_visual_smoke.tscn",
+        "tests/animation_validation_smoke_harness_report.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "bd5f74110fa8c40db86c0a3bf859b7ad8ee4cfa6",
+        "town_building_built_catalog_entry": true,
+        "normal_animation_state": "build_complete",
+        "normal_blocking_policy": "input_blocking_timeout",
+        "reduced_motion_fallback": "building_badge_added",
+        "player_construction_rule_live": true,
+        "town_building_stage_playback": false
+      },
+      "completionCriteria": [
+        "Exactly one successful live player build publishes one detached town_building_built payload with authoritative Town placement, building id, existing result message, and exact catalog-selected policy after the authoritative refresh",
+		"Normal playback draws one bounded scenic-stage build-complete cue while a transparent full-shell layer blocks background pointer and keyboard commands; ui_cancel skips it and returns focus to the live Town focus cycle",
+        "Reduced motion uses the exact building_badge_added static fallback with nonblocking_reduced_motion policy, while malformed or failed construction publishes nothing",
+        "Refresh does not duplicate/reset the cue, expiry or skip never replays it, and an independent build control proves exact costs, built set, daily-build flag, session, save, focus, and Town authority",
+        "Focused normal/reduced runtime at 1280x720 and 1920x1080, recruitment/Town visual/animation/focus/accessibility/core compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "construction eligibility, prerequisite, cost, market coverage, one-build-per-day, Town state, economy, combat, AI, balance, content, event, save, schema, or cache policy changes",
+        "other Town action cues, final VFX/audio assets or playback, global animation timing, camera, scenic composition, or other-screen changes",
+        "packaged Town interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "createdAt": "2026-08-14T21:25:53Z",
+      "startedAt": "2026-08-14T21:25:53Z",
+      "updatedAt": "2026-08-14T21:50:03Z",
+      "completedAt": "2026-08-14T21:50:03Z",
+      "notes": "Implemented one exact post-refresh town_building_built presentation for successful live player construction. Normal mode owns full-shell pointer and keyboard input for its bounded skippable cue; reduced motion uses the authored nonblocking building badge. Four focused 1280/1920 normal/reduced rows passed with exact independent build/session authority, malformed fail-closed behavior, stable refresh, skip/expiry cleanup, and focus restoration. Recruitment, Town visual, animation, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Packaged Town cue interaction, final audio/VFX assets, controller, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
+      "result": {
+        "focused_viewports": [[1280, 720], [1920, 1080]],
+        "focused_modes": ["normal", "reduced_motion"],
+        "focused_report_passed": true,
+        "normal_input_blocking_passed": true,
+        "ui_cancel_skip_passed": true,
+        "reduced_motion_nonblocking_passed": true,
+        "independent_build_session_authority_passed": true,
+        "refresh_and_completion_lifecycle_passed": true,
+        "malformed_payload_failed_closed": true,
+        "compatibility_chain_passed": true,
+        "repository_validation_passed": true,
+        "editor_parse_passed": true,
+        "linux_export_headless_startup_passed": true,
+        "windows_export_fresh_wine_startup_passed": true
+      },
+      "blockedReason": null
+    },
+    {
       "id": "presentation-town-recruitment-cue-playback-10184",
       "title": "Town Recruitment Cue Playback",
       "status": "completed",
@@ -82266,7 +82340,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
-  "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader release gaps remain.",
+  "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader gameplay, content, performance, accessibility certification, signing/publication, native Windows hardware certification, Native RMG parity, and overall release readiness remain open.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -82697,7 +82771,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "ux_main_menu_campaign_contextual_dock_height_completed",
+  "result": "presentation_town_building_complete_cue_playback_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -82798,9 +82872,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The completed Town recruitment cue playback slice connects authoritative successful player recruitment to the existing authored Town presentation contract without changing recruitment or save authority. The game is not release-ready.",
+  "summary": "The selected Town building-complete cue slice connects authoritative successful player construction to the existing authored Town presentation contract with bounded skippable input ownership. The game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-14T21:19:15Z",
+  "updatedAt": "2026-08-14T21:25:53Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

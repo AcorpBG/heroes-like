@@ -20588,6 +20588,103 @@ def validate_town_faction_progression(errors: list[str]) -> None:
         ensure(required_token in town_script_text, errors, f"TownShell.gd is missing required town progression token: {required_token}")
 
 
+def validate_town_building_complete_cue_playback(errors: list[str]) -> None:
+    report_script_path = ROOT / "tests" / "town_building_complete_cue_playback_report.gd"
+    report_scene_path = ROOT / "tests" / "town_building_complete_cue_playback_report.tscn"
+    required_paths = (TOWN_SCENE_PATH, TOWN_SCRIPT_PATH, TOWN_STAGE_SCRIPT_PATH, report_script_path, report_scene_path)
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Town building-complete cue owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    scene_text = TOWN_SCENE_PATH.read_text(encoding="utf-8")
+    ensure_scene_nodes(scene_text, errors, "TownShell.tscn", [("TownActionInputBlocker", "Control")])
+    for token in (
+        'visible = false',
+        'mouse_filter = 0',
+        'focus_mode = 2',
+        'tooltip_text = "Construction completion is resolving. Press Escape to skip."',
+    ):
+        ensure(token in scene_text, errors, f"Town action blocker is missing exact fail-closed ownership: {token}")
+
+    shell_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
+    for token in (
+        '@onready var _town_action_input_blocker: Control = %TownActionInputBlocker',
+        '_record_town_action_presentation("build", full_action_id, action, result, before)',
+        'var event_id := "town_units_recruited" if lane == "recruit" else "town_building_built"',
+        'var building_id := action_id.trim_prefix("build:")',
+        'building_id in before_buildings or building_id not in after_buildings',
+        'presentation["building_id"] = building_id',
+        'presentation["building_name"] = String(building.get("name", action.get("label", building_id)))',
+        'town_action_presentation_blocking_changed.connect(_on_town_action_presentation_blocking_changed)',
+        'if _town_action_input_blocker != null and _town_action_input_blocker.visible:',
+        'if event.is_action_pressed("ui_cancel") and _town_stage_view.has_method("dismiss_town_action_presentation"):',
+        '_town_action_input_blocker.visible = blocking',
+        'call_deferred("_configure_town_keyboard_focus", true)',
+    ):
+        ensure(token in shell_text, errors, f"TownShell.gd is missing building-complete publication/input ownership: {token}")
+    build_handler = re.search(r"func _commit_build_action\(action_id: String\) -> void:\n(?P<body>.*?)(?=\nfunc )", shell_text, re.DOTALL)
+    ensure(build_handler is not None, errors, "Could not isolate live Town build handler")
+    if build_handler is not None:
+        body = build_handler.group("body")
+        order = [
+            body.find("TownRules.build_active_town(_session, action_id)"),
+            body.find('_record_town_action_result("build", full_action_id, action, result, before)'),
+            body.find('_invalidate_active_town_entity_cache("build", ["town", "economy", "recruitment"])'),
+            body.find("if _handle_session_resolution():"),
+            body.find("\t_refresh()"),
+            body.find('_record_town_action_presentation("build", full_action_id, action, result, before)'),
+        ]
+        ensure(all(index >= 0 for index in order) and order == sorted(order), errors, "Town build cue must publish after result, invalidation, resolution guard, and refresh")
+
+    stage_text = TOWN_STAGE_SCRIPT_PATH.read_text(encoding="utf-8")
+    for token in (
+        'signal town_action_presentation_blocking_changed(blocking: bool)',
+        'event_id not in ["town_units_recruited", "town_building_built"]',
+        'event_id == "town_building_built" and selected_blocking_policy not in ["input_blocking_timeout", "nonblocking_reduced_motion", "nonblocking_fast_resolve"]',
+        'func dismiss_town_action_presentation() -> void:',
+        'return String(policy.get("selected_blocking_policy", "")) == "input_blocking_timeout"',
+        'town_action_presentation_blocking_changed.emit(true)',
+        'town_action_presentation_blocking_changed.emit(false)',
+        'draw_entries = ["building_badge_added"] if reduced_motion else ["build_completion_frame", "building_badge_added"]',
+        'func _draw_town_building_complete_presentation(badge_rect: Rect2, reduced_motion: bool) -> void:',
+        '_draw_text("BUILD COMPLETE"',
+    ):
+        ensure(token in stage_text, errors, f"TownStageView.gd is missing building-complete playback ownership: {token}")
+    for forbidden in ("get_tree().create_timer", "TownRulesScript.build_active_town", "SaveService", "AppRouter"):
+        ensure(forbidden not in stage_text, errors, f"Town building-complete view must remain frame-owned and authority-free: {forbidden}")
+
+    report_text = report_script_path.read_text(encoding="utf-8")
+    report_scene_text = report_scene_path.read_text(encoding="utf-8")
+    ensure_scene_nodes(report_scene_text, errors, "town_building_complete_cue_playback_report.tscn", [("TownBuildingCompleteCuePlaybackReport", "Node")])
+    for token in (
+        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        '{"id": "normal", "reduced_motion": false}',
+        '{"id": "reduced_motion", "reduced_motion": true}',
+        'var control_result: Dictionary = TownRules.build_active_town(control, building_id)',
+        'confirm.emit_signal("pressed")',
+        'String(active.get("event_id", "")) == "town_building_built"',
+        'String(active.get("selected_blocking_policy", "")) == expected_blocking',
+        'await _click_global_position(menu.get_global_rect().get_center())',
+        'await _press_action("ui_cancel")',
+		'int(shell.get("_validation_return_to_menu_request_count")) == return_count_before',
+        'live_after == control.to_dict()',
+        'while bool(stage.validation_town_action_presentation_snapshot().get("active", false))',
+		'var keys: Array = expected.keys()',
+        'print("TOWN_BUILDING_COMPLETE_CUE_PLAYBACK_REPORT %s"',
+    ):
+        ensure(token in report_text, errors, f"Town building-complete report is missing method-matched live proof: {token}")
+    for forbidden in (
+        "_commit_build_action(",
+        "_record_town_action_presentation(",
+        "stage.dismiss_town_action_presentation",
+        "get_tree().create_timer",
+        "session.overworld.erase",
+		"var keys := expected.keys()",
+    ):
+        ensure(forbidden not in report_text, errors, f"Town building-complete report bypasses live production ownership: {forbidden}")
+
+
 def validate_town_recruitment_cue_playback(errors: list[str]) -> None:
     report_script_path = ROOT / "tests" / "town_recruitment_cue_playback_report.gd"
     report_scene_path = ROOT / "tests" / "town_recruitment_cue_playback_report.tscn"
@@ -20601,14 +20698,14 @@ def validate_town_recruitment_cue_playback(errors: list[str]) -> None:
     ensure_script_functions(shell_text, errors, "TownShell.gd", ["_record_town_action_presentation"])
     for required_token in (
 		'_record_town_action_presentation("recruit", full_action_id, action, result, before)',
-        'if lane != "recruit" or not bool(result.get("ok", false)):',
+		'if lane not in ["build", "recruit"] or not bool(result.get("ok", false)):',
         'var unit_id := action_id.trim_prefix("recruit:")',
         'var after := TownRules.town_action_consequence_signature(_session)',
         'var recruited_count := int(after_army.get(unit_id, 0)) - int(before_army.get(unit_id, 0))',
         'AnimationCueCatalog.cue_playback_policy_for_event(',
-        '"town_units_recruited",\n\t\tSettingsService.animation_preferences()',
+		'var event_id := "town_units_recruited" if lane == "recruit" else "town_building_built"',
         'String(policy.get("selected_blocking_policy", "")) != "nonblocking"',
-        '_town_stage_view.call("present_town_action", {',
+		'_town_stage_view.call("present_town_action", presentation)',
         '"policy": policy.duplicate(true)',
     ):
         ensure(required_token in shell_text, errors, f"TownShell.gd is missing exact recruitment-presentation publication: {required_token}")
@@ -20662,12 +20759,12 @@ def validate_town_recruitment_cue_playback(errors: list[str]) -> None:
         "const RECRUIT_PRESENTATION_MAX_DURATION_MS := 700",
         "const RECRUIT_PRESENTATION_MIN_DURATION_MS := 120",
         "set_process(false)",
-        'String(presentation.get("event_id", "")) != "town_units_recruited"',
-        'String(policy.get("cue_id", "")) != "cue_town_units_recruited"',
-        'String(policy.get("selected_blocking_policy", "")) != "nonblocking"',
+		'event_id not in ["town_units_recruited", "town_building_built"]',
+		'var expected_cue_id := "cue_town_units_recruited" if event_id == "town_units_recruited" else "cue_town_building_built"',
+		'event_id == "town_units_recruited" and selected_blocking_policy != "nonblocking"',
         "_town_action_presentation = presentation.duplicate(true)",
         'if Time.get_ticks_msec() >= int(_town_action_presentation.get("expires_msec", 0)):',
-        '"draw_entries": (["recruit_count_badge"] if reduced_motion else ["recruit_muster_rings", "recruit_count_badge"]) if active else []',
+		'draw_entries = ["recruit_count_badge"] if reduced_motion else ["recruit_muster_rings", "recruit_count_badge"]',
         '"started_msec": int(_town_action_presentation.get("started_msec", 0))',
         '"expires_msec": int(_town_action_presentation.get("expires_msec", 0))',
 		'var selected_mode := String(policy.get("mode", "normal"))',
@@ -36969,6 +37066,7 @@ def main() -> int:
     validate_battle_spell_timing_board(errors)
     validate_battle_faction_identity(errors)
     validate_town_faction_progression(errors)
+    validate_town_building_complete_cue_playback(errors)
     validate_town_recruitment_cue_playback(errors)
     validate_town_contextual_guide(errors)
     validate_town_shell_release_polish(errors)

@@ -80,6 +80,7 @@ const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains ope
 @onready var _guide_title_label: Label = %TownGuideTitle
 @onready var _guide_label: Label = %TownGuideText
 @onready var _guide_close_button: Button = %TownGuideClose
+@onready var _town_action_input_blocker: Control = %TownActionInputBlocker
 @onready var _manual_save_overwrite_dialog = $ManualSaveOverwriteDialog
 @onready var _active_play_settings_dialog = %ActivePlaySettingsDialog
 
@@ -122,6 +123,9 @@ func _ready() -> void:
 	_last_management_tab_index = _management_tabs.current_tab
 	_configure_management_tab_accessibility()
 	_configure_town_guide_surface()
+	_town_action_input_blocker.visible = false
+	if not _town_stage_view.town_action_presentation_blocking_changed.is_connected(_on_town_action_presentation_blocking_changed):
+		_town_stage_view.town_action_presentation_blocking_changed.connect(_on_town_action_presentation_blocking_changed)
 	_confirm_build_button.pressed.connect(_on_confirm_build_pressed)
 	if not _management_tabs.tab_changed.is_connected(_on_management_tab_changed):
 		_management_tabs.tab_changed.connect(_on_management_tab_changed)
@@ -209,6 +213,7 @@ func _commit_build_action(action_id: String) -> void:
 	if _handle_session_resolution():
 		return
 	_refresh()
+	_record_town_action_presentation("build", full_action_id, action, result, before)
 
 func _select_build_action(action_id: String) -> void:
 	var action := _build_action_for_id(action_id)
@@ -577,6 +582,11 @@ func _complete_management_tab_focus_handoff(tab: int, change_sequence: int) -> v
 	)
 
 func _input(event: InputEvent) -> void:
+	if _town_action_input_blocker != null and _town_action_input_blocker.visible:
+		get_viewport().set_input_as_handled()
+		if event.is_action_pressed("ui_cancel") and _town_stage_view.has_method("dismiss_town_action_presentation"):
+			_town_stage_view.call("dismiss_town_action_presentation")
+		return
 	if _active_play_settings_dialog != null and _active_play_settings_dialog.is_open():
 		return
 	if _town_guide_is_open():
@@ -600,6 +610,9 @@ func _input(event: InputEvent) -> void:
 
 func _configure_town_keyboard_focus(force: bool = false) -> void:
 	if not is_inside_tree() or (_active_play_settings_dialog != null and _active_play_settings_dialog.is_open()):
+		return
+	if _town_action_input_blocker != null and _town_action_input_blocker.visible:
+		_town_action_input_blocker.grab_focus()
 		return
 	if _town_guide_is_open():
 		var guide_controls := FrontierVisualKit.configure_focus_cycle([_guide_close_button])
@@ -661,6 +674,15 @@ func _close_town_guide() -> void:
 		return
 	_guide_overlay.visible = false
 	_guide_button.call_deferred("grab_focus")
+
+func _on_town_action_presentation_blocking_changed(blocking: bool) -> void:
+	if _town_action_input_blocker == null:
+		return
+	_town_action_input_blocker.visible = blocking
+	if blocking:
+		_town_action_input_blocker.call_deferred("grab_focus")
+	else:
+		call_deferred("_configure_town_keyboard_focus", true)
 
 func _configure_management_tab_accessibility() -> void:
 	var tab_bar := _management_tabs.get_tab_bar()
@@ -4335,44 +4357,56 @@ func _record_town_action_presentation(
 	result: Dictionary,
 	before: Dictionary
 ) -> void:
-	if lane != "recruit" or not bool(result.get("ok", false)):
+	if lane not in ["build", "recruit"] or not bool(result.get("ok", false)):
 		return
 	if _town_stage_view == null or not _town_stage_view.has_method("present_town_action"):
 		return
-	var unit_id := action_id.trim_prefix("recruit:")
-	if unit_id == "" or unit_id == action_id:
-		return
 	var after := TownRules.town_action_consequence_signature(_session)
-	var before_army: Dictionary = before.get("army_counts", {}) if before.get("army_counts", {}) is Dictionary else {}
-	var after_army: Dictionary = after.get("army_counts", {}) if after.get("army_counts", {}) is Dictionary else {}
-	var recruited_count := int(after_army.get(unit_id, 0)) - int(before_army.get(unit_id, 0))
-	if recruited_count <= 0:
-		return
+	var event_id := "town_units_recruited" if lane == "recruit" else "town_building_built"
+	var subject_kind := "unit_roster" if lane == "recruit" else "building"
 	var policy := AnimationCueCatalog.cue_playback_policy_for_event(
-		"town_units_recruited",
+		event_id,
 		SettingsService.animation_preferences()
 	)
 	if (
-		String(policy.get("event_id", "")) != "town_units_recruited"
+		String(policy.get("event_id", "")) != event_id
 		or String(policy.get("surface", "")) != "town"
-		or String(policy.get("subject_kind", "")) != "unit_roster"
+		or String(policy.get("subject_kind", "")) != subject_kind
 		or String(policy.get("selected_playback_policy", "")) != "queue_resolved"
-		or String(policy.get("selected_blocking_policy", "")) != "nonblocking"
+		or lane == "recruit" and String(policy.get("selected_blocking_policy", "")) != "nonblocking"
+		or lane == "build" and String(policy.get("selected_blocking_policy", "")) not in ["input_blocking_timeout", "nonblocking_reduced_motion", "nonblocking_fast_resolve"]
 	):
 		return
 	var town := TownRules.get_active_town(_session)
-	var unit := ContentService.get_unit(unit_id)
-	_town_stage_view.call("present_town_action", {
-		"event_id": "town_units_recruited",
+	var presentation := {
+		"event_id": event_id,
 		"cue_id": String(policy.get("cue_id", "")),
 		"town_placement_id": String(town.get("placement_id", "")),
 		"town_id": String(town.get("town_id", "")),
-		"unit_id": unit_id,
-		"unit_name": String(unit.get("name", action.get("label", unit_id))),
-		"recruited_count": recruited_count,
 		"result_message": String(result.get("message", "")),
 		"policy": policy.duplicate(true),
-	})
+	}
+	if lane == "recruit":
+		var unit_id := action_id.trim_prefix("recruit:")
+		var before_army: Dictionary = before.get("army_counts", {}) if before.get("army_counts", {}) is Dictionary else {}
+		var after_army: Dictionary = after.get("army_counts", {}) if after.get("army_counts", {}) is Dictionary else {}
+		var recruited_count := int(after_army.get(unit_id, 0)) - int(before_army.get(unit_id, 0))
+		if unit_id == "" or unit_id == action_id or recruited_count <= 0:
+			return
+		var unit := ContentService.get_unit(unit_id)
+		presentation["unit_id"] = unit_id
+		presentation["unit_name"] = String(unit.get("name", action.get("label", unit_id)))
+		presentation["recruited_count"] = recruited_count
+	else:
+		var building_id := action_id.trim_prefix("build:")
+		var before_buildings: Array = before.get("built_buildings", []) if before.get("built_buildings", []) is Array else []
+		var after_buildings: Array = after.get("built_buildings", []) if after.get("built_buildings", []) is Array else []
+		if building_id == "" or building_id == action_id or building_id in before_buildings or building_id not in after_buildings:
+			return
+		var building := ContentService.get_building(building_id)
+		presentation["building_id"] = building_id
+		presentation["building_name"] = String(building.get("name", action.get("label", building_id)))
+	_town_stage_view.call("present_town_action", presentation)
 
 func _town_profile_metadata(first_render: bool) -> Dictionary:
 	var town := TownRules.get_active_town(_session) if _session != null else {}
