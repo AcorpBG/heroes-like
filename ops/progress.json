@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld hero-route locomotion slice is complete. Successful movement now replays the active-hero marker over exact authoritative route tiles with reduced-motion endpoint snap and unchanged gameplay authority; select the next bounded release-readiness implementation slice from current behavior and source evidence.",
+  "currentNotes": "The Overworld object-resolution cue playback slice is complete. Successful persistent-site capture and artifact depletion now play exact bounded view-only cues with unchanged gameplay authority; select the next bounded release-readiness implementation slice from current behavior and source evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-hero-route-locomotion-10184",
-  "currentSliceId": "presentation-overworld-hero-route-locomotion-10184",
-  "currentSliceNotes": "Completed: exact one-shot route-tile interpolation, dynamic-layer-only redraw, reduced-motion endpoint snap, focused two-viewport proof, compatibility, static/editor, and bounded Linux/Windows export-startup gates are green.",
+  "currentSlice": "presentation-overworld-object-resolution-cue-playback-10184",
+  "currentSliceId": "presentation-overworld-object-resolution-cue-playback-10184",
+  "currentSliceNotes": "Completed: exact one-shot captured/depleted cue playback, route-locomotion queueing, dynamic-layer-only redraw, reduced-motion fallback, focused two-viewport proof, compatibility, static/editor, and bounded Linux/Windows export-startup gates are green.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Hero Route Locomotion",
-  "currentSliceUpdatedAt": "2026-08-14T17:59:21Z",
+  "currentSliceTitle": "Overworld Object Resolution Cue Playback",
+  "currentSliceUpdatedAt": "2026-08-14T18:29:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -81216,6 +81216,100 @@
         "linux_export_headless_startup_passed": true,
         "windows_export_fresh_wine_startup_passed": true
       }
+    },
+    {
+      "id": "presentation-overworld-object-resolution-cue-playback-10184",
+      "title": "Overworld Object Resolution Cue Playback",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/animation-systems-foundation.md",
+        "docs/animation-overworld-object-state-contract-report.md",
+        "AGENTS.md"
+      ],
+      "purpose": "Play one bounded view-only captured or depleted cue at the exact object tile already returned by a successful Overworld interaction.",
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_object_resolution_cue_playback_report.gd",
+        "tests/overworld_object_resolution_cue_playback_report.tscn",
+        "tests/overworld_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_object_resolution_cue_playback_report.gd",
+        "tests/overworld_full_route_movement_regression.gd",
+        "tests/overworld_cached_route_execution_regression.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "b39ff669",
+        "interaction_result_facts_available": true,
+        "captured_and_depleted_cues_authored": true,
+        "overworld_object_playback_runtime": false
+      },
+      "completionCriteria": [
+        "Successful non-routing persistent resource capture and artifact depletion each issue exactly one detached presentation serial from the authoritative interaction_result placement and tile",
+        "OverworldMapView consumes each serial once, renders the matching existing cue policy on only the dynamic layer, and does not replay it on selection or status refresh",
+        "Reduced motion uses the exact catalog fallback without per-frame large motion, while stale, invalid, routed, or unsupported results fail closed",
+        "Rewards, topology, movement, fog, route, session, save, static/state caches, focus, controls, camera, and audio remain exact",
+        "Focused runtime, inspected 1280x720/1920x1080 captures, compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "OverworldRules, content, reward, topology, pathing, movement, fog, interaction, route, input, save, or schema changes",
+        "town, encounter, blocked, guarded, route-open/closed, ambient-loop, or broad object-state playback",
+        "new sprite/VFX/audio assets, particles/shaders, camera, AI/balance, map, or Native RMG changes",
+        "packaged Overworld interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "createdAt": "2026-08-14T18:04:59Z",
+      "startedAt": "2026-08-14T18:04:59Z",
+      "updatedAt": "2026-08-14T18:29:00Z",
+      "notes": "Implemented one-shot view-only captured/depleted playback from exact successful interaction_result placement and tile facts. Persistent resource capture queues behind route locomotion; disappearing artifact depletion remains visible after object-index removal; unrelated refresh and unsupported open movement do not replay a serial. Normal and reduced-motion policies, dynamic-layer-only redraw, unchanged session/reward/topology/movement/fog/save/cache/input authority, and inspected 1280x720/1920x1080 captures pass. Route, destination-only, cached-route, visual, object-contract, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Overworld interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null,
+      "result": {
+        "persistent_capture_event": "overworld_object_captured",
+        "artifact_depletion_event": "overworld_object_depleted",
+        "normal_duration_msec": 620,
+        "reduced_motion_duration_msec": 260,
+        "route_locomotion_queue_passed": true,
+        "one_shot_serial_consumption_passed": true,
+        "dynamic_layer_only_redraw_passed": true,
+        "unrelated_refresh_replay_absent": true,
+        "reduced_motion_fallback_passed": true,
+        "authority_and_cache_preservation_passed": true,
+        "focused_headless_passed": true,
+        "xvfb_viewports": [
+          [
+            1280,
+            720
+          ],
+          [
+            1920,
+            1080
+          ]
+        ],
+        "route_and_destination_compatibility_passed": true,
+        "cached_route_compatibility_passed": true,
+        "visual_smoke_passed": true,
+        "object_state_contract_passed": true,
+        "accessibility_passed": true,
+        "core_passed": true,
+        "repository_validation_passed": true,
+        "editor_parse_passed": true,
+        "linux_export_headless_startup_passed": true,
+        "windows_export_fresh_wine_startup_passed": true
+      },
+      "completedAt": "2026-08-14T18:29:00Z"
     },
     {
       "id": "presentation-overworld-hero-route-locomotion-10184",

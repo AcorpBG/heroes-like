@@ -179,6 +179,8 @@ const CACHE_SIGNATURE_SEED := 2166136261
 const CACHE_SIGNATURE_MASK := 0x7fffffff
 const HERO_MOVEMENT_MIN_DURATION_MSEC := 80
 const HERO_MOVEMENT_MAX_DURATION_MSEC := 700
+const OBJECT_RESOLUTION_MIN_DURATION_MSEC := 60
+const OBJECT_RESOLUTION_MAX_DURATION_MSEC := 700
 
 @export var large_map_visible_tile_span_override := 0.0
 
@@ -273,6 +275,19 @@ var _hero_movement_animation_state := ""
 var _hero_movement_visual_policy := ""
 var _hero_movement_fallback_tag := ""
 var _hero_movement_reduced_motion := false
+var _object_resolution_last_serial := 0
+var _object_resolution_tile := Vector2i(-1, -1)
+var _object_resolution_elapsed_sec := 0.0
+var _object_resolution_duration_sec := 0.0
+var _object_resolution_active := false
+var _object_resolution_queued := false
+var _object_resolution_event_id := ""
+var _object_resolution_animation_state := ""
+var _object_resolution_visual_policy := ""
+var _object_resolution_fallback_tag := ""
+var _object_resolution_family := ""
+var _object_resolution_placement_id := ""
+var _object_resolution_allows_large_motion := false
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -291,7 +306,8 @@ func set_map_state(
 	map_size: Vector2i,
 	selected_tile: Vector2i,
 	selected_route_state: Dictionary = {},
-	movement_presentation: Dictionary = {}
+	movement_presentation: Dictionary = {},
+	object_resolution_presentation: Dictionary = {}
 ) -> void:
 	var profile_start := _profile_begin("set_map_state")
 	_ensure_render_layers()
@@ -305,6 +321,7 @@ func set_map_state(
 	_map_size = Vector2i(max(map_size.x, 1), max(map_size.y, 1))
 	_hero_tile = OverworldRulesScript.hero_position(session) if session != null else Vector2i.ZERO
 	_sync_hero_movement_presentation(movement_presentation)
+	_sync_object_resolution_presentation(object_resolution_presentation)
 	_movement_left = int(session.overworld.get("movement", {}).get("current", 0)) if session != null else 0
 	_terrain_layers = session.overworld.get("terrain_layers", {}) if session != null and session.overworld.get("terrain_layers", {}) is Dictionary else {}
 	_rebuild_object_indexes()
@@ -364,14 +381,28 @@ func set_map_state(
 	_profile_end("set_map_state", profile_start)
 
 func _process(delta: float) -> void:
-	if not _hero_movement_active:
-		set_process(false)
-		return
-	_hero_movement_elapsed_sec = minf(_hero_movement_duration_sec, _hero_movement_elapsed_sec + maxf(0.0, delta))
-	if _hero_movement_elapsed_sec >= _hero_movement_duration_sec:
-		_hero_movement_active = false
-		set_process(false)
-	_invalidate_dynamic_layer("hero_movement_presentation")
+	var redraw_dynamic := false
+	var elapsed_delta := maxf(0.0, delta)
+	if _hero_movement_active:
+		_hero_movement_elapsed_sec = minf(_hero_movement_duration_sec, _hero_movement_elapsed_sec + elapsed_delta)
+		if _hero_movement_elapsed_sec >= _hero_movement_duration_sec:
+			_hero_movement_active = false
+		redraw_dynamic = true
+	if _object_resolution_queued and not _hero_movement_active:
+		_object_resolution_queued = false
+		_object_resolution_active = true
+		redraw_dynamic = true
+	if _object_resolution_active:
+		_object_resolution_elapsed_sec = minf(_object_resolution_duration_sec, _object_resolution_elapsed_sec + elapsed_delta)
+		if _object_resolution_elapsed_sec >= _object_resolution_duration_sec:
+			_object_resolution_active = false
+		redraw_dynamic = true
+	_sync_presentation_processing()
+	if redraw_dynamic:
+		_invalidate_dynamic_layer("overworld_presentation_frame")
+
+func _sync_presentation_processing() -> void:
+	set_process(_hero_movement_active or _object_resolution_active or _object_resolution_queued)
 
 func _sync_hero_movement_presentation(presentation: Dictionary) -> void:
 	var serial := int(presentation.get("serial", 0))
@@ -379,7 +410,7 @@ func _sync_hero_movement_presentation(presentation: Dictionary) -> void:
 		return
 	_hero_movement_last_serial = serial
 	_hero_movement_active = false
-	set_process(false)
+	_sync_presentation_processing()
 	_hero_movement_path = []
 	_hero_movement_elapsed_sec = 0.0
 	_hero_movement_duration_sec = 0.0
@@ -404,8 +435,46 @@ func _sync_hero_movement_presentation(presentation: Dictionary) -> void:
 	)
 	_hero_movement_duration_sec = float(duration_msec) / 1000.0
 	_hero_movement_active = true
-	set_process(true)
+	_sync_presentation_processing()
 	_invalidate_dynamic_layer("hero_movement_started")
+
+func _sync_object_resolution_presentation(presentation: Dictionary) -> void:
+	var serial := int(presentation.get("serial", 0))
+	if serial <= 0 or serial == _object_resolution_last_serial:
+		return
+	_object_resolution_last_serial = serial
+	_object_resolution_active = false
+	_object_resolution_queued = false
+	_object_resolution_tile = Vector2i(-1, -1)
+	_object_resolution_elapsed_sec = 0.0
+	_object_resolution_duration_sec = 0.0
+	_object_resolution_event_id = String(presentation.get("event_id", ""))
+	_object_resolution_animation_state = String(presentation.get("selected_animation_state", ""))
+	_object_resolution_visual_policy = String(presentation.get("selected_visual_policy", ""))
+	_object_resolution_fallback_tag = String(presentation.get("selected_fallback_tag", ""))
+	_object_resolution_family = String(presentation.get("family", ""))
+	_object_resolution_placement_id = String(presentation.get("placement_id", ""))
+	_object_resolution_allows_large_motion = bool(presentation.get("allows_large_motion", true))
+	_sync_presentation_processing()
+	if _object_resolution_event_id not in ["overworld_object_captured", "overworld_object_depleted"]:
+		return
+	if _object_resolution_family not in ["resource_site", "artifact"] or _object_resolution_placement_id == "":
+		return
+	var tile_payload: Dictionary = presentation.get("tile", {}) if presentation.get("tile", {}) is Dictionary else {}
+	var tile := Vector2i(int(tile_payload.get("x", -1)), int(tile_payload.get("y", -1)))
+	if tile.x < 0 or tile.y < 0 or tile.x >= _map_size.x or tile.y >= _map_size.y:
+		return
+	var duration_msec := clampi(
+		int(presentation.get("duration_ms", OBJECT_RESOLUTION_MIN_DURATION_MSEC)),
+		OBJECT_RESOLUTION_MIN_DURATION_MSEC,
+		OBJECT_RESOLUTION_MAX_DURATION_MSEC
+	)
+	_object_resolution_tile = tile
+	_object_resolution_duration_sec = float(duration_msec) / 1000.0
+	_object_resolution_queued = _hero_movement_active
+	_object_resolution_active = not _object_resolution_queued
+	_sync_presentation_processing()
+	_invalidate_dynamic_layer("object_resolution_started")
 
 func set_placement_debug_overlay_enabled(enabled: bool) -> void:
 	if _placement_debug_overlay_enabled == enabled:
@@ -836,6 +905,7 @@ func _draw_dynamic_layer() -> void:
 			_draw_tile_focus(tile, rect)
 			_draw_tile_dynamic_icon(tile, rect)
 	_draw_hero_movement_presentation(board_rect)
+	_draw_object_resolution_presentation(board_rect)
 	_draw_canvas_item = previous_target
 	_profile_add("dynamic_tile_checks", tile_checks)
 	_profile_end("draw_dynamic", profile_start, {
@@ -1311,6 +1381,36 @@ func _hero_movement_draw_state(board_rect: Rect2) -> Dictionary:
 		"to_tile": to_tile,
 		"grounding_tile": from_tile if segment_progress < 0.5 else to_tile,
 	}
+
+func _draw_object_resolution_presentation(board_rect: Rect2) -> void:
+	if not _object_resolution_active or _object_resolution_duration_sec <= 0.0:
+		return
+	var rect := _tile_rect(board_rect, _object_resolution_tile)
+	var center := rect.get_center()
+	var extent := minf(rect.size.x, rect.size.y)
+	var progress := clampf(_object_resolution_elapsed_sec / _object_resolution_duration_sec, 0.0, 1.0)
+	var motion_progress := progress if _object_resolution_allows_large_motion else 0.35
+	var alpha := clampf(1.0 - progress * 0.72, 0.24, 1.0)
+	if _object_resolution_event_id == "overworld_object_captured":
+		var radius := extent * lerpf(0.26, 0.48, motion_progress)
+		var capture_color := Color(1.0, 0.78, 0.22, alpha)
+		_canvas_draw_circle(center, radius, capture_color, false, maxf(2.0, extent * 0.035), true)
+		_canvas_draw_circle(center, radius * 0.72, Color(1.0, 0.94, 0.62, alpha * 0.72), false, maxf(1.0, extent * 0.018), true)
+		var pole_top := center + Vector2(-extent * 0.12, -extent * 0.34)
+		var pole_bottom := center + Vector2(-extent * 0.12, extent * 0.28)
+		_canvas_draw_line(pole_top, pole_bottom, Color(0.28, 0.18, 0.08, alpha), maxf(2.0, extent * 0.026), true)
+		_canvas_draw_colored_polygon(PackedVector2Array([
+			pole_top,
+			pole_top + Vector2(extent * 0.30, extent * 0.08),
+			pole_top + Vector2(0.0, extent * 0.18),
+		]), Color(1.0, 0.70, 0.16, alpha))
+	else:
+		var radius := extent * lerpf(0.46, 0.24, motion_progress)
+		var depleted_color := Color(0.72, 0.86, 0.94, alpha)
+		_canvas_draw_circle(center, radius, depleted_color, false, maxf(2.0, extent * 0.032), true)
+		for direction in [Vector2(-1.0, -0.35), Vector2(-0.25, -1.0), Vector2(0.55, -0.85), Vector2(1.0, -0.15)]:
+			var particle_offset: Vector2 = direction.normalized() * extent * lerpf(0.12, 0.42, motion_progress)
+			_canvas_draw_circle(center + particle_offset, maxf(1.5, extent * 0.035), Color(0.88, 0.95, 1.0, alpha * 0.82))
 
 func _draw_resource_sprite(node: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
 	return _draw_object_sprite(_resource_asset_id(node), rect, remembered, _resource_object_profile(node), tile)
@@ -2771,6 +2871,7 @@ func validation_view_metrics() -> Dictionary:
 		},
 		"unit_art": validation_unit_art_summary(),
 		"hero_movement_presentation": validation_hero_movement_presentation(),
+		"object_resolution_presentation": validation_object_resolution_presentation(),
 	}
 
 func validation_hero_movement_presentation() -> Dictionary:
@@ -2802,6 +2903,26 @@ func validation_hero_movement_presentation() -> Dictionary:
 		"segment_from_tile": {"x": from_tile.x, "y": from_tile.y},
 		"segment_to_tile": {"x": to_tile.x, "y": to_tile.y},
 		"final_tile": {"x": _hero_tile.x, "y": _hero_tile.y},
+	}
+
+func validation_object_resolution_presentation() -> Dictionary:
+	var progress := 1.0
+	if (_object_resolution_active or _object_resolution_queued) and _object_resolution_duration_sec > 0.0:
+		progress = clampf(_object_resolution_elapsed_sec / _object_resolution_duration_sec, 0.0, 1.0)
+	return {
+		"serial": _object_resolution_last_serial,
+		"event_id": _object_resolution_event_id,
+		"active": _object_resolution_active,
+		"queued": _object_resolution_queued,
+		"family": _object_resolution_family,
+		"placement_id": _object_resolution_placement_id,
+		"tile": {"x": _object_resolution_tile.x, "y": _object_resolution_tile.y},
+		"animation_state": _object_resolution_animation_state,
+		"visual_policy": _object_resolution_visual_policy,
+		"fallback_tag": _object_resolution_fallback_tag,
+		"allows_large_motion": _object_resolution_allows_large_motion,
+		"duration_ms": int(round(_object_resolution_duration_sec * 1000.0)),
+		"progress": progress,
 	}
 
 func validation_color_cue_summary() -> Dictionary:
