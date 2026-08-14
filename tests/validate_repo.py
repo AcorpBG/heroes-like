@@ -136,6 +136,11 @@ OUTCOME_SCENE_PATH = ROOT / "scenes" / "results" / "ScenarioOutcomeShell.tscn"
 OUTCOME_SCRIPT_PATH = ROOT / "scenes" / "results" / "ScenarioOutcomeShell.gd"
 OUTCOME_SCENIC_BACKDROP_VIEW_PATH = ROOT / "scenes" / "results" / "OutcomeScenicBackdropView.gd"
 UNIT_ART_MANIFEST_PATH = CONTENT_DIR / "unit_art_manifest.json"
+HERO_ART_MANIFEST_PATH = CONTENT_DIR / "hero_art_manifest.json"
+HERO_ART_GENERATOR_PATH = ROOT / "tools" / "generate_hero_portrait_assets.py"
+HERO_ART_ROOT = ROOT / "art" / "heroes" / "portraits"
+HERO_PORTRAIT_MENU_REPORT_SCRIPT_PATH = ROOT / "tests" / "hero_portrait_menu_report.gd"
+HERO_PORTRAIT_MENU_REPORT_SCENE_PATH = ROOT / "tests" / "hero_portrait_menu_report.tscn"
 UNIT_ANIMATION_MANIFEST_PATH = CONTENT_DIR / "unit_animation_manifest.json"
 UNIT_ART_GENERATOR_PATH = ROOT / "tools" / "generate_unit_art_assets.py"
 UNIT_ART_REPRODUCIBILITY_REPORT_PATH = ROOT / "tests" / "unit_art_reproducibility_report.py"
@@ -27948,6 +27953,98 @@ def validate_neutral_dwelling_unit_slice(errors: list[str]) -> None:
         ensure(required_token in battle_text, errors, f"BattleRules.gd is missing neutral battle token {required_token}")
 
 
+def validate_hero_portrait_assets(errors: list[str]) -> None:
+    required_paths = (
+        CONTENT_DIR / "heroes.json",
+        HERO_ART_MANIFEST_PATH,
+        HERO_ART_GENERATOR_PATH,
+        CONTENT_SERVICE_PATH,
+        MAIN_MENU_SCRIPT_PATH,
+        MAIN_MENU_SCENE_PATH,
+        HERO_PORTRAIT_MENU_REPORT_SCRIPT_PATH,
+        HERO_PORTRAIT_MENU_REPORT_SCENE_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing hero portrait asset file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    heroes = items_index(load_json(CONTENT_DIR / "heroes.json"))
+    manifest = load_json(HERO_ART_MANIFEST_PATH)
+    ensure(int(manifest.get("schema_version", 0)) == 1, errors, "Hero art manifest must use schema version 1")
+    ensure(str(manifest.get("generator", "")) == "deterministic_hero_portrait_assets_v1", errors, "Hero art manifest must identify deterministic hero portrait generator v1")
+    ensure(str(manifest.get("source", "")) == "content/heroes.json", errors, "Hero art manifest must identify content/heroes.json as its source")
+    surface_size = manifest.get("surface_size", {})
+    ensure((int(surface_size.get("width", 0)), int(surface_size.get("height", 0))) == (384, 512), errors, "Hero portrait surface size must be 384x512")
+
+    records: dict[str, dict] = {}
+    duplicates: list[str] = []
+    for record in manifest.get("items", []):
+        if not isinstance(record, dict):
+            fail(errors, "Hero art manifest contains a non-object item")
+            continue
+        hero_id = str(record.get("hero_id", record.get("id", "")))
+        if not hero_id:
+            fail(errors, "Hero art manifest item is missing hero_id")
+            continue
+        if hero_id in records:
+            duplicates.append(hero_id)
+        records[hero_id] = record
+    ensure(not duplicates, errors, "Hero art manifest must not duplicate hero ids: " + ", ".join(sorted(set(duplicates))))
+    ensure(set(records) == set(heroes), errors, "Hero art manifest must cover every authored hero exactly once")
+    ensure(len(records) == 60, errors, "Hero art manifest must cover all 60 authored heroes")
+
+    portrait_paths: set[str] = set()
+    for hero_id, hero in heroes.items():
+        record = records.get(hero_id, {})
+        ensure(str(record.get("name", "")) == str(hero.get("name", "")), errors, f"Hero art name mismatch for {hero_id}")
+        ensure(str(record.get("faction_id", "")) == str(hero.get("faction_id", "")), errors, f"Hero art faction mismatch for {hero_id}")
+        ensure(str(record.get("archetype", "")) == str(hero.get("archetype", "")), errors, f"Hero art archetype mismatch for {hero_id}")
+        raw_path = str(record.get("portrait", ""))
+        ensure(raw_path == f"res://art/heroes/portraits/{hero_id}.png", errors, f"Hero art path must be exact for {hero_id}")
+        ensure(raw_path not in portrait_paths, errors, f"Hero art portrait path is reused: {raw_path}")
+        portrait_paths.add(raw_path)
+        disk_path = res_path_to_disk(raw_path)
+        ensure(disk_path.exists(), errors, f"Hero portrait is missing: {raw_path}")
+        if disk_path.exists():
+            ensure(png_size(disk_path) == (384, 512), errors, f"Hero portrait must be 384x512 PNG: {raw_path}")
+
+    generator_text = HERO_ART_GENERATOR_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "deterministic_hero_portrait_assets_v1",
+        "content/heroes.json",
+        "stable_int",
+        "draw_hero",
+        "faction_id",
+        "command_path",
+        "384, 512",
+    ):
+        ensure(required_token in generator_text, errors, f"Hero portrait generator is missing token {required_token}")
+
+    content_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
+    for required_token in ("HERO_ART_PATH", "func get_hero_art", "func _validate_hero_art_manifest"):
+        ensure(required_token in content_text, errors, f"ContentService.gd is missing hero art token {required_token}")
+
+    menu_text = MAIN_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "%CampaignCommanderPortrait",
+        "%SkirmishCommanderPortrait",
+        "func _set_commander_portrait",
+        "ContentService.get_hero_art",
+        "ResourceLoader.load(path, \"Texture2D\")",
+        "target.visible = false",
+        "campaign_commander_portrait_visible",
+        "skirmish_commander_portrait_visible",
+    ):
+        ensure(required_token in menu_text, errors, f"MainMenu.gd is missing hero portrait token {required_token}")
+    scene_text = MAIN_MENU_SCENE_PATH.read_text(encoding="utf-8")
+    for required_token in ("CampaignCommanderIdentity", "CampaignCommanderPortrait", "SkirmishCommanderIdentity", "SkirmishCommanderPortrait", "custom_minimum_size = Vector2(64, 86)", "stretch_mode = 5"):
+        ensure(required_token in scene_text, errors, f"MainMenu.tscn is missing hero portrait token {required_token}")
+    report_text = HERO_PORTRAIT_MENU_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in ("HERO_PORTRAIT_MENU_REPORT", "hero_ids.size() != 60", "campaign_commander_portrait_path", "skirmish_commander_portrait_path", "texture.get_width() != 384", "texture.get_height() != 512"):
+        ensure(required_token in report_text, errors, f"Hero portrait menu report is missing token {required_token}")
+
+
 def validate_unit_art_assets(errors: list[str]) -> None:
     required_paths = (
         CONTENT_DIR / "units.json",
@@ -36035,6 +36132,7 @@ def main() -> int:
     validate_overworld_object_content_batch_001(errors)
     validate_overworld_art_asset_slice(errors)
     validate_neutral_dwelling_unit_slice(errors)
+    validate_hero_portrait_assets(errors)
     validate_unit_art_assets(errors)
     validate_six_faction_biome_scenario_breadth(errors)
     validate_town_frontline_reinforcement_delivery(errors)

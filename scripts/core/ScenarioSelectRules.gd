@@ -444,6 +444,7 @@ static func build_skirmish_setup(scenario_id: String, difficulty_id: String) -> 
 
 	return {
 		"scenario_id": scenario_id,
+		"hero_id": String(hero.get("id", scenario.get("hero_id", ""))),
 		"scenario_name": String(scenario.get("name", scenario_id)),
 		"summary": String(selection.get("summary", "")),
 		"difficulty": normalized_difficulty,

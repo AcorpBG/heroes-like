@@ -1,0 +1,491 @@
+{
+  "schema_version": 1,
+  "generator": "deterministic_hero_portrait_assets_v1",
+  "source": "content/heroes.json",
+  "surface_size": {
+    "width": 384,
+    "height": 512
+  },
+  "items": [
+    {
+      "id": "hero_lyra",
+      "hero_id": "hero_lyra",
+      "name": "Lyra Emberwell",
+      "faction_id": "faction_embercourt",
+      "archetype": "pathfinder",
+      "portrait": "res://art/heroes/portraits/hero_lyra.png"
+    },
+    {
+      "id": "hero_caelen",
+      "hero_id": "hero_caelen",
+      "name": "Caelen Ashgrove",
+      "faction_id": "faction_embercourt",
+      "archetype": "warden",
+      "portrait": "res://art/heroes/portraits/hero_caelen.png"
+    },
+    {
+      "id": "hero_mira",
+      "hero_id": "hero_mira",
+      "name": "Mira Flintmere",
+      "faction_id": "faction_embercourt",
+      "archetype": "marshal",
+      "portrait": "res://art/heroes/portraits/hero_mira.png"
+    },
+    {
+      "id": "hero_seren",
+      "hero_id": "hero_seren",
+      "name": "Seren Valechant",
+      "faction_id": "faction_embercourt",
+      "archetype": "starseer",
+      "portrait": "res://art/heroes/portraits/hero_seren.png"
+    },
+    {
+      "id": "hero_torren",
+      "hero_id": "hero_torren",
+      "name": "Torren Pikeward",
+      "faction_id": "faction_embercourt",
+      "archetype": "castellan",
+      "portrait": "res://art/heroes/portraits/hero_torren.png"
+    },
+    {
+      "id": "hero_vaska",
+      "hero_id": "hero_vaska",
+      "name": "Vaska Reedmaw",
+      "faction_id": "faction_mireclaw",
+      "archetype": "raider",
+      "portrait": "res://art/heroes/portraits/hero_vaska.png"
+    },
+    {
+      "id": "hero_sable",
+      "hero_id": "hero_sable",
+      "name": "Sable Muckscribe",
+      "faction_id": "faction_mireclaw",
+      "archetype": "hexcaller",
+      "portrait": "res://art/heroes/portraits/hero_sable.png"
+    },
+    {
+      "id": "hero_tarn",
+      "hero_id": "hero_tarn",
+      "name": "Tarn Fenhook",
+      "faction_id": "faction_mireclaw",
+      "archetype": "warrenhunter",
+      "portrait": "res://art/heroes/portraits/hero_tarn.png"
+    },
+    {
+      "id": "hero_orrik",
+      "hero_id": "hero_orrik",
+      "name": "Orrik Tollreaver",
+      "faction_id": "faction_mireclaw",
+      "archetype": "packlord",
+      "portrait": "res://art/heroes/portraits/hero_orrik.png"
+    },
+    {
+      "id": "hero_solera",
+      "hero_id": "hero_solera",
+      "name": "Solera Prismarch",
+      "faction_id": "faction_sunvault",
+      "archetype": "marshal",
+      "portrait": "res://art/heroes/portraits/hero_solera.png"
+    },
+    {
+      "id": "hero_neral",
+      "hero_id": "hero_neral",
+      "name": "Neral Glasswind",
+      "faction_id": "faction_sunvault",
+      "archetype": "starseer",
+      "portrait": "res://art/heroes/portraits/hero_neral.png"
+    },
+    {
+      "id": "hero_varis",
+      "hero_id": "hero_varis",
+      "name": "Varis Mirrorstep",
+      "faction_id": "faction_sunvault",
+      "archetype": "outrider",
+      "portrait": "res://art/heroes/portraits/hero_varis.png"
+    },
+    {
+      "id": "hero_thalen",
+      "hero_id": "hero_thalen",
+      "name": "Thalen Choirward",
+      "faction_id": "faction_sunvault",
+      "archetype": "castellan",
+      "portrait": "res://art/heroes/portraits/hero_thalen.png"
+    },
+    {
+      "id": "hero_embercourt_helva_tollbrand",
+      "hero_id": "hero_embercourt_helva_tollbrand",
+      "name": "Helva Tollbrand",
+      "faction_id": "faction_embercourt",
+      "archetype": "roadwarden",
+      "portrait": "res://art/heroes/portraits/hero_embercourt_helva_tollbrand.png"
+    },
+    {
+      "id": "hero_embercourt_saren_lockmaster",
+      "hero_id": "hero_embercourt_saren_lockmaster",
+      "name": "Saren Lockmaster",
+      "faction_id": "faction_embercourt",
+      "archetype": "siegelock",
+      "portrait": "res://art/heroes/portraits/hero_embercourt_saren_lockmaster.png"
+    },
+    {
+      "id": "hero_embercourt_orra_cinderquill",
+      "hero_id": "hero_embercourt_orra_cinderquill",
+      "name": "Orra Cinderquill",
+      "faction_id": "faction_embercourt",
+      "archetype": "ashwrit",
+      "portrait": "res://art/heroes/portraits/hero_embercourt_orra_cinderquill.png"
+    },
+    {
+      "id": "hero_embercourt_belis_rainledger",
+      "hero_id": "hero_embercourt_belis_rainledger",
+      "name": "Belis Rainledger",
+      "faction_id": "faction_embercourt",
+      "archetype": "granary",
+      "portrait": "res://art/heroes/portraits/hero_embercourt_belis_rainledger.png"
+    },
+    {
+      "id": "hero_embercourt_jorun_beaconscribe",
+      "hero_id": "hero_embercourt_jorun_beaconscribe",
+      "name": "Jorun Beaconscribe",
+      "faction_id": "faction_embercourt",
+      "archetype": "beaconscribe",
+      "portrait": "res://art/heroes/portraits/hero_embercourt_jorun_beaconscribe.png"
+    },
+    {
+      "id": "hero_mireclaw_kessa_chainboom",
+      "hero_id": "hero_mireclaw_kessa_chainboom",
+      "name": "Kessa Chainboom",
+      "faction_id": "faction_mireclaw",
+      "archetype": "chainbreaker",
+      "portrait": "res://art/heroes/portraits/hero_mireclaw_kessa_chainboom.png"
+    },
+    {
+      "id": "hero_mireclaw_brakka_mudkeel",
+      "hero_id": "hero_mireclaw_brakka_mudkeel",
+      "name": "Brakka Mudkeel",
+      "faction_id": "faction_mireclaw",
+      "archetype": "bogplate",
+      "portrait": "res://art/heroes/portraits/hero_mireclaw_brakka_mudkeel.png"
+    },
+    {
+      "id": "hero_mireclaw_nix_votivejaw",
+      "hero_id": "hero_mireclaw_nix_votivejaw",
+      "name": "Nix Votivejaw",
+      "faction_id": "faction_mireclaw",
+      "archetype": "shrinebiter",
+      "portrait": "res://art/heroes/portraits/hero_mireclaw_nix_votivejaw.png"
+    },
+    {
+      "id": "hero_mireclaw_edda_rotlamp",
+      "hero_id": "hero_mireclaw_edda_rotlamp",
+      "name": "Edda Rotlamp",
+      "faction_id": "faction_mireclaw",
+      "archetype": "sporewake",
+      "portrait": "res://art/heroes/portraits/hero_mireclaw_edda_rotlamp.png"
+    },
+    {
+      "id": "hero_mireclaw_pell_reedscript",
+      "hero_id": "hero_mireclaw_pell_reedscript",
+      "name": "Pell Reedscript",
+      "faction_id": "faction_mireclaw",
+      "archetype": "denaugur",
+      "portrait": "res://art/heroes/portraits/hero_mireclaw_pell_reedscript.png"
+    },
+    {
+      "id": "hero_mireclaw_zhorra_fenwake",
+      "hero_id": "hero_mireclaw_zhorra_fenwake",
+      "name": "Zhorra Fenwake",
+      "faction_id": "faction_mireclaw",
+      "archetype": "drumoracle",
+      "portrait": "res://art/heroes/portraits/hero_mireclaw_zhorra_fenwake.png"
+    },
+    {
+      "id": "hero_sunvault_ilyr_glassmarshal",
+      "hero_id": "hero_sunvault_ilyr_glassmarshal",
+      "name": "Ilyr Glassmarshal",
+      "faction_id": "faction_sunvault",
+      "archetype": "batterycaptain",
+      "portrait": "res://art/heroes/portraits/hero_sunvault_ilyr_glassmarshal.png"
+    },
+    {
+      "id": "hero_sunvault_dovan_lenscaptain",
+      "hero_id": "hero_sunvault_dovan_lenscaptain",
+      "name": "Dovan Lens-Captain",
+      "faction_id": "faction_sunvault",
+      "archetype": "relaysurveyor",
+      "portrait": "res://art/heroes/portraits/hero_sunvault_dovan_lenscaptain.png"
+    },
+    {
+      "id": "hero_sunvault_renn_facetlane",
+      "hero_id": "hero_sunvault_renn_facetlane",
+      "name": "Renn Facetlane",
+      "faction_id": "faction_sunvault",
+      "archetype": "duelline",
+      "portrait": "res://art/heroes/portraits/hero_sunvault_renn_facetlane.png"
+    },
+    {
+      "id": "hero_sunvault_essa_daynote",
+      "hero_id": "hero_sunvault_essa_daynote",
+      "name": "Essa Daynote",
+      "faction_id": "faction_sunvault",
+      "archetype": "harmonicscholar",
+      "portrait": "res://art/heroes/portraits/hero_sunvault_essa_daynote.png"
+    },
+    {
+      "id": "hero_sunvault_calis_sunvein",
+      "hero_id": "hero_sunvault_calis_sunvein",
+      "name": "Calis Sunvein",
+      "faction_id": "faction_sunvault",
+      "archetype": "solarphysician",
+      "portrait": "res://art/heroes/portraits/hero_sunvault_calis_sunvein.png"
+    },
+    {
+      "id": "hero_sunvault_mirro_halometer",
+      "hero_id": "hero_sunvault_mirro_halometer",
+      "name": "Mirro Halometer",
+      "faction_id": "faction_sunvault",
+      "archetype": "calibration",
+      "portrait": "res://art/heroes/portraits/hero_sunvault_mirro_halometer.png"
+    },
+    {
+      "id": "hero_thornwake_ardren_briarmarshal",
+      "hero_id": "hero_thornwake_ardren_briarmarshal",
+      "name": "Ardren Briar-Marshal",
+      "faction_id": "faction_thornwake",
+      "archetype": "briarmarshal",
+      "portrait": "res://art/heroes/portraits/hero_thornwake_ardren_briarmarshal.png"
+    },
+    {
+      "id": "hero_thornwake_tova_rootwright",
+      "hero_id": "hero_thornwake_tova_rootwright",
+      "name": "Tova Rootwright",
+      "faction_id": "faction_thornwake",
+      "archetype": "rootwright",
+      "portrait": "res://art/heroes/portraits/hero_thornwake_tova_rootwright.png"
+    },
+    {
+      "id": "hero_thornwake_halen_thorncart",
+      "hero_id": "hero_thornwake_halen_thorncart",
+      "name": "Halen Thorncart",
+      "faction_id": "faction_thornwake",
+      "archetype": "pilgrimcaptain",
+      "portrait": "res://art/heroes/portraits/hero_thornwake_halen_thorncart.png"
+    },
+    {
+      "id": "hero_thornwake_merek_greenbarrow",
+      "hero_id": "hero_thornwake_merek_greenbarrow",
+      "name": "Merek Greenbarrow",
+      "faction_id": "faction_thornwake",
+      "archetype": "recoverywarden",
+      "portrait": "res://art/heroes/portraits/hero_thornwake_merek_greenbarrow.png"
+    },
+    {
+      "id": "hero_thornwake_silsa_bramblehound",
+      "hero_id": "hero_thornwake_silsa_bramblehound",
+      "name": "Silsa Bramble-Hound",
+      "faction_id": "faction_thornwake",
+      "archetype": "huntleader",
+      "portrait": "res://art/heroes/portraits/hero_thornwake_silsa_bramblehound.png"
+    },
+    {
+      "id": "hero_thornwake_veyra_seedseer",
+      "hero_id": "hero_thornwake_veyra_seedseer",
+      "name": "Veyra Seedseer",
+      "faction_id": "faction_thornwake",
+      "archetype": "rootoracle",
+      "portrait": "res://art/heroes/portraits/hero_thornwake_veyra_seedseer.png"
+    },
+    {
+      "id": "hero_thornwake_osmund_pollenglass",
+      "hero_id": "hero_thornwake_osmund_pollenglass",
+      "name": "Osmund Pollenglass",
+      "faction_id": "faction_thornwake",
+      "archetype": "sporedoctor",
+      "portrait": "res://art/heroes/portraits/hero_thornwake_osmund_pollenglass.png"
+    },
+    {
+      "id": "hero_thornwake_elian_loamchant",
+      "hero_id": "hero_thornwake_elian_loamchant",
+      "name": "Elian Loamchant",
+      "faction_id": "faction_thornwake",
+      "archetype": "loamsinger",
+      "portrait": "res://art/heroes/portraits/hero_thornwake_elian_loamchant.png"
+    },
+    {
+      "id": "hero_thornwake_ralka_mossvein",
+      "hero_id": "hero_thornwake_ralka_mossvein",
+      "name": "Ralka Mossvein",
+      "faction_id": "faction_thornwake",
+      "archetype": "mossmemory",
+      "portrait": "res://art/heroes/portraits/hero_thornwake_ralka_mossvein.png"
+    },
+    {
+      "id": "hero_thornwake_nara_graftsibyl",
+      "hero_id": "hero_thornwake_nara_graftsibyl",
+      "name": "Nara Graft-Sibyl",
+      "faction_id": "faction_thornwake",
+      "archetype": "graftprophet",
+      "portrait": "res://art/heroes/portraits/hero_thornwake_nara_graftsibyl.png"
+    },
+    {
+      "id": "hero_brasshollow_marka_ironclause",
+      "hero_id": "hero_brasshollow_marka_ironclause",
+      "name": "Marka Ironclause",
+      "faction_id": "faction_brasshollow",
+      "archetype": "contractmarshal",
+      "portrait": "res://art/heroes/portraits/hero_brasshollow_marka_ironclause.png"
+    },
+    {
+      "id": "hero_brasshollow_oren_bellfounder",
+      "hero_id": "hero_brasshollow_oren_bellfounder",
+      "name": "Oren Bellfounder",
+      "faction_id": "faction_brasshollow",
+      "archetype": "siegecaptain",
+      "portrait": "res://art/heroes/portraits/hero_brasshollow_oren_bellfounder.png"
+    },
+    {
+      "id": "hero_brasshollow_kuld_varn",
+      "hero_id": "hero_brasshollow_kuld_varn",
+      "name": "Kuld Varn",
+      "faction_id": "faction_brasshollow",
+      "archetype": "railhead",
+      "portrait": "res://art/heroes/portraits/hero_brasshollow_kuld_varn.png"
+    },
+    {
+      "id": "hero_brasshollow_selka_pitmarshal",
+      "hero_id": "hero_brasshollow_selka_pitmarshal",
+      "name": "Selka Pitmarshal",
+      "faction_id": "faction_brasshollow",
+      "archetype": "pitmarshal",
+      "portrait": "res://art/heroes/portraits/hero_brasshollow_selka_pitmarshal.png"
+    },
+    {
+      "id": "hero_brasshollow_daxis_chaincaptain",
+      "hero_id": "hero_brasshollow_daxis_chaincaptain",
+      "name": "Daxis Chain-Captain",
+      "faction_id": "faction_brasshollow",
+      "archetype": "pavisforeman",
+      "portrait": "res://art/heroes/portraits/hero_brasshollow_daxis_chaincaptain.png"
+    },
+    {
+      "id": "hero_brasshollow_vellum_quench",
+      "hero_id": "hero_brasshollow_vellum_quench",
+      "name": "Vellum Quench",
+      "faction_id": "faction_brasshollow",
+      "archetype": "heatrice",
+      "portrait": "res://art/heroes/portraits/hero_brasshollow_vellum_quench.png"
+    },
+    {
+      "id": "hero_brasshollow_odrik_heatpriest",
+      "hero_id": "hero_brasshollow_odrik_heatpriest",
+      "name": "Odrik Heatpriest",
+      "faction_id": "faction_brasshollow",
+      "archetype": "furnacechaplain",
+      "portrait": "res://art/heroes/portraits/hero_brasshollow_odrik_heatpriest.png"
+    },
+    {
+      "id": "hero_brasshollow_lina_gaugesavant",
+      "hero_id": "hero_brasshollow_lina_gaugesavant",
+      "name": "Lina Gauge-Savant",
+      "faction_id": "faction_brasshollow",
+      "archetype": "pressuremath",
+      "portrait": "res://art/heroes/portraits/hero_brasshollow_lina_gaugesavant.png"
+    },
+    {
+      "id": "hero_brasshollow_harro_debtrune",
+      "hero_id": "hero_brasshollow_harro_debtrune",
+      "name": "Harro Debt-Rune",
+      "faction_id": "faction_brasshollow",
+      "archetype": "clausemage",
+      "portrait": "res://art/heroes/portraits/hero_brasshollow_harro_debtrune.png"
+    },
+    {
+      "id": "hero_brasshollow_pava_ashmeter",
+      "hero_id": "hero_brasshollow_pava_ashmeter",
+      "name": "Pava Ashmeter",
+      "faction_id": "faction_brasshollow",
+      "archetype": "slagalchemist",
+      "portrait": "res://art/heroes/portraits/hero_brasshollow_pava_ashmeter.png"
+    },
+    {
+      "id": "hero_veilmourn_ivara_blacktide",
+      "hero_id": "hero_veilmourn_ivara_blacktide",
+      "name": "Ivara Blacktide",
+      "faction_id": "faction_veilmourn",
+      "archetype": "admiral",
+      "portrait": "res://art/heroes/portraits/hero_veilmourn_ivara_blacktide.png"
+    },
+    {
+      "id": "hero_veilmourn_ruln_vanehook",
+      "hero_id": "hero_veilmourn_ruln_vanehook",
+      "name": "Ruln Vanehook",
+      "faction_id": "faction_veilmourn",
+      "archetype": "harpooncaptain",
+      "portrait": "res://art/heroes/portraits/hero_veilmourn_ruln_vanehook.png"
+    },
+    {
+      "id": "hero_veilmourn_cela_mistcorsair",
+      "hero_id": "hero_veilmourn_cela_mistcorsair",
+      "name": "Cela Mist-Corsair",
+      "faction_id": "faction_veilmourn",
+      "archetype": "backlineraider",
+      "portrait": "res://art/heroes/portraits/hero_veilmourn_cela_mistcorsair.png"
+    },
+    {
+      "id": "hero_veilmourn_damar_oriflag",
+      "hero_id": "hero_veilmourn_damar_oriflag",
+      "name": "Damar Oriflag",
+      "faction_id": "faction_veilmourn",
+      "archetype": "signalthief",
+      "portrait": "res://art/heroes/portraits/hero_veilmourn_damar_oriflag.png"
+    },
+    {
+      "id": "hero_veilmourn_jessa_keelwarden",
+      "hero_id": "hero_veilmourn_jessa_keelwarden",
+      "name": "Jessa Keelwarden",
+      "faction_id": "faction_veilmourn",
+      "archetype": "fleetdefender",
+      "portrait": "res://art/heroes/portraits/hero_veilmourn_jessa_keelwarden.png"
+    },
+    {
+      "id": "hero_veilmourn_morwen_wakeoracle",
+      "hero_id": "hero_veilmourn_morwen_wakeoracle",
+      "name": "Morwen Wakeoracle",
+      "faction_id": "faction_veilmourn",
+      "archetype": "fogprophet",
+      "portrait": "res://art/heroes/portraits/hero_veilmourn_morwen_wakeoracle.png"
+    },
+    {
+      "id": "hero_veilmourn_thir_obituaryink",
+      "hero_id": "hero_veilmourn_thir_obituaryink",
+      "name": "Thir Obituary-Ink",
+      "faction_id": "faction_veilmourn",
+      "archetype": "memoryscribe",
+      "portrait": "res://art/heroes/portraits/hero_veilmourn_thir_obituaryink.png"
+    },
+    {
+      "id": "hero_veilmourn_sael_mirrorbell",
+      "hero_id": "hero_veilmourn_sael_mirrorbell",
+      "name": "Sael Mirrorbell",
+      "faction_id": "faction_veilmourn",
+      "archetype": "mirrornavigator",
+      "portrait": "res://art/heroes/portraits/hero_veilmourn_sael_mirrorbell.png"
+    },
+    {
+      "id": "hero_veilmourn_nacre_vowless",
+      "hero_id": "hero_veilmourn_nacre_vowless",
+      "name": "Nacre Vowless",
+      "faction_id": "faction_veilmourn",
+      "archetype": "funeralhexer",
+      "portrait": "res://art/heroes/portraits/hero_veilmourn_nacre_vowless.png"
+    },
+    {
+      "id": "hero_veilmourn_orso_nightchart",
+      "hero_id": "hero_veilmourn_orso_nightchart",
+      "name": "Orso Nightchart",
+      "faction_id": "faction_veilmourn",
+      "archetype": "routediviner",
+      "portrait": "res://art/heroes/portraits/hero_veilmourn_orso_nightchart.png"
+    }
+  ]
+}

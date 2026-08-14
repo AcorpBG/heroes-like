@@ -5,6 +5,7 @@ const CONTENT_DIR := "res://content"
 const SCENARIOS_PATH := "%s/scenarios.json" % CONTENT_DIR
 const ENCOUNTERS_PATH := "%s/encounters.json" % CONTENT_DIR
 const HEROES_PATH := "%s/heroes.json" % CONTENT_DIR
+const HERO_ART_PATH := "%s/hero_art_manifest.json" % CONTENT_DIR
 const FACTIONS_PATH := "%s/factions.json" % CONTENT_DIR
 const UNITS_PATH := "%s/units.json" % CONTENT_DIR
 const UNIT_ART_PATH := "%s/unit_art_manifest.json" % CONTENT_DIR
@@ -90,6 +91,17 @@ func get_faction(id: String) -> Dictionary:
 
 func get_hero(id: String) -> Dictionary:
 	return get_content_by_id(HEROES_PATH, id)
+
+func get_hero_art(id: String) -> Dictionary:
+	var raw := load_json(HERO_ART_PATH)
+	if raw.is_empty():
+		return {}
+	for item in _items_from_raw(raw):
+		if not (item is Dictionary):
+			continue
+		if String(item.get("hero_id", item.get("id", ""))) == id:
+			return item
+	return {}
 
 func get_unit(id: String) -> Dictionary:
 	return get_content_by_id(UNITS_PATH, id)
@@ -307,6 +319,16 @@ func _index_unit_art_items(items: Array) -> Dictionary:
 			index[unit_id] = item
 	return index
 
+func _index_hero_art_items(items: Array) -> Dictionary:
+	var index := {}
+	for item in items:
+		if not (item is Dictionary):
+			continue
+		var hero_id := String(item.get("hero_id", item.get("id", "")))
+		if hero_id != "":
+			index[hero_id] = item
+	return index
+
 func _map_object_footprint_area(item: Dictionary) -> int:
 	var footprint = item.get("footprint", {})
 	if not (footprint is Dictionary):
@@ -316,6 +338,7 @@ func _map_object_footprint_area(item: Dictionary) -> int:
 func _validate_content() -> void:
 	var faction_index := _index_items(_items_from_raw(load_json(FACTIONS_PATH)))
 	var hero_index := _index_items(_items_from_raw(load_json(HEROES_PATH)))
+	var hero_art_index := _index_hero_art_items(_items_from_raw(load_json(HERO_ART_PATH)))
 	var unit_index := _index_items(_items_from_raw(load_json(UNITS_PATH)))
 	var unit_art_index := _index_unit_art_items(_items_from_raw(load_json(UNIT_ART_PATH)))
 	var unit_animation_raw := load_json(UNIT_ANIMATION_PATH)
@@ -358,6 +381,7 @@ func _validate_content() -> void:
 		_validate_faction(faction, town_index, hero_index)
 	for hero in hero_index.values():
 		_validate_hero(hero, faction_index, spell_index)
+	_validate_hero_art_manifest(hero_index, hero_art_index)
 	for unit in unit_index.values():
 		_validate_unit(unit, faction_index)
 	_validate_unit_art_manifest(unit_index, unit_art_index)
@@ -977,6 +1001,21 @@ func _validate_unit(unit: Dictionary, faction_index: Dictionary) -> void:
 		push_warning("Unit %s must define hp > 0." % unit_id)
 	if int(unit.get("max_damage", 0)) <= 0:
 		push_warning("Unit %s must define max_damage > 0." % unit_id)
+
+func _validate_hero_art_manifest(hero_index: Dictionary, hero_art_index: Dictionary) -> void:
+	for hero_id in hero_index.keys():
+		if not hero_art_index.has(hero_id):
+			push_warning("Hero art manifest is missing hero %s." % hero_id)
+			continue
+		var record: Dictionary = hero_art_index.get(hero_id, {})
+		var path := String(record.get("portrait", ""))
+		if path == "" or not path.begins_with("res://"):
+			push_warning("Hero art %s must define portrait as a res:// path." % hero_id)
+		elif not ResourceLoader.exists(path):
+			push_warning("Hero art %s portrait file is missing: %s." % [hero_id, path])
+	for hero_id in hero_art_index.keys():
+		if not hero_index.has(hero_id):
+			push_warning("Hero art manifest references unknown hero %s." % hero_id)
 
 func _validate_unit_art_manifest(unit_index: Dictionary, unit_art_index: Dictionary) -> void:
 	for unit_id in unit_index.keys():

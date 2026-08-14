@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Outcome scenic epilogue slice is complete. Victory and defeat use distinct original full-screen scenery with exact cover crop, translucent existing surfaces, a compact action dock, and flat-palette fallback; focused behavior, compatibility, the 121-step campaign, static/editor, and bounded Linux/Windows startup gates pass.",
+  "currentNotes": "The authored hero portrait pipeline is complete. All 60 heroes have unique deterministic 384x512 assets, and Campaign/Skirmish commander cards render the exact selected hero while preserving existing text, actions, focus, and launch authority.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-scenario-outcome-scenic-epilogue-stage-10184",
-  "currentSliceId": "presentation-scenario-outcome-scenic-epilogue-stage-10184",
-  "currentSliceNotes": "Completed with two original 1600x900 panoramas, focused 1280x720 and 1920x1080 live proof, exact Outcome authority, compatibility, the 121-step routed campaign, repository/editor validation, and bounded official Linux/Windows export-startup evidence.",
+  "currentSlice": "presentation-authored-hero-portrait-pipeline-10184",
+  "currentSliceId": "presentation-authored-hero-portrait-pipeline-10184",
+  "currentSliceNotes": "Completed with 60 unique authored-hero portrait assets, exact manifest and ContentService ownership, selected-hero Campaign/Skirmish rendering, focused and compatibility proof, and bounded Linux/Windows export-startup evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Scenario Outcome Scenic Epilogue Stage",
-  "currentSliceUpdatedAt": "2026-08-14T14:29:07Z",
+  "currentSliceTitle": "Authored Hero Portrait Pipeline",
+  "currentSliceUpdatedAt": "2026-08-14T17:02:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -78842,6 +78842,29 @@
       "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
       "blockedReason": null,
       "result": {"scenic_backdrop_count": 2, "backdrop_dimensions": [1600, 900], "mapped_statuses": ["victory", "defeat"], "flat_fallback_preserved": true, "focused_viewports": [[1280, 720], [1920, 1080]], "scenic_window_min_area_ratio": 0.25, "actions_panel_max_bottom_ratio": 0.65, "focused_smoke_passed": true, "visual_inspection_passed": true, "normal_entry_focus_passed": true, "new_session_safe_cancel_passed": true, "outcome_recovery_passed": true, "active_play_focus_passed": true, "core_passed": true, "full_arc_ok": true, "full_arc_step_count": 121, "full_arc_last_step": "campaign_arc_completed_browser", "linux_export_headless_startup_passed": true, "windows_export_fresh_wine_startup_passed": true, "packaged_texture_count": 2}
+    },
+    {
+      "id": "presentation-authored-hero-portrait-pipeline-10184",
+      "title": "Authored Hero Portrait Pipeline",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "AGENTS.md"],
+      "purpose": "Give all authored commanders unique data-driven portrait assets and render the selected hero in the existing Campaign and Skirmish commander previews without changing selection, launch, progression, or save authority.",
+      "implementationTargets": ["art/heroes/portraits/", "content/hero_art_manifest.json", "tools/generate_hero_portrait_assets.py", "scripts/autoload/ContentService.gd", "scripts/core/ScenarioSelectRules.gd", "scenes/menus/MainMenu.gd", "scenes/menus/MainMenu.tscn", "tests/hero_portrait_menu_report.gd", "tests/player_facing_campaign_menu_smoke.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "testOwners": ["tests/hero_portrait_menu_report.gd", "tests/player_facing_campaign_menu_smoke.gd", "tests/main_menu_keyboard_navigation_smoke.gd", "tests/core_systems_regression_smoke.tscn", "tests/validate_repo.py"],
+      "baseline": {"head": "f0eac2e2b0af9a4b351d1a6aaf91572ac09d62a8", "authored_hero_count": 60, "hero_art_manifest_present": false, "hero_portrait_asset_count": 0, "campaign_commander_renderer": "text_only", "skirmish_commander_renderer": "text_only"},
+      "completionCriteria": ["Every authored hero has one unique deterministic 384x512 PNG and exact manifest record", "ContentService validates and loads the complete hero-art domain while missing assets fail safely", "Campaign and Skirmish show the selected hero portrait beside unchanged commander text at 1280x720 and 1920x1080", "Selection, scrolling, containment, focus, keyboard/controller navigation, launch, storage, session, core, repository, and editor authority pass"],
+      "nonGoals": ["hero gameplay, stats, spells, artifacts, armies, progression, scenario, campaign, skirmish, save schema/version, unit art, animation, combat, AI, balance, map, or Native RMG changes", "other-screen redesign, global theme or UI scale changes", "packaged menu interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claims"],
+      "createdAt": "2026-08-14T16:10:00Z",
+      "startedAt": "2026-08-14T16:10:00Z",
+      "updatedAt": "2026-08-14T17:02:00Z",
+      "completedAt": "2026-08-14T17:02:00Z",
+      "notes": "Production now ships one unique deterministic original 384x512 portrait for each of the 60 authored heroes. The exact manifest and ContentService loader are data-driven and fail safely when art is absent. Campaign and Skirmish commander cards load the selected hero portrait beside the unchanged compact text; focused all-roster loading, Campaign two-size containment and launch authority, keyboard/controller navigation, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. The inspected six-faction lead contact sheet is visually distinct. No packaged portrait interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claim is made.",
+      "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null,
+      "result": {"authored_hero_count": 60, "unique_portrait_count": 60, "portrait_dimensions": [384, 512], "campaign_portrait_exact": true, "skirmish_portrait_exact": true, "focused_report_passed": true, "campaign_menu_passed": true, "keyboard_navigation_passed": true, "core_passed": true, "repository_validation_passed": true, "editor_parse_passed": true, "linux_export_headless_startup_passed": true, "windows_export_fresh_wine_startup_passed": true}
     }
   ],
   "project": "heroes-like",
