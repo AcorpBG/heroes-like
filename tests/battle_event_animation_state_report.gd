@@ -29,6 +29,7 @@ func _run() -> void:
 	SettingsService.apply_settings()
 	_validate_fallback_states()
 	_validate_core_vfx_asset_manifest()
+	_validate_spell_vfx_asset_surface()
 	_validate_defend_state()
 	_validate_move_state()
 	await _validate_melee_hit_state()
@@ -44,6 +45,7 @@ func _run() -> void:
 	await _validate_board_runtime_summary()
 	if OS.get_environment("HEROES_BATTLE_VFX_CAPTURE") == "1":
 		await _validate_imported_vfx_live_viewports()
+		await _validate_spell_vfx_live_viewports()
 	await _validate_battle_audio_mix_policy()
 	await _validate_board_playback_lifecycle()
 	await _validate_presentation_event_stream_contract()
@@ -80,18 +82,73 @@ func _validate_core_vfx_asset_manifest() -> void:
 	var summary: Dictionary = view.validation_vfx_asset_summary()
 	_expect_equal("battle vfx manifest schema", String(summary.get("schema_id", "")), "battle_vfx_manifest_v1")
 	_expect_equal("battle vfx manifest path", String(summary.get("manifest_path", "")), "res://content/battle_vfx_manifest.json")
-	_expect_int("battle vfx mapped cue count", int(summary.get("mapped_cue_count", -1)), 8)
-	_expect_int("battle vfx unique texture count", int(summary.get("unique_texture_count", -1)), 3)
-	_expect_int("battle vfx loaded texture count", int(summary.get("loaded_texture_count", -1)), 3)
+	_expect_int("battle vfx mapped cue count", int(summary.get("mapped_cue_count", -1)), 15)
+	_expect_int("battle vfx unique texture count", int(summary.get("unique_texture_count", -1)), 10)
+	_expect_int("battle vfx loaded texture count", int(summary.get("loaded_texture_count", -1)), 10)
 	_expect_equal("battle vfx missing texture paths", JSON.stringify(summary.get("missing_texture_paths", [])), "[]")
 	for expected_path in [
 		"res://art/battle/vfx/core_projectile_impact.png",
 		"res://art/battle/vfx/core_slash_arc.png",
 		"res://art/battle/vfx/core_ward_ring.png",
+		"res://art/battle/vfx/spell_cinder_burst.png",
+		"res://art/battle/vfx/spell_coal_rain.png",
+		"res://art/battle/vfx/spell_sunlance_arc.png",
+		"res://art/battle/vfx/spell_briar_bind.png",
+		"res://art/battle/vfx/spell_graft_mend.png",
+		"res://art/battle/vfx/spell_prism_bastion.png",
+		"res://art/battle/vfx/spell_command_ward.png",
 	]:
 		_expect_array_contains("battle vfx imported texture", summary.get("loaded_texture_paths", []), expected_path)
 	view.queue_free()
 	_report["cases"]["core_vfx_assets"] = summary
+
+func _validate_spell_vfx_asset_surface() -> void:
+	var cue_paths := {
+		"vfx_spell_cinder_burst": "res://art/battle/vfx/spell_cinder_burst.png",
+		"vfx_spell_coal_rain": "res://art/battle/vfx/spell_coal_rain.png",
+		"vfx_spell_sunlance_arc": "res://art/battle/vfx/spell_sunlance_arc.png",
+		"vfx_spell_briar_bind": "res://art/battle/vfx/spell_briar_bind.png",
+		"vfx_spell_graft_mend": "res://art/battle/vfx/spell_graft_mend.png",
+		"vfx_spell_prism_bastion": "res://art/battle/vfx/spell_prism_bastion.png",
+		"vfx_spell_command_ward": "res://art/battle/vfx/spell_command_ward.png",
+	}
+	var cue_ids: Array = cue_paths.keys()
+	var session := _basic_session("unit_river_guard", "unit_bog_brute", 3, 3, 7, 3)
+	var view := BattleBoardViewScript.new()
+	view.size = Vector2(960.0, 540.0)
+	add_child(view)
+	view.set_battle_state(session)
+	_install_validation_vfx_cues(view, cue_ids)
+	var playback: Dictionary = view.validation_vfx_playback_summary()
+	_expect_int("spell vfx live cue draw count", int(playback.get("active_vfx_draw_count", -1)), cue_ids.size())
+	_expect_int("spell vfx imported asset draw count", int(playback.get("imported_asset_draw_count", -1)), cue_ids.size())
+	_expect_int("spell vfx procedural fallback draw count", int(playback.get("procedural_fallback_draw_count", -1)), 0)
+	for cue_id_value in cue_ids:
+		var cue_id := String(cue_id_value)
+		var entry := _vfx_entry_for_cue(playback, cue_id)
+		_expect_equal("spell vfx imported %s" % cue_id, str(bool(entry.get("asset_loaded", false))), "true")
+		_expect_equal("spell vfx asset path %s" % cue_id, String(entry.get("asset_path", "")), String(cue_paths.get(cue_id, "")))
+		var expected_render_mode := "spell_projectile" if cue_id == "vfx_spell_sunlance_arc" else "spell_target"
+		_expect_equal("spell vfx render mode %s" % cue_id, String(entry.get("asset_render_mode", "")), expected_render_mode)
+	view.queue_free()
+	var fallback_view := BattleBoardViewScript.new()
+	fallback_view.size = Vector2(960.0, 540.0)
+	add_child(fallback_view)
+	fallback_view.set_battle_state(session)
+	fallback_view.set("_battle_vfx_manifest_loaded", true)
+	fallback_view.set("_battle_vfx_manifest", {"schema_id": "battle_vfx_manifest_v1", "cues": {}})
+	_install_validation_vfx_cues(fallback_view, ["vfx_spell_cinder_burst"])
+	var fallback_playback: Dictionary = fallback_view.validation_vfx_playback_summary()
+	var fallback_entry := _vfx_entry_for_cue(fallback_playback, "vfx_spell_cinder_burst")
+	_expect_equal("spell vfx missing mapping fallback kind", String(fallback_entry.get("kind", "")), "spell_cinder_burst")
+	_expect_equal("spell vfx missing mapping asset absent", str(bool(fallback_entry.get("asset_loaded", true))), "false")
+	_expect_int("spell vfx missing mapping procedural count", int(fallback_playback.get("procedural_fallback_draw_count", 0)), 1)
+	fallback_view.queue_redraw()
+	fallback_view.queue_free()
+	_report["cases"]["spell_vfx_assets"] = {
+		"imported": playback,
+		"procedural_fallback": fallback_playback,
+	}
 
 func _validate_defend_state() -> void:
 	var session := _basic_session("unit_river_guard", "unit_bog_brute", 4, 3, 5, 3)
@@ -375,6 +432,8 @@ func _validate_spell_cast_state() -> void:
 	var vfx_playback: Dictionary = board_summary.get("vfx_playback", {}) if board_summary.get("vfx_playback", {}) is Dictionary else {}
 	var spell_vfx := _vfx_entry_for(vfx_playback, "spell_cinder_burst")
 	_expect_equal("spell-specific vfx cue", String(spell_vfx.get("cue_id", "")), "vfx_spell_cinder_burst")
+	_expect_equal("spell-specific imported vfx", str(bool(spell_vfx.get("asset_loaded", false))), "true")
+	_expect_equal("spell-specific imported asset", String(spell_vfx.get("asset_path", "")), "res://art/battle/vfx/spell_cinder_burst.png")
 	var audio_playback: Dictionary = board_summary.get("audio_playback", {}) if board_summary.get("audio_playback", {}) is Dictionary else {}
 	var caster_audio := _audio_record_for(audio_playback, "player_0")
 	_expect_array_contains("spell caster runtime audio", caster_audio.get("selected_audio_cue_ids", []), "audio_spell_cinder_burst")
@@ -670,6 +729,86 @@ func _validate_imported_vfx_live_viewports() -> void:
 	get_window().size = original_window_size
 	await get_tree().process_frame
 	_report["cases"]["core_vfx_live_viewports"] = results
+
+func _validate_spell_vfx_live_viewports() -> void:
+	var original_window_size := get_window().size
+	var cue_by_viewport := {
+		"1280x720": "vfx_spell_cinder_burst",
+		"1920x1080": "vfx_spell_prism_bastion",
+	}
+	var results := {}
+	for viewport_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:
+		get_window().size = viewport_size
+		await get_tree().process_frame
+		await get_tree().process_frame
+		_expect_equal("spell vfx requested viewport", str(get_window().size), str(viewport_size))
+		var session := _basic_session("unit_river_guard", "unit_bog_brute", 3, 3, 7, 3)
+		var view := BattleBoardViewScript.new()
+		view.position = Vector2.ZERO
+		view.size = get_viewport().get_visible_rect().size
+		add_child(view)
+		view.set_battle_state(session)
+		var viewport_key := "%dx%d" % [viewport_size.x, viewport_size.y]
+		var cue_id := String(cue_by_viewport.get(viewport_key, ""))
+		_install_validation_vfx_cues(view, [cue_id])
+		await get_tree().process_frame
+		view.queue_redraw()
+		await get_tree().process_frame
+		var playback: Dictionary = view.validation_vfx_playback_summary()
+		_expect_int("spell vfx viewport imported draw count", int(playback.get("imported_asset_draw_count", 0)), 1)
+		var spell_entry := _vfx_entry_for_cue(playback, cue_id)
+		_expect_equal("spell vfx viewport asset loaded", str(bool(spell_entry.get("asset_loaded", false))), "true")
+		var viewport_texture: Texture2D = get_viewport().get_texture()
+		if viewport_texture == null:
+			_error("Spell VFX live viewport capture requires a windowed render texture at %s." % viewport_size)
+			view.queue_free()
+			get_window().size = original_window_size
+			return
+		var image: Image = viewport_texture.get_image()
+		if image == null:
+			_error("Spell VFX live viewport capture returned no image at %s." % viewport_size)
+			view.queue_free()
+			get_window().size = original_window_size
+			return
+		_expect_int("spell vfx capture width", image.get_width(), viewport_size.x)
+		_expect_int("spell vfx capture height", image.get_height(), viewport_size.y)
+		var capture_path := "%s/spell_vfx_%dx%d.png" % [OUTPUT_DIR, viewport_size.x, viewport_size.y]
+		var save_error := image.save_png(ProjectSettings.globalize_path(capture_path))
+		_expect_int("spell vfx capture save", save_error, OK)
+		results[viewport_key] = {
+			"capture_path": capture_path,
+			"cue_id": cue_id,
+			"asset_path": String(spell_entry.get("asset_path", "")),
+			"logical_view_size": [view.size.x, view.size.y],
+		}
+		view.queue_free()
+		await get_tree().process_frame
+	get_window().size = original_window_size
+	await get_tree().process_frame
+	_report["cases"]["spell_vfx_live_viewports"] = results
+
+func _install_validation_vfx_cues(view: Control, cue_ids: Array) -> void:
+	var now := int(Time.get_ticks_msec())
+	view.set("_stack_animation_playback_until_msec", {"player_0": now + 5000})
+	view.set("_stack_animation_cue_playback_records", {
+		"player_0": {
+			"battle_id": "player_0",
+			"event_id": "battle_unit_cast",
+			"serial": 9100,
+			"cue_id": "cast_support_anchor",
+			"selected_vfx_cue_ids": cue_ids.duplicate(),
+			"selected_audio_cue_ids": [],
+			"source_battle_id": "player_0",
+			"target_battle_id": "enemy_0",
+			"from_q": 3,
+			"from_r": 3,
+			"to_q": 7,
+			"to_r": 3,
+			"started_at_msec": now - 120,
+			"max_duration_ms": 760,
+			"sequence_delay_msec": 0,
+		}
+	})
 
 func _validate_board_playback_lifecycle() -> void:
 	var session := _basic_session("unit_mire_slinger", "unit_bog_brute", 1, 3, 7, 3)
@@ -1290,6 +1429,14 @@ func _vfx_entry_for(vfx_playback: Dictionary, kind: String) -> Dictionary:
 		if entry is Dictionary and String(entry.get("kind", "")) == kind:
 			return entry
 	_error("Missing VFX draw entry kind %s in %s." % [kind, vfx_playback])
+	return {}
+
+func _vfx_entry_for_cue(vfx_playback: Dictionary, cue_id: String) -> Dictionary:
+	var entries: Array = vfx_playback.get("active_draw_entries", []) if vfx_playback.get("active_draw_entries", []) is Array else []
+	for entry in entries:
+		if entry is Dictionary and String(entry.get("cue_id", "")) == cue_id:
+			return entry
+	_error("Missing VFX draw entry cue %s in %s." % [cue_id, vfx_playback])
 	return {}
 
 func _audio_record_for(audio_playback: Dictionary, battle_id: String) -> Dictionary:

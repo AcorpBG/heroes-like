@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Battle core VFX asset adoption is complete. Three original imported textures now render through the exact existing cue records while stack tokens remain on top and the prior procedural paths remain fail-closed fallbacks; select the next source-backed release-readiness slice.",
+  "currentNotes": "Battle spell VFX asset adoption is complete. Seven original imported textures now render through the exact existing spell cue records while every procedural spell path remains a fail-closed fallback; select the next source-backed release-readiness slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-battle-core-vfx-asset-adoption-10184",
-  "currentSliceId": "presentation-battle-core-vfx-asset-adoption-10184",
-  "currentSliceNotes": "Completed exact three-texture/eight-cue Battle VFX adoption with inspected 1280x720 and 1920x1080 rendering, procedural fallback, compatibility, static/editor, and bounded Linux/Windows export-startup gates.",
+  "currentSlice": "presentation-battle-spell-vfx-asset-adoption-10184",
+  "currentSliceId": "presentation-battle-spell-vfx-asset-adoption-10184",
+  "currentSliceNotes": "Completed exact seven-texture/seven-cue spell VFX adoption with inspected 1280x720 and 1920x1080 rendering, procedural fallback, compatibility, routed layout, static/editor, and bounded Linux/Windows export-startup gates.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Battle Core VFX Asset Adoption",
-  "currentSliceUpdatedAt": "2026-08-14T16:28:06Z",
+  "currentSliceTitle": "Battle Spell VFX Asset Adoption",
+  "currentSliceUpdatedAt": "2026-08-14T17:05:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -78888,6 +78888,29 @@
       "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
       "blockedReason": null,
       "result": {"authored_hero_count": 60, "shared_portrait_component": true, "menu_surface_count": 2, "live_surface_count": 5, "focused_viewports": [[1280, 720], [1920, 1080]], "unknown_enemy_hidden": true, "authored_enemy_refresh_exact": true, "focused_report_passed": true, "menu_portrait_report_passed": true, "town_battle_visual_passed": true, "menu_outcome_visual_passed": true, "active_play_focus_passed": true, "core_passed": true, "repository_validation_passed": true, "editor_parse_passed": true, "linux_export_headless_startup_passed": true, "windows_export_fresh_wine_startup_passed": true}
+    },
+    {
+      "id": "presentation-battle-spell-vfx-asset-adoption-10184",
+      "title": "Battle Spell VFX Asset Adoption",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/animation-systems-foundation.md", "docs/battle-spell-impact-runtime-presentation-assets-report.md", "AGENTS.md"],
+      "purpose": "Replace every existing spell-specific Battle procedural effect with distinct original imported art while preserving exact spell, cue, timing, accessibility, and battle authority.",
+      "implementationTargets": ["art/battle/vfx/spell_cinder_burst.png", "art/battle/vfx/spell_coal_rain.png", "art/battle/vfx/spell_sunlance_arc.png", "art/battle/vfx/spell_briar_bind.png", "art/battle/vfx/spell_graft_mend.png", "art/battle/vfx/spell_prism_bastion.png", "art/battle/vfx/spell_command_ward.png", "content/battle_vfx_manifest.json", "scenes/battle/BattleBoardView.gd", "docs/battle-spell-impact-runtime-presentation-assets-report.md", "tests/battle_event_animation_state_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "testOwners": ["tests/battle_event_animation_state_report.gd", "tests/magic_battle_spell_behavior_report.gd", "tests/battle_layout_smoke.tscn", "tests/core_systems_regression_smoke.tscn", "tests/validate_repo.py"],
+      "baseline": {"head": "cad2e7be51fb690edfbdc0adfb19f72eed97c5f9", "spell_specific_cue_count": 7, "spell_imported_vfx_asset_count": 0, "spell_procedural_draw_function_count": 7},
+      "completionCriteria": ["Seven distinct original transparent textures map one-to-one to all existing spell-specific Battle cue ids", "BattleBoardView renders each spell texture from unchanged event source, target, resolution, and progress records and retains each current procedural spell function as missing-map/missing-texture fallback", "Focused live validation materializes all seven imported cue entries plus a procedural control and inspected 1280x720/1920x1080 captures remain readable beneath stack tokens", "Reduced motion, reduced flashes, cue ordering, playback duration, spell behavior, AI, camera, audio, battle state, input, and save authority remain exact", "Magic/battle compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass"],
+      "nonGoals": ["spell mechanics/content/costs/AI/balance or new cue ids", "generic core, overworld, town, artifact, UI, or broad catalog VFX migration", "animation timing, camera/audio, particles/shaders, save/schema, map, or Native RMG changes", "packaged Battle interaction, hardware/accessibility certification, signing/publication, whole-game, or release-readiness claims"],
+      "createdAt": "2026-08-14T16:31:51Z",
+      "startedAt": "2026-08-14T16:31:51Z",
+      "updatedAt": "2026-08-14T17:05:00Z",
+      "completedAt": "2026-08-14T17:05:00Z",
+      "notes": "Seven distinct original 384x384 alpha textures generated through the built-in image tool now map one-to-one to the complete existing spell-specific Battle cue set. BattleBoardView resolves spell_target and spell_projectile assets from the unchanged event source, target, and progress records, draws them beneath stack tokens/counts, and returns to every existing procedural spell function whenever the mapping or texture is unavailable. Focused headless runtime proves all seven loaded cue entries, an exact missing-map procedural fallback, the real Cinder Burst cast asset, unchanged cue/audio/camera/battle authority, and reduced-motion/reduced-flash behavior. Inspected Xvfb captures at 1280x720 and 1920x1080 confirm Cinder Burst and Prism Bastion remain readable. Magic behavior, cue catalog, core, the 1280 routed layout matrix, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass; the Windows PCK contains the manifest and all seven imported resources. Packaged Battle interaction, particles/shaders, broad VFX migration, hardware/accessibility certification, publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null,
+      "result": {"original_texture_count": 7, "mapped_spell_cue_count": 7, "focused_headless_passed": true, "xvfb_viewports": [[1280, 720], [1920, 1080]], "procedural_fallback_passed": true, "actual_cinder_cast_asset_passed": true, "reduced_motion_and_flash_passed": true, "magic_behavior_passed": true, "cue_catalog_passed": true, "core_passed": true, "battle_layout_1280_passed": true, "repository_validation_passed": true, "editor_parse_passed": true, "linux_export_headless_startup_passed": true, "windows_export_fresh_wine_startup_passed": true, "windows_pck_spell_vfx_resources_present": true}
     },
     {
       "id": "presentation-battle-core-vfx-asset-adoption-10184",
