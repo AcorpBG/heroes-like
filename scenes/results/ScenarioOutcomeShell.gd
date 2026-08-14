@@ -32,6 +32,7 @@ const OUTCOME_SCENIC_PANEL_ALPHA_BY_NAME := {
 @onready var _result_badge_panel: PanelContainer = %ResultBadgePanel
 @onready var _outcome_banner: Control = %OutcomeBanner
 @onready var _recap_tabs: TabContainer = %RecapTabs
+@onready var _hero_portrait: HeroPortraitView = %HeroPortrait
 @onready var _hero_label: Label = %Hero
 @onready var _army_label: Label = %Army
 @onready var _resource_label: Label = %Resources
@@ -347,6 +348,7 @@ func _refresh() -> void:
 	_result_badge_label.text = _result_status_label(status)
 	if _outcome_banner.has_method("set_outcome"):
 		_outcome_banner.call("set_outcome", status)
+	_hero_portrait.set_hero_id(_live_player_hero_id())
 	_set_compact_label(_hero_label, String(_model.get("hero_summary", "Hero data unavailable.")), 2 if _compact_layout_active else 5)
 	_set_compact_label(_army_label, String(_model.get("army_summary", "Army data unavailable.")), 2 if _compact_layout_active else 5)
 	_set_compact_label(_resource_label, String(_model.get("resource_summary", "Resource data unavailable.")), 2 if _compact_layout_active else 5)
@@ -1120,6 +1122,7 @@ func validation_snapshot() -> Dictionary:
 		"outcome_recovery_router_snapshot": outcome_recovery_router_snapshot,
 		"music_audio": MusicAudio.validation_summary(),
 		"scenario_id": _session.scenario_id,
+		"hero_portrait": _hero_portrait.validation_snapshot(),
 		"difficulty": _session.difficulty,
 		"launch_mode": _session.launch_mode,
 		"scenario_status": _session.scenario_status,
@@ -1181,6 +1184,13 @@ func validation_snapshot() -> Dictionary:
 		"current_save_recap": String(save_surface.get("current_save_recap", "")),
 		"slot_resume_recap": String(save_surface.get("slot_resume_recap", "")),
 	}
+
+
+func _live_player_hero_id() -> String:
+	var hero = _session.overworld.get("hero", {})
+	if hero is Dictionary and String(hero.get("id", "")) != "":
+		return String(hero.get("id", ""))
+	return String(_session.overworld.get("active_hero_id", ""))
 
 
 func validation_scenic_epilogue_summary() -> Dictionary:

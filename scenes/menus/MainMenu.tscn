@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://main_menu"]
+[gd_scene load_steps=6 format=3 uid="uid://main_menu"]
 
 [ext_resource type="Script" path="res://scenes/menus/MainMenu.gd" id="1"]
 [ext_resource type="Script" path="res://scenes/menus/MainMenuHeroView.gd" id="2"]
 [ext_resource type="Script" path="res://scenes/ui/FrontierBannerGlyph.gd" id="3"]
 [ext_resource type="PackedScene" path="res://scenes/menus/HeroKeybindingsDialog.tscn" id="4_keybindings"]
+[ext_resource type="Script" path="res://scenes/ui/HeroPortraitView.gd" id="5_hero_portrait"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -345,6 +346,7 @@ custom_minimum_size = Vector2(64, 86)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
+script = ExtResource("5_hero_portrait")
 
 [node name="CampaignCommanderPreview" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignIntelRow/CommanderPreviewPanel/CommanderPreviewPad/CommanderPreviewBox/CampaignCommanderIdentity"]
 unique_name_in_owner = true
@@ -696,6 +698,7 @@ custom_minimum_size = Vector2(64, 86)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
+script = ExtResource("5_hero_portrait")
 
 [node name="SkirmishCommanderPreview" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/SkirmishIntelRow/SkirmishCommanderPanel/SkirmishCommanderPad/SkirmishCommanderBox/SkirmishCommanderIdentity"]
 unique_name_in_owner = true

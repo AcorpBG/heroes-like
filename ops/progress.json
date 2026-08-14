@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved release-readiness implementation slice."
+    "Select the next tracker-approved release-readiness implementation slice from direct current product evidence."
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The authored hero portrait pipeline is complete. All 60 heroes have unique deterministic 384x512 assets, and Campaign/Skirmish commander cards render the exact selected hero while preserving existing text, actions, focus, and launch authority.",
+  "currentNotes": "Live commander portrait adoption is complete. The shared fail-safe component now carries authored portraits from Campaign and Skirmish into Overworld, Town, Battle, and Outcome without changing gameplay authority; select the next source-backed release-readiness slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-authored-hero-portrait-pipeline-10184",
-  "currentSliceId": "presentation-authored-hero-portrait-pipeline-10184",
-  "currentSliceNotes": "Completed with 60 unique authored-hero portrait assets, exact manifest and ContentService ownership, selected-hero Campaign/Skirmish rendering, focused and compatibility proof, and bounded Linux/Windows export-startup evidence.",
+  "currentSlice": "presentation-live-commander-portrait-adoption-10184",
+  "currentSliceId": "presentation-live-commander-portrait-adoption-10184",
+  "currentSliceNotes": "Completed shared portrait adoption across Campaign, Skirmish, Overworld, Town, Battle, and Outcome with exact live hero-id/path updates, unknown-enemy hidden fallback, unchanged compatibility authority, and bounded platform export/startup proof.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Authored Hero Portrait Pipeline",
-  "currentSliceUpdatedAt": "2026-08-14T17:02:00Z",
+  "currentSliceTitle": "Live Commander Portrait Adoption",
+  "currentSliceUpdatedAt": "2026-08-14T17:50:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -78865,6 +78865,29 @@
       "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
       "blockedReason": null,
       "result": {"authored_hero_count": 60, "unique_portrait_count": 60, "portrait_dimensions": [384, 512], "campaign_portrait_exact": true, "skirmish_portrait_exact": true, "focused_report_passed": true, "campaign_menu_passed": true, "keyboard_navigation_passed": true, "core_passed": true, "repository_validation_passed": true, "editor_parse_passed": true, "linux_export_headless_startup_passed": true, "windows_export_fresh_wine_startup_passed": true}
+    },
+    {
+      "id": "presentation-live-commander-portrait-adoption-10184",
+      "title": "Live Commander Portrait Adoption",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "AGENTS.md"],
+      "purpose": "Carry the complete authored hero-art domain into the live Overworld, Town, Battle, and Outcome commander surfaces through one reusable fail-safe portrait component without changing gameplay authority.",
+      "implementationTargets": ["scenes/ui/HeroPortraitView.gd", "scenes/menus/MainMenu.gd", "scenes/menus/MainMenu.tscn", "scenes/overworld/OverworldShell.gd", "scenes/overworld/OverworldShell.tscn", "scenes/town/TownShell.gd", "scenes/town/TownShell.tscn", "scenes/battle/BattleShell.gd", "scenes/battle/BattleShell.tscn", "scenes/results/ScenarioOutcomeShell.gd", "scenes/results/ScenarioOutcomeShell.tscn", "tests/live_commander_portrait_report.gd", "tests/live_commander_portrait_report.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "testOwners": ["tests/live_commander_portrait_report.gd", "tests/town_battle_visual_smoke.tscn", "tests/menu_outcome_visual_smoke.tscn", "tests/active_play_keyboard_focus_smoke.tscn", "tests/core_systems_regression_smoke.tscn", "tests/validate_repo.py"],
+      "baseline": {"head": "55100c51b30977d397645f979bdfa8399d8da7bc", "authored_hero_count": 60, "menu_portrait_surfaces": 2, "live_overworld_portrait_surface": false, "live_town_portrait_surface": false, "live_battle_portrait_surface": false, "live_outcome_portrait_surface": false},
+      "completionCriteria": ["One reusable aspect-preserving HeroPortraitView owns ContentService lookup, exact tooltip, resource loading, and hidden fail-safe behavior", "Main Menu Campaign and Skirmish plus live Overworld, Town, Battle, and Outcome surfaces use the shared component", "Player portraits follow the authoritative live hero id; enemy Battle portrait appears only for an authored commander hero id and otherwise remains hidden", "Portrait paths and hero ids update exactly across routing and battle lifecycle while every existing text, action, focus, route, battle, session, save, and input authority remains unchanged", "Focused 1280x720 and 1920x1080 containment, compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass"],
+      "nonGoals": ["hero content, gameplay, stats, spells, artifacts, armies, progression, enemy commander synthesis, scenario, campaign, skirmish, save schema/version, combat, AI, balance, map, or Native RMG changes", "animation, global theme, UI scale, action, focus-order, input-timing, route, or other-screen redesign", "packaged portrait interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claims"],
+      "createdAt": "2026-08-14T17:12:00Z",
+      "startedAt": "2026-08-14T17:12:00Z",
+      "updatedAt": "2026-08-14T17:50:00Z",
+      "completedAt": "2026-08-14T17:50:00Z",
+      "notes": "Production now uses one reusable HeroPortraitView for Campaign, Skirmish, Overworld, Town, Battle, and Outcome. The component resolves exact authored hero art and tooltip copy through ContentService, preserves aspect ratio, and fails closed by hiding unknown or missing art. Player gameplay surfaces follow the authoritative live hero id; the Battle enemy surface appears only for an authored commander id. The focused report proves all 60 portraits, exact two-resolution containment, live shell paths, unknown-enemy hiding, and authored-enemy lifecycle refresh. Existing menu portrait, Town/Battle visual, Menu/Outcome visual, active-play focus, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged portrait interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null,
+      "result": {"authored_hero_count": 60, "shared_portrait_component": true, "menu_surface_count": 2, "live_surface_count": 5, "focused_viewports": [[1280, 720], [1920, 1080]], "unknown_enemy_hidden": true, "authored_enemy_refresh_exact": true, "focused_report_passed": true, "menu_portrait_report_passed": true, "town_battle_visual_passed": true, "menu_outcome_visual_passed": true, "active_play_focus_passed": true, "core_passed": true, "repository_validation_passed": true, "editor_parse_passed": true, "linux_export_headless_startup_passed": true, "windows_export_fresh_wine_startup_passed": true}
     }
   ],
   "project": "heroes-like",

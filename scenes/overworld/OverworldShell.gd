@@ -52,6 +52,7 @@ const KEYBOARD_HERO_MOVE_DELTAS := {
 @onready var _commitment_title_label: Label = %CommitmentTitle
 @onready var _commitment_label: Label = %Commitment
 @onready var _hero_title_label: Label = %HeroTitle
+@onready var _hero_portrait: HeroPortraitView = %HeroPortrait
 @onready var _hero_label: Label = %Hero
 @onready var _army_label: Label = %Army
 @onready var _heroes_label: Label = %Heroes
@@ -2369,6 +2370,7 @@ func _refresh_status_surfaces(generated_surface_start: int) -> bool:
 	_debug_refresh_profile_end("refresh_commitment_rail", commitment_profile_start)
 	var hero_rail_profile_start := _debug_refresh_profile_begin("refresh_hero_rail")
 	var hero_text := _hero_card_text()
+	_hero_portrait.set_hero_id(_live_player_hero_id())
 	_set_rail_text(_hero_label, hero_text, hero_text, 2)
 	_debug_refresh_profile_end("refresh_hero_rail", hero_rail_profile_start)
 	var army_rail_profile_start := _debug_refresh_profile_begin("refresh_army_rail")
@@ -8530,6 +8532,7 @@ func validation_snapshot() -> Dictionary:
 		"context_summary": _cached_focus_tile_text(),
 		"context_visible_text": _context_label.text,
 		"hero_text": OverworldRules.describe_hero(_session),
+		"hero_portrait": _hero_portrait.validation_snapshot(),
 		"hero_visible_text": _hero_label.text,
 		"hero_tooltip_text": _hero_label.tooltip_text,
 		"heroes_text": OverworldRules.describe_heroes(_session),
@@ -8638,6 +8641,13 @@ func validation_snapshot() -> Dictionary:
 		"music_audio": validation_music_audio_summary(),
 		"profile": validation_profile_snapshot(),
 	}
+
+
+func _live_player_hero_id() -> String:
+	var hero = _session.overworld.get("hero", {})
+	if hero is Dictionary and String(hero.get("id", "")) != "":
+		return String(hero.get("id", ""))
+	return String(_session.overworld.get("active_hero_id", ""))
 
 func validation_ambient_audio_summary() -> Dictionary:
 	return AmbientAudio.validation_summary()

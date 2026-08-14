@@ -141,6 +141,9 @@ HERO_ART_GENERATOR_PATH = ROOT / "tools" / "generate_hero_portrait_assets.py"
 HERO_ART_ROOT = ROOT / "art" / "heroes" / "portraits"
 HERO_PORTRAIT_MENU_REPORT_SCRIPT_PATH = ROOT / "tests" / "hero_portrait_menu_report.gd"
 HERO_PORTRAIT_MENU_REPORT_SCENE_PATH = ROOT / "tests" / "hero_portrait_menu_report.tscn"
+HERO_PORTRAIT_VIEW_PATH = ROOT / "scenes" / "ui" / "HeroPortraitView.gd"
+LIVE_COMMANDER_PORTRAIT_REPORT_SCRIPT_PATH = ROOT / "tests" / "live_commander_portrait_report.gd"
+LIVE_COMMANDER_PORTRAIT_REPORT_SCENE_PATH = ROOT / "tests" / "live_commander_portrait_report.tscn"
 UNIT_ANIMATION_MANIFEST_PATH = CONTENT_DIR / "unit_animation_manifest.json"
 UNIT_ART_GENERATOR_PATH = ROOT / "tools" / "generate_unit_art_assets.py"
 UNIT_ART_REPRODUCIBILITY_REPORT_PATH = ROOT / "tests" / "unit_art_reproducibility_report.py"
@@ -27963,6 +27966,9 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
         MAIN_MENU_SCENE_PATH,
         HERO_PORTRAIT_MENU_REPORT_SCRIPT_PATH,
         HERO_PORTRAIT_MENU_REPORT_SCENE_PATH,
+        HERO_PORTRAIT_VIEW_PATH,
+        LIVE_COMMANDER_PORTRAIT_REPORT_SCRIPT_PATH,
+        LIVE_COMMANDER_PORTRAIT_REPORT_SCENE_PATH,
     )
     for path in required_paths:
         ensure(path.exists(), errors, f"Missing hero portrait asset file: {path.relative_to(ROOT)}")
@@ -28030,19 +28036,78 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
         "%CampaignCommanderPortrait",
         "%SkirmishCommanderPortrait",
         "func _set_commander_portrait",
-        "ContentService.get_hero_art",
-        "ResourceLoader.load(path, \"Texture2D\")",
-        "target.visible = false",
+        "target.set_hero_id(hero_id)",
         "campaign_commander_portrait_visible",
         "skirmish_commander_portrait_visible",
     ):
         ensure(required_token in menu_text, errors, f"MainMenu.gd is missing hero portrait token {required_token}")
+    for forbidden_token in ("_hero_portrait_textures", "_missing_hero_portrait_paths", "ResourceLoader.load(path, \"Texture2D\")"):
+        ensure(forbidden_token not in menu_text, errors, f"MainMenu.gd must delegate portrait ownership to HeroPortraitView instead of retaining {forbidden_token}")
     scene_text = MAIN_MENU_SCENE_PATH.read_text(encoding="utf-8")
-    for required_token in ("CampaignCommanderIdentity", "CampaignCommanderPortrait", "SkirmishCommanderIdentity", "SkirmishCommanderPortrait", "custom_minimum_size = Vector2(64, 86)", "stretch_mode = 5"):
+    for required_token in ("CampaignCommanderIdentity", "CampaignCommanderPortrait", "SkirmishCommanderIdentity", "SkirmishCommanderPortrait", "custom_minimum_size = Vector2(64, 86)", 'path="res://scenes/ui/HeroPortraitView.gd"', 'script = ExtResource("5_hero_portrait")'):
         ensure(required_token in scene_text, errors, f"MainMenu.tscn is missing hero portrait token {required_token}")
     report_text = HERO_PORTRAIT_MENU_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in ("HERO_PORTRAIT_MENU_REPORT", "hero_ids.size() != 60", "campaign_commander_portrait_path", "skirmish_commander_portrait_path", "texture.get_width() != 384", "texture.get_height() != 512"):
         ensure(required_token in report_text, errors, f"Hero portrait menu report is missing token {required_token}")
+
+    portrait_view_text = HERO_PORTRAIT_VIEW_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "class_name HeroPortraitView",
+        "extends TextureRect",
+        "func set_hero_id(hero_id: String) -> bool",
+        "ContentService.get_hero(hero_id)",
+        "ContentService.get_hero_art(hero_id)",
+        'ResourceLoader.exists(portrait_path, "Texture2D")',
+        'ResourceLoader.load(portrait_path, "Texture2D") as Texture2D',
+        'tooltip_text = "%s portrait"',
+        "stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED",
+        "func validation_snapshot() -> Dictionary",
+        "func _clear_portrait() -> void",
+        "visible = false",
+    ):
+        ensure(required_token in portrait_view_text, errors, f"HeroPortraitView.gd is missing live portrait ownership token {required_token}")
+
+    live_shells = (
+        (ROOT / "scenes" / "overworld" / "OverworldShell.gd", ROOT / "scenes" / "overworld" / "OverworldShell.tscn", "%HeroPortrait", '"hero_portrait": _hero_portrait.validation_snapshot()'),
+        (ROOT / "scenes" / "town" / "TownShell.gd", ROOT / "scenes" / "town" / "TownShell.tscn", "%HeroPortrait", '"hero_portrait": _hero_portrait.validation_snapshot()'),
+        (ROOT / "scenes" / "results" / "ScenarioOutcomeShell.gd", ROOT / "scenes" / "results" / "ScenarioOutcomeShell.tscn", "%HeroPortrait", '"hero_portrait": _hero_portrait.validation_snapshot()'),
+    )
+    for script_path, shell_scene_path, node_token, snapshot_token in live_shells:
+        script_owner_text = script_path.read_text(encoding="utf-8")
+        shell_scene_text = shell_scene_path.read_text(encoding="utf-8")
+        for required_token in (node_token, "_hero_portrait.set_hero_id(_live_player_hero_id())", snapshot_token, "func _live_player_hero_id() -> String"):
+            ensure(required_token in script_owner_text, errors, f"{script_path.relative_to(ROOT)} is missing live portrait token {required_token}")
+        for required_token in ('path="res://scenes/ui/HeroPortraitView.gd"', 'name="HeroIdentity"', 'name="HeroPortrait"', "visible = false"):
+            ensure(required_token in shell_scene_text, errors, f"{shell_scene_path.relative_to(ROOT)} is missing live portrait scene token {required_token}")
+
+    battle_script_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
+    battle_scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "%PlayerCommanderPortrait",
+        "%EnemyCommanderPortrait",
+        "_player_commander_portrait.set_hero_id(_battle_player_hero_id())",
+        "_enemy_commander_portrait.set_hero_id(_battle_enemy_hero_id())",
+        '"player_commander_portrait": _player_commander_portrait.validation_snapshot()',
+        '"enemy_commander_portrait": _enemy_commander_portrait.validation_snapshot()',
+        'source = _session.battle.get("player_commander_source", {})',
+        'hero = _session.battle.get("enemy_hero", {})',
+    ):
+        ensure(required_token in battle_script_text, errors, f"BattleShell.gd is missing live commander portrait token {required_token}")
+    for required_token in ('path="res://scenes/ui/HeroPortraitView.gd"', 'name="PlayerCommanderIdentity"', 'name="PlayerCommanderPortrait"', 'name="EnemyCommanderIdentity"', 'name="EnemyCommanderPortrait"'):
+        ensure(required_token in battle_scene_text, errors, f"BattleShell.tscn is missing live commander portrait token {required_token}")
+
+    live_report_text = LIVE_COMMANDER_PORTRAIT_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "LIVE_COMMANDER_PORTRAIT_REPORT",
+        "hero_ids.size() != 60",
+        "VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]",
+        'portrait.set_hero_id("hero_not_authored")',
+        'session.battle["enemy_hero"] = enemy_hero',
+        'shell.call("_refresh")',
+        'frame_rect.encloses(portrait_rect)',
+        '"enemy_unknown_hidden": true',
+    ):
+        ensure(required_token in live_report_text, errors, f"Live commander portrait report is missing token {required_token}")
 
 
 def validate_unit_art_assets(errors: list[str]) -> None:
