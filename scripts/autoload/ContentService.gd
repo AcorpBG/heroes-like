@@ -1356,6 +1356,9 @@ func _validate_scenario(
 	for placement in scenario.get("encounters", []):
 		if placement is Dictionary:
 			_append_unique_string(encounter_placement_ids, String(placement.get("placement_id", "")))
+	var script_hooks = scenario.get("script_hooks", [])
+	if script_hooks is Array:
+		_append_hook_spawn_placements(script_hooks, "spawn_encounter", encounter_placement_ids)
 
 	var objectives = scenario.get("objectives", {})
 	var objective_ids: Array[String] = []
@@ -1369,11 +1372,9 @@ func _validate_scenario(
 				_append_unique_string(objective_ids, String(objective.get("id", "")))
 				_validate_objective(scenario_id, objective, faction_index, town_placement_ids, encounter_placement_ids)
 
-	var script_hooks = scenario.get("script_hooks", [])
 	if scenario.has("script_hooks") and not (script_hooks is Array):
 		push_warning("Scenario %s script_hooks must be an array." % scenario_id)
 	elif script_hooks is Array:
-		_append_hook_spawn_placements(script_hooks, "spawn_encounter", encounter_placement_ids)
 		for hook in script_hooks:
 			if hook is Dictionary:
 				_validate_script_hook(
@@ -1634,6 +1635,20 @@ func _validate_script_effect(
 						push_warning("Scenario %s hook %s references missing recruit unit id %s." % [scenario_id, hook_id, unit_id])
 					if int(recruits[unit_id_value]) <= 0:
 						push_warning("Scenario %s hook %s recruit counts must be > 0 for unit %s." % [scenario_id, hook_id, unit_id])
+		"town_add_garrison":
+			var garrison_placement_id := String(effect.get("placement_id", ""))
+			if garrison_placement_id == "" or garrison_placement_id not in town_placement_ids:
+				push_warning("Scenario %s hook %s references missing town placement %s." % [scenario_id, hook_id, garrison_placement_id])
+			var garrison = effect.get("garrison", {})
+			if not (garrison is Dictionary) or garrison.is_empty():
+				push_warning("Scenario %s hook %s town_add_garrison effects must define garrison." % [scenario_id, hook_id])
+			elif garrison is Dictionary:
+				for unit_id_value in garrison.keys():
+					var unit_id := String(unit_id_value)
+					if unit_id == "" or not unit_index.has(unit_id):
+						push_warning("Scenario %s hook %s references missing garrison unit id %s." % [scenario_id, hook_id, unit_id])
+					if int(garrison[unit_id_value]) <= 0:
+						push_warning("Scenario %s hook %s garrison counts must be > 0 for unit %s." % [scenario_id, hook_id, unit_id])
 		"add_enemy_pressure":
 			var faction_id := String(effect.get("faction_id", ""))
 			if faction_id == "" or not faction_index.has(faction_id):

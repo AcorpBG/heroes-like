@@ -9579,10 +9579,9 @@ func _validation_route_step(target_kind: String, owner_id: String = "", placemen
 
 	var movement = _session.overworld.get("movement", {})
 	if path.size() > 1 and int(movement.get("current", 0)) <= 0:
-		var day_before := _session.day
-		_on_end_turn_pressed()
+		var end_turn_result: Dictionary = validation_end_turn()
 		return {
-			"ok": _session.day > day_before,
+			"ok": bool(end_turn_result.get("ok", false)),
 			"action": "end_turn_for_route",
 			"target_kind": target_kind,
 			"target": target.duplicate(true),
@@ -9592,6 +9591,7 @@ func _validation_route_step(target_kind: String, owner_id: String = "", placemen
 			"last_action": String(_session.flags.get("last_action", "")),
 			"message": _last_message,
 			"action_feedback": _validation_action_feedback(),
+			"end_turn_result": end_turn_result,
 		}
 
 	if path.size() <= 1:
@@ -9774,21 +9774,11 @@ func _validation_route_step(target_kind: String, owner_id: String = "", placemen
 				var artifact_context_action_ids := _validation_context_action_ids()
 				if artifact_context_action_ids.has("collect_artifact"):
 					var artifact_primary_action := _current_primary_action()
-					if String(artifact_primary_action.get("id", "")) != "collect_artifact":
-						return {
-							"ok": false,
-							"action": "collect_artifact",
-							"target_kind": target_kind,
-							"target": target.duplicate(true),
-							"start": _validation_tile_payload(hero_pos),
-							"finish": _validation_tile_payload(hero_pos),
-							"remaining_steps": 0,
-							"context_action_ids": artifact_context_action_ids,
-							"primary_action": _validation_action_payload(artifact_primary_action),
-							"last_action": String(_session.flags.get("last_action", "")),
-							"message": "The artifact cache did not expose recovery as the primary order.",
-						}
-					var artifact_result := validation_perform_primary_action()
+					var artifact_result := (
+						validation_perform_primary_action()
+						if String(artifact_primary_action.get("id", "")) == "collect_artifact"
+						else validation_perform_context_action("collect_artifact")
+					)
 					return {
 						"ok": bool(artifact_result.get("ok", false)),
 						"action": "collect_artifact",
@@ -10119,6 +10109,7 @@ func _validation_context_action_signature() -> Dictionary:
 	var hero_pos := OverworldRules.hero_position(_session)
 	var active_context: Dictionary = OverworldRules.get_active_context(_session)
 	var resource_sites := []
+	var artifact_nodes := []
 	for node_value in _session.overworld.get("resource_nodes", []):
 		if not (node_value is Dictionary):
 			continue
@@ -10135,6 +10126,19 @@ func _validation_context_action_signature() -> Dictionary:
 				"delivery_manifest": _duplicate_dictionary(node.get("delivery_manifest", {})),
 			}
 		)
+	for node_value in _session.overworld.get("artifact_nodes", []):
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		artifact_nodes.append(
+			{
+				"placement_id": String(node.get("placement_id", "")),
+				"artifact_id": String(node.get("artifact_id", "")),
+				"collected": bool(node.get("collected", false)),
+				"collected_by_faction_id": String(node.get("collected_by_faction_id", "")),
+				"collected_day": max(0, int(node.get("collected_day", 0))),
+			}
+		)
 	return {
 		"game_state": _session.game_state,
 		"scenario_status": _session.scenario_status,
@@ -10146,6 +10150,8 @@ func _validation_context_action_signature() -> Dictionary:
 		"active_context_type": String(active_context.get("type", "")),
 		"active_town": _validation_active_town_state(),
 		"resource_sites": resource_sites,
+		"artifact_nodes": artifact_nodes,
+		"commander_artifacts": _validation_commander_state().get("artifacts", {}).duplicate(true),
 	}
 
 func _validation_active_town_state() -> Dictionary:

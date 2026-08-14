@@ -6606,10 +6606,7 @@ static func _finalize_victory(session: SessionStateStoreScript.SessionData) -> D
 	HeroCommandRulesScript.commit_active_hero(session)
 	OverworldRulesScript.refresh_fog_of_war(session)
 
-	var victory_flags = encounter.get("victory_flags", [])
-	if victory_flags is Array:
-		for flag_value in victory_flags:
-			session.flags[String(flag_value)] = true
+	_apply_encounter_victory_flags(session, encounter)
 
 	session.flags["last_battle_outcome"] = "victory"
 	_record_battle_aftermath(
@@ -6907,6 +6904,10 @@ static func _finalize_enemy_withdrawal(session: SessionStateStoreScript.SessionD
 	_sync_enemy_force_from_battle(session, true)
 	HeroCommandRulesScript.commit_active_hero(session)
 	OverworldRulesScript.refresh_fog_of_war(session)
+	_apply_encounter_victory_flags(
+		session,
+		ContentService.get_encounter(String(session.battle.get("encounter_id", "")))
+	)
 	session.flags["last_battle_outcome"] = outcome_id
 	_record_battle_aftermath(
 		session,
@@ -6931,6 +6932,18 @@ static func _finalize_enemy_withdrawal(session: SessionStateStoreScript.SessionD
 		"state": "victory",
 		"battle_exit_animation_snapshot": exit_animation_snapshot,
 	}
+
+static func _apply_encounter_victory_flags(
+	session: SessionStateStoreScript.SessionData,
+	encounter: Dictionary
+) -> void:
+	if session == null:
+		return
+	var victory_flags = encounter.get("victory_flags", [])
+	if not (victory_flags is Array):
+		return
+	for flag_value in victory_flags:
+		session.flags[String(flag_value)] = true
 
 static func _finalize_stalemate(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var messages = []

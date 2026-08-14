@@ -1327,7 +1327,11 @@ func _drive_campaign_chapter_to_victory_outcome(
 	if scenario_id == "fen-crown":
 		return await _drive_fen_crown_chapter_to_victory_outcome(current_overworld, step_prefix)
 
-	var objective_clear := await _clear_required_encounters_to_overworld(current_overworld)
+	var objective_clear: Dictionary
+	if scenario_id == "river-pass":
+		objective_clear = await _clear_river_pass_required_encounters_with_refit(current_overworld, step_prefix)
+	else:
+		objective_clear = await _clear_required_encounters_to_overworld(current_overworld)
 	if not bool(objective_clear.get("ok", false)):
 		return {"ok": false}
 	current_overworld = objective_clear.get("scene", current_overworld)
@@ -1344,7 +1348,17 @@ func _drive_campaign_chapter_to_victory_outcome(
 			return {"ok": false}
 		current_overworld = gorget_claim.get("scene", current_overworld)
 
-	var battle_route := await _route_from_overworld_to_scene(current_overworld, "town", "enemy", BATTLE_SCENE)
+	var battle_route := await _route_with_battle_interrupts(
+		current_overworld,
+		"town",
+		"enemy",
+		BATTLE_SCENE,
+		"",
+		"%s_town_assault_route" % step_prefix,
+		"town_assault",
+		"",
+		scenario_id == "river-pass"
+	)
 	if not _require(bool(battle_route.get("ok", false)), "Could not route from the campaign chapter overworld into the hostile town assault.", battle_route):
 		return {"ok": false}
 	var battle = battle_route.get("scene", null)
@@ -1353,7 +1367,13 @@ func _drive_campaign_chapter_to_victory_outcome(
 	await _settle_frames(6)
 
 	var assault_route := _last_history_entry(battle_route.get("history", []))
-	if not _require(String(assault_route.get("pre_action_town_owner", "")) == "enemy", "Campaign chapter hostile-town route did not preserve enemy ownership before battle entry.", assault_route):
+	var pre_assault_town_owner := String(
+		assault_route.get(
+			"pre_action_town_owner",
+			_dictionary_value(assault_route.get("target", {})).get("owner", "")
+		)
+	)
+	if not _require(pre_assault_town_owner == "enemy", "Campaign chapter hostile-town route did not preserve enemy ownership before battle entry.", assault_route):
 		return {"ok": false}
 	var battle_snapshot: Dictionary = battle.call("validation_snapshot")
 	if not _require(String(battle_snapshot.get("launch_mode", "")) == "campaign", "Campaign chapter battle route did not preserve campaign launch mode.", battle_snapshot):
@@ -1365,12 +1385,40 @@ func _drive_campaign_chapter_to_victory_outcome(
 	battle_snapshot["route_history"] = battle_route.get("history", [])
 	_capture_step("%s_battle_entered" % step_prefix, battle_snapshot)
 
-	return await _play_battle_to_scene(
+	var post_assault_destination := OVERWORLD_SCENE if scenario_id == "river-pass" else SCENARIO_OUTCOME_SCENE
+	var assault_resolution := await _play_battle_to_scene(
 		battle,
 		"%s_battle_progressed" % step_prefix,
-		"%s_outcome_entered" % step_prefix,
-		SCENARIO_OUTCOME_SCENE
+		"%s_overworld_after_assault" % step_prefix if scenario_id == "river-pass" else "%s_outcome_entered" % step_prefix,
+		post_assault_destination,
+		scenario_id == "river-pass"
 	)
+	if not bool(assault_resolution.get("ok", false)) or scenario_id != "river-pass":
+		return assault_resolution
+	var counterstroke_route := await _route_with_battle_interrupts(
+		assault_resolution.get("scene", null),
+		"encounter",
+		"",
+		BATTLE_SCENE,
+		"duskfen_counterstroke",
+		"%s_counterstroke" % step_prefix,
+		"encounter",
+		"",
+		false
+	)
+	if not bool(counterstroke_route.get("ok", false)):
+		return _fail_with_payload("River Pass counterstroke did not enter its shipped battle after Duskfen fell.", counterstroke_route)
+	var counterstroke_battle = counterstroke_route.get("scene", null)
+	if counterstroke_battle == null:
+		return _fail_with_payload("River Pass counterstroke route completed without a battle scene.", counterstroke_route)
+	var counterstroke_resolution := await _play_battle_to_scene(
+		counterstroke_battle,
+		"%s_counterstroke_battle_progressed" % step_prefix,
+		"%s_outcome_entered" % step_prefix,
+		SCENARIO_OUTCOME_SCENE,
+		true
+	)
+	return counterstroke_resolution
 
 func _prepare_campaign_town(town, step_prefix: String) -> Dictionary:
 	var current_town = town
@@ -1475,6 +1523,7 @@ func _first_enabled_action_id(actions: Array) -> String:
 func _drive_causeway_chapter_to_victory_outcome(overworld, step_prefix: String) -> Dictionary:
 	var current_overworld = overworld
 	for support_target in [
+		{"kind": "resource", "placement_id": "duskfen_peatwax_yard", "step": "pre_outcome_support_site_claimed_duskfen_peatwax_yard"},
 		{"kind": "resource", "placement_id": "causeway_fenhound_kennels", "step": "pre_outcome_support_site_claimed_causeway_fenhound_kennels"},
 		{"kind": "artifact", "placement_id": "causeway_pennon", "step": "pre_outcome_support_artifact_claimed_causeway_pennon"},
 	]:
@@ -1500,7 +1549,17 @@ func _drive_causeway_chapter_to_victory_outcome(overworld, step_prefix: String) 
 		return {"ok": false}
 	current_overworld = gate_clear.get("scene", current_overworld)
 
-	var town_route := await _route_from_overworld_to_scene(current_overworld, "town", "enemy", BATTLE_SCENE, "blackfen_gate")
+	var town_route := await _route_with_battle_interrupts(
+		current_overworld,
+		"town",
+		"enemy",
+		BATTLE_SCENE,
+		"blackfen_gate",
+		"%s_blackfen_gate_route" % step_prefix,
+		"town_assault",
+		"blackfen_gate",
+		true
+	)
 	if not _require(bool(town_route.get("ok", false)), "Could not route from Causeway overworld into the Blackfen Gate assault.", town_route):
 		return {"ok": false}
 	var town_battle = town_route.get("scene", null)
@@ -1515,36 +1574,13 @@ func _drive_causeway_chapter_to_victory_outcome(overworld, step_prefix: String) 
 	var town_capture := await _play_battle_to_scene(
 		town_battle,
 		"%s_blackfen_gate_battle_progressed" % step_prefix,
-		"%s_blackfen_gate_captured" % step_prefix,
-		OVERWORLD_SCENE
+		"%s_outcome_entered" % step_prefix,
+		SCENARIO_OUTCOME_SCENE,
+		true
 	)
 	if not bool(town_capture.get("ok", false)):
 		return {"ok": false}
-	current_overworld = town_capture.get("scene", current_overworld)
-
-	var recruited := await _recruit_from_campaign_town(current_overworld, "blackfen_gate", "%s_blackfen_gate" % step_prefix)
-	if not bool(recruited.get("ok", false)):
-		return recruited
-	current_overworld = recruited.get("scene", current_overworld)
-
-	var reed_clear := await _clear_campaign_encounter_to_scene(
-		current_overworld,
-		"causeway_reed_camp",
-		"pre_outcome_objective_battle",
-		OVERWORLD_SCENE,
-		"overworld_after_pre_outcome_objective_causeway_reed_camp"
-	)
-	if not bool(reed_clear.get("ok", false)):
-		return {"ok": false}
-	current_overworld = reed_clear.get("scene", current_overworld)
-
-	return await _clear_campaign_encounter_to_scene(
-		current_overworld,
-		"causeway_levee_cutters",
-		"pre_outcome_objective_battle",
-		SCENARIO_OUTCOME_SCENE,
-		"%s_outcome_entered" % step_prefix
-	)
+	return town_capture
 
 func _drive_fen_crown_chapter_to_victory_outcome(overworld, step_prefix: String) -> Dictionary:
 	var current_overworld = overworld
@@ -1627,15 +1663,25 @@ func _drive_fen_crown_chapter_to_victory_outcome(overworld, step_prefix: String)
 	current_overworld = final_refit.get("scene", current_overworld)
 
 	if current_overworld.has_method("validation_cast_overworld_spell"):
-		var movement_spell: Dictionary = current_overworld.call("validation_cast_overworld_spell", "spell_trailglyph")
+		var movement_spell: Dictionary = current_overworld.call("validation_cast_overworld_spell", "spell_waystride")
 		await _settle_frames(6)
-		if not _require(bool(movement_spell.get("ok", false)), "Could not cast the real Trailglyph overworld spell before the final Fen Crown march.", movement_spell):
+		if not _require(bool(movement_spell.get("ok", false)), "Could not cast Lyra's authored Waystride overworld spell before the final Fen Crown march.", movement_spell):
 			return {"ok": false}
 		var movement_spell_snapshot: Dictionary = current_overworld.call("validation_snapshot")
 		movement_spell_snapshot["spell_result"] = movement_spell
 		_capture_step("%s_final_march_spell_cast" % step_prefix, movement_spell_snapshot)
 
-	var town_route := await _route_from_overworld_to_scene(current_overworld, "town", "enemy", BATTLE_SCENE, "fen_crown_redoubt")
+	var town_route := await _route_with_battle_interrupts(
+		current_overworld,
+		"town",
+		"enemy",
+		BATTLE_SCENE,
+		"fen_crown_redoubt",
+		"%s_fen_crown_redoubt_route" % step_prefix,
+		"town_assault",
+		"fen_crown_redoubt",
+		true
+	)
 	if not _require(bool(town_route.get("ok", false)), "Could not route from Fen Crown overworld into the final redoubt assault.", town_route):
 		return {"ok": false}
 	var town_battle = town_route.get("scene", null)
@@ -1949,7 +1995,8 @@ func _route_with_battle_interrupts(
 	placement_id: String,
 	step_prefix: String,
 	expected_battle_context: String = "",
-	expected_town_placement_id: String = ""
+	expected_town_placement_id: String = "",
+	use_quick_resolve: bool = false
 ) -> Dictionary:
 	var current_overworld = overworld
 	var combined_history := []
@@ -1984,7 +2031,8 @@ func _route_with_battle_interrupts(
 						battle,
 						"%s_interrupt_battle_progressed_%d" % [step_prefix, int(attempt_index + 1)],
 						"%s_after_interrupt_%d" % [step_prefix, int(attempt_index + 1)],
-						OVERWORLD_SCENE
+						OVERWORLD_SCENE,
+						use_quick_resolve
 					)
 					if not bool(interrupt_exit.get("ok", false)):
 						return {"ok": false}
@@ -2002,7 +2050,8 @@ func _route_with_battle_interrupts(
 				interrupt_battle,
 				"%s_interrupt_battle_progressed_%d" % [step_prefix, int(attempt_index + 1)],
 				"%s_after_interrupt_%d" % [step_prefix, int(attempt_index + 1)],
-				OVERWORLD_SCENE
+				OVERWORLD_SCENE,
+				use_quick_resolve
 			)
 			if not bool(resolved_interrupt.get("ok", false)):
 				return {"ok": false}
@@ -2210,6 +2259,16 @@ func _clear_required_encounters_to_overworld(overworld) -> Dictionary:
 			and placement_id == "causeway_gate_marshals"
 			and not causeway_support_claimed
 		):
+			var peatwax_claim := await _claim_overworld_validation_target(
+				current_overworld,
+				"resource",
+				"duskfen_peatwax_yard",
+				"pre_outcome_support_site_claimed_duskfen_peatwax_yard"
+			)
+			if not bool(peatwax_claim.get("ok", false)):
+				_fail("Could not claim the authored Duskfen support yard before leaving the Causeway staging pocket.", peatwax_claim)
+				return {"ok": false}
+			current_overworld = peatwax_claim.get("scene", current_overworld)
 			var kennels_claim := await _claim_overworld_validation_target(
 				current_overworld,
 				"resource",
@@ -2262,6 +2321,100 @@ func _clear_required_encounters_to_overworld(overworld) -> Dictionary:
 
 	for placement_id_value in required_placements:
 		if not _require(_encounter_placement_resolved(String(placement_id_value)), "Required encounter clearing ended with an unresolved objective before the final assault.", {"placement_id": String(placement_id_value)}):
+			return {"ok": false}
+	return {
+		"ok": true,
+		"scene": current_overworld,
+	}
+
+func _clear_river_pass_required_encounters_with_refit(overworld, step_prefix: String) -> Dictionary:
+	var current_overworld = overworld
+	for support_target in [
+		{"placement_id": "north_wood", "step": "%s_support_site_claimed_north_wood" % step_prefix},
+		{"placement_id": "river_signal_post", "step": "%s_support_site_claimed_river_signal_post" % step_prefix},
+	]:
+		var support_claim := await _claim_overworld_validation_target(
+			current_overworld,
+			"resource",
+			String(support_target.get("placement_id", "")),
+			String(support_target.get("step", ""))
+		)
+		if not bool(support_claim.get("ok", false)):
+			return _fail_with_payload(
+				"Could not claim the authored River Pass support economy before the required encounters.",
+				{"support_target": support_target, "result": support_claim}
+			)
+		current_overworld = support_claim.get("scene", current_overworld)
+
+	for placement_id in ["river_pass_ghoul_grove", "river_pass_hollow_mire"]:
+		var encounter_clear := await _clear_campaign_encounter_to_scene(
+			current_overworld,
+			placement_id,
+			"pre_outcome_objective_battle",
+			OVERWORLD_SCENE,
+			"overworld_after_pre_outcome_objective_%s" % placement_id
+		)
+		if not bool(encounter_clear.get("ok", false)):
+			return encounter_clear
+		current_overworld = encounter_clear.get("scene", current_overworld)
+
+	var ore_claim := await _claim_overworld_validation_target(
+		current_overworld,
+		"resource",
+		"southern_ore",
+		"%s_support_site_claimed_southern_ore" % step_prefix
+	)
+	if not bool(ore_claim.get("ok", false)):
+		return _fail_with_payload(
+			"Could not claim the authored River Pass ore branch before the field refit.",
+			ore_claim
+		)
+	current_overworld = ore_claim.get("scene", current_overworld)
+
+	for day_advance_index in range(2):
+		var day_snapshot: Dictionary = current_overworld.call("validation_snapshot")
+		if int(day_snapshot.get("day", 0)) >= 3:
+			break
+		var day_advance := await _advance_campaign_overworld_day(
+			current_overworld,
+			"%s_riverwatch_refit_income_day_%d" % [step_prefix, int(day_advance_index + 1)]
+		)
+		if not bool(day_advance.get("ok", false)):
+			return day_advance
+		current_overworld = day_advance.get("scene", current_overworld)
+	var refit_ready_snapshot: Dictionary = current_overworld.call("validation_snapshot")
+	if not _require(
+		int(refit_ready_snapshot.get("day", 0)) >= 3,
+		"River Pass refit did not reach the authored Day 3 relief window.",
+		refit_ready_snapshot
+	):
+		return {"ok": false}
+
+	var refit := await _recruit_from_campaign_town(
+		current_overworld,
+		"riverwatch_hold",
+		"%s_riverwatch_relief_refit" % step_prefix
+	)
+	if not bool(refit.get("ok", false)):
+		return refit
+	current_overworld = refit.get("scene", current_overworld)
+
+	var totemist_clear := await _clear_campaign_encounter_to_scene(
+		current_overworld,
+		"river_pass_reed_totemists",
+		"pre_outcome_objective_battle",
+		OVERWORLD_SCENE,
+		"overworld_after_pre_outcome_objective_river_pass_reed_totemists"
+	)
+	if not bool(totemist_clear.get("ok", false)):
+		return totemist_clear
+	current_overworld = totemist_clear.get("scene", current_overworld)
+	for placement_id in ["river_pass_ghoul_grove", "river_pass_hollow_mire", "river_pass_reed_totemists"]:
+		if not _require(
+			_encounter_placement_resolved(placement_id),
+			"River Pass refit route ended with an unresolved required encounter.",
+			{"placement_id": placement_id, "snapshot": current_overworld.call("validation_snapshot")}
+		):
 			return {"ok": false}
 	return {
 		"ok": true,
@@ -3570,11 +3723,44 @@ func _play_battle_to_scene(
 	battle,
 	battle_progress_step_id: String,
 	destination_step_id: String,
-	destination_scene: String
+	destination_scene: String,
+	use_quick_resolve: bool = false
 ) -> Dictionary:
 	var battle_actions := []
 	var battle_progress_captured := false
 	var current_battle = battle
+	if use_quick_resolve:
+		var quick_resolve_request: Dictionary = current_battle.call("validation_request_quick_resolve_confirmation")
+		battle_actions.append(quick_resolve_request.duplicate(true))
+		if not _require(bool(quick_resolve_request.get("ok", false)) and bool(quick_resolve_request.get("pending", false)), "Battle validation could not request the shipped Quick Resolve confirmation.", quick_resolve_request):
+			return {"ok": false}
+		await _settle_frames(2)
+		var quick_resolve_pending_snapshot: Dictionary = current_battle.call("validation_snapshot")
+		quick_resolve_pending_snapshot["progress_action"] = quick_resolve_request.duplicate(true)
+		_capture_step(battle_progress_step_id, quick_resolve_pending_snapshot)
+		var quick_resolve_result: Dictionary = current_battle.call("validation_confirm_quick_resolve_confirmation")
+		battle_actions.append(quick_resolve_result.duplicate(true))
+		if not _require(bool(quick_resolve_result.get("ok", false)) and bool(quick_resolve_result.get("performed", false)), "Battle validation Quick Resolve confirmation did not complete through the shipped action.", quick_resolve_result):
+			return {"ok": false}
+		await _settle_frames(6)
+		var quick_resolve_destination = await _wait_for_scene(destination_scene, 10000)
+		if quick_resolve_destination == null:
+			return _fail_with_payload(
+				"Confirmed Quick Resolve did not route to the required destination scene.",
+				{
+					"destination_scene": destination_scene,
+					"battle_actions": battle_actions,
+					"current_scene": _current_scene_path(),
+				}
+			)
+		var quick_resolve_destination_snapshot: Dictionary = quick_resolve_destination.call("validation_snapshot")
+		quick_resolve_destination_snapshot["battle_actions"] = battle_actions
+		_capture_step(destination_step_id, quick_resolve_destination_snapshot)
+		return {
+			"ok": true,
+			"scene": quick_resolve_destination,
+			"snapshot": quick_resolve_destination_snapshot,
+		}
 	for _action_index in range(MAX_VALIDATION_BATTLE_ACTIONS):
 		if current_battle == null:
 			break
@@ -3587,6 +3773,25 @@ func _play_battle_to_scene(
 		if current_scene == null:
 			continue
 		var scene_path := String(current_scene.scene_file_path)
+		if scene_path == BATTLE_SCENE and not SessionState.has_battle_state():
+			var resolution_snapshot: Dictionary = (
+				current_scene.call("validation_battle_resolution_checkpoint_snapshot")
+				if current_scene.has_method("validation_battle_resolution_checkpoint_snapshot")
+				else {}
+			)
+			var routed_scene = await _wait_for_scene(destination_scene, 10000)
+			if routed_scene == null:
+				return _fail_with_payload(
+					"Resolved battle did not complete its checkpointed scene route.",
+					{
+						"destination_scene": destination_scene,
+						"battle_actions": battle_actions,
+						"resolution_snapshot": resolution_snapshot,
+						"current_scene": _current_scene_path(),
+					}
+				)
+			current_scene = routed_scene
+			scene_path = String(current_scene.scene_file_path)
 		if scene_path == BATTLE_SCENE and not battle_progress_captured:
 			var battle_mid_snapshot: Dictionary = current_scene.call("validation_snapshot")
 			battle_mid_snapshot["progress_action"] = battle_action
