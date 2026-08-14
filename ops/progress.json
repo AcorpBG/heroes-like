@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved release-readiness implementation slice from direct current behavior and source evidence."
+    "Select the next tracker-approved release-readiness implementation slice."
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld artifact-slot cue slice is completed with focused, compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine startup evidence. Select the next tracker-approved release-readiness implementation slice; no whole-release claim is made.",
+  "currentNotes": "The Overworld artifact-acquired cue slice is completed. Successful live player collection now publishes the authored post-refresh artifact_acquired presentation with bounded normal input ownership and exact nonblocking reduced-motion fallback; broader release gaps remain.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-artifact-slot-cue-playback-10184",
-  "currentSliceId": "presentation-overworld-artifact-slot-cue-playback-10184",
-  "currentSliceNotes": "Completed: successful live equip and stow buttons publish exact post-refresh nonblocking Artifact rail cues in normal and reduced-motion modes without changing artifact or session authority.",
+  "currentSlice": "presentation-overworld-artifact-acquired-cue-playback-10184",
+  "currentSliceId": "presentation-overworld-artifact-acquired-cue-playback-10184",
+  "currentSliceNotes": "Completed: exact live collection, independent session authority, map-depletion compatibility, normal input ownership, reduced-motion fallback, refresh, failure, compatibility, static/editor, Linux, and Windows gates pass with bounded claims.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Artifact Slot Cue Playback",
-  "currentSliceUpdatedAt": "2026-08-14T23:00:38Z",
+  "currentSliceTitle": "Overworld Artifact Acquired Cue Playback",
+  "currentSliceUpdatedAt": "2026-08-14T23:37:33Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -81218,6 +81218,63 @@
       }
     },
     {
+      "id": "presentation-overworld-artifact-acquired-cue-playback-10184",
+      "title": "Overworld Artifact Acquired Cue Playback",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/animation-systems-foundation.md", "AGENTS.md"],
+      "purpose": "Make successful live player artifact-cache collection visibly confirm the authoritative acquired artifact through the existing authored artifact_acquired cue contract.",
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/overworld/OverworldShell.tscn",
+        "tests/overworld_artifact_acquired_cue_playback_report.gd",
+        "tests/overworld_artifact_acquired_cue_playback_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_artifact_acquired_cue_playback_report.tscn",
+        "tests/overworld_object_resolution_cue_playback_report.tscn",
+        "tests/artifact_pickup_source_execution_report.tscn",
+        "tests/animation_validation_smoke_harness_report.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "09d2f6d3",
+        "artifact_acquired_catalog_entry": true,
+        "normal_animation_state": "artifact_claim",
+        "normal_blocking_policy": "input_blocking_timeout",
+        "reduced_motion_fallback": "artifact_badge_added",
+        "live_collect_artifact_action": true,
+        "overworld_artifact_acquired_playback": false
+      },
+      "completionCriteria": [
+        "Exactly one successful live collect-artifact button publishes one detached artifact_acquired payload with authoritative artifact id/name, placement, tile, resulting location/slot, existing result message/recap, and exact catalog policy after authoritative refresh",
+        "Normal playback shows one compact Artifact rail cue while a transparent full-shell layer owns pointer and keyboard input; ui_cancel skips it and returns Overworld focus; reduced motion uses the exact nonblocking artifact_badge_added fallback",
+        "Malformed, unsupported, already-collected, and failed actions publish nothing; refresh does not duplicate or reset the cue; expiry or skip never replays it",
+        "Focused collection runtime at 1280x720 and 1920x1080 proves exact independent node, inventory/equipment, movement, fog, recap, session, focus, action-list, map-depletion, and route authority",
+        "Object-resolution, artifact pickup/runtime, animation policy, focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "artifact collection, reward, auto-equip, slot, inventory, bonuses, set effects, movement, fog, scenario, content, AI, balance, save, schema, cache, or event-contract changes",
+        "changing or replacing the existing overworld_object_depleted map cue, route/pathfinding, camera, battle/town artifact presentation, final VFX/audio assets or playback, global animation timing, or other-screen changes",
+        "packaged artifact interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "createdAt": "2026-08-14T23:05:00Z",
+      "startedAt": "2026-08-14T23:05:00Z",
+      "updatedAt": "2026-08-14T23:37:33Z",
+      "completedAt": "2026-08-14T23:37:33Z",
+      "notes": "Production now publishes one detached artifact_acquired payload only after a successful live player cache collection and authoritative refresh. The producer verifies the structured interaction identity against the exact collected player-owned artifact node and resulting hero inventory/equipment location while preserving the compact recap. Normal mode shows the compact Artifact rail cue with bounded transparent input ownership and Escape skip; reduced motion uses the exact nonblocking artifact_badge_added fallback. The focused 1280x720 and 1920x1080 report drives the live PrimaryAction button, matches an independent rules control and whole session authority exactly, preserves the existing overworld_object_depleted map cue, keeps refresh progress stable, fails closed for malformed and unavailable actions, and settles without replay. Object-resolution, artifact-source, animation-policy, active-play focus, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Artifact rules/content/rewards/auto-equip/movement/fog/save/schema/AI, final audio/VFX assets, packaged artifact interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unchanged or unclaimed.",
+      "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null
+    },
+    {
       "id": "presentation-overworld-artifact-slot-cue-playback-10184",
       "title": "Overworld Artifact Slot Cue Playback",
       "status": "completed",
@@ -82513,7 +82570,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
-  "remainingWork": "Complete the selected Overworld field-spell cast cue implementation and validation. Broader release gaps remain.",
+  "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader release gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -82945,7 +83002,7 @@
     }
   ],
   "result": "presentation_overworld_field_spell_cast_cue_playback_completed",
-  "status": "in_progress",
+  "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
       "completed": "Implementation or documentation-only governance work satisfies the PLAN completion criteria and has validation/evidence.",

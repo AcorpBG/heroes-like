@@ -96,6 +96,7 @@ const KEYBOARD_HERO_MOVE_DELTAS := {
 @onready var _settings_button: Button = %Settings
 @onready var _menu_button: Button = %Menu
 @onready var _spell_cast_input_blocker: Control = %SpellCastInputBlocker
+@onready var _artifact_acquired_input_blocker: Control = %ArtifactAcquiredInputBlocker
 @onready var _end_turn_confirmation_dialog: ConfirmationDialog = $EndTurnConfirmationDialog
 @onready var _manual_save_overwrite_dialog = $ManualSaveOverwriteDialog
 @onready var _active_play_settings_dialog = %ActivePlaySettingsDialog
@@ -187,6 +188,11 @@ var _artifact_slot_presentation_serial := 0
 var _artifact_slot_presentation_active := false
 var _artifact_slot_presentation_elapsed_sec := 0.0
 var _artifact_slot_presentation_duration_sec := 0.0
+var _artifact_acquired_presentation: Dictionary = {}
+var _artifact_acquired_presentation_serial := 0
+var _artifact_acquired_presentation_active := false
+var _artifact_acquired_presentation_elapsed_sec := 0.0
+var _artifact_acquired_presentation_duration_sec := 0.0
 var _post_route_execution_compact_context := false
 var _briefing_title_text := "Command Briefing"
 var _command_briefing_text := ""
@@ -315,6 +321,7 @@ func _ready() -> void:
 	_map_view.tile_pressed.connect(_on_map_tile_pressed)
 	_map_view.tile_hovered.connect(_on_map_tile_hovered)
 	_spell_cast_input_blocker.visible = false
+	_artifact_acquired_input_blocker.visible = false
 	_artifact_action_cue.visible = false
 	set_process(false)
 	if not _map_view.spell_cast_presentation_blocking_changed.is_connected(_on_spell_cast_presentation_blocking_changed):
@@ -426,6 +433,11 @@ func _responsive_available_size() -> Vector2:
 	return available_size
 
 func _input(event: InputEvent) -> void:
+	if _artifact_acquired_input_blocker != null and _artifact_acquired_input_blocker.visible:
+		get_viewport().set_input_as_handled()
+		if event.is_action_pressed("ui_cancel"):
+			dismiss_artifact_acquired_presentation()
+		return
 	if _spell_cast_input_blocker != null and _spell_cast_input_blocker.visible:
 		get_viewport().set_input_as_handled()
 		if event.is_action_pressed("ui_cancel") and _map_view.has_method("dismiss_spell_cast_presentation"):
@@ -476,6 +488,17 @@ func _input(event: InputEvent) -> void:
 	get_viewport().set_input_as_handled()
 
 func _process(delta: float) -> void:
+	if _artifact_acquired_presentation_active:
+		_artifact_acquired_presentation_elapsed_sec = minf(
+			_artifact_acquired_presentation_duration_sec,
+			_artifact_acquired_presentation_elapsed_sec + maxf(delta, 0.0)
+		)
+		var acquired_progress := clampf(_artifact_acquired_presentation_elapsed_sec / maxf(_artifact_acquired_presentation_duration_sec, 0.001), 0.0, 1.0)
+		var acquired_allows_large_motion := bool(_artifact_acquired_presentation.get("allows_large_motion", true))
+		_artifact_action_cue.modulate.a = 1.0 if not acquired_allows_large_motion else (0.68 + 0.32 * sin(acquired_progress * PI))
+		if acquired_progress >= 1.0:
+			dismiss_artifact_acquired_presentation()
+		return
 	if not _artifact_slot_presentation_active:
 		set_process(false)
 		return
@@ -1701,6 +1724,8 @@ func _on_context_action_pressed(action_id: String) -> void:
 		})
 		return
 	_refresh()
+	if action_id == "collect_artifact":
+		_record_artifact_acquired_presentation(result, action_id)
 	_debug_phase_end("context_action_dispatch", dispatch_started_usec, {"action_id": action_id, "resolved": false})
 
 func _on_artifact_action_pressed(action_id: String) -> void:
@@ -2587,6 +2612,155 @@ func _record_artifact_slot_presentation(result: Dictionary, action_id: String, b
 		"duration_ms": duration_ms,
 	})
 
+func _record_artifact_acquired_presentation(result: Dictionary, action_id: String) -> void:
+	if not bool(result.get("ok", false)) or action_id != "collect_artifact":
+		return
+	var interaction: Dictionary = result.get("interaction_result", {}) if result.get("interaction_result", {}) is Dictionary else {}
+	var recap: Dictionary = result.get("post_action_recap", {}) if result.get("post_action_recap", {}) is Dictionary else {}
+	if String(interaction.get("family", "")) != "artifact" or String(recap.get("kind", "")) != "artifact":
+		return
+	var artifact_id := String(recap.get("artifact_id", interaction.get("content_id", "")))
+	var placement_id := String(recap.get("placement_id", interaction.get("placement_id", "")))
+	var tile: Dictionary = interaction.get("tile", {}) if interaction.get("tile", {}) is Dictionary else {}
+	if (
+		artifact_id == ""
+		or placement_id == ""
+		or String(interaction.get("content_id", "")) != artifact_id
+		or String(interaction.get("placement_id", "")) != placement_id
+	):
+		return
+	var acquired_node: Dictionary = {}
+	for node_value in _session.overworld.get("artifact_nodes", []):
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		if String(node.get("placement_id", "")) == placement_id:
+			acquired_node = node
+			break
+	if (
+		acquired_node.is_empty()
+		or String(acquired_node.get("artifact_id", "")) != artifact_id
+		or int(acquired_node.get("x", -1)) != int(tile.get("x", -2))
+		or int(acquired_node.get("y", -1)) != int(tile.get("y", -2))
+		or not bool(acquired_node.get("collected", false))
+		or String(acquired_node.get("collected_by_faction_id", "")) != "player"
+	):
+		return
+	var hero: Dictionary = _session.overworld.get("hero", {}) if _session.overworld.get("hero", {}) is Dictionary else {}
+	var location: Dictionary = ArtifactRules.locate_artifact(hero, artifact_id)
+	var location_name := String(location.get("location", "missing"))
+	if location_name not in ["equipped", "inventory"]:
+		return
+	var artifact := ContentService.get_artifact(artifact_id)
+	if artifact.is_empty():
+		return
+	var policy: Dictionary = AnimationCueCatalogScript.cue_playback_policy_for_event(
+		"artifact_acquired",
+		SettingsService.animation_preferences()
+	)
+	if (
+		String(policy.get("event_id", "")) != "artifact_acquired"
+		or String(policy.get("cue_id", "")) != "cue_artifact_acquired"
+		or String(policy.get("surface", "")) != "artifact"
+		or String(policy.get("subject_kind", "")) != "artifact"
+		or String(policy.get("selected_playback_policy", "")) != "queue_resolved"
+		or String(policy.get("selected_blocking_policy", "")) not in ["input_blocking_timeout", "nonblocking_reduced_motion", "nonblocking_fast_resolve"]
+	):
+		return
+	_artifact_acquired_presentation_serial += 1
+	var duration_ms := mini(620, maxi(80, int(policy.get("max_duration_ms", 700))))
+	present_artifact_acquired_presentation({
+		"serial": _artifact_acquired_presentation_serial,
+		"event_id": "artifact_acquired",
+		"cue_id": "cue_artifact_acquired",
+		"action_id": action_id,
+		"artifact_id": artifact_id,
+		"artifact_name": String(artifact.get("name", artifact_id)),
+		"placement_id": placement_id,
+		"tile": {"x": int(tile.get("x", -1)), "y": int(tile.get("y", -1))},
+		"location": location_name,
+		"slot": String(location.get("slot", "")),
+		"result_message": String(result.get("message", "")),
+		"post_action_recap": recap.duplicate(true),
+		"selected_animation_state": String(policy.get("selected_animation_state", "")),
+		"selected_visual_policy": String(policy.get("selected_visual_policy", "")),
+		"selected_fallback_tag": String(policy.get("selected_fallback_tag", "")),
+		"selected_playback_policy": String(policy.get("selected_playback_policy", "")),
+		"selected_blocking_policy": String(policy.get("selected_blocking_policy", "")),
+		"selected_vfx_cue_ids": (policy.get("selected_vfx_cue_ids", []) as Array).duplicate(true),
+		"selected_audio_cue_ids": (policy.get("selected_audio_cue_ids", []) as Array).duplicate(true),
+		"allows_large_motion": bool(policy.get("allows_large_motion", true)),
+		"blocks_input": String(policy.get("selected_blocking_policy", "")) == "input_blocking_timeout",
+		"duration_ms": duration_ms,
+	})
+
+func present_artifact_acquired_presentation(presentation: Dictionary) -> Dictionary:
+	var tile: Dictionary = presentation.get("tile", {}) if presentation.get("tile", {}) is Dictionary else {}
+	var location := String(presentation.get("location", ""))
+	var blocking_policy := String(presentation.get("selected_blocking_policy", ""))
+	var blocks_input := bool(presentation.get("blocks_input", false))
+	if (
+		int(presentation.get("serial", 0)) <= 0
+		or String(presentation.get("event_id", "")) != "artifact_acquired"
+		or String(presentation.get("cue_id", "")) != "cue_artifact_acquired"
+		or String(presentation.get("action_id", "")) != "collect_artifact"
+		or String(presentation.get("artifact_id", "")) == ""
+		or String(presentation.get("artifact_name", "")) == ""
+		or String(presentation.get("placement_id", "")) == ""
+		or int(tile.get("x", -1)) < 0
+		or int(tile.get("y", -1)) < 0
+		or location not in ["equipped", "inventory"]
+		or (location == "equipped" and String(presentation.get("slot", "")) == "")
+		or String(presentation.get("result_message", "")) == ""
+		or not (presentation.get("post_action_recap", {}) is Dictionary)
+		or String(presentation.get("selected_playback_policy", "")) != "queue_resolved"
+		or blocking_policy not in ["input_blocking_timeout", "nonblocking_reduced_motion", "nonblocking_fast_resolve"]
+		or blocks_input != (blocking_policy == "input_blocking_timeout")
+	):
+		return validation_artifact_acquired_presentation()
+	_artifact_slot_presentation_active = false
+	_artifact_acquired_presentation = presentation.duplicate(true)
+	_artifact_acquired_presentation_active = true
+	_artifact_acquired_presentation_elapsed_sec = 0.0
+	_artifact_acquired_presentation_duration_sec = float(clampi(int(presentation.get("duration_ms", 80)), 80, 700)) / 1000.0
+	var location_label := String(presentation.get("slot", "")).capitalize() if location == "equipped" else "Pack"
+	_artifact_action_cue.text = "Recovered: %s • %s" % [String(presentation.get("artifact_name", "")), location_label]
+	_artifact_action_cue.tooltip_text = String(presentation.get("result_message", ""))
+	_artifact_action_cue.modulate = Color.WHITE
+	_artifact_action_cue.visible = true
+	_artifact_acquired_input_blocker.visible = blocks_input
+	if blocks_input:
+		_artifact_acquired_input_blocker.call_deferred("grab_focus")
+	set_process(true)
+	return validation_artifact_acquired_presentation()
+
+func dismiss_artifact_acquired_presentation(restore_focus: bool = true) -> Dictionary:
+	var was_blocking := _artifact_acquired_input_blocker.visible
+	_artifact_acquired_presentation_active = false
+	_artifact_acquired_presentation_elapsed_sec = _artifact_acquired_presentation_duration_sec
+	_artifact_acquired_input_blocker.visible = false
+	_artifact_action_cue.visible = false
+	_artifact_action_cue.modulate = Color.WHITE
+	if restore_focus and was_blocking:
+		call_deferred("_configure_overworld_keyboard_focus", true)
+	if not _artifact_slot_presentation_active:
+		set_process(false)
+	return validation_artifact_acquired_presentation()
+
+func validation_artifact_acquired_presentation() -> Dictionary:
+	var snapshot := _artifact_acquired_presentation.duplicate(true)
+	var progress := 1.0
+	if _artifact_acquired_presentation_active and _artifact_acquired_presentation_duration_sec > 0.0:
+		progress = clampf(_artifact_acquired_presentation_elapsed_sec / _artifact_acquired_presentation_duration_sec, 0.0, 1.0)
+	snapshot["active"] = _artifact_acquired_presentation_active
+	snapshot["progress"] = progress
+	snapshot["duration_ms"] = int(round(_artifact_acquired_presentation_duration_sec * 1000.0))
+	snapshot["visible"] = _artifact_action_cue.visible and _artifact_acquired_presentation_active
+	snapshot["text"] = _artifact_action_cue.text if _artifact_acquired_presentation_active else ""
+	snapshot["tooltip_text"] = _artifact_action_cue.tooltip_text if _artifact_acquired_presentation_active else ""
+	snapshot["input_blocker_visible"] = _artifact_acquired_input_blocker.visible
+	return snapshot
+
 func present_artifact_slot_presentation(presentation: Dictionary) -> Dictionary:
 	var event_id := String(presentation.get("event_id", ""))
 	var expected_cue_id := "cue_artifact_equipped" if event_id == "artifact_equipped" else ("cue_artifact_unequipped" if event_id == "artifact_unequipped" else "")
@@ -2605,6 +2779,8 @@ func present_artifact_slot_presentation(presentation: Dictionary) -> Dictionary:
 		or String(presentation.get("selected_blocking_policy", "")) != "nonblocking"
 	):
 		return validation_artifact_slot_presentation()
+	if _artifact_acquired_presentation_active:
+		dismiss_artifact_acquired_presentation(false)
 	_artifact_slot_presentation = presentation.duplicate(true)
 	_artifact_slot_presentation_active = true
 	_artifact_slot_presentation_elapsed_sec = 0.0
@@ -6864,6 +7040,9 @@ func _set_active_drawer(drawer: String) -> void:
 func _configure_overworld_keyboard_focus(force: bool = false) -> void:
 	if not is_inside_tree() or (_active_play_settings_dialog != null and _active_play_settings_dialog.is_open()) or (_end_turn_confirmation_dialog != null and _end_turn_confirmation_dialog.visible):
 		return
+	if _artifact_acquired_input_blocker != null and _artifact_acquired_input_blocker.visible:
+		_artifact_acquired_input_blocker.grab_focus()
+		return
 	if _spell_cast_input_blocker != null and _spell_cast_input_blocker.visible:
 		_spell_cast_input_blocker.grab_focus()
 		return
@@ -9023,6 +9202,7 @@ func validation_snapshot() -> Dictionary:
 		"artifact_tooltip_text": _artifact_label.tooltip_text,
 		"artifact_actions": _validation_artifact_action_payloads(),
 		"artifact_slot_presentation": validation_artifact_slot_presentation(),
+		"artifact_acquired_presentation": validation_artifact_acquired_presentation(),
 		"active_town": active_town,
 		"selected_town": selected_town,
 		"resources": _duplicate_dictionary(_session.overworld.get("resources", {})),
