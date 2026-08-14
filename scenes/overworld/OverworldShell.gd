@@ -94,6 +94,7 @@ const KEYBOARD_HERO_MOVE_DELTAS := {
 @onready var _save_button: Button = %Save
 @onready var _settings_button: Button = %Settings
 @onready var _menu_button: Button = %Menu
+@onready var _spell_cast_input_blocker: Control = %SpellCastInputBlocker
 @onready var _end_turn_confirmation_dialog: ConfirmationDialog = $EndTurnConfirmationDialog
 @onready var _manual_save_overwrite_dialog = $ManualSaveOverwriteDialog
 @onready var _active_play_settings_dialog = %ActivePlaySettingsDialog
@@ -178,6 +179,8 @@ var _object_resolution_presentation_serial := 0
 var _route_blocked_presentation: Dictionary = {}
 var _route_blocked_presentation_serial := 0
 var _route_blocked_presentation_signature := ""
+var _spell_cast_presentation: Dictionary = {}
+var _spell_cast_presentation_serial := 0
 var _post_route_execution_compact_context := false
 var _briefing_title_text := "Command Briefing"
 var _command_briefing_text := ""
@@ -305,6 +308,9 @@ func _ready() -> void:
 	_profile_log_enabled = _profile_log_env_enabled()
 	_map_view.tile_pressed.connect(_on_map_tile_pressed)
 	_map_view.tile_hovered.connect(_on_map_tile_hovered)
+	_spell_cast_input_blocker.visible = false
+	if not _map_view.spell_cast_presentation_blocking_changed.is_connected(_on_spell_cast_presentation_blocking_changed):
+		_map_view.spell_cast_presentation_blocking_changed.connect(_on_spell_cast_presentation_blocking_changed)
 	AppRouter.note_overworld_handoff_step("overworld_ready_signals_done")
 
 	_session = SessionState.ensure_active_session()
@@ -412,6 +418,11 @@ func _responsive_available_size() -> Vector2:
 	return available_size
 
 func _input(event: InputEvent) -> void:
+	if _spell_cast_input_blocker != null and _spell_cast_input_blocker.visible:
+		get_viewport().set_input_as_handled()
+		if event.is_action_pressed("ui_cancel") and _map_view.has_method("dismiss_spell_cast_presentation"):
+			_map_view.call("dismiss_spell_cast_presentation")
+		return
 	var modal_owner_open: bool = (
 		(_active_play_settings_dialog != null and _active_play_settings_dialog.is_open())
 		or (_manual_save_overwrite_dialog != null and _manual_save_overwrite_dialog.visible)
@@ -1753,8 +1764,10 @@ func _on_rendezvous_transfer_pressed() -> void:
 
 func _on_spell_action_pressed(action_id: String) -> void:
 	var result = {}
+	var spell_id := ""
 	if action_id.begins_with("cast_spell:"):
-		result = OverworldRules.cast_overworld_spell(_session, action_id.trim_prefix("cast_spell:"))
+		spell_id = action_id.trim_prefix("cast_spell:")
+		result = OverworldRules.cast_overworld_spell(_session, spell_id)
 
 	if result.is_empty():
 		return
@@ -1769,6 +1782,7 @@ func _on_spell_action_pressed(action_id: String) -> void:
 	if bool(resolution.get("handled", false)):
 		return
 	_refresh()
+	_record_spell_cast_presentation(result, spell_id)
 
 func _on_map_tile_pressed(tile: Vector2i) -> void:
 	var handler_started_usec := Time.get_ticks_usec()
@@ -2300,7 +2314,8 @@ func _refresh_map_view() -> void:
 		_hero_movement_presentation,
 		_object_resolution_presentation,
 		_route_blocked_presentation,
-		_selected_guarded_site_presentation()
+		_selected_guarded_site_presentation(),
+		_spell_cast_presentation
 	)
 	if _map_view.has_method("set_placement_debug_overlay_enabled"):
 		_map_view.call("set_placement_debug_overlay_enabled", _placement_debug_overlay_enabled)
@@ -2431,6 +2446,67 @@ func _record_object_resolution_presentation(result: Dictionary, route: String) -
 		"duration_ms": int(round(float(authored_duration_ms) * duration_scale)),
 		"max_duration_ms": max_duration_ms,
 	}
+
+func _record_spell_cast_presentation(result: Dictionary, spell_id: String) -> void:
+	if not bool(result.get("ok", false)) or spell_id == "" or _map_view == null or not _map_view.has_method("present_spell_cast_presentation"):
+		return
+	var recap: Dictionary = result.get("post_action_recap", {}) if result.get("post_action_recap", {}) is Dictionary else {}
+	if String(recap.get("kind", "")) != "spell":
+		return
+	var spell := ContentService.get_spell(spell_id)
+	if spell.is_empty():
+		return
+	var policy: Dictionary = AnimationCueCatalogScript.cue_playback_policy_for_event(
+		"spell_cast_overworld",
+		SettingsService.animation_preferences()
+	)
+	if (
+		String(policy.get("event_id", "")) != "spell_cast_overworld"
+		or String(policy.get("cue_id", "")) != "cue_spell_cast_overworld"
+		or String(policy.get("surface", "")) != "spell"
+		or String(policy.get("subject_kind", "")) != "spell"
+		or String(policy.get("selected_playback_policy", "")) != "queue_resolved"
+		or String(policy.get("selected_blocking_policy", "")) not in ["input_blocking_timeout", "nonblocking_reduced_motion", "nonblocking_fast_resolve"]
+	):
+		return
+	var hero_tile := OverworldRules.hero_position(_session)
+	var duration_ms := mini(
+		620,
+		maxi(0, int(round(float(policy.get("max_duration_ms", 700)) * float(policy.get("duration_scale", 1.0)))))
+	)
+	_spell_cast_presentation_serial += 1
+	_spell_cast_presentation = {
+		"serial": _spell_cast_presentation_serial,
+		"event_id": "spell_cast_overworld",
+		"cue_id": String(policy.get("cue_id", "")),
+		"spell_id": spell_id,
+		"spell_name": String(spell.get("name", result.get("spell_name", spell_id))),
+		"result_message": String(result.get("message", "")),
+		"post_action_recap": recap.duplicate(true),
+		"hero_tile": {"x": hero_tile.x, "y": hero_tile.y},
+		"selected_animation_state": String(policy.get("selected_animation_state", "")),
+		"selected_visual_policy": String(policy.get("selected_visual_policy", "")),
+		"selected_fallback_tag": String(policy.get("selected_fallback_tag", "")),
+		"selected_playback_policy": String(policy.get("selected_playback_policy", "")),
+		"selected_blocking_policy": String(policy.get("selected_blocking_policy", "")),
+		"selected_vfx_cue_ids": (policy.get("selected_vfx_cue_ids", []) as Array).duplicate(true),
+		"selected_audio_cue_ids": (policy.get("selected_audio_cue_ids", []) as Array).duplicate(true),
+		"allows_large_motion": bool(policy.get("allows_large_motion", true)),
+		"duration_ms": duration_ms,
+		"max_duration_ms": int(policy.get("max_duration_ms", 700)),
+	}
+	_map_view.call("present_spell_cast_presentation", _spell_cast_presentation)
+
+func _on_spell_cast_presentation_blocking_changed(blocking: bool) -> void:
+	if _spell_cast_input_blocker == null:
+		return
+	_spell_cast_input_blocker.visible = blocking
+	if blocking:
+		_clear_controller_move_state()
+		_deactivate_controller_route_cursor(false, false)
+		_spell_cast_input_blocker.call_deferred("grab_focus")
+	else:
+		call_deferred("_configure_overworld_keyboard_focus", true)
 
 func _selected_guarded_site_presentation() -> Dictionary:
 	if _session == null or not _tile_in_bounds(_selected_tile):
@@ -6654,6 +6730,9 @@ func _set_active_drawer(drawer: String) -> void:
 
 func _configure_overworld_keyboard_focus(force: bool = false) -> void:
 	if not is_inside_tree() or (_active_play_settings_dialog != null and _active_play_settings_dialog.is_open()) or (_end_turn_confirmation_dialog != null and _end_turn_confirmation_dialog.visible):
+		return
+	if _spell_cast_input_blocker != null and _spell_cast_input_blocker.visible:
+		_spell_cast_input_blocker.grab_focus()
 		return
 	var surfaces := [
 		_primary_action_button,
