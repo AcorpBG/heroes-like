@@ -303,6 +303,14 @@ func _probe_rot_cant(unit_id: String) -> Dictionary:
 	target["tier"] = min_tier
 	var battle := _battle_for_stacks([attacker, target])
 	var eligible_score := BattleAiRulesScript._attack_score(attacker, target, battle, true)
+	var zero_priority_attacker := _with_ability_field(attacker, "rot_cant", "ai_target_priority_bonus", 0.0)
+	var zero_priority_target := target.duplicate(true)
+	var zero_priority_battle := _battle_for_stacks([zero_priority_attacker, zero_priority_target])
+	var zero_priority_score := BattleAiRulesScript._attack_score(zero_priority_attacker, zero_priority_target, zero_priority_battle, true)
+	var old_priority_attacker := _with_ability_field(attacker, "rot_cant", "ai_target_priority_bonus", 1.0)
+	var old_priority_target := target.duplicate(true)
+	var old_priority_battle := _battle_for_stacks([old_priority_attacker, old_priority_target])
+	var old_priority_score := BattleAiRulesScript._attack_score(old_priority_attacker, old_priority_target, old_priority_battle, true)
 	var preview := BattleRulesScript._active_ability_window_summary(attacker, battle, target)
 	var messages := BattleRulesScript._apply_attack_ability_effects(battle, attacker, target, true, 1)
 	var updated := BattleRulesScript._get_stack_by_id(battle, String(target.get("battle_id", "")))
@@ -326,8 +334,9 @@ func _probe_rot_cant(unit_id: String) -> Dictionary:
 		and int(rot_cant.get("available_from_round", 0)) == 1
 		and opening_applied
 		and low_blocked
-		and priority_bonus > 0.0
-		and eligible_score - low_score >= priority_bonus
+		and is_equal_approx(priority_bonus, 0.9)
+		and is_equal_approx(eligible_score - zero_priority_score, 0.9)
+		and is_equal_approx(old_priority_score - eligible_score, 0.1)
 		and status_applied
 		and uses_recorded == 1
 		and second_blocked
@@ -341,6 +350,11 @@ func _probe_rot_cant(unit_id: String) -> Dictionary:
 		"target_min_tier": min_tier,
 		"week_two_veteran_target_proven": min_tier == 4,
 		"ai_target_priority_bonus": priority_bonus,
+		"zero_priority_control_score": zero_priority_score,
+		"authored_priority_score_delta": eligible_score - zero_priority_score,
+		"old_priority_control_bonus": 1.0,
+		"old_priority_control_score": old_priority_score,
+		"old_priority_score_delta": old_priority_score - eligible_score,
 		"low_tier_blocked": low_blocked,
 		"opening_round_applied": opening_applied,
 		"low_tier_score": low_score,

@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The bounded Reedfall campaign corrections are complete. River Pass uses the first continuous 34/34 sequential 34/8 shield, Causeway uses the first stable ten-field/32-garrison split with shared ordinary/withdrawal victory flags, and Fen Crown uses the first 34/34 final-march reserve of 14 Guards. The full 121-step routed arc completes all three chapters through public town, route, battle, Waystride, save/resume, finale, and campaign-browser paths with every enemy force unchanged. Active breadth is 59/59 with clear signature 829808c9; compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. No manual tactical-play, packaged campaign interaction, controller, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claim is made.",
+  "currentNotes": "Sporewake Rot Cant now uses the globally screened 0.9 opening target priority while preserving its round-one tier-four gate and every live consequence. Focused ability proof, exact all-live balance, 59-scenario breadth, compatibility, static/editor, and bounded Linux/Windows export-startup gates pass. The matrix remains needs_tuning and no broad balance or release-readiness claim is made.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "campaign-fen-crown-final-march-veteran-reserve-10184",
-  "currentSliceId": "campaign-fen-crown-final-march-veteran-reserve-10184",
-  "currentSliceNotes": "Completed with the exact 14-Guard first 34/34 reserve, full routed three-chapter arc, focused and compatibility gates, and bounded Linux/Windows export-startup evidence. Select the next tracker-approved slice.",
+  "currentSlice": "combat-mireclaw-sporewake-rot-cant-priority-calibration-10184",
+  "currentSliceId": "combat-mireclaw-sporewake-rot-cant-priority-calibration-10184",
+  "currentSliceNotes": "Completed with the exact 0.9 content calibration, 118/118 focused live ability consequences, 34 / 183.5 / 3 / 68.5 / 0.73 / 0 full matrix, 59/59 clear active breadth, compatibility/static/editor gates, and bounded Linux/Windows export-startup evidence. Select the next tracker-approved slice.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Campaign Fen Crown Final March Veteran Reserve",
-  "currentSliceUpdatedAt": "2026-08-14T03:57:32Z",
+  "currentSliceTitle": "Mireclaw Sporewake Rot Cant Priority Calibration",
+  "currentSliceUpdatedAt": "2026-08-14T05:21:19Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -78703,6 +78703,30 @@
       "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
       "blockedReason": null,
       "result": {"reserve_river_guards": 14, "first_observed_victory_reserve": 13, "first_all_victory_screened_reserve": 14, "sequential_screen_sample_count": 34, "waystride_cast": true, "raid_interrupt_count": 2, "redoubt_result": "victory", "final_scenario_status": "victory", "full_arc_step_count": 121, "campaign_browser_completed": true, "active_breadth_completed": 59, "active_breadth_queue_signature": "829808c9", "linux_export_headless_startup_passed": true, "windows_export_fresh_wine_startup_passed": true}
+    },
+    {
+      "id": "combat-mireclaw-sporewake-rot-cant-priority-calibration-10184",
+      "title": "Mireclaw Sporewake Rot Cant Priority Calibration",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md"],
+      "purpose": "Reduce only Sporewake Rot Cant's authored opening tactical priority from 1.0 to the globally screened 0.9 so the ability remains live without overcommitting Mireclaw's week-two targeting against Brasshollow.",
+      "implementationTargets": ["content/units.json", "tests/unit_ability_runtime_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "testOwners": ["tests/unit_ability_runtime_report.gd", "tests/battle_faction_fast_balance_benchmark.py", "tests/battle_autoplay_active_scenario_breadth_report.gd", "tests/core_systems_regression_smoke.gd", "tests/validate_repo.py"],
+      "baseline": {"head": "d41d8b22ec709e02aa0bb7b65e4864b62da5d804", "rot_cant_ai_target_priority_bonus": 1.0, "week_two_brasshollow_mireclaw_mire_win_rate": 61.5, "ordered_mire_win_rates": [63.0, 60.0], "outliers": 34, "severity": 187.0, "severe": 3, "max_dominance": 68.5, "max_side_bias": 0.73, "structural_failures": 0},
+      "candidate": {"rot_cant_ai_target_priority_bonus": 0.9, "week_two_brasshollow_mireclaw_mire_win_rate": 58.0, "ordered_mire_win_rates": [59.0, 57.0], "outliers": 34, "severity": 183.5, "severe": 3, "max_dominance": 68.5, "max_side_bias": 0.73, "structural_failures": 0, "non_mireclaw_ordered_rows_exact": true},
+      "completionCriteria": ["Only Sporewake Rot Cant ai_target_priority_bonus changes from 1.0 to 0.9; its timing, target floor, use count, status, duration, modifiers, wounded rider, description, and every other content field remain exact", "Focused live runtime proves exact 0.9 authored priority, round-one tier-four eligibility, lower-tier rejection, one-use status and wounded effect, with an exact old-1.0 method control", "The all-live 100-seed four-week matrix reproduces 34 outliers / 183.5 severity / 3 severe / 68.5 max dominance / 0.73 side bias / zero structural failures, keeps every non-Mireclaw ordered row exact, and keeps the exact W2 ordered 59/41 and 57/43 results", "The 59-scenario active autoplay breadth remains complete with an empty queue and signature 829808c9", "Ability, battle/autoplay compatibility, core, repository, JSON, Python, diff, editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass"],
+      "nonGoals": ["Rot Cant timing, tier gate, uses, status, duration, modifier, damage, summary, or identity changes", "other unit, hero, spell, faction, encounter, scenario, formation, combat-rule, tactical-AI algorithm, benchmark threshold, save, economy, strategic-AI, or Native RMG changes", "priority below 0.9, broad faction-balance completion, packaged battle interaction, controller, accessibility API, native hardware, signing/publication, whole-game, or release-readiness claims"],
+      "createdAt": "2026-08-14T05:00:09Z",
+      "startedAt": "2026-08-14T05:00:09Z",
+      "updatedAt": "2026-08-14T05:21:19Z",
+      "completedAt": "2026-08-14T05:21:19Z",
+      "notes": "Production now changes only Sporewake Rot Cant ai_target_priority_bonus 1.0 to 0.9. Focused runtime proves the exact 0.9 contribution against zero-priority and old-1.0 controls while all 118 authored ability instances remain live. The all-live matrix is 34 outliers / 183.5 severity / 3 severe / 68.5 max dominance / 0.73 side bias / zero structural failures, W2 Brasshollow/Mireclaw is 59/41 and reverse 57/43, and every non-Mireclaw ordered row is exact. Active breadth is 59/59 with clear signature 829808c9; compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.",
+      "remainingWork": "No work remains in this bounded slice. The matrix remains needs_tuning at 34 outliers / 183.5 severity / 68.5 maximum dominance / 0.73 side bias; select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null,
+      "result": {"rot_cant_ai_target_priority_bonus": 0.9, "focused_ability_instance_count": 118, "focused_runtime_consequence_count": 118, "week_two_brasshollow_mireclaw_mire_win_rate": 58.0, "ordered_mire_win_rates": [59.0, 57.0], "outliers": 34, "severity": 183.5, "severe": 3, "max_dominance": 68.5, "max_side_bias": 0.73, "structural_failures": 0, "non_mireclaw_ordered_rows_exact": true, "active_breadth_completed": 59, "active_breadth_queue_signature": "829808c9", "linux_export_headless_startup_passed": true, "windows_export_fresh_wine_startup_passed": true, "balance_report_sha256": "f1849e3a3dbef2beeff9fb64cb9446c7380ba91104d60094264abd37ca25bffa"}
     }
   ],
   "project": "heroes-like",
@@ -78713,7 +78737,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, manual public-prerelease execution, stable publication, signing, and native Windows hardware certification.",
-  "remainingWork": "Continue strategic-AI, accessibility, content, performance, signing, native Windows certification, stable-channel, and remaining faction balance gaps; create/review a current verified draft before manually exercising public prerelease promotion. The accepted faction matrix remains needs_tuning at 34 outliers / 187.0 severity / 68.5 percent maximum dominance / 0.73 side bias.",
+  "remainingWork": "Continue strategic-AI, accessibility, content, performance, signing, native Windows certification, stable-channel, and remaining faction balance gaps; select the next tracker-approved implementation slice. The accepted faction matrix remains needs_tuning at 34 outliers / 183.5 severity / 68.5 percent maximum dominance / 0.73 side bias.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -79144,7 +79168,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "campaign_fen_crown_final_march_veteran_reserve_completed",
+  "result": "combat_mireclaw_sporewake_rot_cant_priority_calibration_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -79245,9 +79269,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The bounded Reedfall campaign corrections are complete: River Pass 34/8, Causeway ten-field/32-garrison, and Fen Crown 14-reserve values are the first screened stable plateaus; the full 121-step routed arc, focused and compatibility suites, static/editor checks, and bounded Linux/Windows export-startup gates pass. Broader release readiness remains open.",
+  "summary": "Sporewake Rot Cant's authored opening target priority is calibrated from 1.0 to 0.9 with exact focused live behavior, improved full-matrix severity, clear active breadth, compatibility/static/editor validation, and bounded Linux/Windows export-startup evidence. Broad faction balance and release readiness remain open.",
   "taskId": "10184",
-  "updatedAt": "2026-08-14T03:57:32Z",
+  "updatedAt": "2026-08-14T05:21:19Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

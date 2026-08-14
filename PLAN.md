@@ -25,6 +25,7 @@ Rules:
 Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Current selected implementation slice: none. Select the next tracker-approved release-readiness implementation slice.
+- Latest completed implementation slice: `combat-mireclaw-sporewake-rot-cant-priority-calibration-10184`. Sporewake Rot Cant keeps its round-one tier-four veteran identity and all live consequences while its authored target-priority bonus is calibrated from `1.0` to `0.9`; the exact all-live matrix lowers severity from `187.0` to `183.5`, preserves every non-Mireclaw ordered row, and keeps the active 59-encounter queue clear.
 - Latest completed validation/adoption slice: `strategic-ai-medium-long-run-seed-matrix-10184`. Exact current-HEAD Medium seed ordinals 1-100 now pass the 56-turn behavior matrix with zero aggregate behavior, integrity, reachability, or no-active-pressure blockers; the baseline retires only that matrix gap while generated topology/contact/pacing and broader release readiness remain open.
 - Latest completed implementation slice: `strategic-ai-known-world-target-catalog-projection-reuse-10184`. Strategic AI now enumerates one exact detached sight-source surface and eligible-target catalog per known-world refresh while keeping every source projection and every later refresh fresh.
 - Latest completed implementation slice: `strategic-ai-phase-target-descriptor-enumeration-reuse-10184`. Strategic AI now separates exact ordered detached target descriptors from fresh origin-specific projection and reuses discovery only within one planner invocation or best-open-spawn-point sweep, preserving ordinal-100 behavior while reducing repeated target enumeration.
@@ -4624,6 +4625,37 @@ Completion evidence:
   JSON, diff, and editor gates pass; official Linux export/headless startup and Windows export/fresh-Wine
   Boot/MainMenu/native-DLL startup pass. These are bounded startup claims only, with no packaged AI
   interaction, controller, AT-SPI/UIA, native-hardware, signing/publication, whole-game, or release claim.
+
+## Mireclaw Sporewake Rot Cant Priority Calibration
+
+id: `combat-mireclaw-sporewake-rot-cant-priority-calibration-10184`
+
+Status: completed.
+
+Selected Phase 6 content-balance implementation slice. On exact current HEAD, week-two Brasshollow/Mireclaw is Mireclaw `61.5` percent across both ordered sides (`63/37` and `60/40`). A method-matched one-entry screen identifies Sporewake Rot Cant as the causal surface, and `ai_target_priority_bonus: 0.9` retains the opening ability while moving the ordered rows to `59/41` and `57/43`. The full all-live 100-seed four-week screen preserves all non-Mireclaw ordered rows and improves aggregate excess severity from `187.0` to `183.5` without worsening the `34` outliers, `3` severe rows, `68.5` maximum dominance, `0.73` side bias, or zero structural failures.
+
+Implementation target:
+- change only Sporewake Rot Cant's authored `ai_target_priority_bonus` from `1.0` to `0.9` in `content/units.json`;
+- keep its round-one availability, tier-four target floor, once-per-battle use, status, duration, cohesion/retaliation pressure, wounded threshold/multiplier, description, and all other unit fields exact;
+- keep shared BattleRules, BattleAiRules, benchmark algorithms, thresholds, seeds, formations, heroes, spells, scenarios, and faction content unchanged;
+- update focused live ability proof and repository validation to require the exact `0.9` contract and an exact old-`1.0` AI-score control.
+
+Completion criteria:
+- focused live runtime proves the exact authored `0.9` bonus, round-one tier-four veteran eligibility, lower-tier rejection, bounded one-use status, unchanged wounded-prey effect, and a method-matched old-`1.0` score delta without changing target order or AI rules;
+- the all-live 100-seed four-week matrix reproduces the accepted `34 / 183.5 / 3 / 68.5 / 0.73 / 0` aggregate, moves only Mireclaw-owned ordered rows, and keeps the exact week-two Brasshollow/Mireclaw `59/41` and reverse `57/43` results;
+- the 59-scenario active autoplay breadth remains complete with zero queue items and signature `829808c9`;
+- ability, battle/autoplay compatibility, core, repository-validator, JSON, Python, diff, editor-parse, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass before completion is claimed.
+
+Completion result:
+- the production content changes only Rot Cant's target-priority bonus from `1.0` to `0.9`; focused live runtime proves the exact authored contribution against zero-priority and old-`1.0` controls while all `118/118` authored ability instances retain live consequences;
+- the authoritative all-live 100-seed four-week matrix is `34 / 183.5 / 3 / 68.5 / 0.73 / 0`, with week-two Brasshollow/Mireclaw at `59/41`, reverse at `57/43`, and every non-Mireclaw ordered row exact to the current control;
+- active breadth completes `59/59` with no stalls, invalid orders, or queue items and repeated signature `829808c9`; runtime-consequence matrix and core compatibility pass;
+- repository, JSON, Python, diff, exact/generic editor, Linux export plus packaged headless startup, and Windows export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup gates pass. Platform evidence is bounded to export/startup and does not establish packaged battle interaction or broad release readiness.
+
+Non-goals:
+- no Rot Cant timing, tier gate, use count, status, duration, modifier, damage, summary, or ability-identity change;
+- no other unit, hero, spell, faction, encounter, scenario, formation, combat rule, tactical-AI algorithm, benchmark branch/threshold, save, economy, strategic-AI, or Native RMG change;
+- no opportunistic priority below `0.9`, broad faction-balance completion, packaged battle interaction, controller, accessibility API, native-hardware, signing/publication, whole-game, or release-readiness claim.
 
 ## Phase Roadmap
 

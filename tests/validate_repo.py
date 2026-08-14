@@ -11231,7 +11231,7 @@ def validate_content(errors: list[str]) -> None:
     ensure(int(sporewake_rot_cant.get("uses_per_battle", 0)) == 1, errors, "Sporewake Rot Cant must be limited to one veteran-line call per battle")
     ensure(int(sporewake_rot_cant.get("available_from_round", 0)) == 1, errors, "Sporewake Rot Cant must open before its week-two Chanter stack is eliminated")
     ensure(int(sporewake_rot_cant.get("target_min_tier", 0)) == 4, errors, "Sporewake Rot Cant must engage a tier-4-or-higher veteran line when Chanters enter the week-two army")
-    ensure(float(sporewake_rot_cant.get("ai_target_priority_bonus", 0.0)) == 1.0, errors, "Sporewake Rot Cant must narrowly prioritize its opening veteran-line shot over a routine commander spell")
+    ensure(float(sporewake_rot_cant.get("ai_target_priority_bonus", 0.0)) == 0.9, errors, "Sporewake Rot Cant must keep the globally screened opening veteran-line priority calibration")
     ensure(int(sporewake_rot_cant.get("modifiers", {}).get("retaliation", 0)) < 0, errors, "Sporewake Rot Cant must weaken retaliation")
     ensure(float(sporewake_rot_cant.get("wounded_damage_multiplier", 1.0)) > 1.0, errors, "Sporewake Rot Cant must amplify wounded-prey pressure")
     mireclaw_rippers = units.get("unit_mireclaw_gorefen_rippers", {})
@@ -28117,6 +28117,12 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "REQUIRED_ABILITY_IDS",
         "func _runtime_consequence_for_ability",
         "func _probe_harry",
+        "func _probe_rot_cant",
+        'var zero_priority_attacker := _with_ability_field(attacker, "rot_cant", "ai_target_priority_bonus", 0.0)',
+        'var old_priority_attacker := _with_ability_field(attacker, "rot_cant", "ai_target_priority_bonus", 1.0)',
+        "is_equal_approx(priority_bonus, 0.9)",
+        "is_equal_approx(eligible_score - zero_priority_score, 0.9)",
+        "is_equal_approx(old_priority_score - eligible_score, 0.1)",
         "func _probe_rivet_hound_seam_mark",
         "rivet_hound_content_driven_supported_seam_mark",
         "func _probe_obituary",
