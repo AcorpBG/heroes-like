@@ -177,6 +177,8 @@ const DIRECTIONS := [
 ]
 const CACHE_SIGNATURE_SEED := 2166136261
 const CACHE_SIGNATURE_MASK := 0x7fffffff
+const HERO_MOVEMENT_MIN_DURATION_MSEC := 80
+const HERO_MOVEMENT_MAX_DURATION_MSEC := 700
 
 @export var large_map_visible_tile_span_override := 0.0
 
@@ -261,6 +263,16 @@ var _heroes_by_tile: Dictionary = {}
 var _decorative_object_asset_ids: Dictionary = {}
 var _map_object_content_profiles: Dictionary = {}
 var _placement_debug_overlay_enabled := false
+var _hero_movement_last_serial := 0
+var _hero_movement_path: Array = []
+var _hero_movement_elapsed_sec := 0.0
+var _hero_movement_duration_sec := 0.0
+var _hero_movement_active := false
+var _hero_movement_event_id := ""
+var _hero_movement_animation_state := ""
+var _hero_movement_visual_policy := ""
+var _hero_movement_fallback_tag := ""
+var _hero_movement_reduced_motion := false
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -271,8 +283,16 @@ func _ready() -> void:
 	_load_terrain_grammar()
 	_load_overworld_art_manifest()
 	_invalidate_frame_layer("ready")
+	set_process(false)
 
-func set_map_state(session, map_data: Array, map_size: Vector2i, selected_tile: Vector2i, selected_route_state: Dictionary = {}) -> void:
+func set_map_state(
+	session,
+	map_data: Array,
+	map_size: Vector2i,
+	selected_tile: Vector2i,
+	selected_route_state: Dictionary = {},
+	movement_presentation: Dictionary = {}
+) -> void:
 	var profile_start := _profile_begin("set_map_state")
 	_ensure_render_layers()
 	var previous_viewport_layout := _viewport_layout_signature()
@@ -284,6 +304,7 @@ func set_map_state(session, map_data: Array, map_size: Vector2i, selected_tile: 
 	_map_data = map_data
 	_map_size = Vector2i(max(map_size.x, 1), max(map_size.y, 1))
 	_hero_tile = OverworldRulesScript.hero_position(session) if session != null else Vector2i.ZERO
+	_sync_hero_movement_presentation(movement_presentation)
 	_movement_left = int(session.overworld.get("movement", {}).get("current", 0)) if session != null else 0
 	_terrain_layers = session.overworld.get("terrain_layers", {}) if session != null and session.overworld.get("terrain_layers", {}) is Dictionary else {}
 	_rebuild_object_indexes()
@@ -341,6 +362,50 @@ func set_map_state(session, map_data: Array, map_size: Vector2i, selected_tile: 
 
 	_invalidate_dynamic_layer("map_state_updated")
 	_profile_end("set_map_state", profile_start)
+
+func _process(delta: float) -> void:
+	if not _hero_movement_active:
+		set_process(false)
+		return
+	_hero_movement_elapsed_sec = minf(_hero_movement_duration_sec, _hero_movement_elapsed_sec + maxf(0.0, delta))
+	if _hero_movement_elapsed_sec >= _hero_movement_duration_sec:
+		_hero_movement_active = false
+		set_process(false)
+	_invalidate_dynamic_layer("hero_movement_presentation")
+
+func _sync_hero_movement_presentation(presentation: Dictionary) -> void:
+	var serial := int(presentation.get("serial", 0))
+	if serial <= 0 or serial == _hero_movement_last_serial:
+		return
+	_hero_movement_last_serial = serial
+	_hero_movement_active = false
+	set_process(false)
+	_hero_movement_path = []
+	_hero_movement_elapsed_sec = 0.0
+	_hero_movement_duration_sec = 0.0
+	_hero_movement_event_id = String(presentation.get("event_id", ""))
+	_hero_movement_animation_state = String(presentation.get("selected_animation_state", ""))
+	_hero_movement_visual_policy = String(presentation.get("selected_visual_policy", ""))
+	_hero_movement_fallback_tag = String(presentation.get("selected_fallback_tag", ""))
+	_hero_movement_reduced_motion = not bool(presentation.get("allows_large_motion", true))
+	if _hero_movement_event_id != "overworld_hero_move":
+		return
+	var path := _tiles_from_payloads(presentation.get("route_tiles", []))
+	if path.size() <= 1 or path[path.size() - 1] != _hero_tile:
+		return
+	_hero_movement_path = path
+	if _hero_movement_reduced_motion:
+		_invalidate_dynamic_layer("hero_movement_reduced_motion_snap")
+		return
+	var duration_msec := clampi(
+		int(presentation.get("duration_ms", HERO_MOVEMENT_MIN_DURATION_MSEC)),
+		HERO_MOVEMENT_MIN_DURATION_MSEC,
+		HERO_MOVEMENT_MAX_DURATION_MSEC
+	)
+	_hero_movement_duration_sec = float(duration_msec) / 1000.0
+	_hero_movement_active = true
+	set_process(true)
+	_invalidate_dynamic_layer("hero_movement_started")
 
 func set_placement_debug_overlay_enabled(enabled: bool) -> void:
 	if _placement_debug_overlay_enabled == enabled:
@@ -770,6 +835,7 @@ func _draw_dynamic_layer() -> void:
 			tile_checks += 1
 			_draw_tile_focus(tile, rect)
 			_draw_tile_dynamic_icon(tile, rect)
+	_draw_hero_movement_presentation(board_rect)
 	_draw_canvas_item = previous_target
 	_profile_add("dynamic_tile_checks", tile_checks)
 	_profile_end("draw_dynamic", profile_start, {
@@ -1213,8 +1279,38 @@ func _draw_tile_dynamic_icon(tile: Vector2i, rect: Rect2) -> void:
 	if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y):
 		return
 	var visible := OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y)
-	if visible and _has_hero_at(tile):
+	if visible and _has_hero_at(tile) and not (_hero_movement_active and tile == _hero_tile):
 		_draw_hero_marker(rect, tile)
+
+func _draw_hero_movement_presentation(board_rect: Rect2) -> void:
+	var draw_state := _hero_movement_draw_state(board_rect)
+	if draw_state.is_empty():
+		return
+	var draw_rect: Rect2 = draw_state.get("rect", Rect2())
+	var grounding_tile: Vector2i = draw_state.get("grounding_tile", Vector2i(-1, -1))
+	_draw_hero_marker(draw_rect, grounding_tile, false)
+
+func _hero_movement_draw_state(board_rect: Rect2) -> Dictionary:
+	if not _hero_movement_active or _hero_movement_path.size() <= 1 or _hero_movement_duration_sec <= 0.0:
+		return {}
+	var progress := clampf(_hero_movement_elapsed_sec / _hero_movement_duration_sec, 0.0, 1.0)
+	var scaled_progress := progress * float(_hero_movement_path.size() - 1)
+	var segment_index := mini(int(floor(scaled_progress)), _hero_movement_path.size() - 2)
+	var segment_progress := clampf(scaled_progress - float(segment_index), 0.0, 1.0)
+	var from_tile: Vector2i = _hero_movement_path[segment_index]
+	var to_tile: Vector2i = _hero_movement_path[segment_index + 1]
+	var from_rect := _tile_rect(board_rect, from_tile)
+	var to_rect := _tile_rect(board_rect, to_tile)
+	var center := from_rect.get_center().lerp(to_rect.get_center(), segment_progress)
+	return {
+		"rect": Rect2(center - from_rect.size * 0.5, from_rect.size),
+		"center": center,
+		"segment_index": segment_index,
+		"segment_progress": segment_progress,
+		"from_tile": from_tile,
+		"to_tile": to_tile,
+		"grounding_tile": from_tile if segment_progress < 0.5 else to_tile,
+	}
 
 func _draw_resource_sprite(node: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
 	return _draw_object_sprite(_resource_asset_id(node), rect, remembered, _resource_object_profile(node), tile)
@@ -1528,7 +1624,7 @@ func _draw_encounter_marker(rect: Rect2, remembered: bool = false, tile: Vector2
 	]), Color(0.92, 0.30, 0.24, 0.68 if remembered else 0.96))
 	_draw_procedural_contact_marks(anchor, "encounter", remembered)
 
-func _draw_hero_marker(rect: Rect2, tile: Vector2i) -> void:
+func _draw_hero_marker(rect: Rect2, tile: Vector2i, show_reserve_count: bool = true) -> void:
 	var anchor := _draw_hero_grounding_anchor(rect, tile)
 	var extent := minf(rect.size.x, rect.size.y)
 	var base_radius := maxf(5.0, extent * HERO_MARKER_RADIUS)
@@ -1575,7 +1671,7 @@ func _draw_hero_marker(rect: Rect2, tile: Vector2i) -> void:
 	_canvas_draw_polyline(PackedVector2Array([banner[0], banner[1], banner[2], banner[0]]), MARKER_OUTLINE_COLOR, maxf(1.4, extent * 0.020))
 	_draw_hero_foreground_contact(anchor)
 
-	var reserve_count = _reserve_hero_count(tile)
+	var reserve_count = _reserve_hero_count(tile) if show_reserve_count else 0
 	if reserve_count <= 0:
 		return
 	var marker_center = rect.position + rect.size * Vector2(0.78, 0.25)
@@ -2674,6 +2770,38 @@ func validation_view_metrics() -> Dictionary:
 			"hero_tiles": _heroes_by_tile.size(),
 		},
 		"unit_art": validation_unit_art_summary(),
+		"hero_movement_presentation": validation_hero_movement_presentation(),
+	}
+
+func validation_hero_movement_presentation() -> Dictionary:
+	var progress := 1.0
+	if _hero_movement_active and _hero_movement_duration_sec > 0.0:
+		progress = clampf(_hero_movement_elapsed_sec / _hero_movement_duration_sec, 0.0, 1.0)
+	var route_tiles := []
+	for tile in _hero_movement_path:
+		route_tiles.append({"x": tile.x, "y": tile.y})
+	var draw_state := _hero_movement_draw_state(_board_rect())
+	var center: Vector2 = draw_state.get("center", Vector2.ZERO)
+	var from_tile: Vector2i = draw_state.get("from_tile", _hero_tile)
+	var to_tile: Vector2i = draw_state.get("to_tile", _hero_tile)
+	return {
+		"serial": _hero_movement_last_serial,
+		"event_id": _hero_movement_event_id,
+		"active": _hero_movement_active,
+		"route_tiles": route_tiles,
+		"route_step_count": maxi(0, route_tiles.size() - 1),
+		"animation_state": _hero_movement_animation_state,
+		"visual_policy": _hero_movement_visual_policy,
+		"fallback_tag": _hero_movement_fallback_tag,
+		"reduced_motion": _hero_movement_reduced_motion,
+		"duration_ms": int(round(_hero_movement_duration_sec * 1000.0)),
+		"progress": progress,
+		"segment_index": int(draw_state.get("segment_index", -1)),
+		"segment_progress": float(draw_state.get("segment_progress", 1.0)),
+		"draw_center": {"x": center.x, "y": center.y},
+		"segment_from_tile": {"x": from_tile.x, "y": from_tile.y},
+		"segment_to_tile": {"x": to_tile.x, "y": to_tile.y},
+		"final_tile": {"x": _hero_tile.x, "y": _hero_tile.y},
 	}
 
 func validation_color_cue_summary() -> Dictionary:

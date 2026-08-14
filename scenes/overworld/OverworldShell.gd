@@ -2,6 +2,7 @@ extends Control
 
 const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
+const AnimationCueCatalogScript = preload("res://scripts/core/AnimationCueCatalog.gd")
 
 const UI_ART_OVERWORLD_RESOURCE_BAR := "res://art/ui/runtime/overworld/resource_bar.png"
 const UI_ART_OVERWORLD_SIDEBAR_FRAME := "res://art/ui/runtime/overworld/sidebar_frame.png"
@@ -170,6 +171,8 @@ var _last_enemy_activity_events: Array = []
 var _last_turn_resolution_text := ""
 var _last_action_recap: Dictionary = {}
 var _last_route_execution: Dictionary = {}
+var _hero_movement_presentation: Dictionary = {}
+var _hero_movement_presentation_serial := 0
 var _post_route_execution_compact_context := false
 var _briefing_title_text := "Command Briefing"
 var _command_briefing_text := ""
@@ -1852,6 +1855,7 @@ func _handle_move_result(result: Dictionary, preserve_selection: bool, debug_sta
 		var route_steps = result.get("route_steps", [])
 		if route_steps is Array:
 			_last_route_execution["route_steps"] = route_steps.duplicate(true)
+	_record_hero_movement_presentation(result, route)
 	if route == "battle":
 		_session.flags["last_action"] = "entered_battle"
 	elif route == "town":
@@ -2278,11 +2282,49 @@ func _refresh_read_scope_and_map_state() -> void:
 func _refresh_map_view() -> void:
 	AppRouter.note_overworld_handoff_step("overworld_refresh_set_map_state_start")
 	var set_map_state_profile_start := _profile_begin("refresh_set_map_state")
-	_map_view.set_map_state(_session, _map_data, _map_size, _selected_tile, _selected_route_cache_for_map_view())
+	_map_view.set_map_state(
+		_session,
+		_map_data,
+		_map_size,
+		_selected_tile,
+		_selected_route_cache_for_map_view(),
+		_hero_movement_presentation
+	)
 	if _map_view.has_method("set_placement_debug_overlay_enabled"):
 		_map_view.call("set_placement_debug_overlay_enabled", _placement_debug_overlay_enabled)
 	_profile_end("refresh_set_map_state", set_map_state_profile_start)
 	AppRouter.note_overworld_handoff_step("overworld_refresh_set_map_state_done")
+
+func _record_hero_movement_presentation(result: Dictionary, route: String) -> void:
+	if not bool(result.get("ok", false)) or route != "":
+		return
+	var route_execution: Dictionary = result.get("route_execution", {}) if result.get("route_execution", {}) is Dictionary else {}
+	var route_tiles: Array = route_execution.get("reachable_tiles", []) if route_execution.get("reachable_tiles", []) is Array else []
+	var route_steps: Array = result.get("route_steps", []) if result.get("route_steps", []) is Array else []
+	if route_steps.is_empty() or route_tiles.size() != route_steps.size() + 1:
+		return
+	var policy: Dictionary = AnimationCueCatalogScript.cue_playback_policy_for_event(
+		"overworld_hero_move",
+		SettingsService.animation_preferences()
+	)
+	if policy.is_empty():
+		return
+	_hero_movement_presentation_serial += 1
+	var max_duration_ms: int = maxi(0, int(policy.get("max_duration_ms", 700)))
+	var duration_scale := maxf(0.0, float(policy.get("duration_scale", 1.0)))
+	var authored_duration_ms: int = mini(max_duration_ms, maxi(160, route_steps.size() * 110))
+	_hero_movement_presentation = {
+		"serial": _hero_movement_presentation_serial,
+		"event_id": "overworld_hero_move",
+		"route_tiles": route_tiles.duplicate(true),
+		"route_step_count": route_steps.size(),
+		"selected_animation_state": String(policy.get("selected_animation_state", "")),
+		"selected_visual_policy": String(policy.get("selected_visual_policy", "")),
+		"selected_fallback_tag": String(policy.get("selected_fallback_tag", "")),
+		"allows_large_motion": bool(policy.get("allows_large_motion", true)),
+		"duration_ms": int(round(float(authored_duration_ms) * duration_scale)),
+		"max_duration_ms": max_duration_ms,
+	}
 
 func _refresh_action_rails(request: Dictionary = {}) -> void:
 	AppRouter.note_overworld_handoff_step("overworld_refresh_actions_start")
