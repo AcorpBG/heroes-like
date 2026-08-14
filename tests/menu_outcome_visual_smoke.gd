@@ -1,7 +1,29 @@
 extends Node
 
 const FrontierVisualKitScript = preload("res://scripts/ui/FrontierVisualKit.gd")
+const OutcomeScenicBackdropViewScript = preload("res://scenes/results/OutcomeScenicBackdropView.gd")
 const CAMPAIGN_SMOKE_ID := "campaign_reedfall"
+const OUTCOME_SCENIC_BACKDROP_PATHS := {
+	"victory": "res://art/results/runtime/backdrops/outcome_victory.png",
+	"defeat": "res://art/results/runtime/backdrops/outcome_defeat.png",
+}
+const OUTCOME_SCENIC_PANEL_ALPHA_BY_NAME := {
+	"Banner": 0.90,
+	"BannerArtPanel": 0.84,
+	"ActionStatusPanel": 0.84,
+	"HeroPanel": 0.86,
+	"ArmyPanel": 0.86,
+	"ResourcePanel": 0.86,
+	"ActionsPanel": 0.86,
+	"SidebarShell": 0.88,
+	"ProgressionPanel": 0.84,
+	"AftermathPanel": 0.84,
+	"CampaignArcPanel": 0.84,
+	"CarryoverPanel": 0.84,
+	"JournalPanel": 0.84,
+	"SavePanel": 0.86,
+}
+const OUTCOME_SCENIC_STAGE_SIZES := [Vector2(1280.0, 720.0), Vector2(1920.0, 1080.0)]
 
 var _original_campaign_profile := {}
 
@@ -987,6 +1009,115 @@ func _assert_no_score_leak(label: String, texts: Array) -> bool:
 			return false
 	return true
 
+
+func _assert_outcome_scenic_epilogue_contract(shell: Control, session) -> bool:
+	if not shell.has_method("validation_scenic_epilogue_summary"):
+		push_error("Outcome smoke: shell does not expose scenic epilogue validation.")
+		get_tree().quit(1)
+		return false
+	var authority_before: Dictionary = session.to_dict()
+	var live_summary: Dictionary = shell.call("validation_scenic_epilogue_summary")
+	if (
+		String(live_summary.get("status", "")) != "victory"
+		or String(live_summary.get("expected_path", "")) != String(OUTCOME_SCENIC_BACKDROP_PATHS["victory"])
+		or not _outcome_scenic_geometry_exact(live_summary)
+		or bool(live_summary.get("actions_panel_vertical_expand", true))
+		or not bool(live_summary.get("scenic_window_positive", false))
+		or not bool(live_summary.get("content_above_backdrop", false))
+		or live_summary.get("draw_order", []) != ["scenic_backdrop", "scenic_veil", "outcome_content"]
+		or not _outcome_panel_alphas_exact(live_summary.get("panel_alphas", {}), OUTCOME_SCENIC_PANEL_ALPHA_BY_NAME)
+		or live_summary.get("panel_alpha_contract", {}) != OUTCOME_SCENIC_PANEL_ALPHA_BY_NAME
+	):
+		push_error("Outcome smoke: live victory scenic epilogue contract failed: %s." % live_summary)
+		get_tree().quit(1)
+		return false
+	var viewport_size: Vector2 = live_summary.get("viewport_size", Vector2.ZERO)
+	var scenic_window: Rect2 = live_summary.get("scenic_window_rect", Rect2())
+	var action_rect: Rect2 = live_summary.get("actions_panel_rect", Rect2())
+	if (
+		viewport_size.x <= 0.0
+		or viewport_size.y <= 0.0
+		or scenic_window.size.y < viewport_size.y * 0.30
+		or scenic_window.size.x * scenic_window.size.y < viewport_size.x * viewport_size.y * 0.25
+		or action_rect.end.y > viewport_size.y * 0.65
+	):
+		push_error("Outcome smoke: compact action dock did not preserve the dominant scenic stage: %s." % live_summary)
+		get_tree().quit(1)
+		return false
+
+	var fixture = OutcomeScenicBackdropViewScript.new()
+	add_child(fixture)
+	await get_tree().process_frame
+	for stage_size in OUTCOME_SCENIC_STAGE_SIZES:
+		fixture.size = stage_size
+		for status in OUTCOME_SCENIC_BACKDROP_PATHS:
+			fixture.set_outcome(String(status))
+			var summary: Dictionary = fixture.validation_summary()
+			if (
+				String(summary.get("status", "")) != String(status)
+				or String(summary.get("expected_path", "")) != String(OUTCOME_SCENIC_BACKDROP_PATHS[status])
+				or String(summary.get("texture_path", "")) != String(OUTCOME_SCENIC_BACKDROP_PATHS[status])
+				or not _outcome_scenic_geometry_exact(summary)
+			):
+				push_error("Outcome smoke: %s scenic epilogue contract failed at %s: %s." % [status, stage_size, summary])
+				fixture.queue_free()
+				get_tree().quit(1)
+				return false
+	fixture.set_outcome("unmapped_outcome")
+	var fallback_summary: Dictionary = fixture.validation_summary()
+	if (
+		bool(fallback_summary.get("texture_loaded", true))
+		or not bool(fallback_summary.get("fallback", false))
+		or String(fallback_summary.get("rendering_mode", "")) != "flat_palette_fallback"
+		or String(fallback_summary.get("expected_path", "")) != ""
+	):
+		push_error("Outcome smoke: unmapped status did not retain the flat palette fallback: %s." % fallback_summary)
+		fixture.queue_free()
+		get_tree().quit(1)
+		return false
+	fixture.queue_free()
+	await get_tree().process_frame
+	if session.to_dict() != authority_before:
+		push_error("Outcome smoke: scenic epilogue selection changed live session authority.")
+		get_tree().quit(1)
+		return false
+	return true
+
+
+func _outcome_panel_alphas_exact(actual_value, expected: Dictionary) -> bool:
+	if not (actual_value is Dictionary):
+		return false
+	var actual: Dictionary = actual_value
+	if actual.keys() != expected.keys():
+		return false
+	for panel_name in expected:
+		if not actual.has(panel_name) or not is_equal_approx(float(actual[panel_name]), float(expected[panel_name])):
+			return false
+	return true
+
+
+func _outcome_scenic_geometry_exact(summary: Dictionary) -> bool:
+	var texture_size: Vector2 = summary.get("texture_size", Vector2.ZERO)
+	var destination_rect: Rect2 = summary.get("destination_rect", Rect2())
+	var source_rect: Rect2 = summary.get("source_rect", Rect2())
+	return (
+		bool(summary.get("texture_loaded", false))
+		and String(summary.get("rendering_mode", "")) == "cover_crop_scenic_epilogue"
+		and bool(summary.get("cover_crop", false))
+		and not bool(summary.get("stretched", true))
+		and not bool(summary.get("fallback", true))
+		and bool(summary.get("mouse_filter_ignore", false))
+		and bool(summary.get("source_contained", false))
+		and bool(summary.get("destination_contained", false))
+		and texture_size == Vector2(1600.0, 900.0)
+		and destination_rect.position == Vector2.ZERO
+		and destination_rect.size.x > 0.0
+		and destination_rect.size.y > 0.0
+		and source_rect.size.x > 0.0
+		and source_rect.size.y > 0.0
+		and is_equal_approx(source_rect.size.x / source_rect.size.y, destination_rect.size.x / destination_rect.size.y)
+	)
+
 func _run_outcome_smoke() -> bool:
 	var session = ScenarioFactory.create_session(
 		"river-pass",
@@ -1021,6 +1152,8 @@ func _run_outcome_smoke() -> bool:
 		return false
 
 	var snapshot: Dictionary = shell.call("validation_snapshot")
+	if not await _assert_outcome_scenic_epilogue_contract(shell, session):
+		return false
 	if not _assert_outcome_field_manual_contract(shell, "Outcome skirmish Field Manual"):
 		return false
 	var follow_up_check: Dictionary = snapshot.get("outcome_follow_up_check", {}) if snapshot.get("outcome_follow_up_check", {}) is Dictionary else {}

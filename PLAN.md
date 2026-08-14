@@ -25,6 +25,7 @@ Rules:
 Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Current selected implementation slice: none. Select the next tracker-approved release-readiness implementation slice.
+- Latest completed implementation slice: `presentation-scenario-outcome-scenic-epilogue-stage-10184`. Victory and defeat now use distinct original full-screen epilogue panoramas behind the unchanged Outcome authority surfaces, with exact cover crop, translucent cards, a compact action dock, and flat-palette fallback.
 - Latest completed implementation slice: `presentation-town-faction-scenic-stage-backdrops-10184`. The Town stage now selects one of six original faction panoramas behind its unchanged live overlays, cover-crops without stretching, and retains the procedural renderer as a fail-safe.
 - Latest completed implementation slice: `combat-mireclaw-sporewake-rot-cant-priority-calibration-10184`. Sporewake Rot Cant keeps its round-one tier-four veteran identity and all live consequences while its authored target-priority bonus is calibrated from `1.0` to `0.9`; the exact all-live matrix lowers severity from `187.0` to `183.5`, preserves every non-Mireclaw ordered row, and keeps the active 59-encounter queue clear.
 - Latest completed validation/adoption slice: `strategic-ai-medium-long-run-seed-matrix-10184`. Exact current-HEAD Medium seed ordinals 1-100 now pass the 56-turn behavior matrix with zero aggregate behavior, integrity, reachability, or no-active-pressure blockers; the baseline retires only that matrix gap while generated topology/contact/pacing and broader release readiness remain open.
@@ -4774,6 +4775,37 @@ Completed evidence:
 - natural headless and Xvfb Town/Battle smokes pass, with inspected 1280x720 and 1920x1080 captures confirming that scenery is the dominant Town surface and the existing status, district, command, header, and action surfaces remain readable;
 - Town exit, active-play focus, menu/outcome, core, and a fresh 121-step routed Reedfall campaign ending at `campaign_arc_completed_browser` pass;
 - repository/editor checks and official Linux export/headless startup plus Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass, with all six imported textures present in both PCKs and no packaged Town interaction or broader release claim.
+
+## Scenario Outcome Scenic Epilogue Stage
+
+id: `presentation-scenario-outcome-scenic-epilogue-stage-10184`
+
+Status: complete.
+
+Selected Phase 6 shipped-content and player-facing presentation slice. A fresh current-HEAD 1920x1080 Outcome render shows the full screen as a flat dark panel farm: the only visual is a small procedural shield-and-lines diagram, while an oversized empty `ActionsPanel` covers the dominant lower-left surface. This directly contradicts the scenery-first screen-composition boundary.
+
+Implementation target:
+- ship distinct original 16:9 victory and defeat epilogue panoramas with no text, logos, UI, characters, bodies, or copyrighted designs;
+- select the exact full-screen panorama from the live terminal scenario status and cover-crop it without stretching;
+- make the existing information cards and action surface translucent, and let the action panel shrink to its actual content so the central/lower stage remains scenic rather than an empty black box;
+- retain the existing procedural Outcome banner and flat status palette as a fail-safe when the status has no mapped or loadable panorama.
+
+Completion criteria:
+- both status assets are distinct, original, imported, and exact 1600x900 images mapped one-to-one to `victory` and `defeat`;
+- focused 1280x720 and 1920x1080 live validation proves exact status selection, cover-crop behavior, non-stretched rendering, compact action-panel geometry, translucent information surfaces, readable controls, and fail-safe fallback;
+- outcome model, summaries, tabs, actions, save/overwrite, focus, keyboard/controller navigation, recovery, routing, session, progression, and campaign authority remain exact;
+- outcome visual, normal-entry focus, new-session safe cancel, recovery, active-play focus, core, routed campaign, repository, editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass.
+
+Non-goals:
+- no outcome rules, progression, rewards, actions, copy, tabs, save format/version, routing, focus order, input timing, campaign, scenario, combat, AI, balance, map, or Native RMG change;
+- no new character art, animation, video, global theme, UI-scale, accessibility semantics, modal, or other screen redesign;
+- no packaged Outcome interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Completed evidence:
+- two distinct original 1600x900 victory/defeat panoramas are imported and mapped one-to-one, while focused 1280x720 and 1920x1080 runtime proof covers exact status selection, non-stretched cover crop, flat fallback, translucent surfaces, compact action geometry, and unchanged session authority;
+- inspected live victory and defeat captures are scenery-first and readable, and Outcome visual, normal-entry focus, new-session safe cancel, autosave recovery, active-play focus, and core compatibility gates pass;
+- a fresh routed Reedfall campaign completes all 121 public route/town/battle/save/resume/Outcome steps through `campaign_arc_completed_browser`;
+- repository/editor checks and official Linux export/headless startup plus Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass, with both imported Outcome textures present in the packaged PCK and no packaged Outcome interaction or broader release claim.
 
 ## Phase Roadmap
 
