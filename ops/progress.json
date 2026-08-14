@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld repeatable-site visited-state correction is complete. Authored repeatable services remain live through cooldown and replay the exact visited cue when ready; select the next bounded release-readiness implementation slice from current behavior and source evidence.",
+  "currentNotes": "The Overworld neutral-town capture cue slice is complete. Successful captures now play the exact captured cue over the retained town with normal and reduced-motion authority preserved; select the next bounded release-readiness implementation slice from current behavior and source evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-repeatable-site-visited-state-10184",
-  "currentSliceId": "presentation-overworld-repeatable-site-visited-state-10184",
-  "currentSliceNotes": "Completed: exact visited cue classification, live repeatable-site retention, cooldown-aware context/revisit, reduced-motion fallback, focused authority proof, compatibility, static/editor, and bounded Linux/Windows export-startup gates are green.",
+  "currentSlice": "presentation-overworld-town-capture-cue-playback-10184",
+  "currentSliceId": "presentation-overworld-town-capture-cue-playback-10184",
+  "currentSliceNotes": "Completed: exact town_capture presentation classification, route-queued retained-town playback, reduced-motion ownership-badge fallback, focused authority proof, compatibility, static/editor, and bounded Linux/Windows export-startup gates are green.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Repeatable Site Visited State",
-  "currentSliceUpdatedAt": "2026-08-14T18:53:31Z",
+  "currentSliceTitle": "Overworld Town Capture Cue Playback",
+  "currentSliceUpdatedAt": "2026-08-14T19:14:26Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -81216,6 +81216,87 @@
         "linux_export_headless_startup_passed": true,
         "windows_export_fresh_wine_startup_passed": true
       }
+    },
+    {
+      "id": "presentation-overworld-town-capture-cue-playback-10184",
+      "title": "Overworld Town Capture Cue Playback",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/animation-systems-foundation.md",
+        "docs/animation-overworld-object-state-contract-report.md",
+        "AGENTS.md"
+      ],
+      "purpose": "Play the existing captured cue at the exact neutral-town tile already returned by a successful capture result.",
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_object_resolution_cue_playback_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_object_resolution_cue_playback_report.gd",
+        "tests/overworld_route_destination_only_action_regression.tscn",
+        "tests/overworld_visual_smoke.tscn",
+        "tests/animation_overworld_object_state_contract_report.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "ea1a3a24bc7deccdf3652138006fdab82d3c1e13",
+        "town_capture_interaction_result_available": true,
+        "captured_cue_authored": true,
+        "town_capture_playback_runtime": false
+      },
+      "completionCriteria": [
+        "Successful non-routing neutral-town capture issues exactly one detached captured presentation serial from the authoritative town_capture placement and tile",
+        "The cue queues behind exact route locomotion, renders over the retained captured town on only the dynamic layer, and does not replay on refresh or unrelated movement",
+        "Reduced motion uses the exact ownership badge fallback without large motion",
+        "Town ownership, objectives, garrison, economy, movement, fog, route, session, save, static/state caches, focus, controls, camera, and audio remain exact",
+        "Focused runtime, compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "enemy-town assault, battle routing, battle aftermath, town capture rules, garrison, economy, content, save, or schema changes",
+        "resource, artifact, encounter, blocked, guarded, route, ambient, or broad town animation changes",
+        "new sprite/VFX/audio assets, particles/shaders, camera, AI/balance, map, or Native RMG changes",
+        "packaged Overworld interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "createdAt": "2026-08-14T18:55:26Z",
+      "startedAt": "2026-08-14T18:55:26Z",
+      "updatedAt": "2026-08-14T19:14:26Z",
+      "notes": "Implemented the missing neutral-town presentation bridge: successful town_capture results publish one detached captured serial from the authoritative placement/tile, queue behind route locomotion, remain visible over the retained captured town, redraw only the dynamic layer, and stay silent on refresh. Focused normal playback proves exact player ownership, unchanged objective authority, four route steps, 620ms catalog timing, and two retained town tiles; the reduced-motion fixture proves the exact ownership_badge_swap fallback at 260ms without large motion. Route/destination, visual, town-battle, object-state, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Overworld interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null,
+      "result": {
+        "event_id": "overworld_object_captured",
+        "family": "town_capture",
+        "normal_duration_msec": 620,
+        "reduced_motion_duration_msec": 260,
+        "reduced_motion_fallback": "ownership_badge_swap",
+        "route_step_count": 4,
+        "retained_town_tile_count": 2,
+        "ownership_and_objective_authority_passed": true,
+        "refresh_no_replay_passed": true,
+        "focused_headless_passed": true,
+        "route_and_destination_compatibility_passed": true,
+        "visual_smoke_passed": true,
+        "town_battle_visual_smoke_passed": true,
+        "object_state_contract_passed": true,
+        "accessibility_passed": true,
+        "core_passed": true,
+        "repository_validation_passed": true,
+        "editor_parse_passed": true,
+        "linux_export_headless_startup_passed": true,
+        "windows_export_fresh_wine_startup_passed": true
+      },
+      "completedAt": "2026-08-14T19:14:26Z"
     },
     {
       "id": "presentation-overworld-repeatable-site-visited-state-10184",
