@@ -9,7 +9,8 @@ const TAB_SKIRMISH := 1
 const TAB_SAVES := 2
 const TAB_GUIDE := 3
 const TAB_SETTINGS := 4
-const CAMPAIGN_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.528, 0.600)
+const CAMPAIGN_COMPACT_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.528, 0.440)
+const CAMPAIGN_EXPANDED_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.528, 0.600)
 const STANDARD_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.733, 0.620)
 const TAB_STAGE_COPY := {
 	TAB_CAMPAIGN: {
@@ -333,6 +334,7 @@ func _set_campaign_intel_expanded(expanded: bool) -> void:
 	_campaign_details_panel.visible = expanded
 	_chapter_details_panel.visible = expanded
 	_campaign_intel_row.visible = expanded
+	_apply_stage_dock_layout()
 	_campaign_intel_toggle.text = "Hide Intel" if expanded else "Show Intel"
 	_campaign_intel_toggle.tooltip_text = (
 		"Hide the selected arc, chapter, commander, operational, and journal detail; selection and launch actions stay unchanged."
@@ -2759,7 +2761,9 @@ func _show_stage_dock() -> void:
 	call_deferred("_focus_stage_entry")
 
 func _apply_stage_dock_layout() -> void:
-	var anchors := CAMPAIGN_DOCK_ANCHORS if _menu_tabs.current_tab == TAB_CAMPAIGN else STANDARD_DOCK_ANCHORS
+	var anchors := STANDARD_DOCK_ANCHORS
+	if _menu_tabs.current_tab == TAB_CAMPAIGN:
+		anchors = CAMPAIGN_EXPANDED_DOCK_ANCHORS if _campaign_intel_expanded else CAMPAIGN_COMPACT_DOCK_ANCHORS
 	_stage_dock_panel.anchor_left = anchors.position.x
 	_stage_dock_panel.anchor_top = anchors.position.y
 	_stage_dock_panel.anchor_right = anchors.end.x

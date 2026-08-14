@@ -4714,6 +4714,35 @@ Completed evidence:
 - focused authority, keyboard/controller navigation, restart, menu/outcome, core, and the 121-step routed campaign ending at `campaign_arc_completed_browser` are green;
 - repository/editor checks and official Linux export/headless startup plus Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green, without a packaged Campaign interaction or broader release claim.
 
+## Main Menu Campaign Contextual Dock Height
+
+id: `ux-main-menu-campaign-contextual-dock-height-10184`
+
+Status: complete.
+
+Selected Phase 6 player-facing UX corrective slice. Fresh current-head visual evidence shows that the default Intel-collapsed Campaign board still reserves the full expanded 60% viewport height, leaving a large empty dark panel over the scenery. Source confirms the Campaign dock uses one static anchor rectangle for both collapsed and expanded disclosure states.
+
+Implementation target:
+- keep the default Intel-collapsed Campaign dock compact enough to contain its visible selectors and actions without reserving the hidden detail area;
+- expand to the existing bounded Campaign height only while Intel is shown, then restore the compact height exactly when Intel is hidden or the Campaign board is reopened;
+- preserve width, right-side scenic space, scrolling, focus, action visibility, ordered rows, selection, storage, and campaign authority.
+
+Completion criteria:
+- at 1280x720 and 1920x1080, the collapsed dock is at most 46% viewport height, contains every visible Campaign control, and leaves the existing scenic width uncovered;
+- opening Intel expands the dock to the existing at-most-60% height with all six detail surfaces visible, retains toggle focus, and closing Intel restores the exact compact layout;
+- default and distinct chapter action deduplication, campaign rows/tooltips, storage/session authority, keyboard/controller navigation, restart, menu/outcome, core, and the routed campaign remain exact;
+- repository, Python, JSON, diff, editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass.
+
+Non-goals:
+- no campaign data, action construction, progression, unlock/status, difficulty, restart, save, scenario, content, balance, AI, battle, map, or Native RMG change;
+- no Campaign width, first-view, other submenu, modal, global UI-scale, or theme redesign;
+- no packaged Campaign interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Completed evidence:
+- at 1280x720 and 1920x1080, the collapsed Campaign dock is 44% viewport height with all visible controls contained, Intel expands to the existing 60% height, and hiding Intel restores the exact compact rectangle;
+- focused authority, keyboard/controller navigation, restart, menu/outcome, core, and a fresh 121-step routed campaign ending at `campaign_arc_completed_browser` are green, and its current-head screenshot confirms the lower-left scenery is no longer covered by hidden-detail space;
+- repository/editor checks and official Linux export/headless startup plus Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green, without a packaged Campaign interaction or broader release claim.
+
 ## Phase Roadmap
 
 ### Phase 0 - Prototype Reality And Governance

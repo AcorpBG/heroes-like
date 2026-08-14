@@ -162,6 +162,8 @@ func _validate_scenery_first_campaign_layout(shell: Control, initial_snapshot: D
 		var compact_snapshot: Dictionary = shell.call("validation_snapshot")
 		if not _campaign_layout_contract_exact(compact_snapshot, false, expected_campaign_rows, expected_chapter_rows):
 			return false
+		var compact_layout: Dictionary = compact_snapshot.get("campaign_layout", {}) if compact_snapshot.get("campaign_layout", {}) is Dictionary else {}
+		var compact_stage_rect: Dictionary = (compact_layout.get("stage_rect", {}) as Dictionary).duplicate(true)
 		if not _campaign_authority_exact(compact_snapshot, authority_before):
 			return false
 
@@ -185,6 +187,10 @@ func _validate_scenery_first_campaign_layout(shell: Control, initial_snapshot: D
 		var restored_snapshot: Dictionary = shell.call("validation_snapshot")
 		if not _campaign_layout_contract_exact(restored_snapshot, false, expected_campaign_rows, expected_chapter_rows):
 			return false
+		var restored_layout: Dictionary = restored_snapshot.get("campaign_layout", {}) if restored_snapshot.get("campaign_layout", {}) is Dictionary else {}
+		if restored_layout.get("stage_rect", {}) != compact_stage_rect:
+			_fail("Hiding Campaign Intel did not restore the exact compact dock rectangle: compact=%s restored=%s" % [JSON.stringify(compact_stage_rect), JSON.stringify(restored_layout.get("stage_rect", {}))])
+			return false
 		if not _campaign_authority_exact(restored_snapshot, authority_before):
 			return false
 
@@ -203,10 +209,12 @@ func _campaign_layout_contract_exact(snapshot: Dictionary, expanded: bool, expec
 	var primary_action: Dictionary = snapshot.get("primary_campaign_action", {}) if snapshot.get("primary_campaign_action", {}) is Dictionary else {}
 	var chapter_action: Dictionary = snapshot.get("selected_chapter_action", {}) if snapshot.get("selected_chapter_action", {}) is Dictionary else {}
 	var expected_toggle_text := "Hide Intel" if expanded else "Show Intel"
+	var height_ratio := float(layout.get("height_ratio", 1.0))
 	if not bool(snapshot.get("stage_dock_visible", false)) \
 			or int(snapshot.get("current_tab", -1)) != 0 \
 			or float(layout.get("width_ratio", 1.0)) > 0.56 \
-			or float(layout.get("height_ratio", 1.0)) > 0.60 \
+			or height_ratio > (0.60 if expanded else 0.46) \
+			or (expanded and height_ratio < 0.58) \
 			or float(layout.get("uncovered_right_ratio", 0.0)) < 0.40 \
 			or bool(layout.get("intel_expanded", not expanded)) != expanded \
 			or String(layout.get("intel_toggle_text", "")) != expected_toggle_text:
