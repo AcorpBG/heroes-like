@@ -4685,6 +4685,35 @@ Non-goals:
 - no Skirmish/Load/Guide/Settings redesign, first-view plaque redesign, global UI-scale rewrite, new modal framework, or removal of authored campaign detail;
 - no packaged Campaign interaction, controller hardware, AT-SPI/UIA, native-hardware, signing/publication, whole-game, or release-readiness claim.
 
+## Main Menu Campaign Launch Action Deduplication
+
+id: `ux-main-menu-campaign-launch-action-deduplication-10184`
+
+Status: complete.
+
+Selected Phase 6 player-facing UX implementation slice. Fresh current-head live evidence shows the compact Campaign rail rendering two identical `Start Chapter 1: Break the Pass` actions. Source confirms that `CampaignRules.build_start_action` returns the exact `build_chapter_action` payload when the selected scenario is already the primary campaign scenario, so the second button is duplicate affordance rather than separate authority.
+
+Implementation target:
+- keep the primary campaign action visible and hide only the selected-chapter button when its whole production action payload is exact to the primary action;
+- restore the selected-chapter button whenever the selected action is distinct, including locked, replay, retry, or non-primary chapter selection;
+- preserve both action payloads, labels, tooltips, disabled state, selection, focus, campaign storage, launch, restart, and progression authority.
+
+Completion criteria:
+- at 1280x720 and 1920x1080, the default primary chapter exposes exactly one launch affordance while the rest of the scenery-first rail geometry remains bounded and exact;
+- selecting a distinct locked or non-primary chapter reveals its exact selected-chapter action without changing the primary action, and returning to the primary chapter collapses the duplicate again;
+- actual primary and distinct chapter launch signals, keyboard/controller focus/cancel, restart, menu/outcome, full routed campaign, storage/save authority, and ordered campaign/chapter content remain exact;
+- focused, compatibility, core, repository, Python, JSON, diff, editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass.
+
+Non-goals:
+- no campaign action construction, campaign rules/progression, chapter unlock/status, difficulty, restart, save, scenario, content, balance, AI, battle, map, or Native RMG change;
+- no broader Campaign rail, first-view, Skirmish/Load/Guide/Settings, modal, or UI-scale redesign;
+- no packaged Campaign interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Completed evidence:
+- the default whole-equal primary/selected action now exposes one launch affordance at 1280x720 and 1920x1080, while a distinct locked chapter restores the exact selected action and returning to the primary chapter collapses it again;
+- focused authority, keyboard/controller navigation, restart, menu/outcome, core, and the 121-step routed campaign ending at `campaign_arc_completed_browser` are green;
+- repository/editor checks and official Linux export/headless startup plus Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green, without a packaged Campaign interaction or broader release claim.
+
 ## Phase Roadmap
 
 ### Phase 0 - Prototype Reality And Governance

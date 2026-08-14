@@ -188,6 +188,9 @@ func _validate_scenery_first_campaign_layout(shell: Control, initial_snapshot: D
 		if not _campaign_authority_exact(restored_snapshot, authority_before):
 			return false
 
+	if not await _validate_distinct_chapter_action(shell, authority_before):
+		return false
+
 	get_window().size = original_window_size
 	await get_tree().process_frame
 	await get_tree().process_frame
@@ -197,6 +200,8 @@ func _validate_scenery_first_campaign_layout(shell: Control, initial_snapshot: D
 func _campaign_layout_contract_exact(snapshot: Dictionary, expanded: bool, expected_campaign_rows: Array, expected_chapter_rows: Array) -> bool:
 	var layout: Dictionary = snapshot.get("campaign_layout", {}) if snapshot.get("campaign_layout", {}) is Dictionary else {}
 	var detail_visibility: Dictionary = layout.get("detail_surface_visibility", {}) if layout.get("detail_surface_visibility", {}) is Dictionary else {}
+	var primary_action: Dictionary = snapshot.get("primary_campaign_action", {}) if snapshot.get("primary_campaign_action", {}) is Dictionary else {}
+	var chapter_action: Dictionary = snapshot.get("selected_chapter_action", {}) if snapshot.get("selected_chapter_action", {}) is Dictionary else {}
 	var expected_toggle_text := "Hide Intel" if expanded else "Show Intel"
 	if not bool(snapshot.get("stage_dock_visible", false)) \
 			or int(snapshot.get("current_tab", -1)) != 0 \
@@ -207,6 +212,12 @@ func _campaign_layout_contract_exact(snapshot: Dictionary, expanded: bool, expec
 			or String(layout.get("intel_toggle_text", "")) != expected_toggle_text:
 		_fail("Campaign rail did not preserve its scenery-first viewport contract: %s" % JSON.stringify(layout))
 		return false
+	if primary_action != chapter_action \
+			or not bool(snapshot.get("campaign_primary_visible", false)) \
+			or bool(snapshot.get("start_chapter_visible", true)) \
+			or not bool(snapshot.get("campaign_launch_actions_deduplicated", false)):
+		_fail("Campaign rail did not collapse the exact duplicate selected-chapter launch action: %s" % JSON.stringify(snapshot))
+		return false
 	for key in ["arc", "arc_status", "chapter", "commander", "operational", "journal"]:
 		if bool(detail_visibility.get(key, not expanded)) != expanded:
 			_fail("Campaign rail detail surface %s did not match contextual disclosure state %s: %s" % [key, expanded, JSON.stringify(detail_visibility)])
@@ -216,6 +227,56 @@ func _campaign_layout_contract_exact(snapshot: Dictionary, expanded: bool, expec
 		_fail("Campaign rail changed ordered arc/chapter row identity or full tooltips: %s" % JSON.stringify(layout))
 		return false
 	if not expanded and not _visible_campaign_controls_contained(layout):
+		return false
+	return true
+
+func _validate_distinct_chapter_action(shell: Control, authority_before: Dictionary) -> bool:
+	var distinct_scenario_id := ""
+	for row_value in _expected_chapter_rows():
+		var row: Dictionary = row_value if row_value is Dictionary else {}
+		var scenario_id := String(row.get("id", ""))
+		if scenario_id != "" and scenario_id != START_SCENARIO_ID:
+			distinct_scenario_id = scenario_id
+			break
+	if distinct_scenario_id == "":
+		_fail("Campaign action deduplication fixture has no distinct authored chapter.")
+		return false
+	var expected_distinct_profile: Dictionary = CampaignRules.mark_selected_scenario(
+		authority_before.get("profile", {}),
+		distinct_scenario_id,
+		CAMPAIGN_ID
+	)
+	if not bool(shell.call("validation_select_campaign_chapter", distinct_scenario_id)):
+		_fail("Campaign action deduplication fixture could not select distinct chapter %s." % distinct_scenario_id)
+		return false
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var distinct_snapshot: Dictionary = shell.call("validation_snapshot")
+	var distinct_primary: Dictionary = distinct_snapshot.get("primary_campaign_action", {}) if distinct_snapshot.get("primary_campaign_action", {}) is Dictionary else {}
+	var distinct_chapter: Dictionary = distinct_snapshot.get("selected_chapter_action", {}) if distinct_snapshot.get("selected_chapter_action", {}) is Dictionary else {}
+	if String(distinct_snapshot.get("selected_campaign_scenario_id", "")) != distinct_scenario_id \
+			or distinct_primary != authority_before.get("primary_action", {}) \
+			or distinct_chapter == distinct_primary \
+			or not bool(distinct_snapshot.get("start_chapter_visible", false)) \
+			or bool(distinct_snapshot.get("campaign_launch_actions_deduplicated", true)) \
+			or not bool(distinct_snapshot.get("start_chapter_disabled", false)):
+		_fail("Distinct locked chapter did not restore its exact selected-chapter affordance: %s" % JSON.stringify(distinct_snapshot))
+		return false
+	if CampaignProgression.ensure_profile().duplicate(true) != expected_distinct_profile \
+			or SessionState.ensure_active_session().to_dict() != authority_before.get("session", {}):
+		_fail("Distinct chapter selection did not preserve exact selection-only profile and session authority.")
+		return false
+	if not bool(shell.call("validation_select_campaign_chapter", START_SCENARIO_ID)):
+		_fail("Campaign action deduplication fixture could not restore the primary chapter.")
+		return false
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var restored_snapshot: Dictionary = shell.call("validation_snapshot")
+	if bool(restored_snapshot.get("start_chapter_visible", true)) \
+			or not bool(restored_snapshot.get("campaign_launch_actions_deduplicated", false)):
+		_fail("Returning to the primary chapter did not restore exact launch-action deduplication: %s" % JSON.stringify(restored_snapshot))
+		return false
+	if not _campaign_authority_exact(restored_snapshot, authority_before):
 		return false
 	return true
 
