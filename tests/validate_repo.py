@@ -14036,7 +14036,8 @@ def validate_campaign_browser(errors: list[str]) -> None:
         "_campaign_commander_preview_label",
         "_campaign_operational_board_label",
         "_campaign_journal_label",
-        "CAMPAIGN_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.528, 0.600)",
+        "CAMPAIGN_COMPACT_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.528, 0.440)",
+        "CAMPAIGN_EXPANDED_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.528, 0.600)",
         "STANDARD_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.733, 0.620)",
         "_campaign_details_panel",
         "_chapter_details_panel",
@@ -14085,6 +14086,34 @@ def validate_campaign_browser(errors: list[str]) -> None:
     )
     for forbidden_token in (".get(", "scenario_id", "label", "summary", "disabled"):
         ensure(forbidden_token not in campaign_dedup_block, errors, f"MainMenu campaign launch deduplication must not use partial action identity: {forbidden_token}")
+
+    campaign_disclosure_start = main_menu_script_text.find("func _set_campaign_intel_expanded")
+    campaign_disclosure_end = main_menu_script_text.find("\nfunc ", campaign_disclosure_start + 1) if campaign_disclosure_start >= 0 else -1
+    campaign_disclosure_block = main_menu_script_text[campaign_disclosure_start:campaign_disclosure_end] if campaign_disclosure_start >= 0 and campaign_disclosure_end > campaign_disclosure_start else ""
+    campaign_disclosure_tokens = [
+        "_campaign_intel_expanded = expanded",
+        "_campaign_details_panel.visible = expanded",
+        "_chapter_details_panel.visible = expanded",
+        "_campaign_intel_row.visible = expanded",
+        "_apply_stage_dock_layout()",
+        '_campaign_intel_toggle.text = "Hide Intel" if expanded else "Show Intel"',
+    ]
+    campaign_disclosure_positions = [campaign_disclosure_block.find(token) for token in campaign_disclosure_tokens]
+    ensure(
+        all(position >= 0 for position in campaign_disclosure_positions)
+        and campaign_disclosure_positions == sorted(campaign_disclosure_positions),
+        errors,
+        "MainMenu Campaign disclosure must resize the dock after its detail visibility changes and before updating the immutable toggle copy",
+    )
+    campaign_layout_start = main_menu_script_text.find("func _apply_stage_dock_layout")
+    campaign_layout_end = main_menu_script_text.find("\nfunc ", campaign_layout_start + 1) if campaign_layout_start >= 0 else -1
+    campaign_layout_block = main_menu_script_text[campaign_layout_start:campaign_layout_end] if campaign_layout_start >= 0 and campaign_layout_end > campaign_layout_start else ""
+    ensure(
+        "anchors = CAMPAIGN_EXPANDED_DOCK_ANCHORS if _campaign_intel_expanded else CAMPAIGN_COMPACT_DOCK_ANCHORS" in campaign_layout_block,
+        errors,
+        "MainMenu Campaign layout must choose exact expanded or compact anchors from the live Intel disclosure state",
+    )
+    ensure("CAMPAIGN_DOCK_ANCHORS" not in main_menu_script_text, errors, "MainMenu must not retain the old single-height Campaign dock anchor")
 
     for path in (CAMPAIGN_ARC_RESTART_REGRESSION_SCRIPT_PATH, CAMPAIGN_ARC_RESTART_REGRESSION_SCENE_PATH):
         ensure(path.exists(), errors, f"Missing campaign arc restart regression file: {path.relative_to(ROOT)}")
@@ -14295,11 +14324,16 @@ def validate_campaign_browser(errors: list[str]) -> None:
             'bool(distinct_snapshot.get("start_chapter_disabled", false))',
             'shell.call("validation_select_campaign_chapter", START_SCENARIO_ID)',
             'float(layout.get("width_ratio", 1.0)) > 0.56',
-            'float(layout.get("height_ratio", 1.0)) > 0.60',
+            'var height_ratio := float(layout.get("height_ratio", 1.0))',
+            'height_ratio > (0.60 if expanded else 0.46)',
+            '(expanded and height_ratio < 0.58)',
             'float(layout.get("uncovered_right_ratio", 0.0)) < 0.40',
             'for key in ["arc", "arc_status", "chapter", "commander", "operational", "journal"]',
             "func _visible_campaign_controls_contained",
             "if not expanded and not _visible_campaign_controls_contained(layout):",
+            'var compact_stage_rect: Dictionary = (compact_layout.get("stage_rect", {}) as Dictionary).duplicate(true)',
+            'if restored_layout.get("stage_rect", {}) != compact_stage_rect:',
+            '"Hiding Campaign Intel did not restore the exact compact dock rectangle',
             "func _campaign_authority_exact",
             "func _expected_campaign_rows",
             "func _expected_chapter_rows",

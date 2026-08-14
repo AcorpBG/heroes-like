@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Main Menu Campaign rail now hides the selected-chapter launch control only when its whole production action payload equals the primary action, reducing the default duplicate affordances from two to one. Distinct locked chapter actions restore exact and all focused, routed, compatibility, static, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass.",
+  "currentNotes": "The Main Menu Campaign dock now uses 44% viewport height while Intel is collapsed and the existing 60% height only while Intel is expanded. Visible controls stay contained, hiding Intel restores the exact compact rectangle, campaign authority remains exact, and focused, routed, compatibility, static, and bounded Linux/Windows startup gates pass.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-main-menu-campaign-launch-action-deduplication-10184",
-  "currentSliceId": "ux-main-menu-campaign-launch-action-deduplication-10184",
-  "currentSliceNotes": "Completed exact whole-action deduplication with default and distinct locked chapter controls at 1280x720 and 1920x1080, exact campaign authority, keyboard/controller navigation, restart/menu/core compatibility, a fresh 121-step routed campaign, repository/editor checks, and bounded Linux/Windows export-startup evidence.",
+  "currentSlice": "ux-main-menu-campaign-contextual-dock-height-10184",
+  "currentSliceId": "ux-main-menu-campaign-contextual-dock-height-10184",
+  "currentSliceNotes": "Completed with exact 44%-collapsed and 60%-expanded Campaign dock geometry at 1280x720 and 1920x1080, exact collapse restoration, visible-control containment, natural keyboard/controller PASS, campaign compatibility, a fresh 121-step routed arc, current-head visual confirmation, static/editor checks, and bounded Linux/Windows export-startup evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Main Menu Campaign Launch Action Deduplication",
-  "currentSliceUpdatedAt": "2026-08-14T09:28:28Z",
+  "currentSliceTitle": "Main Menu Campaign Contextual Dock Height",
+  "currentSliceUpdatedAt": "2026-08-14T10:29:06Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -78773,6 +78773,29 @@
       "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
       "blockedReason": null,
       "result": {"default_action_payloads_exact": true, "default_visible_launch_affordances_before": 2, "default_visible_launch_affordances_after": 1, "distinct_locked_chapter_action_visible": true, "distinct_locked_chapter_action_disabled": true, "focused_viewports": [[1280, 720], [1920, 1080]], "full_arc_ok": true, "full_arc_step_count": 121, "full_arc_last_step": "campaign_arc_completed_browser", "linux_export_headless_startup_passed": true, "windows_export_fresh_wine_startup_passed": true}
+    },
+    {
+      "id": "ux-main-menu-campaign-contextual-dock-height-10184",
+      "title": "Main Menu Campaign Contextual Dock Height",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "AGENTS.md"],
+      "purpose": "Make the Campaign dock height follow its existing Intel disclosure state so the default compact board does not reserve hidden-detail space over the scenic surface.",
+      "implementationTargets": ["scenes/menus/MainMenu.gd", "tests/player_facing_campaign_menu_smoke.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "testOwners": ["tests/player_facing_campaign_menu_smoke.gd", "tests/main_menu_keyboard_navigation_smoke.gd", "tests/campaign_arc_restart_regression.gd", "tests/menu_outcome_visual_smoke.gd", "scripts/autoload/LiveValidationHarness.gd", "tests/core_systems_regression_smoke.gd", "tests/validate_repo.py"],
+      "baseline": {"head": "d98b651c54bf7c47e28df36205143c7873859111", "collapsed_height_ratio": 0.6, "expanded_height_ratio": 0.6, "campaign_width_ratio": 0.528, "full_arc_ok": true, "full_arc_step_count": 121},
+      "completionCriteria": ["Collapsed Campaign dock is at most 46 percent viewport height at 1280x720 and 1920x1080 and contains every visible selector and action", "Intel expands only to the existing at-most-60-percent height, keeps all six detail surfaces visible and toggle focus exact, and hiding or reopening restores exact compact height", "Campaign width/scenic space, scrolling, ordered rows/tooltips, default and distinct chapter action visibility, storage/session authority, keyboard/controller navigation, restart, menu/outcome, core, and routed campaign remain exact", "Repository, Python, JSON, diff, editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass"],
+      "nonGoals": ["campaign data, action construction, progression, unlock/status, difficulty, restart, save, scenario, content, balance, AI, battle, map, or Native RMG changes", "Campaign width, first-view, other submenu, modal, global UI-scale, or theme redesign", "packaged Campaign interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claims"],
+      "createdAt": "2026-08-14T09:32:31Z",
+      "startedAt": "2026-08-14T09:32:31Z",
+      "updatedAt": "2026-08-14T10:29:06Z",
+      "completedAt": "2026-08-14T10:29:06Z",
+      "notes": "Production now uses a 44%-height Campaign dock while Intel is collapsed and expands to the existing 60% height only while Intel is shown. At 1280x720 and 1920x1080 every compact control remains contained, Intel reveals all six detail surfaces with retained toggle focus, and hiding it restores the exact compact rectangle without campaign/session/action authority drift. Focused interaction, keyboard/controller navigation, restart, menu/outcome, core, and a fresh 121-step routed campaign ending at campaign_arc_completed_browser are green; its current-head screenshot confirms the lower-left scenery is no longer covered by hidden-detail space. Static/editor checks and official Linux export/headless startup plus Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. No packaged Campaign interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claim is made.",
+      "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null,
+      "result": {"collapsed_height_ratio": 0.44, "expanded_height_ratio": 0.6, "focused_viewports": [[1280, 720], [1920, 1080]], "visible_controls_contained": true, "exact_compact_rect_restored": true, "current_head_visual_confirmed": true, "full_arc_ok": true, "full_arc_step_count": 121, "full_arc_last_step": "campaign_arc_completed_browser", "linux_export_headless_startup_passed": true, "windows_export_fresh_wine_startup_passed": true}
     }
   ],
   "project": "heroes-like",
@@ -79214,7 +79237,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "ux_main_menu_campaign_launch_action_deduplication_completed",
+  "result": "ux_main_menu_campaign_contextual_dock_height_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
