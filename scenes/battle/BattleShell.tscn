@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://battle_scene"]
+[gd_scene load_steps=7 format=3 uid="uid://battle_scene"]
 
 [ext_resource type="Script" path="res://scenes/battle/BattleShell.gd" id="1"]
 [ext_resource type="Script" path="res://scenes/battle/BattleBoardView.gd" id="2"]
 [ext_resource type="Script" path="res://scenes/ui/FrontierBannerGlyph.gd" id="3"]
 [ext_resource type="PackedScene" path="res://scenes/shared/ManualSaveOverwriteDialog.tscn" id="4_save_overwrite"]
 [ext_resource type="PackedScene" path="res://scenes/shared/ActivePlaySettingsDialog.tscn" id="5_active_settings"]
+[ext_resource type="Script" path="res://scenes/ui/HeroPortraitView.gd" id="6_hero_portrait"]
 
 [node name="BattleShell" type="Control"]
 layout_mode = 3
@@ -357,15 +358,39 @@ theme_override_constants/separation = 3
 layout_mode = 2
 text = "Command"
 
-[node name="PlayerCommand" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/CommandPanel/CommandPad/CommandBox"]
+[node name="PlayerCommanderIdentity" type="HBoxContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/CommandPanel/CommandPad/CommandBox"]
+layout_mode = 2
+theme_override_constants/separation = 7
+
+[node name="PlayerCommanderPortrait" type="TextureRect" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/CommandPanel/CommandPad/CommandBox/PlayerCommanderIdentity"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(32, 43)
+layout_mode = 2
+script = ExtResource("6_hero_portrait")
+
+[node name="PlayerCommand" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/CommandPanel/CommandPad/CommandBox/PlayerCommanderIdentity"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 autowrap_mode = 3
 text = "Player command"
 
-[node name="EnemyCommand" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/CommandPanel/CommandPad/CommandBox"]
+[node name="EnemyCommanderIdentity" type="HBoxContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/CommandPanel/CommandPad/CommandBox"]
+layout_mode = 2
+theme_override_constants/separation = 7
+
+[node name="EnemyCommanderPortrait" type="TextureRect" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/CommandPanel/CommandPad/CommandBox/EnemyCommanderIdentity"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(32, 43)
+layout_mode = 2
+script = ExtResource("6_hero_portrait")
+
+[node name="EnemyCommand" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/CommandPanel/CommandPad/CommandBox/EnemyCommanderIdentity"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 autowrap_mode = 3
 text = "Enemy command"
 

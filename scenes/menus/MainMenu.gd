@@ -67,7 +67,7 @@ const TAB_HELP_TOPIC := {
 @onready var _chapter_details_panel: PanelContainer = %ChapterDetailsPanel
 @onready var _chapter_details_label: Label = %ChapterDetails
 @onready var _campaign_intel_row: HBoxContainer = %CampaignIntelRow
-@onready var _campaign_commander_portrait: TextureRect = %CampaignCommanderPortrait
+@onready var _campaign_commander_portrait: HeroPortraitView = %CampaignCommanderPortrait
 @onready var _campaign_commander_preview_label: Label = %CampaignCommanderPreview
 @onready var _campaign_operational_board_label: Label = %CampaignOperationalBoard
 @onready var _campaign_journal_label: Label = %CampaignJournal
@@ -93,7 +93,7 @@ const TAB_HELP_TOPIC := {
 @onready var _generated_progress_bar: ProgressBar = %GeneratedMapProgress
 @onready var _generated_provenance_label: Label = %GeneratedMapProvenance
 @onready var _start_generated_skirmish_button: Button = %StartGeneratedSkirmish
-@onready var _skirmish_commander_portrait: TextureRect = %SkirmishCommanderPortrait
+@onready var _skirmish_commander_portrait: HeroPortraitView = %SkirmishCommanderPortrait
 @onready var _skirmish_commander_preview_label: Label = %SkirmishCommanderPreview
 @onready var _skirmish_operational_board_label: Label = %SkirmishOperationalBoard
 @onready var _start_skirmish_button: Button = %StartSkirmish
@@ -156,8 +156,6 @@ var _campaign_storage_warning := ""
 var _campaign_last_mutation_result: Dictionary = {}
 var _validation_campaign_blocked_command_count := 0
 var _campaign_intel_expanded := false
-var _hero_portrait_textures: Dictionary = {}
-var _missing_hero_portrait_paths: Dictionary = {}
 var _skirmish_entries: Array = []
 var _selected_skirmish_id := ""
 var _selected_difficulty: String = ScenarioSelectRulesScript.default_difficulty_id()
@@ -4142,26 +4140,8 @@ func _exit_tree() -> void:
 	if SettingsService.display_change_pending():
 		SettingsService.revert_display_change("menu_exit")
 
-func _set_commander_portrait(target: TextureRect, hero_id: String) -> void:
-	target.visible = false
-	target.texture = null
-	if hero_id == "":
-		return
-	var hero := ContentService.get_hero(hero_id)
-	var art := ContentService.get_hero_art(hero_id)
-	var path := String(art.get("portrait", ""))
-	if path == "" or _missing_hero_portrait_paths.has(path):
-		return
-	var texture: Variant = _hero_portrait_textures.get(path)
-	if not (texture is Texture2D):
-		texture = ResourceLoader.load(path, "Texture2D")
-		if not (texture is Texture2D):
-			_missing_hero_portrait_paths[path] = true
-			return
-		_hero_portrait_textures[path] = texture
-	target.texture = texture
-	target.tooltip_text = "%s portrait" % String(hero.get("name", hero_id))
-	target.visible = true
+func _set_commander_portrait(target: HeroPortraitView, hero_id: String) -> void:
+	target.set_hero_id(hero_id)
 
 func _set_compact_label(label: Label, full_text: String, max_lines: int, max_chars: int = 84) -> void:
 	FrontierVisualKit.set_compact_label(label, full_text, max_lines, max_chars)

@@ -37,6 +37,7 @@ const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains ope
 @onready var _town_stage_view = %TownStage
 @onready var _outlook_label: Label = %Outlook
 @onready var _command_ledger_label: Label = %CommandLedger
+@onready var _hero_portrait: HeroPortraitView = %HeroPortrait
 @onready var _hero_label: Label = %Hero
 @onready var _production_overview_label: Label = %ProductionOverview
 @onready var _heroes_label: Label = %Heroes
@@ -450,6 +451,7 @@ func _refresh(first_render_minimal: bool = false) -> void:
 	_set_compact_label(_command_ledger_label, String(view_state.get("command_ledger_text", "")), 4)
 	buckets["header_outlook"] = ProfileLogScript.elapsed_ms(section_started)
 	section_started = ProfileLogScript.begin_usec()
+	_hero_portrait.set_hero_id(_live_player_hero_id())
 	_set_compact_label(_hero_label, String(view_state.get("hero_text", "")), 2)
 	_set_compact_label(_production_overview_label, String(view_state.get("production_visible_text", "")), 4)
 	_production_overview_label.tooltip_text = String(view_state.get("production_tooltip_text", ""))
@@ -2231,6 +2233,7 @@ func validation_snapshot() -> Dictionary:
 		"resources_tooltip_text": _resource_label.tooltip_text,
 		"resources_full_ledger_text": OverworldRules.describe_resource_stockpile(_session.overworld.get("resources", {}), true),
 		"hero_text": OverworldRules.describe_hero(_session),
+		"hero_portrait": _hero_portrait.validation_snapshot(),
 		"hero_visible_text": _hero_label.text,
 		"hero_tooltip_text": _hero_label.tooltip_text,
 		"heroes_text": TownRules.describe_heroes(_session),
@@ -2360,6 +2363,13 @@ func validation_snapshot() -> Dictionary:
 		"study_action_count": TownRules.get_spell_learning_actions(_session).size(),
 		"latest_save_summary": SaveService.latest_loadable_summary(),
 	}
+
+
+func _live_player_hero_id() -> String:
+	var hero = _session.overworld.get("hero", {})
+	if hero is Dictionary and String(hero.get("id", "")) != "":
+		return String(hero.get("id", ""))
+	return String(_session.overworld.get("active_hero_id", ""))
 
 func validation_try_progress_action() -> Dictionary:
 	var before_signature := JSON.stringify(_validation_progress_signature())

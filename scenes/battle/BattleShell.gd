@@ -40,7 +40,9 @@ const BATTLE_PLAYBACK_SPEED_SAVE_FAILURE_MESSAGE := "Playback speed not saved. P
 @onready var _risk_label: Label = %Risk
 @onready var _consequence_label: Label = %Consequence
 @onready var _battle_board_view = %BattleBoard
+@onready var _player_commander_portrait: HeroPortraitView = %PlayerCommanderPortrait
 @onready var _player_command_label: Label = %PlayerCommand
+@onready var _enemy_commander_portrait: HeroPortraitView = %EnemyCommanderPortrait
 @onready var _enemy_command_label: Label = %EnemyCommand
 @onready var _initiative_label: Label = %Initiative
 @onready var _active_label: Label = %Active
@@ -1502,6 +1504,8 @@ func _refresh() -> void:
 			risk_board,
 		])
 	_set_compact_label(_consequence_label, _battle_consequence_text(), 4)
+	_player_commander_portrait.set_hero_id(_battle_player_hero_id())
+	_enemy_commander_portrait.set_hero_id(_battle_enemy_hero_id())
 	_set_compact_label(_player_command_label, BattleRules.describe_commander_summary(_session, "player"), 1)
 	_set_compact_label(_enemy_command_label, BattleRules.describe_commander_summary(_session, "enemy"), 1)
 	buckets["risk_consequence_commanders"] = ProfileLogScript.elapsed_ms(section_started)
@@ -2830,6 +2834,7 @@ func validation_snapshot() -> Dictionary:
 		"player_roster": player_roster,
 		"enemy_roster": enemy_roster,
 		"player_commander_text": BattleRules.describe_commander_summary(_session, "player"),
+		"player_commander_portrait": _player_commander_portrait.validation_snapshot(),
 		"player_commander_visible_text": _player_command_label.text,
 		"player_commander_tooltip_text": _player_command_label.tooltip_text,
 		"spellbook_text": BattleRules.describe_spellbook(_session),
@@ -2841,6 +2846,7 @@ func validation_snapshot() -> Dictionary:
 		"spell_timing_visible_text": _timing_label.text,
 		"spell_timing_tooltip_text": _timing_label.tooltip_text,
 		"enemy_commander_text": BattleRules.describe_commander_summary(_session, "enemy"),
+		"enemy_commander_portrait": _enemy_commander_portrait.validation_snapshot(),
 		"enemy_commander_visible_text": _enemy_command_label.text,
 		"enemy_commander_tooltip_text": _enemy_command_label.tooltip_text,
 		"battle_board": _battle_board_view.validation_hex_layout_summary() if _battle_board_view.has_method("validation_hex_layout_summary") else {},
@@ -2853,6 +2859,19 @@ func validation_snapshot() -> Dictionary:
 		"save_status_visible_text": _system_body_label.text,
 		"save_status_tooltip_text": _system_body_label.tooltip_text,
 	}
+
+
+func _battle_player_hero_id() -> String:
+	var source = _session.battle.get("player_commander_source", {})
+	if source is Dictionary and String(source.get("hero_id", "")) != "":
+		return String(source.get("hero_id", ""))
+	var hero = _session.battle.get("player_commander_state", {})
+	return String(hero.get("id", "")) if hero is Dictionary else ""
+
+
+func _battle_enemy_hero_id() -> String:
+	var hero = _session.battle.get("enemy_hero", {})
+	return String(hero.get("id", "")) if hero is Dictionary else ""
 
 func validation_reset_battle_info_tab_navigation_state() -> Dictionary:
 	_validation_battle_info_tab_resetting = true
