@@ -2299,7 +2299,8 @@ func _refresh_map_view() -> void:
 		_selected_route_cache_for_map_view(),
 		_hero_movement_presentation,
 		_object_resolution_presentation,
-		_route_blocked_presentation
+		_route_blocked_presentation,
+		_selected_guarded_site_presentation()
 	)
 	if _map_view.has_method("set_placement_debug_overlay_enabled"):
 		_map_view.call("set_placement_debug_overlay_enabled", _placement_debug_overlay_enabled)
@@ -2429,6 +2430,49 @@ func _record_object_resolution_presentation(result: Dictionary, route: String) -
 		"allows_large_motion": bool(policy.get("allows_large_motion", true)),
 		"duration_ms": int(round(float(authored_duration_ms) * duration_scale)),
 		"max_duration_ms": max_duration_ms,
+	}
+
+func _selected_guarded_site_presentation() -> Dictionary:
+	if _session == null or not _tile_in_bounds(_selected_tile):
+		return {}
+	var node := _resource_node_at(_selected_tile.x, _selected_tile.y)
+	if node.is_empty():
+		return {}
+	var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+	if site.is_empty():
+		return {}
+	var guard := OverworldRules.resource_site_blocking_guard(_session, node, site)
+	if guard.is_empty():
+		return {}
+	var placement_id := String(node.get("placement_id", "")).strip_edges()
+	var guard_placement_id := String(guard.get("placement_id", guard.get("id", ""))).strip_edges()
+	var control_inspection := OverworldRules.describe_resource_site_control_inspection(_session, node, site)
+	var guard_link_surface := OverworldRules.describe_encounter_guard_link_surface(_session, guard)
+	if placement_id == "" or guard_placement_id == "" or control_inspection == "" or guard_link_surface == "":
+		return {}
+	var policy: Dictionary = AnimationCueCatalogScript.cue_playback_policy_for_event(
+		"overworld_object_guarded",
+		SettingsService.animation_preferences()
+	)
+	if policy.is_empty() or String(policy.get("selected_playback_policy", "")) != "context_visible_only":
+		return {}
+	return {
+		"active": true,
+		"event_id": "overworld_object_guarded",
+		"status": "guarded",
+		"tile": {"x": _selected_tile.x, "y": _selected_tile.y},
+		"placement_id": placement_id,
+		"site_id": String(node.get("site_id", "")),
+		"site_name": String(site.get("name", "")),
+		"guard_placement_id": guard_placement_id,
+		"guard_name": OverworldRules.encounter_display_name(guard),
+		"control_inspection": control_inspection,
+		"guard_link_surface": guard_link_surface,
+		"playback_policy": String(policy.get("selected_playback_policy", "")),
+		"selected_animation_state": String(policy.get("selected_animation_state", "")),
+		"selected_visual_policy": String(policy.get("selected_visual_policy", "")),
+		"selected_fallback_tag": String(policy.get("selected_fallback_tag", "")),
+		"allows_large_motion": bool(policy.get("allows_large_motion", true)),
 	}
 
 func _refresh_action_rails(request: Dictionary = {}) -> void:

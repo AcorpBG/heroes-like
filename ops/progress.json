@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld blocked-route cue slice is complete. Exact blocked selections now play one deduped normal or reduced-motion cue without changing route authority or the compact reachable-destination path; select the next bounded release-readiness implementation slice from current behavior and source evidence.",
+  "currentNotes": "The Overworld guarded-site context cue slice is complete. Exact selected unresolved guards now show one normal or reduced-motion context-only badge that clears on deselection or guard resolution without changing gameplay authority; select the next bounded release-readiness implementation slice from current behavior and source evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-blocked-route-cue-playback-10184",
-  "currentSliceId": "presentation-overworld-blocked-route-cue-playback-10184",
-  "currentSliceNotes": "Completed: exact blocked tile/reason publication, one-shot normal and reduced-motion playback, dynamic-layer-only rendering, refresh/reselection dedupe, reachable compact-path preservation, compatibility, static/editor, and bounded Linux/Windows export-startup gates are green.",
+  "currentSlice": "presentation-overworld-guarded-site-context-cue-10184",
+  "currentSliceId": "presentation-overworld-guarded-site-context-cue-10184",
+  "currentSliceNotes": "Completed: exact selected site/guard/inspection publication, context-only normal and reduced-motion rendering, refresh stability, deselection and guard-resolution removal, dynamic-layer-only ownership, compatibility, static/editor, and bounded Linux/Windows export-startup gates are green.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Blocked Route Cue Playback",
-  "currentSliceUpdatedAt": "2026-08-14T19:39:00Z",
+  "currentSliceTitle": "Overworld Guarded Site Context Cue",
+  "currentSliceUpdatedAt": "2026-08-14T20:01:33Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -81216,6 +81216,90 @@
         "linux_export_headless_startup_passed": true,
         "windows_export_fresh_wine_startup_passed": true
       }
+    },
+    {
+      "id": "presentation-overworld-guarded-site-context-cue-10184",
+      "title": "Overworld Guarded Site Context Cue",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/animation-systems-foundation.md",
+        "docs/animation-overworld-object-state-contract-report.md",
+        "AGENTS.md"
+      ],
+      "purpose": "Render the authored guarded-site cue as exact context-only feedback while a selected resource site remains blocked by its unresolved live guard.",
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_object_resolution_cue_playback_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_object_resolution_cue_playback_report.gd",
+        "tests/artifact_guarded_site_reward_execution_report.tscn",
+        "tests/overworld_full_route_movement_regression.tscn",
+        "tests/overworld_visual_smoke.tscn",
+        "tests/animation_overworld_object_state_contract_report.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "5e7b71e01190176092893d161ebcd83f06b4e53c",
+        "blocking_guard_authority_available": true,
+        "selected_site_context_available": true,
+        "guarded_context_cue_authored": true,
+        "guarded_context_playback_runtime": false
+      },
+      "completionCriteria": [
+        "Selecting a resource site with an exact unresolved blocking guard publishes one detached overworld_object_guarded context at the authoritative site tile with exact site, guard, and existing inspection text",
+        "The context-visible cue draws only on the dynamic layer, remains stable across refresh, clears on deselection or authoritative guard resolution, and never becomes a timed or replayable event",
+        "Reduced motion uses the exact guard_badge_static fallback without large motion",
+        "Guard resolution, routing, movement, interaction, battle, session/save authority, focus, keyboard/controller navigation, camera, static/state caches, and audio policy remain exact",
+        "Focused runtime, guard compatibility, route/visual/object-contract/accessibility/core compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "guard encounter resolution, battle, route/pathfinding, movement, resource interaction, session, save, schema, or content changes",
+        "object-blocked, route-open, route-closed, ambient, resolution-event, or broad map animation changes",
+        "new sprite/VFX/audio assets, particles/shaders, camera, AI/balance, map, content, or Native RMG changes",
+        "packaged Overworld interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "createdAt": "2026-08-14T19:43:12Z",
+      "startedAt": "2026-08-14T19:43:12Z",
+      "updatedAt": "2026-08-14T20:01:33Z",
+      "notes": "Implemented a detached guarded-site context derived on each map refresh from the exact selected resource node, unresolved blocking guard, existing inspection/link surfaces, and authored context_visible_only cue policy. MapView validates the whole detached identity, requires the authoritative selected tile, draws a bounded shield badge only on the dynamic layer, and owns no timer, serial, session, route, or interaction state. Focused normal and reduced-motion proof covers exact site/guard/tile/inspection, refresh stability, deselection removal, authoritative guard-resolution removal, unchanged session/static/state authority, and guard_badge_static fallback. Existing object-resolution controls plus guarded reward, full-route, visual, animation-contract, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Other object/route cues, guard/battle/route/resource rules, packaged Overworld interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null,
+      "result": {
+        "event_id": "overworld_object_guarded",
+        "playback_policy": "context_visible_only",
+        "normal_animation_state": "guard_warning_hold",
+        "reduced_motion_fallback": "guard_badge_static",
+        "exact_site_guard_tile_and_inspection_passed": true,
+        "dynamic_layer_only_passed": true,
+        "refresh_stability_passed": true,
+        "deselection_clear_passed": true,
+        "guard_resolution_clear_passed": true,
+        "no_timer_or_replay_authority": true,
+        "focused_object_resolution_report_passed": true,
+        "guarded_reward_compatibility_passed": true,
+        "full_route_compatibility_passed": true,
+        "visual_smoke_passed": true,
+        "animation_contract_passed": true,
+        "accessibility_passed": true,
+        "core_passed": true,
+        "repository_validation_passed": true,
+        "editor_parse_passed": true,
+        "linux_export_headless_startup_passed": true,
+        "windows_export_fresh_wine_startup_passed": true
+      },
+      "completedAt": "2026-08-14T20:01:33Z"
     },
     {
       "id": "presentation-overworld-blocked-route-cue-playback-10184",

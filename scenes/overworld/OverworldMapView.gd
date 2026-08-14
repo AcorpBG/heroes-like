@@ -301,6 +301,20 @@ var _route_blocked_visual_policy := ""
 var _route_blocked_fallback_tag := ""
 var _route_blocked_reason := ""
 var _route_blocked_allows_large_motion := false
+var _guarded_site_active := false
+var _guarded_site_tile := Vector2i(-1, -1)
+var _guarded_site_event_id := ""
+var _guarded_site_animation_state := ""
+var _guarded_site_visual_policy := ""
+var _guarded_site_fallback_tag := ""
+var _guarded_site_placement_id := ""
+var _guarded_site_site_id := ""
+var _guarded_site_site_name := ""
+var _guarded_site_guard_placement_id := ""
+var _guarded_site_guard_name := ""
+var _guarded_site_control_inspection := ""
+var _guarded_site_guard_link_surface := ""
+var _guarded_site_allows_large_motion := false
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -321,7 +335,8 @@ func set_map_state(
 	selected_route_state: Dictionary = {},
 	movement_presentation: Dictionary = {},
 	object_resolution_presentation: Dictionary = {},
-	route_blocked_presentation: Dictionary = {}
+	route_blocked_presentation: Dictionary = {},
+	guarded_site_presentation: Dictionary = {}
 ) -> void:
 	var profile_start := _profile_begin("set_map_state")
 	_ensure_render_layers()
@@ -342,6 +357,7 @@ func set_map_state(
 	_rebuild_object_indexes()
 	_rebuild_road_tiles()
 	_selected_tile = selected_tile
+	_sync_guarded_site_presentation(guarded_site_presentation)
 	var path_profile_start := _profile_begin("path_recompute")
 	var route_cache_reused := _apply_selected_route_state(selected_route_state)
 	if not route_cache_reused:
@@ -528,6 +544,41 @@ func _sync_route_blocked_presentation(presentation: Dictionary) -> void:
 	_route_blocked_active = true
 	_sync_presentation_processing()
 	_invalidate_dynamic_layer("route_blocked_started")
+
+func _sync_guarded_site_presentation(presentation: Dictionary) -> void:
+	_guarded_site_active = false
+	_guarded_site_tile = Vector2i(-1, -1)
+	_guarded_site_event_id = String(presentation.get("event_id", ""))
+	_guarded_site_animation_state = String(presentation.get("selected_animation_state", ""))
+	_guarded_site_visual_policy = String(presentation.get("selected_visual_policy", ""))
+	_guarded_site_fallback_tag = String(presentation.get("selected_fallback_tag", ""))
+	_guarded_site_placement_id = String(presentation.get("placement_id", "")).strip_edges()
+	_guarded_site_site_id = String(presentation.get("site_id", "")).strip_edges()
+	_guarded_site_site_name = String(presentation.get("site_name", "")).strip_edges()
+	_guarded_site_guard_placement_id = String(presentation.get("guard_placement_id", "")).strip_edges()
+	_guarded_site_guard_name = String(presentation.get("guard_name", "")).strip_edges()
+	_guarded_site_control_inspection = String(presentation.get("control_inspection", "")).strip_edges()
+	_guarded_site_guard_link_surface = String(presentation.get("guard_link_surface", "")).strip_edges()
+	_guarded_site_allows_large_motion = bool(presentation.get("allows_large_motion", true))
+	if (
+		not bool(presentation.get("active", false))
+		or _guarded_site_event_id != "overworld_object_guarded"
+		or String(presentation.get("status", "")) != "guarded"
+		or String(presentation.get("playback_policy", "")) != "context_visible_only"
+		or _guarded_site_placement_id == ""
+		or _guarded_site_site_id == ""
+		or _guarded_site_guard_placement_id == ""
+		or _guarded_site_guard_name == ""
+		or _guarded_site_control_inspection == ""
+		or _guarded_site_guard_link_surface == ""
+	):
+		return
+	var tile_payload: Dictionary = presentation.get("tile", {}) if presentation.get("tile", {}) is Dictionary else {}
+	var tile := Vector2i(int(tile_payload.get("x", -1)), int(tile_payload.get("y", -1)))
+	if tile != _selected_tile or tile.x < 0 or tile.y < 0 or tile.x >= _map_size.x or tile.y >= _map_size.y:
+		return
+	_guarded_site_tile = tile
+	_guarded_site_active = true
 
 func set_placement_debug_overlay_enabled(enabled: bool) -> void:
 	if _placement_debug_overlay_enabled == enabled:
@@ -960,6 +1011,7 @@ func _draw_dynamic_layer() -> void:
 	_draw_hero_movement_presentation(board_rect)
 	_draw_object_resolution_presentation(board_rect)
 	_draw_route_blocked_presentation(board_rect)
+	_draw_guarded_site_presentation(board_rect)
 	_draw_canvas_item = previous_target
 	_profile_add("dynamic_tile_checks", tile_checks)
 	_profile_end("draw_dynamic", profile_start, {
@@ -1491,6 +1543,27 @@ func _draw_route_blocked_presentation(board_rect: Rect2) -> void:
 	var cross_extent := extent * 0.20
 	_canvas_draw_line(center + Vector2(-cross_extent, -cross_extent), center + Vector2(cross_extent, cross_extent), Color(1.0, 0.82, 0.64, alpha), maxf(2.5, extent * 0.052), true)
 	_canvas_draw_line(center + Vector2(cross_extent, -cross_extent), center + Vector2(-cross_extent, cross_extent), Color(1.0, 0.82, 0.64, alpha), maxf(2.5, extent * 0.052), true)
+
+func _draw_guarded_site_presentation(board_rect: Rect2) -> void:
+	if not _guarded_site_active:
+		return
+	var rect := _tile_rect(board_rect, _guarded_site_tile)
+	var center := rect.get_center()
+	var extent := minf(rect.size.x, rect.size.y)
+	var guard_color := Color(1.0, 0.68, 0.18, 0.94)
+	var shield_extent := extent * 0.19
+	_canvas_draw_circle(center, extent * 0.38, Color(0.20, 0.08, 0.03, 0.46), true)
+	_canvas_draw_circle(center, extent * 0.38, guard_color, false, maxf(2.0, extent * 0.034), true)
+	_canvas_draw_colored_polygon(PackedVector2Array([
+		center + Vector2(0.0, -shield_extent),
+		center + Vector2(shield_extent * 0.82, -shield_extent * 0.48),
+		center + Vector2(shield_extent * 0.62, shield_extent * 0.58),
+		center + Vector2(0.0, shield_extent),
+		center + Vector2(-shield_extent * 0.62, shield_extent * 0.58),
+		center + Vector2(-shield_extent * 0.82, -shield_extent * 0.48),
+	]), Color(1.0, 0.82, 0.30, 0.92))
+	_canvas_draw_line(center + Vector2(0.0, -shield_extent * 0.58), center + Vector2(0.0, shield_extent * 0.48), Color(0.31, 0.12, 0.04, 0.92), maxf(2.0, extent * 0.034), true)
+	_canvas_draw_circle(center + Vector2(0.0, shield_extent * 0.72), maxf(1.5, extent * 0.026), Color(0.31, 0.12, 0.04, 0.92))
 
 func _draw_resource_sprite(node: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
 	return _draw_object_sprite(_resource_asset_id(node), rect, remembered, _resource_object_profile(node), tile)
@@ -2953,6 +3026,7 @@ func validation_view_metrics() -> Dictionary:
 		"hero_movement_presentation": validation_hero_movement_presentation(),
 		"object_resolution_presentation": validation_object_resolution_presentation(),
 		"route_blocked_presentation": validation_route_blocked_presentation(),
+		"guarded_site_presentation": validation_guarded_site_presentation(),
 	}
 
 func validation_hero_movement_presentation() -> Dictionary:
@@ -3022,6 +3096,26 @@ func validation_route_blocked_presentation() -> Dictionary:
 		"allows_large_motion": _route_blocked_allows_large_motion,
 		"duration_ms": int(round(_route_blocked_duration_sec * 1000.0)),
 		"progress": progress,
+	}
+
+func validation_guarded_site_presentation() -> Dictionary:
+	return {
+		"active": _guarded_site_active,
+		"event_id": _guarded_site_event_id,
+		"status": "guarded" if _guarded_site_active else "",
+		"tile": {"x": _guarded_site_tile.x, "y": _guarded_site_tile.y},
+		"placement_id": _guarded_site_placement_id,
+		"site_id": _guarded_site_site_id,
+		"site_name": _guarded_site_site_name,
+		"guard_placement_id": _guarded_site_guard_placement_id,
+		"guard_name": _guarded_site_guard_name,
+		"control_inspection": _guarded_site_control_inspection,
+		"guard_link_surface": _guarded_site_guard_link_surface,
+		"playback_policy": "context_visible_only" if _guarded_site_active else "",
+		"animation_state": _guarded_site_animation_state,
+		"visual_policy": _guarded_site_visual_policy,
+		"fallback_tag": _guarded_site_fallback_tag,
+		"allows_large_motion": _guarded_site_allows_large_motion,
 	}
 
 func validation_color_cue_summary() -> Dictionary:
