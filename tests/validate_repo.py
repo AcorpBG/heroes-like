@@ -107,6 +107,8 @@ OVERWORLD_FIELD_SPELL_CAST_CUE_PLAYBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "o
 OVERWORLD_FIELD_SPELL_CAST_CUE_PLAYBACK_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_field_spell_cast_cue_playback_report.tscn"
 OVERWORLD_ARTIFACT_SLOT_CUE_PLAYBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_artifact_slot_cue_playback_report.gd"
 OVERWORLD_ARTIFACT_SLOT_CUE_PLAYBACK_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_artifact_slot_cue_playback_report.tscn"
+OVERWORLD_ARTIFACT_ACQUIRED_CUE_PLAYBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_artifact_acquired_cue_playback_report.gd"
+OVERWORLD_ARTIFACT_ACQUIRED_CUE_PLAYBACK_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_artifact_acquired_cue_playback_report.tscn"
 OVERWORLD_ART_MANIFEST_PATH = ROOT / "art" / "overworld" / "manifest.json"
 TERRAIN_GRAMMAR_PATH = CONTENT_DIR / "terrain_grammar.json"
 TERRAIN_LAYERS_PATH = CONTENT_DIR / "terrain_layers.json"
@@ -28728,6 +28730,205 @@ def validate_overworld_artifact_slot_cue_playback(errors: list[str]) -> None:
         ensure(forbidden not in report_text, errors, f"Artifact-slot cue report must not bypass or weaken production behavior: {forbidden}")
 
 
+def validate_overworld_artifact_acquired_cue_playback(errors: list[str]) -> None:
+    required_paths = (
+        OVERWORLD_SCENE_PATH,
+        OVERWORLD_SCRIPT_PATH,
+        OVERWORLD_ARTIFACT_ACQUIRED_CUE_PLAYBACK_REPORT_SCRIPT_PATH,
+        OVERWORLD_ARTIFACT_ACQUIRED_CUE_PLAYBACK_REPORT_SCENE_PATH,
+        ANIMATION_EVENT_CUES_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Overworld artifact-acquired cue owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    shell_scene_text = OVERWORLD_SCENE_PATH.read_text(encoding="utf-8")
+    shell_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+    report_text = OVERWORLD_ARTIFACT_ACQUIRED_CUE_PLAYBACK_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    report_scene_text = OVERWORLD_ARTIFACT_ACQUIRED_CUE_PLAYBACK_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+
+    def gdscript_function_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}")
+        if start < 0:
+            return ""
+        end = text.find("\nfunc ", start + 1)
+        return text[start:] if end < 0 else text[start:end]
+
+    ensure_scene_nodes(shell_scene_text, errors, "OverworldShell.tscn", [("ArtifactActionCue", "Label"), ("ArtifactAcquiredInputBlocker", "Control")])
+    blocker_match = re.search(
+        r'\[node name="ArtifactAcquiredInputBlocker" type="Control" parent="\."\]\n(?P<body>.*?)(?=\n\[node )',
+        shell_scene_text,
+        re.DOTALL,
+    )
+    ensure(blocker_match is not None, errors, "Overworld artifact-acquired playback must own one top-level input blocker")
+    if blocker_match is not None:
+        blocker_body = blocker_match.group("body")
+        for token in (
+            "unique_name_in_owner = true",
+            "visible = false",
+            "anchors_preset = 15",
+            "mouse_filter = 0",
+            "focus_mode = 2",
+            "z_index = 44",
+            'tooltip_text = "Artifact recovery is resolving. Press Escape to skip."',
+        ):
+            ensure(token in blocker_body, errors, f"Artifact-acquired input blocker is missing exact ownership token: {token}")
+    ensure(shell_scene_text.count('[node name="ArtifactAcquiredInputBlocker"') == 1, errors, "Overworld shell must own exactly one artifact-acquired input blocker")
+
+    for token in (
+        '@onready var _artifact_acquired_input_blocker: Control = %ArtifactAcquiredInputBlocker',
+        "var _artifact_acquired_presentation: Dictionary = {}",
+        "var _artifact_acquired_presentation_serial := 0",
+        "var _artifact_acquired_presentation_active := false",
+        "func _record_artifact_acquired_presentation",
+        "func present_artifact_acquired_presentation",
+        "func dismiss_artifact_acquired_presentation",
+        "func validation_artifact_acquired_presentation",
+        '"artifact_acquired_presentation": validation_artifact_acquired_presentation()',
+        'cue_playback_policy_for_event(\n\t\t"artifact_acquired"',
+        'String(policy.get("cue_id", "")) != "cue_artifact_acquired"',
+        'String(policy.get("subject_kind", "")) != "artifact"',
+        '_artifact_action_cue.text = "Recovered: %s • %s"',
+    ):
+        ensure(token in shell_text, errors, f"OverworldShell.gd is missing artifact-acquired ownership token: {token}")
+    ensure(shell_text.count("func _record_artifact_acquired_presentation") == 1, errors, "Overworld shell must define exactly one artifact-acquired producer")
+    ensure(shell_text.count("func present_artifact_acquired_presentation") == 1, errors, "Overworld shell must define exactly one public artifact-acquired presenter")
+
+    handler_block = gdscript_function_block(shell_text, "_on_context_action_pressed")
+    handler_order = [
+        handler_block.find("OverworldRules.perform_context_action(_session, action_id)"),
+        handler_block.find("_record_object_resolution_presentation(result"),
+        handler_block.find("_record_result_feedback("),
+        handler_block.find("var resolution := _handle_session_resolution()"),
+        handler_block.find("\t_refresh()"),
+        handler_block.find('if action_id == "collect_artifact":'),
+        handler_block.find("_record_artifact_acquired_presentation(result, action_id)"),
+    ]
+    ensure(all(index >= 0 for index in handler_order) and handler_order == sorted(handler_order), errors, "Live artifact-acquired cue must preserve map-result publication and publish its rail presentation only after rules, feedback, resolution, and refresh")
+    ensure(handler_block.count("OverworldRules.perform_context_action(_session, action_id)") == 1, errors, "Context action handler must execute the live artifact rule exactly once")
+
+    record_block = gdscript_function_block(shell_text, "_record_artifact_acquired_presentation")
+    record_order = [
+        record_block.find('not bool(result.get("ok", false))'),
+        record_block.find('String(interaction.get("family", "")) != "artifact"'),
+        record_block.find('String(recap.get("kind", "")) != "artifact"'),
+		record_block.find('for node_value in _session.overworld.get("artifact_nodes", [])'),
+		record_block.find('String(acquired_node.get("collected_by_faction_id", "")) != "player"'),
+        record_block.find("ArtifactRules.locate_artifact(hero, artifact_id)"),
+        record_block.find("ContentService.get_artifact(artifact_id)"),
+        record_block.find("cue_playback_policy_for_event"),
+        record_block.find("_artifact_acquired_presentation_serial += 1"),
+        record_block.find("present_artifact_acquired_presentation({"),
+    ]
+    ensure(all(index >= 0 for index in record_order) and record_order == sorted(record_order), errors, "Artifact-acquired producer must prove result/recap identity, authoritative ownership, content, and catalog policy before serial publication")
+    for token in (
+        'String(interaction.get("content_id", "")) != artifact_id',
+        'String(interaction.get("placement_id", "")) != placement_id',
+		'String(acquired_node.get("artifact_id", "")) != artifact_id',
+		'int(acquired_node.get("x", -1)) != int(tile.get("x", -2))',
+		'int(acquired_node.get("y", -1)) != int(tile.get("y", -2))',
+		'not bool(acquired_node.get("collected", false))',
+		'String(acquired_node.get("collected_by_faction_id", "")) != "player"',
+        'location_name not in ["equipped", "inventory"]',
+        '"post_action_recap": recap.duplicate(true)',
+        '"selected_animation_state": String(policy.get("selected_animation_state", ""))',
+        '"selected_vfx_cue_ids": (policy.get("selected_vfx_cue_ids", []) as Array).duplicate(true)',
+        '"selected_audio_cue_ids": (policy.get("selected_audio_cue_ids", []) as Array).duplicate(true)',
+        '"blocks_input": String(policy.get("selected_blocking_policy", "")) == "input_blocking_timeout"',
+    ):
+        ensure(token in record_block, errors, f"Artifact-acquired producer is missing exact authority/catalog payload proof: {token}")
+    ensure("session.overworld[" not in record_block and "session.flags[" not in record_block, errors, "Artifact-acquired producer must not mutate session authority")
+    ensure("await " not in record_block and "create_timer" not in record_block and "create_tween" not in record_block, errors, "Artifact-acquired producer must remain synchronous and timer-free")
+
+    present_block = gdscript_function_block(shell_text, "present_artifact_acquired_presentation")
+    dismiss_block = gdscript_function_block(shell_text, "dismiss_artifact_acquired_presentation")
+    process_block = gdscript_function_block(shell_text, "_process")
+    input_block = gdscript_function_block(shell_text, "_input")
+    focus_block = gdscript_function_block(shell_text, "_configure_overworld_keyboard_focus")
+    ensure(present_block.find("var tile: Dictionary") < present_block.find("if (\n") < present_block.find("_artifact_acquired_presentation = presentation.duplicate(true)"), errors, "Artifact-acquired presenter must validate the detached payload before replacing live state")
+    for token in (
+        'String(presentation.get("event_id", "")) != "artifact_acquired"',
+        'String(presentation.get("cue_id", "")) != "cue_artifact_acquired"',
+        'String(presentation.get("action_id", "")) != "collect_artifact"',
+        'location not in ["equipped", "inventory"]',
+        'blocking_policy not in ["input_blocking_timeout", "nonblocking_reduced_motion", "nonblocking_fast_resolve"]',
+        'blocks_input != (blocking_policy == "input_blocking_timeout")',
+        "_artifact_slot_presentation_active = false",
+        "_artifact_acquired_input_blocker.visible = blocks_input",
+        '_artifact_acquired_input_blocker.call_deferred("grab_focus")',
+    ):
+        ensure(token in present_block, errors, f"Artifact-acquired presenter is missing fail-closed/input ownership token: {token}")
+    ensure("_artifact_acquired_input_blocker.visible = false" in dismiss_block and '_configure_overworld_keyboard_focus", true' in dismiss_block, errors, "Artifact-acquired dismissal must release input and return Overworld focus")
+    ensure(process_block.find("if _artifact_acquired_presentation_active:") < process_block.find("dismiss_artifact_acquired_presentation()") < process_block.find("if not _artifact_slot_presentation_active:"), errors, "Shared artifact process must settle acquired playback before advancing slot playback")
+    ensure("_session" not in present_block + dismiss_block + process_block and "OverworldRules" not in present_block + dismiss_block + process_block, errors, "Artifact-acquired playback helpers must not consult or mutate gameplay authority")
+    ensure("await " not in present_block + dismiss_block + process_block and "create_timer" not in present_block + dismiss_block + process_block and "create_tween" not in present_block + dismiss_block + process_block, errors, "Artifact-acquired playback must use only bounded frame processing")
+    ensure(input_block.find("_artifact_acquired_input_blocker.visible") < input_block.find("_spell_cast_input_blocker.visible") < input_block.find("modal_owner_open"), errors, "Artifact-acquired input ownership must precede spell, modal, drawer, and gameplay input")
+    ensure('event.is_action_pressed("ui_cancel")' in input_block and "dismiss_artifact_acquired_presentation()" in input_block and "get_viewport().set_input_as_handled()" in input_block, errors, "Artifact-acquired blocking playback must consume all input and expose Escape dismissal")
+    ensure(focus_block.find("_artifact_acquired_input_blocker.visible") < focus_block.find("_spell_cast_input_blocker.visible") < focus_block.find("var surfaces :="), errors, "Overworld focus configuration must preserve exact artifact then spell blocker ownership")
+
+    ensure_scene_nodes(report_scene_text, errors, "overworld_artifact_acquired_cue_playback_report.tscn", [("OverworldArtifactAcquiredCuePlaybackReport", "Node")])
+    for token in (
+        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        '{"id": "normal", "reduced_motion": false}',
+        '{"id": "reduced_motion", "reduced_motion": true}',
+        'const ARTIFACT_ID := "artifact_trailsinger_boots"',
+        '"artifact_nodes"] = [{',
+        'shell.get_node_or_null("%PrimaryAction")',
+        'shell.get_node_or_null("%ArtifactAcquiredInputBlocker")',
+        'var selected: Dictionary = shell.validation_snapshot()',
+        'String(selected.get("primary_action_id", "")) == "collect_artifact"',
+        'primary_action.is_visible_in_tree()',
+        'primary_action.get_global_rect().size.x > 0.0',
+        'primary_action.get_global_rect().size.y > 0.0',
+        "var control = SessionDataScript.SessionData.new()",
+        'OverworldRules.perform_context_action(control, "collect_artifact")',
+        'String(control_recap.get("kind", "")) != "artifact"',
+        'control.flags["last_overworld_action_recap"] = control_recap.duplicate(true)',
+        'primary_action.emit_signal("pressed")',
+        'String(active.get("event_id", "")) == "artifact_acquired"',
+        'String(object_resolution.get("event_id", "")) == "overworld_object_depleted"',
+        'live_after == control.to_dict()',
+        'await _click_global_position(menu.get_global_rect().get_center())',
+        'open_command.emit_signal("pressed")',
+        'var active_after_command: Dictionary = _acquired_presentation(shell)',
+        'bool(active_after_command.get("active", false))',
+        'shell.call("_refresh")',
+        'await _press_action("ui_cancel")',
+        'while bool(_acquired_presentation(shell).get("active", false)) and settle_frames < 90:',
+        'shell.validation_perform_context_action("collect_artifact")',
+        'print("%s %s" % [REPORT_ID, JSON.stringify({"ok": true, "rows": rows})])',
+    ):
+        ensure(token in report_text, errors, f"Artifact-acquired cue report is missing method-matched live proof: {token}")
+    ensure(report_text.count('OverworldRules.perform_context_action(control, "collect_artifact")') == 1, errors, "Artifact-acquired report must materialize exactly one independent rules control per row")
+    control_index = report_text.find('OverworldRules.perform_context_action(control, "collect_artifact")')
+    recap_index = report_text.find('String(control_recap.get("kind", "")) != "artifact"', control_index)
+    persist_index = report_text.find('control.flags["last_overworld_action_recap"] = control_recap.duplicate(true)', recap_index)
+    button_index = report_text.find('primary_action.emit_signal("pressed")', persist_index)
+    ensure(0 <= control_index < recap_index < persist_index < button_index, errors, "Independent artifact control must preserve exact recap authority before the real live button action")
+    active_capture_index = report_text.find("var active := _acquired_presentation(shell)", button_index)
+    first_frame_after_button_index = report_text.find("await get_tree().process_frame", button_index)
+    ensure(0 <= button_index < active_capture_index < first_frame_after_button_index, errors, "Artifact-acquired report must capture the synchronous presentation before reduced-motion playback can settle on a process frame")
+    command_index = report_text.find('open_command.emit_signal("pressed")', active_capture_index)
+    active_after_command_index = report_text.find("var active_after_command: Dictionary = _acquired_presentation(shell)", command_index)
+    command_frame_index = report_text.find("await get_tree().process_frame", command_index)
+    ensure(0 <= command_index < active_after_command_index < command_frame_index, errors, "Reduced-motion command authority must be observed while the synchronous nonblocking cue is still active")
+    for forbidden in (
+        "_on_context_action_pressed(",
+        "_record_artifact_acquired_presentation(",
+        "_process(",
+        "create_timer",
+        "create_tween",
+        "var deadline := Time.get_ticks_msec()",
+        "session.overworld.erase",
+        "control.overworld.erase",
+        "OverworldRules.collect_active_artifact(",
+        "ArtifactRules.claim_artifact(",
+        "shell.validation_select_tile(",
+    ):
+        ensure(forbidden not in report_text, errors, f"Artifact-acquired cue report must not bypass or weaken production behavior: {forbidden}")
+
+
 def validate_overworld_object_resolution_cue_playback(errors: list[str]) -> None:
     required_paths = (
         OVERWORLD_RULES_PATH,
@@ -37457,6 +37658,7 @@ def main() -> int:
     validate_overworld_hero_route_locomotion(errors)
     validate_overworld_field_spell_cast_cue_playback(errors)
     validate_overworld_artifact_slot_cue_playback(errors)
+    validate_overworld_artifact_acquired_cue_playback(errors)
     validate_overworld_object_resolution_cue_playback(errors)
     validate_neutral_dwelling_unit_slice(errors)
     validate_hero_portrait_assets(errors)
