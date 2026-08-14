@@ -27859,8 +27859,13 @@ def validate_overworld_hero_route_locomotion(errors: list[str]) -> None:
         'const AnimationCueCatalogScript = preload("res://scripts/core/AnimationCueCatalog.gd")',
         "var _hero_movement_presentation: Dictionary = {}",
         "var _hero_movement_presentation_serial := 0",
+        "var _route_blocked_presentation: Dictionary = {}",
+        "var _route_blocked_presentation_serial := 0",
+        'var _route_blocked_presentation_signature := ""',
         "func _record_hero_movement_presentation",
+        "func _record_route_blocked_presentation",
         '"overworld_hero_move"',
+        '"overworld_route_blocked"',
         "SettingsService.animation_preferences()",
         'route_execution.get("reachable_tiles", [])',
         'result.get("route_steps", [])',
@@ -27876,12 +27881,25 @@ def validate_overworld_hero_route_locomotion(errors: list[str]) -> None:
     ensure(record_block.find("cue_playback_policy_for_event") < record_block.find("_hero_movement_presentation_serial += 1"), errors, "Hero locomotion must resolve the authored cue policy before issuing a presentation serial")
     ensure("session.overworld" not in record_block and "session.flags" not in record_block, errors, "Hero locomotion presentation must not mutate session authority")
     ensure("create_tween" not in record_block and "await " not in record_block and "create_timer" not in record_block, errors, "Hero locomotion producer must not add hidden timing or coroutine authority")
+    blocked_record_block = gdscript_function_block(shell_text, "_record_route_blocked_presentation")
+    ensure('not _tile_in_bounds(_selected_tile) or _selected_tile == OverworldRules.hero_position(_session)' in blocked_record_block, errors, "Blocked-route presentation must fail closed outside a distinct in-bounds selection")
+    ensure('OverworldRules.tile_is_blocked' in blocked_record_block and 'OverworldRules.tile_is_actionable_route_destination' in blocked_record_block, errors, "Blocked-route presentation must preserve actionable blocked-destination semantics")
+    ensure('_ensure_selected_route_state("blocked_presentation")' in blocked_record_block and 'if not route_tiles.is_empty():' in blocked_record_block, errors, "Blocked-route presentation must reuse route state and reject reachable selections without rich decision construction")
+    ensure('_selected_route_decision_surface' not in blocked_record_block, errors, "Blocked-route presentation must not force rich route-decision construction on compact reachable destinations")
+    ensure('blocked_reason == ""' in blocked_record_block and '_route_blocked_presentation_signature' in blocked_record_block, errors, "Blocked-route presentation must require an exact reason and dedupe decision signature")
+    ensure(blocked_record_block.find("cue_playback_policy_for_event") < blocked_record_block.find("_route_blocked_presentation_serial += 1"), errors, "Blocked-route presentation must resolve authored policy before issuing a serial")
+    ensure('"tile": {"x": tile.x, "y": tile.y}' in blocked_record_block and '"blocked_reason": blocked_reason' in blocked_record_block, errors, "Blocked-route presentation must detach the exact decision tile and reason")
+    ensure("session.overworld" not in blocked_record_block and "session.flags" not in blocked_record_block and "create_timer" not in blocked_record_block and "await " not in blocked_record_block, errors, "Blocked-route presentation must remain view-only and synchronous")
+    refresh_route_block = gdscript_function_block(shell_text, "_refresh_selected_route_preview")
+    ensure(refresh_route_block.find("_record_route_blocked_presentation(reason)") < refresh_route_block.find("_refresh_with_request"), errors, "Blocked-route presentation must publish before the selected-route map refresh consumes it")
 
     for required_token in (
         "HERO_MOVEMENT_MIN_DURATION_MSEC := 80",
         "HERO_MOVEMENT_MAX_DURATION_MSEC := 700",
         "movement_presentation: Dictionary = {}",
+        "route_blocked_presentation: Dictionary = {}",
         "func _sync_hero_movement_presentation",
+        "func _sync_route_blocked_presentation",
         "serial == _hero_movement_last_serial",
         'path[path.size() - 1] != _hero_tile',
         "func _process(delta: float)",
@@ -27893,6 +27911,9 @@ def validate_overworld_hero_route_locomotion(errors: list[str]) -> None:
         "not (_hero_movement_active and tile == _hero_tile)",
         "func validation_hero_movement_presentation",
         '"hero_movement_presentation": validation_hero_movement_presentation()',
+        "func _draw_route_blocked_presentation",
+        "func validation_route_blocked_presentation",
+        '"route_blocked_presentation": validation_route_blocked_presentation()',
     ):
         ensure(required_token in map_view_text, errors, f"OverworldMapView.gd is missing hero-route locomotion token {required_token}")
     sync_block = gdscript_function_block(map_view_text, "_sync_hero_movement_presentation")
@@ -27901,11 +27922,18 @@ def validate_overworld_hero_route_locomotion(errors: list[str]) -> None:
     ensure(sync_block.find("_hero_movement_last_serial = serial") < sync_block.find("_tiles_from_payloads"), errors, "Map view must consume each movement serial once before validating its detached path")
     ensure(sync_block.find("_hero_movement_reduced_motion") < sync_block.find("if _hero_movement_reduced_motion:"), errors, "Map view must derive reduced-motion policy before choosing endpoint snap")
     processing_block = gdscript_function_block(map_view_text, "_sync_presentation_processing")
-    ensure('set_process(_hero_movement_active or _object_resolution_active or _object_resolution_queued)' in processing_block, errors, "Map view must run per-frame processing only while a presentation is active or queued")
+    ensure('set_process(_hero_movement_active or _object_resolution_active or _object_resolution_queued or _route_blocked_active)' in processing_block, errors, "Map view must run per-frame processing only while a presentation is active or queued")
     ensure("_invalidate_session_static_cache" not in process_block and "_invalidate_state_cache" not in process_block, errors, "Hero locomotion frames must not invalidate static or state caches")
     ensure("_invalidate_dynamic_layer" in process_block, errors, "Hero locomotion frames must invalidate the dynamic layer")
     ensure("session" not in process_block and "session" not in draw_block, errors, "Hero locomotion frame/draw helpers must not mutate or consult session authority")
     ensure("create_tween" not in sync_block + process_block + draw_block and "create_timer" not in sync_block + process_block + draw_block and "await " not in sync_block + process_block + draw_block, errors, "Hero locomotion must use the bounded view process without hidden timers or coroutines")
+    blocked_sync_block = gdscript_function_block(map_view_text, "_sync_route_blocked_presentation")
+    blocked_draw_block = gdscript_function_block(map_view_text, "_draw_route_blocked_presentation")
+    ensure('serial <= 0 or serial == _route_blocked_last_serial' in blocked_sync_block, errors, "Map view must consume each blocked-route serial once")
+    ensure('String(presentation.get("status", "")) != "blocked"' in blocked_sync_block and '_route_blocked_reason == ""' in blocked_sync_block, errors, "Map view must fail closed without exact blocked status and reason")
+    ensure(blocked_sync_block.find("_route_blocked_last_serial = serial") < blocked_sync_block.find('presentation.get("tile", {})'), errors, "Map view must consume a blocked-route serial before validating its detached tile")
+    ensure('_invalidate_dynamic_layer("route_blocked_started")' in blocked_sync_block and "_invalidate_session_static_cache" not in blocked_sync_block and "_invalidate_state_cache" not in blocked_sync_block, errors, "Blocked-route playback must invalidate only the dynamic layer")
+    ensure("session" not in blocked_draw_block and "create_tween" not in blocked_sync_block + blocked_draw_block and "create_timer" not in blocked_sync_block + blocked_draw_block and "await " not in blocked_sync_block + blocked_draw_block, errors, "Blocked-route view helpers must not mutate gameplay or add hidden timing")
 
     for required_token in (
         "func _assert_reduced_motion_route_endpoint_snap",
@@ -27921,6 +27949,17 @@ def validate_overworld_hero_route_locomotion(errors: list[str]) -> None:
         'int(mid_cache.get("dynamic_generation", -1))',
         'shell.call("_refresh")',
         '"movement_refresh_replayed": false',
+        'func _route_blocked_presentation',
+        'String(blocked_cue.get("event_id", "")) != "overworld_route_blocked"',
+        'blocked_cue.get("tile", {}) != {"x": 5, "y": 1}',
+        'String(blocked_cue.get("blocked_reason", "")) != String(route_decision.get("blocked_reason", ""))',
+        'int(blocked_cue.get("duration_ms", 0)) != 420',
+        'int(repeated_cue.get("serial", -1)) != blocked_serial',
+        'String(reachable_selection.get("selected_route_decision", {}).get("status", "")) != "reachable"',
+        'String(reduced_cue.get("fallback_tag", "")) != "blocked_route_icon"',
+        'String(reduced_cue.get("animation_state", "")) != "blocked_route_icon"',
+        'int(reduced_cue.get("duration_ms", 0)) != 260',
+        '"dynamic_layer_only": true',
         'SettingsService.set_reduced_motion_enabled(true)',
         'SettingsService.set_reduced_motion_enabled(original_reduced_motion)',
         'const CAPTURE_ENV := "HEROES_OVERWORLD_ROUTE_LOCOMOTION_CAPTURE"',
@@ -27933,6 +27972,14 @@ def validate_overworld_hero_route_locomotion(errors: list[str]) -> None:
     ):
         ensure(required_token in test_text, errors, f"Full-route movement regression is missing locomotion proof token {required_token}")
     ensure(test_text.count("func _assert_reduced_motion_route_endpoint_snap") == 1, errors, "Full-route movement regression must define one reduced-motion endpoint-snap case")
+    ensure(test_text.count("func _route_blocked_presentation") == 1, errors, "Full-route movement regression must define one detached blocked-route presentation observer")
+    blocked_case = gdscript_function_block(test_text, "_assert_route_does_not_pass_through_interaction")
+    ensure(blocked_case.find('String(route_decision.get("status", "")) != "blocked"') < blocked_case.find("_route_blocked_presentation(shell)"), errors, "Blocked-route case must establish exact route authority before presentation observation")
+    blocked_refresh_pos = blocked_case.find('shell.call("_refresh")')
+    blocked_reselection_pos = blocked_case.find('shell.call("validation_select_tile", 5, 1)', blocked_refresh_pos)
+    blocked_reachable_pos = blocked_case.find('shell.call("validation_select_tile", 1, 1)', blocked_reselection_pos)
+    ensure(0 <= blocked_refresh_pos < blocked_reselection_pos < blocked_reachable_pos, errors, "Blocked-route case must prove refresh, identical reselection, then reachable control in order")
+    ensure("_route_blocked_elapsed_sec" not in test_text and "_sync_route_blocked_presentation" not in test_text and "_draw_route_blocked_presentation" not in test_text, errors, "Full-route regression must passively observe production blocked-route playback")
     ensure("validation_set_hero_movement" not in test_text and "_hero_movement_elapsed_sec" not in test_text and "_process(" not in test_text, errors, "Full-route regression must passively observe production locomotion rather than mutate its clock")
     for required_token in (
         '"Objectives 0/5"',
