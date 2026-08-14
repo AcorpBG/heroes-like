@@ -20588,6 +20588,165 @@ def validate_town_faction_progression(errors: list[str]) -> None:
         ensure(required_token in town_script_text, errors, f"TownShell.gd is missing required town progression token: {required_token}")
 
 
+def validate_town_recruitment_cue_playback(errors: list[str]) -> None:
+    report_script_path = ROOT / "tests" / "town_recruitment_cue_playback_report.gd"
+    report_scene_path = ROOT / "tests" / "town_recruitment_cue_playback_report.tscn"
+    required_paths = (TOWN_SCRIPT_PATH, TOWN_STAGE_SCRIPT_PATH, report_script_path, report_scene_path)
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Town recruitment-cue owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    shell_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
+    ensure_script_functions(shell_text, errors, "TownShell.gd", ["_record_town_action_presentation"])
+    for required_token in (
+		'_record_town_action_presentation("recruit", full_action_id, action, result, before)',
+        'if lane != "recruit" or not bool(result.get("ok", false)):',
+        'var unit_id := action_id.trim_prefix("recruit:")',
+        'var after := TownRules.town_action_consequence_signature(_session)',
+        'var recruited_count := int(after_army.get(unit_id, 0)) - int(before_army.get(unit_id, 0))',
+        'AnimationCueCatalog.cue_playback_policy_for_event(',
+        '"town_units_recruited",\n\t\tSettingsService.animation_preferences()',
+        'String(policy.get("selected_blocking_policy", "")) != "nonblocking"',
+        '_town_stage_view.call("present_town_action", {',
+        '"policy": policy.duplicate(true)',
+    ):
+        ensure(required_token in shell_text, errors, f"TownShell.gd is missing exact recruitment-presentation publication: {required_token}")
+    recruit_handler_match = re.search(
+        r"func _on_recruit_action_pressed\(action_id: String\) -> void:\n(?P<body>.*?)(?=\nfunc )",
+        shell_text,
+        re.DOTALL,
+    )
+    ensure(recruit_handler_match is not None, errors, "TownShell.gd is missing the live recruitment action handler")
+    if recruit_handler_match is not None:
+        recruit_handler = recruit_handler_match.group("body")
+        recruit_order = [
+            recruit_handler.find("var result := TownRules.recruit_active_town(_session, action_id)"),
+            recruit_handler.find('_record_town_action_result("recruit", full_action_id, action, result, before)'),
+            recruit_handler.find('_invalidate_active_town_entity_cache("recruit", ["town", "economy", "hero_army"])'),
+            recruit_handler.find("if _handle_session_resolution():"),
+            recruit_handler.find("\t_refresh()"),
+            recruit_handler.find('_record_town_action_presentation("recruit", full_action_id, action, result, before)'),
+        ]
+        ensure(
+            all(index >= 0 for index in recruit_order) and recruit_order == sorted(recruit_order),
+            errors,
+            "Town recruitment presentation must start only after the authoritative result, cache invalidation, resolution guard, and refreshed live stage",
+        )
+    record_result_match = re.search(
+        r"func _record_town_action_result\(.*?\n(?P<body>.*?)(?=\nfunc )",
+        shell_text,
+        re.DOTALL,
+    )
+    if record_result_match is not None:
+        ensure(
+            "_record_town_action_presentation(" not in record_result_match.group("body"),
+            errors,
+            "Generic Town action-result recording must not start recruitment playback before the refreshed stage is renderable",
+        )
+
+    stage_text = TOWN_STAGE_SCRIPT_PATH.read_text(encoding="utf-8")
+    ensure_script_functions(
+        stage_text,
+        errors,
+        "TownStageView.gd",
+        [
+            "present_town_action",
+            "validation_town_action_presentation_snapshot",
+            "_town_scene_rect",
+            "_town_action_presentation_rect",
+            "_draw_town_action_presentation",
+        ],
+    )
+    for required_token in (
+        "const RECRUIT_PRESENTATION_MAX_DURATION_MS := 700",
+        "const RECRUIT_PRESENTATION_MIN_DURATION_MS := 120",
+        "set_process(false)",
+        'String(presentation.get("event_id", "")) != "town_units_recruited"',
+        'String(policy.get("cue_id", "")) != "cue_town_units_recruited"',
+        'String(policy.get("selected_blocking_policy", "")) != "nonblocking"',
+        "_town_action_presentation = presentation.duplicate(true)",
+        'if Time.get_ticks_msec() >= int(_town_action_presentation.get("expires_msec", 0)):',
+        '"draw_entries": (["recruit_count_badge"] if reduced_motion else ["recruit_muster_rings", "recruit_count_badge"]) if active else []',
+        '"started_msec": int(_town_action_presentation.get("started_msec", 0))',
+        '"expires_msec": int(_town_action_presentation.get("expires_msec", 0))',
+		'var selected_mode := String(policy.get("mode", "normal"))',
+		'var reduced_motion := selected_mode in ["reduced_motion", "reduced_motion_fast"]',
+		'var reduced_motion := String(policy.get("mode", "normal")) in ["reduced_motion", "reduced_motion_fast"]',
+        "_draw_town_action_presentation(scene_rect)",
+        'draw_arc(ring_center, radius, 0.0, TAU, 32',
+        'draw_rect(badge_rect, Color(0.10, 0.13, 0.16, 0.94), true)',
+        '"MUSTER +%d" % recruited_count',
+    ):
+        ensure(required_token in stage_text, errors, f"TownStageView.gd is missing bounded recruitment playback token: {required_token}")
+    for forbidden in (
+        "TownRulesScript.recruit_active_town",
+        "OverworldRulesScript.recruit_in_active_town",
+        "SessionState.set_active_session",
+        "SaveService",
+        "AppRouter",
+        "get_tree().create_timer",
+        "await ",
+		'bool(policy.get("reduced_motion", false))',
+    ):
+        ensure(forbidden not in stage_text, errors, f"TownStageView recruitment playback must remain view-only and frame-owned: {forbidden}")
+
+    report_scene_text = report_scene_path.read_text(encoding="utf-8")
+    ensure_scene_nodes(report_scene_text, errors, "town_recruitment_cue_playback_report.tscn", [("TownRecruitmentCuePlaybackReport", "Node")])
+    report_text = report_script_path.read_text(encoding="utf-8")
+    for required_token in (
+        "const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]",
+        '{"id": "normal", "reduced_motion": false}',
+        '{"id": "reduced_motion", "reduced_motion": true}',
+        "SettingsService.set_reduced_motion_enabled(original_reduced_motion)",
+        'var malformed_result: Dictionary = stage.present_town_action({"event_id": "town_units_recruited"})',
+        "management_tabs.current_tab = 1",
+		"var live_session = SessionState.ensure_active_session()",
+		"var live_town: Dictionary = TownRules.get_active_town(live_session)",
+        "var recruit_row: Node = recruit_actions.get_child(selected_index)",
+        'var row_buttons: Array = recruit_row.find_children("*", "Button", true, false)',
+        "var control = SessionStateStoreScript.SessionData.new()",
+		"var live_before: Dictionary = live_session.to_dict()",
+		"control.from_dict(live_before.duplicate(true))",
+        "var control_result: Dictionary = TownRules.recruit_active_town(control, unit_id)",
+        "control.flags[\"last_town_action_recap\"] = control_recap.duplicate(true)",
+        'recruit_button.emit_signal("pressed")',
+        "live_after == control.to_dict()",
+        'String(active_presentation.get("event_id", "")) == "town_units_recruited"',
+        'String(active_presentation.get("selected_animation_state", "")) == expected_animation_state',
+        'String(active_presentation.get("selected_blocking_policy", "")) == "nonblocking"',
+        "shell.validation_force_refresh()",
+        "shell.validation_force_minimal_refresh()",
+        "int(refreshed_presentation.get(\"serial\", 0)) == active_serial",
+		"int(refreshed_presentation.get(\"started_msec\", 0)) == int(active_presentation.get(\"started_msec\", -1))",
+		"Time.get_ticks_msec() >= int(active_presentation.get(\"expires_msec\", Time.get_ticks_msec() + 1))",
+        "while bool(stage.validation_town_action_presentation_snapshot().get(\"active\", false)) and Time.get_ticks_msec() < expiry_deadline:",
+        "not bool(post_expiry_presentation.get(\"active\", true))",
+		"_stage_layout_snapshot(shell) == layout_after_action",
+		"and _stage_layout_valid(shell)",
+        'row["session_differences"] = _recursive_exact_differences(control.to_dict(), live_after)',
+        'print("TOWN_RECRUITMENT_CUE_PLAYBACK_REPORT %s"',
+    ):
+        ensure(required_token in report_text, errors, f"Town recruitment-cue report is missing method-matched live proof: {required_token}")
+    for forbidden in (
+        "get_tree().create_timer",
+        "_on_recruit_action_pressed(",
+        "_record_town_action_presentation(",
+        "_draw_town_action_presentation(",
+        "session.flags.erase",
+        "session.overworld.erase",
+        "AnimationCueCatalog.cue_for_event",
+        "var recruit_row := recruit_actions.get_child(selected_index)",
+        'var row_buttons := recruit_row.find_children("*", "Button", true, false)',
+		"TownRules.get_recruit_actions(session)",
+		"var live_before: Dictionary = session.to_dict()",
+		"live_after == session.to_dict()",
+		'["TownStagePanel", "TownStage", "SidebarShell", "FooterPanel"]',
+		"_stage_layout_snapshot(shell) == layout_before",
+    ):
+        ensure(forbidden not in report_text, errors, f"Town recruitment-cue report must not bypass production action/presentation ownership: {forbidden}")
+
+
 def validate_town_contextual_guide(errors: list[str]) -> None:
     report_script_path = ROOT / "tests" / "town_contextual_guide_report.gd"
     report_scene_path = ROOT / "tests" / "town_contextual_guide_report.tscn"
@@ -36810,6 +36969,7 @@ def main() -> int:
     validate_battle_spell_timing_board(errors)
     validate_battle_faction_identity(errors)
     validate_town_faction_progression(errors)
+    validate_town_recruitment_cue_playback(errors)
     validate_town_contextual_guide(errors)
     validate_town_shell_release_polish(errors)
     validate_town_defense_outlook_board(errors)

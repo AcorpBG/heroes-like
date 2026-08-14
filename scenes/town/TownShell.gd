@@ -228,6 +228,7 @@ func _on_recruit_action_pressed(action_id: String) -> void:
 	if _handle_session_resolution():
 		return
 	_refresh()
+	_record_town_action_presentation("recruit", full_action_id, action, result, before)
 
 func _on_market_action_pressed(action_id: String) -> void:
 	var before := TownRules.town_action_consequence_signature(_session)
@@ -4326,6 +4327,52 @@ func _record_town_action_result(
 		"action_label": String(action.get("label", "")),
 		"result_ok": bool(result.get("ok", false)),
 	}, true), _session)
+
+func _record_town_action_presentation(
+	lane: String,
+	action_id: String,
+	action: Dictionary,
+	result: Dictionary,
+	before: Dictionary
+) -> void:
+	if lane != "recruit" or not bool(result.get("ok", false)):
+		return
+	if _town_stage_view == null or not _town_stage_view.has_method("present_town_action"):
+		return
+	var unit_id := action_id.trim_prefix("recruit:")
+	if unit_id == "" or unit_id == action_id:
+		return
+	var after := TownRules.town_action_consequence_signature(_session)
+	var before_army: Dictionary = before.get("army_counts", {}) if before.get("army_counts", {}) is Dictionary else {}
+	var after_army: Dictionary = after.get("army_counts", {}) if after.get("army_counts", {}) is Dictionary else {}
+	var recruited_count := int(after_army.get(unit_id, 0)) - int(before_army.get(unit_id, 0))
+	if recruited_count <= 0:
+		return
+	var policy := AnimationCueCatalog.cue_playback_policy_for_event(
+		"town_units_recruited",
+		SettingsService.animation_preferences()
+	)
+	if (
+		String(policy.get("event_id", "")) != "town_units_recruited"
+		or String(policy.get("surface", "")) != "town"
+		or String(policy.get("subject_kind", "")) != "unit_roster"
+		or String(policy.get("selected_playback_policy", "")) != "queue_resolved"
+		or String(policy.get("selected_blocking_policy", "")) != "nonblocking"
+	):
+		return
+	var town := TownRules.get_active_town(_session)
+	var unit := ContentService.get_unit(unit_id)
+	_town_stage_view.call("present_town_action", {
+		"event_id": "town_units_recruited",
+		"cue_id": String(policy.get("cue_id", "")),
+		"town_placement_id": String(town.get("placement_id", "")),
+		"town_id": String(town.get("town_id", "")),
+		"unit_id": unit_id,
+		"unit_name": String(unit.get("name", action.get("label", unit_id))),
+		"recruited_count": recruited_count,
+		"result_message": String(result.get("message", "")),
+		"policy": policy.duplicate(true),
+	})
 
 func _town_profile_metadata(first_render: bool) -> Dictionary:
 	var town := TownRules.get_active_town(_session) if _session != null else {}

@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Town contextual guide slice is complete. The live Town footer now exposes one compact modal consumer of the existing authored Town help topic with exact responsive containment, focus/input ownership, close-and-return focus, and unchanged gameplay/session/save authority; select the next bounded release-readiness implementation slice.",
+  "currentNotes": "Town recruitment cue playback is complete. Successful live recruitment publishes one detached authored cue after the authoritative refresh; normal and reduced-motion playback, exact session authority, refresh stability, expiry, compatibility, repository/editor, and bounded Linux/Windows startup gates pass. Select the next tracker-approved release-readiness implementation slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-town-contextual-guide-10184",
-  "currentSliceId": "ux-town-contextual-guide-10184",
-  "currentSliceNotes": "Completed: compact Town Guide content, exact 1280/1920 containment, pointer blocking, modal focus, ui_cancel and Close focus return, unchanged layout/session/save authority, compatibility, static/editor, and bounded Linux/Windows export-startup gates are green.",
+  "currentSlice": "presentation-town-recruitment-cue-playback-10184",
+  "currentSliceId": "presentation-town-recruitment-cue-playback-10184",
+  "currentSliceNotes": "Completed: the live Town recruitment action now starts one exact authored nonblocking cue after refresh, with normal muster rings, the reduced-motion count badge, exact session authority, and no refresh or expiry replay.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Town Contextual Guide",
-  "currentSliceUpdatedAt": "2026-08-14T20:34:24Z",
+  "currentSliceTitle": "Town Recruitment Cue Playback",
+  "currentSliceUpdatedAt": "2026-08-14T21:19:15Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -81218,6 +81218,86 @@
       }
     },
     {
+      "id": "presentation-town-recruitment-cue-playback-10184",
+      "title": "Town Recruitment Cue Playback",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/animation-systems-foundation.md",
+        "AGENTS.md"
+      ],
+      "purpose": "Make successful live player recruitment visible on the scenic Town stage through the existing authored town_units_recruited cue contract.",
+      "implementationTargets": [
+        "scenes/town/TownShell.gd",
+        "scenes/town/TownStageView.gd",
+        "tests/town_recruitment_cue_playback_report.gd",
+        "tests/town_recruitment_cue_playback_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/town_recruitment_cue_playback_report.tscn",
+        "tests/town_battle_visual_smoke.tscn",
+        "tests/animation_validation_smoke_harness_report.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "256001ba33a3ae285e77688e8e4d31442b4c724c",
+        "town_units_recruited_catalog_entry": true,
+        "normal_animation_state": "recruit_confirmed",
+        "reduced_motion_fallback": "recruit_count_badge",
+        "player_recruitment_rule_live": true,
+        "town_recruitment_stage_playback": false
+      },
+      "completionCriteria": [
+        "Exactly one successful live player recruit action publishes one detached town_units_recruited payload with the authoritative Town placement, unit id, recruited count, existing result message, and exact catalog-selected policy",
+        "TownStageView renders one bounded nonblocking normal recruit_confirmed cue and uses the exact recruit_count_badge static fallback under reduced motion without changing the scenic stage layout",
+        "Failed or unavailable recruitment produces no presentation, ordinary full/minimal refresh does not duplicate or reset the active cue, and expiry does not replay it",
+        "An independent method-matched recruitment control proves exact resources, reserve, army, event, session, cache, save, focus, and Town action authority",
+        "Focused normal/reduced runtime at 1280x720 and 1920x1080, Town visual, animation-contract, focus/accessibility/core compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "recruitment availability, cost, count, reserve, army, economy, combat, AI, balance, content, event, save, schema, or cache policy changes",
+        "Town building/capture/market/study/logistics presentation, global animation timing, final VFX/audio assets, camera, scene layout, or other-screen changes",
+        "packaged Town interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "createdAt": "2026-08-14T20:37:50Z",
+      "startedAt": "2026-08-14T20:37:50Z",
+      "updatedAt": "2026-08-14T21:19:15Z",
+      "completedAt": "2026-08-14T21:19:15Z",
+      "notes": "TownShell now publishes one detached town_units_recruited payload only after a successful live recruit result, cache invalidation, resolution guard, and authoritative refresh, preventing the bounded cue lifetime from elapsing before its first rendered frame. TownStageView consumes the catalog mode exactly: normal draws compact muster rings plus a count badge, while reduced_motion and reduced_motion_fast use the static recruit_count_badge path. The focused live-button report passes normal and reduced motion at 1280x720 and 1920x1080 with exact independent recruitment/session authority, malformed-input fail-closed behavior, refresh non-replay, natural expiry, and stable scenic-stage containment. Town visual, animation policy, active-play focus, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. Packaged Town interaction, actual audio cue playback/assets, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null,
+      "result": {
+        "successful_live_recruit_publication_exact": true,
+        "publication_after_authoritative_refresh": true,
+        "normal_muster_playback_passed": true,
+        "reduced_motion_static_fallback_passed": true,
+        "focused_viewports": [[1280, 720], [1920, 1080]],
+        "independent_session_authority_exact": true,
+        "malformed_payload_fail_closed": true,
+        "refresh_non_replay_passed": true,
+        "natural_expiry_non_replay_passed": true,
+        "town_battle_visual_passed": true,
+        "animation_contract_passed": true,
+        "active_play_focus_passed": true,
+        "accessibility_passed": true,
+        "core_passed": true,
+        "repository_validation_passed": true,
+        "editor_parse_passed": true,
+        "linux_export_headless_startup_passed": true,
+        "windows_export_fresh_wine_startup_passed": true
+      }
+    },
+    {
       "id": "ux-town-contextual-guide-10184",
       "title": "Town Contextual Guide",
       "status": "completed",
@@ -82718,9 +82798,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The completed Town contextual guide slice adds one compact consumer of the existing authored Town help topic while preserving Town gameplay, focus, session, save, and responsive layout authority. The game is not release-ready.",
+  "summary": "The completed Town recruitment cue playback slice connects authoritative successful player recruitment to the existing authored Town presentation contract without changing recruitment or save authority. The game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-14T20:34:24Z",
+  "updatedAt": "2026-08-14T21:19:15Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
