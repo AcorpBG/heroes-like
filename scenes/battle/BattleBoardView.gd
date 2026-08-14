@@ -2421,6 +2421,15 @@ func _draw_imported_vfx_asset(entry: Dictionary, start: Vector2, end: Vector2, c
 		"spell_target":
 			draw_center = end
 			rotation += progress * TAU * 0.04
+		"state_center":
+			draw_center = center
+			rotation += progress * TAU * 0.025
+		"state_marker":
+			draw_center = center + Vector2(radius * 0.38, -radius * 0.42)
+		"path_follow":
+			draw_center = center
+			if start.distance_to(end) > 1.0:
+				rotation += (end - start).angle()
 		_:
 			return false
 	var draw_size := radius * float(spec.get("scale", 1.0))

@@ -90,6 +90,42 @@
       "render_mode": "spell_target",
       "scale": 1.58,
       "base_rotation_degrees": 0.0
+    },
+    "vfx_placeholder_idle_shadow": {
+      "texture_path": "res://art/battle/vfx/state_idle_shadow.png",
+      "render_mode": "state_center",
+      "scale": 1.42,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_placeholder_active_ring": {
+      "texture_path": "res://art/battle/vfx/state_active_ring.png",
+      "render_mode": "state_center",
+      "scale": 1.58,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_placeholder_stack_fade": {
+      "texture_path": "res://art/battle/vfx/state_stack_fade.png",
+      "render_mode": "state_center",
+      "scale": 1.56,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_placeholder_surrender_marker": {
+      "texture_path": "res://art/battle/vfx/state_surrender_marker.png",
+      "render_mode": "state_marker",
+      "scale": 1.25,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_placeholder_battle_path_ghost": {
+      "texture_path": "res://art/battle/vfx/path_move_ghost.png",
+      "render_mode": "path_follow",
+      "scale": 1.18,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_placeholder_withdraw_path": {
+      "texture_path": "res://art/battle/vfx/path_withdraw_ghost.png",
+      "render_mode": "path_follow",
+      "scale": 1.18,
+      "base_rotation_degrees": 180.0
     }
   }
 }

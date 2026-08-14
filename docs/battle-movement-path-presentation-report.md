@@ -13,6 +13,7 @@ Implementation evidence. Battle movement already selected the `move_path_step` a
 - `BattleBoardView` copies those coordinates into cue playback records and uses them for `vfx_placeholder_battle_path_ghost`.
 - The move path ghost now spans the event source and destination cells instead of only pulsing on the final stack cell.
 - `tests/battle_event_animation_state_report.tscn` now proves a real move action emits path coordinates and a distinct source-to-destination path ghost.
+- The later `presentation-battle-state-path-vfx-asset-adoption-10184` slice maps the existing movement and withdrawal path cue ids to distinct original transparent textures while preserving these exact event coordinates and both procedural fallback paths.
 
 ## Validation
 
@@ -22,4 +23,4 @@ GODOT_SILENCE_ROOT_WARNING=1 godot --headless --path . --quit-after 120 --scene 
 
 ## Boundaries
 
-This fixes movement path presentation context. It does not add interpolated stack-token travel, camera motion, final authored motion curves, imported VFX/audio, or combat balance tuning.
+This fixes movement path presentation context. It does not add interpolated stack-token travel, camera motion, final authored motion curves, particles/shaders, audio changes, or combat balance tuning.
