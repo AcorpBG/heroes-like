@@ -1,5 +1,7 @@
 extends Control
 
+signal town_action_presentation_blocking_changed(blocking: bool)
+
 const TownRulesScript = preload("res://scripts/core/TownRules.gd")
 const OverworldRulesScript = preload("res://scripts/core/OverworldRules.gd")
 const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
@@ -86,8 +88,8 @@ func _process(_delta: float) -> void:
 		set_process(false)
 		return
 	if Time.get_ticks_msec() >= int(_town_action_presentation.get("expires_msec", 0)):
-		_town_action_presentation = {}
-		set_process(false)
+		dismiss_town_action_presentation()
+		return
 	queue_redraw()
 
 func _notification(what: int) -> void:
@@ -174,19 +176,27 @@ func _draw() -> void:
 
 func present_town_action(presentation: Dictionary) -> Dictionary:
 	var policy: Dictionary = presentation.get("policy", {}) if presentation.get("policy", {}) is Dictionary else {}
+	var event_id := String(presentation.get("event_id", ""))
+	var expected_cue_id := "cue_town_units_recruited" if event_id == "town_units_recruited" else "cue_town_building_built"
+	var expected_subject_kind := "unit_roster" if event_id == "town_units_recruited" else "building"
+	var selected_blocking_policy := String(policy.get("selected_blocking_policy", ""))
 	if (
-		String(presentation.get("event_id", "")) != "town_units_recruited"
+		event_id not in ["town_units_recruited", "town_building_built"]
 		or String(presentation.get("town_placement_id", "")) != String(_town.get("placement_id", ""))
-		or String(presentation.get("unit_id", "")) == ""
-		or int(presentation.get("recruited_count", 0)) <= 0
-		or String(policy.get("event_id", "")) != "town_units_recruited"
-		or String(policy.get("cue_id", "")) != "cue_town_units_recruited"
+		or event_id == "town_units_recruited" and String(presentation.get("unit_id", "")) == ""
+		or event_id == "town_units_recruited" and int(presentation.get("recruited_count", 0)) <= 0
+		or event_id == "town_building_built" and String(presentation.get("building_id", "")) == ""
+		or String(policy.get("event_id", "")) != event_id
+		or String(policy.get("cue_id", "")) != expected_cue_id
 		or String(policy.get("surface", "")) != "town"
-		or String(policy.get("subject_kind", "")) != "unit_roster"
+		or String(policy.get("subject_kind", "")) != expected_subject_kind
 		or String(policy.get("selected_playback_policy", "")) != "queue_resolved"
-		or String(policy.get("selected_blocking_policy", "")) != "nonblocking"
+		or event_id == "town_units_recruited" and selected_blocking_policy != "nonblocking"
+		or event_id == "town_building_built" and selected_blocking_policy not in ["input_blocking_timeout", "nonblocking_reduced_motion", "nonblocking_fast_resolve"]
 	):
 		return validation_town_action_presentation_snapshot()
+	if _town_action_presentation_blocks_input():
+		town_action_presentation_blocking_changed.emit(false)
 	var started_msec := Time.get_ticks_msec()
 	var duration_ms := clampi(
 		int(policy.get("max_duration_ms", RECRUIT_PRESENTATION_MAX_DURATION_MS)),
@@ -200,8 +210,24 @@ func present_town_action(presentation: Dictionary) -> Dictionary:
 	_town_action_presentation["duration_ms"] = duration_ms
 	_town_action_presentation["expires_msec"] = started_msec + duration_ms
 	set_process(true)
+	if _town_action_presentation_blocks_input():
+		town_action_presentation_blocking_changed.emit(true)
 	queue_redraw()
 	return validation_town_action_presentation_snapshot()
+
+func dismiss_town_action_presentation() -> void:
+	var was_blocking := _town_action_presentation_blocks_input()
+	_town_action_presentation = {}
+	set_process(false)
+	queue_redraw()
+	if was_blocking:
+		town_action_presentation_blocking_changed.emit(false)
+
+func _town_action_presentation_blocks_input() -> bool:
+	if _town_action_presentation.is_empty():
+		return false
+	var policy: Dictionary = _town_action_presentation.get("policy", {}) if _town_action_presentation.get("policy", {}) is Dictionary else {}
+	return String(policy.get("selected_blocking_policy", "")) == "input_blocking_timeout"
 
 func validation_town_action_presentation_snapshot() -> Dictionary:
 	var active := not _town_action_presentation.is_empty()
@@ -209,6 +235,12 @@ func validation_town_action_presentation_snapshot() -> Dictionary:
 	var draw_rect := _town_action_presentation_rect(_town_scene_rect()) if active else Rect2()
 	var selected_mode := String(policy.get("mode", "normal"))
 	var reduced_motion := selected_mode in ["reduced_motion", "reduced_motion_fast"]
+	var event_id := String(_town_action_presentation.get("event_id", ""))
+	var draw_entries := []
+	if active and event_id == "town_building_built":
+		draw_entries = ["building_badge_added"] if reduced_motion else ["build_completion_frame", "building_badge_added"]
+	elif active:
+		draw_entries = ["recruit_count_badge"] if reduced_motion else ["recruit_muster_rings", "recruit_count_badge"]
 	return {
 		"active": active,
 		"serial": int(_town_action_presentation.get("serial", _town_action_presentation_serial)),
@@ -218,6 +250,8 @@ func validation_town_action_presentation_snapshot() -> Dictionary:
 		"town_id": String(_town_action_presentation.get("town_id", "")),
 		"unit_id": String(_town_action_presentation.get("unit_id", "")),
 		"unit_name": String(_town_action_presentation.get("unit_name", "")),
+		"building_id": String(_town_action_presentation.get("building_id", "")),
+		"building_name": String(_town_action_presentation.get("building_name", "")),
 		"recruited_count": int(_town_action_presentation.get("recruited_count", 0)),
 		"result_message": String(_town_action_presentation.get("result_message", "")),
 		"selected_mode": selected_mode if active else "",
@@ -235,7 +269,8 @@ func validation_town_action_presentation_snapshot() -> Dictionary:
 		"process_active": is_processing(),
 		"draw_rect": draw_rect,
 		"draw_rect_contained": _town_scene_rect().encloses(draw_rect) if active else true,
-		"draw_entries": (["recruit_count_badge"] if reduced_motion else ["recruit_muster_rings", "recruit_count_badge"]) if active else [],
+		"blocks_input": _town_action_presentation_blocks_input(),
+		"draw_entries": draw_entries,
 	}
 
 func _town_scene_rect() -> Rect2:
@@ -254,6 +289,9 @@ func _draw_town_action_presentation(scene_rect: Rect2) -> void:
 	var policy: Dictionary = _town_action_presentation.get("policy", {}) if _town_action_presentation.get("policy", {}) is Dictionary else {}
 	var badge_rect := _town_action_presentation_rect(scene_rect)
 	var reduced_motion := String(policy.get("mode", "normal")) in ["reduced_motion", "reduced_motion_fast"]
+	if String(_town_action_presentation.get("event_id", "")) == "town_building_built":
+		_draw_town_building_complete_presentation(badge_rect, reduced_motion)
+		return
 	if not reduced_motion:
 		var duration_ms: int = maxi(1, int(_town_action_presentation.get("duration_ms", 1)))
 		var elapsed_ms: int = maxi(0, Time.get_ticks_msec() - int(_town_action_presentation.get("started_msec", 0)))
@@ -268,6 +306,19 @@ func _draw_town_action_presentation(scene_rect: Rect2) -> void:
 	var recruited_count := int(_town_action_presentation.get("recruited_count", 0))
 	_draw_text("MUSTER +%d" % recruited_count, badge_rect.position + Vector2(12.0, 21.0), TEXT_COLOR, 16)
 	_draw_text(_short_stage_text(unit_name, 34), badge_rect.position + Vector2(12.0, 42.0), SUBTEXT_COLOR, 13)
+
+func _draw_town_building_complete_presentation(badge_rect: Rect2, reduced_motion: bool) -> void:
+	if not reduced_motion:
+		var duration_ms: int = maxi(1, int(_town_action_presentation.get("duration_ms", 1)))
+		var elapsed_ms: int = maxi(0, Time.get_ticks_msec() - int(_town_action_presentation.get("started_msec", 0)))
+		var progress := clampf(float(elapsed_ms) / float(duration_ms), 0.0, 1.0)
+		var frame_rect := badge_rect.grow(4.0 + sin(progress * PI) * 7.0)
+		draw_rect(frame_rect, Color(0.92, 0.72, 0.28, 0.78), false, 3.0)
+	draw_rect(badge_rect, Color(0.10, 0.13, 0.16, 0.94), true)
+	draw_rect(badge_rect, FRAME_COLOR, false, 2.0)
+	var building_name := String(_town_action_presentation.get("building_name", _town_action_presentation.get("building_id", "Construction")))
+	_draw_text("BUILD COMPLETE", badge_rect.position + Vector2(12.0, 21.0), TEXT_COLOR, 16)
+	_draw_text(_short_stage_text(building_name, 34), badge_rect.position + Vector2(12.0, 42.0), SUBTEXT_COLOR, 13)
 
 func _draw_procedural_stage(scene_rect: Rect2) -> void:
 	var horizon_y := scene_rect.position.y + scene_rect.size.y * 0.58
