@@ -808,9 +808,22 @@ theme_override_constants/separation = 6
 layout_mode = 2
 text = "Resume Preview"
 
-[node name="SaveDetails" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveDetailPanel/SaveDetailPad/SaveDetailBox"]
+[node name="SaveCommanderIdentity" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveDetailPanel/SaveDetailPad/SaveDetailBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+
+[node name="SaveCommanderPortrait" type="TextureRect" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveDetailPanel/SaveDetailPad/SaveDetailBox/SaveCommanderIdentity"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(64, 86)
+layout_mode = 2
+script = ExtResource("5_hero_portrait")
+
+[node name="SaveDetails" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Saves/SaveSplit/SaveDetailPanel/SaveDetailPad/SaveDetailBox/SaveCommanderIdentity"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_minimum_size = Vector2(0, 124)
 autowrap_mode = 3

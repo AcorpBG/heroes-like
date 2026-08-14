@@ -1,7 +1,9 @@
 extends Node
 
 const OUTPUT_DIR := "res://.artifacts/save_load_confidence_visual_smoke"
-const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1024, 600)]
+const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080), Vector2i(1024, 600)]
+const EXPECTED_HERO_ID := "hero_lyra"
+const EXPECTED_PORTRAIT_PATH := "res://art/heroes/portraits/hero_lyra.png"
 
 var _autosave_path := ""
 var _previous_autosave := PackedByteArray()
@@ -63,6 +65,7 @@ func _validate_viewport(viewport_size: Vector2i) -> bool:
 	var delete_text := String(snapshot.get("save_delete_action", {}).get("label", ""))
 	var delete_tooltip := String(snapshot.get("save_delete_tooltip", ""))
 	var rows := "\n".join(snapshot.get("save_browser_items", []))
+	var portrait: Dictionary = snapshot.get("save_commander_portrait", {})
 	var visible_copy := "\n".join([details, button_text, button_tooltip, delete_text, delete_tooltip, rows])
 	for expected in ["River Pass", "Skirmish", "Captain", "Day 4", "Commander:", "Saved:", "Returns to: Adventure Map", "Next:"]:
 		if not visible_copy.contains(expected):
@@ -84,7 +87,13 @@ func _validate_viewport(viewport_size: Vector2i) -> bool:
 	if not delete_tooltip.contains("permanently removes only this expedition save"):
 		_fail("Delete action at %s does not state its single-slot boundary." % viewport_size)
 		return false
-	for control_name in ["StageDockPanel", "SaveList", "SaveDetails", "DeleteSelectedSave", "LoadSelected"]:
+	if not bool(portrait.get("visible", false)) \
+		or String(portrait.get("hero_id", "")) != EXPECTED_HERO_ID \
+		or String(portrait.get("portrait_path", "")) != EXPECTED_PORTRAIT_PATH \
+		or String(portrait.get("tooltip_text", "")) != "Lyra Emberwell portrait":
+		_fail("Load preview commander portrait is not exact at %s: %s" % [viewport_size, JSON.stringify(portrait)])
+		return false
+	for control_name in ["StageDockPanel", "SaveList", "SaveCommanderPortrait", "SaveDetails", "DeleteSelectedSave", "LoadSelected"]:
 		var control = shell.find_child(control_name, true, false)
 		if not _inside_viewport(control as Control, viewport_size, control_name):
 			return false
@@ -115,6 +124,10 @@ func _validate_viewport(viewport_size: Vector2i) -> bool:
 			return false
 		if bool(stale_snapshot.get("save_delete_visible", true)) or bool(stale_snapshot.get("save_delete_enabled", true)):
 			_fail("A removed selected save left the delete action available.")
+			return false
+		var stale_portrait: Dictionary = stale_snapshot.get("save_commander_portrait", {})
+		if bool(stale_portrait.get("visible", true)) or String(stale_portrait.get("hero_id", "")) != "":
+			_fail("A removed selected save left stale commander portrait identity: %s" % JSON.stringify(stale_portrait))
 			return false
 
 	viewport.queue_free()

@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Live commander portrait adoption is complete. The shared fail-safe component now carries authored portraits from Campaign and Skirmish into Overworld, Town, Battle, and Outcome without changing gameplay authority; select the next source-backed release-readiness slice.",
+  "currentNotes": "Save-resume commander portrait continuity is complete. The existing Load preview now renders the exact hero id already owned by the selected summary through HeroPortraitView, while save and load authority remains unchanged; select the next source-backed release-readiness slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-live-commander-portrait-adoption-10184",
-  "currentSliceId": "presentation-live-commander-portrait-adoption-10184",
-  "currentSliceNotes": "Completed shared portrait adoption across Campaign, Skirmish, Overworld, Town, Battle, and Outcome with exact live hero-id/path updates, unknown-enemy hidden fallback, unchanged compatibility authority, and bounded platform export/startup proof.",
+  "currentSlice": "presentation-save-resume-commander-portrait-continuity-10184",
+  "currentSliceId": "presentation-save-resume-commander-portrait-continuity-10184",
+  "currentSliceNotes": "Completed exact selected-summary portrait continuity across 1280x720, 1920x1080, and compact 1024x600 Load previews, including stale-file hidden fallback and unchanged save-browser authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Live Commander Portrait Adoption",
-  "currentSliceUpdatedAt": "2026-08-14T17:50:00Z",
+  "currentSliceTitle": "Save Resume Commander Portrait Continuity",
+  "currentSliceUpdatedAt": "2026-08-14T18:20:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -78888,6 +78888,29 @@
       "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
       "blockedReason": null,
       "result": {"authored_hero_count": 60, "shared_portrait_component": true, "menu_surface_count": 2, "live_surface_count": 5, "focused_viewports": [[1280, 720], [1920, 1080]], "unknown_enemy_hidden": true, "authored_enemy_refresh_exact": true, "focused_report_passed": true, "menu_portrait_report_passed": true, "town_battle_visual_passed": true, "menu_outcome_visual_passed": true, "active_play_focus_passed": true, "core_passed": true, "repository_validation_passed": true, "editor_parse_passed": true, "linux_export_headless_startup_passed": true, "windows_export_fresh_wine_startup_passed": true}
+    },
+    {
+      "id": "presentation-save-resume-commander-portrait-continuity-10184",
+      "title": "Save Resume Commander Portrait Continuity",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "AGENTS.md"],
+      "purpose": "Render the exact commander already owned by each save summary beside the existing Load/Resume preview through HeroPortraitView without changing save or load authority.",
+      "implementationTargets": ["scenes/menus/MainMenu.gd", "scenes/menus/MainMenu.tscn", "tests/save_load_confidence_visual_smoke.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "testOwners": ["tests/save_load_confidence_visual_smoke.gd", "tests/save_slot_delete_regression.gd", "tests/manual_save_slot_naming_regression.gd", "tests/save_latest_summary_subsecond_recency_regression.gd", "tests/main_menu_keyboard_navigation_smoke.gd", "tests/core_systems_regression_smoke.tscn", "tests/validate_repo.py"],
+      "baseline": {"head": "e43181cd", "save_summary_hero_id": true, "save_summary_hero_name": true, "load_preview_commander_portrait": false},
+      "completionCriteria": ["The selected loadable save shows the exact authored hero portrait beside unchanged SaveDetails copy", "Empty, corrupt, missing, and unknown-hero summaries hide the portrait without synthesizing identity", "1280x720 and 1920x1080 Load preview containment passes", "Manual/autosave/corrupt selection, stale refresh, delete, slot naming, load routing, focus, core, repository, and editor authority remain exact"],
+      "nonGoals": ["save schema/version/payload/summary construction, slot policy, integrity policy, hero content/gameplay, campaign, scenario, combat, AI, balance, map, or Native RMG changes", "other UI redesign, global theme, UI scale, focus order, or input timing changes", "packaged portrait interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claims"],
+      "createdAt": "2026-08-14T17:55:00Z",
+      "startedAt": "2026-08-14T17:55:00Z",
+      "updatedAt": "2026-08-14T18:20:00Z",
+      "completedAt": "2026-08-14T18:20:00Z",
+      "notes": "The existing Load/Resume detail card now renders the selected summary's exact hero_id through HeroPortraitView beside unchanged SaveDetails copy. Empty and stale summaries clear the portrait; unknown or missing art remains hidden through the shared component. Focused autosave proof passes at 1280x720, 1920x1080, and compact 1024x600, including exact Lyra path/tooltip, containment, unchanged visible copy/actions, and stale-file fail-closed behavior. Delete, manual slot naming, latest-summary subsecond recency, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. The naming regression's intentional corrupt-JSON fixture remained suite-owned and exited successfully. Packaged portrait interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null,
+      "result": {"selected_summary_portrait_exact": true, "focused_viewports": [[1280, 720], [1920, 1080], [1024, 600]], "stale_file_portrait_hidden": true, "save_details_copy_unchanged": true, "delete_regression_passed": true, "manual_slot_naming_passed": true, "latest_summary_recency_passed": true, "core_passed": true, "repository_validation_passed": true, "editor_parse_passed": true, "linux_export_headless_startup_passed": true, "windows_export_fresh_wine_startup_passed": true}
     }
   ],
   "project": "heroes-like",
