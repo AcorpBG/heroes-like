@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Main Menu Campaign board is now a scenery-first left command rail with exact selectors/actions and tooltips, while deeper arc, chapter, commander, operational, and journal detail is available through one contextual Intel disclosure. Focused, compatibility, full routed campaign, static/editor, and bounded Linux/Windows startup gates pass.",
+  "currentNotes": "The Main Menu Campaign rail now hides the selected-chapter launch control only when its whole production action payload equals the primary action, reducing the default duplicate affordances from two to one. Distinct locked chapter actions restore exact and all focused, routed, compatibility, static, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-main-menu-campaign-scenery-first-command-rail-10184",
-  "currentSliceId": "ux-main-menu-campaign-scenery-first-command-rail-10184",
-  "currentSliceNotes": "Completed with focused 1280x720 and 1920x1080 compact/disclosure authority, natural keyboard/controller navigation PASS, campaign restart and menu/outcome compatibility, a fresh 121-step full routed campaign ending at campaign_arc_completed_browser, static/editor checks, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup.",
+  "currentSlice": "ux-main-menu-campaign-launch-action-deduplication-10184",
+  "currentSliceId": "ux-main-menu-campaign-launch-action-deduplication-10184",
+  "currentSliceNotes": "Completed exact whole-action deduplication with default and distinct locked chapter controls at 1280x720 and 1920x1080, exact campaign authority, keyboard/controller navigation, restart/menu/core compatibility, a fresh 121-step routed campaign, repository/editor checks, and bounded Linux/Windows export-startup evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Main Menu Campaign Scenery-First Command Rail",
-  "currentSliceUpdatedAt": "2026-08-14T08:27:00Z",
+  "currentSliceTitle": "Main Menu Campaign Launch Action Deduplication",
+  "currentSliceUpdatedAt": "2026-08-14T09:28:28Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -78750,6 +78750,29 @@
       "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
       "blockedReason": null,
       "result": {"campaign_dock_width_ratio": 0.528, "campaign_dock_max_height_ratio": 0.6, "default_detail_surfaces_collapsed": 5, "focused_viewports": [[1280, 720], [1920, 1080]], "full_arc_ok": true, "full_arc_step_count": 121, "full_arc_last_step": "campaign_arc_completed_browser", "linux_export_headless_startup_passed": true, "windows_export_fresh_wine_startup_passed": true}
+    },
+    {
+      "id": "ux-main-menu-campaign-launch-action-deduplication-10184",
+      "title": "Main Menu Campaign Launch Action Deduplication",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "AGENTS.md"],
+      "purpose": "Remove the duplicate selected-chapter launch affordance only when its whole production action payload is exact to the primary campaign action, while preserving all distinct chapter actions and campaign authority.",
+      "implementationTargets": ["scenes/menus/MainMenu.gd", "tests/player_facing_campaign_menu_smoke.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "testOwners": ["tests/player_facing_campaign_menu_smoke.gd", "tests/main_menu_keyboard_navigation_smoke.gd", "tests/campaign_arc_restart_regression.gd", "tests/menu_outcome_visual_smoke.gd", "scripts/autoload/LiveValidationHarness.gd", "tests/core_systems_regression_smoke.gd", "tests/validate_repo.py"],
+      "baseline": {"head": "9307489346d94c5aef08e37789f3f84fc801d246", "default_primary_action_label": "Start Chapter 1: Break the Pass", "default_selected_chapter_action_label": "Start Chapter 1: Break the Pass", "default_action_payloads_exact": true, "duplicate_visible_launch_affordances": 2, "full_arc_ok": true, "full_arc_step_count": 121},
+      "completionCriteria": ["Default primary chapter shows exactly one visible launch affordance at 1280x720 and 1920x1080 while the scenery-first rail geometry stays bounded", "Selected-chapter action is hidden only when its whole payload equals the primary action and is restored exact for locked, replay, retry, or non-primary selections", "Actual primary/distinct chapter actions, keyboard/controller focus and cancel, restart, storage/save authority, menu/outcome compatibility, and the 121-step routed campaign remain exact", "Repository, Python, JSON, diff, editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass"],
+      "nonGoals": ["campaign action construction, rules, progression, unlock/status, difficulty, restart, save, scenario, content, balance, AI, battle, map, or Native RMG changes", "broader Campaign rail, first-view, Skirmish, Load, Guide, Settings, modal, or UI-scale redesign", "packaged Campaign interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claims"],
+      "createdAt": "2026-08-14T08:31:00Z",
+      "startedAt": "2026-08-14T08:31:00Z",
+      "updatedAt": "2026-08-14T09:28:28Z",
+      "completedAt": "2026-08-14T09:28:28Z",
+      "notes": "Production now keeps the primary Campaign action visible and hides the selected-chapter control only when the two whole action dictionaries are exact. The default primary chapter therefore exposes one launch affordance at 1280x720 and 1920x1080; selecting the first distinct locked chapter restores its exact visible disabled action, and restoring the primary chapter collapses the duplicate again without authority drift. Focused interaction, keyboard/controller navigation, restart, menu/outcome, core, and a fresh 121-step routed campaign ending at campaign_arc_completed_browser are green. Static/editor checks and official Linux export/headless startup plus Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. No packaged Campaign interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claim is made.",
+      "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null,
+      "result": {"default_action_payloads_exact": true, "default_visible_launch_affordances_before": 2, "default_visible_launch_affordances_after": 1, "distinct_locked_chapter_action_visible": true, "distinct_locked_chapter_action_disabled": true, "focused_viewports": [[1280, 720], [1920, 1080]], "full_arc_ok": true, "full_arc_step_count": 121, "full_arc_last_step": "campaign_arc_completed_browser", "linux_export_headless_startup_passed": true, "windows_export_fresh_wine_startup_passed": true}
     }
   ],
   "project": "heroes-like",
@@ -78759,7 +78782,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The Campaign board composition defect is resolved. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain; this slice does not make the game release-ready.",
+  "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
   "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
   "reportOnlyEvidence": [
     {
@@ -79191,7 +79214,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "ux_main_menu_campaign_scenery_first_command_rail_completed",
+  "result": "ux_main_menu_campaign_launch_action_deduplication_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {

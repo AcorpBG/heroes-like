@@ -14047,6 +14047,11 @@ def validate_campaign_browser(errors: list[str]) -> None:
         '"Hide Intel" if expanded else "Show Intel"',
         "func _apply_stage_dock_layout",
         "func _refresh_campaign_row_tooltips",
+        "func _campaign_launch_actions_are_exact(chapter_action: Dictionary, primary_action: Dictionary) -> bool",
+        "_start_chapter_button.visible = not _campaign_launch_actions_are_exact(chapter_action, primary_action)",
+        '"campaign_primary_visible"',
+        '"start_chapter_visible"',
+        '"campaign_launch_actions_deduplicated"',
         "_campaign_list.set_item_tooltip",
         "_chapter_list.set_item_tooltip",
         '"campaign_layout": _campaign_layout_snapshot()',
@@ -14069,6 +14074,17 @@ def validate_campaign_browser(errors: list[str]) -> None:
         "CampaignProgression.primary_campaign_action",
     ):
         ensure(required_token in main_menu_script_text, errors, f"MainMenu.gd is missing required campaign-browser token: {required_token}")
+
+    campaign_dedup_start = main_menu_script_text.find("func _campaign_launch_actions_are_exact")
+    campaign_dedup_end = main_menu_script_text.find("\nfunc ", campaign_dedup_start + 1) if campaign_dedup_start >= 0 else -1
+    campaign_dedup_block = main_menu_script_text[campaign_dedup_start:campaign_dedup_end] if campaign_dedup_start >= 0 and campaign_dedup_end > campaign_dedup_start else ""
+    ensure(
+        "return not chapter_action.is_empty() and chapter_action == primary_action" in campaign_dedup_block,
+        errors,
+        "MainMenu campaign launch deduplication must compare the whole nonempty selected and primary action payloads",
+    )
+    for forbidden_token in (".get(", "scenario_id", "label", "summary", "disabled"):
+        ensure(forbidden_token not in campaign_dedup_block, errors, f"MainMenu campaign launch deduplication must not use partial action identity: {forbidden_token}")
 
     for path in (CAMPAIGN_ARC_RESTART_REGRESSION_SCRIPT_PATH, CAMPAIGN_ARC_RESTART_REGRESSION_SCENE_PATH):
         ensure(path.exists(), errors, f"Missing campaign arc restart regression file: {path.relative_to(ROOT)}")
@@ -14267,6 +14283,17 @@ def validate_campaign_browser(errors: list[str]) -> None:
             "CampaignIntelToggle",
             'intel_toggle.emit_signal("pressed")',
             "func _campaign_layout_contract_exact",
+            "primary_action != chapter_action",
+            'bool(snapshot.get("start_chapter_visible", true))',
+            'bool(snapshot.get("campaign_launch_actions_deduplicated", false))',
+            "func _validate_distinct_chapter_action",
+            "CampaignRules.mark_selected_scenario(",
+            "CampaignProgression.ensure_profile().duplicate(true) != expected_distinct_profile",
+            'shell.call("validation_select_campaign_chapter", distinct_scenario_id)',
+            "distinct_chapter == distinct_primary",
+            'bool(distinct_snapshot.get("start_chapter_visible", false))',
+            'bool(distinct_snapshot.get("start_chapter_disabled", false))',
+            'shell.call("validation_select_campaign_chapter", START_SCENARIO_ID)',
             'float(layout.get("width_ratio", 1.0)) > 0.56',
             'float(layout.get("height_ratio", 1.0)) > 0.60',
             'float(layout.get("uncovered_right_ratio", 0.0)) < 0.40',

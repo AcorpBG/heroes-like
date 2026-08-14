@@ -1481,6 +1481,7 @@ func _refresh_campaign_browser() -> void:
 		_campaign_difficulty_picker.disabled = true
 		_campaign_difficulty_picker.tooltip_text = "Campaign difficulty is unavailable while no campaign arcs are active."
 		_start_chapter_button.text = "Select Chapter"
+		_start_chapter_button.visible = true
 		_start_chapter_button.disabled = true
 		_start_chapter_button.tooltip_text = "No campaign chapter is selectable while the campaign domain is archived."
 		return
@@ -1514,12 +1515,14 @@ func _refresh_campaign_browser() -> void:
 		_set_compact_label(_campaign_commander_preview_label, "Select a chapter to review the commander and opening force.", 3, 86)
 		_set_compact_label(_campaign_operational_board_label, "Select a chapter to review terrain, pressure, and first contact.", 3, 86)
 		_start_chapter_button.text = "Select Chapter"
+		_start_chapter_button.visible = true
 		_start_chapter_button.disabled = true
 		_start_chapter_button.tooltip_text = _campaign_storage_warning if _campaign_storage_blocked else "Select a chapter to start or replay it."
 		return
 
 	var chapter_action := CampaignProgression.chapter_action(_selected_campaign_id, _selected_campaign_scenario_id, _selected_difficulty)
 	var chapter_check := _campaign_chapter_check_payload(chapter_action, primary_action)
+	_start_chapter_button.visible = not _campaign_launch_actions_are_exact(chapter_action, primary_action)
 	_set_compact_label(
 		_chapter_details_label,
 		_chapter_details_with_campaign_check(
@@ -1552,6 +1555,9 @@ func _refresh_campaign_browser() -> void:
 			String(chapter_action.get("summary", "")),
 		])
 	)
+
+func _campaign_launch_actions_are_exact(chapter_action: Dictionary, primary_action: Dictionary) -> bool:
+	return not chapter_action.is_empty() and chapter_action == primary_action
 
 func _refresh_campaign_row_tooltips() -> void:
 	for index in range(mini(_campaign_list.item_count, _campaign_entries.size())):
@@ -2969,9 +2975,12 @@ func validation_snapshot() -> Dictionary:
 		"campaign_primary_text": _campaign_primary_button.text,
 		"campaign_primary_tooltip": _campaign_primary_button.tooltip_text,
 		"campaign_primary_disabled": _campaign_primary_button.disabled,
+		"campaign_primary_visible": _campaign_primary_button.visible,
 		"start_chapter_text": _start_chapter_button.text,
 		"start_chapter_tooltip": _start_chapter_button.tooltip_text,
 		"start_chapter_disabled": _start_chapter_button.disabled,
+		"start_chapter_visible": _start_chapter_button.visible,
+		"campaign_launch_actions_deduplicated": _campaign_launch_actions_are_exact(selected_chapter_action, primary_campaign_action) and not _start_chapter_button.visible,
 		"campaign_details": _campaign_details_label.text,
 		"campaign_details_full": _campaign_details_label.tooltip_text,
 		"campaign_arc_status": _campaign_arc_status_label.text,
