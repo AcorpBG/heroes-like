@@ -132,6 +132,7 @@ const TAB_HELP_TOPIC := {
 @onready var _settings_restore_defaults_dialog: ConfirmationDialog = $SettingsRestoreDefaultsDialog
 @onready var _display_change_confirmation_dialog: ConfirmationDialog = $DisplayChangeConfirmationDialog
 @onready var _save_list: ItemList = %SaveList
+@onready var _save_commander_portrait: HeroPortraitView = %SaveCommanderPortrait
 @onready var _save_details_label: Label = %SaveDetails
 @onready var _save_name_edit: LineEdit = %SaveNameEdit
 @onready var _apply_save_name_button: Button = %ApplySaveName
@@ -1947,6 +1948,7 @@ func _rebuild_save_browser() -> void:
 func _refresh_selected_save() -> void:
 	var summary := _selected_summary()
 	if summary.is_empty():
+		_save_commander_portrait.set_hero_id("")
 		var empty_text := _save_load_notice if _save_load_notice != "" else "No saved expeditions are available."
 		_set_compact_label(_save_details_label, empty_text, 3, 84)
 		_delete_selected_save_button.visible = false
@@ -1959,6 +1961,7 @@ func _refresh_selected_save() -> void:
 		_load_selected_button.tooltip_text = _selected_save_command_tooltip(summary)
 		return
 
+	_save_commander_portrait.set_hero_id(String(summary.get("hero_id", "")))
 	var details := SaveService.describe_load_preview(summary)
 	if _save_load_notice != "":
 		details = "%s\n\n%s" % [_save_load_notice, details]
@@ -2044,6 +2047,8 @@ func _reset_save_browser_placeholder() -> void:
 		_save_list.clear()
 	if _save_details_label != null:
 		_set_compact_label(_save_details_label, "Open Load to choose a saved expedition.", 3, 84)
+	if _save_commander_portrait != null:
+		_save_commander_portrait.set_hero_id("")
 	if _load_selected_button != null:
 		_load_selected_button.text = "Load Save"
 		_load_selected_button.disabled = true
@@ -3067,6 +3072,7 @@ func validation_snapshot() -> Dictionary:
 		"save_browser_item_tooltips": _save_browser_item_tooltips(),
 		"save_details": _save_details_label.text,
 		"save_details_full": _save_details_label.tooltip_text,
+		"save_commander_portrait": _save_commander_portrait.validation_snapshot(),
 		"save_pulse": _build_save_pulse(),
 		"save_pulse_full": _build_save_pulse(),
 		"continue_text": String(latest_continue.get("text", "")),

@@ -144,6 +144,7 @@ HERO_PORTRAIT_MENU_REPORT_SCENE_PATH = ROOT / "tests" / "hero_portrait_menu_repo
 HERO_PORTRAIT_VIEW_PATH = ROOT / "scenes" / "ui" / "HeroPortraitView.gd"
 LIVE_COMMANDER_PORTRAIT_REPORT_SCRIPT_PATH = ROOT / "tests" / "live_commander_portrait_report.gd"
 LIVE_COMMANDER_PORTRAIT_REPORT_SCENE_PATH = ROOT / "tests" / "live_commander_portrait_report.tscn"
+SAVE_LOAD_CONFIDENCE_VISUAL_SMOKE_PATH = ROOT / "tests" / "save_load_confidence_visual_smoke.gd"
 UNIT_ANIMATION_MANIFEST_PATH = CONTENT_DIR / "unit_animation_manifest.json"
 UNIT_ART_GENERATOR_PATH = ROOT / "tools" / "generate_unit_art_assets.py"
 UNIT_ART_REPRODUCIBILITY_REPORT_PATH = ROOT / "tests" / "unit_art_reproducibility_report.py"
@@ -27969,6 +27970,7 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
         HERO_PORTRAIT_VIEW_PATH,
         LIVE_COMMANDER_PORTRAIT_REPORT_SCRIPT_PATH,
         LIVE_COMMANDER_PORTRAIT_REPORT_SCENE_PATH,
+        SAVE_LOAD_CONFIDENCE_VISUAL_SMOKE_PATH,
     )
     for path in required_paths:
         ensure(path.exists(), errors, f"Missing hero portrait asset file: {path.relative_to(ROOT)}")
@@ -28108,6 +28110,29 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
         '"enemy_unknown_hidden": true',
     ):
         ensure(required_token in live_report_text, errors, f"Live commander portrait report is missing token {required_token}")
+
+    for required_token in (
+        "%SaveCommanderPortrait",
+        '_save_commander_portrait.set_hero_id("")',
+        '_save_commander_portrait.set_hero_id(String(summary.get("hero_id", "")))',
+        '"save_commander_portrait": _save_commander_portrait.validation_snapshot()',
+    ):
+        ensure(required_token in menu_text, errors, f"MainMenu.gd is missing save-resume portrait token {required_token}")
+    for required_token in ('name="SaveCommanderIdentity"', 'name="SaveCommanderPortrait"', 'script = ExtResource("5_hero_portrait")', 'custom_minimum_size = Vector2(64, 86)'):
+        ensure(required_token in scene_text, errors, f"MainMenu.tscn is missing save-resume portrait token {required_token}")
+    save_visual_text = SAVE_LOAD_CONFIDENCE_VISUAL_SMOKE_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "Vector2i(1280, 720)",
+        "Vector2i(1920, 1080)",
+        "Vector2i(1024, 600)",
+        'EXPECTED_HERO_ID := "hero_lyra"',
+        'EXPECTED_PORTRAIT_PATH := "res://art/heroes/portraits/hero_lyra.png"',
+        'snapshot.get("save_commander_portrait", {})',
+        '"SaveCommanderPortrait"',
+        'stale_snapshot.get("save_commander_portrait", {})',
+        'bool(stale_portrait.get("visible", true))',
+    ):
+        ensure(required_token in save_visual_text, errors, f"Save/load confidence visual smoke is missing portrait continuity token {required_token}")
 
 
 def validate_unit_art_assets(errors: list[str]) -> None:
