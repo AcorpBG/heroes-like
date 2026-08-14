@@ -4657,6 +4657,34 @@ Non-goals:
 - no other unit, hero, spell, faction, encounter, scenario, formation, combat rule, tactical-AI algorithm, benchmark branch/threshold, save, economy, strategic-AI, or Native RMG change;
 - no opportunistic priority below `0.9`, broad faction-balance completion, packaged battle interaction, controller, accessibility API, native-hardware, signing/publication, whole-game, or release-readiness claim.
 
+## Main Menu Campaign Scenery-First Command Rail
+
+id: `ux-main-menu-campaign-scenery-first-command-rail-10184`
+
+Status: complete.
+
+Selected Phase 6 player-facing UX implementation slice. Current-head live campaign evidence reaches the completed three-chapter browser, but the Campaign submenu covers most of the scenic Main Menu with separate arc, chapter, commander, operational, and journal text panels. That shipped composition conflicts with the repository rule that scenic screens remain scenery-first and that detail exceeding a compact rail belongs in contextual disclosure rather than a panel farm.
+
+Implementation target:
+- keep the Campaign submenu as a compact left-side command rail by default, with authored arc and chapter selectors plus difficulty and launch/restart actions directly available;
+- collapse selected-arc, selected-chapter, commander, operational, and journal panels behind one explicit `Show Intel` / `Hide Intel` contextual disclosure without deleting their exact content, tooltips, selection state, or accessibility copy;
+- give every arc and chapter row its exact full production detail as a native item tooltip, and reset the disclosure to compact on each newly opened Campaign board;
+- leave Skirmish, Load, Guide, Settings, first-view command plaques, campaign rules/progression, launch/save behavior, and authored content unchanged.
+
+Completion criteria:
+- at 1280x720 and 1920x1080, the default Campaign board occupies at most 56 percent of viewport width and 60 percent of viewport height, keeps at least 40 percent of the scenic width uncovered before the right command plaques, and contains every visible control without overlap or clipping;
+- default view exposes arc/chapter selection, difficulty, primary/chapter launch, and permitted restart actions while all five detail surfaces are collapsed; one real `Show Intel` action reveals the exact existing full detail surfaces inside the bounded scroll rail and `Hide Intel` restores the compact view;
+- arc and chapter item order, ids, labels, full tooltips, selection, campaign/chapter actions, difficulty, restart confirmation, focus/cancel return, campaign storage authority, and full routed campaign completion remain exact;
+- focused layout/action coverage, campaign-menu, keyboard/controller navigation, campaign restart, menu/outcome, full routed campaign, core, repository, Python, JSON, diff, and editor gates pass;
+- official Linux export plus packaged headless startup and Windows export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass before completion is claimed.
+
+Completed evidence: the default Campaign board is now a 52.8%-wide, at-most-60%-high left rail with all authored selectors and actions directly available, exact arc/chapter details retained as native tooltips, and the five deeper detail surfaces collapsed behind one real `Show Intel` / `Hide Intel` disclosure. Focused 1280x720 and 1920x1080 interaction/authority coverage, campaign restart, keyboard/controller navigation, menu/outcome, core, and the fresh 121-step three-chapter routed campaign all pass. Official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup also pass; these are bounded startup claims, not packaged Campaign interaction or whole-release certification.
+
+Non-goals:
+- no campaign rule, progression, scenario, commander, difficulty, save, content, balance, strategic-AI, battle, map, or Native RMG change;
+- no Skirmish/Load/Guide/Settings redesign, first-view plaque redesign, global UI-scale rewrite, new modal framework, or removal of authored campaign detail;
+- no packaged Campaign interaction, controller hardware, AT-SPI/UIA, native-hardware, signing/publication, whole-game, or release-readiness claim.
+
 ## Phase Roadmap
 
 ### Phase 0 - Prototype Reality And Governance

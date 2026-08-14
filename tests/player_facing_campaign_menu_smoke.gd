@@ -4,6 +4,7 @@ const REPORT_ID := "PLAYER_FACING_CAMPAIGN_MENU_SMOKE"
 const CAMPAIGN_ID := "campaign_reedfall"
 const START_SCENARIO_ID := "river-pass"
 const CAMPAIGN_DIFFICULTY := "hard"
+const CAMPAIGN_LAYOUT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]
 
 var _original_profile := {}
 
@@ -88,6 +89,9 @@ func _run() -> void:
 	if launch_text.find("Campaign mode at Warlord difficulty") < 0 or launch_text.find("Day 1 at Warlord difficulty") < 0:
 		_fail("Campaign launch preview did not reflect the selected Warlord mode/day consequence: %s." % launch_text)
 		return
+	if not await _validate_scenery_first_campaign_layout(shell, snapshot):
+		return
+	snapshot = shell.call("validation_snapshot")
 	if not shell.has_method("validation_start_selected_campaign_chapter"):
 		_fail("Main menu is missing selected campaign launch validation hook.")
 		return
@@ -128,6 +132,151 @@ func _run() -> void:
 		"latest_save_campaign_id": String(save_summary.get("campaign_id", "")),
 	})])
 	tree.quit(0)
+
+func _validate_scenery_first_campaign_layout(shell: Control, initial_snapshot: Dictionary) -> bool:
+	var original_window_size := get_window().size
+	var authority_before := {
+		"profile": CampaignProgression.ensure_profile().duplicate(true),
+		"session": SessionState.ensure_active_session().to_dict(),
+		"campaign_id": String(initial_snapshot.get("selected_campaign_id", "")),
+		"scenario_id": String(initial_snapshot.get("selected_campaign_scenario_id", "")),
+		"difficulty": String(initial_snapshot.get("selected_campaign_difficulty", "")),
+		"primary_action": (initial_snapshot.get("primary_campaign_action", {}) as Dictionary).duplicate(true),
+		"chapter_action": (initial_snapshot.get("selected_chapter_action", {}) as Dictionary).duplicate(true),
+	}
+	var expected_campaign_rows := _expected_campaign_rows()
+	var expected_chapter_rows := _expected_chapter_rows()
+	var intel_toggle := shell.find_child("CampaignIntelToggle", true, false) as Button
+	if intel_toggle == null:
+		_fail("Campaign rail is missing its contextual Intel disclosure button.")
+		return false
+
+	for target_size in CAMPAIGN_LAYOUT_SIZES:
+		get_window().size = target_size
+		await get_tree().process_frame
+		await get_tree().process_frame
+		await get_tree().process_frame
+		if get_window().size != target_size:
+			_fail("Campaign rail fixture did not reach requested viewport %s: %s." % [target_size, get_window().size])
+			return false
+		var compact_snapshot: Dictionary = shell.call("validation_snapshot")
+		if not _campaign_layout_contract_exact(compact_snapshot, false, expected_campaign_rows, expected_chapter_rows):
+			return false
+		if not _campaign_authority_exact(compact_snapshot, authority_before):
+			return false
+
+		intel_toggle.grab_focus()
+		await get_tree().process_frame
+		intel_toggle.emit_signal("pressed")
+		await get_tree().process_frame
+		await get_tree().process_frame
+		var expanded_snapshot: Dictionary = shell.call("validation_snapshot")
+		if not _campaign_layout_contract_exact(expanded_snapshot, true, expected_campaign_rows, expected_chapter_rows):
+			return false
+		if not _campaign_authority_exact(expanded_snapshot, authority_before):
+			return false
+		if get_viewport().gui_get_focus_owner() != intel_toggle:
+			_fail("Campaign Intel disclosure did not retain focus on its immutable toggle action.")
+			return false
+
+		intel_toggle.emit_signal("pressed")
+		await get_tree().process_frame
+		await get_tree().process_frame
+		var restored_snapshot: Dictionary = shell.call("validation_snapshot")
+		if not _campaign_layout_contract_exact(restored_snapshot, false, expected_campaign_rows, expected_chapter_rows):
+			return false
+		if not _campaign_authority_exact(restored_snapshot, authority_before):
+			return false
+
+	get_window().size = original_window_size
+	await get_tree().process_frame
+	await get_tree().process_frame
+	await get_tree().process_frame
+	return true
+
+func _campaign_layout_contract_exact(snapshot: Dictionary, expanded: bool, expected_campaign_rows: Array, expected_chapter_rows: Array) -> bool:
+	var layout: Dictionary = snapshot.get("campaign_layout", {}) if snapshot.get("campaign_layout", {}) is Dictionary else {}
+	var detail_visibility: Dictionary = layout.get("detail_surface_visibility", {}) if layout.get("detail_surface_visibility", {}) is Dictionary else {}
+	var expected_toggle_text := "Hide Intel" if expanded else "Show Intel"
+	if not bool(snapshot.get("stage_dock_visible", false)) \
+			or int(snapshot.get("current_tab", -1)) != 0 \
+			or float(layout.get("width_ratio", 1.0)) > 0.56 \
+			or float(layout.get("height_ratio", 1.0)) > 0.60 \
+			or float(layout.get("uncovered_right_ratio", 0.0)) < 0.40 \
+			or bool(layout.get("intel_expanded", not expanded)) != expanded \
+			or String(layout.get("intel_toggle_text", "")) != expected_toggle_text:
+		_fail("Campaign rail did not preserve its scenery-first viewport contract: %s" % JSON.stringify(layout))
+		return false
+	for key in ["arc", "arc_status", "chapter", "commander", "operational", "journal"]:
+		if bool(detail_visibility.get(key, not expanded)) != expanded:
+			_fail("Campaign rail detail surface %s did not match contextual disclosure state %s: %s" % [key, expanded, JSON.stringify(detail_visibility)])
+			return false
+	if (layout.get("campaign_items", []) as Array) != expected_campaign_rows \
+			or (layout.get("chapter_items", []) as Array) != expected_chapter_rows:
+		_fail("Campaign rail changed ordered arc/chapter row identity or full tooltips: %s" % JSON.stringify(layout))
+		return false
+	if not expanded and not _visible_campaign_controls_contained(layout):
+		return false
+	return true
+
+func _visible_campaign_controls_contained(layout: Dictionary) -> bool:
+	var stage: Dictionary = layout.get("stage_rect", {}) if layout.get("stage_rect", {}) is Dictionary else {}
+	var controls: Dictionary = layout.get("control_rects", {}) if layout.get("control_rects", {}) is Dictionary else {}
+	for control_name in controls:
+		var rect: Dictionary = controls[control_name] if controls[control_name] is Dictionary else {}
+		if float(rect.get("x", -1.0)) < float(stage.get("x", 0.0)) - 1.0 \
+				or float(rect.get("y", -1.0)) < float(stage.get("y", 0.0)) - 1.0 \
+				or float(rect.get("right", 1.0e9)) > float(stage.get("right", 0.0)) + 1.0 \
+				or float(rect.get("bottom", 1.0e9)) > float(stage.get("bottom", 0.0)) + 1.0:
+			_fail("Visible Campaign control %s escaped the bounded rail: stage=%s control=%s" % [control_name, JSON.stringify(stage), JSON.stringify(rect)])
+			return false
+	return true
+
+func _campaign_authority_exact(snapshot: Dictionary, authority_before: Dictionary) -> bool:
+	var current_authority := {
+		"profile": CampaignProgression.ensure_profile().duplicate(true),
+		"session": SessionState.ensure_active_session().to_dict(),
+		"campaign_id": String(snapshot.get("selected_campaign_id", "")),
+		"scenario_id": String(snapshot.get("selected_campaign_scenario_id", "")),
+		"difficulty": String(snapshot.get("selected_campaign_difficulty", "")),
+		"primary_action": (snapshot.get("primary_campaign_action", {}) as Dictionary).duplicate(true),
+		"chapter_action": (snapshot.get("selected_chapter_action", {}) as Dictionary).duplicate(true),
+	}
+	if current_authority != authority_before:
+		_fail("Campaign layout disclosure changed campaign/session/action authority: before=%s after=%s" % [JSON.stringify(authority_before), JSON.stringify(current_authority)])
+		return false
+	return true
+
+func _expected_campaign_rows() -> Array:
+	var rows := []
+	for entry in CampaignProgression.campaign_browser_entries():
+		var campaign_id := String(entry.get("campaign_id", ""))
+		rows.append({
+			"id": campaign_id,
+			"label": String(entry.get("label", campaign_id)),
+			"tooltip": "\n".join([
+				CampaignProgression.campaign_details(campaign_id),
+				CampaignProgression.campaign_arc_status(campaign_id),
+			]),
+			"selected": campaign_id == CAMPAIGN_ID,
+		})
+	return rows
+
+func _expected_chapter_rows() -> Array:
+	var rows := []
+	for entry in CampaignProgression.campaign_chapter_entries(CAMPAIGN_ID):
+		var scenario_id := String(entry.get("scenario_id", ""))
+		var action := CampaignProgression.chapter_action(CAMPAIGN_ID, scenario_id, CAMPAIGN_DIFFICULTY)
+		rows.append({
+			"id": scenario_id,
+			"label": String(entry.get("label", scenario_id)),
+			"tooltip": "\n".join([
+				CampaignProgression.chapter_details(CAMPAIGN_ID, scenario_id, CAMPAIGN_DIFFICULTY),
+				String(action.get("summary", "")),
+			]),
+			"selected": scenario_id == START_SCENARIO_ID,
+		})
+	return rows
 
 func _autosave_started_campaign_session() -> Dictionary:
 	var save_result: Dictionary = SaveService.save_runtime_autosave_session(SessionState.ensure_active_session())

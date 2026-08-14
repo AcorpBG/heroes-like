@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Sporewake Rot Cant now uses the globally screened 0.9 opening target priority while preserving its round-one tier-four gate and every live consequence. Focused ability proof, exact all-live balance, 59-scenario breadth, compatibility, static/editor, and bounded Linux/Windows export-startup gates pass. The matrix remains needs_tuning and no broad balance or release-readiness claim is made.",
+  "currentNotes": "The Main Menu Campaign board is now a scenery-first left command rail with exact selectors/actions and tooltips, while deeper arc, chapter, commander, operational, and journal detail is available through one contextual Intel disclosure. Focused, compatibility, full routed campaign, static/editor, and bounded Linux/Windows startup gates pass.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "combat-mireclaw-sporewake-rot-cant-priority-calibration-10184",
-  "currentSliceId": "combat-mireclaw-sporewake-rot-cant-priority-calibration-10184",
-  "currentSliceNotes": "Completed with the exact 0.9 content calibration, 118/118 focused live ability consequences, 34 / 183.5 / 3 / 68.5 / 0.73 / 0 full matrix, 59/59 clear active breadth, compatibility/static/editor gates, and bounded Linux/Windows export-startup evidence. Select the next tracker-approved slice.",
+  "currentSlice": "ux-main-menu-campaign-scenery-first-command-rail-10184",
+  "currentSliceId": "ux-main-menu-campaign-scenery-first-command-rail-10184",
+  "currentSliceNotes": "Completed with focused 1280x720 and 1920x1080 compact/disclosure authority, natural keyboard/controller navigation PASS, campaign restart and menu/outcome compatibility, a fresh 121-step full routed campaign ending at campaign_arc_completed_browser, static/editor checks, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Mireclaw Sporewake Rot Cant Priority Calibration",
-  "currentSliceUpdatedAt": "2026-08-14T05:21:19Z",
+  "currentSliceTitle": "Main Menu Campaign Scenery-First Command Rail",
+  "currentSliceUpdatedAt": "2026-08-14T08:27:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -78727,6 +78727,29 @@
       "remainingWork": "No work remains in this bounded slice. The matrix remains needs_tuning at 34 outliers / 183.5 severity / 68.5 maximum dominance / 0.73 side bias; select the next tracker-approved release-readiness implementation slice.",
       "blockedReason": null,
       "result": {"rot_cant_ai_target_priority_bonus": 0.9, "focused_ability_instance_count": 118, "focused_runtime_consequence_count": 118, "week_two_brasshollow_mireclaw_mire_win_rate": 58.0, "ordered_mire_win_rates": [59.0, 57.0], "outliers": 34, "severity": 183.5, "severe": 3, "max_dominance": 68.5, "max_side_bias": 0.73, "structural_failures": 0, "non_mireclaw_ordered_rows_exact": true, "active_breadth_completed": 59, "active_breadth_queue_signature": "829808c9", "linux_export_headless_startup_passed": true, "windows_export_fresh_wine_startup_passed": true, "balance_report_sha256": "f1849e3a3dbef2beeff9fb64cb9446c7380ba91104d60094264abd37ca25bffa"}
+    },
+    {
+      "id": "ux-main-menu-campaign-scenery-first-command-rail-10184",
+      "title": "Main Menu Campaign Scenery-First Command Rail",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "AGENTS.md"],
+      "purpose": "Replace the current Campaign submenu panel farm with a compact scenery-first command rail while preserving every authored campaign selection, detail, action, and authority through contextual disclosure.",
+      "implementationTargets": ["scenes/menus/MainMenu.gd", "scenes/menus/MainMenu.tscn", "tests/player_facing_campaign_menu_smoke.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "testOwners": ["tests/player_facing_campaign_menu_smoke.gd", "tests/main_menu_keyboard_navigation_smoke.gd", "tests/campaign_arc_restart_regression.gd", "tests/menu_outcome_visual_smoke.gd", "scripts/autoload/LiveValidationHarness.gd", "tests/core_systems_regression_smoke.gd", "tests/validate_repo.py"],
+      "baseline": {"head": "f3bdc97414462d1886ebc73f188cfb1825deadd5", "viewport": [1882, 1059], "stage_anchor_left": 0.032, "stage_anchor_top": 0.258, "stage_anchor_right": 0.765, "stage_anchor_bottom": 0.878, "default_detail_panel_count": 5, "full_arc_ok": true, "full_arc_step_count": 121},
+      "completionCriteria": ["Default Campaign board is a bounded left command rail at 1280x720 and 1920x1080, at most 56 percent viewport width and 60 percent viewport height, with at least 40 percent scenic width left uncovered before the right command plaques", "Arc/chapter selectors, difficulty and launch/restart actions remain directly available while five detail surfaces are default-collapsed behind one Show Intel/Hide Intel disclosure", "Every arc/chapter row preserves exact order, id, label, full tooltip and selection; disclosure preserves existing full detail and accessibility copy", "Campaign actions, storage authority, restart confirmation, keyboard/controller focus and cancel, menu/outcome compatibility, and the 121-step routed campaign arc remain exact", "Repository, Python, JSON, diff, editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass"],
+      "nonGoals": ["campaign rules, progression, scenarios, commanders, difficulty, saves, content, balance, AI, battle, map, or Native RMG changes", "Skirmish, Load, Guide, Settings, first-view plaque, global UI-scale, or modal redesign", "packaged Campaign interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claims"],
+      "createdAt": "2026-08-14T07:08:37Z",
+      "startedAt": "2026-08-14T07:08:37Z",
+      "updatedAt": "2026-08-14T08:27:00Z",
+      "completedAt": "2026-08-14T08:27:00Z",
+      "notes": "Production now keeps the Campaign board as a 52.8%-wide, at-most-60%-high scenery-first rail, leaves exact selectors/difficulty/launch/restart actions directly available, preserves full arc/chapter detail in native item tooltips, and collapses all five deeper detail surfaces behind one real Show Intel/Hide Intel action. Focused 1280x720 and 1920x1080 interaction/authority coverage is green; main-menu keyboard/controller navigation passed naturally; campaign restart, menu/outcome, core, and a fresh 121-step full routed campaign ending at campaign_arc_completed_browser are green. Static/editor checks and official Linux export/headless startup plus Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. No packaged Campaign interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claim is made.",
+      "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null,
+      "result": {"campaign_dock_width_ratio": 0.528, "campaign_dock_max_height_ratio": 0.6, "default_detail_surfaces_collapsed": 5, "focused_viewports": [[1280, 720], [1920, 1080]], "full_arc_ok": true, "full_arc_step_count": 121, "full_arc_last_step": "campaign_arc_completed_browser", "linux_export_headless_startup_passed": true, "windows_export_fresh_wine_startup_passed": true}
     }
   ],
   "project": "heroes-like",
@@ -78736,8 +78759,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The overall game remains incomplete across pending strategic-AI breadth, balance, accessibility, content, performance, manual public-prerelease execution, stable publication, signing, and native Windows hardware certification.",
-  "remainingWork": "Continue strategic-AI, accessibility, content, performance, signing, native Windows certification, stable-channel, and remaining faction balance gaps; select the next tracker-approved implementation slice. The accepted faction matrix remains needs_tuning at 34 outliers / 183.5 severity / 68.5 percent maximum dominance / 0.73 side bias.",
+  "remainingGap": "The Campaign board composition defect is resolved. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain; this slice does not make the game release-ready.",
+  "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -79168,7 +79191,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "combat_mireclaw_sporewake_rot_cant_priority_calibration_completed",
+  "result": "ux_main_menu_campaign_scenery_first_command_rail_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -79271,7 +79294,7 @@
   ],
   "summary": "Sporewake Rot Cant's authored opening target priority is calibrated from 1.0 to 0.9 with exact focused live behavior, improved full-matrix severity, clear active breadth, compatibility/static/editor validation, and bounded Linux/Windows export-startup evidence. Broad faction balance and release readiness remain open.",
   "taskId": "10184",
-  "updatedAt": "2026-08-14T05:21:19Z",
+  "updatedAt": "2026-08-14T07:08:37Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
