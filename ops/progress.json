@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved release-readiness implementation slice from direct current product evidence."
+    "Select the next tracker-approved release-readiness implementation slice from direct current behavior and source evidence."
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Battle spell VFX asset adoption is complete. Seven original imported textures now render through the exact existing spell cue records while every procedural spell path remains a fail-closed fallback; select the next source-backed release-readiness slice.",
+  "currentNotes": "The Battle state/path VFX asset-adoption slice is complete. All 21 Board-recognized cue ids now have imported manifest mappings with exact procedural fallback; select the next bounded release-readiness implementation slice from current behavior and source evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-battle-spell-vfx-asset-adoption-10184",
-  "currentSliceId": "presentation-battle-spell-vfx-asset-adoption-10184",
-  "currentSliceNotes": "Completed exact seven-texture/seven-cue spell VFX adoption with inspected 1280x720 and 1920x1080 rendering, procedural fallback, compatibility, routed layout, static/editor, and bounded Linux/Windows export-startup gates.",
+  "currentSlice": "presentation-battle-state-path-vfx-asset-adoption-10184",
+  "currentSliceId": "presentation-battle-state-path-vfx-asset-adoption-10184",
+  "currentSliceNotes": "Completed: six distinct original textures cover every remaining Board-recognized state/path cue with exact live lifecycle, coordinates, authority, and procedural fallback.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Battle Spell VFX Asset Adoption",
-  "currentSliceUpdatedAt": "2026-08-14T17:05:00Z",
+  "currentSliceTitle": "Battle State and Path VFX Asset Adoption",
+  "currentSliceUpdatedAt": "2026-08-14T17:28:54Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -78890,6 +78890,29 @@
       "result": {"authored_hero_count": 60, "shared_portrait_component": true, "menu_surface_count": 2, "live_surface_count": 5, "focused_viewports": [[1280, 720], [1920, 1080]], "unknown_enemy_hidden": true, "authored_enemy_refresh_exact": true, "focused_report_passed": true, "menu_portrait_report_passed": true, "town_battle_visual_passed": true, "menu_outcome_visual_passed": true, "active_play_focus_passed": true, "core_passed": true, "repository_validation_passed": true, "editor_parse_passed": true, "linux_export_headless_startup_passed": true, "windows_export_fresh_wine_startup_passed": true}
     },
     {
+      "id": "presentation-battle-state-path-vfx-asset-adoption-10184",
+      "title": "Battle State and Path VFX Asset Adoption",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/animation-systems-foundation.md", "docs/battle-decision-vfx-cue-coverage-report.md", "docs/battle-movement-path-presentation-report.md", "docs/battle-death-animation-retention-report.md", "AGENTS.md"],
+      "purpose": "Replace every remaining Board-recognized state/path procedural effect with distinct original imported art while preserving exact event, timing, accessibility, movement, exit, and battle authority.",
+      "implementationTargets": ["art/battle/vfx/state_idle_shadow.png", "art/battle/vfx/state_active_ring.png", "art/battle/vfx/state_stack_fade.png", "art/battle/vfx/state_surrender_marker.png", "art/battle/vfx/path_move_ghost.png", "art/battle/vfx/path_withdraw_ghost.png", "content/battle_vfx_manifest.json", "scenes/battle/BattleBoardView.gd", "docs/battle-decision-vfx-cue-coverage-report.md", "docs/battle-movement-path-presentation-report.md", "docs/battle-death-animation-retention-report.md", "tests/battle_event_animation_state_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "testOwners": ["tests/battle_event_animation_state_report.gd", "tests/battle_controller_board_navigation_smoke.gd", "tests/battle_layout_smoke.tscn", "tests/accessibility_screen_reader_semantics_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/validate_repo.py"],
+      "baseline": {"head": "7fd060930fb68c8a01d38e3de59022e4abae669e", "board_recognized_cue_count": 21, "mapped_board_cue_count": 15, "unmapped_state_path_cue_count": 6, "unmapped_state_path_procedural_function_count": 6},
+      "completionCriteria": ["Six distinct original transparent textures map one-to-one to the six remaining Board-recognized state/path cue ids", "BattleBoardView renders each texture from unchanged subject/source/target/path/progress records and retains every current procedural state/path function as missing-map/missing-texture fallback", "Focused live validation materializes all six imported cue entries plus an exact procedural control and inspected 1280x720/1920x1080 captures remain readable beneath stack tokens", "Reduced motion, fast mode, cue ordering, playback duration, path coordinates, movement, retreat, surrender, death retention, camera, audio, input, and save authority remain exact", "Board navigation/routed battle compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass"],
+      "nonGoals": ["battle mechanics, movement, retreat/surrender consequences, AI, balance, event/cue ids, or content changes", "generic core/spell cue changes, unit animation sheets, other-screen or broad catalog VFX migration", "animation timing, camera/audio, particles/shaders, save/schema, map, or Native RMG changes", "packaged Battle interaction, hardware/accessibility certification, signing/publication, whole-game, or release-readiness claims"],
+      "createdAt": "2026-08-14T17:10:00Z",
+      "startedAt": "2026-08-14T17:10:00Z",
+      "updatedAt": "2026-08-14T17:28:54Z",
+      "completedAt": "2026-08-14T17:28:54Z",
+      "notes": "Six distinct original 384x384 alpha textures generated through the built-in image tool now map one-to-one to the complete remaining Board state/path cue set. BattleBoardView resolves state_center, state_marker, and path_follow assets from the unchanged event subject/source/target/path/progress records, draws them beneath stack tokens/counts, and returns to every existing procedural state/path function whenever a mapping or texture is unavailable. Focused headless runtime proves all six loaded entries, an exact missing-map stack-fade fallback, actual movement, death, retreat, and surrender asset paths, and unchanged cue, audio, camera, reduced-motion, and battle authority. Inspected Xvfb captures at 1280x720 and 1920x1080 confirm the movement trail and surrender marker remain readable. Board navigation, accessibility, core, the 1280 routed layout matrix, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass; both PCKs contain the manifest and all six imported resources. Packaged Battle interaction, particles/shaders, other-screen VFX, hardware/accessibility certification, publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null,
+      "result": {"original_texture_count": 6, "mapped_state_path_cue_count": 6, "mapped_board_cue_count": 21, "focused_headless_passed": true, "xvfb_viewports": [[1280, 720], [1920, 1080]], "procedural_fallback_passed": true, "actual_movement_path_passed": true, "actual_death_path_passed": true, "actual_retreat_path_passed": true, "actual_surrender_path_passed": true, "reduced_motion_passed": true, "board_navigation_passed": true, "accessibility_passed": true, "core_passed": true, "battle_layout_1280_passed": true, "repository_validation_passed": true, "editor_parse_passed": true, "linux_export_headless_startup_passed": true, "linux_pck_state_path_vfx_resources_present": true, "windows_export_fresh_wine_startup_passed": true, "windows_pck_state_path_vfx_resources_present": true}
+    },
+    {
       "id": "presentation-battle-spell-vfx-asset-adoption-10184",
       "title": "Battle Spell VFX Asset Adoption",
       "status": "completed",
@@ -79499,9 +79522,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Outcome scenic epilogue slice is in progress from direct current-HEAD source and live-render evidence: replace the flat panel-farm backdrop with exact victory/defeat scenery and compact translucent existing surfaces without changing outcome behavior.",
+  "summary": "The Battle state/path VFX asset-adoption slice is completed: all 21 Board-recognized cue ids now have imported manifest mappings with exact procedural fallback, focused live and visual proof, compatibility, repository/editor, and bounded Linux/Windows export-startup evidence. Select the next tracker-approved release-readiness implementation slice; the game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-14T13:23:12Z",
+  "updatedAt": "2026-08-14T17:28:54Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

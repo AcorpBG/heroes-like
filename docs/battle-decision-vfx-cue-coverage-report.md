@@ -16,9 +16,11 @@ The battle cue catalog declared several placeholder VFX ids that were not mapped
 - `tests/battle_event_animation_state_report.gd` now asserts a real defend action emits `brace_outline` VFX.
 - The same report now asserts a real surrender exit snapshot emits `surrender_marker` VFX.
 
+The later `presentation-battle-state-path-vfx-asset-adoption-10184` slice maps the established idle-shadow, active-ring, and surrender-marker cue ids to distinct original transparent textures through `content/battle_vfx_manifest.json`; each original procedural draw function remains the fail-closed fallback.
+
 ## Boundaries
 
-- No final imported VFX art.
+- No particles, shaders, or broad non-Battle VFX migration.
 - No final sound design.
 - No combat balance tuning.
 - No broad battle UX redesign.

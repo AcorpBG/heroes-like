@@ -30,6 +30,7 @@ func _run() -> void:
 	_validate_fallback_states()
 	_validate_core_vfx_asset_manifest()
 	_validate_spell_vfx_asset_surface()
+	_validate_state_path_vfx_asset_surface()
 	_validate_defend_state()
 	_validate_move_state()
 	await _validate_melee_hit_state()
@@ -46,6 +47,7 @@ func _run() -> void:
 	if OS.get_environment("HEROES_BATTLE_VFX_CAPTURE") == "1":
 		await _validate_imported_vfx_live_viewports()
 		await _validate_spell_vfx_live_viewports()
+		await _validate_state_path_vfx_live_viewports()
 	await _validate_battle_audio_mix_policy()
 	await _validate_board_playback_lifecycle()
 	await _validate_presentation_event_stream_contract()
@@ -82,9 +84,9 @@ func _validate_core_vfx_asset_manifest() -> void:
 	var summary: Dictionary = view.validation_vfx_asset_summary()
 	_expect_equal("battle vfx manifest schema", String(summary.get("schema_id", "")), "battle_vfx_manifest_v1")
 	_expect_equal("battle vfx manifest path", String(summary.get("manifest_path", "")), "res://content/battle_vfx_manifest.json")
-	_expect_int("battle vfx mapped cue count", int(summary.get("mapped_cue_count", -1)), 15)
-	_expect_int("battle vfx unique texture count", int(summary.get("unique_texture_count", -1)), 10)
-	_expect_int("battle vfx loaded texture count", int(summary.get("loaded_texture_count", -1)), 10)
+	_expect_int("battle vfx mapped cue count", int(summary.get("mapped_cue_count", -1)), 21)
+	_expect_int("battle vfx unique texture count", int(summary.get("unique_texture_count", -1)), 16)
+	_expect_int("battle vfx loaded texture count", int(summary.get("loaded_texture_count", -1)), 16)
 	_expect_equal("battle vfx missing texture paths", JSON.stringify(summary.get("missing_texture_paths", [])), "[]")
 	for expected_path in [
 		"res://art/battle/vfx/core_projectile_impact.png",
@@ -97,6 +99,12 @@ func _validate_core_vfx_asset_manifest() -> void:
 		"res://art/battle/vfx/spell_graft_mend.png",
 		"res://art/battle/vfx/spell_prism_bastion.png",
 		"res://art/battle/vfx/spell_command_ward.png",
+		"res://art/battle/vfx/state_idle_shadow.png",
+		"res://art/battle/vfx/state_active_ring.png",
+		"res://art/battle/vfx/state_stack_fade.png",
+		"res://art/battle/vfx/state_surrender_marker.png",
+		"res://art/battle/vfx/path_move_ghost.png",
+		"res://art/battle/vfx/path_withdraw_ghost.png",
 	]:
 		_expect_array_contains("battle vfx imported texture", summary.get("loaded_texture_paths", []), expected_path)
 	view.queue_free()
@@ -150,6 +158,57 @@ func _validate_spell_vfx_asset_surface() -> void:
 		"procedural_fallback": fallback_playback,
 	}
 
+func _validate_state_path_vfx_asset_surface() -> void:
+	var cue_paths := {
+		"vfx_placeholder_idle_shadow": "res://art/battle/vfx/state_idle_shadow.png",
+		"vfx_placeholder_active_ring": "res://art/battle/vfx/state_active_ring.png",
+		"vfx_placeholder_stack_fade": "res://art/battle/vfx/state_stack_fade.png",
+		"vfx_placeholder_surrender_marker": "res://art/battle/vfx/state_surrender_marker.png",
+		"vfx_placeholder_battle_path_ghost": "res://art/battle/vfx/path_move_ghost.png",
+		"vfx_placeholder_withdraw_path": "res://art/battle/vfx/path_withdraw_ghost.png",
+	}
+	var cue_ids: Array = cue_paths.keys()
+	var session := _basic_session("unit_river_guard", "unit_bog_brute", 3, 3, 7, 3)
+	var view := BattleBoardViewScript.new()
+	view.size = Vector2(960.0, 540.0)
+	add_child(view)
+	view.set_battle_state(session)
+	_install_validation_vfx_cues(view, cue_ids)
+	var playback: Dictionary = view.validation_vfx_playback_summary()
+	_expect_int("state path vfx live cue draw count", int(playback.get("active_vfx_draw_count", -1)), cue_ids.size())
+	_expect_int("state path vfx imported asset draw count", int(playback.get("imported_asset_draw_count", -1)), cue_ids.size())
+	_expect_int("state path vfx procedural fallback draw count", int(playback.get("procedural_fallback_draw_count", -1)), 0)
+	for cue_id_value in cue_ids:
+		var cue_id := String(cue_id_value)
+		var entry := _vfx_entry_for_cue(playback, cue_id)
+		_expect_equal("state path vfx imported %s" % cue_id, str(bool(entry.get("asset_loaded", false))), "true")
+		_expect_equal("state path vfx asset path %s" % cue_id, String(entry.get("asset_path", "")), String(cue_paths.get(cue_id, "")))
+		var expected_render_mode := "state_center"
+		if cue_id in ["vfx_placeholder_battle_path_ghost", "vfx_placeholder_withdraw_path"]:
+			expected_render_mode = "path_follow"
+		elif cue_id == "vfx_placeholder_surrender_marker":
+			expected_render_mode = "state_marker"
+		_expect_equal("state path vfx render mode %s" % cue_id, String(entry.get("asset_render_mode", "")), expected_render_mode)
+	view.queue_free()
+	var fallback_view := BattleBoardViewScript.new()
+	fallback_view.size = Vector2(960.0, 540.0)
+	add_child(fallback_view)
+	fallback_view.set_battle_state(session)
+	fallback_view.set("_battle_vfx_manifest_loaded", true)
+	fallback_view.set("_battle_vfx_manifest", {"schema_id": "battle_vfx_manifest_v1", "cues": {}})
+	_install_validation_vfx_cues(fallback_view, ["vfx_placeholder_stack_fade"])
+	var fallback_playback: Dictionary = fallback_view.validation_vfx_playback_summary()
+	var fallback_entry := _vfx_entry_for_cue(fallback_playback, "vfx_placeholder_stack_fade")
+	_expect_equal("state path vfx missing mapping fallback kind", String(fallback_entry.get("kind", "")), "stack_fade")
+	_expect_equal("state path vfx missing mapping asset absent", str(bool(fallback_entry.get("asset_loaded", true))), "false")
+	_expect_int("state path vfx missing mapping procedural count", int(fallback_playback.get("procedural_fallback_draw_count", 0)), 1)
+	fallback_view.queue_redraw()
+	fallback_view.queue_free()
+	_report["cases"]["state_path_vfx_assets"] = {
+		"imported": playback,
+		"procedural_fallback": fallback_playback,
+	}
+
 func _validate_defend_state() -> void:
 	var session := _basic_session("unit_river_guard", "unit_bog_brute", 4, 3, 5, 3)
 	var result := BattleRulesScript.perform_player_action(session, "defend")
@@ -191,6 +250,8 @@ func _validate_move_state() -> void:
 	var vfx_playback: Dictionary = board_summary.get("vfx_playback", {}) if board_summary.get("vfx_playback", {}) is Dictionary else {}
 	var path := _vfx_entry_for(vfx_playback, "path_ghost")
 	_expect_equal("move path ghost cue", String(path.get("cue_id", "")), "vfx_placeholder_battle_path_ghost")
+	_expect_equal("move path ghost imported vfx", str(bool(path.get("asset_loaded", false))), "true")
+	_expect_equal("move path ghost imported asset", String(path.get("asset_path", "")), "res://art/battle/vfx/path_move_ghost.png")
 	if int(path.get("start_q", -1)) == int(path.get("target_q", -1)) and int(path.get("start_r", -1)) == int(path.get("target_r", -1)):
 		_error("Move path ghost did not span distinct source and destination cells: %s" % path)
 	var moving_stack := _summary_stack_entry(board_summary, "player_0")
@@ -382,7 +443,8 @@ func _validate_death_state() -> void:
 	_expect_equal("death target presentation source", String(death_stack.get("presentation_motion_source_battle_id", "")), "player_0")
 	_expect_equal("death fade vfx cue", String(fade.get("cue_id", "")), "vfx_placeholder_stack_fade")
 	_expect_equal("death fade vfx battle id", String(fade.get("battle_id", "")), "enemy_0")
-	_expect_equal("death fade procedural fallback", str(bool(fade.get("asset_loaded", true))), "false")
+	_expect_equal("death fade imported vfx", str(bool(fade.get("asset_loaded", false))), "true")
+	_expect_equal("death fade imported asset", String(fade.get("asset_path", "")), "res://art/battle/vfx/state_stack_fade.png")
 	_report["cases"]["death"] = {
 		"target_state": target_state,
 		"events": BattleRulesScript.animation_event_states(session.battle),
@@ -590,10 +652,17 @@ func _validate_exit_action_state(action_id: String, event_id: String, expected_s
 	_expect_equal("%s board exit presentation event" % action_id, String(exiting_stack.get("presentation_motion_event_id", "")), event_id)
 	_expect_equal("%s board exit presentation role" % action_id, String(exiting_stack.get("presentation_motion_role", "")), expected_role)
 	var vfx_playback: Dictionary = summary.get("vfx_playback", {}) if summary.get("vfx_playback", {}) is Dictionary else {}
-	if action_id == "surrender":
+	if action_id == "retreat":
+		var retreat_vfx := _vfx_entry_for(vfx_playback, "path_ghost")
+		_expect_equal("retreat path vfx cue", String(retreat_vfx.get("cue_id", "")), "vfx_placeholder_withdraw_path")
+		_expect_equal("retreat path imported vfx", str(bool(retreat_vfx.get("asset_loaded", false))), "true")
+		_expect_equal("retreat path imported asset", String(retreat_vfx.get("asset_path", "")), "res://art/battle/vfx/path_withdraw_ghost.png")
+	else:
 		var surrender_vfx := _vfx_entry_for(vfx_playback, "surrender_marker")
 		_expect_equal("surrender marker vfx cue", String(surrender_vfx.get("cue_id", "")), "vfx_placeholder_surrender_marker")
 		_expect_equal("surrender marker vfx battle id", String(surrender_vfx.get("battle_id", "")), "player_0")
+		_expect_equal("surrender marker imported vfx", str(bool(surrender_vfx.get("asset_loaded", false))), "true")
+		_expect_equal("surrender marker imported asset", String(surrender_vfx.get("asset_path", "")), "res://art/battle/vfx/state_surrender_marker.png")
 	var motion_roles: Dictionary = summary.get("presentation_motion_roles", {}) if summary.get("presentation_motion_roles", {}) is Dictionary else {}
 	if int(motion_roles.get(expected_role, 0)) < 1:
 		_error("%s board exit presentation role was not counted in the board summary: %s" % [action_id, summary])
@@ -786,6 +855,63 @@ func _validate_spell_vfx_live_viewports() -> void:
 	get_window().size = original_window_size
 	await get_tree().process_frame
 	_report["cases"]["spell_vfx_live_viewports"] = results
+
+func _validate_state_path_vfx_live_viewports() -> void:
+	var original_window_size := get_window().size
+	var cue_by_viewport := {
+		"1280x720": "vfx_placeholder_battle_path_ghost",
+		"1920x1080": "vfx_placeholder_surrender_marker",
+	}
+	var results := {}
+	for viewport_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:
+		get_window().size = viewport_size
+		await get_tree().process_frame
+		await get_tree().process_frame
+		_expect_equal("state path vfx requested viewport", str(get_window().size), str(viewport_size))
+		var session := _basic_session("unit_river_guard", "unit_bog_brute", 3, 3, 7, 3)
+		var view := BattleBoardViewScript.new()
+		view.position = Vector2.ZERO
+		view.size = get_viewport().get_visible_rect().size
+		add_child(view)
+		view.set_battle_state(session)
+		var viewport_key := "%dx%d" % [viewport_size.x, viewport_size.y]
+		var cue_id := String(cue_by_viewport.get(viewport_key, ""))
+		_install_validation_vfx_cues(view, [cue_id])
+		await get_tree().process_frame
+		view.queue_redraw()
+		await get_tree().process_frame
+		var playback: Dictionary = view.validation_vfx_playback_summary()
+		_expect_int("state path vfx viewport imported draw count", int(playback.get("imported_asset_draw_count", 0)), 1)
+		var state_entry := _vfx_entry_for_cue(playback, cue_id)
+		_expect_equal("state path vfx viewport asset loaded", str(bool(state_entry.get("asset_loaded", false))), "true")
+		var viewport_texture: Texture2D = get_viewport().get_texture()
+		if viewport_texture == null:
+			_error("State/path VFX live viewport capture requires a windowed render texture at %s." % viewport_size)
+			view.queue_free()
+			get_window().size = original_window_size
+			return
+		var image: Image = viewport_texture.get_image()
+		if image == null:
+			_error("State/path VFX live viewport capture returned no image at %s." % viewport_size)
+			view.queue_free()
+			get_window().size = original_window_size
+			return
+		_expect_int("state path vfx capture width", image.get_width(), viewport_size.x)
+		_expect_int("state path vfx capture height", image.get_height(), viewport_size.y)
+		var capture_path := "%s/state_path_vfx_%dx%d.png" % [OUTPUT_DIR, viewport_size.x, viewport_size.y]
+		var save_error := image.save_png(ProjectSettings.globalize_path(capture_path))
+		_expect_int("state path vfx capture save", save_error, OK)
+		results[viewport_key] = {
+			"capture_path": capture_path,
+			"cue_id": cue_id,
+			"asset_path": String(state_entry.get("asset_path", "")),
+			"logical_view_size": [view.size.x, view.size.y],
+		}
+		view.queue_free()
+		await get_tree().process_frame
+	get_window().size = original_window_size
+	await get_tree().process_frame
+	_report["cases"]["state_path_vfx_live_viewports"] = results
 
 func _install_validation_vfx_cues(view: Control, cue_ids: Array) -> void:
 	var now := int(Time.get_ticks_msec())
