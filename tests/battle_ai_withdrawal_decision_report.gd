@@ -28,6 +28,7 @@ func _run() -> void:
 	_validate_outcome_payload_continuity()
 	_validate_force_sync_payload_continuity()
 	_validate_runtime_enemy_retreat()
+	_validate_runtime_enemy_surrender_victory_flags()
 	print("%s %s" % [REPORT_ID, JSON.stringify(_report)])
 	get_tree().quit(0)
 
@@ -252,6 +253,28 @@ func _validate_runtime_enemy_retreat() -> void:
 		"last_battle_outcome": String(session.flags.get("last_battle_outcome", "")),
 		"snapshot_policy": String(snapshot.get("presentation_policy", "")),
 		"queue": BattleRulesScript.animation_event_queue(snapshot),
+	}
+
+func _validate_runtime_enemy_surrender_victory_flags() -> void:
+	var session := _withdrawal_session(8, 100, false, true)
+	session.battle["encounter_id"] = "encounter_gate_marshals"
+	var result := BattleRulesScript.resolve_if_battle_ready(session)
+	_expect_equal("enemy surrender runtime state", String(result.get("state", "")), "victory")
+	_expect_equal("enemy surrender last outcome", String(session.flags.get("last_battle_outcome", "")), "enemy_surrender")
+	if not bool(session.flags.get("gate_marshals_broken", false)):
+		_fail("enemy surrender runtime did not apply the encounter victory flag: %s" % JSON.stringify(session.flags))
+		return
+	if "withdrawal_fixture" not in session.overworld.get("resolved_encounters", []):
+		_fail("enemy surrender runtime did not resolve the encounter placement: %s" % JSON.stringify(session.overworld))
+		return
+	if not session.battle.is_empty():
+		_fail("enemy surrender runtime did not clear battle: %s" % JSON.stringify(session.battle))
+		return
+	_report["cases"]["runtime_enemy_surrender_victory_flags"] = {
+		"state": String(result.get("state", "")),
+		"last_battle_outcome": String(session.flags.get("last_battle_outcome", "")),
+		"gate_marshals_broken": bool(session.flags.get("gate_marshals_broken", false)),
+		"encounter_resolved": true,
 	}
 
 func _withdrawal_session(

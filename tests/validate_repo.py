@@ -2043,6 +2043,14 @@ def validate_script_effect(
             for unit_id, amount in recruits.items():
                 ensure(str(unit_id) in units, errors, f"Scenario {scenario_id} hook {hook_id} references missing recruit unit {unit_id}")
                 ensure(int(amount) > 0, errors, f"Scenario {scenario_id} hook {hook_id} recruit count must be > 0 for {unit_id}")
+    elif effect_type == "town_add_garrison":
+        ensure(str(effect.get("placement_id", "")) in town_placement_ids, errors, f"Scenario {scenario_id} hook {hook_id} references missing town placement {effect.get('placement_id')}")
+        garrison = effect.get("garrison", {})
+        ensure(isinstance(garrison, dict) and bool(garrison), errors, f"Scenario {scenario_id} hook {hook_id} town_add_garrison effects must define garrison")
+        if isinstance(garrison, dict):
+            for unit_id, amount in garrison.items():
+                ensure(str(unit_id) in units, errors, f"Scenario {scenario_id} hook {hook_id} references missing garrison unit {unit_id}")
+                ensure(int(amount) > 0, errors, f"Scenario {scenario_id} hook {hook_id} garrison count must be > 0 for {unit_id}")
     elif effect_type == "add_enemy_pressure":
         ensure(str(effect.get("faction_id", "")) in factions, errors, f"Scenario {scenario_id} hook {hook_id} references missing faction {effect.get('faction_id')}")
         ensure(int(effect.get("amount", 0)) > 0 or int(effect.get("minimum", 0)) > 0, errors, f"Scenario {scenario_id} hook {hook_id} add_enemy_pressure must define amount > 0 or minimum > 0")
@@ -12039,6 +12047,15 @@ def validate_content(errors: list[str]) -> None:
             for placement in scenario.get("encounters", [])
             if isinstance(placement, dict) and str(placement.get("placement_id", ""))
         ]
+        for hook in scenario.get("script_hooks", []):
+            if not isinstance(hook, dict):
+                continue
+            for effect in hook.get("effects", []):
+                if not isinstance(effect, dict) or str(effect.get("type", "")) != "spawn_encounter":
+                    continue
+                placement = effect.get("placement", {})
+                if isinstance(placement, dict):
+                    append_unique(encounter_placement_ids, str(placement.get("placement_id", "")))
 
         objectives = scenario.get("objectives", {})
         objective_ids: list[str] = []
@@ -12256,10 +12273,425 @@ def validate_content(errors: list[str]) -> None:
             "campaign_deadline_count",
             "skirmish_deadline_count",
             "finale_deadline_count",
+            'RIVER_PASS_SCENARIO_ID := "river-pass"',
+            "RIVER_PASS_SAFE_PRESSURE := 14",
+            "RIVER_PASS_DEFEAT_PRESSURE := 15",
+            "RIVER_PASS_RELIEF_RIVER_GUARDS := 20",
+            "RIVER_PASS_RECALL_RIVER_GUARDS := 2",
+            "RIVER_PASS_RECALL_EMBER_ARCHERS := 8",
+            'CAUSEWAY_SCENARIO_ID := "causeway-stand"',
+            "CAUSEWAY_VETERAN_RIVER_GUARDS := 10",
+            "CAUSEWAY_DUSKFEN_GARRISON_BOG_BRUTES := 5",
+            "CAUSEWAY_VETERAN_GARRISON_RIVER_GUARDS := 32",
+            'FEN_CROWN_SCENARIO_ID := "fen-crown"',
+            "FEN_CROWN_FINAL_MARCH_RIVER_GUARDS := 14",
+            "func _river_pass_pressure_boundary() -> Dictionary:",
+            "func _river_pass_refit_reinforcement_contract() -> Dictionary:",
+            "func _river_pass_objective_chain() -> Dictionary:",
+            "func _causeway_veteran_staging_contract() -> Dictionary:",
+            "func _fen_crown_final_march_reserve_contract() -> Dictionary:",
+            '"fen_crown_final_march_reserve": fen_crown_final_march_reserve,',
+            '"post_totemist_screen_army": {',
+            'String(pressure_objective.get("label", "")) != "Do not let Mireclaw pressure reach 15"',
+            'safe_objective_text.find("Do not let Mireclaw pressure reach 15 (14/15)") < 0',
+            'String(safe_result.get("status", "")) != "in_progress"',
+            'String(defeat_result.get("status", "")) != "defeat"',
             "final_scenario_balance",
             "campaign_breadth_complete",
         ):
             ensure(required_text in report_text, errors, f"Scenario deadline-loss variety report is missing required token: {required_text}")
+        river_pressure_match = re.search(
+            r"func _river_pass_pressure_boundary\(\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc _river_pass_refit_reinforcement_contract)",
+            report_text,
+            re.S,
+        )
+        ensure(river_pressure_match is not None, errors, "Could not isolate the River Pass pressure-boundary report case")
+        if river_pressure_match is not None:
+            river_pressure_body = river_pressure_match.group("body")
+            pressure_tokens = (
+                "ScenarioRulesScript.normalize_scenario_state(session)",
+                "session.day = 1",
+                "_set_enemy_pressure(session, RIVER_PASS_PRESSURE_FACTION_ID, RIVER_PASS_SAFE_PRESSURE)",
+                "var safe_result: Dictionary = ScenarioRulesScript.evaluate_session(session)",
+                "safe_objective_text.find(\"Do not let Mireclaw pressure reach 15 (14/15)\") < 0",
+                "_set_enemy_pressure(session, RIVER_PASS_PRESSURE_FACTION_ID, RIVER_PASS_DEFEAT_PRESSURE)",
+                "var defeat_result: Dictionary = ScenarioRulesScript.evaluate_session(session)",
+            )
+            pressure_positions = [river_pressure_body.find(token) for token in pressure_tokens]
+            ensure(
+                min(pressure_positions) >= 0 and pressure_positions == sorted(pressure_positions),
+                errors,
+                "River Pass pressure proof must use the live rules in exact safe-14 then defeat-15 order",
+            )
+            ensure("session.scenario_status =" not in river_pressure_body, errors, "River Pass pressure proof must not force scenario status")
+            ensure("session.flags[" not in river_pressure_body, errors, "River Pass pressure proof must not bypass objectives with session flags")
+        river_refit_match = re.search(
+            r"func _river_pass_refit_reinforcement_contract\(\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc _river_pass_objective_chain)",
+            report_text,
+            re.S,
+        )
+        ensure(river_refit_match is not None, errors, "Could not isolate the River Pass refit-reinforcement report case")
+        if river_refit_match is not None:
+            river_refit_body = river_refit_match.group("body")
+            refit_tokens = (
+                'var relief_recruits := _hook_town_recruits(scenario, "riverwatch_relief_column", "riverwatch_hold")',
+                'var recall_recruits := _hook_town_recruits(scenario, "riverwatch_bell_recall", "riverwatch_hold")',
+                'relief_recruits.size() == 1',
+                'int(relief_recruits.get("unit_river_guard", -1)) == RIVER_PASS_RELIEF_RIVER_GUARDS',
+                'recall_recruits.size() == 2',
+                'int(recall_recruits.get("unit_river_guard", -1)) == RIVER_PASS_RECALL_RIVER_GUARDS',
+                'int(recall_recruits.get("unit_ember_archer", -1)) == RIVER_PASS_RECALL_EMBER_ARCHERS',
+                '"unit_river_guard": 34',
+                '"unit_ember_archer": 8',
+            )
+            refit_positions = [river_refit_body.find(token) for token in refit_tokens]
+            ensure(
+                min(refit_positions) >= 0 and refit_positions == sorted(refit_positions),
+                errors,
+                "River Pass refit proof must observe exact relief, recall, and screened post-Totemist army in order",
+            )
+            ensure("session." not in river_refit_body, errors, "River Pass refit content proof must not mutate session state")
+        river_objective_chain_match = re.search(
+            r"func _river_pass_objective_chain\(\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc _objective_by_id)",
+            report_text,
+            re.S,
+        )
+        ensure(river_objective_chain_match is not None, errors, "Could not isolate the River Pass objective-chain report case")
+        if river_objective_chain_match is not None:
+            river_objective_chain_body = river_objective_chain_match.group("body")
+            objective_chain_tokens = (
+                'var clear_blackbranch := _objective_by_id(victory, "clear_blackbranch")',
+                'var repulse_counterstroke := _objective_by_id(victory, "repulse_duskfen_counterstroke")',
+                '"type": "encounter_resolved",\n\t\t"placement_id": "river_pass_ghoul_grove",',
+                'north_road_effects[0] != {"type": "set_flag", "flag": "pass_cleared", "value": true}',
+                'resolved.append("river_pass_ghoul_grove")',
+                "var blackbranch_result: Dictionary = ScenarioRulesScript.evaluate_session(session)",
+                'not bool(session.flags.get("pass_cleared", false))',
+                '_set_town_owner(session, "duskfen_bastion", "player")',
+                'session.flags["mire_cleared"] = true',
+                'resolved.append("river_pass_reed_totemists")',
+                "var counterstroke_pending_result: Dictionary = ScenarioRulesScript.evaluate_session(session)",
+                'not _encounter_exists(session, "duskfen_counterstroke")',
+                'resolved.append("duskfen_counterstroke")',
+                "var counterstroke_cleared_result: Dictionary = ScenarioRulesScript.evaluate_session(session)",
+                'String(counterstroke_cleared_result.get("status", "")) != "victory"',
+            )
+            objective_chain_positions = [river_objective_chain_body.find(token) for token in objective_chain_tokens]
+            ensure(
+                min(objective_chain_positions) >= 0 and objective_chain_positions == sorted(objective_chain_positions),
+                errors,
+                "River Pass objective proof must clear Ghoul Grove, export pass_cleared, spawn and require the counterstroke, then resolve victory in order",
+            )
+            for forbidden_token in (
+                'session.scenario_status = "victory"',
+                'session.flags["pass_cleared"] =',
+                'session.overworld["encounters"].append',
+                "BattleRules",
+            ):
+                ensure(
+                    forbidden_token not in river_objective_chain_body,
+                    errors,
+                    f"River Pass objective proof must not bypass authored scenario evaluation via {forbidden_token}",
+                )
+        causeway_contract_match = re.search(
+            r"func _causeway_veteran_staging_contract\(\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc _fen_crown_final_march_reserve_contract)",
+            report_text,
+            re.S,
+        )
+        ensure(causeway_contract_match is not None, errors, "Could not isolate the Causeway veteran/staging report case")
+        if causeway_contract_match is not None:
+            causeway_contract_body = causeway_contract_match.group("body")
+            causeway_contract_tokens = (
+                'var veteran_recruits := _hook_town_recruits(scenario, "veteran_supply_train", "duskfen_staging")',
+                'var veteran_garrison := _hook_town_garrison(scenario, "veteran_supply_train", "duskfen_staging")',
+                'veteran_recruits.size() != 1',
+                'int(veteran_recruits.get("unit_river_guard", -1)) != CAUSEWAY_VETERAN_RIVER_GUARDS',
+                'veteran_garrison.size() != 1',
+                'int(veteran_garrison.get("unit_river_guard", -1)) != CAUSEWAY_VETERAN_GARRISON_RIVER_GUARDS',
+                "ScenarioFactoryScript.create_session(",
+                'var duskfen_before := _town_by_placement(session, "duskfen_staging")',
+                'String(garrison_before[0].get("unit_id", "")) != "unit_bog_brute"',
+                'int(garrison_before[0].get("count", 0)) != CAUSEWAY_DUSKFEN_GARRISON_BOG_BRUTES',
+                'session.flags["carryover_pass_cleared"] = true',
+                "var hook_result: Dictionary = ScenarioRulesScript.evaluate_session(session)",
+                'var duskfen_after := _town_by_placement(session, "duskfen_staging")',
+                '"base_staging_garrison": garrison_before.duplicate(true)',
+                '"reinforced_staging_garrison": garrison_after.duplicate(true)',
+                '"screened_totemist_entry": {"unit_river_guard": 20}',
+                '"screened_totemist_survivors": {"unit_river_guard": 17}',
+            )
+            causeway_contract_positions = [causeway_contract_body.find(token) for token in causeway_contract_tokens]
+            ensure(
+                min(causeway_contract_positions) >= 0 and causeway_contract_positions == sorted(causeway_contract_positions),
+                errors,
+                "Causeway content proof must observe the exact ten-Guard veteran hook and unchanged five-Bog-Brute live staging garrison in order",
+            )
+            for forbidden_token in (
+                'garrison[0]["count"] =',
+                'session.overworld["towns"] =',
+                'session.scenario_status =',
+                'effect["recruits"] =',
+                'effect["garrison"] =',
+                "BattleRules",
+            ):
+                ensure(
+                    forbidden_token not in causeway_contract_body,
+                    errors,
+                    f"Causeway veteran/staging proof must remain observation-only and not use {forbidden_token}",
+                )
+        fen_contract_match = re.search(
+            r"func _fen_crown_final_march_reserve_contract\(\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc _objective_by_id)",
+            report_text,
+            re.S,
+        )
+        ensure(fen_contract_match is not None, errors, "Could not isolate the Fen Crown final-march reserve report case")
+        if fen_contract_match is not None:
+            fen_contract_body = fen_contract_match.group("body")
+            fen_contract_tokens = (
+                "ContentService.get_scenario(FEN_CROWN_SCENARIO_ID)",
+                'var hook := _hook_by_id(scenario, "crown_archive_falls")',
+                'var reserve_recruits := _hook_town_recruits(scenario, "crown_archive_falls", "blackfen_bridgehead")',
+                '{"type": "objective_met", "objective_id": "break_crown_watch"}',
+                "reserve_recruits.size() != 1",
+                'int(reserve_recruits.get("unit_river_guard", -1)) != FEN_CROWN_FINAL_MARCH_RIVER_GUARDS',
+                '"observed_zero_reserve_result": "defeat"',
+                '"first_observed_victory_reserve": 13',
+                '"first_all_victory_screened_reserve": FEN_CROWN_FINAL_MARCH_RIVER_GUARDS',
+                '"screen_sample_count": 34',
+            )
+            fen_contract_positions = [fen_contract_body.find(token) for token in fen_contract_tokens]
+            ensure(
+                min(fen_contract_positions) >= 0 and fen_contract_positions == sorted(fen_contract_positions),
+                errors,
+                "Fen Crown reserve proof must observe the exact Crown Watch gate, bridgehead reserve, and first all-victory 14-Guard screen in order",
+            )
+            for forbidden_token in (
+                "session.",
+                "BattleAutoResolve",
+                "BattleRules",
+                "seed =",
+                'effect["recruits"] =',
+            ):
+                ensure(
+                    forbidden_token not in fen_contract_body,
+                    errors,
+                    f"Fen Crown reserve proof must remain observation-only and not use {forbidden_token}",
+                )
+    river_pass = scenarios.get("river-pass", {})
+    ensure(bool(river_pass), errors, "River Pass scenario is missing")
+    content_service_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
+    scenario_validation_match = re.search(
+        r"func _validate_scenario\(.*?\n(?P<body>.*?)(?=\nfunc _validate_objective)",
+        content_service_text,
+        re.S,
+    )
+    ensure(scenario_validation_match is not None, errors, "Could not isolate ContentService scenario validation")
+    if scenario_validation_match is not None:
+        scenario_validation_body = scenario_validation_match.group("body")
+        spawned_objective_tokens = (
+            "var encounter_placement_ids: Array[String] = []",
+            'var script_hooks = scenario.get("script_hooks", [])',
+            "if script_hooks is Array:",
+            '_append_hook_spawn_placements(script_hooks, "spawn_encounter", encounter_placement_ids)',
+            'var objectives = scenario.get("objectives", {})',
+            "_validate_objective(scenario_id, objective, faction_index, town_placement_ids, encounter_placement_ids)",
+        )
+        spawned_objective_positions = [scenario_validation_body.find(token) for token in spawned_objective_tokens]
+        ensure(
+            min(spawned_objective_positions) >= 0 and spawned_objective_positions == sorted(spawned_objective_positions),
+            errors,
+            "ContentService must materialize script-spawned encounter placement ids before validating encounter-resolved objectives",
+        )
+        ensure(
+            scenario_validation_body.count('_append_hook_spawn_placements(script_hooks, "spawn_encounter", encounter_placement_ids)') == 1,
+            errors,
+            "ContentService must materialize script-spawned encounter placement ids exactly once per scenario validation",
+        )
+    if isinstance(river_pass, dict):
+        river_objectives = river_pass.get("objectives", {})
+        river_victory = river_objectives.get("victory", []) if isinstance(river_objectives, dict) else []
+        river_defeat = river_objectives.get("defeat", []) if isinstance(river_objectives, dict) else []
+        ensure(len(river_victory) == 5, errors, "River Pass must keep exactly five victory objectives including the post-capture counterstroke")
+        river_clear_blackbranch_rows = [
+            objective
+            for objective in river_victory
+            if isinstance(objective, dict) and str(objective.get("id", "")) == "clear_blackbranch"
+        ]
+        river_counterstroke_rows = [
+            objective
+            for objective in river_victory
+            if isinstance(objective, dict) and str(objective.get("id", "")) == "repulse_duskfen_counterstroke"
+        ]
+        ensure(
+            river_clear_blackbranch_rows
+            == [{
+                "id": "clear_blackbranch",
+                "label": "Break the Blackbranch raiders",
+                "type": "encounter_resolved",
+                "placement_id": "river_pass_ghoul_grove",
+            }],
+            errors,
+            "River Pass Blackbranch objective must follow the authored Ghoul Grove resolved placement",
+        )
+        ensure(
+            river_counterstroke_rows
+            == [{
+                "id": "repulse_duskfen_counterstroke",
+                "label": "Repulse the Duskfen counterstroke",
+                "type": "encounter_resolved",
+                "placement_id": "duskfen_counterstroke",
+            }],
+            errors,
+            "River Pass must require the authored Duskfen counterstroke before victory",
+        )
+        river_pressure_rows = [
+            objective
+            for objective in river_defeat
+            if isinstance(objective, dict) and str(objective.get("id", "")) == "contain_pressure"
+        ]
+        ensure(len(river_pressure_rows) == 1, errors, "River Pass must keep exactly one contain_pressure objective")
+        if len(river_pressure_rows) == 1:
+            ensure(
+                river_pressure_rows[0]
+                == {
+                    "id": "contain_pressure",
+                    "label": "Do not let Mireclaw pressure reach 15",
+                    "type": "enemy_pressure_at_least",
+                    "faction_id": "faction_mireclaw",
+                    "threshold": 15,
+                },
+                errors,
+                "River Pass must keep the exact scenario-local 15-pressure loss boundary",
+            )
+        river_hooks = river_pass.get("script_hooks", []) if isinstance(river_pass.get("script_hooks", []), list) else []
+        north_road_hook = next((hook for hook in river_hooks if isinstance(hook, dict) and str(hook.get("id", "")) == "north_road_salvage"), {})
+        relief_hook = next((hook for hook in river_hooks if isinstance(hook, dict) and str(hook.get("id", "")) == "riverwatch_relief_column"), {})
+        recall_hook = next((hook for hook in river_hooks if isinstance(hook, dict) and str(hook.get("id", "")) == "riverwatch_bell_recall"), {})
+        relief_recruit_effects = [
+            effect for effect in relief_hook.get("effects", [])
+            if isinstance(effect, dict) and str(effect.get("type", "")) == "town_add_recruits"
+        ]
+        recall_recruit_effects = [
+            effect for effect in recall_hook.get("effects", [])
+            if isinstance(effect, dict) and str(effect.get("type", "")) == "town_add_recruits"
+        ]
+        ensure(
+            north_road_hook.get("conditions") == [{"type": "objective_met", "objective_id": "clear_blackbranch"}]
+            and isinstance(north_road_hook.get("effects"), list)
+            and bool(north_road_hook.get("effects"))
+            and north_road_hook.get("effects")[0] == {"type": "set_flag", "flag": "pass_cleared", "value": True},
+            errors,
+            "River Pass north-road hook must export pass_cleared from the resolved Ghoul Grove objective",
+        )
+        ensure(
+            len(relief_recruit_effects) == 1
+            and relief_recruit_effects[0].get("placement_id") == "riverwatch_hold"
+            and relief_recruit_effects[0].get("recruits") == {"unit_river_guard": 20},
+            errors,
+            "River Pass Day 3 relief must add exactly twenty River Guards at Riverwatch",
+        )
+        ensure(
+            len(recall_recruit_effects) == 1
+            and recall_recruit_effects[0].get("placement_id") == "riverwatch_hold"
+            and recall_recruit_effects[0].get("recruits") == {"unit_river_guard": 2, "unit_ember_archer": 8},
+            errors,
+            "River Pass bell recall must add exactly two River Guards and eight Ember Archers at Riverwatch",
+        )
+    causeway = scenarios.get("causeway-stand", {})
+    ensure(bool(causeway), errors, "Causeway Stand scenario is missing")
+    if isinstance(causeway, dict):
+        causeway_hooks = causeway.get("script_hooks", []) if isinstance(causeway.get("script_hooks", []), list) else []
+        veteran_hook = next((hook for hook in causeway_hooks if isinstance(hook, dict) and str(hook.get("id", "")) == "veteran_supply_train"), {})
+        veteran_recruit_effects = [
+            effect for effect in veteran_hook.get("effects", [])
+            if isinstance(effect, dict) and str(effect.get("type", "")) == "town_add_recruits"
+        ]
+        veteran_garrison_effects = [
+            effect for effect in veteran_hook.get("effects", [])
+            if isinstance(effect, dict) and str(effect.get("type", "")) == "town_add_garrison"
+        ]
+        ensure(
+            len(veteran_recruit_effects) == 1
+            and veteran_recruit_effects[0].get("placement_id") == "duskfen_staging"
+            and veteran_recruit_effects[0].get("recruits") == {"unit_river_guard": 10},
+            errors,
+            "Causeway veteran supply train must add only the first stable all-victory plateau of ten River Guards at Duskfen",
+        )
+        ensure(
+            len(veteran_garrison_effects) == 1
+            and veteran_garrison_effects[0].get("placement_id") == "duskfen_staging"
+            and veteran_garrison_effects[0].get("garrison") == {"unit_river_guard": 32},
+            errors,
+            "Causeway veteran supply train must add only the first all-victory screened 32 River Guards to Duskfen's staging defense",
+        )
+    fen_crown = scenarios.get("fen-crown", {})
+    ensure(bool(fen_crown), errors, "Fen Crown scenario is missing")
+    if isinstance(fen_crown, dict):
+        fen_hooks = fen_crown.get("script_hooks", []) if isinstance(fen_crown.get("script_hooks", []), list) else []
+        crown_archive_hook = next((hook for hook in fen_hooks if isinstance(hook, dict) and str(hook.get("id", "")) == "crown_archive_falls"), {})
+        crown_archive_effects = crown_archive_hook.get("effects", []) if isinstance(crown_archive_hook.get("effects", []), list) else []
+        fen_reserve_effects = [
+            effect for effect in crown_archive_effects
+            if isinstance(effect, dict) and str(effect.get("type", "")) == "town_add_recruits"
+        ]
+        ensure(
+            crown_archive_hook.get("conditions") == [{"type": "objective_met", "objective_id": "break_crown_watch"}],
+            errors,
+            "Fen Crown final-march reserve must remain gated by the authored Crown Watch objective",
+        )
+        ensure(
+            crown_archive_effects
+            == [
+                {"type": "town_add_building", "placement_id": "fen_crown_redoubt", "building_id": "building_starseer_annex"},
+                {"type": "town_add_recruits", "placement_id": "blackfen_bridgehead", "recruits": {"unit_river_guard": 14}},
+                {"type": "award_experience", "amount": 120},
+                {"type": "message", "text": "When the Crown Watch is broken, the captured redoubt archive yields charts and spell leaves from the inner marsh."},
+            ],
+            errors,
+            "Fen Crown Crown Watch hook must preserve its authored rewards and add only the exact 14-Guard bridgehead reserve",
+        )
+        ensure(
+            len(fen_reserve_effects) == 1
+            and fen_reserve_effects[0].get("placement_id") == "blackfen_bridgehead"
+            and fen_reserve_effects[0].get("recruits") == {"unit_river_guard": 14},
+            errors,
+            "Fen Crown Crown Watch hook must add exactly fourteen River Guards at Blackfen for the final march",
+        )
+    ensure(
+        towns.get("town_duskfen", {}).get("garrison") == [{"unit_id": "unit_bog_brute", "count": 5}],
+        errors,
+        "Causeway must retain Duskfen's authored five-Bog-Brute staging garrison",
+    )
+    scenario_script_text = (ROOT / "scripts/core/ScenarioScriptRules.gd").read_text(encoding="utf-8")
+    ensure(
+        '"town_add_garrison":\n\t\t\treturn _town_add_garrison(' in scenario_script_text,
+        errors,
+        "ScenarioScriptRules must dispatch town_add_garrison through its bounded owner",
+    )
+    causeway_garrison_runtime_match = re.search(
+        r"static func _town_add_garrison\(.*?\n(?P<body>.*?)(?=\nstatic func _append_event_log)",
+        scenario_script_text,
+        re.S,
+    )
+    ensure(causeway_garrison_runtime_match is not None, errors, "Could not isolate ScenarioScriptRules town-add-garrison owner")
+    causeway_garrison_runtime_body = causeway_garrison_runtime_match.group("body") if causeway_garrison_runtime_match is not None else ""
+    causeway_garrison_runtime_tokens = (
+        "static func _town_add_garrison(session: SessionStateStoreScript.SessionData, placement_id: String, garrison: Variant) -> Dictionary:",
+        "var unit_ids = garrison.keys()",
+        "unit_ids.sort()",
+        "stacks = _overworld_rules()._add_army_stack(stacks, unit_id, int(garrison.get(unit_id_value, 0)))",
+        'town["garrison"] = stacks',
+        'session.overworld["towns"] = towns',
+    )
+    causeway_garrison_runtime_source = "static func _town_add_garrison(session: SessionStateStoreScript.SessionData, placement_id: String, garrison: Variant) -> Dictionary:\n" + causeway_garrison_runtime_body
+    causeway_garrison_runtime_positions = [causeway_garrison_runtime_source.find(token) for token in causeway_garrison_runtime_tokens]
+    ensure(
+        min(causeway_garrison_runtime_positions) >= 0 and causeway_garrison_runtime_positions == sorted(causeway_garrison_runtime_positions),
+        errors,
+        "ScenarioScriptRules must apply authored garrison additions through sorted canonical army-stack merging and live town state",
+    )
+    for forbidden_token in ('town["garrison"] = garrison', 'session.overworld["towns"].append', "unit_ids.shuffle"):
+        ensure(forbidden_token not in causeway_garrison_runtime_source, errors, f"Scenario garrison additions must not bypass canonical merging via {forbidden_token}")
     for report_path in (
         ROOT / "tests/map_campaign_replayability_breadth_report.gd",
         ROOT / "tests/map_campaign_replayability_breadth_report.tscn",
@@ -28676,6 +29108,7 @@ def validate_live_client_harness(errors: list[str]) -> None:
         return
 
     harness_text = LIVE_VALIDATION_HARNESS_PATH.read_text(encoding="utf-8")
+    overworld_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
         'const FLOW_BOOT_TO_SKIRMISH_OVERWORLD := "boot_to_skirmish_overworld"',
         'const FLOW_BOOT_TO_SKIRMISH_TOWN_BATTLE := "boot_to_skirmish_town_battle"',
@@ -28795,6 +29228,379 @@ def validate_live_client_harness(errors: list[str]) -> None:
     ):
         ensure(required_token in harness_text, errors, f"LiveValidationHarness.gd is missing required routed-harness token: {required_token}")
 
+    battle_flow_match = re.search(
+        r"func _play_battle_to_scene\(.*?\n(?P<body>.*?)(?=\nfunc _parse_user_args)",
+        harness_text,
+        re.S,
+    )
+    ensure(battle_flow_match is not None, errors, "Could not isolate the live battle-to-scene flow")
+    if battle_flow_match is not None:
+        battle_flow_body = battle_flow_match.group("body")
+        route_wait_tokens = (
+            "await _settle_frames(6)",
+            "var current_scene = get_tree().current_scene",
+            "if scene_path == BATTLE_SCENE and not SessionState.has_battle_state():",
+            'current_scene.call("validation_battle_resolution_checkpoint_snapshot")',
+            "var routed_scene = await _wait_for_scene(destination_scene, 10000)",
+            '"Resolved battle did not complete its checkpointed scene route."',
+            "current_scene = routed_scene",
+            "scene_path = String(current_scene.scene_file_path)",
+        )
+        route_wait_positions = [battle_flow_body.find(token) for token in route_wait_tokens]
+        ensure(
+            min(route_wait_positions) >= 0 and route_wait_positions == sorted(route_wait_positions),
+            errors,
+            "Live battle flow must settle, observe a resolved battle, wait fail-closed for its checkpoint route, then adopt the routed scene",
+        )
+        ensure(
+            battle_flow_body.count("await _wait_for_scene(destination_scene, 10000)") == 2,
+            errors,
+            "Live battle flow must wait once in each confirmed Quick Resolve and manual checkpoint route branch",
+        )
+        ensure(
+            "SessionState.has_active_battle" not in battle_flow_body,
+            errors,
+            "Live battle route observer must use the real SessionState.has_battle_state API",
+        )
+        for forbidden_token in (
+            "SessionState.ensure_active_session().battle =",
+            "SessionState.ensure_active_session().battle.clear",
+            "AppRouter.go_to_overworld()",
+            "AppRouter.go_to_scenario_outcome()",
+        ):
+            ensure(
+                forbidden_token not in battle_flow_body,
+                errors,
+                f"Live battle route observer must not mutate or force routing via {forbidden_token}",
+            )
+
+    river_refit_match = re.search(
+        r"func _clear_river_pass_required_encounters_with_refit\(.*?\n(?P<body>.*?)(?=\nfunc )",
+        harness_text,
+        re.S,
+    )
+    ensure(river_refit_match is not None, errors, "Could not isolate the River Pass full-arc refit route")
+    if river_refit_match is not None:
+        river_refit_body = river_refit_match.group("body")
+        river_refit_tokens = (
+            '"north_wood"',
+            '"river_signal_post"',
+            'for placement_id in ["river_pass_ghoul_grove", "river_pass_hollow_mire"]:',
+            '"southern_ore"',
+            "var day_advance := await _advance_campaign_overworld_day(",
+            'int(refit_ready_snapshot.get("day", 0)) >= 3',
+            "var refit := await _recruit_from_campaign_town(",
+            '"riverwatch_hold"',
+            "var totemist_clear := await _clear_campaign_encounter_to_scene(",
+            '"river_pass_reed_totemists"',
+        )
+        river_refit_positions = [river_refit_body.find(token) for token in river_refit_tokens]
+        ensure(
+            min(river_refit_positions) >= 0 and river_refit_positions == sorted(river_refit_positions),
+            errors,
+            "River Pass full-arc validation must claim its support economy, clear the opening fronts, reach the real Day 3 relief, refit at Riverwatch, then clear the Totemists",
+        )
+        ensure(
+            'SessionState.ensure_active_session().overworld' not in river_refit_body
+            and 'SessionState.ensure_active_session().day' not in river_refit_body,
+            errors,
+            "River Pass full-arc refit must observe and drive public live-shell actions instead of mutating session authority",
+        )
+        for forbidden_token in (
+            '"force_victory"',
+            '"victory" =',
+            "BattleRules.resolve_battle",
+            "ScenarioRules.evaluate",
+        ):
+            ensure(
+                forbidden_token not in river_refit_body,
+                errors,
+                f"River Pass full-arc refit must not force campaign progress via {forbidden_token}",
+            )
+
+    causeway_chapter_match = re.search(
+        r"func _drive_causeway_chapter_to_victory_outcome\(.*?\n(?P<body>.*?)(?=\nfunc _drive_fen_crown_chapter_to_victory_outcome)",
+        harness_text,
+        re.S,
+    )
+    ensure(causeway_chapter_match is not None, errors, "Could not isolate the Causeway full-arc chapter driver")
+    if causeway_chapter_match is not None:
+        causeway_chapter_body = causeway_chapter_match.group("body")
+        causeway_support_tokens = (
+            '{"kind": "resource", "placement_id": "duskfen_peatwax_yard", "step": "pre_outcome_support_site_claimed_duskfen_peatwax_yard"}',
+            '{"kind": "resource", "placement_id": "causeway_fenhound_kennels", "step": "pre_outcome_support_site_claimed_causeway_fenhound_kennels"}',
+            '{"kind": "artifact", "placement_id": "causeway_pennon", "step": "pre_outcome_support_artifact_claimed_causeway_pennon"}',
+        )
+        causeway_support_positions = [causeway_chapter_body.find(token) for token in causeway_support_tokens]
+        ensure(
+            min(causeway_support_positions) >= 0 and causeway_support_positions == sorted(causeway_support_positions),
+            errors,
+            "Causeway full-arc validation must leave the authored staging pocket through Peatwax Yard before routing to the co-located kennels and pennon",
+        )
+        causeway_blackfen_quick_resolve_tokens = (
+            'var town_route := await _route_with_battle_interrupts(',
+            '"%s_blackfen_gate_route" % step_prefix',
+            '"town_assault"',
+            '"blackfen_gate",\n\t\ttrue',
+            'var town_capture := await _play_battle_to_scene(',
+            '"%s_blackfen_gate_battle_progressed" % step_prefix',
+            '"%s_outcome_entered" % step_prefix',
+            "SCENARIO_OUTCOME_SCENE,\n\t\ttrue",
+            "return town_capture",
+        )
+        causeway_blackfen_quick_resolve_positions = [causeway_chapter_body.find(token) for token in causeway_blackfen_quick_resolve_tokens]
+        ensure(
+            min(causeway_blackfen_quick_resolve_positions) >= 0
+            and causeway_blackfen_quick_resolve_positions == sorted(causeway_blackfen_quick_resolve_positions),
+            errors,
+            "Causeway full-arc validation must resolve authored guard battles, require the exact Blackfen town-assault context, and use public confirmed Quick Resolve into the outcome",
+        )
+        ensure(
+            "_recruit_from_campaign_town" not in causeway_chapter_body
+            and causeway_chapter_body.count("_clear_campaign_encounter_to_scene") == 1
+            and '"causeway_reed_camp"' not in causeway_chapter_body
+            and '"causeway_levee_cutters"' not in causeway_chapter_body,
+            errors,
+            "Causeway full-arc validation must not backtrack after the guard-aware hostile-town route has already resolved the authored objective blockers",
+        )
+        for forbidden_token in (
+            "hero_position",
+            "set_active_hero",
+            "is_tile_explored",
+            'flags["',
+            'overworld["',
+        ):
+            ensure(
+                forbidden_token not in causeway_chapter_body,
+                errors,
+                f"Causeway support routing must use public authored target actions instead of bypassing route authority via {forbidden_token}",
+            )
+
+    fen_crown_chapter_match = re.search(
+        r"func _drive_fen_crown_chapter_to_victory_outcome\(.*?\n(?P<body>.*?)(?=\nfunc _recruit_from_campaign_town)",
+        harness_text,
+        re.S,
+    )
+    ensure(fen_crown_chapter_match is not None, errors, "Could not isolate the Fen Crown full-arc chapter driver")
+    if fen_crown_chapter_match is not None:
+        fen_crown_chapter_body = fen_crown_chapter_match.group("body")
+        fen_crown_spell_tokens = (
+            'current_overworld.has_method("validation_cast_overworld_spell")',
+            'current_overworld.call("validation_cast_overworld_spell", "spell_waystride")',
+            "await _settle_frames(6)",
+            "Could not cast Lyra's authored Waystride overworld spell before the final Fen Crown march.",
+            '"%s_final_march_spell_cast" % step_prefix',
+            "var town_route := await _route_with_battle_interrupts(",
+            '"%s_fen_crown_redoubt_route" % step_prefix',
+            '"town_assault"',
+            '"fen_crown_redoubt",\n\t\ttrue',
+            'String(town_battle_snapshot.get("battle_context_type", "")) == "town_assault"',
+        )
+        fen_crown_spell_positions = [fen_crown_chapter_body.find(token) for token in fen_crown_spell_tokens]
+        ensure(
+            min(fen_crown_spell_positions) >= 0 and fen_crown_spell_positions == sorted(fen_crown_spell_positions),
+            errors,
+            "Fen Crown full-arc validation must cast Lyra's authored Waystride, resolve route interrupts, then require the exact final town assault",
+        )
+        ensure(
+            'validation_cast_overworld_spell", "spell_trailglyph"' not in fen_crown_chapter_body,
+            errors,
+            "Fen Crown full-arc validation must not require Trailglyph from Lyra's spellbook",
+        )
+        ensure(
+            '_route_from_overworld_to_scene(current_overworld, "town", "enemy", BATTLE_SCENE, "fen_crown_redoubt")' not in fen_crown_chapter_body,
+            errors,
+            "Fen Crown final march must not mistake an encounter interrupt for the redoubt town assault",
+        )
+
+    generic_pre_assault_match = re.search(
+        r"func _clear_required_encounters_to_overworld\(.*?\n(?P<body>.*?)(?=\nfunc )",
+        harness_text,
+        re.S,
+    )
+    ensure(generic_pre_assault_match is not None, errors, "Could not isolate the generic pre-assault encounter driver")
+    if generic_pre_assault_match is not None:
+        generic_pre_assault_body = generic_pre_assault_match.group("body")
+        generic_causeway_tokens = (
+            '"duskfen_peatwax_yard",',
+            '"pre_outcome_support_site_claimed_duskfen_peatwax_yard"',
+            '"causeway_fenhound_kennels",',
+            '"pre_outcome_support_site_claimed_causeway_fenhound_kennels"',
+            '"causeway_pennon",',
+            '"pre_outcome_support_artifact_claimed_causeway_pennon"',
+        )
+        generic_causeway_positions = [generic_pre_assault_body.find(token) for token in generic_causeway_tokens]
+        ensure(
+            min(generic_causeway_positions) >= 0 and generic_causeway_positions == sorted(generic_causeway_positions),
+            errors,
+            "Generic Causeway pre-assault validation must claim Peatwax Yard before the kennels and pennon",
+        )
+
+    overworld_route_step_match = re.search(
+        r"func _validation_route_step\(.*?\n(?P<body>.*?)(?=\nfunc _first_validation_safe_step)",
+        overworld_text,
+        re.S,
+    )
+    ensure(overworld_route_step_match is not None, errors, "Could not isolate the public overworld validation route step")
+    if overworld_route_step_match is not None:
+        overworld_route_step_body = overworld_route_step_match.group("body")
+        artifact_route_body = overworld_route_step_body.split('\n\t\t\t"artifact":', 1)[1].split("\n\t\t\t_:", 1)[0] if '\n\t\t\t"artifact":' in overworld_route_step_body else ""
+        co_located_artifact_tokens = (
+            'var artifact_context_action_ids := _validation_context_action_ids()',
+            'if artifact_context_action_ids.has("collect_artifact"):',
+            'var artifact_primary_action := _current_primary_action()',
+            'validation_perform_primary_action()',
+            'if String(artifact_primary_action.get("id", "")) == "collect_artifact"',
+            'else validation_perform_context_action("collect_artifact")',
+        )
+        co_located_artifact_positions = [artifact_route_body.find(token) for token in co_located_artifact_tokens]
+        ensure(
+            min(co_located_artifact_positions) >= 0 and co_located_artifact_positions == sorted(co_located_artifact_positions),
+            errors,
+            "Overworld validation routing must use the named public context action when a co-located persistent site owns the primary order",
+        )
+        ensure(
+            '"The artifact cache did not expose recovery as the primary order."' not in artifact_route_body,
+            errors,
+            "Overworld validation routing must not reject an available co-located artifact solely because another valid context action is primary",
+        )
+        for forbidden_token in (
+            '_on_context_action_pressed("collect_artifact")',
+            '_collect_artifact(',
+            'node["collected"] =',
+        ):
+            ensure(
+                forbidden_token not in overworld_route_step_body,
+                errors,
+                f"Co-located artifact validation must retain public action authority instead of bypassing it via {forbidden_token}",
+            )
+        context_signature_match = re.search(
+            r"func _validation_context_action_signature\(\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc _validation_active_town_state)",
+            overworld_text,
+            re.S,
+        )
+        ensure(context_signature_match is not None, errors, "Could not isolate the overworld context-action validation signature")
+        if context_signature_match is not None:
+            context_signature_body = context_signature_match.group("body")
+            artifact_node_loop_body = context_signature_body.split('for node_value in _session.overworld.get("artifact_nodes", []):', 1)[1] if 'for node_value in _session.overworld.get("artifact_nodes", []):' in context_signature_body else ""
+            artifact_signature_tokens = (
+                '"placement_id": String(node.get("placement_id", ""))',
+                '"artifact_id": String(node.get("artifact_id", ""))',
+                '"collected": bool(node.get("collected", false))',
+                '"collected_by_faction_id": String(node.get("collected_by_faction_id", ""))',
+                '"collected_day": max(0, int(node.get("collected_day", 0)))',
+                '"artifact_nodes": artifact_nodes',
+                '"commander_artifacts": _validation_commander_state().get("artifacts", {}).duplicate(true)',
+            )
+            artifact_signature_positions = [artifact_node_loop_body.find(token) for token in artifact_signature_tokens]
+            ensure(
+                'var artifact_nodes := []' in context_signature_body
+                and context_signature_body.count('for node_value in _session.overworld.get("artifact_nodes", []):') == 1
+                and min(artifact_signature_positions) >= 0
+                and artifact_signature_positions == sorted(artifact_signature_positions),
+                errors,
+                "Overworld context-action validation must detach complete artifact node and commander state before comparing public action consequences",
+            )
+
+    campaign_chapter_match = re.search(
+        r"func _drive_campaign_chapter_to_victory_outcome\(.*?\n(?P<body>.*?)(?=\nfunc _prepare_campaign_town)",
+        harness_text,
+        re.S,
+    )
+    ensure(campaign_chapter_match is not None, errors, "Could not isolate the full campaign chapter driver")
+    if campaign_chapter_match is not None:
+        campaign_chapter_body = campaign_chapter_match.group("body")
+        assault_route_tokens = (
+            '"%s_support_artifact_claimed_bastion_vault" % step_prefix',
+            "var battle_route := await _route_with_battle_interrupts(",
+            '"%s_town_assault_route" % step_prefix',
+            '"town_assault"',
+            'var pre_assault_town_owner := String(',
+            '"pre_action_town_owner",',
+            '_dictionary_value(assault_route.get("target", {})).get("owner", "")',
+            'pre_assault_town_owner == "enemy"',
+            'String(battle_snapshot.get("battle_context_type", "")) == "town_assault"',
+            'var post_assault_destination := OVERWORLD_SCENE if scenario_id == "river-pass" else SCENARIO_OUTCOME_SCENE',
+            "var assault_resolution := await _play_battle_to_scene(",
+            "var counterstroke_route := await _route_with_battle_interrupts(",
+            '"duskfen_counterstroke"',
+            '"%s_counterstroke" % step_prefix',
+            '"River Pass counterstroke did not enter its shipped battle after Duskfen fell."',
+            'var counterstroke_battle = counterstroke_route.get("scene", null)',
+            '"River Pass counterstroke route completed without a battle scene."',
+            '"%s_counterstroke_battle_progressed" % step_prefix',
+            '"%s_outcome_entered" % step_prefix,\n\t\tSCENARIO_OUTCOME_SCENE,\n\t\ttrue',
+            "return counterstroke_resolution",
+        )
+        assault_route_positions = [campaign_chapter_body.find(token) for token in assault_route_tokens]
+        ensure(
+            min(assault_route_positions) >= 0 and assault_route_positions == sorted(assault_route_positions),
+            errors,
+            "Full campaign chapter routing must resolve live battle interrupts before proving and entering the hostile-town assault",
+        )
+        ensure(
+            campaign_chapter_body.count("await _route_with_battle_interrupts(") == 2,
+            errors,
+            "Full campaign chapter must use exactly one hostile-town route and one River Pass counterstroke route",
+        )
+        ensure(
+            campaign_chapter_body.count('_dictionary_value(assault_route.get("target", {})).get("owner", "")') == 1,
+            errors,
+            "Full campaign chapter must fall back exactly once to the detached pre-move target owner for arrival-triggered assault",
+        )
+        ensure(
+            'post_action_town_state' not in campaign_chapter_body.split("var pre_assault_town_owner := String(", 1)[1].split("var battle_snapshot", 1)[0],
+            errors,
+            "Full campaign chapter ownership proof must not substitute post-action town state for pre-battle ownership",
+        )
+        for forbidden_token in (
+            'counterstroke_overworld.call("validation_end_turn")',
+            'session.flags["pass_cleared"] =',
+            'session.overworld["resolved_encounters"]',
+        ):
+            ensure(
+                forbidden_token not in campaign_chapter_body,
+                errors,
+                f"Full campaign chapter must reach outcome from authored counterstroke completion without bypassing authority via {forbidden_token}",
+            )
+
+    battle_play_match = re.search(
+        r"func _play_battle_to_scene\(.*?\n(?P<body>.*?)(?=\nfunc _parse_user_args)",
+        harness_text,
+        re.S,
+    )
+    ensure(battle_play_match is not None, errors, "Could not isolate the live battle route driver")
+    if battle_play_match is not None:
+        battle_play_body = battle_play_match.group("body")
+        quick_resolve_tokens = (
+            "if use_quick_resolve:",
+            'current_battle.call("validation_request_quick_resolve_confirmation")',
+            'bool(quick_resolve_request.get("pending", false))',
+            'current_battle.call("validation_confirm_quick_resolve_confirmation")',
+            'bool(quick_resolve_result.get("performed", false))',
+            "await _settle_frames(6)",
+            "var quick_resolve_destination = await _wait_for_scene(destination_scene, 10000)",
+            "_capture_step(destination_step_id, quick_resolve_destination_snapshot)",
+            '"scene": quick_resolve_destination,',
+        )
+        quick_resolve_positions = [battle_play_body.find(token) for token in quick_resolve_tokens]
+        ensure(
+            min(quick_resolve_positions) >= 0 and quick_resolve_positions == sorted(quick_resolve_positions),
+            errors,
+            "Campaign battle driver must use the public confirmed Quick Resolve path in exact order when requested",
+        )
+        for forbidden_token in (
+            "BattleAutoResolveRules",
+            "BattleRules.resolve",
+            'session.scenario_status = "victory"',
+            'session.game_state = "overworld"',
+        ):
+            ensure(
+                forbidden_token not in battle_play_body,
+                errors,
+                f"Campaign battle driver must not bypass shipped battle authority via {forbidden_token}",
+            )
+
     runner_text = RUN_LIVE_FLOW_HARNESS_PATH.read_text(encoding="utf-8")
     ensure(
         'DEFAULT_FLOW = "boot_to_skirmish_resolved_outcome"' in runner_text,
@@ -28871,6 +29677,39 @@ def validate_live_client_harness(errors: list[str]) -> None:
         '"artifact"',
     ):
         ensure(required_token in overworld_script_text, errors, f"OverworldShell.gd is missing required live-harness token: {required_token}")
+
+    route_step_match = re.search(
+        r"func _validation_route_step\(.*?\n(?P<body>.*?)(?=\nfunc )",
+        overworld_script_text,
+        re.S,
+    )
+    ensure(route_step_match is not None, errors, "Could not isolate the overworld validation route step helper")
+    if route_step_match is not None:
+        route_step_body = route_step_match.group("body")
+        confirmed_end_turn_tokens = (
+            'if path.size() > 1 and int(movement.get("current", 0)) <= 0:',
+            "var end_turn_result: Dictionary = validation_end_turn()",
+            '"ok": bool(end_turn_result.get("ok", false))',
+            '"action": "end_turn_for_route"',
+            '"end_turn_result": end_turn_result',
+        )
+        confirmed_end_turn_positions = [route_step_body.find(token) for token in confirmed_end_turn_tokens]
+        ensure(
+            min(confirmed_end_turn_positions) >= 0
+            and confirmed_end_turn_positions == sorted(confirmed_end_turn_positions),
+            errors,
+            "Overworld validation routing must use the confirmation-aware public end-turn helper and expose its exact result",
+        )
+        ensure(
+            route_step_body.count("validation_end_turn()") == 1,
+            errors,
+            "Overworld validation routing must invoke the confirmation-aware end-turn helper exactly once",
+        )
+        ensure(
+            "_on_end_turn_pressed()" not in route_step_body,
+            errors,
+            "Overworld validation routing must not stop at the confirmation-request-only end-turn path",
+        )
 
     town_script_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
@@ -30257,6 +31096,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     tactical_report_path = ROOT / "tests/battle_autoplay_tactical_order_report.gd"
     tactical_scene_path = ROOT / "tests/battle_autoplay_tactical_order_report.tscn"
     withdrawal_report_path = ROOT / "tests/battle_ai_withdrawal_decision_report.gd"
+    battle_rules_text = BATTLE_RULES_PATH.read_text(encoding="utf-8") if BATTLE_RULES_PATH.exists() else ""
     withdrawal_scene_path = ROOT / "tests/battle_ai_withdrawal_decision_report.tscn"
     doc_path = ROOT / "docs/battle-autoplay-combat-feel-diagnostics-report.md"
     calibration_doc_path = ROOT / "docs/battle-autoplay-combat-balance-calibration-report.md"
@@ -31101,11 +31941,49 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "BATTLE_AI_WITHDRAWAL_DECISION_REPORT",
             "battle_ai_enemy_withdrawal_decision_v1",
             "enemy_retreat",
+            "_validate_runtime_enemy_surrender_victory_flags",
+            'session.battle["encounter_id"] = "encounter_gate_marshals"',
+            'session.flags.get("gate_marshals_broken", false)',
+            '"withdrawal_fixture" not in session.overworld.get("resolved_encounters", [])',
             "battle_exit_animation_snapshot",
             "locked withdrawal",
             "get_tree().quit(1)",
         ):
             ensure(required_token in withdrawal_report_text, errors, f"Battle AI withdrawal report is missing token: {required_token}")
+        for required_token in (
+            "static func _apply_encounter_victory_flags(",
+            "ContentService.get_encounter(String(session.battle.get(\"encounter_id\", \"\")))",
+            "session.flags[String(flag_value)] = true",
+        ):
+            ensure(required_token in battle_rules_text, errors, f"BattleRules encounter-withdrawal victory flag handling is missing token: {required_token}")
+        ensure(
+            battle_rules_text.count("_apply_encounter_victory_flags(") == 3,
+            errors,
+            "BattleRules must apply the shared encounter victory flags from exactly ordinary victory and enemy withdrawal",
+        )
+        enemy_withdrawal_match = re.search(
+            r"static func _finalize_enemy_withdrawal\(.*?\n(?P<body>.*?)(?=\nstatic func _apply_encounter_victory_flags)",
+            battle_rules_text,
+            re.S,
+        )
+        ensure(enemy_withdrawal_match is not None, errors, "Could not isolate BattleRules enemy-withdrawal finalization")
+        if enemy_withdrawal_match is not None:
+            enemy_withdrawal_body = enemy_withdrawal_match.group("body")
+            withdrawal_tokens = (
+                "_sync_enemy_force_from_battle(session, true)",
+                "HeroCommandRulesScript.commit_active_hero(session)",
+                "OverworldRulesScript.refresh_fog_of_war(session)",
+                "_apply_encounter_victory_flags(",
+                'session.flags["last_battle_outcome"] = outcome_id',
+                "session.battle = {}",
+                "ScenarioRulesScript.evaluate_session(session)",
+            )
+            withdrawal_positions = [enemy_withdrawal_body.find(token) for token in withdrawal_tokens]
+            ensure(
+                min(withdrawal_positions) >= 0 and withdrawal_positions == sorted(withdrawal_positions),
+                errors,
+                "Enemy withdrawal must resolve the encounter, apply authored victory flags, record the outcome, then evaluate scenario completion in order",
+            )
     if withdrawal_scene_path.exists():
         withdrawal_scene_text = withdrawal_scene_path.read_text(encoding="utf-8")
         ensure("battle_ai_withdrawal_decision_report.gd" in withdrawal_scene_text, errors, "Battle AI withdrawal scene is not wired to its script.")

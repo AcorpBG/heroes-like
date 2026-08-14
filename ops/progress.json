@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the exact current-HEAD 100-ordinal Medium long-run matrix. All setup and row health gates pass, and production-equivalent aggregation is blocker-free for behavior, integrity, reachability, and active pressure. Generated topology/contact/pacing, strategic-AI production readiness, Native RMG parity, manual play, and overall release readiness remain open.",
+  "currentNotes": "The bounded Reedfall campaign corrections are complete. River Pass uses the first continuous 34/34 sequential 34/8 shield, Causeway uses the first stable ten-field/32-garrison split with shared ordinary/withdrawal victory flags, and Fen Crown uses the first 34/34 final-march reserve of 14 Guards. The full 121-step routed arc completes all three chapters through public town, route, battle, Waystride, save/resume, finale, and campaign-browser paths with every enemy force unchanged. Active breadth is 59/59 with clear signature 829808c9; compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. No manual tactical-play, packaged campaign interaction, controller, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claim is made.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "strategic-ai-medium-long-run-seed-matrix-10184",
-  "currentSliceId": "strategic-ai-medium-long-run-seed-matrix-10184",
-  "currentSliceNotes": "Exact ordinals 1-100 at a 56-turn target are complete through method-equivalent independent rows. Select the next tracker-approved slice; ordinals 95/98 topology-contact pacing and broader release gaps remain open.",
+  "currentSlice": "campaign-fen-crown-final-march-veteran-reserve-10184",
+  "currentSliceId": "campaign-fen-crown-final-march-veteran-reserve-10184",
+  "currentSliceNotes": "Completed with the exact 14-Guard first 34/34 reserve, full routed three-chapter arc, focused and compatibility gates, and bounded Linux/Windows export-startup evidence. Select the next tracker-approved slice.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Strategic AI Medium Long-Run Seed Matrix",
-  "currentSliceUpdatedAt": "2026-08-13T17:58:34Z",
+  "currentSliceTitle": "Campaign Fen Crown Final March Veteran Reserve",
+  "currentSliceUpdatedAt": "2026-08-14T03:57:32Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -78637,6 +78637,72 @@
       "notes": "EnemyAdventureRules now separates exact ordered detached target descriptors from fresh origin-specific projection, and EnemyTurnRules reuses descriptors only within one best-open-spawn-point sweep with entry, exit, no-points, mutation, and next-sweep invalidation proved. Independent legacy parity covers all ten target families, known and unscouted targets, duplicate seen timing, guarded and unreachable targets, multi-origin ordering, and exact selected task/spawn payloads. Ordinal-100 retains signature 6e893020, 36 turns, day-37 defeat, 172 events, two commander tasks, and zero integrity or unreachable-target failures. Five descriptor enumerations serve thirteen origin projections with eight reuses; row, maximum-turn, planner, spawn, and fresh-discovery timings all improve. Compatibility, core, repository, Python, JSON, diff, editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates passed. No packaged strategic-AI interaction, controller, AT-SPI/UIA, native hardware, Native RMG parity, signing/publication, whole-game, or whole-release claim is made.",
       "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice; broader strategic-AI breadth, faction balance, accessibility certification, content/performance, signing/publication, Native RMG parity, native Windows certification, and overall release readiness remain open.",
       "result": {"ordinal_100_signature": "6e893020", "turns_completed": 36, "final_day": 37, "final_scenario_status": "defeat", "enemy_activity_event_count": 172, "commander_task_planned_count": 2, "target_integrity_violation_count": 0, "unreachable_active_target_total": 0, "target_descriptor_enumeration_count": 5, "target_descriptor_reuse_count": 8, "target_descriptor_projection_count": 13, "descriptor_enumeration_elimination_pct": 61.5, "row_runtime_msec": 205433, "max_turn_runtime_msec": 8992, "task_plan_runtime_msec": 26701, "spawn_loop_runtime_msec": 14297, "fresh_target_candidates_msec": 4997, "linux_export_headless_startup_passed": true, "windows_export_fresh_wine_startup_passed": true, "packaged_strategic_ai_interaction_tested": false}
+    },
+    {
+      "id": "campaign-river-pass-day-three-refit-pressure-window-10184",
+      "title": "Campaign River Pass Day 3 Refit Pressure and Relief Window",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/economy-capture-resource-loop-proof-plan.md", "docs/economy-capture-resource-loop-live-proof-report.md"],
+      "purpose": "Keep River Pass's authored Day 3 refit and required post-refit raid/town approach usable by widening only its local defeat boundary and strengthening only its existing relief/recall recruit grants, while preserving encounter armies, global AI/combat rules, recruitment costs, deadline, and other scenarios.",
+      "implementationTargets": ["content/scenarios.json", "scenes/overworld/OverworldShell.gd", "scripts/autoload/ContentService.gd", "scripts/autoload/LiveValidationHarness.gd", "tests/scenario_deadline_loss_variety_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "testOwners": ["tests/scenario_deadline_loss_variety_report.gd", "scripts/autoload/LiveValidationHarness.gd", "tests/battle_autoplay_active_scenario_breadth_report.gd", "tests/validate_repo.py"],
+      "baseline": {"head": "e5c8a5498a92b37fc71637b8180ffb42a8bf6b06", "scenario_id": "river-pass", "pressure_loss_threshold": 8, "day_deadline": 9, "observed_day3_pressure": 9, "observed_day3_status": "defeat", "day3_relief_gold": 250, "day3_relief_river_guard": 3, "day3_bell_recall_river_guard": 2, "day3_bell_recall_ember_archer": 1, "pre_refit_totemist_live_result": "defeat"},
+      "completionCriteria": ["River Pass alone uses enemy-pressure defeat threshold 15 with an exact matching player-facing objective label while retaining the Day 9 deadline", "River Pass alone grants exactly 20 River Guards from the Day 3 relief and exactly 2 River Guards/8 Ember Archers from the existing two-raid bell recall, yielding the proven 34/8 field army after the temporary Fordhook cadets absorb the Totemist loss", "Focused live rules prove pressure 14 remains in progress and pressure 15 produces defeat, and three live trajectories plus the corrected 34-seed sequential Quick Resolve control reproduce 33/8 defeats before the first continuous all-victory 34/8 raid-plus-town-plus-counterstroke plateau", "The live campaign route claims Free Company, north wood, signal post, clears Ghoul Grove and Hollow Mire, claims southern ore, reaches the real Day 3 relief and bell recall, refits at Riverwatch, clears the Totemist and intervening raid, captures Duskfen, and clears the authored counterstroke without forced outcomes or direct session mutation", "The full authored River Pass, Glass Coast, and Ashen Crown campaign arc completes through real route transitions and the public confirmed Quick Resolve path for required post-refit battles, without a manual tactical-play claim", "Active battle breadth remains clear and deadline, core, repository, JSON, editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass"],
+      "nonGoals": ["encounter army, unit, hero, spell, battle math, battle AI, or autoresolve tuning", "global pressure, strategic AI, resource or recruitment costs, save schema, route consequence, other-scenario, generated-map, Native RMG, asset, or project-setting changes", "broad campaign balance, manual-play certification, platform input parity, signing/publication, whole-game, or release-readiness claims"],
+      "createdAt": "2026-08-13T19:06:29Z",
+      "startedAt": "2026-08-13T19:06:29Z",
+      "updatedAt": "2026-08-14T03:57:32Z",
+      "notes": "Threshold 8 defeated the intended route at Day 3 pressure 9; threshold 10 allowed the refit/Totemist victory but defeated at Day 4 pressure 14. Three live trajectories and the corrected 34-seed sequential control identify 34/8 as the first continuous all-victory shield. The authoritative 121-step routed arc now clears River Pass through refit, Totemists, live raid, Duskfen assault, counterstroke, outcome save/resume, and chapter handoff, then completes the remaining campaign. Focused, active breadth, compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
+      "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null,
+      "result": {"pressure_threshold": 15, "relief_river_guards": 20, "recall_river_guards": 2, "recall_ember_archers": 8, "post_totemist_river_guards": 34, "post_totemist_ember_archers": 8, "sequential_screen_sample_count": 34, "full_arc_step_count": 121, "full_arc_ok": true}
+    },
+    {
+      "id": "campaign-causeway-veteran-field-and-staging-defense-10184",
+      "title": "Campaign Causeway Veteran Field and Staging Defense",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/economy-capture-resource-loop-proof-plan.md", "docs/economy-capture-resource-loop-live-proof-report.md"],
+      "purpose": "Resolve Causeway Stand's independent Day 1 field-army versus Duskfen-defense conflict through the existing scenario-local veteran supply train while preserving the authored base staging garrison, encounter armies, and global rules.",
+      "implementationTargets": ["content/scenarios.json", "scripts/core/ScenarioScriptRules.gd", "scripts/core/BattleRules.gd", "scripts/autoload/ContentService.gd", "scripts/autoload/LiveValidationHarness.gd", "tests/scenario_deadline_loss_variety_report.gd", "tests/battle_ai_withdrawal_decision_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "testOwners": ["scripts/autoload/LiveValidationHarness.gd", "tests/scenario_deadline_loss_variety_report.gd", "tests/battle_ai_withdrawal_decision_report.gd", "tests/battle_autoplay_active_scenario_breadth_report.gd", "tests/validate_repo.py"],
+      "baseline": {"head": "e5c8a5498a92b37fc71637b8180ffb42a8bf6b06", "scenario_id": "causeway-stand", "veteran_supply_train_river_guard": 2, "duskfen_garrison_unit_id": "unit_bog_brute", "duskfen_garrison_count": 5, "observed_day1_route_result_with_garrison_preserved": "defeat_at_reed_totemists", "observed_day2_result_after_full_garrison_transfer": "duskfen_captured_and_scenario_defeat"},
+      "completionCriteria": ["Causeway Stand alone changes the existing veteran_supply_train to exactly ten field-recruit River Guards and exactly 32 garrison River Guards, the first stable all-victory screened values", "Duskfen retains exactly five authored base Bog Brutes and receives the veteran garrison through live scenario rules before the scripted Day 2 counterraid", "Exact current-snapshot controls reproduce the field defeat below the Totemist boundary, prove four locally clears it but leaves the real 14-Guard Blackfen assault defeated, prove the 33-seed Blackfen screen still loses through 17 and at non-monotonic 19 while 20 through 25 all win, reproduce live Duskfen defense defeats at 25 and 26, and prove the 34-seed defense screen first wins every seed at 32", "Ordinary victory and decisive enemy withdrawal share the exact authored encounter-victory flag application before scenario evaluation, with a direct Gate Marshals surrender proving resolved placement, gate_marshals_broken, cleared battle state, and victory", "The real full campaign arc captures Blackfen and completes Causeway through public route, town, battle, save/resume, daybreak, and outcome behavior while preserving River Pass and the following chapter", "Active battle breadth, deadline/core compatibility, repository, JSON, editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass"],
+      "nonGoals": ["Duskfen base-garrison transfer, reduction, replacement, direct session mutation, or counterraid weakening", "encounter army, support-site, unit, hero, spell, battle math, autoresolve, strategic-AI, recruitment-cost, save-schema, other-scenario, generated-map, Native RMG, asset, or project-setting changes", "manual tactical-play, broad campaign balance, platform input parity, signing/publication, whole-game, or release-readiness claims"],
+      "createdAt": "2026-08-13T23:44:17Z",
+      "startedAt": "2026-08-13T23:44:17Z",
+      "updatedAt": "2026-08-14T03:57:32Z",
+      "notes": "The exact ten-field/32-garrison Causeway correction preserves Duskfen's five Bog Brutes, and shared ordinary/withdrawal victory flags make Gate Marshals surrender authoritative. The 121-step routed arc clears three live route interrupts, Blackfen, outcome save/resume, and chapter handoff before completing Fen Crown. Focused withdrawal, active breadth, core, static/editor, and bounded Linux/Windows startup gates pass.",
+      "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null,
+      "result": {"field_river_guards": 10, "base_duskfen_bog_brutes": 5, "garrison_river_guards": 32, "gate_marshals_surrender_victory_flags": true, "full_arc_step_count": 121, "full_arc_ok": true}
+    },
+    {
+      "id": "campaign-fen-crown-final-march-veteran-reserve-10184",
+      "title": "Campaign Fen Crown Final March Veteran Reserve",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/economy-capture-resource-loop-proof-plan.md", "docs/economy-capture-resource-loop-live-proof-report.md"],
+      "purpose": "Keep the final Reedfall chapter playable through its real two-raid final march and redoubt assault by adding the smallest screened River Guard reserve through an existing Fen Crown scenario-local post-objective hook and normal town recruitment path.",
+      "implementationTargets": ["content/scenarios.json", "scripts/autoload/ContentService.gd", "scripts/autoload/LiveValidationHarness.gd", "tests/scenario_deadline_loss_variety_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "testOwners": ["scripts/autoload/LiveValidationHarness.gd", "tests/scenario_deadline_loss_variety_report.gd", "tests/battle_autoplay_active_scenario_breadth_report.gd", "tests/validate_repo.py"],
+      "baseline": {"head": "e5c8a5498a92b37fc71637b8180ffb42a8bf6b06", "scenario_id": "fen-crown", "final_march_entry_army_count": 24, "first_interrupt_survivor_count": 10, "second_interrupt_survivor_count": 3, "redoubt_result": "defeat", "final_scenario_status": "defeat"},
+      "completionCriteria": ["An existing Fen Crown post-objective hook adds exactly the first screened stable River Guard reserve to captured Blackfen bridgehead recruits without changing any enemy force", "The exact live two-raid-plus-redoubt sequence and a bounded multi-seed Quick Resolve screen reproduce the zero-reserve defeat and identify the smallest continuous all-victory reserve plateau", "The reserve is collected through the live captured-town recruitment path after Crown Watch and before the final march, with Waystride and both live raid interrupts retained", "The real full three-chapter campaign arc completes through public route, town, battle, save/resume, finale outcome, and completed campaign browser paths", "Active battle breadth, deadline/withdrawal/core compatibility, repository, JSON, editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass"],
+      "nonGoals": ["enemy raid or redoubt weakening/removal/bypass", "unit, hero, spell, battle math, autoresolve, strategic-AI, recruitment-cost, save-schema, other-scenario, generated-map, Native RMG, asset, or project-setting changes", "manual tactical-play, broad campaign balance, platform input parity, signing/publication, whole-game, or release-readiness claims"],
+      "createdAt": "2026-08-14T03:11:00Z",
+      "startedAt": "2026-08-14T03:11:00Z",
+      "updatedAt": "2026-08-14T03:57:32Z",
+      "notes": "Zero reserve reproduces the live 10-to-3-Guard redoubt defeat. Thirteen reserve Guards still lose seed triplets 12 and 17 in the 34-seed sequential screen; 14 is the first 34/34 all-victory plateau. The 121-step routed arc collects exactly 14 Guards through crown_archive_falls at captured Blackfen after break_crown_watch, casts Waystride, resolves both live raid interrupts, wins the unchanged redoubt assault, saves/resumes the finale, and reaches the completed campaign browser. Focused, 59/59 active breadth, withdrawal/core compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
+      "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null,
+      "result": {"reserve_river_guards": 14, "first_observed_victory_reserve": 13, "first_all_victory_screened_reserve": 14, "sequential_screen_sample_count": 34, "waystride_cast": true, "raid_interrupt_count": 2, "redoubt_result": "victory", "final_scenario_status": "victory", "full_arc_step_count": 121, "campaign_browser_completed": true, "active_breadth_completed": 59, "active_breadth_queue_signature": "829808c9", "linux_export_headless_startup_passed": true, "windows_export_fresh_wine_startup_passed": true}
     }
   ],
   "project": "heroes-like",
@@ -79078,7 +79144,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "strategic_ai_known_world_target_catalog_projection_reuse_completed",
+  "result": "campaign_fen_crown_final_march_veteran_reserve_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -79179,9 +79245,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The strategic-AI known-world target catalog projection reuse slice is complete. Exact detached discovery is reused only within one refresh while every source projection and later refresh remain fresh; focused parity, ordinal-100 materiality, compatibility, static, Linux, and Windows startup gates pass. Select the next tracker-approved slice; broader strategic-AI breadth and overall release readiness remain open.",
+  "summary": "The bounded Reedfall campaign corrections are complete: River Pass 34/8, Causeway ten-field/32-garrison, and Fen Crown 14-reserve values are the first screened stable plateaus; the full 121-step routed arc, focused and compatibility suites, static/editor checks, and bounded Linux/Windows export-startup gates pass. Broader release readiness remains open.",
   "taskId": "10184",
-  "updatedAt": "2026-08-13T09:24:52Z",
+  "updatedAt": "2026-08-14T03:57:32Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
@@ -93029,6 +93095,6 @@
     },
     "remainingWork": "Resolve the next source-owned object materialization gap before 0x4ad3eb: native still serializes 836 objects / 10872 bytes vs H3MapEd 1212 replay objects / 17057 bytes, with final callstream second/unflagged count 154 vs H3MapEd 371 and flagged count 682 vs 925. Focus next on live descriptor producers/raw source-field capture for generic non-type98 pairs, reward/guard wrapper/source-relation caller feed, fallback payload feed, and downstream object caller order. Runtime/native map output remains disabled until final tile/object payload parity is owned."
   },
-  "blockedReason": "",
+  "blockedReason": null,
   "currentBlocker": ""
 }

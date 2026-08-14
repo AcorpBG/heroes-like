@@ -256,6 +256,12 @@ static func _apply_effect(session: SessionStateStoreScript.SessionData, effect: 
 				String(effect.get("placement_id", "")),
 				effect.get("recruits", {})
 			)
+		"town_add_garrison":
+			return _town_add_garrison(
+				session,
+				String(effect.get("placement_id", "")),
+				effect.get("garrison", {})
+			)
 		"add_enemy_pressure":
 			return _add_enemy_pressure(
 				session,
@@ -444,6 +450,29 @@ static func _town_add_recruits(session: SessionStateStoreScript.SessionData, pla
 				"%s receives %s." % [town_label, summary]
 			]
 		}
+	return {"messages": []}
+
+static func _town_add_garrison(session: SessionStateStoreScript.SessionData, placement_id: String, garrison: Variant) -> Dictionary:
+	var town_result = _find_town_result(session, placement_id)
+	if int(town_result.get("index", -1)) < 0 or not (garrison is Dictionary):
+		return {"messages": []}
+
+	var towns = session.overworld.get("towns", [])
+	var town = town_result.get("town", {})
+	var stacks = town.get("garrison", [])
+	var unit_ids = garrison.keys()
+	unit_ids.sort()
+	for unit_id_value in unit_ids:
+		var unit_id := String(unit_id_value)
+		stacks = _overworld_rules()._add_army_stack(stacks, unit_id, int(garrison.get(unit_id_value, 0)))
+	town["garrison"] = stacks
+	towns[int(town_result.get("index", -1))] = town
+	session.overworld["towns"] = towns
+
+	var summary = _describe_recruits(garrison)
+	if summary != "":
+		var town_label = _town_name(town) if _placement_is_visible(session, town) else "A town beyond current scouting"
+		return {"messages": ["%s garrisons %s." % [town_label, summary]]}
 	return {"messages": []}
 
 static func _append_event_log(session: SessionStateStoreScript.SessionData, hook_id: String, messages: Array) -> void:

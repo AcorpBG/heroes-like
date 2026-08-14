@@ -33,14 +33,15 @@
         "defeat_text": "The Mireclaw warhost breaks the pass before Lyra can secure it.",
         "victory": [
           {"id": "claim_duskfen", "label": "Claim Duskfen Bastion", "type": "town_owned_by_player", "placement_id": "duskfen_bastion"},
-          {"id": "clear_blackbranch", "label": "Break the Blackbranch raiders", "type": "flag_true", "flag": "pass_cleared"},
+          {"id": "clear_blackbranch", "label": "Break the Blackbranch raiders", "type": "encounter_resolved", "placement_id": "river_pass_ghoul_grove"},
           {"id": "purge_mire", "label": "Purge the Hollow Mire", "type": "flag_true", "flag": "mire_cleared"},
-          {"id": "break_reed_totemists", "label": "Break the Reed Totemists", "type": "encounter_resolved", "placement_id": "river_pass_reed_totemists"}
+          {"id": "break_reed_totemists", "label": "Break the Reed Totemists", "type": "encounter_resolved", "placement_id": "river_pass_reed_totemists"},
+          {"id": "repulse_duskfen_counterstroke", "label": "Repulse the Duskfen counterstroke", "type": "encounter_resolved", "placement_id": "duskfen_counterstroke"}
         ],
         "defeat": [
           {"id": "hold_riverwatch", "label": "Keep Riverwatch Hold under your banner", "type": "town_not_owned_by_player", "placement_id": "riverwatch_hold"},
           {"id": "lyra_survives", "label": "Lyra must survive the campaign", "type": "session_flag_equals", "flag": "campaign", "value": "defeat"},
-          {"id": "contain_pressure", "label": "Do not let Mireclaw pressure reach 8", "type": "enemy_pressure_at_least", "faction_id": "faction_mireclaw", "threshold": 8},
+          {"id": "contain_pressure", "label": "Do not let Mireclaw pressure reach 15", "type": "enemy_pressure_at_least", "faction_id": "faction_mireclaw", "threshold": 15},
           {"id": "hold_pass_before_daybreak", "label": "Secure the pass before Day 9", "type": "day_at_least", "day": 9}
         ]
       },
@@ -52,6 +53,7 @@
             {"type": "objective_met", "objective_id": "clear_blackbranch"}
           ],
           "effects": [
+            {"type": "set_flag", "flag": "pass_cleared", "value": true},
             {
               "type": "spawn_resource_node",
               "placement": {
@@ -76,7 +78,7 @@
           ],
           "effects": [
             {"type": "add_resources", "resources": {"gold": 250, "wood": 1, "ore": 1}},
-            {"type": "town_add_recruits", "placement_id": "riverwatch_hold", "recruits": {"unit_river_guard": 3}},
+            {"type": "town_add_recruits", "placement_id": "riverwatch_hold", "recruits": {"unit_river_guard": 20}},
             {
               "type": "message",
               "text": "A relief column reaches Riverwatch with pay chests and fresh shield bearers."
@@ -135,7 +137,7 @@
             {"type": "active_raid_count_at_least", "faction_id": "faction_mireclaw", "threshold": 2}
           ],
           "effects": [
-            {"type": "town_add_recruits", "placement_id": "riverwatch_hold", "recruits": {"unit_river_guard": 2, "unit_ember_archer": 1}},
+            {"type": "town_add_recruits", "placement_id": "riverwatch_hold", "recruits": {"unit_river_guard": 2, "unit_ember_archer": 8}},
             {
               "type": "message",
               "text": "Riverwatch rings the basin bells and every free shield along the pass is dragged back onto the walls."
@@ -535,10 +537,11 @@
           ],
           "effects": [
             {"type": "add_resources", "resources": {"gold": 200, "wood": 1}},
-            {"type": "town_add_recruits", "placement_id": "duskfen_staging", "recruits": {"unit_river_guard": 2}},
+            {"type": "town_add_recruits", "placement_id": "duskfen_staging", "recruits": {"unit_river_guard": 10}},
+            {"type": "town_add_garrison", "placement_id": "duskfen_staging", "garrison": {"unit_river_guard": 32}},
             {
               "type": "message",
-              "text": "Veterans from River Pass arrive with repaired wagons and enough supplies to keep the advance moving."
+              "text": "Veterans from River Pass arrive with repaired wagons, reinforcing both Lyra's advance and Duskfen's walls."
             }
           ]
         },
@@ -824,6 +827,7 @@
           ],
           "effects": [
             {"type": "town_add_building", "placement_id": "fen_crown_redoubt", "building_id": "building_starseer_annex"},
+            {"type": "town_add_recruits", "placement_id": "blackfen_bridgehead", "recruits": {"unit_river_guard": 14}},
             {"type": "award_experience", "amount": 120},
             {
               "type": "message",
