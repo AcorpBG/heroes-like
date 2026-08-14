@@ -251,6 +251,8 @@ ANIMATION_VALIDATION_SMOKE_REPORT_DOC_PATH = ROOT / "docs" / "animation-validati
 BATTLE_EVENT_ANIMATION_STATE_REPORT_SCRIPT_PATH = ROOT / "tests" / "battle_event_animation_state_report.gd"
 BATTLE_EVENT_ANIMATION_STATE_REPORT_SCENE_PATH = ROOT / "tests" / "battle_event_animation_state_report.tscn"
 BATTLE_SFX_MANIFEST_PATH = CONTENT_DIR / "battle_sfx_manifest.json"
+BATTLE_VFX_MANIFEST_PATH = CONTENT_DIR / "battle_vfx_manifest.json"
+BATTLE_VFX_ROOT = ROOT / "art" / "battle" / "vfx"
 BATTLE_SFX_GENERATOR_PATH = ROOT / "tools" / "generate_battle_sfx_assets.py"
 BATTLE_SFX_ROOT = ROOT / "art" / "audio" / "runtime" / "battle"
 BATTLE_RUNTIME_SFX_ASSET_LAYER_DOC_PATH = ROOT / "docs" / "battle-runtime-sfx-asset-layer-report.md"
@@ -28331,6 +28333,41 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     ):
         ensure(required_token in content_service_text, errors, f"ContentService.gd is missing unit art token {required_token}")
 
+    ensure(BATTLE_VFX_MANIFEST_PATH.exists(), errors, "battle_vfx_manifest.json is missing")
+    required_battle_vfx_cues = {
+        "vfx_placeholder_projectile_path": ("core_projectile_impact.png", "projectile"),
+        "vfx_placeholder_damage_tick": ("core_projectile_impact.png", "impact"),
+        "vfx_placeholder_melee_arc": ("core_slash_arc.png", "slash"),
+        "vfx_placeholder_retaliation_arc": ("core_slash_arc.png", "slash"),
+        "vfx_placeholder_cast_anchor": ("core_ward_ring.png", "ward"),
+        "vfx_placeholder_status_residue": ("core_ward_ring.png", "ward"),
+        "vfx_placeholder_status_clear": ("core_ward_ring.png", "ward"),
+        "vfx_placeholder_brace_outline": ("core_ward_ring.png", "ward"),
+    }
+    if BATTLE_VFX_MANIFEST_PATH.exists():
+        battle_vfx_manifest = json.loads(BATTLE_VFX_MANIFEST_PATH.read_text(encoding="utf-8"))
+        ensure(battle_vfx_manifest.get("schema_id") == "battle_vfx_manifest_v1", errors, "battle_vfx_manifest.json has the wrong schema")
+        battle_vfx_cues = battle_vfx_manifest.get("cues", {})
+        ensure(isinstance(battle_vfx_cues, dict), errors, "battle_vfx_manifest.json cues must be an object")
+        ensure(set(battle_vfx_cues) == set(required_battle_vfx_cues), errors, "battle_vfx_manifest.json must map exactly the selected eight core Battle cues")
+        observed_vfx_paths = set()
+        for cue_id, (filename, render_mode) in required_battle_vfx_cues.items():
+            cue = battle_vfx_cues.get(cue_id, {}) if isinstance(battle_vfx_cues, dict) else {}
+            ensure(isinstance(cue, dict), errors, f"battle_vfx_manifest.json is missing cue {cue_id}")
+            expected_path = f"res://art/battle/vfx/{filename}"
+            ensure(cue.get("texture_path") == expected_path, errors, f"battle VFX cue {cue_id} must use {expected_path}")
+            ensure(cue.get("render_mode") == render_mode, errors, f"battle VFX cue {cue_id} must use render mode {render_mode}")
+            ensure(float(cue.get("scale", 0.0)) > 0.0, errors, f"battle VFX cue {cue_id} needs a positive scale")
+            observed_vfx_paths.add(expected_path)
+        ensure(len(observed_vfx_paths) == 3, errors, "battle VFX core layer must use exactly three distinct imported textures")
+        for texture_path in sorted(observed_vfx_paths):
+            disk_path = ROOT / texture_path.removeprefix("res://")
+            ensure(disk_path.exists(), errors, f"battle VFX texture is missing: {texture_path}")
+            if disk_path.exists():
+                ensure(png_size(disk_path) == (384, 384), errors, f"battle VFX texture must be 384x384 PNG: {texture_path}")
+                header = disk_path.read_bytes()[:26]
+                ensure(len(header) >= 26 and header[25] in {4, 6}, errors, f"battle VFX texture must retain a PNG alpha channel: {texture_path}")
+
     ensure(BATTLE_SFX_MANIFEST_PATH.exists(), errors, "battle_sfx_manifest.json is missing")
     ensure(BATTLE_SFX_GENERATOR_PATH.exists(), errors, "generate_battle_sfx_assets.py is missing")
     required_battle_audio_ids = (
@@ -28410,8 +28447,10 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "func validation_animation_playback_summary",
         "func validation_cue_playback_summary",
         "func validation_vfx_playback_summary",
+        "func validation_vfx_asset_summary",
         "func validation_audio_playback_summary",
         "func _draw_vfx_cues",
+        "func _draw_imported_vfx_asset",
         "func _vfx_draw_entries",
         "func _register_audio_cue_playback",
         "func _activate_due_audio_cue_playback",
@@ -28419,11 +28458,14 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "func _play_imported_audio_cue",
         "func _play_generated_audio_cue",
         "func _battle_sfx_manifest_cue",
+        "func _battle_vfx_manifest_cue",
+        "func _battle_vfx_texture_for_path",
         "func _audio_mix_admission",
         "func _audio_eviction_candidate_index",
         "func validation_reset_audio_mix",
         "func validation_play_audio_cue",
         "BATTLE_SFX_MANIFEST_PATH",
+        "BATTLE_VFX_MANIFEST_PATH",
         "BATTLE_AUDIO_PRIORITY_VALUES",
         "BATTLE_AUDIO_REDUCED_REPETITION_MAX_ACTIVE_PLAYERS",
         "SettingsService.reduced_repetitive_sounds_enabled",
@@ -28477,6 +28519,17 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "animation_sheet_loaded_count",
     ):
         ensure(required_token in battle_board_text, errors, f"BattleBoardView.gd is missing unit art token {required_token}")
+    draw_block = battle_board_text[battle_board_text.find("func _draw() -> void:"):battle_board_text.find("func _draw_terrain", battle_board_text.find("func _draw() -> void:"))]
+    ensure(draw_block.find("_draw_vfx_cues(hex_layout, stack_cells)") < draw_block.find("_draw_stack_tokens(hex_layout, stack_cells)"), errors, "Battle VFX assets must draw below stack tokens and count labels")
+    imported_draw_block = battle_board_text[battle_board_text.find("func _draw_imported_vfx_asset"):battle_board_text.find("func _vfx_draw_entries", battle_board_text.find("func _draw_imported_vfx_asset"))]
+    for required_token in (
+        "if spec.is_empty():\n\t\treturn false",
+        "if texture == null:\n\t\treturn false",
+        "draw_texture_rect(texture",
+        "draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)",
+        "return true",
+    ):
+        ensure(required_token in imported_draw_block, errors, f"Battle imported VFX draw path is missing fail-closed token {required_token}")
 
     battle_rules_text = BATTLE_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
@@ -28653,6 +28706,22 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "board_playback_lifecycle",
         "board_cue_dispatch",
         "board_vfx_presentation",
+        "_validate_core_vfx_asset_manifest",
+        "_validate_imported_vfx_live_viewports",
+        "OS.get_environment(\"HEROES_BATTLE_VFX_CAPTURE\") == \"1\"",
+        "Vector2i(1280, 720)",
+        "Vector2i(1920, 1080)",
+        "view.queue_redraw()\n\t\tawait get_tree().process_frame",
+        "core_vfx_%dx%d.png",
+        "get_viewport().get_visible_rect().size",
+        "battle_vfx_manifest_v1",
+        "battle vfx mapped cue count",
+        "battle vfx unique texture count",
+        "battle vfx loaded texture count",
+        "death fade procedural fallback",
+        "projectile imported vfx",
+        "melee imported vfx",
+        "status imported vfx",
         "board_audio_playback",
         "board_camera_presentation",
         "battle_exit_animation_snapshot",

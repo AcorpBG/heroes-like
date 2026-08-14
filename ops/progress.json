@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Save-resume commander portrait continuity is complete. The existing Load preview now renders the exact hero id already owned by the selected summary through HeroPortraitView, while save and load authority remains unchanged; select the next source-backed release-readiness slice.",
+  "currentNotes": "Battle core VFX asset adoption is complete. Three original imported textures now render through the exact existing cue records while stack tokens remain on top and the prior procedural paths remain fail-closed fallbacks; select the next source-backed release-readiness slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-save-resume-commander-portrait-continuity-10184",
-  "currentSliceId": "presentation-save-resume-commander-portrait-continuity-10184",
-  "currentSliceNotes": "Completed exact selected-summary portrait continuity across 1280x720, 1920x1080, and compact 1024x600 Load previews, including stale-file hidden fallback and unchanged save-browser authority.",
+  "currentSlice": "presentation-battle-core-vfx-asset-adoption-10184",
+  "currentSliceId": "presentation-battle-core-vfx-asset-adoption-10184",
+  "currentSliceNotes": "Completed exact three-texture/eight-cue Battle VFX adoption with inspected 1280x720 and 1920x1080 rendering, procedural fallback, compatibility, static/editor, and bounded Linux/Windows export-startup gates.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Save Resume Commander Portrait Continuity",
-  "currentSliceUpdatedAt": "2026-08-14T18:20:00Z",
+  "currentSliceTitle": "Battle Core VFX Asset Adoption",
+  "currentSliceUpdatedAt": "2026-08-14T16:28:06Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -78888,6 +78888,29 @@
       "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
       "blockedReason": null,
       "result": {"authored_hero_count": 60, "shared_portrait_component": true, "menu_surface_count": 2, "live_surface_count": 5, "focused_viewports": [[1280, 720], [1920, 1080]], "unknown_enemy_hidden": true, "authored_enemy_refresh_exact": true, "focused_report_passed": true, "menu_portrait_report_passed": true, "town_battle_visual_passed": true, "menu_outcome_visual_passed": true, "active_play_focus_passed": true, "core_passed": true, "repository_validation_passed": true, "editor_parse_passed": true, "linux_export_headless_startup_passed": true, "windows_export_fresh_wine_startup_passed": true}
+    },
+    {
+      "id": "presentation-battle-core-vfx-asset-adoption-10184",
+      "title": "Battle Core VFX Asset Adoption",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/animation-systems-foundation.md", "docs/battle-vfx-cue-presentation-report.md", "AGENTS.md"],
+      "purpose": "Replace the core Battle action cue placeholders with original imported sprite textures while preserving the exact existing event, timing, accessibility, and combat authority.",
+      "implementationTargets": ["art/battle/vfx/core_projectile_impact.png", "art/battle/vfx/core_slash_arc.png", "art/battle/vfx/core_ward_ring.png", "content/battle_vfx_manifest.json", "scenes/battle/BattleBoardView.gd", "tests/battle_event_animation_state_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "testOwners": ["tests/battle_event_animation_state_report.gd", "tests/battle_layout_smoke.tscn", "tests/accessibility_screen_reader_semantics_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/validate_repo.py"],
+      "baseline": {"head": "1739e06aa0f504aada3fca7825947eacfe3ed656", "core_imported_vfx_asset_count": 0, "catalog_final_vfx_import": false, "catalog_renderer_asset_pipeline": false, "core_placeholder_draw_functions": 12},
+      "completionCriteria": ["Three distinct original transparent Battle VFX textures are imported and mapped data-first to the existing core cue ids", "BattleBoardView renders the mapped asset from existing source/target/progress records and falls back to the exact current procedural draw path when a mapping or texture is unavailable", "Projectile/impact, melee/retaliation, and cast/status/cleanse/brace families remain readable at 1280x720 and 1920x1080 without obscuring stack counts or legal-action cues", "Reduced motion, reduced flashes, fast mode, cue ordering, playback duration, camera, audio, battle state, input, and save authority remain exact", "Focused runtime, compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass"],
+      "nonGoals": ["overworld, town, artifact, UI, or broad catalog VFX migration", "combat math, event order/timing, camera, audio, unit animation sheets, spell catalog expansion, particles/shaders, save/schema, AI, balance, map, or Native RMG changes", "packaged Battle interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claims"],
+      "createdAt": "2026-08-14T15:56:31Z",
+      "startedAt": "2026-08-14T15:56:31Z",
+      "updatedAt": "2026-08-14T16:28:06Z",
+      "completedAt": "2026-08-14T16:28:06Z",
+      "notes": "Three original 384x384 alpha textures generated through the built-in image tool now back an exact data-driven eight-cue Battle manifest. BattleBoardView loads each texture lazily, draws imported projectile/impact, slash, and ward families from the unchanged event source/target/progress records, draws VFX below stack tokens/counts, and returns to the existing procedural function whenever a mapping or texture is unavailable. Focused headless runtime proves three loaded textures, eight mappings, live projectile/melee/status/brace assets, death-fade fallback, cue timing, reduced motion, reduced flashes, audio, camera, and battle authority. Inspected Xvfb captures at 1280x720 and 1920x1080 confirm full-window readability. The 1280 routed layout matrix, cue catalog, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass; the Windows PCK contains the manifest and all three imported resources. Broader cue migration, final VFX art, packaged Battle interaction, hardware/accessibility certification, publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null,
+      "result": {"original_texture_count": 3, "mapped_core_cue_count": 8, "focused_headless_passed": true, "xvfb_viewports": [[1280, 720], [1920, 1080]], "procedural_fallback_passed": true, "reduced_motion_and_flash_passed": true, "battle_layout_1280_passed": true, "cue_catalog_passed": true, "accessibility_passed": true, "core_passed": true, "repository_validation_passed": true, "editor_parse_passed": true, "linux_export_headless_startup_passed": true, "windows_export_fresh_wine_startup_passed": true, "windows_pck_vfx_resources_present": true}
     },
     {
       "id": "presentation-save-resume-commander-portrait-continuity-10184",

@@ -83,6 +83,7 @@ const BATTLE_AUDIO_REDUCED_REPETITION_MAX_ACTIVE_PLAYERS := 4
 const BATTLE_AUDIO_REDUCED_REPETITION_COOLDOWN_MULTIPLIER := 2
 const BATTLE_AUDIO_BUS := "Effects"
 const BATTLE_SFX_MANIFEST_PATH := "res://content/battle_sfx_manifest.json"
+const BATTLE_VFX_MANIFEST_PATH := "res://content/battle_vfx_manifest.json"
 const BATTLE_AUDIO_PRIORITY_VALUES := {"low": 1, "normal": 2, "high": 3, "critical": 4}
 const BATTLE_AUDIO_DEFAULT_PRIORITY_CLASS := "normal"
 const BATTLE_AUDIO_DEFAULT_REPEAT_COOLDOWN_MSEC := 80
@@ -112,6 +113,10 @@ var _stack_animation_audio_playback_records: Dictionary = {}
 var _active_audio_players: Array = []
 var _battle_sfx_manifest: Dictionary = {}
 var _battle_sfx_manifest_loaded := false
+var _battle_vfx_manifest: Dictionary = {}
+var _battle_vfx_manifest_loaded := false
+var _battle_vfx_textures: Dictionary = {}
+var _battle_vfx_texture_missing: Dictionary = {}
 var _audio_last_started_msec_by_cue: Dictionary = {}
 var _audio_mix_counters: Dictionary = {
 	"played": 0,
@@ -137,6 +142,7 @@ func _ready() -> void:
 	focus_exited.connect(_on_controller_focus_exited)
 	_configure_battle_board_cursor_semantic_timer()
 	_load_terrain_textures()
+	_load_battle_vfx_manifest()
 
 func _exit_tree() -> void:
 	_cancel_battle_board_cursor_semantic()
@@ -1000,9 +1006,15 @@ func validation_vfx_playback_summary() -> Dictionary:
 	var status_count := 0
 	var impact_count := 0
 	var cast_count := 0
+	var imported_asset_draw_count := 0
+	var procedural_fallback_draw_count := 0
 	for entry in entries:
 		if not (entry is Dictionary):
 			continue
+		if bool(entry.get("asset_loaded", false)):
+			imported_asset_draw_count += 1
+		else:
+			procedural_fallback_draw_count += 1
 		match String(entry.get("kind", "")):
 			"projectile_path":
 				projectile_count += 1
@@ -1018,7 +1030,42 @@ func validation_vfx_playback_summary() -> Dictionary:
 		"status_draw_count": status_count,
 		"impact_draw_count": impact_count,
 		"cast_draw_count": cast_count,
+		"imported_asset_draw_count": imported_asset_draw_count,
+		"procedural_fallback_draw_count": procedural_fallback_draw_count,
+		"vfx_manifest_path": BATTLE_VFX_MANIFEST_PATH,
+		"vfx_manifest_loaded": _battle_vfx_manifest_loaded,
 		"active_draw_entries": entries,
+	}
+
+func validation_vfx_asset_summary() -> Dictionary:
+	_load_battle_vfx_manifest()
+	var cues: Dictionary = _battle_vfx_manifest.get("cues", {}) if _battle_vfx_manifest.get("cues", {}) is Dictionary else {}
+	var cue_ids: Array = cues.keys()
+	cue_ids.sort()
+	var texture_paths: Array = []
+	var loaded_texture_paths: Array = []
+	var missing_texture_paths: Array = []
+	for cue_id_value in cue_ids:
+		var cue: Dictionary = cues.get(cue_id_value, {}) if cues.get(cue_id_value, {}) is Dictionary else {}
+		var texture_path := String(cue.get("texture_path", "")).strip_edges()
+		if texture_path == "" or texture_paths.has(texture_path):
+			continue
+		texture_paths.append(texture_path)
+		if _battle_vfx_texture_for_path(texture_path) != null:
+			loaded_texture_paths.append(texture_path)
+		else:
+			missing_texture_paths.append(texture_path)
+	return {
+		"manifest_path": BATTLE_VFX_MANIFEST_PATH,
+		"manifest_loaded": _battle_vfx_manifest_loaded,
+		"schema_id": String(_battle_vfx_manifest.get("schema_id", "")),
+		"mapped_cue_count": cue_ids.size(),
+		"mapped_cue_ids": cue_ids,
+		"unique_texture_count": texture_paths.size(),
+		"texture_paths": texture_paths,
+		"loaded_texture_count": loaded_texture_paths.size(),
+		"loaded_texture_paths": loaded_texture_paths,
+		"missing_texture_paths": missing_texture_paths,
 	}
 
 func validation_audio_playback_summary() -> Dictionary:
@@ -1456,8 +1503,8 @@ func _draw() -> void:
 	var stack_cells := _stack_cells()
 	_draw_tactical_affordances(hex_layout, stack_cells)
 	_draw_controller_cursor(hex_layout)
-	_draw_stack_tokens(hex_layout, stack_cells)
 	_draw_vfx_cues(hex_layout, stack_cells)
+	_draw_stack_tokens(hex_layout, stack_cells)
 	_draw_turn_strip(field_rect)
 	_draw_footer_line(field_rect)
 
@@ -2295,6 +2342,8 @@ func _draw_vfx_cues(hex_layout: Dictionary, stack_cells: Dictionary) -> void:
 		var center := Vector2(float(entry.get("center_x", end.x)), float(entry.get("center_y", end.y)))
 		var radius := float(entry.get("hex_radius", 12.0))
 		var progress := float(entry.get("progress", 0.0))
+		if _draw_imported_vfx_asset(entry, start, end, center, radius, progress):
+			continue
 		match String(entry.get("kind", "")):
 			"idle_shadow":
 				_draw_idle_shadow_vfx(center, radius, progress)
@@ -2336,6 +2385,42 @@ func _draw_vfx_cues(hex_layout: Dictionary, stack_cells: Dictionary) -> void:
 				_draw_spell_prism_bastion_vfx(center, radius, progress)
 			"spell_command_ward":
 				_draw_spell_command_ward_vfx(center, radius, progress)
+
+func _draw_imported_vfx_asset(entry: Dictionary, start: Vector2, end: Vector2, center: Vector2, radius: float, progress: float) -> bool:
+	var cue_id := String(entry.get("cue_id", ""))
+	var spec := _battle_vfx_manifest_cue(cue_id)
+	if spec.is_empty():
+		return false
+	var texture_path := String(spec.get("texture_path", "")).strip_edges()
+	var texture: Texture2D = _battle_vfx_texture_for_path(texture_path) as Texture2D
+	if texture == null:
+		return false
+	var render_mode := String(spec.get("render_mode", ""))
+	var draw_center := center
+	var rotation := deg_to_rad(float(spec.get("base_rotation_degrees", 0.0)))
+	match render_mode:
+		"projectile":
+			if start.distance_to(end) > 1.0:
+				var direction := (end - start).normalized()
+				var head := start.lerp(end, clampf(progress, 0.08, 0.96))
+				draw_center = head - direction * radius * 0.16
+				rotation += direction.angle()
+		"slash":
+			if start.distance_to(end) > 1.0:
+				draw_center = start.lerp(end, 0.52)
+				rotation += (end - start).angle()
+		"impact":
+			rotation += progress * TAU * 0.10
+		"ward":
+			rotation += progress * TAU * 0.08
+		_:
+			return false
+	var draw_size := radius * float(spec.get("scale", 1.0))
+	var alpha := clampf(0.82 - progress * 0.30, 0.42, 0.82)
+	draw_set_transform(draw_center, rotation, Vector2.ONE)
+	draw_texture_rect(texture, Rect2(Vector2(-draw_size, -draw_size) * 0.5, Vector2(draw_size, draw_size)), false, Color(1.0, 1.0, 1.0, alpha))
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	return true
 
 func _vfx_draw_entries(hex_layout: Dictionary, stack_cells: Dictionary) -> Array:
 	var entries: Array = []
@@ -2383,6 +2468,9 @@ func _vfx_draw_entries(hex_layout: Dictionary, stack_cells: Dictionary) -> Array
 				center = source_center.lerp(target_center, progress)
 			elif source_id != "" and stack_cells.has(source_id):
 				start = source_center
+			var asset_spec := _battle_vfx_manifest_cue(cue_id)
+			var asset_path := String(asset_spec.get("texture_path", "")).strip_edges()
+			var asset_loaded := asset_path != "" and _battle_vfx_texture_for_path(asset_path) != null
 			entries.append({
 				"cue_id": cue_id,
 				"kind": kind,
@@ -2405,6 +2493,9 @@ func _vfx_draw_entries(hex_layout: Dictionary, stack_cells: Dictionary) -> Array
 				"center_y": snappedf(center.y, 0.01),
 				"hex_radius": snappedf(radius, 0.01),
 				"progress": snappedf(progress, 0.001),
+				"asset_path": asset_path,
+				"asset_render_mode": String(asset_spec.get("render_mode", "")),
+				"asset_loaded": asset_loaded,
 			})
 	return entries
 
@@ -2935,6 +3026,43 @@ func _battle_sfx_manifest_cue(audio_id: String) -> Dictionary:
 	var cues: Dictionary = _battle_sfx_manifest.get("cues", {}) if _battle_sfx_manifest.get("cues", {}) is Dictionary else {}
 	var cue: Dictionary = cues.get(audio_id, {}) if cues.get(audio_id, {}) is Dictionary else {}
 	return cue.duplicate(true)
+
+func _battle_vfx_manifest_cue(cue_id: String) -> Dictionary:
+	_load_battle_vfx_manifest()
+	var cues: Dictionary = _battle_vfx_manifest.get("cues", {}) if _battle_vfx_manifest.get("cues", {}) is Dictionary else {}
+	var cue: Dictionary = cues.get(cue_id, {}) if cues.get(cue_id, {}) is Dictionary else {}
+	return cue.duplicate(true)
+
+func _load_battle_vfx_manifest() -> void:
+	if _battle_vfx_manifest_loaded:
+		return
+	_battle_vfx_manifest_loaded = true
+	_battle_vfx_manifest = {}
+	_battle_vfx_textures.clear()
+	_battle_vfx_texture_missing.clear()
+	if not FileAccess.file_exists(BATTLE_VFX_MANIFEST_PATH):
+		return
+	var text := FileAccess.get_file_as_string(BATTLE_VFX_MANIFEST_PATH)
+	if text.strip_edges() == "":
+		return
+	var parsed = JSON.parse_string(text)
+	if parsed is Dictionary:
+		_battle_vfx_manifest = parsed
+
+func _battle_vfx_texture_for_path(texture_path: String):
+	if texture_path == "" or _battle_vfx_texture_missing.has(texture_path):
+		return null
+	if _battle_vfx_textures.has(texture_path):
+		return _battle_vfx_textures.get(texture_path)
+	if not ResourceLoader.exists(texture_path):
+		_battle_vfx_texture_missing[texture_path] = true
+		return null
+	var loaded = load(texture_path)
+	if loaded is Texture2D:
+		_battle_vfx_textures[texture_path] = loaded
+		return loaded
+	_battle_vfx_texture_missing[texture_path] = true
+	return null
 
 func _load_battle_sfx_manifest() -> void:
 	if _battle_sfx_manifest_loaded:

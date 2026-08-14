@@ -1,0 +1,53 @@
+{
+  "schema_id": "battle_vfx_manifest_v1",
+  "cues": {
+    "vfx_placeholder_projectile_path": {
+      "texture_path": "res://art/battle/vfx/core_projectile_impact.png",
+      "render_mode": "projectile",
+      "scale": 1.55,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_placeholder_damage_tick": {
+      "texture_path": "res://art/battle/vfx/core_projectile_impact.png",
+      "render_mode": "impact",
+      "scale": 1.30,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_placeholder_melee_arc": {
+      "texture_path": "res://art/battle/vfx/core_slash_arc.png",
+      "render_mode": "slash",
+      "scale": 1.90,
+      "base_rotation_degrees": -45.0
+    },
+    "vfx_placeholder_retaliation_arc": {
+      "texture_path": "res://art/battle/vfx/core_slash_arc.png",
+      "render_mode": "slash",
+      "scale": 1.90,
+      "base_rotation_degrees": 135.0
+    },
+    "vfx_placeholder_cast_anchor": {
+      "texture_path": "res://art/battle/vfx/core_ward_ring.png",
+      "render_mode": "ward",
+      "scale": 1.50,
+      "base_rotation_degrees": 0.0
+    },
+    "vfx_placeholder_status_residue": {
+      "texture_path": "res://art/battle/vfx/core_ward_ring.png",
+      "render_mode": "ward",
+      "scale": 1.38,
+      "base_rotation_degrees": 22.5
+    },
+    "vfx_placeholder_status_clear": {
+      "texture_path": "res://art/battle/vfx/core_ward_ring.png",
+      "render_mode": "ward",
+      "scale": 1.62,
+      "base_rotation_degrees": -22.5
+    },
+    "vfx_placeholder_brace_outline": {
+      "texture_path": "res://art/battle/vfx/core_ward_ring.png",
+      "render_mode": "ward",
+      "scale": 1.42,
+      "base_rotation_degrees": 45.0
+    }
+  }
+}
