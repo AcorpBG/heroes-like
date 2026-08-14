@@ -105,6 +105,7 @@ TERRAIN_GRAMMAR_PATH = CONTENT_DIR / "terrain_grammar.json"
 TERRAIN_LAYERS_PATH = CONTENT_DIR / "terrain_layers.json"
 TOWN_SCENE_PATH = ROOT / "scenes" / "town" / "TownShell.tscn"
 TOWN_SCRIPT_PATH = ROOT / "scenes" / "town" / "TownShell.gd"
+TOWN_STAGE_SCRIPT_PATH = ROOT / "scenes" / "town" / "TownStageView.gd"
 TOWN_ENTITY_CACHE_ACTIVE_REFRESH_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "town_entity_cache_active_refresh_regression.gd"
 TOWN_ENTITY_CACHE_ACTIVE_REFRESH_REGRESSION_SCENE_PATH = ROOT / "tests" / "town_entity_cache_active_refresh_regression.tscn"
 GENERATED_LARGE_TOWN_EXPLICIT_SAVE_SURFACE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "generated_large_town_explicit_save_surface_regression.gd"
@@ -20495,6 +20496,7 @@ def validate_town_shell_release_polish(errors: list[str]) -> None:
     required_paths = (
         TOWN_SCENE_PATH,
         TOWN_SCRIPT_PATH,
+        TOWN_STAGE_SCRIPT_PATH,
         TOWN_RULES_PATH,
         OVERWORLD_RULES_PATH,
         town_visual_smoke_path,
@@ -20595,6 +20597,48 @@ def validate_town_shell_release_polish(errors: list[str]) -> None:
     ):
         ensure(required_token in town_script_text, errors, f"TownShell.gd is missing required town-shell polish token: {required_token}")
 
+    town_stage_text = TOWN_STAGE_SCRIPT_PATH.read_text(encoding="utf-8")
+    scenic_backdrops = {
+        "faction_embercourt": "art/towns/runtime/backdrops/town_embercourt.png",
+        "faction_mireclaw": "art/towns/runtime/backdrops/town_mireclaw.png",
+        "faction_sunvault": "art/towns/runtime/backdrops/town_sunvault.png",
+        "faction_thornwake": "art/towns/runtime/backdrops/town_thornwake.png",
+        "faction_brasshollow": "art/towns/runtime/backdrops/town_brasshollow.png",
+        "faction_veilmourn": "art/towns/runtime/backdrops/town_veilmourn.png",
+    }
+    for faction_id, relative_path in scenic_backdrops.items():
+        asset_path = ROOT / relative_path
+        ensure(asset_path.exists(), errors, f"Town scenic backdrop is missing for {faction_id}: {relative_path}")
+        if asset_path.exists():
+            ensure(png_size(asset_path) == (1600, 900), errors, f"Town scenic backdrop must be 1600x900 for {faction_id}: {relative_path}")
+        resource_path = f"res://{relative_path}"
+        ensure(town_stage_text.count(f'\"{faction_id}\": \"{resource_path}\"') == 1, errors, f"TownStageView.gd must map exactly one scenic path for {faction_id}")
+        ensure(town_stage_text.count(f'\"{faction_id}\": preload(\"{resource_path}\")') == 1, errors, f"TownStageView.gd must preload exactly one scenic texture for {faction_id}")
+    for required_token in (
+        "func _draw_scenic_backdrop(scene_rect: Rect2) -> bool:",
+        "if not _draw_scenic_backdrop(scene_rect):",
+        "_draw_procedural_stage(scene_rect)",
+        "draw_texture_rect_region(texture, scene_rect, source_rect)",
+        "var cover_scale := maxf(destination_size.x / texture_size.x, destination_size.y / texture_size.y)",
+        "var source_size := destination_size / cover_scale",
+        "return Rect2((texture_size - source_size) * 0.5, source_size)",
+        "func validation_scenic_backdrop_summary() -> Dictionary:",
+        '"rendering_mode": "cover_crop_scenic_backdrop" if texture != null else "procedural_geometry_fallback"',
+        '"procedural_fallback": texture == null',
+        '["scenic_or_procedural_stage", "status_plaques", "district_strip", "command_markers", "header"]',
+    ):
+        ensure(required_token in town_stage_text, errors, f"TownStageView.gd is missing scenic-backdrop contract token: {required_token}")
+    draw_block = town_stage_text.split("func _draw() -> void:", 1)[1].split("func _draw_procedural_stage", 1)[0]
+    draw_order = [
+        draw_block.find("_draw_scenic_backdrop(scene_rect)"),
+        draw_block.find("_draw_status_plaques(scene_rect)"),
+        draw_block.find("_draw_district_strip(scene_rect)"),
+        draw_block.find("_draw_command_markers(scene_rect)"),
+        draw_block.find("_draw_header(scene_rect)"),
+    ]
+    ensure(all(index >= 0 for index in draw_order) and draw_order == sorted(draw_order), errors, "TownStageView.gd must draw the scenic or fallback stage before every existing Town overlay")
+    ensure("draw_texture_rect(" not in town_stage_text, errors, "TownStageView.gd must not stretch scenic backdrops instead of cover-cropping them")
+
     for source_name, source_text in (
         ("TownRules.gd", town_rules_text),
         ("TownShell.gd", town_script_text),
@@ -20608,6 +20652,22 @@ def validate_town_shell_release_polish(errors: list[str]) -> None:
             ensure(required_token in source_text, errors, f"{source_name} is missing authoritative town-departure copy token: {required_token}")
 
     town_visual_text = town_visual_smoke_path.read_text(encoding="utf-8")
+    for required_token in (
+        "func _assert_town_scenic_backdrop_contract(live_board: Node, session) -> bool:",
+        "var session_before: Dictionary = session.to_dict()",
+        'String(live_summary.get("faction_id", "")) != "faction_embercourt"',
+        "for stage_size in [Vector2(620.0, 320.0), Vector2(1180.0, 640.0)]",
+        "for faction_id_value in TOWN_SCENIC_BACKDROP_PATHS.keys()",
+        'summary.get("texture_size", Vector2.ZERO) != Vector2(1600.0, 900.0)',
+        '"faction_id": "faction_unmapped"',
+        'String(fallback_summary.get("rendering_mode", "")) != "procedural_geometry_fallback"',
+        "if session.to_dict() != session_before:",
+        "func _scenic_backdrop_geometry_exact(summary: Dictionary) -> bool:",
+        "is_equal_approx(source_rect.size.x / source_rect.size.y, destination_rect.size.x / destination_rect.size.y)",
+        'await _capture_color_cue_frame("town_scenic_backdrop")',
+    ):
+        ensure(required_token in town_visual_text, errors, f"town_battle_visual_smoke.gd is missing scenic-backdrop validation token: {required_token}")
+    ensure(town_visual_text.count("TOWN_SCENIC_BACKDROP_PATHS.keys()") == 1, errors, "Town scenic smoke must traverse the exact six-path fixture once")
     for required_token in (
         "_assert_player_weekly_growth_forecast_parity",
         "for rank in [0, 1, 2]",
@@ -20671,7 +20731,7 @@ def validate_town_shell_release_polish(errors: list[str]) -> None:
         '"delivery_manifest": {"unit_neutral_cliffhawk_wardens": 2}',
         "occupation_release",
         "expected_delta = OverworldRules._add_recruit_growth(expected_delta, {\"unit_neutral_roadwardens\": 1})",
-        "expected_delta = OverworldRules._add_recruit_growth(expected_delta, {\"unit_river_guard\": 3})",
+        "expected_delta = OverworldRules._add_recruit_growth(expected_delta, {\"unit_river_guard\": 20})",
         "OverworldRules._add_resource_sets(income_projection, {\"gold\": 250, \"wood\": 1, \"ore\": 1})",
         'town_summary.to_lower().contains("convoy reaches")',
     ):

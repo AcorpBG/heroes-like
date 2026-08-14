@@ -1,6 +1,15 @@
 extends Node
 
 const FrontierVisualKitScript = preload("res://scripts/ui/FrontierVisualKit.gd")
+const TownStageViewScript = preload("res://scenes/town/TownStageView.gd")
+const TOWN_SCENIC_BACKDROP_PATHS := {
+	"faction_embercourt": "res://art/towns/runtime/backdrops/town_embercourt.png",
+	"faction_mireclaw": "res://art/towns/runtime/backdrops/town_mireclaw.png",
+	"faction_sunvault": "res://art/towns/runtime/backdrops/town_sunvault.png",
+	"faction_thornwake": "res://art/towns/runtime/backdrops/town_thornwake.png",
+	"faction_brasshollow": "res://art/towns/runtime/backdrops/town_brasshollow.png",
+	"faction_veilmourn": "res://art/towns/runtime/backdrops/town_veilmourn.png",
+}
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -41,6 +50,12 @@ func _run_town_smoke() -> bool:
 	var board = shell.get_node_or_null("%TownStage")
 	if board == null:
 		push_error("Town smoke: town stage board did not load.")
+		get_tree().quit(1)
+		return false
+	if not await _assert_town_scenic_backdrop_contract(board, session):
+		get_tree().quit(1)
+		return false
+	if not await _capture_color_cue_frame("town_scenic_backdrop"):
 		get_tree().quit(1)
 		return false
 	var build_actions = shell.get_node_or_null("%BuildActions")
@@ -131,6 +146,86 @@ func _run_town_smoke() -> bool:
 		get_tree().quit(1)
 		return false
 	return true
+
+func _assert_town_scenic_backdrop_contract(live_board: Node, session) -> bool:
+	if not live_board.has_method("validation_scenic_backdrop_summary"):
+		push_error("Town smoke: town stage does not expose scenic-backdrop validation.")
+		return false
+	var session_before: Dictionary = session.to_dict()
+	var live_summary: Dictionary = live_board.call("validation_scenic_backdrop_summary")
+	if String(live_summary.get("faction_id", "")) != "faction_embercourt" \
+			or String(live_summary.get("mapped_path", "")) != String(TOWN_SCENIC_BACKDROP_PATHS.get("faction_embercourt", "")) \
+			or not bool(live_summary.get("texture_loaded", false)) \
+			or String(live_summary.get("rendering_mode", "")) != "cover_crop_scenic_backdrop" \
+			or bool(live_summary.get("procedural_fallback", true)):
+		push_error("Town smoke: live Riverwatch stage did not select the Embercourt scenic backdrop: %s." % live_summary)
+		return false
+	if not _scenic_backdrop_geometry_exact(live_summary):
+		push_error("Town smoke: live scenic backdrop crop is outside the Town stage: %s." % live_summary)
+		return false
+	var expected_overlay_order := ["scenic_or_procedural_stage", "status_plaques", "district_strip", "command_markers", "header"]
+	if Array(live_summary.get("overlay_order", [])) != expected_overlay_order:
+		push_error("Town smoke: scenic layer no longer precedes every live Town overlay: %s." % live_summary)
+		return false
+
+	var fixture = TownStageViewScript.new()
+	add_child(fixture)
+	for stage_size in [Vector2(620.0, 320.0), Vector2(1180.0, 640.0)]:
+		fixture.size = stage_size
+		for faction_id_value in TOWN_SCENIC_BACKDROP_PATHS.keys():
+			var faction_id := String(faction_id_value)
+			fixture.set_precomputed_town_state(null, {
+				"town": {"town_id": "validation_town", "built_buildings": [], "garrison": [], "available_recruits": {}},
+				"town_template": {"id": "validation_town", "name": "Validation Town", "faction_id": faction_id},
+				"faction": {"id": faction_id, "name": faction_id},
+			})
+			var summary: Dictionary = fixture.validation_scenic_backdrop_summary()
+			if String(summary.get("faction_id", "")) != faction_id \
+					or String(summary.get("mapped_path", "")) != String(TOWN_SCENIC_BACKDROP_PATHS.get(faction_id, "")) \
+					or not bool(summary.get("texture_loaded", false)) \
+					or summary.get("texture_size", Vector2.ZERO) != Vector2(1600.0, 900.0) \
+					or String(summary.get("rendering_mode", "")) != "cover_crop_scenic_backdrop" \
+					or bool(summary.get("procedural_fallback", true)) \
+					or Array(summary.get("overlay_order", [])) != expected_overlay_order \
+					or not _scenic_backdrop_geometry_exact(summary):
+				push_error("Town smoke: %s scenic backdrop contract failed at %s: %s." % [faction_id, stage_size, summary])
+				fixture.queue_free()
+				return false
+
+	fixture.set_precomputed_town_state(null, {
+		"town": {"town_id": "validation_unknown", "built_buildings": [], "garrison": [], "available_recruits": {}},
+		"town_template": {"id": "validation_unknown", "name": "Fallback Town", "faction_id": "faction_unmapped"},
+		"faction": {"id": "faction_unmapped", "name": "Unmapped"},
+	})
+	var fallback_summary: Dictionary = fixture.validation_scenic_backdrop_summary()
+	if String(fallback_summary.get("mapped_path", "")) != "" \
+			or bool(fallback_summary.get("texture_loaded", true)) \
+			or String(fallback_summary.get("rendering_mode", "")) != "procedural_geometry_fallback" \
+			or not bool(fallback_summary.get("procedural_fallback", false)) \
+			or Array(fallback_summary.get("overlay_order", [])) != expected_overlay_order:
+		push_error("Town smoke: unmapped faction did not fail safely to the procedural stage: %s." % fallback_summary)
+		fixture.queue_free()
+		return false
+	fixture.queue_free()
+	await get_tree().process_frame
+	if session.to_dict() != session_before:
+		push_error("Town smoke: scenic-backdrop selection changed live session authority.")
+		return false
+	return true
+
+func _scenic_backdrop_geometry_exact(summary: Dictionary) -> bool:
+	var texture_size: Vector2 = summary.get("texture_size", Vector2.ZERO)
+	var destination_rect: Rect2 = summary.get("destination_rect", Rect2())
+	var source_rect: Rect2 = summary.get("source_rect", Rect2())
+	if texture_size != Vector2(1600.0, 900.0) \
+			or destination_rect.size.x <= 0.0 \
+			or destination_rect.size.y <= 0.0 \
+			or source_rect.size.x <= 0.0 \
+			or source_rect.size.y <= 0.0 \
+			or not bool(summary.get("source_within_texture", false)) \
+			or not bool(summary.get("destination_contained", false)):
+		return false
+	return is_equal_approx(source_rect.size.x / source_rect.size.y, destination_rect.size.x / destination_rect.size.y)
 
 func _run_battle_smoke() -> bool:
 	var session = ScenarioFactory.create_session(
@@ -1841,7 +1936,7 @@ func _assert_daybreak_muster_effect_separation(base_session) -> bool:
 	var recruit_delta := _recruit_pool_delta(recruits_before, town_after.get("available_recruits", {}))
 	var expected_delta := OverworldRules._add_recruit_growth(occupation_release, town_growth)
 	expected_delta = OverworldRules._add_recruit_growth(expected_delta, {"unit_neutral_roadwardens": 1})
-	expected_delta = OverworldRules._add_recruit_growth(expected_delta, {"unit_river_guard": 3})
+	expected_delta = OverworldRules._add_recruit_growth(expected_delta, {"unit_river_guard": 20})
 	var income_projection: Dictionary = _manual_daybreak_income_projection(projected_session)
 	var expected_resource_delta := _resource_pool_delta(
 		{},
@@ -1856,7 +1951,7 @@ func _assert_daybreak_muster_effect_separation(base_session) -> bool:
 			or actual_resource_delta != expected_resource_delta \
 			or not weekly_summary.contains(OverworldRules._describe_recruit_delta(town_growth)) \
 			or not weekly_summary.contains("Roadwardens") \
-			or weekly_summary.contains("+3 River Guard") \
+			or weekly_summary.contains("+20 River Guard") \
 			or not town_summary.to_lower().contains("held lev") \
 			or not town_summary.to_lower().contains("convoy reaches") \
 			or not String(result.get("message", "")).to_lower().contains("relief column"):

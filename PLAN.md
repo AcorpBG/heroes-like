@@ -25,6 +25,7 @@ Rules:
 Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Current selected implementation slice: none. Select the next tracker-approved release-readiness implementation slice.
+- Latest completed implementation slice: `presentation-town-faction-scenic-stage-backdrops-10184`. The Town stage now selects one of six original faction panoramas behind its unchanged live overlays, cover-crops without stretching, and retains the procedural renderer as a fail-safe.
 - Latest completed implementation slice: `combat-mireclaw-sporewake-rot-cant-priority-calibration-10184`. Sporewake Rot Cant keeps its round-one tier-four veteran identity and all live consequences while its authored target-priority bonus is calibrated from `1.0` to `0.9`; the exact all-live matrix lowers severity from `187.0` to `183.5`, preserves every non-Mireclaw ordered row, and keeps the active 59-encounter queue clear.
 - Latest completed validation/adoption slice: `strategic-ai-medium-long-run-seed-matrix-10184`. Exact current-HEAD Medium seed ordinals 1-100 now pass the 56-turn behavior matrix with zero aggregate behavior, integrity, reachability, or no-active-pressure blockers; the baseline retires only that matrix gap while generated topology/contact/pacing and broader release readiness remain open.
 - Latest completed implementation slice: `strategic-ai-known-world-target-catalog-projection-reuse-10184`. Strategic AI now enumerates one exact detached sight-source surface and eligible-target catalog per known-world refresh while keeping every source projection and every later refresh fresh.
@@ -4742,6 +4743,37 @@ Completed evidence:
 - at 1280x720 and 1920x1080, the collapsed Campaign dock is 44% viewport height with all visible controls contained, Intel expands to the existing 60% height, and hiding Intel restores the exact compact rectangle;
 - focused authority, keyboard/controller navigation, restart, menu/outcome, core, and a fresh 121-step routed campaign ending at `campaign_arc_completed_browser` are green, and its current-head screenshot confirms the lower-left scenery is no longer covered by hidden-detail space;
 - repository/editor checks and official Linux export/headless startup plus Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green, without a packaged Campaign interaction or broader release claim.
+
+## Town Faction Scenic Stage Backdrops
+
+id: `presentation-town-faction-scenic-stage-backdrops-10184`
+
+Status: complete.
+
+Selected Phase 6 shipped-content and player-facing presentation slice. Fresh current-HEAD live campaign evidence is behaviorally green through all three Reedfall chapters, but the Town stage still spends its dominant surface on generic procedural rectangles, circles, polylines, and polygons. This reads as a placeholder geometry mockup instead of a scenery-first production Town screen.
+
+Implementation target:
+- ship one original painterly 16:9 Town panorama for each of Embercourt, Mireclaw, Sunvault, Thornwake, Brasshollow, and Veilmourn, with no text, logos, characters, UI, or copyrighted designs;
+- select the exact backdrop from the live active Town faction and cover-crop it inside the existing framed stage without stretching or changing Town layout;
+- retain the existing header, status plaques, districts, command markers, hit regions, focus, actions, and authority over the scenic layer;
+- retain the current procedural Town stage as a fail-safe when the live faction has no mapped or loadable backdrop.
+
+Completion criteria:
+- all six faction assets are distinct, original, readable at 1280x720 and 1920x1080, imported by Godot, and mapped one-to-one to the authored faction ids;
+- focused live Town validation proves exact faction selection, cover-crop containment, overlay order, unknown-faction fallback, and unchanged session, town, action, focus, save, route, and campaign authority;
+- current Town, battle, menu/outcome, core, and the 121-step routed Reedfall campaign remain green, with current-head visual inspection confirming scenery-first Town composition;
+- repository, Python, JSON, diff, editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass with the six assets present in packaged payloads.
+
+Non-goals:
+- no Town rules, buildings, districts, economy, recruitment, magic, logistics, recovery, threat, actions, focus, save, route, scenario, campaign, combat, AI, balance, map, or Native RMG change;
+- no Town shell geometry, command rail, modal, global UI-scale, accessibility semantics, animation, character art, or other screen redesign;
+- no packaged Town interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Completed evidence:
+- six distinct original 1600x900 faction panoramas are imported and mapped one-to-one, while two-size focused runtime proves exact cover crop, source/destination containment, overlay order, unknown-faction fallback, and unchanged session authority;
+- natural headless and Xvfb Town/Battle smokes pass, with inspected 1280x720 and 1920x1080 captures confirming that scenery is the dominant Town surface and the existing status, district, command, header, and action surfaces remain readable;
+- Town exit, active-play focus, menu/outcome, core, and a fresh 121-step routed Reedfall campaign ending at `campaign_arc_completed_browser` pass;
+- repository/editor checks and official Linux export/headless startup plus Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass, with all six imported textures present in both PCKs and no packaged Town interaction or broader release claim.
 
 ## Phase Roadmap
 

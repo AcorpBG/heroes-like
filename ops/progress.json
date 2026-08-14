@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Main Menu Campaign dock now uses 44% viewport height while Intel is collapsed and the existing 60% height only while Intel is expanded. Visible controls stay contained, hiding Intel restores the exact compact rectangle, campaign authority remains exact, and focused, routed, compatibility, static, and bounded Linux/Windows startup gates pass.",
+  "currentNotes": "TownStageView now selects one of six original faction-specific 1600x900 panoramas, cover-crops it behind every unchanged live overlay, and retains the procedural renderer as a fail-safe. Focused 1280/1920 visuals, Town/focus/menu/core compatibility, a fresh 121-step routed campaign, static/editor checks, and bounded Linux/Windows export-startup gates pass.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-main-menu-campaign-contextual-dock-height-10184",
-  "currentSliceId": "ux-main-menu-campaign-contextual-dock-height-10184",
-  "currentSliceNotes": "Completed with exact 44%-collapsed and 60%-expanded Campaign dock geometry at 1280x720 and 1920x1080, exact collapse restoration, visible-control containment, natural keyboard/controller PASS, campaign compatibility, a fresh 121-step routed arc, current-head visual confirmation, static/editor checks, and bounded Linux/Windows export-startup evidence.",
+  "currentSlice": "presentation-town-faction-scenic-stage-backdrops-10184",
+  "currentSliceId": "presentation-town-faction-scenic-stage-backdrops-10184",
+  "currentSliceNotes": "Completed with six original mapped 1600x900 panoramas, exact cover-crop and procedural-fallback validation, unchanged live overlay/session authority, inspected 1280x720 and 1920x1080 Town frames, Town/focus/menu/core compatibility, a fresh 121-step routed campaign, static/editor checks, and bounded Linux/Windows export-startup evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Main Menu Campaign Contextual Dock Height",
-  "currentSliceUpdatedAt": "2026-08-14T10:29:06Z",
+  "currentSliceTitle": "Town Faction Scenic Stage Backdrops",
+  "currentSliceUpdatedAt": "2026-08-14T13:15:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -78796,6 +78796,29 @@
       "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
       "blockedReason": null,
       "result": {"collapsed_height_ratio": 0.44, "expanded_height_ratio": 0.6, "focused_viewports": [[1280, 720], [1920, 1080]], "visible_controls_contained": true, "exact_compact_rect_restored": true, "current_head_visual_confirmed": true, "full_arc_ok": true, "full_arc_step_count": 121, "full_arc_last_step": "campaign_arc_completed_browser", "linux_export_headless_startup_passed": true, "windows_export_fresh_wine_startup_passed": true}
+    },
+    {
+      "id": "presentation-town-faction-scenic-stage-backdrops-10184",
+      "title": "Town Faction Scenic Stage Backdrops",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "AGENTS.md", "docs/factions-content-bible.md"],
+      "purpose": "Replace the dominant procedural placeholder Town stage with six original faction-specific scenic backdrops while preserving the existing live Town overlays, interactions, and authority.",
+      "implementationTargets": ["art/towns/runtime/backdrops/", "scenes/town/TownStageView.gd", "tests/town_battle_visual_smoke.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "testOwners": ["tests/town_battle_visual_smoke.gd", "tests/town_battle_visual_smoke.tscn", "scripts/autoload/LiveValidationHarness.gd", "tests/menu_outcome_visual_smoke.gd", "tests/core_systems_regression_smoke.gd", "tests/validate_repo.py"],
+      "baseline": {"head": "6322a5f07c930170697dd570de4720eafe71c3c4", "town_stage_scenic_backdrop_count": 0, "town_stage_renderer": "procedural_geometry_only", "current_full_arc_ok": true, "current_full_arc_step_count": 121},
+      "completionCriteria": ["Six distinct original 16:9 faction Town panoramas are imported and mapped one-to-one to the six authored faction ids", "Live Town faction selection cover-crops the exact backdrop inside the existing frame without stretch, while every header, status, district, command, focus, hit-region, action, save, route, and session surface remains exact", "Unknown or unavailable faction assets fail safely to the existing procedural stage, and focused 1280x720 plus 1920x1080 visual evidence is scenery-first", "Town, battle, menu/outcome, core, routed campaign, repository, editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass"],
+      "nonGoals": ["Town rules, buildings, districts, economy, recruitment, magic, logistics, recovery, threat, actions, focus, save, route, scenario, campaign, combat, AI, balance, map, or Native RMG changes", "Town shell geometry, command rail, modal, global UI-scale, accessibility semantics, animation, character art, or other screen redesign", "packaged Town interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claims"],
+      "createdAt": "2026-08-14T12:20:00Z",
+      "startedAt": "2026-08-14T12:20:00Z",
+      "updatedAt": "2026-08-14T13:15:00Z",
+      "completedAt": "2026-08-14T13:15:00Z",
+      "notes": "Production now ships six distinct original faction panoramas and selects the exact live Town faction through a cover-cropped scenic layer behind the unchanged status plaques, district strip, command markers, and header. Unknown factions retain the old procedural renderer. Focused two-size mapping/fallback/session-authority proof, natural headless and Xvfb Town/Battle smoke, inspected 1280x720 and 1920x1080 captures, Town exit, active-play focus, menu/outcome, core, and a fresh 121-step routed Reedfall campaign are green. Static/editor checks and official Linux export/headless startup plus Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass; both PCKs contain all six textures. No packaged Town interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claim is made.",
+      "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null,
+      "result": {"scenic_backdrop_count": 6, "backdrop_dimensions": [1600, 900], "mapped_faction_count": 6, "procedural_fallback_preserved": true, "focused_viewports": [[1280, 720], [1920, 1080]], "focused_headless_smoke_passed": true, "focused_xvfb_smoke_passed": true, "town_exit_passed": true, "active_play_focus_passed": true, "menu_outcome_passed": true, "core_passed": true, "full_arc_ok": true, "full_arc_step_count": 121, "full_arc_last_step": "campaign_arc_completed_browser", "linux_export_headless_startup_passed": true, "windows_export_fresh_wine_startup_passed": true, "packaged_texture_count": 6}
     }
   ],
   "project": "heroes-like",
@@ -79338,9 +79361,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Sporewake Rot Cant's authored opening target priority is calibrated from 1.0 to 0.9 with exact focused live behavior, improved full-matrix severity, clear active breadth, compatibility/static/editor validation, and bounded Linux/Windows export-startup evidence. Broad faction balance and release readiness remain open.",
+  "summary": "TownStageView now presents six original faction panoramas behind unchanged live overlays with exact cover-crop mapping and procedural fallback. Focused visuals, compatibility, routed campaign, static/editor, and bounded Linux/Windows export-startup gates pass; broader release readiness remains open.",
   "taskId": "10184",
-  "updatedAt": "2026-08-14T07:08:37Z",
+  "updatedAt": "2026-08-14T13:15:00Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
