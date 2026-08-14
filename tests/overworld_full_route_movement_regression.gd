@@ -1,6 +1,8 @@
 extends Node
 
 const REPORT_ID := "OVERWORLD_FULL_ROUTE_MOVEMENT_REGRESSION"
+const CAPTURE_ENV := "HEROES_OVERWORLD_ROUTE_LOCOMOTION_CAPTURE"
+const CAPTURE_DIR_ENV := "HEROES_OVERWORLD_ROUTE_LOCOMOTION_CAPTURE_DIR"
 
 var _evidence: Dictionary = {}
 
@@ -10,11 +12,15 @@ func _ready() -> void:
 func _run() -> void:
 	if not await _assert_partial_full_route_execution():
 		return
+	if not await _assert_reduced_motion_route_endpoint_snap():
+		return
 	if not await _assert_selected_route_cache_reuse():
 		return
 	if not await _assert_reachable_interaction_resolves_only_at_destination():
 		return
 	if not await _assert_route_does_not_pass_through_interaction():
+		return
+	if OS.get_environment(CAPTURE_ENV) == "1" and not await _capture_route_locomotion_viewports():
 		return
 	print("%s %s" % [REPORT_ID, JSON.stringify({"evidence": _evidence, "ok": true})])
 	get_tree().quit(0)
@@ -41,7 +47,55 @@ func _assert_partial_full_route_execution() -> bool:
 	if int(map_preview.get("reachable_steps", 0)) != 4 or int(map_preview.get("unreachable_steps", 0)) != 5:
 		return _fail("Map route preview did not expose the same out-of-movement partition.", selection)
 	var result: Dictionary = shell.call("validation_perform_primary_action")
+	var movement_start: Dictionary = _hero_movement_presentation(shell)
+	var start_cache: Dictionary = _render_cache(shell)
+	var expected_route: Array = [
+		{"x": 0, "y": 1},
+		{"x": 1, "y": 1},
+		{"x": 2, "y": 1},
+		{"x": 3, "y": 1},
+		{"x": 4, "y": 1},
+	]
+	if (
+		not bool(movement_start.get("active", false))
+		or String(movement_start.get("event_id", "")) != "overworld_hero_move"
+		or String(movement_start.get("animation_state", "")) != "map_step"
+		or String(movement_start.get("visual_policy", "")) != "authored_animation_state"
+		or bool(movement_start.get("reduced_motion", true))
+		or movement_start.get("route_tiles", []) != expected_route
+		or int(movement_start.get("route_step_count", 0)) != 4
+		or int(movement_start.get("duration_ms", 0)) != 440
+		or float(movement_start.get("progress", -1.0)) != 0.0
+	):
+		return _fail("Full-route movement did not start one exact normal-mode locomotion replay.", movement_start)
+	await get_tree().create_timer(0.16).timeout
+	var movement_mid: Dictionary = _hero_movement_presentation(shell)
+	var mid_cache: Dictionary = _render_cache(shell)
+	var mid_progress: float = float(movement_mid.get("progress", 0.0))
+	var mid_center: Dictionary = movement_mid.get("draw_center", {}) if movement_mid.get("draw_center", {}) is Dictionary else {}
+	if (
+		not bool(movement_mid.get("active", false))
+		or mid_progress <= 0.0
+		or mid_progress >= 1.0
+		or int(movement_mid.get("segment_index", -1)) < 0
+		or float(movement_mid.get("segment_progress", 0.0)) <= 0.0
+		or float(mid_center.get("x", 0.0)) <= 0.0
+		or float(mid_center.get("y", 0.0)) <= 0.0
+		or int(mid_cache.get("session_static_generation", -1)) != int(start_cache.get("session_static_generation", -2))
+		or int(mid_cache.get("state_generation", -1)) != int(start_cache.get("state_generation", -2))
+		or int(mid_cache.get("dynamic_generation", -1)) <= int(start_cache.get("dynamic_generation", -1))
+	):
+		return _fail("Normal-mode locomotion did not advance between exact route centers on only the dynamic layer.", {"start": movement_start, "mid": movement_mid})
+	await get_tree().create_timer(0.36).timeout
+	var movement_end: Dictionary = _hero_movement_presentation(shell)
+	if bool(movement_end.get("active", true)) or float(movement_end.get("progress", 0.0)) != 1.0 or movement_end.get("final_tile", {}) != {"x": 4, "y": 1}:
+		return _fail("Normal-mode locomotion did not settle on the authoritative endpoint.", movement_end)
+	var completed_serial: int = int(movement_end.get("serial", 0))
+	shell.call("_refresh")
 	await get_tree().process_frame
+	var movement_refresh: Dictionary = _hero_movement_presentation(shell)
+	if bool(movement_refresh.get("active", true)) or int(movement_refresh.get("serial", -1)) != completed_serial or float(movement_refresh.get("progress", 0.0)) != 1.0:
+		return _fail("An unrelated refresh replayed the completed movement serial.", movement_refresh)
 	var overlay: Dictionary = shell.call("validation_debug_overlay_snapshot")
 	var last_command: Dictionary = overlay.get("last_command", {}) if overlay.get("last_command", {}) is Dictionary else {}
 	var phase_buckets: Dictionary = last_command.get("phase_buckets_ms", {}) if last_command.get("phase_buckets_ms", {}) is Dictionary else {}
@@ -63,6 +117,12 @@ func _assert_partial_full_route_execution() -> bool:
 		"preview_unreachable_steps": int(route_preview.get("unreachable_steps", 0)),
 		"executed_steps": route_steps.size(),
 		"final_tile": {"x": finish.x, "y": finish.y},
+		"movement_presentation_serial": completed_serial,
+		"movement_duration_ms": int(movement_start.get("duration_ms", 0)),
+		"movement_mid_progress": mid_progress,
+		"movement_mid_segment": int(movement_mid.get("segment_index", -1)),
+		"movement_dynamic_only": true,
+		"movement_refresh_replayed": false,
 	}
 	if route_steps.size() != 4 or movement_after != 0:
 		return _fail("Full-route confirmation did not consume one point per traversed tile.", result)
@@ -70,6 +130,64 @@ func _assert_partial_full_route_execution() -> bool:
 		return _fail("Fog did not reveal along the traversed route.", result)
 	if before_target_explored or OverworldRules.is_tile_explored(session, target.x, target.y):
 		return _fail("Fog revealed the untraversed destination before the hero reached it.", result)
+	shell.queue_free()
+	return true
+
+func _assert_reduced_motion_route_endpoint_snap() -> bool:
+	var original_reduced_motion: bool = SettingsService.reduced_motion_enabled()
+	SettingsService.set_reduced_motion_enabled(true)
+	var session = _session_with_map(7, 3, true)
+	session.overworld["fog"] = {}
+	var opened := await _open_shell(session)
+	var shell: Node = opened.get("shell", null)
+	session = opened.get("session", session)
+	_prepare_shell_state(shell, session, Vector2i(0, 1), 4)
+	var selection: Dictionary = shell.call("validation_select_tile", 4, 1)
+	if String(selection.get("selected_route_decision", {}).get("status", "")) != "reachable":
+		SettingsService.set_reduced_motion_enabled(original_reduced_motion)
+		return _fail("Reduced-motion fixture route was not reachable.", selection)
+	var result: Dictionary = shell.call("validation_perform_primary_action")
+	var movement: Dictionary = _hero_movement_presentation(shell)
+	var serial: int = int(movement.get("serial", 0))
+	var expected_route: Array = [
+		{"x": 0, "y": 1},
+		{"x": 1, "y": 1},
+		{"x": 2, "y": 1},
+		{"x": 3, "y": 1},
+		{"x": 4, "y": 1},
+	]
+	var reduced_exact: bool = (
+		bool(result.get("ok", false))
+		and OverworldRules.hero_position(session) == Vector2i(4, 1)
+		and serial > 0
+		and not bool(movement.get("active", true))
+		and bool(movement.get("reduced_motion", false))
+		and String(movement.get("animation_state", "")) == "route_endpoint_snap"
+		and String(movement.get("visual_policy", "")) == "reduced_motion_fallback"
+		and String(movement.get("fallback_tag", "")) == "route_endpoint_snap"
+		and movement.get("route_tiles", []) == expected_route
+		and int(movement.get("route_step_count", 0)) == 4
+		and int(movement.get("duration_ms", -1)) == 0
+		and float(movement.get("progress", 0.0)) == 1.0
+		and movement.get("final_tile", {}) == {"x": 4, "y": 1}
+	)
+	shell.call("_refresh")
+	await get_tree().process_frame
+	var refreshed: Dictionary = _hero_movement_presentation(shell)
+	var refresh_exact: bool = not bool(refreshed.get("active", true)) and int(refreshed.get("serial", -1)) == serial and float(refreshed.get("progress", 0.0)) == 1.0
+	SettingsService.set_reduced_motion_enabled(original_reduced_motion)
+	if not reduced_exact or not refresh_exact:
+		return _fail("Reduced motion did not use the exact one-shot endpoint-snap fallback.", {"movement": movement, "refreshed": refreshed})
+	var final_tile: Dictionary = movement.get("final_tile", {}) if movement.get("final_tile", {}) is Dictionary else {}
+	_evidence["reduced_motion_route"] = {
+		"serial": serial,
+		"animation_state": String(movement.get("animation_state", "")),
+		"fallback_tag": String(movement.get("fallback_tag", "")),
+		"route_step_count": int(movement.get("route_step_count", 0)),
+		"duration_ms": int(movement.get("duration_ms", -1)),
+		"final_tile": final_tile.duplicate(true),
+		"refresh_replayed": false,
+	}
 	shell.queue_free()
 	return true
 
@@ -185,9 +303,84 @@ func _assert_route_does_not_pass_through_interaction() -> bool:
 	shell.queue_free()
 	return true
 
+func _capture_route_locomotion_viewports() -> bool:
+	var capture_dir := OS.get_environment(CAPTURE_DIR_ENV).strip_edges()
+	if capture_dir == "":
+		capture_dir = "user://route_locomotion_captures"
+	var absolute_capture_dir := ProjectSettings.globalize_path(capture_dir)
+	var mkdir_error := DirAccess.make_dir_recursive_absolute(absolute_capture_dir)
+	if mkdir_error != OK:
+		return _fail("Could not create the route-locomotion capture directory.", {"path": absolute_capture_dir, "error": mkdir_error})
+	var original_window_size := get_window().size
+	var captures := {}
+	for viewport_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:
+		get_window().size = viewport_size
+		await get_tree().process_frame
+		await get_tree().process_frame
+		if get_window().size != viewport_size:
+			get_window().size = original_window_size
+			return _fail("Windowed locomotion capture did not reach the requested viewport.", {"requested": str(viewport_size), "actual": str(get_window().size)})
+		var session = _session_with_map(12, 5, true)
+		session.overworld["fog"] = {}
+		var opened := await _open_shell(session)
+		var shell: Node = opened.get("shell", null)
+		session = opened.get("session", session)
+		_prepare_shell_state(shell, session, Vector2i(1, 1), 6)
+		var selection: Dictionary = shell.call("validation_select_tile", 7, 1)
+		if String(selection.get("selected_route_decision", {}).get("status", "")) != "reachable":
+			shell.queue_free()
+			get_window().size = original_window_size
+			return _fail("Windowed locomotion capture route was not reachable.", selection)
+		var result: Dictionary = shell.call("validation_perform_primary_action")
+		await get_tree().create_timer(0.24).timeout
+		var movement := _hero_movement_presentation(shell)
+		if not bool(result.get("ok", false)) or not bool(movement.get("active", false)) or float(movement.get("progress", 0.0)) <= 0.0 or float(movement.get("progress", 0.0)) >= 1.0:
+			shell.queue_free()
+			get_window().size = original_window_size
+			return _fail("Windowed locomotion capture did not observe the live marker between route endpoints.", movement)
+		await get_tree().process_frame
+		var viewport_texture: Texture2D = get_viewport().get_texture()
+		if viewport_texture == null:
+			shell.queue_free()
+			get_window().size = original_window_size
+			return _fail("Windowed locomotion capture has no viewport texture.", movement)
+		var image: Image = viewport_texture.get_image()
+		if image == null or image.get_width() != viewport_size.x or image.get_height() != viewport_size.y:
+			shell.queue_free()
+			get_window().size = original_window_size
+			return _fail("Windowed locomotion capture returned the wrong image dimensions.", {"requested": str(viewport_size), "width": image.get_width() if image != null else -1, "height": image.get_height() if image != null else -1})
+		var capture_path := absolute_capture_dir.path_join("overworld_route_locomotion_%dx%d.png" % [viewport_size.x, viewport_size.y])
+		var save_error := image.save_png(capture_path)
+		if save_error != OK:
+			shell.queue_free()
+			get_window().size = original_window_size
+			return _fail("Windowed locomotion capture could not save the image.", {"path": capture_path, "error": save_error})
+		captures["%dx%d" % [viewport_size.x, viewport_size.y]] = {
+			"path": capture_path,
+			"progress": float(movement.get("progress", 0.0)),
+			"segment_index": int(movement.get("segment_index", -1)),
+			"route_step_count": int(movement.get("route_step_count", 0)),
+		}
+		shell.queue_free()
+		await get_tree().process_frame
+	get_window().size = original_window_size
+	await get_tree().process_frame
+	_evidence["windowed_route_locomotion"] = captures
+	return true
+
 func _last_debug_command(shell: Node) -> Dictionary:
 	var overlay: Dictionary = shell.call("validation_debug_overlay_snapshot")
 	return overlay.get("last_command", {}) if overlay.get("last_command", {}) is Dictionary else {}
+
+func _hero_movement_presentation(shell: Node) -> Dictionary:
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var viewport: Dictionary = snapshot.get("map_viewport", {}) if snapshot.get("map_viewport", {}) is Dictionary else {}
+	return viewport.get("hero_movement_presentation", {}).duplicate(true) if viewport.get("hero_movement_presentation", {}) is Dictionary else {}
+
+func _render_cache(shell: Node) -> Dictionary:
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var viewport: Dictionary = snapshot.get("map_viewport", {}) if snapshot.get("map_viewport", {}) is Dictionary else {}
+	return viewport.get("render_cache", {}).duplicate(true) if viewport.get("render_cache", {}) is Dictionary else {}
 
 func _open_shell(session) -> Dictionary:
 	var active_session = SessionState.set_active_session(session)

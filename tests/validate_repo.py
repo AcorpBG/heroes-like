@@ -100,6 +100,7 @@ MAP_EDITOR_DIRTY_TRANSITION_REGRESSION_SCENE_PATH = ROOT / "tests" / "map_editor
 OVERWORLD_SCENE_PATH = ROOT / "scenes" / "overworld" / "OverworldShell.tscn"
 OVERWORLD_SCRIPT_PATH = ROOT / "scenes" / "overworld" / "OverworldShell.gd"
 OVERWORLD_MAP_VIEW_SCRIPT_PATH = ROOT / "scenes" / "overworld" / "OverworldMapView.gd"
+OVERWORLD_FULL_ROUTE_MOVEMENT_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "overworld_full_route_movement_regression.gd"
 OVERWORLD_ART_MANIFEST_PATH = ROOT / "art" / "overworld" / "manifest.json"
 TERRAIN_GRAMMAR_PATH = CONTENT_DIR / "terrain_grammar.json"
 TERRAIN_LAYERS_PATH = CONTENT_DIR / "terrain_layers.json"
@@ -27821,6 +27822,125 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(required_token in overworld_script_text, errors, f"OverworldShell.gd is missing town-footprint validation token {required_token}")
 
 
+def validate_overworld_hero_route_locomotion(errors: list[str]) -> None:
+    visual_smoke_path = ROOT / "tests" / "overworld_visual_smoke.gd"
+    required_paths = (
+        OVERWORLD_SCRIPT_PATH,
+        OVERWORLD_MAP_VIEW_SCRIPT_PATH,
+        OVERWORLD_FULL_ROUTE_MOVEMENT_REGRESSION_SCRIPT_PATH,
+        visual_smoke_path,
+        ANIMATION_EVENT_CUES_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Overworld hero-route locomotion file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    shell_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+    map_view_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
+    test_text = OVERWORLD_FULL_ROUTE_MOVEMENT_REGRESSION_SCRIPT_PATH.read_text(encoding="utf-8")
+    visual_smoke_text = visual_smoke_path.read_text(encoding="utf-8")
+
+    def gdscript_function_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}")
+        if start < 0:
+            return ""
+        end = text.find("\nfunc ", start + 1)
+        return text[start:] if end < 0 else text[start:end]
+
+    for required_token in (
+        'const AnimationCueCatalogScript = preload("res://scripts/core/AnimationCueCatalog.gd")',
+        "var _hero_movement_presentation: Dictionary = {}",
+        "var _hero_movement_presentation_serial := 0",
+        "func _record_hero_movement_presentation",
+        '"overworld_hero_move"',
+        "SettingsService.animation_preferences()",
+        'route_execution.get("reachable_tiles", [])',
+        'result.get("route_steps", [])',
+        '"serial": _hero_movement_presentation_serial',
+        '"route_tiles": route_tiles.duplicate(true)',
+        "_hero_movement_presentation",
+    ):
+        ensure(required_token in shell_text, errors, f"OverworldShell.gd is missing hero-route locomotion token {required_token}")
+    ensure(shell_text.count("func _record_hero_movement_presentation") == 1, errors, "OverworldShell.gd must define one hero movement presentation producer")
+    record_block = gdscript_function_block(shell_text, "_record_hero_movement_presentation")
+    ensure('not bool(result.get("ok", false)) or route != ""' in record_block, errors, "Hero locomotion must fail closed outside successful non-routing field movement")
+    ensure('route_tiles.size() != route_steps.size() + 1' in record_block, errors, "Hero locomotion must require the exact origin plus resolved step count")
+    ensure(record_block.find("cue_playback_policy_for_event") < record_block.find("_hero_movement_presentation_serial += 1"), errors, "Hero locomotion must resolve the authored cue policy before issuing a presentation serial")
+    ensure("session.overworld" not in record_block and "session.flags" not in record_block, errors, "Hero locomotion presentation must not mutate session authority")
+    ensure("create_tween" not in record_block and "await " not in record_block and "create_timer" not in record_block, errors, "Hero locomotion producer must not add hidden timing or coroutine authority")
+
+    for required_token in (
+        "HERO_MOVEMENT_MIN_DURATION_MSEC := 80",
+        "HERO_MOVEMENT_MAX_DURATION_MSEC := 700",
+        "movement_presentation: Dictionary = {}",
+        "func _sync_hero_movement_presentation",
+        "serial == _hero_movement_last_serial",
+        'path[path.size() - 1] != _hero_tile',
+        "func _process(delta: float)",
+        '_invalidate_dynamic_layer("hero_movement_presentation")',
+        "func _draw_hero_movement_presentation",
+        "func _hero_movement_draw_state",
+        "from_rect.get_center().lerp(to_rect.get_center(), segment_progress)",
+        "_draw_hero_marker(draw_rect, grounding_tile, false)",
+        "not (_hero_movement_active and tile == _hero_tile)",
+        "func validation_hero_movement_presentation",
+        '"hero_movement_presentation": validation_hero_movement_presentation()',
+    ):
+        ensure(required_token in map_view_text, errors, f"OverworldMapView.gd is missing hero-route locomotion token {required_token}")
+    sync_block = gdscript_function_block(map_view_text, "_sync_hero_movement_presentation")
+    process_block = gdscript_function_block(map_view_text, "_process")
+    draw_block = gdscript_function_block(map_view_text, "_hero_movement_draw_state")
+    ensure(sync_block.find("_hero_movement_last_serial = serial") < sync_block.find("_tiles_from_payloads"), errors, "Map view must consume each movement serial once before validating its detached path")
+    ensure(sync_block.find("_hero_movement_reduced_motion") < sync_block.find("if _hero_movement_reduced_motion:"), errors, "Map view must derive reduced-motion policy before choosing endpoint snap")
+    ensure('set_process(true)' in sync_block and 'set_process(false)' in sync_block, errors, "Map view must run per-frame processing only for active locomotion")
+    ensure("_invalidate_session_static_cache" not in process_block and "_invalidate_state_cache" not in process_block, errors, "Hero locomotion frames must not invalidate static or state caches")
+    ensure("_invalidate_dynamic_layer" in process_block, errors, "Hero locomotion frames must invalidate the dynamic layer")
+    ensure("session" not in process_block and "session" not in draw_block, errors, "Hero locomotion frame/draw helpers must not mutate or consult session authority")
+    ensure("create_tween" not in sync_block + process_block + draw_block and "create_timer" not in sync_block + process_block + draw_block and "await " not in sync_block + process_block + draw_block, errors, "Hero locomotion must use the bounded view process without hidden timers or coroutines")
+
+    for required_token in (
+        "func _assert_reduced_motion_route_endpoint_snap",
+        'String(movement_start.get("animation_state", "")) != "map_step"',
+        'String(movement.get("animation_state", "")) == "route_endpoint_snap"',
+        'String(movement.get("visual_policy", "")) == "reduced_motion_fallback"',
+        'movement_start.get("route_tiles", []) != expected_route',
+        'int(movement_start.get("duration_ms", 0)) != 440',
+        'await get_tree().create_timer(0.16).timeout',
+        'await get_tree().create_timer(0.36).timeout',
+        'int(mid_cache.get("session_static_generation", -1))',
+        'int(mid_cache.get("state_generation", -1))',
+        'int(mid_cache.get("dynamic_generation", -1))',
+        'shell.call("_refresh")',
+        '"movement_refresh_replayed": false',
+        'SettingsService.set_reduced_motion_enabled(true)',
+        'SettingsService.set_reduced_motion_enabled(original_reduced_motion)',
+        'const CAPTURE_ENV := "HEROES_OVERWORLD_ROUTE_LOCOMOTION_CAPTURE"',
+        "func _capture_route_locomotion_viewports",
+        'for viewport_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        'await get_tree().create_timer(0.24).timeout',
+        'get_viewport().get_texture()',
+        'overworld_route_locomotion_%dx%d.png',
+        '"windowed_route_locomotion"',
+    ):
+        ensure(required_token in test_text, errors, f"Full-route movement regression is missing locomotion proof token {required_token}")
+    ensure(test_text.count("func _assert_reduced_motion_route_endpoint_snap") == 1, errors, "Full-route movement regression must define one reduced-motion endpoint-snap case")
+    ensure("validation_set_hero_movement" not in test_text and "_hero_movement_elapsed_sec" not in test_text and "_process(" not in test_text, errors, "Full-route regression must passively observe production locomotion rather than mutate its clock")
+    for required_token in (
+        '"Objectives 0/5"',
+        '"Progress: 0/5 victory complete"',
+        '"Victory 0/5"',
+        '"Defeat risks 0/4 triggered"',
+    ):
+        ensure(required_token in visual_smoke_text, errors, f"Overworld visual smoke is missing current River Pass objective token {required_token}")
+    for stale_token in (
+        '"Objectives 0/4"',
+        '"Progress: 0/4 victory complete"',
+        '"Victory 0/4"',
+    ):
+        ensure(stale_token not in visual_smoke_text, errors, f"Overworld visual smoke must not retain stale River Pass victory token {stale_token}")
+
+
 def validate_neutral_dwelling_unit_slice(errors: list[str]) -> None:
     required_paths = (
         NEUTRAL_DWELLINGS_PATH,
@@ -36352,6 +36472,7 @@ def main() -> int:
     validate_overworld_object_route_effect_authoring(errors)
     validate_overworld_object_content_batch_001(errors)
     validate_overworld_art_asset_slice(errors)
+    validate_overworld_hero_route_locomotion(errors)
     validate_neutral_dwelling_unit_slice(errors)
     validate_hero_portrait_assets(errors)
     validate_unit_art_assets(errors)

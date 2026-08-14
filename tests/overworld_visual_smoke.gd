@@ -366,10 +366,10 @@ func _assert_objective_stakes_ui_contract(shell: Node) -> bool:
 		],
 		[
 			"Skirmish",
-			"Objectives 0/4",
+			"Objectives 0/5",
 			"Next Claim Duskfen Bastion",
 			"Objective Stakes",
-			"Progress: 0/4 victory complete",
+			"Progress: 0/5 victory complete",
 			"Incomplete: Claim Duskfen Bastion",
 			"Defeat watch:",
 			"Win: River Pass holds",
@@ -384,7 +384,7 @@ func _assert_objective_stakes_ui_contract(shell: Node) -> bool:
 	if not _assert_text_contains_all(
 		"River Pass objective drawer",
 		[String(frontier_snapshot.get("objective_summary", ""))],
-		["Objective Board", "Victory 0/4", "Defeat risks 0/4 triggered", "Claim Duskfen Bastion", "Avoid Defeat", "Current progress:", "Next step:"]
+		["Objective Board", "Victory 0/5", "Defeat risks 0/4 triggered", "Claim Duskfen Bastion", "Avoid Defeat", "Current progress:", "Next step:"]
 	):
 		return false
 	shell.call("_on_close_drawers_pressed")
@@ -414,7 +414,7 @@ func _assert_objective_stakes_ui_contract(shell: Node) -> bool:
 		],
 		[
 			"Campaign",
-			"Objectives 0/4",
+			"Objectives 0/5",
 			"Next Claim Duskfen Bastion",
 			"Campaign: Lanterns Through Reedfall",
 			"Chapter I: River Pass",
