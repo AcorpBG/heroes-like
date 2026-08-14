@@ -25,6 +25,22 @@ const FACTION_COLORS := {
 	"faction_brasshollow": Color(0.70, 0.52, 0.31, 1.0),
 	"faction_veilmourn": Color(0.42, 0.52, 0.62, 1.0),
 }
+const FACTION_BACKDROP_PATHS := {
+	"faction_embercourt": "res://art/towns/runtime/backdrops/town_embercourt.png",
+	"faction_mireclaw": "res://art/towns/runtime/backdrops/town_mireclaw.png",
+	"faction_sunvault": "res://art/towns/runtime/backdrops/town_sunvault.png",
+	"faction_thornwake": "res://art/towns/runtime/backdrops/town_thornwake.png",
+	"faction_brasshollow": "res://art/towns/runtime/backdrops/town_brasshollow.png",
+	"faction_veilmourn": "res://art/towns/runtime/backdrops/town_veilmourn.png",
+}
+const FACTION_BACKDROP_TEXTURES := {
+	"faction_embercourt": preload("res://art/towns/runtime/backdrops/town_embercourt.png"),
+	"faction_mireclaw": preload("res://art/towns/runtime/backdrops/town_mireclaw.png"),
+	"faction_sunvault": preload("res://art/towns/runtime/backdrops/town_sunvault.png"),
+	"faction_thornwake": preload("res://art/towns/runtime/backdrops/town_thornwake.png"),
+	"faction_brasshollow": preload("res://art/towns/runtime/backdrops/town_brasshollow.png"),
+	"faction_veilmourn": preload("res://art/towns/runtime/backdrops/town_veilmourn.png"),
+}
 const DISTRICT_ORDER := ["military", "economy", "spellcraft", "logistics", "defense"]
 const DISTRICT_LABELS := {
 	"military": "WAR",
@@ -132,6 +148,16 @@ func _draw() -> void:
 	draw_rect(board_rect, FRAME_COLOR, false, 3.0)
 
 	var scene_rect := board_rect.grow(-12.0)
+	if not _draw_scenic_backdrop(scene_rect):
+		_draw_procedural_stage(scene_rect)
+	else:
+		draw_rect(scene_rect, Color(0.02, 0.03, 0.04, 0.08), true)
+	_draw_status_plaques(scene_rect)
+	_draw_district_strip(scene_rect)
+	_draw_command_markers(scene_rect)
+	_draw_header(scene_rect)
+
+func _draw_procedural_stage(scene_rect: Rect2) -> void:
 	var horizon_y := scene_rect.position.y + scene_rect.size.y * 0.58
 	var sky_rect := Rect2(scene_rect.position, Vector2(scene_rect.size.x, horizon_y - scene_rect.position.y))
 	var ground_rect := Rect2(Vector2(scene_rect.position.x, horizon_y), Vector2(scene_rect.size.x, scene_rect.end.y - horizon_y))
@@ -140,10 +166,60 @@ func _draw() -> void:
 	_draw_haze(scene_rect)
 	_draw_roads(ground_rect)
 	_draw_city(scene_rect, ground_rect)
-	_draw_status_plaques(scene_rect)
-	_draw_district_strip(scene_rect)
-	_draw_command_markers(scene_rect)
-	_draw_header(scene_rect)
+
+func _draw_scenic_backdrop(scene_rect: Rect2) -> bool:
+	var texture := _scenic_backdrop_texture()
+	if texture == null or scene_rect.size.x <= 0.0 or scene_rect.size.y <= 0.0:
+		return false
+	var source_rect := _cover_source_rect(texture.get_size(), scene_rect.size)
+	if source_rect.size.x <= 0.0 or source_rect.size.y <= 0.0:
+		return false
+	draw_texture_rect_region(texture, scene_rect, source_rect)
+	return true
+
+func _scenic_backdrop_texture() -> Texture2D:
+	var value: Variant = FACTION_BACKDROP_TEXTURES.get(_town_faction_id(), null)
+	return value as Texture2D if value is Texture2D else null
+
+func _town_faction_id() -> String:
+	var faction_id := String(_town_template.get("faction_id", ""))
+	if faction_id == "":
+		faction_id = String(_faction.get("id", ""))
+	return faction_id
+
+func _cover_source_rect(texture_size: Vector2, destination_size: Vector2) -> Rect2:
+	if texture_size.x <= 0.0 or texture_size.y <= 0.0 or destination_size.x <= 0.0 or destination_size.y <= 0.0:
+		return Rect2()
+	var cover_scale := maxf(destination_size.x / texture_size.x, destination_size.y / texture_size.y)
+	var source_size := destination_size / cover_scale
+	return Rect2((texture_size - source_size) * 0.5, source_size)
+
+func validation_scenic_backdrop_summary() -> Dictionary:
+	var faction_id := _town_faction_id()
+	var texture := _scenic_backdrop_texture()
+	var scene_rect := Rect2(Vector2(26.0, 26.0), size - Vector2(52.0, 52.0))
+	var texture_size := texture.get_size() if texture != null else Vector2.ZERO
+	var source_rect := _cover_source_rect(texture_size, scene_rect.size) if texture != null else Rect2()
+	return {
+		"faction_id": faction_id,
+		"mapped_path": String(FACTION_BACKDROP_PATHS.get(faction_id, "")),
+		"texture_loaded": texture != null,
+		"texture_size": texture_size,
+		"destination_rect": scene_rect,
+		"source_rect": source_rect,
+		"source_within_texture": texture != null \
+			and source_rect.position.x >= 0.0 \
+			and source_rect.position.y >= 0.0 \
+			and source_rect.end.x <= texture_size.x \
+			and source_rect.end.y <= texture_size.y,
+		"destination_contained": scene_rect.position.x >= 0.0 \
+			and scene_rect.position.y >= 0.0 \
+			and scene_rect.end.x <= size.x \
+			and scene_rect.end.y <= size.y,
+		"rendering_mode": "cover_crop_scenic_backdrop" if texture != null else "procedural_geometry_fallback",
+		"procedural_fallback": texture == null,
+		"overlay_order": ["scenic_or_procedural_stage", "status_plaques", "district_strip", "command_markers", "header"],
+	}
 
 func _draw_haze(scene_rect: Rect2) -> void:
 	for index in range(4):
