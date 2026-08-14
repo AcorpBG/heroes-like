@@ -12,7 +12,9 @@ func _ready() -> void:
 func _run() -> void:
 	var original_reduced_motion: bool = SettingsService.reduced_motion_enabled()
 	SettingsService.set_reduced_motion_enabled(false)
-	var ok := await _assert_persistent_resource_capture_playback()
+	var ok := await _assert_guarded_site_context_playback()
+	if ok:
+		ok = await _assert_persistent_resource_capture_playback()
 	if ok:
 		ok = await _assert_repeatable_service_visited_and_revisit()
 	if ok:
@@ -30,6 +32,123 @@ func _run() -> void:
 		return
 	print("%s %s" % [REPORT_ID, JSON.stringify({"evidence": _evidence, "ok": true})])
 	get_tree().quit(0)
+
+func _assert_guarded_site_context_playback() -> bool:
+	var guarded_tile := Vector2i(3, 1)
+	var guard_id := "object_guarded_barrow_watch"
+	var session = _session_with_map(7, 3, true)
+	session.overworld["resource_nodes"] = [_guarded_barrow_node("object_guarded_barrow", guarded_tile)]
+	session.overworld["encounters"] = [_guarded_barrow_encounter(guard_id, "object_guarded_barrow", Vector2i(3, 0))]
+	var opened := await _open_shell(session)
+	var shell: Node = opened.get("shell", null)
+	session = opened.get("session", session)
+	_prepare_shell_state(shell, session, Vector2i(0, 1), 4)
+	var authority_before_selection: Dictionary = session.to_dict()
+	var cache_before_selection := _render_cache(shell)
+	var selection: Dictionary = shell.call("validation_select_tile", guarded_tile.x, guarded_tile.y)
+	var guarded := _guarded_site(shell)
+	var cache_after_selection := _render_cache(shell)
+	var node: Dictionary = session.overworld.get("resource_nodes", [])[0]
+	var guard: Dictionary = session.overworld.get("encounters", [])[0]
+	var site := ContentService.get_resource_site("site_barrow_vault")
+	var expected_inspection := OverworldRules.describe_resource_site_control_inspection(session, node, site)
+	var expected_guard_surface := OverworldRules.describe_encounter_guard_link_surface(session, guard)
+	if (
+		guarded != {
+			"active": true,
+			"event_id": "overworld_object_guarded",
+			"status": "guarded",
+			"tile": {"x": guarded_tile.x, "y": guarded_tile.y},
+			"placement_id": "object_guarded_barrow",
+			"site_id": "site_barrow_vault",
+			"site_name": "Barrow Vault",
+			"guard_placement_id": guard_id,
+			"guard_name": "Bramble Hedge Watch",
+			"control_inspection": expected_inspection,
+			"guard_link_surface": expected_guard_surface,
+			"playback_policy": "context_visible_only",
+			"animation_state": "guard_warning_hold",
+			"visual_policy": "authored_animation_state",
+			"fallback_tag": "",
+			"allows_large_motion": true,
+		}
+		or String(selection.get("selected_route_decision", {}).get("status", "")) not in ["reachable", "blocked"]
+		or not expected_inspection.contains("Guard: Guarded by Bramble Hedge Watch; clear guard to use site")
+		or expected_guard_surface == ""
+		or session.to_dict() != authority_before_selection
+		or int(cache_after_selection.get("session_static_generation", -1)) != int(cache_before_selection.get("session_static_generation", -2))
+		or int(cache_after_selection.get("state_generation", -1)) != int(cache_before_selection.get("state_generation", -2))
+		or int(cache_after_selection.get("dynamic_generation", -1)) <= int(cache_before_selection.get("dynamic_generation", -1))
+	):
+		return _fail("Guarded site selection did not publish the exact context-only cue on the dynamic layer.", {"selection": selection, "guarded": guarded})
+	shell.call("_refresh")
+	await get_tree().process_frame
+	var refreshed := _guarded_site(shell)
+	var cache_after_refresh := _render_cache(shell)
+	if (
+		refreshed != guarded
+		or session.to_dict() != authority_before_selection
+		or int(cache_after_refresh.get("session_static_generation", -1)) != int(cache_after_selection.get("session_static_generation", -2))
+		or int(cache_after_refresh.get("state_generation", -1)) != int(cache_after_selection.get("state_generation", -2))
+	):
+		return _fail("Guarded context was not stable across a full refresh.", refreshed)
+	shell.call("validation_select_tile", 0, 1)
+	if bool(_guarded_site(shell).get("active", true)) or session.to_dict() != authority_before_selection:
+		return _fail("Guarded context remained active after deselection.", _guarded_site(shell))
+	shell.call("validation_select_tile", guarded_tile.x, guarded_tile.y)
+	if _guarded_site(shell) != guarded:
+		return _fail("Guarded context did not return exactly after reselection.", _guarded_site(shell))
+	var resolved: Array = session.overworld.get("resolved_encounters", []) if session.overworld.get("resolved_encounters", []) is Array else []
+	resolved.append(guard_id)
+	session.overworld["resolved_encounters"] = resolved
+	shell.call("_refresh")
+	await get_tree().process_frame
+	if bool(_guarded_site(shell).get("active", true)) or not OverworldRules.resource_site_blocking_guard(session, node, site).is_empty():
+		return _fail("Guarded context did not clear with authoritative guard resolution.", _guarded_site(shell))
+	_evidence["guarded_site_context"] = {
+		"event_id": "overworld_object_guarded",
+		"site_id": "site_barrow_vault",
+		"guard_placement_id": guard_id,
+		"exact_inspection": true,
+		"refresh_stable": true,
+		"deselection_cleared": true,
+		"guard_resolution_cleared": true,
+		"dynamic_layer_only": true,
+	}
+	shell.queue_free()
+	await get_tree().process_frame
+
+	SettingsService.set_reduced_motion_enabled(true)
+	var reduced_session = _session_with_map(7, 3, true)
+	reduced_session.overworld["resource_nodes"] = [_guarded_barrow_node("object_guarded_barrow_reduced", guarded_tile)]
+	reduced_session.overworld["encounters"] = [_guarded_barrow_encounter("object_guarded_barrow_watch_reduced", "object_guarded_barrow_reduced", Vector2i(3, 0))]
+	var reduced_opened := await _open_shell(reduced_session)
+	var reduced_shell: Node = reduced_opened.get("shell", null)
+	reduced_session = reduced_opened.get("session", reduced_session)
+	_prepare_shell_state(reduced_shell, reduced_session, Vector2i(0, 1), 4)
+	var reduced_authority: Dictionary = reduced_session.to_dict()
+	reduced_shell.call("validation_select_tile", guarded_tile.x, guarded_tile.y)
+	var reduced := _guarded_site(reduced_shell)
+	if (
+		not bool(reduced.get("active", false))
+		or String(reduced.get("event_id", "")) != "overworld_object_guarded"
+		or String(reduced.get("playback_policy", "")) != "context_visible_only"
+		or String(reduced.get("animation_state", "")) != "guard_badge_static"
+		or String(reduced.get("visual_policy", "")) != "reduced_motion_fallback"
+		or String(reduced.get("fallback_tag", "")) != "guard_badge_static"
+		or bool(reduced.get("allows_large_motion", true))
+		or reduced_session.to_dict() != reduced_authority
+	):
+		return _fail("Reduced motion did not use the exact static guarded-site fallback.", reduced)
+	_evidence["reduced_motion_guarded_site_context"] = {
+		"animation_state": "guard_badge_static",
+		"fallback_tag": "guard_badge_static",
+		"allows_large_motion": false,
+	}
+	reduced_shell.queue_free()
+	await get_tree().process_frame
+	SettingsService.set_reduced_motion_enabled(false)
+	return true
 
 func _assert_persistent_resource_capture_playback() -> bool:
 	var session = _session_with_map(7, 3, true)
@@ -443,6 +562,33 @@ func _repeatable_service_node(placement_id: String, tile: Vector2i) -> Dictionar
 		"collected_by_faction_id": "",
 	}
 
+func _guarded_barrow_node(placement_id: String, tile: Vector2i) -> Dictionary:
+	return {
+		"placement_id": placement_id,
+		"site_id": "site_barrow_vault",
+		"x": tile.x,
+		"y": tile.y,
+		"collected": false,
+		"collected_by_faction_id": "",
+	}
+
+func _guarded_barrow_encounter(placement_id: String, target_placement_id: String, tile: Vector2i) -> Dictionary:
+	return {
+		"placement_id": placement_id,
+		"encounter_id": "encounter_bramble_hedge_watch",
+		"name": "Bramble Hedge Watch",
+		"x": tile.x,
+		"y": tile.y,
+		"guard_link": {
+			"guard_role": "site_guard",
+			"target_kind": "resource_site",
+			"target_placement_id": target_placement_id,
+			"target_id": "site_barrow_vault",
+			"clear_required_for_target": true,
+			"blocks_approach": true,
+		},
+	}
+
 func _neutral_town(placement_id: String, tile: Vector2i) -> Dictionary:
 	return {
 		"placement_id": placement_id,
@@ -466,6 +612,11 @@ func _object_resolution(shell: Node) -> Dictionary:
 	var snapshot: Dictionary = shell.call("validation_snapshot")
 	var viewport: Dictionary = snapshot.get("map_viewport", {}) if snapshot.get("map_viewport", {}) is Dictionary else {}
 	return viewport.get("object_resolution_presentation", {}).duplicate(true) if viewport.get("object_resolution_presentation", {}) is Dictionary else {}
+
+func _guarded_site(shell: Node) -> Dictionary:
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var viewport: Dictionary = snapshot.get("map_viewport", {}) if snapshot.get("map_viewport", {}) is Dictionary else {}
+	return viewport.get("guarded_site_presentation", {}).duplicate(true) if viewport.get("guarded_site_presentation", {}) is Dictionary else {}
 
 func _map_viewport(shell: Node) -> Dictionary:
 	var snapshot: Dictionary = shell.call("validation_snapshot")

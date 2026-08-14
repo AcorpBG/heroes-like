@@ -28026,6 +28026,16 @@ def validate_overworld_object_resolution_cue_playback(errors: list[str]) -> None
     for required_token in (
         "var _object_resolution_presentation: Dictionary = {}",
         "var _object_resolution_presentation_serial := 0",
+        "func _selected_guarded_site_presentation",
+        'OverworldRules.resource_site_blocking_guard(_session, node, site)',
+        'OverworldRules.describe_resource_site_control_inspection(_session, node, site)',
+        'OverworldRules.describe_encounter_guard_link_surface(_session, guard)',
+        '"overworld_object_guarded"',
+        'String(policy.get("selected_playback_policy", "")) != "context_visible_only"',
+        '"guard_placement_id": guard_placement_id',
+        '"control_inspection": control_inspection',
+        '"guard_link_surface": guard_link_surface',
+        "_selected_guarded_site_presentation()",
         "_record_object_resolution_presentation(result, route)",
         "func _record_object_resolution_presentation",
         'result.get("interaction_result", {})',
@@ -28050,6 +28060,14 @@ def validate_overworld_object_resolution_cue_playback(errors: list[str]) -> None
     ensure(record_block.find("placement_id == \"\"") < record_block.find("cue_playback_policy_for_event") < record_block.find("_object_resolution_presentation_serial += 1"), errors, "Object-result playback must validate placement/tile and resolve catalog policy before serial publication")
     ensure("session.overworld" not in record_block and "session.flags" not in record_block and "OverworldRules." not in record_block, errors, "Object-result presentation must not mutate or recompute gameplay authority")
     ensure("create_timer" not in record_block and "await " not in record_block and "create_tween" not in record_block, errors, "Object-result producer must not add hidden timing authority")
+    guarded_shell_block = gdscript_function_block(shell_text, "_selected_guarded_site_presentation")
+    ensure(guarded_shell_block.find("_resource_node_at") < guarded_shell_block.find("resource_site_blocking_guard") < guarded_shell_block.find("cue_playback_policy_for_event") < guarded_shell_block.rfind("return {"), errors, "Guarded-site producer must resolve selected node, live blocking guard, authored policy, then publish detached context")
+    ensure('String(policy.get("selected_playback_policy", "")) != "context_visible_only"' in guarded_shell_block, errors, "Guarded-site producer must require the exact context-visible catalog policy")
+    ensure('placement_id == "" or guard_placement_id == "" or control_inspection == "" or guard_link_surface == ""' in guarded_shell_block, errors, "Guarded-site producer must fail closed without exact site, guard, inspection, and guard-link authority")
+    ensure('"tile": {"x": _selected_tile.x, "y": _selected_tile.y}' in guarded_shell_block and '"guard_name": OverworldRules.encounter_display_name(guard)' in guarded_shell_block, errors, "Guarded-site producer must detach the exact selected tile and guard identity")
+    ensure("session.overworld[" not in guarded_shell_block and "session.flags[" not in guarded_shell_block and "create_timer" not in guarded_shell_block and "await " not in guarded_shell_block and "create_tween" not in guarded_shell_block, errors, "Guarded-site producer must remain synchronous and read-only")
+    refresh_map_block = gdscript_function_block(shell_text, "_refresh_map_view")
+    ensure(refresh_map_block.count("_selected_guarded_site_presentation()") == 1 and refresh_map_block.find("_selected_guarded_site_presentation()") < refresh_map_block.find("set_placement_debug_overlay_enabled"), errors, "Map refresh must derive guarded-site context exactly once inside the normal map-state handoff")
     move_handler = gdscript_function_block(shell_text, "_handle_move_result")
     ensure(move_handler.find("_record_hero_movement_presentation(result, route)") < move_handler.find("_record_object_resolution_presentation(result, route)"), errors, "Object-result playback must queue after the exact route-locomotion producer")
     context_handler = gdscript_function_block(shell_text, "_on_context_action_pressed")
@@ -28065,7 +28083,14 @@ def validate_overworld_object_resolution_cue_playback(errors: list[str]) -> None
         "OBJECT_RESOLUTION_MIN_DURATION_MSEC := 60",
         "OBJECT_RESOLUTION_MAX_DURATION_MSEC := 700",
         "object_resolution_presentation: Dictionary = {}",
+        "guarded_site_presentation: Dictionary = {}",
         "func _sync_object_resolution_presentation",
+        "func _sync_guarded_site_presentation",
+        'String(presentation.get("playback_policy", "")) != "context_visible_only"',
+        'tile != _selected_tile',
+        "func _draw_guarded_site_presentation",
+        "func validation_guarded_site_presentation",
+        '"guarded_site_presentation": validation_guarded_site_presentation()',
         'serial == _object_resolution_last_serial',
         'not in ["overworld_object_visited", "overworld_object_captured", "overworld_object_depleted"]',
         'not in ["resource_site", "artifact", "town_capture"]',
@@ -28094,12 +28119,37 @@ def validate_overworld_object_resolution_cue_playback(errors: list[str]) -> None
     ensure("_invalidate_session_static_cache" not in process_block + draw_block and "_invalidate_state_cache" not in process_block + draw_block, errors, "Object-result frames must not invalidate static or state caches")
     ensure("session" not in process_block and "session" not in draw_block, errors, "Object-result frame/draw helpers must not consult or mutate session authority")
     ensure("create_timer" not in sync_block + process_block + draw_block and "create_tween" not in sync_block + process_block + draw_block and "await " not in sync_block + process_block + draw_block, errors, "Object-result playback must use the bounded shared view process without hidden timers or coroutines")
+    guarded_sync_block = gdscript_function_block(map_view_text, "_sync_guarded_site_presentation")
+    guarded_draw_block = gdscript_function_block(map_view_text, "_draw_guarded_site_presentation")
+    guarded_validation_block = gdscript_function_block(map_view_text, "validation_guarded_site_presentation")
+    dynamic_draw_block = gdscript_function_block(map_view_text, "_draw_dynamic_layer")
+    ensure(guarded_sync_block.find("_guarded_site_active = false") < guarded_sync_block.find('presentation.get("event_id", "")') < guarded_sync_block.find('presentation.get("tile", {})') < guarded_sync_block.find("_guarded_site_active = true"), errors, "Map view guarded-site context must clear first, validate whole identity, validate selected tile, then activate")
+    ensure('_guarded_site_event_id != "overworld_object_guarded"' in guarded_sync_block and 'String(presentation.get("status", "")) != "guarded"' in guarded_sync_block, errors, "Map view guarded-site context must require exact event and guarded status")
+    ensure('_guarded_site_control_inspection == ""' in guarded_sync_block and '_guarded_site_guard_link_surface == ""' in guarded_sync_block, errors, "Map view guarded-site context must fail closed without both existing rule surfaces")
+    ensure("session" not in guarded_sync_block + guarded_draw_block + guarded_validation_block and "create_timer" not in guarded_sync_block + guarded_draw_block and "create_tween" not in guarded_sync_block + guarded_draw_block and "await " not in guarded_sync_block + guarded_draw_block, errors, "Guarded-site view helpers must not consult gameplay authority or add timing")
+    ensure("_invalidate_session_static_cache" not in guarded_sync_block + guarded_draw_block and "_invalidate_state_cache" not in guarded_sync_block + guarded_draw_block, errors, "Guarded-site context must not invalidate static or state caches")
+    ensure(dynamic_draw_block.count("_draw_guarded_site_presentation(board_rect)") == 1, errors, "Guarded-site context must draw exactly once on the dynamic layer")
+    ensure("_draw_guarded_site_presentation" not in gdscript_function_block(map_view_text, "_draw_session_static_layer") and "_draw_guarded_site_presentation" not in gdscript_function_block(map_view_text, "_draw_state_layer") and "_draw_guarded_site_presentation" not in gdscript_function_block(map_view_text, "_draw_frame_layer"), errors, "Guarded-site context must not draw on static, state, or frame layers")
     index_block = gdscript_function_block(map_view_text, "_rebuild_static_object_indexes")
     ensure('var repeatable := bool(site.get("repeatable", false)) or String(site.get("family", "")) == "repeatable_service"' in index_block, errors, "Map object indexing must derive the exact authored repeatable service contract")
     ensure('bool(site.get("persistent_control", false)) or repeatable or not bool(node.get("collected", false))' in index_block, errors, "Collected repeatable services must remain live while one-time collected resources stay excluded")
 
     for required_token in (
         'const REPORT_ID := "OVERWORLD_OBJECT_RESOLUTION_CUE_PLAYBACK_REPORT"',
+        "func _assert_guarded_site_context_playback",
+        "func _guarded_site",
+        '"event_id": "overworld_object_guarded"',
+        '"playback_policy": "context_visible_only"',
+        '"animation_state": "guard_warning_hold"',
+        '"fallback_tag": "guard_badge_static"',
+        'expected_inspection.contains("Guard: Guarded by Bramble Hedge Watch; clear guard to use site")',
+        'OverworldRules.resource_site_blocking_guard(session, node, site).is_empty()',
+        'session.to_dict() != authority_before_selection',
+        'int(cache_after_selection.get("session_static_generation", -1))',
+        'int(cache_after_selection.get("state_generation", -1))',
+        'int(cache_after_selection.get("dynamic_generation", -1))',
+        'shell.call("validation_select_tile", 0, 1)',
+        'resolved.append(guard_id)',
         "func _assert_persistent_resource_capture_playback",
         "func _assert_repeatable_service_visited_and_revisit",
         "func _assert_neutral_town_capture_playback",
@@ -28132,6 +28182,9 @@ def validate_overworld_object_resolution_cue_playback(errors: list[str]) -> None
     ):
         ensure(required_token in test_text, errors, f"Object-resolution focused report is missing exact proof token {required_token}")
     ensure("validation_set_object_resolution" not in test_text and "_object_resolution_elapsed_sec" not in test_text and "_process(" not in test_text, errors, "Focused object-result report must passively observe production playback rather than mutate its clock")
+    guarded_case = gdscript_function_block(test_text, "_assert_guarded_site_context_playback")
+    ensure(guarded_case.find("authority_before_selection") < guarded_case.find('validation_select_tile", guarded_tile.x') < guarded_case.find("_guarded_site(shell)") < guarded_case.find('shell.call("_refresh")') < guarded_case.find('shell.call("validation_select_tile", 0, 1)') < guarded_case.find("resolved.append(guard_id)"), errors, "Guarded-site focused proof must establish authority, select, observe, refresh, deselect, then resolve in order")
+    ensure("_selected_guarded_site_presentation" not in test_text and "_sync_guarded_site_presentation" not in test_text and "_draw_guarded_site_presentation" not in test_text, errors, "Focused guarded-site proof must passively observe the production context boundary")
     ensure('path="res://tests/overworld_object_resolution_cue_playback_report.gd"' in scene_text, errors, "Object-resolution report scene must own its exact focused script")
 
 
