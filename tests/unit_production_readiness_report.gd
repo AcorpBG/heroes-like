@@ -19,6 +19,11 @@ const CONTENT_REFERENCE_PATHS := {
 	"encounters": "res://content/encounters.json",
 	"scenarios": "res://content/scenarios.json",
 }
+const IMMUTABLE_CONTENT_ABILITY_IDS := [
+	"bramble_ground",
+	"fog_screen",
+	"readiness_writ",
+]
 
 var _errors: Array[String] = []
 var _report := {
@@ -87,19 +92,18 @@ func _validate_unit(
 	used_names[unit_name] = unit_id
 
 	_validate_unit_gameplay_fields(unit_id, unit)
-	var source_ability_ids := _unit_ability_ids(unit)
 	var stack: Dictionary = BattleRulesScript._build_battle_stack(unit_id, 3, "player", 0, {"source_type": "unit_production_readiness_report"})
 	if stack.is_empty():
 		_error("Unit %s could not materialize as a battle stack." % unit_id)
 	else:
 		_report["stack_materialized_count"] = int(_report["stack_materialized_count"]) + 1
-		_validate_stack(unit_id, source_ability_ids, stack, "materialized")
+		_validate_stack(unit_id, unit, stack, "materialized")
 	var normalized: Dictionary = BattleRulesScript._normalize_stack(stack)
 	if normalized.is_empty():
 		_error("Unit %s could not normalize as a battle stack." % unit_id)
 	else:
 		_report["normalized_stack_count"] = int(_report["normalized_stack_count"]) + 1
-		_validate_stack(unit_id, source_ability_ids, normalized, "normalized")
+		_validate_stack(unit_id, unit, normalized, "normalized")
 
 	var art_summary := _validate_art(unit_id, manifest_by_unit.get(unit_id, {}), art_hashes)
 	var unit_refs: Array = references.get(unit_id, []) if references.get(unit_id, []) is Array else []
@@ -111,7 +115,7 @@ func _validate_unit(
 		"name": unit_name,
 		"faction_id": String(unit.get("faction_id", "")),
 		"content_status": String(unit.get("content_status", "")),
-		"ability_ids": source_ability_ids,
+		"ability_ids": _unit_ability_ids(unit),
 		"reference_count": unit_refs.size(),
 		"reference_sources": _unique_string_array(unit_refs),
 		"art": art_summary,
@@ -146,18 +150,27 @@ func _validate_unit_gameplay_fields(unit_id: String, unit: Dictionary) -> void:
 	if abilities.is_empty():
 		_error("Unit %s must define at least one implemented ability." % unit_id)
 
-func _validate_stack(unit_id: String, source_ability_ids: Array, stack: Dictionary, label: String) -> void:
+func _validate_stack(unit_id: String, unit: Dictionary, stack: Dictionary, label: String) -> void:
 	if String(stack.get("unit_id", "")) != unit_id:
 		_error("Unit %s %s stack changed unit_id to %s." % [unit_id, label, stack.get("unit_id", "")])
 	for field in ["unit_hp", "base_count", "attack", "defense", "min_damage", "max_damage", "initiative", "speed"]:
 		if int(stack.get(field, 0)) <= 0:
 			_error("Unit %s %s stack must define %s > 0." % [unit_id, label, field])
-	var normalized_ability_ids := _unit_ability_ids(stack)
-	if normalized_ability_ids.size() != source_ability_ids.size():
-		_error("Unit %s %s stack ability count changed from %d to %d." % [unit_id, label, source_ability_ids.size(), normalized_ability_ids.size()])
+	var source_ability_ids := _unit_ability_ids(unit)
+	var expected_stack_ability_ids := []
 	for ability_id in source_ability_ids:
-		if ability_id not in normalized_ability_ids:
-			_error("Unit %s %s stack dropped ability %s." % [unit_id, label, ability_id])
+		if ability_id not in IMMUTABLE_CONTENT_ABILITY_IDS:
+			expected_stack_ability_ids.append(ability_id)
+	var normalized_ability_ids := _unit_ability_ids(stack)
+	if normalized_ability_ids != expected_stack_ability_ids:
+		_error("Unit %s %s stack stored ability ids changed from %s to %s." % [unit_id, label, expected_stack_ability_ids, normalized_ability_ids])
+	for ability_id in IMMUTABLE_CONTENT_ABILITY_IDS:
+		var authored_ability := _unit_ability_by_id(unit, ability_id)
+		if authored_ability.is_empty():
+			continue
+		var resolved_ability: Dictionary = BattleRulesScript._authored_ability_by_id(stack, ability_id)
+		if resolved_ability != authored_ability:
+			_error("Unit %s %s stack did not resolve immutable authored ability %s exactly." % [unit_id, label, ability_id])
 
 func _validate_art(unit_id: String, record: Variant, art_hashes: Dictionary) -> Dictionary:
 	var summary := {}
@@ -224,6 +237,12 @@ func _unit_ability_ids(unit_or_stack: Dictionary) -> Array:
 			if ability_id != "":
 				ids.append(ability_id)
 	return ids
+
+func _unit_ability_by_id(unit_or_stack: Dictionary, ability_id: String) -> Dictionary:
+	for ability in unit_or_stack.get("abilities", []):
+		if ability is Dictionary and String(ability.get("id", "")) == ability_id:
+			return ability
+	return {}
 
 func _unique_string_array(values: Array) -> Array:
 	var seen := {}

@@ -28088,10 +28088,20 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "UNIT_PRODUCTION_READINESS_REPORT",
         "BattleRulesScript._build_battle_stack",
         "BattleRulesScript._normalize_stack",
+        'IMMUTABLE_CONTENT_ABILITY_IDS := [\n\t"bramble_ground",\n\t"fog_screen",\n\t"readiness_writ",\n]',
+        "if ability_id not in IMMUTABLE_CONTENT_ABILITY_IDS:",
+        "if normalized_ability_ids != expected_stack_ability_ids:",
+        "BattleRulesScript._authored_ability_by_id(stack, ability_id)",
+        "if resolved_ability != authored_ability:",
         "art_surface_unique_hash_counts",
         "units_without_live_reference",
     ):
         ensure(required_token in readiness_report_text, errors, f"unit_production_readiness_report.gd is missing token {required_token}")
+    for forbidden_token in (
+        "normalized_ability_ids.size() != source_ability_ids.size()",
+        'stack dropped ability %s',
+    ):
+        ensure(forbidden_token not in readiness_report_text, errors, f"unit_production_readiness_report.gd retains stale mutable-stack ability oracle {forbidden_token}")
 
     runtime_asset_resolution_report_text = UNIT_RUNTIME_ASSET_RESOLUTION_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     ensure(UNIT_RUNTIME_ASSET_RESOLUTION_REPORT_SCENE_PATH.exists(), errors, "unit_runtime_asset_resolution_report.tscn is missing")
