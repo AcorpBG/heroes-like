@@ -9,12 +9,12 @@ func _run() -> void:
 	var cases := [
 		{
 			"label": "safe pickup metadata",
-			"site_id": "site_wood_wagon",
+			"site_id": "site_waystone_cache",
 			"expected": [
 				"Class: Pickup",
 				"Cadence: one-time",
 				"pickup/cache",
-				"Roles: Build Resource, Small Reward, Route Pacing",
+				"Roles: Small Reward, Route Pacing",
 			],
 		},
 		{
@@ -48,9 +48,9 @@ func _run() -> void:
 		if _failed:
 			return
 
-	var wood_object := ContentService.get_map_object("object_wood_wagon")
+	var wood_object := ContentService.get_map_object("object_waystone_cache")
 	if wood_object.has("body_tiles") or wood_object.has("approach"):
-		_fail("Safe runtime metadata report must not require body_tiles or approach metadata for object_wood_wagon")
+		_fail("Safe runtime metadata report must not require body_tiles or approach metadata for object_waystone_cache")
 		return
 
 	var payload := {

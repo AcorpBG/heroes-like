@@ -1644,6 +1644,8 @@ func _on_context_action_pressed(action_id: String) -> void:
 	if result.is_empty():
 		_debug_phase_end("context_action_dispatch", dispatch_started_usec, {"action_id": action_id, "empty_result": true})
 		return
+	if action_id in ["collect_resource", "collect_artifact"]:
+		_record_object_resolution_presentation(result, String(result.get("route", "")))
 	_last_message = String(result.get("message", ""))
 	_last_enemy_activity_text = ""
 	_last_turn_resolution_text = ""
@@ -2347,6 +2349,8 @@ func _record_object_resolution_presentation(result: Dictionary, route: String) -
 		var site := ContentService.get_resource_site(String(interaction.get("content_id", "")))
 		if bool(site.get("persistent_control", false)):
 			event_id = "overworld_object_captured"
+		elif bool(site.get("repeatable", false)) or String(site.get("family", "")) == "repeatable_service":
+			event_id = "overworld_object_visited"
 	var policy: Dictionary = AnimationCueCatalogScript.cue_playback_policy_for_event(
 		event_id,
 		SettingsService.animation_preferences()

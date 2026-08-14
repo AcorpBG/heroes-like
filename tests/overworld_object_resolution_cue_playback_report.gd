@@ -14,6 +14,8 @@ func _run() -> void:
 	SettingsService.set_reduced_motion_enabled(false)
 	var ok := await _assert_persistent_resource_capture_playback()
 	if ok:
+		ok = await _assert_repeatable_service_visited_and_revisit()
+	if ok:
 		ok = await _assert_artifact_depletion_playback()
 	if ok:
 		SettingsService.set_reduced_motion_enabled(true)
@@ -91,6 +93,84 @@ func _assert_persistent_resource_capture_playback() -> bool:
 		"active_progress": active_progress,
 		"dynamic_layer_only": true,
 		"refresh_replayed": false,
+	}
+	shell.queue_free()
+	await get_tree().process_frame
+	return true
+
+func _assert_repeatable_service_visited_and_revisit() -> bool:
+	var session = _session_with_map(5, 3, true)
+	session.overworld["resource_nodes"] = [_repeatable_service_node("repeatable_infirmary", Vector2i(2, 1))]
+	var starting_gold := int(session.overworld.get("resources", {}).get("gold", 0))
+	var opened := await _open_shell(session)
+	var shell: Node = opened.get("shell", null)
+	session = opened.get("session", session)
+	_prepare_shell_state(shell, session, Vector2i(0, 1), 2)
+	var selection: Dictionary = shell.call("validation_select_tile", 2, 1)
+	if String(selection.get("selected_route_decision", {}).get("status", "")) != "reachable":
+		return _fail("Repeatable service fixture route was not reachable.", selection)
+	var first_result: Dictionary = shell.call("validation_click_tile", 2, 1)
+	var first_cue := _object_resolution(shell)
+	var first_serial := int(first_cue.get("serial", 0))
+	var first_viewport := _map_viewport(shell)
+	var first_node: Dictionary = session.overworld.get("resource_nodes", [])[0]
+	if (
+		not bool(first_result.get("ok", false))
+		or first_serial <= 0
+		or String(first_cue.get("event_id", "")) != "overworld_object_visited"
+		or String(first_cue.get("animation_state", "")) != "visit_resolved"
+		or String(first_cue.get("fallback_tag", "")) != ""
+		or not bool(first_cue.get("queued", false))
+		or int(first_cue.get("duration_ms", 0)) != 620
+		or int(first_viewport.get("spatial_index", {}).get("resource_tiles", 0)) != 1
+		or not bool(first_node.get("collected", false))
+		or int(session.overworld.get("resources", {}).get("gold", 0)) != starting_gold - 120
+	):
+		return _fail("Repeatable service did not retain one exact visited cue and live map entry.", {"cue": first_cue, "viewport": first_viewport, "node": first_node})
+	await get_tree().create_timer(1.2).timeout
+	var authority_before_early_revisit: Dictionary = session.to_dict()
+	var early_revisit: Dictionary = shell.call("validation_perform_context_action", "collect_resource")
+	var after_early_cue := _object_resolution(shell)
+	if (
+		bool(early_revisit.get("ok", true))
+		or "collect_resource" in early_revisit.get("context_action_ids", [])
+		or int(after_early_cue.get("serial", -1)) != first_serial
+		or bool(after_early_cue.get("active", true))
+		or session.to_dict() != authority_before_early_revisit
+	):
+		return _fail("Repeatable service cooldown did not fail closed without a new cue or authority drift.", {"result": early_revisit, "cue": after_early_cue})
+	var first_collected_day := int(first_node.get("collected_day", session.day))
+	session.day = first_collected_day + 7
+	SettingsService.set_reduced_motion_enabled(true)
+	shell.call("_refresh")
+	await get_tree().process_frame
+	var authority_before_ready_revisit: Dictionary = session.to_dict()
+	var ready_revisit: Dictionary = shell.call("validation_perform_context_action", "collect_resource")
+	var revisit_cue := _object_resolution(shell)
+	var revisit_viewport := _map_viewport(shell)
+	var revisit_node: Dictionary = session.overworld.get("resource_nodes", [])[0]
+	SettingsService.set_reduced_motion_enabled(false)
+	if (
+		not bool(ready_revisit.get("ok", false))
+		or int(revisit_cue.get("serial", 0)) != first_serial + 1
+		or String(revisit_cue.get("event_id", "")) != "overworld_object_visited"
+		or String(revisit_cue.get("animation_state", "")) != "visited_check_icon"
+		or String(revisit_cue.get("visual_policy", "")) != "reduced_motion_fallback"
+		or String(revisit_cue.get("fallback_tag", "")) != "visited_check_icon"
+		or bool(revisit_cue.get("allows_large_motion", true))
+		or int(revisit_cue.get("duration_ms", 0)) != 260
+		or int(revisit_viewport.get("spatial_index", {}).get("resource_tiles", 0)) != 1
+		or int(revisit_node.get("collected_day", 0)) != session.day
+		or int(session.overworld.get("resources", {}).get("gold", 0)) != starting_gold - 240
+		or session.to_dict() == authority_before_ready_revisit
+	):
+		return _fail("Ready repeatable service revisit did not publish the exact reduced-motion visited state.", {"result": ready_revisit, "cue": revisit_cue, "viewport": revisit_viewport, "node": revisit_node})
+	_evidence["repeatable_service_visited"] = {
+		"first_serial": first_serial,
+		"revisit_serial": int(revisit_cue.get("serial", 0)),
+		"cooldown_days": 7,
+		"resource_tiles_after_visit": int(revisit_viewport.get("spatial_index", {}).get("resource_tiles", 0)),
+		"reduced_motion_fallback": String(revisit_cue.get("fallback_tag", "")),
 	}
 	shell.queue_free()
 	await get_tree().process_frame
@@ -261,10 +341,24 @@ func _wood_wagon_node(placement_id: String, tile: Vector2i) -> Dictionary:
 		"collected_by_faction_id": "",
 	}
 
+func _repeatable_service_node(placement_id: String, tile: Vector2i) -> Dictionary:
+	return {
+		"placement_id": placement_id,
+		"site_id": "site_wayfarer_infirmary",
+		"x": tile.x,
+		"y": tile.y,
+		"collected": false,
+		"collected_by_faction_id": "",
+	}
+
 func _object_resolution(shell: Node) -> Dictionary:
 	var snapshot: Dictionary = shell.call("validation_snapshot")
 	var viewport: Dictionary = snapshot.get("map_viewport", {}) if snapshot.get("map_viewport", {}) is Dictionary else {}
 	return viewport.get("object_resolution_presentation", {}).duplicate(true) if viewport.get("object_resolution_presentation", {}) is Dictionary else {}
+
+func _map_viewport(shell: Node) -> Dictionary:
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	return snapshot.get("map_viewport", {}).duplicate(true) if snapshot.get("map_viewport", {}) is Dictionary else {}
 
 func _render_cache(shell: Node) -> Dictionary:
 	var snapshot: Dictionary = shell.call("validation_snapshot")

@@ -456,7 +456,7 @@ func _sync_object_resolution_presentation(presentation: Dictionary) -> void:
 	_object_resolution_placement_id = String(presentation.get("placement_id", ""))
 	_object_resolution_allows_large_motion = bool(presentation.get("allows_large_motion", true))
 	_sync_presentation_processing()
-	if _object_resolution_event_id not in ["overworld_object_captured", "overworld_object_depleted"]:
+	if _object_resolution_event_id not in ["overworld_object_visited", "overworld_object_captured", "overworld_object_depleted"]:
 		return
 	if _object_resolution_family not in ["resource_site", "artifact"] or _object_resolution_placement_id == "":
 		return
@@ -1404,6 +1404,16 @@ func _draw_object_resolution_presentation(board_rect: Rect2) -> void:
 			pole_top + Vector2(extent * 0.30, extent * 0.08),
 			pole_top + Vector2(0.0, extent * 0.18),
 		]), Color(1.0, 0.70, 0.16, alpha))
+	elif _object_resolution_event_id == "overworld_object_visited":
+		var radius := extent * lerpf(0.25, 0.40, motion_progress)
+		var visited_color := Color(0.38, 0.94, 0.72, alpha)
+		_canvas_draw_circle(center, radius, visited_color, false, maxf(2.0, extent * 0.032), true)
+		var check_points := PackedVector2Array([
+			center + Vector2(-extent * 0.18, 0.0),
+			center + Vector2(-extent * 0.04, extent * 0.15),
+			center + Vector2(extent * 0.22, -extent * 0.17),
+		])
+		_canvas_draw_polyline(check_points, Color(0.80, 1.0, 0.91, alpha), maxf(2.5, extent * 0.050), true)
 	else:
 		var radius := extent * lerpf(0.46, 0.24, motion_progress)
 		var depleted_color := Color(0.72, 0.86, 0.94, alpha)
@@ -5479,7 +5489,8 @@ func _rebuild_static_object_indexes() -> void:
 			continue
 		var node: Dictionary = node_value
 		var site = ContentService.get_resource_site(String(node.get("site_id", "")))
-		if bool(site.get("persistent_control", false)) or not bool(node.get("collected", false)):
+		var repeatable := bool(site.get("repeatable", false)) or String(site.get("family", "")) == "repeatable_service"
+		if bool(site.get("persistent_control", false)) or repeatable or not bool(node.get("collected", false)):
 			_resources_by_tile[_tile_key(Vector2i(int(node.get("x", -1)), int(node.get("y", -1))))] = node
 	for node_value in _session.overworld.get("artifact_nodes", []):
 		if not (node_value is Dictionary):
