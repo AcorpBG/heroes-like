@@ -334,9 +334,22 @@ theme_override_constants/separation = 6
 layout_mode = 2
 text = "Commander"
 
-[node name="CampaignCommanderPreview" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignIntelRow/CommanderPreviewPanel/CommanderPreviewPad/CommanderPreviewBox"]
+[node name="CampaignCommanderIdentity" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignIntelRow/CommanderPreviewPanel/CommanderPreviewPad/CommanderPreviewBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="CampaignCommanderPortrait" type="TextureRect" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignIntelRow/CommanderPreviewPanel/CommanderPreviewPad/CommanderPreviewBox/CampaignCommanderIdentity"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(64, 86)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CampaignCommanderPreview" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignIntelRow/CommanderPreviewPanel/CommanderPreviewPad/CommanderPreviewBox/CampaignCommanderIdentity"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 custom_minimum_size = Vector2(0, 72)
 autowrap_mode = 3
 text = "Commander preview"
@@ -672,9 +685,22 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Commander"
 
-[node name="SkirmishCommanderPreview" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/SkirmishIntelRow/SkirmishCommanderPanel/SkirmishCommanderPad/SkirmishCommanderBox"]
+[node name="SkirmishCommanderIdentity" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/SkirmishIntelRow/SkirmishCommanderPanel/SkirmishCommanderPad/SkirmishCommanderBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="SkirmishCommanderPortrait" type="TextureRect" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/SkirmishIntelRow/SkirmishCommanderPanel/SkirmishCommanderPad/SkirmishCommanderBox/SkirmishCommanderIdentity"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(64, 86)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SkirmishCommanderPreview" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/SkirmishIntelRow/SkirmishCommanderPanel/SkirmishCommanderPad/SkirmishCommanderBox/SkirmishCommanderIdentity"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 custom_minimum_size = Vector2(0, 72)
 autowrap_mode = 3
 text = "Commander preview"

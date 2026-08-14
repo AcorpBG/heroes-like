@@ -67,6 +67,7 @@ const TAB_HELP_TOPIC := {
 @onready var _chapter_details_panel: PanelContainer = %ChapterDetailsPanel
 @onready var _chapter_details_label: Label = %ChapterDetails
 @onready var _campaign_intel_row: HBoxContainer = %CampaignIntelRow
+@onready var _campaign_commander_portrait: TextureRect = %CampaignCommanderPortrait
 @onready var _campaign_commander_preview_label: Label = %CampaignCommanderPreview
 @onready var _campaign_operational_board_label: Label = %CampaignOperationalBoard
 @onready var _campaign_journal_label: Label = %CampaignJournal
@@ -92,6 +93,7 @@ const TAB_HELP_TOPIC := {
 @onready var _generated_progress_bar: ProgressBar = %GeneratedMapProgress
 @onready var _generated_provenance_label: Label = %GeneratedMapProvenance
 @onready var _start_generated_skirmish_button: Button = %StartGeneratedSkirmish
+@onready var _skirmish_commander_portrait: TextureRect = %SkirmishCommanderPortrait
 @onready var _skirmish_commander_preview_label: Label = %SkirmishCommanderPreview
 @onready var _skirmish_operational_board_label: Label = %SkirmishOperationalBoard
 @onready var _start_skirmish_button: Button = %StartSkirmish
@@ -154,6 +156,8 @@ var _campaign_storage_warning := ""
 var _campaign_last_mutation_result: Dictionary = {}
 var _validation_campaign_blocked_command_count := 0
 var _campaign_intel_expanded := false
+var _hero_portrait_textures: Dictionary = {}
+var _missing_hero_portrait_paths: Dictionary = {}
 var _skirmish_entries: Array = []
 var _selected_skirmish_id := ""
 var _selected_difficulty: String = ScenarioSelectRulesScript.default_difficulty_id()
@@ -1464,6 +1468,7 @@ func _refresh_campaign_browser() -> void:
 	_sync_campaign_storage_state()
 	_refresh_campaign_row_tooltips()
 	if _campaign_entries.is_empty():
+		_set_commander_portrait(_campaign_commander_portrait, "")
 		_set_compact_label(_campaign_details_label, "Campaign board: archived campaign arcs are not active in this build.", 2, 82)
 		_set_compact_label(
 			_campaign_arc_status_label,
@@ -1513,6 +1518,7 @@ func _refresh_campaign_browser() -> void:
 	_campaign_primary_button.tooltip_text = _campaign_storage_warning if _campaign_storage_blocked else String(primary_action.get("summary", ""))
 
 	if _selected_campaign_scenario_id == "":
+		_set_commander_portrait(_campaign_commander_portrait, "")
 		_set_compact_label(_chapter_details_label, "Select a chapter to inspect carryover and the latest result.", 3, 86)
 		_set_compact_label(_campaign_commander_preview_label, "Select a chapter to review the commander and opening force.", 3, 86)
 		_set_compact_label(_campaign_operational_board_label, "Select a chapter to review terrain, pressure, and first contact.", 3, 86)
@@ -1523,6 +1529,8 @@ func _refresh_campaign_browser() -> void:
 		return
 
 	var chapter_action := CampaignProgression.chapter_action(_selected_campaign_id, _selected_campaign_scenario_id, _selected_difficulty)
+	var campaign_scenario := ContentService.get_scenario(_selected_campaign_scenario_id)
+	_set_commander_portrait(_campaign_commander_portrait, String(campaign_scenario.get("hero_id", "")))
 	var chapter_check := _campaign_chapter_check_payload(chapter_action, primary_action)
 	_start_chapter_button.visible = not _campaign_launch_actions_are_exact(chapter_action, primary_action)
 	_set_compact_label(
@@ -2188,6 +2196,7 @@ func _refresh_skirmish_setup() -> void:
 	_set_compact_label(_difficulty_summary_label, ScenarioSelectRulesScript.difficulty_summary(_selected_difficulty), 3, 82)
 
 	if selected_entry.is_empty():
+		_set_commander_portrait(_skirmish_commander_portrait, "")
 		_set_compact_label(_skirmish_details_label, "No generated maps folder packages are available.", 2, 82)
 		_set_compact_label(_setup_summary_label, "Use Generated Skirmish to create a fresh map package under maps/.", 3, 82)
 		_set_compact_label(_skirmish_commander_preview_label, "Commander preview appears here.", 3, 82)
@@ -2199,6 +2208,7 @@ func _refresh_skirmish_setup() -> void:
 	_set_compact_label(_skirmish_details_label, String(selected_entry.get("summary", "")), 3, 84)
 	var setup := ScenarioSelectRulesScript.build_skirmish_setup(_selected_skirmish_id, _selected_difficulty)
 	if setup.is_empty():
+		_set_commander_portrait(_skirmish_commander_portrait, "")
 		_set_compact_label(_setup_summary_label, "This front cannot be launched right now.", 3, 82)
 		_set_compact_label(_skirmish_commander_preview_label, "Commander preview unavailable for this front.", 3, 82)
 		_set_compact_label(_skirmish_operational_board_label, "Operational board unavailable for this front.", 3, 82)
@@ -2226,6 +2236,7 @@ func _refresh_skirmish_setup() -> void:
 		84
 	)
 	_set_compact_label(_skirmish_commander_preview_label, String(setup.get("commander_preview", "Commander preview unavailable.")), 4, 84)
+	_set_commander_portrait(_skirmish_commander_portrait, String(setup.get("hero_id", "")))
 	_set_compact_label(_skirmish_operational_board_label, String(setup.get("operational_board", "Operational board unavailable.")), 4, 84)
 	_start_skirmish_button.disabled = false
 	_start_skirmish_button.text = "Launch Skirmish"
@@ -2993,6 +3004,9 @@ func validation_snapshot() -> Dictionary:
 		"chapter_details_full": _chapter_details_label.tooltip_text,
 		"campaign_commander_preview": _campaign_commander_preview_label.text,
 		"campaign_commander_preview_full": _campaign_commander_preview_label.tooltip_text,
+		"campaign_commander_portrait_visible": _campaign_commander_portrait.visible,
+		"campaign_commander_portrait_path": _campaign_commander_portrait.texture.resource_path if _campaign_commander_portrait.texture is Texture2D else "",
+		"campaign_commander_portrait_tooltip": _campaign_commander_portrait.tooltip_text,
 		"campaign_operational_board": _campaign_operational_board_label.text,
 		"campaign_operational_board_full": _campaign_operational_board_label.tooltip_text,
 		"campaign_journal": _campaign_journal_label.text,
@@ -3030,6 +3044,9 @@ func validation_snapshot() -> Dictionary:
 		"start_generated_skirmish_enabled": not _start_generated_skirmish_button.disabled,
 		"skirmish_commander_preview": _skirmish_commander_preview_label.text,
 		"skirmish_commander_preview_full": _skirmish_commander_preview_label.tooltip_text,
+		"skirmish_commander_portrait_visible": _skirmish_commander_portrait.visible,
+		"skirmish_commander_portrait_path": _skirmish_commander_portrait.texture.resource_path if _skirmish_commander_portrait.texture is Texture2D else "",
+		"skirmish_commander_portrait_tooltip": _skirmish_commander_portrait.tooltip_text,
 		"skirmish_browser_item_tooltips": _skirmish_browser_item_tooltips(),
 		"difficulty_summary": _difficulty_summary_label.text,
 		"difficulty_summary_full": _difficulty_summary_label.tooltip_text,
@@ -4124,6 +4141,27 @@ func _unhandled_input(event: InputEvent) -> void:
 func _exit_tree() -> void:
 	if SettingsService.display_change_pending():
 		SettingsService.revert_display_change("menu_exit")
+
+func _set_commander_portrait(target: TextureRect, hero_id: String) -> void:
+	target.visible = false
+	target.texture = null
+	if hero_id == "":
+		return
+	var hero := ContentService.get_hero(hero_id)
+	var art := ContentService.get_hero_art(hero_id)
+	var path := String(art.get("portrait", ""))
+	if path == "" or _missing_hero_portrait_paths.has(path):
+		return
+	var texture: Variant = _hero_portrait_textures.get(path)
+	if not (texture is Texture2D):
+		texture = ResourceLoader.load(path, "Texture2D")
+		if not (texture is Texture2D):
+			_missing_hero_portrait_paths[path] = true
+			return
+		_hero_portrait_textures[path] = texture
+	target.texture = texture
+	target.tooltip_text = "%s portrait" % String(hero.get("name", hero_id))
+	target.visible = true
 
 func _set_compact_label(label: Label, full_text: String, max_lines: int, max_chars: int = 84) -> void:
 	FrontierVisualKit.set_compact_label(label, full_text, max_lines, max_chars)

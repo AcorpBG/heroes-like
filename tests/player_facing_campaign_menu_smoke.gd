@@ -76,6 +76,11 @@ func _run() -> void:
 		return
 	var commander_preview := String(snapshot.get("campaign_commander_preview_full", ""))
 	var operational_board := String(snapshot.get("campaign_operational_board_full", ""))
+	if not bool(snapshot.get("campaign_commander_portrait_visible", false)) \
+			or String(snapshot.get("campaign_commander_portrait_path", "")) != "res://art/heroes/portraits/hero_lyra.png" \
+			or String(snapshot.get("campaign_commander_portrait_tooltip", "")) != "Lyra Emberwell portrait":
+		_fail("Campaign commander portrait did not match the selected authored hero: %s." % JSON.stringify(snapshot))
+		return
 	for preview in [commander_preview, operational_board]:
 		if preview.find("Campaign difficulty: Warlord") < 0 or preview.find("Reduced movement and income") < 0:
 			_fail("Campaign preview did not reflect the selected Warlord pressure: %s." % preview)
