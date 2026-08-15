@@ -39,6 +39,7 @@ func _fail(message: String, original_window_size: Vector2i, original_reduced_mot
 	get_tree().quit(1)
 
 func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
+	PresentationAudio.validation_reset()
 	get_window().size = viewport_size
 	await get_tree().process_frame
 	await get_tree().process_frame
@@ -73,7 +74,7 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		"cue_id": "cue_spell_cast_overworld",
 		"spell_id": spell_id,
 	})
-	var malformed_fail_closed := malformed_after == malformed_before and not blocker.visible
+	var malformed_fail_closed := malformed_after == malformed_before and not blocker.visible and PresentationAudio.validation_records().is_empty()
 
 	open_command.emit_signal("pressed")
 	await get_tree().process_frame
@@ -95,6 +96,9 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	var active := _spell_presentation(shell)
+	var audio_records: Array = PresentationAudio.validation_records()
+	var audio_record: Dictionary = audio_records[0] if audio_records.size() == 1 and audio_records[0] is Dictionary else {}
+	var audio_exact := _audio_record_exact(active, audio_record, "audio_placeholder_spell_school_soft", "res://art/audio/runtime/presentation/field_spell.wav", "overworld_field_spell_cast", "OverworldMapView.spell_cast", 480)
 	var live_after: Dictionary = live_session.to_dict()
 	var reduced_motion := bool(mode.get("reduced_motion", false))
 	var expected_blocking := "nonblocking_reduced_motion" if reduced_motion else "input_blocking_timeout"
@@ -128,6 +132,8 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		and int(active.get("duration_ms", 0)) == (260 if reduced_motion else 620)
 		and float(active.get("progress", -1.0)) >= 0.0
 		and float(active.get("progress", -1.0)) < 1.0
+		and audio_records.size() == 1
+		and audio_exact
 	)
 
 	var pointer_blocked := true
@@ -149,6 +155,7 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		and String(refreshed.get("spell_id", "")) == spell_id
 		and float(refreshed.get("progress", -1.0)) >= progress_before_refresh
 		and live_session.to_dict() == live_after
+		and PresentationAudio.validation_records() == audio_records
 	)
 
 	var skipped := false
@@ -168,6 +175,7 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		and not blocker.visible
 		and focus_owner != blocker
 		and live_session.to_dict() == live_after
+		and PresentationAudio.validation_records() == audio_records
 	)
 
 	var failed_authority_before: Dictionary = live_session.to_dict()
@@ -179,6 +187,7 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		and int(failed_presentation.get("serial", 0)) == serial
 		and not bool(failed_presentation.get("active", true))
 		and live_session.to_dict() == failed_authority_before
+		and PresentationAudio.validation_records() == audio_records
 	)
 
 	var row := {
@@ -188,6 +197,8 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		"spell_id": spell_id,
 		"malformed_fail_closed": malformed_fail_closed,
 		"presentation_exact": presentation_exact,
+		"audio_exact": audio_exact,
+		"audio_record": audio_record,
 		"pointer_blocked": pointer_blocked,
 		"refresh_exact": refresh_exact,
 		"completion_exact": completion_exact,
@@ -255,7 +266,25 @@ func _finish_case(shell: Node, result: Dictionary) -> Dictionary:
 	if shell != null and is_instance_valid(shell):
 		shell.queue_free()
 		await get_tree().process_frame
+	PresentationAudio.validation_reset()
 	return result
+
+func _audio_record_exact(snapshot: Dictionary, record: Dictionary, cue_id: String, asset_path: String, role: String, source: String, duration_msec: int) -> bool:
+	return (
+		Array(snapshot.get("audio_playback_records", [])) == [record]
+		and String(record.get("cue_id", "")) == cue_id
+		and String(record.get("source", "")) == source
+		and bool(record.get("played", false))
+		and String(record.get("playback_source", "")) == "imported_wav"
+		and String(record.get("asset_path", "")) == asset_path
+		and String(record.get("role", "")) == role
+		and int(record.get("duration_msec", 0)) == duration_msec
+		and int(record.get("stream_mix_rate", 0)) == 44100
+		and bool(record.get("stream_stereo", false))
+		and int(record.get("stream_loop_mode", -1)) == AudioStreamWAV.LOOP_DISABLED
+		and int(record.get("imported_asset_count", 0)) == 1
+		and int(record.get("generated_fallback_count", -1)) == 0
+	)
 
 func _click_global_position(position: Vector2) -> void:
 	var press := InputEventMouseButton.new()

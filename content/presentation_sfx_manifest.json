@@ -8,6 +8,36 @@
   "sample_width_bits": 16,
   "asset_tier": "production_layered_v1",
   "cues": {
+    "audio_placeholder_artifact_claim": {
+      "path": "res://art/audio/runtime/presentation/artifact_claim.wav",
+      "duration_msec": 420,
+      "volume_db": -12.5,
+      "role": "overworld_artifact_recovered"
+    },
+    "audio_placeholder_artifact_equip": {
+      "path": "res://art/audio/runtime/presentation/artifact_equip.wav",
+      "duration_msec": 260,
+      "volume_db": -14.0,
+      "role": "overworld_artifact_equipped"
+    },
+    "audio_placeholder_artifact_stow": {
+      "path": "res://art/audio/runtime/presentation/artifact_stow.wav",
+      "duration_msec": 280,
+      "volume_db": -14.0,
+      "role": "overworld_artifact_stowed"
+    },
+    "audio_placeholder_resource_tick": {
+      "path": "res://art/audio/runtime/presentation/resource_tick.wav",
+      "duration_msec": 240,
+      "volume_db": -14.5,
+      "role": "overworld_resource_collected"
+    },
+    "audio_placeholder_spell_school_soft": {
+      "path": "res://art/audio/runtime/presentation/field_spell.wav",
+      "duration_msec": 480,
+      "volume_db": -13.0,
+      "role": "overworld_field_spell_cast"
+    },
     "audio_placeholder_town_build": {
       "path": "res://art/audio/runtime/presentation/town_build.wav",
       "duration_msec": 420,

@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Town action production-audio playback slice is completed. Successful live construction and recruitment now play one exact imported production transient only after the existing Town presentation contract is accepted. Malformed/fallback/mute/voice-budget behavior, refresh/expiry non-replay, Town consequences, presentation lifecycle, input, focus, motion settings, session/settings authority, compatibility, static/editor, and bounded Linux/Windows export/startup gates pass. Final sound-design/mixer-mastering approval, other placeholder cues, packaged interaction/listening, hardware certification, signing/publication, whole-game, and release readiness remain unclaimed.",
+  "currentNotes": "The Overworld action production-audio playback slice is complete. Five successful field-spell, artifact recovery/equip/stow, and resource-collection presenters now play their exact cue ids once through the reusable Effects-bus service after full validation, with focused 1280/1920, compatibility, static/editor, and bounded Linux/Windows export/startup evidence green.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-town-action-production-audio-playback-10184",
-  "currentSliceId": "presentation-town-action-production-audio-playback-10184",
-  "currentSliceNotes": "Completed exact-once live construction/recruitment playback through the reusable presentation-audio service with two original stereo assets, fail-closed fallback/mute/voice-budget ownership, no refresh replay, and green focused, compatibility, repository/editor, Linux, and Windows gates.",
+  "currentSlice": "presentation-overworld-action-production-audio-playback-10184",
+  "currentSliceId": "presentation-overworld-action-production-audio-playback-10184",
+  "currentSliceNotes": "Completed exact-once playback for the five existing Overworld spell, artifact, and resource action cue ids through the reusable presentation-audio service. Focused lifecycle/authority, compatibility, static/editor, and bounded Linux/Windows export/startup validation passed; packaged interaction/listening and release readiness remain unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Town Action Production Audio Playback",
-  "currentSliceUpdatedAt": "2026-08-15T16:16:39Z",
+  "currentSliceTitle": "Overworld Action Production Audio Playback",
+  "currentSliceUpdatedAt": "2026-08-15T16:40:24Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19849,6 +19849,66 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "id": "presentation-overworld-action-production-audio-playback-10184",
+      "title": "Overworld Action Production Audio Playback",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/animation-systems-foundation.md", "AGENTS.md"],
+      "purpose": "Play the five existing successful Overworld field-spell, artifact recovery/equip/stow, and resource-collection audio cue identities through the reusable production presentation-audio service.",
+      "implementationTargets": [
+        "art/audio/runtime/presentation/*.wav",
+        "content/presentation_sfx_manifest.json",
+        "tools/generate_presentation_sfx_assets.py",
+        "scripts/autoload/PresentationAudio.gd",
+        "scenes/overworld/OverworldMapView.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "tests/overworld_field_spell_cast_cue_playback_report.gd",
+        "tests/overworld_artifact_acquired_cue_playback_report.gd",
+        "tests/overworld_artifact_slot_cue_playback_report.gd",
+        "tests/overworld_resource_delta_cue_playback_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_field_spell_cast_cue_playback_report.tscn",
+        "tests/overworld_artifact_acquired_cue_playback_report.tscn",
+        "tests/overworld_artifact_slot_cue_playback_report.tscn",
+        "tests/overworld_resource_delta_cue_playback_report.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "cdecacb3cf00c8a339052ac57b6fd2bb8c595752",
+        "cue_ids": ["audio_placeholder_spell_school_soft", "audio_placeholder_artifact_claim", "audio_placeholder_artifact_equip", "audio_placeholder_artifact_stow", "audio_placeholder_resource_tick"],
+        "live_audio_asset_count": 0,
+        "live_presenter_count": 5,
+        "selected_audio_only": true,
+        "implementation_or_runtime_started": false
+      },
+      "completionCriteria": [
+        "The five exact existing Overworld action cue ids map one-to-one to five byte-distinct original deterministic 44.1 kHz stereo 16-bit production transients and play only after each complete live presenter contract is accepted",
+        "Malformed and failed actions remain silent, repeated sync/refresh/expiry/skip never replay audio, and each detached presentation snapshot exposes the exact one playback record",
+        "Spell mana/movement/fog, artifact inventory/slots, resource stockpile, cue policy, serial/lifetime, layout, focus/input, motion settings, session/save authority, service fallback/mute/voice budgets, and all non-target audio remain exact",
+        "Focused real actions at 1280x720 and 1920x1080, active-play/core/cue compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass and both PCKs contain all five new assets"
+      ],
+      "nonGoals": [
+        "final sound-design or mixer-mastering approval, licensed or third-party audio, renaming cue ids, spatial audio, haptics, or all-placeholder-audio completion",
+        "spell, artifact, resource, route, object, economy, cue-policy, timing, input, focus, settings, save/schema, combat, AI, map, Native RMG, Town/UI/Battle/music/ambience behavior changes",
+        "packaged Overworld interaction or listening, controller/headset/speaker hardware, native audio certification, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "createdAt": "2026-08-15T16:18:52Z",
+      "startedAt": "2026-08-15T16:18:52Z",
+      "updatedAt": "2026-08-15T16:40:24Z",
+      "completedAt": "2026-08-15T16:40:24Z",
+      "notes": "Completed five exact existing Overworld action cue mappings with five byte-distinct original deterministic 44.1 kHz stereo 16-bit assets and exact-once playback after validated field-spell, artifact recovery/equip/stow, and resource collection presenters. Four focused owners passed real 1280x720 and 1920x1080 actions with imported playback records, malformed/failed silence, refresh/expiry non-replay, and exact spell/artifact/resource/session authority. Cue catalog, active-play focus, Overworld visual, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed; both PCKs contain all five assets. Packaged Overworld interaction/listening, controller or audio hardware certification, final sound-design approval, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null
+    },
     {
       "id": "presentation-town-action-production-audio-playback-10184",
       "title": "Town Action Production Audio Playback",

@@ -38953,7 +38953,7 @@ def validate_ui_audio_cue_runtime(errors: list[str]) -> None:
             ensure(required_text in doc_text, errors, f"UI audio cue runtime doc is missing required text: {required_text}")
 
 
-def validate_town_action_presentation_audio(errors: list[str]) -> None:
+def validate_presentation_audio_runtime(errors: list[str]) -> None:
     project_path = ROOT / "project.godot"
     building_report_path = ROOT / "tests" / "town_building_complete_cue_playback_report.gd"
     recruitment_report_path = ROOT / "tests" / "town_recruitment_cue_playback_report.gd"
@@ -38986,6 +38986,11 @@ def validate_town_action_presentation_audio(errors: list[str]) -> None:
         "REDUCED_REPETITION_MAX_ACTIVE_PLAYERS := 3",
         '"audio_placeholder_town_build"',
         '"audio_placeholder_recruit"',
+        '"audio_placeholder_spell_school_soft"',
+        '"audio_placeholder_artifact_claim"',
+        '"audio_placeholder_artifact_equip"',
+        '"audio_placeholder_artifact_stow"',
+        '"audio_placeholder_resource_tick"',
         "func play_cue(cue_id: String, source: String = \"\", metadata: Dictionary = {}) -> Dictionary:",
         '"unsupported_cue" if not supported',
         "SettingsService.effects_audio_muted()",
@@ -39011,6 +39016,36 @@ def validate_town_action_presentation_audio(errors: list[str]) -> None:
         ensure(forbidden not in audio_text, errors, f"PresentationAudio must remain presentation-only and authority-free: {forbidden}")
 
     expected_cues = {
+        "audio_placeholder_artifact_claim": {
+            "path": "res://art/audio/runtime/presentation/artifact_claim.wav",
+            "duration_msec": 420,
+            "volume_db": -12.5,
+            "role": "overworld_artifact_recovered",
+        },
+        "audio_placeholder_artifact_equip": {
+            "path": "res://art/audio/runtime/presentation/artifact_equip.wav",
+            "duration_msec": 260,
+            "volume_db": -14.0,
+            "role": "overworld_artifact_equipped",
+        },
+        "audio_placeholder_artifact_stow": {
+            "path": "res://art/audio/runtime/presentation/artifact_stow.wav",
+            "duration_msec": 280,
+            "volume_db": -14.0,
+            "role": "overworld_artifact_stowed",
+        },
+        "audio_placeholder_resource_tick": {
+            "path": "res://art/audio/runtime/presentation/resource_tick.wav",
+            "duration_msec": 240,
+            "volume_db": -14.5,
+            "role": "overworld_resource_collected",
+        },
+        "audio_placeholder_spell_school_soft": {
+            "path": "res://art/audio/runtime/presentation/field_spell.wav",
+            "duration_msec": 480,
+            "volume_db": -13.0,
+            "role": "overworld_field_spell_cast",
+        },
         "audio_placeholder_town_build": {
             "path": "res://art/audio/runtime/presentation/town_build.wav",
             "duration_msec": 420,
@@ -39034,7 +39069,7 @@ def validate_town_action_presentation_audio(errors: list[str]) -> None:
     ensure(int(manifest.get("sample_width_bits", 0)) == 16, errors, "production presentation SFX must use 16-bit PCM")
     ensure(manifest.get("asset_tier") == "production_layered_v1", errors, "presentation SFX manifest must declare production_layered_v1")
     cues = manifest.get("cues", {})
-    ensure(isinstance(cues, dict) and set(cues) == set(expected_cues), errors, "presentation SFX manifest must contain exactly the two Town action cues")
+    ensure(isinstance(cues, dict) and set(cues) == set(expected_cues), errors, "presentation SFX manifest must contain exactly the seven live Town and Overworld action cues")
     asset_hashes: list[str] = []
     for cue_id in sorted(expected_cues):
         expected = expected_cues[cue_id]
@@ -39068,10 +39103,10 @@ def validate_town_action_presentation_audio(errors: list[str]) -> None:
             if left_samples and right_samples:
                 ensure(left_samples[0] == 0 and right_samples[0] == 0, errors, f"presentation SFX must start at zero: {expected['path']}")
                 ensure(left_samples[-1] == 0 and right_samples[-1] == 0, errors, f"presentation SFX must end at zero: {expected['path']}")
-    ensure(len(set(asset_hashes)) == 2, errors, "the two Town presentation assets must be byte-distinct")
-    if len(asset_hashes) == 2:
+    ensure(len(set(asset_hashes)) == 7, errors, "all seven presentation assets must be byte-distinct")
+    if len(asset_hashes) == 7:
         pack_signature = hashlib.sha256("\n".join(asset_hashes).encode("utf-8")).hexdigest()
-        ensure(pack_signature == "33a34327ac781041cac944d969275b8f69ec1db4a89a0a50f7c571a9c82f8c9f", errors, "Town presentation SFX pack signature drifted")
+        ensure(pack_signature == "2de23642dfd9d1329ed96133540126bfd80bada89c5d5ee36fa2c883a28bb801", errors, "presentation SFX pack signature drifted")
 
     generator_text = PRESENTATION_SFX_GENERATOR_PATH.read_text(encoding="utf-8")
     for required_token in (
@@ -39081,6 +39116,11 @@ def validate_town_action_presentation_audio(errors: list[str]) -> None:
         "SPECS",
         "masonry_seal",
         "muster_call",
+        "relic_reveal",
+        "buckle_lock",
+        "satchel_stow",
+        "coin_tick",
+        "arcane_swell",
         "presentation-production-v1",
         "render_stereo",
         "layered_sample",
@@ -39135,6 +39175,64 @@ def validate_town_action_presentation_audio(errors: list[str]) -> None:
         'Array(active_presentation.get("audio_playback_records", [])) == audio_records',
     ):
         ensure(required_token in recruitment_text, errors, f"Town recruitment focused owner is missing presentation-audio proof: {required_token}")
+
+    overworld_map_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
+    spell_sync = re.search(r"func _sync_spell_cast_presentation\(presentation: Dictionary\) -> void:\n(?P<body>.*?)(?=\nfunc )", overworld_map_text, re.DOTALL)
+    ensure(spell_sync is not None, errors, "Could not isolate OverworldMapView spell-cast acceptance")
+    if spell_sync is not None:
+        body = spell_sync.group("body")
+        order = [
+            body.find("return"),
+            body.find("_spell_cast_last_serial = serial"),
+            body.find("_spell_cast_audio_cue_ids = audio_cue_ids"),
+            body.find("_spell_cast_audio_playback_records = []"),
+            body.find('PresentationAudio.play_cue(String(audio_cue_value), "OverworldMapView.spell_cast"'),
+            body.find("_spell_cast_active = true"),
+        ]
+        ensure(all(index >= 0 for index in order) and order == sorted(order), errors, "field-spell audio must play only after full acceptance and serial ownership")
+    ensure('"audio_playback_records": _spell_cast_audio_playback_records.duplicate(true)' in overworld_map_text, errors, "Overworld spell snapshot must detach playback records")
+
+    overworld_shell_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+    ensure(overworld_shell_text.count("_play_overworld_presentation_audio(") == 4, errors, "OverworldShell must own one helper plus exactly three accepted action-audio call sites")
+    for function_name, assignment_token, source_token in (
+        ("present_resource_delta_presentation", '_resource_delta_presentation = presentation.duplicate(true)', '"OverworldShell.resource_delta"'),
+        ("present_artifact_acquired_presentation", '_artifact_acquired_presentation = presentation.duplicate(true)', '"OverworldShell.artifact_acquired"'),
+        ("present_artifact_slot_presentation", '_artifact_slot_presentation = presentation.duplicate(true)', '"OverworldShell.artifact_slot"'),
+    ):
+        match = re.search(rf"func {function_name}\(presentation: Dictionary\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc )", overworld_shell_text, re.DOTALL)
+        ensure(match is not None, errors, f"Could not isolate {function_name}")
+        if match is not None:
+            body = match.group("body")
+            order = [body.find("return validation_"), body.find(assignment_token), body.find("audio_playback_records"), body.find(source_token)]
+            ensure(all(index >= 0 for index in order) and order == sorted(order), errors, f"{function_name} audio must follow full fail-closed validation")
+    for required_token in (
+        "func _play_overworld_presentation_audio(presentation: Dictionary, source: String) -> Array:",
+        'for audio_cue_value in Array(presentation.get("selected_audio_cue_ids", [])):',
+        'PresentationAudio.play_cue(String(audio_cue_value), source',
+        '"event_id": String(presentation.get("event_id", ""))',
+        '"presentation_serial": int(presentation.get("serial", 0))',
+        '"action_id": String(presentation.get("action_id", ""))',
+    ):
+        ensure(required_token in overworld_shell_text, errors, f"Overworld action-audio helper is missing token: {required_token}")
+
+    focused_overworld = {
+        ROOT / "tests" / "overworld_field_spell_cast_cue_playback_report.gd": ("audio_placeholder_spell_school_soft", "field_spell.wav", "overworld_field_spell_cast", "OverworldMapView.spell_cast"),
+        ROOT / "tests" / "overworld_artifact_acquired_cue_playback_report.gd": ("audio_placeholder_artifact_claim", "artifact_claim.wav", "overworld_artifact_recovered", "OverworldShell.artifact_acquired"),
+        ROOT / "tests" / "overworld_resource_delta_cue_playback_report.gd": ("audio_placeholder_resource_tick", "resource_tick.wav", "overworld_resource_collected", "OverworldShell.resource_delta"),
+        ROOT / "tests" / "overworld_artifact_slot_cue_playback_report.gd": ("audio_placeholder_artifact_equip", "artifact_equip.wav", "overworld_artifact_equipped", "OverworldShell.artifact_slot"),
+    }
+    for path, tokens in focused_overworld.items():
+        ensure(path.exists(), errors, f"Missing Overworld action-audio focused owner: {path.relative_to(ROOT)}")
+        if not path.exists():
+            continue
+        text = path.read_text(encoding="utf-8")
+        for required_token in ("PresentationAudio.validation_reset()", "PresentationAudio.validation_records()", "audio_playback_records", "imported_wav", "stream_mix_rate", "stream_stereo", "AudioStreamWAV.LOOP_DISABLED", *tokens):
+            ensure(required_token in text, errors, f"{path.name} is missing action-audio proof token: {required_token}")
+        ensure("PresentationAudio.validation_records().is_empty()" in text, errors, f"{path.name} must prove malformed actions remain silent")
+
+    slot_text = (ROOT / "tests" / "overworld_artifact_slot_cue_playback_report.gd").read_text(encoding="utf-8")
+    for required_token in ("audio_placeholder_artifact_stow", "artifact_stow.wav", "overworld_artifact_stowed", "stow_audio_records.size() == 2"):
+        ensure(required_token in slot_text, errors, f"artifact-slot focused owner is missing stow-audio proof: {required_token}")
 
 
 def validate_overworld_ambient_audio_runtime(errors: list[str]) -> None:
@@ -41463,7 +41561,7 @@ def main() -> int:
     validate_packaged_settings_persistence_smoke(errors)
     validate_packaged_runtime_issue_log_smoke(errors)
     validate_ui_audio_cue_runtime(errors)
-    validate_town_action_presentation_audio(errors)
+    validate_presentation_audio_runtime(errors)
     validate_overworld_ambient_audio_runtime(errors)
     validate_music_audio_runtime(errors)
     validate_in_session_save_controls(errors)

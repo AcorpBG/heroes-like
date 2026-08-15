@@ -41,6 +41,7 @@ func _fail(message: String, original_window_size: Vector2i, original_reduced_mot
 	get_tree().quit(1)
 
 func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
+	PresentationAudio.validation_reset()
 	get_window().size = viewport_size
 	await get_tree().process_frame
 	await get_tree().process_frame
@@ -73,7 +74,7 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		"cue_id": "cue_artifact_equipped",
 		"artifact_id": ARTIFACT_ID,
 	})
-	var malformed_fail_closed: bool = malformed_after == malformed_before and not artifact_cue_row.visible and not artifact_cue_icon.visible and not artifact_cue.visible and map_cue.visible and not spell_blocker.visible
+	var malformed_fail_closed: bool = malformed_after == malformed_before and not artifact_cue_row.visible and not artifact_cue_icon.visible and not artifact_cue.visible and map_cue.visible and not spell_blocker.visible and PresentationAudio.validation_records().is_empty()
 
 	var live_before: Dictionary = live_session.to_dict()
 	var control = SessionDataScript.SessionData.new()
@@ -87,6 +88,9 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	var equip_presentation := _artifact_presentation(shell)
+	var equip_audio_records: Array = PresentationAudio.validation_records()
+	var equip_audio_record: Dictionary = equip_audio_records[0] if equip_audio_records.size() == 1 and equip_audio_records[0] is Dictionary else {}
+	var equip_audio_exact := _audio_record_exact(equip_presentation, equip_audio_record, "audio_placeholder_artifact_equip", "res://art/audio/runtime/presentation/artifact_equip.wav", "overworld_artifact_equipped", 260)
 	var equip_live_after: Dictionary = live_session.to_dict()
 	var equip_exact := _presentation_exact(
 		equip_presentation,
@@ -96,7 +100,7 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		String(equip_control_result.get("message", "")),
 		mode,
 		1
-	) and bool(equip_control_result.get("ok", false)) and equip_live_after == control.to_dict() and artifact_cue_row.is_visible_in_tree() and artifact_cue.is_visible_in_tree() and artifact_cue_icon.is_visible_in_tree() == not bool(mode.get("reduced_motion", false)) and not map_cue.visible
+	) and bool(equip_control_result.get("ok", false)) and equip_live_after == control.to_dict() and artifact_cue_row.is_visible_in_tree() and artifact_cue.is_visible_in_tree() and artifact_cue_icon.is_visible_in_tree() == not bool(mode.get("reduced_motion", false)) and not map_cue.visible and equip_audio_records.size() == 1 and equip_audio_exact
 
 	var stow_action_id := "unequip_artifact:%s" % ARTIFACT_SLOT
 	var stow_control_result: Dictionary = OverworldRules.perform_artifact_action(control, stow_action_id)
@@ -108,6 +112,9 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	var stow_presentation := _artifact_presentation(shell)
+	var stow_audio_records: Array = PresentationAudio.validation_records()
+	var stow_audio_record: Dictionary = stow_audio_records[1] if stow_audio_records.size() == 2 and stow_audio_records[1] is Dictionary else {}
+	var stow_audio_exact := _audio_record_exact(stow_presentation, stow_audio_record, "audio_placeholder_artifact_stow", "res://art/audio/runtime/presentation/artifact_stow.wav", "overworld_artifact_stowed", 280)
 	var live_after: Dictionary = live_session.to_dict()
 	var stow_exact := _presentation_exact(
 		stow_presentation,
@@ -117,7 +124,7 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		String(stow_control_result.get("message", "")),
 		mode,
 		2
-	) and bool(stow_control_result.get("ok", false)) and live_after == control.to_dict() and artifact_cue_row.is_visible_in_tree() and artifact_cue.is_visible_in_tree() and artifact_cue_icon.is_visible_in_tree() == not bool(mode.get("reduced_motion", false)) and not map_cue.visible
+	) and bool(stow_control_result.get("ok", false)) and live_after == control.to_dict() and artifact_cue_row.is_visible_in_tree() and artifact_cue.is_visible_in_tree() and artifact_cue_icon.is_visible_in_tree() == not bool(mode.get("reduced_motion", false)) and not map_cue.visible and stow_audio_records.size() == 2 and stow_audio_exact
 	var nonblocking_exact: bool = equip_was_still_active and stow_exact and not spell_blocker.visible
 
 	var serial := int(stow_presentation.get("serial", 0))
@@ -131,6 +138,7 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		and float(refreshed.get("progress", -1.0)) >= progress_before_refresh
 		and live_session.to_dict() == live_after
 		and not spell_blocker.visible
+		and PresentationAudio.validation_records() == stow_audio_records
 	)
 
 	var settle_frames := 0
@@ -147,6 +155,7 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		and not artifact_cue.visible
 		and map_cue.visible
 		and live_session.to_dict() == live_after
+		and PresentationAudio.validation_records() == stow_audio_records
 	)
 
 	var failed_authority_before: Dictionary = live_session.to_dict()
@@ -158,6 +167,7 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		and int(failed_presentation.get("serial", 0)) == serial
 		and not bool(failed_presentation.get("active", true))
 		and live_session.to_dict() == failed_authority_before
+		and PresentationAudio.validation_records() == stow_audio_records
 	)
 
 	var row := {
@@ -166,7 +176,11 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		"mode": String(mode.get("id", "")),
 		"malformed_fail_closed": malformed_fail_closed,
 		"equip_exact": equip_exact,
+		"equip_audio_exact": equip_audio_exact,
+		"equip_audio_record": equip_audio_record,
 		"stow_exact": stow_exact,
+		"stow_audio_exact": stow_audio_exact,
+		"stow_audio_record": stow_audio_record,
 		"nonblocking_exact": nonblocking_exact,
 		"refresh_exact": refresh_exact,
 		"completion_exact": completion_exact,
@@ -263,7 +277,11 @@ func _finish_case(shell: Node, result: Dictionary) -> Dictionary:
 	if shell != null and is_instance_valid(shell):
 		shell.queue_free()
 		await get_tree().process_frame
+	PresentationAudio.validation_reset()
 	return result
+
+func _audio_record_exact(snapshot: Dictionary, record: Dictionary, cue_id: String, asset_path: String, role: String, duration_msec: int) -> bool:
+	return Array(snapshot.get("audio_playback_records", [])) == [record] and String(record.get("cue_id", "")) == cue_id and String(record.get("source", "")) == "OverworldShell.artifact_slot" and bool(record.get("played", false)) and String(record.get("playback_source", "")) == "imported_wav" and String(record.get("asset_path", "")) == asset_path and String(record.get("role", "")) == role and int(record.get("duration_msec", 0)) == duration_msec and int(record.get("stream_mix_rate", 0)) == 44100 and bool(record.get("stream_stereo", false)) and int(record.get("stream_loop_mode", -1)) == AudioStreamWAV.LOOP_DISABLED and int(record.get("imported_asset_count", 0)) == 1 and int(record.get("generated_fallback_count", -1)) == 0
 
 func _recursive_exact_differences(expected: Variant, actual: Variant, path: String = "$") -> Array:
 	var differences := []
