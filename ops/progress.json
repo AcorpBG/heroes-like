@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld action-feedback VFX asset adoption slice is completed. Four distinct imported alpha effects render in the existing compact artifact/resource edge-rail overlays with exact reduced-motion and missing-asset text fallbacks; focused, real-action, compatibility, static/editor, Linux export/startup, and Windows fresh-Wine startup gates pass. Whole-game and release readiness remain unclaimed.",
+  "currentNotes": "The Battle core VFX semantic distinction slice is completed. Eight existing live core cue meanings now use eight distinct original imported textures with focused live, compatibility, static/editor, Linux export/startup, and Windows fresh-Wine startup evidence. Packaged Battle interaction and release readiness remain unclaimed.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-active-play-system-feedback-vfx-asset-adoption-10184",
-  "currentSliceId": "presentation-active-play-system-feedback-vfx-asset-adoption-10184",
-  "currentSliceNotes": "Completed two original compact imported alpha effects for the existing live save-written and load-resumed cues across Overworld, Town, Battle, and Scenario Outcome without changing save/load, focus, timing, layout, session, or settings authority. Select the next tracker-approved release-readiness implementation slice.",
+  "currentSlice": "presentation-battle-core-vfx-semantic-distinction-10184",
+  "currentSliceId": "presentation-battle-core-vfx-semantic-distinction-10184",
+  "currentSliceNotes": "Completed one-to-one original imported textures for all eight existing core Battle cue meanings while preserving renderer fallback, cue/timing, accessibility, input, session, and combat authority. Select the next tracker-approved release-readiness implementation slice.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Active-Play System Feedback VFX Asset Adoption",
-  "currentSliceUpdatedAt": "2026-08-15T13:44:42Z",
+  "currentSliceTitle": "Battle Core VFX Semantic Distinction",
+  "currentSliceUpdatedAt": "2026-08-15T14:09:09Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19849,6 +19849,94 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "id": "presentation-battle-core-vfx-semantic-distinction-10184",
+      "title": "Battle Core VFX Semantic Distinction",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/animation-systems-foundation.md",
+        "docs/battle-vfx-cue-presentation-report.md",
+        "AGENTS.md"
+      ],
+      "purpose": "Give each existing core Battle action cue a distinct original imported visual identity while preserving the exact live cue, playback, accessibility, and combat authority.",
+      "implementationTargets": [
+        "art/battle/source/core_vfx_semantic_atlas.png",
+        "art/battle/vfx/core_projectile_path.png",
+        "art/battle/vfx/core_damage_impact.png",
+        "art/battle/vfx/core_melee_arc.png",
+        "art/battle/vfx/core_retaliation_arc.png",
+        "art/battle/vfx/core_cast_anchor.png",
+        "art/battle/vfx/core_status_residue.png",
+        "art/battle/vfx/core_status_clear.png",
+        "art/battle/vfx/core_brace_outline.png",
+        "content/battle_vfx_manifest.json",
+        "tests/battle_event_animation_state_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/battle_event_animation_state_report.tscn",
+        "tests/battle_layout_smoke.tscn",
+        "tests/animation_event_cue_catalog_report.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "5c674827250c03b943fbe6dc6587e19ceee549da",
+        "mapped_battle_cue_count": 21,
+        "core_cue_count": 8,
+        "core_unique_texture_count": 3,
+        "manifest_unique_texture_count": 16,
+        "spell_unique_texture_count": 7,
+        "state_path_unique_texture_count": 6,
+        "implementation_or_runtime_started": false
+      },
+      "completionCriteria": [
+        "Eight distinct original transparent 384x384 textures map one-to-one to projectile travel, damage impact, melee, retaliation, cast anchor, status residue, status clear, and brace cue ids",
+        "Live Battle playback loads and draws every exact imported mapping from unchanged source, target, path, progress, render-mode, and scale records at 1280x720 and 1920x1080",
+        "Existing missing-map/missing-texture procedural fallback, reduced motion, reduced flashes, timing, cue ordering, camera/audio, input/focus, accessibility, session, and combat authority remain exact",
+        "Battle compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "combat rules, math, events, cue ids, ordering, timing, camera, audio, AI, balance, save/schema, map, or Native RMG changes",
+        "spell, state/path, unit, overworld, town, artifact, UI, particles, shaders, renderer architecture, or broad cue-catalog changes",
+        "packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "createdAt": "2026-08-15T13:50:16Z",
+      "startedAt": "2026-08-15T13:50:16Z",
+      "updatedAt": "2026-08-15T14:09:09Z",
+      "completedAt": "2026-08-15T14:09:09Z",
+      "notes": "Built-in image generation produced one retained 1774x887 alpha source atlas (SHA256 df43b7598c3f4ea8fd952b589a4691733cac1908324472126a37f36dee4f3aa2); eight cropped 384x384 alpha textures now map one-to-one to the exact existing core Battle cues. The generic renderer and every non-core cue remain unchanged. Focused `/tmp/heroes-core-vfx-focused-final.w7Xb06` passes 27 cases, including all-eight imported playback, exact render modes/paths, missing-map procedural fallback, real brace/melee/retaliation/cast/cleanse/projectile/status paths, reduced-motion/reduced-flash, audio/camera, session, and combat authority. Inspected 1280x720 and 1920x1080 captures remain readable. Cue catalog, Board navigation, accessibility, and core artifacts under `/tmp/heroes-core-vfx-compat-*` are green; routed 1280 layout/save/menu authority passes `/tmp/heroes-core-vfx-layout1280.p6nOuA` in 292 seconds. Repository/editor gates pass. Linux report SHA256 be47c7f5901e251c3a55870112364ffee94ddf0304790e59dd9bff7bc6d28910 proves export/headless startup and PCK ownership of all eight resources; Windows report SHA256 04b9c54bf13b4c655596ac3605efbe74282c4d82c55d50c1219cec6bcd1961f6 proves export and fresh-Wine Godot/Boot/MainMenu/native-DLL startup with the same PCK resources. Packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null,
+      "result": {
+        "original_source_atlas_count": 1,
+        "core_cue_count": 8,
+        "core_unique_texture_count": 8,
+        "manifest_unique_texture_count": 21,
+        "focused_all_eight_live_playback_passed": true,
+        "procedural_fallback_passed": true,
+        "viewports": [[1280, 720], [1920, 1080]],
+        "cue_catalog_passed": true,
+        "board_navigation_passed": true,
+        "accessibility_passed": true,
+        "core_passed": true,
+        "battle_layout_1280_passed": true,
+        "repository_validation_passed": true,
+        "editor_parse_passed": true,
+        "linux_export_headless_startup_passed": true,
+        "linux_pck_resources_present": true,
+        "windows_export_fresh_wine_startup_passed": true,
+        "windows_pck_resources_present": true
+      }
+    },
     {
       "id": "presentation-active-play-system-feedback-vfx-asset-adoption-10184",
       "title": "Active-Play System Feedback VFX Asset Adoption",
