@@ -341,7 +341,7 @@ func _ready() -> void:
 	_load_resumed_cue_presenter = SystemLoadResumedCuePresenterScript.new()
 	_load_resumed_cue_presenter.name = "SystemLoadResumedCuePresenter"
 	add_child(_load_resumed_cue_presenter)
-	_load_resumed_cue_presenter.configure(_save_status_label, "overworld")
+	_load_resumed_cue_presenter.configure(_save_status_label, _save_button, "overworld")
 	resized.connect(_apply_responsive_layout)
 	_apply_responsive_layout()
 	AppRouter.note_overworld_handoff_step("overworld_ready_theme_done")

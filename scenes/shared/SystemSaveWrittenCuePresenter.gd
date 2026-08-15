@@ -2,6 +2,7 @@ class_name SystemSaveWrittenCuePresenter
 extends Node
 
 const AnimationCueCatalogScript = preload("res://scripts/core/AnimationCueCatalog.gd")
+const SystemFeedbackVfxIconScript = preload("res://scenes/shared/SystemFeedbackVfxIcon.gd")
 
 const EVENT_ID := "system_save_written"
 const CUE_ID := "cue_system_save_written"
@@ -24,6 +25,7 @@ var _status_base_modulate := Color.WHITE
 var _button_text_at_publish := ""
 var _status_text_at_publish := ""
 var _status_tooltip_at_publish := ""
+var _vfx_icon: SystemFeedbackVfxIcon
 
 
 func configure(save_button: Button, status_control: Control, surface: String) -> bool:
@@ -32,6 +34,10 @@ func configure(save_button: Button, status_control: Control, surface: String) ->
 	_save_button = save_button
 	_status_control = status_control
 	_surface = String(surface).strip_edges()
+	_vfx_icon = SystemFeedbackVfxIconScript.new()
+	if not _vfx_icon.configure(_save_button):
+		_vfx_icon = null
+		return false
 	set_process(false)
 	return true
 
@@ -65,6 +71,11 @@ func present(save_result: Dictionary, manual_slot: int) -> Dictionary:
 		"message": String(save_result.get("message", "")),
 		"summary": (save_result.get("summary", {}) as Dictionary).duplicate(true),
 	}.duplicate(true)
+	_vfx_icon.present(
+		EVENT_ID,
+		policy.get("selected_vfx_cue_ids", []) if policy.get("selected_vfx_cue_ids", []) is Array else [],
+		bool(policy.get("allows_large_motion", true))
+	)
 	_active = true
 	_apply_visuals(0.0)
 	set_process(true)
@@ -122,6 +133,8 @@ func _apply_visuals(progress: float) -> void:
 	var amount := 0.72 if not allows_large_motion else (0.34 + 0.38 * sin(clampf(progress, 0.0, 1.0) * PI))
 	_save_button.modulate = _button_base_modulate.lerp(accent, amount)
 	_status_control.modulate = _status_base_modulate.lerp(accent, amount)
+	if is_instance_valid(_vfx_icon):
+		_vfx_icon.apply_progress(progress)
 
 
 func _restore_visuals() -> void:
@@ -129,6 +142,8 @@ func _restore_visuals() -> void:
 		_save_button.modulate = _button_base_modulate
 	if is_instance_valid(_status_control):
 		_status_control.modulate = _status_base_modulate
+	if is_instance_valid(_vfx_icon):
+		_vfx_icon.clear()
 
 
 func validation_snapshot() -> Dictionary:
@@ -152,4 +167,5 @@ func validation_snapshot() -> Dictionary:
 		"status_modulate": _status_control.modulate if is_instance_valid(_status_control) else Color.TRANSPARENT,
 		"button_base_modulate": _button_base_modulate,
 		"status_base_modulate": _status_base_modulate,
+		"vfx_asset": _vfx_icon.validation_snapshot() if is_instance_valid(_vfx_icon) else {},
 	}

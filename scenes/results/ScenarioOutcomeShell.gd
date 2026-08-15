@@ -128,7 +128,7 @@ func _ready() -> void:
 	_load_resumed_cue_presenter = SystemLoadResumedCuePresenterScript.new()
 	_load_resumed_cue_presenter.name = "SystemLoadResumedCuePresenter"
 	add_child(_load_resumed_cue_presenter)
-	_load_resumed_cue_presenter.configure(_save_status_label, "scenario_outcome")
+	_load_resumed_cue_presenter.configure(_save_status_label, _save_button, "scenario_outcome")
 	_last_outcome_recap_tab_index = _recap_tabs.current_tab
 	_configure_outcome_recap_tab_accessibility()
 	if not _recap_tabs.tab_changed.is_connected(_on_outcome_recap_tab_changed):

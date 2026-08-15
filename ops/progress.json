@@ -14326,12 +14326,12 @@
   ],
   "currentNotes": "The Overworld action-feedback VFX asset adoption slice is completed. Four distinct imported alpha effects render in the existing compact artifact/resource edge-rail overlays with exact reduced-motion and missing-asset text fallbacks; focused, real-action, compatibility, static/editor, Linux export/startup, and Windows fresh-Wine startup gates pass. Whole-game and release readiness remain unclaimed.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-action-feedback-vfx-asset-adoption-10184",
-  "currentSliceId": "presentation-overworld-action-feedback-vfx-asset-adoption-10184",
-  "currentSliceNotes": "Completed four original compact imported alpha effects for live artifact recovery/equip/stow and resource-delta cues without changing gameplay, focus, timing, session, or save authority. Select the next tracker-approved release-readiness implementation slice.",
+  "currentSlice": "presentation-active-play-system-feedback-vfx-asset-adoption-10184",
+  "currentSliceId": "presentation-active-play-system-feedback-vfx-asset-adoption-10184",
+  "currentSliceNotes": "Completed two original compact imported alpha effects for the existing live save-written and load-resumed cues across Overworld, Town, Battle, and Scenario Outcome without changing save/load, focus, timing, layout, session, or settings authority. Select the next tracker-approved release-readiness implementation slice.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Action Feedback VFX Asset Adoption",
-  "currentSliceUpdatedAt": "2026-08-15T12:43:44Z",
+  "currentSliceTitle": "Active-Play System Feedback VFX Asset Adoption",
+  "currentSliceUpdatedAt": "2026-08-15T13:44:42Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19849,6 +19849,86 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "id": "presentation-active-play-system-feedback-vfx-asset-adoption-10184",
+      "title": "Active-Play System Feedback VFX Asset Adoption",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/screen-wireframes.md",
+        "AGENTS.md"
+      ],
+      "purpose": "Render the existing live save-written and load-resumed cue identities with original compact imported alpha effects inside the existing active-play controls without changing save/load or UI authority.",
+      "implementationTargets": [
+        "art/ui/source/system_feedback_vfx_source.png",
+        "art/ui/runtime/system_feedback/save_confirm.png",
+        "art/ui/runtime/system_feedback/load_resume.png",
+        "content/system_feedback_vfx_manifest.json",
+        "scenes/shared/SystemFeedbackVfxIcon.gd",
+        "scenes/shared/SystemSaveWrittenCuePresenter.gd",
+        "scenes/shared/SystemLoadResumedCuePresenter.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/town/TownShell.gd",
+        "scenes/battle/BattleShell.gd",
+        "scenes/results/ScenarioOutcomeShell.gd",
+        "tests/active_play_system_feedback_vfx_asset_runtime_report.gd",
+        "tests/active_play_system_feedback_vfx_asset_runtime_report.tscn",
+        "tests/active_play_save_written_cue_playback_report.gd",
+        "tests/active_play_load_resumed_cue_playback_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/active_play_system_feedback_vfx_asset_runtime_report.tscn",
+        "tests/active_play_save_written_cue_playback_report.tscn",
+        "tests/active_play_load_resumed_cue_playback_report.tscn",
+        "tests/manual_save_overwrite_regression.tscn",
+        "tests/save_load_confidence_visual_smoke.tscn",
+        "tests/battle_layout_smoke.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/animation_event_cue_catalog_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "7612edab4b1bd939d63030bc9bdb58a811ac2872",
+        "event_ids": [
+          "system_save_written",
+          "system_load_resumed"
+        ],
+        "vfx_cue_ids": [
+          "vfx_placeholder_save_confirm",
+          "vfx_placeholder_load_resume"
+        ],
+        "runtime_texture_count": 0,
+        "live_rendering": "control_modulation_only",
+        "implementation_or_runtime_started": false
+      },
+      "completionCriteria": [
+        "Normal live save-written and load-resumed playback each maps and visibly renders one distinct exact imported alpha texture at 1280x720 and 1920x1080 on Overworld, Town, Battle, and Scenario Outcome",
+        "Imported icons remain contained, nonblocking, and layout-neutral while reduced motion and missing mapping or texture retain exact text and tint-only feedback",
+        "Focused real save/load proof preserves payload/version/path, label/tooltip, duration/progress, focus, lifecycle, session/settings authority, and existing cross-surface behavior",
+        "Save/load compatibility, animation cue catalog/policy, accessibility/core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "save/load serialization, schema, routing, slot, recovery, autosave, gameplay, session, settings, focus, input, cue timing, or animation-policy changes",
+        "panel expansion, status copy rewrite, layout redesign, particles, shaders, audio, other cue/event assets, or global renderer changes",
+        "packaged save/load interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "createdAt": "2026-08-15T12:48:38Z",
+      "startedAt": "2026-08-15T12:48:38Z",
+      "updatedAt": "2026-08-15T13:44:42Z",
+      "completedAt": "2026-08-15T13:44:42Z",
+      "notes": "Implemented one retained 1672x941 alpha source atlas and two distinct 512x512 alpha textures for system_save_written and system_load_resumed. A shared 14px layout-neutral, mouse-transparent, unfocusable renderer maps only the exact two cue ids and fails closed to text/tint-only for reduced motion, missing rows, or missing textures. Load visuals use the visible Save button while the existing status control retains copy/tint authority. Focused `/tmp/heroes-system-feedback-focused14.TYtBVJ`, save `/tmp/heroes-system-feedback-compat.x3o86b/active_play_save_written_cue_playback_report`, and load `/tmp/heroes-system-feedback-load-savehost.d5qXuA` gates prove both widths, both modes, all four surfaces, real save/load authority, containment, focus, lifecycle, session/settings, and save9. Compatibility `/tmp/heroes-system-feedback-compat.x3o86b` and static/editor `/tmp/heroes-system-feedback-final-audit.zIRB8k` are green. Linux report SHA256 86ad885f15696de02bbb898ea93567304ad95fae820c60f361994947de0555a0 proves export/headless startup; Windows report SHA256 92362bfc039aeb053668205312cf07b426f6bac4111018a4819579fc745ddf47 proves export and fresh-Wine Godot/Boot/MainMenu/native-DLL startup. Packaged save/load interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null
+    },
     {
       "id": "presentation-overworld-action-feedback-vfx-asset-adoption-10184",
       "title": "Overworld Action Feedback VFX Asset Adoption",

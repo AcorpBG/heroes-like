@@ -1,0 +1,17 @@
+{
+  "schema_id": "system_feedback_vfx_manifest_v1",
+  "cues": {
+    "vfx_placeholder_save_confirm": {
+      "event_id": "system_save_written",
+      "texture_path": "res://art/ui/runtime/system_feedback/save_confirm.png",
+      "render_mode": "system_feedback_icon",
+      "scale": 1.0
+    },
+    "vfx_placeholder_load_resume": {
+      "event_id": "system_load_resumed",
+      "texture_path": "res://art/ui/runtime/system_feedback/load_resume.png",
+      "render_mode": "system_feedback_icon",
+      "scale": 1.0
+    }
+  }
+}

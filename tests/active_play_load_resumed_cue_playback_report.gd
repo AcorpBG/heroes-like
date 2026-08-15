@@ -50,6 +50,8 @@ func _run() -> void:
 		var route: Dictionary = route_value
 		for mode in [
 			{"width": 1280, "height": 720, "reduced_motion": false},
+			{"width": 1280, "height": 720, "reduced_motion": true},
+			{"width": 1920, "height": 1080, "reduced_motion": false},
 			{"width": 1920, "height": 1080, "reduced_motion": true},
 		]:
 			_stage("route_start_%s_%d" % [String(route.get("id", "")), int(mode.get("width", 0))])
@@ -138,6 +140,7 @@ func _exercise_route(route: Dictionary, mode: Dictionary) -> Dictionary:
 	var presenter: Node = shell.get_node_or_null("SystemLoadResumedCuePresenter")
 	var cue: Dictionary = shell.call("validation_load_resumed_cue_snapshot")
 	var policy: Dictionary = cue.get("policy", {}) if cue.get("policy", {}) is Dictionary else {}
+	var vfx: Dictionary = cue.get("vfx_asset", {}) if cue.get("vfx_asset", {}) is Dictionary else {}
 	var identity: Dictionary = cue.get("summary_identity", {}) if cue.get("summary_identity", {}) is Dictionary else {}
 	var expected_state := "load_icon_static" if reduced_motion else "load_resume"
 	var active_session := SessionState.ensure_active_session()
@@ -166,6 +169,7 @@ func _exercise_route(route: Dictionary, mode: Dictionary) -> Dictionary:
 		"cue_policy": String(policy.get("selected_animation_state", "")) == expected_state and String(policy.get("selected_playback_policy", "")) == "instant" and String(policy.get("selected_blocking_policy", "")) == "never_blocks_input",
 		"copy_unchanged": bool(cue.get("status_text_unchanged", false)) and bool(cue.get("status_tooltip_unchanged", false)),
 		"status_highlighted": cue.get("status_modulate") != cue.get("status_base_modulate"),
+		"vfx_exact": _vfx_exact(vfx, save_button, not reduced_motion, "system_load_resumed", "vfx_placeholder_load_resume", "res://art/ui/runtime/system_feedback/load_resume.png"),
 		"pending_consumed": AppRouter.validation_pending_load_resumed_presentation().is_empty(),
 		"save_bytes_exact": _file_state(save_path) == save_state_before,
 		"summary_authority_exact": _summary_authority() == summaries_before,
@@ -201,6 +205,7 @@ func _exercise_route(route: Dictionary, mode: Dictionary) -> Dictionary:
 		bool(expired.get("active", true))
 		or int(expired.get("activation_count", 0)) != 1
 		or expired.get("status_modulate") != expired.get("status_base_modulate")
+		or bool((expired.get("vfx_asset", {}) as Dictionary).get("icon_visible", true))
 		or active_session.to_dict() != session_after_route
 		or _file_state(save_path) != save_state_before
 	):
@@ -214,6 +219,26 @@ func _exercise_route(route: Dictionary, mode: Dictionary) -> Dictionary:
 		"day": session.day,
 		"resume_target": expected_target,
 	}
+
+
+func _vfx_exact(vfx: Dictionary, host: Control, expects_imported: bool, event_id: String, cue_id: String, texture_path: String) -> bool:
+	var icon_rect: Rect2 = vfx.get("icon_global_rect", Rect2())
+	var host_rect := host.get_global_rect()
+	if expects_imported:
+		return (
+			bool(vfx.get("configured", false))
+			and bool(vfx.get("imported", false))
+			and bool(vfx.get("icon_visible", false))
+			and String(vfx.get("event_id", "")) == event_id
+			and String(vfx.get("cue_id", "")) == cue_id
+			and String(vfx.get("texture_path", "")) == texture_path
+			and String(vfx.get("render_mode", "")) == "system_feedback_icon"
+			and vfx.get("texture_size", {}) == {"x": 512, "y": 512}
+			and bool(vfx.get("mouse_filter_ignore", false))
+			and bool(vfx.get("focus_none", false))
+			and host_rect.grow(0.5).encloses(icon_rect)
+		)
+	return bool(vfx.get("configured", false)) and not bool(vfx.get("imported", false)) and not bool(vfx.get("icon_visible", true)) and String(vfx.get("fallback", "")) == "reduced_motion_text_tint_only"
 
 
 func _exercise_stale_selected_save_failure() -> bool:
