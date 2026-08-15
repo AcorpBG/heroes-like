@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `presentation-overworld-object-resolution-vfx-asset-adoption-10184`. Capture, visited, and depleted object-resolution events now map one-to-one to three distinct original imported alpha textures through an exact local manifest. The live renderer retains the authoritative tile, bounded progress/alpha/motion behavior, reduced-motion policy, dynamic-layer ownership, and the prior procedural bodies as fail-closed missing-map/missing-texture fallback. Focused 1280x720/1920x1080, object-resolution playback, full-route movement, broad Overworld visual, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged object interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `presentation-overworld-object-resolution-vfx-asset-adoption-10184`
 - Completed implementation slice: `presentation-overworld-enemy-commander-sprite-adoption-10184`. Live strategic-raid encounters now show the exact existing faction commander sprite when roster hero, commander faction, spawning faction, and authored hero faction agree. The renderer retains the hostile encounter ring, grounding/contact treatment, fog/memory behavior, and exact unit-icon then encounter-sprite fallback for absent, unknown, mismatched, or unloadable identity. Focused 1280x720/1920x1080, commander selection, hero hunt, full-route movement, broad Overworld visual, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged strategic-raid interaction, hardware/certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `presentation-overworld-enemy-commander-sprite-adoption-10184`
 - Completed implementation slice: `presentation-overworld-faction-hero-sprite-adoption-10184`. All 60 production commanders now resolve through their existing faction metadata to one of six distinct original 512x512 Overworld sprites. The live renderer preserves active identity during route interpolation, reserve badges, existing grounding/contact, selection, routing, session, and save version 9 authority, while the procedural figure remains the fail-closed fallback. Focused 1280x720/1920x1080, full-route movement, Ninefold, broad Overworld visual, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged hero interaction, hardware/certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -5235,6 +5237,37 @@ Completed evidence:
 - focused live 1280x720 and 1920x1080 proof covers exact sprite ids and paths, active identity, movement-compatible presentation, reserve/grounding/contact contracts, procedural fallback, whole-session restoration, containment, and save version 9;
 - full-route movement, Ninefold scenario breadth, broad Overworld visual, active-play focus, accessibility, core, repository validation, and exact/generic editor gates pass;
 - official Linux export plus packaged headless startup and official Windows export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass, with no packaged hero interaction or broader release claim.
+
+## Overworld Object Resolution VFX Asset Adoption
+
+id: `presentation-overworld-object-resolution-vfx-asset-adoption-10184`
+
+Status: completed.
+
+Selected Phase 6 player-facing presentation slice. Successful live object capture, repeatable-site visit, and depletion already publish one bounded view-only presentation at the exact authoritative map tile, but `_draw_object_resolution_presentation` still renders all three states as generic procedural geometry. The earlier cue-playback slice explicitly left final VFX assets out of scope.
+
+Implementation target:
+- add one original three-effect source atlas and three distinct runtime alpha textures for capture, visited, and depleted states;
+- map exactly `vfx_placeholder_capture_flag`, `vfx_placeholder_object_visit`, and `vfx_placeholder_depleted_dim` through a small production manifest;
+- render the mapped texture at the existing authoritative tile with existing progress, alpha, motion/reduced-motion, and dynamic-layer ownership;
+- preserve the current procedural capture, visit, and depletion bodies as exact missing-map or missing-texture fallback.
+
+Completion criteria:
+- all three existing object-resolution event ids select one distinct exact imported texture and no other Overworld or Battle cue is remapped;
+- missing manifest rows or unloadable textures use the existing procedural function for the same event without errors, replay, or state mutation;
+- focused 1280x720 and 1920x1080 live proof preserves exact event/tile/progress/reduced-motion/session/save authority and observes asset-first plus procedural fallback behavior;
+- object-resolution, repeatable-site, guarded-site, full-route, broad Overworld visual, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Completion evidence:
+- one original three-panel source atlas yields three distinct 512x512 alpha runtime textures, and the exact local manifest maps only capture, visit, and depleted cue ids to their matching event and texture;
+- focused live 1280x720 and 1920x1080 proof observes six imported texture draws, six missing-texture procedural fallbacks, six reduced-motion procedural fallbacks, exact containment, unchanged session authority, and save version 9;
+- object-resolution playback (including persistent capture, repeatable visit, guarded context, neutral-town capture, artifact depletion, and reduced motion), full-route movement, broad Overworld visual, accessibility, core, repository validation, and exact/generic editor gates pass;
+- official Linux export plus packaged headless startup and official Windows export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass, with no packaged object-interaction or broader release claim.
+
+Non-goals:
+- no object, resource, artifact, reward, capture, visit, depletion, route, movement, fog, input, timing, animation-policy, AI, save-schema, map-topology, or Native-RMG changes;
+- no other Overworld cue, Battle VFX, particles, shaders, audio, object sprites, layout, focus, or broad renderer rewrite;
+- no packaged object interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
 
 ## Overworld Enemy Commander Sprite Adoption
 

@@ -10,6 +10,7 @@ const TerrainPlacementRulesScript = preload("res://scripts/core/TerrainPlacement
 const FrontierVisualKitScript = preload("res://scripts/ui/FrontierVisualKit.gd")
 
 const OVERWORLD_ART_MANIFEST_PATH := "res://art/overworld/manifest.json"
+const OVERWORLD_VFX_MANIFEST_PATH := "res://content/overworld_vfx_manifest.json"
 const TERRAIN_GRAMMAR_PATH := "res://content/terrain_grammar.json"
 const MAP_PADDING := 22.0
 const TACTICAL_VISIBLE_TILE_SPAN := 16.0
@@ -226,6 +227,10 @@ var _homm3_direct_bridge_pairs: Dictionary = {}
 var _homm3_routed_bridge_rules: Dictionary = {}
 var _homm3_road_overlays: Dictionary = {}
 var _overworld_art_manifest: Dictionary = {}
+var _overworld_vfx_manifest: Dictionary = {}
+var _overworld_vfx_manifest_loaded := false
+var _overworld_vfx_textures: Dictionary = {}
+var _overworld_vfx_texture_missing: Dictionary = {}
 var _object_asset_paths: Dictionary = {}
 var _object_textures: Dictionary = {}
 var _object_texture_missing: Dictionary = {}
@@ -293,9 +298,11 @@ var _object_resolution_event_id := ""
 var _object_resolution_animation_state := ""
 var _object_resolution_visual_policy := ""
 var _object_resolution_fallback_tag := ""
+var _object_resolution_vfx_cue_ids: Array = []
 var _object_resolution_family := ""
 var _object_resolution_placement_id := ""
 var _object_resolution_allows_large_motion := false
+var _object_resolution_last_draw: Dictionary = {}
 var _route_blocked_last_serial := 0
 var _route_blocked_tile := Vector2i(-1, -1)
 var _route_blocked_elapsed_sec := 0.0
@@ -348,6 +355,7 @@ func _ready() -> void:
 	_ensure_render_layers()
 	_load_terrain_grammar()
 	_load_overworld_art_manifest()
+	_load_overworld_vfx_manifest()
 	_invalidate_frame_layer("ready")
 	set_process(false)
 
@@ -593,9 +601,11 @@ func _sync_object_resolution_presentation(presentation: Dictionary) -> void:
 	_object_resolution_animation_state = String(presentation.get("selected_animation_state", ""))
 	_object_resolution_visual_policy = String(presentation.get("selected_visual_policy", ""))
 	_object_resolution_fallback_tag = String(presentation.get("selected_fallback_tag", ""))
+	_object_resolution_vfx_cue_ids = (presentation.get("selected_vfx_cue_ids", []) as Array).duplicate(true)
 	_object_resolution_family = String(presentation.get("family", ""))
 	_object_resolution_placement_id = String(presentation.get("placement_id", ""))
 	_object_resolution_allows_large_motion = bool(presentation.get("allows_large_motion", true))
+	_object_resolution_last_draw = {}
 	_sync_presentation_processing()
 	if _object_resolution_event_id not in ["overworld_object_visited", "overworld_object_captured", "overworld_object_depleted"]:
 		return
@@ -1598,11 +1608,44 @@ func _draw_object_resolution_presentation(board_rect: Rect2) -> void:
 	if not _object_resolution_active or _object_resolution_duration_sec <= 0.0:
 		return
 	var rect := _tile_rect(board_rect, _object_resolution_tile)
+	var progress := clampf(_object_resolution_elapsed_sec / _object_resolution_duration_sec, 0.0, 1.0)
+	if _draw_object_resolution_imported_vfx(rect, progress):
+		return
+	_draw_object_resolution_procedural_vfx(rect, progress)
+
+func _draw_object_resolution_imported_vfx(rect: Rect2, progress: float) -> bool:
+	var asset_state := _object_resolution_vfx_asset_state()
+	if not bool(asset_state.get("uses_imported_asset", false)):
+		return false
+	var texture: Texture2D = _overworld_vfx_texture_for_path(String(asset_state.get("texture_path", ""))) as Texture2D
+	if texture == null:
+		return false
 	var center := rect.get_center()
 	var extent := minf(rect.size.x, rect.size.y)
-	var progress := clampf(_object_resolution_elapsed_sec / _object_resolution_duration_sec, 0.0, 1.0)
 	var motion_progress := progress if _object_resolution_allows_large_motion else 0.35
 	var alpha := clampf(1.0 - progress * 0.72, 0.24, 1.0)
+	var draw_extent := extent * float(asset_state.get("scale", 1.0)) * lerpf(0.82, 1.0, motion_progress)
+	var draw_rect := Rect2(center - Vector2(draw_extent, draw_extent) * 0.5, Vector2(draw_extent, draw_extent))
+	_canvas_draw_texture_rect(texture, draw_rect, false, Color(1.0, 1.0, 1.0, alpha))
+	_object_resolution_last_draw = {
+		"mode": "imported_texture",
+		"texture_path": String(asset_state.get("texture_path", "")),
+		"rect": {"x": draw_rect.position.x, "y": draw_rect.position.y, "width": draw_rect.size.x, "height": draw_rect.size.y},
+		"alpha": alpha,
+	}
+	return true
+
+func _draw_object_resolution_procedural_vfx(rect: Rect2, progress: float) -> void:
+	var center := rect.get_center()
+	var extent := minf(rect.size.x, rect.size.y)
+	var motion_progress := progress if _object_resolution_allows_large_motion else 0.35
+	var alpha := clampf(1.0 - progress * 0.72, 0.24, 1.0)
+	_object_resolution_last_draw = {
+		"mode": "existing_procedural_object_resolution_body",
+		"texture_path": "",
+		"rect": {"x": rect.position.x, "y": rect.position.y, "width": rect.size.x, "height": rect.size.y},
+		"alpha": alpha,
+	}
 	if _object_resolution_event_id == "overworld_object_captured":
 		var radius := extent * lerpf(0.26, 0.48, motion_progress)
 		var capture_color := Color(1.0, 0.78, 0.22, alpha)
@@ -3244,9 +3287,66 @@ func validation_object_resolution_presentation() -> Dictionary:
 		"animation_state": _object_resolution_animation_state,
 		"visual_policy": _object_resolution_visual_policy,
 		"fallback_tag": _object_resolution_fallback_tag,
+		"selected_vfx_cue_ids": _object_resolution_vfx_cue_ids.duplicate(true),
+		"vfx_asset": _object_resolution_vfx_asset_state(),
+		"vfx_draw": _object_resolution_last_draw.duplicate(true),
 		"allows_large_motion": _object_resolution_allows_large_motion,
 		"duration_ms": int(round(_object_resolution_duration_sec * 1000.0)),
 		"progress": progress,
+	}
+
+func validation_object_resolution_vfx_asset_summary() -> Dictionary:
+	_load_overworld_vfx_manifest()
+	var cues: Dictionary = _overworld_vfx_manifest.get("cues", {}) if _overworld_vfx_manifest.get("cues", {}) is Dictionary else {}
+	var cue_ids: Array = cues.keys()
+	cue_ids.sort()
+	var texture_paths: Array = []
+	var loaded_texture_paths: Array = []
+	var missing_texture_paths: Array = []
+	for cue_id_value in cue_ids:
+		var cue: Dictionary = cues.get(cue_id_value, {}) if cues.get(cue_id_value, {}) is Dictionary else {}
+		var texture_path := String(cue.get("texture_path", "")).strip_edges()
+		if texture_path == "" or texture_paths.has(texture_path):
+			continue
+		texture_paths.append(texture_path)
+		if _overworld_vfx_texture_for_path(texture_path) != null:
+			loaded_texture_paths.append(texture_path)
+		else:
+			missing_texture_paths.append(texture_path)
+	return {
+		"manifest_path": OVERWORLD_VFX_MANIFEST_PATH,
+		"manifest_loaded": _overworld_vfx_manifest_loaded,
+		"schema_id": String(_overworld_vfx_manifest.get("schema_id", "")),
+		"mapped_cue_count": cue_ids.size(),
+		"mapped_cue_ids": cue_ids,
+		"unique_texture_count": texture_paths.size(),
+		"texture_paths": texture_paths,
+		"loaded_texture_count": loaded_texture_paths.size(),
+		"loaded_texture_paths": loaded_texture_paths,
+		"missing_texture_paths": missing_texture_paths,
+	}
+
+func _object_resolution_vfx_asset_state() -> Dictionary:
+	var cue_id := String(_object_resolution_vfx_cue_ids[0]).strip_edges() if _object_resolution_vfx_cue_ids.size() == 1 else ""
+	var spec := _overworld_vfx_manifest_cue(cue_id)
+	var texture_path := String(spec.get("texture_path", "")).strip_edges()
+	var event_id := String(spec.get("event_id", "")).strip_edges()
+	var render_mode := String(spec.get("render_mode", "")).strip_edges()
+	var texture_loaded := texture_path != "" and _overworld_vfx_texture_for_path(texture_path) != null
+	var uses_imported_asset := cue_id != "" \
+		and event_id == _object_resolution_event_id \
+		and render_mode == "object_resolution" \
+		and texture_loaded
+	return {
+		"cue_id": cue_id,
+		"event_id": event_id,
+		"texture_path": texture_path,
+		"render_mode": render_mode,
+		"scale": float(spec.get("scale", 1.0)),
+		"texture_loaded": texture_loaded,
+		"uses_imported_asset": uses_imported_asset,
+		"uses_procedural_fallback": not uses_imported_asset,
+		"fallback_mode": "existing_procedural_object_resolution_body",
 	}
 
 func validation_route_blocked_presentation() -> Dictionary:
@@ -6249,6 +6349,43 @@ func _load_overworld_art_manifest() -> void:
 
 	_load_decorative_object_sprite_manifest(String(_overworld_art_manifest.get("decorative_object_sprite_manifest", "")))
 	_load_map_object_sprite_manifest(String(_overworld_art_manifest.get("map_object_sprite_manifest", "")))
+
+func _overworld_vfx_manifest_cue(cue_id: String) -> Dictionary:
+	_load_overworld_vfx_manifest()
+	var cues: Dictionary = _overworld_vfx_manifest.get("cues", {}) if _overworld_vfx_manifest.get("cues", {}) is Dictionary else {}
+	var cue: Dictionary = cues.get(cue_id, {}) if cues.get(cue_id, {}) is Dictionary else {}
+	return cue.duplicate(true)
+
+func _load_overworld_vfx_manifest() -> void:
+	if _overworld_vfx_manifest_loaded:
+		return
+	_overworld_vfx_manifest_loaded = true
+	_overworld_vfx_manifest = {}
+	_overworld_vfx_textures.clear()
+	_overworld_vfx_texture_missing.clear()
+	if not FileAccess.file_exists(OVERWORLD_VFX_MANIFEST_PATH):
+		return
+	var text := FileAccess.get_file_as_string(OVERWORLD_VFX_MANIFEST_PATH)
+	if text.strip_edges() == "":
+		return
+	var parsed = JSON.parse_string(text)
+	if parsed is Dictionary:
+		_overworld_vfx_manifest = parsed
+
+func _overworld_vfx_texture_for_path(texture_path: String):
+	if texture_path == "" or _overworld_vfx_texture_missing.has(texture_path):
+		return null
+	if _overworld_vfx_textures.has(texture_path):
+		return _overworld_vfx_textures.get(texture_path)
+	if not ResourceLoader.exists(texture_path):
+		_overworld_vfx_texture_missing[texture_path] = true
+		return null
+	var loaded = load(texture_path)
+	if loaded is Texture2D:
+		_overworld_vfx_textures[texture_path] = loaded
+		return loaded
+	_overworld_vfx_texture_missing[texture_path] = true
+	return null
 
 func _load_decorative_object_sprite_manifest(manifest_path: String) -> void:
 	var normalized_path := manifest_path.strip_edges()

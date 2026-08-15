@@ -1,0 +1,23 @@
+{
+  "schema_id": "overworld_vfx_manifest_v1",
+  "cues": {
+    "vfx_placeholder_capture_flag": {
+      "event_id": "overworld_object_captured",
+      "texture_path": "res://art/overworld/runtime/vfx/object_resolution/captured.png",
+      "render_mode": "object_resolution",
+      "scale": 1.16
+    },
+    "vfx_placeholder_object_visit": {
+      "event_id": "overworld_object_visited",
+      "texture_path": "res://art/overworld/runtime/vfx/object_resolution/visited.png",
+      "render_mode": "object_resolution",
+      "scale": 1.08
+    },
+    "vfx_placeholder_depleted_dim": {
+      "event_id": "overworld_object_depleted",
+      "texture_path": "res://art/overworld/runtime/vfx/object_resolution/depleted.png",
+      "render_mode": "object_resolution",
+      "scale": 1.12
+    }
+  }
+}
