@@ -338,6 +338,9 @@ var _guarded_site_guard_name := ""
 var _guarded_site_control_inspection := ""
 var _guarded_site_guard_link_surface := ""
 var _guarded_site_vfx_cue_ids: Array = []
+var _guarded_site_audio_cue_ids: Array = []
+var _guarded_site_audio_playback_records: Array = []
+var _guarded_site_context_signature := ""
 var _guarded_site_allows_large_motion := false
 var _guarded_site_last_draw: Dictionary = {}
 var _spell_cast_last_serial := 0
@@ -724,6 +727,8 @@ func _sync_route_blocked_presentation(presentation: Dictionary) -> void:
 	_invalidate_dynamic_layer("route_blocked_started")
 
 func _sync_guarded_site_presentation(presentation: Dictionary) -> void:
+	var previous_signature := _guarded_site_context_signature if _guarded_site_active else ""
+	var previous_audio_records := _guarded_site_audio_playback_records.duplicate(true)
 	_guarded_site_active = false
 	_guarded_site_tile = Vector2i(-1, -1)
 	_guarded_site_event_id = String(presentation.get("event_id", ""))
@@ -738,6 +743,9 @@ func _sync_guarded_site_presentation(presentation: Dictionary) -> void:
 	_guarded_site_control_inspection = String(presentation.get("control_inspection", "")).strip_edges()
 	_guarded_site_guard_link_surface = String(presentation.get("guard_link_surface", "")).strip_edges()
 	_guarded_site_vfx_cue_ids = (presentation.get("selected_vfx_cue_ids", []) as Array).duplicate(true)
+	_guarded_site_audio_cue_ids = (presentation.get("selected_audio_cue_ids", []) as Array).duplicate(true)
+	_guarded_site_audio_playback_records = []
+	_guarded_site_context_signature = ""
 	_guarded_site_allows_large_motion = bool(presentation.get("allows_large_motion", true))
 	_guarded_site_last_draw = {}
 	if (
@@ -759,6 +767,26 @@ func _sync_guarded_site_presentation(presentation: Dictionary) -> void:
 		return
 	_guarded_site_tile = tile
 	_guarded_site_active = true
+	_guarded_site_context_signature = "%s|%d,%d|%s|%s|%s" % [
+		_guarded_site_event_id,
+		tile.x,
+		tile.y,
+		_guarded_site_placement_id,
+		_guarded_site_site_id,
+		_guarded_site_guard_placement_id,
+	]
+	if _guarded_site_context_signature == previous_signature:
+		_guarded_site_audio_playback_records = previous_audio_records
+		return
+	for audio_cue_value in _guarded_site_audio_cue_ids:
+		_guarded_site_audio_playback_records.append(PresentationAudio.play_cue(String(audio_cue_value), "OverworldMapView.guarded_site", {
+			"event_id": _guarded_site_event_id,
+			"context_signature": _guarded_site_context_signature,
+			"placement_id": _guarded_site_placement_id,
+			"site_id": _guarded_site_site_id,
+			"guard_placement_id": _guarded_site_guard_placement_id,
+			"tile": {"x": _guarded_site_tile.x, "y": _guarded_site_tile.y},
+		}))
 
 func set_placement_debug_overlay_enabled(enabled: bool) -> void:
 	if _placement_debug_overlay_enabled == enabled:
@@ -3639,6 +3667,9 @@ func validation_guarded_site_presentation() -> Dictionary:
 		"visual_policy": _guarded_site_visual_policy,
 		"fallback_tag": _guarded_site_fallback_tag,
 		"selected_vfx_cue_ids": _guarded_site_vfx_cue_ids.duplicate(true),
+		"selected_audio_cue_ids": _guarded_site_audio_cue_ids.duplicate(true),
+		"audio_playback_records": _guarded_site_audio_playback_records.duplicate(true),
+		"context_signature": _guarded_site_context_signature,
 		"vfx_asset": _guarded_site_vfx_asset_state(),
 		"vfx_draw": _guarded_site_last_draw.duplicate(true),
 		"allows_large_motion": _guarded_site_allows_large_motion,

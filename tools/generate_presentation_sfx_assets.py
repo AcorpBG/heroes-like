@@ -89,6 +89,9 @@ SPECS = {
     "audio_placeholder_collect": {
         "kind": "cache_lift", "fundamental": 698.0, "metal": 1396.0, "peak": 0.56, "pan": 0.12,
     },
+    "audio_placeholder_guard_warning": {
+        "kind": "sentinel_warning", "fundamental": 196.0, "metal": 588.0, "peak": 0.62, "pan": -0.10,
+    },
     "audio_placeholder_town_build": {
         "kind": "masonry_seal",
         "fundamental": 118.0,
@@ -192,6 +195,11 @@ def layered_sample(kind: str, fundamental: float, metal: float, t: float, progre
         sparkle = math.sin(math.tau * metal * t - phase) * 0.22
         second = max(0.0, 1.0 - abs(progress - 0.34) / 0.14) * sparkle * 0.36
         return (bright + sparkle + second + noise * transient * 0.10) * envelope(progress)
+    if kind == "sentinel_warning":
+        low = math.sin(math.tau * fundamental * t + phase) * 0.34
+        warning = math.sin(math.tau * metal * t - phase) * 0.22
+        repeat = max(0.0, 1.0 - abs(progress - 0.48) / 0.18) * warning * 0.42
+        return (low + warning + repeat + noise * transient * 0.12) * envelope(progress)
     raise ValueError(f"Unsupported presentation sound kind: {kind}")
 
 

@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld object-resolution production-audio slice is completed. Live visited/captured/depleted actions now use exact catalog VFX/audio ids and imported activation-synchronized playback with focused, compatibility, static/editor, and bounded Linux/Windows export/startup evidence. Packaged object interaction/listening and release readiness remain unclaimed.",
+  "currentNotes": "The guarded-site production-audio slice is completed. Live Shell/MapView now play one context-signature-owned original warning per newly accepted guarded selection, with refresh dedupe and silent clear/resolution paths. Focused, compatibility, static/editor, and bounded Linux/Windows export/startup gates pass; select the next tracker-approved release-readiness implementation slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-object-resolution-production-audio-playback-10184",
-  "currentSliceId": "presentation-overworld-object-resolution-production-audio-playback-10184",
-  "currentSliceNotes": "Completed exact visited/captured/depleted VFX/audio policy threading and production audio when immediate or movement-queued object resolution becomes active; select the next tracker-approved release-readiness slice.",
+  "currentSlice": "presentation-overworld-guarded-site-production-audio-playback-10184",
+  "currentSliceId": "presentation-overworld-guarded-site-production-audio-playback-10184",
+  "currentSliceNotes": "Completed with exact live guarded-context playback, lifecycle dedupe, focused authority, compatibility/static/editor validation, and bounded Linux/Windows export/startup evidence. Packaged guarded interaction/listening and release readiness remain unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Object Resolution Production Audio Playback",
-  "currentSliceUpdatedAt": "2026-08-15T17:53:49Z",
+  "currentSliceTitle": "Overworld Guarded Site Production Audio Playback",
+  "currentSliceUpdatedAt": "2026-08-15T18:14:04Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19849,6 +19849,25 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "id": "presentation-overworld-guarded-site-production-audio-playback-10184",
+      "title": "Overworld Guarded Site Production Audio Playback",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/animation-systems-foundation.md", "AGENTS.md"],
+      "purpose": "Play the existing guarded-site context audio identity once per newly accepted live guarded selection without refresh replay.",
+      "implementationTargets": ["art/audio/runtime/presentation/*.wav", "content/presentation_sfx_manifest.json", "tools/generate_presentation_sfx_assets.py", "scripts/autoload/PresentationAudio.gd", "scenes/overworld/OverworldShell.gd", "scenes/overworld/OverworldMapView.gd", "tests/overworld_object_resolution_cue_playback_report.gd", "tests/overworld_guarded_site_vfx_asset_runtime_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "testOwners": ["tests/overworld_object_resolution_cue_playback_report.tscn", "tests/overworld_guarded_site_vfx_asset_runtime_report.tscn", "tests/overworld_visual_smoke.tscn", "tests/active_play_keyboard_focus_smoke.tscn", "tests/core_systems_regression_smoke.tscn", "tests/validate_repo.py"],
+      "baseline": {"head": "20df1c59d3a4c91d2b1a1f8d184ab8bed7d0cc09", "event_id": "overworld_object_guarded", "audio_id": "audio_placeholder_guard_warning", "live_selected_audio_threaded": false, "live_audio_asset_count": 0, "implementation_or_runtime_started": false},
+      "completionCriteria": ["Live Shell threads the exact detached guarded-site audio id and MapView plays one byte-distinct original 44.1 kHz stereo 16-bit warning transient only after full context acceptance", "Unchanged refresh does not replay; deselect, guard resolution, invalid/malformed context, and clear remain silent; real reselection plays once again", "Guard/resource/route authority, selection/focus/input, VFX imported/procedural/reduced-motion behavior, settings/session/save, service fallback/mute/voice budgets, and all non-target audio remain exact", "Focused real context and direct 1280x720/1920x1080 asset/fallback, compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass and both PCKs contain the asset"],
+      "nonGoals": ["blocked-object, route-open/closed, ambient, Town/Battle/UI audio expansion, spatial audio, haptics, or final sound design", "guard/resource/object/routing rules, selection semantics, AI, save/schema, content, camera, VFX timing, or other presentation behavior changes", "packaged guarded-site interaction/listening, hardware certification, signing/publication, whole-game, or release-readiness claims"],
+      "createdAt": "2026-08-15T17:56:53Z", "startedAt": "2026-08-15T17:56:53Z", "updatedAt": "2026-08-15T18:14:04Z", "completedAt": "2026-08-15T18:14:04Z",
+      "notes": "Completed with live guarded-site audio behavior rather than policy/report-only credit. Shell threads the detached audio identity and MapView accepts one context-signature-owned warning playback per newly active guarded selection. Focused live and 1280x720/1920 imported/missing/reduced-motion owners prove initial play, unchanged-refresh dedupe, silent deselect/guard-resolution/invalid clear, and real-reselection replay while preserving guard/resource/route, VFX, selection/focus/input, settings/session/save, service, and other-audio authority. Compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass; both PCKs contain guard_warning.wav. Packaged guarded-site interaction/listening, hardware certification, signing/publication, whole-game, and release readiness are not claimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null
+    },
     {
       "id": "presentation-overworld-object-resolution-production-audio-playback-10184",
       "title": "Overworld Object Resolution Production Audio Playback",
@@ -84552,7 +84571,7 @@
   ],
   "summary": "The UI production SFX fidelity slice is completed: all six short mono generated click, select, adjust, tab, confirm, and invalid assets are replaced by distinct stereo production transients while exact cue, control, repetition, mute, input, settings, and gameplay authority remain preserved. Focused, compatibility, static/editor, and bounded Linux/Windows export/startup gates pass. Select the next tracker-approved slice; the game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-15T15:51:54Z",
+  "updatedAt": "2026-08-15T18:14:04Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

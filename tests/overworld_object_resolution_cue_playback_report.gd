@@ -52,6 +52,7 @@ func _assert_guarded_site_context_playback() -> bool:
 	var guarded_identity: Dictionary = guarded.duplicate(true)
 	guarded_identity.erase("vfx_asset")
 	guarded_identity.erase("vfx_draw")
+	guarded_identity.erase("audio_playback_records")
 	var cache_after_selection := _render_cache(shell)
 	var node: Dictionary = session.overworld.get("resource_nodes", [])[0]
 	var guard: Dictionary = session.overworld.get("encounters", [])[0]
@@ -76,9 +77,12 @@ func _assert_guarded_site_context_playback() -> bool:
 			"visual_policy": "authored_animation_state",
 			"fallback_tag": "",
 			"selected_vfx_cue_ids": ["vfx_placeholder_guard_warning"],
+			"selected_audio_cue_ids": ["audio_placeholder_guard_warning"],
+			"context_signature": "overworld_object_guarded|3,1|object_guarded_barrow|site_barrow_vault|object_guarded_barrow_watch",
 			"allows_large_motion": true,
 		}
 		or not _guarded_vfx_imported_exact(guarded)
+		or not _guard_audio_exact(guarded, 1)
 		or String(selection.get("selected_route_decision", {}).get("status", "")) not in ["reachable", "blocked"]
 		or not expected_inspection.contains("Guard: Guarded by Bramble Hedge Watch; clear guard to use site")
 		or expected_guard_surface == ""
@@ -95,25 +99,33 @@ func _assert_guarded_site_context_playback() -> bool:
 	var cache_after_refresh := _render_cache(shell)
 	if (
 		refreshed != guarded
+		or not _guard_audio_exact(refreshed, 1)
 		or session.to_dict() != authority_before_selection
 		or int(cache_after_refresh.get("session_static_generation", -1)) != int(cache_after_selection.get("session_static_generation", -2))
 		or int(cache_after_refresh.get("state_generation", -1)) != int(cache_after_selection.get("state_generation", -2))
 	):
 		return _fail("Guarded context was not stable across a full refresh.", refreshed)
 	shell.call("validation_select_tile", 0, 1)
-	if bool(_guarded_site(shell).get("active", true)) or session.to_dict() != authority_before_selection:
-		return _fail("Guarded context remained active after deselection.", _guarded_site(shell))
+	var deselected := _guarded_site(shell)
+	if bool(deselected.get("active", true)) or not Array(deselected.get("audio_playback_records", [])).is_empty() or String(deselected.get("context_signature", "")) != "" or _guard_audio_service_records().size() != 1 or session.to_dict() != authority_before_selection:
+		return _fail("Guarded context remained active or replayed after deselection.", deselected)
 	shell.call("validation_select_tile", guarded_tile.x, guarded_tile.y)
 	await get_tree().process_frame
-	if _guarded_site(shell) != guarded:
-		return _fail("Guarded context did not return exactly after reselection.", _guarded_site(shell))
+	var reselected := _guarded_site(shell)
+	var reselected_identity: Dictionary = reselected.duplicate(true)
+	reselected_identity.erase("vfx_asset")
+	reselected_identity.erase("vfx_draw")
+	reselected_identity.erase("audio_playback_records")
+	if reselected_identity != guarded_identity or not _guard_audio_exact(reselected, 2):
+		return _fail("Guarded context did not return exactly with one new warning after reselection.", reselected)
 	var resolved: Array = session.overworld.get("resolved_encounters", []) if session.overworld.get("resolved_encounters", []) is Array else []
 	resolved.append(guard_id)
 	session.overworld["resolved_encounters"] = resolved
 	shell.call("_refresh")
 	await get_tree().process_frame
-	if bool(_guarded_site(shell).get("active", true)) or not OverworldRules.resource_site_blocking_guard(session, node, site).is_empty():
-		return _fail("Guarded context did not clear with authoritative guard resolution.", _guarded_site(shell))
+	var resolved_snapshot := _guarded_site(shell)
+	if bool(resolved_snapshot.get("active", true)) or not Array(resolved_snapshot.get("audio_playback_records", [])).is_empty() or _guard_audio_service_records().size() != 2 or not OverworldRules.resource_site_blocking_guard(session, node, site).is_empty():
+		return _fail("Guarded context did not clear silently with authoritative guard resolution.", resolved_snapshot)
 	_evidence["guarded_site_context"] = {
 		"event_id": "overworld_object_guarded",
 		"site_id": "site_barrow_vault",
@@ -123,11 +135,13 @@ func _assert_guarded_site_context_playback() -> bool:
 		"deselection_cleared": true,
 		"guard_resolution_cleared": true,
 		"dynamic_layer_only": true,
+		"audio_imported_count": 2,
 	}
 	shell.queue_free()
 	await get_tree().process_frame
 
 	SettingsService.set_reduced_motion_enabled(true)
+	PresentationAudio.validation_reset()
 	var reduced_session = _session_with_map(7, 3, true)
 	reduced_session.overworld["resource_nodes"] = [_guarded_barrow_node("object_guarded_barrow_reduced", guarded_tile)]
 	reduced_session.overworld["encounters"] = [_guarded_barrow_encounter("object_guarded_barrow_watch_reduced", "object_guarded_barrow_reduced", Vector2i(3, 0))]
@@ -147,6 +161,8 @@ func _assert_guarded_site_context_playback() -> bool:
 		or String(reduced.get("visual_policy", "")) != "reduced_motion_fallback"
 		or String(reduced.get("fallback_tag", "")) != "guard_badge_static"
 		or reduced.get("selected_vfx_cue_ids", []) != ["guard_badge_static"]
+		or reduced.get("selected_audio_cue_ids", []) != ["audio_placeholder_guard_warning"]
+		or not _guard_audio_exact(reduced, 1)
 		or not _guarded_vfx_fallback_exact(reduced)
 		or bool(reduced.get("allows_large_motion", true))
 		or reduced_session.to_dict() != reduced_authority
@@ -156,6 +172,7 @@ func _assert_guarded_site_context_playback() -> bool:
 		"animation_state": "guard_badge_static",
 		"fallback_tag": "guard_badge_static",
 		"allows_large_motion": false,
+		"audio_imported_once": true,
 	}
 	reduced_shell.queue_free()
 	await get_tree().process_frame
@@ -178,6 +195,39 @@ func _guarded_vfx_fallback_exact(snapshot: Dictionary) -> bool:
 		and not bool(asset.get("uses_imported_asset", true)) \
 		and String(draw.get("mode", "")) == "guard_badge_static" \
 		and int(draw.get("shield_count", 0)) == 1
+
+func _guard_audio_service_records() -> Array:
+	var records: Array = []
+	for record_value in PresentationAudio.validation_records():
+		if record_value is Dictionary and String(record_value.get("source", "")) == "OverworldMapView.guarded_site":
+			records.append(record_value.duplicate(true))
+	return records
+
+func _guard_audio_exact(snapshot: Dictionary, expected_service_count: int) -> bool:
+	var snapshot_records: Array = snapshot.get("audio_playback_records", []) if snapshot.get("audio_playback_records", []) is Array else []
+	var service_records := _guard_audio_service_records()
+	if snapshot.get("selected_audio_cue_ids", []) != ["audio_placeholder_guard_warning"] or snapshot_records.size() != 1 or service_records.size() != expected_service_count:
+		return false
+	var record: Dictionary = snapshot_records[0] if snapshot_records[0] is Dictionary else {}
+	var metadata: Dictionary = record.get("metadata", {}) if record.get("metadata", {}) is Dictionary else {}
+	return record == service_records[-1] \
+		and String(record.get("cue_id", "")) == "audio_placeholder_guard_warning" \
+		and String(record.get("source", "")) == "OverworldMapView.guarded_site" \
+		and bool(record.get("played", false)) \
+		and String(record.get("playback_source", "")) == "imported_wav" \
+		and String(record.get("asset_path", "")) == "res://art/audio/runtime/presentation/guard_warning.wav" \
+		and String(record.get("role", "")) == "overworld_object_guarded" \
+		and int(record.get("stream_mix_rate", 0)) == 44100 \
+		and bool(record.get("stream_stereo", false)) \
+		and int(record.get("stream_loop_mode", -1)) == AudioStreamWAV.LOOP_DISABLED \
+		and int(record.get("imported_asset_count", 0)) == 1 \
+		and int(record.get("generated_fallback_count", -1)) == 0 \
+		and String(metadata.get("event_id", "")) == "overworld_object_guarded" \
+		and String(metadata.get("context_signature", "")) == String(snapshot.get("context_signature", "")) \
+		and String(metadata.get("placement_id", "")) == String(snapshot.get("placement_id", "")) \
+		and String(metadata.get("site_id", "")) == String(snapshot.get("site_id", "")) \
+		and String(metadata.get("guard_placement_id", "")) == String(snapshot.get("guard_placement_id", "")) \
+		and metadata.get("tile", {}) == snapshot.get("tile", {})
 
 func _assert_persistent_resource_capture_playback() -> bool:
 	var session = _session_with_map(7, 3, true)

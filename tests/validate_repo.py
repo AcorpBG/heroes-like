@@ -31792,24 +31792,45 @@ def validate_overworld_guarded_site_vfx_assets(errors: list[str]) -> None:
     shell_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
     producer = function_block(shell_text, "_selected_guarded_site_presentation")
     ensure('(policy.get("selected_vfx_cue_ids", []) as Array).duplicate(true)' in producer, errors, "Guarded-site producer must detach the exact selected VFX cue ids")
-    ensure(producer.find("cue_playback_policy_for_event") < producer.rfind("return {") < producer.find('"selected_vfx_cue_ids"'), errors, "Guarded-site producer must resolve policy before publishing detached VFX identity")
+    ensure('(policy.get("selected_audio_cue_ids", []) as Array).duplicate(true)' in producer, errors, "Guarded-site producer must detach the exact selected audio cue ids")
+    ensure(producer.find("cue_playback_policy_for_event") < producer.rfind("return {") < producer.find('"selected_vfx_cue_ids"') < producer.find('"selected_audio_cue_ids"'), errors, "Guarded-site producer must resolve policy before publishing detached VFX/audio identity")
     ensure("session.overworld[" not in producer and "session.flags[" not in producer and "create_timer" not in producer and "await " not in producer, errors, "Guarded-site producer must remain read-only and synchronous")
 
     map_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
     for token in (
         "var _guarded_site_vfx_cue_ids: Array = []",
+        "var _guarded_site_audio_cue_ids: Array = []",
+        "var _guarded_site_audio_playback_records: Array = []",
+        'var _guarded_site_context_signature := ""',
         "var _guarded_site_last_draw: Dictionary = {}",
         '_guarded_site_vfx_cue_ids = (presentation.get("selected_vfx_cue_ids", []) as Array).duplicate(true)',
         "_guarded_site_last_draw = {}",
         '"selected_vfx_cue_ids": _guarded_site_vfx_cue_ids.duplicate(true)',
+        '"selected_audio_cue_ids": _guarded_site_audio_cue_ids.duplicate(true)',
+        '"audio_playback_records": _guarded_site_audio_playback_records.duplicate(true)',
+        '"context_signature": _guarded_site_context_signature',
         '"vfx_asset": _guarded_site_vfx_asset_state()',
         '"vfx_draw": _guarded_site_last_draw.duplicate(true)',
     ):
         ensure(token in map_text, errors, f"Overworld guarded-site VFX state is missing exact ownership: {token}")
     draw = function_block(map_text, "_draw_guarded_site_presentation")
+    sync = function_block(map_text, "_sync_guarded_site_presentation")
     imported = function_block(map_text, "_draw_guarded_site_imported_vfx")
     fallback = function_block(map_text, "_draw_guarded_site_procedural_shield")
     state = function_block(map_text, "_guarded_site_vfx_asset_state")
+    for token in (
+        "var previous_signature := _guarded_site_context_signature if _guarded_site_active else \"\"",
+        "var previous_audio_records := _guarded_site_audio_playback_records.duplicate(true)",
+        '_guarded_site_audio_cue_ids = (presentation.get("selected_audio_cue_ids", []) as Array).duplicate(true)',
+        '_guarded_site_context_signature = "%s|%d,%d|%s|%s|%s"',
+        "if _guarded_site_context_signature == previous_signature:",
+        "_guarded_site_audio_playback_records = previous_audio_records",
+        'PresentationAudio.play_cue(String(audio_cue_value), "OverworldMapView.guarded_site"',
+        '"guard_placement_id": _guarded_site_guard_placement_id',
+    ):
+        ensure(token in sync, errors, f"Guarded-site audio lifecycle is missing exact acceptance/signature ownership: {token}")
+    ensure(sync.find("_guarded_site_active = false") < sync.find('not bool(presentation.get("active", false))') < sync.find("tile != _selected_tile") < sync.find("_guarded_site_active = true") < sync.find('_guarded_site_context_signature = "%s|%d,%d|%s|%s|%s"') < sync.find("if _guarded_site_context_signature == previous_signature:") < sync.find("PresentationAudio.play_cue"), errors, "Guarded-site audio must clear first, validate whole live context, dedupe the same signature, then play")
+    ensure("session" not in sync and "await " not in sync and "create_timer" not in sync and "create_tween" not in sync, errors, "Guarded-site audio lifecycle must remain synchronous and authority-free")
     ensure(draw.find('if _guarded_site_visual_policy != "reduced_motion_fallback"') < draw.find("_draw_guarded_site_imported_vfx") < draw.find("_draw_guarded_site_procedural_shield"), errors, "Guarded-site drawing must use imported art only in normal mode and retain the procedural shield fallback")
     for token in (
         "_guarded_site_vfx_asset_state()",
@@ -31850,6 +31871,12 @@ def validate_overworld_guarded_site_vfx_assets(errors: list[str]) -> None:
         'map_view.set("_overworld_vfx_texture_missing", {TEXTURE_PATH: true})',
         'map_view.set("_overworld_vfx_texture_missing", {})',
         '"selected_vfx_cue_ids": ["guard_badge_static"] if reduced_motion else ["vfx_placeholder_guard_warning"]',
+        '"selected_audio_cue_ids": ["audio_placeholder_guard_warning"]',
+        "PresentationAudio.validation_reset()",
+        'func _audio_exact(snapshot: Dictionary, expected_service_count: int) -> bool:',
+        'String(record.get("source", "")) == "OverworldMapView.guarded_site"',
+        '"res://art/audio/runtime/presentation/guard_warning.wav"',
+        'AudioStreamWAV.LOOP_DISABLED',
         'String(draw.get("mode", "")) == "imported_texture"',
         'String(draw.get("mode", "")) == expected_mode',
         "session.to_dict() == authority_before",
@@ -31864,11 +31891,14 @@ def validate_overworld_guarded_site_vfx_assets(errors: list[str]) -> None:
     cue_report = OVERWORLD_OBJECT_RESOLUTION_CUE_PLAYBACK_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     for token in (
         '"selected_vfx_cue_ids": ["vfx_placeholder_guard_warning"]',
+        '"selected_audio_cue_ids": ["audio_placeholder_guard_warning"]',
         "or not _guarded_vfx_imported_exact(guarded)",
+        "or not _guard_audio_exact(guarded, 1)",
         'reduced.get("selected_vfx_cue_ids", []) != ["guard_badge_static"]',
         "or not _guarded_vfx_fallback_exact(reduced)",
         "session.to_dict() != authority_before_selection",
         "resolved.append(guard_id)",
+        "_guard_audio_service_records().size() != 2",
     ):
         ensure(token in cue_report, errors, f"Live guarded-site cue owner is missing asset/lifecycle authority: {token}")
     ensure("_draw_guarded_site_imported_vfx" not in cue_report and "_guarded_site_vfx_asset_state" not in cue_report, errors, "Live guarded-site owner must observe public VFX state without private draw/resolver calls")
@@ -31877,7 +31907,7 @@ def validate_overworld_guarded_site_vfx_assets(errors: list[str]) -> None:
     reduced_selection = guarded_case.find('reduced_shell.call("validation_select_tile"')
     ensure(0 <= reduced_selection < guarded_case.find("await get_tree().process_frame", reduced_selection) < guarded_case.find("var reduced := _guarded_site(reduced_shell)"), errors, "Reduced-motion guarded-site owner must cross one real draw frame before observing fallback VFX")
     reselection = guarded_case.find('shell.call("validation_select_tile", guarded_tile.x, guarded_tile.y)', guarded_case.find('shell.call("validation_select_tile", 0, 1)'))
-    ensure(0 <= reselection < guarded_case.find("await get_tree().process_frame", reselection) < guarded_case.find("if _guarded_site(shell) != guarded:", reselection), errors, "Guarded-site reselection must cross one real draw frame before exact whole-state comparison")
+    ensure(0 <= reselection < guarded_case.find("await get_tree().process_frame", reselection) < guarded_case.find("var reselected := _guarded_site(shell)", reselection) < guarded_case.find("not _guard_audio_exact(reselected, 2)", reselection), errors, "Guarded-site reselection must cross one real draw frame before exact context and second-play comparison")
 
 
 def validate_overworld_hero_route_step_vfx_assets(errors: list[str]) -> None:
@@ -32327,6 +32357,7 @@ def validate_overworld_object_resolution_cue_playback(errors: list[str]) -> None
         '"audio_placeholder_object_visit"',
         '"audio_placeholder_capture"',
         '"audio_placeholder_collect"',
+        '"audio_placeholder_guard_warning"',
         '"object_visit.wav"',
         '"object_capture.wav"',
         '"object_collect.wav"',
@@ -39140,6 +39171,12 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
             "volume_db": -13.5,
             "role": "overworld_object_depleted",
         },
+        "audio_placeholder_guard_warning": {
+            "path": "res://art/audio/runtime/presentation/guard_warning.wav",
+            "duration_msec": 340,
+            "volume_db": -13.0,
+            "role": "overworld_object_guarded",
+        },
         "audio_placeholder_town_build": {
             "path": "res://art/audio/runtime/presentation/town_build.wav",
             "duration_msec": 420,
@@ -39163,7 +39200,7 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
     ensure(int(manifest.get("sample_width_bits", 0)) == 16, errors, "production presentation SFX must use 16-bit PCM")
     ensure(manifest.get("asset_tier") == "production_layered_v1", errors, "presentation SFX manifest must declare production_layered_v1")
     cues = manifest.get("cues", {})
-    ensure(isinstance(cues, dict) and set(cues) == set(expected_cues), errors, "presentation SFX manifest must contain exactly the fourteen live Town, Overworld, navigation, object-resolution, and system action cues")
+    ensure(isinstance(cues, dict) and set(cues) == set(expected_cues), errors, "presentation SFX manifest must contain exactly the fifteen live Town, Overworld, navigation, object-resolution, guarded-context, and system action cues")
     asset_hashes: list[str] = []
     for cue_id in sorted(expected_cues):
         expected = expected_cues[cue_id]
@@ -39197,10 +39234,10 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
             if left_samples and right_samples:
                 ensure(left_samples[0] == 0 and right_samples[0] == 0, errors, f"presentation SFX must start at zero: {expected['path']}")
                 ensure(left_samples[-1] == 0 and right_samples[-1] == 0, errors, f"presentation SFX must end at zero: {expected['path']}")
-    ensure(len(set(asset_hashes)) == 14, errors, "all fourteen presentation assets must be byte-distinct")
-    if len(asset_hashes) == 14:
+    ensure(len(set(asset_hashes)) == 15, errors, "all fifteen presentation assets must be byte-distinct")
+    if len(asset_hashes) == 15:
         pack_signature = hashlib.sha256("\n".join(asset_hashes).encode("utf-8")).hexdigest()
-        ensure(pack_signature == "6c2e95dfeda2f65e25ad6eda99795c169d7e8b1d7d20732c5025edb4eb5b1daf", errors, "presentation SFX pack signature drifted")
+        ensure(pack_signature == "966e3f052bbdba29a2ae57b109de31190e7de0f716efecca0f90e97923628bd0", errors, "presentation SFX pack signature drifted")
 
     generator_text = PRESENTATION_SFX_GENERATOR_PATH.read_text(encoding="utf-8")
     for required_token in (
@@ -39222,6 +39259,7 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
         "waypoint_acknowledge",
         "banner_claim",
         "cache_lift",
+        "sentinel_warning",
         "presentation-production-v1",
         "render_stereo",
         "layered_sample",
