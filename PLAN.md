@@ -5282,7 +5282,7 @@ Completed evidence:
 
 id: `presentation-overworld-field-spell-vfx-asset-adoption-10184`
 
-Status: in_progress.
+Status: completed.
 
 Selected Phase 6 player-facing presentation slice. Successful live movement-restoration and scouting-reveal spells already publish the exact `spell_cast_overworld` event and `vfx_placeholder_adventure_spell` cue at the authoritative hero tile, but normal playback still draws only two procedural cast rings plus the existing compact spell icon. The completed field-spell cue-playback slice explicitly left final VFX assets out of scope.
 
@@ -5505,6 +5505,35 @@ Non-goals:
 - no save/load serialization, schema, routing, slot, recovery, autosave, gameplay, session, settings, focus, input, cue timing, or animation-policy changes;
 - no panel expansion, status copy rewrite, layout redesign, particles, shaders, audio, other cue/event assets, or global renderer changes;
 - no packaged save/load interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+## Selected Slice: Overworld Object Focus Cue Adoption
+
+Slice id: `presentation-overworld-object-focus-cue-adoption-10184`
+
+Status: in_progress.
+
+Implementation boundary:
+- deliver the already-authored `overworld_object_active` catalog cue for an actual user selection of one visible, unguarded town, resource, artifact, or encounter;
+- add one original focus-ring source image, one bounded alpha runtime texture, one deterministic production presentation sound, and exact manifest mappings for `vfx_placeholder_object_focus_ring` and `audio_placeholder_object_focus`;
+- accept the cue only after selected tile, object kind/stable identity, visibility, catalog policy, and guarded-site precedence agree, then draw/play it once per newly accepted selection context without unchanged-refresh replay;
+- preserve programmatic opening/reset selection silence, hero/open/hidden/adjacent-immediate-action silence, guarded warning precedence, and all existing route/object-resolution behavior.
+
+Completion criteria:
+- real pointer and keyboard/D-pad route-cursor selection produce the exact imported focus ring and one exact audio play for all four object families at 1280x720 and 1920x1080;
+- unchanged refresh does not replay, while leaving the object and genuinely reselecting it does; guarded, hidden, malformed, stale, hero, open, initial, and immediate-action contexts remain fail-closed and silent;
+- selection, route/action consequences, guarded-site warning, VFX/audio fallback and reduced-motion policy, focus/input, session/settings/save authority, and all other cue mappings remain exact;
+- focused and compatibility runtime, repository/editor validation, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass with bounded claims.
+
+Completion evidence:
+- real pointer selection for visible town/resource/artifact/encounter contexts passes at physical 1280x720 and 1920x1080, with imported normal-mode focus art, missing-asset and reduced-motion outline fallbacks, exact one-shot audio, unchanged-refresh dedupe, and genuine-reselection replay;
+- keyboard/D-pad route-cursor selection and guarded-site precedence pass while programmatic selection remains silent and session/save authority remains exact;
+- all five existing Overworld VFX manifest owners, object-resolution playback, animation catalog, visual composition, active-play focus, accessibility, core, repository/editor validation, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass;
+- platform evidence is export/startup only: packaged object-focus interaction/listening, hardware controller, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release-readiness remain unclaimed.
+
+Non-goals:
+- no object, route, movement, reward, guard, fog, action, AI, save/schema, content, or map-topology changes;
+- no hover cue, initial/programmatic-selection cue, adjacent action pre-cue, broad object highlighting, particles, shaders, camera, layout, spatial audio, haptics, or final sound mastering;
+- no packaged object-focus interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
 
 ## Progress Reconciliation
 

@@ -134,6 +134,11 @@ OVERWORLD_MAP_VIEW_SCRIPT_PATH = ROOT / "scenes" / "overworld" / "OverworldMapVi
 OVERWORLD_FULL_ROUTE_MOVEMENT_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "overworld_full_route_movement_regression.gd"
 OVERWORLD_OBJECT_RESOLUTION_CUE_PLAYBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_object_resolution_cue_playback_report.gd"
 OVERWORLD_OBJECT_RESOLUTION_CUE_PLAYBACK_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_object_resolution_cue_playback_report.tscn"
+OVERWORLD_OBJECT_FOCUS_CUE_PLAYBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_object_focus_cue_playback_report.gd"
+OVERWORLD_OBJECT_FOCUS_CUE_PLAYBACK_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_object_focus_cue_playback_report.tscn"
+OVERWORLD_OBJECT_FOCUS_VFX_SOURCE_PATH = ROOT / "art" / "overworld" / "source" / "object_focus_vfx_source.png"
+OVERWORLD_OBJECT_FOCUS_VFX_RUNTIME_PATH = ROOT / "art" / "overworld" / "runtime" / "vfx" / "object_focus.png"
+OVERWORLD_OBJECT_FOCUS_AUDIO_RUNTIME_PATH = ROOT / "art" / "audio" / "runtime" / "presentation" / "object_focus.wav"
 OVERWORLD_OBJECT_RESOLUTION_VFX_MANIFEST_PATH = CONTENT_DIR / "overworld_vfx_manifest.json"
 OVERWORLD_OBJECT_RESOLUTION_VFX_ATLAS_PATH = ROOT / "art" / "overworld" / "source" / "object_resolution_vfx_atlas.png"
 OVERWORLD_OBJECT_RESOLUTION_VFX_RUNTIME_DIR = ROOT / "art" / "overworld" / "runtime" / "vfx" / "object_resolution"
@@ -31514,7 +31519,7 @@ def validate_overworld_action_feedback_vfx_assets(errors: list[str]) -> None:
         ensure(token in real_reports["artifact_slot"], errors, f"Real artifact-slot owner is missing imported/fallback proof: {token}")
     for token in ('"res://art/overworld/runtime/vfx/resource_delta.png"', 'bool(vfx_asset.get("imported", false)) == not reduced_motion', 'cue_icon.is_visible_in_tree() == not reduced_motion'):
         ensure(token in real_reports["resource_delta"], errors, f"Real resource-delta owner is missing imported/fallback proof: {token}")
-    exact_summary_ids = '["vfx_placeholder_adventure_spell", "vfx_placeholder_artifact_claim", "vfx_placeholder_blocked_route_marker", "vfx_placeholder_capture_flag", "vfx_placeholder_depleted_dim", "vfx_placeholder_guard_warning", "vfx_placeholder_object_visit", "vfx_placeholder_resource_delta", "vfx_placeholder_route_step", "vfx_placeholder_slot_equip", "vfx_placeholder_slot_unequip"]'
+    exact_summary_ids = '["vfx_placeholder_adventure_spell", "vfx_placeholder_artifact_claim", "vfx_placeholder_blocked_route_marker", "vfx_placeholder_capture_flag", "vfx_placeholder_depleted_dim", "vfx_placeholder_guard_warning", "vfx_placeholder_object_focus_ring", "vfx_placeholder_object_visit", "vfx_placeholder_resource_delta", "vfx_placeholder_route_step", "vfx_placeholder_slot_equip", "vfx_placeholder_slot_unequip"]'
     for path in (
         OVERWORLD_OBJECT_RESOLUTION_VFX_REPORT_SCRIPT_PATH,
         OVERWORLD_FIELD_SPELL_VFX_REPORT_SCRIPT_PATH,
@@ -31523,7 +31528,7 @@ def validate_overworld_action_feedback_vfx_assets(errors: list[str]) -> None:
         OVERWORLD_HERO_ROUTE_STEP_VFX_REPORT_SCRIPT_PATH,
     ):
         compatibility_text = path.read_text(encoding="utf-8")
-        ensure('int(summary.get("mapped_cue_count", 0)) == 11' in compatibility_text and exact_summary_ids in compatibility_text and 'int(summary.get("unique_texture_count", 0)) == 11' in compatibility_text and 'int(summary.get("loaded_texture_count", 0)) == 11' in compatibility_text, errors, f"Existing Overworld VFX owner must recognize exactly the eleven imported manifest textures: {path.name}")
+        ensure('int(summary.get("mapped_cue_count", 0)) == 12' in compatibility_text and exact_summary_ids in compatibility_text and 'int(summary.get("unique_texture_count", 0)) == 12' in compatibility_text and 'int(summary.get("loaded_texture_count", 0)) == 12' in compatibility_text, errors, f"Existing Overworld VFX owner must recognize exactly the twelve imported manifest textures: {path.name}")
 
 
 def validate_overworld_object_resolution_vfx_assets(errors: list[str]) -> None:
@@ -31590,6 +31595,12 @@ def validate_overworld_object_resolution_vfx_assets(errors: list[str]) -> None:
                 "render_mode": "guarded_site_context",
                 "scale": 0.92,
             },
+            "vfx_placeholder_object_focus_ring": {
+                "event_id": "overworld_object_active",
+                "texture_path": "res://art/overworld/runtime/vfx/object_focus.png",
+                "render_mode": "object_focus_context",
+                "scale": 1.08,
+            },
             "vfx_placeholder_blocked_route_marker": {
                 "event_id": "overworld_route_blocked",
                 "texture_path": "res://art/overworld/runtime/vfx/route_blocked.png",
@@ -31616,7 +31627,7 @@ def validate_overworld_object_resolution_vfx_assets(errors: list[str]) -> None:
             },
         },
     }
-    ensure(load_json(OVERWORLD_OBJECT_RESOLUTION_VFX_MANIFEST_PATH) == expected_manifest, errors, "Overworld VFX manifest must retain the exact eleven field, route, action-feedback, guard, and object-resolution mappings")
+    ensure(load_json(OVERWORLD_OBJECT_RESOLUTION_VFX_MANIFEST_PATH) == expected_manifest, errors, "Overworld VFX manifest must retain the exact twelve field, route, action-feedback, focus, guard, and object-resolution mappings")
     ensure(png_size(OVERWORLD_OBJECT_RESOLUTION_VFX_ATLAS_PATH) == (2172, 724), errors, "Object-resolution VFX source atlas must remain the exact 3x724 source image")
     runtime_payloads: list[bytes] = []
     for cue_id, path in runtime_paths.items():
@@ -31763,7 +31774,7 @@ def validate_overworld_field_spell_vfx_assets(errors: list[str]) -> None:
         "render_mode": "field_spell_cast",
         "scale": 1.12,
     }, errors, "Overworld VFX manifest must map the exact field-spell cue/event/texture")
-    ensure(set(cues) == {"vfx_placeholder_adventure_spell", "vfx_placeholder_route_step", "vfx_placeholder_artifact_claim", "vfx_placeholder_slot_equip", "vfx_placeholder_slot_unequip", "vfx_placeholder_resource_delta", "vfx_placeholder_blocked_route_marker", "vfx_placeholder_guard_warning", "vfx_placeholder_capture_flag", "vfx_placeholder_object_visit", "vfx_placeholder_depleted_dim"}, errors, "Overworld VFX manifest must not remap any other cue")
+    ensure(set(cues) == {"vfx_placeholder_adventure_spell", "vfx_placeholder_route_step", "vfx_placeholder_artifact_claim", "vfx_placeholder_slot_equip", "vfx_placeholder_slot_unequip", "vfx_placeholder_resource_delta", "vfx_placeholder_blocked_route_marker", "vfx_placeholder_guard_warning", "vfx_placeholder_object_focus_ring", "vfx_placeholder_capture_flag", "vfx_placeholder_object_visit", "vfx_placeholder_depleted_dim"}, errors, "Overworld VFX manifest must not remap any other cue")
     ensure(png_size(OVERWORLD_FIELD_SPELL_VFX_SOURCE_PATH) == (1254, 1254), errors, "Overworld field-spell VFX source must retain its exact square source image")
     ensure(png_size(OVERWORLD_FIELD_SPELL_VFX_RUNTIME_PATH) == (512, 512), errors, "Overworld field-spell runtime texture must be 512x512")
     header = OVERWORLD_FIELD_SPELL_VFX_RUNTIME_PATH.read_bytes()[:26]
@@ -32254,6 +32265,179 @@ def validate_overworld_route_blocked_vfx_assets(errors: list[str]) -> None:
     reduced_selection = route_case.find('var reduced_selection: Dictionary = reduced_shell.call("validation_select_tile", 5, 1)')
     ensure(0 <= reduced_selection < route_case.find("await get_tree().process_frame", reduced_selection) < route_case.find("var reduced_cue: Dictionary", reduced_selection), errors, "Reduced-motion route-blocked owner must cross one real draw frame before observing fallback VFX")
     ensure("_draw_route_blocked_imported_vfx" not in route_text and "_route_blocked_vfx_asset_state" not in route_text, errors, "Live route-blocked owner must observe public VFX state without private draw/resolver calls")
+
+
+def validate_overworld_object_focus_cue_playback(errors: list[str]) -> None:
+    required_paths = (
+        OVERWORLD_SCRIPT_PATH,
+        OVERWORLD_MAP_VIEW_SCRIPT_PATH,
+        OVERWORLD_OBJECT_RESOLUTION_VFX_MANIFEST_PATH,
+        ANIMATION_EVENT_CUES_PATH,
+        PRESENTATION_SFX_MANIFEST_PATH,
+        PRESENTATION_AUDIO_PATH,
+        PRESENTATION_SFX_GENERATOR_PATH,
+        OVERWORLD_OBJECT_FOCUS_VFX_SOURCE_PATH,
+        OVERWORLD_OBJECT_FOCUS_VFX_RUNTIME_PATH,
+        OVERWORLD_OBJECT_FOCUS_AUDIO_RUNTIME_PATH,
+        OVERWORLD_OBJECT_FOCUS_CUE_PLAYBACK_REPORT_SCRIPT_PATH,
+        OVERWORLD_OBJECT_FOCUS_CUE_PLAYBACK_REPORT_SCENE_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Overworld object-focus owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    def function_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}")
+        if start < 0:
+            return ""
+        end = text.find("\nfunc ", start + 1)
+        return text[start:] if end < 0 else text[start:end]
+
+    vfx_cues = load_json(OVERWORLD_OBJECT_RESOLUTION_VFX_MANIFEST_PATH).get("cues", {})
+    ensure(vfx_cues.get("vfx_placeholder_object_focus_ring") == {
+        "event_id": "overworld_object_active",
+        "texture_path": "res://art/overworld/runtime/vfx/object_focus.png",
+        "render_mode": "object_focus_context",
+        "scale": 1.08,
+    }, errors, "Object-focus VFX manifest mapping must remain exact")
+    ensure(png_size(OVERWORLD_OBJECT_FOCUS_VFX_SOURCE_PATH) == (1254, 1254), errors, "Object-focus source must retain the generated 1254x1254 RGBA image")
+    ensure(png_size(OVERWORLD_OBJECT_FOCUS_VFX_RUNTIME_PATH) == (512, 512), errors, "Object-focus runtime texture must remain 512x512")
+    for path in (OVERWORLD_OBJECT_FOCUS_VFX_SOURCE_PATH, OVERWORLD_OBJECT_FOCUS_VFX_RUNTIME_PATH):
+        header = path.read_bytes()[:26]
+        ensure(len(header) >= 26 and header[25] in {4, 6}, errors, f"Object-focus texture must retain a PNG alpha channel: {path.relative_to(ROOT)}")
+
+    catalog_entries = load_json(ANIMATION_EVENT_CUES_PATH).get("entries", [])
+    focus_entries = [entry for entry in catalog_entries if isinstance(entry, dict) and entry.get("event_id") == "overworld_object_active"]
+    ensure(len(focus_entries) == 1, errors, "Animation catalog must retain exactly one overworld_object_active entry")
+    if len(focus_entries) == 1:
+        entry = focus_entries[0]
+        ensure(entry.get("cue_id") == "cue_overworld_object_active" and entry.get("subject_kind") == "map_object" and entry.get("animation_state_family") == "active" and entry.get("animation_state") == "context_focus_active", errors, "Object-focus catalog identity/state must remain exact")
+        ensure(entry.get("playback_policy") == "context_visible_only" and entry.get("blocking_policy") == "never_blocks_input" and entry.get("vfx_cue_ids") == ["vfx_placeholder_object_focus_ring"] and entry.get("audio_cue_ids") == ["audio_placeholder_object_focus"], errors, "Object-focus catalog playback/VFX/audio policy must remain exact")
+        ensure(entry.get("fallbacks") == {"reduced_motion_tag": "focus_outline_static", "fast_mode_tag": "focus_outline_snap"}, errors, "Object-focus catalog fallbacks must remain exact")
+
+    with wave.open(str(OVERWORLD_OBJECT_FOCUS_AUDIO_RUNTIME_PATH), "rb") as wav_file:
+        ensure(wav_file.getnchannels() == 2 and wav_file.getsampwidth() == 2 and wav_file.getframerate() == 44100 and wav_file.getnframes() == 11466, errors, "Object-focus audio must remain 260ms stereo 16-bit PCM at 44.1kHz")
+    audio_manifest = load_json(PRESENTATION_SFX_MANIFEST_PATH).get("cues", {})
+    ensure(audio_manifest.get("audio_placeholder_object_focus") == {
+        "path": "res://art/audio/runtime/presentation/object_focus.wav",
+        "duration_msec": 260,
+        "volume_db": -14.5,
+        "role": "overworld_object_selected",
+    }, errors, "Object-focus presentation audio manifest mapping must remain exact")
+    generator_text = PRESENTATION_SFX_GENERATOR_PATH.read_text(encoding="utf-8")
+    audio_text = PRESENTATION_AUDIO_PATH.read_text(encoding="utf-8")
+    ensure('"audio_placeholder_object_focus": {' in generator_text and '"kind": "compass_focus"' in generator_text and 'if kind == "compass_focus":' in generator_text, errors, "Object-focus audio generator must retain its deterministic compass-focus waveform")
+    ensure('"audio_placeholder_object_focus": {"frequency": 523.0, "duration": 0.26, "gain": 0.09}' in audio_text, errors, "PresentationAudio must retain a bounded generated fallback for object focus")
+
+    shell_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+    producer = function_block(shell_text, "_record_selected_object_focus_presentation")
+    selected_setter = function_block(shell_text, "_set_selected_tile")
+    pointer_handler = function_block(shell_text, "_on_map_tile_pressed")
+    controller_handler = function_block(shell_text, "_move_controller_route_cursor")
+    refresh_map = function_block(shell_text, "_refresh_map_view")
+    ensure("var _object_focus_presentation: Dictionary = {}" in shell_text, errors, "OverworldShell must own detached object-focus state")
+    for token in (
+        "_object_focus_presentation = {}",
+        'input_source not in ["pointer", "controller_route_cursor"]',
+        "OverworldRules.is_tile_visible(_session, _selected_tile.x, _selected_tile.y)",
+        "not _selected_guarded_site_presentation().is_empty()",
+        "_selected_route_destination_execution_descriptor(_selected_tile)",
+        'object_kind not in ["town", "resource", "artifact", "encounter"]',
+        'String(descriptor.get("placement_id", "")).strip_edges()',
+        'cue_playback_policy_for_event(\n\t\t"overworld_object_active"',
+        'String(policy.get("cue_id", "")) != "cue_overworld_object_active"',
+        'String(policy.get("selected_blocking_policy", "")) != "never_blocks_input"',
+        '"selected_vfx_cue_ids": (policy.get("selected_vfx_cue_ids", []) as Array).duplicate(true)',
+        '"selected_audio_cue_ids": (policy.get("selected_audio_cue_ids", []) as Array).duplicate(true)',
+    ):
+        ensure(token in producer, errors, f"Object-focus producer is missing fail-closed live ownership: {token}")
+    ensure(producer.find("_object_focus_presentation = {}") < producer.find("is_tile_visible") < producer.find("_selected_guarded_site_presentation") < producer.find("_selected_route_destination_execution_descriptor") < producer.find("cue_playback_policy_for_event") < producer.rfind("_object_focus_presentation = {"), errors, "Object-focus producer must clear, validate visibility/guard/live identity/policy, then publish")
+    ensure("session.overworld[" not in producer and "session.flags[" not in producer and "await " not in producer and "create_timer" not in producer and "create_tween" not in producer, errors, "Object-focus producer must remain synchronous and read-only")
+    ensure(selected_setter.find("if _selected_tile == route_tile:") < selected_setter.find("_object_focus_presentation = {}") < selected_setter.find("_selected_tile = route_tile"), errors, "Actual selection changes must clear stale object focus before changing tile")
+    ensure(pointer_handler.count('_record_selected_object_focus_presentation("pointer")') == 1 and pointer_handler.find('_debug_set_path_command_type("select_route")') < pointer_handler.find('_record_selected_object_focus_presentation("pointer")') < pointer_handler.find('_refresh_selected_route_preview("selected_route_changed")'), errors, "Pointer focus must publish only on the non-action route-selection branch before refresh")
+    ensure(controller_handler.count('_record_selected_object_focus_presentation("controller_route_cursor")') == 1 and controller_handler.find("_set_selected_tile(requested)") < controller_handler.find('_record_selected_object_focus_presentation("controller_route_cursor")') < controller_handler.find("_refresh_selected_route_preview"), errors, "Controller focus must publish after a changed selection and before refresh")
+    ensure(refresh_map.find("_selected_guarded_site_presentation()") < refresh_map.find("_spell_cast_presentation") < refresh_map.find("_object_focus_presentation"), errors, "Map-state handoff must preserve guarded/spell argument ownership and append object focus")
+    for forbidden_owner in ("validation_select_tile", "validation_click_tile", "_on_map_tile_hovered"):
+        ensure("_record_selected_object_focus_presentation" not in function_block(shell_text, forbidden_owner), errors, f"Object focus must not be synthesized by {forbidden_owner}")
+
+    map_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
+    set_map_state = function_block(map_text, "set_map_state")
+    sync = function_block(map_text, "_sync_object_focus_presentation")
+    identity = function_block(map_text, "_object_focus_identity_at")
+    dynamic_draw = function_block(map_text, "_draw_dynamic_layer")
+    draw = function_block(map_text, "_draw_object_focus_presentation")
+    imported = function_block(map_text, "_draw_object_focus_imported_vfx")
+    asset_state = function_block(map_text, "_object_focus_vfx_asset_state")
+    ensure("object_focus_presentation: Dictionary = {}" in set_map_state and set_map_state.find("_sync_guarded_site_presentation") < set_map_state.find("_sync_object_focus_presentation") < set_map_state.find("_sync_spell_cast_presentation"), errors, "MapView must append and sync object focus after guarded precedence and before spell state")
+    for token in (
+        "var previous_signature := _object_focus_context_signature if _object_focus_active else \"\"",
+        "_object_focus_active = false",
+        "or _guarded_site_active",
+        'or _object_focus_event_id != "overworld_object_active"',
+        'or _object_focus_input_source not in ["pointer", "controller_route_cursor"]',
+        'or _object_focus_kind not in ["town", "resource", "artifact", "encounter"]',
+        'or _object_focus_audio_cue_ids != ["audio_placeholder_object_focus"]',
+        "OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y)",
+        "var live_identity := _object_focus_identity_at(tile)",
+        'expected_vfx_ids = ["focus_outline_static"]',
+        'expected_vfx_ids = ["focus_outline_snap"]',
+        "_object_focus_active = true",
+        'if _object_focus_context_signature == previous_signature:',
+        'PresentationAudio.play_cue(String(audio_cue_value), "OverworldMapView.object_focus"',
+    ):
+        ensure(token in sync, errors, f"MapView object-focus sync is missing fail-closed/deduped behavior: {token}")
+    ensure(sync.find("_object_focus_active = false") < sync.find("or _guarded_site_active") < sync.find("is_tile_visible") < sync.find("_object_focus_identity_at") < sync.find("_object_focus_active = true") < sync.find("if _object_focus_context_signature == previous_signature:") < sync.find("PresentationAudio.play_cue"), errors, "MapView object focus must clear first, validate guard/visibility/live identity, activate, dedupe, then play audio")
+    for token in ("_town_at(tile)", "_resource_node_at(tile)", "_artifact_node_at(tile)", "_encounter_node_at(tile)"):
+        ensure(token in identity, errors, f"Object-focus live identity must cover exact object family: {token}")
+    ensure(dynamic_draw.find("_draw_object_focus_presentation(board_rect)") < dynamic_draw.find("_draw_guarded_site_presentation(board_rect)"), errors, "Guarded-site draw must remain above object focus")
+    ensure(draw.find('if _object_focus_visual_policy == "authored_animation_state"') < draw.find("_draw_object_focus_imported_vfx") < draw.find('"mode": "existing_tile_selection_outline"'), errors, "Object focus must prefer imported normal-mode art and retain the existing outline fallback")
+    for token in ("_object_focus_vfx_asset_state()", "_overworld_vfx_texture_for_path", "_canvas_draw_texture_rect", '"mode": "imported_texture"'):
+        ensure(token in imported, errors, f"Object-focus imported draw is missing exact asset rendering: {token}")
+    for token in ('cue_id == "vfx_placeholder_object_focus_ring"', "event_id == _object_focus_event_id", 'render_mode == "object_focus_context"', '"fallback_mode": "existing_tile_selection_outline"'):
+        ensure(token in asset_state, errors, f"Object-focus VFX resolver is missing fail-closed ownership: {token}")
+    for block in (imported, asset_state):
+        for forbidden in ("session.", "_session.", "await ", "create_timer", "create_tween", "AnimationCueCatalog"):
+            ensure(forbidden not in block, errors, f"Object-focus asset rendering must not mutate gameplay/timing authority: {forbidden}")
+
+    test_text = OVERWORLD_OBJECT_FOCUS_CUE_PLAYBACK_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    scene_text = OVERWORLD_OBJECT_FOCUS_CUE_PLAYBACK_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure_scene_nodes(scene_text, errors, "overworld_object_focus_cue_playback_report.tscn", [("OverworldObjectFocusCuePlaybackReport", "Node")])
+    for token in (
+        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        '"kind": "town"', '"kind": "resource"', '"kind": "artifact"', '"kind": "encounter"',
+        'shell.call("validation_click_tile", tile.x, tile.y)',
+        'shell.call("validation_controller_route_axis", JOY_AXIS_RIGHT_X, 1.0)',
+        'shell.call("validation_select_tile", 4, 1)',
+        'map_view.set("_overworld_vfx_texture_missing", {FOCUS_TEXTURE_PATH: true} if index == 1 else {})',
+        'SettingsService.set_reduced_motion_enabled(index == 2)',
+        'shell.call("_refresh")',
+        'first_records := _focus_records().duplicate(true)',
+        'session.to_dict() == authority_before',
+        'get_viewport().get_visible_rect()',
+        'String(record.get("playback_source", "")) == "imported_wav"',
+        'String(record.get("role", "")) == "overworld_object_selected"',
+        'String(record.get("source", "")) == "OverworldMapView.object_focus"',
+        'guard_records.size() == 1',
+        'func _run_fail_closed_contexts() -> Dictionary:',
+        '_resource_node("hidden_resource", Vector2i(0, 1))',
+        '_resource_node("visible_resource", Vector2i(2, 1))',
+        'shell.call("validation_click_tile", 0, 1)',
+        'map_view.call("set_map_state", session, map_data, map_size, Vector2i(4, 1), {}, {}, {}, {}, {}, {}, stale)',
+        'map_view.call("set_map_state", session, map_data, map_size, Vector2i(2, 1), {}, {}, {}, {}, {}, {}, malformed)',
+        '"hidden_silent": hidden_silent',
+        '"stale_silent": stale_silent',
+        '"malformed_silent": malformed_silent',
+        'SessionStateStore.SAVE_VERSION == 9',
+        'print("%s %s" % [REPORT_ID, JSON.stringify({',
+    ):
+        ensure(token in test_text, errors, f"Object-focus focused owner is missing exact live proof: {token}")
+    ensure(test_text.count("for viewport_size in VIEWPORT_SIZES:") == 1 and test_text.count("for index in range(OBJECT_ROWS.size()):") == 1, errors, "Object-focus owner must run the two widths and four families exactly once")
+    fail_closed_case = function_block(test_text, "_run_fail_closed_contexts")
+    ensure(fail_closed_case.find('validation_click_tile", 0, 1') < fail_closed_case.find("var stale := _focus_presentation") < fail_closed_case.find('Vector2i(4, 1), {}, {}, {}, {}, {}, {}, stale') < fail_closed_case.find("var malformed := _focus_presentation") < fail_closed_case.find('Vector2i(2, 1), {}, {}, {}, {}, {}, {}, malformed') < fail_closed_case.find("session.to_dict() == authority_before"), errors, "Focused fail-closed proof must observe real hidden input, then stale and malformed public map-state payloads, before whole session authority")
+    ensure("PresentationAudio.validation_reset()" in fail_closed_case and fail_closed_case.count("_focus_records().is_empty()") == 3, errors, "Hidden/stale/malformed contexts must remain exactly audio-silent")
+    for forbidden in ("_record_selected_object_focus_presentation", "_sync_object_focus_presentation", "_draw_object_focus_presentation", "_draw_object_focus_imported_vfx", "_object_focus_vfx_asset_state", "create_timer", "create_tween"):
+        ensure(forbidden not in test_text, errors, f"Object-focus focused owner must use public input/validation without bypassing production: {forbidden}")
 
 
 def validate_overworld_object_resolution_cue_playback(errors: list[str]) -> None:
@@ -39175,6 +39359,7 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
         '"audio_placeholder_load_resume"',
         '"audio_placeholder_map_step"',
         '"audio_placeholder_invalid_route"',
+        '"audio_placeholder_object_focus"',
         '"audio_placeholder_object_visit"',
         '"audio_placeholder_capture"',
         '"audio_placeholder_collect"',
@@ -39263,6 +39448,12 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
             "volume_db": -14.0,
             "role": "overworld_object_visited",
         },
+        "audio_placeholder_object_focus": {
+            "path": "res://art/audio/runtime/presentation/object_focus.wav",
+            "duration_msec": 260,
+            "volume_db": -14.5,
+            "role": "overworld_object_selected",
+        },
         "audio_placeholder_capture": {
             "path": "res://art/audio/runtime/presentation/object_capture.wav",
             "duration_msec": 420,
@@ -39304,7 +39495,7 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
     ensure(int(manifest.get("sample_width_bits", 0)) == 16, errors, "production presentation SFX must use 16-bit PCM")
     ensure(manifest.get("asset_tier") == "production_layered_v1", errors, "presentation SFX manifest must declare production_layered_v1")
     cues = manifest.get("cues", {})
-    ensure(isinstance(cues, dict) and set(cues) == set(expected_cues), errors, "presentation SFX manifest must contain exactly the fifteen live Town, Overworld, navigation, object-resolution, guarded-context, and system action cues")
+    ensure(isinstance(cues, dict) and set(cues) == set(expected_cues), errors, "presentation SFX manifest must contain exactly the sixteen live Town, Overworld, navigation, object-focus, object-resolution, guarded-context, and system action cues")
     asset_hashes: list[str] = []
     for cue_id in sorted(expected_cues):
         expected = expected_cues[cue_id]
@@ -39338,10 +39529,10 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
             if left_samples and right_samples:
                 ensure(left_samples[0] == 0 and right_samples[0] == 0, errors, f"presentation SFX must start at zero: {expected['path']}")
                 ensure(left_samples[-1] == 0 and right_samples[-1] == 0, errors, f"presentation SFX must end at zero: {expected['path']}")
-    ensure(len(set(asset_hashes)) == 15, errors, "all fifteen presentation assets must be byte-distinct")
-    if len(asset_hashes) == 15:
+    ensure(len(set(asset_hashes)) == 16, errors, "all sixteen presentation assets must be byte-distinct")
+    if len(asset_hashes) == 16:
         pack_signature = hashlib.sha256("\n".join(asset_hashes).encode("utf-8")).hexdigest()
-        ensure(pack_signature == "966e3f052bbdba29a2ae57b109de31190e7de0f716efecca0f90e97923628bd0", errors, "presentation SFX pack signature drifted")
+        ensure(pack_signature == "274ede772a3eece327af0f352288a67570dde170695b806837f9573723a8f2a0", errors, "presentation SFX pack signature drifted")
 
     generator_text = PRESENTATION_SFX_GENERATOR_PATH.read_text(encoding="utf-8")
     for required_token in (
@@ -41841,6 +42032,7 @@ def main() -> int:
     validate_overworld_guarded_site_vfx_assets(errors)
     validate_overworld_hero_route_step_vfx_assets(errors)
     validate_overworld_route_blocked_vfx_assets(errors)
+    validate_overworld_object_focus_cue_playback(errors)
     validate_overworld_object_resolution_cue_playback(errors)
     validate_neutral_dwelling_unit_slice(errors)
     validate_hero_portrait_assets(errors)

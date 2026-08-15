@@ -292,6 +292,24 @@ var _hero_movement_audio_cue_ids: Array = []
 var _hero_movement_audio_playback_records: Array = []
 var _hero_movement_reduced_motion := false
 var _hero_movement_last_draw: Dictionary = {}
+var _object_focus_active := false
+var _object_focus_tile := Vector2i(-1, -1)
+var _object_focus_event_id := ""
+var _object_focus_cue_id := ""
+var _object_focus_input_source := ""
+var _object_focus_kind := ""
+var _object_focus_id := ""
+var _object_focus_animation_state := ""
+var _object_focus_visual_policy := ""
+var _object_focus_fallback_tag := ""
+var _object_focus_playback_policy := ""
+var _object_focus_blocking_policy := ""
+var _object_focus_vfx_cue_ids: Array = []
+var _object_focus_audio_cue_ids: Array = []
+var _object_focus_audio_playback_records: Array = []
+var _object_focus_context_signature := ""
+var _object_focus_allows_large_motion := false
+var _object_focus_last_draw: Dictionary = {}
 var _object_resolution_last_serial := 0
 var _object_resolution_tile := Vector2i(-1, -1)
 var _object_resolution_elapsed_sec := 0.0
@@ -386,7 +404,8 @@ func set_map_state(
 	object_resolution_presentation: Dictionary = {},
 	route_blocked_presentation: Dictionary = {},
 	guarded_site_presentation: Dictionary = {},
-	spell_cast_presentation: Dictionary = {}
+	spell_cast_presentation: Dictionary = {},
+	object_focus_presentation: Dictionary = {}
 ) -> void:
 	var profile_start := _profile_begin("set_map_state")
 	_ensure_render_layers()
@@ -408,6 +427,7 @@ func set_map_state(
 	_rebuild_road_tiles()
 	_selected_tile = selected_tile
 	_sync_guarded_site_presentation(guarded_site_presentation)
+	_sync_object_focus_presentation(object_focus_presentation)
 	_sync_spell_cast_presentation(spell_cast_presentation)
 	var path_profile_start := _profile_begin("path_recompute")
 	var route_cache_reused := _apply_selected_route_state(selected_route_state)
@@ -787,6 +807,93 @@ func _sync_guarded_site_presentation(presentation: Dictionary) -> void:
 			"guard_placement_id": _guarded_site_guard_placement_id,
 			"tile": {"x": _guarded_site_tile.x, "y": _guarded_site_tile.y},
 		}))
+
+func _sync_object_focus_presentation(presentation: Dictionary) -> void:
+	var previous_signature := _object_focus_context_signature if _object_focus_active else ""
+	var previous_audio_records := _object_focus_audio_playback_records.duplicate(true)
+	_object_focus_active = false
+	_object_focus_tile = Vector2i(-1, -1)
+	_object_focus_event_id = String(presentation.get("event_id", ""))
+	_object_focus_cue_id = String(presentation.get("cue_id", ""))
+	_object_focus_input_source = String(presentation.get("input_source", ""))
+	_object_focus_kind = String(presentation.get("object_kind", ""))
+	_object_focus_id = String(presentation.get("object_id", "")).strip_edges()
+	_object_focus_animation_state = String(presentation.get("selected_animation_state", ""))
+	_object_focus_visual_policy = String(presentation.get("selected_visual_policy", ""))
+	_object_focus_fallback_tag = String(presentation.get("selected_fallback_tag", ""))
+	_object_focus_playback_policy = String(presentation.get("selected_playback_policy", ""))
+	_object_focus_blocking_policy = String(presentation.get("selected_blocking_policy", ""))
+	_object_focus_vfx_cue_ids = (presentation.get("selected_vfx_cue_ids", []) as Array).duplicate(true)
+	_object_focus_audio_cue_ids = (presentation.get("selected_audio_cue_ids", []) as Array).duplicate(true)
+	_object_focus_audio_playback_records = []
+	_object_focus_context_signature = ""
+	_object_focus_allows_large_motion = bool(presentation.get("allows_large_motion", true))
+	_object_focus_last_draw = {}
+	if (
+		not bool(presentation.get("active", false))
+		or _guarded_site_active
+		or _object_focus_event_id != "overworld_object_active"
+		or _object_focus_cue_id != "cue_overworld_object_active"
+		or _object_focus_input_source not in ["pointer", "controller_route_cursor"]
+		or _object_focus_kind not in ["town", "resource", "artifact", "encounter"]
+		or _object_focus_id == ""
+		or _object_focus_playback_policy not in ["context_visible_only", "fast_resolve"]
+		or _object_focus_blocking_policy != "never_blocks_input"
+		or _object_focus_audio_cue_ids != ["audio_placeholder_object_focus"]
+	):
+		return
+	var tile_payload: Dictionary = presentation.get("tile", {}) if presentation.get("tile", {}) is Dictionary else {}
+	var tile := Vector2i(int(tile_payload.get("x", -1)), int(tile_payload.get("y", -1)))
+	if tile != _selected_tile or tile.x < 0 or tile.y < 0 or tile.x >= _map_size.x or tile.y >= _map_size.y:
+		return
+	if not OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y):
+		return
+	var live_identity := _object_focus_identity_at(tile)
+	if String(live_identity.get("object_kind", "")) != _object_focus_kind or String(live_identity.get("object_id", "")) != _object_focus_id:
+		return
+	var expected_vfx_ids := ["vfx_placeholder_object_focus_ring"]
+	if _object_focus_visual_policy == "reduced_motion_fallback":
+		expected_vfx_ids = ["focus_outline_static"]
+	elif _object_focus_visual_policy == "fast_mode_fallback":
+		expected_vfx_ids = ["focus_outline_snap"]
+	if _object_focus_vfx_cue_ids != expected_vfx_ids:
+		return
+	_object_focus_tile = tile
+	_object_focus_active = true
+	_object_focus_context_signature = "%s|%d,%d|%s|%s" % [
+		_object_focus_event_id,
+		tile.x,
+		tile.y,
+		_object_focus_kind,
+		_object_focus_id,
+	]
+	if _object_focus_context_signature == previous_signature:
+		_object_focus_audio_playback_records = previous_audio_records
+		return
+	for audio_cue_value in _object_focus_audio_cue_ids:
+		_object_focus_audio_playback_records.append(PresentationAudio.play_cue(String(audio_cue_value), "OverworldMapView.object_focus", {
+			"event_id": _object_focus_event_id,
+			"context_signature": _object_focus_context_signature,
+			"input_source": _object_focus_input_source,
+			"object_kind": _object_focus_kind,
+			"object_id": _object_focus_id,
+			"tile": {"x": _object_focus_tile.x, "y": _object_focus_tile.y},
+		}))
+
+func _object_focus_identity_at(tile: Vector2i) -> Dictionary:
+	var town := _town_at(tile)
+	if not town.is_empty():
+		return {"object_kind": "town", "object_id": String(town.get("placement_id", "")).strip_edges()}
+	var resource := _resource_node_at(tile)
+	if not resource.is_empty():
+		return {"object_kind": "resource", "object_id": String(resource.get("placement_id", "")).strip_edges()}
+	var artifact := _artifact_node_at(tile)
+	if not artifact.is_empty():
+		return {"object_kind": "artifact", "object_id": String(artifact.get("placement_id", "")).strip_edges()}
+	var encounter := _encounter_node_at(tile)
+	if not encounter.is_empty():
+		return {"object_kind": "encounter", "object_id": String(encounter.get("placement_id", encounter.get("id", ""))).strip_edges()}
+	return {}
 
 func set_placement_debug_overlay_enabled(enabled: bool) -> void:
 	if _placement_debug_overlay_enabled == enabled:
@@ -1219,6 +1326,7 @@ func _draw_dynamic_layer() -> void:
 	_draw_hero_movement_presentation(board_rect)
 	_draw_object_resolution_presentation(board_rect)
 	_draw_route_blocked_presentation(board_rect)
+	_draw_object_focus_presentation(board_rect)
 	_draw_guarded_site_presentation(board_rect)
 	_draw_spell_cast_presentation(board_rect)
 	_draw_canvas_item = previous_target
@@ -1860,6 +1968,37 @@ func _draw_guarded_site_presentation(board_rect: Rect2) -> void:
 	if _guarded_site_visual_policy != "reduced_motion_fallback" and _draw_guarded_site_imported_vfx(rect):
 		return
 	_draw_guarded_site_procedural_shield(rect)
+
+func _draw_object_focus_presentation(board_rect: Rect2) -> void:
+	if not _object_focus_active:
+		return
+	var rect := _tile_rect(board_rect, _object_focus_tile)
+	if _object_focus_visual_policy == "authored_animation_state" and _draw_object_focus_imported_vfx(rect):
+		return
+	_object_focus_last_draw = {
+		"mode": "existing_tile_selection_outline",
+		"texture_path": "",
+		"rect": {"x": rect.position.x, "y": rect.position.y, "width": rect.size.x, "height": rect.size.y},
+	}
+
+func _draw_object_focus_imported_vfx(rect: Rect2) -> bool:
+	var asset_state := _object_focus_vfx_asset_state()
+	if not bool(asset_state.get("uses_imported_asset", false)):
+		return false
+	var texture: Texture2D = _overworld_vfx_texture_for_path(String(asset_state.get("texture_path", ""))) as Texture2D
+	if texture == null:
+		return false
+	var center := rect.get_center()
+	var extent := minf(rect.size.x, rect.size.y) * float(asset_state.get("scale", 1.0))
+	var draw_rect := Rect2(center - Vector2(extent, extent) * 0.5, Vector2(extent, extent))
+	_canvas_draw_texture_rect(texture, draw_rect, false, Color(1.0, 1.0, 1.0, 0.92))
+	_object_focus_last_draw = {
+		"mode": "imported_texture",
+		"texture_path": String(asset_state.get("texture_path", "")),
+		"rect": {"x": draw_rect.position.x, "y": draw_rect.position.y, "width": draw_rect.size.x, "height": draw_rect.size.y},
+		"alpha": 0.92,
+	}
+	return true
 
 func _draw_guarded_site_imported_vfx(rect: Rect2) -> bool:
 	var asset_state := _guarded_site_vfx_asset_state()
@@ -3462,6 +3601,7 @@ func validation_view_metrics() -> Dictionary:
 		"object_resolution_presentation": validation_object_resolution_presentation(),
 		"route_blocked_presentation": validation_route_blocked_presentation(),
 		"guarded_site_presentation": validation_guarded_site_presentation(),
+		"object_focus_presentation": validation_object_focus_presentation(),
 		"spell_cast_presentation": validation_spell_cast_presentation(),
 	}
 
@@ -3673,6 +3813,52 @@ func validation_guarded_site_presentation() -> Dictionary:
 		"vfx_asset": _guarded_site_vfx_asset_state(),
 		"vfx_draw": _guarded_site_last_draw.duplicate(true),
 		"allows_large_motion": _guarded_site_allows_large_motion,
+	}
+
+func validation_object_focus_presentation() -> Dictionary:
+	return {
+		"active": _object_focus_active,
+		"event_id": _object_focus_event_id,
+		"cue_id": _object_focus_cue_id,
+		"input_source": _object_focus_input_source,
+		"tile": {"x": _object_focus_tile.x, "y": _object_focus_tile.y},
+		"object_kind": _object_focus_kind,
+		"object_id": _object_focus_id,
+		"animation_state": _object_focus_animation_state,
+		"visual_policy": _object_focus_visual_policy,
+		"fallback_tag": _object_focus_fallback_tag,
+		"playback_policy": _object_focus_playback_policy,
+		"blocking_policy": _object_focus_blocking_policy,
+		"selected_vfx_cue_ids": _object_focus_vfx_cue_ids.duplicate(true),
+		"selected_audio_cue_ids": _object_focus_audio_cue_ids.duplicate(true),
+		"audio_playback_records": _object_focus_audio_playback_records.duplicate(true),
+		"context_signature": _object_focus_context_signature,
+		"vfx_asset": _object_focus_vfx_asset_state(),
+		"vfx_draw": _object_focus_last_draw.duplicate(true),
+		"allows_large_motion": _object_focus_allows_large_motion,
+	}
+
+func _object_focus_vfx_asset_state() -> Dictionary:
+	var cue_id := String(_object_focus_vfx_cue_ids[0]).strip_edges() if _object_focus_vfx_cue_ids.size() == 1 else ""
+	var spec := _overworld_vfx_manifest_cue(cue_id)
+	var texture_path := String(spec.get("texture_path", "")).strip_edges()
+	var event_id := String(spec.get("event_id", "")).strip_edges()
+	var render_mode := String(spec.get("render_mode", "")).strip_edges()
+	var texture_loaded := texture_path != "" and _overworld_vfx_texture_for_path(texture_path) != null
+	var uses_imported_asset := cue_id == "vfx_placeholder_object_focus_ring" \
+		and event_id == _object_focus_event_id \
+		and render_mode == "object_focus_context" \
+		and texture_loaded
+	return {
+		"cue_id": cue_id,
+		"event_id": event_id,
+		"texture_path": texture_path,
+		"render_mode": render_mode,
+		"scale": float(spec.get("scale", 1.0)),
+		"texture_loaded": texture_loaded,
+		"uses_imported_asset": uses_imported_asset,
+		"uses_selection_outline_fallback": not uses_imported_asset,
+		"fallback_mode": "existing_tile_selection_outline",
 	}
 
 func _guarded_site_vfx_asset_state() -> Dictionary:

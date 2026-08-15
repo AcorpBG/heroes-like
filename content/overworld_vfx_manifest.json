@@ -13,6 +13,12 @@
       "render_mode": "hero_route_step",
       "scale": 0.68
     },
+    "vfx_placeholder_object_focus_ring": {
+      "event_id": "overworld_object_active",
+      "texture_path": "res://art/overworld/runtime/vfx/object_focus.png",
+      "render_mode": "object_focus_context",
+      "scale": 1.08
+    },
     "vfx_placeholder_artifact_claim": {
       "event_id": "artifact_acquired",
       "texture_path": "res://art/overworld/runtime/vfx/artifact_claim.png",

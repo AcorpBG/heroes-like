@@ -73,6 +73,13 @@ SPECS = {
         "peak": 0.48,
         "pan": -0.10,
     },
+    "audio_placeholder_object_focus": {
+        "kind": "compass_focus",
+        "fundamental": 523.0,
+        "metal": 1046.0,
+        "peak": 0.48,
+        "pan": 0.04,
+    },
     "audio_placeholder_invalid_route": {
         "kind": "route_denial",
         "fundamental": 146.0,
@@ -176,6 +183,11 @@ def layered_sample(kind: str, fundamental: float, metal: float, t: float, progre
         grit = noise * (0.24 * transient + 0.08 * (1.0 - progress))
         follow = max(0.0, 1.0 - abs(progress - 0.42) / 0.16) * math.sin(math.tau * metal * t - phase) * 0.20
         return (tread + grit + follow) * envelope(progress)
+    if kind == "compass_focus":
+        point = math.sin(math.tau * fundamental * t + phase) * 0.30
+        rim = math.sin(math.tau * metal * t - phase) * 0.20
+        answer = max(0.0, 1.0 - abs(progress - 0.36) / 0.14) * math.sin(math.tau * metal * 1.25 * t + phase) * 0.22
+        return (point + rim + answer + noise * transient * 0.07) * envelope(progress)
     if kind == "route_denial":
         knock = math.sin(math.tau * fundamental * t + phase) * 0.34
         dissonance = math.sin(math.tau * metal * 1.06 * t - phase) * 0.24

@@ -16,6 +16,7 @@ const CUE_SPECS := {
 	"audio_placeholder_save_confirm": {"frequency": 523.0, "duration": 0.32, "gain": 0.10},
 	"audio_placeholder_load_resume": {"frequency": 330.0, "duration": 0.36, "gain": 0.11},
 	"audio_placeholder_map_step": {"frequency": 196.0, "duration": 0.22, "gain": 0.09},
+	"audio_placeholder_object_focus": {"frequency": 523.0, "duration": 0.26, "gain": 0.09},
 	"audio_placeholder_invalid_route": {"frequency": 146.0, "duration": 0.30, "gain": 0.12},
 	"audio_placeholder_object_visit": {"frequency": 440.0, "duration": 0.30, "gain": 0.10},
 	"audio_placeholder_capture": {"frequency": 262.0, "duration": 0.42, "gain": 0.13},
