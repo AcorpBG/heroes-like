@@ -82,7 +82,13 @@ func play_cue(cue_id: String, source: String = "", metadata: Dictionary = {}) ->
 	record["asset_path"] = String(playback.get("asset_path", ""))
 	record["role"] = String(playback.get("role", ""))
 	record["volume_db"] = float(playback.get("volume_db", 0.0))
+	record["duration_msec"] = int(playback.get("duration_msec", 0))
 	record["player_created"] = bool(playback.get("player_created", false))
+	record["stream_length_sec"] = float(playback.get("stream_length_sec", 0.0))
+	record["stream_mix_rate"] = int(playback.get("stream_mix_rate", 0))
+	record["stream_stereo"] = bool(playback.get("stream_stereo", false))
+	record["stream_format"] = int(playback.get("stream_format", -1))
+	record["stream_loop_mode"] = int(playback.get("stream_loop_mode", -1))
 	record["sfx_manifest_loaded"] = _ui_sfx_manifest_loaded
 	record["imported_asset_count"] = 1 if String(playback.get("source", "")) == "imported_wav" else 0
 	record["generated_fallback_count"] = 1 if String(playback.get("source", "")) == "generated_waveform" else 0
@@ -222,6 +228,16 @@ func _play_imported_audio_cue(cue_id: String) -> Dictionary:
 			stream = wav_stream
 	if stream == null:
 		return {}
+	var stream_mix_rate := 0
+	var stream_stereo := false
+	var stream_format := -1
+	var stream_loop_mode := -1
+	if stream is AudioStreamWAV:
+		var wav_metadata := stream as AudioStreamWAV
+		stream_mix_rate = int(wav_metadata.mix_rate)
+		stream_stereo = bool(wav_metadata.stereo)
+		stream_format = int(wav_metadata.format)
+		stream_loop_mode = int(wav_metadata.loop_mode)
 	var duration_msec := int(cue.get("duration_msec", 80))
 	var stream_length := stream.get_length()
 	if stream_length > 0.0:
@@ -240,6 +256,11 @@ func _play_imported_audio_cue(cue_id: String) -> Dictionary:
 		"duration_msec": duration_msec,
 		"volume_db": float(cue.get("volume_db", -18.0)),
 		"player_created": true,
+		"stream_length_sec": stream_length,
+		"stream_mix_rate": stream_mix_rate,
+		"stream_stereo": stream_stereo,
+		"stream_format": stream_format,
+		"stream_loop_mode": stream_loop_mode,
 	}
 
 func _play_generated_waveform(record: Dictionary) -> Dictionary:

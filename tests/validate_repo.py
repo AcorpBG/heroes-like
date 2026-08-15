@@ -38799,35 +38799,85 @@ def validate_ui_audio_cue_runtime(errors: list[str]) -> None:
             "Effects",
             "imported_asset_count",
             "generated_fallback_count",
+            "stream_length_sec",
+            "stream_mix_rate",
+            "stream_stereo",
+            "stream_format",
+            "stream_loop_mode",
             "node_added",
         ):
             ensure(required_token in ui_audio_text, errors, f"UiAudio.gd is missing required token: {required_token}")
 
-    required_ui_cue_ids = ("ui_click", "ui_select", "ui_adjust", "ui_tab", "ui_confirm", "ui_invalid")
+    required_ui_cues = {
+        "ui_click": {"path": "res://art/audio/runtime/ui/click.wav", "duration_msec": 70, "volume_db": -18.0, "role": "button_click"},
+        "ui_select": {"path": "res://art/audio/runtime/ui/select.wav", "duration_msec": 80, "volume_db": -18.0, "role": "list_select"},
+        "ui_adjust": {"path": "res://art/audio/runtime/ui/adjust.wav", "duration_msec": 60, "volume_db": -20.0, "role": "slider_adjust"},
+        "ui_tab": {"path": "res://art/audio/runtime/ui/tab.wav", "duration_msec": 90, "volume_db": -18.5, "role": "tab_change"},
+        "ui_confirm": {"path": "res://art/audio/runtime/ui/confirm.wav", "duration_msec": 120, "volume_db": -17.0, "role": "confirm_action"},
+        "ui_invalid": {"path": "res://art/audio/runtime/ui/invalid.wav", "duration_msec": 150, "volume_db": -17.5, "role": "invalid_action"},
+    }
     if UI_SFX_MANIFEST_PATH.exists():
         ui_sfx_manifest = json.loads(UI_SFX_MANIFEST_PATH.read_text(encoding="utf-8"))
         ensure(ui_sfx_manifest.get("schema") == "ui_runtime_sfx_manifest_v1", errors, "ui_sfx_manifest.json has the wrong schema")
         ensure(ui_sfx_manifest.get("final_sound_design") is False, errors, "ui_sfx_manifest.json must not claim final sound design")
         ensure(ui_sfx_manifest.get("audio_bus") == "Effects", errors, "ui_sfx_manifest.json must route UI SFX through Effects")
+        ensure(int(ui_sfx_manifest.get("sample_rate_hz", 0)) == 44100, errors, "production UI SFX assets must use 44.1 kHz sample rate")
+        ensure(int(ui_sfx_manifest.get("channel_count", 0)) == 2, errors, "production UI SFX assets must be stereo")
+        ensure(int(ui_sfx_manifest.get("sample_width_bits", 0)) == 16, errors, "production UI SFX assets must use 16-bit PCM")
+        ensure(ui_sfx_manifest.get("asset_tier") == "production_layered_v1", errors, "UI SFX manifest must declare production_layered_v1 asset tier")
         ui_sfx_cues = ui_sfx_manifest.get("cues", {})
         ensure(isinstance(ui_sfx_cues, dict), errors, "ui_sfx_manifest.json cues must be an object")
-        for cue_id in required_ui_cue_ids:
+        ensure(set(ui_sfx_cues) == set(required_ui_cues), errors, "ui_sfx_manifest.json must contain exactly the six production UI cue ids")
+        ui_asset_hashes: set[str] = set()
+        for cue_id, expected_cue in required_ui_cues.items():
             cue = ui_sfx_cues.get(cue_id, {}) if isinstance(ui_sfx_cues, dict) else {}
             ensure(isinstance(cue, dict), errors, f"ui_sfx_manifest.json is missing cue {cue_id}")
             path_value = str(cue.get("path", ""))
-            ensure(path_value.startswith("res://art/audio/runtime/ui/"), errors, f"UI SFX cue {cue_id} must use the runtime UI audio folder")
+            ensure(path_value == expected_cue["path"], errors, f"UI SFX cue {cue_id} must preserve its exact production path")
+            ensure(int(cue.get("duration_msec", 0)) == expected_cue["duration_msec"], errors, f"UI SFX cue {cue_id} must preserve its exact duration")
+            ensure(float(cue.get("volume_db", 0.0)) == expected_cue["volume_db"], errors, f"UI SFX cue {cue_id} must preserve its exact volume")
+            ensure(str(cue.get("role", "")) == expected_cue["role"], errors, f"UI SFX cue {cue_id} must preserve its exact role")
             wav_path = ROOT / path_value.removeprefix("res://")
             ensure(wav_path.exists(), errors, f"UI SFX asset is missing for {cue_id}: {path_value}")
             if wav_path.exists():
                 header = wav_path.read_bytes()[:12]
                 ensure(header[:4] == b"RIFF" and header[8:12] == b"WAVE", errors, f"UI SFX asset is not a WAV file: {path_value}")
-            ensure(int(cue.get("duration_msec", 0)) > 0, errors, f"UI SFX cue {cue_id} needs duration_msec")
-            ensure("volume_db" in cue, errors, f"UI SFX cue {cue_id} needs volume_db")
+                ui_asset_hashes.add(hashlib.sha256(wav_path.read_bytes()).hexdigest())
+                with wave.open(str(wav_path), "rb") as wav_file:
+                    channel_count = wav_file.getnchannels()
+                    sample_width = wav_file.getsampwidth()
+                    sample_rate = wav_file.getframerate()
+                    frame_count = wav_file.getnframes()
+                    payload = wav_file.readframes(frame_count)
+                expected_frame_count = int(44100 * expected_cue["duration_msec"] / 1000)
+                ensure(channel_count == 2, errors, f"production UI SFX asset must be stereo: {path_value}")
+                ensure(sample_width == 2, errors, f"production UI SFX asset must use 16-bit PCM: {path_value}")
+                ensure(sample_rate == 44100, errors, f"production UI SFX asset must use 44.1 kHz: {path_value}")
+                ensure(frame_count == expected_frame_count, errors, f"production UI SFX asset must preserve exact authored duration: {path_value}")
+                samples = struct.unpack(f"<{len(payload) // 2}h", payload) if payload else ()
+                left_samples = samples[0::2]
+                right_samples = samples[1::2]
+                peak = max((abs(value) for value in samples), default=0)
+                energy = sum(value * value for value in samples)
+                stereo_difference = sum((left - right) * (left - right) for left, right in zip(left_samples, right_samples))
+                ensure(4096 <= peak <= 30000, errors, f"production UI SFX asset peak must stay bounded and audible: {path_value}")
+                ensure(energy > 0, errors, f"production UI SFX asset must not be silent: {path_value}")
+                ensure(stereo_difference > 0, errors, f"production UI SFX asset channels must be distinct: {path_value}")
+                if left_samples and right_samples:
+                    ensure(left_samples[0] == 0 and right_samples[0] == 0, errors, f"production UI SFX asset must start at zero crossing: {path_value}")
+                    ensure(left_samples[-1] == 0 and right_samples[-1] == 0, errors, f"production UI SFX asset must end at zero crossing: {path_value}")
+        ensure(len(ui_asset_hashes) == len(required_ui_cues), errors, "all six production UI SFX assets must be byte-distinct")
 
     ui_sfx_generator_text = UI_SFX_GENERATOR_PATH.read_text(encoding="utf-8") if UI_SFX_GENERATOR_PATH.exists() else ""
     for required_token in (
         "ui_sfx_manifest.json",
         "SPECS",
+        "SAMPLE_RATE = 44100",
+        "CHANNEL_COUNT = 2",
+        "production-ui-v1",
+        "render_stereo",
+        "layered_sample",
+        "pack_signature",
         "write_wav",
         "wave.open",
         "Manifest/spec cue mismatch",
@@ -38855,6 +38905,20 @@ def validate_ui_audio_cue_runtime(errors: list[str]) -> None:
             "imported_wav",
             "repeat_cooldown",
             "REDUCED_REPETITION_MAX_ACTIVE_PLAYERS",
+            "EXPECTED_CUES",
+            "production_asset_contract",
+            "stream_mix_rate",
+            "stream_stereo",
+            "AudioStreamWAV.FORMAT_QOA",
+            "AudioStreamWAV.LOOP_DISABLED",
+            "validation_generated_fallback",
+            "generated_waveform",
+            "settings_authority_exact",
+            "CueButton",
+            "CueOption",
+            "CueSlider",
+            "CueTabs",
+            "CueList",
         ):
             ensure(required_token in report_text, errors, f"UI audio cue runtime report is missing required token: {required_token}")
 
@@ -38863,6 +38927,7 @@ def validate_ui_audio_cue_runtime(errors: list[str]) -> None:
         for required_text in (
             "UI Audio Cue Runtime Report",
             "ui-audio-cue-runtime-baseline-20260523-10184",
+            "presentation-ui-production-sfx-fidelity-10184",
             "scripts/autoload/UiAudio.gd",
             "content/ui_sfx_manifest.json",
             "art/audio/runtime/ui/",
@@ -38875,6 +38940,11 @@ def validate_ui_audio_cue_runtime(errors: list[str]) -> None:
             "ItemList",
             "not final sound design",
             "Final sound design",
+            "44.1 kHz stereo 16-bit production transients",
+            "latch, glass-pluck, ratchet, page-turn, seal-chime, and wooden-denial",
+            "generated fallback",
+            "packaged listening",
+            "release readiness",
         ):
             ensure(required_text in doc_text, errors, f"UI audio cue runtime doc is missing required text: {required_text}")
 
