@@ -5083,11 +5083,14 @@ static func get_context_actions(session: SessionStateStoreScript.SessionData) ->
 			var node = context.get("node", {})
 			var site := ContentService.get_resource_site(String(node.get("site_id", "")))
 			if _resource_node_claimable_by_player(node, site, session):
+				var collection_resource_id := resource_site_primary_stockpile_resource_id(site)
 				actions.append(
 					{
 						"id": "collect_resource",
 						"label": _resource_site_action_label(node, site),
 						"summary": _context_action_summary(session, "collect_resource", context),
+						"resource_id": collection_resource_id,
+						"resource_icon_path": resource_icon_path(collection_resource_id),
 					}
 				)
 			elif _resource_site_is_persistent(site) and String(node.get("collected_by_faction_id", "")) == "player":
@@ -11046,6 +11049,29 @@ static func _normalize_resource_dict(value: Variant) -> Dictionary:
 			normalized[String(key)] = max(0, int(value[key]))
 	return normalized
 
+static func resource_definition(resource_id: String) -> Dictionary:
+	var normalized_id := resource_id.strip_edges()
+	if normalized_id not in LIVE_STOCKPILE_RESOURCE_KEYS:
+		return {}
+	var resource: Dictionary = ContentService.get_resource(normalized_id)
+	return resource.duplicate(true) if String(resource.get("id", "")) == normalized_id and bool(resource.get("stockpile", false)) else {}
+
+static func resource_icon_path(resource_id: String) -> String:
+	var resource := resource_definition(resource_id)
+	if String(resource.get("icon_id", "")) != "resource_icon_%s" % resource_id:
+		return ""
+	var icon_path := String(resource.get("icon_path", ""))
+	if not icon_path.begins_with("res://art/economy/runtime/resources/") or not ResourceLoader.exists(icon_path, "Texture2D"):
+		return ""
+	return icon_path
+
+static func resource_site_primary_stockpile_resource_id(site: Dictionary) -> String:
+	var rewards := _resource_site_claim_rewards(site)
+	for resource_id in LIVE_STOCKPILE_RESOURCE_KEYS:
+		if resource_id != "gold" and int(rewards.get(resource_id, 0)) > 0:
+			return resource_id
+	return "gold" if int(rewards.get("gold", 0)) > 0 else ""
+
 static func _empty_live_resource_stockpile() -> Dictionary:
 	var resources := {}
 	for resource_key in LIVE_STOCKPILE_RESOURCE_KEYS:
@@ -11063,6 +11089,9 @@ static func _normalize_live_resource_stockpile(value: Variant) -> Dictionary:
 	return normalized
 
 static func _resource_display_name(resource_key: String) -> String:
+	var production_name := String(resource_definition(resource_key).get("display_name", ""))
+	if production_name != "":
+		return production_name
 	match resource_key:
 		"gold":
 			return "Gold"

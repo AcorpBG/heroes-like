@@ -60,6 +60,9 @@ SPELL_SCHOOL_ICON_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "spell_school_ico
 BUILDING_CATEGORY_ICON_MANIFEST_PATH = CONTENT_DIR / "building_category_icons.json"
 TOWN_BUILDING_CATEGORY_ICON_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_building_category_icon_runtime_report.gd"
 TOWN_BUILDING_CATEGORY_ICON_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "town_building_category_icon_runtime_report.tscn"
+RESOURCE_REGISTRY_PATH = CONTENT_DIR / "resources.json"
+RESOURCE_REGISTRY_FIXTURE_PATH = ROOT / "tests" / "fixtures" / "economy_resource_schema" / "resource_registry.json"
+RESOURCE_ICON_ATLAS_PATH = ROOT / "art" / "economy" / "source" / "resource_icon_atlas.png"
 SPELL_RULES_PATH = ROOT / "scripts" / "core" / "SpellRules.gd"
 ANIMATION_CUE_CATALOG_RULES_PATH = ROOT / "scripts" / "core" / "AnimationCueCatalog.gd"
 ENEMY_TURN_RULES_PATH = ROOT / "scripts" / "core" / "EnemyTurnRules.gd"
@@ -29455,6 +29458,11 @@ def validate_overworld_artifact_acquired_cue_playback(errors: list[str]) -> None
 
 def validate_overworld_resource_delta_cue_playback(errors: list[str]) -> None:
     required_paths = (
+        RESOURCE_REGISTRY_PATH,
+        RESOURCE_REGISTRY_FIXTURE_PATH,
+        RESOURCE_ICON_ATLAS_PATH,
+        CONTENT_SERVICE_PATH,
+        OVERWORLD_RULES_PATH,
         OVERWORLD_SCENE_PATH,
         OVERWORLD_SCRIPT_PATH,
         OVERWORLD_RESOURCE_DELTA_CUE_PLAYBACK_REPORT_SCRIPT_PATH,
@@ -29467,6 +29475,8 @@ def validate_overworld_resource_delta_cue_playback(errors: list[str]) -> None:
         return
     scene_text = OVERWORLD_SCENE_PATH.read_text(encoding="utf-8")
     shell_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+    content_service_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
+    overworld_rules_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
     report_text = OVERWORLD_RESOURCE_DELTA_CUE_PLAYBACK_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     report_scene_text = OVERWORLD_RESOURCE_DELTA_CUE_PLAYBACK_REPORT_SCENE_PATH.read_text(encoding="utf-8")
 
@@ -29474,8 +29484,85 @@ def validate_overworld_resource_delta_cue_playback(errors: list[str]) -> None:
         start = text.find(f"func {name}")
         if start < 0:
             return ""
-        end = text.find("\nfunc ", start + 1)
+        ends = [index for index in (text.find("\nfunc ", start + 1), text.find("\nstatic func ", start + 1)) if index >= 0]
+        end = min(ends) if ends else -1
         return text[start:] if end < 0 else text[start:end]
+
+    resource_ids = [
+        "gold", "wood", "ore", "aetherglass", "embergrain", "peatwax",
+        "verdant_grafts", "brass_scrip", "memory_salt",
+    ]
+    production_raw = load_json(RESOURCE_REGISTRY_PATH)
+    fixture_raw = load_json(RESOURCE_REGISTRY_FIXTURE_PATH)
+    production_items = production_raw.get("items", []) if isinstance(production_raw, dict) else []
+    fixture_items = fixture_raw.get("items", []) if isinstance(fixture_raw, dict) else []
+    ensure(production_raw.get("schema") == "resource_registry_v1", errors, "Production resource registry must own schema resource_registry_v1")
+    ensure(isinstance(production_items, list) and len(production_items) == 9, errors, "Production resource registry must contain exactly nine stockpile rows")
+    production_by_id = {str(row.get("id", "")): row for row in production_items if isinstance(row, dict)}
+    fixture_by_id = {str(row.get("id", "")): row for row in fixture_items if isinstance(row, dict)}
+    ensure(list(production_by_id) == resource_ids, errors, "Production resource registry must preserve exact live stockpile order")
+    fixture_fields = (
+        "display_name", "category", "market_tier", "default_visible", "legacy_aliases",
+        "canonical_status", "activation_status", "source_readiness", "source_site_family",
+        "intended_source_paths", "faction_affinity", "ui_sort", "material_cue", "stockpile",
+    )
+    icon_paths: list[str] = []
+    for resource_id in resource_ids:
+        row = production_by_id.get(resource_id, {})
+        fixture_row = fixture_by_id.get(resource_id, {})
+        ensure(bool(row) and bool(fixture_row), errors, f"Resource {resource_id} must exist in production and strict fixture registries")
+        for field in fixture_fields:
+            ensure(row.get(field) == fixture_row.get(field), errors, f"Production resource {resource_id} must retain strict fixture metadata field {field}")
+        expected_path = f"res://art/economy/runtime/resources/{resource_id}.png"
+        ensure(row.get("icon_id") == f"resource_icon_{resource_id}", errors, f"Resource {resource_id} must own its stable production icon id")
+        ensure(row.get("icon_path") == expected_path, errors, f"Resource {resource_id} must own its exact production icon path")
+        icon_paths.append(str(row.get("icon_path", "")))
+        disk_path = res_path_to_disk(expected_path)
+        ensure(disk_path.is_file() and png_size(disk_path) == (128, 128), errors, f"Resource {resource_id} icon must be an exact 128x128 PNG")
+        if disk_path.is_file():
+            header = disk_path.read_bytes()[:26]
+            ensure(len(header) >= 26 and header[25] in {4, 6}, errors, f"Resource {resource_id} icon must retain a PNG alpha channel")
+        ensure(Path(f"{disk_path}.import").is_file(), errors, f"Resource {resource_id} icon import is missing")
+    ensure(len(set(icon_paths)) == 9, errors, "Production resource icon paths must be unique")
+    ensure(RESOURCE_ICON_ATLAS_PATH.is_file() and Path(f"{RESOURCE_ICON_ATLAS_PATH}.import").is_file(), errors, "Production resource source atlas and import must exist")
+
+    for token in (
+        'const RESOURCES_PATH := "%s/resources.json" % CONTENT_DIR',
+        "func get_resource(id: String) -> Dictionary:",
+        "return get_content_by_id(RESOURCES_PATH, id)",
+        "var resource_index := _index_items(_items_from_raw(load_json(RESOURCES_PATH)))",
+        "_validate_resources(resource_index)",
+        '"gold", "wood", "ore", "aetherglass", "embergrain", "peatwax"',
+        '"verdant_grafts", "brass_scrip", "memory_salt"',
+        'icon_path.begins_with("res://art/economy/runtime/resources/")',
+        '_validate_art_path(icon_path, "Production resource %s icon" % resource_id)',
+    ):
+        ensure(token in content_service_text, errors, f"ContentService resource registry ownership is missing: {token}")
+
+    definition_block = block(overworld_rules_text, "resource_definition")
+    resolver_block = block(overworld_rules_text, "resource_icon_path")
+    primary_resource_block = block(overworld_rules_text, "resource_site_primary_stockpile_resource_id")
+    context_actions_block = block(overworld_rules_text, "get_context_actions")
+    for token in ("normalized_id not in LIVE_STOCKPILE_RESOURCE_KEYS", "ContentService.get_resource(normalized_id)", 'String(resource.get("id", "")) == normalized_id', 'bool(resource.get("stockpile", false))'):
+        ensure(token in definition_block, errors, f"Resource definition resolver is missing fail-closed ownership: {token}")
+    for token in ('"resource_icon_%s" % resource_id', 'begins_with("res://art/economy/runtime/resources/")', 'ResourceLoader.exists(icon_path, "Texture2D")', "return icon_path"):
+        ensure(token in resolver_block, errors, f"Resource icon resolver is missing fail-closed ownership: {token}")
+    ensure("load(" not in definition_block + resolver_block and "preload(" not in definition_block + resolver_block, errors, "Resource rules must not load presentation textures")
+    for token in ("_resource_site_claim_rewards(site)", "for resource_id in LIVE_STOCKPILE_RESOURCE_KEYS:", 'resource_id != "gold"', 'return "gold" if int(rewards.get("gold", 0)) > 0 else ""'):
+        ensure(token in primary_resource_block, errors, f"Resource collection identity resolver is missing exact authored-reward policy: {token}")
+    for token in ('"id": "collect_resource"', '"resource_id": collection_resource_id', '"resource_icon_path": resource_icon_path(collection_resource_id)'):
+        ensure(token in context_actions_block, errors, f"Collect-resource action is missing detached presentation identity: {token}")
+
+    render_block = block(shell_text, "_render_context_action_buttons")
+    icon_helper_block = block(shell_text, "_apply_resource_action_icon")
+    primary_block = block(shell_text, "_refresh_primary_action_button")
+    ensure(render_block.find("button.tooltip_text =") < render_block.find("_apply_resource_action_icon(button, action)") < render_block.find("_style_rail_action_button") < render_block.find("button.pressed.connect") < render_block.find("add_child(button)"), errors, "Overworld secondary collection icon must preserve copy/style/binding/order")
+    ensure(primary_block.startswith("func _refresh_primary_action_button") and "_apply_resource_action_icon(_primary_action_button, action)" in primary_block, errors, "Overworld primary collection action must apply the shared resource icon helper")
+    for token in ('button.icon = null', 'button.remove_theme_constant_override("icon_max_width")', 'String(action.get("id", "")) != "collect_resource"', 'OverworldRules.resource_icon_path(resource_id)', 'icon_path != OverworldRules.resource_icon_path(resource_id)', 'load(icon_path)', 'icon_resource is Texture2D', 'button.icon = icon_resource', 'button.add_theme_constant_override("icon_max_width", 24)', 'button.expand_icon = true'):
+        ensure(token in icon_helper_block, errors, f"Overworld resource icon helper is missing fail-closed live token: {token}")
+    for forbidden in ("button.text =", "button.tooltip_text =", "button.disabled =", "queue_free", "await ", "create_timer", "create_tween", "perform_context_action"):
+        ensure(forbidden not in icon_helper_block, errors, f"Overworld resource icon helper must not alter action/timing/gameplay authority: {forbidden}")
+    ensure('"primary_action_button_icon_path"' in shell_text and '"primary_action_button_icon_max_width"' in shell_text, errors, "Overworld validation snapshot must expose detached primary resource icon state")
 
     ensure_scene_nodes(scene_text, errors, "OverworldShell.tscn", [("ResourceDeltaCue", "Label")])
     cue_match = re.search(r'\[node name="ResourceDeltaCue" type="Label"[^\]]*\]\n(?P<body>.*?)(?=\n\[node )', scene_text, re.DOTALL)
@@ -29531,10 +29618,25 @@ def validate_overworld_resource_delta_cue_playback(errors: list[str]) -> None:
 
     ensure_scene_nodes(report_scene_text, errors, "overworld_resource_delta_cue_playback_report.tscn", [("OverworldResourceDeltaCuePlaybackReport", "Node")])
     for token in (
+        'const RESOURCE_IDS := [',
+        'const RESOURCE_REGISTRY_PATH := "res://content/resources.json"',
+        'const RESOURCE_FIXTURE_PATH := "res://tests/fixtures/economy_resource_schema/resource_registry.json"',
+        "var registry_contract := _resource_registry_contract()",
+        'String(production.get("schema", "")) == "resource_registry_v1"',
+        "ordered_ids == RESOURCE_IDS",
+        "OverworldRules.LIVE_STOCKPILE_RESOURCE_KEYS == RESOURCE_IDS",
+        "OverworldRules.resource_definition(resource_id)",
+        "OverworldRules.resource_icon_path(resource_id) == icon_path",
+        'FileAccess.file_exists("res://art/economy/source/resource_icon_atlas.png")',
         'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
         'const PLACEMENT_ID := "north_wood"',
         'var initial: Dictionary = shell.validation_snapshot()',
         'String(initial.get("primary_action_id", "")) == "collect_resource"',
+        'String(primary_payload.get("resource_id", "")) == "wood"',
+        'String(primary_payload.get("resource_icon_path", "")) == expected_icon_path',
+        'String(initial.get("primary_action_button_icon_path", "")) == expected_icon_path',
+        'int(initial.get("primary_action_button_icon_max_width", 0)) == 24',
+        'primary_icon.get_size() == Vector2(128.0, 128.0)',
         'OverworldRules.perform_context_action(control, "collect_resource")',
         'control.flags["last_overworld_action_recap"] = control_recap.duplicate(true)',
         'primary_action.emit_signal("pressed")',
@@ -29547,7 +29649,7 @@ def validate_overworld_resource_delta_cue_playback(errors: list[str]) -> None:
     ):
         ensure(token in report_text, errors, f"Resource-delta focused report is missing method-matched live proof: {token}")
     ensure(report_text.count('OverworldRules.perform_context_action(control, "collect_resource")') == 1, errors, "Resource-delta report must own exactly one independent rule control per row")
-    for forbidden in ("_on_context_action_pressed(", "_record_resource_delta_presentation(", "_process(", "create_timer", "create_tween", "OverworldRules.collect_active_resource(", "session.overworld.erase", "control.overworld.erase"):
+    for forbidden in ("_on_context_action_pressed(", "_record_resource_delta_presentation(", "_process(", "create_timer", "create_tween", "OverworldRules.collect_active_resource(", "session.overworld.erase", "control.overworld.erase", "primary_action.icon =", "button.icon ="):
         ensure(forbidden not in report_text, errors, f"Resource-delta focused report must not bypass or weaken production behavior: {forbidden}")
 
 
@@ -36962,8 +37064,22 @@ def validate_active_scenario_rare_economy_access(errors: list[str]) -> None:
         "development_balance",
         "rare_resource_id",
         "SessionState.LAUNCH_MODE_SKIRMISH",
+        "func _prepare_unclaimed_resource_fixture",
+        'node["collected"] = false',
+        'node["collected_by_faction_id"] = ""',
+        'node.erase("collected_day")',
+        "OverworldRules.resource_site_blocking_guard(session, node, site)",
+        "resolved_guard_key = OverworldRules.encounter_key(guard)",
+        'session.overworld["resolved_encounters"] = resolved',
+        "OverworldRules.mark_runtime_normalized_transition_state(session)",
+        "OverworldRules.refresh_fog_of_war(session)",
     ):
         ensure(required_token in script_text, errors, f"Active scenario rare economy access report is missing token {required_token}")
+    fixture_reset = script_text.find("var fixture_reset := _prepare_unclaimed_resource_fixture(session, placement_id)")
+    before_claim = script_text.find("var before_claim := _resources(session)")
+    live_collect = script_text.find("var claim_result: Dictionary = OverworldRules.collect_active_resource(session)")
+    ensure(0 <= fixture_reset < before_claim < live_collect, errors, "Rare-access fixture must prepare the selected source before bracketing the one live collection call")
+    ensure(script_text.count("_prepare_unclaimed_resource_fixture(session, placement_id)") == 1, errors, "Rare-access report must reset exactly one selected source per case")
     ensure("res://tests/active_scenario_rare_economy_access_report.gd" in scene_text, errors, "Active scenario rare economy access scene must load its report script")
     for required_text in (
         "Economy Active Scenario Rare Access Report",

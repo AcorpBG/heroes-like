@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Town building category sigil adoption slice is completed. Five original category sigils now identify all 133 buildings on the existing selectable Build options with focused construction, compatibility, static/editor, and bounded Linux/Windows startup evidence green. The game is not release-ready.",
+  "currentNotes": "Production resource registry and collection icon adoption is complete. Nine stable stockpile definitions and nine original imported icons now drive fail-closed live Overworld collection identity; focused, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass. Select the next tracker-approved slice; no whole-game or release-readiness claim is made.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-town-building-category-sigil-adoption-10184",
-  "currentSliceId": "presentation-town-building-category-sigil-adoption-10184",
-  "currentSliceNotes": "Completed with five distinct imported building-category sigils, exact data-driven resolution for all 133 production buildings, and fail-closed live adoption on real Town Build options at 1280x720 and 1920x1080. Focused construction, all-town save/resume, compatibility, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass; packaged construction interaction and broader release claims remain unclaimed.",
+  "currentSlice": "economy-production-resource-registry-collection-icon-adoption-10184",
+  "currentSliceId": "economy-production-resource-registry-collection-icon-adoption-10184",
+  "currentSliceNotes": "Completed exact nine-row production metadata and nine original 128x128 resource icons. Real collection at 1280x720 and 1920x1080 preserved whole-session, recap, cue, resolution, refresh, and fail-closed authority; live stockpile, 20 active rare-source collection/income cases, Town economy, Overworld visual, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. Packaged collection interaction, certification, whole-game, and release readiness remain unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Town Building Category Sigil Adoption",
-  "currentSliceUpdatedAt": "2026-08-15T04:43:43Z",
+  "currentSliceTitle": "Production Resource Registry And Collection Icon Adoption",
+  "currentSliceUpdatedAt": "2026-08-15T05:12:49Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19849,6 +19849,28 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "id": "economy-production-resource-registry-collection-icon-adoption-10184",
+      "title": "Production Resource Registry And Collection Icon Adoption",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/economy-overhaul-foundation.md", "docs/screen-wireframes.md", "docs/concept-art-pipeline.md", "AGENTS.md"],
+      "purpose": "Promote the nine live stockpile resources into exact production metadata and give existing compact Overworld collection actions original resource identity.",
+      "implementationTargets": ["content/resources.json", "art/economy/source/resource_icon_atlas.png", "art/economy/runtime/resources/", "scripts/autoload/ContentService.gd", "scripts/core/OverworldRules.gd", "scenes/overworld/OverworldShell.gd", "tests/overworld_resource_delta_cue_playback_report.gd", "tests/active_scenario_rare_economy_access_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "testOwners": ["tests/overworld_resource_delta_cue_playback_report.tscn", "tests/live_stockpile_resource_surface_report.tscn", "tests/active_scenario_rare_economy_access_report.tscn", "tests/town_economy_resource_ui_surface_report.tscn", "tests/overworld_visual_smoke.tscn", "tests/accessibility_screen_reader_semantics_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/validate_repo.py"],
+      "baseline": {"head": "d2cbbd2e", "live_stockpile_resource_count": 9, "production_resource_registry_count": 0, "resource_runtime_asset_count": 0, "overworld_collection_icons_loaded": 0, "resource_rules_or_save_changes_started": false},
+      "completionCriteria": ["Production owns exactly nine stockpile resource definitions and nine distinct original imported icons while preserving all stable ids and fixture agreement", "Existing compact Overworld resource collection actions render exact yielded-resource identity fail-closed without changing order, copy, tooltip, disabled state, focus, containment, or consequences", "Focused real collection proof passes at 1280x720 and 1920x1080 with exact whole session/save/recap/cue authority; invalid metadata remains text-only", "Economy registry/schema, collection, live stockpile/Town economy, Overworld visual/accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"],
+      "nonGoals": ["resource id/amount/cost/income/market/site/source/faction-affinity/AI/save-schema or collection-consequence changes", "new resource dashboard/panel, broad resource-bar redesign, pickup/site art, non-resource icons, packaged interaction, hardware/certification, signing/publication, whole-game, or release-readiness claims"],
+      "createdAt": "2026-08-15T04:46:30Z",
+      "startedAt": "2026-08-15T04:46:30Z",
+      "updatedAt": "2026-08-15T05:12:49Z",
+      "completedAt": "2026-08-15T05:12:49Z",
+      "notes": "Completed exact nine-row production metadata and nine unique original 128x128 alpha icons. Existing compact collect_resource actions resolve the site's distinctive non-gold claim resource, then gold fallback, and load only the exact imported registry path. Focused 1280x720/1920x1080 normal/reduced-motion collection matched independent rules and whole-session/recap/cue/resolution authority. Live stockpile, all 20 active rare-source collection/income cases, Town economy, Overworld visual, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Resource balances, ids, costs, income, market, sites, sources, faction affinity, AI, save schema/version, packaged collection interaction, certification, whole-game, and release readiness remain unchanged or unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null
+    },
     {
       "id": "presentation-town-building-category-sigil-adoption-10184",
       "title": "Town Building Category Sigil Adoption",

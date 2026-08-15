@@ -3889,9 +3889,26 @@ func _render_context_action_buttons(actions: Array, primary_action: Dictionary, 
 		button.text = String(action.get("label", action.get("id", "Action")))
 		button.disabled = bool(action.get("disabled", false))
 		button.tooltip_text = String(action.get("summary", ""))
+		_apply_resource_action_icon(button, action)
 		_style_rail_action_button(button, "primary", 34.0)
 		button.pressed.connect(_on_context_action_pressed.bind(String(action.get("id", ""))))
 		_context_actions.add_child(button)
+
+func _apply_resource_action_icon(button: Button, action: Dictionary) -> void:
+	button.icon = null
+	button.remove_theme_constant_override("icon_max_width")
+	if String(action.get("id", "")) != "collect_resource":
+		return
+	var resource_id := String(action.get("resource_id", ""))
+	var icon_path := String(action.get("resource_icon_path", ""))
+	if resource_id == "" or icon_path == "" or icon_path != OverworldRules.resource_icon_path(resource_id):
+		return
+	var icon_resource := load(icon_path)
+	if not (icon_resource is Texture2D):
+		return
+	button.icon = icon_resource
+	button.add_theme_constant_override("icon_max_width", 24)
+	button.expand_icon = true
 
 func _current_context_actions() -> Array:
 	var context_actions_started_usec := _debug_phase_begin("context_actions_computation")
@@ -4587,6 +4604,7 @@ func _cached_command_risk_surface() -> Dictionary:
 	return _refresh_cache["command_risk_surface"]
 
 func _refresh_primary_action_button(action: Dictionary) -> void:
+	_apply_resource_action_icon(_primary_action_button, action)
 	if action.is_empty():
 		_primary_action_button.text = "Select Site"
 		_primary_action_button.disabled = true
@@ -9417,6 +9435,8 @@ func validation_snapshot() -> Dictionary:
 		"primary_action_button_text": _primary_action_button.text,
 		"primary_action_button_disabled": _primary_action_button.disabled,
 		"primary_action_button_tooltip_text": _primary_action_button.tooltip_text,
+		"primary_action_button_icon_path": _primary_action_button.icon.resource_path if _primary_action_button.icon != null else "",
+		"primary_action_button_icon_max_width": _primary_action_button.get_theme_constant("icon_max_width"),
 		"primary_order_commit_check": primary_order_commit_check,
 		"context_action_ids": _validation_context_action_ids(),
 		"rendezvous": _validation_rendezvous_surface(),
@@ -10921,6 +10941,9 @@ func _validation_action_payload(action: Dictionary) -> Dictionary:
 		payload["route_decision"] = action.get("route_decision", {})
 	if action.get("town_entry_handoff", {}) is Dictionary:
 		payload["town_entry_handoff"] = action.get("town_entry_handoff", {})
+	if String(action.get("id", "")) == "collect_resource":
+		payload["resource_id"] = String(action.get("resource_id", ""))
+		payload["resource_icon_path"] = String(action.get("resource_icon_path", ""))
 	return payload
 
 func _validation_context_action_signature() -> Dictionary:
