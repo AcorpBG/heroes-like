@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `presentation-authored-artifact-icon-adoption-10184`. All 12 production artifacts now own distinct original painted icons and stable non-placeholder metadata. The existing compact Overworld Command and Town Logistics gear buttons resolve only the exact equipped or packed artifact already owned by each action, load its imported icon fail-closed, and preserve real equip/stow, session, save, copy, tooltip, focus, and ordering authority at 1280x720 and 1920x1080. The Town artifact lane is now first in Logistics so the live buttons remain visible and contained. Focused, artifact compatibility, Town/Battle visual, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged artifact interaction, final artifact VFX/audio, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `presentation-authored-artifact-icon-adoption-10184`
 - Completed implementation slice: `overworld-ninefold-rope-lift-live-transit-10184`. Ninefold Confluence's existing `Reeve Rope Lift` response now opens the exact authored two-way land shortcut between 9,51 and 9,54 for its four-day active window. The live player BFS previews it as one movement, full route execution independently revalidates it, activation/expiry changes invalidate cached routes, and malformed, unclaimed, enemy, unsafe, expired, unaffordable, or movement-exhausted cases remain closed. Focused 1280x720/1920x1080 live proof, save normalization, full/cached route, terrain, controller, Ninefold, metadata, AI valuation, core, save/load, focus, accessibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Ferry/ship/water, other transit objects, strategic-AI transit use, RMG, editor placement, packaged transit interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unchanged or unclaimed. Select the next tracker-approved implementation slice.
   id: `overworld-ninefold-rope-lift-live-transit-10184`
 - Completed implementation slice: `presentation-active-play-load-resumed-cue-playback-10184`. Successful Main Menu selected-save loads now carry one detached `system_load_resumed` handoff across the real AppRouter transition and publish it exactly once after the authoritative Overworld, Town, Battle, or Scenario Outcome initial refresh. One shared presenter modulates only the existing status control, uses exact normal `load_resume` or reduced-motion `load_icon_static` policy, never blocks input or changes copy/layout, clears mismatched/failed/stale routes, does not replay on refresh, and restores exact visual state after expiry. Focused eight-case 1280x720/1920x1080 real-load proof, stale-file control, save/load confidence, 1280 Battle layout/load, animation policy, active-play focus, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Save schema/restore/routing, final audio/VFX assets, packaged load interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unchanged or unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -4849,6 +4851,39 @@ Completed evidence:
 - inspected live victory and defeat captures are scenery-first and readable, and Outcome visual, normal-entry focus, new-session safe cancel, autosave recovery, active-play focus, and core compatibility gates pass;
 - a fresh routed Reedfall campaign completes all 121 public route/town/battle/save/resume/Outcome steps through `campaign_arc_completed_browser`;
 - repository/editor checks and official Linux export/headless startup plus Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass, with both imported Outcome textures present in the packaged PCK and no packaged Outcome interaction or broader release claim.
+
+## Authored Artifact Icon Adoption
+
+id: `presentation-authored-artifact-icon-adoption-10184`
+
+Selected Phase 6 production-art and live-UX slice. All 12 shipped artifact
+records still expose `*_placeholder` icon identities, no artifact icon asset
+domain exists under `art/`, and the live Overworld and Town gear action buttons
+render text only even though each action resolves one exact owned artifact.
+
+Implementation target:
+- produce one coherent original 12-icon artifact set matching the existing painterly fantasy UI and store the project-consumed runtime assets under a dedicated artifact-art domain;
+- replace every placeholder artifact icon identity with one unique stable icon id and exact imported path while preserving all non-UI artifact content byte-for-byte;
+- make ArtifactRules management actions carry the exact equipped or packed artifact id already owned by the action, then let the existing Overworld and Town gear buttons load its validated icon fail-closed;
+- keep the compact action labels, tooltips, order, disabled state, focus, sizing, and equip/stow consequences unchanged at 1280x720 and 1920x1080.
+
+Completion criteria:
+- all 12 production artifacts load one distinct non-placeholder icon asset with exact content-to-asset ownership and no missing import;
+- real live equip and stow actions in both Overworld and Town show the matching artifact icon while preserving the exact ordered action arrays, button text/tooltips, focus cycle, containment, and whole session/save authority;
+- missing or invalid icon metadata yields a text-only button without errors or action changes;
+- focused visual/runtime proof, artifact acquisition/slot/rendezvous/town compatibility, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Non-goals:
+- do not change artifact bonuses, rarity, slot/set rules, inventory/equipment ordering, acquisition/reward tables, economy, movement, scouting, spells, AI valuation, save schema/version, or artifact action consequences;
+- do not add a new panel, enlarge the gear rails, cover the map or scenic stage, or change non-artifact buttons;
+- do not claim final artifact VFX/audio, packaged artifact interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release readiness.
+
+Completed evidence:
+- one coherent original 4x3 painted atlas produced 12 exact 128x128 imported runtime icons, and every production artifact now owns a unique `artifact_icon_*` id and `res://art/artifacts/runtime/` path;
+- the live Overworld Command drawer and Town Logistics tab render the exact equipped or packed artifact icon with a bounded 24px theme width while preserving the existing button copy, tooltip, disabled state, binding, and action order;
+- the focused report passes real equip/stow presses on both surfaces at 1280x720 and 1920x1080 with whole-session equality against independent rule controls, exact visibility/containment, invalid-id fail-closed behavior, and all 12 icon imports;
+- artifact slot presentation, faction/content taxonomy, runtime set effects, field rendezvous transfer, Town/Battle visuals, accessibility semantics, core systems, repository validation, and exact/generic editor parses pass;
+- official Linux export plus packaged headless startup and official Windows export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass with no packaged artifact-interaction or broader release claim.
 
 ## Phase Roadmap
 

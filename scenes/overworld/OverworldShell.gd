@@ -6429,8 +6429,22 @@ func _rebuild_artifact_actions() -> void:
 		button.disabled = bool(action.get("disabled", false))
 		button.tooltip_text = String(action.get("summary", ""))
 		_style_rail_action_button(button)
+		_apply_artifact_action_icon(button, action)
 		button.pressed.connect(_on_artifact_action_pressed.bind(String(action.get("id", ""))))
 		_artifact_actions.add_child(button)
+
+func _apply_artifact_action_icon(button: Button, action: Dictionary) -> void:
+	var hero: Dictionary = _session.overworld.get("hero", {}) if _session != null else {}
+	var artifact_id := ArtifactRules.artifact_id_for_management_action(hero, String(action.get("id", "")))
+	var icon_path := ArtifactRules.artifact_icon_path(artifact_id)
+	if icon_path == "":
+		return
+	var texture := load(icon_path) as Texture2D
+	if texture == null:
+		return
+	button.icon = texture
+	button.expand_icon = true
+	button.add_theme_constant_override("icon_max_width", 24)
 
 func _rebuild_specialty_actions() -> void:
 	for child in _specialty_actions.get_children():

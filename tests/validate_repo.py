@@ -52,6 +52,8 @@ BATTLE_AI_RULES_PATH = ROOT / "scripts" / "core" / "BattleAiRules.gd"
 TOWN_RULES_PATH = ROOT / "scripts" / "core" / "TownRules.gd"
 CAMPAIGN_RULES_PATH = ROOT / "scripts" / "core" / "CampaignRules.gd"
 ARTIFACT_RULES_PATH = ROOT / "scripts" / "core" / "ArtifactRules.gd"
+ARTIFACT_ICON_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "artifact_icon_runtime_report.gd"
+ARTIFACT_ICON_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "artifact_icon_runtime_report.tscn"
 SPELL_RULES_PATH = ROOT / "scripts" / "core" / "SpellRules.gd"
 ANIMATION_CUE_CATALOG_RULES_PATH = ROOT / "scripts" / "core" / "AnimationCueCatalog.gd"
 ENEMY_TURN_RULES_PATH = ROOT / "scripts" / "core" / "EnemyTurnRules.gd"
@@ -8885,6 +8887,17 @@ def artifact_taxonomy_issues(
             issues.append("missing_ui_summary")
         if not str(ui.get("icon_id", "")).strip():
             issues.append("missing_icon_id")
+        elif not str(ui.get("icon_id", "")).strip().startswith("artifact_icon_"):
+            issues.append("unsupported_icon_id")
+        icon_path = str(ui.get("icon_path", "")).strip()
+        if not icon_path.startswith("res://art/artifacts/runtime/"):
+            issues.append("unsupported_icon_path")
+        else:
+            icon_disk_path = res_path_to_disk(icon_path)
+            if not icon_disk_path.is_file():
+                issues.append("missing_icon_asset")
+            elif png_size(icon_disk_path) != (128, 128):
+                issues.append("invalid_icon_dimensions")
         if not isinstance(ui.get("effect_tags", []), list) or not string_list(ui.get("effect_tags", [])):
             issues.append("missing_ui_effect_tags")
         if not isinstance(ui.get("comparison_priority", []), list) or not string_list(ui.get("comparison_priority", [])):
@@ -8960,6 +8973,8 @@ def build_artifact_taxonomy_report() -> dict:
         "bonus_metadata_count": 0,
         "risk_metadata_count": 0,
         "ui_summary_count": 0,
+        "distinct_icon_id_count": 0,
+        "distinct_icon_path_count": 0,
         "ai_hint_count": 0,
         "curse_tradeoff_counts": {"cursed": 0, "tradeoff": 0},
         "unsupported_records": [],
@@ -8973,6 +8988,8 @@ def build_artifact_taxonomy_report() -> dict:
             "set_bonuses_active": True,
         },
     }
+    artifact_icon_ids: list[str] = []
+    artifact_icon_paths: list[str] = []
     for artifact_id, artifact in artifacts.items():
         issues = artifact_taxonomy_issues(artifact_id, artifact, factions, artifact_sets)
         if not issues:
@@ -9013,15 +9030,22 @@ def build_artifact_taxonomy_report() -> dict:
                 report["curse_tradeoff_counts"]["tradeoff"] += 1
         if isinstance(artifact.get("ui", {}), dict) and str(artifact.get("ui", {}).get("summary", "")).strip():
             report["ui_summary_count"] += 1
+        if isinstance(artifact.get("ui", {}), dict):
+            artifact_icon_ids.append(str(artifact.get("ui", {}).get("icon_id", "")).strip())
+            artifact_icon_paths.append(str(artifact.get("ui", {}).get("icon_path", "")).strip())
         if isinstance(artifact.get("ai_hints", {}), dict) and string_list(artifact.get("ai_hints", {}).get("value_drivers", [])):
             report["ai_hint_count"] += 1
     set_report = build_artifact_set_faction_report(artifacts, artifact_sets)
     report["set_count"] = int(set_report.get("set_count", 0))
     report["set_validation_issues"] = set_report.get("set_validation_issues", [])
     report["set_reports"] = set_report.get("set_reports", [])
+    report["distinct_icon_id_count"] = len(set(artifact_icon_ids))
+    report["distinct_icon_path_count"] = len(set(artifact_icon_paths))
     report["ok"] = (
         report["artifact_count"] > 0
         and report["complete_taxonomy_count"] == report["artifact_count"]
+        and report["distinct_icon_id_count"] == report["artifact_count"]
+        and report["distinct_icon_path_count"] == report["artifact_count"]
         and bool(set_report.get("ok", False))
     )
     return report
@@ -18420,6 +18444,7 @@ def validate_scenario_outcome_shell(errors: list[str]) -> None:
         OUTCOME_SCENE_PATH,
         OUTCOME_SCRIPT_PATH,
         OVERWORLD_SCRIPT_PATH,
+        TOWN_SCENE_PATH,
         TOWN_SCRIPT_PATH,
         BATTLE_SCRIPT_PATH,
     )
@@ -28579,6 +28604,174 @@ def validate_overworld_field_spell_cast_cue_playback(errors: list[str]) -> None:
         ensure(forbidden not in report_text, errors, f"Field-spell cue report must not bypass or weaken production behavior: {forbidden}")
 
 
+def validate_artifact_icon_runtime(errors: list[str]) -> None:
+    required_paths = (
+        CONTENT_DIR / "artifacts.json",
+        ARTIFACT_RULES_PATH,
+        OVERWORLD_SCRIPT_PATH,
+        TOWN_SCRIPT_PATH,
+        ARTIFACT_ICON_RUNTIME_REPORT_SCRIPT_PATH,
+        ARTIFACT_ICON_RUNTIME_REPORT_SCENE_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing artifact icon runtime owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    def function_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}")
+        if start < 0:
+            return ""
+        ends = [index for index in (text.find("\nfunc ", start + 1), text.find("\nstatic func ", start + 1)) if index >= 0]
+        end = min(ends) if ends else -1
+        return text[start:] if end < 0 else text[start:end]
+
+    expected_icons = {
+        "artifact_trailsinger_boots": "res://art/artifacts/runtime/trailsinger_boots.png",
+        "artifact_quarry_tally_rod": "res://art/artifacts/runtime/quarry_tally_rod.png",
+        "artifact_warcrest_pennon": "res://art/artifacts/runtime/warcrest_pennon.png",
+        "artifact_bastion_gorget": "res://art/artifacts/runtime/bastion_gorget.png",
+        "artifact_waymark_compass": "res://art/artifacts/runtime/waymark_compass.png",
+        "artifact_milepost_lantern": "res://art/artifacts/runtime/milepost_lantern.png",
+        "artifact_tollstone_ring": "res://art/artifacts/runtime/tollstone_ring.png",
+        "artifact_mudglass_beads": "res://art/artifacts/runtime/mudglass_beads.png",
+        "artifact_choir_tuning_fork": "res://art/artifacts/runtime/choir_tuning_fork.png",
+        "artifact_living_bridge_knot": "res://art/artifacts/runtime/living_bridge_knot.png",
+        "artifact_pressure_gauge_reliquary": "res://art/artifacts/runtime/pressure_gauge_reliquary.png",
+        "artifact_black_sail_compass": "res://art/artifacts/runtime/black_sail_compass.png",
+    }
+    artifacts = items_index(load_json(CONTENT_DIR / "artifacts.json"))
+    ensure(set(artifacts) == set(expected_icons), errors, "Artifact icon adoption must cover the exact 12 production artifacts")
+    icon_ids: list[str] = []
+    icon_paths: list[str] = []
+    for artifact_id, expected_path in expected_icons.items():
+        artifact = artifacts.get(artifact_id, {})
+        ui = artifact.get("ui", {}) if isinstance(artifact.get("ui", {}), dict) else {}
+        icon_id = str(ui.get("icon_id", ""))
+        icon_path = str(ui.get("icon_path", ""))
+        icon_ids.append(icon_id)
+        icon_paths.append(icon_path)
+        ensure(icon_id == f"artifact_icon_{artifact_id.removeprefix('artifact_')}", errors, f"Artifact {artifact_id} must own its exact stable icon id")
+        ensure("placeholder" not in icon_id, errors, f"Artifact {artifact_id} must not retain a placeholder icon id")
+        ensure(icon_path == expected_path, errors, f"Artifact {artifact_id} must own its exact runtime icon path")
+        disk_path = res_path_to_disk(icon_path)
+        ensure(disk_path.is_file(), errors, f"Artifact {artifact_id} icon asset is missing: {icon_path}")
+        if disk_path.is_file():
+            ensure(png_size(disk_path) == (128, 128), errors, f"Artifact {artifact_id} icon must be 128x128 PNG: {icon_path}")
+        ensure(Path(f"{disk_path}.import").is_file(), errors, f"Artifact {artifact_id} icon import is missing: {icon_path}.import")
+    ensure(len(set(icon_ids)) == len(expected_icons), errors, "Artifact icon ids must be unique across all production artifacts")
+    ensure(len(set(icon_paths)) == len(expected_icons), errors, "Artifact icon paths must be unique across all production artifacts")
+
+    artifact_rules_text = ARTIFACT_RULES_PATH.read_text(encoding="utf-8")
+    action_block = function_block(artifact_rules_text, "artifact_id_for_management_action")
+    icon_block = function_block(artifact_rules_text, "artifact_icon_path")
+    for token in (
+        'action_id.begins_with("equip_artifact:")',
+        'locate_artifact(hero_state, inventory_artifact_id)',
+        '== "inventory" else ""',
+        'action_id.begins_with("unequip_artifact:")',
+        "slot not in EQUIPMENT_SLOTS",
+        'normalize_hero_artifacts(hero_state.get("artifacts", {}))',
+        'artifacts.get("equipped", {}).get(slot, "")',
+    ):
+        ensure(token in action_block, errors, f"Artifact action icon ownership is missing fail-closed token: {token}")
+    ensure(action_block.count("locate_artifact(") == 1, errors, "Artifact action icon ownership must resolve inventory ownership exactly once")
+    ensure("ContentService" not in action_block and "load(" not in action_block, errors, "Artifact action ownership must not consult presentation assets")
+    for token in (
+        "ContentService.get_artifact(artifact_id)",
+        'artifact.get("ui", {})',
+        'ui.get("icon_path", "")',
+        'icon_path.begins_with("res://art/artifacts/runtime/")',
+        'ResourceLoader.exists(icon_path, "Texture2D")',
+        'return ""',
+        "return icon_path",
+    ):
+        ensure(token in icon_block, errors, f"Artifact icon path resolver is missing fail-closed token: {token}")
+    ensure(icon_block.find("begins_with") < icon_block.find("ResourceLoader.exists") < icon_block.rfind("return icon_path"), errors, "Artifact icon paths must validate the owned domain and imported texture before publication")
+    ensure("load(" not in icon_block and "preload(" not in icon_block, errors, "ArtifactRules must validate icon ownership without loading presentation resources")
+
+    for shell_path in (OVERWORLD_SCRIPT_PATH, TOWN_SCRIPT_PATH):
+        shell_text = shell_path.read_text(encoding="utf-8")
+        rebuild_block = function_block(shell_text, "_rebuild_artifact_actions")
+        helper_block = function_block(shell_text, "_apply_artifact_action_icon")
+        ensure(shell_text.count("func _apply_artifact_action_icon") == 1, errors, f"{shell_path.name} must define one artifact action icon helper")
+        order = [
+            rebuild_block.find("_style_"),
+            rebuild_block.find("_apply_artifact_action_icon(button, action)"),
+            rebuild_block.find("button.pressed.connect"),
+            rebuild_block.find("_artifact_actions.add_child(button)"),
+        ]
+        ensure(all(index >= 0 for index in order) and order == sorted(order), errors, f"{shell_path.name} must apply icons without changing style, action binding, or button order")
+        for token in (
+            'ArtifactRules.artifact_id_for_management_action(hero, String(action.get("id", "")))',
+            "ArtifactRules.artifact_icon_path(artifact_id)",
+            'if icon_path == "":\n\t\treturn',
+            "load(icon_path) as Texture2D",
+            "if texture == null:\n\t\treturn",
+            "button.icon = texture",
+            "button.expand_icon = true",
+            'button.add_theme_constant_override("icon_max_width", 24)',
+        ):
+            ensure(token in helper_block, errors, f"{shell_path.name} artifact icon helper is missing exact live token: {token}")
+        for forbidden in ("action[\"icon", "ContentService.get_artifact", "button.text =", "button.tooltip_text =", "button.disabled =", "queue_free", "await ", "create_timer"):
+            ensure(forbidden not in helper_block, errors, f"{shell_path.name} artifact icon helper must not change action or layout authority: {forbidden}")
+
+    report_text = ARTIFACT_ICON_RUNTIME_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    report_scene_text = ARTIFACT_ICON_RUNTIME_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure_scene_nodes(report_scene_text, errors, "artifact_icon_runtime_report.tscn", [("ArtifactIconRuntimeReport", "Node")])
+    for token in (
+        'const REPORT_ID := "ARTIFACT_ICON_RUNTIME_REPORT"',
+        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        "rows.size() == 12",
+        'row.get("size", Vector2.ZERO) == Vector2(128.0, 128.0)',
+        'ArtifactRules.artifact_icon_path("artifact_missing") == ""',
+        'ArtifactRules.artifact_id_for_management_action({}, "equip_artifact:artifact_missing") == ""',
+        'shell.get_node_or_null("%ArtifactActions")',
+        'shell.get_node_or_null("%ManagementTabs") as TabContainer',
+        "management_tabs.current_tab = 4",
+        "shell.validation_open_command_drawer()",
+        "TownRules.get_artifact_actions(live_session)",
+        "OverworldRules.get_artifact_actions(live_session)",
+        "OverworldRules.perform_artifact_action(control, action_id)",
+        'equip_button.emit_signal("pressed")',
+        'stow_button.emit_signal("pressed")',
+        "live_session.to_dict() == control.to_dict()",
+        "button.text == String(action.get(\"label\", \"\"))",
+        "button.tooltip_text.contains(String(action.get(\"summary\", \"\")))",
+        'button.expand_icon and button.get_theme_constant("icon_max_width") == 24',
+        "get_viewport().get_visible_rect().encloses(button_rect)",
+        "button.is_visible_in_tree()",
+        'print("%s %s" % [REPORT_ID, JSON.stringify({"ok": true, "catalog": catalog, "rows": rows})])',
+    ):
+        ensure(token in report_text, errors, f"Artifact icon runtime report is missing method-matched proof token: {token}")
+    for token in (
+        "TownRules.town_action_consequence_signature(control)",
+        "TownRules.manage_artifact_at_active_town(control, action_id)",
+        'TownRules.build_town_action_recap(control, "order", action_id, action, result, before)',
+        'control.flags["last_town_action_recap"] = recap.duplicate(true)',
+    ):
+        ensure(token in report_text, errors, f"Artifact icon runtime report must preserve exact Town shell action authority: {token}")
+    town_scene_text = TOWN_SCENE_PATH.read_text(encoding="utf-8")
+    logistics_title_index = town_scene_text.find('[node name="LogisticsTitle"')
+    artifact_label_index = town_scene_text.find('[node name="Artifacts"', logistics_title_index)
+    artifact_actions_index = town_scene_text.find('[node name="ArtifactActions"', artifact_label_index)
+    tavern_index = town_scene_text.find('[node name="Tavern"', artifact_actions_index)
+    ensure(0 <= logistics_title_index < artifact_label_index < artifact_actions_index < tavern_index, errors, "Town Logistics must keep the compact artifact action surface visible before the taller tavern/transfer/response lanes")
+    ensure(report_text.count('for viewport_size in VIEWPORT_SIZES:') == 1 and report_text.count('for surface in ["overworld", "town"]:') == 1, errors, "Artifact icon runtime report must cover both live surfaces at both required widths")
+    for forbidden in (
+        "_on_artifact_action_pressed(",
+        "ArtifactRules.equip_artifact(",
+        "ArtifactRules.unequip_artifact(",
+        "\n\tbutton.icon = ",
+        "button.expand_icon =",
+        'button.add_theme_constant_override("icon_max_width"',
+        "session.overworld.erase",
+        "create_timer",
+        "create_tween",
+    ):
+        ensure(forbidden not in report_text, errors, f"Artifact icon runtime report must not bypass production or mutate presentation: {forbidden}")
+
+
 def validate_overworld_artifact_slot_cue_playback(errors: list[str]) -> None:
     required_paths = (
         OVERWORLD_SCENE_PATH,
@@ -38167,6 +38360,7 @@ def main() -> int:
     validate_overworld_art_asset_slice(errors)
     validate_overworld_hero_route_locomotion(errors)
     validate_overworld_field_spell_cast_cue_playback(errors)
+    validate_artifact_icon_runtime(errors)
     validate_overworld_artifact_slot_cue_playback(errors)
     validate_overworld_artifact_acquired_cue_playback(errors)
     validate_overworld_resource_delta_cue_playback(errors)

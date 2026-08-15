@@ -389,7 +389,8 @@
       },
       "ui": {
         "summary": "Common roadfinder boots for movement, scouting, and Beacon route tempo.",
-        "icon_id": "artifact_boots_placeholder",
+        "icon_id": "artifact_icon_trailsinger_boots",
+        "icon_path": "res://art/artifacts/runtime/trailsinger_boots.png",
         "effect_tags": [
           "movement",
           "scouting",
@@ -484,7 +485,8 @@
       },
       "ui": {
         "summary": "Common surveyor trinket for gold and ore income.",
-        "icon_id": "artifact_tally_rod_placeholder",
+        "icon_id": "artifact_icon_quarry_tally_rod",
+        "icon_path": "res://art/artifacts/runtime/quarry_tally_rod.png",
         "effect_tags": [
           "economy",
           "ore"
@@ -569,7 +571,8 @@
       },
       "ui": {
         "summary": "Uncommon command banner for attack and initiative.",
-        "icon_id": "artifact_pennon_placeholder",
+        "icon_id": "artifact_icon_warcrest_pennon",
+        "icon_path": "res://art/artifacts/runtime/warcrest_pennon.png",
         "effect_tags": [
           "combat",
           "initiative"
@@ -646,7 +649,8 @@
       },
       "ui": {
         "summary": "Uncommon armor for defensive command.",
-        "icon_id": "artifact_gorget_placeholder",
+        "icon_id": "artifact_icon_bastion_gorget",
+        "icon_path": "res://art/artifacts/runtime/bastion_gorget.png",
         "effect_tags": [
           "defense",
           "armor"
@@ -722,7 +726,8 @@
       },
       "ui": {
         "summary": "Wayfarer Compact trinket for route scouting and set progress.",
-        "icon_id": "artifact_compass_placeholder",
+        "icon_id": "artifact_icon_waymark_compass",
+        "icon_path": "res://art/artifacts/runtime/waymark_compass.png",
         "effect_tags": [
           "scouting",
           "route",
@@ -808,7 +813,8 @@
       },
       "ui": {
         "summary": "Wayfarer Compact lantern for movement, short scouting, and set progress.",
-        "icon_id": "artifact_lantern_placeholder",
+        "icon_id": "artifact_icon_milepost_lantern",
+        "icon_path": "res://art/artifacts/runtime/milepost_lantern.png",
         "effect_tags": [
           "movement",
           "scouting",
@@ -897,7 +903,8 @@
       },
       "ui": {
         "summary": "Embercourt-aligned toll ring for road, Embergrain, and town income.",
-        "icon_id": "artifact_tollstone_ring_placeholder",
+        "icon_id": "artifact_icon_tollstone_ring",
+        "icon_path": "res://art/artifacts/runtime/tollstone_ring.png",
         "effect_tags": [
           "economy",
           "route",
@@ -1003,7 +1010,8 @@
       },
       "ui": {
         "summary": "Mireclaw-aligned bead string for harrying tempo, attack command, and Peatwax income.",
-        "icon_id": "artifact_mudglass_beads_placeholder",
+        "icon_id": "artifact_icon_mudglass_beads",
+        "icon_path": "res://art/artifacts/runtime/mudglass_beads.png",
         "effect_tags": [
           "combat",
           "initiative",
@@ -1129,7 +1137,8 @@
       },
       "ui": {
         "summary": "Sunvault-aligned tuning tool for calibrated sight, spell resistance, and Aetherglass income.",
-        "icon_id": "artifact_tuning_fork_placeholder",
+        "icon_id": "artifact_icon_choir_tuning_fork",
+        "icon_path": "res://art/artifacts/runtime/choir_tuning_fork.png",
         "effect_tags": [
           "scouting",
           "defense",
@@ -1242,7 +1251,8 @@
       },
       "ui": {
         "summary": "Thornwake-aligned graft knot for living routes, wood, and Verdant Grafts.",
-        "icon_id": "artifact_living_knot_placeholder",
+        "icon_id": "artifact_icon_living_bridge_knot",
+        "icon_path": "res://art/artifacts/runtime/living_bridge_knot.png",
         "effect_tags": [
           "movement",
           "wood",
@@ -1349,7 +1359,8 @@
       },
       "ui": {
         "summary": "Brasshollow-aligned gauge relic for armor timing, command tempo, and Brass Scrip income.",
-        "icon_id": "artifact_pressure_gauge_placeholder",
+        "icon_id": "artifact_icon_pressure_gauge_reliquary",
+        "icon_path": "res://art/artifacts/runtime/pressure_gauge_reliquary.png",
         "effect_tags": [
           "defense",
           "initiative",
@@ -1451,7 +1462,8 @@
       },
       "ui": {
         "summary": "Veilmourn-aligned compass for fog scouting, salvage routes, and Memory Salt income.",
-        "icon_id": "artifact_black_sail_compass_placeholder",
+        "icon_id": "artifact_icon_black_sail_compass",
+        "icon_path": "res://art/artifacts/runtime/black_sail_compass.png",
         "effect_tags": [
           "scouting",
           "route",

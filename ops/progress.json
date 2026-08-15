@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Ninefold Rope Lift live transit slice is completed. Its existing repair response now opens one exact bounded land shortcut with real preview/execution and fail-closed lifecycle authority; broader release gaps remain.",
+  "currentNotes": "The authored artifact icon adoption slice is completed. All 12 production artifacts own distinct original icons, and the exact equipped or packed artifact renders fail-closed on the existing visible Overworld and Town gear actions with behavior, compatibility, static/editor, and bounded Linux/Windows startup gates green. Broader release gaps remain.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "overworld-ninefold-rope-lift-live-transit-10184",
-  "currentSliceId": "overworld-ninefold-rope-lift-live-transit-10184",
-  "currentSliceNotes": "Completed: exact response-active 9,51 to 9,54 two-way cost-one transit, live shell selection, independent route validation, expiry/cache/save/failure authority, compatibility, static/editor, Linux, and Windows gates pass with bounded claims.",
+  "currentSlice": "presentation-authored-artifact-icon-adoption-10184",
+  "currentSliceId": "presentation-authored-artifact-icon-adoption-10184",
+  "currentSliceNotes": "Completed: 12 original imported artifact icons, exact content ownership, fail-closed live Overworld/Town button resolution, visible Town Logistics placement, real 1280/1920 equip/stow authority, compatibility, static/editor, and bounded platform startup gates pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Ninefold Rope Lift Live Transit",
-  "currentSliceUpdatedAt": "2026-08-15T02:32:48Z",
+  "currentSliceTitle": "Authored Artifact Icon Adoption",
+  "currentSliceUpdatedAt": "2026-08-15T03:40:36Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19849,6 +19849,74 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "id": "presentation-authored-artifact-icon-adoption-10184",
+      "title": "Authored Artifact Icon Adoption",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/artifact-system-expansion-foundation.md",
+        "docs/concept-art-pipeline.md",
+        "AGENTS.md"
+      ],
+      "purpose": "Replace the shipped placeholder artifact icon identities with one coherent original asset set and show the exact owned artifact on the existing compact Overworld and Town gear actions.",
+      "implementationTargets": [
+        "art/artifacts/source/artifact_icon_atlas.png",
+        "art/artifacts/runtime/",
+        "content/artifacts.json",
+        "scripts/core/ArtifactRules.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/town/TownShell.gd",
+        "scenes/town/TownShell.tscn",
+        "tests/artifact_icon_runtime_report.gd",
+        "tests/artifact_icon_runtime_report.tscn",
+        "tests/overworld_artifact_slot_cue_playback_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/artifact_icon_runtime_report.tscn",
+        "tests/overworld_artifact_slot_cue_playback_report.tscn",
+        "tests/artifact_set_faction_content_report.tscn",
+        "tests/artifact_set_runtime_effects_report.tscn",
+        "tests/hero_field_rendezvous_artifact_transfer_report.tscn",
+        "tests/town_battle_visual_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "760f99d3",
+        "production_artifact_count": 12,
+        "placeholder_icon_id_count": 12,
+        "artifact_runtime_asset_count": 0,
+        "overworld_artifact_action_icons_loaded": 0,
+        "town_artifact_action_icons_loaded": 0,
+        "artifact_rules_or_save_changes_started": false
+      },
+      "completionCriteria": [
+        "All 12 production artifacts own one distinct original non-placeholder icon id and imported runtime image under a dedicated artifact-art domain",
+        "Artifact management actions expose the exact equipped or packed artifact id and the existing Overworld and Town gear buttons render its matching icon fail-closed without changing action order, copy, tooltip, disabled state, focus, containment, or consequences",
+        "Focused live equip and stow proof passes at 1280x720 and 1920x1080 with exact whole session and save authority; invalid icon metadata remains text-only without errors",
+        "Artifact acquisition, slot, rendezvous, town, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "artifact bonus, rarity, slot, set, inventory, acquisition, reward-table, economy, movement, scouting, spell, AI, save-schema, or action-consequence changes",
+        "new panels, enlarged rails, map/scenic-stage coverage, non-artifact button changes, final artifact VFX/audio, packaged artifact interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "createdAt": "2026-08-15T03:10:10Z",
+      "startedAt": "2026-08-15T03:10:10Z",
+      "updatedAt": "2026-08-15T03:40:36Z",
+      "completedAt": "2026-08-15T03:40:36Z",
+      "notes": "Completed on current source: one original 4x3 painted atlas produced 12 distinct 128x128 imported runtime icons and every artifact now owns one stable non-placeholder id/path. ArtifactRules resolves only exact owned management-action artifacts; Overworld and Town load icons fail-closed with a 24px theme bound. The Town artifact lane moved first in Logistics after focused proof exposed the old off-screen placement. Real 1280/1920 equip/stow presses on both surfaces preserve whole session authority, copy/tooltips, visibility, containment, and order. Artifact compatibility, Town/Battle visual, accessibility, core, validator/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. No packaged artifact interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claim.",
+      "remainingWork": "Completed. Select the next tracker-approved release-readiness implementation slice; broader release gaps remain.",
+      "blockedReason": null
+    },
     {
       "id": "overworld-ninefold-rope-lift-live-transit-10184",
       "title": "Ninefold Rope Lift Live Transit",
@@ -83254,7 +83322,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "presentation_overworld_field_spell_cast_cue_playback_completed",
+  "result": "presentation_authored_artifact_icon_adoption_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -83355,9 +83423,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The selected Town building-complete cue slice connects authoritative successful player construction to the existing authored Town presentation contract with bounded skippable input ownership. The game is not release-ready.",
+  "summary": "The authored artifact icon adoption slice is completed: 12 original imported icons now render for exact owned artifacts on existing compact Overworld and Town gear actions with behavior and bounded platform gates green. The game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-14T21:25:53Z",
+  "updatedAt": "2026-08-15T03:40:36Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
