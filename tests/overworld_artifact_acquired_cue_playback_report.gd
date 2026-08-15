@@ -59,11 +59,14 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 	if live_session == null:
 		live_session = active_session
 	var primary_action := shell.get_node_or_null("%PrimaryAction") as Button
+	var artifact_cue_row := shell.get_node_or_null("%ArtifactActionCueRow") as Control
+	var artifact_cue_icon := shell.get_node_or_null("%ArtifactActionCueIcon") as TextureRect
 	var artifact_cue := shell.get_node_or_null("%ArtifactActionCue") as Label
+	var map_cue := shell.get_node_or_null("%MapCue") as Label
 	var artifact_blocker := shell.get_node_or_null("%ArtifactAcquiredInputBlocker") as Control
 	var menu := shell.get_node_or_null("%Menu") as Button
 	var open_command := shell.get_node_or_null("%OpenCommand") as Button
-	if primary_action == null or artifact_cue == null or artifact_blocker == null or menu == null or open_command == null:
+	if primary_action == null or artifact_cue_row == null or artifact_cue_icon == null or artifact_cue == null or map_cue == null or artifact_blocker == null or menu == null or open_command == null:
 		return await _finish_case(shell, {"ok": false, "failure": "live_surface_missing"})
 
 	var selected: Dictionary = shell.validation_snapshot()
@@ -83,7 +86,7 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		"cue_id": "cue_artifact_acquired",
 		"artifact_id": ARTIFACT_ID,
 	})
-	var malformed_fail_closed: bool = malformed_after == malformed_before and not artifact_cue.visible and not artifact_blocker.visible
+	var malformed_fail_closed: bool = malformed_after == malformed_before and not artifact_cue_row.visible and not artifact_cue_icon.visible and not artifact_cue.visible and not artifact_blocker.visible
 
 	var live_before: Dictionary = live_session.to_dict()
 	var control = SessionDataScript.SessionData.new()
@@ -106,6 +109,19 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 	var expected_vfx := ["artifact_badge_added"] if reduced_motion else ["vfx_placeholder_artifact_claim"]
 	var location: Dictionary = ArtifactRules.locate_artifact(live_session.overworld.get("hero", {}), ARTIFACT_ID)
 	var node: Dictionary = live_session.overworld.get("artifact_nodes", [])[0]
+	var vfx_asset: Dictionary = active.get("vfx_asset", {}) if active.get("vfx_asset", {}) is Dictionary else {}
+	var vfx_asset_exact := (
+		bool(vfx_asset.get("imported", false)) == not reduced_motion
+		and bool(vfx_asset.get("icon_visible", false)) == not reduced_motion
+		and String(vfx_asset.get("cue_id", "")) == String(expected_vfx[0])
+		and String(vfx_asset.get("texture_path", "")) == ("" if reduced_motion else "res://art/overworld/runtime/vfx/artifact_claim.png")
+		and String(vfx_asset.get("render_mode", "")) == ("" if reduced_motion else "action_feedback_icon")
+		and String(vfx_asset.get("fallback", "")) == ("text_only_feedback" if reduced_motion else "")
+		and artifact_cue_row.is_visible_in_tree()
+		and artifact_cue.is_visible_in_tree()
+		and artifact_cue_icon.is_visible_in_tree() == not reduced_motion
+		and not map_cue.visible
+	)
 	var presentation_exact: bool = (
 		primary_action_exact
 		and bool(control_result.get("ok", false))
@@ -142,6 +158,7 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		and String(node.get("collected_by_faction_id", "")) == "player"
 		and String(location.get("location", "")) == "equipped"
 		and String(location.get("slot", "")) == "boots"
+		and vfx_asset_exact
 	)
 	var map_depletion_exact: bool = (
 		String(object_resolution.get("event_id", "")) == "overworld_object_depleted"
@@ -192,6 +209,9 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		and int(settled.get("serial", 0)) == serial
 		and not bool(settled.get("input_blocker_visible", true))
 		and not artifact_blocker.visible
+		and not artifact_cue_row.visible
+		and not artifact_cue_icon.visible
+		and map_cue.visible
 		and focus_owner != artifact_blocker
 		and live_session.to_dict() == live_after
 	)
@@ -213,6 +233,7 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		"mode": String(mode.get("id", "")),
 		"malformed_fail_closed": malformed_fail_closed,
 		"presentation_exact": presentation_exact,
+		"vfx_asset_exact": vfx_asset_exact,
 		"map_depletion_exact": map_depletion_exact,
 		"input_policy_exact": input_policy_exact,
 		"refresh_exact": refresh_exact,

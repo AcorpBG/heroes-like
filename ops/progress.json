@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld hero route-step VFX asset adoption slice is completed. Select the next tracker-approved release-readiness implementation slice; whole-game and release readiness remain unclaimed.",
+  "currentNotes": "The Overworld action-feedback VFX asset adoption slice is completed. Four distinct imported alpha effects render in the existing compact artifact/resource edge-rail overlays with exact reduced-motion and missing-asset text fallbacks; focused, real-action, compatibility, static/editor, Linux export/startup, and Windows fresh-Wine startup gates pass. Whole-game and release readiness remain unclaimed.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-hero-route-step-vfx-asset-adoption-10184",
-  "currentSliceId": "presentation-overworld-hero-route-step-vfx-asset-adoption-10184",
-  "currentSliceNotes": "One original imported route-step trail now renders behind the exact live interpolated hero while preserving marker-only fallback, reduced-motion endpoint snap, route/session authority, and bounded platform startup claims.",
+  "currentSlice": "presentation-overworld-action-feedback-vfx-asset-adoption-10184",
+  "currentSliceId": "presentation-overworld-action-feedback-vfx-asset-adoption-10184",
+  "currentSliceNotes": "Completed four original compact imported alpha effects for live artifact recovery/equip/stow and resource-delta cues without changing gameplay, focus, timing, session, or save authority. Select the next tracker-approved release-readiness implementation slice.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Hero Route-Step VFX Asset Adoption",
-  "currentSliceUpdatedAt": "2026-08-15T11:56:52Z",
+  "currentSliceTitle": "Overworld Action Feedback VFX Asset Adoption",
+  "currentSliceUpdatedAt": "2026-08-15T12:43:44Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19849,6 +19849,28 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "id": "presentation-overworld-action-feedback-vfx-asset-adoption-10184",
+      "title": "Overworld Action Feedback VFX Asset Adoption",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/screen-wireframes.md", "AGENTS.md"],
+      "purpose": "Render four existing live artifact/resource cue identities with original compact imported alpha effects inside the existing Overworld edge rails without changing gameplay or UI authority.",
+      "implementationTargets": ["art/overworld/source/action_feedback_vfx_source.png", "art/overworld/runtime/vfx/artifact_claim.png", "art/overworld/runtime/vfx/artifact_slot_equip.png", "art/overworld/runtime/vfx/artifact_slot_unequip.png", "art/overworld/runtime/vfx/resource_delta.png", "content/overworld_vfx_manifest.json", "scenes/overworld/OverworldShell.gd", "scenes/overworld/OverworldShell.tscn", "tests/overworld_action_feedback_vfx_asset_runtime_report.gd", "tests/overworld_action_feedback_vfx_asset_runtime_report.tscn", "tests/overworld_artifact_acquired_cue_playback_report.gd", "tests/overworld_artifact_slot_cue_playback_report.gd", "tests/overworld_resource_delta_cue_playback_report.gd", "tests/overworld_object_resolution_vfx_asset_runtime_report.gd", "tests/overworld_field_spell_vfx_asset_runtime_report.gd", "tests/overworld_guarded_site_vfx_asset_runtime_report.gd", "tests/overworld_route_blocked_vfx_asset_runtime_report.gd", "tests/overworld_hero_route_step_vfx_asset_runtime_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "testOwners": ["tests/overworld_action_feedback_vfx_asset_runtime_report.tscn", "tests/overworld_artifact_acquired_cue_playback_report.tscn", "tests/overworld_artifact_slot_cue_playback_report.tscn", "tests/overworld_resource_delta_cue_playback_report.tscn", "tests/overworld_object_resolution_vfx_asset_runtime_report.tscn", "tests/overworld_field_spell_vfx_asset_runtime_report.tscn", "tests/overworld_guarded_site_vfx_asset_runtime_report.tscn", "tests/overworld_route_blocked_vfx_asset_runtime_report.tscn", "tests/overworld_hero_route_step_vfx_asset_runtime_report.tscn", "tests/overworld_visual_smoke.tscn", "tests/overworld_gameplay_movement_input_ownership_regression.tscn", "tests/active_play_keyboard_focus_smoke.tscn", "tests/accessibility_screen_reader_semantics_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/validate_repo.py"],
+      "baseline": {"head": "2c1c7f4a", "event_ids": ["artifact_acquired", "artifact_equipped", "artifact_unequipped", "ui_resource_delta"], "vfx_cue_ids": ["vfx_placeholder_artifact_claim", "vfx_placeholder_slot_equip", "vfx_placeholder_slot_unequip", "vfx_placeholder_resource_delta"], "runtime_texture_count": 0, "live_rendering": "text_only_feedback_labels", "implementation_or_runtime_started": false},
+      "completionCriteria": ["Normal artifact recovery/equip/stow and resource collection each map and visibly render one distinct exact imported alpha texture at 1280x720 and 1920x1080 without remapping any other cue", "Missing mapping or texture retains exact text-only feedback and reduced motion retains the existing static fallback identity without the normal imported effect", "Focused and real action proof preserves event/action/content identity, consequences, text/tooltip, duration/progress, blocking/nonblocking behavior, focus, refresh/expiry lifecycle, containment, session authority, and save version 9", "Artifact acquired/slot and resource-delta cue owners, existing Overworld VFX assets, broad Overworld visual/input/focus/accessibility/core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"],
+      "nonGoals": ["artifact, resource, reward, inventory, slot, economy, route, object, input, focus, timing, animation-policy, AI, save-schema, content, or map changes", "panel expansion, dashboard, command ordering, broader layout redesign, other Overworld/Town/Battle/UI cue, particles, shaders, audio, or global renderer changes", "packaged action interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"],
+      "createdAt": "2026-08-15T12:02:16Z",
+      "startedAt": "2026-08-15T12:02:16Z",
+      "updatedAt": "2026-08-15T12:43:44Z",
+      "completedAt": "2026-08-15T12:43:44Z",
+      "notes": "Implemented one retained 1536x1024 source atlas and four distinct 512x512 alpha textures for artifact recovery/equip/stow and resource collection. OverworldShell loads only exact action_feedback_icon mappings, renders them in the existing CueChip/ResourceChip overlays, and fails closed to unchanged text for reduced-motion or missing assets. Focused runtime `/tmp/heroes-action-feedback-focused-current.dTEZ20` proves both widths, exact four asset hashes, containment, fallbacks, unchanged session authority, and save9. Real action chain `/tmp/heroes-action-feedback-real-chain.bZCvYE` proves independent-rule consequences and cue/focus/lifecycle authority. Compatibility chain `/tmp/heroes-action-feedback-compat-final.fxP1ta` proves all existing Overworld VFX owners, visual/input/focus/accessibility/core. validate_repo, py_compile, jq, diff-check, and editor parses pass. Official Linux report SHA256 fdf0dc9bced0e83bd5a88fe0e023da4200cfc1e7f8cd3120283a05b8e31a9b42 proves export/headless startup; Windows report SHA256 447bbcbfb7f17896c6b182f49ac7ffd94526404bd6ad79af80036c8cd9671f84 proves export and fresh-Wine Godot/Boot/MainMenu/native-DLL startup. Packaged action interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null
+    },
     {
       "id": "presentation-overworld-hero-route-step-vfx-asset-adoption-10184",
       "title": "Overworld Hero Route-Step VFX Asset Adoption",
@@ -83871,7 +83893,7 @@
   ],
   "summary": "The Town building category sigil adoption slice is completed: five original imported construction sigils now render for all 133 buildings on existing selectable Build options with behavior and bounded platform gates green. The game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-15T04:43:43Z",
+  "updatedAt": "2026-08-15T12:02:16Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

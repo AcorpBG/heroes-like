@@ -63,9 +63,11 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 	if live_session == null:
 		live_session = active_session
 	var primary_action := shell.get_node_or_null("%PrimaryAction") as Button
+	var cue_row := shell.get_node_or_null("%ResourceDeltaCueRow") as Control
+	var cue_icon := shell.get_node_or_null("%ResourceDeltaCueIcon") as TextureRect
 	var cue := shell.get_node_or_null("%ResourceDeltaCue") as Label
 	var open_command := shell.get_node_or_null("%OpenCommand") as Button
-	if primary_action == null or cue == null or open_command == null:
+	if primary_action == null or cue_row == null or cue_icon == null or cue == null or open_command == null:
 		return await _finish_case(shell, {"ok": false, "failure": "live_surface_missing"})
 	var initial: Dictionary = shell.validation_snapshot()
 	var primary_payload: Dictionary = initial.get("primary_action", {}) if initial.get("primary_action", {}) is Dictionary else {}
@@ -89,7 +91,7 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		"cue_id": "cue_ui_resource_delta",
 		"action_id": "collect_resource",
 	})
-	var malformed_fail_closed := malformed_after == malformed_before and not cue.visible
+	var malformed_fail_closed := malformed_after == malformed_before and not cue_row.visible and not cue_icon.visible and not cue.visible
 
 	var live_before: Dictionary = live_session.to_dict()
 	var resources_before: Dictionary = (live_session.overworld.get("resources", {}) as Dictionary).duplicate(true)
@@ -106,6 +108,18 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 	var live_after: Dictionary = live_session.to_dict()
 	var expected_deltas := _resource_deltas(resources_before, control.overworld.get("resources", {}), Array(active.get("deltas", [])))
 	var reduced_motion := bool(mode.get("reduced_motion", false))
+	var vfx_asset: Dictionary = active.get("vfx_asset", {}) if active.get("vfx_asset", {}) is Dictionary else {}
+	var vfx_asset_exact := (
+		bool(vfx_asset.get("imported", false)) == not reduced_motion
+		and bool(vfx_asset.get("icon_visible", false)) == not reduced_motion
+		and String(vfx_asset.get("cue_id", "")) == ("resource_delta_static" if reduced_motion else "vfx_placeholder_resource_delta")
+		and String(vfx_asset.get("texture_path", "")) == ("" if reduced_motion else "res://art/overworld/runtime/vfx/resource_delta.png")
+		and String(vfx_asset.get("render_mode", "")) == ("" if reduced_motion else "action_feedback_icon")
+		and String(vfx_asset.get("fallback", "")) == ("text_only_feedback" if reduced_motion else "")
+		and cue_row.is_visible_in_tree()
+		and cue.is_visible_in_tree()
+		and cue_icon.is_visible_in_tree() == not reduced_motion
+	)
 	var presentation_exact: bool = (
 		primary_exact
 		and bool(control_result.get("ok", false))
@@ -132,6 +146,7 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		and cue.visible
 		and String(active.get("text", "")) != ""
 		and String(active.get("tooltip_text", "")) == String(control_result.get("message", ""))
+		and vfx_asset_exact
 	)
 	var object_resolution_exact := (
 		String(object_resolution.get("event_id", "")) == "overworld_object_captured"
@@ -151,7 +166,7 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		await get_tree().process_frame
 		settle_frames += 1
 	var settled := _presentation(shell)
-	var completion_exact: bool = not bool(settled.get("active", true)) and int(settled.get("serial", 0)) == serial and not cue.visible and live_session.to_dict() == live_after
+	var completion_exact: bool = not bool(settled.get("active", true)) and int(settled.get("serial", 0)) == serial and not cue_row.visible and not cue_icon.visible and not cue.visible and live_session.to_dict() == live_after
 	var failed_before: Dictionary = live_session.to_dict()
 	var failed_result: Dictionary = shell.validation_perform_context_action("collect_resource")
 	var failed_after := _presentation(shell)
@@ -161,6 +176,7 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		"viewport_size": viewport_size,
 		"mode": String(mode.get("id", "")),
 		"presentation_exact": presentation_exact,
+		"vfx_asset_exact": vfx_asset_exact,
 		"object_resolution_exact": object_resolution_exact,
 		"refresh_exact": refresh_exact,
 		"nonblocking_exact": nonblocking_exact,
