@@ -32812,14 +32812,14 @@ def validate_unit_art_assets(errors: list[str]) -> None:
 
     ensure(BATTLE_VFX_MANIFEST_PATH.exists(), errors, "battle_vfx_manifest.json is missing")
     required_battle_vfx_cues = {
-        "vfx_placeholder_projectile_path": ("core_projectile_impact.png", "projectile"),
-        "vfx_placeholder_damage_tick": ("core_projectile_impact.png", "impact"),
-        "vfx_placeholder_melee_arc": ("core_slash_arc.png", "slash"),
-        "vfx_placeholder_retaliation_arc": ("core_slash_arc.png", "slash"),
-        "vfx_placeholder_cast_anchor": ("core_ward_ring.png", "ward"),
-        "vfx_placeholder_status_residue": ("core_ward_ring.png", "ward"),
-        "vfx_placeholder_status_clear": ("core_ward_ring.png", "ward"),
-        "vfx_placeholder_brace_outline": ("core_ward_ring.png", "ward"),
+        "vfx_placeholder_projectile_path": ("core_projectile_path.png", "projectile"),
+        "vfx_placeholder_damage_tick": ("core_damage_impact.png", "impact"),
+        "vfx_placeholder_melee_arc": ("core_melee_arc.png", "slash"),
+        "vfx_placeholder_retaliation_arc": ("core_retaliation_arc.png", "slash"),
+        "vfx_placeholder_cast_anchor": ("core_cast_anchor.png", "ward"),
+        "vfx_placeholder_status_residue": ("core_status_residue.png", "ward"),
+        "vfx_placeholder_status_clear": ("core_status_clear.png", "ward"),
+        "vfx_placeholder_brace_outline": ("core_brace_outline.png", "ward"),
         "vfx_spell_cinder_burst": ("spell_cinder_burst.png", "spell_target"),
         "vfx_spell_coal_rain": ("spell_coal_rain.png", "spell_target"),
         "vfx_spell_sunlance_arc": ("spell_sunlance_arc.png", "spell_projectile"),
@@ -32849,7 +32849,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
             ensure(cue.get("render_mode") == render_mode, errors, f"battle VFX cue {cue_id} must use render mode {render_mode}")
             ensure(float(cue.get("scale", 0.0)) > 0.0, errors, f"battle VFX cue {cue_id} needs a positive scale")
             observed_vfx_paths.add(expected_path)
-        ensure(len(observed_vfx_paths) == 16, errors, "battle VFX asset layer must use exactly three core, seven spell, and six distinct state/path textures")
+        ensure(len(observed_vfx_paths) == 21, errors, "battle VFX asset layer must use exactly eight core, seven spell, and six distinct state/path textures")
         for texture_path in sorted(observed_vfx_paths):
             disk_path = ROOT / texture_path.removeprefix("res://")
             ensure(disk_path.exists(), errors, f"battle VFX texture is missing: {texture_path}")
@@ -33216,6 +33216,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "board_cue_dispatch",
         "board_vfx_presentation",
         "_validate_core_vfx_asset_manifest",
+        "_validate_core_vfx_asset_surface",
         "_validate_imported_vfx_live_viewports",
         "_validate_spell_vfx_asset_surface",
         "_validate_spell_vfx_live_viewports",
@@ -33235,6 +33236,10 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "battle vfx mapped cue count",
         "battle vfx unique texture count",
         "battle vfx loaded texture count",
+        "core semantic vfx live cue draw count",
+        "core semantic vfx imported asset draw count",
+        "core semantic vfx procedural fallback draw count",
+        "core semantic vfx missing mapping procedural count",
         "spell vfx live cue draw count",
         "spell vfx imported asset draw count",
         "spell vfx missing mapping fallback kind",

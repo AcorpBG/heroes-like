@@ -29,6 +29,7 @@ func _run() -> void:
 	SettingsService.apply_settings()
 	_validate_fallback_states()
 	_validate_core_vfx_asset_manifest()
+	_validate_core_vfx_asset_surface()
 	_validate_spell_vfx_asset_surface()
 	_validate_state_path_vfx_asset_surface()
 	_validate_defend_state()
@@ -85,13 +86,38 @@ func _validate_core_vfx_asset_manifest() -> void:
 	_expect_equal("battle vfx manifest schema", String(summary.get("schema_id", "")), "battle_vfx_manifest_v1")
 	_expect_equal("battle vfx manifest path", String(summary.get("manifest_path", "")), "res://content/battle_vfx_manifest.json")
 	_expect_int("battle vfx mapped cue count", int(summary.get("mapped_cue_count", -1)), 21)
-	_expect_int("battle vfx unique texture count", int(summary.get("unique_texture_count", -1)), 16)
-	_expect_int("battle vfx loaded texture count", int(summary.get("loaded_texture_count", -1)), 16)
+	_expect_int("battle vfx unique texture count", int(summary.get("unique_texture_count", -1)), 21)
+	_expect_int("battle vfx loaded texture count", int(summary.get("loaded_texture_count", -1)), 21)
 	_expect_equal("battle vfx missing texture paths", JSON.stringify(summary.get("missing_texture_paths", [])), "[]")
+	var core_cue_paths := {
+		"vfx_placeholder_projectile_path": "res://art/battle/vfx/core_projectile_path.png",
+		"vfx_placeholder_damage_tick": "res://art/battle/vfx/core_damage_impact.png",
+		"vfx_placeholder_melee_arc": "res://art/battle/vfx/core_melee_arc.png",
+		"vfx_placeholder_retaliation_arc": "res://art/battle/vfx/core_retaliation_arc.png",
+		"vfx_placeholder_cast_anchor": "res://art/battle/vfx/core_cast_anchor.png",
+		"vfx_placeholder_status_residue": "res://art/battle/vfx/core_status_residue.png",
+		"vfx_placeholder_status_clear": "res://art/battle/vfx/core_status_clear.png",
+		"vfx_placeholder_brace_outline": "res://art/battle/vfx/core_brace_outline.png",
+	}
+	var core_texture_paths: Array = core_cue_paths.values()
+	_expect_int("battle core vfx semantic texture count", core_texture_paths.size(), 8)
+	var unique_core_texture_paths: Dictionary = {}
+	for cue_id_value in core_cue_paths.keys():
+		var cue_id := String(cue_id_value)
+		var cue: Dictionary = view.call("_battle_vfx_manifest_cue", cue_id)
+		var expected_cue_path := String(core_cue_paths.get(cue_id, ""))
+		_expect_equal("battle core vfx semantic path %s" % cue_id, String(cue.get("texture_path", "")), expected_cue_path)
+		unique_core_texture_paths[expected_cue_path] = true
+	_expect_int("battle core vfx one-to-one texture count", unique_core_texture_paths.size(), 8)
 	for expected_path in [
-		"res://art/battle/vfx/core_projectile_impact.png",
-		"res://art/battle/vfx/core_slash_arc.png",
-		"res://art/battle/vfx/core_ward_ring.png",
+		"res://art/battle/vfx/core_projectile_path.png",
+		"res://art/battle/vfx/core_damage_impact.png",
+		"res://art/battle/vfx/core_melee_arc.png",
+		"res://art/battle/vfx/core_retaliation_arc.png",
+		"res://art/battle/vfx/core_cast_anchor.png",
+		"res://art/battle/vfx/core_status_residue.png",
+		"res://art/battle/vfx/core_status_clear.png",
+		"res://art/battle/vfx/core_brace_outline.png",
 		"res://art/battle/vfx/spell_cinder_burst.png",
 		"res://art/battle/vfx/spell_coal_rain.png",
 		"res://art/battle/vfx/spell_sunlance_arc.png",
@@ -109,6 +135,64 @@ func _validate_core_vfx_asset_manifest() -> void:
 		_expect_array_contains("battle vfx imported texture", summary.get("loaded_texture_paths", []), expected_path)
 	view.queue_free()
 	_report["cases"]["core_vfx_assets"] = summary
+
+func _validate_core_vfx_asset_surface() -> void:
+	var cue_paths := {
+		"vfx_placeholder_projectile_path": "res://art/battle/vfx/core_projectile_path.png",
+		"vfx_placeholder_damage_tick": "res://art/battle/vfx/core_damage_impact.png",
+		"vfx_placeholder_melee_arc": "res://art/battle/vfx/core_melee_arc.png",
+		"vfx_placeholder_retaliation_arc": "res://art/battle/vfx/core_retaliation_arc.png",
+		"vfx_placeholder_cast_anchor": "res://art/battle/vfx/core_cast_anchor.png",
+		"vfx_placeholder_status_residue": "res://art/battle/vfx/core_status_residue.png",
+		"vfx_placeholder_status_clear": "res://art/battle/vfx/core_status_clear.png",
+		"vfx_placeholder_brace_outline": "res://art/battle/vfx/core_brace_outline.png",
+	}
+	var render_modes := {
+		"vfx_placeholder_projectile_path": "projectile",
+		"vfx_placeholder_damage_tick": "impact",
+		"vfx_placeholder_melee_arc": "slash",
+		"vfx_placeholder_retaliation_arc": "slash",
+		"vfx_placeholder_cast_anchor": "ward",
+		"vfx_placeholder_status_residue": "ward",
+		"vfx_placeholder_status_clear": "ward",
+		"vfx_placeholder_brace_outline": "ward",
+	}
+	var cue_ids: Array = cue_paths.keys()
+	var session := _basic_session("unit_river_guard", "unit_bog_brute", 3, 3, 7, 3)
+	var view := BattleBoardViewScript.new()
+	view.size = Vector2(960.0, 540.0)
+	add_child(view)
+	view.set_battle_state(session)
+	_install_validation_vfx_cues(view, cue_ids)
+	var playback: Dictionary = view.validation_vfx_playback_summary()
+	_expect_int("core semantic vfx live cue draw count", int(playback.get("active_vfx_draw_count", -1)), cue_ids.size())
+	_expect_int("core semantic vfx imported asset draw count", int(playback.get("imported_asset_draw_count", -1)), cue_ids.size())
+	_expect_int("core semantic vfx procedural fallback draw count", int(playback.get("procedural_fallback_draw_count", -1)), 0)
+	for cue_id_value in cue_ids:
+		var cue_id := String(cue_id_value)
+		var entry := _vfx_entry_for_cue(playback, cue_id)
+		_expect_equal("core semantic vfx imported %s" % cue_id, str(bool(entry.get("asset_loaded", false))), "true")
+		_expect_equal("core semantic vfx asset path %s" % cue_id, String(entry.get("asset_path", "")), String(cue_paths.get(cue_id, "")))
+		_expect_equal("core semantic vfx render mode %s" % cue_id, String(entry.get("asset_render_mode", "")), String(render_modes.get(cue_id, "")))
+	view.queue_free()
+	var fallback_view := BattleBoardViewScript.new()
+	fallback_view.size = Vector2(960.0, 540.0)
+	add_child(fallback_view)
+	fallback_view.set_battle_state(session)
+	fallback_view.set("_battle_vfx_manifest_loaded", true)
+	fallback_view.set("_battle_vfx_manifest", {"schema_id": "battle_vfx_manifest_v1", "cues": {}})
+	_install_validation_vfx_cues(fallback_view, ["vfx_placeholder_projectile_path"])
+	var fallback_playback: Dictionary = fallback_view.validation_vfx_playback_summary()
+	var fallback_entry := _vfx_entry_for_cue(fallback_playback, "vfx_placeholder_projectile_path")
+	_expect_equal("core semantic vfx missing mapping fallback kind", String(fallback_entry.get("kind", "")), "projectile_path")
+	_expect_equal("core semantic vfx missing mapping asset absent", str(bool(fallback_entry.get("asset_loaded", true))), "false")
+	_expect_int("core semantic vfx missing mapping procedural count", int(fallback_playback.get("procedural_fallback_draw_count", 0)), 1)
+	fallback_view.queue_redraw()
+	fallback_view.queue_free()
+	_report["cases"]["core_vfx_semantic_surface"] = {
+		"imported": playback,
+		"procedural_fallback": fallback_playback,
+	}
 
 func _validate_spell_vfx_asset_surface() -> void:
 	var cue_paths := {
@@ -222,6 +306,7 @@ func _validate_defend_state() -> void:
 	_expect_equal("defend brace vfx cue", String(brace_vfx.get("cue_id", "")), "vfx_placeholder_brace_outline")
 	_expect_equal("defend brace vfx battle id", String(brace_vfx.get("battle_id", "")), "player_0")
 	_expect_equal("defend brace imported vfx", str(bool(brace_vfx.get("asset_loaded", false))), "true")
+	_expect_equal("defend brace vfx asset path", String(brace_vfx.get("asset_path", "")), "res://art/battle/vfx/core_brace_outline.png")
 	_report["cases"]["defend"] = {
 		"state": state,
 		"events": BattleRulesScript.animation_event_states(session.battle),
@@ -304,7 +389,7 @@ func _validate_melee_hit_state() -> void:
 	var vfx_playback: Dictionary = board_summary.get("vfx_playback", {}) if board_summary.get("vfx_playback", {}) is Dictionary else {}
 	var melee_arc := _vfx_entry_for(vfx_playback, "melee_arc")
 	_expect_equal("melee imported vfx", str(bool(melee_arc.get("asset_loaded", false))), "true")
-	_expect_equal("melee vfx asset path", String(melee_arc.get("asset_path", "")), "res://art/battle/vfx/core_slash_arc.png")
+	_expect_equal("melee vfx asset path", String(melee_arc.get("asset_path", "")), "res://art/battle/vfx/core_melee_arc.png")
 	if float(attacker_stack.get("presentation_x", 0.0)) <= float(melee_arc.get("start_x", 0.0)) + 0.05:
 		_error("Melee attacker token did not lunge toward the target: attacker=%s melee_arc=%s." % [attacker_stack, melee_arc])
 	if float(target_stack.get("presentation_x", 0.0)) <= float(melee_arc.get("end_x", 0.0)) + 0.5:
@@ -354,6 +439,8 @@ func _validate_retaliation_state() -> void:
 	_expect_equal("retaliation vfx cue", String(retaliation_arc.get("cue_id", "")), "vfx_placeholder_retaliation_arc")
 	_expect_equal("retaliation vfx source", String(retaliation_arc.get("battle_id", "")), "enemy_0")
 	_expect_equal("retaliation vfx target", String(retaliation_arc.get("target_battle_id", "")), "player_0")
+	_expect_equal("retaliation imported vfx", str(bool(retaliation_arc.get("asset_loaded", false))), "true")
+	_expect_equal("retaliation vfx asset path", String(retaliation_arc.get("asset_path", "")), "res://art/battle/vfx/core_retaliation_arc.png")
 	var audio_playback: Dictionary = board_summary.get("audio_playback", {}) if board_summary.get("audio_playback", {}) is Dictionary else {}
 	var retaliator_audio := _audio_record_for(audio_playback, "enemy_0")
 	_expect_array_contains("retaliation audio cue", retaliator_audio.get("selected_audio_cue_ids", []), "audio_placeholder_retaliation")
@@ -492,6 +579,9 @@ func _validate_spell_cast_state() -> void:
 	_expect_array_contains("spell caster generic vfx fallback", caster_cue.get("selected_vfx_cue_ids", []), "vfx_placeholder_cast_anchor")
 	_expect_array_contains("spell caster generic audio fallback", caster_cue.get("selected_audio_cue_ids", []), "audio_placeholder_cast")
 	var vfx_playback: Dictionary = board_summary.get("vfx_playback", {}) if board_summary.get("vfx_playback", {}) is Dictionary else {}
+	var cast_anchor_vfx := _vfx_entry_for(vfx_playback, "cast_anchor")
+	_expect_equal("cast anchor imported vfx", str(bool(cast_anchor_vfx.get("asset_loaded", false))), "true")
+	_expect_equal("cast anchor vfx asset path", String(cast_anchor_vfx.get("asset_path", "")), "res://art/battle/vfx/core_cast_anchor.png")
 	var spell_vfx := _vfx_entry_for(vfx_playback, "spell_cinder_burst")
 	_expect_equal("spell-specific vfx cue", String(spell_vfx.get("cue_id", "")), "vfx_spell_cinder_burst")
 	_expect_equal("spell-specific imported vfx", str(bool(spell_vfx.get("asset_loaded", false))), "true")
@@ -583,6 +673,8 @@ func _validate_status_cleanse_state() -> void:
 	var vfx_playback: Dictionary = board_summary.get("vfx_playback", {}) if board_summary.get("vfx_playback", {}) is Dictionary else {}
 	var clear_vfx := _vfx_entry_for(vfx_playback, "status_clear")
 	_expect_equal("status cleanse vfx cue", String(clear_vfx.get("cue_id", "")), "vfx_placeholder_status_clear")
+	_expect_equal("status cleanse imported vfx", str(bool(clear_vfx.get("asset_loaded", false))), "true")
+	_expect_equal("status cleanse vfx asset path", String(clear_vfx.get("asset_path", "")), "res://art/battle/vfx/core_status_clear.png")
 	var audio_playback: Dictionary = board_summary.get("audio_playback", {}) if board_summary.get("audio_playback", {}) is Dictionary else {}
 	var clear_audio := _audio_record_for(audio_playback, "player_0")
 	_expect_array_contains("status cleanse audio cue", clear_audio.get("selected_audio_cue_ids", []), "audio_placeholder_status_clear")
@@ -1137,12 +1229,12 @@ func _validate_active_vfx_presentation(summary: Dictionary) -> Dictionary:
 	var status := _vfx_entry_for(vfx_playback, "status_residue")
 	_expect_equal("projectile vfx cue", String(projectile.get("cue_id", "")), "vfx_placeholder_projectile_path")
 	_expect_equal("projectile imported vfx", str(bool(projectile.get("asset_loaded", false))), "true")
-	_expect_equal("projectile vfx asset path", String(projectile.get("asset_path", "")), "res://art/battle/vfx/core_projectile_impact.png")
+	_expect_equal("projectile vfx asset path", String(projectile.get("asset_path", "")), "res://art/battle/vfx/core_projectile_path.png")
 	_expect_equal("projectile vfx source", String(projectile.get("battle_id", "")), "player_0")
 	_expect_equal("projectile vfx target", String(projectile.get("target_battle_id", "")), "enemy_0")
 	_expect_equal("status vfx cue", String(status.get("cue_id", "")), "vfx_placeholder_status_residue")
 	_expect_equal("status imported vfx", str(bool(status.get("asset_loaded", false))), "true")
-	_expect_equal("status vfx asset path", String(status.get("asset_path", "")), "res://art/battle/vfx/core_ward_ring.png")
+	_expect_equal("status vfx asset path", String(status.get("asset_path", "")), "res://art/battle/vfx/core_status_residue.png")
 	_expect_equal("status vfx target battle id", String(status.get("battle_id", "")), "enemy_0")
 	_expect_equal("status vfx source", String(status.get("source_battle_id", "")), "player_0")
 	if int(projectile.get("start_q", -1)) == int(projectile.get("target_q", -1)) and int(projectile.get("start_r", -1)) == int(projectile.get("target_r", -1)):
