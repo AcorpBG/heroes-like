@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `presentation-overworld-enemy-route-closure-feedback-10184`. A real enemy resource seizure now adds the exact compact `route_closed` reason only when it interrupts a still-active player response route, and the successful live end-turn/autosave path publishes one authored `overworld_route_closed` cue at the visible seized site. The cue uses an original imported alpha VFX, deterministic 440 ms stereo sound, static reduced-motion icon, and distinct missing-asset gate fallback. Focused 1280x720/1920x1080 live enemy-turn proof preserves the exact `ai_site_seized` event, controller transfer, response clear, transit edge 1->0, save/session authority, and duplicate silence; inactive-route control, Rope Lift, shared cue/VFX, accessibility, visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Natural expiry, Town-screen response presentation, packaged interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `presentation-overworld-enemy-route-closure-feedback-10184`
 - Completed implementation slice: `presentation-overworld-field-route-response-open-feedback-10184`. A successful live field `site_response` now publishes one exact, deduped `overworld_route_open` presentation through the existing Shell/MapView queue, with an original imported alpha VFX, deterministic 420 ms stereo production-layer sound, and distinct reduced-motion and missing-asset fallbacks. Focused 1280x720/1920x1080 proof preserves the exact Rope Lift cost, movement, active transit edge, refresh/duplicate silence, session/save authority, and cue identity; transit, shared object-resolution/audio, object-blocked, catalog, accessibility, visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Town-screen response presentation, enemy-driven route closure, packaged interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `presentation-overworld-field-route-response-open-feedback-10184`
 - Completed implementation slice: `strategic-ai-battle-pressure-near-objective-commitment-10184`. After the existing understrength/regroup authority, battle-pressure-floor selection now retains only a still-valid resource, artifact, or encounter target whose refreshed route distance is 0 or 1. The original live route now seizes `river_free_company` in 7 turns instead of abandoning it at distance 1, while the exact distance-2 reciprocal still preempts to the player town and long-range, blocked-frontier, neutral-fallback, target/task/session/public-event behavior remains intact. Focused, full headless product harness, strategic compatibility, Medium ordinal-100 health, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged strategic-AI interaction, broad balance/policy changes, Native RMG topology/parity, hardware certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -5588,6 +5590,29 @@ Non-goals:
 - no response-order availability, resource/movement costs, duration, delivery, transit, recovery, routing/pathfinding, fog, AI, Native RMG, save/schema, content, or map-topology changes;
 - no Town-screen response presentation, enemy-driven `overworld_route_closed` adoption, hover/ambient loops, layout redesign, particles, shaders, spatial audio, haptics, or final sound mastering;
 - no packaged route-response interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+## Selected Slice: Overworld Enemy Route-Closure Feedback
+
+id: `presentation-overworld-enemy-route-closure-feedback-10184`
+
+Status: completed.
+
+Implementation boundary:
+- at the two existing enemy resource-seizure mutation points, add one exact `route_closed` public reason code only when the pre-seizure player site response is still active; retain the existing `ai_site_seized` event type, compact public-event boundary, summary, controller transition, event ordering, and all seizure/disruption consequences;
+- after a successful live end-turn rule result and autosave, select at most one exact visible compact route-closure event, resolve its stable resource placement against the already-mutated live session, and publish the authored `overworld_route_closed` cue through the existing object-resolution serial/queue without string parsing or inferred expiry;
+- add one original alpha VFX and one deterministic production presentation sound mapped only to `vfx_placeholder_route_closed` and `audio_placeholder_route_closed`, with distinct reduced-motion and missing-asset fallbacks;
+- preserve enemy target policy, movement, capture, rewards, pressure, task continuation, response/transit/delivery clearing, event privacy/order/limit, end-turn/autosave/battle/outcome routing, selection/input/focus, settings, session/save authority, and every other presentation mapping.
+
+Completion criteria:
+- a real enemy turn at 1280x720 and 1920x1080 seizes a player-controlled site with an active response route, closes the exact persisted transit edge, retains the exact compact `ai_site_seized` event, and draws/plays one `overworld_route_closed` presentation for the visible site after successful autosave;
+- ordinary player-site seizure without an active response, natural response expiry, hidden/malformed/stale/non-resource events, autosave failure, battle/outcome routing, unchanged refresh, and duplicate payloads remain silent and cannot spoof a closure;
+- reduced motion uses the exact static route-closed fallback and missing assets use a distinct procedural fallback; route-open, route-blocked, object-blocked, object-focus, guarded, and generic object-resolution cues remain exact;
+- focused live end-turn proof plus enemy live-turn/event-boundary, Rope Lift, visual, cue-catalog, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass with bounded claims.
+
+Non-goals:
+- no enemy strategy, target scoring, movement, seizure eligibility, rewards, disruption pressure, task policy, response cost/duration, transit/pathfinding, delivery, fog, event visibility/limit, save/schema, content, Native RMG, or map-topology changes;
+- no natural-expiry presentation, Town-screen response presentation, multi-closure carousel, hover/ambient loops, layout redesign, particles, shaders, spatial audio, haptics, or final sound mastering;
+- no packaged route-closure interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
 
 ## Progress Reconciliation
 

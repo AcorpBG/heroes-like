@@ -16945,6 +16945,8 @@ static func _secure_opportunistic_route_resource(
 	if disruption_message != "":
 		message = "%s %s" % [message, disruption_message]
 	var seized_codes := ["site_seized", "route_pressure"]
+	if escorted_route:
+		seized_codes.append("route_closed")
 	seized_codes.append_array(
 		_resource_target_reason_codes(
 			site,
@@ -17488,6 +17490,8 @@ static func _secure_resource_target(
 	if disruption_message != "":
 		message = "%s %s" % [message, disruption_message]
 	var seized_codes := ["site_seized"]
+	if escorted_route:
+		seized_codes.append("route_closed")
 	seized_codes.append_array(
 		_resource_target_reason_codes(
 			site,

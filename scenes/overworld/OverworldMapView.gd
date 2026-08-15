@@ -669,11 +669,13 @@ func _sync_object_resolution_presentation(presentation: Dictionary) -> void:
 	_object_resolution_allows_large_motion = bool(presentation.get("allows_large_motion", true))
 	_object_resolution_last_draw = {}
 	_sync_presentation_processing()
-	if _object_resolution_event_id not in ["overworld_object_visited", "overworld_object_captured", "overworld_object_depleted", "overworld_route_open"]:
+	if _object_resolution_event_id not in ["overworld_object_visited", "overworld_object_captured", "overworld_object_depleted", "overworld_route_open", "overworld_route_closed"]:
 		return
-	if _object_resolution_family not in ["resource_site", "artifact", "town_capture", "site_response"] or _object_resolution_placement_id == "":
+	if _object_resolution_family not in ["resource_site", "artifact", "town_capture", "site_response", "route_closure"] or _object_resolution_placement_id == "":
 		return
 	if (_object_resolution_event_id == "overworld_route_open") != (_object_resolution_family == "site_response"):
+		return
+	if (_object_resolution_event_id == "overworld_route_closed") != (_object_resolution_family == "route_closure"):
 		return
 	var tile_payload: Dictionary = presentation.get("tile", {}) if presentation.get("tile", {}) is Dictionary else {}
 	var tile := Vector2i(int(tile_payload.get("x", -1)), int(tile_payload.get("y", -1)))
@@ -696,7 +698,7 @@ func _sync_object_resolution_presentation(presentation: Dictionary) -> void:
 func _play_object_resolution_audio() -> void:
 	if not _object_resolution_active or not _object_resolution_audio_playback_records.is_empty():
 		return
-	var audio_source := "OverworldMapView.route_open" if _object_resolution_event_id == "overworld_route_open" else "OverworldMapView.object_resolution"
+	var audio_source := "OverworldMapView.route_open" if _object_resolution_event_id == "overworld_route_open" else ("OverworldMapView.route_closed" if _object_resolution_event_id == "overworld_route_closed" else "OverworldMapView.object_resolution")
 	for audio_cue_value in _object_resolution_audio_cue_ids:
 		_object_resolution_audio_playback_records.append(PresentationAudio.play_cue(String(audio_cue_value), audio_source, {
 			"event_id": _object_resolution_event_id,
@@ -1849,7 +1851,7 @@ func _draw_object_resolution_presentation(board_rect: Rect2) -> void:
 		return
 	var rect := _tile_rect(board_rect, _object_resolution_tile)
 	var progress := clampf(_object_resolution_elapsed_sec / _object_resolution_duration_sec, 0.0, 1.0)
-	if not (_object_resolution_event_id == "overworld_route_open" and _object_resolution_visual_policy == "reduced_motion_fallback") and _draw_object_resolution_imported_vfx(rect, progress):
+	if not (_object_resolution_event_id in ["overworld_route_open", "overworld_route_closed"] and _object_resolution_visual_policy == "reduced_motion_fallback") and _draw_object_resolution_imported_vfx(rect, progress):
 		return
 	_draw_object_resolution_procedural_vfx(rect, progress)
 
@@ -1903,6 +1905,25 @@ func _draw_object_resolution_procedural_vfx(rect: Rect2, progress: float) -> voi
 		_canvas_draw_line(Vector2(center.x + gate_half_width, gate_top), Vector2(center.x + gate_half_width, gate_bottom), open_color, maxf(2.2, extent * 0.042), true)
 		_canvas_draw_line(Vector2(center.x - extent * 0.12, center.y + extent * 0.28), Vector2(center.x, center.y - extent * 0.20), path_color, maxf(2.0, extent * 0.036), true)
 		_canvas_draw_line(Vector2(center.x + extent * 0.12, center.y + extent * 0.28), Vector2(center.x, center.y - extent * 0.20), path_color, maxf(2.0, extent * 0.036), true)
+	elif _object_resolution_event_id == "overworld_route_closed":
+		_object_resolution_last_draw = {
+			"mode": "route_closed_icon" if _object_resolution_visual_policy == "reduced_motion_fallback" else "procedural_route_closed_marker",
+			"texture_path": "",
+			"gate_post_count": 2,
+			"bar_count": 1,
+			"broken_path_count": 2,
+			"alpha": alpha,
+		}
+		var closed_color := Color(0.92, 0.30, 0.22, alpha)
+		var iron_color := Color(0.34, 0.42, 0.46, alpha)
+		var gate_half_width := extent * 0.22
+		var gate_top := center.y - extent * 0.26
+		var gate_bottom := center.y + extent * 0.22
+		_canvas_draw_line(Vector2(center.x - gate_half_width, gate_top), Vector2(center.x - gate_half_width, gate_bottom), iron_color, maxf(2.2, extent * 0.042), true)
+		_canvas_draw_line(Vector2(center.x + gate_half_width, gate_top), Vector2(center.x + gate_half_width, gate_bottom), iron_color, maxf(2.2, extent * 0.042), true)
+		_canvas_draw_line(Vector2(center.x - gate_half_width, center.y), Vector2(center.x + gate_half_width, center.y), closed_color, maxf(2.4, extent * 0.050), true)
+		_canvas_draw_line(Vector2(center.x - extent * 0.13, center.y + extent * 0.30), Vector2(center.x - extent * 0.035, center.y + extent * 0.08), Color(1.0, 0.70, 0.28, alpha), maxf(2.0, extent * 0.035), true)
+		_canvas_draw_line(Vector2(center.x + extent * 0.035, center.y - extent * 0.08), Vector2(center.x + extent * 0.13, center.y - extent * 0.30), Color(1.0, 0.70, 0.28, alpha), maxf(2.0, extent * 0.035), true)
 	elif _object_resolution_event_id == "overworld_object_captured":
 		var radius := extent * lerpf(0.26, 0.48, motion_progress)
 		var capture_color := Color(1.0, 0.78, 0.22, alpha)
@@ -3769,8 +3790,8 @@ func _object_resolution_vfx_asset_state() -> Dictionary:
 	var event_id := String(spec.get("event_id", "")).strip_edges()
 	var render_mode := String(spec.get("render_mode", "")).strip_edges()
 	var texture_loaded := texture_path != "" and _overworld_vfx_texture_for_path(texture_path) != null
-	var expected_render_mode := "route_open_resolution" if _object_resolution_event_id == "overworld_route_open" else "object_resolution"
-	var expected_fallback_mode := "procedural_route_open_marker" if _object_resolution_event_id == "overworld_route_open" else "existing_procedural_object_resolution_body"
+	var expected_render_mode := "route_open_resolution" if _object_resolution_event_id == "overworld_route_open" else ("route_closed_resolution" if _object_resolution_event_id == "overworld_route_closed" else "object_resolution")
+	var expected_fallback_mode := "procedural_route_open_marker" if _object_resolution_event_id == "overworld_route_open" else ("procedural_route_closed_marker" if _object_resolution_event_id == "overworld_route_closed" else "existing_procedural_object_resolution_body")
 	var uses_imported_asset := cue_id != "" \
 		and event_id == _object_resolution_event_id \
 		and render_mode == expected_render_mode \

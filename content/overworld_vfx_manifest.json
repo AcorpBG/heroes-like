@@ -67,6 +67,12 @@
       "render_mode": "route_open_resolution",
       "scale": 1.04
     },
+    "vfx_placeholder_route_closed": {
+      "event_id": "overworld_route_closed",
+      "texture_path": "res://art/overworld/runtime/vfx/route_closed.png",
+      "render_mode": "route_closed_resolution",
+      "scale": 1.04
+    },
     "vfx_placeholder_capture_flag": {
       "event_id": "overworld_object_captured",
       "texture_path": "res://art/overworld/runtime/vfx/object_resolution/captured.png",

@@ -1475,6 +1475,7 @@ func _commit_end_turn() -> Dictionary:
 			"resolution": resolution.duplicate(true),
 			"result": result.duplicate(true),
 		}
+	_record_route_closed_presentation(_last_enemy_activity_events)
 	var refresh_started := ProfileLogScript.begin_usec()
 	_refresh()
 	general_buckets["refresh_after_end_turn"] = ProfileLogScript.elapsed_ms(refresh_started)
@@ -2663,6 +2664,78 @@ func _record_route_open_presentation(result: Dictionary, context_before: Diction
 		"placement_id": placement_id,
 		"content_id": site_id,
 		"site_name": String(site.get("name", site_id)),
+		"tile": {"x": tile.x, "y": tile.y},
+		"selected_animation_state": String(policy.get("selected_animation_state", "")),
+		"selected_visual_policy": String(policy.get("selected_visual_policy", "")),
+		"selected_fallback_tag": String(policy.get("selected_fallback_tag", "")),
+		"selected_vfx_cue_ids": (policy.get("selected_vfx_cue_ids", []) as Array).duplicate(true),
+		"selected_audio_cue_ids": (policy.get("selected_audio_cue_ids", []) as Array).duplicate(true),
+		"allows_large_motion": bool(policy.get("allows_large_motion", true)),
+		"duration_ms": int(round(float(mini(max_duration_ms, 620)) * duration_scale)),
+		"max_duration_ms": max_duration_ms,
+	}
+
+func _record_route_closed_presentation(events: Array) -> void:
+	var closure_event := {}
+	for event_value in events:
+		if not (event_value is Dictionary):
+			continue
+		var event: Dictionary = event_value
+		var reason_codes: Array = event.get("reason_codes", []) if event.get("reason_codes", []) is Array else []
+		if (
+			String(event.get("event_type", "")) == "ai_site_seized"
+			and String(event.get("target_kind", "")) == "resource"
+			and "route_closed" in reason_codes
+		):
+			closure_event = event.duplicate(true)
+			break
+	if closure_event.is_empty():
+		return
+	var placement_id := String(closure_event.get("target_id", "")).strip_edges()
+	if placement_id == "":
+		return
+	var live_node := {}
+	for node_value in _session.overworld.get("resource_nodes", []):
+		if node_value is Dictionary and String(node_value.get("placement_id", "")) == placement_id:
+			live_node = node_value
+			break
+	if (
+		live_node.is_empty()
+		or String(live_node.get("collected_by_faction_id", "")) in ["", "player"]
+		or int(live_node.get("response_last_day", -1)) != 0
+		or int(live_node.get("response_until_day", -1)) != 0
+	):
+		return
+	var tile := Vector2i(int(live_node.get("x", -1)), int(live_node.get("y", -1)))
+	if not _tile_in_bounds(tile) or not OverworldRules.is_tile_visible(_session, tile.x, tile.y):
+		return
+	var site_id := String(live_node.get("site_id", "")).strip_edges()
+	var site := ContentService.get_resource_site(site_id)
+	if site_id == "" or site.is_empty():
+		return
+	var policy: Dictionary = AnimationCueCatalogScript.cue_playback_policy_for_event(
+		"overworld_route_closed",
+		SettingsService.animation_preferences()
+	)
+	if (
+		String(policy.get("event_id", "")) != "overworld_route_closed"
+		or String(policy.get("surface", "")) != "overworld"
+		or String(policy.get("subject_kind", "")) != "map_object"
+		or String(policy.get("selected_playback_policy", "")) != "queue_resolved"
+	):
+		return
+	_object_resolution_presentation_serial += 1
+	var max_duration_ms: int = maxi(0, int(policy.get("max_duration_ms", 700)))
+	var duration_scale := maxf(0.0, float(policy.get("duration_scale", 1.0)))
+	_object_resolution_presentation = {
+		"serial": _object_resolution_presentation_serial,
+		"event_id": "overworld_route_closed",
+		"family": "route_closure",
+		"placement_id": placement_id,
+		"content_id": site_id,
+		"site_name": String(site.get("name", site_id)),
+		"enemy_faction_id": String(closure_event.get("faction_id", "")),
+		"enemy_faction_label": String(closure_event.get("faction_label", "")),
 		"tile": {"x": tile.x, "y": tile.y},
 		"selected_animation_state": String(policy.get("selected_animation_state", "")),
 		"selected_visual_policy": String(policy.get("selected_visual_policy", "")),
