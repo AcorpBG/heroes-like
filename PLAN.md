@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `presentation-overworld-field-spell-vfx-asset-adoption-10184`. Normal live field-spell playback now draws one original imported alpha arcane waypoint effect at the authoritative hero tile through the exact existing `vfx_placeholder_adventure_spell` cue. The renderer preserves exact spell consequences, bounded progress/alpha/input-blocking lifetime, refresh/skip/expiry/focus behavior, and the prior two rings as missing-map/missing-texture fallback, while reduced motion retains the static nonblocking icon. Focused 1280x720/1920x1080, real field-spell cue, four-cue object/VFX manifest, Overworld visual/route/input, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged field-spell interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `presentation-overworld-field-spell-vfx-asset-adoption-10184`
 - Completed implementation slice: `presentation-town-recruitment-vfx-asset-adoption-10184`. Successful live recruitment now draws one original imported alpha muster effect behind the unchanged contained count badge. The renderer preserves exact recruitment consequences, progress/alpha/nonblocking lifetime, refresh/expiry/focus behavior, and the prior three rings as missing-map/missing-texture fallback, while reduced motion retains the static badge. Focused 1280x720/1920x1080, real recruitment cue, construction cue/asset, Town/Battle visual, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged recruitment interaction, hardware/certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `presentation-town-recruitment-vfx-asset-adoption-10184`
 - Completed implementation slice: `presentation-town-building-complete-vfx-asset-adoption-10184`. Normal live construction completion now draws one original imported alpha texture behind the unchanged contained Town badge/text. The renderer preserves exact building consequences, bounded progress/alpha/input-blocking lifetime, skip/expiry/focus behavior, and the prior gold frame as missing-map/missing-texture fallback, while reduced motion retains the static nonblocking badge. Focused 1280x720/1920x1080, real construction cue, Town/Battle visual, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged building interaction, hardware/certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -5241,6 +5243,31 @@ Completed evidence:
 - focused live 1280x720 and 1920x1080 proof covers exact sprite ids and paths, active identity, movement-compatible presentation, reserve/grounding/contact contracts, procedural fallback, whole-session restoration, containment, and save version 9;
 - full-route movement, Ninefold scenario breadth, broad Overworld visual, active-play focus, accessibility, core, repository validation, and exact/generic editor gates pass;
 - official Linux export plus packaged headless startup and official Windows export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass, with no packaged hero interaction or broader release claim.
+
+## Overworld Field Spell VFX Asset Adoption
+
+id: `presentation-overworld-field-spell-vfx-asset-adoption-10184`
+
+Status: in_progress.
+
+Selected Phase 6 player-facing presentation slice. Successful live movement-restoration and scouting-reveal spells already publish the exact `spell_cast_overworld` event and `vfx_placeholder_adventure_spell` cue at the authoritative hero tile, but normal playback still draws only two procedural cast rings plus the existing compact spell icon. The completed field-spell cue-playback slice explicitly left final VFX assets out of scope.
+
+Implementation target:
+- add one original source image and one 512x512 runtime alpha texture for Overworld field-spell casting;
+- extend the existing Overworld VFX manifest with exactly `vfx_placeholder_adventure_spell` mapped to `spell_cast_overworld`;
+- render it at the authoritative hero tile using the current progress, alpha, input-blocking, refresh, skip, and expiry authority, while retaining the existing icon above it;
+- preserve the current two cast rings and icon as exact missing-map or missing-texture fallback, while reduced motion continues using only the static `adventure_spell_icon` contract.
+
+Completion criteria:
+- normal live field-spell playback selects and visibly draws the exact imported texture at 1280x720 and 1920x1080 without remapping object-resolution or any Battle/Town cue;
+- missing manifest rows or unloadable textures use the existing two-ring procedural body without errors, replay, input drift, or state mutation;
+- focused live proof preserves exact mana/movement/fog/recap consequences, hero tile, progress, blocking/skip/expiry, refresh, focus, route, session, and save version 9 authority;
+- field-spell cue, magic hooks, object-resolution asset, Overworld visual/route/input, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Non-goals:
+- no spell, mana, movement, fog, visibility, recap, route, focus, input, timing, animation-policy, AI, save-schema, or content changes;
+- no object-resolution, Town/Battle cue, particles, shaders, audio, spell icon, layout, terrain, or broad renderer rewrite;
+- no packaged field-spell interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
 
 ## Town Recruitment VFX Asset Adoption
 

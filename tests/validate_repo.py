@@ -136,6 +136,10 @@ OVERWORLD_OBJECT_RESOLUTION_VFX_ATLAS_PATH = ROOT / "art" / "overworld" / "sourc
 OVERWORLD_OBJECT_RESOLUTION_VFX_RUNTIME_DIR = ROOT / "art" / "overworld" / "runtime" / "vfx" / "object_resolution"
 OVERWORLD_OBJECT_RESOLUTION_VFX_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_object_resolution_vfx_asset_runtime_report.gd"
 OVERWORLD_OBJECT_RESOLUTION_VFX_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_object_resolution_vfx_asset_runtime_report.tscn"
+OVERWORLD_FIELD_SPELL_VFX_SOURCE_PATH = ROOT / "art" / "overworld" / "source" / "field_spell_vfx_source.png"
+OVERWORLD_FIELD_SPELL_VFX_RUNTIME_PATH = ROOT / "art" / "overworld" / "runtime" / "vfx" / "field_spell.png"
+OVERWORLD_FIELD_SPELL_VFX_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_field_spell_vfx_asset_runtime_report.gd"
+OVERWORLD_FIELD_SPELL_VFX_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_field_spell_vfx_asset_runtime_report.tscn"
 OVERWORLD_FIELD_SPELL_CAST_CUE_PLAYBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_field_spell_cast_cue_playback_report.gd"
 OVERWORLD_FIELD_SPELL_CAST_CUE_PLAYBACK_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_field_spell_cast_cue_playback_report.tscn"
 OVERWORLD_ARTIFACT_SLOT_CUE_PLAYBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_artifact_slot_cue_playback_report.gd"
@@ -31106,6 +31110,12 @@ def validate_overworld_object_resolution_vfx_assets(errors: list[str]) -> None:
     expected_manifest = {
         "schema_id": "overworld_vfx_manifest_v1",
         "cues": {
+            "vfx_placeholder_adventure_spell": {
+                "event_id": "spell_cast_overworld",
+                "texture_path": "res://art/overworld/runtime/vfx/field_spell.png",
+                "render_mode": "field_spell_cast",
+                "scale": 1.12,
+            },
             "vfx_placeholder_capture_flag": {
                 "event_id": "overworld_object_captured",
                 "texture_path": "res://art/overworld/runtime/vfx/object_resolution/captured.png",
@@ -31126,7 +31136,7 @@ def validate_overworld_object_resolution_vfx_assets(errors: list[str]) -> None:
             },
         },
     }
-    ensure(load_json(OVERWORLD_OBJECT_RESOLUTION_VFX_MANIFEST_PATH) == expected_manifest, errors, "Object-resolution VFX manifest must retain the exact three event/cue/path/render/scale mappings")
+    ensure(load_json(OVERWORLD_OBJECT_RESOLUTION_VFX_MANIFEST_PATH) == expected_manifest, errors, "Overworld VFX manifest must retain the exact field-spell and three object-resolution event/cue/path/render/scale mappings")
     ensure(png_size(OVERWORLD_OBJECT_RESOLUTION_VFX_ATLAS_PATH) == (2172, 724), errors, "Object-resolution VFX source atlas must remain the exact 3x724 source image")
     runtime_payloads: list[bytes] = []
     for cue_id, path in runtime_paths.items():
@@ -31240,6 +31250,123 @@ def validate_overworld_object_resolution_vfx_assets(errors: list[str]) -> None:
     ensure(report_text.count("for event_id_value in EXPECTED_CUES:") == 4, errors, "Object-resolution VFX focused owner must build exact missing paths and run normal, missing-asset, and reduced-motion event matrices")
     for forbidden in ("_draw_object_resolution_imported_vfx", "_draw_object_resolution_procedural_vfx", "_object_resolution_vfx_asset_state", "create_timer", "create_tween", "AnimationCueCatalog"):
         ensure(forbidden not in report_text, errors, f"Object-resolution VFX focused owner must observe public rendering without bypassing production: {forbidden}")
+
+
+def validate_overworld_field_spell_vfx_assets(errors: list[str]) -> None:
+    required_paths = (
+        OVERWORLD_MAP_VIEW_SCRIPT_PATH,
+        OVERWORLD_OBJECT_RESOLUTION_VFX_MANIFEST_PATH,
+        OVERWORLD_FIELD_SPELL_VFX_SOURCE_PATH,
+        OVERWORLD_FIELD_SPELL_VFX_RUNTIME_PATH,
+        OVERWORLD_FIELD_SPELL_VFX_REPORT_SCRIPT_PATH,
+        OVERWORLD_FIELD_SPELL_VFX_REPORT_SCENE_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Overworld field-spell VFX owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+    manifest = load_json(OVERWORLD_OBJECT_RESOLUTION_VFX_MANIFEST_PATH)
+    cues = manifest.get("cues", {}) if isinstance(manifest, dict) else {}
+    ensure(cues.get("vfx_placeholder_adventure_spell") == {
+        "event_id": "spell_cast_overworld",
+        "texture_path": "res://art/overworld/runtime/vfx/field_spell.png",
+        "render_mode": "field_spell_cast",
+        "scale": 1.12,
+    }, errors, "Overworld VFX manifest must map the exact field-spell cue/event/texture")
+    ensure(set(cues) == {"vfx_placeholder_adventure_spell", "vfx_placeholder_capture_flag", "vfx_placeholder_object_visit", "vfx_placeholder_depleted_dim"}, errors, "Overworld VFX manifest must not remap any other cue")
+    ensure(png_size(OVERWORLD_FIELD_SPELL_VFX_SOURCE_PATH) == (1254, 1254), errors, "Overworld field-spell VFX source must retain its exact square source image")
+    ensure(png_size(OVERWORLD_FIELD_SPELL_VFX_RUNTIME_PATH) == (512, 512), errors, "Overworld field-spell runtime texture must be 512x512")
+    header = OVERWORLD_FIELD_SPELL_VFX_RUNTIME_PATH.read_bytes()[:26]
+    ensure(len(header) >= 26 and header[25] in {4, 6}, errors, "Overworld field-spell runtime texture must retain a PNG alpha channel")
+
+    def function_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}")
+        if start < 0:
+            return ""
+        end = text.find("\nfunc ", start + 1)
+        return text[start:] if end < 0 else text[start:end]
+
+    map_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
+    for token in (
+        "var _spell_cast_last_draw: Dictionary = {}",
+        "_spell_cast_last_draw = {}",
+        '"vfx_asset": _spell_cast_vfx_asset_state()',
+        '"vfx_draw": _spell_cast_last_draw.duplicate(true)',
+    ):
+        ensure(token in map_text, errors, f"Overworld field-spell VFX state is missing exact ownership: {token}")
+    draw = function_block(map_text, "_draw_spell_cast_presentation")
+    imported = function_block(map_text, "_draw_spell_cast_imported_vfx")
+    fallback = function_block(map_text, "_draw_spell_cast_procedural_rings")
+    state = function_block(map_text, "_spell_cast_vfx_asset_state")
+    ensure(draw.find("_draw_spell_cast_imported_vfx") < draw.find("_draw_spell_cast_procedural_rings") < draw.find("var icon_extent"), errors, "Overworld field-spell drawing must prefer imported art, retain procedural rings fallback, then draw the unchanged icon")
+    ensure(draw.find('if _spell_cast_visual_policy != "reduced_motion_fallback":') < draw.find('"mode": "adventure_spell_icon"'), errors, "Reduced motion must remain the exact static field-spell icon path")
+    for token in (
+        "_spell_cast_vfx_asset_state()",
+        '_overworld_vfx_texture_for_path(String(asset_state.get("texture_path", "")))',
+        "lerpf(0.82, 1.0, motion_progress)",
+        '_canvas_draw_texture_rect(texture, draw_rect, false, Color(1.0, 1.0, 1.0, alpha))',
+        '"mode": "imported_texture"',
+        "return true",
+    ):
+        ensure(token in imported, errors, f"Imported field-spell draw path is missing exact live behavior: {token}")
+    for token in (
+        "extent * lerpf(0.28, 0.50, motion_progress)",
+        "_canvas_draw_circle(center, radius, spell_color",
+        "_canvas_draw_circle(center, radius * 0.66",
+        '"mode": "existing_procedural_adventure_cast_rings"',
+        '"ring_count": 2',
+    ):
+        ensure(token in fallback, errors, f"Existing field-spell procedural fallback was not retained: {token}")
+    for token in (
+        '_spell_cast_vfx_cue_ids.size() == 1',
+        'cue_id == "vfx_placeholder_adventure_spell"',
+        "event_id == _spell_cast_event_id",
+        'render_mode == "field_spell_cast"',
+        '"uses_procedural_fallback": not uses_imported_asset',
+        '"fallback_mode": "existing_procedural_adventure_cast_rings"',
+    ):
+        ensure(token in state, errors, f"Field-spell VFX resolver is missing fail-closed event/asset ownership: {token}")
+    for forbidden in ("session.", "_session.", "await ", "create_timer", "create_tween", "AnimationCueCatalog", "OverworldRules"):
+        ensure(forbidden not in imported and forbidden not in state, errors, f"Field-spell asset draw/resolver must not change gameplay or timing authority: {forbidden}")
+
+    report_text = OVERWORLD_FIELD_SPELL_VFX_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    ensure('const HERO_TILE := Vector2i(1, 2)' in report_text, errors, "Field-spell VFX report must use River Pass's live in-bounds hero start")
+    ensure('const HERO_TILE := Vector2i(5, 5)' not in report_text, errors, "Field-spell VFX report must not place its hero beyond River Pass's map")
+    validity_tokens = [
+        'var map_size := OverworldRules.derive_map_size(session)',
+        'var map_rows: Array = session.overworld.get("map", [])',
+        'var hero_tile_valid: bool = HERO_TILE.x >= 0',
+        'and HERO_TILE.x < map_size.x',
+        'and HERO_TILE.y < map_size.y',
+        'and OverworldRules.terrain_id_is_passable(String(map_rows[HERO_TILE.y][HERO_TILE.x]))',
+        'if not hero_tile_valid:',
+        'return {"ok": false, "failure": "hero_tile_valid"',
+        'var map_view: Control = MapViewScript.new()',
+    ]
+    validity_positions = [report_text.find(token) for token in validity_tokens]
+    ensure(all(position >= 0 for position in validity_positions) and validity_positions == sorted(validity_positions), errors, "Field-spell VFX report must fail closed on the real hero tile before testing draw containment")
+    scene_text = OVERWORLD_FIELD_SPELL_VFX_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure_scene_nodes(scene_text, errors, "overworld_field_spell_vfx_asset_runtime_report.tscn", [("OverworldFieldSpellVfxAssetRuntimeReport", "Node")])
+    for token in (
+        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        'OverworldRules.cast_overworld_spell(control, "spell_waystride")',
+        'OverworldRules.cast_overworld_spell(session, "spell_waystride")',
+        "live_result == control_result",
+        "session.to_dict() == control.to_dict()",
+        "MapViewScript.new()",
+        'map_view.call("present_spell_cast_presentation", _presentation(1, live_result, false))',
+        'map_view.set("_overworld_vfx_texture_missing", {TEXTURE_PATH: true})',
+        'map_view.call("present_spell_cast_presentation", _presentation(3, live_result, true))',
+        'String(draw.get("mode", "")) == "imported_texture"',
+        'String(draw.get("mode", "")) == expected_mode',
+        "session.to_dict() == authority_after_cast",
+        "SessionStateStore.SAVE_VERSION == 9",
+        'print("OVERWORLD_FIELD_SPELL_VFX_ASSET_RUNTIME_REPORT %s"',
+    ):
+        ensure(token in report_text, errors, f"Overworld field-spell VFX focused owner is missing live proof: {token}")
+    ensure(report_text.count("for viewport_size in VIEWPORT_SIZES:") == 1, errors, "Overworld field-spell VFX focused owner must run both exact widths")
+    for forbidden in ("_draw_spell_cast_imported_vfx", "_draw_spell_cast_procedural_rings", "_spell_cast_vfx_asset_state", "create_timer", "create_tween", "AnimationCueCatalog"):
+        ensure(forbidden not in report_text, errors, f"Overworld field-spell focused owner must observe public rendering without bypassing production: {forbidden}")
 
 
 def validate_overworld_object_resolution_cue_playback(errors: list[str]) -> None:
@@ -40089,6 +40216,7 @@ def main() -> int:
     validate_active_play_save_written_cue_playback(errors)
     validate_active_play_load_resumed_cue_playback(errors)
     validate_overworld_object_resolution_vfx_assets(errors)
+    validate_overworld_field_spell_vfx_assets(errors)
     validate_overworld_object_resolution_cue_playback(errors)
     validate_neutral_dwelling_unit_slice(errors)
     validate_hero_portrait_assets(errors)

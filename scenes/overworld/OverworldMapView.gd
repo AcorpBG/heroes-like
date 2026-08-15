@@ -346,6 +346,7 @@ var _spell_cast_blocking_policy := ""
 var _spell_cast_vfx_cue_ids: Array = []
 var _spell_cast_audio_cue_ids: Array = []
 var _spell_cast_allows_large_motion := false
+var _spell_cast_last_draw: Dictionary = {}
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -547,6 +548,7 @@ func _sync_spell_cast_presentation(presentation: Dictionary) -> void:
 	_spell_cast_audio_cue_ids = audio_cue_ids
 	_spell_cast_allows_large_motion = allows_large_motion
 	_spell_cast_tile = spell_tile
+	_spell_cast_last_draw = {}
 	_spell_cast_active = true
 	_sync_presentation_processing()
 	_invalidate_dynamic_layer("spell_cast_presentation_started")
@@ -1723,16 +1725,51 @@ func _draw_spell_cast_presentation(board_rect: Rect2) -> void:
 	var progress := clampf(_spell_cast_elapsed_sec / _spell_cast_duration_sec, 0.0, 1.0)
 	var motion_progress := progress if _spell_cast_allows_large_motion else 0.36
 	var alpha := clampf(1.0 - progress * 0.64, 0.30, 1.0)
-	var radius := extent * lerpf(0.28, 0.50, motion_progress)
-	var spell_color := Color(0.44, 0.82, 1.0, alpha)
 	if _spell_cast_visual_policy != "reduced_motion_fallback":
-		_canvas_draw_circle(center, radius, spell_color, false, maxf(2.0, extent * 0.034), true)
-		_canvas_draw_circle(center, radius * 0.66, Color(0.72, 0.94, 1.0, alpha * 0.86), false, maxf(1.5, extent * 0.022), true)
+		if not _draw_spell_cast_imported_vfx(rect, progress, motion_progress, alpha):
+			_draw_spell_cast_procedural_rings(rect, motion_progress, alpha)
+	else:
+		_spell_cast_last_draw = {"mode": "adventure_spell_icon", "texture_path": "", "alpha": alpha}
 	var icon_extent := extent * 0.18
 	_canvas_draw_line(center + Vector2(-icon_extent, 0.0), center + Vector2(icon_extent, 0.0), Color(0.94, 0.99, 1.0, alpha), maxf(2.0, extent * 0.036), true)
 	_canvas_draw_line(center + Vector2(0.0, -icon_extent), center + Vector2(0.0, icon_extent), Color(0.94, 0.99, 1.0, alpha), maxf(2.0, extent * 0.036), true)
 	_canvas_draw_line(center + Vector2(-icon_extent * 0.68, -icon_extent * 0.68), center + Vector2(icon_extent * 0.68, icon_extent * 0.68), Color(0.78, 0.94, 1.0, alpha), maxf(1.5, extent * 0.024), true)
 	_canvas_draw_line(center + Vector2(icon_extent * 0.68, -icon_extent * 0.68), center + Vector2(-icon_extent * 0.68, icon_extent * 0.68), Color(0.78, 0.94, 1.0, alpha), maxf(1.5, extent * 0.024), true)
+
+func _draw_spell_cast_imported_vfx(rect: Rect2, progress: float, motion_progress: float, alpha: float) -> bool:
+	var asset_state := _spell_cast_vfx_asset_state()
+	if not bool(asset_state.get("uses_imported_asset", false)):
+		return false
+	var texture: Texture2D = _overworld_vfx_texture_for_path(String(asset_state.get("texture_path", ""))) as Texture2D
+	if texture == null:
+		return false
+	var center := rect.get_center()
+	var extent := minf(rect.size.x, rect.size.y)
+	var draw_extent := extent * float(asset_state.get("scale", 1.0)) * lerpf(0.82, 1.0, motion_progress)
+	var draw_rect := Rect2(center - Vector2(draw_extent, draw_extent) * 0.5, Vector2(draw_extent, draw_extent))
+	_canvas_draw_texture_rect(texture, draw_rect, false, Color(1.0, 1.0, 1.0, alpha))
+	_spell_cast_last_draw = {
+		"mode": "imported_texture",
+		"texture_path": String(asset_state.get("texture_path", "")),
+		"rect": {"x": draw_rect.position.x, "y": draw_rect.position.y, "width": draw_rect.size.x, "height": draw_rect.size.y},
+		"alpha": alpha,
+		"progress": progress,
+	}
+	return true
+
+func _draw_spell_cast_procedural_rings(rect: Rect2, motion_progress: float, alpha: float) -> void:
+	var center := rect.get_center()
+	var extent := minf(rect.size.x, rect.size.y)
+	var radius := extent * lerpf(0.28, 0.50, motion_progress)
+	var spell_color := Color(0.44, 0.82, 1.0, alpha)
+	_canvas_draw_circle(center, radius, spell_color, false, maxf(2.0, extent * 0.034), true)
+	_canvas_draw_circle(center, radius * 0.66, Color(0.72, 0.94, 1.0, alpha * 0.86), false, maxf(1.5, extent * 0.022), true)
+	_spell_cast_last_draw = {
+		"mode": "existing_procedural_adventure_cast_rings",
+		"texture_path": "",
+		"alpha": alpha,
+		"ring_count": 2,
+	}
 
 func _draw_resource_sprite(node: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
 	return _draw_object_sprite(_resource_asset_id(node), rect, remembered, _resource_object_profile(node), tile)
@@ -3409,10 +3446,35 @@ func validation_spell_cast_presentation() -> Dictionary:
 		"blocks_input": _spell_cast_active and _spell_cast_blocking_policy == "input_blocking_timeout",
 		"vfx_cue_ids": _spell_cast_vfx_cue_ids.duplicate(true),
 		"audio_cue_ids": _spell_cast_audio_cue_ids.duplicate(true),
+		"vfx_asset": _spell_cast_vfx_asset_state(),
+		"vfx_draw": _spell_cast_last_draw.duplicate(true),
 		"allows_large_motion": _spell_cast_allows_large_motion,
 		"duration_ms": int(round(_spell_cast_duration_sec * 1000.0)),
 		"progress": progress,
 		"draw_entries": ["adventure_spell_icon"] if reduced_motion else ["adventure_cast_rings", "adventure_spell_icon"],
+	}
+
+func _spell_cast_vfx_asset_state() -> Dictionary:
+	var cue_id := String(_spell_cast_vfx_cue_ids[0]).strip_edges() if _spell_cast_vfx_cue_ids.size() == 1 else ""
+	var spec := _overworld_vfx_manifest_cue(cue_id)
+	var texture_path := String(spec.get("texture_path", "")).strip_edges()
+	var event_id := String(spec.get("event_id", "")).strip_edges()
+	var render_mode := String(spec.get("render_mode", "")).strip_edges()
+	var texture_loaded := texture_path != "" and _overworld_vfx_texture_for_path(texture_path) != null
+	var uses_imported_asset := cue_id == "vfx_placeholder_adventure_spell" \
+		and event_id == _spell_cast_event_id \
+		and render_mode == "field_spell_cast" \
+		and texture_loaded
+	return {
+		"cue_id": cue_id,
+		"event_id": event_id,
+		"texture_path": texture_path,
+		"render_mode": render_mode,
+		"scale": float(spec.get("scale", 1.0)),
+		"texture_loaded": texture_loaded,
+		"uses_imported_asset": uses_imported_asset,
+		"uses_procedural_fallback": not uses_imported_asset,
+		"fallback_mode": "existing_procedural_adventure_cast_rings",
 	}
 
 func validation_color_cue_summary() -> Dictionary:
