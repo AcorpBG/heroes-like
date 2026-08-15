@@ -14324,13 +14324,13 @@
       }
     }
   ],
-  "currentNotes": "The Overworld object-focus cue slice is complete. Genuine visible unguarded pointer and keyboard/D-pad route-cursor selections now deliver exact imported VFX/audio with guarded precedence, fallback/reduced-motion behavior, refresh dedupe, and unchanged gameplay authority. Focused, compatibility, static/editor, Linux export/startup, and Windows fresh-Wine startup gates pass with bounded claims. Select the next tracker-approved release-readiness implementation slice.",
+  "currentNotes": "The Overworld blocking-object feedback slice is complete. Visible blocking map objects and resource bodies now expose exact authored identity and distinct original object-blocked VFX/audio; unexplored blockers stay identity-silent, and terrain/unreachable routing plus gameplay authority remain exact. Focused, compatibility, static/editor, Linux export/startup, and Windows fresh-Wine startup gates pass with bounded claims. Select the next tracker-approved release-readiness implementation slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-object-focus-cue-adoption-10184",
-  "currentSliceId": "presentation-overworld-object-focus-cue-adoption-10184",
-  "currentSliceNotes": "Completed live behavior: genuine visible unguarded pointer and keyboard/D-pad route-cursor selections deliver overworld_object_active through original imported focus-ring/audio assets exactly once per new context; guarded warnings win, programmatic selections remain silent, and gameplay/session/save authority is unchanged.",
+  "currentSlice": "presentation-overworld-blocking-object-feedback-10184",
+  "currentSliceId": "presentation-overworld-blocking-object-feedback-10184",
+  "currentSliceNotes": "Completed live Overworld blocking-object feedback: visible blocking map objects and resource bodies now use exact authored identity with distinct object-blocked VFX/audio; hidden identity, terrain/unreachable route cues, pathing, interaction, session/save, compatibility, static/editor, and bounded Linux/Windows export/startup authority remain exact.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Object Focus Cue Adoption",
+  "currentSliceTitle": "Overworld Blocking Object Feedback",
   "currentSliceUpdatedAt": "2026-08-15T20:44:19Z",
   "deferredRiskRegister": [
     {
@@ -19856,13 +19856,71 @@
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/animation-systems-foundation.md", "docs/animation-overworld-object-state-contract-report.md", "AGENTS.md"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/animation-systems-foundation.md",
+        "docs/animation-overworld-object-state-contract-report.md",
+        "AGENTS.md"
+      ],
       "purpose": "Deliver the already-authored overworld_object_active VFX/audio cue when the player genuinely selects a visible unguarded town, resource, artifact, or encounter.",
-      "implementationTargets": ["art/overworld/source/object_focus_vfx_source.png", "art/overworld/runtime/vfx/object_focus.png", "art/audio/runtime/presentation/object_focus.wav", "content/overworld_vfx_manifest.json", "content/presentation_sfx_manifest.json", "tools/generate_presentation_sfx_assets.py", "scripts/autoload/PresentationAudio.gd", "scenes/overworld/OverworldShell.gd", "scenes/overworld/OverworldMapView.gd", "tests/overworld_object_focus_cue_playback_report.gd", "tests/overworld_object_focus_cue_playback_report.tscn", "tests/overworld_object_resolution_vfx_asset_runtime_report.gd", "tests/overworld_field_spell_vfx_asset_runtime_report.gd", "tests/overworld_guarded_site_vfx_asset_runtime_report.gd", "tests/overworld_route_blocked_vfx_asset_runtime_report.gd", "tests/overworld_hero_route_step_vfx_asset_runtime_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
-      "testOwners": ["tests/overworld_object_focus_cue_playback_report.tscn", "tests/overworld_object_resolution_vfx_asset_runtime_report.tscn", "tests/overworld_field_spell_vfx_asset_runtime_report.tscn", "tests/overworld_guarded_site_vfx_asset_runtime_report.tscn", "tests/overworld_route_blocked_vfx_asset_runtime_report.tscn", "tests/overworld_hero_route_step_vfx_asset_runtime_report.tscn", "tests/overworld_object_resolution_cue_playback_report.tscn", "tests/animation_event_cue_catalog_report.tscn", "tests/overworld_visual_smoke.tscn", "tests/active_play_keyboard_focus_smoke.tscn", "tests/accessibility_screen_reader_semantics_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/validate_repo.py"],
-      "baseline": {"head": "5d156505a711a24e1b60f8b91c0b8f788bb6248d", "event_id": "overworld_object_active", "vfx_cue_id": "vfx_placeholder_object_focus_ring", "audio_cue_id": "audio_placeholder_object_focus", "catalog_authored": true, "runtime_delivery_present": false, "vfx_asset_present": false, "audio_asset_present": false},
-      "completionCriteria": ["Real pointer and keyboard/D-pad selection produce the exact imported focus ring and one audio playback for visible unguarded town/resource/artifact/encounter contexts at 1280x720 and 1920x1080", "Unchanged refresh does not replay; leaving and genuinely reselecting replays once; guarded, hidden, malformed, stale, hero, open, initial, and adjacent-immediate-action contexts remain silent", "Selection, route/action consequences, guarded warning precedence, fallback/reduced-motion behavior, focus/input, session/settings/save authority, and all non-target cues remain exact", "Focused and compatibility runtime, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass"],
-      "nonGoals": ["object, route, movement, reward, guard, fog, action, AI, save/schema, content, or map-topology changes", "hover, initial/programmatic selection, adjacent action pre-cue, broad highlighting, particles, shaders, camera/layout, spatial audio, haptics, or final sound mastering", "packaged object-focus interaction/listening, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claims"],
+      "implementationTargets": [
+        "art/overworld/source/object_focus_vfx_source.png",
+        "art/overworld/runtime/vfx/object_focus.png",
+        "art/audio/runtime/presentation/object_focus.wav",
+        "content/overworld_vfx_manifest.json",
+        "content/presentation_sfx_manifest.json",
+        "tools/generate_presentation_sfx_assets.py",
+        "scripts/autoload/PresentationAudio.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_object_focus_cue_playback_report.gd",
+        "tests/overworld_object_focus_cue_playback_report.tscn",
+        "tests/overworld_object_resolution_vfx_asset_runtime_report.gd",
+        "tests/overworld_field_spell_vfx_asset_runtime_report.gd",
+        "tests/overworld_guarded_site_vfx_asset_runtime_report.gd",
+        "tests/overworld_route_blocked_vfx_asset_runtime_report.gd",
+        "tests/overworld_hero_route_step_vfx_asset_runtime_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_object_focus_cue_playback_report.tscn",
+        "tests/overworld_object_resolution_vfx_asset_runtime_report.tscn",
+        "tests/overworld_field_spell_vfx_asset_runtime_report.tscn",
+        "tests/overworld_guarded_site_vfx_asset_runtime_report.tscn",
+        "tests/overworld_route_blocked_vfx_asset_runtime_report.tscn",
+        "tests/overworld_hero_route_step_vfx_asset_runtime_report.tscn",
+        "tests/overworld_object_resolution_cue_playback_report.tscn",
+        "tests/animation_event_cue_catalog_report.tscn",
+        "tests/overworld_visual_smoke.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "5d156505a711a24e1b60f8b91c0b8f788bb6248d",
+        "event_id": "overworld_object_active",
+        "vfx_cue_id": "vfx_placeholder_object_focus_ring",
+        "audio_cue_id": "audio_placeholder_object_focus",
+        "catalog_authored": true,
+        "runtime_delivery_present": false,
+        "vfx_asset_present": false,
+        "audio_asset_present": false
+      },
+      "completionCriteria": [
+        "Real pointer and keyboard/D-pad selection produce the exact imported focus ring and one audio playback for visible unguarded town/resource/artifact/encounter contexts at 1280x720 and 1920x1080",
+        "Unchanged refresh does not replay; leaving and genuinely reselecting replays once; guarded, hidden, malformed, stale, hero, open, initial, and adjacent-immediate-action contexts remain silent",
+        "Selection, route/action consequences, guarded warning precedence, fallback/reduced-motion behavior, focus/input, session/settings/save authority, and all non-target cues remain exact",
+        "Focused and compatibility runtime, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass"
+      ],
+      "nonGoals": [
+        "object, route, movement, reward, guard, fog, action, AI, save/schema, content, or map-topology changes",
+        "hover, initial/programmatic selection, adjacent action pre-cue, broad highlighting, particles, shaders, camera/layout, spatial audio, haptics, or final sound mastering",
+        "packaged object-focus interaction/listening, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
       "createdAt": "2026-08-15T19:02:42Z",
       "startedAt": "2026-08-15T19:02:42Z",
       "updatedAt": "2026-08-15T20:44:19Z",
@@ -19878,14 +19936,54 @@
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "AGENTS.md"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "AGENTS.md"
+      ],
       "purpose": "Let a valid mobile raid finish a resource, artifact, or encounter objective that is at most one route step away before the late battle-pressure floor can preempt it.",
-      "implementationTargets": ["scripts/core/EnemyAdventureRules.gd", "tests/ai_raid_assault_grouping_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
-      "testOwners": ["tests/ai_raid_assault_grouping_report.tscn", "tests/headless_simulation_harness_report.tscn", "tests/ai_hero_task_live_target_selection_report.tscn", "tests/ai_hero_task_live_turn_execution_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/validate_repo.py"],
-      "baseline": {"head": "a52c95922ef276d96ba58d0fd287ae5d5969aad3", "harness_ok": false, "failed_subsystem_id": "strategic_ai_live_route_progression", "target_id": "river_free_company", "initial_goal_distance": 6, "closest_goal_distance": 1, "final_goal_distance": 6, "seized_target": false, "turns_simulated": 14, "preemption_day": 8},
-      "completionCriteria": ["After target refresh, a still-valid resource, artifact, or encounter target at goal distance 0 or 1 is retained through battle-pressure-floor selection and resolves through the existing movement/objective path", "The current live route fixture seizes river_free_company within 14 turns, reduces the goal distance, preserves task/session/public-event authority, and the full headless product harness has no strategic_ai_live_route_progression failure", "Existing long-range player-town pressure, blocked-frontier continuation/exhaustion, neutral fallback, regroup/risk/unreachable redirects, target scoring/order, and all non-target strategic behavior remain exact", "Focused and compatibility runtime, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass"],
-      "nonGoals": ["battle-pressure thresholds, priority bonuses, town/hero preemption, target scoring, task policy, unit/spell/economy/content balance, save/schema, or authored scenario changes", "Native RMG topology, object placement, parity, generation, package/session adoption, or source-recovery work", "manual-play replacement, packaged strategic-AI interaction, native hardware certification, signing/publication, whole-game, or release-readiness claims"],
-      "createdAt": "2026-08-15T18:26:42Z", "startedAt": "2026-08-15T18:26:42Z", "updatedAt": "2026-08-15T18:52:41Z", "completedAt": "2026-08-15T18:52:41Z",
+      "implementationTargets": [
+        "scripts/core/EnemyAdventureRules.gd",
+        "tests/ai_raid_assault_grouping_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/ai_raid_assault_grouping_report.tscn",
+        "tests/headless_simulation_harness_report.tscn",
+        "tests/ai_hero_task_live_target_selection_report.tscn",
+        "tests/ai_hero_task_live_turn_execution_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "a52c95922ef276d96ba58d0fd287ae5d5969aad3",
+        "harness_ok": false,
+        "failed_subsystem_id": "strategic_ai_live_route_progression",
+        "target_id": "river_free_company",
+        "initial_goal_distance": 6,
+        "closest_goal_distance": 1,
+        "final_goal_distance": 6,
+        "seized_target": false,
+        "turns_simulated": 14,
+        "preemption_day": 8
+      },
+      "completionCriteria": [
+        "After target refresh, a still-valid resource, artifact, or encounter target at goal distance 0 or 1 is retained through battle-pressure-floor selection and resolves through the existing movement/objective path",
+        "The current live route fixture seizes river_free_company within 14 turns, reduces the goal distance, preserves task/session/public-event authority, and the full headless product harness has no strategic_ai_live_route_progression failure",
+        "Existing long-range player-town pressure, blocked-frontier continuation/exhaustion, neutral fallback, regroup/risk/unreachable redirects, target scoring/order, and all non-target strategic behavior remain exact",
+        "Focused and compatibility runtime, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass"
+      ],
+      "nonGoals": [
+        "battle-pressure thresholds, priority bonuses, town/hero preemption, target scoring, task policy, unit/spell/economy/content balance, save/schema, or authored scenario changes",
+        "Native RMG topology, object placement, parity, generation, package/session adoption, or source-recovery work",
+        "manual-play replacement, packaged strategic-AI interaction, native hardware certification, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "createdAt": "2026-08-15T18:26:42Z",
+      "startedAt": "2026-08-15T18:26:42Z",
+      "updatedAt": "2026-08-15T18:52:41Z",
+      "completedAt": "2026-08-15T18:52:41Z",
       "notes": "Completed live strategic behavior rather than fixture/report-only credit. Battle-pressure-floor selection now checks the existing regroup requirement first, then retains only a refreshed valid resource/artifact/encounter objective at distance 0 or 1. Focused coverage proves exact distance-1 resource retention, distance-0/1 encounter/artifact eligibility, invalid and exploration rejection, and exact distance-2 player-town preemption. The unchanged product harness now seizes river_free_company in 7 turns (initial distance 6, final observed distance 4 after capture/retarget lifecycle) with task/session/public-event authority and all 19 pass cases intact. Target-selection, live-turn, regroup, and core owners pass. Medium ordinal 100 passes 36 turns to day 37 defeat with signature 7391c7bb, 170 events, one stall, and zero behavior, integrity, or unreachable failures. Repository/editor checks and official Linux export/headless startup plus Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged strategic-AI interaction, broad AI balance/policy, Native RMG topology/parity, hardware certification, signing/publication, whole-game, and release readiness are not claimed.",
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
       "blockedReason": null
@@ -19897,14 +19995,57 @@
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/animation-systems-foundation.md", "AGENTS.md"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/animation-systems-foundation.md",
+        "AGENTS.md"
+      ],
       "purpose": "Play the existing guarded-site context audio identity once per newly accepted live guarded selection without refresh replay.",
-      "implementationTargets": ["art/audio/runtime/presentation/*.wav", "content/presentation_sfx_manifest.json", "tools/generate_presentation_sfx_assets.py", "scripts/autoload/PresentationAudio.gd", "scenes/overworld/OverworldShell.gd", "scenes/overworld/OverworldMapView.gd", "tests/overworld_object_resolution_cue_playback_report.gd", "tests/overworld_guarded_site_vfx_asset_runtime_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
-      "testOwners": ["tests/overworld_object_resolution_cue_playback_report.tscn", "tests/overworld_guarded_site_vfx_asset_runtime_report.tscn", "tests/overworld_visual_smoke.tscn", "tests/active_play_keyboard_focus_smoke.tscn", "tests/core_systems_regression_smoke.tscn", "tests/validate_repo.py"],
-      "baseline": {"head": "20df1c59d3a4c91d2b1a1f8d184ab8bed7d0cc09", "event_id": "overworld_object_guarded", "audio_id": "audio_placeholder_guard_warning", "live_selected_audio_threaded": false, "live_audio_asset_count": 0, "implementation_or_runtime_started": false},
-      "completionCriteria": ["Live Shell threads the exact detached guarded-site audio id and MapView plays one byte-distinct original 44.1 kHz stereo 16-bit warning transient only after full context acceptance", "Unchanged refresh does not replay; deselect, guard resolution, invalid/malformed context, and clear remain silent; real reselection plays once again", "Guard/resource/route authority, selection/focus/input, VFX imported/procedural/reduced-motion behavior, settings/session/save, service fallback/mute/voice budgets, and all non-target audio remain exact", "Focused real context and direct 1280x720/1920x1080 asset/fallback, compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass and both PCKs contain the asset"],
-      "nonGoals": ["blocked-object, route-open/closed, ambient, Town/Battle/UI audio expansion, spatial audio, haptics, or final sound design", "guard/resource/object/routing rules, selection semantics, AI, save/schema, content, camera, VFX timing, or other presentation behavior changes", "packaged guarded-site interaction/listening, hardware certification, signing/publication, whole-game, or release-readiness claims"],
-      "createdAt": "2026-08-15T17:56:53Z", "startedAt": "2026-08-15T17:56:53Z", "updatedAt": "2026-08-15T18:14:04Z", "completedAt": "2026-08-15T18:14:04Z",
+      "implementationTargets": [
+        "art/audio/runtime/presentation/*.wav",
+        "content/presentation_sfx_manifest.json",
+        "tools/generate_presentation_sfx_assets.py",
+        "scripts/autoload/PresentationAudio.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_object_resolution_cue_playback_report.gd",
+        "tests/overworld_guarded_site_vfx_asset_runtime_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_object_resolution_cue_playback_report.tscn",
+        "tests/overworld_guarded_site_vfx_asset_runtime_report.tscn",
+        "tests/overworld_visual_smoke.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "20df1c59d3a4c91d2b1a1f8d184ab8bed7d0cc09",
+        "event_id": "overworld_object_guarded",
+        "audio_id": "audio_placeholder_guard_warning",
+        "live_selected_audio_threaded": false,
+        "live_audio_asset_count": 0,
+        "implementation_or_runtime_started": false
+      },
+      "completionCriteria": [
+        "Live Shell threads the exact detached guarded-site audio id and MapView plays one byte-distinct original 44.1 kHz stereo 16-bit warning transient only after full context acceptance",
+        "Unchanged refresh does not replay; deselect, guard resolution, invalid/malformed context, and clear remain silent; real reselection plays once again",
+        "Guard/resource/route authority, selection/focus/input, VFX imported/procedural/reduced-motion behavior, settings/session/save, service fallback/mute/voice budgets, and all non-target audio remain exact",
+        "Focused real context and direct 1280x720/1920x1080 asset/fallback, compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass and both PCKs contain the asset"
+      ],
+      "nonGoals": [
+        "blocked-object, route-open/closed, ambient, Town/Battle/UI audio expansion, spatial audio, haptics, or final sound design",
+        "guard/resource/object/routing rules, selection semantics, AI, save/schema, content, camera, VFX timing, or other presentation behavior changes",
+        "packaged guarded-site interaction/listening, hardware certification, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "createdAt": "2026-08-15T17:56:53Z",
+      "startedAt": "2026-08-15T17:56:53Z",
+      "updatedAt": "2026-08-15T18:14:04Z",
+      "completedAt": "2026-08-15T18:14:04Z",
       "notes": "Completed with live guarded-site audio behavior rather than policy/report-only credit. Shell threads the detached audio identity and MapView accepts one context-signature-owned warning playback per newly active guarded selection. Focused live and 1280x720/1920 imported/missing/reduced-motion owners prove initial play, unchanged-refresh dedupe, silent deselect/guard-resolution/invalid clear, and real-reselection replay while preserving guard/resource/route, VFX, selection/focus/input, settings/session/save, service, and other-audio authority. Compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass; both PCKs contain guard_warning.wav. Packaged guarded-site interaction/listening, hardware certification, signing/publication, whole-game, and release readiness are not claimed.",
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
       "blockedReason": null
@@ -19916,14 +20057,66 @@
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/animation-systems-foundation.md", "AGENTS.md"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/animation-systems-foundation.md",
+        "AGENTS.md"
+      ],
       "purpose": "Restore live selected VFX ownership and play the existing visited, captured, and depleted object-resolution audio identities in synchronization with accepted presentation activation.",
-      "implementationTargets": ["art/audio/runtime/presentation/*.wav", "content/presentation_sfx_manifest.json", "tools/generate_presentation_sfx_assets.py", "scripts/autoload/PresentationAudio.gd", "scenes/overworld/OverworldShell.gd", "scenes/overworld/OverworldMapView.gd", "tests/overworld_object_resolution_cue_playback_report.gd", "tests/overworld_object_resolution_vfx_asset_runtime_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
-      "testOwners": ["tests/overworld_object_resolution_cue_playback_report.tscn", "tests/overworld_object_resolution_vfx_asset_runtime_report.tscn", "tests/overworld_full_route_movement_regression.tscn", "tests/overworld_visual_smoke.tscn", "tests/active_play_keyboard_focus_smoke.tscn", "tests/core_systems_regression_smoke.tscn", "tests/validate_repo.py"],
-      "baseline": {"head": "d28b30168a27900c95ffe7ee01aa318c30dd2ede", "event_ids": ["overworld_object_visited", "overworld_object_captured", "overworld_object_depleted"], "audio_ids": ["audio_placeholder_object_visit", "audio_placeholder_capture", "audio_placeholder_collect"], "live_selected_vfx_threaded": false, "live_selected_audio_threaded": false, "implementation_or_runtime_started": false},
-      "completionCriteria": ["Live Shell threads exact detached VFX/audio ids for visited/captured/depleted events and MapView uses imported VFX plus one byte-distinct 44.1 kHz stereo 16-bit audio transient when each accepted cue becomes active", "Route-queued audio waits for locomotion completion; immediate and reduced-motion cues play once; refresh, duplicate serial, failed/cooldown actions, and settled cues do not replay", "Object/resource/artifact/town consequences, route order, serial/lifetime, VFX timing/fallback, session/save/input/focus/settings, service policy, and non-target audio remain exact", "Focused real outcome, direct asset, compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass and both PCKs contain all three assets"],
-      "nonGoals": ["guarded, blocked-object, route-open/closed, ambient, Town/Battle/UI audio expansion, spatial audio, haptics, or final sound design", "object rules, rewards, capture/depletion semantics, routing, AI, save/schema, content, camera, animation timing, or other presentation changes", "packaged object interaction/listening, hardware certification, signing/publication, whole-game, or release-readiness claims"],
-      "createdAt": "2026-08-15T17:31:43Z", "startedAt": "2026-08-15T17:31:43Z", "updatedAt": "2026-08-15T17:53:49Z", "completedAt": "2026-08-15T17:53:49Z",
+      "implementationTargets": [
+        "art/audio/runtime/presentation/*.wav",
+        "content/presentation_sfx_manifest.json",
+        "tools/generate_presentation_sfx_assets.py",
+        "scripts/autoload/PresentationAudio.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_object_resolution_cue_playback_report.gd",
+        "tests/overworld_object_resolution_vfx_asset_runtime_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_object_resolution_cue_playback_report.tscn",
+        "tests/overworld_object_resolution_vfx_asset_runtime_report.tscn",
+        "tests/overworld_full_route_movement_regression.tscn",
+        "tests/overworld_visual_smoke.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "d28b30168a27900c95ffe7ee01aa318c30dd2ede",
+        "event_ids": [
+          "overworld_object_visited",
+          "overworld_object_captured",
+          "overworld_object_depleted"
+        ],
+        "audio_ids": [
+          "audio_placeholder_object_visit",
+          "audio_placeholder_capture",
+          "audio_placeholder_collect"
+        ],
+        "live_selected_vfx_threaded": false,
+        "live_selected_audio_threaded": false,
+        "implementation_or_runtime_started": false
+      },
+      "completionCriteria": [
+        "Live Shell threads exact detached VFX/audio ids for visited/captured/depleted events and MapView uses imported VFX plus one byte-distinct 44.1 kHz stereo 16-bit audio transient when each accepted cue becomes active",
+        "Route-queued audio waits for locomotion completion; immediate and reduced-motion cues play once; refresh, duplicate serial, failed/cooldown actions, and settled cues do not replay",
+        "Object/resource/artifact/town consequences, route order, serial/lifetime, VFX timing/fallback, session/save/input/focus/settings, service policy, and non-target audio remain exact",
+        "Focused real outcome, direct asset, compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass and both PCKs contain all three assets"
+      ],
+      "nonGoals": [
+        "guarded, blocked-object, route-open/closed, ambient, Town/Battle/UI audio expansion, spatial audio, haptics, or final sound design",
+        "object rules, rewards, capture/depletion semantics, routing, AI, save/schema, content, camera, animation timing, or other presentation changes",
+        "packaged object interaction/listening, hardware certification, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "createdAt": "2026-08-15T17:31:43Z",
+      "startedAt": "2026-08-15T17:31:43Z",
+      "updatedAt": "2026-08-15T17:53:49Z",
+      "completedAt": "2026-08-15T17:53:49Z",
       "notes": "Completed live catalog-policy VFX/audio threading and activation-synchronized exact-once playback for visited, captured, and depleted object results. Three byte-distinct original deterministic 44.1 kHz stereo 16-bit assets extend the production presentation pack to fourteen cues (signature 6c2e95dfeda2f65e25ad6eda99795c169d7e8b1d7d20732c5025edb4eb5b1daf). The real object-result owner proves queued silence until movement handoff, imported playback for persistent resource capture, repeatable visit/revisit, neutral-town capture, artifact depletion, reduced motion, refresh/cooldown/unsupported no-replay, and exact authority. The direct 1280x720/1920x1080 owner proves audio across imported VFX, missing-VFX procedural fallback, and reduced motion. Route movement, cue catalog, Overworld visual, active-play focus, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass; both PCKs contain all three assets. Guarded/blocked/route-open/closed audio, final sound design, packaged object interaction/listening, hardware certification, signing/publication, whole-game, and release readiness remain unclaimed.",
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
       "blockedReason": null
@@ -19935,13 +20128,58 @@
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/animation-systems-foundation.md", "AGENTS.md"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/animation-systems-foundation.md",
+        "AGENTS.md"
+      ],
       "purpose": "Play the existing successful full-route movement and newly blocked-route audio cue identities through the reusable production presentation-audio service.",
-      "implementationTargets": ["art/audio/runtime/presentation/*.wav", "content/presentation_sfx_manifest.json", "tools/generate_presentation_sfx_assets.py", "scripts/autoload/PresentationAudio.gd", "scenes/overworld/OverworldShell.gd", "scenes/overworld/OverworldMapView.gd", "tests/overworld_hero_route_step_vfx_asset_runtime_report.gd", "tests/overworld_route_blocked_vfx_asset_runtime_report.gd", "tests/overworld_full_route_movement_regression.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
-      "testOwners": ["tests/overworld_hero_route_step_vfx_asset_runtime_report.tscn", "tests/overworld_route_blocked_vfx_asset_runtime_report.tscn", "tests/overworld_full_route_movement_regression.tscn", "tests/overworld_visual_smoke.tscn", "tests/active_play_keyboard_focus_smoke.tscn", "tests/core_systems_regression_smoke.tscn", "tests/validate_repo.py"],
-      "baseline": {"head": "6f2e061c05ba1fd0c478bcc433a08d7ac3df7542", "cue_ids": ["audio_placeholder_map_step", "audio_placeholder_invalid_route"], "live_audio_asset_count": 0, "live_presenter_count": 2, "selected_audio_omitted": true, "implementation_or_runtime_started": false},
-      "completionCriteria": ["The two exact existing navigation cue ids map one-to-one to byte-distinct original deterministic 44.1 kHz stereo 16-bit transients and play only after complete live MapView acceptance", "Malformed, duplicate-serial, unchanged blocked-signature, refresh, reduced-motion, and failed routes never replay, while detached snapshots expose exact playback records", "Route tiles/pathfinding, final hero tile, movement points, blocked tile/reason, VFX/timing, input/focus/settings, session/save authority, service fallback/mute/voice budgets, and all non-target audio remain exact", "Focused real actions at 1280x720 and 1920x1080, compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass and both PCKs contain both assets"],
-      "nonGoals": ["per-tile repeated footstep playback, route/object/guard audio expansion, final sound-design or mixer-mastering approval, spatial audio, haptics, or all-placeholder-audio completion", "routing, pathfinding, movement, object resolution, battle, AI, save/schema, content, VFX, camera, timing, or other audio behavior changes", "packaged Overworld interaction/listening, controller or audio hardware certification, signing/publication, whole-game, or release-readiness claims"],
+      "implementationTargets": [
+        "art/audio/runtime/presentation/*.wav",
+        "content/presentation_sfx_manifest.json",
+        "tools/generate_presentation_sfx_assets.py",
+        "scripts/autoload/PresentationAudio.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_hero_route_step_vfx_asset_runtime_report.gd",
+        "tests/overworld_route_blocked_vfx_asset_runtime_report.gd",
+        "tests/overworld_full_route_movement_regression.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_hero_route_step_vfx_asset_runtime_report.tscn",
+        "tests/overworld_route_blocked_vfx_asset_runtime_report.tscn",
+        "tests/overworld_full_route_movement_regression.tscn",
+        "tests/overworld_visual_smoke.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "6f2e061c05ba1fd0c478bcc433a08d7ac3df7542",
+        "cue_ids": [
+          "audio_placeholder_map_step",
+          "audio_placeholder_invalid_route"
+        ],
+        "live_audio_asset_count": 0,
+        "live_presenter_count": 2,
+        "selected_audio_omitted": true,
+        "implementation_or_runtime_started": false
+      },
+      "completionCriteria": [
+        "The two exact existing navigation cue ids map one-to-one to byte-distinct original deterministic 44.1 kHz stereo 16-bit transients and play only after complete live MapView acceptance",
+        "Malformed, duplicate-serial, unchanged blocked-signature, refresh, reduced-motion, and failed routes never replay, while detached snapshots expose exact playback records",
+        "Route tiles/pathfinding, final hero tile, movement points, blocked tile/reason, VFX/timing, input/focus/settings, session/save authority, service fallback/mute/voice budgets, and all non-target audio remain exact",
+        "Focused real actions at 1280x720 and 1920x1080, compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass and both PCKs contain both assets"
+      ],
+      "nonGoals": [
+        "per-tile repeated footstep playback, route/object/guard audio expansion, final sound-design or mixer-mastering approval, spatial audio, haptics, or all-placeholder-audio completion",
+        "routing, pathfinding, movement, object resolution, battle, AI, save/schema, content, VFX, camera, timing, or other audio behavior changes",
+        "packaged Overworld interaction/listening, controller or audio hardware certification, signing/publication, whole-game, or release-readiness claims"
+      ],
       "createdAt": "2026-08-15T17:15:07Z",
       "startedAt": "2026-08-15T17:15:07Z",
       "updatedAt": "2026-08-15T17:29:36Z",
@@ -19957,7 +20195,12 @@
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/animation-systems-foundation.md", "AGENTS.md"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/animation-systems-foundation.md",
+        "AGENTS.md"
+      ],
       "purpose": "Play the existing successful manual-save and routed load/resume audio cue identities through the reusable production presentation-audio service.",
       "implementationTargets": [
         "art/audio/runtime/presentation/*.wav",
@@ -19981,7 +20224,10 @@
       ],
       "baseline": {
         "head": "bc1aabcf715720bc226efd97437c5156f66a2a2b",
-        "cue_ids": ["audio_placeholder_save_confirm", "audio_placeholder_load_resume"],
+        "cue_ids": [
+          "audio_placeholder_save_confirm",
+          "audio_placeholder_load_resume"
+        ],
         "live_audio_asset_count": 0,
         "live_presenter_count": 2,
         "selected_audio_only": true,
@@ -20013,7 +20259,12 @@
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/animation-systems-foundation.md", "AGENTS.md"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/animation-systems-foundation.md",
+        "AGENTS.md"
+      ],
       "purpose": "Play the five existing successful Overworld field-spell, artifact recovery/equip/stow, and resource-collection audio cue identities through the reusable production presentation-audio service.",
       "implementationTargets": [
         "art/audio/runtime/presentation/*.wav",
@@ -20041,7 +20292,13 @@
       ],
       "baseline": {
         "head": "cdecacb3cf00c8a339052ac57b6fd2bb8c595752",
-        "cue_ids": ["audio_placeholder_spell_school_soft", "audio_placeholder_artifact_claim", "audio_placeholder_artifact_equip", "audio_placeholder_artifact_stow", "audio_placeholder_resource_tick"],
+        "cue_ids": [
+          "audio_placeholder_spell_school_soft",
+          "audio_placeholder_artifact_claim",
+          "audio_placeholder_artifact_equip",
+          "audio_placeholder_artifact_stow",
+          "audio_placeholder_resource_tick"
+        ],
         "live_audio_asset_count": 0,
         "live_presenter_count": 5,
         "selected_audio_only": true,
@@ -20474,7 +20731,16 @@
         "manifest_unique_texture_count": 21,
         "focused_all_eight_live_playback_passed": true,
         "procedural_fallback_passed": true,
-        "viewports": [[1280, 720], [1920, 1080]],
+        "viewports": [
+          [
+            1280,
+            720
+          ],
+          [
+            1920,
+            1080
+          ]
+        ],
         "cue_catalog_passed": true,
         "board_navigation_passed": true,
         "accessibility_passed": true,
@@ -20575,13 +20841,82 @@
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/screen-wireframes.md", "AGENTS.md"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/screen-wireframes.md",
+        "AGENTS.md"
+      ],
       "purpose": "Render four existing live artifact/resource cue identities with original compact imported alpha effects inside the existing Overworld edge rails without changing gameplay or UI authority.",
-      "implementationTargets": ["art/overworld/source/action_feedback_vfx_source.png", "art/overworld/runtime/vfx/artifact_claim.png", "art/overworld/runtime/vfx/artifact_slot_equip.png", "art/overworld/runtime/vfx/artifact_slot_unequip.png", "art/overworld/runtime/vfx/resource_delta.png", "content/overworld_vfx_manifest.json", "scenes/overworld/OverworldShell.gd", "scenes/overworld/OverworldShell.tscn", "tests/overworld_action_feedback_vfx_asset_runtime_report.gd", "tests/overworld_action_feedback_vfx_asset_runtime_report.tscn", "tests/overworld_artifact_acquired_cue_playback_report.gd", "tests/overworld_artifact_slot_cue_playback_report.gd", "tests/overworld_resource_delta_cue_playback_report.gd", "tests/overworld_object_resolution_vfx_asset_runtime_report.gd", "tests/overworld_field_spell_vfx_asset_runtime_report.gd", "tests/overworld_guarded_site_vfx_asset_runtime_report.gd", "tests/overworld_route_blocked_vfx_asset_runtime_report.gd", "tests/overworld_hero_route_step_vfx_asset_runtime_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
-      "testOwners": ["tests/overworld_action_feedback_vfx_asset_runtime_report.tscn", "tests/overworld_artifact_acquired_cue_playback_report.tscn", "tests/overworld_artifact_slot_cue_playback_report.tscn", "tests/overworld_resource_delta_cue_playback_report.tscn", "tests/overworld_object_resolution_vfx_asset_runtime_report.tscn", "tests/overworld_field_spell_vfx_asset_runtime_report.tscn", "tests/overworld_guarded_site_vfx_asset_runtime_report.tscn", "tests/overworld_route_blocked_vfx_asset_runtime_report.tscn", "tests/overworld_hero_route_step_vfx_asset_runtime_report.tscn", "tests/overworld_visual_smoke.tscn", "tests/overworld_gameplay_movement_input_ownership_regression.tscn", "tests/active_play_keyboard_focus_smoke.tscn", "tests/accessibility_screen_reader_semantics_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/validate_repo.py"],
-      "baseline": {"head": "2c1c7f4a", "event_ids": ["artifact_acquired", "artifact_equipped", "artifact_unequipped", "ui_resource_delta"], "vfx_cue_ids": ["vfx_placeholder_artifact_claim", "vfx_placeholder_slot_equip", "vfx_placeholder_slot_unequip", "vfx_placeholder_resource_delta"], "runtime_texture_count": 0, "live_rendering": "text_only_feedback_labels", "implementation_or_runtime_started": false},
-      "completionCriteria": ["Normal artifact recovery/equip/stow and resource collection each map and visibly render one distinct exact imported alpha texture at 1280x720 and 1920x1080 without remapping any other cue", "Missing mapping or texture retains exact text-only feedback and reduced motion retains the existing static fallback identity without the normal imported effect", "Focused and real action proof preserves event/action/content identity, consequences, text/tooltip, duration/progress, blocking/nonblocking behavior, focus, refresh/expiry lifecycle, containment, session authority, and save version 9", "Artifact acquired/slot and resource-delta cue owners, existing Overworld VFX assets, broad Overworld visual/input/focus/accessibility/core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"],
-      "nonGoals": ["artifact, resource, reward, inventory, slot, economy, route, object, input, focus, timing, animation-policy, AI, save-schema, content, or map changes", "panel expansion, dashboard, command ordering, broader layout redesign, other Overworld/Town/Battle/UI cue, particles, shaders, audio, or global renderer changes", "packaged action interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"],
+      "implementationTargets": [
+        "art/overworld/source/action_feedback_vfx_source.png",
+        "art/overworld/runtime/vfx/artifact_claim.png",
+        "art/overworld/runtime/vfx/artifact_slot_equip.png",
+        "art/overworld/runtime/vfx/artifact_slot_unequip.png",
+        "art/overworld/runtime/vfx/resource_delta.png",
+        "content/overworld_vfx_manifest.json",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/overworld/OverworldShell.tscn",
+        "tests/overworld_action_feedback_vfx_asset_runtime_report.gd",
+        "tests/overworld_action_feedback_vfx_asset_runtime_report.tscn",
+        "tests/overworld_artifact_acquired_cue_playback_report.gd",
+        "tests/overworld_artifact_slot_cue_playback_report.gd",
+        "tests/overworld_resource_delta_cue_playback_report.gd",
+        "tests/overworld_object_resolution_vfx_asset_runtime_report.gd",
+        "tests/overworld_field_spell_vfx_asset_runtime_report.gd",
+        "tests/overworld_guarded_site_vfx_asset_runtime_report.gd",
+        "tests/overworld_route_blocked_vfx_asset_runtime_report.gd",
+        "tests/overworld_hero_route_step_vfx_asset_runtime_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_action_feedback_vfx_asset_runtime_report.tscn",
+        "tests/overworld_artifact_acquired_cue_playback_report.tscn",
+        "tests/overworld_artifact_slot_cue_playback_report.tscn",
+        "tests/overworld_resource_delta_cue_playback_report.tscn",
+        "tests/overworld_object_resolution_vfx_asset_runtime_report.tscn",
+        "tests/overworld_field_spell_vfx_asset_runtime_report.tscn",
+        "tests/overworld_guarded_site_vfx_asset_runtime_report.tscn",
+        "tests/overworld_route_blocked_vfx_asset_runtime_report.tscn",
+        "tests/overworld_hero_route_step_vfx_asset_runtime_report.tscn",
+        "tests/overworld_visual_smoke.tscn",
+        "tests/overworld_gameplay_movement_input_ownership_regression.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "2c1c7f4a",
+        "event_ids": [
+          "artifact_acquired",
+          "artifact_equipped",
+          "artifact_unequipped",
+          "ui_resource_delta"
+        ],
+        "vfx_cue_ids": [
+          "vfx_placeholder_artifact_claim",
+          "vfx_placeholder_slot_equip",
+          "vfx_placeholder_slot_unequip",
+          "vfx_placeholder_resource_delta"
+        ],
+        "runtime_texture_count": 0,
+        "live_rendering": "text_only_feedback_labels",
+        "implementation_or_runtime_started": false
+      },
+      "completionCriteria": [
+        "Normal artifact recovery/equip/stow and resource collection each map and visibly render one distinct exact imported alpha texture at 1280x720 and 1920x1080 without remapping any other cue",
+        "Missing mapping or texture retains exact text-only feedback and reduced motion retains the existing static fallback identity without the normal imported effect",
+        "Focused and real action proof preserves event/action/content identity, consequences, text/tooltip, duration/progress, blocking/nonblocking behavior, focus, refresh/expiry lifecycle, containment, session authority, and save version 9",
+        "Artifact acquired/slot and resource-delta cue owners, existing Overworld VFX assets, broad Overworld visual/input/focus/accessibility/core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "artifact, resource, reward, inventory, slot, economy, route, object, input, focus, timing, animation-policy, AI, save-schema, content, or map changes",
+        "panel expansion, dashboard, command ordering, broader layout redesign, other Overworld/Town/Battle/UI cue, particles, shaders, audio, or global renderer changes",
+        "packaged action interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
       "createdAt": "2026-08-15T12:02:16Z",
       "startedAt": "2026-08-15T12:02:16Z",
       "updatedAt": "2026-08-15T12:43:44Z",
@@ -20597,13 +20932,63 @@
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/screen-wireframes.md", "AGENTS.md"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/screen-wireframes.md",
+        "AGENTS.md"
+      ],
       "purpose": "Add one original imported alpha route-step effect behind normal live hero interpolation without changing established movement or presentation authority.",
-      "implementationTargets": ["art/overworld/source/hero_route_step_vfx_source.png", "art/overworld/runtime/vfx/hero_route_step.png", "content/overworld_vfx_manifest.json", "scenes/overworld/OverworldShell.gd", "scenes/overworld/OverworldMapView.gd", "tests/overworld_hero_route_step_vfx_asset_runtime_report.gd", "tests/overworld_hero_route_step_vfx_asset_runtime_report.tscn", "tests/overworld_full_route_movement_regression.gd", "tests/overworld_object_resolution_vfx_asset_runtime_report.gd", "tests/overworld_field_spell_vfx_asset_runtime_report.gd", "tests/overworld_guarded_site_vfx_asset_runtime_report.gd", "tests/overworld_route_blocked_vfx_asset_runtime_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
-      "testOwners": ["tests/overworld_hero_route_step_vfx_asset_runtime_report.tscn", "tests/overworld_full_route_movement_regression.tscn", "tests/overworld_object_resolution_vfx_asset_runtime_report.tscn", "tests/overworld_field_spell_vfx_asset_runtime_report.tscn", "tests/overworld_guarded_site_vfx_asset_runtime_report.tscn", "tests/overworld_route_blocked_vfx_asset_runtime_report.tscn", "tests/overworld_visual_smoke.tscn", "tests/overworld_gameplay_movement_input_ownership_regression.tscn", "tests/active_play_keyboard_focus_smoke.tscn", "tests/accessibility_screen_reader_semantics_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/validate_repo.py"],
-      "baseline": {"head": "d73a6ff0", "event_id": "overworld_hero_move", "vfx_cue_id": "vfx_placeholder_route_step", "runtime_texture_count": 0, "live_rendering": "interpolated_hero_marker_only", "implementation_or_runtime_started": false},
-      "completionCriteria": ["Normal hero-route playback maps and visibly draws one exact imported alpha texture behind the unchanged hero marker at 1280x720 and 1920x1080 without remapping any other cue", "Missing mapping or texture retains exact interpolation-only behavior and reduced motion retains exact zero-duration endpoint snap", "Focused and real route proof preserves path/steps, segment centers, duration/progress, dynamic-only playback, refresh/expiry lifecycle, hero identity/grounding, session authority, and save version 9", "Hero-route cue, existing Overworld VFX assets, Overworld visual/route/input, focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"],
-      "nonGoals": ["route, pathfinding, action, selection, movement consequence, hero identity/sprite, fog, focus, input, timing, animation-policy, AI, save-schema, content, or map changes", "other object/guard/spell/Town/Battle VFX, particles, shaders, audio, layout, terrain, camera, or broad renderer changes", "packaged route interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"],
+      "implementationTargets": [
+        "art/overworld/source/hero_route_step_vfx_source.png",
+        "art/overworld/runtime/vfx/hero_route_step.png",
+        "content/overworld_vfx_manifest.json",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_hero_route_step_vfx_asset_runtime_report.gd",
+        "tests/overworld_hero_route_step_vfx_asset_runtime_report.tscn",
+        "tests/overworld_full_route_movement_regression.gd",
+        "tests/overworld_object_resolution_vfx_asset_runtime_report.gd",
+        "tests/overworld_field_spell_vfx_asset_runtime_report.gd",
+        "tests/overworld_guarded_site_vfx_asset_runtime_report.gd",
+        "tests/overworld_route_blocked_vfx_asset_runtime_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_hero_route_step_vfx_asset_runtime_report.tscn",
+        "tests/overworld_full_route_movement_regression.tscn",
+        "tests/overworld_object_resolution_vfx_asset_runtime_report.tscn",
+        "tests/overworld_field_spell_vfx_asset_runtime_report.tscn",
+        "tests/overworld_guarded_site_vfx_asset_runtime_report.tscn",
+        "tests/overworld_route_blocked_vfx_asset_runtime_report.tscn",
+        "tests/overworld_visual_smoke.tscn",
+        "tests/overworld_gameplay_movement_input_ownership_regression.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "d73a6ff0",
+        "event_id": "overworld_hero_move",
+        "vfx_cue_id": "vfx_placeholder_route_step",
+        "runtime_texture_count": 0,
+        "live_rendering": "interpolated_hero_marker_only",
+        "implementation_or_runtime_started": false
+      },
+      "completionCriteria": [
+        "Normal hero-route playback maps and visibly draws one exact imported alpha texture behind the unchanged hero marker at 1280x720 and 1920x1080 without remapping any other cue",
+        "Missing mapping or texture retains exact interpolation-only behavior and reduced motion retains exact zero-duration endpoint snap",
+        "Focused and real route proof preserves path/steps, segment centers, duration/progress, dynamic-only playback, refresh/expiry lifecycle, hero identity/grounding, session authority, and save version 9",
+        "Hero-route cue, existing Overworld VFX assets, Overworld visual/route/input, focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "route, pathfinding, action, selection, movement consequence, hero identity/sprite, fog, focus, input, timing, animation-policy, AI, save-schema, content, or map changes",
+        "other object/guard/spell/Town/Battle VFX, particles, shaders, audio, layout, terrain, camera, or broad renderer changes",
+        "packaged route interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
       "createdAt": "2026-08-15T11:35:48Z",
       "startedAt": "2026-08-15T11:35:48Z",
       "updatedAt": "2026-08-15T11:56:52Z",
@@ -20619,13 +21004,61 @@
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/screen-wireframes.md", "AGENTS.md"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/screen-wireframes.md",
+        "AGENTS.md"
+      ],
       "purpose": "Replace normal live blocked-route procedural warning drawing with one original imported alpha effect without changing established route or presentation authority.",
-      "implementationTargets": ["art/overworld/source/route_blocked_vfx_source.png", "art/overworld/runtime/vfx/route_blocked.png", "content/overworld_vfx_manifest.json", "scenes/overworld/OverworldShell.gd", "scenes/overworld/OverworldMapView.gd", "tests/overworld_route_blocked_vfx_asset_runtime_report.gd", "tests/overworld_route_blocked_vfx_asset_runtime_report.tscn", "tests/overworld_full_route_movement_regression.gd", "tests/overworld_object_resolution_vfx_asset_runtime_report.gd", "tests/overworld_field_spell_vfx_asset_runtime_report.gd", "tests/overworld_guarded_site_vfx_asset_runtime_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
-      "testOwners": ["tests/overworld_route_blocked_vfx_asset_runtime_report.tscn", "tests/overworld_full_route_movement_regression.tscn", "tests/overworld_object_resolution_vfx_asset_runtime_report.tscn", "tests/overworld_field_spell_vfx_asset_runtime_report.tscn", "tests/overworld_guarded_site_vfx_asset_runtime_report.tscn", "tests/overworld_visual_smoke.tscn", "tests/overworld_gameplay_movement_input_ownership_regression.tscn", "tests/active_play_keyboard_focus_smoke.tscn", "tests/accessibility_screen_reader_semantics_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/validate_repo.py"],
-      "baseline": {"head": "699f8100", "event_id": "overworld_route_blocked", "vfx_cue_id": "vfx_placeholder_blocked_route_marker", "runtime_texture_count": 0, "live_rendering": "procedural_circle_and_cross_only", "implementation_or_runtime_started": false},
-      "completionCriteria": ["Normal blocked-route playback maps and visibly draws one exact imported alpha texture at 1280x720 and 1920x1080 without remapping any other cue", "Missing mapping or texture retains the exact existing procedural circle-and-X and reduced motion retains the static blocked-route icon", "Focused live proof preserves selected tile, blocked reason, serial/dedupe, duration/progress, dynamic-only rendering, refresh/reselection/reachable-clear lifecycle, session authority, and save version 9", "Blocked-route cue, existing Overworld VFX assets, Overworld visual/route/input, focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"],
-      "nonGoals": ["route, pathfinding, blocked-reason, action, selection, movement, fog, focus, input, timing, animation-policy, AI, save-schema, content, or map changes", "other object/guard/spell/Town/Battle VFX, particles, shaders, audio, layout, terrain, or broad renderer changes", "packaged blocked-route interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"],
+      "implementationTargets": [
+        "art/overworld/source/route_blocked_vfx_source.png",
+        "art/overworld/runtime/vfx/route_blocked.png",
+        "content/overworld_vfx_manifest.json",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_route_blocked_vfx_asset_runtime_report.gd",
+        "tests/overworld_route_blocked_vfx_asset_runtime_report.tscn",
+        "tests/overworld_full_route_movement_regression.gd",
+        "tests/overworld_object_resolution_vfx_asset_runtime_report.gd",
+        "tests/overworld_field_spell_vfx_asset_runtime_report.gd",
+        "tests/overworld_guarded_site_vfx_asset_runtime_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_route_blocked_vfx_asset_runtime_report.tscn",
+        "tests/overworld_full_route_movement_regression.tscn",
+        "tests/overworld_object_resolution_vfx_asset_runtime_report.tscn",
+        "tests/overworld_field_spell_vfx_asset_runtime_report.tscn",
+        "tests/overworld_guarded_site_vfx_asset_runtime_report.tscn",
+        "tests/overworld_visual_smoke.tscn",
+        "tests/overworld_gameplay_movement_input_ownership_regression.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "699f8100",
+        "event_id": "overworld_route_blocked",
+        "vfx_cue_id": "vfx_placeholder_blocked_route_marker",
+        "runtime_texture_count": 0,
+        "live_rendering": "procedural_circle_and_cross_only",
+        "implementation_or_runtime_started": false
+      },
+      "completionCriteria": [
+        "Normal blocked-route playback maps and visibly draws one exact imported alpha texture at 1280x720 and 1920x1080 without remapping any other cue",
+        "Missing mapping or texture retains the exact existing procedural circle-and-X and reduced motion retains the static blocked-route icon",
+        "Focused live proof preserves selected tile, blocked reason, serial/dedupe, duration/progress, dynamic-only rendering, refresh/reselection/reachable-clear lifecycle, session authority, and save version 9",
+        "Blocked-route cue, existing Overworld VFX assets, Overworld visual/route/input, focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "route, pathfinding, blocked-reason, action, selection, movement, fog, focus, input, timing, animation-policy, AI, save-schema, content, or map changes",
+        "other object/guard/spell/Town/Battle VFX, particles, shaders, audio, layout, terrain, or broad renderer changes",
+        "packaged blocked-route interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
       "createdAt": "2026-08-15T11:08:22Z",
       "startedAt": "2026-08-15T11:08:22Z",
       "updatedAt": "2026-08-15T11:33:59Z",
@@ -20641,13 +21074,57 @@
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/screen-wireframes.md", "AGENTS.md"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/screen-wireframes.md",
+        "AGENTS.md"
+      ],
       "purpose": "Replace normal live guarded-site procedural warning drawing with one original imported alpha effect without changing established guard or context authority.",
-      "implementationTargets": ["art/overworld/source/guarded_site_vfx_source.png", "art/overworld/runtime/vfx/guarded_site.png", "content/overworld_vfx_manifest.json", "scenes/overworld/OverworldMapView.gd", "tests/overworld_guarded_site_vfx_asset_runtime_report.gd", "tests/overworld_guarded_site_vfx_asset_runtime_report.tscn", "tests/overworld_object_resolution_vfx_asset_runtime_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
-      "testOwners": ["tests/overworld_guarded_site_vfx_asset_runtime_report.tscn", "tests/overworld_object_resolution_cue_playback_report.tscn", "tests/overworld_object_resolution_vfx_asset_runtime_report.tscn", "tests/artifact_guarded_site_reward_execution_report.tscn", "tests/overworld_visual_smoke.tscn", "tests/overworld_full_route_movement_regression.tscn", "tests/overworld_gameplay_movement_input_ownership_regression.tscn", "tests/active_play_keyboard_focus_smoke.tscn", "tests/accessibility_screen_reader_semantics_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/validate_repo.py"],
-      "baseline": {"head": "4b77651b", "event_id": "overworld_object_guarded", "vfx_cue_id": "vfx_placeholder_guard_warning", "runtime_texture_count": 0, "live_rendering": "procedural_guard_shield_only", "implementation_or_runtime_started": false},
-      "completionCriteria": ["Normal guarded-site context maps and visibly draws one exact imported alpha texture at 1280x720 and 1920x1080 without remapping any other cue", "Missing mapping or texture retains the exact existing procedural guard shield and reduced motion retains the static guard badge", "Focused live proof preserves selected site, blocking guard, tile, inspection/link text, dynamic-only rendering, refresh/deselect/resolution lifecycle, session authority, and save version 9", "Guarded-site cue, object-resolution asset/playback, guarded reward, Overworld visual/route/input, focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"],
-      "nonGoals": ["guard, battle, route, resource, reward, selection, fog, focus, input, timing, animation-policy, AI, save-schema, content, or map changes", "other object/route/spell/Town/Battle VFX, particles, shaders, audio, layout, terrain, or broad renderer changes", "packaged guarded-site interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"],
+      "implementationTargets": [
+        "art/overworld/source/guarded_site_vfx_source.png",
+        "art/overworld/runtime/vfx/guarded_site.png",
+        "content/overworld_vfx_manifest.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_guarded_site_vfx_asset_runtime_report.gd",
+        "tests/overworld_guarded_site_vfx_asset_runtime_report.tscn",
+        "tests/overworld_object_resolution_vfx_asset_runtime_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_guarded_site_vfx_asset_runtime_report.tscn",
+        "tests/overworld_object_resolution_cue_playback_report.tscn",
+        "tests/overworld_object_resolution_vfx_asset_runtime_report.tscn",
+        "tests/artifact_guarded_site_reward_execution_report.tscn",
+        "tests/overworld_visual_smoke.tscn",
+        "tests/overworld_full_route_movement_regression.tscn",
+        "tests/overworld_gameplay_movement_input_ownership_regression.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "4b77651b",
+        "event_id": "overworld_object_guarded",
+        "vfx_cue_id": "vfx_placeholder_guard_warning",
+        "runtime_texture_count": 0,
+        "live_rendering": "procedural_guard_shield_only",
+        "implementation_or_runtime_started": false
+      },
+      "completionCriteria": [
+        "Normal guarded-site context maps and visibly draws one exact imported alpha texture at 1280x720 and 1920x1080 without remapping any other cue",
+        "Missing mapping or texture retains the exact existing procedural guard shield and reduced motion retains the static guard badge",
+        "Focused live proof preserves selected site, blocking guard, tile, inspection/link text, dynamic-only rendering, refresh/deselect/resolution lifecycle, session authority, and save version 9",
+        "Guarded-site cue, object-resolution asset/playback, guarded reward, Overworld visual/route/input, focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "guard, battle, route, resource, reward, selection, fog, focus, input, timing, animation-policy, AI, save-schema, content, or map changes",
+        "other object/route/spell/Town/Battle VFX, particles, shaders, audio, layout, terrain, or broad renderer changes",
+        "packaged guarded-site interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
       "createdAt": "2026-08-15T10:37:55Z",
       "startedAt": "2026-08-15T10:37:55Z",
       "updatedAt": "2026-08-15T11:04:42Z",
@@ -20663,13 +21140,55 @@
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/screen-wireframes.md", "AGENTS.md"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/screen-wireframes.md",
+        "AGENTS.md"
+      ],
       "purpose": "Replace normal live Overworld field-spell procedural cast rings with one original imported alpha effect without changing established spell or presentation authority.",
-      "implementationTargets": ["art/overworld/source/field_spell_vfx_source.png", "art/overworld/runtime/vfx/field_spell.png", "content/overworld_vfx_manifest.json", "scenes/overworld/OverworldMapView.gd", "tests/overworld_field_spell_vfx_asset_runtime_report.gd", "tests/overworld_field_spell_vfx_asset_runtime_report.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
-      "testOwners": ["tests/overworld_field_spell_vfx_asset_runtime_report.tscn", "tests/overworld_field_spell_cast_cue_playback_report.tscn", "tests/overworld_object_resolution_vfx_asset_runtime_report.tscn", "tests/overworld_visual_smoke.tscn", "tests/overworld_full_route_movement_regression.tscn", "tests/overworld_gameplay_movement_input_ownership_regression.tscn", "tests/active_play_keyboard_focus_smoke.tscn", "tests/accessibility_screen_reader_semantics_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/validate_repo.py"],
-      "baseline": {"head": "e7989d19", "event_id": "spell_cast_overworld", "vfx_cue_id": "vfx_placeholder_adventure_spell", "runtime_texture_count": 0, "live_rendering": "procedural_cast_rings_plus_icon", "implementation_or_runtime_started": false},
-      "completionCriteria": ["Normal field-spell playback maps and visibly draws one exact imported alpha texture at 1280x720 and 1920x1080 without remapping any other cue", "Missing mapping or texture retains the exact existing procedural cast rings and reduced motion retains the static adventure-spell icon", "Focused live proof preserves spell consequences, hero tile, progress, blocking, skip, expiry, refresh, focus, route, session, and save version 9 authority", "Field-spell cue, magic hooks, object-resolution asset, Overworld visual/route/input, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"],
-      "nonGoals": ["spell, mana, movement, fog, visibility, recap, route, focus, input, timing, animation-policy, AI, save-schema, or content changes", "object-resolution, Town/Battle cue, particles, shaders, audio, spell icon, layout, terrain, or broad renderer changes", "packaged field-spell interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"],
+      "implementationTargets": [
+        "art/overworld/source/field_spell_vfx_source.png",
+        "art/overworld/runtime/vfx/field_spell.png",
+        "content/overworld_vfx_manifest.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_field_spell_vfx_asset_runtime_report.gd",
+        "tests/overworld_field_spell_vfx_asset_runtime_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_field_spell_vfx_asset_runtime_report.tscn",
+        "tests/overworld_field_spell_cast_cue_playback_report.tscn",
+        "tests/overworld_object_resolution_vfx_asset_runtime_report.tscn",
+        "tests/overworld_visual_smoke.tscn",
+        "tests/overworld_full_route_movement_regression.tscn",
+        "tests/overworld_gameplay_movement_input_ownership_regression.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "e7989d19",
+        "event_id": "spell_cast_overworld",
+        "vfx_cue_id": "vfx_placeholder_adventure_spell",
+        "runtime_texture_count": 0,
+        "live_rendering": "procedural_cast_rings_plus_icon",
+        "implementation_or_runtime_started": false
+      },
+      "completionCriteria": [
+        "Normal field-spell playback maps and visibly draws one exact imported alpha texture at 1280x720 and 1920x1080 without remapping any other cue",
+        "Missing mapping or texture retains the exact existing procedural cast rings and reduced motion retains the static adventure-spell icon",
+        "Focused live proof preserves spell consequences, hero tile, progress, blocking, skip, expiry, refresh, focus, route, session, and save version 9 authority",
+        "Field-spell cue, magic hooks, object-resolution asset, Overworld visual/route/input, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "spell, mana, movement, fog, visibility, recap, route, focus, input, timing, animation-policy, AI, save-schema, or content changes",
+        "object-resolution, Town/Battle cue, particles, shaders, audio, spell icon, layout, terrain, or broad renderer changes",
+        "packaged field-spell interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
       "createdAt": "2026-08-15T10:08:19Z",
       "startedAt": "2026-08-15T10:08:19Z",
       "updatedAt": "2026-08-15T10:35:41Z",
@@ -20685,13 +21204,52 @@
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/screen-wireframes.md", "AGENTS.md"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/screen-wireframes.md",
+        "AGENTS.md"
+      ],
       "purpose": "Replace the normal live Town recruitment procedural muster rings with one original imported alpha effect without changing established recruitment or presentation authority.",
-      "implementationTargets": ["art/town/source/recruit_muster_vfx_source.png", "art/town/runtime/vfx/recruit_muster.png", "content/town_vfx_manifest.json", "scenes/town/TownStageView.gd", "tests/town_recruitment_vfx_asset_runtime_report.gd", "tests/town_recruitment_vfx_asset_runtime_report.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
-      "testOwners": ["tests/town_recruitment_vfx_asset_runtime_report.tscn", "tests/town_recruitment_cue_playback_report.tscn", "tests/town_battle_visual_smoke.tscn", "tests/active_play_keyboard_focus_smoke.tscn", "tests/accessibility_screen_reader_semantics_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/validate_repo.py"],
-      "baseline": {"head": "869746bf", "event_id": "town_units_recruited", "vfx_cue_id": "vfx_placeholder_recruit_muster", "runtime_texture_count": 0, "live_rendering": "procedural_muster_rings_only", "implementation_or_runtime_started": false},
-      "completionCriteria": ["Normal recruitment playback maps and visibly draws one exact imported alpha texture at 1280x720 and 1920x1080 without remapping any other cue", "Missing mapping or texture retains the exact existing procedural muster rings and reduced motion retains the static recruit-count badge", "Focused live proof preserves recruitment consequences, containment, progress, nonblocking lifetime, refresh, expiry, focus, session, and save version 9 authority", "Recruitment cue, Town visual/action, focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"],
-      "nonGoals": ["unit, cost, availability, recruitment, army, town-state, focus, input, timing, animation-policy, AI, save-schema, or content changes", "construction VFX, other Town/Overworld/Battle cues, particles, shaders, audio, layout, scenic backdrop, or broad renderer changes", "packaged recruitment interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"],
+      "implementationTargets": [
+        "art/town/source/recruit_muster_vfx_source.png",
+        "art/town/runtime/vfx/recruit_muster.png",
+        "content/town_vfx_manifest.json",
+        "scenes/town/TownStageView.gd",
+        "tests/town_recruitment_vfx_asset_runtime_report.gd",
+        "tests/town_recruitment_vfx_asset_runtime_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/town_recruitment_vfx_asset_runtime_report.tscn",
+        "tests/town_recruitment_cue_playback_report.tscn",
+        "tests/town_battle_visual_smoke.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "869746bf",
+        "event_id": "town_units_recruited",
+        "vfx_cue_id": "vfx_placeholder_recruit_muster",
+        "runtime_texture_count": 0,
+        "live_rendering": "procedural_muster_rings_only",
+        "implementation_or_runtime_started": false
+      },
+      "completionCriteria": [
+        "Normal recruitment playback maps and visibly draws one exact imported alpha texture at 1280x720 and 1920x1080 without remapping any other cue",
+        "Missing mapping or texture retains the exact existing procedural muster rings and reduced motion retains the static recruit-count badge",
+        "Focused live proof preserves recruitment consequences, containment, progress, nonblocking lifetime, refresh, expiry, focus, session, and save version 9 authority",
+        "Recruitment cue, Town visual/action, focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "unit, cost, availability, recruitment, army, town-state, focus, input, timing, animation-policy, AI, save-schema, or content changes",
+        "construction VFX, other Town/Overworld/Battle cues, particles, shaders, audio, layout, scenic backdrop, or broad renderer changes",
+        "packaged recruitment interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
       "createdAt": "2026-08-15T09:47:01Z",
       "startedAt": "2026-08-15T09:47:01Z",
       "updatedAt": "2026-08-15T10:06:42Z",
@@ -20707,13 +21265,52 @@
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/screen-wireframes.md", "AGENTS.md"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/screen-wireframes.md",
+        "AGENTS.md"
+      ],
       "purpose": "Replace the normal live Town construction-complete procedural outline with one original imported alpha effect without changing established construction or presentation authority.",
-      "implementationTargets": ["art/town/source/build_complete_vfx_source.png", "art/town/runtime/vfx/build_complete.png", "content/town_vfx_manifest.json", "scenes/town/TownStageView.gd", "tests/town_building_complete_vfx_asset_runtime_report.gd", "tests/town_building_complete_vfx_asset_runtime_report.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
-      "testOwners": ["tests/town_building_complete_vfx_asset_runtime_report.tscn", "tests/town_building_complete_cue_playback_report.tscn", "tests/town_battle_visual_smoke.tscn", "tests/active_play_keyboard_focus_smoke.tscn", "tests/accessibility_screen_reader_semantics_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/validate_repo.py"],
-      "baseline": {"head": "e4ed41ce", "event_id": "town_building_built", "vfx_cue_id": "vfx_placeholder_build_complete", "runtime_texture_count": 0, "live_rendering": "procedural_gold_frame_only", "implementation_or_runtime_started": false},
-      "completionCriteria": ["Normal building-complete playback maps and visibly draws one exact imported alpha texture at 1280x720 and 1920x1080 without remapping any other cue", "Missing mapping or texture retains the exact existing procedural frame and reduced motion retains the static building badge", "Focused live proof preserves construction consequences, containment, progress, blocking, skip, expiry, focus, session, and save version 9 authority", "Building-complete, Town visual/action, focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"],
-      "nonGoals": ["building, cost, economy, action, construction, town-state, focus, input, timing, animation-policy, AI, save-schema, or content changes", "recruitment VFX, other Town/Overworld/Battle cues, particles, shaders, audio, layout, scenic backdrop, or broad renderer changes", "packaged building interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"],
+      "implementationTargets": [
+        "art/town/source/build_complete_vfx_source.png",
+        "art/town/runtime/vfx/build_complete.png",
+        "content/town_vfx_manifest.json",
+        "scenes/town/TownStageView.gd",
+        "tests/town_building_complete_vfx_asset_runtime_report.gd",
+        "tests/town_building_complete_vfx_asset_runtime_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/town_building_complete_vfx_asset_runtime_report.tscn",
+        "tests/town_building_complete_cue_playback_report.tscn",
+        "tests/town_battle_visual_smoke.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "e4ed41ce",
+        "event_id": "town_building_built",
+        "vfx_cue_id": "vfx_placeholder_build_complete",
+        "runtime_texture_count": 0,
+        "live_rendering": "procedural_gold_frame_only",
+        "implementation_or_runtime_started": false
+      },
+      "completionCriteria": [
+        "Normal building-complete playback maps and visibly draws one exact imported alpha texture at 1280x720 and 1920x1080 without remapping any other cue",
+        "Missing mapping or texture retains the exact existing procedural frame and reduced motion retains the static building badge",
+        "Focused live proof preserves construction consequences, containment, progress, blocking, skip, expiry, focus, session, and save version 9 authority",
+        "Building-complete, Town visual/action, focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "building, cost, economy, action, construction, town-state, focus, input, timing, animation-policy, AI, save-schema, or content changes",
+        "recruitment VFX, other Town/Overworld/Battle cues, particles, shaders, audio, layout, scenic backdrop, or broad renderer changes",
+        "packaged building interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
       "createdAt": "2026-08-15T09:26:05Z",
       "startedAt": "2026-08-15T09:26:05Z",
       "updatedAt": "2026-08-15T09:43:48Z",
@@ -20729,13 +21326,60 @@
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/screen-wireframes.md", "AGENTS.md"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/screen-wireframes.md",
+        "AGENTS.md"
+      ],
       "purpose": "Replace the live capture, visit, and depletion procedural placeholder effects with three distinct original textures without changing their established object-resolution authority.",
-      "implementationTargets": ["art/overworld/source/object_resolution_vfx_atlas.png", "art/overworld/runtime/vfx/object_resolution/", "content/overworld_vfx_manifest.json", "scenes/overworld/OverworldMapView.gd", "tests/overworld_object_resolution_vfx_asset_runtime_report.gd", "tests/overworld_object_resolution_vfx_asset_runtime_report.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
-      "testOwners": ["tests/overworld_object_resolution_vfx_asset_runtime_report.tscn", "tests/overworld_object_resolution_cue_playback_report.tscn", "tests/overworld_full_route_movement_regression.tscn", "tests/overworld_visual_smoke.tscn", "tests/accessibility_screen_reader_semantics_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/validate_repo.py"],
-      "baseline": {"head": "19c8883b774e163b9e55e188c45abc2cc236516f", "selected_event_ids": ["overworld_object_captured", "overworld_object_visited", "overworld_object_depleted"], "selected_vfx_cue_ids": ["vfx_placeholder_capture_flag", "vfx_placeholder_object_visit", "vfx_placeholder_depleted_dim"], "distinct_runtime_texture_count": 0, "live_rendering": "procedural_geometry_only", "implementation_or_runtime_started": false},
-      "completionCriteria": ["Three selected object-resolution cue ids map one-to-one to distinct original imported textures and no other cue is remapped", "Missing map or missing texture falls back to the exact existing procedural body for the same event", "Real 1280x720 and 1920x1080 live proof preserves exact event, tile, progress, reduced-motion, dynamic-layer, session, and save version 9 authority", "Object-resolution, repeatable-site, guarded-site, full-route, broad Overworld visual, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"],
-      "nonGoals": ["object, resource, artifact, reward, capture, visit, depletion, route, movement, fog, input, timing, animation-policy, AI, save-schema, map-topology, or Native-RMG changes", "other Overworld cues, Battle VFX, particles, shaders, audio, object sprites, layout, focus, or broad renderer changes", "packaged object interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"],
+      "implementationTargets": [
+        "art/overworld/source/object_resolution_vfx_atlas.png",
+        "art/overworld/runtime/vfx/object_resolution/",
+        "content/overworld_vfx_manifest.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_object_resolution_vfx_asset_runtime_report.gd",
+        "tests/overworld_object_resolution_vfx_asset_runtime_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_object_resolution_vfx_asset_runtime_report.tscn",
+        "tests/overworld_object_resolution_cue_playback_report.tscn",
+        "tests/overworld_full_route_movement_regression.tscn",
+        "tests/overworld_visual_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "19c8883b774e163b9e55e188c45abc2cc236516f",
+        "selected_event_ids": [
+          "overworld_object_captured",
+          "overworld_object_visited",
+          "overworld_object_depleted"
+        ],
+        "selected_vfx_cue_ids": [
+          "vfx_placeholder_capture_flag",
+          "vfx_placeholder_object_visit",
+          "vfx_placeholder_depleted_dim"
+        ],
+        "distinct_runtime_texture_count": 0,
+        "live_rendering": "procedural_geometry_only",
+        "implementation_or_runtime_started": false
+      },
+      "completionCriteria": [
+        "Three selected object-resolution cue ids map one-to-one to distinct original imported textures and no other cue is remapped",
+        "Missing map or missing texture falls back to the exact existing procedural body for the same event",
+        "Real 1280x720 and 1920x1080 live proof preserves exact event, tile, progress, reduced-motion, dynamic-layer, session, and save version 9 authority",
+        "Object-resolution, repeatable-site, guarded-site, full-route, broad Overworld visual, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "object, resource, artifact, reward, capture, visit, depletion, route, movement, fog, input, timing, animation-policy, AI, save-schema, map-topology, or Native-RMG changes",
+        "other Overworld cues, Battle VFX, particles, shaders, audio, object sprites, layout, focus, or broad renderer changes",
+        "packaged object interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
       "createdAt": "2026-08-15T08:59:32Z",
       "startedAt": "2026-08-15T08:59:32Z",
       "updatedAt": "2026-08-15T09:23:55Z",
@@ -20751,13 +21395,53 @@
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/screen-wireframes.md", "AGENTS.md"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/screen-wireframes.md",
+        "AGENTS.md"
+      ],
       "purpose": "Show the exact existing faction identity of live strategic-raid commanders on the Overworld without changing raid, fog, routing, battle, or AI authority.",
-      "implementationTargets": ["scenes/overworld/OverworldMapView.gd", "tests/overworld_enemy_commander_sprite_runtime_report.gd", "tests/overworld_enemy_commander_sprite_runtime_report.tscn", "tests/overworld_visual_smoke.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
-      "testOwners": ["tests/overworld_enemy_commander_sprite_runtime_report.tscn", "tests/ai_hero_task_spawn_commander_selection_report.tscn", "tests/ai_hero_task_hero_hunt_report.tscn", "tests/overworld_full_route_movement_regression.tscn", "tests/overworld_visual_smoke.tscn", "tests/active_play_keyboard_focus_smoke.tscn", "tests/accessibility_screen_reader_semantics_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/validate_repo.py"],
-      "baseline": {"head": "6a523ab21aaa97e0c15d570c1a14cb2ed2bcb9a6", "production_hero_count": 60, "production_faction_count": 6, "faction_hero_sprite_count": 6, "strategic_raid_commander_identity_present": true, "live_strategic_raid_marker": "primary_army_unit_icon", "implementation_or_runtime_started": false},
-      "completionCriteria": ["Six valid strategic-raid commander identities resolve one-to-one to the existing faction sprites only when roster hero, commander faction, spawning faction, and authored hero faction agree", "Commanderless, unknown, mismatched, or unloadable identity preserves the exact current primary-unit icon then mapped/default encounter fallback", "Real 1280x720 and 1920x1080 views preserve encounter tile, hostile treatment, fog and remembered semantics, selection, routing, battle payload, commander state, session, and save version 9 authority", "Focused raid presentation, strategic commander continuity, hero hunt and raid movement, broad Overworld visual, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"],
-      "nonGoals": ["hero, unit, encounter, raid, commander-roster, target, movement, fog, battle, AI, balance, save-schema, map-topology, or Native-RMG changes", "new assets, per-hero Overworld sprites, player-hero changes, army unit-icon replacement, encounter ring redesign, other object families, or broad renderer changes", "packaged raid interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"],
+      "implementationTargets": [
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_enemy_commander_sprite_runtime_report.gd",
+        "tests/overworld_enemy_commander_sprite_runtime_report.tscn",
+        "tests/overworld_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_enemy_commander_sprite_runtime_report.tscn",
+        "tests/ai_hero_task_spawn_commander_selection_report.tscn",
+        "tests/ai_hero_task_hero_hunt_report.tscn",
+        "tests/overworld_full_route_movement_regression.tscn",
+        "tests/overworld_visual_smoke.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "6a523ab21aaa97e0c15d570c1a14cb2ed2bcb9a6",
+        "production_hero_count": 60,
+        "production_faction_count": 6,
+        "faction_hero_sprite_count": 6,
+        "strategic_raid_commander_identity_present": true,
+        "live_strategic_raid_marker": "primary_army_unit_icon",
+        "implementation_or_runtime_started": false
+      },
+      "completionCriteria": [
+        "Six valid strategic-raid commander identities resolve one-to-one to the existing faction sprites only when roster hero, commander faction, spawning faction, and authored hero faction agree",
+        "Commanderless, unknown, mismatched, or unloadable identity preserves the exact current primary-unit icon then mapped/default encounter fallback",
+        "Real 1280x720 and 1920x1080 views preserve encounter tile, hostile treatment, fog and remembered semantics, selection, routing, battle payload, commander state, session, and save version 9 authority",
+        "Focused raid presentation, strategic commander continuity, hero hunt and raid movement, broad Overworld visual, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "hero, unit, encounter, raid, commander-roster, target, movement, fog, battle, AI, balance, save-schema, map-topology, or Native-RMG changes",
+        "new assets, per-hero Overworld sprites, player-hero changes, army unit-icon replacement, encounter ring redesign, other object families, or broad renderer changes",
+        "packaged raid interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
       "createdAt": "2026-08-15T08:26:07Z",
       "startedAt": "2026-08-15T08:26:07Z",
       "updatedAt": "2026-08-15T08:54:27Z",
@@ -20765,7 +21449,45 @@
       "notes": "Completed exact strategic-raid commander presentation through the six existing faction hero sprites. The renderer requires roster hero, commander faction, spawning faction, and authored hero faction to agree, keeps the existing hostile ring/grounding/contact and visible or remembered treatment, and falls through to the primary unit icon then mapped/default encounter sprite for absent, unknown, mismatched, or unloadable identity. Focused 1280x720 and 1920x1080 proof covers all six identities, four fail-closed component cases, exact restoration, containment, and save version 9. Commander selection, hero hunt, full-route movement, broad Overworld visual, active-play focus, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup passed. Packaged raid interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
       "blockedReason": null,
-      "result": {"production_faction_count": 6, "commander_sprite_count": 6, "viewports": [[1280, 720], [1920, 1080]], "fallback_cases": ["commanderless", "unknown_hero", "commander_faction_mismatch", "spawned_faction_mismatch"], "fallback_order": ["primary_unit_icon", "mapped_or_default_encounter_sprite"], "hostile_treatment_preserved": true, "fog_memory_presentation_preserved": true, "session_restoration_exact": true, "save_version": 9, "commander_selection_passed": true, "hero_hunt_passed": true, "full_route_movement_passed": true, "overworld_visual_passed": true, "active_play_keyboard_focus_passed": true, "accessibility_passed": true, "core_passed": true, "repository_validation_passed": true, "editor_parse_passed": true, "linux_export_headless_startup_passed": true, "windows_export_fresh_wine_startup_passed": true}
+      "result": {
+        "production_faction_count": 6,
+        "commander_sprite_count": 6,
+        "viewports": [
+          [
+            1280,
+            720
+          ],
+          [
+            1920,
+            1080
+          ]
+        ],
+        "fallback_cases": [
+          "commanderless",
+          "unknown_hero",
+          "commander_faction_mismatch",
+          "spawned_faction_mismatch"
+        ],
+        "fallback_order": [
+          "primary_unit_icon",
+          "mapped_or_default_encounter_sprite"
+        ],
+        "hostile_treatment_preserved": true,
+        "fog_memory_presentation_preserved": true,
+        "session_restoration_exact": true,
+        "save_version": 9,
+        "commander_selection_passed": true,
+        "hero_hunt_passed": true,
+        "full_route_movement_passed": true,
+        "overworld_visual_passed": true,
+        "active_play_keyboard_focus_passed": true,
+        "accessibility_passed": true,
+        "core_passed": true,
+        "repository_validation_passed": true,
+        "editor_parse_passed": true,
+        "linux_export_headless_startup_passed": true,
+        "windows_export_fresh_wine_startup_passed": true
+      }
     },
     {
       "id": "presentation-overworld-faction-hero-sprite-adoption-10184",
@@ -20774,13 +21496,55 @@
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/screen-wireframes.md", "docs/concept-art-pipeline.md", "AGENTS.md"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/screen-wireframes.md",
+        "docs/concept-art-pipeline.md",
+        "AGENTS.md"
+      ],
       "purpose": "Give all live Overworld commanders exact faction visual identity instead of one shared procedural hero figure while preserving hero and movement authority.",
-      "implementationTargets": ["art/overworld/source/faction_hero_sprite_atlas.png", "art/overworld/runtime/heroes/factions/", "art/overworld/manifest.json", "scenes/overworld/OverworldMapView.gd", "tests/overworld_faction_hero_sprite_runtime_report.gd", "tests/overworld_faction_hero_sprite_runtime_report.tscn", "tests/overworld_visual_smoke.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
-      "testOwners": ["tests/overworld_faction_hero_sprite_runtime_report.tscn", "tests/overworld_full_route_movement_regression.tscn", "tests/ninefold_scenario_smoke.tscn", "tests/overworld_visual_smoke.tscn", "tests/active_play_keyboard_focus_smoke.tscn", "tests/accessibility_screen_reader_semantics_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/validate_repo.py"],
-      "baseline": {"head": "1482e6b1d48faf1fd37532e39e48e9a6a19176c1", "production_hero_count": 60, "production_faction_count": 6, "faction_hero_sprite_count": 0, "live_overworld_hero_presentation": "shared_procedural_figure", "implementation_or_runtime_started": false},
-      "completionCriteria": ["Six distinct original imported commander sprites map one-to-one to all production faction ids and all 60 production heroes resolve through exact existing faction metadata", "Invalid, missing, unmapped, or unloadable hero identity uses only the existing procedural marker", "Real 1280x720 and 1920x1080 views preserve exact hero position, active identity, movement path and interpolation, reserve count, grounding and contact, selection, routing, session, and save version 9 authority", "Six-faction breadth, broad Overworld visual, route locomotion, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"],
-      "nonGoals": ["hero ids/names/portraits/rosters/stats/specialties/spells/armies/recruitment, faction rules, movement/pathfinding, AI, balance, save-schema, map-topology, or Native-RMG changes", "60-hero sprite set, portrait replacement, Town/Battle/Outcome UI, input/focus, camera, other object family, terrain/road/river, or broad renderer changes", "packaged hero interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"],
+      "implementationTargets": [
+        "art/overworld/source/faction_hero_sprite_atlas.png",
+        "art/overworld/runtime/heroes/factions/",
+        "art/overworld/manifest.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_faction_hero_sprite_runtime_report.gd",
+        "tests/overworld_faction_hero_sprite_runtime_report.tscn",
+        "tests/overworld_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_faction_hero_sprite_runtime_report.tscn",
+        "tests/overworld_full_route_movement_regression.tscn",
+        "tests/ninefold_scenario_smoke.tscn",
+        "tests/overworld_visual_smoke.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "1482e6b1d48faf1fd37532e39e48e9a6a19176c1",
+        "production_hero_count": 60,
+        "production_faction_count": 6,
+        "faction_hero_sprite_count": 0,
+        "live_overworld_hero_presentation": "shared_procedural_figure",
+        "implementation_or_runtime_started": false
+      },
+      "completionCriteria": [
+        "Six distinct original imported commander sprites map one-to-one to all production faction ids and all 60 production heroes resolve through exact existing faction metadata",
+        "Invalid, missing, unmapped, or unloadable hero identity uses only the existing procedural marker",
+        "Real 1280x720 and 1920x1080 views preserve exact hero position, active identity, movement path and interpolation, reserve count, grounding and contact, selection, routing, session, and save version 9 authority",
+        "Six-faction breadth, broad Overworld visual, route locomotion, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "hero ids/names/portraits/rosters/stats/specialties/spells/armies/recruitment, faction rules, movement/pathfinding, AI, balance, save-schema, map-topology, or Native-RMG changes",
+        "60-hero sprite set, portrait replacement, Town/Battle/Outcome UI, input/focus, camera, other object family, terrain/road/river, or broad renderer changes",
+        "packaged hero interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
       "createdAt": "2026-08-15T07:50:07Z",
       "startedAt": "2026-08-15T07:50:07Z",
       "updatedAt": "2026-08-15T08:21:43Z",
@@ -20788,7 +21552,41 @@
       "notes": "Completed six distinct original 512x512 alpha faction commander sprites and exact manifest-backed live resolution for all 60 production heroes without changing hero content or movement authority. The renderer carries the authoritative active hero identity through route interpolation, preserves reserve badges and existing grounding/contact, and retains the procedural figure only for invalid, missing, unmapped, or unloadable identity. Focused 1280x720 and 1920x1080 proof covers all six sprite ids and paths, fallback, whole-session restoration, containment, and save version 9. Full-route movement, Ninefold, broad Overworld visual, active-play focus, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup passed. Packaged hero interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
       "blockedReason": null,
-      "result": {"production_hero_count": 60, "production_faction_count": 6, "distinct_sprite_count": 6, "runtime_asset_size": [512, 512], "viewports": [[1280, 720], [1920, 1080]], "fallback": "procedural_hero_marker", "active_identity_exact": true, "movement_interpolation_identity_preserved": true, "reserve_grounding_contact_preserved": true, "session_restoration_exact": true, "save_version": 9, "full_route_movement_passed": true, "ninefold_passed": true, "overworld_visual_passed": true, "active_play_keyboard_focus_passed": true, "accessibility_passed": true, "core_passed": true, "repository_validation_passed": true, "editor_parse_passed": true, "linux_export_headless_startup_passed": true, "windows_export_fresh_wine_startup_passed": true}
+      "result": {
+        "production_hero_count": 60,
+        "production_faction_count": 6,
+        "distinct_sprite_count": 6,
+        "runtime_asset_size": [
+          512,
+          512
+        ],
+        "viewports": [
+          [
+            1280,
+            720
+          ],
+          [
+            1920,
+            1080
+          ]
+        ],
+        "fallback": "procedural_hero_marker",
+        "active_identity_exact": true,
+        "movement_interpolation_identity_preserved": true,
+        "reserve_grounding_contact_preserved": true,
+        "session_restoration_exact": true,
+        "save_version": 9,
+        "full_route_movement_passed": true,
+        "ninefold_passed": true,
+        "overworld_visual_passed": true,
+        "active_play_keyboard_focus_passed": true,
+        "accessibility_passed": true,
+        "core_passed": true,
+        "repository_validation_passed": true,
+        "editor_parse_passed": true,
+        "linux_export_headless_startup_passed": true,
+        "windows_export_fresh_wine_startup_passed": true
+      }
     },
     {
       "id": "presentation-overworld-artifact-pickup-icon-adoption-10184",
@@ -20797,13 +21595,52 @@
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/artifact-system-expansion-foundation.md", "docs/screen-wireframes.md", "AGENTS.md"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/artifact-system-expansion-foundation.md",
+        "docs/screen-wireframes.md",
+        "AGENTS.md"
+      ],
       "purpose": "Render every live Overworld artifact pickup with its existing exact production icon instead of collapsing all 12 identities to adventurers_bundle.",
-      "implementationTargets": ["scenes/overworld/OverworldMapView.gd", "tests/overworld_artifact_pickup_icon_runtime_report.gd", "tests/overworld_artifact_pickup_icon_runtime_report.tscn", "tests/overworld_visual_smoke.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
-      "testOwners": ["tests/overworld_artifact_pickup_icon_runtime_report.tscn", "tests/artifact_pickup_source_execution_report.tscn", "tests/overworld_object_resolution_cue_playback_report.tscn", "tests/overworld_visual_smoke.tscn", "tests/active_play_keyboard_focus_smoke.tscn", "tests/accessibility_screen_reader_semantics_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/validate_repo.py"],
-      "baseline": {"head": "0be3cdbb54c6fc57efc0dab4bb02f601e546c783", "production_artifact_count": 12, "distinct_imported_artifact_icon_count": 12, "live_overworld_artifact_sprite_asset_id": "adventurers_bundle", "artifact_id_ignored_by_draw_path": true, "implementation_or_runtime_started": false},
-      "completionCriteria": ["All 12 production artifact ids resolve one-to-one to their existing distinct imported icons in the live Overworld renderer", "Invalid, missing, or unloadable artifact identity falls back only to adventurers_bundle without errors or state changes", "Real 1280x720 and 1920x1080 views preserve exact pickup footprint, grounding, current explored and visible treatment, selection, collection and depletion, fog, route, session, and save version 9 authority", "Focused, artifact pickup and object-resolution compatibility, Overworld visual, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"],
-      "nonGoals": ["new art, artifact ids/content/bonuses/rarity/slots/sets/reward tables, placement selection, acquisition, auto-equip, economy, movement, scouting, AI, balance, save-schema, map-topology, or Native-RMG changes", "gear-button, Town, cue, layout, focus, input, other object-family, terrain/road/river, or broad renderer changes", "packaged artifact interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"],
+      "implementationTargets": [
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_artifact_pickup_icon_runtime_report.gd",
+        "tests/overworld_artifact_pickup_icon_runtime_report.tscn",
+        "tests/overworld_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_artifact_pickup_icon_runtime_report.tscn",
+        "tests/artifact_pickup_source_execution_report.tscn",
+        "tests/overworld_object_resolution_cue_playback_report.tscn",
+        "tests/overworld_visual_smoke.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "0be3cdbb54c6fc57efc0dab4bb02f601e546c783",
+        "production_artifact_count": 12,
+        "distinct_imported_artifact_icon_count": 12,
+        "live_overworld_artifact_sprite_asset_id": "adventurers_bundle",
+        "artifact_id_ignored_by_draw_path": true,
+        "implementation_or_runtime_started": false
+      },
+      "completionCriteria": [
+        "All 12 production artifact ids resolve one-to-one to their existing distinct imported icons in the live Overworld renderer",
+        "Invalid, missing, or unloadable artifact identity falls back only to adventurers_bundle without errors or state changes",
+        "Real 1280x720 and 1920x1080 views preserve exact pickup footprint, grounding, current explored and visible treatment, selection, collection and depletion, fog, route, session, and save version 9 authority",
+        "Focused, artifact pickup and object-resolution compatibility, Overworld visual, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "new art, artifact ids/content/bonuses/rarity/slots/sets/reward tables, placement selection, acquisition, auto-equip, economy, movement, scouting, AI, balance, save-schema, map-topology, or Native-RMG changes",
+        "gear-button, Town, cue, layout, focus, input, other object-family, terrain/road/river, or broad renderer changes",
+        "packaged artifact interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
       "createdAt": "2026-08-15T07:22:19Z",
       "startedAt": "2026-08-15T07:22:19Z",
       "updatedAt": "2026-08-15T07:47:11Z",
@@ -20811,7 +21648,39 @@
       "notes": "Completed exact live artifact-id to imported-icon adoption without content or gameplay changes. All 12 existing icon ids and paths render through the existing 1x1 pickup footprint and localized grounding; malformed identity uses adventurers_bundle only. Focused 1280x720 and 1920x1080 proof preserves current explored/visible semantics, fallback, whole-session restoration, containment, and save version 9. Artifact pickup source, object-resolution cue, broad Overworld visual, active-play focus, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup passed. Packaged artifact interaction, hardware/certification, signing/publication, whole-game, and release readiness remain unclaimed.",
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
       "blockedReason": null,
-      "result": {"production_artifact_count": 12, "distinct_existing_icon_count": 12, "viewports": [[1280, 720], [1920, 1080]], "fallback_asset_id": "adventurers_bundle", "footprint": [1, 1], "grounding_model": "localized_sprite_contact_scuffs", "current_explored_visible_treatment_preserved": true, "session_restoration_exact": true, "save_version": 9, "artifact_pickup_source_passed": true, "object_resolution_passed": true, "overworld_visual_passed": true, "active_play_keyboard_focus_passed": true, "accessibility_passed": true, "core_passed": true, "repository_validation_passed": true, "editor_parse_passed": true, "linux_export_headless_startup_passed": true, "windows_export_fresh_wine_startup_passed": true}
+      "result": {
+        "production_artifact_count": 12,
+        "distinct_existing_icon_count": 12,
+        "viewports": [
+          [
+            1280,
+            720
+          ],
+          [
+            1920,
+            1080
+          ]
+        ],
+        "fallback_asset_id": "adventurers_bundle",
+        "footprint": [
+          1,
+          1
+        ],
+        "grounding_model": "localized_sprite_contact_scuffs",
+        "current_explored_visible_treatment_preserved": true,
+        "session_restoration_exact": true,
+        "save_version": 9,
+        "artifact_pickup_source_passed": true,
+        "object_resolution_passed": true,
+        "overworld_visual_passed": true,
+        "active_play_keyboard_focus_passed": true,
+        "accessibility_passed": true,
+        "core_passed": true,
+        "repository_validation_passed": true,
+        "editor_parse_passed": true,
+        "linux_export_headless_startup_passed": true,
+        "windows_export_fresh_wine_startup_passed": true
+      }
     },
     {
       "id": "presentation-overworld-faction-town-sprite-adoption-10184",
@@ -20820,13 +21689,55 @@
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/screen-wireframes.md", "docs/concept-art-pipeline.md", "AGENTS.md"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/screen-wireframes.md",
+        "docs/concept-art-pipeline.md",
+        "AGENTS.md"
+      ],
       "purpose": "Give every live authored Overworld town exact faction visual identity while preserving the existing map interaction and authority boundaries.",
-      "implementationTargets": ["art/overworld/source/faction_town_sprite_atlas.png", "art/overworld/runtime/objects/towns/factions/", "art/overworld/manifest.json", "scenes/overworld/OverworldMapView.gd", "tests/overworld_faction_town_sprite_runtime_report.gd", "tests/overworld_faction_town_sprite_runtime_report.tscn", "tests/ninefold_scenario_smoke.gd", "tests/overworld_visual_smoke.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
-      "testOwners": ["tests/overworld_faction_town_sprite_runtime_report.tscn", "tests/ninefold_scenario_smoke.tscn", "tests/overworld_visual_smoke.tscn", "tests/active_play_keyboard_focus_smoke.tscn", "tests/accessibility_screen_reader_semantics_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/validate_repo.py"],
-      "baseline": {"head": "05fb5286ffa9e22a56d49ba397a30d2cfbd9223e", "authored_town_count": 15, "production_faction_count": 6, "faction_town_sprite_count": 0, "live_town_asset_id": "frontier_town", "implementation_or_runtime_started": false},
-      "completionCriteria": ["Six distinct original imported Overworld town sprites map one-to-one to all production faction ids in the existing art manifest", "All 15 authored towns resolve through exact live template faction while invalid or unloadable identity falls back to frontier_town", "Real 1280x720 and 1920x1080 Overworld maps preserve exact town footprint, grounding, owner pennant, visible and remembered treatment, selection, routing, passability, session, and save authority", "Focused, Ninefold, Overworld visual, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"],
-      "nonGoals": ["town ids/templates/placements, faction rules, economy, buildings, recruitment, garrisons, ownership, capture, AI, balance, save-schema, map-topology, footprints, passability, routing, or Native-RMG changes", "Town-screen backdrop/crest/layout, owner-pennant redesign, other overworld object families, terrain/road/river art, or broad map-renderer changes", "packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"],
+      "implementationTargets": [
+        "art/overworld/source/faction_town_sprite_atlas.png",
+        "art/overworld/runtime/objects/towns/factions/",
+        "art/overworld/manifest.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_faction_town_sprite_runtime_report.gd",
+        "tests/overworld_faction_town_sprite_runtime_report.tscn",
+        "tests/ninefold_scenario_smoke.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_faction_town_sprite_runtime_report.tscn",
+        "tests/ninefold_scenario_smoke.tscn",
+        "tests/overworld_visual_smoke.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "05fb5286ffa9e22a56d49ba397a30d2cfbd9223e",
+        "authored_town_count": 15,
+        "production_faction_count": 6,
+        "faction_town_sprite_count": 0,
+        "live_town_asset_id": "frontier_town",
+        "implementation_or_runtime_started": false
+      },
+      "completionCriteria": [
+        "Six distinct original imported Overworld town sprites map one-to-one to all production faction ids in the existing art manifest",
+        "All 15 authored towns resolve through exact live template faction while invalid or unloadable identity falls back to frontier_town",
+        "Real 1280x720 and 1920x1080 Overworld maps preserve exact town footprint, grounding, owner pennant, visible and remembered treatment, selection, routing, passability, session, and save authority",
+        "Focused, Ninefold, Overworld visual, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "town ids/templates/placements, faction rules, economy, buildings, recruitment, garrisons, ownership, capture, AI, balance, save-schema, map-topology, footprints, passability, routing, or Native-RMG changes",
+        "Town-screen backdrop/crest/layout, owner-pennant redesign, other overworld object families, terrain/road/river art, or broad map-renderer changes",
+        "packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
       "createdAt": "2026-08-15T06:46:56Z",
       "startedAt": "2026-08-15T06:46:56Z",
       "updatedAt": "2026-08-15T07:17:33Z",
@@ -20834,7 +21745,42 @@
       "notes": "Completed six distinct original 512x512 alpha faction town sprites and exact existing-manifest mapping. All 15 authored towns now resolve through their live template faction; the renderer prefers only a valid loaded faction texture, then frontier_town, then the existing procedural fallback. Focused 1280x720/1920x1080 Ninefold rows preserve the 3x2 footprint, bottom-middle visit entry, blocked non-entry cells, no-ellipse grounding, owner color/pennant path, shell containment, whole-session restoration, and save version 9. Ninefold, broad Overworld visual, active-play focus, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup passed. Packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
       "blockedReason": null,
-      "result": {"authored_town_count": 15, "production_faction_count": 6, "distinct_sprite_count": 6, "runtime_asset_size": [512, 512], "viewports": [[1280, 720], [1920, 1080]], "fallback_asset_id": "frontier_town", "town_footprint": [3, 2], "entry_role": "bottom_middle_visit_approach", "session_route_passability_save_authority_exact": true, "save_version": 9, "ninefold_passed": true, "overworld_visual_passed": true, "active_play_keyboard_focus_passed": true, "accessibility_passed": true, "core_passed": true, "repository_validation_passed": true, "editor_parse_passed": true, "linux_export_headless_startup_passed": true, "windows_export_fresh_wine_startup_passed": true}
+      "result": {
+        "authored_town_count": 15,
+        "production_faction_count": 6,
+        "distinct_sprite_count": 6,
+        "runtime_asset_size": [
+          512,
+          512
+        ],
+        "viewports": [
+          [
+            1280,
+            720
+          ],
+          [
+            1920,
+            1080
+          ]
+        ],
+        "fallback_asset_id": "frontier_town",
+        "town_footprint": [
+          3,
+          2
+        ],
+        "entry_role": "bottom_middle_visit_approach",
+        "session_route_passability_save_authority_exact": true,
+        "save_version": 9,
+        "ninefold_passed": true,
+        "overworld_visual_passed": true,
+        "active_play_keyboard_focus_passed": true,
+        "accessibility_passed": true,
+        "core_passed": true,
+        "repository_validation_passed": true,
+        "editor_parse_passed": true,
+        "linux_export_headless_startup_passed": true,
+        "windows_export_fresh_wine_startup_passed": true
+      }
     },
     {
       "id": "presentation-town-faction-crest-adoption-10184",
@@ -20843,13 +21789,56 @@
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/screen-wireframes.md", "docs/concept-art-pipeline.md", "AGENTS.md"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/screen-wireframes.md",
+        "docs/concept-art-pipeline.md",
+        "AGENTS.md"
+      ],
       "purpose": "Give the six production factions distinct original crests on the existing live Town crest medallion while preserving exact Town behavior and layout.",
-      "implementationTargets": ["art/factions/source/faction_crest_atlas.png", "art/factions/runtime/crests/", "content/faction_crests.json", "scripts/autoload/ContentService.gd", "scripts/core/TownRules.gd", "scenes/town/TownShell.gd", "scenes/town/TownShell.tscn", "tests/town_faction_crest_runtime_report.gd", "tests/town_faction_crest_runtime_report.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
-      "testOwners": ["tests/town_faction_crest_runtime_report.tscn", "tests/town_development_save_resume_report.tscn", "tests/town_battle_visual_smoke.tscn", "tests/active_play_keyboard_focus_smoke.tscn", "tests/accessibility_screen_reader_semantics_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/validate_repo.py"],
-      "baseline": {"head": "fd2551f5a517e4ca160b3ce285667680a6efab47", "production_faction_count": 6, "town_scenic_faction_backdrop_count": 6, "production_faction_crest_asset_count": 0, "town_live_crest_glyph_id": "town", "implementation_or_runtime_started": false},
-      "completionCriteria": ["Six distinct original imported crest assets map one-to-one to all six production faction ids through exact fail-closed production content and rules ownership", "Real Town shells at 1280x720 and 1920x1080 render the exact active faction crest inside the existing medallion while unknown or unloadable identity retains the procedural town fallback", "Crest containment, aspect, tooltip, overlay order, Town layout, focus, actions, session, save, route, and all-faction identity authority remain exact", "Focused, all-faction Town/save, Town visual, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"],
-      "nonGoals": ["faction ids/names/rules/economy/recruitment/units/heroes/buildings/towns/scenarios/campaign/combat/AI/balance/save-schema/map/Native-RMG changes", "Town stage/backdrop, medallion geometry, layout, focus order, input, other screen, global theme, UI scale, or broad heraldry redesign", "packaged Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"],
+      "implementationTargets": [
+        "art/factions/source/faction_crest_atlas.png",
+        "art/factions/runtime/crests/",
+        "content/faction_crests.json",
+        "scripts/autoload/ContentService.gd",
+        "scripts/core/TownRules.gd",
+        "scenes/town/TownShell.gd",
+        "scenes/town/TownShell.tscn",
+        "tests/town_faction_crest_runtime_report.gd",
+        "tests/town_faction_crest_runtime_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/town_faction_crest_runtime_report.tscn",
+        "tests/town_development_save_resume_report.tscn",
+        "tests/town_battle_visual_smoke.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "fd2551f5a517e4ca160b3ce285667680a6efab47",
+        "production_faction_count": 6,
+        "town_scenic_faction_backdrop_count": 6,
+        "production_faction_crest_asset_count": 0,
+        "town_live_crest_glyph_id": "town",
+        "implementation_or_runtime_started": false
+      },
+      "completionCriteria": [
+        "Six distinct original imported crest assets map one-to-one to all six production faction ids through exact fail-closed production content and rules ownership",
+        "Real Town shells at 1280x720 and 1920x1080 render the exact active faction crest inside the existing medallion while unknown or unloadable identity retains the procedural town fallback",
+        "Crest containment, aspect, tooltip, overlay order, Town layout, focus, actions, session, save, route, and all-faction identity authority remain exact",
+        "Focused, all-faction Town/save, Town visual, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "faction ids/names/rules/economy/recruitment/units/heroes/buildings/towns/scenarios/campaign/combat/AI/balance/save-schema/map/Native-RMG changes",
+        "Town stage/backdrop, medallion geometry, layout, focus order, input, other screen, global theme, UI scale, or broad heraldry redesign",
+        "packaged Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
       "createdAt": "2026-08-15T06:05:18Z",
       "startedAt": "2026-08-15T06:05:18Z",
       "updatedAt": "2026-08-15T06:42:32Z",
@@ -20857,7 +21846,44 @@
       "notes": "Completed six distinct original 256x256 alpha faction crests and one exact ordered manifest/resolver. Real Town shells at 1280x720 and 1920x1080 render all six active faction identities inside the existing 74x50 crest frame with a contained 42x40 icon and exact tooltip; unknown identity remains fail-closed on the procedural town glyph. Focused authority preserved the whole session, action catalog, route, layout, focus, and save version 9. All-faction Town/save, Town visual, active-play focus, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup passed. Packaged Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
       "blockedReason": null,
-      "result": {"faction_count": 6, "distinct_crest_count": 6, "runtime_asset_size": [256, 256], "viewports": [[1280, 720], [1920, 1080]], "crest_icon_size": [42, 40], "crest_frame_size": [74, 50], "unknown_faction_fallback_exact": true, "session_action_route_layout_focus_authority_exact": true, "save_version": 9, "town_save_passed": true, "town_visual_passed": true, "active_play_keyboard_focus_passed": true, "accessibility_passed": true, "core_passed": true, "repository_validation_passed": true, "editor_parse_passed": true, "linux_export_headless_startup_passed": true, "windows_export_fresh_wine_startup_passed": true}
+      "result": {
+        "faction_count": 6,
+        "distinct_crest_count": 6,
+        "runtime_asset_size": [
+          256,
+          256
+        ],
+        "viewports": [
+          [
+            1280,
+            720
+          ],
+          [
+            1920,
+            1080
+          ]
+        ],
+        "crest_icon_size": [
+          42,
+          40
+        ],
+        "crest_frame_size": [
+          74,
+          50
+        ],
+        "unknown_faction_fallback_exact": true,
+        "session_action_route_layout_focus_authority_exact": true,
+        "save_version": 9,
+        "town_save_passed": true,
+        "town_visual_passed": true,
+        "active_play_keyboard_focus_passed": true,
+        "accessibility_passed": true,
+        "core_passed": true,
+        "repository_validation_passed": true,
+        "editor_parse_passed": true,
+        "linux_export_headless_startup_passed": true,
+        "windows_export_fresh_wine_startup_passed": true
+      }
     },
     {
       "id": "ux-shared-resource-stockpile-icon-popover-10184",
@@ -20866,13 +21892,56 @@
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/economy-overhaul-foundation.md", "docs/economy-resource-schema-migration-plan.md", "docs/screen-wireframes.md", "AGENTS.md"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-overhaul-foundation.md",
+        "docs/economy-resource-schema-migration-plan.md",
+        "docs/screen-wireframes.md",
+        "AGENTS.md"
+      ],
       "purpose": "Show the exact nine live stockpile resources and their production icons in one compact focusable menu shared by the existing Town and Overworld resource rails.",
-      "implementationTargets": ["scenes/shared/ResourceStockpileMenu.gd", "scenes/overworld/OverworldShell.gd", "scenes/overworld/OverworldShell.tscn", "scenes/town/TownShell.gd", "scenes/town/TownShell.tscn", "tests/resource_stockpile_icon_popover_runtime_report.gd", "tests/resource_stockpile_icon_popover_runtime_report.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
-      "testOwners": ["tests/resource_stockpile_icon_popover_runtime_report.tscn", "tests/town_economy_resource_ui_surface_report.tscn", "tests/overworld_visual_smoke.tscn", "tests/active_play_keyboard_focus_smoke.tscn", "tests/accessibility_screen_reader_semantics_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/validate_repo.py"],
-      "baseline": {"head": "001fde0c", "production_resource_count": 9, "production_resource_icon_count": 9, "town_stockpile_control_type": "Label", "overworld_stockpile_control_type": "Label", "shared_stockpile_icon_menu_count": 0, "economy_or_save_changes_started": false},
-      "completionCriteria": ["One shared production component renders the exact ordered nine resource rows with exact current amounts and fail-closed imported icons; invalid registry rows are omitted and invalid icons remain text-only", "Real Town and Overworld shells at 1280x720 and 1920x1080 open and close the menu through public input with containment and focus return exact", "Existing visible summary, full ledger tooltip, action, session, economy, save, route, and layout authority remain exact", "Focused, Town economy, Overworld visual, keyboard focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"],
-      "nonGoals": ["resource id/amount/order/cost/income/market/site/source/AI/save-schema or gameplay changes", "full-width dashboard, persistent panel, new top-level screen, new resource art, pickup/site art, or unrelated icon work", "packaged popover interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"],
+      "implementationTargets": [
+        "scenes/shared/ResourceStockpileMenu.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/overworld/OverworldShell.tscn",
+        "scenes/town/TownShell.gd",
+        "scenes/town/TownShell.tscn",
+        "tests/resource_stockpile_icon_popover_runtime_report.gd",
+        "tests/resource_stockpile_icon_popover_runtime_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/resource_stockpile_icon_popover_runtime_report.tscn",
+        "tests/town_economy_resource_ui_surface_report.tscn",
+        "tests/overworld_visual_smoke.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "001fde0c",
+        "production_resource_count": 9,
+        "production_resource_icon_count": 9,
+        "town_stockpile_control_type": "Label",
+        "overworld_stockpile_control_type": "Label",
+        "shared_stockpile_icon_menu_count": 0,
+        "economy_or_save_changes_started": false
+      },
+      "completionCriteria": [
+        "One shared production component renders the exact ordered nine resource rows with exact current amounts and fail-closed imported icons; invalid registry rows are omitted and invalid icons remain text-only",
+        "Real Town and Overworld shells at 1280x720 and 1920x1080 open and close the menu through public input with containment and focus return exact",
+        "Existing visible summary, full ledger tooltip, action, session, economy, save, route, and layout authority remain exact",
+        "Focused, Town economy, Overworld visual, keyboard focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "resource id/amount/order/cost/income/market/site/source/AI/save-schema or gameplay changes",
+        "full-width dashboard, persistent panel, new top-level screen, new resource art, pickup/site art, or unrelated icon work",
+        "packaged popover interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
       "createdAt": "2026-08-15T05:25:21Z",
       "startedAt": "2026-08-15T05:25:21Z",
       "updatedAt": "2026-08-15T06:00:50Z",
@@ -20880,7 +21949,37 @@
       "notes": "Completed one shared focusable ResourceStockpileMenu on the existing Town and Overworld resource rails. The native popup consumes only detached live values and production resource resolvers, preserves exact registry order, renders all nine current amounts and original icons, omits invalid icon identity fail-closed, and never touches session/economy/save/action authority. Focused 1280x720/1920x1080 Town/Overworld rows prove public keyboard open, native popup containment, Escape close, focus return, exact 80px compact Overworld button inside the existing 96px chip, whole-session and action authority, and save version 9. Town economy, Overworld visual, active-play keyboard focus, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup passed. Packaged popover interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
       "blockedReason": null,
-      "result": {"resource_count": 9, "focused_rows": 4, "viewports": [[1280, 720], [1920, 1080]], "town_menu_exact": true, "overworld_menu_exact": true, "compact_overworld_button_width": 80, "compact_resource_chip_width": 96, "public_keyboard_open_close": true, "focus_return_exact": true, "session_action_save_authority_exact": true, "save_version": 9, "town_economy_passed": true, "overworld_visual_passed": true, "active_play_keyboard_focus_passed": true, "accessibility_passed": true, "core_passed": true, "repository_validation_passed": true, "editor_parse_passed": true, "linux_export_headless_startup_passed": true, "windows_export_fresh_wine_startup_passed": true}
+      "result": {
+        "resource_count": 9,
+        "focused_rows": 4,
+        "viewports": [
+          [
+            1280,
+            720
+          ],
+          [
+            1920,
+            1080
+          ]
+        ],
+        "town_menu_exact": true,
+        "overworld_menu_exact": true,
+        "compact_overworld_button_width": 80,
+        "compact_resource_chip_width": 96,
+        "public_keyboard_open_close": true,
+        "focus_return_exact": true,
+        "session_action_save_authority_exact": true,
+        "save_version": 9,
+        "town_economy_passed": true,
+        "overworld_visual_passed": true,
+        "active_play_keyboard_focus_passed": true,
+        "accessibility_passed": true,
+        "core_passed": true,
+        "repository_validation_passed": true,
+        "editor_parse_passed": true,
+        "linux_export_headless_startup_passed": true,
+        "windows_export_fresh_wine_startup_passed": true
+      }
     },
     {
       "id": "economy-production-resource-registry-collection-icon-adoption-10184",
@@ -20889,13 +21988,56 @@
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/economy-overhaul-foundation.md", "docs/screen-wireframes.md", "docs/concept-art-pipeline.md", "AGENTS.md"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/economy-overhaul-foundation.md",
+        "docs/screen-wireframes.md",
+        "docs/concept-art-pipeline.md",
+        "AGENTS.md"
+      ],
       "purpose": "Promote the nine live stockpile resources into exact production metadata and give existing compact Overworld collection actions original resource identity.",
-      "implementationTargets": ["content/resources.json", "art/economy/source/resource_icon_atlas.png", "art/economy/runtime/resources/", "scripts/autoload/ContentService.gd", "scripts/core/OverworldRules.gd", "scenes/overworld/OverworldShell.gd", "tests/overworld_resource_delta_cue_playback_report.gd", "tests/active_scenario_rare_economy_access_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
-      "testOwners": ["tests/overworld_resource_delta_cue_playback_report.tscn", "tests/live_stockpile_resource_surface_report.tscn", "tests/active_scenario_rare_economy_access_report.tscn", "tests/town_economy_resource_ui_surface_report.tscn", "tests/overworld_visual_smoke.tscn", "tests/accessibility_screen_reader_semantics_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/validate_repo.py"],
-      "baseline": {"head": "d2cbbd2e", "live_stockpile_resource_count": 9, "production_resource_registry_count": 0, "resource_runtime_asset_count": 0, "overworld_collection_icons_loaded": 0, "resource_rules_or_save_changes_started": false},
-      "completionCriteria": ["Production owns exactly nine stockpile resource definitions and nine distinct original imported icons while preserving all stable ids and fixture agreement", "Existing compact Overworld resource collection actions render exact yielded-resource identity fail-closed without changing order, copy, tooltip, disabled state, focus, containment, or consequences", "Focused real collection proof passes at 1280x720 and 1920x1080 with exact whole session/save/recap/cue authority; invalid metadata remains text-only", "Economy registry/schema, collection, live stockpile/Town economy, Overworld visual/accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"],
-      "nonGoals": ["resource id/amount/cost/income/market/site/source/faction-affinity/AI/save-schema or collection-consequence changes", "new resource dashboard/panel, broad resource-bar redesign, pickup/site art, non-resource icons, packaged interaction, hardware/certification, signing/publication, whole-game, or release-readiness claims"],
+      "implementationTargets": [
+        "content/resources.json",
+        "art/economy/source/resource_icon_atlas.png",
+        "art/economy/runtime/resources/",
+        "scripts/autoload/ContentService.gd",
+        "scripts/core/OverworldRules.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "tests/overworld_resource_delta_cue_playback_report.gd",
+        "tests/active_scenario_rare_economy_access_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_resource_delta_cue_playback_report.tscn",
+        "tests/live_stockpile_resource_surface_report.tscn",
+        "tests/active_scenario_rare_economy_access_report.tscn",
+        "tests/town_economy_resource_ui_surface_report.tscn",
+        "tests/overworld_visual_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "d2cbbd2e",
+        "live_stockpile_resource_count": 9,
+        "production_resource_registry_count": 0,
+        "resource_runtime_asset_count": 0,
+        "overworld_collection_icons_loaded": 0,
+        "resource_rules_or_save_changes_started": false
+      },
+      "completionCriteria": [
+        "Production owns exactly nine stockpile resource definitions and nine distinct original imported icons while preserving all stable ids and fixture agreement",
+        "Existing compact Overworld resource collection actions render exact yielded-resource identity fail-closed without changing order, copy, tooltip, disabled state, focus, containment, or consequences",
+        "Focused real collection proof passes at 1280x720 and 1920x1080 with exact whole session/save/recap/cue authority; invalid metadata remains text-only",
+        "Economy registry/schema, collection, live stockpile/Town economy, Overworld visual/accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "resource id/amount/cost/income/market/site/source/faction-affinity/AI/save-schema or collection-consequence changes",
+        "new resource dashboard/panel, broad resource-bar redesign, pickup/site art, non-resource icons, packaged interaction, hardware/certification, signing/publication, whole-game, or release-readiness claims"
+      ],
       "createdAt": "2026-08-15T04:46:30Z",
       "startedAt": "2026-08-15T04:46:30Z",
       "updatedAt": "2026-08-15T05:12:49Z",
@@ -21143,12 +22285,27 @@
         "placement_id": "rope_lift",
         "site_id": "site_rope_lift",
         "object_id": "object_rope_lift",
-        "placement": {"x": 9, "y": 52},
-        "endpoint_tiles": [{"x": 9, "y": 51}, {"x": 9, "y": 54}],
+        "placement": {
+          "x": 9,
+          "y": 52
+        },
+        "endpoint_tiles": [
+          {
+            "x": 9,
+            "y": 51
+          },
+          {
+            "x": 9,
+            "y": 54
+          }
+        ],
         "response_action": "Reeve Rope Lift",
         "response_watch_days": 4,
         "response_movement_cost": 3,
-        "response_resource_cost": {"gold": 130, "ore": 1},
+        "response_resource_cost": {
+          "gold": 130,
+          "ore": 1
+        },
         "authored_movement_cost_delta": -2,
         "runtime_route_effect_adopted": false
       },
@@ -82617,7 +83774,12 @@
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/animation-systems-foundation.md", "AGENTS.md"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/animation-systems-foundation.md",
+        "AGENTS.md"
+      ],
       "purpose": "Make successful live manual saves visibly confirm the authoritative write through the existing authored system_save_written cue contract on every active-play shell.",
       "implementationTargets": [
         "scenes/shared/SystemSaveWrittenCuePresenter.gd",
@@ -82645,7 +83807,12 @@
         "normal_animation_state": "save_confirm",
         "normal_blocking_policy": "never_blocks_input",
         "reduced_motion_fallback": "save_icon_static",
-        "active_play_manual_save_surfaces": ["overworld", "town", "battle", "scenario_outcome"],
+        "active_play_manual_save_surfaces": [
+          "overworld",
+          "town",
+          "battle",
+          "scenario_outcome"
+        ],
         "active_play_save_written_playback": false
       },
       "completionCriteria": [
@@ -82675,7 +83842,12 @@
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/animation-systems-foundation.md", "AGENTS.md"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/animation-systems-foundation.md",
+        "AGENTS.md"
+      ],
       "purpose": "Make successful live player resource-site collection visibly confirm exact authoritative net stockpile changes through the existing authored ui_resource_delta cue contract.",
       "implementationTargets": [
         "scenes/overworld/OverworldShell.gd",
@@ -82732,7 +83904,12 @@
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/animation-systems-foundation.md", "AGENTS.md"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/animation-systems-foundation.md",
+        "AGENTS.md"
+      ],
       "purpose": "Make successful live player artifact-cache collection visibly confirm the authoritative acquired artifact through the existing authored artifact_acquired cue contract.",
       "implementationTargets": [
         "scenes/overworld/OverworldShell.gd",
@@ -82789,7 +83966,12 @@
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/animation-systems-foundation.md", "AGENTS.md"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/animation-systems-foundation.md",
+        "AGENTS.md"
+      ],
       "purpose": "Make successful live player artifact equip and stow actions visibly confirm their refreshed loadout state through the existing authored nonblocking artifact slot cue contracts.",
       "implementationTargets": [
         "scenes/overworld/OverworldShell.gd",
@@ -82845,7 +84027,16 @@
         "reduced_equip_fallback": "slot_badge_added",
         "reduced_unequip_fallback": "slot_badge_removed",
         "nonblocking": true,
-        "focused_viewports": [[1280, 720], [1920, 1080]],
+        "focused_viewports": [
+          [
+            1280,
+            720
+          ],
+          [
+            1920,
+            1080
+          ]
+        ],
         "equip_control_exact": true,
         "stow_control_exact": true,
         "stow_while_equip_active": true,
@@ -82874,7 +84065,12 @@
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/animation-systems-foundation.md", "AGENTS.md"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/animation-systems-foundation.md",
+        "AGENTS.md"
+      ],
       "purpose": "Make successful live player field-spell casts visible and skippable on the Overworld map through the existing authored spell_cast_overworld cue contract while preserving exact spell and session authority.",
       "implementationTargets": [
         "scenes/overworld/OverworldShell.gd",
@@ -82931,8 +84127,14 @@
         "normal_input_blocking": true,
         "reduced_motion_fallback": "adventure_spell_icon",
         "focused_viewports": [
-          [1280, 720],
-          [1920, 1080]
+          [
+            1280,
+            720
+          ],
+          [
+            1920,
+            1080
+          ]
         ],
         "movement_restore_control_exact": true,
         "scouting_reveal_control_exact": true,
@@ -82962,7 +84164,12 @@
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/animation-systems-foundation.md", "AGENTS.md"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/animation-systems-foundation.md",
+        "AGENTS.md"
+      ],
       "purpose": "Make successful live player construction visible and skippable through the existing authored town_building_built cue contract while honoring its input-blocking policy.",
       "implementationTargets": [
         "scenes/town/TownShell.gd",
@@ -82995,7 +84202,7 @@
       },
       "completionCriteria": [
         "Exactly one successful live player build publishes one detached town_building_built payload with authoritative Town placement, building id, existing result message, and exact catalog-selected policy after the authoritative refresh",
-		"Normal playback draws one bounded scenic-stage build-complete cue while a transparent full-shell layer blocks background pointer and keyboard commands; ui_cancel skips it and returns focus to the live Town focus cycle",
+        "Normal playback draws one bounded scenic-stage build-complete cue while a transparent full-shell layer blocks background pointer and keyboard commands; ui_cancel skips it and returns focus to the live Town focus cycle",
         "Reduced motion uses the exact building_badge_added static fallback with nonblocking_reduced_motion policy, while malformed or failed construction publishes nothing",
         "Refresh does not duplicate/reset the cue, expiry or skip never replays it, and an independent build control proves exact costs, built set, daily-build flag, session, save, focus, and Town authority",
         "Focused normal/reduced runtime at 1280x720 and 1920x1080, recruitment/Town visual/animation/focus/accessibility/core compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass"
@@ -83012,8 +84219,20 @@
       "notes": "Implemented one exact post-refresh town_building_built presentation for successful live player construction. Normal mode owns full-shell pointer and keyboard input for its bounded skippable cue; reduced motion uses the authored nonblocking building badge. Four focused 1280/1920 normal/reduced rows passed with exact independent build/session authority, malformed fail-closed behavior, stable refresh, skip/expiry cleanup, and focus restoration. Recruitment, Town visual, animation, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Packaged Town cue interaction, final audio/VFX assets, controller, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
       "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
       "result": {
-        "focused_viewports": [[1280, 720], [1920, 1080]],
-        "focused_modes": ["normal", "reduced_motion"],
+        "focused_viewports": [
+          [
+            1280,
+            720
+          ],
+          [
+            1920,
+            1080
+          ]
+        ],
+        "focused_modes": [
+          "normal",
+          "reduced_motion"
+        ],
         "focused_report_passed": true,
         "normal_input_blocking_passed": true,
         "ui_cancel_skip_passed": true,
@@ -83093,7 +84312,16 @@
         "publication_after_authoritative_refresh": true,
         "normal_muster_playback_passed": true,
         "reduced_motion_static_fallback_passed": true,
-        "focused_viewports": [[1280, 720], [1920, 1080]],
+        "focused_viewports": [
+          [
+            1280,
+            720
+          ],
+          [
+            1920,
+            1080
+          ]
+        ],
         "independent_session_authority_exact": true,
         "malformed_payload_fail_closed": true,
         "refresh_non_replay_passed": true,
@@ -83170,8 +84398,14 @@
         "authored_town_help_topic_reused": true,
         "footer_order_exact": true,
         "focused_viewports": [
-          [1280, 720],
-          [1920, 1080]
+          [
+            1280,
+            720
+          ],
+          [
+            1920,
+            1080
+          ]
         ],
         "compact_host_containment_passed": true,
         "background_pointer_blocked": true,
@@ -84068,6 +85302,96 @@
         "linux_export_headless_startup_passed": true,
         "windows_export_fresh_wine_startup_passed": true
       }
+    },
+    {
+      "id": "presentation-overworld-blocking-object-feedback-10184",
+      "title": "Overworld Blocking Object Feedback",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/animation-systems-foundation.md",
+        "docs/animation-overworld-object-state-contract-report.md",
+        "AGENTS.md"
+      ],
+      "purpose": "Replace terrain-misnamed feedback on visible blocking map-object and resource-body tiles with exact authored object identity and the existing object-blocked event using original runtime VFX/audio, without changing pathing or interactions.",
+      "implementationTargets": [
+        "art/overworld/source/object_blocked_vfx_source.png",
+        "art/overworld/runtime/vfx/object_blocked.png",
+        "art/audio/runtime/presentation/object_blocked.wav",
+        "content/overworld_vfx_manifest.json",
+        "content/presentation_sfx_manifest.json",
+        "tools/generate_presentation_sfx_assets.py",
+        "scripts/autoload/PresentationAudio.gd",
+        "scripts/core/OverworldRules.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_object_blocked_feedback_report.gd",
+        "tests/overworld_object_blocked_feedback_report.tscn",
+        "tests/overworld_field_spell_vfx_asset_runtime_report.gd",
+        "tests/overworld_guarded_site_vfx_asset_runtime_report.gd",
+        "tests/overworld_hero_route_step_vfx_asset_runtime_report.gd",
+        "tests/overworld_object_resolution_vfx_asset_runtime_report.gd",
+        "tests/overworld_route_blocked_vfx_asset_runtime_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_object_blocked_feedback_report.tscn",
+        "tests/overworld_route_blocked_vfx_asset_runtime_report.tscn",
+        "tests/overworld_full_route_movement_regression.tscn",
+        "tests/overworld_object_focus_cue_playback_report.tscn",
+        "tests/animation_event_cue_catalog_report.tscn",
+        "tests/overworld_visual_smoke.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "db4c00a9eeed19e5e72f669351f0cc332edca1ec",
+        "event_id": "overworld_object_blocked",
+        "vfx_cue_id": "vfx_placeholder_object_blocked_marker",
+        "audio_cue_id": "audio_placeholder_blocked_object",
+        "catalog_authored": true,
+        "runtime_delivery_present": false,
+        "runtime_vfx_asset_present": false,
+        "runtime_audio_asset_present": false,
+        "visible_passable_terrain_message": "Grassland blocks travel."
+      },
+      "completionCriteria": [
+        "Live visible blocking map-object and resource-body selections at 1280x720 and 1920x1080 expose exact object identity and one object-blocked VFX/audio presentation instead of naming passable terrain",
+        "Unexplored blockers do not leak identity; rock terrain and route-unreachable controls retain the exact generic route-blocked presentation",
+        "Unchanged refresh and identical selection dedupe, true reselection replays once, reduced motion and missing assets use exact distinct fallbacks, and session/save/pathing/interaction authority remains unchanged",
+        "Focused, route/focus/visual/catalog/core compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "pathfinding, passability, body or interaction tiles, object placement/content/rewards, movement, fog policy, AI, Native RMG, save/schema, or map-topology changes",
+        "hover or ambient loops, route-open or route-closed adoption, layout, particles, shaders, spatial audio, haptics, or final sound mastering",
+        "packaged object interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "updatedAt": "2026-08-15T21:31:36Z",
+      "startedAt": "2026-08-15T20:58:48Z",
+      "notes": "Completed live behavior, not report-only credit. The focused Shell owner passes at 1280x720 and 1920x1080 with exact Bramble Wall and Brightwood Sawmill body identity, imported object-blocked VFX and 44.1 kHz stereo audio, unchanged-refresh/identical-selection dedupe, real reselection, unexplored identity suppression, rock/unreachable controls, distinct reduced/missing fallbacks, and exact session/save authority. Generic route assets, full-route movement, object focus, animation catalog, Overworld visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged object interaction, accessibility/controller/hardware certification, signing/publication, whole-game, and release readiness are not claimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null,
+      "completedAt": "2026-08-15T21:31:36Z",
+      "evidence": {
+        "focusedArtifact": "/tmp/heroes-object-blocked-authoritative",
+        "compatibilityArtifact": "/tmp/heroes-object-blocked-compat.vptyzy",
+        "broadCompatibilityArtifact": "/tmp/heroes-object-blocked-broad.VwV1Aq",
+        "linuxPackagingArtifact": "/tmp/heroes-object-blocked-linux-package.Z0HJGW",
+        "windowsPackagingArtifact": "/tmp/heroes-object-blocked-windows-package.8eBZyt",
+        "normalViewportCount": 2,
+        "objectSurfaceCount": 2,
+        "saveVersion": 9,
+        "linuxExportHeadlessStartupPassed": true,
+        "windowsExportFreshWineStartupPassed": true
+      }
     }
   ],
   "project": "heroes-like",
@@ -84612,7 +85936,7 @@
   ],
   "summary": "The UI production SFX fidelity slice is completed: all six short mono generated click, select, adjust, tab, confirm, and invalid assets are replaced by distinct stereo production transients while exact cue, control, repetition, mute, input, settings, and gameplay authority remain preserved. Focused, compatibility, static/editor, and bounded Linux/Windows export/startup gates pass. Select the next tracker-approved slice; the game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-15T18:52:41Z",
+  "updatedAt": "2026-08-15T21:31:36Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

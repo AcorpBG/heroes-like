@@ -130,6 +130,7 @@ Current phase: **Phase 6 - Production Alpha Layer**.
   id: `presentation-live-commander-portrait-adoption-10184`
 - Completed implementation slice: `presentation-authored-hero-portrait-pipeline-10184`. All 60 authored commanders now have unique deterministic original 384x512 portrait assets and exact data-driven manifest records. ContentService validates and loads the hero-art domain, while the existing Campaign and Skirmish commander cards render the selected hero beside unchanged text with a missing-art fail-safe. Focused complete-roster loading, 1280x720 and 1920x1080 Campaign containment, keyboard/controller navigation, launch/session authority, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. Packaged portrait interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
   id: `presentation-authored-hero-portrait-pipeline-10184`
+- Completed implementation slice: `presentation-overworld-blocking-object-feedback-10184`. Visible blocking map objects and resource bodies now expose exact authored identity and use a distinct original object-blocked VFX/audio cue instead of misnaming passable ground. Unexplored blockers remain identity-silent; terrain/unreachable routing, body/interaction tiles, selection, session/save authority, 1280x720 and 1920x1080 presentation, reduced/missing fallbacks, compatibility, static/editor, and bounded Linux/Windows export/startup gates are green.
 - Latest completed implementation slice: `presentation-scenario-outcome-scenic-epilogue-stage-10184`. Victory and defeat now use distinct original full-screen epilogue panoramas behind the unchanged Outcome authority surfaces, with exact cover crop, translucent cards, a compact action dock, and flat-palette fallback.
 - Latest completed implementation slice: `presentation-town-faction-scenic-stage-backdrops-10184`. The Town stage now selects one of six original faction panoramas behind its unchanged live overlays, cover-crops without stretching, and retains the procedural renderer as a fail-safe.
 - Latest completed implementation slice: `combat-mireclaw-sporewake-rot-cant-priority-calibration-10184`. Sporewake Rot Cant keeps its round-one tier-four veteran identity and all live consequences while its authored target-priority bonus is calibrated from `1.0` to `0.9`; the exact all-live matrix lowers severity from `187.0` to `183.5`, preserves every non-Mireclaw ordered row, and keeps the active 59-encounter queue clear.
@@ -5510,7 +5511,12 @@ Non-goals:
 
 Slice id: `presentation-overworld-object-focus-cue-adoption-10184`
 
-Status: in_progress.
+Status: completed.
+
+Completion evidence:
+- the live Shell focused report passes at 1280x720 and 1920x1080 with exact Bramble Wall and Brightwood Sawmill body identity, imported object-blocked VFX and 44.1 kHz stereo audio, unchanged-refresh/identical-selection dedupe, real reselection, hidden identity suppression, terrain/unreachable controls, and exact session/save authority;
+- reduced-motion and missing-asset runs use the distinct static/procedural object fallback, while the existing generic blocked-route, full-route movement, object-focus, animation-catalog, Overworld visual, and core owners remain green;
+- repository/editor validation passes, and official Linux export/headless startup plus Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass with no packaged interaction, accessibility, controller, hardware, signing, publication, whole-game, or release-readiness claim.
 
 Implementation boundary:
 - deliver the already-authored `overworld_object_active` catalog cue for an actual user selection of one visible, unguarded town, resource, artifact, or encounter;
@@ -5534,6 +5540,29 @@ Non-goals:
 - no object, route, movement, reward, guard, fog, action, AI, save/schema, content, or map-topology changes;
 - no hover cue, initial/programmatic-selection cue, adjacent action pre-cue, broad object highlighting, particles, shaders, camera, layout, spatial audio, haptics, or final sound mastering;
 - no packaged object-focus interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+## Selected Slice: Overworld Blocking Object Feedback
+
+id: `presentation-overworld-blocking-object-feedback-10184`
+
+Status: in_progress.
+
+Implementation boundary:
+- expose one detached read-only blocking-object surface from the existing `OverworldRules` blocked-tile inputs for `map_objects` and resource-node body tiles, preserving their production array order and exact body-tile rules;
+- when a visible selected blocked tile is owned by that surface, use the exact object/content name and the already-authored `overworld_object_blocked` cue; keep terrain blockers and route-unreachable cases on the existing `overworld_route_blocked` path;
+- add one original alpha VFX and one deterministic production presentation sound mapped only to `vfx_placeholder_object_blocked_marker` and `audio_placeholder_blocked_object`, with the current procedural marker and silent playback remaining fail-closed fallbacks;
+- preserve pathfinding, blocked indexes, object interaction/visit tiles, fog knowledge, selection/route authority, cue dedupe/lifetime, input/focus, session/settings/save state, and every existing cue mapping.
+
+Completion criteria:
+- live visible blocking map-object and resource-body selections at 1280x720 and 1920x1080 report the exact object identity and play/draw one object-blocked cue instead of misnaming the underlying passable terrain;
+- hidden or merely remembered blockers do not leak object identity, while rock/water terrain and route-unreachable controls remain exact route-blocked presentations;
+- unchanged refresh dedupes, genuine reselection replays once, reduced motion and missing assets retain the exact static/procedural fallback, and malformed/stale payloads fail closed;
+- focused object-body/terrain/unreachable proof plus Overworld visual, blocked-route, object-pathing, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass with bounded claims.
+
+Non-goals:
+- no pathfinding, passability, body/interaction tiles, object placement/content, rewards, route decisions, movement, fog, AI, Native RMG, save/schema, or map-topology changes;
+- no hover/ambient loop, route-open/route-closed adoption, panel/layout redesign, particles, shaders, spatial audio, haptics, or global renderer changes;
+- no packaged object interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
 
 ## Progress Reconciliation
 

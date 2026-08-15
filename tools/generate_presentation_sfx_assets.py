@@ -87,6 +87,13 @@ SPECS = {
         "peak": 0.60,
         "pan": 0.0,
     },
+    "audio_placeholder_blocked_object": {
+        "kind": "object_obstruction",
+        "fundamental": 110.0,
+        "metal": 660.0,
+        "peak": 0.62,
+        "pan": -0.02,
+    },
     "audio_placeholder_object_visit": {
         "kind": "waypoint_acknowledge", "fundamental": 440.0, "metal": 880.0, "peak": 0.52, "pan": 0.08,
     },
@@ -193,6 +200,11 @@ def layered_sample(kind: str, fundamental: float, metal: float, t: float, progre
         dissonance = math.sin(math.tau * metal * 1.06 * t - phase) * 0.24
         stop = max(0.0, 1.0 - abs(progress - 0.30) / 0.12) * (knock - dissonance) * 0.30
         return (knock + dissonance + stop + noise * transient * 0.14) * envelope(progress)
+    if kind == "object_obstruction":
+        impact = math.sin(math.tau * fundamental * t + phase) * 0.38
+        iron = math.sin(math.tau * metal * t - phase) * 0.24
+        latch = max(0.0, 1.0 - abs(progress - 0.34) / 0.10) * math.sin(math.tau * metal * 1.47 * t + phase) * 0.28
+        return (impact + iron + latch + noise * transient * 0.18) * envelope(progress)
     if kind == "waypoint_acknowledge":
         note = math.sin(math.tau * fundamental * t + phase) * 0.30
         answer = max(0.0, 1.0 - abs(progress - 0.46) / 0.18) * math.sin(math.tau * metal * t - phase) * 0.24

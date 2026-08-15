@@ -68,6 +68,12 @@
       "volume_db": -13.5,
       "role": "overworld_route_blocked"
     },
+    "audio_placeholder_blocked_object": {
+      "path": "res://art/audio/runtime/presentation/object_blocked.wav",
+      "duration_msec": 340,
+      "volume_db": -13.0,
+      "role": "overworld_object_blocked"
+    },
     "audio_placeholder_object_visit": {
       "path": "res://art/audio/runtime/presentation/object_visit.wav",
       "duration_msec": 300,
