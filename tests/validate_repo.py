@@ -67,6 +67,8 @@ TOWN_FACTION_CREST_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "town_faction_cr
 FACTION_TOWN_SPRITE_ATLAS_PATH = ROOT / "art" / "overworld" / "source" / "faction_town_sprite_atlas.png"
 OVERWORLD_FACTION_TOWN_SPRITE_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_faction_town_sprite_runtime_report.gd"
 OVERWORLD_FACTION_TOWN_SPRITE_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_faction_town_sprite_runtime_report.tscn"
+OVERWORLD_ARTIFACT_PICKUP_ICON_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_artifact_pickup_icon_runtime_report.gd"
+OVERWORLD_ARTIFACT_PICKUP_ICON_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_artifact_pickup_icon_runtime_report.tscn"
 RESOURCE_REGISTRY_PATH = CONTENT_DIR / "resources.json"
 RESOURCE_REGISTRY_FIXTURE_PATH = ROOT / "tests" / "fixtures" / "economy_resource_schema" / "resource_registry.json"
 RESOURCE_ICON_ATLAS_PATH = ROOT / "art" / "economy" / "source" / "resource_icon_atlas.png"
@@ -29408,6 +29410,124 @@ def validate_overworld_faction_town_sprite_runtime(errors: list[str]) -> None:
     ensure('expected_asset_id.begins_with("town_faction_")' in visual_text, errors, "Overworld visual town grounding gate must recognize faction town asset ids")
 
 
+def validate_overworld_artifact_pickup_icon_runtime(errors: list[str]) -> None:
+    required_paths = (
+        OVERWORLD_MAP_VIEW_SCRIPT_PATH,
+        ARTIFACT_RULES_PATH,
+        CONTENT_DIR / "artifacts.json",
+        OVERWORLD_ARTIFACT_PICKUP_ICON_RUNTIME_REPORT_SCRIPT_PATH,
+        OVERWORLD_ARTIFACT_PICKUP_ICON_RUNTIME_REPORT_SCENE_PATH,
+        ROOT / "tests" / "overworld_visual_smoke.gd",
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Overworld artifact pickup icon owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    def function_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}")
+        if start < 0:
+            return ""
+        end = text.find("\nfunc ", start + 1)
+        return text[start:] if end < 0 else text[start:end]
+
+    artifacts = items_index(load_json(CONTENT_DIR / "artifacts.json"))
+    ensure(len(artifacts) == 12, errors, "Overworld artifact pickup adoption must retain the exact 12 production artifacts")
+    icon_ids: list[str] = []
+    icon_paths: list[str] = []
+    for artifact_id, artifact in artifacts.items():
+        ui = artifact.get("ui", {}) if isinstance(artifact, dict) else {}
+        icon_id = str(ui.get("icon_id", "")) if isinstance(ui, dict) else ""
+        icon_path = str(ui.get("icon_path", "")) if isinstance(ui, dict) else ""
+        expected_icon_id = f"artifact_icon_{artifact_id.removeprefix('artifact_')}"
+        expected_path = f"res://art/artifacts/runtime/{artifact_id.removeprefix('artifact_')}.png"
+        ensure(icon_id == expected_icon_id, errors, f"Artifact pickup {artifact_id} must retain its exact stable icon id")
+        ensure(icon_path == expected_path, errors, f"Artifact pickup {artifact_id} must retain its exact runtime icon path")
+        disk_path = res_path_to_disk(icon_path)
+        ensure(disk_path.is_file() and png_size(disk_path) == (128, 128), errors, f"Artifact pickup icon {artifact_id} must remain an imported 128x128 PNG")
+        ensure(Path(f"{disk_path}.import").is_file(), errors, f"Artifact pickup icon {artifact_id} is missing Godot import metadata")
+        icon_ids.append(icon_id)
+        icon_paths.append(icon_path)
+    ensure(len(set(icon_ids)) == 12 and len(set(icon_paths)) == 12, errors, "All 12 Overworld artifact pickup identities must remain distinct")
+
+    map_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
+    draw_block = function_block(map_text, "_draw_artifact_sprite")
+    resolver_block = function_block(map_text, "_artifact_sprite_asset_id")
+    art_payload_block = function_block(map_text, "_object_art_payload")
+    validation_block = function_block(map_text, "_artifact_presentation_payload")
+    load_block = function_block(map_text, "_load_overworld_art_manifest")
+    for token in (
+        "var _artifact_icon_asset_ids: Dictionary = {}",
+        "_artifact_icon_asset_ids.clear()",
+        "ArtifactRules.artifact_icon_path(artifact_id)",
+        'icon_asset_id.begins_with("artifact_icon_")',
+        "_artifact_icon_asset_ids[artifact_id] = icon_asset_id",
+        "_object_asset_paths[icon_asset_id] = icon_path",
+        "_object_texture_for_asset(icon_asset_id) is Texture2D",
+        "return icon_asset_id",
+        "_object_texture_for_asset(_artifact_default_asset_id) is Texture2D",
+        "return _artifact_default_asset_id",
+        'return ""',
+    ):
+        ensure(token in map_text, errors, f"Overworld artifact pickup resolver ownership is missing: {token}")
+    ensure(load_block.find("_artifact_icon_asset_ids.clear()") >= 0, errors, "Artifact pickup icon cache must clear with each art-manifest load")
+    resolver_order = [resolver_block.find(token) for token in ("var artifact_id :=", "var icon_asset_id :=", "var icon_path :=", "return icon_asset_id", "return _artifact_default_asset_id")]
+    ensure(all(index >= 0 for index in resolver_order) and resolver_order == sorted(resolver_order), errors, "Artifact pickup resolver must prefer exact valid icon, then default bundle, then empty")
+    ensure(resolver_block.rstrip().endswith('return ""'), errors, "Artifact pickup resolver must fail closed after the default bundle")
+    for forbidden in ("_session.", "session.", "await ", "create_timer", "create_tween", "queue_free", "match artifact_id"):
+        ensure(forbidden not in resolver_block, errors, f"Artifact pickup resolver must remain synchronous, content-owned, and read-only: {forbidden}")
+    ensure("_draw_object_sprite(_artifact_sprite_asset_id(node), rect, remembered, _artifact_object_profile(), tile)" in draw_block, errors, "Live artifact drawing must resolve the current pickup identity")
+    for token in (
+        "var artifact_asset_id := _artifact_sprite_asset_id(artifact_node)",
+        "_object_texture_for_asset(artifact_asset_id) is Texture2D",
+        "sprite_asset_ids.append(artifact_asset_id)",
+    ):
+        ensure(token in art_payload_block, errors, f"Artifact art payload must use the same exact resolver as live drawing: {token}")
+    for token in (
+        '"artifact_id": artifact_id', '"icon_path": icon_path', '"sprite_asset_id": sprite_asset_id',
+        '"sprite_path": String(_object_asset_paths.get(sprite_asset_id, ""))',
+        '"uses_artifact_icon": artifact_id != ""', '"uses_default_sprite": sprite_asset_id != ""',
+        '"footprint_width_tiles": 1', '"footprint_height_tiles": 1',
+    ):
+        ensure(token in validation_block, errors, f"Artifact pickup validation payload is missing detached evidence: {token}")
+    ensure('"artifact_presentation": _artifact_presentation_payload(tile, explored)' in map_text, errors, "Tile validation must expose exact artifact pickup presentation")
+
+    report_text = OVERWORLD_ARTIFACT_PICKUP_ICON_RUNTIME_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    report_scene = OVERWORLD_ARTIFACT_PICKUP_ICON_RUNTIME_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure_scene_nodes(report_scene, errors, "overworld_artifact_pickup_icon_runtime_report.tscn", [("OverworldArtifactPickupIconRuntimeReport", "Node")])
+    for token in (
+        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        'const EXPECTED_ICONS := {',
+        'ScenarioFactory.create_session(SCENARIO_ID, "hard", SessionState.LAUNCH_MODE_SKIRMISH)',
+        'session.overworld["artifact_nodes"] = nodes',
+        'var authority_before: Dictionary = session.to_dict()',
+        'map_view.call("validation_tile_presentation"',
+        'rows.size() != EXPECTED_ICONS.size()',
+        'expected_asset_id := "artifact_icon_%s"',
+        'expected_asset_id not in art.get("sprite_asset_ids", [])',
+        'String(art.get("remembered_sprite_treatment", "")) != "ghosted_sprite_with_ground_anchor"',
+        'visible_count == 12 and remembered_count == 0',
+        'String(art.get("mapped_sprite_grounding_model", "")) == "localized_sprite_contact_scuffs"',
+        '"x": 2 + (index % 6) if index < 6 else 40 + (index % 6)',
+        '"y": 2 if index < 6 else 40',
+        'first_node["artifact_id"] = "artifact_missing_pickup_icon_fixture"',
+        'var fallback_exact: bool = String(fallback.get("artifact_id", ""))',
+        'String(fallback.get("sprite_asset_id", "")) == "adventurers_bundle"',
+        'first_node["artifact_id"] = original_artifact_id',
+        'presentation_restored == presentation_before and session.to_dict() == authority_before',
+        'var viewport_rect: Rect2 = get_viewport().get_visible_rect()',
+        'viewport_rect.encloses(shell_rect)',
+        'SessionStateStore.SAVE_VERSION',
+        'print("OVERWORLD_ARTIFACT_PICKUP_ICON_RUNTIME_REPORT %s"',
+    ):
+        ensure(token in report_text, errors, f"Overworld artifact pickup focused owner is missing method-matched proof: {token}")
+    ensure(report_text.count("for viewport_size in VIEWPORT_SIZES:") == 1, errors, "Artifact pickup focused owner must run exactly both registered widths")
+    for forbidden in ("_artifact_icon_asset_ids[", "_object_asset_paths[", "_object_textures[", "_draw_artifact_sprite(", "create_timer", "create_tween"):
+        ensure(forbidden not in report_text, errors, f"Artifact pickup focused owner must not bypass production resolution: {forbidden}")
+    visual_text = (ROOT / "tests" / "overworld_visual_smoke.gd").read_text(encoding="utf-8")
+    ensure('_assert_art_sprite(artifact_presentation, "artifact_icon_trailsinger_boots", false)' in visual_text, errors, "Overworld visual gate must require the exact River Pass artifact icon")
+
+
 def validate_overworld_artifact_slot_cue_playback(errors: list[str]) -> None:
     required_paths = (
         OVERWORLD_SCENE_PATH,
@@ -39266,6 +39386,7 @@ def main() -> int:
     validate_town_building_category_icon_runtime(errors)
     validate_town_faction_crest_runtime(errors)
     validate_overworld_faction_town_sprite_runtime(errors)
+    validate_overworld_artifact_pickup_icon_runtime(errors)
     validate_overworld_artifact_slot_cue_playback(errors)
     validate_overworld_artifact_acquired_cue_playback(errors)
     validate_overworld_resource_delta_cue_playback(errors)

@@ -235,6 +235,7 @@ var _resource_site_asset_ids: Dictionary = {}
 var _resource_site_object_profiles: Dictionary = {}
 var _map_object_asset_ids: Dictionary = {}
 var _artifact_default_asset_id := ""
+var _artifact_icon_asset_ids: Dictionary = {}
 var _town_default_asset_id := ""
 var _town_faction_asset_ids: Dictionary = {}
 var _encounter_default_asset_id := ""
@@ -1695,7 +1696,7 @@ func _draw_resource_sprite(node: Dictionary, rect: Rect2, remembered: bool, tile
 func _draw_artifact_sprite(node: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
 	if node.is_empty():
 		return false
-	return _draw_object_sprite(_artifact_default_asset_id, rect, remembered, _artifact_object_profile(), tile)
+	return _draw_object_sprite(_artifact_sprite_asset_id(node), rect, remembered, _artifact_object_profile(), tile)
 
 func _draw_town_sprite(rect: Rect2, entry_rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
 	var texture = _object_texture_for_asset(_town_sprite_asset_id(_town_at(tile)))
@@ -3371,7 +3372,28 @@ func validation_tile_presentation(tile: Vector2i) -> Dictionary:
 		"terrain_presentation": _terrain_visual_payload(tile, explored, visible),
 		"marker_readability": _marker_readability_payload(tile, explored, visible, object_kinds, has_visible_hero),
 		"art_presentation": _object_art_payload(tile, explored, visible, object_kinds),
+		"artifact_presentation": _artifact_presentation_payload(tile, explored),
 		"town_presentation": town_presentation,
+	}
+
+func _artifact_presentation_payload(tile: Vector2i, explored: bool) -> Dictionary:
+	if not explored:
+		return {}
+	var node := _artifact_node_at(tile)
+	if node.is_empty():
+		return {}
+	var artifact_id := String(node.get("artifact_id", "")).strip_edges()
+	var icon_path := ArtifactRules.artifact_icon_path(artifact_id)
+	var sprite_asset_id := _artifact_sprite_asset_id(node)
+	return {
+		"artifact_id": artifact_id,
+		"icon_path": icon_path,
+		"sprite_asset_id": sprite_asset_id,
+		"sprite_path": String(_object_asset_paths.get(sprite_asset_id, "")),
+		"uses_artifact_icon": artifact_id != "" and icon_path != "" and sprite_asset_id == String(_artifact_icon_asset_ids.get(artifact_id, "")),
+		"uses_default_sprite": sprite_asset_id != "" and sprite_asset_id == _artifact_default_asset_id,
+		"footprint_width_tiles": 1,
+		"footprint_height_tiles": 1,
 	}
 
 func validation_editor_restamp_payload(tile: Vector2i) -> Dictionary:
@@ -3882,9 +3904,10 @@ func _object_art_payload(tile: Vector2i, explored: bool, visible: bool, object_k
 			var resource_footprint := _object_profile_footprint(_resource_object_profile(resource_node))
 			sprite_footprints.append({"width": resource_footprint.x, "height": resource_footprint.y})
 	var artifact_node := _artifact_node_at(tile)
-	if not artifact_node.is_empty() and _artifact_default_asset_id != "":
-		if _object_texture_for_asset(_artifact_default_asset_id) is Texture2D:
-			sprite_asset_ids.append(_artifact_default_asset_id)
+	if not artifact_node.is_empty():
+		var artifact_asset_id := _artifact_sprite_asset_id(artifact_node)
+		if artifact_asset_id != "" and _object_texture_for_asset(artifact_asset_id) is Texture2D:
+			sprite_asset_ids.append(artifact_asset_id)
 			var artifact_footprint := _object_profile_footprint(_artifact_object_profile())
 			sprite_footprints.append({"width": artifact_footprint.x, "height": artifact_footprint.y})
 	var encounter_payload := _encounter_node_at(tile)
@@ -6010,6 +6033,7 @@ func _load_overworld_art_manifest() -> void:
 	_map_object_asset_ids.clear()
 	_decorative_object_asset_ids.clear()
 	_artifact_default_asset_id = ""
+	_artifact_icon_asset_ids.clear()
 	_town_default_asset_id = ""
 	_town_faction_asset_ids.clear()
 	_encounter_default_asset_id = ""
@@ -6523,6 +6547,23 @@ func _resource_asset_id(node: Dictionary) -> String:
 	if direct_asset_id != "":
 		return direct_asset_id
 	return String(_resource_site_asset_ids.get(site_id, ""))
+
+func _artifact_sprite_asset_id(node: Dictionary) -> String:
+	if node.is_empty():
+		return ""
+	var artifact_id := String(node.get("artifact_id", "")).strip_edges()
+	var artifact := ContentService.get_artifact(artifact_id)
+	var ui: Dictionary = artifact.get("ui", {}) if artifact.get("ui", {}) is Dictionary else {}
+	var icon_asset_id := String(ui.get("icon_id", "")).strip_edges()
+	var icon_path := ArtifactRules.artifact_icon_path(artifact_id)
+	if artifact_id != "" and icon_asset_id.begins_with("artifact_icon_") and icon_path != "":
+		_artifact_icon_asset_ids[artifact_id] = icon_asset_id
+		_object_asset_paths[icon_asset_id] = icon_path
+		if _object_texture_for_asset(icon_asset_id) is Texture2D:
+			return icon_asset_id
+	if _artifact_default_asset_id != "" and _object_texture_for_asset(_artifact_default_asset_id) is Texture2D:
+		return _artifact_default_asset_id
+	return ""
 
 func _encounter_asset_id(encounter: Dictionary) -> String:
 	var object_id := String(encounter.get("object_id", "")).strip_edges()

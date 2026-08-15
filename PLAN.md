@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `presentation-overworld-artifact-pickup-icon-adoption-10184`. All 12 production artifact pickups now render their exact existing imported icon on the live Overworld instead of sharing `adventurers_bundle`. The renderer retains the generic bundle only for invalid or unloadable identity and preserves the existing 1x1 footprint, localized grounding, current explored/visible treatment, selection, collection/depletion, fog, route, session, and save version 9 authority. Focused 1280x720/1920x1080, pickup source, object-resolution, broad visual, focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged artifact interaction, hardware/certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `presentation-overworld-artifact-pickup-icon-adoption-10184`
 - Completed implementation slice: `presentation-overworld-faction-town-sprite-adoption-10184`. All 15 authored towns now resolve through their exact template faction to one of six distinct original 512x512 Overworld town sprites. The existing draw path preserves the 3x2 footprint, bottom-middle entry, grounding, owner pennant/color, visible/remembered treatment, selection, routing, passability, session, and save authority, while `frontier_town` remains the fail-closed fallback. Focused 1280x720/1920x1080, Ninefold, Overworld visual, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged Overworld interaction, hardware/certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `presentation-overworld-faction-town-sprite-adoption-10184`
 - Completed implementation slice: `presentation-town-faction-crest-adoption-10184`. The six production factions now own distinct original 256x256 imported crests through an exact manifest and fail-closed resolver. Real Town shells render the active faction crest inside the existing 74x50 medallion at 1280x720 and 1920x1080, keep the 42x40 icon contained, retain the procedural `town` glyph for unknown identity, and preserve Town layout, focus, actions, session, route, and save version 9. Focused, all-faction Town/save, Town visual, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -5167,6 +5169,37 @@ Completed evidence:
 - focused live presentation preserves the existing 3x2 footprint, bottom-middle visit entry, blocked non-entry cells, no-ellipse grounding, owner color/pennant path, shell containment, whole-session restoration, and save version 9;
 - Ninefold, broad Overworld visual, active-play focus, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup gates pass;
 - packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
+
+## Overworld Artifact Pickup Icon Adoption
+
+id: `presentation-overworld-artifact-pickup-icon-adoption-10184`
+
+Status: complete.
+
+Selected Phase 6 shipped-content and player-facing presentation slice. All 12 production artifacts already own distinct imported 128x128 icons and every normalized map pickup carries an exact `artifact_id`, but `_draw_artifact_sprite` ignores that node identity and always renders `adventurers_bundle`.
+
+Implementation target:
+- resolve each live pickup through its existing `artifact_id` and validated `ArtifactRules.artifact_icon_path` without changing artifact content or placement state;
+- cache and draw the exact icon through the existing pickup footprint, grounding, current explored/visible treatment, and draw order;
+- retain `adventurers_bundle` when the artifact id, metadata, import, or texture is missing or invalid;
+- expose detached validation evidence for exact artifact id, icon path, chosen presentation, and fallback while leaving session/save authority untouched.
+
+Completion criteria:
+- all 12 production artifact ids render one-to-one through their existing distinct imported icons, while invalid identity falls back only to `adventurers_bundle`;
+- real Overworld views at 1280x720 and 1920x1080 preserve exact pickup footprint, grounding, current explored/visible treatment, selection, collection/depletion, fog, route, session, and save version 9 authority;
+- artifact pickup/source and object-resolution compatibility, Overworld visual, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass;
+- packaged claims remain bounded to export/startup unless a packaged harness actually drives and observes an artifact pickup.
+
+Non-goals:
+- no new art, artifact ids/content/bonuses/rarity/slots/sets/reward tables, placement selection, acquisition, auto-equip, economy, movement, scouting, AI, balance, save schema, map topology, or Native RMG changes;
+- no gear-button, Town, cue, layout, focus, input, other object-family, terrain/road/river, or broad renderer redesign;
+- no packaged artifact interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Completed evidence:
+- all 12 existing imported 128x128 artifact icons resolve one-to-one from each normalized pickup's exact artifact id, while malformed identity resolves only to the existing `adventurers_bundle` fallback;
+- focused live 1280x720 and 1920x1080 proof covers all 12 identities, exact icon paths and asset ids, current explored/visible semantics, 1x1 footprint, localized grounding, fallback, full restoration, containment, and save version 9;
+- artifact pickup source, object-resolution cue, broad Overworld visual, active-play focus, accessibility, core, repository validation, and exact/generic editor gates pass;
+- official Linux export plus packaged headless startup and official Windows export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass, with no packaged artifact interaction or broader release claim.
 
 ## Progress Reconciliation
 
