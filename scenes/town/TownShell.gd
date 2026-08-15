@@ -34,7 +34,7 @@ const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains ope
 @onready var _crest_label: Label = %CrestLabel
 @onready var _header_label: Label = %Header
 @onready var _status_label: Label = %Status
-@onready var _resource_label: Label = %Resources
+@onready var _resource_label: ResourceStockpileMenu = %Resources
 @onready var _event_label: Label = %Event
 @onready var _town_stage_view = %TownStage
 @onready var _outlook_label: Label = %Outlook
@@ -478,8 +478,11 @@ func _refresh(first_render_minimal: bool = false) -> void:
 	section_started = ProfileLogScript.begin_usec()
 	_header_label.text = String(view_state.get("header_text", ""))
 	_status_label.text = String(view_state.get("status_text", ""))
-	_resource_label.text = String(view_state.get("resources_text", ""))
-	_resource_label.tooltip_text = String(view_state.get("resources_tooltip_text", ""))
+	_resource_label.sync_stockpile(
+		_session.overworld.get("resources", {}),
+		String(view_state.get("resources_text", "")),
+		String(view_state.get("resources_tooltip_text", ""))
+	)
 	_last_economy_readability_surface = _duplicate_dictionary(view_state.get("economy_readability_surface", {}))
 	_last_rendered_build_actions = _duplicate_action_array(view_state.get("build_actions", []))
 	_last_rendered_recruit_actions = _duplicate_action_array(view_state.get("recruit_actions", []))
@@ -2330,6 +2333,7 @@ func validation_snapshot() -> Dictionary:
 		"resources_visible_text": _resource_label.text,
 		"resources_tooltip_text": _resource_label.tooltip_text,
 		"resources_full_ledger_text": OverworldRules.describe_resource_stockpile(_session.overworld.get("resources", {}), true),
+		"resource_stockpile_menu": _resource_label.validation_snapshot(),
 		"hero_text": OverworldRules.describe_hero(_session),
 		"hero_portrait": _hero_portrait.validation_snapshot(),
 		"hero_visible_text": _hero_label.text,
@@ -2612,6 +2616,7 @@ func validation_resource_ledger_snapshot() -> Dictionary:
 		"resources_visible_text": _resource_label.text,
 		"resources_tooltip_text": _resource_label.tooltip_text,
 		"resources_full_ledger_text": OverworldRules.describe_resource_stockpile(_session.overworld.get("resources", {}), true),
+		"resource_stockpile_menu": _resource_label.validation_snapshot(),
 		"rendered_economy_readability_surface": _last_economy_readability_surface.duplicate(true),
 		"rendered_build_actions": _duplicate_action_array(_last_rendered_build_actions),
 		"rendered_recruit_actions": _duplicate_action_array(_last_rendered_recruit_actions),
@@ -4923,7 +4928,8 @@ func _apply_visual_theme() -> void:
 
 	FrontierVisualKit.apply_label(_header_label, "title", 20)
 	FrontierVisualKit.apply_label(_status_label, "body", 12)
-	FrontierVisualKit.apply_label(_resource_label, "gold", 12)
+	FrontierVisualKit.apply_button(_resource_label, "secondary", 210.0, 30.0, 12)
+	_resource_label.flat = true
 	FrontierVisualKit.apply_label(_crest_label, "title", 16)
 	FrontierVisualKit.apply_label(_event_label, "body", 12)
 	FrontierVisualKit.apply_label(_save_status_label, "muted", 12)

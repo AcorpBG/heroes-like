@@ -63,6 +63,9 @@ TOWN_BUILDING_CATEGORY_ICON_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "town_b
 RESOURCE_REGISTRY_PATH = CONTENT_DIR / "resources.json"
 RESOURCE_REGISTRY_FIXTURE_PATH = ROOT / "tests" / "fixtures" / "economy_resource_schema" / "resource_registry.json"
 RESOURCE_ICON_ATLAS_PATH = ROOT / "art" / "economy" / "source" / "resource_icon_atlas.png"
+RESOURCE_STOCKPILE_MENU_SCRIPT_PATH = ROOT / "scenes" / "shared" / "ResourceStockpileMenu.gd"
+RESOURCE_STOCKPILE_ICON_POPOVER_REPORT_SCRIPT_PATH = ROOT / "tests" / "resource_stockpile_icon_popover_runtime_report.gd"
+RESOURCE_STOCKPILE_ICON_POPOVER_REPORT_SCENE_PATH = ROOT / "tests" / "resource_stockpile_icon_popover_runtime_report.tscn"
 SPELL_RULES_PATH = ROOT / "scripts" / "core" / "SpellRules.gd"
 ANIMATION_CUE_CATALOG_RULES_PATH = ROOT / "scripts" / "core" / "AnimationCueCatalog.gd"
 ENEMY_TURN_RULES_PATH = ROOT / "scripts" / "core" / "EnemyTurnRules.gd"
@@ -29653,6 +29656,158 @@ def validate_overworld_resource_delta_cue_playback(errors: list[str]) -> None:
         ensure(forbidden not in report_text, errors, f"Resource-delta focused report must not bypass or weaken production behavior: {forbidden}")
 
 
+def validate_resource_stockpile_icon_popover(errors: list[str]) -> None:
+    required_paths = (
+        RESOURCE_STOCKPILE_MENU_SCRIPT_PATH,
+        RESOURCE_STOCKPILE_ICON_POPOVER_REPORT_SCRIPT_PATH,
+        RESOURCE_STOCKPILE_ICON_POPOVER_REPORT_SCENE_PATH,
+        OVERWORLD_SCENE_PATH,
+        OVERWORLD_SCRIPT_PATH,
+        TOWN_SCENE_PATH,
+        TOWN_SCRIPT_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing resource stockpile icon popover owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    menu_text = RESOURCE_STOCKPILE_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
+    report_text = RESOURCE_STOCKPILE_ICON_POPOVER_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    report_scene_text = RESOURCE_STOCKPILE_ICON_POPOVER_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    overworld_scene_text = OVERWORLD_SCENE_PATH.read_text(encoding="utf-8")
+    overworld_shell_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+    town_scene_text = TOWN_SCENE_PATH.read_text(encoding="utf-8")
+    town_shell_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
+
+    def block(text: str, name: str) -> str:
+        start = text.find(f"func {name}")
+        if start < 0:
+            return ""
+        end = text.find("\nfunc ", start + 1)
+        return text[start:] if end < 0 else text[start:end]
+
+    for token in (
+        "class_name ResourceStockpileMenu",
+        "extends MenuButton",
+        'const SNAPSHOT_SCHEMA := "resource_stockpile_icon_menu_v1"',
+        'const COMPACT_LABEL := "Stores"',
+        "func sync_stockpile(resources: Variant, normal_summary: String, full_summary: String) -> void:",
+        "for resource_id_value in OverworldRules.LIVE_STOCKPILE_RESOURCE_KEYS:",
+        "_resource_values[resource_id] = amount",
+        "func set_compact_mode(compact: bool) -> void:",
+        "func full_summary_text() -> String:",
+        "func validation_snapshot() -> Dictionary:",
+        '"popup_items": items',
+        "popup.window_input.connect(_on_popup_window_input)",
+        "func _on_popup_window_input(event: InputEvent) -> void:",
+        'if event.is_action_pressed("ui_cancel"):',
+        "_return_focus_on_hide = true",
+    ):
+        ensure(token in menu_text, errors, f"Shared resource stockpile menu is missing exact ownership token: {token}")
+
+    rebuild = block(menu_text, "_rebuild_popup")
+    for token in (
+        "popup.clear()",
+        "for resource_id_value in OverworldRules.LIVE_STOCKPILE_RESOURCE_KEYS:",
+        "OverworldRules.resource_definition(resource_id)",
+        "OverworldRules.resource_icon_path(resource_id)",
+        "if loaded_icon is Texture2D:",
+        "popup.add_icon_item(icon_texture, item_text, index)",
+        "popup.add_item(item_text, index)",
+        "popup.set_item_disabled(index, true)",
+        'popup.set_item_tooltip(index, "%s: %d" % [display_name, amount])',
+        '"resource_id": resource_id',
+        '"amount": amount',
+        '"icon_path": icon_path if icon_texture != null else ""',
+    ):
+        ensure(token in rebuild, errors, f"Shared stockpile popup is missing ordered fail-closed row construction: {token}")
+    for forbidden in (
+        "SessionState",
+        "SaveService",
+        "TownRules",
+        "perform_context_action",
+        "build_active_town",
+        "end_turn",
+        "sort(",
+        "sort_custom",
+        "create_timer",
+        "create_tween",
+        "await ",
+    ):
+        ensure(forbidden not in menu_text, errors, f"Shared stockpile popup must remain detached presentation-only UI: {forbidden}")
+    ensure(menu_text.count("popup.clear()") == 1, errors, "Shared stockpile popup must rebuild exactly one native menu")
+    ensure(menu_text.count("OverworldRules.LIVE_STOCKPILE_RESOURCE_KEYS") >= 3, errors, "Shared stockpile popup must use the exact production order for capture, rows, and validation")
+    ensure("_return_focus_on_hide = has_focus()" not in menu_text, errors, "Stockpile popup must not steal focus after pointer-outside dismissal")
+
+    for label, scene_text in (("Overworld", overworld_scene_text), ("Town", town_scene_text)):
+        ensure(scene_text.count('[node name="Resources" type="MenuButton"') == 1, errors, f"{label} must own exactly one native resource MenuButton")
+        ensure('[node name="Resources" type="Label"' not in scene_text, errors, f"{label} must not retain the passive resource Label")
+        menu_match = re.search(r'\[node name="Resources" type="MenuButton"[^\]]*\]\n(?P<body>.*?)(?=\n\[node )', scene_text, re.DOTALL)
+        ensure(menu_match is not None, errors, f"{label} resource MenuButton node is missing")
+        if menu_match is not None:
+            for token in ('unique_name_in_owner = true', 'focus_mode = 2', 'flat = true', 'clip_text = true', 'script = ExtResource("7_resource_stockpile_menu")'):
+                ensure(token in menu_match.group("body"), errors, f"{label} resource MenuButton is missing compact/focus ownership: {token}")
+        ensure('path="res://scenes/shared/ResourceStockpileMenu.gd" id="7_resource_stockpile_menu"' in scene_text, errors, f"{label} must reuse the shared stockpile component")
+
+    for shell_label, shell_text in (("Overworld", overworld_shell_text), ("Town", town_shell_text)):
+        ensure("@onready var _resource_label: ResourceStockpileMenu = %Resources" in shell_text, errors, f"{shell_label} must type the shared resource control")
+        ensure("_resource_label.sync_stockpile(" in shell_text, errors, f"{shell_label} refresh must feed detached live stockpile values into the shared menu")
+        ensure('"resource_stockpile_menu": _resource_label.validation_snapshot()' in shell_text, errors, f"{shell_label} validation must expose the detached menu")
+        ensure('FrontierVisualKit.apply_button(_resource_label, "secondary", 210.0, 30.0, 12)' in shell_text, errors, f"{shell_label} must keep the stockpile menu bounded in the existing visual language")
+        ensure("FrontierVisualKit.apply_label(_resource_label" not in shell_text, errors, f"{shell_label} must not style the MenuButton through the old Label API")
+
+    responsive = block(overworld_shell_text, "_apply_responsive_layout")
+    responsive_order = [
+        responsive.find("_resource_chip_panel.visible = true"),
+        responsive.find("_resource_chip_panel.custom_minimum_size.x = 96.0 if resource_compact else 210.0"),
+        responsive.find("_resource_label.custom_minimum_size.x = 80.0 if resource_compact else 210.0"),
+        responsive.find("_resource_label.set_compact_mode(resource_compact)"),
+        responsive.find("_resource_label.full_summary_text()"),
+    ]
+    ensure(all(index >= 0 for index in responsive_order) and responsive_order == sorted(responsive_order), errors, "Overworld compact stockpile menu must remain visible, bounded, switched, then mirrored into status context")
+    ensure("var resource_compact := compact_layout or get_window().size.x < 1360 or get_window().size.y < 760" in responsive, errors, "Overworld stockpile menu must honor the physical 1280x720 compact boundary under scaled viewports")
+    ensure("_resource_chip_panel.visible = not compact_layout" not in responsive, errors, "Overworld compact layout must not hide the selected stockpile interaction")
+
+    ensure_scene_nodes(report_scene_text, errors, "resource_stockpile_icon_popover_runtime_report.tscn", [("ResourceStockpileIconPopoverRuntimeReport", "Node")])
+    for token in (
+        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        'const RESOURCE_IDS := [',
+        'load("res://scenes/town/TownShell.tscn").instantiate()',
+        'load("res://scenes/overworld/OverworldShell.tscn").instantiate()',
+        'shell.get_node_or_null("%Resources") as ResourceStockpileMenu',
+        'var authority_before: Dictionary = live_session.to_dict()',
+        'var authority_after: Dictionary = SessionState.ensure_active_session().to_dict()',
+        'var town_signature_before: Dictionary = TownRules.town_action_consequence_signature(live_session)',
+        'var town_signature_after: Dictionary = TownRules.town_action_consequence_signature(SessionState.ensure_active_session())',
+        'menu.grab_focus()',
+        'await _emit_action("ui_accept")',
+        'await _emit_action("ui_cancel")',
+        'Input.parse_input_event(pressed)',
+        'Input.parse_input_event(released)',
+        'OverworldRules.resource_definition(resource_id)',
+        'OverworldRules.resource_icon_path(resource_id)',
+        'texture.get_size() == Vector2(128.0, 128.0)',
+        'command_band.get_global_rect().encloses(resource_chip.get_global_rect())',
+        'var bounded_width_exact: bool = is_equal_approx(menu.size.x, 80.0 if compact_expected else 210.0)',
+        'top_bar.get_global_rect().encloses(menu.get_global_rect())',
+        'SessionStateStore.SAVE_VERSION',
+    ):
+        ensure(token in report_text, errors, f"Focused stockpile popover report is missing real interaction/authority proof: {token}")
+    for forbidden in (
+        "menu.show_popup(",
+        "get_popup().popup",
+        "pressed.emit(",
+        "emit_signal(\"pressed\")",
+        "_rebuild_popup(",
+        "sync_stockpile(",
+        "session.overworld.erase",
+        "session.overworld[\"resources\"] =",
+        "create_timer",
+        "create_tween",
+    ):
+        ensure(forbidden not in report_text, errors, f"Focused stockpile popover report must use production refresh and public input without mutation: {forbidden}")
+
+
 def validate_active_play_save_written_cue_playback(errors: list[str]) -> None:
     required_paths = (
         SYSTEM_SAVE_WRITTEN_CUE_PRESENTER_SCRIPT_PATH,
@@ -38792,6 +38947,7 @@ def main() -> int:
     validate_overworld_artifact_slot_cue_playback(errors)
     validate_overworld_artifact_acquired_cue_playback(errors)
     validate_overworld_resource_delta_cue_playback(errors)
+    validate_resource_stockpile_icon_popover(errors)
     validate_active_play_save_written_cue_playback(errors)
     validate_active_play_load_resumed_cue_playback(errors)
     validate_overworld_object_resolution_cue_playback(errors)
