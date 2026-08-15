@@ -39079,8 +39079,21 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
             "signature == _current_signature",
             "imported_asset_count",
             "generated_fallback_count",
+            "duplicate(true) as AudioStreamWAV",
+            "AudioStreamWAV.LOOP_FORWARD",
+            "loop_begin_sample",
+            "loop_end_sample",
+            "stream_length_sec",
+            'layer["looped"] = looped',
         ):
             ensure(required_token in music_text, errors, f"MusicAudio.gd is missing required token: {required_token}")
+        ensure(
+            music_text.index("duplicate(true) as AudioStreamWAV")
+            < music_text.index("wav_stream.loop_mode = AudioStreamWAV.LOOP_FORWARD")
+            < music_text.index("player.stream = playback_stream"),
+            errors,
+            "MusicAudio must duplicate the imported WAV before applying forward-loop state and assigning it to the player",
+        )
 
     required_music_cue_ids = (
         "music_menu_theme",
@@ -39101,26 +39114,79 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
         ensure(music_manifest.get("schema") == "music_runtime_asset_manifest_v1", errors, "music_runtime_manifest.json has the wrong schema")
         ensure(music_manifest.get("final_composition") is False, errors, "music_runtime_manifest.json must not claim final composition")
         ensure(music_manifest.get("audio_bus") == "Music", errors, "music_runtime_manifest.json must target the Music bus")
+        ensure(int(music_manifest.get("sample_rate_hz", 0)) == 44100, errors, "production music assets must use 44.1 kHz")
+        ensure(int(music_manifest.get("channel_count", 0)) == 2, errors, "production music assets must be stereo")
+        ensure(int(music_manifest.get("sample_width_bits", 0)) == 16, errors, "production music source assets must use 16-bit PCM")
+        ensure(int(music_manifest.get("segment_duration_msec", 0)) == 8000, errors, "production music assets must use exact eight-second segments")
+        ensure(music_manifest.get("loop_mode") == "forward", errors, "production music manifest must declare forward looping")
+        ensure(music_manifest.get("asset_tier") == "production_layered_loop_v1", errors, "production music manifest must declare production_layered_loop_v1")
         music_cues = music_manifest.get("cues", {})
         ensure(isinstance(music_cues, dict), errors, "music_runtime_manifest.json cues must be an object")
+        ensure(set(music_cues) == set(required_music_cue_ids), errors, "music_runtime_manifest.json must contain exactly the twelve live music layer ids")
+        expected_music_cues = {
+            "music_menu_theme": ("res://art/audio/runtime/music/menu_root.wav", "menu root", -23.0),
+            "music_menu_theme_harmony": ("res://art/audio/runtime/music/menu_harmony.wav", "menu harmony", -26.0),
+            "music_menu_theme_motion": ("res://art/audio/runtime/music/menu_motion.wav", "menu motion", -28.0),
+            "music_overworld_theme": ("res://art/audio/runtime/music/overworld_root.wav", "overworld root", -23.5),
+            "music_overworld_theme_harmony": ("res://art/audio/runtime/music/overworld_harmony.wav", "overworld harmony", -26.5),
+            "music_overworld_theme_motion": ("res://art/audio/runtime/music/overworld_motion.wav", "overworld motion", -28.5),
+            "music_battle_theme": ("res://art/audio/runtime/music/battle_root.wav", "battle root", -22.5),
+            "music_battle_theme_harmony": ("res://art/audio/runtime/music/battle_harmony.wav", "battle harmony", -25.5),
+            "music_battle_theme_motion": ("res://art/audio/runtime/music/battle_motion.wav", "battle motion", -27.5),
+            "music_outcome_theme": ("res://art/audio/runtime/music/outcome_root.wav", "outcome root", -24.0),
+            "music_outcome_theme_harmony": ("res://art/audio/runtime/music/outcome_harmony.wav", "outcome harmony", -27.0),
+            "music_outcome_theme_motion": ("res://art/audio/runtime/music/outcome_motion.wav", "outcome motion", -29.0),
+        }
+        music_asset_hashes = set()
         for cue_id in required_music_cue_ids:
             cue = music_cues.get(cue_id, {}) if isinstance(music_cues, dict) else {}
             ensure(isinstance(cue, dict), errors, f"music_runtime_manifest.json is missing cue {cue_id}")
             path_value = str(cue.get("path", ""))
-            ensure(path_value.startswith("res://art/audio/runtime/music/"), errors, f"music cue {cue_id} must use the runtime music audio folder")
+            expected_path, expected_role, expected_volume = expected_music_cues[cue_id]
+            ensure(path_value == expected_path, errors, f"music cue {cue_id} must preserve its exact live asset path")
+            ensure(str(cue.get("role", "")) == expected_role, errors, f"music cue {cue_id} must preserve its exact role")
+            ensure(float(cue.get("volume_db", 0.0)) == expected_volume, errors, f"music cue {cue_id} must preserve its exact volume")
             wav_path = ROOT / path_value.removeprefix("res://")
             ensure(wav_path.exists(), errors, f"runtime music asset is missing for {cue_id}: {path_value}")
             if wav_path.exists():
                 header = wav_path.read_bytes()[:12]
                 ensure(header[:4] == b"RIFF" and header[8:12] == b"WAVE", errors, f"runtime music asset is not a WAV file: {path_value}")
-            ensure(int(cue.get("duration_msec", 0)) > 0, errors, f"music cue {cue_id} needs duration_msec")
+                music_asset_hashes.add(hashlib.sha256(wav_path.read_bytes()).hexdigest())
+                with wave.open(str(wav_path), "rb") as wav_file:
+                    channel_count = wav_file.getnchannels()
+                    sample_width = wav_file.getsampwidth()
+                    sample_rate = wav_file.getframerate()
+                    frame_count = wav_file.getnframes()
+                    raw_frames = wav_file.readframes(frame_count)
+                ensure(channel_count == 2, errors, f"production music asset must be stereo: {path_value}")
+                ensure(sample_width == 2, errors, f"production music asset must be 16-bit PCM: {path_value}")
+                ensure(sample_rate == 44100, errors, f"production music asset must use 44.1 kHz: {path_value}")
+                ensure(frame_count == 352800, errors, f"production music asset must contain exactly eight seconds: {path_value}")
+                samples = struct.unpack(f"<{len(raw_frames) // 2}h", raw_frames) if raw_frames else ()
+                left_samples = samples[0::2]
+                right_samples = samples[1::2]
+                peak = max((abs(value) for value in samples), default=0) / 32767.0
+                total_energy = sum(value * value for value in samples)
+                stereo_difference = sum((left - right) * (left - right) for left, right in zip(left_samples, right_samples))
+                ensure(0.35 <= peak <= 0.70, errors, f"production music asset peak must stay in the bounded source range: {path_value}")
+                ensure(total_energy > len(samples) * 1000, errors, f"production music asset must contain sustained non-silent content: {path_value}")
+                ensure(stereo_difference > 0, errors, f"production music asset must use distinct stereo channels: {path_value}")
+                if left_samples and right_samples:
+                    ensure(left_samples[0] == left_samples[-1] and right_samples[0] == right_samples[-1], errors, f"production music asset must close its stereo loop boundary exactly: {path_value}")
+            ensure(int(cue.get("duration_msec", 0)) == 8000, errors, f"music cue {cue_id} must use exact eight-second duration")
             ensure("volume_db" in cue, errors, f"music cue {cue_id} needs volume_db")
+        ensure(len(music_asset_hashes) == len(required_music_cue_ids), errors, "all twelve production music WAV payloads must be byte-distinct")
 
     music_generator_text = MUSIC_RUNTIME_GENERATOR_PATH.read_text(encoding="utf-8") if MUSIC_RUNTIME_GENERATOR_PATH.exists() else ""
     for required_token in (
         "music_runtime_manifest.json",
         "SPECS",
         "write_wav",
+        "render_stereo",
+        "production-layered-loop-v1",
+        "SEGMENT_DURATION_MSEC = 8000",
+        "periodic_frequency",
+        "normalized[-1] = normalized[0]",
         "wave.open",
         "Manifest/spec cue mismatch",
     ):
@@ -39156,6 +39222,16 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
             "imported_asset_count",
             "generated_fallback_count",
             "imported_wav",
+            "EXPECTED_LAYER_CUES",
+            "EXPECTED_SEGMENT_DURATION_SEC := 8.0",
+            "_validate_manifest_asset_surface",
+            "_validate_continuous_playback",
+            "_validate_generated_fallback",
+            "AudioStreamWAV.LOOP_FORWARD",
+            "validation_outcome_repeat_after_loop",
+            "continuous_active_player_count",
+            "route must own exactly three active music players",
+            '"generated_waveform"',
         ):
             ensure(required_token in report_text, errors, f"Music audio runtime report is missing required token: {required_token}")
 
@@ -39176,6 +39252,10 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
             "OverworldShell",
             "BattleShell",
             "ScenarioOutcomeShell",
+            "production-loop follow-up",
+            "seamless eight-second 44.1 kHz stereo",
+            "LOOP_FORWARD",
+            "all three players still active after a full segment",
             "Not final music composition",
             "No final music stems",
         ):

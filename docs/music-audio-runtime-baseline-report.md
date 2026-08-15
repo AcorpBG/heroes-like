@@ -6,14 +6,16 @@ Slice: `music-audio-runtime-baseline-20260523-10184`
 
 This slice adds `scripts/autoload/MusicAudio.gd`, a music runtime layer for menu, overworld, battle, and scenario outcome contexts.
 
-The service now prefers committed original WAV cue layers from `content/music_runtime_manifest.json` under `art/audio/runtime/music/`, with bounded `AudioStreamGenerator` fallback when an asset is unavailable. It records cue ids, context ids, layer metadata, route source, bus, mute state, active player count, manifest state, asset paths, and stable signatures for validation.
+The service now prefers committed original WAV cue layers from `content/music_runtime_manifest.json` under `art/audio/runtime/music/`, with bounded `AudioStreamGenerator` fallback when an asset is unavailable. The production-loop follow-up replaces all twelve 1.35-second mono placeholder stems with distinct seamless eight-second 44.1 kHz stereo layers and plays detached imported WAV resources in forward-loop mode. It records cue ids, context ids, layer metadata, route source, bus, mute state, active player count, manifest state, asset paths, loop state, and stable signatures for validation.
 
 ## Runtime Contract
 
 - `MusicAudio.sync_context(...)` is the single public routing call.
 - Context cues are `music_menu_theme`, `music_overworld_theme`, `music_battle_theme`, and `music_outcome_theme`.
-- Contexts generate root, harmony, and motion layers with deterministic frequencies.
-- `tools/generate_music_runtime_assets.py` reproducibly writes the current runtime music WAV cue layers from `content/music_runtime_manifest.json`.
+- Every context owns exact root, harmony, and motion cue layers; the established three-player cap is unchanged.
+- `tools/generate_music_runtime_assets.py` reproducibly writes twelve byte-distinct original layered stereo loops from `content/music_runtime_manifest.json`. Each context shares one exact eight-second phrase boundary across its three stems.
+- Imported WAV resources are deep-duplicated before `LOOP_FORWARD` metadata is applied, so the source import cache is not mutated.
+- Normal imported playback remains active beyond a full segment; an unchanged context signature does not restart it, while a changed context still stops and replaces the three old players.
 - Unchanged context signatures do not restart active music.
 - The service respects `SettingsService.master_volume_percent()` and `SettingsService.music_volume_percent()`.
 - Audio routes to `Music` when that bus exists, otherwise `Master`.
@@ -28,11 +30,11 @@ The service now prefers committed original WAV cue layers from `content/music_ru
 
 ## Validation
 
-`tests/music_audio_runtime_report.tscn` proves direct routing for all four contexts, stable non-restart behavior on a repeated menu signature, imported runtime music asset use, bus selection, player cap exposure, manifest loading, and at least one live shell route through `MainMenu`.
+`tests/music_audio_runtime_report.tscn` proves exact manifest and imported asset coverage for all twelve layers, 44.1 kHz stereo eight-second imports, forward-loop metadata, all three players still active after a full segment, stable non-restart behavior, changed-context replacement, generated fallback, bus selection, player cap exposure, and a live shell route through `MainMenu`. Repository validation separately checks 16-bit source PCM, bounded peaks, non-silent distinct channels, exact loop boundaries, unique hashes, and deterministic generation.
 
 ## Non-Goals
 
 - Not final music composition.
-- No final music stems, licensed tracks, adaptive soundtrack approval, or mixer mastering.
+- No final music stems approval, orchestral recording, licensed tracks, adaptive soundtrack redesign, hardware listening certification, or mixer mastering.
 - No mixer/bus-layout migration.
 - No save migration.
