@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `presentation-live-spell-school-sigil-adoption-10184`. All 112 shipped spells now resolve through their existing school id to one of seven distinct original imported material-language sigils. The existing compact Overworld cast, Town study, and Battle cast buttons load the exact school sigil fail-closed while preserving copy, tooltips, order, disabled state, focus, containment, and real action consequences at 1280x720 and 1920x1080. Focused real cast/learn/cast, magic/Town/Battle compatibility, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Per-spell illustrations, spell balance/rules/content, save schema, AI, new panels, packaged spell interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `presentation-live-spell-school-sigil-adoption-10184`
 - Completed implementation slice: `presentation-authored-artifact-icon-adoption-10184`. All 12 production artifacts now own distinct original painted icons and stable non-placeholder metadata. The existing compact Overworld Command and Town Logistics gear buttons resolve only the exact equipped or packed artifact already owned by each action, load its imported icon fail-closed, and preserve real equip/stow, session, save, copy, tooltip, focus, and ordering authority at 1280x720 and 1920x1080. The Town artifact lane is now first in Logistics so the live buttons remain visible and contained. Focused, artifact compatibility, Town/Battle visual, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged artifact interaction, final artifact VFX/audio, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `presentation-authored-artifact-icon-adoption-10184`
 - Completed implementation slice: `overworld-ninefold-rope-lift-live-transit-10184`. Ninefold Confluence's existing `Reeve Rope Lift` response now opens the exact authored two-way land shortcut between 9,51 and 9,54 for its four-day active window. The live player BFS previews it as one movement, full route execution independently revalidates it, activation/expiry changes invalidate cached routes, and malformed, unclaimed, enemy, unsafe, expired, unaffordable, or movement-exhausted cases remain closed. Focused 1280x720/1920x1080 live proof, save normalization, full/cached route, terrain, controller, Ninefold, metadata, AI valuation, core, save/load, focus, accessibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Ferry/ship/water, other transit objects, strategic-AI transit use, RMG, editor placement, packaged transit interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unchanged or unclaimed. Select the next tracker-approved implementation slice.
@@ -4884,6 +4886,42 @@ Completed evidence:
 - the focused report passes real equip/stow presses on both surfaces at 1280x720 and 1920x1080 with whole-session equality against independent rule controls, exact visibility/containment, invalid-id fail-closed behavior, and all 12 icon imports;
 - artifact slot presentation, faction/content taxonomy, runtime set effects, field rendezvous transfer, Town/Battle visuals, accessibility semantics, core systems, repository validation, and exact/generic editor parses pass;
 - official Linux export plus packaged headless startup and official Windows export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass with no packaged artifact-interaction or broader release claim.
+
+## Live Spell School Sigil Adoption
+
+id: `presentation-live-spell-school-sigil-adoption-10184`
+
+Selected Phase 6 production-art and live-UX slice. All 112 shipped spell records
+already belong to the seven authored Beacon, Mire, Lens, Root, Furnace, Veil, and
+Old Measure schools, and the magic foundation requires material-language school
+identity rather than hue alone. No school-sigil asset domain exists, and the live
+Overworld cast, Town study, and Battle cast buttons render text only.
+
+Implementation target:
+- produce one coherent original seven-sigil set whose distinct shapes and materials follow the exact authored school language, and store the project-consumed runtime assets under a dedicated magic-school art domain;
+- add one exact data-driven school-to-icon manifest and a fail-closed SpellRules resolver so every shipped spell maps through its existing school id without duplicating UI metadata across 112 records;
+- render the resolved school sigil on the existing compact Overworld cast, Town study, and Battle cast buttons without changing their labels, tooltips, order, disabled state, focus, sizing, or actions;
+- preserve the seven-school content contract and all spell learning, mana, targeting, casting, consequence, save, and AI authority.
+
+Completion criteria:
+- all seven schools load one distinct original imported sigil with exact manifest ownership, and every one of the 112 production spells resolves to its school asset with no missing or placeholder identity;
+- real live cast/learn/cast actions across Overworld, Town, and Battle show the matching school sigil at 1280x720 and 1920x1080 while preserving exact ordered action arrays, button copy/tooltips, focus cycle, containment, and whole session/save authority against independent rules controls;
+- missing, unsupported, or invalid school icon metadata yields a text-only button without errors or action changes;
+- focused runtime, magic/Town/Battle compatibility, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Non-goals:
+- do not claim unique per-spell illustrations; these seven sigils are permanent school/category identity assets rather than substitutes for future spell-specific art;
+- do not change spell names, schools, tiers, costs, effects, target modes, spellbooks, learning rules, mana, balance, VFX/audio, AI valuation, save schema/version, or action consequences;
+- do not add panels, enlarge command rails, cover the map/battle/town stage, or change non-spell buttons;
+- do not claim packaged spell interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release readiness.
+
+Completed evidence:
+- one coherent original atlas produced seven distinct 128x128 imported runtime sigils, and one exact manifest owns their stable school, icon, asset, and material-language identities;
+- every production spell resolves through its existing school id without per-spell UI metadata, and invalid or unsupported metadata fails closed to the existing text-only action;
+- the live Overworld, Town, and Battle spell actions render the exact sigil at a bounded 24px theme width while preserving their existing labels, tooltips, disabled state, focus order, containment, and bindings;
+- the focused report passes real Waystride cast, Town study, and Stone Veil battle-cast consequences at 1280x720 and 1920x1080 with whole-session equality against independent rule controls and unchanged save summaries;
+- magic schema and behavior, field spell cue, spell sharing, Town/Battle visuals, accessibility semantics, core systems, repository validation, and exact/generic editor parses pass;
+- official Linux export plus packaged headless startup and official Windows export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass, without a packaged spell-interaction or broader release claim.
 
 ## Phase Roadmap
 

@@ -28,6 +28,29 @@ const SPELL_PRIMARY_ROLES := [
 	"assault_buff",
 ]
 
+static func spell_id_for_action(action_id: String) -> String:
+	var spell_id := ""
+	if action_id.begins_with("cast_spell:"):
+		spell_id = action_id.trim_prefix("cast_spell:")
+	elif action_id.begins_with("learn_spell:"):
+		spell_id = action_id.trim_prefix("learn_spell:")
+	return spell_id if not ContentService.get_spell(spell_id).is_empty() else ""
+
+static func spell_school_icon_path(spell_id: String) -> String:
+	var spell := ContentService.get_spell(spell_id)
+	var school_id := String(spell.get("school_id", "")).strip_edges()
+	if school_id not in SPELL_SCHOOL_IDS:
+		return ""
+	var icon := ContentService.get_spell_school_icon(school_id)
+	var icon_path := String(icon.get("icon_path", "")).strip_edges()
+	if String(icon.get("id", "")) != school_id:
+		return ""
+	if String(icon.get("icon_id", "")) != "spell_school_sigil_%s" % school_id:
+		return ""
+	if not icon_path.begins_with("res://art/magic/runtime/schools/") or not ResourceLoader.exists(icon_path, "Texture2D"):
+		return ""
+	return icon_path
+
 static func build_spellbook(hero_template: Dictionary) -> Dictionary:
 	var mana_max := mana_max_from_command(hero_template.get("command", {}))
 	return {

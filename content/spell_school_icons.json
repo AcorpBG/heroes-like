@@ -1,0 +1,46 @@
+{
+  "items": [
+    {
+      "id": "beacon",
+      "icon_id": "spell_school_sigil_beacon",
+      "icon_path": "res://art/magic/runtime/schools/beacon.png",
+      "material_language": "signal brazier, ash writ, road glyph, and court bells"
+    },
+    {
+      "id": "mire",
+      "icon_id": "spell_school_sigil_mire",
+      "icon_path": "res://art/magic/runtime/schools/mire.png",
+      "material_language": "peat mask, reeds, drag ripples, and drum rings"
+    },
+    {
+      "id": "lens",
+      "icon_id": "spell_school_sigil_lens",
+      "icon_path": "res://art/magic/runtime/schools/lens.png",
+      "material_language": "faceted prism, calibrated sextant, and choir ring"
+    },
+    {
+      "id": "root",
+      "icon_id": "spell_school_sigil_root",
+      "icon_path": "res://art/magic/runtime/schools/root.png",
+      "material_language": "graft knot, thorn ring, and amber seed light"
+    },
+    {
+      "id": "furnace",
+      "icon_id": "spell_school_sigil_furnace",
+      "icon_path": "res://art/magic/runtime/schools/furnace.png",
+      "material_language": "pressure gauge, vent, slag plate, and hot ceramic"
+    },
+    {
+      "id": "veil",
+      "icon_id": "spell_school_sigil_veil",
+      "icon_path": "res://art/magic/runtime/schools/veil.png",
+      "material_language": "tarnished bell, folded chart, fog curve, and memory salt"
+    },
+    {
+      "id": "old_measure",
+      "icon_id": "spell_school_sigil_old_measure",
+      "icon_path": "res://art/magic/runtime/schools/old_measure.png",
+      "material_language": "cracked mirror, measuring stone, weather marks, and timekeeping ring"
+    }
+  ]
+}
