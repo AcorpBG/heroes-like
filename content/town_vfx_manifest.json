@@ -6,6 +6,12 @@
       "texture_path": "res://art/town/runtime/vfx/build_complete.png",
       "render_mode": "town_building_complete",
       "scale": 1.0
+    },
+    "vfx_placeholder_recruit_muster": {
+      "event_id": "town_units_recruited",
+      "texture_path": "res://art/town/runtime/vfx/recruit_muster.png",
+      "render_mode": "town_recruit_muster",
+      "scale": 1.0
     }
   }
 }

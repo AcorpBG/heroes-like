@@ -161,6 +161,10 @@ TOWN_BUILDING_COMPLETE_VFX_SOURCE_PATH = ROOT / "art" / "town" / "source" / "bui
 TOWN_BUILDING_COMPLETE_VFX_RUNTIME_PATH = ROOT / "art" / "town" / "runtime" / "vfx" / "build_complete.png"
 TOWN_BUILDING_COMPLETE_VFX_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_building_complete_vfx_asset_runtime_report.gd"
 TOWN_BUILDING_COMPLETE_VFX_REPORT_SCENE_PATH = ROOT / "tests" / "town_building_complete_vfx_asset_runtime_report.tscn"
+TOWN_RECRUITMENT_VFX_SOURCE_PATH = ROOT / "art" / "town" / "source" / "recruit_muster_vfx_source.png"
+TOWN_RECRUITMENT_VFX_RUNTIME_PATH = ROOT / "art" / "town" / "runtime" / "vfx" / "recruit_muster.png"
+TOWN_RECRUITMENT_VFX_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_recruitment_vfx_asset_runtime_report.gd"
+TOWN_RECRUITMENT_VFX_REPORT_SCENE_PATH = ROOT / "tests" / "town_recruitment_vfx_asset_runtime_report.tscn"
 TOWN_ENTITY_CACHE_ACTIVE_REFRESH_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "town_entity_cache_active_refresh_regression.gd"
 TOWN_ENTITY_CACHE_ACTIVE_REFRESH_REGRESSION_SCENE_PATH = ROOT / "tests" / "town_entity_cache_active_refresh_regression.tscn"
 GENERATED_LARGE_TOWN_EXPLICIT_SAVE_SURFACE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "generated_large_town_explicit_save_surface_regression.gd"
@@ -20691,13 +20695,21 @@ def validate_town_building_complete_vfx_assets(errors: list[str]) -> None:
         return
     ensure(load_json(TOWN_VFX_MANIFEST_PATH) == {
         "schema_id": "town_vfx_manifest_v1",
-        "cues": {"vfx_placeholder_build_complete": {
-            "event_id": "town_building_built",
-            "texture_path": "res://art/town/runtime/vfx/build_complete.png",
-            "render_mode": "town_building_complete",
-            "scale": 1.0,
-        }},
-    }, errors, "Town VFX manifest must map only the exact building-complete cue/event/texture")
+        "cues": {
+            "vfx_placeholder_build_complete": {
+                "event_id": "town_building_built",
+                "texture_path": "res://art/town/runtime/vfx/build_complete.png",
+                "render_mode": "town_building_complete",
+                "scale": 1.0,
+            },
+            "vfx_placeholder_recruit_muster": {
+                "event_id": "town_units_recruited",
+                "texture_path": "res://art/town/runtime/vfx/recruit_muster.png",
+                "render_mode": "town_recruit_muster",
+                "scale": 1.0,
+            },
+        },
+    }, errors, "Town VFX manifest must map only the exact building-complete and recruitment cues/events/textures")
     ensure(png_size(TOWN_BUILDING_COMPLETE_VFX_SOURCE_PATH) == (1254, 1254), errors, "Town building-complete source must retain its exact square source image")
     ensure(png_size(TOWN_BUILDING_COMPLETE_VFX_RUNTIME_PATH) == (512, 512), errors, "Town building-complete runtime texture must be 512x512")
     header = TOWN_BUILDING_COMPLETE_VFX_RUNTIME_PATH.read_bytes()[:26]
@@ -20714,7 +20726,7 @@ def validate_town_building_complete_vfx_assets(errors: list[str]) -> None:
     for token in (
         'const TOWN_VFX_MANIFEST_PATH := "res://content/town_vfx_manifest.json"',
         "_load_town_vfx_manifest()",
-        '"vfx_asset": _town_building_complete_vfx_asset_state()',
+        '"vfx_asset": _town_action_vfx_asset_state()',
         '"vfx_draw": _town_action_last_draw.duplicate(true)',
         "func validation_town_building_complete_vfx_asset_summary() -> Dictionary:",
     ):
@@ -20771,6 +20783,99 @@ def validate_town_building_complete_vfx_assets(errors: list[str]) -> None:
     ensure(report_text.count("for viewport_size in VIEWPORT_SIZES:") == 1, errors, "Town building-complete VFX focused owner must run both exact widths")
     for forbidden in ("_draw_town_building_complete_imported_vfx", "_draw_town_building_complete_procedural_frame", "_town_building_complete_vfx_asset_state", "create_timer", "create_tween"):
         ensure(forbidden not in report_text, errors, f"Town building-complete focused owner must not bypass production rendering: {forbidden}")
+
+
+def validate_town_recruitment_vfx_assets(errors: list[str]) -> None:
+    required_paths = (
+        TOWN_STAGE_SCRIPT_PATH,
+        TOWN_VFX_MANIFEST_PATH,
+        TOWN_RECRUITMENT_VFX_SOURCE_PATH,
+        TOWN_RECRUITMENT_VFX_RUNTIME_PATH,
+        TOWN_RECRUITMENT_VFX_REPORT_SCRIPT_PATH,
+        TOWN_RECRUITMENT_VFX_REPORT_SCENE_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Town recruitment VFX owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+    manifest = load_json(TOWN_VFX_MANIFEST_PATH)
+    cues = manifest.get("cues", {}) if isinstance(manifest, dict) else {}
+    ensure(cues.get("vfx_placeholder_recruit_muster") == {
+        "event_id": "town_units_recruited",
+        "texture_path": "res://art/town/runtime/vfx/recruit_muster.png",
+        "render_mode": "town_recruit_muster",
+        "scale": 1.0,
+    }, errors, "Town VFX manifest must map the exact recruitment cue/event/texture")
+    ensure(set(cues) == {"vfx_placeholder_build_complete", "vfx_placeholder_recruit_muster"}, errors, "Town VFX manifest must not remap any other cue")
+    ensure(png_size(TOWN_RECRUITMENT_VFX_SOURCE_PATH) == (1254, 1254), errors, "Town recruitment VFX source must retain its exact square source image")
+    ensure(png_size(TOWN_RECRUITMENT_VFX_RUNTIME_PATH) == (512, 512), errors, "Town recruitment runtime texture must be 512x512")
+    header = TOWN_RECRUITMENT_VFX_RUNTIME_PATH.read_bytes()[:26]
+    ensure(len(header) >= 26 and header[25] in {4, 6}, errors, "Town recruitment runtime texture must retain a PNG alpha channel")
+
+    def block(text: str, name: str) -> str:
+        start = text.find(f"func {name}")
+        if start < 0:
+            return ""
+        end = text.find("\nfunc ", start + 1)
+        return text[start:] if end < 0 else text[start:end]
+
+    stage_text = TOWN_STAGE_SCRIPT_PATH.read_text(encoding="utf-8")
+    recruit_draw = block(stage_text, "_draw_town_action_presentation")
+    imported = block(stage_text, "_draw_town_recruitment_imported_vfx")
+    fallback = block(stage_text, "_draw_town_recruitment_procedural_rings")
+    state = block(stage_text, "_town_recruitment_vfx_asset_state")
+    dispatch = block(stage_text, "_town_action_vfx_asset_state")
+    ensure(recruit_draw.find("_draw_town_recruitment_imported_vfx") < recruit_draw.find("_draw_town_recruitment_procedural_rings") < recruit_draw.find("draw_rect(badge_rect"), errors, "Town recruitment must prefer imported art, retain procedural rings fallback, then draw unchanged badge/text")
+    for token in (
+        '_town_vfx_texture_for_path(String(asset_state.get("texture_path", "")))',
+        "var alpha := clampf(1.0 - progress * 0.48, 0.46, 1.0)",
+        "draw_texture_rect(texture, draw_rect, false",
+        '"mode": "imported_texture"',
+        "return true",
+    ):
+        ensure(token in imported, errors, f"Town imported recruitment path is missing exact draw behavior: {token}")
+    for token in (
+        "for index in range(3):",
+        "14.0 + float(index) * 9.0 + progress * 8.0",
+        "draw_arc(ring_center, radius",
+        '"mode": "existing_procedural_recruit_muster_rings"',
+        '"ring_count": 3',
+    ):
+        ensure(token in fallback, errors, f"Town procedural recruitment fallback was not retained exactly: {token}")
+    for token in (
+        'cue_id == "vfx_placeholder_recruit_muster"',
+        'String(_town_action_presentation.get("event_id", "")) == "town_units_recruited"',
+        'String(spec.get("render_mode", "")) == "town_recruit_muster"',
+        '"uses_procedural_fallback": not uses_imported_asset',
+    ):
+        ensure(token in state, errors, f"Town recruitment resolver is missing fail-closed cue/event/asset matching: {token}")
+    ensure('== "town_units_recruited"' in dispatch and "return _town_recruitment_vfx_asset_state()" in dispatch and "return _town_building_complete_vfx_asset_state()" in dispatch, errors, "Town VFX snapshot dispatch must isolate recruitment from construction")
+    for forbidden in ("session.", "_session.", "TownRules", "await ", "create_timer", "create_tween"):
+        ensure(forbidden not in imported and forbidden not in fallback and forbidden not in state, errors, f"Town recruitment VFX resolution/draw must not change game or timing authority: {forbidden}")
+
+    report_text = TOWN_RECRUITMENT_VFX_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    scene_text = TOWN_RECRUITMENT_VFX_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure_scene_nodes(scene_text, errors, "town_recruitment_vfx_asset_runtime_report.tscn", [("TownRecruitmentVfxAssetRuntimeReport", "Node")])
+    for token in (
+        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        "TownRules.recruit_active_town(control, unit_id)",
+        "TownRules.recruit_active_town(session, unit_id)",
+        "live_result == control_result",
+        "session.to_dict() == control.to_dict()",
+        'TownStageViewScript.new()',
+        'stage.call("present_town_action", _presentation(live_town, selected_action, unit_id, expected_count, live_result, false))',
+        'stage.set("_town_vfx_texture_missing", {TEXTURE_PATH: true})',
+        'stage.call("present_town_action", _presentation(live_town, selected_action, unit_id, expected_count, live_result, true))',
+        'String(draw.get("mode", "")) == "imported_texture"',
+        'String(draw.get("mode", "")) == expected_mode',
+        "session.to_dict() == authority_after_recruit",
+        "SessionStateStore.SAVE_VERSION == 9",
+        'print("TOWN_RECRUITMENT_VFX_ASSET_RUNTIME_REPORT %s"',
+    ):
+        ensure(token in report_text, errors, f"Town recruitment VFX focused owner is missing live proof: {token}")
+    ensure(report_text.count("for viewport_size in VIEWPORT_SIZES:") == 1, errors, "Town recruitment VFX focused owner must run both exact widths")
+    for forbidden in ("_draw_town_recruitment_imported_vfx", "_draw_town_recruitment_procedural_rings", "_town_recruitment_vfx_asset_state", "create_timer", "create_tween"):
+        ensure(forbidden not in report_text, errors, f"Town recruitment focused owner must not bypass production rendering: {forbidden}")
 
 
 def validate_town_building_complete_cue_playback(errors: list[str]) -> None:
@@ -39923,6 +40028,7 @@ def main() -> int:
     validate_battle_faction_identity(errors)
     validate_town_faction_progression(errors)
     validate_town_building_complete_vfx_assets(errors)
+    validate_town_recruitment_vfx_assets(errors)
     validate_town_building_complete_cue_playback(errors)
     validate_town_recruitment_cue_playback(errors)
     validate_town_contextual_guide(errors)

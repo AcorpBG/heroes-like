@@ -1,9 +1,10 @@
 extends Node
 
+const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const TownStageViewScript = preload("res://scenes/town/TownStageView.gd")
 const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]
-const TEXTURE_PATH := "res://art/town/runtime/vfx/build_complete.png"
-const RECRUIT_TEXTURE_PATH := "res://art/town/runtime/vfx/recruit_muster.png"
+const BUILD_TEXTURE_PATH := "res://art/town/runtime/vfx/build_complete.png"
+const TEXTURE_PATH := "res://art/town/runtime/vfx/recruit_muster.png"
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -15,11 +16,11 @@ func _run() -> void:
 		var row: Dictionary = await _run_viewport(viewport_size)
 		rows.append(row)
 		if not bool(row.get("ok", false)):
-			_fail("Town building-complete VFX row failed.", {"row": row})
+			_fail("Town recruitment VFX row failed.", {"row": row})
 			return
 	get_window().size = original_window_size
 	await get_tree().process_frame
-	print("TOWN_BUILDING_COMPLETE_VFX_ASSET_RUNTIME_REPORT %s" % JSON.stringify({
+	print("TOWN_RECRUITMENT_VFX_ASSET_RUNTIME_REPORT %s" % JSON.stringify({
 		"ok": true,
 		"viewports": [[1280, 720], [1920, 1080]],
 		"normal_imported_rows": 2,
@@ -41,7 +42,29 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 	if town.is_empty():
 		return {"ok": false, "failure": "town_missing"}
 	_move_active_hero_to_town(session, town)
-	var authority_before: Dictionary = session.to_dict()
+	var selected_action := _first_enabled_recruit_action(session)
+	var unit_id := String(selected_action.get("id", "")).trim_prefix("recruit:")
+	if unit_id == "":
+		return {"ok": false, "failure": "recruit_action_missing"}
+	var before: Dictionary = session.to_dict()
+	var control = SessionStateStoreScript.SessionData.new()
+	control.from_dict(before.duplicate(true))
+	var control_before: Dictionary = TownRules.town_action_consequence_signature(control)
+	var control_result: Dictionary = TownRules.recruit_active_town(control, unit_id)
+	var live_result: Dictionary = TownRules.recruit_active_town(session, unit_id)
+	var control_after: Dictionary = TownRules.town_action_consequence_signature(control)
+	var expected_count := (
+		int(Dictionary(control_after.get("army_counts", {})).get(unit_id, 0))
+		- int(Dictionary(control_before.get("army_counts", {})).get(unit_id, 0))
+	)
+	var consequence_exact := bool(control_result.get("ok", false)) \
+		and live_result == control_result \
+		and session.to_dict() == control.to_dict() \
+		and expected_count > 0
+	if not consequence_exact:
+		return {"ok": false, "failure": "recruit_consequence", "live": live_result, "control": control_result}
+	var authority_after_recruit: Dictionary = session.to_dict()
+	var live_town: Dictionary = TownRules.get_active_town(session)
 	var stage: Control = TownStageViewScript.new()
 	stage.size = Vector2(viewport_size)
 	add_child(stage)
@@ -51,7 +74,7 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 	if not _summary_exact(summary):
 		return await _finish(stage, {"ok": false, "failure": "asset_summary", "actual": summary})
 
-	stage.call("present_town_action", _presentation(town, false))
+	stage.call("present_town_action", _presentation(live_town, selected_action, unit_id, expected_count, live_result, false))
 	await get_tree().process_frame
 	var imported: Dictionary = stage.call("validation_town_action_presentation_snapshot")
 	if not _imported_exact(imported, stage.size):
@@ -59,7 +82,7 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 	stage.call("dismiss_town_action_presentation")
 
 	stage.set("_town_vfx_texture_missing", {TEXTURE_PATH: true})
-	stage.call("present_town_action", _presentation(town, false))
+	stage.call("present_town_action", _presentation(live_town, selected_action, unit_id, expected_count, live_result, false))
 	await get_tree().process_frame
 	var missing: Dictionary = stage.call("validation_town_action_presentation_snapshot")
 	if not _fallback_exact(missing, false):
@@ -67,46 +90,50 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 	stage.call("dismiss_town_action_presentation")
 
 	stage.set("_town_vfx_texture_missing", {})
-	stage.call("present_town_action", _presentation(town, true))
+	stage.call("present_town_action", _presentation(live_town, selected_action, unit_id, expected_count, live_result, true))
 	await get_tree().process_frame
 	var reduced: Dictionary = stage.call("validation_town_action_presentation_snapshot")
 	if not _fallback_exact(reduced, true):
 		return await _finish(stage, {"ok": false, "failure": "reduced_motion", "actual": reduced})
-	var authority_exact: bool = session.to_dict() == authority_before
+	var authority_exact: bool = session.to_dict() == authority_after_recruit
 	var containment_exact: bool = Rect2(Vector2.ZERO, Vector2(viewport_size)).encloses(stage.get_global_rect())
 	return await _finish(stage, {
-		"ok": authority_exact and containment_exact and SessionStateStore.SAVE_VERSION == 9,
+		"ok": consequence_exact and authority_exact and containment_exact and SessionStateStore.SAVE_VERSION == 9,
 		"viewport": [viewport_size.x, viewport_size.y],
+		"unit_id": unit_id,
+		"recruited_count": expected_count,
 		"asset_summary": summary,
 		"imported": imported,
 		"missing": missing,
 		"reduced": reduced,
+		"consequence_exact": consequence_exact,
 		"authority_exact": authority_exact,
 		"containment_exact": containment_exact,
 	})
 
-func _presentation(town: Dictionary, reduced_motion: bool) -> Dictionary:
+func _presentation(town: Dictionary, action: Dictionary, unit_id: String, recruited_count: int, result: Dictionary, reduced_motion: bool) -> Dictionary:
 	return {
-		"event_id": "town_building_built",
+		"event_id": "town_units_recruited",
 		"town_placement_id": String(town.get("placement_id", "")),
 		"town_id": String(town.get("town_id", "")),
-		"building_id": "building_emberwatch",
-		"building_name": "Emberwatch",
-		"result_message": "Emberwatch completed.",
+		"unit_id": unit_id,
+		"unit_name": String(action.get("name", action.get("label", unit_id))),
+		"recruited_count": recruited_count,
+		"result_message": String(result.get("message", "")),
 		"policy": {
-			"event_id": "town_building_built",
-			"cue_id": "cue_town_building_built",
+			"event_id": "town_units_recruited",
+			"cue_id": "cue_town_units_recruited",
 			"surface": "town",
-			"subject_kind": "building",
+			"subject_kind": "unit_roster",
 			"mode": "reduced_motion" if reduced_motion else "normal",
-			"selected_animation_state": "building_badge_added" if reduced_motion else "build_complete",
-			"selected_fallback_tag": "building_badge_added" if reduced_motion else "",
-			"selected_vfx_cue_ids": ["building_badge_added"] if reduced_motion else ["vfx_placeholder_build_complete"],
-			"selected_audio_cue_ids": ["audio_placeholder_town_build"],
+			"selected_animation_state": "recruit_count_badge" if reduced_motion else "recruit_confirmed",
+			"selected_fallback_tag": "recruit_count_badge" if reduced_motion else "",
+			"selected_vfx_cue_ids": ["recruit_count_badge"] if reduced_motion else ["vfx_placeholder_recruit_muster"],
+			"selected_audio_cue_ids": ["audio_placeholder_recruit"],
 			"selected_playback_policy": "queue_resolved",
-			"selected_blocking_policy": "nonblocking_reduced_motion" if reduced_motion else "input_blocking_timeout",
+			"selected_blocking_policy": "nonblocking",
 			"allows_large_motion": not reduced_motion,
-			"max_duration_ms": 700,
+			"max_duration_ms": 260 if reduced_motion else 700,
 		},
 	}
 
@@ -119,7 +146,7 @@ func _imported_exact(snapshot: Dictionary, stage_size: Vector2) -> bool:
 		Vector2(float(rect_payload.get("width", 0.0)), float(rect_payload.get("height", 0.0)))
 	)
 	return bool(snapshot.get("active", false)) \
-		and snapshot.get("selected_vfx_cue_ids", []) == ["vfx_placeholder_build_complete"] \
+		and snapshot.get("selected_vfx_cue_ids", []) == ["vfx_placeholder_recruit_muster"] \
 		and bool(asset.get("uses_imported_asset", false)) \
 		and not bool(asset.get("uses_procedural_fallback", true)) \
 		and String(asset.get("texture_path", "")) == TEXTURE_PATH \
@@ -128,18 +155,19 @@ func _imported_exact(snapshot: Dictionary, stage_size: Vector2) -> bool:
 		and float(draw.get("alpha", 0.0)) > 0.0 \
 		and Rect2(Vector2.ZERO, stage_size).encloses(draw_rect) \
 		and bool(snapshot.get("draw_rect_contained", false)) \
-		and bool(snapshot.get("blocks_input", false))
+		and not bool(snapshot.get("blocks_input", true))
 
 func _fallback_exact(snapshot: Dictionary, reduced_motion: bool) -> bool:
 	var asset: Dictionary = snapshot.get("vfx_asset", {}) if snapshot.get("vfx_asset", {}) is Dictionary else {}
 	var draw: Dictionary = snapshot.get("vfx_draw", {}) if snapshot.get("vfx_draw", {}) is Dictionary else {}
-	var expected_mode := "building_badge_added" if reduced_motion else "existing_procedural_build_completion_frame"
+	var expected_mode := "recruit_count_badge" if reduced_motion else "existing_procedural_recruit_muster_rings"
 	return bool(asset.get("uses_procedural_fallback", false)) \
 		and not bool(asset.get("uses_imported_asset", true)) \
-		and String(asset.get("fallback_mode", "")) == "existing_procedural_build_completion_frame" \
+		and String(asset.get("fallback_mode", "")) == "existing_procedural_recruit_muster_rings" \
 		and String(draw.get("mode", "")) == expected_mode \
 		and String(draw.get("texture_path", "missing")) == "" \
-		and bool(snapshot.get("blocks_input", true)) == not reduced_motion \
+		and int(draw.get("ring_count", 3)) == 3 \
+		and not bool(snapshot.get("blocks_input", true)) \
 		and bool(snapshot.get("reduced_motion", false)) == reduced_motion
 
 func _summary_exact(summary: Dictionary) -> bool:
@@ -147,9 +175,15 @@ func _summary_exact(summary: Dictionary) -> bool:
 		and bool(summary.get("manifest_loaded", false)) \
 		and String(summary.get("schema_id", "")) == "town_vfx_manifest_v1" \
 		and summary.get("mapped_cue_ids", []) == ["vfx_placeholder_build_complete", "vfx_placeholder_recruit_muster"] \
-		and summary.get("texture_paths", []) == [TEXTURE_PATH, RECRUIT_TEXTURE_PATH] \
-		and summary.get("loaded_texture_paths", []) == [TEXTURE_PATH, RECRUIT_TEXTURE_PATH] \
+		and summary.get("texture_paths", []) == [BUILD_TEXTURE_PATH, TEXTURE_PATH] \
+		and summary.get("loaded_texture_paths", []) == [BUILD_TEXTURE_PATH, TEXTURE_PATH] \
 		and summary.get("missing_texture_paths", []) == []
+
+func _first_enabled_recruit_action(session) -> Dictionary:
+	for action_value in TownRules.get_recruit_actions(session):
+		if action_value is Dictionary and not bool(action_value.get("disabled", true)) and int(action_value.get("direct_affordable_count", 0)) > 0:
+			return action_value.duplicate(true)
+	return {}
 
 func _first_player_town(session) -> Dictionary:
 	for town_value in session.overworld.get("towns", []):
@@ -177,5 +211,5 @@ func _finish(stage: Control, result: Dictionary) -> Dictionary:
 	return result
 
 func _fail(message: String, payload: Dictionary = {}) -> void:
-	push_error("TOWN_BUILDING_COMPLETE_VFX_ASSET_RUNTIME_REPORT failed: %s payload=%s" % [message, JSON.stringify(payload)])
+	push_error("TOWN_RECRUITMENT_VFX_ASSET_RUNTIME_REPORT failed: %s payload=%s" % [message, JSON.stringify(payload)])
 	get_tree().quit(1)

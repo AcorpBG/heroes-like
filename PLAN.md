@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `presentation-town-recruitment-vfx-asset-adoption-10184`. Successful live recruitment now draws one original imported alpha muster effect behind the unchanged contained count badge. The renderer preserves exact recruitment consequences, progress/alpha/nonblocking lifetime, refresh/expiry/focus behavior, and the prior three rings as missing-map/missing-texture fallback, while reduced motion retains the static badge. Focused 1280x720/1920x1080, real recruitment cue, construction cue/asset, Town/Battle visual, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged recruitment interaction, hardware/certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `presentation-town-recruitment-vfx-asset-adoption-10184`
 - Completed implementation slice: `presentation-town-building-complete-vfx-asset-adoption-10184`. Normal live construction completion now draws one original imported alpha texture behind the unchanged contained Town badge/text. The renderer preserves exact building consequences, bounded progress/alpha/input-blocking lifetime, skip/expiry/focus behavior, and the prior gold frame as missing-map/missing-texture fallback, while reduced motion retains the static nonblocking badge. Focused 1280x720/1920x1080, real construction cue, Town/Battle visual, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged building interaction, hardware/certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `presentation-town-building-complete-vfx-asset-adoption-10184`
 - Completed implementation slice: `presentation-overworld-object-resolution-vfx-asset-adoption-10184`. Capture, visited, and depleted object-resolution events now map one-to-one to three distinct original imported alpha textures through an exact local manifest. The live renderer retains the authoritative tile, bounded progress/alpha/motion behavior, reduced-motion policy, dynamic-layer ownership, and the prior procedural bodies as fail-closed missing-map/missing-texture fallback. Focused 1280x720/1920x1080, object-resolution playback, full-route movement, broad Overworld visual, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged object interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -5239,6 +5241,37 @@ Completed evidence:
 - focused live 1280x720 and 1920x1080 proof covers exact sprite ids and paths, active identity, movement-compatible presentation, reserve/grounding/contact contracts, procedural fallback, whole-session restoration, containment, and save version 9;
 - full-route movement, Ninefold scenario breadth, broad Overworld visual, active-play focus, accessibility, core, repository validation, and exact/generic editor gates pass;
 - official Linux export plus packaged headless startup and official Windows export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass, with no packaged hero interaction or broader release claim.
+
+## Town Recruitment VFX Asset Adoption
+
+id: `presentation-town-recruitment-vfx-asset-adoption-10184`
+
+Status: completed.
+
+Selected Phase 6 player-facing presentation slice. Successful live player recruitment already publishes the exact `town_units_recruited` event and `vfx_placeholder_recruit_muster` cue after authoritative Town refresh, but normal playback still draws only three procedural muster rings around the existing contained count badge. The completed recruitment cue-playback slice explicitly left final VFX assets out of scope.
+
+Implementation target:
+- add one original source image and one 512x512 runtime alpha texture for recruitment confirmation;
+- extend the existing Town VFX manifest with exactly `vfx_placeholder_recruit_muster` mapped to `town_units_recruited`;
+- render it behind the existing contained muster badge/text using the current progress, alpha, nonblocking lifetime, refresh, and expiry authority;
+- preserve the current three muster rings and badge/text body as exact missing-map or missing-texture fallback, while reduced motion continues using the existing static `recruit_count_badge` contract.
+
+Completion criteria:
+- normal recruitment playback selects and visibly draws the exact imported texture at 1280x720 and 1920x1080 without remapping construction or any other Town/Battle/Overworld cue;
+- missing manifest rows or unloadable textures use the existing three-ring procedural body without errors, replay, input drift, or state mutation;
+- focused live proof preserves exact recruitment consequences, contained stage geometry, progress, nonblocking lifetime, refresh, expiry, focus, session, and save version 9 authority;
+- recruitment cue, Town visual/action, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Completion evidence:
+- one original 1254x1254 source image yields one 512x512 alpha runtime texture, and the exact Town manifest maps only construction and recruitment cues to their matching events and render modes;
+- focused live 1280x720 and 1920x1080 proof observes the imported draw, exact missing-texture three-ring fallback, static reduced-motion badge, containment, nonblocking behavior, exact recruitment consequences, unchanged post-recruit session authority, and save version 9;
+- the real recruitment and construction cues, construction asset, Town/Battle visual, active-play focus, accessibility, core, repository validation, and exact/generic editor gates pass;
+- official Linux export plus packaged headless startup and official Windows export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass, with no packaged recruitment interaction or broader release claim.
+
+Non-goals:
+- no unit, cost, availability, recruitment, army, town-state, focus, input, timing, animation-policy, AI, save-schema, or content changes;
+- no construction VFX, other Town/Overworld/Battle cue, particles, shaders, audio, layout, scenic backdrop, or broad renderer rewrite;
+- no packaged recruitment interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
 
 ## Town Building Complete VFX Asset Adoption
 
