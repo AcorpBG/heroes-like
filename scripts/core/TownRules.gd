@@ -1,6 +1,8 @@
 class_name TownRules
 extends RefCounted
 
+const BUILDING_CATEGORY_IDS := ["civic", "dwelling", "economy", "support", "magic"]
+
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 static var OverworldRulesScript: Variant = load("res://scripts/core/OverworldRules.gd")
 static var HeroCommandRulesScript: Variant = load("res://scripts/core/HeroCommandRules.gd")
@@ -22,6 +24,27 @@ const FACTION_SPELL_SCHOOL_ACCESS := {
 	"faction_brasshollow": ["furnace", "old_measure"],
 	"faction_veilmourn": ["veil", "old_measure"],
 }
+
+static func building_id_for_action(action_id: String) -> String:
+	if not action_id.begins_with("build:"):
+		return ""
+	var building_id := action_id.trim_prefix("build:")
+	return building_id if not ContentService.get_building(building_id).is_empty() else ""
+
+static func building_category_icon_path(building_id: String) -> String:
+	var building := ContentService.get_building(building_id)
+	var category_id := String(building.get("category", "")).strip_edges()
+	if category_id not in BUILDING_CATEGORY_IDS:
+		return ""
+	var icon := ContentService.get_building_category_icon(category_id)
+	var icon_path := String(icon.get("icon_path", "")).strip_edges()
+	if String(icon.get("id", "")) != category_id:
+		return ""
+	if String(icon.get("icon_id", "")) != "building_category_sigil_%s" % category_id:
+		return ""
+	if not icon_path.begins_with("res://art/towns/runtime/building_categories/") or not ResourceLoader.exists(icon_path, "Texture2D"):
+		return ""
+	return icon_path
 
 static func begin_read_scope(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null:

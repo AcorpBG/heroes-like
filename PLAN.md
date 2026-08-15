@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `presentation-town-building-category-sigil-adoption-10184`. All 133 production buildings now resolve through their existing category to one of five distinct original construction sigils. The selectable Town Build options load the exact civic, dwelling, economy, support, or magic sigil fail-closed while preserving selection, readiness, tooltip, order, focus, containment, and real construction consequences at 1280x720 and 1920x1080. Focused construction, building cue, all-town save/resume, Town/Battle visual, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Unique per-building illustrations, building/economy/balance/save/AI changes, packaged interaction, hardware/certification, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `presentation-town-building-category-sigil-adoption-10184`
 - Completed implementation slice: `presentation-live-spell-school-sigil-adoption-10184`. All 112 shipped spells now resolve through their existing school id to one of seven distinct original imported material-language sigils. The existing compact Overworld cast, Town study, and Battle cast buttons load the exact school sigil fail-closed while preserving copy, tooltips, order, disabled state, focus, containment, and real action consequences at 1280x720 and 1920x1080. Focused real cast/learn/cast, magic/Town/Battle compatibility, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Per-spell illustrations, spell balance/rules/content, save schema, AI, new panels, packaged spell interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `presentation-live-spell-school-sigil-adoption-10184`
 - Completed implementation slice: `presentation-authored-artifact-icon-adoption-10184`. All 12 production artifacts now own distinct original painted icons and stable non-placeholder metadata. The existing compact Overworld Command and Town Logistics gear buttons resolve only the exact equipped or packed artifact already owned by each action, load its imported icon fail-closed, and preserve real equip/stow, session, save, copy, tooltip, focus, and ordering authority at 1280x720 and 1920x1080. The Town artifact lane is now first in Logistics so the live buttons remain visible and contained. Focused, artifact compatibility, Town/Battle visual, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged artifact interaction, final artifact VFX/audio, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -4922,6 +4924,42 @@ Completed evidence:
 - the focused report passes real Waystride cast, Town study, and Stone Veil battle-cast consequences at 1280x720 and 1920x1080 with whole-session equality against independent rule controls and unchanged save summaries;
 - magic schema and behavior, field spell cue, spell sharing, Town/Battle visuals, accessibility semantics, core systems, repository validation, and exact/generic editor parses pass;
 - official Linux export plus packaged headless startup and official Windows export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass, without a packaged spell-interaction or broader release claim.
+
+## Town Building Category Sigil Adoption
+
+id: `presentation-town-building-category-sigil-adoption-10184`
+
+Selected Phase 6 production-art and live Town UX slice. The 133 shipped building
+records already use exactly five stable categories: civic, dwelling, economy,
+support, and magic. The existing compact Build plan exposes real selectable
+construction actions but renders them as text only, while the production screen
+wireframe calls for compact building iconography.
+
+Implementation target:
+- produce one coherent original five-sigil set with shape-first civic, dwelling, economy, support, and magic construction identities under a dedicated Town building-category art domain;
+- add one exact category-to-icon manifest and fail-closed resolver so every production building maps through its existing category without duplicating icon metadata across 133 records;
+- render the resolved category sigil on the existing selectable Build option buttons without changing labels, tooltips, order, toggle state, readiness, focus, sizing, or construction actions;
+- preserve building content, costs, prerequisites, daily limits, town progression, save, and strategic-AI authority.
+
+Completion criteria:
+- all five categories load one distinct original imported sigil with exact manifest ownership, and every production building resolves to its category asset;
+- real live Build selection and construction at 1280x720 and 1920x1080 show the matching sigil while preserving exact option arrays, copy/tooltips, focus cycle, containment, whole session/save authority, and independent construction consequences;
+- missing, unsupported, or invalid category icon metadata yields a text-only option without errors or action changes;
+- focused runtime, town construction/economy, Town visual, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Non-goals:
+- do not claim unique per-building illustrations; these five sigils are permanent category identity assets rather than substitutes for future building-specific art;
+- do not change building ids, names, categories, costs, prerequisites, unlocks, effects, build limits, town balance, save schema/version, or strategic-AI policy;
+- do not add panels, enlarge the Build rail, cover the Town stage, or change non-build actions;
+- do not claim packaged construction interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release readiness.
+
+Completed evidence:
+- one coherent original atlas produced five distinct 128x128 imported runtime sigils, and one exact manifest owns their stable civic, dwelling, economy, support, and magic identities;
+- every production building resolves through its existing category without duplicated per-building UI metadata, and invalid or unsupported metadata fails closed to the existing text-only option;
+- the live selectable Build options render the exact category sigil at a bounded 24px width while preserving their labels, tooltips, toggle/readiness state, focus order, containment, and binding;
+- the focused report passes real selection and construction at 1280x720 and 1920x1080 with whole-session equality against an independent rule-plus-recap control and save version 9 unchanged;
+- the building-completion cue, all 15 authored town save/resume cases, Town/Battle visuals, accessibility semantics, core systems, repository validation, and exact/generic editor parses pass;
+- official Linux export plus packaged headless startup and official Windows export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass, without a packaged construction-interaction or broader release claim.
 
 ## Phase Roadmap
 

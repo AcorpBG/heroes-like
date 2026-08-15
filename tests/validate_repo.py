@@ -57,6 +57,9 @@ ARTIFACT_ICON_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "artifact_icon_runtim
 SPELL_SCHOOL_ICON_MANIFEST_PATH = CONTENT_DIR / "spell_school_icons.json"
 SPELL_SCHOOL_ICON_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "spell_school_icon_runtime_report.gd"
 SPELL_SCHOOL_ICON_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "spell_school_icon_runtime_report.tscn"
+BUILDING_CATEGORY_ICON_MANIFEST_PATH = CONTENT_DIR / "building_category_icons.json"
+TOWN_BUILDING_CATEGORY_ICON_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_building_category_icon_runtime_report.gd"
+TOWN_BUILDING_CATEGORY_ICON_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "town_building_category_icon_runtime_report.tscn"
 SPELL_RULES_PATH = ROOT / "scripts" / "core" / "SpellRules.gd"
 ANIMATION_CUE_CATALOG_RULES_PATH = ROOT / "scripts" / "core" / "AnimationCueCatalog.gd"
 ENEMY_TURN_RULES_PATH = ROOT / "scripts" / "core" / "EnemyTurnRules.gd"
@@ -28972,6 +28975,113 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
         ensure(forbidden not in report_text, errors, f"Spell school icon runtime report must not bypass production or mutate presentation: {forbidden}")
 
 
+def validate_town_building_category_icon_runtime(errors: list[str]) -> None:
+    required_paths = (
+        BUILDING_CATEGORY_ICON_MANIFEST_PATH,
+        CONTENT_DIR / "buildings.json",
+        CONTENT_SERVICE_PATH,
+        TOWN_RULES_PATH,
+        TOWN_SCRIPT_PATH,
+        TOWN_BUILDING_CATEGORY_ICON_RUNTIME_REPORT_SCRIPT_PATH,
+        TOWN_BUILDING_CATEGORY_ICON_RUNTIME_REPORT_SCENE_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Town building category icon owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    def function_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}")
+        if start < 0:
+            return ""
+        ends = [index for index in (text.find("\nfunc ", start + 1), text.find("\nstatic func ", start + 1)) if index >= 0]
+        end = min(ends) if ends else -1
+        return text[start:] if end < 0 else text[start:end]
+
+    expected_icons = {
+        category: f"res://art/towns/runtime/building_categories/{category}.png"
+        for category in ("civic", "dwelling", "economy", "support", "magic")
+    }
+    manifest = load_json(BUILDING_CATEGORY_ICON_MANIFEST_PATH).get("items", [])
+    ensure(isinstance(manifest, list) and len(manifest) == 5, errors, "Building category icon manifest must contain exactly five rows")
+    ids: list[str] = []
+    paths: list[str] = []
+    if isinstance(manifest, list):
+        for row in manifest:
+            ensure(isinstance(row, dict), errors, "Building category icon rows must be dictionaries")
+            if not isinstance(row, dict):
+                continue
+            category = str(row.get("id", ""))
+            icon_path = str(row.get("icon_path", ""))
+            ids.append(category)
+            paths.append(icon_path)
+            ensure(str(row.get("icon_id", "")) == f"building_category_sigil_{category}", errors, f"Building category {category} must own its stable sigil id")
+            ensure(icon_path == expected_icons.get(category, ""), errors, f"Building category {category} must own its exact runtime path")
+            ensure(bool(str(row.get("material_language", "")).strip()), errors, f"Building category {category} must define material language")
+            disk_path = res_path_to_disk(icon_path)
+            ensure(disk_path.is_file() and png_size(disk_path) == (128, 128), errors, f"Building category {category} sigil must be an exact 128x128 PNG")
+            ensure(Path(f"{disk_path}.import").is_file(), errors, f"Building category {category} sigil import is missing")
+    ensure(ids == list(expected_icons), errors, "Building category icon manifest must preserve exact category order")
+    ensure(len(set(paths)) == 5, errors, "Building category icon paths must be distinct")
+    atlas = ROOT / "art" / "towns" / "source" / "building_category_sigil_atlas.png"
+    ensure(atlas.is_file() and Path(f"{atlas}.import").is_file(), errors, "Building category source atlas and import must exist")
+
+    buildings = load_json(CONTENT_DIR / "buildings.json").get("items", [])
+    ensure(isinstance(buildings, list) and len(buildings) == 133, errors, "Building category adoption must cover exactly 133 production buildings")
+    if isinstance(buildings, list):
+        for building in buildings:
+            if isinstance(building, dict):
+                ensure(str(building.get("category", "")) in expected_icons, errors, f"Building {building.get('id', '')} must retain one supported category")
+                ensure("icon_id" not in building and "icon_path" not in building, errors, f"Building {building.get('id', '')} must not duplicate category presentation metadata")
+
+    content_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
+    for token in (
+        'const BUILDING_CATEGORY_ICONS_PATH := "%s/building_category_icons.json" % CONTENT_DIR',
+        "func get_building_category_icon(category_id: String) -> Dictionary:",
+        "_validate_building_category_icons(building_category_icon_index)",
+        'var expected_category_ids := ["civic", "dwelling", "economy", "support", "magic"]',
+        '_validate_art_path(String(icon.get("icon_path", "")), "Building category %s sigil" % category_id)',
+    ):
+        ensure(token in content_text, errors, f"ContentService building category icon ownership is missing: {token}")
+
+    rules_text = TOWN_RULES_PATH.read_text(encoding="utf-8")
+    action_block = function_block(rules_text, "building_id_for_action")
+    resolver_block = function_block(rules_text, "building_category_icon_path")
+    for token in ('action_id.begins_with("build:")', 'action_id.trim_prefix("build:")', 'ContentService.get_building(building_id)'):
+        ensure(token in action_block, errors, f"Building action resolver is missing: {token}")
+    for token in ("category_id not in BUILDING_CATEGORY_IDS", "ContentService.get_building_category_icon(category_id)", 'building_category_sigil_%s', 'res://art/towns/runtime/building_categories/', 'ResourceLoader.exists(icon_path, "Texture2D")', "return icon_path"):
+        ensure(token in resolver_block, errors, f"Building category icon resolver is missing: {token}")
+    ensure("load(" not in resolver_block and "preload(" not in resolver_block, errors, "TownRules must not load category presentation textures")
+
+    shell_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
+    rebuild = function_block(shell_text, "_rebuild_build_actions")
+    helper = function_block(shell_text, "_apply_build_action_icon")
+    order = [rebuild.find("_style_action_button"), rebuild.find("_apply_build_action_icon(button, action)"), rebuild.find("button.pressed.connect"), rebuild.find("add_child(button)")]
+    ensure(all(index >= 0 for index in order) and order == sorted(order), errors, "Town Build category icon must apply after styling and before unchanged binding/order")
+    for token in ("TownRules.building_id_for_action", "TownRules.building_category_icon_path", "load(icon_path) as Texture2D", "button.icon = texture", "button.expand_icon = true", 'button.add_theme_constant_override("icon_max_width", 24)'):
+        ensure(token in helper, errors, f"Town Build category icon helper is missing: {token}")
+    for forbidden in ("button.text =", "button.tooltip_text =", "button.disabled =", "await ", "create_timer", "create_tween"):
+        ensure(forbidden not in helper, errors, f"Town Build category icon helper must not alter action/timing authority: {forbidden}")
+
+    report_text = TOWN_BUILDING_CATEGORY_ICON_RUNTIME_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    scene_text = TOWN_BUILDING_CATEGORY_ICON_RUNTIME_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure_scene_nodes(scene_text, errors, "town_building_category_icon_runtime_report.tscn", [("TownBuildingCategoryIconRuntimeReport", "Node")])
+    for token in (
+        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        "building_count == 133", "category_counts.size() == 5", "asset_paths.size() == 5",
+        'shell.get_node_or_null("%BuildActions")', 'shell.validation_select_build_plan(action_id)',
+        'shell._apply_build_action_icon(invalid_button, {"id": "build:missing_building"})',
+        "confirm.emit_signal(\"pressed\")", "TownRules.build_active_town(control, building_id)",
+        "TownRules.town_action_consequence_signature(control)", "TownRules.build_town_action_recap(control, \"build\", action_id, enabled_action, control_result, control_before)",
+        'control.flags["last_town_action_recap"] = control_recap.duplicate(true)',
+        "live_session.to_dict() == control.to_dict()", "SessionState.reset_session()",
+        'print("TOWN_BUILDING_CATEGORY_ICON_RUNTIME_REPORT %s"',
+    ):
+        ensure(token in report_text, errors, f"Town building category focused owner is missing: {token}")
+    for forbidden in ("_on_build_action_pressed(", "_on_confirm_build_pressed(", "\n\tbutton.icon = ", "create_timer", "create_tween"):
+        ensure(forbidden not in report_text, errors, f"Town building category focused owner must not bypass production: {forbidden}")
+
+
 def validate_overworld_artifact_slot_cue_playback(errors: list[str]) -> None:
     required_paths = (
         OVERWORLD_SCENE_PATH,
@@ -38562,6 +38672,7 @@ def main() -> int:
     validate_overworld_field_spell_cast_cue_playback(errors)
     validate_artifact_icon_runtime(errors)
     validate_spell_school_icon_runtime(errors)
+    validate_town_building_category_icon_runtime(errors)
     validate_overworld_artifact_slot_cue_playback(errors)
     validate_overworld_artifact_acquired_cue_playback(errors)
     validate_overworld_resource_delta_cue_playback(errors)

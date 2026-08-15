@@ -2889,9 +2889,22 @@ func _rebuild_build_actions(actions_override: Variant = null) -> void:
 		button.disabled = action_id == ""
 		button.tooltip_text = _town_action_button_tooltip(action, "build")
 		_style_action_button(button, button.button_pressed)
+		_apply_build_action_icon(button, action)
 		button.pressed.connect(_on_build_action_pressed.bind(String(action.get("id", "")).trim_prefix("build:")))
 		_build_actions.add_child(button)
 	_refresh_build_plan_surface(actions)
+
+func _apply_build_action_icon(button: Button, action: Dictionary) -> void:
+	var building_id := TownRules.building_id_for_action(String(action.get("id", "")))
+	var icon_path := TownRules.building_category_icon_path(building_id)
+	if icon_path == "":
+		return
+	var texture := load(icon_path) as Texture2D
+	if texture == null:
+		return
+	button.icon = texture
+	button.expand_icon = true
+	button.add_theme_constant_override("icon_max_width", 24)
 
 func _ensure_selected_build_action(actions: Array) -> void:
 	if not _build_action_for_id(_selected_build_action_id, actions).is_empty():
