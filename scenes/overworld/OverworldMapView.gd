@@ -287,7 +287,9 @@ var _hero_movement_event_id := ""
 var _hero_movement_animation_state := ""
 var _hero_movement_visual_policy := ""
 var _hero_movement_fallback_tag := ""
+var _hero_movement_vfx_cue_ids: Array = []
 var _hero_movement_reduced_motion := false
+var _hero_movement_last_draw: Dictionary = {}
 var _object_resolution_last_serial := 0
 var _object_resolution_tile := Vector2i(-1, -1)
 var _object_resolution_elapsed_sec := 0.0
@@ -573,7 +575,9 @@ func _sync_hero_movement_presentation(presentation: Dictionary) -> void:
 	_hero_movement_animation_state = String(presentation.get("selected_animation_state", ""))
 	_hero_movement_visual_policy = String(presentation.get("selected_visual_policy", ""))
 	_hero_movement_fallback_tag = String(presentation.get("selected_fallback_tag", ""))
+	_hero_movement_vfx_cue_ids = (presentation.get("selected_vfx_cue_ids", []) as Array).duplicate(true)
 	_hero_movement_reduced_motion = not bool(presentation.get("allows_large_motion", true))
+	_hero_movement_last_draw = {}
 	if _hero_movement_event_id != "overworld_hero_move":
 		return
 	var path := _tiles_from_payloads(presentation.get("route_tiles", []))
@@ -581,6 +585,7 @@ func _sync_hero_movement_presentation(presentation: Dictionary) -> void:
 		return
 	_hero_movement_path = path
 	if _hero_movement_reduced_motion:
+		_hero_movement_last_draw = {"mode": "route_endpoint_snap", "texture_path": ""}
 		_invalidate_dynamic_layer("hero_movement_reduced_motion_snap")
 		return
 	var duration_msec := clampi(
@@ -1590,7 +1595,39 @@ func _draw_hero_movement_presentation(board_rect: Rect2) -> void:
 		return
 	var draw_rect: Rect2 = draw_state.get("rect", Rect2())
 	var grounding_tile: Vector2i = draw_state.get("grounding_tile", Vector2i(-1, -1))
+	if not _draw_hero_route_step_imported_vfx(draw_state):
+		_hero_movement_last_draw = {"mode": "existing_interpolated_hero_marker_only", "texture_path": ""}
 	_draw_hero_marker(draw_rect, grounding_tile, false, _hero_presentation_entry(_hero_tile))
+
+func _draw_hero_route_step_imported_vfx(draw_state: Dictionary) -> bool:
+	var asset_state := _hero_movement_vfx_asset_state()
+	if not bool(asset_state.get("uses_imported_asset", false)):
+		return false
+	var texture: Texture2D = _overworld_vfx_texture_for_path(String(asset_state.get("texture_path", ""))) as Texture2D
+	if texture == null:
+		return false
+	var draw_rect: Rect2 = draw_state.get("rect", Rect2())
+	var center: Vector2 = draw_state.get("center", draw_rect.get_center())
+	var extent := minf(draw_rect.size.x, draw_rect.size.y) * float(asset_state.get("scale", 1.0))
+	var texture_rect := Rect2(Vector2(extent, extent) * -0.5, Vector2(extent, extent))
+	var from_tile: Vector2i = draw_state.get("from_tile", Vector2i.ZERO)
+	var to_tile: Vector2i = draw_state.get("to_tile", from_tile)
+	var direction := Vector2(to_tile - from_tile)
+	var rotation := direction.angle() + PI * 0.25 if direction.length_squared() > 0.0 else 0.0
+	var alpha := clampf(0.90 - float(draw_state.get("segment_progress", 0.0)) * 0.18, 0.72, 0.90)
+	var canvas := _current_draw_canvas_item()
+	canvas.draw_set_transform(center, rotation, Vector2.ONE)
+	canvas.draw_texture_rect(texture, texture_rect, false, Color(1.0, 1.0, 1.0, alpha))
+	canvas.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	_hero_movement_last_draw = {
+		"mode": "imported_texture_behind_hero",
+		"texture_path": String(asset_state.get("texture_path", "")),
+		"center": {"x": center.x, "y": center.y},
+		"extent": extent,
+		"rotation": rotation,
+		"alpha": alpha,
+	}
+	return true
 
 func _hero_movement_draw_state(board_rect: Rect2) -> Dictionary:
 	if not _hero_movement_active or _hero_movement_path.size() <= 1 or _hero_movement_duration_sec <= 0.0:
@@ -3370,6 +3407,9 @@ func validation_hero_movement_presentation() -> Dictionary:
 		"animation_state": _hero_movement_animation_state,
 		"visual_policy": _hero_movement_visual_policy,
 		"fallback_tag": _hero_movement_fallback_tag,
+		"selected_vfx_cue_ids": _hero_movement_vfx_cue_ids.duplicate(true),
+		"vfx_asset": _hero_movement_vfx_asset_state(),
+		"vfx_draw": _hero_movement_last_draw.duplicate(true),
 		"reduced_motion": _hero_movement_reduced_motion,
 		"duration_ms": int(round(_hero_movement_duration_sec * 1000.0)),
 		"progress": progress,
@@ -3379,6 +3419,29 @@ func validation_hero_movement_presentation() -> Dictionary:
 		"segment_from_tile": {"x": from_tile.x, "y": from_tile.y},
 		"segment_to_tile": {"x": to_tile.x, "y": to_tile.y},
 		"final_tile": {"x": _hero_tile.x, "y": _hero_tile.y},
+	}
+
+func _hero_movement_vfx_asset_state() -> Dictionary:
+	var cue_id := String(_hero_movement_vfx_cue_ids[0]).strip_edges() if _hero_movement_vfx_cue_ids.size() == 1 else ""
+	var spec := _overworld_vfx_manifest_cue(cue_id)
+	var texture_path := String(spec.get("texture_path", "")).strip_edges()
+	var event_id := String(spec.get("event_id", "")).strip_edges()
+	var render_mode := String(spec.get("render_mode", "")).strip_edges()
+	var texture_loaded := texture_path != "" and _overworld_vfx_texture_for_path(texture_path) != null
+	var uses_imported_asset := cue_id == "vfx_placeholder_route_step" \
+		and event_id == _hero_movement_event_id \
+		and render_mode == "hero_route_step" \
+		and texture_loaded
+	return {
+		"cue_id": cue_id,
+		"event_id": event_id,
+		"texture_path": texture_path,
+		"render_mode": render_mode,
+		"scale": float(spec.get("scale", 1.0)),
+		"texture_loaded": texture_loaded,
+		"uses_imported_asset": uses_imported_asset,
+		"uses_interpolation_fallback": not uses_imported_asset,
+		"fallback_mode": "existing_interpolated_hero_marker_only",
 	}
 
 func validation_object_resolution_presentation() -> Dictionary:
