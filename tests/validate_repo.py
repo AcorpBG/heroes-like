@@ -144,6 +144,10 @@ OVERWORLD_GUARDED_SITE_VFX_SOURCE_PATH = ROOT / "art" / "overworld" / "source" /
 OVERWORLD_GUARDED_SITE_VFX_RUNTIME_PATH = ROOT / "art" / "overworld" / "runtime" / "vfx" / "guarded_site.png"
 OVERWORLD_GUARDED_SITE_VFX_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_guarded_site_vfx_asset_runtime_report.gd"
 OVERWORLD_GUARDED_SITE_VFX_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_guarded_site_vfx_asset_runtime_report.tscn"
+OVERWORLD_ROUTE_BLOCKED_VFX_SOURCE_PATH = ROOT / "art" / "overworld" / "source" / "route_blocked_vfx_source.png"
+OVERWORLD_ROUTE_BLOCKED_VFX_RUNTIME_PATH = ROOT / "art" / "overworld" / "runtime" / "vfx" / "route_blocked.png"
+OVERWORLD_ROUTE_BLOCKED_VFX_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_route_blocked_vfx_asset_runtime_report.gd"
+OVERWORLD_ROUTE_BLOCKED_VFX_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_route_blocked_vfx_asset_runtime_report.tscn"
 OVERWORLD_FIELD_SPELL_CAST_CUE_PLAYBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_field_spell_cast_cue_playback_report.gd"
 OVERWORLD_FIELD_SPELL_CAST_CUE_PLAYBACK_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_field_spell_cast_cue_playback_report.tscn"
 OVERWORLD_ARTIFACT_SLOT_CUE_PLAYBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_artifact_slot_cue_playback_report.gd"
@@ -31126,6 +31130,12 @@ def validate_overworld_object_resolution_vfx_assets(errors: list[str]) -> None:
                 "render_mode": "guarded_site_context",
                 "scale": 0.92,
             },
+            "vfx_placeholder_blocked_route_marker": {
+                "event_id": "overworld_route_blocked",
+                "texture_path": "res://art/overworld/runtime/vfx/route_blocked.png",
+                "render_mode": "route_blocked_marker",
+                "scale": 0.96,
+            },
             "vfx_placeholder_capture_flag": {
                 "event_id": "overworld_object_captured",
                 "texture_path": "res://art/overworld/runtime/vfx/object_resolution/captured.png",
@@ -31146,7 +31156,7 @@ def validate_overworld_object_resolution_vfx_assets(errors: list[str]) -> None:
             },
         },
     }
-    ensure(load_json(OVERWORLD_OBJECT_RESOLUTION_VFX_MANIFEST_PATH) == expected_manifest, errors, "Overworld VFX manifest must retain the exact field-spell, guarded-site, and three object-resolution event/cue/path/render/scale mappings")
+    ensure(load_json(OVERWORLD_OBJECT_RESOLUTION_VFX_MANIFEST_PATH) == expected_manifest, errors, "Overworld VFX manifest must retain the exact field-spell, guarded-site, blocked-route, and three object-resolution event/cue/path/render/scale mappings")
     ensure(png_size(OVERWORLD_OBJECT_RESOLUTION_VFX_ATLAS_PATH) == (2172, 724), errors, "Object-resolution VFX source atlas must remain the exact 3x724 source image")
     runtime_payloads: list[bytes] = []
     for cue_id, path in runtime_paths.items():
@@ -31283,7 +31293,7 @@ def validate_overworld_field_spell_vfx_assets(errors: list[str]) -> None:
         "render_mode": "field_spell_cast",
         "scale": 1.12,
     }, errors, "Overworld VFX manifest must map the exact field-spell cue/event/texture")
-    ensure(set(cues) == {"vfx_placeholder_adventure_spell", "vfx_placeholder_guard_warning", "vfx_placeholder_capture_flag", "vfx_placeholder_object_visit", "vfx_placeholder_depleted_dim"}, errors, "Overworld VFX manifest must not remap any other cue")
+    ensure(set(cues) == {"vfx_placeholder_adventure_spell", "vfx_placeholder_blocked_route_marker", "vfx_placeholder_guard_warning", "vfx_placeholder_capture_flag", "vfx_placeholder_object_visit", "vfx_placeholder_depleted_dim"}, errors, "Overworld VFX manifest must not remap any other cue")
     ensure(png_size(OVERWORLD_FIELD_SPELL_VFX_SOURCE_PATH) == (1254, 1254), errors, "Overworld field-spell VFX source must retain its exact square source image")
     ensure(png_size(OVERWORLD_FIELD_SPELL_VFX_RUNTIME_PATH) == (512, 512), errors, "Overworld field-spell runtime texture must be 512x512")
     header = OVERWORLD_FIELD_SPELL_VFX_RUNTIME_PATH.read_bytes()[:26]
@@ -31502,6 +31512,136 @@ def validate_overworld_guarded_site_vfx_assets(errors: list[str]) -> None:
     ensure(0 <= reduced_selection < guarded_case.find("await get_tree().process_frame", reduced_selection) < guarded_case.find("var reduced := _guarded_site(reduced_shell)"), errors, "Reduced-motion guarded-site owner must cross one real draw frame before observing fallback VFX")
     reselection = guarded_case.find('shell.call("validation_select_tile", guarded_tile.x, guarded_tile.y)', guarded_case.find('shell.call("validation_select_tile", 0, 1)'))
     ensure(0 <= reselection < guarded_case.find("await get_tree().process_frame", reselection) < guarded_case.find("if _guarded_site(shell) != guarded:", reselection), errors, "Guarded-site reselection must cross one real draw frame before exact whole-state comparison")
+
+
+def validate_overworld_route_blocked_vfx_assets(errors: list[str]) -> None:
+    required_paths = (
+        OVERWORLD_SCRIPT_PATH,
+        OVERWORLD_MAP_VIEW_SCRIPT_PATH,
+        OVERWORLD_OBJECT_RESOLUTION_VFX_MANIFEST_PATH,
+        OVERWORLD_ROUTE_BLOCKED_VFX_SOURCE_PATH,
+        OVERWORLD_ROUTE_BLOCKED_VFX_RUNTIME_PATH,
+        OVERWORLD_ROUTE_BLOCKED_VFX_REPORT_SCRIPT_PATH,
+        OVERWORLD_ROUTE_BLOCKED_VFX_REPORT_SCENE_PATH,
+        OVERWORLD_FULL_ROUTE_MOVEMENT_REGRESSION_SCRIPT_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Overworld route-blocked VFX owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+    cues = load_json(OVERWORLD_OBJECT_RESOLUTION_VFX_MANIFEST_PATH).get("cues", {})
+    ensure(cues.get("vfx_placeholder_blocked_route_marker") == {
+        "event_id": "overworld_route_blocked",
+        "texture_path": "res://art/overworld/runtime/vfx/route_blocked.png",
+        "render_mode": "route_blocked_marker",
+        "scale": 0.96,
+    }, errors, "Overworld VFX manifest must map the exact route-blocked cue/event/texture")
+    ensure(png_size(OVERWORLD_ROUTE_BLOCKED_VFX_SOURCE_PATH) == (1254, 1254), errors, "Overworld route-blocked VFX source must retain its exact square source image")
+    ensure(png_size(OVERWORLD_ROUTE_BLOCKED_VFX_RUNTIME_PATH) == (512, 512), errors, "Overworld route-blocked runtime texture must be 512x512")
+    header = OVERWORLD_ROUTE_BLOCKED_VFX_RUNTIME_PATH.read_bytes()[:26]
+    ensure(len(header) >= 26 and header[25] in {4, 6}, errors, "Overworld route-blocked runtime texture must retain a PNG alpha channel")
+
+    def function_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}")
+        if start < 0:
+            return ""
+        end = text.find("\nfunc ", start + 1)
+        return text[start:] if end < 0 else text[start:end]
+
+    shell_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+    producer = function_block(shell_text, "_record_route_blocked_presentation")
+    ensure('(policy.get("selected_vfx_cue_ids", []) as Array).duplicate(true)' in producer, errors, "Route-blocked producer must detach the exact selected VFX cue ids")
+    ensure(producer.find("cue_playback_policy_for_event") < producer.find('"selected_vfx_cue_ids"') < producer.find('"duration_ms"'), errors, "Route-blocked producer must resolve policy before publishing detached VFX identity and existing timing")
+    ensure("session.overworld[" not in producer and "session.flags[" not in producer and "create_timer" not in producer and "await " not in producer, errors, "Route-blocked producer must remain read-only and synchronous")
+
+    map_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
+    for token in (
+        "var _route_blocked_vfx_cue_ids: Array = []",
+        "var _route_blocked_last_draw: Dictionary = {}",
+        '_route_blocked_vfx_cue_ids = (presentation.get("selected_vfx_cue_ids", []) as Array).duplicate(true)',
+        "_route_blocked_last_draw = {}",
+        '"selected_vfx_cue_ids": _route_blocked_vfx_cue_ids.duplicate(true)',
+        '"vfx_asset": _route_blocked_vfx_asset_state()',
+        '"vfx_draw": _route_blocked_last_draw.duplicate(true)',
+    ):
+        ensure(token in map_text, errors, f"Overworld route-blocked VFX state is missing exact ownership: {token}")
+    draw = function_block(map_text, "_draw_route_blocked_presentation")
+    imported = function_block(map_text, "_draw_route_blocked_imported_vfx")
+    fallback = function_block(map_text, "_draw_route_blocked_procedural_marker")
+    state = function_block(map_text, "_route_blocked_vfx_asset_state")
+    ensure(draw.find('if _route_blocked_visual_policy != "reduced_motion_fallback"') < draw.find("_draw_route_blocked_imported_vfx") < draw.find("_draw_route_blocked_procedural_marker"), errors, "Route-blocked drawing must use imported art only in normal mode and retain the procedural marker fallback")
+    for token in (
+        "_route_blocked_vfx_asset_state()",
+        'if not bool(asset_state.get("uses_imported_asset", false)):',
+        '_overworld_vfx_texture_for_path(String(asset_state.get("texture_path", "")))',
+        "var motion_progress := progress if _route_blocked_allows_large_motion else 0.35",
+        "var alpha := clampf(1.0 - progress * 0.68, 0.28, 1.0)",
+        '_canvas_draw_texture_rect(texture, draw_rect, false, Color(1.0, 1.0, 1.0, alpha))',
+        '"mode": "imported_texture"',
+        "return true",
+    ):
+        ensure(token in imported, errors, f"Imported route-blocked draw path is missing exact live behavior: {token}")
+    for token in (
+        "extent * lerpf(0.25, 0.40, motion_progress)",
+        "_canvas_draw_circle(center, radius, blocked_color",
+        "_canvas_draw_line(center + Vector2(-cross_extent, -cross_extent)",
+        "_canvas_draw_line(center + Vector2(cross_extent, -cross_extent)",
+        '"blocked_route_icon" if _route_blocked_visual_policy == "reduced_motion_fallback" else "existing_procedural_route_blocked_marker"',
+        '"circle_count": 1',
+        '"cross_line_count": 2',
+    ):
+        ensure(token in fallback, errors, f"Existing route-blocked procedural fallback was not retained exactly: {token}")
+    for token in (
+        "_route_blocked_vfx_cue_ids.size() == 1",
+        'cue_id == "vfx_placeholder_blocked_route_marker"',
+        "event_id == _route_blocked_event_id",
+        'render_mode == "route_blocked_marker"',
+        '"uses_procedural_fallback": not uses_imported_asset',
+        '"fallback_mode": "existing_procedural_route_blocked_marker"',
+    ):
+        ensure(token in state, errors, f"Route-blocked VFX resolver is missing fail-closed event/asset ownership: {token}")
+    for forbidden in ("session.", "_session.", "await ", "create_timer", "create_tween", "AnimationCueCatalog", "OverworldRules"):
+        ensure(forbidden not in imported and forbidden not in state, errors, f"Route-blocked asset draw/resolver must not change gameplay or timing authority: {forbidden}")
+
+    report_text = OVERWORLD_ROUTE_BLOCKED_VFX_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    scene_text = OVERWORLD_ROUTE_BLOCKED_VFX_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure_scene_nodes(scene_text, errors, "overworld_route_blocked_vfx_asset_runtime_report.tscn", [("OverworldRouteBlockedVfxAssetRuntimeReport", "Node")])
+    for token in (
+        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        'const BLOCKED_TILE := Vector2i(3, 1)',
+        'ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)',
+        'map_view.call("validation_route_blocked_presentation")',
+        'map_view.set("_overworld_vfx_texture_missing", {TEXTURE_PATH: true})',
+        'map_view.set("_overworld_vfx_texture_missing", {})',
+        '"selected_vfx_cue_ids": ["blocked_route_icon"] if reduced_motion else ["vfx_placeholder_blocked_route_marker"]',
+        'String(draw.get("mode", "")) == "imported_texture"',
+        'String(draw.get("mode", "")) == expected_mode',
+        "session.to_dict() == authority_before",
+        "SessionStateStore.SAVE_VERSION == 9",
+        'print("OVERWORLD_ROUTE_BLOCKED_VFX_ASSET_RUNTIME_REPORT %s"',
+    ):
+        ensure(token in report_text, errors, f"Overworld route-blocked VFX focused owner is missing exact proof: {token}")
+    ensure(report_text.count("for viewport_size in VIEWPORT_SIZES:") == 1, errors, "Overworld route-blocked VFX focused owner must run both exact widths")
+    for forbidden in ("_draw_route_blocked_imported_vfx", "_draw_route_blocked_procedural_marker", "_route_blocked_vfx_asset_state", "create_timer", "create_tween", "AnimationCueCatalog"):
+        ensure(forbidden not in report_text, errors, f"Route-blocked focused owner must observe public rendering without bypassing production: {forbidden}")
+
+    route_text = OVERWORLD_FULL_ROUTE_MOVEMENT_REGRESSION_SCRIPT_PATH.read_text(encoding="utf-8")
+    route_case = function_block(route_text, "_assert_route_does_not_pass_through_interaction")
+    for token in (
+        'blocked_cue.get("selected_vfx_cue_ids", []) != ["vfx_placeholder_blocked_route_marker"]',
+        'String(blocked_asset.get("texture_path", "")) != "res://art/overworld/runtime/vfx/route_blocked.png"',
+        'String(blocked_draw.get("mode", "")) != "imported_texture"',
+        'reduced_cue.get("selected_vfx_cue_ids", []) != ["blocked_route_icon"]',
+        'String(reduced_draw.get("mode", "")) != "blocked_route_icon"',
+        'int(reduced_draw.get("circle_count", 0)) != 1',
+        'int(reduced_draw.get("cross_line_count", 0)) != 2',
+    ):
+        ensure(token in route_case, errors, f"Live route-blocked owner is missing asset/lifecycle authority: {token}")
+    selection = route_case.find('var selection: Dictionary = shell.call("validation_select_tile", 5, 1)')
+    ensure(0 <= selection < route_case.find("await get_tree().process_frame", selection) < route_case.find("var blocked_cue: Dictionary", selection), errors, "Live route-blocked owner must cross one real draw frame before observing imported VFX")
+    reduced_selection = route_case.find('var reduced_selection: Dictionary = reduced_shell.call("validation_select_tile", 5, 1)')
+    ensure(0 <= reduced_selection < route_case.find("await get_tree().process_frame", reduced_selection) < route_case.find("var reduced_cue: Dictionary", reduced_selection), errors, "Reduced-motion route-blocked owner must cross one real draw frame before observing fallback VFX")
+    ensure("_draw_route_blocked_imported_vfx" not in route_text and "_route_blocked_vfx_asset_state" not in route_text, errors, "Live route-blocked owner must observe public VFX state without private draw/resolver calls")
 
 
 def validate_overworld_object_resolution_cue_playback(errors: list[str]) -> None:
@@ -40353,6 +40493,7 @@ def main() -> int:
     validate_overworld_object_resolution_vfx_assets(errors)
     validate_overworld_field_spell_vfx_assets(errors)
     validate_overworld_guarded_site_vfx_assets(errors)
+    validate_overworld_route_blocked_vfx_assets(errors)
     validate_overworld_object_resolution_cue_playback(errors)
     validate_neutral_dwelling_unit_slice(errors)
     validate_hero_portrait_assets(errors)

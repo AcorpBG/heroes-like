@@ -13,6 +13,12 @@
       "render_mode": "guarded_site_context",
       "scale": 0.92
     },
+    "vfx_placeholder_blocked_route_marker": {
+      "event_id": "overworld_route_blocked",
+      "texture_path": "res://art/overworld/runtime/vfx/route_blocked.png",
+      "render_mode": "route_blocked_marker",
+      "scale": 0.96
+    },
     "vfx_placeholder_capture_flag": {
       "event_id": "overworld_object_captured",
       "texture_path": "res://art/overworld/runtime/vfx/object_resolution/captured.png",
