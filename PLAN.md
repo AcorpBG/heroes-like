@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `presentation-overworld-enemy-commander-sprite-adoption-10184`. Live strategic-raid encounters now show the exact existing faction commander sprite when roster hero, commander faction, spawning faction, and authored hero faction agree. The renderer retains the hostile encounter ring, grounding/contact treatment, fog/memory behavior, and exact unit-icon then encounter-sprite fallback for absent, unknown, mismatched, or unloadable identity. Focused 1280x720/1920x1080, commander selection, hero hunt, full-route movement, broad Overworld visual, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged strategic-raid interaction, hardware/certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `presentation-overworld-enemy-commander-sprite-adoption-10184`
 - Completed implementation slice: `presentation-overworld-faction-hero-sprite-adoption-10184`. All 60 production commanders now resolve through their existing faction metadata to one of six distinct original 512x512 Overworld sprites. The live renderer preserves active identity during route interpolation, reserve badges, existing grounding/contact, selection, routing, session, and save version 9 authority, while the procedural figure remains the fail-closed fallback. Focused 1280x720/1920x1080, full-route movement, Ninefold, broad Overworld visual, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged hero interaction, hardware/certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `presentation-overworld-faction-hero-sprite-adoption-10184`
 - Completed implementation slice: `presentation-overworld-artifact-pickup-icon-adoption-10184`. All 12 production artifact pickups now render their exact existing imported icon on the live Overworld instead of sharing `adventurers_bundle`. The renderer retains the generic bundle only for invalid or unloadable identity and preserves the existing 1x1 footprint, localized grounding, current explored/visible treatment, selection, collection/depletion, fog, route, session, and save version 9 authority. Focused 1280x720/1920x1080, pickup source, object-resolution, broad visual, focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged artifact interaction, hardware/certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -5233,6 +5235,37 @@ Completed evidence:
 - focused live 1280x720 and 1920x1080 proof covers exact sprite ids and paths, active identity, movement-compatible presentation, reserve/grounding/contact contracts, procedural fallback, whole-session restoration, containment, and save version 9;
 - full-route movement, Ninefold scenario breadth, broad Overworld visual, active-play focus, accessibility, core, repository validation, and exact/generic editor gates pass;
 - official Linux export plus packaged headless startup and official Windows export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass, with no packaged hero interaction or broader release claim.
+
+## Overworld Enemy Commander Sprite Adoption
+
+id: `presentation-overworld-enemy-commander-sprite-adoption-10184`
+
+Status: completed.
+
+Selected Phase 6 player-facing presentation slice. Strategic raids materialize into live encounter rows with exact spawning faction and `enemy_commander_state.roster_hero_id`, but `_draw_encounter_sprite` currently skips that identity and renders only the primary army unit icon or the existing encounter fallback.
+
+Implementation target:
+- resolve only a valid strategic-raid commander whose roster hero, commander faction, spawning faction, and authored hero faction agree;
+- reuse the existing six faction commander textures inside the current hostile encounter ring, visibility/memory treatment, grounding, and contact path;
+- retain the exact current primary-unit icon and mapped/default encounter sprite paths whenever commander identity or texture is absent, invalid, or mismatched;
+- expose detached presentation evidence without changing encounter/session authority.
+
+Completion criteria:
+- six valid faction raid commanders resolve one-to-one to the shipped faction sprites, while commanderless, unknown, mismatched, or unloadable rows keep the current unit/camp fallback;
+- real 1280x720 and 1920x1080 Overworld views preserve exact encounter tile, hostile treatment, fog/remembered semantics, selection, routing, battle payload, commander state, session, and save version 9 authority;
+- focused raid presentation, strategic commander continuity, hero-hunt/raid movement, broad Overworld visual, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass;
+- packaged claims remain bounded to export/startup unless a packaged harness actually observes a strategic raid marker.
+
+Non-goals:
+- no hero, unit, encounter, raid, commander-roster, target, movement, fog, battle, AI, balance, save-schema, map-topology, or Native-RMG changes;
+- no new assets, per-hero Overworld sprites, player-hero changes, army unit-icon replacement, encounter ring redesign, other object family, or broad renderer rewrite;
+- no packaged raid interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Completion evidence:
+- the live encounter draw path prefers the strict commander identity resolver, then preserves the primary-unit icon and mapped/default encounter fallback in exact order;
+- focused live proof covers all six faction sprites and four fail-closed identity cases at 1280x720 and 1920x1080 with exact restoration, containment, and save version 9;
+- commander selection, hero hunt, full-route movement, broad Overworld visual, active-play focus, accessibility, core, repository validation, and exact/generic editor gates pass;
+- official Linux export plus packaged headless startup and official Windows export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass, with no packaged raid-interaction or broader release claim.
 
 ## Progress Reconciliation
 

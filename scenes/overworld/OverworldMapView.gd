@@ -1718,9 +1718,30 @@ func _draw_town_sprite(rect: Rect2, entry_rect: Rect2, remembered: bool, tile: V
 	return true
 
 func _draw_encounter_sprite(encounter: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
+	if _draw_encounter_commander_sprite(encounter, rect, remembered, tile):
+		return true
 	if _draw_encounter_unit_icon(encounter, rect, remembered, tile):
 		return true
 	return _draw_object_sprite(_encounter_asset_id(encounter), rect, remembered, _encounter_object_profile(), tile)
+
+func _draw_encounter_commander_sprite(encounter: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
+	var hero := _enemy_commander_hero_template(encounter)
+	var texture = _object_texture_for_asset(_hero_sprite_asset_id(hero))
+	if not (texture is Texture2D):
+		return false
+	var anchor := _draw_procedural_object_grounding(rect, tile, "encounter", Vector2i(1, 1), remembered)
+	var extent := minf(rect.size.x, rect.size.y)
+	var icon_extent := maxf(14.0, extent * 0.68)
+	var center: Vector2 = anchor.get("center", rect.get_center())
+	var icon_center := center + Vector2(0.0, -extent * 0.14)
+	var icon_rect := Rect2(icon_center - Vector2(icon_extent, icon_extent) * 0.5, Vector2(icon_extent, icon_extent))
+	var ring_radius := icon_extent * 0.54
+	_canvas_draw_circle(icon_center + Vector2(1.5, 2.0), ring_radius, MARKER_SHADOW_COLOR)
+	_canvas_draw_circle(icon_center, ring_radius, Color(0.08, 0.07, 0.05, 0.88 if not remembered else 0.58))
+	_canvas_draw_circle(icon_center, ring_radius, MEMORY_OBJECT_OUTLINE if remembered else ENCOUNTER_COLOR, false, maxf(2.0, extent * 0.028))
+	_canvas_draw_texture_rect(texture, icon_rect, false, OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE)
+	_draw_procedural_contact_marks(anchor, "encounter", remembered)
+	return true
 
 func _draw_encounter_unit_icon(encounter: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
 	var path := _encounter_overworld_icon_path(encounter)
@@ -3443,6 +3464,55 @@ func validation_hero_presentation_profiles() -> Array:
 		var hero: Dictionary = hero_value
 		profiles.append(_hero_presentation_payload(Vector2i(int(hero.get("x", -1)), int(hero.get("y", -1))), true))
 	return profiles
+
+func validation_enemy_commander_presentation_profiles() -> Array:
+	var profiles := []
+	if _session == null:
+		return profiles
+	for encounter_value in _session.overworld.get("encounters", []):
+		if not (encounter_value is Dictionary):
+			continue
+		var encounter: Dictionary = encounter_value
+		if String(encounter.get("spawned_by_faction_id", "")).strip_edges() == "":
+			continue
+		var tile := Vector2i(int(encounter.get("x", -1)), int(encounter.get("y", -1)))
+		if not _encounters_by_tile.has(_tile_key(tile)):
+			continue
+		profiles.append(_enemy_commander_presentation_payload(encounter))
+	return profiles
+
+func _enemy_commander_presentation_payload(encounter: Dictionary) -> Dictionary:
+	var commander_state: Dictionary = encounter.get("enemy_commander_state", {}) if encounter.get("enemy_commander_state", {}) is Dictionary else {}
+	var hero_id := String(commander_state.get("roster_hero_id", "")).strip_edges()
+	var commander_faction_id := String(commander_state.get("faction_id", "")).strip_edges()
+	var spawned_faction_id := String(encounter.get("spawned_by_faction_id", "")).strip_edges()
+	var authored_hero := ContentService.get_hero(hero_id)
+	var authored_faction_id := String(authored_hero.get("faction_id", "")).strip_edges()
+	var resolved_hero := _enemy_commander_hero_template(encounter)
+	var sprite_asset_id := _hero_sprite_asset_id(resolved_hero)
+	var unit_id := _encounter_primary_unit_id(encounter)
+	var unit_icon_path := _encounter_overworld_icon_path(encounter)
+	var unit_icon_loaded := unit_icon_path != "" and _unit_art_texture(unit_icon_path) is Texture2D
+	var encounter_asset_id := _encounter_asset_id(encounter)
+	var encounter_asset_loaded := encounter_asset_id != "" and _object_texture_for_asset(encounter_asset_id) is Texture2D
+	return {
+		"placement_id": String(encounter.get("placement_id", "")),
+		"hero_id": hero_id,
+		"commander_faction_id": commander_faction_id,
+		"spawned_by_faction_id": spawned_faction_id,
+		"authored_faction_id": authored_faction_id,
+		"sprite_asset_id": sprite_asset_id,
+		"sprite_path": String(_object_asset_paths.get(sprite_asset_id, "")),
+		"primary_unit_id": unit_id,
+		"unit_icon_path": unit_icon_path,
+		"encounter_asset_id": encounter_asset_id,
+		"uses_commander_sprite": sprite_asset_id != "",
+		"uses_unit_icon_fallback": sprite_asset_id == "" and unit_icon_loaded,
+		"uses_encounter_sprite_fallback": sprite_asset_id == "" and not unit_icon_loaded and encounter_asset_loaded,
+		"hostile_treatment": "encounter_ring",
+		"grounding_model": OBJECT_PROCEDURAL_GROUNDING_MODEL,
+		"contact_model": OBJECT_PROCEDURAL_CONTACT_MODEL,
+	}
 
 func _hero_presentation_payload(tile: Vector2i, explored: bool) -> Dictionary:
 	if not explored:
@@ -5969,8 +6039,24 @@ func _object_index_signature_for(session) -> int:
 	signature = _combine_cache_signature(signature, _placement_array_cache_signature(overworld.get("resource_nodes", []), ["site_id", "placement_id", "collected", "collected_by_faction_id"]))
 	signature = _combine_cache_signature(signature, _placement_array_cache_signature(overworld.get("artifact_nodes", []), ["artifact_id", "placement_id", "collected", "collected_by_faction_id"]))
 	signature = _combine_cache_signature(signature, _placement_array_cache_signature(overworld.get("encounters", []), ["encounter_id", "placement_id", "spawned_by_faction_id"]))
+	signature = _combine_cache_signature(signature, _enemy_commander_presentation_signature(overworld.get("encounters", [])))
 	signature = _combine_cache_signature(signature, _placement_array_cache_signature(overworld.get("map_objects", []), ["object_id", "placement_id", "kind", "runtime_object_role"]))
 	return _combine_cache_signature(signature, _placement_array_cache_signature(overworld.get("resolved_encounters", []), ["placement_id", "encounter_id", "id"]))
+
+func _enemy_commander_presentation_signature(encounters: Variant) -> int:
+	var signature := CACHE_SIGNATURE_SEED
+	if not (encounters is Array):
+		return signature
+	for encounter_value in encounters:
+		if not (encounter_value is Dictionary):
+			continue
+		var encounter: Dictionary = encounter_value
+		var commander_state: Dictionary = encounter.get("enemy_commander_state", {}) if encounter.get("enemy_commander_state", {}) is Dictionary else {}
+		signature = _combine_cache_signature(signature, String(encounter.get("placement_id", "")).hash())
+		signature = _combine_cache_signature(signature, String(encounter.get("spawned_by_faction_id", "")).hash())
+		signature = _combine_cache_signature(signature, String(commander_state.get("roster_hero_id", "")).hash())
+		signature = _combine_cache_signature(signature, String(commander_state.get("faction_id", "")).hash())
+	return signature
 
 func _hero_index_signature_for(session) -> int:
 	if session == null:
@@ -6543,6 +6629,18 @@ func _hero_sprite_asset_id(hero: Dictionary) -> String:
 	if asset_id != "" and _object_texture_for_asset(asset_id) is Texture2D:
 		return asset_id
 	return ""
+
+func _enemy_commander_hero_template(encounter: Dictionary) -> Dictionary:
+	var commander_state: Dictionary = encounter.get("enemy_commander_state", {}) if encounter.get("enemy_commander_state", {}) is Dictionary else {}
+	var hero_id := String(commander_state.get("roster_hero_id", "")).strip_edges()
+	var commander_faction_id := String(commander_state.get("faction_id", "")).strip_edges()
+	var spawned_faction_id := String(encounter.get("spawned_by_faction_id", "")).strip_edges()
+	if hero_id == "" or commander_faction_id == "" or spawned_faction_id == "" or commander_faction_id != spawned_faction_id:
+		return {}
+	var hero := ContentService.get_hero(hero_id)
+	if hero.is_empty() or String(hero.get("faction_id", "")).strip_edges() != spawned_faction_id:
+		return {}
+	return hero
 
 func _town_color(tile: Vector2i) -> Color:
 	var town = _town_at(tile)

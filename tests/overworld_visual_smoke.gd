@@ -1274,6 +1274,7 @@ func _assert_route_decision_clarity_contract(shell: Node) -> bool:
 			"goal_x": 0,
 			"goal_y": 4,
 			"goal_distance": 0,
+			"enemy_commander_state": {"roster_hero_id": "hero_vaska", "faction_id": "faction_mireclaw"},
 			"delivery_intercept_node_placement_id": "river_free_company",
 			"enemy_army": {"id": "smoke_mireclaw_convoy_interceptor", "name": "Smoke Interceptor", "stacks": []},
 		}
@@ -1285,6 +1286,19 @@ func _assert_route_decision_clarity_contract(shell: Node) -> bool:
 	session.overworld["movement"] = movement
 	OverworldRules.refresh_fog_of_war(session)
 	shell.call("_refresh")
+	var map_view = shell.get_node_or_null("%Map")
+	var commander_profiles: Array = map_view.call("validation_enemy_commander_presentation_profiles") if map_view != null and map_view.has_method("validation_enemy_commander_presentation_profiles") else []
+	var interceptor_profile: Dictionary = {}
+	for profile_value in commander_profiles:
+		if profile_value is Dictionary and String(profile_value.get("placement_id", "")) == "smoke_mireclaw_convoy_interceptor":
+			interceptor_profile = profile_value
+			break
+	if String(interceptor_profile.get("hero_id", "")) != "hero_vaska" \
+		or String(interceptor_profile.get("sprite_asset_id", "")) != "hero_faction_mireclaw" \
+		or not bool(interceptor_profile.get("uses_commander_sprite", false)):
+		push_error("Overworld smoke: strategic raid did not retain its exact Mireclaw commander presentation. profile=%s" % interceptor_profile)
+		get_tree().quit(1)
+		return false
 	var convoy_watch: Dictionary = shell.call("validation_select_tile", 0, 4)
 	var convoy_decision: Dictionary = convoy_watch.get("selected_route_decision", {})
 	var route_watch: Dictionary = convoy_decision.get("interception", {})
