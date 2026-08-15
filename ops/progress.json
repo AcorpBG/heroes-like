@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld faction hero sprite adoption slice is complete. All 60 live commanders now resolve through existing faction metadata to six distinct original sprites while the procedural marker remains fail-closed. Select the next tracker-approved release-readiness implementation slice.",
+  "currentNotes": "The Overworld enemy commander sprite adoption slice is completed. Strict live identity resolution now reuses the six shipped faction commander sprites while preserving the hostile unit-icon/camp fallback and all encounter authority. Select the next tracker-approved release-readiness implementation slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-faction-hero-sprite-adoption-10184",
-  "currentSliceId": "presentation-overworld-faction-hero-sprite-adoption-10184",
-  "currentSliceNotes": "Completed six original faction commander sprites and exact manifest-backed live resolution for all 60 production heroes. Focused 1280x720/1920x1080 proof preserves active identity, movement-compatible presentation, reserve/grounding/contact, procedural fallback, whole-session restoration, containment, and save v9. Route movement, Ninefold, visual, focus, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates passed. Packaged hero interaction and broader release claims remain unclaimed.",
+  "currentSlice": "presentation-overworld-enemy-commander-sprite-adoption-10184",
+  "currentSliceId": "presentation-overworld-enemy-commander-sprite-adoption-10184",
+  "currentSliceNotes": "Completed strict strategic-raid commander sprite adoption for all six factions with exact unit-icon/camp fallback, focused 1280x720 and 1920x1080 runtime proof, compatibility/static/editor gates, and bounded Linux and Windows export/startup evidence. Packaged raid interaction and release readiness remain unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Faction Hero Sprite Adoption",
-  "currentSliceUpdatedAt": "2026-08-15T08:21:43Z",
+  "currentSliceTitle": "Overworld Enemy Commander Sprite Adoption",
+  "currentSliceUpdatedAt": "2026-08-15T08:54:27Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19849,6 +19849,29 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "id": "presentation-overworld-enemy-commander-sprite-adoption-10184",
+      "title": "Overworld Enemy Commander Sprite Adoption",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/screen-wireframes.md", "AGENTS.md"],
+      "purpose": "Show the exact existing faction identity of live strategic-raid commanders on the Overworld without changing raid, fog, routing, battle, or AI authority.",
+      "implementationTargets": ["scenes/overworld/OverworldMapView.gd", "tests/overworld_enemy_commander_sprite_runtime_report.gd", "tests/overworld_enemy_commander_sprite_runtime_report.tscn", "tests/overworld_visual_smoke.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "testOwners": ["tests/overworld_enemy_commander_sprite_runtime_report.tscn", "tests/ai_hero_task_spawn_commander_selection_report.tscn", "tests/ai_hero_task_hero_hunt_report.tscn", "tests/overworld_full_route_movement_regression.tscn", "tests/overworld_visual_smoke.tscn", "tests/active_play_keyboard_focus_smoke.tscn", "tests/accessibility_screen_reader_semantics_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/validate_repo.py"],
+      "baseline": {"head": "6a523ab21aaa97e0c15d570c1a14cb2ed2bcb9a6", "production_hero_count": 60, "production_faction_count": 6, "faction_hero_sprite_count": 6, "strategic_raid_commander_identity_present": true, "live_strategic_raid_marker": "primary_army_unit_icon", "implementation_or_runtime_started": false},
+      "completionCriteria": ["Six valid strategic-raid commander identities resolve one-to-one to the existing faction sprites only when roster hero, commander faction, spawning faction, and authored hero faction agree", "Commanderless, unknown, mismatched, or unloadable identity preserves the exact current primary-unit icon then mapped/default encounter fallback", "Real 1280x720 and 1920x1080 views preserve encounter tile, hostile treatment, fog and remembered semantics, selection, routing, battle payload, commander state, session, and save version 9 authority", "Focused raid presentation, strategic commander continuity, hero hunt and raid movement, broad Overworld visual, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"],
+      "nonGoals": ["hero, unit, encounter, raid, commander-roster, target, movement, fog, battle, AI, balance, save-schema, map-topology, or Native-RMG changes", "new assets, per-hero Overworld sprites, player-hero changes, army unit-icon replacement, encounter ring redesign, other object families, or broad renderer changes", "packaged raid interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"],
+      "createdAt": "2026-08-15T08:26:07Z",
+      "startedAt": "2026-08-15T08:26:07Z",
+      "updatedAt": "2026-08-15T08:54:27Z",
+      "completedAt": "2026-08-15T08:54:27Z",
+      "notes": "Completed exact strategic-raid commander presentation through the six existing faction hero sprites. The renderer requires roster hero, commander faction, spawning faction, and authored hero faction to agree, keeps the existing hostile ring/grounding/contact and visible or remembered treatment, and falls through to the primary unit icon then mapped/default encounter sprite for absent, unknown, mismatched, or unloadable identity. Focused 1280x720 and 1920x1080 proof covers all six identities, four fail-closed component cases, exact restoration, containment, and save version 9. Commander selection, hero hunt, full-route movement, broad Overworld visual, active-play focus, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup passed. Packaged raid interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null,
+      "result": {"production_faction_count": 6, "commander_sprite_count": 6, "viewports": [[1280, 720], [1920, 1080]], "fallback_cases": ["commanderless", "unknown_hero", "commander_faction_mismatch", "spawned_faction_mismatch"], "fallback_order": ["primary_unit_icon", "mapped_or_default_encounter_sprite"], "hostile_treatment_preserved": true, "fog_memory_presentation_preserved": true, "session_restoration_exact": true, "save_version": 9, "commander_selection_passed": true, "hero_hunt_passed": true, "full_route_movement_passed": true, "overworld_visual_passed": true, "active_play_keyboard_focus_passed": true, "accessibility_passed": true, "core_passed": true, "repository_validation_passed": true, "editor_parse_passed": true, "linux_export_headless_startup_passed": true, "windows_export_fresh_wine_startup_passed": true}
+    },
     {
       "id": "presentation-overworld-faction-hero-sprite-adoption-10184",
       "title": "Overworld Faction Hero Sprite Adoption",

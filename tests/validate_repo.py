@@ -70,6 +70,8 @@ OVERWORLD_FACTION_TOWN_SPRITE_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "over
 FACTION_HERO_SPRITE_ATLAS_PATH = ROOT / "art" / "overworld" / "source" / "faction_hero_sprite_atlas.png"
 OVERWORLD_FACTION_HERO_SPRITE_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_faction_hero_sprite_runtime_report.gd"
 OVERWORLD_FACTION_HERO_SPRITE_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_faction_hero_sprite_runtime_report.tscn"
+OVERWORLD_ENEMY_COMMANDER_SPRITE_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_enemy_commander_sprite_runtime_report.gd"
+OVERWORLD_ENEMY_COMMANDER_SPRITE_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_enemy_commander_sprite_runtime_report.tscn"
 OVERWORLD_ARTIFACT_PICKUP_ICON_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_artifact_pickup_icon_runtime_report.gd"
 OVERWORLD_ARTIFACT_PICKUP_ICON_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_artifact_pickup_icon_runtime_report.tscn"
 RESOURCE_REGISTRY_PATH = CONTENT_DIR / "resources.json"
@@ -29548,6 +29550,186 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
     ensure('String(hero_sprite.get("sprite_asset_id", "")) != "hero_faction_embercourt"' in visual_text, errors, "Overworld visual gate must require the exact River Pass hero faction sprite")
 
 
+def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None:
+    required_paths = (
+        OVERWORLD_MAP_VIEW_SCRIPT_PATH,
+        CONTENT_DIR / "heroes.json",
+        OVERWORLD_ENEMY_COMMANDER_SPRITE_RUNTIME_REPORT_SCRIPT_PATH,
+        OVERWORLD_ENEMY_COMMANDER_SPRITE_RUNTIME_REPORT_SCENE_PATH,
+        ROOT / "tests" / "overworld_visual_smoke.gd",
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Overworld enemy commander sprite owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    def function_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}")
+        if start < 0:
+            return ""
+        end = text.find("\nfunc ", start + 1)
+        return text[start:] if end < 0 else text[start:end]
+
+    map_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
+    draw_block = function_block(map_text, "_draw_encounter_sprite")
+    commander_draw_block = function_block(map_text, "_draw_encounter_commander_sprite")
+    resolver_block = function_block(map_text, "_enemy_commander_hero_template")
+    profile_block = function_block(map_text, "validation_enemy_commander_presentation_profiles")
+    payload_block = function_block(map_text, "_enemy_commander_presentation_payload")
+    index_block = function_block(map_text, "_object_index_signature_for")
+    signature_block = function_block(map_text, "_enemy_commander_presentation_signature")
+
+    draw_order = [
+        draw_block.find("_draw_encounter_commander_sprite"),
+        draw_block.find("_draw_encounter_unit_icon"),
+        draw_block.find("_draw_object_sprite"),
+    ]
+    ensure(all(index >= 0 for index in draw_order) and draw_order == sorted(draw_order), errors, "Encounter drawing must prefer exact commander sprite, then retain unit icon and mapped/default encounter fallback")
+    for token in (
+        "_enemy_commander_hero_template(encounter)",
+        "_object_texture_for_asset(_hero_sprite_asset_id(hero))",
+        'if not (texture is Texture2D):',
+        '_draw_procedural_object_grounding(rect, tile, "encounter", Vector2i(1, 1), remembered)',
+        "MEMORY_OBJECT_OUTLINE if remembered else ENCOUNTER_COLOR",
+        "OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE",
+        '_draw_procedural_contact_marks(anchor, "encounter", remembered)',
+        "return true",
+    ):
+        ensure(token in commander_draw_block, errors, f"Enemy commander sprite draw path is missing hostile presentation ownership: {token}")
+    for forbidden in ("session.", "_session.", "await ", "create_timer", "create_tween", "queue_free"):
+        ensure(forbidden not in commander_draw_block, errors, f"Enemy commander drawing must remain detached and synchronous: {forbidden}")
+
+    resolver_order = [
+        resolver_block.find('encounter.get("enemy_commander_state", {})'),
+        resolver_block.find('commander_state.get("roster_hero_id", "")'),
+        resolver_block.find('commander_state.get("faction_id", "")'),
+        resolver_block.find('encounter.get("spawned_by_faction_id", "")'),
+        resolver_block.find("commander_faction_id != spawned_faction_id"),
+        resolver_block.find("ContentService.get_hero(hero_id)"),
+        resolver_block.find('String(hero.get("faction_id", "")).strip_edges() != spawned_faction_id'),
+        resolver_block.find("return hero"),
+    ]
+    ensure(all(index >= 0 for index in resolver_order) and resolver_order == sorted(resolver_order), errors, "Enemy commander resolver must require state hero, state faction, spawn faction, and authored faction in exact fail-closed order")
+    ensure(resolver_block.count("return {}") == 2, errors, "Enemy commander resolver must fail closed for malformed identity and missing or mismatched authored hero")
+    for forbidden in ("session.", "_session.", "await ", "load(", "_hero_faction_asset_ids[", "match hero_id"):
+        ensure(forbidden not in resolver_block, errors, f"Enemy commander resolver must remain content-owned and read-only: {forbidden}")
+
+    for token in (
+        'for encounter_value in _session.overworld.get("encounters", []):',
+        'String(encounter.get("spawned_by_faction_id", "")).strip_edges() == ""',
+        'if not _encounters_by_tile.has(_tile_key(tile)):',
+        "profiles.append(_enemy_commander_presentation_payload(encounter))",
+    ):
+        ensure(token in profile_block, errors, f"Enemy commander validation profiles must observe exact live strategic encounters: {token}")
+    for token in (
+        '"placement_id": String(encounter.get("placement_id", ""))',
+        '"hero_id": hero_id', '"commander_faction_id": commander_faction_id',
+        '"spawned_by_faction_id": spawned_faction_id', '"authored_faction_id": authored_faction_id',
+        '"sprite_asset_id": sprite_asset_id', '"sprite_path": String(_object_asset_paths.get(sprite_asset_id, ""))',
+        '"primary_unit_id": unit_id', '"unit_icon_path": unit_icon_path', '"encounter_asset_id": encounter_asset_id',
+        '"uses_commander_sprite": sprite_asset_id != ""',
+        '"uses_unit_icon_fallback": sprite_asset_id == "" and unit_icon_loaded',
+        '"uses_encounter_sprite_fallback": sprite_asset_id == "" and not unit_icon_loaded and encounter_asset_loaded',
+        '"hostile_treatment": "encounter_ring"',
+        '"grounding_model": OBJECT_PROCEDURAL_GROUNDING_MODEL',
+        '"contact_model": OBJECT_PROCEDURAL_CONTACT_MODEL',
+    ):
+        ensure(token in payload_block, errors, f"Enemy commander validation payload is missing detached identity/fallback evidence: {token}")
+    for forbidden in ("session.", "_session.", "await ", "create_timer", "create_tween", "erase("):
+        ensure(forbidden not in payload_block, errors, f"Enemy commander validation payload must remain read-only: {forbidden}")
+
+    ensure('_enemy_commander_presentation_signature(overworld.get("encounters", []))' in index_block, errors, "Static object index must invalidate when nested enemy commander presentation identity changes")
+    signature_order = [
+        signature_block.find('encounter.get("placement_id", "")'),
+        signature_block.find('encounter.get("spawned_by_faction_id", "")'),
+        signature_block.find('commander_state.get("roster_hero_id", "")'),
+        signature_block.find('commander_state.get("faction_id", "")'),
+    ]
+    ensure(all(index >= 0 for index in signature_order) and signature_order == sorted(signature_order), errors, "Enemy commander cache signature must track placement, spawn faction, roster hero, and commander faction in order")
+    for forbidden in ("session.", "_session.", "sort", "erase", "await ", "create_timer"):
+        ensure(forbidden not in signature_block, errors, f"Enemy commander cache signature must remain ordered and observation-only: {forbidden}")
+
+    report_text = OVERWORLD_ENEMY_COMMANDER_SPRITE_RUNTIME_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    report_scene = OVERWORLD_ENEMY_COMMANDER_SPRITE_RUNTIME_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure_scene_nodes(report_scene, errors, "overworld_enemy_commander_sprite_runtime_report.tscn", [("OverworldEnemyCommanderSpriteRuntimeReport", "Node")])
+    for token in (
+        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        'const EXPECTED_FACTION_ASSETS := {', 'const REPRESENTATIVE_HERO_IDS := {',
+        'const FALLBACK_CASES := ["commanderless", "unknown_hero", "commander_faction_mismatch", "spawned_faction_mismatch"]',
+        'ScenarioFactory.create_session(SCENARIO_ID, "hard", SessionState.LAUNCH_MODE_SKIRMISH)',
+        'EnemyAdventureRules.build_raid_commander_state(encounter, hero_id, faction_id, session)',
+        'map_view.call("validation_enemy_commander_presentation_profiles")',
+        'profiles.size() != EXPECTED_FACTION_ASSETS.size()',
+        'String(profile.get("commander_faction_id", "")) != faction_id',
+        'String(profile.get("authored_faction_id", "")) != faction_id',
+        'String(profile.get("sprite_asset_id", "")) != expected_asset_id',
+        'String(profile.get("hostile_treatment", "")) == "encounter_ring"',
+        'session.from_dict(authority_before)',
+        'if not _apply_fallback_case(session, "enemy_commander_fixture:faction_embercourt", case_id):',
+        'session.overworld["encounters"] = encounters',
+        'return _fallback_case_mutation_exact(encounter, case_id)',
+        'return not encounter.has("enemy_commander_state")',
+        'map_view.call(', '"set_map_state"',
+        'OverworldRules.derive_map_size(session)',
+        'OverworldRules.hero_position(session)',
+        'String(fallback.get("sprite_asset_id", "")) == ""',
+        'bool(fallback.get("uses_unit_icon_fallback", false))',
+        'not bool(fallback.get("uses_encounter_sprite_fallback", true))',
+        'restored_profiles == profiles and session.to_dict() == authority_before',
+        'viewport_rect.encloses(shell_rect)', 'SessionStateStore.SAVE_VERSION',
+        'print("OVERWORLD_ENEMY_COMMANDER_SPRITE_RUNTIME_REPORT %s"',
+    ):
+        ensure(token in report_text, errors, f"Enemy commander focused owner is missing method-matched proof: {token}")
+    ensure(report_text.count("for viewport_size in VIEWPORT_SIZES:") == 1, errors, "Enemy commander focused owner must run exactly both registered widths")
+    ensure(report_text.count("for case_id in FALLBACK_CASES:") == 1, errors, "Enemy commander focused owner must run all exact fallback cases at each width")
+    fallback_order = [
+        report_text.find("session.from_dict(authority_before)", report_text.find("for case_id in FALLBACK_CASES:")),
+        report_text.find('_apply_fallback_case(session, "enemy_commander_fixture:faction_embercourt", case_id)'),
+        report_text.find('_set_map_view_from_session(map_view, session)', report_text.find('_apply_fallback_case(session, "enemy_commander_fixture:faction_embercourt", case_id)')),
+        report_text.find('map_view.call("validation_enemy_commander_presentation_profiles")', report_text.find('_apply_fallback_case(session, "enemy_commander_fixture:faction_embercourt", case_id)')),
+    ]
+    ensure(all(index >= 0 for index in fallback_order) and fallback_order == sorted(fallback_order), errors, "Each enemy commander fallback case must restore authority, mutate one live field, set the public map state, then observe")
+    fallback_mutation_block = function_block(report_text, "_apply_fallback_case")
+    fallback_exact_block = function_block(report_text, "_fallback_case_mutation_exact")
+    for token in (
+        'var encounter: Dictionary = encounters[index].duplicate(true)',
+        'encounters[index] = encounter',
+        'session.overworld["encounters"] = encounters',
+        'return _fallback_case_mutation_exact(encounter, case_id)',
+    ):
+        ensure(token in fallback_mutation_block, errors, f"Enemy commander fallback fixture must replace the exact live encounter row before refresh: {token}")
+    for token in (
+        'not encounter.has("enemy_commander_state")',
+        'String(state.get("roster_hero_id", "")) == "hero_missing_enemy_commander_fixture"',
+        'String(state.get("faction_id", "")) == "faction_mireclaw"',
+        'String(encounter.get("spawned_by_faction_id", "")) == "faction_mireclaw"',
+    ):
+        ensure(token in fallback_exact_block, errors, f"Enemy commander fallback fixture must fail closed on its exact mutation: {token}")
+    map_state_block = function_block(report_text, "_set_map_view_from_session")
+    map_state_order = [
+        map_state_block.find('map_view.call('),
+        map_state_block.find('"set_map_state"'),
+        map_state_block.find('session.overworld.get("map", [])'),
+        map_state_block.find('OverworldRules.derive_map_size(session)'),
+        map_state_block.find('OverworldRules.hero_position(session)'),
+    ]
+    ensure(all(index >= 0 for index in map_state_order) and map_state_order == sorted(map_state_order), errors, "Enemy commander fallback fixture must refresh only through the public MapView state API with live session/map/size/hero context")
+    for forbidden in ('shell.call("_refresh")', 'map_view.call("_rebuild_object_indexes")', '_draw_encounter_commander_sprite(', '_enemy_commander_presentation_payload('):
+        ensure(forbidden not in report_text, errors, f"Enemy commander focused owner must not normalize or bypass the component fallback boundary: {forbidden}")
+    for forbidden in ("_hero_faction_asset_ids[", "_object_textures[", "_draw_encounter_commander_sprite(", "_draw_encounter_unit_icon(", "create_timer", "create_tween"):
+        ensure(forbidden not in report_text, errors, f"Enemy commander focused owner must not bypass production presentation: {forbidden}")
+
+    visual_text = (ROOT / "tests" / "overworld_visual_smoke.gd").read_text(encoding="utf-8")
+    for token in (
+        '"enemy_commander_state": {"roster_hero_id": "hero_vaska", "faction_id": "faction_mireclaw"}',
+        'map_view.call("validation_enemy_commander_presentation_profiles")',
+        'String(interceptor_profile.get("hero_id", "")) != "hero_vaska"',
+        'String(interceptor_profile.get("sprite_asset_id", "")) != "hero_faction_mireclaw"',
+        'not bool(interceptor_profile.get("uses_commander_sprite", false))',
+    ):
+        ensure(token in visual_text, errors, f"Broad Overworld visual gate must require the exact live Mireclaw raid commander sprite: {token}")
+
+
 def validate_overworld_artifact_pickup_icon_runtime(errors: list[str]) -> None:
     required_paths = (
         OVERWORLD_MAP_VIEW_SCRIPT_PATH,
@@ -39525,6 +39707,7 @@ def main() -> int:
     validate_town_faction_crest_runtime(errors)
     validate_overworld_faction_town_sprite_runtime(errors)
     validate_overworld_faction_hero_sprite_runtime(errors)
+    validate_overworld_enemy_commander_sprite_runtime(errors)
     validate_overworld_artifact_pickup_icon_runtime(errors)
     validate_overworld_artifact_slot_cue_playback(errors)
     validate_overworld_artifact_acquired_cue_playback(errors)
