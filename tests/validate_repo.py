@@ -5725,6 +5725,7 @@ def build_overworld_object_content_batch_004_section(map_objects: dict[str, dict
         role = str(obj.get("batch004_role", ""))
         site_id = str(obj.get("resource_site_id", ""))
         site = resource_sites.get(site_id, {}) if site_id else {}
+        selected_live_rope_lift = object_id == "object_rope_lift" and site_id == "site_rope_lift"
         footprint = obj.get("footprint", {}) if isinstance(obj.get("footprint", {}), dict) else {}
         width = int(footprint.get("width", 0))
         height = int(footprint.get("height", 0))
@@ -5776,17 +5777,21 @@ def build_overworld_object_content_batch_004_section(map_objects: dict[str, dict
         directionality = str(endpoint_contract.get("directionality", ""))
         if directionality:
             increment_count(section["directionality_counts"], directionality)
-        if endpoint_contract and site_endpoint_contract and bool(endpoint_contract.get("metadata_only", False)) and not bool(endpoint_contract.get("runtime_route_effect_adopted", True)):
+        endpoint_metadata_only = endpoint_contract and site_endpoint_contract and bool(endpoint_contract.get("metadata_only", False)) and not bool(endpoint_contract.get("runtime_route_effect_adopted", True))
+        endpoint_selected_runtime = selected_live_rope_lift and endpoint_contract and site_endpoint_contract and not bool(endpoint_contract.get("metadata_only", True)) and bool(endpoint_contract.get("runtime_route_effect_adopted", False)) and not bool(site_endpoint_contract.get("metadata_only", True)) and bool(site_endpoint_contract.get("runtime_route_effect_adopted", False))
+        if endpoint_metadata_only or endpoint_selected_runtime:
             section["linked_endpoint_contract_count"] += 1
         else:
-            add_error(f"{object_id}: Batch 004 objects and sites must author metadata-only linked_endpoint_contract")
+            add_error(f"{object_id}: Batch 004 objects and sites must author metadata-only linked_endpoint_contract except the selected live Rope Lift")
 
         route_effect = obj.get("route_effect", {}) if isinstance(obj.get("route_effect", {}), dict) else {}
         route_boundary = obj.get("route_effect_boundary", {}) if isinstance(obj.get("route_effect_boundary", {}), dict) else {}
-        if route_effect and str(route_boundary.get("status", "")) == "metadata_only" and not bool(route_boundary.get("runtime_behavior_adopted", True)):
+        route_metadata_only = route_effect and str(route_boundary.get("status", "")) == "metadata_only" and not bool(route_boundary.get("runtime_behavior_adopted", True))
+        route_selected_runtime = selected_live_rope_lift and route_effect and str(route_boundary.get("status", "")) == "selected_land_transit_runtime" and bool(route_boundary.get("runtime_behavior_adopted", False))
+        if route_metadata_only or route_selected_runtime:
             section["route_effect_metadata_count"] += 1
         else:
-            add_error(f"{object_id}: Batch 004 must author route_effect metadata with runtime adoption disabled")
+            add_error(f"{object_id}: Batch 004 route_effect must remain metadata-only except the selected live Rope Lift")
         if role == "route_lock":
             lock_contract = obj.get("route_lock_contract", {}) if isinstance(obj.get("route_lock_contract", {}), dict) else {}
             site_lock_contract = site.get("route_lock_contract", {}) if isinstance(site.get("route_lock_contract", {}), dict) else {}
@@ -5802,10 +5807,18 @@ def build_overworld_object_content_batch_004_section(map_objects: dict[str, dict
             else:
                 add_error(f"{object_id}: coast route objects must author coast_applicability without live ship movement adoption")
 
-        if metadata_boundary_is_safe(obj) and metadata_boundary_is_safe(site):
+        selected_runtime_boundary_exact = selected_live_rope_lift and all(
+            isinstance(value.get("runtime_boundary", {}), dict)
+            and value.get("runtime_boundary", {}).get("status") == "selected_land_transit_runtime"
+            and value.get("runtime_boundary", {}).get("pathing_runtime_adopted") is True
+            and value.get("runtime_boundary", {}).get("route_effect_runtime_adopted") is True
+            and value.get("runtime_boundary", {}).get("ship_movement_runtime_adopted") is False
+            for value in (obj, site)
+        )
+        if (metadata_boundary_is_safe(obj) and metadata_boundary_is_safe(site)) or selected_runtime_boundary_exact:
             section["metadata_only_boundary_count"] += 1
         else:
-            add_error(f"{object_id}: Batch 004 object and site must keep explicit metadata-only runtime boundaries")
+            add_error(f"{object_id}: Batch 004 runtime boundary must remain metadata-only except the selected live Rope Lift")
         if live_resource_ids(site, obj).intersection(ECONOMY_RARE_RESOURCE_IDS):
             add_error(f"{object_id}: Batch 004 must not activate rare resources in live site or route-effect fields")
         else:
@@ -37953,6 +37966,93 @@ def validate_strategic_ai_medium_long_run_adoption(errors: list[str]) -> None:
     )
 
 
+def validate_overworld_rope_lift_live_transit(errors: list[str]) -> None:
+    resource_sites = items_index(load_json(CONTENT_DIR / "resource_sites.json"))
+    map_objects = items_index(load_json(CONTENT_DIR / "map_objects.json"))
+    scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
+    site = resource_sites.get("site_rope_lift", {})
+    map_object = map_objects.get("object_rope_lift", {})
+    scenario = scenarios.get("ninefold-confluence", {})
+    ensure(bool(site), errors, "Rope Lift live transit requires site_rope_lift")
+    ensure(bool(map_object), errors, "Rope Lift live transit requires object_rope_lift")
+    ensure(bool(scenario), errors, "Rope Lift live transit requires ninefold-confluence")
+    if isinstance(site, dict):
+        transit = site.get("transit_profile", {})
+        runtime = site.get("runtime_boundary", {})
+        route_boundary = site.get("route_effect_boundary", {})
+        contract = site.get("linked_endpoint_contract", {})
+        response = site.get("response_profile", {})
+        ensure(transit == {
+            "mode": "lift", "route_role": "vertical_shortcut", "requires_repair": True,
+            "paired_link_required": True, "metadata_only": False,
+            "runtime_route_effect_adopted": True, "one_way": False,
+        }, errors, "site_rope_lift transit profile must remain the exact selected live land shortcut")
+        ensure(isinstance(runtime, dict) and runtime.get("status") == "selected_land_transit_runtime" and runtime.get("pathing_runtime_adopted") is True and runtime.get("route_effect_runtime_adopted") is True and runtime.get("ship_movement_runtime_adopted") is False, errors, "site_rope_lift runtime boundary must adopt only selected land pathing")
+        ensure(route_boundary == {"status": "selected_land_transit_runtime", "runtime_behavior_adopted": True, "public_output_safe": True}, errors, "site_rope_lift route-effect boundary must be exact")
+        ensure(isinstance(response, dict) and response.get("action_label") == "Reeve Rope Lift" and response.get("movement_cost") == 3 and response.get("resource_cost") == {"gold": 130, "ore": 1} and response.get("watch_days") == 4, errors, "Rope Lift must retain its exact existing response authority")
+        ensure(isinstance(contract, dict) and contract.get("endpoint_group_id") == "ninefold_ridge_rope_lift" and contract.get("directionality") == "two_way" and contract.get("entry_offsets") == [{"x": 0, "y": -1}, {"x": 0, "y": 2}] and contract.get("exit_offsets") == contract.get("entry_offsets") and contract.get("requires_exit_safety") is True and contract.get("metadata_only") is False and contract.get("runtime_route_effect_adopted") is True, errors, "Rope Lift site endpoint contract must remain exact")
+    if isinstance(map_object, dict):
+        runtime = map_object.get("runtime_boundary", {})
+        route_boundary = map_object.get("route_effect_boundary", {})
+        contract = map_object.get("linked_endpoint_contract", {})
+        route_effect = map_object.get("route_effect", {})
+        ensure(isinstance(runtime, dict) and runtime.get("status") == "selected_land_transit_runtime" and runtime.get("pathing_runtime_adopted") is True and runtime.get("route_effect_runtime_adopted") is True and runtime.get("ship_movement_runtime_adopted") is False, errors, "object_rope_lift runtime boundary must adopt only selected land pathing")
+        ensure(route_boundary == {"status": "selected_land_transit_runtime", "runtime_behavior_adopted": True, "public_output_safe": True}, errors, "object_rope_lift route-effect boundary must be exact")
+        ensure(isinstance(route_effect, dict) and route_effect.get("effect_type") == "linked_endpoint" and route_effect.get("movement_cost_delta") == -2 and route_effect.get("linked_endpoint_group_id") == "ninefold_ridge_rope_lift" and route_effect.get("blocked_state_ids") == ["damaged", "closed"], errors, "object_rope_lift linked route effect must remain exact")
+        ensure(isinstance(contract, dict) and contract.get("endpoint_group_id") == "ninefold_ridge_rope_lift" and contract.get("entry_offsets") == [{"x": 0, "y": -1}, {"x": 0, "y": 2}] and contract.get("exit_offsets") == contract.get("entry_offsets") and contract.get("metadata_only") is False and contract.get("runtime_route_effect_adopted") is True, errors, "Rope Lift object endpoint contract must remain exact")
+    if isinstance(scenario, dict):
+        rope_rows = [row for row in scenario.get("resource_nodes", []) if isinstance(row, dict) and row.get("placement_id") == "rope_lift"]
+        ensure(rope_rows == [{"placement_id": "rope_lift", "site_id": "site_rope_lift", "x": 9, "y": 52}], errors, "Ninefold must retain one exact Rope Lift placement")
+
+    ferry_site = resource_sites.get("site_repaired_ferry_stage", {})
+    ferry_object = map_objects.get("object_repaired_ferry_stage", {})
+    for label, value in (("site", ferry_site), ("object", ferry_object)):
+        ensure(isinstance(value, dict), errors, f"Repaired ferry {label} must remain authored")
+        if isinstance(value, dict):
+            ensure(value.get("runtime_boundary", {}).get("pathing_runtime_adopted") is False and value.get("route_effect_boundary", {}).get("runtime_behavior_adopted") is False and value.get("linked_endpoint_contract", {}).get("runtime_route_effect_adopted") is False, errors, f"Repaired ferry {label} must remain outside the Rope Lift runtime slice")
+
+    rules_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
+    shell_text = (ROOT / "scenes/overworld/OverworldShell.gd").read_text(encoding="utf-8")
+    report_path = ROOT / "tests/overworld_rope_lift_live_transit_report.gd"
+    scene_path = ROOT / "tests/overworld_rope_lift_live_transit_report.tscn"
+    ensure(report_path.exists(), errors, "Rope Lift live transit focused report script is missing")
+    ensure(scene_path.exists(), errors, "Rope Lift live transit focused report scene is missing")
+    for token in (
+        "static func active_linked_transit_edges", "runtime_route_effect_adopted", "_resource_site_response_state",
+        "String(route_effect.get(\"effect_type\", \"\")) != \"linked_endpoint\"", "entry_offsets != exit_offsets",
+        "paired_link_required", "requires_exit_safety", "requires_visit", "requires_owner", "toll_resources",
+        "blocked_state_ids", "entry_offsets != approach.get(\"linked_exit_offsets\", [])",
+        "movement_cost != 1", "tile_is_blocked(session, endpoint.x, endpoint.y)",
+        "tile_has_route_interaction(session, endpoint.x, endpoint.y)", "static func linked_transit_neighbors_from_edges",
+        "static func active_linked_transit_step", "static func active_linked_transit_signature",
+        "var linked_transit_step := active_linked_transit_step(session, previous, tile) if not adjacent_step else {}",
+    ):
+        ensure(token in rules_text, errors, f"Rope Lift live transit rules are missing token: {token}")
+    ensure('"site_rope_lift"' not in rules_text and '"object_rope_lift"' not in rules_text, errors, "Linked transit production rules must remain content-generic")
+    for token in (
+        "OverworldRules.active_linked_transit_signature(_session)",
+        "var linked_transit_edges := OverworldRules.active_linked_transit_edges(_session)",
+        "OverworldRules.linked_transit_neighbors_from_edges(linked_transit_edges, current)",
+    ):
+        ensure(token in shell_text, errors, f"Overworld live route integration is missing token: {token}")
+    ensure(shell_text.count("var linked_transit_edges := OverworldRules.active_linked_transit_edges(_session)") == 1, errors, "Overworld BFS must materialize active linked edges exactly once per path build")
+    if report_path.exists():
+        report_text = report_path.read_text(encoding="utf-8")
+        for token in (
+            "OVERWORLD_ROPE_LIFT_LIVE_TRANSIT_REPORT", "claim_alone_closed", "response_cost_exact",
+            "two_way_cost_one", "save_roundtrip", "unsafe_exit_closed", "expired_closed",
+            "failed_response_closed", "exhausted_response_closed", "OverworldRules.perform_context_action(session, \"site_response\")",
+            "OverworldRules.try_move_along_route(session, [NORTH_ENDPOINT, SOUTH_ENDPOINT], 10)",
+            "OverworldRules.try_move_along_route(session, [SOUTH_ENDPOINT, NORTH_ENDPOINT], 10)",
+            "shell.call(\"_build_path\", NORTH_ENDPOINT, SOUTH_ENDPOINT)", "for width in [1280, 1920]",
+            "expiry_cache_invalidated", "rope_lift_expired",
+        ):
+            ensure(token in report_text, errors, f"Rope Lift focused report is missing token: {token}")
+        ensure("response_until_day" in report_text and "rope_lift_exit_blocker" in report_text, errors, "Rope Lift focused report must prove expiry and unsafe-exit fail closure")
+    if scene_path.exists():
+        ensure("res://tests/overworld_rope_lift_live_transit_report.gd" in scene_path.read_text(encoding="utf-8"), errors, "Rope Lift focused scene must load its report script")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate repository content and scaffolding.")
     parser.add_argument("--economy-resource-report", action="store_true", help="Print the opt-in economy/resource compatibility report.")
@@ -38062,6 +38162,7 @@ def main() -> int:
     validate_ai_adventure_spell_execution(errors)
     validate_ai_scouting_spell_execution(errors)
     validate_overworld_object_route_effect_authoring(errors)
+    validate_overworld_rope_lift_live_transit(errors)
     validate_overworld_object_content_batch_001(errors)
     validate_overworld_art_asset_slice(errors)
     validate_overworld_hero_route_locomotion(errors)
