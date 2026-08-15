@@ -80,6 +80,12 @@
       "volume_db": -13.5,
       "role": "overworld_object_depleted"
     },
+    "audio_placeholder_guard_warning": {
+      "path": "res://art/audio/runtime/presentation/guard_warning.wav",
+      "duration_msec": 340,
+      "volume_db": -13.0,
+      "role": "overworld_object_guarded"
+    },
     "audio_placeholder_town_build": {
       "path": "res://art/audio/runtime/presentation/town_build.wav",
       "duration_msec": 420,
