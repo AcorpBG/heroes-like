@@ -279,7 +279,7 @@ func validation_town_action_presentation_snapshot() -> Dictionary:
 		"draw_rect_contained": _town_scene_rect().encloses(draw_rect) if active else true,
 		"blocks_input": _town_action_presentation_blocks_input(),
 		"draw_entries": draw_entries,
-		"vfx_asset": _town_building_complete_vfx_asset_state(),
+		"vfx_asset": _town_action_vfx_asset_state(),
 		"vfx_draw": _town_action_last_draw.duplicate(true),
 	}
 
@@ -334,16 +334,48 @@ func _draw_town_action_presentation(scene_rect: Rect2) -> void:
 		var duration_ms: int = maxi(1, int(_town_action_presentation.get("duration_ms", 1)))
 		var elapsed_ms: int = maxi(0, Time.get_ticks_msec() - int(_town_action_presentation.get("started_msec", 0)))
 		var progress := clampf(float(elapsed_ms) / float(duration_ms), 0.0, 1.0)
-		var ring_center := Vector2(badge_rect.get_center().x, badge_rect.position.y - 10.0)
-		for index in range(3):
-			var radius := 14.0 + float(index) * 9.0 + progress * 8.0
-			draw_arc(ring_center, radius, 0.0, TAU, 32, _accent_color().lightened(0.20 - progress * 0.10), 2.0)
+		if not _draw_town_recruitment_imported_vfx(badge_rect, progress):
+			_draw_town_recruitment_procedural_rings(badge_rect, progress)
+	else:
+		_town_action_last_draw = {"mode": "recruit_count_badge", "texture_path": "", "alpha": 1.0}
 	draw_rect(badge_rect, Color(0.10, 0.13, 0.16, 0.94), true)
 	draw_rect(badge_rect, _accent_color(), false, 2.0)
 	var unit_name := String(_town_action_presentation.get("unit_name", _town_action_presentation.get("unit_id", "Unit")))
 	var recruited_count := int(_town_action_presentation.get("recruited_count", 0))
 	_draw_text("MUSTER +%d" % recruited_count, badge_rect.position + Vector2(12.0, 21.0), TEXT_COLOR, 16)
 	_draw_text(_short_stage_text(unit_name, 34), badge_rect.position + Vector2(12.0, 42.0), SUBTEXT_COLOR, 13)
+
+func _draw_town_recruitment_imported_vfx(badge_rect: Rect2, progress: float) -> bool:
+	var asset_state := _town_recruitment_vfx_asset_state()
+	if not bool(asset_state.get("uses_imported_asset", false)):
+		return false
+	var texture: Texture2D = _town_vfx_texture_for_path(String(asset_state.get("texture_path", ""))) as Texture2D
+	if texture == null:
+		return false
+	var extent := badge_rect.size.y * 2.4 * float(asset_state.get("scale", 1.0))
+	var center := Vector2(badge_rect.get_center().x, badge_rect.position.y - 10.0)
+	var draw_rect := Rect2(center - Vector2(extent, extent) * 0.5, Vector2(extent, extent))
+	var alpha := clampf(1.0 - progress * 0.48, 0.46, 1.0)
+	draw_texture_rect(texture, draw_rect, false, Color(1.0, 1.0, 1.0, alpha))
+	_town_action_last_draw = {
+		"mode": "imported_texture",
+		"texture_path": String(asset_state.get("texture_path", "")),
+		"rect": {"x": draw_rect.position.x, "y": draw_rect.position.y, "width": draw_rect.size.x, "height": draw_rect.size.y},
+		"alpha": alpha,
+	}
+	return true
+
+func _draw_town_recruitment_procedural_rings(badge_rect: Rect2, progress: float) -> void:
+	var ring_center := Vector2(badge_rect.get_center().x, badge_rect.position.y - 10.0)
+	for index in range(3):
+		var radius := 14.0 + float(index) * 9.0 + progress * 8.0
+		draw_arc(ring_center, radius, 0.0, TAU, 32, _accent_color().lightened(0.20 - progress * 0.10), 2.0)
+	_town_action_last_draw = {
+		"mode": "existing_procedural_recruit_muster_rings",
+		"texture_path": "",
+		"alpha": 1.0,
+		"ring_count": 3,
+	}
 
 func _draw_town_building_complete_presentation(badge_rect: Rect2, reduced_motion: bool) -> void:
 	if not reduced_motion:
@@ -411,6 +443,33 @@ func _town_building_complete_vfx_asset_state() -> Dictionary:
 		"uses_procedural_fallback": not uses_imported_asset,
 		"fallback_mode": "existing_procedural_build_completion_frame",
 	}
+
+func _town_recruitment_vfx_asset_state() -> Dictionary:
+	var policy: Dictionary = _town_action_presentation.get("policy", {}) if _town_action_presentation.get("policy", {}) is Dictionary else {}
+	var cue_ids: Array = policy.get("selected_vfx_cue_ids", []) if policy.get("selected_vfx_cue_ids", []) is Array else []
+	var cue_id := String(cue_ids[0]).strip_edges() if cue_ids.size() == 1 else ""
+	var spec := _town_vfx_manifest_cue(cue_id)
+	var texture_path := String(spec.get("texture_path", "")).strip_edges()
+	var texture_loaded := texture_path != "" and _town_vfx_texture_for_path(texture_path) != null
+	var uses_imported_asset := cue_id == "vfx_placeholder_recruit_muster" \
+		and String(_town_action_presentation.get("event_id", "")) == "town_units_recruited" \
+		and String(spec.get("event_id", "")) == "town_units_recruited" \
+		and String(spec.get("render_mode", "")) == "town_recruit_muster" \
+		and texture_loaded
+	return {
+		"cue_id": cue_id,
+		"texture_path": texture_path,
+		"scale": float(spec.get("scale", 1.0)),
+		"texture_loaded": texture_loaded,
+		"uses_imported_asset": uses_imported_asset,
+		"uses_procedural_fallback": not uses_imported_asset,
+		"fallback_mode": "existing_procedural_recruit_muster_rings",
+	}
+
+func _town_action_vfx_asset_state() -> Dictionary:
+	if String(_town_action_presentation.get("event_id", "")) == "town_units_recruited":
+		return _town_recruitment_vfx_asset_state()
+	return _town_building_complete_vfx_asset_state()
 
 func _town_vfx_manifest_cue(cue_id: String) -> Dictionary:
 	_load_town_vfx_manifest()
