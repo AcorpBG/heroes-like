@@ -3,6 +3,7 @@ extends Control
 const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
 const BattleAutoResolveRulesScript = preload("res://scripts/core/BattleAutoResolveRules.gd")
+const SystemSaveWrittenCuePresenterScript = preload("res://scenes/shared/SystemSaveWrittenCuePresenter.gd")
 
 const UI_ART_BATTLE_INITIATIVE_BAR := "res://art/ui/runtime/battle/initiative_bar.png"
 const UI_ART_BATTLE_COMBAT_LOG_PANEL := "res://art/ui/runtime/battle/combat_log_panel.png"
@@ -133,12 +134,17 @@ var _last_battle_info_tab_change_result: Dictionary = {}
 var _last_battle_keyboard_focus_cycle_names := []
 var _last_battle_keyboard_focus_tab_bar_occurrences := 0
 var _validation_battle_info_tab_resetting := false
+var _save_written_cue_presenter: SystemSaveWrittenCuePresenter
 
 func _ready() -> void:
 	var profile_started := ProfileLogScript.begin_usec()
 	var buckets := {}
 	var phase_started := ProfileLogScript.begin_usec()
 	_apply_visual_theme()
+	_save_written_cue_presenter = SystemSaveWrittenCuePresenterScript.new()
+	_save_written_cue_presenter.name = "SystemSaveWrittenCuePresenter"
+	add_child(_save_written_cue_presenter)
+	_save_written_cue_presenter.configure(_save_button, _system_body_label, "battle")
 	_configure_quick_resolve_confirmation()
 	_configure_withdrawal_confirmation()
 	_configure_confirmation_input_forwarding()
@@ -1155,11 +1161,16 @@ func _commit_manual_save(manual_slot: int) -> Dictionary:
 		_last_message = String(result.get("message", ""))
 	var refresh_started := ProfileLogScript.begin_usec()
 	_refresh()
+	if bool(result.get("ok", false)):
+		_save_written_cue_presenter.present(result, manual_slot)
 	if briefing_checkpoint_pending and not bool(result.get("ok", false)):
 		_save_button.call_deferred("grab_focus")
 	buckets["refresh"] = ProfileLogScript.elapsed_ms(refresh_started)
 	ProfileLogScript.emit_general("battle", "action", "save", ProfileLogScript.elapsed_ms(profile_started), buckets, _battle_profile_metadata(false), _session)
 	return result
+
+func validation_save_written_cue_snapshot() -> Dictionary:
+	return _save_written_cue_presenter.validation_snapshot() if _save_written_cue_presenter != null else {}
 
 func _on_manual_save_overwrite_confirmed() -> void:
 	var manual_slot: int = int(_manual_save_overwrite_dialog.consume_pending_slot())

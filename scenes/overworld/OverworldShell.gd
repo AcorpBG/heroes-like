@@ -3,6 +3,7 @@ extends Control
 const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
 const AnimationCueCatalogScript = preload("res://scripts/core/AnimationCueCatalog.gd")
+const SystemSaveWrittenCuePresenterScript = preload("res://scenes/shared/SystemSaveWrittenCuePresenter.gd")
 
 const UI_ART_OVERWORLD_RESOURCE_BAR := "res://art/ui/runtime/overworld/resource_bar.png"
 const UI_ART_OVERWORLD_SIDEBAR_FRAME := "res://art/ui/runtime/overworld/sidebar_frame.png"
@@ -309,6 +310,7 @@ var _validation_manual_save_attempt_count := 0
 var _validation_manual_save_success_count := 0
 var _validation_manual_save_failure_count := 0
 var _validation_manual_save_route_attempt_count := 0
+var _save_written_cue_presenter: SystemSaveWrittenCuePresenter
 
 func _ready() -> void:
 	AppRouter.note_overworld_handoff_step("overworld_ready_enter")
@@ -318,6 +320,10 @@ func _ready() -> void:
 	_configure_gameplay_movement_input_ownership()
 	_configure_end_turn_confirmation()
 	_apply_visual_theme()
+	_save_written_cue_presenter = SystemSaveWrittenCuePresenterScript.new()
+	_save_written_cue_presenter.name = "SystemSaveWrittenCuePresenter"
+	add_child(_save_written_cue_presenter)
+	_save_written_cue_presenter.configure(_save_button, _save_status_label, "overworld")
 	resized.connect(_apply_responsive_layout)
 	_apply_responsive_layout()
 	AppRouter.note_overworld_handoff_step("overworld_ready_theme_done")
@@ -1598,7 +1604,11 @@ func _commit_manual_save(manual_slot: int) -> Dictionary:
 	if routed:
 		return _last_manual_save_result.duplicate(true)
 	_refresh()
+	_save_written_cue_presenter.present(save_result, manual_slot)
 	return _last_manual_save_result.duplicate(true)
+
+func validation_save_written_cue_snapshot() -> Dictionary:
+	return _save_written_cue_presenter.validation_snapshot() if _save_written_cue_presenter != null else {}
 
 func _manual_save_commit_result(save_result: Dictionary, routed: bool, route_attempt_delta: int) -> Dictionary:
 	var save_ok := bool(save_result.get("ok", false))

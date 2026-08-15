@@ -2,6 +2,7 @@ extends Control
 
 const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
+const SystemSaveWrittenCuePresenterScript = preload("res://scenes/shared/SystemSaveWrittenCuePresenter.gd")
 
 const UI_ART_TOWN_BANNER_FRAME := "res://art/ui/runtime/town/banner_frame.png"
 const UI_ART_TOWN_CREST_MEDALLION := "res://art/ui/runtime/town/crest_medallion.png"
@@ -108,6 +109,7 @@ var _validation_management_tab_boundary_retain_count := 0
 var _last_management_tab_change_result: Dictionary = {}
 var _unit_art_textures: Dictionary = {}
 var _unit_art_texture_missing: Dictionary = {}
+var _save_written_cue_presenter: SystemSaveWrittenCuePresenter
 
 static var _town_entity_cache_by_session: Dictionary = {}
 
@@ -116,6 +118,10 @@ func _ready() -> void:
 	var buckets := {}
 	var phase_started := ProfileLogScript.begin_usec()
 	_apply_visual_theme()
+	_save_written_cue_presenter = SystemSaveWrittenCuePresenterScript.new()
+	_save_written_cue_presenter.name = "SystemSaveWrittenCuePresenter"
+	add_child(_save_written_cue_presenter)
+	_save_written_cue_presenter.configure(_save_button, _save_status_label, "town")
 	resized.connect(_apply_responsive_layout)
 	_apply_responsive_layout()
 	buckets["theme"] = ProfileLogScript.elapsed_ms(phase_started)
@@ -359,8 +365,13 @@ func _commit_manual_save(manual_slot: int) -> void:
 	buckets["refresh"] = ProfileLogScript.elapsed_ms(refresh_started)
 	var save_surface_started := ProfileLogScript.begin_usec()
 	_refresh_save_slot_picker(true)
+	if bool(result.get("ok", false)):
+		_save_written_cue_presenter.present(result, manual_slot)
 	buckets["save_surface_force"] = ProfileLogScript.elapsed_ms(save_surface_started)
 	ProfileLogScript.emit_general("town", "action", "save", ProfileLogScript.elapsed_ms(profile_started), buckets, _town_profile_metadata(false), _session)
+
+func validation_save_written_cue_snapshot() -> Dictionary:
+	return _save_written_cue_presenter.validation_snapshot() if _save_written_cue_presenter != null else {}
 
 func _on_manual_save_overwrite_confirmed() -> void:
 	var manual_slot: int = int(_manual_save_overwrite_dialog.consume_pending_slot())
