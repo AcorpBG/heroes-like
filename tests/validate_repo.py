@@ -27390,6 +27390,52 @@ def validate_ai_raid_assault_grouping(errors: list[str]) -> None:
         '"step_path_plan_ms"',
     ):
         ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing raid assault grouping token: {required_token}")
+    commitment_match = re.search(
+        r"static func _raid_has_immediate_field_objective_commitment\([\s\S]*?(?=\nstatic func )",
+        enemy_adventure_text,
+    )
+    ensure(commitment_match is not None, errors, "EnemyAdventureRules.gd is missing the near-field objective commitment helper.")
+    if commitment_match is not None:
+        commitment_body = commitment_match.group(0)
+        for required_token in (
+            'String(raid.get("target_kind", "")) not in ["resource", "artifact", "encounter"]',
+            "if not _raid_target_valid(session, raid):",
+            'var goal_distance := int(raid.get("goal_distance", 9999))',
+            "goal_distance >= 0 and goal_distance <= RAID_BATTLE_PRESSURE_FIELD_OBJECTIVE_COMMITMENT_DISTANCE",
+        ):
+            ensure(required_token in commitment_body, errors, f"Near-field objective commitment helper is missing fail-closed token: {required_token}")
+        for forbidden_token in (
+            '"town"',
+            '"hero"',
+            '"regroup"',
+            '"explore"',
+            "return true",
+        ):
+            ensure(forbidden_token not in commitment_body, errors, f"Near-field objective commitment helper broadened beyond valid immediate field objectives: {forbidden_token}")
+    preempt_match = re.search(
+        r"static func _maybe_preempt_for_battle_pressure_floor\([\s\S]*?(?=\nstatic func )",
+        enemy_adventure_text,
+    )
+    ensure(preempt_match is not None, errors, "EnemyAdventureRules.gd is missing battle-pressure-floor preemption.")
+    if preempt_match is not None:
+        preempt_body = preempt_match.group(0)
+        ordered_tokens = (
+            'if current_kind not in ["resource", "regroup", "explore", "encounter", "artifact"]:',
+            "if raid_regroup_needed(raid, config, faction_id):",
+            "if _raid_has_immediate_field_objective_commitment(session, raid):",
+            "var active_count := _active_raid_count_for_faction(session, faction_id)",
+        )
+        ordered_positions = [preempt_body.find(token) for token in ordered_tokens]
+        ensure(
+            all(position >= 0 for position in ordered_positions) and ordered_positions == sorted(ordered_positions),
+            errors,
+            "Battle-pressure preemption must preserve regroup authority before gating valid immediate field objectives and active-pressure selection.",
+        )
+        ensure(
+            preempt_body.count("_raid_has_immediate_field_objective_commitment(session, raid)") == 1,
+            errors,
+            "Battle-pressure preemption must consult the near-field commitment helper exactly once.",
+        )
     harness_text = (ROOT / "scripts" / "core" / "HeadlessSimulationHarnessRules.gd").read_text(encoding="utf-8")
     for required_token in (
         '"strategic_ai_live_raid_assault_grouping"',
@@ -27427,8 +27473,66 @@ def validate_ai_raid_assault_grouping(errors: list[str]) -> None:
             "hero_task_state_live_persist_no_save_migration",
             "save_version_before",
             "save_version_after",
+            "var all_candidates: Array = EnemyAdventureRules._target_candidates(",
+            'String(candidate_value.get("target_kind", "")) == "resource"',
+            'String(candidate_value.get("target_placement_id", "")) == "owned_corridor_site"',
+            "candidates.append(candidate_value.duplicate(true))",
+            "battle_pressure_near_field_objective_commitment",
+            "near_resource_commitment",
+            "near_artifact_commitment",
+            "near_encounter_commitment",
+            "EnemyAdventureRules._raid_has_immediate_field_objective_commitment(session, refreshed)",
+            "if retained != refreshed:",
+            'distant_resource["goal_distance"] = 2',
+            'String(preempted.get("target_kind", "")) != "town"',
+            'String(preempted.get("target_placement_id", "")) != "riverwatch_hold"',
+            '"battle_pressure_floor" not in preempt_reason_codes',
+            "invalid_resource_rejected",
+            "explore_rejected",
         ):
             ensure(required_token in report_text, errors, f"AI raid assault grouping report is missing token: {required_token}")
+        ensure(
+            "EnemyAdventureRules._append_resource_candidate(" not in report_text,
+            errors,
+            "AI raid assault grouping report must use the retained ordered target-candidate compatibility wrapper.",
+        )
+        commitment_case_match = re.search(
+            r"func _near_field_objective_commitment_survives_battle_pressure\(\) -> Dictionary:[\s\S]*?(?=\nfunc )",
+            report_text,
+        )
+        ensure(commitment_case_match is not None, errors, "AI raid assault grouping report is missing the focused near-field commitment case.")
+        if commitment_case_match is not None:
+            commitment_case = commitment_case_match.group(0)
+            ordered_tokens = (
+                "var refreshed: Dictionary = EnemyAdventureRules._refresh_target",
+                "if not EnemyAdventureRules._raid_target_valid(session, refreshed)",
+                "if not EnemyAdventureRules._raid_has_immediate_field_objective_commitment(session, refreshed):",
+                "var retained := EnemyAdventureRules.assign_target",
+                "if retained != refreshed:",
+                "var artifact_probe := refreshed.duplicate(true)",
+                "var encounter_probe := refreshed.duplicate(true)",
+                "var distant_session = _long_range_pressure_session(false)",
+                "if EnemyAdventureRules._raid_has_immediate_field_objective_commitment(distant_session, distant_refreshed):",
+                "var preempted := EnemyAdventureRules.assign_target",
+                "var invalid_resource := refreshed.duplicate(true)",
+                "if EnemyAdventureRules._raid_has_immediate_field_objective_commitment(session, invalid_resource):",
+                "var explore_probe := refreshed.duplicate(true)",
+                "if EnemyAdventureRules._raid_has_immediate_field_objective_commitment(session, explore_probe):",
+            )
+            ordered_positions = [commitment_case.find(token) for token in ordered_tokens]
+            ensure(
+                all(position >= 0 for position in ordered_positions) and ordered_positions == sorted(ordered_positions),
+                errors,
+                "Focused near-field commitment case must prove valid exact retention, all allowed families, distance-two preemption, and invalid/non-field rejection in order.",
+            )
+            for forbidden_token in (
+                "RAID_BATTLE_PRESSURE_FLOOR_DAY =",
+                "RAID_BATTLE_PRESSURE_FLOOR_MIN_ACTIVE_RAIDS =",
+                "RAID_BATTLE_PRESSURE_FIELD_OBJECTIVE_COMMITMENT_DISTANCE =",
+                "session.day = 7",
+                "get_tree().create_timer",
+            ):
+                ensure(forbidden_token not in commitment_case, errors, f"Focused near-field commitment case weakens production timing or pressure policy: {forbidden_token}")
     if AI_RAID_MOVEMENT_PATH_PLAN_REUSE_SCRIPT_PATH.exists():
         path_plan_text = AI_RAID_MOVEMENT_PATH_PLAN_REUSE_SCRIPT_PATH.read_text(encoding="utf-8")
         for required_token in (
