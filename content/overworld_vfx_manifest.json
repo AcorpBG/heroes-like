@@ -13,6 +13,30 @@
       "render_mode": "hero_route_step",
       "scale": 0.68
     },
+    "vfx_placeholder_artifact_claim": {
+      "event_id": "artifact_acquired",
+      "texture_path": "res://art/overworld/runtime/vfx/artifact_claim.png",
+      "render_mode": "action_feedback_icon",
+      "scale": 1.0
+    },
+    "vfx_placeholder_slot_equip": {
+      "event_id": "artifact_equipped",
+      "texture_path": "res://art/overworld/runtime/vfx/artifact_slot_equip.png",
+      "render_mode": "action_feedback_icon",
+      "scale": 1.0
+    },
+    "vfx_placeholder_slot_unequip": {
+      "event_id": "artifact_unequipped",
+      "texture_path": "res://art/overworld/runtime/vfx/artifact_slot_unequip.png",
+      "render_mode": "action_feedback_icon",
+      "scale": 1.0
+    },
+    "vfx_placeholder_resource_delta": {
+      "event_id": "ui_resource_delta",
+      "texture_path": "res://art/overworld/runtime/vfx/resource_delta.png",
+      "render_mode": "action_feedback_icon",
+      "scale": 1.0
+    },
     "vfx_placeholder_guard_warning": {
       "event_id": "overworld_object_guarded",
       "texture_path": "res://art/overworld/runtime/vfx/guarded_site.png",

@@ -12,6 +12,7 @@ const UI_ART_OVERWORLD_PARCHMENT_PANEL := "res://art/ui/runtime/overworld/parchm
 const UI_ART_OVERWORLD_WOOD_PANEL := "res://art/ui/runtime/overworld/wood_panel.png"
 const UI_ART_OVERWORLD_MINIMAP_FRAME := "res://art/ui/runtime/overworld/minimap_frame.png"
 const UI_ART_OVERWORLD_HERO_FRAME := "res://art/ui/runtime/overworld/hero_frame.png"
+const OVERWORLD_VFX_MANIFEST_PATH := "res://content/overworld_vfx_manifest.json"
 const KEYBOARD_HERO_MOVE_DELTAS := {
 	&"hero_move_up": Vector2i.UP,
 	&"hero_move_down": Vector2i.DOWN,
@@ -47,6 +48,8 @@ const KEYBOARD_HERO_MOVE_DELTAS := {
 @onready var _header_label: Label = %Header
 @onready var _status_label: Label = %Status
 @onready var _resource_label: ResourceStockpileMenu = %Resources
+@onready var _resource_delta_cue_row: HBoxContainer = %ResourceDeltaCueRow
+@onready var _resource_delta_cue_icon: TextureRect = %ResourceDeltaCueIcon
 @onready var _resource_delta_cue: Label = %ResourceDeltaCue
 @onready var _map_cue_label: Label = %MapCue
 @onready var _event_title_label: Label = %EventTitle
@@ -82,6 +85,8 @@ const KEYBOARD_HERO_MOVE_DELTAS := {
 @onready var _spell_actions: Container = %SpellActions
 @onready var _specialty_actions: Container = %SpecialtyActions
 @onready var _artifact_actions: Container = %ArtifactActions
+@onready var _artifact_action_cue_row: HBoxContainer = %ArtifactActionCueRow
+@onready var _artifact_action_cue_icon: TextureRect = %ArtifactActionCueIcon
 @onready var _artifact_action_cue: Label = %ArtifactActionCue
 @onready var _rendezvous_label: Label = %Rendezvous
 @onready var _rendezvous_controls: Container = %RendezvousControls
@@ -201,6 +206,13 @@ var _resource_delta_presentation_serial := 0
 var _resource_delta_presentation_active := false
 var _resource_delta_presentation_elapsed_sec := 0.0
 var _resource_delta_presentation_duration_sec := 0.0
+var _overworld_vfx_manifest: Dictionary = {}
+var _overworld_vfx_manifest_loaded := false
+var _overworld_vfx_textures: Dictionary = {}
+var _overworld_vfx_texture_missing: Dictionary = {}
+var _artifact_action_vfx_state: Dictionary = {}
+var _resource_delta_vfx_state: Dictionary = {}
+var _map_cue_visible_before_artifact_feedback := true
 var _post_route_execution_compact_context := false
 var _briefing_title_text := "Command Briefing"
 var _command_briefing_text := ""
@@ -340,7 +352,11 @@ func _ready() -> void:
 	_map_view.tile_hovered.connect(_on_map_tile_hovered)
 	_spell_cast_input_blocker.visible = false
 	_artifact_acquired_input_blocker.visible = false
+	_artifact_action_cue_row.visible = false
+	_artifact_action_cue_icon.visible = false
 	_artifact_action_cue.visible = false
+	_resource_delta_cue_row.visible = false
+	_resource_delta_cue_icon.visible = false
 	_resource_delta_cue.visible = false
 	set_process(false)
 	if not _map_view.spell_cast_presentation_blocking_changed.is_connected(_on_spell_cast_presentation_blocking_changed):
@@ -520,6 +536,7 @@ func _process(delta: float) -> void:
 		var resource_progress := clampf(_resource_delta_presentation_elapsed_sec / maxf(_resource_delta_presentation_duration_sec, 0.001), 0.0, 1.0)
 		var resource_allows_large_motion := bool(_resource_delta_presentation.get("allows_large_motion", true))
 		_resource_delta_cue.modulate.a = 1.0 if not resource_allows_large_motion else (0.74 + 0.26 * sin(resource_progress * PI))
+		_resource_delta_cue_icon.modulate.a = _resource_delta_cue.modulate.a
 		if resource_progress >= 1.0:
 			dismiss_resource_delta_presentation()
 	if _artifact_acquired_presentation_active:
@@ -530,6 +547,7 @@ func _process(delta: float) -> void:
 		var acquired_progress := clampf(_artifact_acquired_presentation_elapsed_sec / maxf(_artifact_acquired_presentation_duration_sec, 0.001), 0.0, 1.0)
 		var acquired_allows_large_motion := bool(_artifact_acquired_presentation.get("allows_large_motion", true))
 		_artifact_action_cue.modulate.a = 1.0 if not acquired_allows_large_motion else (0.68 + 0.32 * sin(acquired_progress * PI))
+		_artifact_action_cue_icon.modulate.a = _artifact_action_cue.modulate.a
 		if acquired_progress >= 1.0:
 			dismiss_artifact_acquired_presentation()
 		return
@@ -545,10 +563,10 @@ func _process(delta: float) -> void:
 	var progress := clampf(_artifact_slot_presentation_elapsed_sec / maxf(_artifact_slot_presentation_duration_sec, 0.001), 0.0, 1.0)
 	var allows_large_motion := bool(_artifact_slot_presentation.get("allows_large_motion", true))
 	_artifact_action_cue.modulate.a = 1.0 if not allows_large_motion else (0.72 + 0.28 * sin(progress * PI))
+	_artifact_action_cue_icon.modulate.a = _artifact_action_cue.modulate.a
 	if progress >= 1.0:
 		_artifact_slot_presentation_active = false
-		_artifact_action_cue.visible = false
-		_artifact_action_cue.modulate = Color.WHITE
+		_hide_artifact_action_feedback()
 		set_process(_resource_delta_presentation_active)
 
 func _keyboard_hero_move_delta(event: InputEvent) -> Vector2i:
@@ -2775,6 +2793,8 @@ func present_resource_delta_presentation(presentation: Dictionary) -> Dictionary
 	_resource_delta_cue.text = " • ".join(labels)
 	_resource_delta_cue.tooltip_text = String(presentation.get("result_message", ""))
 	_resource_delta_cue.modulate = Color.WHITE
+	_resource_delta_vfx_state = _show_action_feedback_vfx(_resource_delta_presentation, _resource_delta_cue_icon)
+	_resource_delta_cue_row.visible = true
 	_resource_delta_cue.visible = true
 	set_process(true)
 	return validation_resource_delta_presentation()
@@ -2782,8 +2802,7 @@ func present_resource_delta_presentation(presentation: Dictionary) -> Dictionary
 func dismiss_resource_delta_presentation() -> Dictionary:
 	_resource_delta_presentation_active = false
 	_resource_delta_presentation_elapsed_sec = _resource_delta_presentation_duration_sec
-	_resource_delta_cue.visible = false
-	_resource_delta_cue.modulate = Color.WHITE
+	_hide_resource_delta_feedback()
 	if not _artifact_acquired_presentation_active and not _artifact_slot_presentation_active:
 		set_process(false)
 	return validation_resource_delta_presentation()
@@ -2799,6 +2818,7 @@ func validation_resource_delta_presentation() -> Dictionary:
 	snapshot["visible"] = _resource_delta_cue.visible and _resource_delta_presentation_active
 	snapshot["text"] = _resource_delta_cue.text if _resource_delta_presentation_active else ""
 	snapshot["tooltip_text"] = _resource_delta_cue.tooltip_text if _resource_delta_presentation_active else ""
+	snapshot["vfx_asset"] = _action_feedback_vfx_validation(_resource_delta_vfx_state, _resource_delta_cue_icon)
 	return snapshot
 
 func _record_artifact_acquired_presentation(result: Dictionary, action_id: String) -> void:
@@ -2916,6 +2936,11 @@ func present_artifact_acquired_presentation(presentation: Dictionary) -> Diction
 	_artifact_action_cue.text = "Recovered: %s • %s" % [String(presentation.get("artifact_name", "")), location_label]
 	_artifact_action_cue.tooltip_text = String(presentation.get("result_message", ""))
 	_artifact_action_cue.modulate = Color.WHITE
+	_artifact_action_vfx_state = _show_action_feedback_vfx(_artifact_acquired_presentation, _artifact_action_cue_icon)
+	if not _artifact_action_cue_row.visible:
+		_map_cue_visible_before_artifact_feedback = _map_cue_label.visible
+	_map_cue_label.visible = false
+	_artifact_action_cue_row.visible = true
 	_artifact_action_cue.visible = true
 	_artifact_acquired_input_blocker.visible = blocks_input
 	if blocks_input:
@@ -2928,8 +2953,7 @@ func dismiss_artifact_acquired_presentation(restore_focus: bool = true) -> Dicti
 	_artifact_acquired_presentation_active = false
 	_artifact_acquired_presentation_elapsed_sec = _artifact_acquired_presentation_duration_sec
 	_artifact_acquired_input_blocker.visible = false
-	_artifact_action_cue.visible = false
-	_artifact_action_cue.modulate = Color.WHITE
+	_hide_artifact_action_feedback()
 	if restore_focus and was_blocking:
 		call_deferred("_configure_overworld_keyboard_focus", true)
 	if not _artifact_slot_presentation_active and not _resource_delta_presentation_active:
@@ -2948,6 +2972,7 @@ func validation_artifact_acquired_presentation() -> Dictionary:
 	snapshot["text"] = _artifact_action_cue.text if _artifact_acquired_presentation_active else ""
 	snapshot["tooltip_text"] = _artifact_action_cue.tooltip_text if _artifact_acquired_presentation_active else ""
 	snapshot["input_blocker_visible"] = _artifact_acquired_input_blocker.visible
+	snapshot["vfx_asset"] = _action_feedback_vfx_validation(_artifact_action_vfx_state, _artifact_action_cue_icon)
 	return snapshot
 
 func present_artifact_slot_presentation(presentation: Dictionary) -> Dictionary:
@@ -2978,6 +3003,11 @@ func present_artifact_slot_presentation(presentation: Dictionary) -> Dictionary:
 	_artifact_action_cue.text = "%s: %s • %s" % [verb, String(presentation.get("artifact_name", "")), String(presentation.get("slot", "")).capitalize()]
 	_artifact_action_cue.tooltip_text = String(presentation.get("result_message", ""))
 	_artifact_action_cue.modulate = Color.WHITE
+	_artifact_action_vfx_state = _show_action_feedback_vfx(_artifact_slot_presentation, _artifact_action_cue_icon)
+	if not _artifact_action_cue_row.visible:
+		_map_cue_visible_before_artifact_feedback = _map_cue_label.visible
+	_map_cue_label.visible = false
+	_artifact_action_cue_row.visible = true
 	_artifact_action_cue.visible = true
 	set_process(true)
 	return validation_artifact_slot_presentation()
@@ -2993,7 +3023,102 @@ func validation_artifact_slot_presentation() -> Dictionary:
 	snapshot["visible"] = _artifact_action_cue.visible
 	snapshot["text"] = _artifact_action_cue.text
 	snapshot["tooltip_text"] = _artifact_action_cue.tooltip_text
+	snapshot["vfx_asset"] = _action_feedback_vfx_validation(_artifact_action_vfx_state, _artifact_action_cue_icon)
 	return snapshot
+
+func _show_action_feedback_vfx(presentation: Dictionary, icon: TextureRect) -> Dictionary:
+	icon.texture = null
+	icon.visible = false
+	icon.modulate = Color.WHITE
+	var event_id := String(presentation.get("event_id", ""))
+	var cue_ids: Array = presentation.get("selected_vfx_cue_ids", []) if presentation.get("selected_vfx_cue_ids", []) is Array else []
+	var cue_id := String(cue_ids[0]) if cue_ids.size() == 1 else ""
+	var state := {
+		"manifest_path": OVERWORLD_VFX_MANIFEST_PATH,
+		"event_id": event_id,
+		"cue_id": cue_id,
+		"texture_path": "",
+		"render_mode": "",
+		"imported": false,
+		"fallback": "text_only_feedback",
+	}
+	var spec := _overworld_action_feedback_vfx_cue(cue_id)
+	if spec.is_empty():
+		return state
+	state["texture_path"] = String(spec.get("texture_path", ""))
+	state["render_mode"] = String(spec.get("render_mode", ""))
+	if String(spec.get("event_id", "")) != event_id or String(spec.get("render_mode", "")) != "action_feedback_icon":
+		return state
+	var texture = _overworld_action_feedback_vfx_texture(String(spec.get("texture_path", "")))
+	if not (texture is Texture2D):
+		return state
+	icon.texture = texture
+	icon.visible = true
+	state["imported"] = true
+	state["fallback"] = ""
+	state["texture_size"] = {"x": int(texture.get_size().x), "y": int(texture.get_size().y)}
+	return state
+
+func _action_feedback_vfx_validation(value: Variant, icon: TextureRect) -> Dictionary:
+	var state: Dictionary = value.duplicate(true) if value is Dictionary else {}
+	state["icon_visible"] = icon.visible and icon.texture != null
+	state["icon_custom_minimum_size"] = icon.custom_minimum_size
+	state["icon_global_rect"] = icon.get_global_rect()
+	return state
+
+func _hide_artifact_action_feedback() -> void:
+	_artifact_action_cue_row.visible = false
+	_artifact_action_cue.visible = false
+	_artifact_action_cue.modulate = Color.WHITE
+	_artifact_action_cue_icon.visible = false
+	_artifact_action_cue_icon.texture = null
+	_artifact_action_cue_icon.modulate = Color.WHITE
+	_map_cue_label.visible = _map_cue_visible_before_artifact_feedback
+
+func _hide_resource_delta_feedback() -> void:
+	_resource_delta_cue_row.visible = false
+	_resource_delta_cue.visible = false
+	_resource_delta_cue.modulate = Color.WHITE
+	_resource_delta_cue_icon.visible = false
+	_resource_delta_cue_icon.texture = null
+	_resource_delta_cue_icon.modulate = Color.WHITE
+
+func _overworld_action_feedback_vfx_cue(cue_id: String) -> Dictionary:
+	_load_overworld_action_feedback_vfx_manifest()
+	var cues: Dictionary = _overworld_vfx_manifest.get("cues", {}) if _overworld_vfx_manifest.get("cues", {}) is Dictionary else {}
+	var cue: Dictionary = cues.get(cue_id, {}) if cues.get(cue_id, {}) is Dictionary else {}
+	return cue.duplicate(true)
+
+func _load_overworld_action_feedback_vfx_manifest() -> void:
+	if _overworld_vfx_manifest_loaded:
+		return
+	_overworld_vfx_manifest_loaded = true
+	_overworld_vfx_manifest = {}
+	_overworld_vfx_textures.clear()
+	_overworld_vfx_texture_missing.clear()
+	if not FileAccess.file_exists(OVERWORLD_VFX_MANIFEST_PATH):
+		return
+	var text := FileAccess.get_file_as_string(OVERWORLD_VFX_MANIFEST_PATH)
+	if text.strip_edges() == "":
+		return
+	var parsed = JSON.parse_string(text)
+	if parsed is Dictionary:
+		_overworld_vfx_manifest = parsed
+
+func _overworld_action_feedback_vfx_texture(texture_path: String):
+	if texture_path == "" or _overworld_vfx_texture_missing.has(texture_path):
+		return null
+	if _overworld_vfx_textures.has(texture_path):
+		return _overworld_vfx_textures.get(texture_path)
+	if not ResourceLoader.exists(texture_path):
+		_overworld_vfx_texture_missing[texture_path] = true
+		return null
+	var loaded = load(texture_path)
+	if loaded is Texture2D:
+		_overworld_vfx_textures[texture_path] = loaded
+		return loaded
+	_overworld_vfx_texture_missing[texture_path] = true
+	return null
 
 func _on_spell_cast_presentation_blocking_changed(blocking: bool) -> void:
 	if _spell_cast_input_blocker == null:

@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `presentation-overworld-action-feedback-vfx-asset-adoption-10184`. Artifact recovery, artifact equip, artifact stow, and resource collection now render four distinct original imported alpha effects inside the existing bottom CueChip and ResourceChip overlays. Normal motion uses the exact existing cue identities; reduced motion and missing assets remain text-only. Focused 1280x720/1920x1080, real action authority, eleven-cue VFX compatibility, broad Overworld visual/input/focus/accessibility/core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged action interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `presentation-overworld-action-feedback-vfx-asset-adoption-10184`
 - Completed implementation slice: `presentation-overworld-hero-route-step-vfx-asset-adoption-10184`. Normal live hero-route playback now draws one original imported alpha dust-and-rune trail behind the unchanged interpolated hero marker through the exact existing `vfx_placeholder_route_step` cue. The renderer rotates the effect with the current route segment and preserves exact route execution, hero identity/grounding, bounded timing, dynamic-layer lifecycle, marker-only missing-map/missing-texture fallback, and zero-duration reduced-motion endpoint snap. Focused 1280x720/1920x1080, real full-route, seven-cue Overworld VFX manifest, visual/input/focus/accessibility/core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged route interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `presentation-overworld-hero-route-step-vfx-asset-adoption-10184`
 - Completed implementation slice: `presentation-overworld-route-blocked-vfx-asset-adoption-10184`. Normal live blocked-route playback now draws one original imported alpha warning sigil through the exact existing `vfx_placeholder_blocked_route_marker` cue. The renderer preserves exact route authority, blocked reason, serial/dedupe, bounded timing, dynamic-layer lifecycle, and the prior procedural circle-and-X as missing-map/missing-texture fallback, while reduced motion retains the static `blocked_route_icon`. Focused 1280x720/1920x1080, real blocked/reachable selection, six-cue Overworld VFX manifest, visual/input/focus/accessibility/core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged blocked-route interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -5425,6 +5427,32 @@ Completion evidence:
 - the real full-route regression proves policy-derived VFX identity, actual four-step route/interpolated center, dynamic-only progress, refresh/expiry lifecycle, and unchanged route consequences;
 - seven-cue object/spell/guard/blocked-route/hero-route VFX, Overworld visual/input, active-play focus, accessibility, core, repository, and exact/generic editor gates pass;
 - official Linux export plus packaged headless startup and official Windows export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass, with no packaged route interaction or broader release claim.
+
+## Selected Slice: Overworld Action Feedback VFX Asset Adoption
+
+Slice id: `presentation-overworld-action-feedback-vfx-asset-adoption-10184`
+
+Implementation boundary:
+- create one original source atlas and four bounded alpha runtime textures for the existing `vfx_placeholder_artifact_claim`, `vfx_placeholder_slot_equip`, `vfx_placeholder_slot_unequip`, and `vfx_placeholder_resource_delta` cues;
+- map only those four cues through the existing Overworld VFX manifest and render each compactly beside the unchanged live artifact/resource feedback text inside the existing command rail;
+- retain exact text-only behavior for missing manifest rows or unloadable textures and retain the catalog's existing reduced-motion static fallback identities without importing or animating a normal-motion effect;
+- preserve exact artifact/resource consequences, label text/tooltips, input-blocking policy, focus, cue lifetime/progress, refresh/expiry behavior, containment, session authority, save version 9, and all existing Overworld VFX mappings.
+
+Completion criteria:
+- normal artifact recovery/equip/stow and resource collection each select and visibly render one distinct exact imported texture at 1280x720 and 1920x1080 without remapping any other cue;
+- missing mapping/texture stays fail-closed and text-only, while reduced motion keeps the exact existing static fallback cue and no normal imported effect;
+- focused and real action proof preserves event/action/content identity, consequences, text/tooltip, duration/progress, blocking/nonblocking behavior, focus, refresh/expiry lifecycle, session authority, and save version 9;
+- artifact acquired/slot and resource-delta cue owners, existing Overworld VFX assets, broad Overworld visual/input/focus/accessibility/core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Completion evidence:
+- four distinct 512x512 alpha runtime effects from one retained 1536x1024 source atlas render through the exact existing artifact/resource cue ids inside the compact bottom command rail at both registered widths;
+- missing assets and reduced motion remain exact text-only fallbacks, while real artifact/resource actions preserve independent-rule consequences, input/focus/lifecycle behavior, session authority, and save version 9;
+- the focused and compatibility runtime chains, repository/editor validation, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green with bounded claims only.
+
+Non-goals:
+- no artifact, resource, reward, inventory, slot, economy, route, object, input, focus, timing, animation-policy, AI, save-schema, content, or map changes;
+- no panel expansion, dashboard, command ordering, broader layout redesign, other Overworld/Town/Battle/UI cue, particles, shaders, audio, or global renderer changes;
+- no packaged action interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
 
 ## Progress Reconciliation
 

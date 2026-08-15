@@ -152,6 +152,10 @@ OVERWORLD_HERO_ROUTE_STEP_VFX_SOURCE_PATH = ROOT / "art" / "overworld" / "source
 OVERWORLD_HERO_ROUTE_STEP_VFX_RUNTIME_PATH = ROOT / "art" / "overworld" / "runtime" / "vfx" / "hero_route_step.png"
 OVERWORLD_HERO_ROUTE_STEP_VFX_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_hero_route_step_vfx_asset_runtime_report.gd"
 OVERWORLD_HERO_ROUTE_STEP_VFX_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_hero_route_step_vfx_asset_runtime_report.tscn"
+OVERWORLD_ACTION_FEEDBACK_VFX_SOURCE_PATH = ROOT / "art" / "overworld" / "source" / "action_feedback_vfx_source.png"
+OVERWORLD_ACTION_FEEDBACK_VFX_RUNTIME_DIR = ROOT / "art" / "overworld" / "runtime" / "vfx"
+OVERWORLD_ACTION_FEEDBACK_VFX_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_action_feedback_vfx_asset_runtime_report.gd"
+OVERWORLD_ACTION_FEEDBACK_VFX_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_action_feedback_vfx_asset_runtime_report.tscn"
 OVERWORLD_FIELD_SPELL_CAST_CUE_PLAYBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_field_spell_cast_cue_playback_report.gd"
 OVERWORLD_FIELD_SPELL_CAST_CUE_PLAYBACK_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_field_spell_cast_cue_playback_report.tscn"
 OVERWORLD_ARTIFACT_SLOT_CUE_PLAYBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_artifact_slot_cue_playback_report.gd"
@@ -30102,27 +30106,29 @@ def validate_overworld_artifact_slot_cue_playback(errors: list[str]) -> None:
         end = text.find("\nfunc ", start + 1)
         return text[start:] if end < 0 else text[start:end]
 
-    ensure_scene_nodes(shell_scene_text, errors, "OverworldShell.tscn", [("ArtifactActionCue", "Label")])
-    cue_match = re.search(
-        r'\[node name="ArtifactActionCue" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/CommandPanel/CommandPad/CommandBox"\]\n(?P<body>.*?)(?=\n\[node )',
-        shell_scene_text,
-        re.DOTALL,
-    )
-    ensure(cue_match is not None, errors, "Overworld artifact-slot cue must remain a compact command-spine label")
-    if cue_match is not None:
-        cue_body = cue_match.group("body")
-        for token in (
-            "unique_name_in_owner = true",
-            "visible = false",
-            "layout_mode = 2",
-            "theme_override_font_sizes/font_size = 13",
-            "horizontal_alignment = 1",
-            "autowrap_mode = 2",
-        ):
-            ensure(token in cue_body, errors, f"Artifact-slot cue label is missing exact compact ownership token: {token}")
-    ensure(shell_scene_text.find('[node name="Artifacts"') < shell_scene_text.find('[node name="ArtifactActionCue"') < shell_scene_text.find('[node name="ArtifactActions"'), errors, "Artifact-slot cue must remain directly between the artifact heading and live actions")
+    ensure_scene_nodes(shell_scene_text, errors, "OverworldShell.tscn", [("ArtifactActionCueRow", "HBoxContainer"), ("ArtifactActionCueIcon", "TextureRect"), ("ArtifactActionCue", "Label")])
+    cue_nodes = {
+        "row": ("ArtifactActionCueRow", "HBoxContainer", "ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/CueChip/CuePad"),
+        "icon": ("ArtifactActionCueIcon", "TextureRect", "ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/CueChip/CuePad/ArtifactActionCueRow"),
+        "label": ("ArtifactActionCue", "Label", "ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/CueChip/CuePad/ArtifactActionCueRow"),
+    }
+    cue_bodies: dict[str, str] = {}
+    for key, (node_name, node_type, parent) in cue_nodes.items():
+        match = re.search(rf'\[node name="{node_name}" type="{node_type}" parent="{re.escape(parent)}"\]\n(?P<body>.*?)(?=\n\[node )', shell_scene_text, re.DOTALL)
+        ensure(match is not None, errors, f"Overworld artifact action feedback is missing its exact compact CueChip {key}")
+        cue_bodies[key] = match.group("body") if match is not None else ""
+    for token in ("unique_name_in_owner = true", "visible = false", "layout_mode = 2", "mouse_filter = 2"):
+        ensure(token in cue_bodies["row"], errors, f"Artifact action cue row is missing compact overlay ownership: {token}")
+    for token in ("unique_name_in_owner = true", "visible = false", "custom_minimum_size = Vector2(28, 28)", "expand_mode = 3", "stretch_mode = 5"):
+        ensure(token in cue_bodies["icon"], errors, f"Artifact action cue icon is missing exact imported-texture ownership: {token}")
+    for token in ("unique_name_in_owner = true", "visible = false", "theme_override_font_sizes/font_size = 13", "horizontal_alignment = 1", "clip_text = true"):
+        ensure(token in cue_bodies["label"], errors, f"Artifact action cue label is missing exact compact ownership: {token}")
+    ensure(shell_scene_text.find('[node name="MapCue"') < shell_scene_text.find('[node name="ArtifactActionCueRow"') < shell_scene_text.find('[node name="OrdersPanel"'), errors, "Artifact action feedback must remain an overlay inside the existing bottom CueChip")
+    ensure('parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/CommandPanel/CommandPad/CommandBox"' not in shell_scene_text[shell_scene_text.find('[node name="ArtifactActionCue"'):shell_scene_text.find('[node name="ArtifactActionCue"') + 300], errors, "Artifact action feedback must not regress into the normally closed command drawer")
 
     for token in (
+        '@onready var _artifact_action_cue_row: HBoxContainer = %ArtifactActionCueRow',
+        '@onready var _artifact_action_cue_icon: TextureRect = %ArtifactActionCueIcon',
         '@onready var _artifact_action_cue: Label = %ArtifactActionCue',
         "var _artifact_slot_presentation: Dictionary = {}",
         "var _artifact_slot_presentation_serial := 0",
@@ -30138,6 +30144,8 @@ def validate_overworld_artifact_slot_cue_playback(errors: list[str]) -> None:
         'String(policy.get("selected_blocking_policy", "")) != "nonblocking"',
         'var expected_cue_id := "cue_artifact_equipped" if event_id == "artifact_equipped" else ("cue_artifact_unequipped" if event_id == "artifact_unequipped" else "")',
         '_artifact_action_cue.text = "%s: %s • %s"',
+        '_artifact_action_vfx_state = _show_action_feedback_vfx(_artifact_slot_presentation, _artifact_action_cue_icon)',
+        '_map_cue_label.visible = false',
     ):
         ensure(token in shell_text, errors, f"OverworldShell.gd is missing artifact-slot cue ownership token: {token}")
     ensure(shell_text.count("func _record_artifact_slot_presentation") == 1, errors, "Overworld shell must define exactly one artifact-slot presentation producer")
@@ -30209,6 +30217,8 @@ def validate_overworld_artifact_slot_cue_playback(errors: list[str]) -> None:
         'const ARTIFACT_ID := "artifact_trailsinger_boots"',
         'ArtifactRules.normalize_hero_artifacts({"equipped": {}, "inventory": [ARTIFACT_ID]})',
         'shell.get_node_or_null("%ArtifactActions")',
+        'shell.get_node_or_null("%ArtifactActionCueRow")',
+        'shell.get_node_or_null("%ArtifactActionCueIcon")',
         'shell.get_node_or_null("%ArtifactActionCue")',
         "var control = SessionDataScript.SessionData.new()",
         "OverworldRules.perform_artifact_action(control, equip_action_id)",
@@ -30219,6 +30229,8 @@ def validate_overworld_artifact_slot_cue_playback(errors: list[str]) -> None:
         'String(presentation.get("event_id", "")) == event_id',
         'String(presentation.get("cue_id", "")) == cue_id',
         'String(presentation.get("selected_blocking_policy", "")) == "nonblocking"',
+        'String(vfx_asset.get("render_mode", "")) == ("" if reduced_motion else "action_feedback_icon")',
+        'artifact_cue_icon.is_visible_in_tree() == not bool(mode.get("reduced_motion", false))',
         'and live_after == control.to_dict()',
         'shell.call("_refresh")',
         'while bool(_artifact_presentation(shell).get("active", false)) and settle_frames < 90:',
@@ -30556,13 +30568,22 @@ def validate_overworld_resource_delta_cue_playback(errors: list[str]) -> None:
         ensure(forbidden not in icon_helper_block, errors, f"Overworld resource icon helper must not alter action/timing/gameplay authority: {forbidden}")
     ensure('"primary_action_button_icon_path"' in shell_text and '"primary_action_button_icon_max_width"' in shell_text, errors, "Overworld validation snapshot must expose detached primary resource icon state")
 
-    ensure_scene_nodes(scene_text, errors, "OverworldShell.tscn", [("ResourceDeltaCue", "Label")])
+    ensure_scene_nodes(scene_text, errors, "OverworldShell.tscn", [("ResourceDeltaCueRow", "HBoxContainer"), ("ResourceDeltaCueIcon", "TextureRect"), ("ResourceDeltaCue", "Label")])
+    row_match = re.search(r'\[node name="ResourceDeltaCueRow" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/ResourceChip/ResourcePad"\]\n(?P<body>.*?)(?=\n\[node )', scene_text, re.DOTALL)
+    icon_match = re.search(r'\[node name="ResourceDeltaCueIcon" type="TextureRect" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/ResourceChip/ResourcePad/ResourceDeltaCueRow"\]\n(?P<body>.*?)(?=\n\[node )', scene_text, re.DOTALL)
     cue_match = re.search(r'\[node name="ResourceDeltaCue" type="Label"[^\]]*\]\n(?P<body>.*?)(?=\n\[node )', scene_text, re.DOTALL)
+    ensure(row_match is not None and icon_match is not None, errors, "Overworld resource delta must own one compact command-band row and imported icon")
+    if row_match is not None:
+        for token in ("unique_name_in_owner = true", "visible = false", "mouse_filter = 2"):
+            ensure(token in row_match.group("body"), errors, f"Resource-delta row is missing exact overlay ownership: {token}")
+    if icon_match is not None:
+        for token in ("unique_name_in_owner = true", "visible = false", "custom_minimum_size = Vector2(22, 22)", "expand_mode = 3", "stretch_mode = 5"):
+            ensure(token in icon_match.group("body"), errors, f"Resource-delta icon is missing exact imported-texture ownership: {token}")
     ensure(cue_match is not None, errors, "Overworld resource delta must own one command-band overlay label")
     if cue_match is not None:
         for token in ("unique_name_in_owner = true", "visible = false", "mouse_filter = 2", "clip_text = true"):
             ensure(token in cue_match.group("body"), errors, f"Resource-delta cue is missing exact overlay ownership: {token}")
-    ensure(scene_text.count('[node name="ResourceDeltaCue"') == 1, errors, "Overworld must own exactly one ResourceDeltaCue")
+    ensure(scene_text.count('[node name="ResourceDeltaCue"') == 1 and scene_text.count('[node name="ResourceDeltaCueRow"') == 1 and scene_text.count('[node name="ResourceDeltaCueIcon"') == 1, errors, "Overworld must own exactly one resource-delta row, icon, and label")
 
     handler = block(shell_text, "_on_context_action_pressed")
     order = [
@@ -30601,10 +30622,15 @@ def validate_overworld_resource_delta_cue_playback(errors: list[str]) -> None:
         'String(presentation.get("action_id", "")) != "collect_resource"',
         'String(presentation.get("selected_blocking_policy", "")) != "nonblocking"',
         'int(row.get("after", 0)) - int(row.get("before", 0)) != delta',
+        '_resource_delta_vfx_state = _show_action_feedback_vfx(_resource_delta_presentation, _resource_delta_cue_icon)',
+        '_resource_delta_cue_row.visible = true',
         '_resource_delta_cue.visible = true',
     ):
         ensure(token in presenter, errors, f"Resource-delta presenter is missing fail-closed detached validation: {token}")
-    ensure("_resource_delta_cue.visible = false" in dismiss and "set_process(false)" in dismiss, errors, "Resource-delta dismissal must clear only its overlay and idle shared processing")
+    hide_resource = block(shell_text, "_hide_resource_delta_feedback")
+    ensure("_hide_resource_delta_feedback()" in dismiss and "set_process(false)" in dismiss, errors, "Resource-delta dismissal must clear its compact overlay and idle shared processing")
+    for token in ("_resource_delta_cue_row.visible = false", "_resource_delta_cue.visible = false", "_resource_delta_cue_icon.visible = false", "_resource_delta_cue_icon.texture = null"):
+        ensure(token in hide_resource, errors, f"Resource-delta cleanup is missing exact row/icon/label lifecycle: {token}")
     ensure(process.find("if _resource_delta_presentation_active:") < process.find("if _artifact_acquired_presentation_active:"), errors, "Shared processing must advance the independent resource overlay before artifact playback")
     ensure('"resource_delta_presentation": validation_resource_delta_presentation()' in shell_text, errors, "Overworld validation snapshot must expose detached resource presentation state")
 
@@ -30632,6 +30658,9 @@ def validate_overworld_resource_delta_cue_playback(errors: list[str]) -> None:
         'OverworldRules.perform_context_action(control, "collect_resource")',
         'control.flags["last_overworld_action_recap"] = control_recap.duplicate(true)',
         'primary_action.emit_signal("pressed")',
+        'shell.get_node_or_null("%ResourceDeltaCueRow")',
+        'shell.get_node_or_null("%ResourceDeltaCueIcon")',
+        'String(vfx_asset.get("render_mode", "")) == ("" if reduced_motion else "action_feedback_icon")',
         'active.get("deltas", []) == expected_deltas',
         'String(object_resolution.get("event_id", "")) == "overworld_object_captured"',
         'shell.call("_refresh")',
@@ -31100,6 +31129,131 @@ def validate_active_play_load_resumed_cue_playback(errors: list[str]) -> None:
         ensure(forbidden not in report_text, errors, f"Active-play load-resumed report must drive the real Main Menu action without bypassing production: {forbidden}")
 
 
+def validate_overworld_action_feedback_vfx_assets(errors: list[str]) -> None:
+    runtime_paths = {
+        "artifact_acquired": ("vfx_placeholder_artifact_claim", OVERWORLD_ACTION_FEEDBACK_VFX_RUNTIME_DIR / "artifact_claim.png"),
+        "artifact_equipped": ("vfx_placeholder_slot_equip", OVERWORLD_ACTION_FEEDBACK_VFX_RUNTIME_DIR / "artifact_slot_equip.png"),
+        "artifact_unequipped": ("vfx_placeholder_slot_unequip", OVERWORLD_ACTION_FEEDBACK_VFX_RUNTIME_DIR / "artifact_slot_unequip.png"),
+        "ui_resource_delta": ("vfx_placeholder_resource_delta", OVERWORLD_ACTION_FEEDBACK_VFX_RUNTIME_DIR / "resource_delta.png"),
+    }
+    required_paths = (
+        OVERWORLD_ACTION_FEEDBACK_VFX_SOURCE_PATH,
+        OVERWORLD_ACTION_FEEDBACK_VFX_REPORT_SCRIPT_PATH,
+        OVERWORLD_ACTION_FEEDBACK_VFX_REPORT_SCENE_PATH,
+        OVERWORLD_OBJECT_RESOLUTION_VFX_MANIFEST_PATH,
+        OVERWORLD_SCENE_PATH,
+        OVERWORLD_SCRIPT_PATH,
+        OVERWORLD_ARTIFACT_ACQUIRED_CUE_PLAYBACK_REPORT_SCRIPT_PATH,
+        OVERWORLD_ARTIFACT_SLOT_CUE_PLAYBACK_REPORT_SCRIPT_PATH,
+        OVERWORLD_RESOURCE_DELTA_CUE_PLAYBACK_REPORT_SCRIPT_PATH,
+        *(path for _, path in runtime_paths.values()),
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Overworld action-feedback VFX owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    manifest = load_json(OVERWORLD_OBJECT_RESOLUTION_VFX_MANIFEST_PATH)
+    cues = manifest.get("cues", {}) if isinstance(manifest, dict) else {}
+    expected_specs = {
+        "artifact_acquired": {"cue_id": "vfx_placeholder_artifact_claim", "texture_path": "res://art/overworld/runtime/vfx/artifact_claim.png"},
+        "artifact_equipped": {"cue_id": "vfx_placeholder_slot_equip", "texture_path": "res://art/overworld/runtime/vfx/artifact_slot_equip.png"},
+        "artifact_unequipped": {"cue_id": "vfx_placeholder_slot_unequip", "texture_path": "res://art/overworld/runtime/vfx/artifact_slot_unequip.png"},
+        "ui_resource_delta": {"cue_id": "vfx_placeholder_resource_delta", "texture_path": "res://art/overworld/runtime/vfx/resource_delta.png"},
+    }
+    ensure(png_size(OVERWORLD_ACTION_FEEDBACK_VFX_SOURCE_PATH) == (1536, 1024), errors, "Action-feedback VFX source atlas must remain the exact 1536x1024 authored image")
+    source_header = OVERWORLD_ACTION_FEEDBACK_VFX_SOURCE_PATH.read_bytes()[:26]
+    ensure(len(source_header) >= 26 and source_header[25] in {4, 6}, errors, "Action-feedback VFX source atlas must retain a PNG alpha channel")
+    runtime_payloads: list[bytes] = []
+    for event_id, (cue_id, path) in runtime_paths.items():
+        expected_path = expected_specs[event_id]["texture_path"]
+        ensure(cues.get(cue_id) == {"event_id": event_id, "texture_path": expected_path, "render_mode": "action_feedback_icon", "scale": 1.0}, errors, f"Action-feedback manifest mapping must remain exact: {event_id}")
+        ensure(png_size(path) == (512, 512), errors, f"Action-feedback runtime texture must be 512x512: {event_id}")
+        header = path.read_bytes()[:26]
+        ensure(len(header) >= 26 and header[25] in {4, 6}, errors, f"Action-feedback runtime texture must retain a PNG alpha channel: {event_id}")
+        runtime_payloads.append(path.read_bytes())
+    ensure(len(set(runtime_payloads)) == 4, errors, "Action-feedback VFX must retain four distinct runtime textures")
+
+    shell_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+    for token in (
+        'const OVERWORLD_VFX_MANIFEST_PATH := "res://content/overworld_vfx_manifest.json"',
+        "var _overworld_vfx_manifest: Dictionary = {}",
+        "var _overworld_vfx_textures: Dictionary = {}",
+        "var _overworld_vfx_texture_missing: Dictionary = {}",
+        "var _artifact_action_vfx_state: Dictionary = {}",
+        "var _resource_delta_vfx_state: Dictionary = {}",
+        "func _show_action_feedback_vfx(presentation: Dictionary, icon: TextureRect) -> Dictionary:",
+        'String(spec.get("event_id", "")) != event_id or String(spec.get("render_mode", "")) != "action_feedback_icon"',
+        "if not (texture is Texture2D):",
+        'state["imported"] = true',
+        'state["fallback"] = ""',
+        "func _action_feedback_vfx_validation(value: Variant, icon: TextureRect) -> Dictionary:",
+        "func _load_overworld_action_feedback_vfx_manifest() -> void:",
+        "func _overworld_action_feedback_vfx_texture(texture_path: String):",
+        "if not ResourceLoader.exists(texture_path):",
+        "if loaded is Texture2D:",
+        "_map_cue_label.visible = false",
+        "_map_cue_label.visible = _map_cue_visible_before_artifact_feedback",
+    ):
+        ensure(token in shell_text, errors, f"Overworld action-feedback renderer is missing exact fail-closed ownership: {token}")
+    show_start = shell_text.find("func _show_action_feedback_vfx")
+    show_end = shell_text.find("\nfunc ", show_start + 1)
+    show_block = shell_text[show_start:] if show_end < 0 else shell_text[show_start:show_end]
+    for forbidden in ("OverworldRules", "ArtifactRules", "_session", "await ", "create_timer", "create_tween"):
+        ensure(forbidden not in show_block, errors, f"Action-feedback rendering must not alter gameplay or timing authority: {forbidden}")
+
+    report_text = OVERWORLD_ACTION_FEEDBACK_VFX_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    scene_text = OVERWORLD_ACTION_FEEDBACK_VFX_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure_scene_nodes(scene_text, errors, "overworld_action_feedback_vfx_asset_runtime_report.tscn", [("OverworldActionFeedbackVfxAssetRuntimeReport", "Node")])
+    for token in (
+        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        'const SOURCE_PATH := "res://art/overworld/source/action_feedback_vfx_source.png"',
+        '"artifact_acquired": {',
+        '"artifact_equipped": {',
+        '"artifact_unequipped": {',
+        '"ui_resource_delta": {',
+        "var normal: Dictionary = await _run_presentation",
+        "var reduced: Dictionary = await _run_presentation",
+        '"vfx_missing_action_feedback"',
+        'shell.get_node_or_null("%ArtifactActionCueRow")',
+        'shell.get_node_or_null("%ResourceDeltaCueRow")',
+        'String(vfx.get("render_mode", "")) == ("action_feedback_icon" if expects_imported else "")',
+        'vfx.get("texture_size", {}) == {"x": 512, "y": 512}',
+        "host_rect.grow(0.5).encloses(row_rect)",
+        "authority_after == authority_before",
+        '"save_version": int(authority_after.get("save_version", -1))',
+        "FileAccess.get_sha256(texture_path)",
+        "image.detect_alpha() != Image.ALPHA_NONE",
+        'print("%s %s" % [REPORT_ID, JSON.stringify({"ok": true, "asset_contract": asset_contract, "rows": rows})])',
+    ):
+        ensure(token in report_text, errors, f"Action-feedback focused owner is missing exact live proof: {token}")
+    ensure(report_text.count("for viewport_size in VIEWPORT_SIZES:") == 1, errors, "Action-feedback focused owner must run both registered widths exactly once")
+    for forbidden in ("_show_action_feedback_vfx(", "_overworld_action_feedback_vfx_cue(", "_overworld_action_feedback_vfx_texture(", "_process(", "create_timer", "create_tween", "OverworldRules.perform", "session.overworld["):
+        ensure(forbidden not in report_text, errors, f"Action-feedback focused owner must observe public presentation without bypassing production: {forbidden}")
+
+    real_reports = {
+        "artifact_acquired": OVERWORLD_ARTIFACT_ACQUIRED_CUE_PLAYBACK_REPORT_SCRIPT_PATH.read_text(encoding="utf-8"),
+        "artifact_slot": OVERWORLD_ARTIFACT_SLOT_CUE_PLAYBACK_REPORT_SCRIPT_PATH.read_text(encoding="utf-8"),
+        "resource_delta": OVERWORLD_RESOURCE_DELTA_CUE_PLAYBACK_REPORT_SCRIPT_PATH.read_text(encoding="utf-8"),
+    }
+    for token in ('"res://art/overworld/runtime/vfx/artifact_claim.png"', 'bool(vfx_asset.get("imported", false)) == not reduced_motion', 'artifact_cue_icon.is_visible_in_tree() == not reduced_motion'):
+        ensure(token in real_reports["artifact_acquired"], errors, f"Real artifact-acquired owner is missing imported/fallback proof: {token}")
+    for token in ('"res://art/overworld/runtime/vfx/artifact_slot_equip.png"', '"res://art/overworld/runtime/vfx/artifact_slot_unequip.png"', 'bool(vfx_asset.get("imported", false)) == not reduced_motion'):
+        ensure(token in real_reports["artifact_slot"], errors, f"Real artifact-slot owner is missing imported/fallback proof: {token}")
+    for token in ('"res://art/overworld/runtime/vfx/resource_delta.png"', 'bool(vfx_asset.get("imported", false)) == not reduced_motion', 'cue_icon.is_visible_in_tree() == not reduced_motion'):
+        ensure(token in real_reports["resource_delta"], errors, f"Real resource-delta owner is missing imported/fallback proof: {token}")
+    exact_summary_ids = '["vfx_placeholder_adventure_spell", "vfx_placeholder_artifact_claim", "vfx_placeholder_blocked_route_marker", "vfx_placeholder_capture_flag", "vfx_placeholder_depleted_dim", "vfx_placeholder_guard_warning", "vfx_placeholder_object_visit", "vfx_placeholder_resource_delta", "vfx_placeholder_route_step", "vfx_placeholder_slot_equip", "vfx_placeholder_slot_unequip"]'
+    for path in (
+        OVERWORLD_OBJECT_RESOLUTION_VFX_REPORT_SCRIPT_PATH,
+        OVERWORLD_FIELD_SPELL_VFX_REPORT_SCRIPT_PATH,
+        OVERWORLD_GUARDED_SITE_VFX_REPORT_SCRIPT_PATH,
+        OVERWORLD_ROUTE_BLOCKED_VFX_REPORT_SCRIPT_PATH,
+        OVERWORLD_HERO_ROUTE_STEP_VFX_REPORT_SCRIPT_PATH,
+    ):
+        compatibility_text = path.read_text(encoding="utf-8")
+        ensure('int(summary.get("mapped_cue_count", 0)) == 11' in compatibility_text and exact_summary_ids in compatibility_text and 'int(summary.get("unique_texture_count", 0)) == 11' in compatibility_text and 'int(summary.get("loaded_texture_count", 0)) == 11' in compatibility_text, errors, f"Existing Overworld VFX owner must recognize exactly the eleven imported manifest textures: {path.name}")
+
+
 def validate_overworld_object_resolution_vfx_assets(errors: list[str]) -> None:
     runtime_paths = {
         "vfx_placeholder_capture_flag": OVERWORLD_OBJECT_RESOLUTION_VFX_RUNTIME_DIR / "captured.png",
@@ -31134,6 +31288,30 @@ def validate_overworld_object_resolution_vfx_assets(errors: list[str]) -> None:
                 "render_mode": "hero_route_step",
                 "scale": 0.68,
             },
+            "vfx_placeholder_artifact_claim": {
+                "event_id": "artifact_acquired",
+                "texture_path": "res://art/overworld/runtime/vfx/artifact_claim.png",
+                "render_mode": "action_feedback_icon",
+                "scale": 1.0,
+            },
+            "vfx_placeholder_slot_equip": {
+                "event_id": "artifact_equipped",
+                "texture_path": "res://art/overworld/runtime/vfx/artifact_slot_equip.png",
+                "render_mode": "action_feedback_icon",
+                "scale": 1.0,
+            },
+            "vfx_placeholder_slot_unequip": {
+                "event_id": "artifact_unequipped",
+                "texture_path": "res://art/overworld/runtime/vfx/artifact_slot_unequip.png",
+                "render_mode": "action_feedback_icon",
+                "scale": 1.0,
+            },
+            "vfx_placeholder_resource_delta": {
+                "event_id": "ui_resource_delta",
+                "texture_path": "res://art/overworld/runtime/vfx/resource_delta.png",
+                "render_mode": "action_feedback_icon",
+                "scale": 1.0,
+            },
             "vfx_placeholder_guard_warning": {
                 "event_id": "overworld_object_guarded",
                 "texture_path": "res://art/overworld/runtime/vfx/guarded_site.png",
@@ -31166,7 +31344,7 @@ def validate_overworld_object_resolution_vfx_assets(errors: list[str]) -> None:
             },
         },
     }
-    ensure(load_json(OVERWORLD_OBJECT_RESOLUTION_VFX_MANIFEST_PATH) == expected_manifest, errors, "Overworld VFX manifest must retain the exact field-spell, guarded-site, blocked-route, and three object-resolution event/cue/path/render/scale mappings")
+    ensure(load_json(OVERWORLD_OBJECT_RESOLUTION_VFX_MANIFEST_PATH) == expected_manifest, errors, "Overworld VFX manifest must retain the exact eleven field, route, action-feedback, guard, and object-resolution mappings")
     ensure(png_size(OVERWORLD_OBJECT_RESOLUTION_VFX_ATLAS_PATH) == (2172, 724), errors, "Object-resolution VFX source atlas must remain the exact 3x724 source image")
     runtime_payloads: list[bytes] = []
     for cue_id, path in runtime_paths.items():
@@ -31303,7 +31481,7 @@ def validate_overworld_field_spell_vfx_assets(errors: list[str]) -> None:
         "render_mode": "field_spell_cast",
         "scale": 1.12,
     }, errors, "Overworld VFX manifest must map the exact field-spell cue/event/texture")
-    ensure(set(cues) == {"vfx_placeholder_adventure_spell", "vfx_placeholder_route_step", "vfx_placeholder_blocked_route_marker", "vfx_placeholder_guard_warning", "vfx_placeholder_capture_flag", "vfx_placeholder_object_visit", "vfx_placeholder_depleted_dim"}, errors, "Overworld VFX manifest must not remap any other cue")
+    ensure(set(cues) == {"vfx_placeholder_adventure_spell", "vfx_placeholder_route_step", "vfx_placeholder_artifact_claim", "vfx_placeholder_slot_equip", "vfx_placeholder_slot_unequip", "vfx_placeholder_resource_delta", "vfx_placeholder_blocked_route_marker", "vfx_placeholder_guard_warning", "vfx_placeholder_capture_flag", "vfx_placeholder_object_visit", "vfx_placeholder_depleted_dim"}, errors, "Overworld VFX manifest must not remap any other cue")
     ensure(png_size(OVERWORLD_FIELD_SPELL_VFX_SOURCE_PATH) == (1254, 1254), errors, "Overworld field-spell VFX source must retain its exact square source image")
     ensure(png_size(OVERWORLD_FIELD_SPELL_VFX_RUNTIME_PATH) == (512, 512), errors, "Overworld field-spell runtime texture must be 512x512")
     header = OVERWORLD_FIELD_SPELL_VFX_RUNTIME_PATH.read_bytes()[:26]
@@ -40612,6 +40790,7 @@ def main() -> int:
     validate_resource_stockpile_icon_popover(errors)
     validate_active_play_save_written_cue_playback(errors)
     validate_active_play_load_resumed_cue_playback(errors)
+    validate_overworld_action_feedback_vfx_assets(errors)
     validate_overworld_object_resolution_vfx_assets(errors)
     validate_overworld_field_spell_vfx_assets(errors)
     validate_overworld_guarded_site_vfx_assets(errors)

@@ -58,9 +58,12 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 	if live_session == null:
 		live_session = active_session
 	var artifact_actions := shell.get_node_or_null("%ArtifactActions") as Container
+	var artifact_cue_row := shell.get_node_or_null("%ArtifactActionCueRow") as Control
+	var artifact_cue_icon := shell.get_node_or_null("%ArtifactActionCueIcon") as TextureRect
 	var artifact_cue := shell.get_node_or_null("%ArtifactActionCue") as Label
+	var map_cue := shell.get_node_or_null("%MapCue") as Label
 	var spell_blocker := shell.get_node_or_null("%SpellCastInputBlocker") as Control
-	if artifact_actions == null or artifact_cue == null or spell_blocker == null:
+	if artifact_actions == null or artifact_cue_row == null or artifact_cue_icon == null or artifact_cue == null or map_cue == null or spell_blocker == null:
 		return await _finish_case(shell, {"ok": false, "failure": "live_surface_missing"})
 
 	var malformed_before := _artifact_presentation(shell)
@@ -70,7 +73,7 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		"cue_id": "cue_artifact_equipped",
 		"artifact_id": ARTIFACT_ID,
 	})
-	var malformed_fail_closed: bool = malformed_after == malformed_before and not artifact_cue.visible and not spell_blocker.visible
+	var malformed_fail_closed: bool = malformed_after == malformed_before and not artifact_cue_row.visible and not artifact_cue_icon.visible and not artifact_cue.visible and map_cue.visible and not spell_blocker.visible
 
 	var live_before: Dictionary = live_session.to_dict()
 	var control = SessionDataScript.SessionData.new()
@@ -93,7 +96,7 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		String(equip_control_result.get("message", "")),
 		mode,
 		1
-	) and bool(equip_control_result.get("ok", false)) and equip_live_after == control.to_dict()
+	) and bool(equip_control_result.get("ok", false)) and equip_live_after == control.to_dict() and artifact_cue_row.is_visible_in_tree() and artifact_cue.is_visible_in_tree() and artifact_cue_icon.is_visible_in_tree() == not bool(mode.get("reduced_motion", false)) and not map_cue.visible
 
 	var stow_action_id := "unequip_artifact:%s" % ARTIFACT_SLOT
 	var stow_control_result: Dictionary = OverworldRules.perform_artifact_action(control, stow_action_id)
@@ -114,7 +117,7 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		String(stow_control_result.get("message", "")),
 		mode,
 		2
-	) and bool(stow_control_result.get("ok", false)) and live_after == control.to_dict()
+	) and bool(stow_control_result.get("ok", false)) and live_after == control.to_dict() and artifact_cue_row.is_visible_in_tree() and artifact_cue.is_visible_in_tree() and artifact_cue_icon.is_visible_in_tree() == not bool(mode.get("reduced_motion", false)) and not map_cue.visible
 	var nonblocking_exact: bool = equip_was_still_active and stow_exact and not spell_blocker.visible
 
 	var serial := int(stow_presentation.get("serial", 0))
@@ -139,7 +142,10 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		not bool(settled.get("active", true))
 		and int(settled.get("serial", 0)) == serial
 		and not bool(settled.get("visible", true))
+		and not artifact_cue_row.visible
+		and not artifact_cue_icon.visible
 		and not artifact_cue.visible
+		and map_cue.visible
 		and live_session.to_dict() == live_after
 	)
 
@@ -219,6 +225,8 @@ func _presentation_exact(presentation: Dictionary, event_id: String, cue_id: Str
 	var expected_vfx := [expected_fallback] if reduced_motion else (["vfx_placeholder_slot_equip"] if equip else ["vfx_placeholder_slot_unequip"])
 	var expected_audio := ["audio_placeholder_artifact_equip"] if equip else ["audio_placeholder_artifact_stow"]
 	var expected_verb := "Equipped" if equip else "Stowed"
+	var vfx_asset: Dictionary = presentation.get("vfx_asset", {}) if presentation.get("vfx_asset", {}) is Dictionary else {}
+	var expected_texture := "res://art/overworld/runtime/vfx/artifact_slot_equip.png" if equip else "res://art/overworld/runtime/vfx/artifact_slot_unequip.png"
 	return (
 		bool(presentation.get("active", false))
 		and bool(presentation.get("visible", false))
@@ -243,6 +251,12 @@ func _presentation_exact(presentation: Dictionary, event_id: String, cue_id: Str
 		and float(presentation.get("progress", -1.0)) < 1.0
 		and String(presentation.get("text", "")) == "%s: Trailsinger Boots • Boots" % expected_verb
 		and String(presentation.get("tooltip_text", "")) == result_message
+		and bool(vfx_asset.get("imported", false)) == not reduced_motion
+		and bool(vfx_asset.get("icon_visible", false)) == not reduced_motion
+		and String(vfx_asset.get("cue_id", "")) == String(expected_vfx[0])
+		and String(vfx_asset.get("texture_path", "")) == ("" if reduced_motion else expected_texture)
+		and String(vfx_asset.get("render_mode", "")) == ("" if reduced_motion else "action_feedback_icon")
+		and String(vfx_asset.get("fallback", "")) == ("text_only_feedback" if reduced_motion else "")
 	)
 
 func _finish_case(shell: Node, result: Dictionary) -> Dictionary:

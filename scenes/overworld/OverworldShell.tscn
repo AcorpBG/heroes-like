@@ -462,16 +462,6 @@ layout_mode = 2
 autowrap_mode = 3
 text = "Artifacts"
 
-[node name="ArtifactActionCue" type="Label" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/CommandPanel/CommandPad/CommandBox"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-theme_override_colors/font_color = Color(0.72, 0.92, 1, 1)
-theme_override_font_sizes/font_size = 13
-text = "Artifact slot updated"
-horizontal_alignment = 1
-autowrap_mode = 2
-
 [node name="ArtifactActions" type="VBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/CommandSpine/CommandPanel/CommandPad/CommandBox"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -597,10 +587,28 @@ clip_text = true
 text = "Gold 0 | Wood 0 | Ore 0"
 script = ExtResource("7_resource_stockpile_menu")
 
-[node name="ResourceDeltaCue" type="Label" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/ResourceChip/ResourcePad"]
+[node name="ResourceDeltaCueRow" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/ResourceChip/ResourcePad"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+mouse_filter = 2
+alignment = 1
+theme_override_constants/separation = 3
+
+[node name="ResourceDeltaCueIcon" type="TextureRect" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/ResourceChip/ResourcePad/ResourceDeltaCueRow"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(22, 22)
+layout_mode = 2
+mouse_filter = 2
+expand_mode = 3
+stretch_mode = 5
+
+[node name="ResourceDeltaCue" type="Label" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/ResourceChip/ResourcePad/ResourceDeltaCueRow"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 2
 theme_override_colors/font_color = Color(1, 0.84, 0.42, 1)
 text = "Wood +0"
@@ -641,6 +649,36 @@ theme_override_constants/margin_bottom = 6
 unique_name_in_owner = true
 layout_mode = 2
 text = "Action ready"
+
+[node name="ArtifactActionCueRow" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/CueChip/CuePad"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+mouse_filter = 2
+alignment = 1
+theme_override_constants/separation = 4
+
+[node name="ArtifactActionCueIcon" type="TextureRect" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/CueChip/CuePad/ArtifactActionCueRow"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+mouse_filter = 2
+expand_mode = 3
+stretch_mode = 5
+
+[node name="ArtifactActionCue" type="Label" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/CueChip/CuePad/ArtifactActionCueRow"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.72, 0.92, 1, 1)
+theme_override_font_sizes/font_size = 13
+text = "Artifact slot updated"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
 
 [node name="OrdersPanel" type="PanelContainer" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow"]
 unique_name_in_owner = true
