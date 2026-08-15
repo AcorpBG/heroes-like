@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `presentation-overworld-field-route-response-open-feedback-10184`. A successful live field `site_response` now publishes one exact, deduped `overworld_route_open` presentation through the existing Shell/MapView queue, with an original imported alpha VFX, deterministic 420 ms stereo production-layer sound, and distinct reduced-motion and missing-asset fallbacks. Focused 1280x720/1920x1080 proof preserves the exact Rope Lift cost, movement, active transit edge, refresh/duplicate silence, session/save authority, and cue identity; transit, shared object-resolution/audio, object-blocked, catalog, accessibility, visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Town-screen response presentation, enemy-driven route closure, packaged interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `presentation-overworld-field-route-response-open-feedback-10184`
 - Completed implementation slice: `strategic-ai-battle-pressure-near-objective-commitment-10184`. After the existing understrength/regroup authority, battle-pressure-floor selection now retains only a still-valid resource, artifact, or encounter target whose refreshed route distance is 0 or 1. The original live route now seizes `river_free_company` in 7 turns instead of abandoning it at distance 1, while the exact distance-2 reciprocal still preempts to the player town and long-range, blocked-frontier, neutral-fallback, target/task/session/public-event behavior remains intact. Focused, full headless product harness, strategic compatibility, Medium ordinal-100 health, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged strategic-AI interaction, broad balance/policy changes, Native RMG topology/parity, hardware certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `strategic-ai-battle-pressure-near-objective-commitment-10184`
 - Completed implementation slice: `presentation-overworld-guarded-site-production-audio-playback-10184`. Selected guarded resource sites now thread their exact detached `audio_placeholder_guard_warning` identity through the live Shell and play one original deterministic 44.1 kHz stereo 16-bit warning transient only after MapView accepts the complete guarded context. Context-signature ownership prevents unchanged-refresh replay; deselection, guard resolution, malformed/invalid context, and clear stay silent, while a real reselection plays once again. Focused real context and 1280x720/1920x1080 imported/missing/reduced-motion reports preserve guard/resource/route, selection/focus/input, VFX, settings/session/save, service, and other-audio authority; compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass, and both PCKs contain the asset. Blocked-object and route-open/closed audio, final sound design, packaged guarded-site interaction/listening, hardware certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -5545,7 +5547,7 @@ Non-goals:
 
 id: `presentation-overworld-blocking-object-feedback-10184`
 
-Status: in_progress.
+Status: completed.
 
 Implementation boundary:
 - expose one detached read-only blocking-object surface from the existing `OverworldRules` blocked-tile inputs for `map_objects` and resource-node body tiles, preserving their production array order and exact body-tile rules;
@@ -5563,6 +5565,29 @@ Non-goals:
 - no pathfinding, passability, body/interaction tiles, object placement/content, rewards, route decisions, movement, fog, AI, Native RMG, save/schema, or map-topology changes;
 - no hover/ambient loop, route-open/route-closed adoption, panel/layout redesign, particles, shaders, spatial audio, haptics, or global renderer changes;
 - no packaged object interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+## Selected Slice: Overworld Field Route-Response Open Feedback
+
+id: `presentation-overworld-field-route-response-open-feedback-10184`
+
+Status: completed.
+
+Implementation boundary:
+- after the existing live Overworld context-action path successfully commits `site_response`, derive one detached route-open presentation from its exact post-action recap, placement/site identity, tile, and authored `overworld_route_open` policy;
+- add one original alpha VFX and one deterministic production presentation sound mapped only to `vfx_placeholder_route_open` and `audio_placeholder_route_open`, with distinct reduced-motion and missing-asset fallbacks;
+- accept and play the cue only after the Overworld Shell confirms success, exact response recap kind, live active response state, visible site tile, and matching stable placement; dedupe unchanged refresh/duplicate serial while allowing a later independently issued response;
+- preserve route-response resources/movement/duration/delivery/transit/recovery consequences, route/pathing, input/focus, settings, session/save authority, and every existing presentation mapping.
+
+Completion criteria:
+- one real successful field response at 1280x720 and 1920x1080 publishes the exact site identity and route-open event, draws the imported VFX, and plays one exact audio record after MapView accepts it;
+- failed, unaffordable, movement-exhausted, already-active, malformed, hidden, stale, and non-response actions remain silent, while unchanged refresh and duplicate payloads do not replay;
+- reduced motion uses the exact static route-open fallback and missing assets use a distinct procedural fallback; generic route-blocked, object-blocked, object-focus, guarded, and object-resolution cues remain exact;
+- focused Rope Lift/ordinary response proof plus transit, visual, cue-catalog, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass with bounded claims.
+
+Non-goals:
+- no response-order availability, resource/movement costs, duration, delivery, transit, recovery, routing/pathfinding, fog, AI, Native RMG, save/schema, content, or map-topology changes;
+- no Town-screen response presentation, enemy-driven `overworld_route_closed` adoption, hover/ambient loops, layout redesign, particles, shaders, spatial audio, haptics, or final sound mastering;
+- no packaged route-response interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
 
 ## Progress Reconciliation
 
