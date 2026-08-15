@@ -1,0 +1,34 @@
+{
+  "items": [
+    {
+      "id": "civic",
+      "icon_id": "building_category_sigil_civic",
+      "icon_path": "res://art/towns/runtime/building_categories/civic.png",
+      "material_language": "stone gatehouse, civic pennant, and foundation step"
+    },
+    {
+      "id": "dwelling",
+      "icon_id": "building_category_sigil_dwelling",
+      "icon_path": "res://art/towns/runtime/building_categories/dwelling.png",
+      "material_language": "timber gabled hall, warm doorway, and barracks roofline"
+    },
+    {
+      "id": "economy",
+      "icon_id": "building_category_sigil_economy",
+      "icon_path": "res://art/towns/runtime/building_categories/economy.png",
+      "material_language": "brass balance scale, stacked coin, and trade crate"
+    },
+    {
+      "id": "support",
+      "icon_id": "building_category_sigil_support",
+      "icon_path": "res://art/towns/runtime/building_categories/support.png",
+      "material_language": "iron bridge brace, rope knot, and field tools"
+    },
+    {
+      "id": "magic",
+      "icon_id": "building_category_sigil_magic",
+      "icon_path": "res://art/towns/runtime/building_categories/magic.png",
+      "material_language": "observatory tower, faceted crystal star, and bounded ring"
+    }
+  ]
+}
