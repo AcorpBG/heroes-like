@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The field route-response open-feedback slice is completed. A successful live Overworld site_response now publishes one exact imported route-open VFX/audio presentation with reduced and missing fallbacks, while exact response, transit, refresh/duplicate, session, save, compatibility, repository/editor, and bounded Linux/Windows export/startup authority remain green. Select the next tracker-approved release-readiness slice; broader product gaps remain.",
+  "currentNotes": "The enemy route-closure feedback slice is completed. A real enemy seizure of a player resource with an active response route emits the exact compact route_closed reason and, after successful end-turn autosave, publishes one visible authored overworld_route_closed cue with original imported VFX, deterministic 440 ms stereo audio, reduced-motion icon, and distinct missing-asset fallback. Focused 1280x720/1920x1080, inactive-route control, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged route interaction/listening, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-field-route-response-open-feedback-10184",
-  "currentSliceId": "presentation-overworld-field-route-response-open-feedback-10184",
-  "currentSliceNotes": "Completed exact live Overworld field route-open VFX/audio after successful site_response with imported, reduced, and missing fallbacks; exact gameplay, dedupe, save, compatibility, static, and bounded platform startup gates pass.",
+  "currentSlice": "presentation-overworld-enemy-route-closure-feedback-10184",
+  "currentSliceId": "presentation-overworld-enemy-route-closure-feedback-10184",
+  "currentSliceNotes": "Completed with exact live enemy-turn route-closure identity, imported/fallback VFX, deterministic audio, focused authority proof, compatibility, repository/editor, and bounded Linux/Windows export-startup validation.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Field Route-Response Open Feedback",
-  "currentSliceUpdatedAt": "2026-08-15T22:26:59Z",
+  "currentSliceTitle": "Overworld Enemy Route-Closure Feedback",
+  "currentSliceUpdatedAt": "2026-08-15T23:17:19Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -85491,6 +85491,102 @@
         "windowsExportFreshWineStartupPassed": true
       },
       "blockedReason": null
+    },
+    {
+      "id": "presentation-overworld-enemy-route-closure-feedback-10184",
+      "title": "Overworld Enemy Route-Closure Feedback",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/animation-systems-foundation.md",
+        "docs/animation-overworld-object-state-contract-report.md",
+        "AGENTS.md"
+      ],
+      "purpose": "Adopt the already-authored overworld_route_closed presentation for the real enemy site-seizure transition that clears a still-active player response route, without changing enemy policy or route consequences.",
+      "implementationTargets": [
+        "art/overworld/source/route_closed_vfx_source.png",
+        "art/overworld/runtime/vfx/route_closed.png",
+        "art/audio/runtime/presentation/route_closed.wav",
+        "content/overworld_vfx_manifest.json",
+        "content/presentation_sfx_manifest.json",
+        "tools/generate_presentation_sfx_assets.py",
+        "scripts/core/EnemyAdventureRules.gd",
+        "scripts/autoload/PresentationAudio.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_enemy_route_closure_feedback_report.gd",
+        "tests/overworld_enemy_route_closure_feedback_report.tscn",
+        "tests/ai_hero_task_live_turn_execution_report.gd",
+        "tests/overworld_rope_lift_live_transit_report.gd",
+        "tests/animation_event_cue_catalog_report.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/accessibility_screen_reader_semantics_report.gd",
+        "tests/core_systems_regression_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_enemy_route_closure_feedback_report.tscn",
+        "tests/ai_hero_task_live_turn_execution_report.tscn",
+        "tests/overworld_rope_lift_live_transit_report.tscn",
+        "tests/animation_event_cue_catalog_report.tscn",
+        "tests/overworld_visual_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "0e60c6af29fa64c401f113a24eaf655be880c6c0",
+        "enemy_event_type": "ai_site_seized",
+        "event_id": "overworld_route_closed",
+        "vfx_cue_id": "vfx_placeholder_route_closed",
+        "audio_cue_id": "audio_placeholder_route_closed",
+        "live_enemy_route_clear_present": true,
+        "compact_transition_identity_present": false,
+        "live_presentation_present": false,
+        "runtime_vfx_asset_present": false,
+        "runtime_audio_asset_present": false
+      },
+      "completionCriteria": [
+        "A real enemy turn at 1280x720 and 1920x1080 seizes a player site with an active response route, closes its exact transit edge, retains the compact ai_site_seized event, and publishes one imported overworld_route_closed VFX/audio presentation after successful autosave",
+        "Ordinary seizure, natural expiry, hidden, malformed, stale, non-resource, autosave-failed, battle-routed, outcome-routed, refresh, and duplicate paths remain silent",
+        "Reduced motion and missing assets retain distinct exact fallbacks while enemy policy, seizure/disruption, response/transit/delivery, public-event, end-turn, session, settings, and save authority remain exact",
+        "Focused, live-turn, transit, visual, catalog, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "enemy strategy, target scoring, movement, seizure eligibility, rewards, disruption pressure, task policy, response cost/duration, transit/pathfinding, delivery, fog, event visibility/limit, save/schema, content, Native RMG, or map-topology changes",
+        "natural-expiry presentation, Town-screen response presentation, multi-closure carousel, hover or ambient loops, layout, particles, shaders, spatial audio, haptics, or final mastering",
+        "packaged interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "updatedAt": "2026-08-15T23:17:19Z",
+      "createdAt": "2026-08-15T22:32:56Z",
+      "startedAt": "2026-08-15T22:32:56Z",
+      "completedAt": "2026-08-15T23:17:19Z",
+      "notes": "Completed live behavior: enemy resource seizure appends route_closed only for a pre-seizure active player response; the successful post-autosave Shell path validates the compact visible event against mutated session authority and publishes one overworld_route_closed object-resolution cue. Original imported VFX and deterministic 440 ms stereo audio are shipped with reduced-motion and missing-asset fallbacks. Focused 1280x720/1920x1080 normal, reduced, and missing rows are exact; active/inactive enemy-turn controls, Rope Lift, shared cue/VFX, accessibility, visual, core, validator/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Platform evidence is export/startup only; packaged interaction/listening and release readiness are not claimed.",
+      "remainingWork": "None for this bounded slice. Select the next tracker-approved release-readiness implementation slice; broader release gaps remain.",
+      "validation": {
+        "focusedArtifact": "/tmp/heroes-route-closed-focused-rerun.SMu7Qi",
+        "liveTurnArtifact": "/tmp/heroes-route-closed-live-turn.O8FF8J",
+        "compatibilityArtifact": "/tmp/heroes-route-closed-compat.1IHGhX",
+        "staticEditorArtifact": "/tmp/heroes-route-closed-static.ptUJFh",
+        "linuxPackagingArtifact": "/tmp/heroes-route-closed-linux-package.EqAssA",
+        "windowsPackagingArtifact": "/tmp/heroes-route-closed-windows-package.U6x3Ub",
+        "normalViewportCount": 2,
+        "activeTransitEdgesBefore": 1,
+        "activeTransitEdgesAfter": 0,
+        "audioDurationMsec": 440,
+        "presentationSfxPackSignature": "7bbf09643cea0a288ea61a2608ad59b3bd5a1b8147a931eceea4aad42079f3cf",
+        "linuxExportHeadlessStartupPassed": true,
+        "windowsExportFreshWineStartupPassed": true
+      },
+      "blockedReason": null
     }
   ],
   "project": "heroes-like",
@@ -85501,7 +85597,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
-  "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader release gaps remain.",
+  "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, signing/publication, native Windows certification, and unrecovered Native RMG parity gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -86035,7 +86131,7 @@
   ],
   "summary": "The UI production SFX fidelity slice is completed: all six short mono generated click, select, adjust, tab, confirm, and invalid assets are replaced by distinct stereo production transients while exact cue, control, repetition, mute, input, settings, and gameplay authority remain preserved. Focused, compatibility, static/editor, and bounded Linux/Windows export/startup gates pass. Select the next tracker-approved slice; the game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-15T21:31:36Z",
+  "updatedAt": "2026-08-15T22:32:56Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

@@ -39,6 +39,7 @@ func _river_pass_live_targets_execute_on_enemy_turn() -> Dictionary:
 	_set_player_position(session, {"x": 12, "y": 12})
 	_set_resource_controller(session, "river_free_company", "player")
 	_set_resource_controller(session, "river_signal_post", "player")
+	_set_active_response(session, "river_free_company")
 	var free_company_before := _resource_controller(session, "river_free_company")
 	var signal_post_before := _resource_controller(session, "river_signal_post")
 	var encounters: Array = session.overworld.get("encounters", [])
@@ -74,6 +75,8 @@ func _river_pass_live_targets_execute_on_enemy_turn() -> Dictionary:
 	_assert_event(result.get("events", []), "ai_site_seized", "river_signal_post")
 	_assert_site_transition_event(result.get("events", []), "river_free_company", "player", MIRECLAW)
 	_assert_site_transition_event(result.get("events", []), "river_signal_post", "player", MIRECLAW)
+	_assert_site_route_closure_event(result.get("events", []), "river_free_company", true)
+	_assert_site_route_closure_event(result.get("events", []), "river_signal_post", false)
 	if _failed:
 		return {}
 	var task_board := _assert_live_task_board(session)
@@ -287,6 +290,22 @@ func _set_resource_controller(session, placement_id: String, faction_id: String)
 		return
 	_fail("Could not find resource placement %s" % placement_id)
 
+func _set_active_response(session, placement_id: String) -> void:
+	var nodes: Array = session.overworld.get("resource_nodes", [])
+	for index in range(nodes.size()):
+		var node = nodes[index]
+		if not (node is Dictionary) or String(node.get("placement_id", "")) != placement_id:
+			continue
+		node["response_origin"] = "field"
+		node["response_last_day"] = int(session.day)
+		node["response_until_day"] = int(session.day) + 2
+		node["response_commander_id"] = "hero_player"
+		node["response_security_rating"] = 2
+		nodes[index] = node
+		session.overworld["resource_nodes"] = nodes
+		return
+	_fail("Could not activate response for %s" % placement_id)
+
 func _set_player_position(session, position: Dictionary) -> void:
 	session.overworld["hero_position"] = {"x": int(position.get("x", 0)), "y": int(position.get("y", 0))}
 	for heroes_key in ["heroes", "player_heroes"]:
@@ -363,6 +382,21 @@ func _assert_site_transition_event(events: Variant, target_id: String, expected_
 			_fail("Site transition event %s expected %s->%s, got %s" % [target_id, expected_before, expected_after, JSON.stringify(event)])
 		return
 	_fail("Missing site transition event for %s in %s" % [target_id, JSON.stringify(events)])
+
+func _assert_site_route_closure_event(events: Variant, target_id: String, expected_closed: bool) -> void:
+	if not (events is Array):
+		_fail("Events payload is not an array for route closure %s" % target_id)
+		return
+	for event in events:
+		if not (event is Dictionary):
+			continue
+		if String(event.get("event_type", "")) != "ai_site_seized" or String(event.get("target_id", "")) != target_id:
+			continue
+		var reason_codes: Array = event.get("reason_codes", []) if event.get("reason_codes", []) is Array else []
+		if ("route_closed" in reason_codes) != expected_closed:
+			_fail("Site route-closure event %s expected closed=%s, got %s" % [target_id, expected_closed, JSON.stringify(event)])
+		return
+	_fail("Missing site route-closure event for %s in %s" % [target_id, JSON.stringify(events)])
 
 func _assert_progression(before: Dictionary, after: Dictionary, expected_outcome: String, label: String) -> void:
 	if after.is_empty():

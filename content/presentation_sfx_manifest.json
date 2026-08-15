@@ -80,6 +80,12 @@
       "volume_db": -12.5,
       "role": "overworld_route_open"
     },
+    "audio_placeholder_route_closed": {
+      "path": "res://art/audio/runtime/presentation/route_closed.wav",
+      "duration_msec": 440,
+      "volume_db": -12.5,
+      "role": "overworld_route_closed"
+    },
     "audio_placeholder_object_visit": {
       "path": "res://art/audio/runtime/presentation/object_visit.wav",
       "duration_msec": 300,

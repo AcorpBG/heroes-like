@@ -184,10 +184,10 @@ func _summary_exact(summary: Dictionary) -> bool:
 	return String(summary.get("manifest_path", "")) == "res://content/overworld_vfx_manifest.json" \
 		and bool(summary.get("manifest_loaded", false)) \
 		and String(summary.get("schema_id", "")) == "overworld_vfx_manifest_v1" \
-		and int(summary.get("mapped_cue_count", 0)) == 14 \
-		and summary.get("mapped_cue_ids", []) == ["vfx_placeholder_adventure_spell", "vfx_placeholder_artifact_claim", "vfx_placeholder_blocked_route_marker", "vfx_placeholder_capture_flag", "vfx_placeholder_depleted_dim", "vfx_placeholder_guard_warning", "vfx_placeholder_object_blocked_marker", "vfx_placeholder_object_focus_ring", "vfx_placeholder_object_visit", "vfx_placeholder_resource_delta", "vfx_placeholder_route_open", "vfx_placeholder_route_step", "vfx_placeholder_slot_equip", "vfx_placeholder_slot_unequip"] \
-		and int(summary.get("unique_texture_count", 0)) == 14 \
-		and int(summary.get("loaded_texture_count", 0)) == 14 \
+		and int(summary.get("mapped_cue_count", 0)) == 15 \
+		and summary.get("mapped_cue_ids", []) == ["vfx_placeholder_adventure_spell", "vfx_placeholder_artifact_claim", "vfx_placeholder_blocked_route_marker", "vfx_placeholder_capture_flag", "vfx_placeholder_depleted_dim", "vfx_placeholder_guard_warning", "vfx_placeholder_object_blocked_marker", "vfx_placeholder_object_focus_ring", "vfx_placeholder_object_visit", "vfx_placeholder_resource_delta", "vfx_placeholder_route_closed", "vfx_placeholder_route_open", "vfx_placeholder_route_step", "vfx_placeholder_slot_equip", "vfx_placeholder_slot_unequip"] \
+		and int(summary.get("unique_texture_count", 0)) == 15 \
+		and int(summary.get("loaded_texture_count", 0)) == 15 \
 		and summary.get("missing_texture_paths", []) == []
 
 func _finish(map_view: Control, result: Dictionary) -> Dictionary:

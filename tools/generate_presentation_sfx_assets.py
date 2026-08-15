@@ -101,6 +101,13 @@ SPECS = {
         "peak": 0.66,
         "pan": 0.02,
     },
+    "audio_placeholder_route_closed": {
+        "kind": "threshold_close",
+        "fundamental": 174.0,
+        "metal": 522.0,
+        "peak": 0.66,
+        "pan": -0.02,
+    },
     "audio_placeholder_object_visit": {
         "kind": "waypoint_acknowledge", "fundamental": 440.0, "metal": 880.0, "peak": 0.52, "pan": 0.08,
     },
@@ -218,6 +225,12 @@ def layered_sample(kind: str, fundamental: float, metal: float, t: float, progre
         horizon = smoothstep(0.08, 0.52, progress) * (1.0 - smoothstep(0.76, 1.0, progress))
         answer = math.sin(math.tau * metal * 1.5 * t + phase * 0.7) * horizon * 0.28
         return (gate + chime + answer + noise * transient * 0.08) * envelope(progress)
+    if kind == "threshold_close":
+        gate = math.sin(math.tau * fundamental * (1.10 - progress * 0.18) * t + phase) * 0.34
+        iron = math.sin(math.tau * metal * t - phase) * 0.24
+        slam = max(0.0, 1.0 - abs(progress - 0.46) / 0.10) * (gate + iron + noise * 0.34)
+        warning = math.sin(math.tau * fundamental * 0.5 * t + phase * 0.6) * smoothstep(0.38, 0.62, progress) * 0.22
+        return (gate + iron + slam * 0.58 + warning + noise * transient * 0.12) * envelope(progress)
     if kind == "waypoint_acknowledge":
         note = math.sin(math.tau * fundamental * t + phase) * 0.30
         answer = max(0.0, 1.0 - abs(progress - 0.46) / 0.18) * math.sin(math.tau * metal * t - phase) * 0.24
