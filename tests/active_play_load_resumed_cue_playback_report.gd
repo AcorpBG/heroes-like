@@ -95,6 +95,7 @@ func _stage(stage: String) -> void:
 
 
 func _exercise_route(route: Dictionary, mode: Dictionary) -> Dictionary:
+	PresentationAudio.validation_reset()
 	AppRouter.validation_clear_pending_load_resumed_presentation()
 	var route_id := String(route.get("id", ""))
 	var expected_target := String(route.get("target", ""))
@@ -141,6 +142,7 @@ func _exercise_route(route: Dictionary, mode: Dictionary) -> Dictionary:
 	var cue: Dictionary = shell.call("validation_load_resumed_cue_snapshot")
 	var policy: Dictionary = cue.get("policy", {}) if cue.get("policy", {}) is Dictionary else {}
 	var vfx: Dictionary = cue.get("vfx_asset", {}) if cue.get("vfx_asset", {}) is Dictionary else {}
+	var audio: Dictionary = cue.get("audio_playback_record", {}) if cue.get("audio_playback_record", {}) is Dictionary else {}
 	var identity: Dictionary = cue.get("summary_identity", {}) if cue.get("summary_identity", {}) is Dictionary else {}
 	var expected_state := "load_icon_static" if reduced_motion else "load_resume"
 	var active_session := SessionState.ensure_active_session()
@@ -170,6 +172,7 @@ func _exercise_route(route: Dictionary, mode: Dictionary) -> Dictionary:
 		"copy_unchanged": bool(cue.get("status_text_unchanged", false)) and bool(cue.get("status_tooltip_unchanged", false)),
 		"status_highlighted": cue.get("status_modulate") != cue.get("status_base_modulate"),
 		"vfx_exact": _vfx_exact(vfx, save_button, not reduced_motion, "system_load_resumed", "vfx_placeholder_load_resume", "res://art/ui/runtime/system_feedback/load_resume.png"),
+		"audio_exact": _audio_exact(audio, "audio_placeholder_load_resume", "res://art/audio/runtime/presentation/load_resume.wav", "SystemLoadResumedCuePresenter", "system_load_resumed") and PresentationAudio.validation_records().size() == 1,
 		"pending_consumed": AppRouter.validation_pending_load_resumed_presentation().is_empty(),
 		"save_bytes_exact": _file_state(save_path) == save_state_before,
 		"summary_authority_exact": _summary_authority() == summaries_before,
@@ -189,6 +192,7 @@ func _exercise_route(route: Dictionary, mode: Dictionary) -> Dictionary:
 		or int(refreshed.get("activation_count", 0)) != 1
 		or status_control.get_global_rect() != status_rect
 		or active_session.to_dict() != session_after_route
+		or PresentationAudio.validation_records().size() != 1
 	):
 		return _fail_row("%s refresh replayed or changed the load cue." % route_id)
 	save_button.grab_focus()
@@ -196,7 +200,7 @@ func _exercise_route(route: Dictionary, mode: Dictionary) -> Dictionary:
 		return _fail_row("%s load cue blocked active-play focus." % route_id)
 	if presenter != null:
 		var malformed: Dictionary = presenter.call("present", {"event_id": "system_load_resumed"})
-		if not malformed.is_empty() or int(shell.call("validation_load_resumed_cue_snapshot").get("activation_count", 0)) != 1:
+		if not malformed.is_empty() or int(shell.call("validation_load_resumed_cue_snapshot").get("activation_count", 0)) != 1 or PresentationAudio.validation_records().size() != 1:
 			return _fail_row("%s malformed payload replayed the load cue." % route_id)
 	await get_tree().create_timer(0.8).timeout
 	await get_tree().process_frame
@@ -208,6 +212,7 @@ func _exercise_route(route: Dictionary, mode: Dictionary) -> Dictionary:
 		or bool((expired.get("vfx_asset", {}) as Dictionary).get("icon_visible", true))
 		or active_session.to_dict() != session_after_route
 		or _file_state(save_path) != save_state_before
+		or PresentationAudio.validation_records().size() != 1
 	):
 		return _fail_row("%s load cue did not expire cleanly: %s." % [route_id, JSON.stringify(expired)])
 	return {
@@ -219,6 +224,24 @@ func _exercise_route(route: Dictionary, mode: Dictionary) -> Dictionary:
 		"day": session.day,
 		"resume_target": expected_target,
 	}
+
+
+func _audio_exact(audio: Dictionary, cue_id: String, asset_path: String, source: String, role: String) -> bool:
+	return (
+		bool(audio.get("played", false))
+		and bool(audio.get("supported", false))
+		and bool(audio.get("player_created", false))
+		and String(audio.get("cue_id", "")) == cue_id
+		and String(audio.get("asset_path", "")) == asset_path
+		and String(audio.get("source", "")) == source
+		and String(audio.get("role", "")) == role
+		and String(audio.get("playback_source", "")) == "imported_wav"
+		and int(audio.get("imported_asset_count", 0)) == 1
+		and int(audio.get("generated_fallback_count", -1)) == 0
+		and int(audio.get("stream_mix_rate", 0)) == 44100
+		and bool(audio.get("stream_stereo", false))
+		and int(audio.get("stream_loop_mode", -1)) == AudioStreamWAV.LOOP_DISABLED
+	)
 
 
 func _vfx_exact(vfx: Dictionary, host: Control, expects_imported: bool, event_id: String, cue_id: String, texture_path: String) -> bool:

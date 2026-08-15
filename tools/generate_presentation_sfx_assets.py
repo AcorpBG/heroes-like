@@ -52,6 +52,20 @@ SPECS = {
         "peak": 0.58,
         "pan": -0.03,
     },
+    "audio_placeholder_save_confirm": {
+        "kind": "ledger_seal",
+        "fundamental": 523.0,
+        "metal": 1046.0,
+        "peak": 0.54,
+        "pan": 0.04,
+    },
+    "audio_placeholder_load_resume": {
+        "kind": "continuity_chime",
+        "fundamental": 330.0,
+        "metal": 990.0,
+        "peak": 0.58,
+        "pan": -0.05,
+    },
     "audio_placeholder_town_build": {
         "kind": "masonry_seal",
         "fundamental": 118.0,
@@ -121,6 +135,16 @@ def layered_sample(kind: str, fundamental: float, metal: float, t: float, progre
         air = noise * (0.08 + max(0.0, math.sin(math.pi * progress)) * 0.14)
         pulse = math.sin(math.tau * 5.0 * progress) * harmonic * 0.28
         return (body + harmonic + air + pulse) * envelope(progress)
+    if kind == "ledger_seal":
+        stamp = math.sin(math.tau * fundamental * t + phase) * 0.32
+        rim = math.sin(math.tau * metal * t - phase) * 0.22
+        confirmation = max(0.0, 1.0 - abs(progress - 0.38) / 0.14) * math.sin(math.tau * metal * 1.5 * t) * 0.20
+        return (stamp + rim + confirmation + noise * transient * 0.12) * envelope(progress)
+    if kind == "continuity_chime":
+        root = math.sin(math.tau * fundamental * t + phase) * 0.30
+        bell = math.sin(math.tau * metal * t - phase) * 0.22
+        rise = smoothstep(0.0, 0.48, progress) * (1.0 - smoothstep(0.62, 1.0, progress))
+        return (root + bell + bell * rise * 0.38 + noise * transient * 0.08) * envelope(progress)
     raise ValueError(f"Unsupported presentation sound kind: {kind}")
 
 
