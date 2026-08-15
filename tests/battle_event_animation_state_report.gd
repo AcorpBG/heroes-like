@@ -30,6 +30,7 @@ func _run() -> void:
 	_validate_fallback_states()
 	_validate_core_vfx_asset_manifest()
 	_validate_core_vfx_asset_surface()
+	_validate_production_sfx_asset_surface()
 	_validate_spell_vfx_asset_surface()
 	_validate_state_path_vfx_asset_surface()
 	_validate_defend_state()
@@ -240,6 +241,86 @@ func _validate_spell_vfx_asset_surface() -> void:
 	_report["cases"]["spell_vfx_assets"] = {
 		"imported": playback,
 		"procedural_fallback": fallback_playback,
+	}
+
+func _validate_production_sfx_asset_surface() -> void:
+	var expected_audio_ids := [
+		"audio_placeholder_ranged_release",
+		"audio_placeholder_status_apply",
+		"audio_placeholder_melee_release",
+		"audio_placeholder_hit",
+		"audio_placeholder_unit_rout",
+		"audio_placeholder_cast",
+		"audio_placeholder_unit_step",
+		"audio_placeholder_defend",
+		"audio_placeholder_retaliation",
+		"audio_placeholder_retreat_order",
+		"audio_placeholder_surrender_order",
+		"audio_placeholder_turn_ready",
+		"audio_placeholder_status_clear",
+		"audio_placeholder_idle_soft",
+		"audio_spell_cinder_burst",
+		"audio_spell_coal_rain",
+		"audio_spell_sunlance_arc",
+		"audio_spell_briar_bind",
+		"audio_spell_graft_mend",
+		"audio_spell_prism_bastion",
+		"audio_spell_command_ward",
+	]
+	var parsed = JSON.parse_string(FileAccess.get_file_as_string("res://content/battle_sfx_manifest.json"))
+	if not (parsed is Dictionary):
+		_error("Battle production SFX manifest did not parse as a Dictionary: %s" % parsed)
+		return
+	var manifest: Dictionary = parsed
+	_expect_equal("battle production sfx manifest schema", String(manifest.get("schema", "")), "battle_runtime_sfx_manifest_v1")
+	_expect_int("battle production sfx sample rate", int(manifest.get("sample_rate_hz", 0)), 44100)
+	_expect_int("battle production sfx channel count", int(manifest.get("channel_count", 0)), 2)
+	_expect_int("battle production sfx sample width", int(manifest.get("sample_width_bits", 0)), 16)
+	_expect_equal("battle production sfx asset tier", String(manifest.get("asset_tier", "")), "production_layered_v1")
+	_expect_equal("battle production sfx final approval remains open", str(bool(manifest.get("final_sound_design", true))), "false")
+	var cues: Dictionary = manifest.get("cues", {}) if manifest.get("cues", {}) is Dictionary else {}
+	var observed_audio_ids: Array = cues.keys()
+	observed_audio_ids.sort()
+	expected_audio_ids.sort()
+	_expect_equal("battle production sfx exact cue ids", JSON.stringify(observed_audio_ids), JSON.stringify(expected_audio_ids))
+	var view := BattleBoardViewScript.new()
+	add_child(view)
+	var playbacks := {}
+	for audio_id_value in expected_audio_ids:
+		var audio_id := String(audio_id_value)
+		var cue: Dictionary = cues.get(audio_id, {}) if cues.get(audio_id, {}) is Dictionary else {}
+		var path := String(cue.get("path", ""))
+		if not ResourceLoader.exists(path):
+			_error("Battle production SFX resource does not exist for %s: %s" % [audio_id, path])
+			continue
+		var stream = load(path)
+		if not (stream is AudioStreamWAV):
+			_error("Battle production SFX resource is not AudioStreamWAV for %s: %s" % [audio_id, stream])
+			continue
+		_expect_int("battle production sfx live sample rate %s" % audio_id, int(stream.mix_rate), 44100)
+		_expect_equal("battle production sfx live stereo %s" % audio_id, str(bool(stream.stereo)), "true")
+		view.validation_reset_audio_mix()
+		var playback: Dictionary = view.validation_play_audio_cue(audio_id, "production_%s" % audio_id, 1)
+		_expect_equal("battle production sfx imported source %s" % audio_id, String(playback.get("source", "")), "imported_wav")
+		_expect_equal("battle production sfx asset path %s" % audio_id, String(playback.get("asset_path", "")), path)
+		_expect_equal("battle production sfx role %s" % audio_id, String(playback.get("role", "")), String(cue.get("role", "")))
+		_expect_int("battle production sfx duration %s" % audio_id, int(playback.get("duration_msec", 0)), int(cue.get("duration_msec", 0)))
+		_expect_equal("battle production sfx priority %s" % audio_id, String(playback.get("priority_class", "")), String(cue.get("priority_class", "")))
+		_expect_int("battle production sfx cooldown %s" % audio_id, int(playback.get("repeat_cooldown_msec", 0)), int(cue.get("repeat_cooldown_msec", 0)))
+		_expect_equal("battle production sfx played %s" % audio_id, str(bool(playback.get("played", false))), "true")
+		playbacks[audio_id] = playback
+	view.validation_reset_audio_mix()
+	view.set("_battle_sfx_manifest_loaded", true)
+	view.set("_battle_sfx_manifest", {"schema": "battle_runtime_sfx_manifest_v1", "cues": {}})
+	var fallback: Dictionary = view.validation_play_audio_cue("audio_placeholder_hit", "production_fallback", 2)
+	_expect_equal("battle production sfx missing mapping fallback source", String(fallback.get("source", "")), "generated_waveform")
+	_expect_equal("battle production sfx missing mapping fallback played", str(bool(fallback.get("played", false))), "true")
+	view.validation_reset_audio_mix()
+	view.queue_free()
+	_report["cases"]["production_sfx_assets"] = {
+		"cue_count": expected_audio_ids.size(),
+		"playbacks": playbacks,
+		"generated_fallback": fallback,
 	}
 
 func _validate_state_path_vfx_asset_surface() -> void:

@@ -2,20 +2,20 @@
 
 Slice: `battle-runtime-sfx-asset-layer-20260523-10184`
 
-This slice adds committed original WAV assets for current battle audio cue ids. It moves battle presentation beyond generated-only tones while keeping the existing generated waveform fallback for missing or unloadable assets.
+The original runtime slice added committed WAV assets for current battle audio cue ids. The production-fidelity follow-up now replaces the complete simple-tone payload with deterministic layered stereo assets while keeping the established loader, mix policy, and generated waveform fallback.
 
 ## Implementation
 
 - Added `content/battle_sfx_manifest.json` with schema `battle_runtime_sfx_manifest_v1`.
-- Added deterministic source generation in `tools/generate_battle_sfx_assets.py`.
-- Added 14 short WAV assets under `art/audio/runtime/battle/` for ranged release, status apply, melee, hit, rout, cast, movement, defend, retaliation, retreat, surrender, turn-ready, status-clear, and idle-soft cues.
+- `tools/generate_battle_sfx_assets.py` now renders cue-specific tonal, transient, filtered-noise, modulation, and stereo-width layers, removes DC, applies boundary fades, and normalizes each cue to a bounded peak.
+- The complete 21-cue pack under `art/audio/runtime/battle/` uses 44.1 kHz stereo 16-bit PCM. It covers the fourteen core action/state cues plus seven spell-specific cues, with 21 byte-distinct payloads.
 - Updated `BattleBoardView` so `_play_audio_cue` prefers manifest-backed imported WAV streams before falling back to generated `AudioStreamGenerator` playback.
 - Extended `audio_playback` validation records with `imported_asset_count`, `generated_fallback_count`, `asset_playbacks`, manifest path, asset paths, bus, mute state, and lifecycle expiry.
 
 ## Validation Surface
 
-`tests/battle_event_animation_state_report.tscn` now verifies that the ranged/status runtime case loads committed battle SFX assets and reports the `ranged_release.wav` asset path. `tests/validate_repo.py` gates the manifest schema, cue coverage, WAV headers, generator contract, board integration tokens, focused report tokens, and this report.
+`tests/battle_event_animation_state_report.tscn` loads and plays every exact cue path, proves live 44.1 kHz stereo imports, preserves role/duration/priority/cooldown policy, and retains a missing-manifest generated-waveform control. `tests/validate_repo.py` separately proves the committed source payloads are stereo 16-bit PCM and gates exact cue coverage, duration, bounded peaks, non-silent channels, channel distinction, clean boundaries, 21 unique hashes, generator contract, and runtime ownership.
 
 ## Non-Claims
 
-No final sound design approval is claimed. These are deterministic runtime SFX assets and a loading path, not a final authored audio direction, mixer mastering pass, platform audio certification, music layer, ambience layer, UI audio replacement, or combat balance pass.
+No final sound design approval is claimed. These are production-fidelity deterministic runtime assets, not a final mastering pass, platform audio certification, music layer, ambience layer, UI audio replacement, hardware listening approval, or combat balance pass.
