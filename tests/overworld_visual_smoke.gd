@@ -2640,7 +2640,7 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 	if not _assert_art_sprite(wood_presentation, "lumber_wagon", false):
 		return false
 	var artifact_presentation: Dictionary = shell.call("validation_tile_presentation", 2, 0)
-	if not _assert_art_sprite(artifact_presentation, "adventurers_bundle", false):
+	if not _assert_art_sprite(artifact_presentation, "artifact_icon_trailsinger_boots", false):
 		return false
 	var fallback_presentation: Dictionary = shell.call("validation_tile_presentation", 2, 3)
 	var fallback_art: Dictionary = fallback_presentation.get("art_presentation", {})
