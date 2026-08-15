@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld enemy commander sprite adoption slice is completed. Strict live identity resolution now reuses the six shipped faction commander sprites while preserving the hostile unit-icon/camp fallback and all encounter authority. Select the next tracker-approved release-readiness implementation slice.",
+  "currentNotes": "The Overworld object-resolution VFX asset adoption slice is completed. Three original imported alpha textures now render capture, visited, and depleted events through an exact fail-closed manifest while preserving existing event, tile, timing, reduced-motion, dynamic-layer, session, save, and procedural fallback authority. Select the next tracker-approved release-readiness implementation slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-enemy-commander-sprite-adoption-10184",
-  "currentSliceId": "presentation-overworld-enemy-commander-sprite-adoption-10184",
-  "currentSliceNotes": "Completed strict strategic-raid commander sprite adoption for all six factions with exact unit-icon/camp fallback, focused 1280x720 and 1920x1080 runtime proof, compatibility/static/editor gates, and bounded Linux and Windows export/startup evidence. Packaged raid interaction and release readiness remain unclaimed.",
+  "currentSlice": "presentation-overworld-object-resolution-vfx-asset-adoption-10184",
+  "currentSliceId": "presentation-overworld-object-resolution-vfx-asset-adoption-10184",
+  "currentSliceNotes": "Three original capture, visited, and depleted textures are adopted through an exact local manifest; focused, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass with bounded claims.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Enemy Commander Sprite Adoption",
-  "currentSliceUpdatedAt": "2026-08-15T08:54:27Z",
+  "currentSliceTitle": "Overworld Object Resolution VFX Asset Adoption",
+  "currentSliceUpdatedAt": "2026-08-15T09:23:55Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19849,6 +19849,28 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "id": "presentation-overworld-object-resolution-vfx-asset-adoption-10184",
+      "title": "Overworld Object Resolution VFX Asset Adoption",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/screen-wireframes.md", "AGENTS.md"],
+      "purpose": "Replace the live capture, visit, and depletion procedural placeholder effects with three distinct original textures without changing their established object-resolution authority.",
+      "implementationTargets": ["art/overworld/source/object_resolution_vfx_atlas.png", "art/overworld/runtime/vfx/object_resolution/", "content/overworld_vfx_manifest.json", "scenes/overworld/OverworldMapView.gd", "tests/overworld_object_resolution_vfx_asset_runtime_report.gd", "tests/overworld_object_resolution_vfx_asset_runtime_report.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "testOwners": ["tests/overworld_object_resolution_vfx_asset_runtime_report.tscn", "tests/overworld_object_resolution_cue_playback_report.tscn", "tests/overworld_full_route_movement_regression.tscn", "tests/overworld_visual_smoke.tscn", "tests/accessibility_screen_reader_semantics_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/validate_repo.py"],
+      "baseline": {"head": "19c8883b774e163b9e55e188c45abc2cc236516f", "selected_event_ids": ["overworld_object_captured", "overworld_object_visited", "overworld_object_depleted"], "selected_vfx_cue_ids": ["vfx_placeholder_capture_flag", "vfx_placeholder_object_visit", "vfx_placeholder_depleted_dim"], "distinct_runtime_texture_count": 0, "live_rendering": "procedural_geometry_only", "implementation_or_runtime_started": false},
+      "completionCriteria": ["Three selected object-resolution cue ids map one-to-one to distinct original imported textures and no other cue is remapped", "Missing map or missing texture falls back to the exact existing procedural body for the same event", "Real 1280x720 and 1920x1080 live proof preserves exact event, tile, progress, reduced-motion, dynamic-layer, session, and save version 9 authority", "Object-resolution, repeatable-site, guarded-site, full-route, broad Overworld visual, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"],
+      "nonGoals": ["object, resource, artifact, reward, capture, visit, depletion, route, movement, fog, input, timing, animation-policy, AI, save-schema, map-topology, or Native-RMG changes", "other Overworld cues, Battle VFX, particles, shaders, audio, object sprites, layout, focus, or broad renderer changes", "packaged object interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"],
+      "createdAt": "2026-08-15T08:59:32Z",
+      "startedAt": "2026-08-15T08:59:32Z",
+      "updatedAt": "2026-08-15T09:23:55Z",
+      "completedAt": "2026-08-15T09:23:55Z",
+      "notes": "Implemented one original three-panel source atlas, three distinct 512x512 alpha runtime textures, an exact three-cue local manifest, and asset-first live rendering with the prior procedural bodies retained fail closed. Focused runtime at 1280x720 and 1920x1080 proved six imported draws, six missing-texture fallbacks, six reduced-motion fallbacks, containment, unchanged session authority, and save version 9. Object-resolution playback, full-route movement, broad Overworld visual, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup gates pass. Packaged object interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null
+    },
     {
       "id": "presentation-overworld-enemy-commander-sprite-adoption-10184",
       "title": "Overworld Enemy Commander Sprite Adoption",

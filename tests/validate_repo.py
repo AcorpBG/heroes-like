@@ -131,6 +131,11 @@ OVERWORLD_MAP_VIEW_SCRIPT_PATH = ROOT / "scenes" / "overworld" / "OverworldMapVi
 OVERWORLD_FULL_ROUTE_MOVEMENT_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "overworld_full_route_movement_regression.gd"
 OVERWORLD_OBJECT_RESOLUTION_CUE_PLAYBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_object_resolution_cue_playback_report.gd"
 OVERWORLD_OBJECT_RESOLUTION_CUE_PLAYBACK_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_object_resolution_cue_playback_report.tscn"
+OVERWORLD_OBJECT_RESOLUTION_VFX_MANIFEST_PATH = CONTENT_DIR / "overworld_vfx_manifest.json"
+OVERWORLD_OBJECT_RESOLUTION_VFX_ATLAS_PATH = ROOT / "art" / "overworld" / "source" / "object_resolution_vfx_atlas.png"
+OVERWORLD_OBJECT_RESOLUTION_VFX_RUNTIME_DIR = ROOT / "art" / "overworld" / "runtime" / "vfx" / "object_resolution"
+OVERWORLD_OBJECT_RESOLUTION_VFX_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_object_resolution_vfx_asset_runtime_report.gd"
+OVERWORLD_OBJECT_RESOLUTION_VFX_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_object_resolution_vfx_asset_runtime_report.tscn"
 OVERWORLD_FIELD_SPELL_CAST_CUE_PLAYBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_field_spell_cast_cue_playback_report.gd"
 OVERWORLD_FIELD_SPELL_CAST_CUE_PLAYBACK_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_field_spell_cast_cue_playback_report.tscn"
 OVERWORLD_ARTIFACT_SLOT_CUE_PLAYBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_artifact_slot_cue_playback_report.gd"
@@ -30871,6 +30876,164 @@ def validate_active_play_load_resumed_cue_playback(errors: list[str]) -> None:
         ensure(forbidden not in report_text, errors, f"Active-play load-resumed report must drive the real Main Menu action without bypassing production: {forbidden}")
 
 
+def validate_overworld_object_resolution_vfx_assets(errors: list[str]) -> None:
+    runtime_paths = {
+        "vfx_placeholder_capture_flag": OVERWORLD_OBJECT_RESOLUTION_VFX_RUNTIME_DIR / "captured.png",
+        "vfx_placeholder_object_visit": OVERWORLD_OBJECT_RESOLUTION_VFX_RUNTIME_DIR / "visited.png",
+        "vfx_placeholder_depleted_dim": OVERWORLD_OBJECT_RESOLUTION_VFX_RUNTIME_DIR / "depleted.png",
+    }
+    required_paths = (
+        OVERWORLD_MAP_VIEW_SCRIPT_PATH,
+        OVERWORLD_OBJECT_RESOLUTION_VFX_MANIFEST_PATH,
+        OVERWORLD_OBJECT_RESOLUTION_VFX_ATLAS_PATH,
+        OVERWORLD_OBJECT_RESOLUTION_VFX_REPORT_SCRIPT_PATH,
+        OVERWORLD_OBJECT_RESOLUTION_VFX_REPORT_SCENE_PATH,
+        *runtime_paths.values(),
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing object-resolution VFX asset owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    expected_manifest = {
+        "schema_id": "overworld_vfx_manifest_v1",
+        "cues": {
+            "vfx_placeholder_capture_flag": {
+                "event_id": "overworld_object_captured",
+                "texture_path": "res://art/overworld/runtime/vfx/object_resolution/captured.png",
+                "render_mode": "object_resolution",
+                "scale": 1.16,
+            },
+            "vfx_placeholder_object_visit": {
+                "event_id": "overworld_object_visited",
+                "texture_path": "res://art/overworld/runtime/vfx/object_resolution/visited.png",
+                "render_mode": "object_resolution",
+                "scale": 1.08,
+            },
+            "vfx_placeholder_depleted_dim": {
+                "event_id": "overworld_object_depleted",
+                "texture_path": "res://art/overworld/runtime/vfx/object_resolution/depleted.png",
+                "render_mode": "object_resolution",
+                "scale": 1.12,
+            },
+        },
+    }
+    ensure(load_json(OVERWORLD_OBJECT_RESOLUTION_VFX_MANIFEST_PATH) == expected_manifest, errors, "Object-resolution VFX manifest must retain the exact three event/cue/path/render/scale mappings")
+    ensure(png_size(OVERWORLD_OBJECT_RESOLUTION_VFX_ATLAS_PATH) == (2172, 724), errors, "Object-resolution VFX source atlas must remain the exact 3x724 source image")
+    runtime_payloads: list[bytes] = []
+    for cue_id, path in runtime_paths.items():
+        ensure(png_size(path) == (512, 512), errors, f"Object-resolution VFX runtime texture must be 512x512: {cue_id}")
+        header = path.read_bytes()[:26]
+        ensure(len(header) >= 26 and header[25] in {4, 6}, errors, f"Object-resolution VFX runtime texture must retain a PNG alpha channel: {cue_id}")
+        runtime_payloads.append(path.read_bytes())
+    ensure(len(set(runtime_payloads)) == 3, errors, "Object-resolution VFX runtime textures must remain three distinct imported effects")
+
+    def function_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}")
+        if start < 0:
+            return ""
+        end = text.find("\nfunc ", start + 1)
+        return text[start:] if end < 0 else text[start:end]
+
+    map_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
+    for token in (
+        'const OVERWORLD_VFX_MANIFEST_PATH := "res://content/overworld_vfx_manifest.json"',
+        "var _overworld_vfx_manifest: Dictionary = {}",
+        "var _overworld_vfx_manifest_loaded := false",
+        "var _overworld_vfx_textures: Dictionary = {}",
+        "var _overworld_vfx_texture_missing: Dictionary = {}",
+        "var _object_resolution_vfx_cue_ids: Array = []",
+        "var _object_resolution_last_draw: Dictionary = {}",
+        "_load_overworld_vfx_manifest()",
+        '_object_resolution_vfx_cue_ids = (presentation.get("selected_vfx_cue_ids", []) as Array).duplicate(true)',
+        '"selected_vfx_cue_ids": _object_resolution_vfx_cue_ids.duplicate(true)',
+        '"vfx_asset": _object_resolution_vfx_asset_state()',
+        '"vfx_draw": _object_resolution_last_draw.duplicate(true)',
+        "func validation_object_resolution_vfx_asset_summary() -> Dictionary:",
+    ):
+        ensure(token in map_text, errors, f"OverworldMapView is missing object-resolution VFX asset ownership: {token}")
+    draw_block = function_block(map_text, "_draw_object_resolution_presentation")
+    imported_block = function_block(map_text, "_draw_object_resolution_imported_vfx")
+    procedural_block = function_block(map_text, "_draw_object_resolution_procedural_vfx")
+    asset_state_block = function_block(map_text, "_object_resolution_vfx_asset_state")
+    loader_block = function_block(map_text, "_load_overworld_vfx_manifest")
+    texture_block = function_block(map_text, "_overworld_vfx_texture_for_path")
+    ensure(draw_block.find("_draw_object_resolution_imported_vfx(rect, progress)") < draw_block.find("_draw_object_resolution_procedural_vfx(rect, progress)"), errors, "Object-resolution drawing must prefer the imported asset and retain the existing procedural body as fallback")
+    for token in (
+        "_object_resolution_vfx_asset_state()",
+        'if not bool(asset_state.get("uses_imported_asset", false)):',
+        '_overworld_vfx_texture_for_path(String(asset_state.get("texture_path", "")))',
+        "var motion_progress := progress if _object_resolution_allows_large_motion else 0.35",
+        "var alpha := clampf(1.0 - progress * 0.72, 0.24, 1.0)",
+        '_canvas_draw_texture_rect(texture, draw_rect, false, Color(1.0, 1.0, 1.0, alpha))',
+        '"mode": "imported_texture"',
+        "return true",
+    ):
+        ensure(token in imported_block, errors, f"Imported object-resolution draw path is missing exact live behavior: {token}")
+    for token in (
+        'if _object_resolution_event_id == "overworld_object_captured":',
+        'elif _object_resolution_event_id == "overworld_object_visited":',
+        "_canvas_draw_colored_polygon",
+        "_canvas_draw_polyline",
+        '"mode": "existing_procedural_object_resolution_body"',
+    ):
+        ensure(token in procedural_block, errors, f"Existing object-resolution procedural fallback was not preserved: {token}")
+    for token in (
+        "_object_resolution_vfx_cue_ids.size() == 1",
+        "event_id == _object_resolution_event_id",
+        'render_mode == "object_resolution"',
+        "texture_loaded",
+        '"uses_procedural_fallback": not uses_imported_asset',
+        '"fallback_mode": "existing_procedural_object_resolution_body"',
+    ):
+        ensure(token in asset_state_block, errors, f"Object-resolution VFX resolver is missing fail-closed event/asset ownership: {token}")
+    for forbidden in ("session.", "_session.", "await ", "create_timer", "create_tween", "AnimationCueCatalog", "OverworldRules"):
+        ensure(forbidden not in imported_block and forbidden not in asset_state_block, errors, f"Object-resolution asset draw/resolver must not change gameplay or timing authority: {forbidden}")
+    for token in (
+        "if _overworld_vfx_manifest_loaded:",
+        "_overworld_vfx_manifest_loaded = true",
+        "FileAccess.file_exists(OVERWORLD_VFX_MANIFEST_PATH)",
+        "FileAccess.get_file_as_string(OVERWORLD_VFX_MANIFEST_PATH)",
+        "JSON.parse_string(text)",
+    ):
+        ensure(token in loader_block, errors, f"Object-resolution VFX manifest loader is missing bounded local loading: {token}")
+    for token in (
+        "_overworld_vfx_texture_missing.has(texture_path)",
+        "_overworld_vfx_textures.has(texture_path)",
+        "ResourceLoader.exists(texture_path)",
+        "load(texture_path)",
+        "loaded is Texture2D",
+    ):
+        ensure(token in texture_block, errors, f"Object-resolution VFX texture loader is missing cached fail-closed loading: {token}")
+
+    report_text = OVERWORLD_OBJECT_RESOLUTION_VFX_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    scene_text = OVERWORLD_OBJECT_RESOLUTION_VFX_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure_scene_nodes(scene_text, errors, "overworld_object_resolution_vfx_asset_runtime_report.tscn", [("OverworldObjectResolutionVfxAssetRuntimeReport", "Node")])
+    for token in (
+        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        '"overworld_object_captured": {',
+        '"overworld_object_visited": {',
+        '"overworld_object_depleted": {',
+        'MapViewScript.new()',
+        'map_view.call("validation_object_resolution_vfx_asset_summary")',
+        'map_view.call("set_map_state", session, session.overworld.get("map", []), Vector2i(8, 6), TILE, {}, {}, presentation)',
+        'map_view.call("validation_object_resolution_presentation")',
+        'map_view.set("_overworld_vfx_texture_missing", missing_paths)',
+        'map_view.set("_overworld_vfx_texture_missing", {})',
+        'String(draw.get("mode", "")) == "imported_texture"',
+        'String(draw.get("mode", "")) == "existing_procedural_object_resolution_body"',
+        'session.to_dict() == authority_before',
+        'Rect2(Vector2.ZERO, Vector2(viewport_size)).encloses(map_view.get_global_rect())',
+        'SessionStateStore.SAVE_VERSION == 9',
+        'print("OVERWORLD_OBJECT_RESOLUTION_VFX_ASSET_RUNTIME_REPORT %s"',
+    ):
+        ensure(token in report_text, errors, f"Object-resolution VFX focused owner is missing exact live proof: {token}")
+    ensure(report_text.count("for viewport_size in VIEWPORT_SIZES:") == 1, errors, "Object-resolution VFX focused owner must run both registered widths exactly once")
+    ensure(report_text.count("for event_id_value in EXPECTED_CUES:") == 4, errors, "Object-resolution VFX focused owner must build exact missing paths and run normal, missing-asset, and reduced-motion event matrices")
+    for forbidden in ("_draw_object_resolution_imported_vfx", "_draw_object_resolution_procedural_vfx", "_object_resolution_vfx_asset_state", "create_timer", "create_tween", "AnimationCueCatalog"):
+        ensure(forbidden not in report_text, errors, f"Object-resolution VFX focused owner must observe public rendering without bypassing production: {forbidden}")
+
+
 def validate_overworld_object_resolution_cue_playback(errors: list[str]) -> None:
     required_paths = (
         OVERWORLD_RULES_PATH,
@@ -39715,6 +39878,7 @@ def main() -> int:
     validate_resource_stockpile_icon_popover(errors)
     validate_active_play_save_written_cue_playback(errors)
     validate_active_play_load_resumed_cue_playback(errors)
+    validate_overworld_object_resolution_vfx_assets(errors)
     validate_overworld_object_resolution_cue_playback(errors)
     validate_neutral_dwelling_unit_slice(errors)
     validate_hero_portrait_assets(errors)

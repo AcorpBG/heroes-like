@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://tests/overworld_object_resolution_vfx_asset_runtime_report.gd" id="1"]
+
+[node name="OverworldObjectResolutionVfxAssetRuntimeReport" type="Node"]
+script = ExtResource("1")
