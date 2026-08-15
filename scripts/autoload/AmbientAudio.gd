@@ -50,6 +50,7 @@ func sync_overworld_session(session: Variant, source: String = "overworld") -> D
 		})
 	var context := _overworld_context(session)
 	var signature := _signature_for_context(context)
+	_prune_players()
 	if signature == _current_signature and not _active_players.is_empty():
 		return {
 			"schema": REPORT_SCHEMA,
@@ -191,12 +192,20 @@ func _layer_payload(layer_id: String, cue_id: String, spec: Dictionary, phase_of
 		"asset_path": String(manifest_cue.get("path", "")),
 		"role": String(manifest_cue.get("role", "")),
 		"playback_source": "pending",
+		"stream_length_sec": 0.0,
+		"looped": false,
+		"loop_mode": -1,
+		"loop_begin_sample": 0,
+		"loop_end_sample": 0,
+		"mix_rate": 0,
+		"stereo": false,
 		"imported_asset_count": 0,
 		"generated_fallback_count": 0,
 	}
 
 func _play_layers(layers: Array[Dictionary]) -> void:
 	_prune_players()
+	var generated_playback_started := false
 	for index in range(layers.size()):
 		if _active_players.size() >= MAX_ACTIVE_PLAYERS:
 			break
@@ -219,7 +228,8 @@ func _play_layers(layers: Array[Dictionary]) -> void:
 		layer["playback_source"] = "generated_waveform"
 		layer["generated_fallback_count"] = 1
 		layers[index] = layer
-	var timer := get_tree().create_timer(DEFAULT_SEGMENT_DURATION + 0.08) if get_tree() != null and not layers.is_empty() else null
+		generated_playback_started = true
+	var timer := get_tree().create_timer(DEFAULT_SEGMENT_DURATION + 0.08) if get_tree() != null and generated_playback_started else null
 	if timer != null:
 		timer.timeout.connect(_prune_players)
 
@@ -241,9 +251,29 @@ func _play_imported_layer(layer: Dictionary) -> bool:
 			stream = wav_stream
 	if stream == null:
 		return false
+	var playback_stream: AudioStream = stream
+	var looped := false
+	var loop_mode := -1
+	var loop_begin_sample := 0
+	var loop_end_sample := 0
+	var source_mix_rate := 0
+	var source_stereo := false
+	if stream is AudioStreamWAV:
+		var wav_stream := (stream as AudioStreamWAV).duplicate(true) as AudioStreamWAV
+		if wav_stream != null:
+			wav_stream.loop_mode = AudioStreamWAV.LOOP_FORWARD
+			wav_stream.loop_begin = 0
+			wav_stream.loop_end = maxi(1, int(round(wav_stream.get_length() * float(wav_stream.mix_rate))))
+			playback_stream = wav_stream
+			looped = true
+			loop_mode = int(wav_stream.loop_mode)
+			loop_begin_sample = int(wav_stream.loop_begin)
+			loop_end_sample = int(wav_stream.loop_end)
+			source_mix_rate = int(wav_stream.mix_rate)
+			source_stereo = bool(wav_stream.stereo)
 	var player := AudioStreamPlayer.new()
 	player.bus = SettingsService.effects_audio_bus_name()
-	player.stream = stream
+	player.stream = playback_stream
 	player.volume_db = float(cue.get("volume_db", -27.0))
 	add_child(player)
 	_active_players.append(player)
@@ -253,6 +283,13 @@ func _play_imported_layer(layer: Dictionary) -> bool:
 	layer["role"] = String(cue.get("role", ""))
 	layer["duration_sec"] = maxf(0.01, float(cue.get("duration_msec", 850)) / 1000.0)
 	layer["volume_db"] = float(cue.get("volume_db", -27.0))
+	layer["stream_length_sec"] = playback_stream.get_length()
+	layer["looped"] = looped
+	layer["loop_mode"] = loop_mode
+	layer["loop_begin_sample"] = loop_begin_sample
+	layer["loop_end_sample"] = loop_end_sample
+	layer["mix_rate"] = source_mix_rate
+	layer["stereo"] = source_stereo
 	layer["imported_asset_count"] = 1
 	layer["generated_fallback_count"] = 0
 	return true

@@ -38929,8 +38929,29 @@ def validate_overworld_ambient_audio_runtime(errors: list[str]) -> None:
             "Effects",
             "imported_asset_count",
             "generated_fallback_count",
+            "duplicate(true) as AudioStreamWAV",
+            "AudioStreamWAV.LOOP_FORWARD",
+            "loop_begin_sample",
+            "loop_end_sample",
+            "stream_length_sec",
+            'layer["looped"] = looped',
+            "generated_playback_started",
         ):
             ensure(required_token in ambient_text, errors, f"AmbientAudio.gd is missing required token: {required_token}")
+        ensure(
+            ambient_text.index("duplicate(true) as AudioStreamWAV")
+            < ambient_text.index("wav_stream.loop_mode = AudioStreamWAV.LOOP_FORWARD")
+            < ambient_text.index("player.stream = playback_stream"),
+            errors,
+            "AmbientAudio must duplicate the imported WAV before applying forward-loop state and assigning it to the player",
+        )
+        ensure(
+            ambient_text.index("var signature := _signature_for_context(context)")
+            < ambient_text.index("_prune_players()")
+            < ambient_text.index("if signature == _current_signature and not _active_players.is_empty():"),
+            errors,
+            "AmbientAudio must prune stopped players before accepting an unchanged context signature",
+        )
 
     required_ambient_cue_ids = (
         "overworld_ambient_grass",
@@ -38950,26 +38971,78 @@ def validate_overworld_ambient_audio_runtime(errors: list[str]) -> None:
         ensure(ambient_sfx_manifest.get("schema") == "overworld_ambient_runtime_sfx_manifest_v1", errors, "ambient_sfx_manifest.json has the wrong schema")
         ensure(ambient_sfx_manifest.get("final_sound_design") is False, errors, "ambient_sfx_manifest.json must not claim final sound design")
         ensure(ambient_sfx_manifest.get("audio_bus") == "Effects", errors, "ambient_sfx_manifest.json must route ambient SFX through Effects")
+        ensure(int(ambient_sfx_manifest.get("sample_rate_hz", 0)) == 44100, errors, "production ambient assets must use 44.1 kHz")
+        ensure(int(ambient_sfx_manifest.get("channel_count", 0)) == 2, errors, "production ambient assets must be stereo")
+        ensure(int(ambient_sfx_manifest.get("sample_width_bits", 0)) == 16, errors, "production ambient source assets must use 16-bit PCM")
+        ensure(int(ambient_sfx_manifest.get("segment_duration_msec", 0)) == 12000, errors, "production ambient assets must use exact twelve-second segments")
+        ensure(ambient_sfx_manifest.get("loop_mode") == "forward", errors, "production ambient manifest must declare forward looping")
+        ensure(ambient_sfx_manifest.get("asset_tier") == "production_ambient_loop_v1", errors, "production ambient manifest must declare production_ambient_loop_v1")
         ambient_sfx_cues = ambient_sfx_manifest.get("cues", {})
         ensure(isinstance(ambient_sfx_cues, dict), errors, "ambient_sfx_manifest.json cues must be an object")
+        ensure(set(ambient_sfx_cues) == set(required_ambient_cue_ids), errors, "ambient_sfx_manifest.json must contain exactly the eleven live ambient cue ids")
+        expected_ambient_cues = {
+            "overworld_ambient_grass": ("res://art/audio/runtime/ambient/grass.wav", "terrain_grass", -27.0),
+            "overworld_ambient_water": ("res://art/audio/runtime/ambient/water.wav", "terrain_water", -27.0),
+            "overworld_ambient_mire": ("res://art/audio/runtime/ambient/mire.wav", "terrain_mire", -26.5),
+            "overworld_ambient_dirt": ("res://art/audio/runtime/ambient/dirt.wav", "terrain_dirt", -28.0),
+            "overworld_ambient_rough": ("res://art/audio/runtime/ambient/rough.wav", "terrain_rough", -27.5),
+            "overworld_ambient_sand": ("res://art/audio/runtime/ambient/sand.wav", "terrain_sand", -29.0),
+            "overworld_ambient_snow": ("res://art/audio/runtime/ambient/snow.wav", "terrain_snow", -29.5),
+            "overworld_ambient_lava": ("res://art/audio/runtime/ambient/lava.wav", "terrain_lava", -26.0),
+            "overworld_ambient_underground": ("res://art/audio/runtime/ambient/underground.wav", "terrain_underground", -27.0),
+            "overworld_ambient_pressure": ("res://art/audio/runtime/ambient/pressure.wav", "enemy_pressure", -24.5),
+            "overworld_ambient_day_pulse": ("res://art/audio/runtime/ambient/day_pulse.wav", "day_pulse", -30.0),
+        }
+        ambient_asset_hashes = set()
         for cue_id in required_ambient_cue_ids:
             cue = ambient_sfx_cues.get(cue_id, {}) if isinstance(ambient_sfx_cues, dict) else {}
             ensure(isinstance(cue, dict), errors, f"ambient_sfx_manifest.json is missing cue {cue_id}")
             path_value = str(cue.get("path", ""))
-            ensure(path_value.startswith("res://art/audio/runtime/ambient/"), errors, f"ambient SFX cue {cue_id} must use the runtime ambient audio folder")
+            expected_path, expected_role, expected_volume = expected_ambient_cues[cue_id]
+            ensure(path_value == expected_path, errors, f"ambient cue {cue_id} must preserve its exact live asset path")
+            ensure(str(cue.get("role", "")) == expected_role, errors, f"ambient cue {cue_id} must preserve its exact role")
+            ensure(float(cue.get("volume_db", 0.0)) == expected_volume, errors, f"ambient cue {cue_id} must preserve its exact volume")
             wav_path = ROOT / path_value.removeprefix("res://")
             ensure(wav_path.exists(), errors, f"ambient SFX asset is missing for {cue_id}: {path_value}")
             if wav_path.exists():
                 header = wav_path.read_bytes()[:12]
                 ensure(header[:4] == b"RIFF" and header[8:12] == b"WAVE", errors, f"ambient SFX asset is not a WAV file: {path_value}")
-            ensure(int(cue.get("duration_msec", 0)) > 0, errors, f"ambient SFX cue {cue_id} needs duration_msec")
+                ambient_asset_hashes.add(hashlib.sha256(wav_path.read_bytes()).hexdigest())
+                with wave.open(str(wav_path), "rb") as wav_file:
+                    channel_count = wav_file.getnchannels()
+                    sample_width = wav_file.getsampwidth()
+                    sample_rate = wav_file.getframerate()
+                    frame_count = wav_file.getnframes()
+                    raw_frames = wav_file.readframes(frame_count)
+                ensure(channel_count == 2, errors, f"production ambient asset must be stereo: {path_value}")
+                ensure(sample_width == 2, errors, f"production ambient asset must be 16-bit PCM: {path_value}")
+                ensure(sample_rate == 44100, errors, f"production ambient asset must use 44.1 kHz: {path_value}")
+                ensure(frame_count == 529200, errors, f"production ambient asset must contain exactly twelve seconds: {path_value}")
+                samples = struct.unpack(f"<{len(raw_frames) // 2}h", raw_frames) if raw_frames else ()
+                left_samples = samples[0::2]
+                right_samples = samples[1::2]
+                peak = max((abs(value) for value in samples), default=0) / 32767.0
+                total_energy = sum(value * value for value in samples)
+                stereo_difference = sum((left - right) * (left - right) for left, right in zip(left_samples, right_samples))
+                ensure(0.32 <= peak <= 0.55, errors, f"production ambient asset peak must stay in the bounded source range: {path_value}")
+                ensure(total_energy > len(samples) * 1000, errors, f"production ambient asset must contain sustained non-silent content: {path_value}")
+                ensure(stereo_difference > 0, errors, f"production ambient asset must use distinct stereo channels: {path_value}")
+                if left_samples and right_samples:
+                    ensure(left_samples[0] == left_samples[-1] and right_samples[0] == right_samples[-1], errors, f"production ambient asset must close its stereo loop boundary exactly: {path_value}")
+            ensure(int(cue.get("duration_msec", 0)) == 12000, errors, f"ambient cue {cue_id} must use exact twelve-second duration")
             ensure("volume_db" in cue, errors, f"ambient SFX cue {cue_id} needs volume_db")
+        ensure(len(ambient_asset_hashes) == len(required_ambient_cue_ids), errors, "all eleven production ambient WAV payloads must be byte-distinct")
 
     ambient_sfx_generator_text = AMBIENT_SFX_GENERATOR_PATH.read_text(encoding="utf-8") if AMBIENT_SFX_GENERATOR_PATH.exists() else ""
     for required_token in (
         "ambient_sfx_manifest.json",
         "SPECS",
         "write_wav",
+        "render_stereo",
+        "production-ambient-loop-v1",
+        "SEGMENT_DURATION_MSEC = 12000",
+        "periodic_frequency",
+        "normalized[-1] = normalized[0]",
         "wave.open",
         "Manifest/spec cue mismatch",
     ):
@@ -39003,6 +39076,16 @@ def validate_overworld_ambient_audio_runtime(errors: list[str]) -> None:
             "imported_asset_count",
             "generated_fallback_count",
             "imported_wav",
+            "EXPECTED_AMBIENT_CUES",
+            "EXPECTED_SEGMENT_DURATION_SEC := 12.0",
+            "_validate_manifest_asset_surface",
+            "_validate_continuous_playback",
+            "_validate_generated_fallback",
+            "AudioStreamWAV.LOOP_FORWARD",
+            "validation_repeat_after_loop",
+            "continuous_active_player_count",
+            "exact ambient layer count",
+            '"generated_waveform"',
         ):
             ensure(required_token in report_text, errors, f"Overworld ambient audio runtime report is missing required token: {required_token}")
 
@@ -39021,6 +39104,10 @@ def validate_overworld_ambient_audio_runtime(errors: list[str]) -> None:
             "not final sound design",
             "No final ambient stems",
             "No save migration",
+            "Production-loop follow-up",
+            "seamless twelve-second 44.1 kHz stereo",
+            "LOOP_FORWARD",
+            "all three terrain/pressure/day players still active after a full segment",
         ):
             ensure(required_text in doc_text, errors, f"Overworld ambient audio runtime doc is missing required text: {required_text}")
 
