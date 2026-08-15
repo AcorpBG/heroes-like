@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The active-play load-resumed cue slice is completed. Successful real Main Menu loads now publish one authored nonblocking cue after the exact routed shell refresh; broader release gaps remain.",
+  "currentNotes": "The Ninefold Rope Lift live transit slice is completed. Its existing repair response now opens one exact bounded land shortcut with real preview/execution and fail-closed lifecycle authority; broader release gaps remain.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-active-play-load-resumed-cue-playback-10184",
-  "currentSliceId": "presentation-active-play-load-resumed-cue-playback-10184",
-  "currentSliceNotes": "Completed: exact four-destination real load publication, normal/reduced playback, stale/mismatch/refresh/expiry behavior, save and route authority, compatibility, static/editor, Linux, and Windows gates pass with bounded claims.",
+  "currentSlice": "overworld-ninefold-rope-lift-live-transit-10184",
+  "currentSliceId": "overworld-ninefold-rope-lift-live-transit-10184",
+  "currentSliceNotes": "Completed: exact response-active 9,51 to 9,54 two-way cost-one transit, live shell selection, independent route validation, expiry/cache/save/failure authority, compatibility, static/editor, Linux, and Windows gates pass with bounded claims.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Active Play Load Resumed Cue Playback",
-  "currentSliceUpdatedAt": "2026-08-15T01:23:06Z",
+  "currentSliceTitle": "Ninefold Rope Lift Live Transit",
+  "currentSliceUpdatedAt": "2026-08-15T02:32:48Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19849,6 +19849,74 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "id": "overworld-ninefold-rope-lift-live-transit-10184",
+      "title": "Ninefold Rope Lift Live Transit",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/phase2-4-object-implementation-backlog.md",
+        "docs/overworld-object-route-effect-authoring-validation-report.md",
+        "AGENTS.md"
+      ],
+      "purpose": "Adopt the already-authored Ninefold Rope Lift linked-endpoint route effect as real player movement while its existing Reeve Rope Lift response is active.",
+      "implementationTargets": [
+        "content/resource_sites.json",
+        "content/map_objects.json",
+        "scripts/core/OverworldRules.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "tests/overworld_rope_lift_live_transit_report.gd",
+        "tests/overworld_rope_lift_live_transit_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_rope_lift_live_transit_report.tscn",
+        "tests/overworld_controller_route_selection_regression.tscn",
+        "tests/terrain_blocking_town_capture_interaction_regression.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "1aa7a510",
+        "scenario_id": "ninefold-confluence",
+        "placement_id": "rope_lift",
+        "site_id": "site_rope_lift",
+        "object_id": "object_rope_lift",
+        "placement": {"x": 9, "y": 52},
+        "endpoint_tiles": [{"x": 9, "y": 51}, {"x": 9, "y": 54}],
+        "response_action": "Reeve Rope Lift",
+        "response_watch_days": 4,
+        "response_movement_cost": 3,
+        "response_resource_cost": {"gold": 130, "ore": 1},
+        "authored_movement_cost_delta": -2,
+        "runtime_route_effect_adopted": false
+      },
+      "completionCriteria": [
+        "Claiming the Rope Lift alone leaves the shortcut closed; one successful existing Reeve Rope Lift response opens exactly the authored two-way 9,51 to 9,54 linked edge only while that player-controlled response remains active",
+        "The linked edge costs one movement, appears in the live selected-route preview, executes through the public movement path in both directions, invalidates cached routes on activation/expiry/control change, and retains exact fog, recap, focus, and session authority",
+        "Out-of-bounds, impassable, occupied, blocked, unsafe, malformed, unclaimed, enemy-controlled, expired, insufficient-resource, insufficient-movement, canceled, and failed-response cases expose no transit edge and spend or mutate nothing beyond existing action authority",
+        "Save/load preserves the existing response state and therefore exact transit availability without a save-version/schema change; normal adjacent movement and all non-selected transit objects remain exact",
+        "Focused live 1280x720 and 1920x1080 proof, route/controller/terrain/core compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "repaired ferry, ship, coast, water, cross-level, other linked-endpoint or other transit-object runtime adoption",
+        "strategic-AI use of transit edges, AI policy, random-map generation, map-editor transit placement, global pathfinding or movement-cost redesign",
+        "save schema/version migration, new panels, dashboard surfaces, final VFX/audio assets, packaged transit interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "createdAt": "2026-08-15T01:58:21Z",
+      "startedAt": "2026-08-15T01:58:21Z",
+      "updatedAt": "2026-08-15T02:32:48Z",
+      "completedAt": "2026-08-15T02:32:48Z",
+      "notes": "Implemented a content-gated active linked-transit edge from the existing response state and exact site/object endpoint contracts. The player BFS materializes active edges once per path build, cached route identity includes live transit state, and the public full validator accepts only currently safe authored edges. Focused natural-rc0 proof at 1280 and 1920 covers claim-only closure, exact repair spend, both directions at cost one, save roundtrip, cache invalidation, expiry, unsafe exits, unaffordable and exhausted failures. Full/cached route, terrain, controller, Ninefold, runtime metadata, AI object valuation, core, save/load, focus, accessibility, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. A separate legacy pathing-occupancy report still has a pre-existing Brightwood Sawmill six-vs-ten authored-tile oracle mismatch and is not evidence against this slice. Ferry/ship/water, other transit objects, strategic-AI transit use, RMG, editor placement, packaged transit interaction, hardware certification, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null
+    },
     {
       "id": "presentation-active-play-load-resumed-cue-playback-10184",
       "title": "Active Play Load Resumed Cue Playback",

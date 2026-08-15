@@ -7682,6 +7682,7 @@ func _selected_route_signature() -> String:
 	return "|".join([
 		"selected_route:min:v2",
 		_selected_route_session_signature(),
+		OverworldRules.active_linked_transit_signature(_session),
 		"selected:%d,%d" % [_selected_tile.x, _selected_tile.y],
 		"hero:%d,%d" % [hero_pos.x, hero_pos.y],
 		"move:%d/%d" % [movement_current, movement_max],
@@ -7844,6 +7845,7 @@ func _build_path(start: Vector2i, goal: Vector2i) -> Array:
 	var found = false
 	var blocked_tile_lookup_count := 1 if debug_timing_enabled else 0
 	var enqueued_count := 1 if debug_timing_enabled else 0
+	var linked_transit_edges := OverworldRules.active_linked_transit_edges(_session)
 
 	while queue_index < queue.size():
 		var current: Vector2i = queue[queue_index]
@@ -7869,6 +7871,17 @@ func _build_path(start: Vector2i, goal: Vector2i) -> Array:
 			visited[key] = true
 			came_from[key] = current
 			queue.append(next)
+			if debug_timing_enabled:
+				enqueued_count += 1
+		for linked_next in OverworldRules.linked_transit_neighbors_from_edges(linked_transit_edges, current):
+			if not (linked_next is Vector2i):
+				continue
+			var linked_key = _tile_key(linked_next)
+			if visited.has(linked_key):
+				continue
+			visited[linked_key] = true
+			came_from[linked_key] = current
+			queue.append(linked_next)
 			if debug_timing_enabled:
 				enqueued_count += 1
 

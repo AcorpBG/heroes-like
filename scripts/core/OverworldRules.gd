@@ -508,6 +508,178 @@ static func route_movement_preview(
 		"destination_tile": _route_tile_payload(destination_tile),
 	}
 
+static func active_linked_transit_edges(session: SessionStateStoreScript.SessionData) -> Array:
+	var edges := []
+	if session == null:
+		return edges
+	var map_size := derive_map_size(session)
+	var resource_nodes = session.overworld.get("resource_nodes", [])
+	if not (resource_nodes is Array):
+		return edges
+	for node_value in resource_nodes:
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+		if String(site.get("family", "")) != "transit_object":
+			continue
+		var transit_profile: Dictionary = site.get("transit_profile", {}) if site.get("transit_profile", {}) is Dictionary else {}
+		var site_runtime: Dictionary = site.get("runtime_boundary", {}) if site.get("runtime_boundary", {}) is Dictionary else {}
+		var site_route_boundary: Dictionary = site.get("route_effect_boundary", {}) if site.get("route_effect_boundary", {}) is Dictionary else {}
+		var site_contract: Dictionary = site.get("linked_endpoint_contract", {}) if site.get("linked_endpoint_contract", {}) is Dictionary else {}
+		if (
+			not bool(transit_profile.get("runtime_route_effect_adopted", false))
+			or not bool(transit_profile.get("paired_link_required", false))
+			or not bool(site_runtime.get("pathing_runtime_adopted", false))
+			or not bool(site_runtime.get("route_effect_runtime_adopted", false))
+			or not bool(site_route_boundary.get("runtime_behavior_adopted", false))
+			or not bool(site_contract.get("runtime_route_effect_adopted", false))
+		):
+			continue
+		if bool(transit_profile.get("requires_repair", false)) and not bool(_resource_site_response_state(session, node, site).get("active", false)):
+			continue
+		var map_object := _map_object_for_resource_node(node)
+		var object_runtime: Dictionary = map_object.get("runtime_boundary", {}) if map_object.get("runtime_boundary", {}) is Dictionary else {}
+		var object_route_boundary: Dictionary = map_object.get("route_effect_boundary", {}) if map_object.get("route_effect_boundary", {}) is Dictionary else {}
+		var object_contract: Dictionary = map_object.get("linked_endpoint_contract", {}) if map_object.get("linked_endpoint_contract", {}) is Dictionary else {}
+		var route_effect: Dictionary = map_object.get("route_effect", {}) if map_object.get("route_effect", {}) is Dictionary else {}
+		var approach: Dictionary = map_object.get("approach", {}) if map_object.get("approach", {}) is Dictionary else {}
+		if (
+			String(route_effect.get("effect_type", "")) != "linked_endpoint"
+			or String(approach.get("mode", "")) != "linked_endpoint"
+			or not bool(object_runtime.get("pathing_runtime_adopted", false))
+			or not bool(object_runtime.get("route_effect_runtime_adopted", false))
+			or not bool(object_route_boundary.get("runtime_behavior_adopted", false))
+			or not bool(object_contract.get("runtime_route_effect_adopted", false))
+		):
+			continue
+		var endpoint_group_id := String(site_contract.get("endpoint_group_id", ""))
+		if (
+			endpoint_group_id == ""
+			or endpoint_group_id != String(object_contract.get("endpoint_group_id", ""))
+			or endpoint_group_id != String(route_effect.get("linked_endpoint_group_id", ""))
+			or String(site_contract.get("directionality", "")) != "two_way"
+			or String(object_contract.get("directionality", "")) != "two_way"
+			or not bool(site_contract.get("requires_exit_safety", false))
+			or not bool(object_contract.get("requires_exit_safety", false))
+		):
+			continue
+		if bool(route_effect.get("requires_visit", false)) and not bool(node.get("collected", false)):
+			continue
+		if bool(route_effect.get("requires_owner", false)) and String(node.get("collected_by_faction_id", "")) != "player":
+			continue
+		if not _normalize_resource_dict(route_effect.get("toll_resources", {})).is_empty():
+			continue
+		var blocked_state_ids := _string_array(route_effect.get("blocked_state_ids", []))
+		var route_state_id := String(node.get("route_state_id", node.get("state_id", "")))
+		if route_state_id != "" and route_state_id in blocked_state_ids:
+			continue
+		var entry_offsets = site_contract.get("entry_offsets", [])
+		var exit_offsets = site_contract.get("exit_offsets", [])
+		var object_entry_offsets = object_contract.get("entry_offsets", [])
+		var object_exit_offsets = object_contract.get("exit_offsets", [])
+		if (
+			not (entry_offsets is Array)
+			or entry_offsets.size() != 2
+			or entry_offsets != exit_offsets
+			or entry_offsets != object_entry_offsets
+			or entry_offsets != object_exit_offsets
+			or entry_offsets != approach.get("linked_exit_offsets", [])
+		):
+			continue
+		var placement := Vector2i(int(node.get("x", -1)), int(node.get("y", -1)))
+		var endpoint_tiles := []
+		for offset_value in entry_offsets:
+			if not (offset_value is Dictionary):
+				endpoint_tiles.clear()
+				break
+			endpoint_tiles.append(placement + Vector2i(int(offset_value.get("x", 0)), int(offset_value.get("y", 0))))
+		if endpoint_tiles.size() != 2 or endpoint_tiles[0] == endpoint_tiles[1]:
+			continue
+		var from_tile: Vector2i = endpoint_tiles[0]
+		var to_tile: Vector2i = endpoint_tiles[1]
+		var endpoint_distance: int = abs(to_tile.x - from_tile.x) + abs(to_tile.y - from_tile.y)
+		var movement_cost: int = endpoint_distance + int(route_effect.get("movement_cost_delta", 0))
+		if movement_cost != 1:
+			continue
+		var endpoints_safe := true
+		var own_body_tiles := _map_object_world_body_tiles(map_object, node)
+		var own_interaction_tiles := _resource_node_world_interaction_tiles(map_object, node)
+		for endpoint in endpoint_tiles:
+			if (
+				endpoint.x < 0
+				or endpoint.y < 0
+				or endpoint.x >= map_size.x
+				or endpoint.y >= map_size.y
+				or (tile_is_blocked(session, endpoint.x, endpoint.y) and endpoint not in own_body_tiles)
+				or (tile_has_route_interaction(session, endpoint.x, endpoint.y) and endpoint not in own_interaction_tiles)
+			):
+				endpoints_safe = false
+				break
+		if not endpoints_safe:
+			continue
+		edges.append({
+			"placement_id": String(node.get("placement_id", "")),
+			"site_id": String(node.get("site_id", "")),
+			"object_id": String(map_object.get("id", "")),
+			"effect_id": String(route_effect.get("effect_id", "")),
+			"endpoint_group_id": endpoint_group_id,
+			"from_tile": from_tile,
+			"to_tile": to_tile,
+			"movement_cost": movement_cost,
+			"two_way": true,
+		})
+	return edges
+
+static func linked_transit_neighbors_from_edges(edges: Array, tile: Vector2i) -> Array:
+	var neighbors := []
+	for edge_value in edges:
+		if not (edge_value is Dictionary):
+			continue
+		var edge: Dictionary = edge_value
+		if int(edge.get("movement_cost", 0)) != 1 or not bool(edge.get("two_way", false)):
+			continue
+		var from_tile: Vector2i = edge.get("from_tile", Vector2i(-1, -1))
+		var to_tile: Vector2i = edge.get("to_tile", Vector2i(-1, -1))
+		if tile == from_tile and not neighbors.has(to_tile):
+			neighbors.append(to_tile)
+		elif tile == to_tile and not neighbors.has(from_tile):
+			neighbors.append(from_tile)
+	return neighbors
+
+static func active_linked_transit_step(
+	session: SessionStateStoreScript.SessionData,
+	from_tile: Vector2i,
+	to_tile: Vector2i
+) -> Dictionary:
+	for edge_value in active_linked_transit_edges(session):
+		if not (edge_value is Dictionary):
+			continue
+		var edge: Dictionary = edge_value
+		var edge_from: Vector2i = edge.get("from_tile", Vector2i(-1, -1))
+		var edge_to: Vector2i = edge.get("to_tile", Vector2i(-1, -1))
+		if (from_tile == edge_from and to_tile == edge_to) or (from_tile == edge_to and to_tile == edge_from):
+			return edge.duplicate(true)
+	return {}
+
+static func active_linked_transit_signature(session: SessionStateStoreScript.SessionData) -> String:
+	var rows := []
+	for edge_value in active_linked_transit_edges(session):
+		if not (edge_value is Dictionary):
+			continue
+		var edge: Dictionary = edge_value
+		var from_tile: Vector2i = edge.get("from_tile", Vector2i(-1, -1))
+		var to_tile: Vector2i = edge.get("to_tile", Vector2i(-1, -1))
+		rows.append("%s:%d,%d>%d,%d:%d" % [
+			String(edge.get("placement_id", "")),
+			from_tile.x,
+			from_tile.y,
+			to_tile.x,
+			to_tile.y,
+			int(edge.get("movement_cost", 0)),
+		])
+	return "linked_transit:%s" % ";".join(rows)
+
 static func try_move_along_route(
 	session: SessionStateStoreScript.SessionData,
 	route_tiles: Variant,
@@ -527,13 +699,15 @@ static func try_move_along_route(
 		if tile.x < 0 or tile.y < 0 or tile.x >= map_size.x or tile.y >= map_size.y:
 			return {"ok": false, "message": "The map edge blocks that route.", "route_steps": []}
 		var previous: Vector2i = path[index - 1]
-		if maxi(abs(tile.x - previous.x), abs(tile.y - previous.y)) != 1:
+		var adjacent_step := maxi(abs(tile.x - previous.x), abs(tile.y - previous.y)) == 1
+		var linked_transit_step := active_linked_transit_step(session, previous, tile) if not adjacent_step else {}
+		if not adjacent_step and linked_transit_step.is_empty():
 			return {"ok": false, "message": "The selected route is not contiguous.", "route_steps": []}
-		if tile_step_cuts_blocked_corner(session, previous, tile):
+		if adjacent_step and tile_step_cuts_blocked_corner(session, previous, tile):
 			return {"ok": false, "message": "The terrain blocks that route.", "route_steps": []}
-		if _tile_blocks_route_step(session, tile, index == path.size() - 1):
+		if adjacent_step and _tile_blocks_route_step(session, tile, index == path.size() - 1):
 			return {"ok": false, "message": "The terrain blocks that route.", "route_steps": []}
-		if index < path.size() - 1 and tile_has_route_interaction(session, tile.x, tile.y):
+		if adjacent_step and index < path.size() - 1 and tile_has_route_interaction(session, tile.x, tile.y):
 			return {"ok": false, "message": "An interaction blocks that route.", "route_steps": []}
 
 	var movement = session.overworld.get("movement", {})

@@ -2814,8 +2814,8 @@
         "route_role": "vertical_shortcut",
         "requires_repair": true,
         "paired_link_required": true,
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false,
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true,
         "one_way": false
       },
       "response_profile": {
@@ -2833,18 +2833,18 @@
       "normalized_content_batch_id": "overworld-object-content-batch-004-transit-coast-route-control-10184",
       "batch004_role": "two_way_transit",
       "runtime_boundary": {
-        "status": "metadata_only",
+        "status": "selected_land_transit_runtime",
         "live_reward_grants": false,
         "save_payload_required": false,
         "renderer_sprite_required": false,
-        "pathing_runtime_adopted": false,
-        "route_effect_runtime_adopted": false,
+        "pathing_runtime_adopted": true,
+        "route_effect_runtime_adopted": true,
         "rare_resource_activation": false,
         "ship_movement_runtime_adopted": false
       },
       "route_effect_boundary": {
-        "status": "metadata_only",
-        "runtime_behavior_adopted": false,
+        "status": "selected_land_transit_runtime",
+        "runtime_behavior_adopted": true,
         "public_output_safe": true
       },
       "linked_endpoint_contract": {
@@ -2873,8 +2873,8 @@
         ],
         "requires_exit_safety": true,
         "approach_role": "vertical_land_shortcut",
-        "metadata_only": true,
-        "runtime_route_effect_adopted": false
+        "metadata_only": false,
+        "runtime_route_effect_adopted": true
       }
     },
     {
