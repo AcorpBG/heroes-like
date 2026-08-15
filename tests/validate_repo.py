@@ -109,6 +109,8 @@ OVERWORLD_ARTIFACT_SLOT_CUE_PLAYBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "over
 OVERWORLD_ARTIFACT_SLOT_CUE_PLAYBACK_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_artifact_slot_cue_playback_report.tscn"
 OVERWORLD_ARTIFACT_ACQUIRED_CUE_PLAYBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_artifact_acquired_cue_playback_report.gd"
 OVERWORLD_ARTIFACT_ACQUIRED_CUE_PLAYBACK_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_artifact_acquired_cue_playback_report.tscn"
+OVERWORLD_RESOURCE_DELTA_CUE_PLAYBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_resource_delta_cue_playback_report.gd"
+OVERWORLD_RESOURCE_DELTA_CUE_PLAYBACK_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_resource_delta_cue_playback_report.tscn"
 OVERWORLD_ART_MANIFEST_PATH = ROOT / "art" / "overworld" / "manifest.json"
 TERRAIN_GRAMMAR_PATH = CONTENT_DIR / "terrain_grammar.json"
 TERRAIN_LAYERS_PATH = CONTENT_DIR / "terrain_layers.json"
@@ -28929,6 +28931,104 @@ def validate_overworld_artifact_acquired_cue_playback(errors: list[str]) -> None
         ensure(forbidden not in report_text, errors, f"Artifact-acquired cue report must not bypass or weaken production behavior: {forbidden}")
 
 
+def validate_overworld_resource_delta_cue_playback(errors: list[str]) -> None:
+    required_paths = (
+        OVERWORLD_SCENE_PATH,
+        OVERWORLD_SCRIPT_PATH,
+        OVERWORLD_RESOURCE_DELTA_CUE_PLAYBACK_REPORT_SCRIPT_PATH,
+        OVERWORLD_RESOURCE_DELTA_CUE_PLAYBACK_REPORT_SCENE_PATH,
+        ANIMATION_EVENT_CUES_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Overworld resource-delta cue owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+    scene_text = OVERWORLD_SCENE_PATH.read_text(encoding="utf-8")
+    shell_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+    report_text = OVERWORLD_RESOURCE_DELTA_CUE_PLAYBACK_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    report_scene_text = OVERWORLD_RESOURCE_DELTA_CUE_PLAYBACK_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+
+    def block(text: str, name: str) -> str:
+        start = text.find(f"func {name}")
+        if start < 0:
+            return ""
+        end = text.find("\nfunc ", start + 1)
+        return text[start:] if end < 0 else text[start:end]
+
+    ensure_scene_nodes(scene_text, errors, "OverworldShell.tscn", [("ResourceDeltaCue", "Label")])
+    cue_match = re.search(r'\[node name="ResourceDeltaCue" type="Label"[^\]]*\]\n(?P<body>.*?)(?=\n\[node )', scene_text, re.DOTALL)
+    ensure(cue_match is not None, errors, "Overworld resource delta must own one command-band overlay label")
+    if cue_match is not None:
+        for token in ("unique_name_in_owner = true", "visible = false", "mouse_filter = 2", "clip_text = true"):
+            ensure(token in cue_match.group("body"), errors, f"Resource-delta cue is missing exact overlay ownership: {token}")
+    ensure(scene_text.count('[node name="ResourceDeltaCue"') == 1, errors, "Overworld must own exactly one ResourceDeltaCue")
+
+    handler = block(shell_text, "_on_context_action_pressed")
+    order = [
+        handler.find('if action_id == "collect_resource":'),
+        handler.find('resources_before = _duplicate_dictionary'),
+        handler.find("OverworldRules.perform_context_action(_session, action_id)"),
+        handler.find("_record_object_resolution_presentation(result"),
+        handler.find("\t_refresh()"),
+        handler.find("_record_resource_delta_presentation(result, action_id, resources_before)"),
+    ]
+    ensure(all(i >= 0 for i in order) and order == sorted(order), errors, "Resource delta must bracket the one live rule call and publish after map resolution and refresh")
+    ensure(handler.count("OverworldRules.perform_context_action(_session, action_id)") == 1, errors, "Resource delta must not duplicate the live context action")
+
+    producer = block(shell_text, "_record_resource_delta_presentation")
+    presenter = block(shell_text, "present_resource_delta_presentation")
+    dismiss = block(shell_text, "dismiss_resource_delta_presentation")
+    validation = block(shell_text, "validation_resource_delta_presentation")
+    process = block(shell_text, "_process")
+    for token in (
+        'String(interaction.get("family", "")) != "resource_site"',
+        'String(recap.get("kind", "")) != "resource_site"',
+        'for node_value in _session.overworld.get("resource_nodes", [])',
+        'String(collected_node.get("collected_by_faction_id", "")) != "player"',
+        'var delta := after_amount - before_amount',
+        'if delta == 0:',
+        'cue_playback_policy_for_event("ui_resource_delta"',
+        'String(policy.get("selected_blocking_policy", "")) != "nonblocking"',
+        'present_resource_delta_presentation({',
+    ):
+        ensure(token in producer, errors, f"Resource-delta producer is missing authority/policy proof: {token}")
+    ensure("OverworldRules" not in presenter + dismiss + validation and "_session" not in presenter + dismiss + validation, errors, "Resource-delta playback must not consult gameplay authority")
+    ensure("create_timer" not in producer + presenter + dismiss + process and "create_tween" not in producer + presenter + dismiss + process, errors, "Resource-delta playback must use bounded shared frame processing")
+    for token in (
+        'String(presentation.get("event_id", "")) != "ui_resource_delta"',
+        'String(presentation.get("cue_id", "")) != "cue_ui_resource_delta"',
+        'String(presentation.get("action_id", "")) != "collect_resource"',
+        'String(presentation.get("selected_blocking_policy", "")) != "nonblocking"',
+        'int(row.get("after", 0)) - int(row.get("before", 0)) != delta',
+        '_resource_delta_cue.visible = true',
+    ):
+        ensure(token in presenter, errors, f"Resource-delta presenter is missing fail-closed detached validation: {token}")
+    ensure("_resource_delta_cue.visible = false" in dismiss and "set_process(false)" in dismiss, errors, "Resource-delta dismissal must clear only its overlay and idle shared processing")
+    ensure(process.find("if _resource_delta_presentation_active:") < process.find("if _artifact_acquired_presentation_active:"), errors, "Shared processing must advance the independent resource overlay before artifact playback")
+    ensure('"resource_delta_presentation": validation_resource_delta_presentation()' in shell_text, errors, "Overworld validation snapshot must expose detached resource presentation state")
+
+    ensure_scene_nodes(report_scene_text, errors, "overworld_resource_delta_cue_playback_report.tscn", [("OverworldResourceDeltaCuePlaybackReport", "Node")])
+    for token in (
+        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        'const PLACEMENT_ID := "north_wood"',
+        'var initial: Dictionary = shell.validation_snapshot()',
+        'String(initial.get("primary_action_id", "")) == "collect_resource"',
+        'OverworldRules.perform_context_action(control, "collect_resource")',
+        'control.flags["last_overworld_action_recap"] = control_recap.duplicate(true)',
+        'primary_action.emit_signal("pressed")',
+        'active.get("deltas", []) == expected_deltas',
+        'String(object_resolution.get("event_id", "")) == "overworld_object_captured"',
+        'shell.call("_refresh")',
+        'open_command.emit_signal("pressed")',
+        'shell.validation_perform_context_action("collect_resource")',
+        'while bool(_presentation(shell).get("active", false)) and settle_frames < 120:',
+    ):
+        ensure(token in report_text, errors, f"Resource-delta focused report is missing method-matched live proof: {token}")
+    ensure(report_text.count('OverworldRules.perform_context_action(control, "collect_resource")') == 1, errors, "Resource-delta report must own exactly one independent rule control per row")
+    for forbidden in ("_on_context_action_pressed(", "_record_resource_delta_presentation(", "_process(", "create_timer", "create_tween", "OverworldRules.collect_active_resource(", "session.overworld.erase", "control.overworld.erase"):
+        ensure(forbidden not in report_text, errors, f"Resource-delta focused report must not bypass or weaken production behavior: {forbidden}")
+
+
 def validate_overworld_object_resolution_cue_playback(errors: list[str]) -> None:
     required_paths = (
         OVERWORLD_RULES_PATH,
@@ -37659,6 +37759,7 @@ def main() -> int:
     validate_overworld_field_spell_cast_cue_playback(errors)
     validate_overworld_artifact_slot_cue_playback(errors)
     validate_overworld_artifact_acquired_cue_playback(errors)
+    validate_overworld_resource_delta_cue_playback(errors)
     validate_overworld_object_resolution_cue_playback(errors)
     validate_neutral_dwelling_unit_slice(errors)
     validate_hero_portrait_assets(errors)

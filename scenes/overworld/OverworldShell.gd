@@ -45,6 +45,7 @@ const KEYBOARD_HERO_MOVE_DELTAS := {
 @onready var _header_label: Label = %Header
 @onready var _status_label: Label = %Status
 @onready var _resource_label: Label = %Resources
+@onready var _resource_delta_cue: Label = %ResourceDeltaCue
 @onready var _map_cue_label: Label = %MapCue
 @onready var _event_title_label: Label = %EventTitle
 @onready var _event_label: Label = %Event
@@ -193,6 +194,11 @@ var _artifact_acquired_presentation_serial := 0
 var _artifact_acquired_presentation_active := false
 var _artifact_acquired_presentation_elapsed_sec := 0.0
 var _artifact_acquired_presentation_duration_sec := 0.0
+var _resource_delta_presentation: Dictionary = {}
+var _resource_delta_presentation_serial := 0
+var _resource_delta_presentation_active := false
+var _resource_delta_presentation_elapsed_sec := 0.0
+var _resource_delta_presentation_duration_sec := 0.0
 var _post_route_execution_compact_context := false
 var _briefing_title_text := "Command Briefing"
 var _command_briefing_text := ""
@@ -323,6 +329,7 @@ func _ready() -> void:
 	_spell_cast_input_blocker.visible = false
 	_artifact_acquired_input_blocker.visible = false
 	_artifact_action_cue.visible = false
+	_resource_delta_cue.visible = false
 	set_process(false)
 	if not _map_view.spell_cast_presentation_blocking_changed.is_connected(_on_spell_cast_presentation_blocking_changed):
 		_map_view.spell_cast_presentation_blocking_changed.connect(_on_spell_cast_presentation_blocking_changed)
@@ -488,6 +495,16 @@ func _input(event: InputEvent) -> void:
 	get_viewport().set_input_as_handled()
 
 func _process(delta: float) -> void:
+	if _resource_delta_presentation_active:
+		_resource_delta_presentation_elapsed_sec = minf(
+			_resource_delta_presentation_duration_sec,
+			_resource_delta_presentation_elapsed_sec + maxf(delta, 0.0)
+		)
+		var resource_progress := clampf(_resource_delta_presentation_elapsed_sec / maxf(_resource_delta_presentation_duration_sec, 0.001), 0.0, 1.0)
+		var resource_allows_large_motion := bool(_resource_delta_presentation.get("allows_large_motion", true))
+		_resource_delta_cue.modulate.a = 1.0 if not resource_allows_large_motion else (0.74 + 0.26 * sin(resource_progress * PI))
+		if resource_progress >= 1.0:
+			dismiss_resource_delta_presentation()
 	if _artifact_acquired_presentation_active:
 		_artifact_acquired_presentation_elapsed_sec = minf(
 			_artifact_acquired_presentation_duration_sec,
@@ -500,6 +517,8 @@ func _process(delta: float) -> void:
 			dismiss_artifact_acquired_presentation()
 		return
 	if not _artifact_slot_presentation_active:
+		if _resource_delta_presentation_active:
+			return
 		set_process(false)
 		return
 	_artifact_slot_presentation_elapsed_sec = minf(
@@ -513,7 +532,7 @@ func _process(delta: float) -> void:
 		_artifact_slot_presentation_active = false
 		_artifact_action_cue.visible = false
 		_artifact_action_cue.modulate = Color.WHITE
-		set_process(false)
+		set_process(_resource_delta_presentation_active)
 
 func _keyboard_hero_move_delta(event: InputEvent) -> Vector2i:
 	for action_value in KEYBOARD_HERO_MOVE_DELTAS:
@@ -1702,6 +1721,9 @@ func _on_context_action_pressed(action_id: String) -> void:
 		_debug_phase_end("context_action_dispatch", dispatch_started_usec, {"action_id": action_id})
 		return
 
+	var resources_before: Dictionary = {}
+	if action_id == "collect_resource":
+		resources_before = _duplicate_dictionary(_session.overworld.get("resources", {}))
 	var result = OverworldRules.perform_context_action(_session, action_id)
 	if result.is_empty():
 		_debug_phase_end("context_action_dispatch", dispatch_started_usec, {"action_id": action_id, "empty_result": true})
@@ -1724,6 +1746,8 @@ func _on_context_action_pressed(action_id: String) -> void:
 		})
 		return
 	_refresh()
+	if action_id == "collect_resource":
+		_record_resource_delta_presentation(result, action_id, resources_before)
 	if action_id == "collect_artifact":
 		_record_artifact_acquired_presentation(result, action_id)
 	_debug_phase_end("context_action_dispatch", dispatch_started_usec, {"action_id": action_id, "resolved": false})
@@ -2612,6 +2636,140 @@ func _record_artifact_slot_presentation(result: Dictionary, action_id: String, b
 		"duration_ms": duration_ms,
 	})
 
+func _record_resource_delta_presentation(result: Dictionary, action_id: String, resources_before: Dictionary) -> void:
+	if not bool(result.get("ok", false)) or action_id != "collect_resource":
+		return
+	var interaction: Dictionary = result.get("interaction_result", {}) if result.get("interaction_result", {}) is Dictionary else {}
+	var recap: Dictionary = result.get("post_action_recap", {}) if result.get("post_action_recap", {}) is Dictionary else {}
+	if String(interaction.get("family", "")) != "resource_site" or String(recap.get("kind", "")) != "resource_site":
+		return
+	var placement_id := String(interaction.get("placement_id", ""))
+	var tile: Dictionary = interaction.get("tile", {}) if interaction.get("tile", {}) is Dictionary else {}
+	var mutation_facts: Dictionary = interaction.get("mutation_facts", {}) if interaction.get("mutation_facts", {}) is Dictionary else {}
+	var changed_resources: Array = mutation_facts.get("changed_resources", []) if mutation_facts.get("changed_resources", []) is Array else []
+	var collected_node: Dictionary = {}
+	for node_value in _session.overworld.get("resource_nodes", []):
+		if node_value is Dictionary and String(node_value.get("placement_id", "")) == placement_id:
+			collected_node = node_value
+			break
+	if (
+		placement_id == ""
+		or int(tile.get("x", -1)) < 0
+		or int(tile.get("y", -1)) < 0
+		or collected_node.is_empty()
+		or int(collected_node.get("x", -1)) != int(tile.get("x", -2))
+		or int(collected_node.get("y", -1)) != int(tile.get("y", -2))
+		or not bool(collected_node.get("collected", false))
+		or String(collected_node.get("collected_by_faction_id", "")) != "player"
+	):
+		return
+	var resources_after: Dictionary = _session.overworld.get("resources", {}) if _session.overworld.get("resources", {}) is Dictionary else {}
+	var deltas: Array = []
+	for resource_value in changed_resources:
+		var resource_id := String(resource_value)
+		if resource_id == "" or deltas.any(func(row): return String(row.get("resource_id", "")) == resource_id):
+			continue
+		var before_amount := int(resources_before.get(resource_id, 0))
+		var after_amount := int(resources_after.get(resource_id, 0))
+		var delta := after_amount - before_amount
+		if delta == 0:
+			continue
+		deltas.append({"resource_id": resource_id, "before": before_amount, "after": after_amount, "delta": delta})
+	if deltas.is_empty():
+		return
+	var policy: Dictionary = AnimationCueCatalogScript.cue_playback_policy_for_event("ui_resource_delta", SettingsService.animation_preferences())
+	if (
+		String(policy.get("event_id", "")) != "ui_resource_delta"
+		or String(policy.get("cue_id", "")) != "cue_ui_resource_delta"
+		or String(policy.get("surface", "")) != "ui"
+		or String(policy.get("subject_kind", "")) != "resource_delta"
+		or String(policy.get("selected_playback_policy", "")) != "queue_resolved"
+		or String(policy.get("selected_blocking_policy", "")) != "nonblocking"
+	):
+		return
+	_resource_delta_presentation_serial += 1
+	present_resource_delta_presentation({
+		"serial": _resource_delta_presentation_serial,
+		"event_id": "ui_resource_delta",
+		"cue_id": "cue_ui_resource_delta",
+		"action_id": action_id,
+		"placement_id": placement_id,
+		"tile": {"x": int(tile.get("x", -1)), "y": int(tile.get("y", -1))},
+		"deltas": deltas.duplicate(true),
+		"result_message": String(result.get("message", "")),
+		"post_action_recap": recap.duplicate(true),
+		"selected_animation_state": String(policy.get("selected_animation_state", "")),
+		"selected_visual_policy": String(policy.get("selected_visual_policy", "")),
+		"selected_fallback_tag": String(policy.get("selected_fallback_tag", "")),
+		"selected_playback_policy": String(policy.get("selected_playback_policy", "")),
+		"selected_blocking_policy": String(policy.get("selected_blocking_policy", "")),
+		"selected_vfx_cue_ids": (policy.get("selected_vfx_cue_ids", []) as Array).duplicate(true),
+		"selected_audio_cue_ids": (policy.get("selected_audio_cue_ids", []) as Array).duplicate(true),
+		"allows_large_motion": bool(policy.get("allows_large_motion", true)),
+		"duration_ms": 520 if bool(policy.get("allows_large_motion", true)) else 260,
+	})
+
+func present_resource_delta_presentation(presentation: Dictionary) -> Dictionary:
+	var tile: Dictionary = presentation.get("tile", {}) if presentation.get("tile", {}) is Dictionary else {}
+	var deltas: Array = presentation.get("deltas", []) if presentation.get("deltas", []) is Array else []
+	if (
+		int(presentation.get("serial", 0)) <= 0
+		or String(presentation.get("event_id", "")) != "ui_resource_delta"
+		or String(presentation.get("cue_id", "")) != "cue_ui_resource_delta"
+		or String(presentation.get("action_id", "")) != "collect_resource"
+		or String(presentation.get("placement_id", "")) == ""
+		or int(tile.get("x", -1)) < 0
+		or int(tile.get("y", -1)) < 0
+		or deltas.is_empty()
+		or String(presentation.get("result_message", "")) == ""
+		or not (presentation.get("post_action_recap", {}) is Dictionary)
+		or String(presentation.get("selected_playback_policy", "")) != "queue_resolved"
+		or String(presentation.get("selected_blocking_policy", "")) != "nonblocking"
+	):
+		return validation_resource_delta_presentation()
+	var labels: Array[String] = []
+	for row_value in deltas:
+		if not (row_value is Dictionary):
+			return validation_resource_delta_presentation()
+		var row: Dictionary = row_value
+		var resource_id := String(row.get("resource_id", ""))
+		var delta := int(row.get("delta", 0))
+		if resource_id == "" or delta == 0 or int(row.get("after", 0)) - int(row.get("before", 0)) != delta:
+			return validation_resource_delta_presentation()
+		labels.append("%s %s%d" % [resource_id.replace("_", " ").capitalize(), "+" if delta > 0 else "", delta])
+	_resource_delta_presentation = presentation.duplicate(true)
+	_resource_delta_presentation_active = true
+	_resource_delta_presentation_elapsed_sec = 0.0
+	_resource_delta_presentation_duration_sec = float(clampi(int(presentation.get("duration_ms", 80)), 80, 700)) / 1000.0
+	_resource_delta_cue.text = " • ".join(labels)
+	_resource_delta_cue.tooltip_text = String(presentation.get("result_message", ""))
+	_resource_delta_cue.modulate = Color.WHITE
+	_resource_delta_cue.visible = true
+	set_process(true)
+	return validation_resource_delta_presentation()
+
+func dismiss_resource_delta_presentation() -> Dictionary:
+	_resource_delta_presentation_active = false
+	_resource_delta_presentation_elapsed_sec = _resource_delta_presentation_duration_sec
+	_resource_delta_cue.visible = false
+	_resource_delta_cue.modulate = Color.WHITE
+	if not _artifact_acquired_presentation_active and not _artifact_slot_presentation_active:
+		set_process(false)
+	return validation_resource_delta_presentation()
+
+func validation_resource_delta_presentation() -> Dictionary:
+	var snapshot := _resource_delta_presentation.duplicate(true)
+	var progress := 1.0
+	if _resource_delta_presentation_active and _resource_delta_presentation_duration_sec > 0.0:
+		progress = clampf(_resource_delta_presentation_elapsed_sec / _resource_delta_presentation_duration_sec, 0.0, 1.0)
+	snapshot["active"] = _resource_delta_presentation_active
+	snapshot["progress"] = progress
+	snapshot["duration_ms"] = int(round(_resource_delta_presentation_duration_sec * 1000.0))
+	snapshot["visible"] = _resource_delta_cue.visible and _resource_delta_presentation_active
+	snapshot["text"] = _resource_delta_cue.text if _resource_delta_presentation_active else ""
+	snapshot["tooltip_text"] = _resource_delta_cue.tooltip_text if _resource_delta_presentation_active else ""
+	return snapshot
+
 func _record_artifact_acquired_presentation(result: Dictionary, action_id: String) -> void:
 	if not bool(result.get("ok", false)) or action_id != "collect_artifact":
 		return
@@ -2743,7 +2901,7 @@ func dismiss_artifact_acquired_presentation(restore_focus: bool = true) -> Dicti
 	_artifact_action_cue.modulate = Color.WHITE
 	if restore_focus and was_blocking:
 		call_deferred("_configure_overworld_keyboard_focus", true)
-	if not _artifact_slot_presentation_active:
+	if not _artifact_slot_presentation_active and not _resource_delta_presentation_active:
 		set_process(false)
 	return validation_artifact_acquired_presentation()
 
@@ -9203,6 +9361,7 @@ func validation_snapshot() -> Dictionary:
 		"artifact_actions": _validation_artifact_action_payloads(),
 		"artifact_slot_presentation": validation_artifact_slot_presentation(),
 		"artifact_acquired_presentation": validation_artifact_acquired_presentation(),
+		"resource_delta_presentation": validation_resource_delta_presentation(),
 		"active_town": active_town,
 		"selected_town": selected_town,
 		"resources": _duplicate_dictionary(_session.overworld.get("resources", {})),
