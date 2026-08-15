@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld object-resolution VFX asset adoption slice is completed. Three original imported alpha textures now render capture, visited, and depleted events through an exact fail-closed manifest while preserving existing event, tile, timing, reduced-motion, dynamic-layer, session, save, and procedural fallback authority. Select the next tracker-approved release-readiness implementation slice.",
+  "currentNotes": "The Town building-complete VFX asset adoption slice is completed. Normal construction completion draws one original imported alpha effect behind the unchanged badge/text, with the prior gold frame retained fail closed and reduced motion kept static/nonblocking. Select the next tracker-approved release-readiness implementation slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-object-resolution-vfx-asset-adoption-10184",
-  "currentSliceId": "presentation-overworld-object-resolution-vfx-asset-adoption-10184",
-  "currentSliceNotes": "Three original capture, visited, and depleted textures are adopted through an exact local manifest; focused, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass with bounded claims.",
+  "currentSlice": "presentation-town-building-complete-vfx-asset-adoption-10184",
+  "currentSliceId": "presentation-town-building-complete-vfx-asset-adoption-10184",
+  "currentSliceNotes": "One original construction-complete alpha texture is adopted through an exact one-cue manifest; focused, real construction, compatibility, static/editor, Linux, and Windows gates pass with bounded claims.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Object Resolution VFX Asset Adoption",
-  "currentSliceUpdatedAt": "2026-08-15T09:23:55Z",
+  "currentSliceTitle": "Town Building Complete VFX Asset Adoption",
+  "currentSliceUpdatedAt": "2026-08-15T09:43:48Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19849,6 +19849,28 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "id": "presentation-town-building-complete-vfx-asset-adoption-10184",
+      "title": "Town Building Complete VFX Asset Adoption",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/screen-wireframes.md", "AGENTS.md"],
+      "purpose": "Replace the normal live Town construction-complete procedural outline with one original imported alpha effect without changing established construction or presentation authority.",
+      "implementationTargets": ["art/town/source/build_complete_vfx_source.png", "art/town/runtime/vfx/build_complete.png", "content/town_vfx_manifest.json", "scenes/town/TownStageView.gd", "tests/town_building_complete_vfx_asset_runtime_report.gd", "tests/town_building_complete_vfx_asset_runtime_report.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "testOwners": ["tests/town_building_complete_vfx_asset_runtime_report.tscn", "tests/town_building_complete_cue_playback_report.tscn", "tests/town_battle_visual_smoke.tscn", "tests/active_play_keyboard_focus_smoke.tscn", "tests/accessibility_screen_reader_semantics_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/validate_repo.py"],
+      "baseline": {"head": "e4ed41ce", "event_id": "town_building_built", "vfx_cue_id": "vfx_placeholder_build_complete", "runtime_texture_count": 0, "live_rendering": "procedural_gold_frame_only", "implementation_or_runtime_started": false},
+      "completionCriteria": ["Normal building-complete playback maps and visibly draws one exact imported alpha texture at 1280x720 and 1920x1080 without remapping any other cue", "Missing mapping or texture retains the exact existing procedural frame and reduced motion retains the static building badge", "Focused live proof preserves construction consequences, containment, progress, blocking, skip, expiry, focus, session, and save version 9 authority", "Building-complete, Town visual/action, focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"],
+      "nonGoals": ["building, cost, economy, action, construction, town-state, focus, input, timing, animation-policy, AI, save-schema, or content changes", "recruitment VFX, other Town/Overworld/Battle cues, particles, shaders, audio, layout, scenic backdrop, or broad renderer changes", "packaged building interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"],
+      "createdAt": "2026-08-15T09:26:05Z",
+      "startedAt": "2026-08-15T09:26:05Z",
+      "updatedAt": "2026-08-15T09:43:48Z",
+      "completedAt": "2026-08-15T09:43:48Z",
+      "notes": "Implemented one original 1254x1254 source image, one 512x512 alpha runtime texture, an exact one-cue Town manifest, and asset-first live construction-complete drawing behind the unchanged badge/text. Focused 1280x720 and 1920x1080 runtime proves imported draw, missing-texture procedural frame, reduced-motion static badge, containment, blocking split, unchanged session authority, and save version 9. Real construction cue, Town/Battle visual, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup gates pass. Packaged building interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null
+    },
     {
       "id": "presentation-overworld-object-resolution-vfx-asset-adoption-10184",
       "title": "Overworld Object Resolution VFX Asset Adoption",
