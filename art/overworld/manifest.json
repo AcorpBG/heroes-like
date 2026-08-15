@@ -111,6 +111,30 @@
       "path": "res://art/overworld/runtime/objects/towns/factions/veilmourn.png",
       "source_atlas": "res://art/overworld/source/faction_town_sprite_atlas.png"
     },
+    "hero_faction_embercourt": {
+      "path": "res://art/overworld/runtime/heroes/factions/embercourt.png",
+      "source_atlas": "res://art/overworld/source/faction_hero_sprite_atlas.png"
+    },
+    "hero_faction_mireclaw": {
+      "path": "res://art/overworld/runtime/heroes/factions/mireclaw.png",
+      "source_atlas": "res://art/overworld/source/faction_hero_sprite_atlas.png"
+    },
+    "hero_faction_sunvault": {
+      "path": "res://art/overworld/runtime/heroes/factions/sunvault.png",
+      "source_atlas": "res://art/overworld/source/faction_hero_sprite_atlas.png"
+    },
+    "hero_faction_thornwake": {
+      "path": "res://art/overworld/runtime/heroes/factions/thornwake.png",
+      "source_atlas": "res://art/overworld/source/faction_hero_sprite_atlas.png"
+    },
+    "hero_faction_brasshollow": {
+      "path": "res://art/overworld/runtime/heroes/factions/brasshollow.png",
+      "source_atlas": "res://art/overworld/source/faction_hero_sprite_atlas.png"
+    },
+    "hero_faction_veilmourn": {
+      "path": "res://art/overworld/runtime/heroes/factions/veilmourn.png",
+      "source_atlas": "res://art/overworld/source/faction_hero_sprite_atlas.png"
+    },
     "hostile_camp": {
       "path": "res://art/overworld/runtime/objects/encounters/hostile_camp.png",
       "source_trimmed": "res://art/overworld/source/trimmed/encounters/hostile_camp-trimmed.png"
@@ -3829,6 +3853,14 @@
     "faction_thornwake": "town_faction_thornwake",
     "faction_brasshollow": "town_faction_brasshollow",
     "faction_veilmourn": "town_faction_veilmourn"
+  },
+  "hero_faction_sprites": {
+    "faction_embercourt": "hero_faction_embercourt",
+    "faction_mireclaw": "hero_faction_mireclaw",
+    "faction_sunvault": "hero_faction_sunvault",
+    "faction_thornwake": "hero_faction_thornwake",
+    "faction_brasshollow": "hero_faction_brasshollow",
+    "faction_veilmourn": "hero_faction_veilmourn"
   },
   "encounter_default_sprite": {
     "asset_id": "hostile_camp",
