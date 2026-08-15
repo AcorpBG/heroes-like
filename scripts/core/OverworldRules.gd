@@ -2029,6 +2029,65 @@ static func overworld_object_placement_pathing_surface(
 		"blocks_visual_footprint_rectangle": false,
 	}
 
+static func blocking_object_feedback_surface_at_tile(
+	session: SessionStateStoreScript.SessionData,
+	x: int,
+	y: int
+) -> Dictionary:
+	if session == null:
+		return {}
+	var map_size := derive_map_size(session)
+	var tile := Vector2i(x, y)
+	if tile.x < 0 or tile.y < 0 or tile.x >= map_size.x or tile.y >= map_size.y:
+		return {}
+	for object_value in session.overworld.get("map_objects", []):
+		if not (object_value is Dictionary):
+			continue
+		var object: Dictionary = object_value
+		var kind := String(object.get("kind", ""))
+		var family := String(object.get("object_family_id", object.get("family_id", "")))
+		var blocks_body := bool(object.get("blocking_body", kind == "decorative_obstacle" or family == "decorative_obstacle"))
+		if tile not in _generated_body_tiles_for_placement(object, blocks_body):
+			continue
+		var object_id := String(object.get("object_id", object.get("id", ""))).strip_edges()
+		var map_object := ContentService.get_map_object(object_id) if object_id != "" else {}
+		var object_name := String(map_object.get("name", object.get("name", ""))).strip_edges()
+		if object_name == "":
+			continue
+		return {
+			"source": "map_objects",
+			"kind": "map_object",
+			"placement_id": String(object.get("placement_id", "")),
+			"object_id": object_id,
+			"site_id": "",
+			"name": object_name,
+			"tile": _tile_payload(tile),
+		}
+	for node_value in session.overworld.get("resource_nodes", []):
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		var map_object := _map_object_for_resource_node(node)
+		if not _resource_node_blocks_body_tiles(node, map_object):
+			continue
+		if tile not in _map_object_world_body_tiles(map_object, node):
+			continue
+		var site_id := String(node.get("site_id", "")).strip_edges()
+		var site := ContentService.get_resource_site(site_id) if site_id != "" else {}
+		var object_name := String(map_object.get("name", site.get("name", node.get("name", "")))).strip_edges()
+		if object_name == "":
+			continue
+		return {
+			"source": "resource_nodes",
+			"kind": "resource_body",
+			"placement_id": String(node.get("placement_id", "")),
+			"object_id": String(map_object.get("id", node.get("object_id", ""))),
+			"site_id": site_id,
+			"name": object_name,
+			"tile": _tile_payload(tile),
+		}
+	return {}
+
 static func tile_is_blocked(session: SessionStateStoreScript.SessionData, x: int, y: int) -> bool:
 	var map_data = session.overworld.get("map", [])
 	if y < 0 or not (map_data is Array) or y >= map_data.size():
@@ -2527,19 +2586,25 @@ static func _build_blocked_tile_index(session: SessionStateStoreScript.SessionDa
 	return index
 
 static func _append_generated_body_tiles_to_blocked_index(index: Dictionary, placement: Dictionary, blocks_body: bool) -> void:
+	for body_tile in _generated_body_tiles_for_placement(placement, blocks_body):
+		index[_tile_key(body_tile)] = true
+
+static func _generated_body_tiles_for_placement(placement: Dictionary, blocks_body: bool) -> Array:
 	if not blocks_body:
-		return
+		return []
 	var block_payload: Variant = placement.get("package_block_tiles", null)
 	var body_tiles := _world_tiles_from_payload_array(block_payload) if block_payload is Array else []
 	if body_tiles.is_empty() and block_payload is Array:
-		return
+		return []
 	if body_tiles.is_empty():
 		body_tiles = _world_tiles_from_payload_array(placement.get("body_tiles", []))
 	if body_tiles.is_empty():
 		body_tiles = [Vector2i(int(placement.get("x", -1)), int(placement.get("y", -1)))]
+	var valid_tiles := []
 	for body_tile in body_tiles:
 		if body_tile is Vector2i and body_tile.x >= 0 and body_tile.y >= 0:
-			index[_tile_key(body_tile)] = true
+			valid_tiles.append(body_tile)
+	return valid_tiles
 
 static func _map_object_for_resource_node(node: Dictionary) -> Dictionary:
 	var object_id := String(node.get("object_id", "")).strip_edges()

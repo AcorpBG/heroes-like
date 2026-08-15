@@ -2487,9 +2487,14 @@ func _record_route_blocked_presentation(source_reason: String) -> void:
 		return
 	var tile := _selected_tile
 	var blocked_reason := ""
+	var event_id := "overworld_route_blocked"
+	var blocking_object := {}
 	var selected_blocks_travel := OverworldRules.tile_is_blocked(_session, tile.x, tile.y) and not OverworldRules.tile_is_actionable_route_destination(_session, tile.x, tile.y)
 	if selected_blocks_travel:
-		blocked_reason = "%s blocks travel." % _terrain_name_at(tile.x, tile.y)
+		var feedback := _blocking_route_feedback_surface(tile)
+		blocked_reason = String(feedback.get("blocked_reason", ""))
+		event_id = String(feedback.get("event_id", "overworld_route_blocked"))
+		blocking_object = feedback.get("blocking_object", {}) if feedback.get("blocking_object", {}) is Dictionary else {}
 	else:
 		var route_state := _ensure_selected_route_state("blocked_presentation")
 		var route_tiles: Array = route_state.get("route_tiles", []) if route_state.get("route_tiles", []) is Array else []
@@ -2498,16 +2503,25 @@ func _record_route_blocked_presentation(source_reason: String) -> void:
 		blocked_reason = "No clear route from the active hero."
 	if blocked_reason == "":
 		return
-	var decision_signature := "%s|blocked|%d,%d|%s" % [
-		_selected_route_action_surface_signature(),
+	var hero_pos := OverworldRules.hero_position(_session)
+	var movement = _session.overworld.get("movement", {})
+	var decision_signature := "%s|blocked|hero:%d,%d|move:%d/%d|tile:%d,%d|%s|%s|%s|%s" % [
+		_selected_route_session_signature(),
+		hero_pos.x,
+		hero_pos.y,
+		int(movement.get("current", 0)),
+		int(movement.get("max", 0)),
 		tile.x,
 		tile.y,
+		_selected_route_destination_state_signature(tile),
+		event_id,
 		blocked_reason,
+		String(blocking_object.get("placement_id", "")),
 	]
 	if decision_signature == _route_blocked_presentation_signature:
 		return
 	var policy: Dictionary = AnimationCueCatalogScript.cue_playback_policy_for_event(
-		"overworld_route_blocked",
+		event_id,
 		SettingsService.animation_preferences()
 	)
 	if policy.is_empty():
@@ -2519,10 +2533,11 @@ func _record_route_blocked_presentation(source_reason: String) -> void:
 	var authored_duration_ms: int = mini(max_duration_ms, 420)
 	_route_blocked_presentation = {
 		"serial": _route_blocked_presentation_serial,
-		"event_id": "overworld_route_blocked",
+		"event_id": event_id,
 		"status": "blocked",
 		"tile": {"x": tile.x, "y": tile.y},
 		"blocked_reason": blocked_reason,
+		"blocking_object": blocking_object.duplicate(true),
 		"source_reason": source_reason,
 		"selected_animation_state": String(policy.get("selected_animation_state", "")),
 		"selected_visual_policy": String(policy.get("selected_visual_policy", "")),
@@ -2532,6 +2547,26 @@ func _record_route_blocked_presentation(source_reason: String) -> void:
 		"allows_large_motion": bool(policy.get("allows_large_motion", true)),
 		"duration_ms": int(round(float(authored_duration_ms) * duration_scale)),
 		"max_duration_ms": max_duration_ms,
+	}
+
+func _blocking_route_feedback_surface(tile: Vector2i) -> Dictionary:
+	var blocking_object := OverworldRules.blocking_object_feedback_surface_at_tile(_session, tile.x, tile.y)
+	if blocking_object.is_empty():
+		return {
+			"event_id": "overworld_route_blocked",
+			"blocked_reason": "%s blocks travel." % _terrain_name_at(tile.x, tile.y),
+			"blocking_object": {},
+		}
+	if not OverworldRules.is_tile_visible(_session, tile.x, tile.y):
+		return {
+			"event_id": "overworld_route_blocked",
+			"blocked_reason": "An unseen obstacle blocks travel.",
+			"blocking_object": {},
+		}
+	return {
+		"event_id": "overworld_object_blocked",
+		"blocked_reason": "%s blocks travel." % String(blocking_object.get("name", "Object")),
+		"blocking_object": blocking_object.duplicate(true),
 	}
 
 func _record_object_resolution_presentation(result: Dictionary, route: String) -> void:
@@ -5723,6 +5758,7 @@ func _selected_route_decision_surface() -> Dictionary:
 	var route_clear: bool = steps > 0
 	var status := "selected"
 	var blocked_reason := ""
+	var blocking_feedback := {}
 	if selected_is_hero:
 		status = "current"
 		action_kind = "hold"
@@ -5730,7 +5766,8 @@ func _selected_route_decision_surface() -> Dictionary:
 		reachable_today = true
 	elif selected_blocks_travel:
 		status = "blocked"
-		blocked_reason = "%s blocks travel." % _terrain_name_at(_selected_tile.x, _selected_tile.y)
+		blocking_feedback = _blocking_route_feedback_surface(_selected_tile)
+		blocked_reason = String(blocking_feedback.get("blocked_reason", ""))
 	elif route_clear and movement_current <= 0:
 		status = "no_movement"
 		blocked_reason = "No movement left today."
@@ -5774,6 +5811,8 @@ func _selected_route_decision_surface() -> Dictionary:
 		"reachable_today": reachable_today,
 		"route_clear": route_clear,
 		"blocked_reason": blocked_reason,
+		"blocked_event_id": String(blocking_feedback.get("event_id", "")),
+		"blocking_object": (blocking_feedback.get("blocking_object", {}) as Dictionary).duplicate(true) if blocking_feedback.get("blocking_object", {}) is Dictionary else {},
 		"steps": steps,
 		"distance": steps,
 		"movement_current": movement_current,

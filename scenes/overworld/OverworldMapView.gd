@@ -337,6 +337,7 @@ var _route_blocked_animation_state := ""
 var _route_blocked_visual_policy := ""
 var _route_blocked_fallback_tag := ""
 var _route_blocked_reason := ""
+var _route_blocked_blocking_object: Dictionary = {}
 var _route_blocked_vfx_cue_ids: Array = []
 var _route_blocked_audio_cue_ids: Array = []
 var _route_blocked_audio_playback_records: Array = []
@@ -716,13 +717,14 @@ func _sync_route_blocked_presentation(presentation: Dictionary) -> void:
 	_route_blocked_visual_policy = String(presentation.get("selected_visual_policy", ""))
 	_route_blocked_fallback_tag = String(presentation.get("selected_fallback_tag", ""))
 	_route_blocked_reason = String(presentation.get("blocked_reason", "")).strip_edges()
+	_route_blocked_blocking_object = (presentation.get("blocking_object", {}) as Dictionary).duplicate(true) if presentation.get("blocking_object", {}) is Dictionary else {}
 	_route_blocked_vfx_cue_ids = (presentation.get("selected_vfx_cue_ids", []) as Array).duplicate(true)
 	_route_blocked_audio_cue_ids = (presentation.get("selected_audio_cue_ids", []) as Array).duplicate(true)
 	_route_blocked_audio_playback_records = []
 	_route_blocked_allows_large_motion = bool(presentation.get("allows_large_motion", true))
 	_route_blocked_last_draw = {}
 	_sync_presentation_processing()
-	if _route_blocked_event_id != "overworld_route_blocked" or String(presentation.get("status", "")) != "blocked" or _route_blocked_reason == "":
+	if _route_blocked_event_id not in ["overworld_route_blocked", "overworld_object_blocked"] or String(presentation.get("status", "")) != "blocked" or _route_blocked_reason == "":
 		return
 	var tile_payload: Dictionary = presentation.get("tile", {}) if presentation.get("tile", {}) is Dictionary else {}
 	var tile := Vector2i(int(tile_payload.get("x", -1)), int(tile_payload.get("y", -1)))
@@ -734,12 +736,14 @@ func _sync_route_blocked_presentation(presentation: Dictionary) -> void:
 		ROUTE_BLOCKED_MAX_DURATION_MSEC
 	)
 	_route_blocked_tile = tile
+	var audio_source := "OverworldMapView.object_blocked" if _route_blocked_event_id == "overworld_object_blocked" else "OverworldMapView.route_blocked"
 	for audio_cue_value in _route_blocked_audio_cue_ids:
-		_route_blocked_audio_playback_records.append(PresentationAudio.play_cue(String(audio_cue_value), "OverworldMapView.route_blocked", {
+		_route_blocked_audio_playback_records.append(PresentationAudio.play_cue(String(audio_cue_value), audio_source, {
 			"event_id": _route_blocked_event_id,
 			"presentation_serial": serial,
 			"tile": {"x": tile.x, "y": tile.y},
 			"blocked_reason": _route_blocked_reason,
+			"blocking_object": _route_blocked_blocking_object.duplicate(true),
 		}))
 	_route_blocked_duration_sec = float(duration_msec) / 1000.0
 	_route_blocked_active = true
@@ -1947,6 +1951,24 @@ func _draw_route_blocked_procedural_marker(rect: Rect2, progress: float) -> void
 	var extent := minf(rect.size.x, rect.size.y)
 	var motion_progress := progress if _route_blocked_allows_large_motion else 0.35
 	var alpha := clampf(1.0 - progress * 0.68, 0.28, 1.0)
+	if _route_blocked_event_id == "overworld_object_blocked":
+		var gate_size := Vector2(extent * 0.54, extent * 0.48)
+		var gate_rect := Rect2(center - gate_size * 0.5, gate_size)
+		_route_blocked_last_draw = {
+			"mode": "blocked_object_icon" if _route_blocked_visual_policy == "reduced_motion_fallback" else "procedural_object_blocked_marker",
+			"texture_path": "",
+			"gate_bar_count": 3,
+			"lock_count": 1,
+			"alpha": alpha,
+		}
+		var object_color := Color(1.0, 0.48, 0.20, alpha)
+		var detail_color := Color(1.0, 0.84, 0.58, alpha)
+		_canvas_draw_rect(gate_rect, object_color, false, maxf(2.0, extent * 0.038))
+		for ratio in [0.25, 0.50, 0.75]:
+			var bar_x: float = gate_rect.position.x + gate_rect.size.x * float(ratio)
+			_canvas_draw_line(Vector2(bar_x, gate_rect.position.y), Vector2(bar_x, gate_rect.end.y), detail_color, maxf(1.8, extent * 0.032), true)
+		_canvas_draw_circle(center + Vector2(0.0, extent * 0.08), maxf(2.0, extent * 0.075), detail_color, false, maxf(1.8, extent * 0.030), true)
+		return
 	_route_blocked_last_draw = {
 		"mode": "blocked_route_icon" if _route_blocked_visual_policy == "reduced_motion_fallback" else "existing_procedural_route_blocked_marker",
 		"texture_path": "",
@@ -3753,6 +3775,7 @@ func validation_route_blocked_presentation() -> Dictionary:
 		"active": _route_blocked_active,
 		"tile": {"x": _route_blocked_tile.x, "y": _route_blocked_tile.y},
 		"blocked_reason": _route_blocked_reason,
+		"blocking_object": _route_blocked_blocking_object.duplicate(true),
 		"animation_state": _route_blocked_animation_state,
 		"visual_policy": _route_blocked_visual_policy,
 		"fallback_tag": _route_blocked_fallback_tag,
@@ -3773,9 +3796,12 @@ func _route_blocked_vfx_asset_state() -> Dictionary:
 	var event_id := String(spec.get("event_id", "")).strip_edges()
 	var render_mode := String(spec.get("render_mode", "")).strip_edges()
 	var texture_loaded := texture_path != "" and _overworld_vfx_texture_for_path(texture_path) != null
-	var uses_imported_asset := cue_id == "vfx_placeholder_blocked_route_marker" \
+	var expected_cue_id := "vfx_placeholder_object_blocked_marker" if _route_blocked_event_id == "overworld_object_blocked" else "vfx_placeholder_blocked_route_marker"
+	var expected_render_mode := "object_blocked_marker" if _route_blocked_event_id == "overworld_object_blocked" else "route_blocked_marker"
+	var expected_fallback_mode := "procedural_object_blocked_marker" if _route_blocked_event_id == "overworld_object_blocked" else "existing_procedural_route_blocked_marker"
+	var uses_imported_asset := cue_id == expected_cue_id \
 		and event_id == _route_blocked_event_id \
-		and render_mode == "route_blocked_marker" \
+		and render_mode == expected_render_mode \
 		and texture_loaded
 	return {
 		"cue_id": cue_id,
@@ -3786,7 +3812,7 @@ func _route_blocked_vfx_asset_state() -> Dictionary:
 		"texture_loaded": texture_loaded,
 		"uses_imported_asset": uses_imported_asset,
 		"uses_procedural_fallback": not uses_imported_asset,
-		"fallback_mode": "existing_procedural_route_blocked_marker",
+		"fallback_mode": expected_fallback_mode,
 	}
 
 func validation_guarded_site_presentation() -> Dictionary:

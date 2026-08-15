@@ -156,6 +156,11 @@ OVERWORLD_ROUTE_BLOCKED_VFX_SOURCE_PATH = ROOT / "art" / "overworld" / "source" 
 OVERWORLD_ROUTE_BLOCKED_VFX_RUNTIME_PATH = ROOT / "art" / "overworld" / "runtime" / "vfx" / "route_blocked.png"
 OVERWORLD_ROUTE_BLOCKED_VFX_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_route_blocked_vfx_asset_runtime_report.gd"
 OVERWORLD_ROUTE_BLOCKED_VFX_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_route_blocked_vfx_asset_runtime_report.tscn"
+OVERWORLD_OBJECT_BLOCKED_VFX_SOURCE_PATH = ROOT / "art" / "overworld" / "source" / "object_blocked_vfx_source.png"
+OVERWORLD_OBJECT_BLOCKED_VFX_RUNTIME_PATH = ROOT / "art" / "overworld" / "runtime" / "vfx" / "object_blocked.png"
+OVERWORLD_OBJECT_BLOCKED_AUDIO_RUNTIME_PATH = ROOT / "art" / "audio" / "runtime" / "presentation" / "object_blocked.wav"
+OVERWORLD_OBJECT_BLOCKED_FEEDBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_object_blocked_feedback_report.gd"
+OVERWORLD_OBJECT_BLOCKED_FEEDBACK_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_object_blocked_feedback_report.tscn"
 OVERWORLD_HERO_ROUTE_STEP_VFX_SOURCE_PATH = ROOT / "art" / "overworld" / "source" / "hero_route_step_vfx_source.png"
 OVERWORLD_HERO_ROUTE_STEP_VFX_RUNTIME_PATH = ROOT / "art" / "overworld" / "runtime" / "vfx" / "hero_route_step.png"
 OVERWORLD_HERO_ROUTE_STEP_VFX_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_hero_route_step_vfx_asset_runtime_report.gd"
@@ -28707,7 +28712,7 @@ def validate_overworld_hero_route_locomotion(errors: list[str]) -> None:
     ensure('blocked_reason == ""' in blocked_record_block and '_route_blocked_presentation_signature' in blocked_record_block, errors, "Blocked-route presentation must require an exact reason and dedupe decision signature")
     ensure(blocked_record_block.find("cue_playback_policy_for_event") < blocked_record_block.find("_route_blocked_presentation_serial += 1"), errors, "Blocked-route presentation must resolve authored policy before issuing a serial")
     ensure('"tile": {"x": tile.x, "y": tile.y}' in blocked_record_block and '"blocked_reason": blocked_reason' in blocked_record_block, errors, "Blocked-route presentation must detach the exact decision tile and reason")
-    ensure("session.overworld" not in blocked_record_block and "session.flags" not in blocked_record_block and "create_timer" not in blocked_record_block and "await " not in blocked_record_block, errors, "Blocked-route presentation must remain view-only and synchronous")
+    ensure("session.overworld[" not in blocked_record_block and "session.flags[" not in blocked_record_block and "create_timer" not in blocked_record_block and "await " not in blocked_record_block, errors, "Blocked-route presentation must remain view-only and synchronous")
     refresh_route_block = gdscript_function_block(shell_text, "_refresh_selected_route_preview")
     ensure(refresh_route_block.find("_record_route_blocked_presentation(reason)") < refresh_route_block.find("_refresh_with_request"), errors, "Blocked-route presentation must publish before the selected-route map refresh consumes it")
 
@@ -31519,7 +31524,7 @@ def validate_overworld_action_feedback_vfx_assets(errors: list[str]) -> None:
         ensure(token in real_reports["artifact_slot"], errors, f"Real artifact-slot owner is missing imported/fallback proof: {token}")
     for token in ('"res://art/overworld/runtime/vfx/resource_delta.png"', 'bool(vfx_asset.get("imported", false)) == not reduced_motion', 'cue_icon.is_visible_in_tree() == not reduced_motion'):
         ensure(token in real_reports["resource_delta"], errors, f"Real resource-delta owner is missing imported/fallback proof: {token}")
-    exact_summary_ids = '["vfx_placeholder_adventure_spell", "vfx_placeholder_artifact_claim", "vfx_placeholder_blocked_route_marker", "vfx_placeholder_capture_flag", "vfx_placeholder_depleted_dim", "vfx_placeholder_guard_warning", "vfx_placeholder_object_focus_ring", "vfx_placeholder_object_visit", "vfx_placeholder_resource_delta", "vfx_placeholder_route_step", "vfx_placeholder_slot_equip", "vfx_placeholder_slot_unequip"]'
+    exact_summary_ids = '["vfx_placeholder_adventure_spell", "vfx_placeholder_artifact_claim", "vfx_placeholder_blocked_route_marker", "vfx_placeholder_capture_flag", "vfx_placeholder_depleted_dim", "vfx_placeholder_guard_warning", "vfx_placeholder_object_blocked_marker", "vfx_placeholder_object_focus_ring", "vfx_placeholder_object_visit", "vfx_placeholder_resource_delta", "vfx_placeholder_route_step", "vfx_placeholder_slot_equip", "vfx_placeholder_slot_unequip"]'
     for path in (
         OVERWORLD_OBJECT_RESOLUTION_VFX_REPORT_SCRIPT_PATH,
         OVERWORLD_FIELD_SPELL_VFX_REPORT_SCRIPT_PATH,
@@ -31528,7 +31533,7 @@ def validate_overworld_action_feedback_vfx_assets(errors: list[str]) -> None:
         OVERWORLD_HERO_ROUTE_STEP_VFX_REPORT_SCRIPT_PATH,
     ):
         compatibility_text = path.read_text(encoding="utf-8")
-        ensure('int(summary.get("mapped_cue_count", 0)) == 12' in compatibility_text and exact_summary_ids in compatibility_text and 'int(summary.get("unique_texture_count", 0)) == 12' in compatibility_text and 'int(summary.get("loaded_texture_count", 0)) == 12' in compatibility_text, errors, f"Existing Overworld VFX owner must recognize exactly the twelve imported manifest textures: {path.name}")
+        ensure('int(summary.get("mapped_cue_count", 0)) == 13' in compatibility_text and exact_summary_ids in compatibility_text and 'int(summary.get("unique_texture_count", 0)) == 13' in compatibility_text and 'int(summary.get("loaded_texture_count", 0)) == 13' in compatibility_text, errors, f"Existing Overworld VFX owner must recognize exactly the thirteen imported manifest textures: {path.name}")
 
 
 def validate_overworld_object_resolution_vfx_assets(errors: list[str]) -> None:
@@ -31607,6 +31612,12 @@ def validate_overworld_object_resolution_vfx_assets(errors: list[str]) -> None:
                 "render_mode": "route_blocked_marker",
                 "scale": 0.96,
             },
+            "vfx_placeholder_object_blocked_marker": {
+                "event_id": "overworld_object_blocked",
+                "texture_path": "res://art/overworld/runtime/vfx/object_blocked.png",
+                "render_mode": "object_blocked_marker",
+                "scale": 0.96,
+            },
             "vfx_placeholder_capture_flag": {
                 "event_id": "overworld_object_captured",
                 "texture_path": "res://art/overworld/runtime/vfx/object_resolution/captured.png",
@@ -31627,7 +31638,7 @@ def validate_overworld_object_resolution_vfx_assets(errors: list[str]) -> None:
             },
         },
     }
-    ensure(load_json(OVERWORLD_OBJECT_RESOLUTION_VFX_MANIFEST_PATH) == expected_manifest, errors, "Overworld VFX manifest must retain the exact twelve field, route, action-feedback, focus, guard, and object-resolution mappings")
+    ensure(load_json(OVERWORLD_OBJECT_RESOLUTION_VFX_MANIFEST_PATH) == expected_manifest, errors, "Overworld VFX manifest must retain the exact thirteen field, route, blocking-object, action-feedback, focus, guard, and object-resolution mappings")
     ensure(png_size(OVERWORLD_OBJECT_RESOLUTION_VFX_ATLAS_PATH) == (2172, 724), errors, "Object-resolution VFX source atlas must remain the exact 3x724 source image")
     runtime_payloads: list[bytes] = []
     for cue_id, path in runtime_paths.items():
@@ -31774,7 +31785,7 @@ def validate_overworld_field_spell_vfx_assets(errors: list[str]) -> None:
         "render_mode": "field_spell_cast",
         "scale": 1.12,
     }, errors, "Overworld VFX manifest must map the exact field-spell cue/event/texture")
-    ensure(set(cues) == {"vfx_placeholder_adventure_spell", "vfx_placeholder_route_step", "vfx_placeholder_artifact_claim", "vfx_placeholder_slot_equip", "vfx_placeholder_slot_unequip", "vfx_placeholder_resource_delta", "vfx_placeholder_blocked_route_marker", "vfx_placeholder_guard_warning", "vfx_placeholder_object_focus_ring", "vfx_placeholder_capture_flag", "vfx_placeholder_object_visit", "vfx_placeholder_depleted_dim"}, errors, "Overworld VFX manifest must not remap any other cue")
+    ensure(set(cues) == {"vfx_placeholder_adventure_spell", "vfx_placeholder_route_step", "vfx_placeholder_artifact_claim", "vfx_placeholder_slot_equip", "vfx_placeholder_slot_unequip", "vfx_placeholder_resource_delta", "vfx_placeholder_blocked_route_marker", "vfx_placeholder_object_blocked_marker", "vfx_placeholder_guard_warning", "vfx_placeholder_object_focus_ring", "vfx_placeholder_capture_flag", "vfx_placeholder_object_visit", "vfx_placeholder_depleted_dim"}, errors, "Overworld VFX manifest must not remap any other cue")
     ensure(png_size(OVERWORLD_FIELD_SPELL_VFX_SOURCE_PATH) == (1254, 1254), errors, "Overworld field-spell VFX source must retain its exact square source image")
     ensure(png_size(OVERWORLD_FIELD_SPELL_VFX_RUNTIME_PATH) == (512, 512), errors, "Overworld field-spell runtime texture must be 512x512")
     header = OVERWORLD_FIELD_SPELL_VFX_RUNTIME_PATH.read_bytes()[:26]
@@ -32216,11 +32227,14 @@ def validate_overworld_route_blocked_vfx_assets(errors: list[str]) -> None:
         ensure(token in fallback, errors, f"Existing route-blocked procedural fallback was not retained exactly: {token}")
     for token in (
         "_route_blocked_vfx_cue_ids.size() == 1",
-        'cue_id == "vfx_placeholder_blocked_route_marker"',
+        'var expected_cue_id := "vfx_placeholder_object_blocked_marker" if _route_blocked_event_id == "overworld_object_blocked" else "vfx_placeholder_blocked_route_marker"',
+        'var expected_render_mode := "object_blocked_marker" if _route_blocked_event_id == "overworld_object_blocked" else "route_blocked_marker"',
+        "cue_id == expected_cue_id",
         "event_id == _route_blocked_event_id",
-        'render_mode == "route_blocked_marker"',
+        "render_mode == expected_render_mode",
         '"uses_procedural_fallback": not uses_imported_asset',
-        '"fallback_mode": "existing_procedural_route_blocked_marker"',
+        'var expected_fallback_mode := "procedural_object_blocked_marker" if _route_blocked_event_id == "overworld_object_blocked" else "existing_procedural_route_blocked_marker"',
+        '"fallback_mode": expected_fallback_mode',
     ):
         ensure(token in state, errors, f"Route-blocked VFX resolver is missing fail-closed event/asset ownership: {token}")
     for forbidden in ("session.", "_session.", "await ", "create_timer", "create_tween", "AnimationCueCatalog", "OverworldRules"):
@@ -32265,6 +32279,160 @@ def validate_overworld_route_blocked_vfx_assets(errors: list[str]) -> None:
     reduced_selection = route_case.find('var reduced_selection: Dictionary = reduced_shell.call("validation_select_tile", 5, 1)')
     ensure(0 <= reduced_selection < route_case.find("await get_tree().process_frame", reduced_selection) < route_case.find("var reduced_cue: Dictionary", reduced_selection), errors, "Reduced-motion route-blocked owner must cross one real draw frame before observing fallback VFX")
     ensure("_draw_route_blocked_imported_vfx" not in route_text and "_route_blocked_vfx_asset_state" not in route_text, errors, "Live route-blocked owner must observe public VFX state without private draw/resolver calls")
+
+
+def validate_overworld_object_blocked_feedback(errors: list[str]) -> None:
+    required_paths = (
+        OVERWORLD_RULES_PATH,
+        OVERWORLD_SCRIPT_PATH,
+        OVERWORLD_MAP_VIEW_SCRIPT_PATH,
+        OVERWORLD_OBJECT_RESOLUTION_VFX_MANIFEST_PATH,
+        ANIMATION_EVENT_CUES_PATH,
+        PRESENTATION_SFX_MANIFEST_PATH,
+        PRESENTATION_AUDIO_PATH,
+        PRESENTATION_SFX_GENERATOR_PATH,
+        OVERWORLD_OBJECT_BLOCKED_VFX_SOURCE_PATH,
+        OVERWORLD_OBJECT_BLOCKED_VFX_RUNTIME_PATH,
+        OVERWORLD_OBJECT_BLOCKED_AUDIO_RUNTIME_PATH,
+        OVERWORLD_OBJECT_BLOCKED_FEEDBACK_REPORT_SCRIPT_PATH,
+        OVERWORLD_OBJECT_BLOCKED_FEEDBACK_REPORT_SCENE_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Overworld object-blocked feedback owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    ensure(png_size(OVERWORLD_OBJECT_BLOCKED_VFX_SOURCE_PATH) == (1254, 1254), errors, "Object-blocked VFX source must remain the exact square alpha source")
+    ensure(png_size(OVERWORLD_OBJECT_BLOCKED_VFX_RUNTIME_PATH) == (512, 512), errors, "Object-blocked VFX runtime texture must remain 512x512")
+    header = OVERWORLD_OBJECT_BLOCKED_VFX_RUNTIME_PATH.read_bytes()[:26]
+    ensure(len(header) >= 26 and header[25] in {4, 6}, errors, "Object-blocked VFX runtime texture must retain a PNG alpha channel")
+    ensure(OVERWORLD_OBJECT_BLOCKED_VFX_RUNTIME_PATH.read_bytes() != OVERWORLD_ROUTE_BLOCKED_VFX_RUNTIME_PATH.read_bytes(), errors, "Object-blocked VFX must remain distinct from the generic route-blocked marker")
+
+    vfx_cues = load_json(OVERWORLD_OBJECT_RESOLUTION_VFX_MANIFEST_PATH).get("cues", {})
+    ensure(vfx_cues.get("vfx_placeholder_object_blocked_marker") == {
+        "event_id": "overworld_object_blocked",
+        "texture_path": "res://art/overworld/runtime/vfx/object_blocked.png",
+        "render_mode": "object_blocked_marker",
+        "scale": 0.96,
+    }, errors, "Overworld VFX manifest must map the exact object-blocked cue/event/texture")
+    audio_cues = load_json(PRESENTATION_SFX_MANIFEST_PATH).get("cues", {})
+    ensure(audio_cues.get("audio_placeholder_blocked_object") == {
+        "path": "res://art/audio/runtime/presentation/object_blocked.wav",
+        "duration_msec": 340,
+        "volume_db": -13.0,
+        "role": "overworld_object_blocked",
+    }, errors, "Presentation SFX manifest must map the exact object-blocked audio cue")
+    animation_rows = load_json(ANIMATION_EVENT_CUES_PATH).get("entries", [])
+    object_blocked_rows = [row for row in animation_rows if isinstance(row, dict) and row.get("event_id") == "overworld_object_blocked"]
+    ensure(len(object_blocked_rows) == 1, errors, "Animation cue catalog must retain one exact overworld_object_blocked event")
+    if len(object_blocked_rows) == 1:
+        row = object_blocked_rows[0]
+        ensure(row.get("animation_state") == "object_blocks_route" and row.get("vfx_cue_ids") == ["vfx_placeholder_object_blocked_marker"] and row.get("audio_cue_ids") == ["audio_placeholder_blocked_object"], errors, "Object-blocked animation event must retain its distinct state/VFX/audio mapping")
+
+    def function_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}")
+        if start < 0:
+            return ""
+        end_candidates = [index for index in (text.find("\nfunc ", start + 1), text.find("\nstatic func ", start + 1)) if index >= 0]
+        end = min(end_candidates) if end_candidates else -1
+        return text[start:] if end < 0 else text[start:end]
+
+    rules_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
+    surface = function_block(rules_text, "blocking_object_feedback_surface_at_tile")
+    for token in (
+        'session.overworld.get("map_objects", [])',
+        '_generated_body_tiles_for_placement(object, blocks_body)',
+        'ContentService.get_map_object(object_id)',
+        '"source": "map_objects"',
+        '"kind": "map_object"',
+        'session.overworld.get("resource_nodes", [])',
+        '_resource_node_blocks_body_tiles(node, map_object)',
+        '_map_object_world_body_tiles(map_object, node)',
+        'ContentService.get_resource_site(site_id)',
+        '"source": "resource_nodes"',
+        '"kind": "resource_body"',
+        '"tile": _tile_payload(tile)',
+    ):
+        ensure(token in surface, errors, f"Blocking-object feedback surface is missing exact detached identity/pathing ownership: {token}")
+    ensure(surface.find('session.overworld.get("map_objects", [])') < surface.find('session.overworld.get("resource_nodes", [])') < surface.rfind("return {}"), errors, "Blocking-object feedback must preserve map-object then resource-body source order")
+    for forbidden in ('session.overworld[', 'session.flags[', ".erase(", ".append(", "tile_is_blocked(", "tile_is_actionable_route_destination("):
+        ensure(forbidden not in surface, errors, f"Blocking-object feedback surface must be detached/read-only and must not redefine pathing: {forbidden}")
+    body_helper = function_block(rules_text, "_generated_body_tiles_for_placement")
+    blocked_index = function_block(rules_text, "_build_blocked_tile_index")
+    append_block = function_block(rules_text, "_append_generated_body_tiles_to_blocked_index")
+    ensure('_generated_body_tiles_for_placement(placement, blocks_body)' in append_block and '_generated_body_tiles_for_placement(object, blocks_body)' in surface, errors, "Map-object feedback and blocked-index authority must share the exact generated body-tile materializer")
+    for token in ('placement.get("package_block_tiles", null)', 'placement.get("body_tiles", [])', 'Vector2i(int(placement.get("x", -1)), int(placement.get("y", -1)))', "body_tile.x >= 0 and body_tile.y >= 0"):
+        ensure(token in body_helper, errors, f"Shared generated body-tile materializer is missing prior blocked-index semantics: {token}")
+    ensure(blocked_index.find('session.overworld.get("map_objects", [])') < blocked_index.find('session.overworld.get("resource_nodes", [])'), errors, "Blocked-index source order must remain map objects before resource bodies")
+
+    shell_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+    feedback = function_block(shell_text, "_blocking_route_feedback_surface")
+    producer = function_block(shell_text, "_record_route_blocked_presentation")
+    decision = function_block(shell_text, "_selected_route_decision_surface")
+    for token in (
+        "OverworldRules.blocking_object_feedback_surface_at_tile",
+        'if blocking_object.is_empty():',
+        'if not OverworldRules.is_tile_visible(_session, tile.x, tile.y):',
+        '"blocked_reason": "An unseen obstacle blocks travel."',
+        '"event_id": "overworld_object_blocked"',
+        '"blocked_reason": "%s blocks travel." % String(blocking_object.get("name", "Object"))',
+        '"blocking_object": blocking_object.duplicate(true)',
+    ):
+        ensure(token in feedback, errors, f"Shell object-blocked feedback is missing visible/hidden fail-closed ownership: {token}")
+    ensure(feedback.find("blocking_object.is_empty()") < feedback.find("is_tile_visible") < feedback.find('"event_id": "overworld_object_blocked"'), errors, "Shell must retain terrain fallback, then hidden identity suppression, before visible object naming")
+    ensure('cue_playback_policy_for_event(\n\t\tevent_id,' in producer and '"event_id": event_id' in producer and '"blocking_object": blocking_object.duplicate(true)' in producer, errors, "Blocked producer must select policy from the exact route/object event and publish detached object identity")
+    for token in ("_selected_route_session_signature()", "OverworldRules.hero_position(_session)", 'int(movement.get("current", 0))', "_selected_route_destination_state_signature(tile)", 'String(blocking_object.get("placement_id", ""))'):
+        ensure(token in producer, errors, f"Blocked cue dedupe must retain stable session/hero/movement/destination/object authority without route-generation replay: {token}")
+    ensure("_selected_route_action_surface_signature()" not in producer and "route_generation" not in producer, errors, "Blocked cue dedupe must not replay from an unrelated route-generation counter")
+    ensure('"blocked_event_id": String(blocking_feedback.get("event_id", ""))' in decision and '"blocking_object":' in decision and '_blocking_route_feedback_surface(_selected_tile)' in decision, errors, "Selected route decision must expose the same object-specific feedback surface")
+    for block in (feedback, producer, decision):
+        for forbidden in ("session.overworld[", "session.flags[", "create_timer", "create_tween"):
+            ensure(forbidden not in block, errors, f"Object-blocked Shell feedback must not mutate gameplay or timing: {forbidden}")
+
+    map_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
+    sync = function_block(map_text, "_sync_route_blocked_presentation")
+    fallback = function_block(map_text, "_draw_route_blocked_procedural_marker")
+    state = function_block(map_text, "_route_blocked_vfx_asset_state")
+    for token in (
+        '["overworld_route_blocked", "overworld_object_blocked"]',
+        '_route_blocked_blocking_object = (presentation.get("blocking_object", {}) as Dictionary).duplicate(true)',
+        '"OverworldMapView.object_blocked" if _route_blocked_event_id == "overworld_object_blocked" else "OverworldMapView.route_blocked"',
+        '"blocking_object": _route_blocked_blocking_object.duplicate(true)',
+    ):
+        ensure(token in sync, errors, f"Map view must accept and detach exact object-blocked presentation/audio ownership: {token}")
+    for token in ('if _route_blocked_event_id == "overworld_object_blocked":', '"procedural_object_blocked_marker"', '"blocked_object_icon"', '"gate_bar_count": 3', '"lock_count": 1'):
+        ensure(token in fallback, errors, f"Object-blocked procedural/reduced fallback is missing exact distinct geometry: {token}")
+    for token in ('"vfx_placeholder_object_blocked_marker"', '"overworld_object_blocked"', '"object_blocked_marker"', '"procedural_object_blocked_marker"', "cue_id == expected_cue_id", "render_mode == expected_render_mode"):
+        ensure(token in state, errors, f"Object-blocked VFX resolver is missing fail-closed event/cue/mode ownership: {token}")
+
+    report_text = OVERWORLD_OBJECT_BLOCKED_FEEDBACK_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    scene_text = OVERWORLD_OBJECT_BLOCKED_FEEDBACK_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure_scene_nodes(scene_text, errors, "overworld_object_blocked_feedback_report.tscn", [("OverworldObjectBlockedFeedbackReport", "Node")])
+    for token in (
+        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        'await _run_case(viewport_size, "normal")',
+        'await _run_case(Vector2i(1280, 720), "reduced")',
+        'await _run_case(Vector2i(1280, 720), "missing")',
+        'OverworldRules.blocking_object_feedback_surface_at_tile(session, OBJECT_TILE.x, OBJECT_TILE.y)',
+        'OverworldRules.blocking_object_feedback_surface_at_tile(session, RESOURCE_BODY_TILE.x, RESOURCE_BODY_TILE.y)',
+        '"name": "Bramble Wall"',
+        '"name": "Brightwood Sawmill"',
+        'String(decision.get("blocked_reason", "")) == "Bramble Wall blocks travel."',
+        'String(decision.get("blocked_event_id", "")) == "overworld_object_blocked"',
+        'not JSON.stringify(hidden_decision).contains("Bramble Wall")',
+        '"Rock blocks travel."',
+        '"No clear route from the active hero."',
+        '"An unseen obstacle blocks travel."',
+        'String(record.get("asset_path", "")) == OBJECT_AUDIO_PATH',
+        'String(record.get("source", "")) == "OverworldMapView.object_blocked"',
+        'session.to_dict() == authority_before',
+        'SessionStateStore.SAVE_VERSION == 9',
+        'print("%s %s" % [REPORT_ID, JSON.stringify({',
+    ):
+        ensure(token in report_text, errors, f"Object-blocked focused owner is missing exact live proof: {token}")
+    ensure(report_text.count("for viewport_size in VIEWPORT_SIZES:") == 1, errors, "Object-blocked focused owner must run both normal registered widths exactly once")
+    for forbidden in ("_record_route_blocked_presentation", "_blocking_route_feedback_surface", "_sync_route_blocked_presentation", "_draw_route_blocked_imported_vfx", "_route_blocked_vfx_asset_state"):
+        ensure(forbidden not in report_text, errors, f"Object-blocked focused owner must observe the real public selection/presentation path without bypass: {forbidden}")
 
 
 def validate_overworld_object_focus_cue_playback(errors: list[str]) -> None:
@@ -39359,6 +39527,7 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
         '"audio_placeholder_load_resume"',
         '"audio_placeholder_map_step"',
         '"audio_placeholder_invalid_route"',
+        '"audio_placeholder_blocked_object"',
         '"audio_placeholder_object_focus"',
         '"audio_placeholder_object_visit"',
         '"audio_placeholder_capture"',
@@ -39442,6 +39611,12 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
             "volume_db": -13.5,
             "role": "overworld_route_blocked",
         },
+        "audio_placeholder_blocked_object": {
+            "path": "res://art/audio/runtime/presentation/object_blocked.wav",
+            "duration_msec": 340,
+            "volume_db": -13.0,
+            "role": "overworld_object_blocked",
+        },
         "audio_placeholder_object_visit": {
             "path": "res://art/audio/runtime/presentation/object_visit.wav",
             "duration_msec": 300,
@@ -39495,7 +39670,7 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
     ensure(int(manifest.get("sample_width_bits", 0)) == 16, errors, "production presentation SFX must use 16-bit PCM")
     ensure(manifest.get("asset_tier") == "production_layered_v1", errors, "presentation SFX manifest must declare production_layered_v1")
     cues = manifest.get("cues", {})
-    ensure(isinstance(cues, dict) and set(cues) == set(expected_cues), errors, "presentation SFX manifest must contain exactly the sixteen live Town, Overworld, navigation, object-focus, object-resolution, guarded-context, and system action cues")
+    ensure(isinstance(cues, dict) and set(cues) == set(expected_cues), errors, "presentation SFX manifest must contain exactly the seventeen live Town, Overworld, navigation, object-blocked, object-focus, object-resolution, guarded-context, and system action cues")
     asset_hashes: list[str] = []
     for cue_id in sorted(expected_cues):
         expected = expected_cues[cue_id]
@@ -39529,10 +39704,10 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
             if left_samples and right_samples:
                 ensure(left_samples[0] == 0 and right_samples[0] == 0, errors, f"presentation SFX must start at zero: {expected['path']}")
                 ensure(left_samples[-1] == 0 and right_samples[-1] == 0, errors, f"presentation SFX must end at zero: {expected['path']}")
-    ensure(len(set(asset_hashes)) == 16, errors, "all sixteen presentation assets must be byte-distinct")
-    if len(asset_hashes) == 16:
+    ensure(len(set(asset_hashes)) == 17, errors, "all seventeen presentation assets must be byte-distinct")
+    if len(asset_hashes) == 17:
         pack_signature = hashlib.sha256("\n".join(asset_hashes).encode("utf-8")).hexdigest()
-        ensure(pack_signature == "274ede772a3eece327af0f352288a67570dde170695b806837f9573723a8f2a0", errors, "presentation SFX pack signature drifted")
+        ensure(pack_signature == "d085ee7fecf742c4a9c5cb6cf2c8b77c615f2320ff998fa60f742056d26a5bc8", errors, "presentation SFX pack signature drifted")
 
     generator_text = PRESENTATION_SFX_GENERATOR_PATH.read_text(encoding="utf-8")
     for required_token in (
@@ -39551,6 +39726,7 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
         "continuity_chime",
         "travel_step",
         "route_denial",
+        "object_obstruction",
         "waypoint_acknowledge",
         "banner_claim",
         "cache_lift",
@@ -39714,7 +39890,6 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
 
     navigation_syncs = {
         "_sync_hero_movement_presentation": ("_hero_movement_path = path", "_hero_movement_audio_playback_records.append", "OverworldMapView.hero_movement"),
-        "_sync_route_blocked_presentation": ("_route_blocked_tile = tile", "_route_blocked_audio_playback_records.append", "OverworldMapView.route_blocked"),
     }
     for function_name, tokens in navigation_syncs.items():
         match = re.search(rf"func {function_name}\(presentation: Dictionary\) -> void:\n(?P<body>.*?)(?=\nfunc )", overworld_map_text, re.DOTALL)
@@ -39724,9 +39899,18 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
             order = [body.find("return"), body.find(tokens[0]), body.find(tokens[1]), body.find(tokens[2])]
             ensure(all(index >= 0 for index in order) and order == sorted(order), errors, f"{function_name} audio must follow full path/tile acceptance")
 
+    route_sync_match = re.search(r"func _sync_route_blocked_presentation\(presentation: Dictionary\) -> void:\n(?P<body>.*?)(?=\nfunc )", overworld_map_text, re.DOTALL)
+    ensure(route_sync_match is not None, errors, "Could not isolate _sync_route_blocked_presentation")
+    if route_sync_match is not None:
+        route_sync = route_sync_match.group("body")
+        route_order = [route_sync.find("return"), route_sync.find("_route_blocked_tile = tile"), route_sync.find("var audio_source :="), route_sync.find("_route_blocked_audio_playback_records.append")]
+        ensure(all(index >= 0 for index in route_order) and route_order == sorted(route_order), errors, "_sync_route_blocked_presentation audio must follow full tile acceptance and event-specific source selection")
+        ensure('"OverworldMapView.object_blocked" if _route_blocked_event_id == "overworld_object_blocked" else "OverworldMapView.route_blocked"' in route_sync, errors, "Blocked presentation audio must distinguish object and route ownership")
+
     navigation_reports = {
         ROOT / "tests" / "overworld_hero_route_step_vfx_asset_runtime_report.gd": ("audio_placeholder_map_step", "map_step.wav", "OverworldMapView.hero_movement"),
         ROOT / "tests" / "overworld_route_blocked_vfx_asset_runtime_report.gd": ("audio_placeholder_invalid_route", "invalid_route.wav", "OverworldMapView.route_blocked"),
+        OVERWORLD_OBJECT_BLOCKED_FEEDBACK_REPORT_SCRIPT_PATH: ("audio_placeholder_blocked_object", "object_blocked.wav", "OverworldMapView.object_blocked"),
         ROOT / "tests" / "overworld_full_route_movement_regression.gd": ("_navigation_audio_exact", "PresentationAudio.validation_records().size()", "audio_placeholder_invalid_route"),
     }
     for path, tokens in navigation_reports.items():
@@ -42032,6 +42216,7 @@ def main() -> int:
     validate_overworld_guarded_site_vfx_assets(errors)
     validate_overworld_hero_route_step_vfx_assets(errors)
     validate_overworld_route_blocked_vfx_assets(errors)
+    validate_overworld_object_blocked_feedback(errors)
     validate_overworld_object_focus_cue_playback(errors)
     validate_overworld_object_resolution_cue_playback(errors)
     validate_neutral_dwelling_unit_slice(errors)
