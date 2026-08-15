@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The production music loop fidelity slice is complete. All twelve live menu, overworld, battle, and outcome stems are distinct original seamless 8-second 44.1 kHz stereo loops; detached imported streams loop continuously while routing, settings, fallback, save, and gameplay authority remain exact. Focused, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass. Select the next tracker-approved slice; the game is not release-ready.",
+  "currentNotes": "The Overworld ambient production loop fidelity slice is completed. All eleven exact terrain, enemy-pressure, and day-pulse paths now hold distinct deterministic seamless 12-second 44.1 kHz stereo 16-bit production loops; detached imported forward-loop clones remain active beyond a full segment without restarting an unchanged context. Focused continuity/fallback, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass, with all eleven ambient imports present in both PCKs. Final sound-design/mixer-mastering approval, packaged listening, hardware certification, signing/publication, whole-game, and release readiness remain unclaimed.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-music-production-loop-fidelity-10184",
-  "currentSliceId": "presentation-music-production-loop-fidelity-10184",
-  "currentSliceNotes": "Completed all twelve original seamless stereo stems and detached imported forward-loop playback with exact context policy, focused continuity/fallback, compatibility, repository/editor, and bounded Linux/Windows export-startup validation.",
+  "currentSlice": "presentation-overworld-ambient-production-loop-fidelity-10184",
+  "currentSliceId": "presentation-overworld-ambient-production-loop-fidelity-10184",
+  "currentSliceNotes": "Completed all eleven original seamless stereo production loops and continuous detached imported playback while preserving exact ambient context policy and authority. Focused, compatibility, repository/editor, and bounded Linux/Windows export/startup gates are green; select the next tracker-approved slice.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Production Music Loop Fidelity",
-  "currentSliceUpdatedAt": "2026-08-15T14:58:34Z",
+  "currentSliceTitle": "Overworld Ambient Production Loop Fidelity",
+  "currentSliceUpdatedAt": "2026-08-15T15:32:24Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19849,6 +19849,77 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "id": "presentation-overworld-ambient-production-loop-fidelity-10184",
+      "title": "Overworld Ambient Production Loop Fidelity",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/overworld-ambient-audio-runtime-report.md",
+        "docs/animation-systems-foundation.md",
+        "AGENTS.md"
+      ],
+      "purpose": "Replace the complete live Overworld ambience pack's short one-shot placeholders with distinct seamless production-fidelity loops and make stable imported ambience remain continuous.",
+      "implementationTargets": [
+        "art/audio/runtime/ambient/*.wav",
+        "content/ambient_sfx_manifest.json",
+        "tools/generate_ambient_sfx_assets.py",
+        "scripts/autoload/AmbientAudio.gd",
+        "tests/overworld_ambient_audio_runtime_report.gd",
+        "docs/overworld-ambient-audio-runtime-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_ambient_audio_runtime_report.tscn",
+        "tests/overworld_visual_smoke.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "6ce450d9c3747b016834139726d3ff927fc6f907",
+        "terrain_cue_count": 9,
+        "pressure_cue_count": 1,
+        "day_pulse_cue_count": 1,
+        "cue_count": 11,
+        "duration_msec": 850,
+        "sample_rate_hz": 22050,
+        "channel_count": 1,
+        "sample_width_bits": 16,
+        "unique_asset_sha_count": 11,
+        "imported_loop_mode": 0,
+        "initial_active_player_count": 3,
+        "active_player_count_after_1650_msec": 0,
+        "stable_repeat_changed_after_expiry": true,
+        "generator_owned": true,
+        "final_sound_design": false,
+        "implementation_or_runtime_started": false
+      },
+      "completionCriteria": [
+        "All eleven exact existing ambient cue paths contain byte-distinct original seamless 12-second 44.1 kHz stereo 16-bit layers with bounded peaks, non-silent distinct channels, and clean loop boundaries",
+        "AmbientAudio plays imported WAV clones in forward-loop mode, keeps the exact active terrain/pressure/day layers alive beyond one complete segment, avoids restarting an unchanged signature, and stops/replaces old context layers exactly on live context transitions",
+        "Exact cue ids, paths, roles, volumes, terrain/day/pressure selection, four-player cap, Effects bus, mute policy, generated fallback, shell synchronization, settings, save, and gameplay authority remain unchanged",
+        "Focused ambience, Overworld visual, active-play/core compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass and both PCKs contain all eleven ambient assets"
+      ],
+      "nonGoals": [
+        "final sound-design or mixer-mastering approval, licensed or third-party audio, new ambience contexts or cue ids, adaptive environment redesign, or broad soundtrack work",
+        "music, UI or Battle audio, audio bus/settings architecture, gameplay, combat, AI, save/schema, map, Native RMG, renderer, or scene-layout changes",
+        "packaged ambience listening, controller/headset/speaker hardware, native audio certification, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "createdAt": "2026-08-15T15:05:38Z",
+      "startedAt": "2026-08-15T15:05:38Z",
+      "updatedAt": "2026-08-15T15:32:24Z",
+      "completedAt": "2026-08-15T15:32:24Z",
+      "notes": "Completed from baseline head 6ce450d9c3747b016834139726d3ff927fc6f907. All eleven exact imported paths are distinct deterministic seamless 12-second 44.1 kHz stereo 16-bit production loops with pack signature e03f3ae6070a91a6aa0024ebd124ef3092128181d000875c83847c32855decb8. AmbientAudio deep-duplicates imported WAVs into forward-loop clones and preserves exact terrain/pressure/day selection, context signatures, Effects-bus/mute policy, four-player cap, generated fallback, shell synchronization, settings, save, and gameplay authority. The authoritative focused report is .artifacts/overworld_ambient_audio_runtime_report-production-loop-final.sb32Ah/report.json (SHA256 6c0a3e6cc5799fa7750d93ad3850a1db94766419f53c9556b9ce4f18767f31b0): all nine terrain cues route exactly, pressure and day form a continuous three-layer mix beyond 12 seconds, unchanged context does not restart, and generated fallback remains exact. Active-play keyboard focus, Overworld visual, core, generator determinism, repository validator, Python compile, JSON/diff, and exact/generic editor gates pass. Official Linux export/headless startup report SHA256 is 852a9baff0a74580235e2d9a2e8c285eadd63a0fe814e0b8916fb666d654778f; official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup report SHA256 is 034f60bd12fb2c508297ab48c598001d75fe4675d8615ca4c6c8002e2d7012a7; each PCK exposes all eleven imported ambient samples. These are bounded export/startup claims only: packaged ambience listening, final sound-design/mixer mastering, audio hardware certification, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Final sound-design and mixer-mastering approval, packaged listening, and native audio hardware certification remain separate release work.",
+      "blockedReason": null
+    },
     {
       "id": "presentation-music-production-loop-fidelity-10184",
       "title": "Production Music Loop Fidelity",
@@ -84186,9 +84257,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The production music loop fidelity slice is complete: all twelve menu, overworld, battle, and outcome layers are distinct original seamless production loops with continuous detached imported playback and bounded cross-platform export/startup validation. Select the next tracker-approved release-readiness slice; the game is not release-ready.",
+  "summary": "The Overworld ambient production loop fidelity slice is completed: all eleven short one-shot terrain, enemy-pressure, and day-pulse assets are replaced by distinct seamless production loops, and stable imported ambience remains continuous while preserving exact runtime policy. Focused, compatibility, static/editor, and bounded Linux/Windows export/startup gates pass. Select the next tracker-approved slice; the game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-15T14:58:34Z",
+  "updatedAt": "2026-08-15T15:32:24Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
