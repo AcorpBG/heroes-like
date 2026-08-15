@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Town faction crest adoption slice is complete. Six distinct original 256x256 crests now resolve through exact production content and rules ownership and render fail-closed inside the existing live Town medallion. Select the next tracker-approved release-readiness implementation slice.",
+  "currentNotes": "The Overworld faction town sprite adoption slice is complete. All 15 authored towns now resolve through exact template faction identity to six distinct original map sprites with frontier_town retained as fail-closed fallback. Select the next tracker-approved release-readiness implementation slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-town-faction-crest-adoption-10184",
-  "currentSliceId": "presentation-town-faction-crest-adoption-10184",
-  "currentSliceNotes": "Completed six distinct original faction crests, exact manifest and fail-closed resolver ownership, and live Town adoption for all six factions at 1280x720 and 1920x1080. The 42x40 icon remains contained in the unchanged 74x50 medallion; unknown identity retains the procedural town glyph; layout, focus, actions, session, route, and save version 9 remain exact. Focused, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL gates passed. Packaged Town interaction, certification, hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+  "currentSlice": "presentation-overworld-faction-town-sprite-adoption-10184",
+  "currentSliceId": "presentation-overworld-faction-town-sprite-adoption-10184",
+  "currentSliceNotes": "Completed six distinct original 512x512 faction town sprites and exact existing-manifest mapping. All 15 authored towns resolve through live template faction; focused 1280x720/1920x1080 proof preserves the 3x2 footprint, bottom-middle entry, no-ellipse grounding, owner color/pennant path, selection, route, passability, session, and save version 9, while invalid identity falls back to frontier_town. Ninefold, Overworld visual, active-play focus, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL gates passed. Packaged interaction, certification, hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Town Faction Crest Adoption",
-  "currentSliceUpdatedAt": "2026-08-15T06:42:32Z",
+  "currentSliceTitle": "Overworld Faction Town Sprite Adoption",
+  "currentSliceUpdatedAt": "2026-08-15T07:17:33Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19849,6 +19849,29 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "id": "presentation-overworld-faction-town-sprite-adoption-10184",
+      "title": "Overworld Faction Town Sprite Adoption",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/screen-wireframes.md", "docs/concept-art-pipeline.md", "AGENTS.md"],
+      "purpose": "Give every live authored Overworld town exact faction visual identity while preserving the existing map interaction and authority boundaries.",
+      "implementationTargets": ["art/overworld/source/faction_town_sprite_atlas.png", "art/overworld/runtime/objects/towns/factions/", "art/overworld/manifest.json", "scenes/overworld/OverworldMapView.gd", "tests/overworld_faction_town_sprite_runtime_report.gd", "tests/overworld_faction_town_sprite_runtime_report.tscn", "tests/ninefold_scenario_smoke.gd", "tests/overworld_visual_smoke.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "testOwners": ["tests/overworld_faction_town_sprite_runtime_report.tscn", "tests/ninefold_scenario_smoke.tscn", "tests/overworld_visual_smoke.tscn", "tests/active_play_keyboard_focus_smoke.tscn", "tests/accessibility_screen_reader_semantics_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/validate_repo.py"],
+      "baseline": {"head": "05fb5286ffa9e22a56d49ba397a30d2cfbd9223e", "authored_town_count": 15, "production_faction_count": 6, "faction_town_sprite_count": 0, "live_town_asset_id": "frontier_town", "implementation_or_runtime_started": false},
+      "completionCriteria": ["Six distinct original imported Overworld town sprites map one-to-one to all production faction ids in the existing art manifest", "All 15 authored towns resolve through exact live template faction while invalid or unloadable identity falls back to frontier_town", "Real 1280x720 and 1920x1080 Overworld maps preserve exact town footprint, grounding, owner pennant, visible and remembered treatment, selection, routing, passability, session, and save authority", "Focused, Ninefold, Overworld visual, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"],
+      "nonGoals": ["town ids/templates/placements, faction rules, economy, buildings, recruitment, garrisons, ownership, capture, AI, balance, save-schema, map-topology, footprints, passability, routing, or Native-RMG changes", "Town-screen backdrop/crest/layout, owner-pennant redesign, other overworld object families, terrain/road/river art, or broad map-renderer changes", "packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"],
+      "createdAt": "2026-08-15T06:46:56Z",
+      "startedAt": "2026-08-15T06:46:56Z",
+      "updatedAt": "2026-08-15T07:17:33Z",
+      "completedAt": "2026-08-15T07:17:33Z",
+      "notes": "Completed six distinct original 512x512 alpha faction town sprites and exact existing-manifest mapping. All 15 authored towns now resolve through their live template faction; the renderer prefers only a valid loaded faction texture, then frontier_town, then the existing procedural fallback. Focused 1280x720/1920x1080 Ninefold rows preserve the 3x2 footprint, bottom-middle visit entry, blocked non-entry cells, no-ellipse grounding, owner color/pennant path, shell containment, whole-session restoration, and save version 9. Ninefold, broad Overworld visual, active-play focus, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup passed. Packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null,
+      "result": {"authored_town_count": 15, "production_faction_count": 6, "distinct_sprite_count": 6, "runtime_asset_size": [512, 512], "viewports": [[1280, 720], [1920, 1080]], "fallback_asset_id": "frontier_town", "town_footprint": [3, 2], "entry_role": "bottom_middle_visit_approach", "session_route_passability_save_authority_exact": true, "save_version": 9, "ninefold_passed": true, "overworld_visual_passed": true, "active_play_keyboard_focus_passed": true, "accessibility_passed": true, "core_passed": true, "repository_validation_passed": true, "editor_parse_passed": true, "linux_export_headless_startup_passed": true, "windows_export_fresh_wine_startup_passed": true}
+    },
     {
       "id": "presentation-town-faction-crest-adoption-10184",
       "title": "Town Faction Crest Adoption",

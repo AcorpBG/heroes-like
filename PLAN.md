@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `presentation-overworld-faction-town-sprite-adoption-10184`. All 15 authored towns now resolve through their exact template faction to one of six distinct original 512x512 Overworld town sprites. The existing draw path preserves the 3x2 footprint, bottom-middle entry, grounding, owner pennant/color, visible/remembered treatment, selection, routing, passability, session, and save authority, while `frontier_town` remains the fail-closed fallback. Focused 1280x720/1920x1080, Ninefold, Overworld visual, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged Overworld interaction, hardware/certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `presentation-overworld-faction-town-sprite-adoption-10184`
 - Completed implementation slice: `presentation-town-faction-crest-adoption-10184`. The six production factions now own distinct original 256x256 imported crests through an exact manifest and fail-closed resolver. Real Town shells render the active faction crest inside the existing 74x50 medallion at 1280x720 and 1920x1080, keep the 42x40 icon contained, retain the procedural `town` glyph for unknown identity, and preserve Town layout, focus, actions, session, route, and save version 9. Focused, all-faction Town/save, Town visual, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `presentation-town-faction-crest-adoption-10184`
 - Completed implementation slice: `ux-shared-resource-stockpile-icon-popover-10184`. One shared focusable native menu now exposes the exact nine live stockpile resources, current amounts, and original icons on the existing Town top bar and Overworld command band. It preserves the existing summary and full-ledger tooltip, opens and closes through public keyboard input, returns focus only after Escape, remains contained at 1280x720 and 1920x1080, and leaves session, economy, save, action, route, and layout authority unchanged. The compact 1280 Overworld form is an 80px `Stores` button inside the existing 96px resource chip. Focused, Town economy, Overworld visual, keyboard focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged popover interaction, hardware/certification, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -5133,6 +5135,38 @@ Completed evidence:
 - focused authority preserves the exact session, action catalog, route, layout, focus, and save version 9;
 - all-faction Town/save, Town visual, active-play focus, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup gates pass;
 - packaged Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
+
+## Overworld Faction Town Sprite Adoption
+
+id: `presentation-overworld-faction-town-sprite-adoption-10184`
+
+Status: complete.
+
+Selected Phase 6 shipped-content and player-facing presentation slice. The live Overworld owns exact town placements and town templates for six production factions, but `_draw_town_sprite` always loads the single `frontier_town` placeholder. This collapses faction identity on the primary play surface even though faction Town panoramas and crests are now authored.
+
+Implementation target:
+- ship one coherent set of six distinct original imported overworld town sprites whose silhouettes and material language match Embercourt, Mireclaw, Sunvault, Thornwake, Brasshollow, and Veilmourn;
+- own the exact faction-to-sprite mapping in the existing overworld art manifest and resolve the live town template faction without adding gameplay state;
+- draw the resolved sprite through the existing Town footprint, grounding, memory modulation, owner pennant, contact, and approach path;
+- retain `frontier_town` whenever town placement/template/faction metadata is missing, unmapped, or unloadable.
+
+Completion criteria:
+- all six production faction ids map one-to-one to six distinct imported sprites, while all 15 authored town ids resolve through their exact faction and invalid identity falls back to `frontier_town`;
+- real Overworld maps at 1280x720 and 1920x1080 render all six faction town sprites with exact containment, footprint, owner pennant, visible/remembered treatment, selection/hit authority, and route/passability unchanged;
+- Ninefold six-faction breadth, Overworld visual, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass;
+- packaged claims remain bounded to export/startup unless a packaged harness actually drives and observes the Overworld town surface.
+
+Non-goals:
+- no town ids/templates/placements, faction rules, economy, buildings, recruitment, garrisons, ownership, capture, AI, balance, save schema, map topology, footprints, passability, routing, or Native RMG changes;
+- no Town-screen backdrop/crest/layout changes, no owner-pennant redesign, no other overworld object families, no terrain/road/river art changes, and no broad map-renderer rewrite;
+- no packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Completed evidence:
+- six distinct original 512x512 alpha sprites map in exact production faction order through the existing overworld art manifest, with the original 1536x1024 atlas retained as source provenance;
+- all six Ninefold town placements resolve through their live town template faction at 1280x720 and 1920x1080, and the invalid-template control resolves only to `frontier_town`;
+- focused live presentation preserves the existing 3x2 footprint, bottom-middle visit entry, blocked non-entry cells, no-ellipse grounding, owner color/pennant path, shell containment, whole-session restoration, and save version 9;
+- Ninefold, broad Overworld visual, active-play focus, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup gates pass;
+- packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
 
 ## Progress Reconciliation
 
