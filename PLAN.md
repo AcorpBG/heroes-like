@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `presentation-overworld-faction-hero-sprite-adoption-10184`. All 60 production commanders now resolve through their existing faction metadata to one of six distinct original 512x512 Overworld sprites. The live renderer preserves active identity during route interpolation, reserve badges, existing grounding/contact, selection, routing, session, and save version 9 authority, while the procedural figure remains the fail-closed fallback. Focused 1280x720/1920x1080, full-route movement, Ninefold, broad Overworld visual, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged hero interaction, hardware/certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `presentation-overworld-faction-hero-sprite-adoption-10184`
 - Completed implementation slice: `presentation-overworld-artifact-pickup-icon-adoption-10184`. All 12 production artifact pickups now render their exact existing imported icon on the live Overworld instead of sharing `adventurers_bundle`. The renderer retains the generic bundle only for invalid or unloadable identity and preserves the existing 1x1 footprint, localized grounding, current explored/visible treatment, selection, collection/depletion, fog, route, session, and save version 9 authority. Focused 1280x720/1920x1080, pickup source, object-resolution, broad visual, focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged artifact interaction, hardware/certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `presentation-overworld-artifact-pickup-icon-adoption-10184`
 - Completed implementation slice: `presentation-overworld-faction-town-sprite-adoption-10184`. All 15 authored towns now resolve through their exact template faction to one of six distinct original 512x512 Overworld town sprites. The existing draw path preserves the 3x2 footprint, bottom-middle entry, grounding, owner pennant/color, visible/remembered treatment, selection, routing, passability, session, and save authority, while `frontier_town` remains the fail-closed fallback. Focused 1280x720/1920x1080, Ninefold, Overworld visual, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged Overworld interaction, hardware/certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -5200,6 +5202,37 @@ Completed evidence:
 - focused live 1280x720 and 1920x1080 proof covers all 12 identities, exact icon paths and asset ids, current explored/visible semantics, 1x1 footprint, localized grounding, fallback, full restoration, containment, and save version 9;
 - artifact pickup source, object-resolution cue, broad Overworld visual, active-play focus, accessibility, core, repository validation, and exact/generic editor gates pass;
 - official Linux export plus packaged headless startup and official Windows export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass, with no packaged artifact interaction or broader release claim.
+
+## Overworld Faction Hero Sprite Adoption
+
+id: `presentation-overworld-faction-hero-sprite-adoption-10184`
+
+Status: completed.
+
+Selected Phase 6 shipped-content and player-facing presentation slice. All 60 production hero records already carry exact faction identity and the map index carries exact hero ids, but `_draw_hero_marker` renders one shared procedural figure for every commander.
+
+Implementation target:
+- ship one coherent set of six distinct original alpha commander sprites for Embercourt, Mireclaw, Sunvault, Thornwake, Brasshollow, and Veilmourn;
+- map faction to sprite in the existing Overworld art manifest and resolve each indexed hero id through existing ContentService hero faction metadata;
+- draw the resolved sprite through the existing hero grounding, movement interpolation, active/reserve stacking badge, and foreground-contact path;
+- retain the existing procedural hero marker whenever hero id, faction metadata, manifest mapping, import, or texture is missing.
+
+Completion criteria:
+- all 60 production heroes resolve through exact faction to one of six distinct imported sprites, while invalid identity uses only the procedural marker;
+- real 1280x720 and 1920x1080 Overworld views preserve exact hero position, active identity, movement path/interpolation, reserve count, grounding/contact, selection, routing, session, and save version 9 authority;
+- six-faction scenario breadth, broad Overworld visual, route locomotion, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass;
+- packaged claims remain bounded to export/startup unless a packaged harness actually drives and observes hero movement.
+
+Non-goals:
+- no hero ids/names/portraits/rosters/stats/specialties/spells/armies/recruitment, faction rules, movement/pathfinding, AI, balance, save schema, map topology, or Native RMG changes;
+- no 60-hero sprite set, hero portrait replacement, Town/Battle/Outcome UI, input/focus, camera, other object family, terrain/road/river, or broad renderer rewrite;
+- no packaged hero interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Completed evidence:
+- six distinct original 512x512 alpha commander sprites resolve one-to-one from the six production faction ids, and all 60 production heroes retain exact existing faction metadata;
+- focused live 1280x720 and 1920x1080 proof covers exact sprite ids and paths, active identity, movement-compatible presentation, reserve/grounding/contact contracts, procedural fallback, whole-session restoration, containment, and save version 9;
+- full-route movement, Ninefold scenario breadth, broad Overworld visual, active-play focus, accessibility, core, repository validation, and exact/generic editor gates pass;
+- official Linux export plus packaged headless startup and official Windows export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass, with no packaged hero interaction or broader release claim.
 
 ## Progress Reconciliation
 

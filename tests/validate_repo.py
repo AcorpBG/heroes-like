@@ -67,6 +67,9 @@ TOWN_FACTION_CREST_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "town_faction_cr
 FACTION_TOWN_SPRITE_ATLAS_PATH = ROOT / "art" / "overworld" / "source" / "faction_town_sprite_atlas.png"
 OVERWORLD_FACTION_TOWN_SPRITE_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_faction_town_sprite_runtime_report.gd"
 OVERWORLD_FACTION_TOWN_SPRITE_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_faction_town_sprite_runtime_report.tscn"
+FACTION_HERO_SPRITE_ATLAS_PATH = ROOT / "art" / "overworld" / "source" / "faction_hero_sprite_atlas.png"
+OVERWORLD_FACTION_HERO_SPRITE_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_faction_hero_sprite_runtime_report.gd"
+OVERWORLD_FACTION_HERO_SPRITE_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_faction_hero_sprite_runtime_report.tscn"
 OVERWORLD_ARTIFACT_PICKUP_ICON_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_artifact_pickup_icon_runtime_report.gd"
 OVERWORLD_ARTIFACT_PICKUP_ICON_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_artifact_pickup_icon_runtime_report.tscn"
 RESOURCE_REGISTRY_PATH = CONTENT_DIR / "resources.json"
@@ -28366,7 +28369,7 @@ def validate_overworld_hero_route_locomotion(errors: list[str]) -> None:
         "func _draw_hero_movement_presentation",
         "func _hero_movement_draw_state",
         "from_rect.get_center().lerp(to_rect.get_center(), segment_progress)",
-        "_draw_hero_marker(draw_rect, grounding_tile, false)",
+        "_draw_hero_marker(draw_rect, grounding_tile, false, _hero_presentation_entry(_hero_tile))",
         "not (_hero_movement_active and tile == _hero_tile)",
         "func validation_hero_movement_presentation",
         '"hero_movement_presentation": validation_hero_movement_presentation()',
@@ -29408,6 +29411,141 @@ def validate_overworld_faction_town_sprite_runtime(errors: list[str]) -> None:
     ensure('"town_faction_embercourt" not in town_asset_ids' in ninefold_text, errors, "Ninefold large-map gate must require the exact Embercourt town sprite")
     ensure('_assert_art_sprite(town_presentation, "town_faction_embercourt", false)' in visual_text, errors, "Overworld visual gate must require the exact River Pass Embercourt town sprite")
     ensure('expected_asset_id.begins_with("town_faction_")' in visual_text, errors, "Overworld visual town grounding gate must recognize faction town asset ids")
+
+
+def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
+    required_paths = (
+        OVERWORLD_ART_MANIFEST_PATH,
+        FACTION_HERO_SPRITE_ATLAS_PATH,
+        OVERWORLD_MAP_VIEW_SCRIPT_PATH,
+        CONTENT_DIR / "heroes.json",
+        OVERWORLD_FACTION_HERO_SPRITE_RUNTIME_REPORT_SCRIPT_PATH,
+        OVERWORLD_FACTION_HERO_SPRITE_RUNTIME_REPORT_SCENE_PATH,
+        ROOT / "tests" / "overworld_visual_smoke.gd",
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Overworld faction hero sprite owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    def function_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}")
+        if start < 0:
+            return ""
+        end = text.find("\nfunc ", start + 1)
+        return text[start:] if end < 0 else text[start:end]
+
+    faction_order = (
+        "faction_embercourt", "faction_mireclaw", "faction_sunvault",
+        "faction_thornwake", "faction_brasshollow", "faction_veilmourn",
+    )
+    heroes = items_index(load_json(CONTENT_DIR / "heroes.json"))
+    ensure(len(heroes) == 60, errors, "Faction hero sprite adoption must retain the exact 60 production heroes")
+    hero_faction_counts = {faction_id: 0 for faction_id in faction_order}
+    for hero in heroes.values():
+        faction_id = str(hero.get("faction_id", "")) if isinstance(hero, dict) else ""
+        if faction_id in hero_faction_counts:
+            hero_faction_counts[faction_id] += 1
+    ensure(all(hero_faction_counts[faction_id] == 10 for faction_id in faction_order), errors, "All six factions must retain exactly ten production heroes for sprite resolution")
+
+    manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
+    object_assets = manifest.get("object_assets", {})
+    faction_sprites = manifest.get("hero_faction_sprites", {})
+    ensure(isinstance(faction_sprites, dict) and list(faction_sprites.keys()) == list(faction_order), errors, "Overworld hero faction sprite mapping must preserve exact six-faction order")
+    sprite_bytes: list[bytes] = []
+    if isinstance(faction_sprites, dict) and isinstance(object_assets, dict):
+        for faction_id in faction_order:
+            suffix = faction_id.removeprefix("faction_")
+            asset_id = str(faction_sprites.get(faction_id, ""))
+            expected_asset_id = f"hero_faction_{suffix}"
+            expected_path = f"res://art/overworld/runtime/heroes/factions/{suffix}.png"
+            ensure(asset_id == expected_asset_id, errors, f"Hero faction {faction_id} must map to its stable sprite id")
+            entry = object_assets.get(asset_id, {})
+            ensure(isinstance(entry, dict), errors, f"Hero faction sprite {asset_id} must be defined in object_assets")
+            if not isinstance(entry, dict):
+                continue
+            runtime_path = str(entry.get("path", ""))
+            ensure(runtime_path == expected_path, errors, f"Hero faction sprite {asset_id} must own its exact runtime path")
+            ensure(str(entry.get("source_atlas", "")) == "res://art/overworld/source/faction_hero_sprite_atlas.png", errors, f"Hero faction sprite {asset_id} must retain exact source-atlas provenance")
+            disk_path = res_path_to_disk(runtime_path)
+            ensure(disk_path.is_file() and png_size(disk_path) == (512, 512), errors, f"Hero faction sprite {asset_id} must be an exact 512x512 PNG")
+            ensure(Path(f"{disk_path}.import").is_file(), errors, f"Hero faction sprite {asset_id} is missing Godot import metadata")
+            if disk_path.is_file():
+                sprite_bytes.append(disk_path.read_bytes())
+    ensure(len(sprite_bytes) == 6 and len(set(sprite_bytes)) == 6, errors, "All six Overworld hero faction PNG payloads must be distinct")
+    ensure(png_size(FACTION_HERO_SPRITE_ATLAS_PATH) == (1536, 1024), errors, "Faction hero source atlas must remain the exact 3x2 1536x1024 source")
+    ensure(Path(f"{FACTION_HERO_SPRITE_ATLAS_PATH}.import").is_file(), errors, "Faction hero source atlas import metadata is missing")
+
+    map_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
+    load_block = function_block(map_text, "_load_overworld_art_manifest")
+    entry_block = function_block(map_text, "_hero_presentation_entry")
+    resolver_block = function_block(map_text, "_hero_sprite_asset_id")
+    marker_block = function_block(map_text, "_draw_hero_marker")
+    sprite_block = function_block(map_text, "_draw_hero_sprite")
+    reserve_block = function_block(map_text, "_draw_hero_reserve_badge")
+    movement_block = function_block(map_text, "_draw_hero_movement_presentation")
+    payload_block = function_block(map_text, "_hero_presentation_payload")
+    for token in (
+        "var _hero_faction_asset_ids: Dictionary = {}", "_hero_faction_asset_ids.clear()",
+        'var hero_faction_sprites = _overworld_art_manifest.get("hero_faction_sprites", {})',
+        "for faction_id_value in hero_faction_sprites:", "_hero_faction_asset_ids[faction_id] = asset_id",
+    ):
+        ensure(token in map_text, errors, f"Overworld hero faction manifest lifecycle is missing: {token}")
+    ensure(load_block.find("_hero_faction_asset_ids.clear()") < load_block.find('get("hero_faction_sprites", {})') < load_block.find("_hero_faction_asset_ids[faction_id] = asset_id"), errors, "Hero faction mapping must clear then load only from the current manifest")
+    ensure('bool(hero_value.get("is_active", false))' in entry_block and entry_block.find("is_active") < entry_block.find("return hero_value"), errors, "Hero presentation must prefer the exact active hero when multiple heroes share a tile")
+    ensure(entry_block.rstrip().endswith("return {}"), errors, "Hero presentation entry must fail closed when no indexed hero exists")
+    for token in (
+        "var faction_id := _hero_template_faction_id(hero)", 'String(_hero_faction_asset_ids.get(faction_id, "")).strip_edges()',
+        "_object_texture_for_asset(asset_id) is Texture2D", "return asset_id", 'return ""',
+    ):
+        ensure(token in resolver_block, errors, f"Hero faction sprite resolver is missing fail-closed ownership: {token}")
+    ensure(resolver_block.find("var faction_id :=") < resolver_block.find("var asset_id :=") < resolver_block.find("return asset_id"), errors, "Hero sprite resolver must derive faction then require a loaded mapped texture")
+    for forbidden in ("session.", "_session.", "await ", "create_timer", "create_tween", "match faction_id"):
+        ensure(forbidden not in resolver_block, errors, f"Hero sprite resolver must remain synchronous, manifest-owned, and read-only: {forbidden}")
+    ensure("var hero := hero_override if not hero_override.is_empty() else _hero_presentation_entry(tile)" in marker_block, errors, "Hero draw path must use an exact override only for movement, otherwise the indexed tile hero")
+    ensure(marker_block.find("if _draw_hero_sprite(hero, rect, tile):") < marker_block.find("var anchor := _draw_hero_grounding_anchor"), errors, "Hero draw path must prefer the exact faction sprite before the procedural fallback")
+    for token in (
+        "_object_texture_for_asset(_hero_sprite_asset_id(hero))", "_draw_hero_grounding_anchor(rect, tile)",
+        "_canvas_draw_texture_rect(texture, sprite_rect, false, OBJECT_SPRITE_VISIBLE_MODULATE)",
+        "_draw_hero_foreground_contact(anchor)", "return true",
+    ):
+        ensure(token in sprite_block, errors, f"Faction hero sprite must retain existing grounding/contact ownership: {token}")
+    ensure("_reserve_hero_count(tile) if show_reserve_count else 0" in reserve_block, errors, "Faction hero adoption must preserve reserve-stack badge authority")
+    ensure("_draw_hero_marker(draw_rect, grounding_tile, false, _hero_presentation_entry(_hero_tile))" in movement_block, errors, "Hero movement interpolation must retain the authoritative active hero sprite across intermediate tiles")
+    for token in (
+        '"hero_id": hero_id', '"faction_id": faction_id', '"is_active": bool(hero.get("is_active", false))',
+        '"sprite_asset_id": sprite_asset_id', '"sprite_path": String(_object_asset_paths.get(sprite_asset_id, ""))',
+        '"uses_faction_sprite": faction_id != ""', '"uses_procedural_fallback": sprite_asset_id == ""',
+        '"reserve_count": _reserve_hero_count(tile)', '"grounding_model": HERO_GROUNDING_MODEL', '"depth_cue_model": HERO_DEPTH_CUE_MODEL',
+    ):
+        ensure(token in payload_block, errors, f"Hero faction validation payload is missing detached evidence: {token}")
+    ensure('"hero_presentation": _hero_presentation_payload(tile, explored)' in map_text, errors, "Tile validation must expose exact hero faction presentation")
+
+    report_text = OVERWORLD_FACTION_HERO_SPRITE_RUNTIME_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    report_scene = OVERWORLD_FACTION_HERO_SPRITE_RUNTIME_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure_scene_nodes(report_scene, errors, "overworld_faction_hero_sprite_runtime_report.tscn", [("OverworldFactionHeroSpriteRuntimeReport", "Node")])
+    for token in (
+        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        'const EXPECTED_FACTION_ASSETS := {', 'const REPRESENTATIVE_HERO_IDS := {',
+        'ScenarioFactory.create_session(SCENARIO_ID, "hard", SessionState.LAUNCH_MODE_SKIRMISH)',
+        'session.hero_id = String(heroes[0].get("id", ""))', 'session.overworld["player_heroes"] = heroes',
+        'var authority_before: Dictionary = session.to_dict()',
+        'map_view.call("validation_hero_presentation_profiles")', 'profiles.size() != EXPECTED_FACTION_ASSETS.size()',
+        'seen_factions.size() == 6 and seen_assets.size() == 6 and active_count == 1',
+        'first_hero["id"] = "hero_missing_faction_sprite_fixture"',
+        'String(fallback.get("sprite_asset_id", "")) == ""', 'bool(fallback.get("uses_procedural_fallback", false))',
+        'session.from_dict(authority_before)', 'restored_profiles == profiles and session.to_dict() == authority_before',
+        'var viewport_rect: Rect2 = get_viewport().get_visible_rect()', 'viewport_rect.encloses(shell_rect)',
+        'SessionStateStore.SAVE_VERSION', 'print("OVERWORLD_FACTION_HERO_SPRITE_RUNTIME_REPORT %s"',
+    ):
+        ensure(token in report_text, errors, f"Overworld faction hero focused owner is missing method-matched proof: {token}")
+    ensure(report_text.find('session.hero_id = String(heroes[0].get("id", ""))') < report_text.find('session.overworld["player_heroes"] = heroes'), errors, "Faction hero fixture must align the SessionData primary id before installing the exact six-hero roster")
+    ensure(report_text.count("for viewport_size in VIEWPORT_SIZES:") == 1, errors, "Faction hero focused owner must run exactly both registered widths")
+    ensure(report_text.find('first_hero["id"] = "hero_missing_faction_sprite_fixture"') < report_text.find("session.from_dict(authority_before)") < report_text.find("restored_profiles == profiles and session.to_dict() == authority_before"), errors, "Faction hero fallback fixture must restore through the public SessionData snapshot before exact authority comparison")
+    for forbidden in ("_hero_faction_asset_ids[", "_object_textures[", "_draw_hero_sprite(", "_draw_hero_marker(", "create_timer", "create_tween"):
+        ensure(forbidden not in report_text, errors, f"Faction hero focused owner must not bypass production resolution: {forbidden}")
+    visual_text = (ROOT / "tests" / "overworld_visual_smoke.gd").read_text(encoding="utf-8")
+    ensure('String(hero_sprite.get("sprite_asset_id", "")) != "hero_faction_embercourt"' in visual_text, errors, "Overworld visual gate must require the exact River Pass hero faction sprite")
 
 
 def validate_overworld_artifact_pickup_icon_runtime(errors: list[str]) -> None:
@@ -39386,6 +39524,7 @@ def main() -> int:
     validate_town_building_category_icon_runtime(errors)
     validate_town_faction_crest_runtime(errors)
     validate_overworld_faction_town_sprite_runtime(errors)
+    validate_overworld_faction_hero_sprite_runtime(errors)
     validate_overworld_artifact_pickup_icon_runtime(errors)
     validate_overworld_artifact_slot_cue_playback(errors)
     validate_overworld_artifact_acquired_cue_playback(errors)

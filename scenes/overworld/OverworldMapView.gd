@@ -238,6 +238,7 @@ var _artifact_default_asset_id := ""
 var _artifact_icon_asset_ids: Dictionary = {}
 var _town_default_asset_id := ""
 var _town_faction_asset_ids: Dictionary = {}
+var _hero_faction_asset_ids: Dictionary = {}
 var _encounter_default_asset_id := ""
 var _session_static_layer: Control = null
 var _state_layer: Control = null
@@ -1569,7 +1570,7 @@ func _draw_hero_movement_presentation(board_rect: Rect2) -> void:
 		return
 	var draw_rect: Rect2 = draw_state.get("rect", Rect2())
 	var grounding_tile: Vector2i = draw_state.get("grounding_tile", Vector2i(-1, -1))
-	_draw_hero_marker(draw_rect, grounding_tile, false)
+	_draw_hero_marker(draw_rect, grounding_tile, false, _hero_presentation_entry(_hero_tile))
 
 func _hero_movement_draw_state(board_rect: Rect2) -> Dictionary:
 	if not _hero_movement_active or _hero_movement_path.size() <= 1 or _hero_movement_duration_sec <= 0.0:
@@ -2002,7 +2003,11 @@ func _draw_encounter_marker(rect: Rect2, remembered: bool = false, tile: Vector2
 	]), Color(0.92, 0.30, 0.24, 0.68 if remembered else 0.96))
 	_draw_procedural_contact_marks(anchor, "encounter", remembered)
 
-func _draw_hero_marker(rect: Rect2, tile: Vector2i, show_reserve_count: bool = true) -> void:
+func _draw_hero_marker(rect: Rect2, tile: Vector2i, show_reserve_count: bool = true, hero_override: Dictionary = {}) -> void:
+	var hero := hero_override if not hero_override.is_empty() else _hero_presentation_entry(tile)
+	if _draw_hero_sprite(hero, rect, tile):
+		_draw_hero_reserve_badge(rect, tile, show_reserve_count)
+		return
 	var anchor := _draw_hero_grounding_anchor(rect, tile)
 	var extent := minf(rect.size.x, rect.size.y)
 	var base_radius := maxf(5.0, extent * HERO_MARKER_RADIUS)
@@ -2049,6 +2054,23 @@ func _draw_hero_marker(rect: Rect2, tile: Vector2i, show_reserve_count: bool = t
 	_canvas_draw_polyline(PackedVector2Array([banner[0], banner[1], banner[2], banner[0]]), MARKER_OUTLINE_COLOR, maxf(1.4, extent * 0.020))
 	_draw_hero_foreground_contact(anchor)
 
+	_draw_hero_reserve_badge(rect, tile, show_reserve_count)
+
+func _draw_hero_sprite(hero: Dictionary, rect: Rect2, tile: Vector2i) -> bool:
+	var texture = _object_texture_for_asset(_hero_sprite_asset_id(hero))
+	if not (texture is Texture2D):
+		return false
+	var anchor := _draw_hero_grounding_anchor(rect, tile)
+	var extent := minf(rect.size.x, rect.size.y)
+	var ground_center: Vector2 = anchor.get("center", rect.get_center())
+	var sprite_extent := maxf(16.0, extent * 0.96)
+	var sprite_center := ground_center + Vector2(0.0, -extent * 0.30)
+	var sprite_rect := Rect2(sprite_center - Vector2(sprite_extent, sprite_extent) * 0.5, Vector2(sprite_extent, sprite_extent))
+	_canvas_draw_texture_rect(texture, sprite_rect, false, OBJECT_SPRITE_VISIBLE_MODULATE)
+	_draw_hero_foreground_contact(anchor)
+	return true
+
+func _draw_hero_reserve_badge(rect: Rect2, tile: Vector2i, show_reserve_count: bool) -> void:
 	var reserve_count = _reserve_hero_count(tile) if show_reserve_count else 0
 	if reserve_count <= 0:
 		return
@@ -3373,6 +3395,7 @@ func validation_tile_presentation(tile: Vector2i) -> Dictionary:
 		"marker_readability": _marker_readability_payload(tile, explored, visible, object_kinds, has_visible_hero),
 		"art_presentation": _object_art_payload(tile, explored, visible, object_kinds),
 		"artifact_presentation": _artifact_presentation_payload(tile, explored),
+		"hero_presentation": _hero_presentation_payload(tile, explored),
 		"town_presentation": town_presentation,
 	}
 
@@ -3409,6 +3432,39 @@ func validation_town_presentation_profiles() -> Array:
 		var town: Dictionary = town_value
 		profiles.append(_town_presentation_payload_for_town(town, true))
 	return profiles
+
+func validation_hero_presentation_profiles() -> Array:
+	var profiles := []
+	if _session == null:
+		return profiles
+	for hero_value in HeroCommandRulesScript.hero_positions(_session):
+		if not (hero_value is Dictionary):
+			continue
+		var hero: Dictionary = hero_value
+		profiles.append(_hero_presentation_payload(Vector2i(int(hero.get("x", -1)), int(hero.get("y", -1))), true))
+	return profiles
+
+func _hero_presentation_payload(tile: Vector2i, explored: bool) -> Dictionary:
+	if not explored:
+		return {}
+	var hero := _hero_presentation_entry(tile)
+	if hero.is_empty():
+		return {}
+	var hero_id := String(hero.get("id", "")).strip_edges()
+	var faction_id := _hero_template_faction_id(hero)
+	var sprite_asset_id := _hero_sprite_asset_id(hero)
+	return {
+		"hero_id": hero_id,
+		"faction_id": faction_id,
+		"is_active": bool(hero.get("is_active", false)),
+		"sprite_asset_id": sprite_asset_id,
+		"sprite_path": String(_object_asset_paths.get(sprite_asset_id, "")),
+		"uses_faction_sprite": faction_id != "" and String(_hero_faction_asset_ids.get(faction_id, "")) == sprite_asset_id,
+		"uses_procedural_fallback": sprite_asset_id == "",
+		"reserve_count": _reserve_hero_count(tile),
+		"grounding_model": HERO_GROUNDING_MODEL,
+		"depth_cue_model": HERO_DEPTH_CUE_MODEL,
+	}
 
 func _town_presentation_payload(tile: Vector2i, explored: bool, visible: bool) -> Dictionary:
 	if not explored:
@@ -6036,6 +6092,7 @@ func _load_overworld_art_manifest() -> void:
 	_artifact_icon_asset_ids.clear()
 	_town_default_asset_id = ""
 	_town_faction_asset_ids.clear()
+	_hero_faction_asset_ids.clear()
 	_encounter_default_asset_id = ""
 	_load_map_object_profiles()
 
@@ -6091,6 +6148,14 @@ func _load_overworld_art_manifest() -> void:
 			var asset_id := String(town_faction_sprites.get(faction_id_value, "")).strip_edges()
 			if faction_id != "" and asset_id != "":
 				_town_faction_asset_ids[faction_id] = asset_id
+
+	var hero_faction_sprites = _overworld_art_manifest.get("hero_faction_sprites", {})
+	if hero_faction_sprites is Dictionary:
+		for faction_id_value in hero_faction_sprites:
+			var faction_id := String(faction_id_value).strip_edges()
+			var asset_id := String(hero_faction_sprites.get(faction_id_value, "")).strip_edges()
+			if faction_id != "" and asset_id != "":
+				_hero_faction_asset_ids[faction_id] = asset_id
 
 	var encounter_default = _overworld_art_manifest.get("encounter_default_sprite", {})
 	if encounter_default is Dictionary:
@@ -6456,6 +6521,27 @@ func _town_sprite_asset_id(town: Dictionary) -> String:
 		return faction_asset_id
 	if _town_default_asset_id != "" and _object_texture_for_asset(_town_default_asset_id) is Texture2D:
 		return _town_default_asset_id
+	return ""
+
+func _hero_presentation_entry(tile: Vector2i) -> Dictionary:
+	var heroes: Array = _heroes_by_tile.get(_tile_key(tile), [])
+	for hero_value in heroes:
+		if hero_value is Dictionary and bool(hero_value.get("is_active", false)):
+			return hero_value
+	for hero_value in heroes:
+		if hero_value is Dictionary:
+			return hero_value
+	return {}
+
+func _hero_template_faction_id(hero: Dictionary) -> String:
+	var template := ContentService.get_hero(String(hero.get("id", "")))
+	return String(template.get("faction_id", "")).strip_edges()
+
+func _hero_sprite_asset_id(hero: Dictionary) -> String:
+	var faction_id := _hero_template_faction_id(hero)
+	var asset_id := String(_hero_faction_asset_ids.get(faction_id, "")).strip_edges()
+	if asset_id != "" and _object_texture_for_asset(asset_id) is Texture2D:
+		return asset_id
 	return ""
 
 func _town_color(tile: Vector2i) -> Color:
