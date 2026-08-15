@@ -46,7 +46,7 @@ const KEYBOARD_HERO_MOVE_DELTAS := {
 @onready var _system_panel: PanelContainer = %SystemPanel
 @onready var _header_label: Label = %Header
 @onready var _status_label: Label = %Status
-@onready var _resource_label: Label = %Resources
+@onready var _resource_label: ResourceStockpileMenu = %Resources
 @onready var _resource_delta_cue: Label = %ResourceDeltaCue
 @onready var _map_cue_label: Label = %MapCue
 @onready var _event_title_label: Label = %EventTitle
@@ -431,6 +431,7 @@ func _apply_responsive_layout() -> void:
 	var available_size := _responsive_available_size()
 	var compact_layout := available_size.x < 1360.0 or available_size.y < 760.0
 	var narrow_layout := available_size.x < 1100.0
+	var resource_compact := compact_layout or get_window().size.x < 1360 or get_window().size.y < 760
 	var constrained_desktop_band := not compact_layout and available_size.x <= 1600.0
 	_command_row.add_theme_constant_override("separation", 4 if constrained_desktop_band else 6)
 	_sidebar_shell_panel.visible = not narrow_layout
@@ -438,8 +439,11 @@ func _apply_responsive_layout() -> void:
 	_briefing_panel.visible = not compact_layout
 	_commitment_panel.visible = not compact_layout and _active_drawer == ""
 	_cue_chip_panel.visible = not compact_layout
-	_resource_chip_panel.visible = not compact_layout
-	_status_label.tooltip_text = "%s\n%s" % [_status_label.text, _resource_label.text] if compact_layout else _status_label.text
+	_resource_chip_panel.visible = true
+	_resource_chip_panel.custom_minimum_size.x = 96.0 if resource_compact else 210.0
+	_resource_label.custom_minimum_size.x = 80.0 if resource_compact else 210.0
+	_resource_label.set_compact_mode(resource_compact)
+	_status_label.tooltip_text = "%s\n%s" % [_status_label.text, _resource_label.full_summary_text()] if compact_layout else _status_label.text
 	_save_status_label.visible = not narrow_layout
 	_save_slot_picker.visible = not narrow_layout
 	_map_view.custom_minimum_size = Vector2(520.0, 320.0) if compact_layout else Vector2(640.0, 400.0)
@@ -3120,8 +3124,7 @@ func _refresh_status_surfaces(generated_surface_start: int) -> bool:
 	_status_label.tooltip_text = String(status_forecast.get("tooltip_text", ""))
 	_status_label.text = _compact_text(String(status_forecast.get("visible_text", "")), 1, 64, false)
 	var resource_text := OverworldRules.describe_resources(_session)
-	_resource_label.tooltip_text = resource_text
-	_resource_label.text = resource_text
+	_resource_label.sync_stockpile(_session.overworld.get("resources", {}), resource_text, resource_text)
 	_refresh_map_cue_surface()
 	_debug_refresh_profile_end("refresh_header_objective_status_resources", header_profile_start)
 	var commitment_profile_start := _debug_refresh_profile_begin("refresh_commitment_rail")
@@ -3277,8 +3280,7 @@ func _refresh_generated_opening_surfaces() -> void:
 	_objective_brief_label.tooltip_text = "Detailed objective and readiness surfaces are available from command/frontier drawers; routine generated-map movement keeps the live frame compact."
 	_status_label.text = "Day %d | Pos %d,%d | %s" % [_session.day, hero_pos.x, hero_pos.y, move_line]
 	_status_label.tooltip_text = "Generated map is playable; compact live refresh avoids rebuilding detailed rails on every movement."
-	_resource_label.text = resource_line
-	_resource_label.tooltip_text = resource_line
+	_resource_label.sync_stockpile(_session.overworld.get("resources", {}), resource_line, resource_line)
 	_map_cue_label.text = "Opening generated map" if opening_pending else _map_cue_text()
 	_map_cue_label.tooltip_text = GENERATED_COMPACT_MAP_CUE_TOOLTIP
 	_commitment_label.text = ""
@@ -9450,6 +9452,7 @@ func validation_snapshot() -> Dictionary:
 		"active_town": active_town,
 		"selected_town": selected_town,
 		"resources": _duplicate_dictionary(_session.overworld.get("resources", {})),
+		"resource_stockpile_menu": _resource_label.validation_snapshot(),
 		"commander_state": _validation_commander_state(),
 		"carryover_flags": _validation_carryover_flags(),
 		"objective_summary": _cached_objective_text(),
@@ -11324,7 +11327,8 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_label(_header_label, "title", 22)
 	FrontierVisualKit.apply_label(_objective_brief_label, "muted", 11)
 	FrontierVisualKit.apply_label(_status_label, "body", 12)
-	FrontierVisualKit.apply_label(_resource_label, "gold", 12)
+	FrontierVisualKit.apply_button(_resource_label, "secondary", 210.0, 30.0, 12)
+	_resource_label.flat = true
 	FrontierVisualKit.apply_label(_map_cue_label, "blue", 12)
 	FrontierVisualKit.apply_label(_event_title_label, "muted", 11)
 	FrontierVisualKit.apply_label(_event_label, "body", 12)

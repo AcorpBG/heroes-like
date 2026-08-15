@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `ux-shared-resource-stockpile-icon-popover-10184`. One shared focusable native menu now exposes the exact nine live stockpile resources, current amounts, and original icons on the existing Town top bar and Overworld command band. It preserves the existing summary and full-ledger tooltip, opens and closes through public keyboard input, returns focus only after Escape, remains contained at 1280x720 and 1920x1080, and leaves session, economy, save, action, route, and layout authority unchanged. The compact 1280 Overworld form is an 80px `Stores` button inside the existing 96px resource chip. Focused, Town economy, Overworld visual, keyboard focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged popover interaction, hardware/certification, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `ux-shared-resource-stockpile-icon-popover-10184`
 - Completed implementation slice: `economy-production-resource-registry-collection-icon-adoption-10184`. The nine live stockpile resources now own exact production metadata and distinct original imported 128x128 material icons. Existing compact Overworld collection actions resolve the selected site's distinctive non-gold claim resource, falling back to gold, and load that exact icon fail-closed while preserving action copy, order, focus, collection consequences, recap, resource-delta cue, session authority, and save version 9 at 1280x720 and 1920x1080. Live stockpile, all active rare-source collection/income, Town economy, Overworld visual, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Market/economy/site/source/AI/save changes, a broad resource-bar redesign, packaged collection interaction, certification, whole-game, and release readiness remain out of scope. Select the next tracker-approved release-readiness implementation slice.
   id: `economy-production-resource-registry-collection-icon-adoption-10184`
 - Completed implementation slice: `presentation-town-building-category-sigil-adoption-10184`. All 133 production buildings now resolve through their existing category to one of five distinct original construction sigils. The selectable Town Build options load the exact civic, dwelling, economy, support, or magic sigil fail-closed while preserving selection, readiness, tooltip, order, focus, containment, and real construction consequences at 1280x720 and 1920x1080. Focused construction, building cue, all-town save/resume, Town/Battle visual, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Unique per-building illustrations, building/economy/balance/save/AI changes, packaged interaction, hardware/certification, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -4999,6 +5001,38 @@ Non-goals:
 - do not change resource ids, amounts, costs, income, market access/rates/caps, sites, source placement, faction affinity, AI valuation, save schema/version, or collection consequences;
 - do not add a full-width resource dashboard, new panel, broad resource-bar redesign, pickup art, site art, or non-resource action icons;
 - do not claim packaged collection interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release readiness.
+
+## Shared Resource Stockpile Icon Popover
+
+id: `ux-shared-resource-stockpile-icon-popover-10184`
+
+State: completed on 2026-08-15. The Town and Overworld stockpile controls now
+reuse one production `ResourceStockpileMenu`. Focused live proof passed all four
+1280x720/1920x1080 shell rows with exact nine-row order, icons, amounts, popup
+containment, Escape closure, focus return, session/action/save authority, and
+the physical 1280 compact width exact. Compatibility, static/editor, and
+bounded Linux/Windows export/startup gates are green.
+
+Selected Phase 6 live-UX and resource-readability slice. It reuses the existing
+Town top bar and Overworld command band rather than adding a dashboard.
+
+Implementation target:
+- add one shared compact stockpile menu component that consumes only detached live stockpile values and the production resource resolver;
+- replace the two existing passive resource labels with that focusable menu while preserving their visible summary and full-ledger tooltip contracts;
+- populate the native popup with the exact ordered nine resources, exact imported icons, display names, and current amounts, failing closed per invalid row;
+- keep the Overworld control available in a bounded compact `Stores` form at 1280x720 and restore the existing summary form at wider sizes;
+- close cleanly on `ui_cancel`, preserve focus return, and never mutate session, economy, save, action, or routing authority.
+
+Completion criteria:
+- real Town and Overworld shells at 1280x720 and 1920x1080 open the same exact nine-row icon menu through public input, with stable order, amounts, accessible item text/tooltips, containment, and focus return;
+- an invalid registry row is omitted, while an invalid icon leaves that exact registered resource text-only; neither case invents identity, changes an amount, or blocks opening the remaining ledger;
+- existing visible summary and tooltip/economy readability contracts remain exact, with the compact Overworld resource control staying within the command band;
+- focused runtime, Town economy, Overworld visual, keyboard focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Non-goals:
+- do not change resource ids, amounts, ordering, costs, income, market rules, source sites, AI valuation, save schema/version, or any economy consequence;
+- do not add a full-width dashboard, persistent panel, top-level screen, new resource art, pickup/site art, or unrelated icon work;
+- do not claim packaged popover interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release readiness.
 
 ## Phase Roadmap
 
