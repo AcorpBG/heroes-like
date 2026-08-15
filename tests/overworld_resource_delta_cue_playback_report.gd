@@ -47,6 +47,7 @@ func _fail(message: String, original_window_size: Vector2i, original_reduced_mot
 	get_tree().quit(1)
 
 func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
+	PresentationAudio.validation_reset()
 	get_window().size = viewport_size
 	await get_tree().process_frame
 	await get_tree().process_frame
@@ -91,7 +92,7 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		"cue_id": "cue_ui_resource_delta",
 		"action_id": "collect_resource",
 	})
-	var malformed_fail_closed := malformed_after == malformed_before and not cue_row.visible and not cue_icon.visible and not cue.visible
+	var malformed_fail_closed := malformed_after == malformed_before and not cue_row.visible and not cue_icon.visible and not cue.visible and PresentationAudio.validation_records().is_empty()
 
 	var live_before: Dictionary = live_session.to_dict()
 	var resources_before: Dictionary = (live_session.overworld.get("resources", {}) as Dictionary).duplicate(true)
@@ -104,6 +105,9 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 	control.flags["last_overworld_action_recap"] = control_recap.duplicate(true)
 	primary_action.emit_signal("pressed")
 	var active := _presentation(shell)
+	var audio_records: Array = PresentationAudio.validation_records()
+	var audio_record: Dictionary = audio_records[0] if audio_records.size() == 1 and audio_records[0] is Dictionary else {}
+	var audio_exact := _audio_record_exact(active, audio_record, "audio_placeholder_resource_tick", "res://art/audio/runtime/presentation/resource_tick.wav", "overworld_resource_collected", "OverworldShell.resource_delta", 240)
 	var object_resolution := _object_resolution(shell)
 	var live_after: Dictionary = live_session.to_dict()
 	var expected_deltas := _resource_deltas(resources_before, control.overworld.get("resources", {}), Array(active.get("deltas", [])))
@@ -147,6 +151,8 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		and String(active.get("text", "")) != ""
 		and String(active.get("tooltip_text", "")) == String(control_result.get("message", ""))
 		and vfx_asset_exact
+		and audio_records.size() == 1
+		and audio_exact
 	)
 	var object_resolution_exact := (
 		String(object_resolution.get("event_id", "")) == "overworld_object_captured"
@@ -157,7 +163,7 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 	var progress_before := float(active.get("progress", 0.0))
 	shell.call("_refresh")
 	var refreshed := _presentation(shell)
-	var refresh_exact: bool = int(refreshed.get("serial", 0)) == serial and bool(refreshed.get("active", false)) and float(refreshed.get("progress", -1.0)) >= progress_before and live_session.to_dict() == live_after
+	var refresh_exact: bool = int(refreshed.get("serial", 0)) == serial and bool(refreshed.get("active", false)) and float(refreshed.get("progress", -1.0)) >= progress_before and live_session.to_dict() == live_after and PresentationAudio.validation_records() == audio_records
 	open_command.emit_signal("pressed")
 	var after_command := _presentation(shell)
 	var nonblocking_exact: bool = String(shell.get("_active_drawer")) == "command" and bool(after_command.get("active", false)) and live_session.to_dict() == live_after
@@ -166,16 +172,18 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		await get_tree().process_frame
 		settle_frames += 1
 	var settled := _presentation(shell)
-	var completion_exact: bool = not bool(settled.get("active", true)) and int(settled.get("serial", 0)) == serial and not cue_row.visible and not cue_icon.visible and not cue.visible and live_session.to_dict() == live_after
+	var completion_exact: bool = not bool(settled.get("active", true)) and int(settled.get("serial", 0)) == serial and not cue_row.visible and not cue_icon.visible and not cue.visible and live_session.to_dict() == live_after and PresentationAudio.validation_records() == audio_records
 	var failed_before: Dictionary = live_session.to_dict()
 	var failed_result: Dictionary = shell.validation_perform_context_action("collect_resource")
 	var failed_after := _presentation(shell)
-	var failed_exact: bool = not bool(failed_result.get("ok", true)) and int(failed_after.get("serial", 0)) == serial and not bool(failed_after.get("active", true)) and live_session.to_dict() == failed_before
+	var failed_exact: bool = not bool(failed_result.get("ok", true)) and int(failed_after.get("serial", 0)) == serial and not bool(failed_after.get("active", true)) and live_session.to_dict() == failed_before and PresentationAudio.validation_records() == audio_records
 	var row := {
 		"ok": malformed_fail_closed and presentation_exact and object_resolution_exact and refresh_exact and nonblocking_exact and completion_exact and failed_exact,
 		"viewport_size": viewport_size,
 		"mode": String(mode.get("id", "")),
 		"presentation_exact": presentation_exact,
+		"audio_exact": audio_exact,
+		"audio_record": audio_record,
 		"vfx_asset_exact": vfx_asset_exact,
 		"object_resolution_exact": object_resolution_exact,
 		"refresh_exact": refresh_exact,
@@ -327,4 +335,8 @@ func _finish_case(shell: Node, result: Dictionary) -> Dictionary:
 	if shell != null and is_instance_valid(shell):
 		shell.queue_free()
 		await get_tree().process_frame
+	PresentationAudio.validation_reset()
 	return result
+
+func _audio_record_exact(snapshot: Dictionary, record: Dictionary, cue_id: String, asset_path: String, role: String, source: String, duration_msec: int) -> bool:
+	return Array(snapshot.get("audio_playback_records", [])) == [record] and String(record.get("cue_id", "")) == cue_id and String(record.get("source", "")) == source and bool(record.get("played", false)) and String(record.get("playback_source", "")) == "imported_wav" and String(record.get("asset_path", "")) == asset_path and String(record.get("role", "")) == role and int(record.get("duration_msec", 0)) == duration_msec and int(record.get("stream_mix_rate", 0)) == 44100 and bool(record.get("stream_stereo", false)) and int(record.get("stream_loop_mode", -1)) == AudioStreamWAV.LOOP_DISABLED and int(record.get("imported_asset_count", 0)) == 1 and int(record.get("generated_fallback_count", -1)) == 0

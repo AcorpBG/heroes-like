@@ -42,6 +42,7 @@ func _fail(message: String, original_window_size: Vector2i, original_reduced_mot
 	get_tree().quit(1)
 
 func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
+	PresentationAudio.validation_reset()
 	get_window().size = viewport_size
 	await get_tree().process_frame
 	await get_tree().process_frame
@@ -86,7 +87,7 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		"cue_id": "cue_artifact_acquired",
 		"artifact_id": ARTIFACT_ID,
 	})
-	var malformed_fail_closed: bool = malformed_after == malformed_before and not artifact_cue_row.visible and not artifact_cue_icon.visible and not artifact_cue.visible and not artifact_blocker.visible
+	var malformed_fail_closed: bool = malformed_after == malformed_before and not artifact_cue_row.visible and not artifact_cue_icon.visible and not artifact_cue.visible and not artifact_blocker.visible and PresentationAudio.validation_records().is_empty()
 
 	var live_before: Dictionary = live_session.to_dict()
 	var control = SessionDataScript.SessionData.new()
@@ -99,6 +100,9 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 	var return_count_before := int(shell.get("_validation_return_to_menu_request_count"))
 	primary_action.emit_signal("pressed")
 	var active := _acquired_presentation(shell)
+	var audio_records: Array = PresentationAudio.validation_records()
+	var audio_record: Dictionary = audio_records[0] if audio_records.size() == 1 and audio_records[0] is Dictionary else {}
+	var audio_exact := _audio_record_exact(active, audio_record, "audio_placeholder_artifact_claim", "res://art/audio/runtime/presentation/artifact_claim.wav", "overworld_artifact_recovered", "OverworldShell.artifact_acquired", 420)
 	var object_resolution := _object_resolution(shell)
 	var live_after: Dictionary = live_session.to_dict()
 	var reduced_motion := bool(mode.get("reduced_motion", false))
@@ -159,6 +163,8 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		and String(location.get("location", "")) == "equipped"
 		and String(location.get("slot", "")) == "boots"
 		and vfx_asset_exact
+		and audio_records.size() == 1
+		and audio_exact
 	)
 	var map_depletion_exact: bool = (
 		String(object_resolution.get("event_id", "")) == "overworld_object_depleted"
@@ -191,6 +197,7 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		and String(refreshed.get("artifact_id", "")) == ARTIFACT_ID
 		and float(refreshed.get("progress", -1.0)) >= progress_before_refresh
 		and live_session.to_dict() == live_after
+		and PresentationAudio.validation_records() == audio_records
 	)
 
 	var skipped := false
@@ -214,6 +221,7 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		and map_cue.visible
 		and focus_owner != artifact_blocker
 		and live_session.to_dict() == live_after
+		and PresentationAudio.validation_records() == audio_records
 	)
 
 	var failed_authority_before: Dictionary = live_session.to_dict()
@@ -225,6 +233,7 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		and int(failed_presentation.get("serial", 0)) == serial
 		and not bool(failed_presentation.get("active", true))
 		and live_session.to_dict() == failed_authority_before
+		and PresentationAudio.validation_records() == audio_records
 	)
 
 	var row := {
@@ -233,6 +242,8 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		"mode": String(mode.get("id", "")),
 		"malformed_fail_closed": malformed_fail_closed,
 		"presentation_exact": presentation_exact,
+		"audio_exact": audio_exact,
+		"audio_record": audio_record,
 		"vfx_asset_exact": vfx_asset_exact,
 		"map_depletion_exact": map_depletion_exact,
 		"input_policy_exact": input_policy_exact,
@@ -310,7 +321,11 @@ func _finish_case(shell: Node, result: Dictionary) -> Dictionary:
 	if shell != null and is_instance_valid(shell):
 		shell.queue_free()
 		await get_tree().process_frame
+	PresentationAudio.validation_reset()
 	return result
+
+func _audio_record_exact(snapshot: Dictionary, record: Dictionary, cue_id: String, asset_path: String, role: String, source: String, duration_msec: int) -> bool:
+	return Array(snapshot.get("audio_playback_records", [])) == [record] and String(record.get("cue_id", "")) == cue_id and String(record.get("source", "")) == source and bool(record.get("played", false)) and String(record.get("playback_source", "")) == "imported_wav" and String(record.get("asset_path", "")) == asset_path and String(record.get("role", "")) == role and int(record.get("duration_msec", 0)) == duration_msec and int(record.get("stream_mix_rate", 0)) == 44100 and bool(record.get("stream_stereo", false)) and int(record.get("stream_loop_mode", -1)) == AudioStreamWAV.LOOP_DISABLED and int(record.get("imported_asset_count", 0)) == 1 and int(record.get("generated_fallback_count", -1)) == 0
 
 func _click_global_position(position: Vector2) -> void:
 	var press := InputEventMouseButton.new()

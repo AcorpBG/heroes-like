@@ -8,6 +8,11 @@ const MAX_RECORDS := 24
 const PRESENTATION_SFX_MANIFEST_PATH := "res://content/presentation_sfx_manifest.json"
 const EFFECTS_AUDIO_BUS := "Effects"
 const CUE_SPECS := {
+	"audio_placeholder_artifact_claim": {"frequency": 392.0, "duration": 0.42, "gain": 0.12},
+	"audio_placeholder_artifact_equip": {"frequency": 246.0, "duration": 0.26, "gain": 0.10},
+	"audio_placeholder_artifact_stow": {"frequency": 164.0, "duration": 0.28, "gain": 0.10},
+	"audio_placeholder_resource_tick": {"frequency": 880.0, "duration": 0.24, "gain": 0.09},
+	"audio_placeholder_spell_school_soft": {"frequency": 294.0, "duration": 0.48, "gain": 0.11},
 	"audio_placeholder_town_build": {"frequency": 176.0, "duration": 0.42, "gain": 0.13},
 	"audio_placeholder_recruit": {"frequency": 132.0, "duration": 0.36, "gain": 0.12},
 }

@@ -351,6 +351,7 @@ var _spell_cast_playback_policy := ""
 var _spell_cast_blocking_policy := ""
 var _spell_cast_vfx_cue_ids: Array = []
 var _spell_cast_audio_cue_ids: Array = []
+var _spell_cast_audio_playback_records: Array = []
 var _spell_cast_allows_large_motion := false
 var _spell_cast_last_draw: Dictionary = {}
 
@@ -552,6 +553,14 @@ func _sync_spell_cast_presentation(presentation: Dictionary) -> void:
 	_spell_cast_blocking_policy = blocking_policy
 	_spell_cast_vfx_cue_ids = vfx_cue_ids
 	_spell_cast_audio_cue_ids = audio_cue_ids
+	_spell_cast_audio_playback_records = []
+	for audio_cue_value in audio_cue_ids:
+		_spell_cast_audio_playback_records.append(PresentationAudio.play_cue(String(audio_cue_value), "OverworldMapView.spell_cast", {
+			"event_id": event_id,
+			"presentation_serial": serial,
+			"spell_id": spell_id,
+			"tile": {"x": spell_tile.x, "y": spell_tile.y},
+		}))
 	_spell_cast_allows_large_motion = allows_large_motion
 	_spell_cast_tile = spell_tile
 	_spell_cast_last_draw = {}
@@ -3633,6 +3642,7 @@ func validation_spell_cast_presentation() -> Dictionary:
 		"blocks_input": _spell_cast_active and _spell_cast_blocking_policy == "input_blocking_timeout",
 		"vfx_cue_ids": _spell_cast_vfx_cue_ids.duplicate(true),
 		"audio_cue_ids": _spell_cast_audio_cue_ids.duplicate(true),
+		"audio_playback_records": _spell_cast_audio_playback_records.duplicate(true),
 		"vfx_asset": _spell_cast_vfx_asset_state(),
 		"vfx_draw": _spell_cast_last_draw.duplicate(true),
 		"allows_large_motion": _spell_cast_allows_large_motion,

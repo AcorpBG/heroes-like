@@ -17,6 +17,41 @@ CHANNEL_COUNT = 2
 SAMPLE_WIDTH_BYTES = 2
 
 SPECS = {
+    "audio_placeholder_artifact_claim": {
+        "kind": "relic_reveal",
+        "fundamental": 392.0,
+        "metal": 1176.0,
+        "peak": 0.64,
+        "pan": 0.08,
+    },
+    "audio_placeholder_artifact_equip": {
+        "kind": "buckle_lock",
+        "fundamental": 246.0,
+        "metal": 1320.0,
+        "peak": 0.55,
+        "pan": -0.08,
+    },
+    "audio_placeholder_artifact_stow": {
+        "kind": "satchel_stow",
+        "fundamental": 164.0,
+        "metal": 620.0,
+        "peak": 0.52,
+        "pan": 0.06,
+    },
+    "audio_placeholder_resource_tick": {
+        "kind": "coin_tick",
+        "fundamental": 880.0,
+        "metal": 1760.0,
+        "peak": 0.50,
+        "pan": 0.12,
+    },
+    "audio_placeholder_spell_school_soft": {
+        "kind": "arcane_swell",
+        "fundamental": 294.0,
+        "metal": 882.0,
+        "peak": 0.58,
+        "pan": -0.03,
+    },
     "audio_placeholder_town_build": {
         "kind": "masonry_seal",
         "fundamental": 118.0,
@@ -59,6 +94,33 @@ def layered_sample(kind: str, fundamental: float, metal: float, t: float, progre
         overtone = math.sin(math.tau * metal * 1.5 * t + phase) * 0.14
         second_beat = max(0.0, 1.0 - abs(progress - 0.43) / 0.11) * (drum * 0.46 + noise * 0.18)
         return (drum + horn + overtone + second_beat + noise * transient * 0.13) * envelope(progress)
+    if kind == "relic_reveal":
+        shimmer = math.sin(math.tau * metal * t + phase) * 0.24
+        octave = math.sin(math.tau * metal * 1.5 * t - phase) * 0.16
+        body = math.sin(math.tau * fundamental * t + phase * 0.4) * 0.32
+        reveal = smoothstep(0.08, 0.38, progress) * (1.0 - smoothstep(0.64, 1.0, progress))
+        return (body + shimmer + octave + noise * transient * 0.10 + shimmer * reveal * 0.35) * envelope(progress)
+    if kind == "buckle_lock":
+        clasp = math.sin(math.tau * fundamental * t + phase) * 0.30
+        click = math.sin(math.tau * metal * t - phase) * 0.25 + noise * transient * 0.30
+        second = max(0.0, 1.0 - abs(progress - 0.31) / 0.08) * (clasp + click) * 0.42
+        return (clasp + click + second) * envelope(progress)
+    if kind == "satchel_stow":
+        cloth = noise * (0.30 * transient + 0.18 * (1.0 - progress))
+        close = math.sin(math.tau * fundamental * t + phase) * 0.34
+        latch = math.sin(math.tau * metal * t - phase) * max(0.0, 1.0 - abs(progress - 0.62) / 0.18) * 0.24
+        return (cloth + close + latch) * envelope(progress)
+    if kind == "coin_tick":
+        bright = math.sin(math.tau * fundamental * t + phase) * 0.34
+        edge = math.sin(math.tau * metal * t - phase) * 0.25
+        cascade = max(0.0, 1.0 - abs(progress - 0.36) / 0.16) * math.sin(math.tau * metal * 1.26 * t + phase) * 0.24
+        return (bright + edge + cascade + noise * transient * 0.08) * envelope(progress)
+    if kind == "arcane_swell":
+        body = math.sin(math.tau * fundamental * (0.86 + progress * 0.18) * t + phase) * 0.30
+        harmonic = math.sin(math.tau * metal * t - phase * 0.7) * 0.20
+        air = noise * (0.08 + max(0.0, math.sin(math.pi * progress)) * 0.14)
+        pulse = math.sin(math.tau * 5.0 * progress) * harmonic * 0.28
+        return (body + harmonic + air + pulse) * envelope(progress)
     raise ValueError(f"Unsupported presentation sound kind: {kind}")
 
 

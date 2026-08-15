@@ -2787,6 +2787,7 @@ func present_resource_delta_presentation(presentation: Dictionary) -> Dictionary
 			return validation_resource_delta_presentation()
 		labels.append("%s %s%d" % [resource_id.replace("_", " ").capitalize(), "+" if delta > 0 else "", delta])
 	_resource_delta_presentation = presentation.duplicate(true)
+	_resource_delta_presentation["audio_playback_records"] = _play_overworld_presentation_audio(_resource_delta_presentation, "OverworldShell.resource_delta")
 	_resource_delta_presentation_active = true
 	_resource_delta_presentation_elapsed_sec = 0.0
 	_resource_delta_presentation_duration_sec = float(clampi(int(presentation.get("duration_ms", 80)), 80, 700)) / 1000.0
@@ -2929,6 +2930,7 @@ func present_artifact_acquired_presentation(presentation: Dictionary) -> Diction
 		return validation_artifact_acquired_presentation()
 	_artifact_slot_presentation_active = false
 	_artifact_acquired_presentation = presentation.duplicate(true)
+	_artifact_acquired_presentation["audio_playback_records"] = _play_overworld_presentation_audio(_artifact_acquired_presentation, "OverworldShell.artifact_acquired")
 	_artifact_acquired_presentation_active = true
 	_artifact_acquired_presentation_elapsed_sec = 0.0
 	_artifact_acquired_presentation_duration_sec = float(clampi(int(presentation.get("duration_ms", 80)), 80, 700)) / 1000.0
@@ -2996,6 +2998,7 @@ func present_artifact_slot_presentation(presentation: Dictionary) -> Dictionary:
 	if _artifact_acquired_presentation_active:
 		dismiss_artifact_acquired_presentation(false)
 	_artifact_slot_presentation = presentation.duplicate(true)
+	_artifact_slot_presentation["audio_playback_records"] = _play_overworld_presentation_audio(_artifact_slot_presentation, "OverworldShell.artifact_slot")
 	_artifact_slot_presentation_active = true
 	_artifact_slot_presentation_elapsed_sec = 0.0
 	_artifact_slot_presentation_duration_sec = float(clampi(int(presentation.get("duration_ms", 80)), 80, 700)) / 1000.0
@@ -3011,6 +3014,16 @@ func present_artifact_slot_presentation(presentation: Dictionary) -> Dictionary:
 	_artifact_action_cue.visible = true
 	set_process(true)
 	return validation_artifact_slot_presentation()
+
+func _play_overworld_presentation_audio(presentation: Dictionary, source: String) -> Array:
+	var records := []
+	for audio_cue_value in Array(presentation.get("selected_audio_cue_ids", [])):
+		records.append(PresentationAudio.play_cue(String(audio_cue_value), source, {
+			"event_id": String(presentation.get("event_id", "")),
+			"presentation_serial": int(presentation.get("serial", 0)),
+			"action_id": String(presentation.get("action_id", "")),
+		}))
+	return records
 
 func validation_artifact_slot_presentation() -> Dictionary:
 	var snapshot := _artifact_slot_presentation.duplicate(true)
