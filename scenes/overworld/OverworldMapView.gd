@@ -327,7 +327,9 @@ var _guarded_site_guard_placement_id := ""
 var _guarded_site_guard_name := ""
 var _guarded_site_control_inspection := ""
 var _guarded_site_guard_link_surface := ""
+var _guarded_site_vfx_cue_ids: Array = []
 var _guarded_site_allows_large_motion := false
+var _guarded_site_last_draw: Dictionary = {}
 var _spell_cast_last_serial := 0
 var _spell_cast_tile := Vector2i(-1, -1)
 var _spell_cast_elapsed_sec := 0.0
@@ -676,7 +678,9 @@ func _sync_guarded_site_presentation(presentation: Dictionary) -> void:
 	_guarded_site_guard_name = String(presentation.get("guard_name", "")).strip_edges()
 	_guarded_site_control_inspection = String(presentation.get("control_inspection", "")).strip_edges()
 	_guarded_site_guard_link_surface = String(presentation.get("guard_link_surface", "")).strip_edges()
+	_guarded_site_vfx_cue_ids = (presentation.get("selected_vfx_cue_ids", []) as Array).duplicate(true)
 	_guarded_site_allows_large_motion = bool(presentation.get("allows_large_motion", true))
+	_guarded_site_last_draw = {}
 	if (
 		not bool(presentation.get("active", false))
 		or _guarded_site_event_id != "overworld_object_guarded"
@@ -1699,6 +1703,30 @@ func _draw_guarded_site_presentation(board_rect: Rect2) -> void:
 	if not _guarded_site_active:
 		return
 	var rect := _tile_rect(board_rect, _guarded_site_tile)
+	if _guarded_site_visual_policy != "reduced_motion_fallback" and _draw_guarded_site_imported_vfx(rect):
+		return
+	_draw_guarded_site_procedural_shield(rect)
+
+func _draw_guarded_site_imported_vfx(rect: Rect2) -> bool:
+	var asset_state := _guarded_site_vfx_asset_state()
+	if not bool(asset_state.get("uses_imported_asset", false)):
+		return false
+	var texture: Texture2D = _overworld_vfx_texture_for_path(String(asset_state.get("texture_path", ""))) as Texture2D
+	if texture == null:
+		return false
+	var center := rect.get_center()
+	var extent := minf(rect.size.x, rect.size.y)
+	var draw_extent := extent * float(asset_state.get("scale", 1.0))
+	var draw_rect := Rect2(center - Vector2(draw_extent, draw_extent) * 0.5, Vector2(draw_extent, draw_extent))
+	_canvas_draw_texture_rect(texture, draw_rect, false)
+	_guarded_site_last_draw = {
+		"mode": "imported_texture",
+		"texture_path": String(asset_state.get("texture_path", "")),
+		"rect": {"x": draw_rect.position.x, "y": draw_rect.position.y, "width": draw_rect.size.x, "height": draw_rect.size.y},
+	}
+	return true
+
+func _draw_guarded_site_procedural_shield(rect: Rect2) -> void:
 	var center := rect.get_center()
 	var extent := minf(rect.size.x, rect.size.y)
 	var guard_color := Color(1.0, 0.68, 0.18, 0.94)
@@ -1715,6 +1743,11 @@ func _draw_guarded_site_presentation(board_rect: Rect2) -> void:
 	]), Color(1.0, 0.82, 0.30, 0.92))
 	_canvas_draw_line(center + Vector2(0.0, -shield_extent * 0.58), center + Vector2(0.0, shield_extent * 0.48), Color(0.31, 0.12, 0.04, 0.92), maxf(2.0, extent * 0.034), true)
 	_canvas_draw_circle(center + Vector2(0.0, shield_extent * 0.72), maxf(1.5, extent * 0.026), Color(0.31, 0.12, 0.04, 0.92))
+	_guarded_site_last_draw = {
+		"mode": "guard_badge_static" if _guarded_site_visual_policy == "reduced_motion_fallback" else "existing_procedural_guard_shield",
+		"texture_path": "",
+		"shield_count": 1,
+	}
 
 func _draw_spell_cast_presentation(board_rect: Rect2) -> void:
 	if not _spell_cast_active or _spell_cast_duration_sec <= 0.0:
@@ -3421,7 +3454,33 @@ func validation_guarded_site_presentation() -> Dictionary:
 		"animation_state": _guarded_site_animation_state,
 		"visual_policy": _guarded_site_visual_policy,
 		"fallback_tag": _guarded_site_fallback_tag,
+		"selected_vfx_cue_ids": _guarded_site_vfx_cue_ids.duplicate(true),
+		"vfx_asset": _guarded_site_vfx_asset_state(),
+		"vfx_draw": _guarded_site_last_draw.duplicate(true),
 		"allows_large_motion": _guarded_site_allows_large_motion,
+	}
+
+func _guarded_site_vfx_asset_state() -> Dictionary:
+	var cue_id := String(_guarded_site_vfx_cue_ids[0]).strip_edges() if _guarded_site_vfx_cue_ids.size() == 1 else ""
+	var spec := _overworld_vfx_manifest_cue(cue_id)
+	var texture_path := String(spec.get("texture_path", "")).strip_edges()
+	var event_id := String(spec.get("event_id", "")).strip_edges()
+	var render_mode := String(spec.get("render_mode", "")).strip_edges()
+	var texture_loaded := texture_path != "" and _overworld_vfx_texture_for_path(texture_path) != null
+	var uses_imported_asset := cue_id == "vfx_placeholder_guard_warning" \
+		and event_id == _guarded_site_event_id \
+		and render_mode == "guarded_site_context" \
+		and texture_loaded
+	return {
+		"cue_id": cue_id,
+		"event_id": event_id,
+		"texture_path": texture_path,
+		"render_mode": render_mode,
+		"scale": float(spec.get("scale", 1.0)),
+		"texture_loaded": texture_loaded,
+		"uses_imported_asset": uses_imported_asset,
+		"uses_procedural_fallback": not uses_imported_asset,
+		"fallback_mode": "existing_procedural_guard_shield",
 	}
 
 func validation_spell_cast_presentation() -> Dictionary:

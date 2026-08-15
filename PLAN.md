@@ -24,7 +24,9 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Completed implementation slice: `presentation-overworld-field-spell-vfx-asset-adoption-10184`. Normal live field-spell playback now draws one original imported alpha arcane waypoint effect at the authoritative hero tile through the exact existing `vfx_placeholder_adventure_spell` cue. The renderer preserves exact spell consequences, bounded progress/alpha/input-blocking lifetime, refresh/skip/expiry/focus behavior, and the prior two rings as missing-map/missing-texture fallback, while reduced motion retains the static nonblocking icon. Focused 1280x720/1920x1080, real field-spell cue, four-cue object/VFX manifest, Overworld visual/route/input, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged field-spell interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+- Completed implementation slice: `presentation-overworld-guarded-site-vfx-asset-adoption-10184`. Selecting a real unresolved guarded site now draws one original imported alpha warning effect at the authoritative selected tile through the exact existing `vfx_placeholder_guard_warning` cue. The renderer preserves exact site/guard identity, inspection/link copy, context-visible lifecycle, dynamic-layer ownership, and the prior procedural shield as missing-map/missing-texture fallback, while reduced motion retains the static guard badge. Focused 1280x720/1920x1080, real guarded selection/lifecycle, five-cue Overworld VFX manifest, object/spell VFX, guarded reward, Overworld visual/route/input, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged guarded-site interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `presentation-overworld-guarded-site-vfx-asset-adoption-10184`
+- Completed implementation slice: `presentation-overworld-field-spell-vfx-asset-adoption-10184`. Normal live field-spell playback now draws one original imported alpha arcane waypoint effect at the authoritative hero tile through the exact existing `vfx_placeholder_adventure_spell` cue. The renderer preserves exact spell consequences, bounded progress/alpha/input-blocking lifetime, refresh/skip/expiry/focus behavior, and the prior two rings as missing-map/missing-texture fallback, while reduced motion retains the static nonblocking icon. Focused 1280x720/1920x1080, real field-spell cue, four-cue object/VFX manifest, Overworld visual/route/input, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged field-spell interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
   id: `presentation-overworld-field-spell-vfx-asset-adoption-10184`
 - Completed implementation slice: `presentation-town-recruitment-vfx-asset-adoption-10184`. Successful live recruitment now draws one original imported alpha muster effect behind the unchanged contained count badge. The renderer preserves exact recruitment consequences, progress/alpha/nonblocking lifetime, refresh/expiry/focus behavior, and the prior three rings as missing-map/missing-texture fallback, while reduced motion retains the static badge. Focused 1280x720/1920x1080, real recruitment cue, construction cue/asset, Town/Battle visual, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged recruitment interaction, hardware/certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `presentation-town-recruitment-vfx-asset-adoption-10184`
@@ -5392,6 +5394,27 @@ Completion evidence:
 - focused live proof covers all six faction sprites and four fail-closed identity cases at 1280x720 and 1920x1080 with exact restoration, containment, and save version 9;
 - commander selection, hero hunt, full-route movement, broad Overworld visual, active-play focus, accessibility, core, repository validation, and exact/generic editor gates pass;
 - official Linux export plus packaged headless startup and official Windows export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass, with no packaged raid-interaction or broader release claim.
+
+## Selected Slice: Overworld Guarded-Site VFX Asset Adoption
+
+Slice id: `presentation-overworld-guarded-site-vfx-asset-adoption-10184`
+
+Implementation boundary:
+- create one original source image and one bounded alpha runtime texture for the existing `vfx_placeholder_guard_warning` cue;
+- map only that cue to `overworld_object_guarded` through the existing Overworld VFX manifest and draw it on the existing dynamic-layer guarded-site context path;
+- retain the exact current procedural shield for missing mapping/texture and the current static `guard_badge_static` reduced-motion path;
+- preserve exact selected site/guard identity, inspection/link copy, context-visible lifetime, refresh/deselect/resolution lifecycle, route/session/save authority, and all existing object-resolution mappings.
+
+Completion criteria:
+- normal guarded-site context visibly draws the exact imported texture at 1280x720 and 1920x1080, while missing asset and reduced motion use the unchanged procedural/static badge;
+- focused live selection proves exact guarded site, blocking guard, tile, inspection/link text, dynamic-only rendering, containment, refresh stability, deselection/resolution clearing, session authority, and save version 9;
+- guarded-site cue, object-resolution asset/playback, guarded reward, Overworld visual/full-route/input, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass;
+- packaged claims remain bounded to export/startup unless a packaged harness actually observes the guarded-site effect.
+
+Non-goals:
+- no guard, battle, route, resource, reward, selection, fog, focus, input, timing, animation-policy, AI, save-schema, content, or map changes;
+- no other object/route/spell/Town/Battle VFX, particles, shaders, audio, layout, terrain, or broad renderer changes;
+- no packaged guarded-site interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
 
 ## Progress Reconciliation
 

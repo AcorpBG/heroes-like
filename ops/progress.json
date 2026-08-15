@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld field-spell VFX asset adoption slice is completed. Select the next tracker-approved release-readiness implementation slice; whole-game and release readiness remain unclaimed.",
+  "currentNotes": "The Overworld guarded-site VFX asset adoption slice is completed. Select the next tracker-approved release-readiness implementation slice; whole-game and release readiness remain unclaimed.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-field-spell-vfx-asset-adoption-10184",
-  "currentSliceId": "presentation-overworld-field-spell-vfx-asset-adoption-10184",
-  "currentSliceNotes": "One original imported alpha field-spell effect now renders through the exact live cue while preserving the two-ring fallback, reduced-motion icon, spell/route/session authority, and bounded platform startup claims.",
+  "currentSlice": "presentation-overworld-guarded-site-vfx-asset-adoption-10184",
+  "currentSliceId": "presentation-overworld-guarded-site-vfx-asset-adoption-10184",
+  "currentSliceNotes": "One original imported guarded-site warning effect now renders through the exact live context while preserving the procedural shield fallback, reduced-motion badge, site/guard/session authority, and bounded platform startup claims.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Field Spell VFX Asset Adoption",
-  "currentSliceUpdatedAt": "2026-08-15T10:35:41Z",
+  "currentSliceTitle": "Overworld Guarded-Site VFX Asset Adoption",
+  "currentSliceUpdatedAt": "2026-08-15T11:04:42Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19849,6 +19849,28 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "id": "presentation-overworld-guarded-site-vfx-asset-adoption-10184",
+      "title": "Overworld Guarded-Site VFX Asset Adoption",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/screen-wireframes.md", "AGENTS.md"],
+      "purpose": "Replace normal live guarded-site procedural warning drawing with one original imported alpha effect without changing established guard or context authority.",
+      "implementationTargets": ["art/overworld/source/guarded_site_vfx_source.png", "art/overworld/runtime/vfx/guarded_site.png", "content/overworld_vfx_manifest.json", "scenes/overworld/OverworldMapView.gd", "tests/overworld_guarded_site_vfx_asset_runtime_report.gd", "tests/overworld_guarded_site_vfx_asset_runtime_report.tscn", "tests/overworld_object_resolution_vfx_asset_runtime_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "testOwners": ["tests/overworld_guarded_site_vfx_asset_runtime_report.tscn", "tests/overworld_object_resolution_cue_playback_report.tscn", "tests/overworld_object_resolution_vfx_asset_runtime_report.tscn", "tests/artifact_guarded_site_reward_execution_report.tscn", "tests/overworld_visual_smoke.tscn", "tests/overworld_full_route_movement_regression.tscn", "tests/overworld_gameplay_movement_input_ownership_regression.tscn", "tests/active_play_keyboard_focus_smoke.tscn", "tests/accessibility_screen_reader_semantics_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/validate_repo.py"],
+      "baseline": {"head": "4b77651b", "event_id": "overworld_object_guarded", "vfx_cue_id": "vfx_placeholder_guard_warning", "runtime_texture_count": 0, "live_rendering": "procedural_guard_shield_only", "implementation_or_runtime_started": false},
+      "completionCriteria": ["Normal guarded-site context maps and visibly draws one exact imported alpha texture at 1280x720 and 1920x1080 without remapping any other cue", "Missing mapping or texture retains the exact existing procedural guard shield and reduced motion retains the static guard badge", "Focused live proof preserves selected site, blocking guard, tile, inspection/link text, dynamic-only rendering, refresh/deselect/resolution lifecycle, session authority, and save version 9", "Guarded-site cue, object-resolution asset/playback, guarded reward, Overworld visual/route/input, focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"],
+      "nonGoals": ["guard, battle, route, resource, reward, selection, fog, focus, input, timing, animation-policy, AI, save-schema, content, or map changes", "other object/route/spell/Town/Battle VFX, particles, shaders, audio, layout, terrain, or broad renderer changes", "packaged guarded-site interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"],
+      "createdAt": "2026-08-15T10:37:55Z",
+      "startedAt": "2026-08-15T10:37:55Z",
+      "updatedAt": "2026-08-15T11:04:42Z",
+      "completedAt": "2026-08-15T11:04:42Z",
+      "notes": "Implemented one original 1254x1254 source image, one 512x512 alpha runtime texture, an exact fifth Overworld-manifest cue, and asset-first live guarded-site drawing at the authoritative selected tile. Focused 1280x720 and 1920x1080 runtime proves imported draw containment, missing-texture procedural shield fallback, reduced-motion static badge, clearing, unchanged session authority, and save version 9. Real guarded selection proves exact site/guard identity, inspection/link copy, refresh stability, deselection and authoritative guard-resolution clearing, policy-derived VFX identity, and dynamic-only rendering. Object and field-spell VFX, guarded reward, Overworld visual/full-route/movement-input, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup gates pass. Packaged guarded-site interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null
+    },
     {
       "id": "presentation-overworld-field-spell-vfx-asset-adoption-10184",
       "title": "Overworld Field Spell VFX Asset Adoption",
