@@ -313,7 +313,9 @@ var _route_blocked_animation_state := ""
 var _route_blocked_visual_policy := ""
 var _route_blocked_fallback_tag := ""
 var _route_blocked_reason := ""
+var _route_blocked_vfx_cue_ids: Array = []
 var _route_blocked_allows_large_motion := false
+var _route_blocked_last_draw: Dictionary = {}
 var _guarded_site_active := false
 var _guarded_site_tile := Vector2i(-1, -1)
 var _guarded_site_event_id := ""
@@ -645,7 +647,9 @@ func _sync_route_blocked_presentation(presentation: Dictionary) -> void:
 	_route_blocked_visual_policy = String(presentation.get("selected_visual_policy", ""))
 	_route_blocked_fallback_tag = String(presentation.get("selected_fallback_tag", ""))
 	_route_blocked_reason = String(presentation.get("blocked_reason", "")).strip_edges()
+	_route_blocked_vfx_cue_ids = (presentation.get("selected_vfx_cue_ids", []) as Array).duplicate(true)
 	_route_blocked_allows_large_motion = bool(presentation.get("allows_large_motion", true))
+	_route_blocked_last_draw = {}
 	_sync_presentation_processing()
 	if _route_blocked_event_id != "overworld_route_blocked" or String(presentation.get("status", "")) != "blocked" or _route_blocked_reason == "":
 		return
@@ -1687,11 +1691,46 @@ func _draw_route_blocked_presentation(board_rect: Rect2) -> void:
 	if not _route_blocked_active or _route_blocked_duration_sec <= 0.0:
 		return
 	var rect := _tile_rect(board_rect, _route_blocked_tile)
+	var progress := clampf(_route_blocked_elapsed_sec / _route_blocked_duration_sec, 0.0, 1.0)
+	if _route_blocked_visual_policy != "reduced_motion_fallback" and _draw_route_blocked_imported_vfx(rect, progress):
+		return
+	_draw_route_blocked_procedural_marker(rect, progress)
+
+func _draw_route_blocked_imported_vfx(rect: Rect2, progress: float) -> bool:
+	var asset_state := _route_blocked_vfx_asset_state()
+	if not bool(asset_state.get("uses_imported_asset", false)):
+		return false
+	var texture: Texture2D = _overworld_vfx_texture_for_path(String(asset_state.get("texture_path", ""))) as Texture2D
+	if texture == null:
+		return false
 	var center := rect.get_center()
 	var extent := minf(rect.size.x, rect.size.y)
-	var progress := clampf(_route_blocked_elapsed_sec / _route_blocked_duration_sec, 0.0, 1.0)
 	var motion_progress := progress if _route_blocked_allows_large_motion else 0.35
 	var alpha := clampf(1.0 - progress * 0.68, 0.28, 1.0)
+	var draw_extent := extent * float(asset_state.get("scale", 1.0)) * lerpf(0.84, 1.0, motion_progress)
+	var draw_rect := Rect2(center - Vector2(draw_extent, draw_extent) * 0.5, Vector2(draw_extent, draw_extent))
+	_canvas_draw_texture_rect(texture, draw_rect, false, Color(1.0, 1.0, 1.0, alpha))
+	_route_blocked_last_draw = {
+		"mode": "imported_texture",
+		"texture_path": String(asset_state.get("texture_path", "")),
+		"rect": {"x": draw_rect.position.x, "y": draw_rect.position.y, "width": draw_rect.size.x, "height": draw_rect.size.y},
+		"alpha": alpha,
+		"progress": progress,
+	}
+	return true
+
+func _draw_route_blocked_procedural_marker(rect: Rect2, progress: float) -> void:
+	var center := rect.get_center()
+	var extent := minf(rect.size.x, rect.size.y)
+	var motion_progress := progress if _route_blocked_allows_large_motion else 0.35
+	var alpha := clampf(1.0 - progress * 0.68, 0.28, 1.0)
+	_route_blocked_last_draw = {
+		"mode": "blocked_route_icon" if _route_blocked_visual_policy == "reduced_motion_fallback" else "existing_procedural_route_blocked_marker",
+		"texture_path": "",
+		"circle_count": 1,
+		"cross_line_count": 2,
+		"alpha": alpha,
+	}
 	var radius := extent * lerpf(0.25, 0.40, motion_progress)
 	var blocked_color := Color(1.0, 0.42, 0.24, alpha)
 	_canvas_draw_circle(center, radius, blocked_color, false, maxf(2.0, extent * 0.040), true)
@@ -3432,9 +3471,35 @@ func validation_route_blocked_presentation() -> Dictionary:
 		"animation_state": _route_blocked_animation_state,
 		"visual_policy": _route_blocked_visual_policy,
 		"fallback_tag": _route_blocked_fallback_tag,
+		"selected_vfx_cue_ids": _route_blocked_vfx_cue_ids.duplicate(true),
+		"vfx_asset": _route_blocked_vfx_asset_state(),
+		"vfx_draw": _route_blocked_last_draw.duplicate(true),
 		"allows_large_motion": _route_blocked_allows_large_motion,
 		"duration_ms": int(round(_route_blocked_duration_sec * 1000.0)),
 		"progress": progress,
+	}
+
+func _route_blocked_vfx_asset_state() -> Dictionary:
+	var cue_id := String(_route_blocked_vfx_cue_ids[0]).strip_edges() if _route_blocked_vfx_cue_ids.size() == 1 else ""
+	var spec := _overworld_vfx_manifest_cue(cue_id)
+	var texture_path := String(spec.get("texture_path", "")).strip_edges()
+	var event_id := String(spec.get("event_id", "")).strip_edges()
+	var render_mode := String(spec.get("render_mode", "")).strip_edges()
+	var texture_loaded := texture_path != "" and _overworld_vfx_texture_for_path(texture_path) != null
+	var uses_imported_asset := cue_id == "vfx_placeholder_blocked_route_marker" \
+		and event_id == _route_blocked_event_id \
+		and render_mode == "route_blocked_marker" \
+		and texture_loaded
+	return {
+		"cue_id": cue_id,
+		"event_id": event_id,
+		"texture_path": texture_path,
+		"render_mode": render_mode,
+		"scale": float(spec.get("scale", 1.0)),
+		"texture_loaded": texture_loaded,
+		"uses_imported_asset": uses_imported_asset,
+		"uses_procedural_fallback": not uses_imported_asset,
+		"fallback_mode": "existing_procedural_route_blocked_marker",
 	}
 
 func validation_guarded_site_presentation() -> Dictionary:

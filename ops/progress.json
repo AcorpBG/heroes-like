@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld guarded-site VFX asset adoption slice is completed. Select the next tracker-approved release-readiness implementation slice; whole-game and release readiness remain unclaimed.",
+  "currentNotes": "The Overworld route-blocked VFX asset adoption slice is completed. Select the next tracker-approved release-readiness implementation slice; whole-game and release readiness remain unclaimed.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-guarded-site-vfx-asset-adoption-10184",
-  "currentSliceId": "presentation-overworld-guarded-site-vfx-asset-adoption-10184",
-  "currentSliceNotes": "One original imported guarded-site warning effect now renders through the exact live context while preserving the procedural shield fallback, reduced-motion badge, site/guard/session authority, and bounded platform startup claims.",
+  "currentSlice": "presentation-overworld-route-blocked-vfx-asset-adoption-10184",
+  "currentSliceId": "presentation-overworld-route-blocked-vfx-asset-adoption-10184",
+  "currentSliceNotes": "One original imported blocked-route warning sigil now renders through the exact live cue while preserving the procedural fallback, reduced-motion icon, route/session authority, and bounded platform startup claims.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Guarded-Site VFX Asset Adoption",
-  "currentSliceUpdatedAt": "2026-08-15T11:04:42Z",
+  "currentSliceTitle": "Overworld Route-Blocked VFX Asset Adoption",
+  "currentSliceUpdatedAt": "2026-08-15T11:33:59Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19849,6 +19849,28 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "id": "presentation-overworld-route-blocked-vfx-asset-adoption-10184",
+      "title": "Overworld Route-Blocked VFX Asset Adoption",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/screen-wireframes.md", "AGENTS.md"],
+      "purpose": "Replace normal live blocked-route procedural warning drawing with one original imported alpha effect without changing established route or presentation authority.",
+      "implementationTargets": ["art/overworld/source/route_blocked_vfx_source.png", "art/overworld/runtime/vfx/route_blocked.png", "content/overworld_vfx_manifest.json", "scenes/overworld/OverworldShell.gd", "scenes/overworld/OverworldMapView.gd", "tests/overworld_route_blocked_vfx_asset_runtime_report.gd", "tests/overworld_route_blocked_vfx_asset_runtime_report.tscn", "tests/overworld_full_route_movement_regression.gd", "tests/overworld_object_resolution_vfx_asset_runtime_report.gd", "tests/overworld_field_spell_vfx_asset_runtime_report.gd", "tests/overworld_guarded_site_vfx_asset_runtime_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "testOwners": ["tests/overworld_route_blocked_vfx_asset_runtime_report.tscn", "tests/overworld_full_route_movement_regression.tscn", "tests/overworld_object_resolution_vfx_asset_runtime_report.tscn", "tests/overworld_field_spell_vfx_asset_runtime_report.tscn", "tests/overworld_guarded_site_vfx_asset_runtime_report.tscn", "tests/overworld_visual_smoke.tscn", "tests/overworld_gameplay_movement_input_ownership_regression.tscn", "tests/active_play_keyboard_focus_smoke.tscn", "tests/accessibility_screen_reader_semantics_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/validate_repo.py"],
+      "baseline": {"head": "699f8100", "event_id": "overworld_route_blocked", "vfx_cue_id": "vfx_placeholder_blocked_route_marker", "runtime_texture_count": 0, "live_rendering": "procedural_circle_and_cross_only", "implementation_or_runtime_started": false},
+      "completionCriteria": ["Normal blocked-route playback maps and visibly draws one exact imported alpha texture at 1280x720 and 1920x1080 without remapping any other cue", "Missing mapping or texture retains the exact existing procedural circle-and-X and reduced motion retains the static blocked-route icon", "Focused live proof preserves selected tile, blocked reason, serial/dedupe, duration/progress, dynamic-only rendering, refresh/reselection/reachable-clear lifecycle, session authority, and save version 9", "Blocked-route cue, existing Overworld VFX assets, Overworld visual/route/input, focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"],
+      "nonGoals": ["route, pathfinding, blocked-reason, action, selection, movement, fog, focus, input, timing, animation-policy, AI, save-schema, content, or map changes", "other object/guard/spell/Town/Battle VFX, particles, shaders, audio, layout, terrain, or broad renderer changes", "packaged blocked-route interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"],
+      "createdAt": "2026-08-15T11:08:22Z",
+      "startedAt": "2026-08-15T11:08:22Z",
+      "updatedAt": "2026-08-15T11:33:59Z",
+      "completedAt": "2026-08-15T11:33:59Z",
+      "notes": "Implemented one original 1254x1254 source image, one 512x512 alpha runtime texture, an exact sixth Overworld-manifest cue, detached live policy VFX identity, and asset-first blocked-route drawing at the authoritative selected tile. Focused 1280x720 and 1920x1080 runtime proves imported draw containment, missing-texture procedural circle-and-X fallback, reduced-motion blocked-route icon, clearing, unchanged session authority, and save version 9. The real full-route regression proves exact blocked tile/reason, serial/dedupe, dynamic-only progress, refresh/reselection stability, reachable-selection clearing, and policy-derived VFX identity. Object, field-spell, and guarded-site VFX, Overworld visual/movement-input, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup gates pass. Packaged blocked-route interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null
+    },
     {
       "id": "presentation-overworld-guarded-site-vfx-asset-adoption-10184",
       "title": "Overworld Guarded-Site VFX Asset Adoption",

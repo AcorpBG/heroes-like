@@ -305,8 +305,11 @@ func _assert_route_does_not_pass_through_interaction() -> bool:
 	if not String(route_decision.get("blocked_reason", "")).contains("No clear route"):
 		SettingsService.set_reduced_motion_enabled(original_reduced_motion)
 		return _fail("Blocked route did not explain that no clean path exists.", selection)
+	await get_tree().process_frame
 	var blocked_cue: Dictionary = _route_blocked_presentation(shell)
 	var blocked_serial := int(blocked_cue.get("serial", 0))
+	var blocked_asset: Dictionary = blocked_cue.get("vfx_asset", {}) if blocked_cue.get("vfx_asset", {}) is Dictionary else {}
+	var blocked_draw: Dictionary = blocked_cue.get("vfx_draw", {}) if blocked_cue.get("vfx_draw", {}) is Dictionary else {}
 	var start_cache: Dictionary = _render_cache(shell)
 	if (
 		blocked_serial <= 0
@@ -316,6 +319,11 @@ func _assert_route_does_not_pass_through_interaction() -> bool:
 		or String(blocked_cue.get("blocked_reason", "")) != String(route_decision.get("blocked_reason", ""))
 		or String(blocked_cue.get("animation_state", "")) != "route_blocked"
 		or String(blocked_cue.get("visual_policy", "")) != "authored_animation_state"
+		or blocked_cue.get("selected_vfx_cue_ids", []) != ["vfx_placeholder_blocked_route_marker"]
+		or not bool(blocked_asset.get("uses_imported_asset", false))
+		or String(blocked_asset.get("texture_path", "")) != "res://art/overworld/runtime/vfx/route_blocked.png"
+		or String(blocked_draw.get("mode", "")) != "imported_texture"
+		or String(blocked_draw.get("texture_path", "")) != "res://art/overworld/runtime/vfx/route_blocked.png"
 		or not bool(blocked_cue.get("allows_large_motion", false))
 		or int(blocked_cue.get("duration_ms", 0)) != 420
 		or session.to_dict() != authority_before
@@ -387,7 +395,10 @@ func _assert_route_does_not_pass_through_interaction() -> bool:
 	_prepare_shell_state(reduced_shell, reduced_session, Vector2i(0, 1), 6)
 	var reduced_authority_before: Dictionary = reduced_session.to_dict()
 	var reduced_selection: Dictionary = reduced_shell.call("validation_select_tile", 5, 1)
+	await get_tree().process_frame
 	var reduced_cue: Dictionary = _route_blocked_presentation(reduced_shell)
+	var reduced_asset: Dictionary = reduced_cue.get("vfx_asset", {}) if reduced_cue.get("vfx_asset", {}) is Dictionary else {}
+	var reduced_draw: Dictionary = reduced_cue.get("vfx_draw", {}) if reduced_cue.get("vfx_draw", {}) is Dictionary else {}
 	SettingsService.set_reduced_motion_enabled(original_reduced_motion)
 	if (
 		String(reduced_selection.get("selected_route_decision", {}).get("status", "")) != "blocked"
@@ -398,6 +409,12 @@ func _assert_route_does_not_pass_through_interaction() -> bool:
 		or String(reduced_cue.get("animation_state", "")) != "blocked_route_icon"
 		or String(reduced_cue.get("visual_policy", "")) != "reduced_motion_fallback"
 		or String(reduced_cue.get("fallback_tag", "")) != "blocked_route_icon"
+		or reduced_cue.get("selected_vfx_cue_ids", []) != ["blocked_route_icon"]
+		or bool(reduced_asset.get("uses_imported_asset", true))
+		or not bool(reduced_asset.get("uses_procedural_fallback", false))
+		or String(reduced_draw.get("mode", "")) != "blocked_route_icon"
+		or int(reduced_draw.get("circle_count", 0)) != 1
+		or int(reduced_draw.get("cross_line_count", 0)) != 2
 		or bool(reduced_cue.get("allows_large_motion", true))
 		or int(reduced_cue.get("duration_ms", 0)) != 260
 		or reduced_session.to_dict() != reduced_authority_before
