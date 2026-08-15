@@ -23,6 +23,9 @@ func _run() -> void:
 	var post_move_case_report := _river_pass_raids_group_after_leader_movement_for_town_assault()
 	if post_move_case_report.is_empty():
 		return
+	var near_field_commitment_case_report := _near_field_objective_commitment_survives_battle_pressure()
+	if near_field_commitment_case_report.is_empty():
+		return
 	var long_range_pressure_case_report := _long_range_player_town_restores_battle_pressure()
 	if long_range_pressure_case_report.is_empty():
 		return
@@ -54,6 +57,7 @@ func _run() -> void:
 		"commander_case": commander_case_report,
 		"planned_commander_case": planned_commander_case_report,
 		"post_move_case": post_move_case_report,
+		"near_field_commitment_case": near_field_commitment_case_report,
 		"long_range_pressure_case": long_range_pressure_case_report,
 		"blocked_route_pressure_case": blocked_route_pressure_case_report,
 		"continued_route_pressure_case": continued_route_pressure_case_report,
@@ -66,6 +70,133 @@ func _run() -> void:
 	}
 	print("%s %s" % [REPORT_ID, JSON.stringify(payload)])
 	get_tree().quit(0)
+
+func _near_field_objective_commitment_survives_battle_pressure() -> Dictionary:
+	var session = _long_range_pressure_session(false)
+	session.overworld["resource_nodes"] = [
+		{
+			"placement_id": "near_resource_commitment",
+			"site_id": "site_riverwatch_free_company_yard",
+			"x": 7,
+			"y": 1,
+			"collected": true,
+			"collected_by_faction_id": "player",
+			"collected_day": int(session.day),
+		}
+	]
+	session.overworld["artifact_nodes"] = [
+		{
+			"placement_id": "near_artifact_commitment",
+			"artifact_id": "artifact_trailsinger_boots",
+			"x": 7,
+			"y": 2,
+			"collected": false,
+		}
+	]
+	var neutral_objective := {
+		"placement_id": "near_encounter_commitment",
+		"encounter_id": "encounter_ghoul_grove",
+		"x": 7,
+		"y": 3,
+		"difficulty": "minor",
+		"resolved": false,
+	}
+	var near_resource := _pressure_floor_raid_seed("near_resource_pressure", 6, 1, 12)
+	near_resource.merge({
+		"target_kind": "resource",
+		"target_placement_id": "near_resource_commitment",
+		"target_label": "Near Resource Commitment",
+		"target_x": 7,
+		"target_y": 1,
+		"goal_x": 7,
+		"goal_y": 1,
+		"goal_distance": 1,
+		"target_reason_codes": ["persistent_income_denial"],
+	}, true)
+	var companions := [
+		_pressure_floor_raid_seed("near_resource_support_1", 3, 1, 9),
+		_pressure_floor_raid_seed("near_resource_support_2", 4, 1, 10),
+	]
+	session.overworld["encounters"] = [near_resource, companions[0], companions[1], neutral_objective]
+	var config := _enemy_config()
+	var refreshed: Dictionary = EnemyAdventureRules._refresh_target(session, near_resource.duplicate(true), MIRECLAW)
+	if not EnemyAdventureRules._raid_target_valid(session, refreshed) or int(refreshed.get("goal_distance", 9999)) != 1:
+		_fail("Near resource commitment fixture was not valid at exact distance one: %s" % JSON.stringify(refreshed))
+		return {}
+	if not EnemyAdventureRules._raid_has_immediate_field_objective_commitment(session, refreshed):
+		_fail("Valid distance-one resource objective was not recognized as an immediate field commitment.")
+		return {}
+	var retained := EnemyAdventureRules.assign_target(session, config, near_resource.duplicate(true))
+	if retained != refreshed:
+		_fail("Battle pressure changed the exact near-resource assignment: %s" % JSON.stringify({"expected": refreshed, "actual": retained}))
+		return {}
+
+	var artifact_probe := refreshed.duplicate(true)
+	artifact_probe.merge({
+		"target_kind": "artifact",
+		"target_placement_id": "near_artifact_commitment",
+		"goal_distance": 1,
+	}, true)
+	var encounter_probe := refreshed.duplicate(true)
+	encounter_probe.merge({
+		"target_kind": "encounter",
+		"target_placement_id": "near_encounter_commitment",
+		"goal_distance": 0,
+	}, true)
+	if not EnemyAdventureRules._raid_has_immediate_field_objective_commitment(session, artifact_probe):
+		_fail("Valid distance-one artifact objective was not recognized as an immediate field commitment.")
+		return {}
+	if not EnemyAdventureRules._raid_has_immediate_field_objective_commitment(session, encounter_probe):
+		_fail("Valid arrived encounter objective was not recognized as an immediate field commitment.")
+		return {}
+
+	var distant_session = _long_range_pressure_session(false)
+	distant_session.overworld["resource_nodes"] = session.overworld.get("resource_nodes", []).duplicate(true)
+	var distant_resource := near_resource.duplicate(true)
+	distant_resource["x"] = 5
+	distant_resource["goal_distance"] = 2
+	distant_session.overworld["encounters"] = [distant_resource, companions[0].duplicate(true), companions[1].duplicate(true)]
+	var distant_refreshed: Dictionary = EnemyAdventureRules._refresh_target(distant_session, distant_resource.duplicate(true), MIRECLAW)
+	if int(distant_refreshed.get("goal_distance", 9999)) != 2:
+		_fail("Distant resource reciprocal fixture was not at exact distance two: %s" % JSON.stringify(distant_refreshed))
+		return {}
+	if EnemyAdventureRules._raid_has_immediate_field_objective_commitment(distant_session, distant_refreshed):
+		_fail("Distance-two resource objective incorrectly entered the commitment horizon.")
+		return {}
+	var preempted := EnemyAdventureRules.assign_target(distant_session, config, distant_resource.duplicate(true))
+	if String(preempted.get("target_kind", "")) != "town" or String(preempted.get("target_placement_id", "")) != "riverwatch_hold":
+		_fail("Distance-two field objective did not preserve the existing battle-pressure preemption: %s" % JSON.stringify(preempted))
+		return {}
+	var preempt_reason_codes: Array = preempted.get("target_reason_codes", []) if preempted.get("target_reason_codes", []) is Array else []
+	if "battle_pressure_floor" not in preempt_reason_codes:
+		_fail("Distance-two reciprocal omitted battle-pressure reasoning: %s" % JSON.stringify(preempted))
+		return {}
+
+	var invalid_resource := refreshed.duplicate(true)
+	var invalid_nodes: Array = session.overworld.get("resource_nodes", []).duplicate(true)
+	invalid_nodes[0]["collected_by_faction_id"] = MIRECLAW
+	session.overworld["resource_nodes"] = invalid_nodes
+	if EnemyAdventureRules._raid_has_immediate_field_objective_commitment(session, invalid_resource):
+		_fail("Invalid already-owned resource incorrectly retained near-objective commitment.")
+		return {}
+	var explore_probe := refreshed.duplicate(true)
+	explore_probe["target_kind"] = "explore"
+	if EnemyAdventureRules._raid_has_immediate_field_objective_commitment(session, explore_probe):
+		_fail("Exploration target incorrectly entered field-objective commitment.")
+		return {}
+	return {
+		"case_id": "battle_pressure_near_field_objective_commitment",
+		"retained_kind": String(retained.get("target_kind", "")),
+		"retained_target_id": String(retained.get("target_placement_id", "")),
+		"retained_goal_distance": int(retained.get("goal_distance", -1)),
+		"artifact_distance_one_committed": true,
+		"encounter_distance_zero_committed": true,
+		"distant_goal_distance": int(distant_refreshed.get("goal_distance", -1)),
+		"distant_preempted_kind": String(preempted.get("target_kind", "")),
+		"distant_preempted_target_id": String(preempted.get("target_placement_id", "")),
+		"invalid_resource_rejected": true,
+		"explore_rejected": true,
+	}
 
 func _planned_commander_keeps_grouping_leadership() -> Dictionary:
 	var session = _base_session()
@@ -215,18 +346,19 @@ func _resource_visit_tile_allows_contest_route() -> Dictionary:
 	if claim_id != "owned_corridor_site":
 		_fail("AI did not recognize the offset visit tile as the resource interaction tile: %s" % claim_id)
 		return {}
-	var candidates := []
-	EnemyAdventureRules._append_resource_candidate(
+	var all_candidates: Array = EnemyAdventureRules._target_candidates(
 		session,
-		candidates,
-		{},
-		session.overworld.get("resource_nodes", [])[0],
-		Vector2i(0, 0),
 		{"faction_id": MIRECLAW},
-		MIRECLAW,
+		Vector2i(0, 0),
 		true,
 		EnemyAdventureRules._path_distance_surface_context(session, "", MIRECLAW)
 	)
+	var candidates := []
+	for candidate_value in all_candidates:
+		if candidate_value is Dictionary \
+				and String(candidate_value.get("target_kind", "")) == "resource" \
+				and String(candidate_value.get("target_placement_id", "")) == "owned_corridor_site":
+			candidates.append(candidate_value.duplicate(true))
 	if candidates.size() != 1 \
 			or int(candidates[0].get("target_x", -1)) != 2 \
 			or int(candidates[0].get("goal_distance", -1)) != 2:

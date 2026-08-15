@@ -51,6 +51,7 @@ const RAID_BATTLE_PRESSURE_FLOOR_DAY := 8
 const RAID_BATTLE_PRESSURE_FLOOR_MIN_ACTIVE_RAIDS := 3
 const RAID_BATTLE_PRESSURE_FLOOR_MAX_DISTANCE := 48
 const RAID_BATTLE_PRESSURE_FLOOR_PRIORITY_BONUS := 140
+const RAID_BATTLE_PRESSURE_FIELD_OBJECTIVE_COMMITMENT_DISTANCE := 1
 const RAID_OPPORTUNISTIC_HERO_INTERCEPT_MAX_DISTANCE := 4
 const RAID_NEARBY_PLAYER_THREAT_AVOIDANCE_RADIUS := 3
 const RAID_NEARBY_PLAYER_THREAT_STRENGTH_RATIO := 1.15
@@ -892,6 +893,8 @@ static func _maybe_preempt_for_battle_pressure_floor(
 		return raid
 	if raid_regroup_needed(raid, config, faction_id):
 		return raid
+	if _raid_has_immediate_field_objective_commitment(session, raid):
+		return raid
 	var active_count := _active_raid_count_for_faction(session, faction_id)
 	if active_count < RAID_BATTLE_PRESSURE_FLOOR_MIN_ACTIVE_RAIDS:
 		return raid
@@ -968,6 +971,19 @@ static func _maybe_preempt_for_battle_pressure_floor(
 	var updated := raid.duplicate(true)
 	updated.merge(best, true)
 	return updated
+
+static func _raid_has_immediate_field_objective_commitment(
+	session: SessionStateStoreScript.SessionData,
+	raid: Dictionary
+) -> bool:
+	if session == null or raid.is_empty():
+		return false
+	if String(raid.get("target_kind", "")) not in ["resource", "artifact", "encounter"]:
+		return false
+	if not _raid_target_valid(session, raid):
+		return false
+	var goal_distance := int(raid.get("goal_distance", 9999))
+	return goal_distance >= 0 and goal_distance <= RAID_BATTLE_PRESSURE_FIELD_OBJECTIVE_COMMITMENT_DISTANCE
 
 static func _battle_pressure_floor_defended_neutral_town_candidate(
 	session: SessionStateStoreScript.SessionData,
