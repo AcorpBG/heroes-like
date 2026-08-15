@@ -28,6 +28,7 @@ ACCESSIBILITY_SCREEN_READER_REPORT_SCRIPT_PATH = ROOT / "tests" / "accessibility
 ACCESSIBILITY_SCREEN_READER_REPORT_SCENE_PATH = ROOT / "tests" / "accessibility_screen_reader_semantics_report.tscn"
 RUNTIME_ISSUE_LOG_PATH = ROOT / "scripts" / "autoload" / "RuntimeIssueLog.gd"
 UI_AUDIO_PATH = ROOT / "scripts" / "autoload" / "UiAudio.gd"
+PRESENTATION_AUDIO_PATH = ROOT / "scripts" / "autoload" / "PresentationAudio.gd"
 AMBIENT_AUDIO_PATH = ROOT / "scripts" / "autoload" / "AmbientAudio.gd"
 MUSIC_AUDIO_PATH = ROOT / "scripts" / "autoload" / "MusicAudio.gd"
 LIVE_VALIDATION_HARNESS_PATH = ROOT / "scripts" / "autoload" / "LiveValidationHarness.gd"
@@ -478,6 +479,9 @@ UI_AUDIO_CUE_RUNTIME_REPORT_DOC_PATH = ROOT / "docs" / "ui-audio-cue-runtime-rep
 UI_SFX_MANIFEST_PATH = CONTENT_DIR / "ui_sfx_manifest.json"
 UI_SFX_GENERATOR_PATH = ROOT / "tools" / "generate_ui_sfx_assets.py"
 UI_SFX_ROOT = ROOT / "art" / "audio" / "runtime" / "ui"
+PRESENTATION_SFX_MANIFEST_PATH = CONTENT_DIR / "presentation_sfx_manifest.json"
+PRESENTATION_SFX_GENERATOR_PATH = ROOT / "tools" / "generate_presentation_sfx_assets.py"
+PRESENTATION_SFX_ROOT = ROOT / "art" / "audio" / "runtime" / "presentation"
 OVERWORLD_AMBIENT_AUDIO_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_ambient_audio_runtime_report.gd"
 OVERWORLD_AMBIENT_AUDIO_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_ambient_audio_runtime_report.tscn"
 OVERWORLD_AMBIENT_AUDIO_REPORT_DOC_PATH = ROOT / "docs" / "overworld-ambient-audio-runtime-report.md"
@@ -38949,6 +38953,190 @@ def validate_ui_audio_cue_runtime(errors: list[str]) -> None:
             ensure(required_text in doc_text, errors, f"UI audio cue runtime doc is missing required text: {required_text}")
 
 
+def validate_town_action_presentation_audio(errors: list[str]) -> None:
+    project_path = ROOT / "project.godot"
+    building_report_path = ROOT / "tests" / "town_building_complete_cue_playback_report.gd"
+    recruitment_report_path = ROOT / "tests" / "town_recruitment_cue_playback_report.gd"
+    required_paths = (
+        project_path,
+        PRESENTATION_AUDIO_PATH,
+        PRESENTATION_SFX_MANIFEST_PATH,
+        PRESENTATION_SFX_GENERATOR_PATH,
+        TOWN_STAGE_SCRIPT_PATH,
+        building_report_path,
+        recruitment_report_path,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Town presentation-audio owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    project_text = project_path.read_text(encoding="utf-8")
+    ensure(
+        'PresentationAudio="*res://scripts/autoload/PresentationAudio.gd"' in project_text,
+        errors,
+        "project.godot must register PresentationAudio as an autoload",
+    )
+
+    audio_text = PRESENTATION_AUDIO_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "class_name HeroesPresentationAudio",
+        'PRESENTATION_SFX_MANIFEST_PATH := "res://content/presentation_sfx_manifest.json"',
+        "MAX_ACTIVE_PLAYERS := 6",
+        "REDUCED_REPETITION_MAX_ACTIVE_PLAYERS := 3",
+        '"audio_placeholder_town_build"',
+        '"audio_placeholder_recruit"',
+        "func play_cue(cue_id: String, source: String = \"\", metadata: Dictionary = {}) -> Dictionary:",
+        '"unsupported_cue" if not supported',
+        "SettingsService.effects_audio_muted()",
+        "SettingsService.reduced_repetitive_sounds_enabled()",
+        "SettingsService.effects_audio_bus_name()",
+        "func _play_imported_audio_cue",
+        "AudioStreamWAV.load_from_file",
+        "func _play_generated_waveform",
+        "AudioStreamGeneratorPlayback",
+        "func _trim_players_to_budget",
+        "func validation_reset",
+        "func validation_summary",
+        '"presentation_audio_runtime_v1"',
+        '"imported_asset_count"',
+        '"generated_fallback_count"',
+        '"stream_mix_rate"',
+        '"stream_stereo"',
+        '"stream_format"',
+        '"stream_loop_mode"',
+    ):
+        ensure(required_token in audio_text, errors, f"PresentationAudio.gd is missing required token: {required_token}")
+    for forbidden in ("SessionState", "SaveService", "TownRules", "Input.", "AppRouter", "AnimationCueCatalog"):
+        ensure(forbidden not in audio_text, errors, f"PresentationAudio must remain presentation-only and authority-free: {forbidden}")
+
+    expected_cues = {
+        "audio_placeholder_town_build": {
+            "path": "res://art/audio/runtime/presentation/town_build.wav",
+            "duration_msec": 420,
+            "volume_db": -12.5,
+            "role": "town_construction_complete",
+        },
+        "audio_placeholder_recruit": {
+            "path": "res://art/audio/runtime/presentation/town_recruit.wav",
+            "duration_msec": 360,
+            "volume_db": -13.0,
+            "role": "town_recruitment_muster",
+        },
+    }
+    manifest = json.loads(PRESENTATION_SFX_MANIFEST_PATH.read_text(encoding="utf-8"))
+    ensure(manifest.get("schema") == "presentation_runtime_sfx_manifest_v1", errors, "presentation SFX manifest has the wrong schema")
+    ensure(manifest.get("generated_by") == "tools/generate_presentation_sfx_assets.py", errors, "presentation SFX manifest must name its deterministic generator")
+    ensure(manifest.get("final_sound_design") is False, errors, "presentation SFX manifest must not claim final sound design")
+    ensure(manifest.get("audio_bus") == "Effects", errors, "presentation SFX must route through Effects")
+    ensure(int(manifest.get("sample_rate_hz", 0)) == 44100, errors, "production presentation SFX must use 44.1 kHz")
+    ensure(int(manifest.get("channel_count", 0)) == 2, errors, "production presentation SFX must be stereo")
+    ensure(int(manifest.get("sample_width_bits", 0)) == 16, errors, "production presentation SFX must use 16-bit PCM")
+    ensure(manifest.get("asset_tier") == "production_layered_v1", errors, "presentation SFX manifest must declare production_layered_v1")
+    cues = manifest.get("cues", {})
+    ensure(isinstance(cues, dict) and set(cues) == set(expected_cues), errors, "presentation SFX manifest must contain exactly the two Town action cues")
+    asset_hashes: list[str] = []
+    for cue_id in sorted(expected_cues):
+        expected = expected_cues[cue_id]
+        cue = cues.get(cue_id, {}) if isinstance(cues, dict) else {}
+        ensure(isinstance(cue, dict), errors, f"presentation SFX manifest is missing {cue_id}")
+        ensure(str(cue.get("path", "")) == expected["path"], errors, f"presentation cue {cue_id} path drifted")
+        ensure(int(cue.get("duration_msec", 0)) == expected["duration_msec"], errors, f"presentation cue {cue_id} duration drifted")
+        ensure(float(cue.get("volume_db", 0.0)) == expected["volume_db"], errors, f"presentation cue {cue_id} volume drifted")
+        ensure(str(cue.get("role", "")) == expected["role"], errors, f"presentation cue {cue_id} role drifted")
+        wav_path = ROOT / str(expected["path"]).removeprefix("res://")
+        ensure(wav_path.exists(), errors, f"presentation SFX asset is missing: {expected['path']}")
+        if wav_path.exists():
+            asset_hashes.append(hashlib.sha256(wav_path.read_bytes()).hexdigest())
+            with wave.open(str(wav_path), "rb") as wav_file:
+                channel_count = wav_file.getnchannels()
+                sample_width = wav_file.getsampwidth()
+                sample_rate = wav_file.getframerate()
+                frame_count = wav_file.getnframes()
+                payload = wav_file.readframes(frame_count)
+            ensure(channel_count == 2, errors, f"presentation SFX must be stereo: {expected['path']}")
+            ensure(sample_width == 2, errors, f"presentation SFX must use 16-bit PCM: {expected['path']}")
+            ensure(sample_rate == 44100, errors, f"presentation SFX must use 44.1 kHz: {expected['path']}")
+            ensure(frame_count == int(44100 * expected["duration_msec"] / 1000), errors, f"presentation SFX duration drifted: {expected['path']}")
+            samples = struct.unpack(f"<{len(payload) // 2}h", payload) if payload else ()
+            left_samples = samples[0::2]
+            right_samples = samples[1::2]
+            peak = max((abs(value) for value in samples), default=0)
+            stereo_difference = sum((left - right) * (left - right) for left, right in zip(left_samples, right_samples))
+            ensure(4096 <= peak <= 30000, errors, f"presentation SFX peak must be bounded and audible: {expected['path']}")
+            ensure(stereo_difference > 0, errors, f"presentation SFX channels must be distinct: {expected['path']}")
+            if left_samples and right_samples:
+                ensure(left_samples[0] == 0 and right_samples[0] == 0, errors, f"presentation SFX must start at zero: {expected['path']}")
+                ensure(left_samples[-1] == 0 and right_samples[-1] == 0, errors, f"presentation SFX must end at zero: {expected['path']}")
+    ensure(len(set(asset_hashes)) == 2, errors, "the two Town presentation assets must be byte-distinct")
+    if len(asset_hashes) == 2:
+        pack_signature = hashlib.sha256("\n".join(asset_hashes).encode("utf-8")).hexdigest()
+        ensure(pack_signature == "33a34327ac781041cac944d969275b8f69ec1db4a89a0a50f7c571a9c82f8c9f", errors, "Town presentation SFX pack signature drifted")
+
+    generator_text = PRESENTATION_SFX_GENERATOR_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        "presentation_sfx_manifest.json",
+        "SAMPLE_RATE = 44100",
+        "CHANNEL_COUNT = 2",
+        "SPECS",
+        "masonry_seal",
+        "muster_call",
+        "presentation-production-v1",
+        "render_stereo",
+        "layered_sample",
+        "pack_signature",
+        "wave.open",
+    ):
+        ensure(required_token in generator_text, errors, f"presentation SFX generator is missing token: {required_token}")
+
+    stage_text = TOWN_STAGE_SCRIPT_PATH.read_text(encoding="utf-8")
+    present_match = re.search(r"func present_town_action\(presentation: Dictionary\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc )", stage_text, re.DOTALL)
+    ensure(present_match is not None, errors, "Could not isolate TownStageView.present_town_action")
+    if present_match is not None:
+        body = present_match.group("body")
+        order = [
+            body.find("return validation_town_action_presentation_snapshot()"),
+            body.find("_town_action_presentation_serial += 1"),
+            body.find('_town_action_presentation["expires_msec"] = started_msec + duration_ms'),
+            body.find('for audio_cue_value in Array(policy.get("selected_audio_cue_ids", [])):'),
+            body.find('PresentationAudio.play_cue(audio_cue_id, "TownStageView.present_town_action"'),
+            body.find('_town_action_presentation["audio_playback_records"] = audio_playback_records'),
+            body.find("queue_redraw()"),
+        ]
+        ensure(all(index >= 0 for index in order) and order == sorted(order), errors, "Town presentation audio must play only after validation and serial/lifetime ownership, before the accepted snapshot returns")
+    ensure(stage_text.count("PresentationAudio.play_cue") == 1, errors, "TownStageView must have one exact presentation-audio call site")
+    ensure('"audio_playback_records": Array(_town_action_presentation.get("audio_playback_records", [])).duplicate(true)' in stage_text, errors, "TownStageView must expose detached audio playback records")
+
+    building_text = building_report_path.read_text(encoding="utf-8")
+    for required_token in (
+        "_validate_presentation_audio_service",
+        "PresentationAudio.validation_reset()",
+        'PresentationAudio._presentation_sfx_manifest = {}',
+        'PresentationAudio.play_cue("audio_placeholder_town_build", "validation_generated_fallback")',
+        'PresentationAudio.play_cue("audio_unknown", "validation_unsupported")',
+        'PresentationAudio.play_cue("audio_placeholder_recruit", "validation_effects_muted")',
+        "PresentationAudio.REDUCED_REPETITION_MAX_ACTIVE_PLAYERS",
+        'String(audio_record.get("playback_source", "")) == "imported_wav"',
+        'String(audio_record.get("asset_path", "")) == "res://art/audio/runtime/presentation/town_build.wav"',
+        'String(audio_record.get("role", "")) == "town_construction_complete"',
+        'PresentationAudio.validation_records() == audio_records',
+        'SettingsService.settings == settings_authority_before',
+    ):
+        ensure(required_token in building_text, errors, f"Town building focused owner is missing presentation-audio proof: {required_token}")
+
+    recruitment_text = recruitment_report_path.read_text(encoding="utf-8")
+    for required_token in (
+        "PresentationAudio.validation_reset()",
+        'String(audio_record.get("cue_id", "")) == "audio_placeholder_recruit"',
+        'String(audio_record.get("source", "")) == "TownStageView.present_town_action"',
+        'String(audio_record.get("asset_path", "")) == "res://art/audio/runtime/presentation/town_recruit.wav"',
+        'String(audio_record.get("role", "")) == "town_recruitment_muster"',
+        'PresentationAudio.validation_records() == audio_records',
+        'Array(active_presentation.get("audio_playback_records", [])) == audio_records',
+    ):
+        ensure(required_token in recruitment_text, errors, f"Town recruitment focused owner is missing presentation-audio proof: {required_token}")
+
+
 def validate_overworld_ambient_audio_runtime(errors: list[str]) -> None:
     project_path = ROOT / "project.godot"
     required_paths = (
@@ -41275,6 +41463,7 @@ def main() -> int:
     validate_packaged_settings_persistence_smoke(errors)
     validate_packaged_runtime_issue_log_smoke(errors)
     validate_ui_audio_cue_runtime(errors)
+    validate_town_action_presentation_audio(errors)
     validate_overworld_ambient_audio_runtime(errors)
     validate_music_audio_runtime(errors)
     validate_in_session_save_controls(errors)

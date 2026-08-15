@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The UI production SFX fidelity slice is completed. All six live click, select, adjust, tab, confirm, and invalid paths now hold distinct original deterministic 44.1 kHz stereo 16-bit production transients. Focused real-control routing proves exact imported identity and QOA runtime format while generated fallback, mute, reduced-repetition cooldowns, voice budgets, settings, input, and gameplay authority remain exact. Compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass, with all six UI imports present in both PCKs. Final sound-design/mixer-mastering approval, packaged listening, hardware certification, signing/publication, whole-game, and release readiness remain unclaimed.",
+  "currentNotes": "The Town action production-audio playback slice is completed. Successful live construction and recruitment now play one exact imported production transient only after the existing Town presentation contract is accepted. Malformed/fallback/mute/voice-budget behavior, refresh/expiry non-replay, Town consequences, presentation lifecycle, input, focus, motion settings, session/settings authority, compatibility, static/editor, and bounded Linux/Windows export/startup gates pass. Final sound-design/mixer-mastering approval, other placeholder cues, packaged interaction/listening, hardware certification, signing/publication, whole-game, and release readiness remain unclaimed.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-ui-production-sfx-fidelity-10184",
-  "currentSliceId": "presentation-ui-production-sfx-fidelity-10184",
-  "currentSliceNotes": "Completed all six original stereo UI transients and exact imported playback-format proof while preserving cue routing, control attachment, cooldowns, voice budgets, fallback, mute, input, settings, and gameplay authority. Focused, compatibility, repository/editor, and bounded Linux/Windows export/startup gates are green; select the next tracker-approved slice.",
+  "currentSlice": "presentation-town-action-production-audio-playback-10184",
+  "currentSliceId": "presentation-town-action-production-audio-playback-10184",
+  "currentSliceNotes": "Completed exact-once live construction/recruitment playback through the reusable presentation-audio service with two original stereo assets, fail-closed fallback/mute/voice-budget ownership, no refresh replay, and green focused, compatibility, repository/editor, Linux, and Windows gates.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "UI Production SFX Fidelity",
-  "currentSliceUpdatedAt": "2026-08-15T15:51:54Z",
+  "currentSliceTitle": "Town Action Production Audio Playback",
+  "currentSliceUpdatedAt": "2026-08-15T16:16:39Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19849,6 +19849,75 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "id": "presentation-town-action-production-audio-playback-10184",
+      "title": "Town Action Production Audio Playback",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/animation-systems-foundation.md",
+        "AGENTS.md"
+      ],
+      "purpose": "Play the two existing successful Town construction and recruitment audio cue identities through a reusable production presentation-audio service with distinct imported assets and exact live-action ownership.",
+      "implementationTargets": [
+        "art/audio/runtime/presentation/*.wav",
+        "content/presentation_sfx_manifest.json",
+        "tools/generate_presentation_sfx_assets.py",
+        "scripts/autoload/PresentationAudio.gd",
+        "project.godot",
+        "scenes/town/TownStageView.gd",
+        "tests/town_building_complete_cue_playback_report.gd",
+        "tests/town_recruitment_cue_playback_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/town_building_complete_cue_playback_report.tscn",
+        "tests/town_recruitment_cue_playback_report.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "253291cef659316a57ca8c6dc332971833b58df1",
+        "event_ids": [
+          "town_building_built",
+          "town_units_recruited"
+        ],
+        "cue_ids": [
+          "audio_placeholder_town_build",
+          "audio_placeholder_recruit"
+        ],
+        "live_audio_player": false,
+        "live_audio_asset_count": 0,
+        "construction_audio_selected_only": true,
+        "recruitment_audio_selected_only": true,
+        "implementation_or_runtime_started": false
+      },
+      "completionCriteria": [
+        "The exact existing construction and recruitment cue ids map one-to-one to two distinct original deterministic 44.1 kHz stereo 16-bit production transients and play once only after the complete Town presentation contract is accepted",
+        "A reusable presentation-audio autoload preserves exact manifest order, Effects-bus mute, bounded voice ownership, imported stream preference, deterministic generated fallback, and detached validation records without entering session, save, input, or gameplay authority",
+        "Malformed presentations fail closed without audio, Town refresh and presentation expiry do not replay audio, and construction/recruitment consequences, cue policy, serials, timing, blocking, reduced motion, focus, settings, session, and save authority remain exact",
+        "Focused real construction and recruitment at 1280x720 and 1920x1080, active-play/core compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass and both PCKs contain both assets"
+      ],
+      "nonGoals": [
+        "final sound-design or mixer-mastering approval, licensed or third-party audio, renaming cue ids, spatial audio, haptics, or broad presentation-audio completion",
+        "construction, recruitment, economy, animation policy, presentation timing, input, focus, settings architecture, save/schema, combat, AI, map, Native RMG, music, ambience, UI audio, Battle audio, or non-Town cue behavior changes",
+        "packaged Town interaction or listening, controller/headset/speaker hardware, native audio certification, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "createdAt": "2026-08-15T15:55:55Z",
+      "startedAt": "2026-08-15T15:55:55Z",
+      "updatedAt": "2026-08-15T16:16:39Z",
+      "completedAt": "2026-08-15T16:16:39Z",
+      "notes": "Completed from baseline head 253291cef659316a57ca8c6dc332971833b58df1. PresentationAudio is a reusable authority-free Effects-bus autoload with six normal and three reduced-repetition voices, imported-stream preference, deterministic generated fallback, mute ownership, unsupported-cue fail-closed behavior, and detached records. TownStageView calls it once only after the complete existing construction/recruitment contract, serial, and lifetime are accepted; the exact cue ids remain unchanged. The two byte-distinct original deterministic 44.1 kHz stereo 16-bit assets have pack signature 33a34327ac781041cac944d969275b8f69ec1db4a89a0a50f7c571a9c82f8c9f. Focused construction stdout SHA256 e0d95f929466bc5c0d9b2955f3090bcd25eedacc0cc247089b54c1827c80fb71 and recruitment stdout SHA256 1f0876c7a594c14961961aa636c71ffe1f4c7294d6f1df9644245e7d22960585 prove both widths and motion modes, exact imported 44.1 kHz stereo QOA runtime streams, malformed silence, no refresh/expiry replay, independent consequences, and exact settings/session authority. Town/Battle visual, cue catalog, active-play focus, core, deterministic generation, repository validator, Python compile, JSON/diff, and exact/generic editor gates pass. Official Linux report SHA256 90aea581e67917a14eab7f023734dbd111ff779d235a312116707ae75353f430 proves export/headless startup, ELF/PCK/SO; official Windows report SHA256 af8b6cff212930bc5413d540393a4e89e973fc4d5526a4eb77b302813d83b1c8 proves export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup, PE/PCK/DLL. Both PCK payloads expose the two audio imports and presentation manifest. Claims remain bounded to source WAV production fidelity, focused headless Town interaction, and export/startup.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Final sound-design and mixer-mastering approval, remaining non-Battle placeholder audio, packaged Town listening/interaction, and native audio hardware certification remain separate release work.",
+      "blockedReason": null
+    },
     {
       "id": "presentation-ui-production-sfx-fidelity-10184",
       "title": "UI Production SFX Fidelity",

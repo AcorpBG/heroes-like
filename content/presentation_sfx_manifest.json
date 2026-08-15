@@ -1,0 +1,24 @@
+{
+  "schema": "presentation_runtime_sfx_manifest_v1",
+  "generated_by": "tools/generate_presentation_sfx_assets.py",
+  "final_sound_design": false,
+  "audio_bus": "Effects",
+  "sample_rate_hz": 44100,
+  "channel_count": 2,
+  "sample_width_bits": 16,
+  "asset_tier": "production_layered_v1",
+  "cues": {
+    "audio_placeholder_town_build": {
+      "path": "res://art/audio/runtime/presentation/town_build.wav",
+      "duration_msec": 420,
+      "volume_db": -12.5,
+      "role": "town_construction_complete"
+    },
+    "audio_placeholder_recruit": {
+      "path": "res://art/audio/runtime/presentation/town_recruit.wav",
+      "duration_msec": 360,
+      "volume_db": -13.0,
+      "role": "town_recruitment_muster"
+    }
+  }
+}
