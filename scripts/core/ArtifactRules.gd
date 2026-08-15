@@ -1311,6 +1311,26 @@ static func artifact_name(artifact_id: String) -> String:
 	var artifact := ContentService.get_artifact(artifact_id)
 	return String(artifact.get("name", artifact_id))
 
+static func artifact_id_for_management_action(hero_state: Dictionary, action_id: String) -> String:
+	if action_id.begins_with("equip_artifact:"):
+		var inventory_artifact_id := action_id.trim_prefix("equip_artifact:")
+		return inventory_artifact_id if String(locate_artifact(hero_state, inventory_artifact_id).get("location", "missing")) == "inventory" else ""
+	if action_id.begins_with("unequip_artifact:"):
+		var slot := action_id.trim_prefix("unequip_artifact:")
+		if slot not in EQUIPMENT_SLOTS:
+			return ""
+		var artifacts := normalize_hero_artifacts(hero_state.get("artifacts", {}))
+		return String(artifacts.get("equipped", {}).get(slot, ""))
+	return ""
+
+static func artifact_icon_path(artifact_id: String) -> String:
+	var artifact := ContentService.get_artifact(artifact_id)
+	var ui: Dictionary = artifact.get("ui", {}) if artifact.get("ui", {}) is Dictionary else {}
+	var icon_path := String(ui.get("icon_path", "")).strip_edges()
+	if not icon_path.begins_with("res://art/artifacts/runtime/") or not ResourceLoader.exists(icon_path, "Texture2D"):
+		return ""
+	return icon_path
+
 static func artifact_slot(artifact_id: String) -> String:
 	if artifact_id == "":
 		return ""
