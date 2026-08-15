@@ -1,0 +1,11 @@
+{
+  "schema_id": "town_vfx_manifest_v1",
+  "cues": {
+    "vfx_placeholder_build_complete": {
+      "event_id": "town_building_built",
+      "texture_path": "res://art/town/runtime/vfx/build_complete.png",
+      "render_mode": "town_building_complete",
+      "scale": 1.0
+    }
+  }
+}
