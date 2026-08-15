@@ -288,6 +288,8 @@ var _hero_movement_animation_state := ""
 var _hero_movement_visual_policy := ""
 var _hero_movement_fallback_tag := ""
 var _hero_movement_vfx_cue_ids: Array = []
+var _hero_movement_audio_cue_ids: Array = []
+var _hero_movement_audio_playback_records: Array = []
 var _hero_movement_reduced_motion := false
 var _hero_movement_last_draw: Dictionary = {}
 var _object_resolution_last_serial := 0
@@ -316,6 +318,8 @@ var _route_blocked_visual_policy := ""
 var _route_blocked_fallback_tag := ""
 var _route_blocked_reason := ""
 var _route_blocked_vfx_cue_ids: Array = []
+var _route_blocked_audio_cue_ids: Array = []
+var _route_blocked_audio_playback_records: Array = []
 var _route_blocked_allows_large_motion := false
 var _route_blocked_last_draw: Dictionary = {}
 var _guarded_site_active := false
@@ -585,6 +589,8 @@ func _sync_hero_movement_presentation(presentation: Dictionary) -> void:
 	_hero_movement_visual_policy = String(presentation.get("selected_visual_policy", ""))
 	_hero_movement_fallback_tag = String(presentation.get("selected_fallback_tag", ""))
 	_hero_movement_vfx_cue_ids = (presentation.get("selected_vfx_cue_ids", []) as Array).duplicate(true)
+	_hero_movement_audio_cue_ids = (presentation.get("selected_audio_cue_ids", []) as Array).duplicate(true)
+	_hero_movement_audio_playback_records = []
 	_hero_movement_reduced_motion = not bool(presentation.get("allows_large_motion", true))
 	_hero_movement_last_draw = {}
 	if _hero_movement_event_id != "overworld_hero_move":
@@ -593,6 +599,13 @@ func _sync_hero_movement_presentation(presentation: Dictionary) -> void:
 	if path.size() <= 1 or path[path.size() - 1] != _hero_tile:
 		return
 	_hero_movement_path = path
+	for audio_cue_value in _hero_movement_audio_cue_ids:
+		_hero_movement_audio_playback_records.append(PresentationAudio.play_cue(String(audio_cue_value), "OverworldMapView.hero_movement", {
+			"event_id": _hero_movement_event_id,
+			"presentation_serial": serial,
+			"route_step_count": path.size() - 1,
+			"final_tile": {"x": _hero_tile.x, "y": _hero_tile.y},
+		}))
 	if _hero_movement_reduced_motion:
 		_hero_movement_last_draw = {"mode": "route_endpoint_snap", "texture_path": ""}
 		_invalidate_dynamic_layer("hero_movement_reduced_motion_snap")
@@ -662,6 +675,8 @@ func _sync_route_blocked_presentation(presentation: Dictionary) -> void:
 	_route_blocked_fallback_tag = String(presentation.get("selected_fallback_tag", ""))
 	_route_blocked_reason = String(presentation.get("blocked_reason", "")).strip_edges()
 	_route_blocked_vfx_cue_ids = (presentation.get("selected_vfx_cue_ids", []) as Array).duplicate(true)
+	_route_blocked_audio_cue_ids = (presentation.get("selected_audio_cue_ids", []) as Array).duplicate(true)
+	_route_blocked_audio_playback_records = []
 	_route_blocked_allows_large_motion = bool(presentation.get("allows_large_motion", true))
 	_route_blocked_last_draw = {}
 	_sync_presentation_processing()
@@ -677,6 +692,13 @@ func _sync_route_blocked_presentation(presentation: Dictionary) -> void:
 		ROUTE_BLOCKED_MAX_DURATION_MSEC
 	)
 	_route_blocked_tile = tile
+	for audio_cue_value in _route_blocked_audio_cue_ids:
+		_route_blocked_audio_playback_records.append(PresentationAudio.play_cue(String(audio_cue_value), "OverworldMapView.route_blocked", {
+			"event_id": _route_blocked_event_id,
+			"presentation_serial": serial,
+			"tile": {"x": tile.x, "y": tile.y},
+			"blocked_reason": _route_blocked_reason,
+		}))
 	_route_blocked_duration_sec = float(duration_msec) / 1000.0
 	_route_blocked_active = true
 	_sync_presentation_processing()
@@ -3417,6 +3439,8 @@ func validation_hero_movement_presentation() -> Dictionary:
 		"visual_policy": _hero_movement_visual_policy,
 		"fallback_tag": _hero_movement_fallback_tag,
 		"selected_vfx_cue_ids": _hero_movement_vfx_cue_ids.duplicate(true),
+		"selected_audio_cue_ids": _hero_movement_audio_cue_ids.duplicate(true),
+		"audio_playback_records": _hero_movement_audio_playback_records.duplicate(true),
 		"vfx_asset": _hero_movement_vfx_asset_state(),
 		"vfx_draw": _hero_movement_last_draw.duplicate(true),
 		"reduced_motion": _hero_movement_reduced_motion,
@@ -3544,6 +3568,8 @@ func validation_route_blocked_presentation() -> Dictionary:
 		"visual_policy": _route_blocked_visual_policy,
 		"fallback_tag": _route_blocked_fallback_tag,
 		"selected_vfx_cue_ids": _route_blocked_vfx_cue_ids.duplicate(true),
+		"selected_audio_cue_ids": _route_blocked_audio_cue_ids.duplicate(true),
+		"audio_playback_records": _route_blocked_audio_playback_records.duplicate(true),
 		"vfx_asset": _route_blocked_vfx_asset_state(),
 		"vfx_draw": _route_blocked_last_draw.duplicate(true),
 		"allows_large_motion": _route_blocked_allows_large_motion,
