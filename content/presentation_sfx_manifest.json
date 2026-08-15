@@ -56,6 +56,12 @@
       "volume_db": -15.0,
       "role": "overworld_route_moved"
     },
+    "audio_placeholder_object_focus": {
+      "path": "res://art/audio/runtime/presentation/object_focus.wav",
+      "duration_msec": 260,
+      "volume_db": -14.5,
+      "role": "overworld_object_selected"
+    },
     "audio_placeholder_invalid_route": {
       "path": "res://art/audio/runtime/presentation/invalid_route.wav",
       "duration_msec": 300,

@@ -184,6 +184,7 @@ var _last_action_recap: Dictionary = {}
 var _last_route_execution: Dictionary = {}
 var _hero_movement_presentation: Dictionary = {}
 var _hero_movement_presentation_serial := 0
+var _object_focus_presentation: Dictionary = {}
 var _object_resolution_presentation: Dictionary = {}
 var _object_resolution_presentation_serial := 0
 var _route_blocked_presentation: Dictionary = {}
@@ -808,6 +809,7 @@ func _move_controller_route_cursor(direction: Vector2i, repeated: bool) -> Dicti
 	if changed:
 		_validation_controller_route_step_count += 1
 		_pan_map(_selected_tile - before)
+		_record_selected_object_focus_presentation("controller_route_cursor")
 		_refresh_selected_route_preview("controller_route_cursor_repeat" if repeated else "controller_route_cursor_step")
 		_schedule_controller_route_semantic_after_refresh()
 	_validation_controller_route_last_step = {
@@ -1944,6 +1946,7 @@ func _on_map_tile_pressed(tile: Vector2i) -> void:
 		return
 	_set_active_drawer("")
 	_debug_set_path_command_type("select_route")
+	_record_selected_object_focus_presentation("pointer")
 	_refresh_selected_route_preview("selected_route_changed")
 	if debug_started:
 		_debug_finish_path_command()
@@ -2438,7 +2441,8 @@ func _refresh_map_view() -> void:
 		_object_resolution_presentation,
 		_route_blocked_presentation,
 		_selected_guarded_site_presentation(),
-		_spell_cast_presentation
+		_spell_cast_presentation,
+		_object_focus_presentation
 	)
 	if _map_view.has_method("set_placement_debug_overlay_enabled"):
 		_map_view.call("set_placement_debug_overlay_enabled", _placement_debug_overlay_enabled)
@@ -3188,6 +3192,50 @@ func _selected_guarded_site_presentation() -> Dictionary:
 		"selected_animation_state": String(policy.get("selected_animation_state", "")),
 		"selected_visual_policy": String(policy.get("selected_visual_policy", "")),
 		"selected_fallback_tag": String(policy.get("selected_fallback_tag", "")),
+		"selected_vfx_cue_ids": (policy.get("selected_vfx_cue_ids", []) as Array).duplicate(true),
+		"selected_audio_cue_ids": (policy.get("selected_audio_cue_ids", []) as Array).duplicate(true),
+		"allows_large_motion": bool(policy.get("allows_large_motion", true)),
+	}
+
+func _record_selected_object_focus_presentation(input_source: String) -> void:
+	_object_focus_presentation = {}
+	if _session == null or input_source not in ["pointer", "controller_route_cursor"]:
+		return
+	if not _tile_in_bounds(_selected_tile) or not OverworldRules.is_tile_visible(_session, _selected_tile.x, _selected_tile.y):
+		return
+	if not _selected_guarded_site_presentation().is_empty():
+		return
+	var descriptor := _selected_route_destination_execution_descriptor(_selected_tile)
+	var object_kind := String(descriptor.get("kind", "")).strip_edges()
+	if object_kind not in ["town", "resource", "artifact", "encounter"]:
+		return
+	var object_id := String(descriptor.get("placement_id", "")).strip_edges()
+	if object_id == "":
+		return
+	var policy: Dictionary = AnimationCueCatalogScript.cue_playback_policy_for_event(
+		"overworld_object_active",
+		SettingsService.animation_preferences()
+	)
+	if (
+		String(policy.get("event_id", "")) != "overworld_object_active"
+		or String(policy.get("cue_id", "")) != "cue_overworld_object_active"
+		or String(policy.get("selected_playback_policy", "")) not in ["context_visible_only", "fast_resolve"]
+		or String(policy.get("selected_blocking_policy", "")) != "never_blocks_input"
+	):
+		return
+	_object_focus_presentation = {
+		"active": true,
+		"event_id": "overworld_object_active",
+		"cue_id": "cue_overworld_object_active",
+		"input_source": input_source,
+		"tile": {"x": _selected_tile.x, "y": _selected_tile.y},
+		"object_kind": object_kind,
+		"object_id": object_id,
+		"selected_animation_state": String(policy.get("selected_animation_state", "")),
+		"selected_visual_policy": String(policy.get("selected_visual_policy", "")),
+		"selected_fallback_tag": String(policy.get("selected_fallback_tag", "")),
+		"selected_playback_policy": String(policy.get("selected_playback_policy", "")),
+		"selected_blocking_policy": String(policy.get("selected_blocking_policy", "")),
 		"selected_vfx_cue_ids": (policy.get("selected_vfx_cue_ids", []) as Array).duplicate(true),
 		"selected_audio_cue_ids": (policy.get("selected_audio_cue_ids", []) as Array).duplicate(true),
 		"allows_large_motion": bool(policy.get("allows_large_motion", true)),
@@ -8207,6 +8255,7 @@ func _set_selected_tile(tile: Vector2i) -> void:
 	var route_tile := _selection_route_tile(tile)
 	if _selected_tile == route_tile:
 		return
+	_object_focus_presentation = {}
 	_selected_tile = route_tile
 	_invalidate_selected_route_state("selected_tile_changed")
 	_invalidate_refresh_cache()
