@@ -1,6 +1,12 @@
 {
   "schema_id": "overworld_vfx_manifest_v1",
   "cues": {
+    "vfx_placeholder_adventure_spell": {
+      "event_id": "spell_cast_overworld",
+      "texture_path": "res://art/overworld/runtime/vfx/field_spell.png",
+      "render_mode": "field_spell_cast",
+      "scale": 1.12
+    },
     "vfx_placeholder_capture_flag": {
       "event_id": "overworld_object_captured",
       "texture_path": "res://art/overworld/runtime/vfx/object_resolution/captured.png",
