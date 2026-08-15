@@ -140,6 +140,10 @@ OVERWORLD_FIELD_SPELL_VFX_SOURCE_PATH = ROOT / "art" / "overworld" / "source" / 
 OVERWORLD_FIELD_SPELL_VFX_RUNTIME_PATH = ROOT / "art" / "overworld" / "runtime" / "vfx" / "field_spell.png"
 OVERWORLD_FIELD_SPELL_VFX_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_field_spell_vfx_asset_runtime_report.gd"
 OVERWORLD_FIELD_SPELL_VFX_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_field_spell_vfx_asset_runtime_report.tscn"
+OVERWORLD_GUARDED_SITE_VFX_SOURCE_PATH = ROOT / "art" / "overworld" / "source" / "guarded_site_vfx_source.png"
+OVERWORLD_GUARDED_SITE_VFX_RUNTIME_PATH = ROOT / "art" / "overworld" / "runtime" / "vfx" / "guarded_site.png"
+OVERWORLD_GUARDED_SITE_VFX_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_guarded_site_vfx_asset_runtime_report.gd"
+OVERWORLD_GUARDED_SITE_VFX_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_guarded_site_vfx_asset_runtime_report.tscn"
 OVERWORLD_FIELD_SPELL_CAST_CUE_PLAYBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_field_spell_cast_cue_playback_report.gd"
 OVERWORLD_FIELD_SPELL_CAST_CUE_PLAYBACK_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_field_spell_cast_cue_playback_report.tscn"
 OVERWORLD_ARTIFACT_SLOT_CUE_PLAYBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_artifact_slot_cue_playback_report.gd"
@@ -31116,6 +31120,12 @@ def validate_overworld_object_resolution_vfx_assets(errors: list[str]) -> None:
                 "render_mode": "field_spell_cast",
                 "scale": 1.12,
             },
+            "vfx_placeholder_guard_warning": {
+                "event_id": "overworld_object_guarded",
+                "texture_path": "res://art/overworld/runtime/vfx/guarded_site.png",
+                "render_mode": "guarded_site_context",
+                "scale": 0.92,
+            },
             "vfx_placeholder_capture_flag": {
                 "event_id": "overworld_object_captured",
                 "texture_path": "res://art/overworld/runtime/vfx/object_resolution/captured.png",
@@ -31136,7 +31146,7 @@ def validate_overworld_object_resolution_vfx_assets(errors: list[str]) -> None:
             },
         },
     }
-    ensure(load_json(OVERWORLD_OBJECT_RESOLUTION_VFX_MANIFEST_PATH) == expected_manifest, errors, "Overworld VFX manifest must retain the exact field-spell and three object-resolution event/cue/path/render/scale mappings")
+    ensure(load_json(OVERWORLD_OBJECT_RESOLUTION_VFX_MANIFEST_PATH) == expected_manifest, errors, "Overworld VFX manifest must retain the exact field-spell, guarded-site, and three object-resolution event/cue/path/render/scale mappings")
     ensure(png_size(OVERWORLD_OBJECT_RESOLUTION_VFX_ATLAS_PATH) == (2172, 724), errors, "Object-resolution VFX source atlas must remain the exact 3x724 source image")
     runtime_payloads: list[bytes] = []
     for cue_id, path in runtime_paths.items():
@@ -31273,7 +31283,7 @@ def validate_overworld_field_spell_vfx_assets(errors: list[str]) -> None:
         "render_mode": "field_spell_cast",
         "scale": 1.12,
     }, errors, "Overworld VFX manifest must map the exact field-spell cue/event/texture")
-    ensure(set(cues) == {"vfx_placeholder_adventure_spell", "vfx_placeholder_capture_flag", "vfx_placeholder_object_visit", "vfx_placeholder_depleted_dim"}, errors, "Overworld VFX manifest must not remap any other cue")
+    ensure(set(cues) == {"vfx_placeholder_adventure_spell", "vfx_placeholder_guard_warning", "vfx_placeholder_capture_flag", "vfx_placeholder_object_visit", "vfx_placeholder_depleted_dim"}, errors, "Overworld VFX manifest must not remap any other cue")
     ensure(png_size(OVERWORLD_FIELD_SPELL_VFX_SOURCE_PATH) == (1254, 1254), errors, "Overworld field-spell VFX source must retain its exact square source image")
     ensure(png_size(OVERWORLD_FIELD_SPELL_VFX_RUNTIME_PATH) == (512, 512), errors, "Overworld field-spell runtime texture must be 512x512")
     header = OVERWORLD_FIELD_SPELL_VFX_RUNTIME_PATH.read_bytes()[:26]
@@ -31367,6 +31377,131 @@ def validate_overworld_field_spell_vfx_assets(errors: list[str]) -> None:
     ensure(report_text.count("for viewport_size in VIEWPORT_SIZES:") == 1, errors, "Overworld field-spell VFX focused owner must run both exact widths")
     for forbidden in ("_draw_spell_cast_imported_vfx", "_draw_spell_cast_procedural_rings", "_spell_cast_vfx_asset_state", "create_timer", "create_tween", "AnimationCueCatalog"):
         ensure(forbidden not in report_text, errors, f"Overworld field-spell focused owner must observe public rendering without bypassing production: {forbidden}")
+
+
+def validate_overworld_guarded_site_vfx_assets(errors: list[str]) -> None:
+    required_paths = (
+        OVERWORLD_SCRIPT_PATH,
+        OVERWORLD_MAP_VIEW_SCRIPT_PATH,
+        OVERWORLD_OBJECT_RESOLUTION_VFX_MANIFEST_PATH,
+        OVERWORLD_GUARDED_SITE_VFX_SOURCE_PATH,
+        OVERWORLD_GUARDED_SITE_VFX_RUNTIME_PATH,
+        OVERWORLD_GUARDED_SITE_VFX_REPORT_SCRIPT_PATH,
+        OVERWORLD_GUARDED_SITE_VFX_REPORT_SCENE_PATH,
+        OVERWORLD_OBJECT_RESOLUTION_CUE_PLAYBACK_REPORT_SCRIPT_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Overworld guarded-site VFX owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+    cues = load_json(OVERWORLD_OBJECT_RESOLUTION_VFX_MANIFEST_PATH).get("cues", {})
+    ensure(cues.get("vfx_placeholder_guard_warning") == {
+        "event_id": "overworld_object_guarded",
+        "texture_path": "res://art/overworld/runtime/vfx/guarded_site.png",
+        "render_mode": "guarded_site_context",
+        "scale": 0.92,
+    }, errors, "Overworld VFX manifest must map the exact guarded-site cue/event/texture")
+    ensure(png_size(OVERWORLD_GUARDED_SITE_VFX_SOURCE_PATH) == (1254, 1254), errors, "Overworld guarded-site VFX source must retain its exact square source image")
+    ensure(png_size(OVERWORLD_GUARDED_SITE_VFX_RUNTIME_PATH) == (512, 512), errors, "Overworld guarded-site runtime texture must be 512x512")
+    header = OVERWORLD_GUARDED_SITE_VFX_RUNTIME_PATH.read_bytes()[:26]
+    ensure(len(header) >= 26 and header[25] in {4, 6}, errors, "Overworld guarded-site runtime texture must retain a PNG alpha channel")
+
+    def function_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}")
+        if start < 0:
+            return ""
+        end = text.find("\nfunc ", start + 1)
+        return text[start:] if end < 0 else text[start:end]
+
+    shell_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+    producer = function_block(shell_text, "_selected_guarded_site_presentation")
+    ensure('(policy.get("selected_vfx_cue_ids", []) as Array).duplicate(true)' in producer, errors, "Guarded-site producer must detach the exact selected VFX cue ids")
+    ensure(producer.find("cue_playback_policy_for_event") < producer.rfind("return {") < producer.find('"selected_vfx_cue_ids"'), errors, "Guarded-site producer must resolve policy before publishing detached VFX identity")
+    ensure("session.overworld[" not in producer and "session.flags[" not in producer and "create_timer" not in producer and "await " not in producer, errors, "Guarded-site producer must remain read-only and synchronous")
+
+    map_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
+    for token in (
+        "var _guarded_site_vfx_cue_ids: Array = []",
+        "var _guarded_site_last_draw: Dictionary = {}",
+        '_guarded_site_vfx_cue_ids = (presentation.get("selected_vfx_cue_ids", []) as Array).duplicate(true)',
+        "_guarded_site_last_draw = {}",
+        '"selected_vfx_cue_ids": _guarded_site_vfx_cue_ids.duplicate(true)',
+        '"vfx_asset": _guarded_site_vfx_asset_state()',
+        '"vfx_draw": _guarded_site_last_draw.duplicate(true)',
+    ):
+        ensure(token in map_text, errors, f"Overworld guarded-site VFX state is missing exact ownership: {token}")
+    draw = function_block(map_text, "_draw_guarded_site_presentation")
+    imported = function_block(map_text, "_draw_guarded_site_imported_vfx")
+    fallback = function_block(map_text, "_draw_guarded_site_procedural_shield")
+    state = function_block(map_text, "_guarded_site_vfx_asset_state")
+    ensure(draw.find('if _guarded_site_visual_policy != "reduced_motion_fallback"') < draw.find("_draw_guarded_site_imported_vfx") < draw.find("_draw_guarded_site_procedural_shield"), errors, "Guarded-site drawing must use imported art only in normal mode and retain the procedural shield fallback")
+    for token in (
+        "_guarded_site_vfx_asset_state()",
+        'if not bool(asset_state.get("uses_imported_asset", false)):',
+        '_overworld_vfx_texture_for_path(String(asset_state.get("texture_path", "")))',
+        '_canvas_draw_texture_rect(texture, draw_rect, false)',
+        '"mode": "imported_texture"',
+        "return true",
+    ):
+        ensure(token in imported, errors, f"Imported guarded-site draw path is missing exact live behavior: {token}")
+    for token in (
+        "_canvas_draw_circle(center, extent * 0.38",
+        "_canvas_draw_colored_polygon",
+        '"guard_badge_static" if _guarded_site_visual_policy == "reduced_motion_fallback" else "existing_procedural_guard_shield"',
+        '"shield_count": 1',
+    ):
+        ensure(token in fallback, errors, f"Existing guarded-site procedural fallback was not retained exactly: {token}")
+    for token in (
+        "_guarded_site_vfx_cue_ids.size() == 1",
+        'cue_id == "vfx_placeholder_guard_warning"',
+        "event_id == _guarded_site_event_id",
+        'render_mode == "guarded_site_context"',
+        '"uses_procedural_fallback": not uses_imported_asset',
+        '"fallback_mode": "existing_procedural_guard_shield"',
+    ):
+        ensure(token in state, errors, f"Guarded-site VFX resolver is missing fail-closed event/asset ownership: {token}")
+    for forbidden in ("session.", "_session.", "await ", "create_timer", "create_tween", "AnimationCueCatalog", "OverworldRules"):
+        ensure(forbidden not in imported and forbidden not in state, errors, f"Guarded-site asset draw/resolver must not change gameplay or timing authority: {forbidden}")
+
+    report_text = OVERWORLD_GUARDED_SITE_VFX_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    scene_text = OVERWORLD_GUARDED_SITE_VFX_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure_scene_nodes(scene_text, errors, "overworld_guarded_site_vfx_asset_runtime_report.tscn", [("OverworldGuardedSiteVfxAssetRuntimeReport", "Node")])
+    for token in (
+        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        'const GUARDED_TILE := Vector2i(3, 1)',
+        'ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)',
+        'map_view.call("validation_guarded_site_presentation")',
+        'map_view.set("_overworld_vfx_texture_missing", {TEXTURE_PATH: true})',
+        'map_view.set("_overworld_vfx_texture_missing", {})',
+        '"selected_vfx_cue_ids": ["guard_badge_static"] if reduced_motion else ["vfx_placeholder_guard_warning"]',
+        'String(draw.get("mode", "")) == "imported_texture"',
+        'String(draw.get("mode", "")) == expected_mode',
+        "session.to_dict() == authority_before",
+        "SessionStateStore.SAVE_VERSION == 9",
+        'print("OVERWORLD_GUARDED_SITE_VFX_ASSET_RUNTIME_REPORT %s"',
+    ):
+        ensure(token in report_text, errors, f"Overworld guarded-site VFX focused owner is missing exact proof: {token}")
+    ensure(report_text.count("for viewport_size in VIEWPORT_SIZES:") == 1, errors, "Overworld guarded-site VFX focused owner must run both exact widths")
+    for forbidden in ("_draw_guarded_site_imported_vfx", "_draw_guarded_site_procedural_shield", "_guarded_site_vfx_asset_state", "create_timer", "create_tween", "AnimationCueCatalog"):
+        ensure(forbidden not in report_text, errors, f"Guarded-site focused owner must observe public rendering without bypassing production: {forbidden}")
+
+    cue_report = OVERWORLD_OBJECT_RESOLUTION_CUE_PLAYBACK_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for token in (
+        '"selected_vfx_cue_ids": ["vfx_placeholder_guard_warning"]',
+        "or not _guarded_vfx_imported_exact(guarded)",
+        'reduced.get("selected_vfx_cue_ids", []) != ["guard_badge_static"]',
+        "or not _guarded_vfx_fallback_exact(reduced)",
+        "session.to_dict() != authority_before_selection",
+        "resolved.append(guard_id)",
+    ):
+        ensure(token in cue_report, errors, f"Live guarded-site cue owner is missing asset/lifecycle authority: {token}")
+    ensure("_draw_guarded_site_imported_vfx" not in cue_report and "_guarded_site_vfx_asset_state" not in cue_report, errors, "Live guarded-site owner must observe public VFX state without private draw/resolver calls")
+    guarded_case = function_block(cue_report, "_assert_guarded_site_context_playback")
+    ensure(guarded_case.find('var selection: Dictionary = shell.call("validation_select_tile"') < guarded_case.find("await get_tree().process_frame") < guarded_case.find("var guarded := _guarded_site(shell)"), errors, "Live guarded-site owner must cross one real draw frame before observing imported VFX")
+    reduced_selection = guarded_case.find('reduced_shell.call("validation_select_tile"')
+    ensure(0 <= reduced_selection < guarded_case.find("await get_tree().process_frame", reduced_selection) < guarded_case.find("var reduced := _guarded_site(reduced_shell)"), errors, "Reduced-motion guarded-site owner must cross one real draw frame before observing fallback VFX")
+    reselection = guarded_case.find('shell.call("validation_select_tile", guarded_tile.x, guarded_tile.y)', guarded_case.find('shell.call("validation_select_tile", 0, 1)'))
+    ensure(0 <= reselection < guarded_case.find("await get_tree().process_frame", reselection) < guarded_case.find("if _guarded_site(shell) != guarded:", reselection), errors, "Guarded-site reselection must cross one real draw frame before exact whole-state comparison")
 
 
 def validate_overworld_object_resolution_cue_playback(errors: list[str]) -> None:
@@ -40217,6 +40352,7 @@ def main() -> int:
     validate_active_play_load_resumed_cue_playback(errors)
     validate_overworld_object_resolution_vfx_assets(errors)
     validate_overworld_field_spell_vfx_assets(errors)
+    validate_overworld_guarded_site_vfx_assets(errors)
     validate_overworld_object_resolution_cue_playback(errors)
     validate_neutral_dwelling_unit_slice(errors)
     validate_hero_portrait_assets(errors)

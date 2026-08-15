@@ -7,6 +7,12 @@
       "render_mode": "field_spell_cast",
       "scale": 1.12
     },
+    "vfx_placeholder_guard_warning": {
+      "event_id": "overworld_object_guarded",
+      "texture_path": "res://art/overworld/runtime/vfx/guarded_site.png",
+      "render_mode": "guarded_site_context",
+      "scale": 0.92
+    },
     "vfx_placeholder_capture_flag": {
       "event_id": "overworld_object_captured",
       "texture_path": "res://art/overworld/runtime/vfx/object_resolution/captured.png",

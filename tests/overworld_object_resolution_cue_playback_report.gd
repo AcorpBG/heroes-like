@@ -46,7 +46,11 @@ func _assert_guarded_site_context_playback() -> bool:
 	var authority_before_selection: Dictionary = session.to_dict()
 	var cache_before_selection := _render_cache(shell)
 	var selection: Dictionary = shell.call("validation_select_tile", guarded_tile.x, guarded_tile.y)
+	await get_tree().process_frame
 	var guarded := _guarded_site(shell)
+	var guarded_identity: Dictionary = guarded.duplicate(true)
+	guarded_identity.erase("vfx_asset")
+	guarded_identity.erase("vfx_draw")
 	var cache_after_selection := _render_cache(shell)
 	var node: Dictionary = session.overworld.get("resource_nodes", [])[0]
 	var guard: Dictionary = session.overworld.get("encounters", [])[0]
@@ -54,7 +58,7 @@ func _assert_guarded_site_context_playback() -> bool:
 	var expected_inspection := OverworldRules.describe_resource_site_control_inspection(session, node, site)
 	var expected_guard_surface := OverworldRules.describe_encounter_guard_link_surface(session, guard)
 	if (
-		guarded != {
+		guarded_identity != {
 			"active": true,
 			"event_id": "overworld_object_guarded",
 			"status": "guarded",
@@ -70,8 +74,10 @@ func _assert_guarded_site_context_playback() -> bool:
 			"animation_state": "guard_warning_hold",
 			"visual_policy": "authored_animation_state",
 			"fallback_tag": "",
+			"selected_vfx_cue_ids": ["vfx_placeholder_guard_warning"],
 			"allows_large_motion": true,
 		}
+		or not _guarded_vfx_imported_exact(guarded)
 		or String(selection.get("selected_route_decision", {}).get("status", "")) not in ["reachable", "blocked"]
 		or not expected_inspection.contains("Guard: Guarded by Bramble Hedge Watch; clear guard to use site")
 		or expected_guard_surface == ""
@@ -96,6 +102,7 @@ func _assert_guarded_site_context_playback() -> bool:
 	if bool(_guarded_site(shell).get("active", true)) or session.to_dict() != authority_before_selection:
 		return _fail("Guarded context remained active after deselection.", _guarded_site(shell))
 	shell.call("validation_select_tile", guarded_tile.x, guarded_tile.y)
+	await get_tree().process_frame
 	if _guarded_site(shell) != guarded:
 		return _fail("Guarded context did not return exactly after reselection.", _guarded_site(shell))
 	var resolved: Array = session.overworld.get("resolved_encounters", []) if session.overworld.get("resolved_encounters", []) is Array else []
@@ -128,6 +135,7 @@ func _assert_guarded_site_context_playback() -> bool:
 	_prepare_shell_state(reduced_shell, reduced_session, Vector2i(0, 1), 4)
 	var reduced_authority: Dictionary = reduced_session.to_dict()
 	reduced_shell.call("validation_select_tile", guarded_tile.x, guarded_tile.y)
+	await get_tree().process_frame
 	var reduced := _guarded_site(reduced_shell)
 	if (
 		not bool(reduced.get("active", false))
@@ -136,6 +144,8 @@ func _assert_guarded_site_context_playback() -> bool:
 		or String(reduced.get("animation_state", "")) != "guard_badge_static"
 		or String(reduced.get("visual_policy", "")) != "reduced_motion_fallback"
 		or String(reduced.get("fallback_tag", "")) != "guard_badge_static"
+		or reduced.get("selected_vfx_cue_ids", []) != ["guard_badge_static"]
+		or not _guarded_vfx_fallback_exact(reduced)
 		or bool(reduced.get("allows_large_motion", true))
 		or reduced_session.to_dict() != reduced_authority
 	):
@@ -149,6 +159,23 @@ func _assert_guarded_site_context_playback() -> bool:
 	await get_tree().process_frame
 	SettingsService.set_reduced_motion_enabled(false)
 	return true
+
+func _guarded_vfx_imported_exact(snapshot: Dictionary) -> bool:
+	var asset: Dictionary = snapshot.get("vfx_asset", {}) if snapshot.get("vfx_asset", {}) is Dictionary else {}
+	var draw: Dictionary = snapshot.get("vfx_draw", {}) if snapshot.get("vfx_draw", {}) is Dictionary else {}
+	return bool(asset.get("uses_imported_asset", false)) \
+		and not bool(asset.get("uses_procedural_fallback", true)) \
+		and String(asset.get("texture_path", "")) == "res://art/overworld/runtime/vfx/guarded_site.png" \
+		and String(draw.get("mode", "")) == "imported_texture" \
+		and String(draw.get("texture_path", "")) == "res://art/overworld/runtime/vfx/guarded_site.png"
+
+func _guarded_vfx_fallback_exact(snapshot: Dictionary) -> bool:
+	var asset: Dictionary = snapshot.get("vfx_asset", {}) if snapshot.get("vfx_asset", {}) is Dictionary else {}
+	var draw: Dictionary = snapshot.get("vfx_draw", {}) if snapshot.get("vfx_draw", {}) is Dictionary else {}
+	return bool(asset.get("uses_procedural_fallback", false)) \
+		and not bool(asset.get("uses_imported_asset", true)) \
+		and String(draw.get("mode", "")) == "guard_badge_static" \
+		and int(draw.get("shield_count", 0)) == 1
 
 func _assert_persistent_resource_capture_playback() -> bool:
 	var session = _session_with_map(7, 3, true)

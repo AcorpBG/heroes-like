@@ -184,10 +184,10 @@ func _asset_summary_exact(summary: Dictionary) -> bool:
 	return String(summary.get("manifest_path", "")) == "res://content/overworld_vfx_manifest.json" \
 		and bool(summary.get("manifest_loaded", false)) \
 		and String(summary.get("schema_id", "")) == "overworld_vfx_manifest_v1" \
-		and int(summary.get("mapped_cue_count", 0)) == 4 \
-		and summary.get("mapped_cue_ids", []) == ["vfx_placeholder_adventure_spell", "vfx_placeholder_capture_flag", "vfx_placeholder_depleted_dim", "vfx_placeholder_object_visit"] \
-		and int(summary.get("unique_texture_count", 0)) == 4 \
-		and int(summary.get("loaded_texture_count", 0)) == 4 \
+		and int(summary.get("mapped_cue_count", 0)) == 5 \
+		and summary.get("mapped_cue_ids", []) == ["vfx_placeholder_adventure_spell", "vfx_placeholder_capture_flag", "vfx_placeholder_depleted_dim", "vfx_placeholder_guard_warning", "vfx_placeholder_object_visit"] \
+		and int(summary.get("unique_texture_count", 0)) == 5 \
+		and int(summary.get("loaded_texture_count", 0)) == 5 \
 		and summary.get("missing_texture_paths", []) == []
 
 func _session_with_map(width: int, height: int):

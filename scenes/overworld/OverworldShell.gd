@@ -3044,6 +3044,7 @@ func _selected_guarded_site_presentation() -> Dictionary:
 		"selected_animation_state": String(policy.get("selected_animation_state", "")),
 		"selected_visual_policy": String(policy.get("selected_visual_policy", "")),
 		"selected_fallback_tag": String(policy.get("selected_fallback_tag", "")),
+		"selected_vfx_cue_ids": (policy.get("selected_vfx_cue_ids", []) as Array).duplicate(true),
 		"allows_large_motion": bool(policy.get("allows_large_motion", true)),
 	}
 
