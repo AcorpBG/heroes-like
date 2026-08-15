@@ -33,6 +33,8 @@ const BATTLE_RESOLUTION_AUTOSAVE_FAILURE_MESSAGE := "Battle resolved, but autosa
 const SCENARIO_OUTCOME_AUTOSAVE_FAILURE_MESSAGE := "Outcome is ready, but autosave failed. Use Save now to protect it."
 
 var _menu_notice := ""
+var _pending_load_resumed_presentation: Dictionary = {}
+var _load_resumed_presentation_sequence := 0
 var _active_overworld_handoff_profile := {}
 var _last_overworld_handoff_profile := {}
 var _safe_quit_in_progress := false
@@ -1488,6 +1490,7 @@ func resume_active_session() -> void:
 			go_to_overworld()
 
 func resume_summary(summary: Dictionary) -> bool:
+	_clear_pending_load_resumed_presentation()
 	if summary.is_empty():
 		go_to_main_menu()
 		return false
@@ -1495,9 +1498,131 @@ func resume_summary(summary: Dictionary) -> bool:
 	if session == null:
 		push_warning("The selected save could not be restored.")
 		return false
+	var live_summary: Dictionary = SaveService.refresh_summary(summary)
+	_pending_load_resumed_presentation = _build_load_resumed_presentation(live_summary, session)
 	SessionState.active_session = session
 	resume_active_session()
 	return true
+
+func consume_load_resumed_presentation(surface: String) -> Dictionary:
+	var pending := _pending_load_resumed_presentation.duplicate(true)
+	_clear_pending_load_resumed_presentation()
+	var normalized_surface := surface.strip_edges()
+	if pending.is_empty() or normalized_surface == "":
+		return {}
+	if (
+		String(pending.get("event_id", "")) != "system_load_resumed"
+		or String(pending.get("cue_id", "")) != "cue_system_load_resumed"
+		or String(pending.get("surface", "")) != normalized_surface
+		or String(pending.get("expected_scene_path", "")) != _load_resumed_scene_path_for_surface(normalized_surface)
+		or int(pending.get("sequence", 0)) <= 0
+	):
+		return {}
+	if not SessionState.has_playable_session():
+		return {}
+	var session := SessionState.ensure_active_session()
+	var expected_target := _load_resumed_target_for_surface(normalized_surface)
+	if (
+		session.scenario_id != String(pending.get("scenario_id", ""))
+		or session.day != int(pending.get("day", -1))
+		or session.scenario_status != String(pending.get("scenario_status", ""))
+		or session.game_state != String(pending.get("game_state", ""))
+		or SaveService.resume_target_for_session(session) != expected_target
+		or String(pending.get("resume_target", "")) != expected_target
+	):
+		return {}
+	var summary_identity: Dictionary = pending.get("summary_identity", {}) if pending.get("summary_identity", {}) is Dictionary else {}
+	var live_summary: Dictionary = SaveService.refresh_summary(summary_identity)
+	if not _load_resumed_summary_identity_matches(live_summary, summary_identity):
+		return {}
+	pending["consumed"] = true
+	pending["consumed_surface"] = normalized_surface
+	return pending.duplicate(true)
+
+func validation_pending_load_resumed_presentation() -> Dictionary:
+	return _pending_load_resumed_presentation.duplicate(true)
+
+func validation_clear_pending_load_resumed_presentation() -> void:
+	_clear_pending_load_resumed_presentation()
+
+func _build_load_resumed_presentation(live_summary: Dictionary, session) -> Dictionary:
+	if session == null or not SaveService.can_load_summary(live_summary):
+		return {}
+	var resume_target := SaveService.resume_target_for_session(session)
+	var surface := "scenario_outcome" if resume_target == "outcome" else resume_target
+	var expected_scene_path := _load_resumed_scene_path_for_surface(surface)
+	var continuity_cue := SaveService.describe_slot_continuity_cue(live_summary).strip_edges()
+	var summary_identity := {
+		"slot_type": String(live_summary.get("slot_type", "")),
+		"slot_id": String(live_summary.get("slot_id", "")),
+		"path": String(live_summary.get("path", "")),
+		"modified_timestamp": int(live_summary.get("modified_timestamp", 0)),
+		"payload_bytes": int(live_summary.get("payload_bytes", 0)),
+	}
+	if (
+		not resume_target in ["overworld", "town", "battle", "outcome"]
+		or expected_scene_path == ""
+		or continuity_cue == ""
+		or String(live_summary.get("resume_target", "")) != resume_target
+		or String(live_summary.get("scenario_id", "")) != session.scenario_id
+		or int(live_summary.get("day", -1)) != session.day
+		or String(live_summary.get("scenario_status", "")) != session.scenario_status
+		or String(summary_identity.get("slot_type", "")) not in [SaveService.SLOT_TYPE_MANUAL, SaveService.SLOT_TYPE_AUTOSAVE]
+		or String(summary_identity.get("slot_id", "")) == ""
+		or String(summary_identity.get("path", "")) == ""
+		or int(summary_identity.get("payload_bytes", 0)) <= 0
+	):
+		return {}
+	_load_resumed_presentation_sequence += 1
+	return {
+		"event_id": "system_load_resumed",
+		"cue_id": "cue_system_load_resumed",
+		"sequence": _load_resumed_presentation_sequence,
+		"surface": surface,
+		"expected_scene_path": expected_scene_path,
+		"scenario_id": session.scenario_id,
+		"day": session.day,
+		"scenario_status": session.scenario_status,
+		"game_state": session.game_state,
+		"resume_target": resume_target,
+		"continuity_cue": continuity_cue,
+		"summary_identity": summary_identity.duplicate(true),
+	}.duplicate(true)
+
+func _load_resumed_summary_identity_matches(live_summary: Dictionary, expected: Dictionary) -> bool:
+	return (
+		SaveService.can_load_summary(live_summary)
+		and String(live_summary.get("slot_type", "")) == String(expected.get("slot_type", ""))
+		and String(live_summary.get("slot_id", "")) == String(expected.get("slot_id", ""))
+		and String(live_summary.get("path", "")) == String(expected.get("path", ""))
+		and int(live_summary.get("modified_timestamp", 0)) == int(expected.get("modified_timestamp", -1))
+		and int(live_summary.get("payload_bytes", 0)) == int(expected.get("payload_bytes", -1))
+	)
+
+func _load_resumed_target_for_surface(surface: String) -> String:
+	return "outcome" if surface == "scenario_outcome" else surface
+
+func _load_resumed_scene_path_for_surface(surface: String) -> String:
+	match surface:
+		"overworld":
+			return OVERWORLD_SCENE
+		"town":
+			return TOWN_SCENE
+		"battle":
+			return BATTLE_SCENE
+		"scenario_outcome":
+			return SCENARIO_OUTCOME_SCENE
+		_:
+			return ""
+
+func _clear_pending_load_resumed_presentation() -> void:
+	_pending_load_resumed_presentation = {}
+
+func _reconcile_pending_load_resumed_scene(scene_path: String) -> void:
+	if _pending_load_resumed_presentation.is_empty():
+		return
+	if String(_pending_load_resumed_presentation.get("expected_scene_path", "")) != scene_path:
+		_clear_pending_load_resumed_presentation()
 
 func resume_latest_session() -> bool:
 	return resume_summary(SaveService.latest_loadable_summary())
@@ -1610,18 +1735,22 @@ func validation_prepare_town_handoff_without_scene_change() -> Dictionary:
 	}
 
 func _change_scene(scene_path: String) -> void:
+	_reconcile_pending_load_resumed_scene(scene_path)
 	var packed_scene := _packed_scene_for_route(scene_path)
 	if packed_scene != null:
 		var packed_error := get_tree().change_scene_to_packed(packed_scene)
 		if packed_error != OK:
+			_clear_pending_load_resumed_presentation()
 			push_error("Failed to change scene to %s (error %d)." % [scene_path, packed_error])
 		return
 	if not ResourceLoader.exists(scene_path):
+		_clear_pending_load_resumed_presentation()
 		push_error("Scene file is missing: %s" % scene_path)
 		return
 
 	var error := get_tree().change_scene_to_file(scene_path)
 	if error != OK:
+		_clear_pending_load_resumed_presentation()
 		push_error("Failed to change scene to %s (error %d)." % [scene_path, error])
 
 func _packed_scene_for_route(scene_path: String) -> PackedScene:

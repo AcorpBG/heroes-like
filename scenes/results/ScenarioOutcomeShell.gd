@@ -3,6 +3,7 @@ extends Control
 const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const SystemSaveWrittenCuePresenterScript = preload("res://scenes/shared/SystemSaveWrittenCuePresenter.gd")
+const SystemLoadResumedCuePresenterScript = preload("res://scenes/shared/SystemLoadResumedCuePresenter.gd")
 const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains open; use Save, then try Return to Main Menu again."
 const OUTCOME_AUTOSAVE_RECOVERY_MESSAGE := "Outcome reached, but autosave failed. Use Save Outcome now."
 const OUTCOME_NEW_SESSION_CANCEL_TEXT := "Keep Outcome"
@@ -116,6 +117,7 @@ var _validation_outcome_new_session_route_count := 0
 var _validation_outcome_new_session_routing_suppressed := false
 var _compact_layout_active := false
 var _save_written_cue_presenter: SystemSaveWrittenCuePresenter
+var _load_resumed_cue_presenter: SystemLoadResumedCuePresenter
 
 func _ready() -> void:
 	_apply_visual_theme()
@@ -123,6 +125,10 @@ func _ready() -> void:
 	_save_written_cue_presenter.name = "SystemSaveWrittenCuePresenter"
 	add_child(_save_written_cue_presenter)
 	_save_written_cue_presenter.configure(_save_button, _save_status_label, "scenario_outcome")
+	_load_resumed_cue_presenter = SystemLoadResumedCuePresenterScript.new()
+	_load_resumed_cue_presenter.name = "SystemLoadResumedCuePresenter"
+	add_child(_load_resumed_cue_presenter)
+	_load_resumed_cue_presenter.configure(_save_status_label, "scenario_outcome")
 	_last_outcome_recap_tab_index = _recap_tabs.current_tab
 	_configure_outcome_recap_tab_accessibility()
 	if not _recap_tabs.tab_changed.is_connected(_on_outcome_recap_tab_changed):
@@ -141,6 +147,7 @@ func _ready() -> void:
 	_sync_outcome_recovery_state(true)
 	MusicAudio.sync_context("outcome", "outcome_shell_ready", _outcome_music_metadata())
 	_refresh()
+	_present_load_resumed_cue()
 	call_deferred("_configure_outcome_keyboard_focus", true)
 
 func _configure_outcome_new_session_confirmation() -> void:
@@ -1004,6 +1011,14 @@ func _commit_manual_save(manual_slot: int) -> Dictionary:
 
 func validation_save_written_cue_snapshot() -> Dictionary:
 	return _save_written_cue_presenter.validation_snapshot() if _save_written_cue_presenter != null else {}
+
+func _present_load_resumed_cue() -> void:
+	var payload: Dictionary = AppRouter.consume_load_resumed_presentation("scenario_outcome")
+	if not payload.is_empty() and _load_resumed_cue_presenter != null:
+		_load_resumed_cue_presenter.present(payload)
+
+func validation_load_resumed_cue_snapshot() -> Dictionary:
+	return _load_resumed_cue_presenter.validation_snapshot() if _load_resumed_cue_presenter != null else {}
 
 func _on_manual_save_overwrite_confirmed() -> void:
 	var manual_slot: int = int(_manual_save_overwrite_dialog.consume_pending_slot())

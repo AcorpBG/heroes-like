@@ -114,6 +114,9 @@ OVERWORLD_RESOURCE_DELTA_CUE_PLAYBACK_REPORT_SCENE_PATH = ROOT / "tests" / "over
 SYSTEM_SAVE_WRITTEN_CUE_PRESENTER_SCRIPT_PATH = ROOT / "scenes" / "shared" / "SystemSaveWrittenCuePresenter.gd"
 ACTIVE_PLAY_SAVE_WRITTEN_CUE_PLAYBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "active_play_save_written_cue_playback_report.gd"
 ACTIVE_PLAY_SAVE_WRITTEN_CUE_PLAYBACK_REPORT_SCENE_PATH = ROOT / "tests" / "active_play_save_written_cue_playback_report.tscn"
+SYSTEM_LOAD_RESUMED_CUE_PRESENTER_SCRIPT_PATH = ROOT / "scenes" / "shared" / "SystemLoadResumedCuePresenter.gd"
+ACTIVE_PLAY_LOAD_RESUMED_CUE_PLAYBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "active_play_load_resumed_cue_playback_report.gd"
+ACTIVE_PLAY_LOAD_RESUMED_CUE_PLAYBACK_REPORT_SCENE_PATH = ROOT / "tests" / "active_play_load_resumed_cue_playback_report.tscn"
 OVERWORLD_ART_MANIFEST_PATH = ROOT / "art" / "overworld" / "manifest.json"
 TERRAIN_GRAMMAR_PATH = CONTENT_DIR / "terrain_grammar.json"
 TERRAIN_LAYERS_PATH = CONTENT_DIR / "terrain_layers.json"
@@ -29153,6 +29156,188 @@ def validate_active_play_save_written_cue_playback(errors: list[str]) -> None:
         ensure(forbidden not in report_text, errors, f"Active-play save-written report must drive public validation controls without bypassing production: {forbidden}")
 
 
+def validate_active_play_load_resumed_cue_playback(errors: list[str]) -> None:
+    required_paths = (
+        APP_ROUTER_PATH,
+        SYSTEM_LOAD_RESUMED_CUE_PRESENTER_SCRIPT_PATH,
+        OVERWORLD_SCRIPT_PATH,
+        TOWN_SCRIPT_PATH,
+        BATTLE_SCRIPT_PATH,
+        OUTCOME_SCRIPT_PATH,
+        ACTIVE_PLAY_LOAD_RESUMED_CUE_PLAYBACK_REPORT_SCRIPT_PATH,
+        ACTIVE_PLAY_LOAD_RESUMED_CUE_PLAYBACK_REPORT_SCENE_PATH,
+        ANIMATION_EVENT_CUES_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing active-play load-resumed cue owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+    router_text = APP_ROUTER_PATH.read_text(encoding="utf-8")
+    presenter_text = SYSTEM_LOAD_RESUMED_CUE_PRESENTER_SCRIPT_PATH.read_text(encoding="utf-8")
+    report_text = ACTIVE_PLAY_LOAD_RESUMED_CUE_PLAYBACK_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    report_scene_text = ACTIVE_PLAY_LOAD_RESUMED_CUE_PLAYBACK_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    shell_texts = {
+        "overworld": OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8"),
+        "town": TOWN_SCRIPT_PATH.read_text(encoding="utf-8"),
+        "battle": BATTLE_SCRIPT_PATH.read_text(encoding="utf-8"),
+        "scenario_outcome": OUTCOME_SCRIPT_PATH.read_text(encoding="utf-8"),
+    }
+
+    def block(text: str, name: str) -> str:
+        start = text.find(f"func {name}")
+        if start < 0:
+            return ""
+        end = text.find("\nfunc ", start + 1)
+        return text[start:] if end < 0 else text[start:end]
+
+    resume_block = block(router_text, "resume_summary")
+    consume_block = block(router_text, "consume_load_resumed_presentation")
+    build_block = block(router_text, "_build_load_resumed_presentation")
+    change_scene_block = block(router_text, "_change_scene")
+    for token in (
+        "var _pending_load_resumed_presentation: Dictionary = {}",
+        "var _load_resumed_presentation_sequence := 0",
+        "func consume_load_resumed_presentation(surface: String) -> Dictionary:",
+        "func validation_pending_load_resumed_presentation() -> Dictionary:",
+        "func _build_load_resumed_presentation(live_summary: Dictionary, session) -> Dictionary:",
+        "func _load_resumed_summary_identity_matches(live_summary: Dictionary, expected: Dictionary) -> bool:",
+        "func _load_resumed_scene_path_for_surface(surface: String) -> String:",
+        "func _reconcile_pending_load_resumed_scene(scene_path: String) -> void:",
+        '"event_id": "system_load_resumed"',
+        '"cue_id": "cue_system_load_resumed"',
+        '"continuity_cue": continuity_cue',
+        '"summary_identity": summary_identity.duplicate(true)',
+    ):
+        ensure(token in router_text, errors, f"AppRouter load-resumed handoff is missing exact lifecycle ownership: {token}")
+    for token in (
+        "_clear_pending_load_resumed_presentation()",
+        "var session = SaveService.restore_session_from_summary(summary)",
+        "var live_summary: Dictionary = SaveService.refresh_summary(summary)",
+        "_pending_load_resumed_presentation = _build_load_resumed_presentation(live_summary, session)",
+        "SessionState.active_session = session",
+        "resume_active_session()",
+    ):
+        ensure(token in resume_block, errors, f"Successful restore must build the handoff before the unchanged active-session route: {token}")
+    ensure(resume_block.find("restore_session_from_summary") < resume_block.find("_build_load_resumed_presentation") < resume_block.find("SessionState.active_session = session") < resume_block.find("resume_active_session()"), errors, "Load-resumed handoff must follow successful restore and precede the real route")
+    for token in (
+        "var pending := _pending_load_resumed_presentation.duplicate(true)",
+        "_clear_pending_load_resumed_presentation()",
+        'String(pending.get("surface", "")) != normalized_surface',
+        'String(pending.get("expected_scene_path", "")) != _load_resumed_scene_path_for_surface(normalized_surface)',
+        "SaveService.resume_target_for_session(session) != expected_target",
+        "var live_summary: Dictionary = SaveService.refresh_summary(summary_identity)",
+        "if not _load_resumed_summary_identity_matches(live_summary, summary_identity):",
+        'pending["consumed"] = true',
+        'pending["consumed_surface"] = normalized_surface',
+    ):
+        ensure(token in consume_block, errors, f"Destination consumption must clear once and fail closed on exact route/session/file identity: {token}")
+    ensure(consume_block.find("_clear_pending_load_resumed_presentation()") < consume_block.find('pending["consumed"] = true'), errors, "Load-resumed consumption must clear pending state before any validation return")
+    for token in (
+        "SaveService.can_load_summary(live_summary)",
+        "SaveService.resume_target_for_session(session)",
+        "SaveService.describe_slot_continuity_cue(live_summary)",
+        'String(live_summary.get("resume_target", "")) != resume_target',
+        'String(live_summary.get("scenario_id", "")) != session.scenario_id',
+        'int(live_summary.get("day", -1)) != session.day',
+        'String(summary_identity.get("path", "")) == ""',
+        'int(summary_identity.get("payload_bytes", 0)) <= 0',
+    ):
+        ensure(token in build_block, errors, f"Load-resumed handoff must derive from exact live summary/session authority: {token}")
+    for forbidden in ('"payload":', '"session":', "session.to_dict()", "change_scene", "save_"):
+        ensure(forbidden not in build_block, errors, f"Load-resumed handoff must remain detached bounded presentation metadata: {forbidden}")
+    ensure("_reconcile_pending_load_resumed_scene(scene_path)" in change_scene_block, errors, "All scene changes must invalidate a mismatched load-resumed handoff")
+    ensure(change_scene_block.count("_clear_pending_load_resumed_presentation()") >= 3, errors, "Scene-change failures must clear pending load-resumed presentation state")
+
+    for token in (
+        "class_name SystemLoadResumedCuePresenter",
+        'const EVENT_ID := "system_load_resumed"',
+        'const CUE_ID := "cue_system_load_resumed"',
+        'const NORMAL_STATE := "load_resume"',
+        'const REDUCED_STATE := "load_icon_static"',
+        "func configure(status_control: Control, surface: String) -> bool:",
+        "func present(load_result: Dictionary) -> Dictionary:",
+        "AnimationCueCatalogScript.cue_playback_policy_for_event(",
+        "SettingsService.animation_preferences()",
+        'String(policy.get("selected_blocking_policy", "")) == "never_blocks_input"',
+        '_status_control.modulate = _status_base_modulate.lerp(accent, amount)',
+        "_status_control.modulate = _status_base_modulate",
+        "func validation_snapshot() -> Dictionary:",
+    ):
+        ensure(token in presenter_text, errors, f"Shared load-resumed presenter is missing exact policy/lifecycle ownership: {token}")
+    for forbidden in (
+        "SaveService.load_",
+        "SaveService.restore_",
+        "AppRouter",
+        "SessionState",
+        "change_scene",
+        "grab_focus",
+        "mouse_filter",
+        '_status_control.set("text"',
+        "create_timer",
+        "create_tween",
+    ):
+        ensure(forbidden not in presenter_text, errors, f"Shared load-resumed presenter must remain presentation-only and nonblocking: {forbidden}")
+    ensure(re.search(r"_status_control\.tooltip_text\s*=(?!=)", presenter_text) is None, errors, "Shared load-resumed presenter must not replace status tooltip")
+
+    expected_targets = {
+        "overworld": ("_save_status_label", "\t_render_state()\n\t_apply_responsive_layout()\n\t_present_load_resumed_cue()"),
+        "town": ("_save_status_label", "\t_refresh(true)\n\t_present_load_resumed_cue()"),
+        "battle": ("_system_body_label", "\t_refresh()\n\t_present_load_resumed_cue()"),
+        "scenario_outcome": ("_save_status_label", "\t_refresh()\n\t_present_load_resumed_cue()"),
+    }
+    for surface, text in shell_texts.items():
+        target, ordered_consume = expected_targets[surface]
+        for token in (
+            'const SystemLoadResumedCuePresenterScript = preload("res://scenes/shared/SystemLoadResumedCuePresenter.gd")',
+            "var _load_resumed_cue_presenter: SystemLoadResumedCuePresenter",
+            '_load_resumed_cue_presenter.name = "SystemLoadResumedCuePresenter"',
+            f'_load_resumed_cue_presenter.configure({target}, "{surface}")',
+            ordered_consume,
+            f'AppRouter.consume_load_resumed_presentation("{surface}")',
+            "func validation_load_resumed_cue_snapshot() -> Dictionary:",
+        ):
+            ensure(token in text, errors, f"{surface} must configure and consume the shared load cue after authoritative refresh: {token}")
+        ensure(text.count("_load_resumed_cue_presenter.present(") == 1, errors, f"{surface} must own exactly one load-resumed cue publication")
+        ensure(text.count(f'AppRouter.consume_load_resumed_presentation("{surface}")') == 1, errors, f"{surface} must consume its router handoff exactly once")
+
+    ensure_scene_nodes(report_scene_text, errors, "active_play_load_resumed_cue_playback_report.tscn", [("ActivePlayLoadResumedCuePlaybackReport", "Node")])
+    for token in (
+        'const REPORT_ID := "ACTIVE_PLAY_LOAD_RESUMED_CUE_PLAYBACK_REPORT"',
+        'call_deferred("_bootstrap")',
+        'ACTIVE_PLAY_LOAD_RESUMED_CUE_STAGE',
+        '{"id": "overworld", "target": "overworld", "scene": "res://scenes/overworld/OverworldShell.tscn", "status": "SaveStatus"}',
+        '{"id": "town", "target": "town", "scene": "res://scenes/town/TownShell.tscn", "status": "SaveStatus"}',
+        '{"id": "battle", "target": "battle", "scene": "res://scenes/battle/BattleShell.tscn", "status": "SystemBody"}',
+        '{"id": "scenario_outcome", "target": "outcome", "scene": "res://scenes/results/ScenarioOutcomeShell.tscn", "status": "SaveStatus"}',
+        '{"width": 1280, "height": 720, "reduced_motion": false}',
+        '{"width": 1920, "height": 1080, "reduced_motion": true}',
+        'menu.call("validation_select_save_summary", SaveService.SLOT_TYPE_MANUAL, str(SLOT))',
+        'menu.call("validation_resume_selected_save")',
+        'shell.call("validation_load_resumed_cue_snapshot")',
+        'String(policy.get("selected_blocking_policy", "")) == "never_blocks_input"',
+        "AppRouter.validation_pending_load_resumed_presentation().is_empty()",
+        'shell.call("_refresh")',
+        'AppRouter.consume_load_resumed_presentation(route_id)',
+        'presenter.call("present", {"event_id": "system_load_resumed"})',
+        "await get_tree().create_timer(0.8).timeout",
+        "DirAccess.remove_absolute(ProjectSettings.globalize_path(save_path))",
+        "SessionState.SAVE_VERSION == 9",
+    ):
+        ensure(token in report_text, errors, f"Active-play load-resumed report is missing exact cross-scene authority: {token}")
+    for forbidden in (
+        "AppRouter.resume_summary(",
+        "AppRouter.resume_active_session(",
+        "AppRouter.go_to_overworld(",
+        "AppRouter.go_to_town(",
+        "AppRouter.go_to_battle(",
+        "AppRouter.go_to_scenario_outcome(",
+        "_present_load_resumed_cue(",
+        "SystemLoadResumedCuePresenterScript",
+        "AnimationCueCatalogScript",
+    ):
+        ensure(forbidden not in report_text, errors, f"Active-play load-resumed report must drive the real Main Menu action without bypassing production: {forbidden}")
+
+
 def validate_overworld_object_resolution_cue_playback(errors: list[str]) -> None:
     required_paths = (
         OVERWORLD_RULES_PATH,
@@ -37885,6 +38070,7 @@ def main() -> int:
     validate_overworld_artifact_acquired_cue_playback(errors)
     validate_overworld_resource_delta_cue_playback(errors)
     validate_active_play_save_written_cue_playback(errors)
+    validate_active_play_load_resumed_cue_playback(errors)
     validate_overworld_object_resolution_cue_playback(errors)
     validate_neutral_dwelling_unit_slice(errors)
     validate_hero_portrait_assets(errors)
