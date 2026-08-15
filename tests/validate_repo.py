@@ -148,6 +148,10 @@ OVERWORLD_ROUTE_BLOCKED_VFX_SOURCE_PATH = ROOT / "art" / "overworld" / "source" 
 OVERWORLD_ROUTE_BLOCKED_VFX_RUNTIME_PATH = ROOT / "art" / "overworld" / "runtime" / "vfx" / "route_blocked.png"
 OVERWORLD_ROUTE_BLOCKED_VFX_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_route_blocked_vfx_asset_runtime_report.gd"
 OVERWORLD_ROUTE_BLOCKED_VFX_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_route_blocked_vfx_asset_runtime_report.tscn"
+OVERWORLD_HERO_ROUTE_STEP_VFX_SOURCE_PATH = ROOT / "art" / "overworld" / "source" / "hero_route_step_vfx_source.png"
+OVERWORLD_HERO_ROUTE_STEP_VFX_RUNTIME_PATH = ROOT / "art" / "overworld" / "runtime" / "vfx" / "hero_route_step.png"
+OVERWORLD_HERO_ROUTE_STEP_VFX_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_hero_route_step_vfx_asset_runtime_report.gd"
+OVERWORLD_HERO_ROUTE_STEP_VFX_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_hero_route_step_vfx_asset_runtime_report.tscn"
 OVERWORLD_FIELD_SPELL_CAST_CUE_PLAYBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_field_spell_cast_cue_playback_report.gd"
 OVERWORLD_FIELD_SPELL_CAST_CUE_PLAYBACK_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_field_spell_cast_cue_playback_report.tscn"
 OVERWORLD_ARTIFACT_SLOT_CUE_PLAYBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_artifact_slot_cue_playback_report.gd"
@@ -31124,6 +31128,12 @@ def validate_overworld_object_resolution_vfx_assets(errors: list[str]) -> None:
                 "render_mode": "field_spell_cast",
                 "scale": 1.12,
             },
+            "vfx_placeholder_route_step": {
+                "event_id": "overworld_hero_move",
+                "texture_path": "res://art/overworld/runtime/vfx/hero_route_step.png",
+                "render_mode": "hero_route_step",
+                "scale": 0.68,
+            },
             "vfx_placeholder_guard_warning": {
                 "event_id": "overworld_object_guarded",
                 "texture_path": "res://art/overworld/runtime/vfx/guarded_site.png",
@@ -31293,7 +31303,7 @@ def validate_overworld_field_spell_vfx_assets(errors: list[str]) -> None:
         "render_mode": "field_spell_cast",
         "scale": 1.12,
     }, errors, "Overworld VFX manifest must map the exact field-spell cue/event/texture")
-    ensure(set(cues) == {"vfx_placeholder_adventure_spell", "vfx_placeholder_blocked_route_marker", "vfx_placeholder_guard_warning", "vfx_placeholder_capture_flag", "vfx_placeholder_object_visit", "vfx_placeholder_depleted_dim"}, errors, "Overworld VFX manifest must not remap any other cue")
+    ensure(set(cues) == {"vfx_placeholder_adventure_spell", "vfx_placeholder_route_step", "vfx_placeholder_blocked_route_marker", "vfx_placeholder_guard_warning", "vfx_placeholder_capture_flag", "vfx_placeholder_object_visit", "vfx_placeholder_depleted_dim"}, errors, "Overworld VFX manifest must not remap any other cue")
     ensure(png_size(OVERWORLD_FIELD_SPELL_VFX_SOURCE_PATH) == (1254, 1254), errors, "Overworld field-spell VFX source must retain its exact square source image")
     ensure(png_size(OVERWORLD_FIELD_SPELL_VFX_RUNTIME_PATH) == (512, 512), errors, "Overworld field-spell runtime texture must be 512x512")
     header = OVERWORLD_FIELD_SPELL_VFX_RUNTIME_PATH.read_bytes()[:26]
@@ -31512,6 +31522,118 @@ def validate_overworld_guarded_site_vfx_assets(errors: list[str]) -> None:
     ensure(0 <= reduced_selection < guarded_case.find("await get_tree().process_frame", reduced_selection) < guarded_case.find("var reduced := _guarded_site(reduced_shell)"), errors, "Reduced-motion guarded-site owner must cross one real draw frame before observing fallback VFX")
     reselection = guarded_case.find('shell.call("validation_select_tile", guarded_tile.x, guarded_tile.y)', guarded_case.find('shell.call("validation_select_tile", 0, 1)'))
     ensure(0 <= reselection < guarded_case.find("await get_tree().process_frame", reselection) < guarded_case.find("if _guarded_site(shell) != guarded:", reselection), errors, "Guarded-site reselection must cross one real draw frame before exact whole-state comparison")
+
+
+def validate_overworld_hero_route_step_vfx_assets(errors: list[str]) -> None:
+    required_paths = (
+        OVERWORLD_SCRIPT_PATH,
+        OVERWORLD_MAP_VIEW_SCRIPT_PATH,
+        OVERWORLD_OBJECT_RESOLUTION_VFX_MANIFEST_PATH,
+        OVERWORLD_HERO_ROUTE_STEP_VFX_SOURCE_PATH,
+        OVERWORLD_HERO_ROUTE_STEP_VFX_RUNTIME_PATH,
+        OVERWORLD_HERO_ROUTE_STEP_VFX_REPORT_SCRIPT_PATH,
+        OVERWORLD_HERO_ROUTE_STEP_VFX_REPORT_SCENE_PATH,
+        OVERWORLD_FULL_ROUTE_MOVEMENT_REGRESSION_SCRIPT_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Overworld hero route-step VFX owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+    cues = load_json(OVERWORLD_OBJECT_RESOLUTION_VFX_MANIFEST_PATH).get("cues", {})
+    ensure(cues.get("vfx_placeholder_route_step") == {
+        "event_id": "overworld_hero_move",
+        "texture_path": "res://art/overworld/runtime/vfx/hero_route_step.png",
+        "render_mode": "hero_route_step",
+        "scale": 0.68,
+    }, errors, "Overworld VFX manifest must map the exact hero route-step cue/event/texture")
+    ensure(png_size(OVERWORLD_HERO_ROUTE_STEP_VFX_SOURCE_PATH) == (1254, 1254), errors, "Overworld hero route-step VFX source must retain its exact square source image")
+    ensure(png_size(OVERWORLD_HERO_ROUTE_STEP_VFX_RUNTIME_PATH) == (512, 512), errors, "Overworld hero route-step runtime texture must be 512x512")
+    header = OVERWORLD_HERO_ROUTE_STEP_VFX_RUNTIME_PATH.read_bytes()[:26]
+    ensure(len(header) >= 26 and header[25] in {4, 6}, errors, "Overworld hero route-step runtime texture must retain a PNG alpha channel")
+
+    def function_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}")
+        if start < 0:
+            return ""
+        end = text.find("\nfunc ", start + 1)
+        return text[start:] if end < 0 else text[start:end]
+
+    shell_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+    producer = function_block(shell_text, "_record_hero_movement_presentation")
+    ensure('(policy.get("selected_vfx_cue_ids", []) as Array).duplicate(true)' in producer, errors, "Hero movement producer must detach the exact selected VFX cue ids")
+    ensure(producer.find("cue_playback_policy_for_event") < producer.find('"selected_vfx_cue_ids"') < producer.find('"duration_ms"'), errors, "Hero movement producer must resolve policy before publishing detached VFX identity and existing timing")
+
+    map_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
+    for token in (
+        "var _hero_movement_vfx_cue_ids: Array = []",
+        "var _hero_movement_last_draw: Dictionary = {}",
+        '_hero_movement_vfx_cue_ids = (presentation.get("selected_vfx_cue_ids", []) as Array).duplicate(true)',
+        '"selected_vfx_cue_ids": _hero_movement_vfx_cue_ids.duplicate(true)',
+        '"vfx_asset": _hero_movement_vfx_asset_state()',
+        '"vfx_draw": _hero_movement_last_draw.duplicate(true)',
+    ):
+        ensure(token in map_text, errors, f"Overworld hero route-step VFX state is missing exact ownership: {token}")
+    draw = function_block(map_text, "_draw_hero_movement_presentation")
+    imported = function_block(map_text, "_draw_hero_route_step_imported_vfx")
+    state = function_block(map_text, "_hero_movement_vfx_asset_state")
+    ensure(draw.find("_draw_hero_route_step_imported_vfx") < draw.find("_draw_hero_marker"), errors, "Hero route-step VFX must draw behind the unchanged hero marker")
+    ensure('"existing_interpolated_hero_marker_only"' in draw, errors, "Hero route-step draw must retain exact interpolation-only fallback")
+    for token in (
+        "_hero_movement_vfx_asset_state()",
+        "var direction := Vector2(to_tile - from_tile)",
+        "direction.angle() + PI * 0.25",
+        "canvas.draw_set_transform(center, rotation, Vector2.ONE)",
+        "canvas.draw_texture_rect(texture, texture_rect, false",
+        "canvas.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)",
+        '"mode": "imported_texture_behind_hero"',
+        "return true",
+    ):
+        ensure(token in imported, errors, f"Imported hero route-step draw path is missing exact live behavior: {token}")
+    for token in (
+        "_hero_movement_vfx_cue_ids.size() == 1",
+        'cue_id == "vfx_placeholder_route_step"',
+        "event_id == _hero_movement_event_id",
+        'render_mode == "hero_route_step"',
+        '"uses_interpolation_fallback": not uses_imported_asset',
+        '"fallback_mode": "existing_interpolated_hero_marker_only"',
+    ):
+        ensure(token in state, errors, f"Hero route-step VFX resolver is missing fail-closed event/asset ownership: {token}")
+    for forbidden in ("session.", "_session.", "await ", "create_timer", "create_tween", "AnimationCueCatalog", "OverworldRules"):
+        ensure(forbidden not in imported and forbidden not in state, errors, f"Hero route-step asset draw/resolver must not change gameplay or timing authority: {forbidden}")
+
+    report_text = OVERWORLD_HERO_ROUTE_STEP_VFX_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    scene_text = OVERWORLD_HERO_ROUTE_STEP_VFX_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure_scene_nodes(scene_text, errors, "overworld_hero_route_step_vfx_asset_runtime_report.tscn", [("OverworldHeroRouteStepVfxAssetRuntimeReport", "Node")])
+    for token in (
+        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        'const ROUTE_TILES := [Vector2i(0, 1), Vector2i(1, 1), Vector2i(2, 1), Vector2i(3, 1), END_TILE]',
+        'map_view.call("validation_hero_movement_presentation")',
+        'map_view.set("_overworld_vfx_texture_missing", {TEXTURE_PATH: true})',
+        '"selected_vfx_cue_ids": ["route_endpoint_snap"] if reduced_motion else ["vfx_placeholder_route_step"]',
+        'String(draw.get("mode", "")) == "imported_texture_behind_hero"',
+        'String(draw.get("mode", "")) == "existing_interpolated_hero_marker_only"',
+        'String(draw.get("mode", "")) == "route_endpoint_snap"',
+        "session.to_dict() == authority_before",
+        "SessionStateStore.SAVE_VERSION == 9",
+        'print("OVERWORLD_HERO_ROUTE_STEP_VFX_ASSET_RUNTIME_REPORT %s"',
+    ):
+        ensure(token in report_text, errors, f"Overworld hero route-step VFX focused owner is missing exact proof: {token}")
+    ensure(report_text.count("for viewport_size in VIEWPORT_SIZES:") == 1, errors, "Overworld hero route-step VFX focused owner must run both exact widths")
+    for forbidden in ("_draw_hero_route_step_imported_vfx", "_hero_movement_vfx_asset_state", "create_timer", "create_tween", "AnimationCueCatalog"):
+        ensure(forbidden not in report_text, errors, f"Hero route-step focused owner must observe public rendering without bypassing production: {forbidden}")
+
+    route_text = OVERWORLD_FULL_ROUTE_MOVEMENT_REGRESSION_SCRIPT_PATH.read_text(encoding="utf-8")
+    normal_case = function_block(route_text, "_assert_partial_full_route_execution")
+    reduced_case = function_block(route_text, "_assert_reduced_motion_route_endpoint_snap")
+    for token in (
+        'movement_start.get("selected_vfx_cue_ids", []) != ["vfx_placeholder_route_step"]',
+        'String(mid_vfx_draw.get("mode", "")) != "imported_texture_behind_hero"',
+        'String(mid_vfx_draw.get("texture_path", "")) != "res://art/overworld/runtime/vfx/hero_route_step.png"',
+        'mid_vfx_draw.get("center", {}) != mid_center',
+    ):
+        ensure(token in normal_case, errors, f"Live hero-route owner is missing imported VFX authority: {token}")
+    ensure('movement.get("selected_vfx_cue_ids", []) == ["route_endpoint_snap"]' in reduced_case and 'String(movement.get("vfx_draw", {}).get("mode", "")) == "route_endpoint_snap"' in reduced_case, errors, "Live reduced-motion route owner must retain exact endpoint snap without imported VFX")
+    ensure("_draw_hero_route_step_imported_vfx" not in route_text and "_hero_movement_vfx_asset_state" not in route_text, errors, "Live hero-route owner must observe public VFX state without private draw/resolver calls")
 
 
 def validate_overworld_route_blocked_vfx_assets(errors: list[str]) -> None:
@@ -40493,6 +40615,7 @@ def main() -> int:
     validate_overworld_object_resolution_vfx_assets(errors)
     validate_overworld_field_spell_vfx_assets(errors)
     validate_overworld_guarded_site_vfx_assets(errors)
+    validate_overworld_hero_route_step_vfx_assets(errors)
     validate_overworld_route_blocked_vfx_assets(errors)
     validate_overworld_object_resolution_cue_playback(errors)
     validate_neutral_dwelling_unit_slice(errors)

@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `presentation-overworld-hero-route-step-vfx-asset-adoption-10184`. Normal live hero-route playback now draws one original imported alpha dust-and-rune trail behind the unchanged interpolated hero marker through the exact existing `vfx_placeholder_route_step` cue. The renderer rotates the effect with the current route segment and preserves exact route execution, hero identity/grounding, bounded timing, dynamic-layer lifecycle, marker-only missing-map/missing-texture fallback, and zero-duration reduced-motion endpoint snap. Focused 1280x720/1920x1080, real full-route, seven-cue Overworld VFX manifest, visual/input/focus/accessibility/core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged route interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `presentation-overworld-hero-route-step-vfx-asset-adoption-10184`
 - Completed implementation slice: `presentation-overworld-route-blocked-vfx-asset-adoption-10184`. Normal live blocked-route playback now draws one original imported alpha warning sigil through the exact existing `vfx_placeholder_blocked_route_marker` cue. The renderer preserves exact route authority, blocked reason, serial/dedupe, bounded timing, dynamic-layer lifecycle, and the prior procedural circle-and-X as missing-map/missing-texture fallback, while reduced motion retains the static `blocked_route_icon`. Focused 1280x720/1920x1080, real blocked/reachable selection, six-cue Overworld VFX manifest, visual/input/focus/accessibility/core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged blocked-route interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `presentation-overworld-route-blocked-vfx-asset-adoption-10184`
 - Completed implementation slice: `presentation-overworld-guarded-site-vfx-asset-adoption-10184`. Selecting a real unresolved guarded site now draws one original imported alpha warning effect at the authoritative selected tile through the exact existing `vfx_placeholder_guard_warning` cue. The renderer preserves exact site/guard identity, inspection/link copy, context-visible lifecycle, dynamic-layer ownership, and the prior procedural shield as missing-map/missing-texture fallback, while reduced motion retains the static guard badge. Focused 1280x720/1920x1080, real guarded selection/lifecycle, five-cue Overworld VFX manifest, object/spell VFX, guarded reward, Overworld visual/route/input, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged guarded-site interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -5397,32 +5399,32 @@ Completion evidence:
 - commander selection, hero hunt, full-route movement, broad Overworld visual, active-play focus, accessibility, core, repository validation, and exact/generic editor gates pass;
 - official Linux export plus packaged headless startup and official Windows export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass, with no packaged raid-interaction or broader release claim.
 
-## Selected Slice: Overworld Route-Blocked VFX Asset Adoption
+## Selected Slice: Overworld Hero Route-Step VFX Asset Adoption
 
-Slice id: `presentation-overworld-route-blocked-vfx-asset-adoption-10184`
+Slice id: `presentation-overworld-hero-route-step-vfx-asset-adoption-10184`
 
 Implementation boundary:
-- create one original source image and one bounded alpha runtime texture for the existing `vfx_placeholder_blocked_route_marker` cue;
-- map only that cue to `overworld_route_blocked` through the existing Overworld VFX manifest and draw it on the existing dynamic-layer blocked-route playback path;
-- retain the exact current procedural circle-and-X for missing mapping/texture and the current static `blocked_route_icon` reduced-motion path;
-- preserve exact selected tile, blocked reason, dedupe, duration, progress, refresh/reselection/reachable-clear lifecycle, route/session/save authority, and all existing Overworld VFX mappings.
+- create one original source image and one bounded alpha runtime texture for the existing `vfx_placeholder_route_step` cue;
+- map only that cue to `overworld_hero_move` through the existing Overworld VFX manifest and draw it behind the existing interpolated hero marker on the dynamic layer;
+- retain exact interpolation-only behavior for missing mapping/texture and the current zero-duration `route_endpoint_snap` reduced-motion path;
+- preserve exact route tiles/steps, segment interpolation, hero sprite/grounding, duration, progress, refresh lifecycle, route/session/save authority, and all existing Overworld VFX mappings.
 
 Completion criteria:
-- normal blocked-route playback visibly draws the exact imported texture at 1280x720 and 1920x1080, while missing asset and reduced motion use the unchanged procedural/static icon;
-- focused and real selection proof preserves the exact blocked tile/reason, serial/dedupe, dynamic-only playback, containment, refresh/reselection/reachable-clear lifecycle, session authority, and save version 9;
-- blocked-route cue, existing Overworld VFX asset/playback, broad visual/route/input, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass;
-- packaged claims remain bounded to export/startup unless a packaged harness actually observes the blocked-route effect.
+- normal hero-route playback visibly draws the exact imported texture behind the unchanged hero marker at 1280x720 and 1920x1080, while missing asset and reduced motion retain the unchanged interpolation/endpoint-snap behavior;
+- focused and real route proof preserves exact path/steps, interpolated centers/segments, duration/progress, dynamic-only playback, refresh/expiry lifecycle, session authority, and save version 9;
+- hero-route cue, existing Overworld VFX assets, broad visual/route/input, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass;
+- packaged claims remain bounded to export/startup unless a packaged harness actually observes the route-step effect.
 
 Non-goals:
-- no route, pathfinding, blocked reason, action, selection, movement, fog, focus, input, timing, animation-policy, AI, save-schema, content, or map changes;
-- no other object/guard/spell/Town/Battle VFX, particles, shaders, audio, layout, terrain, or broad renderer changes;
-- no packaged blocked-route interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+- no route, pathfinding, action, selection, movement consequence, hero identity/sprite, fog, focus, input, timing, animation-policy, AI, save-schema, content, or map changes;
+- no other object/guard/spell/Town/Battle VFX, particles, shaders, audio, layout, terrain, camera, or broad renderer changes;
+- no packaged route interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
 
 Completion evidence:
-- focused 1280x720 and 1920x1080 runtime proves imported draw containment, exact missing-texture procedural fallback, exact reduced-motion icon fallback, clearing, session authority, and save version 9;
-- the real full-route regression proves policy-derived VFX identity, actual blocked tile/reason, serial/dedupe, dynamic-only progress, refresh/reselection stability, and reachable-selection clearing;
-- six-cue object/spell/guard/route VFX, Overworld visual/input, active-play focus, accessibility, core, repository, and exact/generic editor gates pass;
-- official Linux export plus packaged headless startup and official Windows export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass, with no packaged blocked-route interaction or broader release claim.
+- focused 1280x720 and 1920x1080 runtime proves imported draw center/rotation/containment, exact missing-texture interpolation fallback, exact reduced-motion endpoint snap, session authority, and save version 9;
+- the real full-route regression proves policy-derived VFX identity, actual four-step route/interpolated center, dynamic-only progress, refresh/expiry lifecycle, and unchanged route consequences;
+- seven-cue object/spell/guard/blocked-route/hero-route VFX, Overworld visual/input, active-play focus, accessibility, core, repository, and exact/generic editor gates pass;
+- official Linux export plus packaged headless startup and official Windows export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass, with no packaged route interaction or broader release claim.
 
 ## Progress Reconciliation
 

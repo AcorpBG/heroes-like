@@ -7,6 +7,12 @@
       "render_mode": "field_spell_cast",
       "scale": 1.12
     },
+    "vfx_placeholder_route_step": {
+      "event_id": "overworld_hero_move",
+      "texture_path": "res://art/overworld/runtime/vfx/hero_route_step.png",
+      "render_mode": "hero_route_step",
+      "scale": 0.68
+    },
     "vfx_placeholder_guard_warning": {
       "event_id": "overworld_object_guarded",
       "texture_path": "res://art/overworld/runtime/vfx/guarded_site.png",

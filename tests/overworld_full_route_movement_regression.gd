@@ -61,6 +61,8 @@ func _assert_partial_full_route_execution() -> bool:
 		or String(movement_start.get("event_id", "")) != "overworld_hero_move"
 		or String(movement_start.get("animation_state", "")) != "map_step"
 		or String(movement_start.get("visual_policy", "")) != "authored_animation_state"
+		or movement_start.get("selected_vfx_cue_ids", []) != ["vfx_placeholder_route_step"]
+		or not bool(movement_start.get("vfx_asset", {}).get("uses_imported_asset", false))
 		or bool(movement_start.get("reduced_motion", true))
 		or movement_start.get("route_tiles", []) != expected_route
 		or int(movement_start.get("route_step_count", 0)) != 4
@@ -73,6 +75,7 @@ func _assert_partial_full_route_execution() -> bool:
 	var mid_cache: Dictionary = _render_cache(shell)
 	var mid_progress: float = float(movement_mid.get("progress", 0.0))
 	var mid_center: Dictionary = movement_mid.get("draw_center", {}) if movement_mid.get("draw_center", {}) is Dictionary else {}
+	var mid_vfx_draw: Dictionary = movement_mid.get("vfx_draw", {}) if movement_mid.get("vfx_draw", {}) is Dictionary else {}
 	if (
 		not bool(movement_mid.get("active", false))
 		or mid_progress <= 0.0
@@ -81,6 +84,9 @@ func _assert_partial_full_route_execution() -> bool:
 		or float(movement_mid.get("segment_progress", 0.0)) <= 0.0
 		or float(mid_center.get("x", 0.0)) <= 0.0
 		or float(mid_center.get("y", 0.0)) <= 0.0
+		or String(mid_vfx_draw.get("mode", "")) != "imported_texture_behind_hero"
+		or String(mid_vfx_draw.get("texture_path", "")) != "res://art/overworld/runtime/vfx/hero_route_step.png"
+		or mid_vfx_draw.get("center", {}) != mid_center
 		or int(mid_cache.get("session_static_generation", -1)) != int(start_cache.get("session_static_generation", -2))
 		or int(mid_cache.get("state_generation", -1)) != int(start_cache.get("state_generation", -2))
 		or int(mid_cache.get("dynamic_generation", -1)) <= int(start_cache.get("dynamic_generation", -1))
@@ -165,6 +171,8 @@ func _assert_reduced_motion_route_endpoint_snap() -> bool:
 		and String(movement.get("animation_state", "")) == "route_endpoint_snap"
 		and String(movement.get("visual_policy", "")) == "reduced_motion_fallback"
 		and String(movement.get("fallback_tag", "")) == "route_endpoint_snap"
+		and movement.get("selected_vfx_cue_ids", []) == ["route_endpoint_snap"]
+		and String(movement.get("vfx_draw", {}).get("mode", "")) == "route_endpoint_snap"
 		and movement.get("route_tiles", []) == expected_route
 		and int(movement.get("route_step_count", 0)) == 4
 		and int(movement.get("duration_ms", -1)) == 0
