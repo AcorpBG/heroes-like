@@ -39001,6 +39001,8 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
         '"audio_placeholder_resource_tick"',
         '"audio_placeholder_save_confirm"',
         '"audio_placeholder_load_resume"',
+        '"audio_placeholder_map_step"',
+        '"audio_placeholder_invalid_route"',
         "func play_cue(cue_id: String, source: String = \"\", metadata: Dictionary = {}) -> Dictionary:",
         '"unsupported_cue" if not supported',
         "SettingsService.effects_audio_muted()",
@@ -39068,6 +39070,18 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
             "volume_db": -13.0,
             "role": "system_load_resumed",
         },
+        "audio_placeholder_map_step": {
+            "path": "res://art/audio/runtime/presentation/map_step.wav",
+            "duration_msec": 220,
+            "volume_db": -15.0,
+            "role": "overworld_route_moved",
+        },
+        "audio_placeholder_invalid_route": {
+            "path": "res://art/audio/runtime/presentation/invalid_route.wav",
+            "duration_msec": 300,
+            "volume_db": -13.5,
+            "role": "overworld_route_blocked",
+        },
         "audio_placeholder_town_build": {
             "path": "res://art/audio/runtime/presentation/town_build.wav",
             "duration_msec": 420,
@@ -39091,7 +39105,7 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
     ensure(int(manifest.get("sample_width_bits", 0)) == 16, errors, "production presentation SFX must use 16-bit PCM")
     ensure(manifest.get("asset_tier") == "production_layered_v1", errors, "presentation SFX manifest must declare production_layered_v1")
     cues = manifest.get("cues", {})
-    ensure(isinstance(cues, dict) and set(cues) == set(expected_cues), errors, "presentation SFX manifest must contain exactly the nine live Town, Overworld, and system action cues")
+    ensure(isinstance(cues, dict) and set(cues) == set(expected_cues), errors, "presentation SFX manifest must contain exactly the eleven live Town, Overworld, navigation, and system action cues")
     asset_hashes: list[str] = []
     for cue_id in sorted(expected_cues):
         expected = expected_cues[cue_id]
@@ -39125,10 +39139,10 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
             if left_samples and right_samples:
                 ensure(left_samples[0] == 0 and right_samples[0] == 0, errors, f"presentation SFX must start at zero: {expected['path']}")
                 ensure(left_samples[-1] == 0 and right_samples[-1] == 0, errors, f"presentation SFX must end at zero: {expected['path']}")
-    ensure(len(set(asset_hashes)) == 9, errors, "all nine presentation assets must be byte-distinct")
-    if len(asset_hashes) == 9:
+    ensure(len(set(asset_hashes)) == 11, errors, "all eleven presentation assets must be byte-distinct")
+    if len(asset_hashes) == 11:
         pack_signature = hashlib.sha256("\n".join(asset_hashes).encode("utf-8")).hexdigest()
-        ensure(pack_signature == "3457d2e8e83d2196bbcb2d7a5fae26b122bcdb6d3ee2ea91985270f5ea16c4f9", errors, "presentation SFX pack signature drifted")
+        ensure(pack_signature == "57fb6e181eb183fec904f7de7d27cfd02a3b39e3516ffb0cac1bd1c280967f85", errors, "presentation SFX pack signature drifted")
 
     generator_text = PRESENTATION_SFX_GENERATOR_PATH.read_text(encoding="utf-8")
     for required_token in (
@@ -39145,6 +39159,8 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
         "arcane_swell",
         "ledger_seal",
         "continuity_chime",
+        "travel_step",
+        "route_denial",
         "presentation-production-v1",
         "render_stereo",
         "layered_sample",
@@ -39293,6 +39309,38 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
             *tokens,
         ):
             ensure(required_token in text, errors, f"{path.name} is missing system presentation-audio proof: {required_token}")
+
+    for function_name, cue_id in (("_record_hero_movement_presentation", "audio_placeholder_map_step"), ("_record_route_blocked_presentation", "audio_placeholder_invalid_route")):
+        match = re.search(rf"func {function_name}\(.*?\) -> void:\n(?P<body>.*?)(?=\nfunc )", overworld_shell_text, re.DOTALL)
+        ensure(match is not None, errors, f"Could not isolate {function_name} navigation-audio ownership")
+        if match is not None:
+            body = match.group("body")
+            ensure('"selected_audio_cue_ids": (policy.get("selected_audio_cue_ids", []) as Array).duplicate(true)' in body, errors, f"{function_name} must thread detached selected audio ids")
+        ensure(cue_id in audio_text, errors, f"PresentationAudio is missing navigation cue {cue_id}")
+
+    navigation_syncs = {
+        "_sync_hero_movement_presentation": ("_hero_movement_path = path", "_hero_movement_audio_playback_records.append", "OverworldMapView.hero_movement"),
+        "_sync_route_blocked_presentation": ("_route_blocked_tile = tile", "_route_blocked_audio_playback_records.append", "OverworldMapView.route_blocked"),
+    }
+    for function_name, tokens in navigation_syncs.items():
+        match = re.search(rf"func {function_name}\(presentation: Dictionary\) -> void:\n(?P<body>.*?)(?=\nfunc )", overworld_map_text, re.DOTALL)
+        ensure(match is not None, errors, f"Could not isolate {function_name}")
+        if match is not None:
+            body = match.group("body")
+            order = [body.find("return"), body.find(tokens[0]), body.find(tokens[1]), body.find(tokens[2])]
+            ensure(all(index >= 0 for index in order) and order == sorted(order), errors, f"{function_name} audio must follow full path/tile acceptance")
+
+    navigation_reports = {
+        ROOT / "tests" / "overworld_hero_route_step_vfx_asset_runtime_report.gd": ("audio_placeholder_map_step", "map_step.wav", "OverworldMapView.hero_movement"),
+        ROOT / "tests" / "overworld_route_blocked_vfx_asset_runtime_report.gd": ("audio_placeholder_invalid_route", "invalid_route.wav", "OverworldMapView.route_blocked"),
+        ROOT / "tests" / "overworld_full_route_movement_regression.gd": ("_navigation_audio_exact", "PresentationAudio.validation_records().size()", "audio_placeholder_invalid_route"),
+    }
+    for path, tokens in navigation_reports.items():
+        ensure(path.exists(), errors, f"Missing navigation-audio focused owner: {path.relative_to(ROOT)}")
+        if path.exists():
+            text = path.read_text(encoding="utf-8")
+            for token in ("PresentationAudio.validation_reset()", "audio_playback_records", *tokens):
+                ensure(token in text, errors, f"{path.name} is missing navigation-audio proof: {token}")
 
 
 def validate_overworld_ambient_audio_runtime(errors: list[str]) -> None:

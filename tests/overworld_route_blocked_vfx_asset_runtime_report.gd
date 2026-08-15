@@ -31,6 +31,7 @@ func _run() -> void:
 	get_tree().quit(0)
 
 func _run_viewport(viewport_size: Vector2i) -> Dictionary:
+	PresentationAudio.validation_reset()
 	get_window().size = viewport_size
 	await get_tree().process_frame
 	await get_tree().process_frame
@@ -49,21 +50,21 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 	await get_tree().process_frame
 	var summary: Dictionary = map_view.call("validation_object_resolution_vfx_asset_summary")
 	var imported: Dictionary = map_view.call("validation_route_blocked_presentation")
-	if not _summary_exact(summary) or not _imported_exact(imported, map_view.size):
+	if not _summary_exact(summary) or not _imported_exact(imported, map_view.size) or not _audio_exact(imported, 1):
 		return await _finish(map_view, {"ok": false, "failure": "imported", "summary": summary, "actual": imported})
 
 	map_view.set("_overworld_vfx_texture_missing", {TEXTURE_PATH: true})
 	_set_state(map_view, session, map_size, _presentation(2, false))
 	await get_tree().process_frame
 	var missing: Dictionary = map_view.call("validation_route_blocked_presentation")
-	if not _fallback_exact(missing, false):
+	if not _fallback_exact(missing, false) or not _audio_exact(missing, 2):
 		return await _finish(map_view, {"ok": false, "failure": "missing_fallback", "actual": missing})
 
 	map_view.set("_overworld_vfx_texture_missing", {})
 	_set_state(map_view, session, map_size, _presentation(3, true))
 	await get_tree().process_frame
 	var reduced: Dictionary = map_view.call("validation_route_blocked_presentation")
-	if not _fallback_exact(reduced, true):
+	if not _fallback_exact(reduced, true) or not _audio_exact(reduced, 3):
 		return await _finish(map_view, {"ok": false, "failure": "reduced_motion", "actual": reduced})
 
 	_set_state(map_view, session, map_size, {"serial": 4})
@@ -72,7 +73,7 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 	var authority_exact: bool = session.to_dict() == authority_before
 	var containment_exact: bool = Rect2(Vector2.ZERO, Vector2(viewport_size)).encloses(map_view.get_global_rect())
 	return await _finish(map_view, {
-		"ok": not bool(cleared.get("active", true)) and cleared.get("vfx_draw", {}) == {} and authority_exact and containment_exact and SessionStateStore.SAVE_VERSION == 9,
+		"ok": not bool(cleared.get("active", true)) and cleared.get("vfx_draw", {}) == {} and PresentationAudio.validation_records().size() == 3 and authority_exact and containment_exact and SessionStateStore.SAVE_VERSION == 9,
 		"viewport": [viewport_size.x, viewport_size.y],
 		"asset_summary": summary,
 		"imported": imported,
@@ -110,10 +111,16 @@ func _presentation(serial: int, reduced_motion: bool) -> Dictionary:
 		"selected_visual_policy": "reduced_motion_fallback" if reduced_motion else "authored_animation_state",
 		"selected_fallback_tag": "blocked_route_icon" if reduced_motion else "",
 		"selected_vfx_cue_ids": ["blocked_route_icon"] if reduced_motion else ["vfx_placeholder_blocked_route_marker"],
+		"selected_audio_cue_ids": ["audio_placeholder_invalid_route"],
 		"allows_large_motion": not reduced_motion,
 		"duration_ms": 260 if reduced_motion else 420,
 		"max_duration_ms": 700,
 	}
+
+func _audio_exact(snapshot: Dictionary, record_count: int) -> bool:
+	var records: Array = snapshot.get("audio_playback_records", []) if snapshot.get("audio_playback_records", []) is Array else []
+	var record: Dictionary = records[0] if records.size() == 1 and records[0] is Dictionary else {}
+	return records.size() == 1 and String(record.get("cue_id", "")) == "audio_placeholder_invalid_route" and String(record.get("asset_path", "")) == "res://art/audio/runtime/presentation/invalid_route.wav" and String(record.get("source", "")) == "OverworldMapView.route_blocked" and String(record.get("role", "")) == "overworld_route_blocked" and String(record.get("playback_source", "")) == "imported_wav" and bool(record.get("played", false)) and int(record.get("stream_mix_rate", 0)) == 44100 and bool(record.get("stream_stereo", false)) and int(record.get("stream_loop_mode", -1)) == AudioStreamWAV.LOOP_DISABLED and PresentationAudio.validation_records().size() == record_count
 
 func _imported_exact(snapshot: Dictionary, view_size: Vector2) -> bool:
 	var asset: Dictionary = snapshot.get("vfx_asset", {}) if snapshot.get("vfx_asset", {}) is Dictionary else {}

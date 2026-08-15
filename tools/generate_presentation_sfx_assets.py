@@ -66,6 +66,20 @@ SPECS = {
         "peak": 0.58,
         "pan": -0.05,
     },
+    "audio_placeholder_map_step": {
+        "kind": "travel_step",
+        "fundamental": 196.0,
+        "metal": 420.0,
+        "peak": 0.48,
+        "pan": -0.10,
+    },
+    "audio_placeholder_invalid_route": {
+        "kind": "route_denial",
+        "fundamental": 146.0,
+        "metal": 292.0,
+        "peak": 0.60,
+        "pan": 0.0,
+    },
     "audio_placeholder_town_build": {
         "kind": "masonry_seal",
         "fundamental": 118.0,
@@ -145,6 +159,16 @@ def layered_sample(kind: str, fundamental: float, metal: float, t: float, progre
         bell = math.sin(math.tau * metal * t - phase) * 0.22
         rise = smoothstep(0.0, 0.48, progress) * (1.0 - smoothstep(0.62, 1.0, progress))
         return (root + bell + bell * rise * 0.38 + noise * transient * 0.08) * envelope(progress)
+    if kind == "travel_step":
+        tread = math.sin(math.tau * fundamental * t + phase) * 0.28
+        grit = noise * (0.24 * transient + 0.08 * (1.0 - progress))
+        follow = max(0.0, 1.0 - abs(progress - 0.42) / 0.16) * math.sin(math.tau * metal * t - phase) * 0.20
+        return (tread + grit + follow) * envelope(progress)
+    if kind == "route_denial":
+        knock = math.sin(math.tau * fundamental * t + phase) * 0.34
+        dissonance = math.sin(math.tau * metal * 1.06 * t - phase) * 0.24
+        stop = max(0.0, 1.0 - abs(progress - 0.30) / 0.12) * (knock - dissonance) * 0.30
+        return (knock + dissonance + stop + noise * transient * 0.14) * envelope(progress)
     raise ValueError(f"Unsupported presentation sound kind: {kind}")
 
 

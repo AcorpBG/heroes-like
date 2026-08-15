@@ -50,6 +50,18 @@
       "volume_db": -13.0,
       "role": "system_load_resumed"
     },
+    "audio_placeholder_map_step": {
+      "path": "res://art/audio/runtime/presentation/map_step.wav",
+      "duration_msec": 220,
+      "volume_db": -15.0,
+      "role": "overworld_route_moved"
+    },
+    "audio_placeholder_invalid_route": {
+      "path": "res://art/audio/runtime/presentation/invalid_route.wav",
+      "duration_msec": 300,
+      "volume_db": -13.5,
+      "role": "overworld_route_blocked"
+    },
     "audio_placeholder_town_build": {
       "path": "res://art/audio/runtime/presentation/town_build.wav",
       "duration_msec": 420,

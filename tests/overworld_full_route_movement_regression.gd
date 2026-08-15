@@ -26,6 +26,7 @@ func _run() -> void:
 	get_tree().quit(0)
 
 func _assert_partial_full_route_execution() -> bool:
+	PresentationAudio.validation_reset()
 	var session = _session_with_map(11, 3)
 	session.overworld["fog"] = {}
 	var opened := await _open_shell(session)
@@ -62,6 +63,8 @@ func _assert_partial_full_route_execution() -> bool:
 		or String(movement_start.get("animation_state", "")) != "map_step"
 		or String(movement_start.get("visual_policy", "")) != "authored_animation_state"
 		or movement_start.get("selected_vfx_cue_ids", []) != ["vfx_placeholder_route_step"]
+		or not _navigation_audio_exact(movement_start, "audio_placeholder_map_step", "map_step.wav", "OverworldMapView.hero_movement")
+		or PresentationAudio.validation_records().size() != 1
 		or not bool(movement_start.get("vfx_asset", {}).get("uses_imported_asset", false))
 		or bool(movement_start.get("reduced_motion", true))
 		or movement_start.get("route_tiles", []) != expected_route
@@ -100,7 +103,7 @@ func _assert_partial_full_route_execution() -> bool:
 	shell.call("_refresh")
 	await get_tree().process_frame
 	var movement_refresh: Dictionary = _hero_movement_presentation(shell)
-	if bool(movement_refresh.get("active", true)) or int(movement_refresh.get("serial", -1)) != completed_serial or float(movement_refresh.get("progress", 0.0)) != 1.0:
+	if bool(movement_refresh.get("active", true)) or int(movement_refresh.get("serial", -1)) != completed_serial or float(movement_refresh.get("progress", 0.0)) != 1.0 or PresentationAudio.validation_records().size() != 1:
 		return _fail("An unrelated refresh replayed the completed movement serial.", movement_refresh)
 	var overlay: Dictionary = shell.call("validation_debug_overlay_snapshot")
 	var last_command: Dictionary = overlay.get("last_command", {}) if overlay.get("last_command", {}) is Dictionary else {}
@@ -140,6 +143,7 @@ func _assert_partial_full_route_execution() -> bool:
 	return true
 
 func _assert_reduced_motion_route_endpoint_snap() -> bool:
+	PresentationAudio.validation_reset()
 	var original_reduced_motion: bool = SettingsService.reduced_motion_enabled()
 	SettingsService.set_reduced_motion_enabled(true)
 	var session = _session_with_map(7, 3, true)
@@ -178,6 +182,8 @@ func _assert_reduced_motion_route_endpoint_snap() -> bool:
 		and int(movement.get("duration_ms", -1)) == 0
 		and float(movement.get("progress", 0.0)) == 1.0
 		and movement.get("final_tile", {}) == {"x": 4, "y": 1}
+		and _navigation_audio_exact(movement, "audio_placeholder_map_step", "map_step.wav", "OverworldMapView.hero_movement")
+		and PresentationAudio.validation_records().size() == 1
 	)
 	shell.call("_refresh")
 	await get_tree().process_frame
@@ -286,6 +292,7 @@ func _assert_reachable_interaction_resolves_only_at_destination() -> bool:
 	return true
 
 func _assert_route_does_not_pass_through_interaction() -> bool:
+	PresentationAudio.validation_reset()
 	var original_reduced_motion: bool = SettingsService.reduced_motion_enabled()
 	SettingsService.set_reduced_motion_enabled(false)
 	var session = _session_with_map(6, 3, true)
@@ -327,6 +334,8 @@ func _assert_route_does_not_pass_through_interaction() -> bool:
 		or String(blocked_cue.get("blocked_reason", "")) != String(route_decision.get("blocked_reason", ""))
 		or String(blocked_cue.get("animation_state", "")) != "route_blocked"
 		or String(blocked_cue.get("visual_policy", "")) != "authored_animation_state"
+		or not _navigation_audio_exact(blocked_cue, "audio_placeholder_invalid_route", "invalid_route.wav", "OverworldMapView.route_blocked")
+		or PresentationAudio.validation_records().size() != 1
 		or blocked_cue.get("selected_vfx_cue_ids", []) != ["vfx_placeholder_blocked_route_marker"]
 		or not bool(blocked_asset.get("uses_imported_asset", false))
 		or String(blocked_asset.get("texture_path", "")) != "res://art/overworld/runtime/vfx/route_blocked.png"
@@ -360,6 +369,7 @@ func _assert_route_does_not_pass_through_interaction() -> bool:
 		int(refreshed_cue.get("serial", -1)) != blocked_serial
 		or int(repeated_cue.get("serial", -1)) != blocked_serial
 		or String(repeated_selection.get("selected_route_decision", {}).get("status", "")) != "blocked"
+		or PresentationAudio.validation_records().size() != 1
 		or session.to_dict() != authority_before
 	):
 		SettingsService.set_reduced_motion_enabled(original_reduced_motion)
@@ -515,6 +525,11 @@ func _route_blocked_presentation(shell: Node) -> Dictionary:
 	var snapshot: Dictionary = shell.call("validation_snapshot")
 	var viewport: Dictionary = snapshot.get("map_viewport", {}) if snapshot.get("map_viewport", {}) is Dictionary else {}
 	return viewport.get("route_blocked_presentation", {}).duplicate(true) if viewport.get("route_blocked_presentation", {}) is Dictionary else {}
+
+func _navigation_audio_exact(snapshot: Dictionary, cue_id: String, asset_name: String, source: String) -> bool:
+	var records: Array = snapshot.get("audio_playback_records", []) if snapshot.get("audio_playback_records", []) is Array else []
+	var record: Dictionary = records[0] if records.size() == 1 and records[0] is Dictionary else {}
+	return records.size() == 1 and String(record.get("cue_id", "")) == cue_id and String(record.get("asset_path", "")) == "res://art/audio/runtime/presentation/%s" % asset_name and String(record.get("source", "")) == source and String(record.get("playback_source", "")) == "imported_wav" and bool(record.get("played", false))
 
 func _render_cache(shell: Node) -> Dictionary:
 	var snapshot: Dictionary = shell.call("validation_snapshot")
