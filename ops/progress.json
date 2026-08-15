@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The active-play save-written cue slice is completed. Successful live manual saves on all four active-play shells now publish the authored nonblocking system_save_written presentation through one shared presenter; broader release gaps remain.",
+  "currentNotes": "The active-play load-resumed cue slice is completed. Successful real Main Menu loads now publish one authored nonblocking cue after the exact routed shell refresh; broader release gaps remain.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-active-play-save-written-cue-playback-10184",
-  "currentSliceId": "presentation-active-play-save-written-cue-playback-10184",
-  "currentSliceNotes": "Completed: exact four-surface live save publication, normal/reduced playback, failure/cancel/refresh/expiry behavior, save authority, compatibility, static/editor, Linux, and Windows gates pass with bounded claims.",
+  "currentSlice": "presentation-active-play-load-resumed-cue-playback-10184",
+  "currentSliceId": "presentation-active-play-load-resumed-cue-playback-10184",
+  "currentSliceNotes": "Completed: exact four-destination real load publication, normal/reduced playback, stale/mismatch/refresh/expiry behavior, save and route authority, compatibility, static/editor, Linux, and Windows gates pass with bounded claims.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Active Play Save Written Cue Playback",
-  "currentSliceUpdatedAt": "2026-08-15T00:28:42Z",
+  "currentSliceTitle": "Active Play Load Resumed Cue Playback",
+  "currentSliceUpdatedAt": "2026-08-15T01:23:06Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19849,6 +19849,76 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "id": "presentation-active-play-load-resumed-cue-playback-10184",
+      "title": "Active Play Load Resumed Cue Playback",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/animation-systems-foundation.md",
+        "AGENTS.md"
+      ],
+      "purpose": "Make a successful Main Menu Continue or selected-save restore visibly confirm the exact resumed destination through the existing authored system_load_resumed cue contract.",
+      "implementationTargets": [
+        "scripts/autoload/AppRouter.gd",
+        "scenes/shared/SystemLoadResumedCuePresenter.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/town/TownShell.gd",
+        "scenes/battle/BattleShell.gd",
+        "scenes/results/ScenarioOutcomeShell.gd",
+        "tests/active_play_load_resumed_cue_playback_report.gd",
+        "tests/active_play_load_resumed_cue_playback_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/active_play_load_resumed_cue_playback_report.tscn",
+        "tests/save_load_confidence_visual_smoke.tscn",
+        "tests/battle_layout_smoke.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "e103a92c",
+        "system_load_resumed_catalog_entry": true,
+        "normal_animation_state": "load_resume",
+        "normal_blocking_policy": "never_blocks_input",
+        "reduced_motion_fallback": "load_icon_static",
+        "main_menu_restore_routes": [
+          "overworld",
+          "town",
+          "battle",
+          "outcome"
+        ],
+        "active_play_load_resumed_playback": false
+      },
+      "completionCriteria": [
+        "Exactly one successful real Main Menu selected-save or Continue restore publishes one detached system_load_resumed presentation only after the exact authoritative Overworld, Town, Battle, or Scenario Outcome destination completes its initial refresh",
+        "One ephemeral AppRouter handoff validates live slot, session, resume-target, and destination identity; it is consumed once and clears fail closed on failed, stale, malformed, mismatched, or unrelated routes",
+        "One reusable presenter applies exact catalog policy to the existing destination status control without adding layout geometry, changing text/tooltips, or blocking pointer, keyboard, controller, focus, route, or gameplay input; reduced motion uses exact load_icon_static fallback",
+        "Focused 1280x720 and 1920x1080 runtime drives the real Main Menu selected-load path across all four destinations and proves exact save bytes/summary/cache/version/session/settings/selection, no replay on refresh, clean expiry, and whole-shell authority",
+        "Save/load, animation-policy, focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "save serialization, transaction, slot, summary, cache, schema/version, migration, restore normalization, route choice, recovery, session, settings, or file-format changes",
+        "new panels, save-browser redesign, status-copy replacement, final VFX/audio assets or playback, global animation timing, or unrelated shell layout changes",
+        "packaged load interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "createdAt": "2026-08-15T00:34:57Z",
+      "startedAt": "2026-08-15T00:34:57Z",
+      "updatedAt": "2026-08-15T01:23:06Z",
+      "completedAt": "2026-08-15T01:23:06Z",
+      "notes": "Production AppRouter now creates one bounded detached handoff only after live summary re-read and successful restore, invalidates it on mismatched or failed scene changes, and lets the exact routed shell consume it once after initial authoritative refresh. One shared SystemLoadResumedCuePresenter validates the authored cue policy and changes only the existing status control modulation. The focused report drives the real Main Menu selected-load action at 1280x720 normal and 1920x1080 reduced motion across Overworld, Town, Battle, and Outcome: all eight cases publish once, preserve save bytes/summary/session/settings/selection/version authority, do not replay on refresh, keep focus and layout, and expire cleanly; a removed selected save routes nowhere and publishes nothing. Save/load confidence, 1280 Battle layout/load, animation policy, active-play focus, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged load interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null
+    },
     {
       "id": "strategic-ai-known-world-target-catalog-projection-reuse-10184",
       "title": "Strategic AI Known-World Target Catalog Projection Reuse",

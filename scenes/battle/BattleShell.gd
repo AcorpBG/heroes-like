@@ -4,6 +4,7 @@ const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
 const BattleAutoResolveRulesScript = preload("res://scripts/core/BattleAutoResolveRules.gd")
 const SystemSaveWrittenCuePresenterScript = preload("res://scenes/shared/SystemSaveWrittenCuePresenter.gd")
+const SystemLoadResumedCuePresenterScript = preload("res://scenes/shared/SystemLoadResumedCuePresenter.gd")
 
 const UI_ART_BATTLE_INITIATIVE_BAR := "res://art/ui/runtime/battle/initiative_bar.png"
 const UI_ART_BATTLE_COMBAT_LOG_PANEL := "res://art/ui/runtime/battle/combat_log_panel.png"
@@ -135,6 +136,7 @@ var _last_battle_keyboard_focus_cycle_names := []
 var _last_battle_keyboard_focus_tab_bar_occurrences := 0
 var _validation_battle_info_tab_resetting := false
 var _save_written_cue_presenter: SystemSaveWrittenCuePresenter
+var _load_resumed_cue_presenter: SystemLoadResumedCuePresenter
 
 func _ready() -> void:
 	var profile_started := ProfileLogScript.begin_usec()
@@ -145,6 +147,10 @@ func _ready() -> void:
 	_save_written_cue_presenter.name = "SystemSaveWrittenCuePresenter"
 	add_child(_save_written_cue_presenter)
 	_save_written_cue_presenter.configure(_save_button, _system_body_label, "battle")
+	_load_resumed_cue_presenter = SystemLoadResumedCuePresenterScript.new()
+	_load_resumed_cue_presenter.name = "SystemLoadResumedCuePresenter"
+	add_child(_load_resumed_cue_presenter)
+	_load_resumed_cue_presenter.configure(_system_body_label, "battle")
 	_configure_quick_resolve_confirmation()
 	_configure_withdrawal_confirmation()
 	_configure_confirmation_input_forwarding()
@@ -209,6 +215,7 @@ func _ready() -> void:
 		buckets["briefing_autosave"] = ProfileLogScript.elapsed_ms(phase_started)
 	phase_started = ProfileLogScript.begin_usec()
 	_refresh()
+	_present_load_resumed_cue()
 	buckets["first_refresh"] = ProfileLogScript.elapsed_ms(phase_started)
 	ProfileLogScript.emit_general("battle", "entry", "battle_ready", ProfileLogScript.elapsed_ms(profile_started), buckets, _battle_profile_metadata(true), _session)
 	call_deferred("_configure_battle_keyboard_focus", true)
@@ -1171,6 +1178,14 @@ func _commit_manual_save(manual_slot: int) -> Dictionary:
 
 func validation_save_written_cue_snapshot() -> Dictionary:
 	return _save_written_cue_presenter.validation_snapshot() if _save_written_cue_presenter != null else {}
+
+func _present_load_resumed_cue() -> void:
+	var payload: Dictionary = AppRouter.consume_load_resumed_presentation("battle")
+	if not payload.is_empty() and _load_resumed_cue_presenter != null:
+		_load_resumed_cue_presenter.present(payload)
+
+func validation_load_resumed_cue_snapshot() -> Dictionary:
+	return _load_resumed_cue_presenter.validation_snapshot() if _load_resumed_cue_presenter != null else {}
 
 func _on_manual_save_overwrite_confirmed() -> void:
 	var manual_slot: int = int(_manual_save_overwrite_dialog.consume_pending_slot())
