@@ -3,11 +3,13 @@ from __future__ import annotations
 
 import json
 import argparse
+import hashlib
 import importlib.util
 import re
 import struct
 import subprocess
 import sys
+import wave
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -32888,6 +32890,10 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         ensure(battle_sfx_manifest.get("schema") == "battle_runtime_sfx_manifest_v1", errors, "battle_sfx_manifest.json has the wrong schema")
         ensure(battle_sfx_manifest.get("final_sound_design") is False, errors, "battle_sfx_manifest.json must not claim final sound design")
         ensure(battle_sfx_manifest.get("audio_bus") == "Effects", errors, "battle_sfx_manifest.json must route battle SFX through Effects")
+        ensure(int(battle_sfx_manifest.get("sample_rate_hz", 0)) == 44100, errors, "battle SFX production assets must use 44.1 kHz sample rate")
+        ensure(int(battle_sfx_manifest.get("channel_count", 0)) == 2, errors, "battle SFX production assets must be stereo")
+        ensure(int(battle_sfx_manifest.get("sample_width_bits", 0)) == 16, errors, "battle SFX production assets must use 16-bit PCM")
+        ensure(battle_sfx_manifest.get("asset_tier") == "production_layered_v1", errors, "battle SFX production assets must declare production_layered_v1")
         battle_mix_policy = battle_sfx_manifest.get("mix_policy", {})
         ensure(isinstance(battle_mix_policy, dict), errors, "battle_sfx_manifest.json mix_policy must be an object")
         if isinstance(battle_mix_policy, dict):
@@ -32904,6 +32910,8 @@ def validate_unit_art_assets(errors: list[str]) -> None:
             )
         battle_sfx_cues = battle_sfx_manifest.get("cues", {})
         ensure(isinstance(battle_sfx_cues, dict), errors, "battle_sfx_manifest.json cues must be an object")
+        ensure(set(battle_sfx_cues) == set(required_battle_audio_ids), errors, "battle_sfx_manifest.json must contain exactly the 21 live Battle audio cue ids")
+        battle_sfx_hashes = set()
         for audio_id in required_battle_audio_ids:
             cue = battle_sfx_cues.get(audio_id, {}) if isinstance(battle_sfx_cues, dict) else {}
             ensure(isinstance(cue, dict), errors, f"battle_sfx_manifest.json is missing cue {audio_id}")
@@ -32914,15 +32922,44 @@ def validate_unit_art_assets(errors: list[str]) -> None:
             if wav_path.exists():
                 header = wav_path.read_bytes()[:12]
                 ensure(header[:4] == b"RIFF" and header[8:12] == b"WAVE", errors, f"battle SFX asset is not a WAV file: {path_value}")
+                battle_sfx_hashes.add(hashlib.sha256(wav_path.read_bytes()).hexdigest())
+                with wave.open(str(wav_path), "rb") as wav_file:
+                    channel_count = wav_file.getnchannels()
+                    sample_width = wav_file.getsampwidth()
+                    sample_rate = wav_file.getframerate()
+                    frame_count = wav_file.getnframes()
+                    raw_frames = wav_file.readframes(frame_count)
+                ensure(channel_count == 2, errors, f"battle SFX asset must be stereo: {path_value}")
+                ensure(sample_width == 2, errors, f"battle SFX asset must be 16-bit PCM: {path_value}")
+                ensure(sample_rate == 44100, errors, f"battle SFX asset must use 44.1 kHz: {path_value}")
+                expected_frames = int(44100 * int(cue.get("duration_msec", 0)) / 1000.0)
+                ensure(frame_count == expected_frames, errors, f"battle SFX asset duration must match manifest exactly: {path_value}")
+                samples = struct.unpack(f"<{len(raw_frames) // 2}h", raw_frames) if raw_frames else ()
+                left_samples = samples[0::2]
+                right_samples = samples[1::2]
+                peak = max((abs(value) for value in samples), default=0) / 32767.0
+                left_energy = sum(value * value for value in left_samples)
+                right_energy = sum(value * value for value in right_samples)
+                stereo_difference = sum((left - right) * (left - right) for left, right in zip(left_samples, right_samples))
+                ensure(0.25 <= peak <= 0.80, errors, f"battle SFX asset peak must stay in the bounded production range: {path_value}")
+                ensure(left_energy > 0 and right_energy > 0, errors, f"battle SFX asset must contain non-silent left and right channels: {path_value}")
+                ensure(stereo_difference > 0, errors, f"battle SFX asset channels must not be byte-identical mono duplication: {path_value}")
+                if left_samples and right_samples:
+                    ensure(max(abs(left_samples[0]), abs(right_samples[0]), abs(left_samples[-1]), abs(right_samples[-1])) <= 256, errors, f"battle SFX asset must fade cleanly at both boundaries: {path_value}")
             ensure(int(cue.get("duration_msec", 0)) > 0, errors, f"battle SFX cue {audio_id} needs duration_msec")
             ensure("volume_db" in cue, errors, f"battle SFX cue {audio_id} needs volume_db")
             ensure(cue.get("priority_class") in {"low", "normal", "high", "critical"}, errors, f"battle SFX cue {audio_id} needs a valid priority_class")
             ensure(int(cue.get("repeat_cooldown_msec", 0)) > 0, errors, f"battle SFX cue {audio_id} needs repeat_cooldown_msec")
+        ensure(len(battle_sfx_hashes) == len(required_battle_audio_ids), errors, "all 21 Battle production SFX WAV payloads must be byte-distinct")
     battle_sfx_generator_text = BATTLE_SFX_GENERATOR_PATH.read_text(encoding="utf-8") if BATTLE_SFX_GENERATOR_PATH.exists() else ""
     for required_token in (
         "battle_sfx_manifest.json",
         "SPECS",
         "write_wav",
+        "render_stereo",
+        "layered_sample",
+        "cue_envelope",
+        "production-layered-v1",
         "wave.open",
         "Manifest/spec cue mismatch",
     ):
@@ -33217,6 +33254,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "board_vfx_presentation",
         "_validate_core_vfx_asset_manifest",
         "_validate_core_vfx_asset_surface",
+        "_validate_production_sfx_asset_surface",
         "_validate_imported_vfx_live_viewports",
         "_validate_spell_vfx_asset_surface",
         "_validate_spell_vfx_live_viewports",
@@ -33295,6 +33333,11 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "scheduled_record_count",
         "_audio_asset_path_for",
         "battle_sfx_manifest.json",
+        "battle production sfx exact cue ids",
+        "battle production sfx live sample rate",
+        "battle production sfx live stereo",
+        "battle production sfx missing mapping fallback source",
+        '"production_sfx_assets"',
         "sequence_delay_msec",
         "started_at_msec",
         "enemy_start <= player_start",

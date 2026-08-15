@@ -3,7 +3,10 @@
   "generated_by": "tools/generate_battle_sfx_assets.py",
   "final_sound_design": false,
   "audio_bus": "Effects",
-  "sample_rate_hz": 22050,
+  "sample_rate_hz": 44100,
+  "channel_count": 2,
+  "sample_width_bits": 16,
+  "asset_tier": "production_layered_v1",
   "mix_policy": {
     "max_active_voices": 8,
     "priority_values": {
