@@ -34,6 +34,7 @@ func _run() -> void:
 	get_tree().quit(0)
 
 func _assert_guarded_site_context_playback() -> bool:
+	PresentationAudio.validation_reset()
 	var guarded_tile := Vector2i(3, 1)
 	var guard_id := "object_guarded_barrow_watch"
 	var session = _session_with_map(7, 3, true)
@@ -85,6 +86,7 @@ func _assert_guarded_site_context_playback() -> bool:
 		or int(cache_after_selection.get("session_static_generation", -1)) != int(cache_before_selection.get("session_static_generation", -2))
 		or int(cache_after_selection.get("state_generation", -1)) != int(cache_before_selection.get("state_generation", -2))
 		or int(cache_after_selection.get("dynamic_generation", -1)) <= int(cache_before_selection.get("dynamic_generation", -1))
+		or not _object_audio_service_records().is_empty()
 	):
 		return _fail("Guarded site selection did not publish the exact context-only cue on the dynamic layer.", {"selection": selection, "guarded": guarded})
 	shell.call("_refresh")
@@ -187,6 +189,7 @@ func _assert_persistent_resource_capture_playback() -> bool:
 	var selection: Dictionary = shell.call("validation_select_tile", 4, 1)
 	if String(selection.get("selected_route_decision", {}).get("status", "")) != "reachable":
 		return _fail("Persistent resource fixture route was not reachable.", selection)
+	PresentationAudio.validation_reset()
 	var result: Dictionary = shell.call("validation_click_tile", 4, 1)
 	var queued := _object_resolution(shell)
 	var serial := int(queued.get("serial", 0))
@@ -202,6 +205,8 @@ func _assert_persistent_resource_capture_playback() -> bool:
 		or String(queued.get("placement_id", "")) != "object_capture_wagon"
 		or queued.get("tile", {}) != {"x": 4, "y": 1}
 		or String(queued.get("animation_state", "")) != "ownership_capture"
+		or queued.get("selected_vfx_cue_ids", []) != ["vfx_placeholder_capture_flag"]
+		or not _object_audio_pending_exact(queued, "audio_placeholder_capture")
 		or String(queued.get("visual_policy", "")) != "authored_animation_state"
 		or not bool(queued.get("allows_large_motion", false))
 		or int(queued.get("duration_ms", 0)) != 620
@@ -211,7 +216,7 @@ func _assert_persistent_resource_capture_playback() -> bool:
 	shell.call("_refresh")
 	await get_tree().process_frame
 	var refreshed_queued := _object_resolution(shell)
-	if int(refreshed_queued.get("serial", -1)) != serial or not bool(refreshed_queued.get("queued", false)) or float(refreshed_queued.get("progress", -1.0)) != 0.0:
+	if int(refreshed_queued.get("serial", -1)) != serial or not bool(refreshed_queued.get("queued", false)) or float(refreshed_queued.get("progress", -1.0)) != 0.0 or not _object_audio_pending_exact(refreshed_queued, "audio_placeholder_capture"):
 		return _fail("Unrelated refresh replayed or consumed the queued captured cue.", refreshed_queued)
 	await get_tree().create_timer(0.52).timeout
 	var active := _object_resolution(shell)
@@ -226,6 +231,7 @@ func _assert_persistent_resource_capture_playback() -> bool:
 		or int(cache_active.get("state_generation", -1)) != int(cache_after_action.get("state_generation", -2))
 		or int(cache_active.get("dynamic_generation", -1)) <= int(cache_after_action.get("dynamic_generation", -1))
 		or session.to_dict() != authority_after_action
+		or not _object_audio_exact(active, "audio_placeholder_capture", "object_capture.wav", "overworld_object_captured", 1)
 	):
 		return _fail("Captured cue did not advance on only the dynamic layer with exact session authority.", {"queued": queued, "active": active})
 	await get_tree().create_timer(0.68).timeout
@@ -241,6 +247,7 @@ func _assert_persistent_resource_capture_playback() -> bool:
 		"active_progress": active_progress,
 		"dynamic_layer_only": true,
 		"refresh_replayed": false,
+		"audio_imported_once": true,
 	}
 	shell.queue_free()
 	await get_tree().process_frame
@@ -257,6 +264,7 @@ func _assert_repeatable_service_visited_and_revisit() -> bool:
 	var selection: Dictionary = shell.call("validation_select_tile", 2, 1)
 	if String(selection.get("selected_route_decision", {}).get("status", "")) != "reachable":
 		return _fail("Repeatable service fixture route was not reachable.", selection)
+	PresentationAudio.validation_reset()
 	var first_result: Dictionary = shell.call("validation_click_tile", 2, 1)
 	var first_cue := _object_resolution(shell)
 	var first_serial := int(first_cue.get("serial", 0))
@@ -267,6 +275,8 @@ func _assert_repeatable_service_visited_and_revisit() -> bool:
 		or first_serial <= 0
 		or String(first_cue.get("event_id", "")) != "overworld_object_visited"
 		or String(first_cue.get("animation_state", "")) != "visit_resolved"
+		or first_cue.get("selected_vfx_cue_ids", []) != ["vfx_placeholder_object_visit"]
+		or not _object_audio_pending_exact(first_cue, "audio_placeholder_object_visit")
 		or String(first_cue.get("fallback_tag", "")) != ""
 		or not bool(first_cue.get("queued", false))
 		or int(first_cue.get("duration_ms", 0)) != 620
@@ -275,7 +285,11 @@ func _assert_repeatable_service_visited_and_revisit() -> bool:
 		or int(session.overworld.get("resources", {}).get("gold", 0)) != starting_gold - 120
 	):
 		return _fail("Repeatable service did not retain one exact visited cue and live map entry.", {"cue": first_cue, "viewport": first_viewport, "node": first_node})
-	await get_tree().create_timer(1.2).timeout
+	await get_tree().create_timer(0.52).timeout
+	var first_active := _object_resolution(shell)
+	if not bool(first_active.get("active", false)) or not _object_audio_exact(first_active, "audio_placeholder_object_visit", "object_visit.wav", "overworld_object_visited", 1):
+		return _fail("Repeatable service visit did not play one imported audio cue after route locomotion.", first_active)
+	await get_tree().create_timer(0.68).timeout
 	var authority_before_early_revisit: Dictionary = session.to_dict()
 	var early_revisit: Dictionary = shell.call("validation_perform_context_action", "collect_resource")
 	var after_early_cue := _object_resolution(shell)
@@ -284,6 +298,7 @@ func _assert_repeatable_service_visited_and_revisit() -> bool:
 		or "collect_resource" in early_revisit.get("context_action_ids", [])
 		or int(after_early_cue.get("serial", -1)) != first_serial
 		or bool(after_early_cue.get("active", true))
+		or _object_audio_service_records().size() != 1
 		or session.to_dict() != authority_before_early_revisit
 	):
 		return _fail("Repeatable service cooldown did not fail closed without a new cue or authority drift.", {"result": early_revisit, "cue": after_early_cue})
@@ -305,6 +320,8 @@ func _assert_repeatable_service_visited_and_revisit() -> bool:
 		or String(revisit_cue.get("animation_state", "")) != "visited_check_icon"
 		or String(revisit_cue.get("visual_policy", "")) != "reduced_motion_fallback"
 		or String(revisit_cue.get("fallback_tag", "")) != "visited_check_icon"
+		or revisit_cue.get("selected_vfx_cue_ids", []) != ["visited_check_icon"]
+		or not _object_audio_exact(revisit_cue, "audio_placeholder_object_visit", "object_visit.wav", "overworld_object_visited", 2)
 		or bool(revisit_cue.get("allows_large_motion", true))
 		or int(revisit_cue.get("duration_ms", 0)) != 260
 		or int(revisit_viewport.get("spatial_index", {}).get("resource_tiles", 0)) != 1
@@ -319,6 +336,7 @@ func _assert_repeatable_service_visited_and_revisit() -> bool:
 		"cooldown_days": 7,
 		"resource_tiles_after_visit": int(revisit_viewport.get("spatial_index", {}).get("resource_tiles", 0)),
 		"reduced_motion_fallback": String(revisit_cue.get("fallback_tag", "")),
+		"audio_imported_count": 2,
 	}
 	shell.queue_free()
 	await get_tree().process_frame
@@ -335,6 +353,7 @@ func _assert_neutral_town_capture_playback() -> bool:
 	var selection: Dictionary = shell.call("validation_select_tile", 4, 1)
 	if String(selection.get("selected_route_decision", {}).get("status", "")) != "reachable":
 		return _fail("Neutral-town capture fixture route was not reachable.", selection)
+	PresentationAudio.validation_reset()
 	var result: Dictionary = shell.call("validation_click_tile", 4, 1)
 	var queued := _object_resolution(shell)
 	var serial := int(queued.get("serial", 0))
@@ -348,6 +367,8 @@ func _assert_neutral_town_capture_playback() -> bool:
 		or String(queued.get("placement_id", "")) != "neutral_cue_town"
 		or queued.get("tile", {}) != {"x": 4, "y": 1}
 		or String(queued.get("animation_state", "")) != "ownership_capture"
+		or queued.get("selected_vfx_cue_ids", []) != ["vfx_placeholder_capture_flag"]
+		or not _object_audio_pending_exact(queued, "audio_placeholder_capture")
 		or not bool(queued.get("queued", false))
 		or int(queued.get("duration_ms", 0)) != 620
 		or String(captured_town.get("owner", "")) != "player"
@@ -357,7 +378,7 @@ func _assert_neutral_town_capture_playback() -> bool:
 	shell.call("_refresh")
 	await get_tree().process_frame
 	var refreshed := _object_resolution(shell)
-	if int(refreshed.get("serial", -1)) != serial or not bool(refreshed.get("queued", false)) or session.to_dict() != authority_after_capture:
+	if int(refreshed.get("serial", -1)) != serial or not bool(refreshed.get("queued", false)) or session.to_dict() != authority_after_capture or not _object_audio_pending_exact(refreshed, "audio_placeholder_capture"):
 		return _fail("Neutral-town captured cue replayed or changed authority during refresh.", refreshed)
 	await get_tree().create_timer(0.52).timeout
 	var active := _object_resolution(shell)
@@ -368,6 +389,7 @@ func _assert_neutral_town_capture_playback() -> bool:
 		or float(active.get("progress", 0.0)) <= 0.0
 		or int(active_viewport.get("spatial_index", {}).get("town_tiles", 0)) != 2
 		or session.to_dict() != authority_after_capture
+		or not _object_audio_exact(active, "audio_placeholder_capture", "object_capture.wav", "overworld_object_captured", 1)
 	):
 		return _fail("Neutral-town captured cue did not remain active over the retained town.", {"cue": active, "viewport": active_viewport})
 	_evidence["neutral_town_capture"] = {
@@ -375,6 +397,7 @@ func _assert_neutral_town_capture_playback() -> bool:
 		"placement_id": String(active.get("placement_id", "")),
 		"town_tiles": int(active_viewport.get("spatial_index", {}).get("town_tiles", 0)),
 		"owner": String(captured_town.get("owner", "")),
+		"audio_imported_once": true,
 	}
 	shell.queue_free()
 	await get_tree().process_frame
@@ -390,6 +413,7 @@ func _assert_neutral_town_capture_playback() -> bool:
 	if String(reduced_selection.get("selected_route_decision", {}).get("status", "")) != "reachable":
 		SettingsService.set_reduced_motion_enabled(false)
 		return _fail("Reduced neutral-town capture fixture route was not reachable.", reduced_selection)
+	PresentationAudio.validation_reset()
 	var reduced_result: Dictionary = reduced_shell.call("validation_click_tile", 2, 1)
 	var reduced_cue := _object_resolution(reduced_shell)
 	SettingsService.set_reduced_motion_enabled(false)
@@ -399,6 +423,8 @@ func _assert_neutral_town_capture_playback() -> bool:
 		or bool(reduced_cue.get("queued", true))
 		or String(reduced_cue.get("family", "")) != "town_capture"
 		or String(reduced_cue.get("fallback_tag", "")) != "ownership_badge_swap"
+		or reduced_cue.get("selected_vfx_cue_ids", []) != ["ownership_badge_swap"]
+		or not _object_audio_exact(reduced_cue, "audio_placeholder_capture", "object_capture.wav", "overworld_object_captured", 1)
 		or String(reduced_cue.get("visual_policy", "")) != "reduced_motion_fallback"
 		or bool(reduced_cue.get("allows_large_motion", true))
 		or int(reduced_cue.get("duration_ms", 0)) != 260
@@ -409,6 +435,7 @@ func _assert_neutral_town_capture_playback() -> bool:
 		"serial": int(reduced_cue.get("serial", 0)),
 		"fallback_tag": String(reduced_cue.get("fallback_tag", "")),
 		"duration_ms": int(reduced_cue.get("duration_ms", 0)),
+		"audio_imported_once": true,
 	}
 	reduced_shell.queue_free()
 	await get_tree().process_frame
@@ -430,6 +457,7 @@ func _assert_artifact_depletion_playback() -> bool:
 	var selection: Dictionary = shell.call("validation_select_tile", 3, 1)
 	if String(selection.get("selected_route_decision", {}).get("status", "")) != "reachable":
 		return _fail("Artifact fixture route was not reachable.", selection)
+	PresentationAudio.validation_reset()
 	var result: Dictionary = shell.call("validation_click_tile", 3, 1)
 	var queued := _object_resolution(shell)
 	var serial := int(queued.get("serial", 0))
@@ -442,12 +470,14 @@ func _assert_artifact_depletion_playback() -> bool:
 		or String(queued.get("placement_id", "")) != "object_depleted_artifact"
 		or queued.get("tile", {}) != {"x": 3, "y": 1}
 		or String(queued.get("animation_state", "")) != "depleted_remove_or_dim"
+		or queued.get("selected_vfx_cue_ids", []) != ["vfx_placeholder_depleted_dim"]
+		or not _object_audio_pending_exact(queued, "audio_placeholder_collect")
 		or not bool(queued.get("queued", false))
 	):
 		return _fail("Artifact result did not queue one exact depleted cue.", queued)
 	await get_tree().create_timer(0.44).timeout
 	var active := _object_resolution(shell)
-	if not bool(active.get("active", false)) or float(active.get("progress", 0.0)) <= 0.0 or session.to_dict() != authority_after_action:
+	if not bool(active.get("active", false)) or float(active.get("progress", 0.0)) <= 0.0 or session.to_dict() != authority_after_action or not _object_audio_exact(active, "audio_placeholder_collect", "object_collect.wav", "overworld_object_depleted", 1):
 		return _fail("Artifact depleted cue did not remain visible after the object left the state index.", active)
 	var artifact: Dictionary = session.overworld.get("artifact_nodes", [])[0]
 	if not bool(artifact.get("collected", false)):
@@ -456,6 +486,7 @@ func _assert_artifact_depletion_playback() -> bool:
 		"serial": serial,
 		"placement_id": String(active.get("placement_id", "")),
 		"active_after_object_removal": true,
+		"audio_imported_once": true,
 	}
 	shell.queue_free()
 	await get_tree().process_frame
@@ -471,6 +502,7 @@ func _assert_reduced_motion_capture_and_unsupported_noop() -> bool:
 	var selection: Dictionary = shell.call("validation_select_tile", 2, 1)
 	if String(selection.get("selected_route_decision", {}).get("status", "")) != "reachable":
 		return _fail("Reduced-motion fixture route was not reachable.", selection)
+	PresentationAudio.validation_reset()
 	var result: Dictionary = shell.call("validation_click_tile", 2, 1)
 	var active := _object_resolution(shell)
 	var serial := int(active.get("serial", 0))
@@ -483,6 +515,8 @@ func _assert_reduced_motion_capture_and_unsupported_noop() -> bool:
 		or bool(active.get("allows_large_motion", true))
 		or String(active.get("visual_policy", "")) != "reduced_motion_fallback"
 		or String(active.get("fallback_tag", "")) != "ownership_badge_swap"
+		or active.get("selected_vfx_cue_ids", []) != ["ownership_badge_swap"]
+		or not _object_audio_exact(active, "audio_placeholder_capture", "object_capture.wav", "overworld_object_captured", 1)
 		or int(active.get("duration_ms", 0)) != 260
 		or float(active.get("progress", -1.0)) != 0.0
 	):
@@ -498,13 +532,14 @@ func _assert_reduced_motion_capture_and_unsupported_noop() -> bool:
 		return _fail("Unsupported open-move control was not reachable.", open_selection)
 	var open_result: Dictionary = shell.call("validation_click_tile", 3, 1)
 	var unchanged := _object_resolution(shell)
-	if not bool(open_result.get("ok", false)) or int(unchanged.get("serial", -1)) != serial or bool(unchanged.get("active", true)):
+	if not bool(open_result.get("ok", false)) or int(unchanged.get("serial", -1)) != serial or bool(unchanged.get("active", true)) or _object_audio_service_records().size() != 1:
 		return _fail("A successful open move incorrectly issued or replayed an object-result cue.", unchanged)
 	_evidence["reduced_motion_capture"] = {
 		"serial": serial,
 		"fallback_tag": String(active.get("fallback_tag", "")),
 		"duration_ms": int(active.get("duration_ms", 0)),
 		"unsupported_open_move_noop": true,
+		"audio_imported_once": true,
 	}
 	shell.queue_free()
 	await get_tree().process_frame
@@ -634,6 +669,43 @@ func _town_by_placement(session, placement_id: String) -> Dictionary:
 		if town_value is Dictionary and String(town_value.get("placement_id", "")) == placement_id:
 			return town_value
 	return {}
+
+func _object_audio_service_records() -> Array:
+	var records: Array = []
+	for record_value in PresentationAudio.validation_records():
+		if record_value is Dictionary and String(record_value.get("source", "")) == "OverworldMapView.object_resolution":
+			records.append(record_value.duplicate(true))
+	return records
+
+func _object_audio_pending_exact(snapshot: Dictionary, cue_id: String) -> bool:
+	return snapshot.get("selected_audio_cue_ids", []) == [cue_id] \
+		and Array(snapshot.get("audio_playback_records", [])).is_empty() \
+		and _object_audio_service_records().is_empty()
+
+func _object_audio_exact(snapshot: Dictionary, cue_id: String, asset_name: String, role: String, expected_service_count: int) -> bool:
+	var snapshot_records: Array = snapshot.get("audio_playback_records", []) if snapshot.get("audio_playback_records", []) is Array else []
+	var service_records := _object_audio_service_records()
+	if snapshot.get("selected_audio_cue_ids", []) != [cue_id] or snapshot_records.size() != 1 or service_records.size() != expected_service_count:
+		return false
+	var record: Dictionary = snapshot_records[0] if snapshot_records[0] is Dictionary else {}
+	var metadata: Dictionary = record.get("metadata", {}) if record.get("metadata", {}) is Dictionary else {}
+	return record == service_records[-1] \
+		and String(record.get("cue_id", "")) == cue_id \
+		and String(record.get("source", "")) == "OverworldMapView.object_resolution" \
+		and bool(record.get("played", false)) \
+		and String(record.get("playback_source", "")) == "imported_wav" \
+		and String(record.get("asset_path", "")).get_file() == asset_name \
+		and String(record.get("role", "")) == role \
+		and int(record.get("stream_mix_rate", 0)) == 44100 \
+		and bool(record.get("stream_stereo", false)) \
+		and int(record.get("stream_loop_mode", -1)) == AudioStreamWAV.LOOP_DISABLED \
+		and int(record.get("imported_asset_count", 0)) == 1 \
+		and int(record.get("generated_fallback_count", -1)) == 0 \
+		and String(metadata.get("event_id", "")) == String(snapshot.get("event_id", "")) \
+		and int(metadata.get("presentation_serial", -1)) == int(snapshot.get("serial", 0)) \
+		and String(metadata.get("family", "")) == String(snapshot.get("family", "")) \
+		and String(metadata.get("placement_id", "")) == String(snapshot.get("placement_id", "")) \
+		and metadata.get("tile", {}) == snapshot.get("tile", {})
 
 func _object_resolution(shell: Node) -> Dictionary:
 	var snapshot: Dictionary = shell.call("validation_snapshot")

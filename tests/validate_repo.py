@@ -31608,6 +31608,16 @@ def validate_overworld_object_resolution_vfx_assets(errors: list[str]) -> None:
         '"overworld_object_captured": {',
         '"overworld_object_visited": {',
         '"overworld_object_depleted": {',
+        '"audio_cue_id": "audio_placeholder_capture"',
+        '"audio_cue_id": "audio_placeholder_object_visit"',
+        '"audio_cue_id": "audio_placeholder_collect"',
+        '"selected_audio_cue_ids": [String(expected.get("audio_cue_id", ""))]',
+        "PresentationAudio.validation_reset()",
+        'func _audio_exact(event_id: String, snapshot: Dictionary) -> bool:',
+        'String(record.get("source", "")) == "OverworldMapView.object_resolution"',
+        'String(record.get("playback_source", "")) == "imported_wav"',
+        'int(record.get("stream_mix_rate", 0)) == 44100',
+        'AudioStreamWAV.LOOP_DISABLED',
         'MapViewScript.new()',
         'map_view.call("validation_object_resolution_vfx_asset_summary")',
         'map_view.call("set_map_state", session, session.overworld.get("map", []), Vector2i(8, 6), TILE, {}, {}, presentation)',
@@ -32165,6 +32175,8 @@ def validate_overworld_object_resolution_cue_playback(errors: list[str]) -> None
         "SettingsService.animation_preferences()",
         '"placement_id": placement_id',
         '"tile": {"x": tile.x, "y": tile.y}',
+        '"selected_vfx_cue_ids": (policy.get("selected_vfx_cue_ids", []) as Array).duplicate(true)',
+        '"selected_audio_cue_ids": (policy.get("selected_audio_cue_ids", []) as Array).duplicate(true)',
         "_object_resolution_presentation",
     ):
         ensure(required_token in shell_text, errors, f"OverworldShell.gd is missing object-resolution playback token {required_token}")
@@ -32174,6 +32186,7 @@ def validate_overworld_object_resolution_cue_playback(errors: list[str]) -> None
     ensure(record_block.find('family not in ["resource_site", "artifact", "town_capture"]') < record_block.find("_object_resolution_presentation_serial += 1"), errors, "Object-result playback must validate its exact family before issuing a serial")
     ensure(record_block.find('bool(site.get("persistent_control", false))') < record_block.find('bool(site.get("repeatable", false))') < record_block.find("cue_playback_policy_for_event"), errors, "Object-result playback must classify persistent capture before repeatable visit and policy resolution")
     ensure(record_block.find("placement_id == \"\"") < record_block.find("cue_playback_policy_for_event") < record_block.find("_object_resolution_presentation_serial += 1"), errors, "Object-result playback must validate placement/tile and resolve catalog policy before serial publication")
+    ensure(record_block.find('"selected_vfx_cue_ids"') < record_block.find('"selected_audio_cue_ids"') < record_block.find('"allows_large_motion"'), errors, "Object-result producer must detach catalog VFX and audio ownership into the same accepted presentation")
     ensure("session.overworld" not in record_block and "session.flags" not in record_block and "OverworldRules." not in record_block, errors, "Object-result presentation must not mutate or recompute gameplay authority")
     ensure("create_timer" not in record_block and "await " not in record_block and "create_tween" not in record_block, errors, "Object-result producer must not add hidden timing authority")
     guarded_shell_block = gdscript_function_block(shell_text, "_selected_guarded_site_presentation")
@@ -32201,6 +32214,9 @@ def validate_overworld_object_resolution_cue_playback(errors: list[str]) -> None
         "object_resolution_presentation: Dictionary = {}",
         "guarded_site_presentation: Dictionary = {}",
         "func _sync_object_resolution_presentation",
+        "var _object_resolution_audio_cue_ids: Array = []",
+        "var _object_resolution_audio_playback_records: Array = []",
+        "func _play_object_resolution_audio",
         "func _sync_guarded_site_presentation",
         'String(presentation.get("playback_policy", "")) != "context_visible_only"',
         'tile != _selected_tile',
@@ -32221,16 +32237,25 @@ def validate_overworld_object_resolution_cue_playback(errors: list[str]) -> None
         "var motion_progress := progress if _object_resolution_allows_large_motion else 0.35",
         "func validation_object_resolution_presentation",
         '"object_resolution_presentation": validation_object_resolution_presentation()',
+        '"selected_audio_cue_ids": _object_resolution_audio_cue_ids.duplicate(true)',
+        '"audio_playback_records": _object_resolution_audio_playback_records.duplicate(true)',
     ):
         ensure(required_token in map_view_text, errors, f"OverworldMapView.gd is missing object-resolution playback token {required_token}")
     sync_block = gdscript_function_block(map_view_text, "_sync_object_resolution_presentation")
     process_block = gdscript_function_block(map_view_text, "_process")
     draw_block = gdscript_function_block(map_view_text, "_draw_object_resolution_presentation")
+    play_audio_block = gdscript_function_block(map_view_text, "_play_object_resolution_audio")
     ensure(sync_block.find("_object_resolution_last_serial = serial") < sync_block.find("_object_resolution_event_id =") < sync_block.find("_object_resolution_tile = tile"), errors, "Map view must consume one serial, validate identity, then retain the exact object tile")
     queue_index = sync_block.find("_object_resolution_queued = _hero_movement_active")
     processing_after_queue_index = sync_block.find("_sync_presentation_processing()", queue_index)
     invalidate_index = sync_block.find('_invalidate_dynamic_layer("object_resolution_started")')
     ensure(0 <= queue_index < processing_after_queue_index < invalidate_index, errors, "Object-result playback must queue behind route locomotion before dynamic invalidation")
+    ensure(sync_block.find('_object_resolution_audio_cue_ids = (presentation.get("selected_audio_cue_ids", []) as Array).duplicate(true)') < sync_block.find('_object_resolution_audio_playback_records = []') < sync_block.find('if _object_resolution_event_id not in ["overworld_object_visited", "overworld_object_captured", "overworld_object_depleted"]') < sync_block.find('_object_resolution_tile = tile') < sync_block.find('_object_resolution_queued = _hero_movement_active') < sync_block.find('if _object_resolution_active:') < sync_block.find('_play_object_resolution_audio()'), errors, "Object-result audio must remain silent until the whole event/family/tile presentation is accepted and immediate activation is owned")
+    ensure(process_block.find("if _object_resolution_queued and not _hero_movement_active:") < process_block.find("_object_resolution_active = true") < process_block.find("_play_object_resolution_audio()") < process_block.find("if _object_resolution_active:"), errors, "Queued object-result audio must play exactly when route locomotion hands off to active object playback")
+    for token in ('if not _object_resolution_active or not _object_resolution_audio_playback_records.is_empty():', 'PresentationAudio.play_cue(String(audio_cue_value), "OverworldMapView.object_resolution"', '"event_id": _object_resolution_event_id', '"presentation_serial": _object_resolution_last_serial', '"family": _object_resolution_family', '"placement_id": _object_resolution_placement_id', '"tile": {"x": _object_resolution_tile.x, "y": _object_resolution_tile.y}'):
+        ensure(token in play_audio_block, errors, f"Object-result audio helper is missing accepted metadata/replay ownership: {token}")
+    ensure(map_view_text.count("_play_object_resolution_audio()") == 3, errors, "Object-result audio helper must have exactly immediate and queued-transition call sites")
+    ensure("session" not in play_audio_block and "await " not in play_audio_block and "create_timer" not in play_audio_block and "create_tween" not in play_audio_block, errors, "Object-result audio helper must remain presentation-only and synchronous")
     ensure(process_block.find("if _hero_movement_active:") < process_block.find("if _object_resolution_queued and not _hero_movement_active:") < process_block.find("if _object_resolution_active:"), errors, "Presentation processing must finish route locomotion before starting and advancing object playback")
     ensure("_invalidate_session_static_cache" not in process_block + draw_block and "_invalidate_state_cache" not in process_block + draw_block, errors, "Object-result frames must not invalidate static or state caches")
     ensure("session" not in process_block and "session" not in draw_block, errors, "Object-result frame/draw helpers must not consult or mutate session authority")
@@ -32295,9 +32320,21 @@ def validate_overworld_object_resolution_cue_playback(errors: list[str]) -> None
         'const CAPTURE_ENV := "HEROES_OVERWORLD_OBJECT_RESOLUTION_CAPTURE"',
         'for viewport_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]',
         'overworld_object_resolution_%dx%d.png',
+        "PresentationAudio.validation_reset()",
+        "func _object_audio_pending_exact",
+        "func _object_audio_exact",
+        '"OverworldMapView.object_resolution"',
+        '"audio_placeholder_object_visit"',
+        '"audio_placeholder_capture"',
+        '"audio_placeholder_collect"',
+        '"object_visit.wav"',
+        '"object_capture.wav"',
+        '"object_collect.wav"',
+        'AudioStreamWAV.LOOP_DISABLED',
     ):
         ensure(required_token in test_text, errors, f"Object-resolution focused report is missing exact proof token {required_token}")
     ensure("validation_set_object_resolution" not in test_text and "_object_resolution_elapsed_sec" not in test_text and "_process(" not in test_text, errors, "Focused object-result report must passively observe production playback rather than mutate its clock")
+    ensure(test_text.count("_object_audio_pending_exact(") >= 5 and test_text.count("_object_audio_exact(") >= 7, errors, "Focused object-result owner must prove queued silence, active playback, revisit, reduced-motion, and unsupported no-replay")
     guarded_case = gdscript_function_block(test_text, "_assert_guarded_site_context_playback")
     ensure(guarded_case.find("authority_before_selection") < guarded_case.find('validation_select_tile", guarded_tile.x') < guarded_case.find("_guarded_site(shell)") < guarded_case.find('shell.call("_refresh")') < guarded_case.find('shell.call("validation_select_tile", 0, 1)') < guarded_case.find("resolved.append(guard_id)"), errors, "Guarded-site focused proof must establish authority, select, observe, refresh, deselect, then resolve in order")
     ensure("_selected_guarded_site_presentation" not in test_text and "_sync_guarded_site_presentation" not in test_text and "_draw_guarded_site_presentation" not in test_text, errors, "Focused guarded-site proof must passively observe the production context boundary")
@@ -39003,6 +39040,9 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
         '"audio_placeholder_load_resume"',
         '"audio_placeholder_map_step"',
         '"audio_placeholder_invalid_route"',
+        '"audio_placeholder_object_visit"',
+        '"audio_placeholder_capture"',
+        '"audio_placeholder_collect"',
         "func play_cue(cue_id: String, source: String = \"\", metadata: Dictionary = {}) -> Dictionary:",
         '"unsupported_cue" if not supported',
         "SettingsService.effects_audio_muted()",
@@ -39082,6 +39122,24 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
             "volume_db": -13.5,
             "role": "overworld_route_blocked",
         },
+        "audio_placeholder_object_visit": {
+            "path": "res://art/audio/runtime/presentation/object_visit.wav",
+            "duration_msec": 300,
+            "volume_db": -14.0,
+            "role": "overworld_object_visited",
+        },
+        "audio_placeholder_capture": {
+            "path": "res://art/audio/runtime/presentation/object_capture.wav",
+            "duration_msec": 420,
+            "volume_db": -12.5,
+            "role": "overworld_object_captured",
+        },
+        "audio_placeholder_collect": {
+            "path": "res://art/audio/runtime/presentation/object_collect.wav",
+            "duration_msec": 280,
+            "volume_db": -13.5,
+            "role": "overworld_object_depleted",
+        },
         "audio_placeholder_town_build": {
             "path": "res://art/audio/runtime/presentation/town_build.wav",
             "duration_msec": 420,
@@ -39105,7 +39163,7 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
     ensure(int(manifest.get("sample_width_bits", 0)) == 16, errors, "production presentation SFX must use 16-bit PCM")
     ensure(manifest.get("asset_tier") == "production_layered_v1", errors, "presentation SFX manifest must declare production_layered_v1")
     cues = manifest.get("cues", {})
-    ensure(isinstance(cues, dict) and set(cues) == set(expected_cues), errors, "presentation SFX manifest must contain exactly the eleven live Town, Overworld, navigation, and system action cues")
+    ensure(isinstance(cues, dict) and set(cues) == set(expected_cues), errors, "presentation SFX manifest must contain exactly the fourteen live Town, Overworld, navigation, object-resolution, and system action cues")
     asset_hashes: list[str] = []
     for cue_id in sorted(expected_cues):
         expected = expected_cues[cue_id]
@@ -39139,10 +39197,10 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
             if left_samples and right_samples:
                 ensure(left_samples[0] == 0 and right_samples[0] == 0, errors, f"presentation SFX must start at zero: {expected['path']}")
                 ensure(left_samples[-1] == 0 and right_samples[-1] == 0, errors, f"presentation SFX must end at zero: {expected['path']}")
-    ensure(len(set(asset_hashes)) == 11, errors, "all eleven presentation assets must be byte-distinct")
-    if len(asset_hashes) == 11:
+    ensure(len(set(asset_hashes)) == 14, errors, "all fourteen presentation assets must be byte-distinct")
+    if len(asset_hashes) == 14:
         pack_signature = hashlib.sha256("\n".join(asset_hashes).encode("utf-8")).hexdigest()
-        ensure(pack_signature == "57fb6e181eb183fec904f7de7d27cfd02a3b39e3516ffb0cac1bd1c280967f85", errors, "presentation SFX pack signature drifted")
+        ensure(pack_signature == "6c2e95dfeda2f65e25ad6eda99795c169d7e8b1d7d20732c5025edb4eb5b1daf", errors, "presentation SFX pack signature drifted")
 
     generator_text = PRESENTATION_SFX_GENERATOR_PATH.read_text(encoding="utf-8")
     for required_token in (
@@ -39161,6 +39219,9 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
         "continuity_chime",
         "travel_step",
         "route_denial",
+        "waypoint_acknowledge",
+        "banner_claim",
+        "cache_lift",
         "presentation-production-v1",
         "render_stereo",
         "layered_sample",

@@ -10,6 +10,9 @@ const EXPECTED_CUES := {
 		"family": "town_capture",
 		"animation_state": "ownership_capture",
 		"texture_path": "res://art/overworld/runtime/vfx/object_resolution/captured.png",
+		"audio_cue_id": "audio_placeholder_capture",
+		"audio_path": "res://art/audio/runtime/presentation/object_capture.wav",
+		"audio_role": "overworld_object_captured",
 	},
 	"overworld_object_visited": {
 		"cue_id": "vfx_placeholder_object_visit",
@@ -17,6 +20,9 @@ const EXPECTED_CUES := {
 		"family": "resource_site",
 		"animation_state": "repeatable_service_visit",
 		"texture_path": "res://art/overworld/runtime/vfx/object_resolution/visited.png",
+		"audio_cue_id": "audio_placeholder_object_visit",
+		"audio_path": "res://art/audio/runtime/presentation/object_visit.wav",
+		"audio_role": "overworld_object_visited",
 	},
 	"overworld_object_depleted": {
 		"cue_id": "vfx_placeholder_depleted_dim",
@@ -24,6 +30,9 @@ const EXPECTED_CUES := {
 		"family": "artifact",
 		"animation_state": "object_depleted",
 		"texture_path": "res://art/overworld/runtime/vfx/object_resolution/depleted.png",
+		"audio_cue_id": "audio_placeholder_collect",
+		"audio_path": "res://art/audio/runtime/presentation/object_collect.wav",
+		"audio_role": "overworld_object_depleted",
 	},
 }
 
@@ -54,6 +63,7 @@ func _run() -> void:
 	get_tree().quit(0)
 
 func _run_viewport(viewport_size: Vector2i) -> Dictionary:
+	PresentationAudio.validation_reset()
 	get_window().size = viewport_size
 	await get_tree().process_frame
 	await get_tree().process_frame
@@ -136,6 +146,7 @@ func _presentation(event_id: String, serial: int, reduced_motion: bool) -> Dicti
 		"selected_visual_policy": "reduced_motion_fallback" if reduced_motion else "authored_animation_state",
 		"selected_fallback_tag": String(expected.get("fallback_cue_id", "")) if reduced_motion else "",
 		"selected_vfx_cue_ids": [String(expected.get("fallback_cue_id", ""))] if reduced_motion else [String(expected.get("cue_id", ""))],
+		"selected_audio_cue_ids": [String(expected.get("audio_cue_id", ""))],
 		"allows_large_motion": not reduced_motion,
 		"family": String(expected.get("family", "")),
 		"placement_id": "object_resolution_vfx_fixture:%s" % event_id,
@@ -162,7 +173,8 @@ func _normal_row(event_id: String, snapshot: Dictionary, view_size: Vector2) -> 
 		and String(draw.get("mode", "")) == "imported_texture" \
 		and String(draw.get("texture_path", "")) == String(expected.get("texture_path", "")) \
 		and float(draw.get("alpha", 0.0)) > 0.0 \
-		and Rect2(Vector2.ZERO, view_size).encloses(draw_rect)
+		and Rect2(Vector2.ZERO, view_size).encloses(draw_rect) \
+		and _audio_exact(event_id, snapshot)
 	return {"event_id": event_id, "exact": exact, "draw_rect": draw_payload, "texture_path": asset.get("texture_path", "")}
 
 func _fallback_row(event_id: String, snapshot: Dictionary, reduced_motion: bool) -> Dictionary:
@@ -177,8 +189,29 @@ func _fallback_row(event_id: String, snapshot: Dictionary, reduced_motion: bool)
 		and String(draw.get("mode", "")) == "existing_procedural_object_resolution_body" \
 		and String(draw.get("texture_path", "missing")) == "" \
 		and bool(snapshot.get("allows_large_motion", true)) == not reduced_motion \
-		and String(snapshot.get("visual_policy", "")) == ("reduced_motion_fallback" if reduced_motion else "authored_animation_state")
+		and String(snapshot.get("visual_policy", "")) == ("reduced_motion_fallback" if reduced_motion else "authored_animation_state") \
+		and _audio_exact(event_id, snapshot)
 	return {"event_id": event_id, "exact": exact, "cue_id": expected_cue, "reduced_motion": reduced_motion}
+
+func _audio_exact(event_id: String, snapshot: Dictionary) -> bool:
+	var expected: Dictionary = EXPECTED_CUES.get(event_id, {})
+	var records: Array = snapshot.get("audio_playback_records", []) if snapshot.get("audio_playback_records", []) is Array else []
+	if snapshot.get("selected_audio_cue_ids", []) != [String(expected.get("audio_cue_id", ""))] or records.size() != 1:
+		return false
+	var record: Dictionary = records[0] if records[0] is Dictionary else {}
+	var metadata: Dictionary = record.get("metadata", {}) if record.get("metadata", {}) is Dictionary else {}
+	return String(record.get("cue_id", "")) == String(expected.get("audio_cue_id", "")) \
+		and String(record.get("source", "")) == "OverworldMapView.object_resolution" \
+		and bool(record.get("played", false)) \
+		and String(record.get("playback_source", "")) == "imported_wav" \
+		and String(record.get("asset_path", "")) == String(expected.get("audio_path", "")) \
+		and String(record.get("role", "")) == String(expected.get("audio_role", "")) \
+		and int(record.get("stream_mix_rate", 0)) == 44100 \
+		and bool(record.get("stream_stereo", false)) \
+		and int(record.get("stream_loop_mode", -1)) == AudioStreamWAV.LOOP_DISABLED \
+		and String(metadata.get("event_id", "")) == event_id \
+		and int(metadata.get("presentation_serial", -1)) == int(snapshot.get("serial", 0)) \
+		and metadata.get("tile", {}) == snapshot.get("tile", {})
 
 func _asset_summary_exact(summary: Dictionary) -> bool:
 	return String(summary.get("manifest_path", "")) == "res://content/overworld_vfx_manifest.json" \
