@@ -13,6 +13,7 @@ const UNIT_ANIMATION_PATH := "%s/unit_animation_manifest.json" % CONTENT_DIR
 const ARMY_GROUPS_PATH := "%s/army_groups.json" % CONTENT_DIR
 const TOWNS_PATH := "%s/towns.json" % CONTENT_DIR
 const BUILDINGS_PATH := "%s/buildings.json" % CONTENT_DIR
+const RESOURCES_PATH := "%s/resources.json" % CONTENT_DIR
 const RESOURCE_SITES_PATH := "%s/resource_sites.json" % CONTENT_DIR
 const BIOMES_PATH := "%s/biomes.json" % CONTENT_DIR
 const TERRAIN_GRAMMAR_PATH := "%s/terrain_grammar.json" % CONTENT_DIR
@@ -138,6 +139,9 @@ func get_town(id: String) -> Dictionary:
 
 func get_building(id: String) -> Dictionary:
 	return get_content_by_id(BUILDINGS_PATH, id)
+
+func get_resource(id: String) -> Dictionary:
+	return get_content_by_id(RESOURCES_PATH, id)
 
 func get_resource_site(id: String) -> Dictionary:
 	return get_content_by_id(RESOURCE_SITES_PATH, id)
@@ -354,6 +358,7 @@ func _validate_content() -> void:
 	var army_group_index := _index_items(_items_from_raw(load_json(ARMY_GROUPS_PATH)))
 	var town_index := _index_items(_items_from_raw(load_json(TOWNS_PATH)))
 	var building_index := _index_items(_items_from_raw(load_json(BUILDINGS_PATH)))
+	var resource_index := _index_items(_items_from_raw(load_json(RESOURCES_PATH)))
 	var resource_site_index := _index_items(_items_from_raw(load_json(RESOURCE_SITES_PATH)))
 	var biome_index := _index_items(_items_from_raw(load_json(BIOMES_PATH)))
 	var terrain_grammar := load_json(TERRAIN_GRAMMAR_PATH)
@@ -400,6 +405,7 @@ func _validate_content() -> void:
 		_validate_army_group(army_group, faction_index, unit_index)
 	for building in building_index.values():
 		_validate_building(building, building_index, unit_index)
+	_validate_resources(resource_index)
 	for town in town_index.values():
 		_validate_town(town, faction_index, building_index, unit_index, spell_index)
 	for artifact in artifact_index.values():
@@ -425,6 +431,29 @@ func _validate_content() -> void:
 		)
 	for campaign in campaign_index.values():
 		_validate_campaign(campaign, scenario_index)
+
+func _validate_resources(resource_index: Dictionary) -> void:
+	var expected_ids := [
+		"gold", "wood", "ore", "aetherglass", "embergrain", "peatwax",
+		"verdant_grafts", "brass_scrip", "memory_salt",
+	]
+	if resource_index.size() != expected_ids.size():
+		push_warning("Production resource registry must define exactly the nine live stockpile resources.")
+	for resource_id in expected_ids:
+		var resource: Dictionary = resource_index.get(resource_id, {})
+		if resource.is_empty():
+			push_warning("Production resource registry is missing %s." % resource_id)
+			continue
+		for key in ["display_name", "category", "market_tier", "icon_id", "icon_path", "material_cue"]:
+			if String(resource.get(key, "")).strip_edges() == "":
+				push_warning("Production resource %s must define %s." % [resource_id, key])
+		if not bool(resource.get("stockpile", false)):
+			push_warning("Production resource %s must remain a live stockpile resource." % resource_id)
+		var icon_path := String(resource.get("icon_path", ""))
+		if not icon_path.begins_with("res://art/economy/runtime/resources/") or not icon_path.ends_with(".png"):
+			push_warning("Production resource %s must use the shipped economy resource icon family." % resource_id)
+		else:
+			_validate_art_path(icon_path, "Production resource %s icon" % resource_id)
 
 func _supported_resource_site_families() -> Array:
 	return [

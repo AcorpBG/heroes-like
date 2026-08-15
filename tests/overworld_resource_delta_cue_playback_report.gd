@@ -3,6 +3,12 @@ extends Node
 const SessionDataScript = preload("res://scripts/core/SessionStateStore.gd")
 const REPORT_ID := "OVERWORLD_RESOURCE_DELTA_CUE_PLAYBACK_REPORT"
 const PLACEMENT_ID := "north_wood"
+const RESOURCE_IDS := [
+	"gold", "wood", "ore", "aetherglass", "embergrain", "peatwax",
+	"verdant_grafts", "brass_scrip", "memory_salt",
+]
+const RESOURCE_REGISTRY_PATH := "res://content/resources.json"
+const RESOURCE_FIXTURE_PATH := "res://tests/fixtures/economy_resource_schema/resource_registry.json"
 const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]
 const MODES := [
 	{"id": "normal", "reduced_motion": false},
@@ -15,6 +21,9 @@ func _ready() -> void:
 func _run() -> void:
 	var original_window_size := get_window().size
 	var original_reduced_motion := SettingsService.reduced_motion_enabled()
+	var registry_contract := _resource_registry_contract()
+	if not bool(registry_contract.get("ok", false)):
+		return _fail("Production resource registry contract failed: %s" % JSON.stringify(registry_contract), original_window_size, original_reduced_motion)
 	var rows := []
 	for viewport_size in VIEWPORT_SIZES:
 		for mode in MODES:
@@ -28,7 +37,7 @@ func _run() -> void:
 	SettingsService.set_reduced_motion_enabled(original_reduced_motion)
 	get_window().size = original_window_size
 	await get_tree().process_frame
-	print("%s %s" % [REPORT_ID, JSON.stringify({"ok": true, "rows": rows})])
+	print("%s %s" % [REPORT_ID, JSON.stringify({"ok": true, "resource_registry": registry_contract, "rows": rows})])
 	get_tree().quit(0)
 
 func _fail(message: String, original_window_size: Vector2i, original_reduced_motion: bool) -> void:
@@ -59,7 +68,20 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 	if primary_action == null or cue == null or open_command == null:
 		return await _finish_case(shell, {"ok": false, "failure": "live_surface_missing"})
 	var initial: Dictionary = shell.validation_snapshot()
-	var primary_exact := String(initial.get("primary_action_id", "")) == "collect_resource" and not primary_action.disabled and primary_action.is_visible_in_tree()
+	var primary_payload: Dictionary = initial.get("primary_action", {}) if initial.get("primary_action", {}) is Dictionary else {}
+	var expected_icon_path := "res://art/economy/runtime/resources/wood.png"
+	var primary_icon: Texture2D = primary_action.icon
+	var primary_exact := (
+		String(initial.get("primary_action_id", "")) == "collect_resource"
+		and String(primary_payload.get("resource_id", "")) == "wood"
+		and String(primary_payload.get("resource_icon_path", "")) == expected_icon_path
+		and String(initial.get("primary_action_button_icon_path", "")) == expected_icon_path
+		and int(initial.get("primary_action_button_icon_max_width", 0)) == 24
+		and primary_icon != null
+		and primary_icon.get_size() == Vector2(128.0, 128.0)
+		and not primary_action.disabled
+		and primary_action.is_visible_in_tree()
+	)
 	var malformed_before := _presentation(shell)
 	var malformed_after: Dictionary = shell.present_resource_delta_presentation({
 		"serial": 991,
@@ -153,6 +175,93 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		row["expected_deltas"] = expected_deltas
 		row["session_equal"] = live_after == control.to_dict()
 	return await _finish_case(shell, row)
+
+func _resource_registry_contract() -> Dictionary:
+	var production := _load_json(RESOURCE_REGISTRY_PATH)
+	var fixture := _load_json(RESOURCE_FIXTURE_PATH)
+	var production_items: Array = production.get("items", []) if production.get("items", []) is Array else []
+	var fixture_items: Array = fixture.get("items", []) if fixture.get("items", []) is Array else []
+	var fixture_by_id := {}
+	for fixture_value in fixture_items:
+		if fixture_value is Dictionary:
+			fixture_by_id[String(fixture_value.get("id", ""))] = fixture_value
+	var ordered_ids := []
+	var icon_ids := []
+	var icon_paths := []
+	var fixture_fields := [
+		"display_name", "category", "market_tier", "default_visible", "legacy_aliases",
+		"canonical_status", "activation_status", "source_readiness", "source_site_family",
+		"intended_source_paths", "faction_affinity", "ui_sort", "material_cue", "stockpile",
+	]
+	var rows := []
+	for production_value in production_items:
+		if not (production_value is Dictionary):
+			return {"ok": false, "failure": "production_row_not_dictionary"}
+		var resource: Dictionary = production_value
+		var resource_id := String(resource.get("id", ""))
+		ordered_ids.append(resource_id)
+		var fixture_resource: Dictionary = fixture_by_id.get(resource_id, {})
+		var metadata_exact := not fixture_resource.is_empty()
+		for field in fixture_fields:
+			metadata_exact = metadata_exact and resource.get(field, null) == fixture_resource.get(field, null)
+		var expected_icon_id := "resource_icon_%s" % resource_id
+		var expected_icon_path := "res://art/economy/runtime/resources/%s.png" % resource_id
+		var icon_id := String(resource.get("icon_id", ""))
+		var icon_path := String(resource.get("icon_path", ""))
+		var icon_image := Image.new()
+		var image_error := icon_image.load(icon_path)
+		var definition: Dictionary = OverworldRules.resource_definition(resource_id)
+		var row := {
+			"resource_id": resource_id,
+			"ok": (
+				metadata_exact
+				and icon_id == expected_icon_id
+				and icon_path == expected_icon_path
+				and image_error == OK
+				and icon_image.get_size() == Vector2i(128, 128)
+				and icon_image.detect_alpha()
+				and definition == resource
+				and OverworldRules.resource_icon_path(resource_id) == icon_path
+			),
+			"metadata_exact": metadata_exact,
+			"icon_id": icon_id,
+			"icon_path": icon_path,
+			"icon_size": icon_image.get_size(),
+		}
+		rows.append(row)
+		icon_ids.append(icon_id)
+		icon_paths.append(icon_path)
+	var unique_icon_ids := {}
+	var unique_icon_paths := {}
+	for icon_id in icon_ids:
+		unique_icon_ids[String(icon_id)] = true
+	for icon_path in icon_paths:
+		unique_icon_paths[String(icon_path)] = true
+	var all_rows_exact := true
+	for row_value in rows:
+		all_rows_exact = all_rows_exact and row_value is Dictionary and bool(row_value.get("ok", false))
+	return {
+		"ok": (
+			String(production.get("schema", "")) == "resource_registry_v1"
+			and ordered_ids == RESOURCE_IDS
+			and all_rows_exact
+			and unique_icon_ids.size() == RESOURCE_IDS.size()
+			and unique_icon_paths.size() == RESOURCE_IDS.size()
+			and OverworldRules.LIVE_STOCKPILE_RESOURCE_KEYS == RESOURCE_IDS
+			and FileAccess.file_exists("res://art/economy/source/resource_icon_atlas.png")
+		),
+		"resource_ids": ordered_ids,
+		"resource_count": ordered_ids.size(),
+		"unique_icon_count": unique_icon_paths.size(),
+		"rows": rows,
+	}
+
+func _load_json(path: String) -> Dictionary:
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed = JSON.parse_string(file.get_as_text())
+	return parsed if parsed is Dictionary else {}
 
 func _resource_session():
 	var session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)

@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `economy-production-resource-registry-collection-icon-adoption-10184`. The nine live stockpile resources now own exact production metadata and distinct original imported 128x128 material icons. Existing compact Overworld collection actions resolve the selected site's distinctive non-gold claim resource, falling back to gold, and load that exact icon fail-closed while preserving action copy, order, focus, collection consequences, recap, resource-delta cue, session authority, and save version 9 at 1280x720 and 1920x1080. Live stockpile, all active rare-source collection/income, Town economy, Overworld visual, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Market/economy/site/source/AI/save changes, a broad resource-bar redesign, packaged collection interaction, certification, whole-game, and release readiness remain out of scope. Select the next tracker-approved release-readiness implementation slice.
+  id: `economy-production-resource-registry-collection-icon-adoption-10184`
 - Completed implementation slice: `presentation-town-building-category-sigil-adoption-10184`. All 133 production buildings now resolve through their existing category to one of five distinct original construction sigils. The selectable Town Build options load the exact civic, dwelling, economy, support, or magic sigil fail-closed while preserving selection, readiness, tooltip, order, focus, containment, and real construction consequences at 1280x720 and 1920x1080. Focused construction, building cue, all-town save/resume, Town/Battle visual, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Unique per-building illustrations, building/economy/balance/save/AI changes, packaged interaction, hardware/certification, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `presentation-town-building-category-sigil-adoption-10184`
 - Completed implementation slice: `presentation-live-spell-school-sigil-adoption-10184`. All 112 shipped spells now resolve through their existing school id to one of seven distinct original imported material-language sigils. The existing compact Overworld cast, Town study, and Battle cast buttons load the exact school sigil fail-closed while preserving copy, tooltips, order, disabled state, focus, containment, and real action consequences at 1280x720 and 1920x1080. Focused real cast/learn/cast, magic/Town/Battle compatibility, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Per-spell illustrations, spell balance/rules/content, save schema, AI, new panels, packaged spell interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -4960,6 +4962,43 @@ Completed evidence:
 - the focused report passes real selection and construction at 1280x720 and 1920x1080 with whole-session equality against an independent rule-plus-recap control and save version 9 unchanged;
 - the building-completion cue, all 15 authored town save/resume cases, Town/Battle visuals, accessibility semantics, core systems, repository validation, and exact/generic editor parses pass;
 - official Linux export plus packaged headless startup and official Windows export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass, without a packaged construction-interaction or broader release claim.
+
+## Production Resource Registry And Collection Icon Adoption
+
+id: `economy-production-resource-registry-collection-icon-adoption-10184`
+
+State: completed on 2026-08-15. Production owns the exact ordered nine-row
+registry and nine unique original alpha icons. Focused collection proof passed
+all four 1280x720/1920x1080 normal/reduced-motion rows with whole-session,
+recap, cue, resolution, refresh, and fail-closed authority intact. Compatibility
+covered all 20 active authored rare-source collection/income cases, the live
+stockpile and Town resource surfaces, Overworld visual composition,
+accessibility, and core systems. Official Linux export/headless startup and
+Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. These are
+bounded export/startup claims, not packaged resource interaction or release
+certification.
+
+Selected Phase 6 economy architecture and live-readability slice. Gold, wood,
+ore, Aetherglass, Embergrain, Peatwax, Verdant grafts, Brass scrip, and Memory
+salt are authoritative live stockpile ids, but their display/category/material
+metadata remains fixture-only and their collection commands are text-only.
+
+Implementation target:
+- promote the exact nine stockpile definitions into production content with stable display, category, market-tier, ordering, affinity, material, and original icon ownership;
+- keep `wood` and all other save/cost ids byte-stable, with no save-version or balance change;
+- resolve exact resource identity from the selected live resource site and show its icon on existing compact primary/context collection actions, fail-closed when metadata or imports are invalid;
+- preserve action copy, tooltip, order, disabled state, focus, containment, collection result, recap, resource delta cue, and save authority.
+
+Completion criteria:
+- production owns exactly nine stockpile resources and nine distinct original imported 128x128 icons, while the strict fixture agrees with the production registry rather than remaining the only authority;
+- real live resource-site collection at 1280x720 and 1920x1080 shows the exact yielded-resource icon and matches an independent rules control for stockpile, site, recap, cue, session, and save authority;
+- invalid resource/action/icon metadata remains text-only without errors or action changes;
+- economy registry/schema, resource-site collection, live stockpile/Town economy, Overworld visual/accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Non-goals:
+- do not change resource ids, amounts, costs, income, market access/rates/caps, sites, source placement, faction affinity, AI valuation, save schema/version, or collection consequences;
+- do not add a full-width resource dashboard, new panel, broad resource-bar redesign, pickup art, site art, or non-resource action icons;
+- do not claim packaged collection interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release readiness.
 
 ## Phase Roadmap
 

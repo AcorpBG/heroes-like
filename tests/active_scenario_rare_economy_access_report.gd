@@ -102,6 +102,12 @@ func _run_town_case(scenario_id: String, authored_town: Dictionary) -> Dictionar
 		return base_row
 
 	var placement_id := String(source.get("placement_id", ""))
+	var fixture_reset := _prepare_unclaimed_resource_fixture(session, placement_id)
+	if not bool(fixture_reset.get("ok", false)):
+		base_row["error"] = "could not prepare an unclaimed collection fixture"
+		base_row["resource_placement_id"] = placement_id
+		return base_row
+	base_row["fixture_controller_before_reset"] = String(fixture_reset.get("controller_before", ""))
 	var before_claim := _resources(session)
 	_move_to_resource(session, placement_id)
 	var claim_result: Dictionary = OverworldRules.collect_active_resource(session)
@@ -205,6 +211,39 @@ func _matching_rare_source(session, rare_id: String) -> Dictionary:
 func _move_to_resource(session, placement_id: String) -> void:
 	var node := _resource_node(session, placement_id)
 	_set_hero_position(session, int(node.get("x", 0)), int(node.get("y", 0)))
+
+func _prepare_unclaimed_resource_fixture(session, placement_id: String) -> Dictionary:
+	var nodes: Array = session.overworld.get("resource_nodes", [])
+	for index in range(nodes.size()):
+		if not (nodes[index] is Dictionary):
+			continue
+		var node: Dictionary = nodes[index]
+		if String(node.get("placement_id", "")) != placement_id:
+			continue
+		var controller_before := String(node.get("collected_by_faction_id", ""))
+		node["collected"] = false
+		node["collected_by_faction_id"] = ""
+		node.erase("collected_day")
+		nodes[index] = node
+		session.overworld["resource_nodes"] = nodes
+		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+		var guard := OverworldRules.resource_site_blocking_guard(session, node, site)
+		var resolved_guard_key := ""
+		if not guard.is_empty():
+			resolved_guard_key = OverworldRules.encounter_key(guard)
+			var resolved: Array = session.overworld.get("resolved_encounters", [])
+			if resolved_guard_key not in resolved:
+				resolved.append(resolved_guard_key)
+			session.overworld["resolved_encounters"] = resolved
+		OverworldRules.mark_runtime_normalized_transition_state(session)
+		OverworldRules.refresh_fog_of_war(session)
+		return {
+			"ok": true,
+			"controller_before": controller_before,
+			"placement_id": placement_id,
+			"resolved_guard_key": resolved_guard_key,
+		}
+	return {"ok": false, "placement_id": placement_id}
 
 func _set_hero_position(session, x: int, y: int) -> void:
 	session.overworld["hero_position"] = {"x": x, "y": y}
