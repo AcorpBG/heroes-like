@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld resource-delta cue slice is completed. Successful live player resource-site collection now publishes the authored post-refresh ui_resource_delta presentation with exact net stockpile changes and nonblocking normal/reduced playback; broader release gaps remain.",
+  "currentNotes": "The active-play save-written cue slice is completed. Successful live manual saves on all four active-play shells now publish the authored nonblocking system_save_written presentation through one shared presenter; broader release gaps remain.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-resource-delta-cue-playback-10184",
-  "currentSliceId": "presentation-overworld-resource-delta-cue-playback-10184",
-  "currentSliceNotes": "Completed: exact live collection, independent session authority, map-resolution compatibility, nonblocking normal/reduced playback, refresh, failure, compatibility, static/editor, Linux, and Windows gates pass with bounded claims.",
+  "currentSlice": "presentation-active-play-save-written-cue-playback-10184",
+  "currentSliceId": "presentation-active-play-save-written-cue-playback-10184",
+  "currentSliceNotes": "Completed: exact four-surface live save publication, normal/reduced playback, failure/cancel/refresh/expiry behavior, save authority, compatibility, static/editor, Linux, and Windows gates pass with bounded claims.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Resource Delta Cue Playback",
-  "currentSliceUpdatedAt": "2026-08-14T23:59:46Z",
+  "currentSliceTitle": "Active Play Save Written Cue Playback",
+  "currentSliceUpdatedAt": "2026-08-15T00:28:42Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -81216,6 +81216,64 @@
         "linux_export_headless_startup_passed": true,
         "windows_export_fresh_wine_startup_passed": true
       }
+    },
+    {
+      "id": "presentation-active-play-save-written-cue-playback-10184",
+      "title": "Active Play Save Written Cue Playback",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/animation-systems-foundation.md", "AGENTS.md"],
+      "purpose": "Make successful live manual saves visibly confirm the authoritative write through the existing authored system_save_written cue contract on every active-play shell.",
+      "implementationTargets": [
+        "scenes/shared/SystemSaveWrittenCuePresenter.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/town/TownShell.gd",
+        "scenes/battle/BattleShell.gd",
+        "scenes/results/ScenarioOutcomeShell.gd",
+        "tests/active_play_save_written_cue_playback_report.gd",
+        "tests/active_play_save_written_cue_playback_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/active_play_save_written_cue_playback_report.tscn",
+        "tests/manual_save_overwrite_regression.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "3efd5ce8",
+        "system_save_written_catalog_entry": true,
+        "normal_animation_state": "save_confirm",
+        "normal_blocking_policy": "never_blocks_input",
+        "reduced_motion_fallback": "save_icon_static",
+        "active_play_manual_save_surfaces": ["overworld", "town", "battle", "scenario_outcome"],
+        "active_play_save_written_playback": false
+      },
+      "completionCriteria": [
+        "Exactly one successful live manual-save commit on Overworld, Town, Battle, and Scenario Outcome publishes one detached system_save_written presentation only after the shell refreshes authoritative save status",
+        "One reusable presenter applies exact catalog policy to the existing Save control/status pair without adding layout geometry, changing status text/tooltips, or blocking pointer, keyboard, controller, focus, route, or gameplay input; reduced motion uses exact save_icon_static fallback",
+        "Confirmation-pending, canceled, malformed, invalid-slot, unavailable, and failed saves publish nothing; refresh does not duplicate or reset playback; expiry restores exact visual state without replay",
+        "Focused 1280x720 and 1920x1080 runtime proves exact save bytes/summary/cache/version/session/settings/selection, overwrite confirmation, focus, route, layout, and whole-shell authority on all four surfaces",
+        "Manual-save, animation-policy, focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "save serialization, transaction, slot, summary, cache, schema/version, migration, autosave, load/resume, recovery, routing, session, settings, or file-format changes",
+        "new panels, save-browser redesign, status-copy replacement, final VFX/audio assets or playback, global animation timing, or unrelated shell layout changes",
+        "packaged save interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "createdAt": "2026-08-15T00:04:15Z",
+      "startedAt": "2026-08-15T00:04:15Z",
+      "updatedAt": "2026-08-15T00:28:42Z",
+      "completedAt": "2026-08-15T00:28:42Z",
+      "notes": "Production now instantiates one reusable SystemSaveWrittenCuePresenter on Overworld, Town, Battle, and Scenario Outcome. Each shell publishes only after its successful manual-save commit and authoritative refresh; the presenter validates exact manual-slot summary identity and catalog policy, changes only existing control modulation, never blocks or moves focus, never changes copy or geometry, and restores exact visuals after the authored bounded lifetime. The focused report drives occupied-slot request, cancel, reopen, and confirm at 1280x720 normal and 1920x1080 reduced motion on all four shells: eight cases publish exactly once, pending/canceled/malformed failures publish nothing, refresh does not replay, and save/session/settings/selection/version authority remains exact. The existing four-route manual-save regression, animation policy, active-play focus, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Autosaves, load/resume, save schema/migration, final audio/VFX assets, packaged save interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null
     },
     {
       "id": "presentation-overworld-resource-delta-cue-playback-10184",

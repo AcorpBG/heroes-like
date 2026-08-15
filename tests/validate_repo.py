@@ -111,6 +111,9 @@ OVERWORLD_ARTIFACT_ACQUIRED_CUE_PLAYBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "
 OVERWORLD_ARTIFACT_ACQUIRED_CUE_PLAYBACK_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_artifact_acquired_cue_playback_report.tscn"
 OVERWORLD_RESOURCE_DELTA_CUE_PLAYBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_resource_delta_cue_playback_report.gd"
 OVERWORLD_RESOURCE_DELTA_CUE_PLAYBACK_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_resource_delta_cue_playback_report.tscn"
+SYSTEM_SAVE_WRITTEN_CUE_PRESENTER_SCRIPT_PATH = ROOT / "scenes" / "shared" / "SystemSaveWrittenCuePresenter.gd"
+ACTIVE_PLAY_SAVE_WRITTEN_CUE_PLAYBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "active_play_save_written_cue_playback_report.gd"
+ACTIVE_PLAY_SAVE_WRITTEN_CUE_PLAYBACK_REPORT_SCENE_PATH = ROOT / "tests" / "active_play_save_written_cue_playback_report.tscn"
 OVERWORLD_ART_MANIFEST_PATH = ROOT / "art" / "overworld" / "manifest.json"
 TERRAIN_GRAMMAR_PATH = CONTENT_DIR / "terrain_grammar.json"
 TERRAIN_LAYERS_PATH = CONTENT_DIR / "terrain_layers.json"
@@ -29029,6 +29032,127 @@ def validate_overworld_resource_delta_cue_playback(errors: list[str]) -> None:
         ensure(forbidden not in report_text, errors, f"Resource-delta focused report must not bypass or weaken production behavior: {forbidden}")
 
 
+def validate_active_play_save_written_cue_playback(errors: list[str]) -> None:
+    required_paths = (
+        SYSTEM_SAVE_WRITTEN_CUE_PRESENTER_SCRIPT_PATH,
+        OVERWORLD_SCRIPT_PATH,
+        TOWN_SCRIPT_PATH,
+        BATTLE_SCRIPT_PATH,
+        OUTCOME_SCRIPT_PATH,
+        ACTIVE_PLAY_SAVE_WRITTEN_CUE_PLAYBACK_REPORT_SCRIPT_PATH,
+        ACTIVE_PLAY_SAVE_WRITTEN_CUE_PLAYBACK_REPORT_SCENE_PATH,
+        ANIMATION_EVENT_CUES_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing active-play save-written cue owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+    presenter_text = SYSTEM_SAVE_WRITTEN_CUE_PRESENTER_SCRIPT_PATH.read_text(encoding="utf-8")
+    report_text = ACTIVE_PLAY_SAVE_WRITTEN_CUE_PLAYBACK_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    report_scene_text = ACTIVE_PLAY_SAVE_WRITTEN_CUE_PLAYBACK_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    shell_texts = {
+        "overworld": OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8"),
+        "town": TOWN_SCRIPT_PATH.read_text(encoding="utf-8"),
+        "battle": BATTLE_SCRIPT_PATH.read_text(encoding="utf-8"),
+        "scenario_outcome": OUTCOME_SCRIPT_PATH.read_text(encoding="utf-8"),
+    }
+
+    def block(text: str, name: str) -> str:
+        start = text.find(f"func {name}")
+        if start < 0:
+            return ""
+        end = text.find("\nfunc ", start + 1)
+        return text[start:] if end < 0 else text[start:end]
+
+    for token in (
+        "class_name SystemSaveWrittenCuePresenter",
+        'const EVENT_ID := "system_save_written"',
+        'const CUE_ID := "cue_system_save_written"',
+        'const NORMAL_STATE := "save_confirm"',
+        'const REDUCED_STATE := "save_icon_static"',
+        "func configure(save_button: Button, status_control: Control, surface: String) -> bool:",
+        "func present(save_result: Dictionary, manual_slot: int) -> Dictionary:",
+        "AnimationCueCatalogScript.cue_playback_policy_for_event(",
+        "SettingsService.animation_preferences()",
+        'String(policy.get("selected_blocking_policy", "")) == "never_blocks_input"',
+        'String(summary.get("slot_type", "")) == SaveService.SLOT_TYPE_MANUAL',
+        'String(summary.get("slot_id", "")) == str(manual_slot)',
+        "_save_button.modulate = _button_base_modulate.lerp(accent, amount)",
+        "_status_control.modulate = _status_base_modulate.lerp(accent, amount)",
+        "_save_button.modulate = _button_base_modulate",
+        "_status_control.modulate = _status_base_modulate",
+        "func validation_snapshot() -> Dictionary:",
+    ):
+        ensure(token in presenter_text, errors, f"Shared save-written presenter is missing exact policy/lifecycle ownership: {token}")
+    for forbidden in (
+        "SaveService.save_",
+        "AppRouter.save_",
+        "SessionState",
+        "change_scene",
+        "grab_focus",
+        "mouse_filter",
+        '_status_control.set("text"',
+        "create_timer",
+        "create_tween",
+    ):
+        ensure(forbidden not in presenter_text, errors, f"Shared save-written presenter must remain presentation-only and nonblocking: {forbidden}")
+    ensure(re.search(r"_save_button\.text\s*=(?!=)", presenter_text) is None, errors, "Shared save-written presenter must not replace Save button text")
+    ensure(re.search(r"_status_control\.tooltip_text\s*=(?!=)", presenter_text) is None, errors, "Shared save-written presenter must not replace save status tooltip")
+
+    expected_targets = {
+        "overworld": ("_save_status_label", "\t_refresh()\n\t_save_written_cue_presenter.present(save_result, manual_slot)"),
+        "town": ("_save_status_label", "\t_refresh_save_slot_picker(true)\n\tif bool(result.get(\"ok\", false)):\n\t\t_save_written_cue_presenter.present(result, manual_slot)"),
+        "battle": ("_system_body_label", "\t_refresh()\n\tif bool(result.get(\"ok\", false)):\n\t\t_save_written_cue_presenter.present(result, manual_slot)"),
+        "scenario_outcome": ("_save_status_label", "\t_refresh()\n\tif bool(result.get(\"ok\", false)):\n\t\t_save_written_cue_presenter.present(result, manual_slot)"),
+    }
+    for surface, text in shell_texts.items():
+        target, ordered_publish = expected_targets[surface]
+        for token in (
+            'const SystemSaveWrittenCuePresenterScript = preload("res://scenes/shared/SystemSaveWrittenCuePresenter.gd")',
+            "var _save_written_cue_presenter: SystemSaveWrittenCuePresenter",
+            '_save_written_cue_presenter.name = "SystemSaveWrittenCuePresenter"',
+            f'_save_written_cue_presenter.configure(_save_button, {target}, "{surface}")',
+            ordered_publish,
+            "func validation_save_written_cue_snapshot() -> Dictionary:",
+        ):
+            ensure(token in text, errors, f"{surface} must configure and publish the shared cue after authoritative refresh: {token}")
+        ensure(text.count("_save_written_cue_presenter.present(") == 1, errors, f"{surface} must own exactly one successful manual-save cue publication")
+        commit = block(text, "_commit_manual_save")
+        ensure("AppRouter.save_active_session_to_manual_slot(manual_slot)" in commit, errors, f"{surface} save cue must remain attached to the live manual-save commit")
+
+    ensure_scene_nodes(report_scene_text, errors, "active_play_save_written_cue_playback_report.tscn", [("ActivePlaySaveWrittenCuePlaybackReport", "Node")])
+    for token in (
+        'const REPORT_ID := "ACTIVE_PLAY_SAVE_WRITTEN_CUE_PLAYBACK_REPORT"',
+        '{"id": "overworld", "scene": "res://scenes/overworld/OverworldShell.tscn", "status": "SaveStatus"}',
+        '{"id": "town", "scene": "res://scenes/town/TownShell.tscn", "status": "SaveStatus"}',
+        '{"id": "battle", "scene": "res://scenes/battle/BattleShell.tscn", "status": "SystemBody"}',
+        '{"id": "scenario_outcome", "scene": "res://scenes/results/ScenarioOutcomeShell.tscn", "status": "SaveStatus"}',
+        '{"width": 1280, "reduced_motion": false}',
+        '{"width": 1920, "reduced_motion": true}',
+        'shell.call("validation_request_manual_save")',
+        'shell.call("validation_cancel_manual_save_overwrite")',
+        'shell.call("validation_confirm_manual_save_overwrite")',
+        'shell.call("validation_save_written_cue_snapshot")',
+        'String(policy.get("selected_blocking_policy", "")) == "never_blocks_input"',
+        'if save_button.get_viewport().gui_get_focus_owner() != save_button:',
+        'shell.call("_refresh")',
+        'presenter.call("present", {"ok": false, "path": "", "summary": {}}, SLOT)',
+        'await get_tree().create_timer(0.8).timeout',
+        'SessionState.SAVE_VERSION == 9',
+    ):
+        ensure(token in report_text, errors, f"Active-play save-written report is missing exact four-surface authority: {token}")
+    for forbidden in (
+        "_commit_manual_save(",
+        "_on_save_pressed(",
+        "SaveService.save_runtime_manual_session",
+        "AppRouter.save_active_session_to_manual_slot",
+        "AnimationCueCatalogScript",
+        "SystemSaveWrittenCuePresenterScript",
+        "queue_free()\n\treturn {\"ok\": true",
+    ):
+        ensure(forbidden not in report_text, errors, f"Active-play save-written report must drive public validation controls without bypassing production: {forbidden}")
+
+
 def validate_overworld_object_resolution_cue_playback(errors: list[str]) -> None:
     required_paths = (
         OVERWORLD_RULES_PATH,
@@ -37760,6 +37884,7 @@ def main() -> int:
     validate_overworld_artifact_slot_cue_playback(errors)
     validate_overworld_artifact_acquired_cue_playback(errors)
     validate_overworld_resource_delta_cue_playback(errors)
+    validate_active_play_save_written_cue_playback(errors)
     validate_overworld_object_resolution_cue_playback(errors)
     validate_neutral_dwelling_unit_slice(errors)
     validate_hero_portrait_assets(errors)

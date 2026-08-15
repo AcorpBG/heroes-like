@@ -2,6 +2,7 @@ extends Control
 
 const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
+const SystemSaveWrittenCuePresenterScript = preload("res://scenes/shared/SystemSaveWrittenCuePresenter.gd")
 const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains open; use Save, then try Return to Main Menu again."
 const OUTCOME_AUTOSAVE_RECOVERY_MESSAGE := "Outcome reached, but autosave failed. Use Save Outcome now."
 const OUTCOME_NEW_SESSION_CANCEL_TEXT := "Keep Outcome"
@@ -114,9 +115,14 @@ var _validation_outcome_new_session_perform_count := 0
 var _validation_outcome_new_session_route_count := 0
 var _validation_outcome_new_session_routing_suppressed := false
 var _compact_layout_active := false
+var _save_written_cue_presenter: SystemSaveWrittenCuePresenter
 
 func _ready() -> void:
 	_apply_visual_theme()
+	_save_written_cue_presenter = SystemSaveWrittenCuePresenterScript.new()
+	_save_written_cue_presenter.name = "SystemSaveWrittenCuePresenter"
+	add_child(_save_written_cue_presenter)
+	_save_written_cue_presenter.configure(_save_button, _save_status_label, "scenario_outcome")
 	_last_outcome_recap_tab_index = _recap_tabs.current_tab
 	_configure_outcome_recap_tab_accessibility()
 	if not _recap_tabs.tab_changed.is_connected(_on_outcome_recap_tab_changed):
@@ -992,7 +998,12 @@ func _commit_manual_save(manual_slot: int) -> Dictionary:
 	var result := AppRouter.save_active_session_to_manual_slot(manual_slot)
 	_last_action_message = String(result.get("message", ""))
 	_refresh()
+	if bool(result.get("ok", false)):
+		_save_written_cue_presenter.present(result, manual_slot)
 	return result
+
+func validation_save_written_cue_snapshot() -> Dictionary:
+	return _save_written_cue_presenter.validation_snapshot() if _save_written_cue_presenter != null else {}
 
 func _on_manual_save_overwrite_confirmed() -> void:
 	var manual_slot: int = int(_manual_save_overwrite_dialog.consume_pending_slot())
