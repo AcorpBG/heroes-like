@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `presentation-overworld-route-expiry-feedback-10184`. A successful end turn now captures a player response route on its exact final active day, validates the same visible site after rule mutation and autosave, and publishes one `overworld_route_closed` cue only when the day transition naturally deactivates its transit edge. The route keeps player control and its persisted response provenance; enemy seizure closure retains priority, and non-final, already-expired, malformed, refresh, and duplicate controls stay silent. Focused 1280x720/1920x1080 proof plus enemy-closure/open-route, Rope Lift, shared cue, accessibility, visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged expiry interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `presentation-overworld-route-expiry-feedback-10184`
 - Completed implementation slice: `presentation-overworld-enemy-route-closure-feedback-10184`. A real enemy resource seizure now adds the exact compact `route_closed` reason only when it interrupts a still-active player response route, and the successful live end-turn/autosave path publishes one authored `overworld_route_closed` cue at the visible seized site. The cue uses an original imported alpha VFX, deterministic 440 ms stereo sound, static reduced-motion icon, and distinct missing-asset gate fallback. Focused 1280x720/1920x1080 live enemy-turn proof preserves the exact `ai_site_seized` event, controller transfer, response clear, transit edge 1->0, save/session authority, and duplicate silence; inactive-route control, Rope Lift, shared cue/VFX, accessibility, visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Natural expiry, Town-screen response presentation, packaged interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `presentation-overworld-enemy-route-closure-feedback-10184`
 - Completed implementation slice: `presentation-overworld-field-route-response-open-feedback-10184`. A successful live field `site_response` now publishes one exact, deduped `overworld_route_open` presentation through the existing Shell/MapView queue, with an original imported alpha VFX, deterministic 420 ms stereo production-layer sound, and distinct reduced-motion and missing-asset fallbacks. Focused 1280x720/1920x1080 proof preserves the exact Rope Lift cost, movement, active transit edge, refresh/duplicate silence, session/save authority, and cue identity; transit, shared object-resolution/audio, object-blocked, catalog, accessibility, visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Town-screen response presentation, enemy-driven route closure, packaged interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -5613,6 +5615,29 @@ Non-goals:
 - no enemy strategy, target scoring, movement, seizure eligibility, rewards, disruption pressure, task policy, response cost/duration, transit/pathfinding, delivery, fog, event visibility/limit, save/schema, content, Native RMG, or map-topology changes;
 - no natural-expiry presentation, Town-screen response presentation, multi-closure carousel, hover/ambient loops, layout redesign, particles, shaders, spatial audio, haptics, or final sound mastering;
 - no packaged route-closure interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+## Selected Slice: Overworld Route-Expiry Feedback
+
+id: `presentation-overworld-route-expiry-feedback-10184`
+
+Status: completed.
+
+Implementation boundary:
+- before the real end-turn rule call, capture detached player-controlled resource responses whose exact `response_until_day` equals the current day and whose linked transit edge is live; after successful autosave and no battle/outcome routing, validate the same resource remains player-controlled, visible, unchanged in identity/provenance, and inactive solely because the day advanced;
+- publish at most one `overworld_route_closed` cue through the existing object-resolution serial/queue, reusing the shipped closure VFX/audio and distinguishing expiry ownership in the presentation family/metadata without changing the animation catalog or sound assets;
+- give enemy-seizure closure priority and keep autosave failure, routing, hidden/malformed/stale candidates, non-final-day responses, refresh, and duplicates silent;
+- preserve response duration/provenance fields, transit/pathfinding, enemy behavior/events, end-turn/autosave, session/save, selection/input/focus, settings, and every other presentation mapping.
+
+Completion criteria:
+- real Shell end-turn at 1280x720 and 1920x1080 advances an active final-day Rope Lift response to inactive, closes its exact transit edge, keeps response provenance persisted, saves the post-turn state, and draws/plays one imported `overworld_route_closed` presentation;
+- non-final-day, already-expired, enemy-seized, hidden, malformed, autosave-failed, battle/outcome-routed, refresh, and duplicate controls remain silent, with enemy route closure retaining priority;
+- reduced-motion and missing-asset fallbacks remain exact while route-open, enemy-closure, route-blocked, object-blocked, guarded, and generic resolution cues remain unchanged;
+- focused expiry, enemy closure/open-route, Rope Lift, visual, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass with bounded claims.
+
+Non-goals:
+- no response duration/cost/provenance clearing, transit/pathfinding, enemy AI/event, fog, save/schema, content, Native RMG, animation-catalog, VFX, audio-asset, or map-topology changes;
+- no Town-screen expiry presentation, multi-expiry carousel, hover/ambient loops, layout, particles, shaders, spatial audio, haptics, or final mastering;
+- no packaged expiry interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
 
 ## Progress Reconciliation
 

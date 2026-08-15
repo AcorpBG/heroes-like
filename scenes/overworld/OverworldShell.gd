@@ -187,6 +187,7 @@ var _hero_movement_presentation_serial := 0
 var _object_focus_presentation: Dictionary = {}
 var _object_resolution_presentation: Dictionary = {}
 var _object_resolution_presentation_serial := 0
+var _last_route_expiry_presentation_signature := ""
 var _route_blocked_presentation: Dictionary = {}
 var _route_blocked_presentation_serial := 0
 var _route_blocked_presentation_signature := ""
@@ -1393,6 +1394,7 @@ func _commit_end_turn() -> Dictionary:
 	var general_buckets := {}
 	var rules_started := ProfileLogScript.begin_usec()
 	_validation_end_turn_rules_call_count += 1
+	var route_expiry_candidates := _active_route_expiry_candidates()
 	var result = OverworldRules.end_turn(_session)
 	_last_end_turn_rule_result = result.duplicate(true) if result is Dictionary else {}
 	general_buckets["rules_end_turn"] = ProfileLogScript.elapsed_ms(rules_started)
@@ -1475,7 +1477,10 @@ func _commit_end_turn() -> Dictionary:
 			"resolution": resolution.duplicate(true),
 			"result": result.duplicate(true),
 		}
+	var route_closure_serial_before := _object_resolution_presentation_serial
 	_record_route_closed_presentation(_last_enemy_activity_events)
+	if _object_resolution_presentation_serial == route_closure_serial_before:
+		_record_route_expiry_presentation(route_expiry_candidates)
 	var refresh_started := ProfileLogScript.begin_usec()
 	_refresh()
 	general_buckets["refresh_after_end_turn"] = ProfileLogScript.elapsed_ms(refresh_started)
@@ -2746,6 +2751,133 @@ func _record_route_closed_presentation(events: Array) -> void:
 		"duration_ms": int(round(float(mini(max_duration_ms, 620)) * duration_scale)),
 		"max_duration_ms": max_duration_ms,
 	}
+
+func _active_route_expiry_candidates() -> Array:
+	var candidates := []
+	if _session == null or _session.scenario_status != "in_progress" or String(_session.game_state) != "overworld":
+		return candidates
+	var active_edges: Array = OverworldRules.active_linked_transit_edges(_session)
+	for node_value in _session.overworld.get("resource_nodes", []):
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		var placement_id := String(node.get("placement_id", "")).strip_edges()
+		var site_id := String(node.get("site_id", "")).strip_edges()
+		var response_last_day := int(node.get("response_last_day", 0))
+		var response_until_day := int(node.get("response_until_day", 0))
+		if (
+			placement_id == ""
+			or site_id == ""
+			or String(node.get("collected_by_faction_id", "")) != "player"
+			or response_last_day <= 0
+			or response_until_day != int(_session.day)
+		):
+			continue
+		var site := ContentService.get_resource_site(site_id)
+		if site.is_empty() or not bool(OverworldRules._resource_site_response_state(_session, node, site).get("active", false)):
+			continue
+		var tile := Vector2i(int(node.get("x", -1)), int(node.get("y", -1)))
+		if not _tile_in_bounds(tile) or not OverworldRules.is_tile_visible(_session, tile.x, tile.y):
+			continue
+		var matching_edges := []
+		for edge_value in active_edges:
+			if edge_value is Dictionary and String(edge_value.get("placement_id", "")) == placement_id:
+				matching_edges.append((edge_value as Dictionary).duplicate(true))
+		if matching_edges.is_empty():
+			continue
+		candidates.append({
+			"placement_id": placement_id,
+			"site_id": site_id,
+			"tile": {"x": tile.x, "y": tile.y},
+			"response_last_day": response_last_day,
+			"response_until_day": response_until_day,
+			"response_origin": String(node.get("response_origin", "")),
+			"response_commander_id": String(node.get("response_commander_id", "")),
+			"response_security_rating": int(node.get("response_security_rating", 0)),
+			"active_edges": matching_edges,
+		})
+	return candidates
+
+func _record_route_expiry_presentation(candidates: Array) -> void:
+	for candidate_value in candidates:
+		if not (candidate_value is Dictionary):
+			continue
+		var candidate: Dictionary = candidate_value
+		var placement_id := String(candidate.get("placement_id", "")).strip_edges()
+		var site_id := String(candidate.get("site_id", "")).strip_edges()
+		var expected_tile_payload: Dictionary = candidate.get("tile", {}) if candidate.get("tile", {}) is Dictionary else {}
+		var expected_tile := Vector2i(int(expected_tile_payload.get("x", -1)), int(expected_tile_payload.get("y", -1)))
+		var response_until_day := int(candidate.get("response_until_day", 0))
+		if placement_id == "" or site_id == "" or response_until_day <= 0 or int(_session.day) != response_until_day + 1:
+			continue
+		var live_node := {}
+		for node_value in _session.overworld.get("resource_nodes", []):
+			if node_value is Dictionary and String(node_value.get("placement_id", "")) == placement_id:
+				live_node = node_value
+				break
+		if (
+			live_node.is_empty()
+			or String(live_node.get("site_id", "")) != site_id
+			or String(live_node.get("collected_by_faction_id", "")) != "player"
+			or int(live_node.get("x", -1)) != expected_tile.x
+			or int(live_node.get("y", -1)) != expected_tile.y
+			or int(live_node.get("response_last_day", 0)) != int(candidate.get("response_last_day", -1))
+			or int(live_node.get("response_until_day", 0)) != response_until_day
+			or String(live_node.get("response_origin", "")) != String(candidate.get("response_origin", ""))
+			or String(live_node.get("response_commander_id", "")) != String(candidate.get("response_commander_id", ""))
+			or int(live_node.get("response_security_rating", 0)) != int(candidate.get("response_security_rating", -1))
+		):
+			continue
+		var site := ContentService.get_resource_site(site_id)
+		if site.is_empty() or bool(OverworldRules._resource_site_response_state(_session, live_node, site).get("active", true)):
+			continue
+		var tile := Vector2i(int(live_node.get("x", -1)), int(live_node.get("y", -1)))
+		if not _tile_in_bounds(tile) or not OverworldRules.is_tile_visible(_session, tile.x, tile.y):
+			continue
+		var edge_still_active := false
+		for edge_value in OverworldRules.active_linked_transit_edges(_session):
+			if edge_value is Dictionary and String(edge_value.get("placement_id", "")) == placement_id:
+				edge_still_active = true
+				break
+		if edge_still_active:
+			continue
+		var signature := "%s|%s|%d" % [_session.session_id, placement_id, response_until_day]
+		if signature == _last_route_expiry_presentation_signature:
+			continue
+		var policy: Dictionary = AnimationCueCatalogScript.cue_playback_policy_for_event(
+			"overworld_route_closed",
+			SettingsService.animation_preferences()
+		)
+		if (
+			String(policy.get("event_id", "")) != "overworld_route_closed"
+			or String(policy.get("surface", "")) != "overworld"
+			or String(policy.get("subject_kind", "")) != "map_object"
+			or String(policy.get("selected_playback_policy", "")) != "queue_resolved"
+		):
+			continue
+		_last_route_expiry_presentation_signature = signature
+		_object_resolution_presentation_serial += 1
+		var max_duration_ms: int = maxi(0, int(policy.get("max_duration_ms", 700)))
+		var duration_scale := maxf(0.0, float(policy.get("duration_scale", 1.0)))
+		_object_resolution_presentation = {
+			"serial": _object_resolution_presentation_serial,
+			"event_id": "overworld_route_closed",
+			"family": "route_closure",
+			"closure_reason": "natural_expiry",
+			"placement_id": placement_id,
+			"content_id": site_id,
+			"site_name": String(site.get("name", site_id)),
+			"tile": {"x": tile.x, "y": tile.y},
+			"selected_animation_state": String(policy.get("selected_animation_state", "")),
+			"selected_visual_policy": String(policy.get("selected_visual_policy", "")),
+			"selected_fallback_tag": String(policy.get("selected_fallback_tag", "")),
+			"selected_vfx_cue_ids": (policy.get("selected_vfx_cue_ids", []) as Array).duplicate(true),
+			"selected_audio_cue_ids": (policy.get("selected_audio_cue_ids", []) as Array).duplicate(true),
+			"allows_large_motion": bool(policy.get("allows_large_motion", true)),
+			"duration_ms": int(round(float(mini(max_duration_ms, 620)) * duration_scale)),
+			"max_duration_ms": max_duration_ms,
+		}
+		return
 
 func _record_spell_cast_presentation(result: Dictionary, spell_id: String) -> void:
 	if not bool(result.get("ok", false)) or spell_id == "" or _map_view == null or not _map_view.has_method("present_spell_cast_presentation"):
