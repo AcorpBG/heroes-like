@@ -46,6 +46,20 @@ static func building_category_icon_path(building_id: String) -> String:
 		return ""
 	return icon_path
 
+static func faction_crest_icon_path(faction_id: String) -> String:
+	var normalized_faction_id := faction_id.strip_edges()
+	if ContentService.get_faction(normalized_faction_id).is_empty():
+		return ""
+	var crest := ContentService.get_faction_crest(normalized_faction_id)
+	var icon_path := String(crest.get("icon_path", "")).strip_edges()
+	if String(crest.get("id", "")) != normalized_faction_id:
+		return ""
+	if String(crest.get("crest_id", "")) != "faction_crest_%s" % normalized_faction_id.trim_prefix("faction_"):
+		return ""
+	if not icon_path.begins_with("res://art/factions/runtime/crests/") or not ResourceLoader.exists(icon_path, "Texture2D"):
+		return ""
+	return icon_path
+
 static func begin_read_scope(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null:
 		return

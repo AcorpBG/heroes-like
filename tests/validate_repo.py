@@ -60,6 +60,10 @@ SPELL_SCHOOL_ICON_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "spell_school_ico
 BUILDING_CATEGORY_ICON_MANIFEST_PATH = CONTENT_DIR / "building_category_icons.json"
 TOWN_BUILDING_CATEGORY_ICON_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_building_category_icon_runtime_report.gd"
 TOWN_BUILDING_CATEGORY_ICON_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "town_building_category_icon_runtime_report.tscn"
+FACTION_CREST_MANIFEST_PATH = CONTENT_DIR / "faction_crests.json"
+FACTION_CREST_ATLAS_PATH = ROOT / "art" / "factions" / "source" / "faction_crest_atlas.png"
+TOWN_FACTION_CREST_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_faction_crest_runtime_report.gd"
+TOWN_FACTION_CREST_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "town_faction_crest_runtime_report.tscn"
 RESOURCE_REGISTRY_PATH = CONTENT_DIR / "resources.json"
 RESOURCE_REGISTRY_FIXTURE_PATH = ROOT / "tests" / "fixtures" / "economy_resource_schema" / "resource_registry.json"
 RESOURCE_ICON_ATLAS_PATH = ROOT / "art" / "economy" / "source" / "resource_icon_atlas.png"
@@ -29088,6 +29092,179 @@ def validate_town_building_category_icon_runtime(errors: list[str]) -> None:
         ensure(forbidden not in report_text, errors, f"Town building category focused owner must not bypass production: {forbidden}")
 
 
+def validate_town_faction_crest_runtime(errors: list[str]) -> None:
+    required_paths = (
+        FACTION_CREST_MANIFEST_PATH,
+        FACTION_CREST_ATLAS_PATH,
+        CONTENT_DIR / "factions.json",
+        CONTENT_SERVICE_PATH,
+        TOWN_RULES_PATH,
+        TOWN_SCRIPT_PATH,
+        TOWN_SCENE_PATH,
+        TOWN_FACTION_CREST_RUNTIME_REPORT_SCRIPT_PATH,
+        TOWN_FACTION_CREST_RUNTIME_REPORT_SCENE_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Town faction crest owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    def function_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}")
+        if start < 0:
+            start = text.find(f"static func {name}")
+        if start < 0:
+            return ""
+        ends = [index for index in (text.find("\nfunc ", start + 1), text.find("\nstatic func ", start + 1)) if index >= 0]
+        end = min(ends) if ends else -1
+        return text[start:] if end < 0 else text[start:end]
+
+    faction_order = (
+        "faction_embercourt",
+        "faction_mireclaw",
+        "faction_sunvault",
+        "faction_thornwake",
+        "faction_brasshollow",
+        "faction_veilmourn",
+    )
+    expected_paths = {
+        faction_id: f"res://art/factions/runtime/crests/{faction_id.removeprefix('faction_')}.png"
+        for faction_id in faction_order
+    }
+    factions = load_json(CONTENT_DIR / "factions.json").get("items", [])
+    faction_ids = [str(row.get("id", "")) for row in factions if isinstance(row, dict)] if isinstance(factions, list) else []
+    ensure(faction_ids == list(faction_order), errors, "Production faction order must remain exact for crest ownership")
+    manifest = load_json(FACTION_CREST_MANIFEST_PATH).get("items", [])
+    ensure(isinstance(manifest, list) and len(manifest) == 6, errors, "Faction crest manifest must contain exactly six rows")
+    crest_ids: list[str] = []
+    crest_paths: list[str] = []
+    crest_bytes: list[bytes] = []
+    if isinstance(manifest, list):
+        for row in manifest:
+            ensure(isinstance(row, dict), errors, "Faction crest rows must be dictionaries")
+            if not isinstance(row, dict):
+                continue
+            faction_id = str(row.get("id", ""))
+            icon_path = str(row.get("icon_path", ""))
+            crest_ids.append(faction_id)
+            crest_paths.append(icon_path)
+            ensure(str(row.get("crest_id", "")) == f"faction_crest_{faction_id.removeprefix('faction_')}", errors, f"Faction {faction_id} must own its stable crest id")
+            ensure(icon_path == expected_paths.get(faction_id, ""), errors, f"Faction {faction_id} must own its exact runtime crest path")
+            ensure(bool(str(row.get("material_language", "")).strip()), errors, f"Faction {faction_id} crest must define material language")
+            disk_path = res_path_to_disk(icon_path)
+            ensure(disk_path.is_file() and png_size(disk_path) == (256, 256), errors, f"Faction {faction_id} crest must be an exact 256x256 PNG")
+            ensure(Path(f"{disk_path}.import").is_file(), errors, f"Faction {faction_id} crest import is missing")
+            if disk_path.is_file():
+                crest_bytes.append(disk_path.read_bytes())
+    ensure(crest_ids == list(faction_order), errors, "Faction crest manifest must preserve exact production faction order")
+    ensure(len(set(crest_paths)) == 6 and len(set(crest_bytes)) == 6, errors, "All six faction crest paths and PNG payloads must be distinct")
+    ensure(png_size(FACTION_CREST_ATLAS_PATH) == (1536, 1024), errors, "Faction crest source atlas must remain the exact 3x2 1536x1024 source")
+    ensure(Path(f"{FACTION_CREST_ATLAS_PATH}.import").is_file(), errors, "Faction crest source atlas import is missing")
+
+    content_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
+    for token in (
+        'const FACTION_CRESTS_PATH := "%s/faction_crests.json" % CONTENT_DIR',
+        "func get_faction_crest(faction_id: String) -> Dictionary:",
+        "var faction_crest_index := _index_items(_items_from_raw(load_json(FACTION_CRESTS_PATH)))",
+        "_validate_faction_crests(faction_index, faction_crest_index)",
+        "func _validate_faction_crests(faction_index: Dictionary, crest_index: Dictionary) -> void:",
+        '"faction_crest_%s" % faction_id.trim_prefix("faction_")',
+        'icon_path.begins_with("res://art/factions/runtime/crests/")',
+        '_validate_art_path(icon_path, "Faction %s crest" % faction_id)',
+    ):
+        ensure(token in content_text, errors, f"ContentService faction crest ownership is missing: {token}")
+
+    rules_text = TOWN_RULES_PATH.read_text(encoding="utf-8")
+    resolver = function_block(rules_text, "faction_crest_icon_path")
+    for token in (
+        "ContentService.get_faction(normalized_faction_id).is_empty()",
+        "ContentService.get_faction_crest(normalized_faction_id)",
+        'String(crest.get("id", "")) != normalized_faction_id',
+        '"faction_crest_%s" % normalized_faction_id.trim_prefix("faction_")',
+        'icon_path.begins_with("res://art/factions/runtime/crests/")',
+        'ResourceLoader.exists(icon_path, "Texture2D")',
+        "return icon_path",
+    ):
+        ensure(token in resolver, errors, f"TownRules faction crest resolver is missing: {token}")
+    for forbidden in ("load(", "preload(", "match normalized_faction_id", "FACTION_CREST"):
+        ensure(forbidden not in resolver, errors, f"TownRules faction crest resolver must remain content-owned and load-free: {forbidden}")
+
+    scene_text = TOWN_SCENE_PATH.read_text(encoding="utf-8")
+    for token in (
+        '[node name="CrestStack" type="Control" parent="ContentMargin/Content/Banner/BannerPad/TopBar/CrestFrame/CrestPad/CrestBox"]',
+        "custom_minimum_size = Vector2(42, 40)",
+        '[node name="CrestGlyph" type="Control" parent="ContentMargin/Content/Banner/BannerPad/TopBar/CrestFrame/CrestPad/CrestBox/CrestStack"]',
+        'glyph_id = "town"',
+        '[node name="CrestIcon" type="TextureRect" parent="ContentMargin/Content/Banner/BannerPad/TopBar/CrestFrame/CrestPad/CrestBox/CrestStack"]',
+        "visible = false",
+        "mouse_filter = 2",
+        "expand_mode = 1",
+        "stretch_mode = 5",
+    ):
+        ensure(token in scene_text, errors, f"Town crest scene ownership is missing: {token}")
+    ensure(scene_text.count('unique_name_in_owner = true\nvisible = false') >= 2, errors, "Town CrestIcon and existing hidden CrestLabel must remain uniquely owned and initially hidden")
+
+    shell_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
+    refresh_block = function_block(shell_text, "_refresh_faction_crest")
+    snapshot_block = function_block(shell_text, "_faction_crest_validation_snapshot")
+    ordered_tokens = (
+        "var faction_id := _active_town_faction_id()",
+        "var faction := ContentService.get_faction(faction_id)",
+        "var icon_path := TownRules.faction_crest_icon_path(faction_id)",
+        'var texture: Texture2D = load(icon_path) as Texture2D if icon_path != "" else null',
+        "_crest_label.text = _crest_text()",
+        "_crest_icon.texture = texture",
+        "_crest_icon.visible = texture != null",
+        '_crest_icon.tooltip_text = "%s crest"',
+        "_crest_glyph.visible = texture == null",
+        '_crest_glyph.call("set_glyph", "town", _faction_accent())',
+    )
+    ordered_indices = [refresh_block.find(token) for token in ordered_tokens]
+    ensure(all(index >= 0 for index in ordered_indices) and ordered_indices == sorted(ordered_indices), errors, "Town crest refresh must resolve, load, publish, and preserve fallback in exact order")
+    for forbidden in ("_session.", "session.", "await ", "create_timer", "create_tween", "queue_free"):
+        ensure(forbidden not in refresh_block, errors, f"Town crest refresh must not mutate game/timing authority: {forbidden}")
+    for token in (
+        '"faction_id": faction_id', '"icon_path": icon_path', '"texture_path": texture_path',
+        '"icon_visible": _crest_icon.visible', '"fallback_visible": _crest_glyph.visible',
+        '"icon_rect": _crest_icon.get_global_rect()', '"frame_rect": _crest_panel.get_global_rect()',
+    ):
+        ensure(token in snapshot_block, errors, f"Town crest validation snapshot is missing detached evidence: {token}")
+    ensure('"faction_crest": _faction_crest_validation_snapshot()' in shell_text, errors, "Town public validation snapshot must expose faction crest identity")
+
+    report_text = TOWN_FACTION_CREST_RUNTIME_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    report_scene = TOWN_FACTION_CREST_RUNTIME_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure_scene_nodes(report_scene, errors, "town_faction_crest_runtime_report.tscn", [("TownFactionCrestRuntimeReport", "Node")])
+    for token in (
+        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        'const FACTION_IDS := [',
+        "faction_ids == FACTION_IDS and crest_ids == FACTION_IDS",
+        "texture.get_size() == Vector2(256.0, 256.0)",
+        "for faction_id in FACTION_IDS:",
+        'town["town_id"] = String(faction.get("seed_town_id", ""))',
+        "var live_session = SessionState.ensure_active_session()",
+        "var fixture_authority_before: Dictionary = live_session.to_dict()",
+        'shell.get_node_or_null("ContentMargin/Content/Banner/BannerPad/TopBar")',
+        "shell._refresh_faction_crest()",
+        "var summary: Dictionary = shell._faction_crest_validation_snapshot()",
+        "frame_rect.encloses(icon_rect)",
+        "icon_rect.size == Vector2(42.0, 40.0)",
+        "top_bar.get_global_rect() == top_bar_rect",
+        "live_session.to_dict() == fixture_authority_before",
+        'town["town_id"] = "town_missing_faction_crest_fixture"',
+        "and bool(fallback.get(\"fallback_visible\", false))",
+        "town.clear()",
+        "town.merge(original_town, true)",
+        "shell.validation_action_catalog() == action_catalog_before",
+        "live_session.to_dict() == authority_before",
+        "SessionStateStore.SAVE_VERSION",
+        'print("TOWN_FACTION_CREST_RUNTIME_REPORT %s"',
+    ):
+        ensure(token in report_text, errors, f"Town faction crest focused owner is missing method-matched proof: {token}")
+    ensure(report_text.count("for viewport_size in VIEWPORT_SIZES:") == 1 and report_text.count("for faction_id in FACTION_IDS:") == 2, errors, "Town crest focused owner must cover the exact catalog plus six live factions at both widths")
+    for forbidden in ("_crest_icon.texture =", "_crest_glyph.visible =", "set_glyph(", "create_timer", "create_tween", "validation_force_refresh"):
+        ensure(forbidden not in report_text, errors, f"Town crest focused owner must not bypass the production presenter: {forbidden}")
+
+
 def validate_overworld_artifact_slot_cue_playback(errors: list[str]) -> None:
     required_paths = (
         OVERWORLD_SCENE_PATH,
@@ -38944,6 +39121,7 @@ def main() -> int:
     validate_artifact_icon_runtime(errors)
     validate_spell_school_icon_runtime(errors)
     validate_town_building_category_icon_runtime(errors)
+    validate_town_faction_crest_runtime(errors)
     validate_overworld_artifact_slot_cue_playback(errors)
     validate_overworld_artifact_acquired_cue_playback(errors)
     validate_overworld_resource_delta_cue_playback(errors)

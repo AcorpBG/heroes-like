@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `presentation-town-faction-crest-adoption-10184`. The six production factions now own distinct original 256x256 imported crests through an exact manifest and fail-closed resolver. Real Town shells render the active faction crest inside the existing 74x50 medallion at 1280x720 and 1920x1080, keep the 42x40 icon contained, retain the procedural `town` glyph for unknown identity, and preserve Town layout, focus, actions, session, route, and save version 9. Focused, all-faction Town/save, Town visual, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `presentation-town-faction-crest-adoption-10184`
 - Completed implementation slice: `ux-shared-resource-stockpile-icon-popover-10184`. One shared focusable native menu now exposes the exact nine live stockpile resources, current amounts, and original icons on the existing Town top bar and Overworld command band. It preserves the existing summary and full-ledger tooltip, opens and closes through public keyboard input, returns focus only after Escape, remains contained at 1280x720 and 1920x1080, and leaves session, economy, save, action, route, and layout authority unchanged. The compact 1280 Overworld form is an 80px `Stores` button inside the existing 96px resource chip. Focused, Town economy, Overworld visual, keyboard focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged popover interaction, hardware/certification, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `ux-shared-resource-stockpile-icon-popover-10184`
 - Completed implementation slice: `economy-production-resource-registry-collection-icon-adoption-10184`. The nine live stockpile resources now own exact production metadata and distinct original imported 128x128 material icons. Existing compact Overworld collection actions resolve the selected site's distinctive non-gold claim resource, falling back to gold, and load that exact icon fail-closed while preserving action copy, order, focus, collection consequences, recap, resource-delta cue, session authority, and save version 9 at 1280x720 and 1920x1080. Live stockpile, all active rare-source collection/income, Town economy, Overworld visual, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Market/economy/site/source/AI/save changes, a broad resource-bar redesign, packaged collection interaction, certification, whole-game, and release readiness remain out of scope. Select the next tracker-approved release-readiness implementation slice.
@@ -5099,6 +5101,38 @@ Owner direction has reopened narrow Phase 6 product fixes while Phase 5 debt rem
 Goal: expand into a broad original fantasy strategy package with the systemic breadth, density, and replayability expected from classic Heroes-style strategy games.
 
 Do not reopen Phase 7 work until Phase 5/6 evidence supports it or the owner explicitly changes priorities.
+
+## Town Faction Crest Adoption
+
+id: `presentation-town-faction-crest-adoption-10184`
+
+Status: complete.
+
+Selected Phase 6 shipped-content and player-facing presentation slice. The six production factions already own distinct names, authored identity language, unit ladders, buildings, heroes, and scenic Town panoramas, but the existing live Town crest medallion renders the same procedural `town` glyph for every active faction. No production faction-crest asset domain or exact resolver exists.
+
+Implementation target:
+- ship one coherent set of six distinct original imported faction crests whose shape and material language follows the authored Embercourt, Mireclaw, Sunvault, Thornwake, Brasshollow, and Veilmourn identities;
+- own the exact faction-to-crest mapping through production content and a fail-closed rules resolver;
+- render the exact live active-Town faction crest inside the existing crest medallion without changing its rectangle, label, focus order, hit regions, or Town layout;
+- retain the existing procedural `town` glyph whenever faction metadata is missing, unmapped, or unloadable.
+
+Completion criteria:
+- all six production faction ids map one-to-one to six distinct imported crests, with exact source/runtime asset ownership and no placeholder identity;
+- real Town shells at 1280x720 and 1920x1080 render the exact active faction crest with containment, aspect, tooltip, overlay order, unknown-faction fallback, and whole Town/session/save/action/focus authority unchanged;
+- all-faction Town/save, Town visual, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass;
+- packaged claims remain bounded to export/startup unless a packaged harness actually drives the Town surface.
+
+Non-goals:
+- no faction ids, names, rules, economy, recruitment, units, heroes, buildings, towns, scenarios, campaign, combat, AI, balance, save schema, map, or Native RMG changes;
+- no Town stage/backdrop, crest-medallion geometry, layout, focus order, input, other screen, global theme, UI-scale, or broad heraldry redesign;
+- no packaged Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Completed evidence:
+- six distinct original 256x256 alpha crests and one exact ordered faction manifest load through production content and rules ownership;
+- live Town shells at 1280x720 and 1920x1080 render all six identities in the unchanged 74x50 medallion with a contained 42x40 icon, exact tooltip, and procedural unknown-faction fallback;
+- focused authority preserves the exact session, action catalog, route, layout, focus, and save version 9;
+- all-faction Town/save, Town visual, active-play focus, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup gates pass;
+- packaged Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
 
 ## Progress Reconciliation
 

@@ -7,6 +7,7 @@ const ENCOUNTERS_PATH := "%s/encounters.json" % CONTENT_DIR
 const HEROES_PATH := "%s/heroes.json" % CONTENT_DIR
 const HERO_ART_PATH := "%s/hero_art_manifest.json" % CONTENT_DIR
 const FACTIONS_PATH := "%s/factions.json" % CONTENT_DIR
+const FACTION_CRESTS_PATH := "%s/faction_crests.json" % CONTENT_DIR
 const UNITS_PATH := "%s/units.json" % CONTENT_DIR
 const UNIT_ART_PATH := "%s/unit_art_manifest.json" % CONTENT_DIR
 const UNIT_ANIMATION_PATH := "%s/unit_animation_manifest.json" % CONTENT_DIR
@@ -91,6 +92,9 @@ func get_content_ids(path: String, list_key: String = "items") -> Array[String]:
 
 func get_faction(id: String) -> Dictionary:
 	return get_content_by_id(FACTIONS_PATH, id)
+
+func get_faction_crest(faction_id: String) -> Dictionary:
+	return get_content_by_id(FACTION_CRESTS_PATH, faction_id)
 
 func get_hero(id: String) -> Dictionary:
 	return get_content_by_id(HEROES_PATH, id)
@@ -349,6 +353,7 @@ func _map_object_footprint_area(item: Dictionary) -> int:
 
 func _validate_content() -> void:
 	var faction_index := _index_items(_items_from_raw(load_json(FACTIONS_PATH)))
+	var faction_crest_index := _index_items(_items_from_raw(load_json(FACTION_CRESTS_PATH)))
 	var hero_index := _index_items(_items_from_raw(load_json(HEROES_PATH)))
 	var hero_art_index := _index_hero_art_items(_items_from_raw(load_json(HERO_ART_PATH)))
 	var unit_index := _index_items(_items_from_raw(load_json(UNITS_PATH)))
@@ -394,6 +399,7 @@ func _validate_content() -> void:
 		)
 	for faction in faction_index.values():
 		_validate_faction(faction, town_index, hero_index)
+	_validate_faction_crests(faction_index, faction_crest_index)
 	for hero in hero_index.values():
 		_validate_hero(hero, faction_index, spell_index)
 	_validate_hero_art_manifest(hero_index, hero_art_index)
@@ -1233,6 +1239,27 @@ func _validate_spell_school_icons(icon_index: Dictionary) -> void:
 	for school_id in icon_index:
 		if String(school_id) not in expected_school_ids:
 			push_warning("Spell school icon manifest contains unsupported school %s." % String(school_id))
+
+func _validate_faction_crests(faction_index: Dictionary, crest_index: Dictionary) -> void:
+	for faction_id_value in faction_index:
+		var faction_id := String(faction_id_value)
+		var crest: Dictionary = crest_index.get(faction_id, {}) if crest_index.get(faction_id, {}) is Dictionary else {}
+		if crest.is_empty():
+			push_warning("Faction %s must define a crest manifest row." % faction_id)
+			continue
+		if String(crest.get("crest_id", "")) != "faction_crest_%s" % faction_id.trim_prefix("faction_"):
+			push_warning("Faction %s must own its stable crest id." % faction_id)
+		if String(crest.get("material_language", "")).strip_edges() == "":
+			push_warning("Faction %s must define crest material language." % faction_id)
+		var icon_path := String(crest.get("icon_path", ""))
+		if not icon_path.begins_with("res://art/factions/runtime/crests/") or not icon_path.ends_with(".png"):
+			push_warning("Faction %s crest must use the production faction crest art domain." % faction_id)
+		else:
+			_validate_art_path(icon_path, "Faction %s crest" % faction_id)
+	for faction_id_value in crest_index:
+		var faction_id := String(faction_id_value)
+		if not faction_index.has(faction_id):
+			push_warning("Faction crest manifest contains unsupported faction %s." % faction_id)
 
 func _validate_building_category_icons(icon_index: Dictionary) -> void:
 	var expected_category_ids := ["civic", "dwelling", "economy", "support", "magic"]
