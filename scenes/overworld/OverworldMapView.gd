@@ -303,6 +303,8 @@ var _object_resolution_animation_state := ""
 var _object_resolution_visual_policy := ""
 var _object_resolution_fallback_tag := ""
 var _object_resolution_vfx_cue_ids: Array = []
+var _object_resolution_audio_cue_ids: Array = []
+var _object_resolution_audio_playback_records: Array = []
 var _object_resolution_family := ""
 var _object_resolution_placement_id := ""
 var _object_resolution_allows_large_motion := false
@@ -468,6 +470,7 @@ func _process(delta: float) -> void:
 	if _object_resolution_queued and not _hero_movement_active:
 		_object_resolution_queued = false
 		_object_resolution_active = true
+		_play_object_resolution_audio()
 		redraw_dynamic = true
 	if _object_resolution_active:
 		_object_resolution_elapsed_sec = minf(_object_resolution_duration_sec, _object_resolution_elapsed_sec + elapsed_delta)
@@ -635,6 +638,8 @@ func _sync_object_resolution_presentation(presentation: Dictionary) -> void:
 	_object_resolution_visual_policy = String(presentation.get("selected_visual_policy", ""))
 	_object_resolution_fallback_tag = String(presentation.get("selected_fallback_tag", ""))
 	_object_resolution_vfx_cue_ids = (presentation.get("selected_vfx_cue_ids", []) as Array).duplicate(true)
+	_object_resolution_audio_cue_ids = (presentation.get("selected_audio_cue_ids", []) as Array).duplicate(true)
+	_object_resolution_audio_playback_records = []
 	_object_resolution_family = String(presentation.get("family", ""))
 	_object_resolution_placement_id = String(presentation.get("placement_id", ""))
 	_object_resolution_allows_large_motion = bool(presentation.get("allows_large_motion", true))
@@ -657,8 +662,22 @@ func _sync_object_resolution_presentation(presentation: Dictionary) -> void:
 	_object_resolution_duration_sec = float(duration_msec) / 1000.0
 	_object_resolution_queued = _hero_movement_active
 	_object_resolution_active = not _object_resolution_queued
+	if _object_resolution_active:
+		_play_object_resolution_audio()
 	_sync_presentation_processing()
 	_invalidate_dynamic_layer("object_resolution_started")
+
+func _play_object_resolution_audio() -> void:
+	if not _object_resolution_active or not _object_resolution_audio_playback_records.is_empty():
+		return
+	for audio_cue_value in _object_resolution_audio_cue_ids:
+		_object_resolution_audio_playback_records.append(PresentationAudio.play_cue(String(audio_cue_value), "OverworldMapView.object_resolution", {
+			"event_id": _object_resolution_event_id,
+			"presentation_serial": _object_resolution_last_serial,
+			"family": _object_resolution_family,
+			"placement_id": _object_resolution_placement_id,
+			"tile": {"x": _object_resolution_tile.x, "y": _object_resolution_tile.y},
+		}))
 
 func _sync_route_blocked_presentation(presentation: Dictionary) -> void:
 	var serial := int(presentation.get("serial", 0))
@@ -3493,6 +3512,8 @@ func validation_object_resolution_presentation() -> Dictionary:
 		"visual_policy": _object_resolution_visual_policy,
 		"fallback_tag": _object_resolution_fallback_tag,
 		"selected_vfx_cue_ids": _object_resolution_vfx_cue_ids.duplicate(true),
+		"selected_audio_cue_ids": _object_resolution_audio_cue_ids.duplicate(true),
+		"audio_playback_records": _object_resolution_audio_playback_records.duplicate(true),
 		"vfx_asset": _object_resolution_vfx_asset_state(),
 		"vfx_draw": _object_resolution_last_draw.duplicate(true),
 		"allows_large_motion": _object_resolution_allows_large_motion,

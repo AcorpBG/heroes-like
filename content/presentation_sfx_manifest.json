@@ -62,6 +62,24 @@
       "volume_db": -13.5,
       "role": "overworld_route_blocked"
     },
+    "audio_placeholder_object_visit": {
+      "path": "res://art/audio/runtime/presentation/object_visit.wav",
+      "duration_msec": 300,
+      "volume_db": -14.0,
+      "role": "overworld_object_visited"
+    },
+    "audio_placeholder_capture": {
+      "path": "res://art/audio/runtime/presentation/object_capture.wav",
+      "duration_msec": 420,
+      "volume_db": -12.5,
+      "role": "overworld_object_captured"
+    },
+    "audio_placeholder_collect": {
+      "path": "res://art/audio/runtime/presentation/object_collect.wav",
+      "duration_msec": 280,
+      "volume_db": -13.5,
+      "role": "overworld_object_depleted"
+    },
     "audio_placeholder_town_build": {
       "path": "res://art/audio/runtime/presentation/town_build.wav",
       "duration_msec": 420,

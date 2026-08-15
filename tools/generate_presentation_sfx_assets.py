@@ -80,6 +80,15 @@ SPECS = {
         "peak": 0.60,
         "pan": 0.0,
     },
+    "audio_placeholder_object_visit": {
+        "kind": "waypoint_acknowledge", "fundamental": 440.0, "metal": 880.0, "peak": 0.52, "pan": 0.08,
+    },
+    "audio_placeholder_capture": {
+        "kind": "banner_claim", "fundamental": 262.0, "metal": 786.0, "peak": 0.65, "pan": -0.04,
+    },
+    "audio_placeholder_collect": {
+        "kind": "cache_lift", "fundamental": 698.0, "metal": 1396.0, "peak": 0.56, "pan": 0.12,
+    },
     "audio_placeholder_town_build": {
         "kind": "masonry_seal",
         "fundamental": 118.0,
@@ -169,6 +178,20 @@ def layered_sample(kind: str, fundamental: float, metal: float, t: float, progre
         dissonance = math.sin(math.tau * metal * 1.06 * t - phase) * 0.24
         stop = max(0.0, 1.0 - abs(progress - 0.30) / 0.12) * (knock - dissonance) * 0.30
         return (knock + dissonance + stop + noise * transient * 0.14) * envelope(progress)
+    if kind == "waypoint_acknowledge":
+        note = math.sin(math.tau * fundamental * t + phase) * 0.30
+        answer = max(0.0, 1.0 - abs(progress - 0.46) / 0.18) * math.sin(math.tau * metal * t - phase) * 0.24
+        return (note + answer + noise * transient * 0.08) * envelope(progress)
+    if kind == "banner_claim":
+        body = math.sin(math.tau * fundamental * t + phase) * 0.34
+        flare = math.sin(math.tau * metal * t - phase) * 0.22
+        lift = smoothstep(0.10, 0.48, progress) * (1.0 - smoothstep(0.70, 1.0, progress))
+        return (body + flare + flare * lift * 0.42 + noise * transient * 0.10) * envelope(progress)
+    if kind == "cache_lift":
+        bright = math.sin(math.tau * fundamental * t + phase) * 0.30
+        sparkle = math.sin(math.tau * metal * t - phase) * 0.22
+        second = max(0.0, 1.0 - abs(progress - 0.34) / 0.14) * sparkle * 0.36
+        return (bright + sparkle + second + noise * transient * 0.10) * envelope(progress)
     raise ValueError(f"Unsupported presentation sound kind: {kind}")
 
 
