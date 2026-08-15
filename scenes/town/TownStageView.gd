@@ -216,6 +216,15 @@ func present_town_action(presentation: Dictionary) -> Dictionary:
 	_town_action_presentation["started_msec"] = started_msec
 	_town_action_presentation["duration_ms"] = duration_ms
 	_town_action_presentation["expires_msec"] = started_msec + duration_ms
+	var audio_playback_records := []
+	for audio_cue_value in Array(policy.get("selected_audio_cue_ids", [])):
+		var audio_cue_id := String(audio_cue_value)
+		audio_playback_records.append(PresentationAudio.play_cue(audio_cue_id, "TownStageView.present_town_action", {
+			"event_id": event_id,
+			"presentation_serial": _town_action_presentation_serial,
+			"town_placement_id": String(_town.get("placement_id", "")),
+		}))
+	_town_action_presentation["audio_playback_records"] = audio_playback_records
 	_town_action_last_draw = {}
 	set_process(true)
 	if _town_action_presentation_blocks_input():
@@ -267,6 +276,7 @@ func validation_town_action_presentation_snapshot() -> Dictionary:
 		"selected_fallback_tag": String(policy.get("selected_fallback_tag", "")),
 		"selected_vfx_cue_ids": Array(policy.get("selected_vfx_cue_ids", [])).duplicate(),
 		"selected_audio_cue_ids": Array(policy.get("selected_audio_cue_ids", [])).duplicate(),
+		"audio_playback_records": Array(_town_action_presentation.get("audio_playback_records", [])).duplicate(true),
 		"selected_playback_policy": String(policy.get("selected_playback_policy", "")),
 		"selected_blocking_policy": String(policy.get("selected_blocking_policy", "")),
 		"allows_large_motion": bool(policy.get("allows_large_motion", true)),

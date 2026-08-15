@@ -43,6 +43,7 @@ func _run() -> void:
 	get_tree().quit(0)
 
 func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
+	PresentationAudio.validation_reset()
 	get_window().size = viewport_size
 	await get_tree().process_frame
 	await get_tree().process_frame
@@ -75,7 +76,7 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 	await get_tree().process_frame
 	var initial_presentation: Dictionary = stage.validation_town_action_presentation_snapshot()
 	var malformed_result: Dictionary = stage.present_town_action({"event_id": "town_units_recruited"})
-	var malformed_fail_closed := not bool(malformed_result.get("active", true)) and int(malformed_result.get("serial", -1)) == 0
+	var malformed_fail_closed := not bool(malformed_result.get("active", true)) and int(malformed_result.get("serial", -1)) == 0 and PresentationAudio.validation_records().is_empty()
 
 	var actions: Array = TownRules.get_recruit_actions(live_session)
 	var selected_index := -1
@@ -119,6 +120,7 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	var active_presentation: Dictionary = stage.validation_town_action_presentation_snapshot()
+	var audio_records: Array = PresentationAudio.validation_records()
 	var live_after: Dictionary = live_session.to_dict()
 	var layout_after_action := _stage_layout_snapshot(shell)
 	var expected_count := (
@@ -129,6 +131,26 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 	var expected_animation_state := "recruit_count_badge" if reduced_motion else "recruit_confirmed"
 	var expected_vfx := ["recruit_count_badge"] if reduced_motion else ["vfx_placeholder_recruit_muster"]
 	var expected_draw_entries := ["recruit_count_badge"] if reduced_motion else ["recruit_muster_rings", "recruit_count_badge"]
+	var audio_record: Dictionary = audio_records[0] if audio_records.size() == 1 and audio_records[0] is Dictionary else {}
+	var audio_exact := (
+		audio_records.size() == 1
+		and Array(active_presentation.get("audio_playback_records", [])) == audio_records
+		and String(audio_record.get("cue_id", "")) == "audio_placeholder_recruit"
+		and String(audio_record.get("source", "")) == "TownStageView.present_town_action"
+		and String(Dictionary(audio_record.get("metadata", {})).get("event_id", "")) == "town_units_recruited"
+		and int(Dictionary(audio_record.get("metadata", {})).get("presentation_serial", 0)) == 1
+		and String(Dictionary(audio_record.get("metadata", {})).get("town_placement_id", "")) == String(live_town.get("placement_id", ""))
+		and bool(audio_record.get("played", false))
+		and String(audio_record.get("playback_source", "")) == "imported_wav"
+		and String(audio_record.get("asset_path", "")) == "res://art/audio/runtime/presentation/town_recruit.wav"
+		and String(audio_record.get("role", "")) == "town_recruitment_muster"
+		and int(audio_record.get("duration_msec", 0)) == 360
+		and int(audio_record.get("stream_mix_rate", 0)) == 44100
+		and bool(audio_record.get("stream_stereo", false))
+		and int(audio_record.get("stream_loop_mode", -1)) == AudioStreamWAV.LOOP_DISABLED
+		and int(audio_record.get("imported_asset_count", 0)) == 1
+		and int(audio_record.get("generated_fallback_count", -1)) == 0
+	)
 	var presentation_exact := (
 		bool(control_result.get("ok", false))
 		and live_after == control.to_dict()
@@ -155,6 +177,7 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		and bool(active_presentation.get("draw_rect_contained", false))
 		and Array(active_presentation.get("draw_entries", [])) == expected_draw_entries
 		and _stage_layout_valid(shell)
+		and audio_exact
 	)
 
 	var active_serial := int(active_presentation.get("serial", 0))
@@ -181,6 +204,7 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		and refresh_cue_state_exact
 		and live_after == live_session.to_dict()
 		and _stage_layout_snapshot(shell) == layout_after_action
+		and PresentationAudio.validation_records() == audio_records
 	)
 
 	var expiry_deadline := Time.get_ticks_msec() + 1600
@@ -197,6 +221,7 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		and int(post_expiry_presentation.get("serial", 0)) == active_serial
 		and live_after == live_session.to_dict()
 		and _stage_layout_snapshot(shell) == layout_after_action
+		and PresentationAudio.validation_records() == audio_records
 	)
 
 	var row := {
@@ -205,6 +230,8 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		"mode": String(mode.get("id", "")),
 		"malformed_fail_closed": malformed_fail_closed,
 		"presentation_exact": presentation_exact,
+		"audio_exact": audio_exact,
+		"audio_record": audio_record,
 		"refresh_stable": refresh_stable,
 		"expiry_exact": expiry_exact,
 		"unit_id": unit_id,
@@ -223,6 +250,7 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		row["layout_after_action"] = _stage_layout_snapshot(shell)
 	shell.queue_free()
 	await get_tree().process_frame
+	PresentationAudio.validation_reset()
 	return row
 
 func _stage_layout_snapshot(shell: Node) -> Dictionary:
