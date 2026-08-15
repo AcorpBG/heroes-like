@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld artifact-acquired cue slice is completed. Successful live player collection now publishes the authored post-refresh artifact_acquired presentation with bounded normal input ownership and exact nonblocking reduced-motion fallback; broader release gaps remain.",
+  "currentNotes": "The Overworld resource-delta cue slice is completed. Successful live player resource-site collection now publishes the authored post-refresh ui_resource_delta presentation with exact net stockpile changes and nonblocking normal/reduced playback; broader release gaps remain.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-artifact-acquired-cue-playback-10184",
-  "currentSliceId": "presentation-overworld-artifact-acquired-cue-playback-10184",
-  "currentSliceNotes": "Completed: exact live collection, independent session authority, map-depletion compatibility, normal input ownership, reduced-motion fallback, refresh, failure, compatibility, static/editor, Linux, and Windows gates pass with bounded claims.",
+  "currentSlice": "presentation-overworld-resource-delta-cue-playback-10184",
+  "currentSliceId": "presentation-overworld-resource-delta-cue-playback-10184",
+  "currentSliceNotes": "Completed: exact live collection, independent session authority, map-resolution compatibility, nonblocking normal/reduced playback, refresh, failure, compatibility, static/editor, Linux, and Windows gates pass with bounded claims.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Artifact Acquired Cue Playback",
-  "currentSliceUpdatedAt": "2026-08-14T23:37:33Z",
+  "currentSliceTitle": "Overworld Resource Delta Cue Playback",
+  "currentSliceUpdatedAt": "2026-08-14T23:59:46Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -81216,6 +81216,63 @@
         "linux_export_headless_startup_passed": true,
         "windows_export_fresh_wine_startup_passed": true
       }
+    },
+    {
+      "id": "presentation-overworld-resource-delta-cue-playback-10184",
+      "title": "Overworld Resource Delta Cue Playback",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/animation-systems-foundation.md", "AGENTS.md"],
+      "purpose": "Make successful live player resource-site collection visibly confirm exact authoritative net stockpile changes through the existing authored ui_resource_delta cue contract.",
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/overworld/OverworldShell.tscn",
+        "tests/overworld_resource_delta_cue_playback_report.gd",
+        "tests/overworld_resource_delta_cue_playback_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_resource_delta_cue_playback_report.tscn",
+        "tests/overworld_object_resolution_cue_playback_report.tscn",
+        "tests/live_stockpile_resource_surface_report.tscn",
+        "tests/animation_validation_smoke_harness_report.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "5e3ba67b",
+        "ui_resource_delta_catalog_entry": true,
+        "normal_animation_state": "resource_delta_tick",
+        "normal_blocking_policy": "nonblocking",
+        "reduced_motion_fallback": "resource_delta_static",
+        "live_collect_resource_action": true,
+        "overworld_resource_delta_playback": false
+      },
+      "completionCriteria": [
+        "Exactly one successful live collect-resource button publishes one detached ui_resource_delta payload with authoritative placement/tile, exact ordered nonzero net stockpile deltas, existing result message/recap, and exact catalog policy after authoritative refresh",
+        "Normal and reduced-motion playback use one compact command-band overlay without changing layout or blocking pointer, keyboard, controller, drawer, route, save, or other gameplay input; reduced motion uses exact resource_delta_static fallback",
+        "Malformed, unsupported, zero-delta, already-collected, guarded, and failed actions publish nothing; refresh does not duplicate or reset the cue; expiry never replays it",
+        "Focused collection runtime at 1280x720 and 1920x1080 proves exact independent node, stockpile, fog, recap, session, focus, action-list, map-depletion, route, and nonblocking action authority",
+        "Object-resolution, resource-site runtime, animation policy, focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "resource collection, reward, visit-cost, income, market, town, end-turn, economy, content, AI, balance, save, schema, cache, or event-contract changes",
+        "changing or replacing the existing overworld object-resolution cue, route/pathfinding, camera, battle/town resource presentation, final VFX/audio assets or playback, global animation timing, or other-screen changes",
+        "packaged resource interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "createdAt": "2026-08-14T23:41:45Z",
+      "startedAt": "2026-08-14T23:41:45Z",
+      "updatedAt": "2026-08-14T23:59:46Z",
+      "completedAt": "2026-08-14T23:59:46Z",
+      "notes": "Production now brackets the one live collect-resource rule call with exact stockpile authority and publishes one detached ui_resource_delta payload after successful refresh. It verifies the structured interaction against the exact collected player-owned node, preserves ordered nonzero net resource changes, and uses a separate Resource chip overlay so stockpile text and the existing map capture/depletion cue remain intact. Normal playback uses resource_delta_tick and reduced motion uses resource_delta_static; both remain nonblocking. The focused 1280x720 and 1920x1080 report drives the live PrimaryAction button, matches an independent rules control and whole session authority exactly, proves refresh stability, drawer input availability, malformed/unavailable fail-closed behavior, and clean expiry. Object-resolution, live-stockpile, animation-policy, active-play focus, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Economy/collection/reward/income/content/save/schema/AI, final audio/VFX assets, packaged resource interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unchanged or unclaimed.",
+      "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null
     },
     {
       "id": "presentation-overworld-artifact-acquired-cue-playback-10184",
