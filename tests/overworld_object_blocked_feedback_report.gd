@@ -199,11 +199,11 @@ func _object_audio_exact(cue: Dictionary) -> bool:
 		and bool(record.get("stream_stereo", false))
 
 func _manifest_summary_exact(summary: Dictionary, mode: String) -> bool:
-	var expected_loaded_count := 12 if mode == "missing" else 13
+	var expected_loaded_count := 13 if mode == "missing" else 14
 	var expected_missing_paths := [OBJECT_TEXTURE_PATH] if mode == "missing" else []
 	return bool(summary.get("manifest_loaded", false)) \
-		and int(summary.get("mapped_cue_count", 0)) == 13 \
-		and int(summary.get("unique_texture_count", 0)) == 13 \
+		and int(summary.get("mapped_cue_count", 0)) == 14 \
+		and int(summary.get("unique_texture_count", 0)) == 14 \
 		and int(summary.get("loaded_texture_count", 0)) == expected_loaded_count \
 		and summary.get("missing_texture_paths", []) == expected_missing_paths \
 		and "vfx_placeholder_object_blocked_marker" in summary.get("mapped_cue_ids", [])

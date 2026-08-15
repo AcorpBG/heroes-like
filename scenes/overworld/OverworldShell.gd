@@ -1773,12 +1773,15 @@ func _on_context_action_pressed(action_id: String) -> void:
 	var resources_before: Dictionary = {}
 	if action_id == "collect_resource":
 		resources_before = _duplicate_dictionary(_session.overworld.get("resources", {}))
+	var route_response_context: Dictionary = _cached_active_context().duplicate(true) if action_id == "site_response" else {}
 	var result = OverworldRules.perform_context_action(_session, action_id)
 	if result.is_empty():
 		_debug_phase_end("context_action_dispatch", dispatch_started_usec, {"action_id": action_id, "empty_result": true})
 		return
 	if action_id in ["collect_resource", "collect_artifact"]:
 		_record_object_resolution_presentation(result, String(result.get("route", "")))
+	if action_id == "site_response":
+		_record_route_open_presentation(result, route_response_context)
 	_last_message = String(result.get("message", ""))
 	_last_enemy_activity_text = ""
 	_last_turn_resolution_text = ""
@@ -2612,6 +2615,62 @@ func _record_object_resolution_presentation(result: Dictionary, route: String) -
 		"selected_audio_cue_ids": (policy.get("selected_audio_cue_ids", []) as Array).duplicate(true),
 		"allows_large_motion": bool(policy.get("allows_large_motion", true)),
 		"duration_ms": int(round(float(authored_duration_ms) * duration_scale)),
+		"max_duration_ms": max_duration_ms,
+	}
+
+func _record_route_open_presentation(result: Dictionary, context_before: Dictionary) -> void:
+	if not bool(result.get("ok", false)) or String(context_before.get("type", "")) != "resource":
+		return
+	var recap: Dictionary = result.get("post_action_recap", {}) if result.get("post_action_recap", {}) is Dictionary else {}
+	if String(recap.get("kind", "")) != "site_response":
+		return
+	var context_node: Dictionary = context_before.get("node", {}) if context_before.get("node", {}) is Dictionary else {}
+	var placement_id := String(context_node.get("placement_id", "")).strip_edges()
+	if placement_id == "":
+		return
+	var live_node := {}
+	for node_value in _session.overworld.get("resource_nodes", []):
+		if node_value is Dictionary and String(node_value.get("placement_id", "")) == placement_id:
+			live_node = node_value
+			break
+	if live_node.is_empty() or int(live_node.get("response_last_day", -1)) != int(_session.day) or int(live_node.get("response_until_day", -1)) < int(_session.day):
+		return
+	var tile := Vector2i(int(live_node.get("x", -1)), int(live_node.get("y", -1)))
+	if not _tile_in_bounds(tile) or not OverworldRules.is_tile_visible(_session, tile.x, tile.y):
+		return
+	var site_id := String(live_node.get("site_id", "")).strip_edges()
+	var site := ContentService.get_resource_site(site_id)
+	if site_id == "" or site.is_empty():
+		return
+	var policy: Dictionary = AnimationCueCatalogScript.cue_playback_policy_for_event(
+		"overworld_route_open",
+		SettingsService.animation_preferences()
+	)
+	if (
+		String(policy.get("event_id", "")) != "overworld_route_open"
+		or String(policy.get("surface", "")) != "overworld"
+		or String(policy.get("subject_kind", "")) != "map_object"
+		or String(policy.get("selected_playback_policy", "")) != "queue_resolved"
+	):
+		return
+	_object_resolution_presentation_serial += 1
+	var max_duration_ms: int = maxi(0, int(policy.get("max_duration_ms", 700)))
+	var duration_scale := maxf(0.0, float(policy.get("duration_scale", 1.0)))
+	_object_resolution_presentation = {
+		"serial": _object_resolution_presentation_serial,
+		"event_id": "overworld_route_open",
+		"family": "site_response",
+		"placement_id": placement_id,
+		"content_id": site_id,
+		"site_name": String(site.get("name", site_id)),
+		"tile": {"x": tile.x, "y": tile.y},
+		"selected_animation_state": String(policy.get("selected_animation_state", "")),
+		"selected_visual_policy": String(policy.get("selected_visual_policy", "")),
+		"selected_fallback_tag": String(policy.get("selected_fallback_tag", "")),
+		"selected_vfx_cue_ids": (policy.get("selected_vfx_cue_ids", []) as Array).duplicate(true),
+		"selected_audio_cue_ids": (policy.get("selected_audio_cue_ids", []) as Array).duplicate(true),
+		"allows_large_motion": bool(policy.get("allows_large_motion", true)),
+		"duration_ms": int(round(float(mini(max_duration_ms, 620)) * duration_scale)),
 		"max_duration_ms": max_duration_ms,
 	}
 

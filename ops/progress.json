@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld blocking-object feedback slice is complete. Visible blocking map objects and resource bodies now expose exact authored identity and distinct original object-blocked VFX/audio; unexplored blockers stay identity-silent, and terrain/unreachable routing plus gameplay authority remain exact. Focused, compatibility, static/editor, Linux export/startup, and Windows fresh-Wine startup gates pass with bounded claims. Select the next tracker-approved release-readiness implementation slice.",
+  "currentNotes": "The field route-response open-feedback slice is completed. A successful live Overworld site_response now publishes one exact imported route-open VFX/audio presentation with reduced and missing fallbacks, while exact response, transit, refresh/duplicate, session, save, compatibility, repository/editor, and bounded Linux/Windows export/startup authority remain green. Select the next tracker-approved release-readiness slice; broader product gaps remain.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-blocking-object-feedback-10184",
-  "currentSliceId": "presentation-overworld-blocking-object-feedback-10184",
-  "currentSliceNotes": "Completed live Overworld blocking-object feedback: visible blocking map objects and resource bodies now use exact authored identity with distinct object-blocked VFX/audio; hidden identity, terrain/unreachable route cues, pathing, interaction, session/save, compatibility, static/editor, and bounded Linux/Windows export/startup authority remain exact.",
+  "currentSlice": "presentation-overworld-field-route-response-open-feedback-10184",
+  "currentSliceId": "presentation-overworld-field-route-response-open-feedback-10184",
+  "currentSliceNotes": "Completed exact live Overworld field route-open VFX/audio after successful site_response with imported, reduced, and missing fallbacks; exact gameplay, dedupe, save, compatibility, static, and bounded platform startup gates pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Blocking Object Feedback",
-  "currentSliceUpdatedAt": "2026-08-15T20:44:19Z",
+  "currentSliceTitle": "Overworld Field Route-Response Open Feedback",
+  "currentSliceUpdatedAt": "2026-08-15T22:26:59Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -85392,6 +85392,105 @@
         "linuxExportHeadlessStartupPassed": true,
         "windowsExportFreshWineStartupPassed": true
       }
+    },
+    {
+      "id": "presentation-overworld-field-route-response-open-feedback-10184",
+      "title": "Overworld Field Route-Response Open Feedback",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/animation-systems-foundation.md",
+        "docs/animation-overworld-object-state-contract-report.md",
+        "AGENTS.md"
+      ],
+      "purpose": "Deliver the already-authored overworld_route_open presentation for one successful live player field site_response, replacing text-only feedback with exact original VFX/audio without changing response or route state.",
+      "implementationTargets": [
+        "art/overworld/source/route_open_vfx_source.png",
+        "art/overworld/runtime/vfx/route_open.png",
+        "art/audio/runtime/presentation/route_open.wav",
+        "content/overworld_vfx_manifest.json",
+        "content/presentation_sfx_manifest.json",
+        "tools/generate_presentation_sfx_assets.py",
+        "scripts/autoload/PresentationAudio.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_field_route_response_open_feedback_report.gd",
+        "tests/overworld_field_route_response_open_feedback_report.tscn",
+        "tests/overworld_field_spell_vfx_asset_runtime_report.gd",
+        "tests/overworld_guarded_site_vfx_asset_runtime_report.gd",
+        "tests/overworld_hero_route_step_vfx_asset_runtime_report.gd",
+        "tests/overworld_object_blocked_feedback_report.gd",
+        "tests/overworld_object_resolution_vfx_asset_runtime_report.gd",
+        "tests/overworld_route_blocked_vfx_asset_runtime_report.gd",
+        "tests/overworld_rope_lift_live_transit_report.gd",
+        "tests/animation_event_cue_catalog_report.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/core_systems_regression_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_field_route_response_open_feedback_report.tscn",
+        "tests/overworld_rope_lift_live_transit_report.tscn",
+        "tests/animation_event_cue_catalog_report.tscn",
+        "tests/overworld_visual_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "fc850faaf3e62e78c34eee7cd1c8afd2eff37c5b",
+        "action_id": "site_response",
+        "event_id": "overworld_route_open",
+        "vfx_cue_id": "vfx_placeholder_route_open",
+        "audio_cue_id": "audio_placeholder_route_open",
+        "catalog_authored": true,
+        "live_response_consequences_present": true,
+        "live_presentation_present": false,
+        "runtime_vfx_asset_present": false,
+        "runtime_audio_asset_present": false
+      },
+      "completionCriteria": [
+        "A real successful field site_response at 1280x720 and 1920x1080 publishes exact site identity and one imported overworld_route_open VFX/audio presentation",
+        "Failed, unaffordable, movement-exhausted, already-active, malformed, hidden, stale, and non-response paths remain silent; unchanged refresh and duplicates do not replay",
+        "Reduced motion and missing assets retain distinct exact fallbacks while response resources, movement, duration, delivery, transit, recovery, routing, session, settings, and save authority remain exact",
+        "Focused, transit, visual, catalog, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "response availability, costs, duration, delivery, transit, recovery, routing/pathfinding, fog, AI, Native RMG, save/schema, content, or map-topology changes",
+        "Town-screen response presentation, enemy-driven route-closed adoption, hover or ambient loops, layout, particles, shaders, spatial audio, haptics, or final mastering",
+        "packaged interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "createdAt": "2026-08-15T21:38:57Z",
+      "startedAt": "2026-08-15T21:38:57Z",
+      "updatedAt": "2026-08-15T22:26:59Z",
+      "completedAt": "2026-08-15T22:26:59Z",
+      "notes": "Completed live field route-response presentation. The real public site_response path at 1280x720 and 1920x1080 spends exactly 130 gold, 1 ore, and 3 movement, opens one persisted Rope Lift transit edge, and publishes one exact overworld_route_open cue. The original 1254x1254 alpha source derives a 512x512 runtime VFX; deterministic presentation generation produces a distinct 420 ms 44.1 kHz stereo 16-bit route-open WAV and exact 18-cue pack signature d2d0b47d1de5613767232ecf94a03186aade937de3a1c7b7a4857eef4c8d7b57. Imported, reduced-motion, and missing-asset rows, refresh/duplicate silence, save roundtrip, Rope Lift authority, shared object-resolution/audio, object-blocked, cue catalog, accessibility, Overworld visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup all pass. Platform evidence is export/startup only; packaged route-open interaction/listening, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness are not claimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader release gaps remain.",
+      "implementationEvidence": {
+        "focusedArtifact": "/tmp/heroes-route-open-authoritative.WsPDCY",
+        "ropeLiftArtifact": "/tmp/heroes-rope-lift-control.5576dQ",
+        "objectResolutionArtifact": "/tmp/heroes-object-resolution-compat-final.BNTE05",
+        "objectBlockedArtifact": "/tmp/heroes-object-blocked-compat-final.iPqlWx",
+        "compatibilityArtifact": "/tmp/heroes-route-open-compat3.bDDEdm",
+        "overworldVisualArtifact": "/tmp/heroes-route-open-overworld-visual.IhVKOt",
+        "staticEditorArtifact": "/tmp/heroes-route-open-static.MMmzDj",
+        "platformArtifact": "/tmp/heroes-route-open-platform.3OAPPN",
+        "normalViewportCount": 2,
+        "activeTransitEdgeCount": 1,
+        "audioDurationMsec": 420,
+        "presentationSfxPackSignature": "d2d0b47d1de5613767232ecf94a03186aade937de3a1c7b7a4857eef4c8d7b57",
+        "linuxExportHeadlessStartupPassed": true,
+        "windowsExportFreshWineStartupPassed": true
+      },
+      "blockedReason": null
     }
   ],
   "project": "heroes-like",
