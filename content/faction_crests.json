@@ -1,0 +1,40 @@
+{
+  "items": [
+    {
+      "id": "faction_embercourt",
+      "crest_id": "faction_crest_embercourt",
+      "icon_path": "res://art/factions/runtime/crests/embercourt.png",
+      "material_language": "river-lock gate, beacon flame, civic iron, and ember cloth"
+    },
+    {
+      "id": "faction_mireclaw",
+      "crest_id": "faction_crest_mireclaw",
+      "icon_path": "res://art/factions/runtime/crests/mireclaw.png",
+      "material_language": "ferry chain, split bog claw, reed marsh, and peat iron"
+    },
+    {
+      "id": "faction_sunvault",
+      "crest_id": "faction_crest_sunvault",
+      "icon_path": "res://art/factions/runtime/crests/sunvault.png",
+      "material_language": "faceted sun lens, calibrated relay arc, gold, and crystal"
+    },
+    {
+      "id": "faction_thornwake",
+      "crest_id": "faction_crest_thornwake",
+      "icon_path": "res://art/factions/runtime/crests/thornwake.png",
+      "material_language": "thorn ring, living seed, branching roots, and verdant leaves"
+    },
+    {
+      "id": "faction_brasshollow",
+      "crest_id": "faction_crest_brasshollow",
+      "icon_path": "res://art/factions/runtime/crests/brasshollow.png",
+      "material_language": "brass furnace gear, riveted contract plate, coal, and forge fire"
+    },
+    {
+      "id": "faction_veilmourn",
+      "crest_id": "faction_crest_veilmourn",
+      "icon_path": "res://art/factions/runtime/crests/veilmourn.png",
+      "material_language": "mourning sail, fog compass, salt silver, and deep violet"
+    }
+  ]
+}

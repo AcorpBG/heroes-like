@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The shared resource stockpile icon popover slice is complete. One shared focusable native menu now exposes the exact nine live stockpile resources, amounts, and production icons on the existing Town and Overworld rails, with focused, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup evidence green. Select the next tracker-approved slice; no whole-game or release-readiness claim is made.",
+  "currentNotes": "The Town faction crest adoption slice is complete. Six distinct original 256x256 crests now resolve through exact production content and rules ownership and render fail-closed inside the existing live Town medallion. Select the next tracker-approved release-readiness implementation slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-shared-resource-stockpile-icon-popover-10184",
-  "currentSliceId": "ux-shared-resource-stockpile-icon-popover-10184",
-  "currentSliceNotes": "Completed one shared ResourceStockpileMenu on the live Town and Overworld shells. Four 1280x720/1920x1080 focused rows prove exact nine-row order, amounts, icons, native popup containment, public keyboard open/Escape close, focus return, 80px compact Overworld width, session/action/save authority, and save version 9. Town economy, Overworld visual, keyboard focus, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. Packaged popover interaction, hardware/certification, whole-game, and release readiness remain unclaimed.",
+  "currentSlice": "presentation-town-faction-crest-adoption-10184",
+  "currentSliceId": "presentation-town-faction-crest-adoption-10184",
+  "currentSliceNotes": "Completed six distinct original faction crests, exact manifest and fail-closed resolver ownership, and live Town adoption for all six factions at 1280x720 and 1920x1080. The 42x40 icon remains contained in the unchanged 74x50 medallion; unknown identity retains the procedural town glyph; layout, focus, actions, session, route, and save version 9 remain exact. Focused, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL gates passed. Packaged Town interaction, certification, hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Shared Resource Stockpile Icon Popover",
-  "currentSliceUpdatedAt": "2026-08-15T06:00:50Z",
+  "currentSliceTitle": "Town Faction Crest Adoption",
+  "currentSliceUpdatedAt": "2026-08-15T06:42:32Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19849,6 +19849,29 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "id": "presentation-town-faction-crest-adoption-10184",
+      "title": "Town Faction Crest Adoption",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/screen-wireframes.md", "docs/concept-art-pipeline.md", "AGENTS.md"],
+      "purpose": "Give the six production factions distinct original crests on the existing live Town crest medallion while preserving exact Town behavior and layout.",
+      "implementationTargets": ["art/factions/source/faction_crest_atlas.png", "art/factions/runtime/crests/", "content/faction_crests.json", "scripts/autoload/ContentService.gd", "scripts/core/TownRules.gd", "scenes/town/TownShell.gd", "scenes/town/TownShell.tscn", "tests/town_faction_crest_runtime_report.gd", "tests/town_faction_crest_runtime_report.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "testOwners": ["tests/town_faction_crest_runtime_report.tscn", "tests/town_development_save_resume_report.tscn", "tests/town_battle_visual_smoke.tscn", "tests/active_play_keyboard_focus_smoke.tscn", "tests/accessibility_screen_reader_semantics_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/validate_repo.py"],
+      "baseline": {"head": "fd2551f5a517e4ca160b3ce285667680a6efab47", "production_faction_count": 6, "town_scenic_faction_backdrop_count": 6, "production_faction_crest_asset_count": 0, "town_live_crest_glyph_id": "town", "implementation_or_runtime_started": false},
+      "completionCriteria": ["Six distinct original imported crest assets map one-to-one to all six production faction ids through exact fail-closed production content and rules ownership", "Real Town shells at 1280x720 and 1920x1080 render the exact active faction crest inside the existing medallion while unknown or unloadable identity retains the procedural town fallback", "Crest containment, aspect, tooltip, overlay order, Town layout, focus, actions, session, save, route, and all-faction identity authority remain exact", "Focused, all-faction Town/save, Town visual, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"],
+      "nonGoals": ["faction ids/names/rules/economy/recruitment/units/heroes/buildings/towns/scenarios/campaign/combat/AI/balance/save-schema/map/Native-RMG changes", "Town stage/backdrop, medallion geometry, layout, focus order, input, other screen, global theme, UI scale, or broad heraldry redesign", "packaged Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"],
+      "createdAt": "2026-08-15T06:05:18Z",
+      "startedAt": "2026-08-15T06:05:18Z",
+      "updatedAt": "2026-08-15T06:42:32Z",
+      "completedAt": "2026-08-15T06:42:32Z",
+      "notes": "Completed six distinct original 256x256 alpha faction crests and one exact ordered manifest/resolver. Real Town shells at 1280x720 and 1920x1080 render all six active faction identities inside the existing 74x50 crest frame with a contained 42x40 icon and exact tooltip; unknown identity remains fail-closed on the procedural town glyph. Focused authority preserved the whole session, action catalog, route, layout, focus, and save version 9. All-faction Town/save, Town visual, active-play focus, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup passed. Packaged Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null,
+      "result": {"faction_count": 6, "distinct_crest_count": 6, "runtime_asset_size": [256, 256], "viewports": [[1280, 720], [1920, 1080]], "crest_icon_size": [42, 40], "crest_frame_size": [74, 50], "unknown_faction_fallback_exact": true, "session_action_route_layout_focus_authority_exact": true, "save_version": 9, "town_save_passed": true, "town_visual_passed": true, "active_play_keyboard_focus_passed": true, "accessibility_passed": true, "core_passed": true, "repository_validation_passed": true, "editor_parse_passed": true, "linux_export_headless_startup_passed": true, "windows_export_fresh_wine_startup_passed": true}
+    },
     {
       "id": "ux-shared-resource-stockpile-icon-popover-10184",
       "title": "Shared Resource Stockpile Icon Popover",

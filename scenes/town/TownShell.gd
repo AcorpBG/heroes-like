@@ -31,6 +31,7 @@ const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains ope
 @onready var _logistics_panel: PanelContainer = %LogisticsPanel
 @onready var _footer_panel: PanelContainer = %FooterPanel
 @onready var _crest_glyph = %CrestGlyph
+@onready var _crest_icon: TextureRect = %CrestIcon
 @onready var _crest_label: Label = %CrestLabel
 @onready var _header_label: Label = %Header
 @onready var _status_label: Label = %Status
@@ -486,9 +487,7 @@ func _refresh(first_render_minimal: bool = false) -> void:
 	_last_economy_readability_surface = _duplicate_dictionary(view_state.get("economy_readability_surface", {}))
 	_last_rendered_build_actions = _duplicate_action_array(view_state.get("build_actions", []))
 	_last_rendered_recruit_actions = _duplicate_action_array(view_state.get("recruit_actions", []))
-	_crest_label.text = _crest_text()
-	if _crest_glyph.has_method("set_glyph"):
-		_crest_glyph.call("set_glyph", "town", _faction_accent())
+	_refresh_faction_crest()
 	_set_compact_label(_outlook_label, String(view_state.get("outlook_text", "")), 4)
 	_set_compact_label(_command_ledger_label, String(view_state.get("command_ledger_text", "")), 4)
 	buckets["header_outlook"] = ProfileLogScript.elapsed_ms(section_started)
@@ -2325,6 +2324,7 @@ func validation_snapshot() -> Dictionary:
 		"town_placement_id": String(town.get("placement_id", "")),
 		"town_id": String(town.get("town_id", "")),
 		"town_owner": String(town.get("owner", "")),
+		"faction_crest": _faction_crest_validation_snapshot(),
 		"built_building_count": _normalize_string_array(town.get("built_buildings", [])).size(),
 		"available_recruits": _duplicate_dictionary(town.get("available_recruits", {})),
 		"resources": _duplicate_dictionary(_session.overworld.get("resources", {})),
@@ -4873,6 +4873,45 @@ func _crest_text() -> String:
 	var faction := ContentService.get_faction(String(template.get("faction_id", "")))
 	var name := String(faction.get("name", template.get("faction_id", "Town")))
 	return name.left(4).to_upper()
+
+func _active_town_faction_id() -> String:
+	var town := TownRules.get_active_town(_session)
+	if town.is_empty():
+		return ""
+	var template := ContentService.get_town(String(town.get("town_id", "")))
+	return String(template.get("faction_id", "")).strip_edges()
+
+func _refresh_faction_crest() -> void:
+	var faction_id := _active_town_faction_id()
+	var faction := ContentService.get_faction(faction_id)
+	var icon_path := TownRules.faction_crest_icon_path(faction_id)
+	var texture: Texture2D = load(icon_path) as Texture2D if icon_path != "" else null
+	_crest_label.text = _crest_text()
+	_crest_icon.texture = texture
+	_crest_icon.visible = texture != null
+	_crest_icon.tooltip_text = "%s crest" % String(faction.get("name", faction_id)) if texture != null else ""
+	_crest_glyph.visible = texture == null
+	if _crest_glyph.has_method("set_glyph"):
+		_crest_glyph.call("set_glyph", "town", _faction_accent())
+
+func _faction_crest_validation_snapshot() -> Dictionary:
+	var faction_id := _active_town_faction_id()
+	var icon_path := TownRules.faction_crest_icon_path(faction_id)
+	var texture_path := _crest_icon.texture.resource_path if _crest_icon.texture != null else ""
+	return {
+		"faction_id": faction_id,
+		"faction_name": String(ContentService.get_faction(faction_id).get("name", "")),
+		"icon_path": icon_path,
+		"texture_path": texture_path,
+		"icon_visible": _crest_icon.visible,
+		"fallback_visible": _crest_glyph.visible,
+		"fallback_glyph_id": String(_crest_glyph.get("glyph_id")),
+		"tooltip_text": _crest_icon.tooltip_text,
+		"icon_rect": _crest_icon.get_global_rect(),
+		"frame_rect": _crest_panel.get_global_rect(),
+		"icon_stretch_mode": int(_crest_icon.stretch_mode),
+		"icon_expand_mode": int(_crest_icon.expand_mode),
+	}
 
 func _style_action_button(button: Button, primary: bool = false) -> void:
 	FrontierVisualKit.apply_button(button, "primary" if primary else "secondary", 108.0, 30.0, 12)
