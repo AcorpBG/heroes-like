@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld ambient production loop fidelity slice is completed. All eleven exact terrain, enemy-pressure, and day-pulse paths now hold distinct deterministic seamless 12-second 44.1 kHz stereo 16-bit production loops; detached imported forward-loop clones remain active beyond a full segment without restarting an unchanged context. Focused continuity/fallback, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass, with all eleven ambient imports present in both PCKs. Final sound-design/mixer-mastering approval, packaged listening, hardware certification, signing/publication, whole-game, and release readiness remain unclaimed.",
+  "currentNotes": "The UI production SFX fidelity slice is completed. All six live click, select, adjust, tab, confirm, and invalid paths now hold distinct original deterministic 44.1 kHz stereo 16-bit production transients. Focused real-control routing proves exact imported identity and QOA runtime format while generated fallback, mute, reduced-repetition cooldowns, voice budgets, settings, input, and gameplay authority remain exact. Compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass, with all six UI imports present in both PCKs. Final sound-design/mixer-mastering approval, packaged listening, hardware certification, signing/publication, whole-game, and release readiness remain unclaimed.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-ambient-production-loop-fidelity-10184",
-  "currentSliceId": "presentation-overworld-ambient-production-loop-fidelity-10184",
-  "currentSliceNotes": "Completed all eleven original seamless stereo production loops and continuous detached imported playback while preserving exact ambient context policy and authority. Focused, compatibility, repository/editor, and bounded Linux/Windows export/startup gates are green; select the next tracker-approved slice.",
+  "currentSlice": "presentation-ui-production-sfx-fidelity-10184",
+  "currentSliceId": "presentation-ui-production-sfx-fidelity-10184",
+  "currentSliceNotes": "Completed all six original stereo UI transients and exact imported playback-format proof while preserving cue routing, control attachment, cooldowns, voice budgets, fallback, mute, input, settings, and gameplay authority. Focused, compatibility, repository/editor, and bounded Linux/Windows export/startup gates are green; select the next tracker-approved slice.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Ambient Production Loop Fidelity",
-  "currentSliceUpdatedAt": "2026-08-15T15:32:24Z",
+  "currentSliceTitle": "UI Production SFX Fidelity",
+  "currentSliceUpdatedAt": "2026-08-15T15:51:54Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19849,6 +19849,73 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
   "plannedSlices": [
+    {
+      "id": "presentation-ui-production-sfx-fidelity-10184",
+      "title": "UI Production SFX Fidelity",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/ui-audio-cue-runtime-report.md",
+        "docs/animation-systems-foundation.md",
+        "AGENTS.md"
+      ],
+      "purpose": "Replace the complete live UI feedback pack's mono generated placeholders with distinct production-fidelity stereo transients while preserving exact cue and control behavior.",
+      "implementationTargets": [
+        "art/audio/runtime/ui/*.wav",
+        "content/ui_sfx_manifest.json",
+        "tools/generate_ui_sfx_assets.py",
+        "scripts/autoload/UiAudio.gd",
+        "tests/ui_audio_cue_runtime_report.gd",
+        "docs/ui-audio-cue-runtime-report.md",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/ui_audio_cue_runtime_report.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "7e98ee3278e45884558fa5d09d60ddb32b0bd12f",
+        "cue_count": 6,
+        "duration_msec_min": 60,
+        "duration_msec_max": 150,
+        "sample_rate_hz": 22050,
+        "channel_count": 1,
+        "sample_width_bits": 16,
+        "unique_asset_sha_count": 6,
+        "generator_owned": true,
+        "focused_runtime_ok": true,
+        "focused_runtime_artifact": "/tmp/heroes-ui-sfx-baseline.UAgvoY",
+        "focused_imported_cue_count": 6,
+        "final_sound_design": false,
+        "implementation_or_runtime_started": false
+      },
+      "completionCriteria": [
+        "All six exact existing UI cue paths contain byte-distinct original deterministic 44.1 kHz stereo 16-bit production transients with exact authored durations, bounded peaks, non-silent distinct channels, clean endpoints, and cue-specific material identity",
+        "UiAudio real control-family routes plus confirm and invalid prefer the exact imported cue, expose exact imported stream format, and preserve common-control attachment, record order, eight-player normal and four-player reduced-repetition budgets, cooldown suppression before player creation, and generated fallback",
+        "Exact cue ids, paths, roles, durations, volumes, Effects bus, mute policy, settings, input, focus, save, and gameplay authority remain unchanged",
+        "Focused UI audio, active-play/core compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass and both PCKs contain all six UI assets"
+      ],
+      "nonGoals": [
+        "final sound-design or mixer-mastering approval, licensed or third-party audio, new UI cue ids, spatial UI audio, haptics, or broad audio redesign",
+        "UI layout, copy, navigation, focus, input, settings architecture, music, ambience, Battle audio, gameplay, combat, AI, save/schema, map, Native RMG, renderer, or scene changes",
+        "packaged UI interaction or listening, controller/headset/speaker hardware, native audio certification, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "createdAt": "2026-08-15T15:36:35Z",
+      "startedAt": "2026-08-15T15:36:35Z",
+      "updatedAt": "2026-08-15T15:51:54Z",
+      "completedAt": "2026-08-15T15:51:54Z",
+      "notes": "Completed from baseline head 7e98ee3278e45884558fa5d09d60ddb32b0bd12f. All six exact imported paths are distinct deterministic 44.1 kHz stereo 16-bit production transients with pack signature 27e87bc116a1a54104a636543f1d509f51f4e037ca836fb8f442170751eff903; durations, volumes, roles, and cue identities remain exact. UiAudio exposes the imported stream contract without changing playback and preserves common-control attachment, Effects mute, normal eight-player and reduced-repetition four-player budgets, cooldown suppression before player creation, generated waveform fallback, settings, input, and gameplay authority. The authoritative focused report is .artifacts/ui_audio_cue_runtime_report/report.json (SHA256 4f515c28c12dd01c9dd9e8512c15769315c6e0fe9bb47a82758d795b1b917971): all six imported identities, five real control routes, QOA runtime import, non-looping length, fallback, mute, repetition policy, and exact settings restoration pass. Active-play keyboard focus, core, deterministic generation, repository validator, Python compile, JSON/diff, and exact/generic editor gates pass. Official Linux export/headless startup report SHA256 is 52b0da1cb29f8aa372339134333ed65a8dce955af6934ce5192fd2c411ff48d9; official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup report SHA256 is 33d92908edaf84efd6a3287d0bdf78d6723065a2a18e9ee01bee1a0c68aeb57c; each PCK exposes all six imported UI samples. These are bounded export/startup claims only: packaged UI interaction/listening, final sound-design/mixer mastering, audio hardware certification, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Final sound-design and mixer-mastering approval, packaged UI listening, and native audio hardware certification remain separate release work.",
+      "blockedReason": null
+    },
     {
       "id": "presentation-overworld-ambient-production-loop-fidelity-10184",
       "title": "Overworld Ambient Production Loop Fidelity",
@@ -84257,9 +84324,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The Overworld ambient production loop fidelity slice is completed: all eleven short one-shot terrain, enemy-pressure, and day-pulse assets are replaced by distinct seamless production loops, and stable imported ambience remains continuous while preserving exact runtime policy. Focused, compatibility, static/editor, and bounded Linux/Windows export/startup gates pass. Select the next tracker-approved slice; the game is not release-ready.",
+  "summary": "The UI production SFX fidelity slice is completed: all six short mono generated click, select, adjust, tab, confirm, and invalid assets are replaced by distinct stereo production transients while exact cue, control, repetition, mute, input, settings, and gameplay authority remain preserved. Focused, compatibility, static/editor, and bounded Linux/Windows export/startup gates pass. Select the next tracker-approved slice; the game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-15T15:32:24Z",
+  "updatedAt": "2026-08-15T15:51:54Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
