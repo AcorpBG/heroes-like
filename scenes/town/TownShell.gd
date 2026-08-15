@@ -3103,8 +3103,21 @@ func _rebuild_study_actions(actions_override: Variant = null) -> void:
 		button.disabled = bool(action.get("disabled", false))
 		button.tooltip_text = _town_action_button_tooltip(action, "study")
 		_style_action_button(button)
+		_apply_spell_action_icon(button, action)
 		button.pressed.connect(_on_study_action_pressed.bind(String(action.get("id", "")).trim_prefix("learn_spell:")))
 		_study_actions.add_child(button)
+
+func _apply_spell_action_icon(button: Button, action: Dictionary) -> void:
+	var spell_id := SpellRules.spell_id_for_action(String(action.get("id", "")))
+	var icon_path := SpellRules.spell_school_icon_path(spell_id)
+	if icon_path == "":
+		return
+	var texture := load(icon_path) as Texture2D
+	if texture == null:
+		return
+	button.icon = texture
+	button.expand_icon = true
+	button.add_theme_constant_override("icon_max_width", 24)
 
 func _rebuild_artifact_actions(actions_override: Variant = null) -> void:
 	for child in _artifact_actions.get_children():

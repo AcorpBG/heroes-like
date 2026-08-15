@@ -1724,8 +1724,21 @@ func _rebuild_spell_actions() -> void:
 		button.disabled = bool(action.get("disabled", false))
 		button.tooltip_text = _battle_spell_action_tooltip(action)
 		_style_action_button(button, false, 132)
+		_apply_spell_action_icon(button, action)
 		button.pressed.connect(_on_spell_action_pressed.bind(String(action.get("id", ""))))
 		_spell_actions.add_child(button)
+
+func _apply_spell_action_icon(button: Button, action: Dictionary) -> void:
+	var spell_id := SpellRules.spell_id_for_action(String(action.get("id", "")))
+	var icon_path := SpellRules.spell_school_icon_path(spell_id)
+	if icon_path == "":
+		return
+	var texture := load(icon_path) as Texture2D
+	if texture == null:
+		return
+	button.icon = texture
+	button.expand_icon = true
+	button.add_theme_constant_override("icon_max_width", 24)
 
 func _refresh_action_buttons() -> void:
 	var active_stack := BattleRules.get_active_stack(_session.battle)

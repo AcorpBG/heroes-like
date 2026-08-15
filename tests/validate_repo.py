@@ -54,6 +54,9 @@ CAMPAIGN_RULES_PATH = ROOT / "scripts" / "core" / "CampaignRules.gd"
 ARTIFACT_RULES_PATH = ROOT / "scripts" / "core" / "ArtifactRules.gd"
 ARTIFACT_ICON_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "artifact_icon_runtime_report.gd"
 ARTIFACT_ICON_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "artifact_icon_runtime_report.tscn"
+SPELL_SCHOOL_ICON_MANIFEST_PATH = CONTENT_DIR / "spell_school_icons.json"
+SPELL_SCHOOL_ICON_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "spell_school_icon_runtime_report.gd"
+SPELL_SCHOOL_ICON_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "spell_school_icon_runtime_report.tscn"
 SPELL_RULES_PATH = ROOT / "scripts" / "core" / "SpellRules.gd"
 ANIMATION_CUE_CATALOG_RULES_PATH = ROOT / "scripts" / "core" / "AnimationCueCatalog.gd"
 ENEMY_TURN_RULES_PATH = ROOT / "scripts" / "core" / "EnemyTurnRules.gd"
@@ -28772,6 +28775,203 @@ def validate_artifact_icon_runtime(errors: list[str]) -> None:
         ensure(forbidden not in report_text, errors, f"Artifact icon runtime report must not bypass production or mutate presentation: {forbidden}")
 
 
+def validate_spell_school_icon_runtime(errors: list[str]) -> None:
+    required_paths = (
+        SPELL_SCHOOL_ICON_MANIFEST_PATH,
+        CONTENT_DIR / "spells.json",
+        CONTENT_SERVICE_PATH,
+        SPELL_RULES_PATH,
+        OVERWORLD_SCRIPT_PATH,
+        TOWN_SCRIPT_PATH,
+        BATTLE_SCRIPT_PATH,
+        SPELL_SCHOOL_ICON_RUNTIME_REPORT_SCRIPT_PATH,
+        SPELL_SCHOOL_ICON_RUNTIME_REPORT_SCENE_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing spell school icon runtime owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    def function_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}")
+        if start < 0:
+            return ""
+        ends = [index for index in (text.find("\nfunc ", start + 1), text.find("\nstatic func ", start + 1)) if index >= 0]
+        end = min(ends) if ends else -1
+        return text[start:] if end < 0 else text[start:end]
+
+    expected_icons = {
+        "beacon": "res://art/magic/runtime/schools/beacon.png",
+        "mire": "res://art/magic/runtime/schools/mire.png",
+        "lens": "res://art/magic/runtime/schools/lens.png",
+        "root": "res://art/magic/runtime/schools/root.png",
+        "furnace": "res://art/magic/runtime/schools/furnace.png",
+        "veil": "res://art/magic/runtime/schools/veil.png",
+        "old_measure": "res://art/magic/runtime/schools/old_measure.png",
+    }
+    manifest_raw = load_json(SPELL_SCHOOL_ICON_MANIFEST_PATH)
+    manifest_items = manifest_raw.get("items", []) if isinstance(manifest_raw, dict) else []
+    ensure(isinstance(manifest_items, list) and len(manifest_items) == 7, errors, "Spell school icon manifest must contain exactly seven rows")
+    manifest_ids: list[str] = []
+    manifest_paths: list[str] = []
+    if isinstance(manifest_items, list):
+        for index, row in enumerate(manifest_items):
+            ensure(isinstance(row, dict), errors, f"Spell school icon manifest row {index} must be a dictionary")
+            if not isinstance(row, dict):
+                continue
+            school_id = str(row.get("id", ""))
+            icon_id = str(row.get("icon_id", ""))
+            icon_path = str(row.get("icon_path", ""))
+            manifest_ids.append(school_id)
+            manifest_paths.append(icon_path)
+            ensure(icon_id == f"spell_school_sigil_{school_id}", errors, f"Spell school {school_id} must own its exact stable sigil id")
+            ensure(icon_path == expected_icons.get(school_id, ""), errors, f"Spell school {school_id} must own its exact runtime sigil path")
+            ensure(bool(str(row.get("material_language", "")).strip()), errors, f"Spell school {school_id} must define non-hue material language")
+            disk_path = res_path_to_disk(icon_path)
+            ensure(disk_path.is_file(), errors, f"Spell school {school_id} runtime sigil is missing: {icon_path}")
+            if disk_path.is_file():
+                ensure(png_size(disk_path) == (128, 128), errors, f"Spell school {school_id} sigil must be 128x128 PNG")
+            ensure(Path(f"{disk_path}.import").is_file(), errors, f"Spell school {school_id} sigil import is missing")
+    ensure(manifest_ids == list(expected_icons), errors, "Spell school icon manifest must preserve the exact authored school order")
+    ensure(len(set(manifest_paths)) == 7, errors, "Spell school runtime sigil paths must be distinct")
+    atlas_path = ROOT / "art" / "magic" / "source" / "spell_school_sigil_atlas.png"
+    ensure(atlas_path.is_file(), errors, "Spell school source sigil atlas is missing")
+    ensure(Path(f"{atlas_path}.import").is_file(), errors, "Spell school source sigil atlas import is missing")
+
+    spells = load_json(CONTENT_DIR / "spells.json").get("items", [])
+    ensure(isinstance(spells, list) and len(spells) == 112, errors, "Spell school sigil adoption must cover the exact 112 production spells")
+    if isinstance(spells, list):
+        for spell in spells:
+            if not isinstance(spell, dict):
+                continue
+            ensure(str(spell.get("school_id", "")) in expected_icons, errors, f"Spell {spell.get('id', '')} must retain one supported school id")
+            ensure("ui" not in spell and "icon_id" not in spell and "icon_path" not in spell, errors, f"Spell {spell.get('id', '')} must resolve shared school art without duplicated presentation metadata")
+
+    content_service_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
+    for token in (
+        'const SPELL_SCHOOL_ICONS_PATH := "%s/spell_school_icons.json" % CONTENT_DIR',
+        "func get_spell_school_icon(school_id: String) -> Dictionary:",
+        "return get_content_by_id(SPELL_SCHOOL_ICONS_PATH, school_id)",
+        "var spell_school_icon_index := _index_items(_items_from_raw(load_json(SPELL_SCHOOL_ICONS_PATH)))",
+        "_validate_spell_school_icons(spell_school_icon_index)",
+        'var expected_school_ids := ["beacon", "mire", "lens", "root", "furnace", "veil", "old_measure"]',
+        'String(icon.get("icon_id", "")) != "spell_school_sigil_%s" % school_id',
+        '_validate_art_path(String(icon.get("icon_path", "")), "Spell school %s sigil" % school_id)',
+    ):
+        ensure(token in content_service_text, errors, f"ContentService spell school icon ownership is missing: {token}")
+    validate_manifest_block = function_block(content_service_text, "_validate_spell_school_icons")
+    ensure("ResourceLoader.load" not in validate_manifest_block and "load(" not in validate_manifest_block, errors, "ContentService school manifest validation must use the shared art-path validator without loading UI resources")
+
+    spell_rules_text = SPELL_RULES_PATH.read_text(encoding="utf-8")
+    action_block = function_block(spell_rules_text, "spell_id_for_action")
+    resolver_block = function_block(spell_rules_text, "spell_school_icon_path")
+    for token in (
+        'action_id.begins_with("cast_spell:")',
+        'action_id.trim_prefix("cast_spell:")',
+        'action_id.begins_with("learn_spell:")',
+        'action_id.trim_prefix("learn_spell:")',
+        'not ContentService.get_spell(spell_id).is_empty() else ""',
+    ):
+        ensure(token in action_block, errors, f"Spell action id resolver is missing fail-closed token: {token}")
+    for token in (
+        "ContentService.get_spell(spell_id)",
+        'spell.get("school_id", "")',
+        "school_id not in SPELL_SCHOOL_IDS",
+        "ContentService.get_spell_school_icon(school_id)",
+        'String(icon.get("id", "")) != school_id',
+        'String(icon.get("icon_id", "")) != "spell_school_sigil_%s" % school_id',
+        'icon_path.begins_with("res://art/magic/runtime/schools/")',
+        'ResourceLoader.exists(icon_path, "Texture2D")',
+        'return ""',
+        "return icon_path",
+    ):
+        ensure(token in resolver_block, errors, f"Spell school icon resolver is missing exact fail-closed token: {token}")
+    ensure(resolver_block.find("school_id not in") < resolver_block.find("get_spell_school_icon") < resolver_block.find("begins_with") < resolver_block.find("ResourceLoader.exists") < resolver_block.rfind("return icon_path"), errors, "Spell school icon resolver must validate spell school, manifest ownership, asset domain, and import before publishing")
+    ensure("load(" not in resolver_block and "preload(" not in resolver_block, errors, "SpellRules must not load presentation textures")
+
+    for shell_path, rebuild_name in (
+        (OVERWORLD_SCRIPT_PATH, "_rebuild_spell_actions"),
+        (TOWN_SCRIPT_PATH, "_rebuild_study_actions"),
+        (BATTLE_SCRIPT_PATH, "_rebuild_spell_actions"),
+    ):
+        shell_text = shell_path.read_text(encoding="utf-8")
+        rebuild_block = function_block(shell_text, rebuild_name)
+        helper_block = function_block(shell_text, "_apply_spell_action_icon")
+        ensure(shell_text.count("func _apply_spell_action_icon") == 1, errors, f"{shell_path.name} must define exactly one spell action icon helper")
+        order = [
+            rebuild_block.find("_style_"),
+            rebuild_block.find("_apply_spell_action_icon(button, action)"),
+            rebuild_block.find("button.pressed.connect"),
+            rebuild_block.find("add_child(button)"),
+        ]
+        ensure(all(index >= 0 for index in order) and order == sorted(order), errors, f"{shell_path.name} must apply school icons after existing style and before unchanged binding/order")
+        for token in (
+            'SpellRules.spell_id_for_action(String(action.get("id", "")))',
+            "SpellRules.spell_school_icon_path(spell_id)",
+            'if icon_path == "":\n\t\treturn',
+            "load(icon_path) as Texture2D",
+            "if texture == null:\n\t\treturn",
+            "button.icon = texture",
+            "button.expand_icon = true",
+            'button.add_theme_constant_override("icon_max_width", 24)',
+        ):
+            ensure(token in helper_block, errors, f"{shell_path.name} spell icon helper is missing exact live token: {token}")
+        for forbidden in ("button.text =", "button.tooltip_text =", "button.disabled =", "queue_free", "await ", "create_timer", "create_tween", "ContentService.get_spell"):
+            ensure(forbidden not in helper_block, errors, f"{shell_path.name} spell icon helper must not alter spell, action, timing, or layout authority: {forbidden}")
+
+    report_text = SPELL_SCHOOL_ICON_RUNTIME_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    report_scene_text = SPELL_SCHOOL_ICON_RUNTIME_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure_scene_nodes(report_scene_text, errors, "spell_school_icon_runtime_report.tscn", [("SpellSchoolIconRuntimeReport", "Node")])
+    for token in (
+        'const REPORT_ID := "SPELL_SCHOOL_ICON_RUNTIME_REPORT"',
+        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        'const SURFACES := ["overworld", "town", "battle"]',
+        "manifest_contract.size() == 7",
+        "spell_rows.size() == 112",
+        'row.get("size", Vector2.ZERO) == Vector2(128.0, 128.0)',
+        'SpellRules.spell_school_icon_path("spell_missing") == ""',
+        "management_tabs.current_tab = 2",
+        "shell.validation_open_command_drawer()",
+        'shell.get_node_or_null(_surface_container_path(surface)) as Container',
+        'shell.call("_apply_spell_action_icon", invalid_button',
+        "invalid_button.icon == null",
+        "invalid_button.free()",
+        'button.emit_signal("pressed")',
+        "live_after == control.to_dict()",
+        "save_after == save_before",
+        "get_viewport().get_visible_rect().encloses(rect)",
+        "get_viewport().gui_get_focus_owner() == button",
+        'button.expand_icon and button.get_theme_constant("icon_max_width") == 24',
+        'OverworldRules.cast_overworld_spell(control, spell_id)',
+        'TownRules.learn_spell_at_active_town(control, spell_id)',
+        'BattleRules.cast_player_spell(control, spell_id)',
+        "SessionState.reset_session()",
+        'overworld_hero["movement"] = {"current": 2, "max": 12}',
+        'overworld_session.overworld["movement"] = {"current": 2, "max": 12}',
+        'overworld_heroes[index] = overworld_hero.duplicate(true)',
+        'if "building_lantern_archive" not in built_buildings:',
+        'built_buildings.append("building_lantern_archive")',
+        'town["built_buildings"] = built_buildings',
+        "TownRules.get_spell_learning_actions(town_session)",
+        'print("%s %s" % [REPORT_ID, JSON.stringify({"ok": true, "catalog": catalog, "rows": rows})])',
+    ):
+        ensure(token in report_text, errors, f"Spell school icon runtime report is missing method-matched proof token: {token}")
+    ensure(report_text.count("for viewport_size in VIEWPORT_SIZES:") == 1 and report_text.count("for surface in SURFACES:") == 1, errors, "Spell school icon runtime report must cover all three live surfaces at both required widths")
+    for forbidden in (
+        "_on_spell_action_pressed(",
+        "_on_study_action_pressed(",
+        "\n\tbutton.icon = ",
+        "button.expand_icon =",
+        'button.add_theme_constant_override("icon_max_width"',
+        "session.overworld.erase",
+        "control.overworld.erase",
+        "create_timer",
+        "create_tween",
+        "SpellRules.resolve_battle_spell(",
+    ):
+        ensure(forbidden not in report_text, errors, f"Spell school icon runtime report must not bypass production or mutate presentation: {forbidden}")
+
+
 def validate_overworld_artifact_slot_cue_playback(errors: list[str]) -> None:
     required_paths = (
         OVERWORLD_SCENE_PATH,
@@ -38361,6 +38561,7 @@ def main() -> int:
     validate_overworld_hero_route_locomotion(errors)
     validate_overworld_field_spell_cast_cue_playback(errors)
     validate_artifact_icon_runtime(errors)
+    validate_spell_school_icon_runtime(errors)
     validate_overworld_artifact_slot_cue_playback(errors)
     validate_overworld_artifact_acquired_cue_playback(errors)
     validate_overworld_resource_delta_cue_playback(errors)
