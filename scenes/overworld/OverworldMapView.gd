@@ -236,6 +236,7 @@ var _resource_site_object_profiles: Dictionary = {}
 var _map_object_asset_ids: Dictionary = {}
 var _artifact_default_asset_id := ""
 var _town_default_asset_id := ""
+var _town_faction_asset_ids: Dictionary = {}
 var _encounter_default_asset_id := ""
 var _session_static_layer: Control = null
 var _state_layer: Control = null
@@ -1697,7 +1698,7 @@ func _draw_artifact_sprite(node: Dictionary, rect: Rect2, remembered: bool, tile
 	return _draw_object_sprite(_artifact_default_asset_id, rect, remembered, _artifact_object_profile(), tile)
 
 func _draw_town_sprite(rect: Rect2, entry_rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
-	var texture = _object_texture_for_asset(_town_default_asset_id)
+	var texture = _object_texture_for_asset(_town_sprite_asset_id(_town_at(tile)))
 	if not (texture is Texture2D):
 		return false
 	var profile := _town_object_profile()
@@ -3431,6 +3432,8 @@ func _town_presentation_payload(tile: Vector2i, explored: bool, visible: bool) -
 func _town_presentation_payload_for_town(town: Dictionary, include_cells: bool) -> Dictionary:
 	var entry := _town_entry_tile(town)
 	var origin := _town_footprint_origin_for_entry(entry)
+	var faction_id := _town_template_faction_id(town)
+	var sprite_asset_id := _town_sprite_asset_id(town)
 	var cells := _town_footprint_cell_payloads(entry) if include_cells else []
 	var blocked_cells := []
 	var off_map_cells := 0
@@ -3469,6 +3472,11 @@ func _town_presentation_payload_for_town(town: Dictionary, include_cells: bool) 
 		"presentation_passability": "entry_only",
 		"town_placement_id": String(town.get("placement_id", "")),
 		"town_id": String(town.get("town_id", "")),
+		"faction_id": faction_id,
+		"sprite_asset_id": sprite_asset_id,
+		"sprite_path": String(_object_asset_paths.get(sprite_asset_id, "")),
+		"uses_faction_sprite": faction_id != "" and String(_town_faction_asset_ids.get(faction_id, "")) == sprite_asset_id,
+		"uses_default_sprite": sprite_asset_id == _town_default_asset_id,
 		"owner": String(town.get("owner", "neutral")),
 		"footprint_cells": cells,
 		"blocked_footprint_cells": blocked_cells,
@@ -3860,9 +3868,10 @@ func _object_art_payload(tile: Vector2i, explored: bool, visible: bool, object_k
 			sprite_asset_ids.append(standalone_asset_id)
 			var standalone_footprint := _object_profile_footprint(_standalone_map_object_profile(standalone_map_object))
 			sprite_footprints.append({"width": standalone_footprint.x, "height": standalone_footprint.y})
-	if "town" in object_kinds and _town_default_asset_id != "":
-		if _object_texture_for_asset(_town_default_asset_id) is Texture2D:
-			sprite_asset_ids.append(_town_default_asset_id)
+	if "town" in object_kinds:
+		var town_asset_id := _town_sprite_asset_id(_town_at(tile))
+		if town_asset_id != "" and _object_texture_for_asset(town_asset_id) is Texture2D:
+			sprite_asset_ids.append(town_asset_id)
 			var town_footprint := _object_profile_footprint(_town_object_profile())
 			sprite_footprints.append({"width": town_footprint.x, "height": town_footprint.y})
 	var resource_node := _resource_node_at(tile)
@@ -3886,7 +3895,7 @@ func _object_art_payload(tile: Vector2i, explored: bool, visible: bool, object_k
 			var encounter_footprint := _object_profile_footprint(_encounter_object_profile())
 			sprite_footprints.append({"width": encounter_footprint.x, "height": encounter_footprint.y})
 	var uses_asset_sprite := not sprite_asset_ids.is_empty()
-	var uses_town_sprite := "town" in object_kinds and _town_default_asset_id in sprite_asset_ids
+	var uses_town_sprite := "town" in object_kinds and _town_sprite_asset_id(_town_at(tile)) in sprite_asset_ids
 	var uses_mapped_sprite := uses_asset_sprite and not uses_town_sprite
 	var uses_fallback := not uses_asset_sprite and not object_kinds.is_empty()
 	return {
@@ -6002,6 +6011,7 @@ func _load_overworld_art_manifest() -> void:
 	_decorative_object_asset_ids.clear()
 	_artifact_default_asset_id = ""
 	_town_default_asset_id = ""
+	_town_faction_asset_ids.clear()
 	_encounter_default_asset_id = ""
 	_load_map_object_profiles()
 
@@ -6049,6 +6059,14 @@ func _load_overworld_art_manifest() -> void:
 	var town_default = _overworld_art_manifest.get("town_default_sprite", {})
 	if town_default is Dictionary:
 		_town_default_asset_id = String(town_default.get("asset_id", ""))
+
+	var town_faction_sprites = _overworld_art_manifest.get("town_faction_sprites", {})
+	if town_faction_sprites is Dictionary:
+		for faction_id_value in town_faction_sprites:
+			var faction_id := String(faction_id_value).strip_edges()
+			var asset_id := String(town_faction_sprites.get(faction_id_value, "")).strip_edges()
+			if faction_id != "" and asset_id != "":
+				_town_faction_asset_ids[faction_id] = asset_id
 
 	var encounter_default = _overworld_art_manifest.get("encounter_default_sprite", {})
 	if encounter_default is Dictionary:
@@ -6402,6 +6420,19 @@ func _has_town_at(tile: Vector2i) -> bool:
 
 func _town_at(tile: Vector2i) -> Dictionary:
 	return _towns_by_tile.get(_tile_key(tile), {})
+
+func _town_template_faction_id(town: Dictionary) -> String:
+	var template := ContentService.get_town(String(town.get("town_id", "")))
+	return String(template.get("faction_id", "")).strip_edges()
+
+func _town_sprite_asset_id(town: Dictionary) -> String:
+	var faction_id := _town_template_faction_id(town)
+	var faction_asset_id := String(_town_faction_asset_ids.get(faction_id, "")).strip_edges()
+	if faction_asset_id != "" and _object_texture_for_asset(faction_asset_id) is Texture2D:
+		return faction_asset_id
+	if _town_default_asset_id != "" and _object_texture_for_asset(_town_default_asset_id) is Texture2D:
+		return _town_default_asset_id
+	return ""
 
 func _town_color(tile: Vector2i) -> Color:
 	var town = _town_at(tile)

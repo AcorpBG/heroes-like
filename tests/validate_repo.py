@@ -64,6 +64,9 @@ FACTION_CREST_MANIFEST_PATH = CONTENT_DIR / "faction_crests.json"
 FACTION_CREST_ATLAS_PATH = ROOT / "art" / "factions" / "source" / "faction_crest_atlas.png"
 TOWN_FACTION_CREST_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_faction_crest_runtime_report.gd"
 TOWN_FACTION_CREST_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "town_faction_crest_runtime_report.tscn"
+FACTION_TOWN_SPRITE_ATLAS_PATH = ROOT / "art" / "overworld" / "source" / "faction_town_sprite_atlas.png"
+OVERWORLD_FACTION_TOWN_SPRITE_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_faction_town_sprite_runtime_report.gd"
+OVERWORLD_FACTION_TOWN_SPRITE_RUNTIME_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_faction_town_sprite_runtime_report.tscn"
 RESOURCE_REGISTRY_PATH = CONTENT_DIR / "resources.json"
 RESOURCE_REGISTRY_FIXTURE_PATH = ROOT / "tests" / "fixtures" / "economy_resource_schema" / "resource_registry.json"
 RESOURCE_ICON_ATLAS_PATH = ROOT / "art" / "economy" / "source" / "resource_icon_atlas.png"
@@ -29265,6 +29268,146 @@ def validate_town_faction_crest_runtime(errors: list[str]) -> None:
         ensure(forbidden not in report_text, errors, f"Town crest focused owner must not bypass the production presenter: {forbidden}")
 
 
+def validate_overworld_faction_town_sprite_runtime(errors: list[str]) -> None:
+    required_paths = (
+        OVERWORLD_ART_MANIFEST_PATH,
+        FACTION_TOWN_SPRITE_ATLAS_PATH,
+        OVERWORLD_MAP_VIEW_SCRIPT_PATH,
+        OVERWORLD_FACTION_TOWN_SPRITE_RUNTIME_REPORT_SCRIPT_PATH,
+        OVERWORLD_FACTION_TOWN_SPRITE_RUNTIME_REPORT_SCENE_PATH,
+        ROOT / "tests" / "ninefold_scenario_smoke.gd",
+        ROOT / "tests" / "overworld_visual_smoke.gd",
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Overworld faction town sprite owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    def function_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}")
+        if start < 0:
+            return ""
+        end = text.find("\nfunc ", start + 1)
+        return text[start:] if end < 0 else text[start:end]
+
+    faction_order = (
+        "faction_embercourt",
+        "faction_mireclaw",
+        "faction_sunvault",
+        "faction_thornwake",
+        "faction_brasshollow",
+        "faction_veilmourn",
+    )
+    expected_assets = {faction_id: f"town_faction_{faction_id.removeprefix('faction_')}" for faction_id in faction_order}
+    expected_paths = {
+        faction_id: f"res://art/overworld/runtime/objects/towns/factions/{faction_id.removeprefix('faction_')}.png"
+        for faction_id in faction_order
+    }
+    manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
+    object_assets = manifest.get("object_assets", {})
+    faction_sprites = manifest.get("town_faction_sprites", {})
+    ensure(isinstance(object_assets, dict), errors, "Overworld object assets must remain a dictionary for faction town ownership")
+    ensure(isinstance(faction_sprites, dict) and list(faction_sprites.keys()) == list(faction_order), errors, "Overworld faction town sprite mapping must preserve exact six-faction order")
+    sprite_bytes: list[bytes] = []
+    if isinstance(faction_sprites, dict) and isinstance(object_assets, dict):
+        for faction_id in faction_order:
+            asset_id = str(faction_sprites.get(faction_id, ""))
+            ensure(asset_id == expected_assets[faction_id], errors, f"Overworld town faction {faction_id} must map to its stable asset id")
+            entry = object_assets.get(asset_id, {})
+            ensure(isinstance(entry, dict), errors, f"Overworld faction town asset {asset_id} must be defined")
+            if not isinstance(entry, dict):
+                continue
+            runtime_path = str(entry.get("path", ""))
+            ensure(runtime_path == expected_paths[faction_id], errors, f"Overworld faction town asset {asset_id} must own its exact runtime path")
+            ensure(str(entry.get("source_atlas", "")) == "res://art/overworld/source/faction_town_sprite_atlas.png", errors, f"Overworld faction town asset {asset_id} must retain exact source-atlas provenance")
+            disk_path = res_path_to_disk(runtime_path)
+            ensure(disk_path.is_file() and png_size(disk_path) == (512, 512), errors, f"Overworld faction town asset {asset_id} must be an exact 512x512 PNG")
+            ensure(Path(f"{disk_path}.import").is_file(), errors, f"Overworld faction town asset {asset_id} is missing Godot import metadata")
+            if disk_path.is_file():
+                sprite_bytes.append(disk_path.read_bytes())
+    ensure(len(sprite_bytes) == 6 and len(set(sprite_bytes)) == 6, errors, "All six Overworld faction town PNG payloads must be distinct")
+    ensure(png_size(FACTION_TOWN_SPRITE_ATLAS_PATH) == (1536, 1024), errors, "Faction town source atlas must remain the exact 3x2 1536x1024 source")
+    ensure(Path(f"{FACTION_TOWN_SPRITE_ATLAS_PATH}.import").is_file(), errors, "Faction town source atlas import metadata is missing")
+    town_default = manifest.get("town_default_sprite", {})
+    ensure(isinstance(town_default, dict) and str(town_default.get("asset_id", "")) == "frontier_town", errors, "Overworld faction town adoption must retain frontier_town as fail-closed default")
+
+    map_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
+    load_block = function_block(map_text, "_load_overworld_art_manifest")
+    resolver_block = function_block(map_text, "_town_sprite_asset_id")
+    draw_block = function_block(map_text, "_draw_town_sprite")
+    payload_block = function_block(map_text, "_town_presentation_payload_for_town")
+    for token in (
+        "var _town_faction_asset_ids: Dictionary = {}",
+        "_town_faction_asset_ids.clear()",
+        'var town_faction_sprites = _overworld_art_manifest.get("town_faction_sprites", {})',
+        "for faction_id_value in town_faction_sprites:",
+        "_town_faction_asset_ids[faction_id] = asset_id",
+    ):
+        ensure(token in map_text, errors, f"Overworld faction town manifest lifecycle is missing: {token}")
+    ensure(load_block.find("_town_faction_asset_ids.clear()") < load_block.find('get("town_faction_sprites", {})') < load_block.find("_town_faction_asset_ids[faction_id] = asset_id"), errors, "Overworld faction town mapping must clear then load only from the current manifest")
+    for token in (
+        "var faction_id := _town_template_faction_id(town)",
+        'String(_town_faction_asset_ids.get(faction_id, "")).strip_edges()',
+        "_object_texture_for_asset(faction_asset_id) is Texture2D",
+        "return faction_asset_id",
+        "_object_texture_for_asset(_town_default_asset_id) is Texture2D",
+        "return _town_default_asset_id",
+        'return ""',
+    ):
+        ensure(token in resolver_block, errors, f"Overworld faction town resolver is missing fail-closed ownership: {token}")
+    resolver_order = [resolver_block.find(token) for token in ("var faction_id :=", "var faction_asset_id :=", "return faction_asset_id", "return _town_default_asset_id", 'return ""')]
+    ensure(all(index >= 0 for index in resolver_order) and resolver_order == sorted(resolver_order), errors, "Overworld faction town resolver must prefer exact faction texture, then default texture, then empty")
+    for forbidden in ("_session.", "session.", "await ", "create_timer", "create_tween", "queue_free", "match faction_id"):
+        ensure(forbidden not in resolver_block, errors, f"Overworld faction town resolver must remain synchronous, manifest-owned, and read-only: {forbidden}")
+    ensure("_object_texture_for_asset(_town_sprite_asset_id(_town_at(tile)))" in draw_block, errors, "Live town drawing must resolve the exact current town sprite")
+    for token in (
+        '"faction_id": faction_id', '"sprite_asset_id": sprite_asset_id', '"sprite_path": String(_object_asset_paths.get(sprite_asset_id, ""))',
+        '"uses_faction_sprite": faction_id != ""', '"uses_default_sprite": sprite_asset_id == _town_default_asset_id',
+        '"footprint_width_tiles": TOWN_PRESENTATION_FOOTPRINT.x', '"entry_is_visit_tile": true', '"non_entry_tiles_blocked": true',
+    ):
+        ensure(token in payload_block, errors, f"Overworld faction town validation payload is missing: {token}")
+
+    report_text = OVERWORLD_FACTION_TOWN_SPRITE_RUNTIME_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    report_scene = OVERWORLD_FACTION_TOWN_SPRITE_RUNTIME_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure_scene_nodes(report_scene, errors, "overworld_faction_town_sprite_runtime_report.tscn", [("OverworldFactionTownSpriteRuntimeReport", "Node")])
+    for token in (
+        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        'const EXPECTED_FACTION_ASSETS := {',
+        'ScenarioFactory.create_session(SCENARIO_ID, "hard", SessionState.LAUNCH_MODE_SKIRMISH)',
+        "var authority_before: Dictionary = session.to_dict()",
+        'shell.call("validation_town_presentation_profiles")',
+        "profiles.size() != EXPECTED_FACTION_ASSETS.size()",
+        "for profile_value in profiles:",
+        'shell.call("validation_tile_presentation"',
+        'sprite_asset_id in sprite_asset_ids',
+        'String(art.get("town_sprite_grounding_model", "")) == "town_sprite_settled_without_base_ellipse"',
+        'shell.get_node_or_null("%Map")',
+        'map_view.call("validation_color_cue_summary")',
+        'color_cues.has("player_town_color")',
+        'color_cues.has("enemy_town_color")',
+        'color_cues.has("neutral_town_color")',
+        'first_town["town_id"] = "town_missing_faction_sprite_fixture"',
+        'String(profile.get("sprite_asset_id", "")) == "frontier_town"',
+        'first_town["town_id"] = original_town_id',
+        "restored_profiles == profiles and session.to_dict() == authority_before",
+        "var viewport_rect: Rect2 = get_viewport().get_visible_rect()",
+        "viewport_rect.encloses(shell_rect)",
+        "SessionStateStore.SAVE_VERSION",
+        'print("OVERWORLD_FACTION_TOWN_SPRITE_RUNTIME_REPORT %s"',
+    ):
+        ensure(token in report_text, errors, f"Overworld faction town focused owner is missing method-matched proof: {token}")
+    ensure(report_text.count("for viewport_size in VIEWPORT_SIZES:") == 1, errors, "Overworld faction town focused owner must run exactly both registered widths")
+    for forbidden in ("_town_faction_asset_ids[", "_object_textures[", "_draw_town_sprite(", "create_timer", "create_tween", "set_map_state("):
+        ensure(forbidden not in report_text, errors, f"Overworld faction town focused owner must not bypass production resolution: {forbidden}")
+    ensure(draw_block.find("_canvas_draw_texture_rect(texture") < draw_block.find("_draw_town_owner_pennant("), errors, "Live faction town drawing must retain the existing owner pennant after the resolved sprite")
+
+    ninefold_text = (ROOT / "tests" / "ninefold_scenario_smoke.gd").read_text(encoding="utf-8")
+    visual_text = (ROOT / "tests" / "overworld_visual_smoke.gd").read_text(encoding="utf-8")
+    ensure('"town_faction_embercourt" not in town_asset_ids' in ninefold_text, errors, "Ninefold large-map gate must require the exact Embercourt town sprite")
+    ensure('_assert_art_sprite(town_presentation, "town_faction_embercourt", false)' in visual_text, errors, "Overworld visual gate must require the exact River Pass Embercourt town sprite")
+    ensure('expected_asset_id.begins_with("town_faction_")' in visual_text, errors, "Overworld visual town grounding gate must recognize faction town asset ids")
+
+
 def validate_overworld_artifact_slot_cue_playback(errors: list[str]) -> None:
     required_paths = (
         OVERWORLD_SCENE_PATH,
@@ -39122,6 +39265,7 @@ def main() -> int:
     validate_spell_school_icon_runtime(errors)
     validate_town_building_category_icon_runtime(errors)
     validate_town_faction_crest_runtime(errors)
+    validate_overworld_faction_town_sprite_runtime(errors)
     validate_overworld_artifact_slot_cue_playback(errors)
     validate_overworld_artifact_acquired_cue_playback(errors)
     validate_overworld_resource_delta_cue_playback(errors)

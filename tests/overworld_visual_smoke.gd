@@ -2626,7 +2626,7 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 		get_tree().quit(1)
 		return false
 	var town_presentation: Dictionary = shell.call("validation_tile_presentation", town_tile.x, town_tile.y)
-	if not _assert_art_sprite(town_presentation, "frontier_town", false):
+	if not _assert_art_sprite(town_presentation, "town_faction_embercourt", false):
 		return false
 	var encounter_tile := _first_visible_encounter_tile(session)
 	if encounter_tile.x < 0:
@@ -2995,7 +2995,7 @@ func _reveal_validation_tiles(session, tiles: Array) -> void:
 func _assert_art_sprite(presentation: Dictionary, expected_asset_id: String, remembered: bool) -> bool:
 	var art: Dictionary = presentation.get("art_presentation", {})
 	var asset_ids: Array = art.get("sprite_asset_ids", [])
-	var is_town := expected_asset_id == "frontier_town"
+	var is_town := expected_asset_id == "frontier_town" or expected_asset_id.begins_with("town_faction_")
 	if not bool(art.get("uses_asset_sprite", false)) or expected_asset_id not in asset_ids:
 		push_error("Overworld smoke: expected overworld sprite %s was not used. presentation=%s" % [expected_asset_id, presentation])
 		get_tree().quit(1)
