@@ -6,6 +6,7 @@ const SystemFeedbackVfxIconScript = preload("res://scenes/shared/SystemFeedbackV
 
 const EVENT_ID := "system_load_resumed"
 const CUE_ID := "cue_system_load_resumed"
+const AUDIO_CUE_ID := "audio_placeholder_load_resume"
 const NORMAL_STATE := "load_resume"
 const REDUCED_STATE := "load_icon_static"
 const NORMAL_ACCENT := Color(0.48, 0.86, 1.0, 1.0)
@@ -20,6 +21,7 @@ var _duration_msec := 0
 var _activation_count := 0
 var _last_policy: Dictionary = {}
 var _last_result: Dictionary = {}
+var _audio_playback_record: Dictionary = {}
 var _status_base_modulate := Color.WHITE
 var _status_text_at_publish := ""
 var _status_tooltip_at_publish := ""
@@ -59,6 +61,11 @@ func present(load_result: Dictionary) -> Dictionary:
 	_duration_msec = maxi(1, int(policy.get("max_duration_ms", 700)))
 	_last_policy = policy.duplicate(true)
 	_last_result = load_result.duplicate(true)
+	_audio_playback_record = PresentationAudio.play_cue(AUDIO_CUE_ID, "SystemLoadResumedCuePresenter", {
+		"event_id": EVENT_ID,
+		"sequence": int(load_result.get("sequence", 0)),
+		"surface": _surface,
+	})
 	_vfx_icon.present(
 		EVENT_ID,
 		policy.get("selected_vfx_cue_ids", []) if policy.get("selected_vfx_cue_ids", []) is Array else [],
@@ -113,6 +120,7 @@ func _valid_policy(policy: Dictionary) -> bool:
 		and String(policy.get("selected_playback_policy", "")) in ["instant", "fast_resolve"]
 		and String(policy.get("selected_blocking_policy", "")) == "never_blocks_input"
 		and selected_state in [NORMAL_STATE, REDUCED_STATE, "load_icon_instant"]
+		and policy.get("selected_audio_cue_ids", []) == [AUDIO_CUE_ID]
 	)
 
 
@@ -150,6 +158,7 @@ func validation_snapshot() -> Dictionary:
 		"continuity_cue": String(_last_result.get("continuity_cue", "")),
 		"summary_identity": (_last_result.get("summary_identity", {}) as Dictionary).duplicate(true),
 		"policy": _last_policy.duplicate(true),
+		"audio_playback_record": _audio_playback_record.duplicate(true),
 		"status_text_unchanged": is_instance_valid(_status_control) and String(_status_control.get("text")) == _status_text_at_publish,
 		"status_tooltip_unchanged": is_instance_valid(_status_control) and _status_control.tooltip_text == _status_tooltip_at_publish,
 		"status_modulate": _status_control.modulate if is_instance_valid(_status_control) else Color.TRANSPARENT,

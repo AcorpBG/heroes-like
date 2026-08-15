@@ -38957,6 +38957,10 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
     project_path = ROOT / "project.godot"
     building_report_path = ROOT / "tests" / "town_building_complete_cue_playback_report.gd"
     recruitment_report_path = ROOT / "tests" / "town_recruitment_cue_playback_report.gd"
+    save_presenter_path = ROOT / "scenes" / "shared" / "SystemSaveWrittenCuePresenter.gd"
+    load_presenter_path = ROOT / "scenes" / "shared" / "SystemLoadResumedCuePresenter.gd"
+    save_report_path = ROOT / "tests" / "active_play_save_written_cue_playback_report.gd"
+    load_report_path = ROOT / "tests" / "active_play_load_resumed_cue_playback_report.gd"
     required_paths = (
         project_path,
         PRESENTATION_AUDIO_PATH,
@@ -38965,6 +38969,10 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
         TOWN_STAGE_SCRIPT_PATH,
         building_report_path,
         recruitment_report_path,
+        save_presenter_path,
+        load_presenter_path,
+        save_report_path,
+        load_report_path,
     )
     for path in required_paths:
         ensure(path.exists(), errors, f"Missing Town presentation-audio owner: {path.relative_to(ROOT)}")
@@ -38991,6 +38999,8 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
         '"audio_placeholder_artifact_equip"',
         '"audio_placeholder_artifact_stow"',
         '"audio_placeholder_resource_tick"',
+        '"audio_placeholder_save_confirm"',
+        '"audio_placeholder_load_resume"',
         "func play_cue(cue_id: String, source: String = \"\", metadata: Dictionary = {}) -> Dictionary:",
         '"unsupported_cue" if not supported',
         "SettingsService.effects_audio_muted()",
@@ -39046,6 +39056,18 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
             "volume_db": -13.0,
             "role": "overworld_field_spell_cast",
         },
+        "audio_placeholder_save_confirm": {
+            "path": "res://art/audio/runtime/presentation/save_confirm.wav",
+            "duration_msec": 320,
+            "volume_db": -13.5,
+            "role": "system_save_confirmed",
+        },
+        "audio_placeholder_load_resume": {
+            "path": "res://art/audio/runtime/presentation/load_resume.wav",
+            "duration_msec": 360,
+            "volume_db": -13.0,
+            "role": "system_load_resumed",
+        },
         "audio_placeholder_town_build": {
             "path": "res://art/audio/runtime/presentation/town_build.wav",
             "duration_msec": 420,
@@ -39069,7 +39091,7 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
     ensure(int(manifest.get("sample_width_bits", 0)) == 16, errors, "production presentation SFX must use 16-bit PCM")
     ensure(manifest.get("asset_tier") == "production_layered_v1", errors, "presentation SFX manifest must declare production_layered_v1")
     cues = manifest.get("cues", {})
-    ensure(isinstance(cues, dict) and set(cues) == set(expected_cues), errors, "presentation SFX manifest must contain exactly the seven live Town and Overworld action cues")
+    ensure(isinstance(cues, dict) and set(cues) == set(expected_cues), errors, "presentation SFX manifest must contain exactly the nine live Town, Overworld, and system action cues")
     asset_hashes: list[str] = []
     for cue_id in sorted(expected_cues):
         expected = expected_cues[cue_id]
@@ -39103,10 +39125,10 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
             if left_samples and right_samples:
                 ensure(left_samples[0] == 0 and right_samples[0] == 0, errors, f"presentation SFX must start at zero: {expected['path']}")
                 ensure(left_samples[-1] == 0 and right_samples[-1] == 0, errors, f"presentation SFX must end at zero: {expected['path']}")
-    ensure(len(set(asset_hashes)) == 7, errors, "all seven presentation assets must be byte-distinct")
-    if len(asset_hashes) == 7:
+    ensure(len(set(asset_hashes)) == 9, errors, "all nine presentation assets must be byte-distinct")
+    if len(asset_hashes) == 9:
         pack_signature = hashlib.sha256("\n".join(asset_hashes).encode("utf-8")).hexdigest()
-        ensure(pack_signature == "2de23642dfd9d1329ed96133540126bfd80bada89c5d5ee36fa2c883a28bb801", errors, "presentation SFX pack signature drifted")
+        ensure(pack_signature == "3457d2e8e83d2196bbcb2d7a5fae26b122bcdb6d3ee2ea91985270f5ea16c4f9", errors, "presentation SFX pack signature drifted")
 
     generator_text = PRESENTATION_SFX_GENERATOR_PATH.read_text(encoding="utf-8")
     for required_token in (
@@ -39121,6 +39143,8 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
         "satchel_stow",
         "coin_tick",
         "arcane_swell",
+        "ledger_seal",
+        "continuity_chime",
         "presentation-production-v1",
         "render_stereo",
         "layered_sample",
@@ -39233,6 +39257,42 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
     slot_text = (ROOT / "tests" / "overworld_artifact_slot_cue_playback_report.gd").read_text(encoding="utf-8")
     for required_token in ("audio_placeholder_artifact_stow", "artifact_stow.wav", "overworld_artifact_stowed", "stow_audio_records.size() == 2"):
         ensure(required_token in slot_text, errors, f"artifact-slot focused owner is missing stow-audio proof: {required_token}")
+
+    system_presenters = {
+        save_presenter_path: ("audio_placeholder_save_confirm", "SystemSaveWrittenCuePresenter", '"manual_slot": manual_slot'),
+        load_presenter_path: ("audio_placeholder_load_resume", "SystemLoadResumedCuePresenter", '"sequence": int(load_result.get("sequence", 0))'),
+    }
+    for path, tokens in system_presenters.items():
+        text = path.read_text(encoding="utf-8")
+        for required_token in (
+            "const AUDIO_CUE_ID :=",
+            'policy.get("selected_audio_cue_ids", []) == [AUDIO_CUE_ID]',
+            "_audio_playback_record = PresentationAudio.play_cue(AUDIO_CUE_ID",
+            '"audio_playback_record": _audio_playback_record.duplicate(true)',
+            *tokens,
+        ):
+            ensure(required_token in text, errors, f"{path.name} is missing system presentation-audio ownership: {required_token}")
+        order = [text.find("if not _configured() or not _valid"), text.find("_last_result ="), text.find("_audio_playback_record = PresentationAudio.play_cue"), text.find("_vfx_icon.present(")]
+        ensure(all(index >= 0 for index in order) and order == sorted(order), errors, f"{path.name} must play audio only after full result/policy validation and result ownership")
+        ensure(text.count("PresentationAudio.play_cue") == 1, errors, f"{path.name} must have one exact audio playback call")
+
+    system_reports = {
+        save_report_path: ("audio_placeholder_save_confirm", "save_confirm.wav", "SystemSaveWrittenCuePresenter", "system_save_confirmed"),
+        load_report_path: ("audio_placeholder_load_resume", "load_resume.wav", "SystemLoadResumedCuePresenter", "system_load_resumed"),
+    }
+    for path, tokens in system_reports.items():
+        text = path.read_text(encoding="utf-8")
+        for required_token in (
+            "PresentationAudio.validation_reset()",
+            "PresentationAudio.validation_records().size() == 1",
+            'cue.get("audio_playback_record", {})',
+            'String(audio.get("playback_source", "")) == "imported_wav"',
+            'int(audio.get("stream_mix_rate", 0)) == 44100',
+            'bool(audio.get("stream_stereo", false))',
+            "AudioStreamWAV.LOOP_DISABLED",
+            *tokens,
+        ):
+            ensure(required_token in text, errors, f"{path.name} is missing system presentation-audio proof: {required_token}")
 
 
 def validate_overworld_ambient_audio_runtime(errors: list[str]) -> None:

@@ -38,6 +38,18 @@
       "volume_db": -13.0,
       "role": "overworld_field_spell_cast"
     },
+    "audio_placeholder_save_confirm": {
+      "path": "res://art/audio/runtime/presentation/save_confirm.wav",
+      "duration_msec": 320,
+      "volume_db": -13.5,
+      "role": "system_save_confirmed"
+    },
+    "audio_placeholder_load_resume": {
+      "path": "res://art/audio/runtime/presentation/load_resume.wav",
+      "duration_msec": 360,
+      "volume_db": -13.0,
+      "role": "system_load_resumed"
+    },
     "audio_placeholder_town_build": {
       "path": "res://art/audio/runtime/presentation/town_build.wav",
       "duration_msec": 420,

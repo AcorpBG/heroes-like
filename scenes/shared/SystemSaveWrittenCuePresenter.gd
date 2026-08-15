@@ -6,6 +6,7 @@ const SystemFeedbackVfxIconScript = preload("res://scenes/shared/SystemFeedbackV
 
 const EVENT_ID := "system_save_written"
 const CUE_ID := "cue_system_save_written"
+const AUDIO_CUE_ID := "audio_placeholder_save_confirm"
 const NORMAL_STATE := "save_confirm"
 const REDUCED_STATE := "save_icon_static"
 const NORMAL_ACCENT := Color(1.0, 0.88, 0.42, 1.0)
@@ -20,6 +21,7 @@ var _duration_msec := 0
 var _activation_count := 0
 var _last_policy: Dictionary = {}
 var _last_result: Dictionary = {}
+var _audio_playback_record: Dictionary = {}
 var _button_base_modulate := Color.WHITE
 var _status_base_modulate := Color.WHITE
 var _button_text_at_publish := ""
@@ -71,6 +73,11 @@ func present(save_result: Dictionary, manual_slot: int) -> Dictionary:
 		"message": String(save_result.get("message", "")),
 		"summary": (save_result.get("summary", {}) as Dictionary).duplicate(true),
 	}.duplicate(true)
+	_audio_playback_record = PresentationAudio.play_cue(AUDIO_CUE_ID, "SystemSaveWrittenCuePresenter", {
+		"event_id": EVENT_ID,
+		"manual_slot": manual_slot,
+		"surface": _surface,
+	})
 	_vfx_icon.present(
 		EVENT_ID,
 		policy.get("selected_vfx_cue_ids", []) if policy.get("selected_vfx_cue_ids", []) is Array else [],
@@ -122,6 +129,7 @@ func _valid_policy(policy: Dictionary) -> bool:
 		and String(policy.get("selected_playback_policy", "")) in ["instant", "fast_resolve"]
 		and String(policy.get("selected_blocking_policy", "")) == "never_blocks_input"
 		and selected_state in [NORMAL_STATE, REDUCED_STATE, "save_icon_instant"]
+		and policy.get("selected_audio_cue_ids", []) == [AUDIO_CUE_ID]
 	)
 
 
@@ -160,6 +168,7 @@ func validation_snapshot() -> Dictionary:
 		"message": String(_last_result.get("message", "")),
 		"summary": (_last_result.get("summary", {}) as Dictionary).duplicate(true),
 		"policy": _last_policy.duplicate(true),
+		"audio_playback_record": _audio_playback_record.duplicate(true),
 		"button_text_unchanged": is_instance_valid(_save_button) and _save_button.text == _button_text_at_publish,
 		"status_text_unchanged": is_instance_valid(_status_control) and String(_status_control.get("text")) == _status_text_at_publish,
 		"status_tooltip_unchanged": is_instance_valid(_status_control) and _status_control.tooltip_text == _status_tooltip_at_publish,
