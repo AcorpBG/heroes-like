@@ -171,6 +171,8 @@ OVERWORLD_ROUTE_CLOSED_VFX_RUNTIME_PATH = ROOT / "art" / "overworld" / "runtime"
 OVERWORLD_ROUTE_CLOSED_AUDIO_RUNTIME_PATH = ROOT / "art" / "audio" / "runtime" / "presentation" / "route_closed.wav"
 OVERWORLD_ROUTE_CLOSED_FEEDBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_enemy_route_closure_feedback_report.gd"
 OVERWORLD_ROUTE_CLOSED_FEEDBACK_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_enemy_route_closure_feedback_report.tscn"
+OVERWORLD_ROUTE_EXPIRY_FEEDBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_route_expiry_feedback_report.gd"
+OVERWORLD_ROUTE_EXPIRY_FEEDBACK_REPORT_SCENE_PATH = ROOT / "tests" / "overworld_route_expiry_feedback_report.tscn"
 OVERWORLD_HERO_ROUTE_STEP_VFX_SOURCE_PATH = ROOT / "art" / "overworld" / "source" / "hero_route_step_vfx_source.png"
 OVERWORLD_HERO_ROUTE_STEP_VFX_RUNTIME_PATH = ROOT / "art" / "overworld" / "runtime" / "vfx" / "hero_route_step.png"
 OVERWORLD_HERO_ROUTE_STEP_VFX_REPORT_SCRIPT_PATH = ROOT / "tests" / "overworld_hero_route_step_vfx_asset_runtime_report.gd"
@@ -32772,6 +32774,104 @@ def validate_overworld_route_closed_feedback(errors: list[str]) -> None:
         ensure(token in live_turn_text, errors, f"Enemy live-turn compatibility owner is missing exact active-vs-inactive route-closure event proof: {token}")
 
 
+def validate_overworld_route_expiry_feedback(errors: list[str]) -> None:
+    required_paths = (
+        OVERWORLD_SCRIPT_PATH,
+        OVERWORLD_ROUTE_EXPIRY_FEEDBACK_REPORT_SCRIPT_PATH,
+        OVERWORLD_ROUTE_EXPIRY_FEEDBACK_REPORT_SCENE_PATH,
+        OVERWORLD_ROUTE_CLOSED_VFX_RUNTIME_PATH,
+        OVERWORLD_ROUTE_CLOSED_AUDIO_RUNTIME_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Overworld route-expiry feedback owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    def function_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}")
+        if start < 0:
+            return ""
+        end = text.find("\nfunc ", start + 1)
+        return text[start:] if end < 0 else text[start:end]
+
+    shell_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+    commit = function_block(shell_text, "_commit_end_turn")
+    capture = function_block(shell_text, "_active_route_expiry_candidates")
+    publish = function_block(shell_text, "_record_route_expiry_presentation")
+    capture_pos = commit.find("var route_expiry_candidates := _active_route_expiry_candidates()")
+    rules_pos = commit.find("var result = OverworldRules.end_turn(_session)")
+    autosave_pos = commit.find("if autosave_failed:")
+    routing_pos = commit.find("_handle_session_resolution(true)")
+    enemy_pos = commit.find("_record_route_closed_presentation(_last_enemy_activity_events)")
+    expiry_pos = commit.find("_record_route_expiry_presentation(route_expiry_candidates)")
+    refresh_pos = commit.find("_refresh()", expiry_pos)
+    ensure(-1 not in (capture_pos, rules_pos, autosave_pos, routing_pos, enemy_pos, expiry_pos, refresh_pos) and capture_pos < rules_pos < autosave_pos < routing_pos < enemy_pos < expiry_pos < refresh_pos, errors, "Route-expiry ownership must capture before rules, then publish only after autosave/routing and lower priority than enemy closure")
+    ensure('if _object_resolution_presentation_serial == route_closure_serial_before:' in commit, errors, "Enemy route closure must retain priority over natural expiry")
+    for token in (
+        'response_until_day != int(_session.day)',
+        'String(node.get("collected_by_faction_id", "")) != "player"',
+        'OverworldRules._resource_site_response_state(_session, node, site).get("active", false)',
+        'OverworldRules.is_tile_visible(_session, tile.x, tile.y)',
+        'OverworldRules.active_linked_transit_edges(_session)',
+        '"response_last_day": response_last_day',
+        '"response_until_day": response_until_day',
+        '"response_origin": String(node.get("response_origin", ""))',
+        '"response_commander_id": String(node.get("response_commander_id", ""))',
+        '"response_security_rating": int(node.get("response_security_rating", 0))',
+        '"active_edges": matching_edges',
+    ):
+        ensure(token in capture, errors, f"Route-expiry capture is missing exact pre-turn active/provenance/visibility/transit ownership: {token}")
+    for token in (
+        'int(_session.day) != response_until_day + 1',
+        'String(live_node.get("collected_by_faction_id", "")) != "player"',
+        'int(live_node.get("response_last_day", 0)) != int(candidate.get("response_last_day", -1))',
+        'int(live_node.get("response_until_day", 0)) != response_until_day',
+        'String(live_node.get("response_origin", "")) != String(candidate.get("response_origin", ""))',
+        'String(live_node.get("response_commander_id", "")) != String(candidate.get("response_commander_id", ""))',
+        'int(live_node.get("response_security_rating", 0)) != int(candidate.get("response_security_rating", -1))',
+        'OverworldRules._resource_site_response_state(_session, live_node, site).get("active", true)',
+        'not OverworldRules.is_tile_visible(_session, tile.x, tile.y)',
+        'OverworldRules.active_linked_transit_edges(_session)',
+        'signature == _last_route_expiry_presentation_signature',
+        'cue_playback_policy_for_event(\n\t\t\t"overworld_route_closed"',
+        '"event_id": "overworld_route_closed"',
+        '"family": "route_closure"',
+        '"closure_reason": "natural_expiry"',
+        '"selected_vfx_cue_ids": (policy.get("selected_vfx_cue_ids", []) as Array).duplicate(true)',
+        '"selected_audio_cue_ids": (policy.get("selected_audio_cue_ids", []) as Array).duplicate(true)',
+    ):
+        ensure(token in publish, errors, f"Route-expiry publisher is missing exact post-turn authority/policy/dedupe ownership: {token}")
+    for block_name, block in (("capture", capture), ("publish", publish)):
+        for forbidden in ("EnemyTurnRules", "EnemyAdventureRules", "OverworldRules.end_turn", "session.overworld[", "_session.overworld[", "response_until_day\"] =", "response_last_day\"] =", "create_timer", "create_tween", "await "):
+            ensure(forbidden not in block, errors, f"Route-expiry {block_name} must remain observation/presentation-only: {forbidden}")
+
+    report_text = OVERWORLD_ROUTE_EXPIRY_FEEDBACK_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    scene_text = OVERWORLD_ROUTE_EXPIRY_FEEDBACK_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure_scene_nodes(scene_text, errors, "overworld_route_expiry_feedback_report.tscn", [("OverworldRouteExpiryFeedbackReport", "Node")])
+    for token in (
+        'for viewport_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:',
+        'OverworldRules.perform_context_action(session, "site_response")',
+        'node["response_until_day"] = int(session.day)',
+        'shell.call("validation_end_turn")',
+        'shell.call("validation_end_turn_confirmation_snapshot")',
+        'candidates_before: Array = shell.call("_active_route_expiry_candidates")',
+        '"provenance_preserved": _response_provenance(node_after) == provenance_before',
+        '"response_inactive": not bool(OverworldRules._resource_site_response_state',
+        '"edge_after_absent": edges_after.is_empty()',
+        '"enemy_closure_absent": _route_closed_event(events).is_empty()',
+        'String(raw_presentation.get("closure_reason", "")) == "natural_expiry"',
+        'shell.call("_record_route_expiry_presentation", candidates_before)',
+        'PresentationAudio.validation_records() == records_after',
+        'non_final_candidates.is_empty() and expired_candidates.is_empty() and malformed_silent',
+        'OverworldRules.active_linked_transit_edges(restored).is_empty()',
+        'print("%s %s" % [REPORT_ID, JSON.stringify({',
+    ):
+        ensure(token in report_text, errors, f"Route-expiry focused owner is missing exact live transition/control/dedupe/save proof: {token}")
+    ensure(report_text.count('await _run_expiry_case(viewport_size)') == 1, errors, "Route-expiry owner must run both registered widths through one loop")
+    for forbidden in ("OverworldRules.end_turn", "_record_route_closed_presentation", "_sync_object_resolution_presentation", "_play_object_resolution_audio", "create_timer", "create_tween"):
+        ensure(forbidden not in report_text, errors, f"Route-expiry focused owner must use the real Shell end-turn path without bypassing production: {forbidden}")
+
+
 def validate_overworld_object_focus_cue_playback(errors: list[str]) -> None:
     required_paths = (
         OVERWORLD_SCRIPT_PATH,
@@ -42572,6 +42672,7 @@ def main() -> int:
     validate_overworld_object_blocked_feedback(errors)
     validate_overworld_route_open_feedback(errors)
     validate_overworld_route_closed_feedback(errors)
+    validate_overworld_route_expiry_feedback(errors)
     validate_overworld_object_focus_cue_playback(errors)
     validate_overworld_object_resolution_cue_playback(errors)
     validate_neutral_dwelling_unit_slice(errors)

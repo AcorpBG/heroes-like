@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The enemy route-closure feedback slice is completed. A real enemy seizure of a player resource with an active response route emits the exact compact route_closed reason and, after successful end-turn autosave, publishes one visible authored overworld_route_closed cue with original imported VFX, deterministic 440 ms stereo audio, reduced-motion icon, and distinct missing-asset fallback. Focused 1280x720/1920x1080, inactive-route control, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged route interaction/listening, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+  "currentNotes": "The route-expiry feedback slice is completed. A real Shell end turn captures exact final-day player response candidates before rule mutation, then after successful autosave and unresolved routing validates the same visible site, preserved response provenance, inactive response, and absent transit edge before reusing the shipped route-closed cue. Enemy seizure closure retains priority. Focused 1280x720/1920x1080, silence/dedupe/save, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged expiry interaction/listening, hardware certification, signing/publication, whole-game, and release readiness remain unclaimed.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-enemy-route-closure-feedback-10184",
-  "currentSliceId": "presentation-overworld-enemy-route-closure-feedback-10184",
-  "currentSliceNotes": "Completed with exact live enemy-turn route-closure identity, imported/fallback VFX, deterministic audio, focused authority proof, compatibility, repository/editor, and bounded Linux/Windows export-startup validation.",
+  "currentSlice": "presentation-overworld-route-expiry-feedback-10184",
+  "currentSliceId": "presentation-overworld-route-expiry-feedback-10184",
+  "currentSliceNotes": "Completed with exact pre-turn final-day capture, post-autosave live validation, preserved response provenance, enemy-closure priority, focused authority proof, compatibility, static/editor, and bounded Linux/Windows export-startup validation.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Enemy Route-Closure Feedback",
-  "currentSliceUpdatedAt": "2026-08-15T23:17:19Z",
+  "currentSliceTitle": "Overworld Route-Expiry Feedback",
+  "currentSliceUpdatedAt": "2026-08-15T23:50:16Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -85583,6 +85583,88 @@
         "activeTransitEdgesAfter": 0,
         "audioDurationMsec": 440,
         "presentationSfxPackSignature": "7bbf09643cea0a288ea61a2608ad59b3bd5a1b8147a931eceea4aad42079f3cf",
+        "linuxExportHeadlessStartupPassed": true,
+        "windowsExportFreshWineStartupPassed": true
+      },
+      "blockedReason": null
+    },
+    {
+      "id": "presentation-overworld-route-expiry-feedback-10184",
+      "title": "Overworld Route-Expiry Feedback",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/animation-systems-foundation.md",
+        "docs/animation-overworld-object-state-contract-report.md",
+        "AGENTS.md"
+      ],
+      "purpose": "Surface the exact successful end-turn transition that naturally deactivates a final-day player response route, reusing the shipped route-closure presentation without changing response or route rules.",
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "tests/overworld_route_expiry_feedback_report.gd",
+        "tests/overworld_route_expiry_feedback_report.tscn",
+        "tests/overworld_enemy_route_closure_feedback_report.gd",
+        "tests/overworld_field_route_response_open_feedback_report.gd",
+        "tests/overworld_rope_lift_live_transit_report.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/accessibility_screen_reader_semantics_report.gd",
+        "tests/core_systems_regression_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_route_expiry_feedback_report.tscn",
+        "tests/overworld_enemy_route_closure_feedback_report.tscn",
+        "tests/overworld_field_route_response_open_feedback_report.tscn",
+        "tests/overworld_rope_lift_live_transit_report.tscn",
+        "tests/overworld_visual_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "baseline": {
+        "head": "5dee973d780e2c041243a3249cba0770d63a9ce5",
+        "response_active_expression": "response_until_day >= session.day",
+        "final_day_end_turn_closes_transit": true,
+        "response_provenance_persists": true,
+        "live_expiry_presentation_present": false,
+        "reuses_event_id": "overworld_route_closed"
+      },
+      "completionCriteria": [
+        "Real Shell end-turn at 1280x720 and 1920x1080 advances an active final-day Rope Lift response to inactive, closes its exact transit edge, preserves response provenance, saves the post-turn state, and publishes one imported overworld_route_closed VFX/audio presentation",
+        "Non-final-day, already-expired, enemy-seized, hidden, malformed, autosave-failed, battle-routed, outcome-routed, refresh, and duplicate controls remain silent, with enemy seizure closure retaining priority",
+        "Reduced-motion and missing-asset fallbacks remain exact while response/route/end-turn/session/save and every other presentation authority remain unchanged",
+        "Focused expiry, enemy closure/open-route, Rope Lift, visual, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "response duration, cost, provenance clearing, transit/pathfinding, enemy AI/events, fog, save/schema, content, Native RMG, animation catalog, VFX/audio assets, or map topology changes",
+        "Town-screen expiry presentation, multi-expiry carousel, hover or ambient loops, layout, particles, shaders, spatial audio, haptics, or final mastering",
+        "packaged interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "createdAt": "2026-08-15T23:19:21Z",
+      "startedAt": "2026-08-15T23:19:21Z",
+      "updatedAt": "2026-08-15T23:50:16Z",
+      "completedAt": "2026-08-15T23:50:16Z",
+      "notes": "Completed live behavior: Shell captures exact final-day player response routes before OverworldRules.end_turn, then only after successful autosave and unresolved battle/outcome routing validates the same visible player-controlled site, unchanged response provenance, inactive response state, and absent linked transit edge before publishing the shipped overworld_route_closed VFX/audio cue. Enemy seizure closure retains priority through the existing presentation serial. Focused 1280x720/1920x1080 proof preserves player control and response provenance while closing edge 1->0, with exact audio/VFX, save, dedupe, non-final, already-expired, and malformed controls. Enemy closure/open-route, Rope Lift, shared cue, accessibility, visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Platform evidence is export/startup only; packaged interaction/listening and release readiness are not claimed.",
+      "remainingWork": "None for this bounded slice. Select the next tracker-approved release-readiness implementation slice; broader release gaps remain.",
+      "validation": {
+        "focusedArtifact": "/tmp/heroes-route-expiry-focused.6pikEt",
+        "compatibilityArtifact": "/tmp/heroes-route-expiry-compat.PF44JN",
+        "staticEditorArtifact": "/tmp/heroes-route-expiry-static.qufe90",
+        "linuxPackagingArtifact": "/tmp/heroes-route-expiry-linux-package.kvqS1q",
+        "windowsPackagingArtifact": "/tmp/heroes-route-expiry-windows-package.08HzdI",
+        "normalViewportCount": 2,
+        "activeTransitEdgesBefore": 1,
+        "activeTransitEdgesAfter": 0,
+        "responseProvenancePreserved": true,
+        "enemyClosurePriorityPreserved": true,
         "linuxExportHeadlessStartupPassed": true,
         "windowsExportFreshWineStartupPassed": true
       },
