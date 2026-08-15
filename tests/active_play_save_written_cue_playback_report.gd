@@ -29,6 +29,8 @@ func _run() -> void:
 		var route: Dictionary = route_value
 		for mode in [
 			{"width": 1280, "reduced_motion": false},
+			{"width": 1280, "reduced_motion": true},
+			{"width": 1920, "reduced_motion": false},
 			{"width": 1920, "reduced_motion": true},
 		]:
 			var row := await _exercise_route(route, int(mode.get("width", 0)), bool(mode.get("reduced_motion", false)))
@@ -87,6 +89,8 @@ func _exercise_route(route: Dictionary, width: int, reduced_motion: bool) -> Dic
 	var status_control: Control = shell.get_node("%%%s" % String(route.get("status", "")))
 	if presenter == null:
 		return _fail_shell(host, "Missing shared save-written presenter on %s." % route_id)
+	var button_rect_before_cue := save_button.get_global_rect()
+	var status_rect_before_cue := status_control.get_global_rect()
 	var session_before: Dictionary = session.to_dict()
 	var settings_before: Dictionary = SettingsService.settings.duplicate(true)
 	var initial_cue: Dictionary = shell.call("validation_save_written_cue_snapshot")
@@ -114,6 +118,7 @@ func _exercise_route(route: Dictionary, width: int, reduced_motion: bool) -> Dic
 	var cue: Dictionary = shell.call("validation_save_written_cue_snapshot")
 	var summary: Dictionary = SaveService.inspect_manual_slot(SLOT)
 	var policy: Dictionary = cue.get("policy", {}) if cue.get("policy", {}) is Dictionary else {}
+	var vfx: Dictionary = cue.get("vfx_asset", {}) if cue.get("vfx_asset", {}) is Dictionary else {}
 	var expected_state := "save_icon_static" if reduced_motion else "save_confirm"
 	var expected_size := Vector2i(width, 720 if width == 1280 else 1080)
 	var checks := {
@@ -132,6 +137,8 @@ func _exercise_route(route: Dictionary, width: int, reduced_motion: bool) -> Dic
 		"copy_unchanged": bool(cue.get("button_text_unchanged", false)) and bool(cue.get("status_text_unchanged", false)) and bool(cue.get("status_tooltip_unchanged", false)),
 		"button_highlighted": cue.get("button_modulate") != cue.get("button_base_modulate"),
 		"status_highlighted": cue.get("status_modulate") != cue.get("status_base_modulate"),
+		"vfx_exact": _vfx_exact(vfx, save_button, not reduced_motion, "system_save_written", "vfx_placeholder_save_confirm", "res://art/ui/runtime/system_feedback/save_confirm.png"),
+		"layout_exact": save_button.get_global_rect() == button_rect_before_cue and status_control.get_global_rect() == status_rect_before_cue,
 		"session_exact": session.to_dict() == session_before,
 		"settings_exact": SettingsService.settings == settings_before,
 		"selection_exact": SaveService.get_selected_manual_slot() == SLOT,
@@ -169,6 +176,7 @@ func _exercise_route(route: Dictionary, width: int, reduced_motion: bool) -> Dic
 		"count_stable": int(expired.get("activation_count", 0)) == 1,
 		"button_restored": expired.get("button_modulate") == expired.get("button_base_modulate"),
 		"status_restored": expired.get("status_modulate") == expired.get("status_base_modulate"),
+		"vfx_cleared": not bool((expired.get("vfx_asset", {}) as Dictionary).get("icon_visible", true)),
 		"session_exact": session.to_dict() == session_before,
 	}
 	if not _checks_exact(expiry_checks):
@@ -185,6 +193,26 @@ func _exercise_route(route: Dictionary, width: int, reduced_motion: bool) -> Dic
 	host.queue_free()
 	await _settle()
 	return row
+
+
+func _vfx_exact(vfx: Dictionary, host: Control, expects_imported: bool, event_id: String, cue_id: String, texture_path: String) -> bool:
+	var icon_rect: Rect2 = vfx.get("icon_global_rect", Rect2())
+	var host_rect := host.get_global_rect()
+	if expects_imported:
+		return (
+			bool(vfx.get("configured", false))
+			and bool(vfx.get("imported", false))
+			and bool(vfx.get("icon_visible", false))
+			and String(vfx.get("event_id", "")) == event_id
+			and String(vfx.get("cue_id", "")) == cue_id
+			and String(vfx.get("texture_path", "")) == texture_path
+			and String(vfx.get("render_mode", "")) == "system_feedback_icon"
+			and vfx.get("texture_size", {}) == {"x": 512, "y": 512}
+			and bool(vfx.get("mouse_filter_ignore", false))
+			and bool(vfx.get("focus_none", false))
+			and host_rect.grow(0.5).encloses(icon_rect)
+		)
+	return bool(vfx.get("configured", false)) and not bool(vfx.get("imported", false)) and not bool(vfx.get("icon_visible", true)) and String(vfx.get("fallback", "")) == "reduced_motion_text_tint_only"
 
 
 func _session_for_route(route_id: String, day: int):

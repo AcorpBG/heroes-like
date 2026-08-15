@@ -128,7 +128,7 @@ func _ready() -> void:
 	_load_resumed_cue_presenter = SystemLoadResumedCuePresenterScript.new()
 	_load_resumed_cue_presenter.name = "SystemLoadResumedCuePresenter"
 	add_child(_load_resumed_cue_presenter)
-	_load_resumed_cue_presenter.configure(_save_status_label, "town")
+	_load_resumed_cue_presenter.configure(_save_status_label, _save_button, "town")
 	resized.connect(_apply_responsive_layout)
 	_apply_responsive_layout()
 	buckets["theme"] = ProfileLogScript.elapsed_ms(phase_started)

@@ -170,6 +170,12 @@ ACTIVE_PLAY_SAVE_WRITTEN_CUE_PLAYBACK_REPORT_SCENE_PATH = ROOT / "tests" / "acti
 SYSTEM_LOAD_RESUMED_CUE_PRESENTER_SCRIPT_PATH = ROOT / "scenes" / "shared" / "SystemLoadResumedCuePresenter.gd"
 ACTIVE_PLAY_LOAD_RESUMED_CUE_PLAYBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "active_play_load_resumed_cue_playback_report.gd"
 ACTIVE_PLAY_LOAD_RESUMED_CUE_PLAYBACK_REPORT_SCENE_PATH = ROOT / "tests" / "active_play_load_resumed_cue_playback_report.tscn"
+SYSTEM_FEEDBACK_VFX_MANIFEST_PATH = CONTENT_DIR / "system_feedback_vfx_manifest.json"
+SYSTEM_FEEDBACK_VFX_SOURCE_PATH = ROOT / "art" / "ui" / "source" / "system_feedback_vfx_source.png"
+SYSTEM_FEEDBACK_VFX_RUNTIME_DIR = ROOT / "art" / "ui" / "runtime" / "system_feedback"
+SYSTEM_FEEDBACK_VFX_ICON_SCRIPT_PATH = ROOT / "scenes" / "shared" / "SystemFeedbackVfxIcon.gd"
+ACTIVE_PLAY_SYSTEM_FEEDBACK_VFX_REPORT_SCRIPT_PATH = ROOT / "tests" / "active_play_system_feedback_vfx_asset_runtime_report.gd"
+ACTIVE_PLAY_SYSTEM_FEEDBACK_VFX_REPORT_SCENE_PATH = ROOT / "tests" / "active_play_system_feedback_vfx_asset_runtime_report.tscn"
 OVERWORLD_ART_MANIFEST_PATH = ROOT / "art" / "overworld" / "manifest.json"
 TERRAIN_GRAMMAR_PATH = CONTENT_DIR / "terrain_grammar.json"
 TERRAIN_LAYERS_PATH = CONTENT_DIR / "terrain_layers.json"
@@ -31045,7 +31051,7 @@ def validate_active_play_load_resumed_cue_playback(errors: list[str]) -> None:
         'const CUE_ID := "cue_system_load_resumed"',
         'const NORMAL_STATE := "load_resume"',
         'const REDUCED_STATE := "load_icon_static"',
-        "func configure(status_control: Control, surface: String) -> bool:",
+        "func configure(status_control: Control, icon_host: Control, surface: String) -> bool:",
         "func present(load_result: Dictionary) -> Dictionary:",
         "AnimationCueCatalogScript.cue_playback_policy_for_event(",
         "SettingsService.animation_preferences()",
@@ -31082,7 +31088,7 @@ def validate_active_play_load_resumed_cue_playback(errors: list[str]) -> None:
             'const SystemLoadResumedCuePresenterScript = preload("res://scenes/shared/SystemLoadResumedCuePresenter.gd")',
             "var _load_resumed_cue_presenter: SystemLoadResumedCuePresenter",
             '_load_resumed_cue_presenter.name = "SystemLoadResumedCuePresenter"',
-            f'_load_resumed_cue_presenter.configure({target}, "{surface}")',
+            f'_load_resumed_cue_presenter.configure({target}, _save_button, "{surface}")',
             ordered_consume,
             f'AppRouter.consume_load_resumed_presentation("{surface}")',
             "func validation_load_resumed_cue_snapshot() -> Dictionary:",
@@ -31127,6 +31133,162 @@ def validate_active_play_load_resumed_cue_playback(errors: list[str]) -> None:
         "AnimationCueCatalogScript",
     ):
         ensure(forbidden not in report_text, errors, f"Active-play load-resumed report must drive the real Main Menu action without bypassing production: {forbidden}")
+
+
+def validate_active_play_system_feedback_vfx_assets(errors: list[str]) -> None:
+    runtime_paths = {
+        "system_save_written": ("vfx_placeholder_save_confirm", SYSTEM_FEEDBACK_VFX_RUNTIME_DIR / "save_confirm.png"),
+        "system_load_resumed": ("vfx_placeholder_load_resume", SYSTEM_FEEDBACK_VFX_RUNTIME_DIR / "load_resume.png"),
+    }
+    required_paths = (
+        SYSTEM_FEEDBACK_VFX_MANIFEST_PATH,
+        SYSTEM_FEEDBACK_VFX_SOURCE_PATH,
+        SYSTEM_FEEDBACK_VFX_ICON_SCRIPT_PATH,
+        SYSTEM_SAVE_WRITTEN_CUE_PRESENTER_SCRIPT_PATH,
+        SYSTEM_LOAD_RESUMED_CUE_PRESENTER_SCRIPT_PATH,
+        ACTIVE_PLAY_SYSTEM_FEEDBACK_VFX_REPORT_SCRIPT_PATH,
+        ACTIVE_PLAY_SYSTEM_FEEDBACK_VFX_REPORT_SCENE_PATH,
+        ACTIVE_PLAY_SAVE_WRITTEN_CUE_PLAYBACK_REPORT_SCRIPT_PATH,
+        ACTIVE_PLAY_LOAD_RESUMED_CUE_PLAYBACK_REPORT_SCRIPT_PATH,
+        *(path for _, path in runtime_paths.values()),
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing active-play system-feedback VFX owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    expected_manifest = {
+        "schema_id": "system_feedback_vfx_manifest_v1",
+        "cues": {
+            "vfx_placeholder_save_confirm": {
+                "event_id": "system_save_written",
+                "texture_path": "res://art/ui/runtime/system_feedback/save_confirm.png",
+                "render_mode": "system_feedback_icon",
+                "scale": 1.0,
+            },
+            "vfx_placeholder_load_resume": {
+                "event_id": "system_load_resumed",
+                "texture_path": "res://art/ui/runtime/system_feedback/load_resume.png",
+                "render_mode": "system_feedback_icon",
+                "scale": 1.0,
+            },
+        },
+    }
+    ensure(load_json(SYSTEM_FEEDBACK_VFX_MANIFEST_PATH) == expected_manifest, errors, "System-feedback VFX manifest must remain the exact two-cue local mapping")
+    ensure(png_size(SYSTEM_FEEDBACK_VFX_SOURCE_PATH) == (1672, 941), errors, "System-feedback source atlas must remain the exact 1672x941 generated image")
+    source_header = SYSTEM_FEEDBACK_VFX_SOURCE_PATH.read_bytes()[:26]
+    ensure(len(source_header) >= 26 and source_header[25] in {4, 6}, errors, "System-feedback source atlas must retain a PNG alpha channel")
+    runtime_payloads: list[bytes] = []
+    for event_id, (_, path) in runtime_paths.items():
+        ensure(png_size(path) == (512, 512), errors, f"System-feedback runtime texture must remain 512x512: {event_id}")
+        header = path.read_bytes()[:26]
+        ensure(len(header) >= 26 and header[25] in {4, 6}, errors, f"System-feedback runtime texture must retain alpha: {event_id}")
+        runtime_payloads.append(path.read_bytes())
+    ensure(len(set(runtime_payloads)) == 2, errors, "Save-confirm and load-resume must retain distinct runtime textures")
+
+    icon_text = SYSTEM_FEEDBACK_VFX_ICON_SCRIPT_PATH.read_text(encoding="utf-8")
+    for token in (
+        "class_name SystemFeedbackVfxIcon",
+        'const MANIFEST_PATH := "res://content/system_feedback_vfx_manifest.json"',
+        'const SCHEMA_ID := "system_feedback_vfx_manifest_v1"',
+        'const RENDER_MODE := "system_feedback_icon"',
+        "const ICON_SIZE := Vector2(14.0, 14.0)",
+        "func configure(host: Control) -> bool:",
+        "mouse_filter = Control.MOUSE_FILTER_IGNORE",
+        "focus_mode = Control.FOCUS_NONE",
+        "custom_minimum_size = Vector2.ZERO",
+        "set_anchors_preset(Control.PRESET_TOP_RIGHT)",
+        "func present(event_id: String, selected_vfx_cue_ids: Array, allows_large_motion: bool) -> Dictionary:",
+        "if not allows_large_motion or event_id.strip_edges() == \"\" or cue_id == \"\":",
+        "var manifest := ContentService.load_json(MANIFEST_PATH)",
+        'String(spec.get("event_id", "")) != event_id or String(spec.get("render_mode", "")) != RENDER_MODE',
+        "if not (loaded is Texture2D):",
+        '_state["imported"] = true',
+        "func apply_progress(progress: float) -> void:",
+        "func clear() -> void:",
+        "func validation_snapshot() -> Dictionary:",
+    ):
+        ensure(token in icon_text, errors, f"System-feedback icon is missing exact fail-closed presentation ownership: {token}")
+    for forbidden in (
+        "SaveService",
+        "SessionState",
+        "AppRouter",
+        "change_scene",
+        "grab_focus",
+        "create_timer",
+        "create_tween",
+        "minimum_size_changed",
+        "queue_sort",
+    ):
+        ensure(forbidden not in icon_text, errors, f"System-feedback icon must remain presentation-only and layout-neutral: {forbidden}")
+
+    presenter_specs = {
+        "save": SYSTEM_SAVE_WRITTEN_CUE_PRESENTER_SCRIPT_PATH.read_text(encoding="utf-8"),
+        "load": SYSTEM_LOAD_RESUMED_CUE_PRESENTER_SCRIPT_PATH.read_text(encoding="utf-8"),
+    }
+    for name, text in presenter_specs.items():
+        for token in (
+            'const SystemFeedbackVfxIconScript = preload("res://scenes/shared/SystemFeedbackVfxIcon.gd")',
+            "var _vfx_icon: SystemFeedbackVfxIcon",
+            "_vfx_icon = SystemFeedbackVfxIconScript.new()",
+            "policy.get(\"selected_vfx_cue_ids\", [])",
+            "bool(policy.get(\"allows_large_motion\", true))",
+            "_vfx_icon.apply_progress(progress)",
+            "_vfx_icon.clear()",
+            '"vfx_asset": _vfx_icon.validation_snapshot()',
+        ):
+            ensure(token in text, errors, f"{name} presenter is missing shared system-feedback VFX lifecycle: {token}")
+        ensure(text.count("_vfx_icon.present(") == 1, errors, f"{name} presenter must publish the imported effect exactly once per accepted cue")
+    ensure("_vfx_icon.configure(_save_button)" in presenter_specs["save"], errors, "Save effect must be hosted inside the existing Save button")
+    ensure("_vfx_icon.configure(_icon_host)" in presenter_specs["load"], errors, "Load effect must be hosted inside the explicit existing Save button")
+
+    report_text = ACTIVE_PLAY_SYSTEM_FEEDBACK_VFX_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    scene_text = ACTIVE_PLAY_SYSTEM_FEEDBACK_VFX_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure_scene_nodes(scene_text, errors, "active_play_system_feedback_vfx_asset_runtime_report.tscn", [("ActivePlaySystemFeedbackVfxAssetRuntimeReport", "Node")])
+    for token in (
+        'const REPORT_ID := "ACTIVE_PLAY_SYSTEM_FEEDBACK_VFX_ASSET_RUNTIME_REPORT"',
+        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        '"system_save_written": {',
+        '"system_load_resumed": {',
+        '"vfx_missing_system_feedback"',
+        "var normal: Dictionary = icon.present(",
+        "var reduced: Dictionary = icon.present(",
+        "var missing: Dictionary = icon.present(",
+        "host_rect.grow(0.5).encloses(icon_rect)",
+        'icon_rect.size == Vector2(14.0, 14.0)',
+        "host.custom_minimum_size == authority.get(\"minimum\")",
+        "source.get_size() == Vector2i(1672, 941)",
+        "distinct_hash_count == 2",
+        'print("%s %s" % [REPORT_ID, JSON.stringify({"ok": true, "asset_contract": asset_contract, "rows": rows})])',
+    ):
+        ensure(token in report_text, errors, f"System-feedback focused owner is missing exact asset/fallback/layout proof: {token}")
+    ensure(report_text.count("for viewport_size in VIEWPORT_SIZES:") == 1, errors, "System-feedback focused owner must run both registered widths exactly once")
+    for forbidden in ("SystemSaveWrittenCuePresenter", "SystemLoadResumedCuePresenter", "SaveService", "AppRouter", "SessionState", "create_timer", "create_tween"):
+        ensure(forbidden not in report_text, errors, f"System-feedback asset owner must not bypass live presenters or mutate authority: {forbidden}")
+
+    real_reports = {
+        "save": ACTIVE_PLAY_SAVE_WRITTEN_CUE_PLAYBACK_REPORT_SCRIPT_PATH.read_text(encoding="utf-8"),
+        "load": ACTIVE_PLAY_LOAD_RESUMED_CUE_PLAYBACK_REPORT_SCRIPT_PATH.read_text(encoding="utf-8"),
+    }
+    real_expectations = {
+        "save": ('"res://art/ui/runtime/system_feedback/save_confirm.png"', '"vfx_placeholder_save_confirm"', '"system_save_written"'),
+        "load": ('"res://art/ui/runtime/system_feedback/load_resume.png"', '"vfx_placeholder_load_resume"', '"system_load_resumed"'),
+    }
+    for name, text in real_reports.items():
+        for token in (
+            '{"width": 1280, "reduced_motion": false}' if name == "save" else '{"width": 1280, "height": 720, "reduced_motion": false}',
+            '{"width": 1280, "reduced_motion": true}' if name == "save" else '{"width": 1280, "height": 720, "reduced_motion": true}',
+            '{"width": 1920, "reduced_motion": false}' if name == "save" else '{"width": 1920, "height": 1080, "reduced_motion": false}',
+            '{"width": 1920, "reduced_motion": true}' if name == "save" else '{"width": 1920, "height": 1080, "reduced_motion": true}',
+            *real_expectations[name],
+            'vfx.get("texture_size", {}) == {"x": 512, "y": 512}',
+            'String(vfx.get("fallback", "")) == "reduced_motion_text_tint_only"',
+            'host_rect.grow(0.5).encloses(icon_rect)',
+            'bool((expired.get("vfx_asset", {}) as Dictionary).get("icon_visible", true))',
+        ):
+            ensure(token in text, errors, f"Real {name} cue owner is missing exact imported/reduced/expiry proof: {token}")
+        for forbidden in ("_vfx_icon.present(", "SystemFeedbackVfxIconScript", "ContentService.load_json"):
+            ensure(forbidden not in text, errors, f"Real {name} cue owner must observe the production presenter without bypassing VFX behavior: {forbidden}")
 
 
 def validate_overworld_action_feedback_vfx_assets(errors: list[str]) -> None:
@@ -40790,6 +40952,7 @@ def main() -> int:
     validate_resource_stockpile_icon_popover(errors)
     validate_active_play_save_written_cue_playback(errors)
     validate_active_play_load_resumed_cue_playback(errors)
+    validate_active_play_system_feedback_vfx_assets(errors)
     validate_overworld_action_feedback_vfx_assets(errors)
     validate_overworld_object_resolution_vfx_assets(errors)
     validate_overworld_field_spell_vfx_assets(errors)

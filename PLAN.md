@@ -24,7 +24,9 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Completed implementation slice: `presentation-overworld-action-feedback-vfx-asset-adoption-10184`. Artifact recovery, artifact equip, artifact stow, and resource collection now render four distinct original imported alpha effects inside the existing bottom CueChip and ResourceChip overlays. Normal motion uses the exact existing cue identities; reduced motion and missing assets remain text-only. Focused 1280x720/1920x1080, real action authority, eleven-cue VFX compatibility, broad Overworld visual/input/focus/accessibility/core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged action interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+- Completed implementation slice: `presentation-active-play-system-feedback-vfx-asset-adoption-10184`. Save-written and load-resumed feedback now renders two distinct original imported alpha effects through one fail-closed, layout-neutral shared renderer inside the visible Save button on Overworld, Town, Battle, and Scenario Outcome. Normal and reduced-motion live save/load matrices pass at both 1280x720 and 1920x1080 with exact text/tint, focus, expiry, session/settings/save authority, while reduced motion and missing assets remain text/tint-only. Compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged save/load interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `presentation-active-play-system-feedback-vfx-asset-adoption-10184`
+- Completed implementation slice: `presentation-overworld-action-feedback-vfx-asset-adoption-10184`. Artifact recovery, artifact equip, artifact stow, and resource collection now render four distinct original imported alpha effects inside the existing bottom CueChip and ResourceChip overlays. Normal motion uses the exact existing cue identities; reduced motion and missing assets remain text-only. Focused 1280x720/1920x1080, real action authority, eleven-cue VFX compatibility, broad Overworld visual/input/focus/accessibility/core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged action interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
   id: `presentation-overworld-action-feedback-vfx-asset-adoption-10184`
 - Completed implementation slice: `presentation-overworld-hero-route-step-vfx-asset-adoption-10184`. Normal live hero-route playback now draws one original imported alpha dust-and-rune trail behind the unchanged interpolated hero marker through the exact existing `vfx_placeholder_route_step` cue. The renderer rotates the effect with the current route segment and preserves exact route execution, hero identity/grounding, bounded timing, dynamic-layer lifecycle, marker-only missing-map/missing-texture fallback, and zero-duration reduced-motion endpoint snap. Focused 1280x720/1920x1080, real full-route, seven-cue Overworld VFX manifest, visual/input/focus/accessibility/core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged route interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `presentation-overworld-hero-route-step-vfx-asset-adoption-10184`
@@ -5453,6 +5455,32 @@ Non-goals:
 - no artifact, resource, reward, inventory, slot, economy, route, object, input, focus, timing, animation-policy, AI, save-schema, content, or map changes;
 - no panel expansion, dashboard, command ordering, broader layout redesign, other Overworld/Town/Battle/UI cue, particles, shaders, audio, or global renderer changes;
 - no packaged action interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+## Selected Slice: Active-Play System Feedback VFX Asset Adoption
+
+Slice id: `presentation-active-play-system-feedback-vfx-asset-adoption-10184`
+
+Implementation boundary:
+- create one original source atlas and two bounded alpha runtime textures for the existing `vfx_placeholder_save_confirm` and `vfx_placeholder_load_resume` cues;
+- map only those exact cue ids in a local system-feedback VFX manifest and render them non-blockingly inside the existing save button or status-control bounds through the existing live presenters on Overworld, Town, Battle, and Scenario Outcome;
+- retain exact text/tint behavior with no imported icon for reduced motion, missing manifest rows, or unloadable textures;
+- preserve save/load payloads, serialization/schema/routing, cue policy and timing, labels/tooltips, layout minima, focus/input, session/settings authority, and every other cue.
+
+Completion criteria:
+- normal live save-written and load-resumed playback each visibly renders one distinct exact imported texture at 1280x720 and 1920x1080 on all four active-play surfaces;
+- imported icons remain contained, nonblocking, and layout-neutral, while reduced motion and missing mapping/texture remain exact text/tint-only fallbacks;
+- focused real save/load proof preserves payload/version/path, label/tooltip, duration/progress, focus, lifecycle, session/settings authority, and existing cross-surface behavior;
+- save-written/load-resumed cue owners, save/load compatibility, animation cue policy/catalog, accessibility/core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Completion evidence:
+- one retained 1672x941 alpha source atlas produces two distinct 512x512 alpha runtime textures mapped only to the exact save-confirm and load-resume cue ids;
+- focused asset/fallback proof passes at both registered widths, and real save plus cross-scene Main Menu load matrices pass all four surfaces in normal and reduced-motion modes at both widths with exact focus/layout/session/settings/save authority;
+- manual overwrite, save/load confidence, keyboard focus, accessibility, animation cue catalog, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass with bounded claims only.
+
+Non-goals:
+- no save/load serialization, schema, routing, slot, recovery, autosave, gameplay, session, settings, focus, input, cue timing, or animation-policy changes;
+- no panel expansion, status copy rewrite, layout redesign, particles, shaders, audio, other cue/event assets, or global renderer changes;
+- no packaged save/load interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
 
 ## Progress Reconciliation
 

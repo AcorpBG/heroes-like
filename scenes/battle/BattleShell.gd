@@ -150,7 +150,7 @@ func _ready() -> void:
 	_load_resumed_cue_presenter = SystemLoadResumedCuePresenterScript.new()
 	_load_resumed_cue_presenter.name = "SystemLoadResumedCuePresenter"
 	add_child(_load_resumed_cue_presenter)
-	_load_resumed_cue_presenter.configure(_system_body_label, "battle")
+	_load_resumed_cue_presenter.configure(_system_body_label, _save_button, "battle")
 	_configure_quick_resolve_confirmation()
 	_configure_withdrawal_confirmation()
 	_configure_confirmation_input_forwarding()
