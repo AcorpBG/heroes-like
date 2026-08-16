@@ -183,6 +183,9 @@ func _validate_battle_board_semantics_width(width: int) -> bool:
 	if not _validate_turn_strip_identity_surface(board, session, width):
 		shell.queue_free()
 		return false
+	if not _validate_order_tab_compact_summary(shell, session, width):
+		shell.queue_free()
+		return false
 	board.grab_focus()
 	await _settle()
 	if live.text != "":
@@ -757,6 +760,118 @@ func _validate_turn_strip_identity_surface(board: Control, session, width: int) 
 	if _battle_background_authority(session) != authority_before:
 		return _fail_bool("Inspecting Battle initiative-strip identity changed session/save/settings authority at %d." % width)
 	return true
+
+func _validate_order_tab_compact_summary(shell: Control, session, width: int) -> bool:
+	var authority_before := _battle_background_authority(session)
+	var initiative_label: Label = shell.get_node("%Initiative")
+	var initiative_panel: PanelContainer = shell.get_node("%InitiativePanel")
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var handoff: Dictionary = snapshot.get("initiative_handoff", {}) if snapshot.get("initiative_handoff", {}) is Dictionary else {}
+	var expected_handoff := _expected_initiative_handoff_for_test(session)
+	var expected_visible := "Initiative cue:\nNow: %s\nNext: %s" % [
+		_short_text_for_test(String(expected_handoff.get("current_stack", "")), 18),
+		_short_text_for_test(String(expected_handoff.get("next_stack", "")), 18),
+	]
+	var full_track := BattleRules.describe_initiative_track(session)
+	var expected_tooltip := "%s\n\n%s" % [String(expected_handoff.get("tooltip_text", "")), full_track]
+	var visible_lines := initiative_label.text.split("\n", false)
+	var font := initiative_label.get_theme_font("font")
+	var font_size := initiative_label.get_theme_font_size("font_size")
+	var widest_line := 0.0
+	for line_value in visible_lines:
+		widest_line = maxf(widest_line, font.get_string_size(String(line_value), HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x)
+	if (
+		handoff != expected_handoff
+		or initiative_label.text != expected_visible
+		or String(snapshot.get("initiative_visible_text", "")) != expected_visible
+		or initiative_label.tooltip_text != expected_tooltip
+		or visible_lines.size() != 3
+		or initiative_label.get_line_count() != 3
+		or widest_line > initiative_label.size.x + 0.5
+		or not initiative_panel.get_global_rect().encloses(initiative_label.get_global_rect())
+		or initiative_label.text.contains(" | Init ")
+		or initiative_label.text.contains(" | HP ")
+		or not initiative_label.tooltip_text.contains(" | Init ")
+		or not initiative_label.tooltip_text.contains(" | HP ")
+	):
+		return _fail_bool("Battle Order-tab compact initiative summary mismatch at %d: visible=%s expected=%s width=%s/%s lines=%s/%s tooltip=%s expected_tooltip=%s handoff=%s expected_handoff=%s label_rect=%s panel_rect=%s." % [width, initiative_label.text, expected_visible, widest_line, initiative_label.size.x, visible_lines.size(), initiative_label.get_line_count(), initiative_label.tooltip_text, expected_tooltip, handoff, expected_handoff, initiative_label.get_global_rect(), initiative_panel.get_global_rect()])
+	if _battle_background_authority(session) != authority_before:
+		return _fail_bool("Inspecting the Battle Order-tab compact summary changed session/save/settings authority at %d." % width)
+	return true
+
+func _expected_initiative_handoff_for_test(session) -> Dictionary:
+	var battle: Dictionary = session.battle
+	var active_stack: Dictionary = BattleRules.get_active_stack(battle)
+	var turn_order: Array = battle.get("turn_order", []) if battle.get("turn_order", []) is Array else []
+	var turn_index := clampi(int(battle.get("turn_index", 0)), 0, max(0, turn_order.size() - 1))
+	var next_stack := _next_living_stack_for_test(battle, turn_order, turn_index + 1)
+	var next_round := false
+	if next_stack.is_empty():
+		next_stack = _next_living_stack_for_test(battle, turn_order, 0)
+		next_round = not next_stack.is_empty()
+	var current_label := _initiative_stack_label_for_test(active_stack)
+	var next_label := _initiative_stack_label_for_test(next_stack) if not next_stack.is_empty() else "no queued stack"
+	var current_side := _initiative_side_label_for_test(String(active_stack.get("side", "")))
+	var next_side := _initiative_side_label_for_test(String(next_stack.get("side", ""))) if not next_stack.is_empty() else "None"
+	var round: int = maxi(1, int(battle.get("round", 1)))
+	var next_round_label: int = round + 1 if next_round else round
+	var current_window := "player command window" if String(active_stack.get("side", "")) == "player" else "enemy pressure window"
+	var next_window := "next round opens" if next_round else "same round continues"
+	var tooltip := "Initiative Handoff\n- Round: %d\n- Current: %s [%s]\n- Next: %s [%s], round %d\n- Handoff: %s; %s.\n- Player input: %s." % [
+		round,
+		current_label,
+		current_side,
+		next_label,
+		next_side,
+		next_round_label,
+		current_window,
+		next_window,
+		"orders are open now" if String(active_stack.get("side", "")) == "player" else "wait for command to return",
+	]
+	return {
+		"visible_text": "Initiative cue:\nNow: %s\nNext: %s" % [_short_text_for_test(current_label, 18), _short_text_for_test(next_label, 18)],
+		"tooltip_text": tooltip,
+		"current_stack": current_label,
+		"current_side": current_side,
+		"next_stack": next_label,
+		"next_side": next_side,
+		"round": round,
+		"next_round": next_round_label,
+		"handoff": "%s; %s" % [current_window, next_window],
+	}
+
+func _next_living_stack_for_test(battle: Dictionary, turn_order: Array, start_index: int) -> Dictionary:
+	for index in range(maxi(0, start_index), turn_order.size()):
+		var stack := _stack_by_battle_id(battle, String(turn_order[index]))
+		if not stack.is_empty() and int(stack.get("count", 0)) > 0 and int(stack.get("total_health", 0)) > 0:
+			return stack
+	return {}
+
+func _initiative_stack_label_for_test(stack: Dictionary) -> String:
+	if stack.is_empty():
+		return "no stack"
+	var name := String(stack.get("name", "")).strip_edges()
+	if name == "":
+		name = String(stack.get("battle_id", "stack")).strip_edges()
+	var count := int(stack.get("count", 0))
+	var hp := int(stack.get("total_health", 0))
+	return "%s x%d, %d HP" % [name, count, hp] if count > 0 and hp > 0 else name
+
+func _initiative_side_label_for_test(side: String) -> String:
+	match side:
+		"player":
+			return "Player"
+		"enemy":
+			return "Enemy"
+	return "Neutral"
+
+func _short_text_for_test(text: String, max_chars: int) -> String:
+	var cleaned := text.strip_edges().trim_suffix(".").strip_edges()
+	if max_chars <= 0 or cleaned.length() <= max_chars:
+		return cleaned
+	if max_chars <= 1:
+		return cleaned.substr(0, max_chars)
+	return "%s..." % cleaned.substr(0, max_chars - 1).strip_edges()
 
 func _stack_alive_count_for_test(stack: Dictionary) -> int:
 	var unit_hp: int = maxi(1, int(stack.get("unit_hp", stack.get("hp", 1))))

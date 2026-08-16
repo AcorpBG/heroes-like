@@ -19669,6 +19669,110 @@ def validate_battle_info_tab_controller_navigation(errors: list[str]) -> None:
         ensure(required_token in focus_text, errors, f"Active-play focus smoke is missing Battle info-tab controller token: {required_token}")
 
 
+def validate_battle_order_tab_compact_initiative_summary(errors: list[str]) -> None:
+    smoke_path = ROOT / "tests" / "battle_controller_board_navigation_smoke.gd"
+    for path in (BATTLE_SCRIPT_PATH, BATTLE_SCENE_PATH, smoke_path):
+        ensure(path.exists(), errors, f"Missing Battle Order-tab compact-summary file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in (BATTLE_SCRIPT_PATH, BATTLE_SCENE_PATH, smoke_path)):
+        return
+
+    shell_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
+    scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8")
+    smoke_text = smoke_path.read_text(encoding="utf-8")
+    for required_token in (
+        "const BATTLE_ORDER_VISIBLE_LINE_COUNT := 3",
+        "const BATTLE_ORDER_VISIBLE_STACK_CHAR_LIMIT := 18",
+        'var visible := "Initiative cue:\\nNow: %s\\nNext: %s"',
+        "_short_text(current_label, BATTLE_ORDER_VISIBLE_STACK_CHAR_LIMIT)",
+        "_short_text(next_label, BATTLE_ORDER_VISIBLE_STACK_CHAR_LIMIT)",
+        "String(initiative_handoff.get(\"visible_text\", \"\"))",
+        "BATTLE_ORDER_VISIBLE_LINE_COUNT",
+        'String(initiative_handoff.get("tooltip_text", ""))',
+        "initiative_track",
+    ):
+        ensure(required_token in shell_text, errors, f"BattleShell compact Order-tab summary is missing exact token: {required_token}")
+    for forbidden_token in (
+        '"%s\\n%s" % [String(initiative_handoff.get("visible_text", "")), initiative_track]',
+        "_set_compact_label(_initiative_label, initiative_track, 5)",
+        "_initiative_label.autowrap_mode =",
+        "_initiative_panel.custom_minimum_size =",
+        "_battle_tabs.custom_minimum_size =",
+    ):
+        ensure(forbidden_token not in shell_text, errors, f"Battle Order-tab compaction must not retain/introduce forbidden source token: {forbidden_token}")
+    initiative_node = re.search(
+        r'\[node name="Initiative" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/BattleTabs/InitiativePanel/InitiativePad/InitiativeBox"\]\n(?P<body>.*?)(?=\n\[node )',
+        scene_text,
+        re.S,
+    )
+    ensure(initiative_node is not None, errors, "BattleShell.tscn must retain the existing native Initiative Label")
+    if initiative_node is not None:
+        initiative_body = initiative_node.group("body")
+        ensure("autowrap_mode = 3" in initiative_body and "custom_minimum_size" not in initiative_body, errors, "Battle Order-tab fix must fit the existing autowrap label without scene sizing overrides")
+
+    focused_match = re.search(
+        r"func _validate_order_tab_compact_summary\(shell: Control, session, width: int\) -> bool:\n(?P<body>.*?)(?=\nfunc )",
+        smoke_text,
+        re.S,
+    )
+    expected_match = re.search(
+        r"func _expected_initiative_handoff_for_test\(session\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc )",
+        smoke_text,
+        re.S,
+    )
+    ensure(focused_match is not None and expected_match is not None, errors, "Battle controller smoke must own independent compact-summary and handoff controls")
+    if focused_match is not None:
+        focused_body = focused_match.group("body")
+        focused_order = tuple(focused_body.find(token) for token in (
+            "_battle_background_authority(session)",
+            'shell.call("validation_snapshot")',
+            "_expected_initiative_handoff_for_test(session)",
+            "BattleRules.describe_initiative_track(session)",
+            'initiative_label.get_theme_font("font")',
+            "for line_value in visible_lines:",
+            "handoff != expected_handoff",
+            "widest_line > initiative_label.size.x + 0.5",
+            "initiative_panel.get_global_rect().encloses(initiative_label.get_global_rect())",
+            "_battle_background_authority(session) != authority_before",
+        ))
+        ensure(all(index >= 0 for index in focused_order) and list(focused_order) == sorted(focused_order), errors, "Focused Battle Order-tab proof must bracket independent content, themed-font, containment, and authority checks in exact order")
+        for required_token in (
+            'visible_lines.size() != 3',
+            'initiative_label.get_line_count() != 3',
+            'initiative_label.text.contains(" | Init ")',
+            'initiative_label.text.contains(" | HP ")',
+            'not initiative_label.tooltip_text.contains(" | Init ")',
+            'not initiative_label.tooltip_text.contains(" | HP ")',
+            'initiative_label.tooltip_text != expected_tooltip',
+            'String(snapshot.get("initiative_visible_text", "")) != expected_visible',
+        ):
+            ensure(required_token in focused_body, errors, f"Focused Battle Order-tab proof is missing exact token: {required_token}")
+        for forbidden_token in ("shell.call(\"_battle_initiative_handoff_surface", "sort(", "erase(", "Input.", "queue_redraw", "set_text", ".text ="):
+            ensure(forbidden_token not in focused_body, errors, f"Focused Battle Order-tab proof must remain public/read-only and avoid {forbidden_token}")
+    if expected_match is not None:
+        expected_body = expected_match.group("body")
+        for required_token in (
+            "BattleRules.get_active_stack(battle)",
+            "_next_living_stack_for_test(battle, turn_order, turn_index + 1)",
+            "_next_living_stack_for_test(battle, turn_order, 0)",
+            "_initiative_stack_label_for_test(active_stack)",
+            '"visible_text": "Initiative cue:\\nNow: %s\\nNext: %s"',
+            '"tooltip_text": tooltip',
+            '"handoff": "%s; %s"',
+        ):
+            ensure(required_token in expected_body, errors, f"Independent Battle handoff control is missing exact token: {required_token}")
+        for forbidden_token in ("shell.", "validation_snapshot", "_battle_initiative_handoff_surface", "sort(", "erase(", "Input."):
+            ensure(forbidden_token not in expected_body, errors, f"Independent Battle handoff control must avoid circular/mutating dependency: {forbidden_token}")
+
+    width_match = re.search(r"func _validate_battle_board_semantics_width\(width: int\) -> bool:\n(?P<body>.*?)(?=\nfunc )", smoke_text, re.S)
+    ensure(width_match is not None, errors, "Could not isolate Battle 1280/1920 focused owner for Order-tab proof")
+    if width_match is not None:
+        width_body = width_match.group("body")
+        strip_call = width_body.find("_validate_turn_strip_identity_surface(board, session, width)")
+        order_call = width_body.find("_validate_order_tab_compact_summary(shell, session, width)")
+        focus_call = width_body.find("board.grab_focus()")
+        ensure(0 <= strip_call < order_call < focus_call and width_body.count("_validate_order_tab_compact_summary(shell, session, width)") == 1, errors, "Battle Order-tab proof must run once at each existing width after strip proof and before focus/input mutation")
+
+
 def validate_battle_quick_resolve_runtime(errors: list[str]) -> None:
     required_paths = (
         BATTLE_AUTO_RESOLVE_RULES_PATH,
@@ -45173,6 +45277,7 @@ def main() -> int:
     validate_native_screen_reader_semantics(errors)
     validate_battle_layout_detached_route_compatibility(errors)
     validate_battle_board_cursor_semantics(errors)
+    validate_battle_order_tab_compact_initiative_summary(errors)
     validate_main_menu_first_view(errors)
     validate_main_menu_destructive_exclusive_parent_input(errors)
     validate_map_editor_shell_slice(errors)

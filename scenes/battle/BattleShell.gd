@@ -14,6 +14,8 @@ const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains ope
 const BATTLE_RESOLUTION_AUTOSAVE_FAILURE_MESSAGE := "Battle resolved, but autosave failed. Press Save to retry the checkpoint."
 const BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_MESSAGE := "Briefing shown, but autosave failed. Press Save to protect this checkpoint."
 const BATTLE_PLAYBACK_SPEED_SAVE_FAILURE_MESSAGE := "Playback speed not saved. Previous speed restored."
+const BATTLE_ORDER_VISIBLE_LINE_COUNT := 3
+const BATTLE_ORDER_VISIBLE_STACK_CHAR_LIMIT := 18
 
 @onready var _banner_panel: PanelContainer = %Banner
 @onready var _briefing_panel: PanelContainer = %BriefingPanel
@@ -1540,12 +1542,12 @@ func _refresh() -> void:
 	var initiative_track := BattleRules.describe_initiative_track(_session)
 	var initiative_handoff := _battle_initiative_handoff_surface()
 	if initiative_handoff.is_empty():
-		_set_compact_label(_initiative_label, initiative_track, 5)
+		_set_compact_label(_initiative_label, initiative_track, BATTLE_ORDER_VISIBLE_LINE_COUNT)
 	else:
 		_set_compact_label(
 			_initiative_label,
-			"%s\n%s" % [String(initiative_handoff.get("visible_text", "")), initiative_track],
-			5
+			String(initiative_handoff.get("visible_text", "")),
+			BATTLE_ORDER_VISIBLE_LINE_COUNT
 		)
 		_initiative_label.tooltip_text = _join_tooltip_sections([
 			String(initiative_handoff.get("tooltip_text", "")),
@@ -2549,9 +2551,9 @@ func _battle_initiative_handoff_surface() -> Dictionary:
 	var next_round_label: int = round + 1 if next_round else round
 	var current_window := "player command window" if String(active_stack.get("side", "")) == "player" else "enemy pressure window"
 	var next_window := "next round opens" if next_round else "same round continues"
-	var visible := "Initiative cue: Now: %s; Next: %s." % [
-		_short_text(current_label, 30),
-		_short_text(next_label, 30),
+	var visible := "Initiative cue:\nNow: %s\nNext: %s" % [
+		_short_text(current_label, BATTLE_ORDER_VISIBLE_STACK_CHAR_LIMIT),
+		_short_text(next_label, BATTLE_ORDER_VISIBLE_STACK_CHAR_LIMIT),
 	]
 	var tooltip := "Initiative Handoff\n- Round: %d\n- Current: %s [%s]\n- Next: %s [%s], round %d\n- Handoff: %s; %s.\n- Player input: %s." % [
 		round,
