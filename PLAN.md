@@ -6155,6 +6155,34 @@ Completion evidence:
 - repository validation, Python compilation, diff checks, exact/generic Godot editor parses, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass;
 - packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release-readiness remain explicitly unclaimed.
 
+## Selected Slice: Overworld Unexplored Fog Shroud
+
+id: `ux-overworld-unexplored-fog-shroud-10184`
+
+Status: completed.
+
+Implementation boundary:
+- replace only the repeated per-tile diagonal X wireframes over unexplored Overworld cells with a subdued deterministic shroud treatment that reads as contiguous hidden territory;
+- keep exact unexplored fill opacity, explored/unexplored boundary ownership, map-cell containment, and no-terrain/no-object/no-route information leakage;
+- expose the rendered shroud contract through the existing Overworld terrain validation surface and focused visual owner without changing fog state or simulation rules.
+
+Completion criteria:
+- at 1280x720 and 1920x1080 unexplored regions render as contained non-wireframe shroud cells without diagonal placeholder crosses, while explored terrain remains scenery-first and unchanged;
+- unexplored terrain identity, roads, objects, heroes, encounters, routes, selection, and tooltips remain hidden; newly explored cells reveal the exact existing terrain/object surface and never retain shroud marks;
+- exploration/visibility arrays, counts, movement, route legality, focus/controller behavior, session/save authority, and permanent-exploration policy remain exact;
+- focused Overworld visual/fog, full-route/input/accessibility/core compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Non-goals:
+- no fog-of-war rule, visibility radius, scouting, pathing, terrain, road, object, hero, encounter, route, camera, save/schema, content, balance, AI, or Native RMG changes;
+- no new bitmap asset, terrain repaint, map layout redesign, additional panel, transient memory-fog layer, animation, audio, or global theme/UI-scale change;
+- no packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Completion evidence:
+- the live Overworld renderer now replaces unexplored-cell diagonal X wireframes with a continuous dark fill and three deterministic, contained, identity-silent mist layers; explored terrain and fog authority are unchanged;
+- the public visual owner passes with exact hidden terrain/texture state, no wireframe state, and no shroud on explored cells; fresh 1280x720 and 1920x1080 X11 captures show the contiguous shroud without square veil tiles or diagonal crosses;
+- focused Overworld visual, fog-rule, full-route, keyboard-focus, accessibility, and core owners pass with natural exits; repository validation, Python compilation, diff checks, and exact/generic Godot editor parses pass;
+- official Linux export/headless startup and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass; packaged Overworld interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release-readiness remain explicitly unclaimed.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:

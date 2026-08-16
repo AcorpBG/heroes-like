@@ -19369,6 +19369,13 @@ def validate_hero_command(errors: list[str]) -> None:
 
 
 def validate_overworld_fog(errors: list[str]) -> None:
+    def fog_function_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}(")
+        if start < 0:
+            return ""
+        next_function = text.find("\nfunc ", start + 1)
+        return text[start:] if next_function < 0 else text[start:next_function]
+
     required_paths = (
         SESSION_STATE_PATH,
         HERO_PROGRESSION_RULES_PATH,
@@ -19434,6 +19441,63 @@ def validate_overworld_fog(errors: list[str]) -> None:
         "func _memory_cell_color",
     ):
         ensure(required_token in overworld_script_text, errors, f"OverworldShell.gd is missing required fog/scouting token: {required_token}")
+
+    map_view_path = ROOT / "scenes" / "overworld" / "OverworldMapView.gd"
+    visual_smoke_path = ROOT / "tests" / "overworld_visual_smoke.gd"
+    ensure(map_view_path.exists(), errors, "Missing OverworldMapView.gd fog-shroud renderer")
+    ensure(visual_smoke_path.exists(), errors, "Missing Overworld visual fog-shroud owner")
+    if not map_view_path.exists() or not visual_smoke_path.exists():
+        return
+    map_view_text = map_view_path.read_text(encoding="utf-8")
+    visual_smoke_text = visual_smoke_path.read_text(encoding="utf-8")
+    overlay_block = fog_function_block(map_view_text, "_draw_tile_state_overlay")
+    shroud_block = fog_function_block(map_view_text, "_draw_unexplored_shroud")
+    terrain_payload_block = fog_function_block(map_view_text, "_terrain_visual_payload")
+    fog_case_block = fog_function_block(visual_smoke_text, "_assert_explored_terrain_presentation")
+    for required_token in (
+        "const UNEXPLORED_SHROUD_BASE",
+        "const UNEXPLORED_SHROUD_MIST",
+        "const UNEXPLORED_SHROUD_LAYER_COUNT := 3",
+    ):
+        ensure(required_token in map_view_text, errors, f"Overworld fog shroud is missing exact renderer token: {required_token}")
+    ensure(
+        overlay_block.find("_canvas_draw_rect(rect, UNEXPLORED_COLOR, true)") < overlay_block.find("_draw_unexplored_shroud(tile, rect)") < overlay_block.find("return"),
+        errors,
+        "Unexplored Overworld cells must draw the exact hidden fill, then shroud, then return before explored-boundary rendering",
+    )
+    ensure("_canvas_draw_line" not in overlay_block, errors, "Unexplored fog overlay must not retain diagonal wireframe lines")
+    for required_token in (
+        "var extent := minf(rect.size.x, rect.size.y)",
+        "_canvas_draw_rect(rect, UNEXPLORED_SHROUD_BASE, true)",
+        "tile.x * 92821",
+        "tile.y * 68917",
+        "for layer in range(UNEXPLORED_SHROUD_LAYER_COUNT)",
+        "_canvas_draw_circle(rect.position + rect.size * Vector2(x_ratio, y_ratio), radius, UNEXPLORED_SHROUD_MIST)",
+    ):
+        ensure(required_token in shroud_block, errors, f"Overworld fog shroud helper is missing contained deterministic behavior: {required_token}")
+    for forbidden_token in ("rect.grow(", "_terrain_at(", "_road_tile_payload(", "_draw_tile_icon(", "create_timer", "create_tween", "RandomNumberGenerator"):
+        ensure(forbidden_token not in shroud_block, errors, f"Overworld fog shroud must not inspect hidden identity, animate, or use unstable randomness: {forbidden_token}")
+    for required_token in (
+        '"visible_terrain_grid_mode": "hidden_fog_shroud"',
+        '"unexplored_wireframe": false',
+        '"unexplored_wireframe_alpha": 0.0',
+        '"unexplored_shroud": true',
+        '"unexplored_shroud_layer_count": UNEXPLORED_SHROUD_LAYER_COUNT',
+        '"unexplored_shroud_contained": true',
+        '"unexplored_shroud_seed_basis": "tile_coordinates"',
+    ):
+        ensure(required_token in terrain_payload_block, errors, f"Overworld fog validation payload is missing exact shroud contract: {required_token}")
+    for required_token in (
+        'String(unexplored_terrain.get("visible_terrain_grid_mode", "")) != "hidden_fog_shroud"',
+        'not bool(unexplored_terrain.get("unexplored_shroud", false))',
+        'int(unexplored_terrain.get("unexplored_shroud_layer_count", 0)) != 3',
+        'String(unexplored_terrain.get("terrain", "leaked")) != ""',
+        'bool(unexplored_terrain.get("texture_loaded", true))',
+        'String(unexplored_terrain.get("texture_path", "leaked")) != ""',
+    ):
+        ensure(required_token in visual_smoke_text, errors, f"Overworld visual smoke is missing fail-closed fog-shroud proof: {required_token}")
+    for forbidden_token in ("_draw_unexplored_shroud(", "_draw_tile_state_overlay(", "set_tile_explored", "erase("):
+        ensure(forbidden_token not in fog_case_block, errors, f"Overworld visual fog owner must observe public presentation without private rendering or state mutation: {forbidden_token}")
 
 
 def validate_battle_deterministic_rng_state(errors: list[str]) -> None:

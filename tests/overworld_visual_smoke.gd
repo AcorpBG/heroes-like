@@ -2205,6 +2205,10 @@ func _assert_explored_terrain_presentation(shell: Node, remembered_tile: Vector2
 		push_error("Overworld smoke: explored terrain still reports a visible per-tile grid/seam treatment at %s. presentation=%s" % [remembered_tile, remembered_presentation])
 		get_tree().quit(1)
 		return false
+	if bool(terrain_presentation.get("unexplored_shroud", true)) or int(terrain_presentation.get("unexplored_shroud_layer_count", -1)) != 0:
+		push_error("Overworld smoke: explored terrain retained hidden-territory shroud state at %s. presentation=%s" % [remembered_tile, remembered_presentation])
+		get_tree().quit(1)
+		return false
 
 	var session = SessionState.ensure_active_session()
 	var unexplored_tile := _first_unexplored_tile(session)
@@ -2222,8 +2226,21 @@ func _assert_explored_terrain_presentation(shell: Node, remembered_tile: Vector2
 		push_error("Overworld smoke: unscouted terrain became fully visible instead of remaining hidden at %s. presentation=%s" % [unexplored_tile, unexplored_presentation])
 		get_tree().quit(1)
 		return false
-	if not bool(unexplored_terrain.get("unexplored_wireframe", false)) or float(unexplored_terrain.get("unexplored_wireframe_alpha", 0.0)) < 0.30:
-		push_error("Overworld smoke: unexplored terrain lost its necessary hidden-ground wireframe treatment at %s. presentation=%s" % [unexplored_tile, unexplored_presentation])
+	if bool(unexplored_terrain.get("unexplored_wireframe", true)) or float(unexplored_terrain.get("unexplored_wireframe_alpha", 1.0)) > 0.01:
+		push_error("Overworld smoke: unexplored terrain still exposes placeholder wireframe crosses at %s. presentation=%s" % [unexplored_tile, unexplored_presentation])
+		get_tree().quit(1)
+		return false
+	if (
+		String(unexplored_terrain.get("visible_terrain_grid_mode", "")) != "hidden_fog_shroud"
+		or not bool(unexplored_terrain.get("unexplored_shroud", false))
+		or int(unexplored_terrain.get("unexplored_shroud_layer_count", 0)) != 3
+		or not bool(unexplored_terrain.get("unexplored_shroud_contained", false))
+		or String(unexplored_terrain.get("unexplored_shroud_seed_basis", "")) != "tile_coordinates"
+		or String(unexplored_terrain.get("terrain", "leaked")) != ""
+		or bool(unexplored_terrain.get("texture_loaded", true))
+		or String(unexplored_terrain.get("texture_path", "leaked")) != ""
+	):
+		push_error("Overworld smoke: unexplored terrain did not expose the exact contained identity-silent fog shroud at %s. presentation=%s" % [unexplored_tile, unexplored_presentation])
 		get_tree().quit(1)
 		return false
 	return true
