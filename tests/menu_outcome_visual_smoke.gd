@@ -110,6 +110,10 @@ func _run_main_menu_smoke() -> bool:
 	var title_rect: Rect2 = (public_title as Label).get_global_rect()
 	var logo_panel: Control = shell.get_node("LogoPocketPanel") as Control
 	var logo_rect: Rect2 = logo_panel.get_global_rect()
+	var frontier_crest = shell.get_node_or_null("LogoPocketPanel/LogoPocketPad/LogoPocketBox/LogoHeader/WarGlyph")
+	if not (frontier_crest is TextureRect) or not _assert_frontier_crest_asset(frontier_crest as TextureRect):
+		get_tree().quit(1)
+		return false
 	var title_minimum_size: Vector2 = (public_title as Label).get_combined_minimum_size()
 	if (
 		title_rect.end.x > logo_rect.end.x + 0.5
@@ -148,6 +152,9 @@ func _run_main_menu_smoke() -> bool:
 			return false
 	if not await _assert_editor_utility_frame_at_supported_widths(
 		shell,
+		logo_panel,
+		public_title as Label,
+		frontier_crest as TextureRect,
 		settings_button as Button,
 		editor_button as Button,
 		quit_button as Button
@@ -948,7 +955,50 @@ func _assert_plaque_anchor(button: Button, label: String, expected_top: float, e
 		return false
 	return true
 
-func _assert_editor_utility_frame_at_supported_widths(shell: Control, settings_button: Button, editor_button: Button, quit_button: Button) -> bool:
+func _assert_frontier_crest_asset(frontier_crest: TextureRect) -> bool:
+	if frontier_crest.custom_minimum_size != Vector2(56.0, 52.0) \
+			or frontier_crest.expand_mode != TextureRect.EXPAND_IGNORE_SIZE \
+			or frontier_crest.stretch_mode != TextureRect.STRETCH_KEEP_ASPECT_CENTERED \
+			or frontier_crest.mouse_filter != Control.MOUSE_FILTER_IGNORE:
+		push_error("Main menu smoke: Aurelion Reach crest layout contract drifted.")
+		return false
+	var crest_texture := frontier_crest.texture
+	if crest_texture == null or crest_texture.resource_path != "res://art/ui/branding/aurelion_reach_frontier_crest.png":
+		push_error("Main menu smoke: Aurelion Reach crest texture is missing or incorrect.")
+		return false
+	var crest_image: Image = crest_texture.get_image()
+	if crest_image == null or crest_image.is_empty() or crest_image.get_width() != 1254 or crest_image.get_height() != 1254:
+		push_error("Main menu smoke: Aurelion Reach crest did not import as the authored 1254x1254 image.")
+		return false
+	var corner_pixels := [
+		crest_image.get_pixel(0, 0),
+		crest_image.get_pixel(crest_image.get_width() - 1, 0),
+		crest_image.get_pixel(0, crest_image.get_height() - 1),
+		crest_image.get_pixel(crest_image.get_width() - 1, crest_image.get_height() - 1),
+	]
+	for corner: Color in corner_pixels:
+		if corner.a > 0.01:
+			push_error("Main menu smoke: Aurelion Reach crest corners are not transparent.")
+			return false
+	var visible_pixel_count := 0
+	var chroma_green_pixel_count := 0
+	for y in range(crest_image.get_height()):
+		for x in range(crest_image.get_width()):
+			var pixel := crest_image.get_pixel(x, y)
+			if pixel.a <= 0.01:
+				continue
+			visible_pixel_count += 1
+			if pixel.g > 0.65 and pixel.g > pixel.r * 1.35 and pixel.g > pixel.b * 1.25:
+				chroma_green_pixel_count += 1
+	var pixel_count := crest_image.get_width() * crest_image.get_height()
+	var visible_coverage := float(visible_pixel_count) / float(pixel_count)
+	var chroma_green_ratio := float(chroma_green_pixel_count) / float(maxi(visible_pixel_count, 1))
+	if visible_coverage < 0.25 or visible_coverage > 0.55 or chroma_green_ratio > 0.002:
+		push_error("Main menu smoke: Aurelion Reach crest alpha/chroma contract failed: coverage %.4f green %.6f." % [visible_coverage, chroma_green_ratio])
+		return false
+	return true
+
+func _assert_editor_utility_frame_at_supported_widths(shell: Control, logo_panel: Control, public_title: Label, frontier_crest: TextureRect, settings_button: Button, editor_button: Button, quit_button: Button) -> bool:
 	var original_size := get_window().size
 	for requested_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:
 		get_window().size = requested_size
@@ -961,6 +1011,18 @@ func _assert_editor_utility_frame_at_supported_widths(shell: Control, settings_b
 		var settings_rect := settings_button.get_global_rect()
 		var editor_rect := editor_button.get_global_rect()
 		var quit_rect := quit_button.get_global_rect()
+		var logo_rect := logo_panel.get_global_rect()
+		var title_rect := public_title.get_global_rect()
+		var crest_rect := frontier_crest.get_global_rect()
+		if crest_rect.position.x < logo_rect.position.x - 0.5 \
+				or crest_rect.position.y < logo_rect.position.y - 0.5 \
+				or crest_rect.end.x > logo_rect.end.x + 0.5 \
+				or crest_rect.end.y > logo_rect.end.y + 0.5 \
+				or crest_rect.size.x < 56.0 \
+				or crest_rect.size.y < 52.0 \
+				or crest_rect.intersects(title_rect):
+			push_error("Main menu smoke: Aurelion Reach crest escaped or overlapped the logo lockup at %s: %s / %s / %s." % [requested_size, logo_rect, crest_rect, title_rect])
+			return false
 		if editor_rect.position.x < viewport_size.x * 0.82 \
 				or editor_rect.end.x > viewport_size.x + 0.5 \
 				or editor_rect.position.y < settings_rect.end.y - 0.5 \
