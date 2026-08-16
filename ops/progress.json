@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Nightglass Ledger Reversal is complete as the twenty-second active scenario and seventh Frontier Claims chapter. Focused standalone/campaign, town recruitment, battle entry, objective, save/resume, bounded carryover, 22-scenario/71-encounter breadth, compatibility, static/editor, and bounded Linux/Windows export-startup gates pass. Broader release gaps remain.",
+  "currentNotes": "Halo Reserve Refraction Claim is complete as the twenty-third active scenario and eighth Frontier Claims chapter. Focused live flow, 23-scenario/74-encounter queue-clear breadth, campaign/economy/AI/core compatibility, static/editor validation, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. No packaged chapter interaction or whole-release claim is made.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-mireclaw-nightglass-ledger-reversal-chapter-10184",
-  "currentSliceId": "content-mireclaw-nightglass-ledger-reversal-chapter-10184",
-  "currentSliceNotes": "Completed with live Nightglass Redoubt/Kessa Chainboom/Nightglass Dominion player ownership, exact Clauseworks-to-Nightglass campaign carryover, screened encounter rosters, clear active breadth queue, full compatibility/static/editor gates, and bounded Linux/Windows export-startup evidence. No packaged chapter interaction or release-readiness claim is made.",
+  "currentSlice": "content-sunvault-halo-reserve-refraction-claim-chapter-10184",
+  "currentSliceId": "content-sunvault-halo-reserve-refraction-claim-chapter-10184",
+  "currentSliceNotes": "Completed with real Sunvault campaign/skirmish content, exact carryover isolation, screened combat breadth, shared-system compatibility, and bounded Linux/Windows export-startup evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Mireclaw Nightglass Ledger Reversal Chapter",
-  "currentSliceUpdatedAt": "2026-08-16T12:33:13Z",
+  "currentSliceTitle": "Sunvault Halo Reserve Refraction Claim Chapter",
+  "currentSliceUpdatedAt": "2026-08-16T13:17:51Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -86511,6 +86511,55 @@
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
       "blockedReason": null,
       "completedAt": "2026-08-16T12:33:13Z"
+    },
+    {
+      "id": "content-sunvault-halo-reserve-refraction-claim-chapter-10184",
+      "title": "Sunvault Halo Reserve Refraction Claim Chapter",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Add the missing Sunvault player chapter to Frontier Claims using authored but unused Neral Glasswind and Halo Reserve content through existing shipped systems.",
+      "implementationTargets": [
+        "content/scenarios.json",
+        "content/campaigns.json",
+        "tests/sunvault_halo_reserve_refraction_claim_chapter_report.gd",
+        "tests/sunvault_halo_reserve_refraction_claim_chapter_report.tscn",
+        "tests/frontier_claims_campaign_report.gd",
+        "tests/mireclaw_nightglass_ledger_reversal_chapter_report.gd",
+        "tests/brasshollow_clauseworks_counterclaim_chapter_report.gd",
+        "tests/veilmourn_fogchart_mooring_chapter_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "The active catalog exposes exactly twenty-three campaign- and skirmish-selectable scenarios, and Halo Reserve Refraction Claim retains exact Neral/Halo Reserve, Sunvault/Thornwake, town, deadline, objective, and economy-route identities",
+        "Real standalone and campaign sessions launch, live Sunvault town development/recruitment and authored public battle payloads work, victory/defeat authority resolves, and save normalization/resume passes",
+        "Frontier Claims chapter VIII unlocks only after exact Nightglass victory plus nightglass_claim_recorded, imports bounded common resources and flags only, and transfers no Mireclaw hero progression, spells, artifacts, or peatwax",
+        "Active combat breadth, campaign/deadline/replay/economy/AI/core compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "new units, towns, heroes, spells, artifacts, resource-site types, battle rules, AI policy, economy coefficients, campaign schema, save version, Native RMG, or map-topology changes",
+        "broad faction balance tuning, generic campaign redesign, cross-faction hero/spell/artifact/rare-resource transfer, generated-map support, visual/audio asset production, or a full Sunvault campaign claim",
+        "packaged chapter interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "24f3a36d38be5cab06d914e49df44a26bc931e2c",
+        "active_scenario_count": 22,
+        "frontier_claims_chapter_count": 7,
+        "frontier_claims_player_faction_ids": ["faction_thornwake", "faction_brasshollow", "faction_veilmourn", "faction_mireclaw"],
+        "missing_frontier_player_faction_id": "faction_sunvault",
+        "unused_player_hero_id": "hero_neral",
+        "unused_player_army_id": "army_halo_reserve"
+      },
+      "createdAt": "2026-08-16T12:36:00Z",
+      "updatedAt": "2026-08-16T13:17:51Z",
+      "startedAt": "2026-08-16T12:36:00Z",
+      "notes": "Completed on baseline HEAD 24f3a36d. Halo Reserve Refraction Claim ships as the twenty-third active scenario and eighth Frontier Claims chapter, making Halo Spire, Neral Glasswind, and Halo Reserve live player-owned content against Rootgate's Thornwake front. Focused `/tmp/heroes-halo-balanced-focused.7QnFzp` passes standalone/campaign launch, live Sunvault recruitment, three public battle payloads, Day 13 outcome authority, save/resume, exact common-only Nightglass carryover, and no Mireclaw hero/spell/artifact/peatwax transfer. Screened rosters are prism watch 10/7/4, sporeglass screen 13/9/6, and barkmantle bastion 9/7/4; authoritative breadth `/tmp/heroes-halo-active-breadth.W6c4My` passes 23 scenarios/74 encounters with stalls0, invalid0, queue clear, signature829808c9. Frontier campaign, deadline/replay, economy-route, player and AI start economy/runway, multi-scenario AI recruitment/delivery, core, repository/editor, official Linux export/headless startup and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. No packaged chapter interaction, controller, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claim is made.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
+      "blockedReason": null,
+      "completedAt": "2026-08-16T13:17:51Z"
     }
   ],
   "project": "heroes-like",
@@ -86520,7 +86569,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain. The game is not release-ready.",
+  "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
   "remainingWork": "Select the next tracker-approved release-readiness implementation slice without claiming whole-game or release readiness.",
   "reportOnlyEvidence": [
     {
