@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Town capital-project identity correction is implemented and validated. Missing metadata is no longer accepted as a project, the three real capitals expose only their authored project, project-absent towns stay inactive, and focused/compatibility/static/platform gates pass. Broader release gaps remain.",
+  "currentNotes": "The terminal End Turn detached-focus defect is fixed and validated. The dialog uses only its guarded visible/pending focus path, and focused, routed-flow, compatibility, static/editor, and bounded platform gates pass. Broader release gaps remain.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "economy-town-capital-project-identity-correction-10184",
-  "currentSliceId": "economy-town-capital-project-identity-correction-10184",
-  "currentSliceNotes": "Completed with exact explicit-metadata identity, three live capital plus two project-absent controls, inactive/4-of-4 TownRules and save-normalization proof, direct AI/town consumers, a healthy 56-turn Medium strategic row, static/editor validation, and bounded Linux/Windows export/startup evidence.",
+  "currentSlice": "ux-overworld-terminal-end-turn-detached-focus-guard-10184",
+  "currentSliceId": "ux-overworld-terminal-end-turn-detached-focus-guard-10184",
+  "currentSliceNotes": "Completed with the redundant raw deferred cancel-button focus removed, exact same-stack confirm/detach authority proof, a clean real nine-step defeat/outcome/save/resume flow, ordinary focus/accessibility/core compatibility, repository/editor validation, and bounded Linux/Windows export-startup evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Town Capital Project Identity Correction",
-  "currentSliceUpdatedAt": "2026-08-16T05:53:49Z",
+  "currentSliceTitle": "Overworld Terminal End-Turn Detached Focus Guard",
+  "currentSliceUpdatedAt": "2026-08-16T06:26:53Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -86207,6 +86207,49 @@
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
       "blockedReason": null,
       "completedAt": "2026-08-16T05:53:49Z"
+    },
+    {
+      "id": "ux-overworld-terminal-end-turn-detached-focus-guard-10184",
+      "title": "Overworld Terminal End-Turn Detached Focus Guard",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Prevent a warned End Turn confirmation's queued cancel-button focus from executing after terminal outcome routing detaches the Overworld, while preserving the existing guarded ordinary-dialog focus path and all End Turn authority.",
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "tests/overworld_end_turn_confirmation_runtime_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "The warned End Turn dialog uses only the existing guarded next-frame cancel-focus path; no raw deferred Control.grab_focus remains on its cancel button, and ordinary visible/pending dialogs still focus Keep Waiting",
+        "A public same-stack warned End Turn confirmation that resolves the scenario and detaches the Overworld reaches the exact Scenario Outcome route without !is_inside_tree, detached Control.grab_focus, parse, load, script, or assertion diagnostics",
+        "Warn, cancel, valid confirm, stale confirm, exhausted low-risk direct commit, rules/autosave counts, focus restoration, session/save authority, and Scenario Outcome status/summary remain exact",
+        "Focused End Turn confirmation, routed defeat live flow, active-play keyboard focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "End Turn rules, warning policy/copy, confirmation ownership, physical-input bridge, autosave, outcome routing, save/schema, scenario pressure/content, or AppRouter changes",
+        "focus-cycle redesign, layout/VFX/audio, controller mapping, accessibility semantics, combat/AI/economy/balance, Native RMG, or map-topology changes",
+        "packaged End Turn interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "e902018f",
+        "live_flow": "boot_to_skirmish_defeat_outcome",
+        "live_flow_completed": true,
+        "scenario_outcome_reached": true,
+        "detached_grab_focus_error_count": 1,
+        "raw_cancel_button_deferred_focus_present": true,
+        "guarded_cancel_focus_path_present": true
+      },
+      "createdAt": "2026-08-16T06:10:49Z",
+      "updatedAt": "2026-08-16T06:26:53Z",
+      "startedAt": "2026-08-16T06:10:49Z",
+      "notes": "Completed on baseline HEAD e902018f. OverworldShell no longer queues the raw cancel-button focus beside the existing guarded coroutine. Focused /tmp/heroes-end-turn-focused.yNlVRb passes exact warned cancel/stale/confirm/low-risk behavior plus same-stack confirmation, immediate tree detach, rules1/autosave1, and direct rule/session parity with zero detached-focus diagnostics. The corrected real flow /tmp/heroes-end-turn-live-flow/20260816T061603Z completes all nine defeat/outcome/save/menu/resume steps with no !is_inside_tree or grab_focus error; its only diagnostic is the host ALSA-open failure followed by Godot's Dummy fallback. Active-play keyboard focus, accessibility semantics, core, validator, pycompile, JSON, diff, exact/generic editor parses, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. No End Turn policy, input bridge, save, routing, outcome, layout, accessibility semantics, packaged interaction, hardware, certification, signing, publication, whole-game, or release-readiness claim changed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
+      "blockedReason": null,
+      "completedAt": "2026-08-16T06:26:53Z"
     }
   ],
   "project": "heroes-like",
@@ -86648,7 +86691,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "presentation_overworld_town_assault_victory_return_feedback_completed",
+  "result": "ux_overworld_terminal_end_turn_detached_focus_guard_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -86749,9 +86792,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The Overworld town-assault victory return feedback slice is completed: real successful hostile-town assaults now publish one exact consume-once existing captured-town cue after durable Battle checkpointing while combat, ownership, save, route, and direct-capture authority remain unchanged. Focused, compatibility, static/editor, and bounded Linux/Windows export/startup gates pass. Select the next tracker-approved slice; the game is not release-ready.",
+  "summary": "The Overworld terminal End Turn detached-focus guard slice is completed: warned confirmation uses only the guarded visible/pending focus path, and real same-stack terminal routing no longer invokes focus on a detached control. Focused, routed-flow, compatibility, static/editor, and bounded Linux/Windows export-startup gates pass. Select the next tracker-approved slice; the game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-16T05:00:55Z",
+  "updatedAt": "2026-08-16T06:26:53Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

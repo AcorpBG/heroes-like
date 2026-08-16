@@ -1210,7 +1210,6 @@ func _request_end_turn() -> Dictionary:
 	dialog_label.custom_minimum_size = Vector2(680.0, 0.0)
 	_on_overworld_interaction_owner_opened()
 	_end_turn_confirmation_dialog.popup_centered(Vector2i(760, 300))
-	_end_turn_confirmation_dialog.get_cancel_button().call_deferred("grab_focus")
 	_focus_end_turn_cancel_after_popup()
 	var request_result := validation_end_turn_confirmation_snapshot()
 	request_result["ok"] = true
