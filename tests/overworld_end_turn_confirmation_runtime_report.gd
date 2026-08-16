@@ -23,6 +23,9 @@ func _run() -> void:
 	var confirmed := await _validate_core_risk_confirm_parity()
 	if confirmed.is_empty():
 		return
+	var same_stack_detach := await _validate_same_stack_confirm_detach_focus_safety()
+	if same_stack_detach.is_empty():
+		return
 	var low_risk := await _validate_exhausted_low_risk_one_click()
 	if low_risk.is_empty():
 		return
@@ -31,6 +34,7 @@ func _run() -> void:
 		"ok": true,
 		"warn_cancel_and_stale": warned_and_stale,
 		"confirmed_core_risk": confirmed,
+		"same_stack_confirm_detach": same_stack_detach,
 		"exhausted_low_risk": low_risk,
 		"save_version": SessionState.SAVE_VERSION,
 	})])
@@ -205,6 +209,64 @@ func _validate_core_risk_confirm_parity() -> Dictionary:
 		"autosaves": 1,
 		"autosave_payload_exact": true,
 		"autosave_restored_route_exact": true,
+	}
+
+
+func _validate_same_stack_confirm_detach_focus_safety() -> Dictionary:
+	_clear_autosave()
+	var shell = await _create_shell(_core_risk_fixture(2))
+	if shell == null or not _require_hooks(shell):
+		if shell != null:
+			await _discard_shell(shell)
+		return {}
+	var shell_session = SessionState.ensure_active_session()
+	var control = _duplicate_session(shell_session)
+	OverworldRules.consume_command_risk_forecast(control)
+	var direct_result: Dictionary = OverworldRules.end_turn(control)
+	var request: Dictionary = shell.validation_request_end_turn()
+	var confirmed: Dictionary = shell.validation_confirm_end_turn()
+	var snapshot: Dictionary = shell.validation_end_turn_confirmation_snapshot()
+	var shell_rule_result: Dictionary = snapshot.get("last_rule_result", {}) if snapshot.get("last_rule_result", {}) is Dictionary else {}
+	var shell_payload := _gameplay_payload(SessionState.ensure_active_session())
+	var control_payload := _gameplay_payload(control)
+	if not bool(request.get("confirmation_required", false)) \
+			or not bool(confirmed.get("ok", false)) \
+			or not bool(confirmed.get("committed", false)) \
+			or int(snapshot.get("commit_count", -1)) != 1 \
+			or int(snapshot.get("rules_end_turn_call_count", -1)) != 1 \
+			or int(snapshot.get("autosave_call_count", -1)) != 1 \
+			or _canonical_dictionary(shell_rule_result) != _canonical_dictionary(direct_result) \
+			or shell_payload != control_payload:
+		_fail("Same-stack confirmation did not preserve exact End Turn authority before detach: %s" % JSON.stringify({
+			"request": _compact_result(request),
+			"confirmed": _compact_result(confirmed),
+			"snapshot": _compact_snapshot(snapshot),
+			"rule_difference": _first_difference(_canonical_dictionary(direct_result), _canonical_dictionary(shell_rule_result)),
+			"session_difference": _first_difference(control_payload, shell_payload),
+		}))
+		await _discard_shell(shell)
+		return {}
+	var shell_parent: Node = shell.get_parent()
+	if shell_parent == null:
+		_fail("Same-stack confirmation Shell had no live parent before the detach control.")
+		await _discard_shell(shell)
+		return {}
+	shell_parent.remove_child(shell)
+	if shell.is_inside_tree():
+		_fail("Same-stack confirmation Shell remained inside the tree after the detach control.")
+		shell.queue_free()
+		await get_tree().process_frame
+		return {}
+	shell.queue_free()
+	await get_tree().process_frame
+	await get_tree().process_frame
+	return {
+		"confirmation_required": true,
+		"committed": true,
+		"rules_calls": 1,
+		"autosaves": 1,
+		"detached_before_deferred_focus": true,
+		"direct_rule_and_session_authority_exact": true,
 	}
 
 

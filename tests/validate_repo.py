@@ -24247,11 +24247,49 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
             "OverworldRules.consume_command_risk_forecast",
             "OverworldRules.end_turn(control)",
             "SaveService.restore_autosave_session",
+            "_validate_same_stack_confirm_detach_focus_safety",
+            'shell_parent.remove_child(shell)',
+            'if shell.is_inside_tree():',
+            '"detached_before_deferred_focus": true',
+            '"direct_rule_and_session_authority_exact": true',
             "rules_end_turn_call_count",
             "autosave_call_count",
             "SessionState.SAVE_VERSION",
         ):
             ensure(required_token in end_turn_report_text, errors, f"overworld_end_turn_confirmation_runtime_report.gd is missing token: {required_token}")
+        same_stack_detach_body = end_turn_report_text.split(
+            "func _validate_same_stack_confirm_detach_focus_safety() -> Dictionary:", 1
+        )[1].split("\n\nfunc ", 1)[0]
+        for required_token in (
+            "var direct_result: Dictionary = OverworldRules.end_turn(control)",
+            "var request: Dictionary = shell.validation_request_end_turn()",
+            "var confirmed: Dictionary = shell.validation_confirm_end_turn()",
+            'int(snapshot.get("commit_count", -1)) != 1',
+            'int(snapshot.get("rules_end_turn_call_count", -1)) != 1',
+            'int(snapshot.get("autosave_call_count", -1)) != 1',
+            "shell_payload != control_payload",
+            "var shell_parent: Node = shell.get_parent()",
+            "shell_parent.remove_child(shell)",
+            "if shell.is_inside_tree():",
+            "shell.queue_free()",
+            "await get_tree().process_frame",
+        ):
+            ensure(required_token in same_stack_detach_body, errors, f"Same-stack End Turn detach control is missing token: {required_token}")
+        ensure(
+            same_stack_detach_body.index("shell.validation_request_end_turn()")
+            < same_stack_detach_body.index("shell.validation_confirm_end_turn()")
+            < same_stack_detach_body.index("shell_parent.remove_child(shell)"),
+            errors,
+            "Same-stack End Turn detach control must request, synchronously confirm, then detach in exact order",
+        )
+        for forbidden_token in (
+            "create_timer(",
+            "call_deferred(",
+            "_focus_end_turn_cancel_after_popup",
+            "_end_turn_confirmation_dialog",
+            "var shell_parent := shell.get_parent()",
+        ):
+            ensure(forbidden_token not in same_stack_detach_body, errors, f"Same-stack End Turn detach control must not bypass production lifecycle with: {forbidden_token}")
     if OVERWORLD_END_TURN_CONFIRMATION_REPORT_SCENE_PATH.exists():
         end_turn_scene_text = OVERWORLD_END_TURN_CONFIRMATION_REPORT_SCENE_PATH.read_text(encoding="utf-8")
         ensure(
@@ -24284,6 +24322,20 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
         "dialog.push_input(event)",
     ):
         ensure(required_token in overworld_script_text, errors, f"OverworldShell.gd is missing required End Turn exclusive-input token: {required_token}")
+    end_turn_request_body = overworld_script_text.split("func _request_end_turn() -> Dictionary:", 1)[1].split("\nfunc _current_end_turn_warning", 1)[0]
+    end_turn_cancel_focus_body = overworld_script_text.split("func _focus_end_turn_cancel_after_popup() -> void:", 1)[1].split("\nfunc _commit_end_turn", 1)[0]
+    ensure(
+        '_end_turn_confirmation_dialog.get_cancel_button().call_deferred("grab_focus")' not in end_turn_request_body,
+        errors,
+        "Warned End Turn must not queue an unguarded cancel-button focus that can outlive the Overworld scene",
+    )
+    for required_token in (
+        "_focus_end_turn_cancel_after_popup()",
+        "await get_tree().process_frame",
+        "if _end_turn_confirmation_dialog.visible and not _pending_end_turn_confirmation.is_empty():",
+        "_end_turn_confirmation_dialog.get_cancel_button().grab_focus()",
+    ):
+        ensure(required_token in (end_turn_request_body + end_turn_cancel_focus_body), errors, f"Guarded End Turn cancel focus is missing token: {required_token}")
     ensure(
         overworld_script_text.count("_manual_save_overwrite_dialog != null and _manual_save_overwrite_dialog.visible") >= 2,
         errors,
