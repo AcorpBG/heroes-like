@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed Map Editor Inspect route-projection elision: distant public Inspect clicks now take 20.3-20.8 ms versus the 651-673 ms current-HEAD baseline while exact inspection/authoring/session/dirty/result authority, broad editor/package behavior, gameplay Overworld routing, core, static/editor, and bounded Linux/Windows export-startup gates remain green.",
+  "currentNotes": "The Overworld full-refresh drawer-readiness reuse is complete. One refresh now passes its already-current no-base readiness payload into drawer handoff synchronization; distinct event-feed and default callers remain fresh. Focused removed-path control proves 191 ms of redundant work with exact authority, and broad compatibility plus bounded Linux/Windows export-startup gates pass.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "performance-map-editor-inspect-route-projection-elision-10184",
-  "currentSliceId": "performance-map-editor-inspect-route-projection-elision-10184",
-  "currentSliceNotes": "Completed with focused public-click performance and exact authority, broad Map Editor/package/Overworld/core compatibility, repository/editor validation, and bounded Linux/Windows export-startup evidence.",
+  "currentSlice": "performance-overworld-full-refresh-drawer-readiness-reuse-10184",
+  "currentSliceId": "performance-overworld-full-refresh-drawer-readiness-reuse-10184",
+  "currentSliceNotes": "Completed with exact focused payload/session/UI authority, a 190875-usec same-process removed-path control against the 474093-usec optimized refresh, authored repeat refresh 4689 to 4370 ms, behavior-exact edited-working-copy compatibility, static/editor, and bounded Linux/Windows export-startup evidence. No broad Play Copy or release-readiness claim.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Map Editor Inspect Route Projection Elision",
-  "currentSliceUpdatedAt": "2026-08-16T23:06:21Z",
+  "currentSliceTitle": "Overworld Full Refresh Drawer Readiness Reuse",
+  "currentSliceUpdatedAt": "2026-08-16T23:42:53Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19847,8 +19847,58 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
-  "notes": "The Map Editor Inspect route-projection elision slice is complete. All editor tools suppress gameplay-only route projection while shared Overworld gameplay defaults remain route-enabled; select the next tracker-approved slice from direct current behavior evidence.",
+  "notes": "Completed the bounded Overworld full-refresh drawer-readiness reuse with exact focused authority, compatibility, static/editor, and Linux/Windows export-startup evidence. The same-process removed-path control proves the redundant derivation is material; no broad Play Copy or release-readiness claim is made.",
   "plannedSlices": [
+    {
+      "id": "performance-overworld-full-refresh-drawer-readiness-reuse-10184",
+      "title": "Overworld Full Refresh Drawer Readiness Reuse",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Reuse the already-current no-base Field Readiness payload when one full Overworld refresh synchronizes command/frontier drawer handoff cues, removing one exact redundant derivation without changing gameplay policy.",
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "tests/overworld_hero_actions_refresh_cache_regression.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "One full status refresh threads its exact already-derived Field Readiness payload through tooltip/context-drawer synchronization, while direct/default callers and event-feed readiness remain fresh",
+        "Focused old-default versus preloaded drawer-handoff payloads are whole-exact across closed, command, frontier, and selected-tile states; the production refresh records one fewer readiness derivation with exact session, action, route, event, end-turn, drawer, save, and UI authority",
+        "A same-process legacy default-drawer control proves the removed readiness derivation is at least 20 percent of the optimized full refresh with whole-exact authority; authored repeat refresh and first-ready are non-regressed and the edited-working-copy round trip remains behavior-exact",
+        "Focused refresh-cache, Map Editor Play Copy, Overworld visual/interaction, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "event-feed readiness reuse, cross-refresh/day/session caching, route/action/forecast/objective policy, drawer content, status content, or refresh invalidation changes",
+        "Map Editor semantics, save schema, generated map topology/content, strategic AI, balance, accessibility policy, Native RMG, package identity, or platform policy changes",
+        "packaged Play Copy interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "7c223c42154866658808637ed7a2dd057e29a2cf",
+        "scenario_id": "ninefold-confluence",
+        "clean_play_copy_first_ready_ms": [8991, 9232],
+        "clean_text_surface_ms": 3891,
+        "repeat_full_refresh_ms": 4689,
+        "exact_readiness_usec_samples": [1585962, 1271928, 1303916],
+        "edited_play_copy_launch_ms": 53156,
+        "edited_play_copy_return_ms": 49980,
+        "attribution_artifacts": [
+          "/tmp/heroes-map-editor-play-profile.cBZxRI",
+          "/tmp/heroes-map-editor-play-steps.Z1B5Nr",
+          "/tmp/heroes-map-editor-play-repeat-profile.n7PPfK",
+          "/tmp/heroes-map-editor-readiness-attribution.3tFWaN"
+        ]
+      },
+      "createdAt": "2026-08-16T23:21:05Z",
+      "startedAt": "2026-08-16T23:21:05Z",
+      "updatedAt": "2026-08-16T23:42:53Z",
+      "notes": "Production threads the already-current no-base readiness payload through drawer synchronization only. Focused same-process control measured optimized full refresh at 474093 usec and the exact legacy default-drawer derivation at 190875 usec (40.3 percent), with whole-exact drawer/session/UI authority. Authored repeat refresh improved 4689 to 4370 ms; clean first-ready was 8993 ms; the edited-working-copy launch/return path remained behavior-exact at 53271/50825 ms, within 1.7 percent of control. Focused, broad compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. No broad Play Copy, packaged interaction, hardware/certification, signing/publication, whole-game, or release-readiness claim is made.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence.",
+      "blockedReason": null,
+      "completedAt": "2026-08-16T23:42:53Z"
+    },
     {
       "id": "performance-map-editor-inspect-route-projection-elision-10184",
       "title": "Map Editor Inspect Route Projection Elision",
@@ -87108,7 +87158,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The selected Map Editor Inspect route-projection performance gap is closed. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
+  "remainingGap": "The selected Overworld full-refresh drawer-readiness reuse is closed. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
   "remainingWork": "Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence.",
   "reportOnlyEvidence": [
     {
@@ -87641,9 +87691,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The Map Editor Inspect route-projection elision slice is complete with live public-click latency reduced from 651-673 ms to 20.3-20.8 ms, exact editor authority, broad compatibility, static/editor, and bounded Linux/Windows export-startup evidence. The game is not release-ready.",
+  "summary": "The Overworld full-refresh drawer-readiness reuse slice is complete with one bounded redundant derivation removed, exact focused authority, broad compatibility, static/editor, and bounded Linux/Windows export-startup evidence. The game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-16T23:06:21Z",
+  "updatedAt": "2026-08-16T23:42:53Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

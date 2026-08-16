@@ -16726,6 +16726,104 @@ def validate_map_editor_terrain_paint_normalization_deferral(errors: list[str]) 
     ensure('res://tests/map_editor_terrain_paint_performance_report.gd' in scene_text, errors, "Terrain paint performance scene must own the focused report script")
 
 
+def validate_overworld_full_refresh_drawer_readiness_reuse(errors: list[str]) -> None:
+    shell_path = ROOT / "scenes/overworld/OverworldShell.gd"
+    report_path = ROOT / "tests/overworld_hero_actions_refresh_cache_regression.gd"
+    for path in (shell_path, report_path):
+        ensure(path.exists(), errors, f"Missing Overworld drawer-readiness reuse owner: {path.relative_to(ROOT)}")
+    if not shell_path.exists() or not report_path.exists():
+        return
+
+    shell_text = shell_path.read_text(encoding="utf-8")
+    status_match = re.search(
+        r"func _refresh_status_surfaces\(generated_surface_start: int\) -> bool:(.*?)(?=\n\nfunc _refresh_map_cue_surface)",
+        shell_text,
+        flags=re.DOTALL,
+    )
+    ensure(status_match is not None, errors, "Overworld full status refresh could not be isolated")
+    if status_match is not None:
+        status_body = status_match.group(1)
+        ensure("var readiness_surface := _field_readiness_surface()" in status_body, errors, "Overworld full status refresh must derive one current readiness payload")
+        ensure("_refresh_tooltip_context_drawer_surfaces(readiness_surface)" in status_body, errors, "Overworld full status refresh must pass current readiness into drawer synchronization")
+        ensure(status_body.index("var readiness_surface := _field_readiness_surface()") < status_body.index("_refresh_tooltip_context_drawer_surfaces(readiness_surface)"), errors, "Readiness must be derived before drawer synchronization reuses it")
+
+    tooltip_match = re.search(
+        r"func _refresh_tooltip_context_drawer_surfaces\(field_readiness: Dictionary = \{\}\) -> void:(.*?)(?=\n\nfunc _refresh_generated_opening_surfaces)",
+        shell_text,
+        flags=re.DOTALL,
+    )
+    ensure(tooltip_match is not None, errors, "Overworld tooltip/drawer synchronization could not be isolated")
+    if tooltip_match is not None:
+        tooltip_body = tooltip_match.group(1)
+        for token in (
+            'if not field_readiness.is_empty():',
+            '_profile_add("drawer_handoff_preloaded_readiness_reuses", 1)',
+            '_sync_context_drawers(field_readiness)',
+        ):
+            ensure(token in tooltip_body, errors, f"Overworld tooltip/drawer readiness reuse is missing token: {token}")
+
+    drawer_match = re.search(
+        r"func _sync_context_drawers\(field_readiness: Dictionary = \{\}\) -> void:(.*?)(?=\n\nfunc _set_active_drawer)",
+        shell_text,
+        flags=re.DOTALL,
+    )
+    ensure(drawer_match is not None, errors, "Overworld context-drawer synchronization could not be isolated")
+    if drawer_match is not None:
+        ensure("_refresh_drawer_handoff_cues(field_readiness)" in drawer_match.group(1), errors, "Context drawers must forward the current readiness payload unchanged")
+
+    readiness_match = re.search(
+        r"func _field_readiness_surface\(base_event_surface: Dictionary = \{\}\) -> Dictionary:(.*?)(?=\n\nfunc _field_readiness_simple_route_surface)",
+        shell_text,
+        flags=re.DOTALL,
+    )
+    ensure(readiness_match is not None, errors, "Overworld Field Readiness surface could not be isolated")
+    if readiness_match is not None:
+        readiness_body = readiness_match.group(1)
+        ensure('_profile_add("field_readiness_surface_calls", 1)' in readiness_body, errors, "Field Readiness must expose exact per-refresh call count")
+        ensure('if not base_event_surface.is_empty():' in readiness_body and '_profile_add("field_readiness_surface_base_event_calls", 1)' in readiness_body, errors, "Event-derived readiness must remain separately observable")
+
+    event_match = re.search(r"func _event_feed_surface\(\) -> Dictionary:(.*?)(?=\n\nfunc _action_context_surface)", shell_text, flags=re.DOTALL)
+    ensure(event_match is not None, errors, "Overworld event-feed surface could not be isolated")
+    if event_match is not None:
+        ensure("var readiness_surface := _field_readiness_surface(surface)" in event_match.group(1), errors, "Event-feed readiness must remain freshly derived from its event payload")
+    ensure("_event_feed_surface(readiness_surface)" not in shell_text, errors, "Full-refresh reuse must not substitute no-base readiness into the event feed")
+    ensure('"field_readiness_surface"' not in shell_text, errors, "Field Readiness reuse must not become a persistent refresh-cache entry")
+
+    report_text = report_path.read_text(encoding="utf-8")
+    for token in (
+        '_assert_drawer_readiness_preload_parity(shell, "current_tile")',
+        '_assert_drawer_readiness_preload_parity(shell, "selected_route")',
+        'var refresh_session_before: Dictionary = session.to_dict()',
+        'var refresh_authority_before: Dictionary = _refresh_authority(shell.call("validation_snapshot"))',
+        'shell.set("_debug_command_in_progress", true)',
+        'shell.call("validation_reset_profile", true)',
+        'shell.call("_refresh")',
+        'int(full_refresh_profile.get("field_readiness_surface_calls", 0)) != 2',
+        'int(full_refresh_profile.get("field_readiness_surface_base_event_calls", 0)) != 1',
+        'int(full_refresh_profile.get("drawer_handoff_preloaded_readiness_reuses", 0)) != 1',
+        'session.to_dict() != refresh_session_before',
+        'refresh_authority_after != refresh_authority_before',
+        'shell.call("validation_reset_profile", false)',
+        'shell.call("_refresh_tooltip_context_drawer_surfaces")',
+        'int(legacy_drawer_profile.get("field_readiness_surface_calls", 0)) != 1',
+        'int(legacy_drawer_profile.get("field_readiness_surface_base_event_calls", 0)) != 0',
+        'int(legacy_drawer_profile.get("drawer_handoff_preloaded_readiness_reuses", 0)) != 0',
+        'legacy_drawer_extra_usec * 5 < full_refresh_usec',
+        'legacy_drawer_authority != refresh_authority_after',
+        'func _assert_drawer_readiness_preload_parity(shell: Node, label: String) -> bool:',
+        'var default_surface: Dictionary = shell.call("_drawer_handoff_surfaces")',
+        'var preloaded_surface: Dictionary = shell.call("_drawer_handoff_surfaces", readiness)',
+        'preloaded_surface != default_surface',
+        'func _refresh_authority(snapshot: Dictionary) -> Dictionary:',
+        '"drawer_readiness_preload_parity": true',
+        '"refresh_authority_exact": true',
+        '"legacy_drawer_authority_exact": true',
+    ):
+        ensure(token in report_text, errors, f"Overworld drawer-readiness focused owner is missing token: {token}")
+    for forbidden in ("await get_tree().create_timer", "OS.delay", "set_process", 'erase("field_readiness', 'sort_custom'):
+        ensure(forbidden not in report_text, errors, f"Overworld drawer-readiness focused owner must remain passive and exact: {forbidden}")
+
+
 def validate_map_editor_shell_slice(errors: list[str]) -> None:
     required_paths = (
         APP_ROUTER_PATH,
@@ -45905,6 +46003,7 @@ def main() -> int:
     validate_town_defense_outlook_board(errors)
     validate_town_order_readiness_ledger(errors)
     validate_overworld_route_map_cue_refresh(errors)
+    validate_overworld_full_refresh_drawer_readiness_reuse(errors)
     validate_overworld_shell_release_polish(errors)
     validate_overworld_command_commitment_board(errors)
     validate_enemy_empire_management(errors)

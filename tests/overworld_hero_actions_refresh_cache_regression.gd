@@ -13,6 +13,53 @@ func _run() -> void:
 	_prepare_shell_state(shell, session, Vector2i(0, 1), 10)
 	var reserve_id := _ensure_reserve_hero(session)
 	shell.call("_refresh")
+	if not _assert_drawer_readiness_preload_parity(shell, "current_tile"):
+		return
+	var refresh_session_before: Dictionary = session.to_dict()
+	var refresh_authority_before: Dictionary = _refresh_authority(shell.call("validation_snapshot"))
+	shell.set("_debug_command_in_progress", true)
+	shell.call("validation_reset_profile", true)
+	var refresh_started := Time.get_ticks_usec()
+	shell.call("_refresh")
+	var full_refresh_usec := Time.get_ticks_usec() - refresh_started
+	var full_refresh_profile: Dictionary = shell.call("validation_profile_snapshot")
+	var refresh_authority_after: Dictionary = _refresh_authority(shell.call("validation_snapshot"))
+	if int(full_refresh_profile.get("field_readiness_surface_calls", 0)) != 2 or int(full_refresh_profile.get("field_readiness_surface_base_event_calls", 0)) != 1:
+		_fail("Full refresh did not retain one status readiness plus one distinct event-feed readiness derivation.", full_refresh_profile)
+		return
+	if int(full_refresh_profile.get("drawer_handoff_preloaded_readiness_reuses", 0)) != 1:
+		_fail("Full refresh did not reuse the current readiness payload for drawer handoff synchronization.", full_refresh_profile)
+		return
+	if session.to_dict() != refresh_session_before or refresh_authority_after != refresh_authority_before:
+		_fail("Readiness reuse changed session or whole refresh surface authority.", {
+			"before": refresh_authority_before,
+			"after": refresh_authority_after,
+		})
+		return
+	shell.call("validation_reset_profile", false)
+	var legacy_drawer_started := Time.get_ticks_usec()
+	shell.call("_refresh_tooltip_context_drawer_surfaces")
+	var legacy_drawer_extra_usec := Time.get_ticks_usec() - legacy_drawer_started
+	var legacy_drawer_profile: Dictionary = shell.call("validation_profile_snapshot")
+	var legacy_drawer_authority: Dictionary = _refresh_authority(shell.call("validation_snapshot"))
+	if int(legacy_drawer_profile.get("field_readiness_surface_calls", 0)) != 1 or int(legacy_drawer_profile.get("field_readiness_surface_base_event_calls", 0)) != 0:
+		_fail("Legacy default drawer control did not perform exactly one no-base readiness derivation.", legacy_drawer_profile)
+		return
+	if int(legacy_drawer_profile.get("drawer_handoff_preloaded_readiness_reuses", 0)) != 0:
+		_fail("Legacy default drawer control unexpectedly used the preloaded readiness path.", legacy_drawer_profile)
+		return
+	if legacy_drawer_extra_usec * 5 < full_refresh_usec:
+		_fail("Removed drawer readiness work was not at least 20 percent of the optimized full refresh.", {
+			"legacy_drawer_extra_usec": legacy_drawer_extra_usec,
+			"full_refresh_usec": full_refresh_usec,
+		})
+		return
+	if session.to_dict() != refresh_session_before or legacy_drawer_authority != refresh_authority_after:
+		_fail("Legacy default drawer control changed session or refresh surface authority.", {
+			"candidate": refresh_authority_after,
+			"legacy": legacy_drawer_authority,
+		})
+		return
 
 	var initial_snapshot: Dictionary = shell.call("validation_snapshot")
 	if _hero_action_count(initial_snapshot) < 2:
@@ -31,6 +78,8 @@ func _run() -> void:
 		return
 	if int(selection_profile.get("hero_actions_cache_hits", 0)) <= 0:
 		_fail("Route-selection refresh did not reuse cached hero actions.", selection_profile)
+		return
+	if not _assert_drawer_readiness_preload_parity(shell, "selected_route"):
 		return
 
 	shell.call("validation_reset_profile", true)
@@ -82,6 +131,15 @@ func _run() -> void:
 		"roster_cache_misses": int(roster_profile.get("hero_actions_cache_misses", 0)),
 		"nested_specialty_cache_misses": int(specialty_profile.get("hero_actions_cache_misses", 0)),
 		"hero_action_count_after_roster": _hero_action_count(roster_snapshot),
+		"full_refresh_usec": full_refresh_usec,
+		"legacy_drawer_extra_usec": legacy_drawer_extra_usec,
+		"legacy_extra_to_full_refresh_ratio": float(legacy_drawer_extra_usec) / float(maxi(full_refresh_usec, 1)),
+		"field_readiness_surface_calls": int(full_refresh_profile.get("field_readiness_surface_calls", 0)),
+		"field_readiness_surface_base_event_calls": int(full_refresh_profile.get("field_readiness_surface_base_event_calls", 0)),
+		"drawer_handoff_preloaded_readiness_reuses": int(full_refresh_profile.get("drawer_handoff_preloaded_readiness_reuses", 0)),
+		"drawer_readiness_preload_parity": true,
+		"refresh_authority_exact": true,
+		"legacy_drawer_authority_exact": true,
 	})])
 	shell.queue_free()
 	get_tree().quit(0)
@@ -274,6 +332,59 @@ func _action_present(actions: Variant, action_id: String) -> bool:
 
 func _hero_action_surfaces(snapshot: Dictionary) -> Array:
 	return snapshot.get("hero_action_surfaces", []) if snapshot.get("hero_action_surfaces", []) is Array else []
+
+func _assert_drawer_readiness_preload_parity(shell: Node, label: String) -> bool:
+	var original_drawer := String(shell.get("_active_drawer"))
+	for drawer in ["", "command", "frontier"]:
+		shell.set("_active_drawer", drawer)
+		var readiness: Dictionary = shell.call("_field_readiness_surface")
+		var default_surface: Dictionary = shell.call("_drawer_handoff_surfaces")
+		var preloaded_surface: Dictionary = shell.call("_drawer_handoff_surfaces", readiness)
+		if preloaded_surface != default_surface:
+			shell.set("_active_drawer", original_drawer)
+			_fail("Preloaded drawer readiness diverged from the fresh default for %s/%s." % [label, drawer], {
+				"default": default_surface,
+				"preloaded": preloaded_surface,
+			})
+			return false
+	shell.set("_active_drawer", original_drawer)
+	return true
+
+func _refresh_authority(snapshot: Dictionary) -> Dictionary:
+	var keys := [
+		"status_visible_text",
+		"status_tooltip_text",
+		"status_forecast",
+		"context_summary",
+		"context_visible_text",
+		"hero_action_surfaces",
+		"specialty_action_surfaces",
+		"spell_action_surfaces",
+		"event_visible_text",
+		"event_tooltip_text",
+		"event_feed",
+		"action_context",
+		"field_readiness",
+		"objective_brief_visible_text",
+		"objective_brief_tooltip_text",
+		"end_turn_button_text",
+		"end_turn_tooltip_text",
+		"end_turn_confirmation",
+		"drawer_handoff",
+		"command_drawer_button_text",
+		"command_drawer_tooltip_text",
+		"frontier_drawer_button_text",
+		"frontier_drawer_tooltip_text",
+		"map_cue_text",
+		"map_cue_tooltip_text",
+		"selected_route_decision",
+		"primary_action",
+		"context_actions",
+	]
+	var authority := {}
+	for key in keys:
+		authority[key] = snapshot.get(key).duplicate(true) if snapshot.get(key) is Dictionary or snapshot.get(key) is Array else snapshot.get(key)
+	return authority
 
 func _fail(message: String, context: Variant = {}) -> void:
 	push_error("%s: %s %s" % [REPORT_ID, message, JSON.stringify(context)])
