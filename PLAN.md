@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `presentation-overworld-encounter-victory-return-feedback-10184`. Real victories over source-validated static encounters now carry detached encounter placement/content/tile identity through the durable Battle-to-Overworld route and publish one exact existing `overworld_object_depleted` consequence on the next Overworld scene. Focused 1280x720/1920x1080 River Pass movement battles resolve `river_pass_hollow_mire`, preserve the guarded `duskfen_bastion_peatwax_front` resource byte-exact, save successfully, consume the cue once, and remain silent for malformed, stale, terminal, unresolved, missing/mutated identity, spawned-raid, non-victory, assault, wrong-surface, refresh, and later-scene controls. Quick-resolve, guarded-site, town/resource return, object-resolution, checkpoint, keyboard focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged encounter interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `presentation-overworld-encounter-victory-return-feedback-10184`
 - Completed implementation slice: `presentation-overworld-resource-assault-victory-return-feedback-10184`. Real victories over a strategically stationed resource defender now carry one validated route-local `resource_site` consequence only after the resolved checkpoint saves, and the exact next Overworld scene consumes it once through the existing persistent-resource capture presenter. Focused 1280x720/1920x1080 public collector battles at Riverwatch Free Company Yard publish the authored capture VFX/audio while preserving control, defender/commander, battle, save, and session authority; malformed, stale, wrong-site/controller/context/surface, nonpersistent, terminal, refresh, and later-scene controls remain silent. Resource-defense, hostile-town return, object-resolution, checkpoint failure/retry, quick-resolve, keyboard focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged resource-assault interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `presentation-overworld-resource-assault-victory-return-feedback-10184`
 - Completed implementation slice: `presentation-town-army-transfer-completion-feedback-10184`. Successful public Town `transfer:<source_holder>:<target_holder>:<unit_id>:<amount>` actions now publish one compact nonblocking TownStage completion only after proving the exact source decrease, target increase, conserved unit total, stationed holder identities, result recap, and active-hero mirror. The semantic cue uses the existing imported UI-confirm audio and compact procedural roster movement with an exact reduced-motion fallback. Eight focused 1280x720/1920x1080 normal/reduced garrison-to-hero and hero-to-garrison rows pass with whole-session TownRules parity and malformed, stale, repeated, invalid, and refresh silence. Transfer/rendezvous, cue/audio, keyboard-focus, Town/Battle visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged transfer interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -5886,6 +5888,28 @@ Non-goals:
 - no transfer rules, amount tokens, stack ordering/merge/removal, holder eligibility, army stats, unit content, AI/logistics, save/schema, Native RMG, or map-topology changes;
 - no new art/audio, generic UI cue remapping, layout redesign, particles, shaders, spatial audio, haptics, or final mastering;
 - no packaged transfer interaction/listening, hardware certification, signing/publication, whole-game, or release-readiness claim.
+
+## Selected Slice: Overworld Encounter Victory Return Feedback
+
+id: `presentation-overworld-encounter-victory-return-feedback-10184`
+
+Status: in_progress.
+
+Implementation boundary:
+- before a real ordinary static encounter victory mutates resolution authority, snapshot only its exact placement/content/tile identity alongside the existing detached route context; after the resolved-battle checkpoint is durably saved, validate that identity against the live encounter row and `resolved_encounters`, then carry one route-local consequence through `AppRouter` into the exact next Overworld scene;
+- publish the existing `overworld_object_depleted` cue under a truthful `encounter` family at the authored encounter tile, consume it once, and keep source order, VFX/audio policy, reduced-motion behavior, route ordering, and direct object presentations unchanged;
+- preserve BattleRules combat/reward/survivor/commander/objective behavior, guarded-resource ownership and collection, checkpoint retry/save-failure authority, town/resource assault return paths, focus/input/settings, session/save schema, and all non-static or non-victory outcomes.
+
+Completion criteria:
+- real 1280x720 and 1920x1080 River Pass `river_pass_hollow_mire` victories durably checkpoint, preserve method-matched unarmed Overworld authority, resolve the exact encounter, leave the guarded `duskfen_bastion_peatwax_front` resource byte-exact and unclaimed by the player, and publish one exact encounter-depleted cue at the guard tile after scene readiness;
+- the detached payload contains only exact pre-resolution placement/content/tile identity, is absent before successful checkpoint durability, and fails closed for malformed, unresolved, missing/mutated placement/content/tile, spawned-raid, assault, non-victory, terminal, stale, and wrong-surface controls;
+- the cue consumes once and cannot replay after refresh, retry, or later Overworld construction; Battle rewards, casualties, active hero, objective/return notice, resolved encounter list, resource guard/control/claim authority, session/save bytes, and existing town/resource return presentations remain exact;
+- focused encounter-return plus quick-resolve, guarded-site reward/context, town/resource return, object-resolution, checkpoint failure/retry, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Non-goals:
+- no combat, reward, casualty, encounter resolution, guard, resource ownership/claim, AI raid, objective, save/schema, Native RMG, or map-topology changes;
+- no new cue, VFX, audio, generic battle-aftermath stream, layout redesign, particles, shaders, spatial audio, haptics, or final mastering;
+- no packaged encounter interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
 
 ## Progress Reconciliation
 
