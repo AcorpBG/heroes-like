@@ -15354,6 +15354,13 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
             ensure(required_token in live_body, errors, f"BattleBoardCursorLive is missing exact authored token: {required_token}")
 
     function_names = (
+        "_get_tooltip",
+        "_draw_turn_strip",
+        "_turn_strip_entries",
+        "_turn_strip_entry_at_position",
+        "_turn_strip_entry_tooltip",
+        "_turn_strip_chip_label",
+        "validation_turn_strip_identity_surface",
         "_gui_input",
         "_handle_controller_navigation_input",
         "handle_root_controller_navigation_cancel",
@@ -15385,6 +15392,117 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
         ensure(match is not None, errors, f"Could not isolate BattleBoardView semantic helper {function_name}")
         if match is not None:
             bodies[function_name] = match.group("body")
+
+    tooltip_body = bodies.get("_get_tooltip", "")
+    turn_probe_index = tooltip_body.find("_turn_strip_entry_at_position(at_position)")
+    turn_return_index = tooltip_body.find("_turn_strip_entry_tooltip(", turn_probe_index)
+    hex_probe_index = tooltip_body.find("_hex_cell_at_position(at_position)")
+    ensure(0 <= turn_probe_index < turn_return_index < hex_probe_index, errors, "BattleBoard tooltip routing must resolve an exact painted initiative chip before any hex/stack fallback")
+    ensure(tooltip_body.count("_turn_strip_entry_at_position(at_position)") == 1 and tooltip_body.count("_turn_strip_entry_tooltip(") == 1, errors, "BattleBoard tooltip routing must probe and return one initiative-chip tooltip exactly once")
+
+    draw_turn_body = bodies.get("_draw_turn_strip", "")
+    ensure(draw_turn_body.count("_turn_strip_entries(field_rect)") == 1, errors, "Battle initiative drawing must consume the shared chip geometry exactly once")
+    ensure(draw_turn_body.count("_turn_strip_chip_label(stack, rect.size.x)") == 1, errors, "Battle initiative drawing must use the width-fitted readable stack label exactly once")
+    for forbidden_token in ("_stack_initials", '"%s x%d" % [_stack_initials', "turn_order =", "chip_width:", "drawn :="):
+        ensure(forbidden_token not in draw_turn_body, errors, f"Battle initiative drawing must not retain duplicate/initial-only geometry via {forbidden_token}")
+    ensure("func _stack_initials(" not in board_text, errors, "BattleBoardView must not retain the opaque initials-only initiative-label helper")
+
+    entries_body = bodies.get("_turn_strip_entries", "")
+    for required_token in (
+        "if entries.size() >= 5:",
+        "if stack.is_empty() or _stack_alive_count(stack) <= 0:",
+        '"slot": entries.size() + 1',
+        '"stack": stack',
+        '"rect": Rect2(',
+        "strip_rect.position + Vector2(7.0 + float(entries.size()) * chip_width, 5.0)",
+        "Vector2(chip_width - 5.0, strip_rect.size.y - 10.0)",
+    ):
+        ensure(required_token in entries_body, errors, f"Battle initiative shared geometry is missing exact token: {required_token}")
+    ensure(entries_body.count("_stack_by_id(") == 1 and entries_body.count("entries.append({") == 1, errors, "Battle initiative shared geometry must materialize each ordered live stack through one path")
+
+    hit_body = bodies.get("_turn_strip_entry_at_position", "")
+    ensure(hit_body.count("_turn_strip_entries(_current_field_rect())") == 1 and hit_body.count("rect.has_point(position)") == 1, errors, "Battle initiative hit testing must reuse the exact current painted geometry and native Rect2 containment")
+    for forbidden_token in ("_hex_cell_at_position", "_stack_id_at_position", "sort", "erase", "Input."):
+        ensure(forbidden_token not in hit_body, errors, f"Battle initiative hit testing must remain geometry-only and avoid {forbidden_token}")
+
+    strip_tooltip_body = bodies.get("_turn_strip_entry_tooltip", "")
+    for required_token in (
+        '"Initiative Strip\\n- Visible slot: %d of %d\\n- Stack: %s x%d\\n- Side: %s\\n- State: %s\\n- Inspection: hovering this chip does not advance initiative or spend an action."',
+        "_stack_full_name(stack)",
+        "_stack_alive_count(stack)",
+        '"current stack" if current else "queued stack"',
+    ):
+        ensure(required_token in strip_tooltip_body, errors, f"Battle initiative chip tooltip is missing exact identity/authority token: {required_token}")
+    for forbidden_token in ("BattleRules", "advance_turn", "emit_signal", "Input.", "queue_redraw"):
+        ensure(forbidden_token not in strip_tooltip_body, errors, f"Battle initiative tooltip must remain observation-only and avoid {forbidden_token}")
+
+    chip_label_body = bodies.get("_turn_strip_chip_label", "")
+    for required_token in (
+        "_stack_full_name(stack)",
+        'var suffix := " x%d" % _stack_alive_count(stack)',
+        "get_theme_default_font()",
+        "font.get_string_size(candidate, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 10).x <= max_text_width",
+        "while compact_name.length() > 3:",
+        'return "%s…%s" % [full_name.left(3), suffix]',
+    ):
+        ensure(required_token in chip_label_body, errors, f"Battle initiative readable-label fitter is missing exact token: {required_token}")
+    for forbidden_token in ("split(\" \")", "to_upper", "_stack_initials", "stack[", "sort"):
+        ensure(forbidden_token not in chip_label_body, errors, f"Battle initiative readable-label fitter must preserve source identity and avoid {forbidden_token}")
+
+    validation_surface_body = bodies.get("validation_turn_strip_identity_surface", "")
+    validation_order = tuple(validation_surface_body.find(token) for token in (
+        "_current_field_rect()",
+        "_turn_strip_entries(field_rect)",
+        "for entry_value in entries:",
+        "var center := rect.get_center()",
+        "var visible_label := _turn_strip_chip_label(stack, rect.size.x)",
+        '"visible_label": visible_label',
+        '"visible_label_width": font.get_string_size(visible_label, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 10).x if font != null else 0.0',
+        '"tooltip": _get_tooltip(center)',
+        '"turn_order":',
+    ))
+    ensure(all(index >= 0 for index in validation_order) and list(validation_order) == sorted(validation_order), errors, "Battle initiative validation must capture shared geometry, then exact painted labels and native center tooltips in order")
+    for forbidden_token in ("Input.", "emit_signal", "BattleRules", "advance_turn", "queue_redraw", "sort", "erase"):
+        ensure(forbidden_token not in validation_surface_body, errors, f"Battle initiative validation must remain detached/read-only and avoid {forbidden_token}")
+
+    focused_match = re.search(
+        r"func _validate_turn_strip_identity_surface\(board: Control, session, width: int\) -> bool:\n(?P<body>.*?)(?=\nfunc )",
+        smoke_text,
+        re.S,
+    )
+    ensure(focused_match is not None, errors, "Battle controller smoke must own a focused initiative-strip identity/geometry validator")
+    if focused_match is not None:
+        focused_body = focused_match.group("body")
+        focused_order = tuple(focused_body.find(token) for token in (
+            '_battle_background_authority(session)',
+            'board.call("validation_turn_strip_identity_surface")',
+            'for battle_id_value in turn_order:',
+            'for index in range(rows.size()):',
+            'var expected_tooltip := "Initiative Strip',
+            'visible_label == initials_label',
+            'not field_rect.encloses(rect)',
+            '_battle_background_authority(session) != authority_before',
+        ))
+        ensure(all(index >= 0 for index in focused_order) and list(focused_order) == sorted(focused_order), errors, "Focused initiative-strip proof must bracket exact ordered identity/tooltip/geometry checks with whole authority")
+        for required_token in (
+            "expected_ids.size() >= 5",
+            "rows.size() != expected_ids.size()",
+            'visible_label.begins_with(full_name.left(3))',
+            'visible_label.ends_with(" x%d" % alive_count)',
+            'float(row.get("visible_label_width", INF)) > float(row.get("visible_label_max_width", 0.0)) + 0.01',
+            'String(row.get("tooltip", "")) != expected_tooltip',
+            '(index > 0 and previous_rect.intersects(rect))',
+        ):
+            ensure(required_token in focused_body, errors, f"Focused initiative-strip proof is missing exact token: {required_token}")
+        for forbidden_token in ("board.call(\"_draw", "Input.", "queue_redraw", "BattleRules.advance", "sort", "erase"):
+            ensure(forbidden_token not in focused_body, errors, f"Focused initiative-strip proof must remain public/read-only and avoid {forbidden_token}")
+    width_case_match = re.search(r"func _validate_battle_board_semantics_width\(width: int\) -> bool:\n(?P<body>.*?)(?=\nfunc )", smoke_text, re.S)
+    ensure(width_case_match is not None, errors, "Could not isolate focused BattleBoard two-width semantic owner")
+    if width_case_match is not None:
+        width_body = width_case_match.group("body")
+        strip_call = width_body.find("if not _validate_turn_strip_identity_surface(board, session, width):")
+        focus_call = width_body.find("board.grab_focus()")
+        ensure(0 <= strip_call < focus_call and width_body.count("_validate_turn_strip_identity_surface(board, session, width)") == 1, errors, "Battle initiative-strip proof must run exactly once at each existing 1280/1920 width before controller focus mutation")
 
     input_body = bodies.get("_handle_controller_navigation_input", "")
     gui_input_body = bodies.get("_gui_input", "")

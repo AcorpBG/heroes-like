@@ -180,6 +180,9 @@ func _validate_battle_board_semantics_width(width: int) -> bool:
 	if semantic_timer == null or not semantic_timer.one_shot or not is_equal_approx(semantic_timer.wait_time, 1.0):
 		shell.queue_free()
 		return _fail_bool("Battle semantic Timer was not a configured one-shot before use at %d: %s." % [width, semantic_timer])
+	if not _validate_turn_strip_identity_surface(board, session, width):
+		shell.queue_free()
+		return false
 	board.grab_focus()
 	await _settle()
 	if live.text != "":
@@ -692,6 +695,79 @@ func _stack_by_battle_id(battle: Dictionary, battle_id: String) -> Dictionary:
 		if stack_value is Dictionary and String(stack_value.get("battle_id", "")) == battle_id:
 			return stack_value
 	return {}
+
+func _validate_turn_strip_identity_surface(board: Control, session, width: int) -> bool:
+	if not board.has_method("validation_turn_strip_identity_surface"):
+		return _fail_bool("Battle board does not expose the initiative-strip identity surface at %d." % width)
+	var authority_before := _battle_background_authority(session)
+	var surface: Dictionary = board.call("validation_turn_strip_identity_surface")
+	var rows: Array = surface.get("rows", []) if surface.get("rows", []) is Array else []
+	var expected_ids: Array[String] = []
+	var turn_order: Array = session.battle.get("turn_order", []) if session.battle.get("turn_order", []) is Array else []
+	for battle_id_value in turn_order:
+		if expected_ids.size() >= 5:
+			break
+		var stack := _stack_by_battle_id(session.battle, String(battle_id_value))
+		if stack.is_empty() or _stack_alive_count_for_test(stack) <= 0:
+			continue
+		expected_ids.append(String(stack.get("battle_id", "")))
+	if expected_ids.is_empty() or rows.size() != expected_ids.size() or int(surface.get("visible_count", 0)) != expected_ids.size() or int(surface.get("visible_cap", 0)) != 5:
+		return _fail_bool("Battle initiative strip did not expose the exact visible live turn-order count at %d: expected=%s surface=%s." % [width, expected_ids, surface])
+	var field_rect: Rect2 = surface.get("field_rect", Rect2())
+	var previous_rect := Rect2()
+	for index in range(rows.size()):
+		var row: Dictionary = rows[index] if rows[index] is Dictionary else {}
+		var stack := _stack_by_battle_id(session.battle, expected_ids[index])
+		var full_name := String(stack.get("name", stack.get("unit_id", "Stack"))).strip_edges()
+		if full_name == "":
+			full_name = "Stack"
+		var alive_count := _stack_alive_count_for_test(stack)
+		var side := String(stack.get("side", ""))
+		var current := expected_ids[index] == String(session.battle.get("active_stack_id", ""))
+		var expected_tooltip := "Initiative Strip\n- Visible slot: %d of %d\n- Stack: %s x%d\n- Side: %s\n- State: %s\n- Inspection: hovering this chip does not advance initiative or spend an action." % [
+			index + 1,
+			rows.size(),
+			full_name,
+			alive_count,
+			side.capitalize(),
+			"current stack" if current else "queued stack",
+		]
+		var visible_label := String(row.get("visible_label", ""))
+		var initials_label := "%s x%d" % [_stack_initials_for_test(full_name), alive_count]
+		var rect: Rect2 = row.get("rect", Rect2())
+		if (
+			int(row.get("slot", 0)) != index + 1
+			or String(row.get("battle_id", "")) != expected_ids[index]
+			or String(row.get("full_name", "")) != full_name
+			or int(row.get("alive_count", -1)) != alive_count
+			or String(row.get("side", "")) != side
+			or bool(row.get("current", not current)) != current
+			or String(row.get("tooltip", "")) != expected_tooltip
+			or visible_label == initials_label
+			or not visible_label.begins_with(full_name.left(3))
+			or not visible_label.ends_with(" x%d" % alive_count)
+			or float(row.get("visible_label_width", INF)) > float(row.get("visible_label_max_width", 0.0)) + 0.01
+			or rect.size.x <= 0.0
+			or rect.size.y <= 0.0
+			or not field_rect.encloses(rect)
+			or (index > 0 and previous_rect.intersects(rect))
+		):
+			return _fail_bool("Battle initiative chip identity/geometry mismatch at %d row %d: expected=%s row=%s field=%s previous=%s." % [width, index, expected_tooltip, row, field_rect, previous_rect])
+		previous_rect = rect
+	if _battle_background_authority(session) != authority_before:
+		return _fail_bool("Inspecting Battle initiative-strip identity changed session/save/settings authority at %d." % width)
+	return true
+
+func _stack_alive_count_for_test(stack: Dictionary) -> int:
+	var unit_hp: int = maxi(1, int(stack.get("unit_hp", stack.get("hp", 1))))
+	var total_health: int = maxi(0, int(stack.get("total_health", 0)))
+	return int(ceil(float(total_health) / float(unit_hp))) if total_health > 0 else 0
+
+func _stack_initials_for_test(full_name: String) -> String:
+	var parts := full_name.split(" ", false)
+	if parts.size() <= 1:
+		return full_name.left(2).to_upper()
+	return ("%s%s" % [String(parts[0]).left(1), String(parts[1]).left(1)]).to_upper()
 
 func _cell_payload(cell: Vector2i) -> Dictionary:
 	return {"q": cell.x, "r": cell.y}
