@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Battle info-tab header compact-fit slice is complete. Four compact native headers fit the unchanged bar at 1280x720 and 1920x1080 while full readiness semantics remain in the existing payload and tooltip; focused navigation/authority, compatibility, repository/editor, and bounded Linux/Windows export-startup gates pass.",
+  "currentNotes": "The Battle Focus/Spell body containment slice is complete. Bounded live summaries retain the established visible cue names and full tooltips; both pages now keep the footer inside the shell at both required widths, with focused navigation/authority, compatibility, repository/editor, and bounded Linux/Windows export-startup proof green.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-battle-info-tab-header-compact-fit-10184",
-  "currentSliceId": "ux-battle-info-tab-header-compact-fit-10184",
-  "currentSliceNotes": "The live native headers are exactly Order, Focus, Spell, Timing; all four fit the unchanged 200px bar at both required widths, while the payload and tooltip retain full semantic identities, readiness counts, summaries, and selected focus. Broader packaged Battle interaction and release claims remain unclaimed.",
+  "currentSlice": "ux-battle-focus-spell-tab-body-containment-10184",
+  "currentSliceId": "ux-battle-focus-spell-tab-body-containment-10184",
+  "currentSliceNotes": "Focus and Spell now use bounded live summaries inside the unchanged page allocation; the full existing context remains in tooltips, established Stack/Engagement/Status check cues remain visible, and footer/navigation/authority remain exact.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Battle Information Tab Header Compact Fit",
-  "currentSliceUpdatedAt": "2026-08-16T17:32:12Z",
+  "currentSliceTitle": "Battle Focus and Spell Tab Body Containment",
+  "currentSliceUpdatedAt": "2026-08-16T18:03:16Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -86868,6 +86868,54 @@
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, signing/publication, native Windows certification, and unrecovered Native RMG parity gaps remain.",
       "blockedReason": null,
       "completedAt": "2026-08-16T17:32:12Z"
+    },
+    {
+      "id": "ux-battle-focus-spell-tab-body-containment-10184",
+      "title": "Battle Focus and Spell Tab Body Containment",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Keep the newly reachable Focus and Spell tab bodies inside the shipped Battle composition without resizing the rail or weakening their full semantic detail.",
+      "implementationTargets": [
+        "scenes/battle/BattleShell.gd",
+        "tests/battle_controller_board_navigation_smoke.gd",
+        "tests/active_play_keyboard_focus_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Focus and Spell no longer grow the BattleTabs/page body above the contained Order/Timing allocation, and the complete footer remains inside the 1080-logical-pixel shell at 1280x720 and 1920x1080",
+        "Focus visibly retains active/target identity, side, count, HP, and readiness/order state; Spell visibly retains mana, first ready spell/readiness count, and current effect status/count without unbounded autowrap",
+        "The existing tooltips retain exact full stack/target context, spellbook, effect board, cue detail, and guidance while tab navigation, selected-page persistence, session/save/settings/routes, and battle authority remain exact",
+        "Focused board/body, active-play tab navigation, Town/Battle visual, animation, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "battle action, stack, targeting, spell, effect, timing, combat, AI, content, balance, save/schema, or Native RMG changes",
+        "sidebar/TabBar/page/footer resizing, font/theme/UI-scale, new control/panel, scroll container, navigation, Order/Timing body, or general rail-summary changes",
+        "packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "2e0e0e76",
+        "geometry_artifact": "/tmp/heroes-battle-info-body-audit-x11.3IjuWX/stdout.log",
+        "focus_capture": ".artifacts/battle_info_body_audit/tab_1.png",
+        "spell_capture": ".artifacts/battle_info_body_audit/tab_2.png",
+        "shell_height": 1080,
+        "contained_panel_height": 312,
+        "focus_panel_height": 376,
+        "spell_panel_height": 376,
+        "focus_spell_footer_bottom": 1104,
+        "overflow_pixels": 24,
+        "authority_exact": true
+      },
+      "createdAt": "2026-08-16T17:37:21Z",
+      "startedAt": "2026-08-16T17:37:21Z",
+      "updatedAt": "2026-08-16T18:03:16Z",
+      "notes": "Implemented bounded state-derived Focus and Spell bodies without resizing the shipped composition. Focus uses four short lines per active/target half, retaining visible Stack check and Engagement check cues plus identity, side, count, HP, and readiness/order state. Spell uses three spellbook lines and two effect lines for mana, first ready spell, ready/total count, visible Status check, and effect-stack count. Exact full prior context remains in the same label tooltips. Independent focused proof validates themed-font widths, exact summaries/tooltips, page containment, footer bottom 1072 inside the 1080 shell, restored selection, and whole session/save/settings/route authority at 1280x720 and 1920x1080. Fresh X11 captures show both corrected pages. Active-play keyboard/controller/mouse navigation, Town/Battle visual, animation, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, signing/publication, native Windows certification, and unrecovered Native RMG parity gaps remain.",
+      "blockedReason": null,
+      "completedAt": "2026-08-16T18:03:16Z"
     }
   ],
   "project": "heroes-like",
@@ -86877,7 +86925,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The Battle info-tab header containment gap is closed; broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
+  "remainingGap": "The Battle Focus/Spell body containment gap is closed; broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
   "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
   "reportOnlyEvidence": [
     {
@@ -87309,7 +87357,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "ux_battle_info_tab_header_compact_fit_completed",
+  "result": "ux_battle_focus_spell_tab_body_containment_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {

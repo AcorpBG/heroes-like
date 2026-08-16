@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `ux-battle-focus-spell-tab-body-containment-10184`. Focus now shows bounded Stack/Engagement check summaries and Spell shows bounded mana/readiness/status summaries, preserving the established visible cue names while the complete prior context remains in each label tooltip. Both pages now use the contained 312-logical-pixel allocation and leave the footer fully inside the 1080 root at 1280x720 and 1920x1080. Focused board/body, fresh visual capture, active-play keyboard/controller/mouse tab navigation, Town/Battle visual, animation, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `ux-battle-focus-spell-tab-body-containment-10184`
 - Completed implementation slice: `ux-battle-info-tab-header-compact-fit-10184`. The existing Battle info TabBar now exposes `Order / Focus / Spell / Timing` as four contained native headers at 1280x720 and 1920x1080 while its semantic payload and tooltip retain the full `Order / Focus / Spells / Timing` identities, exact readiness counts, summaries, and selected focus. Focused board/header, fresh 1280x720 visual capture, active-play keyboard/controller/mouse tab navigation, Town/Battle visual, animation, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `ux-battle-info-tab-header-compact-fit-10184`
 - Completed implementation slice: `ux-battle-order-tab-compact-initiative-summary-10184`. The Battle Order tab now shows a contained three-line Initiative/Now/Next summary at 1280x720 and 1920x1080 while its existing tooltip retains the exact full handoff and ordered technical track. Focused Battle board/navigation, visual, tab/focus, animation, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction, controller hardware, certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -6270,6 +6272,34 @@ Completion evidence:
 - focused native-rectangle proof passes at 1280x720 and 1920x1080 with four positive, ordered, nonoverlapping rectangles contained in the unchanged 200px bar, while whole session/save/settings/route authority remains exact;
 - the fresh X11 capture `/tmp/heroes-battle-tab-fit-visual.EikFJX/info_tabs_compact_1280.png` shows all four headers with no scroll-arrow-hidden state; active-play keyboard/controller/mouse traversal and boundary/focus-return behavior pass;
 - Town/Battle visual, animation, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass; broader packaged interaction and release claims remain unclaimed.
+
+## Completed Slice: Battle Focus and Spell Tab Body Containment
+
+id: `ux-battle-focus-spell-tab-body-containment-10184`
+
+Status: completed.
+
+Implementation boundary:
+- compact only the existing Focus page's active/target visible labels and the Spell page's spellbook/effect visible labels into bounded live summaries derived from the same authoritative stack, action, mana, readiness, and effect state;
+- retain the exact full existing stack/target context, spellbook, effect board, cue detail, and next-action guidance in the same native label tooltips;
+- keep the authored sidebar, TabBar, page panels, footer, font/theme/UI scale, and all keyboard/controller/mouse navigation unchanged while proving the footer remains inside the shell at both required widths.
+
+Completion criteria:
+- selecting Focus or Spell no longer increases the BattleTabs/page body above the contained Order/Timing allocation, and the complete footer rectangle remains inside the 1080-logical-pixel shell at 1280x720 and 1920x1080;
+- Focus visibly retains active/target identity, side, count, HP, and readiness/order state; Spell visibly retains mana, first ready spell/readiness count, and current effect status/count without autowrap beyond the bounded line contract;
+- each corresponding tooltip remains exact to the full independently derived stack/target context, spellbook, effect board, cue detail, and guidance; navigation, selected-page persistence, session/save/settings/routes, and battle authority remain exact;
+- focused board/body, active-play tab navigation, Town/Battle visual, animation, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Non-goals:
+- no battle action, stack, targeting, spell, effect, timing, combat, AI, content, balance, save/schema, or Native RMG changes;
+- no sidebar/TabBar/page/footer resizing, font/theme/UI-scale change, new control/panel, scroll container, navigation change, Order/Timing body change, or general rail-summary rewrite;
+- no packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Completion evidence:
+- Focus renders four short lines per active/target half with visible `Stack check:` and `Engagement check:` cues plus bounded identity, side, count, HP, and readiness/order state; Spell renders three spellbook lines and two effect lines with visible mana, first ready spell, readiness count, `Status check:`, and effect-stack count;
+- the unchanged label tooltips retain the exact full stack/target context, spellbook, effect board, cue detail, and next-action guidance, while independent focused controls verify themed-font line width and exact public state at 1280x720 and 1920x1080;
+- selecting Focus or Spell keeps BattleTabs at the contained 347-logical-pixel rectangle and footer bottom at 1072 inside the 1080 shell; fresh captures `.artifacts/battle_focus_spell_capture/tab_1.png` and `tab_2.png` show the corrected 1280x720 composition;
+- active-play keyboard/controller/mouse navigation, Town/Battle visual, animation, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass; broader packaged interaction and release claims remain unclaimed.
 
 ## Progress Reconciliation
 

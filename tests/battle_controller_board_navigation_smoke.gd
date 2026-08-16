@@ -189,6 +189,9 @@ func _validate_battle_board_semantics_width(width: int) -> bool:
 	if not _validate_battle_info_tab_header_fit(shell, session, width):
 		shell.queue_free()
 		return false
+	if not await _validate_battle_focus_spell_tab_body_fit(shell, session, width):
+		shell.queue_free()
+		return false
 	board.grab_focus()
 	await _settle()
 	if live.text != "":
@@ -851,6 +854,133 @@ func _validate_battle_info_tab_header_fit(shell: Control, session, width: int) -
 	if _battle_background_authority(session) != authority_before:
 		return _fail_bool("Inspecting the Battle info-tab compact header changed session/save/settings authority at %d." % width)
 	return true
+
+func _validate_battle_focus_spell_tab_body_fit(shell: Control, session, width: int) -> bool:
+	var authority_before := _battle_background_authority(session)
+	var tabs: TabContainer = shell.get_node("%BattleTabs")
+	var footer: Control = shell.get_node("%Footer")
+	var initial_tab := tabs.current_tab
+	tabs.current_tab = 0
+	await _settle()
+	var contained_tabs_height := tabs.size.y
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var stack_check: Dictionary = snapshot.get("stack_check", {}) if snapshot.get("stack_check", {}) is Dictionary else {}
+	var engagement_check: Dictionary = snapshot.get("engagement_check", {}) if snapshot.get("engagement_check", {}) is Dictionary else {}
+	var status_check: Dictionary = snapshot.get("status_check", {}) if snapshot.get("status_check", {}) is Dictionary else {}
+	var active_stack := BattleRules.get_active_stack(session.battle)
+	var target_stack := BattleRules.get_selected_target(session.battle)
+	var spellbook_text := BattleRules.describe_spellbook(session)
+	var spell_actions := BattleRules.get_spell_actions(session)
+	var expected_active := _focus_visible_surface_for_test("Active", active_stack, stack_check)
+	var expected_target := _focus_visible_surface_for_test("Target", target_stack, engagement_check)
+	var expected_spellbook := _spellbook_visible_surface_for_test(spellbook_text, spell_actions)
+	var expected_effect := _effect_visible_surface_for_test(status_check)
+	var rows := [
+		{
+			"tab": 1,
+			"panel": shell.get_node("%ContextPanel"),
+			"labels": [shell.get_node("%Active"), shell.get_node("%Target")],
+			"texts": [expected_active, expected_target],
+			"tooltips": [
+				"%s\n\n%s" % [String(stack_check.get("tooltip_text", "")), BattleRules.describe_active_context(session)],
+				"%s\n\n%s" % [String(engagement_check.get("tooltip_text", "")), BattleRules.describe_target_context(session)],
+			],
+			"line_counts": [4, 4],
+		},
+		{
+			"tab": 2,
+			"panel": shell.get_node("%SpellPanel"),
+			"labels": [shell.get_node("%Spellbook"), shell.get_node("%Effects")],
+			"texts": [expected_spellbook, expected_effect],
+			"tooltips": [
+				spellbook_text,
+				"%s\n\n%s" % [String(status_check.get("tooltip_text", "")), BattleRules.describe_effect_board(session)],
+			],
+			"line_counts": [3, 2],
+		},
+	]
+	for row_value in rows:
+		var row: Dictionary = row_value
+		tabs.current_tab = int(row.get("tab", 0))
+		await _settle()
+		var panel: Control = row.get("panel")
+		var labels: Array = row.get("labels", [])
+		var texts: Array = row.get("texts", [])
+		var tooltips: Array = row.get("tooltips", [])
+		var line_counts: Array = row.get("line_counts", [])
+		var geometry_exact := tabs.size.y <= contained_tabs_height + 0.01 \
+			and shell.get_global_rect().encloses(footer.get_global_rect()) \
+			and tabs.get_global_rect().encloses(panel.get_global_rect())
+		for index in range(labels.size()):
+			var label: Label = labels[index]
+			var widest_line := _widest_themed_label_line_for_test(label)
+			geometry_exact = geometry_exact \
+				and label.text == String(texts[index]) \
+				and label.tooltip_text == String(tooltips[index]) \
+				and label.get_line_count() == int(line_counts[index]) \
+				and label.get_visible_line_count() == int(line_counts[index]) \
+				and widest_line <= label.size.x + 0.5 \
+				and panel.get_global_rect().encloses(label.get_global_rect())
+		if not geometry_exact:
+			return _fail_bool("Battle Focus/Spell compact body overflow/semantic mismatch at %d tab %s: tabs=%s contained_height=%s panel=%s footer=%s shell=%s labels=%s expected=%s tooltips=%s expected_tooltips=%s." % [width, row.get("tab"), tabs.get_global_rect(), contained_tabs_height, panel.get_global_rect(), footer.get_global_rect(), shell.get_global_rect(), labels.map(func(label): return {"text": label.text, "tooltip": label.tooltip_text, "rect": label.get_global_rect(), "lines": label.get_line_count(), "visible_lines": label.get_visible_line_count(), "widest": _widest_themed_label_line_for_test(label)}), texts, labels.map(func(label): return label.tooltip_text), tooltips])
+	tabs.current_tab = initial_tab
+	await _settle()
+	if _battle_background_authority(session) != authority_before:
+		return _fail_bool("Inspecting the Battle Focus/Spell compact bodies changed session/save/settings authority at %d." % width)
+	return true
+
+func _focus_visible_surface_for_test(prefix: String, stack: Dictionary, cue: Dictionary) -> String:
+	var cue_label := "Stack check:" if prefix == "Active" else "Engagement check:"
+	if stack.is_empty():
+		return "%s\n%s: none\nSide: unavailable\nState: %s" % [cue_label, prefix, String(cue.get("readiness", "Waiting"))]
+	var name := String(stack.get("name", stack.get("battle_id", "stack"))).strip_edges()
+	if name == "":
+		name = "stack"
+	var side_value := String(stack.get("side", ""))
+	var side := "Player" if side_value == "player" else ("Enemy" if side_value == "enemy" else side_value.capitalize())
+	var readiness := String(cue.get("readiness", "Ready")).strip_edges()
+	if readiness == "":
+		readiness = "Ready"
+	var order := String(cue.get("order", "")).strip_edges()
+	if order.contains(" ("):
+		order = order.get_slice(" (", 0).strip_edges()
+	var state_line := readiness if order == "" else "%s: %s" % [readiness, _short_text_for_test(order, 16)]
+	return "%s\n%s: %s\n%s | x%d | HP %d\n%s" % [cue_label, prefix, _short_text_for_test(name, 14), side, max(0, int(stack.get("count", 0))), max(0, int(stack.get("total_health", 0))), state_line]
+
+func _spellbook_visible_surface_for_test(spellbook_text: String, spell_actions: Array) -> String:
+	var mana_line := "Mana 0/0"
+	var lines := spellbook_text.split("\n", false)
+	if not lines.is_empty():
+		for part_value in String(lines[0]).split("|", false):
+			var part := String(part_value).strip_edges()
+			if part.begins_with("Mana "):
+				mana_line = part
+				break
+	var ready_count := 0
+	var first_ready := ""
+	for action_value in spell_actions:
+		if not (action_value is Dictionary) or bool(action_value.get("disabled", false)):
+			continue
+		ready_count += 1
+		if first_ready == "":
+			first_ready = String(action_value.get("label", action_value.get("id", "Spell"))).strip_edges()
+	var ready_line := "Ready: none" if first_ready == "" else "Ready: %s" % _short_text_for_test(first_ready, 16)
+	return "%s\n%s\nSpells: %d/%d ready" % [mana_line, ready_line, ready_count, spell_actions.size()]
+
+func _effect_visible_surface_for_test(status_check: Dictionary) -> String:
+	var readiness := String(status_check.get("readiness", "Review")).strip_edges()
+	if readiness == "":
+		readiness = "Review"
+	var effect_count: int = max(0, int(status_check.get("effect_stack_count", 0)))
+	return "Status check: %s\nEffects: %d stack%s" % [readiness, effect_count, "" if effect_count == 1 else "s"]
+
+func _widest_themed_label_line_for_test(label: Label) -> float:
+	var font := label.get_theme_font("font")
+	var font_size := label.get_theme_font_size("font_size")
+	var widest := 0.0
+	for line_value in label.text.split("\n", false):
+		widest = maxf(widest, font.get_string_size(String(line_value), HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x)
+	return widest
 
 func _expected_initiative_handoff_for_test(session) -> Dictionary:
 	var battle: Dictionary = session.battle

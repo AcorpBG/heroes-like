@@ -17,6 +17,9 @@ const BATTLE_PLAYBACK_SPEED_SAVE_FAILURE_MESSAGE := "Playback speed not saved. P
 const BATTLE_ORDER_VISIBLE_LINE_COUNT := 3
 const BATTLE_ORDER_VISIBLE_STACK_CHAR_LIMIT := 18
 const BATTLE_INFO_TAB_VISIBLE_TITLES := ["Order", "Focus", "Spell", "Timing"]
+const BATTLE_FOCUS_VISIBLE_NAME_CHAR_LIMIT := 14
+const BATTLE_FOCUS_VISIBLE_ORDER_CHAR_LIMIT := 16
+const BATTLE_SPELL_VISIBLE_NAME_CHAR_LIMIT := 16
 
 @onready var _banner_panel: PanelContainer = %Banner
 @onready var _briefing_panel: PanelContainer = %BriefingPanel
@@ -1559,10 +1562,10 @@ func _refresh() -> void:
 	if active_stack_check.is_empty():
 		_set_compact_label(_active_label, active_context, 3)
 	else:
-		_set_compact_label(
-			_active_label,
-			"%s\n%s" % [String(active_stack_check.get("visible_text", "")), active_context],
-			3
+		_active_label.text = _battle_focus_visible_surface(
+			"Active",
+			BattleRules.get_active_stack(_session.battle),
+			active_stack_check
 		)
 		_active_label.tooltip_text = _join_tooltip_sections([
 			String(active_stack_check.get("tooltip_text", "")),
@@ -1573,16 +1576,19 @@ func _refresh() -> void:
 	if engagement_check.is_empty():
 		_set_compact_label(_target_label, target_context, 3)
 	else:
-		_set_compact_label(
-			_target_label,
-			"%s\n%s" % [String(engagement_check.get("visible_text", "")), target_context],
-			3
+		_target_label.text = _battle_focus_visible_surface(
+			"Target",
+			BattleRules.get_selected_target(_session.battle),
+			engagement_check
 		)
 		_target_label.tooltip_text = _join_tooltip_sections([
 			String(engagement_check.get("tooltip_text", "")),
 			target_context,
 		])
-	_set_compact_label(_spell_label, BattleRules.describe_spellbook(_session), 3)
+	var spellbook_text := BattleRules.describe_spellbook(_session)
+	var spell_actions := BattleRules.get_spell_actions(_session)
+	_spell_label.text = _battle_spellbook_visible_surface(spellbook_text, spell_actions)
+	_spell_label.tooltip_text = spellbook_text
 	buckets["turn_target_spell"] = ProfileLogScript.elapsed_ms(section_started)
 	section_started = ProfileLogScript.begin_usec()
 	var effect_board := BattleRules.describe_effect_board(_session)
@@ -1590,11 +1596,7 @@ func _refresh() -> void:
 	if status_check.is_empty():
 		_set_compact_label(_effect_label, effect_board, 3)
 	else:
-		_set_compact_label(
-			_effect_label,
-			"%s\n%s" % [String(status_check.get("visible_text", "")), effect_board],
-			3
-		)
+		_effect_label.text = _battle_effect_visible_surface(status_check)
 		_effect_label.tooltip_text = _join_tooltip_sections([
 			String(status_check.get("tooltip_text", "")),
 			effect_board,
@@ -1649,6 +1651,66 @@ func _refresh() -> void:
 		_apply_briefing_consumption_autosave_failure_surface(false)
 	ProfileLogScript.emit_general("battle", "refresh", "battle_refresh", ProfileLogScript.elapsed_ms(profile_started), buckets, _battle_profile_metadata(false), _session)
 	call_deferred("_configure_battle_keyboard_focus", false)
+
+func _battle_focus_visible_surface(prefix: String, stack: Dictionary, cue: Dictionary) -> String:
+	var cue_label := "Stack check:" if prefix == "Active" else "Engagement check:"
+	if stack.is_empty():
+		return "%s\n%s: none\nSide: unavailable\nState: %s" % [cue_label, prefix, String(cue.get("readiness", "Waiting"))]
+	var name := String(stack.get("name", stack.get("battle_id", "stack"))).strip_edges()
+	if name == "":
+		name = "stack"
+	var side := _battle_initiative_side_label(String(stack.get("side", "")))
+	var readiness := String(cue.get("readiness", "Ready")).strip_edges()
+	if readiness == "":
+		readiness = "Ready"
+	var order := String(cue.get("order", "")).strip_edges()
+	if order.contains(" ("):
+		order = order.get_slice(" (", 0).strip_edges()
+	var state_line := readiness
+	if order != "":
+		state_line = "%s: %s" % [readiness, _short_text(order, BATTLE_FOCUS_VISIBLE_ORDER_CHAR_LIMIT)]
+	return "%s\n%s: %s\n%s | x%d | HP %d\n%s" % [
+		cue_label,
+		prefix,
+		_short_text(name, BATTLE_FOCUS_VISIBLE_NAME_CHAR_LIMIT),
+		side,
+		max(0, int(stack.get("count", 0))),
+		max(0, int(stack.get("total_health", 0))),
+		state_line,
+	]
+
+func _battle_spellbook_visible_surface(spellbook_text: String, spell_actions: Array) -> String:
+	var mana_line := "Mana 0/0"
+	var spellbook_lines := spellbook_text.split("\n", false)
+	if not spellbook_lines.is_empty():
+		for part_value in String(spellbook_lines[0]).split("|", false):
+			var part := String(part_value).strip_edges()
+			if part.begins_with("Mana "):
+				mana_line = part
+				break
+	var ready_count := 0
+	var first_ready := ""
+	for action_value in spell_actions:
+		if not (action_value is Dictionary) or bool(action_value.get("disabled", false)):
+			continue
+		ready_count += 1
+		if first_ready == "":
+			first_ready = String(action_value.get("label", action_value.get("id", "Spell"))).strip_edges()
+	var ready_line := "Ready: none"
+	if first_ready != "":
+		ready_line = "Ready: %s" % _short_text(first_ready, BATTLE_SPELL_VISIBLE_NAME_CHAR_LIMIT)
+	return "%s\n%s\nSpells: %d/%d ready" % [mana_line, ready_line, ready_count, spell_actions.size()]
+
+func _battle_effect_visible_surface(status_check: Dictionary) -> String:
+	var readiness := String(status_check.get("readiness", "Review")).strip_edges()
+	if readiness == "":
+		readiness = "Review"
+	var effect_count: int = max(0, int(status_check.get("effect_stack_count", 0)))
+	return "Status check: %s\nEffects: %d stack%s" % [
+		readiness,
+		effect_count,
+		"" if effect_count == 1 else "s",
+	]
 
 func _configure_battle_keyboard_focus(force: bool = false) -> void:
 	if not is_inside_tree() or _session == null or _session.battle.is_empty() or (_active_play_settings_dialog != null and _active_play_settings_dialog.is_open()) or (_quick_resolve_confirmation_dialog != null and _quick_resolve_confirmation_dialog.visible) or (_withdrawal_confirmation_dialog != null and _withdrawal_confirmation_dialog.visible):
