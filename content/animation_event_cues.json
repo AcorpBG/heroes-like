@@ -689,6 +689,25 @@
       "producer_refs": ["TownShell._on_specialty_action_pressed", "TownRules.choose_specialty_at_active_town"]
     },
     {
+      "event_id": "town_army_transferred",
+      "cue_id": "cue_town_army_transferred",
+      "surface": "town",
+      "subject_kind": "unit_roster",
+      "animation_state_family": "army_transfer",
+      "animation_state": "stack_redeployed",
+      "playback_policy": "queue_resolved",
+      "blocking_policy": "nonblocking",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_button_confirm"],
+      "audio_cue_ids": ["audio_placeholder_ui_confirm"],
+      "fallbacks": {
+        "reduced_motion_tag": "unit_transfer_badge",
+        "fast_mode_tag": "unit_transfer_snap"
+      },
+      "validation_tags": ["town", "unit", "army", "transfer", "resolved_event"],
+      "producer_refs": ["TownShell._on_transfer_action_pressed", "TownRules.transfer_in_active_town"]
+    },
+    {
       "event_id": "spell_cast_battle",
       "cue_id": "cue_spell_cast_battle",
       "surface": "spell",

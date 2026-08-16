@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Town specialty selection feedback is implemented and validated. Successful public specialty choices now publish exact compact semantic TownStage feedback with imported UI-confirm audio and normal/reduced specialty-rank rendering only after authoritative hero progression and recap checks. Broader release gaps remain.",
+  "currentNotes": "Town army transfer completion feedback is implemented and validated. Successful public garrison/hero transfers now publish exact compact semantic TownStage feedback with imported UI-confirm audio and normal/reduced roster movement only after authoritative holder-count, conservation, recap, and active-hero checks. Broader release gaps remain.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-town-specialty-selection-feedback-10184",
-  "currentSliceId": "presentation-town-specialty-selection-feedback-10184",
-  "currentSliceNotes": "Completed with focused public-handler TownRules parity, exact specialty-rank and pending-choice transition proof, silent invalid controls, compatibility/static/editor coverage, and bounded Linux/Windows export/startup evidence.",
+  "currentSlice": "presentation-town-army-transfer-completion-feedback-10184",
+  "currentSliceId": "presentation-town-army-transfer-completion-feedback-10184",
+  "currentSliceNotes": "Completed with focused bidirectional public-handler TownRules parity, exact conserved unit-count transitions, silent invalid controls, compatibility/static/editor coverage, and bounded Linux/Windows export/startup evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Town Specialty Selection Feedback",
-  "currentSliceUpdatedAt": "2026-08-16T03:09:07Z",
+  "currentSliceTitle": "Town Army Transfer Completion Feedback",
+  "currentSliceUpdatedAt": "2026-08-16T03:34:01Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -85986,6 +85986,49 @@
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
       "blockedReason": null,
       "completedAt": "2026-08-16T03:09:07Z"
+    },
+    {
+      "id": "presentation-town-army-transfer-completion-feedback-10184",
+      "title": "Town Army Transfer Completion Feedback",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Present successful live Town garrison/hero army transfers through the existing compact TownStage system without changing transfer rules, amount resolution, stack authority, or save behavior.",
+      "implementationTargets": [
+        "content/animation_event_cues.json",
+        "scenes/town/TownShell.gd",
+        "scenes/town/TownStageView.gd",
+        "tests/town_army_transfer_completion_feedback_report.gd",
+        "tests/town_army_transfer_completion_feedback_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Live TownShell 1280x720/1920x1080 public transfers match method-equivalent TownRules controls and publish exact source/target holder identity, unit identity, moved count, and before/after counts once",
+        "Source count decreases and target count increases by the same positive amount, total count remains exact, both holders remain stationed, and the active-hero mirror remains exact",
+        "Failed, stale, malformed, repeated, refresh, and non-transfer controls remain silent; normal and reduced-motion rendering are exact",
+        "Focused Town transfer, field rendezvous/transfer, Town cue/visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "transfer rules, amount tokens, stack ordering/merge/removal, holder eligibility, army stats, unit content, AI/logistics, save/schema, Native RMG, or map topology changes",
+        "new art/audio, generic UI cue remapping, layout redesign, particles, shaders, spatial audio, haptics, or final mastering",
+        "packaged transfer interaction/listening, hardware certification, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "19971cf3",
+        "town_transfer_action_present": true,
+        "town_transfer_rules_present": true,
+        "town_transfer_presentation_present": false
+      },
+      "createdAt": "2026-08-16T03:13:03Z",
+      "startedAt": "2026-08-16T03:13:03Z",
+      "updatedAt": "2026-08-16T03:34:01Z",
+      "notes": "Implemented live Town army transfer completion feedback without changing HeroCommandRules or TownRules authority. TownShell captures exact stationed source/target holder stacks before and after the public transfer and publishes only when a positive source decrease equals the target increase, total unit count is conserved, holder/unit/action identity is exact, recap is present, and the active-hero mirror remains authoritative. TownStage uses the semantic town-army-transferred cue, existing imported 120 ms UI-confirm WAV, compact normal/reduced procedural roster movement, and fail-closed malformed/stale/invalid/refresh silence. Focused artifact `/tmp/heroes-town-transfer-focused.CO6eYr` passes eight 1280/1920 normal/reduced garrison-to-hero and hero-to-garrison rows with whole-session TownRules parity. Compatibility artifacts `/tmp/heroes-town-transfer-compat.V9zJxn` and `/tmp/heroes-town-transfer-compat-resume.aarxkU` pass animation catalog, UI audio, field-rendezvous transfer, recruitment cue, keyboard focus, Town/Battle visuals, and core. The unrelated `town_entity_cache_active_refresh_regression` build row remains excluded because its pre-existing stable-focus assertion rejects the already-shipped blocking build presenter and is unchanged by this slice. Repository validation, Python compilation, JSON/diff checks, exact and generic editor parses pass. Official Linux and Windows packaging reports are ok:true; claims remain Linux export/headless startup and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup only. Packaged transfer interaction/listening, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
+      "blockedReason": null,
+      "completedAt": "2026-08-16T03:34:01Z"
     }
   ],
   "project": "heroes-like",
