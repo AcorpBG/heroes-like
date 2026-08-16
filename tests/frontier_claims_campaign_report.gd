@@ -14,6 +14,7 @@ const ROOTGATE_ID := "rootgate-toll"
 const FOGCHART_ID := "fogchart-mooring"
 const CLAUSEWORKS_ID := "clauseworks-counterclaim"
 const NIGHTGLASS_ID := "nightglass-ledger-reversal"
+const HALO_RESERVE_ID := "halo-reserve-refraction-claim"
 const MIREFORD_HERO_ID := "hero_thornwake_silsa_bramblehound"
 const OREVEIN_HERO_ID := "hero_brasshollow_marka_ironclause"
 const BELLWAKE_HERO_ID := "hero_veilmourn_ivara_blacktide"
@@ -21,6 +22,7 @@ const ROOTGATE_HERO_ID := "hero_thornwake_tova_rootwright"
 const FOGCHART_HERO_ID := "hero_veilmourn_ruln_vanehook"
 const CLAUSEWORKS_HERO_ID := "hero_brasshollow_oren_bellfounder"
 const NIGHTGLASS_HERO_ID := "hero_mireclaw_kessa_chainboom"
+const HALO_RESERVE_HERO_ID := "hero_neral"
 const SAVE_SLOT := 2
 
 func _ready() -> void:
@@ -258,15 +260,38 @@ func _run() -> void:
 	nightglass_session.flags["nightglass_ledger_guard_broken"] = true
 	nightglass_session.flags["nightglass_rivet_auditors_broken"] = true
 	nightglass_session.flags["nightglass_claim_recorded"] = true
+	nightglass_session.flags["furnace_scrip_drowned"] = true
+	nightglass_session.overworld["resources"] = {"gold": 5000, "wood": 20, "ore": 20, "peatwax": 10}
 	_mark_victory(nightglass_session, "Kessa reversed the seventh frontier claim.")
-	var completed_profile := CampaignRulesScript.record_session_completion(after_clauseworks, nightglass_session)
-	if not _assert_completion_and_replay(completed_profile, nightglass_session):
+	var after_nightglass := CampaignRulesScript.record_session_completion(after_clauseworks, nightglass_session)
+	if not _assert_unlocked(after_nightglass, HALO_RESERVE_ID):
+		return
+
+	var halo_baseline := ScenarioFactoryScript.create_session(HALO_RESERVE_ID, "normal", SessionStateStoreScript.LAUNCH_MODE_SKIRMISH)
+	var halo_session: SessionStateStoreScript.SessionData = CampaignRulesScript.build_session(after_nightglass, HALO_RESERVE_ID, "normal", CAMPAIGN_ID)
+	if not _assert_campaign_session(halo_session, HALO_RESERVE_ID, HALO_RESERVE_HERO_ID, "normal"):
+		return
+	if not _assert_cross_faction_import(halo_session, halo_baseline, {"gold": 1000, "wood": 3, "ore": 3}, "carryover_nightglass_claim_recorded", NIGHTGLASS_ID):
+		return
+	if int(halo_session.overworld.get("resources", {}).get("peatwax", 0)) != int(halo_baseline.overworld.get("resources", {}).get("peatwax", 0)):
+		_fail("Nightglass peatwax leaked into the Sunvault chapter.")
+		return
+	if String(halo_session.overworld.get("active_hero_id", "")) == NIGHTGLASS_HERO_ID:
+		_fail("Nightglass commander leaked into the Halo Reserve chapter.")
+		return
+	if not _assert_skirmish_isolation(after_nightglass, HALO_RESERVE_ID):
+		return
+
+	halo_session.flags["halo_refraction_claim_recorded"] = true
+	_mark_victory(halo_session, "Neral refracted the eighth frontier claim.")
+	var completed_profile := CampaignRulesScript.record_session_completion(after_nightglass, halo_session)
+	if not _assert_completion_and_replay(completed_profile, halo_session):
 		return
 
 	print("%s %s" % [REPORT_ID, JSON.stringify({
 		"ok": true,
 		"campaign_id": CAMPAIGN_ID,
-		"chapter_ids": [MIREFORD_ID, OREVEIN_ID, BELLWAKE_ID, ROOTGATE_ID, FOGCHART_ID, CLAUSEWORKS_ID, NIGHTGLASS_ID],
+		"chapter_ids": [MIREFORD_ID, OREVEIN_ID, BELLWAKE_ID, ROOTGATE_ID, FOGCHART_ID, CLAUSEWORKS_ID, NIGHTGLASS_ID, HALO_RESERVE_ID],
 		"campaign_count": CampaignRulesScript.campaign_ids().size(),
 		"save_resume": save_evidence,
 		"mireford_to_orevein_resources": {"gold": 1000, "wood": 3, "ore": 3, "verdant_grafts": 2},
@@ -275,9 +300,11 @@ func _run() -> void:
 		"rootgate_to_fogchart_resources": {"gold": 1000, "wood": 3, "ore": 3},
 		"fogchart_to_clauseworks_resources": {"gold": 1000, "wood": 3, "ore": 3},
 		"clauseworks_to_nightglass_resources": {"gold": 1000, "wood": 3, "ore": 3},
+		"nightglass_to_halo_resources": {"gold": 1000, "wood": 3, "ore": 3},
 		"rootgate_rare_resource_transfer": false,
 		"fogchart_rare_resource_transfer": false,
 		"clauseworks_rare_resource_transfer": false,
+		"nightglass_rare_resource_transfer": false,
 		"cross_faction_hero_progression": false,
 		"cross_faction_spell_progression": false,
 		"cross_faction_artifact_progression": false,
@@ -299,10 +326,10 @@ func _assert_campaign_browser(profile: Dictionary) -> bool:
 		_fail("Frontier Claims did not start at Mireford.")
 		return false
 	var entries := CampaignRulesScript.build_campaign_chapter_entries(profile, CAMPAIGN_ID)
-	if entries.size() != 7:
-		_fail("Frontier Claims did not expose seven chapters: %s" % JSON.stringify(entries))
+	if entries.size() != 8:
+		_fail("Frontier Claims did not expose eight chapters: %s" % JSON.stringify(entries))
 		return false
-	if bool(entries[0].get("disabled", true)) or not bool(entries[1].get("disabled", false)) or not bool(entries[2].get("disabled", false)) or not bool(entries[3].get("disabled", false)) or not bool(entries[4].get("disabled", false)) or not bool(entries[5].get("disabled", false)) or not bool(entries[6].get("disabled", false)):
+	if bool(entries[0].get("disabled", true)) or not bool(entries[1].get("disabled", false)) or not bool(entries[2].get("disabled", false)) or not bool(entries[3].get("disabled", false)) or not bool(entries[4].get("disabled", false)) or not bool(entries[5].get("disabled", false)) or not bool(entries[6].get("disabled", false)) or not bool(entries[7].get("disabled", false)):
 		_fail("Initial Frontier Claims locks are wrong: %s" % JSON.stringify(entries))
 		return false
 	var action := CampaignRulesScript.build_start_action(profile, CAMPAIGN_ID, "hard")
@@ -387,10 +414,12 @@ func _assert_cross_faction_import(
 		return false
 	var campaign_hero: Dictionary = campaign_session.overworld.get("hero", {})
 	var baseline_hero: Dictionary = baseline_session.overworld.get("hero", {})
+	var campaign_spell_ids: Array = campaign_hero.get("spellbook", {}).get("known_spell_ids", [])
+	var baseline_spell_ids: Array = baseline_hero.get("spellbook", {}).get("known_spell_ids", [])
 	if int(campaign_hero.get("level", 0)) != int(baseline_hero.get("level", 0)):
 		_fail("Cross-faction hero level leaked into %s." % campaign_session.scenario_id)
 		return false
-	if JSON.stringify(campaign_hero.get("spellbook", {})) != JSON.stringify(baseline_hero.get("spellbook", {})):
+	if campaign_spell_ids != baseline_spell_ids:
 		_fail("Cross-faction spellbook leaked into %s." % campaign_session.scenario_id)
 		return false
 	if JSON.stringify(campaign_hero.get("artifacts", {})) != JSON.stringify(baseline_hero.get("artifacts", {})):
@@ -416,13 +445,13 @@ func _assert_skirmish_isolation(profile: Dictionary, scenario_id: String) -> boo
 	return true
 
 func _assert_completion_and_replay(profile: Dictionary, final_session: SessionStateStoreScript.SessionData) -> bool:
-	for scenario_id in [MIREFORD_ID, OREVEIN_ID, BELLWAKE_ID, ROOTGATE_ID, FOGCHART_ID, CLAUSEWORKS_ID, NIGHTGLASS_ID]:
+	for scenario_id in [MIREFORD_ID, OREVEIN_ID, BELLWAKE_ID, ROOTGATE_ID, FOGCHART_ID, CLAUSEWORKS_ID, NIGHTGLASS_ID, HALO_RESERVE_ID]:
 		var record := CampaignRulesScript.get_scenario_record(profile, CAMPAIGN_ID, scenario_id)
 		if String(record.get("status", "")) != "victory":
 			_fail("Campaign completion missed victory record for %s." % scenario_id)
 			return false
 	var start_action := CampaignRulesScript.build_start_action(profile, CAMPAIGN_ID)
-	if bool(start_action.get("disabled", true)) or String(start_action.get("scenario_id", "")) != NIGHTGLASS_ID or not String(start_action.get("label", "")).begins_with("Replay"):
+	if bool(start_action.get("disabled", true)) or String(start_action.get("scenario_id", "")) != HALO_RESERVE_ID or not String(start_action.get("label", "")).begins_with("Replay"):
 		_fail("Completed campaign did not expose finale replay: %s" % JSON.stringify(start_action))
 		return false
 	var outcome_actions := CampaignRulesScript.build_outcome_actions(profile, final_session)

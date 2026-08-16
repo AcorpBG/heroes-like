@@ -6039,6 +6039,34 @@ Non-goals:
 - no broad faction balance tuning, generic campaign/carryover redesign, cross-faction hero/spell/artifact/rare-resource transfer, generated-map support, visual/audio asset production, or full Mireclaw campaign claim;
 - no packaged chapter interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
 
+## Selected Slice: Sunvault Halo Reserve Refraction Claim Chapter
+
+id: `content-sunvault-halo-reserve-refraction-claim-chapter-10184`
+
+Status: completed.
+
+Implementation boundary:
+- add one twenty-third active authored scenario that supplies the missing Sunvault player chapter in `Frontier Claims`, led by the unused Neral Glasswind and Halo Reserve through existing content/runtime systems;
+- wire it as chapter VIII after `nightglass-ledger-reversal`, importing only bounded common resources and campaign flags while retaining Sunvault-owned hero, spell, artifact, army, and rare-resource authority;
+- reuse shipped towns, terrain, units, resources, artifacts, encounters, objectives, campaign/save/runtime systems, and production UI paths without new schemas or policy.
+
+Completion criteria:
+- the active catalog exposes exactly twenty-three campaign- and skirmish-selectable scenarios, and the new chapter preserves exact Neral/Halo Reserve, Sunvault/Thornwake, town, deadline, objective, and economy-route identities;
+- real standalone and campaign sessions launch, expose live Sunvault town development/recruitment, create all authored public battle payloads, reach victory/defeat authority, and survive save normalization/resume;
+- chapter VIII unlocks only after exact Nightglass victory plus `nightglass_claim_recorded`, imports bounded common resources/flags only, and transfers no Mireclaw hero progression, spells, artifacts, or peatwax;
+- active combat breadth, campaign/deadline/replay/economy/AI/core compatibility, repository/editor validation, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Completion evidence:
+- `halo-reserve-refraction-claim` is the exact twenty-third active scenario and eighth `Frontier Claims` chapter, making Halo Spire, Neral Glasswind, and Halo Reserve live player-owned content through existing campaign/skirmish systems;
+- the focused owner proves standalone/campaign launch, live Sunvault recruitment, three public battle entries, exact Day 13 victory/defeat authority, save/resume, common-only Nightglass carryover, and no cross-faction hero/spell/artifact/peatwax transfer;
+- screened rosters pass the authoritative 23-scenario/74-encounter breadth matrix with no stalls or invalid rows and a clear tuning queue (`829808c9`), followed by campaign/deadline/replay/economy/AI/core/static/editor compatibility;
+- official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass; these are bounded export/startup results, not packaged chapter interaction or release certification.
+
+Non-goals:
+- no new units, towns, heroes, spells, artifacts, resource-site types, battle rules, AI policy, economy coefficients, campaign schema, save version, Native RMG, or map-topology changes;
+- no broad faction balance tuning, generic campaign redesign, cross-faction hero/spell/artifact/rare-resource transfer, generated-map support, visual/audio asset production, or full Sunvault campaign claim;
+- no packaged chapter interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:
