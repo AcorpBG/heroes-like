@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `ux-main-menu-editor-utility-command-frame-10184`. The Main Menu now preserves its five authored transparent plaque hotspots while the Editor command alone uses the existing secondary normal/hover/pressed/disabled texture frame in the previously unpainted utility gap. Focused 1280x720/1920x1080 geometry and asset proof, menu/outcome, keyboard/controller navigation, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Editor interaction, hardware/certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `ux-main-menu-editor-utility-command-frame-10184`
 - Completed implementation slice: `content-veilmourn-fogchart-mooring-chapter-10184`. The active catalog now contains twenty campaign/skirmish scenarios, including Veilmourn's Fogchart Mooring chapter with Ruln Vanehook and the Bellwake Privateers defending the previously unused mooring against Sunvault's Halo registry front. Frontier Claims now has five chapters; exact Rootgate victory evidence unlocks Fogchart and imports only bounded common resources and flags, with all six rare resources explicitly capped at zero and no Thornwake hero progression, spells, or artifacts transferred. Real standalone/campaign launch, objective victory and Day 13 defeat, save/resume, 65-encounter queue-clear combat breadth, resource-route and town-development breadth, strategic-AI recruitment/delivery, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged chapter interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `content-veilmourn-fogchart-mooring-chapter-10184`
 - Completed implementation slice: `content-thornwake-rootgate-toll-chapter-10184`. The active catalog now contains nineteen campaign/skirmish scenarios, including Thornwake's new Rootgate Toll chapter with Tova Rootwright and the Graftroot Wardens defending Rootgate Nursery against the Clauseworks toll line. Frontier Claims now has four chapters; exact Bellwake victory evidence unlocks Rootgate Toll and imports only bounded resources and flags, never Veilmourn hero progression, spells, or artifacts. Real standalone/campaign launch, objective victory and Day 12 defeat, save/resume, 62-encounter combat breadth with a clear queue, resource-route and town-development breadth, strategic-AI recruitment/delivery, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged chapter interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -6095,6 +6097,33 @@ Non-goals:
 - no new units, towns, heroes, spells, artifacts, resource-site types, battle rules, AI policy, economy coefficients, campaign schema, save version, Native RMG, or map-topology changes;
 - no broad faction balance tuning, generic campaign redesign, cross-faction hero/spell/artifact/rare-resource transfer, generated-map support, visual/audio asset production, or full Embercourt campaign claim;
 - no packaged chapter interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+## Selected Slice: Main Menu Editor Utility Command Frame
+
+id: `ux-main-menu-editor-utility-command-frame-10184`
+
+Status: completed.
+
+Implementation boundary:
+- keep Campaign, Skirmish, Load, Settings, and Quit as exact transparent hotspots over the five authored backdrop plaques;
+- render only the Editor utility command with the existing asset-backed secondary button states in the unpainted gap between Settings and Quit;
+- preserve the command's exact action, tooltip, focus order, keyboard/controller activation, cancel behavior, and Map Editor handoff.
+
+Completion criteria:
+- at 1280x720 and 1920x1080 the Editor command has a real nontransparent authored frame, remains inside the right command rail, and does not overlap the adjacent Settings or Quit plaques;
+- the other five commands retain their exact text-only painted-plaque styles, anchors, labels, tooltips, order, and actions;
+- mouse and keyboard/controller activation still enter the Map Editor through the public router, returning to the menu without changing save, campaign, settings, or session authority;
+- focused menu visual/navigation, Map Editor return, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Completion evidence:
+- the Editor command alone now uses the existing secondary normal/hover/pressed/disabled texture frames, while Campaign, Skirmish, Load, Settings, and Quit remain exact transparent hotspots over their authored backdrop plaques;
+- focused runtime proves the framed Editor rect is contained and nonoverlapping between Settings and Quit at 1280x720 and 1920x1080, with exact asset paths, tooltip, anchors, command order, and unchanged session/menu authority;
+- menu/outcome visual behavior, the full keyboard/controller navigation matrix, screen-reader semantics, core systems, repository validation, Python compilation, diff checks, and exact/generic editor parses pass;
+- official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass; these remain bounded packaging/startup results, not packaged Editor interaction or release certification.
+
+Non-goals:
+- no backdrop repaint, new art generation, command reordering, submenu redesign, Map Editor behavior change, global theme/UI-scale change, save/campaign/settings change, gameplay/content/balance/AI/Native RMG change, or broad first-view redesign;
+- no packaged Editor interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
 
 ## Progress Reconciliation
 

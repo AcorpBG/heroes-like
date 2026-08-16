@@ -15839,6 +15839,19 @@ def validate_main_menu_first_view(errors: list[str]) -> None:
             errors,
             f"MainMenu.tscn must expose first-view {label} as a painted backdrop hotspot",
         )
+    ensure(
+        re.search(
+            r'\[node name="OpenEditor" type="Button" parent="BackdropCommandHotspots"\]'
+            r'(?:(?!\n\[node ).)*?\nanchor_top = 0\.681'
+            r'(?:(?!\n\[node ).)*?\nanchor_bottom = 0\.729'
+            r'(?:(?!\n\[node ).)*?\ntext = "Editor"',
+            main_menu_scene_text,
+            flags=re.DOTALL,
+        )
+        is not None,
+        errors,
+        "MainMenu.tscn must keep Editor in the unpainted utility gap between Settings and Quit",
+    )
     lower_plaque_bounds = {
         "OpenSaves": ("0.473", "0.523"),
         "OpenSettings": ("0.611", "0.66"),
@@ -15879,6 +15892,10 @@ def validate_main_menu_first_view(errors: list[str]) -> None:
         '"painted_backdrop_hotspots"',
         '"first_view_commands"',
         "func _apply_backdrop_plaque_button",
+        "func _apply_editor_utility_button",
+        'FrontierVisualKit.apply_button(_open_editor_button, "secondary", 0.0, 0.0, 16)',
+        '"editor_utility_frame": _editor_utility_frame_snapshot()',
+        '"normal_texture_path": normal_texture_path',
         "func _latest_continue_surface",
         'button.add_theme_color_override("font_color", highlight_color if active else normal_color)',
         'button.add_theme_stylebox_override("hover", transparent_style.duplicate())',
@@ -15888,6 +15905,33 @@ def validate_main_menu_first_view(errors: list[str]) -> None:
     ensure("active_style" not in main_menu_script_text, errors, "MainMenu.gd must not draw an active rounded plaque box")
     ensure('"hover", hover' not in main_menu_script_text, errors, "MainMenu.gd must not draw a hover rounded plaque box")
     ensure('"pressed", pressed' not in main_menu_script_text, errors, "MainMenu.gd must not draw a pressed rounded plaque box")
+    sync_system_match = re.search(
+        r"func _sync_system_command_buttons\(\) -> void:(?P<body>.*?)(?=\nfunc )",
+        main_menu_script_text,
+        flags=re.DOTALL,
+    )
+    sync_system_body = sync_system_match.group("body") if sync_system_match else ""
+    ensure("_apply_editor_utility_button()" in sync_system_body, errors, "MainMenu must apply the Editor utility frame through its dedicated owner")
+    ensure("_apply_backdrop_plaque_button(_open_editor_button" not in sync_system_body, errors, "MainMenu must not restore Editor's nonexistent painted-plaque hotspot style")
+
+    menu_smoke_text = MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH.read_text(encoding="utf-8") if MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH.exists() else ""
+    for required_token in (
+        "func _assert_editor_utility_frame_at_supported_widths",
+        "[Vector2i(1280, 720), Vector2i(1920, 1080)]",
+        'for state in ["normal", "hover", "pressed", "disabled"]',
+        '"res://art/ui/runtime/shared/button_secondary_%s.png" % state',
+        "editor_rect.intersects(settings_rect)",
+        "editor_rect.intersects(quit_rect)",
+        'String(editor_utility_frame.get("style_class", "")) != "StyleBoxTexture"',
+    ):
+        ensure(required_token in menu_smoke_text, errors, f"menu_outcome_visual_smoke.gd is missing Editor utility-frame proof: {required_token}")
+    painted_loop = '[campaign_button, skirmish_button, load_button, settings_button, quit_button]'
+    ensure(painted_loop in menu_smoke_text, errors, "Main menu smoke must keep exactly the five authored plaque commands text-only")
+    ensure(
+        '[campaign_button, skirmish_button, load_button, settings_button, editor_button, quit_button]:\n\t\tif not _assert_text_only_plaque_style' not in menu_smoke_text,
+        errors,
+        "Main menu smoke must not accept the Editor utility command as a transparent painted hotspot",
+    )
 
 
 def validate_main_menu_destructive_exclusive_parent_input(errors: list[str]) -> None:
