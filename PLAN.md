@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `ux-battle-order-tab-compact-initiative-summary-10184`. The Battle Order tab now shows a contained three-line Initiative/Now/Next summary at 1280x720 and 1920x1080 while its existing tooltip retains the exact full handoff and ordered technical track. Focused Battle board/navigation, visual, tab/focus, animation, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction, controller hardware, certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `ux-battle-order-tab-compact-initiative-summary-10184`
 - Completed implementation slice: `ux-main-menu-editor-utility-command-frame-10184`. The Main Menu now preserves its five authored transparent plaque hotspots while the Editor command alone uses the existing secondary normal/hover/pressed/disabled texture frame in the previously unpainted utility gap. Focused 1280x720/1920x1080 geometry and asset proof, menu/outcome, keyboard/controller navigation, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Editor interaction, hardware/certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `ux-main-menu-editor-utility-command-frame-10184`
 - Completed implementation slice: `content-veilmourn-fogchart-mooring-chapter-10184`. The active catalog now contains twenty campaign/skirmish scenarios, including Veilmourn's Fogchart Mooring chapter with Ruln Vanehook and the Bellwake Privateers defending the previously unused mooring against Sunvault's Halo registry front. Frontier Claims now has five chapters; exact Rootgate victory evidence unlocks Fogchart and imports only bounded common resources and flags, with all six rare resources explicitly capped at zero and no Thornwake hero progression, spells, or artifacts transferred. Real standalone/campaign launch, objective victory and Day 13 defeat, save/resume, 65-encounter queue-clear combat breadth, resource-route and town-development breadth, strategic-AI recruitment/delivery, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged chapter interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -6210,6 +6212,34 @@ Completion evidence:
 - solo state creates no duplicate HeroActions child, while the real reserve state retains its enabled Caelen command button and exact public command surfaces;
 - the focused Overworld owner measures the themed-font string against the live Heroes label and passes method-matched solo/reserve states; fresh 1280x720 and 1920x1080 X11 captures show the complete summary with reclaimed rail space;
 - hero-action cache, active-focus, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass; packaged Overworld interaction and broader release claims remain unclaimed.
+
+## Selected Slice: Battle Order Tab Compact Initiative Summary
+
+id: `ux-battle-order-tab-compact-initiative-summary-10184`
+
+Status: completed.
+
+Implementation boundary:
+- compact only the existing Battle Order tab's visible initiative body from the duplicated full technical track to a bounded three-line Initiative/Now/Next summary derived from the same live handoff state;
+- keep the exact full current/next handoff detail and full ordered initiative track in the existing native tooltip;
+- validate themed-font line width, vertical containment, exact current/next identity, and tooltip completeness at 1280x720 and 1920x1080 through the existing public Battle controller/board owner.
+
+Completion criteria:
+- every visible Order-tab line fits the live proportional-font label without extra autowrap or truncation at 1280x720 and 1920x1080, and the label remains contained in its existing panel;
+- visible Now/Next identities and the tooltip's full handoff/order identities match the authoritative battle state and retain exact refresh behavior;
+- Battle tab titles/navigation, board initiative strip, turn order/index, active/selected stacks, actions, focus/controller behavior, session/save/settings/routes, and deterministic outcomes remain exact;
+- focused board/navigation, Battle tab/focus/visual/animation/accessibility/core compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Non-goals:
+- no initiative, turn-order, action, targeting, movement, combat-math, AI, unit, spell, roster, content, balance, save/schema, or Native RMG changes;
+- no sidebar/tab/panel resizing, new panel, font/theme/UI-scale change, board-strip change, tab-navigation change, new art/audio/VFX, or general Battle layout redesign;
+- no packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Completion evidence:
+- the live Order tab renders exactly `Initiative cue:`, `Now: ...`, and `Next: ...` without the duplicated technical track; every themed-font line fits its existing label and the label remains contained at 1280x720 and 1920x1080;
+- the existing tooltip retains the exact full Initiative Handoff and full ordered `NOW/UP/DONE`, side, initiative, count, and HP track, while focused independent controls prove current/next identity and whole authority;
+- the fresh X11 capture `/tmp/heroes-battle-order-visual.590zIh/order_tab_compact_1280.png` shows the corrected shipped composition; focused board/navigation, Town/Battle visual, active-focus/tab navigation, animation, accessibility, and core owners pass naturally;
+- repository validation, Python compilation, diff checks, exact/generic editor parses, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass; broader packaged interaction and release claims remain unclaimed.
 
 ## Progress Reconciliation
 

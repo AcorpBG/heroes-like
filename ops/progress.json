@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld Hero command-rail compact-fit slice is completed with live proportional-font proof, fresh 1280x720 and 1920x1080 visual evidence, compatibility/static/editor validation, and bounded Linux/Windows export-startup evidence.",
+  "currentNotes": "The Battle Order-tab compact initiative-summary slice is completed with exact two-width themed-font/containment/tooltip authority, fresh 1280x720 visual evidence, compatibility/static/editor validation, and bounded Linux/Windows export-startup evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-hero-command-rail-compact-fit-10184",
-  "currentSliceId": "ux-overworld-hero-command-rail-compact-fit-10184",
-  "currentSliceNotes": "Completed the bounded visible-summary fit and duplicate solo-placeholder removal. Full tooltip, reserve command buttons, hero/movement/action authority, and layout remain exact; platform claims are export/startup only.",
+  "currentSlice": "ux-battle-order-tab-compact-initiative-summary-10184",
+  "currentSliceId": "ux-battle-order-tab-compact-initiative-summary-10184",
+  "currentSliceNotes": "Completed the bounded visible-summary correction. The Order tab shows only Initiative/Now/Next while the full handoff and ordered technical track remain exact in the existing tooltip; Battle rules, board strip, tabs, focus, layout, and authority are unchanged.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Hero Command Rail Compact Fit",
-  "currentSliceUpdatedAt": "2026-08-16T16:15:12Z",
+  "currentSliceTitle": "Battle Order Tab Compact Initiative Summary",
+  "currentSliceUpdatedAt": "2026-08-16T17:12:11Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -86777,6 +86777,49 @@
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, balance, accessibility certification, content/performance, signing/publication, native Windows certification, and unrecovered Native RMG parity gaps remain.",
       "blockedReason": null,
       "completedAt": "2026-08-16T16:15:12Z"
+    },
+    {
+      "id": "ux-battle-order-tab-compact-initiative-summary-10184",
+      "title": "Battle Order Tab Compact Initiative Summary",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Make the existing Battle Order-tab visible initiative summary readable in its live narrow panel while retaining full handoff and ordered-track detail in the existing tooltip.",
+      "implementationTargets": [
+        "scenes/battle/BattleShell.gd",
+        "tests/battle_controller_board_navigation_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "The three visible Initiative/Now/Next lines fit the live themed-font label and remain vertically contained at 1280x720 and 1920x1080",
+        "Visible current/next identity and the existing tooltip full handoff plus ordered initiative track match authoritative battle state exactly",
+        "Battle tabs/navigation, board initiative strip, turn order/index, active/selected stacks, actions, focus/controller, session/save/settings/routes, and deterministic outcome authority remain exact",
+        "Focused Battle board/navigation, tab/focus/visual/animation/accessibility/core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "initiative, turn-order, action, targeting, movement, combat-math, AI, unit, spell, roster, content, balance, save/schema, or Native RMG changes",
+        "sidebar/tab/panel resizing, new panel, font/theme/UI-scale, board-strip, tab-navigation, art/audio/VFX, or general Battle layout redesign",
+        "packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "c1720dba4df0cbe089a2d9c3accdf7c42aacb61b",
+        "capture": "/tmp/heroes-battle-surface-audit.8VabmG/battle_current_1280.png",
+        "viewport": "1280x720",
+        "visible_body_appends_full_technical_track": true,
+        "visible_rows_wrap_and_truncate": true,
+        "full_tooltip_present": true,
+        "board_strip_readable": true
+      },
+      "createdAt": "2026-08-16T16:55:38Z",
+      "startedAt": "2026-08-16T16:55:38Z",
+      "updatedAt": "2026-08-16T17:12:11Z",
+      "notes": "Implemented the bounded live Order-tab correction: the visible body is exactly three Initiative/Now/Next lines using the existing handoff state and an 18-character stack-label bound, while the existing native tooltip retains the exact full handoff plus complete technical initiative track. The focused Battle controller/board owner independently reconstructs handoff identity, measures each themed-font line and native line count, proves panel containment at 1280x720 and 1920x1080, checks full tooltip equality, and brackets inspection with whole session/save/settings/route authority. A fresh 1280x720 X11 capture shows the corrected composition. Town/Battle visual, active-play tab/focus, animation, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, signing/publication, native Windows certification, and unrecovered Native RMG parity gaps remain.",
+      "blockedReason": null,
+      "completedAt": "2026-08-16T17:12:11Z"
     }
   ],
   "project": "heroes-like",
@@ -86786,7 +86829,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain after the bounded Hero command-rail completion.",
+  "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain after the bounded Battle Order-tab correction.",
   "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
   "reportOnlyEvidence": [
     {
@@ -87218,7 +87261,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "ux_overworld_hero_command_rail_compact_fit_completed",
+  "result": "ux_battle_order_tab_compact_initiative_summary_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
