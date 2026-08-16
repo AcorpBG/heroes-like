@@ -952,7 +952,7 @@ func arm_battle_resolution_overworld_presentation(result: Dictionary) -> Diction
 	var context: Dictionary = context_value
 	var context_type := String(context.get("type", ""))
 	if (
-		context_type not in ["town_assault", "resource_assault"]
+		context_type not in ["town_assault", "resource_assault", "encounter"]
 		or String(snapshot.get("resolution_state", "")) != "victory"
 		or String(snapshot.get("snapshot_policy", "")) != "pre_resolution_route_context"
 	):
@@ -964,6 +964,8 @@ func arm_battle_resolution_overworld_presentation(result: Dictionary) -> Diction
 	var placement_id := ""
 	var content_id := ""
 	var tile := Vector2i(-1, -1)
+	var event_id := "overworld_object_captured"
+	var owner := "player"
 	if context_type == "town_assault":
 		placement_id = String(context.get("town_placement_id", "")).strip_edges()
 		var live_town := {}
@@ -976,7 +978,7 @@ func arm_battle_resolution_overworld_presentation(result: Dictionary) -> Diction
 		family = "town_capture"
 		content_id = String(live_town.get("town_id", ""))
 		tile = Vector2i(int(live_town.get("x", -1)), int(live_town.get("y", -1)))
-	else:
+	elif context_type == "resource_assault":
 		placement_id = String(context.get("resource_placement_id", "")).strip_edges()
 		var live_resource: Dictionary = OverworldRules._find_resource_node_by_placement(session, placement_id).get("node", {})
 		var site_id := String(live_resource.get("site_id", ""))
@@ -992,6 +994,31 @@ func arm_battle_resolution_overworld_presentation(result: Dictionary) -> Diction
 		family = "resource_site"
 		content_id = site_id
 		tile = Vector2i(int(live_resource.get("x", -1)), int(live_resource.get("y", -1)))
+	else:
+		var encounter_snapshot_value: Variant = snapshot.get("encounter", {})
+		if not (encounter_snapshot_value is Dictionary):
+			return {}
+		var encounter_snapshot: Dictionary = encounter_snapshot_value
+		placement_id = String(encounter_snapshot.get("placement_id", "")).strip_edges()
+		var live_encounter: Dictionary = OverworldRules._find_encounter_by_placement(session, placement_id).get("encounter", {})
+		var live_encounter_id := String(live_encounter.get("encounter_id", live_encounter.get("id", ""))).strip_edges()
+		var encounter_content := ContentService.get_encounter(live_encounter_id)
+		if (
+			live_encounter.is_empty()
+			or encounter_content.is_empty()
+			or not OverworldRules.is_encounter_resolved(session, live_encounter)
+			or String(live_encounter.get("spawned_by_faction_id", "")).strip_edges() != ""
+			or live_encounter_id != String(encounter_snapshot.get("encounter_id", ""))
+			or int(live_encounter.get("x", -1)) != int(encounter_snapshot.get("x", -2))
+			or int(live_encounter.get("y", -1)) != int(encounter_snapshot.get("y", -2))
+			or String(encounter_snapshot.get("spawned_by_faction_id", "")) != ""
+		):
+			return {}
+		family = "encounter"
+		content_id = live_encounter_id
+		tile = Vector2i(int(live_encounter.get("x", -1)), int(live_encounter.get("y", -1)))
+		event_id = "overworld_object_depleted"
+		owner = "resolved"
 	var map_size := OverworldRules.derive_map_size(session)
 	if (
 		placement_id == ""
@@ -1005,7 +1032,7 @@ func arm_battle_resolution_overworld_presentation(result: Dictionary) -> Diction
 	_battle_resolution_overworld_presentation_sequence += 1
 	_pending_battle_resolution_overworld_presentation = {
 		"sequence": _battle_resolution_overworld_presentation_sequence,
-		"event_id": "overworld_object_captured",
+		"event_id": event_id,
 		"family": family,
 		"placement_id": placement_id,
 		"content_id": content_id,
@@ -1017,7 +1044,7 @@ func arm_battle_resolution_overworld_presentation(result: Dictionary) -> Diction
 		"day": int(session.day),
 		"scenario_status": String(session.scenario_status),
 		"game_state": String(session.game_state),
-		"owner": "player",
+		"owner": owner,
 	}
 	return _pending_battle_resolution_overworld_presentation.duplicate(true)
 
@@ -1027,8 +1054,9 @@ func consume_battle_resolution_overworld_presentation(surface: String) -> Dictio
 	if pending.is_empty() or surface.strip_edges() != "overworld":
 		return {}
 	if (
-		String(pending.get("event_id", "")) != "overworld_object_captured"
-		or String(pending.get("family", "")) not in ["town_capture", "resource_site"]
+		String(pending.get("family", "")) not in ["town_capture", "resource_site", "encounter"]
+		or (String(pending.get("event_id", "")) == "overworld_object_captured") != (String(pending.get("family", "")) in ["town_capture", "resource_site"])
+		or (String(pending.get("event_id", "")) == "overworld_object_depleted") != (String(pending.get("family", "")) == "encounter")
 		or String(pending.get("surface", "")) != "overworld"
 		or String(pending.get("expected_scene_path", "")) != OVERWORLD_SCENE
 		or int(pending.get("sequence", 0)) <= 0
@@ -1063,7 +1091,7 @@ func consume_battle_resolution_overworld_presentation(surface: String) -> Dictio
 			or int(live_town.get("y", -1)) != int(tile.get("y", -2))
 		):
 			return {}
-	else:
+	elif String(pending.get("family", "")) == "resource_site":
 		var live_resource: Dictionary = OverworldRules._find_resource_node_by_placement(session, placement_id).get("node", {})
 		var site := ContentService.get_resource_site(String(live_resource.get("site_id", "")))
 		if (
@@ -1074,6 +1102,20 @@ func consume_battle_resolution_overworld_presentation(surface: String) -> Dictio
 			or String(live_resource.get("site_id", "")) != String(pending.get("content_id", ""))
 			or int(live_resource.get("x", -1)) != int(tile.get("x", -2))
 			or int(live_resource.get("y", -1)) != int(tile.get("y", -2))
+		):
+			return {}
+	else:
+		var live_encounter: Dictionary = OverworldRules._find_encounter_by_placement(session, placement_id).get("encounter", {})
+		var live_encounter_id := String(live_encounter.get("encounter_id", live_encounter.get("id", ""))).strip_edges()
+		if (
+			live_encounter.is_empty()
+			or ContentService.get_encounter(live_encounter_id).is_empty()
+			or not OverworldRules.is_encounter_resolved(session, live_encounter)
+			or String(live_encounter.get("spawned_by_faction_id", "")).strip_edges() != ""
+			or live_encounter_id != String(pending.get("content_id", ""))
+			or int(live_encounter.get("x", -1)) != int(tile.get("x", -2))
+			or int(live_encounter.get("y", -1)) != int(tile.get("y", -2))
+			or String(pending.get("owner", "")) != "resolved"
 		):
 			return {}
 	pending["consumed"] = true

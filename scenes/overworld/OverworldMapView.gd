@@ -671,7 +671,7 @@ func _sync_object_resolution_presentation(presentation: Dictionary) -> void:
 	_sync_presentation_processing()
 	if _object_resolution_event_id not in ["overworld_object_visited", "overworld_object_captured", "overworld_object_depleted", "overworld_route_open", "overworld_route_closed"]:
 		return
-	if _object_resolution_family not in ["resource_site", "artifact", "town_capture", "site_response", "route_closure"] or _object_resolution_placement_id == "":
+	if _object_resolution_family not in ["resource_site", "artifact", "town_capture", "encounter", "site_response", "route_closure"] or _object_resolution_placement_id == "":
 		return
 	if (_object_resolution_event_id == "overworld_route_open") != (_object_resolution_family == "site_response"):
 		return

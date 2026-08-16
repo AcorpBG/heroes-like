@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Overworld resource-assault victory return feedback is implemented and validated. Successful real stationed-resource victories now carry one detached route-local resource capture consequence only after the resolved checkpoint saves, consume it once on the exact next Overworld scene, and preserve battle/resource/session/save authority. Broader release gaps remain.",
+  "currentNotes": "Overworld encounter victory return feedback is implemented and validated. Successful real static-encounter victories now carry one detached route-local depleted-object consequence only after the resolved checkpoint saves, consume it once on the exact next Overworld scene, and preserve encounter, guarded-resource, battle, session, and save authority. Broader release gaps remain.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-resource-assault-victory-return-feedback-10184",
-  "currentSliceId": "presentation-overworld-resource-assault-victory-return-feedback-10184",
-  "currentSliceNotes": "Completed with focused 1280/1920 real strategic-AI-stationed resource-assault battles, method-matched unarmed Overworld parity, exact one-shot/fail-closed route payload checks, compatibility/static validation, and bounded Linux/Windows export/startup evidence.",
+  "currentSlice": "presentation-overworld-encounter-victory-return-feedback-10184",
+  "currentSliceId": "presentation-overworld-encounter-victory-return-feedback-10184",
+  "currentSliceNotes": "Completed with focused 1280/1920 real River Pass encounter battles, method-matched unarmed Overworld parity, exact one-shot/fail-closed route payload checks, compatibility/static validation, and bounded Linux/Windows export/startup evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Resource Assault Victory Return Feedback",
-  "currentSliceUpdatedAt": "2026-08-16T04:54:27Z",
+  "currentSliceTitle": "Overworld Encounter Victory Return Feedback",
+  "currentSliceUpdatedAt": "2026-08-16T05:26:19Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -86118,6 +86118,52 @@
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
       "blockedReason": null,
       "completedAt": "2026-08-16T04:54:27Z"
+    },
+    {
+      "id": "presentation-overworld-encounter-victory-return-feedback-10184",
+      "title": "Overworld Encounter Victory Return Feedback",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Carry a successful ordinary static encounter resolution across the durable Battle-to-Overworld route and present the existing depleted-object consequence once without changing combat, encounter, guard, resource, save, or route authority.",
+      "implementationTargets": [
+        "scripts/core/BattleRules.gd",
+        "scripts/autoload/AppRouter.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_encounter_victory_return_feedback_report.gd",
+        "tests/overworld_encounter_victory_return_feedback_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Real 1280x720/1920x1080 River Pass river_pass_hollow_mire victories durably checkpoint, preserve method-matched unarmed Overworld authority, resolve the exact encounter, leave its guarded resource byte-exact, and publish one exact existing encounter-depleted presentation at the authoritative guard tile",
+        "The route-local payload is built only from detached pre-resolution placement/content/tile identity plus live post-resolution encounter authority, remains absent before successful durability, consumes once, and fails closed for malformed, stale, terminal, unresolved, missing/mutated identity, spawned-raid, non-victory, assault, and wrong-surface controls",
+        "Battle rewards/casualties/active hero/objectives/return notice, resolved encounter list, resource guard/control/claim authority, checkpoint/autosave, session authority, focus/input/settings, and later refresh/scene construction remain exact",
+        "Focused encounter return, quick-resolve, guarded-site reward/context, town/resource return, object-resolution/checkpoint compatibility, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "combat/reward/casualty/encounter resolution/guard/resource ownership/claim/AI raid/objective/save/schema/Native RMG/map-topology changes",
+        "new cue/VFX/audio, generic battle-aftermath stream, layout redesign, particles, shaders, spatial audio, haptics, or final mastering",
+        "packaged encounter interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "181929b7",
+        "ordinary_encounter_victory_resolution_present": true,
+        "durable_battle_to_overworld_route_present": true,
+        "guarded_resource_preserved_after_guard_victory": true,
+        "detached_encounter_identity_present": false,
+        "encounter_return_presentation_present": false
+      },
+      "createdAt": "2026-08-16T05:00:55Z",
+      "updatedAt": "2026-08-16T05:26:19Z",
+      "startedAt": "2026-08-16T05:00:55Z",
+      "notes": "Completed on baseline HEAD 181929b7. BattleRules now snapshots only exact static encounter placement/content/tile identity before resolution; AppRouter arms and consumes it only after successful durability and live resolved/content/static-identity validation; the existing Overworld depleted-object presenter accepts the encounter family. Focused 1280/1920 real River Pass movement battles passed exact one-shot presentation, guarded-resource preservation, unarmed authority, refresh/later-scene silence, and 13 fail-closed controls. Quick-resolve, guarded-site, town/resource return, object-resolution, checkpoint, keyboard focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup gates passed. Packaged encounter interaction/listening and broader certification/release claims remain excluded.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
+      "blockedReason": null,
+      "completedAt": "2026-08-16T05:26:19Z"
     }
   ],
   "project": "heroes-like",
@@ -86662,7 +86708,7 @@
   ],
   "summary": "The Overworld town-assault victory return feedback slice is completed: real successful hostile-town assaults now publish one exact consume-once existing captured-town cue after durable Battle checkpointing while combat, ownership, save, route, and direct-capture authority remain unchanged. Focused, compatibility, static/editor, and bounded Linux/Windows export/startup gates pass. Select the next tracker-approved slice; the game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-16T04:27:53Z",
+  "updatedAt": "2026-08-16T05:00:55Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

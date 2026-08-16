@@ -2596,7 +2596,7 @@ func _record_object_resolution_presentation(result: Dictionary, route: String) -
 		return
 	var interaction: Dictionary = result.get("interaction_result", {}) if result.get("interaction_result", {}) is Dictionary else {}
 	var family := String(interaction.get("family", ""))
-	if family not in ["resource_site", "artifact", "town_capture"]:
+	if family not in ["resource_site", "artifact", "town_capture", "encounter"]:
 		return
 	var placement_id := String(interaction.get("placement_id", "")).strip_edges()
 	var tile_payload: Dictionary = interaction.get("tile", {}) if interaction.get("tile", {}) is Dictionary else {}

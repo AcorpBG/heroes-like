@@ -6571,6 +6571,7 @@ static func _evaluate_outcome(session: SessionStateStoreScript.SessionData) -> D
 static func _finalize_victory(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var resolution_context_snapshot := {
 		"context": session.battle.get("context", {}).duplicate(true) if session.battle.get("context", {}) is Dictionary else {},
+		"encounter": _battle_resolution_static_encounter_snapshot(session),
 		"resolution_state": "victory",
 		"snapshot_policy": "pre_resolution_route_context",
 	}
@@ -6637,6 +6638,25 @@ static func _finalize_victory(session: SessionStateStoreScript.SessionData) -> D
 		"state": "victory",
 		"message": final_message,
 		"battle_resolution_context_snapshot": resolution_context_snapshot,
+	}
+
+static func _battle_resolution_static_encounter_snapshot(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if session == null or session.battle.is_empty():
+		return {}
+	var context: Dictionary = session.battle.get("context", {}) if session.battle.get("context", {}) is Dictionary else {}
+	if String(context.get("type", "")) != "encounter":
+		return {}
+	var encounter := _current_battle_encounter_placement(session)
+	var placement_id := String(encounter.get("placement_id", "")).strip_edges()
+	var encounter_id := String(encounter.get("encounter_id", encounter.get("id", ""))).strip_edges()
+	if placement_id == "" or encounter_id == "" or String(encounter.get("spawned_by_faction_id", "")).strip_edges() != "":
+		return {}
+	return {
+		"placement_id": placement_id,
+		"encounter_id": encounter_id,
+		"x": int(encounter.get("x", -1)),
+		"y": int(encounter.get("y", -1)),
+		"spawned_by_faction_id": "",
 	}
 
 static func _apply_player_battle_salvage_reward(session: SessionStateStoreScript.SessionData) -> Dictionary:
