@@ -594,6 +594,25 @@
       "producer_refs": ["OverworldRules.recruit_in_active_town", "EnemyTurnRules.ai_town_recruit_event"]
     },
     {
+      "event_id": "town_route_response_ordered",
+      "cue_id": "cue_town_route_response_ordered",
+      "surface": "town",
+      "subject_kind": "map_object",
+      "animation_state_family": "route-response",
+      "animation_state": "dispatch_confirmed",
+      "playback_policy": "queue_resolved",
+      "blocking_policy": "nonblocking",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_town_route_response"],
+      "audio_cue_ids": ["audio_placeholder_town_route_response"],
+      "fallbacks": {
+        "reduced_motion_tag": "route_dispatch_badge",
+        "fast_mode_tag": "route_dispatch_snap"
+      },
+      "validation_tags": ["town", "route-response", "resolved_event"],
+      "producer_refs": ["TownShell._on_response_action_pressed", "OverworldRules._issue_resource_site_response"]
+    },
+    {
       "event_id": "spell_cast_battle",
       "cue_id": "cue_spell_cast_battle",
       "surface": "spell",
