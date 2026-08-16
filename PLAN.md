@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `presentation-town-spell-study-completion-feedback-10184`. Successful live Town-screen `learn_spell:<spell_id>` orders now publish one compact Town-specific archive-study completion through the existing TownStage action presenter, derived from the exact active-hero spellbook transition and carrying an original imported alpha VFX, deterministic 400 ms stereo sound, and exact reduced-motion/missing-asset fallbacks. Six focused 1280x720/1920x1080 public-handler rows prove whole-session TownRules parity, one newly learned spell, unchanged mana, mirrored active-hero authority, imported WAV playback, and malformed/already-known/refresh silence. Spell-school icon, Town VFX/cue/route/market, animation catalog, broad Town/Battle visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged study interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `presentation-town-spell-study-completion-feedback-10184`
 - Completed implementation slice: `presentation-town-market-exchange-completion-feedback-10184`. Successful live Town-screen `market:<buy|sell>:<wood|ore>:<amount>` orders now publish one compact Town-specific exchange-completion presentation through the existing TownStage action presenter, derived from exact ordered before/after stockpile deltas and carrying an original imported alpha VFX, deterministic 360 ms stereo sound, and exact reduced-motion/missing-asset fallbacks. Six focused 1280x720/1920x1080 public-handler rows prove buy/sell rule-control session parity, weekly-cap authority, exact signed gold/resource deltas, one imported audio record, and malformed/invalid silence. Market-cap, Town VFX/cue/route, animation catalog, broad Town/Battle visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged exchange interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `presentation-town-market-exchange-completion-feedback-10184`
 - Completed implementation slice: `presentation-town-route-response-dispatch-feedback-10184`. A successful live Town-screen `site_response:<placement>` order now publishes one compact Town-specific strategic-dispatch presentation through the existing TownStage action presenter, with an original imported alpha VFX, deterministic 380 ms stereo sound, and exact reduced-motion/missing-asset fallbacks. The presenter verifies the live route node, Town origin, same-day provenance, and active response after the authoritative mutation and refreshed stage; malformed and repeated unavailable orders remain silent. Focused six-row 1280x720/1920x1080 proof plus Town VFX/cue, animation catalog, broad Town/Battle visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Town interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -5695,6 +5697,33 @@ Validated result:
 - the public Town market handler now publishes only after the exact successful transaction, cache invalidation, resolution guard, and refreshed stage; the presentation validates the action grammar and ordered gold/common-resource deltas without changing rates, gains, costs, caps, or save authority;
 - six focused rows cover 1280x720 and 1920x1080 in normal imported, missing-asset procedural, and reduced-motion static modes, with four buy rows, two sell rows, whole-session parity against detached TownRules controls, exact market usage, one imported WAV cue, and silent malformed/invalid controls;
 - market-cap persistence, both Town VFX reports, both prior Town cue reports, route feedback, the animation catalog, broad Town/Battle visual smoke, core systems, repository/editor checks, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass.
+
+## Selected Slice: Town Spell Study Completion Feedback
+
+id: `presentation-town-spell-study-completion-feedback-10184`
+
+Status: completed.
+
+Implementation boundary:
+- after the real public Town study action succeeds, validate the exact `learn_spell:<spell_id>` action and active-hero spellbook transition before publishing one Town-surface queue-resolved/nonblocking presentation through TownStageView;
+- add one original alpha VFX and one deterministic stereo sound with distinct reduced-motion and missing-asset procedural fallbacks;
+- preserve SpellRules/TownRules spell access, hero/spellbook/mana, study readiness, recap, focus/input, session/save, and all completed Town presentation behavior.
+
+Completion criteria:
+- live TownShell 1280x720/1920x1080 study orders execute through the public handler, match method-equivalent TownRules controls, and present exact imported Town archive-study VFX/audio with one newly learned spell and unchanged mana;
+- failed, already-known, malformed, non-study, and refresh controls remain silent; reduced-motion and missing-asset fallbacks are exact;
+- spell catalog/access, school/context identity, active hero, spellbook normalization, study readiness, recaps, focus/input, session/save, and prior Town presentations remain exact;
+- focused study plus spell-school icon, Town action/VFX/cue, visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Non-goals:
+- no spell effects, mana cost, school, tier, catalog access, AI study policy, hero progression, save/schema, Native RMG, or map-topology changes;
+- no generic UI cue remapping, layout redesign, particles, shaders, spatial audio, haptics, or final mastering;
+- no packaged study interaction/listening, hardware certification, signing/publication, whole-game, or release-readiness claim.
+
+Validated result:
+- the public Town study handler now publishes only after the exact successful learn action, recap, cache invalidation, resolution guard, and refreshed stage; it validates a one-spell active-hero spellbook increase while preserving mana, spell catalog/access, hero mirroring, session/save, and failed-action silence;
+- six focused rows cover 1280x720 and 1920x1080 in normal imported, missing-asset procedural, and reduced-motion static modes with whole-session parity against detached TownRules controls and exactly one imported 400 ms stereo cue;
+- spell-school icon, both Town VFX reports, building/recruitment cue playback, route and market feedback, animation catalog, broad Town/Battle visual smoke, core systems, repository/editor checks, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass.
 
 ## Progress Reconciliation
 

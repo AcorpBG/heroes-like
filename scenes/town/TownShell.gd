@@ -318,6 +318,7 @@ func _on_response_action_pressed(action_id: String) -> void:
 func _on_study_action_pressed(action_id: String) -> void:
 	var full_action_id := "learn_spell:%s" % action_id
 	var before := TownRules.town_action_consequence_signature(_session)
+	before["known_spell_ids"] = _town_active_known_spell_ids()
 	var action := _validation_action_for_id(full_action_id)
 	var result := TownRules.learn_spell_at_active_town(_session, action_id)
 	_record_town_action_result("order", full_action_id, action, result, before)
@@ -325,6 +326,7 @@ func _on_study_action_pressed(action_id: String) -> void:
 	if _handle_session_resolution():
 		return
 	_refresh()
+	_record_town_action_presentation("study", full_action_id, action, result, before)
 
 func _on_artifact_action_pressed(action_id: String) -> void:
 	var before := TownRules.town_action_consequence_signature(_session)
@@ -4430,13 +4432,15 @@ func _record_town_action_presentation(
 	result: Dictionary,
 	before: Dictionary
 ) -> void:
-	if lane not in ["build", "recruit", "response", "market"] or not bool(result.get("ok", false)):
+	if lane not in ["build", "recruit", "response", "market", "study"] or not bool(result.get("ok", false)):
 		return
 	if _town_stage_view == null or not _town_stage_view.has_method("present_town_action"):
 		return
 	var after := TownRules.town_action_consequence_signature(_session)
-	var event_id := "town_market_exchange_completed" if lane == "market" else ("town_route_response_ordered" if lane == "response" else ("town_units_recruited" if lane == "recruit" else "town_building_built"))
-	var subject_kind := "resource_stockpile" if lane == "market" else ("map_object" if lane == "response" else ("unit_roster" if lane == "recruit" else "building"))
+	if lane == "study":
+		after["known_spell_ids"] = _town_active_known_spell_ids()
+	var event_id := "town_spell_studied" if lane == "study" else ("town_market_exchange_completed" if lane == "market" else ("town_route_response_ordered" if lane == "response" else ("town_units_recruited" if lane == "recruit" else "town_building_built")))
+	var subject_kind := "spellbook" if lane == "study" else ("resource_stockpile" if lane == "market" else ("map_object" if lane == "response" else ("unit_roster" if lane == "recruit" else "building")))
 	var policy := AnimationCueCatalog.cue_playback_policy_for_event(
 		event_id,
 		SettingsService.animation_preferences()
@@ -4446,7 +4450,7 @@ func _record_town_action_presentation(
 		or String(policy.get("surface", "")) != "town"
 		or String(policy.get("subject_kind", "")) != subject_kind
 		or String(policy.get("selected_playback_policy", "")) != "queue_resolved"
-		or lane in ["recruit", "response", "market"] and String(policy.get("selected_blocking_policy", "")) != "nonblocking"
+		or lane in ["recruit", "response", "market", "study"] and String(policy.get("selected_blocking_policy", "")) != "nonblocking"
 		or lane == "build" and String(policy.get("selected_blocking_policy", "")) not in ["input_blocking_timeout", "nonblocking_reduced_motion", "nonblocking_fast_resolve"]
 	):
 		return
@@ -4459,7 +4463,27 @@ func _record_town_action_presentation(
 		"result_message": String(result.get("message", "")),
 		"policy": policy.duplicate(true),
 	}
-	if lane == "market":
+	if lane == "study":
+		var spell_id := action_id.trim_prefix("learn_spell:")
+		var before_known: Array = before.get("known_spell_ids", []) if before.get("known_spell_ids", []) is Array else []
+		var after_known: Array = after.get("known_spell_ids", []) if after.get("known_spell_ids", []) is Array else []
+		var spell := ContentService.get_spell(spell_id)
+		if (
+			spell_id == ""
+			or spell_id == action_id
+			or spell.is_empty()
+			or spell_id in before_known
+			or spell_id not in after_known
+			or after_known.size() != before_known.size() + 1
+		):
+			return
+		presentation["spell_id"] = spell_id
+		presentation["spell_name"] = String(spell.get("name", action.get("label", spell_id)))
+		presentation["spell_school_id"] = String(spell.get("school_id", ""))
+		presentation["spell_context"] = String(spell.get("context", ""))
+		presentation["spell_tier"] = int(spell.get("tier", 0))
+		presentation["known_spell_count"] = after_known.size()
+	elif lane == "market":
 		var parts := action_id.split(":")
 		var action_type := String(parts[1]) if parts.size() == 4 else ""
 		var resource_id := String(parts[2]) if parts.size() == 4 else ""
@@ -4542,6 +4566,19 @@ func _town_action_resource_deltas(before: Dictionary, after: Dictionary) -> Arra
 			continue
 		deltas.append({"resource_id": resource_id, "before": before_value, "after": after_value, "delta": after_value - before_value})
 	return deltas
+
+func _town_active_known_spell_ids() -> Array:
+	var hero_value: Variant = _session.overworld.get("hero", {})
+	var hero: Dictionary = hero_value if hero_value is Dictionary else {}
+	var spellbook_value: Variant = hero.get("spellbook", {})
+	var spellbook: Dictionary = spellbook_value if spellbook_value is Dictionary else {}
+	var result := []
+	for spell_id_value in spellbook.get("known_spell_ids", []):
+		var spell_id := String(spell_id_value).strip_edges()
+		if spell_id != "" and spell_id not in result:
+			result.append(spell_id)
+	result.sort()
+	return result
 
 func _town_profile_metadata(first_render: bool) -> Dictionary:
 	var town := TownRules.get_active_town(_session) if _session != null else {}

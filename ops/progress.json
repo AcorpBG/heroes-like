@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Town market exchange completion slice is implemented and validated: the live public handler now publishes exact signed buy/sell completion feedback through TownStage with original VFX, deterministic audio, and fail-closed fallbacks. Focused, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass; broader release gaps remain.",
+  "currentNotes": "The Town spell study completion slice is implemented and validated: successful public study actions now publish exact active-hero spellbook completion feedback through TownStage with original VFX, deterministic audio, and fail-closed fallbacks. Focused, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass; broader release gaps remain.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-town-market-exchange-completion-feedback-10184",
-  "currentSliceId": "presentation-town-market-exchange-completion-feedback-10184",
-  "currentSliceNotes": "Implemented the live Town market-exchange completion presentation. Original 1254x1254 RGBA source was curated to a 512x512 runtime VFX; deterministic generation produced a distinct 360 ms stereo cue. The public handler validates exact market action grammar and ordered signed stockpile deltas only after the successful core transaction and refreshed stage. Focused artifact /tmp/heroes-town-market-focused-final.6SIzR7 passes six 1280/1920 normal, missing-asset, and reduced-motion rows with four buy/two sell public actions, whole-session TownRules control parity, exact market usage and deltas, one imported audio record, and malformed/invalid/refresh silence. Compatibility artifacts /tmp/heroes-town-market-compat.69uNT4 and /tmp/heroes-town-market-compat-resume.E2nAtz pass market-cap, Town VFX/cue/route, animation catalog, broad Town/Battle visual, and core owners; the recruitment VFX owner now explicitly resets validation audio before quit. Static/editor audit /tmp/heroes-town-market-static.9UzYW5 passes. Official Linux /tmp/heroes-town-market-linux-package.V6dCaS and Windows /tmp/heroes-town-market-windows-package.9ZxhM0 reports are ok:true; claims remain export/headless startup and export/fresh-Wine Boot/MainMenu/native-DLL startup only. Packaged exchange interaction/listening, certification, signing/publication, whole-game, and release readiness remain unclaimed.",
+  "currentSlice": "presentation-town-spell-study-completion-feedback-10184",
+  "currentSliceId": "presentation-town-spell-study-completion-feedback-10184",
+  "currentSliceNotes": "Implemented the live Town spell-study completion presentation. An original 1254x1254 RGBA source was curated to a 512x512 runtime VFX and deterministic generation produced a distinct 400 ms stereo cue. The public study handler records exact pre/post active-hero spellbook state and publishes only after successful TownRules learning, recap, cache invalidation, resolution guard, and refresh. Focused artifact /tmp/heroes-town-spell-study-focused.KAbtuO passes six 1280/1920 normal, missing-asset, and reduced-motion rows with whole-session rules-control parity, one newly learned spell, unchanged mana, mirrored player-hero authority, one imported WAV record, and malformed/already-known/refresh silence. Compatibility artifact /tmp/heroes-town-spell-study-compat.uwgBEE passes spell-school icons, both Town VFX owners, building/recruitment cue playback, route and market feedback, animation catalog, broad Town/Battle visual smoke, and core; the building VFX owner now resets validation audio before quit. Static/editor artifact /tmp/heroes-town-spell-study-editor-audit.DoZfwW passes. Official Linux /tmp/heroes-town-spell-study-linux-package.n2Mbzb and Windows /tmp/heroes-town-spell-study-windows-package.fKps6k reports are ok:true; claims remain export/headless startup and export/fresh-Wine Boot/MainMenu/native-DLL startup only. Packaged study interaction/listening, certification, signing/publication, whole-game, and release readiness remain unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Town Market Exchange Completion Feedback",
-  "currentSliceUpdatedAt": "2026-08-16T00:47:33Z",
+  "currentSliceTitle": "Town Spell Study Completion Feedback",
+  "currentSliceUpdatedAt": "2026-08-16T01:20:10Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -85752,7 +85752,7 @@
       ],
       "completionCriteria": [
         "Live TownShell 1280x720/1920x1080 public buy and sell orders match method-equivalent core controls and publish one imported Town exchange VFX/audio cue with exact signed stockpile deltas",
-      "Failed, stale, malformed, non-market, and refresh controls remain silent; reduced-motion and missing-asset fallbacks are exact",
+        "Failed, stale, malformed, non-market, and refresh controls remain silent; reduced-motion and missing-asset fallbacks are exact",
         "Market quote/rate/cost/gain/cap usage, recaps, focus/input, session/save, common-only policy, completed Town presentations, and generic UI cues remain exact",
         "Focused, market-cap, Town action, visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
       ],
@@ -85778,6 +85778,64 @@
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Packaged Town exchange interaction/listening, certification, signing/publication, broader release gaps, and release readiness remain unclaimed.",
       "blockedReason": null,
       "completedAt": "2026-08-16T00:47:33Z"
+    },
+    {
+      "id": "presentation-town-spell-study-completion-feedback-10184",
+      "title": "Town Spell Study Completion Feedback",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Present a successful live Town archive study through the existing compact TownStage action system without changing magic, spell access, hero, or generic UI authority.",
+      "implementationTargets": [
+        "art/town/source/spell_study_vfx_source.png",
+        "art/town/runtime/vfx/spell_study.png",
+        "art/audio/runtime/presentation/town_spell_study.wav",
+        "content/animation_event_cues.json",
+        "content/town_vfx_manifest.json",
+        "content/presentation_sfx_manifest.json",
+        "tools/generate_presentation_sfx_assets.py",
+        "scripts/autoload/PresentationAudio.gd",
+        "scenes/town/TownShell.gd",
+        "scenes/town/TownStageView.gd",
+        "tests/town_spell_study_completion_feedback_report.gd",
+        "tests/town_spell_study_completion_feedback_report.tscn",
+        "tests/town_building_complete_vfx_asset_runtime_report.gd",
+        "tests/town_recruitment_vfx_asset_runtime_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Live TownShell 1280x720/1920x1080 public study orders match method-equivalent TownRules controls and publish one imported Town archive-study VFX/audio cue for exactly one newly learned spell with unchanged mana",
+        "Failed, already-known, malformed, non-study, and refresh controls remain silent; reduced-motion and missing-asset fallbacks are exact",
+        "Spell catalog/access, school/context identity, hero/spellbook normalization, study readiness, recaps, focus/input, session/save, completed Town presentations, and generic UI cues remain exact",
+        "Focused, spell-school icon, Town action/VFX/cue, visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "spell effects, mana cost, school, tier, catalog access, AI study policy, hero progression, save/schema, Native RMG, or map topology changes",
+        "generic UI cue remapping, layout redesign, particles, shaders, spatial audio, haptics, or final mastering",
+        "packaged study interaction/listening, hardware certification, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "b8d375ab",
+        "town_study_action_present": true,
+        "town_study_readiness_present": true,
+        "town_spell_study_presentation_present": false,
+        "town_presenter_supported_events": [
+          "town_building_built",
+          "town_units_recruited",
+          "town_route_response_ordered",
+          "town_market_exchange_completed"
+        ]
+      },
+      "createdAt": "2026-08-16T01:00:00Z",
+      "startedAt": "2026-08-16T01:00:00Z",
+      "updatedAt": "2026-08-16T01:20:10Z",
+      "notes": "Implemented the live Town spell-study completion presentation. An original 1254x1254 RGBA source was curated to a 512x512 runtime VFX and deterministic generation produced a distinct 400 ms stereo cue. The public study handler records exact pre/post active-hero spellbook state and publishes only after successful TownRules learning, recap, cache invalidation, resolution guard, and refresh. Focused artifact /tmp/heroes-town-spell-study-focused.KAbtuO passes six 1280/1920 normal, missing-asset, and reduced-motion rows with whole-session rules-control parity, one newly learned spell, unchanged mana, mirrored player-hero authority, one imported WAV record, and malformed/already-known/refresh silence. Compatibility artifact /tmp/heroes-town-spell-study-compat.uwgBEE passes spell-school icons, both Town VFX owners, building/recruitment cue playback, route and market feedback, animation catalog, broad Town/Battle visual smoke, and core; the building VFX owner now resets validation audio before quit. Static/editor artifact /tmp/heroes-town-spell-study-editor-audit.DoZfwW passes. Official Linux /tmp/heroes-town-spell-study-linux-package.n2Mbzb and Windows /tmp/heroes-town-spell-study-windows-package.fKps6k reports are ok:true; claims remain export/headless startup and export/fresh-Wine Boot/MainMenu/native-DLL startup only. Packaged study interaction/listening, certification, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Packaged Town study interaction/listening, certification, signing/publication, broader release gaps, and release readiness remain unclaimed.",
+      "blockedReason": null,
+      "completedAt": "2026-08-16T01:20:10Z"
     }
   ],
   "project": "heroes-like",
@@ -86219,7 +86277,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "presentation_town_market_exchange_completion_feedback_completed",
+  "result": "presentation_town_spell_study_completion_feedback_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -86322,7 +86380,7 @@
   ],
   "summary": "The UI production SFX fidelity slice is completed: all six short mono generated click, select, adjust, tab, confirm, and invalid assets are replaced by distinct stereo production transients while exact cue, control, repetition, mute, input, settings, and gameplay authority remain preserved. Focused, compatibility, static/editor, and bounded Linux/Windows export/startup gates pass. Select the next tracker-approved slice; the game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-16T00:47:33Z",
+  "updatedAt": "2026-08-16T01:00:00Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

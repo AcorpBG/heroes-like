@@ -24,6 +24,12 @@
       "texture_path": "res://art/town/runtime/vfx/market_exchange.png",
       "render_mode": "town_market_exchange_completion",
       "scale": 1.0
+    },
+    "vfx_placeholder_town_spell_study": {
+      "event_id": "town_spell_studied",
+      "texture_path": "res://art/town/runtime/vfx/spell_study.png",
+      "render_mode": "town_spell_study_completion",
+      "scale": 1.0
     }
   }
 }

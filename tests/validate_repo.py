@@ -226,6 +226,11 @@ TOWN_MARKET_EXCHANGE_VFX_RUNTIME_PATH = ROOT / "art" / "town" / "runtime" / "vfx
 TOWN_MARKET_EXCHANGE_AUDIO_RUNTIME_PATH = ROOT / "art" / "audio" / "runtime" / "presentation" / "town_market_exchange.wav"
 TOWN_MARKET_EXCHANGE_FEEDBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_market_exchange_completion_feedback_report.gd"
 TOWN_MARKET_EXCHANGE_FEEDBACK_REPORT_SCENE_PATH = ROOT / "tests" / "town_market_exchange_completion_feedback_report.tscn"
+TOWN_SPELL_STUDY_VFX_SOURCE_PATH = ROOT / "art" / "town" / "source" / "spell_study_vfx_source.png"
+TOWN_SPELL_STUDY_VFX_RUNTIME_PATH = ROOT / "art" / "town" / "runtime" / "vfx" / "spell_study.png"
+TOWN_SPELL_STUDY_AUDIO_RUNTIME_PATH = ROOT / "art" / "audio" / "runtime" / "presentation" / "town_spell_study.wav"
+TOWN_SPELL_STUDY_FEEDBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_spell_study_completion_feedback_report.gd"
+TOWN_SPELL_STUDY_FEEDBACK_REPORT_SCENE_PATH = ROOT / "tests" / "town_spell_study_completion_feedback_report.tscn"
 TOWN_ENTITY_CACHE_ACTIVE_REFRESH_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "town_entity_cache_active_refresh_regression.gd"
 TOWN_ENTITY_CACHE_ACTIVE_REFRESH_REGRESSION_SCENE_PATH = ROOT / "tests" / "town_entity_cache_active_refresh_regression.tscn"
 GENERATED_LARGE_TOWN_EXPLICIT_SAVE_SURFACE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "generated_large_town_explicit_save_surface_regression.gd"
@@ -20784,8 +20789,14 @@ def validate_town_building_complete_vfx_assets(errors: list[str]) -> None:
                 "render_mode": "town_market_exchange_completion",
                 "scale": 1.0,
             },
+            "vfx_placeholder_town_spell_study": {
+                "event_id": "town_spell_studied",
+                "texture_path": "res://art/town/runtime/vfx/spell_study.png",
+                "render_mode": "town_spell_study_completion",
+                "scale": 1.0,
+            },
         },
-    }, errors, "Town VFX manifest must map only the exact building-complete, recruitment, and route-response cues/events/textures")
+    }, errors, "Town VFX manifest must map only the exact live Town completion cues/events/textures")
     ensure(png_size(TOWN_BUILDING_COMPLETE_VFX_SOURCE_PATH) == (1254, 1254), errors, "Town building-complete source must retain its exact square source image")
     ensure(png_size(TOWN_BUILDING_COMPLETE_VFX_RUNTIME_PATH) == (512, 512), errors, "Town building-complete runtime texture must be 512x512")
     header = TOWN_BUILDING_COMPLETE_VFX_RUNTIME_PATH.read_bytes()[:26]
@@ -20853,6 +20864,7 @@ def validate_town_building_complete_vfx_assets(errors: list[str]) -> None:
         'session.to_dict() == authority_before',
         'Rect2(Vector2.ZERO, Vector2(viewport_size)).encloses(stage.get_global_rect())',
         'SessionStateStore.SAVE_VERSION == 9',
+        'PresentationAudio.validation_reset()',
         'print("TOWN_BUILDING_COMPLETE_VFX_ASSET_RUNTIME_REPORT %s"',
     ):
         ensure(token in report_text, errors, f"Town building-complete VFX focused owner is missing live proof: {token}")
@@ -20882,7 +20894,7 @@ def validate_town_recruitment_vfx_assets(errors: list[str]) -> None:
         "render_mode": "town_recruit_muster",
         "scale": 1.0,
     }, errors, "Town VFX manifest must map the exact recruitment cue/event/texture")
-    ensure(set(cues) == {"vfx_placeholder_build_complete", "vfx_placeholder_recruit_muster", "vfx_placeholder_town_route_response", "vfx_placeholder_town_market_exchange"}, errors, "Town VFX manifest must not remap any other cue")
+    ensure(set(cues) == {"vfx_placeholder_build_complete", "vfx_placeholder_recruit_muster", "vfx_placeholder_town_route_response", "vfx_placeholder_town_market_exchange", "vfx_placeholder_town_spell_study"}, errors, "Town VFX manifest must not remap any other cue")
     ensure(png_size(TOWN_RECRUITMENT_VFX_SOURCE_PATH) == (1254, 1254), errors, "Town recruitment VFX source must retain its exact square source image")
     ensure(png_size(TOWN_RECRUITMENT_VFX_RUNTIME_PATH) == (512, 512), errors, "Town recruitment runtime texture must be 512x512")
     header = TOWN_RECRUITMENT_VFX_RUNTIME_PATH.read_bytes()[:26]
@@ -21046,10 +21058,10 @@ def validate_town_route_response_dispatch_feedback(errors: list[str]) -> None:
     if presentation is not None:
         body = presentation.group("body")
         for token in (
-            'if lane not in ["build", "recruit", "response", "market"] or not bool(result.get("ok", false)):',
-            'var event_id := "town_market_exchange_completed" if lane == "market" else ("town_route_response_ordered" if lane == "response" else ("town_units_recruited" if lane == "recruit" else "town_building_built"))',
-            'var subject_kind := "resource_stockpile" if lane == "market" else ("map_object" if lane == "response" else ("unit_roster" if lane == "recruit" else "building"))',
-            'or lane in ["recruit", "response", "market"] and String(policy.get("selected_blocking_policy", "")) != "nonblocking"',
+            'if lane not in ["build", "recruit", "response", "market", "study"] or not bool(result.get("ok", false)):',
+            'var event_id := "town_spell_studied" if lane == "study" else ("town_market_exchange_completed" if lane == "market" else ("town_route_response_ordered" if lane == "response" else ("town_units_recruited" if lane == "recruit" else "town_building_built")))',
+            'var subject_kind := "spellbook" if lane == "study" else ("resource_stockpile" if lane == "market" else ("map_object" if lane == "response" else ("unit_roster" if lane == "recruit" else "building")))',
+            'or lane in ["recruit", "response", "market", "study"] and String(policy.get("selected_blocking_policy", "")) != "nonblocking"',
             'var placement_id := action_id.trim_prefix("site_response:")',
             'OverworldRules._find_resource_node_by_placement(_session, placement_id)',
             'OverworldRules._resource_site_response_state(_session, node, site)',
@@ -21064,11 +21076,11 @@ def validate_town_route_response_dispatch_feedback(errors: list[str]) -> None:
 
     stage_text = TOWN_STAGE_SCRIPT_PATH.read_text(encoding="utf-8")
     for token in (
-        'event_id not in ["town_units_recruited", "town_building_built", "town_route_response_ordered", "town_market_exchange_completed"]',
+        'event_id not in ["town_units_recruited", "town_building_built", "town_route_response_ordered", "town_market_exchange_completed", "town_spell_studied"]',
         'event_id == "town_route_response_ordered" and String(presentation.get("response_placement_id", "")) == ""',
         '"cue_town_route_response_ordered" if event_id == "town_route_response_ordered" else',
         '"map_object" if event_id == "town_route_response_ordered" else',
-        'event_id in ["town_units_recruited", "town_route_response_ordered", "town_market_exchange_completed"] and selected_blocking_policy != "nonblocking"',
+        'event_id in ["town_units_recruited", "town_route_response_ordered", "town_market_exchange_completed", "town_spell_studied"] and selected_blocking_policy != "nonblocking"',
         'draw_entries = ["route_dispatch_badge"] if reduced_motion else ["route_dispatch_art", "route_dispatch_badge"]',
         '"response_placement_id": String(_town_action_presentation.get("response_placement_id", ""))',
         '"response_label": String(_town_action_presentation.get("response_label", ""))',
@@ -21217,9 +21229,9 @@ def validate_town_market_exchange_completion_feedback(errors: list[str]) -> None
     if presentation is not None:
         body = presentation.group("body")
         for token in (
-            'if lane not in ["build", "recruit", "response", "market"] or not bool(result.get("ok", false)):',
-            'var event_id := "town_market_exchange_completed" if lane == "market" else',
-            'var subject_kind := "resource_stockpile" if lane == "market" else',
+            'if lane not in ["build", "recruit", "response", "market", "study"] or not bool(result.get("ok", false)):',
+            'var event_id := "town_spell_studied" if lane == "study" else ("town_market_exchange_completed" if lane == "market" else',
+            'var subject_kind := "spellbook" if lane == "study" else ("resource_stockpile" if lane == "market" else',
             'var parts := action_id.split(":")',
             'var resource_deltas := _town_action_resource_deltas(before, after)',
             'resource_id not in OverworldRules.NORMAL_MARKET_RESOURCE_KEYS',
@@ -21320,6 +21332,191 @@ def validate_town_market_exchange_completion_feedback(errors: list[str]) -> None
         ensure(forbidden not in report_text, errors, f"Town market-exchange focused report bypasses public production ownership: {forbidden}")
 
 
+def validate_town_spell_study_completion_feedback(errors: list[str]) -> None:
+    required_paths = (
+        TOWN_SCRIPT_PATH,
+        TOWN_STAGE_SCRIPT_PATH,
+        TOWN_VFX_MANIFEST_PATH,
+        TOWN_SPELL_STUDY_VFX_SOURCE_PATH,
+        TOWN_SPELL_STUDY_VFX_RUNTIME_PATH,
+        TOWN_SPELL_STUDY_AUDIO_RUNTIME_PATH,
+        TOWN_SPELL_STUDY_FEEDBACK_REPORT_SCRIPT_PATH,
+        TOWN_SPELL_STUDY_FEEDBACK_REPORT_SCENE_PATH,
+        ANIMATION_EVENT_CUES_PATH,
+        PRESENTATION_SFX_MANIFEST_PATH,
+        PRESENTATION_SFX_GENERATOR_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Town spell-study completion feedback owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    town_vfx = load_json(TOWN_VFX_MANIFEST_PATH)
+    town_vfx_cues = town_vfx.get("cues", {}) if isinstance(town_vfx, dict) else {}
+    ensure(town_vfx_cues.get("vfx_placeholder_town_spell_study") == {
+        "event_id": "town_spell_studied",
+        "texture_path": "res://art/town/runtime/vfx/spell_study.png",
+        "render_mode": "town_spell_study_completion",
+        "scale": 1.0,
+    }, errors, "Town spell-study VFX manifest entry drifted")
+    ensure(png_size(TOWN_SPELL_STUDY_VFX_SOURCE_PATH) == (1254, 1254), errors, "Town spell-study source image must retain the generated 1254x1254 source")
+    ensure(png_size(TOWN_SPELL_STUDY_VFX_RUNTIME_PATH) == (512, 512), errors, "Town spell-study runtime image must be 512x512")
+    for path, label in ((TOWN_SPELL_STUDY_VFX_SOURCE_PATH, "source"), (TOWN_SPELL_STUDY_VFX_RUNTIME_PATH, "runtime")):
+        header = path.read_bytes()[:26]
+        ensure(len(header) >= 26 and header[25] in {4, 6}, errors, f"Town spell-study {label} image must retain a PNG alpha channel")
+
+    animation_rows = load_json(ANIMATION_EVENT_CUES_PATH).get("entries", [])
+    study_rows = [row for row in animation_rows if isinstance(row, dict) and row.get("event_id") == "town_spell_studied"]
+    ensure(study_rows == [{
+        "event_id": "town_spell_studied",
+        "cue_id": "cue_town_spell_studied",
+        "surface": "town",
+        "subject_kind": "spellbook",
+        "animation_state_family": "study",
+        "animation_state": "archive_inscribed",
+        "playback_policy": "queue_resolved",
+        "blocking_policy": "nonblocking",
+        "skippable": True,
+        "vfx_cue_ids": ["vfx_placeholder_town_spell_study"],
+        "audio_cue_ids": ["audio_placeholder_town_spell_study"],
+        "fallbacks": {"reduced_motion_tag": "archive_inscribed_badge", "fast_mode_tag": "archive_inscribed_snap"},
+        "validation_tags": ["town", "spell", "study", "resolved_event"],
+        "producer_refs": ["TownShell._on_study_action_pressed", "TownRules.learn_spell_at_active_town"],
+    }], errors, "Town spell-study animation event must remain a unique exact Town-owned nonblocking archive cue")
+
+    audio_cues = load_json(PRESENTATION_SFX_MANIFEST_PATH).get("cues", {})
+    ensure(audio_cues.get("audio_placeholder_town_spell_study") == {
+        "path": "res://art/audio/runtime/presentation/town_spell_study.wav",
+        "duration_msec": 400,
+        "volume_db": -13.0,
+        "role": "town_spell_studied",
+    }, errors, "Town spell-study audio manifest entry drifted")
+    with wave.open(str(TOWN_SPELL_STUDY_AUDIO_RUNTIME_PATH), "rb") as wav_file:
+        ensure(wav_file.getnchannels() == 2, errors, "Town spell-study audio must be stereo")
+        ensure(wav_file.getsampwidth() == 2, errors, "Town spell-study audio must use 16-bit PCM")
+        ensure(wav_file.getframerate() == 44100, errors, "Town spell-study audio must use 44.1 kHz")
+        ensure(wav_file.getnframes() == 17640, errors, "Town spell-study audio must remain exactly 400ms")
+    generator_text = PRESENTATION_SFX_GENERATOR_PATH.read_text(encoding="utf-8")
+    for token in ('"audio_placeholder_town_spell_study"', '"kind": "archive_chime"', 'if kind == "archive_chime":'):
+        ensure(token in generator_text, errors, f"Town spell-study deterministic audio generator is missing: {token}")
+    audio_text = PRESENTATION_AUDIO_PATH.read_text(encoding="utf-8")
+    ensure('"audio_placeholder_town_spell_study": {"frequency": 392.0, "duration": 0.40, "gain": 0.11}' in audio_text, errors, "Town spell-study generated audio fallback drifted")
+
+    shell_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
+    study_handler = re.search(r"func _on_study_action_pressed\(action_id: String\) -> void:\n(?P<body>.*?)(?=\nfunc )", shell_text, re.DOTALL)
+    ensure(study_handler is not None, errors, "Town spell-study presenter is missing the public study handler")
+    if study_handler is not None:
+        body = study_handler.group("body")
+        order = [
+            body.find('var full_action_id := "learn_spell:%s" % action_id'),
+            body.find('before["known_spell_ids"] = _town_active_known_spell_ids()'),
+            body.find("TownRules.learn_spell_at_active_town(_session, action_id)"),
+            body.find('_record_town_action_result("order", full_action_id, action, result, before)'),
+            body.find('_invalidate_active_town_entity_cache("study", ["active_hero", "spells"])'),
+            body.find("if _handle_session_resolution():"),
+            body.find("\t_refresh()"),
+            body.find('_record_town_action_presentation("study", full_action_id, action, result, before)'),
+        ]
+        ensure(all(index >= 0 for index in order) and order == sorted(order), errors, "Town spell study must publish only after the authoritative learn action, cache invalidation, resolution guard, and refreshed stage")
+        ensure(body.count('_record_town_action_presentation("study", full_action_id, action, result, before)') == 1, errors, "Town study handler must publish exactly one presentation")
+
+    known_helper = re.search(r"func _town_active_known_spell_ids\(\) -> Array:\n(?P<body>.*?)(?=\nfunc )", shell_text, re.DOTALL)
+    ensure(known_helper is not None, errors, "Town spell-study presenter is missing the detached active spellbook helper")
+    if known_helper is not None:
+        body = known_helper.group("body")
+        for token in ('_session.overworld.get("hero", {})', 'spellbook.get("known_spell_ids", [])', 'if spell_id != "" and spell_id not in result:', 'result.sort()', 'return result'):
+            ensure(token in body, errors, f"Town spell-study known-spell provenance is incomplete: {token}")
+        for forbidden in ("learn_spell", "erase(", "SaveService", "AppRouter", "await "):
+            ensure(forbidden not in body, errors, f"Town spell-study known-spell helper must remain detached and read-only: {forbidden}")
+
+    presentation = re.search(r"func _record_town_action_presentation\(.*?\n(?P<body>.*?)(?=\nfunc )", shell_text, re.DOTALL)
+    ensure(presentation is not None, errors, "Town spell-study presentation materializer is missing")
+    if presentation is not None:
+        body = presentation.group("body")
+        for token in (
+            'if lane not in ["build", "recruit", "response", "market", "study"] or not bool(result.get("ok", false)):',
+            'if lane == "study":\n\t\tafter["known_spell_ids"] = _town_active_known_spell_ids()',
+            'var event_id := "town_spell_studied" if lane == "study" else',
+            'var subject_kind := "spellbook" if lane == "study" else',
+            'var spell_id := action_id.trim_prefix("learn_spell:")',
+            'spell_id in before_known',
+            'spell_id not in after_known',
+            'after_known.size() != before_known.size() + 1',
+            'presentation["spell_id"] = spell_id',
+            'presentation["spell_name"] = String(spell.get("name", action.get("label", spell_id)))',
+            'presentation["spell_school_id"] = String(spell.get("school_id", ""))',
+            'presentation["spell_context"] = String(spell.get("context", ""))',
+            'presentation["spell_tier"] = int(spell.get("tier", 0))',
+            'presentation["known_spell_count"] = after_known.size()',
+        ):
+            ensure(token in body, errors, f"Town spell-study presentation is missing exact spellbook provenance: {token}")
+
+    stage_text = TOWN_STAGE_SCRIPT_PATH.read_text(encoding="utf-8")
+    for token in (
+        'event_id == "town_spell_studied" and String(presentation.get("spell_id", "")) == ""',
+        'event_id == "town_spell_studied" and String(presentation.get("spell_context", "")) not in ["battle", "overworld"]',
+        'event_id == "town_spell_studied" and int(presentation.get("known_spell_count", 0)) <= 0',
+        'draw_entries = ["archive_inscribed_badge"] if reduced_motion else ["spell_study_art", "archive_inscribed_badge"]',
+        '"spell_id": String(_town_action_presentation.get("spell_id", ""))',
+        '"known_spell_count": int(_town_action_presentation.get("known_spell_count", 0))',
+        'func _draw_town_spell_study_presentation(badge_rect: Rect2, reduced_motion: bool) -> void:',
+        '_draw_text("SPELL INSCRIBED"',
+        'func _town_spell_study_vfx_asset_state() -> Dictionary:',
+        'cue_id == "vfx_placeholder_town_spell_study"',
+        'String(spec.get("render_mode", "")) == "town_spell_study_completion"',
+    ):
+        ensure(token in stage_text, errors, f"TownStageView is missing spell-study playback ownership: {token}")
+    study_draw = re.search(r"func _draw_town_spell_study_presentation\(.*?\n(?P<body>.*?)(?=\nfunc )", stage_text, re.DOTALL)
+    study_state = re.search(r"func _town_spell_study_vfx_asset_state\(\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc )", stage_text, re.DOTALL)
+    for block_text, label in ((study_draw.group("body") if study_draw else "", "draw"), (study_state.group("body") if study_state else "", "resolver")):
+        for forbidden in ("SessionState", "SaveService", "TownRules", "OverworldRules", "AppRouter", "await ", "create_timer", "create_tween"):
+            ensure(forbidden not in block_text, errors, f"Town spell-study {label} must remain view-only and frame-owned: {forbidden}")
+
+    scene_text = TOWN_SPELL_STUDY_FEEDBACK_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure_scene_nodes(scene_text, errors, "town_spell_study_completion_feedback_report.tscn", [("TownSpellStudyCompletionFeedbackReport", "Node")])
+    report_text = TOWN_SPELL_STUDY_FEEDBACK_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for token in (
+        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        '{"id": "normal", "reduced_motion": false, "missing_asset": false}',
+        '{"id": "missing_asset", "reduced_motion": false, "missing_asset": true}',
+        '{"id": "reduced_motion", "reduced_motion": true, "missing_asset": false}',
+        '_seed_study_fixture(authored_session, authored_town)',
+        '"building_lantern_archive"',
+        '_set_active_hero_spellbook(session, [])',
+        'stage.present_town_action({"event_id": "town_spell_studied"})',
+        'var control_result: Dictionary = TownRules.learn_spell_at_active_town(control, spell_id)',
+        'TownRules.build_town_action_recap(control, "order", action_id, selected_action, control_result, control_before)',
+        'var public_result: Dictionary = shell.validation_perform_town_action(action_id)',
+        'live_after == control.to_dict()',
+        'spell_id not in before_known',
+        'spell_id in after_known',
+        'after_known.size() == before_known.size() + 1',
+        'after_mana == before_mana',
+        'mirrored_hero == after_hero',
+        'String(active.get("event_id", "")) == "town_spell_studied"',
+        'String(active.get("cue_id", "")) == "cue_town_spell_studied"',
+        'String(audio_record.get("cue_id", "")) == "audio_placeholder_town_spell_study"',
+        'String(audio_record.get("playback_source", "")) == "imported_wav"',
+        'var refresh_result: Dictionary = shell.validation_force_refresh()',
+        'var invalid_result: Dictionary = shell.validation_perform_town_action(action_id)',
+        'PresentationAudio.validation_records() == audio_records',
+        'print("TOWN_SPELL_STUDY_COMPLETION_FEEDBACK_REPORT %s"',
+    ):
+        ensure(token in report_text, errors, f"Town spell-study focused report is missing method-matched live proof: {token}")
+    ensure(report_text.count("for viewport_size in VIEWPORT_SIZES:") == 1, errors, "Town spell-study focused report must run both exact viewport widths")
+    ensure(report_text.count("var control_result: Dictionary = TownRules.learn_spell_at_active_town(control, spell_id)") == 1, errors, "Town spell-study focused report must use one detached production-rules control")
+    for forbidden in (
+        "_on_study_action_pressed(",
+        "_record_town_action_presentation(",
+        "_town_spell_study_vfx_asset_state(",
+        "_draw_town_spell_study_presentation(",
+        "get_tree().create_timer",
+        "create_tween",
+        "session.overworld.erase",
+    ):
+        ensure(forbidden not in report_text, errors, f"Town spell-study focused report bypasses public production ownership: {forbidden}")
+
+
 def validate_town_building_complete_cue_playback(errors: list[str]) -> None:
     report_script_path = ROOT / "tests" / "town_building_complete_cue_playback_report.gd"
     report_scene_path = ROOT / "tests" / "town_building_complete_cue_playback_report.tscn"
@@ -21343,7 +21540,7 @@ def validate_town_building_complete_cue_playback(errors: list[str]) -> None:
     for token in (
         '@onready var _town_action_input_blocker: Control = %TownActionInputBlocker',
         '_record_town_action_presentation("build", full_action_id, action, result, before)',
-        'var event_id := "town_market_exchange_completed" if lane == "market" else ("town_route_response_ordered" if lane == "response" else ("town_units_recruited" if lane == "recruit" else "town_building_built"))',
+        'var event_id := "town_spell_studied" if lane == "study" else ("town_market_exchange_completed" if lane == "market" else ("town_route_response_ordered" if lane == "response" else ("town_units_recruited" if lane == "recruit" else "town_building_built")))',
         'var building_id := action_id.trim_prefix("build:")',
         'building_id in before_buildings or building_id not in after_buildings',
         'presentation["building_id"] = building_id',
@@ -21372,7 +21569,7 @@ def validate_town_building_complete_cue_playback(errors: list[str]) -> None:
     stage_text = TOWN_STAGE_SCRIPT_PATH.read_text(encoding="utf-8")
     for token in (
         'signal town_action_presentation_blocking_changed(blocking: bool)',
-        'event_id not in ["town_units_recruited", "town_building_built", "town_route_response_ordered", "town_market_exchange_completed"]',
+        'event_id not in ["town_units_recruited", "town_building_built", "town_route_response_ordered", "town_market_exchange_completed", "town_spell_studied"]',
         'event_id == "town_building_built" and selected_blocking_policy not in ["input_blocking_timeout", "nonblocking_reduced_motion", "nonblocking_fast_resolve"]',
         'func dismiss_town_action_presentation() -> void:',
         'return String(policy.get("selected_blocking_policy", "")) == "input_blocking_timeout"',
@@ -21430,12 +21627,12 @@ def validate_town_recruitment_cue_playback(errors: list[str]) -> None:
     ensure_script_functions(shell_text, errors, "TownShell.gd", ["_record_town_action_presentation"])
     for required_token in (
 		'_record_town_action_presentation("recruit", full_action_id, action, result, before)',
-		'if lane not in ["build", "recruit", "response", "market"] or not bool(result.get("ok", false)):',
+		'if lane not in ["build", "recruit", "response", "market", "study"] or not bool(result.get("ok", false)):',
         'var unit_id := action_id.trim_prefix("recruit:")',
         'var after := TownRules.town_action_consequence_signature(_session)',
         'var recruited_count := int(after_army.get(unit_id, 0)) - int(before_army.get(unit_id, 0))',
         'AnimationCueCatalog.cue_playback_policy_for_event(',
-		'var event_id := "town_market_exchange_completed" if lane == "market" else ("town_route_response_ordered" if lane == "response" else ("town_units_recruited" if lane == "recruit" else "town_building_built"))',
+		'var event_id := "town_spell_studied" if lane == "study" else ("town_market_exchange_completed" if lane == "market" else ("town_route_response_ordered" if lane == "response" else ("town_units_recruited" if lane == "recruit" else "town_building_built")))',
         'String(policy.get("selected_blocking_policy", "")) != "nonblocking"',
 		'_town_stage_view.call("present_town_action", presentation)',
         '"policy": policy.duplicate(true)',
@@ -21491,9 +21688,9 @@ def validate_town_recruitment_cue_playback(errors: list[str]) -> None:
         "const RECRUIT_PRESENTATION_MAX_DURATION_MS := 700",
         "const RECRUIT_PRESENTATION_MIN_DURATION_MS := 120",
         "set_process(false)",
-		'event_id not in ["town_units_recruited", "town_building_built", "town_route_response_ordered", "town_market_exchange_completed"]',
-		'var expected_cue_id := "cue_town_market_exchange_completed" if event_id == "town_market_exchange_completed" else ("cue_town_route_response_ordered" if event_id == "town_route_response_ordered" else ("cue_town_units_recruited" if event_id == "town_units_recruited" else "cue_town_building_built"))',
-		'event_id in ["town_units_recruited", "town_route_response_ordered", "town_market_exchange_completed"] and selected_blocking_policy != "nonblocking"',
+		'event_id not in ["town_units_recruited", "town_building_built", "town_route_response_ordered", "town_market_exchange_completed", "town_spell_studied"]',
+		'var expected_cue_id := "cue_town_spell_studied" if event_id == "town_spell_studied" else ("cue_town_market_exchange_completed" if event_id == "town_market_exchange_completed" else ("cue_town_route_response_ordered" if event_id == "town_route_response_ordered" else ("cue_town_units_recruited" if event_id == "town_units_recruited" else "cue_town_building_built")))',
+		'event_id in ["town_units_recruited", "town_route_response_ordered", "town_market_exchange_completed", "town_spell_studied"] and selected_blocking_policy != "nonblocking"',
         "_town_action_presentation = presentation.duplicate(true)",
         'if Time.get_ticks_msec() >= int(_town_action_presentation.get("expires_msec", 0)):',
 		'draw_entries = ["recruit_count_badge"] if reduced_motion else ["recruit_muster_rings", "recruit_count_badge"]',
@@ -40511,6 +40708,12 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
             "volume_db": -13.5,
             "role": "town_market_exchange_completed",
         },
+        "audio_placeholder_town_spell_study": {
+            "path": "res://art/audio/runtime/presentation/town_spell_study.wav",
+            "duration_msec": 400,
+            "volume_db": -13.0,
+            "role": "town_spell_studied",
+        },
     }
     manifest = json.loads(PRESENTATION_SFX_MANIFEST_PATH.read_text(encoding="utf-8"))
     ensure(manifest.get("schema") == "presentation_runtime_sfx_manifest_v1", errors, "presentation SFX manifest has the wrong schema")
@@ -40522,7 +40725,7 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
     ensure(int(manifest.get("sample_width_bits", 0)) == 16, errors, "production presentation SFX must use 16-bit PCM")
     ensure(manifest.get("asset_tier") == "production_layered_v1", errors, "presentation SFX manifest must declare production_layered_v1")
     cues = manifest.get("cues", {})
-    ensure(isinstance(cues, dict) and set(cues) == set(expected_cues), errors, "presentation SFX manifest must contain exactly the twenty-one live Town, Overworld, navigation, blocking, route-open, route-closed, object-focus, object-resolution, guarded-context, and system action cues")
+    ensure(isinstance(cues, dict) and set(cues) == set(expected_cues), errors, "presentation SFX manifest must contain exactly the twenty-two live Town, Overworld, navigation, blocking, route-open, route-closed, object-focus, object-resolution, guarded-context, and system action cues")
     asset_hashes: list[str] = []
     for cue_id in sorted(expected_cues):
         expected = expected_cues[cue_id]
@@ -40556,7 +40759,7 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
             if left_samples and right_samples:
                 ensure(left_samples[0] == 0 and right_samples[0] == 0, errors, f"presentation SFX must start at zero: {expected['path']}")
                 ensure(left_samples[-1] == 0 and right_samples[-1] == 0, errors, f"presentation SFX must end at zero: {expected['path']}")
-    ensure(len(set(asset_hashes)) == 21, errors, "all twenty-one presentation assets must be byte-distinct")
+    ensure(len(set(asset_hashes)) == 22, errors, "all twenty-two presentation assets must be byte-distinct")
     if len(asset_hashes) == 18:
         pack_signature = hashlib.sha256("\n".join(asset_hashes).encode("utf-8")).hexdigest()
         ensure(pack_signature == "d2d0b47d1de5613767232ecf94a03186aade937de3a1c7b7a4857eef4c8d7b57", errors, "presentation SFX pack signature drifted")
@@ -43007,6 +43210,7 @@ def main() -> int:
     validate_town_recruitment_vfx_assets(errors)
     validate_town_route_response_dispatch_feedback(errors)
     validate_town_market_exchange_completion_feedback(errors)
+    validate_town_spell_study_completion_feedback(errors)
     validate_town_building_complete_cue_playback(errors)
     validate_town_recruitment_cue_playback(errors)
     validate_town_contextual_guide(errors)
