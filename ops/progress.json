@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Town hero-hire completion slice is implemented and validated. Successful public tavern hires now publish one exact commander-arrival completion with original VFX, deterministic audio, and fail-closed fallback behavior. Select the next tracker-approved release-readiness implementation slice; broader release gaps remain.",
+  "currentNotes": "The Town artifact action feedback slice is completed. Successful public commission, equip, and stow actions publish compact TownStage feedback only after exact artifact authority is proven; focused, compatibility, static/editor, and bounded Linux/Windows export/startup gates pass. Packaged Town artifact interaction/listening and overall release readiness remain unclaimed.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-town-hero-hire-completion-feedback-10184",
-  "currentSliceId": "presentation-town-hero-hire-completion-feedback-10184",
-  "currentSliceNotes": "Completed with six exact public-handler rows across 1280x720/1920x1080 normal, missing-asset, and reduced-motion modes; compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass within bounded claims.",
+  "currentSlice": "presentation-town-artifact-action-feedback-10184",
+  "currentSliceId": "presentation-town-artifact-action-feedback-10184",
+  "currentSliceNotes": "Completed with exact public-handler TownRules parity, fail-closed artifact provenance and slot transitions, compact production-icon feedback, compatibility coverage, repository/editor validation, and bounded Linux/Windows export/startup evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Town Hero Hire Completion Feedback",
-  "currentSliceUpdatedAt": "2026-08-16T02:02:57Z",
+  "currentSliceTitle": "Town Artifact Action Feedback",
+  "currentSliceUpdatedAt": "2026-08-16T02:39:24Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -85893,6 +85893,52 @@
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Packaged Town hire interaction/listening, certification, signing/publication, broader release gaps, and release readiness remain unclaimed.",
       "blockedReason": null,
       "completedAt": "2026-08-16T02:02:57Z"
+    },
+    {
+      "id": "presentation-town-artifact-action-feedback-10184",
+      "title": "Town Artifact Action Feedback",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Present successful live Town artifact commission, equip, and stow actions through the existing compact TownStage system without changing artifact rules, rewards, costs, ownership, inventory, equipment, movement, or save authority.",
+      "implementationTargets": [
+        "content/animation_event_cues.json",
+        "scenes/town/TownShell.gd",
+        "scenes/town/TownStageView.gd",
+        "tests/town_artifact_action_feedback_report.gd",
+        "tests/town_artifact_action_feedback_report.tscn",
+        "tests/overworld_artifact_acquired_cue_playback_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Live TownShell 1280x720/1920x1080 public commission, equip, and stow actions match method-equivalent TownRules controls and publish the exact existing artifact cue/audio policies with production artifact icons",
+        "Failed, stale, unaffordable, repeated, malformed, refresh, and non-artifact controls remain silent; reduced-motion and missing-icon fallbacks are exact",
+        "Artifact reward tables, service costs/provenance, ownership, inventory/equipment, movement, active-hero mirroring, recaps, focus/input, session/save, completed Town/Overworld presentations, and generic UI cues remain exact",
+        "Focused artifact action, artifact commission/icon/runtime, Town cue/visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "artifact content, reward tables, commission costs, inventory/equipment rules, movement bonuses, auto-equip policy, Town buildings, hero progression, save/schema, AI, Native RMG, or map topology changes",
+        "new artifact art/audio, generic cue remapping, layout redesign, particles, shaders, spatial audio, haptics, or final mastering",
+        "packaged artifact interaction/listening, hardware certification, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "1b462f04",
+        "town_artifact_action_present": true,
+        "artifact_commission_rules_present": true,
+        "artifact_slot_rules_present": true,
+        "artifact_policies_and_assets_present": true,
+        "town_artifact_presentation_present": false
+      },
+      "createdAt": "2026-08-16T02:07:18Z",
+      "startedAt": "2026-08-16T02:07:18Z",
+      "updatedAt": "2026-08-16T02:39:24Z",
+      "notes": "Implemented live Town artifact completion feedback without changing ArtifactRules or TownRules authority. TownShell now publishes only after successful commission/equip/stow mutation, recap, resolution guard, and refresh, with exact commission service/reward/cost/location provenance and exact equip/stow artifact-slot transitions. TownStage reuses the authored artifact-acquired/equipped/unequipped cue policies, production artifact icons, deterministic audio, compact normal/reduced-motion rendering, and fail-closed missing-icon fallback. Focused artifact `/tmp/heroes-town-artifact-focused-rerun.HZNwRk` passes six 1280/1920 normal, missing-icon, and reduced-motion rows with whole-session TownRules parity and invalid/stale/unaffordable/repeated/refresh silence. Compatibility artifacts `/tmp/heroes-town-artifact-compat.weMBhI`, `/tmp/heroes-overworld-artifact-acquired-compat-fixed.AKW5pi`, and `/tmp/heroes-town-artifact-compat-resume.h0SZRD` pass artifact commission/icon/runtime, exact Overworld object-resolution then artifact-acquired audio ordering, Town cue/action owners, animation catalog, Town/Battle visual smoke, and core. Static/editor artifact `/tmp/heroes-town-artifact-static.9aY552` and exact/generic editor parses pass. Official Linux and Windows packaging reports are ok:true; claims remain Linux export/headless startup and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup only. Packaged artifact interaction/listening, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
+      "blockedReason": null,
+      "completedAt": "2026-08-16T02:39:24Z"
     }
   ],
   "project": "heroes-like",
@@ -86435,9 +86481,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The UI production SFX fidelity slice is completed: all six short mono generated click, select, adjust, tab, confirm, and invalid assets are replaced by distinct stereo production transients while exact cue, control, repetition, mute, input, settings, and gameplay authority remain preserved. Focused, compatibility, static/editor, and bounded Linux/Windows export/startup gates pass. Select the next tracker-approved slice; the game is not release-ready.",
+  "summary": "The Town artifact action feedback slice is completed: successful public commission, equip, and stow actions publish compact, exact, fail-closed TownStage feedback while ArtifactRules/TownRules authority remains unchanged. Focused, compatibility, static/editor, and bounded Linux/Windows export/startup gates pass. Select the next tracker-approved slice; the game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-16T01:00:00Z",
+  "updatedAt": "2026-08-16T02:39:24Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

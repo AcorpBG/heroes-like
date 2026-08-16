@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `presentation-town-artifact-action-feedback-10184`. Successful public Town commission, equip, and stow actions now publish compact TownStage feedback through the existing artifact-acquired/equipped/unequipped cue policies, production artifact icons, and deterministic audio only after exact reward, provenance, spend, inventory/equipment, slot, and recap authority is proven. Six focused 1280x720/1920x1080 normal, missing-icon, and reduced-motion rows pass with method-equivalent TownRules controls and failed, stale, unaffordable, repeated, malformed, and refresh silence. Artifact commission/icon/runtime, Overworld artifact audio ordering, Town cue/visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged artifact interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `presentation-town-artifact-action-feedback-10184`
 - Completed implementation slice: `presentation-town-hero-hire-completion-feedback-10184`. Successful live Town-screen `hire_hero:<hero_id>` orders now publish one compact Town-specific commander-arrival completion through the existing TownStage action presenter, derived from the exact one-hero roster increase and resource spend and carrying an original imported alpha VFX, deterministic 420 ms stereo sound, and exact reduced-motion/missing-asset fallbacks. Six focused 1280x720/1920x1080 public-handler rows prove whole-session TownRules parity, exact recruited-hero identity, unchanged active hero, imported WAV playback, and malformed/unavailable/repeated/refresh silence. Town VFX/cue/action, animation catalog, broad Town/Battle visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged hire interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `presentation-town-hero-hire-completion-feedback-10184`
 - Completed implementation slice: `presentation-town-spell-study-completion-feedback-10184`. Successful live Town-screen `learn_spell:<spell_id>` orders now publish one compact Town-specific archive-study completion through the existing TownStage action presenter, derived from the exact active-hero spellbook transition and carrying an original imported alpha VFX, deterministic 400 ms stereo sound, and exact reduced-motion/missing-asset fallbacks. Six focused 1280x720/1920x1080 public-handler rows prove whole-session TownRules parity, one newly learned spell, unchanged mana, mirrored active-hero authority, imported WAV playback, and malformed/already-known/refresh silence. Spell-school icon, Town VFX/cue/route/market, animation catalog, broad Town/Battle visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged study interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -5753,6 +5755,28 @@ Validated result:
 - the public Town tavern handler now publishes only after the exact successful hire action, recap, cache invalidation, resolution guard, and refreshed stage; it validates one new player hero, authored identity/cost, exact resource deltas, unchanged active hero, and failed-action silence;
 - six focused rows cover 1280x720 and 1920x1080 in normal imported, missing-asset procedural, and reduced-motion static modes with whole-session parity against detached TownRules controls and exactly one imported 420 ms stereo cue;
 - Town building/recruitment VFX and cue playback, route/market/spell feedback, animation catalog, Town/Battle visual smoke, core systems, repository/editor checks, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass.
+
+## Selected Slice: Town Artifact Action Feedback
+
+id: `presentation-town-artifact-action-feedback-10184`
+
+Status: completed.
+
+Implementation boundary:
+- after the real public Town artifact action succeeds and the stage refreshes, reuse the existing artifact-acquired, artifact-equipped, or artifact-unequipped policy and deterministic audio through TownStageView;
+- for commissions, validate the exact one-time town service building, artifact reward/provenance, resource cost, owned location, and recap; for equip/stow, validate the exact artifact identity, previous/current slot, and active-hero mirror transition;
+- render the production artifact icon fail-closed with a compact procedural fallback, while preserving the shared Town input blocker only for the existing normal artifact-acquired policy.
+
+Completion criteria:
+- live TownShell 1280x720/1920x1080 public commission/equip/stow actions match method-equivalent TownRules controls and publish the exact existing artifact cue/audio policies with production icons;
+- failed, stale, unaffordable, repeated, malformed, refresh, and non-artifact controls remain silent; reduced-motion and missing-icon fallbacks are exact;
+- artifact reward tables, service costs/provenance, ownership, inventory/equipment, movement, active-hero mirroring, recaps, focus/input, session/save, and prior Overworld/Town presentations remain exact;
+- focused artifact action plus artifact commission/icon/runtime, Town cue/visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Non-goals:
+- no artifact content, reward tables, commission costs, inventory/equipment rules, movement bonuses, auto-equip policy, Town buildings, hero progression, save/schema, AI, Native RMG, or map-topology changes;
+- no new artifact art/audio, generic cue remapping, layout redesign, particles, shaders, spatial audio, haptics, or final mastering;
+- no packaged artifact interaction/listening, hardware certification, signing/publication, whole-game, or release-readiness claim.
 
 ## Progress Reconciliation
 
