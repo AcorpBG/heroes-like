@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Battle Order-tab compact initiative-summary slice is completed with exact two-width themed-font/containment/tooltip authority, fresh 1280x720 visual evidence, compatibility/static/editor validation, and bounded Linux/Windows export-startup evidence.",
+  "currentNotes": "The Battle info-tab header compact-fit slice is complete. Four compact native headers fit the unchanged bar at 1280x720 and 1920x1080 while full readiness semantics remain in the existing payload and tooltip; focused navigation/authority, compatibility, repository/editor, and bounded Linux/Windows export-startup gates pass.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-battle-order-tab-compact-initiative-summary-10184",
-  "currentSliceId": "ux-battle-order-tab-compact-initiative-summary-10184",
-  "currentSliceNotes": "Completed the bounded visible-summary correction. The Order tab shows only Initiative/Now/Next while the full handoff and ordered technical track remain exact in the existing tooltip; Battle rules, board strip, tabs, focus, layout, and authority are unchanged.",
+  "currentSlice": "ux-battle-info-tab-header-compact-fit-10184",
+  "currentSliceId": "ux-battle-info-tab-header-compact-fit-10184",
+  "currentSliceNotes": "The live native headers are exactly Order, Focus, Spell, Timing; all four fit the unchanged 200px bar at both required widths, while the payload and tooltip retain full semantic identities, readiness counts, summaries, and selected focus. Broader packaged Battle interaction and release claims remain unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Battle Order Tab Compact Initiative Summary",
-  "currentSliceUpdatedAt": "2026-08-16T17:12:11Z",
+  "currentSliceTitle": "Battle Information Tab Header Compact Fit",
+  "currentSliceUpdatedAt": "2026-08-16T17:32:12Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -86820,6 +86820,54 @@
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, signing/publication, native Windows certification, and unrecovered Native RMG parity gaps remain.",
       "blockedReason": null,
       "completedAt": "2026-08-16T17:12:11Z"
+    },
+    {
+      "id": "ux-battle-info-tab-header-compact-fit-10184",
+      "title": "Battle Information Tab Header Compact Fit",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Expose all four existing Battle information tabs in the live native header without resizing the sidebar or weakening readiness/navigation semantics.",
+      "implementationTargets": [
+        "scenes/battle/BattleShell.gd",
+        "tests/battle_controller_board_navigation_smoke.gd",
+        "tests/active_play_keyboard_focus_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "All four native Battle tab rectangles are positive, ordered, nonoverlapping, and contained in the existing TabBar at 1280x720 and 1920x1080",
+        "Visible titles are exactly Order, Focus, Spell, Timing while the existing semantic payload and tooltip retain full Order, Focus, Spells, Timing identities plus readiness counts and selected focus",
+        "Keyboard/controller/mouse traversal, both boundaries, focus return, selected-tab persistence, page content, session/save/settings/routes, and battle authority remain exact",
+        "Focused board/header, active-play tab navigation, Town/Battle visual, animation, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "tab content/readiness calculation, action, combat, turn-order, focus-cycle, input, save/schema, content, balance, AI, or Native RMG changes",
+        "sidebar/TabBar/panel resizing, font/theme/UI-scale, new control/panel, icon-only tabs, board/layout, or generic tab-system changes",
+        "packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "e1556dc3ba79021b01108a8726c13cc9ecb57f11",
+        "capture": "/tmp/heroes-battle-order-visual.590zIh/order_tab_compact_1280.png",
+        "attribution": "/tmp/heroes-battle-tab-header-attribution3.utj2Mn/stdout.log",
+        "viewport": "1280x720",
+        "tab_bar_width": 200,
+        "current_visible_titles": ["Order 2", "Focus"],
+        "current_hidden_titles": ["Spells 3", "Timing 1"],
+        "full_base_title_width": 205,
+        "compact_title_width": 197,
+        "compact_titles": ["Order", "Focus", "Spell", "Timing"],
+        "authority_exact": true
+      },
+      "createdAt": "2026-08-16T17:17:10Z",
+      "startedAt": "2026-08-16T17:17:10Z",
+      "updatedAt": "2026-08-16T17:32:12Z",
+      "notes": "Implemented the bounded native header correction: the existing TabBar now renders Order/Focus/Spell/Timing while the untouched readiness payload and tooltip retain full Order/Focus/Spells/Timing identities, exact counts, summaries, and selected focus. Focused board/header proof validates four positive ordered nonoverlapping native rectangles inside the unchanged 200px bar at 1280x720 and 1920x1080 with exact session/save/settings/route authority. A fresh 1280x720 X11 capture shows all four headers without scroll arrows. Active-play keyboard/controller/mouse traversal, Town/Battle visual, animation, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, signing/publication, native Windows certification, and unrecovered Native RMG parity gaps remain.",
+      "blockedReason": null,
+      "completedAt": "2026-08-16T17:32:12Z"
     }
   ],
   "project": "heroes-like",
@@ -86829,7 +86877,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain after the bounded Battle Order-tab correction.",
+  "remainingGap": "The Battle info-tab header containment gap is closed; broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
   "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
   "reportOnlyEvidence": [
     {
@@ -87261,7 +87309,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "ux_battle_order_tab_compact_initiative_summary_completed",
+  "result": "ux_battle_info_tab_header_compact_fit_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {

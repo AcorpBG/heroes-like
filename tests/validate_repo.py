@@ -19661,7 +19661,7 @@ def validate_battle_info_tab_controller_navigation(errors: list[str]) -> None:
         "JOY_BUTTON_DPAD_LEFT",
         "await _press_key(KEY_RIGHT)",
         "await _press_key(KEY_LEFT)",
-        'expected_titles := ["Order", "Focus", "Spells", "Timing"]',
+        'expected_titles := ["Order", "Focus", "Spell", "Timing"]',
         'String(reset.get("tab_bar_boundary_policy", "")) != "retain"',
         'int(reset.get("tab_bar_occurrences", 0)) != 1',
         'int(post_tab_snapshot.get("active_tab", -1)) != 3',
@@ -19771,6 +19771,93 @@ def validate_battle_order_tab_compact_initiative_summary(errors: list[str]) -> N
         order_call = width_body.find("_validate_order_tab_compact_summary(shell, session, width)")
         focus_call = width_body.find("board.grab_focus()")
         ensure(0 <= strip_call < order_call < focus_call and width_body.count("_validate_order_tab_compact_summary(shell, session, width)") == 1, errors, "Battle Order-tab proof must run once at each existing width after strip proof and before focus/input mutation")
+
+
+def validate_battle_info_tab_header_compact_fit(errors: list[str]) -> None:
+    board_smoke_path = ROOT / "tests" / "battle_controller_board_navigation_smoke.gd"
+    focus_smoke_path = ROOT / "tests" / "active_play_keyboard_focus_smoke.gd"
+    for path in (BATTLE_SCRIPT_PATH, BATTLE_SCENE_PATH, board_smoke_path, focus_smoke_path):
+        ensure(path.exists(), errors, f"Missing Battle info-tab header-fit file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in (BATTLE_SCRIPT_PATH, BATTLE_SCENE_PATH, board_smoke_path, focus_smoke_path)):
+        return
+
+    shell_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
+    scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8")
+    board_smoke_text = board_smoke_path.read_text(encoding="utf-8")
+    focus_smoke_text = focus_smoke_path.read_text(encoding="utf-8")
+    ensure(shell_text.count('const BATTLE_INFO_TAB_VISIBLE_TITLES := ["Order", "Focus", "Spell", "Timing"]') == 1, errors, "BattleShell must own one exact readable four-title header set")
+    refresh_match = re.search(r"func _refresh_battle_tab_cues\(\) -> void:\n(?P<body>.*?)(?=\nfunc )", shell_text, re.S)
+    styles_match = re.search(r"func _apply_visual_theme\(\) -> void:\n(?P<body>.*?)(?=\nfunc )", shell_text, re.S)
+    readiness_match = re.search(r"func _battle_tab_readiness_payload\(\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc )", shell_text, re.S)
+    ensure(refresh_match is not None and styles_match is not None and readiness_match is not None, errors, "Could not isolate Battle header refresh/style/readiness owners")
+    for match, owner in ((refresh_match, "refresh"), (styles_match, "style")):
+        if match is None:
+            continue
+        body = match.group("body")
+        for required_token in (
+            "range(min(_battle_tabs.get_tab_count(), BATTLE_INFO_TAB_VISIBLE_TITLES.size()))",
+            "_battle_tabs.set_tab_title(index, String(BATTLE_INFO_TAB_VISIBLE_TITLES[index]))",
+        ):
+            ensure(required_token in body, errors, f"Battle header {owner} owner is missing exact compact-title token: {required_token}")
+        for forbidden_token in ('set_tab_title(0, "Order")', 'set_tab_title(2, "Spells")', 'tab.get("title"', "custom_minimum_size", "font_size", "scrolling_enabled"):
+            ensure(forbidden_token not in body, errors, f"Battle header {owner} owner must avoid duplicated/resized readiness title path: {forbidden_token}")
+    if readiness_match is not None:
+        readiness_body = readiness_match.group("body")
+        for required_token in (
+            '_battle_tab_readiness_entry("Order"',
+            '"Focus",',
+            '_battle_tab_readiness_entry("Spells"',
+            '"Timing",',
+            'tooltip_lines.append("- %s" % String(tab.get("summary", "")))',
+            'tooltip_lines.append("Selected: %s" % String(selected.get("focus", "")))',
+        ):
+            ensure(required_token in readiness_body, errors, f"Battle readiness semantics must retain full title/count/tooltip token: {required_token}")
+        ensure("BATTLE_INFO_TAB_VISIBLE_TITLES" not in readiness_body, errors, "Compact visible Battle titles must not alter semantic readiness calculation")
+    ensure('custom_minimum_size = Vector2(248, 0)' in scene_text, errors, "Battle header fit must retain the existing 248px SidebarShell minimum")
+    ensure(scene_text.count('[node name="BattleTabs" type="TabContainer"') == 1, errors, "Battle header fit must retain one native BattleTabs container")
+
+    focused_match = re.search(
+        r"func _validate_battle_info_tab_header_fit\(shell: Control, session, width: int\) -> bool:\n(?P<body>.*?)(?=\nfunc )",
+        board_smoke_text,
+        re.S,
+    )
+    ensure(focused_match is not None, errors, "Battle controller owner must prove two-width native header geometry and semantics")
+    if focused_match is not None:
+        body = focused_match.group("body")
+        order = tuple(body.find(token) for token in (
+            "_battle_background_authority(session)",
+            'shell.call("validation_snapshot")',
+            'expected_visible_titles := ["Order", "Focus", "Spell", "Timing"]',
+            'expected_semantic_titles := ["Order", "Focus", "Spells", "Timing"]',
+            "for index in range(expected_visible_titles.size()):",
+            "bar_rect.encloses(rect)",
+            "rect.position.x + 0.01 >= previous_right",
+            'String(semantic.get("base_title", "")) == expected_semantic_titles[index]',
+            "total_width <= tab_bar.size.x + 0.01",
+            "_battle_background_authority(session) != authority_before",
+        ))
+        ensure(all(index >= 0 for index in order) and list(order) == sorted(order), errors, "Focused Battle header proof must bracket exact visual/semantic/geometry checks with whole authority")
+        for required_token in (
+            "rect.size.x > 0.0",
+            "rect.size.y > 0.0",
+            'String(battle_tabs.tooltip_text).contains(summary)',
+            'semantic_title == "%s %d" % [expected_semantic_titles[index], ready_count]',
+            'String(battle_tabs.tooltip_text).contains("Selected: %s"',
+            "tab_bar.get_tab_rect(index)",
+        ):
+            ensure(required_token in body, errors, f"Focused Battle header proof is missing exact token: {required_token}")
+        for forbidden_token in ("set_tab_title", "custom_minimum_size", "add_theme_font", "scrolling_enabled =", "sort(", "erase(", "Input."):
+            ensure(forbidden_token not in body, errors, f"Focused Battle header proof must remain public/read-only and avoid {forbidden_token}")
+    width_match = re.search(r"func _validate_battle_board_semantics_width\(width: int\) -> bool:\n(?P<body>.*?)(?=\nfunc )", board_smoke_text, re.S)
+    ensure(width_match is not None, errors, "Could not isolate Battle two-width owner for header fit")
+    if width_match is not None:
+        width_body = width_match.group("body")
+        summary_call = width_body.find("_validate_order_tab_compact_summary(shell, session, width)")
+        header_call = width_body.find("_validate_battle_info_tab_header_fit(shell, session, width)")
+        focus_call = width_body.find("board.grab_focus()")
+        ensure(0 <= summary_call < header_call < focus_call and width_body.count("_validate_battle_info_tab_header_fit(shell, session, width)") == 1, errors, "Battle header proof must run once per existing width before focus/input mutation")
+    ensure(focus_smoke_text.count('var expected_titles := ["Order", "Focus", "Spell", "Timing"]') == 1, errors, "Active-play Battle navigation must traverse the exact compact visible title set")
+    ensure('var expected_titles := ["Order", "Focus", "Spells", "Timing"]' not in focus_smoke_text, errors, "Active-play Battle navigation must not retain the overflowing Spells header oracle")
 
 
 def validate_battle_quick_resolve_runtime(errors: list[str]) -> None:
@@ -45278,6 +45365,7 @@ def main() -> int:
     validate_battle_layout_detached_route_compatibility(errors)
     validate_battle_board_cursor_semantics(errors)
     validate_battle_order_tab_compact_initiative_summary(errors)
+    validate_battle_info_tab_header_compact_fit(errors)
     validate_main_menu_first_view(errors)
     validate_main_menu_destructive_exclusive_parent_input(errors)
     validate_map_editor_shell_slice(errors)
