@@ -35956,6 +35956,90 @@ def validate_late_game_capital_escalation(errors: list[str]) -> None:
         ensure(found_capital_hook, errors, f"Scenario {scenario_id} must keep a late-game capital escalation hook for {expectation['building_id']}")
 
 
+def validate_town_capital_project_identity_correction(errors: list[str]) -> None:
+    report_path = ROOT / "tests" / "town_capital_project_identity_runtime_report.gd"
+    report_scene_path = ROOT / "tests" / "town_capital_project_identity_runtime_report.tscn"
+    required_paths = (OVERWORLD_RULES_PATH, report_path, report_scene_path, CONTENT_DIR / "towns.json", CONTENT_DIR / "buildings.json")
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing capital-project identity correction file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    overworld_text = OVERWORLD_RULES_PATH.read_text(encoding="utf-8")
+    start = overworld_text.find("static func _town_capital_project_ids(town: Dictionary) -> Array:")
+    end = overworld_text.find("\nstatic func ", start + 1)
+    ensure(start >= 0 and end > start, errors, "OverworldRules must keep an isolated capital-project identity helper")
+    if start >= 0 and end > start:
+        identity_block = overworld_text[start:end]
+        ordered_tokens = (
+            'for building_id_value in template.get("buildable_building_ids", []):',
+            'var building_id := String(building_id_value)',
+            'if building_id == "":',
+            'var capital_project: Variant = ContentService.get_building(building_id).get("capital_project", null)',
+            'if capital_project is Dictionary and not capital_project.is_empty():',
+            'ids.append(building_id)',
+            'return ids',
+        )
+        cursor = -1
+        for token in ordered_tokens:
+            next_cursor = identity_block.find(token, cursor + 1)
+            ensure(next_cursor > cursor, errors, f"Capital-project identity helper must keep ordered token: {token}")
+            cursor = next_cursor
+        ensure(identity_block.count('ContentService.get_building(building_id)') == 1, errors, "Capital-project identity helper must inspect each buildable building exactly once")
+        ensure('.get("capital_project", {}) is Dictionary' not in identity_block, errors, "Capital-project identity helper must not treat missing metadata fallback as a project")
+        for forbidden in ("sort", "reverse", "session", "cache", "built_buildings", "append_array"):
+            ensure(forbidden not in identity_block, errors, f"Capital-project identity helper must preserve authored buildable order without {forbidden}")
+
+    buildings = items_index(load_json(CONTENT_DIR / "buildings.json"))
+    towns = items_index(load_json(CONTENT_DIR / "towns.json"))
+    explicit_project_ids = {
+        building_id
+        for building_id, building in buildings.items()
+        if isinstance(building.get("capital_project"), dict) and bool(building.get("capital_project"))
+    }
+    ensure(explicit_project_ids == CAPITAL_PROJECT_BUILDING_IDS, errors, "Exactly the three authored capital-project buildings must carry nonempty metadata")
+    for town_id, project_id in CAPITAL_PROJECT_TOWN_BUILDINGS.items():
+        buildable = [str(value) for value in towns.get(town_id, {}).get("buildable_building_ids", [])]
+        ensure(buildable.count(project_id) == 1, errors, f"Capital town {town_id} must keep exactly one authored project id {project_id}")
+        ensure(sum(1 for building_id in buildable if building_id in explicit_project_ids) == 1, errors, f"Capital town {town_id} must expose exactly one explicit capital project")
+    for town_id in ("town_thornwake_graftroot_caravan", "town_brasshollow_orevein_gantry"):
+        buildable = [str(value) for value in towns.get(town_id, {}).get("buildable_building_ids", [])]
+        ensure(not any(building_id in explicit_project_ids for building_id in buildable), errors, f"Project-absent town {town_id} must keep zero explicit capital projects")
+
+    report_text = report_path.read_text(encoding="utf-8")
+    for required_token in (
+        'const REPORT_ID := "TOWN_CAPITAL_PROJECT_IDENTITY_RUNTIME_REPORT"',
+        '"scenario_id": "lockmarsh-surge"',
+        '"project_id": "building_charter_bastion"',
+        '"scenario_id": "nightglass-redoubt"',
+        '"project_id": "building_nightglass_dominion"',
+        '"scenario_id": "glassfen-breakers"',
+        '"project_id": "building_daybreak_matrix"',
+        '"scenario_id": "mireford-skirmish"',
+        '"town_id": "town_thornwake_graftroot_caravan"',
+        '"scenario_id": "orevein-contract"',
+        '"town_id": "town_brasshollow_orevein_gantry"',
+        'if explicit_ids != [project_id] or runtime_ids != explicit_ids:',
+        'not _inactive_state_exact(initial_state, project_id, dependencies.size() + 1, initial_dependency_complete, expected_next_label)',
+        'var active_checks := _active_state_checks(active_state, project_id, project_metadata, dependencies.size() + 1)',
+        'if not _all_checks_true(active_checks):',
+        'not _vulnerability_exact(active_state, project_metadata)',
+        'normalized_state != active_state',
+        'session.to_dict() != authority_before',
+        'summary.contains("Capital project")',
+        '"save_version": save_version_before',
+    ):
+        ensure(required_token in report_text, errors, f"Capital-project identity runtime report is missing required gate: {required_token}")
+    ensure(report_text.count("OverworldRules._town_capital_project_ids(town)") == 2, errors, "Capital-project identity report must call the live identity helper once for capital and absent cases")
+    ensure(report_text.count("ScenarioFactory.create_session(") == 2, errors, "Capital-project identity report must create one live session per fixture path")
+    ensure("building.has(\"capital_project\")" in report_text and 'building.get("capital_project", null)' in report_text, errors, "Capital-project identity report must derive its independent explicit-metadata authority")
+    for forbidden in ('.get("capital_project", {}) is Dictionary', 'erase("capital_project")', 'sort_custom', 'sort()', 'SessionStateStore.SAVE_VERSION ='):
+        ensure(forbidden not in report_text, errors, f"Capital-project identity report must not weaken or rewrite authority with {forbidden}")
+
+    scene_text = report_scene_path.read_text(encoding="utf-8")
+    ensure('res://tests/town_capital_project_identity_runtime_report.gd' in scene_text, errors, "Capital-project identity report scene must own the focused runtime script")
+
+
 def validate_capital_front_battle_identity(errors: list[str]) -> None:
     required_paths = (
         SESSION_STATE_PATH,
@@ -44114,6 +44198,7 @@ def main() -> int:
     validate_convoy_interception_clash_slice(errors)
     validate_hostile_empire_personality(errors)
     validate_late_game_capital_escalation(errors)
+    validate_town_capital_project_identity_correction(errors)
     validate_capital_front_battle_identity(errors)
     validate_authored_scenario_identity(errors)
     validate_battle_surrender_pursuit_aftermath(errors)
