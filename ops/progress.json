@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Charter Bastion Counterseal is completed as the twenty-fourth active scenario and ninth Frontier Claims chapter, completing player-owned representation across all six factions. Broader release gaps remain and no whole-game or release-readiness claim is made.",
+  "currentNotes": "The Battle initiative strip now uses readable fitted stack-name labels and exact full-identity native tooltips driven by the same five-chip geometry. Broader release gaps remain and no whole-game or release-readiness claim is made.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-embercourt-charter-bastion-counterseal-chapter-10184",
-  "currentSliceId": "ux-main-menu-editor-utility-command-frame-10184",
-  "currentSliceNotes": "Completed: OpenEditor now uses the existing secondary normal/hover/pressed/disabled texture frames in the unpainted utility gap; the five real backdrop plaques retain transparent hotspot styling. Focused menu/outcome runtime proves exact frame assets and contained nonoverlapping geometry at 1280x720 and 1920x1080. Main-menu keyboard/controller navigation PASS, accessibility semantics PASS, core rc0, validate_repo/pycompile/diff/editor parses green. Official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. No packaged Editor interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.",
+  "currentSlice": "ux-battle-initiative-strip-readable-stack-identity-10184",
+  "currentSliceId": "ux-battle-initiative-strip-readable-stack-identity-10184",
+  "currentSliceNotes": "Completed: the shared initiative-chip geometry now drives readable fitted stack-name labels and exact full-name/count/side/slot/current-or-queued native tooltips without changing combat authority. Focused 1280x720 and 1920x1080 Board validation, Battle visual/animation/accessibility/core compatibility, repository/editor gates, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. No packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "ux main menu editor utility command frame 10184",
-  "currentSliceUpdatedAt": "2026-08-16T14:02:54Z",
+  "currentSliceTitle": "Battle Initiative Strip Readable Stack Identity",
+  "currentSliceUpdatedAt": "2026-08-16T15:13:35Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19847,7 +19847,7 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
-  "notes": "Registered the source-backed Clauseworks Counterclaim content slice. Current active scenario ownership is Embercourt9, Mireclaw3, Sunvault3, Thornwake2, Veilmourn2, Brasshollow1; Clauseworks Depot has no player-owned active scenario and Oren Bellfounder plus Orevein Exactors have no player-front usage. No content or runtime implementation has started for this slice.",
+  "notes": "Completed the source-backed Battle initiative-strip identity slice. Shared chip geometry now drives readable fitted stack-name labels and exact full native hover identity while combat and turn-order authority remain unchanged.",
   "plannedSlices": [
     {
       "id": "presentation-overworld-object-focus-cue-adoption-10184",
@@ -86634,6 +86634,61 @@
       "startedAt": "2026-08-16T14:13:28Z",
       "notes": "Completed: OpenEditor now uses the existing secondary normal/hover/pressed/disabled texture frames in the unpainted utility gap; the five real backdrop plaques retain transparent hotspot styling. Focused menu/outcome runtime proves exact frame assets and contained nonoverlapping geometry at 1280x720 and 1920x1080. Main-menu keyboard/controller navigation PASS, accessibility semantics PASS, core rc0, validate_repo/pycompile/diff/editor parses green. Official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. No packaged Editor interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.",
       "completedAt": "2026-08-16T14:42:44Z"
+    },
+    {
+      "id": "ux-battle-initiative-strip-readable-stack-identity-10184",
+      "title": "Battle Initiative Strip Readable Stack Identity",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Make every visible custom-painted Battle initiative chip readable and exactly discoverable without changing turn order or combat authority.",
+      "implementationTargets": [
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_controller_board_navigation_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "At 1280x720 and 1920x1080 each of the five visible initiative chips is contained, nonoverlapping, uses a readable compact name instead of initials only, and retains the exact alive count",
+        "The exact painted chip rectangles drive native hover tooltips containing full name, count, side, visible slot, and current or queued state in turn-order sequence",
+        "Occupied-stack, movement, blocked-cell, enemy-turn, and fallback Board tooltips remain exact outside the strip",
+        "Turn order, turn index, active and selected stacks, combat/session/save authority, deterministic outcomes, controller focus, and existing accessibility semantics remain unchanged",
+        "Focused Battle layout/tooltip, broad visual/navigation/accessibility, animation, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "initiative, turn-order, action, targeting, movement, combat math, AI, units, rosters, spells, objectives, save/schema, content, balance, Native RMG, or map topology changes",
+        "Battle layout redesign, extra panel, larger strip, more than five chips, board-token relabeling, font/UI-scale changes, new art/audio/VFX, or new accessibility live region",
+        "packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "be452cab",
+        "visible_chip_cap": 5,
+        "visible_example_labels": ["RG x10", "BC x8", "BB x2", "MS x1", "EA x5"],
+        "turn_strip_tooltip_hit_test_present": false,
+        "board_stack_tooltip_full_name_present": true,
+        "initiative_handoff_current_next_only": true
+      },
+      "createdAt": "2026-08-16T14:48:38Z",
+      "startedAt": "2026-08-16T14:48:38Z",
+      "updatedAt": "2026-08-16T15:13:35Z",
+      "notes": "Completed: exact shared five-chip geometry drives readable fitted stack-name labels and full identity tooltips. Focused 1280x720/1920x1080 Board authority, Battle visual/animation/accessibility/core compatibility, static/editor validation, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. Claims remain bounded; packaged Battle interaction and broader certification/release readiness are unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice without broadening this completed Battle identity boundary.",
+      "blockedReason": null,
+      "completedAt": "2026-08-16T15:13:35Z",
+      "validation": {
+        "focusedArtifact": "/tmp/heroes-initiative-focused-final.mTZwBc",
+        "compatibilityArtifact": "/tmp/heroes-initiative-compat.4FjIdt",
+        "staticArtifact": "/tmp/heroes-initiative-static.WXNZXE",
+        "platformArtifact": "/tmp/heroes-initiative-platform.ExRkSW",
+        "focusedWidths": [1280, 1920],
+        "visibleChipCap": 5,
+        "sessionSaveSettingsAuthorityExact": true,
+        "linuxExportHeadlessStartup": true,
+        "windowsExportWineStartup": true,
+        "packagedBattleInteractionClaimed": false
+      }
     }
   ],
   "project": "heroes-like",
@@ -86643,7 +86698,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain after completing six-faction Frontier Claims player representation.",
+  "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain after completing the Battle initiative-strip identity slice.",
   "remainingWork": "Select the next tracker-approved release-readiness implementation slice without claiming whole-game or release readiness.",
   "reportOnlyEvidence": [
     {
@@ -87075,7 +87130,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "ux_overworld_terminal_end_turn_detached_focus_guard_completed",
+  "result": "ux_battle_initiative_strip_readable_stack_identity_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -87176,9 +87231,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The active-play supported-viewport containment slice is complete with focused four-width Overworld/Town behavior, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup evidence. Broader release gaps remain; the game is not release-ready.",
+  "summary": "The Battle initiative strip readable stack identity slice is complete with focused two-width Board behavior, Battle compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup evidence. Broader release gaps remain; the game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-16T14:42:44Z",
+  "updatedAt": "2026-08-16T15:13:35Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

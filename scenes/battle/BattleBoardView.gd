@@ -630,6 +630,9 @@ func _dispatch_board_click_at_position(position: Vector2) -> Dictionary:
 	}
 
 func _get_tooltip(at_position: Vector2) -> String:
+	var turn_strip_entry := _turn_strip_entry_at_position(at_position)
+	if not turn_strip_entry.is_empty():
+		return _turn_strip_entry_tooltip(turn_strip_entry, _turn_strip_entries(_current_field_rect()).size())
 	var destination_cell := _hex_cell_at_position(at_position)
 	var battle_id := _stack_id_at_position(at_position)
 	if battle_id != "":
@@ -1483,6 +1486,42 @@ func validation_board_fallback_tooltip() -> Dictionary:
 		"shape_target": shape_target,
 	}
 
+func validation_turn_strip_identity_surface() -> Dictionary:
+	var field_rect := _current_field_rect()
+	var entries := _turn_strip_entries(field_rect)
+	var rows: Array = []
+	for entry_value in entries:
+		if not (entry_value is Dictionary):
+			continue
+		var entry: Dictionary = entry_value
+		var stack: Dictionary = entry.get("stack", {}) if entry.get("stack", {}) is Dictionary else {}
+		var rect: Rect2 = entry.get("rect", Rect2())
+		var center := rect.get_center()
+		var visible_label := _turn_strip_chip_label(stack, rect.size.x)
+		var font = get_theme_default_font()
+		rows.append({
+			"slot": int(entry.get("slot", 0)),
+			"battle_id": String(stack.get("battle_id", "")),
+			"full_name": _stack_full_name(stack),
+			"alive_count": _stack_alive_count(stack),
+			"side": String(stack.get("side", "")),
+			"current": String(stack.get("battle_id", "")) == String(_battle.get("active_stack_id", "")),
+			"visible_label": visible_label,
+			"visible_label_width": font.get_string_size(visible_label, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 10).x if font != null else 0.0,
+			"visible_label_max_width": maxf(24.0, rect.size.x - 12.0),
+			"tooltip": _get_tooltip(center),
+			"rect": rect,
+			"center": center,
+		})
+	return {
+		"rows": rows,
+		"visible_count": rows.size(),
+		"visible_cap": 5,
+		"field_rect": field_rect,
+		"active_stack_id": String(_battle.get("active_stack_id", "")),
+		"turn_order": (_battle.get("turn_order", []) as Array).duplicate(true) if _battle.get("turn_order", []) is Array else [],
+	}
+
 func _draw() -> void:
 	_stack_hit_shapes = []
 	draw_rect(Rect2(Vector2.ZERO, size), FRAME_FILL, true)
@@ -1493,7 +1532,7 @@ func _draw() -> void:
 	draw_rect(board_rect, BOARD_FILL, true)
 	draw_rect(board_rect, FRAME_COLOR, false, 3.0)
 
-	var field_rect := board_rect.grow(-12.0)
+	var field_rect := _current_field_rect()
 	var hex_field_rect := _hex_field_rect(field_rect)
 	var hex_layout := _hex_layout(hex_field_rect)
 	hex_layout = _camera_adjusted_hex_layout(hex_layout)
@@ -3220,28 +3259,85 @@ func _draw_turn_strip(field_rect: Rect2) -> void:
 	var strip_rect := Rect2(field_rect.position + Vector2(10.0, 10.0), Vector2(strip_width, 30.0))
 	draw_rect(strip_rect, Color(0.08, 0.10, 0.12, 0.82), true)
 	draw_rect(strip_rect, FRAME_COLOR, false, 1.4)
-	var turn_order = _battle.get("turn_order", [])
-	if not (turn_order is Array):
-		return
-	var chip_width: float = minf(92.0, (strip_rect.size.x - 14.0) / float(maxi(1, mini(turn_order.size(), 5))))
-	var drawn := 0
-	for battle_id_value in turn_order:
-		if drawn >= 5:
-			break
-		var stack: Dictionary = _stack_by_id(String(battle_id_value))
-		if stack.is_empty() or _stack_alive_count(stack) <= 0:
+	for entry_value in _turn_strip_entries(field_rect):
+		if not (entry_value is Dictionary):
 			continue
-		var rect := Rect2(
-			strip_rect.position + Vector2(7.0 + float(drawn) * chip_width, 5.0),
-			Vector2(chip_width - 5.0, strip_rect.size.y - 10.0)
-		)
+		var entry: Dictionary = entry_value
+		var stack: Dictionary = entry.get("stack", {}) if entry.get("stack", {}) is Dictionary else {}
+		var rect: Rect2 = entry.get("rect", Rect2())
 		var fill := _side_color(String(stack.get("side", ""))).darkened(0.14)
 		if String(stack.get("battle_id", "")) == String(_battle.get("active_stack_id", "")):
 			fill = ACTIVE_COLOR
 		draw_rect(rect, fill, true)
 		draw_rect(rect, Color(0.10, 0.13, 0.16, 0.84), false, 1.4)
-		_draw_text("%s x%d" % [_stack_initials(stack), _stack_alive_count(stack)], rect.position + Vector2(6.0, 15.0), Color(0.10, 0.12, 0.14, 0.96), 10)
-		drawn += 1
+		_draw_text(_turn_strip_chip_label(stack, rect.size.x), rect.position + Vector2(6.0, 15.0), Color(0.10, 0.12, 0.14, 0.96), 10)
+
+func _turn_strip_entries(field_rect: Rect2) -> Array:
+	var entries: Array = []
+	var turn_order = _battle.get("turn_order", [])
+	if not (turn_order is Array):
+		return entries
+	var strip_width: float = minf(field_rect.size.x - 20.0, 430.0)
+	var strip_rect := Rect2(field_rect.position + Vector2(10.0, 10.0), Vector2(strip_width, 30.0))
+	var chip_width: float = minf(92.0, (strip_rect.size.x - 14.0) / float(maxi(1, mini(turn_order.size(), 5))))
+	for battle_id_value in turn_order:
+		if entries.size() >= 5:
+			break
+		var stack: Dictionary = _stack_by_id(String(battle_id_value))
+		if stack.is_empty() or _stack_alive_count(stack) <= 0:
+			continue
+		entries.append({
+			"slot": entries.size() + 1,
+			"stack": stack,
+			"rect": Rect2(
+				strip_rect.position + Vector2(7.0 + float(entries.size()) * chip_width, 5.0),
+				Vector2(chip_width - 5.0, strip_rect.size.y - 10.0)
+			),
+		})
+	return entries
+
+func _turn_strip_entry_at_position(position: Vector2) -> Dictionary:
+	if _battle.is_empty():
+		return {}
+	for entry_value in _turn_strip_entries(_current_field_rect()):
+		if entry_value is Dictionary:
+			var entry: Dictionary = entry_value
+			var rect: Rect2 = entry.get("rect", Rect2())
+			if rect.has_point(position):
+				return entry
+	return {}
+
+func _turn_strip_entry_tooltip(entry: Dictionary, visible_count: int) -> String:
+	var stack: Dictionary = entry.get("stack", {}) if entry.get("stack", {}) is Dictionary else {}
+	if stack.is_empty():
+		return tooltip_text
+	var current := String(stack.get("battle_id", "")) == String(_battle.get("active_stack_id", ""))
+	return "Initiative Strip\n- Visible slot: %d of %d\n- Stack: %s x%d\n- Side: %s\n- State: %s\n- Inspection: hovering this chip does not advance initiative or spend an action." % [
+		int(entry.get("slot", 0)),
+		visible_count,
+		_stack_full_name(stack),
+		_stack_alive_count(stack),
+		String(stack.get("side", "neutral")).capitalize(),
+		"current stack" if current else "queued stack",
+	]
+
+func _turn_strip_chip_label(stack: Dictionary, chip_width: float) -> String:
+	var full_name := _stack_full_name(stack)
+	var suffix := " x%d" % _stack_alive_count(stack)
+	var font = get_theme_default_font()
+	if font == null:
+		return "%s%s" % [full_name.left(6), suffix]
+	var max_text_width := maxf(24.0, chip_width - 12.0)
+	var candidate := "%s%s" % [full_name, suffix]
+	if font.get_string_size(candidate, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 10).x <= max_text_width:
+		return candidate
+	var compact_name := full_name
+	while compact_name.length() > 3:
+		candidate = "%s…%s" % [compact_name, suffix]
+		if font.get_string_size(candidate, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 10).x <= max_text_width:
+			return candidate
+		compact_name = compact_name.left(compact_name.length() - 1)
+	return "%s…%s" % [full_name.left(3), suffix]
 
 func _draw_footer_line(field_rect: Rect2) -> void:
 	var footer_width: float = minf(field_rect.size.x - 20.0, 520.0)
@@ -3787,9 +3883,11 @@ func _hex_cell_at_position(position: Vector2) -> Vector2i:
 	return best_cell
 
 func _current_hex_layout() -> Dictionary:
+	return _hex_layout(_hex_field_rect(_current_field_rect()))
+
+func _current_field_rect() -> Rect2:
 	var board_rect := Rect2(Vector2(14.0, 14.0), size - Vector2(28.0, 28.0))
-	var field_rect := board_rect.grow(-12.0)
-	return _hex_layout(_hex_field_rect(field_rect))
+	return board_rect.grow(-12.0)
 
 func _camera_adjusted_hex_layout(hex_layout: Dictionary) -> Dictionary:
 	var adjusted := hex_layout.duplicate(true)
@@ -4299,14 +4397,9 @@ func _stack_health_ratio(stack: Dictionary) -> float:
 	var max_health: int = maxi(1, unit_hp * base_count)
 	return clampf(float(max(0, int(stack.get("total_health", 0)))) / float(max_health), 0.0, 1.0)
 
-func _stack_initials(stack: Dictionary) -> String:
+func _stack_full_name(stack: Dictionary) -> String:
 	var name := String(stack.get("name", stack.get("unit_id", "Stack"))).strip_edges()
-	if name == "":
-		return "?"
-	var parts := name.split(" ", false)
-	if parts.size() <= 1:
-		return name.left(2).to_upper()
-	return ("%s%s" % [String(parts[0]).left(1), String(parts[1]).left(1)]).to_upper()
+	return name if name != "" else "Stack"
 
 func _stack_short_label(stack: Dictionary) -> String:
 	var name := String(stack.get("name", stack.get("unit_id", "Stack")))

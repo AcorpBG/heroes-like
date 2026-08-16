@@ -6125,6 +6125,36 @@ Non-goals:
 - no backdrop repaint, new art generation, command reordering, submenu redesign, Map Editor behavior change, global theme/UI-scale change, save/campaign/settings change, gameplay/content/balance/AI/Native RMG change, or broad first-view redesign;
 - no packaged Editor interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
 
+## Selected Slice: Battle Initiative Strip Readable Stack Identity
+
+id: `ux-battle-initiative-strip-readable-stack-identity-10184`
+
+Status: completed.
+
+Implementation boundary:
+- replace only the BattleBoard turn-strip's opaque two-letter initials with bounded readable stack-name labels derived from the same full live stack identity;
+- make every painted turn-strip chip participate in the board's native tooltip hit test and expose its exact full stack name, alive count, side, visible initiative slot, and current/queued state;
+- derive chip rectangles once and reuse the exact same ordered geometry for drawing and tooltip resolution;
+- preserve the existing five-chip cap, side colors, active highlight, board token labels, board cursor semantics, current/next Initiative Handoff surface, and all battle authority.
+
+Completion criteria:
+- at 1280x720 and 1920x1080 every visible initiative chip is contained, nonoverlapping, uses a readable compact name rather than an initials-only code, and retains its exact alive count;
+- hovering the center of every painted chip returns its exact full name/count/side/slot/current-or-queued tooltip, with the tooltip order and rectangles matching the painted turn order exactly;
+- positions outside the strip retain exact occupied-stack, movement, blocked-cell, enemy-turn, and fallback tooltip behavior;
+- turn order, turn index, active/selected stacks, combat state, focus/controller behavior, session/save authority, and deterministic battle outcomes remain unchanged;
+- focused battle-layout/tooltip, broad Battle visual/navigation/accessibility, animation, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Non-goals:
+- no initiative, turn-order, action, targeting, movement, combat-math, AI, unit, roster, spell, objective, save/schema, content, balance, Native RMG, or map-topology changes;
+- no Battle layout redesign, extra panel, larger strip, more than five chips, board-token relabeling, font/UI-scale change, new art/audio/VFX, or new accessibility live region;
+- no packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Completion evidence:
+- the exact five-chip turn-order geometry is shared by drawing and native hover hit testing; compact labels retain readable stack-name prefixes and alive counts while full identity remains available in exact per-chip tooltips;
+- the focused Board navigation owner passes at 1280x720 and 1920x1080 with exact order, geometry, tooltip, and session/save/settings authority; Battle visual, animation, accessibility, and core compatibility owners pass;
+- repository validation, Python compilation, diff checks, exact/generic Godot editor parses, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass;
+- packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release-readiness remain explicitly unclaimed.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:
