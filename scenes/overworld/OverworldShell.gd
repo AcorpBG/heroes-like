@@ -462,6 +462,7 @@ func _apply_responsive_layout() -> void:
 	_resource_chip_panel.custom_minimum_size.x = 96.0 if resource_compact else 210.0
 	_resource_label.custom_minimum_size.x = 80.0 if resource_compact else 210.0
 	_resource_label.set_compact_mode(resource_compact)
+	_status_label.clip_text = narrow_layout
 	_status_label.tooltip_text = "%s\n%s" % [_status_label.text, _resource_label.full_summary_text()] if compact_layout else _status_label.text
 	_save_status_label.visible = not narrow_layout
 	_save_slot_picker.visible = not narrow_layout

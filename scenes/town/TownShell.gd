@@ -177,13 +177,16 @@ func _apply_responsive_layout() -> void:
 		available_size = parent_control.size
 	var compact_layout := available_size.x < 1360.0 or available_size.y < 760.0
 	var narrow_layout := available_size.x < 1100.0
+	_header_label.clip_text = compact_layout
+	_resource_label.custom_minimum_size.x = 80.0 if compact_layout else 210.0
+	_resource_label.set_compact_mode(compact_layout)
 	_narrow_layout_active = narrow_layout
 	if not narrow_layout:
 		_narrow_orders_open = false
 	_stage_column.visible = not narrow_layout or not _narrow_orders_open
 	_sidebar_shell_panel.visible = not narrow_layout or _narrow_orders_open
 	_sidebar_shell_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL if narrow_layout and _narrow_orders_open else Control.SIZE_FILL
-	_sidebar_shell_panel.custom_minimum_size.x = 272.0 if compact_layout else 292.0
+	_sidebar_shell_panel.custom_minimum_size.x = 272.0 if compact_layout else 400.0
 	_town_orders_toggle_button.visible = narrow_layout
 	_town_orders_toggle_button.text = "View Town" if _narrow_orders_open else "Town Orders"
 	_town_orders_toggle_button.tooltip_text = "Return to the scenic town view." if _narrow_orders_open else "Open construction, muster, spells, trade, and town-log orders."
@@ -491,6 +494,7 @@ func _refresh(first_render_minimal: bool = false) -> void:
 
 	section_started = ProfileLogScript.begin_usec()
 	_header_label.text = String(view_state.get("header_text", ""))
+	_header_label.tooltip_text = _header_label.text
 	_status_label.text = String(view_state.get("status_text", ""))
 	_resource_label.sync_stockpile(
 		_session.overworld.get("resources", {}),

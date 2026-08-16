@@ -5915,6 +5915,32 @@ Non-goals:
 - no new cue, VFX, audio, generic battle-aftermath stream, layout redesign, particles, shaders, spatial audio, haptics, or final mastering;
 - no packaged encounter interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
 
+## Selected Slice: Active-Play Supported-Viewport Containment
+
+id: `ux-active-play-supported-viewport-containment-10184`
+
+Status: completed.
+
+Implementation boundary:
+- at the existing narrow Overworld breakpoint below 1100px, let the already compact-width Status chip clip only its visible label while retaining the exact full day/movement/next-day text in its native tooltip;
+- at the existing compact Town breakpoint, let the Banner Header clip only its visible label, retain its exact full text in the native tooltip, and switch the existing native ResourceStockpileMenu to its already-supported compact 80px presentation while retaining the full resource summary and popup;
+- on non-compact Town layouts, give the existing management rail enough width for its unchanged action flow to satisfy the supported 1600x900 height budget, using otherwise flexible TownStage width and without hiding or reparenting controls;
+- keep the status chip visible, preserve every command and focus target, and let the existing container budget keep the map, command band, and system controls inside the supported 1024x600 frame;
+- keep the Town Banner, TownStage, FooterPanel, native resource picker, narrow Town Orders toggle, and every footer command visible, contained, and available;
+- preserve the existing 1280x720, 1600x900, and 1920x1080 layouts, sidebar/briefing/cue/save-detail breakpoints, opening-route and Town-build authority, and all gameplay/session behavior.
+
+Completion criteria:
+- the live player-comprehension layout owner passes 1024x600 with Map, CommandBand, PrimaryAction, EndTurn, Save, Settings, and Menu rectangles fully contained and all required controls visible/enabled;
+- the narrow Status chip keeps exact full status text in its tooltip, uses its authored compact width, clips only the visible label, and returns to ordinary unclipped behavior outside the narrow breakpoint;
+- at 1024x600 the live Town Banner, Header, Resources, TownStage, FooterPanel, SaveSlot, Save, Leave, Guide, Settings, Menu, and narrow Town Orders toggle are fully contained; the Header retains its exact full tooltip, and the resource picker retains its full summary, native popup, and selection authority while using compact mode;
+- 1280x720, 1600x900, and 1920x1080 geometry/visibility remain contained, the compact Town rail remains 272px, the desktop rail is 400px with its combined minimum honored, and opening route/session plus Town build/session state stays byte-exact until a confirmed action;
+- focused layout, resource-stockpile, broad Overworld/Town visual/input/focus/accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Non-goals:
+- no command removal, hidden Status/Header/resource control, text/content rewrite, font or UI-scale change, two-row band, new panel/reparenting, new layout breakpoint, VFX/audio, or broader screen-composition change;
+- no Overworld movement, routing, End Turn, Town build/economy, save, settings, input mapping, focus order, accessibility semantics, combat, AI, balance, session/schema, Native RMG, or map-topology changes;
+- no packaged Overworld/Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:

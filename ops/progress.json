@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The terminal End Turn detached-focus defect is fixed and validated. The dialog uses only its guarded visible/pending focus path, and focused, routed-flow, compatibility, static/editor, and bounded platform gates pass. Broader release gaps remain.",
+  "currentNotes": "The active-play supported-viewport containment slice is complete. Overworld and Town now fit 1024x600, 1280x720, 1600x900, and 1920x1080 with all required commands available, native resource interaction intact, and route/build authority preserved.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-terminal-end-turn-detached-focus-guard-10184",
-  "currentSliceId": "ux-overworld-terminal-end-turn-detached-focus-guard-10184",
-  "currentSliceNotes": "Completed with the redundant raw deferred cancel-button focus removed, exact same-stack confirm/detach authority proof, a clean real nine-step defeat/outcome/save/resume flow, ordinary focus/accessibility/core compatibility, repository/editor validation, and bounded Linux/Windows export-startup evidence.",
+  "currentSlice": "ux-active-play-supported-viewport-containment-10184",
+  "currentSliceId": "ux-active-play-supported-viewport-containment-10184",
+  "currentSliceNotes": "Completed from direct current-head layout reds. Overworld narrow Status clipping preserves the exact full tooltip. Town compact Header/resource presentation preserves full text and native popup semantics. The desktop Town rail uses 400px of flexible stage width so its unchanged build flow fits 1600x900. Focused four-width layout/build authority, seven compatibility owners, static/editor checks, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. Packaged active-play interaction, hardware, certification, signing, publication, whole-game, and release-readiness remain unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Terminal End-Turn Detached Focus Guard",
-  "currentSliceUpdatedAt": "2026-08-16T06:26:53Z",
+  "currentSliceTitle": "Active-Play Supported-Viewport Containment",
+  "currentSliceUpdatedAt": "2026-08-16T07:57:58Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -86250,6 +86250,60 @@
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
       "blockedReason": null,
       "completedAt": "2026-08-16T06:26:53Z"
+    },
+    {
+      "id": "ux-active-play-supported-viewport-containment-10184",
+      "title": "Active-Play Supported-Viewport Containment",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Keep the shipped Overworld and Town play surfaces, command containers, and all system commands inside every supported viewport by making compact edge labels obey their existing budgets and giving the unchanged desktop Town management flow sufficient rail width.",
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/town/TownShell.gd",
+        "tests/player_comprehension_layout_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "At 1024x600 the live Map, CommandBand, PrimaryAction, EndTurn, Save, Settings, and Menu rectangles are fully contained and every required command remains visible and enabled",
+        "Only the narrow Overworld Status and compact Town Header labels clip their visible text; their exact full text remains in native tooltips, while the Town resource menu uses its existing compact 80px presentation with full summary, popup, and selection authority",
+        "At 1024x600 the live Town Banner, Header, Resources, TownStage, FooterPanel, SaveSlot, Save, Leave, Guide, Settings, Menu, and narrow Town Orders toggle are fully contained and every required command remains visible and enabled",
+        "The existing 1280x720, 1600x900, and 1920x1080 Overworld/Town geometry and visibility contracts remain contained; the compact Town rail is 272px, desktop rail is 400px with combined minimum honored, and no commands are hidden or reparented",
+        "Opening route suggestion, Town build flow, native resource popup/selection, and unchanged session authority remain exact",
+        "Focused layout and resource-stockpile, broad Overworld/Town visual/input/focus/accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "command removal, hiding Status/Header/resource controls, text/content rewrite, font or UI-scale changes, a two-row command band, new panels/reparenting, new breakpoints, VFX/audio, or broader screen composition",
+        "Overworld movement, routing, End Turn, Town build/economy, save, settings, input mapping, focus order, accessibility semantics, combat, AI, balance, session/schema, Native RMG, or map topology",
+        "packaged Overworld/Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "79bdfc7b",
+        "viewport": "1024x600",
+        "map_rect": "[P: (-5.0, 70.0), S: (1034.0, 358.0)]",
+        "command_band_rect": "[P: (-45.0, 474.0), S: (1114.0, 96.0)]",
+        "menu_rect": "[P: (946.0, 504.0), S: (89.0, 36.0)]",
+        "town_stage_rect": "[P: (-57.0, 158.0), S: (1138.0, 325.0)]",
+        "town_footer_rect": "[P: (-91.0, 523.0), S: (1206.0, 69.0)]",
+        "town_footer_combined_minimum_width": 808,
+        "town_1600_content_minimum_height_at_292px_rail": 929,
+        "town_1600_management_tab_minimum_height_at_292px_rail": 524,
+        "town_1600_content_minimum_height_at_400px_rail": 811,
+        "source_status_label_clips_at_narrow": false,
+        "full_status_tooltip_present": true,
+        "source_town_header_clips_at_compact": false,
+        "source_town_resource_compact_mode_present": false
+      },
+      "createdAt": "2026-08-16T07:18:00Z",
+      "updatedAt": "2026-08-16T07:57:58Z",
+      "startedAt": "2026-08-16T07:18:00Z",
+      "notes": "Completed on baseline HEAD79bdfc7b. Focused `/tmp/heroes-supported-focused.33W5WX` passes natural rc0 across 1024x600,1280x720,1600x900,1920x1080 for both Overworld and Town, including contained/available commands, exact full Status/Header/resource tooltips, native resource compact mode, 272px compact/400px desktop Town rail, opening-route authority, and real Town build selection/commit authority. `/tmp/heroes-supported-compat.4ykitP` passes route tooltip, real movement/input ownership, keyboard focus, resource popup, accessibility, Town/Battle visuals, and core sequentially. Validator, pycompile, JSON, diff-check, exact/generic editor parses pass. `/tmp/heroes-supported-platform.UkBAdO` records official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup green. No packaged active-play interaction, controller, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claim is made.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
+      "blockedReason": null,
+      "completedAt": "2026-08-16T07:57:58Z"
     }
   ],
   "project": "heroes-like",
@@ -86692,7 +86746,7 @@
     }
   ],
   "result": "ux_overworld_terminal_end_turn_detached_focus_guard_completed",
-  "status": "completed",
+  "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
       "completed": "Implementation or documentation-only governance work satisfies the PLAN completion criteria and has validation/evidence.",
@@ -86792,9 +86846,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The Overworld terminal End Turn detached-focus guard slice is completed: warned confirmation uses only the guarded visible/pending focus path, and real same-stack terminal routing no longer invokes focus on a detached control. Focused, routed-flow, compatibility, static/editor, and bounded Linux/Windows export-startup gates pass. Select the next tracker-approved slice; the game is not release-ready.",
+  "summary": "The active-play supported-viewport containment slice is complete with focused four-width Overworld/Town behavior, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup evidence. Broader release gaps remain; the game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-16T06:26:53Z",
+  "updatedAt": "2026-08-16T07:57:58Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

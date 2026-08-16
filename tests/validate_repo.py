@@ -32056,6 +32056,141 @@ def validate_resource_stockpile_icon_popover(errors: list[str]) -> None:
         ensure(forbidden not in report_text, errors, f"Focused stockpile popover report must use production refresh and public input without mutation: {forbidden}")
 
 
+def validate_active_play_supported_viewport_containment(errors: list[str]) -> None:
+    layout_path = ROOT / "tests" / "player_comprehension_layout_smoke.gd"
+    for path in (OVERWORLD_SCRIPT_PATH, TOWN_SCRIPT_PATH, layout_path):
+        ensure(path.exists(), errors, f"Missing active-play supported-viewport containment owner: {path.relative_to(ROOT)}")
+    if not OVERWORLD_SCRIPT_PATH.exists() or not TOWN_SCRIPT_PATH.exists() or not layout_path.exists():
+        return
+
+    shell_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+    town_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
+    layout_text = layout_path.read_text(encoding="utf-8")
+    responsive_start = shell_text.find("func _apply_responsive_layout() -> void:")
+    responsive_end = shell_text.find("\nfunc ", responsive_start + 1)
+    responsive = shell_text[responsive_start:] if responsive_end < 0 else shell_text[responsive_start:responsive_end]
+    required_source_order = [
+        responsive.find("var narrow_layout := available_size.x < 1100.0"),
+        responsive.find("_status_label.clip_text = narrow_layout"),
+        responsive.find('_status_label.tooltip_text = "%s\\n%s" % [_status_label.text, _resource_label.full_summary_text()] if compact_layout else _status_label.text'),
+        responsive.find("_save_status_label.visible = not narrow_layout"),
+        responsive.find("_save_slot_picker.visible = not narrow_layout"),
+    ]
+    ensure(all(index >= 0 for index in required_source_order) and required_source_order == sorted(required_source_order), errors, "Overworld narrow Status clipping must precede its exact full tooltip and retain save-detail breakpoint ownership")
+    ensure(responsive.count("_status_label.clip_text = narrow_layout") == 1, errors, "Overworld responsive layout must own exactly one narrow Status clipping assignment")
+    for forbidden in (
+        "\n\t_status_label.visible = not narrow_layout",
+        "\n\t_status_chip_panel.visible = not narrow_layout",
+        "\n\t_status_label.text =",
+        "\n\t_status_label.custom_minimum_size",
+        "font_size",
+        "ui_scale",
+    ):
+        ensure(forbidden not in responsive, errors, f"Overworld narrow Status correction must not hide or rewrite the status/layout contract: {forbidden}")
+
+    town_responsive_start = town_text.find("func _apply_responsive_layout() -> void:")
+    town_responsive_end = town_text.find("\nfunc ", town_responsive_start + 1)
+    town_responsive = town_text[town_responsive_start:] if town_responsive_end < 0 else town_text[town_responsive_start:town_responsive_end]
+    required_town_source_order = [
+        town_responsive.find("var compact_layout := available_size.x < 1360.0 or available_size.y < 760.0"),
+        town_responsive.find("var narrow_layout := available_size.x < 1100.0"),
+        town_responsive.find("_header_label.clip_text = compact_layout"),
+        town_responsive.find("_resource_label.custom_minimum_size.x = 80.0 if compact_layout else 210.0"),
+        town_responsive.find("_resource_label.set_compact_mode(compact_layout)"),
+        town_responsive.find("_sidebar_shell_panel.custom_minimum_size.x = 272.0 if compact_layout else 400.0"),
+        town_responsive.find("_town_orders_toggle_button.visible = narrow_layout"),
+    ]
+    ensure(all(index >= 0 for index in required_town_source_order) and required_town_source_order == sorted(required_town_source_order), errors, "Town compact Header/resource and management-rail budgets must be applied before retaining narrow Town Orders ownership")
+    for token in (
+        "_header_label.clip_text = compact_layout",
+        "_resource_label.custom_minimum_size.x = 80.0 if compact_layout else 210.0",
+        "_resource_label.set_compact_mode(compact_layout)",
+        "_sidebar_shell_panel.custom_minimum_size.x = 272.0 if compact_layout else 400.0",
+    ):
+        ensure(town_responsive.count(token) == 1, errors, f"Town responsive layout must own exactly one compact edge-label assignment: {token}")
+    refresh_start = town_text.find("func _refresh(first_render_minimal: bool = false) -> void:")
+    refresh_end = town_text.find("\nfunc ", refresh_start + 1)
+    refresh = town_text[refresh_start:] if refresh_end < 0 else town_text[refresh_start:refresh_end]
+    required_refresh_order = [
+        refresh.find('_header_label.text = String(view_state.get("header_text", ""))'),
+        refresh.find("_header_label.tooltip_text = _header_label.text"),
+        refresh.find("_resource_label.sync_stockpile("),
+    ]
+    ensure(all(index >= 0 for index in required_refresh_order) and required_refresh_order == sorted(required_refresh_order), errors, "Town refresh must retain the exact full Header tooltip before refreshing native resource content")
+    ensure(refresh.count("_header_label.tooltip_text = _header_label.text") == 1, errors, "Town refresh must own exactly one full Header tooltip assignment")
+    for forbidden in (
+        "_header_label.visible = not compact_layout",
+        "_resource_label.visible = not compact_layout",
+        "_header_label.text = _header_label.text.left",
+        "_resource_label.text =",
+        "font_size",
+        "ui_scale",
+    ):
+        ensure(forbidden not in town_responsive, errors, f"Town compact edge-label correction must not hide or rewrite the Banner/layout contract: {forbidden}")
+
+    required_test_tokens = (
+        "const NARROW_SIZE := Vector2(1024.0, 600.0)",
+        'ok = _inside(frame, shell.get_node("%StatusChip"), "overworld status chip", viewport_size) and ok',
+        'ok = _expect_command_available(shell.get_node("%" + control_name), "overworld %s" % control_name, viewport_size) and ok',
+        "ok = _expect_overworld_status_contract(shell, narrow, compact, viewport_size) and ok",
+        "func _expect_overworld_status_contract(shell: Control, narrow: bool, compact: bool, viewport_size: Vector2) -> bool:",
+        'var status_chip := shell.get_node("%StatusChip") as PanelContainer',
+        'var status_label := shell.get_node("%Status") as Label',
+        "is_equal_approx(status_chip.custom_minimum_size.x, 118.0)",
+        "if status_label.clip_text != narrow:",
+        'if not tooltip.begins_with("%s\\n" % full_status):',
+        "elif tooltip != full_status:",
+        "func _expect_command_available(target: Button, label: String, viewport_size: Vector2) -> bool:",
+        "if target.disabled:",
+        'for viewport_size in [COMPACT_SIZE, NARROW_SIZE, FULL_SIZE, WIDE_SIZE]:',
+        "ok = _expect_unchanged_opening_session(session, initial_position, initial_movement, initial_resources, viewport_size) and ok",
+        'var ok := _inside(frame, shell.get_node("%Banner"), "town banner", viewport_size)',
+        'ok = _inside(frame, shell.get_node("%Header"), "town header", viewport_size) and ok',
+        'ok = _inside(frame, shell.get_node("%Resources"), "town resources", viewport_size) and ok',
+        'ok = _inside(frame, shell.get_node("%TownStage"), "town stage", viewport_size) and ok',
+        'ok = _inside(frame, shell.get_node("%FooterPanel"), "town footer", viewport_size) and ok',
+        'for control_name in ["SaveSlot", "Save", "Leave", "Guide", "Settings", "Menu"]:',
+        'ok = _expect_command_available(shell.get_node("%" + button_name), "town %s" % button_name, viewport_size) and ok',
+        "ok = _expect_town_banner_contract(shell, compact, viewport_size) and ok",
+        "ok = _expect_town_sidebar_contract(shell, compact, viewport_size) and ok",
+        'ok = _inside(frame, shell.get_node("%SidebarShell"), "town management sidebar", viewport_size) and ok',
+        'ok = _inside(frame, shell.get_node("%TownOrdersToggle"), "town narrow orders switch", viewport_size) and ok',
+        'ok = _expect_command_available(shell.get_node("%TownOrdersToggle"), "town narrow orders switch", viewport_size) and ok',
+        "func _expect_town_banner_contract(shell: Control, compact: bool, viewport_size: Vector2) -> bool:",
+        'var header := shell.get_node("%Header") as Label',
+        'var resources := shell.get_node("%Resources") as ResourceStockpileMenu',
+        "if header.text.is_empty() or header.tooltip_text != header.text:",
+        "if header.clip_text != compact:",
+        "var expected_resource_width := 80.0 if compact else 210.0",
+        "var resource_snapshot: Dictionary = resources.validation_snapshot()",
+        'if bool(resource_snapshot.get("compact", false)) != compact:',
+        'if String(resource_snapshot.get("tooltip_text", "")) != String(resource_snapshot.get("full_summary", "")):',
+        "func _expect_town_sidebar_contract(shell: Control, compact: bool, viewport_size: Vector2) -> bool:",
+        'var sidebar := shell.get_node("%SidebarShell") as PanelContainer',
+        "var expected_width := 272.0 if compact else 400.0",
+        "if not is_equal_approx(sidebar.custom_minimum_size.x, expected_width):",
+        "if sidebar.visible and sidebar.size.x + 0.01 < sidebar.get_combined_minimum_size().x:",
+    )
+    for token in required_test_tokens:
+        ensure(token in layout_text, errors, f"Player-comprehension owner is missing exact active-play supported-viewport containment proof: {token}")
+    for forbidden in (
+        'shell.get_node("%StatusChip").hide()',
+        'shell.get_node("%Status").text =',
+        'shell.get_node("%Header").text =',
+        'shell.get_node("%Resources").text =',
+        'shell.get_node("%Header").hide()',
+        'shell.get_node("%Resources").hide()',
+        "TOWN_NARROW_LAYOUT_DIAGNOSTIC",
+        "TOWN_FULL_LAYOUT_DIAGNOSTIC",
+        "TOWN_FULL_WIDTH_DIAGNOSTIC",
+        "queue_sort(",
+        "minimum_size_changed.emit(",
+        "get_window().size =",
+        "DisplayServer.window_set_size",
+    ):
+        ensure(forbidden not in layout_text, errors, f"Player-comprehension owner must observe live responsive layout without mutation shortcuts: {forbidden}")
+
+
 def validate_active_play_save_written_cue_playback(errors: list[str]) -> None:
     required_paths = (
         SYSTEM_SAVE_WRITTEN_CUE_PRESENTER_SCRIPT_PATH,
@@ -44227,6 +44362,7 @@ def main() -> int:
     validate_overworld_artifact_acquired_cue_playback(errors)
     validate_overworld_resource_delta_cue_playback(errors)
     validate_resource_stockpile_icon_popover(errors)
+    validate_active_play_supported_viewport_containment(errors)
     validate_active_play_save_written_cue_playback(errors)
     validate_active_play_load_resumed_cue_playback(errors)
     validate_active_play_system_feedback_vfx_assets(errors)
