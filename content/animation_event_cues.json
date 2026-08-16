@@ -670,6 +670,25 @@
       "producer_refs": ["TownShell._on_tavern_action_pressed", "TownRules.hire_hero_at_active_town"]
     },
     {
+      "event_id": "town_specialty_selected",
+      "cue_id": "cue_town_specialty_selected",
+      "surface": "town",
+      "subject_kind": "hero_specialty",
+      "animation_state_family": "progression",
+      "animation_state": "specialty_adopted",
+      "playback_policy": "queue_resolved",
+      "blocking_policy": "nonblocking",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_button_confirm"],
+      "audio_cue_ids": ["audio_placeholder_ui_confirm"],
+      "fallbacks": {
+        "reduced_motion_tag": "specialty_rank_badge",
+        "fast_mode_tag": "specialty_rank_snap"
+      },
+      "validation_tags": ["town", "hero", "specialty", "progression", "resolved_event"],
+      "producer_refs": ["TownShell._on_specialty_action_pressed", "TownRules.choose_specialty_at_active_town"]
+    },
+    {
       "event_id": "spell_cast_battle",
       "cue_id": "cue_spell_cast_battle",
       "surface": "spell",

@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `presentation-town-specialty-selection-feedback-10184`. Successful public Town `choose_specialty:<specialty_id>` actions now publish one compact nonblocking TownStage completion only after proving the exact active-hero specialty rank increase, pending-choice consumption, hero identity, result recap, and active-hero mirror. The semantic cue uses the existing imported UI-confirm audio and a compact procedural specialty-rank badge with an exact reduced-motion fallback. Four focused 1280x720/1920x1080 normal/reduced rows pass with whole-session TownRules parity and malformed, refresh, stale, and invalid silence; all 12 compatibility owners, repository/editor checks, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged specialty interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `presentation-town-specialty-selection-feedback-10184`
 - Completed implementation slice: `presentation-town-artifact-action-feedback-10184`. Successful public Town commission, equip, and stow actions now publish compact TownStage feedback through the existing artifact-acquired/equipped/unequipped cue policies, production artifact icons, and deterministic audio only after exact reward, provenance, spend, inventory/equipment, slot, and recap authority is proven. Six focused 1280x720/1920x1080 normal, missing-icon, and reduced-motion rows pass with method-equivalent TownRules controls and failed, stale, unaffordable, repeated, malformed, and refresh silence. Artifact commission/icon/runtime, Overworld artifact audio ordering, Town cue/visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged artifact interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `presentation-town-artifact-action-feedback-10184`
 - Completed implementation slice: `presentation-town-hero-hire-completion-feedback-10184`. Successful live Town-screen `hire_hero:<hero_id>` orders now publish one compact Town-specific commander-arrival completion through the existing TownStage action presenter, derived from the exact one-hero roster increase and resource spend and carrying an original imported alpha VFX, deterministic 420 ms stereo sound, and exact reduced-motion/missing-asset fallbacks. Six focused 1280x720/1920x1080 public-handler rows prove whole-session TownRules parity, exact recruited-hero identity, unchanged active hero, imported WAV playback, and malformed/unavailable/repeated/refresh silence. Town VFX/cue/action, animation catalog, broad Town/Battle visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged hire interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -5777,6 +5779,33 @@ Non-goals:
 - no artifact content, reward tables, commission costs, inventory/equipment rules, movement bonuses, auto-equip policy, Town buildings, hero progression, save/schema, AI, Native RMG, or map-topology changes;
 - no new artifact art/audio, generic cue remapping, layout redesign, particles, shaders, spatial audio, haptics, or final mastering;
 - no packaged artifact interaction/listening, hardware certification, signing/publication, whole-game, or release-readiness claim.
+
+## Selected Slice: Town Specialty Selection Feedback
+
+id: `presentation-town-specialty-selection-feedback-10184`
+
+Status: completed.
+
+Implementation boundary:
+- after the real public Town specialty action succeeds and the stage refreshes, validate the exact active hero, one-rank specialty increase, consumed pending choice, remaining-choice count, and recap before publishing one compact queue-resolved/nonblocking TownStage presentation;
+- use a semantic Town event with the existing production UI confirmation audio and a compact procedural specialty badge, including an exact reduced-motion static fallback;
+- preserve HeroProgressionRules/TownRules availability and mutation authority, hero progression payload, active-hero mirroring, focus/input, session/save, and all completed Town presentations.
+
+Completion criteria:
+- live TownShell 1280x720/1920x1080 public specialty actions match method-equivalent TownRules controls and publish the exact selected specialty, new rank, hero identity, and remaining pending-choice count once;
+- failed, stale, unavailable, malformed, repeated, refresh, and non-specialty controls remain silent; normal and reduced-motion rendering are exact;
+- specialty definitions/ranks/effects, hero level/experience/command, active hero, recaps, focus/input, session/save, and prior Town presentations remain exact;
+- focused specialty action plus hero-progression, Town cue/visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Validated result:
+- the public Town handler derives the semantic presentation only from an exact one-rank specialty increase, one consumed pending choice, preserved hero identity, mirrored active hero, and successful recap after the authoritative refresh;
+- TownStage renders a compact specialty-rank sigil/badge, uses the existing imported UI-confirm cue, and fails closed for malformed, stale, invalid, repeated, refresh, and non-specialty paths;
+- the focused four-row 1280x720/1920x1080 normal/reduced report, twelve compatibility owners, repository/editor validation, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup all pass.
+
+Non-goals:
+- no specialty definitions, ranks, effects, choice cadence, level thresholds, hero stats, AI choice policy, save/schema, Native RMG, or map-topology changes;
+- no new art/audio, generic UI cue remapping, layout redesign, particles, shaders, spatial audio, haptics, or final mastering;
+- no packaged specialty interaction/listening, hardware certification, signing/publication, whole-game, or release-readiness claim.
 
 ## Progress Reconciliation
 

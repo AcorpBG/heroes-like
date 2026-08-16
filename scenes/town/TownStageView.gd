@@ -185,6 +185,7 @@ func present_town_action(presentation: Dictionary) -> Dictionary:
 	var policy: Dictionary = presentation.get("policy", {}) if presentation.get("policy", {}) is Dictionary else {}
 	var event_id := String(presentation.get("event_id", ""))
 	var expected_cue_id: String = {
+		"town_specialty_selected": "cue_town_specialty_selected",
 		"artifact_acquired": "cue_artifact_acquired",
 		"artifact_equipped": "cue_artifact_equipped",
 		"artifact_unequipped": "cue_artifact_unequipped",
@@ -196,6 +197,7 @@ func present_town_action(presentation: Dictionary) -> Dictionary:
 		"town_building_built": "cue_town_building_built",
 	}.get(event_id, "")
 	var expected_subject_kind: String = {
+		"town_specialty_selected": "hero_specialty",
 		"artifact_acquired": "artifact",
 		"artifact_equipped": "artifact_slot",
 		"artifact_unequipped": "artifact_slot",
@@ -209,7 +211,7 @@ func present_town_action(presentation: Dictionary) -> Dictionary:
 	var expected_surface := "artifact" if event_id in ["artifact_acquired", "artifact_equipped", "artifact_unequipped"] else "town"
 	var selected_blocking_policy := String(policy.get("selected_blocking_policy", ""))
 	if (
-		event_id not in ["artifact_acquired", "artifact_equipped", "artifact_unequipped", "town_units_recruited", "town_building_built", "town_route_response_ordered", "town_market_exchange_completed", "town_spell_studied", "town_hero_hired"]
+		event_id not in ["artifact_acquired", "artifact_equipped", "artifact_unequipped", "town_units_recruited", "town_building_built", "town_route_response_ordered", "town_market_exchange_completed", "town_spell_studied", "town_hero_hired", "town_specialty_selected"]
 		or String(presentation.get("town_placement_id", "")) != String(_town.get("placement_id", ""))
 		or event_id in ["artifact_acquired", "artifact_equipped", "artifact_unequipped"] and String(presentation.get("artifact_id", "")) == ""
 		or event_id in ["artifact_acquired", "artifact_equipped", "artifact_unequipped"] and String(presentation.get("artifact_name", "")) == ""
@@ -252,12 +254,20 @@ func present_town_action(presentation: Dictionary) -> Dictionary:
 		or event_id == "town_hero_hired" and not (presentation.get("resource_deltas", []) is Array)
 		or event_id == "town_hero_hired" and Array(presentation.get("resource_deltas", [])).is_empty()
 		or event_id == "town_hero_hired" and int(presentation.get("player_hero_count", 0)) <= 1
+		or event_id == "town_specialty_selected" and String(presentation.get("hero_id", "")) == ""
+		or event_id == "town_specialty_selected" and String(presentation.get("hero_name", "")) == ""
+		or event_id == "town_specialty_selected" and String(presentation.get("specialty_id", "")) == ""
+		or event_id == "town_specialty_selected" and String(presentation.get("specialty_name", "")) == ""
+		or event_id == "town_specialty_selected" and int(presentation.get("specialty_rank", 0)) <= 0
+		or event_id == "town_specialty_selected" and int(presentation.get("pending_specialty_choice_count", -1)) < 0
+		or event_id == "town_specialty_selected" and not (presentation.get("town_action_recap", {}) is Dictionary)
+		or event_id == "town_specialty_selected" and Dictionary(presentation.get("town_action_recap", {})).is_empty()
 		or String(policy.get("event_id", "")) != event_id
 		or String(policy.get("cue_id", "")) != expected_cue_id
 		or String(policy.get("surface", "")) != expected_surface
 		or String(policy.get("subject_kind", "")) != expected_subject_kind
 		or String(policy.get("selected_playback_policy", "")) != "queue_resolved"
-		or event_id in ["artifact_equipped", "artifact_unequipped", "town_units_recruited", "town_route_response_ordered", "town_market_exchange_completed", "town_spell_studied", "town_hero_hired"] and selected_blocking_policy != "nonblocking"
+		or event_id in ["artifact_equipped", "artifact_unequipped", "town_units_recruited", "town_route_response_ordered", "town_market_exchange_completed", "town_spell_studied", "town_hero_hired", "town_specialty_selected"] and selected_blocking_policy != "nonblocking"
 		or event_id in ["artifact_acquired", "town_building_built"] and selected_blocking_policy not in ["input_blocking_timeout", "nonblocking_reduced_motion", "nonblocking_fast_resolve"]
 	):
 		return validation_town_action_presentation_snapshot()
@@ -323,6 +333,8 @@ func validation_town_action_presentation_snapshot() -> Dictionary:
 		draw_entries = ["archive_inscribed_badge"] if reduced_motion else ["spell_study_art", "archive_inscribed_badge"]
 	elif active and event_id == "town_hero_hired":
 		draw_entries = ["commander_arrived_badge"] if reduced_motion else ["hero_hire_art", "commander_arrived_badge"]
+	elif active and event_id == "town_specialty_selected":
+		draw_entries = ["specialty_rank_badge"] if reduced_motion else ["specialty_rank_sigil", "specialty_rank_badge"]
 	elif active and event_id == "artifact_acquired":
 		draw_entries = ["artifact_badge_added"] if reduced_motion else ["artifact_icon_claim", "artifact_badge_added"]
 	elif active and event_id == "artifact_equipped":
@@ -358,6 +370,10 @@ func validation_town_action_presentation_snapshot() -> Dictionary:
 		"hero_id": String(_town_action_presentation.get("hero_id", "")),
 		"hero_name": String(_town_action_presentation.get("hero_name", "")),
 		"hero_faction_id": String(_town_action_presentation.get("hero_faction_id", "")),
+		"specialty_id": String(_town_action_presentation.get("specialty_id", "")),
+		"specialty_name": String(_town_action_presentation.get("specialty_name", "")),
+		"specialty_rank": int(_town_action_presentation.get("specialty_rank", 0)),
+		"pending_specialty_choice_count": int(_town_action_presentation.get("pending_specialty_choice_count", -1)),
 		"hero_recruit_cost": Dictionary(_town_action_presentation.get("hero_recruit_cost", {})).duplicate(true) if _town_action_presentation.get("hero_recruit_cost", {}) is Dictionary else {},
 		"player_hero_count": int(_town_action_presentation.get("player_hero_count", 0)),
 		"action_id": String(_town_action_presentation.get("action_id", "")),
@@ -456,6 +472,9 @@ func _draw_town_action_presentation(scene_rect: Rect2) -> void:
 		return
 	if String(_town_action_presentation.get("event_id", "")) == "town_hero_hired":
 		_draw_town_hero_hire_presentation(badge_rect, reduced_motion)
+		return
+	if String(_town_action_presentation.get("event_id", "")) == "town_specialty_selected":
+		_draw_town_specialty_presentation(badge_rect, reduced_motion)
 		return
 	if not reduced_motion:
 		var duration_ms: int = maxi(1, int(_town_action_presentation.get("duration_ms", 1)))
@@ -607,6 +626,23 @@ func _draw_town_hero_hire_presentation(badge_rect: Rect2, reduced_motion: bool) 
 	_draw_text("COMMANDER ARRIVED", badge_rect.position + Vector2(12.0, 22.0), TEXT_COLOR, 16)
 	_draw_text(_short_stage_text(String(_town_action_presentation.get("hero_name", "New commander")), 34), badge_rect.position + Vector2(12.0, 43.0), SUBTEXT_COLOR, 13)
 
+func _draw_town_specialty_presentation(badge_rect: Rect2, reduced_motion: bool) -> void:
+	var center := badge_rect.position + Vector2(34.0, badge_rect.size.y * 0.5)
+	draw_rect(badge_rect, Color(0.10, 0.13, 0.16, 0.94), true)
+	draw_rect(badge_rect, _accent_color(), false, 2.0)
+	if reduced_motion:
+		draw_circle(center, 15.0, _accent_color(), false, 3.0)
+		_town_action_last_draw = {"mode": "specialty_rank_badge", "texture_path": "", "circle_count": 1, "ray_count": 0, "alpha": 1.0}
+	else:
+		draw_circle(center, 15.0, _accent_color(), false, 3.0)
+		for index in range(8):
+			var angle := TAU * float(index) / 8.0
+			draw_line(center + Vector2.from_angle(angle) * 18.0, center + Vector2.from_angle(angle) * 24.0, FRAME_COLOR, 2.0)
+		_town_action_last_draw = {"mode": "procedural_specialty_rank", "texture_path": "", "circle_count": 1, "ray_count": 8, "alpha": 1.0}
+	var rank := int(_town_action_presentation.get("specialty_rank", 0))
+	_draw_text("SPECIALTY RANK %d" % rank, badge_rect.position + Vector2(58.0, 21.0), TEXT_COLOR, 15)
+	_draw_text(_short_stage_text(String(_town_action_presentation.get("specialty_name", "Specialty")), 28), badge_rect.position + Vector2(58.0, 42.0), SUBTEXT_COLOR, 13)
+
 func _draw_town_building_complete_presentation(badge_rect: Rect2, reduced_motion: bool) -> void:
 	if not reduced_motion:
 		var duration_ms: int = maxi(1, int(_town_action_presentation.get("duration_ms", 1)))
@@ -752,6 +788,16 @@ func _town_hero_hire_vfx_asset_state() -> Dictionary:
 		and texture_loaded
 	return {"cue_id": cue_id, "texture_path": texture_path, "scale": float(spec.get("scale", 1.0)), "texture_loaded": texture_loaded, "uses_imported_asset": uses_imported_asset, "uses_procedural_fallback": not uses_imported_asset, "fallback_mode": "procedural_hero_hire"}
 
+func _town_specialty_vfx_asset_state() -> Dictionary:
+	var policy: Dictionary = _town_action_presentation.get("policy", {}) if _town_action_presentation.get("policy", {}) is Dictionary else {}
+	var cue_ids: Array = policy.get("selected_vfx_cue_ids", []) if policy.get("selected_vfx_cue_ids", []) is Array else []
+	var cue_id := String(cue_ids[0]).strip_edges() if cue_ids.size() == 1 else ""
+	var reduced_motion := String(policy.get("mode", "normal")) in ["reduced_motion", "reduced_motion_fast"]
+	var expected_cue_id := "specialty_rank_badge" if reduced_motion else "vfx_placeholder_button_confirm"
+	var exact := cue_id == expected_cue_id \
+		and String(_town_action_presentation.get("event_id", "")) == "town_specialty_selected"
+	return {"cue_id": cue_id, "texture_path": "", "scale": 1.0, "texture_loaded": false, "uses_imported_asset": false, "uses_procedural_fallback": exact, "fallback_mode": "specialty_rank_badge" if reduced_motion else "procedural_specialty_rank"}
+
 func _town_artifact_vfx_asset_state() -> Dictionary:
 	var policy: Dictionary = _town_action_presentation.get("policy", {}) if _town_action_presentation.get("policy", {}) is Dictionary else {}
 	var cue_ids: Array = policy.get("selected_vfx_cue_ids", []) if policy.get("selected_vfx_cue_ids", []) is Array else []
@@ -767,6 +813,8 @@ func _town_artifact_vfx_asset_state() -> Dictionary:
 func _town_action_vfx_asset_state() -> Dictionary:
 	if String(_town_action_presentation.get("event_id", "")) in ["artifact_acquired", "artifact_equipped", "artifact_unequipped"]:
 		return _town_artifact_vfx_asset_state()
+	if String(_town_action_presentation.get("event_id", "")) == "town_specialty_selected":
+		return _town_specialty_vfx_asset_state()
 	if String(_town_action_presentation.get("event_id", "")) == "town_hero_hired":
 		return _town_hero_hire_vfx_asset_state()
 	if String(_town_action_presentation.get("event_id", "")) == "town_spell_studied":

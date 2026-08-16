@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Town artifact action feedback slice is completed. Successful public commission, equip, and stow actions publish compact TownStage feedback only after exact artifact authority is proven; focused, compatibility, static/editor, and bounded Linux/Windows export/startup gates pass. Packaged Town artifact interaction/listening and overall release readiness remain unclaimed.",
+  "currentNotes": "Town specialty selection feedback is implemented and validated. Successful public specialty choices now publish exact compact semantic TownStage feedback with imported UI-confirm audio and normal/reduced specialty-rank rendering only after authoritative hero progression and recap checks. Broader release gaps remain.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-town-artifact-action-feedback-10184",
-  "currentSliceId": "presentation-town-artifact-action-feedback-10184",
-  "currentSliceNotes": "Completed with exact public-handler TownRules parity, fail-closed artifact provenance and slot transitions, compact production-icon feedback, compatibility coverage, repository/editor validation, and bounded Linux/Windows export/startup evidence.",
+  "currentSlice": "presentation-town-specialty-selection-feedback-10184",
+  "currentSliceId": "presentation-town-specialty-selection-feedback-10184",
+  "currentSliceNotes": "Completed with focused public-handler TownRules parity, exact specialty-rank and pending-choice transition proof, silent invalid controls, compatibility/static/editor coverage, and bounded Linux/Windows export/startup evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Town Artifact Action Feedback",
-  "currentSliceUpdatedAt": "2026-08-16T02:39:24Z",
+  "currentSliceTitle": "Town Specialty Selection Feedback",
+  "currentSliceUpdatedAt": "2026-08-16T03:09:07Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -85904,8 +85904,10 @@
       "purpose": "Present successful live Town artifact commission, equip, and stow actions through the existing compact TownStage system without changing artifact rules, rewards, costs, ownership, inventory, equipment, movement, or save authority.",
       "implementationTargets": [
         "content/animation_event_cues.json",
+        "content/presentation_sfx_manifest.json",
         "scenes/town/TownShell.gd",
         "scenes/town/TownStageView.gd",
+        "scripts/autoload/PresentationAudio.gd",
         "tests/town_artifact_action_feedback_report.gd",
         "tests/town_artifact_action_feedback_report.tscn",
         "tests/overworld_artifact_acquired_cue_playback_report.gd",
@@ -85939,6 +85941,51 @@
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
       "blockedReason": null,
       "completedAt": "2026-08-16T02:39:24Z"
+    },
+    {
+      "id": "presentation-town-specialty-selection-feedback-10184",
+      "title": "Town Specialty Selection Feedback",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Present successful live Town specialty choices through the existing compact TownStage system without changing hero progression, specialty definitions, choice cadence, rank effects, or save authority.",
+      "implementationTargets": [
+        "content/animation_event_cues.json",
+        "content/presentation_sfx_manifest.json",
+        "scenes/town/TownShell.gd",
+        "scenes/town/TownStageView.gd",
+        "scripts/autoload/PresentationAudio.gd",
+        "tests/town_specialty_selection_feedback_report.gd",
+        "tests/town_specialty_selection_feedback_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Live TownShell 1280x720/1920x1080 public specialty actions match method-equivalent TownRules controls and publish exact selected specialty, new rank, hero identity, and remaining-choice count once",
+        "Failed, stale, unavailable, malformed, repeated, refresh, and non-specialty controls remain silent; normal and reduced-motion rendering are exact",
+        "Specialty definitions/ranks/effects, hero level/experience/command, active hero, recaps, focus/input, session/save, and completed Town presentations remain exact",
+        "Focused specialty action, hero-progression, Town cue/visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "specialty definitions, ranks, effects, choice cadence, level thresholds, hero stats, AI choice policy, save/schema, Native RMG, or map topology changes",
+        "new art/audio, generic UI cue remapping, layout redesign, particles, shaders, spatial audio, haptics, or final mastering",
+        "packaged specialty interaction/listening, hardware certification, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "49d8a362",
+        "town_specialty_action_present": true,
+        "specialty_rules_present": true,
+        "town_specialty_presentation_present": false
+      },
+      "createdAt": "2026-08-16T02:43:06Z",
+      "startedAt": "2026-08-16T02:43:06Z",
+      "updatedAt": "2026-08-16T03:09:07Z",
+      "notes": "Implemented live Town specialty selection completion feedback without changing HeroProgressionRules or TownRules authority. TownShell publishes only after the public action succeeds, the active hero remains exact, specialty rank increases by one, pending choices decrease by one, recap is present, and the active-hero mirror matches. TownStage uses a semantic specialty-selected cue, the existing imported 120 ms UI-confirm WAV, compact normal/reduced procedural rank rendering, and fail-closed malformed/stale/invalid/refresh silence. Focused artifact `/tmp/heroes-town-specialty-focused-rerun.tdpSdg` passes four 1280/1920 normal and reduced public-handler rows with whole-session TownRules parity. Compatibility artifact `/tmp/heroes-town-specialty-compat.R1ZtMm` passes all twelve prescribed cue/audio/Town/Battle/core owners. Repository validation, Python compilation, JSON/diff checks, exact and generic editor parses pass. Official Linux and Windows packaging reports are ok:true; claims remain Linux export/headless startup and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup only. Packaged specialty interaction/listening, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
+      "blockedReason": null,
+      "completedAt": "2026-08-16T03:09:07Z"
     }
   ],
   "project": "heroes-like",
@@ -86483,7 +86530,7 @@
   ],
   "summary": "The Town artifact action feedback slice is completed: successful public commission, equip, and stow actions publish compact, exact, fail-closed TownStage feedback while ArtifactRules/TownRules authority remains unchanged. Focused, compatibility, static/editor, and bounded Linux/Windows export/startup gates pass. Select the next tracker-approved slice; the game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-16T02:39:24Z",
+  "updatedAt": "2026-08-16T02:43:06Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
