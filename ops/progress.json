@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Battle Focus/Spell body containment slice is complete. Bounded live summaries retain the established visible cue names and full tooltips; both pages now keep the footer inside the shell at both required widths, with focused navigation/authority, compatibility, repository/editor, and bounded Linux/Windows export-startup proof green.",
+  "currentNotes": "Main Menu Settings focus visibility is implemented and validated. Every existing Cabinet control uses one deferred Main Menu-owned visibility path, and retained focus is rechecked after scaled panel refresh. Focused runtime, visual, compatibility, repository/editor, and bounded Linux/Windows export-startup gates pass without settings or gameplay authority drift.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-battle-focus-spell-tab-body-containment-10184",
-  "currentSliceId": "ux-battle-focus-spell-tab-body-containment-10184",
-  "currentSliceNotes": "Focus and Spell now use bounded live summaries inside the unchanged page allocation; the full existing context remains in tooltips, established Stack/Engagement/Status check cues remain visible, and footer/navigation/authority remain exact.",
+  "currentSlice": "accessibility-main-menu-settings-focus-visibility-10184",
+  "currentSliceId": "accessibility-main-menu-settings-focus-visibility-10184",
+  "currentSliceNotes": "Completed with exact physical Tab/Shift+Tab visibility across all twenty existing Settings controls at 100 and 130 percent, including retained-focus correction after scaled refresh. Active-play Settings, control order, persistence, dialogs, layout, session/save/campaign/routes, and native control behavior remain unchanged.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Battle Focus and Spell Tab Body Containment",
-  "currentSliceUpdatedAt": "2026-08-16T18:03:16Z",
+  "currentSliceTitle": "Main Menu Settings Focus Visibility",
+  "currentSliceUpdatedAt": "2026-08-16T19:54:29Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -86916,6 +86916,55 @@
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, signing/publication, native Windows certification, and unrecovered Native RMG parity gaps remain.",
       "blockedReason": null,
       "completedAt": "2026-08-16T18:03:16Z"
+    },
+    {
+      "id": "accessibility-main-menu-settings-focus-visibility-10184",
+      "title": "Main Menu Settings Focus Visibility",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Keep every existing Main Menu Cabinet setting visibly inside its real scroll viewport whenever keyboard or controller focus enters it, including at the supported 130 percent UI scale.",
+      "implementationTargets": [
+        "scenes/menus/MainMenu.gd",
+        "tests/main_menu_keyboard_navigation_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "At 1280x720 with UI scale 100 and 130 percent, focus entering every existing SettingsScroll control defers until layout settles and leaves that complete control rectangle contained in the live scroll viewport",
+        "Real focus reaches lower Readability, support-bundle, and Restore Defaults controls, scrolls downward, and makes the entry Presentation control visible again on return without synthetic validation-only reveal calls",
+        "Existing Settings control order, native slider/OptionButton/toggle/button behavior, display and destructive dialogs, keybindings, first-view return focus, session/save/campaign/settings bytes and transaction authority remain exact",
+        "Focused Main Menu keyboard/controller and rendered capture, settings compatibility, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "settings values, persistence, schema, InputMap, display preview, destructive confirmation, save/campaign/session, gameplay, content, AI, balance, or Native RMG changes",
+        "Settings scene/layout/size/theme/font/UI-scale options, new controls, control reordering, closed focus-cycle redesign, or changes to the separate ActivePlaySettingsDialog",
+        "packaged Settings interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "b11be1e4f9f2f39dc5c6f240e04e1e69c9636de1",
+        "capture": ".artifacts/main_menu_keyboard_navigation_smoke/settings_130_reduced_shake.png",
+        "viewport": "1280x720",
+        "ui_scale_percent": 130,
+        "focus_owner": "ReduceFlashesToggle",
+        "follow_focus": false,
+        "scroll_value_before": 0,
+        "scroll_value_after": 0,
+        "scroll_max": 679,
+        "scroll_page": 439,
+        "scroll_bottom": 713.3385,
+        "focused_control_top": 795.3385,
+        "focused_control_visible": false
+      },
+      "createdAt": "2026-08-16T18:33:48Z",
+      "startedAt": "2026-08-16T18:33:48Z",
+      "updatedAt": "2026-08-16T19:54:29Z",
+      "notes": "Implemented one Main Menu-owned deferred visibility path for all twenty existing Settings controls plus a guarded retained-focus recheck after panel refresh, without changing SettingsScroll layout, control order, native behavior, persistence, dialogs, or the separate active-play dialog. The authoritative Main Menu keyboard smoke passed naturally in 1063 seconds at 1280x720: physical Tab and Shift+Tab kept every control contained at 100 and 130 percent, lower controls scrolled into view, Presentation returned into view, original focus returned, and exact session/save/campaign/settings/transaction/route authority remained unchanged. Fresh X11 capture `/tmp/heroes-main-menu-settings-visual.X7QgFZ/settings_130_focus_visible.png` shows the complete gold focus outline on Reduce Flashes inside the compact Cabinet. Display transaction, restore-defaults, active-play Settings, accessibility, menu/outcome visual, and core compatibility gates passed. Repository validation, pycompile, diff-check, exact/generic editor parses, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Packaged Settings interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, signing/publication, native Windows certification, and unrecovered Native RMG parity gaps remain.",
+      "blockedReason": null,
+      "completedAt": "2026-08-16T19:54:29Z"
     }
   ],
   "project": "heroes-like",
@@ -86925,7 +86974,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The Battle Focus/Spell body containment gap is closed; broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
+  "remainingGap": "The selected Main Menu Settings focus-visibility gap is closed. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
   "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
   "reportOnlyEvidence": [
     {
@@ -87357,7 +87406,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "ux_battle_focus_spell_tab_body_containment_completed",
+  "result": "accessibility_main_menu_settings_focus_visibility_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -87458,9 +87507,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The Overworld unexplored fog-shroud implementation slice is active. It is bounded to replacing placeholder-like hidden-cell wireframes while preserving exact fog and map authority; the game is not release-ready.",
+  "summary": "The Main Menu Settings focus-visibility implementation slice is complete with focused, compatibility, static/editor, and bounded Linux/Windows export-startup evidence. The game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-16T15:23:12Z",
+  "updatedAt": "2026-08-16T19:54:29Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

@@ -5,6 +5,28 @@ const CAPTURE_DIR := "res://.artifacts/main_menu_keyboard_navigation_smoke"
 const RESTART_CAMPAIGN_ID := "campaign_reedfall"
 const RESTART_SCENARIO_ID := "river-pass"
 const DESTRUCTIVE_MANUAL_SLOT := 2
+const SETTINGS_SCROLL_FOCUS_NAMES := [
+	"PresentationModePicker",
+	"RenderQualityPicker",
+	"VSyncToggle",
+	"ResolutionPicker",
+	"FrameRatePicker",
+	"BattlePlaybackSpeedPicker",
+	"KeyboardNavigationLayoutPicker",
+	"CustomizeMovementKeys",
+	"MasterVolumeSlider",
+	"MusicVolumeSlider",
+	"EffectsVolumeSlider",
+	"UIScalePicker",
+	"BattleCameraShakePicker",
+	"ColorCuePicker",
+	"HighContrastToggle",
+	"ReduceMotionToggle",
+	"ReduceFlashesToggle",
+	"ReduceRepetitiveSoundsToggle",
+	"ExportSupportBundle",
+	"RestoreSettingsDefaults",
+]
 
 var _failed := false
 var _destructive_fixture_active := false
@@ -82,6 +104,9 @@ func _run() -> void:
 	await _press_joypad_button(JOY_BUTTON_B)
 	await _settle()
 	_expect_focus("OpenCampaign", "first-view return after destructive dialog checks")
+	if not await _check_settings_focus_visibility():
+		return
+	_expect_focus("OpenCampaign", "first-view return after Settings focus visibility")
 
 	for _step in range(3):
 		await _press_action("ui_down")
@@ -173,17 +198,6 @@ func _run() -> void:
 		_fail("Hero keybindings cancel changed destructive authority or remained visible.")
 		return
 	await _capture_if_requested("settings_entry_focus")
-	if OS.get_environment("MAIN_MENU_KEYBOARD_CAPTURE") == "1":
-		var original_ui_scale := SettingsService.ui_scale_percent()
-		var original_shake_mode := SettingsService.battle_camera_shake_mode_id()
-		if not bool(shell.call("validation_select_ui_scale", 130)) or not bool(shell.call("validation_select_battle_camera_shake", "reduced")):
-			_fail("Could not prepare the 130 percent Reduced battle-shake settings capture.")
-			return
-		shell.call("validation_reveal_reduced_flashes")
-		await get_tree().process_frame
-		await _capture_if_requested("settings_130_reduced_shake")
-		shell.call("validation_select_ui_scale", original_ui_scale)
-		shell.call("validation_select_battle_camera_shake", original_shake_mode)
 
 	await _press_action("ui_cancel")
 	await get_tree().process_frame
@@ -194,6 +208,100 @@ func _run() -> void:
 	print("%s PASS" % REPORT_ID)
 	shell.queue_free()
 	get_tree().quit(0)
+
+func _check_settings_focus_visibility() -> bool:
+	var original_window_size: Vector2i = get_window().size
+	var original_focus := get_viewport().gui_get_focus_owner()
+	var original_settings: Dictionary = SettingsService.ensure_settings().duplicate(true)
+	var authority_before: Dictionary = _destructive_protected_state()
+	get_window().size = Vector2i(1280, 720)
+	await _settle()
+	var layout_host := Control.new()
+	layout_host.name = "MainMenuSettingsFocusVisibilityHost"
+	layout_host.size = Vector2(1280.0, 720.0)
+	add_child(layout_host)
+	var settings_shell: Node = load("res://scenes/menus/MainMenu.tscn").instantiate()
+	layout_host.add_child(settings_shell)
+	await _settle()
+	settings_shell.call("validation_open_settings_stage")
+	await _settle()
+	var scroll := settings_shell.get_node_or_null("%SettingsScroll") as ScrollContainer
+	if scroll == null:
+		return _fail_settings_focus_visibility(layout_host, original_window_size, original_settings, "Main Menu SettingsScroll is missing.")
+	for scale in [100, 130]:
+		if not _apply_settings_focus_ui_scale(settings_shell, original_settings, scale):
+			return _fail_settings_focus_visibility(layout_host, original_window_size, original_settings, "Could not apply fixture UI scale %d." % scale)
+		await _settle()
+		var controls: Array[Control] = []
+		for control_name in SETTINGS_SCROLL_FOCUS_NAMES:
+			var control := settings_shell.get_node_or_null("%%%s" % control_name) as Control
+			if control == null or not control.is_visible_in_tree() or control.focus_mode == Control.FOCUS_NONE:
+				return _fail_settings_focus_visibility(layout_host, original_window_size, original_settings, "Settings focus control %s is unavailable at %d percent." % [control_name, scale])
+			controls.append(control)
+		if get_viewport().gui_get_focus_owner() != controls[0] or not _scroll_contains_control(scroll, controls[0]):
+			return _fail_settings_focus_visibility(layout_host, original_window_size, original_settings, "Settings refresh left its retained %s focus off-screen at %d percent: owner=%s scroll=%d rect=%s viewport=%s." % [controls[0].name, scale, get_viewport().gui_get_focus_owner(), scroll.scroll_vertical, controls[0].get_global_rect(), scroll.get_global_rect()])
+		controls[0].grab_focus()
+		await _settle()
+		for index in range(controls.size()):
+			var expected := controls[index]
+			if index > 0:
+				await _press_key(KEY_TAB)
+			if get_viewport().gui_get_focus_owner() != expected or not _scroll_contains_control(scroll, expected):
+				return _fail_settings_focus_visibility(layout_host, original_window_size, original_settings, "Forward Tab left %s focused off-screen at %d percent: owner=%s scroll=%d rect=%s viewport=%s." % [expected.name, scale, get_viewport().gui_get_focus_owner(), scroll.scroll_vertical, expected.get_global_rect(), scroll.get_global_rect()])
+			if scale == 130 and expected.name == &"ReduceFlashesToggle" and OS.get_environment("MAIN_MENU_KEYBOARD_CAPTURE") == "1":
+				await _capture_if_requested("settings_130_focus_visible")
+		var lower_scroll := scroll.scroll_vertical
+		if lower_scroll <= 0:
+			return _fail_settings_focus_visibility(layout_host, original_window_size, original_settings, "Lower Settings focus did not scroll at %d percent." % scale)
+		for index in range(controls.size() - 2, -1, -1):
+			await _press_shift_tab()
+			var expected := controls[index]
+			if get_viewport().gui_get_focus_owner() != expected or not _scroll_contains_control(scroll, expected):
+				return _fail_settings_focus_visibility(layout_host, original_window_size, original_settings, "Reverse Tab left %s focused off-screen at %d percent: owner=%s scroll=%d rect=%s viewport=%s." % [expected.name, scale, get_viewport().gui_get_focus_owner(), scroll.scroll_vertical, expected.get_global_rect(), scroll.get_global_rect()])
+		if scroll.scroll_vertical >= lower_scroll:
+			return _fail_settings_focus_visibility(layout_host, original_window_size, original_settings, "Returning to the first Settings control did not scroll upward at %d percent." % scale)
+	SettingsService.settings = original_settings.duplicate(true)
+	SettingsService.apply_settings()
+	await _settle()
+	layout_host.queue_free()
+	get_window().size = original_window_size
+	await _settle()
+	var authority_exact := _destructive_protected_state() == authority_before
+	if is_instance_valid(original_focus):
+		(original_focus as Control).grab_focus()
+		await _settle()
+	if not authority_exact:
+		return _fail_bool("Main Menu Settings focus visibility changed session/save/campaign/settings authority.")
+	if get_viewport().gui_get_focus_owner() != original_focus:
+		return _fail_bool("Main Menu Settings focus visibility did not restore the original focus owner.")
+	return true
+
+func _scroll_contains_control(scroll: ScrollContainer, control: Control) -> bool:
+	return scroll.get_global_rect().grow(1.0).encloses(control.get_global_rect())
+
+func _apply_settings_focus_ui_scale(shell: Node, original_settings: Dictionary, scale: int) -> bool:
+	var fixture_settings := original_settings.duplicate(true)
+	var accessibility: Dictionary = fixture_settings.get("accessibility", {})
+	accessibility["ui_scale_percent"] = scale
+	accessibility["large_ui_text"] = scale > 100
+	fixture_settings["accessibility"] = accessibility
+	SettingsService.settings = fixture_settings
+	SettingsService.apply_settings()
+	shell.call("_refresh_settings_panel")
+	return SettingsService.ui_scale_percent() == scale
+
+func _fail_settings_focus_visibility(
+	layout_host: Node,
+	original_window_size: Vector2i,
+	original_settings: Dictionary,
+	message: String
+) -> bool:
+	SettingsService.settings = original_settings.duplicate(true)
+	SettingsService.apply_settings()
+	if is_instance_valid(layout_host):
+		layout_host.queue_free()
+	get_window().size = original_window_size
+	return _fail_bool(message)
 
 func _check_destructive_dialog_controller_cancel(shell: Node) -> bool:
 	var original_root_focus: Control = get_viewport().gui_get_focus_owner()
@@ -1437,6 +1545,22 @@ func _press_key(keycode: Key) -> void:
 	var released := InputEventKey.new()
 	released.keycode = keycode
 	released.physical_keycode = keycode
+	released.pressed = false
+	Input.parse_input_event(released)
+	await _settle()
+
+func _press_shift_tab() -> void:
+	var pressed := InputEventKey.new()
+	pressed.keycode = KEY_TAB
+	pressed.physical_keycode = KEY_TAB
+	pressed.shift_pressed = true
+	pressed.pressed = true
+	Input.parse_input_event(pressed)
+	await get_tree().process_frame
+	var released := InputEventKey.new()
+	released.keycode = KEY_TAB
+	released.physical_keycode = KEY_TAB
+	released.shift_pressed = true
 	released.pressed = false
 	Input.parse_input_event(released)
 	await _settle()

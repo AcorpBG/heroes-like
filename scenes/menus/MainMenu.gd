@@ -211,6 +211,7 @@ func _ready() -> void:
 	buckets["settings"] = ProfileLogScript.elapsed_ms(phase_started)
 	_configure_display_change_confirmation()
 	_configure_destructive_confirmations()
+	_configure_settings_focus_visibility()
 	phase_started = ProfileLogScript.begin_usec()
 	_apply_visual_theme()
 	buckets["theme"] = ProfileLogScript.elapsed_ms(phase_started)
@@ -1905,6 +1906,7 @@ func _refresh_settings_panel() -> void:
 	_settings_restore_status_label.text = _settings_restore_status
 	_settings_restore_status_label.tooltip_text = "This operation changes only device settings. Support bundles, campaign progress, expedition saves, and the active session remain unchanged."
 	_syncing_settings_ui = false
+	_queue_current_settings_focus_visibility()
 
 func _refresh_support_bundle_surface() -> void:
 	_export_support_bundle_button.tooltip_text = "Create a local support bundle from bounded device settings and recent runtime issues. No saves or telemetry are included."
@@ -2824,6 +2826,66 @@ func _configure_first_view_focus_navigation() -> void:
 		button.focus_neighbor_bottom = button.get_path_to(next)
 		button.focus_previous = button.get_path_to(previous)
 		button.focus_next = button.get_path_to(next)
+
+func _settings_focus_visibility_controls() -> Array[Control]:
+	return [
+		_presentation_mode_picker,
+		_render_quality_picker,
+		_vsync_toggle,
+		_resolution_picker,
+		_frame_rate_picker,
+		_battle_playback_speed_picker,
+		_keyboard_navigation_layout_picker,
+		_customize_movement_keys_button,
+		_master_volume_slider,
+		_music_volume_slider,
+		_effects_volume_slider,
+		_ui_scale_picker,
+		_battle_camera_shake_picker,
+		_color_cue_picker,
+		_high_contrast_toggle,
+		_reduce_motion_toggle,
+		_reduce_flashes_toggle,
+		_reduce_repetitive_sounds_toggle,
+		_export_support_bundle_button,
+		_restore_settings_defaults_button,
+	]
+
+func _configure_settings_focus_visibility() -> void:
+	for control in _settings_focus_visibility_controls():
+		var callback := _on_settings_focus_control_entered.bind(control)
+		if not control.focus_entered.is_connected(callback):
+			control.focus_entered.connect(callback)
+
+func _on_settings_focus_control_entered(control: Control) -> void:
+	if (
+		is_inside_tree()
+		and _stage_dock_panel.visible
+		and _menu_tabs.current_tab == TAB_SETTINGS
+		and _settings_scroll.is_ancestor_of(control)
+	):
+		call_deferred("_ensure_settings_focus_control_visible", control)
+
+func _queue_current_settings_focus_visibility() -> void:
+	if (
+		is_inside_tree()
+		and _stage_dock_panel.visible
+		and _menu_tabs.current_tab == TAB_SETTINGS
+	):
+		var control := get_viewport().gui_get_focus_owner() as Control
+		if control != null and _settings_scroll.is_ancestor_of(control):
+			call_deferred("_ensure_settings_focus_control_visible", control)
+
+func _ensure_settings_focus_control_visible(control: Control) -> void:
+	if (
+		is_inside_tree()
+		and is_instance_valid(control)
+		and _stage_dock_panel.visible
+		and _menu_tabs.current_tab == TAB_SETTINGS
+		and _settings_scroll.is_ancestor_of(control)
+		and get_viewport().gui_get_focus_owner() == control
+	):
+		_settings_scroll.ensure_control_visible(control)
 
 func _focus_first_view_command() -> void:
 	if _stage_dock_panel.visible or not is_inside_tree():
