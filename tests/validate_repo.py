@@ -240,6 +240,8 @@ TOWN_ARTIFACT_ACTION_FEEDBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_artifa
 TOWN_ARTIFACT_ACTION_FEEDBACK_REPORT_SCENE_PATH = ROOT / "tests" / "town_artifact_action_feedback_report.tscn"
 TOWN_SPECIALTY_SELECTION_FEEDBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_specialty_selection_feedback_report.gd"
 TOWN_SPECIALTY_SELECTION_FEEDBACK_REPORT_SCENE_PATH = ROOT / "tests" / "town_specialty_selection_feedback_report.tscn"
+TOWN_ARMY_TRANSFER_FEEDBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_army_transfer_completion_feedback_report.gd"
+TOWN_ARMY_TRANSFER_FEEDBACK_REPORT_SCENE_PATH = ROOT / "tests" / "town_army_transfer_completion_feedback_report.tscn"
 TOWN_ENTITY_CACHE_ACTIVE_REFRESH_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "town_entity_cache_active_refresh_regression.gd"
 TOWN_ENTITY_CACHE_ACTIVE_REFRESH_REGRESSION_SCENE_PATH = ROOT / "tests" / "town_entity_cache_active_refresh_regression.tscn"
 GENERATED_LARGE_TOWN_EXPLICIT_SAVE_SURFACE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "generated_large_town_explicit_save_surface_regression.gd"
@@ -21073,10 +21075,10 @@ def validate_town_route_response_dispatch_feedback(errors: list[str]) -> None:
     if presentation is not None:
         body = presentation.group("body")
         for token in (
-        'if lane not in ["build", "recruit", "response", "market", "study", "tavern", "specialty"] or not bool(result.get("ok", false)):',
-        'var event_id := "town_specialty_selected" if lane == "specialty" else',
-            'var subject_kind := "hero_specialty" if lane == "specialty" else',
-            'or lane in ["recruit", "response", "market", "study", "tavern", "specialty"] and String(policy.get("selected_blocking_policy", "")) != "nonblocking"',
+        'if lane not in ["build", "recruit", "response", "market", "study", "tavern", "specialty", "transfer"] or not bool(result.get("ok", false)):',
+        'var event_id := "town_army_transferred" if lane == "transfer" else',
+            'var subject_kind := "unit_roster" if lane == "transfer" else',
+            'or lane in ["recruit", "response", "market", "study", "tavern", "specialty", "transfer"] and String(policy.get("selected_blocking_policy", "")) != "nonblocking"',
             'var placement_id := action_id.trim_prefix("site_response:")',
             'OverworldRules._find_resource_node_by_placement(_session, placement_id)',
             'OverworldRules._resource_site_response_state(_session, node, site)',
@@ -21091,11 +21093,11 @@ def validate_town_route_response_dispatch_feedback(errors: list[str]) -> None:
 
     stage_text = TOWN_STAGE_SCRIPT_PATH.read_text(encoding="utf-8")
     for token in (
-        'event_id not in ["artifact_acquired", "artifact_equipped", "artifact_unequipped", "town_units_recruited", "town_building_built", "town_route_response_ordered", "town_market_exchange_completed", "town_spell_studied", "town_hero_hired", "town_specialty_selected"]',
+        'event_id not in ["artifact_acquired", "artifact_equipped", "artifact_unequipped", "town_units_recruited", "town_building_built", "town_route_response_ordered", "town_market_exchange_completed", "town_spell_studied", "town_hero_hired", "town_specialty_selected", "town_army_transferred"]',
         'event_id == "town_route_response_ordered" and String(presentation.get("response_placement_id", "")) == ""',
         '"town_route_response_ordered": "cue_town_route_response_ordered"',
         '"town_route_response_ordered": "map_object"',
-        'event_id in ["artifact_equipped", "artifact_unequipped", "town_units_recruited", "town_route_response_ordered", "town_market_exchange_completed", "town_spell_studied", "town_hero_hired", "town_specialty_selected"] and selected_blocking_policy != "nonblocking"',
+        'event_id in ["artifact_equipped", "artifact_unequipped", "town_units_recruited", "town_route_response_ordered", "town_market_exchange_completed", "town_spell_studied", "town_hero_hired", "town_specialty_selected", "town_army_transferred"] and selected_blocking_policy != "nonblocking"',
         'draw_entries = ["route_dispatch_badge"] if reduced_motion else ["route_dispatch_art", "route_dispatch_badge"]',
         '"response_placement_id": String(_town_action_presentation.get("response_placement_id", ""))',
         '"response_label": String(_town_action_presentation.get("response_label", ""))',
@@ -21244,9 +21246,9 @@ def validate_town_market_exchange_completion_feedback(errors: list[str]) -> None
     if presentation is not None:
         body = presentation.group("body")
         for token in (
-        'if lane not in ["build", "recruit", "response", "market", "study", "tavern", "specialty"] or not bool(result.get("ok", false)):',
-            'var event_id := "town_specialty_selected" if lane == "specialty" else',
-            'var subject_kind := "hero_specialty" if lane == "specialty" else',
+        'if lane not in ["build", "recruit", "response", "market", "study", "tavern", "specialty", "transfer"] or not bool(result.get("ok", false)):',
+            'var event_id := "town_army_transferred" if lane == "transfer" else',
+            'var subject_kind := "unit_roster" if lane == "transfer" else',
             'var parts := action_id.split(":")',
             'var resource_deltas := _town_action_resource_deltas(before, after)',
             'resource_id not in OverworldRules.NORMAL_MARKET_RESOURCE_KEYS',
@@ -21449,10 +21451,10 @@ def validate_town_spell_study_completion_feedback(errors: list[str]) -> None:
     if presentation is not None:
         body = presentation.group("body")
         for token in (
-        'if lane not in ["build", "recruit", "response", "market", "study", "tavern", "specialty"] or not bool(result.get("ok", false)):',
+        'if lane not in ["build", "recruit", "response", "market", "study", "tavern", "specialty", "transfer"] or not bool(result.get("ok", false)):',
             'if lane == "study":\n\t\tafter["known_spell_ids"] = _town_active_known_spell_ids()',
-            'var event_id := "town_specialty_selected" if lane == "specialty" else',
-            'var subject_kind := "hero_specialty" if lane == "specialty" else',
+            'var event_id := "town_army_transferred" if lane == "transfer" else',
+            'var subject_kind := "unit_roster" if lane == "transfer" else',
             'var spell_id := action_id.trim_prefix("learn_spell:")',
             'spell_id in before_known',
             'spell_id not in after_known',
@@ -21718,6 +21720,127 @@ def validate_town_specialty_selection_feedback(errors: list[str]) -> None:
         ensure(forbidden not in report_text, errors, f"Town specialty focused report bypasses public ownership: {forbidden}")
 
 
+def validate_town_army_transfer_completion_feedback(errors: list[str]) -> None:
+    required_paths = (
+        TOWN_SCRIPT_PATH, TOWN_STAGE_SCRIPT_PATH, ANIMATION_EVENT_CUES_PATH,
+        PRESENTATION_SFX_MANIFEST_PATH, PRESENTATION_AUDIO_PATH,
+        TOWN_ARMY_TRANSFER_FEEDBACK_REPORT_SCRIPT_PATH,
+        TOWN_ARMY_TRANSFER_FEEDBACK_REPORT_SCENE_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Town army transfer completion feedback owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    rows = load_json(ANIMATION_EVENT_CUES_PATH).get("entries", [])
+    transfer_rows = [row for row in rows if isinstance(row, dict) and row.get("event_id") == "town_army_transferred"]
+    ensure(transfer_rows == [{
+        "event_id": "town_army_transferred", "cue_id": "cue_town_army_transferred",
+        "surface": "town", "subject_kind": "unit_roster",
+        "animation_state_family": "army_transfer", "animation_state": "stack_redeployed",
+        "playback_policy": "queue_resolved", "blocking_policy": "nonblocking", "skippable": True,
+        "vfx_cue_ids": ["vfx_placeholder_button_confirm"],
+        "audio_cue_ids": ["audio_placeholder_ui_confirm"],
+        "fallbacks": {"reduced_motion_tag": "unit_transfer_badge", "fast_mode_tag": "unit_transfer_snap"},
+        "validation_tags": ["town", "unit", "army", "transfer", "resolved_event"],
+        "producer_refs": ["TownShell._on_transfer_action_pressed", "TownRules.transfer_in_active_town"],
+    }], errors, "Town army transfer must own one exact semantic nonblocking cue")
+    audio_cues = load_json(PRESENTATION_SFX_MANIFEST_PATH).get("cues", {})
+    ensure(audio_cues.get("audio_placeholder_ui_confirm") == {
+        "path": "res://art/audio/runtime/ui/confirm.wav", "duration_msec": 120,
+        "volume_db": -17.0, "role": "confirm_action",
+    }, errors, "Town army transfer must reuse the exact production UI confirmation audio")
+    audio_text = PRESENTATION_AUDIO_PATH.read_text(encoding="utf-8")
+    ensure('"audio_placeholder_ui_confirm": {"frequency": 760.0, "duration": 0.12, "gain": 0.11}' in audio_text, errors, "PresentationAudio must retain the UI confirmation fallback for Town transfer playback")
+
+    shell_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
+    handler = re.search(r"func _on_transfer_action_pressed\(action_id: String\) -> void:\n(?P<body>.*?)(?=\nfunc )", shell_text, re.DOTALL)
+    ensure(handler is not None, errors, "Town army transfer presenter is missing the public action handler")
+    if handler is not None:
+        body = handler.group("body")
+        order = [body.find(token) for token in (
+            'before["transfer"] = _town_transfer_holder_snapshot(action_id)',
+            "TownRules.transfer_in_active_town",
+            '_record_town_action_result("order"',
+            '_invalidate_active_town_entity_cache("transfer"',
+            "if _handle_session_resolution():",
+            "\t_refresh()",
+            '_record_town_action_presentation("transfer"',
+        )]
+        ensure(all(index >= 0 for index in order) and order == sorted(order), errors, "Town army transfer completion must publish after exact mutation, recap, invalidation, resolution, and refresh")
+        ensure(body.count('_record_town_action_presentation("transfer"') == 1, errors, "Town transfer handler must publish exactly once")
+    presenter = re.search(r"func _record_town_action_presentation\(.*?\n(?P<body>.*?)(?=\nfunc )", shell_text, re.DOTALL)
+    ensure(presenter is not None, errors, "Town army transfer materializer is missing")
+    if presenter is not None:
+        body = presenter.group("body")
+        for token in (
+            'lane == "transfer"',
+            'after["transfer"] = _town_transfer_holder_snapshot(action_id)',
+            'var before_transfer: Dictionary = before.get("transfer", {})',
+            'var after_transfer: Dictionary = after.get("transfer", {})',
+            'var transferred_count := source_before - source_after',
+            'target_after - target_before != transferred_count',
+            'source_before + target_before != source_after + target_after',
+            'not bool(before_transfer.get("holders_stationed", false))',
+            'not bool(after_transfer.get("holders_stationed", false))',
+            'presentation["source_holder_id"]',
+            'presentation["target_holder_id"]',
+            'presentation["transferred_count"] = transferred_count',
+            'presentation["town_action_recap"] = _last_action_recap.duplicate(true)',
+        ):
+            ensure(token in body, errors, f"Town transfer materializer is missing fail-closed count authority: {token}")
+    snapshot_helper = re.search(r"func _town_transfer_holder_snapshot\(.*?\n(?P<body>.*?)(?=\nfunc )", shell_text, re.DOTALL)
+    ensure(snapshot_helper is not None, errors, "Town transfer holder snapshot helper is missing")
+    if snapshot_helper is not None:
+        body = snapshot_helper.group("body")
+        for token in ('parts.size() != 5', 'String(parts[0]) != "transfer"', 'HeroCommandRules.stationed_heroes(_session, town)', 'source_holder_id in stationed_holder_ids', 'target_holder_id in stationed_holder_ids', '_town_transfer_unit_count(source_stacks, unit_id)', '_town_transfer_unit_count(target_stacks, unit_id)'):
+            ensure(token in body, errors, f"Town transfer snapshot is missing live holder authority: {token}")
+
+    stage_text = TOWN_STAGE_SCRIPT_PATH.read_text(encoding="utf-8")
+    for token in (
+        '"town_army_transferred": "cue_town_army_transferred"',
+        'event_id == "town_army_transferred" and String(presentation.get("source_holder_id", "")) == ""',
+        'event_id == "town_army_transferred" and int(presentation.get("transferred_count", 0)) <= 0',
+        'int(presentation.get("source_count_before", -1)) + int(presentation.get("target_count_before", -1)) != int(presentation.get("source_count_after", -1)) + int(presentation.get("target_count_after", -1))',
+        'draw_entries = ["unit_transfer_badge"] if reduced_motion else ["unit_transfer_route", "unit_transfer_badge"]',
+        '"source_holder_id": String(_town_action_presentation.get("source_holder_id", ""))',
+        'func _draw_town_army_transfer_presentation(badge_rect: Rect2, reduced_motion: bool) -> void:',
+        '"REDEPLOYED %d %s"',
+        'func _town_army_transfer_vfx_asset_state() -> Dictionary:',
+        'var expected_cue_id := "unit_transfer_badge" if reduced_motion else "vfx_placeholder_button_confirm"',
+    ):
+        ensure(token in stage_text, errors, f"TownStageView is missing army-transfer playback ownership: {token}")
+    for name in ("_draw_town_army_transfer_presentation", "_town_army_transfer_vfx_asset_state"):
+        match = re.search(rf"func {name}\(.*?\n(?P<body>.*?)(?=\nfunc )", stage_text, re.DOTALL)
+        for forbidden in ("SessionState", "SaveService", "TownRules", "HeroCommandRules", "AppRouter", "await ", "create_timer", "create_tween"):
+            ensure(match is not None and forbidden not in match.group("body"), errors, f"Town transfer view helper {name} must remain authority-free: {forbidden}")
+
+    scene_text = TOWN_ARMY_TRANSFER_FEEDBACK_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure_scene_nodes(scene_text, errors, "town_army_transfer_completion_feedback_report.tscn", [("TownArmyTransferCompletionFeedbackReport", "Node")])
+    report_text = TOWN_ARMY_TRANSFER_FEEDBACK_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for token in (
+        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        '{"id": "normal", "reduced_motion": false}',
+        '{"id": "reduced_motion", "reduced_motion": true}',
+        '{"id": "garrison_to_hero", "source": "garrison", "target": "hero"}',
+        '{"id": "hero_to_garrison", "source": "hero", "target": "garrison"}',
+        '_seed_transfer_fixture(session)',
+        'stage.present_town_action({"event_id": "town_army_transferred"})',
+        'var control_result: Dictionary = TownRules.transfer_in_active_town(control, action_id)',
+        'var public_result: Dictionary = shell.validation_perform_town_action(action_id)',
+        'live_session.to_dict() == control.to_dict()',
+        'before_source + before_target == after_source + after_target',
+        'active_hero == live_session.overworld.get("hero", {})',
+        'String(record.get("asset_path", "")) == "res://art/audio/runtime/ui/confirm.wav"',
+        'var stale_result: Dictionary = shell.validation_perform_town_action(action_id)',
+        'var invalid_result: Dictionary = shell.validation_perform_town_action("transfer:garrison:garrison:%s:all" % UNIT_ID)',
+        'print("TOWN_ARMY_TRANSFER_COMPLETION_FEEDBACK_REPORT %s"',
+    ):
+        ensure(token in report_text, errors, f"Town army transfer focused report is missing method-matched live proof: {token}")
+    for forbidden in ("_on_transfer_action_pressed(", "_record_town_action_presentation(", "_draw_town_army_transfer_presentation(", "_town_army_transfer_vfx_asset_state(", "create_timer", "create_tween"):
+        ensure(forbidden not in report_text, errors, f"Town army transfer focused report bypasses public ownership: {forbidden}")
+
+
 def validate_town_artifact_action_feedback(errors: list[str]) -> None:
     def function_block(text: str, name: str) -> str:
         match = re.search(rf"func {re.escape(name)}\(.*?\n(?P<body>.*?)(?=\nfunc |\Z)", text, re.DOTALL)
@@ -21867,7 +21990,7 @@ def validate_town_building_complete_cue_playback(errors: list[str]) -> None:
     for token in (
         '@onready var _town_action_input_blocker: Control = %TownActionInputBlocker',
         '_record_town_action_presentation("build", full_action_id, action, result, before)',
-        'var event_id := "town_specialty_selected" if lane == "specialty" else',
+        'var event_id := "town_army_transferred" if lane == "transfer" else',
         'var building_id := action_id.trim_prefix("build:")',
         'building_id in before_buildings or building_id not in after_buildings',
         'presentation["building_id"] = building_id',
@@ -21896,7 +22019,7 @@ def validate_town_building_complete_cue_playback(errors: list[str]) -> None:
     stage_text = TOWN_STAGE_SCRIPT_PATH.read_text(encoding="utf-8")
     for token in (
         'signal town_action_presentation_blocking_changed(blocking: bool)',
-        'event_id not in ["artifact_acquired", "artifact_equipped", "artifact_unequipped", "town_units_recruited", "town_building_built", "town_route_response_ordered", "town_market_exchange_completed", "town_spell_studied", "town_hero_hired", "town_specialty_selected"]',
+        'event_id not in ["artifact_acquired", "artifact_equipped", "artifact_unequipped", "town_units_recruited", "town_building_built", "town_route_response_ordered", "town_market_exchange_completed", "town_spell_studied", "town_hero_hired", "town_specialty_selected", "town_army_transferred"]',
         'event_id in ["artifact_acquired", "town_building_built"] and selected_blocking_policy not in ["input_blocking_timeout", "nonblocking_reduced_motion", "nonblocking_fast_resolve"]',
         'func dismiss_town_action_presentation() -> void:',
         'return String(policy.get("selected_blocking_policy", "")) == "input_blocking_timeout"',
@@ -21954,12 +22077,12 @@ def validate_town_recruitment_cue_playback(errors: list[str]) -> None:
     ensure_script_functions(shell_text, errors, "TownShell.gd", ["_record_town_action_presentation"])
     for required_token in (
 		'_record_town_action_presentation("recruit", full_action_id, action, result, before)',
-        'if lane not in ["build", "recruit", "response", "market", "study", "tavern", "specialty"] or not bool(result.get("ok", false)):',
+        'if lane not in ["build", "recruit", "response", "market", "study", "tavern", "specialty", "transfer"] or not bool(result.get("ok", false)):',
         'var unit_id := action_id.trim_prefix("recruit:")',
         'var after := TownRules.town_action_consequence_signature(_session)',
         'var recruited_count := int(after_army.get(unit_id, 0)) - int(before_army.get(unit_id, 0))',
         'AnimationCueCatalog.cue_playback_policy_for_event(',
-        'var event_id := "town_specialty_selected" if lane == "specialty" else',
+        'var event_id := "town_army_transferred" if lane == "transfer" else',
         'String(policy.get("selected_blocking_policy", "")) != "nonblocking"',
 		'_town_stage_view.call("present_town_action", presentation)',
         '"policy": policy.duplicate(true)',
@@ -22015,9 +22138,9 @@ def validate_town_recruitment_cue_playback(errors: list[str]) -> None:
         "const RECRUIT_PRESENTATION_MAX_DURATION_MS := 700",
         "const RECRUIT_PRESENTATION_MIN_DURATION_MS := 120",
         "set_process(false)",
-        'event_id not in ["artifact_acquired", "artifact_equipped", "artifact_unequipped", "town_units_recruited", "town_building_built", "town_route_response_ordered", "town_market_exchange_completed", "town_spell_studied", "town_hero_hired", "town_specialty_selected"]',
+        'event_id not in ["artifact_acquired", "artifact_equipped", "artifact_unequipped", "town_units_recruited", "town_building_built", "town_route_response_ordered", "town_market_exchange_completed", "town_spell_studied", "town_hero_hired", "town_specialty_selected", "town_army_transferred"]',
 		'"town_units_recruited": "cue_town_units_recruited"',
-        'event_id in ["artifact_equipped", "artifact_unequipped", "town_units_recruited", "town_route_response_ordered", "town_market_exchange_completed", "town_spell_studied", "town_hero_hired", "town_specialty_selected"] and selected_blocking_policy != "nonblocking"',
+        'event_id in ["artifact_equipped", "artifact_unequipped", "town_units_recruited", "town_route_response_ordered", "town_market_exchange_completed", "town_spell_studied", "town_hero_hired", "town_specialty_selected", "town_army_transferred"] and selected_blocking_policy != "nonblocking"',
         "_town_action_presentation = presentation.duplicate(true)",
         'if Time.get_ticks_msec() >= int(_town_action_presentation.get("expires_msec", 0)):',
 		'draw_entries = ["recruit_count_badge"] if reduced_motion else ["recruit_muster_rings", "recruit_count_badge"]',
@@ -43557,6 +43680,7 @@ def main() -> int:
     validate_town_spell_study_completion_feedback(errors)
     validate_town_hero_hire_completion_feedback(errors)
     validate_town_specialty_selection_feedback(errors)
+    validate_town_army_transfer_completion_feedback(errors)
     validate_town_artifact_action_feedback(errors)
     validate_town_building_complete_cue_playback(errors)
     validate_town_recruitment_cue_playback(errors)

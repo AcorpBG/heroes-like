@@ -294,6 +294,7 @@ func _on_tavern_action_pressed(action_id: String) -> void:
 
 func _on_transfer_action_pressed(action_id: String) -> void:
 	var before := TownRules.town_action_consequence_signature(_session)
+	before["transfer"] = _town_transfer_holder_snapshot(action_id)
 	var action := _validation_action_for_id(action_id)
 	var result := TownRules.transfer_in_active_town(_session, action_id)
 	if result.is_empty():
@@ -303,6 +304,7 @@ func _on_transfer_action_pressed(action_id: String) -> void:
 	if _handle_session_resolution():
 		return
 	_refresh()
+	_record_town_action_presentation("transfer", action_id, action, result, before)
 
 func _on_response_action_pressed(action_id: String) -> void:
 	var before := TownRules.town_action_consequence_signature(_session)
@@ -4439,7 +4441,7 @@ func _record_town_action_presentation(
 	result: Dictionary,
 	before: Dictionary
 ) -> void:
-	if lane not in ["build", "recruit", "response", "market", "study", "tavern", "specialty"] or not bool(result.get("ok", false)):
+	if lane not in ["build", "recruit", "response", "market", "study", "tavern", "specialty", "transfer"] or not bool(result.get("ok", false)):
 		return
 	if _town_stage_view == null or not _town_stage_view.has_method("present_town_action"):
 		return
@@ -4450,8 +4452,10 @@ func _record_town_action_presentation(
 		after["player_hero_ids"] = _town_player_hero_ids()
 	elif lane == "specialty":
 		after["hero_progression"] = HeroProgressionRules.ensure_hero_progression(_session.overworld.get("hero", {})).duplicate(true)
-	var event_id := "town_specialty_selected" if lane == "specialty" else ("town_hero_hired" if lane == "tavern" else ("town_spell_studied" if lane == "study" else ("town_market_exchange_completed" if lane == "market" else ("town_route_response_ordered" if lane == "response" else ("town_units_recruited" if lane == "recruit" else "town_building_built")))))
-	var subject_kind := "hero_specialty" if lane == "specialty" else ("hero" if lane == "tavern" else ("spellbook" if lane == "study" else ("resource_stockpile" if lane == "market" else ("map_object" if lane == "response" else ("unit_roster" if lane == "recruit" else "building")))))
+	elif lane == "transfer":
+		after["transfer"] = _town_transfer_holder_snapshot(action_id)
+	var event_id := "town_army_transferred" if lane == "transfer" else ("town_specialty_selected" if lane == "specialty" else ("town_hero_hired" if lane == "tavern" else ("town_spell_studied" if lane == "study" else ("town_market_exchange_completed" if lane == "market" else ("town_route_response_ordered" if lane == "response" else ("town_units_recruited" if lane == "recruit" else "town_building_built"))))))
+	var subject_kind := "unit_roster" if lane == "transfer" else ("hero_specialty" if lane == "specialty" else ("hero" if lane == "tavern" else ("spellbook" if lane == "study" else ("resource_stockpile" if lane == "market" else ("map_object" if lane == "response" else ("unit_roster" if lane == "recruit" else "building"))))))
 	var policy := AnimationCueCatalog.cue_playback_policy_for_event(
 		event_id,
 		SettingsService.animation_preferences()
@@ -4461,7 +4465,7 @@ func _record_town_action_presentation(
 		or String(policy.get("surface", "")) != "town"
 		or String(policy.get("subject_kind", "")) != subject_kind
 		or String(policy.get("selected_playback_policy", "")) != "queue_resolved"
-		or lane in ["recruit", "response", "market", "study", "tavern", "specialty"] and String(policy.get("selected_blocking_policy", "")) != "nonblocking"
+		or lane in ["recruit", "response", "market", "study", "tavern", "specialty", "transfer"] and String(policy.get("selected_blocking_policy", "")) != "nonblocking"
 		or lane == "build" and String(policy.get("selected_blocking_policy", "")) not in ["input_blocking_timeout", "nonblocking_reduced_motion", "nonblocking_fast_resolve"]
 	):
 		return
@@ -4474,7 +4478,46 @@ func _record_town_action_presentation(
 		"result_message": String(result.get("message", "")),
 		"policy": policy.duplicate(true),
 	}
-	if lane == "specialty":
+	if lane == "transfer":
+		var before_transfer: Dictionary = before.get("transfer", {}) if before.get("transfer", {}) is Dictionary else {}
+		var after_transfer: Dictionary = after.get("transfer", {}) if after.get("transfer", {}) is Dictionary else {}
+		var source_before := int(before_transfer.get("source_count", -1))
+		var source_after := int(after_transfer.get("source_count", -1))
+		var target_before := int(before_transfer.get("target_count", -1))
+		var target_after := int(after_transfer.get("target_count", -1))
+		var transferred_count := source_before - source_after
+		if (
+			before_transfer.is_empty()
+			or after_transfer.is_empty()
+			or String(before_transfer.get("source_holder_id", "")) != String(after_transfer.get("source_holder_id", ""))
+			or String(before_transfer.get("target_holder_id", "")) != String(after_transfer.get("target_holder_id", ""))
+			or String(before_transfer.get("unit_id", "")) != String(after_transfer.get("unit_id", ""))
+			or String(before_transfer.get("amount_token", "")) != String(after_transfer.get("amount_token", ""))
+			or not bool(before_transfer.get("holders_stationed", false))
+			or not bool(after_transfer.get("holders_stationed", false))
+			or transferred_count <= 0
+			or target_after - target_before != transferred_count
+			or source_before + target_before != source_after + target_after
+		):
+			return
+		var unit_id := String(after_transfer.get("unit_id", ""))
+		var unit := ContentService.get_unit(unit_id)
+		if unit_id == "" or unit.is_empty():
+			return
+		presentation["action_id"] = action_id
+		presentation["source_holder_id"] = String(after_transfer.get("source_holder_id", ""))
+		presentation["source_holder_label"] = String(after_transfer.get("source_holder_label", ""))
+		presentation["target_holder_id"] = String(after_transfer.get("target_holder_id", ""))
+		presentation["target_holder_label"] = String(after_transfer.get("target_holder_label", ""))
+		presentation["unit_id"] = unit_id
+		presentation["unit_name"] = String(unit.get("name", unit_id))
+		presentation["transferred_count"] = transferred_count
+		presentation["source_count_before"] = source_before
+		presentation["source_count_after"] = source_after
+		presentation["target_count_before"] = target_before
+		presentation["target_count_after"] = target_after
+		presentation["town_action_recap"] = _last_action_recap.duplicate(true)
+	elif lane == "specialty":
 		var specialty_id := action_id.trim_prefix("choose_specialty:")
 		var before_hero: Dictionary = before.get("hero_progression", {}) if before.get("hero_progression", {}) is Dictionary else {}
 		var after_hero: Dictionary = after.get("hero_progression", {}) if after.get("hero_progression", {}) is Dictionary else {}
@@ -4628,6 +4671,59 @@ func _record_town_action_presentation(
 		presentation["building_id"] = building_id
 		presentation["building_name"] = String(building.get("name", action.get("label", building_id)))
 	_town_stage_view.call("present_town_action", presentation)
+
+func _town_transfer_holder_snapshot(action_id: String) -> Dictionary:
+	var parts := action_id.split(":")
+	if parts.size() != 5 or String(parts[0]) != "transfer":
+		return {}
+	var source_holder_id := String(parts[1])
+	var target_holder_id := String(parts[2])
+	var unit_id := String(parts[3])
+	var amount_token := String(parts[4])
+	var town := TownRules.get_active_town(_session)
+	if source_holder_id == "" or target_holder_id == "" or source_holder_id == target_holder_id or unit_id == "" or amount_token == "" or town.is_empty():
+		return {}
+	var stationed_holder_ids := [HeroCommandRules.HOLDER_GARRISON]
+	for hero_value in HeroCommandRules.stationed_heroes(_session, town):
+		if hero_value is Dictionary:
+			stationed_holder_ids.append(String(hero_value.get("id", "")))
+	var holders_stationed := source_holder_id in stationed_holder_ids and target_holder_id in stationed_holder_ids
+	if not holders_stationed:
+		return {}
+	var source_stacks := _town_transfer_holder_stacks(town, source_holder_id)
+	var target_stacks := _town_transfer_holder_stacks(town, target_holder_id)
+	return {
+		"source_holder_id": source_holder_id,
+		"source_holder_label": _town_transfer_holder_label(town, source_holder_id),
+		"target_holder_id": target_holder_id,
+		"target_holder_label": _town_transfer_holder_label(town, target_holder_id),
+		"unit_id": unit_id,
+		"amount_token": amount_token,
+		"source_count": _town_transfer_unit_count(source_stacks, unit_id),
+		"target_count": _town_transfer_unit_count(target_stacks, unit_id),
+		"holders_stationed": holders_stationed,
+	}
+
+func _town_transfer_holder_stacks(town: Dictionary, holder_id: String) -> Array:
+	if holder_id == HeroCommandRules.HOLDER_GARRISON:
+		return Array(town.get("garrison", [])).duplicate(true) if town.get("garrison", []) is Array else []
+	var hero := HeroCommandRules.hero_by_id(_session, holder_id)
+	var army: Dictionary = hero.get("army", {}) if hero.get("army", {}) is Dictionary else {}
+	return Array(army.get("stacks", [])).duplicate(true) if army.get("stacks", []) is Array else []
+
+func _town_transfer_holder_label(town: Dictionary, holder_id: String) -> String:
+	if holder_id == HeroCommandRules.HOLDER_GARRISON:
+		var town_template := ContentService.get_town(String(town.get("town_id", "")))
+		return "%s garrison" % String(town_template.get("name", town.get("town_id", "Town")))
+	var hero := HeroCommandRules.hero_by_id(_session, holder_id)
+	return String(hero.get("name", holder_id))
+
+func _town_transfer_unit_count(stacks: Array, unit_id: String) -> int:
+	var count := 0
+	for stack_value in stacks:
+		if stack_value is Dictionary and String(stack_value.get("unit_id", "")) == unit_id:
+			count += int(stack_value.get("count", 0))
+	return count
 
 func _town_action_resource_deltas(before: Dictionary, after: Dictionary) -> Array:
 	var before_resources: Dictionary = before.get("resources", {}) if before.get("resources", {}) is Dictionary else {}

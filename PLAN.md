@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `presentation-town-army-transfer-completion-feedback-10184`. Successful public Town `transfer:<source_holder>:<target_holder>:<unit_id>:<amount>` actions now publish one compact nonblocking TownStage completion only after proving the exact source decrease, target increase, conserved unit total, stationed holder identities, result recap, and active-hero mirror. The semantic cue uses the existing imported UI-confirm audio and compact procedural roster movement with an exact reduced-motion fallback. Eight focused 1280x720/1920x1080 normal/reduced garrison-to-hero and hero-to-garrison rows pass with whole-session TownRules parity and malformed, stale, repeated, invalid, and refresh silence. Transfer/rendezvous, cue/audio, keyboard-focus, Town/Battle visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged transfer interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `presentation-town-army-transfer-completion-feedback-10184`
 - Completed implementation slice: `presentation-town-specialty-selection-feedback-10184`. Successful public Town `choose_specialty:<specialty_id>` actions now publish one compact nonblocking TownStage completion only after proving the exact active-hero specialty rank increase, pending-choice consumption, hero identity, result recap, and active-hero mirror. The semantic cue uses the existing imported UI-confirm audio and a compact procedural specialty-rank badge with an exact reduced-motion fallback. Four focused 1280x720/1920x1080 normal/reduced rows pass with whole-session TownRules parity and malformed, refresh, stale, and invalid silence; all 12 compatibility owners, repository/editor checks, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged specialty interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `presentation-town-specialty-selection-feedback-10184`
 - Completed implementation slice: `presentation-town-artifact-action-feedback-10184`. Successful public Town commission, equip, and stow actions now publish compact TownStage feedback through the existing artifact-acquired/equipped/unequipped cue policies, production artifact icons, and deterministic audio only after exact reward, provenance, spend, inventory/equipment, slot, and recap authority is proven. Six focused 1280x720/1920x1080 normal, missing-icon, and reduced-motion rows pass with method-equivalent TownRules controls and failed, stale, unaffordable, repeated, malformed, and refresh silence. Artifact commission/icon/runtime, Overworld artifact audio ordering, Town cue/visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged artifact interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -5806,6 +5808,33 @@ Non-goals:
 - no specialty definitions, ranks, effects, choice cadence, level thresholds, hero stats, AI choice policy, save/schema, Native RMG, or map-topology changes;
 - no new art/audio, generic UI cue remapping, layout redesign, particles, shaders, spatial audio, haptics, or final mastering;
 - no packaged specialty interaction/listening, hardware certification, signing/publication, whole-game, or release-readiness claim.
+
+## Selected Slice: Town Army Transfer Completion Feedback
+
+id: `presentation-town-army-transfer-completion-feedback-10184`
+
+Status: completed.
+
+Implementation boundary:
+- after the real public Town transfer action succeeds and the stage refreshes, validate the parsed source/target holders, exact unit-count movement, conserved total, stationed-holder identities, recap, and active-hero mirror before publishing one compact queue-resolved/nonblocking TownStage presentation;
+- cover both garrison-to-hero and hero-to-garrison transfers with one semantic Town event, the existing production UI confirmation audio, and compact procedural roster movement rendering with an exact reduced-motion fallback;
+- preserve HeroCommandRules/TownRules mutation authority, transfer amount resolution, stack order/merge/removal, active-hero mirroring, focus/input, session/save, and all completed Town presentations.
+
+Completion criteria:
+- live TownShell 1280x720/1920x1080 public transfer actions match method-equivalent TownRules controls and publish exact source/target holder identity, unit identity, moved count, and before/after counts once;
+- source count decreases and target count increases by the same positive amount, total count remains exact, both holders remain stationed, and the active-hero mirror remains exact;
+- failed, stale, malformed, repeated, refresh, and non-transfer controls remain silent; normal and reduced-motion rendering are exact;
+- focused Town transfer plus field-rendezvous/transfer, Town cue/visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Validated result:
+- the public Town transfer handler now publishes only after exact source/target holder snapshots prove one positive unit movement, conserved total count, stationed holders, successful recap, and active-hero mirroring;
+- TownStage renders compact roster movement, uses the existing imported UI-confirm cue, and fails closed for malformed, stale, repeated-empty-source, invalid, refresh, and non-transfer paths;
+- eight focused 1280x720/1920x1080 normal/reduced direction rows plus transfer/rendezvous, cue/audio, keyboard-focus, Town/Battle visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass.
+
+Non-goals:
+- no transfer rules, amount tokens, stack ordering/merge/removal, holder eligibility, army stats, unit content, AI/logistics, save/schema, Native RMG, or map-topology changes;
+- no new art/audio, generic UI cue remapping, layout redesign, particles, shaders, spatial audio, haptics, or final mastering;
+- no packaged transfer interaction/listening, hardware certification, signing/publication, whole-game, or release-readiness claim.
 
 ## Progress Reconciliation
 
