@@ -3952,7 +3952,7 @@ func _sync_preview() -> void:
 		return
 	var map_size := OverworldRules.derive_map_size(_session)
 	var map_data: Array = _session.overworld.get("map", [])
-	_map_view.set_route_preview_enabled(_tool == TOOL_INSPECT)
+	_map_view.set_route_preview_enabled(false)
 	_map_view.set_map_state(_session, map_data, map_size, _selected_tile)
 	_map_view.set_placement_debug_overlay_enabled(_placement_debug_overlay_enabled)
 	var tooltip_sections := [String(_editor_active_tool_cue_payload().get("tooltip", ""))]

@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved release-readiness implementation slice."
+    "Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence."
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Map Editor action-tool clicks now defer validation-only full-map normalization and skip gameplay-only route projection. Focused exact eager-control parity measures complete clicks at about 21-22 ms, validation remains exact on demand, Inspect routes remain live, and broad Map Editor/Overworld/core/static/Linux/Windows gates pass.",
+  "currentNotes": "Completed Map Editor Inspect route-projection elision: distant public Inspect clicks now take 20.3-20.8 ms versus the 651-673 ms current-HEAD baseline while exact inspection/authoring/session/dirty/result authority, broad editor/package behavior, gameplay Overworld routing, core, static/editor, and bounded Linux/Windows export-startup gates remain green.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "performance-map-editor-terrain-paint-normalization-defer-10184",
-  "currentSliceId": "performance-map-editor-terrain-paint-normalization-defer-10184",
-  "currentSliceNotes": "Completed with exact eager-control map/result/session parity, 21-22 ms live clicks, on-demand validation normalization, preserved Inspect routing, broad compatibility, and bounded Linux/Windows export-startup proof.",
+  "currentSlice": "performance-map-editor-inspect-route-projection-elision-10184",
+  "currentSliceId": "performance-map-editor-inspect-route-projection-elision-10184",
+  "currentSliceNotes": "Completed with focused public-click performance and exact authority, broad Map Editor/package/Overworld/core compatibility, repository/editor validation, and bounded Linux/Windows export-startup evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Map Editor Terrain Paint Normalization Deferral",
-  "currentSliceUpdatedAt": "2026-08-16T22:38:36Z",
+  "currentSliceTitle": "Map Editor Inspect Route Projection Elision",
+  "currentSliceUpdatedAt": "2026-08-16T23:06:21Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19847,8 +19847,49 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
-  "notes": "Registered the source-backed Overworld unexplored fog-shroud slice from fresh live visual evidence. Production still draws two diagonal lines on every hidden cell; implementation is bounded to the renderer and existing validation owners.",
+  "notes": "The Map Editor Inspect route-projection elision slice is complete. All editor tools suppress gameplay-only route projection while shared Overworld gameplay defaults remain route-enabled; select the next tracker-approved slice from direct current behavior evidence.",
   "plannedSlices": [
+    {
+      "id": "performance-map-editor-inspect-route-projection-elision-10184",
+      "title": "Map Editor Inspect Route Projection Elision",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Remove gameplay-only hero-route projection from read-only Map Editor Inspect selections while preserving exact inspection and shared Overworld gameplay behavior.",
+      "implementationTargets": [
+        "scenes/editor/MapEditorShell.gd",
+        "tests/map_editor_terrain_paint_performance_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "All Map Editor tools keep the shared MapView route preview disabled, while the shared MapView default and Overworld gameplay remain route-enabled",
+        "Distant public Inspect clicks materially improve from the current 651-673 ms samples without changing selected tile, tile inspection, authoring checks, map rendering, session, dirty state, export, Play Copy, save, or package authority",
+        "Focused Inspect/action-tool performance and authority, broad Map Editor, shared Overworld visual, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "Overworld gameplay route planning, path rules, movement orders, route overlays outside the Map Editor, MapView default behavior, or route cache policy",
+        "Map Editor tool semantics, terrain/object/road behavior, authoring checks, layout, save/export/play policy, content, schema, AI, balance, Native RMG, or package identity",
+        "packaged Editor interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "60c6382fbc72aeaaa9a47ca1a2e14d87c667bee7",
+        "scenario_id": "ninefold-confluence",
+        "map_size": "64x64",
+        "inspect_click_usec_samples": [653070, 650920, 673366],
+        "action_click_usec_samples": [21566, 21121, 21065, 20929],
+        "attribution_script": ".artifacts/map_editor_paint_attribution.gd"
+      },
+      "createdAt": "2026-08-16T22:46:32Z",
+      "startedAt": "2026-08-16T22:46:32Z",
+      "updatedAt": "2026-08-16T23:06:21Z",
+      "notes": "Completed with final focused artifact /tmp/heroes-inspect-final-oracle.CMM3J2: three public Inspect clicks take 20.3-20.8 ms versus the 651-673 ms baseline, route projection remains disabled, and selected-tile, exact terrain/object/link inspection, authoring/readiness contract, read-only cue, session, dirty, and terrain-result authority are exact. Broad compatibility /tmp/heroes-inspect-compat.B2sLGG passes Map Editor smoke (230 s), package load (109 s), Save Copy (113 s), Overworld visual (163 s), and core (42 s). Static/editor audit /tmp/heroes-inspect-final-static.nf5mbm and official Linux/Windows export-startup /tmp/heroes-inspect-platform.kncAAU are green. Platform claims are bounded to Linux export/headless startup and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup; packaged Editor interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null,
+      "completedAt": "2026-08-16T23:06:21Z"
+    },
     {
       "id": "performance-map-editor-terrain-paint-normalization-defer-10184",
       "title": "Map Editor Terrain Paint Normalization Deferral",
@@ -87067,8 +87108,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The selected Aurelion Reach Main Menu crest-art gap is closed. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
-  "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
+  "remainingGap": "The selected Map Editor Inspect route-projection performance gap is closed. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
+  "remainingWork": "Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -87600,9 +87641,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The Aurelion Reach Main Menu crest-art implementation slice is complete with one original shipped crest and focused, compatibility, static/editor, and bounded Linux/Windows export-startup evidence. The game is not release-ready.",
+  "summary": "The Map Editor Inspect route-projection elision slice is complete with live public-click latency reduced from 651-673 ms to 20.3-20.8 ms, exact editor authority, broad compatibility, static/editor, and bounded Linux/Windows export-startup evidence. The game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-16T20:36:59Z",
+  "updatedAt": "2026-08-16T23:06:21Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
