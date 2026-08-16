@@ -44238,9 +44238,9 @@ def validate_thornwake_rootgate_toll_chapter(errors: list[str]) -> None:
     campaign_payload = load_json(campaign_path)
     scenarios = items_index(scenario_payload)
     campaigns = items_index(campaign_payload)
-    ensure(int(scenario_payload.get("player_facing_active_scenario_count", 0)) == 21, errors, "Rootgate Toll compatibility must cover the current exact twenty-one-scenario active roster")
+    ensure(int(scenario_payload.get("player_facing_active_scenario_count", 0)) == 22, errors, "Rootgate Toll compatibility must cover the current exact twenty-two-scenario active roster")
     scenario_rows = scenario_payload.get("items", []) if isinstance(scenario_payload.get("items", []), list) else []
-    ensure(len(scenario_rows) == 21 and str(scenario_rows[18].get("id", "")) == "rootgate-toll", errors, "Rootgate Toll must remain the exact nineteenth active authored scenario")
+    ensure(len(scenario_rows) == 22 and str(scenario_rows[18].get("id", "")) == "rootgate-toll", errors, "Rootgate Toll must remain the exact nineteenth active authored scenario")
     scenario = scenarios.get("rootgate-toll", {})
     ensure(bool(scenario), errors, "Rootgate Toll scenario is missing")
     ensure(str(scenario.get("player_faction_id", "")) == "faction_thornwake", errors, "Rootgate Toll must remain a Thornwake scenario")
@@ -44307,8 +44307,8 @@ def validate_thornwake_rootgate_toll_chapter(errors: list[str]) -> None:
     ensure(all(bool(str(resource_nodes.get(key, {}).get("guard_front_id", ""))) for key in ("rootgate_verdant_nursery", "rootgate_toll_rootgate_nursery_rare_exchange", "clauseworks_scrip_mint", "rootgate_toll_clauseworks_toll_depot_rare_exchange")), errors, "Rootgate Toll rare sources must remain encounter-guarded")
     campaign = campaigns.get("campaign_frontier_claims", {})
     chapters = [row for row in campaign.get("scenarios", []) if isinstance(row, dict)]
-    ensure([str(row.get("scenario_id", "")) for row in chapters] == ["mireford-skirmish", "orevein-contract", "bellwake-wreck-claim", "rootgate-toll", "fogchart-mooring", "clauseworks-counterclaim"], errors, "Frontier Claims must retain its exact six-chapter order")
-    if len(chapters) == 6:
+    ensure([str(row.get("scenario_id", "")) for row in chapters] == ["mireford-skirmish", "orevein-contract", "bellwake-wreck-claim", "rootgate-toll", "fogchart-mooring", "clauseworks-counterclaim", "nightglass-ledger-reversal"], errors, "Frontier Claims must retain its exact seven-chapter order")
+    if len(chapters) == 7:
         bellwake_export = chapters[2].get("carryover_export", {}) if isinstance(chapters[2].get("carryover_export", {}), dict) else {}
         rootgate_import = chapters[3].get("carryover_import", {}) if isinstance(chapters[3].get("carryover_import", {}), dict) else {}
         rootgate_unlocks = chapters[3].get("unlock_requirements", []) if isinstance(chapters[3].get("unlock_requirements", []), list) else []
@@ -44350,10 +44350,10 @@ def validate_thornwake_rootgate_toll_chapter(errors: list[str]) -> None:
         for token in (
             'const ROOTGATE_ID := "rootgate-toll"',
             'const ROOTGATE_HERO_ID := "hero_thornwake_tova_rootwright"',
-            'entries.size() != 6',
+            'entries.size() != 7',
             '"carryover_drowned_chart_recorded"',
-            '[MIREFORD_ID, OREVEIN_ID, BELLWAKE_ID, ROOTGATE_ID, FOGCHART_ID, CLAUSEWORKS_ID]',
-            'String(start_action.get("scenario_id", "")) != CLAUSEWORKS_ID',
+            '[MIREFORD_ID, OREVEIN_ID, BELLWAKE_ID, ROOTGATE_ID, FOGCHART_ID, CLAUSEWORKS_ID, NIGHTGLASS_ID]',
+            'String(start_action.get("scenario_id", "")) != NIGHTGLASS_ID',
         ):
             ensure(token in frontier_text, errors, f"Frontier Claims runtime owner is missing Rootgate token: {token}")
 
@@ -44373,8 +44373,8 @@ def validate_veilmourn_fogchart_mooring_chapter(errors: list[str]) -> None:
     scenario_rows = scenario_payload.get("items", []) if isinstance(scenario_payload.get("items", []), list) else []
     scenarios = items_index(scenario_payload)
     campaigns = items_index(campaign_payload)
-    ensure(int(scenario_payload.get("player_facing_active_scenario_count", 0)) == 21, errors, "Fogchart Mooring must cover the exact twenty-one-scenario active roster")
-    ensure(len(scenario_rows) == 21 and str(scenario_rows[19].get("id", "")) == "fogchart-mooring", errors, "Fogchart Mooring must remain the exact twentieth active authored scenario")
+    ensure(int(scenario_payload.get("player_facing_active_scenario_count", 0)) == 22, errors, "Fogchart Mooring must cover the exact twenty-two-scenario active roster")
+    ensure(len(scenario_rows) == 22 and str(scenario_rows[19].get("id", "")) == "fogchart-mooring", errors, "Fogchart Mooring must remain the exact twentieth active authored scenario")
     scenario = scenarios.get("fogchart-mooring", {})
     ensure(bool(scenario), errors, "Fogchart Mooring scenario is missing")
     ensure(str(scenario.get("player_faction_id", "")) == "faction_veilmourn", errors, "Fogchart Mooring must remain a Veilmourn scenario")
@@ -44441,8 +44441,8 @@ def validate_veilmourn_fogchart_mooring_chapter(errors: list[str]) -> None:
     ensure(all(bool(str(resource_nodes.get(key, {}).get("guard_front_id", ""))) for key in ("fogchart_memory_salt_pan", "fogchart_mooring_fogchart_mooring_rare_exchange", "halo_registry_aetherglass", "fogchart_mooring_halo_registry_front_rare_exchange")), errors, "Fogchart rare sources must remain encounter-guarded")
     campaign = campaigns.get("campaign_frontier_claims", {})
     chapters = [row for row in campaign.get("scenarios", []) if isinstance(row, dict)]
-    ensure([str(row.get("scenario_id", "")) for row in chapters] == ["mireford-skirmish", "orevein-contract", "bellwake-wreck-claim", "rootgate-toll", "fogchart-mooring", "clauseworks-counterclaim"], errors, "Frontier Claims must retain exact six-chapter order")
-    if len(chapters) == 6:
+    ensure([str(row.get("scenario_id", "")) for row in chapters] == ["mireford-skirmish", "orevein-contract", "bellwake-wreck-claim", "rootgate-toll", "fogchart-mooring", "clauseworks-counterclaim", "nightglass-ledger-reversal"], errors, "Frontier Claims must retain exact seven-chapter order")
+    if len(chapters) == 7:
         rootgate_export = chapters[3].get("carryover_export", {}) if isinstance(chapters[3].get("carryover_export", {}), dict) else {}
         fogchart_import = chapters[4].get("carryover_import", {}) if isinstance(chapters[4].get("carryover_import", {}), dict) else {}
         fogchart_unlocks = chapters[4].get("unlock_requirements", []) if isinstance(chapters[4].get("unlock_requirements", []), list) else []
@@ -44457,7 +44457,7 @@ def validate_veilmourn_fogchart_mooring_chapter(errors: list[str]) -> None:
             'const SCENARIO_ID := "fogchart-mooring"',
             'const HERO_ID := "hero_veilmourn_ruln_vanehook"',
             'const ARMY_ID := "army_bellwake_privateers"',
-            'scenario_ids.size() != 21',
+            'scenario_ids.size() != 22',
             'scenario_ids[19] != SCENARIO_ID',
             "ScenarioSelectRulesScript.build_skirmish_setup",
             "ScenarioFactoryScript.create_session",
@@ -44486,11 +44486,11 @@ def validate_veilmourn_fogchart_mooring_chapter(errors: list[str]) -> None:
         for token in (
             'const FOGCHART_ID := "fogchart-mooring"',
             'const FOGCHART_HERO_ID := "hero_veilmourn_ruln_vanehook"',
-            'entries.size() != 6',
+            'entries.size() != 7',
             '"carryover_rootgate_toll_recorded"',
             '"rootgate_rare_resource_transfer": false',
-            '[MIREFORD_ID, OREVEIN_ID, BELLWAKE_ID, ROOTGATE_ID, FOGCHART_ID, CLAUSEWORKS_ID]',
-            'String(start_action.get("scenario_id", "")) != CLAUSEWORKS_ID',
+            '[MIREFORD_ID, OREVEIN_ID, BELLWAKE_ID, ROOTGATE_ID, FOGCHART_ID, CLAUSEWORKS_ID, NIGHTGLASS_ID]',
+            'String(start_action.get("scenario_id", "")) != NIGHTGLASS_ID',
         ):
             ensure(token in frontier_text, errors, f"Frontier Claims runtime owner is missing Fogchart token: {token}")
 
@@ -44510,8 +44510,8 @@ def validate_brasshollow_clauseworks_counterclaim_chapter(errors: list[str]) -> 
     rows = scenario_payload.get("items", []) if isinstance(scenario_payload.get("items", []), list) else []
     scenarios = items_index(scenario_payload)
     campaigns = items_index(campaign_payload)
-    ensure(int(scenario_payload.get("player_facing_active_scenario_count", 0)) == 21, errors, "Clauseworks Counterclaim must establish the exact twenty-one-scenario active roster")
-    ensure(len(rows) == 21 and str(rows[-1].get("id", "")) == "clauseworks-counterclaim", errors, "Clauseworks Counterclaim must be the exact twenty-first active authored scenario")
+    ensure(int(scenario_payload.get("player_facing_active_scenario_count", 0)) == 22, errors, "Clauseworks Counterclaim must cover the exact twenty-two-scenario active roster")
+    ensure(len(rows) == 22 and str(rows[20].get("id", "")) == "clauseworks-counterclaim", errors, "Clauseworks Counterclaim must remain the exact twenty-first active authored scenario")
     scenario = scenarios.get("clauseworks-counterclaim", {})
     ensure(str(scenario.get("player_faction_id", "")) == "faction_brasshollow", errors, "Clauseworks Counterclaim must be Brasshollow-owned")
     ensure(str(scenario.get("hero_id", "")) == "hero_brasshollow_oren_bellfounder", errors, "Clauseworks Counterclaim must activate Oren Bellfounder")
@@ -44564,8 +44564,8 @@ def validate_brasshollow_clauseworks_counterclaim_chapter(errors: list[str]) -> 
     campaign = campaigns.get("campaign_frontier_claims", {})
     chapters = [row for row in campaign.get("scenarios", []) if isinstance(row, dict)]
     chapter_ids = [str(row.get("scenario_id", "")) for row in chapters]
-    ensure(chapter_ids == ["mireford-skirmish", "orevein-contract", "bellwake-wreck-claim", "rootgate-toll", "fogchart-mooring", "clauseworks-counterclaim"], errors, "Frontier Claims must retain exact six-chapter order")
-    if len(chapters) == 6:
+    ensure(chapter_ids == ["mireford-skirmish", "orevein-contract", "bellwake-wreck-claim", "rootgate-toll", "fogchart-mooring", "clauseworks-counterclaim", "nightglass-ledger-reversal"], errors, "Frontier Claims must retain exact seven-chapter order")
+    if len(chapters) == 7:
         fogchart_export = chapters[4].get("carryover_export", {}) if isinstance(chapters[4].get("carryover_export", {}), dict) else {}
         clauseworks_import = chapters[5].get("carryover_import", {}) if isinstance(chapters[5].get("carryover_import", {}), dict) else {}
         clauseworks_unlocks = chapters[5].get("unlock_requirements", []) if isinstance(chapters[5].get("unlock_requirements", []), list) else []
@@ -44581,8 +44581,8 @@ def validate_brasshollow_clauseworks_counterclaim_chapter(errors: list[str]) -> 
             'const SCENARIO_ID := "clauseworks-counterclaim"',
             'const HERO_ID := "hero_brasshollow_oren_bellfounder"',
             'const ARMY_ID := "army_orevein_exactors"',
-            'scenario_ids.size() != 21',
-            'scenario_ids[-1] != SCENARIO_ID',
+            'scenario_ids.size() != 22',
+            'scenario_ids[20] != SCENARIO_ID',
             "ScenarioSelectRulesScript.build_skirmish_setup",
             "ScenarioFactoryScript.create_session",
             "TownRulesScript.get_build_actions",
@@ -44610,13 +44610,87 @@ def validate_brasshollow_clauseworks_counterclaim_chapter(errors: list[str]) -> 
         for token in (
             'const CLAUSEWORKS_ID := "clauseworks-counterclaim"',
             'const CLAUSEWORKS_HERO_ID := "hero_brasshollow_oren_bellfounder"',
-            'entries.size() != 6',
+            'entries.size() != 7',
             '"carryover_fogchart_claim_recorded"',
             '"fogchart_rare_resource_transfer": false',
-            '[MIREFORD_ID, OREVEIN_ID, BELLWAKE_ID, ROOTGATE_ID, FOGCHART_ID, CLAUSEWORKS_ID]',
-            'String(start_action.get("scenario_id", "")) != CLAUSEWORKS_ID',
+            '[MIREFORD_ID, OREVEIN_ID, BELLWAKE_ID, ROOTGATE_ID, FOGCHART_ID, CLAUSEWORKS_ID, NIGHTGLASS_ID]',
+            'String(start_action.get("scenario_id", "")) != NIGHTGLASS_ID',
         ):
             ensure(token in frontier_text, errors, f"Frontier Claims runtime owner is missing Clauseworks token: {token}")
+
+
+def validate_mireclaw_nightglass_ledger_reversal_chapter(errors: list[str]) -> None:
+    scenario_path = ROOT / "content/scenarios.json"
+    campaign_path = ROOT / "content/campaigns.json"
+    report_path = ROOT / "tests/mireclaw_nightglass_ledger_reversal_chapter_report.gd"
+    scene_path = ROOT / "tests/mireclaw_nightglass_ledger_reversal_chapter_report.tscn"
+    frontier_path = ROOT / "tests/frontier_claims_campaign_report.gd"
+    for path in (scenario_path, campaign_path, report_path, scene_path, frontier_path):
+        ensure(path.exists(), errors, f"Nightglass Ledger Reversal owner is missing {path.relative_to(ROOT)}")
+    if not scenario_path.exists() or not campaign_path.exists():
+        return
+    scenario_payload = load_json(scenario_path)
+    campaign_payload = load_json(campaign_path)
+    rows = scenario_payload.get("items", []) if isinstance(scenario_payload.get("items", []), list) else []
+    scenarios = items_index(scenario_payload)
+    campaigns = items_index(campaign_payload)
+    ensure(int(scenario_payload.get("player_facing_active_scenario_count", 0)) == 22, errors, "Nightglass Ledger Reversal must establish the exact twenty-two-scenario active roster")
+    ensure(len(rows) == 22 and str(rows[-1].get("id", "")) == "nightglass-ledger-reversal", errors, "Nightglass Ledger Reversal must be the exact twenty-second scenario")
+    scenario = scenarios.get("nightglass-ledger-reversal", {})
+    ensure(str(scenario.get("player_faction_id", "")) == "faction_mireclaw", errors, "Nightglass Ledger Reversal must be Mireclaw-owned")
+    ensure(str(scenario.get("hero_id", "")) == "hero_mireclaw_kessa_chainboom", errors, "Nightglass Ledger Reversal must activate Kessa Chainboom")
+    ensure(str(scenario.get("player_army_id", "")) == "army_nightglass_dominion", errors, "Nightglass Ledger Reversal must activate Nightglass Dominion")
+    ensure(scenario.get("map_size", {}) == {"width": 11, "height": 6}, errors, "Nightglass Ledger Reversal must retain its exact 11x6 map")
+    ensure(scenario.get("selection", {}).get("availability", {}) == {"campaign": True, "skirmish": True}, errors, "Nightglass Ledger Reversal must remain dual-mode")
+    towns = {str(row.get("placement_id", "")): row for row in scenario.get("towns", []) if isinstance(row, dict)}
+    ensure(str(towns.get("nightglass_player_redoubt", {}).get("town_id", "")) == "town_nightglass_redoubt" and str(towns.get("nightglass_player_redoubt", {}).get("owner", "")) == "player", errors, "Nightglass Redoubt must be the authored player town")
+    ensure(str(towns.get("clauseworks_counter_front", {}).get("town_id", "")) == "town_brasshollow_clauseworks_depot" and str(towns.get("clauseworks_counter_front", {}).get("owner", "")) == "enemy", errors, "Clauseworks Counter-Front must be hostile")
+    enemies = [row for row in scenario.get("enemy_factions", []) if isinstance(row, dict)]
+    ensure(len(enemies) == 1 and str(enemies[0].get("faction_id", "")) == "faction_brasshollow", errors, "Nightglass Ledger Reversal must retain one Brasshollow enemy empire")
+    encounters = {str(row.get("placement_id", "")): row for row in scenario.get("encounters", []) if isinstance(row, dict)}
+    ensure(list(encounters) == ["nightglass_ledger_guard", "nightglass_rivet_auditors", "nightglass_furnace_exactors"], errors, "Nightglass must retain exact ordered encounter fronts")
+    ensure([str(encounters[key].get("encounter_id", "")) for key in encounters] == ["encounter_charter_guard", "encounter_charter_bastion_reserve", "encounter_orevein_exactors"], errors, "Nightglass encounters must retain exact identities")
+    stacks = {key: [{"unit_id": str(stack.get("unit_id", "")), "count": int(stack.get("count", 0))} for stack in row.get("enemy_army", {}).get("stacks", []) if isinstance(stack, dict)] for key, row in encounters.items()}
+    ensure(stacks == {
+        "nightglass_ledger_guard": [{"unit_id": "unit_brasshollow_scrip_haulers", "count": 7}, {"unit_id": "unit_brasshollow_rivet_hounds", "count": 5}, {"unit_id": "unit_brasshollow_furnace_pavis_teams", "count": 2}],
+        "nightglass_rivet_auditors": [{"unit_id": "unit_brasshollow_scrip_haulers", "count": 9}, {"unit_id": "unit_brasshollow_rivet_hounds", "count": 7}, {"unit_id": "unit_brasshollow_furnace_pavis_teams", "count": 3}],
+        "nightglass_furnace_exactors": [{"unit_id": "unit_brasshollow_scrip_haulers", "count": 8}, {"unit_id": "unit_brasshollow_rivet_hounds", "count": 6}, {"unit_id": "unit_brasshollow_furnace_pavis_teams", "count": 4}],
+    }, errors, "Nightglass must retain screened encounter rosters")
+    objectives = scenario.get("objectives", {}) if isinstance(scenario.get("objectives", {}), dict) else {}
+    victory = {str(row.get("id", "")): row for row in objectives.get("victory", []) if isinstance(row, dict)}
+    defeat = {str(row.get("id", "")): row for row in objectives.get("defeat", []) if isinstance(row, dict)}
+    ensure(str(victory.get("claim_clauseworks_counter_front", {}).get("placement_id", "")) == "clauseworks_counter_front", errors, "Nightglass victory must retain Clauseworks capture")
+    ensure(str(victory.get("break_nightglass_ledger_guard", {}).get("flag", "")) == "nightglass_ledger_guard_broken", errors, "Nightglass victory must retain ledger-guard clearance")
+    ensure(str(victory.get("break_nightglass_rivet_auditors", {}).get("flag", "")) == "nightglass_rivet_auditors_broken", errors, "Nightglass victory must retain auditor clearance")
+    ensure(str(victory.get("clear_nightglass_furnace_exactors", {}).get("placement_id", "")) == "nightglass_furnace_exactors", errors, "Nightglass victory must retain furnace clearance")
+    ensure(int(defeat.get("reverse_the_ledger_before_daybreak", {}).get("day", 0)) == 13, errors, "Nightglass must retain exact Day 13 deadline")
+    resources = {str(row.get("placement_id", "")): row for row in scenario.get("resource_nodes", []) if isinstance(row, dict)}
+    required = {"nightglass_wood": "site_wood_wagon", "nightglass_ore": "site_ore_crates", "nightglass_peatwax_yard": "site_peatwax_reed_yard", "nightglass_drum_outpost": "site_bog_drum_outpost", "nightglass_ledger_reversal_nightglass_redoubt_rare_exchange": "site_frontier_rare_exchange", "clauseworks_counter_wood": "site_wood_wagon", "clauseworks_counter_ore": "site_ore_crates", "clauseworks_counter_scrip": "site_brass_scrip_mint", "nightglass_ledger_reversal_clauseworks_counter_front_rare_exchange": "site_frontier_rare_exchange"}
+    ensure({key: str(resources.get(key, {}).get("site_id", "")) for key in required} == required, errors, "Nightglass must retain exact player/enemy economy sources")
+    ensure(all(bool(str(resources.get(key, {}).get("guard_front_id", ""))) for key in ("nightglass_peatwax_yard", "nightglass_ledger_reversal_nightglass_redoubt_rare_exchange", "clauseworks_counter_scrip", "nightglass_ledger_reversal_clauseworks_counter_front_rare_exchange")), errors, "Nightglass rare sources must remain guarded")
+    campaign = campaigns.get("campaign_frontier_claims", {})
+    chapters = [row for row in campaign.get("scenarios", []) if isinstance(row, dict)]
+    ensure([str(row.get("scenario_id", "")) for row in chapters] == ["mireford-skirmish", "orevein-contract", "bellwake-wreck-claim", "rootgate-toll", "fogchart-mooring", "clauseworks-counterclaim", "nightglass-ledger-reversal"], errors, "Frontier Claims must retain exact seven-chapter order")
+    if len(chapters) == 7:
+        export = chapters[5].get("carryover_export", {}) if isinstance(chapters[5].get("carryover_export", {}), dict) else {}
+        imported = chapters[6].get("carryover_import", {}) if isinstance(chapters[6].get("carryover_import", {}), dict) else {}
+        unlocks = chapters[6].get("unlock_requirements", []) if isinstance(chapters[6].get("unlock_requirements", []), list) else []
+        ensure(export.get("resource_caps", {}) == {"gold": 1000, "wood": 3, "ore": 3, "aetherglass": 0, "embergrain": 0, "peatwax": 0, "verdant_grafts": 0, "brass_scrip": 0, "memory_salt": 0}, errors, "Clauseworks export must be common-resource-only")
+        ensure(export.get("flag_ids", []) == ["clauseworks_claim_recorded", "beacon_plate_assayed"], errors, "Clauseworks export must retain exact flags")
+        ensure(imported == {"from_scenario_id": "clauseworks-counterclaim", "resources": True, "hero_progression": False, "spells": False, "artifacts": False, "flags_prefix": "carryover_"}, errors, "Nightglass import must remain resource/flag-only")
+        ensure(unlocks == [{"type": "scenario_status", "scenario_id": "clauseworks-counterclaim", "status": "victory"}, {"type": "scenario_flag_true", "scenario_id": "clauseworks-counterclaim", "flag": "clauseworks_claim_recorded"}], errors, "Nightglass must unlock from exact Clauseworks evidence")
+    if report_path.exists():
+        text = report_path.read_text(encoding="utf-8")
+        for token in ("MIRECLAW_NIGHTGLASS_LEDGER_REVERSAL_CHAPTER_REPORT", 'const SCENARIO_ID := "nightglass-ledger-reversal"', 'const HERO_ID := "hero_mireclaw_kessa_chainboom"', 'const ARMY_ID := "army_nightglass_dominion"', 'scenario_ids.size() != 22', 'scenario_ids[-1] != SCENARIO_ID', "ScenarioSelectRulesScript.build_skirmish_setup", "ScenarioFactoryScript.create_session", "TownRulesScript.get_build_actions", 'ContentService.get_unit(candidate_unit_id)', 'String(candidate_unit.get("faction_id", "")) == "faction_mireclaw"', "TownRulesScript.recruit_active_town", "BattleRulesScript.create_battle_payload", "ScenarioRulesScript.evaluate_session", "CampaignRulesScript.build_chapter_action", "CampaignRulesScript.record_session_completion", "CampaignRulesScript.build_session", "SaveService.save_runtime_manual_session", "SaveService.restore_manual_session", '"locked_before_clauseworks": true', '"unlocked_after_exact_clauseworks_evidence": true', '"brass_scrip_transferred": false', '"hero_spell_artifact_transfer": false', 'get_tree().quit(0)', 'get_tree().quit(1)'):
+            ensure(token in text, errors, f"Nightglass focused report is missing token: {token}")
+        ensure('contains("unit_mireclaw_")' not in text, errors, "Nightglass focused recruitment must use live faction ownership rather than an id-prefix heuristic")
+        ensure("BattleRulesScript.resolve" not in text and "OverworldRules._" not in text, errors, "Nightglass focused owner must use public rules")
+    if scene_path.exists():
+        ensure('res://tests/mireclaw_nightglass_ledger_reversal_chapter_report.gd' in scene_path.read_text(encoding="utf-8"), errors, "Nightglass focused scene must load its exact script")
+    if frontier_path.exists():
+        frontier = frontier_path.read_text(encoding="utf-8")
+        for token in ('const NIGHTGLASS_ID := "nightglass-ledger-reversal"', 'const NIGHTGLASS_HERO_ID := "hero_mireclaw_kessa_chainboom"', 'entries.size() != 7', '"carryover_clauseworks_claim_recorded"', '"clauseworks_rare_resource_transfer": false', '[MIREFORD_ID, OREVEIN_ID, BELLWAKE_ID, ROOTGATE_ID, FOGCHART_ID, CLAUSEWORKS_ID, NIGHTGLASS_ID]', 'String(start_action.get("scenario_id", "")) != NIGHTGLASS_ID'):
+            ensure(token in frontier, errors, f"Frontier Claims runtime owner is missing Nightglass token: {token}")
 
 
 def main() -> int:
@@ -44660,6 +44734,7 @@ def main() -> int:
     validate_thornwake_rootgate_toll_chapter(errors)
     validate_veilmourn_fogchart_mooring_chapter(errors)
     validate_brasshollow_clauseworks_counterclaim_chapter(errors)
+    validate_mireclaw_nightglass_ledger_reversal_chapter(errors)
     validate_project_and_scenes(errors)
     validate_save_management(errors)
     validate_skirmish_setup(errors)

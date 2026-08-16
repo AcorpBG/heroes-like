@@ -515,8 +515,8 @@
     {
       "id": "campaign_frontier_claims",
       "name": "Frontier Claims",
-      "description": "Six independent commanders follow one disputed survey chain from Mireford's root road through Orevein, Bellwake, Rootgate, and Fogchart to Clauseworks' final counterclaim.",
-      "summary": "A six-chapter cross-faction campaign anthology linking Thornwake, Brasshollow, and Veilmourn fronts through bounded supply and objective carryover.",
+      "description": "Seven independent commanders follow one disputed survey chain from Mireford's root road through Orevein, Bellwake, Rootgate, Fogchart, and Clauseworks to Nightglass' final ledger reversal.",
+      "summary": "A seven-chapter cross-faction campaign anthology linking Thornwake, Brasshollow, Veilmourn, and Mireclaw fronts through bounded supply and objective carryover.",
       "region": "Mireford to Bellwake Coast, Rootgate, Fogchart, and Clauseworks",
       "arc_goal": "Secure six rival frontier claims and bind the shared survey chain from Murkward through Riverwatch, Prismhearth, Clauseworks, the Halo registry, and Highwater's audit front.",
       "completion_title": "Claims Ratified",
@@ -747,6 +747,55 @@
           ],
           "carryover_import": {
             "from_scenario_id": "fogchart-mooring",
+            "resources": true,
+            "hero_progression": false,
+            "spells": false,
+            "artifacts": false,
+            "flags_prefix": "carryover_"
+          },
+          "carryover_export": {
+            "retain_hero_progression": false,
+            "retain_spells": false,
+            "retain_artifacts": false,
+            "resource_fraction": 0.35,
+            "resource_caps": {
+              "gold": 1000,
+              "wood": 3,
+              "ore": 3,
+              "aetherglass": 0,
+              "embergrain": 0,
+              "peatwax": 0,
+              "verdant_grafts": 0,
+              "brass_scrip": 0,
+              "memory_salt": 0
+            },
+            "flag_ids": [
+              "clauseworks_claim_recorded",
+              "beacon_plate_assayed"
+            ]
+          }
+        },
+        {
+          "scenario_id": "nightglass-ledger-reversal",
+          "label": "Chapter VII: Nightglass Ledger Reversal",
+          "description": "Carry Clauseworks' stamped counterclaim into the marsh, break Brasshollow's ledger road, and record the seventh frontier claim from Nightglass Redoubt.",
+          "chapter_index": 7,
+          "chapter_title": "Reverse the Ledger",
+          "status_hint": "Kessa receives bounded Clauseworks common stores and evidence while retaining her own Mireclaw command state.",
+          "carryover_summary": "Imports bounded Clauseworks common resources and flags, then resolves the anthology without cross-faction hero, spell, artifact, or rare-resource transfer.",
+          "briefing": "Kessa Chainboom must reverse Clauseworks' stamped counterclaim before Brasshollow turns the marsh road into a permanent toll ledger.",
+          "intel": "Ledger guards, rivet auditors, and furnace exactors hold the Clauseworks counter-front; Oren's stamped record proves the disputed road reaches Nightglass.",
+          "stakes": "Reverse Clauseworks' ledger and all seven claims become one marsh-bound frontier record; fail and Brasshollow seals Nightglass behind its boiler tolls.",
+          "aftermath_victory": "Clauseworks' counter-ledger is reversed beneath Nightglass wax and the seven-command frontier docket becomes a complete disputed record.",
+          "aftermath_defeat": "Brasshollow closes the marsh docket and strands the earlier claims beyond Nightglass' silenced drums.",
+          "journal_victory": "Kessa reversed the Clauseworks ledger and recorded the seventh frontier claim from Nightglass.",
+          "journal_defeat": "Kessa failed to bind Nightglass into the final frontier record.",
+          "unlock_requirements": [
+            {"type": "scenario_status", "scenario_id": "clauseworks-counterclaim", "status": "victory"},
+            {"type": "scenario_flag_true", "scenario_id": "clauseworks-counterclaim", "flag": "clauseworks_claim_recorded"}
+          ],
+          "carryover_import": {
+            "from_scenario_id": "clauseworks-counterclaim",
             "resources": true,
             "hero_progression": false,
             "spells": false,
