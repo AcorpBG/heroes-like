@@ -1,6 +1,6 @@
 {
   "domain_status": "",
-  "player_facing_active_scenario_count": 20,
+  "player_facing_active_scenario_count": 21,
   "reactivation_reason": "player_facing_campaign_reactivation_smoke_2026_05_23",
   "items": [
     {
@@ -5196,6 +5196,147 @@
             ]
           }
         }
+      ]
+    },
+    {
+      "id": "clauseworks-counterclaim",
+      "name": "Clauseworks Counterclaim",
+      "selection": {
+        "summary": "Lead Oren Bellfounder from Clauseworks Depot, break Embercourt's charter line, and capture the Highwater audit front in campaign or standalone skirmish play.",
+        "recommended_difficulty": "normal",
+        "map_size_label": "Clauseworks Audit Road (11x6)",
+        "player_summary": "Oren Bellfounder leads the Orevein Exactors from Clauseworks Depot, turning its tollworks into a live Brasshollow command front.",
+        "enemy_summary": "Embercourt archive wardens, bridge levies, and beacon crews hold Highwater's audit front while charter pressure voids every unstamped road.",
+        "availability": {"campaign": true, "skirmish": true}
+      },
+      "map_size": {"width": 11, "height": 6},
+      "player_faction_id": "faction_brasshollow",
+      "player_army_id": "army_orevein_exactors",
+      "hero_id": "hero_brasshollow_oren_bellfounder",
+      "starting_resources": {"gold": 500, "wood": 3, "ore": 4, "brass_scrip": 2},
+      "map": [
+        ["rough", "rough", "rough", "rough", "rough", "rough", "grass", "grass", "grass", "grass", "grass"],
+        ["rough", "rough", "water", "rough", "rough", "rough", "water", "grass", "grass", "grass", "grass"],
+        ["rough", "rough", "rough", "rough", "rough", "rough", "grass", "grass", "grass", "grass", "grass"],
+        ["rough", "water", "rough", "rough", "rough", "grass", "grass", "grass", "grass", "grass", "grass"],
+        ["rough", "water", "rough", "rough", "rough", "grass", "grass", "water", "grass", "grass", "grass"],
+        ["rough", "rough", "rough", "rough", "rough", "grass", "grass", "water", "grass", "grass", "grass"]
+      ],
+      "start": {"x": 0, "y": 2},
+      "hero_starts": ["hero_brasshollow_oren_bellfounder"],
+      "objectives": {
+        "victory_text": "Oren stamps Highwater's audit into the Clauseworks ledger and records a sixth frontier claim without inheriting another commander's oath.",
+        "defeat_text": "Embercourt voids the counterclaim, closes Clauseworks Depot, and strikes the sixth frontier claim from the docket.",
+        "victory": [
+          {"id": "claim_highwater_audit_front", "label": "Claim the Highwater Audit Front", "type": "town_owned_by_player", "placement_id": "highwater_audit_front"},
+          {"id": "break_clauseworks_archive_wardens", "label": "Break the Clauseworks Archive Wardens", "type": "flag_true", "flag": "clauseworks_archive_wardens_broken"},
+          {"id": "break_clauseworks_bridge_levies", "label": "Break the Clauseworks Bridge Levies", "type": "flag_true", "flag": "clauseworks_bridge_levies_broken"},
+          {"id": "clear_clauseworks_beacon_wardens", "label": "Clear the Clauseworks Beacon Wardens", "type": "encounter_resolved", "placement_id": "clauseworks_beacon_wardens"}
+        ],
+        "defeat": [
+          {"id": "hold_clauseworks_depot", "label": "Keep Clauseworks Depot under Brasshollow authority", "type": "town_not_owned_by_player", "placement_id": "clauseworks_depot"},
+          {"id": "oren_survives", "label": "Oren must survive the audit-road expedition", "type": "session_flag_equals", "flag": "campaign", "value": "defeat"},
+          {"id": "contain_charter_pressure", "label": "Do not let Embercourt pressure reach 10", "type": "enemy_pressure_at_least", "faction_id": "faction_embercourt", "threshold": 10},
+          {"id": "stamp_the_audit_before_daybreak", "label": "Stamp the audit road before Day 13", "type": "day_at_least", "day": 13}
+        ]
+      },
+      "script_hooks": [
+        {
+          "id": "clauseworks_boiler_train",
+          "priority": 120,
+          "conditions": [{"type": "day_at_least", "day": 3}, {"type": "town_owned_by_player", "placement_id": "clauseworks_depot"}],
+          "effects": [
+            {"type": "add_resources", "resources": {"gold": 250, "ore": 1}},
+            {"type": "town_add_recruits", "placement_id": "clauseworks_depot", "recruits": {"unit_brasshollow_scrip_haulers": 3, "unit_brasshollow_rivet_hounds": 2}},
+            {"type": "message", "text": "Clauseworks opens its boiler ledger and sends Oren fresh haulers, rivet hounds, and audit plate."}
+          ]
+        },
+        {
+          "id": "highwater_audit_stamped",
+          "priority": 110,
+          "conditions": [{"type": "objective_met", "objective_id": "claim_highwater_audit_front"}],
+          "effects": [
+            {"type": "town_add_building", "placement_id": "highwater_audit_front", "building_id": "building_wayfarers_hall"},
+            {"type": "set_flag", "flag": "clauseworks_claim_recorded", "value": true},
+            {"type": "message", "text": "Oren stamps the seized Highwater audit into Clauseworks' counter-ledger and records the sixth frontier claim."}
+          ]
+        },
+        {
+          "id": "highwater_charter_counterstroke",
+          "priority": 94,
+          "conditions": [{"type": "day_at_least", "day": 3}, {"type": "town_owned_by_player", "placement_id": "clauseworks_depot"}],
+          "effects": [
+            {"type": "spawn_encounter", "placement": {"placement_id": "clauseworks_charter_counterstroke", "encounter_id": "encounter_bridgeward_levies", "x": 10, "y": 5, "difficulty": "scripted", "spawned_by_faction_id": "faction_embercourt", "days_active": 0, "arrived": false, "goal_distance": 9999}},
+            {"type": "message", "text": "Highwater launches a bridgeward counterstroke along the southern audit road."}
+          ]
+        },
+        {
+          "id": "unbroken_audit_line",
+          "priority": 88,
+          "conditions": [{"type": "day_at_least", "day": 3}, {"type": "objective_not_met", "objective_id": "break_clauseworks_archive_wardens"}],
+          "effects": [
+            {"type": "add_enemy_pressure", "faction_id": "faction_embercourt", "amount": 2},
+            {"type": "spawn_encounter", "placement": {"placement_id": "clauseworks_charter_reinforcement", "encounter_id": "encounter_beacon_wardens", "x": 9, "y": 0, "difficulty": "scripted", "spawned_by_faction_id": "faction_embercourt", "days_active": 0, "arrived": false, "goal_distance": 9999}},
+            {"type": "message", "text": "The unbroken archive line draws another beacon crew onto Clauseworks' north rise."}
+          ]
+        },
+        {
+          "id": "beacon_plate_assayed",
+          "priority": 84,
+          "conditions": [{"type": "encounter_resolved", "placement_id": "clauseworks_beacon_wardens"}],
+          "effects": [
+            {"type": "add_resources", "resources": {"brass_scrip": 2}},
+            {"type": "award_experience", "amount": 120},
+            {"type": "set_flag", "flag": "beacon_plate_assayed", "value": true},
+            {"type": "message", "text": "Oren assays the broken beacon plate into Clauseworks' ledger and recovers two stamped scrip."}
+          ]
+        }
+      ],
+      "towns": [
+        {"placement_id": "clauseworks_depot", "town_id": "town_brasshollow_clauseworks_depot", "x": 0, "y": 2, "owner": "player", "recovery": {"pressure": 1, "source": "audit-road attrition"}},
+        {"placement_id": "highwater_audit_front", "town_id": "town_highwater_keep", "x": 10, "y": 2, "owner": "enemy"}
+      ],
+      "enemy_factions": [
+        {
+          "faction_id": "faction_embercourt",
+          "label": "Highwater Charter Audit",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 1,
+          "raid_threshold": 5,
+          "max_active_raids": 2,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {"gold": 150, "embergrain": 1},
+          "raid_encounter_ids": ["encounter_archive_wardens", "encounter_bridgeward_levies"],
+          "spawn_points": [{"x": 9, "y": 1}, {"x": 9, "y": 4}],
+          "siege_target_placement_id": "clauseworks_depot",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 2,
+          "priority_target_bonus": 115,
+          "priority_target_placement_ids": ["clauseworks_depot", "clauseworks_scrip_mint", "clauseworks_gauge_shrine", "clauseworks_archive_wardens"],
+          "strategy_overrides": {"site_family_weights": {"faction_outpost": 1.4, "frontier_shrine": 1.2}, "raid_target_weights": {"town": 1.35, "resource": 1.1, "encounter": 1.2}, "raid": {"town_siege_weight": 1.45, "site_denial_weight": 1.2}}
+        }
+      ],
+      "resource_nodes": [
+        {"placement_id": "clauseworks_wood", "site_id": "site_wood_wagon", "x": 1, "y": 0},
+        {"placement_id": "clauseworks_ore", "site_id": "site_ore_crates", "x": 2, "y": 5},
+        {"placement_id": "clauseworks_scout_shrine", "site_id": "site_scout_shrine", "x": 5, "y": 2},
+        {"placement_id": "clauseworks_scrip_mint", "site_id": "site_brass_scrip_mint", "x": 0, "y": 1, "guard_front_id": "clauseworks_archive_wardens"},
+        {"placement_id": "clauseworks_gauge_shrine", "site_id": "site_brasshollow_gauge_shrine", "x": 3, "y": 3},
+        {"placement_id": "highwater_audit_wood", "site_id": "site_wood_wagon", "x": 9, "y": 0, "collected_by_faction_id": "faction_embercourt"},
+        {"placement_id": "highwater_audit_ore", "site_id": "site_ore_crates", "x": 9, "y": 5, "collected_by_faction_id": "faction_embercourt"},
+        {"placement_id": "highwater_audit_embergrain", "site_id": "site_embergrain_warm_granary", "x": 10, "y": 1, "guard_front_id": "clauseworks_bridge_levies", "collected_by_faction_id": "faction_embercourt"},
+        {"placement_id": "clauseworks_counterclaim_clauseworks_depot_rare_exchange", "site_id": "site_frontier_rare_exchange", "x": 1, "y": 2, "guard_front_id": "clauseworks_archive_wardens"},
+        {"placement_id": "clauseworks_counterclaim_highwater_audit_front_rare_exchange", "site_id": "site_frontier_rare_exchange", "x": 9, "y": 2, "guard_front_id": "clauseworks_bridge_levies", "collected_by_faction_id": "faction_embercourt"}
+      ],
+      "artifact_nodes": [
+        {"placement_id": "clauseworks_quarry_tally", "artifact_id": "artifact_quarry_tally_rod", "artifact_reward_table_id": "artifact_source_pickup_caches_common", "x": 3, "y": 1},
+        {"placement_id": "clauseworks_pressure_gauge", "artifact_id": "artifact_pressure_gauge_reliquary", "x": 6, "y": 3},
+        {"placement_id": "highwater_milepost_lantern", "artifact_id": "artifact_milepost_lantern", "x": 9, "y": 4}
+      ],
+      "encounters": [
+        {"placement_id": "clauseworks_archive_wardens", "encounter_id": "encounter_archive_wardens", "x": 4, "y": 1, "difficulty": "medium", "combat_seed": 21101, "enemy_army": {"id": "army_clauseworks_archive_wardens", "name": "Clauseworks Archive Wardens", "faction_id": "faction_embercourt", "stacks": [{"unit_id": "unit_river_guard", "count": 8}, {"unit_id": "unit_ember_archer", "count": 8}, {"unit_id": "unit_citadel_pikeward", "count": 3}]}},
+        {"placement_id": "clauseworks_bridge_levies", "encounter_id": "encounter_bridgeward_levies", "x": 6, "y": 4, "difficulty": "high", "combat_seed": 21102, "enemy_army": {"id": "army_clauseworks_bridge_levies", "name": "Clauseworks Bridge Levies", "faction_id": "faction_embercourt", "stacks": [{"unit_id": "unit_river_guard", "count": 5}, {"unit_id": "unit_citadel_pikeward", "count": 4}, {"unit_id": "unit_ember_archer", "count": 6}]}},
+        {"placement_id": "clauseworks_beacon_wardens", "encounter_id": "encounter_beacon_wardens", "x": 8, "y": 0, "difficulty": "high", "combat_seed": 21103, "enemy_army": {"id": "army_clauseworks_beacon_wardens", "name": "Clauseworks Beacon Wardens", "faction_id": "faction_embercourt", "stacks": [{"unit_id": "unit_ember_archer", "count": 6}, {"unit_id": "unit_river_guard", "count": 7}, {"unit_id": "unit_citadel_pikeward", "count": 2}]}}
       ]
     }
   ]

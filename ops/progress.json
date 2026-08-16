@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Fogchart Mooring is complete as one bounded shipped Veilmourn chapter. The catalog now has twenty active scenarios and Frontier Claims has five chapters; focused standalone/campaign flow, explicit common-only carryover, objective/save authority, 65-encounter clear breadth, economy/development, strategic-AI, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Select the next tracker-approved slice; whole-game and release readiness remain unclaimed.",
+  "currentNotes": "Clauseworks Counterclaim is complete as the twenty-first active scenario and sixth Frontier Claims chapter. Focused standalone/campaign/save/battle/outcome authority, 68-encounter breadth with queue signature 829808c9, campaign/deadline/replay/economy/AI/core compatibility, repository/editor validation, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. Platform evidence is export/startup only; no packaged chapter interaction, native hardware, signing, whole-game, or release-readiness claim is made.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-veilmourn-fogchart-mooring-chapter-10184",
-  "currentSliceId": "content-veilmourn-fogchart-mooring-chapter-10184",
-  "currentSliceNotes": "Completed with exact Fogchart/Halo, Ruln/Bellwake Privateers, Veilmourn/Sunvault, deadline, objective, route, common-only campaign carryover, save, combat-breadth, economy, strategic-AI, compatibility, static/editor, and bounded platform evidence. No new system or broad completion claim was introduced.",
+  "currentSlice": "content-brasshollow-clauseworks-counterclaim-chapter-10184",
+  "currentSliceId": "content-brasshollow-clauseworks-counterclaim-chapter-10184",
+  "currentSliceNotes": "Completed one bounded shipped Brasshollow chapter using Clauseworks Depot, Oren Bellfounder, Orevein Exactors, and existing systems. Exact focused, breadth, campaign, compatibility, static/editor, Linux export/startup, and Windows/Wine startup evidence passed without broad completion claims.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Veilmourn Fogchart Mooring Chapter",
-  "currentSliceUpdatedAt": "2026-08-16T11:11:34Z",
+  "currentSliceTitle": "Brasshollow Clauseworks Counterclaim Chapter",
+  "currentSliceUpdatedAt": "2026-08-16T11:45:57Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19847,7 +19847,7 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
-  "notes": "Completed the bounded Veilmourn Fogchart Mooring chapter. Twenty active campaign/skirmish scenarios and five Frontier Claims chapters now ship; exact Rootgate victory plus rootgate_toll_recorded unlocks chapter V with capped common-resource/flag carryover, explicit zero caps for all six rare resources, and no cross-faction hero, spell, or artifact transfer. Focused launch/objective/save proof, 65-encounter queue-clear breadth signature 829808c9, deadline/replay/economy/runway/strategic-AI/core compatibility, repository/editor validation, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. Packaged chapter interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+  "notes": "Registered the source-backed Clauseworks Counterclaim content slice. Current active scenario ownership is Embercourt9, Mireclaw3, Sunvault3, Thornwake2, Veilmourn2, Brasshollow1; Clauseworks Depot has no player-owned active scenario and Oren Bellfounder plus Orevein Exactors have no player-front usage. No content or runtime implementation has started for this slice.",
   "plannedSlices": [
     {
       "id": "presentation-overworld-object-focus-cue-adoption-10184",
@@ -86409,6 +86409,60 @@
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
       "blockedReason": null,
       "completedAt": "2026-08-16T11:11:34Z"
+    },
+    {
+      "id": "content-brasshollow-clauseworks-counterclaim-chapter-10184",
+      "title": "Brasshollow Clauseworks Counterclaim Chapter",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Add one bounded shipped Brasshollow campaign/skirmish front that uses Clauseworks Depot as a player town with the authored but unused Oren Bellfounder and Orevein Exactors through existing systems.",
+      "implementationTargets": [
+        "content/scenarios.json",
+        "content/campaigns.json",
+        "tests/brasshollow_clauseworks_counterclaim_chapter_report.gd",
+        "tests/brasshollow_clauseworks_counterclaim_chapter_report.tscn",
+        "tests/frontier_claims_campaign_report.gd",
+        "tests/veilmourn_fogchart_mooring_chapter_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "The active content catalog exposes exactly twenty-one campaign- and skirmish-selectable scenarios, and Clauseworks Counterclaim keeps exact Clauseworks/Highwater, Oren/Orevein Exactors, Brasshollow/Embercourt, deadline, objective, and authored-route identities",
+        "Real standalone and campaign sessions launch; common and rare economy sources are reachable; authored encounters, Highwater charter-front capture, victory and defeat authority, and save normalization/resume pass without rule shortcuts",
+        "Frontier Claims chapter VI unlocks only after exact Fogchart victory plus its authored completion flag, imports bounded common resources and flags only, and transfers no cross-faction hero progression, spells, artifacts, or memory salt",
+        "Active-scenario combat breadth, deadline, campaign/replay, economy-route/runway, strategic-AI, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "new units, towns, heroes, spells, artifacts, resource-site types, battle rules, AI policy, economy coefficients, campaign schema, save version, Native RMG, or map-topology system changes",
+        "broad faction balance tuning, generic campaign/carryover redesign, cross-faction hero/spell/artifact/rare-resource transfer, generated-map support, visual/audio asset production, or a full Brasshollow campaign claim",
+        "packaged chapter interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "01d8ce0628c259b9a3eca544e9d500a2fa1babb4",
+        "active_scenario_count": 20,
+        "campaign_count": 6,
+        "active_scenarios_by_player_faction": {
+          "faction_embercourt": 9,
+          "faction_mireclaw": 3,
+          "faction_sunvault": 3,
+          "faction_thornwake": 2,
+          "faction_veilmourn": 2,
+          "faction_brasshollow": 1
+        },
+        "unused_player_town_id": "town_brasshollow_clauseworks_depot",
+        "unused_player_hero_id": "hero_brasshollow_oren_bellfounder",
+        "unused_player_army_id": "army_orevein_exactors"
+      },
+      "createdAt": "2026-08-16T11:13:59Z",
+      "updatedAt": "2026-08-16T11:45:57Z",
+      "startedAt": "2026-08-16T11:13:59Z",
+      "notes": "Completed on baseline HEAD 01d8ce06. Clauseworks Counterclaim ships as the twenty-first active scenario and sixth Frontier Claims chapter with Oren Bellfounder, Orevein Exactors, Clauseworks Depot, Highwater, exact Day 13 authority, and common-only Fogchart carryover. Focused `/tmp/heroes-clauseworks-compat-a.Ou0mqD` passes standalone/campaign/save/battle/outcome authority; screened final rosters are archive 8/8/3, bridge 5/4/6, beacon 6/7/2. Active breadth `/tmp/heroes-clauseworks-breadth.zJDRcS` passes 21 scenarios/68 encounters with stalls0, invalid0, queue clear, signature829808c9. Deadline/replay/economy-route, player and AI start economy/runway, multi-scenario AI, core, repository/editor, official Linux export/headless startup `/tmp/heroes-clauseworks-linux-package.X3mJa7`, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup `/tmp/heroes-clauseworks-windows-package.b4NYYW` pass. Fogchart's prior focused catalog oracle changed only to retain its exact twentieth position. No packaged chapter interaction, controller, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claim is made.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
+      "blockedReason": null,
+      "completedAt": "2026-08-16T11:45:57Z"
     }
   ],
   "project": "heroes-like",
@@ -86418,7 +86472,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Fogchart Mooring is complete. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
+  "remainingGap": "Clauseworks Counterclaim is complete. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
   "remainingWork": "Select the next tracker-approved release-readiness implementation slice without claiming whole-game or release readiness.",
   "reportOnlyEvidence": [
     {
@@ -86851,7 +86905,7 @@
     }
   ],
   "result": "ux_overworld_terminal_end_turn_detached_focus_guard_completed",
-  "status": "completed",
+  "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
       "completed": "Implementation or documentation-only governance work satisfies the PLAN completion criteria and has validation/evidence.",

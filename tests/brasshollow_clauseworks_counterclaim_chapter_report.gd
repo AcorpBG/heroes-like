@@ -8,32 +8,32 @@ const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd
 const TownRulesScript = preload("res://scripts/core/TownRules.gd")
 const BattleRulesScript = preload("res://scripts/core/BattleRules.gd")
 
-const REPORT_ID := "VEILMOURN_FOGCHART_MOORING_CHAPTER_REPORT"
-const SCENARIO_ID := "fogchart-mooring"
+const REPORT_ID := "BRASSHOLLOW_CLAUSEWORKS_COUNTERCLAIM_CHAPTER_REPORT"
+const SCENARIO_ID := "clauseworks-counterclaim"
 const CAMPAIGN_ID := "campaign_frontier_claims"
-const PREVIOUS_SCENARIO_ID := "rootgate-toll"
-const HERO_ID := "hero_veilmourn_ruln_vanehook"
-const PREVIOUS_HERO_ID := "hero_thornwake_tova_rootwright"
-const ARMY_ID := "army_bellwake_privateers"
-const PLAYER_TOWN_PLACEMENT_ID := "fogchart_mooring"
-const PLAYER_TOWN_ID := "town_veilmourn_fogchart_mooring"
-const ENEMY_TOWN_PLACEMENT_ID := "halo_registry_front"
-const ENEMY_TOWN_ID := "town_halo_spire"
+const PREVIOUS_SCENARIO_ID := "fogchart-mooring"
+const HERO_ID := "hero_brasshollow_oren_bellfounder"
+const PREVIOUS_HERO_ID := "hero_veilmourn_ruln_vanehook"
+const ARMY_ID := "army_orevein_exactors"
+const PLAYER_TOWN_PLACEMENT_ID := "clauseworks_depot"
+const PLAYER_TOWN_ID := "town_brasshollow_clauseworks_depot"
+const ENEMY_TOWN_PLACEMENT_ID := "highwater_audit_front"
+const ENEMY_TOWN_ID := "town_highwater_keep"
 const ENCOUNTER_PLACEMENT_IDS := [
-	"fogchart_relay_pickets",
-	"fogchart_mirror_lancers",
-	"fogchart_aurora_battery",
+	"clauseworks_archive_wardens",
+	"clauseworks_bridge_levies",
+	"clauseworks_beacon_wardens",
 ]
 const REQUIRED_RESOURCE_PLACEMENT_IDS := [
-	"fogchart_wood",
-	"fogchart_ore",
-	"fogchart_memory_salt_pan",
-	"fogchart_mist_lighthouse",
-	"fogchart_mooring_fogchart_mooring_rare_exchange",
-	"halo_registry_wood",
-	"halo_registry_ore",
-	"halo_registry_aetherglass",
-	"fogchart_mooring_halo_registry_front_rare_exchange",
+	"clauseworks_wood",
+	"clauseworks_ore",
+	"clauseworks_scrip_mint",
+	"clauseworks_gauge_shrine",
+	"clauseworks_counterclaim_clauseworks_depot_rare_exchange",
+	"highwater_audit_wood",
+	"highwater_audit_ore",
+	"highwater_audit_embergrain",
+	"clauseworks_counterclaim_highwater_audit_front_rare_exchange",
 ]
 const SKIRMISH_SAVE_SLOT := 2
 const CAMPAIGN_SAVE_SLOT := 3
@@ -46,49 +46,47 @@ func _ready() -> void:
 func _run() -> void:
 	ContentService.clear_cache()
 	var progression_before: Dictionary = SaveService.load_progression()
-	var catalog_result := _assert_catalog_and_setup()
+	var catalog := _assert_catalog_and_setup()
 	if _failed:
 		return
 	var skirmish: SessionStateStoreScript.SessionData = ScenarioFactoryScript.create_session(
-		SCENARIO_ID,
-		"normal",
-		SessionStateStoreScript.LAUNCH_MODE_SKIRMISH
+		SCENARIO_ID, "normal", SessionStateStoreScript.LAUNCH_MODE_SKIRMISH
 	)
 	OverworldRules.normalize_overworld_state(skirmish)
-	var opening_result := _assert_opening_session(skirmish, SessionStateStoreScript.LAUNCH_MODE_SKIRMISH)
+	var opening := _assert_opening_session(skirmish, SessionStateStoreScript.LAUNCH_MODE_SKIRMISH)
 	if _failed:
 		return
-	var town_result := _exercise_town(skirmish)
+	var town := _exercise_town(skirmish)
 	if _failed:
 		return
 	var skirmish_save := _exercise_save_restore(skirmish, SKIRMISH_SAVE_SLOT, SessionStateStoreScript.LAUNCH_MODE_SKIRMISH)
 	if _failed:
 		return
-	var battle_result := _exercise_battle_entries(skirmish_save.get("session", null))
+	var battles := _exercise_battle_entries(skirmish_save.get("session", null))
 	if _failed:
 		return
-	var outcome_result := _exercise_outcomes()
+	var outcomes := _exercise_outcomes()
 	if _failed:
 		return
-	var campaign_result := _exercise_campaign_unlock_and_import()
+	var campaign := _exercise_campaign_unlock_and_import()
 	if _failed:
 		return
-	var campaign_save := _exercise_save_restore(campaign_result.get("session", null), CAMPAIGN_SAVE_SLOT, SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN)
+	var campaign_save := _exercise_save_restore(campaign.get("session", null), CAMPAIGN_SAVE_SLOT, SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN)
 	if _failed:
 		return
 	if JSON.stringify(progression_before) != JSON.stringify(SaveService.load_progression()):
-		_fail("Fogchart focused flow mutated durable campaign progression storage.")
+		_fail("Clauseworks focused flow mutated durable campaign progression storage.")
 		return
 	print("%s %s" % [REPORT_ID, JSON.stringify({
 		"ok": true,
 		"scenario_id": SCENARIO_ID,
-		"catalog": catalog_result,
-		"opening": opening_result,
-		"town": town_result,
+		"catalog": catalog,
+		"opening": opening,
+		"town": town,
 		"skirmish_save_resume": skirmish_save.get("report", {}),
-		"battle_entries": battle_result,
-		"outcomes": outcome_result,
-		"campaign": campaign_result.get("report", {}),
+		"battle_entries": battles,
+		"outcomes": outcomes,
+		"campaign": campaign.get("report", {}),
 		"campaign_save_resume": campaign_save.get("report", {}),
 		"campaign_progression_storage_unchanged": true,
 	})])
@@ -96,45 +94,45 @@ func _run() -> void:
 
 func _assert_catalog_and_setup() -> Dictionary:
 	var scenario_ids: Array = ContentService.get_content_ids(ContentService.SCENARIOS_PATH)
-	if scenario_ids.size() != 21 or SCENARIO_ID not in scenario_ids or scenario_ids[19] != SCENARIO_ID:
-		_fail("Active catalog did not retain Fogchart as exact twentieth scenario in the twenty-one scenario roster: %s" % JSON.stringify(scenario_ids))
+	if scenario_ids.size() != 21 or SCENARIO_ID not in scenario_ids or scenario_ids[-1] != SCENARIO_ID:
+		_fail("Active catalog did not expose Clauseworks as exact twenty-first scenario: %s" % JSON.stringify(scenario_ids))
 		return {}
 	var scenario: Dictionary = ContentService.get_scenario(SCENARIO_ID)
 	var availability: Dictionary = scenario.get("selection", {}).get("availability", {})
 	if not bool(availability.get("campaign", false)) or not bool(availability.get("skirmish", false)):
-		_fail("Fogchart missed campaign/skirmish availability.")
+		_fail("Clauseworks missed campaign/skirmish availability.")
 		return {}
-	if String(scenario.get("player_faction_id", "")) != "faction_veilmourn" or String(scenario.get("hero_id", "")) != HERO_ID or String(scenario.get("player_army_id", "")) != ARMY_ID:
-		_fail("Fogchart changed its authored Veilmourn commander or army identity.")
+	if String(scenario.get("player_faction_id", "")) != "faction_brasshollow" or String(scenario.get("hero_id", "")) != HERO_ID or String(scenario.get("player_army_id", "")) != ARMY_ID:
+		_fail("Clauseworks changed its authored Brasshollow commander or army identity.")
 		return {}
 	var map_size: Dictionary = scenario.get("map_size", {}) if scenario.get("map_size", {}) is Dictionary else {}
 	if int(map_size.get("width", 0)) != 11 or int(map_size.get("height", 0)) != 6:
-		_fail("Fogchart changed its authored 11x6 map size.")
+		_fail("Clauseworks changed its authored 11x6 map size.")
 		return {}
 	var setup: Dictionary = ScenarioSelectRulesScript.build_skirmish_setup(SCENARIO_ID, "normal")
-	if setup.is_empty() or String(setup.get("scenario_id", "")) != SCENARIO_ID or String(setup.get("difficulty", "")) != "normal":
-		_fail("Live skirmish setup did not expose Fogchart: %s" % JSON.stringify(setup))
+	if setup.is_empty() or String(setup.get("scenario_id", "")) != SCENARIO_ID:
+		_fail("Live skirmish setup did not expose Clauseworks.")
 		return {}
 	return {"active_scenario_count": scenario_ids.size(), "campaign_available": true, "skirmish_available": true, "map_size": map_size}
 
 func _assert_opening_session(session: SessionStateStoreScript.SessionData, launch_mode: String) -> Dictionary:
 	if session == null or session.scenario_id != SCENARIO_ID or session.launch_mode != launch_mode:
-		_fail("ScenarioFactory did not launch Fogchart in %s mode." % launch_mode)
+		_fail("ScenarioFactory did not launch Clauseworks in %s mode." % launch_mode)
 		return {}
-	if String(session.overworld.get("active_hero_id", "")) != HERO_ID or String(session.overworld.get("hero", {}).get("id", "")) != HERO_ID:
-		_fail("Ruln Vanehook is not the active Fogchart commander.")
+	if String(session.overworld.get("active_hero_id", "")) != HERO_ID:
+		_fail("Oren Bellfounder is not the active Clauseworks commander.")
 		return {}
 	var army: Dictionary = session.overworld.get("army", {})
-	if String(army.get("id", "")) != ARMY_ID or _stack_count(army.get("stacks", []), "unit_veilmourn_bellwake_oars") != 12:
-		_fail("Fogchart opening army did not materialize Bellwake Privateers: %s" % JSON.stringify(army))
+	if String(army.get("id", "")) != ARMY_ID or _stack_count(army.get("stacks", []), "unit_brasshollow_scrip_haulers") != 10:
+		_fail("Clauseworks opening army did not materialize the Orevein Exactors: %s" % JSON.stringify(army))
 		return {}
 	var player_town := _town_by_placement(session, PLAYER_TOWN_PLACEMENT_ID)
 	var enemy_town := _town_by_placement(session, ENEMY_TOWN_PLACEMENT_ID)
 	if String(player_town.get("town_id", "")) != PLAYER_TOWN_ID or String(player_town.get("owner", "")) != "player":
-		_fail("Fogchart Mooring did not materialize as the player town.")
+		_fail("Clauseworks Depot did not materialize as the player town.")
 		return {}
 	if String(enemy_town.get("town_id", "")) != ENEMY_TOWN_ID or String(enemy_town.get("owner", "")) != "enemy":
-		_fail("Halo Registry Front did not materialize as the hostile town.")
+		_fail("Highwater Audit Front did not materialize as the hostile town.")
 		return {}
 	var resource_ids := []
 	for node in session.overworld.get("resource_nodes", []):
@@ -142,7 +140,7 @@ func _assert_opening_session(session: SessionStateStoreScript.SessionData, launc
 			resource_ids.append(String(node.get("placement_id", "")))
 	for placement_id in REQUIRED_RESOURCE_PLACEMENT_IDS:
 		if placement_id not in resource_ids:
-			_fail("Fogchart session missed resource placement %s." % placement_id)
+			_fail("Clauseworks session missed resource placement %s." % placement_id)
 			return {}
 	return {"launch_mode": launch_mode, "hero_id": HERO_ID, "army_id": ARMY_ID, "player_town_id": PLAYER_TOWN_ID, "enemy_town_id": ENEMY_TOWN_ID, "required_resource_count": REQUIRED_RESOURCE_PLACEMENT_IDS.size()}
 
@@ -150,21 +148,21 @@ func _exercise_town(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	session.flags["active_town_placement_id"] = PLAYER_TOWN_PLACEMENT_ID
 	session.game_state = "town"
 	if String(TownRulesScript.get_active_town(session).get("town_id", "")) != PLAYER_TOWN_ID:
-		_fail("Fogchart Mooring could not be opened through TownRules.")
+		_fail("Clauseworks Depot could not be opened through TownRules.")
 		return {}
 	var build_actions: Array = TownRulesScript.get_build_actions(session)
 	var recruit_action := {}
 	for action in TownRulesScript.get_recruit_actions(session):
-		if action is Dictionary and String(action.get("id", "")).contains("unit_veilmourn_") and not bool(action.get("disabled", true)):
+		if action is Dictionary and String(action.get("id", "")).contains("unit_brasshollow_") and not bool(action.get("disabled", true)):
 			recruit_action = action
 			break
 	if build_actions.is_empty() or recruit_action.is_empty():
-		_fail("Fogchart exposed no development or affordable Veilmourn recruitment.")
+		_fail("Clauseworks exposed no development or affordable Brasshollow recruitment.")
 		return {}
 	var unit_id := String(recruit_action.get("id", "")).trim_prefix("recruit:")
 	var result: Dictionary = TownRulesScript.recruit_active_town(session, unit_id, 1)
 	if not bool(result.get("ok", false)):
-		_fail("Fogchart recruit action failed: %s" % JSON.stringify(result))
+		_fail("Clauseworks recruit action failed: %s" % JSON.stringify(result))
 		return {}
 	return {"build_action_count": build_actions.size(), "recruited_unit_id": unit_id}
 
@@ -172,17 +170,17 @@ func _exercise_save_restore(session: SessionStateStoreScript.SessionData, slot: 
 	var before := _session_signature(session)
 	var save_result: Dictionary = SaveService.save_runtime_manual_session(session, slot)
 	if not bool(save_result.get("ok", false)):
-		_fail("Fogchart %s save failed: %s" % [launch_mode, JSON.stringify(save_result)])
+		_fail("Clauseworks %s save failed: %s" % [launch_mode, JSON.stringify(save_result)])
 		return {}
 	var summary: Dictionary = SaveService.inspect_manual_slot(slot)
 	var restored: SessionStateStoreScript.SessionData = SaveService.restore_manual_session(slot)
 	if restored == null:
-		_fail("Fogchart %s save did not restore." % launch_mode)
+		_fail("Clauseworks %s save did not restore." % launch_mode)
 		return {}
 	OverworldRules.normalize_overworld_state(restored)
 	var after := _session_signature(restored)
 	if JSON.stringify(before) != JSON.stringify(after) or restored.launch_mode != launch_mode:
-		_fail("Fogchart changed across %s save/restore: before=%s after=%s" % [launch_mode, before, after])
+		_fail("Clauseworks changed across %s save/restore." % launch_mode)
 		return {}
 	return {"session": restored, "report": {"slot": slot, "launch_mode": launch_mode, "resume_target": String(summary.get("resume_target", "")), "signature": after}}
 
@@ -191,7 +189,7 @@ func _exercise_battle_entries(session: SessionStateStoreScript.SessionData) -> D
 	for placement_id in ENCOUNTER_PLACEMENT_IDS:
 		var battle: Dictionary = BattleRulesScript.create_battle_payload(session, _encounter_by_placement(session, placement_id))
 		if battle.is_empty() or String(battle.get("player_commander_state", {}).get("id", "")) != HERO_ID:
-			_fail("%s did not create a Ruln-owned battle payload." % placement_id)
+			_fail("%s did not create an Oren-owned battle payload." % placement_id)
 			return {}
 		var player_stacks := 0
 		var enemy_stacks := 0
@@ -200,8 +198,8 @@ func _exercise_battle_entries(session: SessionStateStoreScript.SessionData) -> D
 				player_stacks += 1
 			elif stack is Dictionary and String(stack.get("side", "")) == "enemy":
 				enemy_stacks += 1
-		if player_stacks != 3 or enemy_stacks < 3:
-			_fail("%s battle missed authored army stacks." % placement_id)
+		if player_stacks != 3 or enemy_stacks != 3:
+			_fail("%s battle missed exact authored three-stack armies." % placement_id)
 			return {}
 		rows.append({"placement_id": placement_id, "player_stacks": player_stacks, "enemy_stacks": enemy_stacks})
 	return {"case_count": rows.size(), "rows": rows}
@@ -209,38 +207,38 @@ func _exercise_battle_entries(session: SessionStateStoreScript.SessionData) -> D
 func _exercise_outcomes() -> Dictionary:
 	var victory: SessionStateStoreScript.SessionData = ScenarioFactoryScript.create_session(SCENARIO_ID, "normal", SessionStateStoreScript.LAUNCH_MODE_SKIRMISH)
 	_set_town_owner(victory, ENEMY_TOWN_PLACEMENT_ID, "player")
-	victory.flags["fogchart_relay_pickets_broken"] = true
-	victory.flags["fogchart_mirror_lancers_broken"] = true
-	victory.overworld["resolved_encounters"] = ["fogchart_aurora_battery"]
+	victory.flags["clauseworks_archive_wardens_broken"] = true
+	victory.flags["clauseworks_bridge_levies_broken"] = true
+	victory.overworld["resolved_encounters"] = ["clauseworks_beacon_wardens"]
 	if String(ScenarioRulesScript.evaluate_session(victory).get("status", "")) != "victory":
-		_fail("Fogchart victory objectives did not resolve.")
+		_fail("Clauseworks victory objectives did not resolve.")
 		return {}
 	var deadline: SessionStateStoreScript.SessionData = ScenarioFactoryScript.create_session(SCENARIO_ID, "normal", SessionStateStoreScript.LAUNCH_MODE_SKIRMISH)
 	deadline.day = 12
 	if String(ScenarioRulesScript.evaluate_session(deadline).get("status", "")) != "in_progress":
-		_fail("Fogchart resolved before its authored Day 13 deadline.")
+		_fail("Clauseworks resolved before its authored Day 13 deadline.")
 		return {}
 	deadline.day = 13
 	if String(ScenarioRulesScript.evaluate_session(deadline).get("status", "")) != "defeat":
-		_fail("Fogchart Day 13 defeat boundary did not resolve.")
+		_fail("Clauseworks Day 13 defeat boundary did not resolve.")
 		return {}
 	return {"victory": "reachable", "pre_deadline": "in_progress", "defeat": "reachable", "deadline_day": 13}
 
 func _exercise_campaign_unlock_and_import() -> Dictionary:
 	var profile := CampaignRulesScript.normalize_profile({})
 	if not bool(CampaignRulesScript.build_chapter_action(profile, CAMPAIGN_ID, SCENARIO_ID).get("disabled", false)):
-		_fail("Fogchart unlocked before Rootgate victory and recorded-claim evidence.")
+		_fail("Clauseworks unlocked before Fogchart victory and recorded-claim evidence.")
 		return {}
-	var rootgate: SessionStateStoreScript.SessionData = ScenarioFactoryScript.create_session(PREVIOUS_SCENARIO_ID, "normal", SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN)
-	rootgate.flags["rootgate_toll_recorded"] = true
-	rootgate.flags["boiler_scrap_grafted"] = true
-	rootgate.overworld["resources"] = {"gold": 5000, "wood": 20, "ore": 20, "verdant_grafts": 10}
-	rootgate.scenario_status = "victory"
-	rootgate.scenario_summary = "Tova recorded the rooted toll claim."
-	var completed := CampaignRulesScript.record_session_completion(profile, rootgate)
+	var fogchart: SessionStateStoreScript.SessionData = ScenarioFactoryScript.create_session(PREVIOUS_SCENARIO_ID, "normal", SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN)
+	fogchart.flags["fogchart_claim_recorded"] = true
+	fogchart.flags["aurora_glass_salted"] = true
+	fogchart.overworld["resources"] = {"gold": 5000, "wood": 20, "ore": 20, "memory_salt": 10}
+	fogchart.scenario_status = "victory"
+	fogchart.scenario_summary = "Ruln recorded the Fogchart claim."
+	var completed := CampaignRulesScript.record_session_completion(profile, fogchart)
 	var action: Dictionary = CampaignRulesScript.build_chapter_action(completed, CAMPAIGN_ID, SCENARIO_ID)
 	if bool(action.get("disabled", true)) or String(action.get("scenario_id", "")) != SCENARIO_ID:
-		_fail("Exact Rootgate victory and recorded-claim evidence did not unlock Fogchart: %s" % JSON.stringify(action))
+		_fail("Exact Fogchart victory and recorded-claim evidence did not unlock Clauseworks.")
 		return {}
 	var baseline: SessionStateStoreScript.SessionData = ScenarioFactoryScript.create_session(SCENARIO_ID, "normal", SessionStateStoreScript.LAUNCH_MODE_SKIRMISH)
 	var campaign: SessionStateStoreScript.SessionData = CampaignRulesScript.build_session(completed, SCENARIO_ID, "normal", CAMPAIGN_ID)
@@ -251,20 +249,20 @@ func _exercise_campaign_unlock_and_import() -> Dictionary:
 	for resource_id in expected:
 		var delta := int(campaign.overworld.get("resources", {}).get(resource_id, 0)) - int(baseline.overworld.get("resources", {}).get(resource_id, 0))
 		if delta != int(expected[resource_id]):
-			_fail("Rootgate carryover %s changed by %d instead of %d." % [resource_id, delta, int(expected[resource_id])])
+			_fail("Fogchart carryover %s changed by %d instead of %d." % [resource_id, delta, int(expected[resource_id])])
 			return {}
-	if int(campaign.overworld.get("resources", {}).get("verdant_grafts", 0)) != int(baseline.overworld.get("resources", {}).get("verdant_grafts", 0)):
-		_fail("Thornwake verdant grafts leaked into Fogchart.")
+	if int(campaign.overworld.get("resources", {}).get("memory_salt", 0)) != int(baseline.overworld.get("resources", {}).get("memory_salt", 0)):
+		_fail("Fogchart memory salt leaked into Clauseworks.")
 		return {}
-	if not bool(campaign.flags.get("carryover_rootgate_toll_recorded", false)) or String(campaign.flags.get("campaign_previous_scenario_id", "")) != PREVIOUS_SCENARIO_ID:
-		_fail("Fogchart campaign session missed bounded Rootgate flag/source identity.")
+	if not bool(campaign.flags.get("carryover_fogchart_claim_recorded", false)) or String(campaign.flags.get("campaign_previous_scenario_id", "")) != PREVIOUS_SCENARIO_ID:
+		_fail("Clauseworks missed bounded Fogchart flag/source identity.")
 		return {}
 	var hero: Dictionary = campaign.overworld.get("hero", {})
 	var baseline_hero: Dictionary = baseline.overworld.get("hero", {})
 	if String(campaign.overworld.get("active_hero_id", "")) == PREVIOUS_HERO_ID or int(hero.get("level", 0)) != int(baseline_hero.get("level", 0)) or JSON.stringify(hero.get("spellbook", {})) != JSON.stringify(baseline_hero.get("spellbook", {})) or JSON.stringify(hero.get("artifacts", {})) != JSON.stringify(baseline_hero.get("artifacts", {})):
-		_fail("Cross-faction hero, spell, or artifact progression leaked into Fogchart.")
+		_fail("Cross-faction hero, spell, or artifact progression leaked into Clauseworks.")
 		return {}
-	return {"session": campaign, "report": {"locked_before_rootgate": true, "unlocked_after_exact_rootgate_evidence": true, "previous_scenario_id": PREVIOUS_SCENARIO_ID, "imported_resources": expected, "imported_flag": "carryover_rootgate_toll_recorded", "verdant_grafts_transferred": false, "hero_spell_artifact_transfer": false, "opening": opening}}
+	return {"session": campaign, "report": {"locked_before_fogchart": true, "unlocked_after_exact_fogchart_evidence": true, "previous_scenario_id": PREVIOUS_SCENARIO_ID, "imported_resources": expected, "imported_flag": "carryover_fogchart_claim_recorded", "memory_salt_transferred": false, "hero_spell_artifact_transfer": false, "opening": opening}}
 
 func _session_signature(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	return {"scenario_id": session.scenario_id, "launch_mode": session.launch_mode, "game_state": session.game_state, "hero_id": String(session.overworld.get("active_hero_id", "")), "army": session.overworld.get("army", {}), "resources": session.overworld.get("resources", {}), "active_town_placement_id": String(session.flags.get("active_town_placement_id", "")), "campaign_id": String(session.flags.get("campaign_id", "")), "campaign_previous_scenario_id": String(session.flags.get("campaign_previous_scenario_id", ""))}
