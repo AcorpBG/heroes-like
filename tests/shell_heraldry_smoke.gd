@@ -57,7 +57,7 @@ func _run_town_glyph() -> bool:
 	SessionState.set_active_session(session)
 	return await _assert_shell_node(
 		"res://scenes/town/TownShell.tscn",
-		"ContentMargin/Content/Banner/BannerPad/TopBar/CrestFrame/CrestPad/CrestBox/CrestGlyph",
+		"ContentMargin/Content/Banner/BannerPad/TopBar/CrestFrame/CrestPad/CrestBox/CrestStack/CrestGlyph",
 		"Town heraldry glyph"
 	)
 
