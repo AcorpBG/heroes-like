@@ -428,8 +428,9 @@ func _ready() -> void:
 	else:
 		AppRouter.note_overworld_handoff_step("overworld_ready_no_command_briefing")
 	_select_hero_tile()
+	_map_size = OverworldRules.derive_map_size(_session)
+	_consume_battle_resolution_overworld_presentation()
 	if command_briefing_text != "":
-		_map_size = OverworldRules.derive_map_size(_session)
 		_select_opening_route_target()
 	AppRouter.note_overworld_handoff_step("overworld_ready_select_hero_done")
 	AppRouter.note_overworld_handoff_step("overworld_ready_render_state_start")
@@ -1651,6 +1652,18 @@ func _present_load_resumed_cue() -> void:
 	var payload: Dictionary = AppRouter.consume_load_resumed_presentation("overworld")
 	if not payload.is_empty() and _load_resumed_cue_presenter != null:
 		_load_resumed_cue_presenter.present(payload)
+
+func _consume_battle_resolution_overworld_presentation() -> void:
+	var payload: Dictionary = AppRouter.consume_battle_resolution_overworld_presentation("overworld")
+	if payload.is_empty():
+		return
+	_record_object_resolution_presentation(
+		{
+			"ok": true,
+			"interaction_result": payload.duplicate(true),
+		},
+		""
+	)
 
 func validation_load_resumed_cue_snapshot() -> Dictionary:
 	return _load_resumed_cue_presenter.validation_snapshot() if _load_resumed_cue_presenter != null else {}

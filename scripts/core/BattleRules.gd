@@ -6569,6 +6569,11 @@ static func _evaluate_outcome(session: SessionStateStoreScript.SessionData) -> D
 	return {"state": "", "message": ""}
 
 static func _finalize_victory(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var resolution_context_snapshot := {
+		"context": session.battle.get("context", {}).duplicate(true) if session.battle.get("context", {}) is Dictionary else {},
+		"resolution_state": "victory",
+		"snapshot_policy": "pre_resolution_route_context",
+	}
 	var messages = []
 	var base_summary := _apply_battle_context_victory(session)
 	if base_summary == "":
@@ -6628,7 +6633,11 @@ static func _finalize_victory(session: SessionStateStoreScript.SessionData) -> D
 	var final_message = " ".join(messages)
 	if session.scenario_status == "in_progress" and final_message != "":
 		session.flags["return_notice"] = final_message
-	return {"state": "victory", "message": final_message}
+	return {
+		"state": "victory",
+		"message": final_message,
+		"battle_resolution_context_snapshot": resolution_context_snapshot,
+	}
 
 static func _apply_player_battle_salvage_reward(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if session == null or session.battle.is_empty():
