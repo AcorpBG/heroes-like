@@ -44224,6 +44224,139 @@ def validate_overworld_encounter_victory_return_feedback(errors: list[str]) -> N
     ensure('res://tests/overworld_encounter_victory_return_feedback_report.gd' in scene_text, errors, "Encounter return focused scene must load its exact report script")
 
 
+def validate_thornwake_rootgate_toll_chapter(errors: list[str]) -> None:
+    scenario_path = ROOT / "content/scenarios.json"
+    campaign_path = ROOT / "content/campaigns.json"
+    report_path = ROOT / "tests/thornwake_rootgate_toll_chapter_report.gd"
+    scene_path = ROOT / "tests/thornwake_rootgate_toll_chapter_report.tscn"
+    frontier_report_path = ROOT / "tests/frontier_claims_campaign_report.gd"
+    for path in (scenario_path, campaign_path, report_path, scene_path, frontier_report_path):
+        ensure(path.exists(), errors, f"Rootgate Toll chapter owner is missing {path.relative_to(ROOT)}")
+    if not scenario_path.exists() or not campaign_path.exists():
+        return
+    scenario_payload = load_json(scenario_path)
+    campaign_payload = load_json(campaign_path)
+    scenarios = items_index(scenario_payload)
+    campaigns = items_index(campaign_payload)
+    ensure(int(scenario_payload.get("player_facing_active_scenario_count", 0)) == 19, errors, "Rootgate Toll chapter must keep the exact nineteen-scenario active roster")
+    ensure(len(scenarios) == 19, errors, "Rootgate Toll chapter must remain the exact nineteenth active authored scenario")
+    scenario = scenarios.get("rootgate-toll", {})
+    ensure(bool(scenario), errors, "Rootgate Toll scenario is missing")
+    ensure(str(scenario.get("player_faction_id", "")) == "faction_thornwake", errors, "Rootgate Toll must remain a Thornwake scenario")
+    ensure(str(scenario.get("hero_id", "")) == "hero_thornwake_tova_rootwright", errors, "Rootgate Toll must retain Tova Rootwright")
+    ensure(str(scenario.get("player_army_id", "")) == "army_graftroot_wardens", errors, "Rootgate Toll must retain Graftroot Wardens")
+    ensure(scenario.get("map_size", {}) == {"width": 11, "height": 6}, errors, "Rootgate Toll must retain its exact 11x6 authored map")
+    availability = scenario.get("selection", {}).get("availability", {}) if isinstance(scenario.get("selection", {}), dict) else {}
+    ensure(availability == {"campaign": True, "skirmish": True}, errors, "Rootgate Toll must remain campaign- and skirmish-selectable")
+    towns = {str(row.get("placement_id", "")): row for row in scenario.get("towns", []) if isinstance(row, dict)}
+    ensure(str(towns.get("rootgate_nursery", {}).get("town_id", "")) == "town_thornwake_rootgate_nursery", errors, "Rootgate Toll must use the authored Rootgate Nursery")
+    ensure(str(towns.get("rootgate_nursery", {}).get("owner", "")) == "player", errors, "Rootgate Nursery must remain the player town")
+    ensure(str(towns.get("clauseworks_toll_depot", {}).get("town_id", "")) == "town_brasshollow_clauseworks_depot", errors, "Rootgate Toll must use the authored Clauseworks Depot")
+    ensure(str(towns.get("clauseworks_toll_depot", {}).get("owner", "")) == "enemy", errors, "Clauseworks Depot must remain hostile")
+    enemy_factions = [row for row in scenario.get("enemy_factions", []) if isinstance(row, dict)]
+    ensure(len(enemy_factions) == 1 and str(enemy_factions[0].get("faction_id", "")) == "faction_brasshollow", errors, "Rootgate Toll must retain one exact Brasshollow enemy empire")
+    encounters = {str(row.get("placement_id", "")): row for row in scenario.get("encounters", []) if isinstance(row, dict)}
+    ensure(list(encounters) == ["rootgate_charter_guard", "rootgate_bastion_reserve", "rootgate_boiler_exactors"], errors, "Rootgate Toll must retain its exact ordered three encounter fronts")
+    ensure([str(encounters[key].get("encounter_id", "")) for key in encounters] == ["encounter_charter_guard", "encounter_charter_bastion_reserve", "encounter_orevein_exactors"], errors, "Rootgate Toll encounter fronts must retain their authored content identities")
+    rootgate_stack_counts = {
+        placement_id: [
+            {"unit_id": str(stack.get("unit_id", "")), "count": int(stack.get("count", 0))}
+            for stack in encounter.get("enemy_army", {}).get("stacks", [])
+            if isinstance(stack, dict)
+        ]
+        for placement_id, encounter in encounters.items()
+    }
+    ensure(rootgate_stack_counts == {
+        "rootgate_charter_guard": [
+            {"unit_id": "unit_brasshollow_scrip_haulers", "count": 8},
+            {"unit_id": "unit_brasshollow_rivet_hounds", "count": 5},
+            {"unit_id": "unit_brasshollow_furnace_pavis_teams", "count": 1},
+        ],
+        "rootgate_bastion_reserve": [
+            {"unit_id": "unit_brasshollow_scrip_haulers", "count": 7},
+            {"unit_id": "unit_brasshollow_rivet_hounds", "count": 4},
+            {"unit_id": "unit_brasshollow_furnace_pavis_teams", "count": 2},
+        ],
+        "rootgate_boiler_exactors": [
+            {"unit_id": "unit_brasshollow_scrip_haulers", "count": 6},
+            {"unit_id": "unit_brasshollow_rivet_hounds", "count": 4},
+            {"unit_id": "unit_brasshollow_furnace_pavis_teams", "count": 1},
+        ],
+    }, errors, "Rootgate Toll must retain the method-matched queue-clear encounter rosters")
+    objectives = scenario.get("objectives", {}) if isinstance(scenario.get("objectives", {}), dict) else {}
+    victory = {str(row.get("id", "")): row for row in objectives.get("victory", []) if isinstance(row, dict)}
+    defeat = {str(row.get("id", "")): row for row in objectives.get("defeat", []) if isinstance(row, dict)}
+    ensure(str(victory.get("claim_clauseworks_depot", {}).get("placement_id", "")) == "clauseworks_toll_depot", errors, "Rootgate Toll victory must retain Clauseworks capture")
+    ensure(str(victory.get("break_charter_toll", {}).get("flag", "")) == "charter_guard_broken", errors, "Rootgate Toll victory must retain Charter Guard clearance")
+    ensure(str(victory.get("break_bastion_reserve", {}).get("flag", "")) == "charter_bastion_reserve_broken", errors, "Rootgate Toll victory must retain Bastion Reserve clearance")
+    ensure(str(victory.get("clear_boiler_exactors", {}).get("placement_id", "")) == "rootgate_boiler_exactors", errors, "Rootgate Toll victory must retain Boiler Exactors clearance")
+    ensure(int(defeat.get("root_the_road_before_daybreak", {}).get("day", 0)) == 12, errors, "Rootgate Toll must retain its exact Day 12 deadline")
+    resource_nodes = {str(row.get("placement_id", "")): row for row in scenario.get("resource_nodes", []) if isinstance(row, dict)}
+    required_resources = {
+        "rootgate_wood": "site_wood_wagon",
+        "rootgate_ore": "site_ore_crates",
+        "rootgate_verdant_nursery": "site_verdant_graft_nursery",
+        "rootgate_toll_rootgate_nursery_rare_exchange": "site_frontier_rare_exchange",
+        "clauseworks_wood": "site_wood_wagon",
+        "clauseworks_ore": "site_ore_crates",
+        "clauseworks_scrip_mint": "site_brass_scrip_mint",
+        "rootgate_toll_clauseworks_toll_depot_rare_exchange": "site_frontier_rare_exchange",
+    }
+    ensure({key: str(resource_nodes.get(key, {}).get("site_id", "")) for key in required_resources} == required_resources, errors, "Rootgate Toll must retain exact player/enemy common and rare economy sources")
+    ensure(all(bool(str(resource_nodes.get(key, {}).get("guard_front_id", ""))) for key in ("rootgate_verdant_nursery", "rootgate_toll_rootgate_nursery_rare_exchange", "clauseworks_scrip_mint", "rootgate_toll_clauseworks_toll_depot_rare_exchange")), errors, "Rootgate Toll rare sources must remain encounter-guarded")
+    campaign = campaigns.get("campaign_frontier_claims", {})
+    chapters = [row for row in campaign.get("scenarios", []) if isinstance(row, dict)]
+    ensure([str(row.get("scenario_id", "")) for row in chapters] == ["mireford-skirmish", "orevein-contract", "bellwake-wreck-claim", "rootgate-toll"], errors, "Frontier Claims must retain its exact four-chapter order")
+    if len(chapters) == 4:
+        bellwake_export = chapters[2].get("carryover_export", {}) if isinstance(chapters[2].get("carryover_export", {}), dict) else {}
+        rootgate_import = chapters[3].get("carryover_import", {}) if isinstance(chapters[3].get("carryover_import", {}), dict) else {}
+        rootgate_unlocks = chapters[3].get("unlock_requirements", []) if isinstance(chapters[3].get("unlock_requirements", []), list) else []
+        ensure(bellwake_export.get("retain_hero_progression") is False and bellwake_export.get("retain_spells") is False and bellwake_export.get("retain_artifacts") is False, errors, "Bellwake export must not transfer cross-faction personal progression")
+        ensure(bellwake_export.get("resource_caps", {}) == {"gold": 1200, "wood": 3, "ore": 3, "memory_salt": 2}, errors, "Bellwake export must retain exact bounded resource caps")
+        ensure(rootgate_import == {"from_scenario_id": "bellwake-wreck-claim", "resources": True, "hero_progression": False, "spells": False, "artifacts": False, "flags_prefix": "carryover_"}, errors, "Rootgate import must retain bounded resource/flag-only authority")
+        ensure(rootgate_unlocks == [{"type": "scenario_status", "scenario_id": "bellwake-wreck-claim", "status": "victory"}, {"type": "scenario_flag_true", "scenario_id": "bellwake-wreck-claim", "flag": "drowned_chart_recorded"}], errors, "Rootgate chapter must unlock only from exact Bellwake victory and drowned-chart evidence")
+    if report_path.exists():
+        report_text = report_path.read_text(encoding="utf-8")
+        for token in (
+            "THORNWAKE_ROOTGATE_TOLL_CHAPTER_REPORT",
+            'const SCENARIO_ID := "rootgate-toll"',
+            'const HERO_ID := "hero_thornwake_tova_rootwright"',
+            'const ARMY_ID := "army_graftroot_wardens"',
+            'int(map_size.get("width", 0)) != 11 or int(map_size.get("height", 0)) != 6',
+            "ScenarioSelectRulesScript.build_skirmish_setup",
+            "ScenarioFactoryScript.create_session",
+            "TownRulesScript.get_build_actions",
+            "TownRulesScript.recruit_active_town",
+            "BattleRulesScript.create_battle_payload",
+            "ScenarioRulesScript.evaluate_session",
+            "CampaignRulesScript.build_chapter_action",
+            "CampaignRulesScript.record_session_completion",
+            "CampaignRulesScript.build_session",
+            "SaveService.save_runtime_manual_session",
+            "SaveService.restore_manual_session",
+            '"locked_before_bellwake": true',
+            '"unlocked_after_exact_bellwake_evidence": true',
+            '"hero_spell_artifact_transfer": false',
+            'get_tree().quit(0)',
+            'get_tree().quit(1)',
+        ):
+            ensure(token in report_text, errors, f"Rootgate Toll focused report is missing token: {token}")
+        ensure("BattleRulesScript.resolve" not in report_text and "OverworldRules._" not in report_text, errors, "Rootgate Toll focused owner must use public rules and must not synthesize combat or call Overworld internals")
+    if scene_path.exists():
+        ensure('res://tests/thornwake_rootgate_toll_chapter_report.gd' in scene_path.read_text(encoding="utf-8"), errors, "Rootgate Toll focused scene must load its exact report script")
+    if frontier_report_path.exists():
+        frontier_text = frontier_report_path.read_text(encoding="utf-8")
+        for token in (
+            'const ROOTGATE_ID := "rootgate-toll"',
+            'const ROOTGATE_HERO_ID := "hero_thornwake_tova_rootwright"',
+            'entries.size() != 4',
+            '"carryover_drowned_chart_recorded"',
+            '[MIREFORD_ID, OREVEIN_ID, BELLWAKE_ID, ROOTGATE_ID]',
+            'String(start_action.get("scenario_id", "")) != ROOTGATE_ID',
+        ):
+            ensure(token in frontier_text, errors, f"Frontier Claims runtime owner is missing Rootgate token: {token}")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate repository content and scaffolding.")
     parser.add_argument("--economy-resource-report", action="store_true", help="Print the opt-in economy/resource compatibility report.")
@@ -44262,6 +44395,7 @@ def main() -> int:
     validate_overworld_resource_assault_victory_return_feedback(errors)
     validate_overworld_encounter_victory_return_feedback(errors)
     validate_content(errors)
+    validate_thornwake_rootgate_toll_chapter(errors)
     validate_project_and_scenes(errors)
     validate_save_management(errors)
     validate_skirmish_setup(errors)

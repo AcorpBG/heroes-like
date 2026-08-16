@@ -1,6 +1,6 @@
 {
   "domain_status": "",
-  "player_facing_active_scenario_count": 18,
+  "player_facing_active_scenario_count": 19,
   "reactivation_reason": "player_facing_campaign_reactivation_smoke_2026_05_23",
   "items": [
     {
@@ -4664,6 +4664,324 @@
           }
         }
       }]
+    },
+    {
+      "id": "rootgate-toll",
+      "name": "Rootgate Toll",
+      "selection": {
+        "summary": "Lead Tova Rootwright from Rootgate Nursery, break Brasshollow's toll line, and reclaim Clauseworks Depot in campaign or standalone skirmish play.",
+        "recommended_difficulty": "normal",
+        "map_size_label": "Rootgate Contract Road (11x6)",
+        "player_summary": "Tova Rootwright leads the Graftroot Wardens from a living nursery that must grow through a plated contract road.",
+        "enemy_summary": "Brasshollow exactors and charter reserves hold Clauseworks Depot while toll pressure closes every unrooted lane.",
+        "availability": {
+          "campaign": true,
+          "skirmish": true
+        }
+      },
+      "map_size": {
+        "width": 11,
+        "height": 6
+      },
+      "player_faction_id": "faction_thornwake",
+      "player_army_id": "army_graftroot_wardens",
+      "hero_id": "hero_thornwake_tova_rootwright",
+      "starting_resources": {
+        "gold": 450,
+        "wood": 4,
+        "ore": 2,
+        "verdant_grafts": 2
+      },
+      "map": [
+        ["grass", "grass", "grass", "rough", "rough", "rough", "rough", "rough", "rough", "rough", "rough"],
+        ["grass", "grass", "grass", "grass", "rough", "rough", "water", "rough", "rough", "rough", "rough"],
+        ["grass", "grass", "grass", "grass", "grass", "rough", "rough", "rough", "rough", "rough", "rough"],
+        ["grass", "water", "grass", "grass", "grass", "grass", "rough", "rough", "rough", "rough", "rough"],
+        ["grass", "water", "grass", "grass", "grass", "grass", "rough", "water", "rough", "rough", "rough"],
+        ["grass", "grass", "grass", "grass", "grass", "rough", "rough", "water", "rough", "rough", "rough"]
+      ],
+      "start": {
+        "x": 0,
+        "y": 2
+      },
+      "hero_starts": [
+        "hero_thornwake_tova_rootwright"
+      ],
+      "objectives": {
+        "victory_text": "Tova roots Clauseworks into the living road and records a fourth frontier claim without inheriting another commander's oath.",
+        "defeat_text": "Brasshollow closes the toll road, uproots Rootgate Nursery, and strikes the final frontier claim from the docket.",
+        "victory": [
+          {
+            "id": "claim_clauseworks_depot",
+            "label": "Claim Clauseworks Depot",
+            "type": "town_owned_by_player",
+            "placement_id": "clauseworks_toll_depot"
+          },
+          {
+            "id": "break_charter_toll",
+            "label": "Break the Charter Toll Guard",
+            "type": "flag_true",
+            "flag": "charter_guard_broken"
+          },
+          {
+            "id": "break_bastion_reserve",
+            "label": "Break the Bastion Reserve",
+            "type": "flag_true",
+            "flag": "charter_bastion_reserve_broken"
+          },
+          {
+            "id": "clear_boiler_exactors",
+            "label": "Clear the Boiler Exactors",
+            "type": "encounter_resolved",
+            "placement_id": "rootgate_boiler_exactors"
+          }
+        ],
+        "defeat": [
+          {
+            "id": "hold_rootgate_nursery",
+            "label": "Keep Rootgate Nursery under living guard",
+            "type": "town_not_owned_by_player",
+            "placement_id": "rootgate_nursery"
+          },
+          {
+            "id": "tova_survives",
+            "label": "Tova must survive the toll-road expedition",
+            "type": "session_flag_equals",
+            "flag": "campaign",
+            "value": "defeat"
+          },
+          {
+            "id": "contain_contract_pressure",
+            "label": "Do not let Brasshollow pressure reach 10",
+            "type": "enemy_pressure_at_least",
+            "faction_id": "faction_brasshollow",
+            "threshold": 10
+          },
+          {
+            "id": "root_the_road_before_daybreak",
+            "label": "Root the toll road before Day 12",
+            "type": "day_at_least",
+            "day": 12
+          }
+        ]
+      },
+      "script_hooks": [
+        {
+          "id": "rootgate_graft_train",
+          "priority": 120,
+          "conditions": [
+            {"type": "day_at_least", "day": 3},
+            {"type": "town_owned_by_player", "placement_id": "rootgate_nursery"}
+          ],
+          "effects": [
+            {"type": "add_resources", "resources": {"gold": 250, "wood": 1}},
+            {
+              "type": "town_add_recruits",
+              "placement_id": "rootgate_nursery",
+              "recruits": {
+                "unit_thornwake_seedcutters": 3,
+                "unit_thornwake_thornwhip_carriers": 2
+              }
+            },
+            {"type": "message", "text": "Rootgate opens its seed vault and sends Tova fresh cutters, thornwhip crews, and living roadstock."}
+          ]
+        },
+        {
+          "id": "clauseworks_ledger_rooted",
+          "priority": 110,
+          "conditions": [
+            {"type": "objective_met", "objective_id": "claim_clauseworks_depot"}
+          ],
+          "effects": [
+            {"type": "town_add_building", "placement_id": "clauseworks_toll_depot", "building_id": "building_wayfarers_hall"},
+            {"type": "set_flag", "flag": "rootgate_toll_recorded", "value": true},
+            {"type": "message", "text": "Tova binds the seized Clauseworks ledgers beneath living root and records the fourth frontier claim."}
+          ]
+        },
+        {
+          "id": "clauseworks_counter_contract",
+          "priority": 94,
+          "conditions": [
+            {"type": "day_at_least", "day": 3},
+            {"type": "town_owned_by_player", "placement_id": "rootgate_nursery"}
+          ],
+          "effects": [
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "rootgate_counter_contract",
+                "encounter_id": "encounter_charter_guard",
+                "x": 10,
+                "y": 5,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_brasshollow",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {"type": "message", "text": "Clauseworks stamps a counter-contract and sends a charter guard down the southern rail."}
+          ]
+        },
+        {
+          "id": "unbroken_toll_line",
+          "priority": 88,
+          "conditions": [
+            {"type": "day_at_least", "day": 3},
+            {"type": "objective_not_met", "objective_id": "break_charter_toll"}
+          ],
+          "effects": [
+            {"type": "add_enemy_pressure", "faction_id": "faction_brasshollow", "amount": 2},
+            {
+              "type": "spawn_encounter",
+              "placement": {
+                "placement_id": "rootgate_toll_reinforcement",
+                "encounter_id": "encounter_orevein_exactors",
+                "x": 9,
+                "y": 0,
+                "difficulty": "scripted",
+                "spawned_by_faction_id": "faction_brasshollow",
+                "days_active": 0,
+                "arrived": false,
+                "goal_distance": 9999
+              }
+            },
+            {"type": "message", "text": "The unbroken toll guard keeps the road priced and draws another exactor crew onto the north rise."}
+          ]
+        },
+        {
+          "id": "boiler_scrap_grafted",
+          "priority": 84,
+          "conditions": [
+            {"type": "encounter_resolved", "placement_id": "rootgate_boiler_exactors"}
+          ],
+          "effects": [
+            {"type": "add_resources", "resources": {"verdant_grafts": 2}},
+            {"type": "award_experience", "amount": 120},
+            {"type": "set_flag", "flag": "boiler_scrap_grafted", "value": true},
+            {"type": "message", "text": "Tova's rootwrights graft the broken boiler plates into the road and recover two measures of living stock."}
+          ]
+        }
+      ],
+      "towns": [
+        {
+          "placement_id": "rootgate_nursery",
+          "town_id": "town_thornwake_rootgate_nursery",
+          "x": 0,
+          "y": 2,
+          "owner": "player",
+          "recovery": {"pressure": 1, "source": "toll-road attrition"}
+        },
+        {
+          "placement_id": "clauseworks_toll_depot",
+          "town_id": "town_brasshollow_clauseworks_depot",
+          "x": 10,
+          "y": 2,
+          "owner": "enemy"
+        }
+      ],
+      "enemy_factions": [
+        {
+          "faction_id": "faction_brasshollow",
+          "label": "Clauseworks Toll Authority",
+          "pressure_per_day": 2,
+          "pressure_per_enemy_town": 1,
+          "raid_threshold": 5,
+          "max_active_raids": 2,
+          "raid_pillage_delay": 1,
+          "raid_pillage": {"gold": 150, "ore": 1},
+          "raid_encounter_ids": ["encounter_orevein_exactors", "encounter_charter_bastion_reserve"],
+          "spawn_points": [{"x": 9, "y": 1}, {"x": 9, "y": 4}],
+          "siege_target_placement_id": "rootgate_nursery",
+          "siege_active_raid_threshold": 2,
+          "siege_capture_progress": 2,
+          "priority_target_bonus": 115,
+          "priority_target_placement_ids": [
+            "rootgate_nursery",
+            "rootgate_verdant_nursery",
+            "rootgate_rootwatch_hollow",
+            "rootgate_charter_guard"
+          ],
+          "strategy_overrides": {
+            "site_family_weights": {"faction_outpost": 1.4, "frontier_shrine": 1.2},
+            "raid_target_weights": {"town": 1.35, "resource": 1.1, "encounter": 1.2},
+            "raid": {"town_siege_weight": 1.45, "site_denial_weight": 1.2}
+          }
+        }
+      ],
+      "resource_nodes": [
+        {"placement_id": "rootgate_wood", "site_id": "site_wood_wagon", "x": 1, "y": 0},
+        {"placement_id": "rootgate_ore", "site_id": "site_ore_crates", "x": 2, "y": 5},
+        {"placement_id": "rootgate_scout_shrine", "site_id": "site_scout_shrine", "x": 5, "y": 2},
+        {"placement_id": "rootgate_verdant_nursery", "site_id": "site_verdant_graft_nursery", "x": 0, "y": 1, "guard_front_id": "rootgate_charter_guard"},
+        {"placement_id": "rootgate_rootwatch_hollow", "site_id": "site_rootwatch_hollow", "x": 3, "y": 3},
+        {"placement_id": "clauseworks_wood", "site_id": "site_wood_wagon", "x": 9, "y": 0, "collected_by_faction_id": "faction_brasshollow"},
+        {"placement_id": "clauseworks_ore", "site_id": "site_ore_crates", "x": 9, "y": 5, "collected_by_faction_id": "faction_brasshollow"},
+        {"placement_id": "clauseworks_scrip_mint", "site_id": "site_brass_scrip_mint", "x": 10, "y": 1, "guard_front_id": "rootgate_bastion_reserve", "collected_by_faction_id": "faction_brasshollow"},
+        {"placement_id": "rootgate_toll_rootgate_nursery_rare_exchange", "site_id": "site_frontier_rare_exchange", "x": 1, "y": 2, "guard_front_id": "rootgate_charter_guard"},
+        {"placement_id": "rootgate_toll_clauseworks_toll_depot_rare_exchange", "site_id": "site_frontier_rare_exchange", "x": 9, "y": 2, "guard_front_id": "rootgate_bastion_reserve", "collected_by_faction_id": "faction_brasshollow"}
+      ],
+      "artifact_nodes": [
+        {"placement_id": "rootgate_trailsinger_boots", "artifact_id": "artifact_trailsinger_boots", "artifact_reward_table_id": "artifact_source_pickup_caches_common", "x": 3, "y": 1},
+        {"placement_id": "rootgate_bastion_gorget", "artifact_id": "artifact_bastion_gorget", "x": 6, "y": 3},
+        {"placement_id": "clauseworks_quarry_tally", "artifact_id": "artifact_quarry_tally_rod", "x": 9, "y": 4}
+      ],
+      "encounters": [
+        {
+          "placement_id": "rootgate_charter_guard",
+          "encounter_id": "encounter_charter_guard",
+          "x": 4,
+          "y": 1,
+          "difficulty": "medium",
+          "combat_seed": 19101,
+          "enemy_army": {
+            "id": "army_rootgate_charter_guard",
+            "name": "Rootgate Charter Guard",
+            "faction_id": "faction_brasshollow",
+            "stacks": [
+              {"unit_id": "unit_brasshollow_scrip_haulers", "count": 8},
+              {"unit_id": "unit_brasshollow_rivet_hounds", "count": 5},
+              {"unit_id": "unit_brasshollow_furnace_pavis_teams", "count": 1}
+            ]
+          }
+        },
+        {
+          "placement_id": "rootgate_bastion_reserve",
+          "encounter_id": "encounter_charter_bastion_reserve",
+          "x": 6,
+          "y": 4,
+          "difficulty": "medium",
+          "combat_seed": 19102,
+          "enemy_army": {
+            "id": "army_rootgate_bastion_reserve",
+            "name": "Rootgate Bastion Reserve",
+            "faction_id": "faction_brasshollow",
+            "stacks": [
+              {"unit_id": "unit_brasshollow_scrip_haulers", "count": 7},
+              {"unit_id": "unit_brasshollow_rivet_hounds", "count": 4},
+              {"unit_id": "unit_brasshollow_furnace_pavis_teams", "count": 2}
+            ]
+          }
+        },
+        {
+          "placement_id": "rootgate_boiler_exactors",
+          "encounter_id": "encounter_orevein_exactors",
+          "x": 8,
+          "y": 0,
+          "difficulty": "medium",
+          "combat_seed": 19103,
+          "enemy_army": {
+            "id": "army_rootgate_boiler_exactors",
+            "name": "Rootgate Boiler Exactors",
+            "faction_id": "faction_brasshollow",
+            "stacks": [
+              {"unit_id": "unit_brasshollow_scrip_haulers", "count": 6},
+              {"unit_id": "unit_brasshollow_rivet_hounds", "count": 4},
+              {"unit_id": "unit_brasshollow_furnace_pavis_teams", "count": 1}
+            ]
+          }
+        }
+      ]
     }
   ]
 }

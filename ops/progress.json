@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The active-play supported-viewport containment slice is complete. Overworld and Town now fit 1024x600, 1280x720, 1600x900, and 1920x1080 with all required commands available, native resource interaction intact, and route/build authority preserved.",
+  "currentNotes": "Rootgate Toll is complete as one bounded shipped Thornwake chapter. The catalog now has nineteen active scenarios and Frontier Claims has four chapters; focused standalone/campaign flow, exact bounded carryover, objective/save authority, 62-encounter clear breadth, economy/development, strategic-AI, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Select the next tracker-approved slice; whole-game and release readiness remain unclaimed.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-active-play-supported-viewport-containment-10184",
-  "currentSliceId": "ux-active-play-supported-viewport-containment-10184",
-  "currentSliceNotes": "Completed from direct current-head layout reds. Overworld narrow Status clipping preserves the exact full tooltip. Town compact Header/resource presentation preserves full text and native popup semantics. The desktop Town rail uses 400px of flexible stage width so its unchanged build flow fits 1600x900. Focused four-width layout/build authority, seven compatibility owners, static/editor checks, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. Packaged active-play interaction, hardware, certification, signing, publication, whole-game, and release-readiness remain unclaimed.",
+  "currentSlice": "content-thornwake-rootgate-toll-chapter-10184",
+  "currentSliceId": "content-thornwake-rootgate-toll-chapter-10184",
+  "currentSliceNotes": "Completed with exact Rootgate/Clauseworks, Tova/Graftroot Wardens, Thornwake/Brasshollow, deadline, objective, route, campaign carryover, save, combat-breadth, economy, strategic-AI, compatibility, static/editor, and bounded platform evidence. No new system or broad completion claim was introduced.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Active-Play Supported-Viewport Containment",
-  "currentSliceUpdatedAt": "2026-08-16T07:57:58Z",
+  "currentSliceTitle": "Thornwake Rootgate Toll Chapter",
+  "currentSliceUpdatedAt": "2026-08-16T10:32:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19847,7 +19847,7 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
-  "notes": "Implemented source-backed 0x49b3fb endpoint lookup alignment in h3maped_rmg_core: the helper now uses generated-cell owner keys and direct endpoint-record first-dword matching, and 0x4a79a3 reciprocal lookup no longer passes runtime-zone ids. No-Godot focused Medium seed-10 setup-1 still reaches final_payload_compare and fails closed at native_final_tile_stream_mismatch_against_same_run_0x49b2b6_payload: tile bytes 36288/36288 first mismatch offset 1 native=53 expected=54; generated-object payload 10872 vs 17057; object payload first byte native=5 expected=2; object appends 836; decorative bit26 candidates 3078. Runtime map output remains disabled.",
+  "notes": "Completed the bounded Thornwake Rootgate Toll chapter. Nineteen active campaign/skirmish scenarios and four Frontier Claims chapters now ship; exact Bellwake victory plus drowned_chart_recorded unlocks chapter IV with capped resource/flag carryover and no cross-faction hero, spell, or artifact transfer. Focused launch/objective/save proof, 62-encounter queue-clear breadth signature 829808c9, deadline/replay/economy/runway/strategic-AI/core compatibility, repository/editor validation, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. Packaged chapter interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
   "plannedSlices": [
     {
       "id": "presentation-overworld-object-focus-cue-adoption-10184",
@@ -86304,6 +86304,58 @@
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
       "blockedReason": null,
       "completedAt": "2026-08-16T07:57:58Z"
+    },
+    {
+      "id": "content-thornwake-rootgate-toll-chapter-10184",
+      "title": "Thornwake Rootgate Toll Chapter",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Add one bounded shipped Thornwake campaign/skirmish front that uses the fully authored Rootgate Nursery and Clauseworks Depot through existing campaign, economy, combat, AI, objective, save, and UI systems.",
+      "implementationTargets": [
+        "content/scenarios.json",
+        "content/campaigns.json",
+        "tests/thornwake_rootgate_toll_chapter_report.gd",
+        "tests/thornwake_rootgate_toll_chapter_report.tscn",
+        "tests/frontier_claims_campaign_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "The active content catalog exposes exactly nineteen campaign- and skirmish-selectable scenarios, and Rootgate Toll keeps exact Rootgate/Clauseworks, Tova/Graftroot Wardens, Thornwake/Brasshollow, deadline, objective, and authored-route identities",
+        "Real standalone and campaign sessions launch; common and rare economy sources are reachable; authored encounters, Clauseworks capture, victory and defeat authority, and save normalization/resume pass without rule shortcuts",
+        "Frontier Claims chapter IV unlocks only after exact Bellwake victory plus its authored completion flag, imports bounded resources and flags only, and transfers no cross-faction hero progression, spells, or artifacts",
+        "Active-scenario combat breadth, deadline, campaign/replay, economy-route/runway, strategic-AI, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "new units, towns, heroes, spells, artifacts, resource-site types, battle rules, AI policy, economy coefficients, campaign schema, save version, Native RMG, or map-topology system changes",
+        "broad faction balance tuning, generic campaign/carryover redesign, cross-faction hero/spell/artifact transfer, generated-map support, visual/audio asset production, or a full Thornwake campaign claim",
+        "packaged chapter interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "0488cfac18c8ab7b64c14fc498f631a8bae688eb",
+        "active_scenario_count": 18,
+        "campaign_count": 6,
+        "active_scenarios_by_player_faction": {
+          "faction_embercourt": 9,
+          "faction_mireclaw": 3,
+          "faction_sunvault": 3,
+          "faction_thornwake": 1,
+          "faction_brasshollow": 1,
+          "faction_veilmourn": 1
+        },
+        "unused_player_town_id": "town_thornwake_rootgate_nursery",
+        "unused_enemy_town_id": "town_brasshollow_clauseworks_depot"
+      },
+      "createdAt": "2026-08-16T09:54:38Z",
+      "updatedAt": "2026-08-16T10:32:00Z",
+      "startedAt": "2026-08-16T09:54:38Z",
+      "notes": "Completed on baseline HEAD0488cfac. Rootgate Toll adds one real Thornwake campaign/skirmish front with Tova Rootwright, Graftroot Wardens, Rootgate Nursery, Clauseworks Depot, exact Day 12 defeat and capture/encounter victory authority, and only existing shipped systems/content. Focused `/tmp/heroes-rootgate-focused-current.n18ZCZ` passes standalone/campaign launch, three encounter payloads, victory/defeat, bounded carryover, save/resume, and unchanged progression storage. Frontier Claims is four chapters and unlocks Rootgate Toll only after exact Bellwake victory plus drowned_chart_recorded. Active combat breadth `/tmp/heroes-rootgate-battle-breadth-rerun.hdSxLu` passes 19 scenarios/62 encounters with stalls0, invalid0, queue clear, signature829808c9; economy route `/tmp/heroes-rootgate-economy-route.YhWdNd`, deadline/replay, player/AI start economy and development runway, strategic-AI recruitment/delivery, and core gates pass. Repository validation, JSON, pycompile, diff-check, exact/generic editor parses, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. No packaged chapter interaction, controller, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claim is made.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
+      "blockedReason": null,
+      "completedAt": "2026-08-16T10:32:00Z"
     }
   ],
   "project": "heroes-like",
@@ -86313,8 +86365,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
-  "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
+  "remainingGap": "Rootgate Toll is complete. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
+  "remainingWork": "Select the next tracker-approved release-readiness implementation slice without claiming whole-game or release readiness.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -86746,7 +86798,7 @@
     }
   ],
   "result": "ux_overworld_terminal_end_turn_detached_focus_guard_completed",
-  "status": "in_progress",
+  "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
       "completed": "Implementation or documentation-only governance work satisfies the PLAN completion criteria and has validation/evidence.",
@@ -86848,7 +86900,7 @@
   ],
   "summary": "The active-play supported-viewport containment slice is complete with focused four-width Overworld/Town behavior, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup evidence. Broader release gaps remain; the game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-16T07:57:58Z",
+  "updatedAt": "2026-08-16T09:54:38Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
