@@ -1309,6 +1309,7 @@ func _checkpoint_battle_resolution_for_overworld(result: Dictionary, retry: bool
 		return true
 	_validation_battle_resolution_checkpoint_success_count += 1
 	_battle_resolution_checkpoint_pending = {}
+	AppRouter.arm_battle_resolution_overworld_presentation(result)
 	_resume_checkpointed_battle_resolution(result, "overworld")
 	return true
 

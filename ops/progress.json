@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Town army transfer completion feedback is implemented and validated. Successful public garrison/hero transfers now publish exact compact semantic TownStage feedback with imported UI-confirm audio and normal/reduced roster movement only after authoritative holder-count, conservation, recap, and active-hero checks. Broader release gaps remain.",
+  "currentNotes": "Overworld town-assault victory return feedback is implemented and validated. Successful real hostile-town victories now carry one detached, route-local captured-town consequence only after the resolved checkpoint saves, consume it once on the exact next Overworld scene, and preserve BattleRules/session/save/direct-capture authority. Broader release gaps remain.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-town-army-transfer-completion-feedback-10184",
-  "currentSliceId": "presentation-town-army-transfer-completion-feedback-10184",
-  "currentSliceNotes": "Completed with focused bidirectional public-handler TownRules parity, exact conserved unit-count transitions, silent invalid controls, compatibility/static/editor coverage, and bounded Linux/Windows export/startup evidence.",
+  "currentSlice": "presentation-overworld-town-assault-victory-return-feedback-10184",
+  "currentSliceId": "presentation-overworld-town-assault-victory-return-feedback-10184",
+  "currentSliceNotes": "Completed with focused 1280/1920 real-assault BattleRules and method-matched Overworld parity, one-shot/fail-closed route payload checks, Battle/Overworld compatibility, static/editor validation, and bounded Linux/Windows export/startup evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Town Army Transfer Completion Feedback",
-  "currentSliceUpdatedAt": "2026-08-16T03:34:01Z",
+  "currentSliceTitle": "Overworld Town Assault Victory Return Feedback",
+  "currentSliceUpdatedAt": "2026-08-16T04:27:53Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -86029,6 +86029,52 @@
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
       "blockedReason": null,
       "completedAt": "2026-08-16T03:34:01Z"
+    },
+    {
+      "id": "presentation-overworld-town-assault-victory-return-feedback-10184",
+      "title": "Overworld Town Assault Victory Return Feedback",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Carry a successful hostile-town assault capture across the durable Battle-to-Overworld route and present the existing captured-town consequence once without changing BattleRules combat/mutation, ownership, save, or route authority.",
+      "implementationTargets": [
+        "scripts/autoload/AppRouter.gd",
+        "scripts/core/BattleRules.gd",
+        "scenes/battle/BattleShell.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "tests/overworld_town_assault_victory_return_feedback_report.gd",
+        "tests/overworld_town_assault_victory_return_feedback_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Real 1280x720/1920x1080 player town-assault victories match an independent BattleRules control, durably checkpoint, route to Overworld, and publish one exact existing captured-town presentation at the authoritative live town tile",
+        "The route-local payload is built only from exact town-assault victory context plus post-resolution player ownership, remains absent before successful durability, consumes once, and fails closed for malformed, stale, terminal, wrong-owner, non-victory, and non-assault controls",
+        "Town ownership/garrison/survivors, active hero, objectives, aftermath/return notice, battle clearance, checkpoint/autosave, session authority, direct neutral-town capture, focus/input/settings, and later refresh/scene construction remain exact",
+        "Focused assault-return, Battle/Overworld compatibility, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "BattleRules combat, town ownership/garrison/survivors, objectives, rewards, AI, balance, save/schema, Native RMG, or map-topology changes",
+        "new cue/VFX/audio, generic battle-aftermath stream, layout redesign, particles, shaders, spatial audio, haptics, or final mastering",
+        "packaged assault interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "11a21e07",
+        "player_town_assault_capture_present": true,
+        "durable_battle_to_overworld_route_present": true,
+        "direct_neutral_town_capture_presentation_present": true,
+        "town_assault_return_presentation_present": false,
+        "campaign_menu_probe_ok": true
+      },
+      "createdAt": "2026-08-16T03:45:05Z",
+      "startedAt": "2026-08-16T03:45:05Z",
+      "updatedAt": "2026-08-16T04:27:53Z",
+      "notes": "Completed on HEAD 11a21e07 baseline. BattleRules returns a detached pre-resolution route-context snapshot without changing combat or victory mutation; BattleShell arms only after checkpoint success; AppRouter validates exact live captured-town/session/scene identity and clears before consume or any wrong/failed route; OverworldShell reuses the existing overworld_object_captured/town_capture presenter before first render. Focused /tmp/heroes-assault-return-focused4.* passed real 1280/1920 assault victories, unarmed Overworld authority parity, exact cue/VFX/audio, one-shot refresh/later-scene silence, and malformed/wrong-context/wrong-owner/terminal/stale/wrong-surface controls. Direct object-resolution, checkpoint failure/retry, quick resolve, full Battle layout 1280 and 1920, active-play focus, accessibility semantics, and core gates passed. Static/editor/validator checks passed. Official Linux export plus packaged headless startup and Windows export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup passed; packaged assault interaction/listening and broader certification/release claims remain excluded.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
+      "blockedReason": null,
+      "completedAt": "2026-08-16T04:27:53Z"
     }
   ],
   "project": "heroes-like",
@@ -86470,7 +86516,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "presentation_town_hero_hire_completion_feedback_in_progress",
+  "result": "presentation_overworld_town_assault_victory_return_feedback_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -86571,9 +86617,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The Town artifact action feedback slice is completed: successful public commission, equip, and stow actions publish compact, exact, fail-closed TownStage feedback while ArtifactRules/TownRules authority remains unchanged. Focused, compatibility, static/editor, and bounded Linux/Windows export/startup gates pass. Select the next tracker-approved slice; the game is not release-ready.",
+  "summary": "The Overworld town-assault victory return feedback slice is completed: real successful hostile-town assaults now publish one exact consume-once existing captured-town cue after durable Battle checkpointing while combat, ownership, save, route, and direct-capture authority remain unchanged. Focused, compatibility, static/editor, and bounded Linux/Windows export/startup gates pass. Select the next tracker-approved slice; the game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-16T02:43:06Z",
+  "updatedAt": "2026-08-16T04:27:53Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

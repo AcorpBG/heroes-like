@@ -35,6 +35,8 @@ const SCENARIO_OUTCOME_AUTOSAVE_FAILURE_MESSAGE := "Outcome is ready, but autosa
 var _menu_notice := ""
 var _pending_load_resumed_presentation: Dictionary = {}
 var _load_resumed_presentation_sequence := 0
+var _pending_battle_resolution_overworld_presentation: Dictionary = {}
+var _battle_resolution_overworld_presentation_sequence := 0
 var _active_overworld_handoff_profile := {}
 var _last_overworld_handoff_profile := {}
 var _safe_quit_in_progress := false
@@ -612,6 +614,7 @@ func go_to_overworld() -> void:
 	ProfileLogScript.emit_general("router", "scene_transition", "go_to_overworld", ProfileLogScript.elapsed_ms(started), buckets, metadata, session)
 
 func checkpoint_battle_resolution_for_overworld(route_after_checkpoint: bool = false) -> Dictionary:
+	_clear_pending_battle_resolution_overworld_presentation()
 	_battle_resolution_checkpoint_request_count += 1
 	if not SessionState.has_playable_session():
 		_clear_battle_resolution_checkpoint_authority()
@@ -800,6 +803,8 @@ func route_checkpointed_battle_resolution() -> Dictionary:
 	var routed := _record_battle_resolution_checkpoint_route(OVERWORLD_SCENE, "already_saved")
 	if routed:
 		_change_scene(OVERWORLD_SCENE)
+	else:
+		_clear_pending_battle_resolution_overworld_presentation()
 	_battle_resolution_checkpoint_last_result = _battle_resolution_checkpoint_result(
 		true,
 		true,
@@ -903,6 +908,7 @@ func validation_reset_battle_resolution_checkpoint_state() -> void:
 	_battle_resolution_checkpoint_skipped_durable_route_count = 0
 	_battle_resolution_checkpoint_runtime_issue_count = 0
 	_clear_battle_resolution_checkpoint_authority()
+	_clear_pending_battle_resolution_overworld_presentation()
 	_battle_resolution_checkpoint_last_result = {}
 	_battle_resolution_checkpoint_last_route = {}
 	_battle_resolution_checkpoint_last_runtime_issue = {}
@@ -929,7 +935,119 @@ func validation_battle_resolution_checkpoint_snapshot() -> Dictionary:
 		"last_result": _battle_resolution_checkpoint_last_result.duplicate(true),
 		"last_route": _battle_resolution_checkpoint_last_route.duplicate(true),
 		"last_runtime_issue": _battle_resolution_checkpoint_last_runtime_issue.duplicate(true),
+		"pending_overworld_presentation": _pending_battle_resolution_overworld_presentation.duplicate(true),
 	}
+
+func arm_battle_resolution_overworld_presentation(result: Dictionary) -> Dictionary:
+	_clear_pending_battle_resolution_overworld_presentation()
+	if not SessionState.has_playable_session() or String(result.get("state", "")) != "victory":
+		return {}
+	var snapshot_value: Variant = result.get("battle_resolution_context_snapshot", {})
+	if not (snapshot_value is Dictionary) or snapshot_value.is_empty():
+		return {}
+	var snapshot: Dictionary = snapshot_value
+	var context_value: Variant = snapshot.get("context", {})
+	if not (context_value is Dictionary):
+		return {}
+	var context: Dictionary = context_value
+	var town_placement_id := String(context.get("town_placement_id", "")).strip_edges()
+	if (
+		String(context.get("type", "")) != "town_assault"
+		or String(snapshot.get("resolution_state", "")) != "victory"
+		or String(snapshot.get("snapshot_policy", "")) != "pre_resolution_route_context"
+		or town_placement_id == ""
+	):
+		return {}
+	var session := SessionState.ensure_active_session()
+	if session.scenario_status != "in_progress" or session.game_state != "overworld" or not session.battle.is_empty():
+		return {}
+	var live_town := {}
+	for town_value in session.overworld.get("towns", []):
+		if town_value is Dictionary and String(town_value.get("placement_id", "")) == town_placement_id:
+			live_town = town_value
+			break
+	var tile := Vector2i(int(live_town.get("x", -1)), int(live_town.get("y", -1)))
+	var map_size := OverworldRules.derive_map_size(session)
+	if (
+		live_town.is_empty()
+		or String(live_town.get("owner", "")) != "player"
+		or tile.x < 0
+		or tile.y < 0
+		or tile.x >= map_size.x
+		or tile.y >= map_size.y
+	):
+		return {}
+	_battle_resolution_overworld_presentation_sequence += 1
+	_pending_battle_resolution_overworld_presentation = {
+		"sequence": _battle_resolution_overworld_presentation_sequence,
+		"event_id": "overworld_object_captured",
+		"family": "town_capture",
+		"placement_id": town_placement_id,
+		"content_id": String(live_town.get("town_id", "")),
+		"tile": {"x": tile.x, "y": tile.y},
+		"surface": "overworld",
+		"expected_scene_path": OVERWORLD_SCENE,
+		"session_id_hash": String(session.session_id).sha256_text(),
+		"scenario_id": String(session.scenario_id),
+		"day": int(session.day),
+		"scenario_status": String(session.scenario_status),
+		"game_state": String(session.game_state),
+		"owner": "player",
+	}
+	return _pending_battle_resolution_overworld_presentation.duplicate(true)
+
+func consume_battle_resolution_overworld_presentation(surface: String) -> Dictionary:
+	var pending := _pending_battle_resolution_overworld_presentation.duplicate(true)
+	_clear_pending_battle_resolution_overworld_presentation()
+	if pending.is_empty() or surface.strip_edges() != "overworld":
+		return {}
+	if (
+		String(pending.get("event_id", "")) != "overworld_object_captured"
+		or String(pending.get("family", "")) != "town_capture"
+		or String(pending.get("surface", "")) != "overworld"
+		or String(pending.get("expected_scene_path", "")) != OVERWORLD_SCENE
+		or int(pending.get("sequence", 0)) <= 0
+	):
+		return {}
+	if not SessionState.has_playable_session():
+		return {}
+	var session := SessionState.ensure_active_session()
+	if (
+		String(session.session_id).sha256_text() != String(pending.get("session_id_hash", ""))
+		or String(session.scenario_id) != String(pending.get("scenario_id", ""))
+		or int(session.day) != int(pending.get("day", -1))
+		or session.scenario_status != String(pending.get("scenario_status", ""))
+		or session.game_state != String(pending.get("game_state", ""))
+		or not session.battle.is_empty()
+	):
+		return {}
+	var placement_id := String(pending.get("placement_id", ""))
+	var live_town := {}
+	for town_value in session.overworld.get("towns", []):
+		if town_value is Dictionary and String(town_value.get("placement_id", "")) == placement_id:
+			live_town = town_value
+			break
+	var tile_value: Variant = pending.get("tile", {})
+	var tile: Dictionary = tile_value if tile_value is Dictionary else {}
+	if (
+		live_town.is_empty()
+		or String(live_town.get("owner", "")) != "player"
+		or String(live_town.get("town_id", "")) != String(pending.get("content_id", ""))
+		or int(live_town.get("x", -1)) != int(tile.get("x", -2))
+		or int(live_town.get("y", -1)) != int(tile.get("y", -2))
+	):
+		return {}
+	pending["consumed"] = true
+	return pending.duplicate(true)
+
+func validation_pending_battle_resolution_overworld_presentation() -> Dictionary:
+	return _pending_battle_resolution_overworld_presentation.duplicate(true)
+
+func validation_clear_pending_battle_resolution_overworld_presentation() -> void:
+	_clear_pending_battle_resolution_overworld_presentation()
+
+func _clear_pending_battle_resolution_overworld_presentation() -> void:
+	_pending_battle_resolution_overworld_presentation = {}
 
 func go_to_town() -> void:
 	var started := ProfileLogScript.begin_usec()
@@ -1736,22 +1854,32 @@ func validation_prepare_town_handoff_without_scene_change() -> Dictionary:
 
 func _change_scene(scene_path: String) -> void:
 	_reconcile_pending_load_resumed_scene(scene_path)
+	_reconcile_pending_battle_resolution_overworld_scene(scene_path)
 	var packed_scene := _packed_scene_for_route(scene_path)
 	if packed_scene != null:
 		var packed_error := get_tree().change_scene_to_packed(packed_scene)
 		if packed_error != OK:
 			_clear_pending_load_resumed_presentation()
+			_clear_pending_battle_resolution_overworld_presentation()
 			push_error("Failed to change scene to %s (error %d)." % [scene_path, packed_error])
 		return
 	if not ResourceLoader.exists(scene_path):
 		_clear_pending_load_resumed_presentation()
+		_clear_pending_battle_resolution_overworld_presentation()
 		push_error("Scene file is missing: %s" % scene_path)
 		return
 
 	var error := get_tree().change_scene_to_file(scene_path)
 	if error != OK:
 		_clear_pending_load_resumed_presentation()
+		_clear_pending_battle_resolution_overworld_presentation()
 		push_error("Failed to change scene to %s (error %d)." % [scene_path, error])
+
+func _reconcile_pending_battle_resolution_overworld_scene(scene_path: String) -> void:
+	if _pending_battle_resolution_overworld_presentation.is_empty():
+		return
+	if String(_pending_battle_resolution_overworld_presentation.get("expected_scene_path", "")) != scene_path:
+		_clear_pending_battle_resolution_overworld_presentation()
 
 func _packed_scene_for_route(scene_path: String) -> PackedScene:
 	match scene_path:

@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `presentation-overworld-town-assault-victory-return-feedback-10184`. BattleRules now returns one detached pre-resolution route-context snapshot without changing victory mutation or enabling a new exit animation; after the resolved checkpoint saves, BattleShell arms an ephemeral AppRouter consequence that the exact next Overworld scene consumes once through the existing captured-town presenter. Real 1280x720/1920x1080 hostile-town victories publish the exact authored capture VFX/audio at Duskfen Bastion while an unarmed Overworld control proves session parity; malformed, stale, wrong-owner/context/surface, terminal, refresh, and later-scene controls remain silent. Direct object capture, checkpoint failure/retry, quick resolve, full 1280/1920 Battle route/layout matrices, active-play focus, accessibility semantics, core systems, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged assault interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `presentation-overworld-town-assault-victory-return-feedback-10184`
 - Completed implementation slice: `presentation-town-army-transfer-completion-feedback-10184`. Successful public Town `transfer:<source_holder>:<target_holder>:<unit_id>:<amount>` actions now publish one compact nonblocking TownStage completion only after proving the exact source decrease, target increase, conserved unit total, stationed holder identities, result recap, and active-hero mirror. The semantic cue uses the existing imported UI-confirm audio and compact procedural roster movement with an exact reduced-motion fallback. Eight focused 1280x720/1920x1080 normal/reduced garrison-to-hero and hero-to-garrison rows pass with whole-session TownRules parity and malformed, stale, repeated, invalid, and refresh silence. Transfer/rendezvous, cue/audio, keyboard-focus, Town/Battle visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged transfer interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `presentation-town-army-transfer-completion-feedback-10184`
 - Completed implementation slice: `presentation-town-specialty-selection-feedback-10184`. Successful public Town `choose_specialty:<specialty_id>` actions now publish one compact nonblocking TownStage completion only after proving the exact active-hero specialty rank increase, pending-choice consumption, hero identity, result recap, and active-hero mirror. The semantic cue uses the existing imported UI-confirm audio and a compact procedural specialty-rank badge with an exact reduced-motion fallback. Four focused 1280x720/1920x1080 normal/reduced rows pass with whole-session TownRules parity and malformed, refresh, stale, and invalid silence; all 12 compatibility owners, repository/editor checks, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged specialty interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -5808,6 +5810,28 @@ Non-goals:
 - no specialty definitions, ranks, effects, choice cadence, level thresholds, hero stats, AI choice policy, save/schema, Native RMG, or map-topology changes;
 - no new art/audio, generic UI cue remapping, layout redesign, particles, shaders, spatial audio, haptics, or final mastering;
 - no packaged specialty interaction/listening, hardware certification, signing/publication, whole-game, or release-readiness claim.
+
+## Selected Slice: Overworld Town Assault Victory Return Feedback
+
+id: `presentation-overworld-town-assault-victory-return-feedback-10184`
+
+Status: completed.
+
+Implementation boundary:
+- after a real player town-assault victory has transferred the exact hostile town to player ownership and the resolved-battle checkpoint is durably saved, carry one detached route-local consequence through `AppRouter` into the next Overworld scene and consume it exactly once;
+- derive the payload only from BattleRules' detached pre-resolution route-context snapshot for the `town_assault` victory plus the live post-resolution town record, then publish the existing `overworld_object_captured` / `town_capture` presentation at that town's exact visible tile;
+- preserve BattleRules town ownership/garrison/hero/objective behavior, checkpoint retry and save-failure authority, route ordering, direct neutral-town capture presentation, focus/input, settings, session/save schema, and all non-assault outcomes.
+
+Completion criteria:
+- real 1280x720 and 1920x1080 player town-assault victories match an independent BattleRules control, save successfully, route to Overworld, and publish one exact captured-town cue after scene readiness with authoritative placement/content/tile/owner identity;
+- the route-local payload is absent before successful checkpoint durability, fails closed on malformed/stale/wrong-owner/wrong-context/terminal routes, is cleared on other routes, and cannot replay after consume, refresh, retry, or a later Overworld construction;
+- town ownership, garrison/survivors, active hero, objectives, aftermath/return notice, battle clearance, autosave bytes, session authority, direct capture behavior, and non-victory assault/ordinary battle outcomes remain exact;
+- focused assault-return, battle layout/quick-resolve/checkpoint, direct town capture/object resolution, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Non-goals:
+- no BattleRules combat, town ownership, garrison, survivor, objective, reward, AI, balance, save/schema, Native RMG, or map-topology changes;
+- no new cue, VFX, audio, generic battle-aftermath stream, layout redesign, particles, shaders, spatial audio, haptics, or final mastering;
+- no packaged assault interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
 
 ## Selected Slice: Town Army Transfer Completion Feedback
 

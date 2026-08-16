@@ -43604,6 +43604,127 @@ def validate_overworld_rope_lift_live_transit(errors: list[str]) -> None:
         ensure("res://tests/overworld_rope_lift_live_transit_report.gd" in scene_path.read_text(encoding="utf-8"), errors, "Rope Lift focused scene must load its report script")
 
 
+def validate_overworld_town_assault_victory_return_feedback(errors: list[str]) -> None:
+    router_text = APP_ROUTER_PATH.read_text(encoding="utf-8")
+    battle_rules_text = BATTLE_RULES_PATH.read_text(encoding="utf-8")
+    battle_shell_text = (ROOT / "scenes/battle/BattleShell.gd").read_text(encoding="utf-8")
+    overworld_shell_text = (ROOT / "scenes/overworld/OverworldShell.gd").read_text(encoding="utf-8")
+    report_path = ROOT / "tests/overworld_town_assault_victory_return_feedback_report.gd"
+    scene_path = ROOT / "tests/overworld_town_assault_victory_return_feedback_report.tscn"
+    ensure(report_path.exists(), errors, "Town-assault victory return feedback focused report script is missing")
+    ensure(scene_path.exists(), errors, "Town-assault victory return feedback focused report scene is missing")
+    if not report_path.exists() or not scene_path.exists():
+        return
+
+    def function_block(text: str, name: str) -> str:
+        marker = f"func {name}("
+        start = text.find(marker)
+        if start < 0:
+            return ""
+        next_offsets = [offset for offset in (
+            text.find("\nfunc ", start + len(marker)),
+            text.find("\nstatic func ", start + len(marker)),
+        ) if offset >= 0]
+        next_func = min(next_offsets) if next_offsets else -1
+        return text[start:] if next_func < 0 else text[start:next_func]
+
+    arm_block = function_block(router_text, "arm_battle_resolution_overworld_presentation")
+    consume_block = function_block(router_text, "consume_battle_resolution_overworld_presentation")
+    change_scene_block = function_block(router_text, "_change_scene")
+    checkpoint_shell_block = function_block(battle_shell_text, "_checkpoint_battle_resolution_for_overworld")
+    ready_block = function_block(overworld_shell_text, "_ready")
+    shell_consume_block = function_block(overworld_shell_text, "_consume_battle_resolution_overworld_presentation")
+    report_text = report_path.read_text(encoding="utf-8")
+    scene_text = scene_path.read_text(encoding="utf-8")
+
+    for token in (
+        'var _pending_battle_resolution_overworld_presentation: Dictionary = {}',
+        'var _battle_resolution_overworld_presentation_sequence := 0',
+        'func arm_battle_resolution_overworld_presentation(result: Dictionary) -> Dictionary:',
+        'func consume_battle_resolution_overworld_presentation(surface: String) -> Dictionary:',
+        'func _reconcile_pending_battle_resolution_overworld_scene(scene_path: String) -> void:',
+    ):
+        ensure(token in router_text, errors, f"Town-assault route-local router ownership is missing token: {token}")
+    finalize_victory_block = function_block(battle_rules_text, "_finalize_victory")
+    for token in (
+        'var resolution_context_snapshot := {',
+        '"context": session.battle.get("context", {}).duplicate(true)',
+        '"resolution_state": "victory"',
+        '"snapshot_policy": "pre_resolution_route_context"',
+        '"battle_resolution_context_snapshot": resolution_context_snapshot',
+    ):
+        ensure(token in finalize_victory_block, errors, f"Battle victory route-context snapshot is missing token: {token}")
+    ensure(finalize_victory_block.find('var resolution_context_snapshot := {') < finalize_victory_block.find('var base_summary := _apply_battle_context_victory(session)') < finalize_victory_block.find('session.battle = {}') < finalize_victory_block.find('"battle_resolution_context_snapshot": resolution_context_snapshot'), errors, "BattleRules must detach route context before ownership/aftermath mutation clears the battle and return it without changing resolution order")
+    ensure("battle_exit_animation_snapshot" not in finalize_victory_block, errors, "Ordinary victory route context must not opt into a new battle-exit animation handoff")
+    for token in (
+        '_clear_pending_battle_resolution_overworld_presentation()',
+        'String(result.get("state", "")) != "victory"',
+        'result.get("battle_resolution_context_snapshot", {})',
+        'String(context.get("type", "")) != "town_assault"',
+        'String(snapshot.get("resolution_state", "")) != "victory"',
+        'String(snapshot.get("snapshot_policy", "")) != "pre_resolution_route_context"',
+        'session.scenario_status != "in_progress"',
+        'session.game_state != "overworld"',
+        'not session.battle.is_empty()',
+        'String(live_town.get("owner", "")) != "player"',
+        '"event_id": "overworld_object_captured"',
+        '"family": "town_capture"',
+        '"expected_scene_path": OVERWORLD_SCENE',
+        '"session_id_hash": String(session.session_id).sha256_text()',
+    ):
+        ensure(token in arm_block, errors, f"Town-assault route-local payload builder is missing fail-closed token: {token}")
+    ensure("session.flags" not in arm_block, errors, "Town-assault return presentation must not persist through session flags or save schema")
+    ensure(arm_block.find("_clear_pending_battle_resolution_overworld_presentation()") < arm_block.find('String(result.get("state", "")) != "victory"') < arm_block.find('result.get("battle_resolution_context_snapshot", {})') < arm_block.find('_pending_battle_resolution_overworld_presentation = {'), errors, "Town-assault return payload must clear stale state, validate the detached result, and only then publish")
+
+    for token in (
+        'var pending := _pending_battle_resolution_overworld_presentation.duplicate(true)',
+        '_clear_pending_battle_resolution_overworld_presentation()',
+        'surface.strip_edges() != "overworld"',
+        'String(session.session_id).sha256_text() != String(pending.get("session_id_hash", ""))',
+        'session.scenario_status != String(pending.get("scenario_status", ""))',
+        'session.game_state != String(pending.get("game_state", ""))',
+        'String(live_town.get("owner", "")) != "player"',
+        'pending["consumed"] = true',
+    ):
+        ensure(token in consume_block, errors, f"Town-assault one-shot consumer is missing token: {token}")
+    ensure(consume_block.find('var pending := _pending_battle_resolution_overworld_presentation.duplicate(true)') < consume_block.find('_clear_pending_battle_resolution_overworld_presentation()') < consume_block.find('surface.strip_edges() != "overworld"') < consume_block.find('pending["consumed"] = true'), errors, "Town-assault return payload must clear before validation and succeed only after all live authority checks")
+    ensure("session.flags" not in consume_block and "SaveService" not in consume_block, errors, "Town-assault return consumer must remain route-local and must not mutate save/session schema")
+
+    ensure(checkpoint_shell_block.find('bool(checkpoint.get("saved", false))') < checkpoint_shell_block.find('AppRouter.arm_battle_resolution_overworld_presentation(result)') < checkpoint_shell_block.find('_resume_checkpointed_battle_resolution(result, "overworld")'), errors, "BattleShell must arm assault-return feedback only after a successful durable checkpoint and before route/animation handoff")
+    ensure(change_scene_block.find('_reconcile_pending_battle_resolution_overworld_scene(scene_path)') < change_scene_block.find('_packed_scene_for_route(scene_path)'), errors, "Scene routing must reconcile the pending assault-return payload before changing scenes")
+    ensure(change_scene_block.count('_clear_pending_battle_resolution_overworld_presentation()') >= 3, errors, "Every scene-change failure path must clear pending assault-return feedback")
+    ensure(ready_block.find('_map_size = OverworldRules.derive_map_size(_session)') < ready_block.find('_consume_battle_resolution_overworld_presentation()') < ready_block.find('_render_state()'), errors, "Overworld must consume the route-local assault cue against live map bounds before its first render")
+    ensure('AppRouter.consume_battle_resolution_overworld_presentation("overworld")' in shell_consume_block, errors, "Overworld assault-return consumer must claim only the exact Overworld surface")
+    ensure(shell_consume_block.find('payload.is_empty()') < shell_consume_block.find('_record_object_resolution_presentation('), errors, "Overworld must fail closed before reusing the existing object-resolution presentation")
+    ensure('"ok": true' in shell_consume_block and '"interaction_result": payload.duplicate(true)' in shell_consume_block, errors, "Overworld must adapt the detached payload through the existing object-result cue path")
+
+    for token in (
+        'const TARGET_WIDTHS := [1280, 1920]',
+        'OverworldRules.capture_active_town(session)',
+        'BattleRules.resolve_if_battle_ready(session)',
+        'session = SessionState.set_active_session(session)',
+        'AppRouter.checkpoint_battle_resolution_for_overworld(false)',
+        'var control_shell := OVERWORLD_SCENE.instantiate()',
+        'var authority_after_ready_control: Dictionary = control_session.to_dict()',
+        'var routed_session = SessionState.new_session_data()',
+        'AppRouter.arm_battle_resolution_overworld_presentation(outcome)',
+        'String(autosave_summary.get("resume_target", "")) != "overworld"',
+        'String(cue.get("event_id", "")) != "overworld_object_captured"',
+        'String(cue.get("family", "")) != "town_capture"',
+        'shell.call("_refresh")',
+        'var later_shell := OVERWORLD_SCENE.instantiate()',
+        'func _run_fail_closed_controls() -> bool:',
+        '["malformed", "wrong_context", "wrong_owner", "terminal", "stale", "wrong_surface"]',
+        'session.to_dict() != authority_before',
+    ):
+        ensure(token in report_text, errors, f"Town-assault return focused report is missing token: {token}")
+    ensure(report_text.count('AppRouter.consume_battle_resolution_overworld_presentation("overworld")') == 1, errors, "Focused fail-closed control must consume the stale payload exactly once outside live Overworld scenes")
+    ensure(report_text.count('session = SessionState.set_active_session(session)') == 2, errors, "Focused assault rows and fail-closed controls must retain the normalized live SessionState authority returned by the autoload")
+    ensure(report_text.find('var control_shell := OVERWORLD_SCENE.instantiate()') < report_text.find('var authority_after_ready_control: Dictionary = control_session.to_dict()') < report_text.find('var pending: Dictionary = AppRouter.arm_battle_resolution_overworld_presentation(outcome)') < report_text.find('var shell := OVERWORLD_SCENE.instantiate()'), errors, "Focused report must capture method-matched unarmed Overworld ready authority before arming and opening the routed shell")
+    ensure("session.flags[" not in report_text and "create_town_assault_payload" not in report_text, errors, "Focused report must use the public hostile-town action and must not synthesize save-backed presentation state")
+    ensure('res://tests/overworld_town_assault_victory_return_feedback_report.gd' in scene_text, errors, "Town-assault return focused scene must load its exact report script")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate repository content and scaffolding.")
     parser.add_argument("--economy-resource-report", action="store_true", help="Print the opt-in economy/resource compatibility report.")
@@ -43638,6 +43759,7 @@ def main() -> int:
     errors: list[str] = []
     validate_progress_tracker_state(errors)
     validate_strategic_ai_medium_long_run_adoption(errors)
+    validate_overworld_town_assault_victory_return_feedback(errors)
     validate_content(errors)
     validate_project_and_scenes(errors)
     validate_save_management(errors)
