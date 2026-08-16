@@ -950,27 +950,52 @@ func arm_battle_resolution_overworld_presentation(result: Dictionary) -> Diction
 	if not (context_value is Dictionary):
 		return {}
 	var context: Dictionary = context_value
-	var town_placement_id := String(context.get("town_placement_id", "")).strip_edges()
+	var context_type := String(context.get("type", ""))
 	if (
-		String(context.get("type", "")) != "town_assault"
+		context_type not in ["town_assault", "resource_assault"]
 		or String(snapshot.get("resolution_state", "")) != "victory"
 		or String(snapshot.get("snapshot_policy", "")) != "pre_resolution_route_context"
-		or town_placement_id == ""
 	):
 		return {}
 	var session := SessionState.ensure_active_session()
 	if session.scenario_status != "in_progress" or session.game_state != "overworld" or not session.battle.is_empty():
 		return {}
-	var live_town := {}
-	for town_value in session.overworld.get("towns", []):
-		if town_value is Dictionary and String(town_value.get("placement_id", "")) == town_placement_id:
-			live_town = town_value
-			break
-	var tile := Vector2i(int(live_town.get("x", -1)), int(live_town.get("y", -1)))
+	var family := ""
+	var placement_id := ""
+	var content_id := ""
+	var tile := Vector2i(-1, -1)
+	if context_type == "town_assault":
+		placement_id = String(context.get("town_placement_id", "")).strip_edges()
+		var live_town := {}
+		for town_value in session.overworld.get("towns", []):
+			if town_value is Dictionary and String(town_value.get("placement_id", "")) == placement_id:
+				live_town = town_value
+				break
+		if live_town.is_empty() or String(live_town.get("owner", "")) != "player":
+			return {}
+		family = "town_capture"
+		content_id = String(live_town.get("town_id", ""))
+		tile = Vector2i(int(live_town.get("x", -1)), int(live_town.get("y", -1)))
+	else:
+		placement_id = String(context.get("resource_placement_id", "")).strip_edges()
+		var live_resource: Dictionary = OverworldRules._find_resource_node_by_placement(session, placement_id).get("node", {})
+		var site_id := String(live_resource.get("site_id", ""))
+		var site := ContentService.get_resource_site(site_id)
+		if (
+			live_resource.is_empty()
+			or site.is_empty()
+			or not bool(site.get("persistent_control", false))
+			or String(live_resource.get("collected_by_faction_id", "")) != "player"
+			or site_id != String(context.get("resource_site_id", ""))
+		):
+			return {}
+		family = "resource_site"
+		content_id = site_id
+		tile = Vector2i(int(live_resource.get("x", -1)), int(live_resource.get("y", -1)))
 	var map_size := OverworldRules.derive_map_size(session)
 	if (
-		live_town.is_empty()
-		or String(live_town.get("owner", "")) != "player"
+		placement_id == ""
+		or content_id == ""
 		or tile.x < 0
 		or tile.y < 0
 		or tile.x >= map_size.x
@@ -981,9 +1006,9 @@ func arm_battle_resolution_overworld_presentation(result: Dictionary) -> Diction
 	_pending_battle_resolution_overworld_presentation = {
 		"sequence": _battle_resolution_overworld_presentation_sequence,
 		"event_id": "overworld_object_captured",
-		"family": "town_capture",
-		"placement_id": town_placement_id,
-		"content_id": String(live_town.get("town_id", "")),
+		"family": family,
+		"placement_id": placement_id,
+		"content_id": content_id,
 		"tile": {"x": tile.x, "y": tile.y},
 		"surface": "overworld",
 		"expected_scene_path": OVERWORLD_SCENE,
@@ -1003,7 +1028,7 @@ func consume_battle_resolution_overworld_presentation(surface: String) -> Dictio
 		return {}
 	if (
 		String(pending.get("event_id", "")) != "overworld_object_captured"
-		or String(pending.get("family", "")) != "town_capture"
+		or String(pending.get("family", "")) not in ["town_capture", "resource_site"]
 		or String(pending.get("surface", "")) != "overworld"
 		or String(pending.get("expected_scene_path", "")) != OVERWORLD_SCENE
 		or int(pending.get("sequence", 0)) <= 0
@@ -1022,21 +1047,35 @@ func consume_battle_resolution_overworld_presentation(surface: String) -> Dictio
 	):
 		return {}
 	var placement_id := String(pending.get("placement_id", ""))
-	var live_town := {}
-	for town_value in session.overworld.get("towns", []):
-		if town_value is Dictionary and String(town_value.get("placement_id", "")) == placement_id:
-			live_town = town_value
-			break
 	var tile_value: Variant = pending.get("tile", {})
 	var tile: Dictionary = tile_value if tile_value is Dictionary else {}
-	if (
-		live_town.is_empty()
-		or String(live_town.get("owner", "")) != "player"
-		or String(live_town.get("town_id", "")) != String(pending.get("content_id", ""))
-		or int(live_town.get("x", -1)) != int(tile.get("x", -2))
-		or int(live_town.get("y", -1)) != int(tile.get("y", -2))
-	):
-		return {}
+	if String(pending.get("family", "")) == "town_capture":
+		var live_town := {}
+		for town_value in session.overworld.get("towns", []):
+			if town_value is Dictionary and String(town_value.get("placement_id", "")) == placement_id:
+				live_town = town_value
+				break
+		if (
+			live_town.is_empty()
+			or String(live_town.get("owner", "")) != "player"
+			or String(live_town.get("town_id", "")) != String(pending.get("content_id", ""))
+			or int(live_town.get("x", -1)) != int(tile.get("x", -2))
+			or int(live_town.get("y", -1)) != int(tile.get("y", -2))
+		):
+			return {}
+	else:
+		var live_resource: Dictionary = OverworldRules._find_resource_node_by_placement(session, placement_id).get("node", {})
+		var site := ContentService.get_resource_site(String(live_resource.get("site_id", "")))
+		if (
+			live_resource.is_empty()
+			or site.is_empty()
+			or not bool(site.get("persistent_control", false))
+			or String(live_resource.get("collected_by_faction_id", "")) != "player"
+			or String(live_resource.get("site_id", "")) != String(pending.get("content_id", ""))
+			or int(live_resource.get("x", -1)) != int(tile.get("x", -2))
+			or int(live_resource.get("y", -1)) != int(tile.get("y", -2))
+		):
+			return {}
 	pending["consumed"] = true
 	return pending.duplicate(true)
 

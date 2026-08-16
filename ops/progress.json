@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Overworld town-assault victory return feedback is implemented and validated. Successful real hostile-town victories now carry one detached, route-local captured-town consequence only after the resolved checkpoint saves, consume it once on the exact next Overworld scene, and preserve BattleRules/session/save/direct-capture authority. Broader release gaps remain.",
+  "currentNotes": "Overworld resource-assault victory return feedback is implemented and validated. Successful real stationed-resource victories now carry one detached route-local resource capture consequence only after the resolved checkpoint saves, consume it once on the exact next Overworld scene, and preserve battle/resource/session/save authority. Broader release gaps remain.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-town-assault-victory-return-feedback-10184",
-  "currentSliceId": "presentation-overworld-town-assault-victory-return-feedback-10184",
-  "currentSliceNotes": "Completed with focused 1280/1920 real-assault BattleRules and method-matched Overworld parity, one-shot/fail-closed route payload checks, Battle/Overworld compatibility, static/editor validation, and bounded Linux/Windows export/startup evidence.",
+  "currentSlice": "presentation-overworld-resource-assault-victory-return-feedback-10184",
+  "currentSliceId": "presentation-overworld-resource-assault-victory-return-feedback-10184",
+  "currentSliceNotes": "Completed with focused 1280/1920 real strategic-AI-stationed resource-assault battles, method-matched unarmed Overworld parity, exact one-shot/fail-closed route payload checks, compatibility/static validation, and bounded Linux/Windows export/startup evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Town Assault Victory Return Feedback",
-  "currentSliceUpdatedAt": "2026-08-16T04:27:53Z",
+  "currentSliceTitle": "Overworld Resource Assault Victory Return Feedback",
+  "currentSliceUpdatedAt": "2026-08-16T04:54:27Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -86075,6 +86075,49 @@
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
       "blockedReason": null,
       "completedAt": "2026-08-16T04:27:53Z"
+    },
+    {
+      "id": "presentation-overworld-resource-assault-victory-return-feedback-10184",
+      "title": "Overworld Resource Assault Victory Return Feedback",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Carry a successful stationed-resource battle capture across the durable Battle-to-Overworld route and present the existing persistent-resource capture consequence once without changing combat, resource-control, defender, save, or route authority.",
+      "implementationTargets": [
+        "scripts/autoload/AppRouter.gd",
+        "tests/overworld_resource_assault_victory_return_feedback_report.gd",
+        "tests/overworld_resource_assault_victory_return_feedback_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Real 1280x720/1920x1080 player resource-assault victories durably checkpoint, preserve method-matched unarmed Overworld authority, route to Overworld, and publish one exact existing persistent-resource capture presentation at the authoritative authored node tile used by direct capture",
+        "The route-local payload is built only from exact resource-assault victory context plus post-resolution player control, remains absent before successful durability, consumes once, and fails closed for malformed, stale, terminal, wrong-controller, nonpersistent, non-victory, and non-resource-assault controls",
+        "Resource control/defender/commander/survivor authority, active hero, rewards/aftermath/return notice, battle clearance, checkpoint/autosave, session authority, direct resource capture, focus/input/settings, and later refresh/scene construction remain exact",
+        "Focused resource-assault return, Battle/resource-defense/checkpoint/object-resolution compatibility, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "BattleRules combat/reward/survivor/commander/AI/balance, resource ownership/income/guard/response, save/schema, Native RMG, or map-topology changes",
+        "new cue/VFX/audio, generic battle-aftermath stream, layout redesign, particles, shaders, spatial audio, haptics, or final mastering",
+        "packaged resource-assault interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "85d557f6",
+        "player_resource_assault_capture_present": true,
+        "detached_resource_assault_victory_context_present": true,
+        "durable_battle_to_overworld_route_present": true,
+        "direct_persistent_resource_capture_presentation_present": true,
+        "resource_assault_return_presentation_present": false
+      },
+      "createdAt": "2026-08-16T04:32:00Z",
+      "startedAt": "2026-08-16T04:32:00Z",
+      "updatedAt": "2026-08-16T04:54:27Z",
+      "notes": "Completed on baseline HEAD 85d557f6. AppRouter now accepts the existing detached resource_assault victory context only when the exact live resource node is persistent, player-controlled, site-matched, in bounds, and still identical at consume; the completed town path remains intact. Focused `/tmp/heroes-resource-assault-focused3.lIqTPn` passed real strategic-AI stationing, public collection, BattleRules victory, durable checkpoint, unarmed Overworld parity, exact 1280/1920 capture cue, one-shot refresh/later-scene silence, and eight fail-closed controls. Compatibility `/tmp/heroes-resource-assault-compat.fKb0O5` passed resource defense, town return, object playback, checkpoint failure/retry, quick resolve, keyboard focus, accessibility, and core. Static/editor checks passed. Official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup passed; packaged resource interaction/listening and broader certification/release claims remain excluded.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
+      "blockedReason": null,
+      "completedAt": "2026-08-16T04:54:27Z"
     }
   ],
   "project": "heroes-like",
