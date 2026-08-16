@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `ux-battle-info-tab-header-compact-fit-10184`. The existing Battle info TabBar now exposes `Order / Focus / Spell / Timing` as four contained native headers at 1280x720 and 1920x1080 while its semantic payload and tooltip retain the full `Order / Focus / Spells / Timing` identities, exact readiness counts, summaries, and selected focus. Focused board/header, fresh 1280x720 visual capture, active-play keyboard/controller/mouse tab navigation, Town/Battle visual, animation, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `ux-battle-info-tab-header-compact-fit-10184`
 - Completed implementation slice: `ux-battle-order-tab-compact-initiative-summary-10184`. The Battle Order tab now shows a contained three-line Initiative/Now/Next summary at 1280x720 and 1920x1080 while its existing tooltip retains the exact full handoff and ordered technical track. Focused Battle board/navigation, visual, tab/focus, animation, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction, controller hardware, certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `ux-battle-order-tab-compact-initiative-summary-10184`
 - Completed implementation slice: `ux-main-menu-editor-utility-command-frame-10184`. The Main Menu now preserves its five authored transparent plaque hotspots while the Editor command alone uses the existing secondary normal/hover/pressed/disabled texture frame in the previously unpainted utility gap. Focused 1280x720/1920x1080 geometry and asset proof, menu/outcome, keyboard/controller navigation, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Editor interaction, hardware/certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -6240,6 +6242,34 @@ Completion evidence:
 - the existing tooltip retains the exact full Initiative Handoff and full ordered `NOW/UP/DONE`, side, initiative, count, and HP track, while focused independent controls prove current/next identity and whole authority;
 - the fresh X11 capture `/tmp/heroes-battle-order-visual.590zIh/order_tab_compact_1280.png` shows the corrected shipped composition; focused board/navigation, Town/Battle visual, active-focus/tab navigation, animation, accessibility, and core owners pass naturally;
 - repository validation, Python compilation, diff checks, exact/generic editor parses, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass; broader packaged interaction and release claims remain unclaimed.
+
+## Completed Slice: Battle Information Tab Header Compact Fit
+
+id: `ux-battle-info-tab-header-compact-fit-10184`
+
+Status: completed.
+
+Implementation boundary:
+- render only the existing native Battle TabBar headers as `Order`, `Focus`, `Spell`, and `Timing`, the exact smallest readable set proven to fit the live 200px bar;
+- retain the full semantic base titles, ready/total counts, summaries, selected focus, and full readiness text in the existing payload and tooltip;
+- validate all four native tab rectangles as visible, ordered, nonoverlapping, and contained at 1280x720 and 1920x1080 while preserving the completed keyboard/controller/mouse navigation contract.
+
+Completion criteria:
+- all four Battle info tabs have positive ordered native rectangles wholly contained in the existing TabBar at 1280x720 and 1920x1080, with no scroll-arrow-only hidden tab state;
+- the visual titles are exactly `Order / Focus / Spell / Timing`, while semantic payload and tooltip retain `Order / Focus / Spells / Timing` plus exact readiness counts and selected focus;
+- tab selection, boundary retention, focus return, mouse/controller/keyboard input, selected-page persistence, content, session/save/settings/routes, and battle authority remain exact;
+- focused board/header, active-play tab navigation, Town/Battle visual, animation, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Non-goals:
+- no tab page/content/readiness calculation, action, combat, turn-order, focus-cycle, input, save/schema, content, balance, AI, or Native RMG changes;
+- no sidebar/TabBar/panel resizing, font/theme/UI-scale change, new control/panel, icon-only tabs, board/layout change, or generic tab-system rewrite;
+- no packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Completion evidence:
+- the production TabBar uses the fixed visual header set `Order / Focus / Spell / Timing`; the existing readiness payload and tooltip retain the full semantic identities, exact ready/total counts, summaries, and selected focus;
+- focused native-rectangle proof passes at 1280x720 and 1920x1080 with four positive, ordered, nonoverlapping rectangles contained in the unchanged 200px bar, while whole session/save/settings/route authority remains exact;
+- the fresh X11 capture `/tmp/heroes-battle-tab-fit-visual.EikFJX/info_tabs_compact_1280.png` shows all four headers with no scroll-arrow-hidden state; active-play keyboard/controller/mouse traversal and boundary/focus-return behavior pass;
+- Town/Battle visual, animation, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass; broader packaged interaction and release claims remain unclaimed.
 
 ## Progress Reconciliation
 

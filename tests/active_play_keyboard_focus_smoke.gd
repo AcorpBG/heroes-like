@@ -1159,7 +1159,7 @@ func _check_battle_info_tab_controller_navigation(shell: Node, session, entry_fo
 		return _fail("Battle info-tab navigation is missing its native TabBar.")
 	var authority_before: Dictionary = _battle_info_tab_authority_snapshot(session)
 	var reset: Dictionary = shell.call("validation_reset_battle_info_tab_navigation_state")
-	var expected_titles := ["Order", "Focus", "Spells", "Timing"]
+	var expected_titles := ["Order", "Focus", "Spell", "Timing"]
 	var raw_titles: Array = reset.get("tab_titles", []) if reset.get("tab_titles", []) is Array else []
 	var cycle_names: Array = reset.get("focus_cycle_names", []) if reset.get("focus_cycle_names", []) is Array else []
 	var tab_bar_name := String(reset.get("tab_bar_name", ""))

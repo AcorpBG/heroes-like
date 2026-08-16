@@ -186,6 +186,9 @@ func _validate_battle_board_semantics_width(width: int) -> bool:
 	if not _validate_order_tab_compact_summary(shell, session, width):
 		shell.queue_free()
 		return false
+	if not _validate_battle_info_tab_header_fit(shell, session, width):
+		shell.queue_free()
+		return false
 	board.grab_focus()
 	await _settle()
 	if live.text != "":
@@ -797,6 +800,56 @@ func _validate_order_tab_compact_summary(shell: Control, session, width: int) ->
 		return _fail_bool("Battle Order-tab compact initiative summary mismatch at %d: visible=%s expected=%s width=%s/%s lines=%s/%s tooltip=%s expected_tooltip=%s handoff=%s expected_handoff=%s label_rect=%s panel_rect=%s." % [width, initiative_label.text, expected_visible, widest_line, initiative_label.size.x, visible_lines.size(), initiative_label.get_line_count(), initiative_label.tooltip_text, expected_tooltip, handoff, expected_handoff, initiative_label.get_global_rect(), initiative_panel.get_global_rect()])
 	if _battle_background_authority(session) != authority_before:
 		return _fail_bool("Inspecting the Battle Order-tab compact summary changed session/save/settings authority at %d." % width)
+	return true
+
+func _validate_battle_info_tab_header_fit(shell: Control, session, width: int) -> bool:
+	var authority_before := _battle_background_authority(session)
+	var battle_tabs: TabContainer = shell.get_node("%BattleTabs")
+	var tab_bar: TabBar = battle_tabs.get_tab_bar()
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var readiness: Dictionary = snapshot.get("battle_tab_readiness", {}) if snapshot.get("battle_tab_readiness", {}) is Dictionary else {}
+	var semantic_tabs: Array = readiness.get("tabs", []) if readiness.get("tabs", []) is Array else []
+	var expected_visible_titles := ["Order", "Focus", "Spell", "Timing"]
+	var expected_semantic_titles := ["Order", "Focus", "Spells", "Timing"]
+	var actual_titles: Array = snapshot.get("battle_tab_titles", []) if snapshot.get("battle_tab_titles", []) is Array else []
+	var bar_rect := Rect2(Vector2.ZERO, tab_bar.size)
+	var previous_right := 0.0
+	var total_width := 0.0
+	var geometry_exact := actual_titles == expected_visible_titles and semantic_tabs.size() == expected_semantic_titles.size()
+	var semantic_exact := semantic_tabs.size() == expected_semantic_titles.size()
+	for index in range(expected_visible_titles.size()):
+		var rect := tab_bar.get_tab_rect(index)
+		geometry_exact = geometry_exact \
+			and rect.size.x > 0.0 \
+			and rect.size.y > 0.0 \
+			and bar_rect.encloses(rect) \
+			and rect.position.x + 0.01 >= previous_right
+		previous_right = rect.end.x
+		total_width += rect.size.x
+		if index < semantic_tabs.size() and semantic_tabs[index] is Dictionary:
+			var semantic: Dictionary = semantic_tabs[index]
+			var ready_count := int(semantic.get("ready_count", -1))
+			var semantic_title := String(semantic.get("title", ""))
+			var summary := String(semantic.get("summary", ""))
+			semantic_exact = semantic_exact \
+				and String(semantic.get("base_title", "")) == expected_semantic_titles[index] \
+				and ready_count >= 0 \
+				and (ready_count <= 0 or semantic_title == "%s %d" % [expected_semantic_titles[index], ready_count]) \
+				and String(battle_tabs.tooltip_text).contains(summary)
+		else:
+			semantic_exact = false
+	geometry_exact = geometry_exact and total_width <= tab_bar.size.x + 0.01 and previous_right <= tab_bar.size.x + 0.01
+	var selected: Dictionary = readiness.get("selected_tab", {}) if readiness.get("selected_tab", {}) is Dictionary else {}
+	semantic_exact = semantic_exact \
+		and String(selected.get("base_title", "")) == expected_semantic_titles[battle_tabs.current_tab] \
+		and String(battle_tabs.tooltip_text).contains("Selected: %s" % String(selected.get("focus", "")))
+	if not geometry_exact or not semantic_exact:
+		var rows: Array = []
+		for index in range(battle_tabs.get_tab_count()):
+			rows.append({"title": battle_tabs.get_tab_title(index), "rect": tab_bar.get_tab_rect(index)})
+		return _fail_bool("Battle info-tab header fit/semantics mismatch at %d: rows=%s bar=%s total=%s geometry=%s semantic=%s readiness=%s tooltip=%s." % [width, rows, tab_bar.size, total_width, geometry_exact, semantic_exact, readiness, battle_tabs.tooltip_text])
+	if _battle_background_authority(session) != authority_before:
+		return _fail_bool("Inspecting the Battle info-tab compact header changed session/save/settings authority at %d." % width)
 	return true
 
 func _expected_initiative_handoff_for_test(session) -> Dictionary:

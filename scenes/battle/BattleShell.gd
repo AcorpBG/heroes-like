@@ -16,6 +16,7 @@ const BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_MESSAGE := "Briefing shown, but auto
 const BATTLE_PLAYBACK_SPEED_SAVE_FAILURE_MESSAGE := "Playback speed not saved. Previous speed restored."
 const BATTLE_ORDER_VISIBLE_LINE_COUNT := 3
 const BATTLE_ORDER_VISIBLE_STACK_CHAR_LIMIT := 18
+const BATTLE_INFO_TAB_VISIBLE_TITLES := ["Order", "Focus", "Spell", "Timing"]
 
 @onready var _banner_panel: PanelContainer = %Banner
 @onready var _briefing_panel: PanelContainer = %BriefingPanel
@@ -3665,9 +3666,8 @@ func _battle_order_button_surfaces() -> Array:
 func _refresh_battle_tab_cues() -> void:
 	var payload := _battle_tab_readiness_payload()
 	var tabs: Array = payload.get("tabs", [])
-	for index in range(min(_battle_tabs.get_tab_count(), tabs.size())):
-		var tab: Dictionary = tabs[index]
-		_battle_tabs.set_tab_title(index, String(tab.get("title", "")))
+	for index in range(min(_battle_tabs.get_tab_count(), BATTLE_INFO_TAB_VISIBLE_TITLES.size())):
+		_battle_tabs.set_tab_title(index, String(BATTLE_INFO_TAB_VISIBLE_TITLES[index]))
 	_battle_tabs.tooltip_text = String(payload.get("tooltip_text", ""))
 	_sync_battle_info_tab_tooltip()
 
@@ -3957,10 +3957,8 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_art_panel(_action_panel, UI_ART_BATTLE_COMBAT_LOG_PANEL, "gold", 54, 10, Color(0.58, 0.52, 0.46, 1.0))
 	FrontierVisualKit.apply_art_panel(_system_panel, UI_ART_BATTLE_COMBAT_LOG_PANEL, "ink", 54, 10, Color(0.50, 0.50, 0.48, 1.0))
 	FrontierVisualKit.apply_tab_container(_battle_tabs)
-	_battle_tabs.set_tab_title(0, "Order")
-	_battle_tabs.set_tab_title(1, "Focus")
-	_battle_tabs.set_tab_title(2, "Spells")
-	_battle_tabs.set_tab_title(3, "Timing")
+	for index in range(min(_battle_tabs.get_tab_count(), BATTLE_INFO_TAB_VISIBLE_TITLES.size())):
+		_battle_tabs.set_tab_title(index, String(BATTLE_INFO_TAB_VISIBLE_TITLES[index]))
 
 	for button in [_prev_target_button, _next_target_button]:
 		_style_action_button(button, false, 88)
