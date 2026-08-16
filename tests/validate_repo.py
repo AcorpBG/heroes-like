@@ -16660,7 +16660,8 @@ def validate_map_editor_terrain_paint_normalization_deferral(errors: list[str]) 
         direct_set_body = direct_set_match.group(1)
         ensure("_materialize_last_terrain_final_normalization()" in direct_set_body, errors, "Direct terrain writes must finalize any prior deferred placement report before mutating the map")
         ensure(direct_set_body.index("_materialize_last_terrain_final_normalization()") < direct_set_body.index('row[tile.x] = terrain_id'), errors, "Prior deferred placement report must materialize before direct terrain mutation")
-    ensure("_map_view.set_route_preview_enabled(_tool == TOOL_INSPECT)" in editor_text, errors, "Map Editor must retain route preview only for Inspect tool")
+    ensure("_map_view.set_route_preview_enabled(false)" in editor_text, errors, "Map Editor tools must not invoke gameplay route projection")
+    ensure("_map_view.set_route_preview_enabled(_tool == TOOL_INSPECT)" not in editor_text, errors, "Map Editor Inspect must not retain gameplay route projection")
 
     map_view_text = map_view_path.read_text(encoding="utf-8")
     for token in (
@@ -16693,13 +16694,33 @@ def validate_map_editor_terrain_paint_normalization_deferral(errors: list[str]) 
         'performance_shell.call("_on_map_tile_pressed", PAINT_TILE)',
         "_integer_sum(live_click_usec) * 2 >= eager_total",
         'String(action_route_profile.get("status", "")) != "disabled_for_editor_action_tool"',
+        'const INSPECT_TILES := [Vector2i(50, 49), Vector2i(49, 50), Vector2i(50, 50)]',
+        'var inspect_session_before: Dictionary = performance_session.to_dict()',
+        'var inspect_terrain_result_before: Dictionary = performance_shell.get("_last_terrain_placement_result").duplicate(true)',
         'performance_shell.set("_tool", "inspect")',
-        'Dictionary(inspect_metrics.get("route_preview", {})).is_empty()',
+        'performance_shell.call("_on_map_tile_pressed", inspect_tile)',
+        '_integer_sum(inspect_click_usec) * 2 >= eager_total',
+        'String(inspect_route_profile.get("status", "")) != "disabled_for_editor_action_tool"',
+        'performance_session.to_dict() != inspect_session_before',
+        'performance_shell.get("_last_terrain_placement_result") != inspect_terrain_result_before',
+        'String(inspect_snapshot.get("status_text", "")) != "Inspected tile %d,%d."',
+        'String(inspect_cue.get("action", "")) != "inspect map content"',
+        'String(inspect_cue.get("detail", "")) != "Read-only selection"',
+        'var inspect_tile_authority_before: Dictionary = inspect_authority_snapshot_before.get("tile_inspection", {}).duplicate(true)',
+        'var inspect_editor_authority_before: Dictionary = _inspection_editor_authority(inspect_authority_snapshot_before)',
+        'inspect_tile_payload != inspect_tile_authority_before',
+        '_inspection_editor_authority(inspect_snapshot) != inspect_editor_authority_before',
+        'func _inspection_editor_authority(snapshot: Dictionary) -> Dictionary:',
+        '"scenario_authoring_validation": snapshot.get("scenario_authoring_validation", {}).duplicate(true)',
+        '"authored_scenario_export_contract": snapshot.get("authored_scenario_export_contract", {}).duplicate(true)',
+        '"play_readiness_gate": snapshot.get("play_readiness_gate", {}).duplicate(true)',
+        '"inspect_route_projection_disabled": true',
+        '"inspect_authority_exact": true',
         '"nonmap_authority_exact": true',
         'MAP_EDITOR_TERRAIN_PAINT_PERFORMANCE_REPORT',
     ):
         ensure(token in report_text, errors, f"Map Editor terrain paint focused owner is missing token: {token}")
-    for forbidden in ("await get_tree().create_timer", "OS.delay", "normalize", "erase(\"final_normalization"):
+    for forbidden in ("await get_tree().create_timer", "OS.delay", "normalize", "erase(\"final_normalization", 'inspect_route_preview_preserved'):
         ensure(forbidden not in report_text, errors, f"Map Editor terrain paint focused owner must not weaken or delay the parity gate: {forbidden}")
     scene_text = scene_path.read_text(encoding="utf-8")
     ensure('res://tests/map_editor_terrain_paint_performance_report.gd' in scene_text, errors, "Terrain paint performance scene must own the focused report script")

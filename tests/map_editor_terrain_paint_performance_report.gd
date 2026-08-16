@@ -3,6 +3,7 @@ extends Node
 const SCENARIO_ID := "ninefold-confluence"
 const TERRAIN_SEQUENCE := ["sand", "grass", "dirt", "grass"]
 const PAINT_TILE := Vector2i(50, 50)
+const INSPECT_TILES := [Vector2i(50, 49), Vector2i(49, 50), Vector2i(50, 50)]
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -145,13 +146,54 @@ func _run() -> void:
 	if not Dictionary(action_metrics.get("route_preview", {})).is_empty() or String(action_route_profile.get("status", "")) != "disabled_for_editor_action_tool":
 		_fail("Terrain tool retained an irrelevant gameplay route preview.")
 		return
+	var final_inspect_tile: Vector2i = INSPECT_TILES[-1]
+	var inspect_authority_snapshot_before: Dictionary = performance_shell.call("validation_snapshot")
+	if inspect_authority_snapshot_before.get("selected_tile", {}) != {"x": final_inspect_tile.x, "y": final_inspect_tile.y}:
+		_fail("Inspect authority control did not start on the final comparison tile.")
+		return
+	var inspect_tile_authority_before: Dictionary = inspect_authority_snapshot_before.get("tile_inspection", {}).duplicate(true)
+	var inspect_editor_authority_before: Dictionary = _inspection_editor_authority(inspect_authority_snapshot_before)
+	var performance_session = performance_shell.get("_session")
+	var inspect_session_before: Dictionary = performance_session.to_dict()
+	var inspect_dirty_before: bool = bool(performance_shell.get("_dirty"))
+	var inspect_terrain_result_before: Dictionary = performance_shell.get("_last_terrain_placement_result").duplicate(true)
 	performance_shell.set("_tool", "inspect")
-	performance_shell.set("_selected_tile", Vector2i(24, 27))
-	performance_shell.call("_refresh_state")
+	var inspect_click_usec := []
+	for inspect_tile in INSPECT_TILES:
+		var inspect_started := Time.get_ticks_usec()
+		performance_shell.call("_on_map_tile_pressed", inspect_tile)
+		inspect_click_usec.append(Time.get_ticks_usec() - inspect_started)
+	if _integer_sum(inspect_click_usec) * 2 >= eager_total:
+		_fail("Public Inspect clicks retained at least half of the eager route/normalization lane: inspect=%s eager=%s." % [inspect_click_usec, eager_usec])
+		return
 	var inspect_metrics: Dictionary = performance_map_view.call("validation_view_metrics")
 	var inspect_route_profile: Dictionary = inspect_metrics.get("render_cache", {}).get("profile", {}).get("last_path_recompute", {})
-	if Dictionary(inspect_metrics.get("route_preview", {})).is_empty() or String(inspect_route_profile.get("status", "")) == "disabled_for_editor_action_tool":
-		_fail("Inspect tool did not retain the shared gameplay route preview.")
+	if not Dictionary(inspect_metrics.get("route_preview", {})).is_empty() or String(inspect_route_profile.get("status", "")) != "disabled_for_editor_action_tool":
+		_fail("Inspect tool retained an irrelevant gameplay route preview.")
+		return
+	if performance_session.to_dict() != inspect_session_before:
+		_fail("Read-only Inspect clicks changed session authority.")
+		return
+	if bool(performance_shell.get("_dirty")) != inspect_dirty_before or performance_shell.get("_last_terrain_placement_result") != inspect_terrain_result_before:
+		_fail("Read-only Inspect clicks changed dirty or terrain-result authority.")
+		return
+	var inspect_snapshot: Dictionary = performance_shell.call("validation_snapshot")
+	var inspect_cue: Dictionary = inspect_snapshot.get("active_tool_cue", {})
+	var inspect_tile_payload: Dictionary = inspect_snapshot.get("tile_inspection", {})
+	if inspect_snapshot.get("selected_tile", {}) != {"x": final_inspect_tile.x, "y": final_inspect_tile.y}:
+		_fail("Public Inspect clicks did not retain exact selected-tile authority.")
+		return
+	if String(inspect_snapshot.get("status_text", "")) != "Inspected tile %d,%d." % [final_inspect_tile.x, final_inspect_tile.y]:
+		_fail("Public Inspect clicks did not retain the exact inspection status.")
+		return
+	if String(inspect_cue.get("tool", "")) != "inspect" or String(inspect_cue.get("action", "")) != "inspect map content" or String(inspect_cue.get("detail", "")) != "Read-only selection":
+		_fail("Public Inspect clicks did not retain the authored read-only tool cue.")
+		return
+	if inspect_tile_payload != inspect_tile_authority_before:
+		_fail("Public Inspect clicks changed exact selected-tile terrain/object/link inspection authority.")
+		return
+	if _inspection_editor_authority(inspect_snapshot) != inspect_editor_authority_before:
+		_fail("Public Inspect clicks changed exact authoring, export, or Play-readiness authority.")
 		return
 
 	print("MAP_EDITOR_TERRAIN_PAINT_PERFORMANCE_REPORT %s" % JSON.stringify({
@@ -163,12 +205,14 @@ func _run() -> void:
 		"live_mutation_usec": live_mutation_usec,
 		"live_refresh_usec": live_refresh_usec,
 		"live_click_usec": live_click_usec,
+		"inspect_click_usec": inspect_click_usec,
 		"live_to_eager_ratio": float(live_total) / float(eager_total),
 		"map_parity": true,
 		"result_parity": true,
 		"validation_materialized_exact": true,
 		"action_route_projection_disabled": true,
-		"inspect_route_preview_preserved": true,
+		"inspect_route_projection_disabled": true,
+		"inspect_authority_exact": true,
 		"nonmap_authority_exact": true,
 	}))
 	shell.queue_free()
@@ -181,6 +225,15 @@ func _session_nonmap_authority(session) -> Dictionary:
 	overworld.erase("map")
 	payload["overworld"] = overworld
 	return payload
+
+func _inspection_editor_authority(snapshot: Dictionary) -> Dictionary:
+	return {
+		"scenario_validation_check": snapshot.get("scenario_validation_check", {}).duplicate(true),
+		"authored_scenario_export_contract": snapshot.get("authored_scenario_export_contract", {}).duplicate(true),
+		"scenario_authoring_validation": snapshot.get("scenario_authoring_validation", {}).duplicate(true),
+		"export_intent": snapshot.get("export_intent", {}).duplicate(true),
+		"play_readiness_gate": snapshot.get("play_readiness_gate", {}).duplicate(true),
+	}
 
 func _integer_sum(values: Array) -> int:
 	var total := 0
