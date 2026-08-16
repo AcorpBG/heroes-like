@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Town route-response dispatch slice is complete. The public Town action dispatcher now publishes one unique Town-surface cue only after the authoritative site response, cache invalidation, resolution guard, and refreshed stage; focused, compatibility, static/editor, and bounded Linux/Windows startup gates pass. Broader release gaps remain.",
+  "currentNotes": "The Town market exchange completion slice is implemented and validated: the live public handler now publishes exact signed buy/sell completion feedback through TownStage with original VFX, deterministic audio, and fail-closed fallbacks. Focused, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass; broader release gaps remain.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-town-route-response-dispatch-feedback-10184",
-  "currentSliceId": "presentation-town-route-response-dispatch-feedback-10184",
-  "currentSliceNotes": "Completed with original imported alpha art, deterministic stereo audio, live route provenance, six focused viewport/mode rows, compatibility/static/editor proof, and bounded Linux/Windows export/startup evidence.",
+  "currentSlice": "presentation-town-market-exchange-completion-feedback-10184",
+  "currentSliceId": "presentation-town-market-exchange-completion-feedback-10184",
+  "currentSliceNotes": "Implemented the live Town market-exchange completion presentation. Original 1254x1254 RGBA source was curated to a 512x512 runtime VFX; deterministic generation produced a distinct 360 ms stereo cue. The public handler validates exact market action grammar and ordered signed stockpile deltas only after the successful core transaction and refreshed stage. Focused artifact /tmp/heroes-town-market-focused-final.6SIzR7 passes six 1280/1920 normal, missing-asset, and reduced-motion rows with four buy/two sell public actions, whole-session TownRules control parity, exact market usage and deltas, one imported audio record, and malformed/invalid/refresh silence. Compatibility artifacts /tmp/heroes-town-market-compat.69uNT4 and /tmp/heroes-town-market-compat-resume.E2nAtz pass market-cap, Town VFX/cue/route, animation catalog, broad Town/Battle visual, and core owners; the recruitment VFX owner now explicitly resets validation audio before quit. Static/editor audit /tmp/heroes-town-market-static.9UzYW5 passes. Official Linux /tmp/heroes-town-market-linux-package.V6dCaS and Windows /tmp/heroes-town-market-windows-package.9ZxhM0 reports are ok:true; claims remain export/headless startup and export/fresh-Wine Boot/MainMenu/native-DLL startup only. Packaged exchange interaction/listening, certification, signing/publication, whole-game, and release readiness remain unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Town Route-Response Dispatch Feedback",
-  "currentSliceUpdatedAt": "2026-08-16T00:17:49Z",
+  "currentSliceTitle": "Town Market Exchange Completion Feedback",
+  "currentSliceUpdatedAt": "2026-08-16T00:47:33Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -85712,7 +85712,10 @@
         "head": "51d32b989b8f1c953de80ecba709fb5813b135c1",
         "town_response_action_present": true,
         "town_response_presentation_present": false,
-        "town_presenter_supported_events": ["town_building_built", "town_units_recruited"]
+        "town_presenter_supported_events": [
+          "town_building_built",
+          "town_units_recruited"
+        ]
       },
       "createdAt": "2026-08-15T23:54:35Z",
       "startedAt": "2026-08-15T23:54:35Z",
@@ -85721,6 +85724,60 @@
       "notes": "Implemented from the exact live gap. Built-in image generation produced the original 1254x1254 RGBA source, curated to a 512x512 runtime VFX; deterministic generation produced a distinct 380 ms stereo cue. The public Town dispatcher now verifies exact live node/Town-origin/same-day/active response provenance after refresh. Focused artifact /tmp/heroes-town-route-response-focused-rerun.L9PrJT passes six 1280/1920 normal, missing-asset, and reduced-motion rows with whole session parity, one imported audio record, and silent repeat rejection. Compatibility artifact /tmp/heroes-town-route-compat.h2q84a passes Town VFX/cue, animation catalog, broad Town/Battle visual, and core owners. Static/editor validation passes. Official Linux and Windows reports are ok:true; claims remain export/headless startup and export/fresh-Wine Boot/MainMenu/native-DLL startup only.",
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Packaged Town interaction/listening, certification, signing/publication, broader release gaps, and release readiness remain unclaimed.",
       "blockedReason": null
+    },
+    {
+      "id": "presentation-town-market-exchange-completion-feedback-10184",
+      "title": "Town Market Exchange Completion Feedback",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Present a successful live Town common-resource exchange through the existing compact TownStage action system without changing economy authority or remapping the generic UI cue surface.",
+      "implementationTargets": [
+        "art/town/source/market_exchange_vfx_source.png",
+        "art/town/runtime/vfx/market_exchange.png",
+        "art/audio/runtime/presentation/town_market_exchange.wav",
+        "content/animation_event_cues.json",
+        "content/town_vfx_manifest.json",
+        "content/presentation_sfx_manifest.json",
+        "tools/generate_presentation_sfx_assets.py",
+        "scripts/autoload/PresentationAudio.gd",
+        "scenes/town/TownShell.gd",
+        "scenes/town/TownStageView.gd",
+        "tests/town_market_exchange_completion_feedback_report.gd",
+        "tests/town_market_exchange_completion_feedback_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Live TownShell 1280x720/1920x1080 public buy and sell orders match method-equivalent core controls and publish one imported Town exchange VFX/audio cue with exact signed stockpile deltas",
+      "Failed, stale, malformed, non-market, and refresh controls remain silent; reduced-motion and missing-asset fallbacks are exact",
+        "Market quote/rate/cost/gain/cap usage, recaps, focus/input, session/save, common-only policy, completed Town presentations, and generic UI cues remain exact",
+        "Focused, market-cap, Town action, visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "market rates, costs, gains, caps, rare-resource policy, AI economy, build/recruit affordability, save/schema, Native RMG, or map topology changes",
+        "generic UI cue remapping, layout redesign, particles, shaders, spatial audio, haptics, or final mastering",
+        "packaged exchange interaction/listening, hardware certification, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "a2e62095",
+        "town_market_action_present": true,
+        "town_market_presentation_present": false,
+        "town_presenter_supported_events": [
+          "town_building_built",
+          "town_units_recruited",
+          "town_route_response_ordered"
+        ]
+      },
+      "createdAt": "2026-08-16T00:21:29Z",
+      "startedAt": "2026-08-16T00:21:29Z",
+      "updatedAt": "2026-08-16T00:47:33Z",
+      "notes": "Implemented the live Town market-exchange completion presentation. Original 1254x1254 RGBA source was curated to a 512x512 runtime VFX; deterministic generation produced a distinct 360 ms stereo cue. The public handler validates exact market action grammar and ordered signed stockpile deltas only after the successful core transaction and refreshed stage. Focused artifact /tmp/heroes-town-market-focused-final.6SIzR7 passes six 1280/1920 normal, missing-asset, and reduced-motion rows with four buy/two sell public actions, whole-session TownRules control parity, exact market usage and deltas, one imported audio record, and malformed/invalid/refresh silence. Compatibility artifacts /tmp/heroes-town-market-compat.69uNT4 and /tmp/heroes-town-market-compat-resume.E2nAtz pass market-cap, Town VFX/cue/route, animation catalog, broad Town/Battle visual, and core owners; the recruitment VFX owner now explicitly resets validation audio before quit. Static/editor audit /tmp/heroes-town-market-static.9UzYW5 passes. Official Linux /tmp/heroes-town-market-linux-package.V6dCaS and Windows /tmp/heroes-town-market-windows-package.9ZxhM0 reports are ok:true; claims remain export/headless startup and export/fresh-Wine Boot/MainMenu/native-DLL startup only. Packaged exchange interaction/listening, certification, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Packaged Town exchange interaction/listening, certification, signing/publication, broader release gaps, and release readiness remain unclaimed.",
+      "blockedReason": null,
+      "completedAt": "2026-08-16T00:47:33Z"
     }
   ],
   "project": "heroes-like",
@@ -85731,7 +85788,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
-  "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader release gaps remain.",
+  "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -86162,7 +86219,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "presentation_town_building_category_sigil_adoption_completed",
+  "result": "presentation_town_market_exchange_completion_feedback_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -86265,7 +86322,7 @@
   ],
   "summary": "The UI production SFX fidelity slice is completed: all six short mono generated click, select, adjust, tab, confirm, and invalid assets are replaced by distinct stereo production transients while exact cue, control, repetition, mute, input, settings, and gameplay authority remain preserved. Focused, compatibility, static/editor, and bounded Linux/Windows export/startup gates pass. Select the next tracker-approved slice; the game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-15T22:32:56Z",
+  "updatedAt": "2026-08-16T00:47:33Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

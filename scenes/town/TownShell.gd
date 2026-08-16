@@ -260,6 +260,7 @@ func _on_market_action_pressed(action_id: String) -> void:
 	if _handle_session_resolution():
 		return
 	_refresh()
+	_record_town_action_presentation("market", action_id, action, result, before)
 
 func _on_hero_action_pressed(action_id: String) -> void:
 	var before := TownRules.town_action_consequence_signature(_session)
@@ -4429,13 +4430,13 @@ func _record_town_action_presentation(
 	result: Dictionary,
 	before: Dictionary
 ) -> void:
-	if lane not in ["build", "recruit", "response"] or not bool(result.get("ok", false)):
+	if lane not in ["build", "recruit", "response", "market"] or not bool(result.get("ok", false)):
 		return
 	if _town_stage_view == null or not _town_stage_view.has_method("present_town_action"):
 		return
 	var after := TownRules.town_action_consequence_signature(_session)
-	var event_id := "town_route_response_ordered" if lane == "response" else ("town_units_recruited" if lane == "recruit" else "town_building_built")
-	var subject_kind := "map_object" if lane == "response" else ("unit_roster" if lane == "recruit" else "building")
+	var event_id := "town_market_exchange_completed" if lane == "market" else ("town_route_response_ordered" if lane == "response" else ("town_units_recruited" if lane == "recruit" else "town_building_built"))
+	var subject_kind := "resource_stockpile" if lane == "market" else ("map_object" if lane == "response" else ("unit_roster" if lane == "recruit" else "building"))
 	var policy := AnimationCueCatalog.cue_playback_policy_for_event(
 		event_id,
 		SettingsService.animation_preferences()
@@ -4445,7 +4446,7 @@ func _record_town_action_presentation(
 		or String(policy.get("surface", "")) != "town"
 		or String(policy.get("subject_kind", "")) != subject_kind
 		or String(policy.get("selected_playback_policy", "")) != "queue_resolved"
-		or lane in ["recruit", "response"] and String(policy.get("selected_blocking_policy", "")) != "nonblocking"
+		or lane in ["recruit", "response", "market"] and String(policy.get("selected_blocking_policy", "")) != "nonblocking"
 		or lane == "build" and String(policy.get("selected_blocking_policy", "")) not in ["input_blocking_timeout", "nonblocking_reduced_motion", "nonblocking_fast_resolve"]
 	):
 		return
@@ -4458,7 +4459,37 @@ func _record_town_action_presentation(
 		"result_message": String(result.get("message", "")),
 		"policy": policy.duplicate(true),
 	}
-	if lane == "response":
+	if lane == "market":
+		var parts := action_id.split(":")
+		var action_type := String(parts[1]) if parts.size() == 4 else ""
+		var resource_id := String(parts[2]) if parts.size() == 4 else ""
+		var amount := int(parts[3]) if parts.size() == 4 else 0
+		var resource_deltas := _town_action_resource_deltas(before, after)
+		var resource_delta := 0
+		var gold_delta := 0
+		for delta_value in resource_deltas:
+			if not (delta_value is Dictionary):
+				continue
+			if String(delta_value.get("resource_id", "")) == resource_id:
+				resource_delta = int(delta_value.get("delta", 0))
+			elif String(delta_value.get("resource_id", "")) == "gold":
+				gold_delta = int(delta_value.get("delta", 0))
+		if (
+			parts.size() != 4
+			or action_type not in ["buy", "sell"]
+			or resource_id not in OverworldRules.NORMAL_MARKET_RESOURCE_KEYS
+			or amount <= 0
+			or resource_deltas.size() != 2
+			or action_type == "buy" and (resource_delta != amount or gold_delta >= 0)
+			or action_type == "sell" and (resource_delta != -amount or gold_delta <= 0)
+		):
+			return
+		presentation["exchange_action"] = action_type
+		presentation["exchange_resource_id"] = resource_id
+		presentation["exchange_amount"] = amount
+		presentation["resource_deltas"] = resource_deltas
+		presentation["exchange_label"] = String(action.get("label", action_id))
+	elif lane == "response":
 		var placement_id := action_id.trim_prefix("site_response:")
 		var recap: Dictionary = result.get("post_action_recap", {}) if result.get("post_action_recap", {}) is Dictionary else {}
 		var node_result := OverworldRules._find_resource_node_by_placement(_session, placement_id)
@@ -4499,6 +4530,18 @@ func _record_town_action_presentation(
 		presentation["building_id"] = building_id
 		presentation["building_name"] = String(building.get("name", action.get("label", building_id)))
 	_town_stage_view.call("present_town_action", presentation)
+
+func _town_action_resource_deltas(before: Dictionary, after: Dictionary) -> Array:
+	var before_resources: Dictionary = before.get("resources", {}) if before.get("resources", {}) is Dictionary else {}
+	var after_resources: Dictionary = after.get("resources", {}) if after.get("resources", {}) is Dictionary else {}
+	var deltas := []
+	for resource_id in OverworldRules.LIVE_STOCKPILE_RESOURCE_KEYS:
+		var before_value := int(before_resources.get(resource_id, 0))
+		var after_value := int(after_resources.get(resource_id, 0))
+		if before_value == after_value:
+			continue
+		deltas.append({"resource_id": resource_id, "before": before_value, "after": after_value, "delta": after_value - before_value})
+	return deltas
 
 func _town_profile_metadata(first_render: bool) -> Dictionary:
 	var town := TownRules.get_active_town(_session) if _session != null else {}

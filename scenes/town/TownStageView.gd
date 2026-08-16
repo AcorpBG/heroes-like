@@ -184,22 +184,27 @@ func _draw() -> void:
 func present_town_action(presentation: Dictionary) -> Dictionary:
 	var policy: Dictionary = presentation.get("policy", {}) if presentation.get("policy", {}) is Dictionary else {}
 	var event_id := String(presentation.get("event_id", ""))
-	var expected_cue_id := "cue_town_route_response_ordered" if event_id == "town_route_response_ordered" else ("cue_town_units_recruited" if event_id == "town_units_recruited" else "cue_town_building_built")
-	var expected_subject_kind := "map_object" if event_id == "town_route_response_ordered" else ("unit_roster" if event_id == "town_units_recruited" else "building")
+	var expected_cue_id := "cue_town_market_exchange_completed" if event_id == "town_market_exchange_completed" else ("cue_town_route_response_ordered" if event_id == "town_route_response_ordered" else ("cue_town_units_recruited" if event_id == "town_units_recruited" else "cue_town_building_built"))
+	var expected_subject_kind := "resource_stockpile" if event_id == "town_market_exchange_completed" else ("map_object" if event_id == "town_route_response_ordered" else ("unit_roster" if event_id == "town_units_recruited" else "building"))
 	var selected_blocking_policy := String(policy.get("selected_blocking_policy", ""))
 	if (
-		event_id not in ["town_units_recruited", "town_building_built", "town_route_response_ordered"]
+		event_id not in ["town_units_recruited", "town_building_built", "town_route_response_ordered", "town_market_exchange_completed"]
 		or String(presentation.get("town_placement_id", "")) != String(_town.get("placement_id", ""))
 		or event_id == "town_units_recruited" and String(presentation.get("unit_id", "")) == ""
 		or event_id == "town_units_recruited" and int(presentation.get("recruited_count", 0)) <= 0
 		or event_id == "town_building_built" and String(presentation.get("building_id", "")) == ""
 		or event_id == "town_route_response_ordered" and String(presentation.get("response_placement_id", "")) == ""
+		or event_id == "town_market_exchange_completed" and String(presentation.get("exchange_action", "")) not in ["buy", "sell"]
+		or event_id == "town_market_exchange_completed" and String(presentation.get("exchange_resource_id", "")) not in ["wood", "ore"]
+		or event_id == "town_market_exchange_completed" and int(presentation.get("exchange_amount", 0)) <= 0
+		or event_id == "town_market_exchange_completed" and not (presentation.get("resource_deltas", []) is Array)
+		or event_id == "town_market_exchange_completed" and Array(presentation.get("resource_deltas", [])).size() != 2
 		or String(policy.get("event_id", "")) != event_id
 		or String(policy.get("cue_id", "")) != expected_cue_id
 		or String(policy.get("surface", "")) != "town"
 		or String(policy.get("subject_kind", "")) != expected_subject_kind
 		or String(policy.get("selected_playback_policy", "")) != "queue_resolved"
-		or event_id in ["town_units_recruited", "town_route_response_ordered"] and selected_blocking_policy != "nonblocking"
+		or event_id in ["town_units_recruited", "town_route_response_ordered", "town_market_exchange_completed"] and selected_blocking_policy != "nonblocking"
 		or event_id == "town_building_built" and selected_blocking_policy not in ["input_blocking_timeout", "nonblocking_reduced_motion", "nonblocking_fast_resolve"]
 	):
 		return validation_town_action_presentation_snapshot()
@@ -259,6 +264,8 @@ func validation_town_action_presentation_snapshot() -> Dictionary:
 		draw_entries = ["building_badge_added"] if reduced_motion else ["build_completion_frame", "building_badge_added"]
 	elif active and event_id == "town_route_response_ordered":
 		draw_entries = ["route_dispatch_badge"] if reduced_motion else ["route_dispatch_art", "route_dispatch_badge"]
+	elif active and event_id == "town_market_exchange_completed":
+		draw_entries = ["ledger_exchange_badge"] if reduced_motion else ["market_exchange_art", "ledger_exchange_badge"]
 	elif active:
 		draw_entries = ["recruit_count_badge"] if reduced_motion else ["recruit_muster_rings", "recruit_count_badge"]
 	return {
@@ -274,6 +281,11 @@ func validation_town_action_presentation_snapshot() -> Dictionary:
 		"building_name": String(_town_action_presentation.get("building_name", "")),
 		"response_placement_id": String(_town_action_presentation.get("response_placement_id", "")),
 		"response_label": String(_town_action_presentation.get("response_label", "")),
+		"exchange_action": String(_town_action_presentation.get("exchange_action", "")),
+		"exchange_resource_id": String(_town_action_presentation.get("exchange_resource_id", "")),
+		"exchange_amount": int(_town_action_presentation.get("exchange_amount", 0)),
+		"resource_deltas": Array(_town_action_presentation.get("resource_deltas", [])).duplicate(true),
+		"exchange_label": String(_town_action_presentation.get("exchange_label", "")),
 		"recruited_count": int(_town_action_presentation.get("recruited_count", 0)),
 		"result_message": String(_town_action_presentation.get("result_message", "")),
 		"selected_mode": selected_mode if active else "",
@@ -348,6 +360,9 @@ func _draw_town_action_presentation(scene_rect: Rect2) -> void:
 	if String(_town_action_presentation.get("event_id", "")) == "town_route_response_ordered":
 		_draw_town_route_response_presentation(badge_rect, reduced_motion)
 		return
+	if String(_town_action_presentation.get("event_id", "")) == "town_market_exchange_completed":
+		_draw_town_market_exchange_presentation(badge_rect, reduced_motion)
+		return
 	if not reduced_motion:
 		var duration_ms: int = maxi(1, int(_town_action_presentation.get("duration_ms", 1)))
 		var elapsed_ms: int = maxi(0, Time.get_ticks_msec() - int(_town_action_presentation.get("started_msec", 0)))
@@ -414,6 +429,27 @@ func _draw_town_route_response_presentation(badge_rect: Rect2, reduced_motion: b
 	draw_rect(badge_rect, _accent_color(), false, 2.0)
 	_draw_text("ROUTE DISPATCHED", badge_rect.position + Vector2(12.0, 22.0), TEXT_COLOR, 16)
 	_draw_text(_short_stage_text(String(_town_action_presentation.get("response_label", "Response order")), 34), badge_rect.position + Vector2(12.0, 43.0), SUBTEXT_COLOR, 13)
+
+func _draw_town_market_exchange_presentation(badge_rect: Rect2, reduced_motion: bool) -> void:
+	var asset_state := _town_market_exchange_vfx_asset_state()
+	var texture: Texture2D = _town_vfx_texture_for_path(String(asset_state.get("texture_path", ""))) as Texture2D
+	if not reduced_motion and bool(asset_state.get("uses_imported_asset", false)) and texture != null:
+		var extent := badge_rect.size.y * 2.15 * float(asset_state.get("scale", 1.0))
+		var center := Vector2(badge_rect.get_center().x, badge_rect.position.y - 6.0)
+		var exchange_rect := Rect2(center - Vector2(extent, extent) * 0.5, Vector2(extent, extent))
+		draw_texture_rect(texture, exchange_rect, false)
+		_town_action_last_draw = {"mode": "imported_texture", "texture_path": String(asset_state.get("texture_path", "")), "rect": {"x": exchange_rect.position.x, "y": exchange_rect.position.y, "width": exchange_rect.size.x, "height": exchange_rect.size.y}, "alpha": 1.0}
+	else:
+		var center := badge_rect.get_center() + Vector2(0.0, 5.0)
+		draw_arc(center, 23.0, 0.2, PI - 0.2, 20, _accent_color(), 3.0)
+		draw_arc(center, 23.0, PI + 0.2, TAU - 0.2, 20, FRAME_COLOR, 3.0)
+		draw_circle(center + Vector2(-24.0, 0.0), 5.0, FRAME_COLOR)
+		draw_circle(center + Vector2(24.0, 0.0), 5.0, _accent_color())
+		_town_action_last_draw = {"mode": "ledger_exchange_badge" if reduced_motion else "procedural_market_exchange", "texture_path": "", "arc_count": 2, "token_count": 2, "alpha": 1.0}
+	draw_rect(badge_rect, Color(0.10, 0.13, 0.16, 0.94), true)
+	draw_rect(badge_rect, _accent_color(), false, 2.0)
+	_draw_text("EXCHANGE COMPLETE", badge_rect.position + Vector2(12.0, 22.0), TEXT_COLOR, 16)
+	_draw_text(_short_stage_text(String(_town_action_presentation.get("exchange_label", "Market order")), 34), badge_rect.position + Vector2(12.0, 43.0), SUBTEXT_COLOR, 13)
 
 func _draw_town_building_complete_presentation(badge_rect: Rect2, reduced_motion: bool) -> void:
 	if not reduced_motion:
@@ -518,7 +554,23 @@ func _town_route_response_vfx_asset_state() -> Dictionary:
 		and texture_loaded
 	return {"cue_id": cue_id, "texture_path": texture_path, "scale": float(spec.get("scale", 1.0)), "texture_loaded": texture_loaded, "uses_imported_asset": uses_imported_asset, "uses_procedural_fallback": not uses_imported_asset, "fallback_mode": "procedural_route_dispatch"}
 
+func _town_market_exchange_vfx_asset_state() -> Dictionary:
+	var policy: Dictionary = _town_action_presentation.get("policy", {}) if _town_action_presentation.get("policy", {}) is Dictionary else {}
+	var cue_ids: Array = policy.get("selected_vfx_cue_ids", []) if policy.get("selected_vfx_cue_ids", []) is Array else []
+	var cue_id := String(cue_ids[0]).strip_edges() if cue_ids.size() == 1 else ""
+	var spec := _town_vfx_manifest_cue(cue_id)
+	var texture_path := String(spec.get("texture_path", "")).strip_edges()
+	var texture_loaded := texture_path != "" and _town_vfx_texture_for_path(texture_path) != null
+	var uses_imported_asset := cue_id == "vfx_placeholder_town_market_exchange" \
+		and String(_town_action_presentation.get("event_id", "")) == "town_market_exchange_completed" \
+		and String(spec.get("event_id", "")) == "town_market_exchange_completed" \
+		and String(spec.get("render_mode", "")) == "town_market_exchange_completion" \
+		and texture_loaded
+	return {"cue_id": cue_id, "texture_path": texture_path, "scale": float(spec.get("scale", 1.0)), "texture_loaded": texture_loaded, "uses_imported_asset": uses_imported_asset, "uses_procedural_fallback": not uses_imported_asset, "fallback_mode": "procedural_market_exchange"}
+
 func _town_action_vfx_asset_state() -> Dictionary:
+	if String(_town_action_presentation.get("event_id", "")) == "town_market_exchange_completed":
+		return _town_market_exchange_vfx_asset_state()
 	if String(_town_action_presentation.get("event_id", "")) == "town_route_response_ordered":
 		return _town_route_response_vfx_asset_state()
 	if String(_town_action_presentation.get("event_id", "")) == "town_units_recruited":

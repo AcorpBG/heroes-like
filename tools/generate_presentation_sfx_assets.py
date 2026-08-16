@@ -141,6 +141,13 @@ SPECS = {
         "peak": 0.60,
         "pan": 0.04,
     },
+    "audio_placeholder_town_market_exchange": {
+        "kind": "exchange_chime",
+        "fundamental": 520.0,
+        "metal": 1560.0,
+        "peak": 0.58,
+        "pan": -0.03,
+    },
 }
 
 
@@ -263,6 +270,10 @@ def layered_sample(kind: str, fundamental: float, metal: float, t: float, progre
         answer = max(0.0, 1.0 - abs(progress - 0.42) / 0.16) * math.sin(math.tau * metal * 1.25 * t + phase) * 0.26
         lift = smoothstep(0.10, 0.52, progress) * (1.0 - smoothstep(0.72, 1.0, progress))
         return (seal + pennant + answer + pennant * lift * 0.30 + noise * transient * 0.08) * envelope(progress)
+    if kind == "exchange_chime":
+        coin = math.sin(math.tau * fundamental * t + phase) * 0.26
+        balance = math.sin(math.tau * metal * t - phase) * 0.18
+        return (coin + balance + balance * max(0.0, 1.0 - abs(progress - 0.38) / 0.20) * 0.34 + noise * transient * 0.06) * envelope(progress)
     raise ValueError(f"Unsupported presentation sound kind: {kind}")
 
 
