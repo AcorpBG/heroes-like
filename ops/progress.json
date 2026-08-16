@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Main Menu Settings focus visibility is implemented and validated. Every existing Cabinet control uses one deferred Main Menu-owned visibility path, and retained focus is rechecked after scaled panel refresh. Focused runtime, visual, compatibility, repository/editor, and bounded Linux/Windows export-startup gates pass without settings or gameplay authority drift.",
+  "currentNotes": "The original transparent Aurelion Reach frontier watchtower/compass crest is shipped in the existing 56x52 Main Menu mark slot. Focused pixel/layout/runtime, live 1280/1920 visual, menu compatibility, repository/editor, and bounded Linux/Windows export-startup gates pass without title, composition, command, accessibility, settings, save, session, or package-identity drift.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "accessibility-main-menu-settings-focus-visibility-10184",
-  "currentSliceId": "accessibility-main-menu-settings-focus-visibility-10184",
-  "currentSliceNotes": "Completed with exact physical Tab/Shift+Tab visibility across all twenty existing Settings controls at 100 and 130 percent, including retained-focus correction after scaled refresh. Active-play Settings, control order, persistence, dialogs, layout, session/save/campaign/routes, and native control behavior remain unchanged.",
+  "currentSlice": "presentation-aurelion-reach-main-menu-crest-art-10184",
+  "currentSliceId": "presentation-aurelion-reach-main-menu-crest-art-10184",
+  "currentSliceNotes": "Completed with one original transparent gold-and-navy frontier watchtower/compass crest in the existing 56x52 mark slot, exact title/copy/composition preservation, live 1280/1920 visual proof, and focused, compatibility, static/editor, Linux, and Windows gates.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Main Menu Settings Focus Visibility",
-  "currentSliceUpdatedAt": "2026-08-16T19:54:29Z",
+  "currentSliceTitle": "Aurelion Reach Main Menu Crest Art",
+  "currentSliceUpdatedAt": "2026-08-16T20:36:59Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -86965,6 +86965,53 @@
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, signing/publication, native Windows certification, and unrecovered Native RMG parity gaps remain.",
       "blockedReason": null,
       "completedAt": "2026-08-16T19:54:29Z"
+    },
+    {
+      "id": "presentation-aurelion-reach-main-menu-crest-art-10184",
+      "title": "Aurelion Reach Main Menu Crest Art",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Replace the generic procedural Main Menu glyph with one original shipped Aurelion Reach frontier crest while preserving the exact accessible public-title lockup and scenery-first composition.",
+      "implementationTargets": [
+        "art/ui/branding/aurelion_reach_frontier_crest.png",
+        "scenes/menus/MainMenu.tscn",
+        "tests/menu_outcome_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "The existing 56x52 Main Menu WarGlyph slot renders the new original transparent crest through a TextureRect with aspect-preserving containment and no procedural glyph fallback",
+        "The crest has a real alpha channel, transparent corners, bounded nontransparent coverage, no chroma fringe, and remains visually legible inside the live 1280x720 and 1920x1080 logo pocket",
+        "The exact AURELION REACH title, KINGDOM FRONT eyebrow, subtitle, summary, logo-pocket geometry, scenic negative space, command anchors, focus navigation, accessibility semantics, saves/settings/session, and technical package identities remain unchanged",
+        "Focused visual/runtime, menu/outcome, keyboard navigation, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "generated text inside the bitmap, title/subtitle/copy changes, logo-pocket resizing, command movement, backdrop changes, other UI/art/VFX/audio assets, or broader menu composition",
+        "gameplay, campaign, content, balance, AI, save/schema, settings, input, accessibility policy, Native RMG, executable/user-data/installer ownership, or package metadata changes",
+        "final marketing identity, trademark clearance, packaged Main Menu interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "77f84bd98847db0e408ad27caa323d07420741e2",
+        "capture": "/tmp/heroes-main-menu-settings-visual.X7QgFZ/settings_130_focus_visible.png",
+        "viewport": "1280x720",
+        "mark_node": "WarGlyph",
+        "mark_type": "Control",
+        "mark_script": "res://scripts/ui/SemanticGlyph.gd",
+        "mark_glyph_id": "menu",
+        "mark_minimum_size": "56x52",
+        "raster_crest_present": false,
+        "public_title": "AURELION REACH"
+      },
+      "createdAt": "2026-08-16T20:00:03Z",
+      "startedAt": "2026-08-16T20:00:03Z",
+      "updatedAt": "2026-08-16T20:36:59Z",
+      "notes": "Completed with the reviewed original RGBA crest (SHA256 f6e04815c0e30640861b631fa9d5bc6720a4ee3d7492f31d1bc7a66a43e957d3), an aspect-preserving mouse-transparent TextureRect in the unchanged 56x52 slot, exact title/copy/layout preservation, focused imported-pixel and two-width runtime proof, live X11 captures at /tmp/heroes-main-menu-crest-visual.RM1B4z, shell-heraldry/accessibility/full keyboard/core compatibility, static/editor validation, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup. Packaged Main Menu interaction, controller hardware, AT-SPI/UIA, native hardware, final marketing/trademark approval, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null,
+      "completedAt": "2026-08-16T20:36:59Z"
     }
   ],
   "project": "heroes-like",
@@ -86974,7 +87021,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The selected Main Menu Settings focus-visibility gap is closed. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
+  "remainingGap": "The selected Aurelion Reach Main Menu crest-art gap is closed. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
   "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
   "reportOnlyEvidence": [
     {
@@ -87406,7 +87453,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "accessibility_main_menu_settings_focus_visibility_completed",
+  "result": "presentation_aurelion_reach_main_menu_crest_art_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -87507,9 +87554,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The Main Menu Settings focus-visibility implementation slice is complete with focused, compatibility, static/editor, and bounded Linux/Windows export-startup evidence. The game is not release-ready.",
+  "summary": "The Aurelion Reach Main Menu crest-art implementation slice is complete with one original shipped crest and focused, compatibility, static/editor, and bounded Linux/Windows export-startup evidence. The game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-16T19:54:29Z",
+  "updatedAt": "2026-08-16T20:36:59Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

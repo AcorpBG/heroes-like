@@ -2,9 +2,9 @@
 
 [ext_resource type="Script" path="res://scenes/menus/MainMenu.gd" id="1"]
 [ext_resource type="Script" path="res://scenes/menus/MainMenuHeroView.gd" id="2"]
-[ext_resource type="Script" path="res://scenes/ui/FrontierBannerGlyph.gd" id="3"]
 [ext_resource type="PackedScene" path="res://scenes/menus/HeroKeybindingsDialog.tscn" id="4_keybindings"]
 [ext_resource type="Script" path="res://scenes/ui/HeroPortraitView.gd" id="5_hero_portrait"]
+[ext_resource type="Texture2D" path="res://art/ui/branding/aurelion_reach_frontier_crest.png" id="6_crest"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -51,11 +51,13 @@ theme_override_constants/separation = 8
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="WarGlyph" type="Control" parent="LogoPocketPanel/LogoPocketPad/LogoPocketBox/LogoHeader"]
+[node name="WarGlyph" type="TextureRect" parent="LogoPocketPanel/LogoPocketPad/LogoPocketBox/LogoHeader"]
 custom_minimum_size = Vector2(56, 52)
 layout_mode = 2
-script = ExtResource("3")
-glyph_id = "menu"
+mouse_filter = 2
+texture = ExtResource("6_crest")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="LogoText" type="VBoxContainer" parent="LogoPocketPanel/LogoPocketPad/LogoPocketBox/LogoHeader"]
 layout_mode = 2

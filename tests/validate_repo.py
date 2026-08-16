@@ -89,6 +89,7 @@ ENEMY_TURN_RULES_PATH = ROOT / "scripts" / "core" / "EnemyTurnRules.gd"
 ENEMY_ADVENTURE_RULES_PATH = ROOT / "scripts" / "core" / "EnemyAdventureRules.gd"
 MAIN_MENU_SCENE_PATH = ROOT / "scenes" / "menus" / "MainMenu.tscn"
 MAIN_MENU_SCRIPT_PATH = ROOT / "scenes" / "menus" / "MainMenu.gd"
+MAIN_MENU_FRONTIER_CREST_PATH = ROOT / "art" / "ui" / "branding" / "aurelion_reach_frontier_crest.png"
 MAIN_MENU_KEYBOARD_NAVIGATION_SMOKE_PATH = ROOT / "tests" / "main_menu_keyboard_navigation_smoke.gd"
 MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH = ROOT / "tests" / "menu_outcome_visual_smoke.gd"
 MAIN_MENU_CAMPAIGN_REACTIVATION_DOC_PATH = ROOT / "docs" / "player-facing-campaign-reactivation-smoke-report.md"
@@ -15919,10 +15920,46 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
 def validate_main_menu_first_view(errors: list[str]) -> None:
     ensure(MAIN_MENU_SCENE_PATH.exists(), errors, "Missing main menu scene for first-view composition validation")
     ensure(MAIN_MENU_SCRIPT_PATH.exists(), errors, "Missing main menu script for first-view composition validation")
-    if not MAIN_MENU_SCENE_PATH.exists() or not MAIN_MENU_SCRIPT_PATH.exists():
+    ensure(MAIN_MENU_FRONTIER_CREST_PATH.exists(), errors, "Missing Aurelion Reach Main Menu frontier crest art")
+    if not MAIN_MENU_SCENE_PATH.exists() or not MAIN_MENU_SCRIPT_PATH.exists() or not MAIN_MENU_FRONTIER_CREST_PATH.exists():
         return
 
     main_menu_scene_text = MAIN_MENU_SCENE_PATH.read_text(encoding="utf-8")
+    crest_bytes = MAIN_MENU_FRONTIER_CREST_PATH.read_bytes()
+    ensure(png_size(MAIN_MENU_FRONTIER_CREST_PATH) == (1254, 1254), errors, "Aurelion Reach Main Menu crest must retain its authored 1254x1254 source dimensions")
+    ensure(len(crest_bytes) > 25 and crest_bytes[:8] == b"\x89PNG\r\n\x1a\n" and crest_bytes[25] == 6, errors, "Aurelion Reach Main Menu crest must be an RGBA PNG with a real alpha channel")
+    ensure(
+        hashlib.sha256(crest_bytes).hexdigest() == "f6e04815c0e30640861b631fa9d5bc6720a4ee3d7492f31d1bc7a66a43e957d3",
+        errors,
+        "Aurelion Reach Main Menu crest must retain the reviewed original frontier-tower artwork",
+    )
+    ensure(
+        '[ext_resource type="Texture2D" path="res://art/ui/branding/aurelion_reach_frontier_crest.png" id="6_crest"]' in main_menu_scene_text,
+        errors,
+        "MainMenu.tscn must import the original Aurelion Reach frontier crest",
+    )
+    ensure(
+        re.search(
+            r'\[node name="WarGlyph" type="TextureRect" parent="LogoPocketPanel/LogoPocketPad/LogoPocketBox/LogoHeader"\]'
+            r'(?:(?!\n\[node ).)*?\ncustom_minimum_size = Vector2\(56, 52\)'
+            r'(?:(?!\n\[node ).)*?\nmouse_filter = 2'
+            r'(?:(?!\n\[node ).)*?\ntexture = ExtResource\("6_crest"\)'
+            r'(?:(?!\n\[node ).)*?\nexpand_mode = 1'
+            r'(?:(?!\n\[node ).)*?\nstretch_mode = 5',
+            main_menu_scene_text,
+            flags=re.DOTALL,
+        )
+        is not None,
+        errors,
+        "MainMenu.tscn must render the crest in the exact 56x52 aspect-preserving logo slot",
+    )
+    war_glyph_match = re.search(
+        r'\[node name="WarGlyph" type="TextureRect" parent="LogoPocketPanel/LogoPocketPad/LogoPocketBox/LogoHeader"\](?P<body>(?:(?!\n\[node ).)*)',
+        main_menu_scene_text,
+        flags=re.DOTALL,
+    )
+    war_glyph_body = war_glyph_match.group("body") if war_glyph_match else ""
+    ensure("script =" not in war_glyph_body and "glyph_id =" not in war_glyph_body, errors, "MainMenu crest slot must not retain the procedural glyph fallback")
     ensure(
         re.search(
             r'\[node name="Title" type="Label" parent="LogoPocketPanel/LogoPocketPad/LogoPocketBox/LogoHeader/LogoText"\]'
@@ -16035,7 +16072,16 @@ def validate_main_menu_first_view(errors: list[str]) -> None:
     menu_smoke_text = MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH.read_text(encoding="utf-8") if MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH.exists() else ""
     for required_token in (
         "func _assert_editor_utility_frame_at_supported_widths",
+        "func _assert_frontier_crest_asset(frontier_crest: TextureRect) -> bool:",
         "[Vector2i(1280, 720), Vector2i(1920, 1080)]",
+        'crest_texture.resource_path != "res://art/ui/branding/aurelion_reach_frontier_crest.png"',
+        "frontier_crest.custom_minimum_size != Vector2(56.0, 52.0)",
+        "frontier_crest.expand_mode != TextureRect.EXPAND_IGNORE_SIZE",
+        "frontier_crest.stretch_mode != TextureRect.STRETCH_KEEP_ASPECT_CENTERED",
+        "corner.a > 0.01",
+        "visible_coverage < 0.25 or visible_coverage > 0.55",
+        "chroma_green_ratio > 0.002",
+        "crest_rect.intersects(title_rect)",
         'for state in ["normal", "hover", "pressed", "disabled"]',
         '"res://art/ui/runtime/shared/button_secondary_%s.png" % state',
         "editor_rect.intersects(settings_rect)",
@@ -16043,6 +16089,13 @@ def validate_main_menu_first_view(errors: list[str]) -> None:
         'String(editor_utility_frame.get("style_class", "")) != "StyleBoxTexture"',
     ):
         ensure(required_token in menu_smoke_text, errors, f"menu_outcome_visual_smoke.gd is missing Editor utility-frame proof: {required_token}")
+    for forbidden_token in (
+        'glyph_id = "menu"',
+        'script = ExtResource("3")',
+        "TextureRect.STRETCH_SCALE",
+        "set_item_text",
+    ):
+        ensure(forbidden_token not in war_glyph_body, errors, f"Main Menu crest slot must not restore procedural/stretch/text behavior: {forbidden_token}")
     painted_loop = '[campaign_button, skirmish_button, load_button, settings_button, quit_button]'
     ensure(painted_loop in menu_smoke_text, errors, "Main menu smoke must keep exactly the five authored plaque commands text-only")
     ensure(
