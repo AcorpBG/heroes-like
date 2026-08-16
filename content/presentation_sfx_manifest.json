@@ -139,6 +139,12 @@
       "duration_msec": 400,
       "volume_db": -13.0,
       "role": "town_spell_studied"
+    },
+    "audio_placeholder_town_hero_hire": {
+      "path": "res://art/audio/runtime/presentation/town_hero_hire.wav",
+      "duration_msec": 420,
+      "volume_db": -12.5,
+      "role": "town_hero_hired"
     }
   }
 }

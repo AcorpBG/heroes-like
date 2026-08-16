@@ -278,6 +278,7 @@ func _on_hero_action_pressed(action_id: String) -> void:
 
 func _on_tavern_action_pressed(action_id: String) -> void:
 	var before := TownRules.town_action_consequence_signature(_session)
+	before["player_hero_ids"] = _town_player_hero_ids()
 	var action := _validation_action_for_id(action_id)
 	var result := {}
 	if action_id.begins_with("hire_hero:"):
@@ -289,6 +290,7 @@ func _on_tavern_action_pressed(action_id: String) -> void:
 	if _handle_session_resolution():
 		return
 	_refresh()
+	_record_town_action_presentation("tavern", action_id, action, result, before)
 
 func _on_transfer_action_pressed(action_id: String) -> void:
 	var before := TownRules.town_action_consequence_signature(_session)
@@ -4432,15 +4434,17 @@ func _record_town_action_presentation(
 	result: Dictionary,
 	before: Dictionary
 ) -> void:
-	if lane not in ["build", "recruit", "response", "market", "study"] or not bool(result.get("ok", false)):
+	if lane not in ["build", "recruit", "response", "market", "study", "tavern"] or not bool(result.get("ok", false)):
 		return
 	if _town_stage_view == null or not _town_stage_view.has_method("present_town_action"):
 		return
 	var after := TownRules.town_action_consequence_signature(_session)
 	if lane == "study":
 		after["known_spell_ids"] = _town_active_known_spell_ids()
-	var event_id := "town_spell_studied" if lane == "study" else ("town_market_exchange_completed" if lane == "market" else ("town_route_response_ordered" if lane == "response" else ("town_units_recruited" if lane == "recruit" else "town_building_built")))
-	var subject_kind := "spellbook" if lane == "study" else ("resource_stockpile" if lane == "market" else ("map_object" if lane == "response" else ("unit_roster" if lane == "recruit" else "building")))
+	elif lane == "tavern":
+		after["player_hero_ids"] = _town_player_hero_ids()
+	var event_id := "town_hero_hired" if lane == "tavern" else ("town_spell_studied" if lane == "study" else ("town_market_exchange_completed" if lane == "market" else ("town_route_response_ordered" if lane == "response" else ("town_units_recruited" if lane == "recruit" else "town_building_built"))))
+	var subject_kind := "hero" if lane == "tavern" else ("spellbook" if lane == "study" else ("resource_stockpile" if lane == "market" else ("map_object" if lane == "response" else ("unit_roster" if lane == "recruit" else "building"))))
 	var policy := AnimationCueCatalog.cue_playback_policy_for_event(
 		event_id,
 		SettingsService.animation_preferences()
@@ -4450,7 +4454,7 @@ func _record_town_action_presentation(
 		or String(policy.get("surface", "")) != "town"
 		or String(policy.get("subject_kind", "")) != subject_kind
 		or String(policy.get("selected_playback_policy", "")) != "queue_resolved"
-		or lane in ["recruit", "response", "market", "study"] and String(policy.get("selected_blocking_policy", "")) != "nonblocking"
+		or lane in ["recruit", "response", "market", "study", "tavern"] and String(policy.get("selected_blocking_policy", "")) != "nonblocking"
 		or lane == "build" and String(policy.get("selected_blocking_policy", "")) not in ["input_blocking_timeout", "nonblocking_reduced_motion", "nonblocking_fast_resolve"]
 	):
 		return
@@ -4463,7 +4467,41 @@ func _record_town_action_presentation(
 		"result_message": String(result.get("message", "")),
 		"policy": policy.duplicate(true),
 	}
-	if lane == "study":
+	if lane == "tavern":
+		var hero_id := action_id.trim_prefix("hire_hero:")
+		var before_hero_ids: Array = before.get("player_hero_ids", []) if before.get("player_hero_ids", []) is Array else []
+		var after_hero_ids: Array = after.get("player_hero_ids", []) if after.get("player_hero_ids", []) is Array else []
+		var hero_template := ContentService.get_hero(hero_id)
+		var recruit_cost := HeroCommandRules.hero_recruit_cost(hero_template)
+		var resource_deltas := _town_action_resource_deltas(before, after)
+		var cost_exact := not recruit_cost.is_empty() and resource_deltas.size() == recruit_cost.size()
+		for resource_id_value in recruit_cost:
+			var resource_id := String(resource_id_value)
+			var expected_delta := -int(recruit_cost.get(resource_id, 0))
+			var matched := false
+			for delta_value in resource_deltas:
+				if delta_value is Dictionary and String(delta_value.get("resource_id", "")) == resource_id and int(delta_value.get("delta", 0)) == expected_delta:
+					matched = true
+					break
+			if expected_delta >= 0 or not matched:
+				cost_exact = false
+		if (
+			hero_id == ""
+			or hero_id == action_id
+			or hero_template.is_empty()
+			or hero_id in before_hero_ids
+			or hero_id not in after_hero_ids
+			or after_hero_ids.size() != before_hero_ids.size() + 1
+			or not cost_exact
+		):
+			return
+		presentation["hero_id"] = hero_id
+		presentation["hero_name"] = String(hero_template.get("name", action.get("label", hero_id)))
+		presentation["hero_faction_id"] = String(hero_template.get("faction_id", ""))
+		presentation["hero_recruit_cost"] = recruit_cost.duplicate(true)
+		presentation["resource_deltas"] = resource_deltas
+		presentation["player_hero_count"] = after_hero_ids.size()
+	elif lane == "study":
 		var spell_id := action_id.trim_prefix("learn_spell:")
 		var before_known: Array = before.get("known_spell_ids", []) if before.get("known_spell_ids", []) is Array else []
 		var after_known: Array = after.get("known_spell_ids", []) if after.get("known_spell_ids", []) is Array else []
@@ -4577,6 +4615,17 @@ func _town_active_known_spell_ids() -> Array:
 		var spell_id := String(spell_id_value).strip_edges()
 		if spell_id != "" and spell_id not in result:
 			result.append(spell_id)
+	result.sort()
+	return result
+
+func _town_player_hero_ids() -> Array:
+	var result := []
+	for hero_value in _session.overworld.get("player_heroes", []):
+		if not (hero_value is Dictionary):
+			continue
+		var hero_id := String(hero_value.get("id", "")).strip_edges()
+		if hero_id != "" and hero_id not in result:
+			result.append(hero_id)
 	result.sort()
 	return result
 
