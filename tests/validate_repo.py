@@ -16355,6 +16355,190 @@ def validate_main_menu_destructive_exclusive_parent_input(errors: list[str]) -> 
         ensure(required_token in display_control_text, errors, f"Display Change focused control is missing token: {required_token}")
 
 
+def validate_main_menu_settings_focus_visibility(errors: list[str]) -> None:
+    for path in (MAIN_MENU_SCRIPT_PATH, MAIN_MENU_KEYBOARD_NAVIGATION_SMOKE_PATH):
+        ensure(path.exists(), errors, f"Missing Main Menu Settings focus-visibility dependency: {path.relative_to(ROOT)}")
+    if not MAIN_MENU_SCRIPT_PATH.exists() or not MAIN_MENU_KEYBOARD_NAVIGATION_SMOKE_PATH.exists():
+        return
+
+    script_text = MAIN_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
+    expected_controls = (
+        "_presentation_mode_picker",
+        "_render_quality_picker",
+        "_vsync_toggle",
+        "_resolution_picker",
+        "_frame_rate_picker",
+        "_battle_playback_speed_picker",
+        "_keyboard_navigation_layout_picker",
+        "_customize_movement_keys_button",
+        "_master_volume_slider",
+        "_music_volume_slider",
+        "_effects_volume_slider",
+        "_ui_scale_picker",
+        "_battle_camera_shake_picker",
+        "_color_cue_picker",
+        "_high_contrast_toggle",
+        "_reduce_motion_toggle",
+        "_reduce_flashes_toggle",
+        "_reduce_repetitive_sounds_toggle",
+        "_export_support_bundle_button",
+        "_restore_settings_defaults_button",
+    )
+    controls_match = re.search(
+        r"func _settings_focus_visibility_controls\(\) -> Array\[Control\]:(.*?)(?=\n\nfunc )",
+        script_text,
+        flags=re.DOTALL,
+    )
+    ensure(controls_match is not None, errors, "MainMenu.gd is missing the typed Settings focus visibility control list")
+    if controls_match is not None:
+        controls_body = controls_match.group(1)
+        actual_controls = tuple(re.findall(r"^\s*(_[a-z0-9_]+),$", controls_body, flags=re.MULTILINE))
+        ensure(
+            actual_controls == expected_controls,
+            errors,
+            f"Main Menu Settings focus visibility controls must remain exact and ordered: expected={expected_controls} actual={actual_controls}",
+        )
+
+    configure_match = re.search(
+        r"func _configure_settings_focus_visibility\(\) -> void:(.*?)(?=\n\nfunc )",
+        script_text,
+        flags=re.DOTALL,
+    )
+    ensure(configure_match is not None, errors, "MainMenu.gd is missing Settings focus visibility configuration")
+    if configure_match is not None:
+        configure_body = configure_match.group(1)
+        for token in (
+            "for control in _settings_focus_visibility_controls():",
+            "var callback := _on_settings_focus_control_entered.bind(control)",
+            "if not control.focus_entered.is_connected(callback):",
+            "control.focus_entered.connect(callback)",
+        ):
+            ensure(token in configure_body, errors, f"Main Menu Settings focus configuration is missing token: {token}")
+
+    entered_match = re.search(
+        r"func _on_settings_focus_control_entered\(control: Control\) -> void:(.*?)(?=\n\nfunc )",
+        script_text,
+        flags=re.DOTALL,
+    )
+    ensure(entered_match is not None, errors, "MainMenu.gd is missing Settings focus-entry handler")
+    if entered_match is not None:
+        entered_body = entered_match.group(1)
+        for token in (
+            "is_inside_tree()",
+            "_stage_dock_panel.visible",
+            "_menu_tabs.current_tab == TAB_SETTINGS",
+            "_settings_scroll.is_ancestor_of(control)",
+            'call_deferred("_ensure_settings_focus_control_visible", control)',
+        ):
+            ensure(token in entered_body, errors, f"Main Menu Settings focus-entry handler is missing token: {token}")
+        ensure("ensure_control_visible" not in entered_body, errors, "Main Menu Settings focus entry must defer until scaled layout settles")
+
+    queue_match = re.search(
+        r"func _queue_current_settings_focus_visibility\(\) -> void:(.*?)(?=\n\nfunc )",
+        script_text,
+        flags=re.DOTALL,
+    )
+    ensure(queue_match is not None, errors, "MainMenu.gd is missing retained Settings focus visibility queuing")
+    if queue_match is not None:
+        queue_body = queue_match.group(1)
+        for token in (
+            "is_inside_tree()",
+            "_stage_dock_panel.visible",
+            "_menu_tabs.current_tab == TAB_SETTINGS",
+            "var control := get_viewport().gui_get_focus_owner() as Control",
+            "control != null",
+            "_settings_scroll.is_ancestor_of(control)",
+            'call_deferred("_ensure_settings_focus_control_visible", control)',
+        ):
+            ensure(token in queue_body, errors, f"Main Menu retained Settings focus visibility is missing token: {token}")
+        for forbidden in ("ensure_control_visible", "grab_focus()", "scroll_vertical ="):
+            ensure(forbidden not in queue_body, errors, f"Main Menu retained Settings focus visibility must remain deferred and layout-only: {forbidden}")
+
+    ensure_match = re.search(
+        r"func _ensure_settings_focus_control_visible\(control: Control\) -> void:(.*?)(?=\n\nfunc )",
+        script_text,
+        flags=re.DOTALL,
+    )
+    ensure(ensure_match is not None, errors, "MainMenu.gd is missing deferred Settings focus visibility handler")
+    if ensure_match is not None:
+        ensure_body = ensure_match.group(1)
+        for token in (
+            "is_inside_tree()",
+            "is_instance_valid(control)",
+            "_stage_dock_panel.visible",
+            "_menu_tabs.current_tab == TAB_SETTINGS",
+            "_settings_scroll.is_ancestor_of(control)",
+            "get_viewport().gui_get_focus_owner() == control",
+            "_settings_scroll.ensure_control_visible(control)",
+        ):
+            ensure(token in ensure_body, errors, f"Main Menu deferred Settings focus visibility is missing token: {token}")
+        for forbidden in ("SettingsService.", "SaveService.", "SessionState.", "AppRouter.", "grab_focus()", "scroll_vertical ="):
+            ensure(forbidden not in ensure_body, errors, f"Main Menu Settings visibility handler must remain observation/layout-only: {forbidden}")
+    ensure(script_text.count("_configure_settings_focus_visibility()") == 2, errors, "Main Menu must define and invoke Settings focus visibility exactly once")
+    ensure(script_text.count("_queue_current_settings_focus_visibility()") == 2, errors, "Main Menu must define retained Settings focus visibility and invoke it only after panel refresh")
+    refresh_match = re.search(r"func _refresh_settings_panel\(\) -> void:(.*?)(?=\n\nfunc )", script_text, flags=re.DOTALL)
+    ensure(refresh_match is not None, errors, "MainMenu.gd is missing Settings panel refresh")
+    if refresh_match is not None:
+        refresh_body = refresh_match.group(1)
+        sync_end_index = refresh_body.find("_syncing_settings_ui = false")
+        queue_index = refresh_body.find("_queue_current_settings_focus_visibility()")
+        ensure(
+            sync_end_index >= 0 and queue_index > sync_end_index,
+            errors,
+            "Main Menu Settings refresh must queue retained-focus visibility after synchronization and scaled layout rebuild",
+        )
+
+    smoke_text = MAIN_MENU_KEYBOARD_NAVIGATION_SMOKE_PATH.read_text(encoding="utf-8")
+    for token in (
+        "const SETTINGS_SCROLL_FOCUS_NAMES := [",
+        '"PresentationModePicker"',
+        '"ReduceFlashesToggle"',
+        '"RestoreSettingsDefaults"',
+        "func _check_settings_focus_visibility() -> bool:",
+        "get_window().size = Vector2i(1280, 720)",
+        "for scale in [100, 130]:",
+        "func _apply_settings_focus_ui_scale(shell: Node, original_settings: Dictionary, scale: int) -> bool:",
+        "var fixture_settings := original_settings.duplicate(true)",
+        'accessibility["ui_scale_percent"] = scale',
+        'accessibility["large_ui_text"] = scale > 100',
+        "SettingsService.settings = fixture_settings",
+        "SettingsService.apply_settings()",
+        'shell.call("_refresh_settings_panel")',
+        "SettingsService.settings = original_settings.duplicate(true)",
+        "await _press_key(KEY_TAB)",
+        "await _press_shift_tab()",
+        "func _press_shift_tab() -> void:",
+        "pressed.shift_pressed = true",
+        "released.shift_pressed = true",
+        "get_viewport().gui_get_focus_owner() != expected",
+        "not _scroll_contains_control(scroll, expected)",
+        "get_viewport().gui_get_focus_owner() != controls[0]",
+        "not _scroll_contains_control(scroll, controls[0])",
+        '"Settings refresh left its retained %s focus off-screen at %d percent:',
+        "var lower_scroll := scroll.scroll_vertical",
+        "scroll.scroll_vertical >= lower_scroll",
+        'await _capture_if_requested("settings_130_focus_visible")',
+        "_destructive_protected_state() == authority_before",
+        "get_viewport().gui_get_focus_owner() != original_focus",
+    ):
+        ensure(token in smoke_text, errors, f"Main Menu Settings focus visibility smoke is missing token: {token}")
+    ensure(
+        'shell.call("validation_reveal_reduced_flashes")' not in smoke_text,
+        errors,
+        "Main Menu Settings focus visibility smoke must not use the validation-only reveal shortcut",
+    )
+    focus_case_match = re.search(
+        r"func _check_settings_focus_visibility\(\) -> bool:(.*?)(?=\n\nfunc _scroll_contains_control)",
+        smoke_text,
+        flags=re.DOTALL,
+    )
+    ensure(focus_case_match is not None, errors, "Main Menu smoke is missing isolated Settings focus visibility case")
+    if focus_case_match is not None:
+        focus_case_body = focus_case_match.group(1)
+        ensure("validation_select_ui_scale" not in focus_case_body, errors, "Settings focus layout fixture must not persist UI-scale commits")
+        ensure("set_ui_scale_percent" not in focus_case_body, errors, "Settings focus layout fixture must not call the persistent scale setter")
+
+
 def validate_map_editor_shell_slice(errors: list[str]) -> None:
     required_paths = (
         APP_ROUTER_PATH,
@@ -45492,6 +45676,7 @@ def main() -> int:
     validate_battle_focus_spell_tab_body_containment(errors)
     validate_main_menu_first_view(errors)
     validate_main_menu_destructive_exclusive_parent_input(errors)
+    validate_main_menu_settings_focus_visibility(errors)
     validate_map_editor_shell_slice(errors)
     validate_map_editor_dirty_transition_regression(errors)
     validate_scenario_outcome_shell(errors)
