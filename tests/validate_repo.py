@@ -43660,15 +43660,16 @@ def validate_overworld_town_assault_victory_return_feedback(errors: list[str]) -
         '_clear_pending_battle_resolution_overworld_presentation()',
         'String(result.get("state", "")) != "victory"',
         'result.get("battle_resolution_context_snapshot", {})',
-        'String(context.get("type", "")) != "town_assault"',
+        'context_type not in ["town_assault", "resource_assault"]',
         'String(snapshot.get("resolution_state", "")) != "victory"',
         'String(snapshot.get("snapshot_policy", "")) != "pre_resolution_route_context"',
         'session.scenario_status != "in_progress"',
         'session.game_state != "overworld"',
         'not session.battle.is_empty()',
+        'if context_type == "town_assault":',
         'String(live_town.get("owner", "")) != "player"',
         '"event_id": "overworld_object_captured"',
-        '"family": "town_capture"',
+        'family = "town_capture"',
         '"expected_scene_path": OVERWORLD_SCENE',
         '"session_id_hash": String(session.session_id).sha256_text()',
     ):
@@ -43725,6 +43726,96 @@ def validate_overworld_town_assault_victory_return_feedback(errors: list[str]) -
     ensure('res://tests/overworld_town_assault_victory_return_feedback_report.gd' in scene_text, errors, "Town-assault return focused scene must load its exact report script")
 
 
+def validate_overworld_resource_assault_victory_return_feedback(errors: list[str]) -> None:
+    router_text = APP_ROUTER_PATH.read_text(encoding="utf-8")
+    report_path = ROOT / "tests/overworld_resource_assault_victory_return_feedback_report.gd"
+    scene_path = ROOT / "tests/overworld_resource_assault_victory_return_feedback_report.tscn"
+    ensure(report_path.exists(), errors, "Resource-assault victory return feedback focused report script is missing")
+    ensure(scene_path.exists(), errors, "Resource-assault victory return feedback focused report scene is missing")
+    if not report_path.exists() or not scene_path.exists():
+        return
+
+    def function_block(text: str, name: str) -> str:
+        marker = f"func {name}("
+        start = text.find(marker)
+        if start < 0:
+            return ""
+        next_offsets = [offset for offset in (
+            text.find("\nfunc ", start + len(marker)),
+            text.find("\nstatic func ", start + len(marker)),
+        ) if offset >= 0]
+        next_func = min(next_offsets) if next_offsets else -1
+        return text[start:] if next_func < 0 else text[start:next_func]
+
+    arm_block = function_block(router_text, "arm_battle_resolution_overworld_presentation")
+    consume_block = function_block(router_text, "consume_battle_resolution_overworld_presentation")
+    report_text = report_path.read_text(encoding="utf-8")
+    scene_text = scene_path.read_text(encoding="utf-8")
+
+    for token in (
+        'context_type not in ["town_assault", "resource_assault"]',
+        'placement_id = String(context.get("resource_placement_id", "")).strip_edges()',
+        'OverworldRules._find_resource_node_by_placement(session, placement_id)',
+        'var site_id := String(live_resource.get("site_id", ""))',
+        'ContentService.get_resource_site(site_id)',
+        'not bool(site.get("persistent_control", false))',
+        'String(live_resource.get("collected_by_faction_id", "")) != "player"',
+        'site_id != String(context.get("resource_site_id", ""))',
+        'family = "resource_site"',
+        'content_id = site_id',
+        'tile = Vector2i(int(live_resource.get("x", -1)), int(live_resource.get("y", -1)))',
+        '"family": family',
+        '"content_id": content_id',
+        '"owner": "player"',
+    ):
+        ensure(token in arm_block, errors, f"Resource-assault route-local payload builder is missing token: {token}")
+    ensure(arm_block.find('context_type not in ["town_assault", "resource_assault"]') < arm_block.find('if context_type == "town_assault":') < arm_block.find('placement_id = String(context.get("resource_placement_id", "")).strip_edges()') < arm_block.find('_pending_battle_resolution_overworld_presentation = {'), errors, "Resource-assault route payload must pass common victory authority, preserve town routing, validate the live resource, and only then publish")
+    ensure("session.flags" not in arm_block and "SaveService" not in arm_block, errors, "Resource-assault route payload must remain ephemeral and result-only")
+
+    for token in (
+        'String(pending.get("family", "")) not in ["town_capture", "resource_site"]',
+        'if String(pending.get("family", "")) == "town_capture":',
+        'OverworldRules._find_resource_node_by_placement(session, placement_id)',
+        'ContentService.get_resource_site(String(live_resource.get("site_id", "")))',
+        'not bool(site.get("persistent_control", false))',
+        'String(live_resource.get("collected_by_faction_id", "")) != "player"',
+        'String(live_resource.get("site_id", "")) != String(pending.get("content_id", ""))',
+        'pending["consumed"] = true',
+    ):
+        ensure(token in consume_block, errors, f"Resource-assault one-shot consumer is missing token: {token}")
+    ensure(consume_block.find('var pending := _pending_battle_resolution_overworld_presentation.duplicate(true)') < consume_block.find('_clear_pending_battle_resolution_overworld_presentation()') < consume_block.find('if String(pending.get("family", "")) == "town_capture":') < consume_block.find('pending["consumed"] = true'), errors, "Resource-assault consumer must clear before validation and prove live resource identity before consume")
+    ensure("session.flags" not in consume_block and "SaveService" not in consume_block, errors, "Resource-assault consumer must not mutate session/save authority")
+
+    for token in (
+        'const TARGET_WIDTHS := [1280, 1920]',
+        'const RESOURCE_PLACEMENT_ID := "river_free_company"',
+        'OverworldRules.collect_active_resource(session)',
+        'OverworldRules._resource_node_has_live_ai_defender(session, node, site)',
+        'String(session.battle.get("context", {}).get("type", "")) != "resource_assault"',
+        'BattleRules.resolve_if_battle_ready(session)',
+        'captured.has("ai_defender_army")',
+        'captured.has("ai_defended_by_faction_id")',
+        'AppRouter.checkpoint_battle_resolution_for_overworld(false)',
+        'var control_shell := OVERWORLD_SCENE.instantiate()',
+        'var authority_after_ready_control: Dictionary = control_session.to_dict()',
+        'var pending: Dictionary = AppRouter.arm_battle_resolution_overworld_presentation(outcome)',
+        'String(cue.get("event_id", "")) != "overworld_object_captured"',
+        'String(cue.get("family", "")) != "resource_site"',
+        'shell.call("_refresh")',
+        'var later_shell := OVERWORLD_SCENE.instantiate()',
+        'func _run_fail_closed_controls() -> bool:',
+        '["malformed", "wrong_context", "wrong_site", "wrong_controller", "nonpersistent", "terminal", "stale", "wrong_surface"]',
+        'session.to_dict() != authority_before',
+    ):
+        ensure(token in report_text, errors, f"Resource-assault return focused report is missing token: {token}")
+    ensure(report_text.count('AppRouter.consume_battle_resolution_overworld_presentation("overworld")') == 1, errors, "Resource-assault stale control must consume exactly once outside live Overworld scenes")
+    ensure(report_text.count('session = SessionState.set_active_session(session)') == 2, errors, "Resource-assault live rows and fail-closed controls must retain active SessionState authority")
+    ensure(report_text.find('var control_shell := OVERWORLD_SCENE.instantiate()') < report_text.find('var authority_after_ready_control: Dictionary = control_session.to_dict()') < report_text.find('var pending: Dictionary = AppRouter.arm_battle_resolution_overworld_presentation(outcome)') < report_text.find('var shell := OVERWORLD_SCENE.instantiate()'), errors, "Resource-assault report must capture unarmed ready authority before arming and constructing the routed shell")
+    ensure('EnemyAdventureRules.advance_raids(session, config, ENEMY_FACTION_ID, state)' in report_text and 'String(defended.get("ai_defender_roster_hero_id", "")) != "hero_vaska"' in report_text and 'OverworldRules.collect_active_resource(session)' in report_text, errors, "Resource-assault report must station a real strategic-AI defender before entering the production resource collector")
+    ensure("session.flags[" not in report_text and "create_resource_defense_payload" not in report_text, errors, "Resource-assault report must not synthesize save-backed presentation state or bypass the live collection action")
+    ensure('res://tests/overworld_resource_assault_victory_return_feedback_report.gd' in scene_text, errors, "Resource-assault return focused scene must load its exact report script")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate repository content and scaffolding.")
     parser.add_argument("--economy-resource-report", action="store_true", help="Print the opt-in economy/resource compatibility report.")
@@ -43760,6 +43851,7 @@ def main() -> int:
     validate_progress_tracker_state(errors)
     validate_strategic_ai_medium_long_run_adoption(errors)
     validate_overworld_town_assault_victory_return_feedback(errors)
+    validate_overworld_resource_assault_victory_return_feedback(errors)
     validate_content(errors)
     validate_project_and_scenes(errors)
     validate_save_management(errors)
