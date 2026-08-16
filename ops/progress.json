@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld fog-shroud slice is completed with focused public-presentation proof, fresh 1280x720 and 1920x1080 visual evidence, compatibility/static/editor validation, and bounded Linux/Windows export-startup evidence.",
+  "currentNotes": "The Overworld Hero command-rail compact-fit slice is completed with live proportional-font proof, fresh 1280x720 and 1920x1080 visual evidence, compatibility/static/editor validation, and bounded Linux/Windows export-startup evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-unexplored-fog-shroud-10184",
-  "currentSliceId": "ux-overworld-unexplored-fog-shroud-10184",
-  "currentSliceNotes": "Completed the renderer-only replacement of unexplored diagonal X wireframes with a continuous deterministic shroud. Fog, terrain, object, route, session, and save authority remain unchanged; platform claims are export/startup only.",
+  "currentSlice": "ux-overworld-hero-command-rail-compact-fit-10184",
+  "currentSliceId": "ux-overworld-hero-command-rail-compact-fit-10184",
+  "currentSliceNotes": "Completed the bounded visible-summary fit and duplicate solo-placeholder removal. Full tooltip, reserve command buttons, hero/movement/action authority, and layout remain exact; platform claims are export/startup only.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Unexplored Fog Shroud",
-  "currentSliceUpdatedAt": "2026-08-16T15:50:29Z",
+  "currentSliceTitle": "Overworld Hero Command Rail Compact Fit",
+  "currentSliceUpdatedAt": "2026-08-16T16:15:12Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -86732,6 +86732,51 @@
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, balance, accessibility certification, content/performance, signing/publication, native Windows certification, and unrecovered Native RMG parity gaps remain.",
       "blockedReason": null,
       "completedAt": "2026-08-16T15:50:29Z"
+    },
+    {
+      "id": "ux-overworld-hero-command-rail-compact-fit-10184",
+      "title": "Overworld Hero Command Rail Compact Fit",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Make the existing Hero rail command-check summary fit its live proportional-font label and remove the duplicate solo placeholder without changing command authority.",
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Solo and reserve command summaries fit the live Heroes label at 1280x720 and 1920x1080 while the full tooltip retains active commander, roster, readiness, switch, movement, and next-action context",
+        "Solo state has no duplicate HeroActions placeholder and reserve state retains the exact enabled command button and public switch consequence",
+        "Hero card, portrait, army, movement, command cache, focus/input, route, session, and save authority remain exact",
+        "Focused Overworld visual, hero-command/cache, active-focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "hero rules, roster, recruitment, switching consequence, movement, action scoring, pathing, fog, map renderer, save/schema, content, AI, or Native RMG changes",
+        "sidebar width, panel height, font/theme, portrait, map size, command drawer, footer, or general rail-summary redesign",
+        "packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "b45fe58a",
+        "captures": [
+          "/tmp/heroes-fog-visual-final-1280.TiQC6S/overworld_color_cues_1280.png",
+          "/tmp/heroes-fog-visual-final-1920.Tq2se6/overworld_color_cues_1920.png"
+        ],
+        "rail_character_budget": 42,
+        "visible_summary_clipped_before_ellipsis": true,
+        "duplicate_solo_placeholder": true,
+        "full_tooltip_present": true
+      },
+      "createdAt": "2026-08-16T15:55:20Z",
+      "startedAt": "2026-08-16T15:55:20Z",
+      "updatedAt": "2026-08-16T16:15:12Z",
+      "notes": "Implemented the bounded live Hero rail correction. Solo now shows `Command: Solo | Move N/N`; reserve state shows `Command: N reserve(s) | Move N/N`; the full tooltip retains active commander, roster, readiness, switch, movement, next-action, and state-change context. Solo creates zero HeroActions children, while reserve state retains its enabled Caelen command button. Focused Overworld visual smoke measures the themed-font width against the live label and passed after a method-matched movement-state oracle correction. Fresh 1280x720 and 1920x1080 X11 captures show the full summary and no duplicate row. Hero-action cache, active-focus, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates passed. Packaged Overworld interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, balance, accessibility certification, content/performance, signing/publication, native Windows certification, and unrecovered Native RMG parity gaps remain.",
+      "blockedReason": null,
+      "completedAt": "2026-08-16T16:15:12Z"
     }
   ],
   "project": "heroes-like",
@@ -86741,7 +86786,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain after the bounded Overworld fog-shroud completion.",
+  "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain after the bounded Hero command-rail completion.",
   "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
   "reportOnlyEvidence": [
     {
@@ -87173,7 +87218,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "ux_overworld_unexplored_fog_shroud_completed",
+  "result": "ux_overworld_hero_command_rail_compact_fit_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {

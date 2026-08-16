@@ -4234,9 +4234,6 @@ func _rebuild_hero_actions() -> void:
 
 	var actions = _cached_hero_actions()
 	if actions.size() <= 1:
-		var placeholder := _make_placeholder_label("Command check: solo")
-		placeholder.tooltip_text = String(_command_check_surface().get("tooltip_text", "No reserve switch."))
-		_hero_actions.add_child(placeholder)
 		return
 
 	for action in actions:
@@ -4753,9 +4750,12 @@ func _command_check_surface() -> Dictionary:
 		reserve_count,
 		"" if reserve_count == 1 else "s",
 	]
-	var visible := "Command check: %s | %s | %s" % [
-		_short_action_label(active_name, 18),
-		readiness,
+	var visible_readiness := "Solo" if switchable_count <= 0 else "%d reserve%s" % [
+		switchable_count,
+		"" if switchable_count == 1 else "s",
+	]
+	var visible := "Command: %s | %s" % [
+		visible_readiness,
 		movement_line,
 	]
 	var tooltip := "Command Check\n- Active: %s\n- Roster: %s\n- Readiness: %s | %s\n- Switch: %s\n- Next practical action: %s\n- State change: choosing a reserve makes that commander active; inspection alone does not spend movement or end the day." % [
