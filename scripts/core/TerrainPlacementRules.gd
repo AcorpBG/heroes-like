@@ -251,7 +251,8 @@ static func apply_paint(
 	map_size: Vector2i,
 	brush_terrain_id: String,
 	paint_tiles: Array,
-	terrain_grammar: Dictionary
+	terrain_grammar: Dictionary,
+	include_final_normalization: bool = true
 ) -> Dictionary:
 	var brush_family := terrain_family_for_id(terrain_grammar, brush_terrain_id)
 	var brush_owner_id := terrain_owner_id_for_family(brush_family)
@@ -303,7 +304,7 @@ static func apply_paint(
 			_write_brush_terrain(tile, context, true, false)
 
 	_drain_terrain_placement_queues(changed_owner_cells, context)
-	var final_payload := final_normalization_payload(map_data, map_size, terrain_grammar)
+	var final_payload := final_normalization_payload(map_data, map_size, terrain_grammar) if include_final_normalization else {}
 	var changed_tiles: Array = context.get("changed_tiles", [])
 	var owner_changed_tiles: Array = context.get("owner_changed_tiles", [])
 	return {
@@ -313,6 +314,7 @@ static func apply_paint(
 		"paint_order_model": PAINT_ORDER_MODEL,
 		"queue_model": "rewrite_to_current_brush_4bb74b_then_drain_queues_4bc5f0",
 		"final_normalization_model": FINAL_NORMALIZATION_MODEL,
+		"final_normalization_deferred": not include_final_normalization,
 		"brush_terrain_id": brush_terrain_id,
 		"brush_family": brush_family,
 		"brush_owner_id": brush_owner_id,

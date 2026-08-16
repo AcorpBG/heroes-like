@@ -16592,6 +16592,119 @@ def validate_main_menu_settings_focus_visibility(errors: list[str]) -> None:
         ensure("set_ui_scale_percent" not in focus_case_body, errors, "Settings focus layout fixture must not call the persistent scale setter")
 
 
+def validate_map_editor_terrain_paint_normalization_deferral(errors: list[str]) -> None:
+    terrain_rules_path = ROOT / "scripts/core/TerrainPlacementRules.gd"
+    editor_path = ROOT / "scenes/editor/MapEditorShell.gd"
+    map_view_path = ROOT / "scenes/overworld/OverworldMapView.gd"
+    report_path = ROOT / "tests/map_editor_terrain_paint_performance_report.gd"
+    scene_path = ROOT / "tests/map_editor_terrain_paint_performance_report.tscn"
+    for path in (terrain_rules_path, editor_path, map_view_path, report_path, scene_path):
+        ensure(path.exists(), errors, f"Missing Map Editor terrain paint performance owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in (terrain_rules_path, editor_path, map_view_path, report_path, scene_path)):
+        return
+
+    terrain_text = terrain_rules_path.read_text(encoding="utf-8")
+    for token in (
+        "include_final_normalization: bool = true",
+        "final_normalization_payload(map_data, map_size, terrain_grammar) if include_final_normalization else {}",
+        '"final_normalization_deferred": not include_final_normalization',
+        '"final_normalization": final_payload',
+    ):
+        ensure(token in terrain_text, errors, f"TerrainPlacementRules must retain on-demand final-normalization token: {token}")
+    ensure(
+        terrain_text.count("include_final_normalization: bool = true") == 1,
+        errors,
+        "TerrainPlacementRules must expose exactly one backward-compatible final-normalization option",
+    )
+
+    editor_text = editor_path.read_text(encoding="utf-8")
+    apply_match = re.search(
+        r"func _apply_terrain_placement\(paint_tiles: Array, terrain_id: String\) -> Dictionary:(.*?)(?=\n\nfunc _materialize_last_terrain_final_normalization)",
+        editor_text,
+        flags=re.DOTALL,
+    )
+    ensure(apply_match is not None, errors, "MapEditorShell must keep terrain placement immediately before validation materialization")
+    if apply_match is not None:
+        apply_body = apply_match.group(1)
+        ensure("TerrainPlacementRulesScript.apply_paint(" in apply_body, errors, "MapEditorShell live paint must use shared terrain placement rules")
+        ensure("ContentService.get_terrain_grammar(),\n\t\tfalse" in apply_body, errors, "MapEditorShell live paint must defer only final-normalization reporting")
+        ensure("final_normalization_payload" not in apply_body, errors, "MapEditorShell live paint must not eagerly run full-map final normalization")
+
+    materialize_match = re.search(
+        r"func _materialize_last_terrain_final_normalization\(\) -> Dictionary:(.*?)(?=\n\nfunc _fill_terrain_from_selected_tile)",
+        editor_text,
+        flags=re.DOTALL,
+    )
+    ensure(materialize_match is not None, errors, "MapEditorShell must expose isolated validation-time final-normalization materialization")
+    if materialize_match is not None:
+        materialize_body = materialize_match.group(1)
+        for token in (
+            'if bool(_last_terrain_placement_result.get("final_normalization_deferred", false)):',
+            'TerrainPlacementRulesScript.final_normalization_payload(',
+            '_last_terrain_placement_result["final_normalization_deferred"] = false',
+        ):
+            ensure(token in materialize_body, errors, f"MapEditorShell validation materializer is missing token: {token}")
+        ensure("await " not in materialize_body and "create_timer" not in materialize_body, errors, "Final-normalization materialization must be synchronous and deterministic")
+    ensure(
+        editor_text.count("_materialize_last_terrain_final_normalization()") == 3,
+        errors,
+        "Final normalization must be defined once, consumed by validation_snapshot, and protected before direct terrain writes",
+    )
+    snapshot_match = re.search(r"func validation_snapshot\(\) -> Dictionary:(.*?)(?=\n\nfunc validation_placement_debug_overlay_snapshot)", editor_text, flags=re.DOTALL)
+    ensure(snapshot_match is not None, errors, "MapEditorShell validation snapshot could not be isolated")
+    if snapshot_match is not None:
+        ensure("var terrain_placement := _materialize_last_terrain_final_normalization()" in snapshot_match.group(1), errors, "Validation snapshot must materialize final normalization before returning terrain placement")
+    direct_set_match = re.search(r"func _set_tile_terrain\(tile: Vector2i, terrain_id: String\) -> bool:(.*?)(?=\n\nfunc _remove_stale_editor_object_keys)", editor_text, flags=re.DOTALL)
+    ensure(direct_set_match is not None, errors, "MapEditorShell direct terrain setter could not be isolated")
+    if direct_set_match is not None:
+        direct_set_body = direct_set_match.group(1)
+        ensure("_materialize_last_terrain_final_normalization()" in direct_set_body, errors, "Direct terrain writes must finalize any prior deferred placement report before mutating the map")
+        ensure(direct_set_body.index("_materialize_last_terrain_final_normalization()") < direct_set_body.index('row[tile.x] = terrain_id'), errors, "Prior deferred placement report must materialize before direct terrain mutation")
+    ensure("_map_view.set_route_preview_enabled(_tool == TOOL_INSPECT)" in editor_text, errors, "Map Editor must retain route preview only for Inspect tool")
+
+    map_view_text = map_view_path.read_text(encoding="utf-8")
+    for token in (
+        "var _route_preview_enabled := true",
+        "if _route_preview_enabled:",
+        "_path_tiles = []",
+        "_route_preview = {}",
+        'path_profile_details["status"] = "disabled_for_editor_action_tool"',
+        "func set_route_preview_enabled(enabled: bool) -> void:",
+        "_route_preview_enabled = enabled",
+    ):
+        ensure(token in map_view_text, errors, f"Overworld MapView route-preview compatibility is missing token: {token}")
+    ensure(map_view_text.count("func set_route_preview_enabled(enabled: bool) -> void:") == 1, errors, "Overworld MapView must expose one bounded route-preview switch")
+
+    report_text = report_path.read_text(encoding="utf-8")
+    for token in (
+        'const SCENARIO_ID := "ninefold-confluence"',
+        "TerrainPlacementRules.apply_paint(",
+        "true\n\t\t)",
+        'shell.call("_paint_terrain", PAINT_TILE, terrain_id)',
+        'shell.call("_select_terrain_by_id", terrain_id)',
+        'shell.set("_selected_tile", PAINT_TILE)',
+        'shell.set("_tool", "terrain")',
+        'live_result.get("final_normalization_deferred", false)',
+        'eager_without_normalization["final_normalization"] = {}',
+        'session.overworld.get("map", []) != eager_map',
+        "live_total * 4 >= eager_total",
+        'shell.call("validation_snapshot")',
+        "validation_result != final_eager_result",
+        'performance_shell.call("_on_map_tile_pressed", PAINT_TILE)',
+        "_integer_sum(live_click_usec) * 2 >= eager_total",
+        'String(action_route_profile.get("status", "")) != "disabled_for_editor_action_tool"',
+        'performance_shell.set("_tool", "inspect")',
+        'Dictionary(inspect_metrics.get("route_preview", {})).is_empty()',
+        '"nonmap_authority_exact": true',
+        'MAP_EDITOR_TERRAIN_PAINT_PERFORMANCE_REPORT',
+    ):
+        ensure(token in report_text, errors, f"Map Editor terrain paint focused owner is missing token: {token}")
+    for forbidden in ("await get_tree().create_timer", "OS.delay", "normalize", "erase(\"final_normalization"):
+        ensure(forbidden not in report_text, errors, f"Map Editor terrain paint focused owner must not weaken or delay the parity gate: {forbidden}")
+    scene_text = scene_path.read_text(encoding="utf-8")
+    ensure('res://tests/map_editor_terrain_paint_performance_report.gd' in scene_text, errors, "Terrain paint performance scene must own the focused report script")
+
+
 def validate_map_editor_shell_slice(errors: list[str]) -> None:
     required_paths = (
         APP_ROUTER_PATH,
@@ -45728,6 +45841,7 @@ def main() -> int:
     validate_battle_info_tab_header_compact_fit(errors)
     validate_battle_focus_spell_tab_body_containment(errors)
     validate_main_menu_first_view(errors)
+    validate_map_editor_terrain_paint_normalization_deferral(errors)
     validate_main_menu_destructive_exclusive_parent_input(errors)
     validate_main_menu_settings_focus_visibility(errors)
     validate_map_editor_shell_slice(errors)
