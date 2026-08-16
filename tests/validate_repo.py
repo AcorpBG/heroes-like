@@ -236,6 +236,8 @@ TOWN_HERO_HIRE_VFX_RUNTIME_PATH = ROOT / "art" / "town" / "runtime" / "vfx" / "h
 TOWN_HERO_HIRE_AUDIO_RUNTIME_PATH = ROOT / "art" / "audio" / "runtime" / "presentation" / "town_hero_hire.wav"
 TOWN_HERO_HIRE_FEEDBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_hero_hire_completion_feedback_report.gd"
 TOWN_HERO_HIRE_FEEDBACK_REPORT_SCENE_PATH = ROOT / "tests" / "town_hero_hire_completion_feedback_report.tscn"
+TOWN_ARTIFACT_ACTION_FEEDBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_artifact_action_feedback_report.gd"
+TOWN_ARTIFACT_ACTION_FEEDBACK_REPORT_SCENE_PATH = ROOT / "tests" / "town_artifact_action_feedback_report.tscn"
 TOWN_ENTITY_CACHE_ACTIVE_REFRESH_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "town_entity_cache_active_refresh_regression.gd"
 TOWN_ENTITY_CACHE_ACTIVE_REFRESH_REGRESSION_SCENE_PATH = ROOT / "tests" / "town_entity_cache_active_refresh_regression.tscn"
 GENERATED_LARGE_TOWN_EXPLICIT_SAVE_SURFACE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "generated_large_town_explicit_save_surface_regression.gd"
@@ -21087,11 +21089,11 @@ def validate_town_route_response_dispatch_feedback(errors: list[str]) -> None:
 
     stage_text = TOWN_STAGE_SCRIPT_PATH.read_text(encoding="utf-8")
     for token in (
-        'event_id not in ["town_units_recruited", "town_building_built", "town_route_response_ordered", "town_market_exchange_completed", "town_spell_studied", "town_hero_hired"]',
+        'event_id not in ["artifact_acquired", "artifact_equipped", "artifact_unequipped", "town_units_recruited", "town_building_built", "town_route_response_ordered", "town_market_exchange_completed", "town_spell_studied", "town_hero_hired"]',
         'event_id == "town_route_response_ordered" and String(presentation.get("response_placement_id", "")) == ""',
-        '"cue_town_route_response_ordered" if event_id == "town_route_response_ordered" else',
-        '"map_object" if event_id == "town_route_response_ordered" else',
-        'event_id in ["town_units_recruited", "town_route_response_ordered", "town_market_exchange_completed", "town_spell_studied", "town_hero_hired"] and selected_blocking_policy != "nonblocking"',
+        '"town_route_response_ordered": "cue_town_route_response_ordered"',
+        '"town_route_response_ordered": "map_object"',
+        'event_id in ["artifact_equipped", "artifact_unequipped", "town_units_recruited", "town_route_response_ordered", "town_market_exchange_completed", "town_spell_studied", "town_hero_hired"] and selected_blocking_policy != "nonblocking"',
         'draw_entries = ["route_dispatch_badge"] if reduced_motion else ["route_dispatch_art", "route_dispatch_badge"]',
         '"response_placement_id": String(_town_action_presentation.get("response_placement_id", ""))',
         '"response_label": String(_town_action_presentation.get("response_label", ""))',
@@ -21603,6 +21605,132 @@ def validate_town_hero_hire_completion_feedback(errors: list[str]) -> None:
         ensure(forbidden not in report_text, errors, f"Town hero-hire report bypasses public ownership: {forbidden}")
 
 
+def validate_town_artifact_action_feedback(errors: list[str]) -> None:
+    def function_block(text: str, name: str) -> str:
+        match = re.search(rf"func {re.escape(name)}\(.*?\n(?P<body>.*?)(?=\nfunc |\Z)", text, re.DOTALL)
+        return match.group(0) if match is not None else ""
+
+    required_paths = (
+        TOWN_SCRIPT_PATH, TOWN_STAGE_SCRIPT_PATH, ANIMATION_EVENT_CUES_PATH,
+        TOWN_ARTIFACT_ACTION_FEEDBACK_REPORT_SCRIPT_PATH,
+        TOWN_ARTIFACT_ACTION_FEEDBACK_REPORT_SCENE_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Town artifact action feedback owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    rows = load_json(ANIMATION_EVENT_CUES_PATH).get("entries", [])
+    by_event = {row.get("event_id"): row for row in rows if isinstance(row, dict)}
+    expected_refs = {
+        "artifact_acquired": ["OverworldRules.collect_active_artifact", "OverworldRules.award_hero_artifact", "TownShell._on_artifact_action_pressed", "TownRules.manage_artifact_at_active_town"],
+        "artifact_equipped": ["OverworldRules.equip_artifact", "ArtifactRules.perform_management_action", "TownShell._on_artifact_action_pressed", "TownRules.manage_artifact_at_active_town"],
+        "artifact_unequipped": ["OverworldRules.unequip_artifact", "ArtifactRules.perform_management_action", "TownShell._on_artifact_action_pressed", "TownRules.manage_artifact_at_active_town"],
+    }
+    for event_id, producer_refs in expected_refs.items():
+        ensure(by_event.get(event_id, {}).get("producer_refs") == producer_refs, errors, f"{event_id} must retain prior producers and add only exact Town public artifact ownership")
+
+    shell_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
+    handler = function_block(shell_text, "_on_artifact_action_pressed")
+    for token in (
+        'before["hero_artifacts"] = ArtifactRules.normalize_hero_artifacts(hero_before.get("artifacts", {}))',
+        "TownRules.manage_artifact_at_active_town(_session, action_id)",
+        '_record_town_action_result("order", action_id, action, result, before)',
+        '_invalidate_active_town_entity_cache("artifact", ["active_hero", "artifacts"])',
+        "if _handle_session_resolution():",
+        "\t_refresh()",
+        "_record_town_artifact_presentation(action_id, action, result, before)",
+    ):
+        ensure(token in handler, errors, f"Town public artifact handler is missing exact authoritative publication order: {token}")
+    order = [handler.find(token) for token in (
+        'before["hero_artifacts"]', "TownRules.manage_artifact_at_active_town", '_record_town_action_result("order"',
+        '_invalidate_active_town_entity_cache("artifact"', "if _handle_session_resolution():", "\t_refresh()",
+        "_record_town_artifact_presentation(action_id, action, result, before)",
+    )]
+    ensure(all(index >= 0 for index in order) and order == sorted(order), errors, "Town artifact feedback must publish only after action, recap, invalidation, resolution guard, and refresh")
+    ensure(handler.count("_record_town_artifact_presentation(action_id, action, result, before)") == 1, errors, "Town artifact handler must publish exactly once")
+
+    presenter = function_block(shell_text, "_record_town_artifact_presentation")
+    for token in (
+        'if not bool(result.get("ok", false)) or action.is_empty():',
+        'action_id.begins_with("commission_artifact:")',
+        'event_id = "artifact_acquired"',
+        'resource_deltas = _town_action_resource_deltas(before, after)',
+        'reward_source_key != String(action.get("source_key", ""))',
+        'artifact_id != String(town.get("artifact_reward_id", ""))',
+        'building_id != String(town.get("artifact_reward_service_building_id", ""))',
+        'String(town.get("artifact_reward_claimed_by_owner", "")) != "player"',
+        'action_id.begins_with("equip_artifact:")',
+        'String(before_location.get("location", "")) != "inventory"',
+        'artifact_location != "equipped"',
+        'action_id.begins_with("unequip_artifact:")',
+        'artifact_id = String(before_artifacts.get("equipped", {}).get(artifact_slot, ""))',
+        'artifact_location != "inventory"',
+        'ArtifactRules.artifact_icon_path(artifact_id)',
+        'String(policy.get("surface", "")) != "artifact"',
+        'String(policy.get("selected_playback_policy", "")) != "queue_resolved"',
+        'presentation["artifact_reward_source_key"] = reward_source_key',
+        '_town_stage_view.call("present_town_action", presentation)',
+    ):
+        ensure(token in presenter, errors, f"Town artifact presentation materializer is missing fail-closed provenance: {token}")
+    for forbidden in ("TownRules.manage_artifact_at_active_town", "ArtifactRules.perform_management_action", "session.overworld.erase", "await ", "create_timer", "create_tween"):
+        ensure(forbidden not in presenter, errors, f"Town artifact presentation materializer must remain post-action and authority-free: {forbidden}")
+
+    stage_text = TOWN_STAGE_SCRIPT_PATH.read_text(encoding="utf-8")
+    for token in (
+        'event_id not in ["artifact_acquired", "artifact_equipped", "artifact_unequipped",',
+        '"artifact_acquired": "cue_artifact_acquired"',
+        '"artifact_equipped": "cue_artifact_equipped"',
+        '"artifact_unequipped": "cue_artifact_unequipped"',
+        'var expected_surface := "artifact" if event_id in ["artifact_acquired", "artifact_equipped", "artifact_unequipped"] else "town"',
+        'event_id == "artifact_acquired" and String(presentation.get("artifact_action_kind", "")) != "commission"',
+        'event_id == "artifact_equipped" and String(presentation.get("artifact_action_kind", "")) != "equip"',
+        'event_id == "artifact_unequipped" and String(presentation.get("artifact_action_kind", "")) != "stow"',
+        'String(presentation.get("artifact_icon_path", "")).begins_with("res://art/artifacts/runtime/")',
+        'draw_entries = ["artifact_badge_added"] if reduced_motion else ["artifact_icon_claim", "artifact_badge_added"]',
+        'draw_entries = ["slot_badge_added"] if reduced_motion else ["artifact_icon_equip", "slot_badge_added"]',
+        'draw_entries = ["slot_badge_removed"] if reduced_motion else ["artifact_icon_stow", "slot_badge_removed"]',
+        'func _draw_town_artifact_presentation(badge_rect: Rect2, reduced_motion: bool) -> void:',
+        'func _town_artifact_vfx_asset_state() -> Dictionary:',
+        'texture_path.begins_with("res://art/artifacts/runtime/")',
+        'return _town_artifact_vfx_asset_state()',
+    ):
+        ensure(token in stage_text, errors, f"TownStageView is missing artifact action playback ownership: {token}")
+    for name in ("_draw_town_artifact_presentation", "_town_artifact_vfx_asset_state"):
+        helper = function_block(stage_text, name)
+        for forbidden in ("SessionState", "SaveService", "TownRules", "ArtifactRules", "AppRouter", "await ", "create_timer", "create_tween"):
+            ensure(forbidden not in helper, errors, f"Town artifact view helper {name} must remain authority-free: {forbidden}")
+
+    scene_text = TOWN_ARTIFACT_ACTION_FEEDBACK_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure_scene_nodes(scene_text, errors, "town_artifact_action_feedback_report.tscn", [("TownArtifactActionFeedbackReport", "Node")])
+    report_text = TOWN_ARTIFACT_ACTION_FEEDBACK_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for token in (
+        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        'const BUILDING_ID := "building_embercourt_lockhouse_tally"',
+        '_seed_artifact_service_fixture(authored_session, authored_town)',
+        'stage.present_town_action({"event_id": "artifact_acquired"})',
+        'var commission_control := _apply_control_action(control, "commission_artifact:%s" % BUILDING_ID)',
+        'var commission_result: Dictionary = shell.validation_perform_town_action("commission_artifact:%s" % BUILDING_ID)',
+        'var stow_result: Dictionary = shell.validation_perform_town_action(stow_action_id)',
+        'var equip_result: Dictionary = shell.validation_perform_town_action(equip_action_id)',
+        'after_commission == control.to_dict()',
+        'after_stow == control.to_dict()',
+        'after_equip == control.to_dict()',
+        '_cost_deltas_exact(expected_deltas, cost)',
+        '_provenance_exact(TownRules.get_active_town(live_session), commission_action)',
+        '_presentation_exact(commission_snapshot, mode, live_town, "commission", "artifact_acquired"',
+        '_presentation_exact(stow_snapshot, mode, live_town, "stow", "artifact_unequipped"',
+        '_presentation_exact(equip_snapshot, mode, live_town, "equip", "artifact_equipped"',
+        '_audio_records_exact(audio_records, live_town)',
+        'unavailable_silent', 'stale_silent', 'repeat_silent', 'refresh_silent',
+        'print("TOWN_ARTIFACT_ACTION_FEEDBACK_REPORT %s"',
+    ):
+        ensure(token in report_text, errors, f"Town artifact focused report is missing method-matched public proof: {token}")
+    ensure(report_text.count("for viewport_size in VIEWPORT_SIZES:") == 1 and report_text.count("for mode_value in MODES:") == 1, errors, "Town artifact focused report must run exact 1280/1920 normal/missing/reduced rows")
+    for forbidden in ("_on_artifact_action_pressed(", "_record_town_artifact_presentation(", "_town_artifact_vfx_asset_state(", "_draw_town_artifact_presentation(", "create_timer", "create_tween"):
+        ensure(forbidden not in report_text, errors, f"Town artifact focused report bypasses public production ownership: {forbidden}")
+
+
 def validate_town_building_complete_cue_playback(errors: list[str]) -> None:
     report_script_path = ROOT / "tests" / "town_building_complete_cue_playback_report.gd"
     report_scene_path = ROOT / "tests" / "town_building_complete_cue_playback_report.tscn"
@@ -21655,8 +21783,8 @@ def validate_town_building_complete_cue_playback(errors: list[str]) -> None:
     stage_text = TOWN_STAGE_SCRIPT_PATH.read_text(encoding="utf-8")
     for token in (
         'signal town_action_presentation_blocking_changed(blocking: bool)',
-        'event_id not in ["town_units_recruited", "town_building_built", "town_route_response_ordered", "town_market_exchange_completed", "town_spell_studied", "town_hero_hired"]',
-        'event_id == "town_building_built" and selected_blocking_policy not in ["input_blocking_timeout", "nonblocking_reduced_motion", "nonblocking_fast_resolve"]',
+        'event_id not in ["artifact_acquired", "artifact_equipped", "artifact_unequipped", "town_units_recruited", "town_building_built", "town_route_response_ordered", "town_market_exchange_completed", "town_spell_studied", "town_hero_hired"]',
+        'event_id in ["artifact_acquired", "town_building_built"] and selected_blocking_policy not in ["input_blocking_timeout", "nonblocking_reduced_motion", "nonblocking_fast_resolve"]',
         'func dismiss_town_action_presentation() -> void:',
         'return String(policy.get("selected_blocking_policy", "")) == "input_blocking_timeout"',
         'town_action_presentation_blocking_changed.emit(true)',
@@ -21774,9 +21902,9 @@ def validate_town_recruitment_cue_playback(errors: list[str]) -> None:
         "const RECRUIT_PRESENTATION_MAX_DURATION_MS := 700",
         "const RECRUIT_PRESENTATION_MIN_DURATION_MS := 120",
         "set_process(false)",
-		'event_id not in ["town_units_recruited", "town_building_built", "town_route_response_ordered", "town_market_exchange_completed", "town_spell_studied", "town_hero_hired"]',
-		'var expected_cue_id := "cue_town_hero_hired" if event_id == "town_hero_hired" else ("cue_town_spell_studied" if event_id == "town_spell_studied" else ("cue_town_market_exchange_completed" if event_id == "town_market_exchange_completed" else ("cue_town_route_response_ordered" if event_id == "town_route_response_ordered" else ("cue_town_units_recruited" if event_id == "town_units_recruited" else "cue_town_building_built"))))',
-		'event_id in ["town_units_recruited", "town_route_response_ordered", "town_market_exchange_completed", "town_spell_studied", "town_hero_hired"] and selected_blocking_policy != "nonblocking"',
+		'event_id not in ["artifact_acquired", "artifact_equipped", "artifact_unequipped", "town_units_recruited", "town_building_built", "town_route_response_ordered", "town_market_exchange_completed", "town_spell_studied", "town_hero_hired"]',
+		'"town_units_recruited": "cue_town_units_recruited"',
+		'event_id in ["artifact_equipped", "artifact_unequipped", "town_units_recruited", "town_route_response_ordered", "town_market_exchange_completed", "town_spell_studied", "town_hero_hired"] and selected_blocking_policy != "nonblocking"',
         "_town_action_presentation = presentation.duplicate(true)",
         'if Time.get_ticks_msec() >= int(_town_action_presentation.get("expires_msec", 0)):',
 		'draw_entries = ["recruit_count_badge"] if reduced_motion else ["recruit_muster_rings", "recruit_count_badge"]',
@@ -31226,6 +31354,11 @@ def validate_overworld_artifact_acquired_cue_playback(errors: list[str]) -> None
         'String(control_recap.get("kind", "")) != "artifact"',
         'control.flags["last_overworld_action_recap"] = control_recap.duplicate(true)',
         'primary_action.emit_signal("pressed")',
+        'var object_audio_record: Dictionary = audio_records[0] if audio_records.size() == 2',
+        'var audio_record: Dictionary = audio_records[1] if audio_records.size() == 2',
+        '"audio_placeholder_collect", "res://art/audio/runtime/presentation/object_collect.wav", "overworld_object_depleted", "OverworldMapView.object_resolution", 280',
+        'and audio_records.size() == 2',
+        'and object_audio_exact',
         'String(active.get("event_id", "")) == "artifact_acquired"',
         'String(object_resolution.get("event_id", "")) == "overworld_object_depleted"',
         'live_after == control.to_dict()',
@@ -43304,6 +43437,7 @@ def main() -> int:
     validate_town_market_exchange_completion_feedback(errors)
     validate_town_spell_study_completion_feedback(errors)
     validate_town_hero_hire_completion_feedback(errors)
+    validate_town_artifact_action_feedback(errors)
     validate_town_building_complete_cue_playback(errors)
     validate_town_recruitment_cue_playback(errors)
     validate_town_contextual_guide(errors)

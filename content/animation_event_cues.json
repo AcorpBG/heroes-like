@@ -743,7 +743,7 @@
         "fast_mode_tag": "artifact_badge_snap"
       },
       "validation_tags": ["artifact", "overworld", "pickup", "resolved_event"],
-      "producer_refs": ["OverworldRules.collect_active_artifact", "OverworldRules.award_hero_artifact"]
+      "producer_refs": ["OverworldRules.collect_active_artifact", "OverworldRules.award_hero_artifact", "TownShell._on_artifact_action_pressed", "TownRules.manage_artifact_at_active_town"]
     },
     {
       "event_id": "artifact_equipped",
@@ -762,7 +762,7 @@
         "fast_mode_tag": "slot_badge_snap"
       },
       "validation_tags": ["artifact", "equip", "resolved_event"],
-      "producer_refs": ["OverworldRules.equip_artifact", "ArtifactRules.perform_management_action"]
+      "producer_refs": ["OverworldRules.equip_artifact", "ArtifactRules.perform_management_action", "TownShell._on_artifact_action_pressed", "TownRules.manage_artifact_at_active_town"]
     },
     {
       "event_id": "artifact_unequipped",
@@ -781,7 +781,7 @@
         "fast_mode_tag": "slot_badge_clear"
       },
       "validation_tags": ["artifact", "equip", "resolved_event"],
-      "producer_refs": ["OverworldRules.unequip_artifact", "ArtifactRules.perform_management_action"]
+      "producer_refs": ["OverworldRules.unequip_artifact", "ArtifactRules.perform_management_action", "TownShell._on_artifact_action_pressed", "TownRules.manage_artifact_at_active_town"]
     },
     {
       "event_id": "ui_command_confirmed",

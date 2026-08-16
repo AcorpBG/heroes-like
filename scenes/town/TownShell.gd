@@ -332,6 +332,8 @@ func _on_study_action_pressed(action_id: String) -> void:
 
 func _on_artifact_action_pressed(action_id: String) -> void:
 	var before := TownRules.town_action_consequence_signature(_session)
+	var hero_before: Dictionary = _session.overworld.get("hero", {}).duplicate(true) if _session.overworld.get("hero", {}) is Dictionary else {}
+	before["hero_artifacts"] = ArtifactRules.normalize_hero_artifacts(hero_before.get("artifacts", {}))
 	var action := _validation_action_for_id(action_id)
 	var result := TownRules.manage_artifact_at_active_town(_session, action_id)
 	_record_town_action_result("order", action_id, action, result, before)
@@ -339,6 +341,7 @@ func _on_artifact_action_pressed(action_id: String) -> void:
 	if _handle_session_resolution():
 		return
 	_refresh()
+	_record_town_artifact_presentation(action_id, action, result, before)
 
 func _on_specialty_action_pressed(action_id: String) -> void:
 	var before := TownRules.town_action_consequence_signature(_session)
@@ -4604,6 +4607,146 @@ func _town_action_resource_deltas(before: Dictionary, after: Dictionary) -> Arra
 			continue
 		deltas.append({"resource_id": resource_id, "before": before_value, "after": after_value, "delta": after_value - before_value})
 	return deltas
+
+func _record_town_artifact_presentation(
+	action_id: String,
+	action: Dictionary,
+	result: Dictionary,
+	before: Dictionary
+) -> void:
+	if not bool(result.get("ok", false)) or action.is_empty():
+		return
+	if _town_stage_view == null or not _town_stage_view.has_method("present_town_action"):
+		return
+	var hero_after: Dictionary = _session.overworld.get("hero", {}) if _session.overworld.get("hero", {}) is Dictionary else {}
+	var before_artifacts: Dictionary = before.get("hero_artifacts", {}) if before.get("hero_artifacts", {}) is Dictionary else {}
+	var hero_before := {"artifacts": before_artifacts.duplicate(true)}
+	var after := TownRules.town_action_consequence_signature(_session)
+	var event_id := ""
+	var artifact_action_kind := ""
+	var artifact_id := ""
+	var artifact_location := ""
+	var artifact_slot := ""
+	var building_id := ""
+	var reward_table_id := ""
+	var reward_source_key := ""
+	var artifact_cost := {}
+	var resource_deltas := []
+	if action_id.begins_with("commission_artifact:"):
+		artifact_action_kind = "commission"
+		event_id = "artifact_acquired"
+		building_id = action_id.trim_prefix("commission_artifact:")
+		artifact_id = String(result.get("artifact_id", ""))
+		reward_table_id = String(result.get("artifact_reward_table_id", ""))
+		artifact_cost = result.get("cost", {}).duplicate(true) if result.get("cost", {}) is Dictionary else {}
+		resource_deltas = _town_action_resource_deltas(before, after)
+		var town := TownRules.get_active_town(_session)
+		var location := ArtifactRules.locate_artifact(hero_after, artifact_id)
+		artifact_location = String(location.get("location", ""))
+		artifact_slot = String(location.get("slot", ""))
+		reward_source_key = String(town.get("artifact_reward_source_key", ""))
+		if (
+			building_id == ""
+			or building_id == action_id
+			or artifact_id == ""
+			or artifact_id != String(action.get("artifact_id", ""))
+			or building_id != String(action.get("building_id", ""))
+			or reward_table_id == ""
+			or reward_table_id != String(action.get("artifact_reward_table_id", ""))
+			or reward_table_id != String(town.get("artifact_reward_table_id", ""))
+			or reward_source_key == ""
+			or reward_source_key != String(action.get("source_key", ""))
+			or artifact_id != String(town.get("artifact_reward_id", ""))
+			or building_id != String(town.get("artifact_reward_service_building_id", ""))
+			or String(town.get("artifact_reward_claimed_by_owner", "")) != "player"
+			or artifact_cost.is_empty()
+			or artifact_cost != action.get("cost", {})
+			or resource_deltas.size() != artifact_cost.size()
+			or artifact_location not in ["equipped", "inventory"]
+		):
+			return
+		for resource_id_value in artifact_cost:
+			var resource_id := String(resource_id_value)
+			var expected_delta := -int(artifact_cost.get(resource_id, 0))
+			var matched := false
+			for delta_value in resource_deltas:
+				if delta_value is Dictionary and String(delta_value.get("resource_id", "")) == resource_id and int(delta_value.get("delta", 0)) == expected_delta:
+					matched = true
+					break
+			if expected_delta >= 0 or not matched:
+				return
+	elif action_id.begins_with("equip_artifact:"):
+		artifact_action_kind = "equip"
+		event_id = "artifact_equipped"
+		artifact_id = action_id.trim_prefix("equip_artifact:")
+		var before_location := ArtifactRules.locate_artifact(hero_before, artifact_id)
+		var after_location := ArtifactRules.locate_artifact(hero_after, artifact_id)
+		artifact_location = String(after_location.get("location", ""))
+		artifact_slot = String(after_location.get("slot", ""))
+		if (
+			artifact_id == ""
+			or artifact_id == action_id
+			or String(before_location.get("location", "")) != "inventory"
+			or artifact_location != "equipped"
+			or artifact_slot not in ArtifactRules.EQUIPMENT_SLOTS
+		):
+			return
+	elif action_id.begins_with("unequip_artifact:"):
+		artifact_action_kind = "stow"
+		event_id = "artifact_unequipped"
+		artifact_slot = action_id.trim_prefix("unequip_artifact:")
+		artifact_id = String(before_artifacts.get("equipped", {}).get(artifact_slot, "")) if before_artifacts.get("equipped", {}) is Dictionary else ""
+		var after_location := ArtifactRules.locate_artifact(hero_after, artifact_id)
+		var after_artifacts := ArtifactRules.normalize_hero_artifacts(hero_after.get("artifacts", {}))
+		artifact_location = String(after_location.get("location", ""))
+		if (
+			artifact_slot not in ArtifactRules.EQUIPMENT_SLOTS
+			or artifact_id == ""
+			or artifact_location != "inventory"
+			or String(after_artifacts.get("equipped", {}).get(artifact_slot, "")) != ""
+		):
+			return
+	else:
+		return
+	var artifact := ContentService.get_artifact(artifact_id)
+	var artifact_icon_path := ArtifactRules.artifact_icon_path(artifact_id)
+	if artifact.is_empty() or artifact_icon_path == "":
+		return
+	var policy := AnimationCueCatalog.cue_playback_policy_for_event(event_id, SettingsService.animation_preferences())
+	var expected_subject_kind := "artifact" if event_id == "artifact_acquired" else "artifact_slot"
+	if (
+		String(policy.get("event_id", "")) != event_id
+		or String(policy.get("surface", "")) != "artifact"
+		or String(policy.get("subject_kind", "")) != expected_subject_kind
+		or String(policy.get("selected_playback_policy", "")) != "queue_resolved"
+		or event_id == "artifact_acquired" and String(policy.get("selected_blocking_policy", "")) not in ["input_blocking_timeout", "nonblocking_reduced_motion", "nonblocking_fast_resolve"]
+		or event_id != "artifact_acquired" and String(policy.get("selected_blocking_policy", "")) != "nonblocking"
+	):
+		return
+	var town := TownRules.get_active_town(_session)
+	var presentation := {
+		"event_id": event_id,
+		"cue_id": String(policy.get("cue_id", "")),
+		"town_placement_id": String(town.get("placement_id", "")),
+		"town_id": String(town.get("town_id", "")),
+		"action_id": action_id,
+		"artifact_action_kind": artifact_action_kind,
+		"artifact_id": artifact_id,
+		"artifact_name": String(artifact.get("name", artifact_id)),
+		"artifact_icon_path": artifact_icon_path,
+		"artifact_location": artifact_location,
+		"artifact_slot": artifact_slot,
+		"result_message": String(result.get("message", "")),
+		"town_action_recap": _last_action_recap.duplicate(true),
+		"policy": policy.duplicate(true),
+	}
+	if event_id == "artifact_acquired":
+		presentation["building_id"] = building_id
+		presentation["artifact_reward_table_id"] = reward_table_id
+		presentation["artifact_reward_source_key"] = reward_source_key
+		presentation["artifact_cost"] = artifact_cost.duplicate(true)
+		presentation["resource_deltas"] = resource_deltas.duplicate(true)
+	_town_stage_view.call("present_town_action", presentation)
 
 func _town_active_known_spell_ids() -> Array:
 	var hero_value: Variant = _session.overworld.get("hero", {})

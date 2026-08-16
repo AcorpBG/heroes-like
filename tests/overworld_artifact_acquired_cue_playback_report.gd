@@ -101,9 +101,11 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 	primary_action.emit_signal("pressed")
 	var active := _acquired_presentation(shell)
 	var audio_records: Array = PresentationAudio.validation_records()
-	var audio_record: Dictionary = audio_records[0] if audio_records.size() == 1 and audio_records[0] is Dictionary else {}
+	var object_audio_record: Dictionary = audio_records[0] if audio_records.size() == 2 and audio_records[0] is Dictionary else {}
+	var audio_record: Dictionary = audio_records[1] if audio_records.size() == 2 and audio_records[1] is Dictionary else {}
 	var audio_exact := _audio_record_exact(active, audio_record, "audio_placeholder_artifact_claim", "res://art/audio/runtime/presentation/artifact_claim.wav", "overworld_artifact_recovered", "OverworldShell.artifact_acquired", 420)
 	var object_resolution := _object_resolution(shell)
+	var object_audio_exact := _audio_record_exact(object_resolution, object_audio_record, "audio_placeholder_collect", "res://art/audio/runtime/presentation/object_collect.wav", "overworld_object_depleted", "OverworldMapView.object_resolution", 280)
 	var live_after: Dictionary = live_session.to_dict()
 	var reduced_motion := bool(mode.get("reduced_motion", false))
 	var expected_blocking := "nonblocking_reduced_motion" if reduced_motion else "input_blocking_timeout"
@@ -163,7 +165,7 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		and String(location.get("location", "")) == "equipped"
 		and String(location.get("slot", "")) == "boots"
 		and vfx_asset_exact
-		and audio_records.size() == 1
+		and audio_records.size() == 2
 		and audio_exact
 	)
 	var map_depletion_exact: bool = (
@@ -171,6 +173,7 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		and String(object_resolution.get("family", "")) == "artifact"
 		and String(object_resolution.get("placement_id", "")) == PLACEMENT_ID
 		and object_resolution.get("tile", {}) == {"x": ARTIFACT_TILE.x, "y": ARTIFACT_TILE.y}
+		and object_audio_exact
 	)
 
 	var input_policy_exact := true
@@ -243,6 +246,8 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		"malformed_fail_closed": malformed_fail_closed,
 		"presentation_exact": presentation_exact,
 		"audio_exact": audio_exact,
+		"object_audio_exact": object_audio_exact,
+		"object_audio_record": object_audio_record,
 		"audio_record": audio_record,
 		"vfx_asset_exact": vfx_asset_exact,
 		"map_depletion_exact": map_depletion_exact,
