@@ -6183,6 +6183,34 @@ Completion evidence:
 - focused Overworld visual, fog-rule, full-route, keyboard-focus, accessibility, and core owners pass with natural exits; repository validation, Python compilation, diff checks, and exact/generic Godot editor parses pass;
 - official Linux export/headless startup and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass; packaged Overworld interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release-readiness remain explicitly unclaimed.
 
+## Selected Slice: Overworld Hero Command Rail Compact Fit
+
+id: `ux-overworld-hero-command-rail-compact-fit-10184`
+
+Status: completed.
+
+Implementation boundary:
+- compact only the existing Hero rail command-check visible summary so its proportional-font width fits the live label at 1280x720 and 1920x1080, while keeping the full command identity/readiness/movement text in the existing native tooltip;
+- remove the duplicate no-reserve placeholder row from the existing HeroActions container; real reserve-command buttons, order, tooltips, focus, and consequences remain unchanged;
+- validate live pixel-width containment and exact solo/reserve presentation through the existing public Overworld visual owner without changing hero, movement, action, route, or save authority.
+
+Completion criteria:
+- the solo and reserve command summaries fit within the live Heroes label at 1280x720 and 1920x1080 with no visual clipping, while the full tooltip retains active commander, roster, readiness, switch, movement, and next-action context;
+- solo state exposes no redundant HeroActions child, while reserve state retains the exact enabled command button and public switch consequence;
+- hero identity/card, army, portrait, movement, command cache, focus/input, route, session, and save authority remain exact;
+- focused Overworld visual, hero-command/cache, active-focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Non-goals:
+- no hero rules, roster, recruitment, switching consequence, movement, action scoring, pathing, fog, map renderer, save/schema, content, AI, or Native RMG changes;
+- no sidebar width, panel height, font/theme, portrait, map size, command drawer, footer, or general rail-summary redesign;
+- no packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Completion evidence:
+- the live solo summary is now `Command: Solo | Move N/N`, the reserve summary is `Command: N reserve(s) | Move N/N`, and the full existing tooltip retains active commander, roster, readiness, switch, movement, next-action, and state-change context;
+- solo state creates no duplicate HeroActions child, while the real reserve state retains its enabled Caelen command button and exact public command surfaces;
+- the focused Overworld owner measures the themed-font string against the live Heroes label and passes method-matched solo/reserve states; fresh 1280x720 and 1920x1080 X11 captures show the complete summary with reclaimed rail space;
+- hero-action cache, active-focus, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass; packaged Overworld interaction and broader release claims remain unclaimed.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:

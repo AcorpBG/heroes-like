@@ -19153,6 +19153,13 @@ def validate_hero_progression(errors: list[str]) -> None:
 
 
 def validate_hero_command(errors: list[str]) -> None:
+    def hero_command_function_block(text: str, name: str) -> str:
+        start = text.find(f"func {name}(")
+        if start < 0:
+            return ""
+        next_function = text.find("\nfunc ", start + 1)
+        return text[start:] if next_function < 0 else text[start:next_function]
+
     required_paths = (
         HERO_COMMAND_RULES_PATH,
         SCENARIO_FACTORY_PATH,
@@ -19299,6 +19306,48 @@ def validate_hero_command(errors: list[str]) -> None:
         "_heroes_label",
     ):
         ensure(required_token in overworld_script_text, errors, f"OverworldShell.gd is missing required hero-command token: {required_token}")
+
+    rebuild_hero_actions_block = hero_command_function_block(overworld_script_text, "_rebuild_hero_actions")
+    command_check_block = hero_command_function_block(overworld_script_text, "_command_check_surface")
+    for required_token in (
+        "if actions.size() <= 1:",
+        'var visible_readiness := "Solo" if switchable_count <= 0 else "%d reserve%s"',
+        'var visible := "Command: %s | %s"',
+        "visible_readiness,",
+        "movement_line,",
+    ):
+        ensure(required_token in rebuild_hero_actions_block + command_check_block, errors, f"Overworld Hero command rail is missing exact compact-fit behavior: {required_token}")
+    ensure(
+        '_make_placeholder_label("Command check: solo")' not in rebuild_hero_actions_block
+        and '"Command check: %s | %s | %s"' not in command_check_block
+        and "_short_action_label(active_name" not in command_check_block,
+        errors,
+        "Overworld Hero command rail must not retain the duplicate solo placeholder or name-redundant clipped summary",
+    )
+    visual_smoke_text = (ROOT / "tests" / "overworld_visual_smoke.gd").read_text(encoding="utf-8")
+    command_case_block = hero_command_function_block(visual_smoke_text, "_assert_overworld_command_check_cue_contract")
+    label_fit_block = hero_command_function_block(visual_smoke_text, "_label_text_fits_width")
+    for required_token in (
+        'shell.get_node_or_null("%Heroes") as Label',
+        'shell.get_node_or_null("%HeroActions") as VBoxContainer',
+        'var solo_expected_visible := "Command: Solo | %s" % String(solo_command_check.get("movement_line", ""))',
+        "String(heroes_label.text) != solo_expected_visible",
+        "hero_actions.get_child_count() != 0",
+        'var reserve_expected_visible := "Command: 1 reserve | %s" % String(reserve_command_check.get("movement_line", ""))',
+        "String(heroes_label.text) != reserve_expected_visible",
+        "not has_caelen_button",
+        "has_placeholder_label",
+        "not _label_text_fits_width(heroes_label)",
+    ):
+        ensure(required_token in command_case_block, errors, f"Overworld visual owner is missing exact Hero command compact-fit proof: {required_token}")
+    for required_token in (
+        'label.get_theme_font("font")',
+        'label.get_theme_font_size("font_size")',
+        "font.get_string_size(label.text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x <= label.size.x + 0.5",
+    ):
+        ensure(required_token in label_fit_block, errors, f"Overworld visual owner is missing live proportional-font measurement: {required_token}")
+    for forbidden_token in ("_rebuild_hero_actions", "_command_check_surface", "custom_minimum_size", "get_window().size =", "SessionStateStore", "SaveService", ".erase("):
+        ensure(forbidden_token not in label_fit_block, errors, f"Hero command fit helper must remain read-only and geometry-observing: {forbidden_token}")
 
     town_script_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (

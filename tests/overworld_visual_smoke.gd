@@ -142,7 +142,15 @@ func _assert_overworld_command_check_cue_contract(shell: Node) -> bool:
 		get_tree().quit(1)
 		return false
 	var session = SessionState.ensure_active_session()
+	var heroes_label := shell.get_node_or_null("%Heroes") as Label
+	var hero_actions := shell.get_node_or_null("%HeroActions") as VBoxContainer
+	if heroes_label == null or hero_actions == null:
+		push_error("Overworld smoke: live Hero command rail nodes are missing.")
+		get_tree().quit(1)
+		return false
 	var solo_snapshot: Dictionary = shell.call("validation_snapshot")
+	var solo_command_check: Dictionary = solo_snapshot.get("command_check", {})
+	var solo_expected_visible := "Command: Solo | %s" % String(solo_command_check.get("movement_line", ""))
 	var solo_text := "\n".join([
 		String(solo_snapshot.get("command_check_visible_text", "")),
 		String(solo_snapshot.get("command_check_tooltip_text", "")),
@@ -152,8 +160,12 @@ func _assert_overworld_command_check_cue_contract(shell: Node) -> bool:
 	if not _assert_text_contains_all(
 		"overworld solo command check cue",
 		[solo_text],
-		["Command check:", "Command Check", "Lyra Emberwell", "Solo command", "No reserve switch", "Next practical action:", "does not spend movement or end the day"]
+		["Command:", "Command Check", "Lyra Emberwell", "Solo command", "No reserve switch", "Next practical action:", "does not spend movement or end the day"]
 	):
+		return false
+	if String(heroes_label.text) != solo_expected_visible or not _label_text_fits_width(heroes_label) or hero_actions.get_child_count() != 0:
+		push_error("Overworld smoke: solo Hero command rail is clipped or still duplicates a placeholder row. label=%s width=%s children=%s" % [heroes_label.text, heroes_label.size.x, hero_actions.get_child_count()])
+		get_tree().quit(1)
 		return false
 	if not _assert_no_ai_score_leak("overworld solo command check cue", solo_text):
 		return false
@@ -179,6 +191,8 @@ func _assert_overworld_command_check_cue_contract(shell: Node) -> bool:
 	HeroCommandRules.normalize_session(session)
 	shell.call("_refresh")
 	var reserve_snapshot: Dictionary = shell.call("validation_snapshot")
+	var reserve_command_check: Dictionary = reserve_snapshot.get("command_check", {})
+	var reserve_expected_visible := "Command: 1 reserve | %s" % String(reserve_command_check.get("movement_line", ""))
 	var action_surfaces := []
 	for surface in (reserve_snapshot.get("hero_action_surfaces", []) if reserve_snapshot.get("hero_action_surfaces", []) is Array else []):
 		if surface is Dictionary:
@@ -193,8 +207,19 @@ func _assert_overworld_command_check_cue_contract(shell: Node) -> bool:
 	if not _assert_text_contains_all(
 		"overworld reserve command check cue",
 		[reserve_text],
-		["Command check:", "Command Check", "2 commanders", "1 reserve", "reserve ready", "Switch ready:", "Caelen", "Open Command", "Command Switch Check", "Target:", "Readiness:", "switch ready", "State change:"]
+		["Command:", "Command Check", "2 commanders", "1 reserve", "reserve ready", "Switch ready:", "Caelen", "Open Command", "Command Switch Check", "Target:", "Readiness:", "switch ready", "State change:"]
 	):
+		return false
+	var has_caelen_button := false
+	var has_placeholder_label := false
+	for child in hero_actions.get_children():
+		if child is Button and String((child as Button).text).contains("Caelen") and not (child as Button).disabled:
+			has_caelen_button = true
+		if child is Label:
+			has_placeholder_label = true
+	if String(heroes_label.text) != reserve_expected_visible or not _label_text_fits_width(heroes_label) or not has_caelen_button or has_placeholder_label:
+		push_error("Overworld smoke: reserve Hero command rail is clipped, missing its live button, or retained a placeholder. label=%s width=%s actions=%s" % [heroes_label.text, heroes_label.size.x, action_surfaces])
+		get_tree().quit(1)
 		return false
 	if not _assert_no_ai_score_leak("overworld reserve command check cue", reserve_text):
 		return false
@@ -209,6 +234,11 @@ func _assert_overworld_command_check_cue_contract(shell: Node) -> bool:
 	OverworldRules.refresh_fog_of_war(session)
 	shell.call("_refresh")
 	return true
+
+func _label_text_fits_width(label: Label) -> bool:
+	var font := label.get_theme_font("font")
+	var font_size := label.get_theme_font_size("font_size")
+	return font.get_string_size(label.text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x <= label.size.x + 0.5
 
 func _assert_overworld_specialty_check_cue_contract(shell: Node) -> bool:
 	if not shell.has_method("validation_snapshot") or not shell.has_method("validation_perform_specialty_action"):
