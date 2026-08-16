@@ -1198,6 +1198,8 @@ func _check_battle_info_tab_controller_navigation(shell: Node, session, entry_fo
 			await _press_joypad_button(JOY_BUTTON_DPAD_RIGHT)
 		if not _assert_battle_info_tab_state(shell, expected_tab, expected_tab, expected_tab, tab_bar):
 			return false
+		if expected_tab in [1, 2] and not _battle_info_tab_footer_contained(shell):
+			return _fail("Battle forward info-tab traversal exposed a Focus/Spell body that overflowed the shell at tab %d." % expected_tab)
 		var forward_authority: Dictionary = _battle_info_tab_authority_snapshot(session)
 		if forward_authority != authority_before:
 			return _fail("Battle forward info-tab traversal mutated battle, session, save, settings, or route authority at tab %d: %s." % [expected_tab, _first_town_management_difference(authority_before, forward_authority)])
@@ -1218,6 +1220,8 @@ func _check_battle_info_tab_controller_navigation(shell: Node, session, entry_fo
 		var expected_count: int = 6 - int(expected_tab)
 		if not _assert_battle_info_tab_state(shell, expected_tab, expected_count, expected_count, tab_bar):
 			return false
+		if expected_tab in [1, 2] and not _battle_info_tab_footer_contained(shell):
+			return _fail("Battle reverse info-tab traversal exposed a Focus/Spell body that overflowed the shell at tab %d." % expected_tab)
 		var reverse_authority: Dictionary = _battle_info_tab_authority_snapshot(session)
 		if reverse_authority != authority_before:
 			return _fail("Battle reverse info-tab traversal mutated battle, session, save, settings, or route authority at tab %d: %s." % [expected_tab, _first_town_management_difference(authority_before, reverse_authority)])
@@ -1233,6 +1237,8 @@ func _check_battle_info_tab_controller_navigation(shell: Node, session, entry_fo
 	await _click_battle_info_tab(tab_bar, 1)
 	if not _assert_battle_info_tab_state(shell, 1, 7, 7, tab_bar):
 		return false
+	if not _battle_info_tab_footer_contained(shell):
+		return _fail("Battle mouse info-tab selection exposed a Focus body that overflowed the shell.")
 	if _battle_info_tab_authority_snapshot(session) != authority_before:
 		return _fail("Battle mouse info-tab selection mutated battle, session, save, settings, or route authority.")
 	for expected_tab in [2, 3]:
@@ -1253,6 +1259,11 @@ func _check_battle_info_tab_controller_navigation(shell: Node, session, entry_fo
 			or _battle_info_tab_authority_snapshot(session) != authority_before:
 		return _fail("Battle info-tab navigation lost selected-tab or authority state when returning to commands: %s." % final_snapshot)
 	return true
+
+func _battle_info_tab_footer_contained(shell: Node) -> bool:
+	var shell_control: Control = shell as Control
+	var footer: Control = shell.get_node_or_null("%Footer")
+	return shell_control != null and footer != null and shell_control.get_global_rect().encloses(footer.get_global_rect())
 
 func _assert_battle_info_tab_state(shell: Node, expected_tab: int, expected_change_count: int, expected_retention_count: int, tab_bar: TabBar) -> bool:
 	var snapshot: Dictionary = shell.call("validation_battle_info_tab_navigation_snapshot")

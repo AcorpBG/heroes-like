@@ -19860,6 +19860,129 @@ def validate_battle_info_tab_header_compact_fit(errors: list[str]) -> None:
     ensure('var expected_titles := ["Order", "Focus", "Spells", "Timing"]' not in focus_smoke_text, errors, "Active-play Battle navigation must not retain the overflowing Spells header oracle")
 
 
+def validate_battle_focus_spell_tab_body_containment(errors: list[str]) -> None:
+    def function_block(text: str, name: str) -> str:
+        match = re.search(rf"func {re.escape(name)}\([^\n]*\)(?: -> [^:]+)?:\n(?P<body>.*?)(?=\nfunc |\Z)", text, re.S)
+        return match.group("body") if match is not None else ""
+
+    board_smoke_path = ROOT / "tests" / "battle_controller_board_navigation_smoke.gd"
+    focus_smoke_path = ROOT / "tests" / "active_play_keyboard_focus_smoke.gd"
+    for path in (BATTLE_SCRIPT_PATH, BATTLE_SCENE_PATH, board_smoke_path, focus_smoke_path):
+        ensure(path.exists(), errors, f"Missing Battle Focus/Spell body-containment file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in (BATTLE_SCRIPT_PATH, BATTLE_SCENE_PATH, board_smoke_path, focus_smoke_path)):
+        return
+
+    shell_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
+    scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8")
+    board_smoke_text = board_smoke_path.read_text(encoding="utf-8")
+    focus_smoke_text = focus_smoke_path.read_text(encoding="utf-8")
+    for required_token in (
+        "const BATTLE_FOCUS_VISIBLE_NAME_CHAR_LIMIT := 14",
+        "const BATTLE_FOCUS_VISIBLE_ORDER_CHAR_LIMIT := 16",
+        "const BATTLE_SPELL_VISIBLE_NAME_CHAR_LIMIT := 16",
+        '_active_label.text = _battle_focus_visible_surface(',
+        '"Active",\n\t\t\tBattleRules.get_active_stack(_session.battle),',
+        '_target_label.text = _battle_focus_visible_surface(',
+        '"Target",\n\t\t\tBattleRules.get_selected_target(_session.battle),',
+        "_spell_label.text = _battle_spellbook_visible_surface(spellbook_text, spell_actions)",
+        "_spell_label.tooltip_text = spellbook_text",
+        "_effect_label.text = _battle_effect_visible_surface(status_check)",
+        'String(active_stack_check.get("tooltip_text", ""))',
+        'String(engagement_check.get("tooltip_text", ""))',
+        'String(status_check.get("tooltip_text", ""))',
+    ):
+        ensure(required_token in shell_text, errors, f"Battle Focus/Spell compact refresh is missing exact token: {required_token}")
+    for helper_name in ("_battle_focus_visible_surface", "_battle_spellbook_visible_surface", "_battle_effect_visible_surface"):
+        helper = function_block(shell_text, helper_name)
+        ensure(helper, errors, f"Could not isolate Battle compact body helper {helper_name}")
+        for forbidden_token in ("custom_minimum_size", "minimum_size_changed", "queue_sort", "set_deferred", "await ", "create_timer", "BattleRules.perform", "SessionState", "SaveService", "AppRouter"):
+            ensure(forbidden_token not in helper, errors, f"Battle compact body helper {helper_name} must remain view-only and avoid {forbidden_token}")
+    focus_helper = function_block(shell_text, "_battle_focus_visible_surface")
+    for required_token in (
+        'var cue_label := "Stack check:" if prefix == "Active" else "Engagement check:"',
+        'return "%s\\n%s: none\\nSide: unavailable\\nState: %s"',
+        '_short_text(name, BATTLE_FOCUS_VISIBLE_NAME_CHAR_LIMIT)',
+        'max(0, int(stack.get("count", 0)))',
+        'max(0, int(stack.get("total_health", 0)))',
+        'state_line = "%s: %s" % [readiness, _short_text(order, BATTLE_FOCUS_VISIBLE_ORDER_CHAR_LIMIT)]',
+    ):
+        ensure(required_token in focus_helper, errors, f"Battle Focus compact summary is missing exact live-state token: {required_token}")
+    spell_helper = function_block(shell_text, "_battle_spellbook_visible_surface")
+    for required_token in (
+        'part.begins_with("Mana ")',
+        'bool(action_value.get("disabled", false))',
+        'ready_line = "Ready: %s" % _short_text(first_ready, BATTLE_SPELL_VISIBLE_NAME_CHAR_LIMIT)',
+        'return "%s\\n%s\\nSpells: %d/%d ready"',
+    ):
+        ensure(required_token in spell_helper, errors, f"Battle Spell compact summary is missing exact live-state token: {required_token}")
+    effect_helper = function_block(shell_text, "_battle_effect_visible_surface")
+    for required_token in (
+        'status_check.get("readiness", "Review")',
+        'status_check.get("effect_stack_count", 0)',
+        'return "Status check: %s\\nEffects: %d stack%s"',
+    ):
+        ensure(required_token in effect_helper, errors, f"Battle effect compact summary is missing exact live-state token: {required_token}")
+    for forbidden_token in (
+        "_context_panel.custom_minimum_size",
+        "_spell_panel.custom_minimum_size",
+        "_battle_tabs.custom_minimum_size",
+        "_footer.custom_minimum_size",
+        "_active_label.add_theme_font",
+        "_spell_label.add_theme_font",
+    ):
+        ensure(forbidden_token not in shell_text, errors, f"Battle body containment must not resize/restyle the shipped composition: {forbidden_token}")
+    ensure(scene_text.count('[node name="ContextPanel" type="PanelContainer"') == 1 and scene_text.count('[node name="SpellPanel" type="PanelContainer"') == 1, errors, "Battle Focus/Spell containment must retain the authored native pages")
+
+    focused_match = re.search(
+        r"func _validate_battle_focus_spell_tab_body_fit\(shell: Control, session, width: int\) -> bool:\n(?P<body>.*?)(?=\nfunc )",
+        board_smoke_text,
+        re.S,
+    )
+    ensure(focused_match is not None, errors, "Battle controller owner must prove Focus/Spell body and footer containment at both widths")
+    if focused_match is not None:
+        body = focused_match.group("body")
+        ordered = tuple(body.find(token) for token in (
+            "_battle_background_authority(session)",
+            "tabs.current_tab = 0",
+            "await _settle()",
+            "var contained_tabs_height := tabs.size.y",
+            'shell.call("validation_snapshot")',
+            '_focus_visible_surface_for_test("Active", active_stack, stack_check)',
+            "for row_value in rows:",
+            "tabs.current_tab = int(row.get(\"tab\", 0))",
+            "shell.get_global_rect().encloses(footer.get_global_rect())",
+            "label.get_visible_line_count() == int(line_counts[index])",
+            "widest_line <= label.size.x + 0.5",
+            "tabs.current_tab = initial_tab",
+            "_battle_background_authority(session) != authority_before",
+        ))
+        ensure(all(index >= 0 for index in ordered) and list(ordered) == sorted(ordered), errors, "Focused Battle body proof must bracket independent semantics, real tab selection, geometry/font checks, restoration, and authority in exact order")
+        for required_token in (
+            '"line_counts": [4, 4]',
+            '"line_counts": [3, 2]',
+            'tabs.size.y <= contained_tabs_height + 0.01',
+            'tabs.get_global_rect().encloses(panel.get_global_rect())',
+            'panel.get_global_rect().encloses(label.get_global_rect())',
+            'label.tooltip_text == String(tooltips[index])',
+        ):
+            ensure(required_token in body, errors, f"Focused Battle body proof is missing exact token: {required_token}")
+        for forbidden_token in ("_battle_focus_visible_surface", "_battle_spellbook_visible_surface", "_battle_effect_visible_surface", "custom_minimum_size", "set_text", "sort(", "erase(", "create_timer", "Input."):
+            ensure(forbidden_token not in body, errors, f"Focused Battle body proof must remain independent/read-only and avoid {forbidden_token}")
+    width_match = re.search(r"func _validate_battle_board_semantics_width\(width: int\) -> bool:\n(?P<body>.*?)(?=\nfunc )", board_smoke_text, re.S)
+    ensure(width_match is not None, errors, "Could not isolate Battle two-width owner for Focus/Spell body containment")
+    if width_match is not None:
+        width_body = width_match.group("body")
+        header_call = width_body.find("_validate_battle_info_tab_header_fit(shell, session, width)")
+        body_call = width_body.find("await _validate_battle_focus_spell_tab_body_fit(shell, session, width)")
+        focus_call = width_body.find("board.grab_focus()")
+        ensure(0 <= header_call < body_call < focus_call and width_body.count("await _validate_battle_focus_spell_tab_body_fit(shell, session, width)") == 1, errors, "Battle body proof must run once per width after header proof and before focus/input mutation")
+    ensure(focus_smoke_text.count("_battle_info_tab_footer_contained(shell)") == 3, errors, "Active-play navigation must prove real Focus/Spell footer containment in forward, reverse, and mouse paths")
+    focus_containment = function_block(focus_smoke_text, "_battle_info_tab_footer_contained")
+    ensure('shell_control.get_global_rect().encloses(footer.get_global_rect())' in focus_containment, errors, "Active-play Focus/Spell containment helper must compare live shell and footer rectangles")
+    for forbidden_token in ("custom_minimum_size", "set_size", "set_position", "queue_sort", "await ", "create_timer"):
+        ensure(forbidden_token not in focus_containment, errors, f"Active-play Focus/Spell containment helper must remain observation-only: {forbidden_token}")
+
+
 def validate_battle_quick_resolve_runtime(errors: list[str]) -> None:
     required_paths = (
         BATTLE_AUTO_RESOLVE_RULES_PATH,
@@ -45366,6 +45489,7 @@ def main() -> int:
     validate_battle_board_cursor_semantics(errors)
     validate_battle_order_tab_compact_initiative_summary(errors)
     validate_battle_info_tab_header_compact_fit(errors)
+    validate_battle_focus_spell_tab_body_containment(errors)
     validate_main_menu_first_view(errors)
     validate_main_menu_destructive_exclusive_parent_input(errors)
     validate_map_editor_shell_slice(errors)
