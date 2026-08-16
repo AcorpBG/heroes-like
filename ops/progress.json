@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Rootgate Toll is complete as one bounded shipped Thornwake chapter. The catalog now has nineteen active scenarios and Frontier Claims has four chapters; focused standalone/campaign flow, exact bounded carryover, objective/save authority, 62-encounter clear breadth, economy/development, strategic-AI, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Select the next tracker-approved slice; whole-game and release readiness remain unclaimed.",
+  "currentNotes": "Fogchart Mooring is complete as one bounded shipped Veilmourn chapter. The catalog now has twenty active scenarios and Frontier Claims has five chapters; focused standalone/campaign flow, explicit common-only carryover, objective/save authority, 65-encounter clear breadth, economy/development, strategic-AI, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Select the next tracker-approved slice; whole-game and release readiness remain unclaimed.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-thornwake-rootgate-toll-chapter-10184",
-  "currentSliceId": "content-thornwake-rootgate-toll-chapter-10184",
-  "currentSliceNotes": "Completed with exact Rootgate/Clauseworks, Tova/Graftroot Wardens, Thornwake/Brasshollow, deadline, objective, route, campaign carryover, save, combat-breadth, economy, strategic-AI, compatibility, static/editor, and bounded platform evidence. No new system or broad completion claim was introduced.",
+  "currentSlice": "content-veilmourn-fogchart-mooring-chapter-10184",
+  "currentSliceId": "content-veilmourn-fogchart-mooring-chapter-10184",
+  "currentSliceNotes": "Completed with exact Fogchart/Halo, Ruln/Bellwake Privateers, Veilmourn/Sunvault, deadline, objective, route, common-only campaign carryover, save, combat-breadth, economy, strategic-AI, compatibility, static/editor, and bounded platform evidence. No new system or broad completion claim was introduced.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Thornwake Rootgate Toll Chapter",
-  "currentSliceUpdatedAt": "2026-08-16T10:32:00Z",
+  "currentSliceTitle": "Veilmourn Fogchart Mooring Chapter",
+  "currentSliceUpdatedAt": "2026-08-16T11:11:34Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19847,7 +19847,7 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
-  "notes": "Completed the bounded Thornwake Rootgate Toll chapter. Nineteen active campaign/skirmish scenarios and four Frontier Claims chapters now ship; exact Bellwake victory plus drowned_chart_recorded unlocks chapter IV with capped resource/flag carryover and no cross-faction hero, spell, or artifact transfer. Focused launch/objective/save proof, 62-encounter queue-clear breadth signature 829808c9, deadline/replay/economy/runway/strategic-AI/core compatibility, repository/editor validation, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. Packaged chapter interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+  "notes": "Completed the bounded Veilmourn Fogchart Mooring chapter. Twenty active campaign/skirmish scenarios and five Frontier Claims chapters now ship; exact Rootgate victory plus rootgate_toll_recorded unlocks chapter V with capped common-resource/flag carryover, explicit zero caps for all six rare resources, and no cross-faction hero, spell, or artifact transfer. Focused launch/objective/save proof, 65-encounter queue-clear breadth signature 829808c9, deadline/replay/economy/runway/strategic-AI/core compatibility, repository/editor validation, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. Packaged chapter interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
   "plannedSlices": [
     {
       "id": "presentation-overworld-object-focus-cue-adoption-10184",
@@ -86356,6 +86356,59 @@
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
       "blockedReason": null,
       "completedAt": "2026-08-16T10:32:00Z"
+    },
+    {
+      "id": "content-veilmourn-fogchart-mooring-chapter-10184",
+      "title": "Veilmourn Fogchart Mooring Chapter",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Add one bounded shipped Veilmourn campaign/skirmish front that uses the fully authored but unused Fogchart Mooring, Ruln Vanehook, and Bellwake Privateers through existing campaign, economy, combat, AI, objective, save, and UI systems.",
+      "implementationTargets": [
+        "content/scenarios.json",
+        "content/campaigns.json",
+        "tests/veilmourn_fogchart_mooring_chapter_report.gd",
+        "tests/veilmourn_fogchart_mooring_chapter_report.tscn",
+        "tests/frontier_claims_campaign_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "The active content catalog exposes exactly twenty campaign- and skirmish-selectable scenarios, and Fogchart Mooring keeps exact Fogchart/Halo, Ruln/Bellwake Privateers, Veilmourn/Sunvault, deadline, objective, and authored-route identities",
+        "Real standalone and campaign sessions launch; common and rare economy sources are reachable; authored encounters, the Sunvault registry capture, victory and defeat authority, and save normalization/resume pass without rule shortcuts",
+        "Frontier Claims chapter V unlocks only after exact Rootgate Toll victory plus its authored completion flag, imports bounded common resources and flags only, and transfers no cross-faction hero progression, spells, artifacts, or verdant grafts",
+        "Active-scenario combat breadth, deadline, campaign/replay, economy-route/runway, strategic-AI, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "new units, towns, heroes, spells, artifacts, resource-site types, battle rules, AI policy, economy coefficients, campaign schema, save version, Native RMG, or map-topology system changes",
+        "broad faction balance tuning, generic campaign/carryover redesign, cross-faction hero/spell/artifact/rare-resource transfer, generated-map support, visual/audio asset production, or a full Veilmourn campaign claim",
+        "packaged chapter interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "0e134090c1b55e6bb09a8c4e574b960fa4e20eb8",
+        "active_scenario_count": 19,
+        "campaign_count": 6,
+        "active_scenarios_by_player_faction": {
+          "faction_embercourt": 9,
+          "faction_mireclaw": 3,
+          "faction_sunvault": 3,
+          "faction_thornwake": 2,
+          "faction_brasshollow": 1,
+          "faction_veilmourn": 1
+        },
+        "unused_player_town_id": "town_veilmourn_fogchart_mooring",
+        "unused_player_hero_id": "hero_veilmourn_ruln_vanehook",
+        "unused_player_army_id": "army_bellwake_privateers"
+      },
+      "createdAt": "2026-08-16T10:38:00Z",
+      "updatedAt": "2026-08-16T11:11:34Z",
+      "startedAt": "2026-08-16T10:38:00Z",
+      "notes": "Completed on baseline HEAD0e134090. Fogchart Mooring adds one real Veilmourn campaign/skirmish front with Ruln Vanehook, Bellwake Privateers, Fogchart Mooring, the Halo registry front, exact Day 13 defeat and capture/encounter victory authority, and only existing shipped systems/content. Focused `/tmp/heroes-fogchart-compat-a.PzVwO8` passes standalone/campaign launch, three final encounter payloads, victory/defeat, common-only carryover with all six rare resources zero-capped, save/resume, and unchanged progression storage. Frontier Claims is five chapters and unlocks Fogchart only after exact Rootgate victory plus rootgate_toll_recorded. Active combat breadth `/tmp/heroes-fogchart-battle-breadth-rerun.gLAqQj` passes 20 scenarios/65 encounters with stalls0, invalid0, queue clear, signature829808c9; economy route, deadline/replay, player/AI start economy and development runway, strategic-AI recruitment/delivery, and core gates pass. Repository validation, JSON, pycompile, diff-check, exact/generic editor parses, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. No packaged chapter interaction, controller, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claim is made.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
+      "blockedReason": null,
+      "completedAt": "2026-08-16T11:11:34Z"
     }
   ],
   "project": "heroes-like",
@@ -86365,7 +86418,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Rootgate Toll is complete. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
+  "remainingGap": "Fogchart Mooring is complete. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
   "remainingWork": "Select the next tracker-approved release-readiness implementation slice without claiming whole-game or release readiness.",
   "reportOnlyEvidence": [
     {

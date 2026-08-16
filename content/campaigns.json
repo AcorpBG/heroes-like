@@ -515,12 +515,12 @@
     {
       "id": "campaign_frontier_claims",
       "name": "Frontier Claims",
-      "description": "Four independent commanders follow one disputed survey chain from Mireford's root road through Orevein and Bellwake to Rootgate's contested toll line.",
-      "summary": "A four-chapter cross-faction campaign anthology linking Thornwake, Brasshollow, and Veilmourn fronts through bounded supply and objective carryover.",
-      "region": "Mireford to Bellwake Coast and Rootgate",
-      "arc_goal": "Secure four rival frontier claims and root the shared survey chain from Murkward through Riverwatch and Prismhearth to Clauseworks Depot.",
-      "completion_title": "Claims Rooted",
-      "completion_summary": "Silsa, Marka, Ivara, and Tova secure four independent claims, leaving a shared frontier route without merging their commands.",
+      "description": "Five independent commanders follow one disputed survey chain from Mireford's root road through Orevein, Bellwake, and Rootgate to Fogchart's hidden wreck lane.",
+      "summary": "A five-chapter cross-faction campaign anthology linking Thornwake, Brasshollow, and Veilmourn fronts through bounded supply and objective carryover.",
+      "region": "Mireford to Bellwake Coast, Rootgate, and Fogchart",
+      "arc_goal": "Secure five rival frontier claims and bind the shared survey chain from Murkward through Riverwatch, Prismhearth, Clauseworks, and the Halo registry front.",
+      "completion_title": "Claims Charted",
+      "completion_summary": "Silsa, Marka, Ivara, Tova, and Ruln secure five independent claims, leaving a shared frontier route without merging their commands.",
       "starting_scenario_id": "mireford-skirmish",
       "scenarios": [
         {
@@ -627,7 +627,7 @@
           "chapter_index": 4,
           "chapter_title": "Root the Toll Road",
           "status_hint": "Tova receives bounded Bellwake stores and evidence while retaining her own Thornwake command state.",
-          "carryover_summary": "Imports bounded Bellwake resources and flags, then closes the anthology without cross-faction hero, spell, or artifact transfer.",
+          "carryover_summary": "Imports bounded Bellwake resources and flags, then exports common stores and the rooted toll record toward Fogchart without cross-faction personal progression.",
           "briefing": "Tova Rootwright must turn the drowned survey record into a living road before Clauseworks prices every inland crossing shut.",
           "intel": "Charter guards, bastion reserves, and boiler exactors hold the contract road; Bellwake's chart proves the toll was built across the shared claim.",
           "stakes": "Root Clauseworks into the living road and the four claims become one durable frontier record; fail and the chain ends at the coast.",
@@ -641,6 +641,63 @@
           ],
           "carryover_import": {
             "from_scenario_id": "bellwake-wreck-claim",
+            "resources": true,
+            "hero_progression": false,
+            "spells": false,
+            "artifacts": false,
+            "flags_prefix": "carryover_"
+          },
+          "carryover_export": {
+            "retain_hero_progression": false,
+            "retain_spells": false,
+            "retain_artifacts": false,
+            "resource_fraction": 0.35,
+            "resource_caps": {
+              "gold": 1000,
+              "wood": 3,
+              "ore": 3,
+              "aetherglass": 0,
+              "embergrain": 0,
+              "peatwax": 0,
+              "verdant_grafts": 0,
+              "brass_scrip": 0,
+              "memory_salt": 0
+            },
+            "flag_ids": [
+              "rootgate_toll_recorded",
+              "boiler_scrap_grafted"
+            ]
+          }
+        },
+        {
+          "scenario_id": "fogchart-mooring",
+          "label": "Chapter V: Fogchart Mooring",
+          "description": "Carry Rootgate's recorded claim back into the mist, break Sunvault's chart-seizure line, and anchor a fifth claim at Fogchart Mooring.",
+          "chapter_index": 5,
+          "chapter_title": "Drown the Registry",
+          "status_hint": "Ruln receives bounded Rootgate common stores and evidence while retaining his own Veilmourn command state.",
+          "carryover_summary": "Imports bounded Rootgate common resources and flags, then resolves the anthology without cross-faction hero, spell, artifact, or rare-resource transfer.",
+          "briefing": "Ruln Vanehook must turn Rootgate's recorded toll claim into a drowned chart before Sunvault fixes Fogchart's hidden wreck lane in daylight.",
+          "intel": "Relay pickets, mirror lancers, and an aurora battery guard the Halo registry front; Rootgate's ledger proves the daylight claim crosses Fogchart water.",
+          "stakes": "Sink the registry and all five claims become one durable frontier chart; fail and Sunvault closes the final mist route.",
+          "aftermath_victory": "The Halo registry is drowned beneath Fogchart's bell chain and the five-command frontier docket becomes a complete chart.",
+          "aftermath_defeat": "Sunvault fixes the wreck lane in daylight and strands the earlier claims beyond Fogchart's silenced mooring.",
+          "journal_victory": "Ruln drowned the Halo registry and anchored the fifth frontier claim at Fogchart.",
+          "journal_defeat": "Ruln failed to bind Fogchart into the frontier chart.",
+          "unlock_requirements": [
+            {
+              "type": "scenario_status",
+              "scenario_id": "rootgate-toll",
+              "status": "victory"
+            },
+            {
+              "type": "scenario_flag_true",
+              "scenario_id": "rootgate-toll",
+              "flag": "rootgate_toll_recorded"
+            }
+          ],
+          "carryover_import": {
+            "from_scenario_id": "rootgate-toll",
             "resources": true,
             "hero_progression": false,
             "spells": false,

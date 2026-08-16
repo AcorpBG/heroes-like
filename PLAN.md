@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `content-veilmourn-fogchart-mooring-chapter-10184`. The active catalog now contains twenty campaign/skirmish scenarios, including Veilmourn's Fogchart Mooring chapter with Ruln Vanehook and the Bellwake Privateers defending the previously unused mooring against Sunvault's Halo registry front. Frontier Claims now has five chapters; exact Rootgate victory evidence unlocks Fogchart and imports only bounded common resources and flags, with all six rare resources explicitly capped at zero and no Thornwake hero progression, spells, or artifacts transferred. Real standalone/campaign launch, objective victory and Day 13 defeat, save/resume, 65-encounter queue-clear combat breadth, resource-route and town-development breadth, strategic-AI recruitment/delivery, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged chapter interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `content-veilmourn-fogchart-mooring-chapter-10184`
 - Completed implementation slice: `content-thornwake-rootgate-toll-chapter-10184`. The active catalog now contains nineteen campaign/skirmish scenarios, including Thornwake's new Rootgate Toll chapter with Tova Rootwright and the Graftroot Wardens defending Rootgate Nursery against the Clauseworks toll line. Frontier Claims now has four chapters; exact Bellwake victory evidence unlocks Rootgate Toll and imports only bounded resources and flags, never Veilmourn hero progression, spells, or artifacts. Real standalone/campaign launch, objective victory and Day 12 defeat, save/resume, 62-encounter combat breadth with a clear queue, resource-route and town-development breadth, strategic-AI recruitment/delivery, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged chapter interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `content-thornwake-rootgate-toll-chapter-10184`
 - Completed implementation slice: `ux-overworld-terminal-end-turn-detached-focus-guard-10184`. The warned End Turn dialog now relies solely on its existing visibility-and-pending guarded next-frame cancel-focus path; the redundant raw deferred cancel-button focus that could execute after terminal routing detached the Overworld is gone. Focused same-stack confirmation/detach proof preserves exact rules, autosave, and session authority, while the real nine-step skirmish defeat flow reaches, saves, leaves, resumes, and leaves Scenario Outcome without detached-focus diagnostics. Ordinary cancel/confirm/stale/low-risk behavior, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged End Turn interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -5963,6 +5965,28 @@ Completion criteria:
 Non-goals:
 - no new units, towns, heroes, spells, artifacts, resource-site types, battle rules, AI policy, economy coefficients, campaign schema, save version, Native RMG, or map-topology system changes;
 - no broad faction balance retuning, generic campaign/carryover redesign, cross-faction hero/spell/artifact transfer, generated-map support, visual/audio asset production, or full Thornwake campaign claim;
+- no packaged chapter interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+## Selected Slice: Veilmourn Fogchart Mooring Chapter
+
+id: `content-veilmourn-fogchart-mooring-chapter-10184`
+
+Status: completed.
+
+Implementation boundary:
+- add one twentieth active authored scenario that gives Veilmourn a second real playable front: Ruln Vanehook and the existing Bellwake Privateers defend the fully authored but unused Fogchart Mooring and break a Sunvault chart-seizure line;
+- wire the scenario as a fifth `Frontier Claims` chapter after `rootgate-toll`, importing only bounded common resources and campaign flags while retaining Veilmourn-owned hero, spell, artifact, army, and rare-resource authority;
+- use only existing shipped terrain, towns, heroes, army groups, units, resources, artifacts, encounters, objectives, scripts, campaign/save/runtime systems, and production UI paths.
+
+Completion criteria:
+- the active content catalog exposes exactly twenty campaign- and skirmish-selectable scenarios, with the new scenario preserving exact Fogchart/Halo, Ruln/Bellwake Privateers, Veilmourn/Sunvault, deadline, objective, and authored-route identities;
+- a real session can launch in standalone and campaign modes, reach common and rare economy sources, resolve its authored encounters, capture the Sunvault registry front, reach victory and defeat authority, and survive save normalization/resume without synthetic rule shortcuts;
+- `Frontier Claims` unlocks chapter V only after exact Rootgate Toll victory plus its authored completion flag, imports bounded common resources/flags only, and transfers no Thornwake hero progression, spells, artifacts, or verdant grafts into Ruln's command;
+- active-scenario combat breadth, deadline, campaign/replay, economy-route/runway, strategic-AI, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Non-goals:
+- no new units, towns, heroes, spells, artifacts, resource-site types, battle rules, AI policy, economy coefficients, campaign schema, save version, Native RMG, or map-topology system changes;
+- no broad faction balance tuning, generic campaign/carryover redesign, cross-faction hero/spell/artifact/rare-resource transfer, generated-map support, visual/audio asset production, or full Veilmourn campaign claim;
 - no packaged chapter interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
 
 ## Progress Reconciliation

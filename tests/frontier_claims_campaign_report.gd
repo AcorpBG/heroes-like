@@ -11,10 +11,12 @@ const MIREFORD_ID := "mireford-skirmish"
 const OREVEIN_ID := "orevein-contract"
 const BELLWAKE_ID := "bellwake-wreck-claim"
 const ROOTGATE_ID := "rootgate-toll"
+const FOGCHART_ID := "fogchart-mooring"
 const MIREFORD_HERO_ID := "hero_thornwake_silsa_bramblehound"
 const OREVEIN_HERO_ID := "hero_brasshollow_marka_ironclause"
 const BELLWAKE_HERO_ID := "hero_veilmourn_ivara_blacktide"
 const ROOTGATE_HERO_ID := "hero_thornwake_tova_rootwright"
+const FOGCHART_HERO_ID := "hero_veilmourn_ruln_vanehook"
 const SAVE_SLOT := 2
 
 func _ready() -> void:
@@ -142,20 +144,62 @@ func _run() -> void:
 	rootgate_session.flags["charter_guard_broken"] = true
 	rootgate_session.flags["charter_bastion_reserve_broken"] = true
 	rootgate_session.flags["rootgate_toll_recorded"] = true
+	rootgate_session.flags["boiler_scrap_grafted"] = true
+	rootgate_session.overworld["resources"] = {
+		"gold": 5000,
+		"wood": 20,
+		"ore": 20,
+		"verdant_grafts": 10,
+	}
 	_mark_victory(rootgate_session, "Tova rooted the fourth frontier claim.")
-	var completed_profile := CampaignRulesScript.record_session_completion(after_bellwake, rootgate_session)
-	if not _assert_completion_and_replay(completed_profile, rootgate_session):
+	var after_rootgate := CampaignRulesScript.record_session_completion(after_bellwake, rootgate_session)
+	if not _assert_unlocked(after_rootgate, FOGCHART_ID):
+		return
+
+	var fogchart_baseline := ScenarioFactoryScript.create_session(
+		FOGCHART_ID, "normal", SessionStateStoreScript.LAUNCH_MODE_SKIRMISH
+	)
+	var fogchart_session: SessionStateStoreScript.SessionData = CampaignRulesScript.build_session(
+		after_rootgate, FOGCHART_ID, "normal", CAMPAIGN_ID
+	)
+	if not _assert_campaign_session(fogchart_session, FOGCHART_ID, FOGCHART_HERO_ID, "normal"):
+		return
+	if not _assert_cross_faction_import(
+		fogchart_session,
+		fogchart_baseline,
+		{"gold": 1000, "wood": 3, "ore": 3},
+		"carryover_rootgate_toll_recorded",
+		ROOTGATE_ID
+	):
+		return
+	if int(fogchart_session.overworld.get("resources", {}).get("verdant_grafts", 0)) != int(fogchart_baseline.overworld.get("resources", {}).get("verdant_grafts", 0)):
+		_fail("Rootgate verdant grafts leaked into the Veilmourn chapter.")
+		return
+	if String(fogchart_session.overworld.get("active_hero_id", "")) == ROOTGATE_HERO_ID:
+		_fail("Rootgate commander leaked into the Fogchart chapter.")
+		return
+	if not _assert_skirmish_isolation(after_rootgate, FOGCHART_ID):
+		return
+
+	fogchart_session.flags["fogchart_relay_pickets_broken"] = true
+	fogchart_session.flags["fogchart_mirror_lancers_broken"] = true
+	fogchart_session.flags["fogchart_claim_recorded"] = true
+	_mark_victory(fogchart_session, "Ruln drowned the fifth frontier claim.")
+	var completed_profile := CampaignRulesScript.record_session_completion(after_rootgate, fogchart_session)
+	if not _assert_completion_and_replay(completed_profile, fogchart_session):
 		return
 
 	print("%s %s" % [REPORT_ID, JSON.stringify({
 		"ok": true,
 		"campaign_id": CAMPAIGN_ID,
-		"chapter_ids": [MIREFORD_ID, OREVEIN_ID, BELLWAKE_ID, ROOTGATE_ID],
+		"chapter_ids": [MIREFORD_ID, OREVEIN_ID, BELLWAKE_ID, ROOTGATE_ID, FOGCHART_ID],
 		"campaign_count": CampaignRulesScript.campaign_ids().size(),
 		"save_resume": save_evidence,
 		"mireford_to_orevein_resources": {"gold": 1000, "wood": 3, "ore": 3, "verdant_grafts": 2},
 		"orevein_to_bellwake_resources": {"gold": 1200, "wood": 3, "ore": 3, "brass_scrip": 2},
 		"bellwake_to_rootgate_resources": {"gold": 1200, "wood": 3, "ore": 3, "memory_salt": 2},
+		"rootgate_to_fogchart_resources": {"gold": 1000, "wood": 3, "ore": 3},
+		"rootgate_rare_resource_transfer": false,
 		"cross_faction_hero_progression": false,
 		"cross_faction_spell_progression": false,
 		"cross_faction_artifact_progression": false,
@@ -177,10 +221,10 @@ func _assert_campaign_browser(profile: Dictionary) -> bool:
 		_fail("Frontier Claims did not start at Mireford.")
 		return false
 	var entries := CampaignRulesScript.build_campaign_chapter_entries(profile, CAMPAIGN_ID)
-	if entries.size() != 4:
-		_fail("Frontier Claims did not expose four chapters: %s" % JSON.stringify(entries))
+	if entries.size() != 5:
+		_fail("Frontier Claims did not expose five chapters: %s" % JSON.stringify(entries))
 		return false
-	if bool(entries[0].get("disabled", true)) or not bool(entries[1].get("disabled", false)) or not bool(entries[2].get("disabled", false)) or not bool(entries[3].get("disabled", false)):
+	if bool(entries[0].get("disabled", true)) or not bool(entries[1].get("disabled", false)) or not bool(entries[2].get("disabled", false)) or not bool(entries[3].get("disabled", false)) or not bool(entries[4].get("disabled", false)):
 		_fail("Initial Frontier Claims locks are wrong: %s" % JSON.stringify(entries))
 		return false
 	var action := CampaignRulesScript.build_start_action(profile, CAMPAIGN_ID, "hard")
@@ -294,13 +338,13 @@ func _assert_skirmish_isolation(profile: Dictionary, scenario_id: String) -> boo
 	return true
 
 func _assert_completion_and_replay(profile: Dictionary, final_session: SessionStateStoreScript.SessionData) -> bool:
-	for scenario_id in [MIREFORD_ID, OREVEIN_ID, BELLWAKE_ID, ROOTGATE_ID]:
+	for scenario_id in [MIREFORD_ID, OREVEIN_ID, BELLWAKE_ID, ROOTGATE_ID, FOGCHART_ID]:
 		var record := CampaignRulesScript.get_scenario_record(profile, CAMPAIGN_ID, scenario_id)
 		if String(record.get("status", "")) != "victory":
 			_fail("Campaign completion missed victory record for %s." % scenario_id)
 			return false
 	var start_action := CampaignRulesScript.build_start_action(profile, CAMPAIGN_ID)
-	if bool(start_action.get("disabled", true)) or String(start_action.get("scenario_id", "")) != ROOTGATE_ID or not String(start_action.get("label", "")).begins_with("Replay"):
+	if bool(start_action.get("disabled", true)) or String(start_action.get("scenario_id", "")) != FOGCHART_ID or not String(start_action.get("label", "")).begins_with("Replay"):
 		_fail("Completed campaign did not expose finale replay: %s" % JSON.stringify(start_action))
 		return false
 	var outcome_actions := CampaignRulesScript.build_outcome_actions(profile, final_session)
