@@ -6011,6 +6011,34 @@ Non-goals:
 - no broad faction balance tuning, generic campaign/carryover redesign, cross-faction hero/spell/artifact/rare-resource transfer, generated-map support, visual/audio asset production, or full Brasshollow campaign claim;
 - no packaged chapter interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
 
+## Selected Slice: Mireclaw Nightglass Ledger Reversal Chapter
+
+id: `content-mireclaw-nightglass-ledger-reversal-chapter-10184`
+
+Status: completed.
+
+Implementation boundary:
+- add one twenty-second active authored scenario that makes the sole never-player-owned authored town, Nightglass Redoubt, a real Mireclaw player front led by the unused Kessa Chainboom and Nightglass Dominion army;
+- wire the scenario as a seventh `Frontier Claims` chapter after `clauseworks-counterclaim`, importing only bounded common resources and campaign flags while retaining Mireclaw-owned hero, spell, artifact, army, and rare-resource authority;
+- use only existing shipped terrain, towns, heroes, army groups, units, resources, artifacts, encounters, objectives, scripts, campaign/save/runtime systems, and production UI paths.
+
+Completion criteria:
+- the active content catalog exposes exactly twenty-two campaign- and skirmish-selectable scenarios, with the new scenario preserving exact Nightglass/Clauseworks, Kessa/Nightglass Dominion, Mireclaw/Brasshollow, deadline, objective, and authored-route identities;
+- a real session can launch in standalone and campaign modes, reach common and rare economy sources, resolve its authored encounters, capture the Clauseworks counter-front, reach victory and defeat authority, and survive save normalization/resume without synthetic rule shortcuts;
+- `Frontier Claims` unlocks chapter VII only after exact Clauseworks victory plus its authored completion flag, imports bounded common resources/flags only, and transfers no Brasshollow hero progression, spells, artifacts, or brass scrip into Kessa's command;
+- active-scenario combat breadth, deadline, campaign/replay, economy-route/runway, strategic-AI, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Completion evidence:
+- `nightglass-ledger-reversal` is the exact twenty-second active scenario and seventh `Frontier Claims` chapter, making Nightglass Redoubt, Kessa Chainboom, and Nightglass Dominion live player-owned content through existing campaign/skirmish systems;
+- the focused owner proves standalone/campaign launch, live Mireclaw recruitment, three public battle entries, exact Day 13 victory/defeat authority, save/resume, common-only Clauseworks carryover, and no cross-faction hero/spell/artifact/brass-scrip transfer;
+- screened rosters pass the authoritative 22-scenario/71-encounter breadth matrix with no stalls or invalid rows and a clear tuning queue (`829808c9`), followed by campaign/deadline/replay/economy/AI/core/static/editor compatibility;
+- official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass; these are bounded export/startup results, not packaged chapter interaction or release certification.
+
+Non-goals:
+- no new units, towns, heroes, spells, artifacts, resource-site types, battle rules, AI policy, economy coefficients, campaign schema, save version, Native RMG, or map-topology system changes;
+- no broad faction balance tuning, generic campaign/carryover redesign, cross-faction hero/spell/artifact/rare-resource transfer, generated-map support, visual/audio asset production, or full Mireclaw campaign claim;
+- no packaged chapter interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:

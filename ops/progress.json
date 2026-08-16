@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Clauseworks Counterclaim is complete as the twenty-first active scenario and sixth Frontier Claims chapter. Focused standalone/campaign/save/battle/outcome authority, 68-encounter breadth with queue signature 829808c9, campaign/deadline/replay/economy/AI/core compatibility, repository/editor validation, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. Platform evidence is export/startup only; no packaged chapter interaction, native hardware, signing, whole-game, or release-readiness claim is made.",
+  "currentNotes": "Nightglass Ledger Reversal is complete as the twenty-second active scenario and seventh Frontier Claims chapter. Focused standalone/campaign, town recruitment, battle entry, objective, save/resume, bounded carryover, 22-scenario/71-encounter breadth, compatibility, static/editor, and bounded Linux/Windows export-startup gates pass. Broader release gaps remain.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-brasshollow-clauseworks-counterclaim-chapter-10184",
-  "currentSliceId": "content-brasshollow-clauseworks-counterclaim-chapter-10184",
-  "currentSliceNotes": "Completed one bounded shipped Brasshollow chapter using Clauseworks Depot, Oren Bellfounder, Orevein Exactors, and existing systems. Exact focused, breadth, campaign, compatibility, static/editor, Linux export/startup, and Windows/Wine startup evidence passed without broad completion claims.",
+  "currentSlice": "content-mireclaw-nightglass-ledger-reversal-chapter-10184",
+  "currentSliceId": "content-mireclaw-nightglass-ledger-reversal-chapter-10184",
+  "currentSliceNotes": "Completed with live Nightglass Redoubt/Kessa Chainboom/Nightglass Dominion player ownership, exact Clauseworks-to-Nightglass campaign carryover, screened encounter rosters, clear active breadth queue, full compatibility/static/editor gates, and bounded Linux/Windows export-startup evidence. No packaged chapter interaction or release-readiness claim is made.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Brasshollow Clauseworks Counterclaim Chapter",
-  "currentSliceUpdatedAt": "2026-08-16T11:45:57Z",
+  "currentSliceTitle": "Mireclaw Nightglass Ledger Reversal Chapter",
+  "currentSliceUpdatedAt": "2026-08-16T12:33:13Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -86463,6 +86463,54 @@
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
       "blockedReason": null,
       "completedAt": "2026-08-16T11:45:57Z"
+    },
+    {
+      "id": "content-mireclaw-nightglass-ledger-reversal-chapter-10184",
+      "title": "Mireclaw Nightglass Ledger Reversal Chapter",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Add one bounded shipped Mireclaw campaign/skirmish front that makes Nightglass Redoubt a player town with the authored but unused Kessa Chainboom and Nightglass Dominion army through existing systems.",
+      "implementationTargets": [
+        "content/scenarios.json",
+        "content/campaigns.json",
+        "tests/mireclaw_nightglass_ledger_reversal_chapter_report.gd",
+        "tests/mireclaw_nightglass_ledger_reversal_chapter_report.tscn",
+        "tests/frontier_claims_campaign_report.gd",
+        "tests/brasshollow_clauseworks_counterclaim_chapter_report.gd",
+        "tests/veilmourn_fogchart_mooring_chapter_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "The active content catalog exposes exactly twenty-two campaign- and skirmish-selectable scenarios, and Nightglass Ledger Reversal keeps exact Nightglass/Clauseworks, Kessa/Nightglass Dominion, Mireclaw/Brasshollow, deadline, objective, and authored-route identities",
+        "Real standalone and campaign sessions launch; common and rare economy sources are reachable; authored encounters, Clauseworks counter-front capture, victory and defeat authority, and save normalization/resume pass without rule shortcuts",
+        "Frontier Claims chapter VII unlocks only after exact Clauseworks victory plus its authored completion flag, imports bounded common resources and flags only, and transfers no cross-faction hero progression, spells, artifacts, or brass scrip",
+        "Active-scenario combat breadth, deadline, campaign/replay, economy-route/runway, strategic-AI, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "new units, towns, heroes, spells, artifacts, resource-site types, battle rules, AI policy, economy coefficients, campaign schema, save version, Native RMG, or map-topology system changes",
+        "broad faction balance tuning, generic campaign/carryover redesign, cross-faction hero/spell/artifact/rare-resource transfer, generated-map support, visual/audio asset production, or a full Mireclaw campaign claim",
+        "packaged chapter interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "e9a31239234babfa2acf4cabcbfec0aa91be3976",
+        "active_scenario_count": 21,
+        "campaign_count": 6,
+        "authored_town_count": 15,
+        "never_player_owned_town_ids": ["town_nightglass_redoubt"],
+        "unused_player_hero_id": "hero_mireclaw_kessa_chainboom",
+        "unused_player_army_id": "army_nightglass_dominion"
+      },
+      "createdAt": "2026-08-16T11:51:36Z",
+      "updatedAt": "2026-08-16T12:33:13Z",
+      "startedAt": "2026-08-16T11:51:36Z",
+      "notes": "Completed on baseline HEAD e9a31239. Nightglass Ledger Reversal ships as the twenty-second active scenario and seventh Frontier Claims chapter, making Nightglass Redoubt, Kessa Chainboom, and Nightglass Dominion live player-owned content against the Clauseworks counter-front. Focused `/tmp/heroes-nightglass-focused-final.8Z0nV7` passes standalone/campaign launch, live Mireclaw recruitment, three public battle payloads, Day 13 outcome authority, save/resume, exact common-only Clauseworks carryover, and no Brasshollow hero/spell/artifact/brass-scrip transfer. Screened rosters are ledger 7/5/2, auditors 9/7/3, exactors 8/6/4; authoritative breadth `/tmp/heroes-nightglass-active-breadth-rerun.jUGnem` passes 22 scenarios/71 encounters with stalls0, invalid0, queue clear, signature829808c9. Frontier campaign, deadline/replay, economy-route, player and AI start economy/runway, multi-scenario AI recruitment/delivery, core, repository/editor, official Linux export/headless startup and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. No packaged chapter interaction, controller, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claim is made.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
+      "blockedReason": null,
+      "completedAt": "2026-08-16T12:33:13Z"
     }
   ],
   "project": "heroes-like",
@@ -86472,7 +86520,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Clauseworks Counterclaim is complete. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
+  "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain. The game is not release-ready.",
   "remainingWork": "Select the next tracker-approved release-readiness implementation slice without claiming whole-game or release readiness.",
   "reportOnlyEvidence": [
     {
