@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The route-expiry feedback slice is completed. A real Shell end turn captures exact final-day player response candidates before rule mutation, then after successful autosave and unresolved routing validates the same visible site, preserved response provenance, inactive response, and absent transit edge before reusing the shipped route-closed cue. Enemy seizure closure retains priority. Focused 1280x720/1920x1080, silence/dedupe/save, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged expiry interaction/listening, hardware certification, signing/publication, whole-game, and release readiness remain unclaimed.",
+  "currentNotes": "The Town route-response dispatch slice is complete. The public Town action dispatcher now publishes one unique Town-surface cue only after the authoritative site response, cache invalidation, resolution guard, and refreshed stage; focused, compatibility, static/editor, and bounded Linux/Windows startup gates pass. Broader release gaps remain.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-route-expiry-feedback-10184",
-  "currentSliceId": "presentation-overworld-route-expiry-feedback-10184",
-  "currentSliceNotes": "Completed with exact pre-turn final-day capture, post-autosave live validation, preserved response provenance, enemy-closure priority, focused authority proof, compatibility, static/editor, and bounded Linux/Windows export-startup validation.",
+  "currentSlice": "presentation-town-route-response-dispatch-feedback-10184",
+  "currentSliceId": "presentation-town-route-response-dispatch-feedback-10184",
+  "currentSliceNotes": "Completed with original imported alpha art, deterministic stereo audio, live route provenance, six focused viewport/mode rows, compatibility/static/editor proof, and bounded Linux/Windows export/startup evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Route-Expiry Feedback",
-  "currentSliceUpdatedAt": "2026-08-15T23:50:16Z",
+  "currentSliceTitle": "Town Route-Response Dispatch Feedback",
+  "currentSliceUpdatedAt": "2026-08-16T00:17:49Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -85669,6 +85669,58 @@
         "windowsExportFreshWineStartupPassed": true
       },
       "blockedReason": null
+    },
+    {
+      "id": "presentation-town-route-response-dispatch-feedback-10184",
+      "title": "Town Route-Response Dispatch Feedback",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Present a successful live Town strategic response order through the existing compact TownStage action system without leaking the Overworld cue surface.",
+      "implementationTargets": [
+        "art/town/source/route_response_vfx_source.png",
+        "art/town/runtime/vfx/route_response.png",
+        "art/audio/runtime/presentation/town_route_response.wav",
+        "content/animation_event_cues.json",
+        "content/town_vfx_manifest.json",
+        "content/presentation_sfx_manifest.json",
+        "tools/generate_presentation_sfx_assets.py",
+        "scripts/autoload/PresentationAudio.gd",
+        "scenes/town/TownShell.gd",
+        "scenes/town/TownStageView.gd",
+        "tests/town_building_complete_vfx_asset_runtime_report.gd",
+        "tests/town_recruitment_vfx_asset_runtime_report.gd",
+        "tests/town_route_response_dispatch_feedback_report.gd",
+        "tests/town_route_response_dispatch_feedback_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Live TownShell 1280x720/1920x1080 site_response orders activate the exact route and publish one imported Town dispatch VFX/audio cue",
+        "Failed, stale, malformed, non-site, refresh, and duplicate controls remain silent; reduced-motion and missing-asset fallbacks are exact",
+        "TownRules/OverworldRules mutation, response cost/duration/transit, recaps, focus/input, session/save, build/recruit presentations, and Overworld route-open cue remain exact",
+        "Focused, Town action, route, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "response cost/duration/transit/pathfinding, Town economy, enemy AI, fog, save/schema, Native RMG, or map topology changes",
+        "Overworld cue remapping, layout redesign, particles, shaders, spatial audio, haptics, or final mastering",
+        "packaged interaction/listening, hardware certification, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "51d32b989b8f1c953de80ecba709fb5813b135c1",
+        "town_response_action_present": true,
+        "town_response_presentation_present": false,
+        "town_presenter_supported_events": ["town_building_built", "town_units_recruited"]
+      },
+      "createdAt": "2026-08-15T23:54:35Z",
+      "startedAt": "2026-08-15T23:54:35Z",
+      "updatedAt": "2026-08-16T00:17:49Z",
+      "completedAt": "2026-08-16T00:17:49Z",
+      "notes": "Implemented from the exact live gap. Built-in image generation produced the original 1254x1254 RGBA source, curated to a 512x512 runtime VFX; deterministic generation produced a distinct 380 ms stereo cue. The public Town dispatcher now verifies exact live node/Town-origin/same-day/active response provenance after refresh. Focused artifact /tmp/heroes-town-route-response-focused-rerun.L9PrJT passes six 1280/1920 normal, missing-asset, and reduced-motion rows with whole session parity, one imported audio record, and silent repeat rejection. Compatibility artifact /tmp/heroes-town-route-compat.h2q84a passes Town VFX/cue, animation catalog, broad Town/Battle visual, and core owners. Static/editor validation passes. Official Linux and Windows reports are ok:true; claims remain export/headless startup and export/fresh-Wine Boot/MainMenu/native-DLL startup only.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Packaged Town interaction/listening, certification, signing/publication, broader release gaps, and release readiness remain unclaimed.",
+      "blockedReason": null
     }
   ],
   "project": "heroes-like",
@@ -85679,7 +85731,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
-  "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, signing/publication, native Windows certification, and unrecovered Native RMG parity gaps remain.",
+  "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader release gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [

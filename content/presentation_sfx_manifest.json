@@ -121,6 +121,12 @@
       "duration_msec": 360,
       "volume_db": -13.0,
       "role": "town_recruitment_muster"
+    },
+    "audio_placeholder_town_route_response": {
+      "path": "res://art/audio/runtime/presentation/town_route_response.wav",
+      "duration_msec": 380,
+      "volume_db": -13.0,
+      "role": "town_route_response_dispatched"
     }
   }
 }

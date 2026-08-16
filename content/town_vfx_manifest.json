@@ -12,6 +12,12 @@
       "texture_path": "res://art/town/runtime/vfx/recruit_muster.png",
       "render_mode": "town_recruit_muster",
       "scale": 1.0
+    },
+    "vfx_placeholder_town_route_response": {
+      "event_id": "town_route_response_ordered",
+      "texture_path": "res://art/town/runtime/vfx/route_response.png",
+      "render_mode": "town_route_response_dispatch",
+      "scale": 1.0
     }
   }
 }

@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `presentation-town-route-response-dispatch-feedback-10184`. A successful live Town-screen `site_response:<placement>` order now publishes one compact Town-specific strategic-dispatch presentation through the existing TownStage action presenter, with an original imported alpha VFX, deterministic 380 ms stereo sound, and exact reduced-motion/missing-asset fallbacks. The presenter verifies the live route node, Town origin, same-day provenance, and active response after the authoritative mutation and refreshed stage; malformed and repeated unavailable orders remain silent. Focused six-row 1280x720/1920x1080 proof plus Town VFX/cue, animation catalog, broad Town/Battle visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Town interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `presentation-town-route-response-dispatch-feedback-10184`
 - Completed implementation slice: `presentation-overworld-route-expiry-feedback-10184`. A successful end turn now captures a player response route on its exact final active day, validates the same visible site after rule mutation and autosave, and publishes one `overworld_route_closed` cue only when the day transition naturally deactivates its transit edge. The route keeps player control and its persisted response provenance; enemy seizure closure retains priority, and non-final, already-expired, malformed, refresh, and duplicate controls stay silent. Focused 1280x720/1920x1080 proof plus enemy-closure/open-route, Rope Lift, shared cue, accessibility, visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged expiry interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `presentation-overworld-route-expiry-feedback-10184`
 - Completed implementation slice: `presentation-overworld-enemy-route-closure-feedback-10184`. A real enemy resource seizure now adds the exact compact `route_closed` reason only when it interrupts a still-active player response route, and the successful live end-turn/autosave path publishes one authored `overworld_route_closed` cue at the visible seized site. The cue uses an original imported alpha VFX, deterministic 440 ms stereo sound, static reduced-motion icon, and distinct missing-asset gate fallback. Focused 1280x720/1920x1080 live enemy-turn proof preserves the exact `ai_site_seized` event, controller transfer, response clear, transit edge 1->0, save/session authority, and duplicate silence; inactive-route control, Rope Lift, shared cue/VFX, accessibility, visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Natural expiry, Town-screen response presentation, packaged interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -5638,6 +5640,32 @@ Non-goals:
 - no response duration/cost/provenance clearing, transit/pathfinding, enemy AI/event, fog, save/schema, content, Native RMG, animation-catalog, VFX, audio-asset, or map-topology changes;
 - no Town-screen expiry presentation, multi-expiry carousel, hover/ambient loops, layout, particles, shaders, spatial audio, haptics, or final mastering;
 - no packaged expiry interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+## Selected Slice: Town Route-Response Dispatch Feedback
+
+id: `presentation-town-route-response-dispatch-feedback-10184`
+
+Status: completed.
+
+Implementation boundary:
+- after the real Town response action succeeds, validate the exact `site_response:<placement>` action and `site_response` recap, then publish one new Town-surface queue-resolved/nonblocking presentation through TownStageView;
+- add one original alpha VFX and one deterministic stereo sound with distinct reduced-motion and missing-asset procedural fallbacks;
+- preserve TownRules/OverworldRules response mutation, cost/duration/transit, recaps, focus/input, session/save, existing build/recruit presentations, and the separate Overworld route-open cue.
+
+Completion criteria:
+- live TownShell 1280x720/1920x1080 response orders activate the exact route and present one imported Town dispatch VFX/audio cue;
+- failed, stale, malformed, non-site, refresh, and duplicate controls remain silent; reduced-motion and missing-asset fallbacks are exact;
+- focused Town response plus Town action, route, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Non-goals:
+- no response cost/duration/transit/pathfinding, Town economy, enemy AI, fog, save/schema, Native RMG, or map-topology changes;
+- no Overworld cue remap, layout redesign, particles, shaders, spatial audio, haptics, or final mastering;
+- no packaged interaction/listening, hardware certification, signing/publication, whole-game, or release-readiness claim.
+
+Validated result:
+- the public Town action dispatcher now emits the unique Town route-response cue only after the exact core action, cache invalidation, resolution guard, and refreshed live stage;
+- six focused rows cover 1280x720 and 1920x1080 in normal imported, missing-asset procedural, and reduced-motion static modes with exact core-control session parity, active Town provenance, one imported WAV cue, and silent repeat rejection;
+- both prior Town VFX reports, both Town cue reports, the animation catalog, broad Town/Battle visual smoke, core systems, repository/editor checks, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass.
 
 ## Progress Reconciliation
 

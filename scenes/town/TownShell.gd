@@ -312,6 +312,7 @@ func _on_response_action_pressed(action_id: String) -> void:
 	if _handle_session_resolution():
 		return
 	_refresh()
+	_record_town_action_presentation("response", action_id, action, result, before)
 
 func _on_study_action_pressed(action_id: String) -> void:
 	var full_action_id := "learn_spell:%s" % action_id
@@ -4428,13 +4429,13 @@ func _record_town_action_presentation(
 	result: Dictionary,
 	before: Dictionary
 ) -> void:
-	if lane not in ["build", "recruit"] or not bool(result.get("ok", false)):
+	if lane not in ["build", "recruit", "response"] or not bool(result.get("ok", false)):
 		return
 	if _town_stage_view == null or not _town_stage_view.has_method("present_town_action"):
 		return
 	var after := TownRules.town_action_consequence_signature(_session)
-	var event_id := "town_units_recruited" if lane == "recruit" else "town_building_built"
-	var subject_kind := "unit_roster" if lane == "recruit" else "building"
+	var event_id := "town_route_response_ordered" if lane == "response" else ("town_units_recruited" if lane == "recruit" else "town_building_built")
+	var subject_kind := "map_object" if lane == "response" else ("unit_roster" if lane == "recruit" else "building")
 	var policy := AnimationCueCatalog.cue_playback_policy_for_event(
 		event_id,
 		SettingsService.animation_preferences()
@@ -4444,7 +4445,7 @@ func _record_town_action_presentation(
 		or String(policy.get("surface", "")) != "town"
 		or String(policy.get("subject_kind", "")) != subject_kind
 		or String(policy.get("selected_playback_policy", "")) != "queue_resolved"
-		or lane == "recruit" and String(policy.get("selected_blocking_policy", "")) != "nonblocking"
+		or lane in ["recruit", "response"] and String(policy.get("selected_blocking_policy", "")) != "nonblocking"
 		or lane == "build" and String(policy.get("selected_blocking_policy", "")) not in ["input_blocking_timeout", "nonblocking_reduced_motion", "nonblocking_fast_resolve"]
 	):
 		return
@@ -4457,7 +4458,27 @@ func _record_town_action_presentation(
 		"result_message": String(result.get("message", "")),
 		"policy": policy.duplicate(true),
 	}
-	if lane == "recruit":
+	if lane == "response":
+		var placement_id := action_id.trim_prefix("site_response:")
+		var recap: Dictionary = result.get("post_action_recap", {}) if result.get("post_action_recap", {}) is Dictionary else {}
+		var node_result := OverworldRules._find_resource_node_by_placement(_session, placement_id)
+		var node: Dictionary = node_result.get("node", {}) if node_result.get("node", {}) is Dictionary else {}
+		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+		var response_state := OverworldRules._resource_site_response_state(_session, node, site)
+		if (
+			placement_id == ""
+			or placement_id == action_id
+			or String(recap.get("kind", "")) != "site_response"
+			or int(node_result.get("index", -1)) < 0
+			or String(node.get("placement_id", "")) != placement_id
+			or String(node.get("response_origin", "")) != "town"
+			or int(node.get("response_last_day", -1)) != _session.day
+			or not bool(response_state.get("active", false))
+		):
+			return
+		presentation["response_placement_id"] = placement_id
+		presentation["response_label"] = String(action.get("label", placement_id))
+	elif lane == "recruit":
 		var unit_id := action_id.trim_prefix("recruit:")
 		var before_army: Dictionary = before.get("army_counts", {}) if before.get("army_counts", {}) is Dictionary else {}
 		var after_army: Dictionary = after.get("army_counts", {}) if after.get("army_counts", {}) is Dictionary else {}

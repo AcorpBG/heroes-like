@@ -4,6 +4,7 @@ const TownStageViewScript = preload("res://scenes/town/TownStageView.gd")
 const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]
 const TEXTURE_PATH := "res://art/town/runtime/vfx/build_complete.png"
 const RECRUIT_TEXTURE_PATH := "res://art/town/runtime/vfx/recruit_muster.png"
+const ROUTE_RESPONSE_TEXTURE_PATH := "res://art/town/runtime/vfx/route_response.png"
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -146,9 +147,9 @@ func _summary_exact(summary: Dictionary) -> bool:
 	return String(summary.get("manifest_path", "")) == "res://content/town_vfx_manifest.json" \
 		and bool(summary.get("manifest_loaded", false)) \
 		and String(summary.get("schema_id", "")) == "town_vfx_manifest_v1" \
-		and summary.get("mapped_cue_ids", []) == ["vfx_placeholder_build_complete", "vfx_placeholder_recruit_muster"] \
-		and summary.get("texture_paths", []) == [TEXTURE_PATH, RECRUIT_TEXTURE_PATH] \
-		and summary.get("loaded_texture_paths", []) == [TEXTURE_PATH, RECRUIT_TEXTURE_PATH] \
+		and summary.get("mapped_cue_ids", []) == ["vfx_placeholder_build_complete", "vfx_placeholder_recruit_muster", "vfx_placeholder_town_route_response"] \
+		and summary.get("texture_paths", []) == [TEXTURE_PATH, RECRUIT_TEXTURE_PATH, ROUTE_RESPONSE_TEXTURE_PATH] \
+		and summary.get("loaded_texture_paths", []) == [TEXTURE_PATH, RECRUIT_TEXTURE_PATH, ROUTE_RESPONSE_TEXTURE_PATH] \
 		and summary.get("missing_texture_paths", []) == []
 
 func _first_player_town(session) -> Dictionary:

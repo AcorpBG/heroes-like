@@ -216,6 +216,11 @@ TOWN_RECRUITMENT_VFX_SOURCE_PATH = ROOT / "art" / "town" / "source" / "recruit_m
 TOWN_RECRUITMENT_VFX_RUNTIME_PATH = ROOT / "art" / "town" / "runtime" / "vfx" / "recruit_muster.png"
 TOWN_RECRUITMENT_VFX_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_recruitment_vfx_asset_runtime_report.gd"
 TOWN_RECRUITMENT_VFX_REPORT_SCENE_PATH = ROOT / "tests" / "town_recruitment_vfx_asset_runtime_report.tscn"
+TOWN_ROUTE_RESPONSE_VFX_SOURCE_PATH = ROOT / "art" / "town" / "source" / "route_response_vfx_source.png"
+TOWN_ROUTE_RESPONSE_VFX_RUNTIME_PATH = ROOT / "art" / "town" / "runtime" / "vfx" / "route_response.png"
+TOWN_ROUTE_RESPONSE_AUDIO_RUNTIME_PATH = ROOT / "art" / "audio" / "runtime" / "presentation" / "town_route_response.wav"
+TOWN_ROUTE_RESPONSE_FEEDBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_route_response_dispatch_feedback_report.gd"
+TOWN_ROUTE_RESPONSE_FEEDBACK_REPORT_SCENE_PATH = ROOT / "tests" / "town_route_response_dispatch_feedback_report.tscn"
 TOWN_ENTITY_CACHE_ACTIVE_REFRESH_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "town_entity_cache_active_refresh_regression.gd"
 TOWN_ENTITY_CACHE_ACTIVE_REFRESH_REGRESSION_SCENE_PATH = ROOT / "tests" / "town_entity_cache_active_refresh_regression.tscn"
 GENERATED_LARGE_TOWN_EXPLICIT_SAVE_SURFACE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "generated_large_town_explicit_save_surface_regression.gd"
@@ -20762,8 +20767,14 @@ def validate_town_building_complete_vfx_assets(errors: list[str]) -> None:
                 "render_mode": "town_recruit_muster",
                 "scale": 1.0,
             },
+            "vfx_placeholder_town_route_response": {
+                "event_id": "town_route_response_ordered",
+                "texture_path": "res://art/town/runtime/vfx/route_response.png",
+                "render_mode": "town_route_response_dispatch",
+                "scale": 1.0,
+            },
         },
-    }, errors, "Town VFX manifest must map only the exact building-complete and recruitment cues/events/textures")
+    }, errors, "Town VFX manifest must map only the exact building-complete, recruitment, and route-response cues/events/textures")
     ensure(png_size(TOWN_BUILDING_COMPLETE_VFX_SOURCE_PATH) == (1254, 1254), errors, "Town building-complete source must retain its exact square source image")
     ensure(png_size(TOWN_BUILDING_COMPLETE_VFX_RUNTIME_PATH) == (512, 512), errors, "Town building-complete runtime texture must be 512x512")
     header = TOWN_BUILDING_COMPLETE_VFX_RUNTIME_PATH.read_bytes()[:26]
@@ -20860,7 +20871,7 @@ def validate_town_recruitment_vfx_assets(errors: list[str]) -> None:
         "render_mode": "town_recruit_muster",
         "scale": 1.0,
     }, errors, "Town VFX manifest must map the exact recruitment cue/event/texture")
-    ensure(set(cues) == {"vfx_placeholder_build_complete", "vfx_placeholder_recruit_muster"}, errors, "Town VFX manifest must not remap any other cue")
+    ensure(set(cues) == {"vfx_placeholder_build_complete", "vfx_placeholder_recruit_muster", "vfx_placeholder_town_route_response"}, errors, "Town VFX manifest must not remap any other cue")
     ensure(png_size(TOWN_RECRUITMENT_VFX_SOURCE_PATH) == (1254, 1254), errors, "Town recruitment VFX source must retain its exact square source image")
     ensure(png_size(TOWN_RECRUITMENT_VFX_RUNTIME_PATH) == (512, 512), errors, "Town recruitment runtime texture must be 512x512")
     header = TOWN_RECRUITMENT_VFX_RUNTIME_PATH.read_bytes()[:26]
@@ -20932,6 +20943,177 @@ def validate_town_recruitment_vfx_assets(errors: list[str]) -> None:
         ensure(forbidden not in report_text, errors, f"Town recruitment focused owner must not bypass production rendering: {forbidden}")
 
 
+def validate_town_route_response_dispatch_feedback(errors: list[str]) -> None:
+    required_paths = (
+        TOWN_SCRIPT_PATH,
+        TOWN_STAGE_SCRIPT_PATH,
+        TOWN_VFX_MANIFEST_PATH,
+        TOWN_ROUTE_RESPONSE_VFX_SOURCE_PATH,
+        TOWN_ROUTE_RESPONSE_VFX_RUNTIME_PATH,
+        TOWN_ROUTE_RESPONSE_AUDIO_RUNTIME_PATH,
+        TOWN_ROUTE_RESPONSE_FEEDBACK_REPORT_SCRIPT_PATH,
+        TOWN_ROUTE_RESPONSE_FEEDBACK_REPORT_SCENE_PATH,
+        ANIMATION_EVENT_CUES_PATH,
+        PRESENTATION_SFX_MANIFEST_PATH,
+        PRESENTATION_SFX_GENERATOR_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Town route-response dispatch feedback owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    town_vfx = load_json(TOWN_VFX_MANIFEST_PATH)
+    town_vfx_cues = town_vfx.get("cues", {}) if isinstance(town_vfx, dict) else {}
+    ensure(town_vfx_cues.get("vfx_placeholder_town_route_response") == {
+        "event_id": "town_route_response_ordered",
+        "texture_path": "res://art/town/runtime/vfx/route_response.png",
+        "render_mode": "town_route_response_dispatch",
+        "scale": 1.0,
+    }, errors, "Town route-response VFX manifest entry drifted")
+    ensure(png_size(TOWN_ROUTE_RESPONSE_VFX_SOURCE_PATH) == (1254, 1254), errors, "Town route-response source image must retain the generated 1254x1254 source")
+    ensure(png_size(TOWN_ROUTE_RESPONSE_VFX_RUNTIME_PATH) == (512, 512), errors, "Town route-response runtime image must be 512x512")
+    for path, label in ((TOWN_ROUTE_RESPONSE_VFX_SOURCE_PATH, "source"), (TOWN_ROUTE_RESPONSE_VFX_RUNTIME_PATH, "runtime")):
+        header = path.read_bytes()[:26]
+        ensure(len(header) >= 26 and header[25] in {4, 6}, errors, f"Town route-response {label} image must retain a PNG alpha channel")
+
+    animation_rows = load_json(ANIMATION_EVENT_CUES_PATH).get("entries", [])
+    route_rows = [row for row in animation_rows if isinstance(row, dict) and row.get("event_id") == "town_route_response_ordered"]
+    ensure(route_rows == [{
+        "event_id": "town_route_response_ordered",
+        "cue_id": "cue_town_route_response_ordered",
+        "surface": "town",
+        "subject_kind": "map_object",
+        "animation_state_family": "route-response",
+        "animation_state": "dispatch_confirmed",
+        "playback_policy": "queue_resolved",
+        "blocking_policy": "nonblocking",
+        "skippable": True,
+        "vfx_cue_ids": ["vfx_placeholder_town_route_response"],
+        "audio_cue_ids": ["audio_placeholder_town_route_response"],
+        "fallbacks": {"reduced_motion_tag": "route_dispatch_badge", "fast_mode_tag": "route_dispatch_snap"},
+        "validation_tags": ["town", "route-response", "resolved_event"],
+        "producer_refs": ["TownShell._on_response_action_pressed", "OverworldRules._issue_resource_site_response"],
+    }], errors, "Town route-response animation event must remain a unique exact Town-owned nonblocking dispatch cue")
+
+    audio_cues = load_json(PRESENTATION_SFX_MANIFEST_PATH).get("cues", {})
+    ensure(audio_cues.get("audio_placeholder_town_route_response") == {
+        "path": "res://art/audio/runtime/presentation/town_route_response.wav",
+        "duration_msec": 380,
+        "volume_db": -13.0,
+        "role": "town_route_response_dispatched",
+    }, errors, "Town route-response audio manifest entry drifted")
+    with wave.open(str(TOWN_ROUTE_RESPONSE_AUDIO_RUNTIME_PATH), "rb") as wav_file:
+        ensure(wav_file.getnchannels() == 2, errors, "Town route-response audio must be stereo")
+        ensure(wav_file.getsampwidth() == 2, errors, "Town route-response audio must use 16-bit PCM")
+        ensure(wav_file.getframerate() == 44100, errors, "Town route-response audio must use 44.1 kHz")
+        ensure(wav_file.getnframes() == 16758, errors, "Town route-response audio must remain exactly 380ms")
+    generator_text = PRESENTATION_SFX_GENERATOR_PATH.read_text(encoding="utf-8")
+    for token in ('"audio_placeholder_town_route_response"', '"kind": "dispatch_signal"', 'if kind == "dispatch_signal":'):
+        ensure(token in generator_text, errors, f"Town route-response deterministic audio generator is missing: {token}")
+    audio_text = PRESENTATION_AUDIO_PATH.read_text(encoding="utf-8")
+    ensure('"audio_placeholder_town_route_response": {"frequency": 330.0, "duration": 0.38, "gain": 0.11}' in audio_text, errors, "Town route-response generated audio fallback drifted")
+
+    shell_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
+    response_handler = re.search(r"func _on_response_action_pressed\(action_id: String\) -> void:\n(?P<body>.*?)(?=\nfunc )", shell_text, re.DOTALL)
+    ensure(response_handler is not None, errors, "Town route-response presenter is missing the public response handler")
+    if response_handler is not None:
+        body = response_handler.group("body")
+        order = [
+            body.find("TownRules.perform_response_action(_session, action_id)"),
+            body.find('_record_town_action_result("response", action_id, action, result, before)'),
+            body.find('_invalidate_active_town_entity_cache("response", ["town", "economy", "active_hero"])'),
+            body.find("if _handle_session_resolution():"),
+            body.find("\t_refresh()"),
+            body.find('_record_town_action_presentation("response", action_id, action, result, before)'),
+        ]
+        ensure(all(index >= 0 for index in order) and order == sorted(order), errors, "Town route-response dispatch must publish only after the authoritative action, cache invalidation, resolution guard, and refreshed stage")
+        ensure(body.count('_record_town_action_presentation("response", action_id, action, result, before)') == 1, errors, "Town response handler must publish exactly one presentation")
+
+    presentation = re.search(r"func _record_town_action_presentation\(.*?\n(?P<body>.*?)(?=\nfunc )", shell_text, re.DOTALL)
+    ensure(presentation is not None, errors, "Town route-response presentation materializer is missing")
+    if presentation is not None:
+        body = presentation.group("body")
+        for token in (
+            'if lane not in ["build", "recruit", "response"] or not bool(result.get("ok", false)):',
+            'var event_id := "town_route_response_ordered" if lane == "response" else ("town_units_recruited" if lane == "recruit" else "town_building_built")',
+            'var subject_kind := "map_object" if lane == "response" else ("unit_roster" if lane == "recruit" else "building")',
+            'or lane in ["recruit", "response"] and String(policy.get("selected_blocking_policy", "")) != "nonblocking"',
+            'var placement_id := action_id.trim_prefix("site_response:")',
+            'OverworldRules._find_resource_node_by_placement(_session, placement_id)',
+            'OverworldRules._resource_site_response_state(_session, node, site)',
+            'String(node.get("response_origin", "")) != "town"',
+            'int(node.get("response_last_day", -1)) != _session.day',
+            'not bool(response_state.get("active", false))',
+            'presentation["response_placement_id"] = placement_id',
+            'presentation["response_label"] = String(action.get("label", placement_id))',
+        ):
+            ensure(token in body, errors, f"Town route-response presentation is missing fail-closed provenance: {token}")
+        ensure('recap.get("placement_id"' not in body, errors, "Town route-response presentation must not invent a placement field in the compact recap schema")
+
+    stage_text = TOWN_STAGE_SCRIPT_PATH.read_text(encoding="utf-8")
+    for token in (
+        'event_id not in ["town_units_recruited", "town_building_built", "town_route_response_ordered"]',
+        'event_id == "town_route_response_ordered" and String(presentation.get("response_placement_id", "")) == ""',
+        'var expected_cue_id := "cue_town_route_response_ordered" if event_id == "town_route_response_ordered" else',
+        'var expected_subject_kind := "map_object" if event_id == "town_route_response_ordered" else',
+        'event_id in ["town_units_recruited", "town_route_response_ordered"] and selected_blocking_policy != "nonblocking"',
+        'draw_entries = ["route_dispatch_badge"] if reduced_motion else ["route_dispatch_art", "route_dispatch_badge"]',
+        '"response_placement_id": String(_town_action_presentation.get("response_placement_id", ""))',
+        '"response_label": String(_town_action_presentation.get("response_label", ""))',
+        'func _draw_town_route_response_presentation(badge_rect: Rect2, reduced_motion: bool) -> void:',
+        '_draw_text("ROUTE DISPATCHED"',
+        'func _town_route_response_vfx_asset_state() -> Dictionary:',
+        'cue_id == "vfx_placeholder_town_route_response"',
+        'String(spec.get("render_mode", "")) == "town_route_response_dispatch"',
+    ):
+        ensure(token in stage_text, errors, f"TownStageView is missing route-response playback ownership: {token}")
+    route_draw = re.search(r"func _draw_town_route_response_presentation\(.*?\n(?P<body>.*?)(?=\nfunc )", stage_text, re.DOTALL)
+    route_state = re.search(r"func _town_route_response_vfx_asset_state\(\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc )", stage_text, re.DOTALL)
+    for block, label in ((route_draw.group("body") if route_draw else "", "draw"), (route_state.group("body") if route_state else "", "resolver")):
+        for forbidden in ("SessionState", "SaveService", "TownRules", "OverworldRules", "AppRouter", "await ", "create_timer", "create_tween"):
+            ensure(forbidden not in block, errors, f"Town route-response {label} must remain view-only and frame-owned: {forbidden}")
+
+    scene_text = TOWN_ROUTE_RESPONSE_FEEDBACK_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure_scene_nodes(scene_text, errors, "town_route_response_dispatch_feedback_report.tscn", [("TownRouteResponseDispatchFeedbackReport", "Node")])
+    report_text = TOWN_ROUTE_RESPONSE_FEEDBACK_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for token in (
+        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        '{"id": "normal", "reduced_motion": false, "missing_asset": false}',
+        '{"id": "missing_asset", "reduced_motion": false, "missing_asset": true}',
+        '{"id": "reduced_motion", "reduced_motion": true, "missing_asset": false}',
+        '_seed_route_response_fixture(authored_session, authored_town)',
+        '"placement_id": "town_route_response_dispatch_fixture"',
+        '"site_id": "site_brightwood_sawmill"',
+        '"collected_by_faction_id": "player"',
+        'stage.present_town_action({"event_id": "town_route_response_ordered"})',
+        'var control_result: Dictionary = TownRules.perform_response_action(control, action_id)',
+        'var public_result: Dictionary = shell.validation_perform_town_action(action_id)',
+        'live_after == control.to_dict()',
+        'String(live_node.get("response_origin", "")) == "town"',
+        'int(live_node.get("response_last_day", -1)) == live_session.day',
+        'String(active.get("event_id", "")) == "town_route_response_ordered"',
+        'String(active.get("cue_id", "")) == "cue_town_route_response_ordered"',
+        'String(active.get("response_placement_id", "")) == placement_id',
+        'String(audio_record.get("cue_id", "")) == "audio_placeholder_town_route_response"',
+        'String(audio_record.get("playback_source", "")) == "imported_wav"',
+        'var repeat_result: Dictionary = shell.validation_perform_town_action(action_id)',
+        'PresentationAudio.validation_records() == audio_records',
+        'print("TOWN_ROUTE_RESPONSE_DISPATCH_FEEDBACK_REPORT %s"',
+    ):
+        ensure(token in report_text, errors, f"Town route-response focused report is missing method-matched live proof: {token}")
+    ensure(report_text.count("for viewport_size in VIEWPORT_SIZES:") == 1, errors, "Town route-response focused report must run both exact viewport widths")
+    for forbidden in (
+        "_on_response_action_pressed(",
+        "_record_town_action_presentation(",
+        "_draw_town_route_response_presentation(",
+        "_town_route_response_vfx_asset_state(",
+        "get_tree().create_timer",
+        "create_tween",
+        "session.overworld.erase",
+    ):
+        ensure(forbidden not in report_text, errors, f"Town route-response focused report bypasses public production ownership: {forbidden}")
+
+
 def validate_town_building_complete_cue_playback(errors: list[str]) -> None:
     report_script_path = ROOT / "tests" / "town_building_complete_cue_playback_report.gd"
     report_scene_path = ROOT / "tests" / "town_building_complete_cue_playback_report.tscn"
@@ -20955,7 +21137,7 @@ def validate_town_building_complete_cue_playback(errors: list[str]) -> None:
     for token in (
         '@onready var _town_action_input_blocker: Control = %TownActionInputBlocker',
         '_record_town_action_presentation("build", full_action_id, action, result, before)',
-        'var event_id := "town_units_recruited" if lane == "recruit" else "town_building_built"',
+        'var event_id := "town_route_response_ordered" if lane == "response" else ("town_units_recruited" if lane == "recruit" else "town_building_built")',
         'var building_id := action_id.trim_prefix("build:")',
         'building_id in before_buildings or building_id not in after_buildings',
         'presentation["building_id"] = building_id',
@@ -20984,7 +21166,7 @@ def validate_town_building_complete_cue_playback(errors: list[str]) -> None:
     stage_text = TOWN_STAGE_SCRIPT_PATH.read_text(encoding="utf-8")
     for token in (
         'signal town_action_presentation_blocking_changed(blocking: bool)',
-        'event_id not in ["town_units_recruited", "town_building_built"]',
+        'event_id not in ["town_units_recruited", "town_building_built", "town_route_response_ordered"]',
         'event_id == "town_building_built" and selected_blocking_policy not in ["input_blocking_timeout", "nonblocking_reduced_motion", "nonblocking_fast_resolve"]',
         'func dismiss_town_action_presentation() -> void:',
         'return String(policy.get("selected_blocking_policy", "")) == "input_blocking_timeout"',
@@ -21042,12 +21224,12 @@ def validate_town_recruitment_cue_playback(errors: list[str]) -> None:
     ensure_script_functions(shell_text, errors, "TownShell.gd", ["_record_town_action_presentation"])
     for required_token in (
 		'_record_town_action_presentation("recruit", full_action_id, action, result, before)',
-		'if lane not in ["build", "recruit"] or not bool(result.get("ok", false)):',
+		'if lane not in ["build", "recruit", "response"] or not bool(result.get("ok", false)):',
         'var unit_id := action_id.trim_prefix("recruit:")',
         'var after := TownRules.town_action_consequence_signature(_session)',
         'var recruited_count := int(after_army.get(unit_id, 0)) - int(before_army.get(unit_id, 0))',
         'AnimationCueCatalog.cue_playback_policy_for_event(',
-		'var event_id := "town_units_recruited" if lane == "recruit" else "town_building_built"',
+		'var event_id := "town_route_response_ordered" if lane == "response" else ("town_units_recruited" if lane == "recruit" else "town_building_built")',
         'String(policy.get("selected_blocking_policy", "")) != "nonblocking"',
 		'_town_stage_view.call("present_town_action", presentation)',
         '"policy": policy.duplicate(true)',
@@ -21103,9 +21285,9 @@ def validate_town_recruitment_cue_playback(errors: list[str]) -> None:
         "const RECRUIT_PRESENTATION_MAX_DURATION_MS := 700",
         "const RECRUIT_PRESENTATION_MIN_DURATION_MS := 120",
         "set_process(false)",
-		'event_id not in ["town_units_recruited", "town_building_built"]',
-		'var expected_cue_id := "cue_town_units_recruited" if event_id == "town_units_recruited" else "cue_town_building_built"',
-		'event_id == "town_units_recruited" and selected_blocking_policy != "nonblocking"',
+		'event_id not in ["town_units_recruited", "town_building_built", "town_route_response_ordered"]',
+		'var expected_cue_id := "cue_town_route_response_ordered" if event_id == "town_route_response_ordered" else ("cue_town_units_recruited" if event_id == "town_units_recruited" else "cue_town_building_built")',
+		'event_id in ["town_units_recruited", "town_route_response_ordered"] and selected_blocking_policy != "nonblocking"',
         "_town_action_presentation = presentation.duplicate(true)",
         'if Time.get_ticks_msec() >= int(_town_action_presentation.get("expires_msec", 0)):',
 		'draw_entries = ["recruit_count_badge"] if reduced_motion else ["recruit_muster_rings", "recruit_count_badge"]',
@@ -40111,6 +40293,12 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
             "volume_db": -13.0,
             "role": "town_recruitment_muster",
         },
+        "audio_placeholder_town_route_response": {
+            "path": "res://art/audio/runtime/presentation/town_route_response.wav",
+            "duration_msec": 380,
+            "volume_db": -13.0,
+            "role": "town_route_response_dispatched",
+        },
     }
     manifest = json.loads(PRESENTATION_SFX_MANIFEST_PATH.read_text(encoding="utf-8"))
     ensure(manifest.get("schema") == "presentation_runtime_sfx_manifest_v1", errors, "presentation SFX manifest has the wrong schema")
@@ -40122,7 +40310,7 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
     ensure(int(manifest.get("sample_width_bits", 0)) == 16, errors, "production presentation SFX must use 16-bit PCM")
     ensure(manifest.get("asset_tier") == "production_layered_v1", errors, "presentation SFX manifest must declare production_layered_v1")
     cues = manifest.get("cues", {})
-    ensure(isinstance(cues, dict) and set(cues) == set(expected_cues), errors, "presentation SFX manifest must contain exactly the nineteen live Town, Overworld, navigation, blocking, route-open, route-closed, object-focus, object-resolution, guarded-context, and system action cues")
+    ensure(isinstance(cues, dict) and set(cues) == set(expected_cues), errors, "presentation SFX manifest must contain exactly the twenty live Town, Overworld, navigation, blocking, route-open, route-closed, object-focus, object-resolution, guarded-context, and system action cues")
     asset_hashes: list[str] = []
     for cue_id in sorted(expected_cues):
         expected = expected_cues[cue_id]
@@ -40156,7 +40344,7 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
             if left_samples and right_samples:
                 ensure(left_samples[0] == 0 and right_samples[0] == 0, errors, f"presentation SFX must start at zero: {expected['path']}")
                 ensure(left_samples[-1] == 0 and right_samples[-1] == 0, errors, f"presentation SFX must end at zero: {expected['path']}")
-    ensure(len(set(asset_hashes)) == 19, errors, "all nineteen presentation assets must be byte-distinct")
+    ensure(len(set(asset_hashes)) == 20, errors, "all twenty presentation assets must be byte-distinct")
     if len(asset_hashes) == 18:
         pack_signature = hashlib.sha256("\n".join(asset_hashes).encode("utf-8")).hexdigest()
         ensure(pack_signature == "d2d0b47d1de5613767232ecf94a03186aade937de3a1c7b7a4857eef4c8d7b57", errors, "presentation SFX pack signature drifted")
@@ -40184,6 +40372,7 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
         "banner_claim",
         "cache_lift",
         "sentinel_warning",
+        "dispatch_signal",
         "presentation-production-v1",
         "render_stereo",
         "layered_sample",
@@ -42603,6 +42792,7 @@ def main() -> int:
     validate_town_faction_progression(errors)
     validate_town_building_complete_vfx_assets(errors)
     validate_town_recruitment_vfx_assets(errors)
+    validate_town_route_response_dispatch_feedback(errors)
     validate_town_building_complete_cue_playback(errors)
     validate_town_recruitment_cue_playback(errors)
     validate_town_contextual_guide(errors)
