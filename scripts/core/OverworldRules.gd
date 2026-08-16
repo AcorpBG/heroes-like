@@ -10773,7 +10773,8 @@ static func _town_capital_project_ids(town: Dictionary) -> Array:
 		var building_id := String(building_id_value)
 		if building_id == "":
 			continue
-		if ContentService.get_building(building_id).get("capital_project", {}) is Dictionary:
+		var capital_project: Variant = ContentService.get_building(building_id).get("capital_project", null)
+		if capital_project is Dictionary and not capital_project.is_empty():
 			ids.append(building_id)
 	return ids
 

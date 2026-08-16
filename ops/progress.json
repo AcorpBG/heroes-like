@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Overworld encounter victory return feedback is implemented and validated. Successful real static-encounter victories now carry one detached route-local depleted-object consequence only after the resolved checkpoint saves, consume it once on the exact next Overworld scene, and preserve encounter, guarded-resource, battle, session, and save authority. Broader release gaps remain.",
+  "currentNotes": "Town capital-project identity correction is implemented and validated. Missing metadata is no longer accepted as a project, the three real capitals expose only their authored project, project-absent towns stay inactive, and focused/compatibility/static/platform gates pass. Broader release gaps remain.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-encounter-victory-return-feedback-10184",
-  "currentSliceId": "presentation-overworld-encounter-victory-return-feedback-10184",
-  "currentSliceNotes": "Completed with focused 1280/1920 real River Pass encounter battles, method-matched unarmed Overworld parity, exact one-shot/fail-closed route payload checks, compatibility/static validation, and bounded Linux/Windows export/startup evidence.",
+  "currentSlice": "economy-town-capital-project-identity-correction-10184",
+  "currentSliceId": "economy-town-capital-project-identity-correction-10184",
+  "currentSliceNotes": "Completed with exact explicit-metadata identity, three live capital plus two project-absent controls, inactive/4-of-4 TownRules and save-normalization proof, direct AI/town consumers, a healthy 56-turn Medium strategic row, static/editor validation, and bounded Linux/Windows export/startup evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Encounter Victory Return Feedback",
-  "currentSliceUpdatedAt": "2026-08-16T05:26:19Z",
+  "currentSliceTitle": "Town Capital Project Identity Correction",
+  "currentSliceUpdatedAt": "2026-08-16T05:53:49Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -86164,6 +86164,49 @@
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
       "blockedReason": null,
       "completedAt": "2026-08-16T05:26:19Z"
+    },
+    {
+      "id": "economy-town-capital-project-identity-correction-10184",
+      "title": "Town Capital Project Identity Correction",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Make live town capital-project state derive only from explicit nonempty building capital_project metadata so ordinary buildings cannot activate project progress, bonuses, vulnerability penalties, or strategic-AI capacity.",
+      "implementationTargets": [
+        "scripts/core/OverworldRules.gd",
+        "tests/town_capital_project_identity_runtime_report.gd",
+        "tests/town_capital_project_identity_runtime_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Real Highwater, Nightglass, and Prismhearth towns expose exactly their one authored Charter Bastion, Nightglass Dominion, or Daybreak Matrix project in authored order, while Graftroot, Orevein, and other project-absent towns expose zero projects",
+        "Initial ordinary built structures cannot activate a project or contribute project quality, pressure, defense, raid-capacity, recovery, vulnerability penalties, progress, or next-project labels; adding the exact authored project activates only its authored bonuses and support vulnerability",
+        "Town building ids/order/costs/dependencies, construction, weekly growth, income, logistics, recovery, occupation, save version 9, session authority, and detached result behavior remain exact outside the corrected project-derived metrics",
+        "Focused capital identity, late-game capital/AI recruitment, town development/economy, strategic-AI behavior, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "capital-project values, building costs/dependencies/order, logistics requirements, faction balance tuning, town/AI policy, save/schema, scenario/content text, Native RMG, or map-topology changes",
+        "new UI/layout/VFX/audio, content expansion, generated-map rules, combat tuning, or strategic-AI performance work",
+        "packaged capital-project interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "cea3d5f7",
+        "authored_capital_project_building_count": 3,
+        "runtime_project_count_per_capital_town": 23,
+        "highwater_false_initial_active_project": true,
+        "highwater_false_initial_quality_bonus": 12,
+        "highwater_false_next_project_label": "Market Square"
+      },
+      "createdAt": "2026-08-16T05:34:13Z",
+      "updatedAt": "2026-08-16T05:53:49Z",
+      "startedAt": "2026-08-16T05:34:13Z",
+      "notes": "The live identity helper now requires explicit nonempty metadata. Focused runtime proves Highwater, Nightglass, and Prismhearth each expose one exact project, start inactive with zero false effects and their real dependency label, activate only authored values at 4/4, and survive save normalization; Graftroot and Orevein expose no project text or state. Planned-task recruitment, strategic planner, all-town 30-turn development/recruitment, static town balance, core, and a native Medium 56-turn row pass with 145 events, three auto-resolved battle interruptions, one stall, and zero behavior/integrity/unreachable failures. Repository/editor checks, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. No values, content order, policy, schema, RMG, packaged interaction, hardware, certification, signing, publication, whole-game, or release-readiness claim changed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
+      "blockedReason": null,
+      "completedAt": "2026-08-16T05:53:49Z"
     }
   ],
   "project": "heroes-like",
