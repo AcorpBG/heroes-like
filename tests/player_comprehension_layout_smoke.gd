@@ -41,8 +41,11 @@ func _check_overworld(viewport_size: Vector2) -> bool:
 		snapshot = shell.call("validation_snapshot")
 	var ok := _inside(frame, shell.get_node("%Map"), "overworld map", viewport_size)
 	ok = _inside(frame, shell.get_node("%CommandBand"), "overworld command band", viewport_size) and ok
+	ok = _inside(frame, shell.get_node("%StatusChip"), "overworld status chip", viewport_size) and ok
 	for control_name in ["PrimaryAction", "EndTurn", "Save", "Settings", "Menu"]:
 		ok = _inside(frame, shell.get_node("%" + control_name), "overworld %s" % control_name, viewport_size) and ok
+		ok = _expect_command_available(shell.get_node("%" + control_name), "overworld %s" % control_name, viewport_size) and ok
+	ok = _expect_overworld_status_contract(shell, narrow, compact, viewport_size) and ok
 	ok = _expect_visibility(shell.get_node("%SidebarShell"), not narrow, "overworld sidebar", viewport_size) and ok
 	ok = _expect_visibility(shell.get_node("%CommandSpine"), false, "overworld opening context drawer", viewport_size) and ok
 	ok = _expect_visibility(shell.get_node("%BriefingPanel"), not compact, "overworld briefing", viewport_size) and ok
@@ -83,6 +86,35 @@ func _expect_opening_order(snapshot: Dictionary, viewport_size: Vector2) -> bool
 		return _fail("first-turn route still selects the hero tile at %s" % viewport_size)
 	return true
 
+func _expect_overworld_status_contract(shell: Control, narrow: bool, compact: bool, viewport_size: Vector2) -> bool:
+	var status_chip := shell.get_node("%StatusChip") as PanelContainer
+	var status_label := shell.get_node("%Status") as Label
+	if status_chip == null or status_label == null:
+		return _fail("overworld status controls are missing at %s" % viewport_size)
+	if not status_chip.visible or not status_label.visible:
+		return _fail("overworld status chip was hidden at %s" % viewport_size)
+	if not is_equal_approx(status_chip.custom_minimum_size.x, 118.0):
+		return _fail("overworld status chip changed its authored compact width at %s: %s" % [viewport_size, status_chip.custom_minimum_size])
+	if status_label.clip_text != narrow:
+		return _fail("overworld status clipping at %s expected %s but got %s" % [viewport_size, narrow, status_label.clip_text])
+	var full_status := status_label.text
+	if full_status.is_empty():
+		return _fail("overworld status text is empty at %s" % viewport_size)
+	var tooltip := status_label.tooltip_text
+	if compact:
+		if not tooltip.begins_with("%s\n" % full_status):
+			return _fail("overworld compact status tooltip lost its exact full status at %s: %s" % [viewport_size, tooltip])
+	elif tooltip != full_status:
+		return _fail("overworld desktop status tooltip differs from its full status at %s: %s" % [viewport_size, tooltip])
+	return true
+
+func _expect_command_available(target: Button, label: String, viewport_size: Vector2) -> bool:
+	if target == null or not target.visible:
+		return _fail("%s is not visible at %s" % [label, viewport_size])
+	if target.disabled:
+		return _fail("%s is disabled at %s" % [label, viewport_size])
+	return true
+
 func _expect_unchanged_opening_session(session, initial_position: Dictionary, initial_movement: Dictionary, initial_resources: Dictionary, viewport_size: Vector2) -> bool:
 	if session.day != 1:
 		return _fail("first-turn suggestion advanced the day at %s" % viewport_size)
@@ -110,14 +142,27 @@ func _check_town(viewport_size: Vector2) -> bool:
 	await _settle_layout()
 	var compact := viewport_size.x < 1360.0 or viewport_size.y < 760.0
 	var narrow := viewport_size.x < 1100.0
-	var ok := _inside(frame, shell.get_node("%TownStage"), "town stage", viewport_size)
+	var ok := _inside(frame, shell.get_node("%Banner"), "town banner", viewport_size)
+	ok = _inside(frame, shell.get_node("%Header"), "town header", viewport_size) and ok
+	ok = _inside(frame, shell.get_node("%Resources"), "town resources", viewport_size) and ok
+	ok = _inside(frame, shell.get_node("%TownStage"), "town stage", viewport_size) and ok
 	ok = _inside(frame, shell.get_node("%FooterPanel"), "town footer", viewport_size) and ok
+	for control_name in ["SaveSlot", "Save", "Leave", "Guide", "Settings", "Menu"]:
+		ok = _inside(frame, shell.get_node("%" + control_name), "town %s" % control_name, viewport_size) and ok
+	for button_name in ["Save", "Leave", "Guide", "Settings", "Menu"]:
+		ok = _expect_command_available(shell.get_node("%" + button_name), "town %s" % button_name, viewport_size) and ok
+	ok = _expect_town_banner_contract(shell, compact, viewport_size) and ok
+	ok = _expect_town_sidebar_contract(shell, compact, viewport_size) and ok
 	ok = _expect_visibility(shell.get_node("%SidebarShell"), not narrow, "town management sidebar", viewport_size) and ok
+	if not narrow:
+		ok = _inside(frame, shell.get_node("%SidebarShell"), "town management sidebar", viewport_size) and ok
 	ok = _expect_visibility(shell.get_node("%CommandPanel"), not compact, "town command summary", viewport_size) and ok
 	ok = _expect_visibility(shell.get_node("%Event"), not compact, "town dispatch", viewport_size) and ok
 	ok = _expect_visibility(shell.get_node("%Status"), not compact, "town duplicate status", viewport_size) and ok
 	ok = _expect_visibility(shell.get_node("%TownOrdersToggle"), narrow, "town narrow orders switch", viewport_size) and ok
 	if narrow:
+		ok = _inside(frame, shell.get_node("%TownOrdersToggle"), "town narrow orders switch", viewport_size) and ok
+		ok = _expect_command_available(shell.get_node("%TownOrdersToggle"), "town narrow orders switch", viewport_size) and ok
 		var toggle_result: Dictionary = shell.call("validation_toggle_narrow_town_orders")
 		await _settle_layout()
 		if not bool(toggle_result.get("ok", false)) or not bool(toggle_result.get("narrow_orders_open", false)):
@@ -175,6 +220,36 @@ func _expect_town_build_plan(shell: Node, session, initial_built_buildings: Arra
 		return _fail("town build confirmation committed the wrong construction at %s: %s" % [viewport_size, built_after])
 	if session.overworld.get("resources", {}) == initial_resources:
 		return _fail("town build confirmation did not spend resources at %s" % viewport_size)
+	return true
+
+func _expect_town_banner_contract(shell: Control, compact: bool, viewport_size: Vector2) -> bool:
+	var header := shell.get_node("%Header") as Label
+	var resources := shell.get_node("%Resources") as ResourceStockpileMenu
+	if header == null or resources == null:
+		return _fail("town banner controls are missing at %s" % viewport_size)
+	if header.text.is_empty() or header.tooltip_text != header.text:
+		return _fail("town header lost its exact full tooltip at %s: %s" % [viewport_size, header.tooltip_text])
+	if header.clip_text != compact:
+		return _fail("town header clipping at %s expected %s but got %s" % [viewport_size, compact, header.clip_text])
+	var expected_resource_width := 80.0 if compact else 210.0
+	if not is_equal_approx(resources.custom_minimum_size.x, expected_resource_width):
+		return _fail("town resource menu width at %s expected %s but got %s" % [viewport_size, expected_resource_width, resources.custom_minimum_size.x])
+	var resource_snapshot: Dictionary = resources.validation_snapshot()
+	if bool(resource_snapshot.get("compact", false)) != compact:
+		return _fail("town resource compact mode at %s expected %s: %s" % [viewport_size, compact, resource_snapshot])
+	if String(resource_snapshot.get("tooltip_text", "")) != String(resource_snapshot.get("full_summary", "")):
+		return _fail("town resource menu lost its full tooltip at %s: %s" % [viewport_size, resource_snapshot])
+	return true
+
+func _expect_town_sidebar_contract(shell: Control, compact: bool, viewport_size: Vector2) -> bool:
+	var sidebar := shell.get_node("%SidebarShell") as PanelContainer
+	if sidebar == null:
+		return _fail("town management sidebar is missing at %s" % viewport_size)
+	var expected_width := 272.0 if compact else 400.0
+	if not is_equal_approx(sidebar.custom_minimum_size.x, expected_width):
+		return _fail("town management sidebar budget at %s expected %s but got %s" % [viewport_size, expected_width, sidebar.custom_minimum_size.x])
+	if sidebar.visible and sidebar.size.x + 0.01 < sidebar.get_combined_minimum_size().x:
+		return _fail("town management sidebar violates its live minimum at %s: %s / %s" % [viewport_size, sidebar.size, sidebar.get_combined_minimum_size()])
 	return true
 
 func _new_frame(frame_name: String, viewport_size: Vector2) -> Control:
