@@ -145,6 +145,12 @@
       "duration_msec": 420,
       "volume_db": -12.5,
       "role": "town_hero_hired"
+    },
+    "audio_placeholder_ui_confirm": {
+      "path": "res://art/audio/runtime/ui/confirm.wav",
+      "duration_msec": 120,
+      "volume_db": -17.0,
+      "role": "confirm_action"
     }
   }
 }

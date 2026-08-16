@@ -345,6 +345,7 @@ func _on_artifact_action_pressed(action_id: String) -> void:
 
 func _on_specialty_action_pressed(action_id: String) -> void:
 	var before := TownRules.town_action_consequence_signature(_session)
+	before["hero_progression"] = HeroProgressionRules.ensure_hero_progression(_session.overworld.get("hero", {})).duplicate(true)
 	var action := _validation_action_for_id(action_id)
 	var result := {}
 	if action_id.begins_with("choose_specialty:"):
@@ -354,6 +355,7 @@ func _on_specialty_action_pressed(action_id: String) -> void:
 	if _handle_session_resolution():
 		return
 	_refresh()
+	_record_town_action_presentation("specialty", action_id, action, result, before)
 
 func _on_save_pressed() -> void:
 	var action := AppRouter.active_manual_save_action()
@@ -4437,7 +4439,7 @@ func _record_town_action_presentation(
 	result: Dictionary,
 	before: Dictionary
 ) -> void:
-	if lane not in ["build", "recruit", "response", "market", "study", "tavern"] or not bool(result.get("ok", false)):
+	if lane not in ["build", "recruit", "response", "market", "study", "tavern", "specialty"] or not bool(result.get("ok", false)):
 		return
 	if _town_stage_view == null or not _town_stage_view.has_method("present_town_action"):
 		return
@@ -4446,8 +4448,10 @@ func _record_town_action_presentation(
 		after["known_spell_ids"] = _town_active_known_spell_ids()
 	elif lane == "tavern":
 		after["player_hero_ids"] = _town_player_hero_ids()
-	var event_id := "town_hero_hired" if lane == "tavern" else ("town_spell_studied" if lane == "study" else ("town_market_exchange_completed" if lane == "market" else ("town_route_response_ordered" if lane == "response" else ("town_units_recruited" if lane == "recruit" else "town_building_built"))))
-	var subject_kind := "hero" if lane == "tavern" else ("spellbook" if lane == "study" else ("resource_stockpile" if lane == "market" else ("map_object" if lane == "response" else ("unit_roster" if lane == "recruit" else "building"))))
+	elif lane == "specialty":
+		after["hero_progression"] = HeroProgressionRules.ensure_hero_progression(_session.overworld.get("hero", {})).duplicate(true)
+	var event_id := "town_specialty_selected" if lane == "specialty" else ("town_hero_hired" if lane == "tavern" else ("town_spell_studied" if lane == "study" else ("town_market_exchange_completed" if lane == "market" else ("town_route_response_ordered" if lane == "response" else ("town_units_recruited" if lane == "recruit" else "town_building_built")))))
+	var subject_kind := "hero_specialty" if lane == "specialty" else ("hero" if lane == "tavern" else ("spellbook" if lane == "study" else ("resource_stockpile" if lane == "market" else ("map_object" if lane == "response" else ("unit_roster" if lane == "recruit" else "building")))))
 	var policy := AnimationCueCatalog.cue_playback_policy_for_event(
 		event_id,
 		SettingsService.animation_preferences()
@@ -4457,7 +4461,7 @@ func _record_town_action_presentation(
 		or String(policy.get("surface", "")) != "town"
 		or String(policy.get("subject_kind", "")) != subject_kind
 		or String(policy.get("selected_playback_policy", "")) != "queue_resolved"
-		or lane in ["recruit", "response", "market", "study", "tavern"] and String(policy.get("selected_blocking_policy", "")) != "nonblocking"
+		or lane in ["recruit", "response", "market", "study", "tavern", "specialty"] and String(policy.get("selected_blocking_policy", "")) != "nonblocking"
 		or lane == "build" and String(policy.get("selected_blocking_policy", "")) not in ["input_blocking_timeout", "nonblocking_reduced_motion", "nonblocking_fast_resolve"]
 	):
 		return
@@ -4470,7 +4474,36 @@ func _record_town_action_presentation(
 		"result_message": String(result.get("message", "")),
 		"policy": policy.duplicate(true),
 	}
-	if lane == "tavern":
+	if lane == "specialty":
+		var specialty_id := action_id.trim_prefix("choose_specialty:")
+		var before_hero: Dictionary = before.get("hero_progression", {}) if before.get("hero_progression", {}) is Dictionary else {}
+		var after_hero: Dictionary = after.get("hero_progression", {}) if after.get("hero_progression", {}) is Dictionary else {}
+		var specialty := HeroProgressionRules.specialty_definition(specialty_id)
+		var before_rank := HeroProgressionRules.specialty_rank(before_hero, specialty_id)
+		var after_rank := HeroProgressionRules.specialty_rank(after_hero, specialty_id)
+		var before_pending := HeroProgressionRules.pending_choices_remaining(before_hero)
+		var after_pending := HeroProgressionRules.pending_choices_remaining(after_hero)
+		if (
+			specialty_id == ""
+			or specialty_id == action_id
+			or specialty.is_empty()
+			or String(before_hero.get("id", "")) == ""
+			or String(after_hero.get("id", "")) != String(before_hero.get("id", ""))
+			or String(_session.overworld.get("active_hero_id", after_hero.get("id", ""))) != String(after_hero.get("id", ""))
+			or after_rank != before_rank + 1
+			or before_pending <= 0
+			or after_pending != before_pending - 1
+		):
+			return
+		presentation["action_id"] = action_id
+		presentation["hero_id"] = String(after_hero.get("id", ""))
+		presentation["hero_name"] = String(after_hero.get("name", "Hero"))
+		presentation["specialty_id"] = specialty_id
+		presentation["specialty_name"] = String(specialty.get("name", specialty_id))
+		presentation["specialty_rank"] = after_rank
+		presentation["pending_specialty_choice_count"] = after_pending
+		presentation["town_action_recap"] = _last_action_recap.duplicate(true)
+	elif lane == "tavern":
 		var hero_id := action_id.trim_prefix("hire_hero:")
 		var before_hero_ids: Array = before.get("player_hero_ids", []) if before.get("player_hero_ids", []) is Array else []
 		var after_hero_ids: Array = after.get("player_hero_ids", []) if after.get("player_hero_ids", []) is Array else []
