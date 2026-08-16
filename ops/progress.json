@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Battle initiative strip now uses readable fitted stack-name labels and exact full-identity native tooltips driven by the same five-chip geometry. Broader release gaps remain and no whole-game or release-readiness claim is made.",
+  "currentNotes": "The Overworld fog-shroud slice is completed with focused public-presentation proof, fresh 1280x720 and 1920x1080 visual evidence, compatibility/static/editor validation, and bounded Linux/Windows export-startup evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-battle-initiative-strip-readable-stack-identity-10184",
-  "currentSliceId": "ux-battle-initiative-strip-readable-stack-identity-10184",
-  "currentSliceNotes": "Completed: the shared initiative-chip geometry now drives readable fitted stack-name labels and exact full-name/count/side/slot/current-or-queued native tooltips without changing combat authority. Focused 1280x720 and 1920x1080 Board validation, Battle visual/animation/accessibility/core compatibility, repository/editor gates, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. No packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.",
+  "currentSlice": "ux-overworld-unexplored-fog-shroud-10184",
+  "currentSliceId": "ux-overworld-unexplored-fog-shroud-10184",
+  "currentSliceNotes": "Completed the renderer-only replacement of unexplored diagonal X wireframes with a continuous deterministic shroud. Fog, terrain, object, route, session, and save authority remain unchanged; platform claims are export/startup only.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Battle Initiative Strip Readable Stack Identity",
-  "currentSliceUpdatedAt": "2026-08-16T15:13:35Z",
+  "currentSliceTitle": "Overworld Unexplored Fog Shroud",
+  "currentSliceUpdatedAt": "2026-08-16T15:50:29Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19847,7 +19847,7 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
-  "notes": "Completed the source-backed Battle initiative-strip identity slice. Shared chip geometry now drives readable fitted stack-name labels and exact full native hover identity while combat and turn-order authority remain unchanged.",
+  "notes": "Registered the source-backed Overworld unexplored fog-shroud slice from fresh live visual evidence. Production still draws two diagonal lines on every hidden cell; implementation is bounded to the renderer and existing validation owners.",
   "plannedSlices": [
     {
       "id": "presentation-overworld-object-focus-cue-adoption-10184",
@@ -86689,6 +86689,49 @@
         "windowsExportWineStartup": true,
         "packagedBattleInteractionClaimed": false
       }
+    },
+    {
+      "id": "ux-overworld-unexplored-fog-shroud-10184",
+      "title": "Overworld Unexplored Fog Shroud",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Replace placeholder-like X wireframes across unexplored Overworld cells with a subdued contiguous shroud while preserving exact fog authority.",
+      "implementationTargets": [
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "At 1280x720 and 1920x1080 unexplored regions render as contained non-wireframe shroud cells without diagonal placeholder crosses",
+        "Unexplored terrain, roads, objects, heroes, encounters, routes, selection, and tooltip identity remain hidden while newly explored cells use the exact existing surface",
+        "Exploration and visibility arrays/counts, movement, route legality, focus/controller, session/save authority, and permanent exploration policy remain exact",
+        "Focused Overworld visual/fog, route/input/accessibility/core compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "fog rules, visibility radius, scouting, pathing, terrain, road, object, hero, encounter, route, camera, save/schema, content, balance, AI, or Native RMG changes",
+        "new bitmap assets, terrain repaint, map redesign, new panels, transient memory fog, animation, audio, or global theme/UI-scale changes",
+        "packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "f2dcfa10",
+        "capture": ".artifacts/color_cue_accessibility/overworld_color_cues.png",
+        "unexplored_state": "unexplored_hidden",
+        "unexplored_wireframe": true,
+        "diagonal_cross_lines_per_cell": 2,
+        "terrain_identity_hidden": true,
+        "permanent_exploration_policy": true
+      },
+      "createdAt": "2026-08-16T15:23:12Z",
+      "startedAt": "2026-08-16T15:23:12Z",
+      "updatedAt": "2026-08-16T15:50:29Z",
+      "notes": "Implemented the bounded live renderer change: unexplored cells keep the exact hidden fill and now add three deterministic contained low-contrast mist layers with no diagonal wireframe or inset tile veil. The public visual owner proves hidden terrain and texture identity, no shroud on explored cells, and no fog-state mutation. Focused Overworld visual smoke passed naturally; fresh 1280x720 and 1920x1080 X11 captures show a continuous dark shroud without X marks or square veil tiles. Fog-rule, full-route, active keyboard-focus, accessibility, and core compatibility owners passed. Repository validation, Python compilation, diff checks, and exact/generic Godot editor parses passed. Official Linux export/headless startup and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup reports are ok:true. Claims remain bounded: no packaged Overworld interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claim.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, balance, accessibility certification, content/performance, signing/publication, native Windows certification, and unrecovered Native RMG parity gaps remain.",
+      "blockedReason": null,
+      "completedAt": "2026-08-16T15:50:29Z"
     }
   ],
   "project": "heroes-like",
@@ -86698,8 +86741,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain after completing the Battle initiative-strip identity slice.",
-  "remainingWork": "Select the next tracker-approved release-readiness implementation slice without claiming whole-game or release readiness.",
+  "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain after the bounded Overworld fog-shroud completion.",
+  "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -87130,7 +87173,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "ux_battle_initiative_strip_readable_stack_identity_completed",
+  "result": "ux_overworld_unexplored_fog_shroud_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -87231,9 +87274,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The Battle initiative strip readable stack identity slice is complete with focused two-width Board behavior, Battle compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup evidence. Broader release gaps remain; the game is not release-ready.",
+  "summary": "The Overworld unexplored fog-shroud implementation slice is active. It is bounded to replacing placeholder-like hidden-cell wireframes while preserving exact fog and map authority; the game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-16T15:13:35Z",
+  "updatedAt": "2026-08-16T15:23:12Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
