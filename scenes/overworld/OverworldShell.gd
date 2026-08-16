@@ -3705,7 +3705,7 @@ func _refresh_status_surfaces(generated_surface_start: int) -> bool:
 	_briefing_title_label.text = _briefing_title_text
 	_set_rail_label(_briefing_label, _command_briefing_text, 2, RAIL_LINE_CHARS, false)
 	_briefing_panel.visible = _command_briefing_text != ""
-	_refresh_tooltip_context_drawer_surfaces()
+	_refresh_tooltip_context_drawer_surfaces(readiness_surface)
 	return false
 
 func _refresh_map_cue_surface() -> void:
@@ -3763,10 +3763,12 @@ func _refresh_context_tile_surface() -> void:
 	_set_rail_text(_context_label, context_text, _rail_tile_text(), 2)
 	_debug_refresh_profile_end("refresh_context_tile_text", context_tile_profile_start)
 
-func _refresh_tooltip_context_drawer_surfaces() -> void:
+func _refresh_tooltip_context_drawer_surfaces(field_readiness: Dictionary = {}) -> void:
 	var tooltip_context_profile_start := _debug_refresh_profile_begin("refresh_tooltip_context_drawers")
 	_update_map_tooltip()
-	_sync_context_drawers()
+	if not field_readiness.is_empty():
+		_profile_add("drawer_handoff_preloaded_readiness_reuses", 1)
+	_sync_context_drawers(field_readiness)
 	_debug_refresh_profile_end("refresh_tooltip_context_drawers", tooltip_context_profile_start)
 
 func _refresh_generated_opening_surfaces() -> void:
@@ -7210,6 +7212,9 @@ func _field_feed_is_idle() -> bool:
 	)
 
 func _field_readiness_surface(base_event_surface: Dictionary = {}) -> Dictionary:
+	_profile_add("field_readiness_surface_calls", 1)
+	if not base_event_surface.is_empty():
+		_profile_add("field_readiness_surface_base_event_calls", 1)
 	var movement = _session.overworld.get("movement", {})
 	var movement_line := "Move %d/%d" % [
 		int(movement.get("current", 0)),
@@ -7757,7 +7762,7 @@ func _remembered_selected_tile_text(terrain: String) -> String:
 		]
 	return ""
 
-func _sync_context_drawers() -> void:
+func _sync_context_drawers(field_readiness: Dictionary = {}) -> void:
 	var show_command := _active_drawer == "command"
 	var show_frontier := _active_drawer == "frontier"
 	var show_tile := not show_command and not show_frontier and _should_show_tile_context()
@@ -7770,7 +7775,7 @@ func _sync_context_drawers() -> void:
 	_commitment_panel.visible = not compact_layout and not show_command and not show_frontier
 	_open_command_button.button_pressed = show_command
 	_open_frontier_button.button_pressed = show_frontier
-	_refresh_drawer_handoff_cues()
+	_refresh_drawer_handoff_cues(field_readiness)
 
 func _set_active_drawer(drawer: String) -> void:
 	if drawer != "":
