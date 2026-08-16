@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `presentation-town-market-exchange-completion-feedback-10184`. Successful live Town-screen `market:<buy|sell>:<wood|ore>:<amount>` orders now publish one compact Town-specific exchange-completion presentation through the existing TownStage action presenter, derived from exact ordered before/after stockpile deltas and carrying an original imported alpha VFX, deterministic 360 ms stereo sound, and exact reduced-motion/missing-asset fallbacks. Six focused 1280x720/1920x1080 public-handler rows prove buy/sell rule-control session parity, weekly-cap authority, exact signed gold/resource deltas, one imported audio record, and malformed/invalid silence. Market-cap, Town VFX/cue/route, animation catalog, broad Town/Battle visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged exchange interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `presentation-town-market-exchange-completion-feedback-10184`
 - Completed implementation slice: `presentation-town-route-response-dispatch-feedback-10184`. A successful live Town-screen `site_response:<placement>` order now publishes one compact Town-specific strategic-dispatch presentation through the existing TownStage action presenter, with an original imported alpha VFX, deterministic 380 ms stereo sound, and exact reduced-motion/missing-asset fallbacks. The presenter verifies the live route node, Town origin, same-day provenance, and active response after the authoritative mutation and refreshed stage; malformed and repeated unavailable orders remain silent. Focused six-row 1280x720/1920x1080 proof plus Town VFX/cue, animation catalog, broad Town/Battle visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Town interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `presentation-town-route-response-dispatch-feedback-10184`
 - Completed implementation slice: `presentation-overworld-route-expiry-feedback-10184`. A successful end turn now captures a player response route on its exact final active day, validates the same visible site after rule mutation and autosave, and publishes one `overworld_route_closed` cue only when the day transition naturally deactivates its transit edge. The route keeps player control and its persisted response provenance; enemy seizure closure retains priority, and non-final, already-expired, malformed, refresh, and duplicate controls stay silent. Focused 1280x720/1920x1080 proof plus enemy-closure/open-route, Rope Lift, shared cue, accessibility, visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged expiry interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -5666,6 +5668,33 @@ Validated result:
 - the public Town action dispatcher now emits the unique Town route-response cue only after the exact core action, cache invalidation, resolution guard, and refreshed live stage;
 - six focused rows cover 1280x720 and 1920x1080 in normal imported, missing-asset procedural, and reduced-motion static modes with exact core-control session parity, active Town provenance, one imported WAV cue, and silent repeat rejection;
 - both prior Town VFX reports, both Town cue reports, the animation catalog, broad Town/Battle visual smoke, core systems, repository/editor checks, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass.
+
+## Selected Slice: Town Market Exchange Completion Feedback
+
+id: `presentation-town-market-exchange-completion-feedback-10184`
+
+Status: completed.
+
+Implementation boundary:
+- after the real Town market action succeeds, validate the exact `market:<buy|sell>:<wood|ore>:<amount>` action and derive its exact signed stockpile deltas from the existing Town consequence signatures before publishing one new Town-surface queue-resolved/nonblocking presentation through TownStageView;
+- add one original alpha VFX and one deterministic stereo sound with distinct reduced-motion and missing-asset procedural fallbacks;
+- preserve TownRules/OverworldRules quote, rate, cost, gain, weekly-cap, recap, focus/input, session/save, common-only market, and all completed Town action-presentation behavior.
+
+Completion criteria:
+- live TownShell 1280x720/1920x1080 buy and sell orders execute through the public handler, match method-equivalent core controls, and present exact imported Town exchange VFX/audio with signed input/output stockpile evidence;
+- failed, stale, malformed, non-market, and refresh controls remain silent; reduced-motion and missing-asset fallbacks are exact;
+- market cap usage, rates, resources, recaps, focus/input, session/save, build/recruit/route presentations, and existing generic UI cues remain exact;
+- focused exchange plus market-cap, Town action, visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Non-goals:
+- no market rates, costs, gains, caps, rare-resource policy, AI economy, build/recruit affordability, save/schema, Native RMG, or map-topology changes;
+- no generic UI cue remapping, layout redesign, particles, shaders, spatial audio, haptics, or final mastering;
+- no packaged exchange interaction/listening, hardware certification, signing/publication, whole-game, or release-readiness claim.
+
+Validated result:
+- the public Town market handler now publishes only after the exact successful transaction, cache invalidation, resolution guard, and refreshed stage; the presentation validates the action grammar and ordered gold/common-resource deltas without changing rates, gains, costs, caps, or save authority;
+- six focused rows cover 1280x720 and 1920x1080 in normal imported, missing-asset procedural, and reduced-motion static modes, with four buy rows, two sell rows, whole-session parity against detached TownRules controls, exact market usage, one imported WAV cue, and silent malformed/invalid controls;
+- market-cap persistence, both Town VFX reports, both prior Town cue reports, route feedback, the animation catalog, broad Town/Battle visual smoke, core systems, repository/editor checks, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass.
 
 ## Progress Reconciliation
 

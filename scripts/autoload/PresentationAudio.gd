@@ -28,6 +28,7 @@ const CUE_SPECS := {
 	"audio_placeholder_town_build": {"frequency": 176.0, "duration": 0.42, "gain": 0.13},
 	"audio_placeholder_recruit": {"frequency": 132.0, "duration": 0.36, "gain": 0.12},
 	"audio_placeholder_town_route_response": {"frequency": 330.0, "duration": 0.38, "gain": 0.11},
+	"audio_placeholder_town_market_exchange": {"frequency": 520.0, "duration": 0.36, "gain": 0.10},
 }
 
 var _records: Array[Dictionary] = []

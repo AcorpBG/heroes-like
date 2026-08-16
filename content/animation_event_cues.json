@@ -613,6 +613,25 @@
       "producer_refs": ["TownShell._on_response_action_pressed", "OverworldRules._issue_resource_site_response"]
     },
     {
+      "event_id": "town_market_exchange_completed",
+      "cue_id": "cue_town_market_exchange_completed",
+      "surface": "town",
+      "subject_kind": "resource_stockpile",
+      "animation_state_family": "exchange",
+      "animation_state": "settlement_confirmed",
+      "playback_policy": "queue_resolved",
+      "blocking_policy": "nonblocking",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_town_market_exchange"],
+      "audio_cue_ids": ["audio_placeholder_town_market_exchange"],
+      "fallbacks": {
+        "reduced_motion_tag": "ledger_exchange_badge",
+        "fast_mode_tag": "settlement_snap"
+      },
+      "validation_tags": ["town", "market", "resolved_event"],
+      "producer_refs": ["TownShell._on_market_action_pressed", "TownRules.perform_market_action"]
+    },
+    {
       "event_id": "spell_cast_battle",
       "cue_id": "cue_spell_cast_battle",
       "surface": "spell",

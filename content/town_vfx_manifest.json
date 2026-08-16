@@ -18,6 +18,12 @@
       "texture_path": "res://art/town/runtime/vfx/route_response.png",
       "render_mode": "town_route_response_dispatch",
       "scale": 1.0
+    },
+    "vfx_placeholder_town_market_exchange": {
+      "event_id": "town_market_exchange_completed",
+      "texture_path": "res://art/town/runtime/vfx/market_exchange.png",
+      "render_mode": "town_market_exchange_completion",
+      "scale": 1.0
     }
   }
 }

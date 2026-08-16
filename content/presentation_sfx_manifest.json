@@ -127,6 +127,12 @@
       "duration_msec": 380,
       "volume_db": -13.0,
       "role": "town_route_response_dispatched"
+    },
+    "audio_placeholder_town_market_exchange": {
+      "path": "res://art/audio/runtime/presentation/town_market_exchange.wav",
+      "duration_msec": 360,
+      "volume_db": -13.5,
+      "role": "town_market_exchange_completed"
     }
   }
 }

@@ -221,6 +221,11 @@ TOWN_ROUTE_RESPONSE_VFX_RUNTIME_PATH = ROOT / "art" / "town" / "runtime" / "vfx"
 TOWN_ROUTE_RESPONSE_AUDIO_RUNTIME_PATH = ROOT / "art" / "audio" / "runtime" / "presentation" / "town_route_response.wav"
 TOWN_ROUTE_RESPONSE_FEEDBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_route_response_dispatch_feedback_report.gd"
 TOWN_ROUTE_RESPONSE_FEEDBACK_REPORT_SCENE_PATH = ROOT / "tests" / "town_route_response_dispatch_feedback_report.tscn"
+TOWN_MARKET_EXCHANGE_VFX_SOURCE_PATH = ROOT / "art" / "town" / "source" / "market_exchange_vfx_source.png"
+TOWN_MARKET_EXCHANGE_VFX_RUNTIME_PATH = ROOT / "art" / "town" / "runtime" / "vfx" / "market_exchange.png"
+TOWN_MARKET_EXCHANGE_AUDIO_RUNTIME_PATH = ROOT / "art" / "audio" / "runtime" / "presentation" / "town_market_exchange.wav"
+TOWN_MARKET_EXCHANGE_FEEDBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_market_exchange_completion_feedback_report.gd"
+TOWN_MARKET_EXCHANGE_FEEDBACK_REPORT_SCENE_PATH = ROOT / "tests" / "town_market_exchange_completion_feedback_report.tscn"
 TOWN_ENTITY_CACHE_ACTIVE_REFRESH_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "town_entity_cache_active_refresh_regression.gd"
 TOWN_ENTITY_CACHE_ACTIVE_REFRESH_REGRESSION_SCENE_PATH = ROOT / "tests" / "town_entity_cache_active_refresh_regression.tscn"
 GENERATED_LARGE_TOWN_EXPLICIT_SAVE_SURFACE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "generated_large_town_explicit_save_surface_regression.gd"
@@ -20773,6 +20778,12 @@ def validate_town_building_complete_vfx_assets(errors: list[str]) -> None:
                 "render_mode": "town_route_response_dispatch",
                 "scale": 1.0,
             },
+            "vfx_placeholder_town_market_exchange": {
+                "event_id": "town_market_exchange_completed",
+                "texture_path": "res://art/town/runtime/vfx/market_exchange.png",
+                "render_mode": "town_market_exchange_completion",
+                "scale": 1.0,
+            },
         },
     }, errors, "Town VFX manifest must map only the exact building-complete, recruitment, and route-response cues/events/textures")
     ensure(png_size(TOWN_BUILDING_COMPLETE_VFX_SOURCE_PATH) == (1254, 1254), errors, "Town building-complete source must retain its exact square source image")
@@ -20871,7 +20882,7 @@ def validate_town_recruitment_vfx_assets(errors: list[str]) -> None:
         "render_mode": "town_recruit_muster",
         "scale": 1.0,
     }, errors, "Town VFX manifest must map the exact recruitment cue/event/texture")
-    ensure(set(cues) == {"vfx_placeholder_build_complete", "vfx_placeholder_recruit_muster", "vfx_placeholder_town_route_response"}, errors, "Town VFX manifest must not remap any other cue")
+    ensure(set(cues) == {"vfx_placeholder_build_complete", "vfx_placeholder_recruit_muster", "vfx_placeholder_town_route_response", "vfx_placeholder_town_market_exchange"}, errors, "Town VFX manifest must not remap any other cue")
     ensure(png_size(TOWN_RECRUITMENT_VFX_SOURCE_PATH) == (1254, 1254), errors, "Town recruitment VFX source must retain its exact square source image")
     ensure(png_size(TOWN_RECRUITMENT_VFX_RUNTIME_PATH) == (512, 512), errors, "Town recruitment runtime texture must be 512x512")
     header = TOWN_RECRUITMENT_VFX_RUNTIME_PATH.read_bytes()[:26]
@@ -20935,6 +20946,7 @@ def validate_town_recruitment_vfx_assets(errors: list[str]) -> None:
         'String(draw.get("mode", "")) == expected_mode',
         "session.to_dict() == authority_after_recruit",
         "SessionStateStore.SAVE_VERSION == 9",
+        "PresentationAudio.validation_reset()",
         'print("TOWN_RECRUITMENT_VFX_ASSET_RUNTIME_REPORT %s"',
     ):
         ensure(token in report_text, errors, f"Town recruitment VFX focused owner is missing live proof: {token}")
@@ -21034,10 +21046,10 @@ def validate_town_route_response_dispatch_feedback(errors: list[str]) -> None:
     if presentation is not None:
         body = presentation.group("body")
         for token in (
-            'if lane not in ["build", "recruit", "response"] or not bool(result.get("ok", false)):',
-            'var event_id := "town_route_response_ordered" if lane == "response" else ("town_units_recruited" if lane == "recruit" else "town_building_built")',
-            'var subject_kind := "map_object" if lane == "response" else ("unit_roster" if lane == "recruit" else "building")',
-            'or lane in ["recruit", "response"] and String(policy.get("selected_blocking_policy", "")) != "nonblocking"',
+            'if lane not in ["build", "recruit", "response", "market"] or not bool(result.get("ok", false)):',
+            'var event_id := "town_market_exchange_completed" if lane == "market" else ("town_route_response_ordered" if lane == "response" else ("town_units_recruited" if lane == "recruit" else "town_building_built"))',
+            'var subject_kind := "resource_stockpile" if lane == "market" else ("map_object" if lane == "response" else ("unit_roster" if lane == "recruit" else "building"))',
+            'or lane in ["recruit", "response", "market"] and String(policy.get("selected_blocking_policy", "")) != "nonblocking"',
             'var placement_id := action_id.trim_prefix("site_response:")',
             'OverworldRules._find_resource_node_by_placement(_session, placement_id)',
             'OverworldRules._resource_site_response_state(_session, node, site)',
@@ -21052,11 +21064,11 @@ def validate_town_route_response_dispatch_feedback(errors: list[str]) -> None:
 
     stage_text = TOWN_STAGE_SCRIPT_PATH.read_text(encoding="utf-8")
     for token in (
-        'event_id not in ["town_units_recruited", "town_building_built", "town_route_response_ordered"]',
+        'event_id not in ["town_units_recruited", "town_building_built", "town_route_response_ordered", "town_market_exchange_completed"]',
         'event_id == "town_route_response_ordered" and String(presentation.get("response_placement_id", "")) == ""',
-        'var expected_cue_id := "cue_town_route_response_ordered" if event_id == "town_route_response_ordered" else',
-        'var expected_subject_kind := "map_object" if event_id == "town_route_response_ordered" else',
-        'event_id in ["town_units_recruited", "town_route_response_ordered"] and selected_blocking_policy != "nonblocking"',
+        '"cue_town_route_response_ordered" if event_id == "town_route_response_ordered" else',
+        '"map_object" if event_id == "town_route_response_ordered" else',
+        'event_id in ["town_units_recruited", "town_route_response_ordered", "town_market_exchange_completed"] and selected_blocking_policy != "nonblocking"',
         'draw_entries = ["route_dispatch_badge"] if reduced_motion else ["route_dispatch_art", "route_dispatch_badge"]',
         '"response_placement_id": String(_town_action_presentation.get("response_placement_id", ""))',
         '"response_label": String(_town_action_presentation.get("response_label", ""))',
@@ -21114,6 +21126,200 @@ def validate_town_route_response_dispatch_feedback(errors: list[str]) -> None:
         ensure(forbidden not in report_text, errors, f"Town route-response focused report bypasses public production ownership: {forbidden}")
 
 
+def validate_town_market_exchange_completion_feedback(errors: list[str]) -> None:
+    required_paths = (
+        TOWN_SCRIPT_PATH,
+        TOWN_STAGE_SCRIPT_PATH,
+        TOWN_VFX_MANIFEST_PATH,
+        TOWN_MARKET_EXCHANGE_VFX_SOURCE_PATH,
+        TOWN_MARKET_EXCHANGE_VFX_RUNTIME_PATH,
+        TOWN_MARKET_EXCHANGE_AUDIO_RUNTIME_PATH,
+        TOWN_MARKET_EXCHANGE_FEEDBACK_REPORT_SCRIPT_PATH,
+        TOWN_MARKET_EXCHANGE_FEEDBACK_REPORT_SCENE_PATH,
+        ANIMATION_EVENT_CUES_PATH,
+        PRESENTATION_SFX_MANIFEST_PATH,
+        PRESENTATION_SFX_GENERATOR_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Town market-exchange completion feedback owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    town_vfx = load_json(TOWN_VFX_MANIFEST_PATH)
+    town_vfx_cues = town_vfx.get("cues", {}) if isinstance(town_vfx, dict) else {}
+    ensure(town_vfx_cues.get("vfx_placeholder_town_market_exchange") == {
+        "event_id": "town_market_exchange_completed",
+        "texture_path": "res://art/town/runtime/vfx/market_exchange.png",
+        "render_mode": "town_market_exchange_completion",
+        "scale": 1.0,
+    }, errors, "Town market-exchange VFX manifest entry drifted")
+    ensure(png_size(TOWN_MARKET_EXCHANGE_VFX_SOURCE_PATH) == (1254, 1254), errors, "Town market-exchange source image must retain the generated 1254x1254 source")
+    ensure(png_size(TOWN_MARKET_EXCHANGE_VFX_RUNTIME_PATH) == (512, 512), errors, "Town market-exchange runtime image must be 512x512")
+    for path, label in ((TOWN_MARKET_EXCHANGE_VFX_SOURCE_PATH, "source"), (TOWN_MARKET_EXCHANGE_VFX_RUNTIME_PATH, "runtime")):
+        header = path.read_bytes()[:26]
+        ensure(len(header) >= 26 and header[25] in {4, 6}, errors, f"Town market-exchange {label} image must retain a PNG alpha channel")
+
+    animation_rows = load_json(ANIMATION_EVENT_CUES_PATH).get("entries", [])
+    market_rows = [row for row in animation_rows if isinstance(row, dict) and row.get("event_id") == "town_market_exchange_completed"]
+    ensure(market_rows == [{
+        "event_id": "town_market_exchange_completed",
+        "cue_id": "cue_town_market_exchange_completed",
+        "surface": "town",
+        "subject_kind": "resource_stockpile",
+        "animation_state_family": "exchange",
+        "animation_state": "settlement_confirmed",
+        "playback_policy": "queue_resolved",
+        "blocking_policy": "nonblocking",
+        "skippable": True,
+        "vfx_cue_ids": ["vfx_placeholder_town_market_exchange"],
+        "audio_cue_ids": ["audio_placeholder_town_market_exchange"],
+        "fallbacks": {"reduced_motion_tag": "ledger_exchange_badge", "fast_mode_tag": "settlement_snap"},
+        "validation_tags": ["town", "market", "resolved_event"],
+        "producer_refs": ["TownShell._on_market_action_pressed", "TownRules.perform_market_action"],
+    }], errors, "Town market-exchange animation event must remain a unique exact Town-owned nonblocking settlement cue")
+
+    audio_cues = load_json(PRESENTATION_SFX_MANIFEST_PATH).get("cues", {})
+    ensure(audio_cues.get("audio_placeholder_town_market_exchange") == {
+        "path": "res://art/audio/runtime/presentation/town_market_exchange.wav",
+        "duration_msec": 360,
+        "volume_db": -13.5,
+        "role": "town_market_exchange_completed",
+    }, errors, "Town market-exchange audio manifest entry drifted")
+    with wave.open(str(TOWN_MARKET_EXCHANGE_AUDIO_RUNTIME_PATH), "rb") as wav_file:
+        ensure(wav_file.getnchannels() == 2, errors, "Town market-exchange audio must be stereo")
+        ensure(wav_file.getsampwidth() == 2, errors, "Town market-exchange audio must use 16-bit PCM")
+        ensure(wav_file.getframerate() == 44100, errors, "Town market-exchange audio must use 44.1 kHz")
+        ensure(wav_file.getnframes() == 15876, errors, "Town market-exchange audio must remain exactly 360ms")
+    generator_text = PRESENTATION_SFX_GENERATOR_PATH.read_text(encoding="utf-8")
+    for token in ('"audio_placeholder_town_market_exchange"', '"kind": "exchange_chime"', 'if kind == "exchange_chime":'):
+        ensure(token in generator_text, errors, f"Town market-exchange deterministic audio generator is missing: {token}")
+    audio_text = PRESENTATION_AUDIO_PATH.read_text(encoding="utf-8")
+    ensure('"audio_placeholder_town_market_exchange": {"frequency": 520.0, "duration": 0.36, "gain": 0.10}' in audio_text, errors, "Town market-exchange generated audio fallback drifted")
+
+    shell_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
+    market_handler = re.search(r"func _on_market_action_pressed\(action_id: String\) -> void:\n(?P<body>.*?)(?=\nfunc )", shell_text, re.DOTALL)
+    ensure(market_handler is not None, errors, "Town market-exchange presenter is missing the public market handler")
+    if market_handler is not None:
+        body = market_handler.group("body")
+        order = [
+            body.find("TownRules.perform_market_action(_session, action_id)"),
+            body.find('_record_town_action_result("market", action_id, action, result, before)'),
+            body.find('_invalidate_active_town_entity_cache("market", ["economy"])'),
+            body.find("if _handle_session_resolution():"),
+            body.find("\t_refresh()"),
+            body.find('_record_town_action_presentation("market", action_id, action, result, before)'),
+        ]
+        ensure(all(index >= 0 for index in order) and order == sorted(order), errors, "Town market exchange must publish only after the authoritative transaction, cache invalidation, resolution guard, and refreshed stage")
+        ensure(body.count('_record_town_action_presentation("market", action_id, action, result, before)') == 1, errors, "Town market handler must publish exactly one presentation")
+
+    presentation = re.search(r"func _record_town_action_presentation\(.*?\n(?P<body>.*?)(?=\nfunc )", shell_text, re.DOTALL)
+    ensure(presentation is not None, errors, "Town market-exchange presentation materializer is missing")
+    if presentation is not None:
+        body = presentation.group("body")
+        for token in (
+            'if lane not in ["build", "recruit", "response", "market"] or not bool(result.get("ok", false)):',
+            'var event_id := "town_market_exchange_completed" if lane == "market" else',
+            'var subject_kind := "resource_stockpile" if lane == "market" else',
+            'var parts := action_id.split(":")',
+            'var resource_deltas := _town_action_resource_deltas(before, after)',
+            'resource_id not in OverworldRules.NORMAL_MARKET_RESOURCE_KEYS',
+            'resource_deltas.size() != 2',
+            'action_type == "buy" and (resource_delta != amount or gold_delta >= 0)',
+            'action_type == "sell" and (resource_delta != -amount or gold_delta <= 0)',
+            'presentation["exchange_action"] = action_type',
+            'presentation["exchange_resource_id"] = resource_id',
+            'presentation["exchange_amount"] = amount',
+            'presentation["resource_deltas"] = resource_deltas',
+            'presentation["exchange_label"] = String(action.get("label", action_id))',
+        ):
+            ensure(token in body, errors, f"Town market-exchange presentation is missing exact consequence provenance: {token}")
+    delta_helper = re.search(r"func _town_action_resource_deltas\(before: Dictionary, after: Dictionary\) -> Array:\n(?P<body>.*?)(?=\nfunc )", shell_text, re.DOTALL)
+    ensure(delta_helper is not None, errors, "Town market-exchange presenter is missing the ordered resource-delta helper")
+    if delta_helper is not None:
+        body = delta_helper.group("body")
+        ensure("for resource_id in OverworldRules.LIVE_STOCKPILE_RESOURCE_KEYS:" in body, errors, "Town market-exchange resource deltas must retain live stockpile order")
+        for forbidden in ("SessionState", "SaveService", "AppRouter", "await ", "erase(", "sort"):
+            ensure(forbidden not in body, errors, f"Town market-exchange delta helper must remain detached and read-only: {forbidden}")
+
+    stage_text = TOWN_STAGE_SCRIPT_PATH.read_text(encoding="utf-8")
+    for token in (
+        'event_id == "town_market_exchange_completed" and String(presentation.get("exchange_action", "")) not in ["buy", "sell"]',
+        'event_id == "town_market_exchange_completed" and String(presentation.get("exchange_resource_id", "")) not in ["wood", "ore"]',
+        'event_id == "town_market_exchange_completed" and int(presentation.get("exchange_amount", 0)) <= 0',
+        'event_id == "town_market_exchange_completed" and Array(presentation.get("resource_deltas", [])).size() != 2',
+        'draw_entries = ["ledger_exchange_badge"] if reduced_motion else ["market_exchange_art", "ledger_exchange_badge"]',
+        '"exchange_action": String(_town_action_presentation.get("exchange_action", ""))',
+        '"resource_deltas": Array(_town_action_presentation.get("resource_deltas", [])).duplicate(true)',
+        'func _draw_town_market_exchange_presentation(badge_rect: Rect2, reduced_motion: bool) -> void:',
+        '_draw_text("EXCHANGE COMPLETE"',
+        'func _town_market_exchange_vfx_asset_state() -> Dictionary:',
+        'cue_id == "vfx_placeholder_town_market_exchange"',
+        'String(spec.get("render_mode", "")) == "town_market_exchange_completion"',
+    ):
+        ensure(token in stage_text, errors, f"TownStageView is missing market-exchange playback ownership: {token}")
+    market_draw = re.search(r"func _draw_town_market_exchange_presentation\(.*?\n(?P<body>.*?)(?=\nfunc )", stage_text, re.DOTALL)
+    market_state = re.search(r"func _town_market_exchange_vfx_asset_state\(\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc )", stage_text, re.DOTALL)
+    for block, label in ((market_draw.group("body") if market_draw else "", "draw"), (market_state.group("body") if market_state else "", "resolver")):
+        for forbidden in ("SessionState", "SaveService", "TownRules", "OverworldRules", "AppRouter", "await ", "create_timer", "create_tween"):
+            ensure(forbidden not in block, errors, f"Town market-exchange {label} must remain view-only and frame-owned: {forbidden}")
+
+    scene_text = TOWN_MARKET_EXCHANGE_FEEDBACK_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure_scene_nodes(scene_text, errors, "town_market_exchange_completion_feedback_report.tscn", [("TownMarketExchangeCompletionFeedbackReport", "Node")])
+    report_text = TOWN_MARKET_EXCHANGE_FEEDBACK_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for token in (
+        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        '"action_type": "buy", "resource_id": "wood"',
+        '"action_type": "sell", "resource_id": "ore"',
+        '_seed_market_fixture(authored_session, authored_town)',
+        '"building_market_square"',
+        'stage.present_town_action({"event_id": "town_market_exchange_completed"})',
+        'var control_result: Dictionary = TownRules.perform_market_action(control, action_id)',
+        'var expected_deltas := _resource_deltas(live_before, control.to_dict())',
+        'var public_result: Dictionary = shell.validation_perform_town_action(action_id)',
+        'live_after == control.to_dict()',
+        'live_town_after.get("market_usage", {}) == control_town_after.get("market_usage", {})',
+        'String(active.get("event_id", "")) == "town_market_exchange_completed"',
+        'String(active.get("cue_id", "")) == "cue_town_market_exchange_completed"',
+        'Array(active.get("resource_deltas", [])) == expected_deltas',
+        'String(audio_record.get("cue_id", "")) == "audio_placeholder_town_market_exchange"',
+        'String(audio_record.get("playback_source", "")) == "imported_wav"',
+        'var refresh_result: Dictionary = shell.validation_force_refresh()',
+        'and int(after_refresh.get("serial", 0)) == serial',
+        'and live_session.to_dict() == authority_before_refresh',
+        'shell.validation_perform_town_action("market:buy:wood:999999")',
+        'PresentationAudio.validation_records() == audio_records',
+        'print("TOWN_MARKET_EXCHANGE_COMPLETION_FEEDBACK_REPORT %s"',
+    ):
+        ensure(token in report_text, errors, f"Town market-exchange focused report is missing method-matched live proof: {token}")
+    ensure(report_text.count("for viewport_size in VIEWPORT_SIZES:") == 1, errors, "Town market-exchange focused report must run both exact viewport widths")
+    ensure(report_text.count("var control_result: Dictionary = TownRules.perform_market_action(control, action_id)") == 1, errors, "Town market-exchange focused report must use one detached production-rules control")
+    resource_delta_helper = re.search(r"func _resource_deltas\(before: Dictionary, after: Dictionary\) -> Array:\n(?P<body>.*?)(?=\nfunc )", report_text, re.DOTALL)
+    ensure(resource_delta_helper is not None, errors, "Town market-exchange focused report is missing its independent whole-session delta oracle")
+    if resource_delta_helper is not None:
+        body = resource_delta_helper.group("body")
+        for token in (
+            'before.get("overworld", {})',
+            'after.get("overworld", {})',
+            'before_overworld.get("resources", {})',
+            'after_overworld.get("resources", {})',
+            'for resource_id in OverworldRules.LIVE_STOCKPILE_RESOURCE_KEYS:',
+        ):
+            ensure(token in body, errors, f"Town market-exchange independent delta oracle is missing exact session-stockpile ownership: {token}")
+        for forbidden in ("TownRules.town_action_consequence_signature", "_town_action_resource_deltas", "sort", "erase"):
+            ensure(forbidden not in body, errors, f"Town market-exchange independent delta oracle must not reuse or normalize production presentation output: {forbidden}")
+    for forbidden in (
+        "_on_market_action_pressed(",
+        "_record_town_action_presentation(",
+        "_town_action_resource_deltas(",
+        "_draw_town_market_exchange_presentation(",
+        "_town_market_exchange_vfx_asset_state(",
+        "get_tree().create_timer",
+        "create_tween",
+        "session.overworld.erase",
+    ):
+        ensure(forbidden not in report_text, errors, f"Town market-exchange focused report bypasses public production ownership: {forbidden}")
+
+
 def validate_town_building_complete_cue_playback(errors: list[str]) -> None:
     report_script_path = ROOT / "tests" / "town_building_complete_cue_playback_report.gd"
     report_scene_path = ROOT / "tests" / "town_building_complete_cue_playback_report.tscn"
@@ -21137,7 +21343,7 @@ def validate_town_building_complete_cue_playback(errors: list[str]) -> None:
     for token in (
         '@onready var _town_action_input_blocker: Control = %TownActionInputBlocker',
         '_record_town_action_presentation("build", full_action_id, action, result, before)',
-        'var event_id := "town_route_response_ordered" if lane == "response" else ("town_units_recruited" if lane == "recruit" else "town_building_built")',
+        'var event_id := "town_market_exchange_completed" if lane == "market" else ("town_route_response_ordered" if lane == "response" else ("town_units_recruited" if lane == "recruit" else "town_building_built"))',
         'var building_id := action_id.trim_prefix("build:")',
         'building_id in before_buildings or building_id not in after_buildings',
         'presentation["building_id"] = building_id',
@@ -21166,7 +21372,7 @@ def validate_town_building_complete_cue_playback(errors: list[str]) -> None:
     stage_text = TOWN_STAGE_SCRIPT_PATH.read_text(encoding="utf-8")
     for token in (
         'signal town_action_presentation_blocking_changed(blocking: bool)',
-        'event_id not in ["town_units_recruited", "town_building_built", "town_route_response_ordered"]',
+        'event_id not in ["town_units_recruited", "town_building_built", "town_route_response_ordered", "town_market_exchange_completed"]',
         'event_id == "town_building_built" and selected_blocking_policy not in ["input_blocking_timeout", "nonblocking_reduced_motion", "nonblocking_fast_resolve"]',
         'func dismiss_town_action_presentation() -> void:',
         'return String(policy.get("selected_blocking_policy", "")) == "input_blocking_timeout"',
@@ -21224,12 +21430,12 @@ def validate_town_recruitment_cue_playback(errors: list[str]) -> None:
     ensure_script_functions(shell_text, errors, "TownShell.gd", ["_record_town_action_presentation"])
     for required_token in (
 		'_record_town_action_presentation("recruit", full_action_id, action, result, before)',
-		'if lane not in ["build", "recruit", "response"] or not bool(result.get("ok", false)):',
+		'if lane not in ["build", "recruit", "response", "market"] or not bool(result.get("ok", false)):',
         'var unit_id := action_id.trim_prefix("recruit:")',
         'var after := TownRules.town_action_consequence_signature(_session)',
         'var recruited_count := int(after_army.get(unit_id, 0)) - int(before_army.get(unit_id, 0))',
         'AnimationCueCatalog.cue_playback_policy_for_event(',
-		'var event_id := "town_route_response_ordered" if lane == "response" else ("town_units_recruited" if lane == "recruit" else "town_building_built")',
+		'var event_id := "town_market_exchange_completed" if lane == "market" else ("town_route_response_ordered" if lane == "response" else ("town_units_recruited" if lane == "recruit" else "town_building_built"))',
         'String(policy.get("selected_blocking_policy", "")) != "nonblocking"',
 		'_town_stage_view.call("present_town_action", presentation)',
         '"policy": policy.duplicate(true)',
@@ -21285,9 +21491,9 @@ def validate_town_recruitment_cue_playback(errors: list[str]) -> None:
         "const RECRUIT_PRESENTATION_MAX_DURATION_MS := 700",
         "const RECRUIT_PRESENTATION_MIN_DURATION_MS := 120",
         "set_process(false)",
-		'event_id not in ["town_units_recruited", "town_building_built", "town_route_response_ordered"]',
-		'var expected_cue_id := "cue_town_route_response_ordered" if event_id == "town_route_response_ordered" else ("cue_town_units_recruited" if event_id == "town_units_recruited" else "cue_town_building_built")',
-		'event_id in ["town_units_recruited", "town_route_response_ordered"] and selected_blocking_policy != "nonblocking"',
+		'event_id not in ["town_units_recruited", "town_building_built", "town_route_response_ordered", "town_market_exchange_completed"]',
+		'var expected_cue_id := "cue_town_market_exchange_completed" if event_id == "town_market_exchange_completed" else ("cue_town_route_response_ordered" if event_id == "town_route_response_ordered" else ("cue_town_units_recruited" if event_id == "town_units_recruited" else "cue_town_building_built"))',
+		'event_id in ["town_units_recruited", "town_route_response_ordered", "town_market_exchange_completed"] and selected_blocking_policy != "nonblocking"',
         "_town_action_presentation = presentation.duplicate(true)",
         'if Time.get_ticks_msec() >= int(_town_action_presentation.get("expires_msec", 0)):',
 		'draw_entries = ["recruit_count_badge"] if reduced_motion else ["recruit_muster_rings", "recruit_count_badge"]',
@@ -40299,6 +40505,12 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
             "volume_db": -13.0,
             "role": "town_route_response_dispatched",
         },
+        "audio_placeholder_town_market_exchange": {
+            "path": "res://art/audio/runtime/presentation/town_market_exchange.wav",
+            "duration_msec": 360,
+            "volume_db": -13.5,
+            "role": "town_market_exchange_completed",
+        },
     }
     manifest = json.loads(PRESENTATION_SFX_MANIFEST_PATH.read_text(encoding="utf-8"))
     ensure(manifest.get("schema") == "presentation_runtime_sfx_manifest_v1", errors, "presentation SFX manifest has the wrong schema")
@@ -40310,7 +40522,7 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
     ensure(int(manifest.get("sample_width_bits", 0)) == 16, errors, "production presentation SFX must use 16-bit PCM")
     ensure(manifest.get("asset_tier") == "production_layered_v1", errors, "presentation SFX manifest must declare production_layered_v1")
     cues = manifest.get("cues", {})
-    ensure(isinstance(cues, dict) and set(cues) == set(expected_cues), errors, "presentation SFX manifest must contain exactly the twenty live Town, Overworld, navigation, blocking, route-open, route-closed, object-focus, object-resolution, guarded-context, and system action cues")
+    ensure(isinstance(cues, dict) and set(cues) == set(expected_cues), errors, "presentation SFX manifest must contain exactly the twenty-one live Town, Overworld, navigation, blocking, route-open, route-closed, object-focus, object-resolution, guarded-context, and system action cues")
     asset_hashes: list[str] = []
     for cue_id in sorted(expected_cues):
         expected = expected_cues[cue_id]
@@ -40344,7 +40556,7 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
             if left_samples and right_samples:
                 ensure(left_samples[0] == 0 and right_samples[0] == 0, errors, f"presentation SFX must start at zero: {expected['path']}")
                 ensure(left_samples[-1] == 0 and right_samples[-1] == 0, errors, f"presentation SFX must end at zero: {expected['path']}")
-    ensure(len(set(asset_hashes)) == 20, errors, "all twenty presentation assets must be byte-distinct")
+    ensure(len(set(asset_hashes)) == 21, errors, "all twenty-one presentation assets must be byte-distinct")
     if len(asset_hashes) == 18:
         pack_signature = hashlib.sha256("\n".join(asset_hashes).encode("utf-8")).hexdigest()
         ensure(pack_signature == "d2d0b47d1de5613767232ecf94a03186aade937de3a1c7b7a4857eef4c8d7b57", errors, "presentation SFX pack signature drifted")
@@ -40373,6 +40585,7 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
         "cache_lift",
         "sentinel_warning",
         "dispatch_signal",
+        "exchange_chime",
         "presentation-production-v1",
         "render_stereo",
         "layered_sample",
@@ -42793,6 +43006,7 @@ def main() -> int:
     validate_town_building_complete_vfx_assets(errors)
     validate_town_recruitment_vfx_assets(errors)
     validate_town_route_response_dispatch_feedback(errors)
+    validate_town_market_exchange_completion_feedback(errors)
     validate_town_building_complete_cue_playback(errors)
     validate_town_recruitment_cue_playback(errors)
     validate_town_contextual_guide(errors)
