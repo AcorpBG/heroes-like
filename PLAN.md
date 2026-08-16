@@ -6067,6 +6067,35 @@ Non-goals:
 - no broad faction balance tuning, generic campaign redesign, cross-faction hero/spell/artifact/rare-resource transfer, generated-map support, visual/audio asset production, or full Sunvault campaign claim;
 - no packaged chapter interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
 
+## Selected Slice: Embercourt Charter Bastion Counterseal Chapter
+
+id: `content-embercourt-charter-bastion-counterseal-chapter-10184`
+
+Status: completed.
+
+Implementation boundary:
+- add one twenty-fourth active authored scenario that completes six-faction player representation inside `Frontier Claims`, led by the authored but player-start-unused Seren Valechant and Charter Bastion Reserve;
+- wire it as chapter IX after `halo-reserve-refraction-claim`, importing only bounded common resources and campaign flags while retaining Embercourt-owned hero, spell, artifact, army, and rare-resource authority;
+- reuse shipped towns, terrain, units, resources, artifacts, encounters, objectives, campaign/save/runtime systems, and production UI paths without new schemas or policy.
+
+Completion criteria:
+- the active catalog exposes exactly twenty-four campaign- and skirmish-selectable scenarios, and the new chapter preserves exact Seren/Charter Bastion Reserve, Embercourt/Sunvault, Highwater/Halo, deadline, objective, and economy-route identities;
+- real standalone and campaign sessions launch, expose live Embercourt town development/recruitment, create all authored public battle payloads, reach victory/defeat authority, and survive save normalization/resume;
+- chapter IX unlocks only after exact Halo Reserve victory plus `halo_refraction_claim_recorded`, imports bounded common resources/flags only, and transfers no Sunvault hero progression, spells, artifacts, or aetherglass;
+- active combat breadth, campaign/deadline/replay/economy/AI/core compatibility, repository/editor validation, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Completion evidence:
+- `charter-bastion-counterseal` is the exact twenty-fourth active scenario and ninth `Frontier Claims` chapter, completing player-owned representation for all six factions through authored Seren Valechant, Charter Bastion Reserve, Highwater Keep, and Halo Spire content;
+- focused runtime proves standalone/campaign launch, live Embercourt recruitment, three public battle payloads, exact Day 13 victory/defeat authority, save/resume, common-only Halo carryover, and no Sunvault hero/spell/artifact/aetherglass transfer;
+- the screened 7/5/2 relay, 6/5/3 mirror, and 5/4/2 aurora fronts pass the authoritative 24-scenario/77-encounter breadth matrix with stalls 0, invalid 0, and tuning queue clear at signature `829808c9`;
+- all prior Frontier chapter owners plus campaign, deadline, replay, economy-route, player/AI start and runway, recruitment-delivery, core, repository, JSON, validator, and exact/generic editor gates pass;
+- official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass; these are bounded export/startup results, not packaged chapter interaction or release certification.
+
+Non-goals:
+- no new units, towns, heroes, spells, artifacts, resource-site types, battle rules, AI policy, economy coefficients, campaign schema, save version, Native RMG, or map-topology changes;
+- no broad faction balance tuning, generic campaign redesign, cross-faction hero/spell/artifact/rare-resource transfer, generated-map support, visual/audio asset production, or full Embercourt campaign claim;
+- no packaged chapter interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:

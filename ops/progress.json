@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Halo Reserve Refraction Claim is complete as the twenty-third active scenario and eighth Frontier Claims chapter. Focused live flow, 23-scenario/74-encounter queue-clear breadth, campaign/economy/AI/core compatibility, static/editor validation, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. No packaged chapter interaction or whole-release claim is made.",
+  "currentNotes": "Charter Bastion Counterseal is completed as the twenty-fourth active scenario and ninth Frontier Claims chapter, completing player-owned representation across all six factions. Broader release gaps remain and no whole-game or release-readiness claim is made.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-sunvault-halo-reserve-refraction-claim-chapter-10184",
-  "currentSliceId": "content-sunvault-halo-reserve-refraction-claim-chapter-10184",
-  "currentSliceNotes": "Completed with real Sunvault campaign/skirmish content, exact carryover isolation, screened combat breadth, shared-system compatibility, and bounded Linux/Windows export-startup evidence.",
+  "currentSlice": "content-embercourt-charter-bastion-counterseal-chapter-10184",
+  "currentSliceId": "content-embercourt-charter-bastion-counterseal-chapter-10184",
+  "currentSliceNotes": "Completed as the exact twenty-fourth active scenario and ninth Frontier Claims chapter with focused live, breadth, compatibility, static/editor, and bounded Linux/Windows export-startup evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Sunvault Halo Reserve Refraction Claim Chapter",
-  "currentSliceUpdatedAt": "2026-08-16T13:17:51Z",
+  "currentSliceTitle": "Embercourt Charter Bastion Counterseal Chapter",
+  "currentSliceUpdatedAt": "2026-08-16T14:02:54Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -86369,6 +86369,7 @@
         "content/scenarios.json",
         "content/campaigns.json",
         "tests/veilmourn_fogchart_mooring_chapter_report.gd",
+        "tests/thornwake_rootgate_toll_chapter_report.gd",
         "tests/veilmourn_fogchart_mooring_chapter_report.tscn",
         "tests/frontier_claims_campaign_report.gd",
         "tests/validate_repo.py",
@@ -86560,6 +86561,56 @@
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
       "blockedReason": null,
       "completedAt": "2026-08-16T13:17:51Z"
+    },
+    {
+      "id": "content-embercourt-charter-bastion-counterseal-chapter-10184",
+      "title": "Embercourt Charter Bastion Counterseal Chapter",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Complete six-faction player representation in Frontier Claims using authored but player-start-unused Seren Valechant and Charter Bastion Reserve content through existing shipped systems.",
+      "implementationTargets": [
+        "content/scenarios.json",
+        "content/campaigns.json",
+        "tests/embercourt_charter_bastion_counterseal_chapter_report.gd",
+        "tests/embercourt_charter_bastion_counterseal_chapter_report.tscn",
+        "tests/frontier_claims_campaign_report.gd",
+        "tests/sunvault_halo_reserve_refraction_claim_chapter_report.gd",
+        "tests/mireclaw_nightglass_ledger_reversal_chapter_report.gd",
+        "tests/brasshollow_clauseworks_counterclaim_chapter_report.gd",
+        "tests/veilmourn_fogchart_mooring_chapter_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "The active catalog exposes exactly twenty-four campaign- and skirmish-selectable scenarios, and Charter Bastion Counterseal retains exact Seren/Charter Bastion Reserve, Embercourt/Sunvault, Highwater/Halo, deadline, objective, and economy-route identities",
+        "Real standalone and campaign sessions launch, live Embercourt town development/recruitment and authored public battle payloads work, victory/defeat authority resolves, and save normalization/resume passes",
+        "Frontier Claims chapter IX unlocks only after exact Halo Reserve victory plus halo_refraction_claim_recorded, imports bounded common resources and flags only, and transfers no Sunvault hero progression, spells, artifacts, or aetherglass",
+        "Active combat breadth, campaign/deadline/replay/economy/AI/core compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "new units, towns, heroes, spells, artifacts, resource-site types, battle rules, AI policy, economy coefficients, campaign schema, save version, Native RMG, or map-topology changes",
+        "broad faction balance tuning, generic campaign redesign, cross-faction hero/spell/artifact/rare-resource transfer, generated-map support, visual/audio asset production, or a full Embercourt campaign claim",
+        "packaged chapter interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "ee824e011fd70b00e321ecb56a545ad46499a9f0",
+        "active_scenario_count": 23,
+        "frontier_claims_chapter_count": 8,
+        "frontier_claims_player_faction_ids": ["faction_thornwake", "faction_brasshollow", "faction_veilmourn", "faction_mireclaw", "faction_sunvault"],
+        "missing_frontier_player_faction_id": "faction_embercourt",
+        "unused_player_hero_id": "hero_seren",
+        "unused_player_army_id": "army_charter_bastion_reserve"
+      },
+      "createdAt": "2026-08-16T13:28:23Z",
+      "updatedAt": "2026-08-16T14:02:54Z",
+      "startedAt": "2026-08-16T13:28:23Z",
+      "notes": "Completed on baseline HEAD ee824e01. Charter Bastion Counterseal ships as the twenty-fourth active scenario and ninth Frontier Claims chapter, completing player-owned representation across all six factions with Seren Valechant and Charter Bastion Reserve against Halo Spire's Sunvault front. Focused `/tmp/heroes-counterseal-focused.1cYTuP` passes standalone/campaign launch, live Embercourt recruitment, three public battle payloads, exact Day 13 outcome authority, save/resume, common-only Halo carryover, and no Sunvault hero/spell/artifact/aetherglass transfer. Method-matched screen `/tmp/heroes-counterseal-balance.ywhLgY` retains relay 7/5/2, mirror 6/5/3, and aurora 5/4/2; authoritative breadth `/tmp/heroes-counterseal-breadth.g8ae7q` passes 24 scenarios/77 encounters with stalls0, invalid0, queue clear, signature829808c9. Prior chapter owners `/tmp/heroes-counterseal-chapter-compat-rerun.WDlliK`, campaign/deadline/replay/economy/player+AI starts/runways/recruitment/core `/tmp/heroes-counterseal-compat.XGR2A8`, repository/editor `/tmp/heroes-counterseal-static.TFhzRh`, official Linux export/headless startup and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup `/tmp/heroes-counterseal-platform.cnY3O1` pass. No packaged chapter interaction, controller, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claim is made.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
+      "blockedReason": null,
+      "completedAt": "2026-08-16T14:02:54Z"
     }
   ],
   "project": "heroes-like",
@@ -86569,7 +86620,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
+  "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain after completing six-faction Frontier Claims player representation.",
   "remainingWork": "Select the next tracker-approved release-readiness implementation slice without claiming whole-game or release readiness.",
   "reportOnlyEvidence": [
     {
@@ -87002,7 +87053,7 @@
     }
   ],
   "result": "ux_overworld_terminal_end_turn_detached_focus_guard_completed",
-  "status": "in_progress",
+  "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
       "completed": "Implementation or documentation-only governance work satisfies the PLAN completion criteria and has validation/evidence.",

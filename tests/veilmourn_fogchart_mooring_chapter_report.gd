@@ -96,7 +96,7 @@ func _run() -> void:
 
 func _assert_catalog_and_setup() -> Dictionary:
 	var scenario_ids: Array = ContentService.get_content_ids(ContentService.SCENARIOS_PATH)
-	if scenario_ids.size() != 23 or SCENARIO_ID not in scenario_ids or scenario_ids[19] != SCENARIO_ID:
+	if scenario_ids.size() != 24 or SCENARIO_ID not in scenario_ids or scenario_ids[19] != SCENARIO_ID:
 		_fail("Active catalog did not retain Fogchart as exact twentieth scenario in the twenty-three scenario roster: %s" % JSON.stringify(scenario_ids))
 		return {}
 	var scenario: Dictionary = ContentService.get_scenario(SCENARIO_ID)

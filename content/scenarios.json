@@ -1,6 +1,6 @@
 {
   "domain_status": "",
-  "player_facing_active_scenario_count": 23,
+  "player_facing_active_scenario_count": 24,
   "reactivation_reason": "player_facing_campaign_reactivation_smoke_2026_05_23",
   "items": [
     {
@@ -5495,6 +5495,85 @@
         {"placement_id": "halo_prism_watch", "encounter_id": "encounter_graftroot_wardens", "x": 4, "y": 1, "difficulty": "medium", "combat_seed": 23101, "enemy_army": {"id": "army_halo_prism_watch", "name": "Halo Prism Watch", "faction_id": "faction_thornwake", "stacks": [{"unit_id": "unit_thornwake_seedcutters", "count": 10}, {"unit_id": "unit_thornwake_thornwhip_carriers", "count": 7}, {"unit_id": "unit_thornwake_sporeglass_menders", "count": 4}]}},
         {"placement_id": "halo_sporeglass_screen", "encounter_id": "encounter_graftroot_wardens", "x": 6, "y": 4, "difficulty": "high", "combat_seed": 23102, "enemy_army": {"id": "army_halo_sporeglass_screen", "name": "Halo Sporeglass Screen", "faction_id": "faction_thornwake", "stacks": [{"unit_id": "unit_thornwake_seedcutters", "count": 13}, {"unit_id": "unit_thornwake_thornwhip_carriers", "count": 9}, {"unit_id": "unit_thornwake_sporeglass_menders", "count": 6}]}},
         {"placement_id": "halo_barkmantle_bastion", "encounter_id": "encounter_graftroot_wardens", "x": 8, "y": 0, "difficulty": "high", "combat_seed": 23103, "enemy_army": {"id": "army_halo_barkmantle_bastion", "name": "Halo Barkmantle Bastion", "faction_id": "faction_thornwake", "stacks": [{"unit_id": "unit_thornwake_seedcutters", "count": 9}, {"unit_id": "unit_thornwake_sporeglass_menders", "count": 7}, {"unit_id": "unit_thornwake_barkmantle_rams", "count": 4}]}}
+      ]
+    },
+    {
+      "id": "charter-bastion-counterseal",
+      "name": "Charter Bastion Counterseal",
+      "selection": {
+        "summary": "Lead Seren Valechant from Charter Bastion, break Sunvault's counterseal line, and enter Embercourt as the ninth and final command in the Frontier Claims docket.",
+        "recommended_difficulty": "normal",
+        "map_size_label": "Counterseal Causeway (11x6)",
+        "player_summary": "Seren Valechant leads Charter Bastion's reserve through existing Embercourt guard, archer, and pikeward systems.",
+        "enemy_summary": "Sunvault relay pickets, mirror lancers, and an aurora battery protect Halo Spire's counterseal road.",
+        "availability": {"campaign": true, "skirmish": true}
+      },
+      "map_size": {"width": 11, "height": 6},
+      "player_faction_id": "faction_embercourt",
+      "player_army_id": "army_charter_bastion_reserve",
+      "hero_id": "hero_seren",
+      "starting_resources": {"gold": 800, "wood": 3, "ore": 3, "embergrain": 2},
+      "map": [
+        ["grass", "grass", "grass", "grass", "grass", "rough", "rough", "grass", "grass", "grass", "grass"],
+        ["grass", "grass", "grass", "rough", "grass", "grass", "rough", "rough", "grass", "grass", "grass"],
+        ["grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass", "grass"],
+        ["grass", "rough", "grass", "grass", "grass", "rough", "grass", "grass", "grass", "rough", "grass"],
+        ["grass", "rough", "rough", "grass", "grass", "grass", "grass", "rough", "grass", "grass", "grass"],
+        ["grass", "grass", "grass", "grass", "rough", "grass", "grass", "grass", "grass", "grass", "grass"]
+      ],
+      "start": {"x": 0, "y": 2},
+      "hero_starts": ["hero_seren"],
+      "objectives": {
+        "victory_text": "Seren breaks Halo Spire's counterseal and enters Embercourt as the ninth command in the completed Frontier Claims docket.",
+        "defeat_text": "Sunvault seals Charter Bastion outside the shared docket and scatters Seren's reserve along the causeway.",
+        "victory": [
+          {"id": "claim_halo_counterseal_front", "label": "Claim the Halo Counterseal Front", "type": "town_owned_by_player", "placement_id": "halo_counterseal_front"},
+          {"id": "clear_counterseal_relay_pickets", "label": "Clear the Counterseal Relay Pickets", "type": "encounter_resolved", "placement_id": "counterseal_relay_pickets"},
+          {"id": "clear_counterseal_mirror_lancers", "label": "Clear the Counterseal Mirror Lancers", "type": "encounter_resolved", "placement_id": "counterseal_mirror_lancers"},
+          {"id": "clear_counterseal_aurora_battery", "label": "Clear the Counterseal Aurora Battery", "type": "encounter_resolved", "placement_id": "counterseal_aurora_battery"}
+        ],
+        "defeat": [
+          {"id": "hold_charter_bastion_keep", "label": "Keep Charter Bastion under Embercourt authority", "type": "town_not_owned_by_player", "placement_id": "charter_bastion_keep"},
+          {"id": "seren_survives", "label": "Seren must survive the counterseal expedition", "type": "session_flag_equals", "flag": "campaign", "value": "defeat"},
+          {"id": "contain_counterseal_pressure", "label": "Do not let Sunvault pressure reach 10", "type": "enemy_pressure_at_least", "faction_id": "faction_sunvault", "threshold": 10},
+          {"id": "record_counterseal_before_daybreak", "label": "Record the counterseal before Day 13", "type": "day_at_least", "day": 13}
+        ]
+      },
+      "script_hooks": [
+        {"id": "charter_bastion_muster", "priority": 120, "conditions": [{"type": "day_at_least", "day": 3}, {"type": "town_owned_by_player", "placement_id": "charter_bastion_keep"}], "effects": [{"type": "add_resources", "resources": {"gold": 250, "wood": 1}}, {"type": "town_add_recruits", "placement_id": "charter_bastion_keep", "recruits": {"unit_river_guard": 3, "unit_ember_archer": 2}}, {"type": "message", "text": "Charter Bastion opens its reserve ledger and sends Seren fresh guards, archers, and measured stores."}]},
+        {"id": "charter_counterseal_recorded", "priority": 110, "conditions": [{"type": "objective_met", "objective_id": "claim_halo_counterseal_front"}], "effects": [{"type": "town_add_building", "placement_id": "halo_counterseal_front", "building_id": "building_wayfarers_hall"}, {"type": "set_flag", "flag": "charter_counterseal_recorded", "value": true}, {"type": "message", "text": "Seren stamps the seized Halo counterseal into the shared docket and records Embercourt as its ninth command."}]},
+        {"id": "halo_prismatic_counterstroke", "priority": 94, "conditions": [{"type": "day_at_least", "day": 3}, {"type": "town_owned_by_player", "placement_id": "charter_bastion_keep"}], "effects": [{"type": "spawn_encounter", "placement": {"placement_id": "counterseal_prismatic_counterstroke", "encounter_id": "encounter_halo_reserve", "x": 10, "y": 5, "difficulty": "scripted", "spawned_by_faction_id": "faction_sunvault", "days_active": 0, "arrived": false, "goal_distance": 9999}}, {"type": "message", "text": "Halo Spire sends a prismatic counterstroke across the southern causeway."}]},
+        {"id": "unbroken_counterseal_line", "priority": 88, "conditions": [{"type": "day_at_least", "day": 3}, {"type": "objective_not_met", "objective_id": "clear_counterseal_relay_pickets"}], "effects": [{"type": "add_enemy_pressure", "faction_id": "faction_sunvault", "amount": 2}, {"type": "spawn_encounter", "placement": {"placement_id": "counterseal_relay_reinforcement", "encounter_id": "encounter_relay_pickets", "x": 9, "y": 0, "difficulty": "scripted", "spawned_by_faction_id": "faction_sunvault", "days_active": 0, "arrived": false, "goal_distance": 9999}}, {"type": "message", "text": "The unbroken relay line draws another Sunvault screen onto the northern causeway."}]},
+        {"id": "aurora_counterseal_recovered", "priority": 84, "conditions": [{"type": "encounter_resolved", "placement_id": "counterseal_aurora_battery"}], "effects": [{"type": "add_resources", "resources": {"embergrain": 2}}, {"type": "award_experience", "amount": 120}, {"type": "set_flag", "flag": "aurora_counterseal_recovered", "value": true}, {"type": "message", "text": "Seren recovers the counterseal register and rations the captured lens stores through Charter Bastion."}]}
+      ],
+      "towns": [
+        {"placement_id": "charter_bastion_keep", "town_id": "town_highwater_keep", "x": 0, "y": 2, "owner": "player"},
+        {"placement_id": "halo_counterseal_front", "town_id": "town_halo_spire", "x": 10, "y": 2, "owner": "enemy"}
+      ],
+      "enemy_factions": [
+        {"faction_id": "faction_sunvault", "label": "Halo Counterseal Custodians", "pressure_per_day": 2, "pressure_per_enemy_town": 1, "raid_threshold": 5, "max_active_raids": 2, "raid_pillage_delay": 1, "raid_pillage": {"gold": 150, "aetherglass": 1}, "raid_encounter_ids": ["encounter_halo_reserve"], "spawn_points": [{"x": 9, "y": 1}, {"x": 9, "y": 4}], "siege_target_placement_id": "charter_bastion_keep", "siege_active_raid_threshold": 2, "siege_capture_progress": 2, "priority_target_bonus": 115, "priority_target_placement_ids": ["charter_bastion_keep", "counterseal_embergrain_granary", "counterseal_signal_post", "counterseal_relay_pickets"], "strategy_overrides": {"site_family_weights": {"faction_outpost": 1.4, "frontier_shrine": 1.25}, "raid_target_weights": {"town": 1.35, "resource": 1.1, "encounter": 1.2}, "raid": {"town_siege_weight": 1.45, "site_denial_weight": 1.2}}}
+      ],
+      "resource_nodes": [
+        {"placement_id": "charter_bastion_wood", "site_id": "site_wood_wagon", "x": 1, "y": 0},
+        {"placement_id": "charter_bastion_ore", "site_id": "site_ore_crates", "x": 2, "y": 5},
+        {"placement_id": "counterseal_scout_shrine", "site_id": "site_scout_shrine", "x": 5, "y": 2},
+        {"placement_id": "counterseal_embergrain_granary", "site_id": "site_embergrain_warm_granary", "x": 0, "y": 1, "guard_front_id": "counterseal_relay_pickets"},
+        {"placement_id": "counterseal_signal_post", "site_id": "site_ember_signal_post", "x": 3, "y": 3},
+        {"placement_id": "halo_counterseal_wood", "site_id": "site_wood_wagon", "x": 9, "y": 0, "collected_by_faction_id": "faction_sunvault"},
+        {"placement_id": "halo_counterseal_ore", "site_id": "site_ore_crates", "x": 9, "y": 5, "collected_by_faction_id": "faction_sunvault"},
+        {"placement_id": "halo_counterseal_lens_house", "site_id": "site_aetherglass_lens_house", "x": 10, "y": 1, "guard_front_id": "counterseal_mirror_lancers", "collected_by_faction_id": "faction_sunvault"},
+        {"placement_id": "charter_bastion_counterseal_charter_rare_exchange", "site_id": "site_frontier_rare_exchange", "x": 1, "y": 2, "guard_front_id": "counterseal_relay_pickets"},
+        {"placement_id": "charter_bastion_counterseal_halo_rare_exchange", "site_id": "site_frontier_rare_exchange", "x": 9, "y": 2, "guard_front_id": "counterseal_mirror_lancers", "collected_by_faction_id": "faction_sunvault"}
+      ],
+      "artifact_nodes": [
+        {"placement_id": "counterseal_trailsinger_boots", "artifact_id": "artifact_trailsinger_boots", "x": 3, "y": 1},
+        {"placement_id": "counterseal_bastion_gorget", "artifact_id": "artifact_bastion_gorget", "x": 6, "y": 3},
+        {"placement_id": "counterseal_warcrest_pennon", "artifact_id": "artifact_warcrest_pennon", "x": 9, "y": 4}
+      ],
+      "encounters": [
+        {"placement_id": "counterseal_relay_pickets", "encounter_id": "encounter_relay_pickets", "x": 4, "y": 1, "difficulty": "medium", "combat_seed": 24101, "enemy_army": {"id": "army_counterseal_relay_pickets", "name": "Counterseal Relay Pickets", "faction_id": "faction_sunvault", "stacks": [{"unit_id": "unit_shard_guard", "count": 7}, {"unit_id": "unit_prism_adept", "count": 5}, {"unit_id": "unit_mirror_duelist", "count": 2}]}},
+        {"placement_id": "counterseal_mirror_lancers", "encounter_id": "encounter_mirror_lancers", "x": 6, "y": 4, "difficulty": "high", "combat_seed": 24102, "enemy_army": {"id": "army_counterseal_mirror_lancers", "name": "Counterseal Mirror Lancers", "faction_id": "faction_sunvault", "stacks": [{"unit_id": "unit_shard_guard", "count": 6}, {"unit_id": "unit_prism_adept", "count": 5}, {"unit_id": "unit_mirror_duelist", "count": 3}]}},
+        {"placement_id": "counterseal_aurora_battery", "encounter_id": "encounter_aurora_battery", "x": 8, "y": 0, "difficulty": "high", "combat_seed": 24103, "enemy_army": {"id": "army_counterseal_aurora_battery", "name": "Counterseal Aurora Battery", "faction_id": "faction_sunvault", "stacks": [{"unit_id": "unit_shard_guard", "count": 5}, {"unit_id": "unit_mirror_duelist", "count": 4}, {"unit_id": "unit_aurora_ballista", "count": 2}]}}
       ]
     }
   ]

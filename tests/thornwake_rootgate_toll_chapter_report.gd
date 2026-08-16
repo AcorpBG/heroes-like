@@ -98,7 +98,7 @@ func _run() -> void:
 
 func _assert_catalog_and_setup() -> Dictionary:
 	var scenario_ids: Array = ContentService.get_content_ids(ContentService.SCENARIOS_PATH)
-	if scenario_ids.size() != 19 or SCENARIO_ID not in scenario_ids:
+	if scenario_ids.size() != 24 or SCENARIO_ID not in scenario_ids or scenario_ids[18] != SCENARIO_ID:
 		_fail("Active scenario catalog did not expose exact nineteenth Rootgate chapter: %s" % JSON.stringify(scenario_ids))
 		return {}
 	var scenario := ContentService.get_scenario(SCENARIO_ID)

@@ -515,12 +515,12 @@
     {
       "id": "campaign_frontier_claims",
       "name": "Frontier Claims",
-      "description": "Eight independent commanders follow one disputed survey chain from Mireford through Orevein, Bellwake, Rootgate, Fogchart, Clauseworks, and Nightglass to Halo Spire's final refraction claim.",
-      "summary": "An eight-chapter cross-faction campaign anthology that gives Thornwake, Brasshollow, Veilmourn, Mireclaw, and Sunvault player-owned frontier chapters through bounded supply and objective carryover.",
-      "region": "Mireford to Bellwake Coast, Rootgate, Fogchart, Clauseworks, Nightglass, and Halo Spire",
-      "arc_goal": "Secure eight rival frontier claims and bind the shared survey chain from Murkward through the coast, contract road, marsh ledger, and final Sunvault refraction front.",
+      "description": "Nine independent commanders follow one disputed survey chain from Mireford through Orevein, Bellwake, Rootgate, Fogchart, Clauseworks, Nightglass, and Halo Spire to Charter Bastion's final counterseal.",
+      "summary": "A nine-chapter campaign anthology that gives all six factions player-owned frontier chapters through bounded supply and objective carryover.",
+      "region": "Mireford to Bellwake Coast, Rootgate, Fogchart, Clauseworks, Nightglass, Halo Spire, and Charter Bastion",
+      "arc_goal": "Secure nine rival frontier claims and bind all six factions into the shared survey chain without merging their commanders.",
       "completion_title": "Claims Ratified",
-      "completion_summary": "Silsa, Marka, Ivara, Tova, Ruln, Oren, Kessa, and Neral secure eight independent claims without merging their commands.",
+      "completion_summary": "Silsa, Marka, Ivara, Tova, Ruln, Oren, Kessa, Neral, and Seren secure nine independent claims across all six factions without merging their commands.",
       "starting_scenario_id": "mireford-skirmish",
       "scenarios": [
         {
@@ -832,6 +832,42 @@
           ],
           "carryover_import": {
             "from_scenario_id": "nightglass-ledger-reversal",
+            "resources": true,
+            "hero_progression": false,
+            "spells": false,
+            "artifacts": false,
+            "flags_prefix": "carryover_"
+          },
+          "carryover_export": {
+            "retain_hero_progression": false,
+            "retain_spells": false,
+            "retain_artifacts": false,
+            "resource_fraction": 0.35,
+            "resource_caps": {"gold": 1000, "wood": 3, "ore": 3, "aetherglass": 0, "embergrain": 0, "peatwax": 0, "verdant_grafts": 0, "brass_scrip": 0, "memory_salt": 0},
+            "flag_ids": ["halo_refraction_claim_recorded", "barkmantle_lens_recovered"]
+          }
+        },
+        {
+          "scenario_id": "charter-bastion-counterseal",
+          "label": "Chapter IX: Charter Bastion Counterseal",
+          "description": "Carry Halo's refracted claim to Charter Bastion, break Sunvault's counterseal, and enter Embercourt as the ninth frontier command.",
+          "chapter_index": 9,
+          "chapter_title": "Counterseal the Charter",
+          "status_hint": "Seren receives bounded Halo common stores and evidence while retaining her own Embercourt command state.",
+          "carryover_summary": "Imports bounded Halo common resources and flags without cross-faction hero, spell, artifact, or rare-resource transfer.",
+          "briefing": "Seren Valechant must counterseal Halo Spire's lens docket before Sunvault closes Charter Bastion outside the shared claim.",
+          "intel": "Relay pickets, mirror lancers, and an aurora battery hold the counterseal causeway; Neral's refracted record proves Embercourt is the last absent command.",
+          "stakes": "Break the Halo counterseal and all six factions stand within nine frontier claims; fail and Embercourt remains outside the completed docket.",
+          "aftermath_victory": "Seren stamps Charter Bastion into the shared record, completing nine claims across all six commands without merging their commanders.",
+          "aftermath_defeat": "Sunvault closes the counterseal and leaves Charter Bastion beyond the frontier record.",
+          "journal_victory": "Seren broke Halo's counterseal and recorded Embercourt as the ninth frontier command.",
+          "journal_defeat": "Seren failed to bind Charter Bastion into the frontier record.",
+          "unlock_requirements": [
+            {"type": "scenario_status", "scenario_id": "halo-reserve-refraction-claim", "status": "victory"},
+            {"type": "scenario_flag_true", "scenario_id": "halo-reserve-refraction-claim", "flag": "halo_refraction_claim_recorded"}
+          ],
+          "carryover_import": {
+            "from_scenario_id": "halo-reserve-refraction-claim",
             "resources": true,
             "hero_progression": false,
             "spells": false,
