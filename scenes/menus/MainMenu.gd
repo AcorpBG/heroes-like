@@ -2949,6 +2949,7 @@ func validation_snapshot() -> Dictionary:
 		"first_view_command_surface": "painted_backdrop_hotspots",
 		"first_view_commands": _first_view_command_labels(),
 		"first_view_command_tooltips": _first_view_command_tooltips(),
+		"editor_utility_frame": _editor_utility_frame_snapshot(),
 		"stage_help_text": _stage_help_button.text,
 		"stage_help_tooltip": _stage_help_button.tooltip_text,
 		"close_stage_dock_tooltip": _close_stage_dock_button.tooltip_text,
@@ -3196,6 +3197,21 @@ func validation_snapshot() -> Dictionary:
 		"summary": _summary_label.text,
 		"active_expedition": _active_expedition_label.text,
 		"active_expedition_full": _active_expedition_label.tooltip_text,
+	}
+
+func _editor_utility_frame_snapshot() -> Dictionary:
+	var normal_style := _open_editor_button.get_theme_stylebox("normal")
+	var normal_texture_path := ""
+	if normal_style is StyleBoxTexture:
+		var texture := (normal_style as StyleBoxTexture).texture
+		if texture != null:
+			normal_texture_path = texture.resource_path
+	return {
+		"style_class": normal_style.get_class() if normal_style != null else "",
+		"normal_texture_path": normal_texture_path,
+		"anchor_top": _open_editor_button.anchor_top,
+		"anchor_bottom": _open_editor_button.anchor_bottom,
+		"tooltip_text": _open_editor_button.tooltip_text,
 	}
 
 func _campaign_layout_snapshot() -> Dictionary:
@@ -4074,8 +4090,14 @@ func _sync_command_button_styles() -> void:
 			_apply_backdrop_plaque_button(button, is_active, false)
 
 func _sync_system_command_buttons() -> void:
-	_apply_backdrop_plaque_button(_open_editor_button, false, false)
+	_apply_editor_utility_button()
 	_apply_backdrop_plaque_button(_quit_button, false, true)
+
+func _apply_editor_utility_button() -> void:
+	# The painted backdrop has five plaque frames. Editor occupies the deliberate
+	# utility gap between Settings and Quit, so it needs its own authored frame
+	# instead of pretending that bare text sits on a sixth painted plaque.
+	FrontierVisualKit.apply_button(_open_editor_button, "secondary", 0.0, 0.0, 16)
 
 func _sync_first_view_command_tooltips() -> void:
 	_open_campaign_button.tooltip_text = (

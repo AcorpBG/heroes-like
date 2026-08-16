@@ -14327,10 +14327,10 @@
   "currentNotes": "Charter Bastion Counterseal is completed as the twenty-fourth active scenario and ninth Frontier Claims chapter, completing player-owned representation across all six factions. Broader release gaps remain and no whole-game or release-readiness claim is made.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "content-embercourt-charter-bastion-counterseal-chapter-10184",
-  "currentSliceId": "content-embercourt-charter-bastion-counterseal-chapter-10184",
-  "currentSliceNotes": "Completed as the exact twenty-fourth active scenario and ninth Frontier Claims chapter with focused live, breadth, compatibility, static/editor, and bounded Linux/Windows export-startup evidence.",
+  "currentSliceId": "ux-main-menu-editor-utility-command-frame-10184",
+  "currentSliceNotes": "Completed: OpenEditor now uses the existing secondary normal/hover/pressed/disabled texture frames in the unpainted utility gap; the five real backdrop plaques retain transparent hotspot styling. Focused menu/outcome runtime proves exact frame assets and contained nonoverlapping geometry at 1280x720 and 1920x1080. Main-menu keyboard/controller navigation PASS, accessibility semantics PASS, core rc0, validate_repo/pycompile/diff/editor parses green. Official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. No packaged Editor interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Embercourt Charter Bastion Counterseal Chapter",
+  "currentSliceTitle": "ux main menu editor utility command frame 10184",
   "currentSliceUpdatedAt": "2026-08-16T14:02:54Z",
   "deferredRiskRegister": [
     {
@@ -86501,7 +86501,9 @@
         "active_scenario_count": 21,
         "campaign_count": 6,
         "authored_town_count": 15,
-        "never_player_owned_town_ids": ["town_nightglass_redoubt"],
+        "never_player_owned_town_ids": [
+          "town_nightglass_redoubt"
+        ],
         "unused_player_hero_id": "hero_mireclaw_kessa_chainboom",
         "unused_player_army_id": "army_nightglass_dominion"
       },
@@ -86549,7 +86551,12 @@
         "head": "24f3a36d38be5cab06d914e49df44a26bc931e2c",
         "active_scenario_count": 22,
         "frontier_claims_chapter_count": 7,
-        "frontier_claims_player_faction_ids": ["faction_thornwake", "faction_brasshollow", "faction_veilmourn", "faction_mireclaw"],
+        "frontier_claims_player_faction_ids": [
+          "faction_thornwake",
+          "faction_brasshollow",
+          "faction_veilmourn",
+          "faction_mireclaw"
+        ],
         "missing_frontier_player_faction_id": "faction_sunvault",
         "unused_player_hero_id": "hero_neral",
         "unused_player_army_id": "army_halo_reserve"
@@ -86599,7 +86606,13 @@
         "head": "ee824e011fd70b00e321ecb56a545ad46499a9f0",
         "active_scenario_count": 23,
         "frontier_claims_chapter_count": 8,
-        "frontier_claims_player_faction_ids": ["faction_thornwake", "faction_brasshollow", "faction_veilmourn", "faction_mireclaw", "faction_sunvault"],
+        "frontier_claims_player_faction_ids": [
+          "faction_thornwake",
+          "faction_brasshollow",
+          "faction_veilmourn",
+          "faction_mireclaw",
+          "faction_sunvault"
+        ],
         "missing_frontier_player_faction_id": "faction_embercourt",
         "unused_player_hero_id": "hero_seren",
         "unused_player_army_id": "army_charter_bastion_reserve"
@@ -86611,6 +86624,16 @@
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
       "blockedReason": null,
       "completedAt": "2026-08-16T14:02:54Z"
+    },
+    {
+      "id": "ux-main-menu-editor-utility-command-frame-10184",
+      "title": "ux main menu editor utility command frame 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-16T14:42:44Z",
+      "startedAt": "2026-08-16T14:13:28Z",
+      "notes": "Completed: OpenEditor now uses the existing secondary normal/hover/pressed/disabled texture frames in the unpainted utility gap; the five real backdrop plaques retain transparent hotspot styling. Focused menu/outcome runtime proves exact frame assets and contained nonoverlapping geometry at 1280x720 and 1920x1080. Main-menu keyboard/controller navigation PASS, accessibility semantics PASS, core rc0, validate_repo/pycompile/diff/editor parses green. Official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. No packaged Editor interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.",
+      "completedAt": "2026-08-16T14:42:44Z"
     }
   ],
   "project": "heroes-like",
@@ -87155,7 +87178,7 @@
   ],
   "summary": "The active-play supported-viewport containment slice is complete with focused four-width Overworld/Town behavior, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup evidence. Broader release gaps remain; the game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-16T09:54:38Z",
+  "updatedAt": "2026-08-16T14:42:44Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

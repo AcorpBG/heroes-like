@@ -142,9 +142,17 @@ func _run_main_menu_smoke() -> bool:
 			push_error("Main menu smoke: first-view command is not a direct painted-backdrop hotspot.")
 			get_tree().quit(1)
 			return false
+	for button in [campaign_button, skirmish_button, load_button, settings_button, quit_button]:
 		if not _assert_text_only_plaque_style(button as Button, String((button as Button).text)):
 			get_tree().quit(1)
 			return false
+	if not await _assert_editor_utility_frame_at_supported_widths(
+		shell,
+		settings_button as Button,
+		editor_button as Button,
+		quit_button as Button
+	):
+		return false
 	var first_view_labels := [
 		String((campaign_button as Button).text),
 		String((skirmish_button as Button).text),
@@ -186,6 +194,15 @@ func _run_main_menu_smoke() -> bool:
 		return false
 	if first_view_snapshot.get("first_view_commands", []) != ["Campaign", "Skirmish", "Load", "Settings", "Editor", "Quit"]:
 		push_error("Main menu smoke: validation snapshot first-view commands are wrong: %s." % [first_view_snapshot])
+		get_tree().quit(1)
+		return false
+	var editor_utility_frame: Dictionary = first_view_snapshot.get("editor_utility_frame", {}) if first_view_snapshot.get("editor_utility_frame", {}) is Dictionary else {}
+	if String(editor_utility_frame.get("style_class", "")) != "StyleBoxTexture" \
+			or String(editor_utility_frame.get("normal_texture_path", "")) != "res://art/ui/runtime/shared/button_secondary_normal.png" \
+			or not is_equal_approx(float(editor_utility_frame.get("anchor_top", 0.0)), 0.681) \
+			or not is_equal_approx(float(editor_utility_frame.get("anchor_bottom", 0.0)), 0.729) \
+			or String(editor_utility_frame.get("tooltip_text", "")) != (editor_button as Button).tooltip_text:
+		push_error("Main menu smoke: Editor utility frame snapshot is not exact: %s." % [editor_utility_frame])
 		get_tree().quit(1)
 		return false
 	var first_view_tooltips: Dictionary = first_view_snapshot.get("first_view_command_tooltips", {}) if first_view_snapshot.get("first_view_command_tooltips", {}) is Dictionary else {}
@@ -929,6 +946,42 @@ func _assert_plaque_anchor(button: Button, label: String, expected_top: float, e
 			]
 		)
 		return false
+	return true
+
+func _assert_editor_utility_frame_at_supported_widths(shell: Control, settings_button: Button, editor_button: Button, quit_button: Button) -> bool:
+	var original_size := get_window().size
+	for requested_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:
+		get_window().size = requested_size
+		await get_tree().process_frame
+		await get_tree().process_frame
+		if get_window().size != requested_size:
+			push_error("Main menu smoke: Editor frame fixture did not reach requested size %s." % [requested_size])
+			return false
+		var viewport_size := shell.get_viewport_rect().size
+		var settings_rect := settings_button.get_global_rect()
+		var editor_rect := editor_button.get_global_rect()
+		var quit_rect := quit_button.get_global_rect()
+		if editor_rect.position.x < viewport_size.x * 0.82 \
+				or editor_rect.end.x > viewport_size.x + 0.5 \
+				or editor_rect.position.y < settings_rect.end.y - 0.5 \
+				or editor_rect.end.y > quit_rect.position.y + 0.5 \
+				or editor_rect.intersects(settings_rect) \
+				or editor_rect.intersects(quit_rect):
+			push_error("Main menu smoke: Editor utility frame escaped or overlapped the right rail at %s: %s / %s / %s." % [requested_size, settings_rect, editor_rect, quit_rect])
+			return false
+		for state in ["normal", "hover", "pressed", "disabled"]:
+			var style := editor_button.get_theme_stylebox(state)
+			if not (style is StyleBoxTexture):
+				push_error("Main menu smoke: Editor utility %s state is not asset-backed at %s." % [state, requested_size])
+				return false
+			var texture := (style as StyleBoxTexture).texture
+			var expected_path := "res://art/ui/runtime/shared/button_secondary_%s.png" % state
+			if texture == null or texture.resource_path != expected_path:
+				push_error("Main menu smoke: Editor utility %s state does not use %s at %s." % [state, expected_path, requested_size])
+				return false
+	get_window().size = original_size
+	await get_tree().process_frame
+	await get_tree().process_frame
 	return true
 
 func _assert_text_only_plaque_style(button: Button, label: String) -> bool:
