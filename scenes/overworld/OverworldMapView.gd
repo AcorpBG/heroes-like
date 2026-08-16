@@ -200,6 +200,7 @@ var _hover_tile := Vector2i(-1, -1)
 var _hero_tile := Vector2i.ZERO
 var _path_tiles: Array = []
 var _route_preview: Dictionary = {}
+var _route_preview_enabled := true
 var _terrain_layers: Dictionary = {}
 var _road_tiles: Dictionary = {}
 var _movement_left := 0
@@ -433,12 +434,20 @@ func set_map_state(
 	_sync_object_focus_presentation(object_focus_presentation)
 	_sync_spell_cast_presentation(spell_cast_presentation)
 	var path_profile_start := _profile_begin("path_recompute")
-	var route_cache_reused := _apply_selected_route_state(selected_route_state)
-	if not route_cache_reused:
-		_path_tiles = _build_path(_hero_tile, _selected_tile)
-		_route_preview = OverworldRulesScript.route_movement_preview(_session, _path_tiles, _movement_left)
+	var route_cache_reused := false
+	if _route_preview_enabled:
+		route_cache_reused = _apply_selected_route_state(selected_route_state)
+		if not route_cache_reused:
+			_path_tiles = _build_path(_hero_tile, _selected_tile)
+			_route_preview = OverworldRulesScript.route_movement_preview(_session, _path_tiles, _movement_left)
+	else:
+		_path_tiles = []
+		_route_preview = {}
 	var path_profile_details: Dictionary = _validation_profile.get("last_path_recompute", {}) if _validation_profile.get("last_path_recompute", {}) is Dictionary else {}
-	if route_cache_reused:
+	if not _route_preview_enabled:
+		path_profile_details["status"] = "disabled_for_editor_action_tool"
+		path_profile_details["cache_reused"] = false
+	elif route_cache_reused:
 		path_profile_details["status"] = "cache_reused"
 		path_profile_details["cache_reused"] = true
 	else:
@@ -484,6 +493,9 @@ func set_map_state(
 
 	_invalidate_dynamic_layer("map_state_updated")
 	_profile_end("set_map_state", profile_start)
+
+func set_route_preview_enabled(enabled: bool) -> void:
+	_route_preview_enabled = enabled
 
 func _process(delta: float) -> void:
 	var redraw_dynamic := false

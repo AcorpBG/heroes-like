@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The original transparent Aurelion Reach frontier watchtower/compass crest is shipped in the existing 56x52 Main Menu mark slot. Focused pixel/layout/runtime, live 1280/1920 visual, menu compatibility, repository/editor, and bounded Linux/Windows export-startup gates pass without title, composition, command, accessibility, settings, save, session, or package-identity drift.",
+  "currentNotes": "Map Editor action-tool clicks now defer validation-only full-map normalization and skip gameplay-only route projection. Focused exact eager-control parity measures complete clicks at about 21-22 ms, validation remains exact on demand, Inspect routes remain live, and broad Map Editor/Overworld/core/static/Linux/Windows gates pass.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-aurelion-reach-main-menu-crest-art-10184",
-  "currentSliceId": "presentation-aurelion-reach-main-menu-crest-art-10184",
-  "currentSliceNotes": "Completed with one original transparent gold-and-navy frontier watchtower/compass crest in the existing 56x52 mark slot, exact title/copy/composition preservation, live 1280/1920 visual proof, and focused, compatibility, static/editor, Linux, and Windows gates.",
+  "currentSlice": "performance-map-editor-terrain-paint-normalization-defer-10184",
+  "currentSliceId": "performance-map-editor-terrain-paint-normalization-defer-10184",
+  "currentSliceNotes": "Completed with exact eager-control map/result/session parity, 21-22 ms live clicks, on-demand validation normalization, preserved Inspect routing, broad compatibility, and bounded Linux/Windows export-startup proof.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Aurelion Reach Main Menu Crest Art",
-  "currentSliceUpdatedAt": "2026-08-16T20:36:59Z",
+  "currentSliceTitle": "Map Editor Terrain Paint Normalization Deferral",
+  "currentSliceUpdatedAt": "2026-08-16T22:38:36Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19849,6 +19849,52 @@
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
   "notes": "Registered the source-backed Overworld unexplored fog-shroud slice from fresh live visual evidence. Production still draws two diagonal lines on every hidden cell; implementation is bounded to the renderer and existing validation owners.",
   "plannedSlices": [
+    {
+      "id": "performance-map-editor-terrain-paint-normalization-defer-10184",
+      "title": "Map Editor Terrain Paint Normalization Deferral",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Remove the validation-only full-map final-normalization scan from the live Map Editor terrain paint path while preserving exact terrain behavior, UI authority, and on-demand validation evidence.",
+      "implementationTargets": [
+        "scripts/core/TerrainPlacementRules.gd",
+        "scenes/editor/MapEditorShell.gd",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/map_editor_terrain_paint_performance_report.gd",
+        "tests/map_editor_terrain_paint_performance_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Live single-tile terrain paint skips only the non-mutating full-map final-normalization report and gameplay-only route projection while materially improving current-HEAD 64x64 paint latency",
+        "Exact map writes, changed and owner-changed tile order, HoMM3 owner queue behavior, dirty state, selected tile, preview, visual selection, export, Play Copy, save, and session authority match an eager-normalization control",
+        "Validation requests still materialize the complete exact final-normalization payload with the authored model, visited count, class counts, corrections, missing buckets, and settled-owner-map source",
+        "Focused performance/parity, broad Map Editor, terrain presentation, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "terrain placement rules, owner queue order, visual frame selection, Inspect-mode route preview, map content, paint tools, editor layout, save/export/play policy, or validation weakening",
+        "persistent cross-mutation caches, approximate normalization, partial-map correctness claims, Native RMG, gameplay balance, AI, content, schema, package identity, or platform policy changes",
+        "packaged editor interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "9ec5216ad1f55340a1d278f3b802a46e301d1c83",
+        "scenario_id": "ninefold-confluence",
+        "map_size": "64x64",
+        "terrain_mutation_usec_samples": [114198, 123051, 114736, 118427],
+        "final_normalization_usec_samples": [112879, 113448, 112974],
+        "refresh_usec_samples": [48945, 48291, 48037],
+        "attribution_script": ".artifacts/map_editor_paint_attribution.gd"
+      },
+      "createdAt": "2026-08-16T22:10:16Z",
+      "startedAt": "2026-08-16T22:10:16Z",
+      "updatedAt": "2026-08-16T22:38:36Z",
+      "notes": "Completed with final focused artifact /tmp/heroes-map-editor-terrain-performance-final.HIlZEg (eager 113-114 ms, mutation 0.5-0.6 ms, full click 21-22 ms, exact map/result/non-map authority, exact on-demand final normalization, action-route disabled and Inspect route preserved), broad Map Editor smoke /tmp/heroes-map-editor-smoke-performance.eivnss (natural rc0, 238 seconds total, terrain transition at 99 seconds versus prior 760-second block), compatibility /tmp/heroes-terrain-compat-chain.BK2XEd, static/editor validation, and official Linux/Windows export-startup /tmp/heroes-terrain-platform.Kdws9G.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null,
+      "completedAt": "2026-08-16T22:38:36Z"
+    },
     {
       "id": "presentation-overworld-object-focus-cue-adoption-10184",
       "title": "Overworld Object Focus Cue Adoption",

@@ -3952,6 +3952,7 @@ func _sync_preview() -> void:
 		return
 	var map_size := OverworldRules.derive_map_size(_session)
 	var map_data: Array = _session.overworld.get("map", [])
+	_map_view.set_route_preview_enabled(_tool == TOOL_INSPECT)
 	_map_view.set_map_state(_session, map_data, map_size, _selected_tile)
 	_map_view.set_placement_debug_overlay_enabled(_placement_debug_overlay_enabled)
 	var tooltip_sections := [String(_editor_active_tool_cue_payload().get("tooltip", ""))]
@@ -4578,7 +4579,8 @@ func _apply_terrain_placement(paint_tiles: Array, terrain_id: String) -> Diction
 		OverworldRules.derive_map_size(_session),
 		terrain_id,
 		paint_tiles,
-		ContentService.get_terrain_grammar()
+		ContentService.get_terrain_grammar(),
+		false
 	)
 	_last_terrain_placement_result = result
 	if bool(result.get("ok", false)):
@@ -4587,6 +4589,20 @@ func _apply_terrain_placement(paint_tiles: Array, terrain_id: String) -> Diction
 			_terrain_paint_order += 1
 			_dirty = true
 	return result
+
+func _materialize_last_terrain_final_normalization() -> Dictionary:
+	if _session == null or _last_terrain_placement_result.is_empty():
+		return _last_terrain_placement_result
+	if bool(_last_terrain_placement_result.get("final_normalization_deferred", false)):
+		var map_data = _session.overworld.get("map", [])
+		if map_data is Array:
+			_last_terrain_placement_result["final_normalization"] = TerrainPlacementRulesScript.final_normalization_payload(
+				map_data,
+				OverworldRules.derive_map_size(_session),
+				ContentService.get_terrain_grammar()
+			)
+			_last_terrain_placement_result["final_normalization_deferred"] = false
+	return _last_terrain_placement_result
 
 func _fill_terrain_from_selected_tile() -> Dictionary:
 	return _fill_terrain_region(_selected_tile, _selected_terrain_id)
@@ -5987,6 +6003,7 @@ func _terrain_at_in_overworld(overworld: Dictionary, tile: Vector2i) -> String:
 func _set_tile_terrain(tile: Vector2i, terrain_id: String) -> bool:
 	if not _tile_in_bounds(tile) or terrain_id == "":
 		return false
+	_materialize_last_terrain_final_normalization()
 	var map_data = _session.overworld.get("map", [])
 	if not (map_data is Array) or tile.y >= map_data.size():
 		return false
@@ -8188,6 +8205,7 @@ func validation_dirty_transition_snapshot() -> Dictionary:
 func validation_snapshot() -> Dictionary:
 	var map_size := OverworldRules.derive_map_size(_session) if _session != null else Vector2i.ZERO
 	var hero_pos := OverworldRules.hero_position(_session) if _session != null else Vector2i.ZERO
+	var terrain_placement := _materialize_last_terrain_final_normalization()
 	return {
 		"scene_path": scene_file_path,
 		"scenario_id": _session.scenario_id if _session != null else "",
@@ -8285,7 +8303,7 @@ func validation_snapshot() -> Dictionary:
 		"authored_terrain_ids": _authored_terrain_ids(),
 		"hidden_terrain_ids": _hidden_terrain_ids(),
 		"terrain_paint_order": _terrain_paint_order,
-		"terrain_placement": _last_terrain_placement_result,
+		"terrain_placement": terrain_placement,
 		"editor_restamp": _editor_restamp_payload_for_tile(_selected_tile),
 		"selected_object_family": _selected_object_family,
 		"selected_object_content_id": _selected_object_content_id,
