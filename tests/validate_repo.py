@@ -231,6 +231,11 @@ TOWN_SPELL_STUDY_VFX_RUNTIME_PATH = ROOT / "art" / "town" / "runtime" / "vfx" / 
 TOWN_SPELL_STUDY_AUDIO_RUNTIME_PATH = ROOT / "art" / "audio" / "runtime" / "presentation" / "town_spell_study.wav"
 TOWN_SPELL_STUDY_FEEDBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_spell_study_completion_feedback_report.gd"
 TOWN_SPELL_STUDY_FEEDBACK_REPORT_SCENE_PATH = ROOT / "tests" / "town_spell_study_completion_feedback_report.tscn"
+TOWN_HERO_HIRE_VFX_SOURCE_PATH = ROOT / "art" / "town" / "source" / "hero_hire_vfx_source.png"
+TOWN_HERO_HIRE_VFX_RUNTIME_PATH = ROOT / "art" / "town" / "runtime" / "vfx" / "hero_hire.png"
+TOWN_HERO_HIRE_AUDIO_RUNTIME_PATH = ROOT / "art" / "audio" / "runtime" / "presentation" / "town_hero_hire.wav"
+TOWN_HERO_HIRE_FEEDBACK_REPORT_SCRIPT_PATH = ROOT / "tests" / "town_hero_hire_completion_feedback_report.gd"
+TOWN_HERO_HIRE_FEEDBACK_REPORT_SCENE_PATH = ROOT / "tests" / "town_hero_hire_completion_feedback_report.tscn"
 TOWN_ENTITY_CACHE_ACTIVE_REFRESH_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "town_entity_cache_active_refresh_regression.gd"
 TOWN_ENTITY_CACHE_ACTIVE_REFRESH_REGRESSION_SCENE_PATH = ROOT / "tests" / "town_entity_cache_active_refresh_regression.tscn"
 GENERATED_LARGE_TOWN_EXPLICIT_SAVE_SURFACE_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "generated_large_town_explicit_save_surface_regression.gd"
@@ -20795,6 +20800,12 @@ def validate_town_building_complete_vfx_assets(errors: list[str]) -> None:
                 "render_mode": "town_spell_study_completion",
                 "scale": 1.0,
             },
+            "vfx_placeholder_town_hero_hire": {
+                "event_id": "town_hero_hired",
+                "texture_path": "res://art/town/runtime/vfx/hero_hire.png",
+                "render_mode": "town_hero_hire_completion",
+                "scale": 1.0,
+            },
         },
     }, errors, "Town VFX manifest must map only the exact live Town completion cues/events/textures")
     ensure(png_size(TOWN_BUILDING_COMPLETE_VFX_SOURCE_PATH) == (1254, 1254), errors, "Town building-complete source must retain its exact square source image")
@@ -20894,7 +20905,7 @@ def validate_town_recruitment_vfx_assets(errors: list[str]) -> None:
         "render_mode": "town_recruit_muster",
         "scale": 1.0,
     }, errors, "Town VFX manifest must map the exact recruitment cue/event/texture")
-    ensure(set(cues) == {"vfx_placeholder_build_complete", "vfx_placeholder_recruit_muster", "vfx_placeholder_town_route_response", "vfx_placeholder_town_market_exchange", "vfx_placeholder_town_spell_study"}, errors, "Town VFX manifest must not remap any other cue")
+    ensure(set(cues) == {"vfx_placeholder_build_complete", "vfx_placeholder_recruit_muster", "vfx_placeholder_town_route_response", "vfx_placeholder_town_market_exchange", "vfx_placeholder_town_spell_study", "vfx_placeholder_town_hero_hire"}, errors, "Town VFX manifest must not remap any other cue")
     ensure(png_size(TOWN_RECRUITMENT_VFX_SOURCE_PATH) == (1254, 1254), errors, "Town recruitment VFX source must retain its exact square source image")
     ensure(png_size(TOWN_RECRUITMENT_VFX_RUNTIME_PATH) == (512, 512), errors, "Town recruitment runtime texture must be 512x512")
     header = TOWN_RECRUITMENT_VFX_RUNTIME_PATH.read_bytes()[:26]
@@ -21058,10 +21069,10 @@ def validate_town_route_response_dispatch_feedback(errors: list[str]) -> None:
     if presentation is not None:
         body = presentation.group("body")
         for token in (
-            'if lane not in ["build", "recruit", "response", "market", "study"] or not bool(result.get("ok", false)):',
-            'var event_id := "town_spell_studied" if lane == "study" else ("town_market_exchange_completed" if lane == "market" else ("town_route_response_ordered" if lane == "response" else ("town_units_recruited" if lane == "recruit" else "town_building_built")))',
-            'var subject_kind := "spellbook" if lane == "study" else ("resource_stockpile" if lane == "market" else ("map_object" if lane == "response" else ("unit_roster" if lane == "recruit" else "building")))',
-            'or lane in ["recruit", "response", "market", "study"] and String(policy.get("selected_blocking_policy", "")) != "nonblocking"',
+            'if lane not in ["build", "recruit", "response", "market", "study", "tavern"] or not bool(result.get("ok", false)):',
+            'var event_id := "town_hero_hired" if lane == "tavern" else ("town_spell_studied" if lane == "study" else ("town_market_exchange_completed" if lane == "market" else ("town_route_response_ordered" if lane == "response" else ("town_units_recruited" if lane == "recruit" else "town_building_built"))))',
+            'var subject_kind := "hero" if lane == "tavern" else ("spellbook" if lane == "study" else ("resource_stockpile" if lane == "market" else ("map_object" if lane == "response" else ("unit_roster" if lane == "recruit" else "building"))))',
+            'or lane in ["recruit", "response", "market", "study", "tavern"] and String(policy.get("selected_blocking_policy", "")) != "nonblocking"',
             'var placement_id := action_id.trim_prefix("site_response:")',
             'OverworldRules._find_resource_node_by_placement(_session, placement_id)',
             'OverworldRules._resource_site_response_state(_session, node, site)',
@@ -21076,11 +21087,11 @@ def validate_town_route_response_dispatch_feedback(errors: list[str]) -> None:
 
     stage_text = TOWN_STAGE_SCRIPT_PATH.read_text(encoding="utf-8")
     for token in (
-        'event_id not in ["town_units_recruited", "town_building_built", "town_route_response_ordered", "town_market_exchange_completed", "town_spell_studied"]',
+        'event_id not in ["town_units_recruited", "town_building_built", "town_route_response_ordered", "town_market_exchange_completed", "town_spell_studied", "town_hero_hired"]',
         'event_id == "town_route_response_ordered" and String(presentation.get("response_placement_id", "")) == ""',
         '"cue_town_route_response_ordered" if event_id == "town_route_response_ordered" else',
         '"map_object" if event_id == "town_route_response_ordered" else',
-        'event_id in ["town_units_recruited", "town_route_response_ordered", "town_market_exchange_completed", "town_spell_studied"] and selected_blocking_policy != "nonblocking"',
+        'event_id in ["town_units_recruited", "town_route_response_ordered", "town_market_exchange_completed", "town_spell_studied", "town_hero_hired"] and selected_blocking_policy != "nonblocking"',
         'draw_entries = ["route_dispatch_badge"] if reduced_motion else ["route_dispatch_art", "route_dispatch_badge"]',
         '"response_placement_id": String(_town_action_presentation.get("response_placement_id", ""))',
         '"response_label": String(_town_action_presentation.get("response_label", ""))',
@@ -21229,9 +21240,9 @@ def validate_town_market_exchange_completion_feedback(errors: list[str]) -> None
     if presentation is not None:
         body = presentation.group("body")
         for token in (
-            'if lane not in ["build", "recruit", "response", "market", "study"] or not bool(result.get("ok", false)):',
-            'var event_id := "town_spell_studied" if lane == "study" else ("town_market_exchange_completed" if lane == "market" else',
-            'var subject_kind := "spellbook" if lane == "study" else ("resource_stockpile" if lane == "market" else',
+            'if lane not in ["build", "recruit", "response", "market", "study", "tavern"] or not bool(result.get("ok", false)):',
+            'var event_id := "town_hero_hired" if lane == "tavern" else ("town_spell_studied" if lane == "study" else ("town_market_exchange_completed" if lane == "market" else',
+            'var subject_kind := "hero" if lane == "tavern" else ("spellbook" if lane == "study" else ("resource_stockpile" if lane == "market" else',
             'var parts := action_id.split(":")',
             'var resource_deltas := _town_action_resource_deltas(before, after)',
             'resource_id not in OverworldRules.NORMAL_MARKET_RESOURCE_KEYS',
@@ -21434,10 +21445,10 @@ def validate_town_spell_study_completion_feedback(errors: list[str]) -> None:
     if presentation is not None:
         body = presentation.group("body")
         for token in (
-            'if lane not in ["build", "recruit", "response", "market", "study"] or not bool(result.get("ok", false)):',
+            'if lane not in ["build", "recruit", "response", "market", "study", "tavern"] or not bool(result.get("ok", false)):',
             'if lane == "study":\n\t\tafter["known_spell_ids"] = _town_active_known_spell_ids()',
-            'var event_id := "town_spell_studied" if lane == "study" else',
-            'var subject_kind := "spellbook" if lane == "study" else',
+            'var event_id := "town_hero_hired" if lane == "tavern" else ("town_spell_studied" if lane == "study" else',
+            'var subject_kind := "hero" if lane == "tavern" else ("spellbook" if lane == "study" else',
             'var spell_id := action_id.trim_prefix("learn_spell:")',
             'spell_id in before_known',
             'spell_id not in after_known',
@@ -21517,6 +21528,81 @@ def validate_town_spell_study_completion_feedback(errors: list[str]) -> None:
         ensure(forbidden not in report_text, errors, f"Town spell-study focused report bypasses public production ownership: {forbidden}")
 
 
+def validate_town_hero_hire_completion_feedback(errors: list[str]) -> None:
+    required_paths = (
+        TOWN_SCRIPT_PATH, TOWN_STAGE_SCRIPT_PATH, TOWN_VFX_MANIFEST_PATH,
+        TOWN_HERO_HIRE_VFX_SOURCE_PATH, TOWN_HERO_HIRE_VFX_RUNTIME_PATH,
+        TOWN_HERO_HIRE_AUDIO_RUNTIME_PATH, TOWN_HERO_HIRE_FEEDBACK_REPORT_SCRIPT_PATH,
+        TOWN_HERO_HIRE_FEEDBACK_REPORT_SCENE_PATH, ANIMATION_EVENT_CUES_PATH,
+        PRESENTATION_SFX_MANIFEST_PATH, PRESENTATION_SFX_GENERATOR_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Town hero-hire completion feedback owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+    cues = load_json(TOWN_VFX_MANIFEST_PATH).get("cues", {})
+    ensure(cues.get("vfx_placeholder_town_hero_hire") == {
+        "event_id": "town_hero_hired", "texture_path": "res://art/town/runtime/vfx/hero_hire.png",
+        "render_mode": "town_hero_hire_completion", "scale": 1.0,
+    }, errors, "Town hero-hire VFX manifest entry drifted")
+    ensure(png_size(TOWN_HERO_HIRE_VFX_SOURCE_PATH) == (1254, 1254), errors, "Town hero-hire source image must retain the generated 1254x1254 source")
+    ensure(png_size(TOWN_HERO_HIRE_VFX_RUNTIME_PATH) == (512, 512), errors, "Town hero-hire runtime image must be 512x512")
+    for path, label in ((TOWN_HERO_HIRE_VFX_SOURCE_PATH, "source"), (TOWN_HERO_HIRE_VFX_RUNTIME_PATH, "runtime")):
+        header = path.read_bytes()[:26]
+        ensure(len(header) >= 26 and header[25] in {4, 6}, errors, f"Town hero-hire {label} image must retain a PNG alpha channel")
+    rows = load_json(ANIMATION_EVENT_CUES_PATH).get("entries", [])
+    hero_rows = [row for row in rows if isinstance(row, dict) and row.get("event_id") == "town_hero_hired"]
+    ensure(hero_rows == [{
+        "event_id": "town_hero_hired", "cue_id": "cue_town_hero_hired", "surface": "town",
+        "subject_kind": "hero", "animation_state_family": "tavern", "animation_state": "commander_arrived",
+        "playback_policy": "queue_resolved", "blocking_policy": "nonblocking", "skippable": True,
+        "vfx_cue_ids": ["vfx_placeholder_town_hero_hire"], "audio_cue_ids": ["audio_placeholder_town_hero_hire"],
+        "fallbacks": {"reduced_motion_tag": "commander_arrived_badge", "fast_mode_tag": "commander_arrived_snap"},
+        "validation_tags": ["town", "hero", "tavern", "resolved_event"],
+        "producer_refs": ["TownShell._on_tavern_action_pressed", "TownRules.hire_hero_at_active_town"],
+    }], errors, "Town hero-hire animation event must remain one exact nonblocking Town cue")
+    audio_cues = load_json(PRESENTATION_SFX_MANIFEST_PATH).get("cues", {})
+    ensure(audio_cues.get("audio_placeholder_town_hero_hire") == {
+        "path": "res://art/audio/runtime/presentation/town_hero_hire.wav", "duration_msec": 420,
+        "volume_db": -12.5, "role": "town_hero_hired",
+    }, errors, "Town hero-hire audio manifest entry drifted")
+    with wave.open(str(TOWN_HERO_HIRE_AUDIO_RUNTIME_PATH), "rb") as wav_file:
+        ensure((wav_file.getnchannels(), wav_file.getsampwidth(), wav_file.getframerate(), wav_file.getnframes()) == (2, 2, 44100, 18522), errors, "Town hero-hire audio must remain exact 420ms stereo 44.1kHz PCM")
+    generator_text = PRESENTATION_SFX_GENERATOR_PATH.read_text(encoding="utf-8")
+    for token in ('"audio_placeholder_town_hero_hire"', '"kind": "contract_fanfare"', 'if kind == "contract_fanfare":'):
+        ensure(token in generator_text, errors, f"Town hero-hire deterministic generator is missing: {token}")
+    ensure('"audio_placeholder_town_hero_hire": {"frequency": 440.0, "duration": 0.42, "gain": 0.12}' in PRESENTATION_AUDIO_PATH.read_text(encoding="utf-8"), errors, "Town hero-hire generated fallback drifted")
+
+    shell_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
+    handler = re.search(r"func _on_tavern_action_pressed\(action_id: String\) -> void:\n(?P<body>.*?)(?=\nfunc )", shell_text, re.DOTALL)
+    ensure(handler is not None, errors, "Town hero-hire presenter is missing the public tavern handler")
+    if handler is not None:
+        body = handler.group("body")
+        order = [body.find('before["player_hero_ids"] = _town_player_hero_ids()'), body.find("TownRules.hire_hero_at_active_town"), body.find('_record_town_action_result("order"'), body.find('_invalidate_active_town_entity_cache("tavern"'), body.find("if _handle_session_resolution():"), body.find("\t_refresh()"), body.find('_record_town_action_presentation("tavern"')]
+        ensure(all(i >= 0 for i in order) and order == sorted(order), errors, "Town hero-hire cue must publish after exact hire, recap, invalidation, resolution, and refresh")
+    presenter = re.search(r"func _record_town_action_presentation\(.*?\n(?P<body>.*?)(?=\nfunc )", shell_text, re.DOTALL)
+    ensure(presenter is not None, errors, "Town hero-hire presentation materializer is missing")
+    if presenter is not None:
+        body = presenter.group("body")
+        for token in ('lane == "tavern"', 'after["player_hero_ids"] = _town_player_hero_ids()', 'var hero_id := action_id.trim_prefix("hire_hero:")', 'HeroCommandRules.hero_recruit_cost(hero_template)', 'var resource_deltas := _town_action_resource_deltas(before, after)', 'hero_id in before_hero_ids', 'hero_id not in after_hero_ids', 'after_hero_ids.size() != before_hero_ids.size() + 1', 'presentation["hero_id"] = hero_id', 'presentation["hero_recruit_cost"] = recruit_cost.duplicate(true)', 'presentation["player_hero_count"] = after_hero_ids.size()'):
+            ensure(token in body, errors, f"Town hero-hire presentation is missing exact roster/cost provenance: {token}")
+    stage_text = TOWN_STAGE_SCRIPT_PATH.read_text(encoding="utf-8")
+    for token in ('event_id == "town_hero_hired" and String(presentation.get("hero_id", "")) == ""', 'event_id == "town_hero_hired" and Dictionary(presentation.get("hero_recruit_cost", {})).is_empty()', 'draw_entries = ["commander_arrived_badge"] if reduced_motion else ["hero_hire_art", "commander_arrived_badge"]', 'func _draw_town_hero_hire_presentation(badge_rect: Rect2, reduced_motion: bool) -> void:', '_draw_text("COMMANDER ARRIVED"', 'func _town_hero_hire_vfx_asset_state() -> Dictionary:', 'cue_id == "vfx_placeholder_town_hero_hire"', 'String(spec.get("render_mode", "")) == "town_hero_hire_completion"'):
+        ensure(token in stage_text, errors, f"TownStageView is missing hero-hire playback ownership: {token}")
+    for name in ("_draw_town_hero_hire_presentation", "_town_hero_hire_vfx_asset_state"):
+        match = re.search(rf"func {name}\(.*?\n(?P<body>.*?)(?=\nfunc )", stage_text, re.DOTALL)
+        for forbidden in ("SessionState", "SaveService", "TownRules", "HeroCommandRules", "AppRouter", "await ", "create_timer"):
+            ensure(match is not None and forbidden not in match.group("body"), errors, f"Town hero-hire view helper {name} must remain authority-free: {forbidden}")
+
+    scene_text = TOWN_HERO_HIRE_FEEDBACK_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure_scene_nodes(scene_text, errors, "town_hero_hire_completion_feedback_report.tscn", [("TownHeroHireCompletionFeedbackReport", "Node")])
+    report_text = TOWN_HERO_HIRE_FEEDBACK_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for token in ('const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]', '_seed_tavern_fixture(authored_session, authored_town)', '_move_active_hero_to_town(session, town)', 'session.overworld["hero_position"] = position.duplicate(true)', '"building_wayfarers_hall"', 'stage.present_town_action({"event_id": "town_hero_hired"})', 'var control_result: Dictionary = TownRules.hire_hero_at_active_town(control, hero_id)', 'var public_result: Dictionary = shell.validation_perform_town_action(action_id)', 'live_after == control.to_dict()', 'after_hero_ids.size() == before_hero_ids.size() + 1', 'recruited_hero == control_hero', '_cost_deltas_exact(expected_deltas, recruit_cost)', 'String(active.get("event_id", "")) == "town_hero_hired"', 'String(audio_record.get("cue_id", "")) == "audio_placeholder_town_hero_hire"', 'unavailable_silent', 'var invalid_result: Dictionary = shell.validation_perform_town_action(action_id)', 'print("TOWN_HERO_HIRE_COMPLETION_FEEDBACK_REPORT %s"'):
+        ensure(token in report_text, errors, f"Town hero-hire focused report is missing method-matched proof: {token}")
+    for forbidden in ("_on_tavern_action_pressed(", "_record_town_action_presentation(", "_town_hero_hire_vfx_asset_state(", "_draw_town_hero_hire_presentation(", "create_timer", "create_tween"):
+        ensure(forbidden not in report_text, errors, f"Town hero-hire report bypasses public ownership: {forbidden}")
+
+
 def validate_town_building_complete_cue_playback(errors: list[str]) -> None:
     report_script_path = ROOT / "tests" / "town_building_complete_cue_playback_report.gd"
     report_scene_path = ROOT / "tests" / "town_building_complete_cue_playback_report.tscn"
@@ -21540,7 +21626,7 @@ def validate_town_building_complete_cue_playback(errors: list[str]) -> None:
     for token in (
         '@onready var _town_action_input_blocker: Control = %TownActionInputBlocker',
         '_record_town_action_presentation("build", full_action_id, action, result, before)',
-        'var event_id := "town_spell_studied" if lane == "study" else ("town_market_exchange_completed" if lane == "market" else ("town_route_response_ordered" if lane == "response" else ("town_units_recruited" if lane == "recruit" else "town_building_built")))',
+        'var event_id := "town_hero_hired" if lane == "tavern" else ("town_spell_studied" if lane == "study" else ("town_market_exchange_completed" if lane == "market" else ("town_route_response_ordered" if lane == "response" else ("town_units_recruited" if lane == "recruit" else "town_building_built"))))',
         'var building_id := action_id.trim_prefix("build:")',
         'building_id in before_buildings or building_id not in after_buildings',
         'presentation["building_id"] = building_id',
@@ -21569,7 +21655,7 @@ def validate_town_building_complete_cue_playback(errors: list[str]) -> None:
     stage_text = TOWN_STAGE_SCRIPT_PATH.read_text(encoding="utf-8")
     for token in (
         'signal town_action_presentation_blocking_changed(blocking: bool)',
-        'event_id not in ["town_units_recruited", "town_building_built", "town_route_response_ordered", "town_market_exchange_completed", "town_spell_studied"]',
+        'event_id not in ["town_units_recruited", "town_building_built", "town_route_response_ordered", "town_market_exchange_completed", "town_spell_studied", "town_hero_hired"]',
         'event_id == "town_building_built" and selected_blocking_policy not in ["input_blocking_timeout", "nonblocking_reduced_motion", "nonblocking_fast_resolve"]',
         'func dismiss_town_action_presentation() -> void:',
         'return String(policy.get("selected_blocking_policy", "")) == "input_blocking_timeout"',
@@ -21627,12 +21713,12 @@ def validate_town_recruitment_cue_playback(errors: list[str]) -> None:
     ensure_script_functions(shell_text, errors, "TownShell.gd", ["_record_town_action_presentation"])
     for required_token in (
 		'_record_town_action_presentation("recruit", full_action_id, action, result, before)',
-		'if lane not in ["build", "recruit", "response", "market", "study"] or not bool(result.get("ok", false)):',
+		'if lane not in ["build", "recruit", "response", "market", "study", "tavern"] or not bool(result.get("ok", false)):',
         'var unit_id := action_id.trim_prefix("recruit:")',
         'var after := TownRules.town_action_consequence_signature(_session)',
         'var recruited_count := int(after_army.get(unit_id, 0)) - int(before_army.get(unit_id, 0))',
         'AnimationCueCatalog.cue_playback_policy_for_event(',
-		'var event_id := "town_spell_studied" if lane == "study" else ("town_market_exchange_completed" if lane == "market" else ("town_route_response_ordered" if lane == "response" else ("town_units_recruited" if lane == "recruit" else "town_building_built")))',
+		'var event_id := "town_hero_hired" if lane == "tavern" else ("town_spell_studied" if lane == "study" else ("town_market_exchange_completed" if lane == "market" else ("town_route_response_ordered" if lane == "response" else ("town_units_recruited" if lane == "recruit" else "town_building_built"))))',
         'String(policy.get("selected_blocking_policy", "")) != "nonblocking"',
 		'_town_stage_view.call("present_town_action", presentation)',
         '"policy": policy.duplicate(true)',
@@ -21688,9 +21774,9 @@ def validate_town_recruitment_cue_playback(errors: list[str]) -> None:
         "const RECRUIT_PRESENTATION_MAX_DURATION_MS := 700",
         "const RECRUIT_PRESENTATION_MIN_DURATION_MS := 120",
         "set_process(false)",
-		'event_id not in ["town_units_recruited", "town_building_built", "town_route_response_ordered", "town_market_exchange_completed", "town_spell_studied"]',
-		'var expected_cue_id := "cue_town_spell_studied" if event_id == "town_spell_studied" else ("cue_town_market_exchange_completed" if event_id == "town_market_exchange_completed" else ("cue_town_route_response_ordered" if event_id == "town_route_response_ordered" else ("cue_town_units_recruited" if event_id == "town_units_recruited" else "cue_town_building_built")))',
-		'event_id in ["town_units_recruited", "town_route_response_ordered", "town_market_exchange_completed", "town_spell_studied"] and selected_blocking_policy != "nonblocking"',
+		'event_id not in ["town_units_recruited", "town_building_built", "town_route_response_ordered", "town_market_exchange_completed", "town_spell_studied", "town_hero_hired"]',
+		'var expected_cue_id := "cue_town_hero_hired" if event_id == "town_hero_hired" else ("cue_town_spell_studied" if event_id == "town_spell_studied" else ("cue_town_market_exchange_completed" if event_id == "town_market_exchange_completed" else ("cue_town_route_response_ordered" if event_id == "town_route_response_ordered" else ("cue_town_units_recruited" if event_id == "town_units_recruited" else "cue_town_building_built"))))',
+		'event_id in ["town_units_recruited", "town_route_response_ordered", "town_market_exchange_completed", "town_spell_studied", "town_hero_hired"] and selected_blocking_policy != "nonblocking"',
         "_town_action_presentation = presentation.duplicate(true)",
         'if Time.get_ticks_msec() >= int(_town_action_presentation.get("expires_msec", 0)):',
 		'draw_entries = ["recruit_count_badge"] if reduced_motion else ["recruit_muster_rings", "recruit_count_badge"]',
@@ -40714,6 +40800,12 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
             "volume_db": -13.0,
             "role": "town_spell_studied",
         },
+        "audio_placeholder_town_hero_hire": {
+            "path": "res://art/audio/runtime/presentation/town_hero_hire.wav",
+            "duration_msec": 420,
+            "volume_db": -12.5,
+            "role": "town_hero_hired",
+        },
     }
     manifest = json.loads(PRESENTATION_SFX_MANIFEST_PATH.read_text(encoding="utf-8"))
     ensure(manifest.get("schema") == "presentation_runtime_sfx_manifest_v1", errors, "presentation SFX manifest has the wrong schema")
@@ -40725,7 +40817,7 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
     ensure(int(manifest.get("sample_width_bits", 0)) == 16, errors, "production presentation SFX must use 16-bit PCM")
     ensure(manifest.get("asset_tier") == "production_layered_v1", errors, "presentation SFX manifest must declare production_layered_v1")
     cues = manifest.get("cues", {})
-    ensure(isinstance(cues, dict) and set(cues) == set(expected_cues), errors, "presentation SFX manifest must contain exactly the twenty-two live Town, Overworld, navigation, blocking, route-open, route-closed, object-focus, object-resolution, guarded-context, and system action cues")
+    ensure(isinstance(cues, dict) and set(cues) == set(expected_cues), errors, "presentation SFX manifest must contain exactly the twenty-three live Town, Overworld, navigation, blocking, route-open, route-closed, object-focus, object-resolution, guarded-context, and system action cues")
     asset_hashes: list[str] = []
     for cue_id in sorted(expected_cues):
         expected = expected_cues[cue_id]
@@ -40759,7 +40851,7 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
             if left_samples and right_samples:
                 ensure(left_samples[0] == 0 and right_samples[0] == 0, errors, f"presentation SFX must start at zero: {expected['path']}")
                 ensure(left_samples[-1] == 0 and right_samples[-1] == 0, errors, f"presentation SFX must end at zero: {expected['path']}")
-    ensure(len(set(asset_hashes)) == 22, errors, "all twenty-two presentation assets must be byte-distinct")
+    ensure(len(set(asset_hashes)) == 23, errors, "all twenty-three presentation assets must be byte-distinct")
     if len(asset_hashes) == 18:
         pack_signature = hashlib.sha256("\n".join(asset_hashes).encode("utf-8")).hexdigest()
         ensure(pack_signature == "d2d0b47d1de5613767232ecf94a03186aade937de3a1c7b7a4857eef4c8d7b57", errors, "presentation SFX pack signature drifted")
@@ -43211,6 +43303,7 @@ def main() -> int:
     validate_town_route_response_dispatch_feedback(errors)
     validate_town_market_exchange_completion_feedback(errors)
     validate_town_spell_study_completion_feedback(errors)
+    validate_town_hero_hire_completion_feedback(errors)
     validate_town_building_complete_cue_playback(errors)
     validate_town_recruitment_cue_playback(errors)
     validate_town_contextual_guide(errors)

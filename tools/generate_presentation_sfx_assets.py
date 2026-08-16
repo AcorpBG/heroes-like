@@ -155,6 +155,13 @@ SPECS = {
         "peak": 0.60,
         "pan": 0.02,
     },
+    "audio_placeholder_town_hero_hire": {
+        "kind": "contract_fanfare",
+        "fundamental": 440.0,
+        "metal": 1320.0,
+        "peak": 0.64,
+        "pan": -0.02,
+    },
 }
 
 
@@ -286,6 +293,11 @@ def layered_sample(kind: str, fundamental: float, metal: float, t: float, progre
         seal = math.sin(math.tau * metal * t - phase) * 0.16
         rising = math.sin(math.tau * fundamental * 1.5 * t + phase * 0.5) * smoothstep(0.18, 0.62, progress) * 0.12
         return (page + seal + rising + noise * transient * 0.05) * envelope(progress)
+    if kind == "contract_fanfare":
+        call = math.sin(math.tau * fundamental * t + phase) * 0.28
+        answer = math.sin(math.tau * fundamental * 1.5 * t - phase * 0.3) * 0.19
+        seal = math.sin(math.tau * metal * t + phase * 0.6) * transient * 0.15
+        return (call + answer + seal + noise * transient * 0.04) * envelope(progress)
     raise ValueError(f"Unsupported presentation sound kind: {kind}")
 
 

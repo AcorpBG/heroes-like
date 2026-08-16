@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Town spell study completion slice is implemented and validated: successful public study actions now publish exact active-hero spellbook completion feedback through TownStage with original VFX, deterministic audio, and fail-closed fallbacks. Focused, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass; broader release gaps remain.",
+  "currentNotes": "The Town hero-hire completion slice is implemented and validated. Successful public tavern hires now publish one exact commander-arrival completion with original VFX, deterministic audio, and fail-closed fallback behavior. Select the next tracker-approved release-readiness implementation slice; broader release gaps remain.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-town-spell-study-completion-feedback-10184",
-  "currentSliceId": "presentation-town-spell-study-completion-feedback-10184",
-  "currentSliceNotes": "Implemented the live Town spell-study completion presentation. An original 1254x1254 RGBA source was curated to a 512x512 runtime VFX and deterministic generation produced a distinct 400 ms stereo cue. The public study handler records exact pre/post active-hero spellbook state and publishes only after successful TownRules learning, recap, cache invalidation, resolution guard, and refresh. Focused artifact /tmp/heroes-town-spell-study-focused.KAbtuO passes six 1280/1920 normal, missing-asset, and reduced-motion rows with whole-session rules-control parity, one newly learned spell, unchanged mana, mirrored player-hero authority, one imported WAV record, and malformed/already-known/refresh silence. Compatibility artifact /tmp/heroes-town-spell-study-compat.uwgBEE passes spell-school icons, both Town VFX owners, building/recruitment cue playback, route and market feedback, animation catalog, broad Town/Battle visual smoke, and core; the building VFX owner now resets validation audio before quit. Static/editor artifact /tmp/heroes-town-spell-study-editor-audit.DoZfwW passes. Official Linux /tmp/heroes-town-spell-study-linux-package.n2Mbzb and Windows /tmp/heroes-town-spell-study-windows-package.fKps6k reports are ok:true; claims remain export/headless startup and export/fresh-Wine Boot/MainMenu/native-DLL startup only. Packaged study interaction/listening, certification, signing/publication, whole-game, and release readiness remain unclaimed.",
+  "currentSlice": "presentation-town-hero-hire-completion-feedback-10184",
+  "currentSliceId": "presentation-town-hero-hire-completion-feedback-10184",
+  "currentSliceNotes": "Completed with six exact public-handler rows across 1280x720/1920x1080 normal, missing-asset, and reduced-motion modes; compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass within bounded claims.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Town Spell Study Completion Feedback",
-  "currentSliceUpdatedAt": "2026-08-16T01:20:10Z",
+  "currentSliceTitle": "Town Hero Hire Completion Feedback",
+  "currentSliceUpdatedAt": "2026-08-16T02:02:57Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -85836,6 +85836,63 @@
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Packaged Town study interaction/listening, certification, signing/publication, broader release gaps, and release readiness remain unclaimed.",
       "blockedReason": null,
       "completedAt": "2026-08-16T01:20:10Z"
+    },
+    {
+      "id": "presentation-town-hero-hire-completion-feedback-10184",
+      "title": "Town Hero Hire Completion Feedback",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Present a successful live Town tavern hire through the existing compact TownStage action system without changing hero recruitment, roster, cost, limit, or save authority.",
+      "implementationTargets": [
+        "art/town/source/hero_hire_vfx_source.png",
+        "art/town/runtime/vfx/hero_hire.png",
+        "art/audio/runtime/presentation/town_hero_hire.wav",
+        "content/animation_event_cues.json",
+        "content/town_vfx_manifest.json",
+        "content/presentation_sfx_manifest.json",
+        "tools/generate_presentation_sfx_assets.py",
+        "scripts/autoload/PresentationAudio.gd",
+        "scenes/town/TownShell.gd",
+        "scenes/town/TownStageView.gd",
+        "tests/town_hero_hire_completion_feedback_report.gd",
+        "tests/town_hero_hire_completion_feedback_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Live TownShell 1280x720/1920x1080 public tavern orders match method-equivalent TownRules controls and publish one imported commander-arrival VFX/audio cue for exactly one newly recruited hero and exact resource cost",
+        "Failed, already-hired, unaffordable, malformed, non-tavern, and refresh controls remain silent; reduced-motion and missing-asset fallbacks are exact",
+        "Hero catalog/availability, recruited payload, active hero, player roster, resources, hero limit, recaps, focus/input, session/save, completed Town presentations, and generic UI cues remain exact",
+        "Focused, hero-command, Town action/VFX/cue, visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "hero templates, recruitment cost, hero limit, starting army, roster availability, active-hero selection, AI hiring, save/schema, Native RMG, or map topology changes",
+        "generic UI cue remapping, layout redesign, particles, shaders, spatial audio, haptics, or final mastering",
+        "packaged hire interaction/listening, hardware certification, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "0c5169e0",
+        "town_tavern_action_present": true,
+        "town_hero_hire_rules_present": true,
+        "town_hero_hire_presentation_present": false,
+        "town_presenter_supported_events": [
+          "town_building_built",
+          "town_units_recruited",
+          "town_route_response_ordered",
+          "town_market_exchange_completed",
+          "town_spell_studied"
+        ]
+      },
+      "createdAt": "2026-08-16T01:24:23Z",
+      "startedAt": "2026-08-16T01:24:23Z",
+      "updatedAt": "2026-08-16T02:02:57Z",
+      "notes": "Implemented the live Town hero-hire completion presentation. Built-in image generation supplied the original 1254x1254 RGBA contract-seal source, curated to a 512x512 runtime VFX; deterministic generation produced a distinct 420 ms stereo cue. The public tavern handler records exact pre/post player-hero ids and publishes only after successful TownRules hiring, recap, cache invalidation, resolution guard, and refresh. Focused artifact /tmp/heroes-town-hero-hire-focused-rerun.SQ8g3D passes six 1280/1920 normal, missing-asset, and reduced-motion rows with whole-session rules-control parity, exact one-hero roster growth, authored hero payload/cost, unchanged active hero, one imported WAV record, and malformed/unavailable/repeated/refresh silence. Compatibility artifact /tmp/heroes-town-hero-hire-compat.EbZJAg passes both Town VFX owners, animation catalog, route/market/spell feedback, building/recruitment cue playback, Town/Battle visual smoke, and core. Repository validation, py_compile, diff checks, and exact/generic editor parses pass. Official Linux /tmp/heroes-town-hero-hire-linux-package.uyjTPr.log and Windows /tmp/heroes-town-hero-hire-windows-package.AJCMpV.log are ok:true; claims remain export/headless startup and export/fresh-Wine Boot/MainMenu/native-DLL startup only. Packaged hire interaction/listening, certification, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Packaged Town hire interaction/listening, certification, signing/publication, broader release gaps, and release readiness remain unclaimed.",
+      "blockedReason": null,
+      "completedAt": "2026-08-16T02:02:57Z"
     }
   ],
   "project": "heroes-like",
@@ -86277,7 +86334,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "presentation_town_spell_study_completion_feedback_completed",
+  "result": "presentation_town_hero_hire_completion_feedback_in_progress",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {

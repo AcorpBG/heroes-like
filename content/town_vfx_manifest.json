@@ -30,6 +30,12 @@
       "texture_path": "res://art/town/runtime/vfx/spell_study.png",
       "render_mode": "town_spell_study_completion",
       "scale": 1.0
+    },
+    "vfx_placeholder_town_hero_hire": {
+      "event_id": "town_hero_hired",
+      "texture_path": "res://art/town/runtime/vfx/hero_hire.png",
+      "render_mode": "town_hero_hire_completion",
+      "scale": 1.0
     }
   }
 }
