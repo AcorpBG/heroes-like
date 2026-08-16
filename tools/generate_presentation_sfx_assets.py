@@ -148,6 +148,13 @@ SPECS = {
         "peak": 0.58,
         "pan": -0.03,
     },
+    "audio_placeholder_town_spell_study": {
+        "kind": "archive_chime",
+        "fundamental": 392.0,
+        "metal": 1176.0,
+        "peak": 0.60,
+        "pan": 0.02,
+    },
 }
 
 
@@ -274,6 +281,11 @@ def layered_sample(kind: str, fundamental: float, metal: float, t: float, progre
         coin = math.sin(math.tau * fundamental * t + phase) * 0.26
         balance = math.sin(math.tau * metal * t - phase) * 0.18
         return (coin + balance + balance * max(0.0, 1.0 - abs(progress - 0.38) / 0.20) * 0.34 + noise * transient * 0.06) * envelope(progress)
+    if kind == "archive_chime":
+        page = math.sin(math.tau * fundamental * t + phase) * 0.24
+        seal = math.sin(math.tau * metal * t - phase) * 0.16
+        rising = math.sin(math.tau * fundamental * 1.5 * t + phase * 0.5) * smoothstep(0.18, 0.62, progress) * 0.12
+        return (page + seal + rising + noise * transient * 0.05) * envelope(progress)
     raise ValueError(f"Unsupported presentation sound kind: {kind}")
 
 

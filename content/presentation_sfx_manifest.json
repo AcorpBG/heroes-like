@@ -133,6 +133,12 @@
       "duration_msec": 360,
       "volume_db": -13.5,
       "role": "town_market_exchange_completed"
+    },
+    "audio_placeholder_town_spell_study": {
+      "path": "res://art/audio/runtime/presentation/town_spell_study.wav",
+      "duration_msec": 400,
+      "volume_db": -13.0,
+      "role": "town_spell_studied"
     }
   }
 }

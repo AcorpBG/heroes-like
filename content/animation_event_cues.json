@@ -632,6 +632,25 @@
       "producer_refs": ["TownShell._on_market_action_pressed", "TownRules.perform_market_action"]
     },
     {
+      "event_id": "town_spell_studied",
+      "cue_id": "cue_town_spell_studied",
+      "surface": "town",
+      "subject_kind": "spellbook",
+      "animation_state_family": "study",
+      "animation_state": "archive_inscribed",
+      "playback_policy": "queue_resolved",
+      "blocking_policy": "nonblocking",
+      "skippable": true,
+      "vfx_cue_ids": ["vfx_placeholder_town_spell_study"],
+      "audio_cue_ids": ["audio_placeholder_town_spell_study"],
+      "fallbacks": {
+        "reduced_motion_tag": "archive_inscribed_badge",
+        "fast_mode_tag": "archive_inscribed_snap"
+      },
+      "validation_tags": ["town", "spell", "study", "resolved_event"],
+      "producer_refs": ["TownShell._on_study_action_pressed", "TownRules.learn_spell_at_active_town"]
+    },
+    {
       "event_id": "spell_cast_battle",
       "cue_id": "cue_spell_cast_battle",
       "surface": "spell",
