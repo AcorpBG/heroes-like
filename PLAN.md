@@ -5989,6 +5989,28 @@ Non-goals:
 - no broad faction balance tuning, generic campaign/carryover redesign, cross-faction hero/spell/artifact/rare-resource transfer, generated-map support, visual/audio asset production, or full Veilmourn campaign claim;
 - no packaged chapter interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
 
+## Selected Slice: Brasshollow Clauseworks Counterclaim Chapter
+
+id: `content-brasshollow-clauseworks-counterclaim-chapter-10184`
+
+Status: completed.
+
+Implementation boundary:
+- add one twenty-first active authored scenario that gives Brasshollow a second real playable front: Oren Bellfounder and the existing Orevein Exactors operate from Clauseworks Depot as a player town and break an Embercourt charter line at Highwater;
+- wire the scenario as a sixth `Frontier Claims` chapter after `fogchart-mooring`, importing only bounded common resources and campaign flags while retaining Brasshollow-owned hero, spell, artifact, army, and rare-resource authority;
+- use only existing shipped terrain, towns, heroes, army groups, units, resources, artifacts, encounters, objectives, scripts, campaign/save/runtime systems, and production UI paths.
+
+Completion criteria:
+- the active content catalog exposes exactly twenty-one campaign- and skirmish-selectable scenarios, with the new scenario preserving exact Clauseworks/Highwater, Oren/Orevein Exactors, Brasshollow/Embercourt, deadline, objective, and authored-route identities;
+- a real session can launch in standalone and campaign modes, reach common and rare economy sources, resolve its authored encounters, capture the Highwater charter front, reach victory and defeat authority, and survive save normalization/resume without synthetic rule shortcuts;
+- `Frontier Claims` unlocks chapter VI only after exact Fogchart victory plus its authored completion flag, imports bounded common resources/flags only, and transfers no Veilmourn hero progression, spells, artifacts, or memory salt into Oren's command;
+- active-scenario combat breadth, deadline, campaign/replay, economy-route/runway, strategic-AI, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Non-goals:
+- no new units, towns, heroes, spells, artifacts, resource-site types, battle rules, AI policy, economy coefficients, campaign schema, save version, Native RMG, or map-topology system changes;
+- no broad faction balance tuning, generic campaign/carryover redesign, cross-faction hero/spell/artifact/rare-resource transfer, generated-map support, visual/audio asset production, or full Brasshollow campaign claim;
+- no packaged chapter interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:
