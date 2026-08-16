@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `content-thornwake-rootgate-toll-chapter-10184`. The active catalog now contains nineteen campaign/skirmish scenarios, including Thornwake's new Rootgate Toll chapter with Tova Rootwright and the Graftroot Wardens defending Rootgate Nursery against the Clauseworks toll line. Frontier Claims now has four chapters; exact Bellwake victory evidence unlocks Rootgate Toll and imports only bounded resources and flags, never Veilmourn hero progression, spells, or artifacts. Real standalone/campaign launch, objective victory and Day 12 defeat, save/resume, 62-encounter combat breadth with a clear queue, resource-route and town-development breadth, strategic-AI recruitment/delivery, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged chapter interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `content-thornwake-rootgate-toll-chapter-10184`
 - Completed implementation slice: `ux-overworld-terminal-end-turn-detached-focus-guard-10184`. The warned End Turn dialog now relies solely on its existing visibility-and-pending guarded next-frame cancel-focus path; the redundant raw deferred cancel-button focus that could execute after terminal routing detached the Overworld is gone. Focused same-stack confirmation/detach proof preserves exact rules, autosave, and session authority, while the real nine-step skirmish defeat flow reaches, saves, leaves, resumes, and leaves Scenario Outcome without detached-focus diagnostics. Ordinary cancel/confirm/stale/low-risk behavior, active-play focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged End Turn interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `ux-overworld-terminal-end-turn-detached-focus-guard-10184`
 - Completed implementation slice: `economy-town-capital-project-identity-correction-10184`. Capital-project discovery now accepts only explicit nonempty `capital_project` metadata, so Highwater, Nightglass, and Prismhearth each expose their one authored project while Graftroot and Orevein expose none. Real starting capitals remain inactive with zero synthetic project effects and name their actual first dependency; detached 4/4 completion activates only the authored project values/support vulnerability and survives save normalization. Planned-task recruitment, strategic planning, all-town development/recruitment, town balance, a 56-turn native Medium strategic row, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged capital-project interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -5897,7 +5899,7 @@ Non-goals:
 
 id: `presentation-overworld-encounter-victory-return-feedback-10184`
 
-Status: in_progress.
+Status: completed.
 
 Implementation boundary:
 - before a real ordinary static encounter victory mutates resolution authority, snapshot only its exact placement/content/tile identity alongside the existing detached route context; after the resolved-battle checkpoint is durably saved, validate that identity against the live encounter row and `resolved_encounters`, then carry one route-local consequence through `AppRouter` into the exact next Overworld scene;
@@ -5940,6 +5942,28 @@ Non-goals:
 - no command removal, hidden Status/Header/resource control, text/content rewrite, font or UI-scale change, two-row band, new panel/reparenting, new layout breakpoint, VFX/audio, or broader screen-composition change;
 - no Overworld movement, routing, End Turn, Town build/economy, save, settings, input mapping, focus order, accessibility semantics, combat, AI, balance, session/schema, Native RMG, or map-topology changes;
 - no packaged Overworld/Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+## Selected Slice: Thornwake Rootgate Toll Chapter
+
+id: `content-thornwake-rootgate-toll-chapter-10184`
+
+Status: completed.
+
+Implementation boundary:
+- add one nineteenth active authored scenario that gives Thornwake a second real playable front: Tova Rootwright defends the already-authored Rootgate Nursery, breaks a Brasshollow toll line, and captures the already-authored Clauseworks Depot;
+- wire the scenario as a fourth `Frontier Claims` chapter after `bellwake-wreck-claim`, importing only bounded resources and campaign flags while retaining Thornwake-owned hero, spell, and artifact authority;
+- use only existing shipped terrain, towns, hero, army groups, units, resources, artifacts, encounters, objectives, scripts, campaign/save/runtime systems, and production UI paths.
+
+Completion criteria:
+- the active content catalog exposes exactly nineteen campaign- and skirmish-selectable scenarios, with the new scenario preserving exact Rootgate/Clauseworks, Tova/Graftroot Wardens, Thornwake/Brasshollow, deadline, objective, and authored-route identities;
+- a real session can launch in both standalone and campaign modes, reach common and rare economy sources, resolve its authored encounters, capture Clauseworks, reach both victory and defeat authority, and survive save normalization/resume without synthetic rule shortcuts;
+- `Frontier Claims` unlocks chapter IV only after exact Bellwake victory plus its authored completion flag, imports bounded resources/flags only, and transfers no Veilmourn hero progression, spells, or artifacts into Tova's command;
+- active-scenario combat breadth, deadline, campaign/replay, economy-route/runway, strategic-AI, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Non-goals:
+- no new units, towns, heroes, spells, artifacts, resource-site types, battle rules, AI policy, economy coefficients, campaign schema, save version, Native RMG, or map-topology system changes;
+- no broad faction balance retuning, generic campaign/carryover redesign, cross-faction hero/spell/artifact transfer, generated-map support, visual/audio asset production, or full Thornwake campaign claim;
+- no packaged chapter interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
 
 ## Progress Reconciliation
 

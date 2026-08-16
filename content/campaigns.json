@@ -515,12 +515,12 @@
     {
       "id": "campaign_frontier_claims",
       "name": "Frontier Claims",
-      "description": "Three independent commanders follow one disputed survey chain from Mireford's root road through Orevein's contract crossing to Bellwake's drowned registry.",
-      "summary": "A three-chapter cross-faction campaign anthology linking the first authored Thornwake, Brasshollow, and Veilmourn fronts through bounded supply and objective carryover.",
-      "region": "Mireford to Bellwake Coast",
-      "arc_goal": "Secure three rival frontier claims and expose the survey chain connecting Murkward, Riverwatch, and Prismhearth's wreck registry.",
-      "completion_title": "Claims Entered",
-      "completion_summary": "Silsa, Marka, and Ivara secure three independent claims, leaving a shared record of the frontier route without merging their commands.",
+      "description": "Four independent commanders follow one disputed survey chain from Mireford's root road through Orevein and Bellwake to Rootgate's contested toll line.",
+      "summary": "A four-chapter cross-faction campaign anthology linking Thornwake, Brasshollow, and Veilmourn fronts through bounded supply and objective carryover.",
+      "region": "Mireford to Bellwake Coast and Rootgate",
+      "arc_goal": "Secure four rival frontier claims and root the shared survey chain from Murkward through Riverwatch and Prismhearth to Clauseworks Depot.",
+      "completion_title": "Claims Rooted",
+      "completion_summary": "Silsa, Marka, Ivara, and Tova secure four independent claims, leaving a shared frontier route without merging their commands.",
       "starting_scenario_id": "mireford-skirmish",
       "scenarios": [
         {
@@ -605,6 +605,42 @@
           ],
           "carryover_import": {
             "from_scenario_id": "orevein-contract",
+            "resources": true,
+            "hero_progression": false,
+            "spells": false,
+            "artifacts": false,
+            "flags_prefix": "carryover_"
+          },
+          "carryover_export": {
+            "retain_hero_progression": false,
+            "retain_spells": false,
+            "retain_artifacts": false,
+            "resource_fraction": 0.35,
+            "resource_caps": {"gold": 1200, "wood": 3, "ore": 3, "memory_salt": 2},
+            "flag_ids": ["drowned_chart_recorded", "relay_pickets_broken", "mirror_lancers_broken"]
+          }
+        },
+        {
+          "scenario_id": "rootgate-toll",
+          "label": "Chapter IV: Rootgate Toll",
+          "description": "Carry the drowned chart back inland, break Clauseworks' toll line, and root a fourth claim through the nursery road.",
+          "chapter_index": 4,
+          "chapter_title": "Root the Toll Road",
+          "status_hint": "Tova receives bounded Bellwake stores and evidence while retaining her own Thornwake command state.",
+          "carryover_summary": "Imports bounded Bellwake resources and flags, then closes the anthology without cross-faction hero, spell, or artifact transfer.",
+          "briefing": "Tova Rootwright must turn the drowned survey record into a living road before Clauseworks prices every inland crossing shut.",
+          "intel": "Charter guards, bastion reserves, and boiler exactors hold the contract road; Bellwake's chart proves the toll was built across the shared claim.",
+          "stakes": "Root Clauseworks into the living road and the four claims become one durable frontier record; fail and the chain ends at the coast.",
+          "aftermath_victory": "Clauseworks' ledgers are bound beneath Rootgate and the four-command frontier docket becomes a living route.",
+          "aftermath_defeat": "Brasshollow closes the toll line and strands the three earlier claims beyond Rootgate's uprooted road.",
+          "journal_victory": "Tova broke the Rootgate toll and rooted the fourth frontier claim.",
+          "journal_defeat": "Tova failed to bind Clauseworks into the frontier route.",
+          "unlock_requirements": [
+            {"type": "scenario_status", "scenario_id": "bellwake-wreck-claim", "status": "victory"},
+            {"type": "scenario_flag_true", "scenario_id": "bellwake-wreck-claim", "flag": "drowned_chart_recorded"}
+          ],
+          "carryover_import": {
+            "from_scenario_id": "bellwake-wreck-claim",
             "resources": true,
             "hero_progression": false,
             "spells": false,
