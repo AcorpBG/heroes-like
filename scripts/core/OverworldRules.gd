@@ -12845,7 +12845,7 @@ static func _command_commitment_action_line(session: SessionStateStoreScript.Ses
 	if not context_actions.is_empty():
 		var action = context_actions[0]
 		if action is Dictionary:
-			return String(action.get("summary", _context_action_briefing(session, action, get_active_context(session))))
+			return _command_commitment_action_summary(session, action)
 	var site_plan := _nearest_logistics_plan(session)
 	if not site_plan.is_empty():
 		return String(site_plan.get("order", "Advance to stabilize the nearest logistics lane."))
@@ -12859,6 +12859,11 @@ static func _command_commitment_action_line(session: SessionStateStoreScript.Ses
 		if not victory_labels.is_empty():
 			return "Advance on %s while the front is still forming." % String(victory_labels[0])
 	return "Expand the scout ring, secure the nearest lane, and shape the first contact on favorable ground."
+
+static func _command_commitment_action_summary(session: SessionStateStoreScript.SessionData, action: Dictionary) -> String:
+	if action.has("summary"):
+		return String(action.get("summary", ""))
+	return _context_action_briefing(session, action, get_active_context(session))
 
 static func _command_commitment_route_line(session: SessionStateStoreScript.SessionData) -> String:
 	var context := get_active_context(session)

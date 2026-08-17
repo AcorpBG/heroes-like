@@ -11,6 +11,9 @@ func _run() -> void:
 	var opened := await _open_shell(session)
 	var shell: Node = opened.get("shell", null)
 	session = opened.get("session", session)
+	var commitment_control := _assert_commitment_summary_fallback_elision(shell, session)
+	if commitment_control.is_empty():
+		return
 	_prepare_shell_state(shell, session, Vector2i(0, 1), 10)
 	var reserve_id := _ensure_reserve_hero(session)
 	shell.call("_refresh")
@@ -209,11 +212,204 @@ func _run() -> void:
 		"legacy_event_readiness_usec": int(event_context_control.get("legacy_usec", 0)),
 		"shared_event_readiness_usec": int(event_context_control.get("shared_usec", 0)),
 		"legacy_event_to_shared_ratio": float(event_context_control.get("legacy_usec", 0)) / float(maxi(int(event_context_control.get("shared_usec", 0)), 1)),
+		"commitment_context_count": int(commitment_control.get("context_count", 0)),
+		"commitment_legacy_median_usec": int(commitment_control.get("legacy_median_usec", 0)),
+		"commitment_current_median_usec": int(commitment_control.get("current_median_usec", 0)),
+		"commitment_current_to_legacy_ratio": float(commitment_control.get("current_median_usec", 0)) / float(maxi(int(commitment_control.get("legacy_median_usec", 0)), 1)),
+		"commitment_full_refresh_usec": int(commitment_control.get("full_refresh_usec", 0)),
+		"commitment_full_refresh_rail_usec": int(commitment_control.get("full_refresh_rail_usec", 0)),
+		"commitment_context_output_parity": true,
+		"commitment_summary_presence_semantics_exact": true,
+		"commitment_full_refresh_authority_exact": true,
 		"refresh_authority_exact": true,
 		"legacy_drawer_authority_exact": true,
 	})])
 	shell.queue_free()
 	get_tree().quit(0)
+
+func _assert_commitment_summary_fallback_elision(shell: Node, shell_session) -> Dictionary:
+	var context_specs := [
+		{"kind": "owned_town", "action_id": "visit_town"},
+		{"kind": "enemy_town", "action_id": "capture_town"},
+		{"kind": "neutral_town", "action_id": "capture_town"},
+		{"kind": "resource", "action_id": "collect_resource"},
+		{"kind": "artifact", "action_id": "collect_artifact"},
+		{"kind": "encounter", "action_id": "enter_battle"},
+		{"kind": "rendezvous", "action_id": "open_rendezvous"},
+	]
+	var context_rows := []
+	for spec_value in context_specs:
+		var spec: Dictionary = spec_value
+		var fixture: Dictionary = _commitment_context_fixture(String(spec.get("kind", "")))
+		var fixture_session = fixture.get("session", null)
+		if fixture_session == null:
+			_fail("Commitment fixture could not be created.", spec)
+			return {}
+		var actions: Array = OverworldRules.get_context_actions(fixture_session)
+		if actions.is_empty() or not (actions[0] is Dictionary):
+			_fail("Commitment fixture did not expose a live context action.", {"spec": spec, "actions": actions})
+			return {}
+		var action: Dictionary = actions[0]
+		if String(action.get("id", "")) != String(spec.get("action_id", "")) or not action.has("summary"):
+			_fail("Commitment fixture did not expose the exact authored summary action.", {"spec": spec, "action": action})
+			return {}
+		var authority_before: Dictionary = fixture_session.to_dict()
+		var legacy_line := _legacy_eager_command_commitment_action_line(fixture_session)
+		var current_line := OverworldRules._command_commitment_action_line(fixture_session)
+		if current_line != legacy_line or current_line != String(action.get("summary", "")):
+			_fail("Lazy commitment action line diverged from the independent eager control.", {
+				"spec": spec,
+				"legacy": legacy_line,
+				"current": current_line,
+				"summary": String(action.get("summary", "")),
+			})
+			return {}
+		var summaryless: Dictionary = action.duplicate(true)
+		summaryless.erase("summary")
+		var expected_fallback := OverworldRules._context_action_briefing(
+			fixture_session,
+			summaryless,
+			OverworldRules.get_active_context(fixture_session)
+		)
+		if OverworldRules._command_commitment_action_summary(fixture_session, summaryless) != expected_fallback:
+			_fail("Summary-less commitment action did not use the exact briefing fallback.", spec)
+			return {}
+		var empty_summary: Dictionary = action.duplicate(true)
+		empty_summary["summary"] = ""
+		if OverworldRules._command_commitment_action_summary(fixture_session, empty_summary) != "":
+			_fail("Present empty commitment summary did not remain authoritative.", spec)
+			return {}
+		if fixture_session.to_dict() != authority_before:
+			_fail("Commitment context parity mutated session authority.", spec)
+			return {}
+		context_rows.append({"kind": spec.get("kind", ""), "action_id": action.get("id", ""), "summary": current_line})
+
+	var empty_fixture: Dictionary = _commitment_context_fixture("empty")
+	var empty_session = empty_fixture.get("session", null)
+	var empty_actions: Array = OverworldRules.get_context_actions(empty_session)
+	if not empty_actions.is_empty():
+		_fail("Empty commitment fixture unexpectedly exposed a context action.", empty_actions)
+		return {}
+	var empty_before: Dictionary = empty_session.to_dict()
+	var empty_line := OverworldRules._command_commitment_action_line(empty_session)
+	if empty_line == "" or empty_session.to_dict() != empty_before:
+		_fail("Empty commitment fallback was blank or mutated session authority.", {"line": empty_line})
+		return {}
+
+	var timing_fixture: Dictionary = _commitment_context_fixture("owned_town")
+	var timing_session = timing_fixture.get("session", null)
+	var legacy_batches := []
+	var current_batches := []
+	for batch_index in range(5):
+		var legacy_started := Time.get_ticks_usec()
+		for _sample in range(3):
+			_legacy_eager_command_commitment_action_line(timing_session)
+		legacy_batches.append(Time.get_ticks_usec() - legacy_started)
+		var current_started := Time.get_ticks_usec()
+		for _sample in range(3):
+			OverworldRules._command_commitment_action_line(timing_session)
+		current_batches.append(Time.get_ticks_usec() - current_started)
+	var legacy_median := _integer_median(legacy_batches)
+	var current_median := _integer_median(current_batches)
+	if legacy_median <= 0 or current_median <= 0 or current_median * 4 > legacy_median * 3:
+		_fail("Commitment summary fallback elision was not materially faster than the eager control.", {
+			"legacy_batches": legacy_batches,
+			"current_batches": current_batches,
+			"legacy_median_usec": legacy_median,
+			"current_median_usec": current_median,
+		})
+		return {}
+
+	_set_active_hero_position(shell_session, Vector2i(0, 0))
+	_set_active_hero_movement(shell_session, 10)
+	shell_session.overworld["fog"] = {}
+	OverworldRules.refresh_fog_of_war(shell_session)
+	shell.call("_set_selected_tile", Vector2i(0, 0))
+	shell.call("_refresh")
+	var shell_authority_before: Dictionary = _refresh_authority(shell.call("validation_snapshot"))
+	var shell_session_before: Dictionary = shell_session.to_dict()
+	var commitment_panel = shell.get("_commitment_panel")
+	var commitment_label = shell.get("_commitment_label")
+	commitment_panel.visible = true
+	shell.set("_debug_command_in_progress", true)
+	shell.call("validation_reset_profile", true)
+	var full_refresh_started := Time.get_ticks_usec()
+	shell.call("_refresh")
+	var full_refresh_usec := Time.get_ticks_usec() - full_refresh_started
+	var full_refresh_profile: Dictionary = shell.call("validation_profile_snapshot")
+	var expected_board := OverworldRules.describe_commitment_board(shell_session)
+	if String(commitment_label.text) == "" or String(commitment_label.tooltip_text) != expected_board:
+		_fail("Active-town full refresh did not preserve the exact commitment rail text.", {
+			"expected": expected_board,
+			"text": String(commitment_label.text),
+			"tooltip": String(commitment_label.tooltip_text),
+		})
+		return {}
+	if int(full_refresh_profile.get("refresh_commitment_rail_usec", 0)) <= 0:
+		_fail("Active-town full refresh did not profile the commitment rail.", full_refresh_profile)
+		return {}
+	if shell_session.to_dict() != shell_session_before or _refresh_authority(shell.call("validation_snapshot")) != shell_authority_before:
+		_fail("Active-town full refresh changed session or whole refresh authority.", {})
+		return {}
+	return {
+		"context_count": context_rows.size() + 1,
+		"legacy_median_usec": legacy_median,
+		"current_median_usec": current_median,
+		"full_refresh_usec": full_refresh_usec,
+		"full_refresh_rail_usec": int(full_refresh_profile.get("refresh_commitment_rail_usec", 0)),
+	}
+
+func _legacy_eager_command_commitment_action_line(session) -> String:
+	var context_actions := OverworldRules.get_context_actions(session)
+	if context_actions.is_empty() or not (context_actions[0] is Dictionary):
+		return ""
+	var action: Dictionary = context_actions[0]
+	return String(action.get("summary", OverworldRules._context_action_briefing(session, action, OverworldRules.get_active_context(session))))
+
+func _commitment_context_fixture(kind: String) -> Dictionary:
+	var session = _session_with_map(12, 3)
+	match kind:
+		"owned_town", "enemy_town", "neutral_town":
+			var towns: Array = session.overworld.get("towns", [])
+			var town: Dictionary = towns[0]
+			town["owner"] = "player" if kind == "owned_town" else ("enemy" if kind == "enemy_town" else "neutral")
+			towns[0] = town
+			session.overworld["towns"] = towns
+			_set_active_hero_position(session, Vector2i(0, 0))
+		"resource", "artifact", "encounter":
+			session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+			OverworldRules.normalize_overworld_state(session)
+			var bucket_key := "resource_nodes" if kind == "resource" else ("artifact_nodes" if kind == "artifact" else "encounters")
+			var bucket: Array = session.overworld.get(bucket_key, [])
+			var entry: Dictionary = bucket[0]
+			_set_active_hero_position(session, Vector2i(int(entry.get("x", 0)), int(entry.get("y", 0))))
+		"rendezvous":
+			_set_active_hero_position(session, Vector2i(10, 1))
+			var reserve_id := _ensure_reserve_hero(session)
+			_set_roster_hero_position(session, reserve_id, Vector2i(10, 1))
+		"empty":
+			_set_active_hero_position(session, Vector2i(11, 1))
+		_:
+			return {}
+	session.overworld["fog"] = {}
+	OverworldRules.refresh_fog_of_war(session)
+	return {"session": session}
+
+func _set_roster_hero_position(session, hero_id: String, tile: Vector2i) -> void:
+	var heroes: Array = session.overworld.get("player_heroes", []) if session.overworld.get("player_heroes", []) is Array else []
+	for index in range(heroes.size()):
+		if heroes[index] is Dictionary and String(heroes[index].get("id", "")) == hero_id:
+			var hero: Dictionary = heroes[index]
+			hero["position"] = {"x": tile.x, "y": tile.y}
+			heroes[index] = hero
+			break
+	session.overworld["player_heroes"] = heroes
+	OverworldRules.normalize_overworld_state(session)
+
+func _integer_median(values: Array) -> int:
+	var ordered := values.duplicate()
+	ordered.sort()
+	return int(ordered[ordered.size() / 2])
 
 func _open_shell(session) -> Dictionary:
 	var active_session = SessionState.set_active_session(session)

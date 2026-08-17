@@ -24,6 +24,9 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Selected implementation slice: none. Select the next tracker-approved release-readiness implementation slice from current source and behavior evidence.
+- Completed implementation slice: `performance-overworld-commitment-summary-eager-fallback-elision-10184`. Command Commitment now returns an authored context-action summary without eagerly deriving its unused briefing fallback, while summary-less and present-empty semantics remain exact. Focused runtime covers eight live context/fallback states with exact session/UI authority and cuts the owned-town three-call median from161.7ms to81.2ms; full active-town refresh, Overworld visual/route/input, Town return, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
+  id: `performance-overworld-commitment-summary-eager-fallback-elision-10184`
 - Completed implementation slice: `performance-overworld-field-readiness-progress-recap-reuse-10184`. One full Overworld refresh now passes the exact detached progress recap already owned by the objective header bundle into Field Readiness context construction, removing its immediate second recap derivation while direct/default callers remain fresh. Focused direct context work is 41.6 ms versus0.1ms preloaded with exact context, no-event/event, session, and UI authority. Authored Ninefold first-ready improves4211 to4102ms, repeat refresh2008 to1919ms, header lane490 to417ms, and full refresh2009 to1918ms. Full Map Editor, Overworld visual/input, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass; broader packaged interaction and release claims remain unclaimed.
   id: `performance-overworld-field-readiness-progress-recap-reuse-10184`
 - Completed implementation slice: `performance-overworld-drawer-objective-recap-reuse-10184`. The closed Frontier handoff now reuses the exact objective progress recap already built by the same full refresh instead of constructing the full Objective Board only to extract its `Next step:` line. Focused parity covers all 24 authored scenarios plus day-state changes, direct fallback, open Frontier, session/UI authority, and 173-to-104 ms handoff work. Authored Ninefold first-ready improves 4425 to4211ms, repeat refresh2288 to2008ms, tooltip/drawer558 to330ms, and full refresh2288 to2009ms. Full Map Editor, Overworld visual/input, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged interaction and broader release claims remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -4199,6 +4202,31 @@ Completion criteria:
 
 Non-goals:
 - no briefing content/consumption policy, End Turn rules/autosave policy, SaveService canonicalization, save schema/version, manual-slot redesign, Battle briefing change, routing, Native RMG, publication, signing, native Windows hardware certification, or overall release-completion claim.
+
+## Overworld Commitment Summary Eager Fallback Elision
+
+id: `performance-overworld-commitment-summary-eager-fallback-elision-10184`
+
+Status: completed.
+
+Selected Phase 6 normal-path performance correction. Every current live context action carries its complete player-facing summary, but `_command_commitment_action_line` passes a second full `_context_action_briefing` call as `Dictionary.get`'s eagerly evaluated fallback. A current owned-town fixture proves exact text and session authority while a conditional fallback reduces the action-line materialization from roughly 68-74ms to 34-36ms.
+
+Implemented outcome: the action line now tests summary presence before deriving the fallback briefing. The authoritative focused owner proves exact outputs for owned, enemy, and neutral towns, resource, artifact, encounter, rendezvous, empty, summary-less, and present-empty states; its three-call median is 81.2ms versus161.7ms for the copied eager control, and the real active-town full refresh preserves the complete commitment tooltip plus whole session/UI authority. Bounded compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass.
+
+Implementation target:
+- read the existing context-action summary first and return it unchanged when present;
+- build the current active-context briefing only when the action has no usable summary, retaining fresh fallback behavior for direct and malformed callers;
+- keep commitment route, coverage, hold/risk, context-action construction, ordering, UI copy, and refresh invalidation unchanged.
+
+Completion criteria:
+- direct current versus lazy-fallback action lines remain whole-exact for owned/enemy/neutral towns, resources, artifacts, encounters, rendezvous, empty context, and a summary-less control;
+- a real active-town full Overworld refresh preserves exact commitment text and whole session/UI/save/focus/action authority while materially reducing commitment-lane work;
+- focused refresh-cache, Overworld interaction/visual, Town return, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Non-goals:
+- no context-action, commitment, route, risk, objective, save, focus, UI copy, or gameplay policy changes;
+- no persistent cache, async work, content, balance, AI, Native RMG, save/schema, or package identity changes;
+- no packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
 
 ## Generated-Large Town Cache-Hit First Refresh Performance
 
