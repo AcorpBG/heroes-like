@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `ux-overworld-empty-manual-save-slot-status-clarity-10184`. The live Overworld footer now maps the selected slot's canonical missing summary to `M1 empty`, then refreshes to `M1 ready` through the real manual-save path, while loadable, held, and invalid states plus all save/overwrite/load/cache/session authority remain unchanged. Focused exact-width, manual-overwrite, active-focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Overworld save interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `ux-overworld-empty-manual-save-slot-status-clarity-10184`
 - Completed implementation slice: `ux-overworld-town-control-label-consistency-10184`. Live Overworld town context, route-decision, selected-tile rail, and hover surfaces now use the same exact `Your/Enemy/Neutral/Unknown Control` mapping as the Town header, without changing ownership, route, fog, interaction, session, or save authority. Focused two-width route/tooltip, Overworld visual, active-focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `ux-overworld-town-control-label-consistency-10184`
 - Completed implementation slice: `ux-town-header-player-facing-control-label-10184`. Town headers now map the exact owner value to compact `Your Control`, `Enemy Control`, `Neutral Control`, or fail-closed `Unknown Control` copy without changing ownership authority. Focused live/direct header proof, exact 1280x720 and 1920x1080 captured-town routes, active focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
@@ -6970,6 +6972,39 @@ Completion evidence:
 - the full River Pass capture/save-resume/re-entry flow passed naturally with 42 steps and zero harness errors at exact 1280x720 (`/tmp/heroes-town-header-routed-1280.lBImP4/20260817T184313Z`) and 1920x1080 (`/tmp/heroes-town-header-routed-1920.k8KFFo/20260817T185207Z`); both captured-town frames visibly retain exact Duskfen/Mireclaw/Frontier/Spell identity and show `Your Control` without `Owner Player`;
 - active-play focus, accessibility semantics, core, repository validation, Python compilation, diff checks, and exact/generic Godot editor parses passed;
 - official Linux export/headless startup and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup reports are `ok:true`; packaged Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
+
+## Selected Slice: Overworld Empty Manual-Slot Status Clarity
+
+id: `ux-overworld-empty-manual-save-slot-status-clarity-10184`
+
+Status: completed.
+
+Implementation boundary:
+- change only the compact Overworld `SaveStatus` mapping so the canonical missing manual-slot summary reads `M<slot> empty` instead of falling through to `M<slot> lock`;
+- retain exact `ready`, `hold`, and `lock` states for loadable, valid-but-held, and invalid non-missing summaries, plus the existing detailed tooltip and enabled Save action;
+- preserve manual save/overwrite/load, latest-save selection, summary/cache/files/settings, route, session, and save-schema authority.
+
+Completion criteria:
+- a fresh live River Pass Overworld with canonical manual-slot `validity: missing` / `Empty slot.` shows `M1 empty`, an enabled Save action, and the existing detailed empty-slot tooltip at 1280x720 and 1920x1080;
+- saving to that real selected slot succeeds and refreshes the same compact status to `M1 ready`, with the existing loadable summary, feedback, tooltip, file/cache, session, and route authority exact;
+- loadable, valid-but-held, invalid non-missing, and missing summary branches remain fail-closed and mutually distinct without relying on whether another latest save exists;
+- focused Overworld visual/save, manual-overwrite, active-focus, accessibility, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass.
+
+Non-goals:
+- no save/write/load/overwrite transaction, slot selection, latest-save, summary schema, cache, filesystem, settings, autosave, route, session, or Native RMG change;
+- no broader Overworld layout, footer geometry, save picker, button, tooltip, accessibility region, controller, audio, VFX, or copy redesign;
+- no packaged Overworld save interaction parity, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- HEAD `3fc9878f178b5954f68e3916c2f5d24c3109b550` defines missing manual summaries as `validity: "missing"`, `valid: false`, `loadable: false`, and `status_text: "Empty slot."` in `SaveService`, but `OverworldShell._save_status_text` maps that state to `M<slot> lock` whenever an autosave is latest-ready;
+- the routed 1280x720 River Pass frame `/tmp/heroes-town-overview-routed-1280.6vgtla/20260817T194950Z/overworld_entered.png` visibly shows `M1 lock` beside an enabled Save button before Manual 1 exists;
+- this is direct current shipped first-view behavior, not a claim that save transaction or summary authority is incorrect.
+
+Completion evidence:
+- `overworld_visual_smoke` passed naturally at exact 1280x720 (`/tmp/heroes-empty-slot-focused-1280-final.fQ0W9g`) and 1920x1080 (`/tmp/heroes-empty-slot-focused-1920-final.7ooO9K`), proving the canonical missing summary, enabled Save action, exact detailed tooltip, unchanged session authority, real write, loadable summary, feedback, and `M1 empty` to `M1 ready` transition;
+- manual-save overwrite, active-play keyboard focus, accessibility semantics, and core compatibility gates passed sequentially (`/tmp/heroes-empty-slot-compat.6ENOjw`);
+- repository validation, Python compilation, diff checks, and exact/generic Godot editor parses passed (`/tmp/heroes-empty-slot-final-static.wmK63Z`);
+- official Linux export/headless startup and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup reports are `ok:true`; packaged Overworld save interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
 
 ## Selected Slice: Overworld Town Control-Label Consistency
 

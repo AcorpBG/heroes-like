@@ -4214,7 +4214,7 @@ func _refresh_save_slot_picker(refresh_watch_context: Dictionary = {}) -> void:
 	if current_context != "":
 		save_tooltip_lines.append("Saving now: %s" % current_context)
 	save_tooltip_lines.append("Selected slot:\n%s" % SaveService.describe_slot_details(summary))
-	_save_status_label.text = _save_status_text(selected_slot, summary, latest_context)
+	_save_status_label.text = _save_status_text(selected_slot, summary)
 	_save_status_label.tooltip_text = "\n".join(save_tooltip_lines)
 	_save_slot_picker.tooltip_text = SaveService.describe_slot_details(summary)
 	_save_button.text = "Save"
@@ -11919,10 +11919,10 @@ func _short_text(text: String, max_chars: int) -> String:
 		return normalized
 	return "%s..." % normalized.left(max(1, max_chars - 3)).strip_edges()
 
-func _save_status_text(selected_slot: int, summary: Dictionary, latest_context: String) -> String:
+func _save_status_text(selected_slot: int, summary: Dictionary) -> String:
 	var status := "M%d" % selected_slot
-	if latest_context == "Latest ready save: none.":
-		return "%s none" % status
+	if String(summary.get("validity", "missing")) == "missing":
+		return "%s empty" % status
 	if SaveService.can_load_summary(summary):
 		return "%s ready" % status
 	if bool(summary.get("valid", false)):

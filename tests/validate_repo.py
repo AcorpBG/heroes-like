@@ -22923,6 +22923,60 @@ def validate_in_session_save_controls(errors: list[str]) -> None:
     ):
         ensure(required_token in overworld_script_text, errors, f"OverworldShell.gd is missing required in-session save token: {required_token}")
 
+    def gdscript_function_block(text: str, name: str) -> str:
+        match = re.search(rf"(?m)^func {re.escape(name)}\([^\n]*\)(?: -> [^:]+)?:\n", text)
+        if match is None:
+            return ""
+        next_match = re.search(r"(?m)^func [A-Za-z0-9_]+\(", text[match.end():])
+        end = match.end() + next_match.start() if next_match is not None else len(text)
+        return text[match.start():end]
+
+    save_status_block = gdscript_function_block(overworld_script_text, "_save_status_text")
+    ensure(save_status_block != "", errors, "OverworldShell.gd must retain the compact save-status helper")
+    required_save_status_tokens = (
+        "func _save_status_text(selected_slot: int, summary: Dictionary) -> String:",
+        'String(summary.get("validity", "missing")) == "missing"',
+        'return "%s empty" % status',
+        "SaveService.can_load_summary(summary)",
+        'return "%s ready" % status',
+        'bool(summary.get("valid", false))',
+        'return "%s hold" % status',
+        'return "%s lock" % status',
+    )
+    for required_token in required_save_status_tokens:
+        ensure(required_token in save_status_block, errors, f"Overworld compact save status is missing required distinct-state token: {required_token}")
+    ensure(
+        all(save_status_block.find(required_save_status_tokens[index]) < save_status_block.find(required_save_status_tokens[index + 1]) for index in range(len(required_save_status_tokens) - 1)),
+        errors,
+        "Overworld compact save status must order missing, loadable, held, and locked states fail-closed",
+    )
+    ensure("latest_context" not in save_status_block and 'return "%s none"' not in save_status_block, errors, "Overworld selected-slot status must not hide empty or invalid state behind latest-save availability")
+
+    visual_smoke_path = ROOT / "tests" / "overworld_visual_smoke.gd"
+    visual_smoke_text = visual_smoke_path.read_text(encoding="utf-8") if visual_smoke_path.exists() else ""
+    save_case_block = gdscript_function_block(visual_smoke_text, "_assert_save_resume_clarity_contract")
+    for required_token in (
+        'String(empty_snapshot.get("save_status_visible_text", "")) != "M1 empty"',
+        'String(empty_summary.get("validity", "")) != "missing"',
+        'String(empty_summary.get("status_text", "")) != "Empty slot."',
+        'contains("Selected slot:")',
+        'contains("Integrity: Empty slot")',
+        'contains("Load state: Blocked")',
+        'contains("Status: Empty slot.")',
+        'save_button.disabled',
+        'SessionState.ensure_active_session().to_dict() != empty_session_authority',
+        'String(snapshot.get("save_status_visible_text", "")) != "M1 ready"',
+        'shell.call("validation_save_to_selected_slot")',
+    ):
+        ensure(required_token in save_case_block, errors, f"Overworld visual save case is missing empty-to-ready authority token: {required_token}")
+    ensure(
+        save_case_block.find('String(empty_snapshot.get("save_status_visible_text", "")) != "M1 empty"')
+        < save_case_block.find('shell.call("validation_save_to_selected_slot")')
+        < save_case_block.find('String(snapshot.get("save_status_visible_text", "")) != "M1 ready"'),
+        errors,
+        "Overworld visual save case must prove empty status before the real save and ready status afterward",
+    )
+
     town_script_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
         "_save_status_label",
