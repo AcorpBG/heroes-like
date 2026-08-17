@@ -6739,6 +6739,32 @@ Non-goals:
 - no objective type change outside the fourteen named Frontier Claims encounter blockers and no inference that other flag objectives are invalid;
 - no packaged campaign interaction parity, controller hardware, AT-SPI/UIA certification, native hardware, Native RMG, signing/publication, whole-game, campaign-complete, or release-readiness claim.
 
+## Selected Slice: Live Validation Screenshot Orientation
+
+id: `tooling-live-validation-screenshot-orientation-10184`
+
+Status: completed.
+
+Implementation boundary:
+- correct the production live-validation screenshot writer so the PNG preserves the viewport's real top-to-bottom orientation instead of unconditionally flipping the already oriented Godot 4 image;
+- add a focused runtime owner that renders distinct top and bottom color bands, invokes the shipped capture path, reloads the PNG, and fails closed unless the saved top and bottom samples match the live viewport;
+- preserve every live flow, scene action, report payload, filename, output directory, save/session/campaign authority, and gameplay behavior.
+
+Completion criteria:
+- the focused runtime test proves the raw viewport and shipped PNG have the same upright top/bottom orientation and that one PNG is written through the production helper;
+- a real routed live-flow capture is upright and its report/step/screenshot ownership remains exact;
+- existing live-harness, campaign, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass.
+
+Completion evidence:
+- the focused X11 runtime owner renders exact red/blue top/bottom bands, invokes `_capture_screenshot` once, reloads the PNG, and reports exact raw/saved samples `eb141fff` / `0f2ef0ff` with both orientation checks true;
+- the real `boot_to_skirmish_overworld` flow exits naturally with exact Main Menu, entered-Overworld, and progressed-Overworld report steps, and its new PNGs are upright;
+- core, repository validation, Python/JSON/diff checks, exact/generic editor imports, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass.
+
+Non-goals:
+- no scene composition, UI layout, art, camera, renderer, gameplay, input, campaign, save, battle, AI, balance, or content change;
+- no new screenshot format, post-processing, image normalization, visual-diff framework, report schema, or claim that tooling correction is shipped gameplay progress;
+- no packaged interaction, controller hardware, AT-SPI/UIA certification, native hardware, Native RMG, signing/publication, whole-game, or release-readiness claim.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:
