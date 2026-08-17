@@ -6792,6 +6792,33 @@ Completion evidence:
 - Linux and Windows PCK directory audits each contain 2,523 entries, retain 24 original base and 11 original road entries, and contain zero local-reference or generated-study terrain entries;
 - official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green; these are bounded startup claims only.
 
+## Selected Slice: Overworld Artifact Field Sprite Containment
+
+id: `presentation-overworld-artifact-field-sprite-containment-10184`
+
+Status: completed.
+
+Implementation boundary:
+- stop using opaque 128x128 inventory artifact icons as live Overworld/shared Map Editor field sprites and use the existing original transparent `adventurers_bundle` field sprite until dedicated per-artifact map silhouettes exist;
+- keep the selected artifact's inventory icon path available in presentation metadata and preserve artifact identity, reward, pickup, tooltip, save, object placement, and editor authority unchanged;
+- keep the existing one-tile mapped-object grounding, contact shadow/scuffs, memory treatment, and draw-order policy while containing the field sprite inside its tile footprint.
+
+Completion criteria:
+- all twelve live artifact ids resolve the transparent default field sprite while retaining their exact inventory icon ids/paths and exact reward/content identity;
+- focused 1280x720 and 1920x1080 live proof shows no opaque icon background, exact one-tile field containment, and unchanged artifact/session/save/object authority;
+- an upright routed Main Menu-to-Overworld capture visibly shows the artifact as a grounded map object instead of an inventory-card square;
+- Overworld visual, Map Editor, artifact pickup/save, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass.
+
+Non-goals:
+- no artifact stat, reward, slot, inventory UI, icon asset, pickup rule, map placement, save schema, terrain, route, fog, camera, battle, AI, balance, or content change;
+- no new artifact art generation or claim that one generic bundle is final per-artifact field art;
+- no packaged Overworld interaction parity, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Completion evidence:
+- focused 1280x720 and 1920x1080 runtime proves all twelve artifact ids retain their exact inventory icon identity while using the transparent, one-tile `adventurers_bundle` field sprite with exact session/save/object authority;
+- the full Overworld visual smoke, artifact pickup/save owner, 21-stage Map Editor smoke, core smoke, and routed 1920x1080 Main Menu-to-River Pass flow are green, and the routed screenshot no longer shows the opaque inventory-card square;
+- official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green; these remain bounded startup claims and the generic bundle is not claimed as final per-artifact art.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:

@@ -2,6 +2,8 @@ extends Node
 
 const SCENARIO_ID := "ninefold-confluence"
 const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]
+const EXPECTED_FIELD_ASSET_ID := "adventurers_bundle"
+const EXPECTED_FIELD_SPRITE_PATH := "res://art/overworld/runtime/objects/pickups/adventurers_bundle.png"
 const EXPECTED_ICONS := {
 	"artifact_trailsinger_boots": "res://art/artifacts/runtime/trailsinger_boots.png",
 	"artifact_quarry_tally_rod": "res://art/artifacts/runtime/quarry_tally_rod.png",
@@ -36,6 +38,8 @@ func _run() -> void:
 		"artifact_count": EXPECTED_ICONS.size(),
 		"viewports": [[1280, 720], [1920, 1080]],
 		"fallback_asset_id": "adventurers_bundle",
+		"field_sprite_path": EXPECTED_FIELD_SPRITE_PATH,
+		"inventory_icons_separate": true,
 		"rows": rows,
 		"save_version": SessionStateStore.SAVE_VERSION,
 	}))
@@ -99,7 +103,9 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 		"ok": fallback_exact and restored_exact and containment_exact,
 		"viewport": [viewport_size.x, viewport_size.y],
 		"artifact_count": presentation_before.size(),
-		"asset_ids": exact.get("asset_ids", []),
+		"artifact_ids": exact.get("artifact_ids", []),
+		"field_asset_ids": exact.get("field_asset_ids", []),
+		"transparent_field_sprite": exact.get("transparent_field_sprite", false),
 		"visible_count": exact.get("visible_count", 0),
 		"remembered_count": exact.get("remembered_count", 0),
 		"grounding_exact": exact.get("grounding_exact", false),
@@ -120,7 +126,7 @@ func _presentation_rows(map_view: Node, nodes: Array) -> Array:
 func _validate_presentations(rows: Array) -> Dictionary:
 	if rows.size() != EXPECTED_ICONS.size():
 		return {"ok": false, "reason": "presentation_count", "actual": rows.size()}
-	var seen_assets: Dictionary = {}
+	var seen_artifact_ids: Dictionary = {}
 	var visible_count := 0
 	var remembered_count := 0
 	var grounding_exact := true
@@ -133,13 +139,13 @@ func _validate_presentations(rows: Array) -> Dictionary:
 		var artifact_id := String(artifact.get("artifact_id", ""))
 		var expected_path := String(EXPECTED_ICONS.get(artifact_id, ""))
 		var expected_asset_id := "artifact_icon_%s" % artifact_id.trim_prefix("artifact_")
-		if expected_path == "" or String(artifact.get("icon_path", "")) != expected_path or String(artifact.get("sprite_path", "")) != expected_path:
+		if expected_path == "" or String(artifact.get("icon_asset_id", "")) != expected_asset_id or String(artifact.get("icon_path", "")) != expected_path:
 			return {"ok": false, "reason": "icon_path", "row": row}
-		if String(artifact.get("sprite_asset_id", "")) != expected_asset_id or not bool(artifact.get("uses_artifact_icon", false)) or bool(artifact.get("uses_default_sprite", true)):
-			return {"ok": false, "reason": "icon_identity", "row": row}
-		if not (load(expected_path) is Texture2D) or expected_asset_id not in art.get("sprite_asset_ids", []):
+		if String(artifact.get("sprite_asset_id", "")) != EXPECTED_FIELD_ASSET_ID or String(artifact.get("sprite_path", "")) != EXPECTED_FIELD_SPRITE_PATH or bool(artifact.get("uses_artifact_icon", true)) or not bool(artifact.get("uses_default_sprite", false)) or not bool(artifact.get("inventory_icon_separate_from_field_sprite", false)):
+			return {"ok": false, "reason": "field_sprite_identity", "row": row}
+		if not (load(expected_path) is Texture2D) or not (load(EXPECTED_FIELD_SPRITE_PATH) is Texture2D) or EXPECTED_FIELD_ASSET_ID not in art.get("sprite_asset_ids", []):
 			return {"ok": false, "reason": "texture_or_art_payload", "row": row}
-		if int(artifact.get("footprint_width_tiles", 0)) != 1 or int(artifact.get("footprint_height_tiles", 0)) != 1:
+		if int(artifact.get("footprint_width_tiles", 0)) != 1 or int(artifact.get("footprint_height_tiles", 0)) != 1 or not bool(artifact.get("field_sprite_contained_in_tile", false)) or float(artifact.get("field_sprite_extent_fraction", 2.0)) > 1.0:
 			return {"ok": false, "reason": "footprint", "row": row}
 		if bool(row.get("visible", false)):
 			visible_count += 1
@@ -155,10 +161,15 @@ func _validate_presentations(rows: Array) -> Dictionary:
 			and String(art.get("mapped_sprite_contact_shadow_model", "")) == "localized_sprite_contact_shadow" \
 			and not bool(art.get("mapped_sprite_foreground_lip", true)) \
 			and not bool(art.get("mapped_sprite_support_stack", true))
-		seen_assets[expected_asset_id] = true
+		seen_artifact_ids[artifact_id] = true
+	var field_texture := load(EXPECTED_FIELD_SPRITE_PATH) as Texture2D
+	var field_image: Image = field_texture.get_image() if field_texture != null else null
+	var transparent_field_sprite := field_image != null and field_image.detect_alpha() != Image.ALPHA_NONE
 	return {
-		"ok": seen_assets.size() == EXPECTED_ICONS.size() and visible_count == 12 and remembered_count == 0 and grounding_exact,
-		"asset_ids": seen_assets.keys(),
+		"ok": seen_artifact_ids.size() == EXPECTED_ICONS.size() and visible_count == 12 and remembered_count == 0 and grounding_exact and transparent_field_sprite,
+		"artifact_ids": seen_artifact_ids.keys(),
+		"field_asset_ids": [EXPECTED_FIELD_ASSET_ID],
+		"transparent_field_sprite": transparent_field_sprite,
 		"visible_count": visible_count,
 		"remembered_count": remembered_count,
 		"grounding_exact": grounding_exact,

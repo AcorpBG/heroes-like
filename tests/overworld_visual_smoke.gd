@@ -2706,7 +2706,16 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 	if not _assert_art_sprite(wood_presentation, "lumber_wagon", false):
 		return false
 	var artifact_presentation: Dictionary = shell.call("validation_tile_presentation", 2, 0)
-	if not _assert_art_sprite(artifact_presentation, "artifact_icon_trailsinger_boots", false):
+	if not _assert_art_sprite(artifact_presentation, "adventurers_bundle", false):
+		return false
+	var artifact_field: Dictionary = artifact_presentation.get("artifact_presentation", {})
+	if String(artifact_field.get("icon_asset_id", "")) != "artifact_icon_trailsinger_boots" or String(artifact_field.get("icon_path", "")) != "res://art/artifacts/runtime/trailsinger_boots.png":
+		push_error("Overworld smoke: Trailsinger Boots did not retain its exact inventory icon identity separately from the field sprite. presentation=%s" % artifact_presentation)
+		get_tree().quit(1)
+		return false
+	if bool(artifact_field.get("uses_artifact_icon", true)) or not bool(artifact_field.get("uses_default_sprite", false)) or not bool(artifact_field.get("inventory_icon_separate_from_field_sprite", false)) or not bool(artifact_field.get("field_sprite_contained_in_tile", false)):
+		push_error("Overworld smoke: Trailsinger Boots still uses its opaque inventory card as a field sprite or escapes its tile. presentation=%s" % artifact_presentation)
+		get_tree().quit(1)
 		return false
 	var fallback_presentation: Dictionary = shell.call("validation_tile_presentation", 2, 3)
 	var fallback_art: Dictionary = fallback_presentation.get("art_presentation", {})

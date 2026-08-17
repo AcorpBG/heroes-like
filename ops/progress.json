@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the shippable original Overworld terrain adoption: live/shared-editor rendering uses the original authored bank or procedural fallback, local extracted and generated study payloads are excluded from both official PCKs, and focused/live/editor/core/platform gates are green within bounded claims.",
+  "currentNotes": "Completed the bounded artifact field-sprite containment: all twelve artifacts keep exact inventory identities while live Overworld/shared-editor presentation uses the transparent one-tile field bundle. Select the next tracker-approved release-readiness implementation slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-shippable-original-terrain-adoption-10184",
-  "currentSliceId": "presentation-overworld-shippable-original-terrain-adoption-10184",
-  "currentSliceNotes": "Completed with exact 1280x720/1920x1080 family coverage, upright routed live capture, Map Editor/core compatibility, and Linux/Windows PCK directory proof. Existing original tiles remain placeholder art; packaged interaction, certification, signing, publication, and release readiness are not claimed.",
+  "currentSlice": "presentation-overworld-artifact-field-sprite-containment-10184",
+  "currentSliceId": "presentation-overworld-artifact-field-sprite-containment-10184",
+  "currentSliceNotes": "Completed with focused all-artifact 1280x720/1920x1080 proof, exact inventory/reward/save authority, a clean routed 1920x1080 screenshot, Map Editor/core compatibility, and bounded Linux/Windows package startup evidence. The generic bundle remains placeholder field art.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Shippable Original Overworld Terrain Adoption",
-  "currentSliceUpdatedAt": "2026-08-17T13:30:58Z",
+  "currentSliceTitle": "Overworld Artifact Field Sprite Containment",
+  "currentSliceUpdatedAt": "2026-08-17T13:57:51Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,82 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence; do not infer whole-game completion from the completed terrain adoption.",
-  "notes": "The completed product slice removes the live/package dependency on repository-labeled nonredistributable HoMM3 reference frames by adopting the existing original tile bank and procedural fallback. The bank remains placeholder art, and this is not a final-art or release-readiness claim.",
+  "nextActionGuardrailNote": "Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence; preserve the artifact inventory/field-sprite separation and do not treat the generic bundle as final per-artifact art.",
+  "notes": "The completed product slice corrects the direct live Overworld black-square composition defect by separating inventory-card icons from field sprites. It adopts an existing original transparent placeholder and does not claim final per-artifact art or release readiness.",
   "plannedSlices": [
+    {
+      "id": "presentation-overworld-artifact-field-sprite-containment-10184",
+      "title": "Overworld Artifact Field Sprite Containment",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Replace opaque inventory-card icons on the live Overworld with the existing original transparent artifact field placeholder while preserving exact artifact and save authority.",
+      "implementationTargets": [
+        "art/overworld/manifest.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_artifact_pickup_icon_runtime_report.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_visual_smoke.tscn",
+        "tests/overworld_artifact_pickup_icon_runtime_report.tscn",
+        "tests/artifact_pickup_source_execution_report.tscn",
+        "tests/map_editor_smoke.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "All twelve live artifact ids use the transparent default field sprite while retaining exact inventory icon ids, paths, reward content, and pickup identity",
+        "Focused 1280x720 and 1920x1080 live presentation proves no opaque icon background, one-tile field containment, and exact session/save/object authority",
+        "An upright routed live capture visibly shows a grounded artifact map object instead of an inventory-card square",
+        "Overworld visual, Map Editor, artifact pickup/save, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "artifact stats, rewards, slots, inventory UI/icons, pickup rules, map placements, save schema, terrain, routes, fog, camera, battle, AI, balance, or content changes",
+        "new artifact art generation or final per-artifact field-art claims",
+        "packaged Overworld interaction parity, controller hardware, AT-SPI/UIA certification, native hardware, signing, publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "70202a47ed53c69098e675c70b3941ec9a6f28b6",
+        "live_capture": "/tmp/heroes-live-original-terrain.CmS0H3/run/20260817T130811Z/overworld_entered.png",
+        "cropped_defect": "/tmp/heroes-artifact-icon-field-defect.png",
+        "artifact_icon_mode": "128x128 RGB opaque inventory card",
+        "existing_field_sprite": "res://art/overworld/runtime/objects/pickups/adventurers_bundle.png",
+        "existing_field_sprite_mode": "512x512 RGBA transparent"
+      },
+      "createdAt": "2026-08-17T13:35:06Z",
+      "startedAt": "2026-08-17T13:35:06Z",
+      "updatedAt": "2026-08-17T13:57:51Z",
+      "completedAt": "2026-08-17T13:57:51Z",
+      "notes": "Completed by making the manifest's original transparent adventurers_bundle authoritative for artifact field presentation while exposing each artifact's exact inventory icon separately. Focused runtime covers all twelve ids at 1280x720 and 1920x1080 with exact containment, grounding, session/save/object authority, and inventory identity. Full Overworld visual, artifact pickup/save, Map Editor, core, and routed 1920x1080 flow are green; the routed artifact is compact and transparent instead of an opaque black card. Official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. The generic bundle remains placeholder field art; packaged interaction, hardware/accessibility certification, signing/publication, whole-game, and release readiness are not claimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence.",
+      "evidence": {
+        "focused_runtime": "/tmp/heroes-artifact-field-focused.l3SVv7",
+        "overworld_visual": "/tmp/heroes-artifact-compat.ozyfAl/visual.stdout.log",
+        "artifact_pickup_save": "/tmp/heroes-artifact-compat.ozyfAl/pickup.stdout.log",
+        "routed_live_capture": "/tmp/heroes-live-artifact-field.t8fzPa/20260817T134845Z/overworld_entered.png",
+        "map_editor": "/tmp/heroes-artifact-map-editor.uOaiFG/stdout.log",
+        "core": "/tmp/heroes-artifact-map-editor.uOaiFG/core.stdout.log",
+        "linux_report": ".artifacts/packaging_linux_export_smoke/report.json",
+        "windows_report": ".artifacts/packaging_windows_export_smoke/report.json",
+        "artifact_count": 12,
+        "viewports": [
+          [1280, 720],
+          [1920, 1080]
+        ],
+        "field_asset_id": "adventurers_bundle",
+        "inventory_icons_separate": true,
+        "linux_pck_size_bytes": 144153400,
+        "windows_pck_size_bytes": 144153400
+      },
+      "blockedReason": null
+    },
     {
       "id": "presentation-overworld-shippable-original-terrain-adoption-10184",
       "title": "Shippable Original Overworld Terrain Adoption",
