@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `performance-overworld-field-readiness-progress-recap-reuse-10184`. One full Overworld refresh now passes the exact detached progress recap already owned by the objective header bundle into Field Readiness context construction, removing its immediate second recap derivation while direct/default callers remain fresh. Focused direct context work is 41.6 ms versus0.1ms preloaded with exact context, no-event/event, session, and UI authority. Authored Ninefold first-ready improves4211 to4102ms, repeat refresh2008 to1919ms, header lane490 to417ms, and full refresh2009 to1918ms. Full Map Editor, Overworld visual/input, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass; broader packaged interaction and release claims remain unclaimed.
+  id: `performance-overworld-field-readiness-progress-recap-reuse-10184`
 - Completed implementation slice: `performance-overworld-drawer-objective-recap-reuse-10184`. The closed Frontier handoff now reuses the exact objective progress recap already built by the same full refresh instead of constructing the full Objective Board only to extract its `Next step:` line. Focused parity covers all 24 authored scenarios plus day-state changes, direct fallback, open Frontier, session/UI authority, and 173-to-104 ms handoff work. Authored Ninefold first-ready improves 4425 to4211ms, repeat refresh2288 to2008ms, tooltip/drawer558 to330ms, and full refresh2288 to2009ms. Full Map Editor, Overworld visual/input, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged interaction and broader release claims remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `performance-overworld-drawer-objective-recap-reuse-10184`
 - Completed implementation slice: `performance-overworld-objective-stakes-surface-bundle-reuse-10184`. One full Overworld status refresh now builds the exact objective-stakes surface once and materializes the unchanged ObjectiveBrief and Objective Stakes tooltip from it, while direct/default callers remain fresh. Focused whole-output/session/UI authority is exact with one build and two materializations; six legacy pairs take 734 ms versus 487 ms shared. Authored Ninefold first-ready improves 4578 to 4425 ms, repeat refresh 2349 to 2288 ms, and the header/objective/status/resources lane 553 to 497 ms. The full edited Map Editor round trip, Overworld visual/input, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Drawer Objective Board, frontier threats, packaged interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -6406,6 +6408,28 @@ Completion criteria:
 
 Non-goals:
 - no Objective Board, objective/progress/campaign/victory/defeat/recap text, frontier-threat, readiness, event, action, route, forecast, risk, or refresh invalidation policy change;
+- no persistent cross-refresh/day/session cache, async/background work, save/schema, gameplay/content/AI/balance/Native RMG/package identity change;
+- no packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+## Selected Slice: Overworld Field Readiness Progress Recap Reuse
+
+id: `performance-overworld-field-readiness-progress-recap-reuse-10184`
+
+Status: completed.
+
+Implementation boundary:
+- pass the exact progress recap in the invocation-local objective header bundle into the same full refresh's Field Readiness context construction;
+- preserve exact progress/current-step extraction, no-event and event-backed readiness materialization, drawer handoff, direct/default caller freshness, and all refresh invalidation behavior;
+- rebuild on every full refresh and retain fresh fallback whenever no preloaded header bundle is supplied.
+
+Completion criteria:
+- direct Field Readiness context/output is whole-exact to the preloaded recap path across ordinary, pressured, day-transition, selected-route, active-event, campaign, missing, and state/day mutation fixtures;
+- one full refresh records one progress recap build and Field Readiness reuse, with exact no-event/event/drawer/objective/action/save/focus/session/whole UI authority and no second recap derivation;
+- same-process direct versus preloaded context timing proves material removed work against the current roughly361ms Ninefold recap, while authored first-ready/repeat-refresh/header timing improve or remain safely non-regressed;
+- focused refresh-cache, Map Editor Play Copy, Overworld visual/input, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass.
+
+Non-goals:
+- no objective/progress/recap/readiness/event/action/drawer/route/forecast/risk/UI copy or refresh invalidation policy change;
 - no persistent cross-refresh/day/session cache, async/background work, save/schema, gameplay/content/AI/balance/Native RMG/package identity change;
 - no packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
 
