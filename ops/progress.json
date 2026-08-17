@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Objective Header normalization reuse is implemented and validated with exact 24-scenario behavior authority and bounded current-head performance improvement. Select the next tracker-approved implementation slice from direct current behavior and source evidence; the game is not release-ready.",
+  "currentNotes": "Objective Progress surface reuse is implemented and validated with exact authored-scenario behavior authority and bounded current-head performance improvement. Select the next tracker-approved implementation slice from direct current behavior and source evidence; the game is not release-ready.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "performance-overworld-objective-header-normalization-reuse-10184",
-  "currentSliceId": "performance-overworld-objective-header-normalization-reuse-10184",
-  "currentSliceNotes": "Implemented one exact normalized-session recap call after Objective Stakes establishes current state while retaining fresh public direct callers. Focused artifact /tmp/heroes-objective-header-focused.Go1cmM is rc0/ok:true across 24 authored scenarios and changed states with exact session/UI authority; five-call median improves408843 to237258usec. Current baseline fixture improves header lane53201 to44620usec and full refresh186283 to177011usec. Compatibility, static/editor, Linux report8a55e2fd73c4dc0bdadc65ad2def9ae71b62b34e7d11117c72d3d7c4eb7a2d97, and Windows report9fd49903c437c06e2ffbecd30a079345576b614d662c93e52bef3a30a218fb3d are green; platform claims are export/startup only.",
+  "currentSlice": "performance-overworld-objective-progress-surface-reuse-10184",
+  "currentSliceId": "performance-overworld-objective-progress-surface-reuse-10184",
+  "currentSliceNotes": "Implemented one fail-closed optional Objective Stakes preload for normalized progress recap while keeping direct/default callers fresh. Focused artifact /tmp/heroes-objective-progress-focused.prhJFD is rc0/ok:true with exact authored scenario/mode, outcome, changed-state, detach, session, and UI authority; method-matched five-call median improves238599 to207656usec. Current baseline fixture improves header lane44620 to39939usec and full refresh177011 to172138usec. Compatibility, static/editor, Linux report91b8f5fb7aa40ada421d6d92a4312c552cb8849351ad5d9922b18a08f57e0926, and Windows reportf4e389189937f174515f1c1ad0c2545b2212ced418624dfc3c743209427b0302 are green; platform claims are export/startup only.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Objective Header Normalization Reuse",
-  "currentSliceUpdatedAt": "2026-08-17T05:43:19Z",
+  "currentSliceTitle": "Overworld Objective Progress Surface Reuse",
+  "currentSliceUpdatedAt": "2026-08-17T06:05:17Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -87605,6 +87605,52 @@
       "blockedReason": null
     },
     {
+      "id": "performance-overworld-objective-progress-surface-reuse-10184",
+      "title": "Overworld Objective Progress Surface Reuse",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Materialize the Objective Header progress recap from the exact objective counts, completed labels, and next objective already owned by its Objective Stakes surface instead of reevaluating the same objectives up to three times.",
+      "implementationTargets": [
+        "scripts/core/ScenarioRules.gd",
+        "scripts/core/OverworldRules.gd",
+        "tests/overworld_hero_actions_refresh_cache_regression.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Independent current and surface-preloaded controls remain whole-exact across all 24 authored scenarios in skirmish and campaign modes, resolved outcome, and representative live objective changes with session authority unchanged",
+        "A real full Overworld refresh preserves whole UI, session, save, focus, route, and action authority and materially reduces the current Objective Header and header lane from the 44620 usec post-normalization baseline",
+        "Focused Objective Header, Overworld visual, route and input, Town return, core, repository and editor, Linux export and headless startup, and Windows export and fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "objective, progress, recent-event, aftermath, status, forecast, readiness, route, event, save, scenario, or gameplay policy changes",
+        "persistent caching, async work, content, balance, AI, Native RMG, save schema, or package identity changes",
+        "packaged Overworld interaction, controller hardware, AT-SPI or UIA certification, native hardware, signing, publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "2228d564",
+        "artifact": "/tmp/heroes-objective-progress-surface-audit-rerun.C2Cu0r",
+        "authoredLaunchModeCaseCount": 48,
+        "resolvedOutcomeExact": true,
+        "wholeOutputExact": true,
+        "sessionAuthorityExact": true,
+        "legacyFiveCallMedianUsec": 275329,
+        "surfacePreloadedFiveCallMedianUsec": 238546,
+        "postNormalizationFullRefreshUsec": 177011,
+        "postNormalizationHeaderLaneUsec": 44620
+      },
+      "createdAt": "2026-08-17T05:48:11Z",
+      "startedAt": "2026-08-17T05:48:11Z",
+      "updatedAt": "2026-08-17T06:05:17Z",
+      "completedAt": "2026-08-17T06:05:17Z",
+      "notes": "Implemented one fail-closed optional complete Objective Stakes surface on the normalized progress recap path. Objective counts, completed labels, and next objective reuse the supplied detached surface; absent/incomplete preloads and all public direct callers remain fresh, while recent events, aftermath, resolution, campaign, day, and other live state are still derived each call. Authoritative focused artifact /tmp/heroes-objective-progress-focused.prhJFD is rc0/ok:true with exact 24-scenario/mode, resolved outcome, changed-state, detach/rebuild, session, and whole UI authority; five-call median improves238599 to207656usec. The identical baseline fixture /tmp/heroes-objective-progress-current-refresh.HNP7dt improves header lane44620 to39939usec and full refresh177011 to172138usec. Overworld visual, route tooltip, gameplay input ownership, Town return, core, validate/editor, Linux report91b8f5fb7aa40ada421d6d92a4312c552cb8849351ad5d9922b18a08f57e0926, and Windows reportf4e389189937f174515f1c1ad0c2545b2212ced418624dfc3c743209427b0302 are green. Platform claims are export/startup only.",
+      "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null
+    },
+    {
       "id": "performance-overworld-objective-header-normalization-reuse-10184",
       "title": "Overworld Objective Header Normalization Reuse",
       "status": "completed",
@@ -88132,7 +88178,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "overworld_objective_header_normalization_reuse_completed",
+  "result": "overworld_objective_progress_surface_reuse_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -88233,9 +88279,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Objective Header normalization reuse is implemented and validated with exact 24-scenario behavior authority, bounded performance improvement, compatibility, static/editor, and Linux/Windows export-startup evidence. No current implementation slice is selected, and the game is not release-ready.",
+  "summary": "Objective Progress surface reuse is implemented and validated with exact authored-scenario behavior authority, bounded performance improvement, compatibility, static/editor, and Linux/Windows export-startup evidence. No current implementation slice is selected, and the game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-17T05:43:19Z",
+  "updatedAt": "2026-08-17T06:05:17Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
