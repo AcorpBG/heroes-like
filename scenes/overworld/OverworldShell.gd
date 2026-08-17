@@ -11815,6 +11815,7 @@ func _set_rail_text(label: Label, full_text: String, visible_text: String, max_l
 	label.tooltip_text = full_text
 	label.autowrap_mode = TextServer.AUTOWRAP_OFF
 	label.clip_text = true
+	label.text_overrun_behavior = TextServer.OVERRUN_TRIM_WORD_ELLIPSIS
 	label.text = _trim_rail_visible_text(visible_text, max_lines, max_chars)
 
 func _rail_prefixed_summary(prefix: String, full_text: String, max_chars: int = RAIL_LINE_CHARS) -> String:

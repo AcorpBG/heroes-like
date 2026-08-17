@@ -27264,7 +27264,12 @@ def validate_overworld_rail_word_boundary_ellipsis(errors: list[str]) -> None:
         shell_text,
         re.S,
     )
-    ensure(rail_helper_match is not None and compact_match is not None and trim_match is not None, errors, "OverworldShell must isolate rail-only word-boundary truncation and both existing rail consumers")
+    set_rail_match = re.search(
+        r"func _set_rail_text\(label: Label, full_text: String, visible_text: String, max_lines: int = 1, max_chars: int = RAIL_LINE_CHARS\) -> void:\n(?P<body>.*?)(?=\nfunc )",
+        shell_text,
+        re.S,
+    )
+    ensure(rail_helper_match is not None and compact_match is not None and trim_match is not None and set_rail_match is not None, errors, "OverworldShell must isolate rail-only word-boundary truncation, native Label fit, and both existing rail consumers")
     ensure(shell_text.count("func _short_rail_text(") == 1, errors, "OverworldShell must own exactly one rail-only truncator")
     ensure(shell_text.count("lines.append(_short_rail_text(") == 2 and shell_text.count("var line := _short_rail_text(raw_line, max_chars)") == 1, errors, "Only the three compact/trim rail call sites may use the rail-only truncator")
     ensure('return "%s..." % normalized.left(max(1, max_chars - 3)).strip_edges()' in shell_text, errors, "The general _short_text compactor must remain unchanged outside the rail slice")
@@ -27291,6 +27296,19 @@ def validate_overworld_rail_word_boundary_ellipsis(errors: list[str]) -> None:
     if trim_match is not None:
         trim_body = trim_match.group("body")
         ensure(trim_body.count("_short_rail_text(") == 1 and "_short_text(" not in trim_body, errors, "Rail visible trimming must use the rail-only word-boundary helper exactly once")
+    if set_rail_match is not None:
+        set_rail_body = set_rail_match.group("body")
+        set_rail_order = tuple(set_rail_body.find(token) for token in (
+            "label.tooltip_text = full_text",
+            "label.autowrap_mode = TextServer.AUTOWRAP_OFF",
+            "label.clip_text = true",
+            "label.text_overrun_behavior = TextServer.OVERRUN_TRIM_WORD_ELLIPSIS",
+            "label.text = _trim_rail_visible_text(visible_text, max_lines, max_chars)",
+        ))
+        ensure(all(index >= 0 for index in set_rail_order) and list(set_rail_order) == sorted(set_rail_order), errors, "Rail Label assignment must retain the full tooltip, no-wrap clipping, native word ellipsis, and semantic text order")
+        ensure(set_rail_body.count("text_overrun_behavior") == 1, errors, "Rail Label assignment must own exactly one native word-ellipsis configuration")
+        for forbidden_token in ("OVERRUN_TRIM_ELLIPSIS", "OVERRUN_TRIM_WORD_ELLIPSIS_FORCE", "get_string_size", "get_global_rect", "size.x", "call_deferred", "await ", "queue_redraw"):
+            ensure(forbidden_token not in set_rail_body, errors, f"Rail native fit must stay Label-owned and timing/layout neutral; forbidden {forbidden_token}")
 
     focused_match = re.search(
         r"func _assert_rail_word_boundary_ellipsis_contract\(shell: Control\) -> bool:\n(?P<body>.*?)(?=\nfunc )",
@@ -27307,7 +27325,17 @@ def validate_overworld_rail_word_boundary_ellipsis(errors: list[str]) -> None:
         visual_text,
         re.S,
     )
-    ensure(focused_match is not None and expected_match is not None and control_match is not None, errors, "Overworld visual smoke must own focused rail, independent briefing, and independent word-boundary controls")
+    army_expected_match = re.search(
+        r"func _expected_army_rail_text\(full_text: String\) -> String:\n(?P<body>.*?)(?=\nfunc )",
+        visual_text,
+        re.S,
+    )
+    width_match = re.search(
+        r"func _themed_label_text_width\(label: Label\) -> float:\n(?P<body>.*?)(?=\nfunc )",
+        visual_text,
+        re.S,
+    )
+    ensure(focused_match is not None and expected_match is not None and army_expected_match is not None and control_match is not None and width_match is not None, errors, "Overworld visual smoke must own focused rail, independent briefing/army/word-boundary, and themed-width controls")
     ensure(visual_text.count("await _assert_rail_word_boundary_ellipsis_contract(shell)") == 1, errors, "Overworld visual smoke must run the real rail word-boundary contract exactly once")
     ensure(visual_text.find("await _assert_objective_brief_native_ellipsis_contract(shell)") < visual_text.find("await _assert_rail_word_boundary_ellipsis_contract(shell)") < visual_text.find("_assert_wireframe_contract(shell)"), errors, "Focused native ObjectiveBrief and rail contracts must finish before broad visual mutations")
     if focused_match is not None:
@@ -27316,19 +27344,37 @@ def validate_overworld_rail_word_boundary_ellipsis(errors: list[str]) -> None:
             "session.to_dict()",
             'shell.get_node("%Briefing")',
             'shell.get_node("%BriefingPanel")',
+            'shell.get_node("%Army")',
+            'shell.get_node("%HeroPanel")',
+            'shell.get_node("%SidebarShell")',
+            "var rail_labels: Array[Label] = [",
             'shell.call("validation_briefing_consumption_autosave_snapshot")',
             '_expected_briefing_rail_text(full_briefing)',
+            "OverworldRules.describe_army(session)",
+            "_expected_army_rail_text(full_army)",
             'full_briefing.contains("Opening objectives: Claim Duskfen Bastion")',
             'expected_visible.contains("Duskfen…")',
             "for width in [1280, 1920]:",
             "get_window().size = requested_size",
             "_visible_text_lines(briefing.text)",
+            "var sidebar_rect := sidebar_shell.get_global_rect()",
+            "var army_text_width := _themed_label_text_width(army)",
+            "for rail_label in rail_labels:",
+            "rail_label.is_visible_in_tree()",
+            "rail_label.text_overrun_behavior != TextServer.OVERRUN_TRIM_WORD_ELLIPSIS",
+            "_themed_label_text_width(rail_label)",
+            "not sidebar_rect.encloses(rail_rect)",
             "briefing.text != expected_visible",
             "briefing.tooltip_text != full_briefing",
+            "army.text != expected_army",
+            "army.tooltip_text != full_army",
             'visible_lines[1].ends_with("…")',
             'String(visible_lines[1]).contains("...")',
             "briefing.autowrap_mode != TextServer.AUTOWRAP_OFF",
             "not briefing.clip_text",
+            "briefing.text_overrun_behavior != TextServer.OVERRUN_TRIM_WORD_ELLIPSIS",
+            "not hero_panel.get_global_rect().encloses(army_rect)",
+            "width == 1280 and army_text_width <= army_rect.size.x + 0.5",
             "not panel_rect.encloses(label_rect)",
             "get_window().size = original_window_size",
             "session.to_dict() != authority_before",
@@ -27337,13 +27383,19 @@ def validate_overworld_rail_word_boundary_ellipsis(errors: list[str]) -> None:
         for required_token in (
             'expected_visible.contains("Basti...")',
             'expected_visible.contains("...")',
+            'expected_army.ends_with("Strength 495")',
+            "expected_army.length() > 42",
             "visible_lines.size() != 2",
             "String(visible_lines[0]).length() > 42",
             "String(visible_lines[1]).length() > 42",
             "not briefing.is_visible_in_tree()",
+            "visible_rail_count < 6",
+            "fitting_rail_count < 1",
         ):
             ensure(required_token in focused_body, errors, f"Focused rail proof is missing exact budget/mid-token token: {required_token}")
-        for forbidden_token in ('shell.call("_short_rail', 'shell.call("_compact_rail', 'shell.call("_trim_rail', 'shell.call("_refresh', "sort(", "erase(", ".text =", "queue_redraw"):
+        for required_label in ("%Hero", "%Army", "%Heroes", "%Specialties", "%Spellbook", "%Artifacts", "%Event", "%Briefing", "%Commitment", "%Visibility", "%Objectives", "%Threats", "%Forecast", "%Context"):
+            ensure(f'shell.get_node("{required_label}")' in focused_body, errors, f"Focused native rail proof is missing existing Label {required_label}")
+        for forbidden_token in ('shell.call("_short_rail', 'shell.call("_compact_rail', 'shell.call("_trim_rail', 'shell.call("_refresh', "sort(", "erase(", ".text =", "queue_redraw", "set_text_overrun_behavior"):
             ensure(forbidden_token not in focused_body, errors, f"Focused rail proof must remain public, independent, and observation-only; forbidden {forbidden_token}")
     if expected_match is not None:
         expected_body = expected_match.group("body")
@@ -27351,12 +27403,39 @@ def validate_overworld_rail_word_boundary_ellipsis(errors: list[str]) -> None:
             ensure(required_token in expected_body, errors, f"Independent briefing rail control is missing exact source/order token: {required_token}")
         for forbidden_token in ("shell", "OverworldShell", "_compact_rail_text", "_trim_rail_visible_text", "sort(", "erase("):
             ensure(forbidden_token not in expected_body, errors, f"Independent briefing control must avoid production/canonicalization dependency: {forbidden_token}")
+    if army_expected_match is not None:
+        army_expected_body = army_expected_match.group("body")
+        army_expected_order = tuple(army_expected_body.find(token) for token in (
+            'full_text.split("\\n", false)',
+            'String(lines[0]).strip_edges() != "Marching Army"',
+            'String(lines[1]).strip_edges()',
+            'detail.contains("troops")',
+            'detail.contains("Strength")',
+            '_word_safe_rail_line_for_test(detail, 42)',
+            '_word_safe_rail_line_for_test("Army: %s" % selected, 42)',
+        ))
+        ensure(all(index >= 0 for index in army_expected_order) and list(army_expected_order) == sorted(army_expected_order), errors, "Independent Army rail control must drop the established heading, select the first detail, and apply both semantic trim stages")
+        for forbidden_token in ("shell", "OverworldShell", "_compact_rail_text", "_trim_rail_visible_text", "_rail_prefixed_summary", "sort(", "erase("):
+            ensure(forbidden_token not in army_expected_body, errors, f"Independent Army rail control must avoid production/canonicalization dependency: {forbidden_token}")
     if control_match is not None:
         control_body = control_match.group("body")
         for required_token in ('text.strip_edges().replace("\\n", " ")', "if normalized.length() <= max_chars:", "if max_chars <= 0:", "if max_chars == 1:", "var prefix := normalized.left(max_chars - 1).strip_edges()", 'var boundary := prefix.rfind(" ")', 'return "%s…" % prefix'):
             ensure(required_token in control_body, errors, f"Independent word-boundary control is missing exact token: {required_token}")
         for forbidden_token in ("shell", "OverworldShell", "_short_rail_text", "_short_text", "sort(", "erase(", "Label", "Control"):
             ensure(forbidden_token not in control_body, errors, f"Independent word-boundary control must avoid production/layout dependency: {forbidden_token}")
+    if width_match is not None:
+        width_body = width_match.group("body")
+        width_order = tuple(width_body.find(token) for token in (
+            'label.get_theme_font("font")',
+            'label.get_theme_font_size("font_size")',
+            "if font == null or font_size <= 0:",
+            "for line_value in label.text.split(\"\\n\", false):",
+            "font.get_string_size(String(line_value), HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size).x",
+            "return widest",
+        ))
+        ensure(all(index >= 0 for index in width_order) and list(width_order) == sorted(width_order), errors, "Independent themed-width control must inspect the live Label font and every semantic line in order")
+        for forbidden_token in ("shell", "OverworldShell", "_set_rail_text", "text_overrun_behavior", "tooltip", "sort(", "erase(", "call("):
+            ensure(forbidden_token not in width_body, errors, f"Independent themed-width control must avoid production/canonicalization dependency: {forbidden_token}")
 
 
 def validate_overworld_shell_release_polish(errors: list[str]) -> None:

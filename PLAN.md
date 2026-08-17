@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `ux-overworld-rail-native-word-ellipsis-fit-10184`. Existing Overworld rail Labels now retain their exact semantic 42-character values and complete tooltips while Godot's native word-ellipsis overrun fits proportional themed text inside the live rectangle, replacing the shipped Army row's clipped `Strength 49` edge with a clean `Strength ...` word ellipsis. Exact 1280x720/1920x1080 themed-width behavior, fresh painted 1280 evidence, full Overworld visual, route tooltip, movement-input ownership, active-focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `ux-overworld-rail-native-word-ellipsis-fit-10184`
 - Completed implementation slice: `ux-overworld-rail-word-boundary-ellipsis-10184`. Compact Overworld right-rail truncation now preserves fitting lines exactly and ends overflow only at a whole-word boundary with one Unicode ellipsis, replacing the shipped First Turn Briefing `Claim Duskfen Basti...` mid-token cut while preserving the established one/two-line 42-character budgets and complete tooltips. Exact 1280x720/1920x1080 real-shell behavior, full Overworld visual, route tooltip, movement-input ownership, active-focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `ux-overworld-rail-word-boundary-ellipsis-10184`
 - Completed implementation slice: `ux-overworld-objective-brief-native-pixel-ellipsis-10184`. The live Overworld ObjectiveBrief now retains the exact complete rule-owned objective summary and existing stakes/readiness tooltip, then uses the existing single-line Label's native pixel-aware ellipsis instead of destroying the value at 72 characters and visibly ending `Next Claim D...`. Exact 1280x720/1920x1080 ObjectiveBrief geometry/authority, full Overworld visual, active-focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -6982,6 +6984,39 @@ Completion evidence:
 - the full River Pass capture/save-resume/re-entry flow passed naturally with 42 steps and zero harness errors at exact 1280x720 (`/tmp/heroes-town-header-routed-1280.lBImP4/20260817T184313Z`) and 1920x1080 (`/tmp/heroes-town-header-routed-1920.k8KFFo/20260817T185207Z`); both captured-town frames visibly retain exact Duskfen/Mireclaw/Frontier/Spell identity and show `Your Control` without `Owner Player`;
 - active-play focus, accessibility semantics, core, repository validation, Python compilation, diff checks, and exact/generic Godot editor parses passed;
 - official Linux export/headless startup and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup reports are `ok:true`; packaged Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
+
+## Selected Slice: Overworld Rail Native Word-Ellipsis Fit
+
+id: `ux-overworld-rail-native-word-ellipsis-fit-10184`
+
+Status: completed.
+
+Implementation boundary:
+- retain the exact existing rail semantic text, line/character budgets, Unicode whole-word suffix, and complete tooltip, then configure only Labels populated through `_set_rail_text` to use Godot's native word-ellipsis overrun behavior inside their live pixel allocation;
+- prove actual themed-font width against each live rail Label rectangle at exact 1280x720 and 1920x1080, including the overflowing Army row and fitting controls;
+- leave source selection/order, `_short_rail_text`, the general `_short_text`, nodes, rail geometry, fonts, UI scale, routes, actions, saves, settings, and whole-session authority unchanged.
+
+Completion criteria:
+- exact 1280x720 and 1920x1080 real Overworld rows retain byte-exact semantic Label text and complete tooltips while every visible `_set_rail_text` Label owns no-wrap clipping plus native word-ellipsis overrun behavior;
+- independent themed-font measurements prove overflow is handled inside each actual Label rectangle and fitting values remain visually whole, with HeroPanel and full rail containment/order unchanged;
+- focused Overworld visual, route/input compatibility, active-focus, accessibility, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass.
+
+Non-goals:
+- no OverworldRules copy, rail semantic compaction, line/character budget, source order, briefing, objective, readiness, action, route, save, session, content, balance, AI, or Native RMG behavior change;
+- no new node, panel, tooltip, wrap, height, font, UI scale, art, audio, VFX, or sidebar redesign;
+- no packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- HEAD `08c6f32802cc47cea3f4c995327c0cd4026a16e1` sets rail Labels to no-wrap plus clipping but leaves `text_overrun_behavior` at its default, so the semantic 42-character budget is not a pixel-fit guarantee across proportional themed glyphs;
+- the fresh exact 1280x720 current-HEAD screenshot `.artifacts/ui_runtime_skin_visual_report/overworld_1280x720.png` and crop `/tmp/heroes-overworld-rail-crop.png` show the fitting semantic Army row clipped after `Strength 49`, losing the final `5` against the Hero frame while its full tooltip remains available;
+- this is a rail rendering defect only, not evidence that the completed semantic word-boundary helper, army copy, rail geometry, or broader layout is incorrect.
+
+Completion evidence:
+- the focused real-shell selector passed naturally at `/tmp/heroes-overworld-rail-native-focused-rerun3.zbBPzl`, proving exact semantic Briefing and Army values/tooltips, native word-ellipsis ownership on every visible rail Label, live themed-width overflow and fitting controls, HeroPanel/Sidebar containment, restored window size, and unchanged whole-session authority at 1280x720 and 1920x1080;
+- the full Overworld visual, route-tooltip, movement-input ownership, active-play focus, accessibility semantics, and core compatibility chain passed naturally at `/tmp/heroes-overworld-rail-native-compat.DfgteM` with zero selected diagnostics;
+- the fresh Xvfb-rendered 1280 visual report passed at `/tmp/heroes-overworld-rail-native-render.UpcYIC`, and its `hero-crop.png` visibly shows the Army row ending with a clean native word ellipsis rather than a clipped digit;
+- repository validation, Python compilation, scoped/global diff checks, tracker status, and exact/generic Godot editor parses passed at `/tmp/heroes-overworld-rail-native-final-audit.df3AWS`;
+- official Linux export/headless startup and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup reports are `ok:true` at `/tmp/heroes-overworld-rail-native-platform.3H9yzj`; packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
 
 ## Selected Slice: Overworld Rail Word-Boundary Ellipsis
 
