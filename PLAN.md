@@ -24,7 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none. Select the next tracker-approved release-readiness implementation slice from current source and behavior evidence.
+- Completed implementation slice: `performance-overworld-save-status-watch-context-reuse-10184`. One normal Overworld refresh now builds its detached watch observation context once before Save and Status surfaces and reuses it across Save Watch, Forecast, Commitment, Event Feed, and Dispatch while direct and incomplete-preload callers remain fresh. Seven-state independent/direct/preloaded output and session authority is exact; normal Save Watch falls from13.3-14.4ms to0.034-0.035ms and Save surface from42.3-43.4ms to28.5-31.7ms. Generated-Large save/recovery, manual overwrite, autosave failure, Overworld visual/route/input, Town dispatch, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged Overworld/save interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
+  id: `performance-overworld-save-status-watch-context-reuse-10184`
 - Completed implementation slice: `performance-in-session-play-check-recap-context-reuse-10184`. The in-session Save surface now materializes Play Check state from its invocation-local recap context while public direct callers remain fresh. Exact Overworld, Town, Battle, Outcome, editor/stale-route, generated-Large transaction, save/cache/file/UI authority passes; the current Play Check bucket improves12.581ms to0.024ms and save-surface total55.344ms to43.809ms. Compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged save interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
   id: `performance-in-session-play-check-recap-context-reuse-10184`
 - Completed implementation slice: `performance-in-session-stored-resume-recap-context-reuse-10184`. Each distinct loadable stored save recap now uses one detached normalized progress/watch context, while empty/invalid summaries, distinct selected/latest payloads, and storage-identity aliasing remain exact. Focused Overworld/Town/Battle/Outcome and generated-Large save authority passes; the current stored-recap bucket improves45.696ms to20.909ms and save-surface total79.845ms to55.344ms. Manual overwrite, autosave failure, Overworld/Town/core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged save interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
@@ -4239,6 +4240,34 @@ Non-goals:
 - no objective, progress, recent-event, aftermath, status, forecast, readiness, route, event, save, scenario, or gameplay policy changes;
 - no persistent cache, async work, content, balance, AI, Native RMG, save/schema, or package identity changes;
 - no packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+## Overworld Save and Status Watch Context Reuse
+
+id: `performance-overworld-save-status-watch-context-reuse-10184`
+
+Status: completed.
+
+Selected Phase 6 normal-path performance correction. A normal Overworld refresh currently derives command-risk and management watch inside the in-session Save recap, then immediately rebuilds the same detached watch observation context for Status Forecast, Commitment, Event Feed, and Dispatch. A current method-matched control keeps ordinary and no-risk fallback Save Watch text plus session authority exact while reducing eight ordinary calls from roughly150 ms to under0.03 ms and no-risk fallback calls from roughly200 ms to97-104 ms.
+
+Implementation target:
+- build one detached `_refresh_watch_observation_context` per normal Overworld refresh request before Save and Status materialization, then pass it through AppRouter into the existing invocation-local Save recap context and onward to the existing Status/Forecast/Commitment/Event surfaces;
+- reuse only exact command-risk forecast and management-watch inputs for Overworld Save Watch, while retaining fresh full frontier-threat fallback and all Town/Battle/Outcome behavior;
+- preserve direct AppRouter/SaveService callers, compact/generated refresh paths, request-phase ownership, copy/order/text, and invocation-local rebuild semantics with no cross-refresh cache.
+
+Completion criteria:
+- independent direct, copied legacy, and preloaded controls remain whole-exact across idle, message, daybreak, enemy-activity, post-action, pressure, outcome, and no-risk frontier states, with detached rebuild and session/UI/save authority unchanged;
+- one normal full refresh records one watch-context build, exact Save plus Forecast/Commitment/Event/Dispatch reuses, zero Save direct fallback in the ordinary risk state, and materially reduces the current13.571ms shared Save watch plus43.809ms Save-surface lane;
+- focused refresh-cache and generated-Large save-surface, manual overwrite/autosave-failure, Overworld visual/route/input, Town return, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Non-goals:
+- no command-risk, management, frontier, forecast, commitment, event, dispatch, Save Watch, recap, save, objective, readiness, route, refresh-request, gameplay, or save-schema/version policy changes;
+- no persistent cache, cross-refresh/day/session reuse, async/background work, content, balance, AI, Native RMG, package identity, or summary-alias change;
+- no packaged Overworld/save interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Completion evidence:
+- focused refresh-cache runtime is exact across seven independent/direct/preloaded states, one normal request records one watch build/four consumers with Save metadata reuse1/fallback0, and the broad-state shared median is1.809s versus3.094s direct;
+- the same current profile records preloaded Save Watch0.034-0.035ms and Save surface28.495-31.699ms versus direct controls13.346-14.359ms and42.314-43.414ms, with direct callers reporting preload false/reuse0/fallback1;
+- generated-Large save/recovery, manual overwrite, intentional autosave-failure, Overworld visual/route/input, Town dispatch, core, validate/editor, Linux report2592adbb46ce2755938812dd39a8a7c4eea372760e3ca2d9e352330f20a36032, and Windows report91da9b91bfb773fb370b25a95c17cece957372f9d3cf2756b7c84b725b8bed32 are green; platform evidence is export/startup only.
 
 ## In-Session Play Check Recap Context Reuse
 

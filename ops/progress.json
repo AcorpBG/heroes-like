@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved release-readiness implementation slice."
+    "Select the next tracker-approved release-readiness implementation slice from direct current behavior and source evidence."
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "In-session Play Check recap-context reuse is implemented and validated with exact save, summary, session, UI, and platform-startup authority plus bounded current-head performance improvement. Select the next tracker-approved implementation slice from direct current behavior and source evidence; the game is not release-ready.",
+  "currentNotes": "Completed request-local Overworld Save/Status watch-context reuse with exact focused, generated-Large, compatibility, static/editor, and bounded Linux/Windows export/startup evidence. Select the next tracker-approved product slice from direct current behavior evidence; the game is not release-ready.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "performance-in-session-play-check-recap-context-reuse-10184",
-  "currentSliceId": "performance-in-session-play-check-recap-context-reuse-10184",
-  "currentSliceNotes": "Implemented one invocation-local Play Check state materialization inside the recap context already owned by the Save surface; public direct summary/session Play Check callers remain fresh. Focused /tmp/heroes-play-check-focused.u2R6yx is rc0/ok:true across Overworld, Town, Battle, Outcome, editor/stale route, changed states, generated-Large transactions, recovery, and exact 17-field authority. Current profile /tmp/heroes-play-check-current-refresh.YNw94H improves Play Check12.581 to0.024ms and save surface55.344 to43.809ms with one build/one reuse/zero fallback. Manual overwrite, autosave-failure, Overworld/Town/core, static/editor, Linux report b2eeca6132d544fa0bc8b9913858a2b229e361d537c4d9b871fa80d17ad5ff2b, and Windows report b42a4b061fe6c9d85435887de75abc43d33c4a2b2317ac721a50a040a38eb2d1 are green; platform claims are export/startup only.",
+  "currentSlice": "performance-overworld-save-status-watch-context-reuse-10184",
+  "currentSliceId": "performance-overworld-save-status-watch-context-reuse-10184",
+  "currentSliceNotes": "Implemented one complete request-local watch context across Save and Status. Focused seven-state whole output, detached rebuild, session/UI/save authority, generated-Large direct fallback, and compatibility are exact. Normal Save Watch is0.034-0.035ms versus13.346-14.359ms direct and Save surface28.495-31.699ms versus42.314-43.414ms direct. Linux export/headless startup and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass; packaged interaction and release readiness are not claimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "In-Session Play Check Recap Context Reuse",
-  "currentSliceUpdatedAt": "2026-08-17T07:18:35Z",
+  "currentSliceTitle": "Overworld Save and Status Watch Context Reuse",
+  "currentSliceUpdatedAt": "2026-08-17T08:00:02Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19847,7 +19847,7 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next tracker-approved implementation slice only from direct current behavior and source evidence; preserve exact completed Overworld refresh behavior and Native RMG fail-closed state.",
-  "notes": "Completed Field Readiness progress recap reuse with exact behavior authority and bounded focused/authored performance improvement. Select the next tracker-approved product slice from direct current behavior evidence.",
+  "notes": "Completed Overworld Save/Status watch-context reuse with exact live behavior authority and material request-local savings. Select the next tracker-approved product slice from direct current behavior evidence; broader release gaps remain.",
   "plannedSlices": [
     {
       "id": "performance-overworld-field-readiness-progress-recap-reuse-10184",
@@ -87647,6 +87647,55 @@
       "updatedAt": "2026-08-17T06:05:17Z",
       "completedAt": "2026-08-17T06:05:17Z",
       "notes": "Implemented one fail-closed optional complete Objective Stakes surface on the normalized progress recap path. Objective counts, completed labels, and next objective reuse the supplied detached surface; absent/incomplete preloads and all public direct callers remain fresh, while recent events, aftermath, resolution, campaign, day, and other live state are still derived each call. Authoritative focused artifact /tmp/heroes-objective-progress-focused.prhJFD is rc0/ok:true with exact 24-scenario/mode, resolved outcome, changed-state, detach/rebuild, session, and whole UI authority; five-call median improves238599 to207656usec. The identical baseline fixture /tmp/heroes-objective-progress-current-refresh.HNP7dt improves header lane44620 to39939usec and full refresh177011 to172138usec. Overworld visual, route tooltip, gameplay input ownership, Town return, core, validate/editor, Linux report91b8f5fb7aa40ada421d6d92a4312c552cb8849351ad5d9922b18a08f57e0926, and Windows reportf4e389189937f174515f1c1ad0c2545b2212ced418624dfc3c743209427b0302 are green. Platform claims are export/startup only.",
+      "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null
+    },
+    {
+      "id": "performance-overworld-save-status-watch-context-reuse-10184",
+      "title": "Overworld Save and Status Watch Context Reuse",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Build one detached watch observation context per normal Overworld refresh and reuse its exact command-risk and management inputs across the in-session Save recap and the existing Status, Forecast, Commitment, Event Feed, and Dispatch consumers.",
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "scripts/autoload/AppRouter.gd",
+        "scripts/autoload/SaveService.gd",
+        "tests/overworld_hero_actions_refresh_cache_regression.gd",
+        "tests/generated_large_town_explicit_save_surface_regression.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Independent direct, copied legacy, and preloaded controls remain whole-exact across idle, message, daybreak, enemy activity, post-action, pressure, outcome, and no-risk frontier states with detached rebuild and session, UI, and save authority unchanged",
+        "One normal full refresh records one watch-context build and exact Save plus Forecast, Commitment, Event, and Dispatch reuses with zero Save direct fallback in the ordinary risk state, materially reducing the current 13.571 ms shared Save watch and 43.809 ms Save-surface lane",
+        "Focused refresh-cache and generated-Large save-surface, manual overwrite and autosave failure, Overworld visual, route and input, Town return, core, repository and editor, Linux export and headless startup, and Windows export and fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "command-risk, management, frontier, forecast, commitment, event, dispatch, Save Watch, recap, save, objective, readiness, route, refresh-request, gameplay, or save-schema/version policy changes",
+        "persistent caching, cross-refresh/day/session reuse, async work, content, balance, AI, Native RMG, package identity, or summary-alias changes",
+        "packaged Overworld or save interaction, controller hardware, AT-SPI or UIA certification, native hardware, signing, publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "4b71d9f6",
+        "artifact": "/tmp/heroes-overworld-save-watch-attribution.kvrlzl",
+        "ordinaryWholeTextExact": true,
+        "quietFallbackWholeTextExact": true,
+        "sessionAuthorityExact": true,
+        "ordinaryDirectEightCallUsec": [151548, 150198, 148482, 149544, 151553, 149410, 150055],
+        "ordinaryPreloadedEightCallUsec": [18, 18, 23, 17, 17, 16, 22],
+        "quietDirectEightCallUsec": [198180, 198700, 198003, 206964, 202568, 200250, 201145],
+        "quietPreloadedEightCallUsec": [97172, 97001, 96857, 104185, 100680, 96997, 99880],
+        "currentSharedWatchMs": 13.571,
+        "currentSaveSurfaceTotalMs": 43.809
+      },
+      "createdAt": "2026-08-17T07:24:26Z",
+      "startedAt": "2026-08-17T07:24:26Z",
+      "updatedAt": "2026-08-17T08:00:02Z",
+      "completedAt": "2026-08-17T08:00:02Z",
+      "notes": "Implemented one fail-closed complete request-local watch context across the in-session Save recap and existing Status consumers while direct, incomplete-preload, generated/compact, Town, Battle, and Outcome callers remain fresh. Authoritative focused artifact /tmp/heroes-save-watch-focused-rerun.YLbc48 is rc0/ok:true with seven independent/direct/preloaded states, detached rebuild, session/UI authority, one build/four consumers, and1.809s shared versus3.094s direct median. Generated-Large artifact /tmp/heroes-save-watch-generated-large.pZYfsL is rc0/ok:true and proves direct preload false/reuse0/fallback1 with save/recovery authority. Profile /tmp/heroes-save-watch-profile.n7YaoE records normal preloaded Save Watch0.034-0.035ms and Save surface28.495-31.699ms versus direct controls13.346-14.359ms and42.314-43.414ms. Manual overwrite, intentional autosave-failure, Overworld visual/route/input, Town dispatch, core, validate/editor, Linux report2592adbb46ce2755938812dd39a8a7c4eea372760e3ca2d9e352330f20a36032, and Windows report91da9b91bfb773fb370b25a95c17cece957372f9d3cf2756b7c84b725b8bed32 are green. Platform claims are export/startup only; packaged interaction and release readiness remain unclaimed.",
       "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
       "blockedReason": null
     },

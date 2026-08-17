@@ -2280,12 +2280,21 @@ func _refresh_with_request(request: Dictionary) -> void:
 		_refresh_action_rails(request)
 	elif _refresh_request_has_phase(request, REFRESH_PHASE_CONTEXT_ROUTE):
 		_refresh_selected_route_action_surface()
+	var refresh_watch_context := {}
+	var needs_normal_watch_context := (
+		_refresh_request_has_any_phase(request, [REFRESH_PHASE_SAVE_SURFACE, REFRESH_PHASE_STATUS_SURFACES])
+		and not _generated_initial_open_pending()
+		and not _use_generated_compact_refresh()
+	)
+	if needs_normal_watch_context:
+		refresh_watch_context = OverworldRules._refresh_watch_observation_context(_session)
+		_profile_add("refresh_watch_observation_context_builds", 1)
 	var generated_surface_start := 0
 	if _refresh_request_has_phase(request, REFRESH_PHASE_SAVE_SURFACE):
-		generated_surface_start = _refresh_save_surface()
+		generated_surface_start = _refresh_save_surface(refresh_watch_context)
 	var compact_generated := false
 	if _refresh_request_has_phase(request, REFRESH_PHASE_STATUS_SURFACES):
-		compact_generated = _refresh_status_surfaces(generated_surface_start)
+		compact_generated = _refresh_status_surfaces(generated_surface_start, refresh_watch_context)
 	elif _refresh_request_has_phase(request, REFRESH_PHASE_CONTEXT_ROUTE):
 		_refresh_selected_route_readiness_surfaces()
 		_refresh_map_cue_surface()
@@ -3581,7 +3590,7 @@ func _refresh_action_rails(request: Dictionary = {}) -> void:
 	_profile_end("refresh_actions", actions_profile_start)
 	AppRouter.note_overworld_handoff_step("overworld_refresh_actions_done")
 
-func _refresh_save_surface() -> int:
+func _refresh_save_surface(refresh_watch_context: Dictionary = {}) -> int:
 	AppRouter.note_overworld_handoff_step("overworld_refresh_save_surface_start")
 	var generated_surface_start := 0
 	if _generated_opening_autosave_failure_pending:
@@ -3604,11 +3613,11 @@ func _refresh_save_surface() -> int:
 		AppRouter.note_overworld_handoff_step("overworld_refresh_save_surface_compact")
 	else:
 		_last_save_surface_compact_reason = ""
-		_refresh_save_slot_picker()
+		_refresh_save_slot_picker(refresh_watch_context)
 		AppRouter.note_overworld_handoff_step("overworld_refresh_save_surface_done")
 	return generated_surface_start
 
-func _refresh_status_surfaces(generated_surface_start: int) -> bool:
+func _refresh_status_surfaces(generated_surface_start: int, preloaded_refresh_watch_context: Dictionary = {}) -> bool:
 	AppRouter.note_overworld_handoff_step("overworld_refresh_text_surfaces_start")
 	if _generated_initial_open_pending() or _use_generated_compact_refresh():
 		_refresh_generated_opening_surfaces()
@@ -3625,8 +3634,10 @@ func _refresh_status_surfaces(generated_surface_start: int) -> bool:
 	_profile_add("objective_progress_recap_builds", 1)
 	var objective_brief := String(objective_header_surfaces.get("objective_brief", "Objectives unavailable"))
 	var objective_stakes := String(objective_header_surfaces.get("objective_stakes", "Objective Stakes\nNo authored scenario objectives are available."))
-	var refresh_watch_context := OverworldRules._refresh_watch_observation_context(_session)
-	_profile_add("refresh_watch_observation_context_builds", 1)
+	var refresh_watch_context := preloaded_refresh_watch_context
+	if refresh_watch_context.is_empty():
+		refresh_watch_context = OverworldRules._refresh_watch_observation_context(_session)
+		_profile_add("refresh_watch_observation_context_builds", 1)
 	var end_turn_forecast_surface := OverworldRules.describe_end_turn_forecast_surfaces(_session, refresh_watch_context)
 	_profile_add("refresh_watch_observation_context_reuses", 1)
 	_profile_add("end_turn_forecast_bundle_builds", 1)
@@ -4173,11 +4184,13 @@ func _set_town_return_compact_save_status() -> void:
 		_menu_button.text = "Menu: Field"
 		_menu_button.tooltip_text = "Return to the main menu."
 
-func _refresh_save_slot_picker() -> void:
+func _refresh_save_slot_picker(refresh_watch_context: Dictionary = {}) -> void:
 	if _save_slot_picker.get_item_count() <= 0:
 		return
 
-	var surface = AppRouter.active_save_surface()
+	var surface = AppRouter.active_save_surface(refresh_watch_context)
+	if not refresh_watch_context.is_empty():
+		_profile_add("refresh_watch_observation_context_reuses", 1)
 	var selected_slot = SaveService.get_selected_manual_slot()
 	for index in range(_save_slot_picker.get_item_count()):
 		if _save_slot_picker.get_item_id(index) == selected_slot:
