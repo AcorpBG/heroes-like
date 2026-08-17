@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `ux-battle-status-native-pixel-ellipsis-10184`. The live Battle banner Status now retains the exact full round/context/terrain/distance/active/objective value in both text and tooltip, uses the existing Label's native pixel-aware ellipsis at 1280x720, and renders the full fitting value at 1920x1080 instead of the prior fixed 62-character `Terrai...` cut. Focused Board, Town/Battle visual, active-focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `ux-battle-status-native-pixel-ellipsis-10184`
 - Completed implementation slice: `ux-battle-board-footer-pixel-ellipsis-10184`. The live Battle board footer now retains its exact tactical summary, renders fitting rows whole, and uses a theme-font-measured word-boundary ellipsis for the longer focused controller-cursor row instead of the prior `left(84)` mid-word cut. Exact 1280x720/1920x1080 Board, Town/Battle visual, active-focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `ux-battle-board-footer-pixel-ellipsis-10184`
 - Completed implementation slice: `ux-town-scenic-action-count-label-clarity-10184`. The live Town scenic caption now names its existing action counts as `Study options <n> | Market options <n>` instead of presenting them as bare town concepts. Exact 1280x720/1920x1080 live widths, ordinary/captured and direct/precomputed state, detached refresh, action/session authority, Town visual/action, active-focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -7008,6 +7010,38 @@ Completion evidence:
 - Town/Battle visual, active-play keyboard focus, accessibility semantics, and core compatibility gates passed sequentially at `/tmp/heroes-battle-footer-compat.lzsw6T`;
 - repository validation, Python compilation, diff checks, progress status, and exact/generic Godot editor parses passed at `/tmp/heroes-battle-footer-final-audit.pX7jfv`;
 - official Linux export/headless startup passed at `/tmp/heroes-battle-footer-linux-package.zU6AK4`, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup passed at `/tmp/heroes-battle-footer-windows-package.yheaYU`; packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
+
+## Selected Slice: Battle Status Native Pixel Ellipsis
+
+id: `ux-battle-status-native-pixel-ellipsis-10184`
+
+Status: completed.
+
+Implementation boundary:
+- replace only the Battle banner Status label's fixed 62-character compacting call with the exact full `BattleRules.describe_status` value, the same full tooltip, and Godot's native pixel-aware ellipsis overrun behavior on the existing clipped Label;
+- preserve the exact round, battle-context, terrain, distance, active-stack, and objective source/order plus Header/Pressure siblings, TopBar geometry, focus, input, and battle/session authority;
+- keep the banner a single compact edge strip with no new node, panel, row, wrap, height, font, or layout allocation.
+
+Completion criteria:
+- exact 1280x720 and 1920x1080 live Battle rows prove Status text and tooltip retain the complete independent `BattleRules.describe_status` value, the existing Label owns native ellipsis, and any pixel overflow stays within its allocated rectangle rather than a fixed-character mid-token cut;
+- Header/Status/Pressure order and geometry plus player/enemy turns, target/movement/cursor input, focus, battle, and session authority remain exact;
+- focused controller-board, Town/Battle visual, active-focus, accessibility, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass.
+
+Non-goals:
+- no BattleRules status value/order, battle context, terrain, distance, target/movement/cursor, objective, Header/Pressure content, TopBar geometry/allocation, input, focus, save/schema, content, balance, or Native RMG change;
+- no new node, panel, tooltip surface, wrap, extra line/height, font, UI scale, audio, VFX, art, or broader Battle banner redesign;
+- no packaged Battle interaction parity, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- HEAD `b825a4ed6af61bf5ea5f0d839cbf9dd4211e6e1d` calls `FrontierVisualKit.set_compact_label(_status_label, BattleRules.describe_status(_session), 1, 62, false)`, which preserves the full value only in the tooltip while destructively shortening the visible value by characters before the existing Label can clip by pixels;
+- the routed 1280x720 assault frame `/tmp/heroes-town-overview-routed-1280.6vgtla/20260817T194950Z/battle_entered.png` visibly ends the centered banner status at `Terrai...` rather than a native pixel ellipsis over the complete status;
+- this is direct current shipped first-view rendering evidence, not a claim that the underlying BattleRules status is incorrect.
+
+Completion evidence:
+- `battle_controller_board_navigation_smoke` passed naturally at `/tmp/heroes-battle-status-focused-final.DXOTJF`, proving exact full status/tooltip, native ellipsis ownership at 1280x720, full fit at 1920x1080, unchanged Header/Status/Pressure containment/order, and unchanged Board/input/session authority;
+- Town/Battle visual, active-play keyboard focus, accessibility semantics, and core compatibility gates passed sequentially at `/tmp/heroes-battle-status-compat.2KcNQ8`;
+- repository validation, Python compilation, diff checks, progress status, and exact/generic Godot editor parses passed at `/tmp/heroes-battle-status-final-audit.oL79LO` and `/tmp/heroes-battle-status-static-final.f18nhr`;
+- official Linux export/headless startup and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup passed at `/tmp/heroes-battle-status-platform.75Cuvw`; packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
 
 ## Selected Slice: Town Scenic Action-Count Label Clarity
 
