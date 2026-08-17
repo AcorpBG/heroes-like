@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Captured Duskfen now surfaces exact seven-day pacification and active retake identity as Occupation / 7d | Retake in the existing third Town plaque. Focused state/authority, exact 1280x720 and 1920x1080 routed capture, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass within bounded claims.",
+  "currentNotes": "Town headers now expose bounded player-facing control copy from the exact owner value while preserving cultural identity, ownership behavior, layout, tooltip, session, and save authority. Focused, exact-width routed, compatibility, static/editor, and bounded Linux/Windows packaging gates pass.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-town-capture-occupation-retake-first-view-10184",
-  "currentSliceId": "ux-town-capture-occupation-retake-first-view-10184",
-  "currentSliceNotes": "Completed compact first-view occupation/retake status from existing public rule state while preserving ordinary Front pressure, the four-plaque layout, Town actions, session, and save authority.",
+  "currentSlice": "ux-town-header-player-facing-control-label-10184",
+  "currentSliceId": "ux-town-header-player-facing-control-label-10184",
+  "currentSliceNotes": "Completed with exact Your/Enemy/Neutral/Unknown Control mappings, live/direct authority proof, exact 1280x720 and 1920x1080 routed captures, compatibility, static/editor, and bounded Linux/Windows packaging evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Captured-Town Occupation and Retake First-View Status",
-  "currentSliceUpdatedAt": "2026-08-17T18:24:27Z",
+  "currentSliceTitle": "Town Header Player-Facing Control Label",
+  "currentSliceUpdatedAt": "2026-08-17T19:03:05Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,76 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence. Preserve the completed Town four-plaque occupation/retake behavior and do not infer whole-game or release readiness from this bounded slice.",
-  "notes": "The captured-town Town UX slice is implemented and validated from live public occupation/front authority. Focused state/authority, exact 1280x720 and 1920x1080 routed capture, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass. The unrelated pre-existing town-entity-cache focus oracle still rejects the already-shipped blocking build presenter and remains excluded. Packaged Town interaction, hardware/accessibility certification, signing/publication, whole-game validation, and release readiness remain outside this slice.",
+  "nextActionGuardrailNote": "Change only TownRules header copy derived from the exact existing owner value; do not alter ownership rules, town/faction identity, layout, session, save, or the completed occupation/retake plaque.",
+  "notes": "The Town header UX slice is completed with live/direct player, enemy, neutral, and unsupported mapping proof; exact 1280x720 and 1920x1080 routed captured-town evidence; compatibility, static/editor, and bounded Linux/Windows export/startup gates. Packaged Town interaction, hardware/accessibility certification, signing/publication, whole-game validation, and release readiness remain outside this slice.",
   "plannedSlices": [
+    {
+      "id": "ux-town-header-player-facing-control-label-10184",
+      "title": "Town Header Player-Facing Control Label",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Replace the Town header's internal owner enum copy with bounded player-facing control text without changing ownership or layout authority.",
+      "implementationTargets": [
+        "scripts/core/TownRules.gd",
+        "tests/town_battle_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/town_battle_visual_smoke.tscn",
+        "scripts/live_client_validation.py --flow boot_to_skirmish_town_battle --scenario-id river-pass",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "Ordinary Riverwatch and captured Duskfen live headers show Your Control without Owner Player while retaining exact town, faction, role, and spell identity",
+        "Direct player, enemy, neutral, and unsupported owner controls return exact bounded labels without exposing raw ids or mutating town/session authority",
+        "The complete header remains contained at 1280x720 and 1920x1080 with exact full tooltip and accessibility semantics",
+        "Focused Town visual/header, routed captured-town, active-focus, accessibility, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "town ownership, capture, faction identity, role, spell tier, economy, recruitment, battle, route, AI, content, balance, save/schema, or Native RMG changes",
+        "header geometry, font, UI scale, panel, plaque, tab, command, tooltip, audio, VFX, scenic art, or broader Town copy redesign",
+        "packaged Town interaction parity, controller hardware, AT-SPI/UIA certification, native hardware, signing, publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "b868b5ab373d799dae5a1f3c94c192887669d4fb",
+        "source_expression": "String(town.get(\"owner\", \"neutral\")).capitalize()",
+        "visible_header_fragment": "Owner Player",
+        "routed_capture_1280": "/tmp/heroes-town-capture-routed-1280-final2.gfZJqy/20260817T180410Z/captured_town_entered.png",
+        "routed_capture_1920": "/tmp/heroes-town-capture-routed-1920-exact.i6r8VB/20260817T181337Z/captured_town_entered.png",
+        "observed_defect": "town_header_exposes_internal_owner_enum"
+      },
+      "createdAt": "2026-08-17T18:29:00Z",
+      "startedAt": "2026-08-17T18:29:00Z",
+      "updatedAt": "2026-08-17T19:03:05Z",
+      "completedAt": "2026-08-17T19:03:05Z",
+      "completionEvidence": {
+        "focusedTownVisualArtifact": "/tmp/heroes-town-header-focused-final.BKhHAz",
+        "routedCapture1280": "/tmp/heroes-town-header-routed-1280.lBImP4/20260817T184313Z",
+        "routedCapture1920": "/tmp/heroes-town-header-routed-1920.k8KFFo/20260817T185207Z",
+        "routedStepCountPerWidth": 42,
+        "routedHarnessErrorCount": 0,
+        "playerHeaderFragment": "Your Control",
+        "unsupportedHeaderFragment": "Unknown Control",
+        "compatibilityArtifact": "/tmp/heroes-town-header-compat.mSDN8G",
+        "linuxPackagingReport": ".artifacts/packaging_linux_export_smoke/report.json",
+        "windowsPackagingReport": ".artifacts/packaging_windows_export_smoke/report.json",
+        "repositoryValidationPassed": true,
+        "packagedTownInteractionClaimed": false,
+        "releaseReadinessClaimed": false
+      },
+      "notes": "Completed from the exact baseline defect with bounded copy-only production behavior and focused/direct, exact-width routed, compatibility, static/editor, and export/startup evidence. No broader Town, ownership, package-interaction, hardware, certification, signing, whole-game, or release-readiness claim is made.",
+      "remainingWork": "",
+      "blockedReason": null
+    },
     {
       "id": "ux-town-capture-occupation-retake-first-view-10184",
       "title": "Captured-Town Occupation and Retake First-View Status",

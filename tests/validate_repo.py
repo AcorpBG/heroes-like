@@ -25206,6 +25206,91 @@ def validate_town_capture_frontier_first_view_status(errors: list[str]) -> None:
             ensure(forbidden not in visual_body, errors, f"Captured-town focused proof must use the public live stage without direct renderer callbacks or delays: {forbidden}")
 
 
+def validate_town_header_player_facing_control_label(errors: list[str]) -> None:
+    town_rules_path = ROOT / "scripts/core/TownRules.gd"
+    town_test_path = ROOT / "tests/town_battle_visual_smoke.gd"
+    town_rules_text = town_rules_path.read_text(encoding="utf-8")
+    town_test_text = town_test_path.read_text(encoding="utf-8")
+    rules_tokens = [
+        'return "%s | %s%s | %s | Spell Tier %d" % [',
+        'town_control_label(String(town.get("owner", "neutral")))',
+        'static func town_control_label(owner: String) -> String:',
+        'match owner.strip_edges().to_lower():',
+        '"player":',
+        'return "Your Control"',
+        '"enemy":',
+        'return "Enemy Control"',
+        '"neutral":',
+        'return "Neutral Control"',
+        'return "Unknown Control"',
+    ]
+    rules_positions = [town_rules_text.find(token) for token in rules_tokens]
+    ensure(
+        min(rules_positions) >= 0 and rules_positions == sorted(rules_positions),
+        errors,
+        "TownRules player-facing Town control label tokens must exist in exact order",
+    )
+    header_match = re.search(
+        r"static func describe_header\(.*?\) -> String:\n(?P<body>.*?)(?=\nstatic func )",
+        town_rules_text,
+        re.S,
+    )
+    ensure(header_match is not None, errors, "Could not isolate TownRules.describe_header")
+    header_body = header_match.group("body") if header_match is not None else ""
+    ensure(
+        'Owner %s' not in header_body
+        and 'String(town.get("owner", "neutral")).capitalize()' not in header_body,
+        errors,
+        "TownRules must not expose the raw owner enum in the release-facing Town header",
+    )
+    test_match = re.search(
+        r"func _assert_town_header_control_label_contract\(.*?\) -> bool:\n(?P<body>.*?)(?=\nfunc )",
+        town_test_text,
+        re.S,
+    )
+    ensure(test_match is not None, errors, "Town visual smoke must own a focused Town header control-label contract")
+    test_block = test_match.group("body") if test_match is not None else ""
+    test_tokens = [
+        'var header := shell.get_node_or_null("%Header") as Label',
+        "var live_header := TownRules.describe_header(live_session)",
+        'header.tooltip_text != live_header',
+        'live_header.contains(" | Your Control | ")',
+        'live_header.contains("Owner Player")',
+        "shell.get_global_rect().encloses(header.get_global_rect())",
+        'font.get_string_size(live_header, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size).x > header.size.x + 0.5',
+        "var expected_spell_tier := TownRules.current_spell_tier(fixture_town)",
+        '"player": "Your Control"',
+        '"enemy": "Enemy Control"',
+        '"neutral": "Neutral Control"',
+        '"unsupported_internal_owner": "Unknown Control"',
+        'var authority_before: Dictionary = fixture_session.to_dict()',
+        "var header_text := TownRules.describe_header(fixture_session)",
+        'fixture_session.to_dict() != authority_before',
+        'header_text.contains("Owner ")',
+        'header_text.contains(owner_value)',
+        'header_text.begins_with("Riverwatch Hold | Embercourt League | Frontier Stronghold | ")',
+        'header_text.ends_with(" | Spell Tier %d" % expected_spell_tier)',
+    ]
+    test_positions = [test_block.find(token) for token in test_tokens]
+    ensure(
+        min(test_positions) >= 0 and test_positions == sorted(test_positions),
+        errors,
+        "Town visual smoke header control-label proof tokens must exist in exact order",
+    )
+    ensure(
+        town_test_text.count("_assert_town_header_control_label_contract(shell, session)") == 1,
+        errors,
+        "Town visual smoke must invoke the focused header control-label proof exactly once",
+    )
+    for forbidden in [
+        'fixture_town.erase("owner")',
+        "header.text =",
+        "header.tooltip_text =",
+        "owner_value.capitalize()",
+    ]:
+        ensure(forbidden not in test_block, errors, f"Town header control-label proof must not use shortcut {forbidden}")
+
+
 def validate_town_defense_outlook_board(errors: list[str]) -> None:
     required_paths = (TOWN_SCENE_PATH, TOWN_SCRIPT_PATH, TOWN_RULES_PATH, OVERWORLD_RULES_PATH)
     for path in required_paths:
@@ -48457,6 +48542,7 @@ def main() -> int:
     validate_town_contextual_guide(errors)
     validate_town_shell_release_polish(errors)
     validate_town_capture_frontier_first_view_status(errors)
+    validate_town_header_player_facing_control_label(errors)
     validate_town_defense_outlook_board(errors)
     validate_town_order_readiness_ledger(errors)
     validate_overworld_route_map_cue_refresh(errors)
