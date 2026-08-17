@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Distinct Town specialty-selection and army-transfer VFX/audio are implemented and validated across focused live action, compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup. Broader packaged interaction/listening, hardware/certification, signing/publication, whole-game, and release-readiness claims remain open.",
+  "currentNotes": "Distinct Overworld town-capture VFX/audio are implemented and validated for neutral capture and hostile-town victory return with generic resource capture, reduced-motion ownership fallback, gameplay/session/save authority, compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup preserved. Packaged town-capture interaction/listening, hardware/certification, signing/publication, whole-game, and release-readiness claims remain open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-town-specialty-transfer-distinct-feedback-10184",
-  "currentSliceId": "presentation-town-specialty-transfer-distinct-feedback-10184",
-  "currentSliceNotes": "Completed with distinct original imported VFX, deterministic stereo audio, exact normal/reduced-motion presentation, and unchanged public Town action/session/save authority.",
+  "currentSlice": "presentation-overworld-town-capture-distinct-feedback-10184",
+  "currentSliceId": "presentation-overworld-town-capture-distinct-feedback-10184",
+  "currentSliceNotes": "Completed with one distinct original imported town-capture VFX and deterministic stereo audio, exact neutral and hostile-victory producers, unchanged resource/reduced-motion identities, and preserved capture, route, queue, session, and save authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Town Specialty And Transfer Distinct Feedback",
-  "currentSliceUpdatedAt": "2026-08-17T09:31:05Z",
+  "currentSliceTitle": "Overworld Town Capture Distinct Feedback",
+  "currentSliceUpdatedAt": "2026-08-17T10:21:23Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19847,8 +19847,91 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next tracker-approved release-readiness implementation slice; do not infer whole-game or release readiness from this completed presentation boundary.",
-  "notes": "Completed the source-proven generic-confirm collision across two live Town actions with distinct original VFX/audio and bounded focused, compatibility, static/editor, and export/startup evidence; broader release gaps remain.",
+  "notes": "Completed the source-proven generic-capture identity collision for two live town-capture producers with distinct original VFX/audio and bounded focused, compatibility, static/editor, and export/startup evidence; broader release gaps remain.",
   "plannedSlices": [
+    {
+      "id": "presentation-overworld-town-capture-distinct-feedback-10184",
+      "title": "Overworld Town Capture Distinct Feedback",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Give successful neutral-town captures and durable hostile-town victory returns one distinct semantic town-capture VFX/audio identity instead of the generic captured-object feedback, without changing capture, route, or save authority.",
+      "implementationTargets": [
+        "art/overworld/runtime/vfx/object_resolution/town_captured.png",
+        "art/overworld/runtime/vfx/object_resolution/town_captured.png.import",
+        "art/audio/runtime/presentation/town_capture.wav",
+        "art/audio/runtime/presentation/town_capture.wav.import",
+        "content/animation_event_cues.json",
+        "content/overworld_vfx_manifest.json",
+        "content/presentation_sfx_manifest.json",
+        "tools/generate_presentation_sfx_assets.py",
+        "scripts/autoload/PresentationAudio.gd",
+        "scripts/autoload/AppRouter.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_object_resolution_cue_playback_report.gd",
+        "tests/overworld_town_assault_victory_return_feedback_report.gd",
+        "tests/overworld_object_resolution_vfx_asset_runtime_report.gd",
+        "tests/overworld_field_spell_vfx_asset_runtime_report.gd",
+        "tests/overworld_guarded_site_vfx_asset_runtime_report.gd",
+        "tests/overworld_route_blocked_vfx_asset_runtime_report.gd",
+        "tests/overworld_hero_route_step_vfx_asset_runtime_report.gd",
+        "tests/overworld_object_blocked_feedback_report.gd",
+        "tests/overworld_field_route_response_open_feedback_report.gd",
+        "tests/overworld_enemy_route_closure_feedback_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_object_resolution_cue_playback_report.tscn",
+        "tests/overworld_town_assault_victory_return_feedback_report.tscn",
+        "tests/overworld_object_resolution_vfx_asset_runtime_report.tscn",
+        "tests/overworld_resource_assault_victory_return_feedback_report.tscn",
+        "tests/overworld_encounter_victory_return_feedback_report.tscn",
+        "tests/overworld_field_spell_vfx_asset_runtime_report.tscn",
+        "tests/overworld_guarded_site_vfx_asset_runtime_report.tscn",
+        "tests/overworld_route_blocked_vfx_asset_runtime_report.tscn",
+        "tests/overworld_hero_route_step_vfx_asset_runtime_report.tscn",
+        "tests/overworld_object_blocked_feedback_report.tscn",
+        "tests/overworld_field_route_response_open_feedback_report.tscn",
+        "tests/overworld_enemy_route_closure_feedback_report.tscn",
+        "tests/animation_event_cue_catalog_report.tscn",
+        "tests/overworld_visual_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "Neutral capture and durable hostile-town victory return publish exactly one town_captured presentation at the authoritative live town tile at 1280x720 and 1920x1080",
+        "Normal motion uses one distinct imported town-capture VFX and production-layer WAV while reduced motion retains the exact ownership badge fallback and current duration, queue, and input-blocking policy",
+        "Resource capture remains generic and malformed, stale, wrong-owner, wrong-family, wrong-surface, refresh, and later-scene controls fail closed or remain silent with exact session/save authority",
+        "Focused neutral, assault-return, imported-VFX, cue catalog, compatibility, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "town capture, assault, ownership, garrison, objectives, battle, route, checkpoint, autosave, schema, focus, input, duration, blocking, reduced-motion, or animation-policy changes",
+        "resource, artifact, encounter, route, other Town/Overworld presentation, broad audio/VFX/renderer, particles, shaders, camera, music, ambience, or final sound-design changes",
+        "packaged capture interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, Native RMG, signing, publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "4c827aab21cdb6ccf18438ddcfcdaaff1dcc9352",
+        "neutral_town_event": "overworld_object_captured",
+        "hostile_town_return_event": "overworld_object_captured",
+        "normal_vfx": "vfx_placeholder_capture_flag",
+        "normal_audio": "audio_placeholder_capture",
+        "reduced_vfx": "ownership_badge_swap",
+        "semantic_town_event_authored_but_unused": true,
+        "generic_capture_identity_collision": true
+      },
+      "createdAt": "2026-08-17T09:39:15Z",
+      "startedAt": "2026-08-17T09:39:15Z",
+      "updatedAt": "2026-08-17T10:21:23Z",
+      "completedAt": "2026-08-17T10:21:23Z",
+      "notes": "Neutral town capture and durable hostile-town victory return now publish exactly one semantic town_captured presentation with a distinct original 512x512 alpha VFX and deterministic 460 ms stereo audio. Focused neutral/resource, hostile-return, and imported/missing/reduced VFX owners pass at 1280x720 and 1920x1080 with fail-closed malformed/stale/wrong-family controls, unchanged generic resource and ownership-badge fallback identities, and exact gameplay/session/save authority. Cue catalog, Overworld compatibility, visual, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. Packaged town-capture interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, final sound-design approval, Native RMG parity, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice; broader product and release gaps remain.",
+      "blockedReason": null
+    },
     {
       "id": "presentation-town-specialty-transfer-distinct-feedback-10184",
       "title": "Town Specialty And Transfer Distinct Feedback",
@@ -88071,7 +88154,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain. The game is not release-ready.",
+  "remainingGap": "The selected town-capture presentation identity is not yet implemented or runtime-validated. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps also remain. The game is not release-ready.",
   "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
   "reportOnlyEvidence": [
     {

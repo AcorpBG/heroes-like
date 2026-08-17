@@ -412,13 +412,13 @@ func _assert_neutral_town_capture_playback() -> bool:
 	if (
 		not bool(result.get("ok", false))
 		or serial <= 0
-		or String(queued.get("event_id", "")) != "overworld_object_captured"
+		or String(queued.get("event_id", "")) != "town_captured"
 		or String(queued.get("family", "")) != "town_capture"
 		or String(queued.get("placement_id", "")) != "neutral_cue_town"
 		or queued.get("tile", {}) != {"x": 4, "y": 1}
-		or String(queued.get("animation_state", "")) != "ownership_capture"
-		or queued.get("selected_vfx_cue_ids", []) != ["vfx_placeholder_capture_flag"]
-		or not _object_audio_pending_exact(queued, "audio_placeholder_capture")
+		or String(queued.get("animation_state", "")) != "town_ownership_capture"
+		or queued.get("selected_vfx_cue_ids", []) != ["vfx_placeholder_town_capture_banner"]
+		or not _object_audio_pending_exact(queued, "audio_placeholder_town_capture")
 		or not bool(queued.get("queued", false))
 		or int(queued.get("duration_ms", 0)) != 620
 		or String(captured_town.get("owner", "")) != "player"
@@ -428,7 +428,7 @@ func _assert_neutral_town_capture_playback() -> bool:
 	shell.call("_refresh")
 	await get_tree().process_frame
 	var refreshed := _object_resolution(shell)
-	if int(refreshed.get("serial", -1)) != serial or not bool(refreshed.get("queued", false)) or session.to_dict() != authority_after_capture or not _object_audio_pending_exact(refreshed, "audio_placeholder_capture"):
+	if int(refreshed.get("serial", -1)) != serial or not bool(refreshed.get("queued", false)) or session.to_dict() != authority_after_capture or not _object_audio_pending_exact(refreshed, "audio_placeholder_town_capture"):
 		return _fail("Neutral-town captured cue replayed or changed authority during refresh.", refreshed)
 	await get_tree().create_timer(0.52).timeout
 	var active := _object_resolution(shell)
@@ -439,7 +439,7 @@ func _assert_neutral_town_capture_playback() -> bool:
 		or float(active.get("progress", 0.0)) <= 0.0
 		or int(active_viewport.get("spatial_index", {}).get("town_tiles", 0)) != 2
 		or session.to_dict() != authority_after_capture
-		or not _object_audio_exact(active, "audio_placeholder_capture", "object_capture.wav", "overworld_object_captured", 1)
+		or not _object_audio_exact(active, "audio_placeholder_town_capture", "town_capture.wav", "overworld_town_captured", 1)
 	):
 		return _fail("Neutral-town captured cue did not remain active over the retained town.", {"cue": active, "viewport": active_viewport})
 	_evidence["neutral_town_capture"] = {
@@ -474,7 +474,8 @@ func _assert_neutral_town_capture_playback() -> bool:
 		or String(reduced_cue.get("family", "")) != "town_capture"
 		or String(reduced_cue.get("fallback_tag", "")) != "ownership_badge_swap"
 		or reduced_cue.get("selected_vfx_cue_ids", []) != ["ownership_badge_swap"]
-		or not _object_audio_exact(reduced_cue, "audio_placeholder_capture", "object_capture.wav", "overworld_object_captured", 1)
+		or String(reduced_cue.get("event_id", "")) != "town_captured"
+		or not _object_audio_exact(reduced_cue, "audio_placeholder_town_capture", "town_capture.wav", "overworld_town_captured", 1)
 		or String(reduced_cue.get("visual_policy", "")) != "reduced_motion_fallback"
 		or bool(reduced_cue.get("allows_large_motion", true))
 		or int(reduced_cue.get("duration_ms", 0)) != 260

@@ -112,8 +112,8 @@ func _run_case(viewport_size: Vector2i, mode: String) -> Dictionary:
 	var map_rect: Rect2 = map_view.get_global_rect()
 	var contained := get_viewport().get_visible_rect().encloses(map_rect)
 	var summary: Dictionary = map_view.call("validation_object_resolution_vfx_asset_summary")
-	var manifest_exact: bool = int(summary.get("mapped_cue_count", 0)) == 15 \
-		and int(summary.get("unique_texture_count", 0)) == 15 \
+	var manifest_exact: bool = int(summary.get("mapped_cue_count", 0)) == 16 \
+		and int(summary.get("unique_texture_count", 0)) == 16 \
 		and "vfx_placeholder_route_closed" in summary.get("mapped_cue_ids", [])
 	var payload := {
 		"ok": consequence_exact and presentation_exact and dedupe_exact and save_exact and contained and manifest_exact,

@@ -549,11 +549,11 @@
       "vfx_cue_ids": ["vfx_placeholder_town_capture_banner"],
       "audio_cue_ids": ["audio_placeholder_town_capture"],
       "fallbacks": {
-        "reduced_motion_tag": "town_owner_badge_swap",
+        "reduced_motion_tag": "ownership_badge_swap",
         "fast_mode_tag": "town_capture_badge_snap"
       },
       "validation_tags": ["town", "object_state", "captured", "resolved_event"],
-      "producer_refs": ["OverworldRules._town_capture_post_action_recap", "TownRules.can_visit_active_town"]
+      "producer_refs": ["OverworldShell._record_object_resolution_presentation", "AppRouter.arm_battle_resolution_overworld_presentation"]
     },
     {
       "event_id": "town_building_built",

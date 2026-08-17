@@ -683,13 +683,19 @@ func _sync_object_resolution_presentation(presentation: Dictionary) -> void:
 	_object_resolution_allows_large_motion = bool(presentation.get("allows_large_motion", true))
 	_object_resolution_last_draw = {}
 	_sync_presentation_processing()
-	if _object_resolution_event_id not in ["overworld_object_visited", "overworld_object_captured", "overworld_object_depleted", "overworld_route_open", "overworld_route_closed"]:
+	if _object_resolution_event_id not in ["overworld_object_visited", "overworld_object_captured", "town_captured", "overworld_object_depleted", "overworld_route_open", "overworld_route_closed"]:
 		return
 	if _object_resolution_family not in ["resource_site", "artifact", "town_capture", "encounter", "site_response", "route_closure"] or _object_resolution_placement_id == "":
 		return
 	if (_object_resolution_event_id == "overworld_route_open") != (_object_resolution_family == "site_response"):
 		return
 	if (_object_resolution_event_id == "overworld_route_closed") != (_object_resolution_family == "route_closure"):
+		return
+	if _object_resolution_event_id == "town_captured" and _object_resolution_family != "town_capture":
+		return
+	if _object_resolution_family == "town_capture" and _object_resolution_event_id != "town_captured":
+		return
+	if _object_resolution_event_id == "overworld_object_captured" and _object_resolution_family != "resource_site":
 		return
 	var tile_payload: Dictionary = presentation.get("tile", {}) if presentation.get("tile", {}) is Dictionary else {}
 	var tile := Vector2i(int(tile_payload.get("x", -1)), int(tile_payload.get("y", -1)))
@@ -1946,7 +1952,7 @@ func _draw_object_resolution_procedural_vfx(rect: Rect2, progress: float) -> voi
 		_canvas_draw_line(Vector2(center.x - gate_half_width, center.y), Vector2(center.x + gate_half_width, center.y), closed_color, maxf(2.4, extent * 0.050), true)
 		_canvas_draw_line(Vector2(center.x - extent * 0.13, center.y + extent * 0.30), Vector2(center.x - extent * 0.035, center.y + extent * 0.08), Color(1.0, 0.70, 0.28, alpha), maxf(2.0, extent * 0.035), true)
 		_canvas_draw_line(Vector2(center.x + extent * 0.035, center.y - extent * 0.08), Vector2(center.x + extent * 0.13, center.y - extent * 0.30), Color(1.0, 0.70, 0.28, alpha), maxf(2.0, extent * 0.035), true)
-	elif _object_resolution_event_id == "overworld_object_captured":
+	elif _object_resolution_event_id in ["overworld_object_captured", "town_captured"]:
 		var radius := extent * lerpf(0.26, 0.48, motion_progress)
 		var capture_color := Color(1.0, 0.78, 0.22, alpha)
 		_canvas_draw_circle(center, radius, capture_color, false, maxf(2.0, extent * 0.035), true)

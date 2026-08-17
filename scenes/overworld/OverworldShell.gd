@@ -2612,7 +2612,7 @@ func _record_object_resolution_presentation(result: Dictionary, route: String) -
 	var tile := Vector2i(int(tile_payload.get("x", -1)), int(tile_payload.get("y", -1)))
 	if placement_id == "" or tile.x < 0 or tile.y < 0 or tile.x >= _map_size.x or tile.y >= _map_size.y:
 		return
-	var event_id := "overworld_object_captured" if family == "town_capture" else "overworld_object_depleted"
+	var event_id := "town_captured" if family == "town_capture" else "overworld_object_depleted"
 	if family == "resource_site":
 		var site := ContentService.get_resource_site(String(interaction.get("content_id", "")))
 		if bool(site.get("persistent_control", false)):

@@ -6689,6 +6689,28 @@ Non-goals:
 - no HP value below 20 or opportunistic follow-up tuning if the exact candidate fails validation;
 - no packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, Native RMG, signing/publication, whole-game, faction-balance-complete, or release-readiness claim.
 
+## Selected Slice: Overworld Town Capture Distinct Feedback
+
+id: `presentation-overworld-town-capture-distinct-feedback-10184`
+
+Status: completed.
+
+Implementation boundary:
+- route both successful neutral-town captures and durable hostile-town victory returns through the existing semantic `town_captured` event instead of the generic object-capture identity;
+- give that event one distinct original imported Overworld capture VFX and one reproducible production-layer sound while retaining the exact current ownership badge fallback, timing, queueing, and input-blocking policy;
+- preserve resource capture on `overworld_object_captured`, encounter depletion, town ownership/garrison/objectives, Battle-to-Overworld durability and one-shot consumption, route locomotion, refresh silence, session/save authority, focus, and input.
+
+Completion criteria:
+- real neutral capture and real hostile-town victory return at 1280x720 and 1920x1080 publish exactly one `town_captured` presentation at the authoritative live town tile, with a distinct imported normal-motion VFX/audio pair and unchanged reduced-motion owner-badge fallback;
+- malformed, stale, wrong-owner, wrong-family, wrong-surface, non-victory, refresh, and later-scene controls fail closed or remain silent, while resource capture retains its generic cue and all gameplay/session/save authority is exact;
+- the Overworld VFX manifest, presentation audio manifest/generator/fallback, event catalog surface/producer ownership, imported-asset draw containment, missing-asset fallback, and cue uniqueness remain exact;
+- focused neutral/assault/VFX owners, cue catalog, Overworld visual/accessibility/core compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Non-goals:
+- no town capture, assault, ownership, garrison, survivor, objective, route, battle, checkpoint, autosave, schema, focus, input, duration, blocking, reduced-motion, or animation-policy change;
+- no resource/artifact/encounter/route cue change, other Town or Overworld presentation change, broad renderer/audio redesign, particles, shaders, camera work, music, ambience, or final sound-design approval;
+- no packaged town-capture interaction/listening parity, controller hardware, AT-SPI/UIA certification, native hardware, Native RMG, signing/publication, whole-game, or release-readiness claim.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:

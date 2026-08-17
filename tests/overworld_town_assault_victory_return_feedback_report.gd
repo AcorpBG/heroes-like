@@ -77,7 +77,7 @@ func _run_live_assault_case(width: int) -> bool:
 	var expected_town: Dictionary = _town_by_placement(session, TOWN_PLACEMENT_ID)
 	var expected_tile := {"x": int(expected_town.get("x", -1)), "y": int(expected_town.get("y", -1))}
 	if (
-		String(pending.get("event_id", "")) != "overworld_object_captured"
+		String(pending.get("event_id", "")) != "town_captured"
 		or String(pending.get("family", "")) != "town_capture"
 		or String(pending.get("placement_id", "")) != TOWN_PLACEMENT_ID
 		or String(pending.get("content_id", "")) != String(expected_town.get("town_id", ""))
@@ -101,13 +101,13 @@ func _run_live_assault_case(width: int) -> bool:
 	var serial := int(cue.get("serial", 0))
 	if (
 		serial <= 0
-		or String(cue.get("event_id", "")) != "overworld_object_captured"
+		or String(cue.get("event_id", "")) != "town_captured"
 		or String(cue.get("family", "")) != "town_capture"
 		or String(cue.get("placement_id", "")) != TOWN_PLACEMENT_ID
 		or cue.get("tile", {}) != expected_tile
-		or String(cue.get("animation_state", "")) != "ownership_capture"
-		or cue.get("selected_vfx_cue_ids", []) != ["vfx_placeholder_capture_flag"]
-		or cue.get("selected_audio_cue_ids", []) != ["audio_placeholder_capture"]
+		or String(cue.get("animation_state", "")) != "town_ownership_capture"
+		or cue.get("selected_vfx_cue_ids", []) != ["vfx_placeholder_town_capture_banner"]
+		or cue.get("selected_audio_cue_ids", []) != ["audio_placeholder_town_capture"]
 		or not AppRouter.validation_pending_battle_resolution_overworld_presentation().is_empty()
 		or session.to_dict() != authority_after_ready_control
 	):
