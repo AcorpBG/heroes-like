@@ -208,6 +208,9 @@ func _run() -> void:
 		"objective_header_bundle_usec": int(objective_header_control.get("bundle_usec", 0)),
 		"legacy_objective_header_usec": int(objective_header_control.get("legacy_usec", 0)),
 		"legacy_objective_to_bundle_ratio": float(objective_header_control.get("legacy_usec", 0)) / float(maxi(int(objective_header_control.get("bundle_usec", 0)), 1)),
+		"objective_header_authored_scenario_count": int(objective_header_control.get("authored_scenario_count", 0)),
+		"objective_header_normalized_recap_reuse": true,
+		"full_refresh_header_objective_status_resources_usec": int(full_refresh_profile.get("refresh_header_objective_status_resources_usec", 0)),
 		"objective_header_surface_parity": true,
 		"drawer_objective_recap_parity": true,
 		"field_readiness_progress_recap_parity": true,
@@ -1092,8 +1095,12 @@ func _assert_objective_header_surface_parity(session) -> Dictionary:
 			"objective_stakes": OverworldRules.describe_objective_stakes_board(probe),
 			"progress_recap": ScenarioRules.describe_session_progress_recap(probe, false),
 		}
+		var duplicate_normalization_control: Dictionary = _legacy_objective_header_surfaces_duplicate_normalization(probe)
 		var bundled: Dictionary = OverworldRules.describe_objective_header_surfaces(probe)
-		if bundled != expected or bundled.keys() != ["objective_brief", "objective_stakes", "progress_recap"] or probe.to_dict() != authority_before:
+		if duplicate_normalization_control != expected \
+				or bundled != expected \
+				or bundled.keys() != ["objective_brief", "objective_stakes", "progress_recap"] \
+				or probe.to_dict() != authority_before:
 			_fail("Combined objective header surfaces diverged from independent production wrappers for %s." % String(row.get("id", "")), {
 				"expected": expected,
 				"bundled": bundled,
@@ -1104,6 +1111,23 @@ func _assert_objective_header_surface_parity(session) -> Dictionary:
 		bundled["progress_recap"] = "mutated detached progress recap"
 		if probe.to_dict() != authority_before or OverworldRules.describe_objective_header_surfaces(probe) != expected:
 			_fail("Combined objective header surfaces were not detached or failed to rebuild for %s." % String(row.get("id", "")))
+			return {}
+	var authored_scenario_ids: Array = ContentService.get_content_ids(ContentService.SCENARIOS_PATH)
+	if authored_scenario_ids.size() != 24:
+		_fail("Objective Header normalized recap proof requires all 24 authored scenarios.", authored_scenario_ids)
+		return {}
+	for scenario_id_value in authored_scenario_ids:
+		var scenario_id := String(scenario_id_value)
+		var authored_session = ScenarioFactory.create_session(scenario_id, "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+		OverworldRules.normalize_overworld_state(authored_session)
+		var authored_authority_before: Dictionary = authored_session.to_dict()
+		var authored_legacy: Dictionary = _legacy_objective_header_surfaces_duplicate_normalization(authored_session)
+		var authored_current: Dictionary = OverworldRules.describe_objective_header_surfaces(authored_session)
+		if authored_current != authored_legacy or authored_session.to_dict() != authored_authority_before:
+			_fail("Objective Header normalized recap diverged for authored scenario %s." % scenario_id, {
+				"legacy": authored_legacy,
+				"current": authored_current,
+			})
 			return {}
 	var raw_surface: Dictionary = OverworldRules._objective_stakes_surface(session)
 	if raw_surface.is_empty():
@@ -1117,35 +1141,46 @@ func _assert_objective_header_surface_parity(session) -> Dictionary:
 	if OverworldRules._objective_stakes_surface(session) != expected_surface:
 		_fail("Objective stakes surface was session-aliased or failed to rebuild from live state.")
 		return {}
-	var expected_brief := OverworldRules.describe_objective_brief(session)
-	var expected_stakes := OverworldRules.describe_objective_stakes_board(session)
-	var expected_progress_recap := ScenarioRules.describe_session_progress_recap(session, false)
-	var legacy_started := Time.get_ticks_usec()
-	for _index in range(6):
-		if OverworldRules.describe_objective_brief(session) != expected_brief \
-				or OverworldRules.describe_objective_stakes_board(session) != expected_stakes:
-			_fail("Legacy objective header timing control changed output.")
-			return {}
-	var legacy_usec := Time.get_ticks_usec() - legacy_started
-	var bundle_started := Time.get_ticks_usec()
-	var timed_bundle: Dictionary = {}
-	for _index in range(6):
-		timed_bundle = OverworldRules.describe_objective_header_surfaces(session)
-		if timed_bundle != {
-			"objective_brief": expected_brief,
-			"objective_stakes": expected_stakes,
-			"progress_recap": expected_progress_recap,
-		}:
-			_fail("Combined objective header timing control changed output.", timed_bundle)
-			return {}
-	var bundle_usec := Time.get_ticks_usec() - bundle_started
-	if legacy_usec * 100 < bundle_usec * 105:
-		_fail("Combined objective header surfaces did not remove at least five percent of the legacy two-build work.", {
-			"legacy_usec": legacy_usec,
-			"bundle_usec": bundle_usec,
+	var expected_header: Dictionary = _legacy_objective_header_surfaces_duplicate_normalization(session)
+	var legacy_batches: Array = []
+	var bundle_batches: Array = []
+	for _batch in range(7):
+		var legacy_started := Time.get_ticks_usec()
+		for _index in range(5):
+			if _legacy_objective_header_surfaces_duplicate_normalization(session) != expected_header:
+				_fail("Duplicate-normalization Objective Header timing control changed output.")
+				return {}
+		legacy_batches.append(Time.get_ticks_usec() - legacy_started)
+		var bundle_started := Time.get_ticks_usec()
+		for _index in range(5):
+			if OverworldRules.describe_objective_header_surfaces(session) != expected_header:
+				_fail("Normalized-recap Objective Header timing control changed output.")
+				return {}
+		bundle_batches.append(Time.get_ticks_usec() - bundle_started)
+	var legacy_usec := _integer_median(legacy_batches)
+	var bundle_usec := _integer_median(bundle_batches)
+	if bundle_usec * 100 > legacy_usec * 85:
+		_fail("Normalized-recap Objective Header did not remove at least fifteen percent of duplicate-normalization work.", {
+			"legacy_batches_usec": legacy_batches,
+			"bundle_batches_usec": bundle_batches,
 		})
 		return {}
-	return {"bundle_usec": bundle_usec, "legacy_usec": legacy_usec}
+	return {
+		"bundle_usec": bundle_usec,
+		"legacy_usec": legacy_usec,
+		"authored_scenario_count": authored_scenario_ids.size(),
+	}
+
+func _legacy_objective_header_surfaces_duplicate_normalization(session) -> Dictionary:
+	var surface: Dictionary = OverworldRules._objective_stakes_surface(session)
+	var progress_recap := ""
+	if not surface.is_empty():
+		progress_recap = ScenarioRules.describe_session_progress_recap(session, false)
+	return {
+		"objective_brief": OverworldRules._describe_objective_brief_from_surface(surface),
+		"objective_stakes": OverworldRules._describe_objective_stakes_board_from_surface(session, surface, {"progress_recap": progress_recap}),
+		"progress_recap": progress_recap,
+	}
 
 func _assert_field_readiness_progress_recap_parity(shell: Node, session, label: String) -> Dictionary:
 	var authority_before: Dictionary = session.to_dict()
