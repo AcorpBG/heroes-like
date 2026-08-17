@@ -206,6 +206,34 @@ func _probe_reach(unit_id: String) -> Dictionary:
 
 func _probe_hookline(unit_id: String) -> Dictionary:
 	var attacker := _stack_for_unit(unit_id, "player", 0)
+	var authored_hp := int(attacker.get("unit_hp", 0))
+	var authored_count := int(attacker.get("base_count", 0))
+	var authored_total_health := int(attacker.get("total_health", 0))
+	var old_hp_control := attacker.duplicate(true)
+	old_hp_control["unit_hp"] = 21
+	old_hp_control["total_health"] = authored_count * 21
+	var health_checkpoint := attacker.duplicate(true)
+	health_checkpoint["total_health"] = authored_total_health - 7
+	var health_checkpoint_battle := _battle_for_stacks([health_checkpoint, _defender_stack("enemy", 0)])
+	var health_checkpoint_session := SessionStateStoreScript.SessionData.new("ferrychain_health_checkpoint", "unit_ability_runtime")
+	health_checkpoint_session.game_state = "battle"
+	health_checkpoint_session.battle = health_checkpoint_battle.duplicate(true)
+	var health_restored_session := SessionStateStoreScript.SessionData.new()
+	health_restored_session.from_dict(health_checkpoint_session.to_dict())
+	var health_restored := BattleRulesScript._get_stack_by_id(
+		health_restored_session.battle,
+		String(health_checkpoint.get("battle_id", ""))
+	)
+	var health_contract_exact := (
+		authored_hp == 20
+		and authored_total_health == authored_count * 20
+		and int(old_hp_control.get("unit_hp", 0)) == 21
+		and int(old_hp_control.get("total_health", 0)) == authored_count * 21
+		and health_restored_session.battle == health_checkpoint_battle
+		and int(health_restored.get("unit_hp", 0)) == 20
+		and int(health_restored.get("base_count", 0)) == authored_count
+		and int(health_restored.get("total_health", 0)) == authored_total_health - 7
+	)
 	var defender := _defender_stack()
 	_set_hex(attacker, 4, 3)
 	_set_hex(defender, 6, 3)
@@ -236,7 +264,8 @@ func _probe_hookline(unit_id: String) -> Dictionary:
 	var second_live_hookline := BattleRulesScript._hookline_available(attacker, battle)
 	var second_ai_hookline := BattleAiRulesScript._hookline_available(attacker, battle)
 	var ok := (
-		opening_blocked
+		health_contract_exact
+		and opening_blocked
 		and legal_with
 		and ai_legal_with
 		and not legal_without
@@ -253,6 +282,13 @@ func _probe_hookline(unit_id: String) -> Dictionary:
 	return {
 		"ok": ok,
 		"probe": "hookline_bounded_range_pin_and_ai_legality",
+		"authored_hp": authored_hp,
+		"authored_count": authored_count,
+		"authored_total_health": authored_total_health,
+		"old_hp_control_total_health": int(old_hp_control.get("total_health", 0)),
+		"health_checkpoint_total_health": int(health_checkpoint.get("total_health", 0)),
+		"health_restored_total_health": int(health_restored.get("total_health", 0)),
+		"health_contract_exact": health_contract_exact,
 		"legal_with": legal_with,
 		"opening_round_blocked": opening_blocked,
 		"legal_without": legal_without,

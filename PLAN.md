@@ -195,7 +195,7 @@ Current phase: **Phase 6 - Production Alpha Layer**.
 - Completed implementation slice: `presentation-overworld-blocking-object-feedback-10184`. Visible blocking map objects and resource bodies now expose exact authored identity and use a distinct original object-blocked VFX/audio cue instead of misnaming passable ground. Unexplored blockers remain identity-silent; terrain/unreachable routing, body/interaction tiles, selection, session/save authority, 1280x720 and 1920x1080 presentation, reduced/missing fallbacks, compatibility, static/editor, and bounded Linux/Windows export/startup gates are green.
 - Latest completed implementation slice: `presentation-scenario-outcome-scenic-epilogue-stage-10184`. Victory and defeat now use distinct original full-screen epilogue panoramas behind the unchanged Outcome authority surfaces, with exact cover crop, translucent cards, a compact action dock, and flat-palette fallback.
 - Latest completed implementation slice: `presentation-town-faction-scenic-stage-backdrops-10184`. The Town stage now selects one of six original faction panoramas behind its unchanged live overlays, cover-crops without stretching, and retains the procedural renderer as a fail-safe.
-- Latest completed implementation slice: `combat-mireclaw-sporewake-rot-cant-priority-calibration-10184`. Sporewake Rot Cant keeps its round-one tier-four veteran identity and all live consequences while its authored target-priority bonus is calibrated from `1.0` to `0.9`; the exact all-live matrix lowers severity from `187.0` to `183.5`, preserves every non-Mireclaw ordered row, and keeps the active 59-encounter queue clear.
+- Latest completed implementation slice: `combat-mireclaw-ferrychain-durability-calibration-10184`. Ferrychain Lashers now have 20 HP while retaining exact Hookline behavior; the method-matched HP-21 control proves the full all-live matrix improves from 34 / 183.5 / 3 / 68.5 / 0.73 / 0 to 33 / 170.0 / 3 / 67.5 / 1.27 / 0, every non-Mireclaw row remains exact, and current 77-encounter breadth stays clear.
 - Latest completed validation/adoption slice: `strategic-ai-medium-long-run-seed-matrix-10184`. Exact current-HEAD Medium seed ordinals 1-100 now pass the 56-turn behavior matrix with zero aggregate behavior, integrity, reachability, or no-active-pressure blockers; the baseline retires only that matrix gap while generated topology/contact/pacing and broader release readiness remain open.
 - Latest completed implementation slice: `strategic-ai-known-world-target-catalog-projection-reuse-10184`. Strategic AI now enumerates one exact detached sight-source surface and eligible-target catalog per known-world refresh while keeping every source projection and every later refresh fresh.
 - Latest completed implementation slice: `strategic-ai-phase-target-descriptor-enumeration-reuse-10184`. Strategic AI now separates exact ordered detached target descriptors from fresh origin-specific projection and reuses discovery only within one planner invocation or best-open-spawn-point sweep, preserving ordinal-100 behavior while reducing repeated target enumeration.
@@ -6432,6 +6432,28 @@ Non-goals:
 - no objective/progress/recap/readiness/event/action/drawer/route/forecast/risk/UI copy or refresh invalidation policy change;
 - no persistent cross-refresh/day/session cache, async/background work, save/schema, gameplay/content/AI/balance/Native RMG/package identity change;
 - no packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+## Selected Slice: Mireclaw Ferrychain Durability Calibration
+
+id: `combat-mireclaw-ferrychain-durability-calibration-10184`
+
+Status: completed.
+
+Implementation boundary:
+- reduce only Ferrychain Lashers HP from 21 to 20 while preserving Ferrychain Hookline and every other authored unit, army, formation, hero, spell, RNG, and battle-rule input;
+- retain an exact in-memory HP-21 benchmark control so the production candidate is compared against current behavior rather than a stale aggregate;
+- preserve the live tier-four melee/control identity, stack-health derivation, casualties, save normalization, and all non-Mireclaw ordered results.
+
+Completion criteria:
+- focused live proof binds unit HP and stack current/max health to 20, proves Hookline's round-two one-use pull/pin behavior unchanged, and preserves save/normalization authority;
+- the exact W3 Embercourt/Mireclaw 100-seed all-live control improves in both orders from 69/68 percent Mireclaw to 67/66 percent, with whole normalized fixture hashes exact;
+- the full weeks-one-through-four all-live matrix reproduces 33 outliers / 170.0 severity / 3 severe rows / 67.5 maximum dominance / 1.27 side bias / zero structural failures, keeps every non-Mireclaw ordered row exact, and explicitly records the bounded side-bias tradeoff;
+- the current active 77-encounter battle breadth remains complete with an empty queue at signature `829808c9`, and focused ability, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass.
+
+Non-goals:
+- no Hookline, ability, attack, defense, damage, speed, initiative, resistance, growth, cost, count, formation, recruitment, economy, hero, spell, AI, combat-rule, RNG, benchmark-threshold, or save-schema change;
+- no HP value below 20 or opportunistic follow-up tuning if the exact candidate fails validation;
+- no packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, Native RMG, signing/publication, whole-game, faction-balance-complete, or release-readiness claim.
 
 ## Progress Reconciliation
 

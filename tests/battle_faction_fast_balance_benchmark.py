@@ -117,11 +117,13 @@ class FastBattleBenchmark:
         self,
         gorefen_screen_control: bool = False,
         drowned_sovereign_screen_control: bool = False,
+        ferrychain_hp_control: bool = False,
     ) -> None:
-        if gorefen_screen_control and drowned_sovereign_screen_control:
-            raise ValueError("Only one method-matched ability control may be active")
+        if sum([gorefen_screen_control, drowned_sovereign_screen_control, ferrychain_hp_control]) > 1:
+            raise ValueError("Only one method-matched benchmark control may be active")
         self.gorefen_screen_control = gorefen_screen_control
         self.drowned_sovereign_screen_control = drowned_sovereign_screen_control
+        self.ferrychain_hp_control = ferrychain_hp_control
         self.units = load_items("units.json")
         if self.gorefen_screen_control:
             self.units["unit_mireclaw_gorefen_rippers"]["abilities"] = [
@@ -131,6 +133,8 @@ class FastBattleBenchmark:
             self.units["unit_mireclaw_drowned_antler_sovereign"]["abilities"] = [
                 dict(ability) for ability in DROWNED_SOVEREIGN_SCREEN_CONTROL_ABILITIES
             ]
+        if self.ferrychain_hp_control:
+            self.units["unit_mireclaw_ferrychain_lashers"]["hp"] = 21
         self.buildings = load_items("buildings.json")
         self.towns = load_items("towns.json")
         self.factions = load_items("factions.json")
@@ -472,6 +476,8 @@ class FastBattleBenchmark:
                 if self.gorefen_screen_control
                 else "drowned_sovereign_screen_control"
                 if self.drowned_sovereign_screen_control
+                else "ferrychain_hp_21_control"
+                if self.ferrychain_hp_control
                 else "current_content"
             ),
             "control_policy": (
@@ -481,7 +487,10 @@ class FastBattleBenchmark:
                 else "method-matched control using current benchmark methods with only "
                 "unit_mireclaw_drowned_antler_sovereign abilities replaced by the exact pre-slice Drowned Sovereign Screen contract"
                 if self.drowned_sovereign_screen_control
-                else "current content with no in-memory ability override"
+                else "method-matched control using current benchmark methods with only "
+                "unit_mireclaw_ferrychain_lashers hp restored to the exact pre-slice value 21"
+                if self.ferrychain_hp_control
+                else "current content with no in-memory unit override"
             ),
             "initiative_tie_policy": "paired ordered matchups keep the same seeded faction tie owner when internal sides reverse",
             "parity_scope": "ported BattleRules/BattleAiRules tactical math without Godot runtime",
@@ -3065,6 +3074,11 @@ def main() -> int:
         action="store_true",
         help="Run a method-matched control with only Drowned Antler Sovereign abilities restored in memory to the exact pre-slice Drowned Sovereign Screen contract.",
     )
+    control_group.add_argument(
+        "--ferrychain-hp-control",
+        action="store_true",
+        help="Run a method-matched control with only Ferrychain Lashers HP restored in memory to the exact pre-slice value 21.",
+    )
     parser.add_argument(
         "--hero-policy",
         choices=["curated-lead", "all-live"],
@@ -3078,6 +3092,7 @@ def main() -> int:
     report = FastBattleBenchmark(
         gorefen_screen_control=bool(args.gorefen_screen_control),
         drowned_sovereign_screen_control=bool(args.drowned_sovereign_screen_control),
+        ferrychain_hp_control=bool(args.ferrychain_hp_control),
     ).run(
         weeks=weeks,
         seeds=seeds,
