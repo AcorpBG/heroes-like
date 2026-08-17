@@ -25215,14 +25215,7 @@ def validate_town_header_player_facing_control_label(errors: list[str]) -> None:
         'return "%s | %s%s | %s | Spell Tier %d" % [',
         'town_control_label(String(town.get("owner", "neutral")))',
         'static func town_control_label(owner: String) -> String:',
-        'match owner.strip_edges().to_lower():',
-        '"player":',
-        'return "Your Control"',
-        '"enemy":',
-        'return "Enemy Control"',
-        '"neutral":',
-        'return "Neutral Control"',
-        'return "Unknown Control"',
+        'return OverworldRulesScript.town_control_label(owner)',
     ]
     rules_positions = [town_rules_text.find(token) for token in rules_tokens]
     ensure(
@@ -25289,6 +25282,161 @@ def validate_town_header_player_facing_control_label(errors: list[str]) -> None:
         "owner_value.capitalize()",
     ]:
         ensure(forbidden not in test_block, errors, f"Town header control-label proof must not use shortcut {forbidden}")
+
+
+def validate_overworld_town_control_label_consistency(errors: list[str]) -> None:
+    overworld_rules_text = (ROOT / "scripts/core/OverworldRules.gd").read_text(encoding="utf-8")
+    town_rules_text = (ROOT / "scripts/core/TownRules.gd").read_text(encoding="utf-8")
+    overworld_shell_text = (ROOT / "scenes/overworld/OverworldShell.gd").read_text(encoding="utf-8")
+    route_test_text = (ROOT / "tests/overworld_route_tooltip_smoke.gd").read_text(encoding="utf-8")
+    mapping_tokens = [
+        'static func town_control_label(owner: String) -> String:',
+        'match owner.strip_edges().to_lower():',
+        '"player":',
+        'return "Your Control"',
+        '"enemy":',
+        'return "Enemy Control"',
+        '"neutral":',
+        'return "Neutral Control"',
+        'return "Unknown Control"',
+    ]
+    mapping_match = re.search(
+        r"static func town_control_label\(owner: String\) -> String:\n(?P<body>.*?)(?=\nstatic func )",
+        overworld_rules_text,
+        re.S,
+    )
+    ensure(mapping_match is not None, errors, "Could not isolate OverworldRules.town_control_label")
+    mapping_block = mapping_match.group(0) if mapping_match is not None else ""
+    mapping_positions = [mapping_block.find(token) for token in mapping_tokens]
+    ensure(
+        min(mapping_positions) >= 0 and mapping_positions == sorted(mapping_positions),
+        errors,
+        "OverworldRules must own the exact ordered shared Town control-label mapping",
+    )
+    town_delegate = re.search(
+        r"static func town_control_label\(owner: String\) -> String:\n(?P<body>.*?)(?=\nstatic func )",
+        town_rules_text,
+        re.S,
+    )
+    ensure(town_delegate is not None, errors, "Could not isolate TownRules.town_control_label delegate")
+    town_delegate_body = town_delegate.group("body") if town_delegate is not None else ""
+    ensure(
+        town_delegate_body.strip() == "return OverworldRulesScript.town_control_label(owner)",
+        errors,
+        "TownRules header mapping must delegate exactly to the shared OverworldRules owner",
+    )
+    source_contracts = {
+        "describe_town_context": [
+            'town_control_label(String(town.get("owner", "neutral")))',
+        ],
+        "_route_decision_affected_text": [
+            'return "%s | Town: %s" % [route_label, OverworldRules.town_control_label(String(town.get("owner", "neutral")))]',
+        ],
+        "_rail_tile_text": [
+            'var control_label := OverworldRules.town_control_label(String(town.get("owner", "neutral")))',
+            '"%s | %s" % [control_label, terrain]',
+        ],
+        "_tile_visibility_tooltip": [
+            'return _append_hover_order_cue("%s %d,%d | Town: %s | %s | %s" % [',
+            'OverworldRules.town_control_label(String(town.get("owner", "neutral")))',
+        ],
+    }
+    for function_name, required_tokens in source_contracts.items():
+        source_text = overworld_rules_text if function_name == "describe_town_context" else overworld_shell_text
+        function_match = re.search(
+            rf"(?:static )?func {re.escape(function_name)}\(.*?\)(?: -> [^:]+)?:\n(?P<body>.*?)(?=\n(?:static )?func )",
+            source_text,
+            re.S,
+        )
+        ensure(function_match is not None, errors, f"Could not isolate {function_name} Town control-label owner")
+        function_body = function_match.group("body") if function_match is not None else ""
+        positions = [function_body.find(token) for token in required_tokens]
+        ensure(
+            min(positions) >= 0 and positions == sorted(positions),
+            errors,
+            f"{function_name} must use the exact shared Town control-label mapping in source order",
+        )
+        ensure(
+            'String(town.get("owner", "neutral")).capitalize()' not in function_body
+            and '"Owner %s"' not in function_body,
+            errors,
+            f"{function_name} must not expose the raw Town owner enum",
+        )
+    mapping_test = re.search(
+        r"func _assert_town_control_label_mapping_contract\(\) -> bool:\n(?P<body>.*?)(?=\nfunc )",
+        route_test_text,
+        re.S,
+    )
+    live_test = re.search(
+        r"func _assert_live_town_control_surfaces\(.*?\) -> bool:\n(?P<body>.*?)(?=\nfunc )",
+        route_test_text,
+        re.S,
+    )
+    ensure(mapping_test is not None and live_test is not None, errors, "Route tooltip smoke must own focused shared and live Town control-label proofs")
+    mapping_body = mapping_test.group("body") if mapping_test is not None else ""
+    live_body = live_test.group("body") if live_test is not None else ""
+    mapping_test_tokens = [
+        '"player": "Your Control"',
+        '"enemy": "Enemy Control"',
+        '"neutral": "Neutral Control"',
+        '"unsupported_internal_owner": "Unknown Control"',
+        "var overworld_label := OverworldRules.town_control_label(owner_value)",
+        "var town_label := TownRules.town_control_label(owner_value)",
+    ]
+    live_test_tokens = [
+        'var context_text := String(snapshot.get("context_summary", ""))',
+        'var rail_text := String(snapshot.get("selected_tile_rail_text", ""))',
+        'session.scenario_id = ""',
+        'var route_affected := String(shell.call("_route_decision_affected_text", decision))',
+        "session.scenario_id = scenario_id_before",
+        'context_text.contains("Riverwatch Hold | Embercourt League | Your Control | Frontier Stronghold")',
+        'rail_text.contains("Your Control | ")',
+        'route_affected == "Riverwatch Hold route | Town: Your Control"',
+        'not context_text.contains("Owner Player")',
+        'not rail_text.contains("Owner Player")',
+        'not route_affected.contains("Town: Player")',
+        'String(session.scenario_id) == scenario_id_before',
+    ]
+    for body, tokens, label in [
+        (mapping_body, mapping_test_tokens, "mapping"),
+        (live_body, live_test_tokens, "live selected-town"),
+    ]:
+        positions = [body.find(token) for token in tokens]
+        ensure(min(positions) >= 0 and positions == sorted(positions), errors, f"Route tooltip smoke {label} control-label proof must remain exact and ordered")
+    ensure(
+        route_test_text.count("_assert_town_control_label_mapping_contract()") == 2
+        and route_test_text.count("_assert_live_town_control_surfaces(shell, session, town, width)") == 1,
+        errors,
+        "Route tooltip smoke must invoke the shared mapping once and the live proof once per width",
+    )
+    hover_tokens = [
+        'var town_hover: Dictionary = shell.call("validation_hover_tile", 0, 2)',
+        'hover_text.contains("Town: Riverwatch Hold | Your Control | ")',
+        'hover_text.contains("Owner Player")',
+        'hover_text.contains("Town: Player")',
+        'shell.call("validation_hover_tile", 1, 0)',
+    ]
+    hover_positions = [route_test_text.find(token) for token in hover_tokens]
+    ensure(min(hover_positions) >= 0 and hover_positions == sorted(hover_positions), errors, "Route tooltip smoke must prove and restore the actual visible Town hover path")
+    viewport_tokens = [
+        "var height := 1080 if width == 1920 else 720",
+        "get_window().size = Vector2i(width, height)",
+        "host.size = Vector2(float(width), float(height))",
+        "Vector2i(host.size) != Vector2i(width, height)",
+        '"height": height',
+    ]
+    viewport_positions = [route_test_text.find(token) for token in viewport_tokens]
+    ensure(min(viewport_positions) >= 0 and viewport_positions == sorted(viewport_positions), errors, "Route tooltip smoke must execute exact 1280x720 and 1920x1080 live host sizes")
+    ensure("Vector2i(width, 720)" not in route_test_text, errors, "Route tooltip smoke must not substitute 1920x720 for the registered 1920x1080 gate")
+    for forbidden in [
+        'fixture_town.erase("owner")',
+        "owner_value.capitalize()",
+        'context_text.replace("Owner Player"',
+        'rail_text.replace("Owner Player"',
+        'hover_text.replace("Owner Player"',
+        'session.scenario_id = "town-control-label-no-objective-fixture"',
+    ]:
+        ensure(forbidden not in mapping_body + live_body, errors, f"Overworld Town control-label proof must not use shortcut {forbidden}")
 
 
 def validate_town_defense_outlook_board(errors: list[str]) -> None:
@@ -25954,7 +26102,7 @@ def validate_overworld_route_map_cue_refresh(errors: list[str]) -> None:
     for required_token in (
         'const REPORT_ID := "OVERWORLD_ROUTE_TOOLTIP_SMOKE"',
         'for width in [1280, 1920]:',
-        'host.size = Vector2(float(width), 720.0)',
+        'host.size = Vector2(float(width), float(height))',
         'shell.call("validation_select_tile", 0, 2)',
         'shell.call("validation_select_tile", 1, 0)',
         'shell.call("validation_select_tile", 2, 2)',
@@ -48543,6 +48691,7 @@ def main() -> int:
     validate_town_shell_release_polish(errors)
     validate_town_capture_frontier_first_view_status(errors)
     validate_town_header_player_facing_control_label(errors)
+    validate_overworld_town_control_label_consistency(errors)
     validate_town_defense_outlook_board(errors)
     validate_town_order_readiness_ledger(errors)
     validate_overworld_route_map_cue_refresh(errors)

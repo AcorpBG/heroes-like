@@ -3038,6 +3038,17 @@ static func days_until_next_weekly_growth(day: int) -> int:
 static func next_weekly_growth_day(day: int) -> int:
 	return max(day, 1) + days_until_next_weekly_growth(day)
 
+static func town_control_label(owner: String) -> String:
+	match owner.strip_edges().to_lower():
+		"player":
+			return "Your Control"
+		"enemy":
+			return "Enemy Control"
+		"neutral":
+			return "Neutral Control"
+		_:
+			return "Unknown Control"
+
 static func describe_town_context(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> String:
 	var income := _describe_resource_delta(_calculate_town_income(town, session))
 	var weekly_growth := _describe_recruit_delta(town_weekly_growth(town, session))
@@ -3051,7 +3062,7 @@ static func describe_town_context(town: Dictionary, session: SessionStateStoreSc
 	var parts := [
 		_town_name(town),
 		String(ContentService.get_faction(_town_faction_id(town)).get("name", _town_faction_id(town))),
-		"Owner %s" % String(town.get("owner", "neutral")).capitalize(),
+		town_control_label(String(town.get("owner", "neutral"))),
 	]
 	if strategic_role == "capital":
 		parts.append("Capital Anchor")

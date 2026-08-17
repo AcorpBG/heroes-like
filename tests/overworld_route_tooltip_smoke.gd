@@ -18,6 +18,8 @@ func _run() -> void:
 	_original_files = _capture_file_states(_authority_paths())
 	_original_summary_cache = SaveService.validation_summary_cache_snapshot()
 	_original_settings = _canonical_settings_transaction(SettingsService.validation_settings_transaction_snapshot())
+	if not _assert_town_control_label_mapping_contract():
+		return
 	var route_rows: Array = await _assert_route_cue_width_matrix()
 	if route_rows.is_empty():
 		return
@@ -113,6 +115,29 @@ func _assert_existing_town_spell_and_action_consequences() -> bool:
 	await _settle()
 	return true
 
+func _assert_town_control_label_mapping_contract() -> bool:
+	var expected_labels := {
+		"player": "Your Control",
+		"enemy": "Enemy Control",
+		"neutral": "Neutral Control",
+		"unsupported_internal_owner": "Unknown Control",
+	}
+	for owner_value in expected_labels:
+		var expected := String(expected_labels[owner_value])
+		var overworld_label := OverworldRules.town_control_label(owner_value)
+		var town_label := TownRules.town_control_label(owner_value)
+		if overworld_label != expected \
+				or town_label != expected \
+				or overworld_label.contains(owner_value) \
+				or town_label.contains(owner_value):
+			_fail("Town control-label mapping did not remain exact and shared for %s." % owner_value, {
+				"expected": expected,
+				"overworld": overworld_label,
+				"town": town_label,
+			})
+			return false
+	return true
+
 func _assert_route_cue_width_matrix() -> Array:
 	var rows: Array = []
 	for width in [1280, 1920]:
@@ -123,6 +148,7 @@ func _assert_route_cue_width_matrix() -> Array:
 	return rows
 
 func _assert_route_cue_width(width: int) -> Dictionary:
+	var height := 1080 if width == 1920 else 720
 	var session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
 	_set_active_hero_position(session, Vector2i(1, 2))
 	var movement: Dictionary = session.overworld.get("movement", {})
@@ -130,10 +156,10 @@ func _assert_route_cue_width(width: int) -> Dictionary:
 	session.overworld["movement"] = movement
 	OverworldRules.refresh_fog_of_war(session)
 	SessionState.set_active_session(session)
-	get_window().size = Vector2i(width, 720)
+	get_window().size = Vector2i(width, height)
 	var host := Control.new()
 	host.name = "RouteTooltipHost%d" % width
-	host.size = Vector2(float(width), 720.0)
+	host.size = Vector2(float(width), float(height))
 	add_child(host)
 	var shell = load("res://scenes/overworld/OverworldShell.tscn").instantiate()
 	host.add_child(shell)
@@ -148,13 +174,16 @@ func _assert_route_cue_width(width: int) -> Dictionary:
 	OverworldRules.refresh_fog_of_war(session)
 	shell.call("_refresh")
 	await _settle()
-	if int(host.size.x) != width:
-		_fail("%d route tooltip host width was not exact." % width, {"host_size": host.size})
+	if Vector2i(host.size) != Vector2i(width, height):
+		_fail("%dx%d route tooltip host size was not exact." % [width, height], {"host_size": host.size})
 		await _discard_host(host)
 		return {}
 
 	var authority_before: Dictionary = _route_authority(shell, session)
 	var town: Dictionary = shell.call("validation_select_tile", 0, 2)
+	if not _assert_live_town_control_surfaces(shell, session, town, width):
+		await _discard_host(host)
+		return {}
 	if not _assert_exact_route_surface(shell, town, {
 		"label": "town", "tile": {"x": 0, "y": 2}, "action_id": "march_selected", "action_label": "Visit Town",
 		"cue": "Try: Visit Town [Enter]", "button": "Visit Town [Enter]", "destination": "Riverwatch Hold",
@@ -178,6 +207,15 @@ func _assert_route_cue_width(width: int) -> Dictionary:
 	}):
 		await _discard_host(host)
 		return {}
+	var town_hover: Dictionary = shell.call("validation_hover_tile", 0, 2)
+	var hover_text := String(town_hover.get("map_tooltip", ""))
+	if not hover_text.contains("Town: Riverwatch Hold | Your Control | ") \
+			or hover_text.contains("Owner Player") \
+			or hover_text.contains("Town: Player"):
+		_fail("%d visible Town hover did not expose exact player-facing control copy." % width, town_hover)
+		await _discard_host(host)
+		return {}
+	shell.call("validation_hover_tile", 1, 0)
 	var wood_payload := _route_cue_payload(wood)
 
 	var open: Dictionary = shell.call("validation_select_tile", 2, 2)
@@ -377,6 +415,7 @@ func _assert_route_cue_width(width: int) -> Dictionary:
 	await _discard_host(host)
 	return {
 		"width": width,
+		"height": height,
 		"town_wood_open_town_wood_inverse": true,
 		"adjacent_open_2_2_march_selected_step_1": true,
 		"current_and_no_movement_disabled_rows": true,
@@ -385,6 +424,33 @@ func _assert_route_cue_width(width: int) -> Dictionary:
 		"generated_pending_compact_policies": true,
 		"authority_exact": true,
 	}
+
+func _assert_live_town_control_surfaces(shell: Node, session, snapshot: Dictionary, width: int) -> bool:
+	var context_text := String(snapshot.get("context_summary", ""))
+	var rail_text := String(snapshot.get("selected_tile_rail_text", ""))
+	var decision: Dictionary = snapshot.get("selected_route_decision", {}) if snapshot.get("selected_route_decision", {}) is Dictionary else {}
+	var scenario_id_before := String(session.scenario_id)
+	session.scenario_id = ""
+	var route_affected := String(shell.call("_route_decision_affected_text", decision))
+	session.scenario_id = scenario_id_before
+	var checks := {
+		"context_control_exact": context_text.contains("Riverwatch Hold | Embercourt League | Your Control | Frontier Stronghold"),
+		"rail_control_exact": rail_text.contains("Your Control | "),
+		"route_affected_exact": route_affected == "Riverwatch Hold route | Town: Your Control",
+		"context_raw_owner_absent": not context_text.contains("Owner Player"),
+		"rail_raw_owner_absent": not rail_text.contains("Owner Player"),
+		"route_raw_owner_absent": not route_affected.contains("Town: Player"),
+		"scenario_restored_exact": String(session.scenario_id) == scenario_id_before,
+	}
+	if not _checks_exact(checks):
+		_fail("%d selected Town surfaces did not expose exact player-facing control copy." % width, {
+			"checks": checks,
+			"context": context_text,
+			"rail": rail_text,
+			"route_affected": route_affected,
+		})
+		return false
+	return true
 
 func _assert_exact_route_surface(shell: Node, snapshot: Dictionary, expected: Dictionary) -> bool:
 	var action: Dictionary = snapshot.get("primary_action", {}) if snapshot.get("primary_action", {}) is Dictionary else {}

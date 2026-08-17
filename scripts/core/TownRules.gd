@@ -154,15 +154,7 @@ static func describe_header(session: SessionStateStoreScript.SessionData) -> Str
 	]
 
 static func town_control_label(owner: String) -> String:
-	match owner.strip_edges().to_lower():
-		"player":
-			return "Your Control"
-		"enemy":
-			return "Enemy Control"
-		"neutral":
-			return "Neutral Control"
-		_:
-			return "Unknown Control"
+	return OverworldRulesScript.town_control_label(owner)
 
 static func describe_summary(session: SessionStateStoreScript.SessionData) -> String:
 	var town := get_active_town(session)
