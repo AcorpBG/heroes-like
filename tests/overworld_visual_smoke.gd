@@ -2307,6 +2307,24 @@ func _assert_marker_readability_contract(shell: Node) -> bool:
 		push_error("Overworld smoke: active River Pass hero did not use the exact Embercourt map sprite. presentation=%s" % hero_presentation)
 		get_tree().quit(1)
 		return false
+	var hero_layout: Dictionary = hero_sprite.get("layout", {})
+	var hero_on_town_footprint := bool(hero_presentation.get("has_town_footprint", false))
+	if hero_on_town_footprint:
+		if String(hero_layout.get("mode", "")) != "compact_town_footprint_visitor" \
+			or not bool(hero_layout.get("town_footprint_colocated", false)) \
+			or not is_equal_approx(float(hero_layout.get("hero_rect_extent_fraction", 0.0)), 0.64) \
+			or float(hero_layout.get("sprite_extent_fraction", 1.0)) >= 0.64 \
+			or not bool(hero_layout.get("sprite_contained_in_tile", false)):
+			push_error("Overworld smoke: active hero on a town footprint did not retain the compact contained visitor composition. presentation=%s" % hero_presentation)
+			get_tree().quit(1)
+			return false
+	elif String(hero_layout.get("mode", "")) != "full_tile_world_hero" \
+		or bool(hero_layout.get("town_footprint_colocated", true)) \
+		or not is_equal_approx(float(hero_layout.get("hero_rect_extent_fraction", 0.0)), 1.0) \
+		or not is_equal_approx(float(hero_layout.get("sprite_extent_fraction", 0.0)), 0.96):
+		push_error("Overworld smoke: active field hero did not retain the exact full-tile composition. presentation=%s" % hero_presentation)
+		get_tree().quit(1)
+		return false
 	var hero_readability: Dictionary = hero_presentation.get("marker_readability", {})
 	if not bool(hero_presentation.get("has_visible_hero", false)) or not bool(hero_readability.get("hero_emphasis", false)):
 		push_error("Overworld smoke: active hero marker is not emphasized. presentation=%s" % hero_presentation)
