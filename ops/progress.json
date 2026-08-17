@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The live Overworld footer now distinguishes canonical empty Manual 1 as M1 empty and refreshes to M1 ready through the real save path, with exact save, overwrite, load, cache, file, session, and route authority.",
+  "currentNotes": "The Town scenic caption now identifies its exact existing study and market action counts as Study options and Market options, with unchanged Town actions, layout, focus, and session authority.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-empty-manual-save-slot-status-clarity-10184",
-  "currentSliceId": "ux-overworld-empty-manual-save-slot-status-clarity-10184",
-  "currentSliceNotes": "Completed with exact 1280x720 and 1920x1080 empty-to-ready live proof, unchanged authority, compatibility, static/editor, and bounded Linux/Windows packaging evidence.",
+  "currentSlice": "ux-town-scenic-action-count-label-clarity-10184",
+  "currentSliceId": "ux-town-scenic-action-count-label-clarity-10184",
+  "currentSliceNotes": "Completed with exact 1280x720 and 1920x1080 ordinary/captured live proof, unchanged action/session authority, compatibility, static/editor, and bounded Linux/Windows packaging evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Empty Manual-Slot Status Clarity",
-  "currentSliceUpdatedAt": "2026-08-17T20:48:30Z",
+  "currentSliceTitle": "Town Scenic Action-Count Label Clarity",
+  "currentSliceUpdatedAt": "2026-08-17T21:08:58Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,79 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select only a tracker-approved source-backed release-readiness implementation slice; preserve completed empty-slot/save authority and Town/Overworld control-label behavior.",
-  "notes": "The Overworld empty manual-slot status slice is completed with exact live empty-to-ready behavior, unchanged save authority, compatibility, static/editor, and bounded Linux/Windows export/startup evidence. Packaged interaction, hardware/accessibility certification, signing/publication, whole-game validation, and release readiness remain outside this slice.",
+  "nextActionGuardrailNote": "Select only a tracker-approved source-backed release-readiness implementation slice; preserve completed Town action-count clarity, empty-slot/save authority, and Town/Overworld control-label behavior.",
+  "notes": "The Town scenic action-count clarity slice is completed with exact ordinary/captured and two-width live behavior, unchanged Town authority, compatibility, static/editor, and bounded Linux/Windows export/startup evidence. Packaged interaction, hardware/accessibility certification, signing/publication, whole-game validation, and release readiness remain outside this slice.",
   "plannedSlices": [
+    {
+      "id": "ux-town-scenic-action-count-label-clarity-10184",
+      "title": "Town Scenic Action-Count Label Clarity",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Make the existing Town scenic study and market action counts self-describing without changing Town rules, actions, layout, or authority.",
+      "implementationTargets": [
+        "scenes/town/TownStageView.gd",
+        "tests/town_battle_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/town_battle_visual_smoke.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "Ordinary and captured River Pass Town stages show explicit Study options and Market options counts matching the live TownRules action arrays at 1280x720 and 1920x1080",
+        "Direct and precomputed stage state produce the same exact caption, refresh stays current, and action, session, scenic-layout, focus, Spell Tier, and management-tab authority remain exact",
+        "Town visual/action, active-focus, accessibility, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "study, spell-tier, market, economy, garrison, building, recruitment, occupation, route, AI, content, balance, save-schema, or Native RMG changes",
+        "scenic geometry, font, UI scale, header, plaque, command-marker, tab, button, tooltip, accessibility-region, audio, VFX, art, or broader Town copy redesign",
+        "packaged Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing, publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "9178436eff89843c22d285e68fdf9f2c3b5e92c2",
+        "observedStudyLabel": "Study 15",
+        "observedMarketLabel": "Market 0",
+        "expectedStudyLabel": "Study options 15",
+        "expectedMarketLabel": "Market options 0",
+        "observedArtifact": "/tmp/heroes-town-overview-routed-1280.6vgtla/20260817T194950Z/captured_town_entered.png",
+        "observedDefect": "available_action_counts_presented_as_bare_town_concepts"
+      },
+      "createdAt": "2026-08-17T20:53:28Z",
+      "startedAt": "2026-08-17T20:53:28Z",
+      "updatedAt": "2026-08-17T21:08:58Z",
+      "completedAt": "2026-08-17T21:08:58Z",
+      "completionEvidence": {
+        "focusedArtifact": "/tmp/heroes-town-action-label-focused-authoritative.GW8Ygr",
+        "liveViewportSizes": [
+          [1280, 720],
+          [1920, 1080]
+        ],
+        "ordinaryAndCapturedLabelsExact": true,
+        "directAndPrecomputedStateExact": true,
+        "detachedRefreshExact": true,
+        "townRulesActionCountsExact": true,
+        "sessionAuthorityExact": true,
+        "compatibilityArtifact": "/tmp/heroes-town-action-label-compat.09Qm9p",
+        "linuxPackagingReport": ".artifacts/packaging_linux_export_smoke/report.json",
+        "linuxPackagingReportSha256": "ace72ff4914ae75f788494faa8dd98b237f0f656db2b5f954df33d9d9001de30",
+        "windowsPackagingReport": ".artifacts/packaging_windows_export_smoke/report.json",
+        "windowsPackagingReportSha256": "0bdd0195ca46ec0a0b6166787da686ae58bfb11fdc8aac6ee09fcde9a0baeca0",
+        "packagedTownInteractionClaimed": false,
+        "releaseReadinessClaimed": false
+      },
+      "notes": "Implemented the copy-only scenic caption formatter and proved exact live action counts across ordinary/captured, direct/precomputed, detached-refresh, compatibility, static/editor, and bounded platform startup gates.",
+      "remainingWork": "",
+      "blockedReason": null
+    },
     {
       "id": "ux-overworld-empty-manual-save-slot-status-clarity-10184",
       "title": "Overworld Empty Manual-Slot Status Clarity",

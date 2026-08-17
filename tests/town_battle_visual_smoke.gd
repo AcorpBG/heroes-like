@@ -58,6 +58,9 @@ func _run_town_smoke() -> bool:
 	if not await _assert_town_scenic_backdrop_contract(board, session):
 		get_tree().quit(1)
 		return false
+	if not await _assert_town_scenic_action_count_label_contract(board, session):
+		get_tree().quit(1)
+		return false
 	if not await _assert_town_capture_frontier_status_contract(board, session):
 		get_tree().quit(1)
 		return false
@@ -233,6 +236,86 @@ func _scenic_backdrop_geometry_exact(summary: Dictionary) -> bool:
 		return false
 	return is_equal_approx(source_rect.size.x / source_rect.size.y, destination_rect.size.x / destination_rect.size.y)
 
+func _assert_town_scenic_action_count_label_contract(live_board: Node, session) -> bool:
+	if not live_board.has_method("validation_header_action_count_summary"):
+		push_error("Town smoke: town stage does not expose scenic action-count label validation.")
+		return false
+	var session_before: Dictionary = session.to_dict()
+	var expected_study_actions: Array = TownRules.get_spell_learning_actions(session)
+	var expected_market_actions: Array = TownRules.get_market_actions(session)
+	var original_window_size := get_window().size
+	for viewport_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:
+		get_window().size = viewport_size
+		await get_tree().process_frame
+		await get_tree().process_frame
+		var live_summary: Dictionary = live_board.call("validation_header_action_count_summary")
+		var expected_live_text := "Garrison %d companies | %d troops | Study options %d | Market options %d" % [
+			int(live_summary.get("garrison_company_count", -1)),
+			int(live_summary.get("garrison_headcount", -1)),
+			expected_study_actions.size(),
+			expected_market_actions.size(),
+		]
+		if get_window().size != viewport_size \
+				or int(live_summary.get("study_action_count", -1)) != expected_study_actions.size() \
+				or int(live_summary.get("market_action_count", -1)) != expected_market_actions.size() \
+				or String(live_summary.get("full_text", "")) != expected_live_text \
+				or String(live_summary.get("rendered_text", "")) != expected_live_text \
+				or String(live_summary.get("full_text", "")).contains(" | Study %d |" % expected_study_actions.size()) \
+				or String(live_summary.get("full_text", "")).ends_with(" | Market %d" % expected_market_actions.size()):
+			push_error("Town smoke: live scenic action counts are not explicitly labeled and untruncated at %s: %s." % [viewport_size, live_summary])
+			return false
+	get_window().size = original_window_size
+	await get_tree().process_frame
+	await get_tree().process_frame
+
+	var fixture := TownStageViewScript.new()
+	fixture.size = Vector2(1180.0, 640.0)
+	add_child(fixture)
+	var fixture_study_actions := [{"id": "study_a"}, {"id": "study_b"}]
+	var fixture_market_actions := [{"id": "market_a"}]
+	fixture.set_precomputed_town_state(null, {
+		"town": {"town_id": "validation_town", "built_buildings": [], "garrison": [], "available_recruits": {}},
+		"town_template": {"id": "validation_town", "name": "Validation Town", "faction_id": "faction_embercourt"},
+		"faction": {"id": "faction_embercourt", "name": "Embercourt League"},
+		"study_actions": fixture_study_actions,
+		"market_actions": fixture_market_actions,
+	})
+	fixture_study_actions.clear()
+	fixture_market_actions.append({"id": "market_b"})
+	var detached_summary: Dictionary = fixture.validation_header_action_count_summary()
+	if detached_summary != {
+		"full_text": "Garrison 0 companies | 0 troops | Study options 2 | Market options 1",
+		"rendered_text": "Garrison 0 companies | 0 troops | Study options 2 | Market options 1",
+		"study_action_count": 2,
+		"market_action_count": 1,
+		"garrison_company_count": 0,
+		"garrison_headcount": 0,
+		"max_chars": 80,
+	}:
+		push_error("Town smoke: precomputed scenic action counts were not detached and explicit: %s." % detached_summary)
+		fixture.queue_free()
+		return false
+	fixture.set_precomputed_town_state(null, {
+		"town": {"town_id": "validation_town", "built_buildings": [], "garrison": [], "available_recruits": {}},
+		"town_template": {"id": "validation_town", "name": "Validation Town", "faction_id": "faction_embercourt"},
+		"faction": {"id": "faction_embercourt", "name": "Embercourt League"},
+		"study_actions": [{"id": "study_c"}],
+		"market_actions": [{"id": "market_c"}, {"id": "market_d"}],
+	})
+	var refreshed_summary: Dictionary = fixture.validation_header_action_count_summary()
+	if String(refreshed_summary.get("full_text", "")) != "Garrison 0 companies | 0 troops | Study options 1 | Market options 2" \
+			or int(refreshed_summary.get("study_action_count", -1)) != 1 \
+			or int(refreshed_summary.get("market_action_count", -1)) != 2:
+		push_error("Town smoke: refreshed scenic action counts did not follow precomputed stage state: %s." % refreshed_summary)
+		fixture.queue_free()
+		return false
+	fixture.queue_free()
+	await get_tree().process_frame
+	if session.to_dict() != session_before:
+		push_error("Town smoke: scenic action-count label validation changed live session authority.")
+		return false
+	return true
+
 func _assert_town_header_control_label_contract(shell: Control, live_session) -> bool:
 	var header := shell.get_node_or_null("%Header") as Label
 	if header == null:
@@ -376,10 +459,19 @@ func _assert_town_capture_frontier_status_contract(live_board: Node, live_sessio
 	}
 	var expected_combined_occupation: Dictionary = OverworldRules.town_occupation_state(fixture_session, fixture_town)
 	var expected_combined_front: Dictionary = OverworldRules.town_front_state(fixture_session, fixture_town)
+	var expected_captured_study_actions: Array = TownRules.get_spell_learning_actions(fixture_session)
+	var expected_captured_market_actions: Array = TownRules.get_market_actions(fixture_session)
 	for stage_size in [Vector2(620.0, 320.0), Vector2(1180.0, 640.0)]:
 		fixture.size = stage_size
 		fixture.set_town_state(fixture_session)
 		var combined: Dictionary = fixture.validation_status_plaques_summary()
+		var captured_label: Dictionary = fixture.validation_header_action_count_summary()
+		var expected_captured_label := "Garrison %d companies | %d troops | Study options %d | Market options %d" % [
+			int(captured_label.get("garrison_company_count", -1)),
+			int(captured_label.get("garrison_headcount", -1)),
+			expected_captured_study_actions.size(),
+			expected_captured_market_actions.size(),
+		]
 		if not _front_plaque_exact(
 			combined,
 			"occupation_retake",
@@ -389,6 +481,12 @@ func _assert_town_capture_frontier_status_contract(live_board: Node, live_sessio
 			"faction_mireclaw"
 		) or int(combined.get("plaque_count", 0)) != 4 or not bool(combined.get("contained", false)):
 			push_error("Town smoke: combined captured-town plaque is not exact or contained at %s: %s." % [stage_size, combined])
+			fixture.queue_free()
+			return false
+		if int(captured_label.get("study_action_count", -1)) != expected_captured_study_actions.size() \
+				or int(captured_label.get("market_action_count", -1)) != expected_captured_market_actions.size() \
+				or String(captured_label.get("full_text", "")) != expected_captured_label:
+			push_error("Town smoke: captured-town scenic action counts lost exact explicit labels at %s: %s." % [stage_size, captured_label])
 			fixture.queue_free()
 			return false
 		if combined.get("occupation", {}) != expected_combined_occupation or combined.get("front", {}) != expected_combined_front:

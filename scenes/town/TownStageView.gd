@@ -1044,6 +1044,20 @@ func validation_status_plaques_summary() -> Dictionary:
 		"scene_rect": scene_rect,
 	}
 
+func validation_header_action_count_summary() -> Dictionary:
+	var scene_rect := Rect2(Vector2(26.0, 26.0), Vector2(maxf(0.0, size.x - 52.0), maxf(0.0, size.y - 52.0)))
+	var max_chars := clampi(int(scene_rect.size.x / 14.0), 42, 116)
+	var full_text := _header_action_count_text()
+	return {
+		"full_text": full_text,
+		"rendered_text": _short_stage_text(full_text, max_chars),
+		"study_action_count": _study_actions.size(),
+		"market_action_count": _market_actions.size(),
+		"garrison_company_count": _garrison_company_count(),
+		"garrison_headcount": _garrison_headcount(),
+		"max_chars": max_chars,
+	}
+
 func _draw_haze(scene_rect: Rect2) -> void:
 	for index in range(4):
 		var radius := scene_rect.size.x * (0.20 + float(index) * 0.08)
@@ -1303,13 +1317,16 @@ func _draw_header(scene_rect: Rect2) -> void:
 	], clampi(int(scene_rect.size.x / 18.0), 34, 96))
 	var label_y: float = minf(scene_rect.end.y - 104.0, scene_rect.position.y + scene_rect.size.y * 0.66)
 	_draw_text(line, scene_rect.position + Vector2(18.0, label_y), TEXT_COLOR, 20)
-	var subline := _short_stage_text("Garrison %d companies | %d troops | Study %d | Market %d" % [
+	var subline := _short_stage_text(_header_action_count_text(), clampi(int(scene_rect.size.x / 14.0), 42, 116))
+	_draw_text(subline, scene_rect.position + Vector2(18.0, label_y + 22.0), SUBTEXT_COLOR, 13)
+
+func _header_action_count_text() -> String:
+	return "Garrison %d companies | %d troops | Study options %d | Market options %d" % [
 		_garrison_company_count(),
 		_garrison_headcount(),
 		_study_actions.size(),
 		_market_actions.size(),
-	], clampi(int(scene_rect.size.x / 14.0), 42, 116))
-	_draw_text(subline, scene_rect.position + Vector2(18.0, label_y + 22.0), SUBTEXT_COLOR, 13)
+	]
 
 func _short_stage_text(text: String, max_chars: int) -> String:
 	if text.length() <= max_chars:

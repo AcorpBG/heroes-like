@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `ux-town-scenic-action-count-label-clarity-10184`. The live Town scenic caption now names its existing action counts as `Study options <n> | Market options <n>` instead of presenting them as bare town concepts. Exact 1280x720/1920x1080 live widths, ordinary/captured and direct/precomputed state, detached refresh, action/session authority, Town visual/action, active-focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `ux-town-scenic-action-count-label-clarity-10184`
 - Completed implementation slice: `ux-overworld-empty-manual-save-slot-status-clarity-10184`. The live Overworld footer now maps the selected slot's canonical missing summary to `M1 empty`, then refreshes to `M1 ready` through the real manual-save path, while loadable, held, and invalid states plus all save/overwrite/load/cache/session authority remain unchanged. Focused exact-width, manual-overwrite, active-focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Overworld save interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `ux-overworld-empty-manual-save-slot-status-clarity-10184`
 - Completed implementation slice: `ux-overworld-town-control-label-consistency-10184`. Live Overworld town context, route-decision, selected-tile rail, and hover surfaces now use the same exact `Your/Enemy/Neutral/Unknown Control` mapping as the Town header, without changing ownership, route, fog, interaction, session, or save authority. Focused two-width route/tooltip, Overworld visual, active-focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -6971,6 +6973,38 @@ Completion evidence:
 - `town_battle_visual_smoke` passed naturally with exact live header, tooltip, themed-font fit, player/enemy/neutral/unsupported mappings, and unchanged town/session authority;
 - the full River Pass capture/save-resume/re-entry flow passed naturally with 42 steps and zero harness errors at exact 1280x720 (`/tmp/heroes-town-header-routed-1280.lBImP4/20260817T184313Z`) and 1920x1080 (`/tmp/heroes-town-header-routed-1920.k8KFFo/20260817T185207Z`); both captured-town frames visibly retain exact Duskfen/Mireclaw/Frontier/Spell identity and show `Your Control` without `Owner Player`;
 - active-play focus, accessibility semantics, core, repository validation, Python compilation, diff checks, and exact/generic Godot editor parses passed;
+- official Linux export/headless startup and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup reports are `ok:true`; packaged Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
+
+## Selected Slice: Town Scenic Action-Count Label Clarity
+
+id: `ux-town-scenic-action-count-label-clarity-10184`
+
+Status: completed.
+
+Implementation boundary:
+- change only the existing TownStage scenic subline labels from bare `Study <n> | Market <n>` to explicit `Study options <n> | Market options <n>`;
+- derive both numbers from the same detached live `_study_actions` and `_market_actions` arrays already owned by the stage;
+- preserve the exact garrison labels, action order/content, Spell Tier plaque/header, Trade and Spells tabs, scenic composition, geometry, focus, session, and Town authority.
+
+Completion criteria:
+- ordinary and captured River Pass Town stages expose the exact player-facing subline with counts matching the live TownRules study and market action arrays at 1280x720 and 1920x1080;
+- direct and precomputed stage state produce the same exact caption, detached refresh remains current, and no session or action authority changes;
+- Town visual/action, active-focus, accessibility, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass.
+
+Non-goals:
+- no study, spell-tier, market, economy, garrison, building, recruitment, occupation, route, AI, content, balance, save/schema, or Native RMG change;
+- no scenic geometry, font, UI scale, header, plaque, command marker, tab, button, tooltip, accessibility-region, audio, VFX, art, or broader Town copy redesign;
+- no packaged Town interaction parity, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- HEAD `9178436eff89843c22d285e68fdf9f2c3b5e92c2` renders `_study_actions.size()` and `_market_actions.size()` through the bare labels `Study %d | Market %d` in `TownStageView._draw_header`, while the adjacent live surface independently renders `Spell Tier 1` and the management tabs use `Spells` and `Trade`;
+- the exact 1280x720 routed captured-town frame `/tmp/heroes-town-overview-routed-1280.6vgtla/20260817T194950Z/captured_town_entered.png` visibly reads `Study 15 | Market 0`, although those values are available action counts rather than town levels or resources;
+- this is direct current shipped first-view copy evidence, not a claim that study, market, or spell-tier rules are incorrect.
+
+Completion evidence:
+- `town_battle_visual_smoke` passed naturally at `/tmp/heroes-town-action-label-focused-authoritative.GW8Ygr`, proving the exact untruncated live caption at 1280x720 and 1920x1080, exact captured-town compact/wide labels, direct/precomputed refresh, detached arrays, TownRules action-count parity, and unchanged session authority;
+- real spell-study and market-exchange feedback, active-play keyboard focus, accessibility semantics, and core compatibility gates passed sequentially at `/tmp/heroes-town-action-label-compat.09Qm9p`;
+- repository validation, Python compilation, diff checks, and exact/generic Godot editor parses passed;
 - official Linux export/headless startup and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup reports are `ok:true`; packaged Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
 
 ## Selected Slice: Overworld Empty Manual-Slot Status Clarity
