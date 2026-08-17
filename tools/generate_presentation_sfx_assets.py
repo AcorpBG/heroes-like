@@ -162,6 +162,20 @@ SPECS = {
         "peak": 0.64,
         "pan": -0.02,
     },
+    "audio_placeholder_town_specialty_rank": {
+        "kind": "mastery_chime",
+        "fundamental": 523.25,
+        "metal": 1568.0,
+        "peak": 0.60,
+        "pan": 0.0,
+    },
+    "audio_placeholder_town_unit_transfer": {
+        "kind": "redeployment_sweep",
+        "fundamental": 220.0,
+        "metal": 880.0,
+        "peak": 0.58,
+        "pan": 0.14,
+    },
 }
 
 
@@ -298,6 +312,19 @@ def layered_sample(kind: str, fundamental: float, metal: float, t: float, progre
         answer = math.sin(math.tau * fundamental * 1.5 * t - phase * 0.3) * 0.19
         seal = math.sin(math.tau * metal * t + phase * 0.6) * transient * 0.15
         return (call + answer + seal + noise * transient * 0.04) * envelope(progress)
+    if kind == "mastery_chime":
+        medal = math.sin(math.tau * fundamental * t + phase) * 0.27
+        rank = math.sin(math.tau * fundamental * 1.5 * t - phase * 0.4) * 0.18
+        facets = math.sin(math.tau * metal * t + phase * 0.7) * transient * 0.14
+        second_rank = max(0.0, 1.0 - abs(progress - 0.42) / 0.16) * math.sin(math.tau * fundamental * 2.0 * t - phase) * 0.20
+        return (medal + rank + facets + second_rank + noise * transient * 0.04) * envelope(progress)
+    if kind == "redeployment_sweep":
+        body = math.sin(math.tau * fundamental * (0.92 + progress * 0.16) * t + phase) * 0.25
+        route = math.sin(math.tau * metal * t - phase * 0.6) * 0.13
+        pulse_one = max(0.0, 1.0 - abs(progress - 0.24) / 0.10) * route * 0.75
+        pulse_two = max(0.0, 1.0 - abs(progress - 0.50) / 0.10) * route * 0.85
+        pulse_three = max(0.0, 1.0 - abs(progress - 0.74) / 0.10) * route
+        return (body + route * 0.35 + pulse_one + pulse_two + pulse_three + noise * transient * 0.05) * envelope(progress)
     raise ValueError(f"Unsupported presentation sound kind: {kind}")
 
 
@@ -350,19 +377,24 @@ def write_wav(path: Path, cue_id: str, duration_msec: int) -> None:
 def main() -> None:
     manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
     cues = manifest.get("cues", {})
-    if set(cues) != set(SPECS):
-        raise SystemExit(f"Manifest/spec cue mismatch: manifest={sorted(cues)} specs={sorted(SPECS)}")
+    generated_cues = {
+        cue_id: cue
+        for cue_id, cue in cues.items()
+        if str(cue.get("path", "")).startswith("res://art/audio/runtime/presentation/")
+    }
+    if set(generated_cues) != set(SPECS):
+        raise SystemExit(f"Manifest/spec cue mismatch: generated={sorted(generated_cues)} specs={sorted(SPECS)}")
     if int(manifest.get("sample_rate_hz", 0)) != SAMPLE_RATE or int(manifest.get("channel_count", 0)) != CHANNEL_COUNT or int(manifest.get("sample_width_bits", 0)) != SAMPLE_WIDTH_BYTES * 8:
         raise SystemExit("Manifest audio format does not match production generator")
     hashes: list[str] = []
-    for cue_id, cue in sorted(cues.items()):
+    for cue_id, cue in sorted(generated_cues.items()):
         output_path = ROOT / str(cue["path"]).removeprefix("res://")
         write_wav(output_path, cue_id, int(cue["duration_msec"]))
         hashes.append(hashlib.sha256(output_path.read_bytes()).hexdigest())
     print(json.dumps({
         "asset_tier": "production_layered_v1",
         "channel_count": CHANNEL_COUNT,
-        "cue_count": len(cues),
+        "cue_count": len(generated_cues),
         "pack_signature": hashlib.sha256("\n".join(hashes).encode("utf-8")).hexdigest(),
         "sample_rate_hz": SAMPLE_RATE,
         "sample_width_bits": SAMPLE_WIDTH_BYTES * 8,

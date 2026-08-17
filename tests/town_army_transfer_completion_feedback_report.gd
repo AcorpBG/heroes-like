@@ -182,17 +182,18 @@ func _presentation_exact(snapshot: Dictionary, mode: Dictionary, town: Dictionar
 		and String(snapshot.get("selected_animation_state", "")) == ("unit_transfer_badge" if reduced_motion else "stack_redeployed")
 		and String(snapshot.get("selected_playback_policy", "")) == "queue_resolved"
 		and String(snapshot.get("selected_blocking_policy", "")) == "nonblocking"
-		and Array(snapshot.get("selected_vfx_cue_ids", [])) == (["unit_transfer_badge"] if reduced_motion else ["vfx_placeholder_button_confirm"])
-		and Array(snapshot.get("selected_audio_cue_ids", [])) == ["audio_placeholder_ui_confirm"]
+		and Array(snapshot.get("selected_vfx_cue_ids", [])) == (["unit_transfer_badge"] if reduced_motion else ["vfx_placeholder_town_unit_transfer"])
+		and Array(snapshot.get("selected_audio_cue_ids", [])) == ["audio_placeholder_town_unit_transfer"]
 		and Array(snapshot.get("draw_entries", [])) == (["unit_transfer_badge"] if reduced_motion else ["unit_transfer_route", "unit_transfer_badge"])
 		and not bool(snapshot.get("blocks_input", true))
 		and bool(snapshot.get("draw_rect_contained", false))
-		and String(draw.get("mode", "")) == ("unit_transfer_badge" if reduced_motion else "procedural_unit_transfer")
-		and int(draw.get("route_line_count", 0)) == 1
-		and int(draw.get("arrow_count", 0)) == 1
-		and int(draw.get("pulse_count", -1)) == (0 if reduced_motion else 1)
-		and String(asset.get("cue_id", "")) == ("unit_transfer_badge" if reduced_motion else "vfx_placeholder_button_confirm")
-		and bool(asset.get("uses_procedural_fallback", false))
+		and String(draw.get("mode", "")) == ("unit_transfer_badge" if reduced_motion else "imported_texture")
+		and (int(draw.get("route_line_count", 0)) == 1 and int(draw.get("arrow_count", 0)) == 1 and int(draw.get("pulse_count", -1)) == 0 if reduced_motion else String(draw.get("texture_path", "")) == "res://art/town/runtime/vfx/unit_transfer.png")
+		and String(asset.get("cue_id", "")) == ("unit_transfer_badge" if reduced_motion else "vfx_placeholder_town_unit_transfer")
+		and String(asset.get("texture_path", "")) == ("" if reduced_motion else "res://art/town/runtime/vfx/unit_transfer.png")
+		and bool(asset.get("texture_loaded", false)) == not reduced_motion
+		and bool(asset.get("uses_imported_asset", false)) == not reduced_motion
+		and bool(asset.get("uses_procedural_fallback", false)) == reduced_motion
 	)
 
 func _audio_exact(records: Array, town: Dictionary) -> bool:
@@ -201,16 +202,16 @@ func _audio_exact(records: Array, town: Dictionary) -> bool:
 	var record: Dictionary = records[0]
 	var metadata: Dictionary = record.get("metadata", {}) if record.get("metadata", {}) is Dictionary else {}
 	return (
-		String(record.get("cue_id", "")) == "audio_placeholder_ui_confirm"
+		String(record.get("cue_id", "")) == "audio_placeholder_town_unit_transfer"
 		and String(record.get("source", "")) == "TownStageView.present_town_action"
 		and String(metadata.get("event_id", "")) == "town_army_transferred"
 		and int(metadata.get("presentation_serial", 0)) == 1
 		and String(metadata.get("town_placement_id", "")) == String(town.get("placement_id", ""))
 		and bool(record.get("played", false))
 		and String(record.get("playback_source", "")) == "imported_wav"
-		and String(record.get("asset_path", "")) == "res://art/audio/runtime/ui/confirm.wav"
-		and String(record.get("role", "")) == "confirm_action"
-		and int(record.get("duration_msec", 0)) == 120
+		and String(record.get("asset_path", "")) == "res://art/audio/runtime/presentation/town_unit_transfer.wav"
+		and String(record.get("role", "")) == "town_army_redeployed"
+		and int(record.get("duration_msec", 0)) == 380
 		and int(record.get("stream_mix_rate", 0)) == 44100
 		and bool(record.get("stream_stereo", false))
 		and int(record.get("stream_loop_mode", -1)) == AudioStreamWAV.LOOP_DISABLED

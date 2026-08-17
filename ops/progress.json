@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved release-readiness implementation slice from direct current behavior and source evidence."
+    "Select the next tracker-approved release-readiness implementation slice."
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the distinct Resonant Chorus Battle audio with exact public-cast, mixer, policy, compatibility, static/editor, and bounded Linux/Windows export-startup evidence. Select the next tracker-approved product slice; the game is not release-ready.",
+  "currentNotes": "Distinct Town specialty-selection and army-transfer VFX/audio are implemented and validated across focused live action, compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup. Broader packaged interaction/listening, hardware/certification, signing/publication, whole-game, and release-readiness claims remain open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-battle-resonant-chorus-distinct-audio-10184",
-  "currentSliceId": "presentation-battle-resonant-chorus-distinct-audio-10184",
-  "currentSliceNotes": "Resonant Chorus now resolves to its distinct reproducible imported WAV in a real public cast under normal, reduced-motion, and reduced-flash policies. Prism, VFX, mixer, spell, session, and action authority remain exact. Platform evidence is export/startup only.",
+  "currentSlice": "presentation-town-specialty-transfer-distinct-feedback-10184",
+  "currentSliceId": "presentation-town-specialty-transfer-distinct-feedback-10184",
+  "currentSliceNotes": "Completed with distinct original imported VFX, deterministic stereo audio, exact normal/reduced-motion presentation, and unchanged public Town action/session/save authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Battle Resonant Chorus Distinct Audio",
-  "currentSliceUpdatedAt": "2026-08-17T09:05:17Z",
+  "currentSliceTitle": "Town Specialty And Transfer Distinct Feedback",
+  "currentSliceUpdatedAt": "2026-08-17T09:31:05Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,78 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved implementation slice only from direct current behavior and source evidence; preserve exact completed battle presentation behavior and Native RMG fail-closed state.",
-  "notes": "Completed the distinct Resonant Chorus Battle audio with exact live behavior authority and bounded platform startup evidence. Select the next tracker-approved product slice; broader release gaps remain.",
+  "nextActionGuardrailNote": "Select the next tracker-approved release-readiness implementation slice; do not infer whole-game or release readiness from this completed presentation boundary.",
+  "notes": "Completed the source-proven generic-confirm collision across two live Town actions with distinct original VFX/audio and bounded focused, compatibility, static/editor, and export/startup evidence; broader release gaps remain.",
   "plannedSlices": [
+    {
+      "id": "presentation-town-specialty-transfer-distinct-feedback-10184",
+      "title": "Town Specialty And Transfer Distinct Feedback",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Give successful live specialty selection and army transfer distinct original imported Town VFX and reproducible production-layer sounds instead of sharing generic button-confirm presentation, without changing their rules or UI authority.",
+      "implementationTargets": [
+        "art/town/runtime/vfx/specialty_rank.png",
+        "art/town/runtime/vfx/specialty_rank.png.import",
+        "art/town/runtime/vfx/unit_transfer.png",
+        "art/town/runtime/vfx/unit_transfer.png.import",
+        "art/audio/runtime/presentation/town_specialty_rank.wav",
+        "art/audio/runtime/presentation/town_specialty_rank.wav.import",
+        "art/audio/runtime/presentation/town_unit_transfer.wav",
+        "art/audio/runtime/presentation/town_unit_transfer.wav.import",
+        "content/animation_event_cues.json",
+        "content/town_vfx_manifest.json",
+        "content/presentation_sfx_manifest.json",
+        "tools/generate_presentation_sfx_assets.py",
+        "scripts/autoload/PresentationAudio.gd",
+        "scenes/town/TownStageView.gd",
+        "tests/town_specialty_selection_feedback_report.gd",
+        "tests/town_army_transfer_completion_feedback_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/town_specialty_selection_feedback_report.tscn",
+        "tests/town_army_transfer_completion_feedback_report.tscn",
+        "tests/animation_event_cue_catalog_report.tscn",
+        "tests/town_battle_visual_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "Normal specialty selection resolves only to a distinct imported specialty-rank VFX and production-layer WAV, while reduced motion retains its exact static specialty_rank_badge and unchanged nonblocking policy",
+        "Normal army transfer resolves only to a distinct imported redeployment VFX and production-layer WAV, while reduced motion retains its exact static unit_transfer_badge and unchanged nonblocking policy",
+        "Real public handlers at 1280x720 and 1920x1080 prove exact specialty rank/pending-choice and source/target/unit-count mutations, recaps, focus/input, draw containment, refresh/repeat silence, session/save authority, and byte-distinct assets",
+        "Specialty/transfer owners, cue catalog, Town visual, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "specialty definitions, rank math, hero progression, transfer availability, unit counts, source/target ownership, TownRules, recaps, save schema, focus, input, blocking, duration, or animation-policy changes",
+        "other Town actions, artifact presentation, Battle/Overworld cues, UI confirm behavior, music, ambience, broad audio/VFX/renderer/layout redesign, particles, shaders, or final sound-design approval",
+        "packaged Town interaction/listening parity, controller hardware, AT-SPI or UIA certification, native hardware, signing, publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "b5b5e6c5896bf8cd6f0d4ff7c59fc3e5b91bf701",
+        "specialty_event": "town_specialty_selected",
+        "transfer_event": "town_army_transferred",
+        "specialty_normal_vfx": "vfx_placeholder_button_confirm",
+        "transfer_normal_vfx": "vfx_placeholder_button_confirm",
+        "specialty_normal_audio": "audio_placeholder_ui_confirm",
+        "transfer_normal_audio": "audio_placeholder_ui_confirm",
+        "specialty_reduced_vfx": "specialty_rank_badge",
+        "transfer_reduced_vfx": "unit_transfer_badge",
+        "generic_confirm_collision": true
+      },
+      "createdAt": "2026-08-17T09:08:52Z",
+      "startedAt": "2026-08-17T09:08:52Z",
+      "updatedAt": "2026-08-17T09:31:05Z",
+      "completedAt": "2026-08-17T09:31:05Z",
+      "notes": "Distinct original 384x384 alpha VFX and deterministic 400 ms/380 ms stereo audio replace the shared generic confirm only for normal specialty-selection and army-transfer completion; reduced-motion badges and all public Town action/session/save authority remain exact. Four specialty and eight bidirectional transfer rows at 1280x720/1920x1080 pass, as do cue catalog, Town visual, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup. Packaged Town interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, final sound-design approval, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice; broader product and release gaps remain.",
+      "blockedReason": null
+    },
     {
       "id": "presentation-battle-resonant-chorus-distinct-audio-10184",
       "title": "Battle Resonant Chorus Distinct Audio",
@@ -88434,7 +88503,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "resonant_chorus_distinct_battle_audio_completed",
+  "result": "town_specialty_transfer_distinct_feedback_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -88535,9 +88604,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Resonant Chorus distinct battle VFX is implemented and validated with exact public-cast and policy authority, live viewport and Battle compatibility, repository/editor, and bounded Linux/Windows export-startup evidence. No current implementation slice is selected, and the game is not release-ready.",
+  "summary": "Distinct Town specialty-selection and army-transfer completion VFX/audio are implemented and validated with exact public-action, reduced-motion, session/save, compatibility, repository/editor, and bounded Linux/Windows export-startup evidence. No current in-progress implementation slice is selected, and the game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-17T08:46:16Z",
+  "updatedAt": "2026-08-17T09:31:05Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

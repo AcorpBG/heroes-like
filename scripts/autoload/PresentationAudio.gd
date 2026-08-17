@@ -31,6 +31,8 @@ const CUE_SPECS := {
 	"audio_placeholder_town_market_exchange": {"frequency": 520.0, "duration": 0.36, "gain": 0.10},
 	"audio_placeholder_town_spell_study": {"frequency": 392.0, "duration": 0.40, "gain": 0.11},
 	"audio_placeholder_town_hero_hire": {"frequency": 440.0, "duration": 0.42, "gain": 0.12},
+	"audio_placeholder_town_specialty_rank": {"frequency": 523.25, "duration": 0.40, "gain": 0.11},
+	"audio_placeholder_town_unit_transfer": {"frequency": 220.0, "duration": 0.38, "gain": 0.10},
 	"audio_placeholder_ui_confirm": {"frequency": 760.0, "duration": 0.12, "gain": 0.11},
 }
 
