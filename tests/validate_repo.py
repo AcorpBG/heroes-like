@@ -13251,6 +13251,12 @@ def validate_save_management(errors: list[str]) -> None:
             "_exclusive_parent_click_geometry",
             "_exclusive_route_authority_snapshot",
             "EXCLUSIVE_SNAPSHOT_OBSERVER_PROFILE_KEYS",
+            '"event_dispatch_observation_context_builds"',
+            '"event_dispatch_observation_context_reuses"',
+            '"field_readiness_context_builds"',
+            '"field_readiness_context_materializations"',
+            '"field_readiness_surface_base_event_calls"',
+            '"field_readiness_surface_calls"',
             '"field_readiness_simple_current_route_fast_path"',
             '"field_readiness_simple_route_fast_path"',
             '"hero_actions_cache_hits"',
@@ -45346,6 +45352,14 @@ def validate_generated_large_town_explicit_save_surface_regression(errors: list[
         "recap_surfaces",
         "stored_resume_recaps",
         "stored_recap_alias_reused",
+        "stored_recap_context_build_count",
+        "stored_recap_context_reuse_count",
+        "_assert_stored_recap_context_parity",
+        "SaveService._describe_summary_resume_recap_direct_legacy(summary)",
+        'for context in ["overworld", "battle", "outcome"]',
+        '{"id": "missing", "summary": {}}',
+        '"id": "invalid"',
+        '"id": "uninspectable"',
         "detached_was_runtime_normalized",
         "detached_normalization_fallback",
         "validation_summary_cache_snapshot",
@@ -45397,6 +45411,10 @@ def validate_generated_large_town_explicit_save_surface_regression(errors: list[
         'buckets["normalized_live_summary"]',
         'buckets["stored_resume_recaps"]',
         '"stored_recap_alias_reused"',
+        '"stored_recap_context_build_count"',
+        '"stored_recap_context_reuse_count"',
+        "func _describe_summary_resume_recap_with_context",
+        "func _describe_summary_resume_recap_direct_legacy",
         'profile["restore_normalize_pass_count"] = 1',
         'profile["prepared_payload_reason"] = "normalized_detached_manual_session"',
         'profile["save_normalize_skip_reason"] = "prepared_normalized_manual_payload"',
@@ -45411,6 +45429,74 @@ def validate_generated_large_town_explicit_save_surface_regression(errors: list[
         'profile["summary_session_reconstruction_count"]',
     ):
         ensure(token in save_service_text, errors, f"SaveService optimized explicit save-surface contract is missing token {token}")
+
+    build_start = save_service_text.find("func build_in_session_save_surface")
+    build_end = save_service_text.find("\nfunc ", build_start + 1) if build_start >= 0 else -1
+    build_body = save_service_text[build_start:build_end] if build_start >= 0 and build_end > build_start else ""
+    build_order = [
+        build_body.find("var stored_recap_profile := {}"),
+        build_body.find("var slot_resume_recap := _describe_summary_resume_recap_with_context(slot_summary, stored_recap_profile)"),
+        build_body.find("var stored_recap_alias_reused := _summaries_share_storage_identity(slot_summary, latest_summary)"),
+        build_body.find("var latest_resume_recap := slot_resume_recap if stored_recap_alias_reused else _describe_summary_resume_recap_with_context(latest_summary, stored_recap_profile)"),
+        build_body.find('"stored_recap_context_build_count": int(stored_recap_profile.get("context_build_count", 0))'),
+        build_body.find('"stored_recap_context_reuse_count": int(stored_recap_profile.get("context_reuse_count", 0))'),
+    ]
+    ensure(
+        build_body != "" and all(index >= 0 for index in build_order) and build_order == sorted(build_order),
+        errors,
+        "SaveService in-session save surface must build stored recap contexts in exact selected/alias/latest/profile order",
+    )
+
+    context_start = save_service_text.find("func _describe_summary_resume_recap_with_context")
+    context_end = save_service_text.find("\nfunc ", context_start + 1) if context_start >= 0 else -1
+    context_body = save_service_text[context_start:context_end] if context_start >= 0 and context_end > context_start else ""
+    context_order_tokens = [
+        "if summary.is_empty():",
+        "if not can_load_summary(summary):",
+        "var session := _session_from_payload(_summary_payload(summary))",
+        'if session == null or session.scenario_id == "":',
+        "OverworldRulesScript.normalize_overworld_state(session)",
+        "OverworldRulesScript.begin_normalized_read_scope(session)",
+        "TownRulesScript.begin_read_scope(session)",
+        "var recap_context := _session_save_recap_context(session, summary)",
+        "var result := _session_save_resume_recap_from_context(session, summary, recap_context)",
+        "TownRulesScript.end_read_scope(session)",
+        "OverworldRulesScript.end_normalized_read_scope(session)",
+        'profile["context_build_count"] = int(profile.get("context_build_count", 0)) + 1',
+        'profile["context_reuse_count"] = int(profile.get("context_reuse_count", 0)) + 3',
+        "return result",
+    ]
+    context_order = [context_body.find(token) for token in context_order_tokens]
+    ensure(
+        context_body != "" and all(index >= 0 for index in context_order) and context_order == sorted(context_order),
+        errors,
+        "SaveService stored recap context must retain fail-closed fallbacks and exact normalize/read-scope/context/materialize/profile order",
+    )
+    for forbidden in ("static var", "stored_recap_cache", "session.flags", "summary.erase(", "summary.clear("):
+        ensure(forbidden not in context_body, errors, f"SaveService stored recap context must remain invocation-local and non-mutating: {forbidden}")
+
+    legacy_start = save_service_text.find("func _describe_summary_resume_recap_direct_legacy")
+    legacy_end = save_service_text.find("\nfunc ", legacy_start + 1) if legacy_start >= 0 else -1
+    legacy_body = save_service_text[legacy_start:legacy_end] if legacy_start >= 0 and legacy_end > legacy_start else ""
+    ensure("return _session_save_resume_recap(session, summary)" in legacy_body, errors, "SaveService stored recap legacy control must retain the independent pre-context materializer")
+    ensure("_describe_summary_resume_recap_with_context" not in legacy_body and "_session_save_recap_context" not in legacy_body, errors, "SaveService stored recap legacy control must remain independent of the new context path")
+
+    parity_start = script_text.find("func _assert_stored_recap_context_parity")
+    parity_end = script_text.find("\nfunc ", parity_start + 1) if parity_start >= 0 else -1
+    parity_body = script_text[parity_start:parity_end] if parity_start >= 0 and parity_end > parity_start else ""
+    for token in (
+        'for context in ["overworld", "battle", "outcome"]',
+        'fixtures.append({"id": "town", "session": town_session})',
+        "var session_before: Dictionary = session.to_dict().duplicate(true)",
+        "var summary_before: Dictionary = summary.duplicate(true)",
+        "SaveService._describe_summary_resume_recap_direct_legacy(summary)",
+        "SaveService.describe_summary_resume_recap(summary)",
+        "direct != context_backed or session.to_dict() != session_before or summary != summary_before",
+        '{"id": "missing", "summary": {}}',
+        '"id": "invalid"',
+        '"id": "uninspectable"',
+    ):
+        ensure(token in parity_body, errors, f"Stored recap context focused parity is missing independent authority token {token}")
 
 
 def validate_town_economy_resource_ui_surface(errors: list[str]) -> None:

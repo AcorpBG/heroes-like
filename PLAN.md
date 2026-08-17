@@ -25,6 +25,8 @@ Rules:
 Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next tracker-approved release-readiness implementation slice from current source and behavior evidence.
+- Completed implementation slice: `performance-in-session-stored-resume-recap-context-reuse-10184`. Each distinct loadable stored save recap now uses one detached normalized progress/watch context, while empty/invalid summaries, distinct selected/latest payloads, and storage-identity aliasing remain exact. Focused Overworld/Town/Battle/Outcome and generated-Large save authority passes; the current stored-recap bucket improves45.696ms to20.909ms and save-surface total79.845ms to55.344ms. Manual overwrite, autosave failure, Overworld/Town/core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged save interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
+  id: `performance-in-session-stored-resume-recap-context-reuse-10184`
 - Completed implementation slice: `performance-overworld-objective-progress-surface-reuse-10184`. Objective Header now passes its same-call detached Objective Stakes surface into the normalized progress recap, eliminating repeated objective counts, completed-label, and next-objective evaluation while direct/default recap callers remain fresh. Focused 24-scenario/mode and changed-state authority is exact; five-call median improves238.6ms to207.7ms, the baseline header lane44.6ms to39.9ms, and full refresh177.0ms to172.1ms. Overworld visual/route/input, Town return, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
   id: `performance-overworld-objective-progress-surface-reuse-10184`
 - Completed implementation slice: `performance-overworld-objective-header-normalization-reuse-10184`. Objective Header now materializes its progress recap from the normalization already established by Objective Stakes, while public direct recap callers remain fresh. Focused output/session/UI authority is exact across all 24 authored scenarios and changed-state controls; five-call median improves from408.8ms to237.3ms, the baseline header lane from53.2ms to44.6ms, and the full refresh from186.3ms to177.0ms. Overworld visual/route/input, Town return, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
@@ -4235,6 +4237,37 @@ Non-goals:
 - no objective, progress, recent-event, aftermath, status, forecast, readiness, route, event, save, scenario, or gameplay policy changes;
 - no persistent cache, async work, content, balance, AI, Native RMG, save/schema, or package identity changes;
 - no packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+## In-Session Stored Resume Recap Context Reuse
+
+id: `performance-in-session-stored-resume-recap-context-reuse-10184`
+
+Status: completed.
+
+Selected Phase 6 normal-path performance correction. A real full Overworld refresh spends roughly 80-85 ms building the explicit save surface. Its latest loadable stored summary recap reconstructs one detached session, then independently evaluates scenario progress in both the changed-state and next-decision paths while also deriving the same watch state. The existing invocation-local recap context already materializes those exact progress and watch inputs once.
+
+Implemented outcome: every loadable stored summary recap now normalizes its detached summary session once, opens one invocation-local Overworld/Town read scope, and materializes changed, watch, and next-decision lines from one shared recap context. Empty, invalid, and uninspectable fallbacks remain exact; distinct selected/latest summaries still build independently, while exact storage identity retains the existing alias reuse.
+
+Implementation target:
+- materialize each loadable stored summary recap from one detached summary session, one normalized Overworld/Town read scope, and one invocation-local `_session_save_recap_context`;
+- retain exact empty, invalid, and uninspectable-summary fallbacks, exact recap strings and order, and fresh independent work for distinct selected/latest summaries;
+- preserve storage-identity alias reuse, summary/file recovery, save-surface fields, transaction/cache behavior, session authority, and direct caller freshness with no cross-call cache.
+
+Completion criteria:
+- independent current direct and context-backed stored recap controls remain whole-exact across Overworld, Town, Battle, Outcome, missing, invalid, and distinct selected/latest summaries, with detached/session/save authority unchanged;
+- one real in-session save surface records one context build for each distinct loadable stored summary, preserves all 17 fields, and materially reduces the current roughly 45.7 ms stored-recap bucket and 80-85 ms save-surface lane;
+- the baseline full Overworld refresh improves from the current 168-173 ms band without regressing the already-corrected Objective Header lanes;
+- focused save-surface, overwrite/transaction, Overworld visual/route/input, Town return, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Non-goals:
+- no recap, objective, progress, watch, save, resume, menu, transaction, recovery, cache, slot, routing, UI-copy, gameplay, or save-schema/version policy changes;
+- no persistent cache, async/background work, content, balance, AI, Native RMG, package identity, or summary-alias broadening;
+- no packaged save interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Completion evidence:
+- focused generated-Large and four-context parity is exact for all 17 save-surface fields, one context build for an aliased pair, two for distinct summaries, transactions/recovery, save bytes, cache, session, and UI authority;
+- the identical small Overworld profile reduces stored resume recaps from45.696ms to20.909ms, the whole save surface from79.845ms to55.344ms, and manual phase batches from168-173ms to140-149ms;
+- manual overwrite, briefing and active-return autosave failure, Overworld visual/route/input, Town dispatch, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass; broader packaged interaction and release claims remain unclaimed.
 
 ## Overworld Objective Header Normalization Reuse
 

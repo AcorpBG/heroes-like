@@ -3,6 +3,12 @@ extends Node
 const REPORT_ID := "MANUAL_SAVE_OVERWRITE_REGRESSION"
 const CAPTURE_DIR := "res://.artifacts/manual_save_overwrite_regression"
 const EXCLUSIVE_SNAPSHOT_OBSERVER_PROFILE_KEYS := [
+	"event_dispatch_observation_context_builds",
+	"event_dispatch_observation_context_reuses",
+	"field_readiness_context_builds",
+	"field_readiness_context_materializations",
+	"field_readiness_surface_base_event_calls",
+	"field_readiness_surface_calls",
 	"field_readiness_simple_current_route_fast_path",
 	"field_readiness_simple_route_fast_path",
 	"hero_actions_cache_hits",

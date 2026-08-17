@@ -582,9 +582,10 @@ func build_in_session_save_surface(session: SessionStateStoreScript.SessionData,
 	TownRulesScript.end_read_scope(detached_live_session)
 	OverworldRulesScript.end_normalized_read_scope(detached_live_session)
 	var stored_recap_started := ProfileLogScript.begin_usec()
-	var slot_resume_recap := describe_summary_resume_recap(slot_summary)
+	var stored_recap_profile := {}
+	var slot_resume_recap := _describe_summary_resume_recap_with_context(slot_summary, stored_recap_profile)
 	var stored_recap_alias_reused := _summaries_share_storage_identity(slot_summary, latest_summary)
-	var latest_resume_recap := slot_resume_recap if stored_recap_alias_reused else describe_summary_resume_recap(latest_summary)
+	var latest_resume_recap := slot_resume_recap if stored_recap_alias_reused else _describe_summary_resume_recap_with_context(latest_summary, stored_recap_profile)
 	buckets["stored_resume_recaps"] = ProfileLogScript.elapsed_ms(stored_recap_started)
 	var result := {
 		"selected_slot": selected_slot,
@@ -616,6 +617,8 @@ func build_in_session_save_surface(session: SessionStateStoreScript.SessionData,
 		"detached_normalization_fallback": detached_normalization_fallback,
 		"detached_was_runtime_normalized": detached_was_runtime_normalized,
 		"stored_recap_alias_reused": stored_recap_alias_reused,
+		"stored_recap_context_build_count": int(stored_recap_profile.get("context_build_count", 0)),
+		"stored_recap_context_reuse_count": int(stored_recap_profile.get("context_reuse_count", 0)),
 	}, session)
 	return result
 
@@ -647,8 +650,8 @@ func _build_in_session_save_surface_direct_legacy(
 		"save_handoff_brief": save_handoff_brief,
 		"return_handoff": return_handoff,
 		"current_save_recap": current_save_recap,
-		"slot_resume_recap": describe_summary_resume_recap(slot_summary),
-		"latest_resume_recap": describe_summary_resume_recap(latest_summary),
+		"slot_resume_recap": _describe_summary_resume_recap_direct_legacy(slot_summary),
+		"latest_resume_recap": _describe_summary_resume_recap_direct_legacy(latest_summary),
 		"menu_button_label": _return_to_menu_label(current_target, session),
 		"menu_button_tooltip": _return_to_menu_tooltip(
 			current_target,
@@ -1028,6 +1031,28 @@ func describe_session_save_handoff_brief(
 	return "Save handoff: %s -> %s." % [_slot_label(summary), _resume_target_label(summary)]
 
 func describe_summary_resume_recap(summary: Dictionary) -> String:
+	return _describe_summary_resume_recap_with_context(summary, {})
+
+func _describe_summary_resume_recap_with_context(summary: Dictionary, profile: Dictionary) -> String:
+	if summary.is_empty():
+		return ""
+	if not can_load_summary(summary):
+		return "Saved state: %s" % String(summary.get("status_text", "This save cannot be resumed."))
+	var session := _session_from_payload(_summary_payload(summary))
+	if session == null or session.scenario_id == "":
+		return "Saved state: This save cannot be inspected."
+	OverworldRulesScript.normalize_overworld_state(session)
+	OverworldRulesScript.begin_normalized_read_scope(session)
+	TownRulesScript.begin_read_scope(session)
+	var recap_context := _session_save_recap_context(session, summary)
+	var result := _session_save_resume_recap_from_context(session, summary, recap_context)
+	TownRulesScript.end_read_scope(session)
+	OverworldRulesScript.end_normalized_read_scope(session)
+	profile["context_build_count"] = int(profile.get("context_build_count", 0)) + 1
+	profile["context_reuse_count"] = int(profile.get("context_reuse_count", 0)) + 3
+	return result
+
+func _describe_summary_resume_recap_direct_legacy(summary: Dictionary) -> String:
 	if summary.is_empty():
 		return ""
 	if not can_load_summary(summary):
