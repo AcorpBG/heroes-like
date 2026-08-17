@@ -3370,6 +3370,10 @@ func _draw_footer_line(field_rect: Rect2) -> void:
 	var footer_rect := Rect2(field_rect.position + Vector2(10.0, field_rect.end.y - 28.0), Vector2(footer_width, 22.0))
 	draw_rect(footer_rect, Color(0.08, 0.10, 0.12, 0.82), true)
 	draw_rect(footer_rect, FRAME_COLOR, false, 1.2)
+	var fit := _footer_summary_fit(_footer_summary_text(), footer_width)
+	_draw_text(String(fit.get("visible_text", "")), footer_rect.position + Vector2(9.0, 15.0), SUBTEXT_COLOR, 11)
+
+func _footer_summary_text() -> String:
 	var summary := "%s | R%d/%d | %s | %s" % [
 		String(_battle.get("encounter_name", "Battle")),
 		int(_battle.get("round", 1)),
@@ -3386,7 +3390,72 @@ func _draw_footer_line(field_rect: Rect2) -> void:
 	var cursor_state := _controller_cursor_state_label()
 	if cursor_state != "":
 		summary = "%s | %s" % [summary, cursor_state]
-	_draw_text(summary.left(84), footer_rect.position + Vector2(9.0, 15.0), SUBTEXT_COLOR, 11)
+	return summary
+
+func _footer_summary_fit(summary: String, footer_width: float) -> Dictionary:
+	var full_text := summary.strip_edges()
+	var max_text_width := maxf(0.0, footer_width - 18.0)
+	var font = get_theme_default_font()
+	if full_text == "" or font == null or max_text_width <= 0.0:
+		return {
+			"full_text": full_text,
+			"visible_text": "",
+			"visible_width": 0.0,
+			"max_text_width": max_text_width,
+			"fits": full_text == "",
+			"truncated": full_text != "",
+		}
+	var full_width := font.get_string_size(full_text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 11).x
+	if full_width <= max_text_width:
+		return {
+			"full_text": full_text,
+			"visible_text": full_text,
+			"visible_width": full_width,
+			"max_text_width": max_text_width,
+			"fits": true,
+			"truncated": false,
+		}
+	var candidate := full_text
+	while candidate != "":
+		var boundary := candidate.rfind(" ")
+		candidate = candidate.left(boundary).strip_edges() if boundary > 0 else ""
+		candidate = candidate.trim_suffix("|").strip_edges()
+		var visible_text := "%s…" % candidate if candidate != "" else "…"
+		var visible_width := font.get_string_size(visible_text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 11).x
+		if visible_width <= max_text_width:
+			return {
+				"full_text": full_text,
+				"visible_text": visible_text,
+				"visible_width": visible_width,
+				"max_text_width": max_text_width,
+				"fits": true,
+				"truncated": true,
+			}
+	return {
+		"full_text": full_text,
+		"visible_text": "",
+		"visible_width": 0.0,
+		"max_text_width": max_text_width,
+		"fits": false,
+		"truncated": true,
+	}
+
+func validation_footer_summary() -> Dictionary:
+	var field_rect := _current_field_rect()
+	var footer_width: float = minf(field_rect.size.x - 20.0, 520.0)
+	var footer_rect := Rect2(field_rect.position + Vector2(10.0, field_rect.end.y - 28.0), Vector2(footer_width, 22.0))
+	var board_rect := Rect2(Vector2.ZERO, size)
+	var summary := _footer_summary_fit(_footer_summary_text(), footer_width)
+	summary["footer_rect"] = footer_rect
+	summary["field_rect"] = field_rect
+	summary["board_rect"] = board_rect
+	summary["footer_contained"] = board_rect.encloses(footer_rect)
+	return summary
+
+func validation_footer_fit_summary(text: String) -> Dictionary:
+	var field_rect := _current_field_rect()
+	var footer_width: float = minf(field_rect.size.x - 20.0, 520.0)
+	return _footer_summary_fit(text, footer_width)
 
 func _controller_cursor_state_label() -> String:
 	if not has_focus() or not _cell_in_bounds(_controller_cursor_cell):

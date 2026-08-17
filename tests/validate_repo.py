@@ -15396,6 +15396,11 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
         "_turn_strip_entry_tooltip",
         "_turn_strip_chip_label",
         "validation_turn_strip_identity_surface",
+        "_draw_footer_line",
+        "_footer_summary_text",
+        "_footer_summary_fit",
+        "validation_footer_summary",
+        "validation_footer_fit_summary",
         "_gui_input",
         "_handle_controller_navigation_input",
         "handle_root_controller_navigation_cancel",
@@ -15500,6 +15505,114 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
     for forbidden_token in ("Input.", "emit_signal", "BattleRules", "advance_turn", "queue_redraw", "sort", "erase"):
         ensure(forbidden_token not in validation_surface_body, errors, f"Battle initiative validation must remain detached/read-only and avoid {forbidden_token}")
 
+    draw_footer_body = bodies.get("_draw_footer_line", "")
+    footer_summary_body = bodies.get("_footer_summary_text", "")
+    footer_fit_body = bodies.get("_footer_summary_fit", "")
+    footer_validation_body = bodies.get("validation_footer_summary", "")
+    footer_control_body = bodies.get("validation_footer_fit_summary", "")
+    ensure(draw_footer_body.count("_footer_summary_fit(_footer_summary_text(), footer_width)") == 1 and 'String(fit.get("visible_text", ""))' in draw_footer_body, errors, "Battle footer drawing must fit the exact full summary once and paint only its returned visible text")
+    ensure("summary.left(84)" not in board_text, errors, "Battle footer must not retain the unsafe fixed-character cut")
+    footer_summary_order = tuple(footer_summary_body.find(token) for token in (
+        'String(_battle.get("encounter_name", "Battle"))',
+        'int(_battle.get("round", 1))',
+        'int(_battle.get("max_rounds", 12))',
+        'String(_battle.get("terrain", "plains")).capitalize()',
+        '_distance_label(int(_battle.get("distance", 1)))',
+        '_target_state_label()',
+        '_movement_state_label()',
+        '_controller_cursor_state_label()',
+        "return summary",
+    ))
+    ensure(all(index >= 0 for index in footer_summary_order) and list(footer_summary_order) == sorted(footer_summary_order), errors, "Battle footer must retain the exact encounter/round/terrain/distance/target/movement/cursor full-summary order")
+    for required_token in (
+        "var max_text_width := maxf(0.0, footer_width - 18.0)",
+        "get_theme_default_font()",
+        "font.get_string_size(full_text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 11).x",
+        'var boundary := candidate.rfind(" ")',
+        'candidate = candidate.trim_suffix("|").strip_edges()',
+        'var visible_text := "%s…" % candidate if candidate != "" else "…"',
+        "font.get_string_size(visible_text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 11).x",
+        '"full_text": full_text',
+        '"visible_text": visible_text',
+        '"max_text_width": max_text_width',
+        '"fits": true',
+        '"truncated": true',
+    ):
+        ensure(required_token in footer_fit_body, errors, f"Battle footer pixel fitter is missing exact token: {required_token}")
+    for forbidden_token in ("left(84)", "substr(0, 84)", "get_string_size(candidate", "sort(", "erase(", "Input.", "BattleRules"):
+        ensure(forbidden_token not in footer_fit_body, errors, f"Battle footer pixel fitter must stay word/pixel-only and avoid {forbidden_token}")
+    footer_validation_order = tuple(footer_validation_body.find(token) for token in (
+        "_current_field_rect()",
+        "minf(field_rect.size.x - 20.0, 520.0)",
+        "var board_rect := Rect2(Vector2.ZERO, size)",
+        "_footer_summary_fit(_footer_summary_text(), footer_width)",
+        'summary["footer_rect"] = footer_rect',
+        'summary["field_rect"] = field_rect',
+        'summary["board_rect"] = board_rect',
+        'summary["footer_contained"] = board_rect.encloses(footer_rect)',
+        "return summary",
+    ))
+    ensure(all(index >= 0 for index in footer_validation_order) and list(footer_validation_order) == sorted(footer_validation_order), errors, "Battle footer validation must report the actual shared fit and exact current footer containment")
+    ensure(footer_control_body.count("_footer_summary_fit(text, footer_width)") == 1 and "_footer_summary_text" not in footer_control_body, errors, "Battle footer short control must use the shared fitter with caller-owned text exactly once")
+    for body, owner in ((footer_validation_body, "live validation"), (footer_control_body, "short control")):
+        for forbidden_token in ("Input.", "emit_signal", "queue_redraw", "sort(", "erase(", "BattleRules"):
+            ensure(forbidden_token not in body, errors, f"Battle footer {owner} must remain observation-only and avoid {forbidden_token}")
+
+    footer_focused_match = re.search(
+        r"func _validate_board_footer_pixel_ellipsis\(board: Control, session, width: int, expect_cursor: bool\) -> bool:\n(?P<body>.*?)(?=\nfunc )",
+        smoke_text,
+        re.S,
+    )
+    footer_distance_match = re.search(
+        r"func _footer_distance_label_for_test\(distance: int\) -> String:\n(?P<body>.*?)(?=\nfunc )",
+        smoke_text,
+        re.S,
+    )
+    ensure(footer_focused_match is not None and footer_distance_match is not None, errors, "Battle controller smoke must own independent footer pixel-fit and distance controls")
+    if footer_focused_match is not None:
+        footer_focused_body = footer_focused_match.group("body")
+        focused_footer_order = tuple(footer_focused_body.find(token) for token in (
+            "_battle_background_authority(session)",
+            'board.call("validation_hex_layout_summary")',
+            'board.call("validation_footer_summary")',
+            'String(session.battle.get("encounter_name", "Battle"))',
+            "_footer_distance_label_for_test",
+            'String(board_summary.get("selected_target_footer_label", ""))',
+            'String(board_summary.get("active_movement_board_click_action", ""))',
+            'if bool(board_summary.get("controller_board_focused", false)):',
+            '_stack_by_battle_id(session.battle, cursor_battle_id)',
+            'visible_text.trim_suffix("…")',
+            'next_character != " "',
+            'board.call("validation_footer_fit_summary", short_text)',
+            "_battle_background_authority(session) != authority_before",
+        ))
+        ensure(all(index >= 0 for index in focused_footer_order) and list(focused_footer_order) == sorted(focused_footer_order), errors, "Focused Battle footer proof must independently reconstruct full state, prove word/pixel fit, short control, then whole authority")
+        for required_token in (
+            'target_state == ""',
+            'movement_state == ""',
+            '(cursor_state != "") != expect_cursor',
+            'not bool(footer.get("footer_contained", false))',
+            'not bool(footer.get("fits", false))',
+            'not bool(footer.get("truncated", false))',
+            'not visible_text.ends_with("…")',
+            'visible_text.ends_with("choos")',
+            "not expected_full.begins_with(visible_prefix)",
+            'float(footer.get("visible_width", INF)) > float(footer.get("max_text_width", 0.0)) + 0.01',
+            'elif bool(footer.get("truncated", true)) or visible_text != expected_full or visible_text.ends_with("…"):',
+            'var short_text := "Battle | R1/1 | Grass | Engaged"',
+            'String(short_control.get("visible_text", "")) != short_text',
+            'bool(short_control.get("truncated", true))',
+        ):
+            ensure(required_token in footer_focused_body, errors, f"Focused Battle footer proof is missing exact token: {required_token}")
+        for forbidden_token in ('board.call("_footer_summary', 'board.call("_draw', "Input.", "queue_redraw", "sort(", "erase(", "session.battle["):
+            ensure(forbidden_token not in footer_focused_body, errors, f"Focused Battle footer proof must remain public, independent, and read-only; forbidden {forbidden_token}")
+    if footer_distance_match is not None:
+        footer_distance_body = footer_distance_match.group("body")
+        for required_token in ('match clampi(distance, 0, 2):', 'return "Engaged"', 'return "Closing"', 'return "Long lane"'):
+            ensure(required_token in footer_distance_body, errors, f"Independent Battle footer distance control is missing exact token: {required_token}")
+        for forbidden_token in ("board.", "_distance_label", "BattleRules", "sort(", "erase("):
+            ensure(forbidden_token not in footer_distance_body, errors, f"Independent Battle footer distance control must avoid circular dependency: {forbidden_token}")
+
     focused_match = re.search(
         r"func _validate_turn_strip_identity_surface\(board: Control, session, width: int\) -> bool:\n(?P<body>.*?)(?=\nfunc )",
         smoke_text,
@@ -15535,8 +15648,14 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
     ensure(width_case_match is not None, errors, "Could not isolate focused BattleBoard two-width semantic owner")
     if width_case_match is not None:
         width_body = width_case_match.group("body")
+        timer_call = width_body.find("if semantic_timer == null")
+        unfocused_footer_call = width_body.find("if not _validate_board_footer_pixel_ellipsis(board, session, width, false):")
         strip_call = width_body.find("if not _validate_turn_strip_identity_surface(board, session, width):")
         focus_call = width_body.find("board.grab_focus()")
+        focused_footer_call = width_body.find("if not _validate_board_footer_pixel_ellipsis(board, session, width, true):", focus_call)
+        live_empty_gate = width_body.find('if live.text != "":', focused_footer_call)
+        ensure(0 <= timer_call < unfocused_footer_call < strip_call < focus_call < focused_footer_call < live_empty_gate, errors, "Battle footer proof must run on the fitting unfocused and long focused live rows at each existing 1280/1920 width")
+        ensure(width_body.count("_validate_board_footer_pixel_ellipsis(board, session, width, false)") == 1 and width_body.count("_validate_board_footer_pixel_ellipsis(board, session, width, true)") == 1, errors, "Battle footer focused owner must execute exactly one fitting and one ellipsized live row at each width")
         ensure(0 <= strip_call < focus_call and width_body.count("_validate_turn_strip_identity_surface(board, session, width)") == 1, errors, "Battle initiative-strip proof must run exactly once at each existing 1280/1920 width before controller focus mutation")
 
     input_body = bodies.get("_handle_controller_navigation_input", "")

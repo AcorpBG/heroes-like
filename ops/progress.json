@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Town scenic caption now identifies its exact existing study and market action counts as Study options and Market options, with unchanged Town actions, layout, focus, and session authority.",
+  "currentNotes": "The Battle board footer now keeps its exact full tactical summary and uses theme-font pixel fit with word-boundary ellipsis only when the live focused cursor row exceeds the compact footer.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-town-scenic-action-count-label-clarity-10184",
-  "currentSliceId": "ux-town-scenic-action-count-label-clarity-10184",
-  "currentSliceNotes": "Completed with exact 1280x720 and 1920x1080 ordinary/captured live proof, unchanged action/session authority, compatibility, static/editor, and bounded Linux/Windows packaging evidence.",
+  "currentSlice": "ux-battle-board-footer-pixel-ellipsis-10184",
+  "currentSliceId": "ux-battle-board-footer-pixel-ellipsis-10184",
+  "currentSliceNotes": "Completed with exact 1280x720 and 1920x1080 fitting and ellipsized live rows, unchanged Board authority, compatibility, static/editor, and bounded Linux/Windows packaging evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Town Scenic Action-Count Label Clarity",
-  "currentSliceUpdatedAt": "2026-08-17T21:08:58Z",
+  "currentSliceTitle": "Battle Board Footer Pixel Ellipsis",
+  "currentSliceUpdatedAt": "2026-08-17T21:34:58Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,93 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select only a tracker-approved source-backed release-readiness implementation slice; preserve completed Town action-count clarity, empty-slot/save authority, and Town/Overworld control-label behavior.",
-  "notes": "The Town scenic action-count clarity slice is completed with exact ordinary/captured and two-width live behavior, unchanged Town authority, compatibility, static/editor, and bounded Linux/Windows export/startup evidence. Packaged interaction, hardware/accessibility certification, signing/publication, whole-game validation, and release readiness remain outside this slice.",
+  "nextActionGuardrailNote": "Select only a tracker-approved source-backed release-readiness implementation slice; preserve the completed Battle footer pixel fit, full tactical summary, Board input, and battle/session authority.",
+  "notes": "The Battle footer pixel-ellipsis slice is completed with exact two-width live behavior, unchanged Board authority, compatibility, static/editor, and bounded Linux/Windows export/startup evidence. Packaged Battle interaction, hardware/accessibility certification, signing/publication, whole-game validation, and release readiness remain outside this slice.",
   "plannedSlices": [
+    {
+      "id": "ux-battle-board-footer-pixel-ellipsis-10184",
+      "title": "Battle Board Footer Pixel Ellipsis",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Make the compact Battle board footer truncate honestly at its real themed pixel width instead of ending mid-word.",
+      "implementationTargets": [
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_controller_board_navigation_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/battle_controller_board_navigation_smoke.tscn",
+        "tests/town_battle_visual_smoke.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "Exact 1280x720 and 1920x1080 live Board rows preserve the whole tactical footer summary while the rendered long form fits the themed inner pixel width and ends with an ellipsis instead of a partial word",
+        "A short footer control remains byte-exact without ellipsis and target, movement, cursor, public Board, focus, battle, and session authority remain unchanged",
+        "Focused controller-board, Town/Battle visual, active-focus, accessibility, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "battle rules, AI, target-movement-cursor semantics, encounter copy, full-summary order/value, footer geometry, board layout, input, focus, save-schema, content, balance, or Native RMG changes",
+        "new panel, tooltip, label node, scrolling, font, UI scale, audio, VFX, art, or broader Battle copy redesign",
+        "packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing, publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "280eb1676bc3cc458ee18dcba245b8fd4b62e3ed",
+        "sourceCut": "summary.left(84)",
+        "observedVisibleEnding": "Move: choos",
+        "expectedVisibleEnding": "ellipsis",
+        "observedArtifact": "/tmp/heroes-town-overview-routed-1280.6vgtla/20260817T194950Z/battle_entered.png",
+        "observedDefect": "battle_board_footer_mid_word_character_cut"
+      },
+      "createdAt": "2026-08-17T21:14:33Z",
+      "startedAt": "2026-08-17T21:14:33Z",
+      "updatedAt": "2026-08-17T21:34:58Z",
+      "completedAt": "2026-08-17T21:34:58Z",
+      "completionEvidence": {
+        "focusedBoardArtifact": "/tmp/heroes-battle-footer-focused-final.coisV4",
+        "focusedBoardNaturalReturnCode": 0,
+        "focusedBoardDurationSeconds": 45,
+        "focusedBoardExactWidths": [
+          1280,
+          1920
+        ],
+        "fittingFullSummaryExact": true,
+        "focusedCursorWordBoundaryEllipsisExact": true,
+        "shortControlByteExact": true,
+        "boardSessionAuthorityExact": true,
+        "compatibilityArtifact": "/tmp/heroes-battle-footer-compat.lzsw6T",
+        "townBattleVisualNaturalReturnCode": 0,
+        "activePlayKeyboardFocusNaturalReturnCode": 0,
+        "accessibilitySemanticsNaturalReturnCode": 0,
+        "coreSystemsNaturalReturnCode": 0,
+        "staticEditorArtifact": "/tmp/heroes-battle-footer-final-audit.pX7jfv",
+        "repositoryValidationPassed": true,
+        "pythonCompilationPassed": true,
+        "diffCheckPassed": true,
+        "exactAndGenericEditorParsePassed": true,
+        "linuxPackagingArtifact": "/tmp/heroes-battle-footer-linux-package.zU6AK4",
+        "linuxExportAndHeadlessStartupOk": true,
+        "windowsPackagingArtifact": "/tmp/heroes-battle-footer-windows-package.yheaYU",
+        "windowsExportAndFreshWineStartupOk": true,
+        "packagedBattleInteractionClaimed": false,
+        "controllerHardwareClaimed": false,
+        "atSpiOrUiaCertificationClaimed": false,
+        "nativeHardwareClaimed": false,
+        "signingOrPublicationClaimed": false,
+        "wholeGameOrReleaseReadyClaimed": false
+      },
+      "notes": "Completed from direct routed mid-word evidence with one rendering-only production change. The exact full summary and footer geometry remain unchanged; live fitting rows render whole and focused cursor rows truncate only at a measured word boundary.",
+      "remainingWork": "Select the next tracker-approved source-backed release-readiness implementation slice.",
+      "blockedReason": null
+    },
     {
       "id": "ux-town-scenic-action-count-label-clarity-10184",
       "title": "Town Scenic Action-Count Label Clarity",
