@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `performance-overworld-drawer-objective-recap-reuse-10184`. The closed Frontier handoff now reuses the exact objective progress recap already built by the same full refresh instead of constructing the full Objective Board only to extract its `Next step:` line. Focused parity covers all 24 authored scenarios plus day-state changes, direct fallback, open Frontier, session/UI authority, and 173-to-104 ms handoff work. Authored Ninefold first-ready improves 4425 to4211ms, repeat refresh2288 to2008ms, tooltip/drawer558 to330ms, and full refresh2288 to2009ms. Full Map Editor, Overworld visual/input, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged interaction and broader release claims remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `performance-overworld-drawer-objective-recap-reuse-10184`
 - Completed implementation slice: `performance-overworld-objective-stakes-surface-bundle-reuse-10184`. One full Overworld status refresh now builds the exact objective-stakes surface once and materializes the unchanged ObjectiveBrief and Objective Stakes tooltip from it, while direct/default callers remain fresh. Focused whole-output/session/UI authority is exact with one build and two materializations; six legacy pairs take 734 ms versus 487 ms shared. Authored Ninefold first-ready improves 4578 to 4425 ms, repeat refresh 2349 to 2288 ms, and the header/objective/status/resources lane 553 to 497 ms. The full edited Map Editor round trip, Overworld visual/input, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Drawer Objective Board, frontier threats, packaged interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `performance-overworld-objective-stakes-surface-bundle-reuse-10184`
 - Completed implementation slice: `performance-overworld-full-refresh-event-readiness-context-reuse-10184`. One full Overworld status refresh now builds one detached event-independent Field Readiness context and materializes the exact header and event-backed variants from it while direct/default callers remain fresh. Focused whole-surface/session authority is exact with one build, two reuses/materializations, and a 352-to-306 ms same-process legacy control. Authored Ninefold event/action context improves from 203 to 112 ms and repeat refresh from 2449 to 2349 ms; first-ready remains safely within 1.1 percent noise at 4578 ms. The full edited-working-copy round trip, Overworld visual/interaction, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -6382,6 +6384,28 @@ Completion criteria:
 
 Non-goals:
 - no objective/progress/campaign/defeat/victory policy, scenario recap, UI copy, drawer Objective Board, frontier-threat, event, action, route, forecast, risk, or refresh invalidation change;
+- no persistent cross-refresh/day/session cache, async/background work, save/schema, gameplay/content/AI/balance/Native RMG/package identity change;
+- no packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+## Selected Slice: Overworld Drawer Objective Recap Reuse
+
+id: `performance-overworld-drawer-objective-recap-reuse-10184`
+
+Status: completed.
+
+Implementation boundary:
+- retain the exact objective progress recap already materialized by the full-refresh objective header bundle and pass it invocation-locally into the closed Frontier drawer-handoff cue;
+- extract the exact existing `Next step:` line from that recap instead of building the full Objective Board solely for the handoff; preserve the full Objective Board for open Frontier and every direct/default caller;
+- keep the recap detached and local to one refresh, with fresh fallback whenever no preloaded header bundle is supplied.
+
+Completion criteria:
+- all 24 authored scenarios prove the legacy full-board `Next step:` line is exact to the preloaded recap line, including session authority and rebuild after state/day changes;
+- one full closed-Frontier refresh records one objective recap build and one drawer reuse, removes the full Objective Board call from that path, and preserves exact objective, threat, readiness, drawer, event, action, save, focus, session, and whole UI authority;
+- a same-process direct-board versus preloaded-recap control proves material removed work against the current Ninefold 524ms board/361ms recap attribution, while authored first-ready and repeat-refresh timing improve or remain safely non-regressed;
+- focused refresh-cache, open-Frontier/direct fallback, Map Editor Play Copy, Overworld visual/input, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass.
+
+Non-goals:
+- no Objective Board, objective/progress/campaign/victory/defeat/recap text, frontier-threat, readiness, event, action, route, forecast, risk, or refresh invalidation policy change;
 - no persistent cross-refresh/day/session cache, async/background work, save/schema, gameplay/content/AI/balance/Native RMG/package identity change;
 - no packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
 

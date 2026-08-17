@@ -3622,6 +3622,7 @@ func _refresh_status_surfaces(generated_surface_start: int) -> bool:
 	_profile_add("objective_stakes_surface_builds", 1)
 	_profile_add("objective_stakes_surface_reuses", 2)
 	_profile_add("objective_stakes_surface_materializations", 2)
+	_profile_add("objective_progress_recap_builds", 1)
 	var objective_brief := String(objective_header_surfaces.get("objective_brief", "Objectives unavailable"))
 	var objective_stakes := String(objective_header_surfaces.get("objective_stakes", "Objective Stakes\nNo authored scenario objectives are available."))
 	var end_turn_forecast_surface := OverworldRules.describe_end_turn_forecast_surfaces(_session)
@@ -3715,7 +3716,7 @@ func _refresh_status_surfaces(generated_surface_start: int) -> bool:
 	_briefing_title_label.text = _briefing_title_text
 	_set_rail_label(_briefing_label, _command_briefing_text, 2, RAIL_LINE_CHARS, false)
 	_briefing_panel.visible = _command_briefing_text != ""
-	_refresh_tooltip_context_drawer_surfaces(readiness_surface, end_turn_forecast_surface)
+	_refresh_tooltip_context_drawer_surfaces(readiness_surface, end_turn_forecast_surface, objective_header_surfaces)
 	return false
 
 func _refresh_map_cue_surface() -> void:
@@ -3773,12 +3774,16 @@ func _refresh_context_tile_surface() -> void:
 	_set_rail_text(_context_label, context_text, _rail_tile_text(), 2)
 	_debug_refresh_profile_end("refresh_context_tile_text", context_tile_profile_start)
 
-func _refresh_tooltip_context_drawer_surfaces(field_readiness: Dictionary = {}, end_turn_forecast_surface: Dictionary = {}) -> void:
+func _refresh_tooltip_context_drawer_surfaces(
+	field_readiness: Dictionary = {},
+	end_turn_forecast_surface: Dictionary = {},
+	objective_header_surfaces: Dictionary = {}
+) -> void:
 	var tooltip_context_profile_start := _debug_refresh_profile_begin("refresh_tooltip_context_drawers")
 	_update_map_tooltip()
 	if not field_readiness.is_empty():
 		_profile_add("drawer_handoff_preloaded_readiness_reuses", 1)
-	_sync_context_drawers(field_readiness, end_turn_forecast_surface)
+	_sync_context_drawers(field_readiness, end_turn_forecast_surface, objective_header_surfaces)
 	_debug_refresh_profile_end("refresh_tooltip_context_drawers", tooltip_context_profile_start)
 
 func _refresh_generated_opening_surfaces() -> void:
@@ -7558,8 +7563,12 @@ func _end_turn_confirmation_surface(field_readiness: Dictionary = {}) -> Diction
 		"end_turn_forecast": forecast,
 	}
 
-func _refresh_drawer_handoff_cues(field_readiness: Dictionary = {}, end_turn_forecast_surface: Dictionary = {}) -> void:
-	var surfaces := _drawer_handoff_surfaces(field_readiness, end_turn_forecast_surface)
+func _refresh_drawer_handoff_cues(
+	field_readiness: Dictionary = {},
+	end_turn_forecast_surface: Dictionary = {},
+	objective_header_surfaces: Dictionary = {}
+) -> void:
+	var surfaces := _drawer_handoff_surfaces(field_readiness, end_turn_forecast_surface, objective_header_surfaces)
 	var command_surface: Dictionary = surfaces.get("command", {}) if surfaces.get("command", {}) is Dictionary else {}
 	var frontier_surface: Dictionary = surfaces.get("frontier", {}) if surfaces.get("frontier", {}) is Dictionary else {}
 	_open_command_button.text = String(command_surface.get("button_text", "Command"))
@@ -7569,7 +7578,11 @@ func _refresh_drawer_handoff_cues(field_readiness: Dictionary = {}, end_turn_for
 	_close_command_button.tooltip_text = "Close Command drawer and return to the selected tile context."
 	_close_frontier_button.tooltip_text = "Close Frontier drawer and return to the selected tile context."
 
-func _drawer_handoff_surfaces(field_readiness: Dictionary = {}, end_turn_forecast_surface: Dictionary = {}) -> Dictionary:
+func _drawer_handoff_surfaces(
+	field_readiness: Dictionary = {},
+	end_turn_forecast_surface: Dictionary = {},
+	objective_header_surfaces: Dictionary = {}
+) -> Dictionary:
 	var readiness := field_readiness
 	if readiness.is_empty():
 		readiness = _field_readiness_surface()
@@ -7598,7 +7611,12 @@ func _drawer_handoff_surfaces(field_readiness: Dictionary = {}, end_turn_forecas
 	else:
 		_profile_add("end_turn_forecast_bundle_reuses", 1)
 		forecast = String(end_turn_forecast_surface.get("forecast_compact", ""))
-	var objective_line := _line_with_prefix(_cached_objective_text(), "Next step:")
+	var objective_line := ""
+	if objective_header_surfaces.has("progress_recap"):
+		_profile_add("drawer_handoff_preloaded_objective_recap_reuses", 1)
+		objective_line = _line_with_prefix(String(objective_header_surfaces.get("progress_recap", "")), "Next step:")
+	else:
+		objective_line = _line_with_prefix(_cached_objective_text(), "Next step:")
 	if objective_line == "":
 		objective_line = String(readiness.get("progress_line", "")).strip_edges()
 	var threat_line := _compact_rail_text(_cached_frontier_threats(), 1, 38, true)
@@ -7854,7 +7872,11 @@ func _remembered_selected_tile_text(terrain: String) -> String:
 		]
 	return ""
 
-func _sync_context_drawers(field_readiness: Dictionary = {}, end_turn_forecast_surface: Dictionary = {}) -> void:
+func _sync_context_drawers(
+	field_readiness: Dictionary = {},
+	end_turn_forecast_surface: Dictionary = {},
+	objective_header_surfaces: Dictionary = {}
+) -> void:
 	var show_command := _active_drawer == "command"
 	var show_frontier := _active_drawer == "frontier"
 	var show_tile := not show_command and not show_frontier and _should_show_tile_context()
@@ -7867,7 +7889,7 @@ func _sync_context_drawers(field_readiness: Dictionary = {}, end_turn_forecast_s
 	_commitment_panel.visible = not compact_layout and not show_command and not show_frontier
 	_open_command_button.button_pressed = show_command
 	_open_frontier_button.button_pressed = show_frontier
-	_refresh_drawer_handoff_cues(field_readiness, end_turn_forecast_surface)
+	_refresh_drawer_handoff_cues(field_readiness, end_turn_forecast_surface, objective_header_surfaces)
 
 func _set_active_drawer(drawer: String) -> void:
 	if drawer != "":

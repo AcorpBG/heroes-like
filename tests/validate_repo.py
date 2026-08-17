@@ -16745,32 +16745,32 @@ def validate_overworld_full_refresh_drawer_readiness_reuse(errors: list[str]) ->
         status_body = status_match.group(1)
         ensure("var readiness_context := _field_readiness_context(end_turn_forecast_surface)" in status_body, errors, "Overworld full status refresh must derive one current readiness context")
         ensure("var readiness_surface := _field_readiness_surface({}, end_turn_forecast_surface, readiness_context)" in status_body, errors, "Overworld full status refresh must materialize one current readiness payload")
-        ensure("_refresh_tooltip_context_drawer_surfaces(readiness_surface, end_turn_forecast_surface)" in status_body, errors, "Overworld full status refresh must pass current readiness into drawer synchronization")
-        ensure(status_body.index("var readiness_surface := _field_readiness_surface({}, end_turn_forecast_surface, readiness_context)") < status_body.index("_refresh_tooltip_context_drawer_surfaces(readiness_surface, end_turn_forecast_surface)"), errors, "Readiness must be derived before drawer synchronization reuses it")
+        ensure("_refresh_tooltip_context_drawer_surfaces(readiness_surface, end_turn_forecast_surface, objective_header_surfaces)" in status_body, errors, "Overworld full status refresh must pass current readiness into drawer synchronization")
+        ensure(status_body.index("var readiness_surface := _field_readiness_surface({}, end_turn_forecast_surface, readiness_context)") < status_body.index("_refresh_tooltip_context_drawer_surfaces(readiness_surface, end_turn_forecast_surface, objective_header_surfaces)"), errors, "Readiness must be derived before drawer synchronization reuses it")
 
     tooltip_match = re.search(
-        r"func _refresh_tooltip_context_drawer_surfaces\(field_readiness: Dictionary = \{\}, end_turn_forecast_surface: Dictionary = \{\}\) -> void:(.*?)(?=\n\nfunc _refresh_generated_opening_surfaces)",
+        r"func _refresh_tooltip_context_drawer_surfaces\((.*?)\n\) -> void:(.*?)(?=\n\nfunc _refresh_generated_opening_surfaces)",
         shell_text,
         flags=re.DOTALL,
     )
     ensure(tooltip_match is not None, errors, "Overworld tooltip/drawer synchronization could not be isolated")
     if tooltip_match is not None:
-        tooltip_body = tooltip_match.group(1)
+        tooltip_body = tooltip_match.group(2)
         for token in (
             'if not field_readiness.is_empty():',
             '_profile_add("drawer_handoff_preloaded_readiness_reuses", 1)',
-            '_sync_context_drawers(field_readiness, end_turn_forecast_surface)',
+            '_sync_context_drawers(field_readiness, end_turn_forecast_surface, objective_header_surfaces)',
         ):
             ensure(token in tooltip_body, errors, f"Overworld tooltip/drawer readiness reuse is missing token: {token}")
 
     drawer_match = re.search(
-        r"func _sync_context_drawers\(field_readiness: Dictionary = \{\}, end_turn_forecast_surface: Dictionary = \{\}\) -> void:(.*?)(?=\n\nfunc _set_active_drawer)",
+        r"func _sync_context_drawers\((.*?)\n\) -> void:(.*?)(?=\n\nfunc _set_active_drawer)",
         shell_text,
         flags=re.DOTALL,
     )
     ensure(drawer_match is not None, errors, "Overworld context-drawer synchronization could not be isolated")
     if drawer_match is not None:
-        ensure("_refresh_drawer_handoff_cues(field_readiness, end_turn_forecast_surface)" in drawer_match.group(1), errors, "Context drawers must forward the current readiness payload unchanged")
+        ensure("_refresh_drawer_handoff_cues(field_readiness, end_turn_forecast_surface, objective_header_surfaces)" in drawer_match.group(2), errors, "Context drawers must forward the current readiness payload unchanged")
 
     readiness_match = re.search(
         r"func _field_readiness_surface\((.*?)\n\) -> Dictionary:(.*?)(?=\n\nfunc _field_readiness_simple_route_surface)",
@@ -16897,7 +16897,7 @@ def validate_overworld_full_refresh_event_readiness_context_reuse(errors: list[s
             "var readiness_surface := _field_readiness_surface({}, end_turn_forecast_surface, readiness_context)",
             "var event_surface := _event_feed_surface(end_turn_forecast_surface, readiness_context)",
             "var action_context_surface := _action_context_surface(event_surface, readiness_surface)",
-            "_refresh_tooltip_context_drawer_surfaces(readiness_surface, end_turn_forecast_surface)",
+            "_refresh_tooltip_context_drawer_surfaces(readiness_surface, end_turn_forecast_surface, objective_header_surfaces)",
         )
         ensure(all(token in status_body for token in ordered_tokens), errors, "Full status refresh is missing ordered readiness-context reuse")
         if all(token in status_body for token in ordered_tokens):
@@ -16960,8 +16960,11 @@ def validate_overworld_objective_stakes_surface_bundle_reuse(errors: list[str]) 
         combined_body = combined_match.group(1)
         ordered_tokens = (
             "var surface := _objective_stakes_surface(session)",
+            'var progress_recap := ""',
+            'progress_recap = _scenario_rules().describe_session_progress_recap(session, false)',
             '"objective_brief": _describe_objective_brief_from_surface(surface)',
-            '"objective_stakes": _describe_objective_stakes_board_from_surface(session, surface)',
+            '"objective_stakes": _describe_objective_stakes_board_from_surface(session, surface, {"progress_recap": progress_recap})',
+            '"progress_recap": progress_recap',
         )
         ensure(all(token in combined_body for token in ordered_tokens), errors, "Combined objective header surface is missing exact shared materialization")
         if all(token in combined_body for token in ordered_tokens):
@@ -16990,7 +16993,7 @@ def validate_overworld_objective_stakes_surface_bundle_reuse(errors: list[str]) 
         flags=re.DOTALL,
     )
     stakes_materializer_match = re.search(
-        r"static func _describe_objective_stakes_board_from_surface\(session: SessionStateStoreScript\.SessionData, surface: Dictionary\) -> String:(.*?)(?=\n\nstatic func _week_of_day)",
+        r"static func _describe_objective_stakes_board_from_surface\((.*?)\n\) -> String:(.*?)(?=\n\nstatic func _week_of_day)",
         rules_text,
         flags=re.DOTALL,
     )
@@ -16999,8 +17002,12 @@ def validate_overworld_objective_stakes_surface_bundle_reuse(errors: list[str]) 
     if brief_materializer_match is not None:
         ensure("_objective_stakes_surface(" not in brief_materializer_match.group(1), errors, "ObjectiveBrief materializer must consume only its supplied surface")
     if stakes_materializer_match is not None:
-        ensure("_objective_stakes_surface(" not in stakes_materializer_match.group(1), errors, "Objective Stakes materializer must consume only its supplied surface")
-        ensure("_scenario_rules().describe_session_progress_recap(session, false)" in stakes_materializer_match.group(1), errors, "Objective Stakes must preserve its exact live progress recap")
+        stakes_signature = stakes_materializer_match.group(1)
+        stakes_body = stakes_materializer_match.group(2)
+        ensure("preloaded_progress: Dictionary = {}" in stakes_signature, errors, "Objective Stakes materializer must retain a fresh-default optional progress recap")
+        ensure("_objective_stakes_surface(" not in stakes_body, errors, "Objective Stakes materializer must consume only its supplied surface")
+        for token in ('if preloaded_progress.has("progress_recap"):', 'progress_recap = String(preloaded_progress.get("progress_recap", ""))', 'progress_recap = _scenario_rules().describe_session_progress_recap(session, false)'):
+            ensure(token in stakes_body, errors, f"Objective Stakes must preserve exact preloaded/fresh progress recap behavior: {token}")
 
     shell_text = shell_path.read_text(encoding="utf-8")
     status_match = re.search(
@@ -17016,6 +17023,7 @@ def validate_overworld_objective_stakes_surface_bundle_reuse(errors: list[str]) 
             '_profile_add("objective_stakes_surface_builds", 1)',
             '_profile_add("objective_stakes_surface_reuses", 2)',
             '_profile_add("objective_stakes_surface_materializations", 2)',
+            '_profile_add("objective_progress_recap_builds", 1)',
             'var objective_brief := String(objective_header_surfaces.get("objective_brief", "Objectives unavailable"))',
             'var objective_stakes := String(objective_header_surfaces.get("objective_stakes", "Objective Stakes\\nNo authored scenario objectives are available."))',
         )
@@ -17040,16 +17048,19 @@ def validate_overworld_objective_stakes_surface_bundle_reuse(errors: list[str]) 
         '"objective_brief": OverworldRules.describe_objective_brief(probe)',
         '"objective_stakes": OverworldRules.describe_objective_stakes_board(probe)',
         "var bundled: Dictionary = OverworldRules.describe_objective_header_surfaces(probe)",
-        'bundled.keys() != ["objective_brief", "objective_stakes"]',
+        '"progress_recap": ScenarioRules.describe_session_progress_recap(probe, false)',
+        'bundled.keys() != ["objective_brief", "objective_stakes", "progress_recap"]',
         "probe.to_dict() != authority_before",
         'bundled["objective_brief"] = "mutated detached objective brief"',
         'bundled["objective_stakes"] = "mutated detached objective stakes"',
+        'bundled["progress_recap"] = "mutated detached progress recap"',
         "var raw_surface: Dictionary = OverworldRules._objective_stakes_surface(session)",
         "if raw_surface.is_empty():",
         "var expected_surface: Dictionary = raw_surface.duplicate(true)",
         'raw_surface["context_line"] = "mutated detached objective context"',
         'raw_incomplete.append("mutated detached objective")',
         "OverworldRules._objective_stakes_surface(session) != expected_surface",
+        "var expected_progress_recap := ScenarioRules.describe_session_progress_recap(session, false)",
         "for _index in range(6):",
         "legacy_usec * 100 < bundle_usec * 105",
         'int(full_refresh_profile.get("objective_stakes_surface_builds", 0)) != 1',
@@ -17080,6 +17091,130 @@ def validate_overworld_objective_stakes_surface_bundle_reuse(errors: list[str]) 
             ensure([objective_case_body.index(token) for token in ordered_tokens] == sorted(objective_case_body.index(token) for token in ordered_tokens), errors, "Objective-stakes fixture must normalize before capturing authority and materializing surfaces")
     for forbidden in ("await get_tree().create_timer", "OS.delay", "set_process", 'erase("objective', "sort_custom", "normalize_objective"):
         ensure(forbidden not in report_text, errors, f"Overworld objective-stakes proof must remain passive and exact: {forbidden}")
+
+
+def validate_overworld_drawer_objective_recap_reuse(errors: list[str]) -> None:
+    rules_path = ROOT / "scripts/core/OverworldRules.gd"
+    shell_path = ROOT / "scenes/overworld/OverworldShell.gd"
+    report_path = ROOT / "tests/overworld_hero_actions_refresh_cache_regression.gd"
+    for path in (rules_path, shell_path, report_path):
+        ensure(path.exists(), errors, f"Missing Overworld drawer-objective recap owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in (rules_path, shell_path, report_path)):
+        return
+
+    rules_text = rules_path.read_text(encoding="utf-8")
+    combined_match = re.search(
+        r"static func describe_objective_header_surfaces\(session: SessionStateStoreScript\.SessionData\) -> Dictionary:(.*?)(?=\n\nstatic func _describe_objective_brief_from_surface)",
+        rules_text,
+        flags=re.DOTALL,
+    )
+    ensure(combined_match is not None, errors, "Objective header bundle could not be isolated for progress-recap reuse")
+    if combined_match is not None:
+        combined_body = combined_match.group(1)
+        ordered_tokens = (
+            "var surface := _objective_stakes_surface(session)",
+            'var progress_recap := ""',
+            "if not surface.is_empty():",
+            "progress_recap = _scenario_rules().describe_session_progress_recap(session, false)",
+            '"objective_stakes": _describe_objective_stakes_board_from_surface(session, surface, {"progress_recap": progress_recap})',
+            '"progress_recap": progress_recap',
+        )
+        ensure(all(token in combined_body for token in ordered_tokens), errors, "Objective header bundle is missing exact progress-recap ownership")
+        if all(token in combined_body for token in ordered_tokens):
+            ensure([combined_body.index(token) for token in ordered_tokens] == sorted(combined_body.index(token) for token in ordered_tokens), errors, "Objective header progress-recap build/materialization order drifted")
+        ensure(combined_body.count("describe_session_progress_recap(session, false)") == 1, errors, "Objective header bundle must build exactly one progress recap")
+
+    shell_text = shell_path.read_text(encoding="utf-8")
+    status_match = re.search(
+        r"func _refresh_status_surfaces\(generated_surface_start: int\) -> bool:(.*?)(?=\n\nfunc _refresh_map_cue_surface)",
+        shell_text,
+        flags=re.DOTALL,
+    )
+    ensure(status_match is not None, errors, "Full refresh could not be isolated for drawer-objective recap reuse")
+    if status_match is not None:
+        status_body = status_match.group(1)
+        ordered_tokens = (
+            "var objective_header_surfaces := OverworldRules.describe_objective_header_surfaces(_session)",
+            '_profile_add("objective_progress_recap_builds", 1)',
+            "var readiness_context := _field_readiness_context(end_turn_forecast_surface)",
+            "var readiness_surface := _field_readiness_surface({}, end_turn_forecast_surface, readiness_context)",
+            "_refresh_tooltip_context_drawer_surfaces(readiness_surface, end_turn_forecast_surface, objective_header_surfaces)",
+        )
+        ensure(all(token in status_body for token in ordered_tokens), errors, "Full refresh is missing ordered objective recap propagation")
+        if all(token in status_body for token in ordered_tokens):
+            ensure([status_body.index(token) for token in ordered_tokens] == sorted(status_body.index(token) for token in ordered_tokens), errors, "Full refresh objective recap propagation order drifted")
+
+    handoff_match = re.search(
+        r"func _drawer_handoff_surfaces\((.*?)\n\) -> Dictionary:(.*?)(?=\n\nfunc _line_with_prefix)",
+        shell_text,
+        flags=re.DOTALL,
+    )
+    ensure(handoff_match is not None, errors, "Drawer handoff surface could not be isolated for objective recap reuse")
+    if handoff_match is not None:
+        handoff_signature = handoff_match.group(1)
+        handoff_body = handoff_match.group(2)
+        ensure("objective_header_surfaces: Dictionary = {}" in handoff_signature, errors, "Drawer handoff must retain a fresh-default optional objective header bundle")
+        ordered_tokens = (
+            'var objective_line := ""',
+            'if objective_header_surfaces.has("progress_recap"):',
+            '_profile_add("drawer_handoff_preloaded_objective_recap_reuses", 1)',
+            'objective_line = _line_with_prefix(String(objective_header_surfaces.get("progress_recap", "")), "Next step:")',
+            'else:\n\t\tobjective_line = _line_with_prefix(_cached_objective_text(), "Next step:")',
+            'if objective_line == "":',
+            'objective_line = String(readiness.get("progress_line", "")).strip_edges()',
+        )
+        ensure(all(token in handoff_body for token in ordered_tokens), errors, "Drawer handoff is missing exact preloaded/fresh objective-line behavior")
+        if all(token in handoff_body for token in ordered_tokens):
+            ensure([handoff_body.index(token) for token in ordered_tokens] == sorted(handoff_body.index(token) for token in ordered_tokens), errors, "Drawer handoff objective recap fallback order drifted")
+
+    propagation_tokens = (
+        "func _refresh_tooltip_context_drawer_surfaces(\n\tfield_readiness: Dictionary = {},\n\tend_turn_forecast_surface: Dictionary = {},\n\tobjective_header_surfaces: Dictionary = {}\n) -> void:",
+        "_sync_context_drawers(field_readiness, end_turn_forecast_surface, objective_header_surfaces)",
+        "func _sync_context_drawers(\n\tfield_readiness: Dictionary = {},\n\tend_turn_forecast_surface: Dictionary = {},\n\tobjective_header_surfaces: Dictionary = {}\n) -> void:",
+        "_refresh_drawer_handoff_cues(field_readiness, end_turn_forecast_surface, objective_header_surfaces)",
+        "func _refresh_drawer_handoff_cues(\n\tfield_readiness: Dictionary = {},\n\tend_turn_forecast_surface: Dictionary = {},\n\tobjective_header_surfaces: Dictionary = {}\n) -> void:",
+        "_drawer_handoff_surfaces(field_readiness, end_turn_forecast_surface, objective_header_surfaces)",
+    )
+    for token in propagation_tokens:
+        ensure(token in shell_text, errors, f"Objective recap propagation is missing exact shell token: {token}")
+    ensure("func _refresh_frontier_drawer(end_turn_forecast_surface: Dictionary = {}) -> Dictionary:" in shell_text, errors, "Open Frontier must retain its independent full Objective Board path")
+    frontier_match = re.search(r"func _refresh_frontier_drawer\(end_turn_forecast_surface: Dictionary = \{\}\) -> Dictionary:(.*?)(?=\n\nfunc _set_collapsed_frontier_indicator)", shell_text, flags=re.DOTALL)
+    ensure(frontier_match is not None and "var objective_text := _cached_objective_text()" in frontier_match.group(1), errors, "Open Frontier must keep the full cached Objective Board")
+    for forbidden in ('session.flags["objective_progress_recap', 'session.overworld["objective_progress_recap', '_refresh_cache["objective_progress_recap', "_objective_progress_recap_cache"):
+        ensure(forbidden not in shell_text, errors, f"Objective recap reuse must not persist across refreshes: {forbidden}")
+
+    report_text = report_path.read_text(encoding="utf-8")
+    for token in (
+        "func _assert_drawer_objective_recap_preload_parity(shell: Node, session, label: String) -> Dictionary:",
+        'var readiness: Dictionary = shell.call("_field_readiness_surface")',
+        "var objective_header_surfaces: Dictionary = OverworldRules.describe_objective_header_surfaces(session)",
+        'var legacy: Dictionary = shell.call("_drawer_handoff_surfaces", readiness, forecast)',
+        'int(legacy_profile.get("drawer_handoff_preloaded_objective_recap_reuses", 0)) != 0',
+        'var shared: Dictionary = shell.call("_drawer_handoff_surfaces", readiness, forecast, objective_header_surfaces)',
+        'int(shared_profile.get("drawer_handoff_preloaded_objective_recap_reuses", 0)) != 1',
+        "shared != legacy or session.to_dict() != authority_before",
+        "legacy_usec * 100 < shared_usec * 105",
+        "func _assert_all_authored_drawer_objective_recap_parity() -> int:",
+        "ContentService.get_content_ids(ContentService.SCENARIOS_PATH)",
+        "scenario_ids.sort()",
+        "for day_offset in [0, 1]:",
+        'var legacy_line: String = _objective_line_with_prefix(OverworldRules.describe_objectives(probe), "Next step:")',
+        "var recap := ScenarioRules.describe_session_progress_recap(probe, false)",
+        'var shared_line: String = _objective_line_with_prefix(recap, "Next step:")',
+        "legacy_line != shared_line or probe.to_dict() != authority_before",
+        "func _objective_line_with_prefix(text: String, prefix: String) -> String:",
+        'for raw_line in text.split("\\n", false):',
+        "var line := String(raw_line).strip_edges()",
+        "if line.begins_with(prefix):",
+        'int(full_refresh_profile.get("objective_progress_recap_builds", 0)) != 1',
+        'int(full_refresh_profile.get("drawer_handoff_preloaded_objective_recap_reuses", 0)) != 1',
+        '"drawer_objective_recap_parity": true',
+        '"legacy_drawer_objective_usec"',
+        '"shared_drawer_objective_usec"',
+    ):
+        ensure(token in report_text, errors, f"Overworld drawer-objective focused owner is missing token: {token}")
+    for forbidden in ("await get_tree().create_timer", "OS.delay", "set_process", "erase(\"objective", "sort_custom", "normalize_objective"):
+        ensure(forbidden not in report_text, errors, f"Overworld drawer-objective proof must remain passive and exact: {forbidden}")
 
 
 def validate_overworld_full_refresh_end_turn_forecast_bundle_reuse(errors: list[str]) -> None:
@@ -17136,7 +17271,7 @@ def validate_overworld_full_refresh_end_turn_forecast_bundle_reuse(errors: list[
             "var event_surface := _event_feed_surface(end_turn_forecast_surface, readiness_context)",
             'var end_turn_tooltip := String(end_turn_check.get("tooltip_text", ""))',
             'end_turn_tooltip = String(end_turn_forecast_surface.get("forecast", ""))',
-            "_refresh_tooltip_context_drawer_surfaces(readiness_surface, end_turn_forecast_surface)",
+            "_refresh_tooltip_context_drawer_surfaces(readiness_surface, end_turn_forecast_surface, objective_header_surfaces)",
         )
         ensure(all(token in status_body for token in ordered_tokens), errors, "Full refresh is missing ordered forecast-bundle construction/reuse tokens")
         if all(token in status_body for token in ordered_tokens):
@@ -17150,7 +17285,7 @@ def validate_overworld_full_refresh_end_turn_forecast_bundle_reuse(errors: list[
         "func _event_feed_surface(\n\tend_turn_forecast_surface: Dictionary = {},\n\treadiness_context: Dictionary = {}\n) -> Dictionary:",
         "func _field_readiness_surface(\n\tbase_event_surface: Dictionary = {},\n\tend_turn_forecast_surface: Dictionary = {},\n\tpreloaded_context: Dictionary = {}\n) -> Dictionary:",
         "func _status_forecast_surface(end_turn_forecast_surface: Dictionary = {}) -> Dictionary:",
-        "func _drawer_handoff_surfaces(field_readiness: Dictionary = {}, end_turn_forecast_surface: Dictionary = {}) -> Dictionary:",
+        "func _drawer_handoff_surfaces(\n\tfield_readiness: Dictionary = {},\n\tend_turn_forecast_surface: Dictionary = {},\n\tobjective_header_surfaces: Dictionary = {}\n) -> Dictionary:",
         'if end_turn_forecast_surface.is_empty():',
         '_profile_add("end_turn_forecast_bundle_reuses", 1)',
     )
@@ -46448,6 +46583,7 @@ def main() -> int:
     validate_overworld_full_refresh_drawer_readiness_reuse(errors)
     validate_overworld_full_refresh_event_readiness_context_reuse(errors)
     validate_overworld_objective_stakes_surface_bundle_reuse(errors)
+    validate_overworld_drawer_objective_recap_reuse(errors)
     validate_overworld_full_refresh_end_turn_forecast_bundle_reuse(errors)
     validate_overworld_shell_release_polish(errors)
     validate_overworld_command_commitment_board(errors)

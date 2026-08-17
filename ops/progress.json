@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed invocation-local Overworld objective-stakes surface reuse with exact focused authority, material focused and authored performance improvement, compatibility, static/editor, and bounded Linux/Windows startup validation.",
+  "currentNotes": "Completed closed-Frontier objective recap reuse with exact all-scenario/day parity, direct/open fallback, material focused/authored performance improvement, compatibility, static/editor, and bounded Linux/Windows startup validation.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "performance-overworld-objective-stakes-surface-bundle-reuse-10184",
-  "currentSliceId": "performance-overworld-objective-stakes-surface-bundle-reuse-10184",
-  "currentSliceNotes": "Completed with one invocation-local objective-stakes surface shared across exact ObjectiveBrief and Objective Stakes materialization; direct callers, drawer/threat behavior, session/UI authority, compatibility, and bounded platform startup remain exact.",
+  "currentSlice": "performance-overworld-drawer-objective-recap-reuse-10184",
+  "currentSliceId": "performance-overworld-drawer-objective-recap-reuse-10184",
+  "currentSliceNotes": "Completed invocation-local objective recap propagation through the closed Frontier handoff; open Frontier and direct/default Objective Board paths remain fresh and exact, with all objective/threat/session/UI authority preserved.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Objective Stakes Surface Bundle Reuse",
-  "currentSliceUpdatedAt": "2026-08-17T01:42:26Z",
+  "currentSliceTitle": "Overworld Drawer Objective Recap Reuse",
+  "currentSliceUpdatedAt": "2026-08-17T02:16:04Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,55 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "The objective-stakes surface slice is complete. Keep direct callers fresh, keep the distinct Objective Board drawer and frontier-threat derivation separate, preserve Native RMG fail-closed behavior, and select the next tracker-approved product slice from direct evidence.",
-  "notes": "Completed Overworld objective-stakes surface bundle reuse with exact behavior authority and bounded focused/authored performance improvement. Select the next tracker-approved product slice from direct current behavior evidence.",
+  "nextActionGuardrailNote": "The closed-Frontier objective recap slice is complete. Preserve the full Objective Board for open Frontier and direct/default callers, keep frontier threats separate, preserve Native RMG fail-closed behavior, and select the next product slice from direct evidence.",
+  "notes": "Completed closed-Frontier objective recap reuse with exact behavior authority and bounded focused/authored performance improvement. Select the next tracker-approved product slice from direct current behavior evidence.",
   "plannedSlices": [
+    {
+      "id": "performance-overworld-drawer-objective-recap-reuse-10184",
+      "title": "Overworld Drawer Objective Recap Reuse",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Reuse the full-refresh objective progress recap for the closed Frontier handoff instead of building the full Objective Board only to extract its exact Next step line.",
+      "implementationTargets": [
+        "scripts/core/OverworldRules.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "tests/overworld_hero_actions_refresh_cache_regression.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "All 24 authored scenarios prove exact full-board versus recap Next step parity with exact session authority and state/day rebuild",
+        "One closed-Frontier full refresh builds one objective recap and reuses it once without a full Objective Board call, preserving whole drawer/threat/readiness/event/action/save/focus/session/UI authority",
+        "A same-process direct-board versus preloaded-recap control proves material removed work from the current Ninefold 524ms board/361ms recap attribution while authored first-ready and repeat refresh improve or remain safely non-regressed",
+        "Focused refresh-cache, open-Frontier/direct fallback, Map Editor Play Copy, Overworld visual/input, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "Objective Board, objective/progress/campaign/victory/defeat/recap text, frontier threat, readiness, event, action, route, forecast, risk, or invalidation policy changes",
+        "persistent cross-refresh/day/session caching, async work, save/schema, gameplay/content/AI/balance/Native RMG/package identity changes",
+        "packaged interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "b1ab40d03d2fcba5b9504e9a6c2839abf3c314bb",
+        "authored_scenario_count": 24,
+        "all_scenario_next_step_exact": true,
+        "ninefold_objective_board_usec": 524059,
+        "ninefold_progress_recap_usec": 360693,
+        "authored_first_ready_ms": 4425,
+        "repeat_full_refresh_ms": 2288,
+        "tooltip_context_drawers_usec": 557974,
+        "attribution_artifact": "/tmp/heroes-objective-handoff-attribution.Cvc41v"
+      },
+      "createdAt": "2026-08-17T01:46:43Z",
+      "startedAt": "2026-08-17T01:46:43Z",
+      "updatedAt": "2026-08-17T02:16:04Z",
+      "notes": "Production passes the detached objective header bundle through the same full-refresh handoff chain; the handoff extracts the exact prebuilt progress recap while default/direct paths and open Frontier retain the full Objective Board. Focused `/tmp/heroes-drawer-objective-focused-final.9ILNUA` proves all 24 authored scenarios plus day changes, default/preloaded equality, direct fallback, whole session/UI authority, one recap build/one reuse, and 173087-usec legacy versus103900-usec shared work. Authored `/tmp/heroes-drawer-objective-profile.wBfajV` improves first-ready4425 to4211ms, repeat refresh2288 to2008ms, tooltip/drawer557974 to329874 usec, and full refresh2287693 to2008525 usec. Full Map Editor `/tmp/heroes-drawer-objective-map-editor.auY1hm`, Overworld visual/active-play/core `/tmp/heroes-drawer-objective-compat.ZEgtrd`, static/editor `/tmp/heroes-drawer-objective-static.f2j4Bt`, and official Linux/Windows export-startup `/tmp/heroes-drawer-objective-platform.QS9lwh` are green. Claims remain bounded.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence.",
+      "blockedReason": null,
+      "completedAt": "2026-08-17T02:16:04Z"
+    },
     {
       "id": "performance-overworld-objective-stakes-surface-bundle-reuse-10184",
       "title": "Overworld Objective Stakes Surface Bundle Reuse",
