@@ -203,6 +203,7 @@ SYSTEM_FEEDBACK_VFX_ICON_SCRIPT_PATH = ROOT / "scenes" / "shared" / "SystemFeedb
 ACTIVE_PLAY_SYSTEM_FEEDBACK_VFX_REPORT_SCRIPT_PATH = ROOT / "tests" / "active_play_system_feedback_vfx_asset_runtime_report.gd"
 ACTIVE_PLAY_SYSTEM_FEEDBACK_VFX_REPORT_SCENE_PATH = ROOT / "tests" / "active_play_system_feedback_vfx_asset_runtime_report.tscn"
 OVERWORLD_ART_MANIFEST_PATH = ROOT / "art" / "overworld" / "manifest.json"
+GENERATED_GRASTL_RUNTIME_ASSET_REPORT_PATH = ROOT / "tests" / "generated_grastl_runtime_asset_report.gd"
 TERRAIN_GRAMMAR_PATH = CONTENT_DIR / "terrain_grammar.json"
 TERRAIN_LAYERS_PATH = CONTENT_DIR / "terrain_layers.json"
 TOWN_SCENE_PATH = ROOT / "scenes" / "town" / "TownShell.tscn"
@@ -31471,6 +31472,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         TERRAIN_GRAMMAR_PATH,
         TERRAIN_LAYERS_PATH,
         OVERWORLD_MAP_VIEW_SCRIPT_PATH,
+        GENERATED_GRASTL_RUNTIME_ASSET_REPORT_PATH,
         ROOT / "tools" / "build_overworld_terrain_tiles.py",
         ROOT / "art" / "overworld" / "source" / "manifest" / "generated-overworld-assets-20260419.json",
     )
@@ -31478,6 +31480,40 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(path.exists(), errors, f"Missing overworld art slice file: {path.relative_to(ROOT)}")
     if not all(path.exists() for path in required_paths):
         return
+
+    grastl_report_text = GENERATED_GRASTL_RUNTIME_ASSET_REPORT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'const TARGET_VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        'const ORIGINAL_TILE_BANK_FAMILIES := ["grass", "plains", "forest", "mire", "swamp", "rough", "rock"]',
+        'const PROCEDURAL_FALLBACK_FAMILIES := ["water", "coast", "shore", "dirt", "sand", "ash", "lava", "underground", "snow", "frost"]',
+        'OverworldRules.normalize_overworld_state(session)',
+        'var session_authority_before: Dictionary = session.to_dict()',
+        'var map_view = shell.get_node_or_null("%Map")',
+        'for terrain_id in ORIGINAL_TILE_BANK_FAMILIES:',
+        'for terrain_id in PROCEDURAL_FALLBACK_FAMILIES:',
+        'if session_authority_after != session_authority_before:',
+        'if get_tree().current_scene != route_before:',
+        'if bool(terrain.get("uses_homm3_local_prototype", true)):',
+        'map_view.call("set_map_state", session, working_map, OverworldRules.derive_map_size(session), fixture_tile)',
+        'String(terrain.get("rendering_mode", "")) != "original_quiet_tile_bank"',
+        'String(terrain.get("rendering_mode", "")) != "authored_autotile_layers"',
+    ):
+        ensure(required_token in grastl_report_text, errors, f"Generated grastl focused runtime owner is missing: {required_token}")
+    ensure(
+        grastl_report_text.find('if int(terrain.get("homm3_expected_frame_count", 0)) != EXPECTED_FRAME_COUNT:')
+        < grastl_report_text.find('var session_authority_before: Dictionary = session.to_dict()')
+        < grastl_report_text.find('for viewport_size in TARGET_VIEWPORT_SIZES:'),
+        errors,
+        "Generated grastl focused runtime owner must bracket only the settled live terrain matrix with its authority snapshot",
+    )
+    for forbidden_token in (
+        'TARGET_VIEWPORT_SIZES.sort',
+        'ORIGINAL_TILE_BANK_FAMILIES.sort',
+        'PROCEDURAL_FALLBACK_FAMILIES.sort',
+        'homm3_local_prototype/terrain/',
+        'homm3_local_prototype/roads/',
+    ):
+        ensure(forbidden_token not in grastl_report_text, errors, f"Generated grastl focused runtime owner weakens live runtime authority: {forbidden_token}")
 
     manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
     terrain_rendering = manifest.get("terrain_rendering", {})
@@ -31499,17 +31535,17 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(str(terrain_rendering.get("model", "")) == "authored_autotile_layers", errors, "Overworld terrain rendering must use the authored autotile layer model")
         ensure(str(terrain_rendering.get("grammar", "")) == "res://content/terrain_grammar.json", errors, "Overworld terrain rendering must point at content/terrain_grammar.json")
         ensure(str(terrain_rendering.get("terrain_layers", "")) == "res://content/terrain_layers.json", errors, "Overworld terrain rendering must point at content/terrain_layers.json")
-        ensure(str(terrain_rendering.get("tile_art_root", "")) == "res://art/overworld/runtime/homm3_local_prototype", errors, "Overworld terrain rendering must point at the HoMM3 local prototype tile-art root")
-        ensure(str(terrain_rendering.get("tile_art_status", "")) == "homm3_local_reference_prototype", errors, "Overworld terrain rendering must record the HoMM3 local-reference prototype status")
-        ensure(str(terrain_rendering.get("tile_art_source_basis", "")) == "homm3_extracted_local_reference_prototype", errors, "Overworld terrain rendering must record the HoMM3 extracted local-reference source basis")
+        ensure(str(terrain_rendering.get("tile_art_root", "")) == "res://art/overworld/runtime/terrain_tiles", errors, "Overworld terrain rendering must point at the shippable original terrain-tile root")
+        ensure(str(terrain_rendering.get("tile_art_status", "")) == "original_quiet_tile_bank_runtime", errors, "Overworld terrain rendering must record the original quiet tile-bank runtime status")
+        ensure(str(terrain_rendering.get("tile_art_source_basis", "")) == "original_procedural_reference_informed", errors, "Overworld terrain rendering must record the original authored source basis")
         ensure(str(terrain_rendering.get("terrain_transition_selection", "")) == "accepted_web_prototype_relation_class_row_lookup", errors, "Overworld terrain rendering must document HoMM3 accepted web-prototype relation-class terrain selection")
         ensure(str(terrain_rendering.get("terrain_transition_rule", "")) == "settled_owner_relation_classes_select_recovered_row_buckets", errors, "Overworld terrain rendering must document settled-owner relation-class row selection")
         ensure(str(terrain_rendering.get("editor_terrain_placement_model", "")) == "homm3_owner_queue_rewrite_final_normalization.v1", errors, "Overworld terrain rendering must document the HoMM3 editor terrain placement model")
         ensure(str(terrain_rendering.get("editor_restamp_model", "")) == "source_paint_known_receiver_offsets_shared_overworld_reprojection.v1", errors, "Overworld terrain rendering must document the editor restamp behavior model")
         ensure(str(terrain_rendering.get("editor_restamp_scope", "")) == "map_editor_terrain_paint_update_and_shared_preview", errors, "Overworld terrain rendering must keep editor restamp scope tied to terrain paint update and shared preview")
         ensure(str(terrain_rendering.get("interior_frame_selection", "")) == "accepted_web_full_row_bucket_selection", errors, "Overworld terrain rendering must document accepted web-prototype full-row interior selection")
-        ensure(str(terrain_rendering.get("primary_base_model", "")) == "homm3_local_reference_prototype", errors, "Overworld terrain rendering must make the HoMM3 local prototype the primary base model")
-        ensure(str(terrain_rendering.get("generated_source_policy", "")) == "generated_grastl_runtime_override_active", errors, "Overworld terrain rendering must document the generated grastl runtime override")
+        ensure(str(terrain_rendering.get("primary_base_model", "")) == "original_quiet_tile_bank", errors, "Overworld terrain rendering must make the original quiet tile bank the primary base model")
+        ensure(str(terrain_rendering.get("generated_source_policy", "")) == "reference_only_inactive", errors, "Overworld terrain rendering must keep generated renderer-study payloads inactive")
         grastl_override = terrain_rendering.get("generated_grastl_runtime_override", {})
         ensure(isinstance(grastl_override, dict), errors, "Overworld terrain rendering must define generated_grastl_runtime_override")
         if isinstance(grastl_override, dict):
@@ -31524,8 +31560,9 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                 if frame_path.exists():
                     ensure(png_size(frame_path) == (64, 64), errors, f"Generated grastl runtime frame must be 64x64 PNG: {frame_path.relative_to(ROOT)}")
                 ensure(frame_path.with_name(frame_path.name + ".import").exists(), errors, f"Generated grastl runtime frame is missing Godot import sidecar: {frame_path.relative_to(ROOT)}.import")
-        ensure(bool(terrain_rendering.get("local_reference_only", False)), errors, "Overworld terrain rendering must mark HoMM3 extracted assets as local_reference_only")
-        ensure(str(terrain_rendering.get("prototype_asset_policy", "")) == "not_shippable_or_redistributable", errors, "Overworld terrain rendering must mark HoMM3 extracted assets as not shippable or redistributable")
+        ensure(not bool(terrain_rendering.get("local_reference_only", True)), errors, "Active Overworld terrain rendering must not be the local-reference-only prototype")
+        ensure(str(terrain_rendering.get("prototype_asset_policy", "")) == "disabled_local_reference_excluded_from_official_exports", errors, "Overworld terrain rendering must exclude the disabled local reference from official exports")
+        ensure(bool(terrain_rendering.get("reference_prototype_excluded_from_exports", False)), errors, "Overworld terrain rendering must record reference-prototype export exclusion")
         authored_tile_sets = terrain_rendering.get("authored_tile_sets", [])
         ensure(isinstance(authored_tile_sets, list) and HOMM3_LOCAL_PROTOTYPE_FAMILIES.issubset(set(map(str, authored_tile_sets))) and "road_dirt" in set(map(str, authored_tile_sets)), errors, "Overworld terrain rendering must list the HoMM3 local prototype terrain families and road tile set")
         ensure(str(terrain_rendering.get("sampled_texture_status", "")) == "deprecated_not_primary", errors, "Overworld sampled terrain textures must be marked deprecated_not_primary")
@@ -31535,9 +31572,9 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     terrain_classes = terrain_grammar.get("terrain_classes", [])
     overlay_classes = terrain_grammar.get("overlay_classes", [])
     ensure(str(terrain_grammar.get("rendering_model", "")) == "authored_autotile_layers", errors, "Terrain grammar must declare authored_autotile_layers")
-    ensure(str(terrain_grammar.get("authoring_status", "")) == "homm3_local_reference_prototype", errors, "Terrain grammar must record the HoMM3 local-reference prototype status")
-    ensure(str(terrain_grammar.get("primary_base_model", "")) == "homm3_local_reference_prototype", errors, "Terrain grammar must make the HoMM3 local prototype primary")
-    ensure(str(terrain_grammar.get("generated_source_policy", "")) == "generated_grastl_runtime_override_active", errors, "Terrain grammar must declare the generated grastl runtime override")
+    ensure(str(terrain_grammar.get("authoring_status", "")) == "original_quiet_tile_bank_runtime", errors, "Terrain grammar must record the original quiet tile-bank runtime status")
+    ensure(str(terrain_grammar.get("primary_base_model", "")) == "original_quiet_tile_bank", errors, "Terrain grammar must make the original quiet tile bank primary")
+    ensure(str(terrain_grammar.get("generated_source_policy", "")) == "reference_only_inactive", errors, "Terrain grammar must keep generated renderer-study payloads inactive")
     transition_rules = terrain_grammar.get("transition_rules", {})
     ensure(isinstance(transition_rules, dict), errors, "Terrain grammar must define transition_rules")
     if isinstance(transition_rules, dict):
@@ -31558,7 +31595,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     homm3_prototype = terrain_grammar.get("homm3_local_prototype", {})
     ensure(isinstance(homm3_prototype, dict), errors, "Terrain grammar must define homm3_local_prototype")
     if isinstance(homm3_prototype, dict):
-        ensure(bool(homm3_prototype.get("enabled", False)), errors, "HoMM3 local prototype must be enabled")
+        ensure(not bool(homm3_prototype.get("enabled", True)), errors, "HoMM3 local prototype must be disabled for live rendering")
         ensure(bool(homm3_prototype.get("local_reference_only", False)), errors, "HoMM3 local prototype must be marked local_reference_only")
         ensure(str(homm3_prototype.get("terrain_lookup_model", "")) == "accepted_web_prototype_relation_class_row_lookup", errors, "HoMM3 local prototype must use accepted web-prototype relation-class row lookup")
         ensure(str(homm3_prototype.get("road_lookup_model", "")) == "table_driven_4_neighbor_overlay", errors, "HoMM3 local prototype must use table-driven 4-neighbor road lookup")
@@ -31808,7 +31845,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
                 tile_art = terrain_class.get("tile_art", {})
                 ensure(isinstance(tile_art, dict), errors, f"Terrain grammar {terrain_id} must define tile_art")
                 if isinstance(tile_art, dict):
-                    ensure(str(tile_art.get("source_basis", "")).startswith("homm3_local_reference_prototype"), errors, f"Terrain grammar {terrain_id} must identify that fallback tile_art paths are superseded by the HoMM3 local prototype")
+                    ensure(str(tile_art.get("source_basis", "")).startswith("original_procedural_reference_informed"), errors, f"Terrain grammar {terrain_id} must identify the original authored tile-art source basis")
                     base_tiles = tile_art.get("base_tiles", [])
                     ensure(isinstance(base_tiles, list) and len(base_tiles) >= 3, errors, f"Terrain grammar {terrain_id} must define at least three authored base tile variants")
                     if isinstance(base_tiles, list):
@@ -32140,6 +32177,17 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(str(object_rendering.get("town_base_ellipse", "")) == "removed", errors, "Overworld object rendering must document that town base ellipses are removed")
 
     map_view_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
+    content_service_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'grammar.get("primary_base_model", "")) != "original_quiet_tile_bank"',
+        'grammar.get("generated_source_policy", "")) != "reference_only_inactive"',
+    ):
+        ensure(required_token in content_service_text, errors, f"ContentService terrain policy validation is missing: {required_token}")
+    for forbidden_token in (
+        'grammar.get("primary_base_model", "")) != "homm3_local_reference_prototype"',
+        'grammar.get("generated_source_policy", "")) != "generated_grastl_runtime_override_active"',
+    ):
+        ensure(forbidden_token not in content_service_text, errors, f"ContentService terrain policy validation still requires an unshippable runtime source: {forbidden_token}")
     for required_token in (
         "OVERWORLD_ART_MANIFEST_PATH",
         "TERRAIN_GRAMMAR_PATH",
@@ -32153,6 +32201,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
 	        "TERRAIN_TRANSITION_CORNER_MODEL",
 	        "func _load_terrain_grammar",
 	        "func _load_homm3_prototype",
+	        "func _homm3_runtime_rendering_enabled",
 	        "func _homm3_bridge_material_resolution",
 	        "func _homm3_bridge_material_rule_for",
 	        "func _homm3_editor_restamp_payload",
@@ -42504,6 +42553,8 @@ def validate_packaging_platform_readiness(errors: list[str]) -> None:
             "ops/*",
             "maps/*",
             "art/overworld/source/*",
+            "art/overworld/runtime/homm3_local_prototype/*",
+            "art/overworld/runtime/terrain_tiles/generated/*",
             "src/gdextension/build/*",
             "src/gdextension/include/*",
             "src/gdextension/src/*",
@@ -42640,6 +42691,17 @@ def validate_packaging_linux_export_smoke(errors: list[str]) -> None:
             "clean-machine smoke coverage",
             "MIN_BINARY_BYTES",
             "MIN_PCK_BYTES",
+            "FORBIDDEN_TERRAIN_PCK_PREFIXES",
+            '"art/overworld/runtime/homm3_local_prototype/"',
+            '"art/overworld/runtime/terrain_tiles/generated/"',
+            '"art/overworld/runtime/terrain_tiles/base/"',
+            '"art/overworld/runtime/terrain_tiles/roads/"',
+            "def pck_terrain_payload_summary() -> dict:",
+            'header[:4] != b"GDPC"',
+            'struct.unpack_from("<Q", header, 32)[0]',
+            'not terrain_payload["forbidden_entries"]',
+            'bool(terrain_payload["required_entries_present"])',
+            '"terrain_pck_payload": terrain_payload',
             "report.json",
         ):
             ensure(required_token in script_text, errors, f"Packaging Linux export smoke script is missing required token: {required_token}")
@@ -42712,6 +42774,17 @@ def validate_packaging_windows_export_smoke(errors: list[str]) -> None:
             "clean-machine smoke coverage",
             "MIN_EXE_BYTES",
             "MIN_PCK_BYTES",
+            "FORBIDDEN_TERRAIN_PCK_PREFIXES",
+            '"art/overworld/runtime/homm3_local_prototype/"',
+            '"art/overworld/runtime/terrain_tiles/generated/"',
+            '"art/overworld/runtime/terrain_tiles/base/"',
+            '"art/overworld/runtime/terrain_tiles/roads/"',
+            "def pck_terrain_payload_summary() -> dict:",
+            'header[:4] != b"GDPC"',
+            'struct.unpack_from("<Q", header, 32)[0]',
+            'not terrain_payload["forbidden_entries"]',
+            'bool(terrain_payload["required_entries_present"])',
+            '"terrain_pck_payload": terrain_payload',
             "report.json",
         ):
             ensure(required_token in script_text, errors, f"Packaging Windows export smoke script is missing required token: {required_token}")

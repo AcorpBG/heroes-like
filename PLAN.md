@@ -6765,6 +6765,33 @@ Non-goals:
 - no new screenshot format, post-processing, image normalization, visual-diff framework, report schema, or claim that tooling correction is shipped gameplay progress;
 - no packaged interaction, controller hardware, AT-SPI/UIA certification, native hardware, Native RMG, signing/publication, whole-game, or release-readiness claim.
 
+## Selected Slice: Shippable Original Overworld Terrain Adoption
+
+id: `presentation-overworld-shippable-original-terrain-adoption-10184`
+
+Status: completed.
+
+Implementation boundary:
+- make the existing original authored 64x64 terrain tile bank and procedural special-terrain fallback authoritative for the live Overworld and shared Map Editor preview instead of loading the local-only extracted HoMM3 reference prototype;
+- retain the recovered logical terrain placement, owner/rewrite/final-normalization, transition metadata, terrain ids, passability, roads, map content, and editor paint consequences unchanged;
+- exclude the ignored local-reference atlas plus committed generated reference sheets, previews, experiments, and inactive frame banks from both official Linux and Windows package payloads.
+
+Completion criteria:
+- focused live Overworld proof reports no HoMM3 local-prototype selection, uses the original tile bank for every authored tile-art family, uses the existing procedural fallback for unsupported special families, and preserves exact terrain/session/route/object authority at 1280x720 and 1920x1080;
+- a real routed Main Menu-to-Overworld capture is upright and visibly uses only the shippable renderer path while movement, selection, town/resource/encounter presentation, save, and scene authority remain exact;
+- official Linux and Windows exports contain no local-reference terrain/road frame resource and no generated reference/debug terrain payload while retaining valid packages and bounded startup evidence;
+- Overworld visual, Map Editor, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Non-goals:
+- no terrain id, map cell, passability, route, object placement, town/resource/encounter, fog, camera, save schema, editor paint consequence, transition/private-state, Native RMG, or gameplay policy change;
+- no claim that the existing original placeholder tile bank is final terrain art, no new copyrighted reference asset, and no attempt to recover or reinterpret HoMM3 renderer semantics;
+- no packaged Overworld interaction parity, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Completion evidence:
+- focused 1280x720 and 1920x1080 runtime covers every original tile-bank and procedural-fallback family with exact session/route/object authority; Overworld visual, routed 1920x1080 capture, Map Editor, and core gates are green;
+- Linux and Windows PCK directory audits each contain 2,523 entries, retain 24 original base and 11 original road entries, and contain zero local-reference or generated-study terrain entries;
+- official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green; these are bounded startup claims only.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:

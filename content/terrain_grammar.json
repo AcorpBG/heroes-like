@@ -1,11 +1,11 @@
 {
   "version": 1,
   "rendering_model": "authored_autotile_layers",
-  "authoring_status": "homm3_local_reference_prototype",
-  "primary_base_model": "homm3_local_reference_prototype",
-  "generated_source_policy": "generated_grastl_runtime_override_active",
+  "authoring_status": "original_quiet_tile_bank_runtime",
+  "primary_base_model": "original_quiet_tile_bank",
+  "generated_source_policy": "reference_only_inactive",
   "tile_size_reference": 64,
-  "summary": "Local-only HoMM3 terrain renderer prototype. Terrain and road frames are staged from extracted HoMM3 DEF assets for renderer study only, not for shippable/distributable art. Current logical terrain ids and save/pathing data remain unchanged, while the Godot map editor routes terrain paint operations through the recovered HoMM3 owner queue/rewrite and final-normalization placement model before shared preview reprojection. Active HoMM3 terrain visual selection now uses the accepted web prototype's settled-owner relation-class row lookup for normal terrain, water, and rock frames instead of the older source-offset stamp/corner heuristics. Rendering reports logical terrain id, renderer family, atlas role, relation ring, recovered shape class, row group, frame, transform flags, final-normalization metadata, and fallback metadata. Roads remain resolved through the existing 4-neighbor overlay masks. The editor base-terrain picker exposes only the curated HoMM3-style base family representatives declared in editor_base_terrain_options.",
+  "summary": "The live Overworld and shared Map Editor preview use the original authored quiet tile bank with procedural special-terrain fallback. Logical terrain ids, recovered owner queue/rewrite/final-normalization placement semantics, transition metadata, save/pathing data, and editor options remain unchanged. The extracted HoMM3 atlas contract is retained below only as disabled local renderer-research metadata and is excluded from official packages.",
   "editor_base_terrain_options": [
     {
       "id": "grass",
@@ -107,7 +107,7 @@
         "worn"
       ],
       "tile_art": {
-        "source_basis": "homm3_local_reference_prototype_fallback_paths_superseded_by_lookup",
+        "source_basis": "original_procedural_reference_informed",
         "base_tiles": [
           {
             "variant_key": "open",
@@ -155,7 +155,7 @@
         "worn"
       ],
       "tile_art": {
-        "source_basis": "homm3_local_reference_prototype_fallback_paths_superseded_by_lookup",
+        "source_basis": "original_procedural_reference_informed",
         "base_tiles": [
           {
             "variant_key": "open",
@@ -203,7 +203,7 @@
         "edge"
       ],
       "tile_art": {
-        "source_basis": "homm3_local_reference_prototype_fallback_paths_superseded_by_lookup",
+        "source_basis": "original_procedural_reference_informed",
         "base_tiles": [
           {
             "variant_key": "canopy",
@@ -271,7 +271,7 @@
           "S": "res://art/overworld/runtime/terrain_tiles/edges/mire_edge_s.png",
           "W": "res://art/overworld/runtime/terrain_tiles/edges/mire_edge_w.png"
         },
-        "source_basis": "homm3_local_reference_prototype_fallback_paths_superseded_by_lookup"
+        "source_basis": "original_procedural_reference_informed"
       }
     },
     {
@@ -319,7 +319,7 @@
           "S": "res://art/overworld/runtime/terrain_tiles/edges/mire_edge_s.png",
           "W": "res://art/overworld/runtime/terrain_tiles/edges/mire_edge_w.png"
         },
-        "source_basis": "homm3_local_reference_prototype_fallback_paths_superseded_by_lookup"
+        "source_basis": "original_procedural_reference_informed"
       }
     },
     {
@@ -367,7 +367,7 @@
           "S": "res://art/overworld/runtime/terrain_tiles/edges/highland_edge_s.png",
           "W": "res://art/overworld/runtime/terrain_tiles/edges/highland_edge_w.png"
         },
-        "source_basis": "homm3_local_reference_prototype_fallback_paths_superseded_by_lookup"
+        "source_basis": "original_procedural_reference_informed"
       }
     },
     {
@@ -415,7 +415,7 @@
           "S": "res://art/overworld/runtime/terrain_tiles/edges/highland_edge_s.png",
           "W": "res://art/overworld/runtime/terrain_tiles/edges/highland_edge_w.png"
         },
-        "source_basis": "homm3_local_reference_prototype_rock_void_logical_blocker"
+        "source_basis": "original_procedural_reference_informed_rock_void_logical_blocker"
       }
     },
     {
@@ -699,7 +699,7 @@
     }
   ],
   "homm3_local_prototype": {
-    "enabled": true,
+    "enabled": false,
     "local_reference_only": true,
     "asset_root": "res://art/overworld/runtime/homm3_local_prototype",
     "runtime_asset_overrides": {

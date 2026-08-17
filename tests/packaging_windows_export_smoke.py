@@ -4,6 +4,7 @@ from __future__ import annotations
 import json
 import os
 import shutil
+import struct
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -34,6 +35,14 @@ WINE_BINARY = os.environ.get("WINE", shutil.which("wine") or "")
 WINESERVER_BINARY = shutil.which("wineserver") or ""
 REQUIRED_WINDOWS_DLLS = (
     "aurelion_map_persistence.windows.template_release.x86_64.dll",
+)
+FORBIDDEN_TERRAIN_PCK_PREFIXES = (
+    "art/overworld/runtime/homm3_local_prototype/",
+    "art/overworld/runtime/terrain_tiles/generated/",
+)
+REQUIRED_TERRAIN_PCK_PREFIXES = (
+    "art/overworld/runtime/terrain_tiles/base/",
+    "art/overworld/runtime/terrain_tiles/roads/",
 )
 FATAL_EXPORT_PATTERNS = (
     "SCRIPT ERROR",
@@ -239,6 +248,61 @@ def artifact_listing() -> list[dict]:
     return rows
 
 
+def pck_terrain_payload_summary() -> dict:
+    summary = {
+        "checked": False,
+        "valid_directory": False,
+        "entry_count": 0,
+        "forbidden_prefixes": list(FORBIDDEN_TERRAIN_PCK_PREFIXES),
+        "forbidden_entries": [],
+        "required_prefix_counts": {prefix: 0 for prefix in REQUIRED_TERRAIN_PCK_PREFIXES},
+        "required_entries_present": False,
+    }
+    if not PCK_PATH.exists():
+        return summary
+    file_size = PCK_PATH.stat().st_size
+    try:
+        with PCK_PATH.open("rb") as handle:
+            header = handle.read(112)
+            if len(header) != 112 or header[:4] != b"GDPC" or struct.unpack_from("<I", header, 4)[0] != 3:
+                return summary
+            directory_offset = struct.unpack_from("<Q", header, 32)[0]
+            if directory_offset < 112 or directory_offset + 4 > file_size:
+                return summary
+            handle.seek(directory_offset)
+            entry_count = struct.unpack("<I", handle.read(4))[0]
+            if entry_count <= 0 or entry_count > 1_000_000:
+                return summary
+            summary["checked"] = True
+            summary["entry_count"] = entry_count
+            for _ in range(entry_count):
+                path_length_data = handle.read(4)
+                if len(path_length_data) != 4:
+                    return summary
+                path_length = struct.unpack("<I", path_length_data)[0]
+                if path_length <= 0 or path_length > 1_048_576:
+                    return summary
+                padded_length = (path_length + 3) & ~3
+                path_data = handle.read(padded_length)
+                metadata = handle.read(36)
+                if len(path_data) != padded_length or len(metadata) != 36:
+                    return summary
+                entry_path = path_data[:path_length].rstrip(b"\0").decode("utf-8", errors="replace")
+                for prefix in FORBIDDEN_TERRAIN_PCK_PREFIXES:
+                    if entry_path.startswith(prefix):
+                        summary["forbidden_entries"].append(entry_path)
+                for prefix in REQUIRED_TERRAIN_PCK_PREFIXES:
+                    if entry_path.startswith(prefix):
+                        summary["required_prefix_counts"][prefix] += 1
+            summary["valid_directory"] = handle.tell() == file_size
+    except (OSError, struct.error, UnicodeError):
+        return summary
+    summary["required_entries_present"] = all(
+        count > 0 for count in summary["required_prefix_counts"].values()
+    )
+    return summary
+
+
 def main() -> int:
     ARTIFACT_DIR.mkdir(parents=True, exist_ok=True)
     if EXPORT_DIR.exists():
@@ -263,6 +327,7 @@ def main() -> int:
     pck = file_summary(PCK_PATH, MIN_PCK_BYTES)
     header = exe_header_summary()
     dlls = dll_summary()
+    terrain_payload = pck_terrain_payload_summary()
     fatal_matches = list(export_result.get("output_summary", {}).get("fatal_pattern_matches", []))
     export_ok = (
         export_result["returncode"] == 0
@@ -275,6 +340,9 @@ def main() -> int:
         and bool(pck["exists"])
         and bool(pck["large_enough"])
         and bool(dlls["all_exported"])
+        and bool(terrain_payload["valid_directory"])
+        and not terrain_payload["forbidden_entries"]
+        and bool(terrain_payload["required_entries_present"])
     )
 
     wine_version_result = (
@@ -363,6 +431,7 @@ def main() -> int:
         "pck": pck,
         "exe_header": header,
         "windows_native_dlls": dlls,
+        "terrain_pck_payload": terrain_payload,
         "artifact_listing": artifact_listing(),
         "fatal_export_patterns": list(FATAL_EXPORT_PATTERNS),
         "fatal_export_matches": fatal_matches,
@@ -391,6 +460,8 @@ def main() -> int:
         "mz_header": header.get("mz_header", False),
         "pe_header": header.get("pe_header", False),
         "windows_dlls_exported": dlls["all_exported"],
+        "terrain_pck_forbidden_entry_count": len(terrain_payload["forbidden_entries"]),
+        "terrain_pck_required_entries_present": terrain_payload["required_entries_present"],
         "fatal_export_matches": fatal_matches,
         "wine_runtime_returncode": runtime_result["returncode"],
         "wine_runtime_markers": runtime_markers,
