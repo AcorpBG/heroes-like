@@ -11834,20 +11834,20 @@ func _compact_rail_text(full_text: String, max_lines: int, max_chars: int = RAIL
 			continue
 		if drop_headings and _rail_line_is_heading(line, raw_lines.size()):
 			continue
-		lines.append(_short_text(line, max_chars))
+		lines.append(_short_rail_text(line, max_chars))
 		if lines.size() >= max_lines:
 			break
 	if lines.is_empty():
 		var fallback := full_text.strip_edges().replace("\n", " | ")
 		if fallback == "":
 			fallback = "Ready"
-		lines.append(_short_text(fallback, max_chars))
+		lines.append(_short_rail_text(fallback, max_chars))
 	return "\n".join(lines)
 
 func _trim_rail_visible_text(visible_text: String, max_lines: int, max_chars: int) -> String:
 	var lines: Array[String] = []
 	for raw_line in visible_text.split("\n", false):
-		var line := _short_text(raw_line, max_chars)
+		var line := _short_rail_text(raw_line, max_chars)
 		if line == "":
 			continue
 		lines.append(line)
@@ -11856,6 +11856,24 @@ func _trim_rail_visible_text(visible_text: String, max_lines: int, max_chars: in
 	if lines.is_empty():
 		lines.append("Ready")
 	return "\n".join(lines)
+
+func _short_rail_text(text: String, max_chars: int) -> String:
+	var normalized := text.strip_edges().replace("\n", " ")
+	while normalized.find("  ") >= 0:
+		normalized = normalized.replace("  ", " ")
+	if normalized.length() <= max_chars:
+		return normalized
+	if max_chars <= 0:
+		return ""
+	if max_chars == 1:
+		return "…"
+	var prefix := normalized.left(max_chars - 1).strip_edges()
+	var boundary := prefix.rfind(" ")
+	if boundary > 0:
+		prefix = prefix.left(boundary).strip_edges()
+	if prefix == "":
+		prefix = normalized.left(max_chars - 1).strip_edges()
+	return "%s…" % prefix
 
 func _clean_rail_line(raw_line: String) -> String:
 	var line := raw_line.strip_edges()

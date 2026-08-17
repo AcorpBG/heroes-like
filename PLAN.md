@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `ux-overworld-rail-word-boundary-ellipsis-10184`. Compact Overworld right-rail truncation now preserves fitting lines exactly and ends overflow only at a whole-word boundary with one Unicode ellipsis, replacing the shipped First Turn Briefing `Claim Duskfen Basti...` mid-token cut while preserving the established one/two-line 42-character budgets and complete tooltips. Exact 1280x720/1920x1080 real-shell behavior, full Overworld visual, route tooltip, movement-input ownership, active-focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `ux-overworld-rail-word-boundary-ellipsis-10184`
 - Completed implementation slice: `ux-overworld-objective-brief-native-pixel-ellipsis-10184`. The live Overworld ObjectiveBrief now retains the exact complete rule-owned objective summary and existing stakes/readiness tooltip, then uses the existing single-line Label's native pixel-aware ellipsis instead of destroying the value at 72 characters and visibly ending `Next Claim D...`. Exact 1280x720/1920x1080 ObjectiveBrief geometry/authority, full Overworld visual, active-focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `ux-overworld-objective-brief-native-pixel-ellipsis-10184`
 - Completed implementation slice: `ux-battle-status-native-pixel-ellipsis-10184`. The live Battle banner Status now retains the exact full round/context/terrain/distance/active/objective value in both text and tooltip, uses the existing Label's native pixel-aware ellipsis at 1280x720, and renders the full fitting value at 1920x1080 instead of the prior fixed 62-character `Terrai...` cut. Focused Board, Town/Battle visual, active-focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -6980,6 +6982,38 @@ Completion evidence:
 - the full River Pass capture/save-resume/re-entry flow passed naturally with 42 steps and zero harness errors at exact 1280x720 (`/tmp/heroes-town-header-routed-1280.lBImP4/20260817T184313Z`) and 1920x1080 (`/tmp/heroes-town-header-routed-1920.k8KFFo/20260817T185207Z`); both captured-town frames visibly retain exact Duskfen/Mireclaw/Frontier/Spell identity and show `Your Control` without `Owner Player`;
 - active-play focus, accessibility semantics, core, repository validation, Python compilation, diff checks, and exact/generic Godot editor parses passed;
 - official Linux export/headless startup and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup reports are `ok:true`; packaged Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
+
+## Selected Slice: Overworld Rail Word-Boundary Ellipsis
+
+id: `ux-overworld-rail-word-boundary-ellipsis-10184`
+
+Status: completed.
+
+Implementation boundary:
+- add one rail-only truncator that preserves the existing normalization and maximum character budgets, returns fitting text byte-exactly, and otherwise uses the last available whole-word boundary followed by one Unicode ellipsis;
+- use it only inside `_compact_rail_text` and `_trim_rail_visible_text`, preserving source-line selection/order, prefixes, one/two-line budgets, complete tooltips, existing nodes, and current right-rail geometry;
+- leave the general `_short_text` helper and all action, status, map cue, frontier indicator, route, and button compactors unchanged.
+
+Completion criteria:
+- exact 1280x720 and 1920x1080 real Overworld rows independently reproduce the First Turn Briefing rail from its full live source and prove truncated lines end on whole words with one Unicode ellipsis, never an ASCII mid-token suffix, while fitting controls remain exact;
+- all visible right-rail labels retain their existing line/character budgets, complete tooltips, containment, order, and no-wrap/clip behavior, with objective/readiness, drawer, focus, route, action, save, settings, and whole-session authority unchanged;
+- focused Overworld visual, route/input compatibility, active-focus, accessibility, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass.
+
+Non-goals:
+- no OverworldRules source copy, briefing, objective, readiness, event, commitment, context, action, route, save, session, content, balance, AI, or Native RMG behavior change;
+- no general `_short_text` change, native multi-line layout replacement, new node/panel/tooltip surface, line/character budget, wrap, height, font, UI scale, art, audio, VFX, or sidebar redesign;
+- no packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- HEAD `916c881c2e875d937f0ccbb21f5ab16e0f9e1722` calls the general `_short_text` inside both rail compactors, which returns `normalized.left(max_chars - 3) + "..."` without checking a word boundary;
+- the fresh exact 1280x720 current-HEAD capture `/tmp/heroes-current-overworld-1280.png` visibly ends the live First Turn Briefing objective line at `Claim Duskfen Basti...`, while the existing tooltip retains the complete briefing;
+- this is direct current shipped first-view evidence for rail presentation only, not a claim that briefing content, line selection, or the broader compact-right-rail design is incorrect.
+
+Completion evidence:
+- the focused real-shell selector passed naturally at `/tmp/heroes-overworld-rail-focused-rerun.KaJIvl`, proving independent full-source reconstruction, exact 1280x720/1920x1080 visible text and complete tooltip, existing line/character budgets, whole-word Unicode ellipsis, no-wrap clipping, rail containment, restored window size, and unchanged whole-session authority;
+- the full Overworld visual smoke passed naturally at `/tmp/heroes-overworld-rail-compat-visual.UcGJ6S`, and route-tooltip, movement-input ownership, active-play focus, accessibility semantics, and core compatibility passed naturally at `/tmp/heroes-overworld-rail-compat-rest2.xhv0Zf` with zero selected diagnostics;
+- repository validation, Python compilation, scoped/global diff checks, tracker status, and exact/generic Godot editor parses passed at `/tmp/heroes-overworld-rail-final-audit.BS6UY1`;
+- official Linux export/headless startup passed at `/tmp/heroes-overworld-rail-platform-linux.XUbUxy`, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup passed at `/tmp/heroes-overworld-rail-platform-windows.37Fvvl`; packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
 
 ## Selected Slice: Overworld Objective Brief Native Pixel Ellipsis
 

@@ -29,6 +29,8 @@ func _run() -> void:
 		return
 	if not await _assert_objective_brief_native_ellipsis_contract(shell):
 		return
+	if not await _assert_rail_word_boundary_ellipsis_contract(shell):
+		return
 	if objective_brief_only:
 		shell.queue_free()
 		await get_tree().process_frame
@@ -457,6 +459,82 @@ func _join_objective_brief_sections(sections: Array) -> String:
 		if section != "" and section not in joined:
 			joined.append(section)
 	return "\n\n".join(joined)
+
+func _assert_rail_word_boundary_ellipsis_contract(shell: Control) -> bool:
+	var session = SessionState.ensure_active_session()
+	var authority_before: Dictionary = session.to_dict()
+	var original_window_size := get_window().size
+	var briefing: Label = shell.get_node("%Briefing")
+	var briefing_panel: Control = shell.get_node("%BriefingPanel")
+	var briefing_state: Dictionary = shell.call("validation_briefing_consumption_autosave_snapshot")
+	var full_briefing := String(briefing_state.get("briefing_text", ""))
+	var expected_visible := _expected_briefing_rail_text(full_briefing)
+	if not full_briefing.contains("Opening objectives: Claim Duskfen Bastion") \
+		or not expected_visible.contains("Duskfen…") \
+		or expected_visible.contains("Basti...") \
+		or expected_visible.contains("..."):
+		return _fail_overworld_objective_brief("Independent briefing source did not establish the rail mid-token control and whole-word expectation: full=%s expected=%s." % [full_briefing, expected_visible])
+	for width in [1280, 1920]:
+		var requested_size := Vector2i(width, 720 if width == 1280 else 1080)
+		get_window().size = requested_size
+		await get_tree().process_frame
+		await get_tree().process_frame
+		await get_tree().process_frame
+		var visible_lines := _visible_text_lines(briefing.text)
+		var panel_rect := briefing_panel.get_global_rect()
+		var label_rect := briefing.get_global_rect()
+		if get_window().size != requested_size \
+			or briefing.text != expected_visible \
+			or briefing.tooltip_text != full_briefing \
+			or visible_lines.size() != 2 \
+			or not visible_lines[1].ends_with("…") \
+			or String(visible_lines[1]).contains("...") \
+			or String(visible_lines[0]).length() > 42 \
+			or String(visible_lines[1]).length() > 42 \
+			or briefing.autowrap_mode != TextServer.AUTOWRAP_OFF \
+			or not briefing.clip_text \
+			or not briefing.is_visible_in_tree() \
+			or not panel_rect.encloses(label_rect):
+			return _fail_overworld_objective_brief("Briefing rail did not preserve exact full tooltip and two-line budget behind whole-word ellipsis at %d: full=%s visible=%s expected=%s lines=%s label=%s panel=%s." % [width, full_briefing, briefing.text, expected_visible, visible_lines, label_rect, panel_rect])
+	get_window().size = original_window_size
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if session.to_dict() != authority_before:
+		return _fail_overworld_objective_brief("Inspecting responsive rail ellipsis changed whole-session authority.")
+	return true
+
+func _expected_briefing_rail_text(full_text: String) -> String:
+	var raw_lines := full_text.split("\n", false)
+	if raw_lines.size() < 2:
+		return ""
+	var posture := String(raw_lines[0]).strip_edges()
+	var objective := String(raw_lines[1]).strip_edges()
+	if posture.begins_with("Command posture:"):
+		posture = "Posture: %s" % posture.trim_prefix("Command posture:").strip_edges()
+	if not posture.begins_with("Posture:") or not objective.begins_with("Opening objectives:"):
+		return ""
+	return "\n".join([
+		_word_safe_rail_line_for_test(posture, 42),
+		_word_safe_rail_line_for_test(objective, 42),
+	])
+
+func _word_safe_rail_line_for_test(text: String, max_chars: int) -> String:
+	var normalized := text.strip_edges().replace("\n", " ")
+	while normalized.find("  ") >= 0:
+		normalized = normalized.replace("  ", " ")
+	if normalized.length() <= max_chars:
+		return normalized
+	if max_chars <= 0:
+		return ""
+	if max_chars == 1:
+		return "…"
+	var prefix := normalized.left(max_chars - 1).strip_edges()
+	var boundary := prefix.rfind(" ")
+	if boundary > 0:
+		prefix = prefix.left(boundary).strip_edges()
+	if prefix == "":
+		prefix = normalized.left(max_chars - 1).strip_edges()
+	return "%s…" % prefix
 
 func _fail_overworld_objective_brief(message: String) -> bool:
 	push_error("Overworld smoke: %s" % message)
