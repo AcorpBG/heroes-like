@@ -209,9 +209,7 @@ func _exercise_battle_entries(session: SessionStateStoreScript.SessionData) -> D
 func _exercise_outcomes() -> Dictionary:
 	var victory: SessionStateStoreScript.SessionData = ScenarioFactoryScript.create_session(SCENARIO_ID, "normal", SessionStateStoreScript.LAUNCH_MODE_SKIRMISH)
 	_set_town_owner(victory, ENEMY_TOWN_PLACEMENT_ID, "player")
-	victory.flags["fogchart_relay_pickets_broken"] = true
-	victory.flags["fogchart_mirror_lancers_broken"] = true
-	victory.overworld["resolved_encounters"] = ["fogchart_aurora_battery"]
+	victory.overworld["resolved_encounters"] = ["fogchart_relay_pickets", "fogchart_mirror_lancers", "fogchart_aurora_battery"]
 	if String(ScenarioRulesScript.evaluate_session(victory).get("status", "")) != "victory":
 		_fail("Fogchart victory objectives did not resolve.")
 		return {}

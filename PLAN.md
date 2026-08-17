@@ -6711,6 +6711,34 @@ Non-goals:
 - no resource/artifact/encounter/route cue change, other Town or Overworld presentation change, broad renderer/audio redesign, particles, shaders, camera work, music, ambience, or final sound-design approval;
 - no packaged town-capture interaction/listening parity, controller hardware, AT-SPI/UIA certification, native hardware, Native RMG, signing/publication, whole-game, or release-readiness claim.
 
+## Selected Slice: Frontier Claims Direct Encounter Objectives
+
+id: `campaign-frontier-claims-direct-encounter-objectives-10184`
+
+Status: completed.
+
+Implementation boundary:
+- make the fourteen encounter-backed victory objectives in Frontier Claims chapters I through VII authoritative on their exact live encounter placement ids, matching chapters VIII and IX, instead of treating duplicate scenario flags as the objective source of truth;
+- open the exact Mireford start-lane terrain cell at `(1,3)` and move only Rootwatch Hollow from `(2,4)` to `(2,5)` so its authored 2x2 body no longer occupies `(1,3)` and `(2,3)`, allowing the shipped route to leave Graftroot Bridgehead and approach the first required Ford Reavers encounter;
+- preserve every encounter-authored victory flag, script condition, campaign unlock, and carryover export/import so existing chapter evidence and cross-faction progression remain compatible;
+- keep the nine-chapter order, every other map cell/object placement, encounter armies/seeds, towns, resource identities/rewards, commanders, difficulty, save schema, and generic live campaign driver unchanged.
+
+Completion criteria:
+- focused content/runtime proof binds each of the fourteen objective ids to its exact authored encounter placement, proves the placement must resolve before victory, and independently proves the existing victory flags and campaign carryover remain exact;
+- the Frontier Claims campaign report and all seven affected chapter/player reports pass without weakening their campaign, skirmish, save/resume, carryover, or faction-isolation authority;
+- the live first-chapter campaign flow leaves the previously sealed Graftroot pocket and enters the exact Ford Reavers objective battle, while focused runtime resolution of all three authored encounters reaches victory and the unlocked Orevein chapter;
+- campaign breadth, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass.
+
+Completion evidence:
+- the shipped route now resolves `(0,3) -> (1,3) -> (2,3) -> (3,2) -> (4,1)` into `bridge_ford_reavers`; both normal and easy live flows enter that exact battle instead of failing route discovery;
+- the generic live driver then loses the Ford Reavers battle, consistent with the existing placement-local balance contract that intentionally records this sample as a narrow autoplay defeat, so no full-arc or immediate-rush victory is claimed and no encounter roster, battle rule, or harness policy was changed;
+- focused campaign/chapter runtime proves all three Mireford encounters are required, their authored resolution reaches victory, and the campaign handoff unlocks Orevein; all seven affected chapter owners, campaign breadth/menu, core, static/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass.
+
+Non-goals:
+- no encounter battle, unit, hero, spell, artifact, AI, map topology or object-placement change beyond the exact Mireford start lane and Rootwatch Hollow one-tile relocation, town, economy, reward, script timing, campaign order, carryover, encounter-authored flag, save-schema, or live-harness behavior change;
+- no objective type change outside the fourteen named Frontier Claims encounter blockers and no inference that other flag objectives are invalid;
+- no packaged campaign interaction parity, controller hardware, AT-SPI/UIA certification, native hardware, Native RMG, signing/publication, whole-game, campaign-complete, or release-readiness claim.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:

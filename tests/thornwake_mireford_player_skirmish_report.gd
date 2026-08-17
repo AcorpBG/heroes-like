@@ -194,7 +194,7 @@ func _exercise_outcomes() -> Dictionary:
 	_set_town_owner(victory_session, "murkward_ford", "player")
 	victory_session.flags["ford_reavers_broken"] = true
 	victory_session.flags["silt_hunters_broken"] = true
-	victory_session.overworld["resolved_encounters"] = ["mireford_reed_totemists"]
+	victory_session.overworld["resolved_encounters"] = ["bridge_ford_reavers", "bridge_silt_hunters", "mireford_reed_totemists"]
 	var victory_result: Dictionary = ScenarioRulesScript.evaluate_session(victory_session)
 	if String(victory_result.get("status", "")) != "victory":
 		_fail("Rootbound Mireford victory objectives did not resolve: %s" % JSON.stringify(victory_result))

@@ -194,7 +194,7 @@ func _exercise_outcomes() -> Dictionary:
 	_set_town_owner(victory_session, "riverwatch_contract_crossing", "player")
 	victory_session.flags["archive_wardens_broken"] = true
 	victory_session.flags["bridgeward_levies_broken"] = true
-	victory_session.overworld["resolved_encounters"] = ["orevein_beacon_wardens"]
+	victory_session.overworld["resolved_encounters"] = ["orevein_archive_wardens", "orevein_bridgeward_levies", "orevein_beacon_wardens"]
 	var victory_result: Dictionary = ScenarioRulesScript.evaluate_session(victory_session)
 	if String(victory_result.get("status", "")) != "victory":
 		_fail("Orevein Contract victory objectives did not resolve: %s" % JSON.stringify(victory_result))
