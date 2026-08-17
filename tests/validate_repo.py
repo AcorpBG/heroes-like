@@ -33518,6 +33518,9 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
     sprite_block = function_block(map_text, "_draw_hero_sprite")
     draw_rect_block = function_block(map_text, "_hero_draw_rect")
     layout_block = function_block(map_text, "_hero_draw_layout_payload")
+    focus_draw_block = function_block(map_text, "_draw_tile_focus")
+    focus_layout_block = function_block(map_text, "_tile_focus_layout")
+    focus_validation_block = function_block(map_text, "validation_tile_focus_layout")
     reserve_block = function_block(map_text, "_draw_hero_reserve_badge")
     movement_block = function_block(map_text, "_draw_hero_movement_presentation")
     payload_block = function_block(map_text, "_hero_presentation_payload")
@@ -33578,6 +33581,42 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
     ensure("_draw_hero_marker(draw_rect, grounding_tile, false, _hero_presentation_entry(_hero_tile))" in movement_block, errors, "Hero movement interpolation must retain the authoritative active hero sprite across intermediate tiles")
     ensure('func validation_hero_draw_layout(tile: Vector2i, moving: bool = false) -> Dictionary:' in map_text and '_hero_draw_layout_payload(_tile_rect(_board_rect(), tile), tile, not moving)' in map_text, errors, "Focused validation must expose the exact static-versus-moving hero layout decision without mutating it")
     for token in (
+        "var layout := _tile_focus_layout(tile, rect)",
+        'var hero_focus_rect: Rect2 = layout.get("hero_focus_rect", rect)',
+        'var selection_rect: Rect2 = layout.get("selection_rect", rect)',
+        'if bool(layout.get("selection_uses_interior_fill", true)):',
+        '_draw_selection_corners(selection_rect, SELECTION_COLOR, focus_width)',
+        'var hover_rect: Rect2 = layout.get("hover_rect", rect)',
+    ):
+        ensure(token in focus_draw_block, errors, f"Town-footprint focus draw path is missing shared resolved geometry: {token}")
+    ensure(focus_draw_block.find("var layout :=") < focus_draw_block.find("if tile == _hero_tile:") < focus_draw_block.find("if tile == _selected_tile:") < focus_draw_block.find("if tile == _hover_tile:"), errors, "Focus drawing must resolve one layout before preserving hero, selected, then hover ownership")
+    for token in (
+        "var town_presentation := _town_presentation_at(tile)",
+        'var town: Dictionary = town_presentation.get("town", {}) if town_presentation.get("town", {}) is Dictionary else {}',
+        "var uses_town_footprint := not town.is_empty()",
+        "town_rect = _town_footprint_rect_for_entry(_town_entry_tile(town))",
+        '"hero_focus_rect": _hero_draw_rect(tile_rect, tile, true) if uses_town_footprint else tile_rect',
+        '"selection_rect": town_rect', '"selection_uses_town_footprint_rect": uses_town_footprint',
+        '"selection_uses_interior_fill": not uses_town_footprint', '"hover_rect": town_rect',
+        '"hover_uses_town_footprint_rect": uses_town_footprint',
+    ):
+        ensure(token in focus_layout_block, errors, f"Town-footprint focus layout is missing exact composite ownership: {token}")
+    ensure(focus_layout_block.find("var town_presentation :=") < focus_layout_block.find("var town: Dictionary =") < focus_layout_block.find("if uses_town_footprint:") < focus_layout_block.find("return {"), errors, "Focus layout must unwrap the exact indexed town before returning detached geometry")
+    for forbidden in ("_hero_tile", "_selected_tile", "_hover_tile", "session.", "_session.", "await ", "create_timer", "create_tween", "queue_redraw", "position =", ".erase("):
+        ensure(forbidden not in focus_layout_block, errors, f"Focus geometry resolver must stay synchronous, state-neutral, and independent of selection identity: {forbidden}")
+    for token in (
+        "func validation_tile_focus_layout(tile: Vector2i) -> Dictionary:",
+        "var layout := _tile_focus_layout(tile, tile_rect)",
+        '"hero_focus_rect": _rect_payload(hero_focus_rect)',
+        '"selection_rect": _rect_payload(selection_rect)',
+        '"selection_uses_interior_fill": bool(layout.get("selection_uses_interior_fill", true))',
+        '"hover_rect": _rect_payload(hover_rect)',
+        '"town_entry_tile": layout.get("town_entry_tile", {}).duplicate(true)',
+    ):
+        ensure(token in focus_validation_block, errors, f"Focus validation surface is missing detached actual geometry: {token}")
+    for forbidden in ("await ", "create_timer", "create_tween", "queue_redraw", "_draw_tile_focus(", ".erase("):
+        ensure(forbidden not in focus_validation_block, errors, f"Focus validation surface must remain read-only and must not invoke drawing: {forbidden}")
+    for token in (
         '"hero_id": hero_id', '"faction_id": faction_id', '"is_active": bool(hero.get("is_active", false))',
         '"sprite_asset_id": sprite_asset_id', '"sprite_path": String(_object_asset_paths.get(sprite_asset_id, ""))',
         '"uses_faction_sprite": faction_id != ""', '"uses_procedural_fallback": sprite_asset_id == ""',
@@ -33600,6 +33639,22 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
         'seen_factions.size() == 6 and seen_assets.size() == 6 and active_count == 1',
         'var moving_layout: Dictionary = map_view.call("validation_hero_draw_layout", active_tile, true)',
         'String(moving_layout.get("mode", "")) == "full_tile_world_hero"',
+        'var focus_exact: Dictionary = _validate_focus_layouts(map_view, exact)',
+        'var town_layout: Dictionary = map_view.call("validation_tile_focus_layout", active_tile)',
+        'var ordinary_layout: Dictionary = map_view.call("validation_tile_focus_layout", ordinary_tile)',
+        'var town_focus_layout_exact: bool = bool(town_layout.get("hero_uses_compact_town_footprint_rect", false))',
+        'var ordinary_focus_layout_exact: bool = not bool(ordinary_layout.get("hero_uses_compact_town_footprint_rect", true))',
+        'town_hero_focus_rect == _rect_from_payload(hero_layout.get("hero_rect", {}))',
+        'active_tile_rect.encloses(town_hero_focus_rect)',
+        'not bool(town_layout.get("selection_uses_interior_fill", true))',
+        'town_selection_rect == expected_town_rect',
+        'town_hover_rect == expected_town_rect',
+        'town_selection_rect.size == active_tile_rect.size * Vector2(3.0, 2.0)',
+        'ordinary_hero_focus_rect == ordinary_tile_rect',
+        'bool(ordinary_layout.get("selection_uses_interior_fill", false))',
+        'ordinary_selection_rect == ordinary_tile_rect',
+        'ordinary_hover_rect == ordinary_tile_rect',
+        'var restored_focus_exact: bool = map_view.call("validation_tile_focus_layout", active_tile) == focus_exact.get("town_layout", {})',
         'town_footprint_layout_count == 1 and ordinary_layout_count == 5 and geometry_exact',
         'String(layout.get("mode", "")) == "compact_town_footprint_visitor"',
         'is_equal_approx(float(layout.get("hero_rect_extent_fraction", 0.0)), 0.64)',
@@ -33610,15 +33665,16 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
         'first_hero["id"] = "hero_missing_faction_sprite_fixture"',
         'String(fallback.get("sprite_asset_id", "")) == ""', 'bool(fallback.get("uses_procedural_fallback", false))',
         'String(fallback.get("layout", {}).get("mode", "")) == "compact_town_footprint_visitor"',
-        'session.from_dict(authority_before)', 'restored_profiles == profiles and session.to_dict() == authority_before',
+        'session.from_dict(authority_before)', 'restored_profiles == profiles and restored_focus_exact and session.to_dict() == authority_before',
         'var viewport_rect: Rect2 = get_viewport().get_visible_rect()', 'viewport_rect.encloses(shell_rect)',
         'SessionStateStore.SAVE_VERSION', 'print("OVERWORLD_FACTION_HERO_SPRITE_RUNTIME_REPORT %s"',
     ):
         ensure(token in report_text, errors, f"Overworld faction hero focused owner is missing method-matched proof: {token}")
     ensure(report_text.find('session.hero_id = String(heroes[0].get("id", ""))') < report_text.find('session.overworld["player_heroes"] = heroes'), errors, "Faction hero fixture must align the SessionData primary id before installing the exact six-hero roster")
     ensure(report_text.count("for viewport_size in VIEWPORT_SIZES:") == 1, errors, "Faction hero focused owner must run exactly both registered widths")
-    ensure(report_text.find('first_hero["id"] = "hero_missing_faction_sprite_fixture"') < report_text.find("session.from_dict(authority_before)") < report_text.find("restored_profiles == profiles and session.to_dict() == authority_before"), errors, "Faction hero fallback fixture must restore through the public SessionData snapshot before exact authority comparison")
-    for forbidden in ("_hero_faction_asset_ids[", "_object_textures[", "_draw_hero_sprite(", "_draw_hero_marker(", "_hero_draw_rect(", "_hero_draw_layout_payload(", "create_timer", "create_tween"):
+    ensure(report_text.find('first_hero["id"] = "hero_missing_faction_sprite_fixture"') < report_text.find("session.from_dict(authority_before)") < report_text.find("restored_profiles == profiles and restored_focus_exact and session.to_dict() == authority_before"), errors, "Faction hero fallback fixture must restore through the public SessionData snapshot before exact authority comparison")
+    ensure(report_text.find("var active_tile :=") < report_text.find("var focus_exact: Dictionary =") < report_text.find('first_hero["id"] = "hero_missing_faction_sprite_fixture"') < report_text.find("session.from_dict(authority_before)"), errors, "Focused focus-layout proof must precede the fallback mutation and exact public restoration")
+    for forbidden in ("_hero_faction_asset_ids[", "_object_textures[", "_draw_hero_sprite(", "_draw_hero_marker(", "_hero_draw_rect(", "_hero_draw_layout_payload(", "_tile_focus_layout(", "_draw_tile_focus(", "create_timer", "create_tween"):
         ensure(forbidden not in report_text, errors, f"Faction hero focused owner must not bypass production resolution: {forbidden}")
     visual_text = (ROOT / "tests" / "overworld_visual_smoke.gd").read_text(encoding="utf-8")
     ensure('String(hero_sprite.get("sprite_asset_id", "")) != "hero_faction_embercourt"' in visual_text, errors, "Overworld visual gate must require the exact River Pass hero faction sprite")
@@ -33632,8 +33688,19 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
         'String(hero_layout.get("mode", "")) != "full_tile_world_hero"',
         'bool(hero_layout.get("town_footprint_colocated", true))',
         'not is_equal_approx(float(hero_layout.get("hero_rect_extent_fraction", 0.0)), 1.0)',
+        'map_view.call("validation_tile_focus_layout", hero_tile)',
+        'hero_focus_rect != _focus_rect_from_payload(hero_layout.get("hero_rect", {}))',
+        'not bool(focus_layout.get("selection_uses_town_footprint_rect", false))',
+        'bool(focus_layout.get("selection_uses_interior_fill", true))',
+        'selection_focus_rect != hover_focus_rect',
+        'not selection_focus_rect.encloses(focus_tile_rect)',
+        'hero_focus_rect != focus_tile_rect',
+        'selection_focus_rect != focus_tile_rect',
+        'hover_focus_rect != focus_tile_rect',
     ):
         ensure(token in visual_text, errors, f"Broad Overworld visual gate is missing town-entry visitor composition: {token}")
+    for forbidden in ("_tile_focus_layout(", "_draw_tile_focus(", "create_timer", "create_tween"):
+        ensure(forbidden not in visual_text, errors, f"Broad focus geometry gate must observe only the public validation surface: {forbidden}")
 
 
 def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None:
