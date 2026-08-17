@@ -3622,7 +3622,8 @@ func _refresh_status_surfaces(generated_surface_start: int) -> bool:
 	var objective_stakes := OverworldRules.describe_objective_stakes_board(_session)
 	var end_turn_forecast_surface := OverworldRules.describe_end_turn_forecast_surfaces(_session)
 	_profile_add("end_turn_forecast_bundle_builds", 1)
-	var readiness_surface := _field_readiness_surface({}, end_turn_forecast_surface)
+	var readiness_context := _field_readiness_context(end_turn_forecast_surface)
+	var readiness_surface := _field_readiness_surface({}, end_turn_forecast_surface, readiness_context)
 	_objective_brief_label.text = _compact_text(objective_brief, 1, 72, false)
 	_objective_brief_label.tooltip_text = _join_tooltip_sections([
 		objective_stakes,
@@ -3690,7 +3691,7 @@ func _refresh_status_surfaces(generated_surface_start: int) -> bool:
 	_debug_refresh_profile_end("refresh_frontier_drawer", frontier_profile_start, {"drawer_open": _active_drawer == "frontier"})
 	_refresh_context_tile_surface()
 	var event_context_profile_start := _debug_refresh_profile_begin("refresh_event_action_context")
-	var event_surface := _event_feed_surface(end_turn_forecast_surface)
+	var event_surface := _event_feed_surface(end_turn_forecast_surface, readiness_context)
 	var action_context_surface := _action_context_surface(event_surface, readiness_surface)
 	_set_rail_text(
 		_event_label,
@@ -7137,7 +7138,10 @@ func _rail_log_text() -> String:
 		message = "Awaiting order"
 	return "Log: %s" % message
 
-func _event_feed_surface(end_turn_forecast_surface: Dictionary = {}) -> Dictionary:
+func _event_feed_surface(
+	end_turn_forecast_surface: Dictionary = {},
+	readiness_context: Dictionary = {}
+) -> Dictionary:
 	var surface := OverworldRules.describe_event_feed_surface(
 		_session,
 		_last_message,
@@ -7146,7 +7150,7 @@ func _event_feed_surface(end_turn_forecast_surface: Dictionary = {}) -> Dictiona
 		_last_enemy_activity_events,
 		_last_action_recap
 	)
-	var readiness_surface := _field_readiness_surface(surface, end_turn_forecast_surface)
+	var readiness_surface := _field_readiness_surface(surface, end_turn_forecast_surface, readiness_context)
 	surface["field_readiness"] = readiness_surface
 	if _field_feed_is_idle():
 		var visible_text := String(readiness_surface.get("visible_text", "")).strip_edges()
@@ -7228,10 +7232,8 @@ func _field_feed_is_idle() -> bool:
 		and _last_action_recap.is_empty()
 	)
 
-func _field_readiness_surface(base_event_surface: Dictionary = {}, end_turn_forecast_surface: Dictionary = {}) -> Dictionary:
-	_profile_add("field_readiness_surface_calls", 1)
-	if not base_event_surface.is_empty():
-		_profile_add("field_readiness_surface_base_event_calls", 1)
+func _field_readiness_context(end_turn_forecast_surface: Dictionary = {}) -> Dictionary:
+	_profile_add("field_readiness_context_builds", 1)
 	var movement = _session.overworld.get("movement", {})
 	var movement_line := "Move %d/%d" % [
 		int(movement.get("current", 0)),
@@ -7239,11 +7241,9 @@ func _field_readiness_surface(base_event_surface: Dictionary = {}, end_turn_fore
 	]
 	var progress_recap := ScenarioRules.describe_session_progress_recap(_session, false)
 	var progress_line := _line_with_prefix(progress_recap, "Current progress:")
-	var next_step := String(base_event_surface.get("next_step", "")).strip_edges()
-	if next_step == "":
-		next_step = _line_with_prefix(progress_recap, "Next step:").trim_prefix("Next step:").strip_edges()
-	if next_step == "":
-		next_step = "Select the next destination or end the turn when field orders are spent."
+	var default_next_step := _line_with_prefix(progress_recap, "Next step:").trim_prefix("Next step:").strip_edges()
+	if default_next_step == "":
+		default_next_step = "Select the next destination or end the turn when field orders are spent."
 	var forecast := ""
 	if end_turn_forecast_surface.is_empty():
 		forecast = OverworldRules.describe_end_turn_forecast_compact(_session)
@@ -7252,10 +7252,22 @@ func _field_readiness_surface(base_event_surface: Dictionary = {}, end_turn_fore
 		forecast = String(end_turn_forecast_surface.get("forecast_compact", ""))
 	var simple_destination := _selected_route_simple_destination_surface()
 	if not simple_destination.is_empty() and not _is_selected_owned_town_visit_target():
-		return _field_readiness_simple_route_surface(simple_destination, progress_line, next_step, movement_line, forecast)
+		return {
+			"movement_line": movement_line,
+			"progress_line": progress_line,
+			"default_next_step": default_next_step,
+			"forecast": forecast,
+			"simple_destination": simple_destination.duplicate(true),
+		}.duplicate(true)
 	var compact_interaction_destination := _selected_route_compact_interaction_destination_surface()
 	if not compact_interaction_destination.is_empty() and not _is_selected_owned_town_visit_target():
-		return _field_readiness_simple_route_surface(compact_interaction_destination, progress_line, next_step, movement_line, forecast)
+		return {
+			"movement_line": movement_line,
+			"progress_line": progress_line,
+			"default_next_step": default_next_step,
+			"forecast": forecast,
+			"simple_destination": compact_interaction_destination.duplicate(true),
+		}.duplicate(true)
 	var primary_action := _current_primary_action()
 	var primary_line := "Primary order: select a visible destination."
 	if not primary_action.is_empty():
@@ -7268,6 +7280,49 @@ func _field_readiness_surface(base_event_surface: Dictionary = {}, end_turn_fore
 	var route_target_handoff := _route_target_handoff_surface(route_decision)
 	var town_entry_handoff := _town_entry_handoff_surface()
 	var active_site_order := _active_site_order_surface(primary_action)
+	return {
+		"movement_line": movement_line,
+		"progress_line": progress_line,
+		"default_next_step": default_next_step,
+		"forecast": forecast,
+		"simple_destination": {},
+		"primary_line": primary_line,
+		"route_line": route_line,
+		"route_target_handoff": route_target_handoff.duplicate(true),
+		"town_entry_handoff": town_entry_handoff.duplicate(true),
+		"active_site_order": active_site_order.duplicate(true),
+	}.duplicate(true)
+
+func _field_readiness_surface(
+	base_event_surface: Dictionary = {},
+	end_turn_forecast_surface: Dictionary = {},
+	preloaded_context: Dictionary = {}
+) -> Dictionary:
+	_profile_add("field_readiness_surface_calls", 1)
+	if not base_event_surface.is_empty():
+		_profile_add("field_readiness_surface_base_event_calls", 1)
+	var context := preloaded_context
+	if context.is_empty():
+		context = _field_readiness_context(end_turn_forecast_surface)
+	else:
+		_profile_add("field_readiness_context_reuses", 1)
+	_profile_add("field_readiness_context_materializations", 1)
+	var movement_line := String(context.get("movement_line", ""))
+	var progress_line := String(context.get("progress_line", ""))
+	var next_step := String(base_event_surface.get("next_step", "")).strip_edges()
+	if next_step == "":
+		next_step = String(context.get("default_next_step", ""))
+	if next_step == "":
+		next_step = "Select the next destination or end the turn when field orders are spent."
+	var forecast := String(context.get("forecast", ""))
+	var simple_destination: Dictionary = context.get("simple_destination", {}) if context.get("simple_destination", {}) is Dictionary else {}
+	if not simple_destination.is_empty():
+		return _field_readiness_simple_route_surface(simple_destination, progress_line, next_step, movement_line, forecast)
+	var primary_line := String(context.get("primary_line", "Primary order: select a visible destination."))
+	var route_line := String(context.get("route_line", ""))
+	var route_target_handoff: Dictionary = context.get("route_target_handoff", {}) if context.get("route_target_handoff", {}) is Dictionary else {}
+	var town_entry_handoff: Dictionary = context.get("town_entry_handoff", {}) if context.get("town_entry_handoff", {}) is Dictionary else {}
+	var active_site_order: Dictionary = context.get("active_site_order", {}) if context.get("active_site_order", {}) is Dictionary else {}
 	var visible_next := _short_text(next_step.trim_suffix("."), 44)
 	var visible := "Ready: %s | %s" % [visible_next, movement_line]
 	var active_site_visible := String(active_site_order.get("visible_text", "")).strip_edges()

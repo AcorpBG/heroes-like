@@ -31,19 +31,27 @@ func _run() -> void:
 	var full_refresh_profile: Dictionary = shell.call("validation_profile_snapshot")
 	var refresh_authority_after: Dictionary = _refresh_authority(shell.call("validation_snapshot"))
 	if int(full_refresh_profile.get("field_readiness_surface_calls", 0)) != 2 or int(full_refresh_profile.get("field_readiness_surface_base_event_calls", 0)) != 1:
-		_fail("Full refresh did not retain one status readiness plus one distinct event-feed readiness derivation.", full_refresh_profile)
+		_fail("Full refresh did not materialize one status readiness plus one event-feed readiness surface.", full_refresh_profile)
+		return
+	if int(full_refresh_profile.get("field_readiness_context_builds", 0)) != 1 \
+			or int(full_refresh_profile.get("field_readiness_context_reuses", 0)) != 2 \
+			or int(full_refresh_profile.get("field_readiness_context_materializations", 0)) != 2:
+		_fail("Full refresh did not build one readiness context and reuse it for both exact surfaces.", full_refresh_profile)
 		return
 	if int(full_refresh_profile.get("drawer_handoff_preloaded_readiness_reuses", 0)) != 1:
 		_fail("Full refresh did not reuse the current readiness payload for drawer handoff synchronization.", full_refresh_profile)
 		return
-	if int(full_refresh_profile.get("end_turn_forecast_bundle_builds", 0)) != 1 or int(full_refresh_profile.get("end_turn_forecast_bundle_reuses", 0)) != 5:
-		_fail("Full refresh did not build one end-turn forecast bundle and reuse it across all five consumers.", full_refresh_profile)
+	if int(full_refresh_profile.get("end_turn_forecast_bundle_builds", 0)) != 1 or int(full_refresh_profile.get("end_turn_forecast_bundle_reuses", 0)) != 4:
+		_fail("Full refresh did not build one end-turn forecast bundle and reuse it across the four remaining consumers.", full_refresh_profile)
 		return
 	if session.to_dict() != refresh_session_before or refresh_authority_after != refresh_authority_before:
 		_fail("Readiness reuse changed session or whole refresh surface authority.", {
 			"before": refresh_authority_before,
 			"after": refresh_authority_after,
 		})
+		return
+	var event_context_control := _assert_event_readiness_context_parity(shell, session, "full_refresh")
+	if event_context_control.is_empty():
 		return
 	shell.call("validation_reset_profile", false)
 	var legacy_drawer_started := Time.get_ticks_usec()
@@ -147,6 +155,9 @@ func _run() -> void:
 		"legacy_extra_to_full_refresh_ratio": float(legacy_drawer_extra_usec) / float(maxi(full_refresh_usec, 1)),
 		"field_readiness_surface_calls": int(full_refresh_profile.get("field_readiness_surface_calls", 0)),
 		"field_readiness_surface_base_event_calls": int(full_refresh_profile.get("field_readiness_surface_base_event_calls", 0)),
+		"field_readiness_context_builds": int(full_refresh_profile.get("field_readiness_context_builds", 0)),
+		"field_readiness_context_reuses": int(full_refresh_profile.get("field_readiness_context_reuses", 0)),
+		"field_readiness_context_materializations": int(full_refresh_profile.get("field_readiness_context_materializations", 0)),
 		"drawer_handoff_preloaded_readiness_reuses": int(full_refresh_profile.get("drawer_handoff_preloaded_readiness_reuses", 0)),
 		"end_turn_forecast_bundle_builds": int(full_refresh_profile.get("end_turn_forecast_bundle_builds", 0)),
 		"end_turn_forecast_bundle_reuses": int(full_refresh_profile.get("end_turn_forecast_bundle_reuses", 0)),
@@ -156,6 +167,10 @@ func _run() -> void:
 		"forecast_bundle_core_parity": true,
 		"forecast_bundle_surface_parity": true,
 		"drawer_readiness_preload_parity": true,
+		"event_readiness_context_parity": true,
+		"legacy_event_readiness_usec": int(event_context_control.get("legacy_usec", 0)),
+		"shared_event_readiness_usec": int(event_context_control.get("shared_usec", 0)),
+		"legacy_event_to_shared_ratio": float(event_context_control.get("legacy_usec", 0)) / float(maxi(int(event_context_control.get("shared_usec", 0)), 1)),
 		"refresh_authority_exact": true,
 		"legacy_drawer_authority_exact": true,
 	})])
@@ -424,20 +439,30 @@ func _assert_forecast_bundle_surface_parity(shell: Node, session, label: String)
 	var bundle: Dictionary = OverworldRules.describe_end_turn_forecast_surfaces(session)
 	var default_readiness: Dictionary = shell.call("_field_readiness_surface")
 	var preloaded_readiness: Dictionary = shell.call("_field_readiness_surface", {}, bundle)
+	var readiness_context: Dictionary = shell.call("_field_readiness_context", bundle)
+	var context_readiness: Dictionary = shell.call("_field_readiness_surface", {}, bundle, readiness_context)
 	var default_status: Dictionary = shell.call("_status_forecast_surface")
 	var preloaded_status: Dictionary = shell.call("_status_forecast_surface", bundle)
 	var default_event: Dictionary = shell.call("_event_feed_surface")
 	var preloaded_event: Dictionary = shell.call("_event_feed_surface", bundle)
+	var context_event: Dictionary = shell.call("_event_feed_surface", bundle, readiness_context)
 	var default_end_turn: Dictionary = shell.call("_end_turn_confirmation_surface", default_readiness)
 	var preloaded_end_turn: Dictionary = shell.call("_end_turn_confirmation_surface", preloaded_readiness)
-	if default_readiness != preloaded_readiness or default_status != preloaded_status or default_event != preloaded_event or default_end_turn != preloaded_end_turn:
+	if default_readiness != preloaded_readiness \
+			or default_readiness != context_readiness \
+			or default_status != preloaded_status \
+			or default_event != preloaded_event \
+			or default_event != context_event \
+			or default_end_turn != preloaded_end_turn:
 		_fail("Preloaded forecast changed readiness, status, event, or End Turn surfaces for %s." % label, {
 			"default_readiness": default_readiness,
 			"preloaded_readiness": preloaded_readiness,
+			"context_readiness": context_readiness,
 			"default_status": default_status,
 			"preloaded_status": preloaded_status,
 			"default_event": default_event,
 			"preloaded_event": preloaded_event,
+			"context_event": context_event,
 			"default_end_turn": default_end_turn,
 			"preloaded_end_turn": preloaded_end_turn,
 		})
@@ -473,6 +498,70 @@ func _assert_forecast_bundle_surface_parity(shell: Node, session, label: String)
 		})
 		return false
 	return true
+
+func _assert_event_readiness_context_parity(shell: Node, session, label: String) -> Dictionary:
+	var authority_before: Dictionary = session.to_dict()
+	var bundle: Dictionary = OverworldRules.describe_end_turn_forecast_surfaces(session)
+	shell.call("validation_reset_profile", false)
+	var legacy_started := Time.get_ticks_usec()
+	var legacy_readiness: Dictionary = shell.call("_field_readiness_surface", {}, bundle)
+	var legacy_event: Dictionary = shell.call("_event_feed_surface", bundle)
+	var legacy_usec := Time.get_ticks_usec() - legacy_started
+	var legacy_profile: Dictionary = shell.call("validation_profile_snapshot")
+	if int(legacy_profile.get("field_readiness_context_builds", 0)) != 2 \
+			or int(legacy_profile.get("field_readiness_context_reuses", 0)) != 0 \
+			or int(legacy_profile.get("field_readiness_context_materializations", 0)) != 2:
+		_fail("Legacy event-readiness control did not build two independent contexts for %s." % label, legacy_profile)
+		return {}
+	shell.call("validation_reset_profile", false)
+	var shared_started := Time.get_ticks_usec()
+	var shared_context: Dictionary = shell.call("_field_readiness_context", bundle)
+	var shared_readiness: Dictionary = shell.call("_field_readiness_surface", {}, bundle, shared_context)
+	var shared_event: Dictionary = shell.call("_event_feed_surface", bundle, shared_context)
+	var shared_usec := Time.get_ticks_usec() - shared_started
+	var shared_profile: Dictionary = shell.call("validation_profile_snapshot")
+	if int(shared_profile.get("field_readiness_context_builds", 0)) != 1 \
+			or int(shared_profile.get("field_readiness_context_reuses", 0)) != 2 \
+			or int(shared_profile.get("field_readiness_context_materializations", 0)) != 2:
+		_fail("Shared event-readiness control did not build once and reuse twice for %s." % label, shared_profile)
+		return {}
+	if legacy_readiness != shared_readiness or legacy_event != shared_event:
+		_fail("Shared event-readiness context changed exact surfaces for %s." % label, {
+			"legacy_readiness": legacy_readiness,
+			"shared_readiness": shared_readiness,
+			"legacy_event": legacy_event,
+			"shared_event": shared_event,
+		})
+		return {}
+	if legacy_usec * 100 < shared_usec * 105:
+		_fail("Shared event-readiness context did not remove at least five percent of the legacy two-build work for %s." % label, {
+			"legacy_usec": legacy_usec,
+			"shared_usec": shared_usec,
+		})
+		return {}
+	var expected_context: Dictionary = shared_context.duplicate(true)
+	shared_context["progress_line"] = "mutated detached readiness control"
+	var nested_mutation_count := 0
+	for key in ["simple_destination", "active_site_order", "route_target_handoff", "town_entry_handoff"]:
+		var nested: Dictionary = shared_context.get(key, {}) if shared_context.get(key, {}) is Dictionary else {}
+		if not nested.is_empty():
+			nested["visible_text"] = "mutated detached readiness control"
+			nested_mutation_count += 1
+	if nested_mutation_count <= 0:
+		_fail("Shared readiness context exposed no nested detached payload for %s." % label, shared_context)
+		return {}
+	var rebuilt_context: Dictionary = shell.call("_field_readiness_context", bundle)
+	if session.to_dict() != authority_before or rebuilt_context != expected_context:
+		_fail("Shared readiness context was session-aliased or did not rebuild from live state for %s." % label, {
+			"expected": expected_context,
+			"rebuilt": rebuilt_context,
+		})
+		return {}
+	return {
+		"legacy_usec": legacy_usec,
+		"shared_usec": shared_usec,
+		"nested_detach_count": nested_mutation_count,
+	}
 
 func _frontier_ui_authority(shell: Node) -> Dictionary:
 	var names := ["FrontierIndicator", "Visibility", "Objectives", "Threats", "Forecast"]

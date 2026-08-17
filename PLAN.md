@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `performance-overworld-full-refresh-event-readiness-context-reuse-10184`. One full Overworld status refresh now builds one detached event-independent Field Readiness context and materializes the exact header and event-backed variants from it while direct/default callers remain fresh. Focused whole-surface/session authority is exact with one build, two reuses/materializations, and a 352-to-306 ms same-process legacy control. Authored Ninefold event/action context improves from 203 to 112 ms and repeat refresh from 2449 to 2349 ms; first-ready remains safely within 1.1 percent noise at 4578 ms. The full edited-working-copy round trip, Overworld visual/interaction, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `performance-overworld-full-refresh-event-readiness-context-reuse-10184`
 - Completed implementation slice: `performance-runtime-save-summary-detail-context-reuse-10184`. Successful inline runtime-summary publication now builds one owned normalized-session recap context and reuses it for resume, continuity, progress, and risk-watch detail while public direct descriptions and large/deferred fallbacks remain fresh. Independent Overworld, Town, Battle, and Outcome controls are whole-exact with exact file/cache/session authority. Authored Ninefold summary-cache time improves from 2566 to 258 ms, briefing autosave from 2590 to 282 ms, and first-ready from 6775 to 4531 ms; the full edited Play Copy round trip remains behavior-exact. Transaction, generated-Large deferred/manual save, save/load visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged save interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `performance-runtime-save-summary-detail-context-reuse-10184`
 - Completed implementation slice: `performance-overworld-full-refresh-end-turn-forecast-bundle-reuse-10184`. One full Overworld refresh now builds one detached full/compact next-day forecast bundle from shared rule components and reuses it across Field Readiness, status, open or collapsed Frontier, event context, End Turn, and drawer handoff surfaces; direct/default callers remain fresh. Focused parity covers ordinary, pressured, day-transition, current-tile, selected-route, open/collapsed Frontier, event, End Turn, drawer, detach/rebuild, session, and whole UI authority. The same-process bundle is 6.7 times faster than the removed three-full/five-compact path; focused full refresh improves 474 to 319 ms, authored Ninefold first-ready 8.99 to 6.78 seconds, repeat refresh 4.37 to 2.43 seconds, and text surfaces 3.54 to 1.60 seconds. The full edited-working-copy round trip remains behavior-exact. Compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
@@ -6336,6 +6338,28 @@ Non-goals:
 - no save format/schema/version, transactional writer/readback, payload inline threshold, cache identity/invalidation, persistent cross-call cache, async/background work, autosave/manual policy, recovery, or UI copy change;
 - no scenario/progress/risk/forecast policy, Overworld/Town/Battle/Outcome gameplay, content, AI, balance, Native RMG, or package identity change;
 - no packaged save interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+## Selected Slice: Overworld Full Refresh Event Readiness Context Reuse
+
+id: `performance-overworld-full-refresh-event-readiness-context-reuse-10184`
+
+Status: completed.
+
+Implementation boundary:
+- during one full Overworld status refresh, derive the event-independent progress, movement, primary-order, selected-route, active-site, town-entry, route-target, and compact forecast inputs once and materialize both the no-event header Field Readiness and event-backed Field Readiness variants from that invocation-local context;
+- preserve exact visible text, tooltips, next-step precedence, route/action decisions, event/action context, End Turn and drawer handoffs, direct/default caller freshness, and all refresh invalidation behavior;
+- keep the context detached and local to one refresh; rebuild it after every state or selection change and never retain it across refreshes, sessions, or days.
+
+Completion criteria:
+- independent current direct Field Readiness controls are whole-exact to context-backed no-event and event-backed variants across idle, active-event, current-tile, open-route, interaction, blocked, town-entry, active-site, and pressured states;
+- one full status refresh records one context build and two exact materializations, removes the second full derivation, and preserves session, action, route, event, End Turn, drawer, save, focus, and whole UI authority;
+- a same-process legacy two-derivation control proves material removed work, while authored Ninefold first-ready/repeat-refresh timing improves or remains safely non-regressed and the edited-working-copy round trip remains behavior-exact;
+- focused refresh-cache, Map Editor Play Copy, Overworld visual/interaction, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass.
+
+Non-goals:
+- no event-feed, route, action, objective, progress, forecast, risk, handoff, End Turn, drawer, or refresh invalidation policy change;
+- no persistent cross-refresh/day/session cache, async/background work, Map Editor semantics, save schema, gameplay/content/AI/balance/Native RMG/package identity change;
+- no packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
 
 ## Progress Reconciliation
 
