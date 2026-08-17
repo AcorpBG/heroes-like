@@ -17,6 +17,9 @@ func _run() -> void:
 	var event_dispatch_control := _assert_event_dispatch_observation_context_reuse()
 	if event_dispatch_control.is_empty():
 		return
+	var refresh_watch_control := _assert_refresh_watch_observation_context_reuse()
+	if refresh_watch_control.is_empty():
+		return
 	_prepare_shell_state(shell, session, Vector2i(0, 1), 10)
 	var reserve_id := _ensure_reserve_hero(session)
 	shell.call("_refresh")
@@ -74,6 +77,10 @@ func _run() -> void:
 	if int(full_refresh_profile.get("event_dispatch_observation_context_builds", 0)) != 1 \
 			or int(full_refresh_profile.get("event_dispatch_observation_context_reuses", 0)) != 2:
 		_fail("Full refresh did not build one Event/Dispatch observation context and reuse it for both exact surfaces.", full_refresh_profile)
+		return
+	if int(full_refresh_profile.get("refresh_watch_observation_context_builds", 0)) != 1 \
+			or int(full_refresh_profile.get("refresh_watch_observation_context_reuses", 0)) != 3:
+		_fail("Full refresh did not build one watch context and reuse it across forecast, commitment, and Event/Dispatch surfaces.", full_refresh_profile)
 		return
 	if session.to_dict() != refresh_session_before or refresh_authority_after != refresh_authority_before:
 		_fail("Readiness reuse changed session or whole refresh surface authority.", {
@@ -234,6 +241,12 @@ func _run() -> void:
 		"event_dispatch_shared_to_legacy_ratio": float(event_dispatch_control.get("shared_median_usec", 0)) / float(maxi(int(event_dispatch_control.get("legacy_median_usec", 0)), 1)),
 		"event_dispatch_whole_output_parity": true,
 		"event_dispatch_session_authority_exact": true,
+		"refresh_watch_fixture_count": int(refresh_watch_control.get("fixture_count", 0)),
+		"refresh_watch_direct_median_usec": int(refresh_watch_control.get("direct_median_usec", 0)),
+		"refresh_watch_shared_median_usec": int(refresh_watch_control.get("shared_median_usec", 0)),
+		"refresh_watch_shared_to_direct_ratio": float(refresh_watch_control.get("shared_median_usec", 0)) / float(maxi(int(refresh_watch_control.get("direct_median_usec", 0)), 1)),
+		"refresh_watch_whole_output_parity": true,
+		"refresh_watch_detached_rebuild_exact": true,
 		"refresh_authority_exact": true,
 		"legacy_drawer_authority_exact": true,
 	})])
@@ -558,6 +571,180 @@ func _legacy_event_feed_watch_line(session) -> String:
 	if parts.is_empty():
 		return "No urgent raid, convoy, or town-management warning is visible."
 	return " | ".join(parts.slice(0, min(3, parts.size())))
+
+func _assert_refresh_watch_observation_context_reuse() -> Dictionary:
+	var ordinary = _session_with_map(12, 3)
+	OverworldRules.normalize_overworld_state(ordinary)
+	var pressure = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+	OverworldRules.normalize_overworld_state(pressure)
+	_set_active_hero_position(pressure, Vector2i(3, 1))
+	pressure.overworld["fog"] = {}
+	OverworldRules.refresh_fog_of_war(pressure)
+	var outcome = _session_with_map(12, 3)
+	outcome.scenario_status = "victory"
+	outcome.game_state = "outcome"
+	outcome.scenario_summary = "River Pass secured."
+	OverworldRules.normalize_overworld_state(outcome)
+	var fixtures := [
+		{"id": "idle", "session": ordinary},
+		{"id": "message", "session": ordinary, "last_message": "Riverwatch Hold is ready."},
+		{"id": "daybreak", "session": ordinary, "turn": "Day 2 begins."},
+		{
+			"id": "enemy_activity",
+			"session": ordinary,
+			"enemy": "Mireclaw advances.",
+			"events": [{"event_type": "ai_target_assigned", "target_label": "Riverwatch Hold", "target_kind": "town", "faction_label": "Mireclaw"}],
+		},
+		{
+			"id": "action_recap",
+			"session": ordinary,
+			"recap": {"happened": "Claimed North Wood.", "affected": "North Wood", "why_it_matters": "The route now pays wood.", "next_step": "Return to Riverwatch Hold."},
+		},
+		{"id": "pressure_watch", "session": pressure},
+		{"id": "outcome", "session": outcome, "last_message": "The river road is secure."},
+	]
+	for fixture_value in fixtures:
+		var fixture: Dictionary = fixture_value
+		var probe = fixture.get("session", null)
+		OverworldRules.normalize_overworld_state(probe)
+		var authority_before: Dictionary = probe.to_dict()
+		var independent: Dictionary = _legacy_refresh_watch_surfaces(probe, fixture)
+		var direct: Dictionary = _direct_refresh_watch_surfaces(probe, fixture)
+		var shared: Dictionary = _shared_refresh_watch_surfaces(probe, fixture)
+		if direct != independent or shared != independent or probe.to_dict() != authority_before:
+			_fail("Refresh watch context diverged from independent forecast, commitment, Event Feed, or Dispatch materializers.", {
+				"fixture": fixture.get("id", ""),
+				"independent": independent,
+				"direct": direct,
+				"shared": shared,
+			})
+			return {}
+	var detach_probe = pressure
+	var detach_authority_before: Dictionary = detach_probe.to_dict()
+	var raw_context: Dictionary = OverworldRules._refresh_watch_observation_context(detach_probe)
+	var fresh_context: Dictionary = OverworldRules._refresh_watch_observation_context(detach_probe)
+	if raw_context.keys() != ["command_risk_forecast", "command_risk_surfaces", "local_pressure", "management_watch"] \
+			or raw_context != fresh_context \
+			or not (raw_context.get("command_risk_forecast", {}) is Dictionary) \
+			or not (raw_context.get("command_risk_surfaces", {}) is Dictionary):
+		_fail("Refresh watch context did not expose the exact detached ordered contract.", raw_context)
+		return {}
+	var raw_forecast: Dictionary = raw_context.get("command_risk_forecast", {})
+	var raw_surfaces: Dictionary = raw_context.get("command_risk_surfaces", {})
+	raw_forecast["summary"] = "mutated detached forecast"
+	raw_surfaces["risk"] = "mutated detached surface"
+	raw_context["local_pressure"] = "mutated detached pressure"
+	raw_context["management_watch"] = "mutated detached management"
+	if detach_probe.to_dict() != detach_authority_before \
+			or OverworldRules._refresh_watch_observation_context(detach_probe) != fresh_context:
+		_fail("Refresh watch context was session-aliased or failed to rebuild from live state.", raw_context)
+		return {}
+	var direct_batches := []
+	var shared_batches := []
+	for _batch in range(5):
+		var direct_started := Time.get_ticks_usec()
+		for fixture_value in fixtures:
+			_direct_refresh_watch_surfaces(fixture_value.get("session", null), fixture_value)
+		direct_batches.append(Time.get_ticks_usec() - direct_started)
+		var shared_started := Time.get_ticks_usec()
+		for fixture_value in fixtures:
+			_shared_refresh_watch_surfaces(fixture_value.get("session", null), fixture_value)
+		shared_batches.append(Time.get_ticks_usec() - shared_started)
+	var direct_median := _integer_median(direct_batches)
+	var shared_median := _integer_median(shared_batches)
+	if direct_median <= 0 or shared_median <= 0 or shared_median * 4 > direct_median * 3:
+		_fail("Refresh watch context reuse was not materially faster than fresh direct materialization.", {
+			"direct_batches": direct_batches,
+			"shared_batches": shared_batches,
+			"direct_median_usec": direct_median,
+			"shared_median_usec": shared_median,
+		})
+		return {}
+	return {
+		"fixture_count": fixtures.size(),
+		"direct_median_usec": direct_median,
+		"shared_median_usec": shared_median,
+	}
+
+func _direct_refresh_watch_surfaces(session, fixture: Dictionary) -> Dictionary:
+	var event_dispatch := OverworldRules.describe_event_dispatch_surfaces(
+		session,
+		String(fixture.get("last_message", "")),
+		String(fixture.get("turn", "")),
+		String(fixture.get("enemy", "")),
+		fixture.get("events", []),
+		fixture.get("recap", {})
+	)
+	return {
+		"forecast": OverworldRules.describe_end_turn_forecast_surfaces(session),
+		"commitment": OverworldRules.describe_commitment_board(session),
+		"event_feed": event_dispatch.get("event_feed", {}),
+		"dispatch": event_dispatch.get("dispatch", ""),
+	}
+
+func _shared_refresh_watch_surfaces(session, fixture: Dictionary) -> Dictionary:
+	var refresh_watch_context := OverworldRules._refresh_watch_observation_context(session)
+	var event_dispatch := OverworldRules.describe_event_dispatch_surfaces(
+		session,
+		String(fixture.get("last_message", "")),
+		String(fixture.get("turn", "")),
+		String(fixture.get("enemy", "")),
+		fixture.get("events", []),
+		fixture.get("recap", {}),
+		refresh_watch_context
+	)
+	return {
+		"forecast": OverworldRules.describe_end_turn_forecast_surfaces(session, refresh_watch_context),
+		"commitment": OverworldRules.describe_commitment_board(session, refresh_watch_context),
+		"event_feed": event_dispatch.get("event_feed", {}),
+		"dispatch": event_dispatch.get("dispatch", ""),
+	}
+
+func _legacy_refresh_watch_surfaces(session, fixture: Dictionary) -> Dictionary:
+	return {
+		"forecast": _legacy_refresh_watch_forecast(session),
+		"commitment": _legacy_refresh_watch_commitment(session),
+		"event_feed": _legacy_event_feed_surface(
+			session,
+			String(fixture.get("last_message", "")),
+			String(fixture.get("turn", "")),
+			String(fixture.get("enemy", "")),
+			fixture.get("events", []),
+			fixture.get("recap", {})
+		),
+		"dispatch": _legacy_dispatch(session, String(fixture.get("last_message", ""))),
+	}
+
+func _legacy_refresh_watch_forecast(session) -> Dictionary:
+	OverworldRules.normalize_overworld_state(session)
+	var next_day: int = int(session.day) + 1
+	var income_line := OverworldRules._end_turn_income_forecast_line(session, next_day)
+	var muster_line := OverworldRules._end_turn_muster_forecast_line(session, next_day)
+	var movement_line := OverworldRules._end_turn_movement_forecast_line(session)
+	var risk_line := OverworldRules._end_turn_risk_forecast_line(session)
+	var management_line := OverworldRules.describe_management_watch(session)
+	var full_lines := [
+		"Next day: Day %d | %s | %s" % [next_day, income_line, muster_line],
+		"- Movement: %s" % movement_line,
+	]
+	if risk_line != "":
+		full_lines.append("- Pressure: %s" % risk_line)
+	if management_line != "":
+		full_lines.append("- Town lines: %s" % management_line)
+	var compact_parts := ["Day %d" % next_day, income_line, movement_line]
+	if risk_line != "":
+		compact_parts.append(risk_line)
+	return {"forecast": "\n".join(full_lines), "forecast_compact": " | ".join(compact_parts)}
+
+func _legacy_refresh_watch_commitment(session) -> String:
+	OverworldRules.normalize_overworld_state(session)
+	return "\n".join([
+		"Command Commitment",
+		"- Immediate order: %s" % OverworldRules._command_commitment_action_line(session),
+		"- Route pressure: %s" % OverworldRules._command_commitment_route_line(session),
+		"- Coverage: %s" % OverworldRules._command_commitment_coverage_line(session),
+		"- If you hold: %s" % OverworldRules._command_commitment_hold_line(session),
+	])
 
 func _legacy_eager_command_commitment_action_line(session) -> String:
 	var context_actions := OverworldRules.get_context_actions(session)

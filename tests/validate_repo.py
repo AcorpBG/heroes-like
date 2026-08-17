@@ -16910,7 +16910,7 @@ def validate_overworld_full_refresh_event_readiness_context_reuse(errors: list[s
         ordered_tokens = (
             "var readiness_context := _field_readiness_context(end_turn_forecast_surface, objective_header_surfaces)",
             "var readiness_surface := _field_readiness_surface({}, end_turn_forecast_surface, readiness_context)",
-            "var event_surface := _event_feed_surface(end_turn_forecast_surface, readiness_context)",
+            "var event_surface := _event_feed_surface(end_turn_forecast_surface, readiness_context, refresh_watch_context)",
             "var action_context_surface := _action_context_surface(event_surface, readiness_surface)",
             "_refresh_tooltip_context_drawer_surfaces(readiness_surface, end_turn_forecast_surface, objective_header_surfaces)",
         )
@@ -16966,18 +16966,28 @@ def validate_overworld_event_dispatch_observation_context_reuse(errors: list[str
 
     rules_text = rules_path.read_text(encoding="utf-8")
     context_match = re.search(
-        r"static func _event_dispatch_observation_context\(session: SessionStateStoreScript\.SessionData\) -> Dictionary:(.*?)(?=\n\nstatic func describe_event_feed_surface)",
+        r"static func _event_dispatch_observation_context\((.*?)\n\) -> Dictionary:(.*?)(?=\n\nstatic func describe_event_feed_surface)",
         rules_text,
         flags=re.DOTALL,
     )
     ensure(context_match is not None, errors, "Event/Dispatch observation context could not be isolated")
     if context_match is not None:
-        context_body = context_match.group(1)
+        context_signature = context_match.group(1)
+        context_body = context_match.group(2)
+        ensure("refresh_watch_context: Dictionary = {}" in context_signature, errors, "Event/Dispatch observation context must retain a fresh-default watch input")
         ordered_tokens = (
+            'var local_pressure := ""',
+            'var management_watch := ""',
+            "if refresh_watch_context.is_empty():",
+            'local_pressure = _local_visible_threat_summary(session, "")',
+            "management_watch = describe_management_watch(session)",
+            "else:",
+            'local_pressure = String(refresh_watch_context.get("local_pressure", ""))',
+            'management_watch = String(refresh_watch_context.get("management_watch", ""))',
             '"recent_events": _describe_recent_events(session, 2)',
             '"route_pressure": describe_route_interception_surface(session)',
-            '"local_pressure": _local_visible_threat_summary(session, "")',
-            '"management_watch": describe_management_watch(session)',
+            '"local_pressure": local_pressure',
+            '"management_watch": management_watch',
             '"defense_watch": describe_defense_readiness_warnings(session, 1)',
             '"dispatch_context": _dispatch_context_brief(session)',
         )
@@ -16997,14 +17007,14 @@ def validate_overworld_event_dispatch_observation_context_reuse(errors: list[str
         bundle_body = bundle_match.group(2)
         ordered_tokens = (
             "normalize_overworld_state(session)",
-            "var observation_context := _event_dispatch_observation_context(session)",
+            "var observation_context := _event_dispatch_observation_context(session, refresh_watch_context)",
             '"event_feed": _describe_event_feed_surface_from_observation_context(',
             '"dispatch": _describe_dispatch_from_observation_context(session, last_message, observation_context)',
         )
         ensure(all(token in bundle_body for token in ordered_tokens), errors, "Combined Event/Dispatch surface is missing one-context/two-materializer ownership")
         if all(token in bundle_body for token in ordered_tokens):
             ensure([bundle_body.index(token) for token in ordered_tokens] == sorted(bundle_body.index(token) for token in ordered_tokens), errors, "Combined Event/Dispatch context/materializer order drifted")
-        ensure(bundle_body.count("_event_dispatch_observation_context(session)") == 1, errors, "Combined Event/Dispatch surface must build exactly one observation context")
+        ensure(bundle_body.count("_event_dispatch_observation_context(session, refresh_watch_context)") == 1, errors, "Combined Event/Dispatch surface must build exactly one observation context")
 
     for signature, required_tokens in (
         (
@@ -17099,7 +17109,7 @@ def validate_overworld_event_dispatch_observation_context_reuse(errors: list[str
         for forbidden in ("await get_tree().create_timer", "OS.delay", "set_process", "sort_custom", "normalize_event_dispatch", "erase(\"event"):
             ensure(forbidden not in case_body, errors, f"Focused Event/Dispatch proof must remain passive and exact: {forbidden}")
 
-    legacy_match = re.search(r"func _legacy_event_dispatch_bundle\(session, fixture: Dictionary\) -> Dictionary:(.*?)(?=\nfunc _legacy_eager_command_commitment_action_line)", report_text, flags=re.DOTALL)
+    legacy_match = re.search(r"func _legacy_event_dispatch_bundle\(session, fixture: Dictionary\) -> Dictionary:(.*?)(?=\nfunc _assert_refresh_watch_observation_context_reuse)", report_text, flags=re.DOTALL)
     ensure(legacy_match is not None, errors, "Independent legacy Event/Dispatch controls could not be isolated")
     if legacy_match is not None:
         legacy_body = legacy_match.group(1)
@@ -17117,6 +17127,181 @@ def validate_overworld_event_dispatch_observation_context_reuse(errors: list[str
         '"event_dispatch_shared_to_legacy_ratio"',
     ):
         ensure(token in report_text, errors, f"Event/Dispatch focused report is missing token: {token}")
+
+
+def validate_overworld_refresh_watch_context_reuse(errors: list[str]) -> None:
+    rules_path = ROOT / "scripts/core/OverworldRules.gd"
+    shell_path = ROOT / "scenes/overworld/OverworldShell.gd"
+    report_path = ROOT / "tests/overworld_hero_actions_refresh_cache_regression.gd"
+    for path in (rules_path, shell_path, report_path):
+        ensure(path.exists(), errors, f"Missing Overworld refresh-watch owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in (rules_path, shell_path, report_path)):
+        return
+
+    rules_text = rules_path.read_text(encoding="utf-8")
+    context_match = re.search(
+        r"static func _refresh_watch_observation_context\(session: SessionStateStoreScript\.SessionData\) -> Dictionary:(.*?)(?=\n\nstatic func describe_commitment_board)",
+        rules_text,
+        flags=re.DOTALL,
+    )
+    ensure(context_match is not None, errors, "Refresh watch observation context could not be isolated")
+    if context_match is not None:
+        context_body = context_match.group(1)
+        ordered_tokens = (
+            "normalize_overworld_state(session)",
+            "return _refresh_watch_observation_context_from_normalized_session(session)",
+            "static func _refresh_watch_observation_context_from_normalized_session(",
+            "var command_risk_forecast := _command_risk_forecast_from_normalized_session(session)",
+            '"command_risk_forecast": command_risk_forecast.duplicate(true)',
+            '"command_risk_surfaces": _command_risk_surfaces_from_forecast(command_risk_forecast).duplicate(true)',
+            '"local_pressure": _local_visible_threat_summary(session, "")',
+            '"management_watch": _describe_management_watch_from_normalized_session(session)',
+            "}.duplicate(true)",
+        )
+        ensure(all(token in context_body for token in ordered_tokens), errors, "Refresh watch context is missing exact normalized, detached, ordered observations")
+        if all(token in context_body for token in ordered_tokens):
+            ensure([context_body.index(token) for token in ordered_tokens] == sorted(context_body.index(token) for token in ordered_tokens), errors, "Refresh watch observation order drifted")
+        for forbidden in ("session.flags[", "session.overworld[", "cache", "static var", "call_deferred", "await ", "create_timer", "OS.delay", "erase(", "sort_custom"):
+            ensure(forbidden not in context_body, errors, f"Refresh watch context must remain detached and invocation-local: {forbidden}")
+
+    management_match = re.search(
+        r"static func describe_management_watch\(session: SessionStateStoreScript\.SessionData\) -> String:(.*?)(?=\n\nstatic func describe_town_build_projection)",
+        rules_text,
+        flags=re.DOTALL,
+    )
+    ensure(management_match is not None, errors, "Management-watch fresh wrapper and normalized materializer could not be isolated")
+    if management_match is not None:
+        management_body = management_match.group(1)
+        for token in (
+            "normalize_overworld_state(session)",
+            "return _describe_management_watch_from_normalized_session(session)",
+            "static func _describe_management_watch_from_normalized_session(",
+            'return "Town lines are stable."',
+            'return " | ".join(parts)',
+        ):
+            ensure(token in management_body, errors, f"Management-watch split is missing exact legacy behavior: {token}")
+
+    forecast_match = re.search(r"static func describe_end_turn_forecast_surfaces\((.*?)\n\) -> Dictionary:(.*?)(?=\n\nstatic func describe_command_risk_surfaces)", rules_text, flags=re.DOTALL)
+    commitment_match = re.search(r"static func describe_commitment_board\((.*?)\n\) -> String:(.*?)(?=\n\nstatic func describe_command_risk_forecast)", rules_text, flags=re.DOTALL)
+    ensure(forecast_match is not None and commitment_match is not None, errors, "Watch-backed forecast or commitment materializer could not be isolated")
+    if forecast_match is not None:
+        ensure("refresh_watch_context: Dictionary = {}" in forecast_match.group(1), errors, "Forecast must retain a fresh-default watch input")
+        forecast_body = forecast_match.group(2)
+        ensure(forecast_body.strip().startswith("if refresh_watch_context.is_empty():\n\t\tnormalize_overworld_state(session)"), errors, "Forecast normalization must run only for fresh direct callers")
+        for token in (
+            "if refresh_watch_context.is_empty():",
+            "normalize_overworld_state(session)",
+            "risk_line = _end_turn_risk_forecast_line(session)",
+            "management_line = describe_management_watch(session)",
+            "risk_line = _end_turn_risk_forecast_line_from_watch_context(refresh_watch_context)",
+            'management_line = String(refresh_watch_context.get("management_watch", ""))',
+        ):
+            ensure(token in forecast_body, errors, f"Forecast watch reuse/fresh fallback is missing token: {token}")
+    if commitment_match is not None:
+        ensure("refresh_watch_context: Dictionary = {}" in commitment_match.group(1), errors, "Commitment must retain a fresh-default watch input")
+        commitment_body = commitment_match.group(2)
+        ensure(commitment_body.strip().startswith('var hold_line := ""\n\tif refresh_watch_context.is_empty():\n\t\tnormalize_overworld_state(session)'), errors, "Commitment normalization must run only for fresh direct callers")
+        for token in (
+            "if refresh_watch_context.is_empty():",
+            "normalize_overworld_state(session)",
+            "hold_line = _command_commitment_hold_line(session)",
+            "hold_line = _command_commitment_hold_line_from_watch_context(session, refresh_watch_context)",
+            '"- If you hold: %s" % hold_line',
+        ):
+            ensure(token in commitment_body, errors, f"Commitment watch reuse/fresh fallback is missing token: {token}")
+    for token in (
+        "static func _end_turn_risk_forecast_line_from_watch_context(refresh_watch_context: Dictionary) -> String:",
+        'refresh_watch_context.get("command_risk_surfaces", {})',
+        'String(refresh_watch_context.get("local_pressure", ""))',
+        "static func _command_commitment_hold_line_from_watch_context(",
+        'refresh_watch_context.get("command_risk_forecast", {})',
+        "return _command_commitment_hold_line_from_forecast(session, forecast)",
+    ):
+        ensure(token in rules_text, errors, f"Refresh watch materializer is missing exact preloaded helper token: {token}")
+    for forbidden in ('session.flags["refresh_watch', 'session.overworld["refresh_watch', '_refresh_cache["refresh_watch', "_refresh_watch_observation_context_cache"):
+        ensure(forbidden not in rules_text, errors, f"Refresh watch context must not persist across refreshes: {forbidden}")
+
+    shell_text = shell_path.read_text(encoding="utf-8")
+    status_match = re.search(r"func _refresh_status_surfaces\(generated_surface_start: int\) -> bool:(.*?)(?=\n\nfunc _refresh_map_cue_surface)", shell_text, flags=re.DOTALL)
+    ensure(status_match is not None, errors, "Full refresh could not be isolated for watch-context reuse")
+    if status_match is not None:
+        status_body = status_match.group(1)
+        ordered_tokens = (
+            "var refresh_watch_context := OverworldRules._refresh_watch_observation_context(_session)",
+            '_profile_add("refresh_watch_observation_context_builds", 1)',
+            "var end_turn_forecast_surface := OverworldRules.describe_end_turn_forecast_surfaces(_session, refresh_watch_context)",
+            '_profile_add("refresh_watch_observation_context_reuses", 1)',
+            "_refresh_commitment_panel(refresh_watch_context)",
+            "var event_surface := _event_feed_surface(end_turn_forecast_surface, readiness_context, refresh_watch_context)",
+        )
+        ensure(all(token in status_body for token in ordered_tokens), errors, "Full refresh is missing ordered watch-context build and three-surface reuse")
+        if all(token in status_body for token in ordered_tokens):
+            ensure([status_body.index(token) for token in ordered_tokens] == sorted(status_body.index(token) for token in ordered_tokens), errors, "Full refresh watch-context reuse order drifted")
+    for token in (
+        "func _refresh_commitment_panel(refresh_watch_context: Dictionary = {}) -> void:",
+        "OverworldRules.describe_commitment_board(_session, refresh_watch_context)",
+        'if not refresh_watch_context.is_empty():\n\t\t_profile_add("refresh_watch_observation_context_reuses", 1)',
+        "refresh_watch_context: Dictionary = {}",
+        "OverworldRules.describe_event_dispatch_surfaces(",
+        "\t\trefresh_watch_context\n\t)",
+    ):
+        ensure(token in shell_text, errors, f"Shell refresh-watch consumer is missing token: {token}")
+
+    event_bundle_match = re.search(r"static func describe_event_dispatch_surfaces\((.*?)\n\) -> Dictionary:(.*?)(?=\n\nstatic func _event_dispatch_observation_context)", rules_text, flags=re.DOTALL)
+    ensure(event_bundle_match is not None, errors, "Watch-backed Event/Dispatch bundle could not be isolated")
+    if event_bundle_match is not None:
+        event_bundle_body = event_bundle_match.group(2)
+        for token in ("if refresh_watch_context.is_empty():", "normalize_overworld_state(session)", "_event_dispatch_observation_context(session, refresh_watch_context)"):
+            ensure(token in event_bundle_body, errors, f"Event/Dispatch watch reuse/fresh normalization is missing token: {token}")
+        ensure(event_bundle_body.index("if refresh_watch_context.is_empty():") < event_bundle_body.index("normalize_overworld_state(session)") < event_bundle_body.index("_event_dispatch_observation_context(session, refresh_watch_context)"), errors, "Event/Dispatch normalization must remain direct-only before materialization")
+
+    report_text = report_path.read_text(encoding="utf-8")
+    case_match = re.search(r"func _assert_refresh_watch_observation_context_reuse\(\) -> Dictionary:(.*?)(?=\nfunc _direct_refresh_watch_surfaces)", report_text, flags=re.DOTALL)
+    ensure(case_match is not None, errors, "Focused refresh-watch context case could not be isolated")
+    if case_match is not None:
+        case_body = case_match.group(1)
+        for token in (
+            '{"id": "idle", "session": ordinary}',
+            '{"id": "message", "session": ordinary, "last_message": "Riverwatch Hold is ready."}',
+            '{"id": "daybreak", "session": ordinary, "turn": "Day 2 begins."}',
+            '"id": "enemy_activity"',
+            '"id": "action_recap"',
+            '{"id": "pressure_watch", "session": pressure}',
+            '{"id": "outcome", "session": outcome, "last_message": "The river road is secure."}',
+            "var independent: Dictionary = _legacy_refresh_watch_surfaces(probe, fixture)",
+            "var direct: Dictionary = _direct_refresh_watch_surfaces(probe, fixture)",
+            "var shared: Dictionary = _shared_refresh_watch_surfaces(probe, fixture)",
+            "direct != independent or shared != independent or probe.to_dict() != authority_before",
+            "var raw_context: Dictionary = OverworldRules._refresh_watch_observation_context(detach_probe)",
+            'raw_context.keys() != ["command_risk_forecast", "command_risk_surfaces", "local_pressure", "management_watch"]',
+            'raw_forecast["summary"] = "mutated detached forecast"',
+            'raw_surfaces["risk"] = "mutated detached surface"',
+            "OverworldRules._refresh_watch_observation_context(detach_probe) != fresh_context",
+            "for _batch in range(5):",
+            "shared_median * 4 > direct_median * 3",
+        ):
+            ensure(token in case_body, errors, f"Focused refresh-watch proof is missing state breadth, parity, detach, or timing token: {token}")
+        for forbidden in ("await get_tree().create_timer", "OS.delay", "set_process", "sort_custom", "erase(\"watch", "normalize_refresh_watch"):
+            ensure(forbidden not in case_body, errors, f"Focused refresh-watch proof must remain passive and exact: {forbidden}")
+
+    legacy_match = re.search(r"func _legacy_refresh_watch_surfaces\(session, fixture: Dictionary\) -> Dictionary:(.*?)(?=\nfunc _legacy_eager_command_commitment_action_line)", report_text, flags=re.DOTALL)
+    ensure(legacy_match is not None, errors, "Independent legacy refresh-watch controls could not be isolated")
+    if legacy_match is not None:
+        legacy_body = legacy_match.group(1)
+        for token in ("func _legacy_refresh_watch_forecast", "func _legacy_refresh_watch_commitment", "_legacy_event_feed_surface(", "_legacy_dispatch(", "OverworldRules._end_turn_risk_forecast_line(session)", "OverworldRules._command_commitment_hold_line(session)"):
+            ensure(token in legacy_body, errors, f"Independent legacy refresh-watch control is missing token: {token}")
+        for forbidden in ("_refresh_watch_observation_context", "_from_watch_context", "refresh_watch_context"):
+            ensure(forbidden not in legacy_body, errors, f"Independent legacy refresh-watch controls must not call optimized helpers: {forbidden}")
+
+    for token in (
+        "var refresh_watch_control := _assert_refresh_watch_observation_context_reuse()",
+        'int(full_refresh_profile.get("refresh_watch_observation_context_builds", 0)) != 1',
+        'int(full_refresh_profile.get("refresh_watch_observation_context_reuses", 0)) != 3',
+        '"refresh_watch_whole_output_parity": true',
+        '"refresh_watch_detached_rebuild_exact": true',
+        '"refresh_watch_shared_to_direct_ratio"',
+    ):
+        ensure(token in report_text, errors, f"Refresh-watch focused report is missing token: {token}")
 
 
 def validate_overworld_objective_stakes_surface_bundle_reuse(errors: list[str]) -> None:
@@ -17439,10 +17624,10 @@ def validate_overworld_field_readiness_progress_recap_reuse(errors: list[str]) -
         status_body = status_match.group(1)
         ordered_tokens = (
             "var objective_header_surfaces := OverworldRules.describe_objective_header_surfaces(_session)",
-            "var end_turn_forecast_surface := OverworldRules.describe_end_turn_forecast_surfaces(_session)",
+            "var end_turn_forecast_surface := OverworldRules.describe_end_turn_forecast_surfaces(_session, refresh_watch_context)",
             "var readiness_context := _field_readiness_context(end_turn_forecast_surface, objective_header_surfaces)",
             "var readiness_surface := _field_readiness_surface({}, end_turn_forecast_surface, readiness_context)",
-            "var event_surface := _event_feed_surface(end_turn_forecast_surface, readiness_context)",
+            "var event_surface := _event_feed_surface(end_turn_forecast_surface, readiness_context, refresh_watch_context)",
         )
         ensure(all(token in status_body for token in ordered_tokens), errors, "Full refresh is missing ordered objective-recap to Field Readiness reuse")
         if all(token in status_body for token in ordered_tokens):
@@ -17489,21 +17674,23 @@ def validate_overworld_full_refresh_end_turn_forecast_bundle_reuse(errors: list[
 
     rules_text = rules_path.read_text(encoding="utf-8")
     combined_match = re.search(
-        r"static func describe_end_turn_forecast_surfaces\(session: SessionStateStoreScript\.SessionData\) -> Dictionary:(.*?)(?=\n\nstatic func describe_command_risk_surfaces)",
+        r"static func describe_end_turn_forecast_surfaces\((.*?)\n\) -> Dictionary:(.*?)(?=\n\nstatic func describe_command_risk_surfaces)",
         rules_text,
         flags=re.DOTALL,
     )
     ensure(combined_match is not None, errors, "Combined end-turn forecast surface could not be isolated")
     if combined_match is not None:
-        combined_body = combined_match.group(1)
+        combined_signature = combined_match.group(1)
+        combined_body = combined_match.group(2)
+        ensure("refresh_watch_context: Dictionary = {}" in combined_signature, errors, "Combined end-turn forecast must retain a fresh-default watch input")
         ordered_tokens = (
             "normalize_overworld_state(session)",
             "var next_day := session.day + 1",
             "var income_line := _end_turn_income_forecast_line(session, next_day)",
             "var muster_line := _end_turn_muster_forecast_line(session, next_day)",
             "var movement_line := _end_turn_movement_forecast_line(session)",
-            "var risk_line := _end_turn_risk_forecast_line(session)",
-            "var management_line := describe_management_watch(session)",
+            'var risk_line := ""',
+            'var management_line := ""',
             '"forecast": "\\n".join(full_lines)',
             '"forecast_compact": " | ".join(compact_parts)',
         )
@@ -17523,13 +17710,14 @@ def validate_overworld_full_refresh_end_turn_forecast_bundle_reuse(errors: list[
     if status_match is not None:
         status_body = status_match.group(1)
         ordered_tokens = (
-            "var end_turn_forecast_surface := OverworldRules.describe_end_turn_forecast_surfaces(_session)",
+            "var refresh_watch_context := OverworldRules._refresh_watch_observation_context(_session)",
+            "var end_turn_forecast_surface := OverworldRules.describe_end_turn_forecast_surfaces(_session, refresh_watch_context)",
             '_profile_add("end_turn_forecast_bundle_builds", 1)',
             "var readiness_context := _field_readiness_context(end_turn_forecast_surface, objective_header_surfaces)",
             "var readiness_surface := _field_readiness_surface({}, end_turn_forecast_surface, readiness_context)",
             "var status_forecast := _status_forecast_surface(end_turn_forecast_surface)",
             "_set_collapsed_frontier_indicator(end_turn_forecast_surface)",
-            "var event_surface := _event_feed_surface(end_turn_forecast_surface, readiness_context)",
+            "var event_surface := _event_feed_surface(end_turn_forecast_surface, readiness_context, refresh_watch_context)",
             'var end_turn_tooltip := String(end_turn_check.get("tooltip_text", ""))',
             'end_turn_tooltip = String(end_turn_forecast_surface.get("forecast", ""))',
             "_refresh_tooltip_context_drawer_surfaces(readiness_surface, end_turn_forecast_surface, objective_header_surfaces)",
@@ -17543,7 +17731,7 @@ def validate_overworld_full_refresh_end_turn_forecast_bundle_reuse(errors: list[
     required_shell_tokens = (
         "func _refresh_frontier_drawer(end_turn_forecast_surface: Dictionary = {}) -> Dictionary:",
         "func _set_collapsed_frontier_indicator(end_turn_forecast_surface: Dictionary = {}) -> void:",
-        "func _event_feed_surface(\n\tend_turn_forecast_surface: Dictionary = {},\n\treadiness_context: Dictionary = {}\n) -> Dictionary:",
+        "func _event_feed_surface(\n\tend_turn_forecast_surface: Dictionary = {},\n\treadiness_context: Dictionary = {},\n\trefresh_watch_context: Dictionary = {}\n) -> Dictionary:",
         "func _field_readiness_surface(\n\tbase_event_surface: Dictionary = {},\n\tend_turn_forecast_surface: Dictionary = {},\n\tpreloaded_context: Dictionary = {}\n) -> Dictionary:",
         "func _status_forecast_surface(end_turn_forecast_surface: Dictionary = {}) -> Dictionary:",
         "func _drawer_handoff_surfaces(\n\tfield_readiness: Dictionary = {},\n\tend_turn_forecast_surface: Dictionary = {},\n\tobjective_header_surfaces: Dictionary = {}\n) -> Dictionary:",
@@ -46970,6 +47158,7 @@ def main() -> int:
     validate_overworld_full_refresh_drawer_readiness_reuse(errors)
     validate_overworld_full_refresh_event_readiness_context_reuse(errors)
     validate_overworld_event_dispatch_observation_context_reuse(errors)
+    validate_overworld_refresh_watch_context_reuse(errors)
     validate_overworld_objective_stakes_surface_bundle_reuse(errors)
     validate_overworld_drawer_objective_recap_reuse(errors)
     validate_overworld_field_readiness_progress_recap_reuse(errors)

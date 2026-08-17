@@ -3767,14 +3767,37 @@ static func describe_command_risk_summary_from_normalized_session(session: Sessi
 		return "Steady watch | No concrete next-day break is signaled from the current frontier watch."
 	return String(reduction.get("summary", ""))
 
-static func describe_commitment_board(session: SessionStateStoreScript.SessionData) -> String:
+static func _refresh_watch_observation_context(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	normalize_overworld_state(session)
+	return _refresh_watch_observation_context_from_normalized_session(session)
+
+static func _refresh_watch_observation_context_from_normalized_session(
+	session: SessionStateStoreScript.SessionData
+) -> Dictionary:
+	var command_risk_forecast := _command_risk_forecast_from_normalized_session(session)
+	return {
+		"command_risk_forecast": command_risk_forecast.duplicate(true),
+		"command_risk_surfaces": _command_risk_surfaces_from_forecast(command_risk_forecast).duplicate(true),
+		"local_pressure": _local_visible_threat_summary(session, ""),
+		"management_watch": _describe_management_watch_from_normalized_session(session),
+	}.duplicate(true)
+
+static func describe_commitment_board(
+	session: SessionStateStoreScript.SessionData,
+	refresh_watch_context: Dictionary = {}
+) -> String:
+	var hold_line := ""
+	if refresh_watch_context.is_empty():
+		normalize_overworld_state(session)
+		hold_line = _command_commitment_hold_line(session)
+	else:
+		hold_line = _command_commitment_hold_line_from_watch_context(session, refresh_watch_context)
 	var lines := [
 		"Command Commitment",
 		"- Immediate order: %s" % _command_commitment_action_line(session),
 		"- Route pressure: %s" % _command_commitment_route_line(session),
 		"- Coverage: %s" % _command_commitment_coverage_line(session),
-		"- If you hold: %s" % _command_commitment_hold_line(session),
+		"- If you hold: %s" % hold_line,
 	]
 	return "\n".join(lines)
 
@@ -3813,14 +3836,24 @@ static func describe_end_turn_forecast_compact(session: SessionStateStoreScript.
 		parts.append(risk_line)
 	return " | ".join(parts)
 
-static func describe_end_turn_forecast_surfaces(session: SessionStateStoreScript.SessionData) -> Dictionary:
-	normalize_overworld_state(session)
+static func describe_end_turn_forecast_surfaces(
+	session: SessionStateStoreScript.SessionData,
+	refresh_watch_context: Dictionary = {}
+) -> Dictionary:
+	if refresh_watch_context.is_empty():
+		normalize_overworld_state(session)
 	var next_day := session.day + 1
 	var income_line := _end_turn_income_forecast_line(session, next_day)
 	var muster_line := _end_turn_muster_forecast_line(session, next_day)
 	var movement_line := _end_turn_movement_forecast_line(session)
-	var risk_line := _end_turn_risk_forecast_line(session)
-	var management_line := describe_management_watch(session)
+	var risk_line := ""
+	var management_line := ""
+	if refresh_watch_context.is_empty():
+		risk_line = _end_turn_risk_forecast_line(session)
+		management_line = describe_management_watch(session)
+	else:
+		risk_line = _end_turn_risk_forecast_line_from_watch_context(refresh_watch_context)
+		management_line = String(refresh_watch_context.get("management_watch", ""))
 	var full_lines := [
 		"Next day: Day %d | %s | %s" % [next_day, income_line, muster_line],
 		"- Movement: %s" % movement_line,
@@ -3908,10 +3941,12 @@ static func describe_event_dispatch_surfaces(
 	turn_resolution_summary: String = "",
 	enemy_activity_summary: String = "",
 	enemy_activity_events_value: Variant = [],
-	action_recap_value: Variant = {}
+	action_recap_value: Variant = {},
+	refresh_watch_context: Dictionary = {}
 ) -> Dictionary:
-	normalize_overworld_state(session)
-	var observation_context := _event_dispatch_observation_context(session)
+	if refresh_watch_context.is_empty():
+		normalize_overworld_state(session)
+	var observation_context := _event_dispatch_observation_context(session, refresh_watch_context)
 	return {
 		"event_feed": _describe_event_feed_surface_from_observation_context(
 			session,
@@ -3925,12 +3960,23 @@ static func describe_event_dispatch_surfaces(
 		"dispatch": _describe_dispatch_from_observation_context(session, last_message, observation_context),
 	}
 
-static func _event_dispatch_observation_context(session: SessionStateStoreScript.SessionData) -> Dictionary:
+static func _event_dispatch_observation_context(
+	session: SessionStateStoreScript.SessionData,
+	refresh_watch_context: Dictionary = {}
+) -> Dictionary:
+	var local_pressure := ""
+	var management_watch := ""
+	if refresh_watch_context.is_empty():
+		local_pressure = _local_visible_threat_summary(session, "")
+		management_watch = describe_management_watch(session)
+	else:
+		local_pressure = String(refresh_watch_context.get("local_pressure", ""))
+		management_watch = String(refresh_watch_context.get("management_watch", ""))
 	return {
 		"recent_events": _describe_recent_events(session, 2),
 		"route_pressure": describe_route_interception_surface(session),
-		"local_pressure": _local_visible_threat_summary(session, ""),
-		"management_watch": describe_management_watch(session),
+		"local_pressure": local_pressure,
+		"management_watch": management_watch,
 		"defense_watch": describe_defense_readiness_warnings(session, 1),
 		"dispatch_context": _dispatch_context_brief(session),
 	}
@@ -4800,6 +4846,16 @@ static func _end_turn_risk_forecast_line(session: SessionStateStoreScript.Sessio
 	var lines := risk_text.split("\n", false)
 	return _short_player_text(String(lines[lines.size() - 1]), 96)
 
+static func _end_turn_risk_forecast_line_from_watch_context(refresh_watch_context: Dictionary) -> String:
+	var risk_surface_value = refresh_watch_context.get("command_risk_surfaces", {})
+	var risk_surface: Dictionary = risk_surface_value if risk_surface_value is Dictionary else {}
+	var risk_text := String(risk_surface.get("risk", "")).strip_edges()
+	if risk_text == "" or risk_text.find("Steady watch") >= 0:
+		var local_pressure := String(refresh_watch_context.get("local_pressure", ""))
+		return local_pressure if local_pressure != "" else "watch steady"
+	var lines := risk_text.split("\n", false)
+	return _short_player_text(String(lines[lines.size() - 1]), 96)
+
 static func _end_turn_muster_summary(weekly_growth_messages: Array, site_muster_messages: Array) -> String:
 	var parts := []
 	for message in weekly_growth_messages:
@@ -4939,6 +4995,11 @@ static func controlled_resource_site_count(
 
 static func describe_management_watch(session: SessionStateStoreScript.SessionData) -> String:
 	normalize_overworld_state(session)
+	return _describe_management_watch_from_normalized_session(session)
+
+static func _describe_management_watch_from_normalized_session(
+	session: SessionStateStoreScript.SessionData
+) -> String:
 	var project_summary := ""
 	var disruption_summary := ""
 	var recovery_summary := ""
@@ -13041,6 +13102,20 @@ static func _command_commitment_coverage_line(session: SessionStateStoreScript.S
 
 static func _command_commitment_hold_line(session: SessionStateStoreScript.SessionData) -> String:
 	var forecast := _command_risk_forecast(session)
+	return _command_commitment_hold_line_from_forecast(session, forecast)
+
+static func _command_commitment_hold_line_from_watch_context(
+	session: SessionStateStoreScript.SessionData,
+	refresh_watch_context: Dictionary
+) -> String:
+	var forecast_value = refresh_watch_context.get("command_risk_forecast", {})
+	var forecast: Dictionary = forecast_value if forecast_value is Dictionary else {}
+	return _command_commitment_hold_line_from_forecast(session, forecast)
+
+static func _command_commitment_hold_line_from_forecast(
+	session: SessionStateStoreScript.SessionData,
+	forecast: Dictionary
+) -> String:
 	if bool(forecast.get("has_risk", false)):
 		var lines = forecast.get("lines", [])
 		if lines is Array and lines.size() > 1:
