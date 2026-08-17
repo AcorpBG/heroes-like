@@ -24,7 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Active implementation slice: none. Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence.
+- Completed implementation slice: `performance-runtime-save-summary-detail-context-reuse-10184`. Successful inline runtime-summary publication now builds one owned normalized-session recap context and reuses it for resume, continuity, progress, and risk-watch detail while public direct descriptions and large/deferred fallbacks remain fresh. Independent Overworld, Town, Battle, and Outcome controls are whole-exact with exact file/cache/session authority. Authored Ninefold summary-cache time improves from 2566 to 258 ms, briefing autosave from 2590 to 282 ms, and first-ready from 6775 to 4531 ms; the full edited Play Copy round trip remains behavior-exact. Transaction, generated-Large deferred/manual save, save/load visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged save interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `performance-runtime-save-summary-detail-context-reuse-10184`
 - Completed implementation slice: `performance-overworld-full-refresh-end-turn-forecast-bundle-reuse-10184`. One full Overworld refresh now builds one detached full/compact next-day forecast bundle from shared rule components and reuses it across Field Readiness, status, open or collapsed Frontier, event context, End Turn, and drawer handoff surfaces; direct/default callers remain fresh. Focused parity covers ordinary, pressured, day-transition, current-tile, selected-route, open/collapsed Frontier, event, End Turn, drawer, detach/rebuild, session, and whole UI authority. The same-process bundle is 6.7 times faster than the removed three-full/five-compact path; focused full refresh improves 474 to 319 ms, authored Ninefold first-ready 8.99 to 6.78 seconds, repeat refresh 4.37 to 2.43 seconds, and text surfaces 3.54 to 1.60 seconds. The full edited-working-copy round trip remains behavior-exact. Compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
   id: `performance-overworld-full-refresh-end-turn-forecast-bundle-reuse-10184`
 - Completed implementation slice: `performance-overworld-full-refresh-drawer-readiness-reuse-10184`. One full Overworld status refresh now passes its already-current no-base Field Readiness payload into tooltip/context-drawer handoff synchronization, while distinct event-feed readiness and default callers remain fresh. A same-process legacy control proves the removed derivation adds 191 ms, or 40.3 percent of the optimized 474 ms refresh, with exact session and whole-surface authority. The authored repeat refresh improves from 4.69 to 4.37 seconds; clean first-ready remains within the 8.99-9.23 second control range; the heavy edited-working-copy round trip remains behavior-exact within 1.7 percent wall-time variance, so no broad Play Copy speedup is claimed. Focused, compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
@@ -6313,6 +6314,28 @@ Completion evidence:
 - the unchanged label tooltips retain the exact full stack/target context, spellbook, effect board, cue detail, and next-action guidance, while independent focused controls verify themed-font line width and exact public state at 1280x720 and 1920x1080;
 - selecting Focus or Spell keeps BattleTabs at the contained 347-logical-pixel rectangle and footer bottom at 1072 inside the 1080 shell; fresh captures `.artifacts/battle_focus_spell_capture/tab_1.png` and `tab_2.png` show the corrected 1280x720 composition;
 - active-play keyboard/controller/mouse navigation, Town/Battle visual, animation, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass; broader packaged interaction and release claims remain unclaimed.
+
+## Selected Slice: Runtime Save Summary Detail Context Reuse
+
+id: `performance-runtime-save-summary-detail-context-reuse-10184`
+
+Status: completed.
+
+Implementation boundary:
+- when a successful runtime save publishes its verified slot-summary cache, derive the stored resume recap, continuity lines, objective/progress recap, and risk watch from one invocation-local normalized-session context already owned by that save;
+- preserve the exact existing summary/detail strings and the public direct description path for arbitrary disk/cache summaries, including independent reconstruction when no trusted live session is supplied;
+- keep autosave/manual transaction, payload inline/deferred policy, cache identity/invalidation, recovery/readback, save version, and session authority unchanged.
+
+Completion criteria:
+- independent current direct detail materialization is whole-exact to the preloaded normalized-session path for Overworld, Town, Battle, and Outcome summaries, with one progress context and one risk-watch derivation and no persistent cache;
+- ordinary briefing-consumption autosaves publish an exact loadable inline summary/cache while reducing the authored roughly 2566ms summary-cache phase materially below the existing first-load cost;
+- direct public detail calls remain fresh, large/deferred summaries and manual saves retain their established behavior, and injected precommit/after-backup failures preserve bytes/cache/residue exactly;
+- focused briefing/save, edited Map Editor Play Copy, save/load and transactional compatibility, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass.
+
+Non-goals:
+- no save format/schema/version, transactional writer/readback, payload inline threshold, cache identity/invalidation, persistent cross-call cache, async/background work, autosave/manual policy, recovery, or UI copy change;
+- no scenario/progress/risk/forecast policy, Overworld/Town/Battle/Outcome gameplay, content, AI, balance, Native RMG, or package identity change;
+- no packaged save interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
 
 ## Progress Reconciliation
 

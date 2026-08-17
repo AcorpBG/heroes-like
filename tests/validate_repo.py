@@ -20957,10 +20957,12 @@ def validate_briefing_consumption_autosave_failure_safety(errors: list[str]) -> 
         return
 
     report_text = BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_REGRESSION_SCRIPT_PATH.read_text(encoding="utf-8")
+    save_service_text = SAVE_SERVICE_PATH.read_text(encoding="utf-8")
     for required_token in (
         "BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_SAFETY_REGRESSION",
         'const FAILURE_PHASES := ["precommit", "after_backup"]',
         'const SURFACES := ["overworld", "battle"]',
+        'const DETAIL_SURFACES := ["overworld", "town", "battle", "outcome"]',
         "validation_briefing_consumption_autosave_snapshot",
         "validation_reconcile_briefing_consumption_autosave_recovery_direct",
         "validation_save_to_selected_slot",
@@ -20982,8 +20984,60 @@ def validate_briefing_consumption_autosave_failure_safety(errors: list[str]) -> 
         "authority_not_canonical",
         "alternate_save_not_verified",
         "validation_request_manual_save",
+        "_prove_runtime_summary_detail_parity",
+        "_summary_detail_fixture",
+        "SaveService.validation_last_runtime_save_profile()",
+        "SaveService.describe_slot_details(summary)",
+        'String(summary.get("detail", "")) != direct_detail',
+        'cached_summary != summary',
+        "SaveService.restore_session_from_summary(summary)",
+        "_gameplay_payload(restored_from_inline_summary) != _gameplay_payload(session)",
+        'bool(summary.get("payload_deferred", true))',
+        'summary_owned_session_materialization_count',
+        'summary_detail_context_build_count',
+        'summary_detail_context_reuse_count',
+        'summary_detail_direct_fallback_count',
+        'float(buckets.get("summary_cache", 99999.0)) >= 1000.0',
+        '_file_state(AUTOSAVE_PATH) != file_before_direct',
+        'SaveService.validation_summary_cache_snapshot() != cache_before_direct',
     ):
         ensure(required_token in report_text, errors, f"Briefing-consumption autosave safety regression is missing required token: {required_token}")
+
+    for required_token in (
+        "func _finalize_runtime_summary(summary: Dictionary, profile: Dictionary = {}) -> Dictionary:",
+        'if bool(summary.get("payload_deferred", false)) or payload.is_empty():',
+        "_session_from_owned_detached_payload(payload)",
+        "OverworldRulesScript.begin_normalized_read_scope(trusted_session)",
+        "TownRulesScript.begin_read_scope(trusted_session)",
+        "describe_session_progress_recap_from_normalized_session(trusted_session, true)",
+        'progress_recap.trim_prefix("Progress Recap\\n")',
+        "_session_save_recap_context(trusted_session, summary, progress_without_header)",
+        "_describe_slot_details(summary, trusted_session, recap_context, progress_recap)",
+        "TownRulesScript.end_read_scope(trusted_session)",
+        "OverworldRulesScript.end_normalized_read_scope(trusted_session)",
+        'profile["summary_owned_session_materialization_count"]',
+        'profile["summary_detail_context_build_count"]',
+        'profile["summary_detail_context_reuse_count"]',
+        'profile["summary_detail_direct_fallback_count"]',
+        '"summary_detail_context"',
+        "func _summary_continuity_lines_from_context(",
+        "_summary_objective_line_from_progress_recap",
+        "_store_slot_summary_cache(_finalize_runtime_summary(summary, profile))",
+    ):
+        ensure(required_token in save_service_text, errors, f"SaveService runtime summary-detail context contract is missing token: {required_token}")
+    ensure(
+        save_service_text.count("func _finalize_runtime_summary(") == 1
+        and save_service_text.count("_store_slot_summary_cache(_finalize_runtime_summary(summary, profile))") == 1,
+        errors,
+        "SaveService must own one runtime summary-detail finalizer and one cache publication call",
+    )
+    ensure(
+        '_slot_summary_cache["summary_detail_context"' not in save_service_text
+        and 'session.flags["summary_detail_context"' not in save_service_text
+        and "_store_slot_summary_cache(_finalize_summary(summary))" not in save_service_text,
+        errors,
+        "Runtime summary-detail reuse must remain invocation-local and must replace the old runtime direct finalizer",
+    )
 
     scene_text = BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_REGRESSION_SCENE_PATH.read_text(encoding="utf-8")
     ensure(

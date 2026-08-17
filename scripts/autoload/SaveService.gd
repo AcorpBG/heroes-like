@@ -729,13 +729,15 @@ func _live_summary_for_manual_slot(source: Dictionary, manual_slot: int, valid_s
 
 func _session_save_recap_context(
 	session: SessionStateStoreScript.SessionData,
-	summary: Dictionary
+	summary: Dictionary,
+	preloaded_progress_recap: String = ""
 ) -> Dictionary:
 	if session == null or session.scenario_id == "" or summary.is_empty():
 		return {
 			"changed_line": "",
 			"watch_line": "",
 			"next_decision_line": "",
+			"progress_recap": "",
 			"profile_progress_ms": 0.0,
 			"profile_watch_ms": 0.0,
 		}
@@ -745,9 +747,10 @@ func _session_save_recap_context(
 	var recap_summary := _action_recap_change_summary(preferred_recap)
 	var recap_next := _action_recap_next_step(preferred_recap)
 	var battle_summary := _battle_aftermath_summary(session) if resume_target == "battle" and recap_summary == "" else ""
-	var progress_recap := ""
+	var progress_recap := preloaded_progress_recap
 	if (recap_summary == "" and battle_summary == "") or recap_next == "":
-		progress_recap = load("res://scripts/core/ScenarioRules.gd").describe_session_progress_recap_from_normalized_session(session, false)
+		if progress_recap == "":
+			progress_recap = load("res://scripts/core/ScenarioRules.gd").describe_session_progress_recap_from_normalized_session(session, false)
 	var changed_line := recap_summary
 	if changed_line == "":
 		changed_line = battle_summary
@@ -777,6 +780,7 @@ func _session_save_recap_context(
 		"changed_line": changed_line,
 		"watch_line": watch_line,
 		"next_decision_line": next_decision_line,
+		"progress_recap": progress_recap,
 		"profile_progress_ms": progress_ms,
 		"profile_watch_ms": ProfileLogScript.elapsed_ms(watch_started),
 	}
@@ -1253,6 +1257,14 @@ func describe_slot_continuity_cue(summary: Dictionary) -> String:
 	return "Cue: %s -> %s" % [target, next_decision]
 
 func describe_slot_details(summary: Dictionary) -> String:
+	return _describe_slot_details(summary)
+
+func _describe_slot_details(
+	summary: Dictionary,
+	trusted_normalized_session: SessionStateStoreScript.SessionData = null,
+	recap_context: Dictionary = {},
+	progress_recap: String = ""
+) -> String:
 	var lines := [_slot_label(summary)]
 	var modified_label := format_modified_timestamp(int(summary.get("modified_timestamp", 0)))
 	if modified_label != "":
@@ -1328,15 +1340,24 @@ func describe_slot_details(summary: Dictionary) -> String:
 		"Resume: %s"
 		% String(summary.get("status_text", "Unavailable"))
 	)
-	var resume_recap := describe_summary_resume_recap(summary)
+	var use_trusted_context := trusted_normalized_session != null and not recap_context.is_empty()
+	var resume_recap := (
+		_session_save_resume_recap_from_context(trusted_normalized_session, summary, recap_context)
+		if use_trusted_context
+		else describe_summary_resume_recap(summary)
+	)
 	if resume_recap != "":
 		lines.append(resume_recap)
-	var continuity_lines := _summary_continuity_lines(summary)
+	var continuity_lines := (
+		_summary_continuity_lines_from_context(summary, recap_context)
+		if use_trusted_context
+		else _summary_continuity_lines(summary)
+	)
 	if not continuity_lines.is_empty():
 		lines.append_array(continuity_lines)
-	var progress_recap := _summary_progress_recap(summary)
-	if progress_recap != "":
-		lines.append(progress_recap)
+	var resolved_progress_recap := progress_recap if use_trusted_context else _summary_progress_recap(summary)
+	if resolved_progress_recap != "":
+		lines.append(resolved_progress_recap)
 
 	var warnings = summary.get("warnings", [])
 	if warnings is Array and not warnings.is_empty():
@@ -1508,6 +1529,10 @@ func _save_runtime_session(
 		"recovery_cache_hit": false,
 		"recovery_reason": "",
 		"summary_session_reconstruction_count": 0,
+		"summary_owned_session_materialization_count": 0,
+		"summary_detail_context_build_count": 0,
+		"summary_detail_context_reuse_count": 0,
+		"summary_detail_direct_fallback_count": 0,
 		"verification_parse_count": 0,
 		"verification_payload_copy_count": 0,
 		"restore_owned_payload_transfer": false,
@@ -2854,6 +2879,35 @@ func _finalize_summary(summary: Dictionary) -> Dictionary:
 	summary["detail"] = describe_slot_details(summary)
 	return summary
 
+func _finalize_runtime_summary(summary: Dictionary, profile: Dictionary = {}) -> Dictionary:
+	var payload: Dictionary = summary.get("payload", {}) if summary.get("payload", {}) is Dictionary else {}
+	if bool(summary.get("payload_deferred", false)) or payload.is_empty():
+		if not profile.is_empty():
+			profile["summary_detail_direct_fallback_count"] = int(profile.get("summary_detail_direct_fallback_count", 0)) + 1
+		return _finalize_summary(summary)
+	var trusted_session: SessionStateStoreScript.SessionData = _session_from_owned_detached_payload(payload)
+	if trusted_session == null or trusted_session.scenario_id == "":
+		if not profile.is_empty():
+			profile["summary_detail_direct_fallback_count"] = int(profile.get("summary_detail_direct_fallback_count", 0)) + 1
+		return _finalize_summary(summary)
+	if not profile.is_empty():
+		profile["summary_owned_session_materialization_count"] = int(profile.get("summary_owned_session_materialization_count", 0)) + 1
+	var context_started := ProfileLogScript.begin_usec()
+	OverworldRulesScript.begin_normalized_read_scope(trusted_session)
+	TownRulesScript.begin_read_scope(trusted_session)
+	var progress_recap: String = load("res://scripts/core/ScenarioRules.gd").describe_session_progress_recap_from_normalized_session(trusted_session, true)
+	var progress_without_header := progress_recap.trim_prefix("Progress Recap\n")
+	var recap_context := _session_save_recap_context(trusted_session, summary, progress_without_header)
+	summary["summary"] = describe_slot(summary)
+	summary["detail"] = _describe_slot_details(summary, trusted_session, recap_context, progress_recap)
+	TownRulesScript.end_read_scope(trusted_session)
+	OverworldRulesScript.end_normalized_read_scope(trusted_session)
+	if not profile.is_empty():
+		profile["summary_detail_context_build_count"] = int(profile.get("summary_detail_context_build_count", 0)) + 1
+		profile["summary_detail_context_reuse_count"] = int(profile.get("summary_detail_context_reuse_count", 0)) + 3
+		_runtime_save_profile_bucket(profile, "summary_detail_context", ProfileLogScript.elapsed_ms(context_started))
+	return summary
+
 func _finalize_and_cache_summary(summary: Dictionary) -> Dictionary:
 	var finalized := _finalize_summary(summary)
 	_store_slot_summary_cache(finalized)
@@ -2923,7 +2977,7 @@ func _store_runtime_summary_cache(
 			profile["summary_session_reconstruction_count"] = int(profile.get("summary_session_reconstruction_count", 0)) + 1
 	summary["loadable"] = summary["resume_target"] != "blocked"
 	summary["status_text"] = _status_text_for_summary(summary)
-	_store_slot_summary_cache(_finalize_summary(summary))
+	_store_slot_summary_cache(_finalize_runtime_summary(summary, profile))
 
 func _invalidate_summary_cache_for_path(file_path: String) -> void:
 	if file_path == "":
@@ -3043,6 +3097,27 @@ func _summary_continuity_lines(summary: Dictionary) -> Array:
 		lines.append(watch_line)
 	return lines
 
+func _summary_continuity_lines_from_context(
+	summary: Dictionary,
+	recap_context: Dictionary
+) -> Array:
+	if summary.is_empty() or not bool(summary.get("valid", false)) or recap_context.is_empty():
+		return []
+	var lines := []
+	var action_line := _summary_resume_action_line(summary)
+	if action_line != "":
+		lines.append(action_line)
+	var context_line := _summary_campaign_context_line(summary)
+	if context_line != "":
+		lines.append(context_line)
+	var objective_line := _summary_objective_line_from_progress_recap(String(recap_context.get("progress_recap", "")))
+	if objective_line != "":
+		lines.append(objective_line)
+	var watch_line := String(recap_context.get("watch_line", ""))
+	if watch_line != "":
+		lines.append(watch_line)
+	return lines
+
 func _summary_resume_action_line(summary: Dictionary) -> String:
 	if not can_load_summary(summary):
 		return ""
@@ -3078,6 +3153,9 @@ func _summary_campaign_context_line(summary: Dictionary) -> String:
 
 func _summary_objective_line(session: SessionStateStoreScript.SessionData) -> String:
 	var recap: String = load("res://scripts/core/ScenarioRules.gd").describe_session_progress_recap(session, false)
+	return _summary_objective_line_from_progress_recap(recap)
+
+func _summary_objective_line_from_progress_recap(recap: String) -> String:
 	var progress_line := _line_with_prefix(recap, "Current progress:")
 	var next_step_line := _line_with_prefix(recap, "Next step:")
 	if progress_line == "" and next_step_line == "":
