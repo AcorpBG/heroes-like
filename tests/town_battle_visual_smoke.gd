@@ -243,6 +243,7 @@ func _assert_town_scenic_action_count_label_contract(live_board: Node, session) 
 	var session_before: Dictionary = session.to_dict()
 	var expected_study_actions: Array = TownRules.get_spell_learning_actions(session)
 	var expected_market_actions: Array = TownRules.get_market_actions(session)
+	var expected_title := _expected_live_town_stage_title(session)
 	var original_window_size := get_window().size
 	for viewport_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:
 		get_window().size = viewport_size
@@ -255,14 +256,31 @@ func _assert_town_scenic_action_count_label_contract(live_board: Node, session) 
 			expected_study_actions.size(),
 			expected_market_actions.size(),
 		]
+		var live_font = live_board.get_theme_default_font()
+		var scene_rect: Rect2 = live_summary.get("scene_rect", Rect2())
+		var max_width := float(live_summary.get("max_width", 0.0))
+		var independent_title_width: float = live_font.get_string_size(expected_title, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 20).x if live_font != null else 0.0
+		var independent_subline_width: float = live_font.get_string_size(expected_live_text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 13).x if live_font != null else 0.0
 		if get_window().size != viewport_size \
+				or expected_title == "" \
+				or String(live_summary.get("title_full_text", "")) != expected_title \
+				or String(live_summary.get("title_rendered_text", "")) != expected_title \
 				or int(live_summary.get("study_action_count", -1)) != expected_study_actions.size() \
 				or int(live_summary.get("market_action_count", -1)) != expected_market_actions.size() \
 				or String(live_summary.get("full_text", "")) != expected_live_text \
 				or String(live_summary.get("rendered_text", "")) != expected_live_text \
+				or live_font == null \
+				or max_width <= 0.0 \
+				or not is_equal_approx(max_width, scene_rect.size.x - 36.0) \
+				or not is_equal_approx(float(live_summary.get("title_full_width", -1.0)), independent_title_width) \
+				or not is_equal_approx(float(live_summary.get("title_rendered_width", -1.0)), independent_title_width) \
+				or not is_equal_approx(float(live_summary.get("full_width", -1.0)), independent_subline_width) \
+				or not is_equal_approx(float(live_summary.get("rendered_width", -1.0)), independent_subline_width) \
+				or independent_title_width > max_width \
+				or independent_subline_width > max_width \
 				or String(live_summary.get("full_text", "")).contains(" | Study %d |" % expected_study_actions.size()) \
 				or String(live_summary.get("full_text", "")).ends_with(" | Market %d" % expected_market_actions.size()):
-			push_error("Town smoke: live scenic action counts are not explicitly labeled and untruncated at %s: %s." % [viewport_size, live_summary])
+			push_error("Town smoke: live scenic header did not retain complete pixel-fitting title and explicit action counts at %s: title=%s subline=%s summary=%s." % [viewport_size, expected_title, expected_live_text, live_summary])
 			return false
 	get_window().size = original_window_size
 	await get_tree().process_frame
@@ -283,18 +301,38 @@ func _assert_town_scenic_action_count_label_contract(live_board: Node, session) 
 	fixture_study_actions.clear()
 	fixture_market_actions.append({"id": "market_b"})
 	var detached_summary: Dictionary = fixture.validation_header_action_count_summary()
-	if detached_summary != {
-		"full_text": "Garrison 0 companies | 0 troops | Study options 2 | Market options 1",
-		"rendered_text": "Garrison 0 companies | 0 troops | Study options 2 | Market options 1",
-		"study_action_count": 2,
-		"market_action_count": 1,
-		"garrison_company_count": 0,
-		"garrison_headcount": 0,
-		"max_chars": 80,
-	}:
+	if String(detached_summary.get("full_text", "")) != "Garrison 0 companies | 0 troops | Study options 2 | Market options 1" \
+			or String(detached_summary.get("rendered_text", "")) != String(detached_summary.get("full_text", "")) \
+			or int(detached_summary.get("study_action_count", -1)) != 2 \
+			or int(detached_summary.get("market_action_count", -1)) != 1 \
+			or int(detached_summary.get("garrison_company_count", -1)) != 0 \
+			or int(detached_summary.get("garrison_headcount", -1)) != 0 \
+			or float(detached_summary.get("full_width", 0.0)) > float(detached_summary.get("max_width", -1.0)) \
+			or float(detached_summary.get("rendered_width", 0.0)) > float(detached_summary.get("max_width", -1.0)) + 0.5:
 		push_error("Town smoke: precomputed scenic action counts were not detached and explicit: %s." % detached_summary)
 		fixture.queue_free()
 		return false
+	fixture.size = Vector2(420.0, 320.0)
+	fixture.set_precomputed_town_state(null, {
+		"town": {"town_id": "validation_town", "built_buildings": [], "garrison": [], "available_recruits": {}},
+		"town_template": {"id": "validation_town", "name": "A Very Long Validation Town Name", "faction_id": "faction_embercourt"},
+		"faction": {"id": "faction_embercourt", "name": "A Very Long Validation Faction League"},
+		"study_actions": [{"id": "study_a"}, {"id": "study_b"}],
+		"market_actions": [{"id": "market_a"}],
+	})
+	var narrow_summary: Dictionary = fixture.validation_header_action_count_summary()
+	if float(narrow_summary.get("title_full_width", 0.0)) <= float(narrow_summary.get("max_width", 0.0)) \
+			or float(narrow_summary.get("title_rendered_width", 0.0)) > float(narrow_summary.get("max_width", 0.0)) + 0.5 \
+			or not String(narrow_summary.get("title_rendered_text", "")).ends_with("…") \
+			or String(narrow_summary.get("title_rendered_text", "")).contains("...") \
+			or float(narrow_summary.get("full_width", 0.0)) > float(narrow_summary.get("max_width", 0.0)) \
+			or float(narrow_summary.get("rendered_width", 0.0)) > float(narrow_summary.get("max_width", 0.0)) + 0.5 \
+			or String(narrow_summary.get("rendered_text", "")) != String(narrow_summary.get("full_text", "")) \
+			or not is_equal_approx(float(narrow_summary.get("rendered_width", -1.0)), float(narrow_summary.get("full_width", -2.0))):
+		push_error("Town smoke: narrow scenic header did not reserve whole-word Unicode ellipsis for genuine title overflow while retaining the fitting subline: %s." % narrow_summary)
+		fixture.queue_free()
+		return false
+	fixture.size = Vector2(1180.0, 640.0)
 	fixture.set_precomputed_town_state(null, {
 		"town": {"town_id": "validation_town", "built_buildings": [], "garrison": [], "available_recruits": {}},
 		"town_template": {"id": "validation_town", "name": "Validation Town", "faction_id": "faction_embercourt"},
@@ -315,6 +353,19 @@ func _assert_town_scenic_action_count_label_contract(live_board: Node, session) 
 		push_error("Town smoke: scenic action-count label validation changed live session authority.")
 		return false
 	return true
+
+func _expected_live_town_stage_title(session) -> String:
+	var town: Dictionary = TownRules.get_active_town(session)
+	if town.is_empty():
+		return ""
+	var town_template := ContentService.get_town(String(town.get("town_id", "")))
+	var faction := ContentService.get_faction(String(town_template.get("faction_id", "")))
+	var role := OverworldRules.town_strategic_role(town).capitalize()
+	return "%s | %s | %s" % [
+		String(town_template.get("name", town.get("town_id", "Town"))),
+		String(faction.get("name", town_template.get("faction_id", "Faction"))),
+		role if role != "" else "Outpost",
+	]
 
 func _assert_town_header_control_label_contract(shell: Control, live_session) -> bool:
 	var header := shell.get_node_or_null("%Header") as Label

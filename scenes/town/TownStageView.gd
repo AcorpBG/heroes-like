@@ -1046,16 +1046,27 @@ func validation_status_plaques_summary() -> Dictionary:
 
 func validation_header_action_count_summary() -> Dictionary:
 	var scene_rect := Rect2(Vector2(26.0, 26.0), Vector2(maxf(0.0, size.x - 52.0), maxf(0.0, size.y - 52.0)))
-	var max_chars := clampi(int(scene_rect.size.x / 14.0), 42, 116)
+	var max_width := maxf(0.0, scene_rect.size.x - 36.0)
+	var title_full_text := _header_title_text()
 	var full_text := _header_action_count_text()
+	var title_rendered_text := _fit_stage_header_text(title_full_text, max_width, 20)
+	var rendered_text := _fit_stage_header_text(full_text, max_width, 13)
+	var font = get_theme_default_font()
 	return {
+		"title_full_text": title_full_text,
+		"title_rendered_text": title_rendered_text,
+		"title_full_width": font.get_string_size(title_full_text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 20).x if font != null else 0.0,
+		"title_rendered_width": font.get_string_size(title_rendered_text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 20).x if font != null else 0.0,
 		"full_text": full_text,
-		"rendered_text": _short_stage_text(full_text, max_chars),
+		"rendered_text": rendered_text,
+		"full_width": font.get_string_size(full_text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 13).x if font != null else 0.0,
+		"rendered_width": font.get_string_size(rendered_text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 13).x if font != null else 0.0,
 		"study_action_count": _study_actions.size(),
 		"market_action_count": _market_actions.size(),
 		"garrison_company_count": _garrison_company_count(),
 		"garrison_headcount": _garrison_headcount(),
-		"max_chars": max_chars,
+		"max_width": max_width,
+		"scene_rect": scene_rect,
 	}
 
 func _draw_haze(scene_rect: Rect2) -> void:
@@ -1308,17 +1319,21 @@ func _draw_command_markers(scene_rect: Rect2) -> void:
 		_draw_text(lines[index], Vector2(rect.position.x + 20.0, y), SUBTEXT_COLOR, 12)
 
 func _draw_header(scene_rect: Rect2) -> void:
+	var max_width := maxf(0.0, scene_rect.size.x - 36.0)
+	var line := _fit_stage_header_text(_header_title_text(), max_width, 20)
+	var label_y: float = minf(scene_rect.end.y - 104.0, scene_rect.position.y + scene_rect.size.y * 0.66)
+	_draw_text(line, scene_rect.position + Vector2(18.0, label_y), TEXT_COLOR, 20)
+	var subline := _fit_stage_header_text(_header_action_count_text(), max_width, 13)
+	_draw_text(subline, scene_rect.position + Vector2(18.0, label_y + 22.0), SUBTEXT_COLOR, 13)
+
+func _header_title_text() -> String:
 	var title := String(_town_template.get("name", _town.get("town_id", "Town")))
 	var role := OverworldRulesScript.town_strategic_role(_town).capitalize()
-	var line := _short_stage_text("%s | %s | %s" % [
+	return "%s | %s | %s" % [
 		title,
 		String(_faction.get("name", _town_template.get("faction_id", "Faction"))),
 		role if role != "" else "Outpost",
-	], clampi(int(scene_rect.size.x / 18.0), 34, 96))
-	var label_y: float = minf(scene_rect.end.y - 104.0, scene_rect.position.y + scene_rect.size.y * 0.66)
-	_draw_text(line, scene_rect.position + Vector2(18.0, label_y), TEXT_COLOR, 20)
-	var subline := _short_stage_text(_header_action_count_text(), clampi(int(scene_rect.size.x / 14.0), 42, 116))
-	_draw_text(subline, scene_rect.position + Vector2(18.0, label_y + 22.0), SUBTEXT_COLOR, 13)
+	]
 
 func _header_action_count_text() -> String:
 	return "Garrison %d companies | %d troops | Study options %d | Market options %d" % [
@@ -1332,6 +1347,28 @@ func _short_stage_text(text: String, max_chars: int) -> String:
 	if text.length() <= max_chars:
 		return text
 	return "%s..." % text.left(max(0, max_chars - 3)).strip_edges()
+
+func _fit_stage_header_text(text: String, max_width: float, font_size: int) -> String:
+	var normalized := text.strip_edges()
+	if normalized == "" or max_width <= 0.0:
+		return ""
+	var font = get_theme_default_font()
+	if font == null or font_size <= 0:
+		return normalized
+	if font.get_string_size(normalized, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size).x <= max_width:
+		return normalized
+	var ellipsis := "…"
+	if font.get_string_size(ellipsis, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size).x > max_width:
+		return ""
+	var prefix := ""
+	for word_value in normalized.split(" ", false):
+		var word := String(word_value)
+		var candidate := word if prefix == "" else "%s %s" % [prefix, word]
+		var candidate_with_ellipsis := "%s%s" % [candidate, ellipsis]
+		if font.get_string_size(candidate_with_ellipsis, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size).x > max_width:
+			break
+		prefix = candidate
+	return "%s%s" % [prefix, ellipsis] if prefix != "" else ellipsis
 
 func _accent_color() -> Color:
 	return FACTION_COLORS.get(String(_town_template.get("faction_id", "")), Color(0.84, 0.67, 0.35, 1.0))
