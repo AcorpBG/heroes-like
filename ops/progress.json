@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Frontier Claims chapters I-VII now bind fourteen encounter-backed objectives directly to their live placements, and Mireford's exact start lane is open. Focused chapter/campaign authority, compatibility, static/editor, and bounded Linux/Windows packaging gates are green. The live driver proves route and battle entry but its immediate rush loses the intentionally difficult Ford Reavers autoplay contract, so no full-arc or campaign-complete claim is made.",
+  "currentNotes": "LiveValidationHarness now saves the already oriented Godot 4 viewport image without inversion. Focused X11 runtime proves exact raw/saved top and bottom pixels, a real routed flow produces upright Main Menu and Overworld PNGs, and core/static/Linux/Windows gates pass. This is completed production validation tooling, not gameplay or release completion.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "campaign-frontier-claims-direct-encounter-objectives-10184",
-  "currentSliceId": "campaign-frontier-claims-direct-encounter-objectives-10184",
-  "currentSliceNotes": "Completed: fourteen exact encounter-backed objectives across Frontier Claims chapters I-VII use direct placement resolution with real encounter flags/carryover preserved. Mireford changes only terrain (1,3) and Rootwatch Hollow (2,4 to 2,5), producing the exact live route to bridge_ford_reavers. Focused resolution proves victory/Orevein handoff; the generic live rush only certifies route and battle entry because its authored Ford Reavers sample is intentionally an autoplay defeat.",
+  "currentSlice": "tooling-live-validation-screenshot-orientation-10184",
+  "currentSliceId": "tooling-live-validation-screenshot-orientation-10184",
+  "currentSliceNotes": "Completed: the production capture helper preserves the Godot viewport orientation; focused X11 and real routed-flow artifacts are upright with unchanged report/step/output ownership. No gameplay or UI composition changed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Frontier Claims Direct Encounter Objectives",
-  "currentSliceUpdatedAt": "2026-08-17T12:08:48Z",
+  "currentSliceTitle": "Live Validation Screenshot Orientation",
+  "currentSliceUpdatedAt": "2026-08-17T12:43:36Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,55 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next source-backed tracker-approved implementation slice; do not infer whole-campaign or release readiness from the completed bounded Frontier Claims objective correction.",
-  "notes": "Frontier Claims direct encounter authority and the exact Mireford route correction are completed and validated. The live harness reaches bridge_ford_reavers through the repaired lane; focused runtime owns encounter-resolution victory and Orevein handoff because the generic immediate-rush driver deterministically loses the existing authored narrow-defeat battle contract. No combat, harness, full-arc, packaged-interaction, or release-readiness claim is made.",
+  "nextActionGuardrailNote": "Select the next source-backed tracker-approved product implementation slice; do not treat the completed screenshot tooling correction as shipped gameplay progress or release readiness.",
+  "notes": "Live-validation screenshot orientation is corrected and validated through the production helper. Focused X11 samples and a real Main Menu-to-Overworld routed flow are upright; core/static and bounded Linux/Windows startup gates pass. No gameplay, content, UI composition, report schema, or packaged-interaction claim changed.",
   "plannedSlices": [
+    {
+      "id": "tooling-live-validation-screenshot-orientation-10184",
+      "title": "Live Validation Screenshot Orientation",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "tooling_implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Make routed live-validation PNGs preserve the real Godot viewport orientation so release-facing visual evidence can be inspected truthfully without changing any game behavior.",
+      "implementationTargets": [
+        "scripts/autoload/LiveValidationHarness.gd",
+        "tests/live_validation_screenshot_orientation_report.gd",
+        "tests/live_validation_screenshot_orientation_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/live_validation_screenshot_orientation_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "Focused runtime proves the raw viewport and production-saved PNG retain exact top/bottom orientation through distinct rendered color bands",
+        "One real routed live-flow screenshot is upright while its report step, filename, and payload ownership remain exact",
+        "No live-flow action, gameplay, session/save/campaign, UI composition, report schema, or output-path behavior changes",
+        "Core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "gameplay, content, UI layout, art, camera, input, renderer policy, campaign, save, battle, AI, balance, or live-flow action changes",
+        "new screenshot formats, image normalization, post-processing, visual-diff infrastructure, report schema changes, or gameplay-progress credit",
+        "packaged interaction, controller hardware, AT-SPI/UIA certification, native hardware, Native RMG, signing, publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "33f9a2ce4d5a08a8a58faa410e9724430fcfd49a",
+        "inverted_live_capture": "/tmp/heroes-frontier-live-final.HgCxQY/run/20260817T115123Z/main_menu_campaign.png",
+        "upright_independent_capture": "/tmp/heroes-main-menu-crest-visual.RM1B4z/main_menu_crest_1280x720.png",
+        "source_cause": "LiveValidationHarness._capture_screenshot calls image.flip_y() before save_png"
+      },
+      "createdAt": "2026-08-17T12:27:28Z",
+      "startedAt": "2026-08-17T12:27:28Z",
+      "updatedAt": "2026-08-17T12:43:36Z",
+      "completedAt": "2026-08-17T12:43:36Z",
+      "notes": "Completed by removing only the invalid vertical flip. Focused X11 runtime reports raw/saved top eb141fff and bottom 0f2ef0ff with exact orientation; a natural boot_to_skirmish_overworld flow writes upright Main Menu and Overworld screenshots with unchanged steps/payload ownership. Core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. This is tooling implementation, not gameplay or release completion.",
+      "remainingWork": "None for this bounded tooling slice. Select the next tracker-approved product implementation slice.",
+      "blockedReason": null
+    },
     {
       "id": "campaign-frontier-claims-direct-encounter-objectives-10184",
       "title": "Frontier Claims Direct Encounter Objectives",
@@ -88756,7 +88802,7 @@
   ],
   "summary": "Frontier Claims direct encounter-objective authority is selected and in progress from a current live chapter-I flow failure. No implementation or validation is complete yet, and the game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-17T12:08:48Z",
+  "updatedAt": "2026-08-17T12:43:36Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

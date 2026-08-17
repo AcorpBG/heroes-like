@@ -39099,6 +39099,64 @@ def validate_town_defense_battle_flow(errors: list[str]) -> None:
         ensure(required_token in battle_script_text, errors, f"BattleShell.gd is missing required town-defense routing token: {required_token}")
 
 
+def validate_live_validation_screenshot_orientation(errors: list[str]) -> None:
+    test_script_path = ROOT / "tests" / "live_validation_screenshot_orientation_report.gd"
+    test_scene_path = ROOT / "tests" / "live_validation_screenshot_orientation_report.tscn"
+    for path in (LIVE_VALIDATION_HARNESS_PATH, test_script_path, test_scene_path):
+        ensure(path.exists(), errors, f"Missing live screenshot orientation owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in (LIVE_VALIDATION_HARNESS_PATH, test_script_path, test_scene_path)):
+        return
+
+    harness_text = LIVE_VALIDATION_HARNESS_PATH.read_text(encoding="utf-8")
+    capture_match = re.search(
+        r"func _capture_screenshot\(step_id: String\) -> String:\n(?P<body>.*?)(?=\nfunc )",
+        harness_text,
+        re.S,
+    )
+    ensure(capture_match is not None, errors, "Could not isolate the production live screenshot helper")
+    if capture_match is not None:
+        capture_body = capture_match.group("body")
+        required_tokens = (
+            "var image := get_viewport().get_texture().get_image()",
+            "if image == null or image.is_empty():",
+            'var path := "%s/%s.png" % [_output_dir, step_id]',
+            "var error := image.save_png(path)",
+            "if error != OK:",
+            "return path",
+        )
+        positions = [capture_body.find(token) for token in required_tokens]
+        ensure(all(position >= 0 for position in positions), errors, "Production live screenshot helper lost viewport/write/failure ownership")
+        ensure(positions == sorted(positions), errors, "Production live screenshot helper changed viewport/write/failure order")
+        for forbidden in ("flip_y(", "flip_x(", "resize(", "rotate"):
+            ensure(forbidden not in capture_body, errors, f"Production live screenshot helper must not transform the already oriented viewport image: {forbidden}")
+
+    test_text = test_script_path.read_text(encoding="utf-8")
+    for token in (
+        'const REPORT_ID := "LIVE_VALIDATION_SCREENSHOT_ORIENTATION_REPORT"',
+        "const TOP_COLOR := Color(0.92, 0.08, 0.12, 1.0)",
+        "const BOTTOM_COLOR := Color(0.06, 0.18, 0.94, 1.0)",
+        "await get_tree().process_frame\n\tawait get_tree().process_frame\n\tawait get_tree().process_frame\n\tvar raw_image := get_viewport().get_texture().get_image()",
+        "var raw_image := get_viewport().get_texture().get_image()",
+        'var previous_output_dir = LiveValidationHarness.get("_output_dir")',
+        'LiveValidationHarness.set("_output_dir", output_dir)',
+        'LiveValidationHarness.call("_capture_screenshot", STEP_ID)',
+        'LiveValidationHarness.set("_output_dir", previous_output_dir)',
+        "var saved_image := Image.load_from_file(screenshot_path)",
+        "var top_exact := _color_matches(saved_top, raw_top)",
+        "var bottom_exact := _color_matches(saved_bottom, raw_bottom)",
+        "if not top_exact or not bottom_exact:",
+        '"png_written": true',
+    ):
+        ensure(token in test_text, errors, f"Focused live screenshot orientation owner is missing exact runtime token: {token}")
+    for forbidden in ("flip_y(", "flip_x(", "Image.create(", "set_pixel("):
+        ensure(forbidden not in test_text, errors, f"Focused screenshot orientation owner must inspect the real rendered/captured pixels: {forbidden}")
+    ensure("RenderingServer.frame_post_draw" not in test_text, errors, "Focused screenshot orientation owner must not await the headless-incompatible frame_post_draw signal")
+    ensure(test_text.count('LiveValidationHarness.call("_capture_screenshot", STEP_ID)') == 1, errors, "Focused screenshot orientation owner must invoke the production helper exactly once")
+
+    scene_text = test_scene_path.read_text(encoding="utf-8")
+    ensure('path="res://tests/live_validation_screenshot_orientation_report.gd"' in scene_text, errors, "Focused screenshot orientation scene does not own its exact script")
+
+
 def validate_live_client_harness(errors: list[str]) -> None:
     required_paths = (
         LIVE_VALIDATION_HARNESS_PATH,
@@ -47918,6 +47976,7 @@ def main() -> int:
     validate_authored_scenario_identity(errors)
     validate_battle_surrender_pursuit_aftermath(errors)
     validate_town_defense_battle_flow(errors)
+    validate_live_validation_screenshot_orientation(errors)
     validate_live_client_harness(errors)
     validate_native_rmg_homm3_validation_adoption_gate(errors)
     validate_legacy_scenario_package_conversion(errors)

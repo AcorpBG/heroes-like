@@ -3921,7 +3921,6 @@ func _capture_screenshot(step_id: String) -> String:
 	if image == null or image.is_empty():
 		_log("Screenshot skipped for %s because the viewport image was unavailable." % step_id)
 		return ""
-	image.flip_y()
 	var path := "%s/%s.png" % [_output_dir, step_id]
 	var error := image.save_png(path)
 	if error != OK:
