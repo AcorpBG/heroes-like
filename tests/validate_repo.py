@@ -24943,6 +24943,22 @@ def validate_town_shell_release_polish(errors: list[str]) -> None:
     scenic_block = town_stage_text.split("func _draw_scenic_backdrop(scene_rect: Rect2) -> bool:", 1)[1].split("\nfunc ", 1)[0]
     ensure("draw_texture_rect(" not in scenic_block, errors, "TownStageView.gd must not stretch scenic backdrops instead of cover-cropping them")
 
+    for required_token in (
+        "func validation_header_action_count_summary() -> Dictionary:",
+        "var full_text := _header_action_count_text()",
+        '"study_action_count": _study_actions.size()',
+        '"market_action_count": _market_actions.size()',
+        "var subline := _short_stage_text(_header_action_count_text(), clampi(int(scene_rect.size.x / 14.0), 42, 116))",
+        "func _header_action_count_text() -> String:",
+        'return "Garrison %d companies | %d troops | Study options %d | Market options %d" % [',
+        "_study_actions.size()",
+        "_market_actions.size()",
+    ):
+        ensure(required_token in town_stage_text, errors, f"TownStageView.gd is missing scenic action-count clarity token: {required_token}")
+    ensure("Garrison %d companies | %d troops | Study %d | Market %d" not in town_stage_text, errors, "TownStageView.gd must not present action counts as bare Study and Market concepts")
+    header_draw_block = town_stage_text.split("func _draw_header(scene_rect: Rect2) -> void:", 1)[1].split("\nfunc _header_action_count_text", 1)[0]
+    ensure(header_draw_block.count("_header_action_count_text()") == 1, errors, "Town header draw must consume the exact shared action-count formatter once")
+
     for source_name, source_text in (
         ("TownRules.gd", town_rules_text),
         ("TownShell.gd", town_script_text),
@@ -24972,6 +24988,45 @@ def validate_town_shell_release_polish(errors: list[str]) -> None:
     ):
         ensure(required_token in town_visual_text, errors, f"town_battle_visual_smoke.gd is missing scenic-backdrop validation token: {required_token}")
     ensure(town_visual_text.count("TOWN_SCENIC_BACKDROP_PATHS.keys()") == 1, errors, "Town scenic smoke must traverse the exact six-path fixture once")
+    for required_token in (
+        "func _assert_town_scenic_action_count_label_contract(live_board: Node, session) -> bool:",
+        'live_board.has_method("validation_header_action_count_summary")',
+        "var expected_study_actions: Array = TownRules.get_spell_learning_actions(session)",
+        "var expected_market_actions: Array = TownRules.get_market_actions(session)",
+        "var original_window_size := get_window().size",
+        "for viewport_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:",
+        "get_window().size = viewport_size",
+        "get_window().size = original_window_size",
+        'String(live_summary.get("rendered_text", "")) != expected_live_text',
+        '"Garrison %d companies | %d troops | Study options %d | Market options %d"',
+        '"full_text": "Garrison 0 companies | 0 troops | Study options 2 | Market options 1"',
+        "fixture_study_actions.clear()",
+        'fixture_market_actions.append({"id": "market_b"})',
+        "Study options 1 | Market options 2",
+        "if session.to_dict() != session_before:",
+    ):
+        ensure(required_token in town_visual_text, errors, f"town_battle_visual_smoke.gd is missing scenic action-count clarity proof: {required_token}")
+    scenic_call = town_visual_text.find("if not await _assert_town_scenic_action_count_label_contract(board, session):")
+    scenic_backdrop_call = town_visual_text.find("if not await _assert_town_scenic_backdrop_contract(board, session):")
+    capture_status_call = town_visual_text.find("if not await _assert_town_capture_frontier_status_contract(board, session):")
+    ensure(scenic_backdrop_call >= 0 and scenic_call > scenic_backdrop_call and capture_status_call > scenic_call, errors, "Town scenic action-count proof must run on the live stage between backdrop and capture-status checks")
+    action_count_test_block = town_visual_text.split("func _assert_town_scenic_action_count_label_contract", 1)[1].split("\nfunc ", 1)[0]
+    viewport_1280 = action_count_test_block.find("Vector2i(1280, 720)")
+    viewport_1920 = action_count_test_block.find("Vector2i(1920, 1080)")
+    viewport_restore = action_count_test_block.find("get_window().size = original_window_size")
+    fixture_creation = action_count_test_block.find("var fixture := TownStageViewScript.new()")
+    ensure(0 <= viewport_1280 < viewport_1920 < viewport_restore < fixture_creation, errors, "Town scenic action-count proof must validate exact 1280 then 1920 live widths and restore the host before detached fixtures")
+    for forbidden_token in ("TownRules.perform_", "OverworldRules.build_", "session.overworld", "sort_custom", "erase("):
+        ensure(forbidden_token not in action_count_test_block, errors, f"Town scenic action-count proof must remain observation-only: {forbidden_token}")
+    capture_status_block = town_visual_text.split("func _assert_town_capture_frontier_status_contract", 1)[1].split("\nfunc ", 1)[0]
+    for required_token in (
+        "var expected_captured_study_actions: Array = TownRules.get_spell_learning_actions(fixture_session)",
+        "var expected_captured_market_actions: Array = TownRules.get_market_actions(fixture_session)",
+        "var captured_label: Dictionary = fixture.validation_header_action_count_summary()",
+        '"Garrison %d companies | %d troops | Study options %d | Market options %d"',
+        'String(captured_label.get("full_text", "")) != expected_captured_label',
+    ):
+        ensure(required_token in capture_status_block, errors, f"Town captured-state fixture is missing scenic action-count clarity proof: {required_token}")
     for required_token in (
         "_assert_player_weekly_growth_forecast_parity",
         "for rank in [0, 1, 2]",
