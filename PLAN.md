@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `ux-town-capture-occupation-retake-first-view-10184`. Captured Duskfen now replaces only the existing Front plaque with compact `Occupation / 7d | Retake` first-view status from detached public occupation/front authority, while ordinary towns retain exact Front pressure and occupation-only/retake-only states remain contextual. Focused direct/precomputed/day-refresh/session-authority proof, exact 1280x720 and 1920x1080 routed River Pass capture/save-resume/re-entry, Town/Battle layout, active-focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. The pre-existing town-entity-cache focus oracle that rejects the shipped blocking build presenter remains explicitly excluded. Packaged Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `ux-town-capture-occupation-retake-first-view-10184`
 - Completed implementation slice: `presentation-town-specialty-transfer-distinct-feedback-10184`. Successful live specialty selection and army transfer now own distinct original imported 384x384 alpha VFX and reproducible 400 ms/380 ms production-layer stereo sounds instead of sharing generic button-confirm presentation. Four specialty and eight bidirectional transfer rows at 1280x720/1920x1080 prove normal imported playback, exact reduced-motion badges, public TownRules/session/save authority, nonblocking input, and malformed/stale/invalid/refresh silence. Cue catalog, Town visual, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Town interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, final sound-design approval, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `presentation-town-specialty-transfer-distinct-feedback-10184`
 - Completed implementation slice: `presentation-battle-resonant-chorus-distinct-audio-10184`. Resonant Chorus now owns a distinct reproducible 290 ms production-layer Battle sound and exact `audio_spell_resonant_chorus` identity while Prism Bastion retains its cue and the existing Effects-bus, priority, cooldown, and accessibility policies remain unchanged. A real public cast proves imported playback, sequenced repeat suppression, unchanged spell/session/VFX authority, and normal/reduced-motion/reduced-flash parity. Animation/cue/spell/Prism/core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Final sound-design/mastering approval, packaged Battle listening, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
@@ -6898,6 +6900,39 @@ Completion evidence:
 - focused 1280x720 and 1920x1080 runtime proves compact town-footprint hero focus, exact fill-free 3x2 town selection/hover geometry, ordinary full-tile controls, restoration, and save version 9;
 - a natural routed 1920x1080 Main Menu-to-River Pass run visibly replaces the two internal per-cell boxes with one gold composite town perimeter plus one compact white hero-focus box, changing 34,690 pixels from the prior routed frame;
 - Overworld visual, full-route movement, active-play focus, accessibility semantics, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup gates are green within bounded claims.
+
+## Selected Slice: Captured-Town Occupation and Retake First-View Status
+
+id: `ux-town-capture-occupation-retake-first-view-10184`
+
+Status: completed.
+
+Implementation boundary:
+- pass the exact detached `town_occupation_state` and `town_front_state` already owned by OverworldRules through TownShell's precomputed stage state and into TownStageView;
+- keep the existing four-plaque scenery-first layout, but make the current Front plaque show compact pacification and retake-front status whenever those states are active, while ordinary towns retain their exact existing offensive-pressure label and value;
+- refresh and sign the occupation/front payload with the existing dynamic Town stage state without changing Town rules, actions, navigation, focus, session, or save authority.
+
+Completion criteria:
+- a real hostile-town victory and captured-town entry at 1280x720 and 1920x1080 show exact active pacification days and retake identity in the existing compact first-view plaque, instead of presenting only `Front 0 pressure` while those consequences are active;
+- normal player-town, inactive-occupation, occupation-only, retake-only, combined occupation/retake, day-advance, refresh, and save/resume controls select exact ordered plaque payloads from fresh public rule state and preserve whole session authority;
+- the existing header, scenic art, Guard/Spell/Routes plaques, district strip, command markers, tabs, actions, focus, accessibility semantics, and scenery-first containment remain exact;
+- Town visual, routed hostile-town capture, battle resolution/save resume, active-play focus, accessibility, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass.
+
+Non-goals:
+- no occupation, front, pressure, readiness, economy, growth, recruitment, town-capture, battle, route, AI, content, balance, save-schema, or Native RMG rule change;
+- no new panel, report box, modal, tab, command rail, audio, VFX, scenic art, plaque count, or broad Town redesign;
+- no packaged Town interaction parity, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- HEAD `36553c56821a312da44b90a0d08969993ed59b82` routed `boot_to_skirmish_town_battle` completed naturally with exact Duskfen assault, battle save/resume, victory, capture, occupation, retake front, captured-town entry, field return, and re-entry authority;
+- `/tmp/heroes-next-slice-battle-lock-rerun/20260817T163351Z/captured_town_entered.png` shows the first-view mismatch: `Front 0 pressure` while the detached live state has seven-day pacification, readiness zero, and an active Mireclaw retake front;
+- the exact route report is `/tmp/heroes-next-slice-battle-lock-rerun/20260817T163351Z/live_validation_report.json`; this is current behavior evidence, not completion evidence.
+
+Completion evidence:
+- focused `town_battle_visual_smoke` passed naturally with exact ordinary, occupation-only, retake-only, combined, day-advance, direct/precomputed, detached-state, four-plaque containment, and whole-session controls;
+- real River Pass hostile-town capture flows passed naturally with 42 steps and zero harness errors at exact 1280x720 (`/tmp/heroes-town-capture-routed-1280-final2.gfZJqy/20260817T180410Z`) and 1920x1080 (`/tmp/heroes-town-capture-routed-1920-exact.i6r8VB/20260817T181337Z`); both captured-town frames visibly contain `Occupation / 7d | Retake` in the existing third plaque;
+- Battle layout at both registered widths, active-play focus, accessibility semantics, core, repository validation, Python compilation, diff checks, and exact/generic Godot editor parses passed; `town_exit_profile_accuracy_regression` passed, while the unrelated pre-existing `town_entity_cache_active_refresh_regression` focus assertion remains excluded because it rejects the already-shipped blocking build presenter;
+- official Linux export/headless startup and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup reports are `ok:true`; packaged Town interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
 
 ## Progress Reconciliation
 

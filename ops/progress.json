@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence."
+    "Select the next tracker-approved release-readiness implementation slice."
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the renderer-only town-footprint focus correction: hero focus follows the compact visitor presentation, selected/hovered town cells use one fill-free composite footprint perimeter, and ordinary tiles retain exact full-tile geometry. Focused 1280/1920 runtime, a visibly changed routed River Pass frame, compatibility, static/editor, and bounded Linux/Windows export/startup gates are green.",
+  "currentNotes": "Captured Duskfen now surfaces exact seven-day pacification and active retake identity as Occupation / 7d | Retake in the existing third Town plaque. Focused state/authority, exact 1280x720 and 1920x1080 routed capture, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass within bounded claims.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-town-footprint-focus-outline-coherence-10184",
-  "currentSliceId": "presentation-overworld-town-footprint-focus-outline-coherence-10184",
-  "currentSliceNotes": "Completed with one shared read-only focus geometry resolver used by actual drawing and detached validation. The routed frame now shows one composite town perimeter and one compact hero-focus box without changing selected tile, actions, routes, input, session, or save authority.",
+  "currentSlice": "ux-town-capture-occupation-retake-first-view-10184",
+  "currentSliceId": "ux-town-capture-occupation-retake-first-view-10184",
+  "currentSliceNotes": "Completed compact first-view occupation/retake status from existing public rule state while preserving ordinary Front pressure, the four-plaque layout, Town actions, session, and save authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Town-Footprint Focus Outline Coherence",
-  "currentSliceUpdatedAt": "2026-08-17T15:41:52Z",
+  "currentSliceTitle": "Captured-Town Occupation and Retake First-View Status",
+  "currentSliceUpdatedAt": "2026-08-17T18:24:27Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,68 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved implementation slice from a direct current shipped-behavior defect and preserve completed town/hero composition and focus authority.",
-  "notes": "The town-footprint focus slice is completed with live renderer behavior and direct visual evidence, not tracker-only evidence. The game remains short of release readiness; packaged Overworld interaction, hardware/accessibility certification, signing/publication, and whole-game validation remain outside this slice.",
+  "nextActionGuardrailNote": "Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence. Preserve the completed Town four-plaque occupation/retake behavior and do not infer whole-game or release readiness from this bounded slice.",
+  "notes": "The captured-town Town UX slice is implemented and validated from live public occupation/front authority. Focused state/authority, exact 1280x720 and 1920x1080 routed capture, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass. The unrelated pre-existing town-entity-cache focus oracle still rejects the already-shipped blocking build presenter and remains excluded. Packaged Town interaction, hardware/accessibility certification, signing/publication, whole-game validation, and release readiness remain outside this slice.",
   "plannedSlices": [
+    {
+      "id": "ux-town-capture-occupation-retake-first-view-10184",
+      "title": "Captured-Town Occupation and Retake First-View Status",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Surface exact active pacification and hostile retake-front consequences in the existing scenery-first Town status plaques after a real hostile-town capture.",
+      "implementationTargets": [
+        "scenes/town/TownShell.gd",
+        "scenes/town/TownStageView.gd",
+        "tests/town_battle_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/town_battle_visual_smoke.tscn",
+        "scripts/live_client_validation.py --flow boot_to_skirmish_town_battle --scenario-id river-pass",
+        "tests/battle_layout_smoke.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "Real 1280x720 and 1920x1080 hostile-town victory and captured-town entry show exact active pacification days and retake identity in the existing compact first-view plaque",
+        "Normal, inactive, occupation-only, retake-only, combined, day-advance, refresh, and save-resume states select exact ordered plaque payloads from fresh public occupation/front authority",
+        "Header, scenic art, Guard/Spell/Routes plaques, district strip, command markers, tabs, actions, focus, accessibility semantics, and whole session/save authority remain exact",
+        "Town visual, routed hostile-town capture, battle resolution/save resume, active-play focus, accessibility, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "occupation, front, pressure, readiness, economy, growth, recruitment, town-capture, battle, route, AI, content, balance, save-schema, or Native RMG rule changes",
+        "new panels, report boxes, modals, tabs, command rails, audio, VFX, scenic art, plaque count, or broad Town redesign",
+        "packaged Town interaction parity, controller hardware, AT-SPI/UIA certification, native hardware, signing, publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "36553c56821a312da44b90a0d08969993ed59b82",
+        "routed_report": "/tmp/heroes-next-slice-battle-lock-rerun/20260817T163351Z/live_validation_report.json",
+        "routed_capture": "/tmp/heroes-next-slice-battle-lock-rerun/20260817T163351Z/captured_town_entered.png",
+        "town_placement_id": "duskfen_bastion",
+        "visible_front_plaque": "Front 0 pressure",
+        "occupation_active": true,
+        "occupation_days_to_clear": 7,
+        "battle_readiness": 0,
+        "retake_front_active": true,
+        "retake_faction_id": "faction_mireclaw",
+        "observed_defect": "captured_town_first_view_omits_active_pacification_and_retake_front"
+      },
+      "createdAt": "2026-08-17T16:47:18Z",
+      "startedAt": "2026-08-17T16:47:18Z",
+      "updatedAt": "2026-08-17T18:24:27Z",
+      "notes": "Implemented the bounded live Town correction: the existing third plaque remains Front pressure for ordinary towns, becomes Occupation with exact pacification days when occupied, Retake with faction/pressure when only a retake front is active, and Occupation / 7d | Retake for the combined captured-Duskfen first view. Focused public-rule, detached-state, refresh, direct/precomputed, containment, and session-authority proof passed. Real 42-step River Pass hostile-town capture/save-resume/re-entry flows passed with zero harness errors at exact 1280x720 and 1920x1080, and both captures visibly retain the four-plaque scenery-first composition. Battle layout, active-focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates passed. The unrelated pre-existing town-entity-cache focus assertion that rejects the shipped blocking build presenter remains excluded. Packaged Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, balance, accessibility certification, content/performance, signing/publication, native Windows certification, and unrecovered Native RMG parity gaps remain.",
+      "blockedReason": null,
+      "completedAt": "2026-08-17T18:24:27Z"
+    },
     {
       "id": "presentation-overworld-town-footprint-focus-outline-coherence-10184",
       "title": "Overworld Town-Footprint Focus Outline Coherence",
@@ -88630,8 +88689,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The selected town-capture presentation identity is not yet implemented or runtime-validated. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps also remain. The game is not release-ready.",
-  "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
+  "remainingGap": "The selected captured-town occupation and retake first-view status is not yet implemented or runtime-validated. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps also remain. The game is not release-ready.",
+  "remainingWork": "Implement and validate exact occupation/retake status in the existing Town scenic plaque budget, then run focused, compatibility, static/editor, and bounded Linux/Windows startup gates. Broader release-readiness gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -89062,8 +89121,8 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "town_specialty_transfer_distinct_feedback_completed",
-  "status": "completed",
+  "result": "town_capture_occupation_retake_first_view_in_progress",
+  "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
       "completed": "Implementation or documentation-only governance work satisfies the PLAN completion criteria and has validation/evidence.",
@@ -89163,9 +89222,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Frontier Claims direct encounter-objective authority is selected and in progress from a current live chapter-I flow failure. No implementation or validation is complete yet, and the game is not release-ready.",
+  "summary": "Captured-town occupation and retake first-view status is selected from a current natural River Pass hostile-town capture. No implementation or validation is complete yet, and the game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-17T12:43:36Z",
+  "updatedAt": "2026-08-17T16:47:18Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

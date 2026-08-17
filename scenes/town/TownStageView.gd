@@ -75,6 +75,8 @@ var _market_actions: Array = []
 var _logistics: Dictionary = {}
 var _recovery: Dictionary = {}
 var _threat: Dictionary = {}
+var _occupation: Dictionary = {}
+var _front: Dictionary = {}
 var _town_action_presentation: Dictionary = {}
 var _town_action_presentation_serial := 0
 var _town_vfx_manifest: Dictionary = {}
@@ -119,6 +121,8 @@ func set_town_state(session) -> void:
 			_logistics = OverworldRulesScript.town_logistics_state(session, _town)
 			_recovery = OverworldRulesScript.town_recovery_state(session, _town)
 			_threat = OverworldRulesScript.town_public_threat_state(session, _town)
+			_occupation = OverworldRulesScript.town_occupation_state(session, _town)
+			_front = OverworldRulesScript.town_front_state(session, _town)
 	queue_redraw()
 
 func set_precomputed_town_state(session, state: Dictionary) -> void:
@@ -138,6 +142,8 @@ func set_precomputed_town_state(session, state: Dictionary) -> void:
 	_logistics = _duplicate_dictionary(state.get("logistics", {}))
 	_recovery = _duplicate_dictionary(state.get("recovery", {}))
 	_threat = _duplicate_dictionary(state.get("threat", {}))
+	_occupation = _duplicate_dictionary(state.get("occupation", {}))
+	_front = _duplicate_dictionary(state.get("front", {}))
 	queue_redraw()
 
 func _clear_town_state(session) -> void:
@@ -154,6 +160,8 @@ func _clear_town_state(session) -> void:
 	_logistics = {}
 	_recovery = {}
 	_threat = {}
+	_occupation = {}
+	_front = {}
 
 func _duplicate_dictionary(value: Variant) -> Dictionary:
 	return value.duplicate(true) if value is Dictionary else {}
@@ -1016,6 +1024,26 @@ func validation_scenic_backdrop_summary() -> Dictionary:
 		"overlay_order": ["scenic_or_procedural_stage", "status_plaques", "district_strip", "command_markers", "header"],
 	}
 
+func validation_status_plaques_summary() -> Dictionary:
+	var scene_size := Vector2(maxf(0.0, size.x - 52.0), maxf(0.0, size.y - 52.0))
+	var scene_rect := Rect2(Vector2(26.0, 26.0), scene_size)
+	var plaques := _status_plaque_payloads()
+	var rects := _status_plaque_rects(scene_rect, plaques.size())
+	var contained := rects.size() == plaques.size()
+	for rect_value in rects:
+		if not (rect_value is Rect2) or not scene_rect.encloses(rect_value):
+			contained = false
+	return {
+		"plaques": plaques.duplicate(true),
+		"rects": rects.duplicate(true),
+		"plaque_count": plaques.size(),
+		"front_plaque": plaques[2].duplicate(true) if plaques.size() > 2 else {},
+		"occupation": _occupation.duplicate(true),
+		"front": _front.duplicate(true),
+		"contained": contained,
+		"scene_rect": scene_rect,
+	}
+
 func _draw_haze(scene_rect: Rect2) -> void:
 	for index in range(4):
 		var radius := scene_rect.size.x * (0.20 + float(index) * 0.08)
@@ -1133,39 +1161,89 @@ func _draw_district_cluster(position: Vector2, strength: int, color: Color) -> v
 		draw_rect(Rect2(house_rect.position + Vector2(5.0, 5.0), Vector2(4.0, 5.0)), WINDOW_GLOW, true)
 
 func _draw_status_plaques(scene_rect: Rect2) -> void:
+	var plaques := _status_plaque_payloads()
+	var plaque_rects := _status_plaque_rects(scene_rect, plaques.size())
+	for index in range(plaques.size()):
+		_draw_plaque(plaque_rects[index], plaques[index])
+
+func _status_plaque_payloads() -> Array:
 	var readiness := OverworldRulesScript.town_battle_readiness(_town, _session)
 	var spell_tier := TownRulesScript.current_spell_tier(_town)
 	var pressure := OverworldRulesScript.town_pressure_output(_town, _session)
 	var disrupted := int(_logistics.get("disrupted_count", 0))
-	var plaque_width: float = min(132.0, (scene_rect.size.x - 54.0) / 4.0)
-	var plaques = [
+	return [
 		{
 			"title": "Guard",
 			"value": "%d" % readiness,
 			"color": Color(0.33, 0.60, 0.64, 0.95),
+			"kind": "guard",
 		},
 		{
 			"title": "Spell",
 			"value": "Tier %d" % spell_tier,
 			"color": Color(0.41, 0.54, 0.83, 0.95),
+			"kind": "spell",
 		},
-		{
-			"title": "Front",
-			"value": "%d pressure" % pressure,
-			"color": Color(0.75, 0.43, 0.30, 0.95),
-		},
+		_contextual_front_plaque(pressure),
 		{
 			"title": "Routes",
 			"value": "%d blocked" % disrupted,
 			"color": Color(0.36, 0.66, 0.58, 0.95),
+			"kind": "routes",
 		},
 	]
-	for index in range(plaques.size()):
-		var rect := Rect2(
+
+func _contextual_front_plaque(pressure: int) -> Dictionary:
+	var occupation_active := bool(_occupation.get("active", false))
+	var retake_active := bool(_front.get("active", false)) and String(_front.get("mode", "")) == "retake"
+	var faction_label := _front_faction_label(_front)
+	if occupation_active:
+		var days_to_clear: int = max(1, int(_occupation.get("days_to_clear", 0)))
+		return {
+			"title": "Occupation",
+			"value": "%dd | Retake" % days_to_clear if retake_active else "%dd pacify" % days_to_clear,
+			"color": Color(0.78, 0.39, 0.27, 0.97),
+			"kind": "occupation_retake" if retake_active else "occupation",
+			"occupation_days_to_clear": days_to_clear,
+			"retake_faction_id": String(_front.get("faction_id", "")) if retake_active else "",
+		}
+	if retake_active:
+		return {
+			"title": "Retake",
+			"value": "%s +%d" % [faction_label, max(0, int(_front.get("pressure_bonus", 0)))],
+			"color": Color(0.78, 0.39, 0.27, 0.97),
+			"kind": "retake",
+			"occupation_days_to_clear": 0,
+			"retake_faction_id": String(_front.get("faction_id", "")),
+		}
+	return {
+		"title": "Front",
+		"value": "%d pressure" % pressure,
+		"color": Color(0.75, 0.43, 0.30, 0.95),
+		"kind": "pressure",
+		"occupation_days_to_clear": 0,
+		"retake_faction_id": "",
+	}
+
+func _front_faction_label(front: Dictionary) -> String:
+	var faction_id := String(front.get("faction_id", ""))
+	var faction_name := String(ContentService.get_faction(faction_id).get("name", "")).strip_edges()
+	if faction_name != "":
+		return faction_name.get_slice(" ", 0)
+	var fallback := faction_id.trim_prefix("faction_").replace("_", " ").strip_edges()
+	return fallback.capitalize() if fallback != "" else "Enemy"
+
+func _status_plaque_rects(scene_rect: Rect2, plaque_count: int) -> Array:
+	var rects := []
+	if plaque_count <= 0:
+		return rects
+	var plaque_width: float = min(132.0, (scene_rect.size.x - 54.0) / float(plaque_count))
+	for index in range(plaque_count):
+		rects.append(Rect2(
 			Vector2(scene_rect.position.x + 12.0 + float(index) * (plaque_width + 10.0), scene_rect.position.y + 12.0),
 			Vector2(plaque_width, 48.0)
-		)
-		_draw_plaque(rect, plaques[index])
+		))
+	return rects
 
 func _draw_plaque(rect: Rect2, data: Dictionary) -> void:
 	var fill: Color = data.get("color", FRAME_COLOR)

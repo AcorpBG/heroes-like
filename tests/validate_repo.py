@@ -25024,6 +25024,188 @@ def validate_town_shell_release_polish(errors: list[str]) -> None:
         ensure(required_token in active_play_focus_text, errors, f"active_play_keyboard_focus_smoke.gd is missing Return-to-Field controller token: {required_token}")
 
 
+def validate_town_capture_frontier_first_view_status(errors: list[str]) -> None:
+    town_visual_path = ROOT / "tests" / "town_battle_visual_smoke.gd"
+    required_paths = (TOWN_SCRIPT_PATH, TOWN_STAGE_SCRIPT_PATH, OVERWORLD_RULES_PATH, town_visual_path)
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing captured-town first-view status file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    stage_text = TOWN_STAGE_SCRIPT_PATH.read_text(encoding="utf-8")
+    shell_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
+    visual_text = town_visual_path.read_text(encoding="utf-8")
+
+    for required_token in (
+        "var _occupation: Dictionary = {}",
+        "var _front: Dictionary = {}",
+        "_occupation = OverworldRulesScript.town_occupation_state(session, _town)",
+        "_front = OverworldRulesScript.town_front_state(session, _town)",
+        '_occupation = _duplicate_dictionary(state.get("occupation", {}))',
+        '_front = _duplicate_dictionary(state.get("front", {}))',
+        "_occupation = {}",
+        "_front = {}",
+        "func validation_status_plaques_summary() -> Dictionary:",
+    ):
+        ensure(required_token in stage_text, errors, f"TownStageView.gd is missing captured-town state ownership token: {required_token}")
+
+    plaque_match = re.search(
+        r"func _status_plaque_payloads\(\) -> Array:\n(?P<body>.*?)(?=\nfunc )",
+        stage_text,
+        re.S,
+    )
+    ensure(plaque_match is not None, errors, "Could not isolate TownStageView status-plaque payload ownership")
+    if plaque_match is not None:
+        plaque_body = plaque_match.group("body")
+        plaque_tokens = (
+            "var readiness := OverworldRulesScript.town_battle_readiness(_town, _session)",
+            "var spell_tier := TownRulesScript.current_spell_tier(_town)",
+            "var pressure := OverworldRulesScript.town_pressure_output(_town, _session)",
+            '"title": "Guard"',
+            '"title": "Spell"',
+            "_contextual_front_plaque(pressure)",
+            '"title": "Routes"',
+        )
+        plaque_positions = [plaque_body.find(token) for token in plaque_tokens]
+        ensure(
+            min(plaque_positions) >= 0 and plaque_positions == sorted(plaque_positions),
+            errors,
+            "Town status plaques must retain exact Guard/Spell/contextual-Front/Routes order from live rule state",
+        )
+        ensure(plaque_body.count("_contextual_front_plaque(pressure)") == 1, errors, "Town status plaques must own exactly one contextual Front slot")
+
+    contextual_match = re.search(
+        r"func _contextual_front_plaque\(pressure: int\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc )",
+        stage_text,
+        re.S,
+    )
+    ensure(contextual_match is not None, errors, "Could not isolate TownStageView contextual Front plaque")
+    if contextual_match is not None:
+        contextual_body = contextual_match.group("body")
+        contextual_tokens = (
+            'var occupation_active := bool(_occupation.get("active", false))',
+            'var retake_active := bool(_front.get("active", false)) and String(_front.get("mode", "")) == "retake"',
+            "if occupation_active:",
+            '"title": "Occupation"',
+            '"kind": "occupation_retake" if retake_active else "occupation"',
+            "if retake_active:",
+            '"title": "Retake"',
+            '"kind": "retake"',
+            '"title": "Front"',
+            '"value": "%d pressure" % pressure',
+            '"kind": "pressure"',
+        )
+        contextual_positions = [contextual_body.find(token) for token in contextual_tokens]
+        ensure(
+            min(contextual_positions) >= 0 and contextual_positions == sorted(contextual_positions),
+            errors,
+            "Town contextual Front plaque must prefer occupation, then retake, then preserve ordinary pressure semantics",
+        )
+        for forbidden in ("town[", "session.", "OverworldRulesScript.", "queue_redraw", "add_child", "Panel"):
+            ensure(forbidden not in contextual_body, errors, f"Town contextual Front plaque must remain a pure view over detached state: {forbidden}")
+
+    summary_match = re.search(
+        r"func validation_status_plaques_summary\(\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc )",
+        stage_text,
+        re.S,
+    )
+    ensure(summary_match is not None, errors, "Could not isolate TownStageView status-plaque validation summary")
+    if summary_match is not None:
+        summary_body = summary_match.group("body")
+        for required_token in (
+            "var plaques := _status_plaque_payloads()",
+            "var rects := _status_plaque_rects(scene_rect, plaques.size())",
+            '"front_plaque": plaques[2].duplicate(true) if plaques.size() > 2 else {}',
+            '"occupation": _occupation.duplicate(true)',
+            '"front": _front.duplicate(true)',
+            '"contained": contained',
+        ):
+            ensure(required_token in summary_body, errors, f"Town plaque summary is missing detached live-render proof: {required_token}")
+        for forbidden in ("town_occupation_state", "town_front_state", "set_town_state", "set_precomputed_town_state"):
+            ensure(forbidden not in summary_body, errors, f"Town plaque summary must observe renderer state without rebuilding authority: {forbidden}")
+
+    shell_build_match = re.search(
+        r"func _build_town_stage_view_state\(.*?\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc )",
+        shell_text,
+        re.S,
+    )
+    ensure(shell_build_match is not None, errors, "Could not isolate TownShell stage-state construction")
+    if shell_build_match is not None:
+        shell_build_body = shell_build_match.group("body")
+        for required_token in (
+            '"occupation": OverworldRules.town_occupation_state(_session, town).duplicate(true)',
+            '"front": OverworldRules.town_front_state(_session, town).duplicate(true)',
+        ):
+            ensure(required_token in shell_build_body, errors, f"TownShell stage state must carry exact detached frontier authority: {required_token}")
+
+    refresh_match = re.search(
+        r"func _refresh_cached_stage_dynamic\(.*?\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc )",
+        shell_text,
+        re.S,
+    )
+    ensure(refresh_match is not None, errors, "Could not isolate TownShell dynamic stage refresh")
+    if refresh_match is not None:
+        refresh_body = refresh_match.group("body")
+        refresh_tokens = (
+            'refreshed["occupation"] = OverworldRules.town_occupation_state(_session, town).duplicate(true)',
+            'refreshed["front"] = OverworldRules.town_front_state(_session, town).duplicate(true)',
+        )
+        refresh_positions = [refresh_body.find(token) for token in refresh_tokens]
+        ensure(
+            min(refresh_positions) >= 0 and refresh_positions == sorted(refresh_positions),
+            errors,
+            "TownShell cache hits must refresh exact occupation/front state in order",
+        )
+
+    signature_match = re.search(
+        r"func _town_stage_signature\(.*?\) -> String:\n(?P<body>.*?)(?=\nfunc )",
+        shell_text,
+        re.S,
+    )
+    ensure(signature_match is not None, errors, "Could not isolate TownShell stage signature")
+    if signature_match is not None:
+        signature_body = signature_match.group("body")
+        ensure('var occupation: Dictionary = stage_state.get("occupation", {})' in signature_body, errors, "Town stage signature must read occupation state")
+        ensure('var front: Dictionary = stage_state.get("front", {})' in signature_body, errors, "Town stage signature must read front state")
+        ensure("_scalar_pairs_signature(occupation)" in signature_body, errors, "Town stage signature must include occupation state")
+        ensure("_scalar_pairs_signature(front)" in signature_body, errors, "Town stage signature must include front state")
+
+    visual_match = re.search(
+        r"func _assert_town_capture_frontier_status_contract\(.*?\) -> bool:\n(?P<body>.*?)(?=\nfunc )",
+        visual_text,
+        re.S,
+    )
+    ensure(visual_match is not None, errors, "Could not isolate captured-town focused visual contract")
+    if visual_match is not None:
+        visual_body = visual_match.group("body")
+        visual_tokens = (
+            'validation_status_plaques_summary',
+            '"pressure", "Front", "%d pressure" % live_pressure',
+            '"occupation"',
+            '"%dd pacify"',
+            '"retake"',
+            '"Mireclaw +%d"',
+            'for stage_size in [Vector2(620.0, 320.0), Vector2(1180.0, 640.0)]:',
+            '"occupation_retake"',
+            '"%dd | Retake"',
+            'fixture_authority_before_detach: Dictionary = fixture_session.to_dict()',
+            'fixture_session.to_dict() != fixture_authority_before_detach',
+            'fixture_session.day += 1',
+            'fixture_town["occupation"]["pressure"] = 5',
+            'fixture.set_precomputed_town_state',
+            'fixture.validation_status_plaques_summary() != advanced_summary',
+            'live_session.to_dict() != live_session_before',
+        )
+        visual_positions = [visual_body.find(token) for token in visual_tokens]
+        ensure(
+            min(visual_positions) >= 0 and visual_positions == sorted(visual_positions),
+            errors,
+            "Captured-town focused proof must cover ordinary/occupation/retake/two-size combined/detach/day-refresh/precomputed/live-authority in order",
+        )
+        for forbidden in ("_contextual_front_plaque(", "_status_plaque_payloads(", "_draw_status_plaques(", "create_timer(", "await get_tree().create_timer"):
+            ensure(forbidden not in visual_body, errors, f"Captured-town focused proof must use the public live stage without direct renderer callbacks or delays: {forbidden}")
+
+
 def validate_town_defense_outlook_board(errors: list[str]) -> None:
     required_paths = (TOWN_SCENE_PATH, TOWN_SCRIPT_PATH, TOWN_RULES_PATH, OVERWORLD_RULES_PATH)
     for path in required_paths:
@@ -48274,6 +48456,7 @@ def main() -> int:
     validate_town_recruitment_cue_playback(errors)
     validate_town_contextual_guide(errors)
     validate_town_shell_release_polish(errors)
+    validate_town_capture_frontier_first_view_status(errors)
     validate_town_defense_outlook_board(errors)
     validate_town_order_readiness_ledger(errors)
     validate_overworld_route_map_cue_refresh(errors)
