@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Live Overworld town context, route-decision, selected-tile rail, and hover surfaces now use the shared exact player-facing control mapping without changing ownership, routes, fog, interactions, session, or save authority. Focused exact-width, compatibility, static/editor, and bounded Linux/Windows packaging gates pass.",
+  "currentNotes": "The live Overworld footer now distinguishes canonical empty Manual 1 as M1 empty and refreshes to M1 ready through the real save path, with exact save, overwrite, load, cache, file, session, and route authority.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-town-control-label-consistency-10184",
-  "currentSliceId": "ux-overworld-town-control-label-consistency-10184",
-  "currentSliceNotes": "Completed with shared Your/Enemy/Neutral/Unknown Control mapping, live context/route/rail/hover proof at exact 1280x720 and 1920x1080, full authority, compatibility, static/editor, and bounded Linux/Windows packaging evidence.",
+  "currentSlice": "ux-overworld-empty-manual-save-slot-status-clarity-10184",
+  "currentSliceId": "ux-overworld-empty-manual-save-slot-status-clarity-10184",
+  "currentSliceNotes": "Completed with exact 1280x720 and 1920x1080 empty-to-ready live proof, unchanged authority, compatibility, static/editor, and bounded Linux/Windows packaging evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Town Control-Label Consistency",
-  "currentSliceUpdatedAt": "2026-08-17T19:28:33Z",
+  "currentSliceTitle": "Overworld Empty Manual-Slot Status Clarity",
+  "currentSliceUpdatedAt": "2026-08-17T20:48:30Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,80 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select only a tracker-approved source-backed release-readiness implementation slice; preserve completed Town/Overworld control-label behavior and do not infer whole-game or release readiness from local gates.",
-  "notes": "The Overworld control-label slice is completed with exact shared direct mappings, live context/route/rail/hover proof at 1280x720 and 1920x1080, full authority, compatibility, static/editor, and bounded Linux/Windows export/startup gates. Packaged interaction, hardware/accessibility certification, signing/publication, whole-game validation, and release readiness remain outside this slice.",
+  "nextActionGuardrailNote": "Select only a tracker-approved source-backed release-readiness implementation slice; preserve completed empty-slot/save authority and Town/Overworld control-label behavior.",
+  "notes": "The Overworld empty manual-slot status slice is completed with exact live empty-to-ready behavior, unchanged save authority, compatibility, static/editor, and bounded Linux/Windows export/startup evidence. Packaged interaction, hardware/accessibility certification, signing/publication, whole-game validation, and release readiness remain outside this slice.",
   "plannedSlices": [
+    {
+      "id": "ux-overworld-empty-manual-save-slot-status-clarity-10184",
+      "title": "Overworld Empty Manual-Slot Status Clarity",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Distinguish the canonical empty selected manual slot from an unreadable or blocked slot in the live compact Overworld save status without changing save authority.",
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_visual_smoke.tscn",
+        "tests/manual_save_overwrite_regression.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "A fresh live River Pass Overworld shows M1 empty for the canonical missing Manual 1 summary, keeps Save enabled and preserves the detailed Empty slot tooltip at 1280x720 and 1920x1080",
+        "Saving through the real selected-slot path succeeds and refreshes the same status to M1 ready with exact feedback, summary, tooltip, file, cache, route, and session authority",
+        "Missing, loadable, valid-but-held, and invalid non-missing summaries remain distinct and fail closed without depending on whether another latest save exists",
+        "Focused Overworld visual/save, manual-overwrite, active-focus, accessibility, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "save write, load, overwrite, selected-slot, latest-save, summary schema, cache, filesystem, settings, autosave, route, session, or Native RMG changes",
+        "broader Overworld layout, footer geometry, save picker, button, tooltip, accessibility-region, controller, audio, VFX, or copy redesign",
+        "packaged Overworld save interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing, publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "3fc9878f178b5954f68e3916c2f5d24c3109b550",
+        "missingValidity": "missing",
+        "missingStatusText": "Empty slot.",
+        "observedVisibleStatus": "M1 lock",
+        "expectedVisibleStatus": "M1 empty",
+        "observedArtifact": "/tmp/heroes-town-overview-routed-1280.6vgtla/20260817T194950Z/overworld_entered.png",
+        "observedDefect": "empty_manual_slot_presented_as_locked"
+      },
+      "createdAt": "2026-08-17T20:15:33Z",
+      "startedAt": "2026-08-17T20:15:33Z",
+      "updatedAt": "2026-08-17T20:48:30Z",
+      "completedAt": "2026-08-17T20:48:30Z",
+      "completionEvidence": {
+        "focused1280Artifact": "/tmp/heroes-empty-slot-focused-1280-final.fQ0W9g",
+        "focused1920Artifact": "/tmp/heroes-empty-slot-focused-1920-final.7ooO9K",
+        "emptySummaryExact": true,
+        "emptyVisibleStatus": "M1 empty",
+        "saveActionEnabled": true,
+        "realSaveSucceeded": true,
+        "readyVisibleStatus": "M1 ready",
+        "sessionAuthorityExact": true,
+        "compatibilityArtifact": "/tmp/heroes-empty-slot-compat.6ENOjw",
+        "staticEditorArtifact": "/tmp/heroes-empty-slot-final-static.wmK63Z",
+        "linuxPackagingReport": ".artifacts/packaging_linux_export_smoke/report.json",
+        "linuxPackagingReportSha256": "5dd886c36fdb7d46199dfb156ab552df6a3fa8ea99e3a91cdd79b9a56db6a27c",
+        "windowsPackagingReport": ".artifacts/packaging_windows_export_smoke/report.json",
+        "windowsPackagingReportSha256": "5287c96f1605ae2f2470b003c9509a5994bd5c8680b1723c36a6630dabdfe7ef",
+        "packagedSaveInteractionClaimed": false,
+        "releaseReadinessClaimed": false
+      },
+      "notes": "Implemented the compact canonical missing-slot branch and proved the real live empty-to-ready transition with unchanged save/session authority, compatibility, static/editor, and bounded Linux/Windows export/startup evidence.",
+      "remainingWork": "",
+      "blockedReason": null
+    },
     {
       "id": "ux-overworld-town-control-label-consistency-10184",
       "title": "Overworld Town Control-Label Consistency",
@@ -88827,8 +88898,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The selected captured-town occupation and retake first-view status is not yet implemented or runtime-validated. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps also remain. The game is not release-ready.",
-  "remainingWork": "Implement and validate exact occupation/retake status in the existing Town scenic plaque budget, then run focused, compatibility, static/editor, and bounded Linux/Windows startup gates. Broader release-readiness gaps remain.",
+  "remainingGap": "The selected Overworld empty manual-slot status defect is fixed and validated. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain. The game is not release-ready.",
+  "remainingWork": "Select the next tracker-approved source-backed release-readiness implementation slice. Broader release-readiness gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -89259,7 +89330,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "town_capture_occupation_retake_first_view_in_progress",
+  "result": "overworld_empty_manual_save_slot_status_clarity_completed",
   "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
@@ -89360,9 +89431,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Captured-town occupation and retake first-view status is selected from a current natural River Pass hostile-town capture. No implementation or validation is complete yet, and the game is not release-ready.",
+  "summary": "Overworld empty manual-slot status clarity is implemented and validated from direct rendered evidence through the real empty-to-ready save path. This is one bounded slice; the game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-17T16:47:18Z",
+  "updatedAt": "2026-08-17T20:48:30Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

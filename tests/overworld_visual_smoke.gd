@@ -860,6 +860,31 @@ func _assert_save_resume_clarity_contract(shell: Node) -> bool:
 		push_error("Overworld smoke: save slot selection failed for resume clarity coverage.")
 		get_tree().quit(1)
 		return false
+	await get_tree().process_frame
+	var save_button := shell.get_node_or_null("%Save") as Button
+	var empty_session_authority: Dictionary = SessionState.ensure_active_session().to_dict()
+	var empty_snapshot: Dictionary = shell.call("validation_snapshot")
+	var empty_surface: Dictionary = empty_snapshot.get("save_surface", {}) if empty_snapshot.get("save_surface", {}) is Dictionary else {}
+	var empty_summary: Dictionary = empty_surface.get("slot_summary", {}) if empty_surface.get("slot_summary", {}) is Dictionary else {}
+	if (
+		save_button == null
+		or save_button.disabled
+		or String(empty_snapshot.get("save_status_visible_text", "")) != "M1 empty"
+		or String(empty_snapshot.get("save_status_visible_text", "")).contains("lock")
+		or String(empty_summary.get("validity", "")) != "missing"
+		or bool(empty_summary.get("valid", true))
+		or bool(empty_summary.get("loadable", true))
+		or String(empty_summary.get("status_text", "")) != "Empty slot."
+		or not String(empty_snapshot.get("save_status_tooltip_text", "")).contains("Selected slot:")
+		or not String(empty_snapshot.get("save_status_tooltip_text", "")).contains("Manual 1")
+		or not String(empty_snapshot.get("save_status_tooltip_text", "")).contains("Integrity: Empty slot")
+		or not String(empty_snapshot.get("save_status_tooltip_text", "")).contains("Load state: Blocked")
+		or not String(empty_snapshot.get("save_status_tooltip_text", "")).contains("Status: Empty slot.")
+		or SessionState.ensure_active_session().to_dict() != empty_session_authority
+	):
+		push_error("Overworld smoke: canonical empty Manual 1 is not presented as an enabled, truthful empty slot. status=%s summary=%s tooltip=%s save_disabled=%s" % [empty_snapshot.get("save_status_visible_text", ""), empty_summary, empty_snapshot.get("save_status_tooltip_text", ""), save_button.disabled if save_button != null else true])
+		get_tree().quit(1)
+		return false
 	var save_result: Dictionary = shell.call("validation_save_to_selected_slot")
 	await get_tree().process_frame
 	if not bool(save_result.get("ok", false)):
@@ -876,6 +901,10 @@ func _assert_save_resume_clarity_contract(shell: Node) -> bool:
 		return false
 	var summary: Dictionary = save_result.get("summary", {}) if save_result.get("summary", {}) is Dictionary else {}
 	var save_surface: Dictionary = snapshot.get("save_surface", {}) if snapshot.get("save_surface", {}) is Dictionary else {}
+	if String(snapshot.get("save_status_visible_text", "")) != "M1 ready":
+		push_error("Overworld smoke: saving the canonical empty Manual 1 did not refresh its compact status to ready. status=%s" % snapshot.get("save_status_visible_text", ""))
+		get_tree().quit(1)
+		return false
 	if not _assert_text_contains_all(
 		"manual save resume summary",
 		[
