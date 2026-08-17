@@ -6846,6 +6846,33 @@ Completion evidence:
 - focused 1280x720/1920x1080 runtime, full Overworld visual, artifact pickup/save, 21-stage Map Editor, core, and the routed 1920x1080 River Pass flow are green, and the routed map visibly shows the exact Trailsinger Boots silhouette;
 - official Linux and Windows PCK audits each contain all twelve artifact import records and twelve compiled textures; Linux packaged headless startup and Windows fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green within bounded claims.
 
+## Selected Slice: Overworld Town-Footprint Hero Identity Separation
+
+id: `presentation-overworld-town-footprint-hero-identity-separation-10184`
+
+Status: completed.
+
+Implementation boundary:
+- when the exact static live hero tile belongs to any cell of a 3x2 town's presentation footprint, draw that hero through a compact, lower layout so the faction commander remains identifiable without covering the town's central architecture;
+- keep the existing full-tile hero layout for ordinary field tiles and route interpolation, and keep the exact faction sprite resolver, procedural fallback, reserve badge, selection, grounding/contact, and town draw ownership;
+- expose detached validation geometry for the actual layout without changing hero position, town entry, route, actions, focus, session, or save authority.
+
+Completion criteria:
+- exact town-footprint co-location selects only the compact visitor layout while ordinary and moving heroes retain the existing full-field layout;
+- focused 1280x720 and 1920x1080 runtime proves exact faction sprite identity, hero rect containment inside the occupied footprint cell, preserved 3x2 town/non-entry authority, normal-field control, procedural fallback, restoration, and save version 9;
+- a routed 1920x1080 Main Menu-to-River Pass capture visibly keeps Lyra and the Embercourt town architecture distinct;
+- Overworld visual, full-route movement, active-play focus, accessibility, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass.
+
+Non-goals:
+- no hero/town identity, art asset, stat, roster, movement, pathfinding, entry, footprint, passability, action, selection-semantic, camera, fog, content, AI, balance, save-schema, or Native RMG change;
+- no other object-family, broad draw-order, town sprite, hero sprite, panel, focus, or input redesign;
+- no packaged Overworld interaction parity, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Completion evidence:
+- focused 1280x720 and 1920x1080 runtime proves the compact static town-footprint layout, six exact faction assets, ordinary-field and moving full-tile controls, procedural fallback, 3x2 blocked non-entry footprint authority, restoration, and save version 9;
+- a routed 1920x1080 River Pass run completed naturally and its changed capture visibly keeps Lyra compact and lower over Riverwatch's blocked footprint cell, preserving substantially more of the tower, gate, and central facade than the pre-change capture;
+- Overworld visual, full-route movement, active-play focus, accessibility semantics, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup gates are green within the stated bounded claims.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:

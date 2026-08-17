@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved release-readiness implementation slice."
+    "Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence."
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed twelve distinct original transparent Overworld artifact field silhouettes with exact live/editor/save identity, routed visual proof, and Linux/Windows packaged texture presence. Select the next tracker-approved release-readiness implementation slice.",
+  "currentNotes": "Completed the live Overworld town-footprint composition correction: static heroes on any 3x2 town presentation-footprint cell use a compact lower layout, while ordinary-field and moving heroes retain exact full-tile presentation. Focused 1280/1920 runtime, changed routed visual evidence, compatibility, static/editor, and bounded Linux/Windows export/startup gates are green; packaged Overworld interaction, hardware/accessibility certification, signing/publication, whole-game, and release readiness are not claimed.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-artifact-distinct-field-silhouettes-10184",
-  "currentSliceId": "presentation-overworld-artifact-distinct-field-silhouettes-10184",
-  "currentSliceNotes": "Completed with twelve unique transparent 512x512 field assets, exact per-artifact runtime mapping and unknown fallback, focused two-resolution and routed screenshot proof, Map Editor/core compatibility, and bounded Linux/Windows package startup evidence.",
+  "currentSlice": "presentation-overworld-town-footprint-hero-identity-separation-10184",
+  "currentSliceId": "presentation-overworld-town-footprint-hero-identity-separation-10184",
+  "currentSliceNotes": "Completed with one source-backed renderer geometry change keyed from the exact live town presentation footprint. Focused runtime proves compact/static versus ordinary/moving controls and exact authority; routed before/after imagery proves the town facade is materially more legible; compatibility, static/editor, Linux packaged headless startup, and Windows fresh-Wine startup are green within bounded claims.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Distinct Overworld Artifact Field Silhouettes",
-  "currentSliceUpdatedAt": "2026-08-17T14:42:29Z",
+  "currentSliceTitle": "Overworld Town-Footprint Hero Identity Separation",
+  "currentSliceUpdatedAt": "2026-08-17T15:17:56Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,80 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence; preserve the distinct artifact field mappings, exact inventory identities, and fail-closed unknown fallback.",
-  "notes": "The completed product slice replaces the generic artifact field bundle with twelve distinct original transparent silhouettes while preserving inventory icons, artifact gameplay/save authority, and the unknown fallback. This is shipped visual implementation, not a release-readiness claim.",
+  "nextActionGuardrailNote": "Select the next tracker-approved implementation slice from a direct current shipped-behavior defect and preserve the completed town-footprint hero composition authority.",
+  "notes": "The town-footprint hero composition slice is completed with live renderer behavior and direct visual evidence, not tracker-only evidence. The game remains short of release readiness; packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing, publication, and whole-game validation remain outside this slice.",
   "plannedSlices": [
+    {
+      "id": "presentation-overworld-town-footprint-hero-identity-separation-10184",
+      "title": "Overworld Town-Footprint Hero Identity Separation",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Keep both the exact faction hero and 3x2 faction town legible when a live static hero occupies any town presentation-footprint cell, without changing position, routing, town entry, actions, or authority.",
+      "implementationTargets": [
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_faction_hero_sprite_runtime_report.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_faction_hero_sprite_runtime_report.tscn",
+        "tests/overworld_visual_smoke.tscn",
+        "tests/overworld_full_route_movement_regression.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "The exact town-footprint co-location state selects one compact lower hero layout, while ordinary field heroes and moving heroes retain the existing full-tile layout",
+        "Focused 1280x720 and 1920x1080 runtime proves exact faction sprite identity, bounded hero rect inside the occupied footprint tile, town footprint/non-entry identity, normal-field control, procedural fallback, restoration, and session/save authority",
+        "A routed 1920x1080 River Pass capture visibly keeps the active Embercourt hero distinct without covering the town's central architecture",
+        "Overworld visual, full-route movement, active-play focus, accessibility, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "hero or town ids, art assets, stats, rosters, movement, pathfinding, entry rules, town footprint/passability, actions, selection semantics, camera, fog, content, AI, balance, save schema, or Native RMG changes",
+        "other object families, a broad draw-order rewrite, town sprite redesign, hero sprite replacement, new panels, or input/focus changes",
+        "packaged Overworld interaction parity, controller hardware, AT-SPI/UIA certification, native hardware, signing, publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "bd7db8a49c703ac29b525f3a5ebfd05ee10171f4",
+        "routed_capture": "/tmp/heroes-live-distinct-artifacts.VXsm9D/20260817T142606Z/overworld_entered.png",
+        "town_footprint": "3x2_bottom_middle_entry",
+        "hero_field_sprite_extent_fraction": 0.96,
+        "draw_order": "town_static_then_hero_dynamic",
+        "hero_tile": "1,2",
+        "town_visit_tile": "0,2",
+        "hero_town_role": "blocked_non_entry_footprint",
+        "observed_defect": "full_tile_hero_obscures_town_footprint_and_central_architecture"
+      },
+      "createdAt": "2026-08-17T14:48:04Z",
+      "startedAt": "2026-08-17T14:48:04Z",
+      "updatedAt": "2026-08-17T15:17:56Z",
+      "completedAt": "2026-08-17T15:17:56Z",
+      "notes": "Completed with a compact lower presentation for static heroes on any exact town-footprint cell, while preserving ordinary-field and moving full-tile layouts plus all gameplay/session/save authority. Focused 1280/1920 runtime and the routed River Pass before/after prove exact behavior and visibly improved town/hero separation. Broad compatibility, static/editor, and bounded Linux/Windows export/startup gates are green. Packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing, publication, whole-game, and release readiness are not claimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence.",
+      "evidence": {
+        "focused_runtime": "/tmp/heroes-town-footprint-focused.4K9meN",
+        "routed_runtime": "/tmp/heroes-town-footprint-routed.LacGnH",
+        "routed_capture": "/tmp/heroes-town-footprint-routed.LacGnH/run/overworld_entered.png",
+        "routed_before_after": "/tmp/heroes-town-footprint-before-after.png",
+        "routed_changed_pixel_count": 6812,
+        "overworld_visual": "/tmp/heroes-town-footprint-visual-rerun.EBrqq7",
+        "compatibility_chain": "/tmp/heroes-town-footprint-compat-rest.9pTpOh",
+        "static_editor_audit": "/tmp/heroes-town-footprint-final-static.ZIfwZD",
+        "linux_report": ".artifacts/packaging_linux_export_smoke/report.json",
+        "windows_report": ".artifacts/packaging_windows_export_smoke/report.json",
+        "linux_pck_size_bytes": 145621316,
+        "windows_pck_size_bytes": 145621316
+      },
+      "blockedReason": null
+    },
     {
       "id": "presentation-overworld-artifact-distinct-field-silhouettes-10184",
       "title": "Distinct Overworld Artifact Field Silhouettes",
@@ -88923,7 +88994,7 @@
     }
   ],
   "result": "town_specialty_transfer_distinct_feedback_completed",
-  "status": "in_progress",
+  "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
       "completed": "Implementation or documentation-only governance work satisfies the PLAN completion criteria and has validation/evidence.",

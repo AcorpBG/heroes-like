@@ -33516,6 +33516,8 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
     resolver_block = function_block(map_text, "_hero_sprite_asset_id")
     marker_block = function_block(map_text, "_draw_hero_marker")
     sprite_block = function_block(map_text, "_draw_hero_sprite")
+    draw_rect_block = function_block(map_text, "_hero_draw_rect")
+    layout_block = function_block(map_text, "_hero_draw_layout_payload")
     reserve_block = function_block(map_text, "_draw_hero_reserve_badge")
     movement_block = function_block(map_text, "_draw_hero_movement_presentation")
     payload_block = function_block(map_text, "_hero_presentation_payload")
@@ -33537,20 +33539,50 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
     for forbidden in ("session.", "_session.", "await ", "create_timer", "create_tween", "match faction_id"):
         ensure(forbidden not in resolver_block, errors, f"Hero sprite resolver must remain synchronous, manifest-owned, and read-only: {forbidden}")
     ensure("var hero := hero_override if not hero_override.is_empty() else _hero_presentation_entry(tile)" in marker_block, errors, "Hero draw path must use an exact override only for movement, otherwise the indexed tile hero")
-    ensure(marker_block.find("if _draw_hero_sprite(hero, rect, tile):") < marker_block.find("var anchor := _draw_hero_grounding_anchor"), errors, "Hero draw path must prefer the exact faction sprite before the procedural fallback")
+    ensure('var hero_rect := _hero_draw_rect(rect, tile, hero_override.is_empty())' in marker_block, errors, "Hero draw path must derive town-entry compaction only for static indexed heroes")
+    ensure(marker_block.find("var hero_rect :=") < marker_block.find("if _draw_hero_sprite(hero, hero_rect, tile):") < marker_block.find("var anchor := _draw_hero_grounding_anchor(hero_rect, tile)"), errors, "Hero draw path must apply the same resolved visitor rect to imported and procedural heroes before grounding")
     for token in (
         "_object_texture_for_asset(_hero_sprite_asset_id(hero))", "_draw_hero_grounding_anchor(rect, tile)",
         "_canvas_draw_texture_rect(texture, sprite_rect, false, OBJECT_SPRITE_VISIBLE_MODULATE)",
         "_draw_hero_foreground_contact(anchor)", "return true",
     ):
         ensure(token in sprite_block, errors, f"Faction hero sprite must retain existing grounding/contact ownership: {token}")
+    for token in (
+        'const HERO_FIELD_LAYOUT_MODE := "full_tile_world_hero"',
+        'const HERO_TOWN_FOOTPRINT_LAYOUT_MODE := "compact_town_footprint_visitor"',
+        "const HERO_FIELD_SPRITE_EXTENT_FACTOR := 0.96",
+        "const HERO_TOWN_FOOTPRINT_VISITOR_RECT_EXTENT_FACTOR := 0.64",
+        "const HERO_TOWN_FOOTPRINT_VISITOR_RECT_CENTER_Y_FACTOR := 0.66",
+    ):
+        ensure(token in map_text, errors, f"Town-footprint hero composition constant drifted: {token}")
+    for token in (
+        "if not allow_town_footprint_layout or _town_presentation_at(tile).is_empty():", "return rect",
+        "extent * HERO_TOWN_FOOTPRINT_VISITOR_RECT_EXTENT_FACTOR",
+        "rect.size * Vector2(0.50, HERO_TOWN_FOOTPRINT_VISITOR_RECT_CENTER_Y_FACTOR)",
+    ):
+        ensure(token in draw_rect_block, errors, f"Town-footprint hero draw-rect resolver is missing exact ownership: {token}")
+    ensure(draw_rect_block.find("if not allow_town_footprint_layout") < draw_rect_block.find("var visitor_extent :=") < draw_rect_block.find("return Rect2("), errors, "Town-footprint hero draw-rect resolver must preserve normal geometry before deriving one contained visitor rect")
+    for forbidden in ("session.", "_session.", "await ", "create_timer", "create_tween", "queue_redraw", "position =", "overworld"):
+        ensure(forbidden not in draw_rect_block, errors, f"Town-footprint hero draw-rect resolver must remain pure layout: {forbidden}")
+    for token in (
+        "var hero_rect := _hero_draw_rect(rect, tile, allow_town_footprint_layout)",
+        "var sprite_extent := maxf(16.0, hero_extent * HERO_FIELD_SPRITE_EXTENT_FACTOR)",
+        '"mode": HERO_TOWN_FOOTPRINT_LAYOUT_MODE if uses_town_footprint_layout else HERO_FIELD_LAYOUT_MODE',
+        '"town_footprint_colocated": uses_town_footprint_layout', '"hero_rect": _rect_payload(hero_rect)',
+        '"sprite_rect": _rect_payload(sprite_rect)', '"sprite_contained_in_tile": rect.encloses(sprite_rect)',
+    ):
+        ensure(token in layout_block, errors, f"Town-footprint hero validation layout is missing actual draw geometry: {token}")
+    for forbidden in ("session.", "await ", "create_timer", "create_tween", "queue_redraw", ".erase("):
+        ensure(forbidden not in layout_block, errors, f"Town-footprint hero validation layout must remain detached and read-only: {forbidden}")
     ensure("_reserve_hero_count(tile) if show_reserve_count else 0" in reserve_block, errors, "Faction hero adoption must preserve reserve-stack badge authority")
     ensure("_draw_hero_marker(draw_rect, grounding_tile, false, _hero_presentation_entry(_hero_tile))" in movement_block, errors, "Hero movement interpolation must retain the authoritative active hero sprite across intermediate tiles")
+    ensure('func validation_hero_draw_layout(tile: Vector2i, moving: bool = false) -> Dictionary:' in map_text and '_hero_draw_layout_payload(_tile_rect(_board_rect(), tile), tile, not moving)' in map_text, errors, "Focused validation must expose the exact static-versus-moving hero layout decision without mutating it")
     for token in (
         '"hero_id": hero_id', '"faction_id": faction_id', '"is_active": bool(hero.get("is_active", false))',
         '"sprite_asset_id": sprite_asset_id', '"sprite_path": String(_object_asset_paths.get(sprite_asset_id, ""))',
         '"uses_faction_sprite": faction_id != ""', '"uses_procedural_fallback": sprite_asset_id == ""',
         '"reserve_count": _reserve_hero_count(tile)', '"grounding_model": HERO_GROUNDING_MODEL', '"depth_cue_model": HERO_DEPTH_CUE_MODEL',
+        '"tile": {"x": tile.x, "y": tile.y}', '"layout": layout',
     ):
         ensure(token in payload_block, errors, f"Hero faction validation payload is missing detached evidence: {token}")
     ensure('"hero_presentation": _hero_presentation_payload(tile, explored)' in map_text, errors, "Tile validation must expose exact hero faction presentation")
@@ -33566,8 +33598,18 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
         'var authority_before: Dictionary = session.to_dict()',
         'map_view.call("validation_hero_presentation_profiles")', 'profiles.size() != EXPECTED_FACTION_ASSETS.size()',
         'seen_factions.size() == 6 and seen_assets.size() == 6 and active_count == 1',
+        'var moving_layout: Dictionary = map_view.call("validation_hero_draw_layout", active_tile, true)',
+        'String(moving_layout.get("mode", "")) == "full_tile_world_hero"',
+        'town_footprint_layout_count == 1 and ordinary_layout_count == 5 and geometry_exact',
+        'String(layout.get("mode", "")) == "compact_town_footprint_visitor"',
+        'is_equal_approx(float(layout.get("hero_rect_extent_fraction", 0.0)), 0.64)',
+        'tile_rect.encloses(hero_rect) and tile_rect.encloses(sprite_rect)',
+        'String(town_presentation.get("presentation_model", "")) == "town_3x2_footprint_bottom_middle_entry"',
+        'bool(tile_presentation.get("has_town_non_entry", false))',
+        'String(town_presentation.get("tile_role", "")) == "blocked_non_entry_footprint"',
         'first_hero["id"] = "hero_missing_faction_sprite_fixture"',
         'String(fallback.get("sprite_asset_id", "")) == ""', 'bool(fallback.get("uses_procedural_fallback", false))',
+        'String(fallback.get("layout", {}).get("mode", "")) == "compact_town_footprint_visitor"',
         'session.from_dict(authority_before)', 'restored_profiles == profiles and session.to_dict() == authority_before',
         'var viewport_rect: Rect2 = get_viewport().get_visible_rect()', 'viewport_rect.encloses(shell_rect)',
         'SessionStateStore.SAVE_VERSION', 'print("OVERWORLD_FACTION_HERO_SPRITE_RUNTIME_REPORT %s"',
@@ -33576,10 +33618,22 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
     ensure(report_text.find('session.hero_id = String(heroes[0].get("id", ""))') < report_text.find('session.overworld["player_heroes"] = heroes'), errors, "Faction hero fixture must align the SessionData primary id before installing the exact six-hero roster")
     ensure(report_text.count("for viewport_size in VIEWPORT_SIZES:") == 1, errors, "Faction hero focused owner must run exactly both registered widths")
     ensure(report_text.find('first_hero["id"] = "hero_missing_faction_sprite_fixture"') < report_text.find("session.from_dict(authority_before)") < report_text.find("restored_profiles == profiles and session.to_dict() == authority_before"), errors, "Faction hero fallback fixture must restore through the public SessionData snapshot before exact authority comparison")
-    for forbidden in ("_hero_faction_asset_ids[", "_object_textures[", "_draw_hero_sprite(", "_draw_hero_marker(", "create_timer", "create_tween"):
+    for forbidden in ("_hero_faction_asset_ids[", "_object_textures[", "_draw_hero_sprite(", "_draw_hero_marker(", "_hero_draw_rect(", "_hero_draw_layout_payload(", "create_timer", "create_tween"):
         ensure(forbidden not in report_text, errors, f"Faction hero focused owner must not bypass production resolution: {forbidden}")
     visual_text = (ROOT / "tests" / "overworld_visual_smoke.gd").read_text(encoding="utf-8")
     ensure('String(hero_sprite.get("sprite_asset_id", "")) != "hero_faction_embercourt"' in visual_text, errors, "Overworld visual gate must require the exact River Pass hero faction sprite")
+    for token in (
+        'var hero_on_town_footprint := bool(hero_presentation.get("has_town_footprint", false))',
+        "if hero_on_town_footprint:",
+        'String(hero_layout.get("mode", "")) != "compact_town_footprint_visitor"',
+        'not bool(hero_layout.get("town_footprint_colocated", false))',
+        'not is_equal_approx(float(hero_layout.get("hero_rect_extent_fraction", 0.0)), 0.64)',
+        'not bool(hero_layout.get("sprite_contained_in_tile", false))',
+        'String(hero_layout.get("mode", "")) != "full_tile_world_hero"',
+        'bool(hero_layout.get("town_footprint_colocated", true))',
+        'not is_equal_approx(float(hero_layout.get("hero_rect_extent_fraction", 0.0)), 1.0)',
+    ):
+        ensure(token in visual_text, errors, f"Broad Overworld visual gate is missing town-entry visitor composition: {token}")
 
 
 def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None:

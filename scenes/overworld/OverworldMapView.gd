@@ -90,6 +90,13 @@ const HERO_PRESENCE_MODEL := "placed_world_hero_figure"
 const HERO_GROUNDING_MODEL := "hero_foot_contact_without_base_ellipse"
 const HERO_ANCHOR_STYLE := "hero_foot_contact_shadow"
 const HERO_DEPTH_CUE_MODEL := "hero_foot_contact_shadow_with_boot_occlusion"
+const HERO_FIELD_LAYOUT_MODE := "full_tile_world_hero"
+const HERO_TOWN_FOOTPRINT_LAYOUT_MODE := "compact_town_footprint_visitor"
+const HERO_FIELD_SPRITE_EXTENT_FACTOR := 0.96
+const HERO_SPRITE_LIFT_FACTOR := 0.30
+const HERO_GROUND_ANCHOR_Y_FACTOR := 0.72
+const HERO_TOWN_FOOTPRINT_VISITOR_RECT_EXTENT_FACTOR := 0.64
+const HERO_TOWN_FOOTPRINT_VISITOR_RECT_CENTER_Y_FACTOR := 0.66
 const TOWN_PRESENTATION_MODEL := "town_3x2_footprint_bottom_middle_entry"
 const TOWN_GROUNDING_MODEL := "town_sprite_settled_without_base_ellipse"
 const TOWN_ANCHOR_STYLE := "town_contact_cues_no_base_ellipse"
@@ -2523,13 +2530,14 @@ func _draw_encounter_marker(rect: Rect2, remembered: bool = false, tile: Vector2
 
 func _draw_hero_marker(rect: Rect2, tile: Vector2i, show_reserve_count: bool = true, hero_override: Dictionary = {}) -> void:
 	var hero := hero_override if not hero_override.is_empty() else _hero_presentation_entry(tile)
-	if _draw_hero_sprite(hero, rect, tile):
+	var hero_rect := _hero_draw_rect(rect, tile, hero_override.is_empty())
+	if _draw_hero_sprite(hero, hero_rect, tile):
 		_draw_hero_reserve_badge(rect, tile, show_reserve_count)
 		return
-	var anchor := _draw_hero_grounding_anchor(rect, tile)
-	var extent := minf(rect.size.x, rect.size.y)
+	var anchor := _draw_hero_grounding_anchor(hero_rect, tile)
+	var extent := minf(hero_rect.size.x, hero_rect.size.y)
 	var base_radius := maxf(5.0, extent * HERO_MARKER_RADIUS)
-	var ground_center: Vector2 = anchor.get("center", rect.get_center())
+	var ground_center: Vector2 = anchor.get("center", hero_rect.get_center())
 	var figure_center := ground_center + Vector2(0.0, -extent * 0.17)
 	var outline_width := maxf(2.2, extent * 0.034)
 	var leg_width := maxf(2.2, extent * 0.030)
@@ -2561,12 +2569,12 @@ func _draw_hero_marker(rect: Rect2, tile: Vector2i, show_reserve_count: bool = t
 	var head_center := figure_center + Vector2(0.0, -base_radius * 0.74)
 	_canvas_draw_circle(head_center, base_radius * 0.48, MARKER_OUTLINE_COLOR)
 	_canvas_draw_circle(head_center, base_radius * 0.38, _scaled_color(HERO_FILL_COLOR, 1.12))
-	_canvas_draw_line(ground_center + Vector2(base_radius * 0.78, -extent * 0.02), figure_center + Vector2(base_radius * 0.78, -rect.size.y * 0.36), MARKER_OUTLINE_COLOR, maxf(3.0, extent * 0.040))
-	_canvas_draw_line(ground_center + Vector2(base_radius * 0.78, -extent * 0.02), figure_center + Vector2(base_radius * 0.78, -rect.size.y * 0.36), HERO_RING_COLOR, maxf(1.9, extent * 0.026))
+	_canvas_draw_line(ground_center + Vector2(base_radius * 0.78, -extent * 0.02), figure_center + Vector2(base_radius * 0.78, -hero_rect.size.y * 0.36), MARKER_OUTLINE_COLOR, maxf(3.0, extent * 0.040))
+	_canvas_draw_line(ground_center + Vector2(base_radius * 0.78, -extent * 0.02), figure_center + Vector2(base_radius * 0.78, -hero_rect.size.y * 0.36), HERO_RING_COLOR, maxf(1.9, extent * 0.026))
 	var banner = PackedVector2Array([
-		figure_center + Vector2(base_radius * 0.78, -rect.size.y * 0.36),
-		figure_center + Vector2(base_radius * 0.78 + rect.size.x * 0.16, -rect.size.y * 0.30),
-		figure_center + Vector2(base_radius * 0.78, -rect.size.y * 0.20),
+		figure_center + Vector2(base_radius * 0.78, -hero_rect.size.y * 0.36),
+		figure_center + Vector2(base_radius * 0.78 + hero_rect.size.x * 0.16, -hero_rect.size.y * 0.30),
+		figure_center + Vector2(base_radius * 0.78, -hero_rect.size.y * 0.20),
 	])
 	_canvas_draw_colored_polygon(banner, Color(0.95, 0.73, 0.25, 0.95))
 	_canvas_draw_polyline(PackedVector2Array([banner[0], banner[1], banner[2], banner[0]]), MARKER_OUTLINE_COLOR, maxf(1.4, extent * 0.020))
@@ -2581,12 +2589,40 @@ func _draw_hero_sprite(hero: Dictionary, rect: Rect2, tile: Vector2i) -> bool:
 	var anchor := _draw_hero_grounding_anchor(rect, tile)
 	var extent := minf(rect.size.x, rect.size.y)
 	var ground_center: Vector2 = anchor.get("center", rect.get_center())
-	var sprite_extent := maxf(16.0, extent * 0.96)
-	var sprite_center := ground_center + Vector2(0.0, -extent * 0.30)
+	var sprite_extent := maxf(16.0, extent * HERO_FIELD_SPRITE_EXTENT_FACTOR)
+	var sprite_center := ground_center + Vector2(0.0, -extent * HERO_SPRITE_LIFT_FACTOR)
 	var sprite_rect := Rect2(sprite_center - Vector2(sprite_extent, sprite_extent) * 0.5, Vector2(sprite_extent, sprite_extent))
 	_canvas_draw_texture_rect(texture, sprite_rect, false, OBJECT_SPRITE_VISIBLE_MODULATE)
 	_draw_hero_foreground_contact(anchor)
 	return true
+
+func _hero_draw_rect(rect: Rect2, tile: Vector2i, allow_town_footprint_layout: bool) -> Rect2:
+	if not allow_town_footprint_layout or _town_presentation_at(tile).is_empty():
+		return rect
+	var extent := minf(rect.size.x, rect.size.y)
+	var visitor_extent := extent * HERO_TOWN_FOOTPRINT_VISITOR_RECT_EXTENT_FACTOR
+	var center := rect.position + rect.size * Vector2(0.50, HERO_TOWN_FOOTPRINT_VISITOR_RECT_CENTER_Y_FACTOR)
+	return Rect2(center - Vector2(visitor_extent, visitor_extent) * 0.5, Vector2(visitor_extent, visitor_extent))
+
+func _hero_draw_layout_payload(rect: Rect2, tile: Vector2i, allow_town_footprint_layout: bool) -> Dictionary:
+	var hero_rect := _hero_draw_rect(rect, tile, allow_town_footprint_layout)
+	var tile_extent := minf(rect.size.x, rect.size.y)
+	var hero_extent := minf(hero_rect.size.x, hero_rect.size.y)
+	var ground_center := hero_rect.position + hero_rect.size * Vector2(0.50, HERO_GROUND_ANCHOR_Y_FACTOR)
+	var sprite_extent := maxf(16.0, hero_extent * HERO_FIELD_SPRITE_EXTENT_FACTOR)
+	var sprite_center := ground_center + Vector2(0.0, -hero_extent * HERO_SPRITE_LIFT_FACTOR)
+	var sprite_rect := Rect2(sprite_center - Vector2(sprite_extent, sprite_extent) * 0.5, Vector2(sprite_extent, sprite_extent))
+	var uses_town_footprint_layout := allow_town_footprint_layout and not _town_presentation_at(tile).is_empty()
+	return {
+		"mode": HERO_TOWN_FOOTPRINT_LAYOUT_MODE if uses_town_footprint_layout else HERO_FIELD_LAYOUT_MODE,
+		"town_footprint_colocated": uses_town_footprint_layout,
+		"hero_rect": _rect_payload(hero_rect),
+		"sprite_rect": _rect_payload(sprite_rect),
+		"hero_rect_extent_fraction": hero_extent / tile_extent if tile_extent > 0.0 else 0.0,
+		"sprite_extent_fraction": sprite_extent / tile_extent if tile_extent > 0.0 else 0.0,
+		"sprite_contained_in_tile": rect.encloses(sprite_rect),
+		"ground_anchor_y_fraction": (ground_center.y - rect.position.y) / rect.size.y if rect.size.y > 0.0 else 0.0,
+	}
 
 func _draw_hero_reserve_badge(rect: Rect2, tile: Vector2i, show_reserve_count: bool) -> void:
 	var reserve_count = _reserve_hero_count(tile) if show_reserve_count else 0
@@ -2601,7 +2637,7 @@ func _draw_hero_reserve_badge(rect: Rect2, tile: Vector2i, show_reserve_count: b
 
 func _draw_hero_grounding_anchor(rect: Rect2, tile: Vector2i) -> Dictionary:
 	var extent := minf(rect.size.x, rect.size.y)
-	var center := rect.position + rect.size * Vector2(0.50, 0.72)
+	var center := rect.position + rect.size * Vector2(0.50, HERO_GROUND_ANCHOR_Y_FACTOR)
 	var radii := Vector2(maxf(6.0, extent * 0.28), maxf(2.5, extent * 0.075))
 	_draw_hero_foot_shadow(tile, center, radii, extent)
 	return {
@@ -4197,6 +4233,9 @@ func validation_hero_presentation_profiles() -> Array:
 		profiles.append(_hero_presentation_payload(Vector2i(int(hero.get("x", -1)), int(hero.get("y", -1))), true))
 	return profiles
 
+func validation_hero_draw_layout(tile: Vector2i, moving: bool = false) -> Dictionary:
+	return _hero_draw_layout_payload(_tile_rect(_board_rect(), tile), tile, not moving)
+
 func validation_enemy_commander_presentation_profiles() -> Array:
 	var profiles := []
 	if _session == null:
@@ -4255,8 +4294,10 @@ func _hero_presentation_payload(tile: Vector2i, explored: bool) -> Dictionary:
 	var hero_id := String(hero.get("id", "")).strip_edges()
 	var faction_id := _hero_template_faction_id(hero)
 	var sprite_asset_id := _hero_sprite_asset_id(hero)
+	var layout := _hero_draw_layout_payload(_tile_rect(_board_rect(), tile), tile, true)
 	return {
 		"hero_id": hero_id,
+		"tile": {"x": tile.x, "y": tile.y},
 		"faction_id": faction_id,
 		"is_active": bool(hero.get("is_active", false)),
 		"sprite_asset_id": sprite_asset_id,
@@ -4266,6 +4307,7 @@ func _hero_presentation_payload(tile: Vector2i, explored: bool) -> Dictionary:
 		"reserve_count": _reserve_hero_count(tile),
 		"grounding_model": HERO_GROUNDING_MODEL,
 		"depth_cue_model": HERO_DEPTH_CUE_MODEL,
+		"layout": layout,
 	}
 
 func _town_presentation_payload(tile: Vector2i, explored: bool, visible: bool) -> Dictionary:

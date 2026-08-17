@@ -60,15 +60,26 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	var map_view = shell.get_node_or_null("%Map")
-	if map_view == null or not map_view.has_method("validation_hero_presentation_profiles"):
+	if map_view == null or not map_view.has_method("validation_hero_presentation_profiles") or not map_view.has_method("validation_hero_draw_layout"):
 		shell.queue_free()
 		return {"ok": false, "failure": "validation_surface_missing"}
 	var authority_before: Dictionary = session.to_dict()
 	var profiles: Array = map_view.call("validation_hero_presentation_profiles")
-	var exact := _validate_profiles(profiles)
+	var exact := _validate_profiles(profiles, map_view)
 	if not bool(exact.get("ok", false)):
 		shell.queue_free()
 		return {"ok": false, "failure": "hero_profiles", "detail": exact}
+
+	var active_tile_value: Dictionary = exact.get("active_tile", {})
+	var active_tile := Vector2i(int(active_tile_value.get("x", -1)), int(active_tile_value.get("y", -1)))
+	var moving_layout: Dictionary = map_view.call("validation_hero_draw_layout", active_tile, true)
+	var moving_layout_exact: bool = String(moving_layout.get("mode", "")) == "full_tile_world_hero" \
+		and not bool(moving_layout.get("town_footprint_colocated", true)) \
+		and is_equal_approx(float(moving_layout.get("hero_rect_extent_fraction", 0.0)), 1.0) \
+		and is_equal_approx(float(moving_layout.get("sprite_extent_fraction", 0.0)), 0.96)
+	if not moving_layout_exact:
+		shell.queue_free()
+		return {"ok": false, "failure": "moving_layout_control", "layout": moving_layout}
 
 	var heroes: Array = session.overworld.get("player_heroes", [])
 	var first_hero: Dictionary = heroes[0]
@@ -84,7 +95,9 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 		and String(fallback.get("faction_id", "")) == "" \
 		and String(fallback.get("sprite_asset_id", "")) == "" \
 		and bool(fallback.get("uses_procedural_fallback", false)) \
-		and not bool(fallback.get("uses_faction_sprite", true))
+		and not bool(fallback.get("uses_faction_sprite", true)) \
+		and String(fallback.get("layout", {}).get("mode", "")) == "compact_town_footprint_visitor" \
+		and bool(fallback.get("layout", {}).get("sprite_contained_in_tile", false))
 
 	session.from_dict(authority_before)
 	shell.call("_refresh")
@@ -98,24 +111,35 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 	shell.queue_free()
 	await get_tree().process_frame
 	return {
-		"ok": fallback_exact and restored_exact and containment_exact,
+		"ok": fallback_exact and restored_exact and containment_exact and moving_layout_exact,
 		"viewport": [viewport_size.x, viewport_size.y],
 		"profile_count": profiles.size(),
 		"asset_ids": exact.get("asset_ids", []),
 		"active_identity_exact": exact.get("active_identity_exact", false),
 		"grounding_exact": exact.get("grounding_exact", false),
+		"town_footprint_layout_exact": exact.get("town_footprint_layout_exact", false),
+		"ordinary_layout_exact": exact.get("ordinary_layout_exact", false),
+		"moving_layout_exact": moving_layout_exact,
 		"fallback_exact": fallback_exact,
 		"restored_exact": restored_exact,
 		"containment_exact": containment_exact,
 	}
 
-func _validate_profiles(profiles: Array) -> Dictionary:
+func _validate_profiles(profiles: Array, map_view: Node) -> Dictionary:
 	if profiles.size() != EXPECTED_FACTION_ASSETS.size():
 		return {"ok": false, "reason": "profile_count", "actual": profiles.size()}
 	var seen_factions: Dictionary = {}
 	var seen_assets: Dictionary = {}
 	var active_count := 0
 	var grounding_exact := true
+	var town_footprint_layout_count := 0
+	var ordinary_layout_count := 0
+	var active_tile := Vector2i(-1, -1)
+	var geometry_exact := true
+	var view_metrics: Dictionary = map_view.call("validation_view_metrics")
+	var board_rect := _rect_from_payload(view_metrics.get("board_rect", {}))
+	var map_size_value: Dictionary = view_metrics.get("map_size", {})
+	var map_size := Vector2i(int(map_size_value.get("x", 0)), int(map_size_value.get("y", 0)))
 	for profile_value in profiles:
 		if not (profile_value is Dictionary):
 			return {"ok": false, "reason": "profile_type"}
@@ -133,23 +157,70 @@ func _validate_profiles(profiles: Array) -> Dictionary:
 			return {"ok": false, "reason": "fallback_state", "profile": profile}
 		if bool(profile.get("is_active", false)):
 			active_count += 1
+			var active_tile_value: Dictionary = profile.get("tile", {})
+			active_tile = Vector2i(int(active_tile_value.get("x", -1)), int(active_tile_value.get("y", -1)))
 		grounding_exact = grounding_exact \
 			and String(profile.get("grounding_model", "")) == "hero_foot_contact_without_base_ellipse" \
 			and String(profile.get("depth_cue_model", "")) == "hero_foot_contact_shadow_with_boot_occlusion"
 		seen_factions[faction_id] = true
 		seen_assets[expected_asset_id] = true
+		var layout: Dictionary = profile.get("layout", {})
+		var tile_value: Dictionary = profile.get("tile", {})
+		var tile := Vector2i(int(tile_value.get("x", -1)), int(tile_value.get("y", -1)))
+		if bool(layout.get("town_footprint_colocated", false)):
+			town_footprint_layout_count += 1
+			var tile_presentation: Dictionary = map_view.call("validation_tile_presentation", tile)
+			var town_presentation: Dictionary = tile_presentation.get("town_presentation", {})
+			var tile_rect := _tile_rect_from_metrics(board_rect, map_size, tile)
+			var hero_rect := _rect_from_payload(layout.get("hero_rect", {}))
+			var sprite_rect := _rect_from_payload(layout.get("sprite_rect", {}))
+			geometry_exact = geometry_exact \
+				and bool(profile.get("is_active", false)) \
+				and String(layout.get("mode", "")) == "compact_town_footprint_visitor" \
+				and is_equal_approx(float(layout.get("hero_rect_extent_fraction", 0.0)), 0.64) \
+				and float(layout.get("sprite_extent_fraction", 1.0)) < 0.64 \
+				and bool(layout.get("sprite_contained_in_tile", false)) \
+				and tile_rect.encloses(hero_rect) and tile_rect.encloses(sprite_rect) \
+				and float(layout.get("ground_anchor_y_fraction", 0.0)) > 0.75 \
+				and bool(tile_presentation.get("has_visible_hero", false)) \
+				and bool(tile_presentation.get("has_town_non_entry", false)) \
+				and String(town_presentation.get("presentation_model", "")) == "town_3x2_footprint_bottom_middle_entry" \
+				and String(town_presentation.get("tile_role", "")) == "blocked_non_entry_footprint"
+		else:
+			ordinary_layout_count += 1
+			geometry_exact = geometry_exact \
+				and String(layout.get("mode", "")) == "full_tile_world_hero" \
+				and is_equal_approx(float(layout.get("hero_rect_extent_fraction", 0.0)), 1.0) \
+				and is_equal_approx(float(layout.get("sprite_extent_fraction", 0.0)), 0.96)
 	return {
-		"ok": seen_factions.size() == 6 and seen_assets.size() == 6 and active_count == 1 and grounding_exact,
+		"ok": seen_factions.size() == 6 and seen_assets.size() == 6 and active_count == 1 and grounding_exact and town_footprint_layout_count == 1 and ordinary_layout_count == 5 and geometry_exact,
 		"asset_ids": seen_assets.keys(),
 		"active_identity_exact": active_count == 1,
 		"grounding_exact": grounding_exact,
+		"town_footprint_layout_exact": town_footprint_layout_count == 1 and geometry_exact,
+		"ordinary_layout_exact": ordinary_layout_count == 5 and geometry_exact,
+		"active_tile": {"x": active_tile.x, "y": active_tile.y},
 	}
+
+func _rect_from_payload(value: Variant) -> Rect2:
+	var payload: Dictionary = value if value is Dictionary else {}
+	return Rect2(
+		float(payload.get("x", 0.0)),
+		float(payload.get("y", 0.0)),
+		float(payload.get("width", 0.0)),
+		float(payload.get("height", 0.0))
+	)
+
+func _tile_rect_from_metrics(board_rect: Rect2, map_size: Vector2i, tile: Vector2i) -> Rect2:
+	var cell_size := board_rect.size / Vector2(float(maxi(map_size.x, 1)), float(maxi(map_size.y, 1)))
+	return Rect2(board_rect.position + Vector2(tile.x, tile.y) * cell_size, cell_size)
 
 func _configure_hero_fixture(session) -> void:
 	var source_heroes: Array = session.overworld.get("player_heroes", [])
 	var source: Dictionary = source_heroes[0].duplicate(true)
 	var heroes: Array = []
 	var faction_ids: Array = EXPECTED_FACTION_ASSETS.keys()
+	var town_footprint_tile := _player_town_footprint_hero_tile(session)
 	for index in range(faction_ids.size()):
 		var faction_id := String(faction_ids[index])
 		var hero_id := String(REPRESENTATIVE_HERO_IDS.get(faction_id, ""))
@@ -158,7 +229,7 @@ func _configure_hero_fixture(session) -> void:
 		hero["id"] = hero_id
 		hero["name"] = String(template.get("name", hero_id))
 		hero["is_primary"] = index == 0
-		hero["position"] = {"x": 3 + index * 3, "y": 4}
+		hero["position"] = {"x": town_footprint_tile.x, "y": town_footprint_tile.y} if index == 0 else {"x": 3 + index * 3, "y": 4}
 		heroes.append(hero)
 	session.hero_id = String(heroes[0].get("id", ""))
 	session.overworld["player_heroes"] = heroes
@@ -192,6 +263,15 @@ func _configure_hero_fixture(session) -> void:
 		"explored_count": heroes.size(),
 		"total_tiles": map_size.x * map_size.y,
 	}
+
+func _player_town_footprint_hero_tile(session) -> Vector2i:
+	var map_size := OverworldRules.derive_map_size(session)
+	for town_value in session.overworld.get("towns", []):
+		if town_value is Dictionary and String(town_value.get("owner", "")) == "player":
+			var entry := Vector2i(int(town_value.get("x", -1)), int(town_value.get("y", -1)))
+			var right_footprint_cell := entry + Vector2i(1, 0)
+			return right_footprint_cell if right_footprint_cell.x < map_size.x else entry - Vector2i(1, 0)
+	return Vector2i(-1, -1)
 
 func _fail(message: String) -> void:
 	push_error(message)
