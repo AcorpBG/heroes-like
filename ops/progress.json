@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Runtime inline summary publication now builds one owned normalized-session recap context and reuses it three times with whole-exact Overworld, Town, Battle, and Outcome detail/file/cache/session authority. Authored Ninefold summary-cache time improved from 2566 to 258ms, briefing autosave from 2590 to 282ms, and first-ready from 6775 to 4531ms. Compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass; broader release gaps remain.",
+  "currentNotes": "One full Overworld status refresh now builds one detached event-independent Field Readiness context and materializes exact header and event-backed variants. Focused legacy/shared work is 351646/305895 usec with exact session/UI authority; authored event context improves 202502 to111868 usec and repeat refresh 2449 to2349ms while first-ready remains within noise. Compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "performance-runtime-save-summary-detail-context-reuse-10184",
-  "currentSliceId": "performance-runtime-save-summary-detail-context-reuse-10184",
-  "currentSliceNotes": "Completed with one invocation-local trusted normalized-session context for inline runtime cache detail, exact direct/fallback behavior, material authored timing improvement, compatibility, static/editor, and bounded Linux/Windows startup validation.",
+  "currentSlice": "performance-overworld-full-refresh-event-readiness-context-reuse-10184",
+  "currentSliceId": "performance-overworld-full-refresh-event-readiness-context-reuse-10184",
+  "currentSliceNotes": "Completed with one invocation-local event-independent Field Readiness context, exact no-event/event materialization and direct callers, material focused/authored timing evidence, compatibility, static/editor, and bounded Linux/Windows startup validation.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Runtime Save Summary Detail Context Reuse",
-  "currentSliceUpdatedAt": "2026-08-17T00:50:18Z",
+  "currentSliceTitle": "Overworld Full Refresh Event Readiness Context Reuse",
+  "currentSliceUpdatedAt": "2026-08-17T01:17:51Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19847,8 +19847,54 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
-  "notes": "Completed runtime save summary-detail context reuse with exact behavior authority and material authored Play Copy timing improvement. Select the next tracker-approved product slice from direct current behavior evidence.",
+  "notes": "Completed Overworld full-refresh event-readiness context reuse with exact behavior authority and bounded focused/authored performance improvement. Select the next tracker-approved product slice from direct current behavior evidence.",
   "plannedSlices": [
+    {
+      "id": "performance-overworld-full-refresh-event-readiness-context-reuse-10184",
+      "title": "Overworld Full Refresh Event Readiness Context Reuse",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Build one invocation-local event-independent Field Readiness context during a full Overworld status refresh and materialize the exact header and event-feed variants without repeating progress, route, action, handoff, or forecast derivation.",
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "tests/overworld_hero_actions_refresh_cache_regression.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "One full status refresh builds one detached event-independent readiness context and materializes exact no-event and event-backed surfaces while direct/default callers remain fresh",
+        "Focused old-direct versus context-backed outputs are whole-exact across idle, active-event, current/open/interaction/blocked routes, town-entry, active-site, and pressured states with exact session/action/route/event/end-turn/drawer/save/focus/UI authority",
+        "A same-process legacy two-derivation control proves material removed work; authored Ninefold first-ready and repeat refresh improve or remain safely non-regressed and the edited Play Copy round trip remains behavior-exact",
+        "Focused refresh-cache, Map Editor Play Copy, Overworld visual/interaction, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "event-feed, route, action, objective, progress, forecast, risk, handoff, End Turn, drawer, refresh invalidation, or direct-caller behavior changes",
+        "persistent cross-refresh/day/session caching, async work, Map Editor semantics, save schema, gameplay/content/AI/balance/Native RMG/package identity changes",
+        "packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "5ae2f99eaae596435e82add1cb648f6aaddd2590",
+        "scenario_id": "ninefold-confluence",
+        "authored_first_ready_ms": 4531,
+        "repeat_full_refresh_ms": 2449,
+        "field_readiness_surface_calls": 2,
+        "field_readiness_surface_base_event_calls": 1,
+        "header_objective_status_resources_usec": 548707,
+        "event_action_context_usec": 202502,
+        "readiness_usec_samples": [1574332, 1243996, 1232758],
+        "profile_artifact": "/tmp/heroes-save-summary-playcopy-profile.h5S0Vs"
+      },
+      "createdAt": "2026-08-17T00:53:44Z",
+      "startedAt": "2026-08-17T00:53:44Z",
+      "updatedAt": "2026-08-17T01:17:51Z",
+      "notes": "Production builds one detached event-independent readiness context per full status refresh and materializes its exact no-event and event-backed variants; direct/default calls still build fresh. Focused `/tmp/heroes-event-readiness-focused-final.QIcmLV` proves exact outputs, detach/rebuild, session/UI authority, one build/two reuses/two materializations, and 351646-usec legacy versus 305895-usec shared work. Authored `/tmp/heroes-event-readiness-playcopy.hVomJB` reduces event/action context 202502 to111868 usec and repeat refresh2449 to2349ms; first-ready4578ms is within1.1 percent of4531 baseline. Full Map Editor `/tmp/heroes-event-readiness-map-editor.5DchPM`, Overworld visual/active-play/core `/tmp/heroes-event-readiness-compat.9D2V50`, static/editor `/tmp/heroes-event-readiness-final-static.15HeHl`, and official Linux/Windows export-startup gates pass. Claims remain bounded.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence.",
+      "blockedReason": null,
+      "completedAt": "2026-08-17T01:17:51Z"
+    },
     {
       "id": "performance-runtime-save-summary-detail-context-reuse-10184",
       "title": "Runtime Save Summary Detail Context Reuse",
