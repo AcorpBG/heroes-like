@@ -17,6 +17,9 @@ func _run() -> void:
 	var forecast_control := _assert_forecast_bundle_core_parity(session)
 	if forecast_control.is_empty():
 		return
+	var objective_header_control := _assert_objective_header_surface_parity(session)
+	if objective_header_control.is_empty():
+		return
 	if not _assert_forecast_bundle_surface_parity(shell, session, "current_tile"):
 		return
 	if not _assert_drawer_readiness_preload_parity(shell, "current_tile"):
@@ -43,6 +46,11 @@ func _run() -> void:
 		return
 	if int(full_refresh_profile.get("end_turn_forecast_bundle_builds", 0)) != 1 or int(full_refresh_profile.get("end_turn_forecast_bundle_reuses", 0)) != 4:
 		_fail("Full refresh did not build one end-turn forecast bundle and reuse it across the four remaining consumers.", full_refresh_profile)
+		return
+	if int(full_refresh_profile.get("objective_stakes_surface_builds", 0)) != 1 \
+			or int(full_refresh_profile.get("objective_stakes_surface_reuses", 0)) != 2 \
+			or int(full_refresh_profile.get("objective_stakes_surface_materializations", 0)) != 2:
+		_fail("Full refresh did not build one objective-stakes surface and reuse it for both exact header outputs.", full_refresh_profile)
 		return
 	if session.to_dict() != refresh_session_before or refresh_authority_after != refresh_authority_before:
 		_fail("Readiness reuse changed session or whole refresh surface authority.", {
@@ -161,6 +169,13 @@ func _run() -> void:
 		"drawer_handoff_preloaded_readiness_reuses": int(full_refresh_profile.get("drawer_handoff_preloaded_readiness_reuses", 0)),
 		"end_turn_forecast_bundle_builds": int(full_refresh_profile.get("end_turn_forecast_bundle_builds", 0)),
 		"end_turn_forecast_bundle_reuses": int(full_refresh_profile.get("end_turn_forecast_bundle_reuses", 0)),
+		"objective_stakes_surface_builds": int(full_refresh_profile.get("objective_stakes_surface_builds", 0)),
+		"objective_stakes_surface_reuses": int(full_refresh_profile.get("objective_stakes_surface_reuses", 0)),
+		"objective_stakes_surface_materializations": int(full_refresh_profile.get("objective_stakes_surface_materializations", 0)),
+		"objective_header_bundle_usec": int(objective_header_control.get("bundle_usec", 0)),
+		"legacy_objective_header_usec": int(objective_header_control.get("legacy_usec", 0)),
+		"legacy_objective_to_bundle_ratio": float(objective_header_control.get("legacy_usec", 0)) / float(maxi(int(objective_header_control.get("bundle_usec", 0)), 1)),
+		"objective_header_surface_parity": true,
 		"forecast_bundle_usec": int(forecast_control.get("bundle_usec", 0)),
 		"legacy_forecast_usec": int(forecast_control.get("legacy_usec", 0)),
 		"legacy_to_bundle_ratio": float(forecast_control.get("legacy_usec", 0)) / float(maxi(int(forecast_control.get("bundle_usec", 0)), 1)),
@@ -430,6 +445,91 @@ func _assert_forecast_bundle_core_parity(session) -> Dictionary:
 			"bundle_usec": bundle_usec,
 			"legacy_usec": legacy_usec,
 			"bundle": timed_bundle,
+		})
+		return {}
+	return {"bundle_usec": bundle_usec, "legacy_usec": legacy_usec}
+
+func _assert_objective_header_surface_parity(session) -> Dictionary:
+	var ordinary := SessionStateStoreScript.SessionData.new()
+	ordinary.from_dict(session.to_dict())
+	var pressured := SessionStateStoreScript.SessionData.new()
+	pressured.from_dict(session.to_dict())
+	var pressured_towns: Array = pressured.overworld.get("towns", []) if pressured.overworld.get("towns", []) is Array else []
+	for index in range(pressured_towns.size()):
+		if pressured_towns[index] is Dictionary and String(pressured_towns[index].get("owner", "neutral")) == "player":
+			var town: Dictionary = pressured_towns[index]
+			town["recovery"] = {"pressure": 4, "last_event_day": pressured.day}
+			pressured_towns[index] = town
+			break
+	pressured.overworld["towns"] = pressured_towns
+	var day_transition := SessionStateStoreScript.SessionData.new()
+	day_transition.from_dict(session.to_dict())
+	day_transition.day = 7
+	var campaign := SessionStateStoreScript.SessionData.new()
+	campaign.from_dict(session.to_dict())
+	campaign.launch_mode = SessionStateStoreScript.LAUNCH_MODE_CAMPAIGN
+	var missing := SessionStateStoreScript.SessionData.new()
+	missing.from_dict(session.to_dict())
+	missing.scenario_id = ""
+	for row in [
+		{"id": "ordinary", "session": ordinary},
+		{"id": "pressured", "session": pressured},
+		{"id": "day_transition", "session": day_transition},
+		{"id": "campaign", "session": campaign},
+		{"id": "missing", "session": missing},
+	]:
+		var probe = row.get("session")
+		OverworldRules.normalize_overworld_state(probe)
+		var authority_before: Dictionary = probe.to_dict()
+		var expected := {
+			"objective_brief": OverworldRules.describe_objective_brief(probe),
+			"objective_stakes": OverworldRules.describe_objective_stakes_board(probe),
+		}
+		var bundled: Dictionary = OverworldRules.describe_objective_header_surfaces(probe)
+		if bundled != expected or bundled.keys() != ["objective_brief", "objective_stakes"] or probe.to_dict() != authority_before:
+			_fail("Combined objective header surfaces diverged from independent production wrappers for %s." % String(row.get("id", "")), {
+				"expected": expected,
+				"bundled": bundled,
+			})
+			return {}
+		bundled["objective_brief"] = "mutated detached objective brief"
+		bundled["objective_stakes"] = "mutated detached objective stakes"
+		if probe.to_dict() != authority_before or OverworldRules.describe_objective_header_surfaces(probe) != expected:
+			_fail("Combined objective header surfaces were not detached or failed to rebuild for %s." % String(row.get("id", "")))
+			return {}
+	var raw_surface: Dictionary = OverworldRules._objective_stakes_surface(session)
+	if raw_surface.is_empty():
+		_fail("Objective stakes detach control requires a nonempty live surface.")
+		return {}
+	var expected_surface: Dictionary = raw_surface.duplicate(true)
+	raw_surface["context_line"] = "mutated detached objective context"
+	var raw_incomplete: Array = raw_surface.get("incomplete_objectives", []) if raw_surface.get("incomplete_objectives", []) is Array else []
+	raw_incomplete.append("mutated detached objective")
+	raw_surface["incomplete_objectives"] = raw_incomplete
+	if OverworldRules._objective_stakes_surface(session) != expected_surface:
+		_fail("Objective stakes surface was session-aliased or failed to rebuild from live state.")
+		return {}
+	var expected_brief := OverworldRules.describe_objective_brief(session)
+	var expected_stakes := OverworldRules.describe_objective_stakes_board(session)
+	var legacy_started := Time.get_ticks_usec()
+	for _index in range(6):
+		if OverworldRules.describe_objective_brief(session) != expected_brief \
+				or OverworldRules.describe_objective_stakes_board(session) != expected_stakes:
+			_fail("Legacy objective header timing control changed output.")
+			return {}
+	var legacy_usec := Time.get_ticks_usec() - legacy_started
+	var bundle_started := Time.get_ticks_usec()
+	var timed_bundle: Dictionary = {}
+	for _index in range(6):
+		timed_bundle = OverworldRules.describe_objective_header_surfaces(session)
+		if timed_bundle != {"objective_brief": expected_brief, "objective_stakes": expected_stakes}:
+			_fail("Combined objective header timing control changed output.", timed_bundle)
+			return {}
+	var bundle_usec := Time.get_ticks_usec() - bundle_started
+	if legacy_usec * 100 < bundle_usec * 105:
+		_fail("Combined objective header surfaces did not remove at least five percent of the legacy two-build work.", {
+			"legacy_usec": legacy_usec,
+			"bundle_usec": bundle_usec,
 		})
 		return {}
 	return {"bundle_usec": bundle_usec, "legacy_usec": legacy_usec}

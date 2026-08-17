@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `performance-overworld-objective-stakes-surface-bundle-reuse-10184`. One full Overworld status refresh now builds the exact objective-stakes surface once and materializes the unchanged ObjectiveBrief and Objective Stakes tooltip from it, while direct/default callers remain fresh. Focused whole-output/session/UI authority is exact with one build and two materializations; six legacy pairs take 734 ms versus 487 ms shared. Authored Ninefold first-ready improves 4578 to 4425 ms, repeat refresh 2349 to 2288 ms, and the header/objective/status/resources lane 553 to 497 ms. The full edited Map Editor round trip, Overworld visual/input, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Drawer Objective Board, frontier threats, packaged interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `performance-overworld-objective-stakes-surface-bundle-reuse-10184`
 - Completed implementation slice: `performance-overworld-full-refresh-event-readiness-context-reuse-10184`. One full Overworld status refresh now builds one detached event-independent Field Readiness context and materializes the exact header and event-backed variants from it while direct/default callers remain fresh. Focused whole-surface/session authority is exact with one build, two reuses/materializations, and a 352-to-306 ms same-process legacy control. Authored Ninefold event/action context improves from 203 to 112 ms and repeat refresh from 2449 to 2349 ms; first-ready remains safely within 1.1 percent noise at 4578 ms. The full edited-working-copy round trip, Overworld visual/interaction, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `performance-overworld-full-refresh-event-readiness-context-reuse-10184`
 - Completed implementation slice: `performance-runtime-save-summary-detail-context-reuse-10184`. Successful inline runtime-summary publication now builds one owned normalized-session recap context and reuses it for resume, continuity, progress, and risk-watch detail while public direct descriptions and large/deferred fallbacks remain fresh. Independent Overworld, Town, Battle, and Outcome controls are whole-exact with exact file/cache/session authority. Authored Ninefold summary-cache time improves from 2566 to 258 ms, briefing autosave from 2590 to 282 ms, and first-ready from 6775 to 4531 ms; the full edited Play Copy round trip remains behavior-exact. Transaction, generated-Large deferred/manual save, save/load visual, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged save interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -6359,6 +6361,28 @@ Completion criteria:
 Non-goals:
 - no event-feed, route, action, objective, progress, forecast, risk, handoff, End Turn, drawer, or refresh invalidation policy change;
 - no persistent cross-refresh/day/session cache, async/background work, Map Editor semantics, save schema, gameplay/content/AI/balance/Native RMG/package identity change;
+- no packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+## Selected Slice: Overworld Objective Stakes Surface Bundle Reuse
+
+id: `performance-overworld-objective-stakes-surface-bundle-reuse-10184`
+
+Status: completed.
+
+Implementation boundary:
+- during one full Overworld status refresh, build the existing objective-stakes surface once and materialize the exact ObjectiveBrief text and Objective Stakes tooltip from that invocation-local detached surface;
+- preserve exact objective eligibility, completion/watch ordering, campaign context, scenario progress recap, visible text, tooltip text, direct/default caller freshness, and every refresh invalidation path;
+- keep the surface local to one refresh and rebuild it after every state/session/day change; do not share it with the distinct full Objective Board drawer or frontier-threat derivation.
+
+Completion criteria:
+- independent direct brief/stakes controls are whole-exact to shared-surface materialization across ordinary, campaign, skirmish, completed-victory, triggered-defeat, missing-scenario, and day/state mutation fixtures;
+- one full status refresh records one surface build and two exact materializations, with exact session, objective, event, action, drawer, threat, save, focus, and whole UI authority;
+- a same-process two-build control proves material removed work against the current 62-67 ms per-build Ninefold attribution, while authored first-ready and repeat-refresh timing improve or remain safely non-regressed;
+- focused refresh-cache, Map Editor Play Copy, Overworld visual/interaction, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass.
+
+Non-goals:
+- no objective/progress/campaign/defeat/victory policy, scenario recap, UI copy, drawer Objective Board, frontier-threat, event, action, route, forecast, risk, or refresh invalidation change;
+- no persistent cross-refresh/day/session cache, async/background work, save/schema, gameplay/content/AI/balance/Native RMG/package identity change;
 - no packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
 
 ## Progress Reconciliation

@@ -2777,7 +2777,16 @@ static func describe_status(session: SessionStateStoreScript.SessionData) -> Str
 	]
 
 static func describe_objective_brief(session: SessionStateStoreScript.SessionData) -> String:
+	return _describe_objective_brief_from_surface(_objective_stakes_surface(session))
+
+static func describe_objective_header_surfaces(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var surface := _objective_stakes_surface(session)
+	return {
+		"objective_brief": _describe_objective_brief_from_surface(surface),
+		"objective_stakes": _describe_objective_stakes_board_from_surface(session, surface),
+	}
+
+static func _describe_objective_brief_from_surface(surface: Dictionary) -> String:
 	if surface.is_empty():
 		return "Objectives unavailable"
 
@@ -2797,7 +2806,9 @@ static func describe_objective_brief(session: SessionStateStoreScript.SessionDat
 	return line
 
 static func describe_objective_stakes_board(session: SessionStateStoreScript.SessionData) -> String:
-	var surface := _objective_stakes_surface(session)
+	return _describe_objective_stakes_board_from_surface(session, _objective_stakes_surface(session))
+
+static func _describe_objective_stakes_board_from_surface(session: SessionStateStoreScript.SessionData, surface: Dictionary) -> String:
 	if surface.is_empty():
 		return "Objective Stakes\nNo authored scenario objectives are available."
 

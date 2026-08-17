@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "One full Overworld status refresh now builds one detached event-independent Field Readiness context and materializes exact header and event-backed variants. Focused legacy/shared work is 351646/305895 usec with exact session/UI authority; authored event context improves 202502 to111868 usec and repeat refresh 2449 to2349ms while first-ready remains within noise. Compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
+  "currentNotes": "Completed invocation-local Overworld objective-stakes surface reuse with exact focused authority, material focused and authored performance improvement, compatibility, static/editor, and bounded Linux/Windows startup validation.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "performance-overworld-full-refresh-event-readiness-context-reuse-10184",
-  "currentSliceId": "performance-overworld-full-refresh-event-readiness-context-reuse-10184",
-  "currentSliceNotes": "Completed with one invocation-local event-independent Field Readiness context, exact no-event/event materialization and direct callers, material focused/authored timing evidence, compatibility, static/editor, and bounded Linux/Windows startup validation.",
+  "currentSlice": "performance-overworld-objective-stakes-surface-bundle-reuse-10184",
+  "currentSliceId": "performance-overworld-objective-stakes-surface-bundle-reuse-10184",
+  "currentSliceNotes": "Completed with one invocation-local objective-stakes surface shared across exact ObjectiveBrief and Objective Stakes materialization; direct callers, drawer/threat behavior, session/UI authority, compatibility, and bounded platform startup remain exact.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Full Refresh Event Readiness Context Reuse",
-  "currentSliceUpdatedAt": "2026-08-17T01:17:51Z",
+  "currentSliceTitle": "Overworld Objective Stakes Surface Bundle Reuse",
+  "currentSliceUpdatedAt": "2026-08-17T01:42:26Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,55 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
-  "notes": "Completed Overworld full-refresh event-readiness context reuse with exact behavior authority and bounded focused/authored performance improvement. Select the next tracker-approved product slice from direct current behavior evidence.",
+  "nextActionGuardrailNote": "The objective-stakes surface slice is complete. Keep direct callers fresh, keep the distinct Objective Board drawer and frontier-threat derivation separate, preserve Native RMG fail-closed behavior, and select the next tracker-approved product slice from direct evidence.",
+  "notes": "Completed Overworld objective-stakes surface bundle reuse with exact behavior authority and bounded focused/authored performance improvement. Select the next tracker-approved product slice from direct current behavior evidence.",
   "plannedSlices": [
+    {
+      "id": "performance-overworld-objective-stakes-surface-bundle-reuse-10184",
+      "title": "Overworld Objective Stakes Surface Bundle Reuse",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Build one invocation-local objective-stakes surface during a full Overworld refresh and materialize the exact ObjectiveBrief and Objective Stakes tooltip without repeating objective and campaign-context derivation.",
+      "implementationTargets": [
+        "scripts/core/OverworldRules.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "tests/overworld_hero_actions_refresh_cache_regression.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Direct brief and stakes outputs remain whole-exact to shared-surface materialization across ordinary, campaign, skirmish, completed, triggered, missing, and mutated fixtures",
+        "One full refresh builds one detached surface and performs two exact materializations with exact objective, event, action, drawer, threat, save, focus, session, and whole UI authority",
+        "A same-process legacy two-build control proves material removed work from the current 62-67ms per-build Ninefold attribution while authored first-ready and repeat refresh improve or remain safely non-regressed",
+        "Focused refresh-cache, Map Editor Play Copy, Overworld visual/interaction, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "objective, progress, campaign, victory, defeat, recap, UI copy, Objective Board drawer, frontier threat, event, action, route, forecast, risk, or invalidation policy changes",
+        "persistent cross-refresh/day/session caching, async work, save/schema, gameplay/content/AI/balance/Native RMG/package identity changes",
+        "packaged interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "7d48f1baa408e8c8f36fa0602b74cff7b87454b1",
+        "scenario_id": "ninefold-confluence",
+        "authored_first_ready_ms": 4578,
+        "repeat_full_refresh_ms": 2349,
+        "header_objective_status_resources_usec": 553440,
+        "objective_stakes_surface_usec_samples": [65616, 67242, 62113],
+        "objective_brief_usec_samples": [67818, 63558, 65948],
+        "objective_stakes_usec_samples": [140669, 128557, 129448],
+        "attribution_artifact": "/tmp/heroes-objective-attribution.LikBbM"
+      },
+      "createdAt": "2026-08-17T01:24:25Z",
+      "startedAt": "2026-08-17T01:24:25Z",
+      "updatedAt": "2026-08-17T01:42:26Z",
+      "notes": "Production builds one detached objective-stakes surface per full refresh and materializes exact ObjectiveBrief and Objective Stakes outputs; direct wrappers remain fresh and the drawer Objective Board/frontier threats remain separate. Focused `/tmp/heroes-objective-bundle-focused-rerun.Ey0WzX` proves exact ordinary/pressured/day/campaign/missing parity, detach/rebuild, whole session/UI authority, one build/two materializations, and 733749-usec legacy versus 486838-usec shared work. Authored `/tmp/heroes-objective-bundle-profile.3DWocW` improves first-ready 4578 to4425ms, repeat refresh2349 to2288ms, and header lane553440 to497146 usec. Full Map Editor `/tmp/heroes-objective-bundle-map-editor.KakKnQ`, Overworld visual/active-play/core `/tmp/heroes-objective-bundle-compat.SmOlR7`, static/editor `/tmp/heroes-objective-bundle-static.Dj1jKq`, and official Linux/Windows export-startup `/tmp/heroes-objective-bundle-platform.sViy3f` are green. Claims remain bounded.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence.",
+      "blockedReason": null,
+      "completedAt": "2026-08-17T01:42:26Z"
+    },
     {
       "id": "performance-overworld-full-refresh-event-readiness-context-reuse-10184",
       "title": "Overworld Full Refresh Event Readiness Context Reuse",
