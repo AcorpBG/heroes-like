@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Town headers now expose bounded player-facing control copy from the exact owner value while preserving cultural identity, ownership behavior, layout, tooltip, session, and save authority. Focused, exact-width routed, compatibility, static/editor, and bounded Linux/Windows packaging gates pass.",
+  "currentNotes": "Live Overworld town context, route-decision, selected-tile rail, and hover surfaces now use the shared exact player-facing control mapping without changing ownership, routes, fog, interactions, session, or save authority. Focused exact-width, compatibility, static/editor, and bounded Linux/Windows packaging gates pass.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-town-header-player-facing-control-label-10184",
-  "currentSliceId": "ux-town-header-player-facing-control-label-10184",
-  "currentSliceNotes": "Completed with exact Your/Enemy/Neutral/Unknown Control mappings, live/direct authority proof, exact 1280x720 and 1920x1080 routed captures, compatibility, static/editor, and bounded Linux/Windows packaging evidence.",
+  "currentSlice": "ux-overworld-town-control-label-consistency-10184",
+  "currentSliceId": "ux-overworld-town-control-label-consistency-10184",
+  "currentSliceNotes": "Completed with shared Your/Enemy/Neutral/Unknown Control mapping, live context/route/rail/hover proof at exact 1280x720 and 1920x1080, full authority, compatibility, static/editor, and bounded Linux/Windows packaging evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Town Header Player-Facing Control Label",
-  "currentSliceUpdatedAt": "2026-08-17T19:03:05Z",
+  "currentSliceTitle": "Overworld Town Control-Label Consistency",
+  "currentSliceUpdatedAt": "2026-08-17T19:28:33Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,80 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Change only TownRules header copy derived from the exact existing owner value; do not alter ownership rules, town/faction identity, layout, session, save, or the completed occupation/retake plaque.",
-  "notes": "The Town header UX slice is completed with live/direct player, enemy, neutral, and unsupported mapping proof; exact 1280x720 and 1920x1080 routed captured-town evidence; compatibility, static/editor, and bounded Linux/Windows export/startup gates. Packaged Town interaction, hardware/accessibility certification, signing/publication, whole-game validation, and release readiness remain outside this slice.",
+  "nextActionGuardrailNote": "Select only a tracker-approved source-backed release-readiness implementation slice; preserve completed Town/Overworld control-label behavior and do not infer whole-game or release readiness from local gates.",
+  "notes": "The Overworld control-label slice is completed with exact shared direct mappings, live context/route/rail/hover proof at 1280x720 and 1920x1080, full authority, compatibility, static/editor, and bounded Linux/Windows export/startup gates. Packaged interaction, hardware/accessibility certification, signing/publication, whole-game validation, and release readiness remain outside this slice.",
   "plannedSlices": [
+    {
+      "id": "ux-overworld-town-control-label-consistency-10184",
+      "title": "Overworld Town Control-Label Consistency",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Replace raw storage-owner copy on four live Overworld selected-town surfaces with the same bounded player-facing control labels used by the completed Town header.",
+      "implementationTargets": [
+        "scripts/core/OverworldRules.gd",
+        "scripts/core/TownRules.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "tests/overworld_route_tooltip_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_route_tooltip_smoke.tscn",
+        "tests/overworld_visual_smoke.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "Live selected Riverwatch context, route-decision, rail, and hover surfaces show Your Control without Owner Player or Town: Player at 1280x720 and 1920x1080",
+        "Direct enemy, neutral, and unsupported owners map to Enemy Control, Neutral Control, and Unknown Control through the same helper while the completed Town header remains exact",
+        "Whole route, action, fog, tooltip, town, session, file, cache, settings, and save authority remains exact",
+        "Focused Overworld route/tooltip, Overworld visual, active-focus, accessibility, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "town ownership, capture, faction identity, route, pathfinding, fog, memory, hover targeting, map geometry, action, AI, content, balance, save/schema, or Native RMG changes",
+        "broader Overworld copy, layout, tooltip, accessibility-region, controller, audio, VFX, scenic art, or map rendering redesign",
+        "packaged Overworld interaction parity, controller hardware, AT-SPI/UIA certification, native hardware, signing, publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "b8d6af184d0438ebcc27ac24ffc7dcb5f72fda34",
+        "rawOwnerExpression": "String(town.get(\"owner\", \"neutral\")).capitalize()",
+        "overworldRulesOwnerFragment": "Owner %s",
+        "routeDecisionOwnerFragment": "Town: %s",
+        "selectedRailOwnerFragment": "Owner %s",
+        "hoverOwnerFragment": "Owner %s",
+        "observedDefect": "overworld_selected_town_surfaces_expose_internal_owner_enum"
+      },
+      "createdAt": "2026-08-17T19:07:14Z",
+      "startedAt": "2026-08-17T19:07:14Z",
+      "updatedAt": "2026-08-17T19:28:33Z",
+      "completedAt": "2026-08-17T19:28:33Z",
+      "completionEvidence": {
+        "focusedRouteTooltipArtifact": "/tmp/heroes-overworld-control-focused-exact.JJZRvN",
+        "focusedViewports": [
+          "1280x720",
+          "1920x1080"
+        ],
+        "sharedDirectMappingsExact": true,
+        "liveContextRouteRailHoverExact": true,
+        "fullAuthorityExact": true,
+        "compatibilityArtifact": "/tmp/heroes-overworld-control-compat.E39Fmt",
+        "linuxPackagingReport": ".artifacts/packaging_linux_export_smoke/report.json",
+        "windowsPackagingReport": ".artifacts/packaging_windows_export_smoke/report.json",
+        "repositoryValidationPassed": true,
+        "packagedOverworldInteractionClaimed": false,
+        "releaseReadinessClaimed": false
+      },
+      "notes": "Completed from the exact current four-surface copy defect with one shared mapping and focused exact-width, full-authority, compatibility, static/editor, and export/startup evidence. No ownership, route, fog, interaction, package-interaction, hardware, certification, signing, whole-game, or release-readiness claim is made.",
+      "remainingWork": "",
+      "blockedReason": null
+    },
     {
       "id": "ux-town-header-player-facing-control-label-10184",
       "title": "Town Header Player-Facing Control Label",

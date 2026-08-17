@@ -24,7 +24,9 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Completed implementation slice: `ux-town-header-player-facing-control-label-10184`. Town headers now map the exact owner value to compact `Your Control`, `Enemy Control`, `Neutral Control`, or fail-closed `Unknown Control` copy without changing ownership authority. Focused live/direct header proof, exact 1280x720 and 1920x1080 captured-town routes, active focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+- Completed implementation slice: `ux-overworld-town-control-label-consistency-10184`. Live Overworld town context, route-decision, selected-tile rail, and hover surfaces now use the same exact `Your/Enemy/Neutral/Unknown Control` mapping as the Town header, without changing ownership, route, fog, interaction, session, or save authority. Focused two-width route/tooltip, Overworld visual, active-focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `ux-overworld-town-control-label-consistency-10184`
+- Completed implementation slice: `ux-town-header-player-facing-control-label-10184`. Town headers now map the exact owner value to compact `Your Control`, `Enemy Control`, `Neutral Control`, or fail-closed `Unknown Control` copy without changing ownership authority. Focused live/direct header proof, exact 1280x720 and 1920x1080 captured-town routes, active focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
   id: `ux-town-header-player-facing-control-label-10184`
 - Completed implementation slice: `ux-town-capture-occupation-retake-first-view-10184`. Captured Duskfen now replaces only the existing Front plaque with compact `Occupation / 7d | Retake` first-view status from detached public occupation/front authority, while ordinary towns retain exact Front pressure and occupation-only/retake-only states remain contextual. Focused direct/precomputed/day-refresh/session-authority proof, exact 1280x720 and 1920x1080 routed River Pass capture/save-resume/re-entry, Town/Battle layout, active-focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. The pre-existing town-entity-cache focus oracle that rejects the shipped blocking build presenter remains explicitly excluded. Packaged Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `ux-town-capture-occupation-retake-first-view-10184`
@@ -6968,6 +6970,39 @@ Completion evidence:
 - the full River Pass capture/save-resume/re-entry flow passed naturally with 42 steps and zero harness errors at exact 1280x720 (`/tmp/heroes-town-header-routed-1280.lBImP4/20260817T184313Z`) and 1920x1080 (`/tmp/heroes-town-header-routed-1920.k8KFFo/20260817T185207Z`); both captured-town frames visibly retain exact Duskfen/Mireclaw/Frontier/Spell identity and show `Your Control` without `Owner Player`;
 - active-play focus, accessibility semantics, core, repository validation, Python compilation, diff checks, and exact/generic Godot editor parses passed;
 - official Linux export/headless startup and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup reports are `ok:true`; packaged Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
+
+## Selected Slice: Overworld Town Control-Label Consistency
+
+id: `ux-overworld-town-control-label-consistency-10184`
+
+Status: completed.
+
+Implementation boundary:
+- centralize the exact player/enemy/neutral/unsupported owner-to-control label mapping on the existing Overworld rules boundary and keep the completed Town header delegated to that same mapping;
+- replace only raw storage-owner copy in `describe_town_context`, selected route decision affected text, selected-tile town rail text, and visible-town hover tooltip text;
+- preserve exact town name, faction identity, terrain, route/action/handoff copy, fog and memory policy, selection behavior, ownership rules, session, and save authority.
+
+Completion criteria:
+- live selected Riverwatch player-town context, route-decision, rail, and hover surfaces show `Your Control` without `Owner Player` or `Town: Player` at 1280x720 and 1920x1080;
+- direct enemy, neutral, and unsupported controls return `Enemy Control`, `Neutral Control`, and fail-closed `Unknown Control` through the same mapping, while the completed Town header remains exact;
+- whole selected-route/action/fog/tooltip payloads retain their existing non-owner fields and order, and town/session/save authority remains unchanged;
+- focused Overworld route/tooltip, Overworld visual, active-play focus, accessibility, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass.
+
+Non-goals:
+- no town ownership, capture, faction identity, route, pathfinding, fog, memory, hover targeting, map geometry, action, AI, content, balance, save/schema, or Native RMG change;
+- no broader Overworld copy, layout, tooltip, accessibility-region, controller, audio, VFX, scenic art, or map rendering redesign;
+- no packaged Overworld interaction parity, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- HEAD `b8d6af184d0438ebcc27ac24ffc7dcb5f72fda34` still formats `Owner %s` or `Town: %s` from `String(town.get("owner", "neutral")).capitalize()` in `OverworldRules.describe_town_context` and three live `OverworldShell` town-selection surfaces;
+- the completed Town header mapping proves the desired compact vocabulary but does not own these separate Overworld surfaces;
+- this is direct shipped source behavior with an existing live selected-town validation path, not a claim that ownership, routing, fog, or interaction behavior is incorrect.
+
+Completion evidence:
+- `overworld_route_tooltip_smoke` passed naturally at exact 1280x720 and 1920x1080 with exact shared direct mappings, live Riverwatch context/route/rail/hover control copy, inverse selection, feedback/recap/generated policies, town/spell/action consequences, and whole session/files/cache/settings/routes authority (`/tmp/heroes-overworld-control-focused-exact.JJZRvN`);
+- Overworld visual, active-play keyboard focus, accessibility semantics, and core compatibility gates passed sequentially (`/tmp/heroes-overworld-control-compat.E39Fmt`);
+- repository validation, Python compilation, diff checks, and exact/generic Godot editor parses passed;
+- official Linux export/headless startup and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup reports are `ok:true`; packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
 
 ## Progress Reconciliation
 

@@ -6417,7 +6417,7 @@ func _route_decision_affected_text(surface: Dictionary) -> String:
 		return "%s | Objective: %s" % [route_label, objective_label]
 	var town := _town_at(_selected_tile.x, _selected_tile.y)
 	if not town.is_empty():
-		return "%s | Town: %s" % [route_label, String(town.get("owner", "neutral")).capitalize()]
+		return "%s | Town: %s" % [route_label, OverworldRules.town_control_label(String(town.get("owner", "neutral")))]
 	return route_label
 
 func _route_decision_why_it_matters(surface: Dictionary) -> String:
@@ -7736,12 +7736,12 @@ func _rail_tile_text() -> String:
 	var town := _town_at(_selected_tile.x, _selected_tile.y)
 	if not town.is_empty():
 		var town_line := "Town: %s" % _selected_tile_destination_name()
-		var owner := String(town.get("owner", "neutral")).capitalize()
+		var control_label := OverworldRules.town_control_label(String(town.get("owner", "neutral")))
 		var handoff := String(_town_entry_handoff_surface().get("visible_text", "")).strip_edges()
 		return "%s\n%s\n%s%s%s" % [
 			town_line,
 			route_line,
-			"Owner %s | %s" % [owner, terrain],
+			"%s | %s" % [control_label, terrain],
 			"" if action_hint == "" else " | %s" % action_hint,
 			"" if handoff == "" else "\n%s" % handoff,
 		]
@@ -8160,12 +8160,12 @@ func _tile_visibility_tooltip(tile: Vector2i, prefix: String) -> String:
 	var town := _town_at(tile.x, tile.y)
 	if not town.is_empty():
 		var town_data := ContentService.get_town(String(town.get("town_id", "")))
-		return _append_hover_order_cue("%s %d,%d | Town: %s | Owner %s | %s" % [
+		return _append_hover_order_cue("%s %d,%d | Town: %s | %s | %s" % [
 			prefix,
 			tile.x,
 			tile.y,
 			String(town_data.get("name", town.get("placement_id", "Town"))),
-			String(town.get("owner", "neutral")).capitalize(),
+			OverworldRules.town_control_label(String(town.get("owner", "neutral"))),
 			terrain,
 		], hover_order)
 	var node := _resource_node_at(tile.x, tile.y)
