@@ -3643,11 +3643,10 @@ func _refresh_status_surfaces(generated_surface_start: int, preloaded_refresh_wa
 	_profile_add("end_turn_forecast_bundle_builds", 1)
 	var readiness_context := _field_readiness_context(end_turn_forecast_surface, objective_header_surfaces)
 	var readiness_surface := _field_readiness_surface({}, end_turn_forecast_surface, readiness_context)
-	_objective_brief_label.text = _compact_text(objective_brief, 1, 72, false)
-	_objective_brief_label.tooltip_text = _join_tooltip_sections([
+	_set_objective_brief_text(objective_brief, _join_tooltip_sections([
 		objective_stakes,
 		String(readiness_surface.get("tooltip_text", "")),
-	])
+	]))
 	var status_forecast := _status_forecast_surface(end_turn_forecast_surface)
 	_status_label.tooltip_text = String(status_forecast.get("tooltip_text", ""))
 	_status_label.text = _compact_text(String(status_forecast.get("visible_text", "")), 1, 64, false)
@@ -3781,6 +3780,13 @@ func _refresh_selected_route_readiness_surfaces() -> void:
 	if end_turn_tooltip != "":
 		_end_turn_button.tooltip_text = end_turn_tooltip
 	_refresh_drawer_handoff_cues(readiness_surface)
+
+func _set_objective_brief_text(full_text: String, full_tooltip: String) -> void:
+	_objective_brief_label.text = full_text
+	_objective_brief_label.tooltip_text = full_tooltip
+	_objective_brief_label.autowrap_mode = TextServer.AUTOWRAP_OFF
+	_objective_brief_label.clip_text = true
+	_objective_brief_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 
 func _refresh_context_tile_surface() -> void:
 	var context_tile_profile_start := _debug_refresh_profile_begin("refresh_context_tile_text")

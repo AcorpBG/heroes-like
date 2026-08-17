@@ -5,7 +5,10 @@ func _ready() -> void:
 
 func _run() -> void:
 	var end_turn_dialog_only := OS.get_environment("OVERWORLD_END_TURN_DIALOG_ONLY") == "1"
+	var objective_brief_only := OS.get_environment("OVERWORLD_OBJECTIVE_BRIEF_ONLY") == "1"
 	if end_turn_dialog_only:
+		get_window().size = Vector2i(1280, 720)
+	elif objective_brief_only:
 		get_window().size = Vector2i(1280, 720)
 	var session = ScenarioFactory.create_session(
 		"river-pass",
@@ -23,6 +26,13 @@ func _run() -> void:
 	if map_node == null:
 		push_error("Overworld smoke: visual map node did not load.")
 		get_tree().quit(1)
+		return
+	if not await _assert_objective_brief_native_ellipsis_contract(shell):
+		return
+	if objective_brief_only:
+		shell.queue_free()
+		await get_tree().process_frame
+		get_tree().quit(0)
 		return
 	if not _assert_wireframe_contract(shell):
 		return
@@ -381,6 +391,77 @@ func _assert_render_cache_split(shell: Node) -> bool:
 		get_tree().quit(1)
 		return false
 	return true
+
+func _assert_objective_brief_native_ellipsis_contract(shell: Control) -> bool:
+	var session = SessionState.ensure_active_session()
+	var authority_before: Dictionary = session.to_dict()
+	var original_window_size := get_window().size
+	var header: Label = shell.get_node("%Header")
+	var objective_brief: Label = shell.get_node("%ObjectiveBrief")
+	var title_box: Control = objective_brief.get_parent()
+	var top_bar: Control = title_box.get_parent()
+	var banner_glyph: Control = top_bar.get_node("BannerGlyph")
+	var objective_surfaces := OverworldRules.describe_objective_header_surfaces(session)
+	var expected_full := String(objective_surfaces.get("objective_brief", ""))
+	var expected_stakes := String(objective_surfaces.get("objective_stakes", ""))
+	var initial_snapshot: Dictionary = shell.call("validation_snapshot")
+	var readiness: Dictionary = initial_snapshot.get("field_readiness", {})
+	var expected_tooltip := _join_objective_brief_sections([
+		expected_stakes,
+		String(readiness.get("tooltip_text", "")),
+	])
+	if expected_full.length() <= 72 or not expected_full.contains("Next Claim Duskfen Bastion") or expected_tooltip == "":
+		return _fail_overworld_objective_brief("Independent objective source did not establish the long River Pass control.")
+	for width in [1280, 1920]:
+		var requested_size := Vector2i(width, 720 if width == 1280 else 1080)
+		get_window().size = requested_size
+		await get_tree().process_frame
+		await get_tree().process_frame
+		await get_tree().process_frame
+		var font := objective_brief.get_theme_font("font")
+		var font_size := objective_brief.get_theme_font_size("font_size")
+		var full_width := font.get_string_size(expected_full, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size).x if font != null else 0.0
+		var top_rect := top_bar.get_global_rect()
+		var glyph_rect := banner_glyph.get_global_rect()
+		var title_rect := title_box.get_global_rect()
+		var header_rect := header.get_global_rect()
+		var objective_rect := objective_brief.get_global_rect()
+		if get_window().size != requested_size \
+			or objective_brief.text != expected_full \
+			or objective_brief.tooltip_text != expected_tooltip \
+			or not objective_brief.clip_text \
+			or objective_brief.autowrap_mode != TextServer.AUTOWRAP_OFF \
+			or objective_brief.text_overrun_behavior != TextServer.OVERRUN_TRIM_ELLIPSIS \
+			or font == null \
+			or full_width <= 0.0 \
+			or not top_rect.encloses(glyph_rect) \
+			or not top_rect.encloses(title_rect) \
+			or not title_rect.encloses(header_rect) \
+			or not title_rect.encloses(objective_rect) \
+			or glyph_rect.end.x > title_rect.position.x + 0.5 \
+			or header_rect.end.y > objective_rect.position.y + 0.5 \
+			or glyph_rect.intersects(title_rect) \
+			or header_rect.intersects(objective_rect):
+			return _fail_overworld_objective_brief("Objective brief did not retain its exact full source/tooltip behind native pixel fit inside the authored TopStrip at %d: text=%s tooltip=%s full_width=%s objective=%s header=%s title=%s glyph=%s top=%s overrun=%s." % [width, objective_brief.text, objective_brief.tooltip_text, full_width, objective_rect, header_rect, title_rect, glyph_rect, top_rect, objective_brief.text_overrun_behavior])
+	get_window().size = original_window_size
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if session.to_dict() != authority_before:
+		return _fail_overworld_objective_brief("Inspecting responsive objective fit changed whole-session authority.")
+	return true
+
+func _join_objective_brief_sections(sections: Array) -> String:
+	var joined: Array[String] = []
+	for section_value in sections:
+		var section := String(section_value).strip_edges()
+		if section != "" and section not in joined:
+			joined.append(section)
+	return "\n\n".join(joined)
+
+func _fail_overworld_objective_brief(message: String) -> bool:
+	push_error("Overworld smoke: %s" % message)
+	get_tree().quit(1)
+	return false
 
 func _assert_objective_stakes_ui_contract(shell: Node) -> bool:
 	if not shell.has_method("validation_snapshot") or not shell.has_method("validation_open_frontier_drawer"):
