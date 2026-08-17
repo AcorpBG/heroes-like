@@ -657,11 +657,18 @@ func _draw_town_hero_hire_presentation(badge_rect: Rect2, reduced_motion: bool) 
 
 func _draw_town_specialty_presentation(badge_rect: Rect2, reduced_motion: bool) -> void:
 	var center := badge_rect.position + Vector2(34.0, badge_rect.size.y * 0.5)
+	var asset_state := _town_specialty_vfx_asset_state()
+	var texture: Texture2D = _town_vfx_texture_for_path(String(asset_state.get("texture_path", ""))) as Texture2D
 	draw_rect(badge_rect, Color(0.10, 0.13, 0.16, 0.94), true)
 	draw_rect(badge_rect, _accent_color(), false, 2.0)
 	if reduced_motion:
 		draw_circle(center, 15.0, _accent_color(), false, 3.0)
 		_town_action_last_draw = {"mode": "specialty_rank_badge", "texture_path": "", "circle_count": 1, "ray_count": 0, "alpha": 1.0}
+	elif bool(asset_state.get("uses_imported_asset", false)) and texture != null:
+		var extent := badge_rect.size.y * 2.15 * float(asset_state.get("scale", 1.0))
+		var specialty_rect := Rect2(center - Vector2(extent, extent) * 0.5, Vector2(extent, extent))
+		draw_texture_rect(texture, specialty_rect, false)
+		_town_action_last_draw = {"mode": "imported_texture", "texture_path": String(asset_state.get("texture_path", "")), "rect": {"x": specialty_rect.position.x, "y": specialty_rect.position.y, "width": specialty_rect.size.x, "height": specialty_rect.size.y}, "alpha": 1.0}
 	else:
 		draw_circle(center, 15.0, _accent_color(), false, 3.0)
 		for index in range(8):
@@ -674,12 +681,19 @@ func _draw_town_specialty_presentation(badge_rect: Rect2, reduced_motion: bool) 
 
 func _draw_town_army_transfer_presentation(badge_rect: Rect2, reduced_motion: bool) -> void:
 	var center := badge_rect.position + Vector2(34.0, badge_rect.size.y * 0.5)
+	var asset_state := _town_army_transfer_vfx_asset_state()
+	var texture: Texture2D = _town_vfx_texture_for_path(String(asset_state.get("texture_path", ""))) as Texture2D
 	draw_rect(badge_rect, Color(0.10, 0.13, 0.16, 0.94), true)
 	draw_rect(badge_rect, _accent_color(), false, 2.0)
 	if reduced_motion:
 		draw_line(center + Vector2(-14.0, 0.0), center + Vector2(14.0, 0.0), _accent_color(), 3.0)
 		draw_colored_polygon(PackedVector2Array([center + Vector2(14.0, -6.0), center + Vector2(23.0, 0.0), center + Vector2(14.0, 6.0)]), _accent_color())
 		_town_action_last_draw = {"mode": "unit_transfer_badge", "texture_path": "", "route_line_count": 1, "arrow_count": 1, "pulse_count": 0, "alpha": 1.0}
+	elif bool(asset_state.get("uses_imported_asset", false)) and texture != null:
+		var extent := badge_rect.size.y * 2.15 * float(asset_state.get("scale", 1.0))
+		var transfer_rect := Rect2(center - Vector2(extent, extent) * 0.5, Vector2(extent, extent))
+		draw_texture_rect(texture, transfer_rect, false)
+		_town_action_last_draw = {"mode": "imported_texture", "texture_path": String(asset_state.get("texture_path", "")), "rect": {"x": transfer_rect.position.x, "y": transfer_rect.position.y, "width": transfer_rect.size.x, "height": transfer_rect.size.y}, "alpha": 1.0}
 	else:
 		var progress := fmod(float(maxi(0, Time.get_ticks_msec() - int(_town_action_presentation.get("started_msec", 0)))) / 540.0, 1.0)
 		var pulse_center := center + Vector2(lerpf(-13.0, 13.0, progress), 0.0)
@@ -844,19 +858,34 @@ func _town_specialty_vfx_asset_state() -> Dictionary:
 	var cue_ids: Array = policy.get("selected_vfx_cue_ids", []) if policy.get("selected_vfx_cue_ids", []) is Array else []
 	var cue_id := String(cue_ids[0]).strip_edges() if cue_ids.size() == 1 else ""
 	var reduced_motion := String(policy.get("mode", "normal")) in ["reduced_motion", "reduced_motion_fast"]
-	var expected_cue_id := "specialty_rank_badge" if reduced_motion else "vfx_placeholder_button_confirm"
-	var exact := cue_id == expected_cue_id \
-		and String(_town_action_presentation.get("event_id", "")) == "town_specialty_selected"
-	return {"cue_id": cue_id, "texture_path": "", "scale": 1.0, "texture_loaded": false, "uses_imported_asset": false, "uses_procedural_fallback": exact, "fallback_mode": "specialty_rank_badge" if reduced_motion else "procedural_specialty_rank"}
+	if reduced_motion:
+		return {"cue_id": cue_id, "texture_path": "", "scale": 1.0, "texture_loaded": false, "uses_imported_asset": false, "uses_procedural_fallback": cue_id == "specialty_rank_badge", "fallback_mode": "specialty_rank_badge"}
+	var spec := _town_vfx_manifest_cue(cue_id)
+	var texture_path := String(spec.get("texture_path", "")).strip_edges()
+	var texture_loaded := texture_path != "" and _town_vfx_texture_for_path(texture_path) != null
+	var uses_imported_asset := cue_id == "vfx_placeholder_town_specialty_rank" \
+		and String(_town_action_presentation.get("event_id", "")) == "town_specialty_selected" \
+		and String(spec.get("event_id", "")) == "town_specialty_selected" \
+		and String(spec.get("render_mode", "")) == "town_specialty_rank_completion" \
+		and texture_loaded
+	return {"cue_id": cue_id, "texture_path": texture_path, "scale": float(spec.get("scale", 1.0)), "texture_loaded": texture_loaded, "uses_imported_asset": uses_imported_asset, "uses_procedural_fallback": not uses_imported_asset, "fallback_mode": "procedural_specialty_rank"}
 
 func _town_army_transfer_vfx_asset_state() -> Dictionary:
 	var policy: Dictionary = _town_action_presentation.get("policy", {}) if _town_action_presentation.get("policy", {}) is Dictionary else {}
 	var cue_ids: Array = policy.get("selected_vfx_cue_ids", []) if policy.get("selected_vfx_cue_ids", []) is Array else []
 	var cue_id := String(cue_ids[0]).strip_edges() if cue_ids.size() == 1 else ""
 	var reduced_motion := String(policy.get("mode", "normal")) in ["reduced_motion", "reduced_motion_fast"]
-	var expected_cue_id := "unit_transfer_badge" if reduced_motion else "vfx_placeholder_button_confirm"
-	var exact := cue_id == expected_cue_id and String(_town_action_presentation.get("event_id", "")) == "town_army_transferred"
-	return {"cue_id": cue_id, "texture_path": "", "scale": 1.0, "texture_loaded": false, "uses_imported_asset": false, "uses_procedural_fallback": exact, "fallback_mode": "unit_transfer_badge" if reduced_motion else "procedural_unit_transfer"}
+	if reduced_motion:
+		return {"cue_id": cue_id, "texture_path": "", "scale": 1.0, "texture_loaded": false, "uses_imported_asset": false, "uses_procedural_fallback": cue_id == "unit_transfer_badge", "fallback_mode": "unit_transfer_badge"}
+	var spec := _town_vfx_manifest_cue(cue_id)
+	var texture_path := String(spec.get("texture_path", "")).strip_edges()
+	var texture_loaded := texture_path != "" and _town_vfx_texture_for_path(texture_path) != null
+	var uses_imported_asset := cue_id == "vfx_placeholder_town_unit_transfer" \
+		and String(_town_action_presentation.get("event_id", "")) == "town_army_transferred" \
+		and String(spec.get("event_id", "")) == "town_army_transferred" \
+		and String(spec.get("render_mode", "")) == "town_unit_transfer_completion" \
+		and texture_loaded
+	return {"cue_id": cue_id, "texture_path": texture_path, "scale": float(spec.get("scale", 1.0)), "texture_loaded": texture_loaded, "uses_imported_asset": uses_imported_asset, "uses_procedural_fallback": not uses_imported_asset, "fallback_mode": "procedural_unit_transfer"}
 
 func _town_artifact_vfx_asset_state() -> Dictionary:
 	var policy: Dictionary = _town_action_presentation.get("policy", {}) if _town_action_presentation.get("policy", {}) is Dictionary else {}

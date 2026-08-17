@@ -146,6 +146,18 @@
       "volume_db": -12.5,
       "role": "town_hero_hired"
     },
+    "audio_placeholder_town_specialty_rank": {
+      "path": "res://art/audio/runtime/presentation/town_specialty_rank.wav",
+      "duration_msec": 400,
+      "volume_db": -13.0,
+      "role": "town_specialty_rank_gained"
+    },
+    "audio_placeholder_town_unit_transfer": {
+      "path": "res://art/audio/runtime/presentation/town_unit_transfer.wav",
+      "duration_msec": 380,
+      "volume_db": -13.5,
+      "role": "town_army_redeployed"
+    },
     "audio_placeholder_ui_confirm": {
       "path": "res://art/audio/runtime/ui/confirm.wav",
       "duration_msec": 120,

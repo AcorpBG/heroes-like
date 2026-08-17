@@ -36,6 +36,18 @@
       "texture_path": "res://art/town/runtime/vfx/hero_hire.png",
       "render_mode": "town_hero_hire_completion",
       "scale": 1.0
+    },
+    "vfx_placeholder_town_specialty_rank": {
+      "event_id": "town_specialty_selected",
+      "texture_path": "res://art/town/runtime/vfx/specialty_rank.png",
+      "render_mode": "town_specialty_rank_completion",
+      "scale": 1.0
+    },
+    "vfx_placeholder_town_unit_transfer": {
+      "event_id": "town_army_transferred",
+      "texture_path": "res://art/town/runtime/vfx/unit_transfer.png",
+      "render_mode": "town_unit_transfer_completion",
+      "scale": 1.0
     }
   }
 }

@@ -679,8 +679,8 @@
       "playback_policy": "queue_resolved",
       "blocking_policy": "nonblocking",
       "skippable": true,
-      "vfx_cue_ids": ["vfx_placeholder_button_confirm"],
-      "audio_cue_ids": ["audio_placeholder_ui_confirm"],
+      "vfx_cue_ids": ["vfx_placeholder_town_specialty_rank"],
+      "audio_cue_ids": ["audio_placeholder_town_specialty_rank"],
       "fallbacks": {
         "reduced_motion_tag": "specialty_rank_badge",
         "fast_mode_tag": "specialty_rank_snap"
@@ -698,8 +698,8 @@
       "playback_policy": "queue_resolved",
       "blocking_policy": "nonblocking",
       "skippable": true,
-      "vfx_cue_ids": ["vfx_placeholder_button_confirm"],
-      "audio_cue_ids": ["audio_placeholder_ui_confirm"],
+      "vfx_cue_ids": ["vfx_placeholder_town_unit_transfer"],
+      "audio_cue_ids": ["audio_placeholder_town_unit_transfer"],
       "fallbacks": {
         "reduced_motion_tag": "unit_transfer_badge",
         "fast_mode_tag": "unit_transfer_snap"

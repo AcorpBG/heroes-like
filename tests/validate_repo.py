@@ -23121,6 +23121,18 @@ def validate_town_building_complete_vfx_assets(errors: list[str]) -> None:
                 "render_mode": "town_hero_hire_completion",
                 "scale": 1.0,
             },
+            "vfx_placeholder_town_specialty_rank": {
+                "event_id": "town_specialty_selected",
+                "texture_path": "res://art/town/runtime/vfx/specialty_rank.png",
+                "render_mode": "town_specialty_rank_completion",
+                "scale": 1.0,
+            },
+            "vfx_placeholder_town_unit_transfer": {
+                "event_id": "town_army_transferred",
+                "texture_path": "res://art/town/runtime/vfx/unit_transfer.png",
+                "render_mode": "town_unit_transfer_completion",
+                "scale": 1.0,
+            },
         },
     }, errors, "Town VFX manifest must map only the exact live Town completion cues/events/textures")
     ensure(png_size(TOWN_BUILDING_COMPLETE_VFX_SOURCE_PATH) == (1254, 1254), errors, "Town building-complete source must retain its exact square source image")
@@ -23220,7 +23232,7 @@ def validate_town_recruitment_vfx_assets(errors: list[str]) -> None:
         "render_mode": "town_recruit_muster",
         "scale": 1.0,
     }, errors, "Town VFX manifest must map the exact recruitment cue/event/texture")
-    ensure(set(cues) == {"vfx_placeholder_build_complete", "vfx_placeholder_recruit_muster", "vfx_placeholder_town_route_response", "vfx_placeholder_town_market_exchange", "vfx_placeholder_town_spell_study", "vfx_placeholder_town_hero_hire"}, errors, "Town VFX manifest must not remap any other cue")
+    ensure(set(cues) == {"vfx_placeholder_build_complete", "vfx_placeholder_recruit_muster", "vfx_placeholder_town_route_response", "vfx_placeholder_town_market_exchange", "vfx_placeholder_town_spell_study", "vfx_placeholder_town_hero_hire", "vfx_placeholder_town_specialty_rank", "vfx_placeholder_town_unit_transfer"}, errors, "Town VFX manifest must not remap any other cue")
     ensure(png_size(TOWN_RECRUITMENT_VFX_SOURCE_PATH) == (1254, 1254), errors, "Town recruitment VFX source must retain its exact square source image")
     ensure(png_size(TOWN_RECRUITMENT_VFX_RUNTIME_PATH) == (512, 512), errors, "Town recruitment runtime texture must be 512x512")
     header = TOWN_RECRUITMENT_VFX_RUNTIME_PATH.read_bytes()[:26]
@@ -23919,9 +23931,14 @@ def validate_town_hero_hire_completion_feedback(errors: list[str]) -> None:
 
 
 def validate_town_specialty_selection_feedback(errors: list[str]) -> None:
+    specialty_vfx_path = ROOT / "art" / "town" / "runtime" / "vfx" / "specialty_rank.png"
+    specialty_vfx_import_path = ROOT / "art" / "town" / "runtime" / "vfx" / "specialty_rank.png.import"
+    specialty_audio_path = ROOT / "art" / "audio" / "runtime" / "presentation" / "town_specialty_rank.wav"
+    specialty_audio_import_path = ROOT / "art" / "audio" / "runtime" / "presentation" / "town_specialty_rank.wav.import"
     required_paths = (
-        TOWN_SCRIPT_PATH, TOWN_STAGE_SCRIPT_PATH, ANIMATION_EVENT_CUES_PATH,
-        PRESENTATION_SFX_MANIFEST_PATH, PRESENTATION_AUDIO_PATH,
+        TOWN_SCRIPT_PATH, TOWN_STAGE_SCRIPT_PATH, TOWN_VFX_MANIFEST_PATH, ANIMATION_EVENT_CUES_PATH,
+        PRESENTATION_SFX_MANIFEST_PATH, PRESENTATION_SFX_GENERATOR_PATH, PRESENTATION_AUDIO_PATH,
+        specialty_vfx_path, specialty_vfx_import_path, specialty_audio_path, specialty_audio_import_path,
         TOWN_SPECIALTY_SELECTION_FEEDBACK_REPORT_SCRIPT_PATH,
         TOWN_SPECIALTY_SELECTION_FEEDBACK_REPORT_SCENE_PATH,
     )
@@ -23937,19 +23954,33 @@ def validate_town_specialty_selection_feedback(errors: list[str]) -> None:
         "surface": "town", "subject_kind": "hero_specialty",
         "animation_state_family": "progression", "animation_state": "specialty_adopted",
         "playback_policy": "queue_resolved", "blocking_policy": "nonblocking", "skippable": True,
-        "vfx_cue_ids": ["vfx_placeholder_button_confirm"],
-        "audio_cue_ids": ["audio_placeholder_ui_confirm"],
+        "vfx_cue_ids": ["vfx_placeholder_town_specialty_rank"],
+        "audio_cue_ids": ["audio_placeholder_town_specialty_rank"],
         "fallbacks": {"reduced_motion_tag": "specialty_rank_badge", "fast_mode_tag": "specialty_rank_snap"},
         "validation_tags": ["town", "hero", "specialty", "progression", "resolved_event"],
         "producer_refs": ["TownShell._on_specialty_action_pressed", "TownRules.choose_specialty_at_active_town"],
     }], errors, "Town specialty selection must own one exact semantic nonblocking cue")
     audio_cues = load_json(PRESENTATION_SFX_MANIFEST_PATH).get("cues", {})
-    ensure(audio_cues.get("audio_placeholder_ui_confirm") == {
-        "path": "res://art/audio/runtime/ui/confirm.wav", "duration_msec": 120,
-        "volume_db": -17.0, "role": "confirm_action",
-    }, errors, "Town specialty selection must reuse the exact production UI confirmation audio")
+    ensure(audio_cues.get("audio_placeholder_town_specialty_rank") == {
+        "path": "res://art/audio/runtime/presentation/town_specialty_rank.wav", "duration_msec": 400,
+        "volume_db": -13.0, "role": "town_specialty_rank_gained",
+    }, errors, "Town specialty selection must own its exact production completion audio")
     audio_text = PRESENTATION_AUDIO_PATH.read_text(encoding="utf-8")
-    ensure('"audio_placeholder_ui_confirm": {"frequency": 760.0, "duration": 0.12, "gain": 0.11}' in audio_text, errors, "PresentationAudio must own the exact UI confirmation fallback for TownStage playback")
+    ensure('"audio_placeholder_town_specialty_rank": {"frequency": 523.25, "duration": 0.40, "gain": 0.11}' in audio_text, errors, "PresentationAudio must own the exact specialty-rank fallback")
+    vfx_cues = load_json(TOWN_VFX_MANIFEST_PATH).get("cues", {})
+    ensure(vfx_cues.get("vfx_placeholder_town_specialty_rank") == {
+        "event_id": "town_specialty_selected", "texture_path": "res://art/town/runtime/vfx/specialty_rank.png",
+        "render_mode": "town_specialty_rank_completion", "scale": 1.0,
+    }, errors, "Town specialty VFX manifest entry drifted")
+    ensure(png_size(specialty_vfx_path) == (384, 384), errors, "Town specialty runtime VFX must be 384x384")
+    specialty_header = specialty_vfx_path.read_bytes()[:26]
+    ensure(len(specialty_header) >= 26 and specialty_header[25] in {4, 6}, errors, "Town specialty runtime VFX must retain alpha")
+    ensure(hashlib.sha256(specialty_vfx_path.read_bytes()).hexdigest() == "421f7c960625e80b87cca4d6057dc513f80dab38bc870af5d6567b1deaf5c468", errors, "Town specialty original runtime VFX drifted")
+    with wave.open(str(specialty_audio_path), "rb") as wav_file:
+        ensure(wav_file.getnchannels() == 2 and wav_file.getsampwidth() == 2 and wav_file.getframerate() == 44100 and wav_file.getnframes() == 17640, errors, "Town specialty audio format/duration drifted")
+    generator_text = PRESENTATION_SFX_GENERATOR_PATH.read_text(encoding="utf-8")
+    for token in ('"audio_placeholder_town_specialty_rank"', '"kind": "mastery_chime"', 'if kind == "mastery_chime":'):
+        ensure(token in generator_text, errors, f"Town specialty deterministic audio generator is missing: {token}")
 
     shell_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
     handler = re.search(r"func _on_specialty_action_pressed\(action_id: String\) -> void:\n(?P<body>.*?)(?=\nfunc )", shell_text, re.DOTALL)
@@ -23996,8 +24027,10 @@ def validate_town_specialty_selection_feedback(errors: list[str]) -> None:
         'func _draw_town_specialty_presentation(badge_rect: Rect2, reduced_motion: bool) -> void:',
         '"SPECIALTY RANK %d" % rank',
         'func _town_specialty_vfx_asset_state() -> Dictionary:',
-        'var expected_cue_id := "specialty_rank_badge" if reduced_motion else "vfx_placeholder_button_confirm"',
-        'var exact := cue_id == expected_cue_id',
+        'cue_id == "vfx_placeholder_town_specialty_rank"',
+        'String(spec.get("render_mode", "")) == "town_specialty_rank_completion"',
+        'draw_texture_rect(texture, specialty_rect, false)',
+        '"fallback_mode": "procedural_specialty_rank"',
     ):
         ensure(token in stage_text, errors, f"TownStageView is missing specialty playback ownership: {token}")
     for name in ("_draw_town_specialty_presentation", "_town_specialty_vfx_asset_state"):
@@ -24019,7 +24052,8 @@ def validate_town_specialty_selection_feedback(errors: list[str]) -> None:
         'live_session.to_dict() == control.to_dict()',
         'HeroProgressionRules.specialty_rank(after_hero, SPECIALTY_ID) == HeroProgressionRules.specialty_rank(before_hero, SPECIALTY_ID) + 1',
         'HeroProgressionRules.pending_choices_remaining(after_hero) == HeroProgressionRules.pending_choices_remaining(before_hero) - 1',
-        'String(record.get("asset_path", "")) == "res://art/audio/runtime/ui/confirm.wav"',
+        'String(draw.get("texture_path", "")) == "res://art/town/runtime/vfx/specialty_rank.png"',
+        'String(record.get("asset_path", "")) == "res://art/audio/runtime/presentation/town_specialty_rank.wav"',
         'var stale_result: Dictionary = shell.validation_perform_town_action(ACTION_ID)',
         'var invalid_result: Dictionary = shell.validation_perform_town_action("choose_specialty:not_a_specialty")',
         'print("TOWN_SPECIALTY_SELECTION_FEEDBACK_REPORT %s"',
@@ -24030,9 +24064,14 @@ def validate_town_specialty_selection_feedback(errors: list[str]) -> None:
 
 
 def validate_town_army_transfer_completion_feedback(errors: list[str]) -> None:
+    transfer_vfx_path = ROOT / "art" / "town" / "runtime" / "vfx" / "unit_transfer.png"
+    transfer_vfx_import_path = ROOT / "art" / "town" / "runtime" / "vfx" / "unit_transfer.png.import"
+    transfer_audio_path = ROOT / "art" / "audio" / "runtime" / "presentation" / "town_unit_transfer.wav"
+    transfer_audio_import_path = ROOT / "art" / "audio" / "runtime" / "presentation" / "town_unit_transfer.wav.import"
     required_paths = (
-        TOWN_SCRIPT_PATH, TOWN_STAGE_SCRIPT_PATH, ANIMATION_EVENT_CUES_PATH,
-        PRESENTATION_SFX_MANIFEST_PATH, PRESENTATION_AUDIO_PATH,
+        TOWN_SCRIPT_PATH, TOWN_STAGE_SCRIPT_PATH, TOWN_VFX_MANIFEST_PATH, ANIMATION_EVENT_CUES_PATH,
+        PRESENTATION_SFX_MANIFEST_PATH, PRESENTATION_SFX_GENERATOR_PATH, PRESENTATION_AUDIO_PATH,
+        transfer_vfx_path, transfer_vfx_import_path, transfer_audio_path, transfer_audio_import_path,
         TOWN_ARMY_TRANSFER_FEEDBACK_REPORT_SCRIPT_PATH,
         TOWN_ARMY_TRANSFER_FEEDBACK_REPORT_SCENE_PATH,
     )
@@ -24048,19 +24087,33 @@ def validate_town_army_transfer_completion_feedback(errors: list[str]) -> None:
         "surface": "town", "subject_kind": "unit_roster",
         "animation_state_family": "army_transfer", "animation_state": "stack_redeployed",
         "playback_policy": "queue_resolved", "blocking_policy": "nonblocking", "skippable": True,
-        "vfx_cue_ids": ["vfx_placeholder_button_confirm"],
-        "audio_cue_ids": ["audio_placeholder_ui_confirm"],
+        "vfx_cue_ids": ["vfx_placeholder_town_unit_transfer"],
+        "audio_cue_ids": ["audio_placeholder_town_unit_transfer"],
         "fallbacks": {"reduced_motion_tag": "unit_transfer_badge", "fast_mode_tag": "unit_transfer_snap"},
         "validation_tags": ["town", "unit", "army", "transfer", "resolved_event"],
         "producer_refs": ["TownShell._on_transfer_action_pressed", "TownRules.transfer_in_active_town"],
     }], errors, "Town army transfer must own one exact semantic nonblocking cue")
     audio_cues = load_json(PRESENTATION_SFX_MANIFEST_PATH).get("cues", {})
-    ensure(audio_cues.get("audio_placeholder_ui_confirm") == {
-        "path": "res://art/audio/runtime/ui/confirm.wav", "duration_msec": 120,
-        "volume_db": -17.0, "role": "confirm_action",
-    }, errors, "Town army transfer must reuse the exact production UI confirmation audio")
+    ensure(audio_cues.get("audio_placeholder_town_unit_transfer") == {
+        "path": "res://art/audio/runtime/presentation/town_unit_transfer.wav", "duration_msec": 380,
+        "volume_db": -13.5, "role": "town_army_redeployed",
+    }, errors, "Town army transfer must own its exact production completion audio")
     audio_text = PRESENTATION_AUDIO_PATH.read_text(encoding="utf-8")
-    ensure('"audio_placeholder_ui_confirm": {"frequency": 760.0, "duration": 0.12, "gain": 0.11}' in audio_text, errors, "PresentationAudio must retain the UI confirmation fallback for Town transfer playback")
+    ensure('"audio_placeholder_town_unit_transfer": {"frequency": 220.0, "duration": 0.38, "gain": 0.10}' in audio_text, errors, "PresentationAudio must own the exact unit-transfer fallback")
+    vfx_cues = load_json(TOWN_VFX_MANIFEST_PATH).get("cues", {})
+    ensure(vfx_cues.get("vfx_placeholder_town_unit_transfer") == {
+        "event_id": "town_army_transferred", "texture_path": "res://art/town/runtime/vfx/unit_transfer.png",
+        "render_mode": "town_unit_transfer_completion", "scale": 1.0,
+    }, errors, "Town transfer VFX manifest entry drifted")
+    ensure(png_size(transfer_vfx_path) == (384, 384), errors, "Town transfer runtime VFX must be 384x384")
+    transfer_header = transfer_vfx_path.read_bytes()[:26]
+    ensure(len(transfer_header) >= 26 and transfer_header[25] in {4, 6}, errors, "Town transfer runtime VFX must retain alpha")
+    ensure(hashlib.sha256(transfer_vfx_path.read_bytes()).hexdigest() == "79ed050d3d8e19fc0739dd0fd858339674276c8b6a39e2a1e795336cc318ba67", errors, "Town transfer original runtime VFX drifted")
+    with wave.open(str(transfer_audio_path), "rb") as wav_file:
+        ensure(wav_file.getnchannels() == 2 and wav_file.getsampwidth() == 2 and wav_file.getframerate() == 44100 and wav_file.getnframes() == 16758, errors, "Town transfer audio format/duration drifted")
+    generator_text = PRESENTATION_SFX_GENERATOR_PATH.read_text(encoding="utf-8")
+    for token in ('"audio_placeholder_town_unit_transfer"', '"kind": "redeployment_sweep"', 'if kind == "redeployment_sweep":'):
+        ensure(token in generator_text, errors, f"Town transfer deterministic audio generator is missing: {token}")
 
     shell_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
     handler = re.search(r"func _on_transfer_action_pressed\(action_id: String\) -> void:\n(?P<body>.*?)(?=\nfunc )", shell_text, re.DOTALL)
@@ -24116,7 +24169,10 @@ def validate_town_army_transfer_completion_feedback(errors: list[str]) -> None:
         'func _draw_town_army_transfer_presentation(badge_rect: Rect2, reduced_motion: bool) -> void:',
         '"REDEPLOYED %d %s"',
         'func _town_army_transfer_vfx_asset_state() -> Dictionary:',
-        'var expected_cue_id := "unit_transfer_badge" if reduced_motion else "vfx_placeholder_button_confirm"',
+        'cue_id == "vfx_placeholder_town_unit_transfer"',
+        'String(spec.get("render_mode", "")) == "town_unit_transfer_completion"',
+        'draw_texture_rect(texture, transfer_rect, false)',
+        '"fallback_mode": "procedural_unit_transfer"',
     ):
         ensure(token in stage_text, errors, f"TownStageView is missing army-transfer playback ownership: {token}")
     for name in ("_draw_town_army_transfer_presentation", "_town_army_transfer_vfx_asset_state"):
@@ -24140,7 +24196,8 @@ def validate_town_army_transfer_completion_feedback(errors: list[str]) -> None:
         'live_session.to_dict() == control.to_dict()',
         'before_source + before_target == after_source + after_target',
         'active_hero == live_session.overworld.get("hero", {})',
-        'String(record.get("asset_path", "")) == "res://art/audio/runtime/ui/confirm.wav"',
+        'String(draw.get("texture_path", "")) == "res://art/town/runtime/vfx/unit_transfer.png"',
+        'String(record.get("asset_path", "")) == "res://art/audio/runtime/presentation/town_unit_transfer.wav"',
         'var stale_result: Dictionary = shell.validation_perform_town_action(action_id)',
         'var invalid_result: Dictionary = shell.validation_perform_town_action("transfer:garrison:garrison:%s:all" % UNIT_ID)',
         'print("TOWN_ARMY_TRANSFER_COMPLETION_FEEDBACK_REPORT %s"',
@@ -43782,6 +43839,8 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
         '"audio_placeholder_object_visit"',
         '"audio_placeholder_capture"',
         '"audio_placeholder_collect"',
+        '"audio_placeholder_town_specialty_rank"',
+        '"audio_placeholder_town_unit_transfer"',
         "func play_cue(cue_id: String, source: String = \"\", metadata: Dictionary = {}) -> Dictionary:",
         '"unsupported_cue" if not supported',
         "SettingsService.effects_audio_muted()",
@@ -43945,6 +44004,18 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
             "volume_db": -12.5,
             "role": "town_hero_hired",
         },
+        "audio_placeholder_town_specialty_rank": {
+            "path": "res://art/audio/runtime/presentation/town_specialty_rank.wav",
+            "duration_msec": 400,
+            "volume_db": -13.0,
+            "role": "town_specialty_rank_gained",
+        },
+        "audio_placeholder_town_unit_transfer": {
+            "path": "res://art/audio/runtime/presentation/town_unit_transfer.wav",
+            "duration_msec": 380,
+            "volume_db": -13.5,
+            "role": "town_army_redeployed",
+        },
         "audio_placeholder_ui_confirm": {
             "path": "res://art/audio/runtime/ui/confirm.wav",
             "duration_msec": 120,
@@ -43962,7 +44033,7 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
     ensure(int(manifest.get("sample_width_bits", 0)) == 16, errors, "production presentation SFX must use 16-bit PCM")
     ensure(manifest.get("asset_tier") == "production_layered_v1", errors, "presentation SFX manifest must declare production_layered_v1")
     cues = manifest.get("cues", {})
-    ensure(isinstance(cues, dict) and set(cues) == set(expected_cues), errors, "presentation SFX manifest must contain exactly the twenty-four live Town, Overworld, navigation, blocking, route-open, route-closed, object-focus, object-resolution, guarded-context, and system action cues")
+    ensure(isinstance(cues, dict) and set(cues) == set(expected_cues), errors, "presentation SFX manifest must contain exactly the twenty-six live Town, Overworld, navigation, blocking, route-open, route-closed, object-focus, object-resolution, guarded-context, and system action cues")
     asset_hashes: list[str] = []
     for cue_id in sorted(expected_cues):
         expected = expected_cues[cue_id]
@@ -43996,10 +44067,7 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
             if left_samples and right_samples:
                 ensure(left_samples[0] == 0 and right_samples[0] == 0, errors, f"presentation SFX must start at zero: {expected['path']}")
                 ensure(left_samples[-1] == 0 and right_samples[-1] == 0, errors, f"presentation SFX must end at zero: {expected['path']}")
-    ensure(len(set(asset_hashes)) == 24, errors, "all twenty-four presentation assets must be byte-distinct")
-    if len(asset_hashes) == 18:
-        pack_signature = hashlib.sha256("\n".join(asset_hashes).encode("utf-8")).hexdigest()
-        ensure(pack_signature == "d2d0b47d1de5613767232ecf94a03186aade937de3a1c7b7a4857eef4c8d7b57", errors, "presentation SFX pack signature drifted")
+    ensure(len(set(asset_hashes)) == 26, errors, "all twenty-six presentation assets must be byte-distinct")
 
     generator_text = PRESENTATION_SFX_GENERATOR_PATH.read_text(encoding="utf-8")
     for required_token in (
@@ -44026,6 +44094,9 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
         "sentinel_warning",
         "dispatch_signal",
         "exchange_chime",
+        "mastery_chime",
+        "redeployment_sweep",
+        "generated_cues = {",
         "presentation-production-v1",
         "render_stereo",
         "layered_sample",
