@@ -37472,6 +37472,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "vfx_spell_briar_bind": ("spell_briar_bind.png", "spell_target"),
         "vfx_spell_graft_mend": ("spell_graft_mend.png", "spell_target"),
         "vfx_spell_prism_bastion": ("spell_prism_bastion.png", "spell_target"),
+        "vfx_spell_resonant_chorus": ("spell_resonant_chorus.png", "spell_target"),
         "vfx_spell_command_ward": ("spell_command_ward.png", "spell_target"),
         "vfx_placeholder_idle_shadow": ("state_idle_shadow.png", "state_center"),
         "vfx_placeholder_active_ring": ("state_active_ring.png", "state_center"),
@@ -37485,8 +37486,9 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         ensure(battle_vfx_manifest.get("schema_id") == "battle_vfx_manifest_v1", errors, "battle_vfx_manifest.json has the wrong schema")
         battle_vfx_cues = battle_vfx_manifest.get("cues", {})
         ensure(isinstance(battle_vfx_cues, dict), errors, "battle_vfx_manifest.json cues must be an object")
-        ensure(set(battle_vfx_cues) == set(required_battle_vfx_cues), errors, "battle_vfx_manifest.json must map exactly the selected eight core, seven spell, and six state/path Battle cues")
+        ensure(set(battle_vfx_cues) == set(required_battle_vfx_cues), errors, "battle_vfx_manifest.json must map exactly the selected eight core, eight spell, and six state/path Battle cues")
         observed_vfx_paths = set()
+        observed_vfx_hashes = set()
         for cue_id, (filename, render_mode) in required_battle_vfx_cues.items():
             cue = battle_vfx_cues.get(cue_id, {}) if isinstance(battle_vfx_cues, dict) else {}
             ensure(isinstance(cue, dict), errors, f"battle_vfx_manifest.json is missing cue {cue_id}")
@@ -37495,7 +37497,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
             ensure(cue.get("render_mode") == render_mode, errors, f"battle VFX cue {cue_id} must use render mode {render_mode}")
             ensure(float(cue.get("scale", 0.0)) > 0.0, errors, f"battle VFX cue {cue_id} needs a positive scale")
             observed_vfx_paths.add(expected_path)
-        ensure(len(observed_vfx_paths) == 21, errors, "battle VFX asset layer must use exactly eight core, seven spell, and six distinct state/path textures")
+        ensure(len(observed_vfx_paths) == 22, errors, "battle VFX asset layer must use exactly eight core, eight spell, and six distinct state/path textures")
         for texture_path in sorted(observed_vfx_paths):
             disk_path = ROOT / texture_path.removeprefix("res://")
             ensure(disk_path.exists(), errors, f"battle VFX texture is missing: {texture_path}")
@@ -37503,6 +37505,10 @@ def validate_unit_art_assets(errors: list[str]) -> None:
                 ensure(png_size(disk_path) == (384, 384), errors, f"battle VFX texture must be 384x384 PNG: {texture_path}")
                 header = disk_path.read_bytes()[:26]
                 ensure(len(header) >= 26 and header[25] in {4, 6}, errors, f"battle VFX texture must retain a PNG alpha channel: {texture_path}")
+                observed_vfx_hashes.add(hashlib.sha256(disk_path.read_bytes()).hexdigest())
+                import_path = Path(str(disk_path) + ".import")
+                ensure(import_path.exists(), errors, f"battle VFX texture import metadata is missing: {texture_path}")
+        ensure(len(observed_vfx_hashes) == 22, errors, "all 22 Battle VFX textures must remain byte-distinct")
 
     ensure(BATTLE_SFX_MANIFEST_PATH.exists(), errors, "battle_sfx_manifest.json is missing")
     ensure(BATTLE_SFX_GENERATOR_PATH.exists(), errors, "generate_battle_sfx_assets.py is missing")
@@ -37661,6 +37667,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "audio_placeholder_status_clear",
         "audio_spell_cinder_burst",
         "vfx_spell_cinder_burst",
+        "vfx_spell_resonant_chorus",
         "func _spell_specific_vfx_cue_ids_for_event",
         "func _spell_specific_audio_cue_ids_for_event",
         "func _draw_spell_cinder_burst_vfx",
@@ -37669,6 +37676,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "func _draw_spell_briar_bind_vfx",
         "func _draw_spell_graft_mend_vfx",
         "func _draw_spell_prism_bastion_vfx",
+        "func _draw_spell_resonant_chorus_vfx",
         "func _draw_spell_command_ward_vfx",
         '"spell_projectile"',
         '"spell_target"',
@@ -37700,6 +37708,18 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "animation_sheet_loaded_count",
     ):
         ensure(required_token in battle_board_text, errors, f"BattleBoardView.gd is missing unit art token {required_token}")
+    for required_mapping in (
+        '"spell_prism_bastion":\n\t\t\treturn "vfx_spell_prism_bastion"',
+        '"spell_resonant_chorus":\n\t\t\treturn "vfx_spell_resonant_chorus"',
+        '"spell_prism_bastion", "spell_resonant_chorus":\n\t\t\treturn "audio_spell_prism_bastion"',
+        '"vfx_spell_resonant_chorus":\n\t\t\treturn "spell_resonant_chorus"',
+    ):
+        ensure(required_mapping in battle_board_text, errors, f"BattleBoardView.gd is missing exact Resonant Chorus/Prism identity mapping {required_mapping}")
+    ensure(
+        '"spell_prism_bastion", "spell_resonant_chorus":\n\t\t\treturn "vfx_spell_prism_bastion"' not in battle_board_text,
+        errors,
+        "BattleBoardView.gd must not collapse Resonant Chorus back onto Prism Bastion visual identity",
+    )
     draw_block = battle_board_text[battle_board_text.find("func _draw() -> void:"):battle_board_text.find("func _draw_terrain", battle_board_text.find("func _draw() -> void:"))]
     ensure(draw_block.find("_draw_vfx_cues(hex_layout, stack_cells)") < draw_block.find("_draw_stack_tokens(hex_layout, stack_cells)"), errors, "Battle VFX assets must draw below stack tokens and count labels")
     imported_draw_block = battle_board_text[battle_board_text.find("func _draw_imported_vfx_asset"):battle_board_text.find("func _vfx_draw_entries", battle_board_text.find("func _draw_imported_vfx_asset"))]
@@ -37913,7 +37933,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "core_vfx_%dx%d.png",
         "spell_vfx_%dx%d.png",
         "state_path_vfx_%dx%d.png",
-        "get_viewport().get_visible_rect().size",
+        "view.size = Vector2(viewport_size)",
         "battle_vfx_manifest_v1",
         "battle vfx mapped cue count",
         "battle vfx unique texture count",
@@ -37940,6 +37960,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "vfx_spell_briar_bind",
         "vfx_spell_graft_mend",
         "vfx_spell_prism_bastion",
+        "vfx_spell_resonant_chorus",
         "vfx_spell_command_ward",
         "death fade imported vfx",
         "projectile imported vfx",
@@ -38015,6 +38036,15 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "spell_specific_caster_cue",
         "spell_specific_vfx",
         "spell_specific_audio",
+        "_validate_resonant_chorus_vfx_identity",
+        "_resonant_chorus_policy_case",
+        "resonant chorus normal distinct vfx",
+        "resonant chorus shared audio fallback",
+        "resonant chorus content immutable",
+        "resonant chorus presentation preserves session authority",
+        "resonant chorus vfx transparent corners",
+        "resonant chorus vfx image size",
+        "FileAccess.get_sha256(texture_path)",
         "_validate_status_cleanse_state",
         "_validate_status_round_expiry_state",
         "spell_prism_bastion",
@@ -38039,6 +38069,8 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "Battle Presentation Event",
     ):
         ensure(required_token in battle_event_animation_report_text, errors, f"battle_event_animation_state_report.gd is missing token {required_token}")
+    ensure(battle_event_animation_report_text.count("view.size = Vector2(viewport_size)") == 3, errors, "Battle VFX live captures must size all three focused views to the exact requested viewport")
+    ensure("view.size = get_viewport().get_visible_rect().size" not in battle_event_animation_report_text, errors, "Battle VFX live captures must not substitute the outer viewport rect for the requested focused size")
     battle_event_shell_doc_path = ROOT / "docs" / "battle-event-presentation-shell-surface-report.md"
     ensure(battle_event_shell_doc_path.exists(), errors, "battle-event-presentation-shell-surface-report.md is missing")
     if battle_event_shell_doc_path.exists():

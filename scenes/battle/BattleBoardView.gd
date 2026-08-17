@@ -1937,8 +1937,10 @@ func _spell_specific_vfx_cue_id(spell_id: String, resolution_type: String) -> St
 			return "vfx_spell_briar_bind"
 		"spell_graft_mend":
 			return "vfx_spell_graft_mend"
-		"spell_prism_bastion", "spell_resonant_chorus":
+		"spell_prism_bastion":
 			return "vfx_spell_prism_bastion"
+		"spell_resonant_chorus":
+			return "vfx_spell_resonant_chorus"
 	var family := resolution_type.strip_edges()
 	match family:
 		"cleanse_effect":
@@ -2422,6 +2424,8 @@ func _draw_vfx_cues(hex_layout: Dictionary, stack_cells: Dictionary) -> void:
 				_draw_spell_graft_mend_vfx(center, radius, progress)
 			"spell_prism_bastion":
 				_draw_spell_prism_bastion_vfx(center, radius, progress)
+			"spell_resonant_chorus":
+				_draw_spell_resonant_chorus_vfx(center, radius, progress)
 			"spell_command_ward":
 				_draw_spell_command_ward_vfx(center, radius, progress)
 
@@ -2595,6 +2599,8 @@ func _vfx_kind_for_cue_id(cue_id: String) -> String:
 			return "spell_graft_mend"
 		"vfx_spell_prism_bastion":
 			return "spell_prism_bastion"
+		"vfx_spell_resonant_chorus":
+			return "spell_resonant_chorus"
 		"vfx_spell_command_ward":
 			return "spell_command_ward"
 	return ""
@@ -2767,6 +2773,22 @@ func _draw_spell_prism_bastion_vfx(center: Vector2, radius: float, progress: flo
 	])
 	draw_polyline(points, color, maxf(1.9, radius * 0.05), true)
 	draw_circle(center, radius * (0.18 + progress * 0.10), Color(color.r, color.g, color.b, 0.18 * alpha), true)
+
+func _draw_spell_resonant_chorus_vfx(center: Vector2, radius: float, progress: float) -> void:
+	var alpha := maxf(0.16, 1.0 - progress * 0.48)
+	var gold := Color(1.0, 0.82, 0.34, 0.76 * alpha)
+	var glass := Color(0.70, 0.94, 1.0, 0.68 * alpha)
+	var pulse := 0.32 + progress * 0.16
+	for ring_index in range(3):
+		var ring_radius := radius * (pulse + float(ring_index) * 0.14)
+		var color := gold if ring_index % 2 == 0 else glass
+		draw_arc(center, ring_radius, -PI * 0.94, PI * 0.94, 28, color, maxf(1.8, radius * 0.045), true)
+	for shard_index in range(6):
+		var angle := float(shard_index) * TAU / 6.0 - PI * 0.5 + progress * 0.20
+		var shard_start := center + Vector2(cos(angle), sin(angle)) * radius * 0.42
+		var shard_end := center + Vector2(cos(angle), sin(angle)) * radius * 0.64
+		draw_line(shard_start, shard_end, glass, maxf(1.7, radius * 0.04), true)
+	draw_circle(center, radius * (0.13 + progress * 0.06), Color(gold.r, gold.g, gold.b, 0.22 * alpha), true)
 
 func _draw_spell_command_ward_vfx(center: Vector2, radius: float, progress: float) -> void:
 	var alpha := maxf(0.18, 1.0 - progress * 0.44)

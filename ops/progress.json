@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed request-local Overworld Save/Status watch-context reuse with exact focused, generated-Large, compatibility, static/editor, and bounded Linux/Windows export/startup evidence. Select the next tracker-approved product slice from direct current behavior evidence; the game is not release-ready.",
+  "currentNotes": "Completed the distinct Resonant Chorus battle VFX with exact public-cast, policy, viewport, compatibility, static/editor, and bounded Linux/Windows export-startup evidence. Select the next tracker-approved product slice; the game is not release-ready.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "performance-overworld-save-status-watch-context-reuse-10184",
-  "currentSliceId": "performance-overworld-save-status-watch-context-reuse-10184",
-  "currentSliceNotes": "Implemented one complete request-local watch context across Save and Status. Focused seven-state whole output, detached rebuild, session/UI/save authority, generated-Large direct fallback, and compatibility are exact. Normal Save Watch is0.034-0.035ms versus13.346-14.359ms direct and Save surface28.495-31.699ms versus42.314-43.414ms direct. Linux export/headless startup and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass; packaged interaction and release readiness are not claimed.",
+  "currentSlice": "presentation-battle-resonant-chorus-distinct-vfx-10184",
+  "currentSliceId": "presentation-battle-resonant-chorus-distinct-vfx-10184",
+  "currentSliceNotes": "Resonant Chorus now resolves to its distinct original imported VFX in normal public-cast playback, while reduced-motion and reduced-flash use status_icon_add, Prism retains its exact visual, shared audio remains unchanged, and spell/session authority is exact. Platform evidence is export/startup only.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Save and Status Watch Context Reuse",
-  "currentSliceUpdatedAt": "2026-08-17T08:00:02Z",
+  "currentSliceTitle": "Battle Resonant Chorus Distinct VFX",
+  "currentSliceUpdatedAt": "2026-08-17T08:46:16Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,70 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved implementation slice only from direct current behavior and source evidence; preserve exact completed Overworld refresh behavior and Native RMG fail-closed state.",
-  "notes": "Completed Overworld Save/Status watch-context reuse with exact live behavior authority and material request-local savings. Select the next tracker-approved product slice from direct current behavior evidence; broader release gaps remain.",
+  "nextActionGuardrailNote": "Select the next tracker-approved implementation slice only from direct current behavior and source evidence; preserve exact completed battle presentation behavior and Native RMG fail-closed state.",
+  "notes": "Completed the distinct Resonant Chorus battle VFX with exact live behavior authority and bounded platform startup evidence. Select the next tracker-approved product slice; broader release gaps remain.",
   "plannedSlices": [
+    {
+      "id": "presentation-battle-resonant-chorus-distinct-vfx-10184",
+      "title": "Battle Resonant Chorus Distinct VFX",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Give Resonant Chorus one distinct original imported battle VFX asset and exact spell-specific cue identity instead of reusing Prism Bastion's visual, without changing spell behavior or the existing shared audio fallback.",
+      "implementationTargets": [
+        "art/battle/vfx/spell_resonant_chorus.png",
+        "art/battle/vfx/spell_resonant_chorus.png.import",
+        "content/battle_vfx_manifest.json",
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/battle_event_animation_state_report.tscn",
+        "tests/animation_event_cue_catalog_report.tscn",
+        "tests/magic_battle_spell_behavior_report.tscn",
+        "tests/magic_prism_bastion_root_countercontrol_regression.tscn",
+        "tests/battle_layout_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "Resonant Chorus resolves to one distinct vfx_spell_resonant_chorus cue backed by an original imported 384x384 RGBA asset, while Prism Bastion retains vfx_spell_prism_bastion and both retain the existing audio_spell_prism_bastion fallback",
+        "A real public Resonant Chorus battle event uses the distinct loaded asset in normal policy, while reduced-motion and strong-flash suppression retain their exact generic/static policy and never render the specific asset",
+        "Focused runtime proves exact event ordering, animation timing, spell/action/session/casualty authority, asset load and draw identity, immutable spell content, fail-closed invalid mapping, and unchanged Prism Bastion behavior at 1280x720 and 1920x1080",
+        "Battle animation/cue/spell/layout, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "spell effect, tier, school, mana, duration, target, AI valuation, balance, content identity, action order, damage, casualty, BattleRules, save schema, or animation timing changes",
+        "Prism Bastion VFX or audio changes, a new Resonant Chorus audio asset, other placeholder cue replacement, other battle asset or manifest redesign, or new UI geometry",
+        "packaged Battle interaction parity, controller hardware, AT-SPI or UIA certification, native hardware, signing, publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "08437b8a3dc19e0aed881fe2beeca21deca404f2",
+        "artifact": "/tmp/heroes-resonant-vfx-attribution.1NrGMO",
+        "spells_distinct": true,
+        "resonant_role": "tempo_buff",
+        "bastion_role": "countermagic_ward",
+        "resonant_vfx": "vfx_spell_prism_bastion",
+        "bastion_vfx": "vfx_spell_prism_bastion",
+        "vfx_identity_collision": true,
+        "audio_fallback_shared": true,
+        "manifest_loaded": true,
+        "mapped_cue_count": 21,
+        "missing_texture_paths": []
+      },
+      "createdAt": "2026-08-17T08:12:04Z",
+      "startedAt": "2026-08-17T08:12:04Z",
+      "updatedAt": "2026-08-17T08:46:16Z",
+      "completedAt": "2026-08-17T08:46:16Z",
+      "notes": "Implemented one original transparent 384x384 Resonant Chorus VFX (SHA-256 651fd627e6db92767a568ebb60860df7e0c0d0bb44bcf1cf87c2f7c8e08e9d7a), one exact manifest cue, distinct normal runtime mapping, and distinct procedural fallback while retaining Prism visual and shared audio. Focused /tmp/heroes-resonant-vfx-focused.xnMUk2 and Xvfb capture /tmp/heroes-resonant-vfx-xvfb-capture-final.qe8dwZ are rc0/ok:true: a real public cast loads the new asset, reduced-motion and reduced-flash select status_icon_add, content/session/action authority is exact, and requested view sizes are exact. Cue catalog, Battle spell behavior, Prism countercontrol, accessibility, core, 1280 layout /tmp/heroes-resonant-vfx-layout-1280.jvCMmt, 1920 layout /tmp/heroes-resonant-vfx-layout-1920.2HM5To, static/editor /tmp/heroes-resonant-vfx-final-static.Mo8pWT, Linux report SHA 0927f4217ff0a14578e1db57dc7f6c64e85c992c4ec0b2af74beae0901141aa7, and Windows report SHA 75a3facdc21a2370e3d7fc280fcf87764012a0cf2063a4318394b8c431f8e29d are green. Platform claims remain export/startup only.",
+      "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null
+    },
     {
       "id": "performance-overworld-field-readiness-progress-recap-reuse-10184",
       "title": "Overworld Field Readiness Progress Recap Reuse",
@@ -88315,7 +88376,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "overworld_objective_progress_surface_reuse_completed",
+  "result": "resonant_chorus_distinct_battle_vfx_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -88416,9 +88477,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Objective Progress surface reuse is implemented and validated with exact authored-scenario behavior authority, bounded performance improvement, compatibility, static/editor, and Linux/Windows export-startup evidence. No current implementation slice is selected, and the game is not release-ready.",
+  "summary": "Resonant Chorus distinct battle VFX is implemented and validated with exact public-cast and policy authority, live viewport and Battle compatibility, repository/editor, and bounded Linux/Windows export-startup evidence. No current implementation slice is selected, and the game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-17T06:47:22Z",
+  "updatedAt": "2026-08-17T08:46:16Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
