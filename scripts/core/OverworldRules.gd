@@ -2781,9 +2781,13 @@ static func describe_objective_brief(session: SessionStateStoreScript.SessionDat
 
 static func describe_objective_header_surfaces(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var surface := _objective_stakes_surface(session)
+	var progress_recap := ""
+	if not surface.is_empty():
+		progress_recap = _scenario_rules().describe_session_progress_recap(session, false)
 	return {
 		"objective_brief": _describe_objective_brief_from_surface(surface),
-		"objective_stakes": _describe_objective_stakes_board_from_surface(session, surface),
+		"objective_stakes": _describe_objective_stakes_board_from_surface(session, surface, {"progress_recap": progress_recap}),
+		"progress_recap": progress_recap,
 	}
 
 static func _describe_objective_brief_from_surface(surface: Dictionary) -> String:
@@ -2808,7 +2812,11 @@ static func _describe_objective_brief_from_surface(surface: Dictionary) -> Strin
 static func describe_objective_stakes_board(session: SessionStateStoreScript.SessionData) -> String:
 	return _describe_objective_stakes_board_from_surface(session, _objective_stakes_surface(session))
 
-static func _describe_objective_stakes_board_from_surface(session: SessionStateStoreScript.SessionData, surface: Dictionary) -> String:
+static func _describe_objective_stakes_board_from_surface(
+	session: SessionStateStoreScript.SessionData,
+	surface: Dictionary,
+	preloaded_progress: Dictionary = {}
+) -> String:
 	if surface.is_empty():
 		return "Objective Stakes\nNo authored scenario objectives are available."
 
@@ -2846,7 +2854,11 @@ static func _describe_objective_stakes_board_from_surface(session: SessionStateS
 	var campaign_arc := String(surface.get("campaign_arc", ""))
 	if campaign_arc != "":
 		lines.append("Campaign arc: %s" % campaign_arc)
-	var progress_recap: String = _scenario_rules().describe_session_progress_recap(session, false)
+	var progress_recap := ""
+	if preloaded_progress.has("progress_recap"):
+		progress_recap = String(preloaded_progress.get("progress_recap", ""))
+	else:
+		progress_recap = _scenario_rules().describe_session_progress_recap(session, false)
 	if progress_recap != "":
 		lines.append(progress_recap)
 	return "\n".join(lines)

@@ -24,6 +24,9 @@ func _run() -> void:
 		return
 	if not _assert_drawer_readiness_preload_parity(shell, "current_tile"):
 		return
+	var drawer_objective_control := _assert_drawer_objective_recap_preload_parity(shell, session, "current_tile")
+	if drawer_objective_control.is_empty():
+		return
 	var refresh_session_before: Dictionary = session.to_dict()
 	var refresh_authority_before: Dictionary = _refresh_authority(shell.call("validation_snapshot"))
 	shell.set("_debug_command_in_progress", true)
@@ -51,6 +54,10 @@ func _run() -> void:
 			or int(full_refresh_profile.get("objective_stakes_surface_reuses", 0)) != 2 \
 			or int(full_refresh_profile.get("objective_stakes_surface_materializations", 0)) != 2:
 		_fail("Full refresh did not build one objective-stakes surface and reuse it for both exact header outputs.", full_refresh_profile)
+		return
+	if int(full_refresh_profile.get("objective_progress_recap_builds", 0)) != 1 \
+			or int(full_refresh_profile.get("drawer_handoff_preloaded_objective_recap_reuses", 0)) != 1:
+		_fail("Full refresh did not reuse its single objective progress recap for the drawer handoff.", full_refresh_profile)
 		return
 	if session.to_dict() != refresh_session_before or refresh_authority_after != refresh_authority_before:
 		_fail("Readiness reuse changed session or whole refresh surface authority.", {
@@ -172,10 +179,16 @@ func _run() -> void:
 		"objective_stakes_surface_builds": int(full_refresh_profile.get("objective_stakes_surface_builds", 0)),
 		"objective_stakes_surface_reuses": int(full_refresh_profile.get("objective_stakes_surface_reuses", 0)),
 		"objective_stakes_surface_materializations": int(full_refresh_profile.get("objective_stakes_surface_materializations", 0)),
+		"objective_progress_recap_builds": int(full_refresh_profile.get("objective_progress_recap_builds", 0)),
+		"drawer_handoff_preloaded_objective_recap_reuses": int(full_refresh_profile.get("drawer_handoff_preloaded_objective_recap_reuses", 0)),
 		"objective_header_bundle_usec": int(objective_header_control.get("bundle_usec", 0)),
 		"legacy_objective_header_usec": int(objective_header_control.get("legacy_usec", 0)),
 		"legacy_objective_to_bundle_ratio": float(objective_header_control.get("legacy_usec", 0)) / float(maxi(int(objective_header_control.get("bundle_usec", 0)), 1)),
 		"objective_header_surface_parity": true,
+		"drawer_objective_recap_parity": true,
+		"drawer_objective_authored_scenario_count": int(drawer_objective_control.get("scenario_count", 0)),
+		"legacy_drawer_objective_usec": int(drawer_objective_control.get("legacy_usec", 0)),
+		"shared_drawer_objective_usec": int(drawer_objective_control.get("shared_usec", 0)),
 		"forecast_bundle_usec": int(forecast_control.get("bundle_usec", 0)),
 		"legacy_forecast_usec": int(forecast_control.get("legacy_usec", 0)),
 		"legacy_to_bundle_ratio": float(forecast_control.get("legacy_usec", 0)) / float(maxi(int(forecast_control.get("bundle_usec", 0)), 1)),
@@ -484,9 +497,10 @@ func _assert_objective_header_surface_parity(session) -> Dictionary:
 		var expected := {
 			"objective_brief": OverworldRules.describe_objective_brief(probe),
 			"objective_stakes": OverworldRules.describe_objective_stakes_board(probe),
+			"progress_recap": ScenarioRules.describe_session_progress_recap(probe, false),
 		}
 		var bundled: Dictionary = OverworldRules.describe_objective_header_surfaces(probe)
-		if bundled != expected or bundled.keys() != ["objective_brief", "objective_stakes"] or probe.to_dict() != authority_before:
+		if bundled != expected or bundled.keys() != ["objective_brief", "objective_stakes", "progress_recap"] or probe.to_dict() != authority_before:
 			_fail("Combined objective header surfaces diverged from independent production wrappers for %s." % String(row.get("id", "")), {
 				"expected": expected,
 				"bundled": bundled,
@@ -494,6 +508,7 @@ func _assert_objective_header_surface_parity(session) -> Dictionary:
 			return {}
 		bundled["objective_brief"] = "mutated detached objective brief"
 		bundled["objective_stakes"] = "mutated detached objective stakes"
+		bundled["progress_recap"] = "mutated detached progress recap"
 		if probe.to_dict() != authority_before or OverworldRules.describe_objective_header_surfaces(probe) != expected:
 			_fail("Combined objective header surfaces were not detached or failed to rebuild for %s." % String(row.get("id", "")))
 			return {}
@@ -511,6 +526,7 @@ func _assert_objective_header_surface_parity(session) -> Dictionary:
 		return {}
 	var expected_brief := OverworldRules.describe_objective_brief(session)
 	var expected_stakes := OverworldRules.describe_objective_stakes_board(session)
+	var expected_progress_recap := ScenarioRules.describe_session_progress_recap(session, false)
 	var legacy_started := Time.get_ticks_usec()
 	for _index in range(6):
 		if OverworldRules.describe_objective_brief(session) != expected_brief \
@@ -522,7 +538,11 @@ func _assert_objective_header_surface_parity(session) -> Dictionary:
 	var timed_bundle: Dictionary = {}
 	for _index in range(6):
 		timed_bundle = OverworldRules.describe_objective_header_surfaces(session)
-		if timed_bundle != {"objective_brief": expected_brief, "objective_stakes": expected_stakes}:
+		if timed_bundle != {
+			"objective_brief": expected_brief,
+			"objective_stakes": expected_stakes,
+			"progress_recap": expected_progress_recap,
+		}:
 			_fail("Combined objective header timing control changed output.", timed_bundle)
 			return {}
 	var bundle_usec := Time.get_ticks_usec() - bundle_started
@@ -533,6 +553,77 @@ func _assert_objective_header_surface_parity(session) -> Dictionary:
 		})
 		return {}
 	return {"bundle_usec": bundle_usec, "legacy_usec": legacy_usec}
+
+func _assert_drawer_objective_recap_preload_parity(shell: Node, session, label: String) -> Dictionary:
+	var authority_before: Dictionary = session.to_dict()
+	var readiness: Dictionary = shell.call("_field_readiness_surface")
+	var forecast: Dictionary = OverworldRules.describe_end_turn_forecast_surfaces(session)
+	var objective_header_surfaces: Dictionary = OverworldRules.describe_objective_header_surfaces(session)
+	shell.call("validation_reset_profile", true)
+	var legacy_started := Time.get_ticks_usec()
+	var legacy: Dictionary = shell.call("_drawer_handoff_surfaces", readiness, forecast)
+	var legacy_usec := Time.get_ticks_usec() - legacy_started
+	var legacy_profile: Dictionary = shell.call("validation_profile_snapshot")
+	if int(legacy_profile.get("drawer_handoff_preloaded_objective_recap_reuses", 0)) != 0:
+		_fail("Default drawer handoff unexpectedly reused a preloaded objective recap for %s." % label, legacy_profile)
+		return {}
+	shell.call("validation_reset_profile", true)
+	var shared_started := Time.get_ticks_usec()
+	var shared: Dictionary = shell.call("_drawer_handoff_surfaces", readiness, forecast, objective_header_surfaces)
+	var shared_usec := Time.get_ticks_usec() - shared_started
+	var shared_profile: Dictionary = shell.call("validation_profile_snapshot")
+	if int(shared_profile.get("drawer_handoff_preloaded_objective_recap_reuses", 0)) != 1:
+		_fail("Preloaded drawer handoff did not reuse exactly one objective recap for %s." % label, shared_profile)
+		return {}
+	if shared != legacy or session.to_dict() != authority_before:
+		_fail("Preloaded objective recap changed drawer handoff or session authority for %s." % label, {
+			"legacy": legacy,
+			"shared": shared,
+		})
+		return {}
+	if legacy_usec * 100 < shared_usec * 105:
+		_fail("Preloaded objective recap did not remove at least five percent of the default full-board handoff work for %s." % label, {
+			"legacy_usec": legacy_usec,
+			"shared_usec": shared_usec,
+		})
+		return {}
+	var scenario_count := _assert_all_authored_drawer_objective_recap_parity()
+	if scenario_count <= 0:
+		return {}
+	return {"legacy_usec": legacy_usec, "shared_usec": shared_usec, "scenario_count": scenario_count}
+
+func _assert_all_authored_drawer_objective_recap_parity() -> int:
+	var scenario_ids := ContentService.get_content_ids(ContentService.SCENARIOS_PATH)
+	scenario_ids.sort()
+	var checked := 0
+	for scenario_id_value in scenario_ids:
+		var scenario_id := String(scenario_id_value)
+		var probe = ScenarioFactory.create_session(scenario_id, "normal", SessionStateStoreScript.LAUNCH_MODE_SKIRMISH)
+		if probe == null or probe.scenario_id == "":
+			continue
+		OverworldRules.normalize_overworld_state(probe)
+		for day_offset in [0, 1]:
+			probe.day += day_offset
+			OverworldRules.normalize_overworld_state(probe)
+			var authority_before: Dictionary = probe.to_dict()
+			var legacy_line: String = _objective_line_with_prefix(OverworldRules.describe_objectives(probe), "Next step:")
+			var recap := ScenarioRules.describe_session_progress_recap(probe, false)
+			var shared_line: String = _objective_line_with_prefix(recap, "Next step:")
+			if legacy_line != shared_line or probe.to_dict() != authority_before:
+				_fail("Authored drawer objective recap diverged for %s/day%d." % [scenario_id, probe.day], {
+					"legacy_line": legacy_line,
+					"shared_line": shared_line,
+				})
+				return 0
+		checked += 1
+	return checked
+
+func _objective_line_with_prefix(text: String, prefix: String) -> String:
+	for raw_line in text.split("\n", false):
+		var line := String(raw_line).strip_edges()
+		if line.begins_with(prefix):
+			return line
+	return ""
 
 func _assert_forecast_bundle_surface_parity(shell: Node, session, label: String) -> bool:
 	var authority_before: Dictionary = session.to_dict()
