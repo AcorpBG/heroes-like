@@ -25,6 +25,8 @@ Rules:
 Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next tracker-approved release-readiness implementation slice from current source and behavior evidence.
+- Completed implementation slice: `performance-overworld-refresh-watch-context-reuse-10184`. End Turn Forecast, Command Commitment, Event Feed, and Field Dispatch now share one detached refresh-local command-risk, local-pressure, and management-watch context while direct APIs remain fresh. Focused runtime covers seven states with exact whole outputs, detached rebuild, and session/UI authority; the broad-state median improves from2.988s to1.751s. Overworld visual/route/input, Town return, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
+  id: `performance-overworld-refresh-watch-context-reuse-10184`
 - Completed implementation slice: `performance-overworld-event-dispatch-observation-context-reuse-10184`. Event Feed and Field Dispatch now share one detached invocation-local observation context while direct APIs remain fresh. Focused runtime covers idle, message, daybreak, enemy activity, post-action recap, pressure/watch, and outcome with exact whole outputs and session/UI authority; the seven-state median improves from1.898s to1.249s. Overworld visual/route/input, Town return, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
   id: `performance-overworld-event-dispatch-observation-context-reuse-10184`
 - Completed implementation slice: `performance-overworld-commitment-summary-eager-fallback-elision-10184`. Command Commitment now returns an authored context-action summary without eagerly deriving its unused briefing fallback, while summary-less and present-empty semantics remain exact. Focused runtime covers eight live context/fallback states with exact session/UI authority and cuts the owned-town three-call median from161.7ms to81.2ms; full active-town refresh, Overworld visual/route/input, Town return, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
@@ -4204,6 +4206,31 @@ Completion criteria:
 
 Non-goals:
 - no briefing content/consumption policy, End Turn rules/autosave policy, SaveService canonicalization, save schema/version, manual-slot redesign, Battle briefing change, routing, Native RMG, publication, signing, native Windows hardware certification, or overall release-completion claim.
+
+## Overworld Refresh Watch Context Reuse
+
+id: `performance-overworld-refresh-watch-context-reuse-10184`
+
+Status: completed.
+
+Selected Phase 6 normal-path performance correction. One full Overworld refresh renders the End Turn Forecast, Command Commitment, Event Feed, and Field Dispatch from the same live session, but the surfaces independently recompute command risk, local visible pressure, and town-management watch state. A current copied materializer preserves all four whole outputs and session authority while one detached refresh-local watch context reduces three-call batches from a1.460s median to0.943s.
+
+Implemented outcome: one normalized refresh-local watch context now owns detached command-risk forecast/surfaces, local pressure, and management watch for the unchanged forecast, commitment, Event Feed, and Dispatch outputs; direct APIs still normalize and derive fresh state. The authoritative seven-state owner is whole-exact with a2.988s direct median versus1.751s shared, detached rebuild and session/UI authority, and real full refresh reports one build/three reuses. Bounded compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass.
+
+Implementation target:
+- derive one detached ordered watch context per full status refresh and pass its exact command-risk forecast/surface, local-pressure line, and management-watch line into the existing forecast, commitment, and Event/Dispatch materializers;
+- keep public direct forecast, commitment, Event Feed, and Dispatch callers fresh and preserve exact normalization, fallback, ordering, tie, copy, event, warning, and action-context semantics;
+- keep the context local to one refresh with no session/day/global cache or cross-refresh reuse.
+
+Completion criteria:
+- independent current versus shared-context controls remain whole-exact for idle, ordinary message, daybreak, enemy activity, post-action recap, pressure/watch, and outcome states;
+- a real full Overworld refresh builds one watch context, preserves exact forecast, commitment, Event/Dispatch text plus whole session/UI/save/focus/action authority, and materially reduces the combined owned surfaces;
+- focused refresh-cache, Overworld visual/route/input, Town return, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Non-goals:
+- no risk, forecast, commitment, event, dispatch, readiness, objective, threat, defense, management, action, save, focus, or gameplay policy changes;
+- no persistent cache, async work, content, balance, AI, Native RMG, save/schema, or package identity changes;
+- no packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
 
 ## Overworld Event/Dispatch Observation Context Reuse
 

@@ -3625,7 +3625,10 @@ func _refresh_status_surfaces(generated_surface_start: int) -> bool:
 	_profile_add("objective_progress_recap_builds", 1)
 	var objective_brief := String(objective_header_surfaces.get("objective_brief", "Objectives unavailable"))
 	var objective_stakes := String(objective_header_surfaces.get("objective_stakes", "Objective Stakes\nNo authored scenario objectives are available."))
-	var end_turn_forecast_surface := OverworldRules.describe_end_turn_forecast_surfaces(_session)
+	var refresh_watch_context := OverworldRules._refresh_watch_observation_context(_session)
+	_profile_add("refresh_watch_observation_context_builds", 1)
+	var end_turn_forecast_surface := OverworldRules.describe_end_turn_forecast_surfaces(_session, refresh_watch_context)
+	_profile_add("refresh_watch_observation_context_reuses", 1)
 	_profile_add("end_turn_forecast_bundle_builds", 1)
 	var readiness_context := _field_readiness_context(end_turn_forecast_surface, objective_header_surfaces)
 	var readiness_surface := _field_readiness_surface({}, end_turn_forecast_surface, readiness_context)
@@ -3642,7 +3645,7 @@ func _refresh_status_surfaces(generated_surface_start: int) -> bool:
 	_refresh_map_cue_surface()
 	_debug_refresh_profile_end("refresh_header_objective_status_resources", header_profile_start)
 	var commitment_profile_start := _debug_refresh_profile_begin("refresh_commitment_rail")
-	_refresh_commitment_panel()
+	_refresh_commitment_panel(refresh_watch_context)
 	_debug_refresh_profile_end("refresh_commitment_rail", commitment_profile_start)
 	var hero_rail_profile_start := _debug_refresh_profile_begin("refresh_hero_rail")
 	var hero_text := _hero_card_text()
@@ -3696,7 +3699,7 @@ func _refresh_status_surfaces(generated_surface_start: int) -> bool:
 	_debug_refresh_profile_end("refresh_frontier_drawer", frontier_profile_start, {"drawer_open": _active_drawer == "frontier"})
 	_refresh_context_tile_surface()
 	var event_context_profile_start := _debug_refresh_profile_begin("refresh_event_action_context")
-	var event_surface := _event_feed_surface(end_turn_forecast_surface, readiness_context)
+	var event_surface := _event_feed_surface(end_turn_forecast_surface, readiness_context, refresh_watch_context)
 	var action_context_surface := _action_context_surface(event_surface, readiness_surface)
 	_set_rail_text(
 		_event_label,
@@ -4216,12 +4219,14 @@ func _refresh_save_slot_picker() -> void:
 		_menu_button.text = String(surface.get("menu_button_label", "Menu: Field"))
 		_menu_button.tooltip_text = String(surface.get("menu_button_tooltip", "Return to the main menu after updating autosave."))
 
-func _refresh_commitment_panel() -> void:
+func _refresh_commitment_panel(refresh_watch_context: Dictionary = {}) -> void:
 	if not _commitment_panel.visible:
 		_commitment_label.text = ""
 		_commitment_label.tooltip_text = ""
 		return
-	var commitment_text := OverworldRules.describe_commitment_board(_session)
+	var commitment_text := OverworldRules.describe_commitment_board(_session, refresh_watch_context)
+	if not refresh_watch_context.is_empty():
+		_profile_add("refresh_watch_observation_context_reuses", 1)
 	_set_rail_text(_commitment_label, commitment_text, _rail_order_text(commitment_text), 2)
 
 func _refresh_frontier_drawer(end_turn_forecast_surface: Dictionary = {}) -> Dictionary:
@@ -7149,7 +7154,8 @@ func _rail_log_text() -> String:
 
 func _event_feed_surface(
 	end_turn_forecast_surface: Dictionary = {},
-	readiness_context: Dictionary = {}
+	readiness_context: Dictionary = {},
+	refresh_watch_context: Dictionary = {}
 ) -> Dictionary:
 	var event_dispatch_surfaces := OverworldRules.describe_event_dispatch_surfaces(
 		_session,
@@ -7157,8 +7163,11 @@ func _event_feed_surface(
 		_last_turn_resolution_text,
 		_last_enemy_activity_text,
 		_last_enemy_activity_events,
-		_last_action_recap
+		_last_action_recap,
+		refresh_watch_context
 	)
+	if not refresh_watch_context.is_empty():
+		_profile_add("refresh_watch_observation_context_reuses", 1)
 	_profile_add("event_dispatch_observation_context_builds", 1)
 	_profile_add("event_dispatch_observation_context_reuses", 2)
 	var surface: Dictionary = event_dispatch_surfaces.get("event_feed", {}).duplicate(true)
