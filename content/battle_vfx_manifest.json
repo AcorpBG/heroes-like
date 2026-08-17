@@ -85,6 +85,12 @@
       "scale": 1.60,
       "base_rotation_degrees": 0.0
     },
+    "vfx_spell_resonant_chorus": {
+      "texture_path": "res://art/battle/vfx/spell_resonant_chorus.png",
+      "render_mode": "spell_target",
+      "scale": 1.58,
+      "base_rotation_degrees": 0.0
+    },
     "vfx_spell_command_ward": {
       "texture_path": "res://art/battle/vfx/spell_command_ward.png",
       "render_mode": "spell_target",

@@ -40,6 +40,7 @@ func _run() -> void:
 	await _validate_ranged_status_state()
 	_validate_death_state()
 	await _validate_spell_cast_state()
+	await _validate_resonant_chorus_vfx_identity()
 	await _validate_reduced_flash_spell_state()
 	await _validate_status_cleanse_state()
 	_validate_status_round_expiry_state()
@@ -86,9 +87,9 @@ func _validate_core_vfx_asset_manifest() -> void:
 	var summary: Dictionary = view.validation_vfx_asset_summary()
 	_expect_equal("battle vfx manifest schema", String(summary.get("schema_id", "")), "battle_vfx_manifest_v1")
 	_expect_equal("battle vfx manifest path", String(summary.get("manifest_path", "")), "res://content/battle_vfx_manifest.json")
-	_expect_int("battle vfx mapped cue count", int(summary.get("mapped_cue_count", -1)), 21)
-	_expect_int("battle vfx unique texture count", int(summary.get("unique_texture_count", -1)), 21)
-	_expect_int("battle vfx loaded texture count", int(summary.get("loaded_texture_count", -1)), 21)
+	_expect_int("battle vfx mapped cue count", int(summary.get("mapped_cue_count", -1)), 22)
+	_expect_int("battle vfx unique texture count", int(summary.get("unique_texture_count", -1)), 22)
+	_expect_int("battle vfx loaded texture count", int(summary.get("loaded_texture_count", -1)), 22)
 	_expect_equal("battle vfx missing texture paths", JSON.stringify(summary.get("missing_texture_paths", [])), "[]")
 	var core_cue_paths := {
 		"vfx_placeholder_projectile_path": "res://art/battle/vfx/core_projectile_path.png",
@@ -125,6 +126,7 @@ func _validate_core_vfx_asset_manifest() -> void:
 		"res://art/battle/vfx/spell_briar_bind.png",
 		"res://art/battle/vfx/spell_graft_mend.png",
 		"res://art/battle/vfx/spell_prism_bastion.png",
+		"res://art/battle/vfx/spell_resonant_chorus.png",
 		"res://art/battle/vfx/spell_command_ward.png",
 		"res://art/battle/vfx/state_idle_shadow.png",
 		"res://art/battle/vfx/state_active_ring.png",
@@ -203,6 +205,7 @@ func _validate_spell_vfx_asset_surface() -> void:
 		"vfx_spell_briar_bind": "res://art/battle/vfx/spell_briar_bind.png",
 		"vfx_spell_graft_mend": "res://art/battle/vfx/spell_graft_mend.png",
 		"vfx_spell_prism_bastion": "res://art/battle/vfx/spell_prism_bastion.png",
+		"vfx_spell_resonant_chorus": "res://art/battle/vfx/spell_resonant_chorus.png",
 		"vfx_spell_command_ward": "res://art/battle/vfx/spell_command_ward.png",
 	}
 	var cue_ids: Array = cue_paths.keys()
@@ -223,6 +226,16 @@ func _validate_spell_vfx_asset_surface() -> void:
 		_expect_equal("spell vfx asset path %s" % cue_id, String(entry.get("asset_path", "")), String(cue_paths.get(cue_id, "")))
 		var expected_render_mode := "spell_projectile" if cue_id == "vfx_spell_sunlance_arc" else "spell_target"
 		_expect_equal("spell vfx render mode %s" % cue_id, String(entry.get("asset_render_mode", "")), expected_render_mode)
+	var resonant_metrics := _vfx_image_metrics("res://art/battle/vfx/spell_resonant_chorus.png")
+	var prism_metrics := _vfx_image_metrics("res://art/battle/vfx/spell_prism_bastion.png")
+	_expect_equal("resonant chorus vfx image loaded", str(bool(resonant_metrics.get("loaded", false))), "true")
+	_expect_equal("resonant chorus vfx image size", JSON.stringify(resonant_metrics.get("size", [])), "[384,384]")
+	_expect_equal("resonant chorus vfx transparent corners", str(bool(resonant_metrics.get("transparent_corners", false))), "true")
+	var resonant_alpha_coverage := float(resonant_metrics.get("alpha_coverage", 0.0))
+	if resonant_alpha_coverage < 0.20 or resonant_alpha_coverage > 0.80:
+		_error("Resonant Chorus VFX alpha coverage is outside the isolated-effect range: %s." % resonant_metrics)
+	if String(resonant_metrics.get("sha256", "")) == "" or String(resonant_metrics.get("sha256", "")) == String(prism_metrics.get("sha256", "")):
+		_error("Resonant Chorus VFX must retain a distinct nonempty asset hash: resonant=%s prism=%s." % [resonant_metrics, prism_metrics])
 	view.queue_free()
 	var fallback_view := BattleBoardViewScript.new()
 	fallback_view.size = Vector2(960.0, 540.0)
@@ -241,6 +254,8 @@ func _validate_spell_vfx_asset_surface() -> void:
 	_report["cases"]["spell_vfx_assets"] = {
 		"imported": playback,
 		"procedural_fallback": fallback_playback,
+		"resonant_metrics": resonant_metrics,
+		"prism_metrics": prism_metrics,
 	}
 
 func _validate_production_sfx_asset_surface() -> void:
@@ -689,6 +704,84 @@ func _validate_spell_cast_state() -> void:
 	case_payload["spell_specific_audio"] = caster_audio
 	_report["cases"]["spell_cast"] = case_payload
 
+func _validate_resonant_chorus_vfx_identity() -> void:
+	SettingsService.ensure_settings()
+	var original_reduce_motion := SettingsService.reduced_motion_enabled()
+	var original_reduce_flashes := SettingsService.reduced_flashes_enabled()
+	var spell_before: Dictionary = ContentService.get_spell("spell_resonant_chorus").duplicate(true)
+	var normal: Dictionary = await _resonant_chorus_policy_case(false, false)
+	var reduced_motion: Dictionary = await _resonant_chorus_policy_case(true, false)
+	var reduced_flash: Dictionary = await _resonant_chorus_policy_case(false, true)
+	SettingsService.settings["accessibility"]["reduce_motion"] = original_reduce_motion
+	SettingsService.settings["accessibility"]["reduce_flashes"] = original_reduce_flashes
+	var spell_after: Dictionary = ContentService.get_spell("spell_resonant_chorus").duplicate(true)
+	_expect_equal("resonant chorus content immutable", JSON.stringify(spell_after), JSON.stringify(spell_before))
+	_expect_equal("resonant chorus normal action matches reduced-motion action", JSON.stringify(normal.get("result", {})), JSON.stringify(reduced_motion.get("result", {})))
+	_expect_equal("resonant chorus normal action matches reduced-flash action", JSON.stringify(normal.get("result", {})), JSON.stringify(reduced_flash.get("result", {})))
+	_expect_equal("resonant chorus normal authority matches reduced-motion authority", JSON.stringify(normal.get("authority_after_cast", {})), JSON.stringify(reduced_motion.get("authority_after_cast", {})))
+	_expect_equal("resonant chorus normal authority matches reduced-flash authority", JSON.stringify(normal.get("authority_after_cast", {})), JSON.stringify(reduced_flash.get("authority_after_cast", {})))
+	var normal_cue: Dictionary = normal.get("cue", {}) if normal.get("cue", {}) is Dictionary else {}
+	var normal_vfx: Dictionary = normal.get("vfx", {}) if normal.get("vfx", {}) is Dictionary else {}
+	var normal_audio: Dictionary = normal.get("audio", {}) if normal.get("audio", {}) is Dictionary else {}
+	_expect_equal("resonant chorus normal strong-flash policy", str(bool(normal_cue.get("allows_strong_flash", false))), "true")
+	_expect_array_contains("resonant chorus normal distinct vfx", normal_cue.get("selected_vfx_cue_ids", []), "vfx_spell_resonant_chorus")
+	if normal_cue.get("selected_vfx_cue_ids", []).has("vfx_spell_prism_bastion"):
+		_error("Resonant Chorus normal playback retained Prism Bastion visual identity: %s." % normal_cue)
+	_expect_equal("resonant chorus normal vfx cue", String(normal_vfx.get("cue_id", "")), "vfx_spell_resonant_chorus")
+	_expect_equal("resonant chorus normal vfx kind", String(normal_vfx.get("kind", "")), "spell_resonant_chorus")
+	_expect_equal("resonant chorus normal vfx imported", str(bool(normal_vfx.get("asset_loaded", false))), "true")
+	_expect_equal("resonant chorus normal vfx asset", String(normal_vfx.get("asset_path", "")), "res://art/battle/vfx/spell_resonant_chorus.png")
+	_expect_equal("resonant chorus normal vfx render mode", String(normal_vfx.get("asset_render_mode", "")), "spell_target")
+	_expect_array_contains("resonant chorus shared audio fallback", normal_audio.get("selected_audio_cue_ids", []), "audio_spell_prism_bastion")
+	var board := BattleBoardViewScript.new()
+	_expect_equal("Prism Bastion visual identity unchanged", String(board.call("_spell_specific_vfx_cue_id", "spell_prism_bastion", "cleanse_effect")), "vfx_spell_prism_bastion")
+	_expect_equal("Resonant Chorus shared audio identity unchanged", String(board.call("_spell_specific_audio_cue_id", "spell_resonant_chorus", "effect")), "audio_spell_prism_bastion")
+	board.free()
+	for policy_case in [reduced_motion, reduced_flash]:
+		var cue: Dictionary = policy_case.get("cue", {}) if policy_case.get("cue", {}) is Dictionary else {}
+		var selected_vfx: Array = cue.get("selected_vfx_cue_ids", []) if cue.get("selected_vfx_cue_ids", []) is Array else []
+		if selected_vfx.has("vfx_spell_resonant_chorus") or selected_vfx.has("vfx_spell_prism_bastion"):
+			_error("Reduced-policy Resonant Chorus playback retained a strong spell-specific visual: %s." % policy_case)
+		var audio: Dictionary = policy_case.get("audio", {}) if policy_case.get("audio", {}) is Dictionary else {}
+		_expect_array_contains("reduced-policy Resonant Chorus shared audio", audio.get("selected_audio_cue_ids", []), "audio_spell_prism_bastion")
+	_report["cases"]["resonant_chorus_vfx_identity"] = {
+		"spell_content": spell_after,
+		"normal": normal,
+		"reduced_motion": reduced_motion,
+		"reduced_flash": reduced_flash,
+	}
+
+func _resonant_chorus_policy_case(reduce_motion: bool, reduce_flashes: bool) -> Dictionary:
+	SettingsService.settings["accessibility"]["reduce_motion"] = reduce_motion
+	SettingsService.settings["accessibility"]["reduce_flashes"] = reduce_flashes
+	var session := _basic_session("unit_river_guard", "unit_bog_brute", 4, 3, 6, 3)
+	session.battle["turn_order"] = ["player_0", "player_0"]
+	session.battle["player_commander_state"] = _spellcaster_state(["spell_resonant_chorus"])
+	var result := BattleRulesScript.cast_player_spell(session, "spell_resonant_chorus")
+	_expect_ok("resonant chorus policy action", result)
+	var cast_event := _event_record_for(session.battle, "player_0", "battle_unit_cast")
+	_expect_equal("resonant chorus public cast event spell id", String(cast_event.get("spell_id", "")), "spell_resonant_chorus")
+	var authority_after_cast: Dictionary = session.to_dict()
+	await get_tree().create_timer(0.08).timeout
+	var summary := _board_summary_for_session(session)
+	_expect_equal("resonant chorus presentation preserves session authority", JSON.stringify(session.to_dict()), JSON.stringify(authority_after_cast))
+	var cue_playback: Dictionary = summary.get("cue_playback", {}) if summary.get("cue_playback", {}) is Dictionary else {}
+	var cue := _cue_record_for(cue_playback, "player_0")
+	var vfx_playback: Dictionary = summary.get("vfx_playback", {}) if summary.get("vfx_playback", {}) is Dictionary else {}
+	var vfx := _vfx_entry_for_cue(vfx_playback, "vfx_spell_resonant_chorus") if not reduce_motion and not reduce_flashes else {}
+	var audio_playback: Dictionary = summary.get("audio_playback", {}) if summary.get("audio_playback", {}) is Dictionary else {}
+	var audio := _audio_record_for(audio_playback, "player_0")
+	return {
+		"reduce_motion": reduce_motion,
+		"reduce_flashes": reduce_flashes,
+		"result": result.duplicate(true),
+		"authority_after_cast": authority_after_cast,
+		"cue": cue,
+		"vfx": vfx,
+		"audio": audio,
+		"vfx_playback": vfx_playback,
+	}
+
 func _validate_reduced_flash_spell_state() -> void:
 	SettingsService.ensure_settings()
 	var original_reduce_motion := SettingsService.reduced_motion_enabled()
@@ -926,7 +1019,7 @@ func _validate_imported_vfx_live_viewports() -> void:
 		_expect_ok("battle vfx live viewport shoot", result)
 		var view := BattleBoardViewScript.new()
 		view.position = Vector2.ZERO
-		view.size = get_viewport().get_visible_rect().size
+		view.size = Vector2(viewport_size)
 		add_child(view)
 		view.set_battle_state(session)
 		await get_tree().process_frame
@@ -975,7 +1068,7 @@ func _validate_imported_vfx_live_viewports() -> void:
 func _validate_spell_vfx_live_viewports() -> void:
 	var original_window_size := get_window().size
 	var cue_by_viewport := {
-		"1280x720": "vfx_spell_cinder_burst",
+		"1280x720": "vfx_spell_resonant_chorus",
 		"1920x1080": "vfx_spell_prism_bastion",
 	}
 	var results := {}
@@ -987,7 +1080,7 @@ func _validate_spell_vfx_live_viewports() -> void:
 		var session := _basic_session("unit_river_guard", "unit_bog_brute", 3, 3, 7, 3)
 		var view := BattleBoardViewScript.new()
 		view.position = Vector2.ZERO
-		view.size = get_viewport().get_visible_rect().size
+		view.size = Vector2(viewport_size)
 		add_child(view)
 		view.set_battle_state(session)
 		var viewport_key := "%dx%d" % [viewport_size.x, viewport_size.y]
@@ -1044,7 +1137,7 @@ func _validate_state_path_vfx_live_viewports() -> void:
 		var session := _basic_session("unit_river_guard", "unit_bog_brute", 3, 3, 7, 3)
 		var view := BattleBoardViewScript.new()
 		view.position = Vector2.ZERO
-		view.size = get_viewport().get_visible_rect().size
+		view.size = Vector2(viewport_size)
 		add_child(view)
 		view.set_battle_state(session)
 		var viewport_key := "%dx%d" % [viewport_size.x, viewport_size.y]
@@ -1737,6 +1830,31 @@ func _vfx_entry_for_cue(vfx_playback: Dictionary, cue_id: String) -> Dictionary:
 			return entry
 	_error("Missing VFX draw entry cue %s in %s." % [cue_id, vfx_playback])
 	return {}
+
+func _vfx_image_metrics(texture_path: String) -> Dictionary:
+	var image := Image.load_from_file(ProjectSettings.globalize_path(texture_path))
+	if image == null or image.is_empty():
+		return {"loaded": false, "size": [], "transparent_corners": false, "alpha_coverage": 0.0, "sha256": ""}
+	var width := image.get_width()
+	var height := image.get_height()
+	var visible_pixels := 0
+	for y in range(height):
+		for x in range(width):
+			if image.get_pixel(x, y).a > 0.01:
+				visible_pixels += 1
+	var corners := [
+		image.get_pixel(0, 0).a,
+		image.get_pixel(width - 1, 0).a,
+		image.get_pixel(0, height - 1).a,
+		image.get_pixel(width - 1, height - 1).a,
+	]
+	return {
+		"loaded": true,
+		"size": [width, height],
+		"transparent_corners": corners.all(func(alpha): return float(alpha) <= 0.01),
+		"alpha_coverage": snappedf(float(visible_pixels) / float(maxi(width * height, 1)), 0.0001),
+		"sha256": FileAccess.get_sha256(texture_path),
+	}
 
 func _audio_record_for(audio_playback: Dictionary, battle_id: String) -> Dictionary:
 	var records: Dictionary = audio_playback.get("active_records", {}) if audio_playback.get("active_records", {}) is Dictionary else {}
