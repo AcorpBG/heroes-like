@@ -16940,6 +16940,148 @@ def validate_overworld_full_refresh_event_readiness_context_reuse(errors: list[s
         ensure(forbidden not in report_text, errors, f"Overworld event-readiness proof must remain passive and exact: {forbidden}")
 
 
+def validate_overworld_objective_stakes_surface_bundle_reuse(errors: list[str]) -> None:
+    rules_path = ROOT / "scripts/core/OverworldRules.gd"
+    shell_path = ROOT / "scenes/overworld/OverworldShell.gd"
+    report_path = ROOT / "tests/overworld_hero_actions_refresh_cache_regression.gd"
+    for path in (rules_path, shell_path, report_path):
+        ensure(path.exists(), errors, f"Missing Overworld objective-stakes bundle owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in (rules_path, shell_path, report_path)):
+        return
+
+    rules_text = rules_path.read_text(encoding="utf-8")
+    combined_match = re.search(
+        r"static func describe_objective_header_surfaces\(session: SessionStateStoreScript\.SessionData\) -> Dictionary:(.*?)(?=\n\nstatic func _describe_objective_brief_from_surface)",
+        rules_text,
+        flags=re.DOTALL,
+    )
+    ensure(combined_match is not None, errors, "Combined objective header surface could not be isolated")
+    if combined_match is not None:
+        combined_body = combined_match.group(1)
+        ordered_tokens = (
+            "var surface := _objective_stakes_surface(session)",
+            '"objective_brief": _describe_objective_brief_from_surface(surface)',
+            '"objective_stakes": _describe_objective_stakes_board_from_surface(session, surface)',
+        )
+        ensure(all(token in combined_body for token in ordered_tokens), errors, "Combined objective header surface is missing exact shared materialization")
+        if all(token in combined_body for token in ordered_tokens):
+            ensure([combined_body.index(token) for token in ordered_tokens] == sorted(combined_body.index(token) for token in ordered_tokens), errors, "Combined objective header materialization order drifted")
+        ensure(combined_body.count("_objective_stakes_surface(session)") == 1, errors, "Combined objective header must build exactly one objective-stakes surface")
+        for forbidden in ("cache", "session.flags[", "session.overworld[", "call_deferred", "await ", "create_timer", "OS.delay", "erase(", "sort_custom"):
+            ensure(forbidden not in combined_body, errors, f"Combined objective header must remain invocation-local and passive: {forbidden}")
+
+    brief_match = re.search(
+        r"static func describe_objective_brief\(session: SessionStateStoreScript\.SessionData\) -> String:(.*?)(?=\n\nstatic func describe_objective_header_surfaces)",
+        rules_text,
+        flags=re.DOTALL,
+    )
+    stakes_match = re.search(
+        r"static func describe_objective_stakes_board\(session: SessionStateStoreScript\.SessionData\) -> String:(.*?)(?=\n\nstatic func _describe_objective_stakes_board_from_surface)",
+        rules_text,
+        flags=re.DOTALL,
+    )
+    ensure(brief_match is not None and "_describe_objective_brief_from_surface(_objective_stakes_surface(session))" in brief_match.group(1), errors, "Direct ObjectiveBrief wrapper must remain fresh")
+    ensure(stakes_match is not None and "_describe_objective_stakes_board_from_surface(session, _objective_stakes_surface(session))" in stakes_match.group(1), errors, "Direct Objective Stakes wrapper must remain fresh")
+    ensure(rules_text.count("static func describe_objective_header_surfaces(session: SessionStateStoreScript.SessionData) -> Dictionary:") == 1, errors, "Combined objective header helper must be unique")
+
+    brief_materializer_match = re.search(
+        r"static func _describe_objective_brief_from_surface\(surface: Dictionary\) -> String:(.*?)(?=\n\nstatic func describe_objective_stakes_board)",
+        rules_text,
+        flags=re.DOTALL,
+    )
+    stakes_materializer_match = re.search(
+        r"static func _describe_objective_stakes_board_from_surface\(session: SessionStateStoreScript\.SessionData, surface: Dictionary\) -> String:(.*?)(?=\n\nstatic func _week_of_day)",
+        rules_text,
+        flags=re.DOTALL,
+    )
+    ensure(brief_materializer_match is not None, errors, "ObjectiveBrief shared materializer could not be isolated")
+    ensure(stakes_materializer_match is not None, errors, "Objective Stakes shared materializer could not be isolated")
+    if brief_materializer_match is not None:
+        ensure("_objective_stakes_surface(" not in brief_materializer_match.group(1), errors, "ObjectiveBrief materializer must consume only its supplied surface")
+    if stakes_materializer_match is not None:
+        ensure("_objective_stakes_surface(" not in stakes_materializer_match.group(1), errors, "Objective Stakes materializer must consume only its supplied surface")
+        ensure("_scenario_rules().describe_session_progress_recap(session, false)" in stakes_materializer_match.group(1), errors, "Objective Stakes must preserve its exact live progress recap")
+
+    shell_text = shell_path.read_text(encoding="utf-8")
+    status_match = re.search(
+        r"func _refresh_status_surfaces\(generated_surface_start: int\) -> bool:(.*?)(?=\n\nfunc _refresh_map_cue_surface)",
+        shell_text,
+        flags=re.DOTALL,
+    )
+    ensure(status_match is not None, errors, "Overworld full status refresh could not be isolated for objective bundle reuse")
+    if status_match is not None:
+        status_body = status_match.group(1)
+        ordered_tokens = (
+            "var objective_header_surfaces := OverworldRules.describe_objective_header_surfaces(_session)",
+            '_profile_add("objective_stakes_surface_builds", 1)',
+            '_profile_add("objective_stakes_surface_reuses", 2)',
+            '_profile_add("objective_stakes_surface_materializations", 2)',
+            'var objective_brief := String(objective_header_surfaces.get("objective_brief", "Objectives unavailable"))',
+            'var objective_stakes := String(objective_header_surfaces.get("objective_stakes", "Objective Stakes\\nNo authored scenario objectives are available."))',
+        )
+        ensure(all(token in status_body for token in ordered_tokens), errors, "Full refresh is missing ordered objective-stakes bundle construction/materialization")
+        if all(token in status_body for token in ordered_tokens):
+            ensure([status_body.index(token) for token in ordered_tokens] == sorted(status_body.index(token) for token in ordered_tokens), errors, "Full refresh objective-stakes bundle order drifted")
+        ensure("OverworldRules.describe_objective_brief(_session)" not in status_body, errors, "Full refresh must not retain a direct ObjectiveBrief derivation")
+        ensure("OverworldRules.describe_objective_stakes_board(_session)" not in status_body, errors, "Full refresh must not retain a direct Objective Stakes derivation")
+    for forbidden in ('session.flags["objective_stakes_surface', 'session.overworld["objective_stakes_surface', '_refresh_cache["objective_stakes_surface', "_objective_stakes_surface_cache"):
+        ensure(forbidden not in shell_text, errors, f"Objective-stakes surface must not persist across refreshes: {forbidden}")
+
+    report_text = report_path.read_text(encoding="utf-8")
+    for token in (
+        "func _assert_objective_header_surface_parity(session) -> Dictionary:",
+        'var ordinary := SessionStateStoreScript.SessionData.new()',
+        '{"id": "pressured", "session": pressured}',
+        '{"id": "day_transition", "session": day_transition}',
+        '{"id": "campaign", "session": campaign}',
+        '{"id": "missing", "session": missing}',
+        "OverworldRules.normalize_overworld_state(probe)",
+        "var authority_before: Dictionary = probe.to_dict()",
+        '"objective_brief": OverworldRules.describe_objective_brief(probe)',
+        '"objective_stakes": OverworldRules.describe_objective_stakes_board(probe)',
+        "var bundled: Dictionary = OverworldRules.describe_objective_header_surfaces(probe)",
+        'bundled.keys() != ["objective_brief", "objective_stakes"]',
+        "probe.to_dict() != authority_before",
+        'bundled["objective_brief"] = "mutated detached objective brief"',
+        'bundled["objective_stakes"] = "mutated detached objective stakes"',
+        "var raw_surface: Dictionary = OverworldRules._objective_stakes_surface(session)",
+        "if raw_surface.is_empty():",
+        "var expected_surface: Dictionary = raw_surface.duplicate(true)",
+        'raw_surface["context_line"] = "mutated detached objective context"',
+        'raw_incomplete.append("mutated detached objective")',
+        "OverworldRules._objective_stakes_surface(session) != expected_surface",
+        "for _index in range(6):",
+        "legacy_usec * 100 < bundle_usec * 105",
+        'int(full_refresh_profile.get("objective_stakes_surface_builds", 0)) != 1',
+        'int(full_refresh_profile.get("objective_stakes_surface_reuses", 0)) != 2',
+        'int(full_refresh_profile.get("objective_stakes_surface_materializations", 0)) != 2',
+        '"objective_header_surface_parity": true',
+        '"objective_brief_visible_text"',
+        '"objective_brief_tooltip_text"',
+    ):
+        ensure(token in report_text, errors, f"Overworld objective-stakes focused owner is missing token: {token}")
+    objective_case_match = re.search(
+        r"func _assert_objective_header_surface_parity\(session\) -> Dictionary:(.*?)(?=\n\nfunc _assert_forecast_bundle_surface_parity)",
+        report_text,
+        flags=re.DOTALL,
+    )
+    ensure(objective_case_match is not None, errors, "Objective-stakes focused parity case could not be isolated")
+    if objective_case_match is not None:
+        objective_case_body = objective_case_match.group(1)
+        ordered_tokens = (
+            "OverworldRules.normalize_overworld_state(probe)",
+            "var authority_before: Dictionary = probe.to_dict()",
+            '"objective_brief": OverworldRules.describe_objective_brief(probe)',
+            "var bundled: Dictionary = OverworldRules.describe_objective_header_surfaces(probe)",
+            "probe.to_dict() != authority_before",
+        )
+        ensure(all(token in objective_case_body for token in ordered_tokens), errors, "Objective-stakes focused parity case is missing normalized authority ordering")
+        if all(token in objective_case_body for token in ordered_tokens):
+            ensure([objective_case_body.index(token) for token in ordered_tokens] == sorted(objective_case_body.index(token) for token in ordered_tokens), errors, "Objective-stakes fixture must normalize before capturing authority and materializing surfaces")
+    for forbidden in ("await get_tree().create_timer", "OS.delay", "set_process", 'erase("objective', "sort_custom", "normalize_objective"):
+        ensure(forbidden not in report_text, errors, f"Overworld objective-stakes proof must remain passive and exact: {forbidden}")
+
+
 def validate_overworld_full_refresh_end_turn_forecast_bundle_reuse(errors: list[str]) -> None:
     rules_path = ROOT / "scripts/core/OverworldRules.gd"
     shell_path = ROOT / "scenes/overworld/OverworldShell.gd"
@@ -46305,6 +46447,7 @@ def main() -> int:
     validate_overworld_route_map_cue_refresh(errors)
     validate_overworld_full_refresh_drawer_readiness_reuse(errors)
     validate_overworld_full_refresh_event_readiness_context_reuse(errors)
+    validate_overworld_objective_stakes_surface_bundle_reuse(errors)
     validate_overworld_full_refresh_end_turn_forecast_bundle_reuse(errors)
     validate_overworld_shell_release_polish(errors)
     validate_overworld_command_commitment_board(errors)
