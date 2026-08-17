@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `ux-battle-board-footer-pixel-ellipsis-10184`. The live Battle board footer now retains its exact tactical summary, renders fitting rows whole, and uses a theme-font-measured word-boundary ellipsis for the longer focused controller-cursor row instead of the prior `left(84)` mid-word cut. Exact 1280x720/1920x1080 Board, Town/Battle visual, active-focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `ux-battle-board-footer-pixel-ellipsis-10184`
 - Completed implementation slice: `ux-town-scenic-action-count-label-clarity-10184`. The live Town scenic caption now names its existing action counts as `Study options <n> | Market options <n>` instead of presenting them as bare town concepts. Exact 1280x720/1920x1080 live widths, ordinary/captured and direct/precomputed state, detached refresh, action/session authority, Town visual/action, active-focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `ux-town-scenic-action-count-label-clarity-10184`
 - Completed implementation slice: `ux-overworld-empty-manual-save-slot-status-clarity-10184`. The live Overworld footer now maps the selected slot's canonical missing summary to `M1 empty`, then refreshes to `M1 ready` through the real manual-save path, while loadable, held, and invalid states plus all save/overwrite/load/cache/session authority remain unchanged. Focused exact-width, manual-overwrite, active-focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Overworld save interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -6974,6 +6976,38 @@ Completion evidence:
 - the full River Pass capture/save-resume/re-entry flow passed naturally with 42 steps and zero harness errors at exact 1280x720 (`/tmp/heroes-town-header-routed-1280.lBImP4/20260817T184313Z`) and 1920x1080 (`/tmp/heroes-town-header-routed-1920.k8KFFo/20260817T185207Z`); both captured-town frames visibly retain exact Duskfen/Mireclaw/Frontier/Spell identity and show `Your Control` without `Owner Player`;
 - active-play focus, accessibility semantics, core, repository validation, Python compilation, diff checks, and exact/generic Godot editor parses passed;
 - official Linux export/headless startup and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup reports are `ok:true`; packaged Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
+
+## Selected Slice: Battle Board Footer Pixel Ellipsis
+
+id: `ux-battle-board-footer-pixel-ellipsis-10184`
+
+Status: completed.
+
+Implementation boundary:
+- retain the exact existing full Battle board footer summary and fixed footer rectangle, but replace `summary.left(84)` with one theme-font measurement helper that returns the full string when it fits or a word-safe Unicode-ellipsis prefix within the available inner width;
+- preserve encounter, round, terrain, distance, target, movement, and controller-cursor source/order plus all battle input and authority;
+- keep the footer a single compact edge strip with no new panel, tooltip, label node, or layout expansion.
+
+Completion criteria:
+- exact 1280x720 and 1920x1080 live Board rows prove the long blocked-target/movement summary retains the unchanged full value, renders within the footer's themed pixel budget, ends in an ellipsis rather than a partial word, and a short control remains byte-exact without ellipsis;
+- player/enemy turns, target selection, movement, controller cursor, public Board methods, focus, battle, and session authority remain exact;
+- focused controller-board, Town/Battle visual, active-focus, accessibility, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass.
+
+Non-goals:
+- no battle rules, AI, target/movement/cursor semantics, encounter copy, full-summary value/order, footer geometry, board layout, input, focus, save/schema, content, balance, or Native RMG change;
+- no new panel, tooltip, label node, scroll behavior, font, UI scale, audio, VFX, art, or broader Battle copy redesign;
+- no packaged Battle interaction parity, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- HEAD `280eb1676bc3cc458ee18dcba245b8fd4b62e3ed` builds the complete encounter/round/terrain/distance/target/movement/cursor summary in `BattleBoardView._draw_footer_line`, then renders `summary.left(84)` inside a fixed 520-pixel footer without measuring the themed font or adding an ellipsis;
+- the routed 1280x720 assault frame `/tmp/heroes-town-overview-routed-1280.6vgtla/20260817T194950Z/battle_entered.png` visibly ends the footer at `Move: choos` rather than a complete token or ellipsis;
+- this is direct current shipped first-view rendering evidence, not a claim that the underlying target or movement summary is incorrect.
+
+Completion evidence:
+- `battle_controller_board_navigation_smoke` passed naturally at `/tmp/heroes-battle-footer-focused-final.coisV4`, proving exact 1280x720 and 1920x1080 live full summaries, whole fitting unfocused rows, word-boundary pixel ellipsis on the focused cursor rows, a byte-exact short control, and unchanged Board/input/session authority;
+- Town/Battle visual, active-play keyboard focus, accessibility semantics, and core compatibility gates passed sequentially at `/tmp/heroes-battle-footer-compat.lzsw6T`;
+- repository validation, Python compilation, diff checks, progress status, and exact/generic Godot editor parses passed at `/tmp/heroes-battle-footer-final-audit.pX7jfv`;
+- official Linux export/headless startup passed at `/tmp/heroes-battle-footer-linux-package.zU6AK4`, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup passed at `/tmp/heroes-battle-footer-windows-package.yheaYU`; packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
 
 ## Selected Slice: Town Scenic Action-Count Label Clarity
 

@@ -180,6 +180,9 @@ func _validate_battle_board_semantics_width(width: int) -> bool:
 	if semantic_timer == null or not semantic_timer.one_shot or not is_equal_approx(semantic_timer.wait_time, 1.0):
 		shell.queue_free()
 		return _fail_bool("Battle semantic Timer was not a configured one-shot before use at %d: %s." % [width, semantic_timer])
+	if not _validate_board_footer_pixel_ellipsis(board, session, width, false):
+		shell.queue_free()
+		return false
 	if not _validate_turn_strip_identity_surface(board, session, width):
 		shell.queue_free()
 		return false
@@ -194,6 +197,9 @@ func _validate_battle_board_semantics_width(width: int) -> bool:
 		return false
 	board.grab_focus()
 	await _settle()
+	if not _validate_board_footer_pixel_ellipsis(board, session, width, true):
+		shell.queue_free()
+		return false
 	if live.text != "":
 		shell.queue_free()
 		return _fail_bool("Battle semantic label was not inactive before navigation at %d: %s." % [width, live.text])
@@ -704,6 +710,84 @@ func _stack_by_battle_id(battle: Dictionary, battle_id: String) -> Dictionary:
 		if stack_value is Dictionary and String(stack_value.get("battle_id", "")) == battle_id:
 			return stack_value
 	return {}
+
+func _validate_board_footer_pixel_ellipsis(board: Control, session, width: int, expect_cursor: bool) -> bool:
+	if not board.has_method("validation_footer_summary") or not board.has_method("validation_footer_fit_summary"):
+		return _fail_bool("Battle board footer does not expose pixel-fit validation at %d." % width)
+	var authority_before := _battle_background_authority(session)
+	var board_summary: Dictionary = board.call("validation_hex_layout_summary")
+	var footer: Dictionary = board.call("validation_footer_summary")
+	var expected_full := "%s | R%d/%d | %s | %s" % [
+		String(session.battle.get("encounter_name", "Battle")),
+		int(session.battle.get("round", 1)),
+		int(session.battle.get("max_rounds", 12)),
+		String(session.battle.get("terrain", "plains")).capitalize(),
+		_footer_distance_label_for_test(int(session.battle.get("distance", 1))),
+	]
+	var target_state := String(board_summary.get("selected_target_footer_label", ""))
+	if target_state != "":
+		expected_full = "%s | %s" % [expected_full, target_state]
+	var movement_state := ""
+	if String(board_summary.get("active_movement_board_click_action", "")) == "move":
+		movement_state = "Move: choose destination" if bool(board_summary.get("selected_target_blocked", false)) else "Move: available"
+	elif bool(board_summary.get("active_movement_board_click_intent", {}).get("blocked", false)) and bool(board_summary.get("selected_target_blocked", false)):
+		movement_state = "Move: unavailable"
+	if movement_state != "":
+		expected_full = "%s | %s" % [expected_full, movement_state]
+	var cursor_state := ""
+	if bool(board_summary.get("controller_board_focused", false)):
+		var cursor_battle_id := String(board_summary.get("controller_cursor_battle_id", ""))
+		if cursor_battle_id != "":
+			var cursor_stack := _stack_by_battle_id(session.battle, cursor_battle_id)
+			cursor_state = "Cursor: %s" % String(cursor_stack.get("name", cursor_stack.get("unit_id", "Stack"))).left(13)
+		else:
+			cursor_state = "Cursor: %d,%d %s" % [
+				int(board_summary.get("controller_cursor_q", -1)),
+				int(board_summary.get("controller_cursor_r", -1)),
+				"move" if bool(board_summary.get("controller_cursor_legal_destination", false)) else "blocked",
+			]
+	if cursor_state != "":
+		expected_full = "%s | %s" % [expected_full, cursor_state]
+	var visible_text := String(footer.get("visible_text", ""))
+	var visible_prefix := visible_text.trim_suffix("…")
+	var next_character := expected_full.substr(visible_prefix.length(), 1)
+	if String(footer.get("full_text", "")) != expected_full \
+			or target_state == "" \
+			or movement_state == "" \
+			or (cursor_state != "") != expect_cursor \
+			or not bool(footer.get("footer_contained", false)) \
+			or not bool(footer.get("fits", false)) \
+			or float(footer.get("visible_width", INF)) > float(footer.get("max_text_width", 0.0)) + 0.01:
+		return _fail_bool("Battle board footer did not preserve the full summary and render a word-safe pixel ellipsis at %d: expected=%s footer=%s board=%s." % [width, expected_full, footer, board_summary])
+	if expect_cursor:
+		if not bool(footer.get("truncated", false)) \
+				or not visible_text.ends_with("…") \
+				or visible_text.ends_with("choos") \
+				or not expected_full.begins_with(visible_prefix) \
+				or next_character != " ":
+			return _fail_bool("Focused Battle board footer did not render its long cursor summary at a word-safe ellipsis at %d: expected=%s footer=%s." % [width, expected_full, footer])
+	elif bool(footer.get("truncated", true)) or visible_text != expected_full or visible_text.ends_with("…"):
+		return _fail_bool("Unfocused Battle board footer changed a fitting full summary at %d: expected=%s footer=%s." % [width, expected_full, footer])
+	var short_text := "Battle | R1/1 | Grass | Engaged"
+	var short_control: Dictionary = board.call("validation_footer_fit_summary", short_text)
+	if String(short_control.get("full_text", "")) != short_text \
+			or String(short_control.get("visible_text", "")) != short_text \
+			or not bool(short_control.get("fits", false)) \
+			or bool(short_control.get("truncated", true)) \
+			or float(short_control.get("visible_width", INF)) > float(short_control.get("max_text_width", 0.0)) + 0.01:
+		return _fail_bool("Battle board footer changed a short fitting control at %d: %s." % [width, short_control])
+	if _battle_background_authority(session) != authority_before:
+		return _fail_bool("Inspecting Battle board footer pixel fit changed session/save/settings authority at %d." % width)
+	return true
+
+func _footer_distance_label_for_test(distance: int) -> String:
+	match clampi(distance, 0, 2):
+		0:
+			return "Engaged"
+		1:
+			return "Closing"
+		_:
+			return "Long lane"
 
 func _validate_turn_strip_identity_surface(board: Control, session, width: int) -> bool:
 	if not board.has_method("validation_turn_strip_identity_surface"):
