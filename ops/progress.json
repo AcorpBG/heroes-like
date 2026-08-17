@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Battle board footer now keeps its exact full tactical summary and uses theme-font pixel fit with word-boundary ellipsis only when the live focused cursor row exceeds the compact footer.",
+  "currentNotes": "The Battle banner Status now retains the exact full BattleRules value and tooltip, uses native pixel ellipsis at 1280x720, and renders the full fitting value at 1920x1080.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-battle-board-footer-pixel-ellipsis-10184",
-  "currentSliceId": "ux-battle-board-footer-pixel-ellipsis-10184",
-  "currentSliceNotes": "Completed with exact 1280x720 and 1920x1080 fitting and ellipsized live rows, unchanged Board authority, compatibility, static/editor, and bounded Linux/Windows packaging evidence.",
+  "currentSlice": "ux-battle-status-native-pixel-ellipsis-10184",
+  "currentSliceId": "ux-battle-status-native-pixel-ellipsis-10184",
+  "currentSliceNotes": "Completed with exact 1280 native-overflow and 1920 full-fit rows, unchanged TopBar/Board authority, compatibility, static/editor, and bounded Linux/Windows packaging evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Battle Board Footer Pixel Ellipsis",
-  "currentSliceUpdatedAt": "2026-08-17T21:34:58Z",
+  "currentSliceTitle": "Battle Status Native Pixel Ellipsis",
+  "currentSliceUpdatedAt": "2026-08-17T21:51:24Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,89 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select only a tracker-approved source-backed release-readiness implementation slice; preserve the completed Battle footer pixel fit, full tactical summary, Board input, and battle/session authority.",
-  "notes": "The Battle footer pixel-ellipsis slice is completed with exact two-width live behavior, unchanged Board authority, compatibility, static/editor, and bounded Linux/Windows export/startup evidence. Packaged Battle interaction, hardware/accessibility certification, signing/publication, whole-game validation, and release readiness remain outside this slice.",
+  "nextActionGuardrailNote": "Select only a tracker-approved source-backed release-readiness implementation slice; preserve the completed Battle Status native fit, full BattleRules value, TopBar geometry, input, and battle/session authority.",
+  "notes": "The Battle Status native pixel-ellipsis slice is completed with exact responsive live behavior, unchanged TopBar/Board authority, compatibility, static/editor, and bounded Linux/Windows export/startup evidence. Packaged Battle interaction, hardware/accessibility certification, signing/publication, whole-game validation, and release readiness remain outside this slice.",
   "plannedSlices": [
+    {
+      "id": "ux-battle-status-native-pixel-ellipsis-10184",
+      "title": "Battle Status Native Pixel Ellipsis",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Keep the complete Battle banner status available while native pixel-aware ellipsis fits it honestly inside the existing TopBar allocation.",
+      "implementationTargets": [
+        "scenes/battle/BattleShell.gd",
+        "tests/battle_controller_board_navigation_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/battle_controller_board_navigation_smoke.tscn",
+        "tests/town_battle_visual_smoke.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "Exact 1280x720 and 1920x1080 live Battle rows retain the complete BattleRules status in text and tooltip while the existing Status Label owns native pixel-aware ellipsis within its allocation",
+        "Header, Status, Pressure order/geometry and target, movement, cursor, input, focus, battle, and session authority remain unchanged",
+        "Focused controller-board, Town/Battle visual, active-focus, accessibility, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "BattleRules status value/order, context, terrain, distance, target-movement-cursor, objective, Header-Pressure content, TopBar geometry, input, focus, save-schema, content, balance, or Native RMG changes",
+        "new node, panel, tooltip surface, wrap, extra line or height, font, UI scale, audio, VFX, art, or broader Battle banner redesign",
+        "packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing, publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "b825a4ed6af61bf5ea5f0d839cbf9dd4211e6e1d",
+        "sourceCut": "FrontierVisualKit.set_compact_label(_status_label, BattleRules.describe_status(_session), 1, 62, false)",
+        "observedVisibleEnding": "Terrai...",
+        "expectedOverflow": "native_pixel_ellipsis",
+        "observedArtifact": "/tmp/heroes-town-overview-routed-1280.6vgtla/20260817T194950Z/battle_entered.png",
+        "observedDefect": "battle_status_fixed_character_mid_token_cut"
+      },
+      "createdAt": "2026-08-17T21:40:00Z",
+      "startedAt": "2026-08-17T21:40:00Z",
+      "updatedAt": "2026-08-17T21:51:24Z",
+      "completedAt": "2026-08-17T21:51:24Z",
+      "completionEvidence": {
+        "focusedBoardArtifact": "/tmp/heroes-battle-status-focused-final.DXOTJF",
+        "focusedBoardNaturalReturnCode": 0,
+        "focusedBoardDurationSeconds": 45,
+        "fullStatusAndTooltipExact": true,
+        "width1280NativeOverflowExact": true,
+        "width1920FullFitExact": true,
+        "headerStatusPressureGeometryExact": true,
+        "boardSessionAuthorityExact": true,
+        "compatibilityArtifact": "/tmp/heroes-battle-status-compat.2KcNQ8",
+        "townBattleVisualNaturalReturnCode": 0,
+        "activePlayKeyboardFocusNaturalReturnCode": 0,
+        "accessibilitySemanticsNaturalReturnCode": 0,
+        "coreSystemsNaturalReturnCode": 0,
+        "staticEditorArtifact": "/tmp/heroes-battle-status-final-audit.oL79LO",
+        "repositoryValidationPassed": true,
+        "pythonCompilationPassed": true,
+        "diffCheckPassed": true,
+        "exactAndGenericEditorParsePassed": true,
+        "platformArtifact": "/tmp/heroes-battle-status-platform.75Cuvw",
+        "linuxExportAndHeadlessStartupOk": true,
+        "windowsExportAndFreshWineStartupOk": true,
+        "packagedBattleInteractionClaimed": false,
+        "controllerHardwareClaimed": false,
+        "atSpiOrUiaCertificationClaimed": false,
+        "nativeHardwareClaimed": false,
+        "signingOrPublicationClaimed": false,
+        "wholeGameOrReleaseReadyClaimed": false
+      },
+      "notes": "Completed from direct routed mid-token evidence with one rendering-only production helper. The exact BattleRules status and TopBar allocation remain unchanged; native overflow is active only when the full value exceeds the live width.",
+      "remainingWork": "Select the next tracker-approved source-backed release-readiness implementation slice.",
+      "blockedReason": null
+    },
     {
       "id": "ux-battle-board-footer-pixel-ellipsis-10184",
       "title": "Battle Board Footer Pixel Ellipsis",

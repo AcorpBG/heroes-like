@@ -1483,7 +1483,7 @@ func _refresh() -> void:
 
 	section_started = ProfileLogScript.begin_usec()
 	_header_label.text = BattleRules.describe_header(_session)
-	FrontierVisualKit.set_compact_label(_status_label, BattleRules.describe_status(_session), 1, 62, false)
+	_set_battle_status_text(BattleRules.describe_status(_session))
 	FrontierVisualKit.set_compact_label(_pressure_label, BattleRules.describe_pressure(_session), 1, 44, false)
 	var dispatch_text := BattleRules.describe_dispatch(_session, _last_message)
 	if _last_message.strip_edges() == "" and _tactical_briefing_text != "":
@@ -1651,6 +1651,12 @@ func _refresh() -> void:
 		_apply_briefing_consumption_autosave_failure_surface(false)
 	ProfileLogScript.emit_general("battle", "refresh", "battle_refresh", ProfileLogScript.elapsed_ms(profile_started), buckets, _battle_profile_metadata(false), _session)
 	call_deferred("_configure_battle_keyboard_focus", false)
+
+func _set_battle_status_text(full_text: String) -> void:
+	_status_label.text = full_text
+	_status_label.tooltip_text = full_text
+	_status_label.clip_text = true
+	_status_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 
 func _battle_focus_visible_surface(prefix: String, stack: Dictionary, cue: Dictionary) -> String:
 	var cue_label := "Stack check:" if prefix == "Active" else "Engagement check:"

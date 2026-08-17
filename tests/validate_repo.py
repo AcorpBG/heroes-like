@@ -15367,6 +15367,27 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
     ensure(board_text.count(nullable_live_lookup) == 1, errors, "BattleBoardView must use exactly one nullable BattleBoardCursorLive lookup for standalone report fixtures")
     ensure('@onready var _battle_board_cursor_live_label: Label = %BattleBoardCursorLive' not in board_text, errors, "BattleBoardView must not hard-resolve BattleBoardCursorLive outside the authored BattleShell scene")
 
+    status_helper_match = re.search(
+        r"func _set_battle_status_text\(full_text: String\) -> void:\n(?P<body>.*?)(?=\nfunc )",
+        shell_text,
+        re.S,
+    )
+    ensure(status_helper_match is not None, errors, "BattleShell must own one full-status native pixel-ellipsis helper")
+    ensure(shell_text.count("_set_battle_status_text(BattleRules.describe_status(_session))") == 1, errors, "Battle refresh must pass the exact full BattleRules status to native ellipsis once")
+    ensure("FrontierVisualKit.set_compact_label(_status_label, BattleRules.describe_status(_session), 1, 62, false)" not in shell_text, errors, "Battle Status must not retain the fixed 62-character visible cut")
+    if status_helper_match is not None:
+        status_helper_body = status_helper_match.group("body")
+        status_helper_order = tuple(status_helper_body.find(token) for token in (
+            "_status_label.text = full_text",
+            "_status_label.tooltip_text = full_text",
+            "_status_label.clip_text = true",
+            "_status_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS",
+        ))
+        ensure(all(index >= 0 for index in status_helper_order) and list(status_helper_order) == sorted(status_helper_order), errors, "Battle Status helper must assign exact full text/tooltip then native clipped ellipsis in order")
+        ensure(status_helper_body.count("_status_label") == 4, errors, "Battle Status native-ellipsis helper must change only the existing Status Label's four exact properties")
+        for forbidden_token in ("compact", "left(", "substr(", "...", "_header_label", "_pressure_label", "custom_minimum_size", "size_flags", "autowrap", "queue_redraw", "call_deferred"):
+            ensure(forbidden_token not in status_helper_body, errors, f"Battle Status helper must not introduce character/layout/timing drift via {forbidden_token}")
+
     battle_live_match = re.search(
         r'\[node name="BattleBoardCursorLive" type="Label" parent="\."\]\n(?P<body>.*?)(?=\n\[node )',
         scene_text,
@@ -15613,6 +15634,48 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
         for forbidden_token in ("board.", "_distance_label", "BattleRules", "sort(", "erase("):
             ensure(forbidden_token not in footer_distance_body, errors, f"Independent Battle footer distance control must avoid circular dependency: {forbidden_token}")
 
+    status_focused_match = re.search(
+        r"func _validate_battle_status_native_ellipsis\(shell: Control, session, width: int, expect_overflow: bool\) -> bool:\n(?P<body>.*?)(?=\nfunc )",
+        smoke_text,
+        re.S,
+    )
+    ensure(status_focused_match is not None, errors, "Battle controller smoke must own a focused full-status native pixel-ellipsis proof")
+    if status_focused_match is not None:
+        status_focused_body = status_focused_match.group("body")
+        status_focused_order = tuple(status_focused_body.find(token) for token in (
+            "_battle_background_authority(session)",
+            'shell.get_node("%Header")',
+            'shell.get_node("%Status")',
+            'shell.get_node("%Pressure")',
+            "BattleRules.describe_status(session)",
+            'status.get_theme_font("font")',
+            "font.get_string_size(expected_full",
+            "top_bar.get_global_rect()",
+            "status.text != expected_full",
+            "status.tooltip_text != expected_full",
+            "status.text_overrun_behavior != TextServer.OVERRUN_TRIM_ELLIPSIS",
+            "(full_width > status.size.x + 0.5) != expect_overflow",
+            "top_rect.encloses(header_rect)",
+            "header_rect.intersects(status_rect)",
+            "_battle_background_authority(session) != authority_before",
+        ))
+        ensure(all(index >= 0 for index in status_focused_order) and list(status_focused_order) == sorted(status_focused_order), errors, "Focused Battle Status proof must independently capture full source, themed width, native overflow, sibling geometry, then whole authority")
+        for required_token in (
+            'expected_full.contains("Round ")',
+            'expected_full.contains(" | Terrain ")',
+            'expected_full.contains(" | Active ")',
+            'status.text.ends_with("...")',
+            "not status.clip_text",
+            "status.autowrap_mode != TextServer.AUTOWRAP_OFF",
+            "not top_rect.encloses(status_rect)",
+            "not top_rect.encloses(pressure_rect)",
+            "status_rect.end.x > pressure_rect.position.x + 0.5",
+            "status_rect.intersects(pressure_rect)",
+        ):
+            ensure(required_token in status_focused_body, errors, f"Focused Battle Status proof is missing exact token: {required_token}")
+        for forbidden_token in ('shell.call("_set_battle_status', 'shell.call("_refresh', "set_text", ".text =", "Input.", "queue_redraw", "sort(", "erase(", "custom_minimum_size"):
+            ensure(forbidden_token not in status_focused_body, errors, f"Focused Battle Status proof must remain public/read-only and avoid {forbidden_token}")
+
     focused_match = re.search(
         r"func _validate_turn_strip_identity_surface\(board: Control, session, width: int\) -> bool:\n(?P<body>.*?)(?=\nfunc )",
         smoke_text,
@@ -15649,12 +15712,14 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
     if width_case_match is not None:
         width_body = width_case_match.group("body")
         timer_call = width_body.find("if semantic_timer == null")
+        status_call = width_body.find("if not _validate_battle_status_native_ellipsis(shell, session, width, width == 1280):")
         unfocused_footer_call = width_body.find("if not _validate_board_footer_pixel_ellipsis(board, session, width, false):")
         strip_call = width_body.find("if not _validate_turn_strip_identity_surface(board, session, width):")
         focus_call = width_body.find("board.grab_focus()")
         focused_footer_call = width_body.find("if not _validate_board_footer_pixel_ellipsis(board, session, width, true):", focus_call)
         live_empty_gate = width_body.find('if live.text != "":', focused_footer_call)
-        ensure(0 <= timer_call < unfocused_footer_call < strip_call < focus_call < focused_footer_call < live_empty_gate, errors, "Battle footer proof must run on the fitting unfocused and long focused live rows at each existing 1280/1920 width")
+        ensure(0 <= timer_call < status_call < unfocused_footer_call < strip_call < focus_call < focused_footer_call < live_empty_gate, errors, "Battle Status/footer proofs must run on exact live rows before strip/focus mutation at each existing 1280/1920 width")
+        ensure(width_body.count("_validate_battle_status_native_ellipsis(shell, session, width, width == 1280)") == 1, errors, "Battle Status proof must require native overflow at 1280 and a full fit at 1920 exactly once per width")
         ensure(width_body.count("_validate_board_footer_pixel_ellipsis(board, session, width, false)") == 1 and width_body.count("_validate_board_footer_pixel_ellipsis(board, session, width, true)") == 1, errors, "Battle footer focused owner must execute exactly one fitting and one ellipsized live row at each width")
         ensure(0 <= strip_call < focus_call and width_body.count("_validate_turn_strip_identity_surface(board, session, width)") == 1, errors, "Battle initiative-strip proof must run exactly once at each existing 1280/1920 width before controller focus mutation")
 
