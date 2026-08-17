@@ -243,7 +243,7 @@ func _exercise_outcomes() -> Dictionary:
 	_set_town_owner(victory_session, ENEMY_TOWN_PLACEMENT_ID, "player")
 	victory_session.flags["charter_guard_broken"] = true
 	victory_session.flags["charter_bastion_reserve_broken"] = true
-	victory_session.overworld["resolved_encounters"] = ["rootgate_boiler_exactors"]
+	victory_session.overworld["resolved_encounters"] = ["rootgate_charter_guard", "rootgate_bastion_reserve", "rootgate_boiler_exactors"]
 	var victory_result: Dictionary = ScenarioRulesScript.evaluate_session(victory_session)
 	if String(victory_result.get("status", "")) != "victory":
 		_fail("Rootgate Toll victory objectives did not resolve: %s" % JSON.stringify(victory_result))

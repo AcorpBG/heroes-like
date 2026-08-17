@@ -179,7 +179,7 @@ func _exercise_outcomes() -> Dictionary:
 	_set_town_owner(victory_session, "prismhearth_wreck_registry", "player")
 	victory_session.flags["relay_pickets_broken"] = true
 	victory_session.flags["mirror_lancers_broken"] = true
-	victory_session.overworld["resolved_encounters"] = ["bellwake_aurora_battery"]
+	victory_session.overworld["resolved_encounters"] = ["bellwake_relay_pickets", "bellwake_mirror_lancers", "bellwake_aurora_battery"]
 	var victory_result: Dictionary = ScenarioRulesScript.evaluate_session(victory_session)
 	if String(victory_result.get("status", "")) != "victory":
 		_fail("Bellwake Wreck Claim victory objectives did not resolve: %s" % JSON.stringify(victory_result))

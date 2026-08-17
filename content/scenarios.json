@@ -3675,7 +3675,7 @@
         ],
         [
           "grass",
-          "water",
+          "grass",
           "grass",
           "grass",
           "grass",
@@ -3730,14 +3730,14 @@
           {
             "id": "break_ford_reavers",
             "label": "Break the Ford Reavers",
-            "type": "flag_true",
-            "flag": "ford_reavers_broken"
+            "type": "encounter_resolved",
+            "placement_id": "bridge_ford_reavers"
           },
           {
             "id": "purge_silt_hunters",
             "label": "Purge the Silt Hunters",
-            "type": "flag_true",
-            "flag": "silt_hunters_broken"
+            "type": "encounter_resolved",
+            "placement_id": "bridge_silt_hunters"
           },
           {
             "id": "clear_reed_totemists",
@@ -4003,7 +4003,7 @@
         {"placement_id": "bridge_ore_reserve", "site_id": "site_ore_crates", "x": 7, "y": 5},
         {"placement_id": "ford_cache", "site_id": "site_waystone_cache", "x": 8, "y": 1},
         {"placement_id": "graftroot_verdant_nursery", "site_id": "site_verdant_graft_nursery", "x": 0, "y": 2, "guard_front_id": "bridge_ford_reavers"},
-        {"placement_id": "graftroot_rootwatch_hollow", "site_id": "site_rootwatch_hollow", "x": 2, "y": 4},
+        {"placement_id": "graftroot_rootwatch_hollow", "site_id": "site_rootwatch_hollow", "x": 2, "y": 5},
         {"placement_id": "murkward_ford_peatwax_front", "site_id": "site_peatwax_reed_yard", "x": 9, "y": 1, "collected_by_faction_id": "faction_mireclaw", "guard_front_id": "bridge_silt_hunters"},
         {"placement_id": "mireford_skirmish_graftroot_bridgehead_rare_exchange", "site_id": "site_frontier_rare_exchange", "x": 0, "y": 4, "guard_front_id": "bridge_ford_reavers"},
         {"placement_id": "mireford_skirmish_murkward_ford_rare_exchange", "site_id": "site_frontier_rare_exchange", "x": 8, "y": 2, "guard_front_id": "bridge_silt_hunters", "collected_by_faction_id": "faction_mireclaw"}
@@ -4117,8 +4117,8 @@
         "defeat_text": "Embercourt voids the Orevein writ and closes the gantry road before Marka can force the crossing.",
         "victory": [
           {"id": "claim_riverwatch_crossing", "label": "Claim the Riverwatch crossing", "type": "town_owned_by_player", "placement_id": "riverwatch_contract_crossing"},
-          {"id": "break_archive_wardens", "label": "Break the Archive Wardens", "type": "flag_true", "flag": "archive_wardens_broken"},
-          {"id": "break_bridgeward", "label": "Break the Bridgeward Levies", "type": "flag_true", "flag": "bridgeward_levies_broken"},
+          {"id": "break_archive_wardens", "label": "Break the Archive Wardens", "type": "encounter_resolved", "placement_id": "orevein_archive_wardens"},
+          {"id": "break_bridgeward", "label": "Break the Bridgeward Levies", "type": "encounter_resolved", "placement_id": "orevein_bridgeward_levies"},
           {"id": "clear_beacon_line", "label": "Clear the Beacon Wardens", "type": "encounter_resolved", "placement_id": "orevein_beacon_wardens"}
         ],
         "defeat": [
@@ -4281,8 +4281,8 @@
         "defeat_text": "Sunvault fixes the wreck lane beneath its arrays and strips Bellwake's claim from every surviving chart.",
         "victory": [
           {"id": "claim_prismhearth_registry", "label": "Claim Prismhearth's wreck registry", "type": "town_owned_by_player", "placement_id": "prismhearth_wreck_registry"},
-          {"id": "break_relay_pickets", "label": "Break the Relay Pickets", "type": "flag_true", "flag": "relay_pickets_broken"},
-          {"id": "break_mirror_lancers", "label": "Break the Mirror Lancers", "type": "flag_true", "flag": "mirror_lancers_broken"},
+          {"id": "break_relay_pickets", "label": "Break the Relay Pickets", "type": "encounter_resolved", "placement_id": "bellwake_relay_pickets"},
+          {"id": "break_mirror_lancers", "label": "Break the Mirror Lancers", "type": "encounter_resolved", "placement_id": "bellwake_mirror_lancers"},
           {"id": "silence_aurora_battery", "label": "Silence the Aurora Battery", "type": "encounter_resolved", "placement_id": "bellwake_aurora_battery"}
         ],
         "defeat": [
@@ -4720,14 +4720,14 @@
           {
             "id": "break_charter_toll",
             "label": "Break the Charter Toll Guard",
-            "type": "flag_true",
-            "flag": "charter_guard_broken"
+            "type": "encounter_resolved",
+            "placement_id": "rootgate_charter_guard"
           },
           {
             "id": "break_bastion_reserve",
             "label": "Break the Bastion Reserve",
-            "type": "flag_true",
-            "flag": "charter_bastion_reserve_broken"
+            "type": "encounter_resolved",
+            "placement_id": "rootgate_bastion_reserve"
           },
           {
             "id": "clear_boiler_exactors",
@@ -5019,8 +5019,8 @@
         "defeat_text": "Sunvault fixes the wreck lane in daylight, silences Fogchart Mooring, and strikes the fifth frontier claim from the docket.",
         "victory": [
           {"id": "claim_halo_registry_front", "label": "Claim the Halo Registry Front", "type": "town_owned_by_player", "placement_id": "halo_registry_front"},
-          {"id": "break_fogchart_relay_pickets", "label": "Break the Fogchart Relay Pickets", "type": "flag_true", "flag": "fogchart_relay_pickets_broken"},
-          {"id": "break_fogchart_mirror_lancers", "label": "Break the Fogchart Mirror Lancers", "type": "flag_true", "flag": "fogchart_mirror_lancers_broken"},
+          {"id": "break_fogchart_relay_pickets", "label": "Break the Fogchart Relay Pickets", "type": "encounter_resolved", "placement_id": "fogchart_relay_pickets"},
+          {"id": "break_fogchart_mirror_lancers", "label": "Break the Fogchart Mirror Lancers", "type": "encounter_resolved", "placement_id": "fogchart_mirror_lancers"},
           {"id": "clear_fogchart_aurora_battery", "label": "Clear the Fogchart Aurora Battery", "type": "encounter_resolved", "placement_id": "fogchart_aurora_battery"}
         ],
         "defeat": [
@@ -5229,8 +5229,8 @@
         "defeat_text": "Embercourt voids the counterclaim, closes Clauseworks Depot, and strikes the sixth frontier claim from the docket.",
         "victory": [
           {"id": "claim_highwater_audit_front", "label": "Claim the Highwater Audit Front", "type": "town_owned_by_player", "placement_id": "highwater_audit_front"},
-          {"id": "break_clauseworks_archive_wardens", "label": "Break the Clauseworks Archive Wardens", "type": "flag_true", "flag": "clauseworks_archive_wardens_broken"},
-          {"id": "break_clauseworks_bridge_levies", "label": "Break the Clauseworks Bridge Levies", "type": "flag_true", "flag": "clauseworks_bridge_levies_broken"},
+          {"id": "break_clauseworks_archive_wardens", "label": "Break the Clauseworks Archive Wardens", "type": "encounter_resolved", "placement_id": "clauseworks_archive_wardens"},
+          {"id": "break_clauseworks_bridge_levies", "label": "Break the Clauseworks Bridge Levies", "type": "encounter_resolved", "placement_id": "clauseworks_bridge_levies"},
           {"id": "clear_clauseworks_beacon_wardens", "label": "Clear the Clauseworks Beacon Wardens", "type": "encounter_resolved", "placement_id": "clauseworks_beacon_wardens"}
         ],
         "defeat": [
@@ -5370,8 +5370,8 @@
         "defeat_text": "Brasshollow seals the marsh docket, silences Nightglass, and strikes the seventh frontier claim from the ledger.",
         "victory": [
           {"id": "claim_clauseworks_counter_front", "label": "Claim the Clauseworks Counter-Front", "type": "town_owned_by_player", "placement_id": "clauseworks_counter_front"},
-          {"id": "break_nightglass_ledger_guard", "label": "Break the Nightglass Ledger Guard", "type": "flag_true", "flag": "nightglass_ledger_guard_broken"},
-          {"id": "break_nightglass_rivet_auditors", "label": "Break the Nightglass Rivet Auditors", "type": "flag_true", "flag": "nightglass_rivet_auditors_broken"},
+          {"id": "break_nightglass_ledger_guard", "label": "Break the Nightglass Ledger Guard", "type": "encounter_resolved", "placement_id": "nightglass_ledger_guard"},
+          {"id": "break_nightglass_rivet_auditors", "label": "Break the Nightglass Rivet Auditors", "type": "encounter_resolved", "placement_id": "nightglass_rivet_auditors"},
           {"id": "clear_nightglass_furnace_exactors", "label": "Clear the Nightglass Furnace Exactors", "type": "encounter_resolved", "placement_id": "nightglass_furnace_exactors"}
         ],
         "defeat": [

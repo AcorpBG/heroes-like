@@ -207,9 +207,7 @@ func _exercise_battle_entries(session: SessionStateStoreScript.SessionData) -> D
 func _exercise_outcomes() -> Dictionary:
 	var victory: SessionStateStoreScript.SessionData = ScenarioFactoryScript.create_session(SCENARIO_ID, "normal", SessionStateStoreScript.LAUNCH_MODE_SKIRMISH)
 	_set_town_owner(victory, ENEMY_TOWN_PLACEMENT_ID, "player")
-	victory.flags["clauseworks_archive_wardens_broken"] = true
-	victory.flags["clauseworks_bridge_levies_broken"] = true
-	victory.overworld["resolved_encounters"] = ["clauseworks_beacon_wardens"]
+	victory.overworld["resolved_encounters"] = ["clauseworks_archive_wardens", "clauseworks_bridge_levies", "clauseworks_beacon_wardens"]
 	if String(ScenarioRulesScript.evaluate_session(victory).get("status", "")) != "victory":
 		_fail("Clauseworks victory objectives did not resolve.")
 		return {}

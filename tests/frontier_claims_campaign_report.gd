@@ -2,6 +2,7 @@ extends Node
 
 const CampaignRulesScript = preload("res://scripts/core/CampaignRules.gd")
 const ScenarioFactoryScript = preload("res://scripts/core/ScenarioFactory.gd")
+const ScenarioRulesScript = preload("res://scripts/core/ScenarioRules.gd")
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 
@@ -26,12 +27,45 @@ const NIGHTGLASS_HERO_ID := "hero_mireclaw_kessa_chainboom"
 const HALO_RESERVE_HERO_ID := "hero_neral"
 const CHARTER_COUNTERSEAL_HERO_ID := "hero_seren"
 const SAVE_SLOT := 2
+const DIRECT_ENCOUNTER_OBJECTIVES := {
+	MIREFORD_ID: [
+		{"objective_id": "break_ford_reavers", "placement_id": "bridge_ford_reavers", "flag": "ford_reavers_broken"},
+		{"objective_id": "purge_silt_hunters", "placement_id": "bridge_silt_hunters", "flag": "silt_hunters_broken"},
+	],
+	OREVEIN_ID: [
+		{"objective_id": "break_archive_wardens", "placement_id": "orevein_archive_wardens", "flag": "archive_wardens_broken"},
+		{"objective_id": "break_bridgeward", "placement_id": "orevein_bridgeward_levies", "flag": "bridgeward_levies_broken"},
+	],
+	BELLWAKE_ID: [
+		{"objective_id": "break_relay_pickets", "placement_id": "bellwake_relay_pickets", "flag": "relay_pickets_broken"},
+		{"objective_id": "break_mirror_lancers", "placement_id": "bellwake_mirror_lancers", "flag": "mirror_lancers_broken"},
+	],
+	ROOTGATE_ID: [
+		{"objective_id": "break_charter_toll", "placement_id": "rootgate_charter_guard", "flag": "charter_guard_broken"},
+		{"objective_id": "break_bastion_reserve", "placement_id": "rootgate_bastion_reserve", "flag": "charter_bastion_reserve_broken"},
+	],
+	FOGCHART_ID: [
+		{"objective_id": "break_fogchart_relay_pickets", "placement_id": "fogchart_relay_pickets", "flag": "relay_pickets_broken"},
+		{"objective_id": "break_fogchart_mirror_lancers", "placement_id": "fogchart_mirror_lancers", "flag": "mirror_lancers_broken"},
+	],
+	CLAUSEWORKS_ID: [
+		{"objective_id": "break_clauseworks_archive_wardens", "placement_id": "clauseworks_archive_wardens", "flag": "archive_wardens_broken"},
+		{"objective_id": "break_clauseworks_bridge_levies", "placement_id": "clauseworks_bridge_levies", "flag": "bridgeward_levies_broken"},
+	],
+	NIGHTGLASS_ID: [
+		{"objective_id": "break_nightglass_ledger_guard", "placement_id": "nightglass_ledger_guard", "flag": "charter_guard_broken"},
+		{"objective_id": "break_nightglass_rivet_auditors", "placement_id": "nightglass_rivet_auditors", "flag": "charter_bastion_reserve_broken"},
+	],
+}
 
 func _ready() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
 	ContentService.clear_cache()
+	var direct_objective_evidence := _assert_direct_encounter_objective_authority()
+	if direct_objective_evidence.is_empty():
+		return
 	var profile := CampaignRulesScript.normalize_profile({})
 	if not _assert_campaign_browser(profile):
 		return
@@ -189,8 +223,6 @@ func _run() -> void:
 	if not _assert_skirmish_isolation(after_rootgate, FOGCHART_ID):
 		return
 
-	fogchart_session.flags["fogchart_relay_pickets_broken"] = true
-	fogchart_session.flags["fogchart_mirror_lancers_broken"] = true
 	fogchart_session.flags["fogchart_claim_recorded"] = true
 	fogchart_session.flags["aurora_glass_salted"] = true
 	fogchart_session.overworld["resources"] = {
@@ -229,8 +261,6 @@ func _run() -> void:
 	if not _assert_skirmish_isolation(after_fogchart, CLAUSEWORKS_ID):
 		return
 
-	clauseworks_session.flags["clauseworks_archive_wardens_broken"] = true
-	clauseworks_session.flags["clauseworks_bridge_levies_broken"] = true
 	clauseworks_session.flags["clauseworks_claim_recorded"] = true
 	clauseworks_session.flags["beacon_plate_assayed"] = true
 	clauseworks_session.overworld["resources"] = {
@@ -259,8 +289,6 @@ func _run() -> void:
 	if not _assert_skirmish_isolation(after_clauseworks, NIGHTGLASS_ID):
 		return
 
-	nightglass_session.flags["nightglass_ledger_guard_broken"] = true
-	nightglass_session.flags["nightglass_rivet_auditors_broken"] = true
 	nightglass_session.flags["nightglass_claim_recorded"] = true
 	nightglass_session.flags["furnace_scrip_drowned"] = true
 	nightglass_session.overworld["resources"] = {"gold": 5000, "wood": 20, "ore": 20, "peatwax": 10}
@@ -317,6 +345,7 @@ func _run() -> void:
 		"ok": true,
 		"campaign_id": CAMPAIGN_ID,
 		"chapter_ids": [MIREFORD_ID, OREVEIN_ID, BELLWAKE_ID, ROOTGATE_ID, FOGCHART_ID, CLAUSEWORKS_ID, NIGHTGLASS_ID, HALO_RESERVE_ID, CHARTER_COUNTERSEAL_ID],
+		"direct_encounter_objectives": direct_objective_evidence,
 		"campaign_count": CampaignRulesScript.campaign_ids().size(),
 		"save_resume": save_evidence,
 		"mireford_to_orevein_resources": {"gold": 1000, "wood": 3, "ore": 3, "verdant_grafts": 2},
@@ -340,6 +369,93 @@ func _run() -> void:
 		"replay_available": true,
 	})])
 	get_tree().quit(0)
+
+func _assert_direct_encounter_objective_authority() -> Dictionary:
+	var scenario_rows := []
+	var objective_count := 0
+	var mireford: Dictionary = ContentService.get_scenario(MIREFORD_ID)
+	var mireford_map: Array = mireford.get("map", [])
+	var mireford_rootwatch := {}
+	for node_value in mireford.get("resource_nodes", []):
+		if node_value is Dictionary and String(node_value.get("placement_id", "")) == "graftroot_rootwatch_hollow":
+			mireford_rootwatch = node_value
+			break
+	if mireford_map.size() != 6 or not (mireford_map[3] is Array) or String(mireford_map[3][1]) != "grass":
+		_fail("Frontier Claims Mireford start lane (1,3) is not open grass.")
+		return {}
+	if int(mireford_rootwatch.get("x", -1)) != 2 or int(mireford_rootwatch.get("y", -1)) != 5:
+		_fail("Frontier Claims Mireford Rootwatch Hollow does not retain the open start lane at (2,5).")
+		return {}
+	for scenario_id in DIRECT_ENCOUNTER_OBJECTIVES.keys():
+		var scenario: Dictionary = ContentService.get_scenario(String(scenario_id))
+		var victory_rows: Array = scenario.get("objectives", {}).get("victory", [])
+		var victory_by_id := {}
+		for objective_value in victory_rows:
+			if objective_value is Dictionary:
+				victory_by_id[String(objective_value.get("id", ""))] = objective_value
+		var encounters_by_placement := {}
+		for encounter_value in scenario.get("encounters", []):
+			if encounter_value is Dictionary:
+				encounters_by_placement[String(encounter_value.get("placement_id", ""))] = encounter_value
+
+		var expected_rows: Array = DIRECT_ENCOUNTER_OBJECTIVES.get(scenario_id, [])
+		for expected_value in expected_rows:
+			var expected: Dictionary = expected_value
+			var objective_id := String(expected.get("objective_id", ""))
+			var placement_id := String(expected.get("placement_id", ""))
+			var flag_id := String(expected.get("flag", ""))
+			var objective: Dictionary = victory_by_id.get(objective_id, {})
+			if objective.get("type") != "encounter_resolved" or String(objective.get("placement_id", "")) != placement_id or objective.has("flag"):
+				_fail("Frontier Claims objective %s/%s is not exact direct encounter authority: %s" % [scenario_id, objective_id, JSON.stringify(objective)])
+				return {}
+			var placement: Dictionary = encounters_by_placement.get(placement_id, {})
+			var encounter: Dictionary = ContentService.get_encounter(String(placement.get("encounter_id", "")))
+			var victory_flags: Array = encounter.get("victory_flags", [])
+			if placement.is_empty() or flag_id not in victory_flags:
+				_fail("Frontier Claims encounter %s/%s did not retain victory flag %s." % [scenario_id, placement_id, flag_id])
+				return {}
+			objective_count += 1
+
+		var session: SessionStateStoreScript.SessionData = ScenarioFactoryScript.create_session(
+			String(scenario_id), "normal", SessionStateStoreScript.LAUNCH_MODE_SKIRMISH
+		)
+		for expected_value in expected_rows:
+			var expected: Dictionary = expected_value
+			session.flags[String(expected.get("flag", ""))] = true
+		for objective_value in victory_rows:
+			if not (objective_value is Dictionary):
+				continue
+			var objective: Dictionary = objective_value
+			if String(objective.get("type", "")) == "town_owned_by_player":
+				_set_town_owner(session, String(objective.get("placement_id", "")), "player")
+		var omitted_placement := String(expected_rows[0].get("placement_id", ""))
+		var resolved := []
+		for objective_value in victory_rows:
+			if objective_value is Dictionary and String(objective_value.get("type", "")) == "encounter_resolved":
+				var placement_id := String(objective_value.get("placement_id", ""))
+				if placement_id != omitted_placement:
+					resolved.append(placement_id)
+		session.overworld["resolved_encounters"] = resolved
+		if String(ScenarioRulesScript.evaluate_session(session).get("status", "")) != "in_progress":
+			_fail("Frontier Claims flags bypassed unresolved encounter authority for %s/%s." % [scenario_id, omitted_placement])
+			return {}
+		resolved.append(omitted_placement)
+		session.overworld["resolved_encounters"] = resolved
+		if String(ScenarioRulesScript.evaluate_session(session).get("status", "")) != "victory":
+			_fail("Frontier Claims exact encounter placements did not satisfy victory for %s." % scenario_id)
+			return {}
+		scenario_rows.append({"scenario_id": String(scenario_id), "objective_count": expected_rows.size(), "flags_retained": true, "flags_do_not_bypass_resolution": true})
+	return {"scenario_count": scenario_rows.size(), "objective_count": objective_count, "mireford_start_lane": {"x": 1, "y": 3, "terrain": "grass"}, "mireford_rootwatch_hollow": {"x": 2, "y": 5}, "rows": scenario_rows}
+
+func _set_town_owner(session: SessionStateStoreScript.SessionData, placement_id: String, owner: String) -> void:
+	var towns: Array = session.overworld.get("towns", [])
+	for index in range(towns.size()):
+		if towns[index] is Dictionary and String(towns[index].get("placement_id", "")) == placement_id:
+			var town: Dictionary = towns[index].duplicate(true)
+			town["owner"] = owner
+			towns[index] = town
+			break
+	session.overworld["towns"] = towns
 
 func _assert_campaign_browser(profile: Dictionary) -> bool:
 	if CAMPAIGN_ID not in CampaignRulesScript.campaign_ids():

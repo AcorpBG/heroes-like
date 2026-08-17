@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Distinct Overworld town-capture VFX/audio are implemented and validated for neutral capture and hostile-town victory return with generic resource capture, reduced-motion ownership fallback, gameplay/session/save authority, compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup preserved. Packaged town-capture interaction/listening, hardware/certification, signing/publication, whole-game, and release-readiness claims remain open.",
+  "currentNotes": "Frontier Claims chapters I-VII now bind fourteen encounter-backed objectives directly to their live placements, and Mireford's exact start lane is open. Focused chapter/campaign authority, compatibility, static/editor, and bounded Linux/Windows packaging gates are green. The live driver proves route and battle entry but its immediate rush loses the intentionally difficult Ford Reavers autoplay contract, so no full-arc or campaign-complete claim is made.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-town-capture-distinct-feedback-10184",
-  "currentSliceId": "presentation-overworld-town-capture-distinct-feedback-10184",
-  "currentSliceNotes": "Completed with one distinct original imported town-capture VFX and deterministic stereo audio, exact neutral and hostile-victory producers, unchanged resource/reduced-motion identities, and preserved capture, route, queue, session, and save authority.",
+  "currentSlice": "campaign-frontier-claims-direct-encounter-objectives-10184",
+  "currentSliceId": "campaign-frontier-claims-direct-encounter-objectives-10184",
+  "currentSliceNotes": "Completed: fourteen exact encounter-backed objectives across Frontier Claims chapters I-VII use direct placement resolution with real encounter flags/carryover preserved. Mireford changes only terrain (1,3) and Rootwatch Hollow (2,4 to 2,5), producing the exact live route to bridge_ford_reavers. Focused resolution proves victory/Orevein handoff; the generic live rush only certifies route and battle entry because its authored Ford Reavers sample is intentionally an autoplay defeat.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Town Capture Distinct Feedback",
-  "currentSliceUpdatedAt": "2026-08-17T10:21:23Z",
+  "currentSliceTitle": "Frontier Claims Direct Encounter Objectives",
+  "currentSliceUpdatedAt": "2026-08-17T12:08:48Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,76 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved release-readiness implementation slice; do not infer whole-game or release readiness from this completed presentation boundary.",
-  "notes": "Completed the source-proven generic-capture identity collision for two live town-capture producers with distinct original VFX/audio and bounded focused, compatibility, static/editor, and export/startup evidence; broader release gaps remain.",
+  "nextActionGuardrailNote": "Select the next source-backed tracker-approved implementation slice; do not infer whole-campaign or release readiness from the completed bounded Frontier Claims objective correction.",
+  "notes": "Frontier Claims direct encounter authority and the exact Mireford route correction are completed and validated. The live harness reaches bridge_ford_reavers through the repaired lane; focused runtime owns encounter-resolution victory and Orevein handoff because the generic immediate-rush driver deterministically loses the existing authored narrow-defeat battle contract. No combat, harness, full-arc, packaged-interaction, or release-readiness claim is made.",
   "plannedSlices": [
+    {
+      "id": "campaign-frontier-claims-direct-encounter-objectives-10184",
+      "title": "Frontier Claims Direct Encounter Objectives",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Make fourteen real encounter blockers in Frontier Claims chapters I-VII authoritative on their exact encounter placements and open the exact sealed Mireford route from Graftroot Bridgehead to the first required encounter, while retaining every encounter-authored victory flag and campaign carryover contract.",
+      "implementationTargets": [
+        "content/scenarios.json",
+        "tests/frontier_claims_campaign_report.gd",
+        "tests/thornwake_mireford_player_skirmish_report.gd",
+        "tests/brasshollow_orevein_player_skirmish_report.gd",
+        "tests/veilmourn_bellwake_wreck_player_skirmish_report.gd",
+        "tests/thornwake_rootgate_toll_chapter_report.gd",
+        "tests/veilmourn_fogchart_mooring_chapter_report.gd",
+        "tests/brasshollow_clauseworks_counterclaim_chapter_report.gd",
+        "tests/mireclaw_nightglass_ledger_reversal_chapter_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/frontier_claims_campaign_report.tscn",
+        "tests/thornwake_mireford_player_skirmish_report.tscn",
+        "tests/brasshollow_orevein_player_skirmish_report.tscn",
+        "tests/veilmourn_bellwake_wreck_player_skirmish_report.tscn",
+        "tests/thornwake_rootgate_toll_chapter_report.tscn",
+        "tests/veilmourn_fogchart_mooring_chapter_report.tscn",
+        "tests/brasshollow_clauseworks_counterclaim_chapter_report.tscn",
+        "tests/mireclaw_nightglass_ledger_reversal_chapter_report.tscn",
+        "tests/map_campaign_replayability_breadth_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "All fourteen named objectives use encounter_resolved with exact existing placement ids and require live placement resolution before victory",
+        "Mireford changes only map cell (1,3) from water to grass and graftroot_rootwatch_hollow from (2,4) to (2,5), opening the real route to bridge_ford_reavers while every other map cell/object placement remains exact",
+        "All existing encounter victory flags, scripts, unlocks, exports/imports, save/resume, chapter order, and faction-isolation authority remain exact",
+        "The live first-chapter flow exits the sealed start pocket and enters bridge_ford_reavers, while focused resolution of all three encounters reaches victory and the unlocked Orevein handoff",
+        "Campaign breadth, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "encounter combat, stats, armies, seeds, map/object changes beyond the exact Mireford lane cell and Rootwatch one-tile relocation, towns, economy, AI, scripts, rewards, campaign order, carryover, encounter-authored flags, save schema, or live-harness behavior changes",
+        "objective changes outside the fourteen named Frontier Claims rows or a general migration of flag objectives",
+        "packaged campaign interaction, controller hardware, AT-SPI/UIA certification, native hardware, Native RMG, signing, publication, whole-game, campaign-complete, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "594d52e0edf8f5e0c50704f931665030194f5acd",
+        "affected_chapter_count": 7,
+        "affected_objective_count": 14,
+        "flag_backed_objective_count_before": 14,
+        "direct_encounter_objective_count_after": 14,
+        "live_flow_artifact": "/tmp/heroes-frontier-claims-flow.hj3QNw/20260817T111952Z",
+        "live_flow_failure": "required encounter objective route unavailable after town progression",
+        "mireford_start_lane_blocked_cell": {"x": 1, "y": 3, "before": "water", "after": "grass"},
+        "mireford_start_lane_blocking_site": {"placement_id": "graftroot_rootwatch_hollow", "before": {"x": 2, "y": 4, "body_tiles": [[1, 3], [2, 3], [1, 4], [2, 4]]}, "after": {"x": 2, "y": 5, "body_tiles": [[1, 4], [2, 4], [1, 5], [2, 5]]}},
+        "flags_and_carryover_preserved": true
+      },
+      "createdAt": "2026-08-17T11:26:50Z",
+      "startedAt": "2026-08-17T11:26:50Z",
+      "updatedAt": "2026-08-17T12:08:48Z",
+      "completedAt": "2026-08-17T12:08:48Z",
+      "notes": "Completed with fourteen exact direct encounter objectives, preserved encounter-authored flags/carryover, and the exact Mireford lane correction. Focused campaign and seven chapter owners prove required resolution, victory, and Orevein handoff. Live normal/easy flows now route through (1,3) and enter bridge_ford_reavers but then lose, matching the existing intentional narrow autoplay-defeat contract; no roster, combat, harness, full-arc, or campaign-complete claim is made. Campaign breadth/menu, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green.",
+      "remainingWork": "None for this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null
+    },
     {
       "id": "presentation-overworld-town-capture-distinct-feedback-10184",
       "title": "Overworld Town Capture Distinct Feedback",
@@ -88587,7 +88654,7 @@
     }
   ],
   "result": "town_specialty_transfer_distinct_feedback_completed",
-  "status": "completed",
+  "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
       "completed": "Implementation or documentation-only governance work satisfies the PLAN completion criteria and has validation/evidence.",
@@ -88687,9 +88754,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Distinct Town specialty-selection and army-transfer completion VFX/audio are implemented and validated with exact public-action, reduced-motion, session/save, compatibility, repository/editor, and bounded Linux/Windows export-startup evidence. No current in-progress implementation slice is selected, and the game is not release-ready.",
+  "summary": "Frontier Claims direct encounter-objective authority is selected and in progress from a current live chapter-I flow failure. No implementation or validation is complete yet, and the game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-17T09:31:05Z",
+  "updatedAt": "2026-08-17T12:08:48Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

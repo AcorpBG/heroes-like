@@ -177,9 +177,7 @@ func _exercise_battle_entries(session: SessionStateStoreScript.SessionData) -> D
 func _exercise_outcomes() -> Dictionary:
 	var victory: SessionStateStoreScript.SessionData = ScenarioFactoryScript.create_session(SCENARIO_ID, "normal", SessionStateStoreScript.LAUNCH_MODE_SKIRMISH)
 	_set_town_owner(victory, ENEMY_TOWN_PLACEMENT_ID, "player")
-	victory.flags["nightglass_ledger_guard_broken"] = true
-	victory.flags["nightglass_rivet_auditors_broken"] = true
-	victory.overworld["resolved_encounters"] = ["nightglass_furnace_exactors"]
+	victory.overworld["resolved_encounters"] = ["nightglass_ledger_guard", "nightglass_rivet_auditors", "nightglass_furnace_exactors"]
 	if String(ScenarioRulesScript.evaluate_session(victory).get("status", "")) != "victory":
 		_fail("Nightglass victory objectives did not resolve.")
 		return {}

@@ -47003,6 +47003,111 @@ def validate_overworld_encounter_victory_return_feedback(errors: list[str]) -> N
     ensure('res://tests/overworld_encounter_victory_return_feedback_report.gd' in scene_text, errors, "Encounter return focused scene must load its exact report script")
 
 
+def validate_frontier_claims_direct_encounter_objectives(errors: list[str]) -> None:
+    scenario_path = ROOT / "content/scenarios.json"
+    encounter_path = ROOT / "content/encounters.json"
+    report_path = ROOT / "tests/frontier_claims_campaign_report.gd"
+    if not scenario_path.exists() or not encounter_path.exists() or not report_path.exists():
+        ensure(False, errors, "Frontier Claims direct encounter objective owner files are missing")
+        return
+    scenarios = items_index(load_json(scenario_path))
+    encounters = items_index(load_json(encounter_path))
+    expected = {
+        "mireford-skirmish": {
+            "break_ford_reavers": ("bridge_ford_reavers", "ford_reavers_broken"),
+            "purge_silt_hunters": ("bridge_silt_hunters", "silt_hunters_broken"),
+        },
+        "orevein-contract": {
+            "break_archive_wardens": ("orevein_archive_wardens", "archive_wardens_broken"),
+            "break_bridgeward": ("orevein_bridgeward_levies", "bridgeward_levies_broken"),
+        },
+        "bellwake-wreck-claim": {
+            "break_relay_pickets": ("bellwake_relay_pickets", "relay_pickets_broken"),
+            "break_mirror_lancers": ("bellwake_mirror_lancers", "mirror_lancers_broken"),
+        },
+        "rootgate-toll": {
+            "break_charter_toll": ("rootgate_charter_guard", "charter_guard_broken"),
+            "break_bastion_reserve": ("rootgate_bastion_reserve", "charter_bastion_reserve_broken"),
+        },
+        "fogchart-mooring": {
+            "break_fogchart_relay_pickets": ("fogchart_relay_pickets", "relay_pickets_broken"),
+            "break_fogchart_mirror_lancers": ("fogchart_mirror_lancers", "mirror_lancers_broken"),
+        },
+        "clauseworks-counterclaim": {
+            "break_clauseworks_archive_wardens": ("clauseworks_archive_wardens", "archive_wardens_broken"),
+            "break_clauseworks_bridge_levies": ("clauseworks_bridge_levies", "bridgeward_levies_broken"),
+        },
+        "nightglass-ledger-reversal": {
+            "break_nightglass_ledger_guard": ("nightglass_ledger_guard", "charter_guard_broken"),
+            "break_nightglass_rivet_auditors": ("nightglass_rivet_auditors", "charter_bastion_reserve_broken"),
+        },
+    }
+    ensure(sum(len(rows) for rows in expected.values()) == 14, errors, "Frontier Claims direct encounter objective map must retain exactly fourteen rows")
+    mireford = scenarios.get("mireford-skirmish", {})
+    mireford_map = mireford.get("map", []) if isinstance(mireford.get("map", []), list) else []
+    ensure(len(mireford_map) == 6 and isinstance(mireford_map[3], list) and len(mireford_map[3]) == 10 and str(mireford_map[3][1]) == "grass", errors, "Frontier Claims Mireford start lane must retain exact open grass cell (1,3)")
+    mireford_resources = {str(row.get("placement_id", "")): row for row in mireford.get("resource_nodes", []) if isinstance(row, dict)}
+    ensure({"x": int(mireford_resources.get("graftroot_rootwatch_hollow", {}).get("x", -1)), "y": int(mireford_resources.get("graftroot_rootwatch_hollow", {}).get("y", -1))} == {"x": 2, "y": 5}, errors, "Frontier Claims Mireford Rootwatch Hollow must retain exact open start-lane placement (2,5)")
+    for scenario_id, expected_rows in expected.items():
+        scenario = scenarios.get(scenario_id, {})
+        victory = {
+            str(row.get("id", "")): row
+            for row in scenario.get("objectives", {}).get("victory", [])
+            if isinstance(row, dict)
+        }
+        placements = {
+            str(row.get("placement_id", "")): row
+            for row in scenario.get("encounters", [])
+            if isinstance(row, dict)
+        }
+        for objective_id, (placement_id, flag_id) in expected_rows.items():
+            objective = victory.get(objective_id, {})
+            ensure(
+                objective.get("type") == "encounter_resolved"
+                and str(objective.get("placement_id", "")) == placement_id
+                and "flag" not in objective,
+                errors,
+                f"Frontier Claims {scenario_id}/{objective_id} must use exact direct encounter authority {placement_id}",
+            )
+            placement = placements.get(placement_id, {})
+            encounter = encounters.get(str(placement.get("encounter_id", "")), {})
+            ensure(flag_id in string_list(encounter.get("victory_flags", [])), errors, f"Frontier Claims {scenario_id}/{placement_id} must retain encounter victory flag {flag_id}")
+
+    report_text = report_path.read_text(encoding="utf-8")
+    for token in (
+        "const DIRECT_ENCOUNTER_OBJECTIVES := {",
+        "func _assert_direct_encounter_objective_authority() -> Dictionary:",
+        'objective.get("type") != "encounter_resolved"',
+        'objective.has("flag")',
+        'ContentService.get_encounter(String(placement.get("encounter_id", "")))',
+        'flag_id not in victory_flags',
+        'session.flags[String(expected.get("flag", ""))] = true',
+        'if placement_id != omitted_placement:',
+        'ScenarioRulesScript.evaluate_session(session).get("status", "")',
+        '!= "in_progress"',
+        'resolved.append(omitted_placement)',
+        '!= "victory"',
+        '"objective_count": objective_count',
+        'String(mireford_map[3][1]) != "grass"',
+        'int(mireford_rootwatch.get("x", -1)) != 2 or int(mireford_rootwatch.get("y", -1)) != 5',
+    ):
+        ensure(token in report_text, errors, f"Frontier Claims direct encounter runtime owner is missing token: {token}")
+    ensure(report_text.find('session.flags[String(expected.get("flag", ""))] = true') < report_text.find('if placement_id != omitted_placement:') < report_text.find('!= "in_progress"') < report_text.find('resolved.append(omitted_placement)') < report_text.find('!= "victory"'), errors, "Frontier Claims runtime owner must prove flags cannot bypass exact encounter resolution before proving victory")
+    ensure('objective["type"] =' not in report_text and 'objective["placement_id"] =' not in report_text, errors, "Frontier Claims focused owner must observe authored objective authority without mutating it")
+    focused_resolved = {
+        "tests/thornwake_mireford_player_skirmish_report.gd": '["bridge_ford_reavers", "bridge_silt_hunters", "mireford_reed_totemists"]',
+        "tests/brasshollow_orevein_player_skirmish_report.gd": '["orevein_archive_wardens", "orevein_bridgeward_levies", "orevein_beacon_wardens"]',
+        "tests/veilmourn_bellwake_wreck_player_skirmish_report.gd": '["bellwake_relay_pickets", "bellwake_mirror_lancers", "bellwake_aurora_battery"]',
+        "tests/thornwake_rootgate_toll_chapter_report.gd": '["rootgate_charter_guard", "rootgate_bastion_reserve", "rootgate_boiler_exactors"]',
+        "tests/veilmourn_fogchart_mooring_chapter_report.gd": '["fogchart_relay_pickets", "fogchart_mirror_lancers", "fogchart_aurora_battery"]',
+        "tests/brasshollow_clauseworks_counterclaim_chapter_report.gd": '["clauseworks_archive_wardens", "clauseworks_bridge_levies", "clauseworks_beacon_wardens"]',
+        "tests/mireclaw_nightglass_ledger_reversal_chapter_report.gd": '["nightglass_ledger_guard", "nightglass_rivet_auditors", "nightglass_furnace_exactors"]',
+    }
+    for relative_path, exact_array in focused_resolved.items():
+        owner_text = (ROOT / relative_path).read_text(encoding="utf-8")
+        ensure(exact_array in owner_text, errors, f"{relative_path} must resolve all three exact authored encounter placements")
+
+
 def validate_thornwake_rootgate_toll_chapter(errors: list[str]) -> None:
     scenario_path = ROOT / "content/scenarios.json"
     campaign_path = ROOT / "content/campaigns.json"
@@ -47067,8 +47172,8 @@ def validate_thornwake_rootgate_toll_chapter(errors: list[str]) -> None:
     victory = {str(row.get("id", "")): row for row in objectives.get("victory", []) if isinstance(row, dict)}
     defeat = {str(row.get("id", "")): row for row in objectives.get("defeat", []) if isinstance(row, dict)}
     ensure(str(victory.get("claim_clauseworks_depot", {}).get("placement_id", "")) == "clauseworks_toll_depot", errors, "Rootgate Toll victory must retain Clauseworks capture")
-    ensure(str(victory.get("break_charter_toll", {}).get("flag", "")) == "charter_guard_broken", errors, "Rootgate Toll victory must retain Charter Guard clearance")
-    ensure(str(victory.get("break_bastion_reserve", {}).get("flag", "")) == "charter_bastion_reserve_broken", errors, "Rootgate Toll victory must retain Bastion Reserve clearance")
+    ensure(str(victory.get("break_charter_toll", {}).get("placement_id", "")) == "rootgate_charter_guard", errors, "Rootgate Toll victory must require exact Charter Guard encounter clearance")
+    ensure(str(victory.get("break_bastion_reserve", {}).get("placement_id", "")) == "rootgate_bastion_reserve", errors, "Rootgate Toll victory must require exact Bastion Reserve encounter clearance")
     ensure(str(victory.get("clear_boiler_exactors", {}).get("placement_id", "")) == "rootgate_boiler_exactors", errors, "Rootgate Toll victory must retain Boiler Exactors clearance")
     ensure(int(defeat.get("root_the_road_before_daybreak", {}).get("day", 0)) == 12, errors, "Rootgate Toll must retain its exact Day 12 deadline")
     resource_nodes = {str(row.get("placement_id", "")): row for row in scenario.get("resource_nodes", []) if isinstance(row, dict)}
@@ -47202,8 +47307,8 @@ def validate_veilmourn_fogchart_mooring_chapter(errors: list[str]) -> None:
     victory = {str(row.get("id", "")): row for row in objectives.get("victory", []) if isinstance(row, dict)}
     defeat = {str(row.get("id", "")): row for row in objectives.get("defeat", []) if isinstance(row, dict)}
     ensure(str(victory.get("claim_halo_registry_front", {}).get("placement_id", "")) == "halo_registry_front", errors, "Fogchart victory must retain Halo registry capture")
-    ensure(str(victory.get("break_fogchart_relay_pickets", {}).get("flag", "")) == "fogchart_relay_pickets_broken", errors, "Fogchart victory must retain relay-picket clearance")
-    ensure(str(victory.get("break_fogchart_mirror_lancers", {}).get("flag", "")) == "fogchart_mirror_lancers_broken", errors, "Fogchart victory must retain mirror-lancer clearance")
+    ensure(str(victory.get("break_fogchart_relay_pickets", {}).get("placement_id", "")) == "fogchart_relay_pickets", errors, "Fogchart victory must require exact relay-picket encounter clearance")
+    ensure(str(victory.get("break_fogchart_mirror_lancers", {}).get("placement_id", "")) == "fogchart_mirror_lancers", errors, "Fogchart victory must require exact mirror-lancer encounter clearance")
     ensure(str(victory.get("clear_fogchart_aurora_battery", {}).get("placement_id", "")) == "fogchart_aurora_battery", errors, "Fogchart victory must retain aurora-battery clearance")
     ensure(int(defeat.get("chart_the_lane_before_daybreak", {}).get("day", 0)) == 13, errors, "Fogchart Mooring must retain its exact Day 13 deadline")
     resource_nodes = {str(row.get("placement_id", "")): row for row in scenario.get("resource_nodes", []) if isinstance(row, dict)}
@@ -47324,8 +47429,8 @@ def validate_brasshollow_clauseworks_counterclaim_chapter(errors: list[str]) -> 
     victory = {str(row.get("id", "")): row for row in objectives.get("victory", []) if isinstance(row, dict)}
     defeat = {str(row.get("id", "")): row for row in objectives.get("defeat", []) if isinstance(row, dict)}
     ensure(str(victory.get("claim_highwater_audit_front", {}).get("placement_id", "")) == "highwater_audit_front", errors, "Clauseworks victory must retain Highwater capture")
-    ensure(str(victory.get("break_clauseworks_archive_wardens", {}).get("flag", "")) == "clauseworks_archive_wardens_broken", errors, "Clauseworks victory must retain archive clearance")
-    ensure(str(victory.get("break_clauseworks_bridge_levies", {}).get("flag", "")) == "clauseworks_bridge_levies_broken", errors, "Clauseworks victory must retain bridge clearance")
+    ensure(str(victory.get("break_clauseworks_archive_wardens", {}).get("placement_id", "")) == "clauseworks_archive_wardens", errors, "Clauseworks victory must require exact archive encounter clearance")
+    ensure(str(victory.get("break_clauseworks_bridge_levies", {}).get("placement_id", "")) == "clauseworks_bridge_levies", errors, "Clauseworks victory must require exact bridge encounter clearance")
     ensure(str(victory.get("clear_clauseworks_beacon_wardens", {}).get("placement_id", "")) == "clauseworks_beacon_wardens", errors, "Clauseworks victory must retain beacon clearance")
     ensure(int(defeat.get("stamp_the_audit_before_daybreak", {}).get("day", 0)) == 13, errors, "Clauseworks Counterclaim must retain its exact Day 13 deadline")
     resources = {str(row.get("placement_id", "")): row for row in scenario.get("resource_nodes", []) if isinstance(row, dict)}
@@ -47441,8 +47546,8 @@ def validate_mireclaw_nightglass_ledger_reversal_chapter(errors: list[str]) -> N
     victory = {str(row.get("id", "")): row for row in objectives.get("victory", []) if isinstance(row, dict)}
     defeat = {str(row.get("id", "")): row for row in objectives.get("defeat", []) if isinstance(row, dict)}
     ensure(str(victory.get("claim_clauseworks_counter_front", {}).get("placement_id", "")) == "clauseworks_counter_front", errors, "Nightglass victory must retain Clauseworks capture")
-    ensure(str(victory.get("break_nightglass_ledger_guard", {}).get("flag", "")) == "nightglass_ledger_guard_broken", errors, "Nightglass victory must retain ledger-guard clearance")
-    ensure(str(victory.get("break_nightglass_rivet_auditors", {}).get("flag", "")) == "nightglass_rivet_auditors_broken", errors, "Nightglass victory must retain auditor clearance")
+    ensure(str(victory.get("break_nightglass_ledger_guard", {}).get("placement_id", "")) == "nightglass_ledger_guard", errors, "Nightglass victory must require exact ledger-guard encounter clearance")
+    ensure(str(victory.get("break_nightglass_rivet_auditors", {}).get("placement_id", "")) == "nightglass_rivet_auditors", errors, "Nightglass victory must require exact auditor encounter clearance")
     ensure(str(victory.get("clear_nightglass_furnace_exactors", {}).get("placement_id", "")) == "nightglass_furnace_exactors", errors, "Nightglass victory must retain furnace clearance")
     ensure(int(defeat.get("reverse_the_ledger_before_daybreak", {}).get("day", 0)) == 13, errors, "Nightglass must retain exact Day 13 deadline")
     resources = {str(row.get("placement_id", "")): row for row in scenario.get("resource_nodes", []) if isinstance(row, dict)}
@@ -47663,6 +47768,7 @@ def main() -> int:
     validate_overworld_resource_assault_victory_return_feedback(errors)
     validate_overworld_encounter_victory_return_feedback(errors)
     validate_content(errors)
+    validate_frontier_claims_direct_encounter_objectives(errors)
     validate_thornwake_rootgate_toll_chapter(errors)
     validate_veilmourn_fogchart_mooring_chapter(errors)
     validate_brasshollow_clauseworks_counterclaim_chapter(errors)
