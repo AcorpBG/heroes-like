@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Existing Overworld rail Labels retain exact semantic values and complete tooltips while native word ellipsis fits proportional themed text inside each live rectangle.",
+  "currentNotes": "Town scenic header strings now use the live themed font and exact painted width, preserving complete fitting copy and reserving one whole-word Unicode ellipsis for genuine overflow.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-rail-native-word-ellipsis-fit-10184",
-  "currentSliceId": "ux-overworld-rail-native-word-ellipsis-fit-10184",
-  "currentSliceNotes": "Completed with exact 1280x720 and 1920x1080 semantic text/tooltip, native word-ellipsis, themed-width/containment/session authority, painted 1280, compatibility, static/editor, and bounded Linux/Windows packaging evidence.",
+  "currentSlice": "ux-town-scenic-header-pixel-fit-10184",
+  "currentSliceId": "ux-town-scenic-header-pixel-fit-10184",
+  "currentSliceNotes": "Completed with exact 1280x720 and 1920x1080 themed-font fitting, genuine-overflow ellipsis, fresh painted 1280 evidence, unchanged Town authority, compatibility, static/editor, and bounded Linux/Windows packaging evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Rail Native Word-Ellipsis Fit",
-  "currentSliceUpdatedAt": "2026-08-17T22:59:12Z",
+  "currentSliceTitle": "Town Scenic Header Pixel Fit",
+  "currentSliceUpdatedAt": "2026-08-17T23:22:32Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,68 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Change only existing rail Label overrun fitting; preserve semantic text, full tooltips, line/character budgets, source order, general compactors, nodes, layout, routes, actions, saves, settings, and session authority.",
-  "notes": "The Overworld rail native word-ellipsis fit slice is completed with exact two-width semantic/tooltip/pixel-fit behavior, fresh painted evidence, unchanged layout/session authority, compatibility, static/editor, and bounded Linux/Windows export-startup evidence. Packaged Overworld interaction, hardware/accessibility certification, signing/publication, whole-game validation, and release readiness remain outside this slice.",
+  "nextActionGuardrailNote": "Select a source-backed release-readiness implementation slice with direct current behavior evidence; preserve completed Town scenic-header pixel fitting and its exact wording, geometry, actions, saves, settings, and session authority.",
+  "notes": "The Town scenic-header pixel-fit slice is completed with exact two-width behavior, genuine-overflow fitting, fresh painted evidence, compatibility, static/editor, and bounded Linux/Windows export-startup evidence. Packaged Town interaction, hardware/accessibility certification, signing/publication, whole-game validation, and release readiness remain outside this slice.",
   "plannedSlices": [
+    {
+      "id": "ux-town-scenic-header-pixel-fit-10184",
+      "title": "Town Scenic Header Pixel Fit",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Render complete fitting Town scenic header strings and reserve whole-word Unicode ellipsis for actual themed pixel overflow instead of character-count guesses.",
+      "implementationTargets": [
+        "scenes/town/TownStageView.gd",
+        "tests/town_battle_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/town_battle_visual_smoke.tscn",
+        "tests/town_spell_study_feedback_report.tscn",
+        "tests/town_market_exchange_feedback_report.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "Exact 1280x720 and 1920x1080 real Town stages expose complete scenic title and explicit Study options and Market options subline when independent themed widths fit the live header budget",
+        "Narrow detached fixtures prove genuine overflow fits the exact pixel budget and ends on a whole-word Unicode ellipsis while fitting values and header-overlay geometry remain exact",
+        "Focused Town visual/action, active-focus, accessibility, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "TownRules title-faction-role-garrison-study-market-spell-economy-building-recruitment-occupation-route-AI-content-balance-save-schema or Native RMG changes",
+        "scenic geometry, header position, font, UI scale, backdrop, plaques, district strip, command markers, sidebar, tabs, buttons, tooltips, audio, VFX, art, or broader Town copy redesign",
+        "packaged Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing, publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "c1351153b8b81e06b71d3dc3d95e2a540cf34423",
+        "sourceTitleLimit": "clampi(int(scene_rect.size.x / 18.0), 34, 96)",
+        "sourceSublineLimit": "clampi(int(scene_rect.size.x / 14.0), 42, 116)",
+        "observedArtifact": "/tmp/heroes-current-ui-audit-1280.PBg9u4/town.png",
+        "observedDefect": "town_scenic_header_character_estimate_truncates_pixel_fitting_text"
+      },
+      "createdAt": "2026-08-17T23:03:30Z",
+      "startedAt": "2026-08-17T23:03:30Z",
+      "updatedAt": "2026-08-17T23:22:32Z",
+      "completedAt": "2026-08-17T23:22:32Z",
+      "completionEvidence": {
+        "focusedTownVisual": "/tmp/heroes-town-scenic-fit-focused-final.rCCFFZ",
+        "paintedTown1280": "/tmp/heroes-town-scenic-fit-visual.iG3UKL/town.png",
+        "compatibility": "/tmp/heroes-town-scenic-fit-compat.cjqtj1",
+        "staticEditor": "/tmp/heroes-town-scenic-fit-final-audit.DpCu3m",
+        "linuxPackaging": "/tmp/heroes-town-scenic-fit-linux-package.kdGXqv",
+        "windowsPackaging": "/tmp/heroes-town-scenic-fit-windows-package.rm7gRG"
+      },
+      "notes": "Implemented themed-font pixel fitting for only the two scenic Town header lines. Exact 1280x720 and 1920x1080 live behavior retains full fitting strings; narrow title overflow uses one whole-word Unicode ellipsis while the fitting subline remains exact. Fresh painted 1280, Town action, focus, accessibility, core, repository/editor, and bounded Linux/Windows packaging gates passed.",
+      "remainingWork": "Completed. Select the next tracker-approved release-readiness implementation slice; broader release-readiness gaps remain.",
+      "blockedReason": null
+    },
     {
       "id": "ux-overworld-rail-native-word-ellipsis-fit-10184",
       "title": "Overworld Rail Native Word-Ellipsis Fit",
@@ -89332,7 +89391,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The selected Overworld compact-rail mid-token truncation defect remains to be implemented and validated. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain. The game is not release-ready.",
+  "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain. The game is not release-ready.",
   "remainingWork": "Select the next tracker-approved source-backed release-readiness implementation slice. Broader release-readiness gaps remain.",
   "reportOnlyEvidence": [
     {
@@ -89867,7 +89926,7 @@
   ],
   "summary": "Overworld empty manual-slot status clarity is implemented and validated from direct rendered evidence through the real empty-to-ready save path. This is one bounded slice; the game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-17T22:59:12Z",
+  "updatedAt": "2026-08-17T23:22:32Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

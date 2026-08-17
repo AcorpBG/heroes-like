@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `ux-town-scenic-header-pixel-fit-10184`. The Town scenic title and action-count subline now use their live themed font and exact painted width, preserving complete fitting strings at 1280x720 and 1920x1080 and reserving one whole-word Unicode ellipsis for genuine overflow. Focused Town behavior, fresh painted 1280 evidence, Town action reports, active focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `ux-town-scenic-header-pixel-fit-10184`
 - Completed implementation slice: `ux-overworld-rail-native-word-ellipsis-fit-10184`. Existing Overworld rail Labels now retain their exact semantic 42-character values and complete tooltips while Godot's native word-ellipsis overrun fits proportional themed text inside the live rectangle, replacing the shipped Army row's clipped `Strength 49` edge with a clean `Strength ...` word ellipsis. Exact 1280x720/1920x1080 themed-width behavior, fresh painted 1280 evidence, full Overworld visual, route tooltip, movement-input ownership, active-focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `ux-overworld-rail-native-word-ellipsis-fit-10184`
 - Completed implementation slice: `ux-overworld-rail-word-boundary-ellipsis-10184`. Compact Overworld right-rail truncation now preserves fitting lines exactly and ends overflow only at a whole-word boundary with one Unicode ellipsis, replacing the shipped First Turn Briefing `Claim Duskfen Basti...` mid-token cut while preserving the established one/two-line 42-character budgets and complete tooltips. Exact 1280x720/1920x1080 real-shell behavior, full Overworld visual, route tooltip, movement-input ownership, active-focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -6984,6 +6986,38 @@ Completion evidence:
 - the full River Pass capture/save-resume/re-entry flow passed naturally with 42 steps and zero harness errors at exact 1280x720 (`/tmp/heroes-town-header-routed-1280.lBImP4/20260817T184313Z`) and 1920x1080 (`/tmp/heroes-town-header-routed-1920.k8KFFo/20260817T185207Z`); both captured-town frames visibly retain exact Duskfen/Mireclaw/Frontier/Spell identity and show `Your Control` without `Owner Player`;
 - active-play focus, accessibility semantics, core, repository validation, Python compilation, diff checks, and exact/generic Godot editor parses passed;
 - official Linux export/headless startup and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup reports are `ok:true`; packaged Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
+
+## Selected Slice: Town Scenic Header Pixel Fit
+
+id: `ux-town-scenic-header-pixel-fit-10184`
+
+Status: completed.
+
+Implementation boundary:
+- replace only the scenic `_draw_header` title and action-count subline character-count estimates with one themed-font pixel-fit helper using the exact existing scene rectangle minus its authored left/right inset;
+- retain both complete source strings when they fit, otherwise shorten at the last whole-word boundary and append one Unicode ellipsis within the measured width;
+- keep `_short_stage_text` for the existing action-presentation badges and preserve Town header/action wording, stage geometry, overlays, sidebar, focus, actions, saves, settings, and whole-session authority.
+
+Completion criteria:
+- exact 1280x720 and 1920x1080 real Town stages expose the complete scenic title and explicit `Study options` / `Market options` subline because independent themed-font widths fit the live header budget;
+- narrow detached fixtures prove genuine overflow remains within the exact pixel budget and ends on a whole-word Unicode ellipsis, while fitting controls stay byte-exact and header/overlay geometry remains unchanged;
+- focused Town visual/action, active-focus, accessibility, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass.
+
+Non-goals:
+- no TownRules title, faction, role, garrison, study, market, spell, economy, building, recruitment, occupation, route, AI, content, balance, save/schema, or Native RMG change;
+- no scenic rectangle, header position, font, UI scale, backdrop, plaque, district strip, command marker, sidebar, tab, button, tooltip, audio, VFX, art, or broader Town copy redesign;
+- no packaged Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- HEAD `c1351153b8b81e06b71d3dc3d95e2a540cf34423` computes `_draw_header` limits as `scene_rect.size.x / 18.0` and `/ 14.0`, then `_short_stage_text` destructively applies `left(max_chars - 3) + "..."` without measuring the themed font;
+- the fresh exact 1280x720 Xvfb artifact `/tmp/heroes-current-ui-audit-1280.PBg9u4/town.png` visibly ends the scenic title at `Frontier Strong...` and the explicit action-count subline at `Market...`, although their complete themed strings fit inside the remaining scene width;
+- the completed action-count clarity slice owns the `Study options` / `Market options` wording and explicitly excluded header fitting; this slice changes only scenic header rendering, not those values or any Town rule.
+
+Completion evidence:
+- `town_battle_visual_smoke` passed naturally with exact 1280x720/1920x1080 themed-font measurements, full fitting title/subline values, narrow genuine-overflow Unicode ellipsis, fitting-subline preservation, and unchanged session authority (`/tmp/heroes-town-scenic-fit-focused-final.rCCFFZ`);
+- a fresh exact 1280x720 Town render is `ok:true` and visibly shows the complete `Riverwatch Hold | Embercourt League | Stronghold` title and `Garrison 1 companies | 4 troops | Study options 0 | Market options 0` subline (`/tmp/heroes-town-scenic-fit-visual.iG3UKL/town.png`);
+- Town spell-study and market-exchange feedback, active-play focus, accessibility semantics, and core compatibility passed sequentially (`/tmp/heroes-town-scenic-fit-compat.cjqtj1`), while repository validation, Python compilation, diff checks, and exact/generic editor parses passed (`/tmp/heroes-town-scenic-fit-final-audit.DpCu3m`);
+- official Linux export/headless startup (`/tmp/heroes-town-scenic-fit-linux-package.kdGXqv`) and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup (`/tmp/heroes-town-scenic-fit-windows-package.rm7gRG`) are `ok:true`; packaged Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
 
 ## Selected Slice: Overworld Rail Native Word-Ellipsis Fit
 

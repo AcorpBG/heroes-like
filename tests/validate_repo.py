@@ -25129,10 +25129,22 @@ def validate_town_shell_release_polish(errors: list[str]) -> None:
 
     for required_token in (
         "func validation_header_action_count_summary() -> Dictionary:",
+        "var max_width := maxf(0.0, scene_rect.size.x - 36.0)",
+        "var title_full_text := _header_title_text()",
         "var full_text := _header_action_count_text()",
+        "var title_rendered_text := _fit_stage_header_text(title_full_text, max_width, 20)",
+        "var rendered_text := _fit_stage_header_text(full_text, max_width, 13)",
+        '"title_full_width": font.get_string_size(title_full_text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 20).x if font != null else 0.0',
+        '"title_rendered_width": font.get_string_size(title_rendered_text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 20).x if font != null else 0.0',
+        '"full_width": font.get_string_size(full_text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 13).x if font != null else 0.0',
+        '"rendered_width": font.get_string_size(rendered_text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 13).x if font != null else 0.0',
         '"study_action_count": _study_actions.size()',
         '"market_action_count": _market_actions.size()',
-        "var subline := _short_stage_text(_header_action_count_text(), clampi(int(scene_rect.size.x / 14.0), 42, 116))",
+        '"max_width": max_width',
+        '"scene_rect": scene_rect',
+        "var line := _fit_stage_header_text(_header_title_text(), max_width, 20)",
+        "var subline := _fit_stage_header_text(_header_action_count_text(), max_width, 13)",
+        "func _header_title_text() -> String:",
         "func _header_action_count_text() -> String:",
         'return "Garrison %d companies | %d troops | Study options %d | Market options %d" % [',
         "_study_actions.size()",
@@ -25142,6 +25154,31 @@ def validate_town_shell_release_polish(errors: list[str]) -> None:
     ensure("Garrison %d companies | %d troops | Study %d | Market %d" not in town_stage_text, errors, "TownStageView.gd must not present action counts as bare Study and Market concepts")
     header_draw_block = town_stage_text.split("func _draw_header(scene_rect: Rect2) -> void:", 1)[1].split("\nfunc _header_action_count_text", 1)[0]
     ensure(header_draw_block.count("_header_action_count_text()") == 1, errors, "Town header draw must consume the exact shared action-count formatter once")
+    ensure("_short_stage_text(" not in header_draw_block and "scene_rect.size.x / 18.0" not in header_draw_block and "scene_rect.size.x / 14.0" not in header_draw_block, errors, "Town scenic header must not retain character-estimate truncation")
+    header_fit_match = re.search(
+        r"func _fit_stage_header_text\(text: String, max_width: float, font_size: int\) -> String:\n(?P<body>.*?)(?=\nfunc )",
+        town_stage_text,
+        re.S,
+    )
+    ensure(header_fit_match is not None and town_stage_text.count("func _fit_stage_header_text(") == 1, errors, "TownStageView.gd must isolate exactly one themed scenic-header fitter")
+    if header_fit_match is not None:
+        header_fit_body = header_fit_match.group("body")
+        header_fit_order = tuple(header_fit_body.find(token) for token in (
+            "text.strip_edges()",
+            'if normalized == "" or max_width <= 0.0:',
+            "get_theme_default_font()",
+            "if font == null or font_size <= 0:",
+            "font.get_string_size(normalized, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size).x <= max_width",
+            'var ellipsis := "…"',
+            "font.get_string_size(ellipsis, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size).x > max_width",
+            'for word_value in normalized.split(" ", false):',
+            'var candidate_with_ellipsis := "%s%s" % [candidate, ellipsis]',
+            "font.get_string_size(candidate_with_ellipsis, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size).x > max_width",
+            'return "%s%s" % [prefix, ellipsis] if prefix != "" else ellipsis',
+        ))
+        ensure(all(index >= 0 for index in header_fit_order) and list(header_fit_order) == sorted(header_fit_order), errors, "Town scenic-header fitter must preserve fitting text, measure real themed width, and stop at the last whole word before one Unicode ellipsis")
+        for forbidden_token in ('"..."', "_short_stage_text", "left(", "substr(", "scene_rect", "queue_redraw", "call_deferred", "await ", "sort(", "erase("):
+            ensure(forbidden_token not in header_fit_body, errors, f"Town scenic-header fitter must avoid character guesses, geometry mutation, timing, and authority: {forbidden_token}")
 
     for source_name, source_text in (
         ("TownRules.gd", town_rules_text),
@@ -25177,17 +25214,39 @@ def validate_town_shell_release_polish(errors: list[str]) -> None:
         'live_board.has_method("validation_header_action_count_summary")',
         "var expected_study_actions: Array = TownRules.get_spell_learning_actions(session)",
         "var expected_market_actions: Array = TownRules.get_market_actions(session)",
+        "var expected_title := _expected_live_town_stage_title(session)",
         "var original_window_size := get_window().size",
         "for viewport_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:",
         "get_window().size = viewport_size",
         "get_window().size = original_window_size",
+        'String(live_summary.get("title_full_text", "")) != expected_title',
+        'String(live_summary.get("title_rendered_text", "")) != expected_title',
         'String(live_summary.get("rendered_text", "")) != expected_live_text',
+        "live_board.get_theme_default_font()",
+        "live_font.get_string_size(expected_title, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 20).x",
+        "live_font.get_string_size(expected_live_text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 13).x",
+        "not is_equal_approx(max_width, scene_rect.size.x - 36.0)",
+        "independent_title_width > max_width",
+        "independent_subline_width > max_width",
         '"Garrison %d companies | %d troops | Study options %d | Market options %d"',
-        '"full_text": "Garrison 0 companies | 0 troops | Study options 2 | Market options 1"',
+        'String(detached_summary.get("full_text", "")) != "Garrison 0 companies | 0 troops | Study options 2 | Market options 1"',
+        "fixture.size = Vector2(420.0, 320.0)",
+        '"name": "A Very Long Validation Town Name"',
+        '"name": "A Very Long Validation Faction League"',
+        'narrow_summary.get("title_full_width", 0.0)',
+        'narrow_summary.get("title_rendered_text", "")).ends_with("…")',
+        'narrow_summary.get("title_rendered_text", "")).contains("...")',
+        'String(narrow_summary.get("rendered_text", "")) != String(narrow_summary.get("full_text", ""))',
+        'not is_equal_approx(float(narrow_summary.get("rendered_width", -1.0)), float(narrow_summary.get("full_width", -2.0)))',
         "fixture_study_actions.clear()",
         'fixture_market_actions.append({"id": "market_b"})',
         "Study options 1 | Market options 2",
         "if session.to_dict() != session_before:",
+        "func _expected_live_town_stage_title(session) -> String:",
+        "TownRules.get_active_town(session)",
+        "ContentService.get_town",
+        "ContentService.get_faction",
+        "OverworldRules.town_strategic_role(town).capitalize()",
     ):
         ensure(required_token in town_visual_text, errors, f"town_battle_visual_smoke.gd is missing scenic action-count clarity proof: {required_token}")
     scenic_call = town_visual_text.find("if not await _assert_town_scenic_action_count_label_contract(board, session):")
@@ -27373,9 +27432,9 @@ def validate_overworld_rail_word_boundary_ellipsis(errors: list[str]) -> None:
             "briefing.autowrap_mode != TextServer.AUTOWRAP_OFF",
             "not briefing.clip_text",
             "briefing.text_overrun_behavior != TextServer.OVERRUN_TRIM_WORD_ELLIPSIS",
+            "not panel_rect.encloses(label_rect)",
             "not hero_panel.get_global_rect().encloses(army_rect)",
             "width == 1280 and army_text_width <= army_rect.size.x + 0.5",
-            "not panel_rect.encloses(label_rect)",
             "get_window().size = original_window_size",
             "session.to_dict() != authority_before",
         ))
