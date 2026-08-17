@@ -27086,6 +27086,132 @@ def validate_overworld_command_commitment_board(errors: list[str]) -> None:
         ensure(required_token in overworld_script_text, errors, f"OverworldShell.gd is missing required command-commitment token: {required_token}")
 
 
+def validate_overworld_commitment_summary_fallback_elision(errors: list[str]) -> None:
+    rules_path = ROOT / "scripts/core/OverworldRules.gd"
+    report_path = ROOT / "tests/overworld_hero_actions_refresh_cache_regression.gd"
+    for path in (rules_path, report_path):
+        ensure(path.exists(), errors, f"Missing Overworld commitment-summary fallback owner: {path.relative_to(ROOT)}")
+    if not rules_path.exists() or not report_path.exists():
+        return
+
+    rules_text = rules_path.read_text(encoding="utf-8")
+    action_line_match = re.search(
+        r"static func _command_commitment_action_line\(session: SessionStateStoreScript\.SessionData\) -> String:(.*?)(?=\n\nstatic func _command_commitment_action_summary)",
+        rules_text,
+        flags=re.DOTALL,
+    )
+    ensure(action_line_match is not None, errors, "Overworld commitment action line could not be isolated before its summary helper")
+    if action_line_match is not None:
+        action_line_body = action_line_match.group(1)
+        ordered_tokens = (
+            "var context_actions := get_context_actions(session)",
+            "if not context_actions.is_empty():",
+            "var action = context_actions[0]",
+            "if action is Dictionary:",
+            "return _command_commitment_action_summary(session, action)",
+            "var site_plan := _nearest_logistics_plan(session)",
+            "var encounter_plan := _nearest_visible_encounter_plan(session)",
+        )
+        ensure(all(token in action_line_body for token in ordered_tokens), errors, "Commitment action line is missing the exact authored-summary/fallback order")
+        if all(token in action_line_body for token in ordered_tokens):
+            ensure([action_line_body.index(token) for token in ordered_tokens] == sorted(action_line_body.index(token) for token in ordered_tokens), errors, "Commitment action line reordered its action and no-action fallbacks")
+        ensure(action_line_body.count("_command_commitment_action_summary(session, action)") == 1, errors, "Commitment action line must materialize its selected action exactly once")
+
+    summary_match = re.search(
+        r"static func _command_commitment_action_summary\(session: SessionStateStoreScript\.SessionData, action: Dictionary\) -> String:(.*?)(?=\n\nstatic func _command_commitment_route_line)",
+        rules_text,
+        flags=re.DOTALL,
+    )
+    ensure(summary_match is not None, errors, "Overworld commitment action-summary helper could not be isolated")
+    if summary_match is not None:
+        summary_body = summary_match.group(1)
+        ordered_tokens = (
+            'if action.has("summary"):',
+            'return String(action.get("summary", ""))',
+            "return _context_action_briefing(session, action, get_active_context(session))",
+        )
+        ensure(all(token in summary_body for token in ordered_tokens), errors, "Commitment summary helper must preserve present-empty authority and lazy summary-less fallback")
+        if all(token in summary_body for token in ordered_tokens):
+            ensure([summary_body.index(token) for token in ordered_tokens] == sorted(summary_body.index(token) for token in ordered_tokens), errors, "Commitment summary helper evaluates fallback before summary presence")
+        for forbidden in ("cache", "session.flags", "session.overworld[", "call_deferred", "await ", "create_timer", "OS.delay", "erase(", "sort_custom"):
+            ensure(forbidden not in summary_body, errors, f"Commitment summary fallback must remain invocation-local and behavior-only: {forbidden}")
+    ensure('action.get("summary", _context_action_briefing' not in rules_text, errors, "Commitment summary path must not restore the eager GDScript default expression")
+
+    report_text = report_path.read_text(encoding="utf-8")
+    case_match = re.search(
+        r"func _assert_commitment_summary_fallback_elision\(shell: Node, shell_session\) -> Dictionary:(.*?)(?=\nfunc _legacy_eager_command_commitment_action_line)",
+        report_text,
+        flags=re.DOTALL,
+    )
+    ensure(case_match is not None, errors, "Focused commitment summary fallback case could not be isolated")
+    if case_match is not None:
+        case_body = case_match.group(1)
+        required_tokens = (
+            '{"kind": "owned_town", "action_id": "visit_town"}',
+            '{"kind": "enemy_town", "action_id": "capture_town"}',
+            '{"kind": "neutral_town", "action_id": "capture_town"}',
+            '{"kind": "resource", "action_id": "collect_resource"}',
+            '{"kind": "artifact", "action_id": "collect_artifact"}',
+            '{"kind": "encounter", "action_id": "enter_battle"}',
+            '{"kind": "rendezvous", "action_id": "open_rendezvous"}',
+            'var legacy_line := _legacy_eager_command_commitment_action_line(fixture_session)',
+            'var current_line := OverworldRules._command_commitment_action_line(fixture_session)',
+            'current_line != legacy_line or current_line != String(action.get("summary", ""))',
+            'summaryless.erase("summary")',
+            'OverworldRules._command_commitment_action_summary(fixture_session, summaryless) != expected_fallback',
+            'empty_summary["summary"] = ""',
+            'OverworldRules._command_commitment_action_summary(fixture_session, empty_summary) != ""',
+            'fixture_session.to_dict() != authority_before',
+            'var empty_fixture: Dictionary = _commitment_context_fixture("empty")',
+            'var empty_actions: Array = OverworldRules.get_context_actions(empty_session)',
+            'not empty_actions.is_empty()',
+            'for batch_index in range(5):',
+            'for _sample in range(3):',
+            'current_median * 4 > legacy_median * 3',
+            '_set_active_hero_position(shell_session, Vector2i(0, 0))',
+            'commitment_panel.visible = true',
+            'shell.set("_debug_command_in_progress", true)',
+            'shell.call("validation_reset_profile", true)',
+            'shell.call("_refresh")',
+            'String(commitment_label.tooltip_text) != expected_board',
+            'int(full_refresh_profile.get("refresh_commitment_rail_usec", 0)) <= 0',
+            'shell_session.to_dict() != shell_session_before',
+            '_refresh_authority(shell.call("validation_snapshot")) != shell_authority_before',
+        )
+        ensure(all(token in case_body for token in required_tokens), errors, "Focused commitment summary case is missing exact context, fallback, timing, or full-refresh authority proof")
+        action_capture = case_body.find("var actions: Array = OverworldRules.get_context_actions(fixture_session)")
+        authority_capture = case_body.find("var authority_before: Dictionary = fixture_session.to_dict()")
+        legacy_capture = case_body.find("var legacy_line := _legacy_eager_command_commitment_action_line(fixture_session)")
+        ensure(action_capture >= 0 and action_capture < authority_capture < legacy_capture, errors, "Focused commitment authority must baseline after required public action normalization and before eager/current comparison")
+        empty_action_capture = case_body.find("var empty_actions: Array = OverworldRules.get_context_actions(empty_session)")
+        empty_authority_capture = case_body.find("var empty_before: Dictionary = empty_session.to_dict()")
+        empty_line_capture = case_body.find("var empty_line := OverworldRules._command_commitment_action_line(empty_session)")
+        ensure(empty_action_capture >= 0 and empty_action_capture < empty_authority_capture < empty_line_capture, errors, "Empty commitment authority must baseline after required public action normalization and before the no-action fallback")
+        for forbidden in ("await get_tree().create_timer", "OS.delay", "set_process", "sort_custom", "normalize_summary", "erase(\"context_actions"):
+            ensure(forbidden not in case_body, errors, f"Focused commitment summary proof must remain passive and fail closed: {forbidden}")
+
+    legacy_match = re.search(
+        r"func _legacy_eager_command_commitment_action_line\(session\) -> String:(.*?)(?=\nfunc _commitment_context_fixture)",
+        report_text,
+        flags=re.DOTALL,
+    )
+    ensure(legacy_match is not None, errors, "Independent eager commitment control could not be isolated")
+    if legacy_match is not None:
+        legacy_body = legacy_match.group(1)
+        ensure('return String(action.get("summary", OverworldRules._context_action_briefing(session, action, OverworldRules.get_active_context(session))))' in legacy_body, errors, "Independent commitment control must preserve the exact pre-change eager expression")
+        ensure("_command_commitment_action_line" not in legacy_body and "_command_commitment_action_summary" not in legacy_body, errors, "Independent eager commitment control must not call the optimized production materializer")
+
+    for required_token in (
+        "var commitment_control := _assert_commitment_summary_fallback_elision(shell, session)",
+        '"commitment_context_count"',
+        '"commitment_current_to_legacy_ratio"',
+        '"commitment_context_output_parity": true',
+        '"commitment_summary_presence_semantics_exact": true',
+        '"commitment_full_refresh_authority_exact": true',
+    ):
+        ensure(required_token in report_text, errors, f"Commitment fallback report is missing required token: {required_token}")
+
+
 def validate_enemy_empire_management(errors: list[str]) -> None:
     recruitment_prep_report_path = ROOT / "tests" / "ai_planned_task_recruitment_prep_report.gd"
     required_paths = (
@@ -46685,6 +46811,7 @@ def main() -> int:
     validate_overworld_full_refresh_end_turn_forecast_bundle_reuse(errors)
     validate_overworld_shell_release_polish(errors)
     validate_overworld_command_commitment_board(errors)
+    validate_overworld_commitment_summary_fallback_elision(errors)
     validate_enemy_empire_management(errors)
     validate_enemy_strategic_contestation(errors)
     validate_overworld_logistics_sites(errors)
