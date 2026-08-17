@@ -98,6 +98,12 @@
       "volume_db": -12.5,
       "role": "overworld_object_captured"
     },
+    "audio_placeholder_town_capture": {
+      "path": "res://art/audio/runtime/presentation/town_capture.wav",
+      "duration_msec": 460,
+      "volume_db": -12.5,
+      "role": "overworld_town_captured"
+    },
     "audio_placeholder_collect": {
       "path": "res://art/audio/runtime/presentation/object_collect.wav",
       "duration_msec": 280,

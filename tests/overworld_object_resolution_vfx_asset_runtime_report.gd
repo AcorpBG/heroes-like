@@ -7,12 +7,22 @@ const EXPECTED_CUES := {
 	"overworld_object_captured": {
 		"cue_id": "vfx_placeholder_capture_flag",
 		"fallback_cue_id": "ownership_badge_swap",
-		"family": "town_capture",
+		"family": "resource_site",
 		"animation_state": "ownership_capture",
 		"texture_path": "res://art/overworld/runtime/vfx/object_resolution/captured.png",
 		"audio_cue_id": "audio_placeholder_capture",
 		"audio_path": "res://art/audio/runtime/presentation/object_capture.wav",
 		"audio_role": "overworld_object_captured",
+	},
+	"town_captured": {
+		"cue_id": "vfx_placeholder_town_capture_banner",
+		"fallback_cue_id": "ownership_badge_swap",
+		"family": "town_capture",
+		"animation_state": "town_ownership_capture",
+		"texture_path": "res://art/overworld/runtime/vfx/object_resolution/town_captured.png",
+		"audio_cue_id": "audio_placeholder_town_capture",
+		"audio_path": "res://art/audio/runtime/presentation/town_capture.wav",
+		"audio_role": "overworld_town_captured",
 	},
 	"overworld_object_visited": {
 		"cue_id": "vfx_placeholder_object_visit",
@@ -56,9 +66,9 @@ func _run() -> void:
 		"ok": true,
 		"viewports": [[1280, 720], [1920, 1080]],
 		"events": EXPECTED_CUES.keys(),
-		"normal_imported_rows": 6,
-		"missing_asset_fallback_rows": 6,
-		"reduced_motion_fallback_rows": 6,
+		"normal_imported_rows": 8,
+		"missing_asset_fallback_rows": 8,
+		"reduced_motion_fallback_rows": 8,
 		"save_version": SessionStateStore.SAVE_VERSION,
 		"rows": rows,
 	}))
@@ -219,10 +229,10 @@ func _asset_summary_exact(summary: Dictionary) -> bool:
 	return String(summary.get("manifest_path", "")) == "res://content/overworld_vfx_manifest.json" \
 		and bool(summary.get("manifest_loaded", false)) \
 		and String(summary.get("schema_id", "")) == "overworld_vfx_manifest_v1" \
-		and int(summary.get("mapped_cue_count", 0)) == 15 \
-		and summary.get("mapped_cue_ids", []) == ["vfx_placeholder_adventure_spell", "vfx_placeholder_artifact_claim", "vfx_placeholder_blocked_route_marker", "vfx_placeholder_capture_flag", "vfx_placeholder_depleted_dim", "vfx_placeholder_guard_warning", "vfx_placeholder_object_blocked_marker", "vfx_placeholder_object_focus_ring", "vfx_placeholder_object_visit", "vfx_placeholder_resource_delta", "vfx_placeholder_route_closed", "vfx_placeholder_route_open", "vfx_placeholder_route_step", "vfx_placeholder_slot_equip", "vfx_placeholder_slot_unequip"] \
-		and int(summary.get("unique_texture_count", 0)) == 15 \
-		and int(summary.get("loaded_texture_count", 0)) == 15 \
+		and int(summary.get("mapped_cue_count", 0)) == 16 \
+		and summary.get("mapped_cue_ids", []) == ["vfx_placeholder_adventure_spell", "vfx_placeholder_artifact_claim", "vfx_placeholder_blocked_route_marker", "vfx_placeholder_capture_flag", "vfx_placeholder_depleted_dim", "vfx_placeholder_guard_warning", "vfx_placeholder_object_blocked_marker", "vfx_placeholder_object_focus_ring", "vfx_placeholder_object_visit", "vfx_placeholder_resource_delta", "vfx_placeholder_route_closed", "vfx_placeholder_route_open", "vfx_placeholder_route_step", "vfx_placeholder_slot_equip", "vfx_placeholder_slot_unequip", "vfx_placeholder_town_capture_banner"] \
+		and int(summary.get("unique_texture_count", 0)) == 16 \
+		and int(summary.get("loaded_texture_count", 0)) == 16 \
 		and summary.get("missing_texture_paths", []) == []
 
 func _session_with_map(width: int, height: int):

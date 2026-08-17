@@ -23,6 +23,7 @@ const CUE_SPECS := {
 	"audio_placeholder_route_closed": {"frequency": 174.0, "duration": 0.44, "gain": 0.13},
 	"audio_placeholder_object_visit": {"frequency": 440.0, "duration": 0.30, "gain": 0.10},
 	"audio_placeholder_capture": {"frequency": 262.0, "duration": 0.42, "gain": 0.13},
+	"audio_placeholder_town_capture": {"frequency": 196.0, "duration": 0.46, "gain": 0.13},
 	"audio_placeholder_collect": {"frequency": 698.0, "duration": 0.28, "gain": 0.10},
 	"audio_placeholder_guard_warning": {"frequency": 196.0, "duration": 0.34, "gain": 0.12},
 	"audio_placeholder_town_build": {"frequency": 176.0, "duration": 0.42, "gain": 0.13},

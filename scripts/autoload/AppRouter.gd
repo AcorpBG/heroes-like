@@ -967,6 +967,7 @@ func arm_battle_resolution_overworld_presentation(result: Dictionary) -> Diction
 	var event_id := "overworld_object_captured"
 	var owner := "player"
 	if context_type == "town_assault":
+		event_id = "town_captured"
 		placement_id = String(context.get("town_placement_id", "")).strip_edges()
 		var live_town := {}
 		for town_value in session.overworld.get("towns", []):
@@ -1055,7 +1056,8 @@ func consume_battle_resolution_overworld_presentation(surface: String) -> Dictio
 		return {}
 	if (
 		String(pending.get("family", "")) not in ["town_capture", "resource_site", "encounter"]
-		or (String(pending.get("event_id", "")) == "overworld_object_captured") != (String(pending.get("family", "")) in ["town_capture", "resource_site"])
+		or (String(pending.get("event_id", "")) == "town_captured") != (String(pending.get("family", "")) == "town_capture")
+		or (String(pending.get("event_id", "")) == "overworld_object_captured") != (String(pending.get("family", "")) == "resource_site")
 		or (String(pending.get("event_id", "")) == "overworld_object_depleted") != (String(pending.get("family", "")) == "encounter")
 		or String(pending.get("surface", "")) != "overworld"
 		or String(pending.get("expected_scene_path", "")) != OVERWORLD_SCENE

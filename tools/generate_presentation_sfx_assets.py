@@ -114,6 +114,9 @@ SPECS = {
     "audio_placeholder_capture": {
         "kind": "banner_claim", "fundamental": 262.0, "metal": 786.0, "peak": 0.65, "pan": -0.04,
     },
+    "audio_placeholder_town_capture": {
+        "kind": "citadel_claim", "fundamental": 196.0, "metal": 1176.0, "peak": 0.66, "pan": 0.02,
+    },
     "audio_placeholder_collect": {
         "kind": "cache_lift", "fundamental": 698.0, "metal": 1396.0, "peak": 0.56, "pan": 0.12,
     },
@@ -282,6 +285,13 @@ def layered_sample(kind: str, fundamental: float, metal: float, t: float, progre
         flare = math.sin(math.tau * metal * t - phase) * 0.22
         lift = smoothstep(0.10, 0.48, progress) * (1.0 - smoothstep(0.70, 1.0, progress))
         return (body + flare + flare * lift * 0.42 + noise * transient * 0.10) * envelope(progress)
+    if kind == "citadel_claim":
+        gate = math.sin(math.tau * fundamental * t + phase) * 0.30
+        seal = math.sin(math.tau * fundamental * 1.5 * t - phase * 0.5) * 0.20
+        battlement = math.sin(math.tau * metal * t + phase * 0.7) * transient * 0.14
+        lock = max(0.0, 1.0 - abs(progress - 0.48) / 0.14) * math.sin(math.tau * metal * 0.75 * t - phase) * 0.24
+        banner = smoothstep(0.12, 0.52, progress) * (1.0 - smoothstep(0.72, 1.0, progress))
+        return (gate + seal + battlement + lock + seal * banner * 0.34 + noise * transient * 0.07) * envelope(progress)
     if kind == "cache_lift":
         bright = math.sin(math.tau * fundamental * t + phase) * 0.30
         sparkle = math.sin(math.tau * metal * t - phase) * 0.22
