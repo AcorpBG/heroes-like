@@ -55,6 +55,9 @@ func _run_town_smoke() -> bool:
 	if not await _assert_town_scenic_backdrop_contract(board, session):
 		get_tree().quit(1)
 		return false
+	if not await _assert_town_capture_frontier_status_contract(board, session):
+		get_tree().quit(1)
+		return false
 	if not await _capture_color_cue_frame("town_scenic_backdrop"):
 		get_tree().quit(1)
 		return false
@@ -226,6 +229,190 @@ func _scenic_backdrop_geometry_exact(summary: Dictionary) -> bool:
 			or not bool(summary.get("destination_contained", false)):
 		return false
 	return is_equal_approx(source_rect.size.x / source_rect.size.y, destination_rect.size.x / destination_rect.size.y)
+
+func _assert_town_capture_frontier_status_contract(live_board: Node, live_session) -> bool:
+	if not live_board.has_method("validation_status_plaques_summary"):
+		push_error("Town smoke: town stage does not expose status-plaque validation.")
+		return false
+	var live_session_before: Dictionary = live_session.to_dict()
+	var live_town := _first_player_town(live_session)
+	var live_summary: Dictionary = live_board.call("validation_status_plaques_summary")
+	var live_pressure := OverworldRules.town_pressure_output(live_town, live_session)
+	if not _front_plaque_exact(live_summary, "pressure", "Front", "%d pressure" % live_pressure, 0, ""):
+		push_error("Town smoke: ordinary live town lost its exact Front pressure plaque: %s." % live_summary)
+		return false
+
+	var fixture_session = ScenarioFactory.create_session(
+		"river-pass",
+		"normal",
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	var fixture_town := _first_player_town(fixture_session)
+	if fixture_town.is_empty():
+		push_error("Town smoke: captured-town status fixture could not find Riverwatch.")
+		return false
+	_move_active_hero_to_town(fixture_session, fixture_town)
+	var fixture_authority_before: Dictionary = fixture_session.to_dict()
+	var fixture = TownStageViewScript.new()
+	add_child(fixture)
+	fixture.size = Vector2(620.0, 320.0)
+	await get_tree().process_frame
+
+	fixture_town["occupation"] = {
+		"state": "pacifying",
+		"faction_id": "faction_mireclaw",
+		"pressure": 7,
+		"initial_pressure": 7,
+		"start_day": int(fixture_session.day),
+		"last_event_day": int(fixture_session.day),
+		"last_owner": "enemy",
+		"source": "town_assault",
+		"locked_recruits": {},
+	}
+	fixture_town["front"] = {}
+	fixture.set_town_state(fixture_session)
+	var occupation_only: Dictionary = fixture.validation_status_plaques_summary()
+	var expected_occupation_only: Dictionary = OverworldRules.town_occupation_state(fixture_session, fixture_town)
+	if not _front_plaque_exact(
+		occupation_only,
+		"occupation",
+		"Occupation",
+		"%dd pacify" % int(expected_occupation_only.get("days_to_clear", 0)),
+		int(expected_occupation_only.get("days_to_clear", 0)),
+		""
+	):
+		push_error("Town smoke: occupation-only status plaque is not exact: %s." % occupation_only)
+		fixture.queue_free()
+		return false
+
+	fixture_town["occupation"] = {}
+	fixture_town["front"] = {
+		"state": "retake",
+		"faction_id": "faction_mireclaw",
+		"last_change_day": int(fixture_session.day),
+		"last_owner": "enemy",
+		"capture_count": 1,
+		"source": "town_assault",
+	}
+	fixture.set_town_state(fixture_session)
+	var retake_only: Dictionary = fixture.validation_status_plaques_summary()
+	var expected_retake_only: Dictionary = OverworldRules.town_front_state(fixture_session, fixture_town)
+	if not _front_plaque_exact(
+		retake_only,
+		"retake",
+		"Retake",
+		"Mireclaw +%d" % int(expected_retake_only.get("pressure_bonus", 0)),
+		0,
+		"faction_mireclaw"
+	):
+		push_error("Town smoke: retake-only status plaque is not exact: %s." % retake_only)
+		fixture.queue_free()
+		return false
+
+	fixture_town["occupation"] = {
+		"state": "pacifying",
+		"faction_id": "faction_mireclaw",
+		"pressure": 7,
+		"initial_pressure": 7,
+		"start_day": int(fixture_session.day),
+		"last_event_day": int(fixture_session.day),
+		"last_owner": "enemy",
+		"source": "town_assault",
+		"locked_recruits": {},
+	}
+	var expected_combined_occupation: Dictionary = OverworldRules.town_occupation_state(fixture_session, fixture_town)
+	var expected_combined_front: Dictionary = OverworldRules.town_front_state(fixture_session, fixture_town)
+	for stage_size in [Vector2(620.0, 320.0), Vector2(1180.0, 640.0)]:
+		fixture.size = stage_size
+		fixture.set_town_state(fixture_session)
+		var combined: Dictionary = fixture.validation_status_plaques_summary()
+		if not _front_plaque_exact(
+			combined,
+			"occupation_retake",
+			"Occupation",
+			"%dd | Retake" % int(expected_combined_occupation.get("days_to_clear", 0)),
+			int(expected_combined_occupation.get("days_to_clear", 0)),
+			"faction_mireclaw"
+		) or int(combined.get("plaque_count", 0)) != 4 or not bool(combined.get("contained", false)):
+			push_error("Town smoke: combined captured-town plaque is not exact or contained at %s: %s." % [stage_size, combined])
+			fixture.queue_free()
+			return false
+		if combined.get("occupation", {}) != expected_combined_occupation or combined.get("front", {}) != expected_combined_front:
+			push_error("Town smoke: captured-town stage did not retain exact detached public rule state: %s." % combined)
+			fixture.queue_free()
+			return false
+
+	var detached_combined: Dictionary = fixture.validation_status_plaques_summary()
+	var fresh_combined: Dictionary = detached_combined.duplicate(true)
+	var fixture_authority_before_detach: Dictionary = fixture_session.to_dict()
+	detached_combined["occupation"]["days_to_clear"] = 999
+	detached_combined["front"]["faction_id"] = "faction_invalid"
+	if fixture_authority_before_detach == fixture_authority_before:
+		push_error("Town smoke: captured-town fixture did not establish its intended occupation/front authority.")
+		fixture.queue_free()
+		return false
+	if fixture_session.to_dict() != fixture_authority_before_detach \
+			or fixture.validation_status_plaques_summary() != fresh_combined:
+		push_error("Town smoke: detached plaque validation mutated the live stage or session authority.")
+		fixture.queue_free()
+		return false
+
+	fixture_session.day += 1
+	fixture_town["occupation"]["pressure"] = 5
+	fixture.set_town_state(fixture_session)
+	var advanced_occupation: Dictionary = OverworldRules.town_occupation_state(fixture_session, fixture_town)
+	var advanced_summary: Dictionary = fixture.validation_status_plaques_summary()
+	if not _front_plaque_exact(
+		advanced_summary,
+		"occupation_retake",
+		"Occupation",
+		"%dd | Retake" % int(advanced_occupation.get("days_to_clear", 0)),
+		int(advanced_occupation.get("days_to_clear", 0)),
+		"faction_mireclaw"
+	):
+		push_error("Town smoke: day/pressure refresh did not rebuild the captured-town plaque: %s." % advanced_summary)
+		fixture.queue_free()
+		return false
+
+	fixture.set_precomputed_town_state(fixture_session, {
+		"town": fixture_town.duplicate(true),
+		"town_template": ContentService.get_town(String(fixture_town.get("town_id", ""))).duplicate(true),
+		"faction": ContentService.get_faction("faction_embercourt").duplicate(true),
+		"logistics": OverworldRules.town_logistics_state(fixture_session, fixture_town).duplicate(true),
+		"recovery": OverworldRules.town_recovery_state(fixture_session, fixture_town).duplicate(true),
+		"threat": OverworldRules.town_public_threat_state(fixture_session, fixture_town).duplicate(true),
+		"occupation": advanced_occupation.duplicate(true),
+		"front": OverworldRules.town_front_state(fixture_session, fixture_town).duplicate(true),
+	})
+	if fixture.validation_status_plaques_summary() != advanced_summary:
+		push_error("Town smoke: precomputed and direct captured-town stage paths diverged.")
+		fixture.queue_free()
+		return false
+
+	fixture.queue_free()
+	await get_tree().process_frame
+	if live_session.to_dict() != live_session_before:
+		push_error("Town smoke: captured-town plaque validation changed the live Town session.")
+		return false
+	return true
+
+func _front_plaque_exact(
+	summary: Dictionary,
+	expected_kind: String,
+	expected_title: String,
+	expected_value: String,
+	expected_days: int,
+	expected_faction_id: String
+) -> bool:
+	var plaques: Array = summary.get("plaques", []) if summary.get("plaques", []) is Array else []
+	var plaque: Dictionary = summary.get("front_plaque", {}) if summary.get("front_plaque", {}) is Dictionary else {}
+	return plaques.size() == 4 \
+		and plaque == plaques[2] \
+		and String(plaque.get("kind", "")) == expected_kind \
+		and String(plaque.get("title", "")) == expected_title \
+		and String(plaque.get("value", "")) == expected_value \
+		and int(plaque.get("occupation_days_to_clear", 0)) == expected_days \
+		and String(plaque.get("retake_faction_id", "")) == expected_faction_id
 
 func _run_battle_smoke() -> bool:
 	var session = ScenarioFactory.create_session(

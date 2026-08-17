@@ -1189,6 +1189,8 @@ func _refresh_cached_stage_dynamic(view_state: Dictionary, town: Dictionary) -> 
 	var refreshed := stage_state.duplicate(true)
 	refreshed["town"] = _town_stage_town_payload(town)
 	refreshed["stationed"] = HeroCommandRules.stationed_heroes(_session, town).duplicate(true)
+	refreshed["occupation"] = OverworldRules.town_occupation_state(_session, town).duplicate(true)
+	refreshed["front"] = OverworldRules.town_front_state(_session, town).duplicate(true)
 	for lane in ["build_actions", "recruit_actions", "response_actions", "study_actions", "market_actions"]:
 		if view_state.has(lane):
 			refreshed[lane] = _duplicate_action_array(view_state.get(lane, []))
@@ -1845,6 +1847,8 @@ func _build_town_stage_view_state(town_override: Dictionary = {}) -> Dictionary:
 		"logistics": OverworldRules.town_logistics_state(_session, town).duplicate(true),
 		"recovery": OverworldRules.town_recovery_state(_session, town).duplicate(true),
 		"threat": OverworldRules.town_public_threat_state(_session, town).duplicate(true),
+		"occupation": OverworldRules.town_occupation_state(_session, town).duplicate(true),
+		"front": OverworldRules.town_front_state(_session, town).duplicate(true),
 	}
 
 func _town_stage_town_payload(town: Dictionary) -> Dictionary:
@@ -1884,6 +1888,8 @@ func _town_stage_signature(stage_state: Dictionary) -> String:
 	var town: Dictionary = stage_state.get("town", {}) if stage_state.get("town", {}) is Dictionary else {}
 	var logistics: Dictionary = stage_state.get("logistics", {}) if stage_state.get("logistics", {}) is Dictionary else {}
 	var threat: Dictionary = stage_state.get("threat", {}) if stage_state.get("threat", {}) is Dictionary else {}
+	var occupation: Dictionary = stage_state.get("occupation", {}) if stage_state.get("occupation", {}) is Dictionary else {}
+	var front: Dictionary = stage_state.get("front", {}) if stage_state.get("front", {}) is Dictionary else {}
 	return "|".join([
 		String(town.get("placement_id", "")),
 		String(town.get("town_id", "")),
@@ -1893,6 +1899,8 @@ func _town_stage_signature(stage_state: Dictionary) -> String:
 		_scalar_pairs_signature(town.get("available_recruits", {})),
 		_scalar_pairs_signature(logistics),
 		_scalar_pairs_signature(threat),
+		_scalar_pairs_signature(occupation),
+		_scalar_pairs_signature(front),
 		str(_collection_size(stage_state.get("stationed", []))),
 		str(_collection_size(stage_state.get("build_actions", []))),
 		str(_collection_size(stage_state.get("recruit_actions", []))),
