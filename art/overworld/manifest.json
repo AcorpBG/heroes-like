@@ -156,6 +156,66 @@
       "path": "res://art/overworld/runtime/objects/pickups/adventurers_bundle.png",
       "source_trimmed": "res://art/overworld/source/trimmed/pickups/adventurers_bundle-trimmed.png"
     },
+    "artifact_field_trailsinger_boots": {
+      "path": "res://art/overworld/runtime/objects/artifacts/trailsinger_boots.png",
+      "source_icon": "res://art/artifacts/runtime/trailsinger_boots.png",
+      "source_model": "original_identity_preserving_background_extraction"
+    },
+    "artifact_field_quarry_tally_rod": {
+      "path": "res://art/overworld/runtime/objects/artifacts/quarry_tally_rod.png",
+      "source_icon": "res://art/artifacts/runtime/quarry_tally_rod.png",
+      "source_model": "original_identity_preserving_background_extraction"
+    },
+    "artifact_field_warcrest_pennon": {
+      "path": "res://art/overworld/runtime/objects/artifacts/warcrest_pennon.png",
+      "source_icon": "res://art/artifacts/runtime/warcrest_pennon.png",
+      "source_model": "original_identity_preserving_background_extraction"
+    },
+    "artifact_field_bastion_gorget": {
+      "path": "res://art/overworld/runtime/objects/artifacts/bastion_gorget.png",
+      "source_icon": "res://art/artifacts/runtime/bastion_gorget.png",
+      "source_model": "original_identity_preserving_background_extraction"
+    },
+    "artifact_field_waymark_compass": {
+      "path": "res://art/overworld/runtime/objects/artifacts/waymark_compass.png",
+      "source_icon": "res://art/artifacts/runtime/waymark_compass.png",
+      "source_model": "original_identity_preserving_background_extraction"
+    },
+    "artifact_field_milepost_lantern": {
+      "path": "res://art/overworld/runtime/objects/artifacts/milepost_lantern.png",
+      "source_icon": "res://art/artifacts/runtime/milepost_lantern.png",
+      "source_model": "original_identity_preserving_background_extraction"
+    },
+    "artifact_field_tollstone_ring": {
+      "path": "res://art/overworld/runtime/objects/artifacts/tollstone_ring.png",
+      "source_icon": "res://art/artifacts/runtime/tollstone_ring.png",
+      "source_model": "original_identity_preserving_background_extraction"
+    },
+    "artifact_field_mudglass_beads": {
+      "path": "res://art/overworld/runtime/objects/artifacts/mudglass_beads.png",
+      "source_icon": "res://art/artifacts/runtime/mudglass_beads.png",
+      "source_model": "original_identity_preserving_background_extraction"
+    },
+    "artifact_field_choir_tuning_fork": {
+      "path": "res://art/overworld/runtime/objects/artifacts/choir_tuning_fork.png",
+      "source_icon": "res://art/artifacts/runtime/choir_tuning_fork.png",
+      "source_model": "original_identity_preserving_background_extraction"
+    },
+    "artifact_field_living_bridge_knot": {
+      "path": "res://art/overworld/runtime/objects/artifacts/living_bridge_knot.png",
+      "source_icon": "res://art/artifacts/runtime/living_bridge_knot.png",
+      "source_model": "original_identity_preserving_background_extraction"
+    },
+    "artifact_field_pressure_gauge_reliquary": {
+      "path": "res://art/overworld/runtime/objects/artifacts/pressure_gauge_reliquary.png",
+      "source_icon": "res://art/artifacts/runtime/pressure_gauge_reliquary.png",
+      "source_model": "original_identity_preserving_background_extraction"
+    },
+    "artifact_field_black_sail_compass": {
+      "path": "res://art/overworld/runtime/objects/artifacts/black_sail_compass.png",
+      "source_icon": "res://art/artifacts/runtime/black_sail_compass.png",
+      "source_model": "original_identity_preserving_background_extraction"
+    },
     "guarded_farmhouse": {
       "path": "res://art/overworld/runtime/objects/dwellings/guarded_farmhouse.png",
       "source_trimmed": "res://art/overworld/source/trimmed/dwellings/guarded_farmhouse-trimmed.png"
@@ -3841,12 +3901,26 @@
   },
   "artifact_default_sprite": {
     "asset_id": "adventurers_bundle",
-    "fit": "Generic transparent artifact field bundle until individual artifact map silhouettes exist.",
+    "fit": "Fail-closed transparent field fallback for unknown, unmapped, or unloadable artifact identity.",
     "source_model": "original_generated_transparent_field_sprite",
     "asset_policy": "original_generated_runtime_sprite_no_inventory_icon_reuse",
     "field_scope": "live_overworld_and_shared_map_editor_preview",
     "inventory_icon_policy": "separate_ui_identity_never_used_as_field_sprite",
     "background": "transparent"
+  },
+  "artifact_field_sprites": {
+    "artifact_trailsinger_boots": "artifact_field_trailsinger_boots",
+    "artifact_quarry_tally_rod": "artifact_field_quarry_tally_rod",
+    "artifact_warcrest_pennon": "artifact_field_warcrest_pennon",
+    "artifact_bastion_gorget": "artifact_field_bastion_gorget",
+    "artifact_waymark_compass": "artifact_field_waymark_compass",
+    "artifact_milepost_lantern": "artifact_field_milepost_lantern",
+    "artifact_tollstone_ring": "artifact_field_tollstone_ring",
+    "artifact_mudglass_beads": "artifact_field_mudglass_beads",
+    "artifact_choir_tuning_fork": "artifact_field_choir_tuning_fork",
+    "artifact_living_bridge_knot": "artifact_field_living_bridge_knot",
+    "artifact_pressure_gauge_reliquary": "artifact_field_pressure_gauge_reliquary",
+    "artifact_black_sail_compass": "artifact_field_black_sail_compass"
   },
   "town_default_sprite": {
     "asset_id": "frontier_town",

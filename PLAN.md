@@ -6819,6 +6819,33 @@ Completion evidence:
 - the full Overworld visual smoke, artifact pickup/save owner, 21-stage Map Editor smoke, core smoke, and routed 1920x1080 Main Menu-to-River Pass flow are green, and the routed screenshot no longer shows the opaque inventory-card square;
 - official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green; these remain bounded startup claims and the generic bundle is not claimed as final per-artifact art.
 
+## Selected Slice: Distinct Overworld Artifact Field Silhouettes
+
+id: `presentation-overworld-artifact-distinct-field-silhouettes-10184`
+
+Status: completed.
+
+Implementation boundary:
+- create one original transparent field sprite for each of the twelve shipped artifact identities, derived from the existing original object illustrations without their opaque inventory-card backgrounds;
+- select the exact per-artifact field asset in live Overworld and shared Map Editor presentation while retaining the existing inventory icon id/path separately and retaining `adventurers_bundle` only as the fail-closed unknown-artifact fallback;
+- preserve one-tile containment, grounding/contact treatment, draw order, artifact rewards/stats/slots/pickup/save identity, placement ids, and editor authority unchanged.
+
+Completion criteria:
+- all twelve artifact ids resolve twelve distinct transparent field asset ids/paths with exact artifact-to-silhouette identity, while inventory icon ids/paths remain exact and byte-unchanged;
+- focused 1280x720 and 1920x1080 runtime proves transparent corners, meaningful nonempty coverage, one-tile containment, exact fallback behavior, and unchanged session/save/object authority;
+- a routed 1920x1080 Main Menu-to-River Pass capture visibly shows the correct Trailsinger Boots silhouette instead of the generic bundle, and shared Map Editor placement/play/return remains exact;
+- Overworld visual, artifact pickup/save, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass.
+
+Non-goals:
+- no artifact gameplay/stat/reward/slot/pickup/save/content identity, inventory icon, map placement, terrain, route, fog, camera, battle, AI, balance, or schema change;
+- no replacement of the existing inventory illustrations, no procedural runtime silhouette generation, and no copyrighted reference art;
+- no packaged Overworld interaction parity, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Completion evidence:
+- twelve distinct original 512x512 RGBA field assets with transparent corners and consistent padding are manifest-mapped one-to-one to all twelve shipped artifact ids, while exact inventory icon ids/paths and the unknown-artifact bundle fallback remain separate;
+- focused 1280x720/1920x1080 runtime, full Overworld visual, artifact pickup/save, 21-stage Map Editor, core, and the routed 1920x1080 River Pass flow are green, and the routed map visibly shows the exact Trailsinger Boots silhouette;
+- official Linux and Windows PCK audits each contain all twelve artifact import records and twelve compiled textures; Linux packaged headless startup and Windows fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green within bounded claims.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:

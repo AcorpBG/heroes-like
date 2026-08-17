@@ -44,6 +44,15 @@ REQUIRED_TERRAIN_PCK_PREFIXES = (
     "art/overworld/runtime/terrain_tiles/base/",
     "art/overworld/runtime/terrain_tiles/roads/",
 )
+REQUIRED_ARTIFACT_FIELD_NAMES = (
+    "trailsinger_boots", "quarry_tally_rod", "warcrest_pennon", "bastion_gorget",
+    "waymark_compass", "milepost_lantern", "tollstone_ring", "mudglass_beads",
+    "choir_tuning_fork", "living_bridge_knot", "pressure_gauge_reliquary", "black_sail_compass",
+)
+REQUIRED_ARTIFACT_FIELD_PCK_IMPORT_ENTRIES = tuple(
+    f"art/overworld/runtime/objects/artifacts/{artifact_name}.png.import"
+    for artifact_name in REQUIRED_ARTIFACT_FIELD_NAMES
+)
 FATAL_EXPORT_PATTERNS = (
     "SCRIPT ERROR",
     "Parse Error",
@@ -257,6 +266,10 @@ def pck_terrain_payload_summary() -> dict:
         "forbidden_entries": [],
         "required_prefix_counts": {prefix: 0 for prefix in REQUIRED_TERRAIN_PCK_PREFIXES},
         "required_entries_present": False,
+        "required_artifact_field_import_entries": list(REQUIRED_ARTIFACT_FIELD_PCK_IMPORT_ENTRIES),
+        "artifact_field_import_entries": [],
+        "artifact_field_texture_names": [],
+        "artifact_field_entries_present": False,
     }
     if not PCK_PATH.exists():
         return summary
@@ -294,12 +307,19 @@ def pck_terrain_payload_summary() -> dict:
                 for prefix in REQUIRED_TERRAIN_PCK_PREFIXES:
                     if entry_path.startswith(prefix):
                         summary["required_prefix_counts"][prefix] += 1
+                if entry_path in REQUIRED_ARTIFACT_FIELD_PCK_IMPORT_ENTRIES:
+                    summary["artifact_field_import_entries"].append(entry_path)
+                if entry_path.startswith(".godot/imported/") and entry_path.endswith(".ctex"):
+                    imported_name = Path(entry_path).name.split(".png-", 1)[0]
+                    if imported_name in REQUIRED_ARTIFACT_FIELD_NAMES:
+                        summary["artifact_field_texture_names"].append(imported_name)
             summary["valid_directory"] = handle.tell() == file_size
     except (OSError, struct.error, UnicodeError):
         return summary
     summary["required_entries_present"] = all(
         count > 0 for count in summary["required_prefix_counts"].values()
     )
+    summary["artifact_field_entries_present"] = set(summary["artifact_field_import_entries"]) == set(REQUIRED_ARTIFACT_FIELD_PCK_IMPORT_ENTRIES) and set(summary["artifact_field_texture_names"]) == set(REQUIRED_ARTIFACT_FIELD_NAMES)
     return summary
 
 
@@ -343,6 +363,7 @@ def main() -> int:
         and bool(terrain_payload["valid_directory"])
         and not terrain_payload["forbidden_entries"]
         and bool(terrain_payload["required_entries_present"])
+        and bool(terrain_payload["artifact_field_entries_present"])
     )
 
     wine_version_result = (
@@ -462,6 +483,9 @@ def main() -> int:
         "windows_dlls_exported": dlls["all_exported"],
         "terrain_pck_forbidden_entry_count": len(terrain_payload["forbidden_entries"]),
         "terrain_pck_required_entries_present": terrain_payload["required_entries_present"],
+        "artifact_field_pck_import_entry_count": len(terrain_payload["artifact_field_import_entries"]),
+        "artifact_field_pck_texture_count": len(set(terrain_payload["artifact_field_texture_names"])),
+        "artifact_field_pck_entries_present": terrain_payload["artifact_field_entries_present"],
         "fatal_export_matches": fatal_matches,
         "wine_runtime_returncode": runtime_result["returncode"],
         "wine_runtime_markers": runtime_markers,

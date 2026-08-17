@@ -243,6 +243,7 @@ var _resource_site_asset_ids: Dictionary = {}
 var _resource_site_object_profiles: Dictionary = {}
 var _map_object_asset_ids: Dictionary = {}
 var _artifact_default_asset_id := ""
+var _artifact_field_asset_ids: Dictionary = {}
 var _town_default_asset_id := ""
 var _town_faction_asset_ids: Dictionary = {}
 var _hero_faction_asset_ids: Dictionary = {}
@@ -4153,6 +4154,7 @@ func _artifact_presentation_payload(tile: Vector2i, explored: bool) -> Dictionar
 	var sprite_asset_id := _artifact_sprite_asset_id(node)
 	var field_sprite_path := String(_object_asset_paths.get(sprite_asset_id, ""))
 	var field_sprite_extent_fraction := _sprite_extent_fraction(_artifact_object_profile(), Vector2i(1, 1))
+	var expected_field_asset_id := String(_artifact_field_asset_ids.get(artifact_id, ""))
 	return {
 		"artifact_id": artifact_id,
 		"icon_asset_id": icon_asset_id,
@@ -4161,6 +4163,8 @@ func _artifact_presentation_payload(tile: Vector2i, explored: bool) -> Dictionar
 		"sprite_path": field_sprite_path,
 		"uses_artifact_icon": artifact_id != "" and icon_asset_id != "" and sprite_asset_id == icon_asset_id,
 		"uses_default_sprite": sprite_asset_id != "" and sprite_asset_id == _artifact_default_asset_id,
+		"uses_distinct_field_sprite": expected_field_asset_id != "" and sprite_asset_id == expected_field_asset_id,
+		"field_sprite_matches_artifact": expected_field_asset_id != "" and sprite_asset_id == expected_field_asset_id,
 		"inventory_icon_separate_from_field_sprite": icon_path != "" and field_sprite_path != "" and icon_path != field_sprite_path,
 		"field_sprite_extent_fraction": field_sprite_extent_fraction,
 		"field_sprite_contained_in_tile": field_sprite_extent_fraction <= 1.0,
@@ -6922,6 +6926,7 @@ func _load_overworld_art_manifest() -> void:
 	_map_object_asset_ids.clear()
 	_decorative_object_asset_ids.clear()
 	_artifact_default_asset_id = ""
+	_artifact_field_asset_ids.clear()
 	_town_default_asset_id = ""
 	_town_faction_asset_ids.clear()
 	_hero_faction_asset_ids.clear()
@@ -6968,6 +6973,14 @@ func _load_overworld_art_manifest() -> void:
 	var artifact_default = _overworld_art_manifest.get("artifact_default_sprite", {})
 	if artifact_default is Dictionary:
 		_artifact_default_asset_id = String(artifact_default.get("asset_id", ""))
+
+	var artifact_field_sprites = _overworld_art_manifest.get("artifact_field_sprites", {})
+	if artifact_field_sprites is Dictionary:
+		for artifact_id_value in artifact_field_sprites:
+			var artifact_id := String(artifact_id_value).strip_edges()
+			var asset_id := String(artifact_field_sprites.get(artifact_id_value, "")).strip_edges()
+			if artifact_id != "" and asset_id != "":
+				_artifact_field_asset_ids[artifact_id] = asset_id
 
 	var town_default = _overworld_art_manifest.get("town_default_sprite", {})
 	if town_default is Dictionary:
@@ -7518,6 +7531,10 @@ func _resource_asset_id(node: Dictionary) -> String:
 func _artifact_sprite_asset_id(node: Dictionary) -> String:
 	if node.is_empty():
 		return ""
+	var artifact_id := String(node.get("artifact_id", "")).strip_edges()
+	var field_asset_id := String(_artifact_field_asset_ids.get(artifact_id, ""))
+	if field_asset_id != "" and _object_texture_for_asset(field_asset_id) is Texture2D:
+		return field_asset_id
 	if _artifact_default_asset_id != "" and _object_texture_for_asset(_artifact_default_asset_id) is Texture2D:
 		return _artifact_default_asset_id
 	return ""

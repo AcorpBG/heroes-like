@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the bounded artifact field-sprite containment: all twelve artifacts keep exact inventory identities while live Overworld/shared-editor presentation uses the transparent one-tile field bundle. Select the next tracker-approved release-readiness implementation slice.",
+  "currentNotes": "Completed twelve distinct original transparent Overworld artifact field silhouettes with exact live/editor/save identity, routed visual proof, and Linux/Windows packaged texture presence. Select the next tracker-approved release-readiness implementation slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-artifact-field-sprite-containment-10184",
-  "currentSliceId": "presentation-overworld-artifact-field-sprite-containment-10184",
-  "currentSliceNotes": "Completed with focused all-artifact 1280x720/1920x1080 proof, exact inventory/reward/save authority, a clean routed 1920x1080 screenshot, Map Editor/core compatibility, and bounded Linux/Windows package startup evidence. The generic bundle remains placeholder field art.",
+  "currentSlice": "presentation-overworld-artifact-distinct-field-silhouettes-10184",
+  "currentSliceId": "presentation-overworld-artifact-distinct-field-silhouettes-10184",
+  "currentSliceNotes": "Completed with twelve unique transparent 512x512 field assets, exact per-artifact runtime mapping and unknown fallback, focused two-resolution and routed screenshot proof, Map Editor/core compatibility, and bounded Linux/Windows package startup evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Artifact Field Sprite Containment",
-  "currentSliceUpdatedAt": "2026-08-17T13:57:51Z",
+  "currentSliceTitle": "Distinct Overworld Artifact Field Silhouettes",
+  "currentSliceUpdatedAt": "2026-08-17T14:42:29Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,89 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence; preserve the artifact inventory/field-sprite separation and do not treat the generic bundle as final per-artifact art.",
-  "notes": "The completed product slice corrects the direct live Overworld black-square composition defect by separating inventory-card icons from field sprites. It adopts an existing original transparent placeholder and does not claim final per-artifact art or release readiness.",
+  "nextActionGuardrailNote": "Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence; preserve the distinct artifact field mappings, exact inventory identities, and fail-closed unknown fallback.",
+  "notes": "The completed product slice replaces the generic artifact field bundle with twelve distinct original transparent silhouettes while preserving inventory icons, artifact gameplay/save authority, and the unknown fallback. This is shipped visual implementation, not a release-readiness claim.",
   "plannedSlices": [
+    {
+      "id": "presentation-overworld-artifact-distinct-field-silhouettes-10184",
+      "title": "Distinct Overworld Artifact Field Silhouettes",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Replace the generic artifact field bundle with twelve original transparent per-artifact silhouettes while preserving exact inventory, gameplay, save, placement, and editor authority.",
+      "implementationTargets": [
+        "art/overworld/runtime/objects/artifacts/*.png",
+        "art/overworld/manifest.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_artifact_pickup_icon_runtime_report.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_artifact_pickup_icon_runtime_report.tscn",
+        "tests/overworld_visual_smoke.tscn",
+        "tests/artifact_pickup_source_execution_report.tscn",
+        "tests/map_editor_smoke.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "All twelve shipped artifact ids resolve twelve distinct transparent field asset ids and paths while retaining exact byte-unchanged inventory icon ids and paths",
+        "Focused 1280x720 and 1920x1080 runtime proves transparent corners, nonempty subject coverage, one-tile containment, exact unknown fallback, and unchanged session/save/object authority",
+        "A routed 1920x1080 capture visibly shows Trailsinger Boots as its distinct grounded silhouette and the shared Map Editor placement/play/return flow remains exact",
+        "Overworld visual, artifact pickup/save, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "artifact gameplay, stats, rewards, slots, pickups, saves, content identity, inventory icons, placements, terrain, routes, fog, camera, battle, AI, balance, or schema changes",
+        "procedural runtime silhouette generation, replacement inventory illustrations, or copyrighted reference art",
+        "packaged Overworld interaction parity, controller hardware, AT-SPI/UIA certification, native hardware, signing, publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "f35f25bbaa881f905790651b57a29a390b90d78f",
+        "routed_capture": "/tmp/heroes-live-artifact-field.t8fzPa/20260817T134845Z/overworld_entered.png",
+        "artifact_count": 12,
+        "distinct_field_asset_count": 1,
+        "shared_field_asset_id": "adventurers_bundle",
+        "inventory_icon_dimensions": "128x128",
+        "inventory_icon_background": "opaque dark RGB",
+        "field_requirement": "distinct transparent one-tile silhouettes"
+      },
+      "createdAt": "2026-08-17T14:02:41Z",
+      "startedAt": "2026-08-17T14:02:41Z",
+      "updatedAt": "2026-08-17T14:42:29Z",
+      "completedAt": "2026-08-17T14:42:29Z",
+      "notes": "Completed with twelve distinct original 512x512 RGBA field sprites created through identity-preserving background extraction, normalized to consistent transparent padding, and mapped exactly by artifact id. Inventory icons remain byte-unchanged and separate; adventurers_bundle remains only the unknown/unloadable fallback. Focused 1280x720 and 1920x1080 runtime proves twelve unique field ids/paths, transparent corners, containment, fallback, and exact session/save/object authority. Full Overworld visual, artifact pickup/save, 21-stage Map Editor, core, and routed River Pass flow are green; the live map visibly shows Trailsinger Boots. Both official PCKs contain all twelve import records and compiled textures, with bounded Linux headless and fresh-Wine startup green. Packaged interaction, hardware/accessibility certification, signing/publication, whole-game, and release readiness are not claimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence.",
+      "evidence": {
+        "sprite_montage": "/tmp/heroes-artifact-field-silhouettes.png",
+        "focused_runtime": "/tmp/heroes-distinct-artifacts-focused.Bmrlqx",
+        "routed_live_capture": "/tmp/heroes-live-distinct-artifacts.VXsm9D/20260817T142606Z/overworld_entered.png",
+        "overworld_visual": "/tmp/heroes-distinct-artifact-compat.zZf1Q8/visual.stdout.log",
+        "artifact_pickup_save": "/tmp/heroes-distinct-artifact-compat.zZf1Q8/pickup.stdout.log",
+        "map_editor": "/tmp/heroes-distinct-artifact-compat.zZf1Q8/editor.stdout.log",
+        "core": "/tmp/heroes-distinct-artifact-compat.zZf1Q8/core.stdout.log",
+        "linux_report": ".artifacts/packaging_linux_export_smoke/report.json",
+        "windows_report": ".artifacts/packaging_windows_export_smoke/report.json",
+        "artifact_count": 12,
+        "distinct_field_asset_count": 12,
+        "field_asset_dimensions": "512x512",
+        "field_asset_mode": "RGBA transparent",
+        "linux_pck_artifact_import_count": 12,
+        "linux_pck_artifact_texture_count": 12,
+        "windows_pck_artifact_import_count": 12,
+        "windows_pck_artifact_texture_count": 12,
+        "linux_pck_size_bytes": 145619876,
+        "windows_pck_size_bytes": 145619876
+      },
+      "blockedReason": null
+    },
     {
       "id": "presentation-overworld-artifact-field-sprite-containment-10184",
       "title": "Overworld Artifact Field Sprite Containment",
