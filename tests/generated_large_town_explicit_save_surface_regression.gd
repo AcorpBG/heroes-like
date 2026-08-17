@@ -510,6 +510,9 @@ func _assert_surface_parity(label: String, session, slot: int) -> Dictionary:
 	var direct_session := SessionStateStoreScript.SessionData.new()
 	direct_session.from_dict(authority_before["session"])
 	var optimized: Dictionary = SaveService.build_in_session_save_surface(session, slot)
+	var optimized_profile: Dictionary = _last_save_surface_record(SaveService.validation_general_profile_log_last_records(10))
+	if not _assert_surface_profile_light(optimized_profile, "%s context parity" % label):
+		return {}
 	var authority_after_optimized := {
 		"session": session.to_dict().duplicate(true),
 		"files": _file_states(AUTHORITY_PATHS),
@@ -897,8 +900,13 @@ func _assert_surface_profile_light(record: Dictionary, label: String, expected_a
 	if float(record.get("total_ms", 99999.0)) >= 1000.0:
 		_finish_fail("%s exceeded the 1000ms save-surface budget." % label, record)
 		return false
+	var metadata: Dictionary = record.get("metadata", {}) if record.get("metadata", {}) is Dictionary else {}
+	if int(metadata.get("play_check_context_build_count", -1)) != 1 \
+			or int(metadata.get("play_check_context_reuse_count", -1)) != 1 \
+			or int(metadata.get("play_check_context_direct_fallback_count", -1)) != 0:
+		_finish_fail("%s did not materialize Play Check from exactly one owned recap context." % label, record)
+		return false
 	if expected_alias >= 0:
-		var metadata: Dictionary = record.get("metadata", {}) if record.get("metadata", {}) is Dictionary else {}
 		if bool(metadata.get("stored_recap_alias_reused", false)) != (expected_alias == 1):
 			_finish_fail("%s reported the wrong stored-recap alias policy." % label, record)
 			return false

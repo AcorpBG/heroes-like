@@ -25,6 +25,8 @@ Rules:
 Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next tracker-approved release-readiness implementation slice from current source and behavior evidence.
+- Completed implementation slice: `performance-in-session-play-check-recap-context-reuse-10184`. The in-session Save surface now materializes Play Check state from its invocation-local recap context while public direct callers remain fresh. Exact Overworld, Town, Battle, Outcome, editor/stale-route, generated-Large transaction, save/cache/file/UI authority passes; the current Play Check bucket improves12.581ms to0.024ms and save-surface total55.344ms to43.809ms. Compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged save interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
+  id: `performance-in-session-play-check-recap-context-reuse-10184`
 - Completed implementation slice: `performance-in-session-stored-resume-recap-context-reuse-10184`. Each distinct loadable stored save recap now uses one detached normalized progress/watch context, while empty/invalid summaries, distinct selected/latest payloads, and storage-identity aliasing remain exact. Focused Overworld/Town/Battle/Outcome and generated-Large save authority passes; the current stored-recap bucket improves45.696ms to20.909ms and save-surface total79.845ms to55.344ms. Manual overwrite, autosave failure, Overworld/Town/core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged save interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
   id: `performance-in-session-stored-resume-recap-context-reuse-10184`
 - Completed implementation slice: `performance-overworld-objective-progress-surface-reuse-10184`. Objective Header now passes its same-call detached Objective Stakes surface into the normalized progress recap, eliminating repeated objective counts, completed-label, and next-objective evaluation while direct/default recap callers remain fresh. Focused 24-scenario/mode and changed-state authority is exact; five-call median improves238.6ms to207.7ms, the baseline header lane44.6ms to39.9ms, and full refresh177.0ms to172.1ms. Overworld visual/route/input, Town return, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
@@ -4237,6 +4239,34 @@ Non-goals:
 - no objective, progress, recent-event, aftermath, status, forecast, readiness, route, event, save, scenario, or gameplay policy changes;
 - no persistent cache, async work, content, balance, AI, Native RMG, save/schema, or package identity changes;
 - no packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+## In-Session Play Check Recap Context Reuse
+
+id: `performance-in-session-play-check-recap-context-reuse-10184`
+
+Status: completed.
+
+Selected Phase 6 normal-path performance correction. The current in-session Save surface already builds one detached normalized progress/watch recap context, then immediately calls Play Check through the direct path, which independently derives the same objective or watch state. A current method-matched control preserves the complete player-facing string and session authority while reducing eight Play Check materializations from roughly 103 ms to 0.24 ms when the owned context is reused.
+
+Implementation target:
+- materialize the in-session Play Check state line from the same invocation-local `_session_save_recap_context` already owned by `build_in_session_save_surface`;
+- preserve exact Overworld objective/watch fallback, Town defense, Battle outlook, Outcome recent-resolution, resume-context, next-action, truncation, and ordering semantics;
+- keep public `describe_summary_play_check` and `describe_session_play_check` callers fresh, with no persistent or cross-surface cache.
+
+Completion criteria:
+- independent direct and context-backed controls remain whole-exact across Overworld, Town, Battle, and Outcome states, including objective-empty/watch fallback and detached rebuild, with session authority unchanged;
+- one real in-session Save surface records one context-backed Play Check materialization and materially reduces the current roughly 12.9 ms Play Check bucket while preserving every existing surface field;
+- focused save-surface, overwrite/transaction, autosave-failure, Overworld visual/route/input, Town return, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Non-goals:
+- no Play Check, objective, progress, watch, defense, battle-risk, outcome, recap, save, resume, menu, transaction, recovery, cache, routing, UI-copy, gameplay, or save-schema/version policy changes;
+- no persistent cache, async/background work, content, balance, AI, Native RMG, package identity, or summary-alias change;
+- no packaged save interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Completion evidence:
+- the focused generated-Large owner is exact for Overworld, Town, Battle, Outcome, editor/stale-route, changed-state, direct legacy comparison, all 17 surface fields, transactions/recovery, save bytes, summary cache, session, and UI authority;
+- the identical current profile reduces Play Check from12.581ms to0.024ms, the whole save surface from55.344ms to43.809ms, and manual full-refresh phase batches to130-142ms while recording one context build, one reuse, and zero direct fallbacks;
+- manual overwrite, briefing and active-return autosave failure, Overworld visual/route/input, Town dispatch, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass; broader packaged interaction and release claims remain unclaimed.
 
 ## In-Session Stored Resume Recap Context Reuse
 

@@ -45354,6 +45354,12 @@ def validate_generated_large_town_explicit_save_surface_regression(errors: list[
         "stored_recap_alias_reused",
         "stored_recap_context_build_count",
         "stored_recap_context_reuse_count",
+        "play_check_context_build_count",
+        "play_check_context_reuse_count",
+        "play_check_context_direct_fallback_count",
+        'int(metadata.get("play_check_context_build_count", -1)) != 1',
+        'int(metadata.get("play_check_context_reuse_count", -1)) != 1',
+        'int(metadata.get("play_check_context_direct_fallback_count", -1)) != 0',
         "_assert_stored_recap_context_parity",
         "SaveService._describe_summary_resume_recap_direct_legacy(summary)",
         'for context in ["overworld", "battle", "outcome"]',
@@ -45413,6 +45419,11 @@ def validate_generated_large_town_explicit_save_surface_regression(errors: list[
         '"stored_recap_alias_reused"',
         '"stored_recap_context_build_count"',
         '"stored_recap_context_reuse_count"',
+        '"play_check_context_build_count"',
+        '"play_check_context_reuse_count"',
+        '"play_check_context_direct_fallback_count"',
+        "func _describe_session_play_check_from_context",
+        "func _summary_play_check_state_line_from_context",
         "func _describe_summary_resume_recap_with_context",
         "func _describe_summary_resume_recap_direct_legacy",
         'profile["restore_normalize_pass_count"] = 1',
@@ -45446,6 +45457,57 @@ def validate_generated_large_town_explicit_save_surface_regression(errors: list[
         errors,
         "SaveService in-session save surface must build stored recap contexts in exact selected/alias/latest/profile order",
     )
+
+    play_build_order = [
+        build_body.find('var recap_context := _session_save_recap_context(detached_live_session, default_live_summary, "", true)'),
+        build_body.find("var save_check := _describe_session_save_check_from_context(detached_live_session, default_live_summary, recap_context)"),
+        build_body.find("var current_save_recap := _session_save_resume_recap_from_context(detached_live_session, default_live_summary, recap_context)"),
+        build_body.find("var play_check := _describe_session_play_check_from_context(detached_live_session, default_live_summary, recap_context)"),
+        build_body.find('"play_check_context_build_count": 1 if bool(recap_context.get("play_check_state_materialized", false)) else 0'),
+        build_body.find('"play_check_context_reuse_count": 1 if bool(recap_context.get("play_check_state_materialized", false)) else 0'),
+        build_body.find('"play_check_context_direct_fallback_count": int(recap_context.get("play_check_direct_fallback_count", 0))'),
+    ]
+    ensure(
+        build_body != "" and all(index >= 0 for index in play_build_order) and play_build_order == sorted(play_build_order),
+        errors,
+        "SaveService in-session Save surface must build one Play Check recap context and reuse it before publishing exact profile counts",
+    )
+
+    play_context_start = save_service_text.find("func _describe_session_play_check_from_context")
+    play_context_end = save_service_text.find("\nfunc ", play_context_start + 1) if play_context_start >= 0 else -1
+    play_context_body = save_service_text[play_context_start:play_context_end] if play_context_start >= 0 and play_context_end > play_context_start else ""
+    play_context_tokens = [
+        'if not bool(recap_context.get("play_check_state_materialized", false)):',
+        "return _describe_session_play_check_from_summary(session, summary)",
+        'var state_line := String(recap_context.get("play_check_state_line", ""))',
+        'return "Play check: %s" % " | ".join(parts.slice(0, min(3, parts.size())))',
+    ]
+    play_context_order = [play_context_body.find(token) for token in play_context_tokens]
+    ensure(
+        play_context_body != "" and all(index >= 0 for index in play_context_order) and play_context_order == sorted(play_context_order),
+        errors,
+        "SaveService context-backed Play Check must fail closed to the independent direct path before consuming the owned state line",
+    )
+    for forbidden in ("static var", "session.flags", "summary.erase(", "summary.clear(", "recap_context.clear("):
+        ensure(forbidden not in play_context_body, errors, f"SaveService context-backed Play Check must remain invocation-local and non-mutating: {forbidden}")
+
+    play_state_start = save_service_text.find("func _summary_play_check_state_line_from_context")
+    play_state_end = save_service_text.find("\nfunc ", play_state_start + 1) if play_state_start >= 0 else -1
+    play_state_body = save_service_text[play_state_start:play_state_end] if play_state_start >= 0 and play_state_end > play_state_start else ""
+    for token in (
+        'var progress_recap := String(recap_context.get("progress_recap", ""))',
+        'var watch_line := String(recap_context.get("watch_line", ""))',
+        '"battle":',
+        '"town":',
+        'TownRulesScript.describe_defense_headline(session)',
+        '"outcome":',
+        '_line_with_prefix(progress_recap, "Recently resolved:")',
+        "_summary_objective_line_from_progress_recap(progress_recap)",
+        'recap_context["direct_fallback_count"] = 1',
+        "return _summary_play_check_state_line(session, summary)",
+    ):
+        ensure(token in play_state_body, errors, f"SaveService context-backed Play Check state materializer is missing exact branch/fallback token: {token}")
+    ensure("_describe_session_play_check_from_context" not in save_service_text[save_service_text.find("func describe_summary_play_check"):save_service_text.find("func describe_session_play_check")], errors, "Public direct summary Play Check must remain fresh and independent of in-session context reuse")
 
     context_start = save_service_text.find("func _describe_summary_resume_recap_with_context")
     context_end = save_service_text.find("\nfunc ", context_start + 1) if context_start >= 0 else -1

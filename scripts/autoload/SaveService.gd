@@ -560,7 +560,7 @@ func build_in_session_save_surface(session: SessionStateStoreScript.SessionData,
 	buckets["detached_read_scope_begin"] = ProfileLogScript.elapsed_ms(read_scope_started)
 	var recap_started := ProfileLogScript.begin_usec()
 	var recap_context_started := ProfileLogScript.begin_usec()
-	var recap_context := _session_save_recap_context(detached_live_session, default_live_summary)
+	var recap_context := _session_save_recap_context(detached_live_session, default_live_summary, "", true)
 	buckets["shared_recap_context"] = ProfileLogScript.elapsed_ms(recap_context_started)
 	buckets["shared_progress_context"] = float(recap_context.get("profile_progress_ms", 0.0))
 	buckets["shared_watch_context"] = float(recap_context.get("profile_watch_ms", 0.0))
@@ -576,7 +576,7 @@ func build_in_session_save_surface(session: SessionStateStoreScript.SessionData,
 	var current_save_recap := _session_save_resume_recap_from_context(detached_live_session, default_live_summary, recap_context)
 	buckets["current_save_recap"] = ProfileLogScript.elapsed_ms(current_recap_started)
 	var play_check_started := ProfileLogScript.begin_usec()
-	var play_check := _describe_session_play_check_from_summary(detached_live_session, default_live_summary)
+	var play_check := _describe_session_play_check_from_context(detached_live_session, default_live_summary, recap_context)
 	buckets["play_check"] = ProfileLogScript.elapsed_ms(play_check_started)
 	buckets["recap_surfaces"] = ProfileLogScript.elapsed_ms(recap_started)
 	TownRulesScript.end_read_scope(detached_live_session)
@@ -619,6 +619,9 @@ func build_in_session_save_surface(session: SessionStateStoreScript.SessionData,
 		"stored_recap_alias_reused": stored_recap_alias_reused,
 		"stored_recap_context_build_count": int(stored_recap_profile.get("context_build_count", 0)),
 		"stored_recap_context_reuse_count": int(stored_recap_profile.get("context_reuse_count", 0)),
+		"play_check_context_build_count": 1 if bool(recap_context.get("play_check_state_materialized", false)) else 0,
+		"play_check_context_reuse_count": 1 if bool(recap_context.get("play_check_state_materialized", false)) else 0,
+		"play_check_context_direct_fallback_count": int(recap_context.get("play_check_direct_fallback_count", 0)),
 	}, session)
 	return result
 
@@ -733,7 +736,8 @@ func _live_summary_for_manual_slot(source: Dictionary, manual_slot: int, valid_s
 func _session_save_recap_context(
 	session: SessionStateStoreScript.SessionData,
 	summary: Dictionary,
-	preloaded_progress_recap: String = ""
+	preloaded_progress_recap: String = "",
+	include_play_check_state: bool = false
 ) -> Dictionary:
 	if session == null or session.scenario_id == "" or summary.is_empty():
 		return {
@@ -743,6 +747,9 @@ func _session_save_recap_context(
 			"progress_recap": "",
 			"profile_progress_ms": 0.0,
 			"profile_watch_ms": 0.0,
+			"play_check_state_line": "",
+			"play_check_state_materialized": false,
+			"play_check_direct_fallback_count": 0,
 		}
 	var progress_started := ProfileLogScript.begin_usec()
 	var resume_target := String(summary.get("resume_target", "overworld"))
@@ -776,9 +783,20 @@ func _session_save_recap_context(
 			if action_line != ""
 			else "Load the save, inspect the resumed scene, then choose the next order."
 		)
+	if include_play_check_state and progress_recap == "" and resume_target in ["overworld", "outcome"]:
+		progress_recap = load("res://scripts/core/ScenarioRules.gd").describe_session_progress_recap_from_normalized_session(session, false)
 	var progress_ms := ProfileLogScript.elapsed_ms(progress_started)
 	var watch_started := ProfileLogScript.begin_usec()
-	var watch_line := _summary_watch_state_line(session, summary, true)
+	var watch_line := _summary_watch_state_line(session, summary, true, progress_recap)
+	var play_check_context := {
+		"progress_recap": progress_recap,
+		"watch_line": watch_line,
+	}
+	var play_check_state_line := ""
+	var play_check_direct_fallback_count := 0
+	if include_play_check_state:
+		play_check_state_line = _summary_play_check_state_line_from_context(session, summary, play_check_context)
+		play_check_direct_fallback_count = int(play_check_context.get("direct_fallback_count", 0))
 	return {
 		"changed_line": changed_line,
 		"watch_line": watch_line,
@@ -786,6 +804,9 @@ func _session_save_recap_context(
 		"progress_recap": progress_recap,
 		"profile_progress_ms": progress_ms,
 		"profile_watch_ms": ProfileLogScript.elapsed_ms(watch_started),
+		"play_check_state_line": play_check_state_line,
+		"play_check_state_materialized": include_play_check_state,
+		"play_check_direct_fallback_count": play_check_direct_fallback_count,
 	}
 
 func _describe_session_save_check_from_context(
@@ -852,6 +873,30 @@ func _describe_session_play_check_from_summary(
 			state_line = _safe_player_text("Defense: %s" % defense_line.trim_prefix("- ").strip_edges(), 72)
 	else:
 		state_line = _summary_play_check_state_line(session, summary)
+	var parts := []
+	if resume_context != "":
+		parts.append("%s ready" % resume_context)
+	if next_action != "":
+		parts.append(next_action)
+	if state_line != "":
+		parts.append(state_line)
+	return "Play check: %s" % " | ".join(parts.slice(0, min(3, parts.size())))
+
+func _describe_session_play_check_from_context(
+	session: SessionStateStoreScript.SessionData,
+	summary: Dictionary,
+	recap_context: Dictionary
+) -> String:
+	if not bool(recap_context.get("play_check_state_materialized", false)):
+		return _describe_session_play_check_from_summary(session, summary)
+	if session == null or session.scenario_id == "":
+		return "Play check: no active expedition."
+	var resume_context := _safe_player_text(_resume_context_label(summary), 34)
+	var next_action := _safe_player_text(
+		describe_summary_next_play_action(summary).trim_prefix("Next play action:").strip_edges(),
+		72
+	)
+	var state_line := String(recap_context.get("play_check_state_line", ""))
 	var parts := []
 	if resume_context != "":
 		parts.append("%s ready" % resume_context)
@@ -3220,10 +3265,45 @@ func _summary_play_check_state_line(session: SessionStateStoreScript.SessionData
 		return _safe_player_text("Watch: %s" % watch_line, 72)
 	return ""
 
+func _summary_play_check_state_line_from_context(
+	session: SessionStateStoreScript.SessionData,
+	summary: Dictionary,
+	recap_context: Dictionary
+) -> String:
+	if session == null or session.scenario_id == "":
+		return ""
+	var resume_target := String(summary.get("resume_target", "overworld"))
+	var progress_recap := String(recap_context.get("progress_recap", ""))
+	var watch_line := String(recap_context.get("watch_line", ""))
+	match resume_target:
+		"battle":
+			var battle_watch := watch_line.trim_prefix("Risk watch:").strip_edges()
+			if battle_watch != "" and not watch_line.contains("No immediate stored warning"):
+				return _safe_player_text("Battle: %s" % battle_watch, 72)
+		"town":
+			var defense_line := _first_meaningful_line(TownRulesScript.describe_defense_headline(session), ["Defense"])
+			if defense_line != "":
+				return _safe_player_text("Defense: %s" % defense_line.trim_prefix("- ").strip_edges(), 72)
+		"outcome":
+			var recent_line := _line_with_prefix(progress_recap, "Recently resolved:")
+			if recent_line != "":
+				return _safe_player_text(recent_line, 72)
+	var objective_line := _summary_objective_line_from_progress_recap(progress_recap).trim_prefix("Current objective:").strip_edges()
+	if objective_line != "":
+		return _safe_player_text("Objective: %s" % objective_line, 72)
+	if resume_target in ["battle", "outcome"]:
+		recap_context["direct_fallback_count"] = 1
+		return _summary_play_check_state_line(session, summary)
+	var watch := watch_line.trim_prefix("Risk watch:").strip_edges()
+	if watch != "":
+		return _safe_player_text("Watch: %s" % watch, 72)
+	return ""
+
 func _summary_watch_state_line(
 	session: SessionStateStoreScript.SessionData,
 	summary: Dictionary,
-	trusted_normalized_session: bool = false
+	trusted_normalized_session: bool = false,
+	preloaded_progress_recap: String = ""
 ) -> String:
 	match String(summary.get("resume_target", "overworld")):
 		"battle":
@@ -3233,7 +3313,7 @@ func _summary_watch_state_line(
 				return "Risk watch: %s" % outlook.trim_prefix("Outlook:").strip_edges()
 		"outcome":
 			var recent_line := _line_with_prefix(
-				load("res://scripts/core/ScenarioRules.gd").describe_session_progress_recap(session, false),
+				preloaded_progress_recap if preloaded_progress_recap != "" else load("res://scripts/core/ScenarioRules.gd").describe_session_progress_recap(session, false),
 				"Recently resolved:"
 			)
 			if recent_line != "":
