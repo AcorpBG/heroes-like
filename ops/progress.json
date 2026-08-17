@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "LiveValidationHarness now saves the already oriented Godot 4 viewport image without inversion. Focused X11 runtime proves exact raw/saved top and bottom pixels, a real routed flow produces upright Main Menu and Overworld PNGs, and core/static/Linux/Windows gates pass. This is completed production validation tooling, not gameplay or release completion.",
+  "currentNotes": "Completed the shippable original Overworld terrain adoption: live/shared-editor rendering uses the original authored bank or procedural fallback, local extracted and generated study payloads are excluded from both official PCKs, and focused/live/editor/core/platform gates are green within bounded claims.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "tooling-live-validation-screenshot-orientation-10184",
-  "currentSliceId": "tooling-live-validation-screenshot-orientation-10184",
-  "currentSliceNotes": "Completed: the production capture helper preserves the Godot viewport orientation; focused X11 and real routed-flow artifacts are upright with unchanged report/step/output ownership. No gameplay or UI composition changed.",
+  "currentSlice": "presentation-overworld-shippable-original-terrain-adoption-10184",
+  "currentSliceId": "presentation-overworld-shippable-original-terrain-adoption-10184",
+  "currentSliceNotes": "Completed with exact 1280x720/1920x1080 family coverage, upright routed live capture, Map Editor/core compatibility, and Linux/Windows PCK directory proof. Existing original tiles remain placeholder art; packaged interaction, certification, signing, publication, and release readiness are not claimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Live Validation Screenshot Orientation",
-  "currentSliceUpdatedAt": "2026-08-17T12:43:36Z",
+  "currentSliceTitle": "Shippable Original Overworld Terrain Adoption",
+  "currentSliceUpdatedAt": "2026-08-17T13:30:58Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,79 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next source-backed tracker-approved product implementation slice; do not treat the completed screenshot tooling correction as shipped gameplay progress or release readiness.",
-  "notes": "Live-validation screenshot orientation is corrected and validated through the production helper. Focused X11 samples and a real Main Menu-to-Overworld routed flow are upright; core/static and bounded Linux/Windows startup gates pass. No gameplay, content, UI composition, report schema, or packaged-interaction claim changed.",
+  "nextActionGuardrailNote": "Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence; do not infer whole-game completion from the completed terrain adoption.",
+  "notes": "The completed product slice removes the live/package dependency on repository-labeled nonredistributable HoMM3 reference frames by adopting the existing original tile bank and procedural fallback. The bank remains placeholder art, and this is not a final-art or release-readiness claim.",
   "plannedSlices": [
+    {
+      "id": "presentation-overworld-shippable-original-terrain-adoption-10184",
+      "title": "Shippable Original Overworld Terrain Adoption",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Make the existing original Overworld tile bank and procedural fallback authoritative in live/editor rendering and remove all local-reference or debug terrain payloads from official packages without changing terrain gameplay semantics.",
+      "implementationTargets": [
+        "content/terrain_grammar.json",
+        "art/overworld/manifest.json",
+        "scenes/overworld/OverworldMapView.gd",
+        "scripts/autoload/ContentService.gd",
+        "export_presets.cfg",
+        "tests/generated_grastl_runtime_asset_report.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_visual_smoke.tscn",
+        "tests/map_editor_smoke.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "Live Overworld and shared Map Editor rendering use no HoMM3 local-prototype selection, use the original tile bank for authored families, and retain the procedural fallback for unsupported special families",
+        "Terrain ids, transition and editor placement semantics, movement/passability, objects, session/save authority, and routed 1280x720/1920x1080 presentation remain exact",
+        "Official Linux and Windows package payloads contain no local-reference terrain or road frames and no generated reference, preview, experiment, source-sheet, or inactive frame-bank payload",
+        "Overworld visual, Map Editor, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "terrain ids, map cells, passability, routes, object placements, fog, camera, save schema, editor paint consequences, transition/private-state rules, Native RMG, or gameplay policy changes",
+        "final terrain art, new copyrighted reference assets, or reinterpretation of recovered HoMM3 rendering semantics",
+        "packaged Overworld interaction parity, controller hardware, AT-SPI/UIA certification, native hardware, signing, publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "99bb79eb231d9e800c4e12936a212bd548a1e8b4",
+        "live_capture": "/tmp/heroes-live-screenshot-routed.8O2P8g/run/20260817T123750Z/overworld_entered.png",
+        "source_policy": "content/terrain_grammar.json labels the active extracted HoMM3 prototype not shippable or redistributable",
+        "linux_pck_contains_local_reference_frame_paths": true,
+        "original_authored_tile_bank_present": true
+      },
+      "createdAt": "2026-08-17T12:53:36Z",
+      "startedAt": "2026-08-17T12:53:36Z",
+      "updatedAt": "2026-08-17T13:30:58Z",
+      "completedAt": "2026-08-17T13:30:58Z",
+      "notes": "Live and shared-editor rendering now selects the original authored bank for seven tile-art families and the procedural fallback for ten special families at 1280x720 and 1920x1080, while preserving reference metadata and exact session/route/object authority. The full Overworld visual smoke, upright routed live capture, Map Editor smoke, and core smoke are green. Official Linux and Windows PCK directory audits each report 2,523 entries, 24 original base entries, 11 original road entries, and zero local-reference or generated-study terrain entries; Linux startup and fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. Existing original tiles remain placeholder art; packaged Overworld interaction, hardware/controller/accessibility certification, signing/publication, whole-game, and release readiness are not claimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence.",
+      "evidence": {
+        "focused_runtime": "/tmp/heroes-terrain-matrix-focused4.qKkQub",
+        "overworld_visual": "/tmp/heroes-overworld-original-visual.P3euPU",
+        "routed_live_capture": "/tmp/heroes-live-original-terrain.CmS0H3/run/20260817T130811Z/overworld_entered.png",
+        "map_editor": "/tmp/heroes-terrain-map-editor-smoke.hD9fgL",
+        "core": "/tmp/heroes-terrain-core.aUNwwX",
+        "linux_report": ".artifacts/packaging_linux_export_smoke/report.json",
+        "windows_report": ".artifacts/packaging_windows_export_smoke/report.json",
+        "linux_pck_entry_count": 2523,
+        "windows_pck_entry_count": 2523,
+        "forbidden_terrain_entries": 0,
+        "original_base_entries": 24,
+        "original_road_entries": 11
+      },
+      "blockedReason": null
+    },
     {
       "id": "tooling-live-validation-screenshot-orientation-10184",
       "title": "Live Validation Screenshot Orientation",

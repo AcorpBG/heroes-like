@@ -2626,32 +2626,32 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 		return false
 	var grass_presentation: Dictionary = shell.call("validation_tile_presentation", 1, 2)
 	var grass_terrain: Dictionary = grass_presentation.get("terrain_presentation", {})
-	if String(grass_terrain.get("rendering_mode", "")) != "homm3_local_reference_prototype":
-		push_error("Overworld smoke: HoMM3 local prototype terrain atlas is not active on the overworld map. presentation=%s" % grass_presentation)
+	if String(grass_terrain.get("rendering_mode", "")) != "original_quiet_tile_bank":
+		push_error("Overworld smoke: original quiet terrain tile bank is not active on the overworld map. presentation=%s" % grass_presentation)
 		get_tree().quit(1)
 		return false
-	if bool(grass_terrain.get("uses_sampled_texture", true)) or bool(grass_terrain.get("generated_source_primary", true)) or not bool(grass_terrain.get("uses_homm3_local_prototype", false)) or not bool(grass_terrain.get("texture_loaded", false)):
-		push_error("Overworld smoke: overworld terrain is not reporting the HoMM3 local prototype tile bank. presentation=%s" % grass_presentation)
+	if bool(grass_terrain.get("uses_sampled_texture", true)) or bool(grass_terrain.get("generated_source_primary", true)) or bool(grass_terrain.get("uses_homm3_local_prototype", true)) or not bool(grass_terrain.get("uses_original_tile_bank", false)) or not bool(grass_terrain.get("texture_loaded", false)):
+		push_error("Overworld smoke: overworld terrain is not reporting the shippable original tile bank. presentation=%s" % grass_presentation)
 		get_tree().quit(1)
 		return false
-	if String(grass_terrain.get("primary_base_model", "")) != "homm3_local_reference_prototype" or String(grass_terrain.get("terrain_noise_profile", "")) != "homm3_extracted_atlas_frame":
-		push_error("Overworld smoke: overworld terrain does not expose the HoMM3 extracted-atlas base model. presentation=%s" % grass_presentation)
+	if String(grass_terrain.get("primary_base_model", "")) != "original_quiet_tile_bank" or String(grass_terrain.get("terrain_noise_profile", "")) != "quiet_low_contrast_macro_readable":
+		push_error("Overworld smoke: overworld terrain does not expose the original authored base model. presentation=%s" % grass_presentation)
 		get_tree().quit(1)
 		return false
-	if String(grass_terrain.get("terrain_variant_selection", "")) != "accepted_web_relation_class_row_lookup" or String(grass_terrain.get("homm3_terrain_lookup_model", "")) != "accepted_web_prototype_relation_class_row_lookup":
-		push_error("Overworld smoke: grass terrain does not expose the accepted web relation-class terrain lookup contract. presentation=%s" % grass_presentation)
+	if String(grass_terrain.get("terrain_variant_selection", "")) != "patch_cohesive_low_frequency" or String(grass_terrain.get("homm3_terrain_lookup_model", "")) != "accepted_web_prototype_relation_class_row_lookup":
+		push_error("Overworld smoke: grass terrain does not use original tile selection while retaining the inactive reference lookup metadata. presentation=%s" % grass_presentation)
 		get_tree().quit(1)
 		return false
 	if String(grass_terrain.get("homm3_interior_frame_selection", "")) != "accepted_web_full_row_bucket_selection" or bool(grass_terrain.get("homm3_uses_interior_variant_cycle", true)):
 		push_error("Overworld smoke: HoMM3 terrain interior frames still report the retired patch-hash variant cycling contract. presentation=%s" % grass_presentation)
 		get_tree().quit(1)
 		return false
-	if not bool(grass_terrain.get("homm3_local_reference_only", false)) or String(grass_terrain.get("tile_art_source_basis", "")) != "homm3_extracted_local_reference_prototype":
-		push_error("Overworld smoke: HoMM3 prototype terrain did not report its local-reference source basis. presentation=%s" % grass_presentation)
+	if not bool(grass_terrain.get("homm3_local_reference_only", false)) or String(grass_terrain.get("tile_art_source_basis", "")) != "original_procedural_reference_informed":
+		push_error("Overworld smoke: original runtime terrain did not retain inactive local-reference metadata separately from its source basis. presentation=%s" % grass_presentation)
 		get_tree().quit(1)
 		return false
-	if not String(grass_terrain.get("texture_path", "")).begins_with("res://art/overworld/runtime/terrain_tiles/generated/grastl/frames_64/") or String(grass_terrain.get("homm3_runtime_asset_source_basis", "")) != "generated_grastl_replacement_trial_20260503" or int(grass_terrain.get("homm3_expected_frame_count", 0)) != 79:
-		push_error("Overworld smoke: grass terrain is not resolving the generated grastl runtime frame bank. presentation=%s" % grass_presentation)
+	if not String(grass_terrain.get("texture_path", "")).begins_with("res://art/overworld/runtime/terrain_tiles/base/grass_") or String(grass_terrain.get("homm3_runtime_asset_source_basis", "")) != "generated_grastl_replacement_trial_20260503" or int(grass_terrain.get("homm3_expected_frame_count", 0)) != 79:
+		push_error("Overworld smoke: grass terrain is not resolving the original bank while preserving inactive grastl reference metadata. presentation=%s" % grass_presentation)
 		get_tree().quit(1)
 		return false
 	if String(grass_terrain.get("terrain_group", "")) != "grasslands" or String(grass_terrain.get("style_id", "")) == "":
@@ -2751,9 +2751,9 @@ func _assert_legacy_forest_degradation(shell: Node, session) -> bool:
 		or String(terrain.get("transition_calculation_model", "")) != "accepted_web_prototype_relation_class_row_lookup"
 		or String(terrain.get("homm3_terrain_family", "")) != "grass"
 		or String(terrain.get("homm3_logical_degrade_note", "")) == ""
-		or String(terrain.get("transition_shape_model", "")) != "homm3_base_atlas_frame"
+		or String(terrain.get("transition_shape_model", "")) == "homm3_base_atlas_frame"
 	):
-		push_error("Overworld smoke: controlled logical forest terrain did not report its explicit HoMM3 grass-atlas prototype degradation. presentation=%s" % presentation)
+		push_error("Overworld smoke: controlled logical forest terrain did not retain its reference metadata while rendering through the original transition path. presentation=%s" % presentation)
 		get_tree().quit(1)
 		return false
 	return true

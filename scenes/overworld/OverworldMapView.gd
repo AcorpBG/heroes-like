@@ -4405,9 +4405,11 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 	var transition_corner_mask := String(transition_payload.get("corner_mask", ""))
 	var tile_art_entry := _terrain_base_art_entry(terrain, tile)
 	var tile_art_path := String(tile_art_entry.get("path", ""))
-	var homm3_selection: Dictionary = tile_art_entry.get("homm3_selection", {})
+	var homm3_selection: Dictionary = _homm3_terrain_selection_payload(tile, terrain)
 	var tile_art_primary := _terrain_art_can_be_primary(terrain)
 	var tile_art_loaded := tile_art_primary and _terrain_art_texture(tile_art_path) is Texture2D
+	var selected_homm3_payload: Dictionary = tile_art_entry.get("homm3_selection", {}) if tile_art_entry.get("homm3_selection", {}) is Dictionary else {}
+	var homm3_rendering_active: bool = _homm3_runtime_rendering_enabled() and tile_art_loaded and not selected_homm3_payload.is_empty()
 	var edge_art_count := _transition_edge_art_count(transition_payload)
 	var edge_transition_count := _transition_source_count(transition_payload, "cardinal_sources")
 	var corner_transition_count := _transition_source_count(transition_payload, "corner_sources")
@@ -4420,7 +4422,7 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 	var road_has_horizontal := _road_has_horizontal_connections(road_neighbor_directions)
 	var road_has_vertical := _road_has_vertical_connections(road_neighbor_directions)
 	var road_has_diagonal := _road_has_diagonal_connections(road_neighbor_directions)
-	var primary_base_model := TERRAIN_HOMM3_LOCAL_PROTOTYPE_RENDERING_MODE if tile_art_loaded and not homm3_selection.is_empty() else (TERRAIN_ORIGINAL_TILE_BANK_RENDERING_MODE if tile_art_loaded else (TERRAIN_GRAMMAR_RENDERING_MODE if not _terrain_style(terrain).is_empty() else "procedural_color_pattern"))
+	var primary_base_model := TERRAIN_HOMM3_LOCAL_PROTOTYPE_RENDERING_MODE if homm3_rendering_active else (TERRAIN_ORIGINAL_TILE_BANK_RENDERING_MODE if tile_art_loaded else (TERRAIN_GRAMMAR_RENDERING_MODE if not _terrain_style(terrain).is_empty() else "procedural_color_pattern"))
 	return {
 		"terrain": terrain,
 		"state": "explored_visible",
@@ -4445,8 +4447,8 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		"fog_boundary_alpha": EXPLORED_TERRAIN_FOG_BOUNDARY_COLOR.a,
 		"uses_sampled_texture": false,
 		"uses_authored_tile_art": tile_art_loaded,
-		"uses_original_tile_bank": tile_art_loaded and homm3_selection.is_empty(),
-		"uses_homm3_local_prototype": tile_art_loaded and not homm3_selection.is_empty(),
+		"uses_original_tile_bank": tile_art_loaded and not homm3_rendering_active,
+		"uses_homm3_local_prototype": homm3_rendering_active,
 		"generated_source_primary": false,
 		"tile_art_source_basis": _terrain_tile_art_source_basis(terrain),
 		"primary_base_model": primary_base_model,
@@ -4457,9 +4459,9 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		"terrain_group": _terrain_group(terrain),
 		"style_id": _terrain_style_id(terrain),
 		"pattern": _terrain_pattern(terrain),
-		"terrain_noise_profile": "homm3_extracted_atlas_frame" if tile_art_loaded and not homm3_selection.is_empty() else ("quiet_low_contrast_macro_readable" if tile_art_loaded else "grammar_pattern_fallback"),
-		"terrain_variant_selection": "accepted_web_relation_class_row_lookup" if tile_art_loaded and not homm3_selection.is_empty() else ("patch_cohesive_low_frequency" if tile_art_loaded else "procedural_fallback_marks"),
-		"grasslands_base_cohesion": "homm3_grass_atlas_family" if _terrain_group(terrain) == "grasslands" and tile_art_loaded and not homm3_selection.is_empty() else ("grass_plains_shared_palette" if _terrain_group(terrain) == "grasslands" and tile_art_loaded else ""),
+		"terrain_noise_profile": "homm3_extracted_atlas_frame" if homm3_rendering_active else ("quiet_low_contrast_macro_readable" if tile_art_loaded else "grammar_pattern_fallback"),
+		"terrain_variant_selection": "accepted_web_relation_class_row_lookup" if homm3_rendering_active else ("patch_cohesive_low_frequency" if tile_art_loaded else "procedural_fallback_marks"),
+		"grasslands_base_cohesion": "homm3_grass_atlas_family" if _terrain_group(terrain) == "grasslands" and homm3_rendering_active else ("grass_plains_shared_palette" if _terrain_group(terrain) == "grasslands" and tile_art_loaded else ""),
 		"homm3_local_reference_only": bool(homm3_selection.get("local_reference_only", false)),
 		"homm3_terrain_lookup_model": String(homm3_selection.get("terrain_lookup_model", "")),
 		"homm3_logical_terrain_id": String(homm3_selection.get("logical_terrain_id", terrain)),
@@ -4610,9 +4612,9 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		"transition_diagonal_policy": String(homm3_selection.get("diagonal_policy", "")),
 		"edge_transition_art_count": edge_art_count,
 		"edge_transition_art_loaded": edge_transition_count > 0 and edge_art_count == edge_transition_count,
-		"transition_shape_model": "homm3_base_atlas_frame" if not homm3_selection.is_empty() else ("jagged_directional_overlay" if edge_art_count > 0 else "procedural_strip_fallback"),
-		"transition_edge_treatment": "bridge_or_shoreline_encoded_in_selected_tile" if not homm3_selection.is_empty() else ("soft_feathered_jagged_overlay" if edge_art_count > 0 else "procedural_strip_fallback"),
-		"transition_selection_rule": "settled_owner_relation_classes_select_recovered_row_buckets" if not homm3_selection.is_empty() else "higher_priority_neighbor_intrudes_into_lower_priority_receiver",
+		"transition_shape_model": "homm3_base_atlas_frame" if homm3_rendering_active else ("jagged_directional_overlay" if edge_art_count > 0 else "procedural_strip_fallback"),
+		"transition_edge_treatment": "bridge_or_shoreline_encoded_in_selected_tile" if homm3_rendering_active else ("soft_feathered_jagged_overlay" if edge_art_count > 0 else "procedural_strip_fallback"),
+		"transition_selection_rule": "settled_owner_relation_classes_select_recovered_row_buckets" if homm3_rendering_active else "higher_priority_neighbor_intrudes_into_lower_priority_receiver",
 		"higher_priority_neighbor_intrusion": edge_transition_count > 0 or corner_transition_count > 0 or propagated_transition_count > 0,
 		"same_group_transition_suppressed": true,
 		"road_overlay": not road_payload.is_empty(),
@@ -5208,7 +5210,7 @@ func _terrain_style_id(terrain_id: String) -> String:
 	return String(style.get("style_id", terrain_id))
 
 func _terrain_tile_art_source_basis(terrain_id: String) -> String:
-	if not _homm3_terrain_config(terrain_id).is_empty():
+	if _homm3_runtime_rendering_enabled() and not _homm3_terrain_config(terrain_id).is_empty():
 		return TERRAIN_HOMM3_SOURCE_BASIS
 	var style := _terrain_style(terrain_id)
 	var tile_art = style.get("tile_art", {})
@@ -5230,7 +5232,7 @@ func _terrain_art_can_be_primary(terrain_id: String) -> bool:
 	return source_basis.find("original") >= 0 or String(_terrain_grammar.get("primary_base_model", "")) == TERRAIN_ORIGINAL_TILE_BANK_RENDERING_MODE
 
 func _road_overlay_art_source_basis(overlay_id: String) -> String:
-	if _homm3_road_overlays.has(overlay_id):
+	if _homm3_runtime_rendering_enabled() and _homm3_road_overlays.has(overlay_id):
 		return TERRAIN_HOMM3_SOURCE_BASIS
 	var style := _road_overlay_style(overlay_id)
 	var tile_art = style.get("tile_art", {})
@@ -5278,6 +5280,8 @@ func _road_overlay_art_paths(overlay_id: String) -> Dictionary:
 	return art if art is Dictionary else {}
 
 func _homm3_road_art_path(overlay_id: String, tile: Vector2i) -> String:
+	if not _homm3_runtime_rendering_enabled():
+		return ""
 	var overlay = _homm3_road_overlays.get(overlay_id, {})
 	if not (overlay is Dictionary):
 		return ""
@@ -5294,6 +5298,8 @@ func _homm3_road_art_path(overlay_id: String, tile: Vector2i) -> String:
 	return "%s/roads/%s/%s.png" % [_homm3_asset_root(), atlas_id, frame_id]
 
 func _h3maped_road_art_path_from_payload(road: Dictionary) -> String:
+	if not _homm3_runtime_rendering_enabled():
+		return ""
 	var frame_id := String(road.get("h3maped_road_art_frame_id", "")).strip_edges()
 	if frame_id == "":
 		return ""
@@ -5304,6 +5310,9 @@ func _h3maped_road_art_path_from_payload(road: Dictionary) -> String:
 
 func _homm3_asset_root() -> String:
 	return String(_homm3_prototype.get("asset_root", "res://art/overworld/runtime/homm3_local_prototype")).strip_edges()
+
+func _homm3_runtime_rendering_enabled() -> bool:
+	return bool(_homm3_prototype.get("enabled", false))
 
 func _homm3_family_asset_root(family: Dictionary) -> String:
 	var family_root := String(family.get("asset_root", "")).strip_edges()
@@ -5738,6 +5747,8 @@ func _vector2i_payload(value: Vector2i) -> Dictionary:
 	return {"x": value.x, "y": value.y}
 
 func _homm3_terrain_art_entry(terrain_id: String, tile: Vector2i) -> Dictionary:
+	if not _homm3_runtime_rendering_enabled():
+		return {}
 	var selection := _homm3_terrain_selection_payload(tile, terrain_id)
 	var frame_id := String(selection.get("frame_id", "")).strip_edges()
 	var atlas_id := String(selection.get("atlas_id", "")).strip_edges()

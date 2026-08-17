@@ -9,24 +9,24 @@
       "town_candidate_file": "towns/001-fantasy-strategy-game-overworld-map-obje.png",
       "encounter_candidate_file": "encounters/001-fantasy-strategy-game-overworld-map-obje.png"
     },
-    "note": "Generated object asset names are best-effort semantic identifications. Runtime mappings intentionally cover only direct or defensible content matches; all other overworld object types keep procedural marker fallbacks. The active terrain prototype still uses the HoMM-style terrain grammar, with the grastl grass family overridden to the committed generated replacement trial frames under art/overworld/runtime/terrain_tiles/generated/grastl/frames_64. Other terrain families and roads remain on the local extracted reference prototype."
+    "note": "Generated object asset names are best-effort semantic identifications. Runtime mappings intentionally cover only direct or defensible content matches; all other overworld object types keep procedural marker fallbacks. Live terrain uses the original authored quiet tile bank and procedural special-terrain fallback. The extracted HoMM3 atlas and generated renderer-study payloads remain local reference material and are excluded from official packages."
   },
   "terrain_rendering": {
     "model": "authored_autotile_layers",
     "grammar": "res://content/terrain_grammar.json",
     "terrain_layers": "res://content/terrain_layers.json",
-    "tile_art_root": "res://art/overworld/runtime/homm3_local_prototype",
-    "tile_art_status": "homm3_local_reference_prototype",
-    "tile_art_source_basis": "homm3_extracted_local_reference_prototype",
-    "tile_art_preparation": "local_only_nearest_neighbor_64x64_staging_from_extracted_homm3_def_frames_via_tools_build_overworld_terrain_tiles_py",
+    "tile_art_root": "res://art/overworld/runtime/terrain_tiles",
+    "tile_art_status": "original_quiet_tile_bank_runtime",
+    "tile_art_source_basis": "original_procedural_reference_informed",
+    "tile_art_preparation": "authored_original_64x64_tile_bank_with_procedural_special_terrain_fallback",
     "terrain_transition_selection": "accepted_web_prototype_relation_class_row_lookup",
     "terrain_transition_rule": "settled_owner_relation_classes_select_recovered_row_buckets",
     "editor_terrain_placement_model": "homm3_owner_queue_rewrite_final_normalization.v1",
     "editor_restamp_model": "source_paint_known_receiver_offsets_shared_overworld_reprojection.v1",
     "editor_restamp_scope": "map_editor_terrain_paint_update_and_shared_preview",
     "interior_frame_selection": "accepted_web_full_row_bucket_selection",
-    "primary_base_model": "homm3_local_reference_prototype",
-    "generated_source_policy": "generated_grastl_runtime_override_active",
+    "primary_base_model": "original_quiet_tile_bank",
+    "generated_source_policy": "reference_only_inactive",
     "generated_grastl_runtime_override": {
       "family": "grass",
       "atlas": "grastl",
@@ -48,8 +48,9 @@
       "water",
       "road_dirt"
     ],
-    "local_reference_only": true,
-    "prototype_asset_policy": "not_shippable_or_redistributable",
+    "local_reference_only": false,
+    "prototype_asset_policy": "disabled_local_reference_excluded_from_official_exports",
+    "reference_prototype_excluded_from_exports": true,
     "sampled_texture_status": "deprecated_not_primary"
   },
   "remembered_object_rendering": "ghosted_sprite_with_ground_anchor",

@@ -503,10 +503,10 @@ func _supported_map_object_families() -> Array:
 func _validate_terrain_grammar(grammar: Dictionary, biome_index: Dictionary) -> void:
 	if String(grammar.get("rendering_model", "")) != "authored_autotile_layers":
 		push_warning("Terrain grammar must declare rendering_model authored_autotile_layers.")
-	if String(grammar.get("primary_base_model", "")) != "homm3_local_reference_prototype":
-		push_warning("Terrain grammar must declare homm3_local_reference_prototype as the active local prototype base model.")
-	if String(grammar.get("generated_source_policy", "")) != "generated_grastl_runtime_override_active":
-		push_warning("Terrain grammar must declare the generated grastl runtime override policy.")
+	if String(grammar.get("primary_base_model", "")) != "original_quiet_tile_bank":
+		push_warning("Terrain grammar must declare original_quiet_tile_bank as the active shippable base model.")
+	if String(grammar.get("generated_source_policy", "")) != "reference_only_inactive":
+		push_warning("Terrain grammar must keep generated renderer-study sources reference-only and inactive.")
 	var classes = grammar.get("terrain_classes", [])
 	if not (classes is Array) or classes.is_empty():
 		push_warning("Terrain grammar must define terrain_classes.")
