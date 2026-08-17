@@ -804,21 +804,30 @@ func _execute_boot_to_skirmish_town_battle_flow() -> bool:
 	_capture_step("overworld_after_town", overworld_after_town)
 
 	var resolving_outcome := String(_config.get("flow", "")) == FLOW_BOOT_TO_SKIRMISH_RESOLVED_OUTCOME
-	if resolving_outcome:
-		var free_company_claim := await _claim_overworld_validation_target(
+	var free_company_claim := await _claim_overworld_validation_target(
+		post_town_overworld,
+		"resource",
+		"river_free_company",
+		"support_site_claimed_river_free_company"
+	)
+	if not bool(free_company_claim.get("ok", false)):
+		_fail("Could not claim the authored Free Company support site before the hostile-town march.", free_company_claim)
+		return false
+	post_town_overworld = free_company_claim.get("scene", post_town_overworld)
+	var scenario_id := String(_config.get("scenario_id", ""))
+	var objective_clear: Dictionary = {}
+	if scenario_id == "river-pass":
+		objective_clear = await _clear_river_pass_required_encounters_with_refit(
 			post_town_overworld,
-			"resource",
-			"river_free_company",
-			"support_site_claimed_river_free_company"
+			"skirmish_town_assault"
 		)
-		if not bool(free_company_claim.get("ok", false)):
-			_fail("Could not claim the authored Free Company support site before objective clearing.", free_company_claim)
-			return false
-		post_town_overworld = free_company_claim.get("scene", post_town_overworld)
-		var objective_clear := await _clear_required_encounters_to_overworld(post_town_overworld)
+	elif resolving_outcome:
+		objective_clear = await _clear_required_encounters_to_overworld(post_town_overworld)
+	if not objective_clear.is_empty():
 		if not bool(objective_clear.get("ok", false)):
 			return false
 		post_town_overworld = objective_clear.get("scene", post_town_overworld)
+	if scenario_id == "river-pass":
 		var gorget_claim := await _claim_overworld_validation_target(
 			post_town_overworld,
 			"artifact",
@@ -830,7 +839,17 @@ func _execute_boot_to_skirmish_town_battle_flow() -> bool:
 			return false
 		post_town_overworld = gorget_claim.get("scene", post_town_overworld)
 
-	var battle_route := await _route_from_overworld_to_scene(post_town_overworld, "town", "enemy", BATTLE_SCENE)
+	var battle_route := await _route_with_battle_interrupts(
+		post_town_overworld,
+		"town",
+		"enemy",
+		BATTLE_SCENE,
+		"",
+		"skirmish_town_assault_route",
+		"town_assault",
+		"",
+		scenario_id == "river-pass"
+	)
 	if not _require(bool(battle_route.get("ok", false)), "Could not route from the live overworld into a hostile town assault.", battle_route):
 		return false
 	var battle = battle_route.get("scene", null)
@@ -840,10 +859,13 @@ func _execute_boot_to_skirmish_town_battle_flow() -> bool:
 
 	var assault_route := _last_history_entry(battle_route.get("history", []))
 	var assaulted_town: Dictionary = _dictionary_value(assault_route.get("target", {}))
-	if not _require(String(assault_route.get("pre_action_town_owner", "")) == "enemy", "Hostile-town assault route did not preserve enemy ownership before battle entry.", assault_route):
-		return false
-	var assault_route_town_state := _dictionary_value(assault_route.get("post_action_town_state", {}))
-	if not _require(String(assault_route_town_state.get("owner", "")) == "enemy", "Hostile-town assault route flipped town ownership before battle resolution.", assault_route):
+	var pre_assault_town_owner := String(
+		assault_route.get(
+			"pre_action_town_owner",
+			assaulted_town.get("owner", "")
+		)
+	)
+	if not _require(pre_assault_town_owner == "enemy", "Hostile-town assault route did not preserve enemy ownership before battle entry.", assault_route):
 		return false
 	var battle_snapshot: Dictionary = battle.call("validation_snapshot")
 	if not _require(String(battle_snapshot.get("battle_context_type", "")) == "town_assault", "Battle validation did not enter a town-assault context.", battle_snapshot):
@@ -868,7 +890,8 @@ func _execute_boot_to_skirmish_town_battle_flow() -> bool:
 		battle,
 		"battle_progressed",
 		"outcome_entered" if resolving_outcome else "overworld_after_battle",
-		SCENARIO_OUTCOME_SCENE if resolving_outcome else OVERWORLD_SCENE
+		SCENARIO_OUTCOME_SCENE if resolving_outcome else OVERWORLD_SCENE,
+		scenario_id == "river-pass"
 	)
 	if not bool(battle_resolution.get("ok", false)):
 		return false
@@ -901,7 +924,24 @@ func _execute_boot_to_skirmish_town_battle_flow() -> bool:
 		return false
 	if not _require(int(captured_occupation.get("days_to_clear", 0)) > 0, "Captured town pacification did not keep a clearance window.", captured_occupation):
 		return false
-	if not _require(int(captured_occupation.get("locked_headcount", 0)) > 0, "Captured town pacification did not hold back local recruits.", captured_occupation):
+	var expected_locked_headcount := _expected_occupation_locked_recruit_total(
+		_dictionary_value(assaulted_town.get("available_recruits", {})),
+		int(captured_occupation.get("initial_pressure", 0))
+	)
+	var actual_locked_headcount := int(captured_occupation.get("locked_headcount", 0))
+	var locked_payload_headcount := _available_recruit_total(
+		{"available_recruits": _dictionary_value(captured_occupation.get("locked_recruits", {}))}
+	)
+	if not _require(
+		actual_locked_headcount == expected_locked_headcount
+		and locked_payload_headcount == actual_locked_headcount,
+		"Captured town pacification did not preserve exact pre-capture reserve-lock authority.",
+		{
+			"pre_assault_available_recruits": assaulted_town.get("available_recruits", {}),
+			"expected_locked_headcount": expected_locked_headcount,
+			"occupation": captured_occupation,
+		}
+	):
 		return false
 	var captured_front := _dictionary_value(captured_town_state.get("front", {}))
 	if not _require(bool(captured_front.get("active", false)), "Captured town did not keep a hostile front anchor.", captured_town_state):
@@ -4280,6 +4320,20 @@ func _available_recruit_total(snapshot: Dictionary) -> int:
 	for unit_id in recruits.keys():
 		total += max(0, int(recruits.get(unit_id, 0)))
 	return total
+
+func _expected_occupation_locked_recruit_total(available_recruits: Dictionary, initial_pressure: int) -> int:
+	var access_percent := clampi(80 - (max(0, initial_pressure) * 8), 20, 55)
+	var locked_total := 0
+	for unit_id in available_recruits.keys():
+		var count: int = max(0, int(available_recruits.get(unit_id, 0)))
+		if String(unit_id) == "" or count <= 0:
+			continue
+		var released := int(floor(float(count) * float(access_percent) / 100.0))
+		if released <= 0:
+			released = 1
+		released = clampi(released, 0, count)
+		locked_total += max(0, count - released)
+	return locked_total
 
 func _string_array_value(value: Variant) -> Array[String]:
 	var normalized: Array[String] = []
