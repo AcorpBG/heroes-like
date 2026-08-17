@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the live Overworld town-footprint composition correction: static heroes on any 3x2 town presentation-footprint cell use a compact lower layout, while ordinary-field and moving heroes retain exact full-tile presentation. Focused 1280/1920 runtime, changed routed visual evidence, compatibility, static/editor, and bounded Linux/Windows export/startup gates are green; packaged Overworld interaction, hardware/accessibility certification, signing/publication, whole-game, and release readiness are not claimed.",
+  "currentNotes": "Completed the renderer-only town-footprint focus correction: hero focus follows the compact visitor presentation, selected/hovered town cells use one fill-free composite footprint perimeter, and ordinary tiles retain exact full-tile geometry. Focused 1280/1920 runtime, a visibly changed routed River Pass frame, compatibility, static/editor, and bounded Linux/Windows export/startup gates are green.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-overworld-town-footprint-hero-identity-separation-10184",
-  "currentSliceId": "presentation-overworld-town-footprint-hero-identity-separation-10184",
-  "currentSliceNotes": "Completed with one source-backed renderer geometry change keyed from the exact live town presentation footprint. Focused runtime proves compact/static versus ordinary/moving controls and exact authority; routed before/after imagery proves the town facade is materially more legible; compatibility, static/editor, Linux packaged headless startup, and Windows fresh-Wine startup are green within bounded claims.",
+  "currentSlice": "presentation-overworld-town-footprint-focus-outline-coherence-10184",
+  "currentSliceId": "presentation-overworld-town-footprint-focus-outline-coherence-10184",
+  "currentSliceNotes": "Completed with one shared read-only focus geometry resolver used by actual drawing and detached validation. The routed frame now shows one composite town perimeter and one compact hero-focus box without changing selected tile, actions, routes, input, session, or save authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Town-Footprint Hero Identity Separation",
-  "currentSliceUpdatedAt": "2026-08-17T15:17:56Z",
+  "currentSliceTitle": "Overworld Town-Footprint Focus Outline Coherence",
+  "currentSliceUpdatedAt": "2026-08-17T15:41:52Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,78 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved implementation slice from a direct current shipped-behavior defect and preserve the completed town-footprint hero composition authority.",
-  "notes": "The town-footprint hero composition slice is completed with live renderer behavior and direct visual evidence, not tracker-only evidence. The game remains short of release readiness; packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing, publication, and whole-game validation remain outside this slice.",
+  "nextActionGuardrailNote": "Select the next tracker-approved implementation slice from a direct current shipped-behavior defect and preserve completed town/hero composition and focus authority.",
+  "notes": "The town-footprint focus slice is completed with live renderer behavior and direct visual evidence, not tracker-only evidence. The game remains short of release readiness; packaged Overworld interaction, hardware/accessibility certification, signing/publication, and whole-game validation remain outside this slice.",
   "plannedSlices": [
+    {
+      "id": "presentation-overworld-town-footprint-focus-outline-coherence-10184",
+      "title": "Overworld Town-Footprint Focus Outline Coherence",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Keep hero focus and selected-town affordance legible without drawing two per-cell boxes through a composite 3x2 town presentation.",
+      "implementationTargets": [
+        "scenes/overworld/OverworldMapView.gd",
+        "tests/overworld_faction_hero_sprite_runtime_report.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_faction_hero_sprite_runtime_report.tscn",
+        "tests/overworld_visual_smoke.tscn",
+        "tests/overworld_full_route_movement_regression.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "Town-footprint hero focus uses the compact hero presentation rectangle while ordinary hero focus remains exact full-tile geometry",
+        "Selected and hovered town cells use one exact in-bounds composite footprint perimeter without the per-cell interior selection wash, while ordinary tiles retain exact existing geometry",
+        "Focused 1280x720 and 1920x1080 runtime plus a routed River Pass capture prove distinct hero focus and selected-town affordance without internal boxes crossing the town facade",
+        "Overworld visual, full-route movement, active-play focus, accessibility, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "hero, town, selected, hover, route, action, entry, footprint, passability, input, focus-navigation, session, save, content, camera, fog, AI, balance, or Native RMG authority changes",
+        "general focus color/style redesign, other object-family selection changes, town or hero sprite changes, panels, tooltips, audio, VFX, or draw-order rewrites",
+        "packaged Overworld interaction parity, controller hardware, AT-SPI/UIA certification, native hardware, signing, publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "a278b2b2c15f9e1b930ec17bcda5a3e3a27a10ab",
+        "routed_capture": "/tmp/heroes-town-footprint-routed.LacGnH/run/overworld_entered.png",
+        "hero_tile": "1,2",
+        "selected_town_entry_tile": "0,2",
+        "shared_town_footprint": "Riverwatch 3x2",
+        "hero_focus_geometry": "full_logical_tile",
+        "selected_geometry": "full_logical_tile_fill_outline_corners",
+        "observed_defect": "two_internal_per_cell_focus_boxes_cross_composite_town_facade"
+      },
+      "createdAt": "2026-08-17T15:24:00Z",
+      "startedAt": "2026-08-17T15:24:00Z",
+      "updatedAt": "2026-08-17T15:41:52Z",
+      "completedAt": "2026-08-17T15:41:52Z",
+      "notes": "Completed with a shared renderer-only focus geometry resolver. Static heroes on town footprints receive compact hero focus; selected/hovered town cells receive one fill-free exact composite perimeter; ordinary tiles remain full-tile. Focused runtime and the routed River Pass frame prove the visual result, while compatibility, static/editor, and bounded Linux/Windows startup gates preserve authority. Packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing, publication, whole-game, and release readiness are not claimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence.",
+      "evidence": {
+        "focused_runtime": "/tmp/heroes-town-focus-focused-rerun.TJxs6H",
+        "routed_runtime": "/tmp/heroes-town-focus-routed.O7Q6X6",
+        "routed_capture": "/tmp/heroes-town-focus-routed.O7Q6X6/run/overworld_entered.png",
+        "routed_before_after": "/tmp/heroes-town-focus-before-after.png",
+        "routed_changed_pixel_count": 34690,
+        "compatibility_chain": "/tmp/heroes-town-focus-compat.7svlb5",
+        "static_editor_audit": "/tmp/heroes-town-focus-final-static.HmJvx2",
+        "linux_report": ".artifacts/packaging_linux_export_smoke/report.json",
+        "windows_report": ".artifacts/packaging_windows_export_smoke/report.json",
+        "linux_pck_size_bytes": 145622644,
+        "windows_pck_size_bytes": 145622644
+      },
+      "blockedReason": null
+    },
     {
       "id": "presentation-overworld-town-footprint-hero-identity-separation-10184",
       "title": "Overworld Town-Footprint Hero Identity Separation",

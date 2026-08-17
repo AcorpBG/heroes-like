@@ -2309,6 +2309,16 @@ func _assert_marker_readability_contract(shell: Node) -> bool:
 		return false
 	var hero_layout: Dictionary = hero_sprite.get("layout", {})
 	var hero_on_town_footprint := bool(hero_presentation.get("has_town_footprint", false))
+	var map_view = shell.get_node_or_null("%Map")
+	if map_view == null or not map_view.has_method("validation_tile_focus_layout"):
+		push_error("Overworld smoke: map is missing the focus-layout validation surface.")
+		get_tree().quit(1)
+		return false
+	var focus_layout: Dictionary = map_view.call("validation_tile_focus_layout", hero_tile)
+	var focus_tile_rect := _focus_rect_from_payload(focus_layout.get("tile_rect", {}))
+	var hero_focus_rect := _focus_rect_from_payload(focus_layout.get("hero_focus_rect", {}))
+	var selection_focus_rect := _focus_rect_from_payload(focus_layout.get("selection_rect", {}))
+	var hover_focus_rect := _focus_rect_from_payload(focus_layout.get("hover_rect", {}))
 	if hero_on_town_footprint:
 		if String(hero_layout.get("mode", "")) != "compact_town_footprint_visitor" \
 			or not bool(hero_layout.get("town_footprint_colocated", false)) \
@@ -2318,11 +2328,34 @@ func _assert_marker_readability_contract(shell: Node) -> bool:
 			push_error("Overworld smoke: active hero on a town footprint did not retain the compact contained visitor composition. presentation=%s" % hero_presentation)
 			get_tree().quit(1)
 			return false
+		var town_presentation: Dictionary = hero_presentation.get("town_presentation", {})
+		if not bool(focus_layout.get("hero_uses_compact_town_footprint_rect", false)) \
+			or hero_focus_rect != _focus_rect_from_payload(hero_layout.get("hero_rect", {})) \
+			or not focus_tile_rect.encloses(hero_focus_rect) \
+			or not bool(focus_layout.get("selection_uses_town_footprint_rect", false)) \
+			or bool(focus_layout.get("selection_uses_interior_fill", true)) \
+			or not bool(focus_layout.get("hover_uses_town_footprint_rect", false)) \
+			or selection_focus_rect != hover_focus_rect \
+			or not selection_focus_rect.encloses(focus_tile_rect) \
+			or focus_layout.get("town_entry_tile", {}) != town_presentation.get("entry_tile", {}):
+			push_error("Overworld smoke: town-footprint focus geometry did not preserve compact hero focus and one fill-free composite town perimeter. focus=%s presentation=%s" % [focus_layout, hero_presentation])
+			get_tree().quit(1)
+			return false
 	elif String(hero_layout.get("mode", "")) != "full_tile_world_hero" \
 		or bool(hero_layout.get("town_footprint_colocated", true)) \
 		or not is_equal_approx(float(hero_layout.get("hero_rect_extent_fraction", 0.0)), 1.0) \
 		or not is_equal_approx(float(hero_layout.get("sprite_extent_fraction", 0.0)), 0.96):
 		push_error("Overworld smoke: active field hero did not retain the exact full-tile composition. presentation=%s" % hero_presentation)
+		get_tree().quit(1)
+		return false
+	elif bool(focus_layout.get("hero_uses_compact_town_footprint_rect", true)) \
+		or hero_focus_rect != focus_tile_rect \
+		or bool(focus_layout.get("selection_uses_town_footprint_rect", true)) \
+		or not bool(focus_layout.get("selection_uses_interior_fill", false)) \
+		or selection_focus_rect != focus_tile_rect \
+		or bool(focus_layout.get("hover_uses_town_footprint_rect", true)) \
+		or hover_focus_rect != focus_tile_rect:
+		push_error("Overworld smoke: ordinary field focus geometry drifted from the exact full-tile treatment. focus=%s" % focus_layout)
 		get_tree().quit(1)
 		return false
 	var hero_readability: Dictionary = hero_presentation.get("marker_readability", {})
@@ -2345,6 +2378,15 @@ func _assert_marker_readability_contract(shell: Node) -> bool:
 		if not _assert_town_grounding_correction(hero_readability, hero_presentation):
 			return false
 	return true
+
+func _focus_rect_from_payload(value: Variant) -> Rect2:
+	var payload: Dictionary = value if value is Dictionary else {}
+	return Rect2(
+		float(payload.get("x", 0.0)),
+		float(payload.get("y", 0.0)),
+		float(payload.get("width", 0.0)),
+		float(payload.get("height", 0.0))
+	)
 
 func _assert_marker_style(presentation: Dictionary, expected_kind: String, remembered: bool) -> bool:
 	var readability: Dictionary = presentation.get("marker_readability", {})

@@ -60,7 +60,7 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	var map_view = shell.get_node_or_null("%Map")
-	if map_view == null or not map_view.has_method("validation_hero_presentation_profiles") or not map_view.has_method("validation_hero_draw_layout"):
+	if map_view == null or not map_view.has_method("validation_hero_presentation_profiles") or not map_view.has_method("validation_hero_draw_layout") or not map_view.has_method("validation_tile_focus_layout"):
 		shell.queue_free()
 		return {"ok": false, "failure": "validation_surface_missing"}
 	var authority_before: Dictionary = session.to_dict()
@@ -80,6 +80,10 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 	if not moving_layout_exact:
 		shell.queue_free()
 		return {"ok": false, "failure": "moving_layout_control", "layout": moving_layout}
+	var focus_exact: Dictionary = _validate_focus_layouts(map_view, exact)
+	if not bool(focus_exact.get("ok", false)):
+		shell.queue_free()
+		return {"ok": false, "failure": "focus_layouts", "detail": focus_exact}
 
 	var heroes: Array = session.overworld.get("player_heroes", [])
 	var first_hero: Dictionary = heroes[0]
@@ -104,14 +108,16 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	var restored_profiles: Array = map_view.call("validation_hero_presentation_profiles")
-	var restored_exact: bool = restored_profiles == profiles and session.to_dict() == authority_before
+	var restored_focus_exact: bool = map_view.call("validation_tile_focus_layout", active_tile) == focus_exact.get("town_layout", {}) \
+		and map_view.call("validation_tile_focus_layout", focus_exact.get("ordinary_tile", Vector2i(-1, -1))) == focus_exact.get("ordinary_layout", {})
+	var restored_exact: bool = restored_profiles == profiles and restored_focus_exact and session.to_dict() == authority_before
 	var shell_rect: Rect2 = shell.get_global_rect() if shell is Control else Rect2()
 	var viewport_rect: Rect2 = get_viewport().get_visible_rect()
 	var containment_exact := viewport_rect.encloses(shell_rect)
 	shell.queue_free()
 	await get_tree().process_frame
 	return {
-		"ok": fallback_exact and restored_exact and containment_exact and moving_layout_exact,
+		"ok": fallback_exact and restored_exact and containment_exact and moving_layout_exact and bool(focus_exact.get("ok", false)),
 		"viewport": [viewport_size.x, viewport_size.y],
 		"profile_count": profiles.size(),
 		"asset_ids": exact.get("asset_ids", []),
@@ -120,6 +126,9 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 		"town_footprint_layout_exact": exact.get("town_footprint_layout_exact", false),
 		"ordinary_layout_exact": exact.get("ordinary_layout_exact", false),
 		"moving_layout_exact": moving_layout_exact,
+		"town_focus_layout_exact": focus_exact.get("town_focus_layout_exact", false),
+		"ordinary_focus_layout_exact": focus_exact.get("ordinary_focus_layout_exact", false),
+		"town_selection_interior_fill": focus_exact.get("town_selection_interior_fill", true),
 		"fallback_exact": fallback_exact,
 		"restored_exact": restored_exact,
 		"containment_exact": containment_exact,
@@ -135,6 +144,7 @@ func _validate_profiles(profiles: Array, map_view: Node) -> Dictionary:
 	var town_footprint_layout_count := 0
 	var ordinary_layout_count := 0
 	var active_tile := Vector2i(-1, -1)
+	var ordinary_tile := Vector2i(-1, -1)
 	var geometry_exact := true
 	var view_metrics: Dictionary = map_view.call("validation_view_metrics")
 	var board_rect := _rect_from_payload(view_metrics.get("board_rect", {}))
@@ -188,6 +198,8 @@ func _validate_profiles(profiles: Array, map_view: Node) -> Dictionary:
 				and String(town_presentation.get("tile_role", "")) == "blocked_non_entry_footprint"
 		else:
 			ordinary_layout_count += 1
+			if ordinary_tile.x < 0:
+				ordinary_tile = tile
 			geometry_exact = geometry_exact \
 				and String(layout.get("mode", "")) == "full_tile_world_hero" \
 				and is_equal_approx(float(layout.get("hero_rect_extent_fraction", 0.0)), 1.0) \
@@ -200,7 +212,74 @@ func _validate_profiles(profiles: Array, map_view: Node) -> Dictionary:
 		"town_footprint_layout_exact": town_footprint_layout_count == 1 and geometry_exact,
 		"ordinary_layout_exact": ordinary_layout_count == 5 and geometry_exact,
 		"active_tile": {"x": active_tile.x, "y": active_tile.y},
+		"ordinary_tile": {"x": ordinary_tile.x, "y": ordinary_tile.y},
 	}
+
+func _validate_focus_layouts(map_view: Node, profiles_exact: Dictionary) -> Dictionary:
+	var active_tile_value: Dictionary = profiles_exact.get("active_tile", {})
+	var active_tile := Vector2i(int(active_tile_value.get("x", -1)), int(active_tile_value.get("y", -1)))
+	var ordinary_tile_value: Dictionary = profiles_exact.get("ordinary_tile", {})
+	var ordinary_tile := Vector2i(int(ordinary_tile_value.get("x", -1)), int(ordinary_tile_value.get("y", -1)))
+	if active_tile.x < 0 or ordinary_tile.x < 0:
+		return {"ok": false, "reason": "missing_control_tiles"}
+	var metrics: Dictionary = map_view.call("validation_view_metrics")
+	var board_rect := _rect_from_payload(metrics.get("board_rect", {}))
+	var map_size_value: Dictionary = metrics.get("map_size", {})
+	var map_size := Vector2i(int(map_size_value.get("x", 0)), int(map_size_value.get("y", 0)))
+	var active_tile_rect := _tile_rect_from_metrics(board_rect, map_size, active_tile)
+	var ordinary_tile_rect := _tile_rect_from_metrics(board_rect, map_size, ordinary_tile)
+	var hero_layout: Dictionary = map_view.call("validation_hero_draw_layout", active_tile, false)
+	var town_tile_presentation: Dictionary = map_view.call("validation_tile_presentation", active_tile)
+	var town_presentation: Dictionary = town_tile_presentation.get("town_presentation", {})
+	var expected_town_rect := _footprint_rect_from_presentation(town_presentation, board_rect, map_size)
+	var town_layout: Dictionary = map_view.call("validation_tile_focus_layout", active_tile)
+	var ordinary_layout: Dictionary = map_view.call("validation_tile_focus_layout", ordinary_tile)
+	var town_hero_focus_rect := _rect_from_payload(town_layout.get("hero_focus_rect", {}))
+	var town_selection_rect := _rect_from_payload(town_layout.get("selection_rect", {}))
+	var town_hover_rect := _rect_from_payload(town_layout.get("hover_rect", {}))
+	var ordinary_hero_focus_rect := _rect_from_payload(ordinary_layout.get("hero_focus_rect", {}))
+	var ordinary_selection_rect := _rect_from_payload(ordinary_layout.get("selection_rect", {}))
+	var ordinary_hover_rect := _rect_from_payload(ordinary_layout.get("hover_rect", {}))
+	var town_focus_layout_exact: bool = bool(town_layout.get("hero_uses_compact_town_footprint_rect", false)) \
+		and town_hero_focus_rect == _rect_from_payload(hero_layout.get("hero_rect", {})) \
+		and active_tile_rect.encloses(town_hero_focus_rect) \
+		and bool(town_layout.get("selection_uses_town_footprint_rect", false)) \
+		and not bool(town_layout.get("selection_uses_interior_fill", true)) \
+		and town_selection_rect == expected_town_rect \
+		and bool(town_layout.get("hover_uses_town_footprint_rect", false)) \
+		and town_hover_rect == expected_town_rect \
+		and town_selection_rect.size == active_tile_rect.size * Vector2(3.0, 2.0) \
+		and town_layout.get("town_entry_tile", {}) == town_presentation.get("entry_tile", {})
+	var ordinary_focus_layout_exact: bool = not bool(ordinary_layout.get("hero_uses_compact_town_footprint_rect", true)) \
+		and ordinary_hero_focus_rect == ordinary_tile_rect \
+		and not bool(ordinary_layout.get("selection_uses_town_footprint_rect", true)) \
+		and bool(ordinary_layout.get("selection_uses_interior_fill", false)) \
+		and ordinary_selection_rect == ordinary_tile_rect \
+		and not bool(ordinary_layout.get("hover_uses_town_footprint_rect", true)) \
+		and ordinary_hover_rect == ordinary_tile_rect \
+		and (ordinary_layout.get("town_entry_tile", {}) as Dictionary).is_empty()
+	return {
+		"ok": town_focus_layout_exact and ordinary_focus_layout_exact,
+		"town_focus_layout_exact": town_focus_layout_exact,
+		"ordinary_focus_layout_exact": ordinary_focus_layout_exact,
+		"town_selection_interior_fill": bool(town_layout.get("selection_uses_interior_fill", true)),
+		"town_layout": town_layout.duplicate(true),
+		"ordinary_layout": ordinary_layout.duplicate(true),
+		"ordinary_tile": ordinary_tile,
+	}
+
+func _footprint_rect_from_presentation(presentation: Dictionary, board_rect: Rect2, map_size: Vector2i) -> Rect2:
+	var cells: Array = presentation.get("footprint_cells", [])
+	var result := Rect2()
+	var has_cell := false
+	for cell_value in cells:
+		if not (cell_value is Dictionary) or not bool(cell_value.get("in_bounds", false)):
+			continue
+		var tile := Vector2i(int(cell_value.get("x", -1)), int(cell_value.get("y", -1)))
+		var cell_rect := _tile_rect_from_metrics(board_rect, map_size, tile)
+		result = result.merge(cell_rect) if has_cell else cell_rect
+		has_cell = true
+	return result
 
 func _rect_from_payload(value: Variant) -> Rect2:
 	var payload: Dictionary = value if value is Dictionary else {}

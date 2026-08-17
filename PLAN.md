@@ -6873,6 +6873,32 @@ Completion evidence:
 - a routed 1920x1080 River Pass run completed naturally and its changed capture visibly keeps Lyra compact and lower over Riverwatch's blocked footprint cell, preserving substantially more of the tower, gate, and central facade than the pre-change capture;
 - Overworld visual, full-route movement, active-play focus, accessibility semantics, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup gates are green within the stated bounded claims.
 
+## Selected Slice: Overworld Town-Footprint Focus Outline Coherence
+
+id: `presentation-overworld-town-footprint-focus-outline-coherence-10184`
+
+Status: completed.
+
+Implementation boundary:
+- when the live hero occupies a town presentation-footprint cell, draw its existing hero-focus identity around the compact hero presentation instead of the full logical tile;
+- when the selected or hovered tile belongs to a town presentation footprint, draw one composite outline/corner treatment around the exact in-bounds town footprint and omit the per-cell interior selection wash that currently crosses the town facade;
+- retain exact full-tile focus, selection, fill, corner, and hover geometry for ordinary map tiles and preserve all underlying hero, selected, hover, route, action, input, session, and save authority.
+
+Completion criteria:
+- focused 1280x720 and 1920x1080 runtime proves compact town-footprint hero-focus containment, exact composite 3x2 town selection/hover perimeter, no town interior selection wash, ordinary-tile full geometry, and unchanged focus/action/session/save authority;
+- a routed 1920x1080 River Pass capture visibly removes the two internal per-cell boxes from Riverwatch while retaining distinct hero focus and selected-town affordance;
+- Overworld visual, full-route movement, active-play focus, accessibility, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass.
+
+Non-goals:
+- no hero, town, selected, hover, route, action, entry, footprint, passability, input, focus-navigation, session, save, content, camera, fog, AI, balance, or Native RMG authority change;
+- no general focus color/style redesign, object-family selection rewrite, town/hero sprite change, panel, tooltip, audio, VFX, or draw-order rewrite;
+- no packaged Overworld interaction parity, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Completion evidence:
+- focused 1280x720 and 1920x1080 runtime proves compact town-footprint hero focus, exact fill-free 3x2 town selection/hover geometry, ordinary full-tile controls, restoration, and save version 9;
+- a natural routed 1920x1080 Main Menu-to-River Pass run visibly replaces the two internal per-cell boxes with one gold composite town perimeter plus one compact white hero-focus box, changing 34,690 pixels from the prior routed frame;
+- Overworld visual, full-route movement, active-play focus, accessibility semantics, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup gates are green within bounded claims.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:

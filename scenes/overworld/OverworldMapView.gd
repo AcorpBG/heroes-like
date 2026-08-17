@@ -1762,17 +1762,41 @@ func _draw_route_segment(board_rect: Rect2, tiles: Array, line_color: Color) -> 
 func _draw_tile_focus(tile: Vector2i, rect: Rect2) -> void:
 	var extent := minf(rect.size.x, rect.size.y)
 	var focus_width := maxf(3.0, extent * FOCUS_RING_WIDTH_FACTOR)
+	var layout := _tile_focus_layout(tile, rect)
 	if tile == _hero_tile:
-		_canvas_draw_rect(rect.grow(-1.0), Color(0.03, 0.025, 0.015, 0.50), false, focus_width + 2.0)
-		_canvas_draw_rect(rect.grow(-3.0), HERO_RING_COLOR, false, focus_width)
+		var hero_focus_rect: Rect2 = layout.get("hero_focus_rect", rect)
+		_canvas_draw_rect(hero_focus_rect.grow(-1.0), Color(0.03, 0.025, 0.015, 0.50), false, focus_width + 2.0)
+		_canvas_draw_rect(hero_focus_rect.grow(-3.0), HERO_RING_COLOR, false, focus_width)
 
 	if tile == _selected_tile:
-		_canvas_draw_rect(rect.grow(-5.0), Color(SELECTION_COLOR.r, SELECTION_COLOR.g, SELECTION_COLOR.b, 0.10), true)
-		_canvas_draw_rect(rect.grow(-5.0), SELECTION_COLOR, false, focus_width)
-		_draw_selection_corners(rect, SELECTION_COLOR, focus_width)
+		var selection_rect: Rect2 = layout.get("selection_rect", rect)
+		if bool(layout.get("selection_uses_interior_fill", true)):
+			_canvas_draw_rect(selection_rect.grow(-5.0), Color(SELECTION_COLOR.r, SELECTION_COLOR.g, SELECTION_COLOR.b, 0.10), true)
+		_canvas_draw_rect(selection_rect.grow(-5.0), SELECTION_COLOR, false, focus_width)
+		_draw_selection_corners(selection_rect, SELECTION_COLOR, focus_width)
 
 	if tile == _hover_tile:
-		_canvas_draw_rect(rect.grow(-7.0), HOVER_COLOR, false, 2.0)
+		var hover_rect: Rect2 = layout.get("hover_rect", rect)
+		_canvas_draw_rect(hover_rect.grow(-7.0), HOVER_COLOR, false, 2.0)
+
+func _tile_focus_layout(tile: Vector2i, tile_rect: Rect2) -> Dictionary:
+	var town_presentation := _town_presentation_at(tile)
+	var town: Dictionary = town_presentation.get("town", {}) if town_presentation.get("town", {}) is Dictionary else {}
+	var uses_town_footprint := not town.is_empty()
+	var town_rect := tile_rect
+	if uses_town_footprint:
+		town_rect = _town_footprint_rect_for_entry(_town_entry_tile(town))
+	return {
+		"tile_rect": tile_rect,
+		"hero_focus_rect": _hero_draw_rect(tile_rect, tile, true) if uses_town_footprint else tile_rect,
+		"hero_uses_compact_town_footprint_rect": uses_town_footprint,
+		"selection_rect": town_rect,
+		"selection_uses_town_footprint_rect": uses_town_footprint,
+		"selection_uses_interior_fill": not uses_town_footprint,
+		"hover_rect": town_rect,
+		"hover_uses_town_footprint_rect": uses_town_footprint,
+		"town_entry_tile": _vector2i_payload(_town_entry_tile(town)) if uses_town_footprint else {},
+	}
 
 func _draw_tile_icon(tile: Vector2i, rect: Rect2) -> void:
 	_draw_tile_state_icon(tile, rect)
@@ -4235,6 +4259,25 @@ func validation_hero_presentation_profiles() -> Array:
 
 func validation_hero_draw_layout(tile: Vector2i, moving: bool = false) -> Dictionary:
 	return _hero_draw_layout_payload(_tile_rect(_board_rect(), tile), tile, not moving)
+
+func validation_tile_focus_layout(tile: Vector2i) -> Dictionary:
+	var tile_rect := _tile_rect(_board_rect(), tile)
+	var layout := _tile_focus_layout(tile, tile_rect)
+	var hero_focus_rect: Rect2 = layout.get("hero_focus_rect", tile_rect)
+	var selection_rect: Rect2 = layout.get("selection_rect", tile_rect)
+	var hover_rect: Rect2 = layout.get("hover_rect", tile_rect)
+	return {
+		"tile": _vector2i_payload(tile),
+		"tile_rect": _rect_payload(tile_rect),
+		"hero_focus_rect": _rect_payload(hero_focus_rect),
+		"hero_uses_compact_town_footprint_rect": bool(layout.get("hero_uses_compact_town_footprint_rect", false)),
+		"selection_rect": _rect_payload(selection_rect),
+		"selection_uses_town_footprint_rect": bool(layout.get("selection_uses_town_footprint_rect", false)),
+		"selection_uses_interior_fill": bool(layout.get("selection_uses_interior_fill", true)),
+		"hover_rect": _rect_payload(hover_rect),
+		"hover_uses_town_footprint_rect": bool(layout.get("hover_uses_town_footprint_rect", false)),
+		"town_entry_tile": layout.get("town_entry_tile", {}).duplicate(true),
+	}
 
 func validation_enemy_commander_presentation_profiles() -> Array:
 	var profiles := []
