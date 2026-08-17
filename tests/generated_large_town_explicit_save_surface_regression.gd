@@ -152,6 +152,10 @@ func _assert_context_and_freshness_parity() -> Dictionary:
 	if alias_rows.is_empty():
 		return {}
 	rows["stored_recap_alias"] = alias_rows
+	var stored_recap_context_rows := _assert_stored_recap_context_parity()
+	if stored_recap_context_rows.is_empty():
+		return {}
+	rows["stored_recap_context"] = stored_recap_context_rows
 	var recovery_rows: Dictionary = _assert_summary_recovery_controls()
 	if recovery_rows.is_empty():
 		return {}
@@ -330,7 +334,9 @@ func _assert_stored_recap_alias_profiles() -> Dictionary:
 	var alias_direct: Dictionary = _direct_legacy_surface(session, 1)
 	var alias_record := _last_save_surface_record(SaveService.validation_general_profile_log_last_records(10))
 	var alias_metadata: Dictionary = alias_record.get("metadata", {}) if alias_record.get("metadata", {}) is Dictionary else {}
-	if alias_live_after != alias_live_before or alias_surface != alias_direct or not bool(alias_metadata.get("stored_recap_alias_reused", false)) or alias_surface.get("slot_resume_recap") != alias_surface.get("latest_resume_recap"):
+	if alias_live_after != alias_live_before or alias_surface != alias_direct or not bool(alias_metadata.get("stored_recap_alias_reused", false)) \
+			or int(alias_metadata.get("stored_recap_context_build_count", -1)) != 1 or int(alias_metadata.get("stored_recap_context_reuse_count", -1)) != 3 \
+			or alias_surface.get("slot_resume_recap") != alias_surface.get("latest_resume_recap"):
 		_finish_fail("Selected/latest stored recap alias was not reused exactly.", {"difference": _first_difference(alias_direct, alias_surface), "record": alias_record})
 		return {}
 
@@ -345,7 +351,9 @@ func _assert_stored_recap_alias_profiles() -> Dictionary:
 	var distinct_direct: Dictionary = _direct_legacy_surface(session, 1)
 	var distinct_record := _last_save_surface_record(SaveService.validation_general_profile_log_last_records(10))
 	var distinct_metadata: Dictionary = distinct_record.get("metadata", {}) if distinct_record.get("metadata", {}) is Dictionary else {}
-	if distinct_live_after != distinct_live_before or distinct_surface != distinct_direct or bool(distinct_metadata.get("stored_recap_alias_reused", true)) or distinct_surface.get("slot_resume_recap") == distinct_surface.get("latest_resume_recap"):
+	if distinct_live_after != distinct_live_before or distinct_surface != distinct_direct or bool(distinct_metadata.get("stored_recap_alias_reused", true)) \
+			or int(distinct_metadata.get("stored_recap_context_build_count", -1)) != 2 or int(distinct_metadata.get("stored_recap_context_reuse_count", -1)) != 6 \
+			or distinct_surface.get("slot_resume_recap") == distinct_surface.get("latest_resume_recap"):
 		_finish_fail("Distinct selected/latest stored recaps were incorrectly aliased.", {"difference": _first_difference(distinct_direct, distinct_surface), "record": distinct_record})
 		return {}
 	return {
@@ -353,7 +361,56 @@ func _assert_stored_recap_alias_profiles() -> Dictionary:
 		"distinct_latest_alias": false,
 		"alias_surface_ms": float(alias_record.get("total_ms", 0.0)),
 		"distinct_surface_ms": float(distinct_record.get("total_ms", 0.0)),
+		"alias_context_build_count": int(alias_metadata.get("stored_recap_context_build_count", 0)),
+		"distinct_context_build_count": int(distinct_metadata.get("stored_recap_context_build_count", 0)),
 	}
+
+func _assert_stored_recap_context_parity() -> Dictionary:
+	var rows := {}
+	var fixtures := []
+	for context in ["overworld", "battle", "outcome"]:
+		var session = _small_context_session(context)
+		if session == null:
+			return {}
+		fixtures.append({"id": context, "session": session})
+	var town_session = _small_town_session()
+	if town_session == null:
+		return {}
+	fixtures.append({"id": "town", "session": town_session})
+	for fixture_value in fixtures:
+		var fixture: Dictionary = fixture_value
+		var session = fixture.get("session")
+		var summary: Dictionary = SaveService._manual_summary_for_session(session, 1)
+		var session_before: Dictionary = session.to_dict().duplicate(true)
+		var summary_before: Dictionary = summary.duplicate(true)
+		var direct: String = SaveService._describe_summary_resume_recap_direct_legacy(summary)
+		var context_backed: String = SaveService.describe_summary_resume_recap(summary)
+		if direct != context_backed or session.to_dict() != session_before or summary != summary_before:
+			_finish_fail("%s stored recap context changed text or authority." % String(fixture.get("id", "")), {
+				"direct": direct,
+				"context_backed": context_backed,
+			})
+			return {}
+		rows[String(fixture.get("id", ""))] = {
+			"whole_text_exact": true,
+			"line_count": context_backed.split("\n").size(),
+		}
+	var fallback_rows := [
+		{"id": "missing", "summary": {}},
+		{"id": "invalid", "summary": {"valid": false, "loadable": false, "status_text": "Empty slot."}},
+		{"id": "uninspectable", "summary": {"valid": true, "loadable": true, "payload": {"day": 1}, "status_text": "Unavailable"}},
+	]
+	for fallback_value in fallback_rows:
+		var fallback: Dictionary = fallback_value
+		var summary: Dictionary = fallback.get("summary", {})
+		var summary_before: Dictionary = summary.duplicate(true)
+		var direct: String = SaveService._describe_summary_resume_recap_direct_legacy(summary)
+		var context_backed: String = SaveService.describe_summary_resume_recap(summary)
+		if direct != context_backed or summary != summary_before:
+			_finish_fail("%s stored recap fallback changed." % String(fallback.get("id", "")), {"direct": direct, "context_backed": context_backed})
+			return {}
+		rows[String(fallback.get("id", ""))] = {"whole_text_exact": true, "text": context_backed}
+	return rows
 
 func _assert_summary_recovery_controls() -> Dictionary:
 	var path := MANUAL_PATHS[0]
