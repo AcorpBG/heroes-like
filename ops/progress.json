@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld ObjectiveBrief now retains the exact complete rule-owned value and full stakes/readiness tooltip behind native pixel-aware ellipsis on the existing single-line Label.",
+  "currentNotes": "Compact Overworld right-rail overflow now ends at a whole-word boundary with one Unicode ellipsis while fitting text, existing budgets, and complete tooltips remain exact.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-objective-brief-native-pixel-ellipsis-10184",
-  "currentSliceId": "ux-overworld-objective-brief-native-pixel-ellipsis-10184",
-  "currentSliceNotes": "Completed with exact 1280x720 and 1920x1080 full-value/tooltip, native-fit, TopStrip geometry, session authority, compatibility, static/editor, and bounded Linux/Windows packaging evidence.",
+  "currentSlice": "ux-overworld-rail-word-boundary-ellipsis-10184",
+  "currentSliceId": "ux-overworld-rail-word-boundary-ellipsis-10184",
+  "currentSliceNotes": "Completed with exact 1280x720 and 1920x1080 full-source/visible-text/tooltip proof, whole-word Unicode ellipsis, rail/session authority, compatibility, static/editor, and bounded Linux/Windows packaging evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Objective Brief Native Pixel Ellipsis",
-  "currentSliceUpdatedAt": "2026-08-17T22:10:47Z",
+  "currentSliceTitle": "Overworld Rail Word-Boundary Ellipsis",
+  "currentSliceUpdatedAt": "2026-08-17T22:35:14Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,72 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select only a tracker-approved source-backed release-readiness implementation slice; preserve the completed Overworld ObjectiveBrief full-value native fit, existing tooltip, TopStrip geometry, and objective/session authority.",
-  "notes": "The Overworld ObjectiveBrief native pixel-ellipsis slice is completed with exact responsive live behavior, unchanged objective/tooltip/session authority, compatibility, static/editor, and bounded Linux/Windows export-startup evidence. Packaged Overworld interaction, hardware/accessibility certification, signing/publication, whole-game validation, and release readiness remain outside this slice.",
+  "nextActionGuardrailNote": "Change only rail truncation boundaries; preserve full tooltips, exact source-line selection/order, existing 42-character and one/two-line budgets, general compactors, nodes, layout, routes, actions, saves, settings, and session authority.",
+  "notes": "The Overworld rail word-boundary slice is completed with exact two-width live behavior, unchanged source/tooltip/session authority, compatibility, static/editor, and bounded Linux/Windows export-startup evidence. Packaged Overworld interaction, hardware/accessibility certification, signing/publication, whole-game validation, and release readiness remain outside this slice.",
   "plannedSlices": [
+    {
+      "id": "ux-overworld-rail-word-boundary-ellipsis-10184",
+      "title": "Overworld Rail Word-Boundary Ellipsis",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Make compact Overworld right-rail truncation end on a whole word with one Unicode ellipsis instead of exposing partial player-facing tokens.",
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_visual_smoke.tscn",
+        "tests/overworld_route_tooltip_smoke.tscn",
+        "tests/overworld_gameplay_movement_input_ownership_regression.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "Exact 1280x720 and 1920x1080 live Overworld rows independently reproduce First Turn Briefing from its full source and prove whole-word Unicode ellipsis while fitting rail text remains exact",
+        "All visible rail labels retain exact line-character budgets, full tooltips, containment-order, and no-wrap clipping while objective-readiness, drawer, focus, route, action, save, settings, and whole-session authority remain exact",
+        "Focused Overworld visual, route/input, active-focus, accessibility, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "OverworldRules source copy, briefing, objective, readiness, event, commitment, context, action, route, save, session, content, balance, AI, or Native RMG behavior changes",
+        "general _short_text changes, native multi-line replacement, new node-panel-tooltip surface, line-character budgets, wrap-height-font-UI-scale, art, audio, VFX, or sidebar redesign",
+        "packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing, publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "916c881c2e875d937f0ccbb21f5ab16e0f9e1722",
+        "sourceCut": "return \"%s...\" % normalized.left(max(1, max_chars - 3)).strip_edges()",
+        "observedVisibleEnding": "Opening objectives: Claim Duskfen Basti...",
+        "expectedOverflow": "word_boundary_unicode_ellipsis",
+        "observedArtifact": "/tmp/heroes-current-overworld-1280.png",
+        "observedDefect": "overworld_compact_rail_ascii_mid_token_cut"
+      },
+      "createdAt": "2026-08-17T22:16:01Z",
+      "startedAt": "2026-08-17T22:16:01Z",
+      "updatedAt": "2026-08-17T22:35:14Z",
+      "completedAt": "2026-08-17T22:35:14Z",
+      "completionEvidence": {
+        "focusedRuntime": "/tmp/heroes-overworld-rail-focused-rerun.KaJIvl",
+        "compatibilityRuntime": [
+          "/tmp/heroes-overworld-rail-compat-visual.UcGJ6S",
+          "/tmp/heroes-overworld-rail-compat-rest2.xhv0Zf"
+        ],
+        "staticEditorAudit": "/tmp/heroes-overworld-rail-final-audit.BS6UY1",
+        "linuxPackaging": "/tmp/heroes-overworld-rail-platform-linux.XUbUxy",
+        "windowsPackaging": "/tmp/heroes-overworld-rail-platform-windows.37Fvvl",
+        "boundedClaims": "Focused headless real-shell rail behavior at 1280x720 and 1920x1080; official Linux export/headless startup; official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup only."
+      },
+      "notes": "Implemented one rail-only whole-word Unicode-ellipsis helper and retained fitting text, full tooltips, line budgets, general compactors, layout, route/action/save/settings/session authority, and all registered non-goals. Focused, compatibility, static/editor, and bounded Linux/Windows packaging gates are green.",
+      "remainingWork": "",
+      "blockedReason": null
+    },
     {
       "id": "ux-overworld-objective-brief-native-pixel-ellipsis-10184",
       "title": "Overworld Objective Brief Native Pixel Ellipsis",
@@ -89210,7 +89273,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The selected Overworld ObjectiveBrief fixed-character rendering defect is fixed and validated. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain. The game is not release-ready.",
+  "remainingGap": "The selected Overworld compact-rail mid-token truncation defect remains to be implemented and validated. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain. The game is not release-ready.",
   "remainingWork": "Select the next tracker-approved source-backed release-readiness implementation slice. Broader release-readiness gaps remain.",
   "reportOnlyEvidence": [
     {
@@ -89745,7 +89808,7 @@
   ],
   "summary": "Overworld empty manual-slot status clarity is implemented and validated from direct rendered evidence through the real empty-to-ready save path. This is one bounded slice; the game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-17T22:10:47Z",
+  "updatedAt": "2026-08-17T22:35:14Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

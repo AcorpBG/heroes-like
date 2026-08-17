@@ -27240,6 +27240,125 @@ def validate_overworld_objective_brief_native_pixel_ellipsis(errors: list[str]) 
             ensure(forbidden_token not in join_body, errors, f"Independent ObjectiveBrief tooltip join must avoid production/canonicalization dependency: {forbidden_token}")
 
 
+def validate_overworld_rail_word_boundary_ellipsis(errors: list[str]) -> None:
+    visual_path = ROOT / "tests" / "overworld_visual_smoke.gd"
+    for path in (OVERWORLD_SCRIPT_PATH, visual_path):
+        ensure(path.exists(), errors, f"Missing Overworld rail word-boundary owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in (OVERWORLD_SCRIPT_PATH, visual_path)):
+        return
+    shell_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+    visual_text = visual_path.read_text(encoding="utf-8")
+
+    rail_helper_match = re.search(
+        r"func _short_rail_text\(text: String, max_chars: int\) -> String:\n(?P<body>.*?)(?=\nfunc )",
+        shell_text,
+        re.S,
+    )
+    compact_match = re.search(
+        r"func _compact_rail_text\(full_text: String, max_lines: int, max_chars: int = RAIL_LINE_CHARS, drop_headings: bool = true\) -> String:\n(?P<body>.*?)(?=\nfunc )",
+        shell_text,
+        re.S,
+    )
+    trim_match = re.search(
+        r"func _trim_rail_visible_text\(visible_text: String, max_lines: int, max_chars: int\) -> String:\n(?P<body>.*?)(?=\nfunc )",
+        shell_text,
+        re.S,
+    )
+    ensure(rail_helper_match is not None and compact_match is not None and trim_match is not None, errors, "OverworldShell must isolate rail-only word-boundary truncation and both existing rail consumers")
+    ensure(shell_text.count("func _short_rail_text(") == 1, errors, "OverworldShell must own exactly one rail-only truncator")
+    ensure(shell_text.count("lines.append(_short_rail_text(") == 2 and shell_text.count("var line := _short_rail_text(raw_line, max_chars)") == 1, errors, "Only the three compact/trim rail call sites may use the rail-only truncator")
+    ensure('return "%s..." % normalized.left(max(1, max_chars - 3)).strip_edges()' in shell_text, errors, "The general _short_text compactor must remain unchanged outside the rail slice")
+    if rail_helper_match is not None:
+        helper_body = rail_helper_match.group("body")
+        helper_order = tuple(helper_body.find(token) for token in (
+            'text.strip_edges().replace("\\n", " ")',
+            'while normalized.find("  ") >= 0:',
+            "if normalized.length() <= max_chars:",
+            "if max_chars <= 0:",
+            "if max_chars == 1:",
+            "var prefix := normalized.left(max_chars - 1).strip_edges()",
+            'var boundary := prefix.rfind(" ")',
+            "if boundary > 0:",
+            "if prefix == \"\":",
+            'return "%s…" % prefix',
+        ))
+        ensure(all(index >= 0 for index in helper_order) and list(helper_order) == sorted(helper_order), errors, "Rail truncator must normalize, preserve fitting values, handle bounds, then choose the last whole word before one Unicode ellipsis")
+        for forbidden_token in ("_short_text", '"..."', "Label", "Control", "font", "size", "tooltip", "sort(", "erase(", "call_deferred", "await "):
+            ensure(forbidden_token not in helper_body, errors, f"Rail-only truncator must not change general compactors, layout, timing, or authority via {forbidden_token}")
+    if compact_match is not None:
+        compact_body = compact_match.group("body")
+        ensure(compact_body.count("_short_rail_text(") == 2 and "_short_text(" not in compact_body, errors, "Rail compact selection must use the rail-only word-boundary helper for selected lines and fallback only")
+    if trim_match is not None:
+        trim_body = trim_match.group("body")
+        ensure(trim_body.count("_short_rail_text(") == 1 and "_short_text(" not in trim_body, errors, "Rail visible trimming must use the rail-only word-boundary helper exactly once")
+
+    focused_match = re.search(
+        r"func _assert_rail_word_boundary_ellipsis_contract\(shell: Control\) -> bool:\n(?P<body>.*?)(?=\nfunc )",
+        visual_text,
+        re.S,
+    )
+    expected_match = re.search(
+        r"func _expected_briefing_rail_text\(full_text: String\) -> String:\n(?P<body>.*?)(?=\nfunc )",
+        visual_text,
+        re.S,
+    )
+    control_match = re.search(
+        r"func _word_safe_rail_line_for_test\(text: String, max_chars: int\) -> String:\n(?P<body>.*?)(?=\nfunc )",
+        visual_text,
+        re.S,
+    )
+    ensure(focused_match is not None and expected_match is not None and control_match is not None, errors, "Overworld visual smoke must own focused rail, independent briefing, and independent word-boundary controls")
+    ensure(visual_text.count("await _assert_rail_word_boundary_ellipsis_contract(shell)") == 1, errors, "Overworld visual smoke must run the real rail word-boundary contract exactly once")
+    ensure(visual_text.find("await _assert_objective_brief_native_ellipsis_contract(shell)") < visual_text.find("await _assert_rail_word_boundary_ellipsis_contract(shell)") < visual_text.find("_assert_wireframe_contract(shell)"), errors, "Focused native ObjectiveBrief and rail contracts must finish before broad visual mutations")
+    if focused_match is not None:
+        focused_body = focused_match.group("body")
+        focused_order = tuple(focused_body.find(token) for token in (
+            "session.to_dict()",
+            'shell.get_node("%Briefing")',
+            'shell.get_node("%BriefingPanel")',
+            'shell.call("validation_briefing_consumption_autosave_snapshot")',
+            '_expected_briefing_rail_text(full_briefing)',
+            'full_briefing.contains("Opening objectives: Claim Duskfen Bastion")',
+            'expected_visible.contains("Duskfen…")',
+            "for width in [1280, 1920]:",
+            "get_window().size = requested_size",
+            "_visible_text_lines(briefing.text)",
+            "briefing.text != expected_visible",
+            "briefing.tooltip_text != full_briefing",
+            'visible_lines[1].ends_with("…")',
+            'String(visible_lines[1]).contains("...")',
+            "briefing.autowrap_mode != TextServer.AUTOWRAP_OFF",
+            "not briefing.clip_text",
+            "not panel_rect.encloses(label_rect)",
+            "get_window().size = original_window_size",
+            "session.to_dict() != authority_before",
+        ))
+        ensure(all(index >= 0 for index in focused_order) and list(focused_order) == sorted(focused_order), errors, "Focused rail proof must capture independent source, resize, compare exact visible/full values and geometry, restore, then verify authority")
+        for required_token in (
+            'expected_visible.contains("Basti...")',
+            'expected_visible.contains("...")',
+            "visible_lines.size() != 2",
+            "String(visible_lines[0]).length() > 42",
+            "String(visible_lines[1]).length() > 42",
+            "not briefing.is_visible_in_tree()",
+        ):
+            ensure(required_token in focused_body, errors, f"Focused rail proof is missing exact budget/mid-token token: {required_token}")
+        for forbidden_token in ('shell.call("_short_rail', 'shell.call("_compact_rail', 'shell.call("_trim_rail', 'shell.call("_refresh', "sort(", "erase(", ".text =", "queue_redraw"):
+            ensure(forbidden_token not in focused_body, errors, f"Focused rail proof must remain public, independent, and observation-only; forbidden {forbidden_token}")
+    if expected_match is not None:
+        expected_body = expected_match.group("body")
+        for required_token in ('full_text.split("\\n", false)', 'posture.begins_with("Command posture:")', 'posture = "Posture: %s" % posture.trim_prefix("Command posture:").strip_edges()', 'posture.begins_with("Posture:")', 'objective.begins_with("Opening objectives:")', '_word_safe_rail_line_for_test(posture, 42)', '_word_safe_rail_line_for_test(objective, 42)'):
+            ensure(required_token in expected_body, errors, f"Independent briefing rail control is missing exact source/order token: {required_token}")
+        for forbidden_token in ("shell", "OverworldShell", "_compact_rail_text", "_trim_rail_visible_text", "sort(", "erase("):
+            ensure(forbidden_token not in expected_body, errors, f"Independent briefing control must avoid production/canonicalization dependency: {forbidden_token}")
+    if control_match is not None:
+        control_body = control_match.group("body")
+        for required_token in ('text.strip_edges().replace("\\n", " ")', "if normalized.length() <= max_chars:", "if max_chars <= 0:", "if max_chars == 1:", "var prefix := normalized.left(max_chars - 1).strip_edges()", 'var boundary := prefix.rfind(" ")', 'return "%s…" % prefix'):
+            ensure(required_token in control_body, errors, f"Independent word-boundary control is missing exact token: {required_token}")
+        for forbidden_token in ("shell", "OverworldShell", "_short_rail_text", "_short_text", "sort(", "erase(", "Label", "Control"):
+            ensure(forbidden_token not in control_body, errors, f"Independent word-boundary control must avoid production/layout dependency: {forbidden_token}")
+
+
 def validate_overworld_shell_release_polish(errors: list[str]) -> None:
     required_paths = (OVERWORLD_SCENE_PATH, OVERWORLD_SCRIPT_PATH, OVERWORLD_RULES_PATH)
     for path in required_paths:
@@ -49097,6 +49216,7 @@ def main() -> int:
     validate_overworld_field_readiness_progress_recap_reuse(errors)
     validate_overworld_full_refresh_end_turn_forecast_bundle_reuse(errors)
     validate_overworld_objective_brief_native_pixel_ellipsis(errors)
+    validate_overworld_rail_word_boundary_ellipsis(errors)
     validate_overworld_shell_release_polish(errors)
     validate_overworld_command_commitment_board(errors)
     validate_overworld_commitment_summary_fallback_elision(errors)
