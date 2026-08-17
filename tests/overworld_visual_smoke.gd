@@ -466,13 +466,37 @@ func _assert_rail_word_boundary_ellipsis_contract(shell: Control) -> bool:
 	var original_window_size := get_window().size
 	var briefing: Label = shell.get_node("%Briefing")
 	var briefing_panel: Control = shell.get_node("%BriefingPanel")
+	var army: Label = shell.get_node("%Army")
+	var hero_panel: Control = shell.get_node("%HeroPanel")
+	var sidebar_shell: Control = shell.get_node("%SidebarShell")
+	var rail_labels: Array[Label] = [
+		shell.get_node("%Hero"),
+		army,
+		shell.get_node("%Heroes"),
+		shell.get_node("%Specialties"),
+		shell.get_node("%Spellbook"),
+		shell.get_node("%Artifacts"),
+		shell.get_node("%Event"),
+		briefing,
+		shell.get_node("%Commitment"),
+		shell.get_node("%Visibility"),
+		shell.get_node("%Objectives"),
+		shell.get_node("%Threats"),
+		shell.get_node("%Forecast"),
+		shell.get_node("%Context"),
+	]
 	var briefing_state: Dictionary = shell.call("validation_briefing_consumption_autosave_snapshot")
 	var full_briefing := String(briefing_state.get("briefing_text", ""))
 	var expected_visible := _expected_briefing_rail_text(full_briefing)
+	var full_army := OverworldRules.describe_army(session)
+	var expected_army := _expected_army_rail_text(full_army)
 	if not full_briefing.contains("Opening objectives: Claim Duskfen Bastion") \
 		or not expected_visible.contains("Duskfen…") \
 		or expected_visible.contains("Basti...") \
-		or expected_visible.contains("..."):
+		or expected_visible.contains("...") \
+		or not full_army.contains("Strength") \
+		or not expected_army.ends_with("Strength 495") \
+		or expected_army.length() > 42:
 		return _fail_overworld_objective_brief("Independent briefing source did not establish the rail mid-token control and whole-word expectation: full=%s expected=%s." % [full_briefing, expected_visible])
 	for width in [1280, 1920]:
 		var requested_size := Vector2i(width, 720 if width == 1280 else 1080)
@@ -483,9 +507,29 @@ func _assert_rail_word_boundary_ellipsis_contract(shell: Control) -> bool:
 		var visible_lines := _visible_text_lines(briefing.text)
 		var panel_rect := briefing_panel.get_global_rect()
 		var label_rect := briefing.get_global_rect()
+		var sidebar_rect := sidebar_shell.get_global_rect()
+		var army_rect := army.get_global_rect()
+		var army_text_width := _themed_label_text_width(army)
+		var visible_rail_count := 0
+		var fitting_rail_count := 0
+		for rail_label in rail_labels:
+			if rail_label.is_visible_in_tree():
+				visible_rail_count += 1
+				if rail_label.autowrap_mode != TextServer.AUTOWRAP_OFF \
+					or not rail_label.clip_text \
+					or rail_label.text_overrun_behavior != TextServer.OVERRUN_TRIM_WORD_ELLIPSIS:
+					return _fail_overworld_objective_brief("Visible rail Label lost native word-ellipsis ownership at %d: label=%s wrap=%s clip=%s overrun=%s." % [width, rail_label.name, rail_label.autowrap_mode, rail_label.clip_text, rail_label.text_overrun_behavior])
+				var rail_rect := rail_label.get_global_rect()
+				var rail_text_width := _themed_label_text_width(rail_label)
+				if rail_text_width <= 0.0 or not sidebar_rect.encloses(rail_rect):
+					return _fail_overworld_objective_brief("Visible rail Label lost themed measurement or Sidebar containment at %d: label=%s text_width=%s rect=%s sidebar=%s." % [width, rail_label.name, rail_text_width, rail_rect, sidebar_rect])
+				if rail_text_width <= rail_rect.size.x + 0.5:
+					fitting_rail_count += 1
 		if get_window().size != requested_size \
 			or briefing.text != expected_visible \
 			or briefing.tooltip_text != full_briefing \
+			or army.text != expected_army \
+			or army.tooltip_text != full_army \
 			or visible_lines.size() != 2 \
 			or not visible_lines[1].ends_with("…") \
 			or String(visible_lines[1]).contains("...") \
@@ -493,15 +537,30 @@ func _assert_rail_word_boundary_ellipsis_contract(shell: Control) -> bool:
 			or String(visible_lines[1]).length() > 42 \
 			or briefing.autowrap_mode != TextServer.AUTOWRAP_OFF \
 			or not briefing.clip_text \
+			or briefing.text_overrun_behavior != TextServer.OVERRUN_TRIM_WORD_ELLIPSIS \
 			or not briefing.is_visible_in_tree() \
-			or not panel_rect.encloses(label_rect):
-			return _fail_overworld_objective_brief("Briefing rail did not preserve exact full tooltip and two-line budget behind whole-word ellipsis at %d: full=%s visible=%s expected=%s lines=%s label=%s panel=%s." % [width, full_briefing, briefing.text, expected_visible, visible_lines, label_rect, panel_rect])
+			or not panel_rect.encloses(label_rect) \
+			or not hero_panel.get_global_rect().encloses(army_rect) \
+			or visible_rail_count < 6 \
+			or fitting_rail_count < 1 \
+			or (width == 1280 and army_text_width <= army_rect.size.x + 0.5):
+			return _fail_overworld_objective_brief("Rail did not preserve exact semantic text/tooltips and native word-ellipsis pixel ownership at %d: briefing_full=%s briefing=%s expected=%s army_full=%s army=%s expected_army=%s army_width=%s army_rect=%s visible=%s fitting=%s label=%s panel=%s." % [width, full_briefing, briefing.text, expected_visible, full_army, army.text, expected_army, army_text_width, army_rect, visible_rail_count, fitting_rail_count, label_rect, panel_rect])
 	get_window().size = original_window_size
 	await get_tree().process_frame
 	await get_tree().process_frame
 	if session.to_dict() != authority_before:
 		return _fail_overworld_objective_brief("Inspecting responsive rail ellipsis changed whole-session authority.")
 	return true
+
+func _themed_label_text_width(label: Label) -> float:
+	var font := label.get_theme_font("font")
+	var font_size := label.get_theme_font_size("font_size")
+	if font == null or font_size <= 0:
+		return 0.0
+	var widest := 0.0
+	for line_value in label.text.split("\n", false):
+		widest = maxf(widest, font.get_string_size(String(line_value), HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size).x)
+	return widest
 
 func _expected_briefing_rail_text(full_text: String) -> String:
 	var raw_lines := full_text.split("\n", false)
@@ -517,6 +576,16 @@ func _expected_briefing_rail_text(full_text: String) -> String:
 		_word_safe_rail_line_for_test(posture, 42),
 		_word_safe_rail_line_for_test(objective, 42),
 	])
+
+func _expected_army_rail_text(full_text: String) -> String:
+	var lines := full_text.split("\n", false)
+	if lines.size() < 2 or String(lines[0]).strip_edges() != "Marching Army":
+		return ""
+	var detail := String(lines[1]).strip_edges()
+	if not detail.contains("troops") or not detail.contains("Strength"):
+		return ""
+	var selected := _word_safe_rail_line_for_test(detail, 42)
+	return _word_safe_rail_line_for_test("Army: %s" % selected, 42)
 
 func _word_safe_rail_line_for_test(text: String, max_chars: int) -> String:
 	var normalized := text.strip_edges().replace("\n", " ")
