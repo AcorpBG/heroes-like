@@ -1,6 +1,7 @@
 extends Node
 
 const REPORT_ID := "OVERWORLD_HERO_ACTIONS_REFRESH_CACHE_REGRESSION"
+const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -13,6 +14,11 @@ func _run() -> void:
 	_prepare_shell_state(shell, session, Vector2i(0, 1), 10)
 	var reserve_id := _ensure_reserve_hero(session)
 	shell.call("_refresh")
+	var forecast_control := _assert_forecast_bundle_core_parity(session)
+	if forecast_control.is_empty():
+		return
+	if not _assert_forecast_bundle_surface_parity(shell, session, "current_tile"):
+		return
 	if not _assert_drawer_readiness_preload_parity(shell, "current_tile"):
 		return
 	var refresh_session_before: Dictionary = session.to_dict()
@@ -29,6 +35,9 @@ func _run() -> void:
 		return
 	if int(full_refresh_profile.get("drawer_handoff_preloaded_readiness_reuses", 0)) != 1:
 		_fail("Full refresh did not reuse the current readiness payload for drawer handoff synchronization.", full_refresh_profile)
+		return
+	if int(full_refresh_profile.get("end_turn_forecast_bundle_builds", 0)) != 1 or int(full_refresh_profile.get("end_turn_forecast_bundle_reuses", 0)) != 5:
+		_fail("Full refresh did not build one end-turn forecast bundle and reuse it across all five consumers.", full_refresh_profile)
 		return
 	if session.to_dict() != refresh_session_before or refresh_authority_after != refresh_authority_before:
 		_fail("Readiness reuse changed session or whole refresh surface authority.", {
@@ -80,6 +89,8 @@ func _run() -> void:
 		_fail("Route-selection refresh did not reuse cached hero actions.", selection_profile)
 		return
 	if not _assert_drawer_readiness_preload_parity(shell, "selected_route"):
+		return
+	if not _assert_forecast_bundle_surface_parity(shell, session, "selected_route"):
 		return
 
 	shell.call("validation_reset_profile", true)
@@ -137,6 +148,13 @@ func _run() -> void:
 		"field_readiness_surface_calls": int(full_refresh_profile.get("field_readiness_surface_calls", 0)),
 		"field_readiness_surface_base_event_calls": int(full_refresh_profile.get("field_readiness_surface_base_event_calls", 0)),
 		"drawer_handoff_preloaded_readiness_reuses": int(full_refresh_profile.get("drawer_handoff_preloaded_readiness_reuses", 0)),
+		"end_turn_forecast_bundle_builds": int(full_refresh_profile.get("end_turn_forecast_bundle_builds", 0)),
+		"end_turn_forecast_bundle_reuses": int(full_refresh_profile.get("end_turn_forecast_bundle_reuses", 0)),
+		"forecast_bundle_usec": int(forecast_control.get("bundle_usec", 0)),
+		"legacy_forecast_usec": int(forecast_control.get("legacy_usec", 0)),
+		"legacy_to_bundle_ratio": float(forecast_control.get("legacy_usec", 0)) / float(maxi(int(forecast_control.get("bundle_usec", 0)), 1)),
+		"forecast_bundle_core_parity": true,
+		"forecast_bundle_surface_parity": true,
 		"drawer_readiness_preload_parity": true,
 		"refresh_authority_exact": true,
 		"legacy_drawer_authority_exact": true,
@@ -332,6 +350,137 @@ func _action_present(actions: Variant, action_id: String) -> bool:
 
 func _hero_action_surfaces(snapshot: Dictionary) -> Array:
 	return snapshot.get("hero_action_surfaces", []) if snapshot.get("hero_action_surfaces", []) is Array else []
+
+func _assert_forecast_bundle_core_parity(session) -> Dictionary:
+	var ordinary := SessionStateStoreScript.SessionData.new()
+	ordinary.from_dict(session.to_dict())
+	var pressured := SessionStateStoreScript.SessionData.new()
+	pressured.from_dict(session.to_dict())
+	var pressured_towns: Array = pressured.overworld.get("towns", []) if pressured.overworld.get("towns", []) is Array else []
+	for index in range(pressured_towns.size()):
+		if not (pressured_towns[index] is Dictionary) or String(pressured_towns[index].get("owner", "neutral")) != "player":
+			continue
+		var pressured_town: Dictionary = pressured_towns[index]
+		pressured_town["recovery"] = {"pressure": 4, "last_event_day": pressured.day}
+		pressured_towns[index] = pressured_town
+		break
+	pressured.overworld["towns"] = pressured_towns
+	var day_transition := SessionStateStoreScript.SessionData.new()
+	day_transition.from_dict(session.to_dict())
+	day_transition.day = 7
+	var transition_movement: Dictionary = day_transition.overworld.get("movement", {}) if day_transition.overworld.get("movement", {}) is Dictionary else {}
+	transition_movement["current"] = 0
+	day_transition.overworld["movement"] = transition_movement
+	for row in [
+		{"id": "ordinary", "session": ordinary},
+		{"id": "pressured", "session": pressured},
+		{"id": "day_transition", "session": day_transition},
+	]:
+		var probe = row.get("session")
+		OverworldRules.normalize_overworld_state(probe)
+		var authority_before: Dictionary = probe.to_dict()
+		var expected := {
+			"forecast": OverworldRules.describe_end_turn_forecast(probe),
+			"forecast_compact": OverworldRules.describe_end_turn_forecast_compact(probe),
+		}
+		var bundled: Dictionary = OverworldRules.describe_end_turn_forecast_surfaces(probe)
+		if bundled != expected or bundled.keys() != ["forecast", "forecast_compact"] or probe.to_dict() != authority_before:
+			_fail("Combined end-turn forecast diverged from independent production wrappers for %s." % String(row.get("id", "")), {
+				"expected": expected,
+				"bundled": bundled,
+			})
+			return {}
+		bundled["forecast"] = "mutated detached control"
+		bundled["forecast_compact"] = "mutated detached control"
+		if probe.to_dict() != authority_before or OverworldRules.describe_end_turn_forecast_surfaces(probe) != expected:
+			_fail("Combined end-turn forecast was not detached or failed to rebuild from live state for %s." % String(row.get("id", "")))
+			return {}
+	var expected_full := OverworldRules.describe_end_turn_forecast(session)
+	var expected_compact := OverworldRules.describe_end_turn_forecast_compact(session)
+	var bundle_started := Time.get_ticks_usec()
+	var timed_bundle: Dictionary = OverworldRules.describe_end_turn_forecast_surfaces(session)
+	var bundle_usec := Time.get_ticks_usec() - bundle_started
+	var legacy_started := Time.get_ticks_usec()
+	for _index in range(3):
+		if OverworldRules.describe_end_turn_forecast(session) != expected_full:
+			_fail("Legacy full forecast timing control changed output.")
+			return {}
+	for _index in range(5):
+		if OverworldRules.describe_end_turn_forecast_compact(session) != expected_compact:
+			_fail("Legacy compact forecast timing control changed output.")
+			return {}
+	var legacy_usec := Time.get_ticks_usec() - legacy_started
+	if timed_bundle != {"forecast": expected_full, "forecast_compact": expected_compact} or legacy_usec < bundle_usec * 2:
+		_fail("Combined forecast did not preserve exact output or remove at least half of the legacy three-full/five-compact work.", {
+			"bundle_usec": bundle_usec,
+			"legacy_usec": legacy_usec,
+			"bundle": timed_bundle,
+		})
+		return {}
+	return {"bundle_usec": bundle_usec, "legacy_usec": legacy_usec}
+
+func _assert_forecast_bundle_surface_parity(shell: Node, session, label: String) -> bool:
+	var authority_before: Dictionary = session.to_dict()
+	var bundle: Dictionary = OverworldRules.describe_end_turn_forecast_surfaces(session)
+	var default_readiness: Dictionary = shell.call("_field_readiness_surface")
+	var preloaded_readiness: Dictionary = shell.call("_field_readiness_surface", {}, bundle)
+	var default_status: Dictionary = shell.call("_status_forecast_surface")
+	var preloaded_status: Dictionary = shell.call("_status_forecast_surface", bundle)
+	var default_event: Dictionary = shell.call("_event_feed_surface")
+	var preloaded_event: Dictionary = shell.call("_event_feed_surface", bundle)
+	var default_end_turn: Dictionary = shell.call("_end_turn_confirmation_surface", default_readiness)
+	var preloaded_end_turn: Dictionary = shell.call("_end_turn_confirmation_surface", preloaded_readiness)
+	if default_readiness != preloaded_readiness or default_status != preloaded_status or default_event != preloaded_event or default_end_turn != preloaded_end_turn:
+		_fail("Preloaded forecast changed readiness, status, event, or End Turn surfaces for %s." % label, {
+			"default_readiness": default_readiness,
+			"preloaded_readiness": preloaded_readiness,
+			"default_status": default_status,
+			"preloaded_status": preloaded_status,
+			"default_event": default_event,
+			"preloaded_event": preloaded_event,
+			"default_end_turn": default_end_turn,
+			"preloaded_end_turn": preloaded_end_turn,
+		})
+		return false
+	var original_drawer := String(shell.get("_active_drawer"))
+	for drawer in ["", "command", "frontier"]:
+		shell.set("_active_drawer", drawer)
+		var default_drawer: Dictionary = shell.call("_drawer_handoff_surfaces", default_readiness)
+		var preloaded_drawer: Dictionary = shell.call("_drawer_handoff_surfaces", preloaded_readiness, bundle)
+		if default_drawer != preloaded_drawer:
+			shell.set("_active_drawer", original_drawer)
+			_fail("Preloaded forecast changed drawer handoff surfaces for %s/%s." % [label, drawer], {
+				"default": default_drawer,
+				"preloaded": preloaded_drawer,
+			})
+			return false
+	shell.call("_set_collapsed_frontier_indicator")
+	var default_collapsed := _frontier_ui_authority(shell)
+	shell.call("_set_collapsed_frontier_indicator", bundle)
+	var preloaded_collapsed := _frontier_ui_authority(shell)
+	shell.call("_refresh_frontier_drawer")
+	var default_frontier := _frontier_ui_authority(shell)
+	shell.call("_refresh_frontier_drawer", bundle)
+	var preloaded_frontier := _frontier_ui_authority(shell)
+	shell.set("_active_drawer", original_drawer)
+	shell.call("_refresh")
+	if default_collapsed != preloaded_collapsed or default_frontier != preloaded_frontier or session.to_dict() != authority_before:
+		_fail("Preloaded forecast changed collapsed/open Frontier or session authority for %s." % label, {
+			"default_collapsed": default_collapsed,
+			"preloaded_collapsed": preloaded_collapsed,
+			"default_frontier": default_frontier,
+			"preloaded_frontier": preloaded_frontier,
+		})
+		return false
+	return true
+
+func _frontier_ui_authority(shell: Node) -> Dictionary:
+	var names := ["FrontierIndicator", "Visibility", "Objectives", "Threats", "Forecast"]
+	var authority := {}
+	for node_name in names:
+		var label: Label = shell.get_node("%%%s" % node_name) as Label
+		authority[node_name] = {"text": label.text, "tooltip_text": label.tooltip_text}
+	return authority
 
 func _assert_drawer_readiness_preload_parity(shell: Node, label: String) -> bool:
 	var original_drawer := String(shell.get("_active_drawer"))

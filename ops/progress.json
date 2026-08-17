@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld full-refresh drawer-readiness reuse is complete. One refresh now passes its already-current no-base readiness payload into drawer handoff synchronization; distinct event-feed and default callers remain fresh. Focused removed-path control proves 191 ms of redundant work with exact authority, and broad compatibility plus bounded Linux/Windows export-startup gates pass.",
+  "currentNotes": "The Overworld full-refresh end-turn forecast bundle reuse is complete. One detached full/compact bundle now serves all full-refresh forecast consumers while direct/default callers stay fresh. Focused and authored Play Copy timing materially improve with exact surface/session/gameplay authority, broad compatibility, static/editor, and bounded Linux/Windows export-startup evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "performance-overworld-full-refresh-drawer-readiness-reuse-10184",
-  "currentSliceId": "performance-overworld-full-refresh-drawer-readiness-reuse-10184",
-  "currentSliceNotes": "Completed with exact focused payload/session/UI authority, a 190875-usec same-process removed-path control against the 474093-usec optimized refresh, authored repeat refresh 4689 to 4370 ms, behavior-exact edited-working-copy compatibility, static/editor, and bounded Linux/Windows export-startup evidence. No broad Play Copy or release-readiness claim.",
+  "currentSlice": "performance-overworld-full-refresh-end-turn-forecast-bundle-reuse-10184",
+  "currentSliceId": "performance-overworld-full-refresh-end-turn-forecast-bundle-reuse-10184",
+  "currentSliceNotes": "Completed with exact combined-vs-independent forecast parity, one build/five reuses, detached rebuild and whole UI/session authority, focused legacy control 709229 versus 105644 usec, authored first-ready 8993 to 6775 ms and repeat refresh 4370 to 2427 ms, exact edited-working-copy compatibility, static/editor, and bounded Linux/Windows export-startup evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Full Refresh Drawer Readiness Reuse",
-  "currentSliceUpdatedAt": "2026-08-16T23:42:53Z",
+  "currentSliceTitle": "Overworld Full Refresh End-Turn Forecast Bundle Reuse",
+  "currentSliceUpdatedAt": "2026-08-17T00:13:04Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19847,8 +19847,56 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
-  "notes": "Completed the bounded Overworld full-refresh drawer-readiness reuse with exact focused authority, compatibility, static/editor, and Linux/Windows export-startup evidence. The same-process removed-path control proves the redundant derivation is material; no broad Play Copy or release-readiness claim is made.",
+  "notes": "Completed the invocation-local Overworld full-refresh forecast bundle reuse with exact core/surface/session authority, material focused and authored timing improvements, broad compatibility, static/editor, and bounded Linux/Windows export-startup evidence. No broad gameplay, packaged interaction, hardware/certification, or release-readiness claim is made.",
   "plannedSlices": [
+    {
+      "id": "performance-overworld-full-refresh-end-turn-forecast-bundle-reuse-10184",
+      "title": "Overworld Full Refresh End-Turn Forecast Bundle Reuse",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Compute the exact full and compact next-day forecast once per full Overworld refresh and reuse that detached bundle across status, readiness, Frontier, event, End Turn, and drawer handoff surfaces without changing forecast or gameplay policy.",
+      "implementationTargets": [
+        "scripts/core/OverworldRules.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "tests/overworld_hero_actions_refresh_cache_regression.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "One full refresh builds one exact detached full/compact forecast bundle and threads it through status, no-base and event-backed readiness, open or collapsed Frontier, End Turn, and drawer handoff surfaces; direct/default callers remain fresh",
+        "The combined production forecast surface is whole-exact to the existing independent full and compact wrappers across ordinary, pressured, route-selected, and day-transition states, with exact session/save authority and no eager fallback call",
+        "Focused same-process legacy three-full/five-compact control proves material removed work and the optimized full refresh records exactly one bundle build with all required preloaded reuse paths and whole-exact UI/action/route/event/end-turn authority",
+        "Authored Play Copy and repeat refresh materially improve from the 8.99-second first-ready and 4.37-second repeat-refresh controls without weakening the behavior-exact edited-working-copy round trip",
+        "Focused refresh-cache, Map Editor Play Copy, Overworld visual/interaction, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "forecast policy, income/muster/movement/risk/management calculations, normalization, ordering, text, visibility radius, action, route, event, end-turn, or save semantics",
+        "cross-refresh/day/session caching, persistent/global cache state, Map Editor semantics, strategic AI, balance, content, accessibility policy, Native RMG, package identity, or platform policy",
+        "packaged Play Copy interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "3a826cc431f6f25b76bd8133d55f117a06b7aa46",
+        "scenario_id": "ninefold-confluence",
+        "full_forecast_usec_samples": [1175850, 1163275, 1171627],
+        "compact_forecast_usec_samples": [848214, 854410, 846465],
+        "independent_status_forecast_usec_samples": [2364380, 2309942, 2351137],
+        "closed_drawer_full_calls": 3,
+        "closed_drawer_compact_calls": 5,
+        "clean_play_copy_first_ready_ms": 8993,
+        "repeat_full_refresh_ms": 4370,
+        "attribution_artifact": "/tmp/heroes-overworld-forecast-attribution.0CEFsX"
+      },
+      "createdAt": "2026-08-16T23:48:34Z",
+      "startedAt": "2026-08-16T23:48:34Z",
+      "updatedAt": "2026-08-17T00:13:04Z",
+      "notes": "Production builds one detached full/compact forecast bundle per full refresh and threads it through all five consumers; direct/default callers remain fresh. Focused `/tmp/heroes-overworld-forecast-focused.ia5Ubh` proves exact ordinary/pressured/day-transition/current/selected/open/collapsed/event/End Turn/drawer/detach/session/UI parity, one build/five reuses, 105644-usec bundle versus 709229-usec legacy control, and focused refresh 319422 usec versus prior 474093. Authored `/tmp/heroes-overworld-forecast-playcopy.nQunqe` improves first-ready 8993 to 6775 ms, repeat refresh 4370 to 2427 ms, and text surfaces 3538 to 1595 ms. Full edited round trip `/tmp/heroes-overworld-forecast-map-editor-smoke.97bAY4` passes all 21 stages with launch 51233 ms and return 51010 ms. Compatibility `/tmp/heroes-overworld-forecast-compat.X9v08F`, static/editor `/tmp/heroes-overworld-forecast-static.QV2aW7`, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup `/tmp/heroes-overworld-forecast-platform.8SGgro` pass. Claims remain bounded.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence.",
+      "blockedReason": null,
+      "completedAt": "2026-08-17T00:13:04Z"
+    },
     {
       "id": "performance-overworld-full-refresh-drawer-readiness-reuse-10184",
       "title": "Overworld Full Refresh Drawer Readiness Reuse",
@@ -87158,7 +87206,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The selected Overworld full-refresh drawer-readiness reuse is closed. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
+  "remainingGap": "The selected Overworld full-refresh end-turn forecast bundle reuse is closed. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
   "remainingWork": "Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence.",
   "reportOnlyEvidence": [
     {
@@ -87691,9 +87739,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The Overworld full-refresh drawer-readiness reuse slice is complete with one bounded redundant derivation removed, exact focused authority, broad compatibility, static/editor, and bounded Linux/Windows export-startup evidence. The game is not release-ready.",
+  "summary": "The Overworld full-refresh end-turn forecast bundle reuse is complete with exact behavior and authority, material focused and authored timing improvements, broad compatibility, static/editor, and bounded Linux/Windows export-startup evidence. The game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-16T23:42:53Z",
+  "updatedAt": "2026-08-17T00:13:04Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
