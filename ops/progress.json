@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the distinct Resonant Chorus battle VFX with exact public-cast, policy, viewport, compatibility, static/editor, and bounded Linux/Windows export-startup evidence. Select the next tracker-approved product slice; the game is not release-ready.",
+  "currentNotes": "Completed the distinct Resonant Chorus Battle audio with exact public-cast, mixer, policy, compatibility, static/editor, and bounded Linux/Windows export-startup evidence. Select the next tracker-approved product slice; the game is not release-ready.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-battle-resonant-chorus-distinct-vfx-10184",
-  "currentSliceId": "presentation-battle-resonant-chorus-distinct-vfx-10184",
-  "currentSliceNotes": "Resonant Chorus now resolves to its distinct original imported VFX in normal public-cast playback, while reduced-motion and reduced-flash use status_icon_add, Prism retains its exact visual, shared audio remains unchanged, and spell/session authority is exact. Platform evidence is export/startup only.",
+  "currentSlice": "presentation-battle-resonant-chorus-distinct-audio-10184",
+  "currentSliceId": "presentation-battle-resonant-chorus-distinct-audio-10184",
+  "currentSliceNotes": "Resonant Chorus now resolves to its distinct reproducible imported WAV in a real public cast under normal, reduced-motion, and reduced-flash policies. Prism, VFX, mixer, spell, session, and action authority remain exact. Platform evidence is export/startup only.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Battle Resonant Chorus Distinct VFX",
-  "currentSliceUpdatedAt": "2026-08-17T08:46:16Z",
+  "currentSliceTitle": "Battle Resonant Chorus Distinct Audio",
+  "currentSliceUpdatedAt": "2026-08-17T09:05:17Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19847,8 +19847,66 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next tracker-approved implementation slice only from direct current behavior and source evidence; preserve exact completed battle presentation behavior and Native RMG fail-closed state.",
-  "notes": "Completed the distinct Resonant Chorus battle VFX with exact live behavior authority and bounded platform startup evidence. Select the next tracker-approved product slice; broader release gaps remain.",
+  "notes": "Completed the distinct Resonant Chorus Battle audio with exact live behavior authority and bounded platform startup evidence. Select the next tracker-approved product slice; broader release gaps remain.",
   "plannedSlices": [
+    {
+      "id": "presentation-battle-resonant-chorus-distinct-audio-10184",
+      "title": "Battle Resonant Chorus Distinct Audio",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Give Resonant Chorus one distinct original deterministic production-layer Battle sound and exact spell-specific audio cue identity instead of reusing Prism Bastion audio, without changing spell behavior, timing, mixer policy, or the completed distinct VFX.",
+      "implementationTargets": [
+        "art/audio/runtime/battle/spell_resonant_chorus.wav",
+        "art/audio/runtime/battle/spell_resonant_chorus.wav.import",
+        "content/battle_sfx_manifest.json",
+        "tools/generate_battle_sfx_assets.py",
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/battle_event_animation_state_report.tscn",
+        "tests/animation_event_cue_catalog_report.tscn",
+        "tests/magic_battle_spell_behavior_report.tscn",
+        "tests/magic_prism_bastion_root_countercontrol_regression.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "Resonant Chorus resolves to one distinct audio_spell_resonant_chorus cue backed by an original deterministic 44.1 kHz stereo 16-bit WAV, while Prism Bastion retains audio_spell_prism_bastion and all Battle WAV payloads remain byte-distinct",
+        "The production generator reproduces the new WAV from one unique layered synthesis profile and the manifest retains exact Effects-bus, priority, cooldown, duration, and non-final-sound-design authority",
+        "A real public Resonant Chorus cast selects and plays the imported cue under normal, reduced-motion, and reduced-flash policies while exact event order, spell/action/session/casualty authority, VFX identity, mixer admission, and Prism behavior remain unchanged",
+        "Battle animation/cue/spell compatibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "spell effect, tier, school, mana, duration, target, AI valuation, balance, content identity, action order, damage, casualty, BattleRules, save schema, animation timing, or accessibility-policy changes",
+        "Prism Bastion audio or VFX changes, Resonant Chorus VFX changes, mixer voice budget/priority/cooldown policy, other Battle cue replacement, music, ambience, UI audio, or broad audio redesign",
+        "final sound-design or mastering approval, packaged Battle interaction/listening parity, controller hardware, AT-SPI or UIA certification, native hardware, signing, publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "6c84b93dd85975ace2e9a167be994ff12f1e7846",
+        "resonant_audio": "audio_spell_prism_bastion",
+        "bastion_audio": "audio_spell_prism_bastion",
+        "audio_identity_collision": true,
+        "battle_sfx_cue_count": 21,
+        "battle_sfx_asset_tier": "production_layered_v1",
+        "effects_bus": "Effects",
+        "sample_rate_hz": 44100,
+        "channel_count": 2,
+        "sample_width_bits": 16
+      },
+      "createdAt": "2026-08-17T08:50:33Z",
+      "startedAt": "2026-08-17T08:50:33Z",
+      "updatedAt": "2026-08-17T09:05:17Z",
+      "completedAt": "2026-08-17T09:05:17Z",
+      "notes": "Implemented one reproducible deterministic 290 ms Resonant Chorus WAV (SHA-256 93461e682bfdf22b0e5d5cf8a915f933e83b7d5dbb1bdea1b13b1da0ec27ffce) through the production layered generator, one exact manifest cue, a distinct runtime mapping, and a distinct generated fallback while retaining Prism and mixer authority. Focused /tmp/heroes-resonant-audio-focused-final5.jD7B3a is rc0/ok:true: a real public cast plays the imported cue, the sequenced status repeat is cooldown-suppressed, reduced-motion and reduced-flash retain audio, all 22 Battle WAVs are byte-distinct, and content/session/action/VFX authority is exact. Cue catalog, Battle spell behavior, Prism countercontrol, core /tmp/heroes-resonant-audio-compat.QTZc4T, static/editor /tmp/heroes-resonant-audio-final-static.2Ah1d2, Linux report SHA 50a6a40334146747b967ee19d90925e781d9ba0be410fba8efc355a7fa1ea4ba, and Windows report SHA aca4193cf2efced0a2f53f877a157b3e29e8d3d43aa6de4cdc17d636ebc2a33f are green. Platform claims remain export/startup only.",
+      "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null
+    },
     {
       "id": "presentation-battle-resonant-chorus-distinct-vfx-10184",
       "title": "Battle Resonant Chorus Distinct VFX",
@@ -88376,7 +88434,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "resonant_chorus_distinct_battle_vfx_completed",
+  "result": "resonant_chorus_distinct_battle_audio_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {

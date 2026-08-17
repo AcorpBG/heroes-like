@@ -280,6 +280,7 @@ func _validate_production_sfx_asset_surface() -> void:
 		"audio_spell_briar_bind",
 		"audio_spell_graft_mend",
 		"audio_spell_prism_bastion",
+		"audio_spell_resonant_chorus",
 		"audio_spell_command_ward",
 	]
 	var parsed = JSON.parse_string(FileAccess.get_file_as_string("res://content/battle_sfx_manifest.json"))
@@ -723,6 +724,7 @@ func _validate_resonant_chorus_vfx_identity() -> void:
 	var normal_cue: Dictionary = normal.get("cue", {}) if normal.get("cue", {}) is Dictionary else {}
 	var normal_vfx: Dictionary = normal.get("vfx", {}) if normal.get("vfx", {}) is Dictionary else {}
 	var normal_audio: Dictionary = normal.get("audio", {}) if normal.get("audio", {}) is Dictionary else {}
+	var normal_audio_playback: Dictionary = normal.get("audio_playback", {}) if normal.get("audio_playback", {}) is Dictionary else {}
 	_expect_equal("resonant chorus normal strong-flash policy", str(bool(normal_cue.get("allows_strong_flash", false))), "true")
 	_expect_array_contains("resonant chorus normal distinct vfx", normal_cue.get("selected_vfx_cue_ids", []), "vfx_spell_resonant_chorus")
 	if normal_cue.get("selected_vfx_cue_ids", []).has("vfx_spell_prism_bastion"):
@@ -732,10 +734,15 @@ func _validate_resonant_chorus_vfx_identity() -> void:
 	_expect_equal("resonant chorus normal vfx imported", str(bool(normal_vfx.get("asset_loaded", false))), "true")
 	_expect_equal("resonant chorus normal vfx asset", String(normal_vfx.get("asset_path", "")), "res://art/battle/vfx/spell_resonant_chorus.png")
 	_expect_equal("resonant chorus normal vfx render mode", String(normal_vfx.get("asset_render_mode", "")), "spell_target")
-	_expect_array_contains("resonant chorus shared audio fallback", normal_audio.get("selected_audio_cue_ids", []), "audio_spell_prism_bastion")
+	_expect_array_contains("resonant chorus normal distinct audio", normal_audio.get("selected_audio_cue_ids", []), "audio_spell_resonant_chorus")
+	if normal_audio.get("selected_audio_cue_ids", []).has("audio_spell_prism_bastion"):
+		_error("Resonant Chorus normal playback retained Prism Bastion audio identity: %s." % normal_audio)
+	var normal_resonant_voice := _audio_voice_for(normal_audio_playback, "audio_spell_resonant_chorus")
+	_expect_equal("resonant chorus normal imported audio source", String(normal_resonant_voice.get("source", "")), "imported_wav")
 	var board := BattleBoardViewScript.new()
 	_expect_equal("Prism Bastion visual identity unchanged", String(board.call("_spell_specific_vfx_cue_id", "spell_prism_bastion", "cleanse_effect")), "vfx_spell_prism_bastion")
-	_expect_equal("Resonant Chorus shared audio identity unchanged", String(board.call("_spell_specific_audio_cue_id", "spell_resonant_chorus", "effect")), "audio_spell_prism_bastion")
+	_expect_equal("Prism Bastion audio identity unchanged", String(board.call("_spell_specific_audio_cue_id", "spell_prism_bastion", "cleanse_effect")), "audio_spell_prism_bastion")
+	_expect_equal("Resonant Chorus distinct audio identity", String(board.call("_spell_specific_audio_cue_id", "spell_resonant_chorus", "effect")), "audio_spell_resonant_chorus")
 	board.free()
 	for policy_case in [reduced_motion, reduced_flash]:
 		var cue: Dictionary = policy_case.get("cue", {}) if policy_case.get("cue", {}) is Dictionary else {}
@@ -743,7 +750,12 @@ func _validate_resonant_chorus_vfx_identity() -> void:
 		if selected_vfx.has("vfx_spell_resonant_chorus") or selected_vfx.has("vfx_spell_prism_bastion"):
 			_error("Reduced-policy Resonant Chorus playback retained a strong spell-specific visual: %s." % policy_case)
 		var audio: Dictionary = policy_case.get("audio", {}) if policy_case.get("audio", {}) is Dictionary else {}
-		_expect_array_contains("reduced-policy Resonant Chorus shared audio", audio.get("selected_audio_cue_ids", []), "audio_spell_prism_bastion")
+		_expect_array_contains("reduced-policy Resonant Chorus distinct audio", audio.get("selected_audio_cue_ids", []), "audio_spell_resonant_chorus")
+		if audio.get("selected_audio_cue_ids", []).has("audio_spell_prism_bastion"):
+			_error("Reduced-policy Resonant Chorus playback retained Prism Bastion audio identity: %s." % audio)
+		var audio_playback: Dictionary = policy_case.get("audio_playback", {}) if policy_case.get("audio_playback", {}) is Dictionary else {}
+		var resonant_voice := _audio_voice_for(audio_playback, "audio_spell_resonant_chorus")
+		_expect_equal("reduced-policy Resonant Chorus imported audio source", String(resonant_voice.get("source", "")), "imported_wav")
 	_report["cases"]["resonant_chorus_vfx_identity"] = {
 		"spell_content": spell_after,
 		"normal": normal,
@@ -762,8 +774,7 @@ func _resonant_chorus_policy_case(reduce_motion: bool, reduce_flashes: bool) -> 
 	var cast_event := _event_record_for(session.battle, "player_0", "battle_unit_cast")
 	_expect_equal("resonant chorus public cast event spell id", String(cast_event.get("spell_id", "")), "spell_resonant_chorus")
 	var authority_after_cast: Dictionary = session.to_dict()
-	await get_tree().create_timer(0.08).timeout
-	var summary := _board_summary_for_session(session)
+	var summary := await _board_summary_for_session_after_audio(session)
 	_expect_equal("resonant chorus presentation preserves session authority", JSON.stringify(session.to_dict()), JSON.stringify(authority_after_cast))
 	var cue_playback: Dictionary = summary.get("cue_playback", {}) if summary.get("cue_playback", {}) is Dictionary else {}
 	var cue := _cue_record_for(cue_playback, "player_0")
@@ -779,6 +790,7 @@ func _resonant_chorus_policy_case(reduce_motion: bool, reduce_flashes: bool) -> 
 		"cue": cue,
 		"vfx": vfx,
 		"audio": audio,
+		"audio_playback": audio_playback,
 		"vfx_playback": vfx_playback,
 	}
 
@@ -1775,6 +1787,23 @@ func _board_summary_for_session(session: SessionStateStoreScript.SessionData) ->
 	view.queue_free()
 	return summary
 
+func _board_summary_for_session_after_audio(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var view := BattleBoardViewScript.new()
+	view.size = Vector2(960.0, 540.0)
+	add_child(view)
+	view.set_battle_state(session)
+	var scheduled_summary: Dictionary = view.validation_unit_art_summary()
+	var summary: Dictionary = scheduled_summary.duplicate(true)
+	var audio_summary: Dictionary = scheduled_summary.get("audio_playback", {}) if scheduled_summary.get("audio_playback", {}) is Dictionary else {}
+	for _attempt in range(12):
+		await get_tree().create_timer(0.04).timeout
+		audio_summary = view.validation_audio_playback_summary()
+		if int(audio_summary.get("scheduled_record_count", 0)) == 0:
+			break
+	summary["audio_playback"] = audio_summary
+	view.queue_free()
+	return summary
+
 func _set_stack_field(battle: Dictionary, battle_id: String, key: String, value: Variant) -> void:
 	var stacks: Array = battle.get("stacks", []) if battle.get("stacks", []) is Array else []
 	for index in range(stacks.size()):
@@ -1868,6 +1897,14 @@ func _audio_asset_path_for(audio_record: Dictionary, audio_id: String) -> String
 		if String(record.get("audio_id", "")) == audio_id:
 			return String(record.get("asset_path", ""))
 	return ""
+
+func _audio_voice_for(audio_playback: Dictionary, audio_id: String) -> Dictionary:
+	var voices: Array = audio_playback.get("active_voice_mix", []) if audio_playback.get("active_voice_mix", []) is Array else []
+	for voice in voices:
+		if voice is Dictionary and String(voice.get("audio_id", "")) == audio_id:
+			return voice
+	_error("Missing active audio voice %s in %s." % [audio_id, audio_playback])
+	return {}
 
 func _expect_event(label: String, battle: Dictionary, battle_id: String, event_id: String, state: String) -> void:
 	for event in BattleRulesScript.animation_event_queue(battle):
