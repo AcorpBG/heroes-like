@@ -3872,25 +3872,68 @@ static func consume_command_risk_forecast(session: SessionStateStoreScript.Sessi
 
 static func describe_dispatch(session: SessionStateStoreScript.SessionData, last_message: String = "") -> String:
 	normalize_overworld_state(session)
+	return _describe_dispatch_from_observation_context(session, last_message, _event_dispatch_observation_context(session))
+
+static func _describe_dispatch_from_observation_context(
+	session: SessionStateStoreScript.SessionData,
+	last_message: String,
+	observation_context: Dictionary
+) -> String:
 	var lead_line := "Latest order: %s" % last_message if last_message != "" else "The field table is waiting on fresh orders."
+	var local_pressure := String(observation_context.get("local_pressure", ""))
+	if local_pressure == "":
+		local_pressure = "No visible hostile pressure is crowding the active hero."
 	var lines := [
 		"Field Dispatch",
 		"- %s" % lead_line,
-		"- Active tile: %s" % _dispatch_context_brief(session),
-		"- %s" % _local_visible_threat_summary(session, "No visible hostile pressure is crowding the active hero."),
+		"- Active tile: %s" % String(observation_context.get("dispatch_context", "")),
+		"- %s" % local_pressure,
 	]
-	var management_watch := describe_management_watch(session)
+	var management_watch := String(observation_context.get("management_watch", ""))
 	if management_watch != "":
 		lines.append("- Management watch: %s" % management_watch)
-	var defense_watch := describe_defense_readiness_warnings(session, 1)
+	var defense_watch := String(observation_context.get("defense_watch", ""))
 	if defense_watch != "No exposed town or route-defense warning is visible.":
 		lines.append("- Defense readiness: %s" % defense_watch)
-	var recent_events: String = _describe_recent_events(session, 2)
+	var recent_events := String(observation_context.get("recent_events", ""))
 	if recent_events != "":
 		lines.append("- Scenario pulse: %s" % recent_events)
 	if session.scenario_status != "in_progress" and session.scenario_summary != "":
 		lines.append("- Outcome pending: %s" % session.scenario_summary)
 	return "\n".join(lines)
+
+static func describe_event_dispatch_surfaces(
+	session: SessionStateStoreScript.SessionData,
+	last_message: String = "",
+	turn_resolution_summary: String = "",
+	enemy_activity_summary: String = "",
+	enemy_activity_events_value: Variant = [],
+	action_recap_value: Variant = {}
+) -> Dictionary:
+	normalize_overworld_state(session)
+	var observation_context := _event_dispatch_observation_context(session)
+	return {
+		"event_feed": _describe_event_feed_surface_from_observation_context(
+			session,
+			last_message,
+			turn_resolution_summary,
+			enemy_activity_summary,
+			enemy_activity_events_value,
+			action_recap_value,
+			observation_context
+		),
+		"dispatch": _describe_dispatch_from_observation_context(session, last_message, observation_context),
+	}
+
+static func _event_dispatch_observation_context(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	return {
+		"recent_events": _describe_recent_events(session, 2),
+		"route_pressure": describe_route_interception_surface(session),
+		"local_pressure": _local_visible_threat_summary(session, ""),
+		"management_watch": describe_management_watch(session),
+		"defense_watch": describe_defense_readiness_warnings(session, 1),
+		"dispatch_context": _dispatch_context_brief(session),
+	}
 
 static func describe_event_feed_surface(
 	session: SessionStateStoreScript.SessionData,
@@ -3901,14 +3944,33 @@ static func describe_event_feed_surface(
 	action_recap_value: Variant = {}
 ) -> Dictionary:
 	normalize_overworld_state(session)
-	var recent_events := _describe_recent_events(session, 2)
+	return _describe_event_feed_surface_from_observation_context(
+		session,
+		last_message,
+		turn_resolution_summary,
+		enemy_activity_summary,
+		enemy_activity_events_value,
+		action_recap_value,
+		_event_dispatch_observation_context(session)
+	)
+
+static func _describe_event_feed_surface_from_observation_context(
+	session: SessionStateStoreScript.SessionData,
+	last_message: String,
+	turn_resolution_summary: String,
+	enemy_activity_summary: String,
+	enemy_activity_events_value: Variant,
+	action_recap_value: Variant,
+	observation_context: Dictionary
+) -> Dictionary:
+	var recent_events := String(observation_context.get("recent_events", ""))
 	var action_recap := _normalize_post_action_recap(action_recap_value)
 	var use_action_recap := turn_resolution_summary.strip_edges() == "" and enemy_activity_summary.strip_edges() == "" and not action_recap.is_empty()
 	var happened := String(action_recap.get("happened", "")) if use_action_recap else _event_feed_happened_line(last_message, turn_resolution_summary, enemy_activity_summary, recent_events)
 	var affected := String(action_recap.get("affected", "")) if use_action_recap else _event_feed_affected_line(session, enemy_activity_summary, enemy_activity_events_value)
 	var why := String(action_recap.get("why_it_matters", "")) if use_action_recap else _event_feed_why_line(last_message, turn_resolution_summary, enemy_activity_summary, recent_events)
 	var next_step := String(action_recap.get("next_step", "")) if use_action_recap else _event_feed_next_step_line(session)
-	var watch := _event_feed_watch_line(session)
+	var watch := _event_feed_watch_line_from_observation_context(observation_context)
 	var visible := _event_feed_visible_line(happened, turn_resolution_summary, enemy_activity_summary)
 	var tooltip_lines := ["Field Feed"]
 	tooltip_lines.append("- Happened: %s" % happened)
@@ -4144,17 +4206,25 @@ static func _event_feed_next_step_line(session: SessionStateStoreScript.SessionD
 	return "Scout, consolidate, or end the turn when orders are spent."
 
 static func _event_feed_watch_line(session: SessionStateStoreScript.SessionData) -> String:
+	return _event_feed_watch_line_from_observation_context({
+		"route_pressure": describe_route_interception_surface(session),
+		"local_pressure": _local_visible_threat_summary(session, ""),
+		"management_watch": describe_management_watch(session),
+		"defense_watch": describe_defense_readiness_warnings(session, 1),
+	})
+
+static func _event_feed_watch_line_from_observation_context(observation_context: Dictionary) -> String:
 	var parts := []
-	var route_pressure := describe_route_interception_surface(session)
+	var route_pressure: Dictionary = observation_context.get("route_pressure", {}) if observation_context.get("route_pressure", {}) is Dictionary else {}
 	if bool(route_pressure.get("active", false)):
 		parts.append(String(route_pressure.get("cue_text", "")))
-	var local_pressure := _local_visible_threat_summary(session, "")
+	var local_pressure := String(observation_context.get("local_pressure", ""))
 	if local_pressure != "":
 		parts.append(local_pressure)
-	var management_watch := describe_management_watch(session)
+	var management_watch := String(observation_context.get("management_watch", ""))
 	if management_watch != "" and management_watch != "Town lines are stable.":
 		parts.append(management_watch)
-	var defense_watch := describe_defense_readiness_warnings(session, 1)
+	var defense_watch := String(observation_context.get("defense_watch", ""))
 	if defense_watch != "No exposed town or route-defense warning is visible.":
 		parts.append("Defense readiness: %s" % defense_watch)
 	if parts.is_empty():
