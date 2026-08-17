@@ -39535,6 +39535,110 @@ def validate_live_client_harness(errors: list[str]) -> None:
     ):
         ensure(required_token in harness_text, errors, f"LiveValidationHarness.gd is missing required routed-harness token: {required_token}")
 
+    skirmish_town_battle_match = re.search(
+        r"func _execute_boot_to_skirmish_town_battle_flow\(\).*?\n(?P<body>.*?)(?=\nfunc )",
+        harness_text,
+        re.S,
+    )
+    ensure(skirmish_town_battle_match is not None, errors, "Could not isolate the routed skirmish town-battle flow")
+    if skirmish_town_battle_match is not None:
+        skirmish_town_battle_body = skirmish_town_battle_match.group("body")
+        town_assault_tokens = (
+            '"support_site_claimed_river_free_company"',
+            '"Could not claim the authored Free Company support site before the hostile-town march."',
+            'objective_clear = await _clear_river_pass_required_encounters_with_refit(',
+            '"skirmish_town_assault"',
+            '"support_artifact_claimed_bastion_vault"',
+            'var battle_route := await _route_with_battle_interrupts(',
+            '"skirmish_town_assault_route"',
+            '"town_assault"',
+            '"town_assault",\n\t\t"",\n\t\tscenario_id == "river-pass"\n\t)',
+            'var pre_assault_town_owner := String(',
+            '"pre_action_town_owner",',
+            'assaulted_town.get("owner", "")',
+            'pre_assault_town_owner == "enemy"',
+            'String(battle_snapshot.get("battle_context_type", "")) == "town_assault"',
+            'String(battle_snapshot.get("battle_context_town_placement_id", "")) == String(assaulted_town.get("placement_id", ""))',
+            'var battle_resume := await _save_and_resume_battle_from_main_menu(',
+            'var battle_resolution := await _play_battle_to_scene(',
+            'SCENARIO_OUTCOME_SCENE if resolving_outcome else OVERWORLD_SCENE,\n\t\tscenario_id == "river-pass"\n\t)',
+            'var expected_locked_headcount := _expected_occupation_locked_recruit_total(',
+            'actual_locked_headcount == expected_locked_headcount',
+            'and locked_payload_headcount == actual_locked_headcount',
+            '"Captured town pacification did not preserve exact pre-capture reserve-lock authority."',
+        )
+        town_assault_positions = [skirmish_town_battle_body.find(token) for token in town_assault_tokens]
+        ensure(
+            min(town_assault_positions) >= 0 and town_assault_positions == sorted(town_assault_positions),
+            errors,
+            "Skirmish town-battle validation must resolve route-interrupt battles before proving exact hostile-town assault authority",
+        )
+        ensure(
+            skirmish_town_battle_body.count("await _route_with_battle_interrupts(") == 1,
+            errors,
+            "Skirmish town-battle validation must use exactly one interrupt-aware hostile-town route",
+        )
+        ensure(
+            skirmish_town_battle_body.count('scenario_id == "river-pass"') == 4,
+            errors,
+            "Skirmish town-battle validation must use River Pass specialization only for refit/artifact routing and the two established Quick Resolve boundaries",
+        )
+        support_claim_index = skirmish_town_battle_body.find('var free_company_claim := await _claim_overworld_validation_target(')
+        resolving_branch_index = skirmish_town_battle_body.find("if resolving_outcome:")
+        ensure(
+            support_claim_index >= 0 and resolving_branch_index >= 0 and support_claim_index < resolving_branch_index,
+            errors,
+            "Skirmish town-battle validation must claim the authored Free Company reserves before either normal or resolved-outcome assault routing",
+        )
+        ensure(
+            skirmish_town_battle_body.count("await _clear_river_pass_required_encounters_with_refit(") == 1,
+            errors,
+            "Skirmish town-battle validation must use the exact authored River Pass support, encounter, and town-refit progression once",
+        )
+        assault_authority_body = skirmish_town_battle_body.split("var pre_assault_town_owner := String(", 1)[-1].split("var battle_snapshot", 1)[0]
+        ensure(
+            "post_action_town_state" not in assault_authority_body,
+            errors,
+            "Skirmish town-battle ownership proof must use detached pre-move target authority, not unavailable post-handoff town state",
+        )
+        ensure(
+            'await _route_from_overworld_to_scene(post_town_overworld, "town", "enemy", BATTLE_SCENE)' not in skirmish_town_battle_body,
+            errors,
+            "Skirmish town-battle validation must not accept the first incidental battle as the hostile-town assault",
+        )
+
+    occupation_lock_helper_match = re.search(
+        r"func _expected_occupation_locked_recruit_total\(.*?\n(?P<body>.*?)(?=\nfunc )",
+        harness_text,
+        re.S,
+    )
+    ensure(occupation_lock_helper_match is not None, errors, "Could not isolate the live harness occupation reserve-lock oracle")
+    if occupation_lock_helper_match is not None:
+        occupation_lock_helper_body = occupation_lock_helper_match.group("body")
+        occupation_lock_tokens = (
+            "var access_percent := clampi(80 - (max(0, initial_pressure) * 8), 20, 55)",
+            "for unit_id in available_recruits.keys():",
+            "var count: int = max(0, int(available_recruits.get(unit_id, 0)))",
+            "if String(unit_id) == \"\" or count <= 0:",
+            "var released := int(floor(float(count) * float(access_percent) / 100.0))",
+            "if released <= 0:",
+            "released = 1",
+            "released = clampi(released, 0, count)",
+            "locked_total += max(0, count - released)",
+            "return locked_total",
+        )
+        occupation_lock_positions = [occupation_lock_helper_body.find(token) for token in occupation_lock_tokens]
+        ensure(
+            min(occupation_lock_positions) >= 0 and occupation_lock_positions == sorted(occupation_lock_positions),
+            errors,
+            "Live harness occupation reserve-lock oracle must reproduce the shipped pressure-scaled per-unit reserve split exactly",
+        )
+        ensure(
+            'locked_headcount", 0)) > 0' not in harness_text,
+            errors,
+            "Live town-capture validation must not require nonexistent reserve locks after an enemy town has recruited its full pool",
+        )
+
     battle_flow_match = re.search(
         r"func _play_battle_to_scene\(.*?\n(?P<body>.*?)(?=\nfunc _parse_user_args)",
         harness_text,
