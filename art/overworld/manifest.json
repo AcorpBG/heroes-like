@@ -3841,7 +3841,12 @@
   },
   "artifact_default_sprite": {
     "asset_id": "adventurers_bundle",
-    "fit": "Generic artifact/pickup bundle until individual artifact silhouettes exist."
+    "fit": "Generic transparent artifact field bundle until individual artifact map silhouettes exist.",
+    "source_model": "original_generated_transparent_field_sprite",
+    "asset_policy": "original_generated_runtime_sprite_no_inventory_icon_reuse",
+    "field_scope": "live_overworld_and_shared_map_editor_preview",
+    "inventory_icon_policy": "separate_ui_identity_never_used_as_field_sprite",
+    "background": "transparent"
   },
   "town_default_sprite": {
     "asset_id": "frontier_town",

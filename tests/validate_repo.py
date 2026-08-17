@@ -33767,6 +33767,7 @@ def validate_overworld_artifact_pickup_icon_runtime(errors: list[str]) -> None:
         OVERWORLD_MAP_VIEW_SCRIPT_PATH,
         ARTIFACT_RULES_PATH,
         CONTENT_DIR / "artifacts.json",
+        OVERWORLD_ART_MANIFEST_PATH,
         OVERWORLD_ARTIFACT_PICKUP_ICON_RUNTIME_REPORT_SCRIPT_PATH,
         OVERWORLD_ARTIFACT_PICKUP_ICON_RUNTIME_REPORT_SCENE_PATH,
         ROOT / "tests" / "overworld_visual_smoke.gd",
@@ -33802,6 +33803,21 @@ def validate_overworld_artifact_pickup_icon_runtime(errors: list[str]) -> None:
         icon_paths.append(icon_path)
     ensure(len(set(icon_ids)) == 12 and len(set(icon_paths)) == 12, errors, "All 12 Overworld artifact pickup identities must remain distinct")
 
+    artifact_default = load_json(OVERWORLD_ART_MANIFEST_PATH).get("artifact_default_sprite", {})
+    ensure(isinstance(artifact_default, dict), errors, "Overworld artifact field rendering must define its default transparent sprite")
+    if isinstance(artifact_default, dict):
+        ensure(str(artifact_default.get("asset_id", "")) == "adventurers_bundle", errors, "Overworld artifact field rendering must use the original adventurers bundle")
+        ensure(str(artifact_default.get("source_model", "")) == "original_generated_transparent_field_sprite", errors, "Overworld artifact field sprite must record its original transparent source model")
+        ensure(str(artifact_default.get("asset_policy", "")) == "original_generated_runtime_sprite_no_inventory_icon_reuse", errors, "Overworld artifact field sprite must forbid inventory-icon reuse")
+        ensure(str(artifact_default.get("field_scope", "")) == "live_overworld_and_shared_map_editor_preview", errors, "Overworld artifact field sprite must own live and editor preview rendering")
+        ensure(str(artifact_default.get("inventory_icon_policy", "")) == "separate_ui_identity_never_used_as_field_sprite", errors, "Overworld artifact inventory icons must remain separate UI identities")
+        ensure(str(artifact_default.get("background", "")) == "transparent", errors, "Overworld artifact field sprite must declare a transparent background")
+    field_sprite_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "pickups" / "adventurers_bundle.png"
+    ensure(field_sprite_path.is_file() and png_size(field_sprite_path) == (512, 512), errors, "Overworld artifact field sprite must remain the original 512x512 runtime PNG")
+    if field_sprite_path.is_file():
+        field_header = field_sprite_path.read_bytes()[:26]
+        ensure(len(field_header) >= 26 and field_header[25] in {4, 6}, errors, "Overworld artifact field sprite must retain a real PNG alpha channel")
+
     map_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
     draw_block = function_block(map_text, "_draw_artifact_sprite")
     resolver_block = function_block(map_text, "_artifact_sprite_asset_id")
@@ -33809,24 +33825,17 @@ def validate_overworld_artifact_pickup_icon_runtime(errors: list[str]) -> None:
     validation_block = function_block(map_text, "_artifact_presentation_payload")
     load_block = function_block(map_text, "_load_overworld_art_manifest")
     for token in (
-        "var _artifact_icon_asset_ids: Dictionary = {}",
-        "_artifact_icon_asset_ids.clear()",
         "ArtifactRules.artifact_icon_path(artifact_id)",
-        'icon_asset_id.begins_with("artifact_icon_")',
-        "_artifact_icon_asset_ids[artifact_id] = icon_asset_id",
-        "_object_asset_paths[icon_asset_id] = icon_path",
-        "_object_texture_for_asset(icon_asset_id) is Texture2D",
-        "return icon_asset_id",
         "_object_texture_for_asset(_artifact_default_asset_id) is Texture2D",
         "return _artifact_default_asset_id",
         'return ""',
     ):
         ensure(token in map_text, errors, f"Overworld artifact pickup resolver ownership is missing: {token}")
-    ensure(load_block.find("_artifact_icon_asset_ids.clear()") >= 0, errors, "Artifact pickup icon cache must clear with each art-manifest load")
-    resolver_order = [resolver_block.find(token) for token in ("var artifact_id :=", "var icon_asset_id :=", "var icon_path :=", "return icon_asset_id", "return _artifact_default_asset_id")]
-    ensure(all(index >= 0 for index in resolver_order) and resolver_order == sorted(resolver_order), errors, "Artifact pickup resolver must prefer exact valid icon, then default bundle, then empty")
+    ensure("_artifact_icon_asset_ids" not in map_text, errors, "Overworld field rendering must not retain a cache that aliases inventory icons into map sprites")
+    resolver_order = [resolver_block.find(token) for token in ('if node.is_empty():', '_object_texture_for_asset(_artifact_default_asset_id) is Texture2D', "return _artifact_default_asset_id")]
+    ensure(all(index >= 0 for index in resolver_order) and resolver_order == sorted(resolver_order), errors, "Artifact field resolver must use only the transparent default bundle after the empty-node guard")
     ensure(resolver_block.rstrip().endswith('return ""'), errors, "Artifact pickup resolver must fail closed after the default bundle")
-    for forbidden in ("_session.", "session.", "await ", "create_timer", "create_tween", "queue_free", "match artifact_id"):
+    for forbidden in ("_session.", "session.", "await ", "create_timer", "create_tween", "queue_free", "match artifact_id", "ContentService.get_artifact", "ArtifactRules.artifact_icon_path", "icon_asset_id", "icon_path"):
         ensure(forbidden not in resolver_block, errors, f"Artifact pickup resolver must remain synchronous, content-owned, and read-only: {forbidden}")
     ensure("_draw_object_sprite(_artifact_sprite_asset_id(node), rect, remembered, _artifact_object_profile(), tile)" in draw_block, errors, "Live artifact drawing must resolve the current pickup identity")
     for token in (
@@ -33836,9 +33845,12 @@ def validate_overworld_artifact_pickup_icon_runtime(errors: list[str]) -> None:
     ):
         ensure(token in art_payload_block, errors, f"Artifact art payload must use the same exact resolver as live drawing: {token}")
     for token in (
-        '"artifact_id": artifact_id', '"icon_path": icon_path', '"sprite_asset_id": sprite_asset_id',
-        '"sprite_path": String(_object_asset_paths.get(sprite_asset_id, ""))',
+        '"artifact_id": artifact_id', '"icon_asset_id": icon_asset_id', '"icon_path": icon_path', '"sprite_asset_id": sprite_asset_id',
+        '"sprite_path": field_sprite_path',
         '"uses_artifact_icon": artifact_id != ""', '"uses_default_sprite": sprite_asset_id != ""',
+        '"inventory_icon_separate_from_field_sprite": icon_path != ""',
+        '"field_sprite_extent_fraction": field_sprite_extent_fraction',
+        '"field_sprite_contained_in_tile": field_sprite_extent_fraction <= 1.0',
         '"footprint_width_tiles": 1', '"footprint_height_tiles": 1',
     ):
         ensure(token in validation_block, errors, f"Artifact pickup validation payload is missing detached evidence: {token}")
@@ -33849,6 +33861,8 @@ def validate_overworld_artifact_pickup_icon_runtime(errors: list[str]) -> None:
     ensure_scene_nodes(report_scene, errors, "overworld_artifact_pickup_icon_runtime_report.tscn", [("OverworldArtifactPickupIconRuntimeReport", "Node")])
     for token in (
         'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
+        'const EXPECTED_FIELD_ASSET_ID := "adventurers_bundle"',
+        'const EXPECTED_FIELD_SPRITE_PATH := "res://art/overworld/runtime/objects/pickups/adventurers_bundle.png"',
         'const EXPECTED_ICONS := {',
         'ScenarioFactory.create_session(SCENARIO_ID, "hard", SessionState.LAUNCH_MODE_SKIRMISH)',
         'session.overworld["artifact_nodes"] = nodes',
@@ -33856,7 +33870,12 @@ def validate_overworld_artifact_pickup_icon_runtime(errors: list[str]) -> None:
         'map_view.call("validation_tile_presentation"',
         'rows.size() != EXPECTED_ICONS.size()',
         'expected_asset_id := "artifact_icon_%s"',
-        'expected_asset_id not in art.get("sprite_asset_ids", [])',
+        'String(artifact.get("icon_asset_id", "")) != expected_asset_id',
+        'String(artifact.get("sprite_asset_id", "")) != EXPECTED_FIELD_ASSET_ID',
+        'EXPECTED_FIELD_ASSET_ID not in art.get("sprite_asset_ids", [])',
+        'not bool(artifact.get("inventory_icon_separate_from_field_sprite", false))',
+        'not bool(artifact.get("field_sprite_contained_in_tile", false))',
+        'field_image.detect_alpha() != Image.ALPHA_NONE',
         'String(art.get("remembered_sprite_treatment", "")) != "ghosted_sprite_with_ground_anchor"',
         'visible_count == 12 and remembered_count == 0',
         'String(art.get("mapped_sprite_grounding_model", "")) == "localized_sprite_contact_scuffs"',
@@ -33877,7 +33896,9 @@ def validate_overworld_artifact_pickup_icon_runtime(errors: list[str]) -> None:
     for forbidden in ("_artifact_icon_asset_ids[", "_object_asset_paths[", "_object_textures[", "_draw_artifact_sprite(", "create_timer", "create_tween"):
         ensure(forbidden not in report_text, errors, f"Artifact pickup focused owner must not bypass production resolution: {forbidden}")
     visual_text = (ROOT / "tests" / "overworld_visual_smoke.gd").read_text(encoding="utf-8")
-    ensure('_assert_art_sprite(artifact_presentation, "artifact_icon_trailsinger_boots", false)' in visual_text, errors, "Overworld visual gate must require the exact River Pass artifact icon")
+    ensure('_assert_art_sprite(artifact_presentation, "adventurers_bundle", false)' in visual_text, errors, "Overworld visual gate must require the transparent River Pass artifact field sprite")
+    for token in ('"artifact_icon_trailsinger_boots"', '"res://art/artifacts/runtime/trailsinger_boots.png"', 'inventory_icon_separate_from_field_sprite', 'field_sprite_contained_in_tile'):
+        ensure(token in visual_text, errors, f"Overworld visual gate must preserve inventory identity while checking field containment: {token}")
 
 
 def validate_overworld_artifact_slot_cue_playback(errors: list[str]) -> None:
