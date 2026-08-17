@@ -1841,12 +1841,13 @@ func active_manual_save_action(manual_slot: int = -1) -> Dictionary:
 	var session = SessionState.ensure_active_session() if SessionState.has_playable_session() else null
 	return SaveService.build_manual_save_action(session, selected_slot)
 
-func active_save_surface() -> Dictionary:
+func active_save_surface(refresh_watch_context: Dictionary = {}) -> Dictionary:
 	if not SessionState.has_playable_session():
 		return SaveService.build_in_session_save_surface(null)
 	return SaveService.build_in_session_save_surface(
 		SessionState.ensure_active_session(),
-		SaveService.get_selected_manual_slot()
+		SaveService.get_selected_manual_slot(),
+		refresh_watch_context
 	)
 
 func consume_menu_notice() -> String:

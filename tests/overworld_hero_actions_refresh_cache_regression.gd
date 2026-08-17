@@ -43,10 +43,15 @@ func _run() -> void:
 	var refresh_authority_before: Dictionary = _refresh_authority(shell.call("validation_snapshot"))
 	shell.set("_debug_command_in_progress", true)
 	shell.call("validation_reset_profile", true)
+	var previous_general_profile := OS.get_environment("HEROES_PROFILE_LOG")
+	OS.set_environment("HEROES_PROFILE_LOG", "1")
+	SaveService.validation_clear_general_profile_log()
 	var refresh_started := Time.get_ticks_usec()
 	shell.call("_refresh")
 	var full_refresh_usec := Time.get_ticks_usec() - refresh_started
 	var full_refresh_profile: Dictionary = shell.call("validation_profile_snapshot")
+	var save_surface_profile: Dictionary = _last_save_surface_profile()
+	OS.set_environment("HEROES_PROFILE_LOG", previous_general_profile)
 	var refresh_authority_after: Dictionary = _refresh_authority(shell.call("validation_snapshot"))
 	if int(full_refresh_profile.get("field_readiness_surface_calls", 0)) != 2 or int(full_refresh_profile.get("field_readiness_surface_base_event_calls", 0)) != 1:
 		_fail("Full refresh did not materialize one status readiness plus one event-feed readiness surface.", full_refresh_profile)
@@ -79,8 +84,14 @@ func _run() -> void:
 		_fail("Full refresh did not build one Event/Dispatch observation context and reuse it for both exact surfaces.", full_refresh_profile)
 		return
 	if int(full_refresh_profile.get("refresh_watch_observation_context_builds", 0)) != 1 \
-			or int(full_refresh_profile.get("refresh_watch_observation_context_reuses", 0)) != 3:
-		_fail("Full refresh did not build one watch context and reuse it across forecast, commitment, and Event/Dispatch surfaces.", full_refresh_profile)
+			or int(full_refresh_profile.get("refresh_watch_observation_context_reuses", 0)) != 4:
+		_fail("Full refresh did not build one watch context and reuse it across Save, forecast, commitment, and Event/Dispatch surfaces.", full_refresh_profile)
+		return
+	var save_surface_metadata: Dictionary = save_surface_profile.get("metadata", {}) if save_surface_profile.get("metadata", {}) is Dictionary else {}
+	if not bool(save_surface_metadata.get("overworld_refresh_watch_context_preloaded", false)) \
+			or int(save_surface_metadata.get("overworld_save_watch_context_reuse_count", 0)) != 1 \
+			or int(save_surface_metadata.get("overworld_save_watch_context_direct_fallback_count", -1)) != 0:
+		_fail("Full refresh Save Watch did not reuse the same exact request-local observation context.", save_surface_profile)
 		return
 	if session.to_dict() != refresh_session_before or refresh_authority_after != refresh_authority_before:
 		_fail("Readiness reuse changed session or whole refresh surface authority.", {
@@ -671,6 +682,7 @@ func _assert_refresh_watch_observation_context_reuse() -> Dictionary:
 	}
 
 func _direct_refresh_watch_surfaces(session, fixture: Dictionary) -> Dictionary:
+	var summary: Dictionary = _save_watch_summary(session)
 	var event_dispatch := OverworldRules.describe_event_dispatch_surfaces(
 		session,
 		String(fixture.get("last_message", "")),
@@ -680,6 +692,7 @@ func _direct_refresh_watch_surfaces(session, fixture: Dictionary) -> Dictionary:
 		fixture.get("recap", {})
 	)
 	return {
+		"save_watch": SaveService._summary_watch_state_line(session, summary, true),
 		"forecast": OverworldRules.describe_end_turn_forecast_surfaces(session),
 		"commitment": OverworldRules.describe_commitment_board(session),
 		"event_feed": event_dispatch.get("event_feed", {}),
@@ -688,6 +701,7 @@ func _direct_refresh_watch_surfaces(session, fixture: Dictionary) -> Dictionary:
 
 func _shared_refresh_watch_surfaces(session, fixture: Dictionary) -> Dictionary:
 	var refresh_watch_context := OverworldRules._refresh_watch_observation_context(session)
+	var summary: Dictionary = _save_watch_summary(session)
 	var event_dispatch := OverworldRules.describe_event_dispatch_surfaces(
 		session,
 		String(fixture.get("last_message", "")),
@@ -698,6 +712,7 @@ func _shared_refresh_watch_surfaces(session, fixture: Dictionary) -> Dictionary:
 		refresh_watch_context
 	)
 	return {
+		"save_watch": SaveService._summary_watch_state_line(session, summary, true, "", refresh_watch_context),
 		"forecast": OverworldRules.describe_end_turn_forecast_surfaces(session, refresh_watch_context),
 		"commitment": OverworldRules.describe_commitment_board(session, refresh_watch_context),
 		"event_feed": event_dispatch.get("event_feed", {}),
@@ -706,6 +721,7 @@ func _shared_refresh_watch_surfaces(session, fixture: Dictionary) -> Dictionary:
 
 func _legacy_refresh_watch_surfaces(session, fixture: Dictionary) -> Dictionary:
 	return {
+		"save_watch": _legacy_save_watch_line(session, _save_watch_summary(session)),
 		"forecast": _legacy_refresh_watch_forecast(session),
 		"commitment": _legacy_refresh_watch_commitment(session),
 		"event_feed": _legacy_event_feed_surface(
@@ -718,6 +734,36 @@ func _legacy_refresh_watch_surfaces(session, fixture: Dictionary) -> Dictionary:
 		),
 		"dispatch": _legacy_dispatch(session, String(fixture.get("last_message", ""))),
 	}
+
+func _save_watch_summary(session) -> Dictionary:
+	var payload: Dictionary = session.to_dict()
+	var resume_target: String = SaveService._resume_target_for_session(session)
+	var selected: Dictionary = SaveService._live_session_summary_from_payload(payload, 1, resume_target)
+	return SaveService._live_summary_for_manual_slot(selected, SaveService.get_selected_manual_slot(), false)
+
+func _legacy_save_watch_line(session, summary: Dictionary) -> String:
+	match String(summary.get("resume_target", "overworld")):
+		"battle":
+			var battle_risk: String = BattleRules.describe_risk_readiness_board(session)
+			var outlook := SaveService._line_with_prefix(battle_risk, "Outlook:")
+			if outlook != "":
+				return "Risk watch: %s" % outlook.trim_prefix("Outlook:").strip_edges()
+		"outcome":
+			var recent_line := SaveService._line_with_prefix(ScenarioRules.describe_session_progress_recap(session, false), "Recently resolved:")
+			if recent_line != "":
+				return "Risk watch: %s" % recent_line.trim_prefix("Recently resolved:").strip_edges()
+		_:
+			var risk_line := OverworldRules.describe_command_risk_summary_from_normalized_session(session)
+			if risk_line != "" and not risk_line.begins_with("Steady watch"):
+				return "Risk watch: %s" % risk_line
+			var frontier_watch: String = OverworldRules.describe_frontier_threats(session)
+			var frontier_line := SaveService._first_meaningful_line(frontier_watch, ["Frontier Watch"])
+			if frontier_line != "" and not frontier_line.contains("No hostile factions are active"):
+				return "Risk watch: %s" % frontier_line.trim_prefix("- ").strip_edges()
+			var management_watch: String = OverworldRules.describe_management_watch(session)
+			if management_watch != "" and management_watch != "Town lines are stable.":
+				return "Risk watch: %s" % management_watch
+	return "Risk watch: No immediate stored warning; review the resumed scene before ending the turn."
 
 func _legacy_refresh_watch_forecast(session) -> Dictionary:
 	OverworldRules.normalize_overworld_state(session)
@@ -1501,6 +1547,14 @@ func _refresh_authority(snapshot: Dictionary) -> Dictionary:
 	for key in keys:
 		authority[key] = snapshot.get(key).duplicate(true) if snapshot.get(key) is Dictionary or snapshot.get(key) is Array else snapshot.get(key)
 	return authority
+
+func _last_save_surface_profile() -> Dictionary:
+	var records: Array = SaveService.validation_general_profile_log_last_records(20)
+	for index in range(records.size() - 1, -1, -1):
+		var record = records[index]
+		if record is Dictionary and String(record.get("surface", "")) == "save" and String(record.get("event", "")) == "build_in_session_save_surface":
+			return record.duplicate(true)
+	return {}
 
 func _fail(message: String, context: Variant = {}) -> void:
 	push_error("%s: %s %s" % [REPORT_ID, message, JSON.stringify(context)])

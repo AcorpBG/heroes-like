@@ -526,7 +526,11 @@ func latest_loadable_summary() -> Dictionary:
 func summary_recency_timestamp(summary: Dictionary) -> float:
 	return _summary_sort_timestamp(summary)
 
-func build_in_session_save_surface(session: SessionStateStoreScript.SessionData, manual_slot: int = -1) -> Dictionary:
+func build_in_session_save_surface(
+	session: SessionStateStoreScript.SessionData,
+	manual_slot: int = -1,
+	refresh_watch_context: Dictionary = {}
+) -> Dictionary:
 	var profile_started := ProfileLogScript.begin_usec()
 	var buckets := {}
 	var selected_slot := _normalize_manual_slot(manual_slot if manual_slot > 0 else _selected_manual_slot)
@@ -560,7 +564,7 @@ func build_in_session_save_surface(session: SessionStateStoreScript.SessionData,
 	buckets["detached_read_scope_begin"] = ProfileLogScript.elapsed_ms(read_scope_started)
 	var recap_started := ProfileLogScript.begin_usec()
 	var recap_context_started := ProfileLogScript.begin_usec()
-	var recap_context := _session_save_recap_context(detached_live_session, default_live_summary, "", true)
+	var recap_context := _session_save_recap_context(detached_live_session, default_live_summary, "", true, refresh_watch_context)
 	buckets["shared_recap_context"] = ProfileLogScript.elapsed_ms(recap_context_started)
 	buckets["shared_progress_context"] = float(recap_context.get("profile_progress_ms", 0.0))
 	buckets["shared_watch_context"] = float(recap_context.get("profile_watch_ms", 0.0))
@@ -622,6 +626,9 @@ func build_in_session_save_surface(session: SessionStateStoreScript.SessionData,
 		"play_check_context_build_count": 1 if bool(recap_context.get("play_check_state_materialized", false)) else 0,
 		"play_check_context_reuse_count": 1 if bool(recap_context.get("play_check_state_materialized", false)) else 0,
 		"play_check_context_direct_fallback_count": int(recap_context.get("play_check_direct_fallback_count", 0)),
+		"overworld_refresh_watch_context_preloaded": bool(recap_context.get("refresh_watch_context_preloaded", false)),
+		"overworld_save_watch_context_reuse_count": 1 if bool(recap_context.get("refresh_watch_context_preloaded", false)) else 0,
+		"overworld_save_watch_context_direct_fallback_count": 0 if bool(recap_context.get("refresh_watch_context_preloaded", false)) else 1,
 	}, session)
 	return result
 
@@ -737,7 +744,8 @@ func _session_save_recap_context(
 	session: SessionStateStoreScript.SessionData,
 	summary: Dictionary,
 	preloaded_progress_recap: String = "",
-	include_play_check_state: bool = false
+	include_play_check_state: bool = false,
+	refresh_watch_context: Dictionary = {}
 ) -> Dictionary:
 	if session == null or session.scenario_id == "" or summary.is_empty():
 		return {
@@ -750,6 +758,7 @@ func _session_save_recap_context(
 			"play_check_state_line": "",
 			"play_check_state_materialized": false,
 			"play_check_direct_fallback_count": 0,
+			"refresh_watch_context_preloaded": false,
 		}
 	var progress_started := ProfileLogScript.begin_usec()
 	var resume_target := String(summary.get("resume_target", "overworld"))
@@ -787,7 +796,13 @@ func _session_save_recap_context(
 		progress_recap = load("res://scripts/core/ScenarioRules.gd").describe_session_progress_recap_from_normalized_session(session, false)
 	var progress_ms := ProfileLogScript.elapsed_ms(progress_started)
 	var watch_started := ProfileLogScript.begin_usec()
-	var watch_line := _summary_watch_state_line(session, summary, true, progress_recap)
+	var refresh_watch_context_preloaded := (
+		resume_target == "overworld"
+		and refresh_watch_context.has("command_risk_forecast")
+		and refresh_watch_context.has("management_watch")
+	)
+	var effective_refresh_watch_context: Dictionary = refresh_watch_context if refresh_watch_context_preloaded else {}
+	var watch_line := _summary_watch_state_line(session, summary, true, progress_recap, effective_refresh_watch_context)
 	var play_check_context := {
 		"progress_recap": progress_recap,
 		"watch_line": watch_line,
@@ -807,6 +822,7 @@ func _session_save_recap_context(
 		"play_check_state_line": play_check_state_line,
 		"play_check_state_materialized": include_play_check_state,
 		"play_check_direct_fallback_count": play_check_direct_fallback_count,
+		"refresh_watch_context_preloaded": refresh_watch_context_preloaded,
 	}
 
 func _describe_session_save_check_from_context(
@@ -3303,7 +3319,8 @@ func _summary_watch_state_line(
 	session: SessionStateStoreScript.SessionData,
 	summary: Dictionary,
 	trusted_normalized_session: bool = false,
-	preloaded_progress_recap: String = ""
+	preloaded_progress_recap: String = "",
+	refresh_watch_context: Dictionary = {}
 ) -> String:
 	match String(summary.get("resume_target", "overworld")):
 		"battle":
@@ -3320,7 +3337,11 @@ func _summary_watch_state_line(
 				return "Risk watch: %s" % recent_line.trim_prefix("Recently resolved:").strip_edges()
 		_:
 			var risk_line := ""
-			if trusted_normalized_session:
+			var preloaded_forecast: Dictionary = refresh_watch_context.get("command_risk_forecast", {}) if refresh_watch_context.get("command_risk_forecast", {}) is Dictionary else {}
+			if not preloaded_forecast.is_empty():
+				if bool(preloaded_forecast.get("has_risk", false)):
+					risk_line = String(preloaded_forecast.get("summary", ""))
+			elif trusted_normalized_session:
 				risk_line = OverworldRulesScript.describe_command_risk_summary_from_normalized_session(session)
 			else:
 				risk_line = _first_meaningful_line(
@@ -3333,7 +3354,11 @@ func _summary_watch_state_line(
 			var frontier_line := _first_meaningful_line(frontier_watch, ["Frontier Watch"])
 			if frontier_line != "" and not frontier_line.contains("No hostile factions are active"):
 				return "Risk watch: %s" % frontier_line.trim_prefix("- ").strip_edges()
-			var management_watch: String = OverworldRulesScript.describe_management_watch(session)
+			var management_watch := (
+				String(refresh_watch_context.get("management_watch", ""))
+				if refresh_watch_context.has("management_watch")
+				else OverworldRulesScript.describe_management_watch(session)
+			)
 			if management_watch != "" and management_watch != "Town lines are stable.":
 				return "Risk watch: %s" % management_watch
 	return "Risk watch: No immediate stored warning; review the resumed scene before ending the turn."

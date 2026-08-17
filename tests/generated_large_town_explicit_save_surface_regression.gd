@@ -906,6 +906,11 @@ func _assert_surface_profile_light(record: Dictionary, label: String, expected_a
 			or int(metadata.get("play_check_context_direct_fallback_count", -1)) != 0:
 		_finish_fail("%s did not materialize Play Check from exactly one owned recap context." % label, record)
 		return false
+	if bool(metadata.get("overworld_refresh_watch_context_preloaded", true)) \
+			or int(metadata.get("overworld_save_watch_context_reuse_count", -1)) != 0 \
+			or int(metadata.get("overworld_save_watch_context_direct_fallback_count", -1)) != 1:
+		_finish_fail("%s direct Save surface unexpectedly consumed an Overworld refresh watch context." % label, record)
+		return false
 	if expected_alias >= 0:
 		if bool(metadata.get("stored_recap_alias_reused", false)) != (expected_alias == 1):
 			_finish_fail("%s reported the wrong stored-recap alias policy." % label, record)
