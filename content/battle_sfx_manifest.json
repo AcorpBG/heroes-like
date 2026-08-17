@@ -178,6 +178,14 @@
       "priority_class": "critical",
       "repeat_cooldown_msec": 220
     },
+    "audio_spell_resonant_chorus": {
+      "path": "res://art/audio/runtime/battle/spell_resonant_chorus.wav",
+      "duration_msec": 290,
+      "volume_db": -13.0,
+      "role": "spell_tempo_chorus",
+      "priority_class": "critical",
+      "repeat_cooldown_msec": 220
+    },
     "audio_spell_command_ward": {
       "path": "res://art/audio/runtime/battle/spell_command_ward.wav",
       "duration_msec": 240,

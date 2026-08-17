@@ -39,6 +39,7 @@ SPECS = {
     "audio_spell_briar_bind": {"kind": "bind", "f1": 105.0, "f2": 285.0, "f3": 660.0, "noise": 0.34, "peak": 0.62, "pan": -0.20, "width": 0.25},
     "audio_spell_graft_mend": {"kind": "mend", "f1": 260.0, "f2": 520.0, "f3": 1040.0, "noise": 0.055, "peak": 0.54, "pan": 0.14, "width": 0.24},
     "audio_spell_prism_bastion": {"kind": "prism", "f1": 420.0, "f2": 840.0, "f3": 1680.0, "noise": 0.035, "peak": 0.58, "pan": -0.10, "width": 0.34},
+    "audio_spell_resonant_chorus": {"kind": "chorus", "f1": 294.0, "f2": 588.0, "f3": 1176.0, "noise": 0.025, "peak": 0.59, "pan": 0.08, "width": 0.38},
     "audio_spell_command_ward": {"kind": "ward", "f1": 165.0, "f2": 330.0, "f3": 660.0, "noise": 0.045, "peak": 0.56, "pan": 0.12, "width": 0.18},
 }
 
@@ -61,7 +62,7 @@ def saw(phase: float) -> float:
 
 def cue_envelope(progress: float, kind: str) -> float:
     fast_attack = {"hit", "step", "brace", "burst", "ready", "counter"}
-    slow_attack = {"rise", "shimmer", "mend", "prism", "ward", "rain"}
+    slow_attack = {"rise", "shimmer", "mend", "prism", "chorus", "ward", "rain"}
     attack_end = 0.018 if kind in fast_attack else (0.11 if kind in slow_attack else 0.055)
     release_start = {
         "hit": 0.18,
@@ -95,6 +96,8 @@ def pitch_curve(kind: str, progress: float) -> float:
         return 1.0 - progress * 0.22
     if kind == "bind":
         return 0.92 + math.sin(progress * math.pi) * 0.18
+    if kind == "chorus":
+        return 0.94 + math.sin(progress * math.pi) * 0.12
     return 1.0
 
 
@@ -163,6 +166,10 @@ def layered_sample(
     elif kind == "prism":
         chorus = math.sin(math.tau * (f2 * 1.006) * time_sec - channel_phase)
         body = sine1 * 0.22 + sine2 * 0.25 + chorus * 0.22 + sine3 * 0.20 + sparkle * 0.16
+    elif kind == "chorus":
+        pulse = 0.62 + 0.38 * max(0.0, math.sin(math.tau * 10.5 * time_sec + channel_phase))
+        overtone = math.sin(math.tau * (f3 * 1.012) * time_sec - channel_phase * 0.8)
+        body = (sine1 * 0.24 + sine2 * 0.30 + sine3 * 0.18 + overtone * 0.17) * pulse + sparkle * 0.16
     elif kind == "ward":
         pulse = 0.78 + 0.22 * math.sin(math.tau * 5.0 * time_sec + channel_phase)
         body = (sine1 * 0.42 + sine2 * 0.28 + sine3 * 0.16) * pulse + smooth_noise * 0.06

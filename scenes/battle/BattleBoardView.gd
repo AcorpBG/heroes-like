@@ -1965,8 +1965,10 @@ func _spell_specific_audio_cue_id(spell_id: String, resolution_type: String) -> 
 			return "audio_spell_briar_bind"
 		"spell_graft_mend":
 			return "audio_spell_graft_mend"
-		"spell_prism_bastion", "spell_resonant_chorus":
+		"spell_prism_bastion":
 			return "audio_spell_prism_bastion"
+		"spell_resonant_chorus":
+			return "audio_spell_resonant_chorus"
 	var family := resolution_type.strip_edges()
 	match family:
 		"cleanse_effect":
@@ -3234,6 +3236,8 @@ func _audio_cue_wave_spec(audio_id: String) -> Dictionary:
 			return {"waveform": "sine", "frequency_hz": 380.0, "secondary_frequency_hz": 570.0, "duration_msec": 280, "amplitude": 0.13, "volume_db": -13.5}
 		"audio_spell_prism_bastion":
 			return {"waveform": "sine", "frequency_hz": 510.0, "secondary_frequency_hz": 1020.0, "duration_msec": 270, "amplitude": 0.13, "volume_db": -13.5}
+		"audio_spell_resonant_chorus":
+			return {"waveform": "sine", "frequency_hz": 294.0, "secondary_frequency_hz": 882.0, "duration_msec": 290, "amplitude": 0.14, "volume_db": -13.0}
 		"audio_spell_command_ward":
 			return {"waveform": "sine", "frequency_hz": 330.0, "secondary_frequency_hz": 495.0, "duration_msec": 240, "amplitude": 0.12, "volume_db": -14.0}
 	return {}

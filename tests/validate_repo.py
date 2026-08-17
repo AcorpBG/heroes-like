@@ -37533,6 +37533,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "audio_spell_briar_bind",
         "audio_spell_graft_mend",
         "audio_spell_prism_bastion",
+        "audio_spell_resonant_chorus",
         "audio_spell_command_ward",
     )
     if BATTLE_SFX_MANIFEST_PATH.exists():
@@ -37560,7 +37561,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
             )
         battle_sfx_cues = battle_sfx_manifest.get("cues", {})
         ensure(isinstance(battle_sfx_cues, dict), errors, "battle_sfx_manifest.json cues must be an object")
-        ensure(set(battle_sfx_cues) == set(required_battle_audio_ids), errors, "battle_sfx_manifest.json must contain exactly the 21 live Battle audio cue ids")
+        ensure(set(battle_sfx_cues) == set(required_battle_audio_ids), errors, "battle_sfx_manifest.json must contain exactly the 22 live Battle audio cue ids")
         battle_sfx_hashes = set()
         for audio_id in required_battle_audio_ids:
             cue = battle_sfx_cues.get(audio_id, {}) if isinstance(battle_sfx_cues, dict) else {}
@@ -37600,7 +37601,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
             ensure("volume_db" in cue, errors, f"battle SFX cue {audio_id} needs volume_db")
             ensure(cue.get("priority_class") in {"low", "normal", "high", "critical"}, errors, f"battle SFX cue {audio_id} needs a valid priority_class")
             ensure(int(cue.get("repeat_cooldown_msec", 0)) > 0, errors, f"battle SFX cue {audio_id} needs repeat_cooldown_msec")
-        ensure(len(battle_sfx_hashes) == len(required_battle_audio_ids), errors, "all 21 Battle production SFX WAV payloads must be byte-distinct")
+        ensure(len(battle_sfx_hashes) == len(required_battle_audio_ids), errors, "all 22 Battle production SFX WAV payloads must be byte-distinct")
     battle_sfx_generator_text = BATTLE_SFX_GENERATOR_PATH.read_text(encoding="utf-8") if BATTLE_SFX_GENERATOR_PATH.exists() else ""
     for required_token in (
         "battle_sfx_manifest.json",
@@ -37666,6 +37667,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "vfx_placeholder_surrender_marker",
         "audio_placeholder_status_clear",
         "audio_spell_cinder_burst",
+        "audio_spell_resonant_chorus",
         "vfx_spell_cinder_burst",
         "vfx_spell_resonant_chorus",
         "func _spell_specific_vfx_cue_ids_for_event",
@@ -37711,7 +37713,8 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     for required_mapping in (
         '"spell_prism_bastion":\n\t\t\treturn "vfx_spell_prism_bastion"',
         '"spell_resonant_chorus":\n\t\t\treturn "vfx_spell_resonant_chorus"',
-        '"spell_prism_bastion", "spell_resonant_chorus":\n\t\t\treturn "audio_spell_prism_bastion"',
+        '"spell_prism_bastion":\n\t\t\treturn "audio_spell_prism_bastion"',
+        '"spell_resonant_chorus":\n\t\t\treturn "audio_spell_resonant_chorus"',
         '"vfx_spell_resonant_chorus":\n\t\t\treturn "spell_resonant_chorus"',
     ):
         ensure(required_mapping in battle_board_text, errors, f"BattleBoardView.gd is missing exact Resonant Chorus/Prism identity mapping {required_mapping}")
@@ -37719,6 +37722,11 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         '"spell_prism_bastion", "spell_resonant_chorus":\n\t\t\treturn "vfx_spell_prism_bastion"' not in battle_board_text,
         errors,
         "BattleBoardView.gd must not collapse Resonant Chorus back onto Prism Bastion visual identity",
+    )
+    ensure(
+        '"spell_prism_bastion", "spell_resonant_chorus":\n\t\t\treturn "audio_spell_prism_bastion"' not in battle_board_text,
+        errors,
+        "BattleBoardView.gd must not collapse Resonant Chorus back onto Prism Bastion audio identity",
     )
     draw_block = battle_board_text[battle_board_text.find("func _draw() -> void:"):battle_board_text.find("func _draw_terrain", battle_board_text.find("func _draw() -> void:"))]
     ensure(draw_block.find("_draw_vfx_cues(hex_layout, stack_cells)") < draw_block.find("_draw_stack_tokens(hex_layout, stack_cells)"), errors, "Battle VFX assets must draw below stack tokens and count labels")
@@ -38038,8 +38046,17 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "spell_specific_audio",
         "_validate_resonant_chorus_vfx_identity",
         "_resonant_chorus_policy_case",
+        "_board_summary_for_session_after_audio",
+        "_audio_voice_for",
+        "for _attempt in range(12):",
+        'audio_summary.get("scheduled_record_count", 0)',
+        'summary["audio_playback"] = audio_summary',
         "resonant chorus normal distinct vfx",
-        "resonant chorus shared audio fallback",
+        "resonant chorus normal distinct audio",
+        "resonant chorus normal imported audio source",
+        "reduced-policy Resonant Chorus imported audio source",
+        "Resonant Chorus distinct audio identity",
+        "Prism Bastion audio identity unchanged",
         "resonant chorus content immutable",
         "resonant chorus presentation preserves session authority",
         "resonant chorus vfx transparent corners",
