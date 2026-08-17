@@ -9,6 +9,7 @@ const REPORT_ID := "BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_SAFETY_REGRESSION"
 const FAILURE_ENV := "HEROES_LIKE_SAVE_FAIL_PHASE"
 const FAILURE_PHASES := ["precommit", "after_backup"]
 const SURFACES := ["overworld", "battle"]
+const DETAIL_SURFACES := ["overworld", "town", "battle", "outcome"]
 const FAILURE_MESSAGE := "Briefing shown, but autosave failed. Press Save to protect this checkpoint."
 const END_TURN_FAILURE_MESSAGE := "Turn completed, but autosave failed. Use Save now to protect the new day."
 const AUTOSAVE_PATH := "user://saves/autosave.json"
@@ -33,6 +34,9 @@ func _run() -> void:
 	_original_file_states = _capture_file_states(_tracked_paths())
 	OS.unset_environment(FAILURE_ENV)
 	if not _require_hooks():
+		return
+	var summary_detail_parity: Dictionary = _prove_runtime_summary_detail_parity()
+	if summary_detail_parity.is_empty():
 		return
 
 	var failure_matrix := {}
@@ -74,6 +78,7 @@ func _run() -> void:
 		"alternate_end_turn": alternate_end_turn,
 		"failed_end_turn": failed_end_turn,
 		"ordinary_success": ordinary,
+		"runtime_summary_detail_parity": summary_detail_parity,
 		"generated_overworld_defer": generated_defer,
 		"save_version": SessionState.SAVE_VERSION,
 	})])
@@ -427,6 +432,58 @@ func _prove_ordinary_success(surface: String) -> Dictionary:
 	return {"autosave_attempts": 1, "autosave_successes": 1, "briefing_shown_on_reload": true}
 
 
+func _prove_runtime_summary_detail_parity() -> Dictionary:
+	var rows := {}
+	for surface_value in DETAIL_SURFACES:
+		var surface := String(surface_value)
+		_clear_runtime_files()
+		var session: SessionStateStoreScript.SessionData = _summary_detail_fixture(surface, 150 + DETAIL_SURFACES.find(surface))
+		if session == null or session.scenario_id == "":
+			return _fail_dictionary("Runtime summary detail fixture is invalid for %s." % surface)
+		var session_before: Dictionary = session.to_dict()
+		var result: Dictionary = SaveService.save_runtime_autosave_session(session)
+		var profile: Dictionary = SaveService.validation_last_runtime_save_profile()
+		var summary: Dictionary = result.get("summary", {}) if result.get("summary", {}) is Dictionary else {}
+		var cached_summary: Dictionary = SaveService.inspect_autosave()
+		var restored = SaveService.restore_autosave_session()
+		var restored_from_inline_summary = SaveService.restore_session_from_summary(summary)
+		var buckets: Dictionary = profile.get("buckets_ms", {}) if profile.get("buckets_ms", {}) is Dictionary else {}
+		var file_before_direct: Dictionary = _file_state(AUTOSAVE_PATH)
+		var cache_before_direct: Dictionary = SaveService.validation_summary_cache_snapshot()
+		var direct_started := Time.get_ticks_usec()
+		var direct_detail := SaveService.describe_slot_details(summary)
+		var direct_usec := Time.get_ticks_usec() - direct_started
+		if not bool(result.get("ok", false)) \
+				or summary.is_empty() \
+				or cached_summary != summary \
+				or bool(summary.get("payload_deferred", true)) \
+				or String(summary.get("detail", "")) != direct_detail \
+				or restored == null \
+				or restored_from_inline_summary == null \
+				or _gameplay_payload(restored) != _gameplay_payload(session) \
+				or _gameplay_payload(restored_from_inline_summary) != _gameplay_payload(session) \
+				or session.to_dict() != session_before \
+				or _file_state(AUTOSAVE_PATH) != file_before_direct \
+				or SaveService.validation_summary_cache_snapshot() != cache_before_direct:
+			return _fail_dictionary("Runtime %s save summary detail/cache/session authority diverged from the direct control." % surface)
+		if int(profile.get("summary_owned_session_materialization_count", -1)) != 1 \
+				or int(profile.get("summary_detail_context_build_count", -1)) != 1 \
+				or int(profile.get("summary_detail_context_reuse_count", -1)) != 3 \
+				or int(profile.get("summary_detail_direct_fallback_count", -1)) != 0 \
+				or int(profile.get("summary_session_reconstruction_count", -1)) != 0 \
+				or float(buckets.get("summary_cache", 99999.0)) >= 1000.0 \
+				or float(buckets.get("summary_detail_context", 99999.0)) >= 1000.0:
+			return _fail_dictionary("Runtime %s save did not use one bounded trusted summary-detail context: %s" % [surface, JSON.stringify(profile)])
+		rows[surface] = {
+			"summary_cache_ms": float(buckets.get("summary_cache", 0.0)),
+			"summary_detail_context_ms": float(buckets.get("summary_detail_context", 0.0)),
+			"direct_detail_ms": float(direct_usec) / 1000.0,
+			"detail_exact": true,
+			"cache_session_file_authority_exact": true,
+		}
+	return rows
+
+
 func _prove_generated_overworld_defer() -> Dictionary:
 	_clear_runtime_files()
 	var fixture: SessionStateStoreScript.SessionData = _overworld_fixture(90)
@@ -461,6 +518,33 @@ func _create_shell(surface: String, session: SessionStateStoreScript.SessionData
 
 func _surface_fixture(surface: String, seed_offset: int) -> SessionStateStoreScript.SessionData:
 	return _overworld_fixture(seed_offset) if surface == "overworld" else _battle_fixture(seed_offset)
+
+
+func _summary_detail_fixture(surface: String, seed_offset: int) -> SessionStateStoreScript.SessionData:
+	if surface == "battle":
+		return _battle_fixture(seed_offset)
+	var session: SessionStateStoreScript.SessionData = _overworld_fixture(seed_offset)
+	match surface:
+		"town":
+			var player_town := {}
+			for town_value in session.overworld.get("towns", []):
+				if town_value is Dictionary and String(town_value.get("owner", "")) == "player":
+					player_town = town_value
+					break
+			if player_town.is_empty():
+				return null
+			var visit_result: Dictionary = OverworldRules.set_active_town_visit(session, String(player_town.get("placement_id", "")))
+			if not bool(visit_result.get("ok", false)):
+				return null
+			session.game_state = "town"
+		"outcome":
+			session.battle = {}
+			session.scenario_status = "victory"
+			session.scenario_summary = "Runtime summary detail outcome control."
+			session.game_state = "outcome"
+		_:
+			session.game_state = "overworld"
+	return session
 
 
 func _overworld_fixture(seed_offset: int) -> SessionStateStoreScript.SessionData:

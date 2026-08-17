@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld full-refresh end-turn forecast bundle reuse is complete. One detached full/compact bundle now serves all full-refresh forecast consumers while direct/default callers stay fresh. Focused and authored Play Copy timing materially improve with exact surface/session/gameplay authority, broad compatibility, static/editor, and bounded Linux/Windows export-startup evidence.",
+  "currentNotes": "Runtime inline summary publication now builds one owned normalized-session recap context and reuses it three times with whole-exact Overworld, Town, Battle, and Outcome detail/file/cache/session authority. Authored Ninefold summary-cache time improved from 2566 to 258ms, briefing autosave from 2590 to 282ms, and first-ready from 6775 to 4531ms. Compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass; broader release gaps remain.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "performance-overworld-full-refresh-end-turn-forecast-bundle-reuse-10184",
-  "currentSliceId": "performance-overworld-full-refresh-end-turn-forecast-bundle-reuse-10184",
-  "currentSliceNotes": "Completed with exact combined-vs-independent forecast parity, one build/five reuses, detached rebuild and whole UI/session authority, focused legacy control 709229 versus 105644 usec, authored first-ready 8993 to 6775 ms and repeat refresh 4370 to 2427 ms, exact edited-working-copy compatibility, static/editor, and bounded Linux/Windows export-startup evidence.",
+  "currentSlice": "performance-runtime-save-summary-detail-context-reuse-10184",
+  "currentSliceId": "performance-runtime-save-summary-detail-context-reuse-10184",
+  "currentSliceNotes": "Completed with one invocation-local trusted normalized-session context for inline runtime cache detail, exact direct/fallback behavior, material authored timing improvement, compatibility, static/editor, and bounded Linux/Windows startup validation.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Full Refresh End-Turn Forecast Bundle Reuse",
-  "currentSliceUpdatedAt": "2026-08-17T00:13:04Z",
+  "currentSliceTitle": "Runtime Save Summary Detail Context Reuse",
+  "currentSliceUpdatedAt": "2026-08-17T00:50:18Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19847,8 +19847,54 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "The selected native RMG release matrix is complete. Keep unsupported RMG inputs fail-closed and keep Linux/Windows outputs synchronized; select a different pending product slice for subsequent work.",
-  "notes": "Completed the invocation-local Overworld full-refresh forecast bundle reuse with exact core/surface/session authority, material focused and authored timing improvements, broad compatibility, static/editor, and bounded Linux/Windows export-startup evidence. No broad gameplay, packaged interaction, hardware/certification, or release-readiness claim is made.",
+  "notes": "Completed runtime save summary-detail context reuse with exact behavior authority and material authored Play Copy timing improvement. Select the next tracker-approved product slice from direct current behavior evidence.",
   "plannedSlices": [
+    {
+      "id": "performance-runtime-save-summary-detail-context-reuse-10184",
+      "title": "Runtime Save Summary Detail Context Reuse",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Reuse one invocation-local normalized-session recap context when a successful runtime save publishes its exact cached summary detail, removing repeated progress/watch reconstruction without changing save or cache semantics.",
+      "implementationTargets": [
+        "scripts/autoload/SaveService.gd",
+        "tests/briefing_consumption_autosave_failure_safety_regression.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Stored runtime summary and detail are whole-exact to independent direct materialization across Overworld, Town, Battle, and Outcome while using one normalized-session progress/watch context",
+        "Ordinary briefing-consumption autosaves retain exact loadable inline summary/cache/session/file authority and materially reduce the current 2566ms summary-cache phase",
+        "Public direct detail calls remain fresh; manual, deferred-payload, transaction, recovery, failure, and cache identity/invalidation behavior remain exact",
+        "Focused briefing/save, edited Map Editor Play Copy, save/load and transaction compatibility, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "save format/schema/version, writer/readback, payload inline threshold, cache identity/invalidation, persistent cache, async work, autosave/manual policy, recovery, or UI copy changes",
+        "scenario/progress/risk/forecast policy, gameplay, content, AI, balance, Native RMG, package identity, or platform policy changes",
+        "packaged save interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "cbb8085017af177fa1ca0d52ed7e907d766f00af",
+        "scenario_id": "ninefold-confluence",
+        "authored_summary_cache_ms": 2566.245,
+        "authored_runtime_save_total_ms": 2589,
+        "authored_first_ready_ms": 6775,
+        "finalize_summary_usec_samples": [2536484, 2602421, 2624957, 2604966, 2567756],
+        "independent_recap_continuity_progress_usec": 2521598,
+        "shared_normalized_context_usec": 362882,
+        "whole_output_exact": true,
+        "attribution_artifact": "/tmp/heroes-summary-cache-recap-attribution.10KwLR"
+      },
+      "createdAt": "2026-08-17T00:20:45Z",
+      "startedAt": "2026-08-17T00:20:45Z",
+      "updatedAt": "2026-08-17T00:50:18Z",
+      "notes": "Production builds one owned normalized-session context for verified inline runtime-summary publication and reuses it across resume, continuity, progress, and risk-watch detail. Focused `/tmp/heroes-save-summary-focused.ElG53s` proves whole-exact Overworld/Town/Battle/Outcome output, exact file/cache/session authority, one materialization/build, three reuses, zero fallback, and 18-28ms summary-cache time. Method-matched authored `/tmp/heroes-save-summary-playcopy-profile.h5S0Vs` improves summary cache 2566 to 258ms, briefing autosave 2590 to 282ms, and first-ready 6775 to 4531ms. Full Map Editor `/tmp/heroes-save-summary-map-editor.nkhh6j`, transaction `/tmp/heroes-save-summary-transactional.uZSCRb`, generated-Large `/tmp/heroes-save-summary-generated-large.OMriLQ`, save visual `/tmp/heroes-save-summary-visual.wrRzqd`, core `/tmp/heroes-save-summary-core.OtOdj2`, static/editor `/tmp/heroes-save-summary-static.i3KuUH`, and official Linux/Windows export-startup gates pass. Claims remain bounded.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence.",
+      "blockedReason": null,
+      "completedAt": "2026-08-17T00:50:18Z"
+    },
     {
       "id": "performance-overworld-full-refresh-end-turn-forecast-bundle-reuse-10184",
       "title": "Overworld Full Refresh End-Turn Forecast Bundle Reuse",
@@ -87206,7 +87252,7 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "The selected Overworld full-refresh end-turn forecast bundle reuse is closed. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain.",
+  "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and unrecovered Native RMG parity gaps remain. The game is not release-ready.",
   "remainingWork": "Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence.",
   "reportOnlyEvidence": [
     {
@@ -87639,7 +87685,7 @@
     }
   ],
   "result": "presentation_aurelion_reach_main_menu_crest_art_completed",
-  "status": "completed",
+  "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
       "completed": "Implementation or documentation-only governance work satisfies the PLAN completion criteria and has validation/evidence.",
@@ -87739,9 +87785,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The Overworld full-refresh end-turn forecast bundle reuse is complete with exact behavior and authority, material focused and authored timing improvements, broad compatibility, static/editor, and bounded Linux/Windows export-startup evidence. The game is not release-ready.",
+  "summary": "The runtime save summary-detail context reuse is selected from direct current performance evidence and method-matched attribution; implementation and validation are pending. The game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-17T00:13:04Z",
+  "updatedAt": "2026-08-17T00:20:45Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
