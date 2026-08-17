@@ -25,6 +25,8 @@ Rules:
 Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next tracker-approved release-readiness implementation slice from current source and behavior evidence.
+- Completed implementation slice: `performance-overworld-objective-progress-surface-reuse-10184`. Objective Header now passes its same-call detached Objective Stakes surface into the normalized progress recap, eliminating repeated objective counts, completed-label, and next-objective evaluation while direct/default recap callers remain fresh. Focused 24-scenario/mode and changed-state authority is exact; five-call median improves238.6ms to207.7ms, the baseline header lane44.6ms to39.9ms, and full refresh177.0ms to172.1ms. Overworld visual/route/input, Town return, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
+  id: `performance-overworld-objective-progress-surface-reuse-10184`
 - Completed implementation slice: `performance-overworld-objective-header-normalization-reuse-10184`. Objective Header now materializes its progress recap from the normalization already established by Objective Stakes, while public direct recap callers remain fresh. Focused output/session/UI authority is exact across all 24 authored scenarios and changed-state controls; five-call median improves from408.8ms to237.3ms, the baseline header lane from53.2ms to44.6ms, and the full refresh from186.3ms to177.0ms. Overworld visual/route/input, Town return, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
   id: `performance-overworld-objective-header-normalization-reuse-10184`
 - Completed implementation slice: `performance-overworld-refresh-watch-context-reuse-10184`. End Turn Forecast, Command Commitment, Event Feed, and Field Dispatch now share one detached refresh-local command-risk, local-pressure, and management-watch context while direct APIs remain fresh. Focused runtime covers seven states with exact whole outputs, detached rebuild, and session/UI authority; the broad-state median improves from2.988s to1.751s. Overworld visual/route/input, Town return, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
@@ -4208,6 +4210,31 @@ Completion criteria:
 
 Non-goals:
 - no briefing content/consumption policy, End Turn rules/autosave policy, SaveService canonicalization, save schema/version, manual-slot redesign, Battle briefing change, routing, Native RMG, publication, signing, native Windows hardware certification, or overall release-completion claim.
+
+## Overworld Objective Progress Surface Reuse
+
+id: `performance-overworld-objective-progress-surface-reuse-10184`
+
+Status: completed.
+
+Selected Phase 6 normal-path performance correction. One Objective Header invocation already evaluates every victory and defeat objective into its detached Objective Stakes surface, but its immediate progress recap independently recomputes objective counts, completed labels, and next unmet victory objective. A copied materializer using the existing surface is exact across all 24 authored scenarios in skirmish and campaign modes plus resolved outcome state.
+
+Implemented outcome: the normalized progress recap accepts an optional complete detached Objective Stakes surface, validates its required fields, and uses it only for objective-derived counts, completed labels, and next-objective text. Direct callers and incomplete/absent preloads follow the unchanged fresh path; recent events, aftermath, resolution, campaign, day, and other live state remain fresh. Focused, compatibility, static/editor, and bounded Linux/Windows export-startup gates pass.
+
+Implementation target:
+- add an exact normalized-session progress-recap materializer that consumes a supplied detached Objective Stakes surface for objective counts, completed labels, and next objective while retaining fresh recent-event, aftermath, resolution, campaign, and day state;
+- keep public direct progress recap callers and the existing normalized-session default fresh, and pass the surface only inside the same Objective Header invocation;
+- preserve exact line order, labels, tie/fallback behavior, output, session, save, UI, focus, route, and action authority with no cross-call cache.
+
+Completion criteria:
+- independent current and surface-preloaded controls remain whole-exact across all 24 authored scenarios in skirmish/campaign modes, resolved outcome, and representative live objective changes with session authority unchanged;
+- a real full Overworld refresh preserves whole UI/session authority and materially reduces the current Objective Header/header lane from the 44.6 ms post-normalization baseline;
+- focused Objective Header, Overworld visual/route/input, Town return, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Non-goals:
+- no objective, progress, recent-event, aftermath, status, forecast, readiness, route, event, save, scenario, or gameplay policy changes;
+- no persistent cache, async work, content, balance, AI, Native RMG, save/schema, or package identity changes;
+- no packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
 
 ## Overworld Objective Header Normalization Reuse
 

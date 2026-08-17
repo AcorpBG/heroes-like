@@ -617,7 +617,8 @@ static func describe_session_progress_recap(
 
 static func describe_session_progress_recap_from_normalized_session(
 	session: SessionStateStoreScript.SessionData,
-	include_header: bool = true
+	include_header: bool = true,
+	preloaded_objective_surface: Dictionary = {}
 ) -> String:
 	if session == null or session.scenario_id == "":
 		return "Progress Recap\nNo active scenario progress is available." if include_header else ""
@@ -626,18 +627,19 @@ static func describe_session_progress_recap_from_normalized_session(
 		return "Progress Recap\nScenario progress is unavailable." if include_header else ""
 
 	var lines := []
+	var objective_surface := preloaded_objective_surface if _objective_progress_surface_is_complete(preloaded_objective_surface) else {}
 	if include_header:
 		lines.append("Progress Recap")
 	var context_line := _progress_recap_context_line(session, scenario)
 	if context_line != "":
 		lines.append(context_line)
-	var status_line := _progress_recap_status_line(session)
+	var status_line := _progress_recap_status_line(session, objective_surface)
 	if status_line != "":
 		lines.append(status_line)
-	var recent_line := _progress_recap_recent_line(session, scenario)
+	var recent_line := _progress_recap_recent_line(session, scenario, objective_surface)
 	if recent_line != "":
 		lines.append(recent_line)
-	var next_step_line := _progress_recap_next_step_line(session, scenario)
+	var next_step_line := _progress_recap_next_step_line(session, scenario, objective_surface)
 	if next_step_line != "":
 		lines.append(next_step_line)
 	return "\n".join(lines)
@@ -971,8 +973,13 @@ static func _progress_recap_context_line(session: SessionStateStoreScript.Sessio
 		session.day,
 	]
 
-static func _progress_recap_status_line(session: SessionStateStoreScript.SessionData) -> String:
-	var objective_counts := _objective_progress_counts(session)
+static func _progress_recap_status_line(
+	session: SessionStateStoreScript.SessionData,
+	preloaded_objective_surface: Dictionary = {}
+) -> String:
+	var objective_counts := _objective_progress_counts_from_surface(preloaded_objective_surface)
+	if objective_counts.is_empty():
+		objective_counts = _objective_progress_counts(session)
 	if objective_counts.is_empty():
 		return ""
 	var status_text := "Current progress: %d/%d victory complete | %d/%d defeat risks active" % [
@@ -985,7 +992,11 @@ static func _progress_recap_status_line(session: SessionStateStoreScript.Session
 		status_text += " | Result %s" % String(session.scenario_status).capitalize()
 	return status_text
 
-static func _progress_recap_recent_line(session: SessionStateStoreScript.SessionData, scenario: Dictionary) -> String:
+static func _progress_recap_recent_line(
+	session: SessionStateStoreScript.SessionData,
+	scenario: Dictionary,
+	preloaded_objective_surface: Dictionary = {}
+) -> String:
 	var recent_events: String = _scenario_script_rules().describe_recent_events(session, 2)
 	if recent_events != "":
 		return "Recently resolved: %s" % recent_events
@@ -996,21 +1007,55 @@ static func _progress_recap_recent_line(session: SessionStateStoreScript.Session
 		var summary := session.scenario_summary if session.scenario_summary != "" else _resolution_text(scenario, session.scenario_status)
 		if summary != "":
 			return "Recently resolved: %s" % summary
-	var completed := _completed_objective_labels(session, 2)
+	var completed: Array = []
+	if _objective_progress_surface_is_complete(preloaded_objective_surface):
+		completed = preloaded_objective_surface.get("completed_objectives", []).duplicate(true)
+		if completed.size() > 2:
+			completed = completed.slice(0, 2)
+	else:
+		completed = _completed_objective_labels(session, 2)
 	if not completed.is_empty():
 		return "Recently resolved: %s" % "; ".join(completed)
 	return ""
 
-static func _progress_recap_next_step_line(session: SessionStateStoreScript.SessionData, scenario: Dictionary) -> String:
+static func _progress_recap_next_step_line(
+	session: SessionStateStoreScript.SessionData,
+	scenario: Dictionary,
+	preloaded_objective_surface: Dictionary = {}
+) -> String:
 	if session.scenario_status != "in_progress":
 		return "Next step: %s" % _resolved_next_step_text(session, scenario)
-	var next_objective := _next_unmet_victory_objective_label(session)
+	var objective_surface_complete := _objective_progress_surface_is_complete(preloaded_objective_surface)
+	var next_objective := String(preloaded_objective_surface.get("next_objective", "")) if objective_surface_complete else _next_unmet_victory_objective_label(session)
 	if next_objective != "":
 		return "Next step: Push toward %s." % next_objective
-	var objective_counts := _objective_progress_counts(session)
+	var objective_counts := _objective_progress_counts_from_surface(preloaded_objective_surface) if objective_surface_complete else _objective_progress_counts(session)
 	if int(objective_counts.get("victory_total", 0)) > 0:
 		return "Next step: All victory objectives are ready; finish the turn or resolve the scenario outcome."
 	return "Next step: Scout the nearest lane, secure income, and choose the next contact."
+
+static func _objective_progress_surface_is_complete(surface: Dictionary) -> bool:
+	for key in [
+		"victory_total",
+		"victory_met",
+		"defeat_total",
+		"defeat_triggered",
+		"next_objective",
+		"completed_objectives",
+	]:
+		if not surface.has(key):
+			return false
+	return surface.get("completed_objectives", []) is Array
+
+static func _objective_progress_counts_from_surface(surface: Dictionary) -> Dictionary:
+	if not _objective_progress_surface_is_complete(surface):
+		return {}
+	return {
+		"victory_total": int(surface.get("victory_total", 0)),
+		"victory_met": int(surface.get("victory_met", 0)),
+		"defeat_total": int(surface.get("defeat_total", 0)),
+		"defeat_met": int(surface.get("defeat_triggered", 0)),
+	}
 
 static func _objective_progress_counts(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if session == null or session.scenario_id == "":
