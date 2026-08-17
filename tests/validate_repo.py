@@ -16955,6 +16955,170 @@ def validate_overworld_full_refresh_event_readiness_context_reuse(errors: list[s
         ensure(forbidden not in report_text, errors, f"Overworld event-readiness proof must remain passive and exact: {forbidden}")
 
 
+def validate_overworld_event_dispatch_observation_context_reuse(errors: list[str]) -> None:
+    rules_path = ROOT / "scripts/core/OverworldRules.gd"
+    shell_path = ROOT / "scenes/overworld/OverworldShell.gd"
+    report_path = ROOT / "tests/overworld_hero_actions_refresh_cache_regression.gd"
+    for path in (rules_path, shell_path, report_path):
+        ensure(path.exists(), errors, f"Missing Overworld Event/Dispatch context owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in (rules_path, shell_path, report_path)):
+        return
+
+    rules_text = rules_path.read_text(encoding="utf-8")
+    context_match = re.search(
+        r"static func _event_dispatch_observation_context\(session: SessionStateStoreScript\.SessionData\) -> Dictionary:(.*?)(?=\n\nstatic func describe_event_feed_surface)",
+        rules_text,
+        flags=re.DOTALL,
+    )
+    ensure(context_match is not None, errors, "Event/Dispatch observation context could not be isolated")
+    if context_match is not None:
+        context_body = context_match.group(1)
+        ordered_tokens = (
+            '"recent_events": _describe_recent_events(session, 2)',
+            '"route_pressure": describe_route_interception_surface(session)',
+            '"local_pressure": _local_visible_threat_summary(session, "")',
+            '"management_watch": describe_management_watch(session)',
+            '"defense_watch": describe_defense_readiness_warnings(session, 1)',
+            '"dispatch_context": _dispatch_context_brief(session)',
+        )
+        ensure(all(token in context_body for token in ordered_tokens), errors, "Event/Dispatch observation context is missing exact ordered live observations")
+        if all(token in context_body for token in ordered_tokens):
+            ensure([context_body.index(token) for token in ordered_tokens] == sorted(context_body.index(token) for token in ordered_tokens), errors, "Event/Dispatch observation order drifted")
+        for forbidden in ("session.flags[", "session.overworld[", "cache", "static var", "call_deferred", "await ", "create_timer", "OS.delay", "erase(", "sort_custom"):
+            ensure(forbidden not in context_body, errors, f"Event/Dispatch observation context must remain detached and invocation-local: {forbidden}")
+
+    bundle_match = re.search(
+        r"static func describe_event_dispatch_surfaces\((.*?)\n\) -> Dictionary:(.*?)(?=\n\nstatic func _event_dispatch_observation_context)",
+        rules_text,
+        flags=re.DOTALL,
+    )
+    ensure(bundle_match is not None, errors, "Combined Event/Dispatch surface could not be isolated")
+    if bundle_match is not None:
+        bundle_body = bundle_match.group(2)
+        ordered_tokens = (
+            "normalize_overworld_state(session)",
+            "var observation_context := _event_dispatch_observation_context(session)",
+            '"event_feed": _describe_event_feed_surface_from_observation_context(',
+            '"dispatch": _describe_dispatch_from_observation_context(session, last_message, observation_context)',
+        )
+        ensure(all(token in bundle_body for token in ordered_tokens), errors, "Combined Event/Dispatch surface is missing one-context/two-materializer ownership")
+        if all(token in bundle_body for token in ordered_tokens):
+            ensure([bundle_body.index(token) for token in ordered_tokens] == sorted(bundle_body.index(token) for token in ordered_tokens), errors, "Combined Event/Dispatch context/materializer order drifted")
+        ensure(bundle_body.count("_event_dispatch_observation_context(session)") == 1, errors, "Combined Event/Dispatch surface must build exactly one observation context")
+
+    for signature, required_tokens in (
+        (
+            r"static func _describe_dispatch_from_observation_context\((.*?)\n\) -> String:(.*?)(?=\n\nstatic func describe_event_dispatch_surfaces)",
+            (
+                'String(observation_context.get("local_pressure", ""))',
+                'String(observation_context.get("dispatch_context", ""))',
+                'String(observation_context.get("management_watch", ""))',
+                'String(observation_context.get("defense_watch", ""))',
+                'String(observation_context.get("recent_events", ""))',
+            ),
+        ),
+        (
+            r"static func _describe_event_feed_surface_from_observation_context\((.*?)\n\) -> Dictionary:(.*?)(?=\n\nstatic func describe_enemy_activity)",
+            (
+                'var recent_events := String(observation_context.get("recent_events", ""))',
+                "var action_recap := _normalize_post_action_recap(action_recap_value)",
+                "var watch := _event_feed_watch_line_from_observation_context(observation_context)",
+                '"visible_text": visible',
+                '"post_action_recap": action_recap',
+            ),
+        ),
+        (
+            r"static func _event_feed_watch_line_from_observation_context\(observation_context: Dictionary\) -> String:(.*?)(?=\n\nstatic func _event_feed_convoy_line)",
+            (
+                'observation_context.get("route_pressure", {})',
+                'String(observation_context.get("local_pressure", ""))',
+                'String(observation_context.get("management_watch", ""))',
+                'String(observation_context.get("defense_watch", ""))',
+                'return "No urgent raid, convoy, or town-management warning is visible."',
+                'return " | ".join(parts.slice(0, min(3, parts.size())))',
+            ),
+        ),
+    ):
+        match = re.search(signature, rules_text, flags=re.DOTALL)
+        ensure(match is not None, errors, "Event/Dispatch context materializer could not be isolated")
+        if match is not None:
+            body = match.group(match.lastindex or 1)
+            ensure(all(token in body for token in required_tokens), errors, "Event/Dispatch context materializer is missing exact legacy output semantics")
+
+    dispatch_wrapper = re.search(r"static func describe_dispatch\(session: SessionStateStoreScript\.SessionData, last_message: String = \"\"\) -> String:(.*?)(?=\n\nstatic func _describe_dispatch_from_observation_context)", rules_text, flags=re.DOTALL)
+    event_wrapper = re.search(r"static func describe_event_feed_surface\((.*?)\n\) -> Dictionary:(.*?)(?=\n\nstatic func _describe_event_feed_surface_from_observation_context)", rules_text, flags=re.DOTALL)
+    ensure(dispatch_wrapper is not None and "_event_dispatch_observation_context(session)" in dispatch_wrapper.group(1), errors, "Direct Field Dispatch caller must retain a fresh observation context")
+    ensure(event_wrapper is not None and "_event_dispatch_observation_context(session)" in event_wrapper.group(2), errors, "Direct Event Feed caller must retain a fresh observation context")
+    for forbidden in ('session.flags["event_dispatch', 'session.overworld["event_dispatch', '_refresh_cache["event_dispatch', "_event_dispatch_observation_context_cache"):
+        ensure(forbidden not in rules_text, errors, f"Event/Dispatch context must not persist across calls: {forbidden}")
+
+    shell_text = shell_path.read_text(encoding="utf-8")
+    shell_match = re.search(r"func _event_feed_surface\((.*?)\n\) -> Dictionary:(.*?)(?=\n\nfunc _action_context_surface)", shell_text, flags=re.DOTALL)
+    ensure(shell_match is not None, errors, "Shell Event Feed bundle consumer could not be isolated")
+    if shell_match is not None:
+        shell_body = shell_match.group(2)
+        ordered_tokens = (
+            "var event_dispatch_surfaces := OverworldRules.describe_event_dispatch_surfaces(",
+            '_profile_add("event_dispatch_observation_context_builds", 1)',
+            '_profile_add("event_dispatch_observation_context_reuses", 2)',
+            'var surface: Dictionary = event_dispatch_surfaces.get("event_feed", {}).duplicate(true)',
+            'surface["dispatch_text"] = String(event_dispatch_surfaces.get("dispatch", ""))',
+        )
+        ensure(all(token in shell_body for token in ordered_tokens), errors, "Shell Event Feed must build one Event/Dispatch bundle and reuse both exact outputs")
+        if all(token in shell_body for token in ordered_tokens):
+            ensure([shell_body.index(token) for token in ordered_tokens] == sorted(shell_body.index(token) for token in ordered_tokens), errors, "Shell Event/Dispatch bundle use order drifted")
+        ensure("OverworldRules.describe_event_feed_surface(" not in shell_body and "OverworldRules.describe_dispatch(" not in shell_body, errors, "Shell Event Feed must not retain direct duplicate Event/Dispatch derivations")
+
+    report_text = report_path.read_text(encoding="utf-8")
+    case_match = re.search(r"func _assert_event_dispatch_observation_context_reuse\(\) -> Dictionary:(.*?)(?=\nfunc _legacy_event_dispatch_bundle)", report_text, flags=re.DOTALL)
+    ensure(case_match is not None, errors, "Focused Event/Dispatch context case could not be isolated")
+    if case_match is not None:
+        case_body = case_match.group(1)
+        required_tokens = (
+            '{"id": "idle", "session": ordinary}',
+            '{"id": "message", "session": ordinary, "last_message": "Riverwatch Hold is ready."}',
+            '{"id": "daybreak", "session": ordinary, "turn": "Day 2 begins."}',
+            '"id": "enemy_activity"',
+            '"id": "action_recap"',
+            '{"id": "pressure_watch", "session": pressure}',
+            '{"id": "outcome", "session": outcome, "last_message": "The river road is secure."}',
+            "OverworldRules.normalize_overworld_state(probe)",
+            "var authority_before: Dictionary = probe.to_dict()",
+            "var legacy: Dictionary = _legacy_event_dispatch_bundle(probe, fixture)",
+            "var shared: Dictionary = OverworldRules.describe_event_dispatch_surfaces(",
+            "shared != legacy or probe.to_dict() != authority_before",
+            "for _batch in range(5):",
+            "shared_median * 4 > legacy_median * 3",
+        )
+        ensure(all(token in case_body for token in required_tokens), errors, "Focused Event/Dispatch context case is missing whole parity, lifecycle, state breadth, or material timing proof")
+        normalization = case_body.find("OverworldRules.normalize_overworld_state(probe)")
+        authority = case_body.find("var authority_before: Dictionary = probe.to_dict()")
+        legacy = case_body.find("var legacy: Dictionary = _legacy_event_dispatch_bundle(probe, fixture)")
+        shared = case_body.find("var shared: Dictionary = OverworldRules.describe_event_dispatch_surfaces(")
+        ensure(normalization >= 0 and normalization < authority < legacy < shared, errors, "Focused Event/Dispatch authority must baseline after required runtime normalization and before both materializers")
+        for forbidden in ("await get_tree().create_timer", "OS.delay", "set_process", "sort_custom", "normalize_event_dispatch", "erase(\"event"):
+            ensure(forbidden not in case_body, errors, f"Focused Event/Dispatch proof must remain passive and exact: {forbidden}")
+
+    legacy_match = re.search(r"func _legacy_event_dispatch_bundle\(session, fixture: Dictionary\) -> Dictionary:(.*?)(?=\nfunc _legacy_eager_command_commitment_action_line)", report_text, flags=re.DOTALL)
+    ensure(legacy_match is not None, errors, "Independent legacy Event/Dispatch controls could not be isolated")
+    if legacy_match is not None:
+        legacy_body = legacy_match.group(1)
+        for token in ("func _legacy_dispatch", "func _legacy_event_feed_surface", "func _legacy_event_feed_watch_line", "OverworldRules._event_feed_next_step_line(session)", "OverworldRules.describe_management_watch(session)", "OverworldRules.describe_defense_readiness_warnings(session, 1)"):
+            ensure(token in legacy_body, errors, f"Independent legacy Event/Dispatch controls are missing copied pre-change token: {token}")
+        for forbidden in ("describe_event_dispatch_surfaces", "_event_dispatch_observation_context", "_from_observation_context"):
+            ensure(forbidden not in legacy_body, errors, f"Independent legacy Event/Dispatch controls must not call optimized helpers: {forbidden}")
+
+    for token in (
+        "var event_dispatch_control := _assert_event_dispatch_observation_context_reuse()",
+        'int(full_refresh_profile.get("event_dispatch_observation_context_builds", 0)) != 1',
+        'int(full_refresh_profile.get("event_dispatch_observation_context_reuses", 0)) != 2',
+        '"event_dispatch_whole_output_parity": true',
+        '"event_dispatch_session_authority_exact": true',
+        '"event_dispatch_shared_to_legacy_ratio"',
+    ):
+        ensure(token in report_text, errors, f"Event/Dispatch focused report is missing token: {token}")
+
+
 def validate_overworld_objective_stakes_surface_bundle_reuse(errors: list[str]) -> None:
     rules_path = ROOT / "scripts/core/OverworldRules.gd"
     shell_path = ROOT / "scenes/overworld/OverworldShell.gd"
@@ -46805,6 +46969,7 @@ def main() -> int:
     validate_overworld_route_map_cue_refresh(errors)
     validate_overworld_full_refresh_drawer_readiness_reuse(errors)
     validate_overworld_full_refresh_event_readiness_context_reuse(errors)
+    validate_overworld_event_dispatch_observation_context_reuse(errors)
     validate_overworld_objective_stakes_surface_bundle_reuse(errors)
     validate_overworld_drawer_objective_recap_reuse(errors)
     validate_overworld_field_readiness_progress_recap_reuse(errors)

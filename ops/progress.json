@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Command Commitment summary fallback elision is implemented and validated. Select the next tracker-approved release-readiness implementation slice; broader strategic-AI, balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG parity gaps remain.",
+  "currentNotes": "The Event Feed/Field Dispatch observation-context reuse slice is implemented and validated with exact behavior authority and bounded performance improvement. Select the next tracker-approved implementation slice from direct current behavior and source evidence; the game is not release-ready.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "performance-overworld-commitment-summary-eager-fallback-elision-10184",
-  "currentSliceId": "performance-overworld-commitment-summary-eager-fallback-elision-10184",
-  "currentSliceNotes": "Completed on the cd951dd9 baseline. Exact focused runtime covers eight context/fallback states and real active-town full refresh authority; the optimized three-call median is 81243usec versus161694usec eager. Overworld visual, route tooltip, gameplay input ownership, Town return, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Packaged interaction and broader release claims remain unclaimed.",
+  "currentSlice": "performance-overworld-event-dispatch-observation-context-reuse-10184",
+  "currentSliceId": "performance-overworld-event-dispatch-observation-context-reuse-10184",
+  "currentSliceNotes": "Implemented one detached invocation-local Event Feed/Field Dispatch observation context while keeping direct APIs fresh. Authoritative focused artifact /tmp/heroes-event-dispatch-focused-rerun.cWL4Kp is rc0/ok:true across seven states with exact whole outputs and session/UI authority, one build/two reuses in a real refresh, and 1897664usec versus1249453usec medians. Overworld visual/route/input, Town return, core, validate/editor, Linux report 431075e27c58fd84c97878d6abff5d1835e3a3dbf4af69d9934c91bbdd5e23ce, and Windows report c2bef2c055bfe1b5bdd2e7febfa83597b1195fe9f572b1628e33747bcb2f2dd4 are green. Platform claims are export/startup only.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Commitment Summary Eager Fallback Elision",
-  "currentSliceUpdatedAt": "2026-08-17T04:19:58Z",
+  "currentSliceTitle": "Overworld Event/Dispatch Observation Context Reuse",
+  "currentSliceUpdatedAt": "2026-08-17T04:45:51Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,7 +19846,7 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Change only the eager Command Commitment action-summary fallback evaluation. Preserve exact context actions, summaries, briefing fallback, route, risk, UI copy, session authority, and Native RMG fail-closed behavior.",
+  "nextActionGuardrailNote": "Select the next tracker-approved implementation slice only from direct current behavior and source evidence; preserve exact completed Event/Dispatch behavior and Native RMG fail-closed state.",
   "notes": "Completed Field Readiness progress recap reuse with exact behavior authority and bounded focused/authored performance improvement. Select the next tracker-approved product slice from direct current behavior evidence.",
   "plannedSlices": [
     {
@@ -87560,6 +87560,49 @@
       "notes": "Implemented lazy summary fallback with exact present-empty semantics. Authoritative focused artifact /tmp/heroes-commitment-focused-authoritative.iHeIP3 is rc0/ok:true across eight context/fallback states, exact session/UI authority, active-town refresh, and 81243usec versus161694usec three-call medians. Overworld visual, route tooltip, gameplay input ownership, Town return, core, validate/editor, Linux report 398943ebfd6a13e0f4ed8d0133dfe39756cedd430dddc43e772a52d70107a3a7, and Windows report b3fb9718c7891dcc6c4cfb2a37798a23de61b692b74d825e63c5510cb8a580e0 are green. Platform claims are export/startup only.",
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
       "blockedReason": null
+    },
+    {
+      "id": "performance-overworld-event-dispatch-observation-context-reuse-10184",
+      "title": "Overworld Event/Dispatch Observation Context Reuse",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Build the shared live observations used by Event Feed and Field Dispatch once per refresh instead of recomputing recent events, local threat, management, and defense state independently.",
+      "implementationTargets": [
+        "scripts/core/OverworldRules.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "tests/overworld_hero_actions_refresh_cache_regression.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Independent current and shared-context Event Feed plus Field Dispatch controls remain whole-exact for idle, ordinary message, daybreak, enemy activity, post-action recap, pressure-watch, and outcome states",
+        "A real full Overworld refresh builds one detached context, preserves exact Event and Dispatch text plus whole session, UI, save, focus, and action authority, and materially reduces event-dispatch work",
+        "Focused refresh-cache, Overworld visual, route, and input, Town return, core, repository and editor, Linux export and headless startup, and Windows export and fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "event-feed, dispatch, readiness, objective, threat, defense, management, action, save, focus, or gameplay policy changes",
+        "persistent caching, async work, content, balance, AI, Native RMG, save schema, or package identity changes",
+        "packaged Overworld interaction, controller hardware, AT-SPI or UIA certification, native hardware, signing, publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "f21e7f1c",
+        "artifact": "/tmp/heroes-overworld-event-dispatch-audit.2E1fk6",
+        "fixture_count": 5,
+        "direct_batches_usec": [1661156, 1629532, 1628823, 1626033, 1606074, 1647464, 1618365],
+        "shared_context_batches_usec": [1044311, 1051393, 1065657, 1030292, 1068090, 1053638, 1085930],
+        "whole_output_exact": true,
+        "session_authority_exact": true
+      },
+      "createdAt": "2026-08-17T04:26:49Z",
+      "startedAt": "2026-08-17T04:26:49Z",
+      "updatedAt": "2026-08-17T04:45:51Z",
+      "completedAt": "2026-08-17T04:45:51Z",
+      "notes": "Implemented one detached invocation-local observation context with fresh direct callers. Authoritative focused artifact /tmp/heroes-event-dispatch-focused-rerun.cWL4Kp is rc0/ok:true across seven states with exact whole outputs and session/UI authority, one build/two reuses in a real refresh, and 1897664usec versus1249453usec medians. Overworld visual, route tooltip, gameplay input ownership, Town return, core, validate/editor, Linux report 431075e27c58fd84c97878d6abff5d1835e3a3dbf4af69d9934c91bbdd5e23ce, and Windows report c2bef2c055bfe1b5bdd2e7febfa83597b1195fe9f572b1628e33747bcb2f2dd4 are green. Platform claims are export/startup only.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null
     }
   ],
   "project": "heroes-like",
@@ -88102,9 +88145,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Command Commitment summary fallback elision is implemented and validated with exact focused behavior/authority, bounded compatibility, static/editor, and Linux/Windows export-startup evidence. No slice is currently selected; the game is not release-ready.",
+  "summary": "Overworld Event Feed/Field Dispatch observation-context reuse is implemented and validated with exact behavior authority, bounded performance improvement, compatibility, static/editor, and Linux/Windows export-startup evidence. No current implementation slice is selected, and the game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-17T04:19:58Z",
+  "updatedAt": "2026-08-17T04:45:51Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

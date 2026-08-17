@@ -14,6 +14,9 @@ func _run() -> void:
 	var commitment_control := _assert_commitment_summary_fallback_elision(shell, session)
 	if commitment_control.is_empty():
 		return
+	var event_dispatch_control := _assert_event_dispatch_observation_context_reuse()
+	if event_dispatch_control.is_empty():
+		return
 	_prepare_shell_state(shell, session, Vector2i(0, 1), 10)
 	var reserve_id := _ensure_reserve_hero(session)
 	shell.call("_refresh")
@@ -67,6 +70,10 @@ func _run() -> void:
 		return
 	if int(full_refresh_profile.get("field_readiness_preloaded_progress_recap_reuses", 0)) != 1:
 		_fail("Full refresh did not reuse the objective progress recap in Field Readiness context construction.", full_refresh_profile)
+		return
+	if int(full_refresh_profile.get("event_dispatch_observation_context_builds", 0)) != 1 \
+			or int(full_refresh_profile.get("event_dispatch_observation_context_reuses", 0)) != 2:
+		_fail("Full refresh did not build one Event/Dispatch observation context and reuse it for both exact surfaces.", full_refresh_profile)
 		return
 	if session.to_dict() != refresh_session_before or refresh_authority_after != refresh_authority_before:
 		_fail("Readiness reuse changed session or whole refresh surface authority.", {
@@ -221,6 +228,12 @@ func _run() -> void:
 		"commitment_context_output_parity": true,
 		"commitment_summary_presence_semantics_exact": true,
 		"commitment_full_refresh_authority_exact": true,
+		"event_dispatch_fixture_count": int(event_dispatch_control.get("fixture_count", 0)),
+		"event_dispatch_legacy_median_usec": int(event_dispatch_control.get("legacy_median_usec", 0)),
+		"event_dispatch_shared_median_usec": int(event_dispatch_control.get("shared_median_usec", 0)),
+		"event_dispatch_shared_to_legacy_ratio": float(event_dispatch_control.get("shared_median_usec", 0)) / float(maxi(int(event_dispatch_control.get("legacy_median_usec", 0)), 1)),
+		"event_dispatch_whole_output_parity": true,
+		"event_dispatch_session_authority_exact": true,
 		"refresh_authority_exact": true,
 		"legacy_drawer_authority_exact": true,
 	})])
@@ -358,6 +371,193 @@ func _assert_commitment_summary_fallback_elision(shell: Node, shell_session) -> 
 		"full_refresh_usec": full_refresh_usec,
 		"full_refresh_rail_usec": int(full_refresh_profile.get("refresh_commitment_rail_usec", 0)),
 	}
+
+func _assert_event_dispatch_observation_context_reuse() -> Dictionary:
+	var ordinary = _session_with_map(12, 3)
+	OverworldRules.normalize_overworld_state(ordinary)
+	var pressure = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+	OverworldRules.normalize_overworld_state(pressure)
+	_set_active_hero_position(pressure, Vector2i(3, 1))
+	pressure.overworld["fog"] = {}
+	OverworldRules.refresh_fog_of_war(pressure)
+	var outcome = _session_with_map(12, 3)
+	outcome.scenario_status = "victory"
+	outcome.game_state = "outcome"
+	outcome.scenario_summary = "River Pass secured."
+	OverworldRules.normalize_overworld_state(outcome)
+	var fixtures := [
+		{"id": "idle", "session": ordinary},
+		{"id": "message", "session": ordinary, "last_message": "Riverwatch Hold is ready."},
+		{"id": "daybreak", "session": ordinary, "turn": "Day 2 begins."},
+		{
+			"id": "enemy_activity",
+			"session": ordinary,
+			"enemy": "Mireclaw advances.",
+			"events": [{"event_type": "ai_target_assigned", "target_label": "Riverwatch Hold", "target_kind": "town", "faction_label": "Mireclaw"}],
+		},
+		{
+			"id": "action_recap",
+			"session": ordinary,
+			"recap": {"happened": "Claimed North Wood.", "affected": "North Wood", "why_it_matters": "The route now pays wood.", "next_step": "Return to Riverwatch Hold."},
+		},
+		{"id": "pressure_watch", "session": pressure},
+		{"id": "outcome", "session": outcome, "last_message": "The river road is secure."},
+	]
+	for fixture_value in fixtures:
+		var fixture: Dictionary = fixture_value
+		var probe = fixture.get("session", null)
+		OverworldRules.normalize_overworld_state(probe)
+		var authority_before: Dictionary = probe.to_dict()
+		var legacy: Dictionary = _legacy_event_dispatch_bundle(probe, fixture)
+		var shared: Dictionary = OverworldRules.describe_event_dispatch_surfaces(
+			probe,
+			String(fixture.get("last_message", "")),
+			String(fixture.get("turn", "")),
+			String(fixture.get("enemy", "")),
+			fixture.get("events", []),
+			fixture.get("recap", {})
+		)
+		if shared != legacy or probe.to_dict() != authority_before:
+			_fail("Shared Event/Dispatch observations diverged from the independent legacy materializers.", {
+				"fixture": fixture.get("id", ""),
+				"legacy": legacy,
+				"shared": shared,
+			})
+			return {}
+	var legacy_batches := []
+	var shared_batches := []
+	for _batch in range(5):
+		var legacy_started := Time.get_ticks_usec()
+		for fixture_value in fixtures:
+			_legacy_event_dispatch_bundle(fixture_value.get("session", null), fixture_value)
+		legacy_batches.append(Time.get_ticks_usec() - legacy_started)
+		var shared_started := Time.get_ticks_usec()
+		for fixture_value in fixtures:
+			OverworldRules.describe_event_dispatch_surfaces(
+				fixture_value.get("session", null),
+				String(fixture_value.get("last_message", "")),
+				String(fixture_value.get("turn", "")),
+				String(fixture_value.get("enemy", "")),
+				fixture_value.get("events", []),
+				fixture_value.get("recap", {})
+			)
+		shared_batches.append(Time.get_ticks_usec() - shared_started)
+	var legacy_median := _integer_median(legacy_batches)
+	var shared_median := _integer_median(shared_batches)
+	if legacy_median <= 0 or shared_median <= 0 or shared_median * 4 > legacy_median * 3:
+		_fail("Shared Event/Dispatch observations were not materially faster than independent legacy materialization.", {
+			"legacy_batches": legacy_batches,
+			"shared_batches": shared_batches,
+			"legacy_median_usec": legacy_median,
+			"shared_median_usec": shared_median,
+		})
+		return {}
+	return {
+		"fixture_count": fixtures.size(),
+		"legacy_median_usec": legacy_median,
+		"shared_median_usec": shared_median,
+	}
+
+func _legacy_event_dispatch_bundle(session, fixture: Dictionary) -> Dictionary:
+	return {
+		"event_feed": _legacy_event_feed_surface(
+			session,
+			String(fixture.get("last_message", "")),
+			String(fixture.get("turn", "")),
+			String(fixture.get("enemy", "")),
+			fixture.get("events", []),
+			fixture.get("recap", {})
+		),
+		"dispatch": _legacy_dispatch(session, String(fixture.get("last_message", ""))),
+	}
+
+func _legacy_dispatch(session, last_message: String) -> String:
+	OverworldRules.normalize_overworld_state(session)
+	var lead_line := "Latest order: %s" % last_message if last_message != "" else "The field table is waiting on fresh orders."
+	var lines := [
+		"Field Dispatch",
+		"- %s" % lead_line,
+		"- Active tile: %s" % OverworldRules._dispatch_context_brief(session),
+		"- %s" % OverworldRules._local_visible_threat_summary(session, "No visible hostile pressure is crowding the active hero."),
+	]
+	var management_watch := OverworldRules.describe_management_watch(session)
+	if management_watch != "":
+		lines.append("- Management watch: %s" % management_watch)
+	var defense_watch := OverworldRules.describe_defense_readiness_warnings(session, 1)
+	if defense_watch != "No exposed town or route-defense warning is visible.":
+		lines.append("- Defense readiness: %s" % defense_watch)
+	var recent_events: String = OverworldRules._describe_recent_events(session, 2)
+	if recent_events != "":
+		lines.append("- Scenario pulse: %s" % recent_events)
+	if session.scenario_status != "in_progress" and session.scenario_summary != "":
+		lines.append("- Outcome pending: %s" % session.scenario_summary)
+	return "\n".join(lines)
+
+func _legacy_event_feed_surface(
+	session,
+	last_message: String,
+	turn_resolution_summary: String,
+	enemy_activity_summary: String,
+	enemy_activity_events_value: Variant,
+	action_recap_value: Variant
+) -> Dictionary:
+	OverworldRules.normalize_overworld_state(session)
+	var recent_events := OverworldRules._describe_recent_events(session, 2)
+	var action_recap := OverworldRules._normalize_post_action_recap(action_recap_value)
+	var use_action_recap := turn_resolution_summary.strip_edges() == "" and enemy_activity_summary.strip_edges() == "" and not action_recap.is_empty()
+	var happened := String(action_recap.get("happened", "")) if use_action_recap else OverworldRules._event_feed_happened_line(last_message, turn_resolution_summary, enemy_activity_summary, recent_events)
+	var affected := String(action_recap.get("affected", "")) if use_action_recap else OverworldRules._event_feed_affected_line(session, enemy_activity_summary, enemy_activity_events_value)
+	var why := String(action_recap.get("why_it_matters", "")) if use_action_recap else OverworldRules._event_feed_why_line(last_message, turn_resolution_summary, enemy_activity_summary, recent_events)
+	var next_step := String(action_recap.get("next_step", "")) if use_action_recap else OverworldRules._event_feed_next_step_line(session)
+	var watch := _legacy_event_feed_watch_line(session)
+	var visible := OverworldRules._event_feed_visible_line(happened, turn_resolution_summary, enemy_activity_summary)
+	var tooltip_lines := ["Field Feed"]
+	tooltip_lines.append("- Happened: %s" % happened)
+	if turn_resolution_summary.strip_edges() != "":
+		tooltip_lines.append("- Daybreak result: %s" % turn_resolution_summary.strip_edges())
+	if enemy_activity_summary.strip_edges() != "":
+		tooltip_lines.append("- Recent enemy activity: %s" % enemy_activity_summary.strip_edges())
+	if recent_events != "":
+		tooltip_lines.append("- Scenario pulse: %s" % OverworldRules._short_player_text(recent_events, 180))
+	if affected != "":
+		tooltip_lines.append("- Affected: %s" % affected)
+	if why != "":
+		tooltip_lines.append("- Why it matters: %s" % why)
+	if next_step != "":
+		tooltip_lines.append("- Next: %s" % next_step)
+	if watch != "":
+		tooltip_lines.append("- Watch: %s" % watch)
+	return {
+		"visible_text": visible,
+		"tooltip_text": "\n".join(tooltip_lines),
+		"happened": happened,
+		"affected": affected,
+		"why_it_matters": why,
+		"next_step": next_step,
+		"watch": watch,
+		"recent_events": recent_events,
+		"enemy_activity_summary": enemy_activity_summary,
+		"turn_resolution_summary": turn_resolution_summary,
+		"post_action_recap": action_recap,
+	}
+
+func _legacy_event_feed_watch_line(session) -> String:
+	var parts := []
+	var route_pressure := OverworldRules.describe_route_interception_surface(session)
+	if bool(route_pressure.get("active", false)):
+		parts.append(String(route_pressure.get("cue_text", "")))
+	var local_pressure := OverworldRules._local_visible_threat_summary(session, "")
+	if local_pressure != "":
+		parts.append(local_pressure)
+	var management_watch := OverworldRules.describe_management_watch(session)
+	if management_watch != "" and management_watch != "Town lines are stable.":
+		parts.append(management_watch)
+	var defense_watch := OverworldRules.describe_defense_readiness_warnings(session, 1)
+	if defense_watch != "No exposed town or route-defense warning is visible.":
+		parts.append("Defense readiness: %s" % defense_watch)
+	if parts.is_empty():
+		return "No urgent raid, convoy, or town-management warning is visible."
+	return " | ".join(parts.slice(0, min(3, parts.size())))
 
 func _legacy_eager_command_commitment_action_line(session) -> String:
 	var context_actions := OverworldRules.get_context_actions(session)

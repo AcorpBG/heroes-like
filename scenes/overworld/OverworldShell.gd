@@ -7151,7 +7151,7 @@ func _event_feed_surface(
 	end_turn_forecast_surface: Dictionary = {},
 	readiness_context: Dictionary = {}
 ) -> Dictionary:
-	var surface := OverworldRules.describe_event_feed_surface(
+	var event_dispatch_surfaces := OverworldRules.describe_event_dispatch_surfaces(
 		_session,
 		_last_message,
 		_last_turn_resolution_text,
@@ -7159,6 +7159,9 @@ func _event_feed_surface(
 		_last_enemy_activity_events,
 		_last_action_recap
 	)
+	_profile_add("event_dispatch_observation_context_builds", 1)
+	_profile_add("event_dispatch_observation_context_reuses", 2)
+	var surface: Dictionary = event_dispatch_surfaces.get("event_feed", {}).duplicate(true)
 	var readiness_surface := _field_readiness_surface(surface, end_turn_forecast_surface, readiness_context)
 	surface["field_readiness"] = readiness_surface
 	if _field_feed_is_idle():
@@ -7169,7 +7172,7 @@ func _event_feed_surface(
 			String(surface.get("tooltip_text", "")),
 			String(readiness_surface.get("tooltip_text", "")),
 		])
-	surface["dispatch_text"] = OverworldRules.describe_dispatch(_session, _last_message)
+	surface["dispatch_text"] = String(event_dispatch_surfaces.get("dispatch", ""))
 	return surface
 
 func _action_context_surface(event_surface: Dictionary, readiness_surface: Dictionary = {}) -> Dictionary:
