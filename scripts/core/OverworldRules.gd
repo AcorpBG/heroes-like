@@ -3790,6 +3790,34 @@ static func describe_end_turn_forecast_compact(session: SessionStateStoreScript.
 		parts.append(risk_line)
 	return " | ".join(parts)
 
+static func describe_end_turn_forecast_surfaces(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	normalize_overworld_state(session)
+	var next_day := session.day + 1
+	var income_line := _end_turn_income_forecast_line(session, next_day)
+	var muster_line := _end_turn_muster_forecast_line(session, next_day)
+	var movement_line := _end_turn_movement_forecast_line(session)
+	var risk_line := _end_turn_risk_forecast_line(session)
+	var management_line := describe_management_watch(session)
+	var full_lines := [
+		"Next day: Day %d | %s | %s" % [next_day, income_line, muster_line],
+		"- Movement: %s" % movement_line,
+	]
+	if risk_line != "":
+		full_lines.append("- Pressure: %s" % risk_line)
+	if management_line != "":
+		full_lines.append("- Town lines: %s" % management_line)
+	var compact_parts := [
+		"Day %d" % next_day,
+		income_line,
+		movement_line,
+	]
+	if risk_line != "":
+		compact_parts.append(risk_line)
+	return {
+		"forecast": "\n".join(full_lines),
+		"forecast_compact": " | ".join(compact_parts),
+	}
+
 static func describe_command_risk_surfaces(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	normalize_overworld_state(session)
 	return _command_risk_surfaces_from_forecast(_command_risk_forecast(session))

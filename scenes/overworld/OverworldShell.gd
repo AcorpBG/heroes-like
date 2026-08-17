@@ -3620,13 +3620,15 @@ func _refresh_status_surfaces(generated_surface_start: int) -> bool:
 	_header_label.text = String(scenario.get("name", "Overworld Command"))
 	var objective_brief := OverworldRules.describe_objective_brief(_session)
 	var objective_stakes := OverworldRules.describe_objective_stakes_board(_session)
-	var readiness_surface := _field_readiness_surface()
+	var end_turn_forecast_surface := OverworldRules.describe_end_turn_forecast_surfaces(_session)
+	_profile_add("end_turn_forecast_bundle_builds", 1)
+	var readiness_surface := _field_readiness_surface({}, end_turn_forecast_surface)
 	_objective_brief_label.text = _compact_text(objective_brief, 1, 72, false)
 	_objective_brief_label.tooltip_text = _join_tooltip_sections([
 		objective_stakes,
 		String(readiness_surface.get("tooltip_text", "")),
 	])
-	var status_forecast := _status_forecast_surface()
+	var status_forecast := _status_forecast_surface(end_turn_forecast_surface)
 	_status_label.tooltip_text = String(status_forecast.get("tooltip_text", ""))
 	_status_label.text = _compact_text(String(status_forecast.get("visible_text", "")), 1, 64, false)
 	var resource_text := OverworldRules.describe_resources(_session)
@@ -3682,13 +3684,13 @@ func _refresh_status_surfaces(generated_surface_start: int) -> bool:
 	var frontier_profile_start := _debug_refresh_profile_begin("refresh_frontier_drawer")
 	var command_risk_surface := {}
 	if _active_drawer == "frontier":
-		command_risk_surface = _refresh_frontier_drawer()
+		command_risk_surface = _refresh_frontier_drawer(end_turn_forecast_surface)
 	else:
-		_set_collapsed_frontier_indicator()
+		_set_collapsed_frontier_indicator(end_turn_forecast_surface)
 	_debug_refresh_profile_end("refresh_frontier_drawer", frontier_profile_start, {"drawer_open": _active_drawer == "frontier"})
 	_refresh_context_tile_surface()
 	var event_context_profile_start := _debug_refresh_profile_begin("refresh_event_action_context")
-	var event_surface := _event_feed_surface()
+	var event_surface := _event_feed_surface(end_turn_forecast_surface)
 	var action_context_surface := _action_context_surface(event_surface, readiness_surface)
 	_set_rail_text(
 		_event_label,
@@ -3700,12 +3702,15 @@ func _refresh_status_surfaces(generated_surface_start: int) -> bool:
 	var end_turn_profile_start := _debug_refresh_profile_begin("refresh_end_turn_surface")
 	var end_turn_check := _end_turn_confirmation_surface(readiness_surface)
 	_end_turn_button.text = String(end_turn_check.get("button_text", "End Turn"))
-	_end_turn_button.tooltip_text = String(end_turn_check.get("tooltip_text", OverworldRules.describe_end_turn_forecast(_session)))
+	var end_turn_tooltip := String(end_turn_check.get("tooltip_text", ""))
+	if end_turn_tooltip == "":
+		end_turn_tooltip = String(end_turn_forecast_surface.get("forecast", ""))
+	_end_turn_button.tooltip_text = end_turn_tooltip
 	_debug_refresh_profile_end("refresh_end_turn_surface", end_turn_profile_start)
 	_briefing_title_label.text = _briefing_title_text
 	_set_rail_label(_briefing_label, _command_briefing_text, 2, RAIL_LINE_CHARS, false)
 	_briefing_panel.visible = _command_briefing_text != ""
-	_refresh_tooltip_context_drawer_surfaces(readiness_surface)
+	_refresh_tooltip_context_drawer_surfaces(readiness_surface, end_turn_forecast_surface)
 	return false
 
 func _refresh_map_cue_surface() -> void:
@@ -3763,12 +3768,12 @@ func _refresh_context_tile_surface() -> void:
 	_set_rail_text(_context_label, context_text, _rail_tile_text(), 2)
 	_debug_refresh_profile_end("refresh_context_tile_text", context_tile_profile_start)
 
-func _refresh_tooltip_context_drawer_surfaces(field_readiness: Dictionary = {}) -> void:
+func _refresh_tooltip_context_drawer_surfaces(field_readiness: Dictionary = {}, end_turn_forecast_surface: Dictionary = {}) -> void:
 	var tooltip_context_profile_start := _debug_refresh_profile_begin("refresh_tooltip_context_drawers")
 	_update_map_tooltip()
 	if not field_readiness.is_empty():
 		_profile_add("drawer_handoff_preloaded_readiness_reuses", 1)
-	_sync_context_drawers(field_readiness)
+	_sync_context_drawers(field_readiness, end_turn_forecast_surface)
 	_debug_refresh_profile_end("refresh_tooltip_context_drawers", tooltip_context_profile_start)
 
 func _refresh_generated_opening_surfaces() -> void:
@@ -4209,7 +4214,7 @@ func _refresh_commitment_panel() -> void:
 	var commitment_text := OverworldRules.describe_commitment_board(_session)
 	_set_rail_text(_commitment_label, commitment_text, _rail_order_text(commitment_text), 2)
 
-func _refresh_frontier_drawer() -> Dictionary:
+func _refresh_frontier_drawer(end_turn_forecast_surface: Dictionary = {}) -> Dictionary:
 	var visibility_text := OverworldRules.describe_visibility_panel(_session)
 	_set_rail_text(_visibility_label, visibility_text, _rail_prefixed_summary("Sight", visibility_text), 1)
 	var objective_text := _cached_objective_text()
@@ -4217,16 +4222,28 @@ func _refresh_frontier_drawer() -> Dictionary:
 	var threat_text := _cached_frontier_threats()
 	_set_rail_text(_threat_label, threat_text, _rail_prefixed_summary("Threat", threat_text), 1)
 	var command_risk_surface := _cached_command_risk_surface()
-	var forecast_text := OverworldRules.describe_end_turn_forecast(_session)
+	var forecast_text := ""
+	if end_turn_forecast_surface.is_empty():
+		forecast_text = OverworldRules.describe_end_turn_forecast(_session)
+	else:
+		_profile_add("end_turn_forecast_bundle_reuses", 1)
+		forecast_text = String(end_turn_forecast_surface.get("forecast", ""))
 	command_risk_surface["forecast"] = forecast_text
 	_set_rail_text(_forecast_label, forecast_text, _rail_prefixed_summary("Next", forecast_text), 1)
 	_frontier_indicator_label.text = _frontier_indicator_text(threat_text, forecast_text)
 	_frontier_indicator_label.tooltip_text = "%s\n\n%s" % [threat_text, forecast_text]
 	return command_risk_surface
 
-func _set_collapsed_frontier_indicator() -> void:
-	var forecast_text := OverworldRules.describe_end_turn_forecast(_session)
-	var compact_forecast := OverworldRules.describe_end_turn_forecast_compact(_session)
+func _set_collapsed_frontier_indicator(end_turn_forecast_surface: Dictionary = {}) -> void:
+	var forecast_text := ""
+	var compact_forecast := ""
+	if end_turn_forecast_surface.is_empty():
+		forecast_text = OverworldRules.describe_end_turn_forecast(_session)
+		compact_forecast = OverworldRules.describe_end_turn_forecast_compact(_session)
+	else:
+		_profile_add("end_turn_forecast_bundle_reuses", 1)
+		forecast_text = String(end_turn_forecast_surface.get("forecast", ""))
+		compact_forecast = String(end_turn_forecast_surface.get("forecast_compact", ""))
 	_frontier_indicator_label.text = "Next: %s" % _short_text(compact_forecast, 34)
 	_frontier_indicator_label.tooltip_text = "%s\n\nOpen Frontier for objectives, threat watch, and next-day risk." % forecast_text
 
@@ -7120,7 +7137,7 @@ func _rail_log_text() -> String:
 		message = "Awaiting order"
 	return "Log: %s" % message
 
-func _event_feed_surface() -> Dictionary:
+func _event_feed_surface(end_turn_forecast_surface: Dictionary = {}) -> Dictionary:
 	var surface := OverworldRules.describe_event_feed_surface(
 		_session,
 		_last_message,
@@ -7129,7 +7146,7 @@ func _event_feed_surface() -> Dictionary:
 		_last_enemy_activity_events,
 		_last_action_recap
 	)
-	var readiness_surface := _field_readiness_surface(surface)
+	var readiness_surface := _field_readiness_surface(surface, end_turn_forecast_surface)
 	surface["field_readiness"] = readiness_surface
 	if _field_feed_is_idle():
 		var visible_text := String(readiness_surface.get("visible_text", "")).strip_edges()
@@ -7211,7 +7228,7 @@ func _field_feed_is_idle() -> bool:
 		and _last_action_recap.is_empty()
 	)
 
-func _field_readiness_surface(base_event_surface: Dictionary = {}) -> Dictionary:
+func _field_readiness_surface(base_event_surface: Dictionary = {}, end_turn_forecast_surface: Dictionary = {}) -> Dictionary:
 	_profile_add("field_readiness_surface_calls", 1)
 	if not base_event_surface.is_empty():
 		_profile_add("field_readiness_surface_base_event_calls", 1)
@@ -7227,12 +7244,18 @@ func _field_readiness_surface(base_event_surface: Dictionary = {}) -> Dictionary
 		next_step = _line_with_prefix(progress_recap, "Next step:").trim_prefix("Next step:").strip_edges()
 	if next_step == "":
 		next_step = "Select the next destination or end the turn when field orders are spent."
+	var forecast := ""
+	if end_turn_forecast_surface.is_empty():
+		forecast = OverworldRules.describe_end_turn_forecast_compact(_session)
+	else:
+		_profile_add("end_turn_forecast_bundle_reuses", 1)
+		forecast = String(end_turn_forecast_surface.get("forecast_compact", ""))
 	var simple_destination := _selected_route_simple_destination_surface()
 	if not simple_destination.is_empty() and not _is_selected_owned_town_visit_target():
-		return _field_readiness_simple_route_surface(simple_destination, progress_line, next_step, movement_line)
+		return _field_readiness_simple_route_surface(simple_destination, progress_line, next_step, movement_line, forecast)
 	var compact_interaction_destination := _selected_route_compact_interaction_destination_surface()
 	if not compact_interaction_destination.is_empty() and not _is_selected_owned_town_visit_target():
-		return _field_readiness_simple_route_surface(compact_interaction_destination, progress_line, next_step, movement_line)
+		return _field_readiness_simple_route_surface(compact_interaction_destination, progress_line, next_step, movement_line, forecast)
 	var primary_action := _current_primary_action()
 	var primary_line := "Primary order: select a visible destination."
 	if not primary_action.is_empty():
@@ -7245,7 +7268,6 @@ func _field_readiness_surface(base_event_surface: Dictionary = {}) -> Dictionary
 	var route_target_handoff := _route_target_handoff_surface(route_decision)
 	var town_entry_handoff := _town_entry_handoff_surface()
 	var active_site_order := _active_site_order_surface(primary_action)
-	var forecast := OverworldRules.describe_end_turn_forecast_compact(_session)
 	var visible_next := _short_text(next_step.trim_suffix("."), 44)
 	var visible := "Ready: %s | %s" % [visible_next, movement_line]
 	var active_site_visible := String(active_site_order.get("visible_text", "")).strip_edges()
@@ -7299,10 +7321,9 @@ func _field_readiness_surface(base_event_surface: Dictionary = {}) -> Dictionary
 		"end_turn_forecast": forecast,
 	}
 
-func _field_readiness_simple_route_surface(simple_destination: Dictionary, progress_line: String, next_step: String, movement_line: String) -> Dictionary:
+func _field_readiness_simple_route_surface(simple_destination: Dictionary, progress_line: String, next_step: String, movement_line: String, forecast: String) -> Dictionary:
 	var route_decision: Dictionary = simple_destination.get("route_decision", {}) if simple_destination.get("route_decision", {}) is Dictionary else {}
 	var route_line := _route_decision_line(route_decision)
-	var forecast := OverworldRules.describe_end_turn_forecast_compact(_session)
 	var visible_next := _short_text(next_step.trim_suffix("."), 44)
 	var visible := "Ready: %s | %s" % [visible_next, movement_line]
 	var primary_line := _simple_route_primary_order_line(simple_destination)
@@ -7371,7 +7392,7 @@ func _simple_route_primary_order_line(simple_destination: Dictionary) -> String:
 		return "Primary order: %s." % label
 	return "Primary order: %s. %s" % [label, summary]
 
-func _status_forecast_surface() -> Dictionary:
+func _status_forecast_surface(end_turn_forecast_surface: Dictionary = {}) -> Dictionary:
 	var status_text := OverworldRules.describe_status(_session)
 	var movement = _session.overworld.get("movement", {})
 	var next_day := _session.day + 1
@@ -7384,8 +7405,15 @@ func _status_forecast_surface() -> Dictionary:
 		int(movement.get("max", 0)),
 		next_day,
 	]
-	var forecast_text := OverworldRules.describe_end_turn_forecast(_session)
-	var forecast_compact := OverworldRules.describe_end_turn_forecast_compact(_session)
+	var forecast_text := ""
+	var forecast_compact := ""
+	if end_turn_forecast_surface.is_empty():
+		forecast_text = OverworldRules.describe_end_turn_forecast(_session)
+		forecast_compact = OverworldRules.describe_end_turn_forecast_compact(_session)
+	else:
+		_profile_add("end_turn_forecast_bundle_reuses", 1)
+		forecast_text = String(end_turn_forecast_surface.get("forecast", ""))
+		forecast_compact = String(end_turn_forecast_surface.get("forecast_compact", ""))
 	var tooltip_lines := [
 		"Status Forecast",
 		"- Current: %s" % status_text,
@@ -7471,8 +7499,8 @@ func _end_turn_confirmation_surface(field_readiness: Dictionary = {}) -> Diction
 		"end_turn_forecast": forecast,
 	}
 
-func _refresh_drawer_handoff_cues(field_readiness: Dictionary = {}) -> void:
-	var surfaces := _drawer_handoff_surfaces(field_readiness)
+func _refresh_drawer_handoff_cues(field_readiness: Dictionary = {}, end_turn_forecast_surface: Dictionary = {}) -> void:
+	var surfaces := _drawer_handoff_surfaces(field_readiness, end_turn_forecast_surface)
 	var command_surface: Dictionary = surfaces.get("command", {}) if surfaces.get("command", {}) is Dictionary else {}
 	var frontier_surface: Dictionary = surfaces.get("frontier", {}) if surfaces.get("frontier", {}) is Dictionary else {}
 	_open_command_button.text = String(command_surface.get("button_text", "Command"))
@@ -7482,7 +7510,7 @@ func _refresh_drawer_handoff_cues(field_readiness: Dictionary = {}) -> void:
 	_close_command_button.tooltip_text = "Close Command drawer and return to the selected tile context."
 	_close_frontier_button.tooltip_text = "Close Frontier drawer and return to the selected tile context."
 
-func _drawer_handoff_surfaces(field_readiness: Dictionary = {}) -> Dictionary:
+func _drawer_handoff_surfaces(field_readiness: Dictionary = {}, end_turn_forecast_surface: Dictionary = {}) -> Dictionary:
 	var readiness := field_readiness
 	if readiness.is_empty():
 		readiness = _field_readiness_surface()
@@ -7505,7 +7533,12 @@ func _drawer_handoff_surfaces(field_readiness: Dictionary = {}) -> Dictionary:
 		movement_line,
 		next_step,
 	]
-	var forecast := OverworldRules.describe_end_turn_forecast_compact(_session)
+	var forecast := ""
+	if end_turn_forecast_surface.is_empty():
+		forecast = OverworldRules.describe_end_turn_forecast_compact(_session)
+	else:
+		_profile_add("end_turn_forecast_bundle_reuses", 1)
+		forecast = String(end_turn_forecast_surface.get("forecast_compact", ""))
 	var objective_line := _line_with_prefix(_cached_objective_text(), "Next step:")
 	if objective_line == "":
 		objective_line = String(readiness.get("progress_line", "")).strip_edges()
@@ -7762,7 +7795,7 @@ func _remembered_selected_tile_text(terrain: String) -> String:
 		]
 	return ""
 
-func _sync_context_drawers(field_readiness: Dictionary = {}) -> void:
+func _sync_context_drawers(field_readiness: Dictionary = {}, end_turn_forecast_surface: Dictionary = {}) -> void:
 	var show_command := _active_drawer == "command"
 	var show_frontier := _active_drawer == "frontier"
 	var show_tile := not show_command and not show_frontier and _should_show_tile_context()
@@ -7775,7 +7808,7 @@ func _sync_context_drawers(field_readiness: Dictionary = {}) -> void:
 	_commitment_panel.visible = not compact_layout and not show_command and not show_frontier
 	_open_command_button.button_pressed = show_command
 	_open_frontier_button.button_pressed = show_frontier
-	_refresh_drawer_handoff_cues(field_readiness)
+	_refresh_drawer_handoff_cues(field_readiness, end_turn_forecast_surface)
 
 func _set_active_drawer(drawer: String) -> void:
 	if drawer != "":
