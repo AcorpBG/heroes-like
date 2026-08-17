@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld refresh watch-context reuse slice is implemented and validated with exact behavior authority and bounded performance improvement. Select the next tracker-approved implementation slice from direct current behavior and source evidence; the game is not release-ready.",
+  "currentNotes": "Objective Header normalization reuse is implemented and validated with exact 24-scenario behavior authority and bounded current-head performance improvement. Select the next tracker-approved implementation slice from direct current behavior and source evidence; the game is not release-ready.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "performance-overworld-refresh-watch-context-reuse-10184",
-  "currentSliceId": "performance-overworld-refresh-watch-context-reuse-10184",
-  "currentSliceNotes": "Implemented one detached invocation-local watch context while keeping direct APIs fresh and normalized. Authoritative focused artifact /tmp/heroes-refresh-watch-focused-rerun.6JUr3s is rc0/ok:true across seven states with exact forecast, commitment, Event Feed, Dispatch, detached rebuild, session/UI authority, one build/three reuses in a real refresh, and 2987620usec versus1750638usec medians. Overworld visual/route/input, Town return, core, validate/editor, Linux report 229b300609413a8f442d7c5da9e1d6bf52bb86f7126fe85527428b32d481d1a1, and Windows report aa019ae9a426bd381f467438209a7916c12d51bb33e625f4eebb396d419afd10 are green. Platform claims are export/startup only.",
+  "currentSlice": "performance-overworld-objective-header-normalization-reuse-10184",
+  "currentSliceId": "performance-overworld-objective-header-normalization-reuse-10184",
+  "currentSliceNotes": "Implemented one exact normalized-session recap call after Objective Stakes establishes current state while retaining fresh public direct callers. Focused artifact /tmp/heroes-objective-header-focused.Go1cmM is rc0/ok:true across 24 authored scenarios and changed states with exact session/UI authority; five-call median improves408843 to237258usec. Current baseline fixture improves header lane53201 to44620usec and full refresh186283 to177011usec. Compatibility, static/editor, Linux report8a55e2fd73c4dc0bdadc65ad2def9ae71b62b34e7d11117c72d3d7c4eb7a2d97, and Windows report9fd49903c437c06e2ffbecd30a079345576b614d662c93e52bef3a30a218fb3d are green; platform claims are export/startup only.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Refresh Watch Context Reuse",
-  "currentSliceUpdatedAt": "2026-08-17T05:19:20Z",
+  "currentSliceTitle": "Overworld Objective Header Normalization Reuse",
+  "currentSliceUpdatedAt": "2026-08-17T05:43:19Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -87605,6 +87605,51 @@
       "blockedReason": null
     },
     {
+      "id": "performance-overworld-objective-header-normalization-reuse-10184",
+      "title": "Overworld Objective Header Normalization Reuse",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Reuse the normalization already completed by Objective Stakes when materializing the same Objective Header progress recap, removing one immediate duplicate normalization while public direct callers remain fresh.",
+      "implementationTargets": [
+        "scripts/core/OverworldRules.gd",
+        "tests/overworld_hero_actions_refresh_cache_regression.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Independent current and normalized-path controls remain whole-exact across all 24 authored scenarios and representative changed day and objective states with session authority unchanged",
+        "A real full Overworld refresh preserves whole UI, session, save, focus, route, and action authority and materially reduces the header objective status resources lane from the current 53201 usec baseline",
+        "Focused Objective Header, Overworld visual, route and input, Town return, core, repository and editor, Linux export and headless startup, and Windows export and fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "objective, progress, status, forecast, readiness, resource, route, event, save, scenario, normalization, or gameplay policy changes",
+        "persistent caching, async work, content, balance, AI, Native RMG, save schema, or package identity changes",
+        "packaged Overworld interaction, controller hardware, AT-SPI or UIA certification, native hardware, signing, publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "cfc4f41f",
+        "profileArtifact": "/tmp/heroes-current-refresh-profile.w6WFBq",
+        "controlArtifact": "/tmp/heroes-objective-normalization-audit.AM21Ib",
+        "authoredScenarioCount": 24,
+        "wholeOutputExact": true,
+        "sessionAuthorityExact": true,
+        "legacyFiveCallMedianUsec": 479787,
+        "normalizedFiveCallMedianUsec": 271083,
+        "fullRefreshUsec": 186283,
+        "headerObjectiveStatusResourcesUsec": 53201
+      },
+      "createdAt": "2026-08-17T05:26:35Z",
+      "startedAt": "2026-08-17T05:26:35Z",
+      "updatedAt": "2026-08-17T05:43:19Z",
+      "completedAt": "2026-08-17T05:43:19Z",
+      "notes": "Implemented one exact normalized-session recap call after Objective Stakes establishes current state while retaining fresh public direct callers and default Objective Stakes fallback. Authoritative focused artifact /tmp/heroes-objective-header-focused.Go1cmM is rc0/ok:true across all 24 authored scenarios plus ordinary, pressured, day-transition, campaign, and missing states with exact whole output, detach/rebuild, session, and UI authority; five-call median improves from408843 to237258usec. The identical current-head baseline fixture /tmp/heroes-objective-current-refresh.ct96qp improves the header lane from53201 to44620usec and full refresh from186283 to177011usec. Overworld visual, route tooltip, gameplay input ownership, Town return, core, validate/editor, Linux report8a55e2fd73c4dc0bdadc65ad2def9ae71b62b34e7d11117c72d3d7c4eb7a2d97, and Windows report9fd49903c437c06e2ffbecd30a079345576b614d662c93e52bef3a30a218fb3d are green. Platform claims are export/startup only.",
+      "remainingWork": "No work remains in this bounded slice. Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null
+    },
+    {
       "id": "performance-overworld-refresh-watch-context-reuse-10184",
       "title": "Overworld Refresh Watch Context Reuse",
       "status": "completed",
@@ -88087,7 +88132,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "presentation_aurelion_reach_main_menu_crest_art_completed",
+  "result": "overworld_objective_header_normalization_reuse_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -88188,9 +88233,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Overworld refresh watch-context reuse is implemented and validated with exact behavior authority, bounded performance improvement, compatibility, static/editor, and Linux/Windows export-startup evidence. No current implementation slice is selected, and the game is not release-ready.",
+  "summary": "Objective Header normalization reuse is implemented and validated with exact 24-scenario behavior authority, bounded performance improvement, compatibility, static/editor, and Linux/Windows export-startup evidence. No current implementation slice is selected, and the game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-17T05:19:20Z",
+  "updatedAt": "2026-08-17T05:43:19Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

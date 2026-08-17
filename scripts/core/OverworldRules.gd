@@ -2783,7 +2783,7 @@ static func describe_objective_header_surfaces(session: SessionStateStoreScript.
 	var surface := _objective_stakes_surface(session)
 	var progress_recap := ""
 	if not surface.is_empty():
-		progress_recap = _scenario_rules().describe_session_progress_recap(session, false)
+		progress_recap = _scenario_rules().describe_session_progress_recap_from_normalized_session(session, false)
 	return {
 		"objective_brief": _describe_objective_brief_from_surface(surface),
 		"objective_stakes": _describe_objective_stakes_board_from_surface(session, surface, {"progress_recap": progress_recap}),

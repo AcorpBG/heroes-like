@@ -17325,7 +17325,7 @@ def validate_overworld_objective_stakes_surface_bundle_reuse(errors: list[str]) 
         ordered_tokens = (
             "var surface := _objective_stakes_surface(session)",
             'var progress_recap := ""',
-            'progress_recap = _scenario_rules().describe_session_progress_recap(session, false)',
+            'progress_recap = _scenario_rules().describe_session_progress_recap_from_normalized_session(session, false)',
             '"objective_brief": _describe_objective_brief_from_surface(surface)',
             '"objective_stakes": _describe_objective_stakes_board_from_surface(session, surface, {"progress_recap": progress_recap})',
             '"progress_recap": progress_recap',
@@ -17334,6 +17334,7 @@ def validate_overworld_objective_stakes_surface_bundle_reuse(errors: list[str]) 
         if all(token in combined_body for token in ordered_tokens):
             ensure([combined_body.index(token) for token in ordered_tokens] == sorted(combined_body.index(token) for token in ordered_tokens), errors, "Combined objective header materialization order drifted")
         ensure(combined_body.count("_objective_stakes_surface(session)") == 1, errors, "Combined objective header must build exactly one objective-stakes surface")
+        ensure("describe_session_progress_recap(session, false)" not in combined_body, errors, "Combined objective header must not normalize the already-normalized session a second time")
         for forbidden in ("cache", "session.flags[", "session.overworld[", "call_deferred", "await ", "create_timer", "OS.delay", "erase(", "sort_custom"):
             ensure(forbidden not in combined_body, errors, f"Combined objective header must remain invocation-local and passive: {forbidden}")
 
@@ -17412,6 +17413,7 @@ def validate_overworld_objective_stakes_surface_bundle_reuse(errors: list[str]) 
         '"objective_brief": OverworldRules.describe_objective_brief(probe)',
         '"objective_stakes": OverworldRules.describe_objective_stakes_board(probe)',
         "var bundled: Dictionary = OverworldRules.describe_objective_header_surfaces(probe)",
+        "var duplicate_normalization_control: Dictionary = _legacy_objective_header_surfaces_duplicate_normalization(probe)",
         '"progress_recap": ScenarioRules.describe_session_progress_recap(probe, false)',
         'bundled.keys() != ["objective_brief", "objective_stakes", "progress_recap"]',
         "probe.to_dict() != authority_before",
@@ -17424,9 +17426,18 @@ def validate_overworld_objective_stakes_surface_bundle_reuse(errors: list[str]) 
         'raw_surface["context_line"] = "mutated detached objective context"',
         'raw_incomplete.append("mutated detached objective")',
         "OverworldRules._objective_stakes_surface(session) != expected_surface",
-        "var expected_progress_recap := ScenarioRules.describe_session_progress_recap(session, false)",
-        "for _index in range(6):",
-        "legacy_usec * 100 < bundle_usec * 105",
+        "var authored_scenario_ids: Array = ContentService.get_content_ids(ContentService.SCENARIOS_PATH)",
+        "if authored_scenario_ids.size() != 24:",
+        "for scenario_id_value in authored_scenario_ids:",
+        "var authored_legacy: Dictionary = _legacy_objective_header_surfaces_duplicate_normalization(authored_session)",
+        "var authored_current: Dictionary = OverworldRules.describe_objective_header_surfaces(authored_session)",
+        "for _batch in range(7):",
+        "if bundle_usec * 100 > legacy_usec * 85:",
+        "func _legacy_objective_header_surfaces_duplicate_normalization(session) -> Dictionary:",
+        "progress_recap = ScenarioRules.describe_session_progress_recap(session, false)",
+        '"objective_header_authored_scenario_count"',
+        '"objective_header_normalized_recap_reuse": true',
+        '"full_refresh_header_objective_status_resources_usec"',
         'int(full_refresh_profile.get("objective_stakes_surface_builds", 0)) != 1',
         'int(full_refresh_profile.get("objective_stakes_surface_reuses", 0)) != 2',
         'int(full_refresh_profile.get("objective_stakes_surface_materializations", 0)) != 2',
@@ -17453,6 +17464,23 @@ def validate_overworld_objective_stakes_surface_bundle_reuse(errors: list[str]) 
         ensure(all(token in objective_case_body for token in ordered_tokens), errors, "Objective-stakes focused parity case is missing normalized authority ordering")
         if all(token in objective_case_body for token in ordered_tokens):
             ensure([objective_case_body.index(token) for token in ordered_tokens] == sorted(objective_case_body.index(token) for token in ordered_tokens), errors, "Objective-stakes fixture must normalize before capturing authority and materializing surfaces")
+    legacy_control_match = re.search(
+        r"func _legacy_objective_header_surfaces_duplicate_normalization\(session\) -> Dictionary:(.*?)(?=\n\nfunc _assert_field_readiness_progress_recap_parity)",
+        report_text,
+        flags=re.DOTALL,
+    )
+    ensure(legacy_control_match is not None, errors, "Independent duplicate-normalization Objective Header control could not be isolated")
+    if legacy_control_match is not None:
+        legacy_control_body = legacy_control_match.group(1)
+        for token in (
+            "OverworldRules._objective_stakes_surface(session)",
+            "ScenarioRules.describe_session_progress_recap(session, false)",
+            "OverworldRules._describe_objective_brief_from_surface(surface)",
+            "OverworldRules._describe_objective_stakes_board_from_surface(session, surface, {\"progress_recap\": progress_recap})",
+        ):
+            ensure(token in legacy_control_body, errors, f"Duplicate-normalization Objective Header control is missing independent legacy token: {token}")
+        for forbidden in ("describe_objective_header_surfaces", "describe_session_progress_recap_from_normalized_session", "await ", "create_timer", "OS.delay"):
+            ensure(forbidden not in legacy_control_body, errors, f"Duplicate-normalization Objective Header control must remain independent and passive: {forbidden}")
     for forbidden in ("await get_tree().create_timer", "OS.delay", "set_process", 'erase("objective', "sort_custom", "normalize_objective"):
         ensure(forbidden not in report_text, errors, f"Overworld objective-stakes proof must remain passive and exact: {forbidden}")
 
@@ -17479,14 +17507,15 @@ def validate_overworld_drawer_objective_recap_reuse(errors: list[str]) -> None:
             "var surface := _objective_stakes_surface(session)",
             'var progress_recap := ""',
             "if not surface.is_empty():",
-            "progress_recap = _scenario_rules().describe_session_progress_recap(session, false)",
+            "progress_recap = _scenario_rules().describe_session_progress_recap_from_normalized_session(session, false)",
             '"objective_stakes": _describe_objective_stakes_board_from_surface(session, surface, {"progress_recap": progress_recap})',
             '"progress_recap": progress_recap',
         )
         ensure(all(token in combined_body for token in ordered_tokens), errors, "Objective header bundle is missing exact progress-recap ownership")
         if all(token in combined_body for token in ordered_tokens):
             ensure([combined_body.index(token) for token in ordered_tokens] == sorted(combined_body.index(token) for token in ordered_tokens), errors, "Objective header progress-recap build/materialization order drifted")
-        ensure(combined_body.count("describe_session_progress_recap(session, false)") == 1, errors, "Objective header bundle must build exactly one progress recap")
+        ensure(combined_body.count("describe_session_progress_recap_from_normalized_session(session, false)") == 1, errors, "Objective header bundle must build exactly one normalized-session progress recap")
+        ensure("describe_session_progress_recap(session, false)" not in combined_body, errors, "Objective header bundle must not retain duplicate public normalization")
 
     shell_text = shell_path.read_text(encoding="utf-8")
     status_match = re.search(
