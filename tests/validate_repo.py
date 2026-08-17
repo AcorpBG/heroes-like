@@ -16743,7 +16743,7 @@ def validate_overworld_full_refresh_drawer_readiness_reuse(errors: list[str]) ->
     ensure(status_match is not None, errors, "Overworld full status refresh could not be isolated")
     if status_match is not None:
         status_body = status_match.group(1)
-        ensure("var readiness_context := _field_readiness_context(end_turn_forecast_surface)" in status_body, errors, "Overworld full status refresh must derive one current readiness context")
+        ensure("var readiness_context := _field_readiness_context(end_turn_forecast_surface, objective_header_surfaces)" in status_body, errors, "Overworld full status refresh must derive one current readiness context")
         ensure("var readiness_surface := _field_readiness_surface({}, end_turn_forecast_surface, readiness_context)" in status_body, errors, "Overworld full status refresh must materialize one current readiness payload")
         ensure("_refresh_tooltip_context_drawer_surfaces(readiness_surface, end_turn_forecast_surface, objective_header_surfaces)" in status_body, errors, "Overworld full status refresh must pass current readiness into drawer synchronization")
         ensure(status_body.index("var readiness_surface := _field_readiness_surface({}, end_turn_forecast_surface, readiness_context)") < status_body.index("_refresh_tooltip_context_drawer_surfaces(readiness_surface, end_turn_forecast_surface, objective_header_surfaces)"), errors, "Readiness must be derived before drawer synchronization reuses it")
@@ -16835,17 +16835,23 @@ def validate_overworld_full_refresh_event_readiness_context_reuse(errors: list[s
 
     shell_text = shell_path.read_text(encoding="utf-8")
     context_match = re.search(
-        r"func _field_readiness_context\(end_turn_forecast_surface: Dictionary = \{\}\) -> Dictionary:(.*?)(?=\n\nfunc _field_readiness_surface)",
+        r"func _field_readiness_context\((.*?)\n\) -> Dictionary:(.*?)(?=\n\nfunc _field_readiness_surface)",
         shell_text,
         flags=re.DOTALL,
     )
     ensure(context_match is not None, errors, "Overworld event-independent Field Readiness context could not be isolated")
     if context_match is not None:
-        context_body = context_match.group(1)
+        context_signature = context_match.group(1)
+        context_body = context_match.group(2)
+        ensure("objective_header_surfaces: Dictionary = {}" in context_signature, errors, "Field Readiness context must retain a fresh-default optional objective header bundle")
         ordered_tokens = (
             '_profile_add("field_readiness_context_builds", 1)',
             'var movement = _session.overworld.get("movement", {})',
-            "var progress_recap := ScenarioRules.describe_session_progress_recap(_session, false)",
+            'var progress_recap := ""',
+            'if objective_header_surfaces.has("progress_recap"):',
+            '_profile_add("field_readiness_preloaded_progress_recap_reuses", 1)',
+            'progress_recap = String(objective_header_surfaces.get("progress_recap", ""))',
+            'progress_recap = ScenarioRules.describe_session_progress_recap(_session, false)',
             'var default_next_step := _line_with_prefix(progress_recap, "Next step:")',
             "var forecast := \"\"",
             "var simple_destination := _selected_route_simple_destination_surface()",
@@ -16893,7 +16899,7 @@ def validate_overworld_full_refresh_event_readiness_context_reuse(errors: list[s
     if status_match is not None:
         status_body = status_match.group(1)
         ordered_tokens = (
-            "var readiness_context := _field_readiness_context(end_turn_forecast_surface)",
+            "var readiness_context := _field_readiness_context(end_turn_forecast_surface, objective_header_surfaces)",
             "var readiness_surface := _field_readiness_surface({}, end_turn_forecast_surface, readiness_context)",
             "var event_surface := _event_feed_surface(end_turn_forecast_surface, readiness_context)",
             "var action_context_surface := _action_context_surface(event_surface, readiness_surface)",
@@ -17136,7 +17142,7 @@ def validate_overworld_drawer_objective_recap_reuse(errors: list[str]) -> None:
         ordered_tokens = (
             "var objective_header_surfaces := OverworldRules.describe_objective_header_surfaces(_session)",
             '_profile_add("objective_progress_recap_builds", 1)',
-            "var readiness_context := _field_readiness_context(end_turn_forecast_surface)",
+            "var readiness_context := _field_readiness_context(end_turn_forecast_surface, objective_header_surfaces)",
             "var readiness_surface := _field_readiness_surface({}, end_turn_forecast_surface, readiness_context)",
             "_refresh_tooltip_context_drawer_surfaces(readiness_surface, end_turn_forecast_surface, objective_header_surfaces)",
         )
@@ -17217,6 +17223,88 @@ def validate_overworld_drawer_objective_recap_reuse(errors: list[str]) -> None:
         ensure(forbidden not in report_text, errors, f"Overworld drawer-objective proof must remain passive and exact: {forbidden}")
 
 
+def validate_overworld_field_readiness_progress_recap_reuse(errors: list[str]) -> None:
+    shell_path = ROOT / "scenes/overworld/OverworldShell.gd"
+    report_path = ROOT / "tests/overworld_hero_actions_refresh_cache_regression.gd"
+    for path in (shell_path, report_path):
+        ensure(path.exists(), errors, f"Missing Overworld Field Readiness recap owner: {path.relative_to(ROOT)}")
+    if not shell_path.exists() or not report_path.exists():
+        return
+
+    shell_text = shell_path.read_text(encoding="utf-8")
+    context_match = re.search(
+        r"func _field_readiness_context\((.*?)\n\) -> Dictionary:(.*?)(?=\n\nfunc _field_readiness_surface)",
+        shell_text,
+        flags=re.DOTALL,
+    )
+    ensure(context_match is not None, errors, "Field Readiness context could not be isolated for progress-recap reuse")
+    if context_match is not None:
+        context_signature = context_match.group(1)
+        context_body = context_match.group(2)
+        ensure("end_turn_forecast_surface: Dictionary = {}" in context_signature and "objective_header_surfaces: Dictionary = {}" in context_signature, errors, "Field Readiness context must retain fresh-default forecast and objective inputs")
+        ordered_tokens = (
+            'var progress_recap := ""',
+            'if objective_header_surfaces.has("progress_recap"):',
+            '_profile_add("field_readiness_preloaded_progress_recap_reuses", 1)',
+            'progress_recap = String(objective_header_surfaces.get("progress_recap", ""))',
+            "else:\n\t\tprogress_recap = ScenarioRules.describe_session_progress_recap(_session, false)",
+            'var progress_line := _line_with_prefix(progress_recap, "Current progress:")',
+            'var default_next_step := _line_with_prefix(progress_recap, "Next step:").trim_prefix("Next step:").strip_edges()',
+        )
+        ensure(all(token in context_body for token in ordered_tokens), errors, "Field Readiness context is missing exact preloaded/fresh progress recap behavior")
+        if all(token in context_body for token in ordered_tokens):
+            ensure([context_body.index(token) for token in ordered_tokens] == sorted(context_body.index(token) for token in ordered_tokens), errors, "Field Readiness progress recap reuse/fallback order drifted")
+        ensure(context_body.count("ScenarioRules.describe_session_progress_recap(_session, false)") == 1, errors, "Field Readiness direct fallback must derive one fresh progress recap")
+
+    status_match = re.search(
+        r"func _refresh_status_surfaces\(generated_surface_start: int\) -> bool:(.*?)(?=\n\nfunc _refresh_map_cue_surface)",
+        shell_text,
+        flags=re.DOTALL,
+    )
+    ensure(status_match is not None, errors, "Full refresh could not be isolated for Field Readiness recap reuse")
+    if status_match is not None:
+        status_body = status_match.group(1)
+        ordered_tokens = (
+            "var objective_header_surfaces := OverworldRules.describe_objective_header_surfaces(_session)",
+            "var end_turn_forecast_surface := OverworldRules.describe_end_turn_forecast_surfaces(_session)",
+            "var readiness_context := _field_readiness_context(end_turn_forecast_surface, objective_header_surfaces)",
+            "var readiness_surface := _field_readiness_surface({}, end_turn_forecast_surface, readiness_context)",
+            "var event_surface := _event_feed_surface(end_turn_forecast_surface, readiness_context)",
+        )
+        ensure(all(token in status_body for token in ordered_tokens), errors, "Full refresh is missing ordered objective-recap to Field Readiness reuse")
+        if all(token in status_body for token in ordered_tokens):
+            ensure([status_body.index(token) for token in ordered_tokens] == sorted(status_body.index(token) for token in ordered_tokens), errors, "Full refresh Field Readiness recap reuse order drifted")
+    for forbidden in ('session.flags["field_readiness_progress_recap', 'session.overworld["field_readiness_progress_recap', '_refresh_cache["field_readiness_progress_recap', "_field_readiness_progress_recap_cache"):
+        ensure(forbidden not in shell_text, errors, f"Field Readiness progress recap must not persist across refreshes: {forbidden}")
+
+    report_text = report_path.read_text(encoding="utf-8")
+    for token in (
+        "func _assert_field_readiness_progress_recap_parity(shell: Node, session, label: String) -> Dictionary:",
+        "var authority_before: Dictionary = session.to_dict()",
+        "var objective_header_surfaces: Dictionary = OverworldRules.describe_objective_header_surfaces(session)",
+        'var direct_context: Dictionary = shell.call("_field_readiness_context", forecast)',
+        'int(direct_profile.get("field_readiness_preloaded_progress_recap_reuses", 0)) != 0',
+        'var preloaded_context: Dictionary = shell.call("_field_readiness_context", forecast, objective_header_surfaces)',
+        'int(preloaded_profile.get("field_readiness_preloaded_progress_recap_reuses", 0)) != 1',
+        'var direct_readiness: Dictionary = shell.call("_field_readiness_surface", {}, forecast, direct_context)',
+        'var preloaded_readiness: Dictionary = shell.call("_field_readiness_surface", {}, forecast, preloaded_context)',
+        'var direct_event: Dictionary = shell.call("_event_feed_surface", forecast, direct_context)',
+        'var preloaded_event: Dictionary = shell.call("_event_feed_surface", forecast, preloaded_context)',
+        "direct_context != preloaded_context",
+        "or direct_readiness != preloaded_readiness",
+        "or direct_event != preloaded_event",
+        "or session.to_dict() != authority_before",
+        "direct_usec * 100 < preloaded_usec * 105",
+        'int(full_refresh_profile.get("field_readiness_preloaded_progress_recap_reuses", 0)) != 1',
+        '"field_readiness_progress_recap_parity": true',
+        '"direct_readiness_progress_usec"',
+        '"preloaded_readiness_progress_usec"',
+    ):
+        ensure(token in report_text, errors, f"Overworld Field Readiness recap focused owner is missing token: {token}")
+    for forbidden in ("await get_tree().create_timer", "OS.delay", "set_process", 'erase("progress', "sort_custom", "normalize_progress"):
+        ensure(forbidden not in report_text, errors, f"Overworld Field Readiness recap proof must remain passive and exact: {forbidden}")
+
+
 def validate_overworld_full_refresh_end_turn_forecast_bundle_reuse(errors: list[str]) -> None:
     rules_path = ROOT / "scripts/core/OverworldRules.gd"
     shell_path = ROOT / "scenes/overworld/OverworldShell.gd"
@@ -17264,7 +17352,7 @@ def validate_overworld_full_refresh_end_turn_forecast_bundle_reuse(errors: list[
         ordered_tokens = (
             "var end_turn_forecast_surface := OverworldRules.describe_end_turn_forecast_surfaces(_session)",
             '_profile_add("end_turn_forecast_bundle_builds", 1)',
-            "var readiness_context := _field_readiness_context(end_turn_forecast_surface)",
+            "var readiness_context := _field_readiness_context(end_turn_forecast_surface, objective_header_surfaces)",
             "var readiness_surface := _field_readiness_surface({}, end_turn_forecast_surface, readiness_context)",
             "var status_forecast := _status_forecast_surface(end_turn_forecast_surface)",
             "_set_collapsed_frontier_indicator(end_turn_forecast_surface)",
@@ -24696,7 +24784,7 @@ def validate_overworld_route_map_cue_refresh(errors: list[str]) -> None:
         )
 
     field_readiness_match = re.search(
-        r"func _field_readiness_context\(end_turn_forecast_surface: Dictionary = \{\}\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc _field_readiness_surface)",
+        r"func _field_readiness_context\((?P<signature>.*?)\n\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc _field_readiness_surface)",
         overworld_text,
         re.S,
     )
@@ -46584,6 +46672,7 @@ def main() -> int:
     validate_overworld_full_refresh_event_readiness_context_reuse(errors)
     validate_overworld_objective_stakes_surface_bundle_reuse(errors)
     validate_overworld_drawer_objective_recap_reuse(errors)
+    validate_overworld_field_readiness_progress_recap_reuse(errors)
     validate_overworld_full_refresh_end_turn_forecast_bundle_reuse(errors)
     validate_overworld_shell_release_polish(errors)
     validate_overworld_command_commitment_board(errors)

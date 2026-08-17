@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed closed-Frontier objective recap reuse with exact all-scenario/day parity, direct/open fallback, material focused/authored performance improvement, compatibility, static/editor, and bounded Linux/Windows startup validation.",
+  "currentNotes": "Completed same-refresh progress recap reuse between the objective header bundle and Field Readiness with exact focused authority, material focused/authored timing improvement, compatibility, static/editor, and bounded Linux/Windows startup validation.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "performance-overworld-drawer-objective-recap-reuse-10184",
-  "currentSliceId": "performance-overworld-drawer-objective-recap-reuse-10184",
-  "currentSliceNotes": "Completed invocation-local objective recap propagation through the closed Frontier handoff; open Frontier and direct/default Objective Board paths remain fresh and exact, with all objective/threat/session/UI authority preserved.",
+  "currentSlice": "performance-overworld-field-readiness-progress-recap-reuse-10184",
+  "currentSliceId": "performance-overworld-field-readiness-progress-recap-reuse-10184",
+  "currentSliceNotes": "Completed invocation-local progress recap preload into Field Readiness; direct/default callers remain fresh and exact no-event/event/readiness/drawer/session/UI authority is preserved.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Drawer Objective Recap Reuse",
-  "currentSliceUpdatedAt": "2026-08-17T02:16:04Z",
+  "currentSliceTitle": "Overworld Field Readiness Progress Recap Reuse",
+  "currentSliceUpdatedAt": "2026-08-17T02:33:43Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,53 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "The closed-Frontier objective recap slice is complete. Preserve the full Objective Board for open Frontier and direct/default callers, keep frontier threats separate, preserve Native RMG fail-closed behavior, and select the next product slice from direct evidence.",
-  "notes": "Completed closed-Frontier objective recap reuse with exact behavior authority and bounded focused/authored performance improvement. Select the next tracker-approved product slice from direct current behavior evidence.",
+  "nextActionGuardrailNote": "The Field Readiness progress recap slice is complete. Keep direct/default callers fresh, preserve every readiness/event/action/drawer result, preserve Native RMG fail-closed behavior, and select the next product slice from direct evidence.",
+  "notes": "Completed Field Readiness progress recap reuse with exact behavior authority and bounded focused/authored performance improvement. Select the next tracker-approved product slice from direct current behavior evidence.",
   "plannedSlices": [
+    {
+      "id": "performance-overworld-field-readiness-progress-recap-reuse-10184",
+      "title": "Overworld Field Readiness Progress Recap Reuse",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Reuse the objective header bundle's invocation-local progress recap in Field Readiness context construction instead of deriving the same recap twice in one full refresh.",
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "tests/overworld_hero_actions_refresh_cache_regression.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Direct and preloaded Field Readiness contexts/outputs remain whole-exact across ordinary, pressured, day-transition, route, event, campaign, missing, and mutation fixtures",
+        "One full refresh records one progress recap build and one Field Readiness reuse with exact objective/readiness/event/action/drawer/save/focus/session/whole UI authority",
+        "Same-process direct versus preloaded timing proves material removed work against the current roughly361ms Ninefold recap while authored first-ready/repeat/header timing improve or remain safely non-regressed",
+        "Focused refresh-cache, Map Editor Play Copy, Overworld visual/input, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "objective, progress, recap, readiness, event, action, drawer, route, forecast, risk, UI copy, or invalidation policy changes",
+        "persistent cross-refresh/day/session caching, async work, save/schema, gameplay/content/AI/balance/Native RMG/package identity changes",
+        "packaged interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "66d3074191ecd8137f060e43ad7222c72d4e1ba9",
+        "scenario_id": "ninefold-confluence",
+        "progress_recap_usec": 360693,
+        "authored_first_ready_ms": 4211,
+        "repeat_full_refresh_ms": 2008,
+        "header_objective_status_resources_usec": 490163,
+        "full_refresh_usec": 2008525,
+        "profile_artifact": "/tmp/heroes-drawer-objective-profile.wBfajV"
+      },
+      "createdAt": "2026-08-17T02:17:17Z",
+      "startedAt": "2026-08-17T02:17:17Z",
+      "updatedAt": "2026-08-17T02:33:43Z",
+      "notes": "Production passes the objective header bundle's detached progress recap into the same full refresh's Field Readiness context and retains the original fresh fallback for every direct/default caller. Focused `/tmp/heroes-readiness-recap-focused.N379Xc` proves exact context/no-event/event/session/UI authority, one full-refresh reuse, and 41550-usec direct versus114-usec preloaded context work. Authored `/tmp/heroes-readiness-recap-profile.e5JV0x` improves first-ready4211 to4102ms, repeat refresh2008 to1919ms, header490163 to417155 usec, and full refresh2008525 to1918161 usec. Full Map Editor `/tmp/heroes-readiness-recap-map-editor.gj6K1c`, Overworld visual/active-play/core `/tmp/heroes-readiness-recap-compat.cerkor`, static/editor `/tmp/heroes-readiness-recap-static.LPgRQw`, and official Linux/Windows export-startup `/tmp/heroes-readiness-recap-platform.fQmmCw` are green. Claims remain bounded.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence.",
+      "blockedReason": null,
+      "completedAt": "2026-08-17T02:33:43Z"
+    },
     {
       "id": "performance-overworld-drawer-objective-recap-reuse-10184",
       "title": "Overworld Drawer Objective Recap Reuse",

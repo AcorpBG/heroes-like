@@ -3627,7 +3627,7 @@ func _refresh_status_surfaces(generated_surface_start: int) -> bool:
 	var objective_stakes := String(objective_header_surfaces.get("objective_stakes", "Objective Stakes\nNo authored scenario objectives are available."))
 	var end_turn_forecast_surface := OverworldRules.describe_end_turn_forecast_surfaces(_session)
 	_profile_add("end_turn_forecast_bundle_builds", 1)
-	var readiness_context := _field_readiness_context(end_turn_forecast_surface)
+	var readiness_context := _field_readiness_context(end_turn_forecast_surface, objective_header_surfaces)
 	var readiness_surface := _field_readiness_surface({}, end_turn_forecast_surface, readiness_context)
 	_objective_brief_label.text = _compact_text(objective_brief, 1, 72, false)
 	_objective_brief_label.tooltip_text = _join_tooltip_sections([
@@ -7241,14 +7241,22 @@ func _field_feed_is_idle() -> bool:
 		and _last_action_recap.is_empty()
 	)
 
-func _field_readiness_context(end_turn_forecast_surface: Dictionary = {}) -> Dictionary:
+func _field_readiness_context(
+	end_turn_forecast_surface: Dictionary = {},
+	objective_header_surfaces: Dictionary = {}
+) -> Dictionary:
 	_profile_add("field_readiness_context_builds", 1)
 	var movement = _session.overworld.get("movement", {})
 	var movement_line := "Move %d/%d" % [
 		int(movement.get("current", 0)),
 		int(movement.get("max", 0)),
 	]
-	var progress_recap := ScenarioRules.describe_session_progress_recap(_session, false)
+	var progress_recap := ""
+	if objective_header_surfaces.has("progress_recap"):
+		_profile_add("field_readiness_preloaded_progress_recap_reuses", 1)
+		progress_recap = String(objective_header_surfaces.get("progress_recap", ""))
+	else:
+		progress_recap = ScenarioRules.describe_session_progress_recap(_session, false)
 	var progress_line := _line_with_prefix(progress_recap, "Current progress:")
 	var default_next_step := _line_with_prefix(progress_recap, "Next step:").trim_prefix("Next step:").strip_edges()
 	if default_next_step == "":

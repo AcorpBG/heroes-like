@@ -20,6 +20,9 @@ func _run() -> void:
 	var objective_header_control := _assert_objective_header_surface_parity(session)
 	if objective_header_control.is_empty():
 		return
+	var readiness_progress_control := _assert_field_readiness_progress_recap_parity(shell, session, "current_tile")
+	if readiness_progress_control.is_empty():
+		return
 	if not _assert_forecast_bundle_surface_parity(shell, session, "current_tile"):
 		return
 	if not _assert_drawer_readiness_preload_parity(shell, "current_tile"):
@@ -58,6 +61,9 @@ func _run() -> void:
 	if int(full_refresh_profile.get("objective_progress_recap_builds", 0)) != 1 \
 			or int(full_refresh_profile.get("drawer_handoff_preloaded_objective_recap_reuses", 0)) != 1:
 		_fail("Full refresh did not reuse its single objective progress recap for the drawer handoff.", full_refresh_profile)
+		return
+	if int(full_refresh_profile.get("field_readiness_preloaded_progress_recap_reuses", 0)) != 1:
+		_fail("Full refresh did not reuse the objective progress recap in Field Readiness context construction.", full_refresh_profile)
 		return
 	if session.to_dict() != refresh_session_before or refresh_authority_after != refresh_authority_before:
 		_fail("Readiness reuse changed session or whole refresh surface authority.", {
@@ -181,11 +187,15 @@ func _run() -> void:
 		"objective_stakes_surface_materializations": int(full_refresh_profile.get("objective_stakes_surface_materializations", 0)),
 		"objective_progress_recap_builds": int(full_refresh_profile.get("objective_progress_recap_builds", 0)),
 		"drawer_handoff_preloaded_objective_recap_reuses": int(full_refresh_profile.get("drawer_handoff_preloaded_objective_recap_reuses", 0)),
+		"field_readiness_preloaded_progress_recap_reuses": int(full_refresh_profile.get("field_readiness_preloaded_progress_recap_reuses", 0)),
 		"objective_header_bundle_usec": int(objective_header_control.get("bundle_usec", 0)),
 		"legacy_objective_header_usec": int(objective_header_control.get("legacy_usec", 0)),
 		"legacy_objective_to_bundle_ratio": float(objective_header_control.get("legacy_usec", 0)) / float(maxi(int(objective_header_control.get("bundle_usec", 0)), 1)),
 		"objective_header_surface_parity": true,
 		"drawer_objective_recap_parity": true,
+		"field_readiness_progress_recap_parity": true,
+		"direct_readiness_progress_usec": int(readiness_progress_control.get("direct_usec", 0)),
+		"preloaded_readiness_progress_usec": int(readiness_progress_control.get("preloaded_usec", 0)),
 		"drawer_objective_authored_scenario_count": int(drawer_objective_control.get("scenario_count", 0)),
 		"legacy_drawer_objective_usec": int(drawer_objective_control.get("legacy_usec", 0)),
 		"shared_drawer_objective_usec": int(drawer_objective_control.get("shared_usec", 0)),
@@ -553,6 +563,51 @@ func _assert_objective_header_surface_parity(session) -> Dictionary:
 		})
 		return {}
 	return {"bundle_usec": bundle_usec, "legacy_usec": legacy_usec}
+
+func _assert_field_readiness_progress_recap_parity(shell: Node, session, label: String) -> Dictionary:
+	var authority_before: Dictionary = session.to_dict()
+	var forecast: Dictionary = OverworldRules.describe_end_turn_forecast_surfaces(session)
+	var objective_header_surfaces: Dictionary = OverworldRules.describe_objective_header_surfaces(session)
+	shell.call("validation_reset_profile", false)
+	var direct_started := Time.get_ticks_usec()
+	var direct_context: Dictionary = shell.call("_field_readiness_context", forecast)
+	var direct_usec := Time.get_ticks_usec() - direct_started
+	var direct_profile: Dictionary = shell.call("validation_profile_snapshot")
+	if int(direct_profile.get("field_readiness_preloaded_progress_recap_reuses", 0)) != 0:
+		_fail("Direct Field Readiness context unexpectedly reused a preloaded progress recap for %s." % label, direct_profile)
+		return {}
+	shell.call("validation_reset_profile", false)
+	var preloaded_started := Time.get_ticks_usec()
+	var preloaded_context: Dictionary = shell.call("_field_readiness_context", forecast, objective_header_surfaces)
+	var preloaded_usec := Time.get_ticks_usec() - preloaded_started
+	var preloaded_profile: Dictionary = shell.call("validation_profile_snapshot")
+	if int(preloaded_profile.get("field_readiness_preloaded_progress_recap_reuses", 0)) != 1:
+		_fail("Preloaded Field Readiness context did not reuse exactly one progress recap for %s." % label, preloaded_profile)
+		return {}
+	var direct_readiness: Dictionary = shell.call("_field_readiness_surface", {}, forecast, direct_context)
+	var preloaded_readiness: Dictionary = shell.call("_field_readiness_surface", {}, forecast, preloaded_context)
+	var direct_event: Dictionary = shell.call("_event_feed_surface", forecast, direct_context)
+	var preloaded_event: Dictionary = shell.call("_event_feed_surface", forecast, preloaded_context)
+	if direct_context != preloaded_context \
+			or direct_readiness != preloaded_readiness \
+			or direct_event != preloaded_event \
+			or session.to_dict() != authority_before:
+		_fail("Preloaded progress recap changed Field Readiness context, outputs, event surface, or session authority for %s." % label, {
+			"direct_context": direct_context,
+			"preloaded_context": preloaded_context,
+			"direct_readiness": direct_readiness,
+			"preloaded_readiness": preloaded_readiness,
+			"direct_event": direct_event,
+			"preloaded_event": preloaded_event,
+		})
+		return {}
+	if direct_usec * 100 < preloaded_usec * 105:
+		_fail("Preloaded progress recap did not remove at least five percent of direct Field Readiness context work for %s." % label, {
+			"direct_usec": direct_usec,
+			"preloaded_usec": preloaded_usec,
+		})
+		return {}
+	return {"direct_usec": direct_usec, "preloaded_usec": preloaded_usec}
 
 func _assert_drawer_objective_recap_preload_parity(shell: Node, session, label: String) -> Dictionary:
 	var authority_before: Dictionary = session.to_dict()
