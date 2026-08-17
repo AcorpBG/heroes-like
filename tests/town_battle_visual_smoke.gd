@@ -52,6 +52,9 @@ func _run_town_smoke() -> bool:
 		push_error("Town smoke: town stage board did not load.")
 		get_tree().quit(1)
 		return false
+	if not _assert_town_header_control_label_contract(shell, session):
+		get_tree().quit(1)
+		return false
 	if not await _assert_town_scenic_backdrop_contract(board, session):
 		get_tree().quit(1)
 		return false
@@ -229,6 +232,57 @@ func _scenic_backdrop_geometry_exact(summary: Dictionary) -> bool:
 			or not bool(summary.get("destination_contained", false)):
 		return false
 	return is_equal_approx(source_rect.size.x / source_rect.size.y, destination_rect.size.x / destination_rect.size.y)
+
+func _assert_town_header_control_label_contract(shell: Control, live_session) -> bool:
+	var header := shell.get_node_or_null("%Header") as Label
+	if header == null:
+		push_error("Town smoke: Town header label is unavailable.")
+		return false
+	var live_header := TownRules.describe_header(live_session)
+	if header.text != live_header \
+			or header.tooltip_text != live_header \
+			or not live_header.contains(" | Your Control | ") \
+			or live_header.contains("Owner Player") \
+			or not shell.get_global_rect().encloses(header.get_global_rect()):
+		push_error("Town smoke: live Town header did not expose exact contained player-facing control copy: %s." % live_header)
+		return false
+	var font := header.get_theme_font("font")
+	var font_size := header.get_theme_font_size("font_size")
+	if font == null or font.get_string_size(live_header, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size).x > header.size.x + 0.5:
+		push_error("Town smoke: live Town header does not fit its themed label: %s / %s." % [live_header, header.size])
+		return false
+
+	var fixture_session = ScenarioFactory.create_session(
+		"river-pass",
+		"normal",
+		SessionState.LAUNCH_MODE_SKIRMISH
+	)
+	var fixture_town := _first_player_town(fixture_session)
+	if fixture_town.is_empty():
+		push_error("Town smoke: Town header fixture could not find Riverwatch.")
+		return false
+	_move_active_hero_to_town(fixture_session, fixture_town)
+	var expected_spell_tier := TownRules.current_spell_tier(fixture_town)
+	var expected_labels := {
+		"player": "Your Control",
+		"enemy": "Enemy Control",
+		"neutral": "Neutral Control",
+		"unsupported_internal_owner": "Unknown Control",
+	}
+	for owner_value in expected_labels:
+		fixture_town["owner"] = owner_value
+		var authority_before: Dictionary = fixture_session.to_dict()
+		var header_text := TownRules.describe_header(fixture_session)
+		var expected_label := String(expected_labels[owner_value])
+		if fixture_session.to_dict() != authority_before \
+				or not header_text.contains(" | %s | " % expected_label) \
+				or header_text.contains("Owner ") \
+				or header_text.contains(owner_value) \
+				or not header_text.begins_with("Riverwatch Hold | Embercourt League | Frontier Stronghold | ") \
+				or not header_text.ends_with(" | Spell Tier %d" % expected_spell_tier):
+			push_error("Town smoke: owner %s did not produce exact player-facing header copy: %s." % [owner_value, header_text])
+			return false
+	return true
 
 func _assert_town_capture_frontier_status_contract(live_board: Node, live_session) -> bool:
 	if not live_board.has_method("validation_status_plaques_summary"):

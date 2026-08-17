@@ -145,13 +145,24 @@ static func describe_header(session: SessionStateStoreScript.SessionData) -> Str
 			role_label = " | Capital Anchor"
 		"stronghold":
 			role_label = " | Frontier Stronghold"
-	return "%s | %s%s | Owner %s | Spell Tier %d" % [
+	return "%s | %s%s | %s | Spell Tier %d" % [
 		String(template.get("name", town.get("town_id", "Town"))),
 		String(faction.get("name", template.get("faction_id", "Faction"))),
 		role_label,
-		String(town.get("owner", "neutral")).capitalize(),
+		town_control_label(String(town.get("owner", "neutral"))),
 		current_spell_tier(town),
 	]
+
+static func town_control_label(owner: String) -> String:
+	match owner.strip_edges().to_lower():
+		"player":
+			return "Your Control"
+		"enemy":
+			return "Enemy Control"
+		"neutral":
+			return "Neutral Control"
+		_:
+			return "Unknown Control"
 
 static func describe_summary(session: SessionStateStoreScript.SessionData) -> String:
 	var town := get_active_town(session)

@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `ux-town-header-player-facing-control-label-10184`. Town headers now map the exact owner value to compact `Your Control`, `Enemy Control`, `Neutral Control`, or fail-closed `Unknown Control` copy without changing ownership authority. Focused live/direct header proof, exact 1280x720 and 1920x1080 captured-town routes, active focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `ux-town-header-player-facing-control-label-10184`
 - Completed implementation slice: `ux-town-capture-occupation-retake-first-view-10184`. Captured Duskfen now replaces only the existing Front plaque with compact `Occupation / 7d | Retake` first-view status from detached public occupation/front authority, while ordinary towns retain exact Front pressure and occupation-only/retake-only states remain contextual. Focused direct/precomputed/day-refresh/session-authority proof, exact 1280x720 and 1920x1080 routed River Pass capture/save-resume/re-entry, Town/Battle layout, active-focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. The pre-existing town-entity-cache focus oracle that rejects the shipped blocking build presenter remains explicitly excluded. Packaged Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `ux-town-capture-occupation-retake-first-view-10184`
 - Completed implementation slice: `presentation-town-specialty-transfer-distinct-feedback-10184`. Successful live specialty selection and army transfer now own distinct original imported 384x384 alpha VFX and reproducible 400 ms/380 ms production-layer stereo sounds instead of sharing generic button-confirm presentation. Four specialty and eight bidirectional transfer rows at 1280x720/1920x1080 prove normal imported playback, exact reduced-motion badges, public TownRules/session/save authority, nonblocking input, and malformed/stale/invalid/refresh silence. Cue catalog, Town visual, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Town interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, final sound-design approval, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -6933,6 +6935,39 @@ Completion evidence:
 - real River Pass hostile-town capture flows passed naturally with 42 steps and zero harness errors at exact 1280x720 (`/tmp/heroes-town-capture-routed-1280-final2.gfZJqy/20260817T180410Z`) and 1920x1080 (`/tmp/heroes-town-capture-routed-1920-exact.i6r8VB/20260817T181337Z`); both captured-town frames visibly contain `Occupation / 7d | Retake` in the existing third plaque;
 - Battle layout at both registered widths, active-play focus, accessibility semantics, core, repository validation, Python compilation, diff checks, and exact/generic Godot editor parses passed; `town_exit_profile_accuracy_regression` passed, while the unrelated pre-existing `town_entity_cache_active_refresh_regression` focus assertion remains excluded because it rejects the already-shipped blocking build presenter;
 - official Linux export/headless startup and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup reports are `ok:true`; packaged Town interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
+
+## Selected Slice: Town Header Player-Facing Control Label
+
+id: `ux-town-header-player-facing-control-label-10184`
+
+Status: completed.
+
+Implementation boundary:
+- replace only the `Owner <storage enum>` fragment produced by `TownRules.describe_header` with a bounded player-facing control label derived from the same exact owner value;
+- render player, enemy, and neutral ownership as `Your Control`, `Enemy Control`, and `Neutral Control`, with a fail-closed `Unknown Control` fallback for unsupported values;
+- preserve exact town name, authored faction/cultural identity, strategic role, spell tier, header geometry/tooltip, and all ownership/session/save behavior.
+
+Completion criteria:
+- ordinary Riverwatch and captured Duskfen live headers show `Your Control` without `Owner Player`, while Duskfen still names Mireclaw Covenant and Frontier Stronghold exactly;
+- direct player/enemy/neutral/unsupported controls return exact bounded labels without exposing raw owner ids or mutating town/session authority;
+- the complete header remains contained and unclipped at 1280x720 and 1920x1080, with its exact full text retained in the existing tooltip and accessibility semantics;
+- focused Town visual/header, routed captured-town, active-play focus, accessibility, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass.
+
+Non-goals:
+- no town ownership, capture, faction identity, role, spell tier, economy, recruitment, battle, route, AI, content, balance, save/schema, or Native RMG change;
+- no header geometry, font, UI scale, panel, plaque, tab, command, tooltip, audio, VFX, scenic art, or broader Town copy redesign;
+- no packaged Town interaction parity, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- HEAD `b868b5ab373d799dae5a1f3c94c192887669d4fb` returns the storage enum through `String(town.get("owner", "neutral")).capitalize()` in `TownRules.describe_header`;
+- exact 1280x720 and 1920x1080 routed captured-town frames at `/tmp/heroes-town-capture-routed-1280-final2.gfZJqy/20260817T180410Z/captured_town_entered.png` and `/tmp/heroes-town-capture-routed-1920-exact.i6r8VB/20260817T181337Z/captured_town_entered.png` visibly read `Owner Player` beside the authored Mireclaw identity;
+- this is direct current shipped UX evidence, not a claim that ownership rules or the completed captured-town plaque are incorrect.
+
+Completion evidence:
+- `town_battle_visual_smoke` passed naturally with exact live header, tooltip, themed-font fit, player/enemy/neutral/unsupported mappings, and unchanged town/session authority;
+- the full River Pass capture/save-resume/re-entry flow passed naturally with 42 steps and zero harness errors at exact 1280x720 (`/tmp/heroes-town-header-routed-1280.lBImP4/20260817T184313Z`) and 1920x1080 (`/tmp/heroes-town-header-routed-1920.k8KFFo/20260817T185207Z`); both captured-town frames visibly retain exact Duskfen/Mireclaw/Frontier/Spell identity and show `Your Control` without `Owner Player`;
+- active-play focus, accessibility semantics, core, repository validation, Python compilation, diff checks, and exact/generic Godot editor parses passed;
+- official Linux export/headless startup and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup reports are `ok:true`; packaged Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
 
 ## Progress Reconciliation
 
