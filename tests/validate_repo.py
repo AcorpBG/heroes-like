@@ -27140,6 +27140,106 @@ def validate_overworld_route_map_cue_refresh(errors: list[str]) -> None:
     )
 
 
+def validate_overworld_objective_brief_native_pixel_ellipsis(errors: list[str]) -> None:
+    visual_path = ROOT / "tests" / "overworld_visual_smoke.gd"
+    for path in (OVERWORLD_SCENE_PATH, OVERWORLD_SCRIPT_PATH, visual_path):
+        ensure(path.exists(), errors, f"Missing Overworld ObjectiveBrief native-fit owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in (OVERWORLD_SCENE_PATH, OVERWORLD_SCRIPT_PATH, visual_path)):
+        return
+
+    scene_text = OVERWORLD_SCENE_PATH.read_text(encoding="utf-8")
+    shell_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+    visual_text = visual_path.read_text(encoding="utf-8")
+    objective_block = scene_node_block(scene_text, "ObjectiveBrief", "Label")
+    ensure(scene_text.count('[node name="ObjectiveBrief" type="Label"') == 1, errors, "OverworldShell must author exactly one ObjectiveBrief Label")
+    ensure("unique_name_in_owner = true" in objective_block and "clip_text = true" in objective_block, errors, "ObjectiveBrief must remain the existing unique clipped Label")
+
+    helper_match = re.search(
+        r"func _set_objective_brief_text\(full_text: String, full_tooltip: String\) -> void:\n(?P<body>.*?)(?=\nfunc )",
+        shell_text,
+        re.S,
+    )
+    ensure(helper_match is not None, errors, "OverworldShell must own one full ObjectiveBrief native pixel-ellipsis helper")
+    exact_call = '_set_objective_brief_text(objective_brief, _join_tooltip_sections([\n\t\tobjective_stakes,\n\t\tString(readiness_surface.get("tooltip_text", "")),\n\t]))'
+    ensure(shell_text.count(exact_call) == 1, errors, "Normal Overworld refresh must pass the exact full objective and unchanged stakes/readiness tooltip once")
+    ensure("_objective_brief_label.text = _compact_text(objective_brief, 1, 72, false)" not in shell_text, errors, "ObjectiveBrief must not retain its fixed 72-character destructive cut")
+    if helper_match is not None:
+        helper_body = helper_match.group("body")
+        helper_order = tuple(helper_body.find(token) for token in (
+            "_objective_brief_label.text = full_text",
+            "_objective_brief_label.tooltip_text = full_tooltip",
+            "_objective_brief_label.autowrap_mode = TextServer.AUTOWRAP_OFF",
+            "_objective_brief_label.clip_text = true",
+            "_objective_brief_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS",
+        ))
+        ensure(all(index >= 0 for index in helper_order) and list(helper_order) == sorted(helper_order), errors, "ObjectiveBrief helper must assign exact full text/tooltip then single-line native ellipsis in order")
+        ensure(helper_body.count("_objective_brief_label") == 5, errors, "ObjectiveBrief helper must change only the existing Label's five exact rendering properties")
+        for forbidden_token in ("compact", "left(", "substr(", '"..."', "_header_label", "_banner_glyph", "custom_minimum_size", "size_flags", "queue_redraw", "call_deferred"):
+            ensure(forbidden_token not in helper_body, errors, f"ObjectiveBrief helper must not introduce copy/layout/timing drift via {forbidden_token}")
+
+    focused_match = re.search(
+        r"func _assert_objective_brief_native_ellipsis_contract\(shell: Control\) -> bool:\n(?P<body>.*?)(?=\nfunc )",
+        visual_text,
+        re.S,
+    )
+    join_match = re.search(
+        r"func _join_objective_brief_sections\(sections: Array\) -> String:\n(?P<body>.*?)(?=\nfunc )",
+        visual_text,
+        re.S,
+    )
+    ensure(focused_match is not None and join_match is not None, errors, "Overworld visual smoke must own focused ObjectiveBrief and independent tooltip controls")
+    ensure(visual_text.count('OS.get_environment("OVERWORLD_OBJECTIVE_BRIEF_ONLY") == "1"') == 1, errors, "Overworld visual smoke must expose one focused ObjectiveBrief-only runtime selector")
+    ensure(visual_text.count("await _assert_objective_brief_native_ellipsis_contract(shell)") == 1, errors, "Overworld visual smoke must run the responsive ObjectiveBrief contract exactly once")
+    ensure(visual_text.find("await _assert_objective_brief_native_ellipsis_contract(shell)") < visual_text.find("_assert_wireframe_contract(shell)"), errors, "ObjectiveBrief-only runtime must complete before broad visual mutations")
+    if focused_match is not None:
+        focused_body = focused_match.group("body")
+        focused_order = tuple(focused_body.find(token) for token in (
+            "session.to_dict()",
+            'shell.get_node("%Header")',
+            'shell.get_node("%ObjectiveBrief")',
+            'top_bar.get_node("BannerGlyph")',
+            "OverworldRules.describe_objective_header_surfaces(session)",
+            'shell.call("validation_snapshot")',
+            "_join_objective_brief_sections([",
+            "expected_full.length() <= 72",
+            "for width in [1280, 1920]:",
+            "get_window().size = requested_size",
+            'objective_brief.get_theme_font("font")',
+            "font.get_string_size(expected_full",
+            "top_bar.get_global_rect()",
+            "objective_brief.text != expected_full",
+            "objective_brief.tooltip_text != expected_tooltip",
+            "objective_brief.text_overrun_behavior != TextServer.OVERRUN_TRIM_ELLIPSIS",
+            "not top_rect.encloses(glyph_rect)",
+            "not title_rect.encloses(objective_rect)",
+            "glyph_rect.intersects(title_rect)",
+            "header_rect.intersects(objective_rect)",
+            "get_window().size = original_window_size",
+            "session.to_dict() != authority_before",
+        ))
+        ensure(all(index >= 0 for index in focused_order) and list(focused_order) == sorted(focused_order), errors, "Focused ObjectiveBrief proof must independently capture source/tooltip, resize, measure, inspect geometry, restore, then verify authority")
+        for required_token in (
+            'expected_full.contains("Next Claim Duskfen Bastion")',
+            "not objective_brief.clip_text",
+            "objective_brief.autowrap_mode != TextServer.AUTOWRAP_OFF",
+            "font == null",
+            "full_width <= 0.0",
+            "not top_rect.encloses(title_rect)",
+            "not title_rect.encloses(header_rect)",
+            "glyph_rect.end.x > title_rect.position.x + 0.5",
+            "header_rect.end.y > objective_rect.position.y + 0.5",
+        ):
+            ensure(required_token in focused_body, errors, f"Focused ObjectiveBrief proof is missing exact responsive token: {required_token}")
+        for forbidden_token in ('shell.call("_set_objective_brief', 'shell.call("_refresh', "_compact_text", "set_text", ".text =", "sort(", "erase(", "queue_redraw"):
+            ensure(forbidden_token not in focused_body, errors, f"Focused ObjectiveBrief proof must remain public, independent, and observation-only; forbidden {forbidden_token}")
+    if join_match is not None:
+        join_body = join_match.group("body")
+        for required_token in ('String(section_value).strip_edges()', 'section != "" and section not in joined', 'joined.append(section)', 'return "\\n\\n".join(joined)'):
+            ensure(required_token in join_body, errors, f"Independent ObjectiveBrief tooltip join is missing exact token: {required_token}")
+        for forbidden_token in ("shell", "OverworldShell", "_join_tooltip_sections", "sort(", "erase(", "normalize"):
+            ensure(forbidden_token not in join_body, errors, f"Independent ObjectiveBrief tooltip join must avoid production/canonicalization dependency: {forbidden_token}")
+
+
 def validate_overworld_shell_release_polish(errors: list[str]) -> None:
     required_paths = (OVERWORLD_SCENE_PATH, OVERWORLD_SCRIPT_PATH, OVERWORLD_RULES_PATH)
     for path in required_paths:
@@ -48996,6 +49096,7 @@ def main() -> int:
     validate_overworld_drawer_objective_recap_reuse(errors)
     validate_overworld_field_readiness_progress_recap_reuse(errors)
     validate_overworld_full_refresh_end_turn_forecast_bundle_reuse(errors)
+    validate_overworld_objective_brief_native_pixel_ellipsis(errors)
     validate_overworld_shell_release_polish(errors)
     validate_overworld_command_commitment_board(errors)
     validate_overworld_commitment_summary_fallback_elision(errors)

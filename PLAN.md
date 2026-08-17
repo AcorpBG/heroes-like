@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `ux-overworld-objective-brief-native-pixel-ellipsis-10184`. The live Overworld ObjectiveBrief now retains the exact complete rule-owned objective summary and existing stakes/readiness tooltip, then uses the existing single-line Label's native pixel-aware ellipsis instead of destroying the value at 72 characters and visibly ending `Next Claim D...`. Exact 1280x720/1920x1080 ObjectiveBrief geometry/authority, full Overworld visual, active-focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `ux-overworld-objective-brief-native-pixel-ellipsis-10184`
 - Completed implementation slice: `ux-battle-status-native-pixel-ellipsis-10184`. The live Battle banner Status now retains the exact full round/context/terrain/distance/active/objective value in both text and tooltip, uses the existing Label's native pixel-aware ellipsis at 1280x720, and renders the full fitting value at 1920x1080 instead of the prior fixed 62-character `Terrai...` cut. Focused Board, Town/Battle visual, active-focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `ux-battle-status-native-pixel-ellipsis-10184`
 - Completed implementation slice: `ux-battle-board-footer-pixel-ellipsis-10184`. The live Battle board footer now retains its exact tactical summary, renders fitting rows whole, and uses a theme-font-measured word-boundary ellipsis for the longer focused controller-cursor row instead of the prior `left(84)` mid-word cut. Exact 1280x720/1920x1080 Board, Town/Battle visual, active-focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -6978,6 +6980,38 @@ Completion evidence:
 - the full River Pass capture/save-resume/re-entry flow passed naturally with 42 steps and zero harness errors at exact 1280x720 (`/tmp/heroes-town-header-routed-1280.lBImP4/20260817T184313Z`) and 1920x1080 (`/tmp/heroes-town-header-routed-1920.k8KFFo/20260817T185207Z`); both captured-town frames visibly retain exact Duskfen/Mireclaw/Frontier/Spell identity and show `Your Control` without `Owner Player`;
 - active-play focus, accessibility semantics, core, repository validation, Python compilation, diff checks, and exact/generic Godot editor parses passed;
 - official Linux export/headless startup and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup reports are `ok:true`; packaged Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
+
+## Selected Slice: Overworld Objective Brief Native Pixel Ellipsis
+
+id: `ux-overworld-objective-brief-native-pixel-ellipsis-10184`
+
+Status: completed.
+
+Implementation boundary:
+- replace only the normal live Overworld ObjectiveBrief label's fixed 72-character compacting call with the exact full `OverworldRules.describe_objective_header_surfaces` brief and Godot's native pixel-aware ellipsis overrun behavior on the existing clipped single-line Label;
+- retain the existing exact Objective Stakes plus Field Readiness tooltip, objective source/order, Header and BannerGlyph siblings, TopStrip geometry, drawers, focus, route, action, save, and session authority;
+- keep the right rail compact and scenery-first with no new node, panel, row, wrap, height, font, allocation, or broader rail-copy redesign.
+
+Completion criteria:
+- exact 1280x720 and 1920x1080 live Overworld rows retain the complete independent objective brief in the Label value, preserve the complete existing tooltip, and use native ellipsis only according to the themed full-string width versus the live allocation;
+- Header, ObjectiveBrief, BannerGlyph, TitleBox, and TopStrip remain contained, ordered, and non-overlapping, while objective/readiness, drawer, focus, route, action, save, settings, and whole-session authority remain exact;
+- focused Overworld visual, active-focus, accessibility, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass.
+
+Non-goals:
+- no OverworldRules objective, progress, stakes, readiness, forecast, route, action, save, session, content, balance, AI, or Native RMG behavior change;
+- no rail-wide character trimming change, new panel, tooltip surface, label node, wrap, extra line/height, font, UI scale, audio, VFX, art, or TopStrip/sidebar layout redesign;
+- no packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- HEAD `335ba8bfd2cfe09804a00eb05995dadfc7c1ea7a` assigns `_compact_text(objective_brief, 1, 72, false)`, destructively shortening the exact header surface before the existing clipped single-line Label can fit it by pixels;
+- the routed current-HEAD frame `/tmp/heroes-town-overview-routed-1280.6vgtla/20260817T194950Z/overworld_entered.png` visibly ends the right-rail summary at `Next Claim D...` rather than preserving the complete `Next Claim Duskfen Bastion` value behind a native ellipsis;
+- this is direct shipped first-view rendering evidence, not a claim that Objective Header derivation, Stakes, Field Readiness, or the broader compact rail policy is incorrect.
+
+Completion evidence:
+- the focused real-shell selector passed naturally at `/tmp/heroes-overworld-objective-focused-rerun.Vqr0Am`, proving the exact independent rule-owned brief and full stakes/readiness tooltip, native single-line ellipsis properties, themed-font measurement, contained/non-overlapping Header/ObjectiveBrief/BannerGlyph/TitleBox/TopStrip geometry at 1280x720 and 1920x1080, and unchanged whole-session authority;
+- the full Overworld visual matrix, active-play keyboard focus, accessibility semantics, and core compatibility gates passed naturally at `/tmp/heroes-overworld-objective-compat.f2KMva` with zero selected diagnostics;
+- repository validation, Python compilation, scoped/global diff checks, progress status, and exact/generic Godot editor parses passed at `/tmp/heroes-overworld-objective-final-audit.6QdACo`;
+- official Linux export/headless startup and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup reports are `ok:true` at `/tmp/heroes-overworld-objective-platform.HCJdCT`; packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
 
 ## Selected Slice: Battle Board Footer Pixel Ellipsis
 
