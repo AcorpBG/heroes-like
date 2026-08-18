@@ -473,8 +473,7 @@ func _validate_melee_hit_state() -> void:
 	_expect_equal("melee target animation state", target_state, "hit_stagger")
 	_expect_event("melee attacker queue", session.battle, "player_0", "battle_unit_melee_attack", "melee_windup_release")
 	_expect_event("melee target queue", session.battle, "enemy_0", "battle_unit_hit", "hit_stagger")
-	await get_tree().create_timer(0.08).timeout
-	var board_summary := _board_summary_for_session(session)
+	var board_summary := await _board_summary_for_session_after_started_playback(session)
 	var attacker_stack := _summary_stack_entry(board_summary, "player_0")
 	var target_stack := _summary_stack_entry(board_summary, "enemy_0")
 	_expect_equal("melee attacker presentation active", str(bool(attacker_stack.get("presentation_motion_active", false))), "true")
@@ -1783,6 +1782,16 @@ func _board_summary_for_session(session: SessionStateStoreScript.SessionData) ->
 	view.size = Vector2(960.0, 540.0)
 	add_child(view)
 	view.set_battle_state(session)
+	var summary: Dictionary = view.validation_unit_art_summary()
+	view.queue_free()
+	return summary
+
+func _board_summary_for_session_after_started_playback(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var view := BattleBoardViewScript.new()
+	view.size = Vector2(960.0, 540.0)
+	add_child(view)
+	view.set_battle_state(session)
+	await get_tree().create_timer(0.04).timeout
 	var summary: Dictionary = view.validation_unit_art_summary()
 	view.queue_free()
 	return summary

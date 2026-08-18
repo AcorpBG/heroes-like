@@ -1616,6 +1616,18 @@ func _assert_battle_timing_check_cue_contract(shell: Node) -> bool:
 		return false
 	var snapshot: Dictionary = shell.call("validation_snapshot")
 	var timing_check: Dictionary = snapshot.get("timing_check", {}) if snapshot.get("timing_check", {}) is Dictionary else {}
+	var timing_board := String(snapshot.get("spell_timing_text", ""))
+	var expected_spell_window := _timing_board_value_for_test(timing_board, "Spell window:")
+	var expected_support_payoff := _timing_board_value_for_test(timing_board, "Support payoff:")
+	var expected_protection_need := _timing_board_value_for_test(timing_board, "Protection need:")
+	var expected_burst_risk := _timing_board_value_for_test(timing_board, "Burst risk:")
+	if expected_burst_risk == "":
+		expected_burst_risk = _timing_board_value_for_test(timing_board, "Incoming burst:")
+	if expected_burst_risk == "":
+		expected_burst_risk = "Burst risk unavailable."
+	var expected_enemy_pressure := _timing_board_value_for_test(timing_board, "Enemy spell pressure:")
+	var cue_tooltip := String(timing_check.get("tooltip_text", ""))
+	var expected_full_tooltip := "%s\n\n%s" % [cue_tooltip, timing_board]
 	var timing_text := "\n".join([
 		String(snapshot.get("spell_timing_visible_text", "")),
 		String(snapshot.get("spell_timing_tooltip_text", "")),
@@ -1645,6 +1657,25 @@ func _assert_battle_timing_check_cue_contract(shell: Node) -> bool:
 	if not ["Cast", "Order", "Hold", "Review", "Locked", "Waiting", "unavailable"].has(String(timing_check.get("readiness", ""))):
 		push_error("Battle smoke: timing-check cue exposed an unexpected readiness: %s." % timing_check)
 		return false
+	if (
+		String(timing_check.get("spell_window", "")) != expected_spell_window
+		or String(timing_check.get("support_payoff", "")) != expected_support_payoff
+		or String(timing_check.get("protection_need", "")) != expected_protection_need
+		or String(timing_check.get("burst_risk", "")) != expected_burst_risk
+		or String(timing_check.get("enemy_pressure", "")) != expected_enemy_pressure
+	):
+		push_error("Battle smoke: timing-check detail values drifted from the independent board control: cue=%s board=%s expected=%s." % [timing_check, timing_board, {"spell_window": expected_spell_window, "support_payoff": expected_support_payoff, "protection_need": expected_protection_need, "burst_risk": expected_burst_risk, "enemy_pressure": expected_enemy_pressure}])
+		return false
+	for heading in ["Spell window:", "Support payoff:", "Protection need:", "Burst risk:", "Enemy pressure:"]:
+		if cue_tooltip.count(heading) != 1:
+			push_error("Battle smoke: timing-check tooltip must expose %s exactly once: %s." % [heading, cue_tooltip])
+			return false
+	if cue_tooltip.contains("Cast Cast") or String(timing_check.get("next_step", "")).contains("Cast Cast"):
+		push_error("Battle smoke: timing-check next action duplicated the Cast verb: %s." % timing_check)
+		return false
+	if String(snapshot.get("spell_timing_tooltip_text", "")) != expected_full_tooltip:
+		push_error("Battle smoke: timing-check full tooltip no longer preserves the exact cue plus timing board: actual=%s expected=%s." % [snapshot.get("spell_timing_tooltip_text"), expected_full_tooltip])
+		return false
 	if not (
 		timing_text.contains("Spell and Ability Timing")
 		and (
@@ -1660,6 +1691,15 @@ func _assert_battle_timing_check_cue_contract(shell: Node) -> bool:
 			push_error("Battle smoke: timing-check cue leaked internal token %s: %s." % [leak_token, timing_text])
 			return false
 	return true
+
+func _timing_board_value_for_test(board_text: String, prefix: String) -> String:
+	for raw_line in board_text.split("\n", false):
+		var line := String(raw_line).strip_edges()
+		if line.begins_with("- "):
+			line = line.trim_prefix("- ").strip_edges()
+		if line.begins_with(prefix):
+			return line.trim_prefix(prefix).strip_edges()
+	return ""
 
 func _assert_battle_aftermath_transition(source_session) -> bool:
 	var outcome_session = _clone_session(source_session)

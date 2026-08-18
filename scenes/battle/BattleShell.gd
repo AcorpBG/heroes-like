@@ -2603,7 +2603,10 @@ func _battle_timing_check_cue_surface(timing_board: String = "") -> Dictionary:
 		next_step = "Wait for command to return, then recheck spell and order timing."
 	elif ready_spell_label != "":
 		readiness = "Cast"
-		next_step = "Cast %s now if it improves this exchange, or keep mana and use a stack order." % ready_spell_label
+		var ready_spell_subject := ready_spell_label.trim_prefix("Cast ").strip_edges()
+		if ready_spell_subject == "":
+			ready_spell_subject = ready_spell_label
+		next_step = "Cast %s now if it improves this exchange, or keep mana and use a stack order." % ready_spell_subject
 	elif spell_window.to_lower().contains("cast this round") or spell_window.to_lower().contains("unit timing"):
 		readiness = "Order"
 		next_step = "Use the best ready stack order; the commander spell window is not the main lever now."
@@ -2656,7 +2659,7 @@ func _battle_timing_board_line_with_prefix(board_text: String, prefix: String) -
 		if line.begins_with("- "):
 			line = line.substr(2).strip_edges()
 		if line.begins_with(prefix):
-			return line
+			return line.trim_prefix(prefix).strip_edges()
 	return ""
 
 func _battle_first_ready_spell_action() -> Dictionary:
