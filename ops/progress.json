@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed. The older Timing-check detail cue now emits each board heading and the Cast verb once while preserving the exact full timing board, ready-action payload, completed three-line first view, and battle authority. Select the next tracker-approved release-readiness implementation slice.",
+  "currentNotes": "Completed. The shipped Battle post-action Latest and Next rail now truncates at complete words with one Unicode ellipsis while preserving the exact full structured action context, tooltip, event ordering, layout, and battle authority. Select the next tracker-approved release-readiness implementation slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-battle-timing-check-detail-prefix-deduplication-10184",
-  "currentSliceId": "ux-battle-timing-check-detail-prefix-deduplication-10184",
-  "currentSliceNotes": "Completed from exact current live tooltip output. Focused cue parity and Battle compatibility pass; a preexisting animation test race was corrected only in its observer ordering. Timing semantics, payload keyset, first-view layout, and authority remain unchanged.",
+  "currentSlice": "ux-battle-action-context-word-boundary-ellipsis-10184",
+  "currentSliceId": "ux-battle-action-context-word-boundary-ellipsis-10184",
+  "currentSliceNotes": "Completed from actual shipped viewport evidence. Focused post-action rail parity and Battle compatibility pass; the optional headless screenshot attempt was excluded because its renderer returned no viewport image, and the unchanged Board behavior rerun passed. Full context/tooltips and battle authority remain exact.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Battle Timing Check Detail Prefix Deduplication",
-  "currentSliceUpdatedAt": "2026-08-18T04:13:13Z",
+  "currentSliceTitle": "Battle Action Context Whole-Word Ellipsis",
+  "currentSliceUpdatedAt": "2026-08-18T04:50:25Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -90033,6 +90033,59 @@
       "completedAt": "2026-08-18T04:13:13Z",
       "updatedAt": "2026-08-18T04:13:13Z",
       "notes": "Completed the live full-detail copy correction. The Timing-check cue now extracts exact board values, exposes each heading once, removes only the duplicated Cast verb from the next-action subject, and retains the exact ready-action payload, full timing board, and completed three-line first view. Focused Town/Battle runtime, Board navigation, shared keyboard focus, animation, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. The first animation compatibility attempt exposed a preexisting test observer race: it waited before Board construction even though playback starts at set_battle_state; the test-only correction starts the real Board playback before a passive wait and snapshot. Packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null
+    },
+    {
+      "id": "ux-battle-action-context-word-boundary-ellipsis-10184",
+      "title": "Battle Action Context Whole-Word Ellipsis",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Keep the shipped Battle post-action Latest and Next rail readable by replacing mid-token character cuts with one complete-word Unicode ellipsis.",
+      "implementationTargets": [
+        "scenes/battle/BattleShell.gd",
+        "tests/town_battle_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/town_battle_visual_smoke.tscn",
+        "tests/battle_controller_board_navigation_smoke.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/battle_event_animation_state_report.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "The real post-action Event rail equals an independent 38/34-character complete-word control, retains Latest and Next, and contains neither ASCII triple-dot nor a partial trailing word",
+        "The exact full latest action, next step, handoff check, recap, Event tooltip, action tooltips, dispatch ordering, layout, focus/input, and battle/session/save authority remain unchanged",
+        "Focused Battle behavior, compatibility, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "general _short_text, BattleRules, recap, dispatch, status, pressure, timing, combat, AI, balance, content, save/schema, route, or Native RMG changes",
+        "new nodes/panels/rows, label geometry/font/UI scale, layout, art/audio/VFX, tooltip removal, event ordering, focus/input, or controller changes",
+        "packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing, publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "1628c8dc",
+        "source": "scenes/battle/BattleShell.gd:_battle_action_context_surface",
+        "paintedEvidence": ".artifacts/battle_controller_board_navigation_smoke/current_head_release_audit.png",
+        "visibleMidwordCut": "highlig...",
+        "latestBudget": 38,
+        "nextBudget": 34,
+        "priorSurfaceOwner": "battle-action-context-strip-10184"
+      },
+      "createdAt": "2026-08-18T04:37:02Z",
+      "startedAt": "2026-08-18T04:37:02Z",
+      "completedAt": "2026-08-18T04:50:25Z",
+      "updatedAt": "2026-08-18T04:50:25Z",
+      "notes": "Completed the action-context-only rendering correction. The existing 38/34-character Latest/Next segments now use one Unicode ellipsis at the last complete word; the general character slicer, exact full action context, tooltip, dispatch ordering, geometry, focus/input, and battle/session/save authority remain unchanged. Focused Town/Battle post-action runtime, Board/controller, shared keyboard focus, animation, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. An optional headless screenshot attempt returned no viewport image and was excluded before an unchanged Board behavior rerun passed. Packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
       "blockedReason": null
     }

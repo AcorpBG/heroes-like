@@ -3680,11 +3680,11 @@ func _battle_action_context_surface(dispatch_text: String = "", action_confirmat
 	if next_step == "":
 		next_step = "Choose the next legal battle order."
 	var handoff_check := _battle_action_handoff_check(next_step, action_confirmation)
-	var visible := "Latest: %s" % _short_text(_strip_sentence(latest_action), 38)
+	var visible := "Latest: %s" % _battle_action_context_word_text(latest_action, 38)
 	if next_step != "":
 		visible = "%s | Next: %s" % [
 			visible,
-			_short_text(_strip_sentence(next_step).trim_suffix("."), 34),
+			_battle_action_context_word_text(next_step.trim_suffix("."), 34),
 		]
 	var tooltip := _join_tooltip_sections([
 		"Battle Turn Context\n- Latest action: %s\n- Next practical step: %s\n- Handoff check: %s" % [
@@ -3704,6 +3704,20 @@ func _battle_action_context_surface(dispatch_text: String = "", action_confirmat
 		"handoff_check": handoff_check,
 		"source": "post_action_recap",
 	}
+
+func _battle_action_context_word_text(text: String, max_chars: int) -> String:
+	var cleaned := _strip_sentence(text)
+	if max_chars <= 0:
+		return ""
+	if cleaned.length() <= max_chars:
+		return cleaned
+	if max_chars == 1:
+		return "…"
+	var prefix := cleaned.left(max_chars - 1).strip_edges()
+	var boundary := prefix.rfind(" ")
+	if boundary <= 0:
+		return "…"
+	return "%s…" % prefix.left(boundary).strip_edges()
 
 func _battle_action_handoff_check(next_step: String, action_confirmation: Dictionary = {}) -> String:
 	var cleaned_next := _strip_sentence(next_step).trim_suffix(".")

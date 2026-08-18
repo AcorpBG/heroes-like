@@ -21583,6 +21583,90 @@ def validate_battle_deterministic_rng_state(errors: list[str]) -> None:
             ensure(required_text in contract_text, errors, f"Deterministic battle RNG contract is missing required text: {required_text}")
 
 
+def validate_battle_action_context_word_boundary_ellipsis(errors: list[str]) -> None:
+    def function_block(text: str, name: str) -> str:
+        match = re.search(rf"func {re.escape(name)}\([^\n]*\)(?: -> [^:]+)?:\n(?P<body>.*?)(?=\nfunc |\Z)", text, re.S)
+        return match.group("body") if match is not None else ""
+
+    smoke_path = ROOT / "tests" / "town_battle_visual_smoke.gd"
+    for path in (BATTLE_SCRIPT_PATH, smoke_path):
+        ensure(path.exists(), errors, f"Missing Battle action-context word-boundary owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in (BATTLE_SCRIPT_PATH, smoke_path)):
+        return
+
+    shell_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
+    smoke_text = smoke_path.read_text(encoding="utf-8")
+    helper = function_block(shell_text, "_battle_action_context_word_text")
+    surface = function_block(shell_text, "_battle_action_context_surface")
+    general_short = function_block(shell_text, "_short_text")
+    ensure(helper and surface and general_short, errors, "Could not isolate Battle action-context whole-word production boundary")
+    if helper:
+        helper_order = tuple(helper.find(token) for token in (
+            "var cleaned := _strip_sentence(text)",
+            "if max_chars <= 0:",
+            'return ""',
+            "if cleaned.length() <= max_chars:",
+            "return cleaned",
+            "if max_chars == 1:",
+            'return "…"',
+            "var prefix := cleaned.left(max_chars - 1).strip_edges()",
+            'var boundary := prefix.rfind(" ")',
+            "if boundary <= 0:",
+            'return "%s…" % prefix.left(boundary).strip_edges()',
+        ))
+        ensure(all(index >= 0 for index in helper_order) and list(helper_order) == sorted(helper_order), errors, "Battle action-context compactor must normalize, preserve fitting text, fail closed at bounds, and return the last complete word plus one Unicode ellipsis")
+        for forbidden in ('"..."', "_short_text", "Label", "Control", "font", "size.x", "tooltip", "sort(", "erase(", "await ", "call_deferred"):
+            ensure(forbidden not in helper, errors, f"Battle action-context compactor must remain display-segment-only and avoid {forbidden}")
+    if surface:
+        surface_order = tuple(surface.find(token) for token in (
+            'var visible := "Latest: %s" % _battle_action_context_word_text(latest_action, 38)',
+            'visible = "%s | Next: %s" % [',
+            '_battle_action_context_word_text(next_step.trim_suffix("."), 34)',
+            '"tooltip_text": tooltip',
+            '"latest_action": latest_action',
+            '"next_step": next_step',
+            '"handoff_check": handoff_check',
+            '"source": "post_action_recap"',
+        ))
+        ensure(all(index >= 0 for index in surface_order) and list(surface_order) == sorted(surface_order), errors, "Battle action-context surface must compact only Latest/Next before retaining the exact full tooltip and structured authority")
+        ensure(surface.count("_battle_action_context_word_text(") == 2 and "_short_text(" not in surface, errors, "Battle action-context surface must use its whole-word helper exactly twice and never the general character slicer")
+        for forbidden in ("_last_action_recap_payload.erase", "_last_action_recap_payload[", "BattleRules.", "sort(", "call_deferred", "await "):
+            ensure(forbidden not in surface, errors, f"Battle action-context rendering must not mutate or broaden semantics via {forbidden}")
+    if general_short:
+        ensure('return "%s..." % cleaned.substr(0, max_chars - 1).strip_edges()' in general_short, errors, "General Battle _short_text behavior must remain unchanged outside the action-context slice")
+
+    control = function_block(smoke_text, "_battle_action_context_word_text_control")
+    focused = function_block(smoke_text, "_assert_battle_post_action_status_recap_contract")
+    ensure(control and focused, errors, "Focused Town/Battle smoke must own an independent action-context word-boundary control and live comparison")
+    if control:
+        for token in ('text.strip_edges().replace("\\n", " ")', 'normalized = normalized.replace("  ", " ")', "if max_chars <= 0:", "if normalized.length() <= max_chars:", "if max_chars == 1:", "var prefix := normalized.left(max_chars - 1).strip_edges()", 'var boundary := prefix.rfind(" ")', 'return "%s…" % prefix.left(boundary).strip_edges()'):
+            ensure(token in control, errors, f"Independent Battle action-context control is missing exact token: {token}")
+        for forbidden in ("shell", "BattleShell", "_battle_action_context_word_text", "_short_text", "Label", "Control", "sort(", "erase("):
+            ensure(forbidden not in control, errors, f"Independent Battle action-context control must avoid production/layout dependency: {forbidden}")
+    if focused:
+        focused_order = tuple(focused.find(token) for token in (
+            'var latest_action := String(context.get("latest_action", ""))',
+            'var next_step := String(context.get("next_step", ""))',
+            'var expected_visible := "Latest: %s | Next: %s"',
+            "_battle_action_context_word_text_control(latest_action, 38)",
+            '_battle_action_context_word_text_control(next_step.trim_suffix("."), 34)',
+            'var actual_visible := String(context.get("visible_text", ""))',
+            'var event_first_line := String(snapshot.get("event_visible_text", "")).get_slice("\\n", 0)',
+            'latest_action != String(response_recap.get("happened", ""))',
+            "actual_visible != expected_visible",
+            "event_first_line != expected_visible",
+            'actual_visible.contains("...")',
+            'not actual_visible.contains("…")',
+            'not String(snapshot.get("event_tooltip_text", "")).contains(latest_action)',
+            '_battle_action_context_word_text_control("Ready now", 9)',
+            '_battle_action_context_word_text_control("overflow", 1)',
+            '_battle_action_context_word_text_control("unbrokenword", 6)',
+        ))
+        ensure(all(index >= 0 for index in focused_order) and list(focused_order) == sorted(focused_order), errors, "Focused Battle action-context proof must derive the independent visible line, compare the live rail, retain full tooltip authority, then exercise fit and fail-closed controls")
+        for forbidden in ('shell.call("_battle_action_context', "set_text", ".text =", "sort(", "erase("):
+            ensure(forbidden not in focused, errors, f"Focused Battle action-context proof must remain public/read-only and avoid {forbidden}")
+
+
 def validate_battle_info_tab_controller_navigation(errors: list[str]) -> None:
     active_play_focus_path = ROOT / "tests" / "active_play_keyboard_focus_smoke.gd"
     required_paths = (BATTLE_SCRIPT_PATH, BATTLE_SCENE_PATH, active_play_focus_path)
@@ -49858,6 +49942,7 @@ def main() -> int:
     validate_native_screen_reader_semantics(errors)
     validate_battle_layout_detached_route_compatibility(errors)
     validate_battle_board_cursor_semantics(errors)
+    validate_battle_action_context_word_boundary_ellipsis(errors)
     validate_battle_order_tab_compact_initiative_summary(errors)
     validate_battle_info_tab_header_compact_fit(errors)
     validate_battle_focus_spell_tab_body_containment(errors)
