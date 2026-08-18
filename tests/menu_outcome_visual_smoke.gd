@@ -1032,6 +1032,8 @@ func _assert_editor_utility_frame_at_supported_widths(shell: Control, logo_panel
 			return false
 		var viewport_size := shell.size
 		var physical_size := DisplayServer.window_get_size()
+		var physical_size_exact: bool = physical_size == requested_size \
+			or (DisplayServer.get_name() == "headless" and physical_size == Vector2i.ZERO)
 		var root_size := get_tree().root.size
 		var content_scale_size := get_tree().root.content_scale_size
 		var settings_rect := settings_button.get_global_rect()
@@ -1040,7 +1042,7 @@ func _assert_editor_utility_frame_at_supported_widths(shell: Control, logo_panel
 		var logo_rect := logo_panel.get_global_rect()
 		var title_rect := public_title.get_global_rect()
 		var crest_rect := frontier_crest.get_global_rect()
-		if physical_size != requested_size \
+		if not physical_size_exact \
 				or get_window().size != requested_size \
 				or root_size != requested_size \
 				or content_scale_size != requested_size \

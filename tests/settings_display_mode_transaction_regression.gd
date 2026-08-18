@@ -187,9 +187,14 @@ func _assert_clamped_preview(snapshot: Dictionary) -> bool:
 
 func _assert_runtime_size_authority(expected: Vector2i, label: String) -> bool:
 	var root := get_tree().root
+	var native_size := DisplayServer.window_get_size()
+	var native_size_exact := native_size == expected \
+		or (DisplayServer.get_name() == "headless" and native_size == Vector2i.ZERO)
 	var actual := {
 		"expected": expected,
-		"native": DisplayServer.window_get_size(),
+		"native": native_size,
+		"native_size_exact": native_size_exact,
+		"display_server": DisplayServer.get_name(),
 		"window": get_window().size,
 		"root": root.size if root != null else Vector2i.ZERO,
 		"content_scale": root.content_scale_size if root != null else Vector2i.ZERO,
@@ -197,7 +202,7 @@ func _assert_runtime_size_authority(expected: Vector2i, label: String) -> bool:
 	return _expect(
 		expected.x > 0 \
 			and expected.y > 0 \
-			and actual.get("native", Vector2i.ZERO) == expected \
+			and native_size_exact \
 			and actual.get("window", Vector2i.ZERO) == expected \
 			and actual.get("root", Vector2i.ZERO) == expected \
 			and actual.get("content_scale", Vector2i.ZERO) == expected,

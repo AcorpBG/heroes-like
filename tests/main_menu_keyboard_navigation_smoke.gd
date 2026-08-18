@@ -459,8 +459,6 @@ func _exercise_display_change_exclusive_case(case_data: Dictionary) -> bool:
 	var case_id := String(case_data.get("id", "display_change_exclusive"))
 	var kind := String(case_data.get("kind", "resolution"))
 	var width := int(case_data.get("width", 1280))
-	get_window().size = Vector2i(width, 720)
-	await _settle()
 	var layout_host := Control.new()
 	layout_host.name = "ExclusiveDisplayChangeHost_%s" % case_id
 	layout_host.size = Vector2(float(width), 720.0)
@@ -478,6 +476,26 @@ func _exercise_display_change_exclusive_case(case_data: Dictionary) -> bool:
 	parent_probe.pressed.connect(_on_display_change_parent_probe_pressed.bind(case_id))
 	layout_host.add_child(parent_probe)
 	await _settle()
+	var display_fixture := SettingsService.ensure_settings().duplicate(true)
+	display_fixture["presentation"]["mode"] = SettingsService.PRESENTATION_WINDOWED
+	display_fixture["presentation"]["resolution"] = "1280x720" if width == 1280 else "1920x1080"
+	SettingsService.settings = display_fixture
+	SettingsService.apply_settings()
+	var display_fixture_path := SettingsService.save_settings()
+	await _settle()
+	var expected_runtime_size := Vector2i(1280, 720) if width == 1280 else Vector2i(1920, 1080)
+	var root_window := get_tree().root
+	var native_size := DisplayServer.window_get_size()
+	var runtime_fixture_checks := {
+		"settings_file_exact": display_fixture_path == SettingsService.SETTINGS_FILE,
+		"native_size_exact": native_size == expected_runtime_size \
+			or (DisplayServer.get_name() == "headless" and native_size == Vector2i.ZERO),
+		"window_size_exact": get_window().size == expected_runtime_size,
+		"root_size_exact": root_window != null and root_window.size == expected_runtime_size,
+		"content_scale_exact": root_window != null and root_window.content_scale_size == expected_runtime_size,
+	}
+	if not _checks_exact(runtime_fixture_checks):
+		return _fail_display_change_case(layout_host, "%s could not establish its exact runtime display fixture: %s." % [case_id, JSON.stringify(runtime_fixture_checks)])
 	shell.call("validation_open_settings_stage")
 	await _settle()
 	var origin_name := &"PresentationModePicker" if kind == "mode" else &"ResolutionPicker"

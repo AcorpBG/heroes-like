@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed with live Battle rendering behavior: painted Board token captions retain fitting names and end genuine multi-word overflow at a complete word with one Unicode ellipsis. Full tooltip/live identity, cursor/footer labels, initiative chips, geometry, input, and battle authority remain exact; focused, visual, compatibility, static/editor, and bounded Linux/Windows gates are green.",
+  "currentNotes": "Completed with live runtime behavior: display apply synchronizes native/root/content-scale size, rollback captures live root authority, headless unavailable native geometry is isolated, and X11 remains exact. Focused, Main Menu, compatibility, static/editor, and bounded Linux/Windows gates are green.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-battle-board-stack-caption-word-boundary-ellipsis-10184",
-  "currentSliceId": "ux-battle-board-stack-caption-word-boundary-ellipsis-10184",
-  "currentSliceNotes": "Only painted BattleBoard token captions changed; full stack identity in tooltip/live context, the separate cursor/footer label, token geometry, input, and battle authority remain exact.",
+  "currentSlice": "settings-runtime-native-window-size-authority-correction-10184",
+  "currentSliceId": "settings-runtime-native-window-size-authority-correction-10184",
+  "currentSliceNotes": "Native/root/content-scale sizing and live root rollback authority now remain exact across display transactions; headless 0x0 is isolated while X11 native equality remains mandatory.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Battle Board Stack Caption Word-Boundary Ellipsis",
-  "currentSliceUpdatedAt": "2026-08-18T11:49:05Z",
+  "currentSliceTitle": "Runtime Native Window Size Authority Correction",
+  "currentSliceUpdatedAt": "2026-08-18T13:57:24Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -90196,6 +90196,48 @@
       "blockedReason": null
     },
     {
+      "id": "settings-runtime-native-window-size-authority-correction-10184",
+      "title": "Runtime Native Window Size Authority Correction",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Keep native DisplayServer, root Window, and root content-scale sizes exact across presentation apply and rollback so Revert cannot restore a stale 0x0/64x64 native authority.",
+      "implementationTargets": ["scripts/autoload/SettingsService.gd", "tests/settings_display_mode_transaction_regression.gd", "tests/main_menu_keyboard_navigation_smoke.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "testOwners": ["tests/settings_display_mode_transaction_regression.tscn", "tests/main_menu_keyboard_navigation_smoke.tscn", "tests/active_play_settings_runtime_report.tscn", "tests/menu_outcome_visual_smoke.tscn", "tests/core_systems_regression_smoke.tscn", "tests/packaging_linux_export_smoke.py", "tests/packaging_windows_export_smoke.py", "tests/validate_repo.py"],
+      "completionCriteria": ["Native/root/content-scale size agreement is exact at 1280x720 and throughout preview, Keep/reload, Revert, replacement, timeout, clamp, and save-failure rollback", "The unchanged Main Menu display matrix blocks parent input while visible and restores the identical parent probe exactly once after Revert at 1280/1920 with exact transaction/settings/file/focus/unrelated authority", "Focused, compatibility, core, repository/editor, Linux X11 and bounded official Linux/Windows export-startup gates pass"],
+      "nonGoals": ["presentation defaults/options, monitor/clamp/timeout/transaction/persistence/focus/dialog/layout/UI-scale policy", "renderer, gameplay, content, balance, AI, save schema, maps, or Native RMG", "packaged display interaction, native hardware/controller certification, AT-SPI/UIA, signing/publication, whole-game, or release-readiness claims"],
+      "baseline": {"head": "e3ee753a", "focusedArtifacts": ["/tmp/heroes-settings-display-current-head.cvs2kL", "/tmp/heroes-settings-display-exact-command.GEDRrm"], "focusedFailure": "native 0x0 while root/window/content scale are 1280x720", "inputDiagnostic": "/tmp/heroes-main-menu-probe-runtime.zaEdok", "revertFailure": "stale native 64x64 restored to root, leaving parent probe outside viewport", "negativeControls": ["exclusive release/re-arm", "canvas-transformed click coordinates"]},
+      "createdAt": "2026-08-18T12:49:23Z",
+      "startedAt": "2026-08-18T12:49:23Z",
+      "updatedAt": "2026-08-18T13:57:24Z",
+      "completedAt": "2026-08-18T13:57:24Z",
+      "notes": "Completed with live runtime behavior, not report-only work. The shared setter updates native DisplayServer, root Window, and content-scale sizes; rollback capture uses live root authority with a native fallback only when no root exists. Headless unavailable 0x0 native geometry is accepted only on the headless DisplayServer, while X11 retains exact native equality. Focused transaction, full 1280/1920 Main Menu, active Settings, Restore Defaults, menu/outcome visual, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. Packaged display interaction and broader release claims remain unclaimed.",
+      "completionEvidence": ["/tmp/heroes-settings-runtime-authority-focused.ZsKduv", "/tmp/heroes-settings-runtime-size-x11.CfLcb1", "/tmp/heroes-main-menu-runtime-authority-final.ZoUWVW", "/tmp/heroes-runtime-size-compat.tVyCZK", "/tmp/heroes-menu-outcome-runtime-size-final.B0IZvv", "/tmp/heroes-runtime-size-core.hnnYGS", "/tmp/heroes-runtime-size-final-audit.uCkXdM", "/tmp/heroes-runtime-size-linux-package.IW7fqC", "/tmp/heroes-runtime-size-windows-package.3xmzPI"],
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader release-readiness gaps remain.",
+      "blockedReason": null
+    },
+    {
+      "id": "ux-main-menu-display-change-exclusive-release-10184",
+      "title": "Main Menu Display-Change Exclusive Release",
+      "status": "superseded",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Release exclusive Window ownership when a display preview finishes so parent pointer input resumes immediately, while retaining exclusive input containment for every visible preview.",
+      "implementationTargets": ["scenes/menus/MainMenu.gd", "tests/main_menu_keyboard_navigation_smoke.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "testOwners": ["tests/main_menu_keyboard_navigation_smoke.tscn", "tests/settings_display_transaction_regression.tscn", "tests/settings_restore_defaults_regression.tscn", "tests/core_systems_regression_smoke.tscn", "tests/packaging_linux_export_smoke.py", "tests/packaging_windows_export_smoke.py", "tests/validate_repo.py"],
+      "completionCriteria": ["1280/1920 mode/resolution previews block parent input while visible, release exclusivity after Keep/Revert, and allow the identical parent probe exactly once afterward", "Every later preview re-arms exclusivity while physical input, stale-generation/fingerprint, settings artifacts, transaction, focus, and unrelated authority remain exact", "Focused, compatibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass"],
+      "nonGoals": ["display options, timeout, transaction schema/paths, persistence, focus target, layout, copy/buttons, or other destructive-dialog changes", "gameplay, content, balance, AI, save schema, renderer policy, maps, or Native RMG changes", "packaged display interaction, native monitor/controller certification, AT-SPI/UIA, signing/publication, whole-game, or release-readiness claims"],
+      "baseline": {"head": "e3ee753a", "artifact": "/tmp/heroes-next-audit-main-menu.pf04m5", "case": "display_mode_1280", "exactFailure": "parent probe was not actionable after Revert", "greenFacts": ["background_authority_exact", "dialog_transaction_exact"], "redFact": "identical_parent_positive_once", "sourceBoundary": "_finish_display_change_ui hides but does not release exclusive; _show_display_change_confirmation does not explicitly re-arm"},
+      "createdAt": "2026-08-18T12:04:34Z",
+      "startedAt": "2026-08-18T12:04:34Z",
+      "updatedAt": "2026-08-18T12:38:00Z",
+      "notes": "Superseded after exact production and observer controls reproduced the identical parent-probe failure: releasing/re-arming exclusivity in /tmp/heroes-display-exclusive-focused.i3Xkvu and using canvas-transformed root coordinates in /tmp/heroes-main-menu-coordinate-runtime.o3vhOh. MainMenu production and the test input helper remain unchanged; no shipped behavior defect is established.",
+      "remainingWork": "None for this rejected production hypothesis. A smaller post-Revert input-path diagnostic is required before any different source-backed slice can be selected from this failure.",
+      "blockedReason": null
+    },
+    {
       "id": "ux-battle-board-stack-caption-word-boundary-ellipsis-10184",
       "title": "Battle Board Stack Caption Word-Boundary Ellipsis",
       "status": "completed",
@@ -90778,10 +90820,10 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The BattleBoard stack-caption word-boundary ellipsis slice is completed with live painted complete-word overflow, exact full tooltip/live identity, focused/visual/compatibility/static evidence, and bounded Linux/Windows export-startup proof. The game is not release-ready.",
+  "summary": "The runtime native-window size authority correction is completed with live apply/rollback behavior, strict X11 native equality, isolated headless compatibility, full Main Menu/compatibility/static evidence, and bounded Linux/Windows export-startup proof. The game is not release-ready.",
   "status": "completed",
   "taskId": "10184",
-  "updatedAt": "2026-08-18T11:49:05Z",
+  "updatedAt": "2026-08-18T13:57:24Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

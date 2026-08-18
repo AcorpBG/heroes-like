@@ -25,6 +25,8 @@ Rules:
 Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence.
+- Completed implementation slice: `settings-runtime-native-window-size-authority-correction-10184`. Runtime display capture now uses the live root Window size while the shared setter synchronizes native, root, and content-scale authorities. Headless `0x0` native geometry is recognized only on the headless DisplayServer; X11 remains exact. Display transaction, full Main Menu, active Settings, Restore Defaults, menu/outcome visual, core, repository/editor, official Linux export/headless startup, and Windows export/fresh-Wine startup gates pass. Packaged display interaction and broader release claims remain unclaimed.
+  id: `settings-runtime-native-window-size-authority-correction-10184`
 - Completed implementation slice: `ux-battle-board-stack-caption-word-boundary-ellipsis-10184`. Painted BattleBoard token captions now retain fitting full names and end overflowing multi-word names at a complete word with one Unicode ellipsis, replacing ambiguous `Blackbranch C` and `Mudglass Slin` cuts. Existing full-name occupied-stack tooltips and polite cursor context, the separate cursor/footer label, initiative chips, token geometry, input, and battle authority remain exact. Focused 1280/1920 Board proof, fresh painted pixels, broad Battle visual, accessibility, animation, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction and broader release claims remain unclaimed.
   id: `ux-battle-board-stack-caption-word-boundary-ellipsis-10184`
 - Completed implementation slice: `ux-battle-action-guide-word-boundary-ellipsis-10184`. The compact Battle ActionGuide now fits each existing source line through the established Battle-local whole-word Unicode-ellipsis policy, so the fresh 1280x720/130% painted Position check ends after the complete phrase `(1 step)…` instead of cutting the next word as `t...`. Exact source order and enriched tooltip remain authoritative; compact retains two guide lines and wide retains three through the real 1280->1920->1280 refit. Focused runtime, painted pixels, Board navigation, shared focus, accessibility, core, authoritative 1280/1920 routed layout, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
@@ -7631,6 +7633,66 @@ Completion evidence:
 - `/tmp/heroes-board-caption-rerun.hSrfHw` exits naturally with the exact Board PASS marker, independently proving every painted caption against its full live stack name, full-name tooltip, fitting-name control, genuine overflow, and unchanged Board authority at 1280 and 1920;
 - broad Town/Battle visual, accessibility semantics, battle animation, and core owners exit naturally green with no selected diagnostics; the immediately preceding authoritative 1280/1920 routed layout gates remain applicable because caption drawing does not mutate any Control geometry;
 - repository validation, Python compilation, JSON/diff checks, exact editor parses, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. These remain bounded export/startup claims only.
+
+## Superseded Slice: Main Menu Display-Change Exclusive Release
+
+id: `ux-main-menu-display-change-exclusive-release-10184`
+
+Status: superseded.
+
+Implementation boundary:
+- keep Display Change exclusive while the Keep/Revert preview is visible, then release its exclusive Window ownership immediately before hiding on Keep, Revert, timeout, menu exit, or validation cleanup;
+- re-arm exclusivity before every subsequent popup so background pointer input remains blocked throughout each active transaction;
+- preserve candidate/runtime/settings/file transaction authority, countdown, copy, Keep/Revert actions, origin focus restoration, Settings dock/tab, and stale-generation/fingerprint guards.
+
+Completion criteria:
+- the existing 1280/1920 mode/resolution matrix proves background mouse input blocked while each preview is visible, exclusivity false after Keep/Revert, and the identical parent probe actionable exactly once immediately afterward;
+- later previews re-arm exclusive ownership and retain exact physical keyboard/controller/mouse Keep/Revert, stale replacement, transaction paths/results, settings artifacts, focus, and unrelated authority;
+- focused Main Menu, display/settings compatibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no display mode/resolution option, timeout, transaction schema/path, settings persistence, focus target, menu layout, dialog text/button, or other destructive-dialog change;
+- no gameplay, content, balance, AI, save schema, renderer policy, map, or Native RMG change;
+- no packaged display interaction, native monitor/controller certification, AT-SPI/UIA, signing/publication, whole-game, or release-readiness claim.
+
+Rejection evidence:
+- pushed HEAD `e3ee753a`; `/tmp/heroes-next-audit-main-menu.pf04m5` exits on `display_mode_1280 parent probe was not actionable after Revert` after 693s;
+- failure decomposition is exact: background authority and dialog transaction remain unchanged, while only `identical_parent_positive_once` is false;
+- an exact production probe that released exclusivity before hide and re-armed it before popup produced the identical failure in `/tmp/heroes-display-exclusive-focused.i3Xkvu`; the production hypothesis is disproven and `MainMenu.gd` remains unchanged;
+- a second exact test-only probe that derived root input geometry through the live canvas transform also reproduced the identical failure in `/tmp/heroes-main-menu-coordinate-runtime.o3vhOh`; that observer hypothesis is likewise rejected and the test helper remains unchanged;
+- no Main Menu exclusivity defect is established. The smaller input-path diagnostic instead identified the separate shared runtime-size rollback regression completed below.
+
+## Completed Slice: Runtime Native Window Size Authority Correction
+
+id: `settings-runtime-native-window-size-authority-correction-10184`
+
+Status: completed.
+
+Implementation boundary:
+- make the existing `SettingsService._set_runtime_window_size` update the native DisplayServer window, root Window size, and root content-scale size for every display apply and rollback;
+- preserve the existing clamped size, mode, borderless, position, screen, preview/Keep/Revert/timeout/failure transaction, settings bytes, and input/focus policy;
+- correct the Main Menu display fixture to establish its 1280/1920 baseline through the public SettingsService apply boundary after shell startup and before preview authority capture.
+
+Completion criteria:
+- the focused display transaction proves exact native/root/content-scale size agreement at 1280x720 and across preview, Keep/reload, Revert, replacement, timeout, clamping, and save-failure rollback;
+- the unchanged Main Menu exclusive-parent matrix proves each visible preview blocks background input and the identical parent probe is actionable exactly once after Revert at 1280/1920, with exact transaction/settings/file/focus/unrelated authority;
+- active Settings, menu visual, core, repository/editor, Linux X11 plus official Linux export/startup, and Windows export/fresh-Wine startup gates pass with bounded platform claims.
+
+Non-goals:
+- no presentation default/option, monitor policy, clamp, timeout, transaction schema/path, persistence version, focus ordering, dialog policy/copy/layout, UI scale, renderer, gameplay, content, balance, AI, save schema, map, or Native RMG change;
+- no packaged display interaction, multi-monitor/native hardware/controller certification, AT-SPI/UIA, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- pushed HEAD `e3ee753a`; `/tmp/heroes-settings-display-current-head.cvs2kL` and `/tmp/heroes-settings-display-exact-command.GEDRrm` both fail the focused owner because native size is 0x0 while root Window/content scale are 1280x720;
+- `/tmp/heroes-main-menu-probe-runtime.zaEdok` proves Revert restores the root to stale 64x64 native authority, leaving the unchanged parent probe center outside the visible viewport;
+- releasing dialog exclusivity and changing click-coordinate transforms were independent negative controls, so this correction reopens only the completed shared runtime-size synchronization boundary.
+
+Completion evidence:
+- `SettingsService._set_runtime_window_size` updates the native DisplayServer size before synchronizing root Window and content scale, while rollback capture uses the live root size and retains a detached native fallback only when no root exists;
+- `/tmp/heroes-settings-runtime-authority-focused.ZsKduv` and X11 `/tmp/heroes-settings-runtime-size-x11.CfLcb1` pass the complete display transaction, with the headless 0x0 exception isolated to `DisplayServer.get_name() == "headless"` and exact native equality retained on X11;
+- `/tmp/heroes-main-menu-runtime-authority-final.ZoUWVW` exits naturally rc0 after 1070 seconds with the exact Main Menu PASS marker across 1280/1920 mode/resolution, blocked visible-dialog parent input, post-Revert input, stale replacement, Keep, focus, settings/file, and unrelated authority;
+- active Settings and Restore Defaults pass in `/tmp/heroes-runtime-size-compat.tVyCZK`; menu/outcome visual passes in `/tmp/heroes-menu-outcome-runtime-size-final.B0IZvv`; core passes in `/tmp/heroes-runtime-size-core.hnnYGS`;
+- repository validation, Python compilation, JSON/diff checks, exact/generic editor parses pass in `/tmp/heroes-runtime-size-final-audit.uCkXdM`; official Linux export/headless startup `/tmp/heroes-runtime-size-linux-package.IW7fqC` and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup `/tmp/heroes-runtime-size-windows-package.3xmzPI` are green. These are bounded export/startup claims only.
 
 ## Completed Slice: Battle Action Guide Word-Boundary Ellipsis
 
