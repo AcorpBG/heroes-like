@@ -220,7 +220,22 @@ func _check_battle_settings() -> bool:
 		return false
 	if not _require(int(_dialog_closed_counts.get("Battle", 0)) == close_count_before + 1, "Battle Back did not emit exactly one modal closed signal."):
 		return false
-	if not _require(_focus_name() == "Settings", "Battle controller/keyboard Back did not restore focus to the Settings command."):
+	var battle_settings_control := shell.get_node_or_null("%Settings") as Control
+	var battle_close_focus_owner := get_viewport().gui_get_focus_owner() as Control
+	var battle_focus_return_exact: bool = (
+		battle_settings_control != null
+		and (
+			(battle_settings_control.is_visible_in_tree() and battle_close_focus_owner == battle_settings_control)
+			or (
+				not battle_settings_control.is_visible_in_tree()
+				and battle_close_focus_owner != null
+				and shell.is_ancestor_of(battle_close_focus_owner)
+				and battle_close_focus_owner.is_visible_in_tree()
+				and battle_close_focus_owner.focus_mode != Control.FOCUS_NONE
+			)
+		)
+	)
+	if not _require(battle_focus_return_exact, "Battle controller/keyboard Back did not restore a visible Battle focus target after the compact Settings origin changed visibility: owner=%s settings_visible=%s." % [_focus_name(), battle_settings_control.is_visible_in_tree() if battle_settings_control != null else false]):
 		return false
 	shell.queue_free()
 	await _settle()

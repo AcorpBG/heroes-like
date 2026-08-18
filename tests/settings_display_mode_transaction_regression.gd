@@ -26,6 +26,8 @@ func _run() -> void:
 		_fail("Could not persist the committed display fixture.")
 		return
 	await _settle()
+	if not _assert_runtime_size_authority(Vector2i(1280, 720), "Committed fixture"):
+		return
 
 	var committed := SettingsService.settings.duplicate(true)
 	var committed_file := _file_state(SettingsService.SETTINGS_FILE)
@@ -179,7 +181,29 @@ func _assert_clamped_preview(snapshot: Dictionary) -> bool:
 		)
 		if not _expect(applied == expected, "Windowed/borderless preview did not uniformly clamp to the usable monitor rectangle", {"requested": requested, "applied": applied, "usable": usable, "expected": expected}):
 			return false
+	if not _assert_runtime_size_authority(applied, "Clamped preview"):
+		return false
 	return true
+
+func _assert_runtime_size_authority(expected: Vector2i, label: String) -> bool:
+	var root := get_tree().root
+	var actual := {
+		"expected": expected,
+		"native": DisplayServer.window_get_size(),
+		"window": get_window().size,
+		"root": root.size if root != null else Vector2i.ZERO,
+		"content_scale": root.content_scale_size if root != null else Vector2i.ZERO,
+	}
+	return _expect(
+		expected.x > 0 \
+			and expected.y > 0 \
+			and actual.get("native", Vector2i.ZERO) == expected \
+			and actual.get("window", Vector2i.ZERO) == expected \
+			and actual.get("root", Vector2i.ZERO) == expected \
+			and actual.get("content_scale", Vector2i.ZERO) == expected,
+		"%s left the native window, root Window, and canvas size out of sync" % label,
+		actual
+	)
 
 func _current_runtime_snapshot() -> Dictionary:
 	return SettingsService.display_change_snapshot().get("current_runtime", {}).duplicate(true)

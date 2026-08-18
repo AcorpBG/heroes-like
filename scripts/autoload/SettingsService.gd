@@ -1219,18 +1219,26 @@ func _apply_display_candidate(mode_id: String, requested_size: Vector2i) -> Vect
 	DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, false)
 	match normalized_mode:
 		PRESENTATION_FULLSCREEN:
-			DisplayServer.window_set_size(applied_size)
+			_set_runtime_window_size(applied_size)
 			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
 		PRESENTATION_BORDERLESS:
 			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
-			DisplayServer.window_set_size(applied_size)
+			_set_runtime_window_size(applied_size)
 			_center_window(applied_size)
 			DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, true)
 		_:
 			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
-			DisplayServer.window_set_size(applied_size)
+			_set_runtime_window_size(applied_size)
 			_center_window(applied_size)
 	return applied_size
+
+func _set_runtime_window_size(size: Vector2i) -> void:
+	var root := get_tree().root
+	if root != null:
+		root.size = size
+		root.content_scale_size = size
+		return
+	DisplayServer.window_set_size(size)
 
 func _apply_audio_settings() -> void:
 	_apply_audio_bus("Master", master_volume_percent(), 0)
@@ -1409,7 +1417,7 @@ func _restore_runtime_display_state(runtime_state: Variant) -> void:
 	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
 	if screen >= 0 and screen < DisplayServer.get_screen_count():
 		DisplayServer.window_set_current_screen(screen)
-	DisplayServer.window_set_size(size)
+	_set_runtime_window_size(size)
 	DisplayServer.window_set_position(position)
 	DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, bool(previous.get("borderless", false)))
 	if mode != DisplayServer.WINDOW_MODE_WINDOWED:

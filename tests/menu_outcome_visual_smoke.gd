@@ -762,29 +762,37 @@ func _run_main_menu_smoke() -> bool:
 		push_error("Main menu smoke: Reduce Repetitive Sounds could not be enabled independently.")
 		get_tree().quit(1)
 		return false
-	shell.call("validation_reveal_reduced_repetitive_sounds")
-	await get_tree().process_frame
+	if not await _focus_settings_scroll_control(shell, &"ReduceRepetitiveSoundsToggle"):
+		push_error("Main menu smoke: Reduce Repetitive Sounds could not receive focus in the max-scale settings scroll.")
+		get_tree().quit(1)
+		return false
 	settings_snapshot = shell.call("validation_snapshot")
 	if not bool(settings_snapshot.get("reduce_repetitive_sounds_visible_in_scroll", false)):
 		push_error("Main menu smoke: Reduce Repetitive Sounds is not reachable in the max-scale settings scroll: %s." % settings_snapshot)
 		get_tree().quit(1)
 		return false
-	shell.call("validation_reveal_reduced_flashes")
-	await get_tree().process_frame
+	if not await _focus_settings_scroll_control(shell, &"ReduceFlashesToggle"):
+		push_error("Main menu smoke: Reduce Flashes could not receive focus in the max-scale settings scroll.")
+		get_tree().quit(1)
+		return false
 	settings_snapshot = shell.call("validation_snapshot")
 	if not bool(settings_snapshot.get("reduce_flashes_visible_in_scroll", false)):
 		push_error("Main menu smoke: Reduce Flashes is not reachable in the max-scale settings scroll: %s." % settings_snapshot)
 		get_tree().quit(1)
 		return false
-	shell.call("validation_reveal_support_bundle")
-	await get_tree().process_frame
+	if not await _focus_settings_scroll_control(shell, &"ExportSupportBundle"):
+		push_error("Main menu smoke: support bundle could not receive focus in the max-scale settings scroll.")
+		get_tree().quit(1)
+		return false
 	settings_snapshot = shell.call("validation_snapshot")
 	if not bool(settings_snapshot.get("support_bundle_visible_in_scroll", false)):
 		push_error("Main menu smoke: support bundle remains clipped after settings scrolling: %s." % settings_snapshot)
 		get_tree().quit(1)
 		return false
-	shell.call("validation_reveal_restore_settings_defaults")
-	await get_tree().process_frame
+	if not await _focus_settings_scroll_control(shell, &"RestoreSettingsDefaults"):
+		push_error("Main menu smoke: Restore Defaults could not receive focus in the max-scale settings scroll.")
+		get_tree().quit(1)
+		return false
 	settings_snapshot = shell.call("validation_snapshot")
 	if not bool(settings_snapshot.get("restore_settings_defaults_visible_in_scroll", false)) \
 			or String(settings_snapshot.get("restore_settings_defaults_button_text", "")) != "Restore Defaults" \
@@ -798,8 +806,10 @@ func _run_main_menu_smoke() -> bool:
 		get_tree().quit(1)
 		return false
 	shell.call("validation_cancel_settings_restore_defaults")
-	shell.call("validation_reveal_reduced_flashes")
-	await get_tree().process_frame
+	if not await _focus_settings_scroll_control(shell, &"ReduceFlashesToggle"):
+		push_error("Main menu smoke: Reduce Flashes could not regain focus after cancelling Restore Defaults.")
+		get_tree().quit(1)
+		return false
 
 	settings_snapshot = shell.call("validation_snapshot")
 	var settings_summary := String(settings_snapshot.get("settings_summary_full", settings_snapshot.get("settings_summary", "")))
@@ -943,6 +953,19 @@ func _run_main_menu_smoke() -> bool:
 	await get_tree().process_frame
 	return true
 
+func _focus_settings_scroll_control(shell: Node, control_name: StringName) -> bool:
+	await get_tree().process_frame
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var control := shell.get_node_or_null("%%%s" % String(control_name)) as Control
+	if control == null or not control.is_visible_in_tree() or control.focus_mode == Control.FOCUS_NONE:
+		return false
+	control.grab_focus()
+	await get_tree().process_frame
+	await get_tree().process_frame
+	await get_tree().process_frame
+	return get_viewport().gui_get_focus_owner() == control
+
 func _assert_plaque_anchor(button: Button, label: String, expected_top: float, expected_bottom: float) -> bool:
 	if not is_equal_approx(button.anchor_top, expected_top) or not is_equal_approx(button.anchor_bottom, expected_bottom):
 		push_error(
@@ -1001,19 +1024,40 @@ func _assert_frontier_crest_asset(frontier_crest: TextureRect) -> bool:
 func _assert_editor_utility_frame_at_supported_widths(shell: Control, logo_panel: Control, public_title: Label, frontier_crest: TextureRect, settings_button: Button, editor_button: Button, quit_button: Button) -> bool:
 	var original_size := get_window().size
 	for requested_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:
-		get_window().size = requested_size
+		SettingsService.call("_set_runtime_window_size", requested_size)
 		await get_tree().process_frame
 		await get_tree().process_frame
 		if get_window().size != requested_size:
 			push_error("Main menu smoke: Editor frame fixture did not reach requested size %s." % [requested_size])
 			return false
-		var viewport_size := shell.get_viewport_rect().size
+		var viewport_size := shell.size
+		var physical_size := DisplayServer.window_get_size()
+		var root_size := get_tree().root.size
+		var content_scale_size := get_tree().root.content_scale_size
 		var settings_rect := settings_button.get_global_rect()
 		var editor_rect := editor_button.get_global_rect()
 		var quit_rect := quit_button.get_global_rect()
 		var logo_rect := logo_panel.get_global_rect()
 		var title_rect := public_title.get_global_rect()
 		var crest_rect := frontier_crest.get_global_rect()
+		if physical_size != requested_size \
+				or get_window().size != requested_size \
+				or root_size != requested_size \
+				or content_scale_size != requested_size \
+				or Vector2i(int(viewport_size.x), int(viewport_size.y)) != requested_size:
+			push_error("Main menu smoke: native/root/canvas size authority diverged at %s: physical=%s window=%s root=%s content_scale=%s viewport=%s." % [requested_size, physical_size, get_window().size, root_size, content_scale_size, viewport_size])
+			return false
+		var first_view_rect := Rect2(Vector2.ZERO, viewport_size)
+		for command_name in ["OpenCampaign", "OpenSkirmish", "OpenSaves", "OpenSettings", "OpenEditor", "Quit"]:
+			var command := shell.get_node_or_null("%%%s" % command_name) as Button
+			if command == null \
+					or not command.visible \
+					or command.get_global_rect().position.x < -0.5 \
+					or command.get_global_rect().position.y < -0.5 \
+					or command.get_global_rect().end.x > first_view_rect.end.x + 0.5 \
+					or command.get_global_rect().end.y > first_view_rect.end.y + 0.5:
+				push_error("Main menu smoke: first-view command %s is not visible and contained at %s: %s / %s." % [command_name, requested_size, command.get_global_rect() if command != null else Rect2(), first_view_rect])
+				return false
 		if crest_rect.position.x < logo_rect.position.x - 0.5 \
 				or crest_rect.position.y < logo_rect.position.y - 0.5 \
 				or crest_rect.end.x > logo_rect.end.x + 0.5 \
@@ -1041,7 +1085,7 @@ func _assert_editor_utility_frame_at_supported_widths(shell: Control, logo_panel
 			if texture == null or texture.resource_path != expected_path:
 				push_error("Main menu smoke: Editor utility %s state does not use %s at %s." % [state, expected_path, requested_size])
 				return false
-	get_window().size = original_size
+	SettingsService.call("_set_runtime_window_size", original_size)
 	await get_tree().process_frame
 	await get_tree().process_frame
 	return true

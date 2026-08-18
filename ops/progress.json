@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved release-readiness implementation slice."
+    "Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence."
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed: fresh real-window 100% and persisted-130% Overworld smokes preserve the complete footer, exact full semantics/tooltips, stable map/footer allocation, and session-static cache across movement. Compatibility, static/editor, and bounded Linux/Windows export-startup gates pass.",
+  "currentNotes": "Completed: native/root/content-scale sizing is synchronized through the root Godot Window, the official packaged Linux 1280x720 first view contains all six Main Menu commands, compact Battle Settings close restores a visible existing focus target, and focused/compatibility/static/Linux/Windows gates pass with bounded claims.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-130-ui-scale-footer-containment-10184",
-  "currentSliceId": "ux-overworld-130-ui-scale-footer-containment-10184",
-  "currentSliceNotes": "Completed with fresh real-window 100% and persisted-130% Overworld smokes, exact full-footer and dynamic-cue allocation/cache proof, compatibility/static/editor gates, and bounded official Linux/Windows export-startup evidence. Packaged Overworld interaction and broader release claims remain unclaimed.",
+  "currentSlice": "settings-runtime-window-viewport-size-sync-10184",
+  "currentSliceId": "settings-runtime-window-viewport-size-sync-10184",
+  "currentSliceNotes": "Root Window sizing now preserves exact native/root/content-scale authority for apply and rollback. Fresh packaged Linux 1280x720 evidence contains Campaign, Skirmish, Load, Settings, Editor, and Quit; visible Settings origins retain focus and hidden compact Battle origins fall back to the existing visible Battle focus cycle. All bounded gates pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld 130% Footer Containment",
-  "currentSliceUpdatedAt": "2026-08-18T06:31:45Z",
+  "currentSliceTitle": "Runtime Window And Viewport Size Synchronization",
+  "currentSliceUpdatedAt": "2026-08-18T09:56:52Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -90152,6 +90152,27 @@
       "notes": "Completed after direct 130% painted/runtime evidence isolated base footer overflow and MapCue-driven layout/cache drift. Existing labels now use native ellipsis and the constrained 130% band narrows only flexible resource/order minima. Fresh real-window 100% and 130% Overworld smokes preserve full semantics/tooltips, complete ordered footer containment, map allocation, route/session authority, and the session-static cache across movement. Settings, focus, accessibility, core, repository/editor, and bounded official Linux/Windows export-startup gates pass; packaged Overworld interaction and broader release claims remain unclaimed.",
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
       "blockedReason": null
+    },
+    {
+      "id": "settings-runtime-window-viewport-size-sync-10184",
+      "title": "Runtime Window And Viewport Size Synchronization",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Keep the native window, root Godot Window, and live canvas at the same clamped size so a fresh 1280x720 launch exposes the complete Main Menu first view.",
+      "implementationTargets": ["scripts/autoload/SettingsService.gd", "scenes/battle/BattleShell.gd", "tests/settings_display_mode_transaction_regression.gd", "tests/menu_outcome_visual_smoke.gd", "tests/active_play_settings_runtime_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "testOwners": ["tests/settings_display_mode_transaction_regression.tscn", "tests/menu_outcome_visual_smoke.tscn", "tests/main_menu_keyboard_navigation_smoke.tscn", "tests/settings_restore_defaults_regression.tscn", "tests/active_play_settings_runtime_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/packaging_linux_export_smoke.py", "tests/packaging_windows_export_smoke.py", "tests/validate_repo.py"],
+      "completionCriteria": ["A fresh 1280x720 X11 launch reports exact native/root/canvas size agreement and contains all six Main Menu commands in the first view", "1920x1080 and the full display preview/Keep/Revert/timeout/failure transaction preserve exact settings/config/runtime authority", "Compact Battle Settings close retains the visible Settings origin or restores the existing visible Battle focus cycle when that origin is hidden", "Focused, compatibility, static/editor, Linux export/startup, and Windows fresh-Wine startup gates pass"],
+      "nonGoals": ["presentation defaults/options, persistence/schema, arbitrary resolution, aspect/stretch, UI scale, Main Menu layout/copy/art, renderer, gameplay/content/balance, AI, or Native RMG changes", "new UI, breakpoints, command visibility, focus-cycle ordering, controller mapping, or confirmation-policy changes beyond the hidden-origin fail-closed focus fallback", "packaged controller interaction, AT-SPI/UIA, native Windows display hardware certification, signing/publication, whole-game, or release-readiness claims"],
+      "baseline": {"head": "aacb4bbf412aed84eed277b64fbcc89d34c1cdad", "screen": "1280x720", "nativeWindow": "1280x720", "rootWindow": "1920x1080", "rootCanvas": "1920x1080", "capture": "/tmp/heroes-packaged-mainmenu-audit2.LOsW7y/main_menu.png", "nativeGeometry": "/tmp/heroes-window-geometry.MHkZ8e", "sourceProbe": "/tmp/heroes-fit-probe-min.UMB21i", "methodControl": "/tmp/heroes-window-sync-probe.jTvDCm", "failure": "all six Main Menu command controls are outside the physical first view"},
+      "createdAt": "2026-08-18T07:50:39Z",
+      "startedAt": "2026-08-18T07:50:39Z",
+      "completedAt": "2026-08-18T09:56:52Z",
+      "updatedAt": "2026-08-18T09:56:52Z",
+      "notes": "Completed with live runtime behavior, not documentation alone. SettingsService apply and rollback now synchronize root Window size and content-scale size with the native window while preserving display policy, confirmation transactions, and settings bytes. Focused display transaction and Main Menu owners are green; the stale visual reveal observer was corrected test-only to exercise the real deferred focus path. Truthful compact Battle evidence exposed a hidden Settings-origin focus dead end, now corrected by retaining visible Settings focus or falling back only to the existing preferred Battle focus cycle. Restore-defaults, active-play Settings, full Main Menu keyboard/controller navigation, menu/outcome, core, repository/editor, official Linux export/headless startup, a fresh exact 1280x720 packaged Linux first-view capture with all six commands, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. No packaged controller interaction, AT-SPI/UIA, native Windows display hardware, signing/publication, whole-game, or release-readiness claim is made.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null
     }
   ],
   "project": "heroes-like",
@@ -90694,9 +90715,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The Main Menu Settings summary word-boundary ellipsis slice is completed with focused behavior, compatibility, static/editor, and bounded Linux/Windows export/startup evidence. The game is not release-ready.",
+  "summary": "The runtime window/viewport synchronization slice is completed with exact native/root/content-scale sizing, fresh packaged Linux 1280x720 Main Menu proof, compact Battle focus recovery, compatibility, static/editor, and bounded Linux/Windows export-startup evidence. The game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-18T02:55:16Z",
+  "updatedAt": "2026-08-18T09:56:52Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

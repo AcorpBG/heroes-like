@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `settings-runtime-window-viewport-size-sync-10184`. SettingsService now applies and rolls back runtime size through the root Godot Window, keeping the native window, root Window, and content-scale canvas synchronized without changing resolution policy or persistence. A fresh official packaged Linux run on a 1280x720 X11 screen reports an exact 1280x720 top-level window and visibly contains Campaign, Skirmish, Load, Settings, Editor, and Quit. At the now-truthful compact Battle root, Settings modal close retains its visible origin or falls back to the existing visible Battle focus cycle when the established compact layout hides that origin. Display transaction, menu/outcome, keyboard/controller, restore-defaults, active-play Settings, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged controller interaction, AT-SPI/UIA, native Windows display hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `settings-runtime-window-viewport-size-sync-10184`
 - Completed implementation slice: `ux-battle-status-native-word-ellipsis-10184`. The shipped Battle Status Label now uses Godot's native word-ellipsis policy, so fresh 1280 evidence ends after complete `Bramble …` instead of `Bramble Scre…`, while exact full Status text/tooltip, the clipped single-line rectangle, Header/Pressure order, layout, input/focus, and battle authority remain unchanged. Focused Board, Town/Battle visual, shared focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction and broader release claims remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `ux-battle-status-native-word-ellipsis-10184`
 - Completed implementation slice: `ux-battle-action-context-word-boundary-ellipsis-10184`. Both successful post-action `Latest:/Next:` copy and the blocked-action fallback Event dispatch now fit at complete meaningful words with one Unicode ellipsis, while exact full action/dispatch tooltips, the 96-character/three-line Event envelope, shared UI-kit behavior, event ordering, layout, input/focus, and battle authority remain unchanged. Fresh shipped-window capture and independent Board proof, focused post-action visual, shared focus, animation, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -7525,6 +7527,39 @@ Completion evidence:
 - one public movement preserves the exact MapView/CommandBand and raw CueChip/MapCue allocations, keeps one-line native word ellipsis plus the exact independent full MapCue text and Action Recap tooltip, advances the dynamic cache, and leaves the session-static cache generation unchanged;
 - active-play settings and keyboard-focus smokes, accessibility screen-reader semantics, core systems, repository validation, Python compilation, JSON/diff checks, and exact/generic editor parses pass;
 - official Linux export/headless startup and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup reports are `ok:true`; packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
+
+## Selected Slice: Runtime Window And Viewport Size Synchronization
+
+id: `settings-runtime-window-viewport-size-sync-10184`
+
+Status: completed.
+
+Implementation boundary:
+- route only SettingsService runtime size application and exact rollback through the root Godot `Window.size` property so the native window, root Window, and canvas viewport observe the same clamped size;
+- retain the existing authored 1920x1080 default, resolution list, usable-monitor uniform clamp, 16:9 choices, windowed/borderless/fullscreen mode order, centering, confirmation countdown, committed settings, and config bytes;
+- keep Main Menu nodes, anchors, copy, art, focus order, and actions unchanged; the existing responsive anchors must receive the actual live window size instead of a stale 1920x1080 logical root.
+- when the established compact Battle layout hides the Settings origin at a truthful 1280x720/130% root, close the shared modal into the existing preferred visible Battle focus cycle instead of leaving keyboard/controller focus empty; retain exact Settings-origin focus whenever that button is visible.
+
+Completion criteria:
+- a fresh packaged Linux launch on a real 1280x720 X11 screen reports exact 1280x720 native, root Window, and canvas sizes and visibly contains Campaign, Skirmish, Load, Settings, Editor, and Quit inside the first view;
+- 1920x1080 remains exact, while windowed/borderless preview, Keep, Revert, timeout, replacement preview, menu exit, Restore Defaults, and injected save failure preserve their established settings/config/runtime authority;
+- focused display and Main Menu owners, compact Battle modal focus return, compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Non-goals:
+- no presentation default/option, persistence/schema, arbitrary resolution, aspect/stretch, UI scale, menu layout/copy/art, renderer, multi-monitor preference, gameplay/content/balance, save/campaign, AI, or Native RMG change;
+- no new panel, breakpoint, command visibility, focus-cycle ordering, controller mapping, or display confirmation policy; the only focus change is the fail-closed existing-cycle fallback when the prior Settings origin is already hidden;
+- no packaged controller interaction, AT-SPI/UIA certification, native Windows display hardware certification, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- current pushed HEAD `aacb4bbf` and the official Linux export render `/tmp/heroes-packaged-mainmenu-audit2.LOsW7y/main_menu.png` in a fresh 1280x720 Xvfb screen with only the left 1280 pixels of the 1920-wide Main Menu canvas visible; all six right-rail commands are off-screen;
+- `/tmp/heroes-window-geometry.MHkZ8e` proves the X11 screen and native top-level window are both 1280x720, while `/tmp/heroes-fit-probe-min.UMB21i` proves `DisplayServer.window_get_size()==1280x720` but root `Window.size`, root canvas size, and content-scale size remain 1920x1080 after SettingsService applies defaults;
+- the method-matched ignored probe `/tmp/heroes-window-sync-probe.jTvDCm` assigns the same physical size through root `Window.size` and immediately produces exact 1280x720 root/window/render-target sizes, isolating the API boundary rather than the existing clamp or Main Menu anchors.
+
+Completion evidence:
+- focused display transaction and Main Menu owners prove exact 1280x720/1920x1080 native/root/content-scale authority, first-view command containment, preview/Keep/Revert/timeout/replacement/menu-exit/save-failure semantics, and real focus-driven Settings scroll behavior;
+- settings defaults, active-play Settings, compact Battle focus fallback, full Main Menu keyboard/controller navigation, menu/outcome visual, and core systems exit naturally green with settings, save, session, route, and gameplay authority preserved;
+- the official Linux export/headless startup report is `ok:true`; `/tmp/heroes-packaged-mainmenu-window-sync.VsBPjD/main-menu-60.png` and X11 geometry show the exact exported binary at 1280x720 with all six first-view commands visible;
+- the official Windows report is `ok:true` for PE/PCK/native DLL export and fresh-Wine Godot/Boot/MainMenu/native-DLL startup. These are bounded export/startup claims only, not packaged interaction or broader release certification.
 
 ## Progress Reconciliation
 
