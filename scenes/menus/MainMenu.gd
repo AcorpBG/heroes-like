@@ -12,6 +12,8 @@ const TAB_SETTINGS := 4
 const CAMPAIGN_COMPACT_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.528, 0.440)
 const CAMPAIGN_EXPANDED_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.528, 0.600)
 const STANDARD_DOCK_ANCHORS := Rect2(0.032, 0.258, 0.733, 0.620)
+const SETTINGS_SUMMARY_MAX_LINES := 4
+const SETTINGS_SUMMARY_MAX_CHARS := 84
 const TAB_STAGE_COPY := {
 	TAB_CAMPAIGN: {
 		"title": "Campaign board",
@@ -1752,8 +1754,41 @@ func _select_help_topic(topic_id: String) -> void:
 	_refresh_help_intro()
 	_refresh_help_browser()
 
+func _set_settings_summary(full_text: String) -> void:
+	_settings_summary_label.tooltip_text = full_text
+	_settings_summary_label.text = _settings_summary_visible_text(full_text)
+
+func _settings_summary_visible_text(full_text: String) -> String:
+	var lines: Array[String] = []
+	for raw_line in full_text.split("\n", false):
+		var line := String(raw_line).strip_edges()
+		if line == "":
+			continue
+		lines.append(_settings_summary_visible_line(line))
+	if lines.is_empty():
+		return full_text.strip_edges()
+	if lines.size() > SETTINGS_SUMMARY_MAX_LINES:
+		var hidden_count := lines.size() - SETTINGS_SUMMARY_MAX_LINES
+		lines = lines.slice(0, SETTINGS_SUMMARY_MAX_LINES)
+		lines.append("+ %d more" % hidden_count)
+	return "\n".join(lines)
+
+func _settings_summary_visible_line(line: String) -> String:
+	if line.length() <= SETTINGS_SUMMARY_MAX_CHARS:
+		return line
+	if SETTINGS_SUMMARY_MAX_CHARS <= 1:
+		return "…"
+	var prefix := line.left(SETTINGS_SUMMARY_MAX_CHARS - 1).strip_edges()
+	var setting_boundary := prefix.rfind(" | ")
+	if setting_boundary > 0:
+		return "%s…" % prefix.left(setting_boundary).strip_edges()
+	var word_boundary := prefix.rfind(" ")
+	if word_boundary > 0:
+		return "%s…" % prefix.left(word_boundary).strip_edges()
+	return "…"
+
 func _refresh_settings_panel() -> void:
-	_set_compact_label(_settings_summary_label, SettingsService.describe_settings(), 4, 84)
+	_set_settings_summary(SettingsService.describe_settings())
 	var settings_check := SettingsService.describe_settings_persistence_check()
 	var display_settings_check := "Display changes preview immediately and are stored only after Keep. Revert or timeout restores the previous display; campaign progress and expedition saves stay unchanged."
 	var settings_handoff := _settings_handoff_surface()

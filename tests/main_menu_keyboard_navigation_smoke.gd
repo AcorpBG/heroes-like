@@ -228,10 +228,16 @@ func _check_settings_focus_visibility() -> bool:
 	var scroll := settings_shell.get_node_or_null("%SettingsScroll") as ScrollContainer
 	if scroll == null:
 		return _fail_settings_focus_visibility(layout_host, original_window_size, original_settings, "Main Menu SettingsScroll is missing.")
+	var summary_label := settings_shell.get_node_or_null("%SettingsSummary") as Label
+	if summary_label == null:
+		return _fail_settings_focus_visibility(layout_host, original_window_size, original_settings, "Main Menu SettingsSummary is missing.")
 	for scale in [100, 130]:
 		if not _apply_settings_focus_ui_scale(settings_shell, original_settings, scale):
 			return _fail_settings_focus_visibility(layout_host, original_window_size, original_settings, "Could not apply fixture UI scale %d." % scale)
 		await _settle()
+		var summary_error := _settings_summary_contract_error(summary_label, scroll, 1280, scale)
+		if summary_error != "":
+			return _fail_settings_focus_visibility(layout_host, original_window_size, original_settings, summary_error)
 		var controls: Array[Control] = []
 		for control_name in SETTINGS_SCROLL_FOCUS_NAMES:
 			var control := settings_shell.get_node_or_null("%%%s" % control_name) as Control
@@ -260,6 +266,16 @@ func _check_settings_focus_visibility() -> bool:
 				return _fail_settings_focus_visibility(layout_host, original_window_size, original_settings, "Reverse Tab left %s focused off-screen at %d percent: owner=%s scroll=%d rect=%s viewport=%s." % [expected.name, scale, get_viewport().gui_get_focus_owner(), scroll.scroll_vertical, expected.get_global_rect(), scroll.get_global_rect()])
 		if scroll.scroll_vertical >= lower_scroll:
 			return _fail_settings_focus_visibility(layout_host, original_window_size, original_settings, "Returning to the first Settings control did not scroll upward at %d percent." % scale)
+	get_window().size = Vector2i(1920, 1080)
+	layout_host.size = Vector2(1920.0, 1080.0)
+	await _settle()
+	for scale in [100, 130]:
+		if not _apply_settings_focus_ui_scale(settings_shell, original_settings, scale):
+			return _fail_settings_focus_visibility(layout_host, original_window_size, original_settings, "Could not apply 1920 fixture UI scale %d." % scale)
+		await _settle()
+		var summary_error := _settings_summary_contract_error(summary_label, scroll, 1920, scale)
+		if summary_error != "":
+			return _fail_settings_focus_visibility(layout_host, original_window_size, original_settings, summary_error)
 	SettingsService.settings = original_settings.duplicate(true)
 	SettingsService.apply_settings()
 	await _settle()
@@ -275,6 +291,64 @@ func _check_settings_focus_visibility() -> bool:
 	if get_viewport().gui_get_focus_owner() != original_focus:
 		return _fail_bool("Main Menu Settings focus visibility did not restore the original focus owner.")
 	return true
+
+func _settings_summary_contract_error(summary_label: Label, scroll: ScrollContainer, width: int, scale: int) -> String:
+	var full_text := SettingsService.describe_settings()
+	var expected := _expected_settings_summary_visible_text(full_text, 4, 84)
+	var visible := summary_label.text
+	var full_lines := full_text.split("\n", false)
+	var visible_lines := visible.split("\n", false)
+	if summary_label.tooltip_text != full_text:
+		return "Settings summary tooltip lost its exact complete value at width %d/%d percent." % [width, scale]
+	if visible != expected:
+		return "Settings summary visible copy is not the independent whole-word control at width %d/%d percent: expected=%s actual=%s." % [width, scale, expected, visible]
+	if full_lines.size() != 5 or visible_lines.size() != 5:
+		return "Settings summary changed its four-line plus hidden-count budget at width %d/%d percent: full=%s visible=%s." % [width, scale, full_lines, visible_lines]
+	for index in range(3):
+		if visible_lines[index] != full_lines[index]:
+			return "Settings summary changed fitting line %d at width %d/%d percent." % [index, width, scale]
+	if not String(full_lines[3]).contains("Battle shake ") \
+			or not String(visible_lines[3]).ends_with("…") \
+			or String(visible_lines[3]).contains("...") \
+			or String(visible_lines[3]).contains("Battle s...") \
+			or String(visible_lines[4]) != "+ 1 more":
+		return "Settings summary did not preserve a whole Settings segment plus one Unicode ellipsis and hidden-line count at width %d/%d percent: %s." % [width, scale, visible_lines]
+	var summary_parent := summary_label.get_parent() as Control
+	if summary_parent == null \
+			or summary_label.size.x <= 0.0 \
+			or summary_label.size.y <= 0.0 \
+			or summary_label.size.x > scroll.size.x + 1.0 \
+			or not summary_parent.get_global_rect().grow(1.0).encloses(summary_label.get_global_rect()):
+		return "Settings summary left its live Settings content width at width %d/%d percent: summary=%s content=%s scroll=%s." % [width, scale, summary_label.get_global_rect(), summary_parent.get_global_rect() if summary_parent != null else Rect2(), scroll.get_global_rect()]
+	return ""
+
+func _expected_settings_summary_visible_text(full_text: String, max_lines: int, max_chars: int) -> String:
+	var lines: Array[String] = []
+	for raw_line in full_text.split("\n", false):
+		var line := String(raw_line).strip_edges()
+		if line == "":
+			continue
+		if line.length() > max_chars:
+			if max_chars <= 1:
+				line = "…"
+			else:
+				var prefix := line.left(max_chars - 1).strip_edges()
+				var setting_boundary := prefix.rfind(" | ")
+				var word_boundary := prefix.rfind(" ")
+				if setting_boundary > 0:
+					line = "%s…" % prefix.left(setting_boundary).strip_edges()
+				elif word_boundary > 0:
+					line = "%s…" % prefix.left(word_boundary).strip_edges()
+				else:
+					line = "…"
+		lines.append(line)
+	if lines.is_empty():
+		return full_text.strip_edges()
+	if lines.size() > max_lines:
+		var hidden_count := lines.size() - max_lines
+		lines = lines.slice(0, max_lines)
+		lines.append("+ %d more" % hidden_count)
+	return "\n".join(lines)
 
 func _scroll_contains_control(scroll: ScrollContainer, control: Control) -> bool:
 	return scroll.get_global_rect().grow(1.0).encloses(control.get_global_rect())

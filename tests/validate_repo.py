@@ -16810,6 +16810,100 @@ def validate_main_menu_settings_focus_visibility(errors: list[str]) -> None:
         ensure("set_ui_scale_percent" not in focus_case_body, errors, "Settings focus layout fixture must not call the persistent scale setter")
 
 
+def validate_main_menu_settings_summary_word_ellipsis(errors: list[str]) -> None:
+    for path in (MAIN_MENU_SCRIPT_PATH, MAIN_MENU_KEYBOARD_NAVIGATION_SMOKE_PATH):
+        ensure(path.exists(), errors, f"Missing Main Menu Settings summary ellipsis owner: {path.relative_to(ROOT)}")
+    if not MAIN_MENU_SCRIPT_PATH.exists() or not MAIN_MENU_KEYBOARD_NAVIGATION_SMOKE_PATH.exists():
+        return
+
+    script_text = MAIN_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
+    for token in (
+        "const SETTINGS_SUMMARY_MAX_LINES := 4",
+        "const SETTINGS_SUMMARY_MAX_CHARS := 84",
+        "_set_settings_summary(SettingsService.describe_settings())",
+        '"settings_summary": _settings_summary_label.text',
+        '"settings_summary_full": _settings_summary_label.tooltip_text',
+    ):
+        ensure(token in script_text, errors, f"MainMenu.gd is missing Settings summary word-ellipsis token: {token}")
+    ensure(
+        "_set_compact_label(_settings_summary_label, SettingsService.describe_settings(), 4, 84)" not in script_text,
+        errors,
+        "Main Menu Settings summary must not use the global mid-word compact helper",
+    )
+
+    set_match = re.search(r"func _set_settings_summary\(full_text: String\) -> void:(.*?)(?=\n\nfunc )", script_text, flags=re.DOTALL)
+    ensure(set_match is not None, errors, "MainMenu.gd is missing the bounded Settings summary setter")
+    if set_match is not None:
+        set_body = set_match.group(1)
+        set_order = tuple(set_body.find(token) for token in (
+            "_settings_summary_label.tooltip_text = full_text",
+            "_settings_summary_label.text = _settings_summary_visible_text(full_text)",
+        ))
+        ensure(all(index >= 0 for index in set_order) and list(set_order) == sorted(set_order), errors, "Settings summary must retain exact full tooltip before applying visible compaction")
+
+    visible_match = re.search(r"func _settings_summary_visible_text\(full_text: String\) -> String:(.*?)(?=\n\nfunc )", script_text, flags=re.DOTALL)
+    ensure(visible_match is not None, errors, "MainMenu.gd is missing Settings summary line-budget materialization")
+    if visible_match is not None:
+        visible_body = visible_match.group(1)
+        for token in (
+            'full_text.split("\\n", false)',
+            "String(raw_line).strip_edges()",
+            "lines.append(_settings_summary_visible_line(line))",
+            "lines.size() > SETTINGS_SUMMARY_MAX_LINES",
+            "lines = lines.slice(0, SETTINGS_SUMMARY_MAX_LINES)",
+            'lines.append("+ %d more" % hidden_count)',
+            'return "\\n".join(lines)',
+        ):
+            ensure(token in visible_body, errors, f"Settings summary line budget is missing token: {token}")
+        for forbidden in ("FrontierVisualKit", "sort(", "erase(", "SettingsService", "tooltip_text"):
+            ensure(forbidden not in visible_body, errors, f"Settings summary line budget must remain local, ordered, and presentation-only: {forbidden}")
+
+    line_match = re.search(r"func _settings_summary_visible_line\(line: String\) -> String:(.*?)(?=\n\nfunc )", script_text, flags=re.DOTALL)
+    ensure(line_match is not None, errors, "MainMenu.gd is missing the Settings summary whole-word line helper")
+    if line_match is not None:
+        line_body = line_match.group(1)
+        line_order = tuple(line_body.find(token) for token in (
+            "line.length() <= SETTINGS_SUMMARY_MAX_CHARS",
+            "line.left(SETTINGS_SUMMARY_MAX_CHARS - 1).strip_edges()",
+            'prefix.rfind(" | ")',
+            'return "%s…" % prefix.left(setting_boundary).strip_edges()',
+            'prefix.rfind(" ")',
+            'return "%s…" % prefix.left(word_boundary).strip_edges()',
+        ))
+        ensure(all(index >= 0 for index in line_order) and list(line_order) == sorted(line_order) and line_body.count('return "…"') == 2 and line_body.rstrip().endswith('return "…"'), errors, "Settings summary must prefer a complete setting segment, then a complete word, then ellipsis-only fallback")
+        for forbidden in ('"..."', '"%s..."', ".left(84)", "FrontierVisualKit", "SettingsService"):
+            ensure(forbidden not in line_body, errors, f"Settings summary line helper must not restore mid-word/global behavior: {forbidden}")
+
+    smoke_text = MAIN_MENU_KEYBOARD_NAVIGATION_SMOKE_PATH.read_text(encoding="utf-8")
+    for token in (
+        'settings_shell.get_node_or_null("%SettingsSummary") as Label',
+        "func _settings_summary_contract_error(summary_label: Label, scroll: ScrollContainer, width: int, scale: int) -> String:",
+        "func _expected_settings_summary_visible_text(full_text: String, max_lines: int, max_chars: int) -> String:",
+        "var expected := _expected_settings_summary_visible_text(full_text, 4, 84)",
+        "summary_label.tooltip_text != full_text",
+        "visible != expected",
+        "full_lines.size() != 5 or visible_lines.size() != 5",
+        "for index in range(3):",
+        'String(full_lines[3]).contains("Battle shake ")',
+        'String(visible_lines[3]).ends_with("…")',
+        'String(visible_lines[3]).contains("...")',
+        'String(visible_lines[3]).contains("Battle s...")',
+        'String(visible_lines[4]) != "+ 1 more"',
+        "summary_label.size.x > scroll.size.x + 1.0",
+        "summary_parent.get_global_rect().grow(1.0).encloses(summary_label.get_global_rect())",
+        "get_window().size = Vector2i(1920, 1080)",
+        "layout_host.size = Vector2(1920.0, 1080.0)",
+        "for scale in [100, 130]:",
+    ):
+        ensure(token in smoke_text, errors, f"Main Menu keyboard smoke is missing Settings summary word-ellipsis proof: {token}")
+    expected_match = re.search(r"func _expected_settings_summary_visible_text\(full_text: String, max_lines: int, max_chars: int\) -> String:(.*?)(?=\n\nfunc )", smoke_text, flags=re.DOTALL)
+    ensure(expected_match is not None, errors, "Main Menu keyboard smoke is missing independent Settings summary control")
+    if expected_match is not None:
+        expected_body = expected_match.group(1)
+        for forbidden in ("MainMenu", "settings_shell", "_settings_summary_visible", "FrontierVisualKit", "call(", "sort(", "erase("):
+            ensure(forbidden not in expected_body, errors, f"Independent Settings summary control must not depend on production helpers: {forbidden}")
+
+
 def validate_map_editor_terrain_paint_normalization_deferral(errors: list[str]) -> None:
     terrain_rules_path = ROOT / "scripts/core/TerrainPlacementRules.gd"
     editor_path = ROOT / "scenes/editor/MapEditorShell.gd"
@@ -49514,6 +49608,7 @@ def main() -> int:
     validate_map_editor_terrain_paint_normalization_deferral(errors)
     validate_main_menu_destructive_exclusive_parent_input(errors)
     validate_main_menu_settings_focus_visibility(errors)
+    validate_main_menu_settings_summary_word_ellipsis(errors)
     validate_map_editor_shell_slice(errors)
     validate_map_editor_dirty_transition_regression(errors)
     validate_scenario_outcome_shell(errors)
