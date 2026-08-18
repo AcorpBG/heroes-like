@@ -505,7 +505,7 @@ func _refresh_save_surface() -> void:
 		save_check,
 		return_handoff,
 	])
-	_menu_button.text = String(surface.get("menu_button_label", "Return to Menu"))
+	_menu_button.text = String(surface.get("menu_button_label", "Main Menu"))
 	_menu_button.tooltip_text = String(surface.get("menu_button_tooltip", "Return to the main menu after updating autosave."))
 	_refresh_guide_surface()
 
@@ -1190,6 +1190,7 @@ func validation_snapshot() -> Dictionary:
 		"save_status": _save_status_label.text,
 		"save_status_tooltip": _save_status_label.tooltip_text,
 		"save_button_tooltip": _save_button.tooltip_text,
+		"menu_button_label": _menu_button.text,
 		"menu_button_tooltip": _menu_button.tooltip_text,
 		"return_cue": _return_cue_label.text,
 		"return_cue_tooltip": _return_cue_label.tooltip_text,

@@ -22393,6 +22393,10 @@ def validate_scenario_outcome_normal_entry_focus(errors: list[str]) -> None:
         "await _press_key(KEY_ESCAPE)",
         "_outcome_controls_fit",
         "Vector2i(1280, 720)",
+        'String(save_surface.get("menu_button_label", "")) != "Main Menu"',
+        '"menu_button_label": save_surface.get("menu_button_label", "")',
+        'editor_control.flags["editor_working_copy"] = true',
+        'String(editor_surface.get("menu_button_label", "")) != "Editor"',
     ):
         ensure(required_token in report_text, errors, f"Scenario Outcome normal-entry focus regression is missing required token: {required_token}")
 
@@ -22423,6 +22427,73 @@ def validate_scenario_outcome_normal_entry_focus(errors: list[str]) -> None:
         '"manual_overwrite_visible"',
     ):
         ensure(required_token in outcome_text, errors, f"ScenarioOutcomeShell.gd is missing required normal-entry focus token: {required_token}")
+
+
+def validate_active_play_main_menu_action_label(errors: list[str]) -> None:
+    paths = (
+        SAVE_SERVICE_PATH,
+        OVERWORLD_SCRIPT_PATH,
+        TOWN_SCRIPT_PATH,
+        BATTLE_SCRIPT_PATH,
+        OUTCOME_SCRIPT_PATH,
+        ROOT / "tests" / "overworld_visual_smoke.gd",
+        ROOT / "tests" / "town_battle_visual_smoke.gd",
+        SCENARIO_OUTCOME_NORMAL_ENTRY_FOCUS_REGRESSION_SCRIPT_PATH,
+    )
+    for path in paths:
+        ensure(path.exists(), errors, f"Missing active-play Main Menu label owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in paths):
+        return
+
+    save_text = SAVE_SERVICE_PATH.read_text(encoding="utf-8")
+    ensure('const MAIN_MENU_ACTION_LABEL := "Main Menu"' in save_text, errors, "SaveService must own one stable Main Menu action label")
+    label_match = re.search(
+        r"(?ms)^func _return_to_menu_label\(current_target: String, session: SessionStateStoreScript\.SessionData = null\) -> String:\n(?P<body>.*?)(?=^func )",
+        save_text,
+    )
+    ensure(label_match is not None, errors, "SaveService must retain the active-play return-label helper")
+    if label_match is not None:
+        label_body = label_match.group("body")
+        required_order = (
+            label_body.find('bool(session.flags.get("editor_working_copy", false))'),
+            label_body.find('return "Editor"'),
+            label_body.find("return MAIN_MENU_ACTION_LABEL"),
+        )
+        ensure(all(index >= 0 for index in required_order) and list(required_order) == sorted(required_order), errors, "Active-play return labeling must keep Editor as the first branch before Main Menu")
+        for forbidden_token in ("match current_target", '"Menu: Field"', '"Menu: Town"', '"Menu: Battle"', '"Menu: Outcome"', 'return "Main Menu"'):
+            ensure(forbidden_token not in label_body, errors, f"Active-play return labeling must not restore context-dependent copy: {forbidden_token}")
+
+    tooltip_header = "func _return_to_menu_tooltip("
+    ensure(tooltip_header in save_text, errors, "SaveService must retain the contextual return tooltip helper")
+    if tooltip_header in save_text:
+        tooltip_body = save_text.split(tooltip_header, 1)[1].split("\nfunc ", 1)[0]
+        for required_token in ("current_target", "latest_summary", "current_context", "return_handoff"):
+            ensure(required_token in tooltip_body, errors, f"Main Menu label must retain contextual tooltip authority: {required_token}")
+
+    surface_expectations = (
+        (OVERWORLD_SCRIPT_PATH, ('_menu_button.text = "Main Menu"', 'surface.get("menu_button_label", "Main Menu")'), ('"Menu: Field"',)),
+        (TOWN_SCRIPT_PATH, ('_menu_button.text = "Main Menu"', 'surface.get("menu_button_label", "Main Menu")'), ('"Return to Menu"',)),
+        (BATTLE_SCRIPT_PATH, ('surface.get("menu_button_label", "Main Menu")',), ('surface.get("menu_button_label", "Return to Menu")',)),
+    )
+    for path, required_tokens, forbidden_tokens in surface_expectations:
+        text = path.read_text(encoding="utf-8")
+        for token in required_tokens:
+            ensure(token in text, errors, f"{path.name} is missing stable Main Menu surface token: {token}")
+        for token in forbidden_tokens:
+            ensure(token not in text, errors, f"{path.name} retains obsolete active-play return copy: {token}")
+
+    outcome_text = OUTCOME_SCRIPT_PATH.read_text(encoding="utf-8")
+    outcome_refresh = outcome_text.split("func _refresh_save_surface() -> void:", 1)[1].split("\nfunc ", 1)[0]
+    ensure('surface.get("menu_button_label", "Main Menu")' in outcome_refresh and 'surface.get("menu_button_label", "Return to Menu")' not in outcome_refresh and '"menu_button_label": _menu_button.text' in outcome_text, errors, "Outcome save controls must expose and render the stable Main Menu label")
+
+    overworld_visual = (ROOT / "tests" / "overworld_visual_smoke.gd").read_text(encoding="utf-8")
+    town_battle_visual = (ROOT / "tests" / "town_battle_visual_smoke.gd").read_text(encoding="utf-8")
+    outcome_focus = SCENARIO_OUTCOME_NORMAL_ENTRY_FOCUS_REGRESSION_SCRIPT_PATH.read_text(encoding="utf-8")
+    ensure('"preserved", "Main Menu", "What changed:"' in overworld_visual and '"Menu: Field"' not in overworld_visual, errors, "Overworld visual smoke must prove stable Main Menu copy with contextual handoff text")
+    ensure('"End Turn?"' in overworld_visual and '\t\t\t"End?",' not in overworld_visual, errors, "Overworld visual smoke must use the completed stable End Turn action-label oracle")
+    for required_token in ('_assert_active_return_handoff_contract(shell, "Town", "Main Menu")', '_assert_active_return_handoff_contract(shell, "Battle", "Main Menu")'):
+        ensure(required_token in town_battle_visual, errors, f"Town/Battle visual smoke is missing stable Main Menu proof: {required_token}")
+    ensure('String(save_surface.get("menu_button_label", "")) != "Main Menu"' in outcome_focus and 'String(editor_surface.get("menu_button_label", "")) != "Editor"' in outcome_focus, errors, "Outcome normal-entry runtime must require Main Menu while preserving the Editor exclusion")
 
 
 def validate_scenario_outcome_new_session_confirmation(errors: list[str]) -> None:
@@ -49457,6 +49528,7 @@ def main() -> int:
     validate_battle_resolution_autosave_failure_route_safety(errors)
     validate_briefing_consumption_autosave_failure_safety(errors)
     validate_scenario_outcome_normal_entry_focus(errors)
+    validate_active_play_main_menu_action_label(errors)
     validate_scenario_outcome_new_session_confirmation(errors)
     validate_battle_ability_layer(errors)
     validate_battle_autoplay_balance_diagnostics(errors)

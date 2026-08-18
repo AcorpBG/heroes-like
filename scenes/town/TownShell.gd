@@ -2266,7 +2266,7 @@ func _refresh_save_slot_picker(force_surface: bool = false, view_state: Dictiona
 		_last_departure_confirmation = lazy_departure.duplicate(true)
 		_leave_button.text = String(lazy_departure.get("button_label", "Leave"))
 		_leave_button.tooltip_text = String(lazy_departure.get("tooltip_text", "Return to the overworld without leaving the current expedition."))
-		_menu_button.text = "Return to Menu"
+		_menu_button.text = "Main Menu"
 		_menu_button.tooltip_text = "Return to the main menu after updating autosave."
 		return
 
@@ -2310,7 +2310,7 @@ func _refresh_save_slot_picker(force_surface: bool = false, view_state: Dictiona
 	_last_departure_confirmation = departure.duplicate(true)
 	_leave_button.text = String(departure.get("button_label", "Leave"))
 	_leave_button.tooltip_text = String(departure.get("tooltip_text", "Return to the overworld without leaving the current expedition."))
-	_menu_button.text = String(surface.get("menu_button_label", "Return to Menu"))
+	_menu_button.text = String(surface.get("menu_button_label", "Main Menu"))
 	_menu_button.tooltip_text = String(surface.get("menu_button_tooltip", "Return to the main menu after updating autosave."))
 
 func validation_snapshot() -> Dictionary:

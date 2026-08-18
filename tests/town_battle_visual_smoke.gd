@@ -138,7 +138,7 @@ func _run_town_smoke() -> bool:
 	if not _assert_town_action_button_command_cues(shell):
 		get_tree().quit(1)
 		return false
-	if not _assert_active_return_handoff_contract(shell, "Town", "Menu: Town"):
+	if not _assert_active_return_handoff_contract(shell, "Town", "Main Menu"):
 		get_tree().quit(1)
 		return false
 	if not _assert_town_economy_decision_payload(shell):
@@ -817,7 +817,7 @@ func _run_battle_smoke() -> bool:
 	if not _assert_battle_save_handoff_cue(shell):
 		get_tree().quit(1)
 		return false
-	if not _assert_active_return_handoff_contract(shell, "Battle", "Menu: Battle"):
+	if not _assert_active_return_handoff_contract(shell, "Battle", "Main Menu"):
 		get_tree().quit(1)
 		return false
 

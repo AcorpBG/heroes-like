@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The warned Overworld End Turn control now keeps exact End Turn? action identity while its existing tooltip and confirmation surfaces retain the contextual reason.",
+  "currentNotes": "The active-play Main Menu label slice is complete: ordinary Overworld, Town, Battle, and Outcome save surfaces use Main Menu, Map Editor Play Copy retains Editor, and focused/compatibility/static/platform gates pass with bounded claims.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-stable-end-turn-action-label-10184",
-  "currentSliceId": "ux-overworld-stable-end-turn-action-label-10184",
-  "currentSliceNotes": "Completed with explicit warning_hint ownership, exact stable End Turn? copy, three live input modalities at 1280/1920, route/accessibility/core compatibility, static/editor, and bounded Linux/Windows export/startup evidence.",
+  "currentSlice": "ux-active-play-main-menu-action-label-10184",
+  "currentSliceId": "ux-active-play-main-menu-action-label-10184",
+  "currentSliceNotes": "Completed from direct rendered evidence through exact cross-surface copy, editor exclusion, all-four-state route/retry, focus, accessibility, core, static/editor, and official Linux/Windows export/startup validation. Broader release readiness remains unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Stable End Turn Action Label",
-  "currentSliceUpdatedAt": "2026-08-18T00:52:28Z",
+  "currentSliceTitle": "Active Play Stable Main Menu Action Label",
+  "currentSliceUpdatedAt": "2026-08-18T01:51:49Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -89816,6 +89816,64 @@
       "notes": "Implemented stable warned End Turn copy and independent warning state after direct current 1280 visual evidence. Focused exclusive-input, route tooltip/controller, accessibility, core, static/editor, and official Linux/Windows export/startup gates pass. Two balance candidates were rejected read-only before selection and did not change content. Packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
       "blockedReason": null
+    },
+    {
+      "id": "ux-active-play-main-menu-action-label-10184",
+      "title": "Active Play Stable Main Menu Action Label",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Label the ordinary active-play route-to-menu action by its Main Menu destination while retaining exact current-context detail in the existing save and return-handoff tooltip.",
+      "implementationTargets": [
+        "scripts/autoload/SaveService.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/town/TownShell.gd",
+        "scenes/battle/BattleShell.gd",
+        "scenes/results/ScenarioOutcomeShell.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/town_battle_visual_smoke.gd",
+        "tests/scenario_outcome_normal_entry_focus_regression.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_visual_smoke.tscn",
+        "tests/town_battle_visual_smoke.tscn",
+        "tests/scenario_outcome_normal_entry_focus_regression.tscn",
+        "tests/scenario_outcome_new_session_confirmation_safe_cancel_regression.tscn",
+        "tests/application_active_play_return_autosave_failure_regression.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "Every ordinary Overworld, Town, Battle, and Outcome active save surface uses the exact stable Main Menu action label while Map Editor Play Copy retains Editor",
+        "Exact current-context, save, resume, and return-handoff details remain in tooltips and all menu routing, autosave/manual-save, confirmation, focus, session, and file authority remain unchanged",
+        "Focused cross-surface, route/focus/accessibility/core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "save writer/schema/version, autosave/manual-save, route destination, confirmation, focus, input, session, gameplay, AI, balance, content, or Native RMG changes",
+        "button geometry, font, theme, tooltip/detail reduction, Main Menu composition, controller mappings, audio, VFX, or broader scene redesign",
+        "packaged active-play interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing, publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "84212131",
+        "observedArtifact": ".artifacts/ui_runtime_skin_visual_report/overworld_1280x720.png",
+        "observedContextLabel": "Menu: Field",
+        "intendedDestinationLabel": "Main Menu"
+      },
+      "createdAt": "2026-08-18T01:26:50Z",
+      "startedAt": "2026-08-18T01:26:50Z",
+      "completedAt": "2026-08-18T01:51:49Z",
+      "updatedAt": "2026-08-18T01:51:49Z",
+      "notes": "Implemented one shared Main Menu action label with exact scene fallbacks, retained the Editor working-copy branch, and preserved contextual tooltip and route authority. Overworld, Town/Battle, Outcome/editor, all-four-state autosave failure/retry, active-focus, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. The first Overworld run exposed and corrected only a stale End? test oracle from the already-completed stable End Turn slice; its authoritative rerun passed. Packaged active-play interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null
     }
   ],
   "project": "heroes-like",
@@ -89826,7 +89884,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain. The game is not release-ready.",
-  "remainingWork": "Select the next tracker-approved source-backed release-readiness implementation slice. Broader release-readiness gaps remain.",
+  "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader release-readiness gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -90358,9 +90416,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Overworld empty manual-slot status clarity is implemented and validated from direct rendered evidence through the real empty-to-ready save path. This is one bounded slice; the game is not release-ready.",
+  "summary": "Active-play save surfaces now use the stable Main Menu destination label while preserving contextual tooltips, exact routing/save authority, and the Map Editor Editor label. This is one bounded slice; the game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-18T00:52:28Z",
+  "updatedAt": "2026-08-18T01:51:49Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

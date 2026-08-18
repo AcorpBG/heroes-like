@@ -925,7 +925,7 @@ func _assert_end_turn_readiness_confirmation_contract(shell: Node) -> bool:
 		"overworld end-turn readiness confirmation",
 		[joined],
 		[
-			"End?",
+			"End Turn?",
 			"End Turn Check",
 			"Field readiness:",
 			"Next practical action:",
@@ -1246,7 +1246,7 @@ func _assert_save_resume_clarity_contract(shell: Node) -> bool:
 			String(save_surface.get("menu_button_label", "")),
 			String(save_surface.get("menu_button_tooltip", "")),
 		],
-		["Skirmish", "River Pass", "Day", "Resume target:", "Overworld", "Save check:", "Return handoff:", "Continue Latest returns", "preserved", "Menu: Field", "What changed:", "Resume:", "Next:"]
+		["Skirmish", "River Pass", "Day", "Resume target:", "Overworld", "Save check:", "Return handoff:", "Continue Latest returns", "preserved", "Main Menu", "What changed:", "Resume:", "Next:"]
 	):
 		return false
 	if not _assert_no_ai_score_leak(
