@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed with live Battle rendering behavior: ActionGuide per-line overflow now reuses the existing Battle-local whole-word Unicode ellipsis, and fresh 1280x720/130% painted evidence ends after the complete (1 step) phrase instead of cutting the next word. Focused, compatibility, routed-layout, static/editor, and bounded Linux/Windows export-startup gates are green; broader release readiness remains unclaimed.",
+  "currentNotes": "Completed with live Battle rendering behavior: painted Board token captions retain fitting names and end genuine multi-word overflow at a complete word with one Unicode ellipsis. Full tooltip/live identity, cursor/footer labels, initiative chips, geometry, input, and battle authority remain exact; focused, visual, compatibility, static/editor, and bounded Linux/Windows gates are green.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-battle-action-guide-word-boundary-ellipsis-10184",
-  "currentSliceId": "ux-battle-action-guide-word-boundary-ellipsis-10184",
-  "currentSliceNotes": "The exact three guide source lines and enriched tooltip remain authoritative. Visible 96-character overflow uses the existing Battle-local whole-word Unicode ellipsis, retaining two compact lines and three wide through the real responsive refit.",
+  "currentSlice": "ux-battle-board-stack-caption-word-boundary-ellipsis-10184",
+  "currentSliceId": "ux-battle-board-stack-caption-word-boundary-ellipsis-10184",
+  "currentSliceNotes": "Only painted BattleBoard token captions changed; full stack identity in tooltip/live context, the separate cursor/footer label, token geometry, input, and battle authority remain exact.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Battle Action Guide Word-Boundary Ellipsis",
-  "currentSliceUpdatedAt": "2026-08-18T11:29:57Z",
+  "currentSliceTitle": "Battle Board Stack Caption Word-Boundary Ellipsis",
+  "currentSliceUpdatedAt": "2026-08-18T11:49:05Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -90196,6 +90196,27 @@
       "blockedReason": null
     },
     {
+      "id": "ux-battle-board-stack-caption-word-boundary-ellipsis-10184",
+      "title": "Battle Board Stack Caption Word-Boundary Ellipsis",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "End painted BattleBoard token captions at a complete word with one Unicode ellipsis while preserving exact full stack identity, token geometry, input, and combat authority.",
+      "implementationTargets": ["scenes/battle/BattleBoardView.gd", "tests/battle_controller_board_navigation_smoke.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "testOwners": ["tests/battle_controller_board_navigation_smoke.tscn", "tests/battle_layout_smoke.tscn", "tests/town_battle_visual_smoke.tscn", "tests/accessibility_screen_reader_semantics_report.tscn", "tests/battle_event_animation_state_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/packaging_linux_export_smoke.py", "tests/packaging_windows_export_smoke.py", "tests/validate_repo.py"],
+      "completionCriteria": ["Fresh 1280x720/130% painted Battle has no mid-token Blackbranch C or Mudglass Slin captions; fitting names remain exact and genuine multi-word overflow ends after a complete word with one Unicode ellipsis", "Focused Board validation independently proves every caption against its full live name while full tooltip/live context and the separate cursor/footer label remain exact", "Board navigation, Battle layout/visual, accessibility, animation, core, repository/editor, and bounded Linux/Windows export-startup gates pass with exact authority"],
+      "nonGoals": ["initiative-strip chips, cursor/footer label, live-region wording, names, caption budget/font/token geometry, tooltip, board/layout, or shared UI-kit changes", "combat rules, initiative, movement, targeting, actions, animation timing, content, balance, AI, save/schema, renderer, map, or Native RMG changes", "packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"],
+      "baseline": {"head": "6386b6ef", "screen": "1280x720", "uiScalePercent": 130, "capture": "/tmp/heroes-battle-guide-painted.s8jDZN/battle_compact_action_guide.png", "visibleFailures": ["Blackbranch C", "Mudglass Slin"], "sourceBoundary": "BattleBoardView._stack_short_label returns name.left(13) and _draw_stack_caption paints it directly", "overlapExclusion": "completed initiative-strip readable identity slice explicitly excluded board-token relabeling"},
+      "createdAt": "2026-08-18T11:34:28Z",
+      "startedAt": "2026-08-18T11:34:28Z",
+      "updatedAt": "2026-08-18T11:49:05Z",
+      "completedAt": "2026-08-18T11:49:05Z",
+      "notes": "Completed with live UI behavior, not documentation alone. Painted BattleBoard token captions now preserve fitting full names and end genuine multi-word overflow at a complete word with one Unicode ellipsis. The focused Board owner independently proves every caption against its full live stack name and occupied-stack tooltip at 1280 and 1920, while existing cursor/live identity, cursor/footer labels, initiative chips, geometry, input, session, and battle authority remain exact. Fresh painted pixels, broad Battle visual, accessibility, animation, core, static/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. No packaged Battle interaction or broader release claim is made.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader release-readiness gaps remain.",
+      "blockedReason": null
+    },
+    {
       "id": "ux-battle-action-guide-word-boundary-ellipsis-10184",
       "title": "Battle Action Guide Word-Boundary Ellipsis",
       "status": "completed",
@@ -90757,10 +90778,10 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The Battle ActionGuide word-boundary ellipsis slice is completed with Battle-local whole-word Unicode overflow, fresh painted compact proof, exact compact/wide source and tooltip authority, compatibility/static evidence, and bounded Linux/Windows export-startup proof. The game is not release-ready.",
+  "summary": "The BattleBoard stack-caption word-boundary ellipsis slice is completed with live painted complete-word overflow, exact full tooltip/live identity, focused/visual/compatibility/static evidence, and bounded Linux/Windows export-startup proof. The game is not release-ready.",
   "status": "completed",
   "taskId": "10184",
-  "updatedAt": "2026-08-18T11:29:57Z",
+  "updatedAt": "2026-08-18T11:49:05Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
