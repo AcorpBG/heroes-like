@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The active-play Main Menu label slice is complete: ordinary Overworld, Town, Battle, and Outcome save surfaces use Main Menu, Map Editor Play Copy retains Editor, and focused/compatibility/static/platform gates pass with bounded claims.",
+  "currentNotes": "Completed. The Main Menu Settings summary preserves the complete SettingsService value in its tooltip and uses a complete setting segment or word plus one Unicode ellipsis within the established compact budget; all focused, compatibility, static/editor, and bounded platform gates pass.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-active-play-main-menu-action-label-10184",
-  "currentSliceId": "ux-active-play-main-menu-action-label-10184",
-  "currentSliceNotes": "Completed from direct rendered evidence through exact cross-surface copy, editor exclusion, all-four-state route/retry, focus, accessibility, core, static/editor, and official Linux/Windows export/startup validation. Broader release readiness remains unclaimed.",
+  "currentSlice": "ux-main-menu-settings-summary-word-ellipsis-10184",
+  "currentSliceId": "ux-main-menu-settings-summary-word-ellipsis-10184",
+  "currentSliceNotes": "Completed with exact 1280x720/1920x1080 and UI-scale 100/130 summary/tooltip/geometry proof plus the existing Settings focus, dialog, persistence, compatibility, accessibility, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Active Play Stable Main Menu Action Label",
-  "currentSliceUpdatedAt": "2026-08-18T01:51:49Z",
+  "currentSliceTitle": "Main Menu Settings Summary Word Ellipsis",
+  "currentSliceUpdatedAt": "2026-08-18T02:55:16Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -89874,6 +89874,60 @@
       "notes": "Implemented one shared Main Menu action label with exact scene fallbacks, retained the Editor working-copy branch, and preserved contextual tooltip and route authority. Overworld, Town/Battle, Outcome/editor, all-four-state autosave failure/retry, active-focus, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. The first Overworld run exposed and corrected only a stale End? test oracle from the already-completed stable End Turn slice; its authoritative rerun passed. Packaged active-play interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
       "blockedReason": null
+    },
+    {
+      "id": "ux-main-menu-settings-summary-word-ellipsis-10184",
+      "title": "Main Menu Settings Summary Word Ellipsis",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Keep the compact Main Menu Cabinet summary readable by ending only its overflowing Settings line at a complete word while preserving the full exact Settings value in the existing tooltip.",
+      "implementationTargets": [
+        "scenes/menus/MainMenu.gd",
+        "tests/main_menu_keyboard_navigation_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/main_menu_keyboard_navigation_smoke.tscn",
+        "tests/active_play_settings_runtime_report.tscn",
+        "tests/settings_display_mode_transaction_regression.tscn",
+        "tests/settings_restore_defaults_regression.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "At 1280x720 and 1920x1080 with UI scale 100 and 130 percent, fitting Presentation, Audio, and Gameplay summary lines remain exact and the overflowing Accessibility line ends at the last complete word with exactly one Unicode ellipsis, never Battle s... or another partial token",
+        "SettingsSummary retains the exact complete SettingsService.describe_settings value in its tooltip, the established four-line plus hidden-line-count budget, and live containment without changing the Settings scene layout",
+        "Existing Settings controls/order/focus/scroll, persistence/display/destructive dialogs, first-view return focus, session/save/campaign authority, accessibility/core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "global FrontierVisualKit compact-text behavior, any non-Settings label, Settings values/schema/persistence, InputMap, display transactions, save/campaign/session, gameplay, content, AI, balance, or Native RMG changes",
+        "Settings scene/layout/size/font/theme/UI-scale options, new controls, control reorder, focus-cycle/scroll redesign, first-view composition, or ActivePlaySettingsDialog changes",
+        "packaged Settings interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing, publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "1184a68f",
+        "runtimeVisibleLine": "Accessibility: UI scale 100% | High contrast Off | Color cues Standard | Battle s...",
+        "runtimeFullPhrase": "Battle shake Full",
+        "midwordCut": true,
+        "lineBudget": 4,
+        "characterBudget": 84,
+        "hiddenLineSummary": "+ 1 more",
+        "renderedEvidence": ".artifacts/main_menu_keyboard_navigation_smoke/settings_entry_focus.png"
+      },
+      "createdAt": "2026-08-18T02:03:43Z",
+      "startedAt": "2026-08-18T02:03:43Z",
+      "completedAt": "2026-08-18T02:55:16Z",
+      "updatedAt": "2026-08-18T02:55:16Z",
+      "notes": "Completed one-label Settings summary fitting from direct current-HEAD evidence. The exact complete SettingsService value remains in the tooltip; fitting lines remain exact; overflow ends at a complete setting segment or word with one Unicode ellipsis and retains the established + 1 more row. The authoritative focused run passed the exact 1280x720/1920x1080 and UI-scale 100/130 matrix together with the existing full focus/dialog/persistence authority. Display-mode, restore-defaults, active-play Settings, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. The first focused attempt was excluded because Dummy-renderer screenshot capture was unsupported and its geometry oracle contradicted intentional scroll-to-focus behavior. Packaged Settings interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null
     }
   ],
   "project": "heroes-like",
@@ -90416,9 +90470,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Active-play save surfaces now use the stable Main Menu destination label while preserving contextual tooltips, exact routing/save authority, and the Map Editor Editor label. This is one bounded slice; the game is not release-ready.",
+  "summary": "The Main Menu Settings summary word-boundary ellipsis slice is completed with focused behavior, compatibility, static/editor, and bounded Linux/Windows export/startup evidence. The game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-18T01:51:49Z",
+  "updatedAt": "2026-08-18T02:55:16Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
