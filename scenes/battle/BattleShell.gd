@@ -1651,7 +1651,7 @@ func _set_battle_status_text(full_text: String) -> void:
 	_status_label.text = full_text
 	_status_label.tooltip_text = full_text
 	_status_label.clip_text = true
-	_status_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	_status_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_WORD_ELLIPSIS
 
 func _battle_focus_visible_surface(prefix: String, stack: Dictionary, cue: Dictionary) -> String:
 	var cue_label := "Stack check:" if prefix == "Active" else "Engagement check:"

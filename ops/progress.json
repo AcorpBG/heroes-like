@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed after direct visual re-audit. Successful post-action Latest/Next and blocked-action fallback Event copy now end on complete meaningful words with one Unicode ellipsis, while exact full tooltips, shared UI-kit behavior, layout, and battle authority remain unchanged. Select the next tracker-approved release-readiness implementation slice.",
+  "currentNotes": "Completed. The full-text Battle Status now uses native word ellipsis and fresh shipped-window evidence ends on complete Bramble … while exact text/tooltip, geometry, and battle authority remain unchanged. Select the next tracker-approved release-readiness implementation slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-battle-action-context-word-boundary-ellipsis-10184",
-  "currentSliceId": "ux-battle-action-context-word-boundary-ellipsis-10184",
-  "currentSliceNotes": "Completed after the fresh Xvfb audit corrected the initial source attribution. The action-context segments and Event-only fallback compactor now share exact meaningful-word fitting; independent Board and post-action controls plus a fresh painted capture prove the behavior and full tooltip authority.",
+  "currentSlice": "ux-battle-status-native-word-ellipsis-10184",
+  "currentSliceId": "ux-battle-status-native-word-ellipsis-10184",
+  "currentSliceNotes": "Completed as a one-property follow-up to the native pixel-overflow owner. Fresh painted evidence plus exact Board and compatibility gates prove word-safe overflow with unchanged full Status text/tooltip and geometry.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Battle Action Context Whole-Word Ellipsis",
-  "currentSliceUpdatedAt": "2026-08-18T05:10:35Z",
+  "currentSliceTitle": "Battle Status Native Word Ellipsis",
+  "currentSliceUpdatedAt": "2026-08-18T05:21:52Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -90087,6 +90087,27 @@
       "completedAt": "2026-08-18T05:10:35Z",
       "updatedAt": "2026-08-18T05:10:35Z",
       "notes": "Completed after correcting the initial source attribution through a fresh shipped-window audit. The 38/34-character successful post-action segments and the Event-only 96-character fallback line now use the last meaningful complete word plus one Unicode ellipsis; trailing articles/connectors are removed, while the exact full action/dispatch tooltips, three-line/hidden-count behavior, shared FrontierVisualKit, all other labels, geometry, event order, focus/input, and battle/session/save authority remain unchanged. Independent Town/Battle and Board controls, fresh Xvfb painted evidence, shared focus, animation, accessibility, core, repository/editor, and final Linux/Windows export-startup gates pass. Packaged Battle interaction and broader release claims remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null
+    },
+    {
+      "id": "ux-battle-status-native-word-ellipsis-10184",
+      "title": "Battle Status Native Word Ellipsis",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Keep the shipped full-text Battle Status overflow at a complete word instead of Bramble Scre… without changing its tooltip, geometry, or semantics.",
+      "implementationTargets": ["scenes/battle/BattleShell.gd", "tests/battle_controller_board_navigation_smoke.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "testOwners": ["tests/battle_controller_board_navigation_smoke.tscn", "tests/town_battle_visual_smoke.tscn", "tests/active_play_keyboard_focus_smoke.tscn", "tests/accessibility_screen_reader_semantics_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/packaging_linux_export_smoke.py", "tests/packaging_windows_export_smoke.py", "tests/validate_repo.py"],
+      "completionCriteria": ["Status retains exact full independent text and tooltip with native word ellipsis on overflow and full fit otherwise", "Header/Status/Pressure geometry plus Board/input/session authority remain exact", "Focused, compatibility, static/editor, Linux, and Windows startup gates pass"],
+      "nonGoals": ["status semantics, BattleRules, Header/Pressure, geometry, wrap, font, input/focus, combat, AI, balance, save/schema, or Native RMG changes", "new UI or shared compact-text changes", "packaged interaction or whole-release claims"],
+      "baseline": {"head": "c8f29051", "capture": ".artifacts/battle_controller_board_navigation_smoke/current_head_event_word_final.png", "visibleCut": "Bramble Scre…", "priorOwner": "ux-battle-status-native-pixel-ellipsis-10184"},
+      "createdAt": "2026-08-18T05:12:29Z",
+      "startedAt": "2026-08-18T05:12:29Z",
+      "completedAt": "2026-08-18T05:21:52Z",
+      "updatedAt": "2026-08-18T05:21:52Z",
+      "notes": "Completed the one-property native word-overrun correction. Exact full Status text/tooltip, clipping, TopBar geometry/order, Board/input/session authority, and every non-Status surface remain unchanged. Fresh Xvfb capture ends after complete Bramble rather than partial Scre; focused Board, Town/Battle visual, shared focus, accessibility, core, repository/editor, and final Linux/Windows export-startup gates pass. Packaged Battle interaction and broader release claims remain unclaimed.",
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
       "blockedReason": null
     }
