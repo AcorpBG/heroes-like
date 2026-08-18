@@ -324,7 +324,8 @@ func _exercise_overworld_end_turn_exclusive_case(case_data: Dictionary) -> bool:
 		"host_height_exact": int(layout_host.size.y) == 720,
 		"origin_root_viewport_exact": end_turn.get_viewport() == get_viewport(),
 		"warning_required": bool(live_snapshot.get("confirmation_required", false)),
-		"surface_warned": String(live_snapshot.get("surface_button_text", "")).begins_with("End?"),
+		"stable_action_label": String(live_snapshot.get("surface_button_text", "")) == "End Turn?",
+		"surface_warned": bool(live_snapshot.get("surface_warning_hint", false)),
 	}
 	if not _checks_exact(fixture_checks):
 		return _fail_exclusive_end_turn_case(layout_host, autosave_states, "%s exact-width End Turn fixture failed: %s." % [case_id, JSON.stringify(fixture_checks)])

@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Overworld hero card now prioritizes exact mana in its live two-line first view while retaining full movement-and-mana tooltip authority and the adjacent exact movement command summary.",
+  "currentNotes": "The warned Overworld End Turn control now keeps exact End Turn? action identity while its existing tooltip and confirmation surfaces retain the contextual reason.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-overworld-hero-card-mana-first-view-10184",
-  "currentSliceId": "ux-overworld-hero-card-mana-first-view-10184",
-  "currentSliceNotes": "Completed with exact 1280x720/1920x1080 mana-first text, full tooltip, adjacent movement, proportional-font fit, portrait/rail/session authority, compatibility, static/editor, and bounded Linux/Windows packaging evidence; the painted-report timeout produced no artifact and is excluded.",
+  "currentSlice": "ux-overworld-stable-end-turn-action-label-10184",
+  "currentSliceId": "ux-overworld-stable-end-turn-action-label-10184",
+  "currentSliceNotes": "Completed with explicit warning_hint ownership, exact stable End Turn? copy, three live input modalities at 1280/1920, route/accessibility/core compatibility, static/editor, and bounded Linux/Windows export/startup evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Overworld Hero Card Mana First View",
-  "currentSliceUpdatedAt": "2026-08-18T00:18:46Z",
+  "currentSliceTitle": "Overworld Stable End Turn Action Label",
+  "currentSliceUpdatedAt": "2026-08-18T00:52:28Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -89749,6 +89749,73 @@
       "notes": "Implemented one value-only mana-first visible formatter while preserving the exact prior full movement-and-mana tooltip. Focused 1280x720/1920x1080 live proof covers exact visible/full strings, adjacent movement, themed pixel fit, native word ellipsis ownership, HeroPanel/Sidebar containment, portrait geometry, and whole-session authority. Full Overworld visual, controller/cached route, active focus, accessibility, spell hooks, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup gates pass. The separate painted-report watchdog produced no new screenshot or report and is excluded. Packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
       "blockedReason": null
+    },
+    {
+      "id": "ux-overworld-stable-end-turn-action-label-10184",
+      "title": "Overworld Stable End Turn Action Label",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Keep the warned End Turn control's action identity explicit while retaining exact contextual warning reasons in the existing tooltip and confirmation flow.",
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "tests/active_play_keyboard_focus_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/overworld_visual_smoke.tscn",
+        "tests/overworld_controller_route_selection_regression.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "Every warned battle, town, route, other-action, and remaining-movement surface uses exact End Turn? copy while unblocked/spent movement remains End Turn",
+        "Warning and confirmation ownership uses an explicit boolean surface field rather than parsing player-facing copy; exact reason, tooltip, dialog, cancel/confirm, movement, route, save, and session authority remain unchanged",
+        "Focused two-width input/focus, Overworld visual/route, accessibility, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "turn rules, warning thresholds/reasons, movement, route, action, battle, town, AI, content, save/schema, or Native RMG behavior changes",
+        "button geometry, font, theme, tooltip/detail reduction, confirmation dialog redesign, controller mappings, audio, VFX, or broader Overworld redesign",
+        "packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing, publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "944bb748",
+        "observedArtifact": ".artifacts/ui_runtime_skin_visual_report/overworld_1280x720.png",
+        "observedAmbiguousCopy": "End? Route",
+        "intendedAction": "End Turn"
+      },
+      "createdAt": "2026-08-18T00:42:16Z",
+      "startedAt": "2026-08-18T00:42:16Z",
+      "updatedAt": "2026-08-18T00:52:28Z",
+      "completedAt": "2026-08-18T00:52:28Z",
+      "completionEvidence": {
+        "focusedArtifact": "/tmp/heroes-end-turn-focused.fk86Fg",
+        "compatibilityArtifact": "/tmp/heroes-end-turn-compat.CuK6El",
+        "editorArtifact": "/tmp/heroes-end-turn-editor.dpEp4i",
+        "stableActionLabelExact": true,
+        "explicitWarningHintExact": true,
+        "liveInputCases": [
+          "controller_1280",
+          "keyboard_1920",
+          "mouse_1280"
+        ],
+        "routeAuthorityExact": true,
+        "accessibilitySemanticsExact": true,
+        "sessionSaveAuthorityExact": true,
+        "linuxReport": ".artifacts/packaging_linux_export_smoke/report.json",
+        "windowsReport": ".artifacts/packaging_windows_export_smoke/report.json",
+        "platformClaim": "Linux export plus packaged headless startup and Windows export plus fresh-Wine Boot/MainMenu/native-DLL startup only"
+      },
+      "notes": "Implemented stable warned End Turn copy and independent warning state after direct current 1280 visual evidence. Focused exclusive-input, route tooltip/controller, accessibility, core, static/editor, and official Linux/Windows export/startup gates pass. Two balance candidates were rejected read-only before selection and did not change content. Packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null
     }
   ],
   "project": "heroes-like",
@@ -90293,7 +90360,7 @@
   ],
   "summary": "Overworld empty manual-slot status clarity is implemented and validated from direct rendered evidence through the real empty-to-ready save path. This is one bounded slice; the game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-17T23:38:13Z",
+  "updatedAt": "2026-08-18T00:52:28Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

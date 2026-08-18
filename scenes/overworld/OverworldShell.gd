@@ -1234,7 +1234,7 @@ func _current_end_turn_warning() -> Dictionary:
 		and not bool(forecast_state.get("shown", false))
 	)
 	var reasons := []
-	if String(surface.get("button_text", "")).begins_with("End?"):
+	if bool(surface.get("warning_hint", false)):
 		var movement = _session.overworld.get("movement", {})
 		if int(movement.get("current", 0)) > 0:
 			reasons.append("movement_remaining")
@@ -7560,23 +7560,29 @@ func _end_turn_confirmation_surface(field_readiness: Dictionary = {}) -> Diction
 	var action_id := String(primary_action.get("id", ""))
 	var action_label := String(primary_action.get("label", "")).strip_edges()
 	var button_text := "End Turn"
+	var warning_hint := false
 	var confirmation := "End the day when field orders are complete."
 	if move_current <= 0:
 		confirmation = "Movement is spent; ending the day is the practical next step."
 	elif action_id == "enter_battle":
-		button_text = "End? Battle"
+		button_text = "End Turn?"
+		warning_hint = true
 		confirmation = "An encounter order is available before ending the day."
 	elif action_id == "visit_town":
-		button_text = "End? Town"
+		button_text = "End Turn?"
+		warning_hint = true
 		confirmation = "A town entry order is available before ending the day."
 	elif action_id in ["advance_route", "march_selected"]:
-		button_text = "End? Route"
+		button_text = "End Turn?"
+		warning_hint = true
 		confirmation = "A route order is available before ending the day."
 	elif action_label != "" and not bool(primary_action.get("disabled", false)):
-		button_text = "End? Action"
+		button_text = "End Turn?"
+		warning_hint = true
 		confirmation = "%s is available before ending the day." % action_label
 	else:
-		button_text = "End? %d Left" % move_current
+		button_text = "End Turn?"
+		warning_hint = true
 		confirmation = "Movement remains before ending the day."
 	var spend_check := "No movement remains; next day refreshes to %d move." % move_max
 	if move_current > 0:
@@ -7608,6 +7614,7 @@ func _end_turn_confirmation_surface(field_readiness: Dictionary = {}) -> Diction
 		tooltip_lines.append("- End turn forecast: %s" % forecast)
 	return {
 		"button_text": button_text,
+		"warning_hint": warning_hint,
 		"tooltip_text": "\n".join(tooltip_lines),
 		"confirmation": confirmation,
 		"next_step": next_step,
@@ -10880,6 +10887,7 @@ func validation_end_turn_confirmation_snapshot() -> Dictionary:
 		"confirmation_required": bool(current_warning.get("requires_confirmation", false)),
 		"risk_unconsumed": bool(current_warning.get("risk_unconsumed", false)),
 		"surface_button_text": String(surface.get("button_text", "")),
+		"surface_warning_hint": bool(surface.get("warning_hint", false)),
 		"surface_confirmation": String(surface.get("confirmation", "")),
 		"surface_spend_check": String(surface.get("spend_check", "")),
 		"surface_route_line": String(surface.get("route_line", "")),
