@@ -14697,12 +14697,32 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
     ensure(runtime_size_match is not None, errors, "SettingsService is missing the root Window size synchronization helper")
     if runtime_size_match is not None:
         runtime_size_body = runtime_size_match.group("body")
-        for required_token in ("var root := get_tree().root", "if root != null:", "root.size = size", "root.content_scale_size = size", "return", "DisplayServer.window_set_size(size)"):
+        for required_token in ("DisplayServer.window_set_size(size)", "var root := get_tree().root", "if root == null:", "return", "root.size = size", "root.content_scale_size = size"):
             ensure(required_token in runtime_size_body, errors, f"Runtime Window size helper is missing fail-closed synchronization token: {required_token}")
         ensure(
-            runtime_size_body.index("root.size = size") < runtime_size_body.index("DisplayServer.window_set_size(size)"),
+            runtime_size_body.index("DisplayServer.window_set_size(size)") < runtime_size_body.index("var root := get_tree().root") < runtime_size_body.index("root.size = size") < runtime_size_body.index("root.content_scale_size = size"),
             errors,
-            "Runtime Window size helper must prefer the root Window property before the detached native fallback",
+            "Runtime Window size helper must synchronize native, root Window, and content-scale authorities in exact order",
+        )
+        ensure("if root != null:" not in runtime_size_body, errors, "Runtime Window size helper must not restore native sizing as a root-null-only fallback")
+    capture_runtime_match = re.search(
+        r"func _capture_runtime_display_state\(\) -> Dictionary:(?P<body>.*?)(?=\nfunc )",
+        settings_text,
+        flags=re.DOTALL,
+    )
+    ensure(capture_runtime_match is not None, errors, "SettingsService is missing runtime display-state capture")
+    if capture_runtime_match is not None:
+        capture_runtime_body = capture_runtime_match.group("body")
+        ensure("var root := get_tree().root" in capture_runtime_body, errors, "Runtime display capture must resolve the live root Window")
+        ensure(
+            '"size": root.size if root != null else DisplayServer.window_get_size()' in capture_runtime_body,
+            errors,
+            "Runtime display rollback must capture live root size while retaining a detached native fallback",
+        )
+        ensure(
+            '"size": DisplayServer.window_get_size()' not in capture_runtime_body,
+            errors,
+            "Runtime display rollback must not treat an unavailable headless native size as live root authority",
         )
     restore_runtime_match = re.search(
         r"func _restore_runtime_display_state\(runtime_state: Variant\) -> void:(?P<body>.*?)(?=\nfunc )",
@@ -16677,6 +16697,8 @@ def validate_main_menu_first_view(errors: list[str]) -> None:
         "editor_rect.intersects(quit_rect)",
         'for command_name in ["OpenCampaign", "OpenSkirmish", "OpenSaves", "OpenSettings", "OpenEditor", "Quit"]:',
         "DisplayServer.window_get_size()",
+        'var physical_size_exact: bool = physical_size == requested_size',
+        'or (DisplayServer.get_name() == "headless" and physical_size == Vector2i.ZERO)',
         "get_tree().root.size",
         "get_tree().root.content_scale_size",
         "var viewport_size := shell.size",
@@ -16696,6 +16718,8 @@ def validate_main_menu_first_view(errors: list[str]) -> None:
     ensure(editor_frame_match is not None, errors, "Could not isolate Main Menu supported-width first-view proof")
     if editor_frame_match is not None:
         editor_frame_body = editor_frame_match.group("body")
+        ensure("if not physical_size_exact" in editor_frame_body, errors, "Main Menu first-view proof must apply its display-server-specific native-size gate")
+        ensure("physical_size != requested_size" not in editor_frame_body, errors, "Main Menu first-view proof must not require unavailable headless native-window geometry")
         ensure("get_viewport_rect()" not in editor_frame_body, errors, "Main Menu first-view containment must use the live shell/root rectangle, not the authored content-scale base rectangle")
         ensure("get_window().size = requested_size" not in editor_frame_body and "get_window().size = original_size" not in editor_frame_body, errors, "Main Menu size-sync proof must exercise the production SettingsService boundary instead of bypassing content-scale synchronization")
     focus_scroll_match = re.search(
@@ -17047,6 +17071,40 @@ def validate_main_menu_destructive_exclusive_parent_input(errors: list[str]) -> 
         ensure(required_token in smoke_text, errors, f"Main Menu destructive exclusive-parent smoke is missing token: {required_token}")
     ensure("manual_slot_%d.json" not in smoke_text, errors, "Main Menu smoke must not use the stale manual-slot filename")
 
+    display_case_match = re.search(
+        r"func _exercise_display_change_exclusive_case\(case_data: Dictionary\) -> bool:(.*?)(?=\n\nfunc )",
+        smoke_text,
+        flags=re.DOTALL,
+    )
+    ensure(display_case_match is not None, errors, "Main Menu smoke is missing its Display Change exclusive case")
+    if display_case_match is not None:
+        display_case_body = display_case_match.group(1)
+        shell_add_index = display_case_body.find("layout_host.add_child(shell)")
+        probe_add_index = display_case_body.find("layout_host.add_child(parent_probe)")
+        fixture_settings_index = display_case_body.find("var display_fixture := SettingsService.ensure_settings().duplicate(true)")
+        apply_settings_index = display_case_body.find("SettingsService.apply_settings()")
+        save_settings_index = display_case_body.find("var display_fixture_path := SettingsService.save_settings()")
+        runtime_gate_index = display_case_body.find("var runtime_fixture_checks :=")
+        settings_open_index = display_case_body.find('shell.call("validation_open_settings_stage")')
+        preview_authority_index = display_case_body.find("var authority_before_preview :=")
+        ensure(
+            0 <= shell_add_index < probe_add_index < fixture_settings_index < apply_settings_index < save_settings_index < runtime_gate_index < settings_open_index < preview_authority_index,
+            errors,
+            "Main Menu Display Change fixture must apply and verify its runtime display baseline after shell startup and before Settings/preview authority",
+        )
+        for required_fixture_token in (
+            'display_fixture["presentation"]["mode"] = SettingsService.PRESENTATION_WINDOWED',
+            'display_fixture["presentation"]["resolution"] = "1280x720" if width == 1280 else "1920x1080"',
+            '"settings_file_exact": display_fixture_path == SettingsService.SETTINGS_FILE',
+            'var native_size := DisplayServer.window_get_size()',
+            'or (DisplayServer.get_name() == "headless" and native_size == Vector2i.ZERO)',
+            '"window_size_exact": get_window().size == expected_runtime_size',
+            '"root_size_exact": root_window != null and root_window.size == expected_runtime_size',
+            '"content_scale_exact": root_window != null and root_window.content_scale_size == expected_runtime_size',
+        ):
+            ensure(required_fixture_token in display_case_body, errors, f"Main Menu Display Change runtime fixture is missing exact token: {required_fixture_token}")
+        ensure("get_window().size = Vector2i(width, 720)" not in display_case_body, errors, "Main Menu Display Change fixture must not use a Window-only size assignment that bypasses SettingsService runtime authority")
+
     display_control_text = SETTINGS_DISPLAY_MODE_TRANSACTION_REGRESSION_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
         "SettingsService.revert_display_change",
@@ -17057,12 +17115,15 @@ def validate_main_menu_destructive_exclusive_parent_input(errors: list[str]) -> 
         "HEROES_LIKE_DISPLAY_CHANGE_FORCE_SAVE_FAILURE",
         "Injected save failure did not restore the exact runtime display state",
         "func _assert_runtime_size_authority(expected: Vector2i, label: String) -> bool:",
-        '"native": DisplayServer.window_get_size()',
+        '"native": native_size',
         '"window": get_window().size',
         '"root": root.size if root != null else Vector2i.ZERO',
         '"content_scale": root.content_scale_size if root != null else Vector2i.ZERO',
         '_assert_runtime_size_authority(Vector2i(1280, 720), "Committed fixture")',
         '_assert_runtime_size_authority(applied, "Clamped preview")',
+        'var native_size := DisplayServer.window_get_size()',
+        'var native_size_exact := native_size == expected',
+        'or (DisplayServer.get_name() == "headless" and native_size == Vector2i.ZERO)',
     ):
         ensure(required_token in display_control_text, errors, f"Display Change focused control is missing token: {required_token}")
 
@@ -46036,7 +46097,7 @@ def validate_packaged_settings_persistence_smoke(errors: list[str]) -> None:
             "func _assert_runtime_size_authority(expected: Vector2i, label: String) -> bool:",
             '_assert_runtime_size_authority(Vector2i(1280, 720), "Committed fixture")',
             '_assert_runtime_size_authority(applied, "Clamped preview")',
-            '"native": DisplayServer.window_get_size()',
+            '"native": native_size',
             '"window": get_window().size',
             '"root": root.size if root != null else Vector2i.ZERO',
             '"content_scale": root.content_scale_size if root != null else Vector2i.ZERO',

@@ -1233,12 +1233,12 @@ func _apply_display_candidate(mode_id: String, requested_size: Vector2i) -> Vect
 	return applied_size
 
 func _set_runtime_window_size(size: Vector2i) -> void:
-	var root := get_tree().root
-	if root != null:
-		root.size = size
-		root.content_scale_size = size
-		return
 	DisplayServer.window_set_size(size)
+	var root := get_tree().root
+	if root == null:
+		return
+	root.size = size
+	root.content_scale_size = size
 
 func _apply_audio_settings() -> void:
 	_apply_audio_bus("Master", master_volume_percent(), 0)
@@ -1396,10 +1396,11 @@ func _clamped_display_size(mode_id: String, requested_size: Vector2i) -> Vector2
 	)
 
 func _capture_runtime_display_state() -> Dictionary:
+	var root := get_tree().root
 	return {
 		"mode": DisplayServer.window_get_mode(),
 		"borderless": DisplayServer.window_get_flag(DisplayServer.WINDOW_FLAG_BORDERLESS),
-		"size": DisplayServer.window_get_size(),
+		"size": root.size if root != null else DisplayServer.window_get_size(),
 		"position": DisplayServer.window_get_position(),
 		"screen": DisplayServer.window_get_current_screen(),
 	}
