@@ -25,6 +25,8 @@ Rules:
 Current phase: **Phase 6 - Production Alpha Layer**.
 
 - Selected implementation slice: none. Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence.
+- Completed implementation slice: `ux-battle-board-stack-caption-word-boundary-ellipsis-10184`. Painted BattleBoard token captions now retain fitting full names and end overflowing multi-word names at a complete word with one Unicode ellipsis, replacing ambiguous `Blackbranch C` and `Mudglass Slin` cuts. Existing full-name occupied-stack tooltips and polite cursor context, the separate cursor/footer label, initiative chips, token geometry, input, and battle authority remain exact. Focused 1280/1920 Board proof, fresh painted pixels, broad Battle visual, accessibility, animation, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction and broader release claims remain unclaimed.
+  id: `ux-battle-board-stack-caption-word-boundary-ellipsis-10184`
 - Completed implementation slice: `ux-battle-action-guide-word-boundary-ellipsis-10184`. The compact Battle ActionGuide now fits each existing source line through the established Battle-local whole-word Unicode-ellipsis policy, so the fresh 1280x720/130% painted Position check ends after the complete phrase `(1 step)…` instead of cutting the next word as `t...`. Exact source order and enriched tooltip remain authoritative; compact retains two guide lines and wide retains three through the real 1280->1920->1280 refit. Focused runtime, painted pixels, Board navigation, shared focus, accessibility, core, authoritative 1280/1920 routed layout, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
   id: `ux-battle-action-guide-word-boundary-ellipsis-10184`
 - Completed implementation slice: `ux-battle-compact-system-command-access-10184`. At the truthful 1280x720 root with supported 130% UI scale, the existing Battle footer now stacks its essential `Manual 1 / Save / Settings / Main Menu` row below the preserved board, spell, and action controls. Compact mode removes only decorative panel/padding overhead, the redundant speed shortcut row, the supplemental save-summary first view, and the third tactical-guide first-view line; exact settings/save summaries and all three tactical lines remain in existing tooltips/settings paths. The live Settings modal returns focus to the visible Settings command, while 1920x1080 restores the exact framed two-column footer, speed row, save summary, and three-line guide. Focused compact/wide behavior, painted 1280 evidence, Board navigation, keyboard/controller focus, accessibility, core, 1280/1920 routed layout, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -7597,6 +7599,38 @@ Completion evidence:
 - the focused active-play report exits naturally `PASS`, proving compact and wide containment, exact system-command text/tooltips/focusability/selection/item metadata, visible Settings focus return, 1280->1920->1280 refit, and unchanged battle authority;
 - controller Board navigation, shared keyboard/controller focus, accessibility semantics, core systems, and independent 1280/1920 Battle layout owners exit naturally green; the layout owners preserve direct/button actions, ordinary/outcome routing, save/resume, menu authority, and scene restoration;
 - repository validation, Python compilation, JSON/diff checks, exact/generic editor parses, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. These are bounded export/startup claims only, not packaged Battle interaction or broader release certification.
+
+## Completed Slice: Battle Board Stack Caption Word-Boundary Ellipsis
+
+id: `ux-battle-board-stack-caption-word-boundary-ellipsis-10184`
+
+Status: completed.
+
+Implementation boundary:
+- replace only each painted BattleBoard stack-token caption's raw 13-codepoint cut with a BattleBoard-local complete-word Unicode-ellipsis materialization;
+- retain the exact full stack name in existing occupied-stack hover tooltips and polite cursor live context, and leave the separate footer cursor label unchanged;
+- preserve token positions, icon/animation, count badge, health bar, side cue, hit testing, turn strip, board geometry, focus/input, and battle authority.
+
+Completion criteria:
+- fresh 1280x720/130% painted Battle evidence contains no mid-token `Blackbranch C` or `Mudglass Slin` captions; fitting names remain exact and overflowing multi-word names end after a complete word with one Unicode ellipsis;
+- focused Board validation independently compares every painted caption with its full live stack name, rejects ASCII ellipses/mid-token boundaries, and proves the existing full-name tooltip/live context and footer cursor behavior remain exact;
+- Board navigation, Battle layout/visual, accessibility, animation, core, repository/editor, and bounded Linux/Windows export-startup gates pass with session/battle/save/settings authority unchanged.
+
+Non-goals:
+- no initiative-strip chip, cursor/footer label, live-region wording, stack/unit name, caption character budget, font, token size/position, board/layout, tooltip content, or shared UI-kit change;
+- no combat rules, initiative, movement, targeting, action, animation timing, content, balance, AI, save/schema, renderer, map, or Native RMG change;
+- no packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- pushed HEAD `6386b6ef` and `/tmp/heroes-battle-guide-painted.s8jDZN/battle_compact_action_guide.png` visibly render `Blackbranch C` and `Mudglass Slin` above their tokens;
+- `BattleBoardView._stack_short_label` returns `name.left(13)` and `_draw_stack_caption` paints it directly, with no ellipsis or word-boundary policy;
+- completed `ux-battle-initiative-strip-readable-stack-identity-10184` explicitly excluded board-token relabeling, so this caption-only boundary does not reopen its chip geometry/tooltip owner.
+
+Completion evidence:
+- `/tmp/heroes-board-caption-painted.cHBhHq/battle-caption.png` is a fresh real-renderer 1280 Battle capture with explicit complete-word token-caption ellipses instead of the prior unmarked mid-token cuts;
+- `/tmp/heroes-board-caption-rerun.hSrfHw` exits naturally with the exact Board PASS marker, independently proving every painted caption against its full live stack name, full-name tooltip, fitting-name control, genuine overflow, and unchanged Board authority at 1280 and 1920;
+- broad Town/Battle visual, accessibility semantics, battle animation, and core owners exit naturally green with no selected diagnostics; the immediately preceding authoritative 1280/1920 routed layout gates remain applicable because caption drawing does not mutate any Control geometry;
+- repository validation, Python compilation, JSON/diff checks, exact editor parses, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. These remain bounded export/startup claims only.
 
 ## Completed Slice: Battle Action Guide Word-Boundary Ellipsis
 

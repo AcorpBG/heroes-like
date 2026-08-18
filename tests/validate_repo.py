@@ -15689,6 +15689,9 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
         "_turn_strip_entry_tooltip",
         "_turn_strip_chip_label",
         "validation_turn_strip_identity_surface",
+        "_draw_stack_caption",
+        "_stack_caption_label",
+        "validation_stack_caption_summary",
         "_draw_footer_line",
         "_footer_summary_text",
         "_footer_summary_fit",
@@ -15781,6 +15784,51 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
         ensure(required_token in chip_label_body, errors, f"Battle initiative readable-label fitter is missing exact token: {required_token}")
     for forbidden_token in ("split(\" \")", "to_upper", "_stack_initials", "stack[", "sort"):
         ensure(forbidden_token not in chip_label_body, errors, f"Battle initiative readable-label fitter must preserve source identity and avoid {forbidden_token}")
+
+    draw_caption_body = bodies.get("_draw_stack_caption", "")
+    ensure(draw_caption_body.count("_stack_caption_label(stack)") == 1 and "_stack_short_label(stack)" not in draw_caption_body, errors, "Painted BattleBoard stack captions must use only the dedicated word-boundary label")
+    caption_label_body = bodies.get("_stack_caption_label", "")
+    caption_order = tuple(caption_label_body.find(token) for token in (
+        "var full_name := _stack_full_name(stack)",
+        "if full_name.length() <= 13:",
+        "return full_name",
+        "var prefix := full_name.left(12)",
+        'var boundary := prefix.rfind(" ")',
+        'return "…"',
+        'return "%s…" % prefix.left(boundary).strip_edges()',
+    ))
+    ensure(all(index >= 0 for index in caption_order) and list(caption_order) == sorted(caption_order), errors, "BattleBoard caption fitter must retain exact fitting names and truncate overflowing multi-word names only at the last complete word")
+    for forbidden_token in ('"..."', "_turn_strip_chip_label", "_stack_short_label", "get_theme", "BattleRules", "Input.", "sort(", "erase("):
+        ensure(forbidden_token not in caption_label_body, errors, f"BattleBoard caption fitting must remain local, deterministic, and caption-only: {forbidden_token}")
+    caption_surface_body = bodies.get("validation_stack_caption_summary", "")
+    caption_surface_order = tuple(caption_surface_body.find(token) for token in (
+        "for stack in _all_visible_stacks():",
+        'var battle_id := String(stack.get("battle_id", ""))',
+        '"full_name": _stack_full_name(stack)',
+        '"visible_caption": _stack_caption_label(stack)',
+        '"tooltip": _stack_board_tooltip(battle_id)',
+        "return rows",
+    ))
+    ensure(all(index >= 0 for index in caption_surface_order) and list(caption_surface_order) == sorted(caption_surface_order), errors, "BattleBoard caption validation must expose exact painted/full/tooltip identity in live stack order")
+    for forbidden_token in ("Input.", "emit_signal", "queue_redraw", "sort(", "erase(", "BattleRules"):
+        ensure(forbidden_token not in caption_surface_body, errors, f"BattleBoard caption validation must remain observation-only: {forbidden_token}")
+
+    caption_test_match = re.search(r"func _validate_stack_caption_word_boundaries\(board: Control, session\) -> bool:(?P<body>.*?)(?=\nfunc )", smoke_text, re.S)
+    ensure(caption_test_match is not None, errors, "Battle controller owner must independently prove painted stack-caption word boundaries")
+    if caption_test_match is not None:
+        caption_test_body = caption_test_match.group("body")
+        for required_token in ("validation_stack_caption_summary", "rows.size() != visible_stack_count", "_stack_by_battle_id(session.battle, battle_id)", "_stack_caption_word_text_control(full_name)", 'visible_caption.contains("...")', 'String(row.get("tooltip", "")).contains(full_name)', 'visible_caption.ends_with("…")', 'full_name.substr(prefix.length(), 1) != " "', "if not saw_overflow:"):
+            ensure(required_token in caption_test_body, errors, f"Battle stack-caption owner is missing exact independent/full-identity token: {required_token}")
+        for forbidden_token in ("_stack_caption_label", "_draw_stack_caption", ".text =", "queue_redraw", "Input.", "sort(", "erase("):
+            ensure(forbidden_token not in caption_test_body, errors, f"Battle stack-caption owner must remain independent and read-only: {forbidden_token}")
+    caption_control_match = re.search(r"func _stack_caption_word_text_control\(full_name: String\) -> String:(?P<body>.*?)(?=\nfunc )", smoke_text, re.S)
+    ensure(caption_control_match is not None, errors, "Battle controller owner must provide one independent caption-fitting control")
+    if caption_control_match is not None:
+        caption_control_body = caption_control_match.group("body")
+        for required_token in ("cleaned.length() <= 13", "cleaned.left(12)", 'prefix.rfind(" ")', 'return "…"', 'return "%s…" % prefix.left(boundary).strip_edges()'):
+            ensure(required_token in caption_control_body, errors, f"Independent Battle caption control is missing exact token: {required_token}")
+        for forbidden_token in ("_stack_caption_label", "_stack_short_label", "BattleBoardView", "board.call", "sort(", "erase("):
+            ensure(forbidden_token not in caption_control_body, errors, f"Independent Battle caption control must not depend on production helpers: {forbidden_token}")
 
     validation_surface_body = bodies.get("validation_turn_strip_identity_surface", "")
     validation_order = tuple(validation_surface_body.find(token) for token in (

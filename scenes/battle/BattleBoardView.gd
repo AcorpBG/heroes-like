@@ -939,6 +939,20 @@ func validation_unit_art_summary() -> Dictionary:
 		"stacks": stack_entries,
 	}
 
+func validation_stack_caption_summary() -> Array:
+	var rows: Array = []
+	for stack in _all_visible_stacks():
+		if not (stack is Dictionary):
+			continue
+		var battle_id := String(stack.get("battle_id", ""))
+		rows.append({
+			"battle_id": battle_id,
+			"full_name": _stack_full_name(stack),
+			"visible_caption": _stack_caption_label(stack),
+			"tooltip": _stack_board_tooltip(battle_id),
+		})
+	return rows
+
 func validation_animation_playback_summary() -> Dictionary:
 	_expire_animation_playback_records()
 	var records := {}
@@ -3571,7 +3585,7 @@ func _draw_count_badge(center: Vector2, token_radius: float, stack: Dictionary) 
 	_draw_centered_text(str(count), badge_center + Vector2(0.0, 3.5), TEXT_COLOR, 10)
 
 func _draw_stack_caption(center: Vector2, radius: float, stack: Dictionary) -> void:
-	var label := _stack_short_label(stack)
+	var label := _stack_caption_label(stack)
 	var caption_pos := center + Vector2(-radius * 0.72, -radius * 0.62)
 	_draw_text(label, caption_pos, TEXT_COLOR, 10)
 
@@ -4499,6 +4513,16 @@ func _stack_full_name(stack: Dictionary) -> String:
 func _stack_short_label(stack: Dictionary) -> String:
 	var name := String(stack.get("name", stack.get("unit_id", "Stack")))
 	return name.left(13)
+
+func _stack_caption_label(stack: Dictionary) -> String:
+	var full_name := _stack_full_name(stack)
+	if full_name.length() <= 13:
+		return full_name
+	var prefix := full_name.left(12)
+	var boundary := prefix.rfind(" ")
+	if boundary <= 0:
+		return "…"
+	return "%s…" % prefix.left(boundary).strip_edges()
 
 func _side_color(side: String) -> Color:
 	var fallback := PLAYER_COLOR if side == "player" else ENEMY_COLOR

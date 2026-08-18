@@ -37,6 +37,8 @@ func _run() -> void:
 	var board: Control = shell.get_node("%BattleBoard")
 	var battle_live: Label = shell.get_node("%BattleBoardCursorLive")
 	var battle_semantic_timer: Timer = board.get("_battle_board_cursor_semantic_timer")
+	if not _validate_stack_caption_word_boundaries(board, session):
+		return
 	board.stack_focus_requested.connect(_on_stack_focus_requested)
 	if get_viewport().gui_get_focus_owner() == board:
 		return _fail("Battle entry must retain preferred command focus instead of auto-entering the board.")
@@ -744,6 +746,47 @@ func _stack_by_battle_id(battle: Dictionary, battle_id: String) -> Dictionary:
 		if stack_value is Dictionary and String(stack_value.get("battle_id", "")) == battle_id:
 			return stack_value
 	return {}
+
+func _validate_stack_caption_word_boundaries(board: Control, session) -> bool:
+	if not board.has_method("validation_stack_caption_summary"):
+		return _fail_bool("BattleBoard does not expose its painted stack-caption summary.")
+	var rows: Array = board.call("validation_stack_caption_summary")
+	var visible_stack_count := 0
+	for stack in session.battle.get("stacks", []):
+		if stack is Dictionary and int(stack.get("total_health", 0)) > 0:
+			visible_stack_count += 1
+	if rows.size() != visible_stack_count or rows.is_empty():
+		return _fail_bool("BattleBoard stack-caption rows do not match live visible stacks: rows=%s battle=%s." % [rows, session.battle])
+	var saw_overflow := false
+	for row_value in rows:
+		if not (row_value is Dictionary):
+			return _fail_bool("BattleBoard stack-caption summary contains a malformed row: %s." % row_value)
+		var row: Dictionary = row_value
+		var battle_id := String(row.get("battle_id", ""))
+		var stack := _stack_by_battle_id(session.battle, battle_id)
+		var full_name := String(stack.get("name", stack.get("unit_id", "Stack"))).strip_edges()
+		var visible_caption := String(row.get("visible_caption", ""))
+		var expected_caption := _stack_caption_word_text_control(full_name)
+		if String(row.get("full_name", "")) != full_name or visible_caption != expected_caption or visible_caption.contains("...") or not String(row.get("tooltip", "")).contains(full_name):
+			return _fail_bool("BattleBoard stack caption lost exact word-boundary/full-identity authority: row=%s expected=%s." % [row, expected_caption])
+		if visible_caption.ends_with("…"):
+			saw_overflow = true
+			var prefix := visible_caption.trim_suffix("…")
+			if prefix == "" or not full_name.begins_with(prefix) or full_name.substr(prefix.length(), 1) != " ":
+				return _fail_bool("BattleBoard stack caption ended inside a live stack-name token: row=%s." % row)
+	if not saw_overflow:
+		return _fail_bool("BattleBoard stack-caption fixture did not exercise genuine multi-word overflow: %s." % rows)
+	return true
+
+func _stack_caption_word_text_control(full_name: String) -> String:
+	var cleaned := full_name.strip_edges()
+	if cleaned.length() <= 13:
+		return cleaned
+	var prefix := cleaned.left(12)
+	var boundary := prefix.rfind(" ")
+	if boundary <= 0:
+		return "…"
+	return "%s…" % prefix.left(boundary).strip_edges()
 
 func _validate_battle_status_native_ellipsis(shell: Control, session, width: int, expect_overflow: bool) -> bool:
 	var authority_before := _battle_background_authority(session)
