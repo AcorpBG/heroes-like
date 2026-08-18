@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `ux-battle-action-context-word-boundary-ellipsis-10184`. The shipped Battle post-action `Latest:` and `Next:` rail now truncates only at complete words with one Unicode ellipsis while retaining the exact full action context and tooltip. Focused post-action visual, Board/controller, shared focus, animation, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. The optional headless screenshot attempt was excluded because its renderer returned no viewport image; the unchanged Board behavior rerun passed. Packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `ux-battle-action-context-word-boundary-ellipsis-10184`
 - Completed implementation slice: `ux-battle-timing-check-detail-prefix-deduplication-10184`. The older Timing-check detail cue now extracts only each board-line value and removes the duplicated leading `Cast` from the next-action subject, while preserving the exact ready action payload, complete timing board, and completed three-line first view. Focused cue parity, Battle navigation/focus/animation/accessibility/core compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. A preexisting animation observer race was corrected test-only by starting the real Board playback before waiting and sampling. Packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `ux-battle-timing-check-detail-prefix-deduplication-10184`
 - Completed implementation slice: `ux-battle-timing-tab-compact-summary-10184`. The Battle Timing tab now shows one readiness line, one current spell/order line, and one risk line fitted to the existing themed label width at complete words, while the exact full timing check and Spell and Ability Timing board remain in the tooltip. Focused 1280x720/1920x1080 behavior, a fresh painted 1280 capture, Battle visual/tab focus/animation/accessibility/core compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -7386,6 +7388,37 @@ Completion evidence:
 - Board navigation and shared keyboard focus pass in `/tmp/heroes-battle-timing-detail-compat.kIY88t`; the animation gate's first attempt exposed a preexisting observer race because its wait preceded Board construction, and the corrected passive started-playback observer passes at `/tmp/heroes-animation-observer-rerun.nfg4oX` without production animation changes;
 - accessibility semantics and core systems pass in `/tmp/heroes-battle-timing-detail-compat-resume.OfZwsD`; repository validation, Python compilation, scoped/global diff checks, exact/generic editor parses, and tracker checks pass;
 - official Linux and Windows packaging reports are `ok:true`; claims remain limited to Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup, with no packaged Battle interaction or broader release claim.
+
+## Completed Slice: Battle Action Context Whole-Word Ellipsis
+
+id: `ux-battle-action-context-word-boundary-ellipsis-10184`
+
+Status: completed.
+
+Implementation boundary:
+- add one Battle action-context-only text compactor that normalizes the existing sentence, preserves fitting values, and when overflow is real returns the last complete word that fits plus one Unicode ellipsis;
+- use it only for the existing `Latest:` 38-character and `Next:` 34-character segments in `_battle_action_context_surface`, keeping their ordering and the enclosing 96-character compact rail unchanged;
+- preserve the exact full `latest_action`, `next_step`, `handoff_check`, post-action recap, Event tooltip, dispatch/presentation stream, and all battle/session/save authority.
+
+Completion criteria:
+- the real post-action Event rail matches an independent whole-word control, contains no ASCII triple-dot or partial trailing word, retains `Latest:` and `Next:`, and remains inside the existing line budget;
+- fitting and one-character controls are fail-closed, while the exact full action context, tooltip sections, structured recap, action tooltips, focus/input, and battle consequences remain unchanged;
+- focused Town/Battle visual and Board behavior, animation/accessibility/core compatibility, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass.
+
+Non-goals:
+- no `_short_text` change outside this surface; no BattleRules, recap, dispatch, status, pressure, timing, combat, AI, balance, content, save/schema, route, or Native RMG semantic change;
+- no new panel/row/node, label width/height/font/scale, layout, art/audio/VFX, tooltip removal, event ordering, input, focus, or controller change;
+- no packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- shipped current-HEAD capture `.artifacts/battle_controller_board_navigation_smoke/current_head_release_audit.png` visibly ends the player-facing action guidance mid-token as `highlig...` while the rail has ample semantic ownership and its tooltip retains the full sentence;
+- `_battle_action_context_surface` passes both segments through the general character-cutting `_short_text` at 38/34 characters; that helper slices codepoints and appends three periods without finding a word boundary;
+- completed `battle-action-context-strip-10184` owns the existence/source ordering of the compact rail, and completed Battle Timing/Overworld/Town word-fitting slices are limited to their own surfaces, so this rendering-only correction does not reopen their semantics or layout.
+
+Completion evidence:
+- focused `/tmp/heroes-battle-context-focused.5oET73` exits naturally with the real post-action Event line equal to an independent 38/34-character whole-word control, at least one Unicode ellipsis, no ASCII triple-dot, and exact full structured recap/tooltip authority;
+- Board/controller `/tmp/heroes-battle-context-board.OAJzqD` emits its exact PASS marker; shared focus, animation, accessibility, and core pass sequentially in `/tmp/heroes-battle-context-compat-resume.acgWYB` with no selected diagnostics;
+- repository validation, Python compilation, JSON, scoped/global diff checks, and exact/generic editor parses pass; official Linux and Windows packaging reports are `ok:true`, with claims limited to Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup.
 
 ## Progress Reconciliation
 

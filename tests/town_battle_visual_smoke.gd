@@ -1307,6 +1307,30 @@ func _assert_battle_post_action_status_recap_contract(shell: Node, action_respon
 	if String(context.get("source", "")) != "post_action_recap":
 		push_error("Battle smoke: battle action context strip did not use the post-action recap source: %s." % context)
 		return false
+	var latest_action := String(context.get("latest_action", ""))
+	var next_step := String(context.get("next_step", ""))
+	var expected_visible := "Latest: %s | Next: %s" % [
+		_battle_action_context_word_text_control(latest_action, 38),
+		_battle_action_context_word_text_control(next_step.trim_suffix("."), 34),
+	]
+	var actual_visible := String(context.get("visible_text", ""))
+	var event_first_line := String(snapshot.get("event_visible_text", "")).get_slice("\n", 0)
+	if latest_action != String(response_recap.get("happened", "")) \
+			or next_step != String(response_recap.get("next_step", "")) \
+			or actual_visible != expected_visible \
+			or event_first_line != expected_visible \
+			or actual_visible.length() > 89 \
+			or actual_visible.contains("...") \
+			or not actual_visible.contains("…") \
+			or not String(snapshot.get("event_tooltip_text", "")).contains(latest_action) \
+			or not String(snapshot.get("event_tooltip_text", "")).contains(next_step):
+		push_error("Battle smoke: battle action context rail did not preserve exact whole-word Latest/Next copy and full tooltip authority: expected=%s actual=%s event=%s context=%s." % [expected_visible, actual_visible, event_first_line, context])
+		return false
+	if _battle_action_context_word_text_control("Ready now", 9) != "Ready now" \
+			or _battle_action_context_word_text_control("overflow", 1) != "…" \
+			or _battle_action_context_word_text_control("unbrokenword", 6) != "…":
+		push_error("Battle smoke: independent Battle action-context word-boundary controls failed.")
+		return false
 	if not String(snapshot.get("event_visible_text", "")).contains("Latest:"):
 		push_error("Battle smoke: battle action context strip is not visible in the dispatch rail: %s." % snapshot)
 		return false
@@ -1328,6 +1352,22 @@ func _assert_battle_post_action_status_recap_contract(shell: Node, action_respon
 			push_error("Battle smoke: post-action recap leaked internal token %s." % leak_token)
 			return false
 	return true
+
+func _battle_action_context_word_text_control(text: String, max_chars: int) -> String:
+	var normalized := text.strip_edges().replace("\n", " ")
+	while normalized.contains("  "):
+		normalized = normalized.replace("  ", " ")
+	if max_chars <= 0:
+		return ""
+	if normalized.length() <= max_chars:
+		return normalized
+	if max_chars == 1:
+		return "…"
+	var prefix := normalized.left(max_chars - 1).strip_edges()
+	var boundary := prefix.rfind(" ")
+	if boundary <= 0:
+		return "…"
+	return "%s…" % prefix.left(boundary).strip_edges()
 
 func _assert_battle_entry_context(shell: Node) -> bool:
 	if not shell.has_method("validation_snapshot"):
