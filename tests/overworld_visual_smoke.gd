@@ -6,9 +6,10 @@ func _ready() -> void:
 func _run() -> void:
 	var end_turn_dialog_only := OS.get_environment("OVERWORLD_END_TURN_DIALOG_ONLY") == "1"
 	var objective_brief_only := OS.get_environment("OVERWORLD_OBJECTIVE_BRIEF_ONLY") == "1"
+	var hero_card_only := OS.get_environment("OVERWORLD_HERO_CARD_ONLY") == "1"
 	if end_turn_dialog_only:
 		get_window().size = Vector2i(1280, 720)
-	elif objective_brief_only:
+	elif objective_brief_only or hero_card_only:
 		get_window().size = Vector2i(1280, 720)
 	var session = ScenarioFactory.create_session(
 		"river-pass",
@@ -30,6 +31,13 @@ func _run() -> void:
 	if not await _assert_objective_brief_native_ellipsis_contract(shell):
 		return
 	if not await _assert_rail_word_boundary_ellipsis_contract(shell):
+		return
+	if not await _assert_hero_identity_progression_contract(shell):
+		return
+	if hero_card_only:
+		shell.queue_free()
+		await get_tree().process_frame
+		get_tree().quit(0)
 		return
 	if objective_brief_only:
 		shell.queue_free()
@@ -68,8 +76,6 @@ func _run() -> void:
 	if not _assert_object_economy_ui_contract(shell):
 		return
 	if not _assert_army_stack_inspection_contract(shell):
-		return
-	if not _assert_hero_identity_progression_contract(shell):
 		return
 	if not _assert_overworld_command_check_cue_contract(shell):
 		return
@@ -129,23 +135,115 @@ func _run() -> void:
 		main_loop.quit(0)
 	return
 
-func _assert_hero_identity_progression_contract(shell: Node) -> bool:
+func _assert_hero_identity_progression_contract(shell: Control) -> bool:
 	if not shell.has_method("validation_snapshot"):
 		push_error("Overworld smoke: shell is missing hero identity validation hooks.")
 		get_tree().quit(1)
 		return false
-	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var session = SessionState.ensure_active_session()
+	var authority_before: Dictionary = session.to_dict()
+	var original_window_size := get_window().size
+	var hero: Dictionary = session.overworld.get("hero", {})
+	var command: Dictionary = hero.get("command", {})
+	var mana: Dictionary = hero.get("spellbook", {}).get("mana", {})
+	var movement: Dictionary = session.overworld.get("movement", {})
+	var scout_radius := HeroCommandRules.scouting_radius_for_hero(hero)
+	var expected_full := "%s Lv%d | Move %d/%d | Mana %d/%d\nA%d D%d P%d K%d | Scout %d" % [
+		String(hero.get("name", "Hero")),
+		int(hero.get("level", 1)),
+		int(movement.get("current", 0)),
+		int(movement.get("max", 0)),
+		int(mana.get("current", 0)),
+		int(mana.get("max", 0)),
+		int(command.get("attack", 0)),
+		int(command.get("defense", 0)),
+		int(command.get("power", 0)),
+		int(command.get("knowledge", 0)),
+		scout_radius,
+	]
+	var expected_visible := "%s Lv%d | Mana %d/%d\nA%d D%d P%d K%d | Scout %d" % [
+		String(hero.get("name", "Hero")),
+		int(hero.get("level", 1)),
+		int(mana.get("current", 0)),
+		int(mana.get("max", 0)),
+		int(command.get("attack", 0)),
+		int(command.get("defense", 0)),
+		int(command.get("power", 0)),
+		int(command.get("knowledge", 0)),
+		scout_radius,
+	]
+	var expected_command := "Command: Solo | Move %d/%d" % [
+		int(movement.get("current", 0)),
+		int(movement.get("max", 0)),
+	]
+	var hero_label: Label = shell.get_node("%Hero")
+	var hero_panel: Control = shell.get_node("%HeroPanel")
+	var sidebar_shell: Control = shell.get_node("%SidebarShell")
+	var hero_portrait: TextureRect = shell.get_node("%HeroPortrait")
+	var hero_identity: Control = hero_label.get_parent()
+	var portrait_contract := {
+		"custom_minimum_size": hero_portrait.custom_minimum_size,
+		"size": hero_portrait.size,
+		"expand_mode": hero_portrait.expand_mode,
+		"stretch_mode": hero_portrait.stretch_mode,
+	}
+	for width in [1280, 1920]:
+		var requested_size := Vector2i(width, 720 if width == 1280 else 1080)
+		get_window().size = requested_size
+		await get_tree().process_frame
+		await get_tree().process_frame
+		await get_tree().process_frame
+		var snapshot: Dictionary = shell.call("validation_snapshot")
+		var visible_lines := _visible_text_lines(hero_label.text)
+		var hero_rect := hero_label.get_global_rect()
+		var portrait_rect := hero_portrait.get_global_rect()
+		var identity_rect := hero_identity.get_global_rect()
+		var panel_rect := hero_panel.get_global_rect()
+		var sidebar_rect := sidebar_shell.get_global_rect()
+		var current_portrait_contract := {
+			"custom_minimum_size": hero_portrait.custom_minimum_size,
+			"size": hero_portrait.size,
+			"expand_mode": hero_portrait.expand_mode,
+			"stretch_mode": hero_portrait.stretch_mode,
+		}
+		if get_window().size != requested_size \
+			or hero_label.text != expected_visible \
+			or hero_label.tooltip_text != expected_full \
+			or String(snapshot.get("hero_visible_text", "")) != expected_visible \
+			or String(snapshot.get("hero_tooltip_text", "")) != expected_full \
+			or String(snapshot.get("command_check_visible_text", "")) != expected_command \
+			or visible_lines.size() != 2 \
+			or String(visible_lines[0]).contains("Move") \
+			or not String(visible_lines[0]).contains("Mana") \
+			or _themed_label_text_width(hero_label) <= 0.0 \
+			or _themed_label_text_width(hero_label) > hero_label.size.x + 0.5 \
+			or not hero_label.clip_text \
+			or hero_label.autowrap_mode != TextServer.AUTOWRAP_OFF \
+			or hero_label.text_overrun_behavior != TextServer.OVERRUN_TRIM_WORD_ELLIPSIS \
+			or not sidebar_rect.encloses(panel_rect) \
+			or not panel_rect.encloses(identity_rect) \
+			or not identity_rect.encloses(hero_rect) \
+			or not identity_rect.encloses(portrait_rect) \
+			or portrait_rect.end.x > hero_rect.position.x + 0.5 \
+			or portrait_rect.intersects(hero_rect) \
+			or not hero_portrait.is_visible_in_tree() \
+			or current_portrait_contract != portrait_contract:
+			return _fail_overworld_objective_brief("Hero card lost exact mana-first text, full tooltip, adjacent movement, themed fit, or authored geometry at %d: visible=%s tooltip=%s command=%s width=%s label=%s portrait=%s identity=%s panel=%s sidebar=%s portrait_contract=%s." % [width, hero_label.text, hero_label.tooltip_text, snapshot.get("command_check_visible_text", ""), _themed_label_text_width(hero_label), hero_rect, portrait_rect, identity_rect, panel_rect, sidebar_rect, current_portrait_contract])
 	if not _assert_text_contains_all(
 		"overworld hero identity/progression rail",
 		[
-			String(snapshot.get("hero_text", "")),
-			String(snapshot.get("hero_tooltip_text", "")),
-			String(snapshot.get("heroes_text", "")),
-			String(snapshot.get("heroes_tooltip_text", "")),
+			String(shell.call("validation_snapshot").get("hero_text", "")),
+			String(shell.call("validation_snapshot").get("heroes_text", "")),
+			String(shell.call("validation_snapshot").get("heroes_tooltip_text", "")),
 		],
 		["Lyra Emberwell", "Embercourt League", "Fast scouting caster", "Lv1", "XP 0/250", "Wayfinder I", "Move", "Scout", "Army"]
 	):
 		return false
+	get_window().size = original_window_size
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if session.to_dict() != authority_before:
+		return _fail_overworld_objective_brief("Inspecting the responsive hero card changed whole-session authority.")
 	return true
 
 func _assert_overworld_command_check_cue_contract(shell: Node) -> bool:

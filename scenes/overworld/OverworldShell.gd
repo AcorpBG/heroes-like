@@ -3660,7 +3660,7 @@ func _refresh_status_surfaces(generated_surface_start: int, preloaded_refresh_wa
 	var hero_rail_profile_start := _debug_refresh_profile_begin("refresh_hero_rail")
 	var hero_text := _hero_card_text()
 	_hero_portrait.set_hero_id(_live_player_hero_id())
-	_set_rail_text(_hero_label, hero_text, hero_text, 2)
+	_set_rail_text(_hero_label, hero_text, _hero_card_visible_text(), 2)
 	_debug_refresh_profile_end("refresh_hero_rail", hero_rail_profile_start)
 	var army_rail_profile_start := _debug_refresh_profile_begin("refresh_army_rail")
 	var army_text := OverworldRules.describe_army(_session)
@@ -7104,6 +7104,22 @@ func _hero_card_text() -> String:
 		int(hero.get("level", 1)),
 		int(movement.get("current", 0)),
 		int(movement.get("max", 0)),
+		int(mana.get("current", 0)),
+		int(mana.get("max", 0)),
+		int(command.get("attack", 0)),
+		int(command.get("defense", 0)),
+		int(command.get("power", 0)),
+		int(command.get("knowledge", 0)),
+		HeroCommandRules.scouting_radius_for_hero(hero),
+	]
+
+func _hero_card_visible_text() -> String:
+	var hero = _session.overworld.get("hero", {})
+	var command = hero.get("command", {})
+	var mana = hero.get("spellbook", {}).get("mana", {})
+	return "%s Lv%d | Mana %d/%d\nA%d D%d P%d K%d | Scout %d" % [
+		String(hero.get("name", "Hero")),
+		int(hero.get("level", 1)),
 		int(mana.get("current", 0)),
 		int(mana.get("max", 0)),
 		int(command.get("attack", 0)),
