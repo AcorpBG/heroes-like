@@ -22093,6 +22093,116 @@ def validate_battle_timing_tab_compact_summary(errors: list[str]) -> None:
     ensure(all(index >= 0 for index in capture_order) and list(capture_order) == sorted(capture_order), errors, "Optional Battle screenshot capture must select and restore the requested real info tab around the unchanged capture")
 
 
+def validate_battle_timing_check_detail_prefix_deduplication(errors: list[str]) -> None:
+    def function_block(text: str, name: str) -> str:
+        match = re.search(rf"func {re.escape(name)}\([^\n]*\)(?: -> [^:]+)?:\n(?P<body>.*?)(?=\nfunc |\Z)", text, re.S)
+        return match.group("body") if match is not None else ""
+
+    smoke_path = ROOT / "tests" / "town_battle_visual_smoke.gd"
+    for path in (BATTLE_SCRIPT_PATH, smoke_path):
+        ensure(path.exists(), errors, f"Missing Battle Timing detail-deduplication file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in (BATTLE_SCRIPT_PATH, smoke_path)):
+        return
+
+    shell_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
+    smoke_text = smoke_path.read_text(encoding="utf-8")
+    cue_helper = function_block(shell_text, "_battle_timing_check_cue_surface")
+    line_helper = function_block(shell_text, "_battle_timing_board_line_with_prefix")
+    ensure(cue_helper and line_helper, errors, "Could not isolate Battle Timing detail production helpers")
+    if line_helper:
+        line_order = tuple(line_helper.find(token) for token in (
+            'board_text.split("\\n", false)',
+            'line.begins_with("- ")',
+            'if line.begins_with(prefix):',
+            'return line.trim_prefix(prefix).strip_edges()',
+            'return ""',
+        ))
+        ensure(all(index >= 0 for index in line_order) and list(line_order) == sorted(line_order), errors, "Battle Timing board extractor must preserve source traversal and return only the requested heading value")
+        ensure("return line\n" not in line_helper and "sort(" not in line_helper and "erase(" not in line_helper, errors, "Battle Timing board extractor must not retain whole prefixed rows or reorder/filter the board")
+    if cue_helper:
+        cue_order = tuple(cue_helper.find(token) for token in (
+            'var ready_spell_label := String(ready_spell.get("label", "")).strip_edges()',
+            'elif ready_spell_label != "":',
+            'var ready_spell_subject := ready_spell_label.trim_prefix("Cast ").strip_edges()',
+            'if ready_spell_subject == "":',
+            'ready_spell_subject = ready_spell_label',
+            'next_step = "Cast %s now if it improves this exchange, or keep mana and use a stack order." % ready_spell_subject',
+            '"ready_spell": ready_spell_label',
+        ))
+        ensure(all(index >= 0 for index in cue_order) and list(cue_order) == sorted(cue_order), errors, "Battle Timing cue must normalize only the next-action subject while preserving the exact ready action payload")
+        for prefix in ("Spell window:", "Support payoff:", "Protection need:", "Burst risk:", "Enemy initiative:", "Enemy spell pressure:", "Incoming burst:"):
+            ensure(f'_battle_timing_board_line_with_prefix(board_text, "{prefix}")' in cue_helper, errors, f"Battle Timing cue must retain exact source lookup for {prefix}")
+        for forbidden_token in ("BattleRules.perform", "SessionState", "SaveService", "AppRouter", "sort(", "erase(", "await ", "create_timer", "custom_minimum_size"):
+            ensure(forbidden_token not in cue_helper, errors, f"Battle Timing copy correction must remain passive and avoid {forbidden_token}")
+
+    focused = function_block(smoke_text, "_assert_battle_timing_check_cue_contract")
+    control = function_block(smoke_text, "_timing_board_value_for_test")
+    ensure(focused and control, errors, "Town/Battle visual owner must prove independent Timing detail prefix/action deduplication")
+    if focused:
+        focused_order = tuple(focused.find(token) for token in (
+            'var timing_board := String(snapshot.get("spell_timing_text", ""))',
+            '_timing_board_value_for_test(timing_board, "Spell window:")',
+            '_timing_board_value_for_test(timing_board, "Support payoff:")',
+            '_timing_board_value_for_test(timing_board, "Protection need:")',
+            '_timing_board_value_for_test(timing_board, "Burst risk:")',
+            '_timing_board_value_for_test(timing_board, "Enemy spell pressure:")',
+            'String(timing_check.get("spell_window", "")) != expected_spell_window',
+            'for heading in ["Spell window:", "Support payoff:", "Protection need:", "Burst risk:", "Enemy pressure:"]:',
+            'cue_tooltip.count(heading) != 1',
+            'cue_tooltip.contains("Cast Cast")',
+            'String(snapshot.get("spell_timing_tooltip_text", "")) != expected_full_tooltip',
+        ))
+        ensure(all(index >= 0 for index in focused_order) and list(focused_order) == sorted(focused_order), errors, "Focused Battle Timing detail proof must derive independent values, compare payload, count headings, reject duplicate action verbs, and retain the full board in order")
+        for forbidden_token in ("_battle_timing_board_line_with_prefix", "_battle_timing_check_cue_surface", "sort(", "erase(", "BattleRules.perform", "SessionState", "SaveService", "await ", "create_timer"):
+            ensure(forbidden_token not in focused, errors, f"Focused Battle Timing detail proof must remain independent/read-only and avoid {forbidden_token}")
+    if control:
+        for required_token in (
+            'board_text.split("\\n", false)',
+            'line.begins_with("- ")',
+            'line.trim_prefix("- ").strip_edges()',
+            'line.begins_with(prefix)',
+            'line.trim_prefix(prefix).strip_edges()',
+        ):
+            ensure(required_token in control, errors, f"Independent Timing board control is missing exact token: {required_token}")
+        for forbidden_token in ("_battle_timing_board_line_with_prefix", "_battle_timing_check_cue_surface", "sort(", "erase(", "BattleRules", "SessionState", "SaveService", "await ", "create_timer"):
+            ensure(forbidden_token not in control, errors, f"Independent Timing board control must not use production or mutate authority via {forbidden_token}")
+
+    animation_text = BATTLE_EVENT_ANIMATION_STATE_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    melee_case = function_block(animation_text, "_validate_melee_hit_state")
+    started_playback = function_block(animation_text, "_board_summary_for_session_after_started_playback")
+    ensure(melee_case and started_playback, errors, "Battle animation compatibility owner must isolate its started-playback observer")
+    if melee_case:
+        ensure(
+            "var board_summary := await _board_summary_for_session_after_started_playback(session)" in melee_case,
+            errors,
+            "Melee presentation proof must observe the real Board only after its playback clock starts",
+        )
+        ensure(
+            "await get_tree().create_timer(0.08).timeout" not in melee_case
+            and "_board_summary_for_session(session)" not in melee_case,
+            errors,
+            "Melee presentation proof must not wait before constructing the Board or snapshot it at playback progress zero",
+        )
+    if started_playback:
+        playback_order = tuple(started_playback.find(token) for token in (
+            "var view := BattleBoardViewScript.new()",
+            "view.size = Vector2(960.0, 540.0)",
+            "add_child(view)",
+            "view.set_battle_state(session)",
+            "await get_tree().create_timer(0.04).timeout",
+            "var summary: Dictionary = view.validation_unit_art_summary()",
+            "view.queue_free()",
+            "return summary",
+        ))
+        ensure(
+            all(index >= 0 for index in playback_order) and list(playback_order) == sorted(playback_order),
+            errors,
+            "Started-playback observer must construct the real Board, start playback, wait passively, snapshot, and free in exact order",
+        )
+        for forbidden_token in ("BattleRules.perform", "set_stack", "animation_event_queue", "_stack_animation", "call_deferred", "create_tween", "set_process"):
+            ensure(forbidden_token not in started_playback, errors, f"Started-playback observer must remain passive and avoid {forbidden_token}")
+
+
 def validate_battle_quick_resolve_runtime(errors: list[str]) -> None:
     required_paths = (
         BATTLE_AUTO_RESOLVE_RULES_PATH,
@@ -49752,6 +49862,7 @@ def main() -> int:
     validate_battle_info_tab_header_compact_fit(errors)
     validate_battle_focus_spell_tab_body_containment(errors)
     validate_battle_timing_tab_compact_summary(errors)
+    validate_battle_timing_check_detail_prefix_deduplication(errors)
     validate_main_menu_first_view(errors)
     validate_map_editor_terrain_paint_normalization_deferral(errors)
     validate_main_menu_destructive_exclusive_parent_input(errors)

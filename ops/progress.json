@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed. The Battle Timing tab now uses one readiness, current-action, and risk line fitted at whole words while the exact complete timing check and spell/ability board remain in its tooltip; focused, compatibility, static/editor, and bounded platform gates pass.",
+  "currentNotes": "Completed. The older Timing-check detail cue now emits each board heading and the Cast verb once while preserving the exact full timing board, ready-action payload, completed three-line first view, and battle authority. Select the next tracker-approved release-readiness implementation slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-battle-timing-tab-compact-summary-10184",
-  "currentSliceId": "ux-battle-timing-tab-compact-summary-10184",
-  "currentSliceNotes": "Completed with exact 1280x720/1920x1080 three-line themed-width semantics, full tooltip equality, native panel/footer containment, fresh painted 1280 evidence, Battle compatibility, static/editor, and bounded Linux/Windows export/startup gates.",
+  "currentSlice": "ux-battle-timing-check-detail-prefix-deduplication-10184",
+  "currentSliceId": "ux-battle-timing-check-detail-prefix-deduplication-10184",
+  "currentSliceNotes": "Completed from exact current live tooltip output. Focused cue parity and Battle compatibility pass; a preexisting animation test race was corrected only in its observer ordering. Timing semantics, payload keyset, first-view layout, and authority remain unchanged.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Battle Timing Tab Compact Summary",
-  "currentSliceUpdatedAt": "2026-08-18T03:54:03Z",
+  "currentSliceTitle": "Battle Timing Check Detail Prefix Deduplication",
+  "currentSliceUpdatedAt": "2026-08-18T04:13:13Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -89981,6 +89981,58 @@
       "completedAt": "2026-08-18T03:54:03Z",
       "updatedAt": "2026-08-18T03:54:03Z",
       "notes": "Completed the live Timing presentation owner. The first view now shows exact three-line readiness/action/risk semantics fitted to the live themed width at complete words; the complete timing-check cue and full Spell and Ability Timing board remain exact in the tooltip. The authoritative two-width focused gate, fresh X11 1280 capture, Battle visual/tab-focus/animation/accessibility/core compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. The first focused attempt exposed and corrected only the transient initial-layout width; the first painted attempt was excluded because the optional capture-only variable had no static type and never loaded the scene. Packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null
+    },
+    {
+      "id": "ux-battle-timing-check-detail-prefix-deduplication-10184",
+      "title": "Battle Timing Check Detail Prefix Deduplication",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Remove duplicate detail headings and the duplicate Cast verb from the full Battle Timing-check tooltip without changing timing semantics or the completed first view.",
+      "implementationTargets": [
+        "scenes/battle/BattleShell.gd",
+        "tests/town_battle_visual_smoke.gd",
+        "tests/battle_event_animation_state_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/town_battle_visual_smoke.tscn",
+        "tests/battle_controller_board_navigation_smoke.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/battle_event_animation_state_report.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "Focused live cue proof independently extracts exact timing-board values and requires the production payload to match them across spell, support, protection, burst, and enemy-pressure families",
+        "The Timing-check tooltip contains each detail heading once, never Cast Cast, and retains the complete underlying Spell and Ability Timing board byte-exact after the existing separator",
+        "The completed first view, Battle compatibility, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass with unchanged battle/session/save/settings authority"
+      ],
+      "nonGoals": [
+        "spell, ability, readiness, targeting, timing, combat, AI, content, balance, save/schema, or Native RMG semantic changes",
+        "Timing first-view text/fit, panel, tooltip surface, TabBar, footer, font/theme/UI scale, focus/input, audio, VFX, or broader Battle copy/layout redesign",
+        "packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing, publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "b71d40d3",
+        "liveEvidence": "/tmp/heroes-battle-timing-focused.GX7t7z/stdout.log",
+        "duplicatedDetail": "Spell window: Spell window:",
+        "duplicatedAction": "Cast Cast Cinder Burst (5)",
+        "originalCueCommit": "c22d201c"
+      },
+      "createdAt": "2026-08-18T03:57:38Z",
+      "startedAt": "2026-08-18T03:57:38Z",
+      "completedAt": "2026-08-18T04:13:13Z",
+      "updatedAt": "2026-08-18T04:13:13Z",
+      "notes": "Completed the live full-detail copy correction. The Timing-check cue now extracts exact board values, exposes each heading once, removes only the duplicated Cast verb from the next-action subject, and retains the exact ready-action payload, full timing board, and completed three-line first view. Focused Town/Battle runtime, Board navigation, shared keyboard focus, animation, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. The first animation compatibility attempt exposed a preexisting test observer race: it waited before Board construction even though playback starts at set_battle_state; the test-only correction starts the real Board playback before a passive wait and snapshot. Packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
       "blockedReason": null
     }

@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `ux-battle-timing-check-detail-prefix-deduplication-10184`. The older Timing-check detail cue now extracts only each board-line value and removes the duplicated leading `Cast` from the next-action subject, while preserving the exact ready action payload, complete timing board, and completed three-line first view. Focused cue parity, Battle navigation/focus/animation/accessibility/core compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. A preexisting animation observer race was corrected test-only by starting the real Board playback before waiting and sampling. Packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `ux-battle-timing-check-detail-prefix-deduplication-10184`
 - Completed implementation slice: `ux-battle-timing-tab-compact-summary-10184`. The Battle Timing tab now shows one readiness line, one current spell/order line, and one risk line fitted to the existing themed label width at complete words, while the exact full timing check and Spell and Ability Timing board remain in the tooltip. Focused 1280x720/1920x1080 behavior, a fresh painted 1280 capture, Battle visual/tab focus/animation/accessibility/core compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `ux-battle-timing-tab-compact-summary-10184`
 - Completed implementation slice: `ux-main-menu-settings-summary-word-ellipsis-10184`. The live Main Menu Cabinet Settings summary now preserves the exact complete `SettingsService.describe_settings()` value in its tooltip while its established four-line-plus-hidden-count first view ends genuine overflow at a complete setting segment or word with one Unicode ellipsis instead of the shipped `Battle s...` mid-token cut. Fitting Presentation, Audio, and Gameplay lines remain exact. Focused 1280x720/1920x1080 behavior at 100/130 percent UI scale, the existing full Settings focus/dialog/persistence matrix, display/defaults/active-play compatibility, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. The first focused attempt was excluded because its screenshot capture path was unsupported under the Dummy renderer and its geometry oracle contradicted the existing intentional scroll-to-focus behavior; the corrected authoritative rerun passed. Packaged Settings interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -7352,6 +7354,38 @@ Completion evidence:
 - the X11-rendered capture `.artifacts/battle_controller_board_navigation_smoke/timing_compact_1280_final.png` shows the live first view as `Timing check: Cast`, `Cast: Cinder Burst (5)`, and `Watch: Stone Veil` with no duplicated timing board or mid-word cut;
 - Town/Battle visual, active-play keyboard focus, battle animation state, accessibility semantics, and core compatibility passed sequentially at `/tmp/heroes-battle-timing-compat.Kh7bn1`; repository validation, Python compilation, diff checks, exact/generic editor parses, and tracker reconciliation pass;
 - official Linux export/headless startup and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup reports are `ok:true`; packaged Battle interaction, hardware/certification, signing/publication, whole-game, and release readiness remain unclaimed.
+
+## Selected Slice: Battle Timing Check Detail Prefix Deduplication
+
+id: `ux-battle-timing-check-detail-prefix-deduplication-10184`
+
+Status: completed.
+
+Implementation boundary:
+- make the existing board-line extractor return only the value after its requested prefix, preserving exact source-line lookup/order and every underlying `BattleRules.describe_spell_timing_board` character;
+- remove only the duplicated leading `Cast` from the ready-spell subject when composing the Timing check's next practical action, while retaining the exact ready action label in the payload;
+- leave the completed three-line Timing first view, native panel/tooltip surfaces, timing payload keyset, spell/ability rules, and all battle/session/save/settings authority unchanged.
+
+Completion criteria:
+- focused live cue proof independently extracts every supported timing-board value and requires exact `spell_window`, `support_payoff`, `protection_need`, `burst_risk`, and enemy-pressure payload equality;
+- the full Timing-check tooltip contains each detail heading exactly once per row and the next practical action never contains `Cast Cast`, while the complete original timing board remains byte-exact after the tooltip separator;
+- the completed three-line readiness/action/risk first view, panel/footer containment, tab navigation/focus, battle/session/save/settings/routes, visual/animation/accessibility/core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass.
+
+Non-goals:
+- no spell window, readiness, target, support, protection, burst, enemy pressure, action availability, combat, AI, content, balance, save/schema, or Native RMG semantic change;
+- no Timing first-view text/fit, panel, tooltip surface, TabBar, footer, font/theme/UI scale, focus/input, audio, VFX, or broader Battle copy/layout redesign;
+- no packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- HEAD `b71d40d3` returns the entire prefixed line from `_battle_timing_board_line_with_prefix` and then adds the same heading in `_battle_timing_check_cue_surface`, yielding `Spell window: Spell window:`, `Support payoff: Support payoff:`, and related duplication in the full player tooltip;
+- the live focused diagnostic `/tmp/heroes-battle-timing-focused.GX7t7z/stdout.log` records `Next practical action: Cast Cast Cinder Burst (5)` because the ready action label already includes the verb;
+- this is a full-detail copy correction to the older `c22d201c Add battle timing check cue` owner; it does not reopen the completed three-line first-view layout or change battle timing behavior.
+
+Completion evidence:
+- the authoritative focused Town/Battle owner `/tmp/heroes-battle-timing-detail-focused.WMNQwX` exits naturally with no selected diagnostics and proves exact independent cue values, one-copy headings, no `Cast Cast`, and exact cue-plus-board tooltip preservation;
+- Board navigation and shared keyboard focus pass in `/tmp/heroes-battle-timing-detail-compat.kIY88t`; the animation gate's first attempt exposed a preexisting observer race because its wait preceded Board construction, and the corrected passive started-playback observer passes at `/tmp/heroes-animation-observer-rerun.nfg4oX` without production animation changes;
+- accessibility semantics and core systems pass in `/tmp/heroes-battle-timing-detail-compat-resume.OfZwsD`; repository validation, Python compilation, scoped/global diff checks, exact/generic editor parses, and tracker checks pass;
+- official Linux and Windows packaging reports are `ok:true`; claims remain limited to Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup, with no packaged Battle interaction or broader release claim.
 
 ## Progress Reconciliation
 
