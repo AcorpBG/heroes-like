@@ -525,9 +525,12 @@ theme_override_constants/margin_top = 6
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 6
 
-[node name="FooterRow" type="HBoxContainer" parent="ContentMargin/Content/Footer/FooterPad"]
+[node name="FooterRow" type="GridContainer" parent="ContentMargin/Content/Footer/FooterPad"]
+unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/separation = 8
+columns = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
 
 [node name="ActionPanel" type="PanelContainer" parent="ContentMargin/Content/Footer/FooterPad/FooterRow"]
 unique_name_in_owner = true
@@ -535,6 +538,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="ActionPad" type="MarginContainer" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 6
@@ -578,6 +582,7 @@ layout_mode = 2
 text = "Next"
 
 [node name="ActionBar" type="HFlowContainer" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/h_separation = 6
 theme_override_constants/v_separation = 6
@@ -624,6 +629,7 @@ custom_minimum_size = Vector2(132, 0)
 layout_mode = 2
 
 [node name="SystemPad" type="MarginContainer" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 6
@@ -647,6 +653,7 @@ autowrap_mode = 3
 text = "Latest ready save: none."
 
 [node name="SpeedBar" type="HBoxContainer" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 4
 
@@ -666,6 +673,7 @@ layout_mode = 2
 text = "Instant"
 
 [node name="SystemActions" type="HBoxContainer" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 4
 

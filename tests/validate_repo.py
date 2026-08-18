@@ -14598,6 +14598,7 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         MAIN_MENU_SCRIPT_PATH,
         OVERWORLD_SCRIPT_PATH,
         BATTLE_SCRIPT_PATH,
+        BATTLE_SCENE_PATH,
         active_play_dialog_path,
         active_play_report_path,
     )
@@ -14735,6 +14736,7 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         ensure(required_token in active_play_dialog_text, errors, f"ActivePlaySettingsDialog.gd is missing focus-containment token: {required_token}")
 
     active_play_report_text = active_play_report_path.read_text(encoding="utf-8")
+    battle_scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8")
     for required_token in (
         "func _check_modal_focus_containment",
         "const FOCUS_CYCLE_NAMES",
@@ -14834,17 +14836,162 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
     battle_focus_return_tokens = (
         'var battle_settings_control := shell.get_node_or_null("%Settings") as Control',
         "var battle_close_focus_owner := get_viewport().gui_get_focus_owner() as Control",
-        "var battle_focus_return_exact: bool = (",
-        "battle_settings_control.is_visible_in_tree() and battle_close_focus_owner == battle_settings_control",
-        "not battle_settings_control.is_visible_in_tree()",
-        "shell.is_ancestor_of(battle_close_focus_owner)",
-        "battle_close_focus_owner.is_visible_in_tree()",
-        "battle_close_focus_owner.focus_mode != Control.FOCUS_NONE",
-        '"Battle controller/keyboard Back did not restore a visible Battle focus target after the compact Settings origin changed visibility:',
+        "var battle_focus_return_exact: bool = battle_settings_control != null and battle_settings_control.is_visible_in_tree() and battle_close_focus_owner == battle_settings_control",
+        '"Battle controller/keyboard Back did not restore the visible compact Settings command:',
     )
     for required_token in battle_focus_return_tokens:
         ensure(required_token in active_play_report_text, errors, f"Active-play Settings report is missing compact Battle focus-return token: {required_token}")
-    ensure("var battle_focus_return_exact := (" not in active_play_report_text, errors, "Active-play Settings compact focus oracle must keep an explicit bool type")
+    ensure("var battle_focus_return_exact :=" not in active_play_report_text, errors, "Active-play Settings compact focus oracle must keep an explicit bool type")
+    ensure("not battle_settings_control.is_visible_in_tree()" not in active_play_report_text, errors, "Active-play Settings compact focus oracle must require the now-visible Settings origin instead of accepting a hidden-origin fallback")
+
+    footer_row_header = '[node name="FooterRow" type="GridContainer" parent="ContentMargin/Content/Footer/FooterPad"]'
+    ensure(battle_scene_text.count(footer_row_header) == 1, errors, "Battle footer must own one responsive GridContainer row")
+    footer_row_match = re.search(re.escape(footer_row_header) + r"\n(?P<body>.*?)(?=\n\[node )", battle_scene_text, flags=re.DOTALL)
+    ensure(footer_row_match is not None, errors, "Could not isolate the responsive Battle FooterRow")
+    if footer_row_match is not None:
+        footer_row_body = footer_row_match.group("body")
+        for required_token in ("unique_name_in_owner = true", "columns = 2", "theme_override_constants/h_separation = 8", "theme_override_constants/v_separation = 8"):
+            ensure(required_token in footer_row_body, errors, f"Battle FooterRow is missing wide-layout contract token: {required_token}")
+        for forbidden_token in ("visible = false", "size_flags_vertical", "custom_minimum_size"):
+            ensure(forbidden_token not in footer_row_body, errors, f"Battle FooterRow must not hide or impose a new size contract via {forbidden_token}")
+    for unique_header in (
+        '[node name="ActionBar" type="HFlowContainer" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel/ActionPad/ActionBox"]',
+        '[node name="ActionPad" type="MarginContainer" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/ActionPanel"]',
+        '[node name="SystemPad" type="MarginContainer" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel"]',
+        '[node name="SpeedBar" type="HBoxContainer" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox"]',
+        '[node name="SystemActions" type="HBoxContainer" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox"]',
+    ):
+        unique_match = re.search(re.escape(unique_header) + r"\n(?P<body>.*?)(?=\n\[node )", battle_scene_text, flags=re.DOTALL)
+        ensure(unique_match is not None and "unique_name_in_owner = true" in unique_match.group("body"), errors, f"Battle compact command proof requires a unique existing node: {unique_header}")
+
+    responsive_layout_match = re.search(
+        r"func _apply_responsive_layout\(\) -> void:(?P<body>.*?)(?=\nfunc )",
+        battle_shell_text,
+        flags=re.DOTALL,
+    )
+    ensure(responsive_layout_match is not None, errors, "Could not isolate Battle responsive layout ownership")
+    if responsive_layout_match is not None:
+        responsive_layout_body = responsive_layout_match.group("body")
+        responsive_order = tuple(responsive_layout_body.find(token) for token in (
+            "var compact_layout := available_size.x < 1360.0 or available_size.y < 760.0",
+            "_compact_layout_active = compact_layout",
+            "_refit_battle_action_guide()",
+            "_footer_row.columns = 1 if compact_layout else 2",
+            '_footer_row.add_theme_constant_override("v_separation", 0 if compact_layout else 8)',
+            '_action_pad.add_theme_constant_override("margin_top", 0 if compact_layout else 6)',
+            '_action_pad.add_theme_constant_override("margin_bottom", 0 if compact_layout else 6)',
+            "if compact_layout:",
+            '_system_panel.add_theme_stylebox_override("panel", _compact_system_panel_style)',
+            "else:",
+            '_system_panel.remove_theme_stylebox_override("panel")',
+            "_system_panel.visible = true",
+            '_system_pad.add_theme_constant_override("margin_top", 0 if compact_layout else 6)',
+            '_system_pad.add_theme_constant_override("margin_bottom", 0 if compact_layout else 6)',
+            "_system_body_label.visible = not compact_layout and not _system_body_label.text.strip_edges().is_empty()",
+            "_speed_bar.visible = not compact_layout",
+            "_prev_target_button.visible = not compact_layout",
+            "_next_target_button.visible = not compact_layout",
+            "_battle_board_view.custom_minimum_size = Vector2(520.0, 240.0) if compact_layout else Vector2(620.0, 300.0)",
+        ))
+        ensure(all(index >= 0 for index in responsive_order) and list(responsive_order) == sorted(responsive_order), errors, "Battle responsive layout must reflow the existing footer, retain essential commands, compact only spacing/speed, and then preserve existing target/board contracts in order")
+        ensure("_system_panel.visible = not compact_layout" not in responsive_layout_body, errors, "Battle compact layout must not hide the existing essential system commands")
+        for forbidden_token in ("reparent", "remove_child", "add_child", "queue_free", "new()", "call_deferred", "create_timer"):
+            ensure(forbidden_token not in responsive_layout_body, errors, f"Battle compact footer reflow must not add, replace, or defer UI through {forbidden_token}")
+
+    layout_contract_match = re.search(
+        r"func _battle_system_command_layout_contract\(shell, compact: bool\) -> Dictionary:(?P<body>.*?)(?=\nfunc )",
+        active_play_report_text,
+        flags=re.DOTALL,
+    )
+    ensure(layout_contract_match is not None, errors, "Active-play Settings report is missing the detached Battle compact/wide command-layout contract")
+    if layout_contract_match is not None:
+        layout_contract_body = layout_contract_match.group("body")
+        for required_token in (
+            'shell.get_node_or_null("%FooterRow") as GridContainer',
+            'for node_name in ["SaveSlot", "Save", "Settings", "Menu"]:',
+            'for node_name in ["Advance", "Strike", "Shoot", "Defend", "QuickResolve", "Retreat", "Surrender"]:',
+            "footer_row.columns == (1 if compact else 2)",
+            "system_panel.is_visible_in_tree()",
+            'system_panel.has_theme_stylebox_override("panel") == compact',
+            '(not compact or system_panel.get_theme_stylebox("panel") is StyleBoxEmpty)',
+            "system_body.is_visible_in_tree() == not compact",
+            "speed_bar.is_visible_in_tree() == not compact",
+            'action_guide.text.split("\\n", false).size() == (2 if compact else 3)',
+            "not action_guide.tooltip_text.strip_edges().is_empty()",
+            "command.focus_mode != Control.FOCUS_NONE",
+            "viewport_rect.grow(1.0).encloses(command.get_global_rect())",
+            "command_order_exact",
+            "child_arrangement_exact",
+            "structural_containment_exact",
+            "board.size.x + 1.0 >= board.custom_minimum_size.x",
+            "board.size.y + 1.0 >= board.custom_minimum_size.y",
+        ):
+            ensure(required_token in layout_contract_body, errors, f"Battle compact/wide layout contract is missing exact geometry token: {required_token}")
+        for forbidden_token in ("_apply_responsive_layout", ".visible =", "custom_minimum_size =", "set_deferred", "call_deferred", "await ", "create_timer", "queue_free"):
+            ensure(forbidden_token not in layout_contract_body, errors, f"Battle layout contract must remain read-only and source-independent: {forbidden_token}")
+
+    ensure("var _compact_layout_active := false" in battle_shell_text, errors, "Battle compact system summary visibility must use one local responsive-layout state flag")
+    ensure("var _compact_system_panel_style := StyleBoxEmpty.new()" in battle_shell_text, errors, "Battle compact system row must remove only the decorative panel frame with one local empty style")
+    ensure(len(re.findall(r"^\t_system_body_label\.visible = not _compact_layout_active$", battle_shell_text, flags=re.MULTILINE)) == 2, errors, "Battle save-failure surfaces must keep the supplemental system summary hidden in compact mode")
+    ensure(battle_shell_text.count("_system_body_label.visible = not _compact_layout_active and not status_lines.is_empty()") == 1, errors, "Battle ordinary save summary must stay visible only in wide mode when content exists")
+    for forbidden_token in ("_system_body_label.text = \"\"", "_system_body_label.tooltip_text = \"\"", "status_lines.clear()", "status_lines.erase("):
+        ensure(forbidden_token not in battle_shell_text, errors, f"Battle compact layout must preserve the full supplemental save summary behind the existing tooltip rather than deleting it via {forbidden_token}")
+    action_guide_setter_match = re.search(r"func _set_battle_action_guide\(full_text: String\) -> void:(?P<body>.*?)(?=\nfunc )", battle_shell_text, flags=re.DOTALL)
+    ensure(action_guide_setter_match is not None, errors, "BattleShell must own one compact-only two-line ActionGuide setter")
+    if action_guide_setter_match is not None:
+        action_guide_setter_body = action_guide_setter_match.group("body")
+        action_guide_order = tuple(action_guide_setter_body.find(token) for token in (
+            "_action_guide_source_text = full_text",
+            "_refit_battle_action_guide()",
+            "_action_guide.tooltip_text = full_text",
+        ))
+        ensure(all(index >= 0 for index in action_guide_order) and list(action_guide_order) == sorted(action_guide_order), errors, "Battle ActionGuide setter must retain exact source text, refit the visible lines, and preserve the exact full tooltip")
+        for forbidden_token in ("replace(", "erase(", "normalize", "BattleRules", "SettingsService", "custom_minimum_size", "visible =", "await ", "call_deferred", "create_timer"):
+            ensure(forbidden_token not in action_guide_setter_body, errors, f"Battle ActionGuide compact first view must not rewrite semantics, mutate layout, or add timing via {forbidden_token}")
+    action_guide_refit_match = re.search(r"func _refit_battle_action_guide\(\) -> void:(?P<body>.*?)(?=\nfunc )", battle_shell_text, flags=re.DOTALL)
+    ensure(action_guide_refit_match is not None, errors, "BattleShell must refit existing ActionGuide source text on breakpoint changes")
+    if action_guide_refit_match is not None:
+        action_guide_refit_body = action_guide_refit_match.group("body")
+        action_guide_refit_order = tuple(action_guide_refit_body.find(token) for token in (
+            'if _action_guide_source_text == "":',
+            "return",
+            "FrontierVisualKit.compact_text(_action_guide_source_text, 3, 96, false)",
+            "if _compact_layout_active:",
+            'visible_text.split("\\n", false)',
+            'visible_text = "\\n".join(visible_lines.slice(0, min(2, visible_lines.size())))',
+            "_action_guide.text = visible_text",
+        ))
+        ensure(all(index >= 0 for index in action_guide_refit_order) and list(action_guide_refit_order) == sorted(action_guide_refit_order), errors, "Battle ActionGuide refit must preserve three wide source lines and select only the first two existing compact lines")
+        ensure("tooltip_text" not in action_guide_refit_body, errors, "Responsive ActionGuide refit must not replace the already-enriched exact tooltip")
+        for forbidden_token in ("replace(", "erase(", "normalize", "BattleRules", "SettingsService", "custom_minimum_size", "visible =", "await ", "call_deferred", "create_timer"):
+            ensure(forbidden_token not in action_guide_refit_body, errors, f"Battle ActionGuide responsive refit must not rewrite semantics, mutate layout, or add timing via {forbidden_token}")
+    ensure(battle_shell_text.count("_set_battle_action_guide(") == 2, errors, "Battle ActionGuide must have exactly one setter definition and one refresh call")
+    ensure(battle_shell_text.count("_refit_battle_action_guide()") == 3, errors, "Battle ActionGuide refit must have one definition plus setter and responsive-layout calls")
+    ensure(battle_shell_text.count("_action_guide.tooltip_text = _join_tooltip_sections([") == 1, errors, "Battle ActionGuide must preserve one exact enriched tactical tooltip after its compact setter")
+
+    layout_roundtrip_match = re.search(
+        r"func _check_battle_system_command_layout_roundtrip\(shell, session, gameplay_before: String, command_semantics_before: Dictionary\) -> bool:(?P<body>.*?)(?=\nfunc )",
+        active_play_report_text,
+        flags=re.DOTALL,
+    )
+    ensure(layout_roundtrip_match is not None, errors, "Active-play Settings report is missing the real compact-wide-compact Battle layout round trip")
+    if layout_roundtrip_match is not None:
+        layout_roundtrip_body = layout_roundtrip_match.group("body")
+        roundtrip_order = tuple(layout_roundtrip_body.find(token) for token in (
+            "SettingsService.set_ui_scale_percent(100)",
+            'SettingsService.set_presentation_resolution("1920x1080")',
+            "get_window().size = Vector2i(1920, 1080)",
+            "_battle_system_command_layout_contract(shell, false)",
+            "_battle_system_command_semantics(shell) == command_semantics_before",
+            "SettingsService.set_ui_scale_percent(130)",
+            'SettingsService.set_presentation_resolution("1280x720")',
+            "get_window().size = Vector2i(1280, 720)",
+            "_battle_system_command_layout_contract(shell, true)",
+            "_gameplay_signature(session) == gameplay_before",
+        ))
+        ensure(all(index >= 0 for index in roundtrip_order) and list(roundtrip_order) == sorted(roundtrip_order), errors, "Battle layout proof must exercise the real wide and restored compact runtime in strict order with exact semantics and gameplay authority")
+        for forbidden_token in ("shell.call", "_apply_responsive_layout", "custom_minimum_size =", ".visible =", "normalize", "erase("):
+            ensure(forbidden_token not in layout_roundtrip_body, errors, f"Battle compact/wide round trip must use public settings/window behavior and avoid {forbidden_token}")
 
     overworld_script_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
     ensure(

@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed: native/root/content-scale sizing is synchronized through the root Godot Window, the official packaged Linux 1280x720 first view contains all six Main Menu commands, compact Battle Settings close restores a visible existing focus target, and focused/compatibility/static/Linux/Windows gates pass with bounded claims.",
+  "currentNotes": "Completed: compact Battle now keeps its existing Manual slot, Save, Settings, and Main Menu controls visible in the existing footer pocket at truthful 1280x720/130%, while wide Battle restores the exact framed speed/save surface. Focused, painted, compatibility, static/editor, and bounded platform gates pass.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "settings-runtime-window-viewport-size-sync-10184",
-  "currentSliceId": "settings-runtime-window-viewport-size-sync-10184",
-  "currentSliceNotes": "Root Window sizing now preserves exact native/root/content-scale authority for apply and rollback. Fresh packaged Linux 1280x720 evidence contains Campaign, Skirmish, Load, Settings, Editor, and Quit; visible Settings origins retain focus and hidden compact Battle origins fall back to the existing visible Battle focus cycle. All bounded gates pass.",
+  "currentSlice": "ux-battle-compact-system-command-access-10184",
+  "currentSliceId": "ux-battle-compact-system-command-access-10184",
+  "currentSliceNotes": "The existing footer now stacks a fully visible Manual slot, Save, Settings, and Main Menu row below compact Battle actions, keeps the 240px board, and restores the exact wide speed/save surface on resize. Exact full save/tactical context remains in existing tooltips/settings paths; all bounded gates pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Runtime Window And Viewport Size Synchronization",
-  "currentSliceUpdatedAt": "2026-08-18T09:56:52Z",
+  "currentSliceTitle": "Battle Compact System Command Access",
+  "currentSliceUpdatedAt": "2026-08-18T10:55:12Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -90173,6 +90173,27 @@
       "notes": "Completed with live runtime behavior, not documentation alone. SettingsService apply and rollback now synchronize root Window size and content-scale size with the native window while preserving display policy, confirmation transactions, and settings bytes. Focused display transaction and Main Menu owners are green; the stale visual reveal observer was corrected test-only to exercise the real deferred focus path. Truthful compact Battle evidence exposed a hidden Settings-origin focus dead end, now corrected by retaining visible Settings focus or falling back only to the existing preferred Battle focus cycle. Restore-defaults, active-play Settings, full Main Menu keyboard/controller navigation, menu/outcome, core, repository/editor, official Linux export/headless startup, a fresh exact 1280x720 packaged Linux first-view capture with all six commands, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. No packaged controller interaction, AT-SPI/UIA, native Windows display hardware, signing/publication, whole-game, or release-readiness claim is made.",
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
       "blockedReason": null
+    },
+    {
+      "id": "ux-battle-compact-system-command-access-10184",
+      "title": "Battle Compact System Command Access",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Keep Battle Save, Settings, and Main Menu commands visible and focusable at the established compact breakpoint without adding a new surface or changing wide-layout behavior.",
+      "implementationTargets": ["scenes/battle/BattleShell.gd", "scenes/battle/BattleShell.tscn", "tests/active_play_settings_runtime_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "testOwners": ["tests/active_play_settings_runtime_report.tscn", "tests/battle_layout_smoke.tscn", "tests/active_play_keyboard_focus_smoke.tscn", "tests/accessibility_screen_reader_semantics_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/packaging_linux_export_smoke.py", "tests/packaging_windows_export_smoke.py", "tests/validate_repo.py"],
+      "completionCriteria": ["At 1280x720 and supported 130% UI scale the existing SaveSlot, Save, Settings, and Main Menu controls are visible, focusable, ordered, and contained without violating Battle board or action-control compact contracts", "Compact Settings open/close returns focus to the visible Settings origin and save/settings/menu/session authority remains exact", "At 1920x1080 the existing two-column footer, speed row, and complete system-command layout remain exact, and focused/compatibility/static/platform gates pass"],
+      "nonGoals": ["new commands, panels, overlays, drawers, scrolling, copy, tooltips, actions, shortcuts, breakpoints, UI-scale options, or settings policy", "Battle rules, board navigation, targeting, animation, save schema, route, content, balance, AI, renderer, or Native RMG changes", "packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"],
+      "baseline": {"head": "5cade7ac1ed91661cf1f2d425fee59af9fa76e9d", "screen": "1280x720", "uiScalePercent": 130, "logicalRoot": "984.615x553.846", "artifact": "/tmp/heroes-battle-compact-command-audit2.eF5Hcm", "hiddenExistingControls": ["SystemPanel", "SpeedNormal", "SpeedFast", "SpeedInstant", "SaveSlot", "Save", "Settings", "Menu"], "failure": "active compact Battle exposes no visible save, settings, or main-menu command"},
+      "createdAt": "2026-08-18T10:07:19Z",
+      "startedAt": "2026-08-18T10:07:19Z",
+      "completedAt": "2026-08-18T10:55:12Z",
+      "updatedAt": "2026-08-18T10:55:12Z",
+      "notes": "Completed with live UI behavior, not documentation alone. The existing footer is a two-column GridContainer wide and stacks only in compact mode. Compact keeps Manual slot, Save, Settings, and Main Menu visible/focusable, removes decorative inner padding/frame, hides the redundant speed row and supplemental save-summary first view, and renders two existing tactical-guide lines while retaining exact full save/guide tooltips and Settings speed access. A fresh painted 1280x720/130% capture contains the 240px board, spells/actions, and complete system row. Focused compact-wide-compact semantics/focus/state, Board navigation, shared focus, accessibility, core, independent 1280/1920 routed layout, static/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. No packaged Battle interaction or broader release claim is made.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader release-readiness gaps remain.",
+      "blockedReason": null
     }
   ],
   "project": "heroes-like",
@@ -90715,9 +90736,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The runtime window/viewport synchronization slice is completed with exact native/root/content-scale sizing, fresh packaged Linux 1280x720 Main Menu proof, compact Battle focus recovery, compatibility, static/editor, and bounded Linux/Windows export-startup evidence. The game is not release-ready.",
+  "summary": "The Battle compact system-command access slice is completed with visible existing save/settings/menu controls at truthful 1280x720/130%, exact wide-layout restoration, focused/painted/compatibility/static evidence, and bounded Linux/Windows export-startup proof. The game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-18T09:56:52Z",
+  "updatedAt": "2026-08-18T10:55:12Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `ux-battle-compact-system-command-access-10184`. At the truthful 1280x720 root with supported 130% UI scale, the existing Battle footer now stacks its essential `Manual 1 / Save / Settings / Main Menu` row below the preserved board, spell, and action controls. Compact mode removes only decorative panel/padding overhead, the redundant speed shortcut row, the supplemental save-summary first view, and the third tactical-guide first-view line; exact settings/save summaries and all three tactical lines remain in existing tooltips/settings paths. The live Settings modal returns focus to the visible Settings command, while 1920x1080 restores the exact framed two-column footer, speed row, save summary, and three-line guide. Focused compact/wide behavior, painted 1280 evidence, Board navigation, keyboard/controller focus, accessibility, core, 1280/1920 routed layout, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `ux-battle-compact-system-command-access-10184`
 - Completed implementation slice: `settings-runtime-window-viewport-size-sync-10184`. SettingsService now applies and rolls back runtime size through the root Godot Window, keeping the native window, root Window, and content-scale canvas synchronized without changing resolution policy or persistence. A fresh official packaged Linux run on a 1280x720 X11 screen reports an exact 1280x720 top-level window and visibly contains Campaign, Skirmish, Load, Settings, Editor, and Quit. At the now-truthful compact Battle root, Settings modal close retains its visible origin or falls back to the existing visible Battle focus cycle when the established compact layout hides that origin. Display transaction, menu/outcome, keyboard/controller, restore-defaults, active-play Settings, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged controller interaction, AT-SPI/UIA, native Windows display hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `settings-runtime-window-viewport-size-sync-10184`
 - Completed implementation slice: `ux-battle-status-native-word-ellipsis-10184`. The shipped Battle Status Label now uses Godot's native word-ellipsis policy, so fresh 1280 evidence ends after complete `Bramble …` instead of `Bramble Scre…`, while exact full Status text/tooltip, the clipped single-line rectangle, Header/Pressure order, layout, input/focus, and battle authority remain unchanged. Focused Board, Town/Battle visual, shared focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction and broader release claims remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -7560,6 +7562,38 @@ Completion evidence:
 - settings defaults, active-play Settings, compact Battle focus fallback, full Main Menu keyboard/controller navigation, menu/outcome visual, and core systems exit naturally green with settings, save, session, route, and gameplay authority preserved;
 - the official Linux export/headless startup report is `ok:true`; `/tmp/heroes-packaged-mainmenu-window-sync.VsBPjD/main-menu-60.png` and X11 geometry show the exact exported binary at 1280x720 with all six first-view commands visible;
 - the official Windows report is `ok:true` for PE/PCK/native DLL export and fresh-Wine Godot/Boot/MainMenu/native-DLL startup. These are bounded export/startup claims only, not packaged interaction or broader release certification.
+
+## Selected Slice: Battle Compact System Command Access
+
+id: `ux-battle-compact-system-command-access-10184`
+
+Status: completed.
+
+Implementation boundary:
+- keep the existing Battle footer, ActionPanel, SystemPanel, SaveSlot, Save, Settings, Menu, speed controls, actions, labels, and focus identities; change only the footer's responsive arrangement at the established compact breakpoint;
+- stack the existing SystemPanel below the ActionPanel in the existing footer pocket at compact size, keep SaveSlot/Save/Settings/Menu visible and focusable, hide the supplemental save-summary text and dedicated speed shortcut row while retaining their exact tooltips/settings paths, and use two of the existing three tactical-guide lines while retaining its exact complete tooltip;
+- retain the exact wide two-column footer with its visible speed row and system commands, and preserve board/action containment, battle/session/save/settings/menu authority, modal focus return, and keyboard/controller ordering.
+
+Completion criteria:
+- at a real 1280x720 root with persisted 130% UI scale, SaveSlot, Save, Settings, and Main Menu are all visible, focusable, ordered, and contained in the logical root without covering or shrinking the Battle board or action controls below their existing compact contracts;
+- opening and closing Settings from the compact visible command returns focus to Settings, while save/menu and battle/session authority remain exact; at 1920x1080 the existing two-column footer, speed row, and system-command layout remain exact;
+- focused active-play Settings, Battle layout/navigation/focus, accessibility, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass.
+
+Non-goals:
+- no new command, panel, overlay, drawer, scroll container, copy, tooltip, action, shortcut, breakpoint, UI-scale option, or settings policy;
+- no Battle rules, board navigation, targeting, animation, save schema, route, content, balance, AI, renderer, or Native RMG change;
+- no packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- current pushed HEAD `5cade7ac` at a truthful 1280x720 root and supported 130% UI scale enters the established compact Battle layout with a 984.615x553.846 logical root;
+- `/tmp/heroes-battle-compact-command-audit2.eF5Hcm` proves SystemPanel, SaveSlot, Save, Settings, Menu, and all three speed controls exist and remain focus-capable but are all hidden; the painted `battle.png` therefore exposes no visible save/settings/menu route during active Battle play;
+- the existing footer pocket already owns these exact commands, and its compact board allocation retains enough vertical budget for one bounded system-command row without introducing a new surface.
+
+Completion evidence:
+- `/tmp/heroes-battle-compact-painted-final-pass.EOxc2A/battle-compact.png` is a fresh real-renderer 1280x720/130% capture with the 240px board, two tactical-guide lines, spell/actions, and complete `Manual 1 / Save Battle / Settings / Main Menu` command row visible inside the physical frame;
+- the focused active-play report exits naturally `PASS`, proving compact and wide containment, exact system-command text/tooltips/focusability/selection/item metadata, visible Settings focus return, 1280->1920->1280 refit, and unchanged battle authority;
+- controller Board navigation, shared keyboard/controller focus, accessibility semantics, core systems, and independent 1280/1920 Battle layout owners exit naturally green; the layout owners preserve direct/button actions, ordinary/outcome routing, save/resume, menu authority, and scene restoration;
+- repository validation, Python compilation, JSON/diff checks, exact/generic editor parses, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. These are bounded export/startup claims only, not packaged Battle interaction or broader release certification.
 
 ## Progress Reconciliation
 

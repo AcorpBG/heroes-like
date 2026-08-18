@@ -192,6 +192,9 @@ func _check_battle_settings() -> bool:
 	add_child(shell)
 	await _settle()
 	var before := _gameplay_signature(session)
+	var compact_layout: Dictionary = _battle_system_command_layout_contract(shell, true)
+	if not _require(bool(compact_layout.get("ok", false)), "Compact Battle does not expose a contained essential system-command row at 1280x720/130 percent: %s" % compact_layout):
+		return false
 	var opened: Dictionary = shell.validation_open_active_play_settings()
 	await _settle()
 	var dialog = shell.validation_active_play_settings_dialog()
@@ -222,24 +225,170 @@ func _check_battle_settings() -> bool:
 		return false
 	var battle_settings_control := shell.get_node_or_null("%Settings") as Control
 	var battle_close_focus_owner := get_viewport().gui_get_focus_owner() as Control
-	var battle_focus_return_exact: bool = (
-		battle_settings_control != null
-		and (
-			(battle_settings_control.is_visible_in_tree() and battle_close_focus_owner == battle_settings_control)
-			or (
-				not battle_settings_control.is_visible_in_tree()
-				and battle_close_focus_owner != null
-				and shell.is_ancestor_of(battle_close_focus_owner)
-				and battle_close_focus_owner.is_visible_in_tree()
-				and battle_close_focus_owner.focus_mode != Control.FOCUS_NONE
-			)
-		)
-	)
-	if not _require(battle_focus_return_exact, "Battle controller/keyboard Back did not restore a visible Battle focus target after the compact Settings origin changed visibility: owner=%s settings_visible=%s." % [_focus_name(), battle_settings_control.is_visible_in_tree() if battle_settings_control != null else false]):
+	var battle_focus_return_exact: bool = battle_settings_control != null and battle_settings_control.is_visible_in_tree() and battle_close_focus_owner == battle_settings_control
+	if not _require(battle_focus_return_exact, "Battle controller/keyboard Back did not restore the visible compact Settings command: owner=%s settings_visible=%s." % [_focus_name(), battle_settings_control.is_visible_in_tree() if battle_settings_control != null else false]):
+		return false
+	var command_semantics_after_settings: Dictionary = _battle_system_command_semantics(shell)
+	if not await _check_battle_system_command_layout_roundtrip(shell, session, before, command_semantics_after_settings):
 		return false
 	shell.queue_free()
 	await _settle()
 	return true
+
+func _check_battle_system_command_layout_roundtrip(shell, session, gameplay_before: String, command_semantics_before: Dictionary) -> bool:
+	var wide_scale_result: Dictionary = SettingsService.set_ui_scale_percent(100)
+	var wide_resolution_result: Dictionary = SettingsService.set_presentation_resolution("1920x1080")
+	get_window().size = Vector2i(1920, 1080)
+	await _settle()
+	var wide_layout: Dictionary = _battle_system_command_layout_contract(shell, false)
+	if not _require(
+		bool(wide_scale_result.get("ok", false))
+		and bool(wide_resolution_result.get("ok", false))
+		and get_window().size == Vector2i(1920, 1080)
+		and SettingsService.ui_scale_percent() == 100
+		and bool(wide_layout.get("ok", false)),
+		"Wide Battle did not retain its complete two-column system-command surface: %s" % wide_layout
+	):
+		return false
+	if not _require(_battle_system_command_semantics(shell) == command_semantics_before, "Wide Battle changed system-command labels, tooltips, focusability, selection, or item metadata."):
+		return false
+
+	var compact_scale_result: Dictionary = SettingsService.set_ui_scale_percent(130)
+	var compact_resolution_result: Dictionary = SettingsService.set_presentation_resolution("1280x720")
+	get_window().size = Vector2i(1280, 720)
+	await _settle()
+	var restored_compact_layout: Dictionary = _battle_system_command_layout_contract(shell, true)
+	return (
+		_require(bool(compact_scale_result.get("ok", false)) and bool(compact_resolution_result.get("ok", false)), "Battle compact layout could not restore the persisted 1280x720/130 percent fixture.")
+		and _require(get_window().size == Vector2i(1280, 720) and SettingsService.ui_scale_percent() == 130, "Battle compact layout restored the wrong runtime size or UI scale.")
+		and _require(bool(restored_compact_layout.get("ok", false)), "Battle essential system commands were not contained after the wide-to-compact round trip: %s" % restored_compact_layout)
+		and _require(_battle_system_command_semantics(shell) == command_semantics_before, "Battle compact round trip changed system-command labels, tooltips, focusability, selection, or item metadata.")
+		and _require(_gameplay_signature(session) == gameplay_before, "Battle responsive command reflow changed combat authority.")
+	)
+
+func _battle_system_command_layout_contract(shell, compact: bool) -> Dictionary:
+	var viewport_rect: Rect2 = shell.get_viewport_rect()
+	var footer_row := shell.get_node_or_null("%FooterRow") as GridContainer
+	var action_panel := shell.get_node_or_null("%ActionPanel") as Control
+	var action_bar := shell.get_node_or_null("%ActionBar") as Control
+	var action_guide := shell.get_node_or_null("%ActionGuide") as Label
+	var system_panel := shell.get_node_or_null("%SystemPanel") as Control
+	var system_actions := shell.get_node_or_null("%SystemActions") as Control
+	var system_body := shell.get_node_or_null("%SystemBody") as Control
+	var speed_bar := shell.get_node_or_null("%SpeedBar") as Control
+	var board := shell.get_node_or_null("%BattleBoard") as Control
+	var required_commands: Array[Control] = []
+	for node_name in ["SaveSlot", "Save", "Settings", "Menu"]:
+		var command := shell.get_node_or_null("%%%s" % node_name) as Control
+		if command != null:
+			required_commands.append(command)
+	var action_controls: Array[Control] = []
+	for node_name in ["Advance", "Strike", "Shoot", "Defend", "QuickResolve", "Retreat", "Surrender"]:
+		var action_control := shell.get_node_or_null("%%%s" % node_name) as Control
+		if action_control != null:
+			action_controls.append(action_control)
+	var required_visible_and_contained := required_commands.size() == 4
+	for command in required_commands:
+		required_visible_and_contained = required_visible_and_contained and command.is_visible_in_tree() and command.focus_mode != Control.FOCUS_NONE and viewport_rect.grow(1.0).encloses(command.get_global_rect())
+	var actions_visible_and_contained := action_controls.size() == 7
+	for action_control in action_controls:
+		actions_visible_and_contained = actions_visible_and_contained and action_control.is_visible_in_tree() and viewport_rect.grow(1.0).encloses(action_control.get_global_rect())
+	var command_order_exact := required_commands.size() == 4
+	for index in range(1, required_commands.size()):
+		command_order_exact = command_order_exact and required_commands[index - 1].get_global_rect().end.x <= required_commands[index].get_global_rect().position.x + 1.0
+	var child_arrangement_exact := false
+	if footer_row != null and action_panel != null and system_panel != null:
+		child_arrangement_exact = (
+			system_panel.get_global_rect().position.y >= action_panel.get_global_rect().end.y - 1.0
+			if compact
+			else system_panel.get_global_rect().position.x >= action_panel.get_global_rect().end.x - 1.0
+		)
+	var structural_nodes_present := footer_row != null and action_panel != null and action_bar != null and action_guide != null and system_panel != null and system_actions != null and system_body != null and speed_bar != null and board != null
+	var structural_containment_exact := false
+	var board_contract_exact := false
+	if structural_nodes_present:
+		structural_containment_exact = (
+			viewport_rect.grow(1.0).encloses(footer_row.get_global_rect())
+			and footer_row.get_global_rect().grow(1.0).encloses(action_panel.get_global_rect())
+			and footer_row.get_global_rect().grow(1.0).encloses(system_panel.get_global_rect())
+			and action_panel.get_global_rect().grow(1.0).encloses(action_bar.get_global_rect())
+			and system_panel.get_global_rect().grow(1.0).encloses(system_actions.get_global_rect())
+		)
+		board_contract_exact = viewport_rect.grow(1.0).encloses(board.get_global_rect()) and board.size.x + 1.0 >= board.custom_minimum_size.x and board.size.y + 1.0 >= board.custom_minimum_size.y
+	var ok := (
+		structural_nodes_present
+		and footer_row.columns == (1 if compact else 2)
+		and system_panel.is_visible_in_tree()
+		and system_panel.has_theme_stylebox_override("panel") == compact
+		and (not compact or system_panel.get_theme_stylebox("panel") is StyleBoxEmpty)
+		and system_body.is_visible_in_tree() == not compact
+		and speed_bar.is_visible_in_tree() == not compact
+		and action_guide.text.split("\n", false).size() == (2 if compact else 3)
+		and not action_guide.tooltip_text.strip_edges().is_empty()
+		and required_visible_and_contained
+		and actions_visible_and_contained
+		and command_order_exact
+		and child_arrangement_exact
+		and structural_containment_exact
+		and board_contract_exact
+	)
+	return {
+		"ok": ok,
+		"compact": compact,
+		"viewport_rect": viewport_rect,
+		"footer_columns": footer_row.columns if footer_row != null else -1,
+		"footer_rect": footer_row.get_global_rect() if footer_row != null else Rect2(),
+		"action_panel_rect": action_panel.get_global_rect() if action_panel != null else Rect2(),
+		"action_guide_line_count": action_guide.text.split("\n", false).size() if action_guide != null else 0,
+		"system_panel_rect": system_panel.get_global_rect() if system_panel != null else Rect2(),
+		"system_panel_compact_style": system_panel.has_theme_stylebox_override("panel") if system_panel != null else false,
+		"system_actions_rect": system_actions.get_global_rect() if system_actions != null else Rect2(),
+		"system_body_visible": system_body.is_visible_in_tree() if system_body != null else false,
+		"speed_visible": speed_bar.is_visible_in_tree() if speed_bar != null else false,
+		"board_rect": board.get_global_rect() if board != null else Rect2(),
+		"board_minimum": board.custom_minimum_size if board != null else Vector2.ZERO,
+		"required_command_count": required_commands.size(),
+		"action_control_count": action_controls.size(),
+		"required_visible_and_contained": required_visible_and_contained,
+		"actions_visible_and_contained": actions_visible_and_contained,
+		"command_order_exact": command_order_exact,
+		"child_arrangement_exact": child_arrangement_exact,
+		"structural_containment_exact": structural_containment_exact,
+		"board_contract_exact": board_contract_exact,
+	}
+
+func _battle_system_command_semantics(shell) -> Dictionary:
+	var semantics := {}
+	for node_name in ["Save", "Settings", "Menu", "SpeedNormal", "SpeedFast", "SpeedInstant"]:
+		var button := shell.get_node_or_null("%%%s" % node_name) as Button
+		semantics[node_name] = {
+			"text": button.text,
+			"tooltip": button.tooltip_text,
+			"focus_mode": button.focus_mode,
+			"disabled": button.disabled,
+		} if button != null else {}
+	var save_slot := shell.get_node_or_null("%SaveSlot") as OptionButton
+	var save_slot_items: Array = []
+	if save_slot != null:
+		for index in range(save_slot.item_count):
+			save_slot_items.append({
+				"text": save_slot.get_item_text(index),
+				"metadata": save_slot.get_item_metadata(index),
+				"disabled": save_slot.is_item_disabled(index),
+			})
+	semantics["SaveSlot"] = {
+		"focus_mode": save_slot.focus_mode if save_slot != null else Control.FOCUS_NONE,
+		"selected": save_slot.selected if save_slot != null else -1,
+		"items": save_slot_items,
+	}
+	var system_body := shell.get_node_or_null("%SystemBody") as Label
+	semantics["SystemBody"] = {
+		"text": system_body.text if system_body != null else "",
+		"tooltip": system_body.tooltip_text if system_body != null else "",
+	}
+	var action_guide := shell.get_node_or_null("%ActionGuide") as Label
+	semantics["ActionGuideTooltip"] = action_guide.tooltip_text if action_guide != null else ""
+	return semantics
 
 func _check_persisted_reload() -> bool:
 	SettingsService.settings = {}
