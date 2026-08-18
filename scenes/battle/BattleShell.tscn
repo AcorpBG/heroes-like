@@ -373,7 +373,8 @@ script = ExtResource("6_hero_portrait")
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-autowrap_mode = 3
+clip_text = true
+text_overrun_behavior = 4
 text = "Player command"
 
 [node name="EnemyCommanderIdentity" type="HBoxContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/CommandPanel/CommandPad/CommandBox"]
@@ -391,7 +392,8 @@ script = ExtResource("6_hero_portrait")
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-autowrap_mode = 3
+clip_text = true
+text_overrun_behavior = 4
 text = "Enemy command"
 
 [node name="BattleTabs" type="TabContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox"]
@@ -432,13 +434,13 @@ layout_mode = 2
 [node name="ContextPad" type="MarginContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/BattleTabs/ContextPanel"]
 layout_mode = 2
 theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
+theme_override_constants/margin_top = 7
 theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
+theme_override_constants/margin_bottom = 7
 
 [node name="ContextBox" type="VBoxContainer" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/BattleTabs/ContextPanel/ContextPad"]
 layout_mode = 2
-theme_override_constants/separation = 4
+theme_override_constants/separation = 2
 
 [node name="ContextTitle" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/BattleTabs/ContextPanel/ContextPad/ContextBox"]
 layout_mode = 2
@@ -663,21 +665,25 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Instant"
 
-[node name="SaveSlot" type="OptionButton" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox"]
+[node name="SystemActions" type="HBoxContainer" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="SaveSlot" type="OptionButton" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/SystemActions"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Save" type="Button" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox"]
+[node name="Save" type="Button" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/SystemActions"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Save"
 
-[node name="Settings" type="Button" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox"]
+[node name="Settings" type="Button" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/SystemActions"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Settings"
 
-[node name="Menu" type="Button" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox"]
+[node name="Menu" type="Button" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/SystemActions"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Menu"
@@ -712,10 +718,10 @@ dialog_text = "Confirm this army-wide battle exit order?"
 [connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/SpeedBar/SpeedNormal" to="." method="_on_speed_normal_pressed"]
 [connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/SpeedBar/SpeedFast" to="." method="_on_speed_fast_pressed"]
 [connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/SpeedBar/SpeedInstant" to="." method="_on_speed_instant_pressed"]
-[connection signal="item_selected" from="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/SaveSlot" to="." method="_on_save_slot_selected"]
-[connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/Save" to="." method="_on_save_pressed"]
-[connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/Settings" to="." method="_on_settings_pressed"]
-[connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/Menu" to="." method="_on_menu_pressed"]
+[connection signal="item_selected" from="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/SystemActions/SaveSlot" to="." method="_on_save_slot_selected"]
+[connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/SystemActions/Save" to="." method="_on_save_pressed"]
+[connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/SystemActions/Settings" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/SystemActions/Menu" to="." method="_on_menu_pressed"]
 [connection signal="canceled" from="QuickResolveConfirmationDialog" to="." method="_on_quick_resolve_canceled"]
 [connection signal="confirmed" from="QuickResolveConfirmationDialog" to="." method="_on_quick_resolve_confirmed"]
 [connection signal="canceled" from="WithdrawalConfirmationDialog" to="." method="_on_withdrawal_confirmation_canceled"]
