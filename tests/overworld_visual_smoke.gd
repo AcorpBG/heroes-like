@@ -464,6 +464,29 @@ func _assert_render_cache_split(shell: Node) -> bool:
 		push_error("Overworld smoke: selecting a route target should only redraw the dynamic overworld layer. before=%s after=%s." % [initial_cache, selection_cache])
 		get_tree().quit(1)
 		return false
+	var map_view := shell.get_node_or_null("%Map") as Control
+	var command_band := shell.get_node_or_null("%CommandBand") as Control
+	var cue_chip := shell.get_node_or_null("%CueChip") as Control
+	var map_cue := shell.get_node_or_null("%MapCue") as Label
+	if map_view == null or command_band == null or cue_chip == null or map_cue == null:
+		push_error("Overworld smoke: render-cache coverage is missing the Map, CommandBand, CueChip, or MapCue layout owner.")
+		get_tree().quit(1)
+		return false
+	if map_cue.autowrap_mode != TextServer.AUTOWRAP_OFF \
+		or not map_cue.clip_text \
+		or map_cue.text_overrun_behavior != TextServer.OVERRUN_TRIM_WORD_ELLIPSIS \
+		or map_cue.get_line_count() != 1 \
+		or map_cue.get_visible_line_count() != 1:
+		push_error("Overworld smoke: MapCue lost its exact single-line native word-ellipsis contract. wrap=%s clip=%s overrun=%s lines=%s/%s." % [map_cue.autowrap_mode, map_cue.clip_text, map_cue.text_overrun_behavior, map_cue.get_line_count(), map_cue.get_visible_line_count()])
+		get_tree().quit(1)
+		return false
+	if not _assert_130_scale_footer_containment(shell, map_cue):
+		return false
+	var selection_map_rect := map_view.get_global_rect()
+	var selection_command_band_rect := command_band.get_global_rect()
+	var selection_cue_chip_rect := Rect2(cue_chip.position, cue_chip.size)
+	var selection_map_cue_rect := Rect2(map_cue.position, map_cue.size)
+	var selection_map_cue_minimum := map_cue.get_combined_minimum_size()
 	var move_result: Dictionary = shell.call("validation_perform_primary_action")
 	await get_tree().process_frame
 	var move_snapshot: Dictionary = shell.call("validation_snapshot")
@@ -483,6 +506,26 @@ func _assert_render_cache_split(shell: Node) -> bool:
 		return false
 	if not _assert_overworld_action_context_strip_contract(move_snapshot):
 		return false
+	var move_map_rect := map_view.get_global_rect()
+	var move_command_band_rect := command_band.get_global_rect()
+	var move_cue_chip_rect := Rect2(cue_chip.position, cue_chip.size)
+	var move_map_cue_rect := Rect2(map_cue.position, map_cue.size)
+	var move_map_cue_minimum := map_cue.get_combined_minimum_size()
+	if (
+		selection_map_rect != move_map_rect
+		or selection_command_band_rect != move_command_band_rect
+		or selection_cue_chip_rect != move_cue_chip_rect
+		or selection_map_cue_rect != move_map_cue_rect
+		or selection_map_cue_minimum != move_map_cue_minimum
+		or map_cue.get_line_count() != 1
+		or map_cue.get_visible_line_count() != 1
+		or map_cue.text != String(move_snapshot.get("map_cue_text", ""))
+		or map_cue.tooltip_text != String(move_snapshot.get("map_cue_tooltip_text", ""))
+		or map_cue.tooltip_text.find("Action Recap") < 0
+	):
+		push_error("Overworld smoke: MapCue prompt-to-movement transition changed the fitted footer/map allocation or lost its exact full tooltip. map=%s/%s footer=%s/%s cue_chip=%s/%s cue=%s/%s minimum=%s/%s text=%s snapshot_text=%s tooltip=%s." % [selection_map_rect, move_map_rect, selection_command_band_rect, move_command_band_rect, selection_cue_chip_rect, move_cue_chip_rect, selection_map_cue_rect, move_map_cue_rect, selection_map_cue_minimum, move_map_cue_minimum, map_cue.text, move_snapshot.get("map_cue_text", ""), map_cue.tooltip_text])
+		get_tree().quit(1)
+		return false
 	if (
 		int(move_cache.get("session_static_generation", -1)) != int(selection_cache.get("session_static_generation", -1))
 		or int(move_cache.get("dynamic_generation", -1)) <= int(selection_cache.get("dynamic_generation", -1))
@@ -490,6 +533,102 @@ func _assert_render_cache_split(shell: Node) -> bool:
 		push_error("Overworld smoke: hero movement on the fitted small map should not rebuild the session-static terrain cache. select=%s move=%s." % [selection_cache, move_cache])
 		get_tree().quit(1)
 		return false
+	return true
+
+func _assert_130_scale_footer_containment(shell: Control, map_cue: Label) -> bool:
+	var shell_panel := shell.get_node_or_null("%Shell") as Control
+	var command_band := shell.get_node_or_null("%CommandBand") as Control
+	var resource_chip := shell.get_node_or_null("%ResourceChip") as Control
+	var resource_label := shell.get_node_or_null("%Resources") as MenuButton
+	var status_chip := shell.get_node_or_null("%StatusChip") as Control
+	var status_label := shell.get_node_or_null("%Status") as Label
+	var cue_chip := shell.get_node_or_null("%CueChip") as Control
+	var orders_panel := shell.get_node_or_null("%OrdersPanel") as Control
+	var primary_action := shell.get_node_or_null("%PrimaryAction") as Button
+	var system_panel := shell.get_node_or_null("%SystemPanel") as Control
+	var save_status := shell.get_node_or_null("%SaveStatus") as Label
+	var end_turn := shell.get_node_or_null("%EndTurn") as Button
+	var save_slot := shell.get_node_or_null("%SaveSlot") as OptionButton
+	var save_button := shell.get_node_or_null("%Save") as Button
+	var settings_button := shell.get_node_or_null("%Settings") as Button
+	var menu_button := shell.get_node_or_null("%Menu") as Button
+	var required_controls: Array[Control] = [
+		shell_panel,
+		command_band,
+		resource_chip,
+		resource_label,
+		status_chip,
+		status_label,
+		cue_chip,
+		map_cue,
+		orders_panel,
+		primary_action,
+		system_panel,
+		save_status,
+		end_turn,
+		save_slot,
+		save_button,
+		settings_button,
+		menu_button,
+	]
+	if required_controls.any(func(control: Control) -> bool: return control == null):
+		push_error("Overworld smoke: 130% footer containment is missing an authored footer surface or system control.")
+		get_tree().quit(1)
+		return false
+	var large_scale_footer := SettingsService.ui_scale_percent() >= 130
+	var expected_resource_chip_width := 190.0 if large_scale_footer else 210.0
+	var expected_resource_label_width := 170.0 if large_scale_footer else 210.0
+	var expected_primary_width := 170.0 if large_scale_footer else 210.0
+	if (
+		resource_chip.custom_minimum_size.x != expected_resource_chip_width
+		or resource_label.custom_minimum_size.x != expected_resource_label_width
+		or primary_action.custom_minimum_size.x != expected_primary_width
+		or status_label.clip_text != large_scale_footer
+		or status_label.text_overrun_behavior != TextServer.OVERRUN_TRIM_WORD_ELLIPSIS
+		or not map_cue.clip_text
+		or map_cue.text_overrun_behavior != TextServer.OVERRUN_TRIM_WORD_ELLIPSIS
+		or not primary_action.clip_text
+		or primary_action.text_overrun_behavior != TextServer.OVERRUN_TRIM_WORD_ELLIPSIS
+		or resource_label.text.strip_edges() == ""
+		or resource_label.tooltip_text.strip_edges() == ""
+		or status_label.tooltip_text != status_label.text
+		or primary_action.tooltip_text.strip_edges() == ""
+	):
+		push_error("Overworld smoke: responsive footer properties or full semantic tooltips drifted at %d percent scale. resource=%s/%s status=%s/%s cue=%s/%s primary=%s/%s tooltips=%s/%s/%s." % [SettingsService.ui_scale_percent(), resource_chip.custom_minimum_size.x, resource_label.custom_minimum_size.x, status_label.clip_text, status_label.text_overrun_behavior, map_cue.clip_text, map_cue.text_overrun_behavior, primary_action.custom_minimum_size.x, primary_action.text_overrun_behavior, resource_label.tooltip_text, status_label.tooltip_text, primary_action.tooltip_text])
+		get_tree().quit(1)
+		return false
+	var root_rect := shell.get_global_rect()
+	var shell_rect := shell_panel.get_global_rect()
+	var footer_rect := command_band.get_global_rect()
+	var footer_surfaces: Array[Control] = [resource_chip, status_chip, cue_chip, orders_panel, system_panel]
+	var system_controls: Array[Control] = [save_status, end_turn, save_slot, save_button, settings_button, menu_button]
+	if not root_rect.encloses(shell_rect) or not shell_rect.encloses(footer_rect):
+		push_error("Overworld smoke: shell/footer escaped the logical root at %d percent scale. root=%s shell=%s footer=%s." % [SettingsService.ui_scale_percent(), root_rect, shell_rect, footer_rect])
+		get_tree().quit(1)
+		return false
+	for index in range(footer_surfaces.size()):
+		var surface := footer_surfaces[index]
+		var surface_rect := surface.get_global_rect()
+		if not surface.is_visible_in_tree() or not footer_rect.encloses(surface_rect):
+			push_error("Overworld smoke: footer surface %s is hidden or outside CommandBand at %d percent scale. footer=%s surface=%s." % [surface.name, SettingsService.ui_scale_percent(), footer_rect, surface_rect])
+			get_tree().quit(1)
+			return false
+		if index > 0 and footer_surfaces[index - 1].get_global_rect().end.x > surface_rect.position.x + 0.5:
+			push_error("Overworld smoke: footer surfaces overlap or changed order at %d percent scale. previous=%s current=%s." % [SettingsService.ui_scale_percent(), footer_surfaces[index - 1].get_global_rect(), surface_rect])
+			get_tree().quit(1)
+			return false
+	var system_rect := system_panel.get_global_rect()
+	for index in range(system_controls.size()):
+		var control := system_controls[index]
+		var control_rect := control.get_global_rect()
+		if not control.is_visible_in_tree() or not system_rect.encloses(control_rect):
+			push_error("Overworld smoke: system footer control %s is hidden or clipped at %d percent scale. system=%s control=%s." % [control.name, SettingsService.ui_scale_percent(), system_rect, control_rect])
+			get_tree().quit(1)
+			return false
+		if index > 0 and system_controls[index - 1].get_global_rect().end.x > control_rect.position.x + 0.5:
+			push_error("Overworld smoke: system footer controls overlap or changed order at %d percent scale. previous=%s current=%s." % [SettingsService.ui_scale_percent(), system_controls[index - 1].get_global_rect(), control_rect])
+			get_tree().quit(1)
+			return false
 	return true
 
 func _assert_objective_brief_native_ellipsis_contract(shell: Control) -> bool:

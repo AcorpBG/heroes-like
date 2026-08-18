@@ -27951,6 +27951,199 @@ def validate_overworld_objective_brief_native_pixel_ellipsis(errors: list[str]) 
             ensure(forbidden_token not in join_body, errors, f"Independent ObjectiveBrief tooltip join must avoid production/canonicalization dependency: {forbidden_token}")
 
 
+def validate_overworld_130_scale_footer_containment(errors: list[str]) -> None:
+    visual_path = ROOT / "tests" / "overworld_visual_smoke.gd"
+    for path in (OVERWORLD_SCENE_PATH, OVERWORLD_SCRIPT_PATH, visual_path):
+        ensure(path.exists(), errors, f"Missing Overworld 130% footer containment owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in (OVERWORLD_SCENE_PATH, OVERWORLD_SCRIPT_PATH, visual_path)):
+        return
+
+    scene_text = OVERWORLD_SCENE_PATH.read_text(encoding="utf-8")
+    shell_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+    visual_text = visual_path.read_text(encoding="utf-8")
+    map_cue_block = scene_node_block(scene_text, "MapCue", "Label")
+    ensure(scene_text.count('[node name="MapCue" type="Label"') == 1, errors, "OverworldShell must author exactly one MapCue Label")
+    for required_token in (
+        "unique_name_in_owner = true",
+        "clip_text = true",
+        'text = "Action ready"',
+        "text_overrun_behavior = 4",
+    ):
+        ensure(required_token in map_cue_block, errors, f"Overworld MapCue is missing its exact native containment property: {required_token}")
+    for forbidden_token in ("autowrap_mode", "custom_minimum_size", "size_flags", "visible = false"):
+        ensure(forbidden_token not in map_cue_block, errors, f"Overworld MapCue must stay a visible inherited-single-line Label without geometry ownership: {forbidden_token}")
+
+    responsive_match = re.search(
+        r"func _apply_responsive_layout\(\) -> void:\n(?P<body>.*?)(?=\nfunc )",
+        shell_text,
+        re.S,
+    )
+    ensure(responsive_match is not None, errors, "OverworldShell must retain one isolated responsive footer allocator")
+    if responsive_match is not None:
+        responsive_body = responsive_match.group("body")
+        responsive_order = tuple(responsive_body.find(token) for token in (
+            "var available_size := _responsive_available_size()",
+            "var compact_layout := available_size.x < 1360.0 or available_size.y < 760.0",
+            "var narrow_layout := available_size.x < 1100.0",
+            "var constrained_desktop_band := not compact_layout and available_size.x <= 1600.0",
+            "var large_scale_footer := constrained_desktop_band and SettingsService.ui_scale_percent() >= 130",
+            '_command_row.add_theme_constant_override("separation", 4 if constrained_desktop_band else 6)',
+            "_resource_chip_panel.custom_minimum_size.x = 96.0 if resource_compact else (190.0 if large_scale_footer else 210.0)",
+            "_resource_label.custom_minimum_size.x = 80.0 if resource_compact else (170.0 if large_scale_footer else 210.0)",
+            "_status_label.clip_text = narrow_layout or large_scale_footer",
+            "_status_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_WORD_ELLIPSIS",
+            "_system_panel.custom_minimum_size.x = 220.0 if narrow_layout else (252.0 if compact_layout else 308.0)",
+            "_primary_action_button.custom_minimum_size.x = 170.0 if large_scale_footer else 210.0",
+            "_primary_action_button.clip_text = true",
+            "_primary_action_button.text_overrun_behavior = TextServer.OVERRUN_TRIM_WORD_ELLIPSIS",
+        ))
+        ensure(all(index >= 0 for index in responsive_order) and list(responsive_order) == sorted(responsive_order), errors, "Overworld responsive allocator must derive the existing breakpoint, apply 130%-only flexible minima, then retain system and primary-action ownership in order")
+        ensure(responsive_body.count("large_scale_footer") == 5, errors, "Overworld 130% footer mode must affect only its predicate, resource/chip minima, Status clipping, and PrimaryAction minimum")
+        for forbidden_token in (
+            "_cue_chip_panel.custom_minimum_size",
+            "_system_panel.visible",
+            "_save_status_label.visible = not large_scale_footer",
+            "_save_slot_picker.visible = not large_scale_footer",
+            "_end_turn_button.visible",
+            "_save_button.visible",
+            "_settings_button.visible",
+            "_menu_button.visible",
+            "custom_minimum_size.y",
+            "font_size",
+            "set_ui_scale_percent",
+            "call_deferred",
+            "await ",
+        ):
+            ensure(forbidden_token not in responsive_body, errors, f"Overworld 130% footer allocator must not hide/reorder/resize system controls or change timing/settings: {forbidden_token}")
+
+    focused_match = re.search(
+        r"func _assert_render_cache_split\(shell: Node\) -> bool:\n(?P<body>.*?)(?=\nfunc )",
+        visual_text,
+        re.S,
+    )
+    ensure(focused_match is not None, errors, "Overworld visual smoke must retain the focused render-cache/MapCue layout control")
+    if focused_match is None:
+        return
+    focused_body = focused_match.group("body")
+    focused_order = tuple(focused_body.find(token) for token in (
+        'var selection_result: Dictionary = shell.call("validation_select_tile", target.x, target.y)',
+        'var map_view := shell.get_node_or_null("%Map") as Control',
+        'var command_band := shell.get_node_or_null("%CommandBand") as Control',
+        'var cue_chip := shell.get_node_or_null("%CueChip") as Control',
+        'var map_cue := shell.get_node_or_null("%MapCue") as Label',
+        "map_cue.autowrap_mode != TextServer.AUTOWRAP_OFF",
+        "map_cue.text_overrun_behavior != TextServer.OVERRUN_TRIM_WORD_ELLIPSIS",
+        "if not _assert_130_scale_footer_containment(shell, map_cue):",
+        "var selection_map_rect := map_view.get_global_rect()",
+        "var selection_command_band_rect := command_band.get_global_rect()",
+        "var selection_cue_chip_rect := Rect2(cue_chip.position, cue_chip.size)",
+        "var selection_map_cue_rect := Rect2(map_cue.position, map_cue.size)",
+        "var selection_map_cue_minimum := map_cue.get_combined_minimum_size()",
+        'var move_result: Dictionary = shell.call("validation_perform_primary_action")',
+        "await get_tree().process_frame",
+        'var move_snapshot: Dictionary = shell.call("validation_snapshot")',
+        "var move_map_rect := map_view.get_global_rect()",
+        "var move_command_band_rect := command_band.get_global_rect()",
+        "var move_cue_chip_rect := Rect2(cue_chip.position, cue_chip.size)",
+        "var move_map_cue_rect := Rect2(map_cue.position, map_cue.size)",
+        "var move_map_cue_minimum := map_cue.get_combined_minimum_size()",
+        "selection_map_rect != move_map_rect",
+        "selection_command_band_rect != move_command_band_rect",
+        "selection_cue_chip_rect != move_cue_chip_rect",
+        "selection_map_cue_rect != move_map_cue_rect",
+        "selection_map_cue_minimum != move_map_cue_minimum",
+        'map_cue.text != String(move_snapshot.get("map_cue_text", ""))',
+        'map_cue.tooltip_text != String(move_snapshot.get("map_cue_tooltip_text", ""))',
+        'map_cue.tooltip_text.find("Action Recap") < 0',
+        'int(move_cache.get("session_static_generation", -1)) != int(selection_cache.get("session_static_generation", -1))',
+    ))
+    ensure(all(index >= 0 for index in focused_order) and list(focused_order) == sorted(focused_order), errors, "Focused MapCue proof must select, capture the native contract/allocation, move one frame, compare exact geometry/text/tooltip, then gate the static cache")
+    for required_token in (
+        "or not map_cue.clip_text",
+        "or map_cue.get_line_count() != 1",
+        "or map_cue.get_visible_line_count() != 1",
+        "map_view == null or command_band == null or cue_chip == null or map_cue == null",
+    ):
+        ensure(required_token in focused_body, errors, f"Focused MapCue containment proof is missing exact fail-closed token: {required_token}")
+    ensure(focused_body.count("await get_tree().process_frame") == 1, errors, "Focused MapCue movement gate must cross exactly one real process frame")
+    ensure("cue_chip.get_global_rect()" not in focused_body and "map_cue.get_global_rect()" not in focused_body and "cue_chip.get_rect()" not in focused_body and "map_cue.get_rect()" not in focused_body, errors, "Animated MapCue controls must be compared from their raw position and size, not any rect transformed by the intentional feedback tween")
+    for forbidden_token in (
+        "map_cue.text =",
+        "map_cue.tooltip_text =",
+        "map_cue.clip_text =",
+        "map_cue.text_overrun_behavior =",
+        "custom_minimum_size =",
+        ".size =",
+        "set_deferred",
+        "call_deferred",
+        "queue_redraw",
+    ):
+        ensure(forbidden_token not in focused_body, errors, f"Focused MapCue proof must remain observation-only without layout or semantic mutation: {forbidden_token}")
+
+    footer_match = re.search(
+        r"func _assert_130_scale_footer_containment\(shell: Control, map_cue: Label\) -> bool:\n(?P<body>.*?)(?=\nfunc )",
+        visual_text,
+        re.S,
+    )
+    ensure(footer_match is not None, errors, "Overworld visual smoke must own one independent 130% full-footer containment control")
+    if footer_match is not None:
+        footer_body = footer_match.group("body")
+        footer_order = tuple(footer_body.find(token) for token in (
+            'var shell_panel := shell.get_node_or_null("%Shell") as Control',
+            'var resource_chip := shell.get_node_or_null("%ResourceChip") as Control',
+            'var resource_label := shell.get_node_or_null("%Resources") as MenuButton',
+            'var status_chip := shell.get_node_or_null("%StatusChip") as Control',
+            'var cue_chip := shell.get_node_or_null("%CueChip") as Control',
+            'var orders_panel := shell.get_node_or_null("%OrdersPanel") as Control',
+            'var primary_action := shell.get_node_or_null("%PrimaryAction") as Button',
+            'var system_panel := shell.get_node_or_null("%SystemPanel") as Control',
+            'var menu_button := shell.get_node_or_null("%Menu") as Button',
+            "var required_controls: Array[Control] = [",
+            "required_controls.any",
+            "var large_scale_footer := SettingsService.ui_scale_percent() >= 130",
+            "var expected_resource_chip_width := 190.0 if large_scale_footer else 210.0",
+            "var expected_resource_label_width := 170.0 if large_scale_footer else 210.0",
+            "var expected_primary_width := 170.0 if large_scale_footer else 210.0",
+            "status_label.text_overrun_behavior != TextServer.OVERRUN_TRIM_WORD_ELLIPSIS",
+            "map_cue.text_overrun_behavior != TextServer.OVERRUN_TRIM_WORD_ELLIPSIS",
+            "primary_action.text_overrun_behavior != TextServer.OVERRUN_TRIM_WORD_ELLIPSIS",
+            "resource_label.tooltip_text.strip_edges() == \"\"",
+            "status_label.tooltip_text != status_label.text",
+            "primary_action.tooltip_text.strip_edges() == \"\"",
+            "var root_rect := shell.get_global_rect()",
+            "var footer_surfaces: Array[Control] = [resource_chip, status_chip, cue_chip, orders_panel, system_panel]",
+            "var system_controls: Array[Control] = [save_status, end_turn, save_slot, save_button, settings_button, menu_button]",
+            "not root_rect.encloses(shell_rect) or not shell_rect.encloses(footer_rect)",
+            "for index in range(footer_surfaces.size()):",
+            "for index in range(system_controls.size()):",
+            "return true",
+        ))
+        ensure(all(index >= 0 for index in footer_order) and list(footer_order) == sorted(footer_order), errors, "Focused 130% footer control must resolve every authored surface, compare exact responsive properties/full tooltips, then prove root/footer/system containment and order")
+        for required_token in (
+            "not surface.is_visible_in_tree() or not footer_rect.encloses(surface_rect)",
+            "footer_surfaces[index - 1].get_global_rect().end.x > surface_rect.position.x + 0.5",
+            "not control.is_visible_in_tree() or not system_rect.encloses(control_rect)",
+            "system_controls[index - 1].get_global_rect().end.x > control_rect.position.x + 0.5",
+            "or not map_cue.clip_text",
+            "or not primary_action.clip_text",
+        ):
+            ensure(required_token in footer_body, errors, f"Focused 130% footer containment control is missing exact fail-closed token: {required_token}")
+        for forbidden_token in (
+            "custom_minimum_size =",
+            ".text =",
+            ".tooltip_text =",
+            ".visible =",
+            "hide()",
+            "show()",
+            "sort(",
+            "erase(",
+            "call(",
+            "await ",
+            "queue_redraw",
+        ):
+            ensure(forbidden_token not in footer_body, errors, f"Focused 130% footer containment control must remain public and observation-only: {forbidden_token}")
+
+
 def validate_overworld_hero_card_mana_first_view(errors: list[str]) -> None:
     visual_path = ROOT / "tests" / "overworld_visual_smoke.gd"
     for path in (OVERWORLD_SCRIPT_PATH, visual_path):
@@ -36633,8 +36826,8 @@ def validate_resource_stockpile_icon_popover(errors: list[str]) -> None:
     responsive = block(overworld_shell_text, "_apply_responsive_layout")
     responsive_order = [
         responsive.find("_resource_chip_panel.visible = true"),
-        responsive.find("_resource_chip_panel.custom_minimum_size.x = 96.0 if resource_compact else 210.0"),
-        responsive.find("_resource_label.custom_minimum_size.x = 80.0 if resource_compact else 210.0"),
+        responsive.find("_resource_chip_panel.custom_minimum_size.x = 96.0 if resource_compact else (190.0 if large_scale_footer else 210.0)"),
+        responsive.find("_resource_label.custom_minimum_size.x = 80.0 if resource_compact else (170.0 if large_scale_footer else 210.0)"),
         responsive.find("_resource_label.set_compact_mode(resource_compact)"),
         responsive.find("_resource_label.full_summary_text()"),
     ]
@@ -36697,20 +36890,23 @@ def validate_active_play_supported_viewport_containment(errors: list[str]) -> No
     responsive = shell_text[responsive_start:] if responsive_end < 0 else shell_text[responsive_start:responsive_end]
     required_source_order = [
         responsive.find("var narrow_layout := available_size.x < 1100.0"),
-        responsive.find("_status_label.clip_text = narrow_layout"),
+        responsive.find("var large_scale_footer := constrained_desktop_band and SettingsService.ui_scale_percent() >= 130"),
+        responsive.find("_status_label.clip_text = narrow_layout or large_scale_footer"),
         responsive.find('_status_label.tooltip_text = "%s\\n%s" % [_status_label.text, _resource_label.full_summary_text()] if compact_layout else _status_label.text'),
         responsive.find("_save_status_label.visible = not narrow_layout"),
         responsive.find("_save_slot_picker.visible = not narrow_layout"),
     ]
     ensure(all(index >= 0 for index in required_source_order) and required_source_order == sorted(required_source_order), errors, "Overworld narrow Status clipping must precede its exact full tooltip and retain save-detail breakpoint ownership")
-    ensure(responsive.count("_status_label.clip_text = narrow_layout") == 1, errors, "Overworld responsive layout must own exactly one narrow Status clipping assignment")
+    ensure(responsive.count("_status_label.clip_text = narrow_layout or large_scale_footer") == 1, errors, "Overworld responsive layout must own exactly one narrow-or-130%-footer Status clipping assignment")
+    ensure(responsive.count("SettingsService.ui_scale_percent() >= 130") == 1, errors, "Overworld responsive layout must read the persisted UI scale exactly once for the constrained 130% footer")
     for forbidden in (
         "\n\t_status_label.visible = not narrow_layout",
         "\n\t_status_chip_panel.visible = not narrow_layout",
         "\n\t_status_label.text =",
         "\n\t_status_label.custom_minimum_size",
         "font_size",
-        "ui_scale",
+        "set_ui_scale_percent",
+        "ui_scale_percent() =",
     ):
         ensure(forbidden not in responsive, errors, f"Overworld narrow Status correction must not hide or rewrite the status/layout contract: {forbidden}")
 
@@ -50152,6 +50348,7 @@ def main() -> int:
     validate_overworld_field_readiness_progress_recap_reuse(errors)
     validate_overworld_full_refresh_end_turn_forecast_bundle_reuse(errors)
     validate_overworld_objective_brief_native_pixel_ellipsis(errors)
+    validate_overworld_130_scale_footer_containment(errors)
     validate_overworld_hero_card_mana_first_view(errors)
     validate_overworld_rail_word_boundary_ellipsis(errors)
     validate_overworld_shell_release_polish(errors)

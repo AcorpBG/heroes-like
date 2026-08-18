@@ -7494,6 +7494,38 @@ Completion evidence:
 - active-play settings, Town/Battle visual, shared keyboard focus, accessibility semantics, core systems, repository validation, Python compilation, JSON/diff checks, and exact/generic editor parsing pass;
 - official Linux export/headless startup and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup reports are `ok:true`; packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
 
+## Selected Slice: Overworld 130% Footer Containment
+
+id: `ux-overworld-130-ui-scale-footer-containment-10184`
+
+Status: completed.
+
+Implementation boundary:
+- keep every existing footer node, action, order, semantic value, and full tooltip, while making the existing Status and MapCue labels use native whole-word ellipsis instead of contributing changing text widths to the footer minimum;
+- at the existing constrained-desktop breakpoint and only for 130% UI scale, reduce the existing resource-chip and primary-order authored minimums just enough to fit the unchanged footer row; retain the CueChip allocation, system-control widths/order, map/sidebar split, route behavior, settings, session, and save authority;
+- strengthen the existing render-cache movement control so the full footer is contained and its dynamic cue transition preserves the exact map/footer allocation.
+
+Completion criteria:
+- a fresh real 1920x1080 window with persisted 130% UI scale keeps the shell inside its logical root and preserves the same MapView/CommandBand allocation before and after the short prompt becomes the longer movement recap;
+- MapCue retains the exact independent full text and tooltip, renders one line with native word ellipsis only on genuine overflow, and movement redraws dynamic/state layers without a session-static rebuild caused by UI layout drift;
+- focused Overworld behavior, shared active-play settings/focus, accessibility, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass.
+
+Non-goals:
+- no footer semantic/manual truncation, CueChip or system-control width/order, font/UI-scale option, breakpoint threshold, map/sidebar allocation policy, route/pathing, movement, combat, AI, balance, content, save/schema, or Native RMG change;
+- no new panel, row, scroll container, tooltip, shared UI helper, action feedback rewrite, or broader Overworld redesign;
+- no packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- current pushed HEAD `e2e43e20` at persisted 130% UI scale has a 1616px CommandBand and 1660px shell inside a 1477px logical root, visibly clipping the resource text and Main Menu control off opposite screen edges;
+- `%MapCue` then changes from `Try: Visit Town [Enter]`/`Try: March [Enter]` to the longer `Moved: ...` recap; its combined minimum grows from 127px to 230px, persistently changes the map allocation by another 40px, fires `NOTIFICATION_RESIZED`, and rebuilds the session-static terrain cache during a one-tile move;
+- a disposable ignored probe under `.artifacts/overworld_130_probe/` independently attributes the resize to the uncontained MapCue label rather than MapView, route rules, or transient frame settling.
+
+Completion evidence:
+- authoritative real-window Overworld visual smokes at fresh default 100% and persisted 130% both exit naturally at 1920x1080; at 130% the 1477px logical root contains the 1460px shell and 1416px CommandBand, every resource/status/cue/order/system surface remains visible in exact order, and the system-control widths are unchanged;
+- one public movement preserves the exact MapView/CommandBand and raw CueChip/MapCue allocations, keeps one-line native word ellipsis plus the exact independent full MapCue text and Action Recap tooltip, advances the dynamic cache, and leaves the session-static cache generation unchanged;
+- active-play settings and keyboard-focus smokes, accessibility screen-reader semantics, core systems, repository validation, Python compilation, JSON/diff checks, and exact/generic editor parses pass;
+- official Linux export/headless startup and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup reports are `ok:true`; packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:

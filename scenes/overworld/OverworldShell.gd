@@ -452,6 +452,7 @@ func _apply_responsive_layout() -> void:
 	var narrow_layout := available_size.x < 1100.0
 	var resource_compact := compact_layout or get_window().size.x < 1360 or get_window().size.y < 760
 	var constrained_desktop_band := not compact_layout and available_size.x <= 1600.0
+	var large_scale_footer := constrained_desktop_band and SettingsService.ui_scale_percent() >= 130
 	_command_row.add_theme_constant_override("separation", 4 if constrained_desktop_band else 6)
 	_sidebar_shell_panel.visible = not narrow_layout
 	_sidebar_shell_panel.custom_minimum_size.x = 284.0 if compact_layout else 320.0
@@ -459,15 +460,19 @@ func _apply_responsive_layout() -> void:
 	_commitment_panel.visible = not compact_layout and _active_drawer == ""
 	_cue_chip_panel.visible = not compact_layout
 	_resource_chip_panel.visible = true
-	_resource_chip_panel.custom_minimum_size.x = 96.0 if resource_compact else 210.0
-	_resource_label.custom_minimum_size.x = 80.0 if resource_compact else 210.0
+	_resource_chip_panel.custom_minimum_size.x = 96.0 if resource_compact else (190.0 if large_scale_footer else 210.0)
+	_resource_label.custom_minimum_size.x = 80.0 if resource_compact else (170.0 if large_scale_footer else 210.0)
 	_resource_label.set_compact_mode(resource_compact)
-	_status_label.clip_text = narrow_layout
+	_status_label.clip_text = narrow_layout or large_scale_footer
+	_status_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_WORD_ELLIPSIS
 	_status_label.tooltip_text = "%s\n%s" % [_status_label.text, _resource_label.full_summary_text()] if compact_layout else _status_label.text
 	_save_status_label.visible = not narrow_layout
 	_save_slot_picker.visible = not narrow_layout
 	_map_view.custom_minimum_size = Vector2(520.0, 320.0) if compact_layout else Vector2(640.0, 400.0)
 	_system_panel.custom_minimum_size.x = 220.0 if narrow_layout else (252.0 if compact_layout else 308.0)
+	_primary_action_button.custom_minimum_size.x = 170.0 if large_scale_footer else 210.0
+	_primary_action_button.clip_text = true
+	_primary_action_button.text_overrun_behavior = TextServer.OVERRUN_TRIM_WORD_ELLIPSIS
 
 func _responsive_available_size() -> Vector2:
 	var available_size := get_viewport_rect().size
