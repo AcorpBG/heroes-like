@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed with live runtime behavior: display apply synchronizes native/root/content-scale size, rollback captures live root authority, headless unavailable native geometry is isolated, and X11 remains exact. Focused, Main Menu, compatibility, static/editor, and bounded Linux/Windows gates are green.",
+  "currentNotes": "The Cinder Burst 30->25 candidate was rejected after it alone reopened the authoritative active-scenario queue from clear signature 829808c9 to six medium watches at 6bf0bece. Production and test support remain unchanged; the last completed implementation is runtime native window-size authority.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "settings-runtime-native-window-size-authority-correction-10184",
   "currentSliceId": "settings-runtime-native-window-size-authority-correction-10184",
-  "currentSliceNotes": "Native/root/content-scale sizing and live root rollback authority now remain exact across display transactions; headless 0x0 is isolated while X11 native equality remains mandatory.",
+  "currentSliceNotes": "Native/root/content-scale sizing and live root rollback authority remain exact; the later Cinder Burst candidate was rejected and shipped content remains unchanged.",
   "currentSliceStatus": "completed",
   "currentSliceTitle": "Runtime Native Window Size Authority Correction",
-  "currentSliceUpdatedAt": "2026-08-18T13:57:24Z",
+  "currentSliceUpdatedAt": "2026-08-18T15:48:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -17788,7 +17788,7 @@
       "remainingWork": "Implement the exact recovered producer for 0x4a3a03 -> 0x4cca55 descriptor/source-cycle/seed ownership so it feeds materialize_boundary_source_handoffs_4a2777_4a325d as the native live owner-grid payload, then pass same-run after_boundary_span_fill_owner_words private-state comparison before terrain, relation, object, route, package, session, or public map output can consume owner words. Do not substitute SourceWalkPlain reconstruction, archived h3maped_small_rmg proxy artifacts, validator-gated package drafts, density scalars, final-map deltas, brute-force retries, Godot/GDScript exports, or Windows DLL churn.",
       "runtimeGenerationAllowed": false,
       "sliceId": "rmg-small-generalization-hardening-10184",
-      "status": "in_progress",
+      "status": "superseded",
       "summary": "Native RMG checkpoint 2 remains pending. Default reachable proxy/reconstruction generation surfaces are now fenced or fail-closed: archived MapPackageService reconstruction helpers compile only behind AURELION_ENABLE_ARCHIVED_NATIVE_RMG_RECONSTRUCTION=1 (off by default), the rebuilt default Linux GDExtension and no-Godot CLI expose no old reconstruction helper symbols, and the GDScript compatibility shim private _generate_* helpers return _archived_native_rmg_reconstruction_blocked if invoked directly. This is not parity and does not enable generation: the exact recovered producer that feeds descriptor/source-cycle/seed ownership as the live payload, final payload ownership, and same-run private-state compare remain pending.",
       "validatedAt": "2026-06-18T19:58:08Z"
     },
@@ -19849,6 +19849,78 @@
   "nextActionGuardrailNote": "Select a source-backed release-readiness implementation slice with direct current behavior evidence; preserve completed Town scenic-header pixel fitting and its exact wording, geometry, actions, saves, settings, and session authority.",
   "notes": "The Town scenic-header pixel-fit slice is completed with exact two-width behavior, genuine-overflow fitting, fresh painted evidence, compatibility, static/editor, and bounded Linux/Windows export-startup evidence. Packaged Town interaction, hardware/accessibility certification, signing/publication, whole-game validation, and release readiness remain outside this slice.",
   "plannedSlices": [
+    {
+      "id": "combat-cinder-burst-base-damage-calibration-10184",
+      "title": "Cinder Burst Base-Damage Calibration",
+      "status": "superseded",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Reduce the globally shared tier-2 Cinder Burst spell's excessive direct-damage contribution without weakening its authored priority-damage, wounded-target, or stagger identity.",
+      "implementationTargets": [
+        "content/spells.json",
+        "tests/magic_battle_spell_behavior_report.gd",
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/magic_battle_spell_behavior_report.tscn",
+        "tests/magic_spell_schema_report.tscn",
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "tests/battle_autoplay_active_scenario_breadth_report.tscn",
+        "tests/battle_autoplay_tactical_order_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "Cinder Burst alone changes effect.base_damage from 30 to 25 while power_scale7, wounded bonus8, threshold0.5, one-round stagger with initiative/cohesion -1, mana5, tier2, role, school, availability, art/audio, and every non-Cinder content value remain exact",
+        "A live focused cast proves exact fresh and wounded damage, status, mana, event, session, and save authority; an exact old-30 benchmark control is method-matched to current content",
+        "All-live 100-seed weeks1-4 current content retains structural0 and improves at least one of control 33 outliers, severity170, severe3, max dominance67.5, side bias1.27 with none worse; all rows without an effective Cinder spellbook remain exact and every moved row is reported",
+        "The active 59-scenario autoplay queue is clear and exact focused magic, tactical-order, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "Cinder Burst power scaling, wounded bonus/threshold, stagger, mana, tier, school, role, availability, AI valuation shape, VFX/audio, or any other spell field",
+        "unit, hero, faction, town, formation, count, growth, cost, BattleRules, BattleAiRules, benchmark seed/tie/threshold, scenario, save/schema, generated-map, or Native RMG changes",
+        "further tuning below 25, compensating edits, manual-play replacement, packaged Battle interaction, controller hardware, AT-SPI/UIA, native hardware, signing, publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "8c6649f317ca890a42304ffd4f3389bf02408677",
+        "controlArtifact": "/tmp/heroes-balance-current-8c6649f3.json",
+        "candidateArtifact": "/tmp/heroes-balance-cinder25-8c6649f3.json",
+        "focusedAbilityArtifact": "/tmp/heroes-w1-ember-sun-ability-screen-8c6649f3.json",
+        "focusedSpellArtifact": "/tmp/heroes-w1-ember-sun-spell-screen-8c6649f3.json",
+        "focusedScalarArtifact": "/tmp/heroes-w1-ember-sun-cinder-decomposition-8c6649f3.json",
+        "controlMetrics": "33/170/3/67.5/1.27/0",
+        "candidateMetrics": "32/170/3/66.5/1.27/0",
+        "motivatingPair": "W1 Embercourt/Sunvault Embercourt 64.5; base25 62.5; full spell removal 59.0"
+      },
+      "createdAt": "2026-08-18T15:05:00Z",
+      "startedAt": "2026-08-18T15:05:00Z",
+      "updatedAt": "2026-08-18T15:48:00Z",
+      "supersededAt": "2026-08-18T15:48:00Z",
+      "notes": "Rejected after the decisive active-scenario breadth control. The integrated base-25 full matrix exactly reproduces 32 outliers / severity 170 / three severe rows / 66.5 maximum dominance / 1.27 side bias / zero structural failures, improving the old-30 control's 33 / 170 / three / 67.5 / 1.27 / zero. However, the exact old-30 active breadth is clear with zero items and signature 829808c9, while base25 alone produces six medium watches and signature 6bf0bece, including Causeway Stand terminal-margin and outcome-bias watches. Production therefore remains at base30; the temporary benchmark control, exact focused assertions, and all shipped-content edits were removed. No lower value or compensating tune is authorized.",
+      "result": {
+        "accepted": false,
+        "productionBaseDamage": 30,
+        "candidateBaseDamage": 25,
+        "controlMetrics": "33/170/3/67.5/1.27/0",
+        "candidateMetrics": "32/170/3/66.5/1.27/0",
+        "integratedCandidateWholeRowsExact": true,
+        "controlActiveQueueCount": 0,
+        "controlActiveQueueSignature": "829808c9",
+        "candidateActiveQueueCount": 6,
+        "candidateActiveQueueMediumCount": 6,
+        "candidateActiveQueueSignature": "6bf0bece",
+        "productionContentChanged": false,
+        "activeBreadthAccepted": false
+      },
+      "remainingWork": "No implementation follows from the rejected base25 candidate. Select a different source-backed release-readiness slice; do not tune Cinder Burst lower or add compensating edits from this investigation.",
+      "blockedReason": null
+    },
     {
       "id": "ux-town-scenic-header-pixel-fit-10184",
       "title": "Town Scenic Header Pixel Fit",
