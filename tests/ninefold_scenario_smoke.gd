@@ -137,9 +137,10 @@ func _assert_neighbor_terrain_transitions(shell: Node, session) -> bool:
 		or int(terrain.get("edge_transition_count", 0)) != 1
 		or String(terrain.get("homm3_selection_kind", "")) != "bridge_transition"
 		or String(terrain.get("homm3_bridge_family", "")) != "dirt"
-		or String(terrain.get("transition_shape_model", "")) != "homm3_base_atlas_frame"
+		or String(terrain.get("transition_shape_model", "")) != "procedural_strip_fallback"
+		or String(terrain.get("transition_edge_treatment", "")) != "procedural_strip_fallback"
 	):
-		_fail("Ninefold smoke: terrain transition was not selected from the HoMM3 full-receiver stamp lookup at the canonical grass/dirt boundary: %s." % presentation)
+		_fail("Ninefold smoke: canonical grass/dirt boundary did not keep original-bank transition rendering with inactive relation metadata: %s." % presentation)
 		return false
 	if not _assert_full_receiver_stamp_payload(terrain, {
 		"table": "full_receiver_native_to_dirt_5x4_provisional_stamp_table",
@@ -352,14 +353,14 @@ func _assert_large_map_marker_readability(shell: Node) -> bool:
 	if not _assert_town_footprint_profile(shell, town_presentation):
 		return false
 	var terrain_presentation: Dictionary = town_presentation.get("terrain_presentation", {})
-	if String(terrain_presentation.get("rendering_mode", "")) != "homm3_local_reference_prototype" or bool(terrain_presentation.get("uses_sampled_texture", true)) or bool(terrain_presentation.get("generated_source_primary", true)) or not bool(terrain_presentation.get("uses_homm3_local_prototype", false)):
-		_fail("Ninefold smoke: large-map starting terrain is not using the HoMM3 local prototype terrain tile bank: %s." % town_presentation)
+	if String(terrain_presentation.get("rendering_mode", "")) != "original_quiet_tile_bank" or bool(terrain_presentation.get("uses_sampled_texture", true)) or bool(terrain_presentation.get("generated_source_primary", true)) or bool(terrain_presentation.get("uses_homm3_local_prototype", true)) or not bool(terrain_presentation.get("uses_original_tile_bank", false)):
+		_fail("Ninefold smoke: large-map starting terrain is not using the shippable original quiet tile bank: %s." % town_presentation)
 		return false
-	if String(terrain_presentation.get("primary_base_model", "")) != "homm3_local_reference_prototype" or String(terrain_presentation.get("terrain_noise_profile", "")) != "homm3_extracted_atlas_frame":
-		_fail("Ninefold smoke: large-map starting terrain does not expose the HoMM3 extracted-atlas base model: %s." % town_presentation)
+	if String(terrain_presentation.get("primary_base_model", "")) != "original_quiet_tile_bank" or String(terrain_presentation.get("terrain_noise_profile", "")) != "quiet_low_contrast_macro_readable" or String(terrain_presentation.get("tile_art_source_basis", "")) != "original_procedural_reference_informed":
+		_fail("Ninefold smoke: large-map starting terrain does not expose the original authored base model: %s." % town_presentation)
 		return false
-	if String(terrain_presentation.get("terrain_variant_selection", "")) != "accepted_web_relation_class_row_lookup" or String(terrain_presentation.get("homm3_terrain_lookup_model", "")) != "accepted_web_prototype_relation_class_row_lookup":
-		_fail("Ninefold smoke: large-map starting grasslands terrain does not expose the accepted web relation-class terrain lookup contract: %s." % town_presentation)
+	if String(terrain_presentation.get("terrain_variant_selection", "")) != "patch_cohesive_low_frequency" or String(terrain_presentation.get("homm3_terrain_lookup_model", "")) != "accepted_web_prototype_relation_class_row_lookup" or not bool(terrain_presentation.get("homm3_local_reference_only", false)):
+		_fail("Ninefold smoke: large-map starting grasslands terrain does not use original tile selection while retaining inactive reference metadata: %s." % town_presentation)
 		return false
 	if String(terrain_presentation.get("homm3_interior_frame_selection", "")) != "accepted_web_full_row_bucket_selection" or bool(terrain_presentation.get("homm3_uses_interior_variant_cycle", true)):
 		_fail("Ninefold smoke: large-map starting terrain still reports the retired HoMM3 interior patch-variant cycling contract: %s." % town_presentation)
