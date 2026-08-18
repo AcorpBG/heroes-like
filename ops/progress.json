@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed. The Main Menu Settings summary preserves the complete SettingsService value in its tooltip and uses a complete setting segment or word plus one Unicode ellipsis within the established compact budget; all focused, compatibility, static/editor, and bounded platform gates pass.",
+  "currentNotes": "Completed. The Battle Timing tab now uses one readiness, current-action, and risk line fitted at whole words while the exact complete timing check and spell/ability board remain in its tooltip; focused, compatibility, static/editor, and bounded platform gates pass.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-main-menu-settings-summary-word-ellipsis-10184",
-  "currentSliceId": "ux-main-menu-settings-summary-word-ellipsis-10184",
-  "currentSliceNotes": "Completed with exact 1280x720/1920x1080 and UI-scale 100/130 summary/tooltip/geometry proof plus the existing Settings focus, dialog, persistence, compatibility, accessibility, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates.",
+  "currentSlice": "ux-battle-timing-tab-compact-summary-10184",
+  "currentSliceId": "ux-battle-timing-tab-compact-summary-10184",
+  "currentSliceNotes": "Completed with exact 1280x720/1920x1080 three-line themed-width semantics, full tooltip equality, native panel/footer containment, fresh painted 1280 evidence, Battle compatibility, static/editor, and bounded Linux/Windows export/startup gates.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Main Menu Settings Summary Word Ellipsis",
-  "currentSliceUpdatedAt": "2026-08-18T02:55:16Z",
+  "currentSliceTitle": "Battle Timing Tab Compact Summary",
+  "currentSliceUpdatedAt": "2026-08-18T03:54:03Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -89926,6 +89926,61 @@
       "completedAt": "2026-08-18T02:55:16Z",
       "updatedAt": "2026-08-18T02:55:16Z",
       "notes": "Completed one-label Settings summary fitting from direct current-HEAD evidence. The exact complete SettingsService value remains in the tooltip; fitting lines remain exact; overflow ends at a complete setting segment or word with one Unicode ellipsis and retains the established + 1 more row. The authoritative focused run passed the exact 1280x720/1920x1080 and UI-scale 100/130 matrix together with the existing full focus/dialog/persistence authority. Display-mode, restore-defaults, active-play Settings, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. The first focused attempt was excluded because Dummy-renderer screenshot capture was unsupported and its geometry oracle contradicted intentional scroll-to-focus behavior. Packaged Settings interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null
+    },
+    {
+      "id": "ux-battle-timing-tab-compact-summary-10184",
+      "title": "Battle Timing Tab Compact Summary",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Replace the duplicated, mid-word-truncated Battle Timing first view with a bounded semantic summary while retaining the exact complete timing detail in the existing tooltip.",
+      "implementationTargets": [
+        "scenes/battle/BattleShell.gd",
+        "tests/battle_controller_board_navigation_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/battle_controller_board_navigation_smoke.tscn",
+        "tests/town_battle_visual_smoke.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/battle_event_animation_state_report.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "At 1280x720 and 1920x1080, the Timing page shows exactly three semantic readiness, current-action, and risk lines whose themed widths fit the existing label without raw three-dot or mid-token truncation",
+        "The Timing tooltip remains exact to the complete independent timing-check tooltip plus the full Spell and Ability Timing board, and the timing payload retains all existing spell-window, support, protection, burst, pressure, readiness, and next-step fields",
+        "Timing-panel containment, footer containment, tab navigation/focus, battle/session/save/settings/routes, compatibility, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "battle action, spell, ability, timing rule, initiative, stack, target, combat, AI, content, balance, save/schema, or Native RMG changes",
+        "sidebar, panel, TabBar, footer, label, line budget, font/theme/UI-scale, scroll, focus, input, audio, VFX, or broader Battle rail redesign",
+        "packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing, publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "66cddeea",
+        "renderedEvidence": ".artifacts/battle_info_body_audit/tab_3.png",
+        "visibleDuplicateHeading": "Spell and Ability Timing",
+        "visibleMidwordCuts": [
+          "exchan...",
+          "Re..."
+        ],
+        "genericCharacterBudget": 96,
+        "visibleLineBudget": 3
+      },
+      "createdAt": "2026-08-18T03:24:30Z",
+      "startedAt": "2026-08-18T03:24:30Z",
+      "completedAt": "2026-08-18T03:54:03Z",
+      "updatedAt": "2026-08-18T03:54:03Z",
+      "notes": "Completed the live Timing presentation owner. The first view now shows exact three-line readiness/action/risk semantics fitted to the live themed width at complete words; the complete timing-check cue and full Spell and Ability Timing board remain exact in the tooltip. The authoritative two-width focused gate, fresh X11 1280 capture, Battle visual/tab-focus/animation/accessibility/core compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. The first focused attempt exposed and corrected only the transient initial-layout width; the first painted attempt was excluded because the optional capture-only variable had no static type and never loaded the scene. Packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
       "blockedReason": null
     }

@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `ux-battle-timing-tab-compact-summary-10184`. The Battle Timing tab now shows one readiness line, one current spell/order line, and one risk line fitted to the existing themed label width at complete words, while the exact full timing check and Spell and Ability Timing board remain in the tooltip. Focused 1280x720/1920x1080 behavior, a fresh painted 1280 capture, Battle visual/tab focus/animation/accessibility/core compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `ux-battle-timing-tab-compact-summary-10184`
 - Completed implementation slice: `ux-main-menu-settings-summary-word-ellipsis-10184`. The live Main Menu Cabinet Settings summary now preserves the exact complete `SettingsService.describe_settings()` value in its tooltip while its established four-line-plus-hidden-count first view ends genuine overflow at a complete setting segment or word with one Unicode ellipsis instead of the shipped `Battle s...` mid-token cut. Fitting Presentation, Audio, and Gameplay lines remain exact. Focused 1280x720/1920x1080 behavior at 100/130 percent UI scale, the existing full Settings focus/dialog/persistence matrix, display/defaults/active-play compatibility, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. The first focused attempt was excluded because its screenshot capture path was unsupported under the Dummy renderer and its geometry oracle contradicted the existing intentional scroll-to-focus behavior; the corrected authoritative rerun passed. Packaged Settings interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `ux-main-menu-settings-summary-word-ellipsis-10184`
 - Completed implementation slice: `ux-active-play-main-menu-action-label-10184`. Ordinary Overworld, Town, Battle, and Outcome save surfaces now label the route-to-menu action by its exact `Main Menu` destination while their existing tooltips retain current-context, save, resume, and return-handoff detail; detached Map Editor Play Copy surfaces retain the distinct `Editor` label. Focused 1280/1920 surface copy, all-four-state autosave-failure/retry routing, Outcome confirmation/focus, active focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged active-play interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -7317,6 +7319,39 @@ Completion evidence:
 - the complete Overworld visual smoke passed naturally (`/tmp/heroes-hero-card-compat.eYWqni`), followed by controller route selection, cached route execution, active-play keyboard focus, accessibility semantics, adventure-spell hooks, and core-system compatibility (`/tmp/heroes-hero-card-compat-rest.12Yert`);
 - repository validation, Python compilation, diff checks, and exact/generic Godot editor parses passed (`/tmp/heroes-hero-card-static.OqWpSf`); the separate production painted-report attempt `/tmp/heroes-hero-card-painted-final.bYvrJ0` timed out without updating its screenshot or JSON and is excluded from evidence;
 - official Linux export/headless startup and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup reports are `ok:true`; packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
+
+## Selected Slice: Battle Timing Tab Compact Summary
+
+id: `ux-battle-timing-tab-compact-summary-10184`
+
+Status: completed.
+
+Implementation boundary:
+- replace only the existing Timing label's visible concatenation of the timing-check cue and full timing board with three short lines derived from the same timing-check readiness, ready spell/order, and burst/protection state;
+- fit genuine overflow to the live themed label width at complete words with one Unicode ellipsis, while keeping the complete timing-check cue and entire `Spell and Ability Timing` board byte-exact in the existing tooltip;
+- preserve the existing Timing panel, three-line budget, TabBar, footer, font/theme/UI scale, navigation, payload, and all battle/session/save/settings authority.
+
+Completion criteria:
+- exact 1280x720 and 1920x1080 live Timing pages show one readiness line, one current spell/order line, and one risk line, with each themed-font line contained in the existing label and no raw fixed-character `...` or mid-token cut;
+- the Timing label tooltip remains exact to the complete independently derived timing-check tooltip plus full spell/ability timing board, including spell window, support payoff, protection, burst, enemy pressure, readiness, and next action;
+- selecting and inspecting Timing does not grow BattleTabs beyond the contained allocation, move the footer outside the shell, alter tab traversal/focus, or change battle/session/save/settings/routes;
+- focused Battle controller/body behavior, tab-navigation compatibility, Town/Battle visual, animation, accessibility, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass.
+
+Non-goals:
+- no battle action, spell, ability, timing rule, initiative, stack, targeting, combat, AI, content, balance, save/schema, or Native RMG change;
+- no sidebar, Timing panel, TabBar, footer, label node, line budget, font/theme/UI scale, scroll container, focus cycle, input mapping, audio, VFX, or broader Battle rail redesign;
+- no packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- HEAD `66cddeea` still renders `timing_check.visible_text + spell_timing_board` through the generic 96-character compact helper, duplicating the timing cue and full board in the first view before truncating raw characters;
+- `.artifacts/battle_info_body_audit/tab_3.png` visibly shows repeated `Timing check: Cast`, `Cast Cinder Burst (5) now...`, the `Spell and Ability Timing` heading, another `Spell window: Cast Cinder Burst (5)...`, and mid-word `exchan...` / `Re...` cuts in the existing 1280 Timing panel;
+- the completed Focus/Spell body-containment slice explicitly excluded Order/Timing body changes, so this is a separate presentation owner rather than reopened work.
+
+Completion evidence:
+- the authoritative two-width controller/body gate passed at `/tmp/heroes-battle-timing-focused-rerun.7ldePB`, proving exact three-line themed-width fit, full tooltip equality, native panel/footer containment, tab restoration, and unchanged session/save/settings authority;
+- the X11-rendered capture `.artifacts/battle_controller_board_navigation_smoke/timing_compact_1280_final.png` shows the live first view as `Timing check: Cast`, `Cast: Cinder Burst (5)`, and `Watch: Stone Veil` with no duplicated timing board or mid-word cut;
+- Town/Battle visual, active-play keyboard focus, battle animation state, accessibility semantics, and core compatibility passed sequentially at `/tmp/heroes-battle-timing-compat.Kh7bn1`; repository validation, Python compilation, diff checks, exact/generic editor parses, and tracker reconciliation pass;
+- official Linux export/headless startup and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup reports are `ok:true`; packaged Battle interaction, hardware/certification, signing/publication, whole-game, and release readiness remain unclaimed.
 
 ## Progress Reconciliation
 
