@@ -24,6 +24,9 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Selected implementation slice: none. Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence.
+- Completed implementation slice: `ux-battle-action-guide-word-boundary-ellipsis-10184`. The compact Battle ActionGuide now fits each existing source line through the established Battle-local whole-word Unicode-ellipsis policy, so the fresh 1280x720/130% painted Position check ends after the complete phrase `(1 step)…` instead of cutting the next word as `t...`. Exact source order and enriched tooltip remain authoritative; compact retains two guide lines and wide retains three through the real 1280->1920->1280 refit. Focused runtime, painted pixels, Board navigation, shared focus, accessibility, core, authoritative 1280/1920 routed layout, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
+  id: `ux-battle-action-guide-word-boundary-ellipsis-10184`
 - Completed implementation slice: `ux-battle-compact-system-command-access-10184`. At the truthful 1280x720 root with supported 130% UI scale, the existing Battle footer now stacks its essential `Manual 1 / Save / Settings / Main Menu` row below the preserved board, spell, and action controls. Compact mode removes only decorative panel/padding overhead, the redundant speed shortcut row, the supplemental save-summary first view, and the third tactical-guide first-view line; exact settings/save summaries and all three tactical lines remain in existing tooltips/settings paths. The live Settings modal returns focus to the visible Settings command, while 1920x1080 restores the exact framed two-column footer, speed row, save summary, and three-line guide. Focused compact/wide behavior, painted 1280 evidence, Board navigation, keyboard/controller focus, accessibility, core, 1280/1920 routed layout, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `ux-battle-compact-system-command-access-10184`
 - Completed implementation slice: `settings-runtime-window-viewport-size-sync-10184`. SettingsService now applies and rolls back runtime size through the root Godot Window, keeping the native window, root Window, and content-scale canvas synchronized without changing resolution policy or persistence. A fresh official packaged Linux run on a 1280x720 X11 screen reports an exact 1280x720 top-level window and visibly contains Campaign, Skirmish, Load, Settings, Editor, and Quit. At the now-truthful compact Battle root, Settings modal close retains its visible origin or falls back to the existing visible Battle focus cycle when the established compact layout hides that origin. Display transaction, menu/outcome, keyboard/controller, restore-defaults, active-play Settings, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged controller interaction, AT-SPI/UIA, native Windows display hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -7593,6 +7596,38 @@ Completion evidence:
 - `/tmp/heroes-battle-compact-painted-final-pass.EOxc2A/battle-compact.png` is a fresh real-renderer 1280x720/130% capture with the 240px board, two tactical-guide lines, spell/actions, and complete `Manual 1 / Save Battle / Settings / Main Menu` command row visible inside the physical frame;
 - the focused active-play report exits naturally `PASS`, proving compact and wide containment, exact system-command text/tooltips/focusability/selection/item metadata, visible Settings focus return, 1280->1920->1280 refit, and unchanged battle authority;
 - controller Board navigation, shared keyboard/controller focus, accessibility semantics, core systems, and independent 1280/1920 Battle layout owners exit naturally green; the layout owners preserve direct/button actions, ordinary/outcome routing, save/resume, menu authority, and scene restoration;
+- repository validation, Python compilation, JSON/diff checks, exact/generic editor parses, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. These are bounded export/startup claims only, not packaged Battle interaction or broader release certification.
+
+## Completed Slice: Battle Action Guide Word-Boundary Ellipsis
+
+id: `ux-battle-action-guide-word-boundary-ellipsis-10184`
+
+Status: completed.
+
+Implementation boundary:
+- keep the exact Suggested order, Position check, and Objective check source strings and enriched tooltip; change only their visible per-line overflow materialization inside the existing Battle-local ActionGuide setter;
+- preserve fitting lines byte-exactly and use the established Battle-local last-whole-word Unicode ellipsis for genuine 96-character overflow, with two source lines compact and all three wide;
+- retain the completed compact command row, footer/board allocation, responsive refit, focus, settings/save/menu paths, and battle authority.
+
+Completion criteria:
+- a fresh 1280x720/130% painted Battle first view contains the existing two ActionGuide lines with no ASCII three-dot or mid-token ending, while the exact complete three-line guide and enriched tactical detail remain in the tooltip;
+- 1920x1080 retains all three guide lines, fitting lines remain exact, overflow ends at a complete word with one Unicode ellipsis, and 1280->1920->1280 refit preserves exact guide tooltip/system semantics and battle state;
+- focused active-play Settings, Battle layout/navigation/focus, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no guide wording, source order, tooltip content, character budgets, line budgets, font, geometry, commands, action semantics, or shared FrontierVisualKit change;
+- no Battle rules, board navigation, targeting, animation, save/schema, route, content, balance, AI, renderer, or Native RMG change;
+- no packaged Battle interaction, hardware/certification, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- pushed HEAD `8d6758f9` and `/tmp/heroes-battle-compact-painted-final-pass.EOxc2A/battle-compact.png` render the compact Position check as `... Click hex 2,2 (1 step) t...`, visibly cutting the next word after one letter;
+- `_set_battle_action_guide` delegates to `FrontierVisualKit.compact_text(..., 96, false)`, whose generic overflow path slices codepoints and appends ASCII `...` without a word-boundary search;
+- `_battle_action_context_word_text` already owns the exact Battle-local whole-word Unicode-ellipsis policy used by post-action and Event action context, so no shared helper or wording change is required.
+
+Completion evidence:
+- `/tmp/heroes-battle-guide-painted.s8jDZN/battle_compact_action_guide.png` is a fresh real-renderer 1280x720/130% capture whose Position check ends at the complete `(1 step)…` word boundary while the compact board, spells, action controls, and Manual/Save/Settings/Main Menu row remain contained;
+- `/tmp/heroes-battle-guide-focused2.KrbfRR` exits naturally with `ACTIVE_PLAY_SETTINGS_RUNTIME_REPORT PASS`, independently comparing visible lines to the exact unabridged source, rejecting ASCII ellipses and mid-token boundaries, and preserving compact/wide line counts, enriched tooltip semantics, focus, layout, and battle authority;
+- Board navigation, shared keyboard/controller focus, accessibility semantics, core systems, and independent routed layout owners are green; the 1280 layout completes 16 stages in 277s and the 1920 layout completes 30 stages in 547s with final viewport markers and no selected diagnostics;
 - repository validation, Python compilation, JSON/diff checks, exact/generic editor parses, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. These are bounded export/startup claims only, not packaged Battle interaction or broader release certification.
 
 ## Progress Reconciliation

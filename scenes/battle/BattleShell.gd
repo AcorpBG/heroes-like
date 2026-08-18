@@ -3634,11 +3634,13 @@ func _set_battle_action_guide(full_text: String) -> void:
 func _refit_battle_action_guide() -> void:
 	if _action_guide_source_text == "":
 		return
-	var visible_text := FrontierVisualKit.compact_text(_action_guide_source_text, 3, 96, false)
-	if _compact_layout_active:
-		var visible_lines := visible_text.split("\n", false)
-		visible_text = "\n".join(visible_lines.slice(0, min(2, visible_lines.size())))
-	_action_guide.text = visible_text
+	var visible_lines: Array[String] = []
+	for raw_line in _action_guide_source_text.split("\n", false):
+		var line := String(raw_line).strip_edges()
+		if line != "":
+			visible_lines.append(_battle_action_context_word_text(line, 96))
+	var line_limit := 2 if _compact_layout_active else 3
+	_action_guide.text = "\n".join(visible_lines.slice(0, min(line_limit, visible_lines.size())))
 
 func _set_battle_event_compact_label(full_text: String, max_lines: int) -> void:
 	_event_label.tooltip_text = full_text

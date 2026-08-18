@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed: compact Battle now keeps its existing Manual slot, Save, Settings, and Main Menu controls visible in the existing footer pocket at truthful 1280x720/130%, while wide Battle restores the exact framed speed/save surface. Focused, painted, compatibility, static/editor, and bounded platform gates pass.",
+  "currentNotes": "Completed with live Battle rendering behavior: ActionGuide per-line overflow now reuses the existing Battle-local whole-word Unicode ellipsis, and fresh 1280x720/130% painted evidence ends after the complete (1 step) phrase instead of cutting the next word. Focused, compatibility, routed-layout, static/editor, and bounded Linux/Windows export-startup gates are green; broader release readiness remains unclaimed.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-battle-compact-system-command-access-10184",
-  "currentSliceId": "ux-battle-compact-system-command-access-10184",
-  "currentSliceNotes": "The existing footer now stacks a fully visible Manual slot, Save, Settings, and Main Menu row below compact Battle actions, keeps the 240px board, and restores the exact wide speed/save surface on resize. Exact full save/tactical context remains in existing tooltips/settings paths; all bounded gates pass.",
+  "currentSlice": "ux-battle-action-guide-word-boundary-ellipsis-10184",
+  "currentSliceId": "ux-battle-action-guide-word-boundary-ellipsis-10184",
+  "currentSliceNotes": "The exact three guide source lines and enriched tooltip remain authoritative. Visible 96-character overflow uses the existing Battle-local whole-word Unicode ellipsis, retaining two compact lines and three wide through the real responsive refit.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Battle Compact System Command Access",
-  "currentSliceUpdatedAt": "2026-08-18T10:55:12Z",
+  "currentSliceTitle": "Battle Action Guide Word-Boundary Ellipsis",
+  "currentSliceUpdatedAt": "2026-08-18T11:29:57Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -90194,6 +90194,27 @@
       "notes": "Completed with live UI behavior, not documentation alone. The existing footer is a two-column GridContainer wide and stacks only in compact mode. Compact keeps Manual slot, Save, Settings, and Main Menu visible/focusable, removes decorative inner padding/frame, hides the redundant speed row and supplemental save-summary first view, and renders two existing tactical-guide lines while retaining exact full save/guide tooltips and Settings speed access. A fresh painted 1280x720/130% capture contains the 240px board, spells/actions, and complete system row. Focused compact-wide-compact semantics/focus/state, Board navigation, shared focus, accessibility, core, independent 1280/1920 routed layout, static/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. No packaged Battle interaction or broader release claim is made.",
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader release-readiness gaps remain.",
       "blockedReason": null
+    },
+    {
+      "id": "ux-battle-action-guide-word-boundary-ellipsis-10184",
+      "title": "Battle Action Guide Word-Boundary Ellipsis",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "End genuine Battle ActionGuide overflow at a complete word with one Unicode ellipsis while preserving exact source text, tooltip, line budgets, layout, and gameplay authority.",
+      "implementationTargets": ["scenes/battle/BattleShell.gd", "tests/active_play_settings_runtime_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "testOwners": ["tests/active_play_settings_runtime_report.tscn", "tests/battle_layout_smoke.tscn", "tests/battle_controller_board_navigation_smoke.tscn", "tests/active_play_keyboard_focus_smoke.tscn", "tests/accessibility_screen_reader_semantics_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/packaging_linux_export_smoke.py", "tests/packaging_windows_export_smoke.py", "tests/validate_repo.py"],
+      "completionCriteria": ["Fresh 1280x720/130% painted ActionGuide first view retains its two source lines and has no ASCII three-dot or mid-token ending while the exact complete guide and enriched detail remain in the tooltip", "Wide Battle retains all three source lines and exact fitting text; genuine overflow ends at the last whole-word boundary with one Unicode ellipsis through 1280-1920-1280 refit", "Focused, compatibility, repository/editor, and bounded Linux/Windows export-startup gates pass with guide/layout/focus/battle authority exact"],
+      "nonGoals": ["guide wording/source order/tooltip content, character or line budgets, font, geometry, commands, actions, or shared FrontierVisualKit changes", "Battle rules, board navigation, targeting, animation, save/schema, route, content, balance, AI, renderer, or Native RMG changes", "packaged Battle interaction, hardware/certification, signing/publication, whole-game, or release-readiness claims"],
+      "baseline": {"head": "8d6758f9", "screen": "1280x720", "uiScalePercent": 130, "capture": "/tmp/heroes-battle-compact-painted-final-pass.EOxc2A/battle-compact.png", "visibleFailure": "Position check ends with t...", "sourceBoundary": "_set_battle_action_guide uses generic character-cutting FrontierVisualKit.compact_text", "existingPolicy": "_battle_action_context_word_text"},
+      "createdAt": "2026-08-18T10:57:00Z",
+      "startedAt": "2026-08-18T10:57:00Z",
+      "updatedAt": "2026-08-18T11:29:57Z",
+      "completedAt": "2026-08-18T11:29:57Z",
+      "notes": "Completed with live UI behavior, not documentation alone. BattleShell now refits each exact ActionGuide source line through the established Battle-local whole-word Unicode-ellipsis helper, retaining two compact lines and three wide. A fresh 1280x720/130% painted capture ends the Position check after the complete `(1 step)…` phrase while the board, spells, actions, and complete system-command row remain contained. The focused owner independently compares visible lines to the unabridged source and rejects ASCII ellipses and mid-token cuts while preserving enriched tooltip/system semantics and battle authority. Board navigation, shared focus, accessibility, core, authoritative 1280/1920 routed layout, static/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. No packaged Battle interaction or broader release claim is made.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader release-readiness gaps remain.",
+      "blockedReason": null
     }
   ],
   "project": "heroes-like",
@@ -90204,7 +90225,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain. The game is not release-ready.",
-  "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader release-readiness gaps remain.",
+  "remainingWork": "Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence. Broader release-readiness gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -90736,9 +90757,10 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The Battle compact system-command access slice is completed with visible existing save/settings/menu controls at truthful 1280x720/130%, exact wide-layout restoration, focused/painted/compatibility/static evidence, and bounded Linux/Windows export-startup proof. The game is not release-ready.",
+  "summary": "The Battle ActionGuide word-boundary ellipsis slice is completed with Battle-local whole-word Unicode overflow, fresh painted compact proof, exact compact/wide source and tooltip authority, compatibility/static evidence, and bounded Linux/Windows export-startup proof. The game is not release-ready.",
+  "status": "completed",
   "taskId": "10184",
-  "updatedAt": "2026-08-18T10:55:12Z",
+  "updatedAt": "2026-08-18T11:29:57Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
