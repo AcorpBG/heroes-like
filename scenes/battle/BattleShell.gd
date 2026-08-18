@@ -1606,15 +1606,12 @@ func _refresh() -> void:
 	if timing_check.is_empty():
 		_set_compact_label(_timing_label, spell_timing_board, 3)
 	else:
-		_set_compact_label(
-			_timing_label,
-			"%s\n%s" % [String(timing_check.get("visible_text", "")), spell_timing_board],
-			3
-		)
+		_timing_label.text = _battle_timing_visible_surface(timing_check)
 		_timing_label.tooltip_text = _join_tooltip_sections([
 			String(timing_check.get("tooltip_text", "")),
 			spell_timing_board,
 		])
+		call_deferred("_refit_battle_timing_visible_surface")
 	var target_handoff := BattleRules.target_handoff_cue_payload(_session)
 	var position_check := _battle_position_check_cue_surface()
 	var objective_check := BattleRules.objective_check_cue_payload(_session)
@@ -1717,6 +1714,90 @@ func _battle_effect_visible_surface(status_check: Dictionary) -> String:
 		effect_count,
 		"" if effect_count == 1 else "s",
 	]
+
+func _battle_timing_visible_surface(timing_check: Dictionary) -> String:
+	var readiness := String(timing_check.get("readiness", "Review")).strip_edges()
+	if readiness == "":
+		readiness = "Review"
+	var action_prefix := "Next"
+	var action_value := readiness
+	var ready_spell := String(timing_check.get("ready_spell", "")).strip_edges()
+	var ready_order := String(timing_check.get("ready_order", "")).strip_edges()
+	if ready_spell != "":
+		action_prefix = "Cast"
+		action_value = ready_spell.trim_prefix("Cast ").strip_edges()
+	elif ready_order != "":
+		action_prefix = "Order"
+		action_value = ready_order
+	var watch_value := _battle_timing_compact_clause(String(timing_check.get("burst_risk", "")))
+	if watch_value == "" or watch_value.to_lower().contains("unavailable"):
+		watch_value = _battle_timing_compact_clause(String(timing_check.get("protection_need", "")))
+	if watch_value == "":
+		watch_value = _battle_timing_compact_clause(String(timing_check.get("enemy_pressure", "")))
+	if watch_value == "":
+		watch_value = "review full detail"
+	var lines := [
+		"Timing check: %s" % readiness,
+		"%s: %s" % [action_prefix, action_value],
+		"Watch: %s" % watch_value,
+	]
+	var visible_lines: Array[String] = []
+	for line_value in lines:
+		visible_lines.append(_fit_battle_timing_line(String(line_value)))
+	return "\n".join(visible_lines)
+
+func _battle_timing_compact_clause(value: String) -> String:
+	var clause := value.strip_edges()
+	for prefix in [
+		"Burst risk:",
+		"Incoming burst:",
+		"Protection need:",
+		"Enemy spell pressure:",
+	]:
+		if clause.begins_with(prefix):
+			clause = clause.trim_prefix(prefix).strip_edges()
+			break
+	if clause.contains(" | "):
+		clause = clause.get_slice(" | ", 0).strip_edges()
+	if clause.contains("; "):
+		clause = clause.get_slice("; ", 0).strip_edges()
+	if clause.contains(" is best placed to cast "):
+		clause = clause.get_slice(" is best placed to cast ", 1).strip_edges()
+		if clause.contains(" on "):
+			clause = clause.get_slice(" on ", 0).strip_edges()
+	return clause.trim_suffix(".").strip_edges()
+
+func _refit_battle_timing_visible_surface() -> void:
+	if not is_inside_tree() or _session == null or _session.battle.is_empty() or _timing_label == null:
+		return
+	var timing_board := BattleRules.describe_spell_timing_board(_session)
+	var timing_check := _battle_timing_check_cue_surface(timing_board)
+	if timing_check.is_empty():
+		return
+	_timing_label.text = _battle_timing_visible_surface(timing_check)
+
+func _fit_battle_timing_line(value: String) -> String:
+	var normalized := value.strip_edges()
+	if normalized == "" or _timing_label == null:
+		return normalized
+	var font := _timing_label.get_theme_font("font")
+	var font_size := _timing_label.get_theme_font_size("font_size")
+	var max_width := _timing_label.size.x
+	if font == null or font_size <= 0 or max_width < 24.0:
+		return normalized
+	if font.get_string_size(normalized, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size).x <= max_width:
+		return normalized
+	var ellipsis := "…"
+	if font.get_string_size(ellipsis, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size).x > max_width:
+		return ""
+	var prefix := ""
+	for word_value in normalized.split(" ", false):
+		var word := String(word_value)
+		var candidate := word if prefix == "" else "%s %s" % [prefix, word]
+		if font.get_string_size("%s%s" % [candidate, ellipsis], HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size).x > max_width:
+			break
+		prefix = candidate
+	return "%s%s" % [prefix, ellipsis] if prefix != "" else ellipsis
 
 func _configure_battle_keyboard_focus(force: bool = false) -> void:
 	if not is_inside_tree() or _session == null or _session.battle.is_empty() or (_active_play_settings_dialog != null and _active_play_settings_dialog.is_open()) or (_quick_resolve_confirmation_dialog != null and _quick_resolve_confirmation_dialog.visible) or (_withdrawal_confirmation_dialog != null and _withdrawal_confirmation_dialog.visible):

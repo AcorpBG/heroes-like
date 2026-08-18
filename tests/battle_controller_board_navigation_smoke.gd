@@ -126,7 +126,16 @@ func _run() -> void:
 	var destination_summary: Dictionary = board.call("validation_hex_layout_summary")
 	if not bool(destination_summary.get("controller_cursor_legal_destination", false)):
 		return _fail("Controller cursor did not reach the selected legal destination %s: %s." % [destination, destination_summary])
+	var capture_tabs: TabContainer = shell.get_node("%BattleTabs")
+	var capture_tab_index: int = int(OS.get_environment("BATTLE_CONTROLLER_BOARD_CAPTURE_TAB_INDEX")) if OS.get_environment("BATTLE_CONTROLLER_BOARD_CAPTURE_TAB_INDEX").is_valid_int() else -1
+	var capture_initial_tab: int = capture_tabs.current_tab
+	if capture_tab_index >= 0 and capture_tab_index < capture_tabs.get_tab_count():
+		capture_tabs.current_tab = capture_tab_index
+		await _settle()
 	await _capture_if_requested()
+	if capture_tab_index >= 0 and capture_tab_index < capture_tabs.get_tab_count():
+		capture_tabs.current_tab = capture_initial_tab
+		await _settle()
 
 	var active_before := BattleRules.get_active_stack(session.battle)
 	var active_battle_id := String(active_before.get("battle_id", ""))
@@ -196,6 +205,9 @@ func _validate_battle_board_semantics_width(width: int) -> bool:
 		shell.queue_free()
 		return false
 	if not await _validate_battle_focus_spell_tab_body_fit(shell, session, width):
+		shell.queue_free()
+		return false
+	if not await _validate_battle_timing_tab_body_fit(shell, session, width):
 		shell.queue_free()
 		return false
 	board.grab_focus()
@@ -1053,6 +1065,107 @@ func _validate_battle_focus_spell_tab_body_fit(shell: Control, session, width: i
 	if _battle_background_authority(session) != authority_before:
 		return _fail_bool("Inspecting the Battle Focus/Spell compact bodies changed session/save/settings authority at %d." % width)
 	return true
+
+func _validate_battle_timing_tab_body_fit(shell: Control, session, width: int) -> bool:
+	var authority_before := _battle_background_authority(session)
+	var tabs: TabContainer = shell.get_node("%BattleTabs")
+	var panel: Control = shell.get_node("%TimingPanel")
+	var timing_label: Label = shell.get_node("%Timing")
+	var footer: Control = shell.get_node("%Footer")
+	var initial_tab := tabs.current_tab
+	tabs.current_tab = 0
+	await _settle()
+	var contained_tabs_height := tabs.size.y
+	tabs.current_tab = 3
+	await _settle()
+	var snapshot: Dictionary = shell.call("validation_snapshot")
+	var timing_check: Dictionary = snapshot.get("timing_check", {}) if snapshot.get("timing_check", {}) is Dictionary else {}
+	var full_board := BattleRules.describe_spell_timing_board(session)
+	var expected_lines := _timing_visible_lines_for_test(timing_label, timing_check)
+	var expected_visible := "\n".join(expected_lines)
+	var expected_tooltip := "%s\n\n%s" % [String(timing_check.get("tooltip_text", "")), full_board]
+	var widest_line := _widest_themed_label_line_for_test(timing_label)
+	var geometry_exact := tabs.size.y <= contained_tabs_height + 0.01 \
+		and shell.get_global_rect().encloses(footer.get_global_rect()) \
+		and tabs.get_global_rect().encloses(panel.get_global_rect()) \
+		and panel.get_global_rect().encloses(timing_label.get_global_rect()) \
+		and timing_label.get_line_count() == 3 \
+		and timing_label.get_visible_line_count() == 3 \
+		and widest_line <= timing_label.size.x + 0.5
+	var semantics_exact := timing_label.text == expected_visible \
+		and timing_label.tooltip_text == expected_tooltip \
+		and String(snapshot.get("spell_timing_text", "")) == full_board \
+		and String(snapshot.get("spell_timing_visible_text", "")) == expected_visible \
+		and String(snapshot.get("spell_timing_tooltip_text", "")) == expected_tooltip \
+		and not timing_label.text.contains("...") \
+		and not timing_label.text.contains("Spell and Ability Timing") \
+		and timing_label.tooltip_text.contains("Spell and Ability Timing") \
+		and timing_label.text.begins_with("Timing check: ")
+	if not geometry_exact or not semantics_exact:
+		return _fail_bool("Battle Timing compact body mismatch at %d: text=%s expected=%s tooltip=%s expected_tooltip=%s width=%s/%s lines=%s/%s tabs=%s contained_height=%s panel=%s label=%s footer=%s shell=%s timing=%s." % [width, timing_label.text, expected_visible, timing_label.tooltip_text, expected_tooltip, widest_line, timing_label.size.x, timing_label.get_line_count(), timing_label.get_visible_line_count(), tabs.get_global_rect(), contained_tabs_height, panel.get_global_rect(), timing_label.get_global_rect(), footer.get_global_rect(), shell.get_global_rect(), timing_check])
+	tabs.current_tab = initial_tab
+	await _settle()
+	if _battle_background_authority(session) != authority_before:
+		return _fail_bool("Inspecting the Battle Timing compact body changed session/save/settings authority at %d." % width)
+	return true
+
+func _timing_visible_lines_for_test(label: Label, timing_check: Dictionary) -> Array[String]:
+	var readiness := String(timing_check.get("readiness", "Review")).strip_edges()
+	if readiness == "":
+		readiness = "Review"
+	var action_prefix := "Next"
+	var action_value := readiness
+	var ready_spell := String(timing_check.get("ready_spell", "")).strip_edges()
+	var ready_order := String(timing_check.get("ready_order", "")).strip_edges()
+	if ready_spell != "":
+		action_prefix = "Cast"
+		action_value = ready_spell.trim_prefix("Cast ").strip_edges()
+	elif ready_order != "":
+		action_prefix = "Order"
+		action_value = ready_order
+	var watch_value := _timing_clause_for_test(String(timing_check.get("burst_risk", "")))
+	if watch_value == "" or watch_value.to_lower().contains("unavailable"):
+		watch_value = _timing_clause_for_test(String(timing_check.get("protection_need", "")))
+	if watch_value == "":
+		watch_value = _timing_clause_for_test(String(timing_check.get("enemy_pressure", "")))
+	if watch_value == "":
+		watch_value = "review full detail"
+	return [
+		_fit_themed_timing_line_for_test(label, "Timing check: %s" % readiness),
+		_fit_themed_timing_line_for_test(label, "%s: %s" % [action_prefix, action_value]),
+		_fit_themed_timing_line_for_test(label, "Watch: %s" % watch_value),
+	]
+
+func _timing_clause_for_test(value: String) -> String:
+	var clause := value.strip_edges()
+	for prefix in ["Burst risk:", "Incoming burst:", "Protection need:", "Enemy spell pressure:"]:
+		if clause.begins_with(prefix):
+			clause = clause.trim_prefix(prefix).strip_edges()
+			break
+	if clause.contains(" | "):
+		clause = clause.get_slice(" | ", 0).strip_edges()
+	if clause.contains("; "):
+		clause = clause.get_slice("; ", 0).strip_edges()
+	if clause.contains(" is best placed to cast "):
+		clause = clause.get_slice(" is best placed to cast ", 1).strip_edges()
+		if clause.contains(" on "):
+			clause = clause.get_slice(" on ", 0).strip_edges()
+	return clause.trim_suffix(".").strip_edges()
+
+func _fit_themed_timing_line_for_test(label: Label, value: String) -> String:
+	var normalized := value.strip_edges()
+	var font := label.get_theme_font("font")
+	var font_size := label.get_theme_font_size("font_size")
+	if font.get_string_size(normalized, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size).x <= label.size.x:
+		return normalized
+	var prefix := ""
+	for word_value in normalized.split(" ", false):
+		var word := String(word_value)
+		var candidate := word if prefix == "" else "%s %s" % [prefix, word]
+		if font.get_string_size("%s…" % candidate, HORIZONTAL_ALIGNMENT_LEFT, -1.0, font_size).x > label.size.x:
+			break
+		prefix = candidate
+	return "%s…" % prefix if prefix != "" else "…"
 
 func _focus_visible_surface_for_test(prefix: String, stack: Dictionary, cue: Dictionary) -> String:
 	var cue_label := "Stack check:" if prefix == "Active" else "Engagement check:"

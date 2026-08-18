@@ -21946,6 +21946,153 @@ def validate_battle_focus_spell_tab_body_containment(errors: list[str]) -> None:
         ensure(forbidden_token not in focus_containment, errors, f"Active-play Focus/Spell containment helper must remain observation-only: {forbidden_token}")
 
 
+def validate_battle_timing_tab_compact_summary(errors: list[str]) -> None:
+    def function_block(text: str, name: str) -> str:
+        match = re.search(rf"func {re.escape(name)}\([^\n]*\)(?: -> [^:]+)?:\n(?P<body>.*?)(?=\nfunc |\Z)", text, re.S)
+        return match.group("body") if match is not None else ""
+
+    board_smoke_path = ROOT / "tests" / "battle_controller_board_navigation_smoke.gd"
+    for path in (BATTLE_SCRIPT_PATH, BATTLE_SCENE_PATH, board_smoke_path):
+        ensure(path.exists(), errors, f"Missing Battle Timing compact-summary file: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in (BATTLE_SCRIPT_PATH, BATTLE_SCENE_PATH, board_smoke_path)):
+        return
+
+    shell_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
+    scene_text = BATTLE_SCENE_PATH.read_text(encoding="utf-8")
+    smoke_text = board_smoke_path.read_text(encoding="utf-8")
+    refresh_helper = function_block(shell_text, "_refresh")
+    ensure(refresh_helper, errors, "Could not isolate Battle refresh for Timing compact summary")
+    refresh_order = tuple(refresh_helper.find(token) for token in (
+        "var spell_timing_board := BattleRules.describe_spell_timing_board(_session)",
+        "var timing_check := _battle_timing_check_cue_surface(spell_timing_board)",
+        "if timing_check.is_empty():",
+        "_set_compact_label(_timing_label, spell_timing_board, 3)",
+        "_timing_label.text = _battle_timing_visible_surface(timing_check)",
+        "_timing_label.tooltip_text = _join_tooltip_sections([",
+        'String(timing_check.get("tooltip_text", ""))',
+        'call_deferred("_refit_battle_timing_visible_surface")',
+    ))
+    ensure(all(index >= 0 for index in refresh_order) and list(refresh_order) == sorted(refresh_order), errors, "Battle Timing refresh must derive one semantic visible summary and preserve the exact full tooltip in order")
+    ensure('_timing_label.tooltip_text = _join_tooltip_sections([\n\t\t\tString(timing_check.get("tooltip_text", "")),\n\t\t\tspell_timing_board,\n\t\t])' in refresh_helper, errors, "Battle Timing tooltip must retain the complete cue and full board in exact order")
+    ensure('"%s\\n%s" % [String(timing_check.get("visible_text", "")), spell_timing_board]' not in shell_text, errors, "Battle Timing first view must not retain the duplicated raw timing-check plus full-board materialization")
+    ensure(scene_text.count('[node name="TimingPanel" type="PanelContainer"') == 1 and scene_text.count('[node name="Timing" type="Label"') == 1, errors, "Battle Timing compact summary must retain the authored native panel and label")
+
+    visible_helper = function_block(shell_text, "_battle_timing_visible_surface")
+    clause_helper = function_block(shell_text, "_battle_timing_compact_clause")
+    fit_helper = function_block(shell_text, "_fit_battle_timing_line")
+    ensure(visible_helper and clause_helper and fit_helper, errors, "Could not isolate Battle Timing compact production helpers")
+    for required_token in (
+        'timing_check.get("readiness", "Review")',
+        'timing_check.get("ready_spell", "")',
+        'timing_check.get("ready_order", "")',
+        'timing_check.get("burst_risk", "")',
+        'timing_check.get("protection_need", "")',
+        'timing_check.get("enemy_pressure", "")',
+        '"Timing check: %s" % readiness',
+        '"%s: %s" % [action_prefix, action_value]',
+        '"Watch: %s" % watch_value',
+        'ready_spell.trim_prefix("Cast ").strip_edges()',
+        "_fit_battle_timing_line(String(line_value))",
+        'return "\\n".join(visible_lines)',
+    ):
+        ensure(required_token in visible_helper, errors, f"Battle Timing visible helper is missing exact semantic token: {required_token}")
+    for required_token in (
+        '"Burst risk:"',
+        '"Incoming burst:"',
+        '"Protection need:"',
+        '"Enemy spell pressure:"',
+        'clause.get_slice(" | ", 0)',
+        'clause.get_slice("; ", 0)',
+        'clause.get_slice(" is best placed to cast ", 1)',
+        'clause.get_slice(" on ", 0)',
+    ):
+        ensure(required_token in clause_helper, errors, f"Battle Timing clause helper is missing exact player-facing reduction token: {required_token}")
+    fit_order = tuple(fit_helper.find(token) for token in (
+        '_timing_label.get_theme_font("font")',
+        '_timing_label.get_theme_font_size("font_size")',
+        "var max_width := _timing_label.size.x",
+        "font.get_string_size(normalized",
+        'var ellipsis := "…"',
+        'normalized.split(" ", false)',
+        'return "%s%s" % [prefix, ellipsis] if prefix != "" else ellipsis',
+    ))
+    ensure(all(index >= 0 for index in fit_order) and list(fit_order) == sorted(fit_order), errors, "Battle Timing line fit must use the live themed width and whole-word Unicode ellipsis in order")
+    refit_helper = function_block(shell_text, "_refit_battle_timing_visible_surface")
+    ensure(refit_helper, errors, "Could not isolate deferred Battle Timing live-width refit")
+    if refit_helper:
+        refit_order = tuple(refit_helper.find(token) for token in (
+            "not is_inside_tree()",
+            "_session == null",
+            "_session.battle.is_empty()",
+            "BattleRules.describe_spell_timing_board(_session)",
+            "_battle_timing_check_cue_surface(timing_board)",
+            "if timing_check.is_empty():",
+            "_timing_label.text = _battle_timing_visible_surface(timing_check)",
+        ))
+        ensure(all(index >= 0 for index in refit_order) and list(refit_order) == sorted(refit_order), errors, "Deferred Battle Timing refit must guard live state and rematerialize current view after layout in order")
+        for forbidden_token in ("tooltip_text", "SessionState", "SaveService", "AppRouter", "BattleRules.perform", "await ", "create_timer", "custom_minimum_size"):
+            ensure(forbidden_token not in refit_helper, errors, f"Deferred Battle Timing refit must change only current visible text and avoid {forbidden_token}")
+    for helper_name, helper in (
+        ("_battle_timing_visible_surface", visible_helper),
+        ("_battle_timing_compact_clause", clause_helper),
+        ("_fit_battle_timing_line", fit_helper),
+    ):
+        for forbidden_token in ("BattleRules.perform", "SessionState", "SaveService", "AppRouter", "custom_minimum_size", "minimum_size_changed", "queue_sort", "set_deferred", "await ", "create_timer", "..."):
+            ensure(forbidden_token not in helper, errors, f"Battle Timing production helper {helper_name} must remain view-only and avoid {forbidden_token}")
+
+    focused = function_block(smoke_text, "_validate_battle_timing_tab_body_fit")
+    ensure(focused, errors, "Battle controller owner must prove the Timing compact body at both widths")
+    if focused:
+        focused_order = tuple(focused.find(token) for token in (
+            "_battle_background_authority(session)",
+            "tabs.current_tab = 0",
+            "await _settle()",
+            "var contained_tabs_height := tabs.size.y",
+            "tabs.current_tab = 3",
+            'shell.call("validation_snapshot")',
+            "BattleRules.describe_spell_timing_board(session)",
+            "_timing_visible_lines_for_test(timing_label, timing_check)",
+            "widest_line <= timing_label.size.x + 0.5",
+            'timing_label.tooltip_text == expected_tooltip',
+            "tabs.current_tab = initial_tab",
+            "_battle_background_authority(session) != authority_before",
+        ))
+        ensure(all(index >= 0 for index in focused_order) and list(focused_order) == sorted(focused_order), errors, "Focused Battle Timing proof must bracket public tab selection, independent semantics, full tooltip, live geometry, restoration, and authority in order")
+        for required_token in (
+            "timing_label.get_line_count() == 3",
+            "timing_label.get_visible_line_count() == 3",
+            'not timing_label.text.contains("...")',
+            'not timing_label.text.contains("Spell and Ability Timing")',
+            'timing_label.tooltip_text.contains("Spell and Ability Timing")',
+            "tabs.size.y <= contained_tabs_height + 0.01",
+            "shell.get_global_rect().encloses(footer.get_global_rect())",
+            "tabs.get_global_rect().encloses(panel.get_global_rect())",
+            "panel.get_global_rect().encloses(timing_label.get_global_rect())",
+        ):
+            ensure(required_token in focused, errors, f"Focused Battle Timing proof is missing exact contract token: {required_token}")
+        for forbidden_token in ("_battle_timing_visible_surface", "_battle_timing_compact_clause", "_fit_battle_timing_line", "custom_minimum_size", "set_text", "sort(", "erase(", "create_timer", "Input."):
+            ensure(forbidden_token not in focused, errors, f"Focused Battle Timing proof must remain independent/read-only and avoid {forbidden_token}")
+    for helper_name in ("_timing_visible_lines_for_test", "_timing_clause_for_test", "_fit_themed_timing_line_for_test"):
+        helper = function_block(smoke_text, helper_name)
+        ensure(helper, errors, f"Missing independent focused Battle Timing helper {helper_name}")
+        for forbidden_token in ("_battle_timing_visible_surface", "_battle_timing_compact_clause", "_fit_battle_timing_line", "shell.call", "BattleRules.perform", "SessionState", "SaveService", "custom_minimum_size", "await ", "create_timer"):
+            ensure(forbidden_token not in helper, errors, f"Independent Battle Timing helper {helper_name} must not call production/mutate authority via {forbidden_token}")
+    width_body = function_block(smoke_text, "_validate_battle_board_semantics_width")
+    focus_spell_call = width_body.find("await _validate_battle_focus_spell_tab_body_fit(shell, session, width)")
+    timing_call = width_body.find("await _validate_battle_timing_tab_body_fit(shell, session, width)")
+    focus_call = width_body.find("board.grab_focus()")
+    ensure(0 <= focus_spell_call < timing_call < focus_call and width_body.count("await _validate_battle_timing_tab_body_fit(shell, session, width)") == 1, errors, "Battle Timing proof must run once per width after existing body proof and before input mutation")
+    capture_order = tuple(smoke_text.find(token) for token in (
+        'var capture_tabs: TabContainer = shell.get_node("%BattleTabs")',
+        'OS.get_environment("BATTLE_CONTROLLER_BOARD_CAPTURE_TAB_INDEX")',
+        'var capture_initial_tab: int = capture_tabs.current_tab',
+        'capture_tabs.current_tab = capture_tab_index',
+        "await _capture_if_requested()",
+        'capture_tabs.current_tab = capture_initial_tab',
+    ))
+    ensure(all(index >= 0 for index in capture_order) and list(capture_order) == sorted(capture_order), errors, "Optional Battle screenshot capture must select and restore the requested real info tab around the unchanged capture")
+
+
 def validate_battle_quick_resolve_runtime(errors: list[str]) -> None:
     required_paths = (
         BATTLE_AUTO_RESOLVE_RULES_PATH,
@@ -49604,6 +49751,7 @@ def main() -> int:
     validate_battle_order_tab_compact_initiative_summary(errors)
     validate_battle_info_tab_header_compact_fit(errors)
     validate_battle_focus_spell_tab_body_containment(errors)
+    validate_battle_timing_tab_compact_summary(errors)
     validate_main_menu_first_view(errors)
     validate_map_editor_terrain_paint_normalization_deferral(errors)
     validate_main_menu_destructive_exclusive_parent_input(errors)
