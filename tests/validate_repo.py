@@ -27933,6 +27933,31 @@ def validate_overworld_shell_release_polish(errors: list[str]) -> None:
             "End Turn root fallback must defer physical key/joypad input and never forward mouse/action input synchronously",
         )
     active_play_end_turn_text = (ROOT / "tests" / "active_play_keyboard_focus_smoke.gd").read_text(encoding="utf-8")
+    end_turn_surface_body = overworld_script_text.split("func _end_turn_confirmation_surface(field_readiness: Dictionary = {}) -> Dictionary:", 1)[1].split("\nfunc _refresh_drawer_handoff_cues", 1)[0]
+    ensure(
+        end_turn_surface_body.count('button_text = "End Turn?"') == 5
+        and 'var warning_hint := false' in end_turn_surface_body
+        and end_turn_surface_body.count('warning_hint = true') == 5
+        and '"warning_hint": warning_hint' in end_turn_surface_body,
+        errors,
+        "Warned End Turn surfaces must retain one stable action label and explicit warning authority across battle, town, route, action, and movement cases",
+    )
+    for misleading_label in ('End? Battle', 'End? Town', 'End? Route', 'End? Action', 'End? %d Left'):
+        ensure(misleading_label not in end_turn_surface_body, errors, f"End Turn must not replace its action identity with misleading label {misleading_label}")
+    ensure(
+        'if bool(surface.get("warning_hint", false)):' in overworld_script_text
+        and 'if String(surface.get("button_text", "")).begins_with("End?"):' not in overworld_script_text
+        and '"surface_warning_hint": bool(surface.get("warning_hint", false))' in overworld_script_text,
+        errors,
+        "End Turn confirmation ownership must use explicit warning_hint state rather than parsing player-facing button copy",
+    )
+    ensure(
+        '"stable_action_label": String(live_snapshot.get("surface_button_text", "")) == "End Turn?"' in active_play_end_turn_text
+        and '"surface_warned": bool(live_snapshot.get("surface_warning_hint", false))' in active_play_end_turn_text
+        and '.begins_with("End?")' not in active_play_end_turn_text,
+        errors,
+        "Active-play focus proof must require the stable End Turn label and independent warning hint",
+    )
     for required_token in (
         "func _exercise_overworld_end_turn_exclusive_case(",
         '"end_turn_controller_1280"',
