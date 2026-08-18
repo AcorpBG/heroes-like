@@ -648,7 +648,9 @@ theme_override_constants/margin_bottom = 6
 [node name="MapCue" type="Label" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/CueChip/CuePad"]
 unique_name_in_owner = true
 layout_mode = 2
+clip_text = true
 text = "Action ready"
+text_overrun_behavior = 4
 
 [node name="ArtifactActionCueRow" type="HBoxContainer" parent="ShellMargin/Shell/ShellPad/Content/CommandBand/CommandPad/CommandRow/CueChip/CuePad"]
 unique_name_in_owner = true

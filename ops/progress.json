@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed. Battle now preserves the full sidebar and every footer system control at a real 1280x720 window with the supported 130% UI scale. Commander summaries remain exact in tooltips, visible values stay to two explicit native-word-ellipsis lines, system controls retain order in one row, and all four tabs stay contained. Select the next tracker-approved release-readiness implementation slice.",
+  "currentNotes": "Completed: fresh real-window 100% and persisted-130% Overworld smokes preserve the complete footer, exact full semantics/tooltips, stable map/footer allocation, and session-static cache across movement. Compatibility, static/editor, and bounded Linux/Windows export-startup gates pass.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-battle-130-ui-scale-sidebar-containment-10184",
-  "currentSliceId": "ux-battle-130-ui-scale-sidebar-containment-10184",
-  "currentSliceNotes": "Completed from a direct 130% real-window behavior red. Exact 100/130 Board, full commander tooltip, system-control order, stable tab allocation, settings/focus/visual/accessibility/core, static/editor, and bounded Linux/Windows startup gates pass.",
+  "currentSlice": "ux-overworld-130-ui-scale-footer-containment-10184",
+  "currentSliceId": "ux-overworld-130-ui-scale-footer-containment-10184",
+  "currentSliceNotes": "Completed with fresh real-window 100% and persisted-130% Overworld smokes, exact full-footer and dynamic-cue allocation/cache proof, compatibility/static/editor gates, and bounded official Linux/Windows export-startup evidence. Packaged Overworld interaction and broader release claims remain unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Battle 130% UI Scale Sidebar Containment",
-  "currentSliceUpdatedAt": "2026-08-18T05:48:00Z",
+  "currentSliceTitle": "Overworld 130% Footer Containment",
+  "currentSliceUpdatedAt": "2026-08-18T06:31:45Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -90129,6 +90129,27 @@
       "completedAt": "2026-08-18T05:48:00Z",
       "updatedAt": "2026-08-18T05:48:00Z",
       "notes": "Completed after a fresh 130% real-window red identified redundant commander wrapping and vertical system-control allocation. The two commander Labels now keep exactly two explicit native-word-ellipsis lines with exact full tooltips; SaveSlot, Save, Settings, and Menu retain their exact order/focus/actions in one contained row; the Focus inset changes only six pixels so all four tabs share the stable allocation. Fresh 100/130 Board captures and exact runtime authority, settings, visual, focus, accessibility, core, repository/editor, and Linux/Windows export-startup gates pass. Packaged Battle interaction and broader release claims remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null
+    },
+    {
+      "id": "ux-overworld-130-ui-scale-footer-containment-10184",
+      "title": "Overworld 130% Footer Containment",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Keep the complete shipped Overworld footer inside a real 1920x1080 window with supported 130% UI scale and preserve its map allocation when dynamic cue text changes.",
+      "implementationTargets": ["scenes/overworld/OverworldShell.gd", "scenes/overworld/OverworldShell.tscn", "tests/overworld_visual_smoke.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "testOwners": ["tests/overworld_visual_smoke.tscn", "tests/active_play_settings_runtime_report.tscn", "tests/active_play_keyboard_focus_smoke.tscn", "tests/accessibility_screen_reader_semantics_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/packaging_linux_export_smoke.py", "tests/packaging_windows_export_smoke.py", "tests/validate_repo.py"],
+      "completionCriteria": ["At persisted 130% UI scale the shell/footer and every resource/status/cue/order/system surface are inside the logical root with all controls visible in exact order", "The prompt-to-movement transition preserves the shell, footer, CueChip, and MapView allocation while Status/MapCue retain exact full independent values/tooltips behind native whole-word ellipsis", "Movement no longer triggers a session-static terrain rebuild through layout drift, while route/session/save authority and focused/compatibility/static/platform gates pass"],
+      "nonGoals": ["footer semantics/manual truncation, CueChip or system-control width/order, font/UI-scale option, breakpoint threshold, map/sidebar allocation policy, route/pathing, movement, combat, AI, balance, content, save/schema, or Native RMG changes", "new UI, shared helper, action feedback rewrite, or broader Overworld redesign", "packaged Overworld interaction or whole-release claims"],
+      "baseline": {"head": "e2e43e20", "window": "1920x1080", "uiScalePercent": 130, "logicalRootWidth": 1476.923, "commandBandWidth": 1616.0, "shellWidth": 1660.0, "leftClippedSurface": "ResourceChip", "rightClippedSurface": "Menu", "mapCueMinimumBefore": 127.0, "mapCueMinimumAfter": 230.0, "cacheFailure": "session_static_reason=resized"},
+      "createdAt": "2026-08-18T06:01:52Z",
+      "startedAt": "2026-08-18T06:01:52Z",
+      "completedAt": "2026-08-18T06:31:45Z",
+      "updatedAt": "2026-08-18T06:31:45Z",
+      "notes": "Completed after direct 130% painted/runtime evidence isolated base footer overflow and MapCue-driven layout/cache drift. Existing labels now use native ellipsis and the constrained 130% band narrows only flexible resource/order minima. Fresh real-window 100% and 130% Overworld smokes preserve full semantics/tooltips, complete ordered footer containment, map allocation, route/session authority, and the session-static cache across movement. Settings, focus, accessibility, core, repository/editor, and bounded official Linux/Windows export-startup gates pass; packaged Overworld interaction and broader release claims remain unclaimed.",
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
       "blockedReason": null
     }
