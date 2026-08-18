@@ -1388,8 +1388,7 @@ func _apply_briefing_consumption_autosave_failure_surface(focus_save: bool = tru
 	if _tactical_briefing_text.strip_edges() != "":
 		visible_surface = "%s\n%s" % [visible_surface, _tactical_briefing_text.strip_edges()]
 	_status_label.text = BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_MESSAGE
-	_set_compact_label(_event_label, visible_surface, 3)
-	_event_label.tooltip_text = visible_surface
+	_set_battle_event_compact_label(visible_surface, 3)
 	_system_body_label.visible = true
 	_system_body_label.text = BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_MESSAGE
 	_system_body_label.tooltip_text = visible_surface
@@ -1499,7 +1498,7 @@ func _refresh() -> void:
 	var action_confirmation := BattleRules.action_readiness_confirmation_payload(_session)
 	var action_context_surface := _battle_action_context_surface(presentation_dispatch_text, action_confirmation)
 	if action_context_surface.is_empty():
-		_set_compact_label(_event_label, presentation_dispatch_text, 3)
+		_set_battle_event_compact_label(presentation_dispatch_text, 3)
 		if presentation_text != "":
 			_event_label.tooltip_text = _join_tooltip_sections([
 				String(presentation_event.get("tooltip_text", "")),
@@ -1507,8 +1506,7 @@ func _refresh() -> void:
 				dispatch_text,
 			])
 	else:
-		_set_compact_label(
-			_event_label,
+		_set_battle_event_compact_label(
 			"%s\n%s" % [String(action_context_surface.get("visible_text", "")), presentation_dispatch_text],
 			3
 		)
@@ -3620,6 +3618,27 @@ func _make_placeholder_label(text: String) -> Label:
 func _set_compact_label(label: Label, full_text: String, max_lines: int) -> void:
 	FrontierVisualKit.set_compact_label(label, full_text, max_lines, 96, false)
 
+func _set_battle_event_compact_label(full_text: String, max_lines: int) -> void:
+	_event_label.tooltip_text = full_text
+	_event_label.text = _battle_event_compact_text(full_text, max_lines, 96)
+
+func _battle_event_compact_text(full_text: String, max_lines: int, max_chars: int) -> String:
+	var lines: Array[String] = []
+	for raw_line in full_text.split("\n", false):
+		var line := String(raw_line).strip_edges()
+		if line == "":
+			continue
+		if line.begins_with("- "):
+			line = line.trim_prefix("- ").strip_edges()
+		lines.append(_battle_action_context_word_text(line, max_chars))
+	if lines.is_empty():
+		return full_text.strip_edges()
+	if lines.size() > max_lines:
+		var hidden := lines.size() - max_lines
+		lines = lines.slice(0, max_lines)
+		lines.append("+ %d more" % hidden)
+	return "\n".join(lines)
+
 func _set_single_line_label(label: Label, full_text: String, max_chars: int = 96) -> void:
 	label.tooltip_text = full_text
 	var lines := full_text.split("\n", false)
@@ -3717,7 +3736,11 @@ func _battle_action_context_word_text(text: String, max_chars: int) -> String:
 	var boundary := prefix.rfind(" ")
 	if boundary <= 0:
 		return "…"
-	return "%s…" % prefix.left(boundary).strip_edges()
+	var fitted := prefix.left(boundary).strip_edges()
+	var trailing_connectors := ["a", "an", "the", "to", "of", "and", "or", "for", "with", "from"]
+	while fitted.contains(" ") and fitted.get_slice(" ", fitted.get_slice_count(" ") - 1).to_lower() in trailing_connectors:
+		fitted = fitted.left(fitted.rfind(" ")).strip_edges()
+	return "%s…" % fitted if fitted != "" else "…"
 
 func _battle_action_handoff_check(next_step: String, action_confirmation: Dictionary = {}) -> String:
 	var cleaned_next := _strip_sentence(next_step).trim_suffix(".")

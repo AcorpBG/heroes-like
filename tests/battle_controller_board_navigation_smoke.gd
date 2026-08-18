@@ -85,6 +85,25 @@ func _run() -> void:
 	await _press_joypad_button(JOY_BUTTON_A)
 	await _settle()
 	var blocked_result_message := String(shell.get("_last_message")).strip_edges()
+	var blocked_snapshot: Dictionary = shell.call("validation_snapshot")
+	var blocked_dispatch := BattleRules.describe_dispatch(session, blocked_result_message)
+	var blocked_full_latest := blocked_dispatch.get_slice("\n", 0)
+	var blocked_expected_latest := _battle_event_word_text_control(blocked_full_latest, 96)
+	var blocked_visible_latest := ""
+	var blocked_latest_count := 0
+	for raw_line in String(blocked_snapshot.get("event_visible_text", "")).split("\n", false):
+		var line := String(raw_line).strip_edges()
+		if line.begins_with("Latest:"):
+			blocked_visible_latest = line
+			blocked_latest_count += 1
+	if blocked_full_latest.length() <= 96 \
+			or blocked_latest_count != 1 \
+			or blocked_visible_latest != blocked_expected_latest \
+			or blocked_visible_latest.contains("...") \
+			or not blocked_visible_latest.ends_with("…") \
+			or _battle_event_word_text_control("Move to a highlighted hex", 10) != "Move…" \
+			or not String(blocked_snapshot.get("event_tooltip_text", "")).contains(blocked_full_latest):
+		return _fail("Blocked-action Battle Event line did not use exact whole-word fitting while retaining the full dispatch tooltip: full=%s expected=%s visible=%s snapshot=%s." % [blocked_full_latest, blocked_expected_latest, blocked_visible_latest, blocked_snapshot])
 	var blocked_result_text := _bounded_text("Battle board result: %s" % blocked_result_message, 320)
 	if _last_dispatched_stack_id != String(enemy_target.get("battle_id", "")):
 		return _fail("Controller A did not dispatch the occupied enemy cursor cell through target selection: target=%s emitted=%s." % [enemy_target, _last_dispatched_stack_id])
@@ -1293,6 +1312,26 @@ func _short_text_for_test(text: String, max_chars: int) -> String:
 	if max_chars <= 1:
 		return cleaned.substr(0, max_chars)
 	return "%s..." % cleaned.substr(0, max_chars - 1).strip_edges()
+
+func _battle_event_word_text_control(text: String, max_chars: int) -> String:
+	var normalized := text.strip_edges().replace("\n", " ")
+	while normalized.contains("  "):
+		normalized = normalized.replace("  ", " ")
+	if max_chars <= 0:
+		return ""
+	if normalized.length() <= max_chars:
+		return normalized
+	if max_chars == 1:
+		return "…"
+	var prefix := normalized.left(max_chars - 1).strip_edges()
+	var boundary := prefix.rfind(" ")
+	if boundary <= 0:
+		return "…"
+	var fitted := prefix.left(boundary).strip_edges()
+	var trailing_connectors := ["a", "an", "the", "to", "of", "and", "or", "for", "with", "from"]
+	while fitted.contains(" ") and fitted.get_slice(" ", fitted.get_slice_count(" ") - 1).to_lower() in trailing_connectors:
+		fitted = fitted.left(fitted.rfind(" ")).strip_edges()
+	return "%s…" % fitted if fitted != "" else "…"
 
 func _stack_alive_count_for_test(stack: Dictionary) -> int:
 	var unit_hp: int = maxi(1, int(stack.get("unit_hp", stack.get("hp", 1))))
