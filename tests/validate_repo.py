@@ -15381,10 +15381,11 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
             "_status_label.text = full_text",
             "_status_label.tooltip_text = full_text",
             "_status_label.clip_text = true",
-            "_status_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS",
+            "_status_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_WORD_ELLIPSIS",
         ))
         ensure(all(index >= 0 for index in status_helper_order) and list(status_helper_order) == sorted(status_helper_order), errors, "Battle Status helper must assign exact full text/tooltip then native clipped ellipsis in order")
         ensure(status_helper_body.count("_status_label") == 4, errors, "Battle Status native-ellipsis helper must change only the existing Status Label's four exact properties")
+        ensure("OVERRUN_TRIM_ELLIPSIS" not in status_helper_body and "OVERRUN_TRIM_WORD_ELLIPSIS_FORCE" not in status_helper_body, errors, "Battle Status must use ordinary native word ellipsis without character or forced overflow policy")
         for forbidden_token in ("compact", "left(", "substr(", "...", "_header_label", "_pressure_label", "custom_minimum_size", "size_flags", "autowrap", "queue_redraw", "call_deferred"):
             ensure(forbidden_token not in status_helper_body, errors, f"Battle Status helper must not introduce character/layout/timing drift via {forbidden_token}")
 
@@ -15653,7 +15654,7 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
             "top_bar.get_global_rect()",
             "status.text != expected_full",
             "status.tooltip_text != expected_full",
-            "status.text_overrun_behavior != TextServer.OVERRUN_TRIM_ELLIPSIS",
+            "status.text_overrun_behavior != TextServer.OVERRUN_TRIM_WORD_ELLIPSIS",
             "(full_width > status.size.x + 0.5) != expect_overflow",
             "top_rect.encloses(header_rect)",
             "header_rect.intersects(status_rect)",

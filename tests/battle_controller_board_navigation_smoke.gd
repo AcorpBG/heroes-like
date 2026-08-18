@@ -767,7 +767,7 @@ func _validate_battle_status_native_ellipsis(shell: Control, session, width: int
 			or status.tooltip_text != expected_full \
 			or status.text.ends_with("...") \
 			or not status.clip_text \
-			or status.text_overrun_behavior != TextServer.OVERRUN_TRIM_ELLIPSIS \
+			or status.text_overrun_behavior != TextServer.OVERRUN_TRIM_WORD_ELLIPSIS \
 			or status.autowrap_mode != TextServer.AUTOWRAP_OFF \
 			or font == null \
 			or (full_width > status.size.x + 0.5) != expect_overflow \

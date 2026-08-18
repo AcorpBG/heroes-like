@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `ux-battle-status-native-word-ellipsis-10184`. The shipped Battle Status Label now uses Godot's native word-ellipsis policy, so fresh 1280 evidence ends after complete `Bramble …` instead of `Bramble Scre…`, while exact full Status text/tooltip, the clipped single-line rectangle, Header/Pressure order, layout, input/focus, and battle authority remain unchanged. Focused Board, Town/Battle visual, shared focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction and broader release claims remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `ux-battle-status-native-word-ellipsis-10184`
 - Completed implementation slice: `ux-battle-action-context-word-boundary-ellipsis-10184`. Both successful post-action `Latest:/Next:` copy and the blocked-action fallback Event dispatch now fit at complete meaningful words with one Unicode ellipsis, while exact full action/dispatch tooltips, the 96-character/three-line Event envelope, shared UI-kit behavior, event ordering, layout, input/focus, and battle authority remain unchanged. Fresh shipped-window capture and independent Board proof, focused post-action visual, shared focus, animation, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `ux-battle-action-context-word-boundary-ellipsis-10184`
 - Completed implementation slice: `ux-battle-timing-check-detail-prefix-deduplication-10184`. The older Timing-check detail cue now extracts only each board-line value and removes the duplicated leading `Cast` from the next-action subject, while preserving the exact ready action payload, complete timing board, and completed three-line first view. Focused cue parity, Battle navigation/focus/animation/accessibility/core compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. A preexisting animation observer race was corrected test-only by starting the real Board playback before waiting and sampling. Packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -7428,6 +7430,36 @@ Final correction evidence:
 - `/tmp/heroes-battle-event-board-final.xOxWpU` exits naturally with the independent blocked-action dispatch/full-tooltip gate and exact Board PASS marker; fresh shipped-window capture `.artifacts/battle_controller_board_navigation_smoke/current_head_event_word_final.png` visibly ends the line on meaningful `move…`, with neither partial `highlig…` nor dangling `to a…`;
 - focused post-action, shared-focus, animation, accessibility, and core gates pass sequentially on final source in `/tmp/heroes-battle-event-final-chain.HycwEu`; exact Board/Town/generic editor parses plus repository/Python/JSON/diff gates pass in `/tmp/heroes-battle-event-final-static.h3iOn1`;
 - final official Linux and Windows packaging reports are `ok:true` from `/tmp/heroes-battle-event-final-platform.gnZcPr`; claims remain limited to Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup.
+
+## Completed Slice: Battle Status Native Word Ellipsis
+
+id: `ux-battle-status-native-word-ellipsis-10184`
+
+Status: completed.
+
+Implementation boundary:
+- replace only `%Status.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS` with Godot's word-boundary equivalent on the existing clipped, single-line Label;
+- retain the exact full Status text and tooltip plus current TopBar allocation and sibling order; no manual truncation or width/geometry change;
+- keep all status semantics, combat, input/focus, session, and save authority unchanged.
+
+Completion criteria:
+- fresh shipped-window 1280 capture shows no partial final Status word, while focused 1280 overflow and 1920 full-fit rows retain the exact independent full value and tooltip;
+- Header/Status/Pressure containment/order and Board/controller behavior remain exact;
+- focused Battle, compatibility, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass.
+
+Non-goals:
+- no Status value/order, BattleRules, Header/Pressure, geometry/allocation, wrap/height/font/scale, input/focus, combat, AI, balance, content, save/schema, or Native RMG change;
+- no new node/panel/row/tooltip, shared UI-kit change, or broader Battle banner redesign;
+- no packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- fresh shipped-window capture `.artifacts/battle_controller_board_navigation_smoke/current_head_event_word_final.png` shows the full-text Status surface still ending midword at `Bramble Scre…`;
+- completed `ux-battle-status-native-pixel-ellipsis-10184` removed destructive fixed-character compaction but pinned character-based native overflow; this follow-up changes only that one native policy to its word-boundary variant.
+
+Completion evidence:
+- `/tmp/heroes-battle-status-word-board.FqczrR` exits naturally with the exact Board PASS marker and independent full Status/tooltip plus 1280 overflow/1920 fit geometry; `.artifacts/battle_controller_board_navigation_smoke/current_head_status_word.png` visibly ends on complete `Bramble …`;
+- Town/Battle visual, shared focus, accessibility, and core pass sequentially in `/tmp/heroes-battle-status-word-compat.CUcWsu`;
+- repository/editor and final official Linux/Windows export-startup gates pass in `/tmp/heroes-battle-status-word-final.ILAT1w`, with no packaged Battle interaction claim.
 
 ## Progress Reconciliation
 
