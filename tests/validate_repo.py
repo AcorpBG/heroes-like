@@ -33533,6 +33533,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         return
 
     grastl_report_text = GENERATED_GRASTL_RUNTIME_ASSET_REPORT_PATH.read_text(encoding="utf-8")
+    ninefold_text = (ROOT / "tests" / "ninefold_scenario_smoke.gd").read_text(encoding="utf-8")
     for required_token in (
         'const TARGET_VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
         'const ORIGINAL_TILE_BANK_FAMILIES := ["grass", "plains", "forest", "mire", "swamp", "rough", "rock"]',
@@ -33565,6 +33566,28 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         'homm3_local_prototype/roads/',
     ):
         ensure(forbidden_token not in grastl_report_text, errors, f"Generated grastl focused runtime owner weakens live runtime authority: {forbidden_token}")
+    for required_token in (
+        'String(terrain_presentation.get("rendering_mode", "")) != "original_quiet_tile_bank"',
+        'bool(terrain_presentation.get("uses_homm3_local_prototype", true))',
+        'not bool(terrain_presentation.get("uses_original_tile_bank", false))',
+        'String(terrain_presentation.get("primary_base_model", "")) != "original_quiet_tile_bank"',
+        'String(terrain_presentation.get("terrain_noise_profile", "")) != "quiet_low_contrast_macro_readable"',
+        'String(terrain_presentation.get("tile_art_source_basis", "")) != "original_procedural_reference_informed"',
+        'String(terrain_presentation.get("terrain_variant_selection", "")) != "patch_cohesive_low_frequency"',
+        'not bool(terrain_presentation.get("homm3_local_reference_only", false))',
+        'String(terrain.get("transition_shape_model", "")) != "procedural_strip_fallback"',
+        'String(terrain.get("transition_edge_treatment", "")) != "procedural_strip_fallback"',
+    ):
+        ensure(required_token in ninefold_text, errors, f"Ninefold large-map terrain gate must retain the shippable original tile-bank contract: {required_token}")
+    for forbidden_token in (
+        'rendering_mode", "")) != "homm3_local_reference_prototype"',
+        'primary_base_model", "")) != "homm3_local_reference_prototype"',
+        'terrain_noise_profile", "")) != "homm3_extracted_atlas_frame"',
+        'terrain_variant_selection", "")) != "accepted_web_relation_class_row_lookup"',
+        'not bool(terrain_presentation.get("uses_homm3_local_prototype", false))',
+        'String(terrain.get("transition_shape_model", "")) != "homm3_base_atlas_frame"',
+    ):
+        ensure(forbidden_token not in ninefold_text, errors, f"Ninefold large-map terrain gate must not restore the retired local prototype oracle: {forbidden_token}")
 
     manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
     terrain_rendering = manifest.get("terrain_rendering", {})
