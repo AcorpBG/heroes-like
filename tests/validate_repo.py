@@ -15363,6 +15363,30 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
     scene_text = scene_path.read_text(encoding="utf-8")
     smoke_text = smoke_path.read_text(encoding="utf-8")
 
+    for commander_name in ("PlayerCommand", "EnemyCommand"):
+        commander_match = re.search(
+            rf'\[node name="{commander_name}" type="Label" parent="ContentMargin/Content/MainRow/SidebarShell/SidebarPad/SidebarBox/CommandPanel/CommandPad/CommandBox/[^"]+"\]\n(?P<body>.*?)(?=\n\[node )',
+            scene_text,
+            re.S,
+        )
+        ensure(commander_match is not None, errors, f"BattleShell must retain the authored {commander_name} Label")
+        if commander_match is not None:
+            commander_body = commander_match.group("body")
+            ensure("clip_text = true" in commander_body, errors, f"{commander_name} must clip only genuine horizontal overflow")
+            ensure("text_overrun_behavior = 4" in commander_body, errors, f"{commander_name} must use native word ellipsis")
+            ensure("autowrap_mode" not in commander_body, errors, f"{commander_name} must not wrap its two explicit compact lines")
+    system_actions_header = '[node name="SystemActions" type="HBoxContainer" parent="ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox"]'
+    ensure(scene_text.count(system_actions_header) == 1, errors, "Battle system controls must own one compact SystemActions row")
+    system_action_parent = "ContentMargin/Content/Footer/FooterPad/FooterRow/SystemPanel/SystemPad/SystemBox/SystemActions"
+    system_action_headers = tuple(
+        f'[node name="{name}" type="{node_type}" parent="{system_action_parent}"]'
+        for name, node_type in (("SaveSlot", "OptionButton"), ("Save", "Button"), ("Settings", "Button"), ("Menu", "Button"))
+    )
+    system_action_indexes = tuple(scene_text.find(token) for token in system_action_headers)
+    ensure(all(index >= 0 for index in system_action_indexes) and list(system_action_indexes) == sorted(system_action_indexes), errors, "Battle SystemActions must retain SaveSlot, Save, Settings, Menu order")
+    for name, _node_type in (("SaveSlot", "OptionButton"), ("Save", "Button"), ("Settings", "Button"), ("Menu", "Button")):
+        ensure(f'SystemBox/{name}" to="."' not in scene_text, errors, f"Battle {name} signal must not retain the old vertical SystemBox path")
+
     nullable_live_lookup = '@onready var _battle_board_cursor_live_label: Label = get_node_or_null("%BattleBoardCursorLive") as Label'
     ensure(board_text.count(nullable_live_lookup) == 1, errors, "BattleBoardView must use exactly one nullable BattleBoardCursorLive lookup for standalone report fixtures")
     ensure('@onready var _battle_board_cursor_live_label: Label = %BattleBoardCursorLive' not in board_text, errors, "BattleBoardView must not hard-resolve BattleBoardCursorLive outside the authored BattleShell scene")
@@ -15676,6 +15700,57 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
             ensure(required_token in status_focused_body, errors, f"Focused Battle Status proof is missing exact token: {required_token}")
         for forbidden_token in ('shell.call("_set_battle_status', 'shell.call("_refresh', "set_text", ".text =", "Input.", "queue_redraw", "sort(", "erase(", "custom_minimum_size"):
             ensure(forbidden_token not in status_focused_body, errors, f"Focused Battle Status proof must remain public/read-only and avoid {forbidden_token}")
+
+    scale_fit_match = re.search(
+        r"func _validate_battle_focus_spell_tab_body_fit\(shell: Control, session, width: int\) -> bool:\n(?P<body>.*?)(?=\nfunc )",
+        smoke_text,
+        re.S,
+    )
+    commander_control_match = re.search(
+        r"func _commander_visible_surface_for_test\(full_text: String\) -> String:\n(?P<body>.*?)(?=\nfunc )",
+        smoke_text,
+        re.S,
+    )
+    ensure(scale_fit_match is not None and commander_control_match is not None, errors, "Battle controller smoke must own 100/130-scale commander and tab containment controls")
+    if scale_fit_match is not None:
+        scale_fit_body = scale_fit_match.group("body")
+        scale_fit_order = tuple(scale_fit_body.find(token) for token in (
+            "_battle_background_authority(session)",
+            'shell.get_node("%PlayerCommand")',
+            'shell.get_node("%EnemyCommand")',
+            'BattleRules.describe_commander_summary(session, "player")',
+            'BattleRules.describe_commander_summary(session, "enemy")',
+            "_commander_visible_surface_for_test(commander_full)",
+            "commander_label.tooltip_text != commander_full",
+            "commander_label.autowrap_mode != TextServer.AUTOWRAP_OFF",
+            "commander_label.text_overrun_behavior != TextServer.OVERRUN_TRIM_WORD_ELLIPSIS",
+            'shell.get_node("%SaveSlot").get_parent()',
+            'shell.get_node("%Save")',
+            'shell.get_node("%Settings")',
+            'shell.get_node("%Menu")',
+            "system_actions_rect.encloses(control_rect)",
+            "tabs.size.y <= contained_tabs_height + 0.01",
+            "_battle_background_authority(session) != authority_before",
+        ))
+        ensure(all(index >= 0 for index in scale_fit_order) and list(scale_fit_order) == sorted(scale_fit_order), errors, "Battle 100/130-scale proof must preserve independent summaries, native two-line policy, system-row geometry, tab containment, then authority")
+        for required_token in (
+            "commander_label.get_line_count() != 2",
+            "commander_label.get_visible_line_count() != 2",
+            "control.get_parent() != system_actions",
+            "control_rect.position.x + 0.01 < previous_system_right",
+            "shell.get_global_rect().encloses(footer.get_global_rect())",
+            "tabs.get_global_rect().encloses(panel.get_global_rect())",
+        ):
+            ensure(required_token in scale_fit_body, errors, f"Battle 100/130-scale proof is missing exact gate: {required_token}")
+        for forbidden_token in ('validation_select_ui_scale', 'set_ui_scale_percent', 'content_scale_factor =', 'sort(', 'erase(', 'queue_free', 'call_deferred'):
+            ensure(forbidden_token not in scale_fit_body, errors, f"Battle 100/130-scale proof must remain observational and avoid {forbidden_token}")
+        ensure(re.search(r"\.text\s*=(?!=)", scale_fit_body) is None, errors, "Battle 100/130-scale proof must not assign visible text")
+    if commander_control_match is not None:
+        commander_control_body = commander_control_match.group("body")
+        for required_token in ('full_text.split("\\n", false)', 'line.left(93)', 'lines.size() - 1'):
+            ensure(required_token in commander_control_body, errors, f"Independent commander compact control is missing exact token: {required_token}")
+        for forbidden_token in ("FrontierVisualKit", "compact_text", "BattleRules", "Label", "get_theme", "sort(", "erase("):
+            ensure(forbidden_token not in commander_control_body, errors, f"Independent commander compact control must avoid circular or mutating dependency: {forbidden_token}")
 
     focused_match = re.search(
         r"func _validate_turn_strip_identity_surface\(board: Control, session, width: int\) -> bool:\n(?P<body>.*?)(?=\nfunc )",

@@ -1015,6 +1015,34 @@ func _validate_battle_focus_spell_tab_body_fit(shell: Control, session, width: i
 	var authority_before := _battle_background_authority(session)
 	var tabs: TabContainer = shell.get_node("%BattleTabs")
 	var footer: Control = shell.get_node("%Footer")
+	var commander_labels: Array[Label] = [shell.get_node("%PlayerCommand"), shell.get_node("%EnemyCommand")]
+	var commander_full_values := [
+		BattleRules.describe_commander_summary(session, "player"),
+		BattleRules.describe_commander_summary(session, "enemy"),
+	]
+	for index in range(commander_labels.size()):
+		var commander_label := commander_labels[index]
+		var commander_full := String(commander_full_values[index])
+		var expected_commander_visible := _commander_visible_surface_for_test(commander_full)
+		if commander_label.text != expected_commander_visible \
+			or commander_label.tooltip_text != commander_full \
+			or commander_label.autowrap_mode != TextServer.AUTOWRAP_OFF \
+			or not commander_label.clip_text \
+			or commander_label.text_overrun_behavior != TextServer.OVERRUN_TRIM_WORD_ELLIPSIS \
+			or commander_label.get_line_count() != 2 \
+			or commander_label.get_visible_line_count() != 2:
+			return _fail_bool("Battle commander compact summary mismatch at %d percent scale for %s: text=%s expected=%s tooltip=%s expected_tooltip=%s wrap=%s clip=%s overrun=%s lines=%s/%s." % [SettingsService.ui_scale_percent(), commander_label.name, commander_label.text, expected_commander_visible, commander_label.tooltip_text, commander_full, commander_label.autowrap_mode, commander_label.clip_text, commander_label.text_overrun_behavior, commander_label.get_line_count(), commander_label.get_visible_line_count()])
+	var system_actions: HBoxContainer = shell.get_node("%SaveSlot").get_parent()
+	var system_controls: Array[Control] = [shell.get_node("%SaveSlot"), shell.get_node("%Save"), shell.get_node("%Settings"), shell.get_node("%Menu")]
+	var system_actions_rect := system_actions.get_global_rect()
+	var previous_system_right := system_actions_rect.position.x
+	for control in system_controls:
+		var control_rect := control.get_global_rect()
+		if control.get_parent() != system_actions \
+			or not system_actions_rect.encloses(control_rect) \
+			or control_rect.position.x + 0.01 < previous_system_right:
+			return _fail_bool("Battle system action row containment/order mismatch at %d percent scale: row=%s control=%s rect=%s previous_right=%s." % [SettingsService.ui_scale_percent(), system_actions_rect, control.name, control_rect, previous_system_right])
+		previous_system_right = control_rect.end.x
 	var initial_tab := tabs.current_tab
 	tabs.current_tab = 0
 	await _settle()
@@ -1127,6 +1155,22 @@ func _validate_battle_timing_tab_body_fit(shell: Control, session, width: int) -
 	if _battle_background_authority(session) != authority_before:
 		return _fail_bool("Inspecting the Battle Timing compact body changed session/save/settings authority at %d." % width)
 	return true
+
+func _commander_visible_surface_for_test(full_text: String) -> String:
+	var lines: Array[String] = []
+	for raw_line in full_text.split("\n", false):
+		var line := String(raw_line).strip_edges()
+		if line == "":
+			continue
+		if line.begins_with("- "):
+			line = line.trim_prefix("- ").strip_edges()
+		if line.length() > 96:
+			line = "%s..." % line.left(93)
+		lines.append(line)
+	if lines.is_empty():
+		return full_text.strip_edges()
+	var first_line := lines[0]
+	return "%s\n+ %d more" % [first_line, lines.size() - 1] if lines.size() > 1 else first_line
 
 func _timing_visible_lines_for_test(label: Label, timing_check: Dictionary) -> Array[String]:
 	var readiness := String(timing_check.get("readiness", "Review")).strip_edges()

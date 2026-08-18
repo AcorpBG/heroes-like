@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed. The full-text Battle Status now uses native word ellipsis and fresh shipped-window evidence ends on complete Bramble … while exact text/tooltip, geometry, and battle authority remain unchanged. Select the next tracker-approved release-readiness implementation slice.",
+  "currentNotes": "Completed. Battle now preserves the full sidebar and every footer system control at a real 1280x720 window with the supported 130% UI scale. Commander summaries remain exact in tooltips, visible values stay to two explicit native-word-ellipsis lines, system controls retain order in one row, and all four tabs stay contained. Select the next tracker-approved release-readiness implementation slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-battle-status-native-word-ellipsis-10184",
-  "currentSliceId": "ux-battle-status-native-word-ellipsis-10184",
-  "currentSliceNotes": "Completed as a one-property follow-up to the native pixel-overflow owner. Fresh painted evidence plus exact Board and compatibility gates prove word-safe overflow with unchanged full Status text/tooltip and geometry.",
+  "currentSlice": "ux-battle-130-ui-scale-sidebar-containment-10184",
+  "currentSliceId": "ux-battle-130-ui-scale-sidebar-containment-10184",
+  "currentSliceNotes": "Completed from a direct 130% real-window behavior red. Exact 100/130 Board, full commander tooltip, system-control order, stable tab allocation, settings/focus/visual/accessibility/core, static/editor, and bounded Linux/Windows startup gates pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Battle Status Native Word Ellipsis",
-  "currentSliceUpdatedAt": "2026-08-18T05:21:52Z",
+  "currentSliceTitle": "Battle 130% UI Scale Sidebar Containment",
+  "currentSliceUpdatedAt": "2026-08-18T05:48:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -90108,6 +90108,27 @@
       "completedAt": "2026-08-18T05:21:52Z",
       "updatedAt": "2026-08-18T05:21:52Z",
       "notes": "Completed the one-property native word-overrun correction. Exact full Status text/tooltip, clipping, TopBar geometry/order, Board/input/session authority, and every non-Status surface remain unchanged. Fresh Xvfb capture ends after complete Bramble rather than partial Scre; focused Board, Town/Battle visual, shared focus, accessibility, core, repository/editor, and final Linux/Windows export-startup gates pass. Packaged Battle interaction and broader release claims remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null
+    },
+    {
+      "id": "ux-battle-130-ui-scale-sidebar-containment-10184",
+      "title": "Battle 130% UI Scale Sidebar Containment",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Keep the shipped Battle sidebar, footer controls, and all four info tabs contained at a real 1280x720 window with the supported 130% UI scale without reducing text size or changing Battle semantics.",
+      "implementationTargets": ["scenes/battle/BattleShell.tscn", "tests/battle_controller_board_navigation_smoke.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "testOwners": ["tests/battle_controller_board_navigation_smoke.tscn", "tests/active_play_settings_runtime_report.tscn", "tests/town_battle_visual_smoke.tscn", "tests/active_play_keyboard_focus_smoke.tscn", "tests/accessibility_screen_reader_semantics_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/packaging_linux_export_smoke.py", "tests/packaging_windows_export_smoke.py", "tests/validate_repo.py"],
+      "completionCriteria": ["At 100% and 130% the two commander labels retain exactly two explicit visible lines, native word ellipsis, and exact full independent summary tooltips", "SaveSlot, Save, Settings, and Menu retain exact order/focus/actions in one contained footer row and all four Battle info pages remain within the initial tab allocation at 130%", "Footer, board, actions, settings, focus, session, and save authority stay exact; focused, compatibility, static/editor, Linux, and Windows startup gates pass"],
+      "nonGoals": ["SettingsService defaults/options/persistence, font reduction, sidebar or tab copy, commander data, combat, input/focus, AI, balance, content, save/schema, or Native RMG changes", "new panels, scrolling, breakpoints, hidden sidebar, shared compact-text changes, control removal/reordering, or broader Battle redesign", "packaged Battle interaction or whole-release claims"],
+      "baseline": {"head": "14266e16", "window": "1280x720", "uiScalePercent": 130, "orderTabHeight": 150.0, "focusTabHeight": 251.0, "commanderExplicitLines": 2, "commanderVisibleLines": 4, "failure": "Battle Focus/Spell compact body overflow/semantic mismatch"},
+      "createdAt": "2026-08-18T05:29:31Z",
+      "startedAt": "2026-08-18T05:29:31Z",
+      "completedAt": "2026-08-18T05:48:00Z",
+      "updatedAt": "2026-08-18T05:48:00Z",
+      "notes": "Completed after a fresh 130% real-window red identified redundant commander wrapping and vertical system-control allocation. The two commander Labels now keep exactly two explicit native-word-ellipsis lines with exact full tooltips; SaveSlot, Save, Settings, and Menu retain their exact order/focus/actions in one contained row; the Focus inset changes only six pixels so all four tabs share the stable allocation. Fresh 100/130 Board captures and exact runtime authority, settings, visual, focus, accessibility, core, repository/editor, and Linux/Windows export-startup gates pass. Packaged Battle interaction and broader release claims remain unclaimed.",
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
       "blockedReason": null
     }

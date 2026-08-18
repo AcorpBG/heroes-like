@@ -7461,6 +7461,39 @@ Completion evidence:
 - Town/Battle visual, shared focus, accessibility, and core pass sequentially in `/tmp/heroes-battle-status-word-compat.CUcWsu`;
 - repository/editor and final official Linux/Windows export-startup gates pass in `/tmp/heroes-battle-status-word-final.ILAT1w`, with no packaged Battle interaction claim.
 
+## Selected Slice: Battle 130% UI Scale Sidebar Containment
+
+id: `ux-battle-130-ui-scale-sidebar-containment-10184`
+
+Status: completed.
+
+Implementation boundary:
+- keep the existing 130% whole-interface scale, Battle font sizes, sidebar width, tab bodies, and full commander-summary tooltips, but stop the two one-line commander summary sources from autowrapping into four visible lines each;
+- render each existing commander label as its current first summary line plus hidden-row count, with native whole-word ellipsis on genuine horizontal overflow and no destructive text rewrite;
+- place the existing Save Slot, Save, Settings, and Main Menu controls on one ordered footer row instead of four vertical rows, preserving every control and focus order while using the available horizontal edge-rail budget;
+- reclaim only that redundant command/footer vertical allocation, with a two-pixel Focus-row separation and one-pixel top/bottom inset reduction, so the existing Focus and Spell tabs remain inside the same contained BattleTabs allocation at a real 1280x720 window and 130% scale.
+
+Completion criteria:
+- fresh 1280x720 Battle runs at both 100% and 130% UI scale keep both commander labels to their exact two explicit lines, preserve the complete independent commander summaries in their tooltips, and use native word ellipsis rather than midword clipping;
+- at 130% the Order, Focus, Spell, and Timing pages remain inside the initial BattleTabs allocation, every authored visible line stays visible, the footer stays inside the shell, and the board/action controls remain usable without changing settings or session authority;
+- focused Battle controller behavior, active-play settings/focus, Town/Battle visual, accessibility, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass.
+
+Non-goals:
+- no SettingsService default/option/persistence change, font-size reduction, sidebar width, tab/body copy, commander data, combat, input/focus, AI, balance, content, save/schema, or Native RMG change;
+- no new panel, scroll container, layout breakpoint, hidden sidebar, shared compact-text helper change, control removal/reordering, art/audio/VFX, or broader Battle redesign;
+- no packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- current pushed HEAD `14266e16` at a fresh real 1280x720 X11 window and persisted 130% UI scale fails the authoritative Board smoke before capture: Focus raises BattleTabs from the contained 150px Order allocation to 251px because both commander summaries autowrap their explicit two-line compact values into four visible lines;
+- the same failure reports the full Focus semantics and tooltips intact, the shell/footer still bounded, and no parse/load/combat error, isolating the defect to large-scale sidebar allocation rather than BattleRules or session authority;
+- the existing 100/115/130% accessibility setting and active-play persistence owners prove the option itself; prior Battle compact-copy slices explicitly excluded font/UI-scale and commander-summary changes, so this is a separate compatibility owner.
+
+Completion evidence:
+- fresh real-window Board runs at both 100% and persisted 130% exit naturally with the exact PASS marker; `.artifacts/battle_controller_board_navigation_smoke/ui_scale_100_final.png` and `ui_scale_130_final.png` show the same complete Battle surface, with two-line commander cards, every system control, and materially larger readable 130% text;
+- independent runtime gates prove exact full commander-summary tooltips, native no-wrap word ellipsis, SaveSlot/Save/Settings/Menu parent/order/containment, stable Order/Focus/Spell/Timing allocation, footer containment, and unchanged whole-session/settings/save authority;
+- active-play settings, Town/Battle visual, shared keyboard focus, accessibility semantics, core systems, repository validation, Python compilation, JSON/diff checks, and exact/generic editor parsing pass;
+- official Linux export/headless startup and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup reports are `ok:true`; packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:
