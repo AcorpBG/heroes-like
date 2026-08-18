@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Town scenic header strings now use the live themed font and exact painted width, preserving complete fitting copy and reserving one whole-word Unicode ellipsis for genuine overflow.",
+  "currentNotes": "The Overworld hero card now prioritizes exact mana in its live two-line first view while retaining full movement-and-mana tooltip authority and the adjacent exact movement command summary.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-town-scenic-header-pixel-fit-10184",
-  "currentSliceId": "ux-town-scenic-header-pixel-fit-10184",
-  "currentSliceNotes": "Completed with exact 1280x720 and 1920x1080 themed-font fitting, genuine-overflow ellipsis, fresh painted 1280 evidence, unchanged Town authority, compatibility, static/editor, and bounded Linux/Windows packaging evidence.",
+  "currentSlice": "ux-overworld-hero-card-mana-first-view-10184",
+  "currentSliceId": "ux-overworld-hero-card-mana-first-view-10184",
+  "currentSliceNotes": "Completed with exact 1280x720/1920x1080 mana-first text, full tooltip, adjacent movement, proportional-font fit, portrait/rail/session authority, compatibility, static/editor, and bounded Linux/Windows packaging evidence; the painted-report timeout produced no artifact and is excluded.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Town Scenic Header Pixel Fit",
-  "currentSliceUpdatedAt": "2026-08-17T23:22:32Z",
+  "currentSliceTitle": "Overworld Hero Card Mana First View",
+  "currentSliceUpdatedAt": "2026-08-18T00:18:46Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -20322,8 +20322,14 @@
       "completionEvidence": {
         "focusedArtifact": "/tmp/heroes-town-action-label-focused-authoritative.GW8Ygr",
         "liveViewportSizes": [
-          [1280, 720],
-          [1920, 1080]
+          [
+            1280,
+            720
+          ],
+          [
+            1920,
+            1080
+          ]
         ],
         "ordinaryAndCapturedLabelsExact": true,
         "directAndPrecomputedStateExact": true,
@@ -20893,8 +20899,14 @@
         "windows_report": ".artifacts/packaging_windows_export_smoke/report.json",
         "artifact_count": 12,
         "viewports": [
-          [1280, 720],
-          [1920, 1080]
+          [
+            1280,
+            720
+          ],
+          [
+            1920,
+            1080
+          ]
         ],
         "field_asset_id": "adventurers_bundle",
         "inventory_icons_separate": true,
@@ -21074,8 +21086,59 @@
         "direct_encounter_objective_count_after": 14,
         "live_flow_artifact": "/tmp/heroes-frontier-claims-flow.hj3QNw/20260817T111952Z",
         "live_flow_failure": "required encounter objective route unavailable after town progression",
-        "mireford_start_lane_blocked_cell": {"x": 1, "y": 3, "before": "water", "after": "grass"},
-        "mireford_start_lane_blocking_site": {"placement_id": "graftroot_rootwatch_hollow", "before": {"x": 2, "y": 4, "body_tiles": [[1, 3], [2, 3], [1, 4], [2, 4]]}, "after": {"x": 2, "y": 5, "body_tiles": [[1, 4], [2, 4], [1, 5], [2, 5]]}},
+        "mireford_start_lane_blocked_cell": {
+          "x": 1,
+          "y": 3,
+          "before": "water",
+          "after": "grass"
+        },
+        "mireford_start_lane_blocking_site": {
+          "placement_id": "graftroot_rootwatch_hollow",
+          "before": {
+            "x": 2,
+            "y": 4,
+            "body_tiles": [
+              [
+                1,
+                3
+              ],
+              [
+                2,
+                3
+              ],
+              [
+                1,
+                4
+              ],
+              [
+                2,
+                4
+              ]
+            ]
+          },
+          "after": {
+            "x": 2,
+            "y": 5,
+            "body_tiles": [
+              [
+                1,
+                4
+              ],
+              [
+                2,
+                4
+              ],
+              [
+                1,
+                5
+              ],
+              [
+                2,
+                5
+              ]
+            ]
+          }
+        },
         "flags_and_carryover_preserved": true
       },
       "createdAt": "2026-08-17T11:26:50Z",
@@ -21480,9 +21543,21 @@
         "authored_first_ready_ms": 4578,
         "repeat_full_refresh_ms": 2349,
         "header_objective_status_resources_usec": 553440,
-        "objective_stakes_surface_usec_samples": [65616, 67242, 62113],
-        "objective_brief_usec_samples": [67818, 63558, 65948],
-        "objective_stakes_usec_samples": [140669, 128557, 129448],
+        "objective_stakes_surface_usec_samples": [
+          65616,
+          67242,
+          62113
+        ],
+        "objective_brief_usec_samples": [
+          67818,
+          63558,
+          65948
+        ],
+        "objective_stakes_usec_samples": [
+          140669,
+          128557,
+          129448
+        ],
         "attribution_artifact": "/tmp/heroes-objective-attribution.LikBbM"
       },
       "createdAt": "2026-08-17T01:24:25Z",
@@ -21528,7 +21603,11 @@
         "field_readiness_surface_base_event_calls": 1,
         "header_objective_status_resources_usec": 548707,
         "event_action_context_usec": 202502,
-        "readiness_usec_samples": [1574332, 1243996, 1232758],
+        "readiness_usec_samples": [
+          1574332,
+          1243996,
+          1232758
+        ],
         "profile_artifact": "/tmp/heroes-save-summary-playcopy-profile.h5S0Vs"
       },
       "createdAt": "2026-08-17T00:53:44Z",
@@ -21571,7 +21650,13 @@
         "authored_summary_cache_ms": 2566.245,
         "authored_runtime_save_total_ms": 2589,
         "authored_first_ready_ms": 6775,
-        "finalize_summary_usec_samples": [2536484, 2602421, 2624957, 2604966, 2567756],
+        "finalize_summary_usec_samples": [
+          2536484,
+          2602421,
+          2624957,
+          2604966,
+          2567756
+        ],
         "independent_recap_continuity_progress_usec": 2521598,
         "shared_normalized_context_usec": 362882,
         "whole_output_exact": true,
@@ -21616,9 +21701,21 @@
       "baseline": {
         "head": "3a826cc431f6f25b76bd8133d55f117a06b7aa46",
         "scenario_id": "ninefold-confluence",
-        "full_forecast_usec_samples": [1175850, 1163275, 1171627],
-        "compact_forecast_usec_samples": [848214, 854410, 846465],
-        "independent_status_forecast_usec_samples": [2364380, 2309942, 2351137],
+        "full_forecast_usec_samples": [
+          1175850,
+          1163275,
+          1171627
+        ],
+        "compact_forecast_usec_samples": [
+          848214,
+          854410,
+          846465
+        ],
+        "independent_status_forecast_usec_samples": [
+          2364380,
+          2309942,
+          2351137
+        ],
         "closed_drawer_full_calls": 3,
         "closed_drawer_compact_calls": 5,
         "clean_play_copy_first_ready_ms": 8993,
@@ -21662,10 +21759,17 @@
       "baseline": {
         "head": "7c223c42154866658808637ed7a2dd057e29a2cf",
         "scenario_id": "ninefold-confluence",
-        "clean_play_copy_first_ready_ms": [8991, 9232],
+        "clean_play_copy_first_ready_ms": [
+          8991,
+          9232
+        ],
         "clean_text_surface_ms": 3891,
         "repeat_full_refresh_ms": 4689,
-        "exact_readiness_usec_samples": [1585962, 1271928, 1303916],
+        "exact_readiness_usec_samples": [
+          1585962,
+          1271928,
+          1303916
+        ],
         "edited_play_copy_launch_ms": 53156,
         "edited_play_copy_return_ms": 49980,
         "attribution_artifacts": [
@@ -21712,8 +21816,17 @@
         "head": "60c6382fbc72aeaaa9a47ca1a2e14d87c667bee7",
         "scenario_id": "ninefold-confluence",
         "map_size": "64x64",
-        "inspect_click_usec_samples": [653070, 650920, 673366],
-        "action_click_usec_samples": [21566, 21121, 21065, 20929],
+        "inspect_click_usec_samples": [
+          653070,
+          650920,
+          673366
+        ],
+        "action_click_usec_samples": [
+          21566,
+          21121,
+          21065,
+          20929
+        ],
         "attribution_script": ".artifacts/map_editor_paint_attribution.gd"
       },
       "createdAt": "2026-08-16T22:46:32Z",
@@ -21757,9 +21870,22 @@
         "head": "9ec5216ad1f55340a1d278f3b802a46e301d1c83",
         "scenario_id": "ninefold-confluence",
         "map_size": "64x64",
-        "terrain_mutation_usec_samples": [114198, 123051, 114736, 118427],
-        "final_normalization_usec_samples": [112879, 113448, 112974],
-        "refresh_usec_samples": [48945, 48291, 48037],
+        "terrain_mutation_usec_samples": [
+          114198,
+          123051,
+          114736,
+          118427
+        ],
+        "final_normalization_usec_samples": [
+          112879,
+          113448,
+          112974
+        ],
+        "refresh_usec_samples": [
+          48945,
+          48291,
+          48037
+        ],
         "attribution_script": ".artifacts/map_editor_paint_attribution.gd"
       },
       "createdAt": "2026-08-16T22:10:16Z",
@@ -88586,7 +88712,13 @@
       "baseline": {
         "head": "be452cab",
         "visible_chip_cap": 5,
-        "visible_example_labels": ["RG x10", "BC x8", "BB x2", "MS x1", "EA x5"],
+        "visible_example_labels": [
+          "RG x10",
+          "BC x8",
+          "BB x2",
+          "MS x1",
+          "EA x5"
+        ],
         "turn_strip_tooltip_hit_test_present": false,
         "board_stack_tooltip_full_name_present": true,
         "initiative_handoff_current_next_only": true
@@ -88603,7 +88735,10 @@
         "compatibilityArtifact": "/tmp/heroes-initiative-compat.4FjIdt",
         "staticArtifact": "/tmp/heroes-initiative-static.WXNZXE",
         "platformArtifact": "/tmp/heroes-initiative-platform.ExRkSW",
-        "focusedWidths": [1280, 1920],
+        "focusedWidths": [
+          1280,
+          1920
+        ],
         "visibleChipCap": 5,
         "sessionSaveSettingsAuthorityExact": true,
         "linuxExportHeadlessStartup": true,
@@ -88775,11 +88910,22 @@
         "attribution": "/tmp/heroes-battle-tab-header-attribution3.utj2Mn/stdout.log",
         "viewport": "1280x720",
         "tab_bar_width": 200,
-        "current_visible_titles": ["Order 2", "Focus"],
-        "current_hidden_titles": ["Spells 3", "Timing 1"],
+        "current_visible_titles": [
+          "Order 2",
+          "Focus"
+        ],
+        "current_hidden_titles": [
+          "Spells 3",
+          "Timing 1"
+        ],
         "full_base_title_width": 205,
         "compact_title_width": 197,
-        "compact_titles": ["Order", "Focus", "Spell", "Timing"],
+        "compact_titles": [
+          "Order",
+          "Focus",
+          "Spell",
+          "Timing"
+        ],
         "authority_exact": true
       },
       "createdAt": "2026-08-16T17:17:10Z",
@@ -88941,10 +89087,27 @@
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "PLAN.md", "docs/factions-content-bible.md"],
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/factions-content-bible.md"
+      ],
       "purpose": "Reduce only Ferrychain Lashers HP from 21 to 20 as a bounded durability calibration that lowers the current highest severe Mireclaw row while preserving Hookline and every other combat input.",
-      "implementationTargets": ["content/units.json", "tests/battle_faction_fast_balance_benchmark.py", "tests/unit_ability_runtime_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
-      "testOwners": ["tests/unit_ability_runtime_report.gd", "tests/battle_faction_fast_balance_benchmark.py", "tests/battle_autoplay_active_scenario_breadth_report.gd", "tests/core_systems_regression_smoke.gd", "tests/validate_repo.py"],
+      "implementationTargets": [
+        "content/units.json",
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "tests/unit_ability_runtime_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/unit_ability_runtime_report.gd",
+        "tests/battle_faction_fast_balance_benchmark.py",
+        "tests/battle_autoplay_active_scenario_breadth_report.gd",
+        "tests/core_systems_regression_smoke.gd",
+        "tests/validate_repo.py"
+      ],
       "baseline": {
         "head": "94254a1c",
         "ferrychain_hp": 21,
@@ -88955,7 +89118,10 @@
         "max_side_bias": 0.73,
         "structural_failures": 0,
         "week3_embercourt_mireclaw_mireclaw_dominance": 68.5,
-        "week3_ordered_mireclaw_win_rates": [69.0, 68.0],
+        "week3_ordered_mireclaw_win_rates": [
+          69.0,
+          68.0
+        ],
         "active_encounter_sample_count": 77,
         "active_encounter_queue_signature": "829808c9"
       },
@@ -88968,7 +89134,10 @@
         "max_side_bias": 1.27,
         "structural_failures": 0,
         "week3_embercourt_mireclaw_mireclaw_dominance": 66.5,
-        "week3_ordered_mireclaw_win_rates": [67.0, 66.0],
+        "week3_ordered_mireclaw_win_rates": [
+          67.0,
+          66.0
+        ],
         "non_mireclaw_ordered_rows_exact": true,
         "control": "exact_in_memory_old_21_hp_with_identical_armies_formations_all_live_heroes_spellbooks_seeds_contexts_and_tie_policy"
       },
@@ -89010,8 +89179,14 @@
         "non_mireclaw_ordered_rows_exact": true,
         "week3_mireclaw_dominance_control_pct": 68.5,
         "week3_mireclaw_dominance_production_pct": 66.5,
-        "week3_ordered_mireclaw_control_win_rates": [69.0, 68.0],
-        "week3_ordered_mireclaw_production_win_rates": [67.0, 66.0],
+        "week3_ordered_mireclaw_control_win_rates": [
+          69.0,
+          68.0
+        ],
+        "week3_ordered_mireclaw_production_win_rates": [
+          67.0,
+          66.0
+        ],
         "focused_authored_hp": 20,
         "focused_stack_health": 160,
         "focused_restored_health": 153,
@@ -89056,8 +89231,24 @@
         "artifact": "/tmp/heroes-overworld-commitment-lazy.37LiZH",
         "fixture": "river-pass-owned-town",
         "action_has_summary": true,
-        "direct_eight_call_batches_usec": [568481, 563313, 571946, 594984, 543482, 551688, 548223],
-        "conditional_eight_call_batches_usec": [270711, 282817, 278826, 284667, 274399, 277797, 269800],
+        "direct_eight_call_batches_usec": [
+          568481,
+          563313,
+          571946,
+          594984,
+          543482,
+          551688,
+          548223
+        ],
+        "conditional_eight_call_batches_usec": [
+          270711,
+          282817,
+          278826,
+          284667,
+          274399,
+          277797,
+          269800
+        ],
         "whole_text_exact": true,
         "session_authority_exact": true
       },
@@ -89099,8 +89290,24 @@
         "head": "f21e7f1c",
         "artifact": "/tmp/heroes-overworld-event-dispatch-audit.2E1fk6",
         "fixture_count": 5,
-        "direct_batches_usec": [1661156, 1629532, 1628823, 1626033, 1606074, 1647464, 1618365],
-        "shared_context_batches_usec": [1044311, 1051393, 1065657, 1030292, 1068090, 1053638, 1085930],
+        "direct_batches_usec": [
+          1661156,
+          1629532,
+          1628823,
+          1626033,
+          1606074,
+          1647464,
+          1618365
+        ],
+        "shared_context_batches_usec": [
+          1044311,
+          1051393,
+          1065657,
+          1030292,
+          1068090,
+          1053638,
+          1085930
+        ],
         "whole_output_exact": true,
         "session_authority_exact": true
       },
@@ -89192,10 +89399,42 @@
         "ordinaryWholeTextExact": true,
         "quietFallbackWholeTextExact": true,
         "sessionAuthorityExact": true,
-        "ordinaryDirectEightCallUsec": [151548, 150198, 148482, 149544, 151553, 149410, 150055],
-        "ordinaryPreloadedEightCallUsec": [18, 18, 23, 17, 17, 16, 22],
-        "quietDirectEightCallUsec": [198180, 198700, 198003, 206964, 202568, 200250, 201145],
-        "quietPreloadedEightCallUsec": [97172, 97001, 96857, 104185, 100680, 96997, 99880],
+        "ordinaryDirectEightCallUsec": [
+          151548,
+          150198,
+          148482,
+          149544,
+          151553,
+          149410,
+          150055
+        ],
+        "ordinaryPreloadedEightCallUsec": [
+          18,
+          18,
+          23,
+          17,
+          17,
+          16,
+          22
+        ],
+        "quietDirectEightCallUsec": [
+          198180,
+          198700,
+          198003,
+          206964,
+          202568,
+          200250,
+          201145
+        ],
+        "quietPreloadedEightCallUsec": [
+          97172,
+          97001,
+          96857,
+          104185,
+          100680,
+          96997,
+          99880
+        ],
         "currentSharedWatchMs": 13.571,
         "currentSaveSurfaceTotalMs": 43.809
       },
@@ -89238,8 +89477,24 @@
         "resumeTarget": "overworld",
         "wholeTextExact": true,
         "sessionAuthorityExact": true,
-        "directEightCallUsec": [102622, 103024, 103225, 105209, 103986, 106467, 105417],
-        "contextEightCallUsec": [240, 237, 253, 243, 251, 242, 240],
+        "directEightCallUsec": [
+          102622,
+          103024,
+          103225,
+          105209,
+          103986,
+          106467,
+          105417
+        ],
+        "contextEightCallUsec": [
+          240,
+          237,
+          253,
+          243,
+          251,
+          242,
+          240
+        ],
         "currentPlayCheckBucketMs": 12.581,
         "currentSaveSurfaceTotalMs": 55.344
       },
@@ -89283,9 +89538,28 @@
         "wholeTextExact": true,
         "storedRecapBucketMs": 45.696,
         "saveSurfaceTotalMs": 79.845,
-        "directFourCallUsec": [496629, 519633, 512232, 500548, 499475, 516853, 502415],
-        "contextFourCallUsec": [83794, 85801, 83491, 82566, 82927, 82972, 83186],
-        "fullRefreshUsecBand": [168103, 172787]
+        "directFourCallUsec": [
+          496629,
+          519633,
+          512232,
+          500548,
+          499475,
+          516853,
+          502415
+        ],
+        "contextFourCallUsec": [
+          83794,
+          85801,
+          83491,
+          82566,
+          82927,
+          82972,
+          83186
+        ],
+        "fullRefreshUsecBand": [
+          168103,
+          172787
+        ]
       },
       "createdAt": "2026-08-17T06:15:29Z",
       "startedAt": "2026-08-17T06:15:29Z",
@@ -89370,8 +89644,24 @@
         "head": "0b9e2e86",
         "artifact": "/tmp/heroes-overworld-shared-watch-attribution.xxfWVv",
         "fixture": "river-pass-live-refresh",
-        "direct_three_call_batches_usec": [1472977, 1454473, 1459649, 1462472, 1459118, 1481454, 1537055],
-        "shared_context_three_call_batches_usec": [943333, 941893, 1060439, 940823, 943037, 953315, 996878],
+        "direct_three_call_batches_usec": [
+          1472977,
+          1454473,
+          1459649,
+          1462472,
+          1459118,
+          1481454,
+          1537055
+        ],
+        "shared_context_three_call_batches_usec": [
+          943333,
+          941893,
+          1060439,
+          940823,
+          943037,
+          953315,
+          996878
+        ],
         "whole_surface_exact": true,
         "session_authority_exact": true
       },
@@ -89380,6 +89670,83 @@
       "updatedAt": "2026-08-17T05:19:20Z",
       "completedAt": "2026-08-17T05:19:20Z",
       "notes": "Implemented one detached invocation-local watch context with fresh normalized direct callers. Authoritative focused artifact /tmp/heroes-refresh-watch-focused-rerun.6JUr3s is rc0/ok:true across seven states with exact forecast, commitment, Event Feed, Dispatch, detached rebuild, session/UI authority, one build/three reuses in a real refresh, and 2987620usec versus1750638usec medians. Overworld visual, route tooltip, gameplay input ownership, Town return, core, validate/editor, Linux report 229b300609413a8f442d7c5da9e1d6bf52bb86f7126fe85527428b32d481d1a1, and Windows report aa019ae9a426bd381f467438209a7916c12d51bb33e625f4eebb396d419afd10 are green. Platform claims are export/startup only.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null
+    },
+    {
+      "id": "ux-overworld-hero-card-mana-first-view-10184",
+      "title": "Overworld Hero Card Mana First View",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Keep the unique live mana value visible in the compact Overworld hero card by removing only the movement value duplicated in the adjacent command summary.",
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "tests/overworld_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_visual_smoke.tscn",
+        "tests/overworld_controller_route_selection_regression.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/magic_adventure_spell_hooks_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "Exact 1280x720 and 1920x1080 live cards visibly retain authoritative hero name, level, mana, command stats, and scouting while the full prior hero text including movement remains in the tooltip",
+        "Independent themed-font measurement proves both visible lines fit the live Hero label and the adjacent command summary retains exact movement with unchanged HeroPanel, Sidebar, portrait, session, and save authority",
+        "Focused Overworld visual, route/input, active-focus, accessibility, spell, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "hero, movement, mana, spellbook, command, army, route, action, AI, balance, content, save/schema, or Native RMG behavior changes",
+        "rail width, panel height, portrait, label node, line budget, font, UI scale, tooltip surface, sidebar, map, audio, VFX, or broader Overworld redesign",
+        "packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing, publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "2e037634d8c1eb22a5685343f12e6f6034d074ad",
+        "observedArtifact": "/tmp/heroes-overworld-hero-card-current.png",
+        "observedVisibleFirstLine": "Lyra Emberwell Lv1 | Move ...",
+        "duplicatedMovementSurface": "Command: Solo | Move 14/14",
+        "hiddenUniqueValue": "Mana 16/16"
+      },
+      "updatedAt": "2026-08-18T00:18:46Z",
+      "startedAt": "2026-08-17T23:38:13Z",
+      "completedAt": "2026-08-18T00:18:46Z",
+      "completionEvidence": {
+        "focusedArtifact": "/tmp/heroes-hero-card-focused.98lsOC",
+        "fullVisualArtifact": "/tmp/heroes-hero-card-compat.eYWqni",
+        "compatibilityArtifact": "/tmp/heroes-hero-card-compat-rest.12Yert",
+        "staticEditorArtifact": "/tmp/heroes-hero-card-static.OqWpSf",
+        "liveViewportSizes": [
+          [
+            1280,
+            720
+          ],
+          [
+            1920,
+            1080
+          ]
+        ],
+        "visibleManaFirstExact": true,
+        "fullMovementManaTooltipExact": true,
+        "adjacentMovementExact": true,
+        "themedPixelFitExact": true,
+        "portraitAndRailGeometryExact": true,
+        "sessionAuthorityExact": true,
+        "paintedReportArtifact": "/tmp/heroes-hero-card-painted-final.bYvrJ0",
+        "paintedReportStatus": "timeout_no_new_artifact_excluded",
+        "linuxReport": ".artifacts/packaging_linux_export_smoke/report.json",
+        "windowsReport": ".artifacts/packaging_windows_export_smoke/report.json",
+        "platformClaim": "Linux export plus packaged headless startup and Windows export plus fresh-Wine Boot/MainMenu/native-DLL startup only"
+      },
+      "notes": "Implemented one value-only mana-first visible formatter while preserving the exact prior full movement-and-mana tooltip. Focused 1280x720/1920x1080 live proof covers exact visible/full strings, adjacent movement, themed pixel fit, native word ellipsis ownership, HeroPanel/Sidebar containment, portrait geometry, and whole-session authority. Full Overworld visual, controller/cached route, active focus, accessibility, spell hooks, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup gates pass. The separate painted-report watchdog produced no new screenshot or report and is excluded. Packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
       "blockedReason": null
     }
@@ -89926,7 +90293,7 @@
   ],
   "summary": "Overworld empty manual-slot status clarity is implemented and validated from direct rendered evidence through the real empty-to-ready save path. This is one bounded slice; the game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-17T23:22:32Z",
+  "updatedAt": "2026-08-17T23:38:13Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

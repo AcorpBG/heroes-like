@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `ux-overworld-hero-card-mana-first-view-10184`. The live Overworld hero card now keeps name, level, mana, four command stats, and scouting visible in its two-line first view while movement remains exact in the adjacent command row and the complete prior movement-and-mana text remains in the tooltip. Exact 1280x720/1920x1080 focused geometry, full Overworld visual, route/input, focus, accessibility, spell, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. A separate painted-report process produced no new artifact before its watchdog and is not claimed. Packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `ux-overworld-hero-card-mana-first-view-10184`
 - Completed implementation slice: `ux-town-scenic-header-pixel-fit-10184`. The Town scenic title and action-count subline now use their live themed font and exact painted width, preserving complete fitting strings at 1280x720 and 1920x1080 and reserving one whole-word Unicode ellipsis for genuine overflow. Focused Town behavior, fresh painted 1280 evidence, Town action reports, active focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Town interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
   id: `ux-town-scenic-header-pixel-fit-10184`
 - Completed implementation slice: `ux-overworld-rail-native-word-ellipsis-fit-10184`. Existing Overworld rail Labels now retain their exact semantic 42-character values and complete tooltips while Godot's native word-ellipsis overrun fits proportional themed text inside the live rectangle, replacing the shipped Army row's clipped `Strength 49` edge with a clean `Strength ...` word ellipsis. Exact 1280x720/1920x1080 themed-width behavior, fresh painted 1280 evidence, full Overworld visual, route tooltip, movement-input ownership, active-focus, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
@@ -7276,6 +7278,38 @@ Completion evidence:
 - `overworld_route_tooltip_smoke` passed naturally at exact 1280x720 and 1920x1080 with exact shared direct mappings, live Riverwatch context/route/rail/hover control copy, inverse selection, feedback/recap/generated policies, town/spell/action consequences, and whole session/files/cache/settings/routes authority (`/tmp/heroes-overworld-control-focused-exact.JJZRvN`);
 - Overworld visual, active-play keyboard focus, accessibility semantics, and core compatibility gates passed sequentially (`/tmp/heroes-overworld-control-compat.E39Fmt`);
 - repository validation, Python compilation, diff checks, and exact/generic Godot editor parses passed;
+- official Linux export/headless startup and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup reports are `ok:true`; packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
+
+## Selected Slice: Overworld Hero Card Mana First View
+
+id: `ux-overworld-hero-card-mana-first-view-10184`
+
+Status: completed.
+
+Implementation boundary:
+- retain the exact existing full `_hero_card_text()` as the native tooltip authority, but add one visible hero-card summary that prioritizes hero name, level, and current/max mana on the first line and keeps attack, defense, power, knowledge, and scouting on the second;
+- remove only the duplicated movement value from the visible hero-card line because the adjacent existing command summary already renders exact current/max movement;
+- keep the existing Hero label, portrait, two-line budget, native word ellipsis, panel geometry, and all hero, spellbook, movement, command, route, session, and save behavior unchanged.
+
+Completion criteria:
+- exact 1280x720 and 1920x1080 live Overworld cards expose the authoritative hero name, level, mana, four command stats, and scouting value in the visible two-line card, while the full prior text including movement remains byte-exact in the tooltip;
+- independent themed-font measurements prove both visible lines fit the live Hero label rectangle, the adjacent command summary retains exact movement, and HeroPanel/Sidebar containment plus portrait geometry remain unchanged;
+- focused Overworld visual, route/input, active-focus, accessibility, spell behavior, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass.
+
+Non-goals:
+- no hero identity, level, XP, specialty, stats, scouting, movement, mana, spellbook, army, reserve-command, route, action, AI, balance, content, save/schema, or Native RMG behavior change;
+- no rail width, HeroPanel height, portrait, label node, line budget, font, UI scale, tooltip surface, sidebar, map, audio, VFX, or broader Overworld copy/layout redesign;
+- no packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- HEAD `2e037634d8c1eb22a5685343f12e6f6034d074ad` builds the visible and tooltip hero card from the same `"<name> Lv<level> | Move <current>/<max> | Mana <current>/<max>"` first line even though the immediately adjacent command summary independently shows exact movement;
+- the fresh exact 1280x720 current-HEAD crop `/tmp/heroes-overworld-hero-card-current.png` visibly ends `Lyra Emberwell Lv1 | Move ...`, so mana is absent from the card's first view while the duplicated `Command: Solo | Move 14/14` remains visible below;
+- this is a hero-card presentation defect only, not evidence that hero, movement, mana, spellbook, command, route, or rail geometry authority is incorrect.
+
+Completion evidence:
+- the exact focused live gate passed at 1280x720 and 1920x1080 with exact mana-first visible text, byte-exact full tooltip, exact adjacent movement, proportional themed-font fit, HeroPanel/Sidebar containment, unchanged portrait geometry, and unchanged whole-session authority (`/tmp/heroes-hero-card-focused.98lsOC`);
+- the complete Overworld visual smoke passed naturally (`/tmp/heroes-hero-card-compat.eYWqni`), followed by controller route selection, cached route execution, active-play keyboard focus, accessibility semantics, adventure-spell hooks, and core-system compatibility (`/tmp/heroes-hero-card-compat-rest.12Yert`);
+- repository validation, Python compilation, diff checks, and exact/generic Godot editor parses passed (`/tmp/heroes-hero-card-static.OqWpSf`); the separate production painted-report attempt `/tmp/heroes-hero-card-painted-final.bYvrJ0` timed out without updating its screenshot or JSON and is excluded from evidence;
 - official Linux export/headless startup and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup reports are `ok:true`; packaged Overworld interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
 
 ## Progress Reconciliation

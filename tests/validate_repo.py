@@ -27299,6 +27299,122 @@ def validate_overworld_objective_brief_native_pixel_ellipsis(errors: list[str]) 
             ensure(forbidden_token not in join_body, errors, f"Independent ObjectiveBrief tooltip join must avoid production/canonicalization dependency: {forbidden_token}")
 
 
+def validate_overworld_hero_card_mana_first_view(errors: list[str]) -> None:
+    visual_path = ROOT / "tests" / "overworld_visual_smoke.gd"
+    for path in (OVERWORLD_SCRIPT_PATH, visual_path):
+        ensure(path.exists(), errors, f"Missing Overworld hero-card mana-first owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in (OVERWORLD_SCRIPT_PATH, visual_path)):
+        return
+    shell_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
+    visual_text = visual_path.read_text(encoding="utf-8")
+
+    full_match = re.search(
+        r"func _hero_card_text\(\) -> String:\n(?P<body>.*?)(?=\nfunc )",
+        shell_text,
+        re.S,
+    )
+    visible_match = re.search(
+        r"func _hero_card_visible_text\(\) -> String:\n(?P<body>.*?)(?=\nfunc )",
+        shell_text,
+        re.S,
+    )
+    focused_match = re.search(
+        r"func _assert_hero_identity_progression_contract\(shell: Control\) -> bool:\n(?P<body>.*?)(?=\nfunc )",
+        visual_text,
+        re.S,
+    )
+    ensure(full_match is not None and visible_match is not None and focused_match is not None, errors, "Overworld hero card must isolate exact full-tooltip, visible mana-first, and focused live contracts")
+    ensure(shell_text.count("func _hero_card_visible_text()") == 1, errors, "OverworldShell must own exactly one visible hero-card formatter")
+    ensure('_set_rail_text(_hero_label, hero_text, _hero_card_visible_text(), 2)' in shell_text, errors, "Overworld hero rail must pair the prior full tooltip with the mana-first visible summary")
+    ensure('_set_rail_text(_hero_label, hero_text, hero_text, 2)' not in shell_text, errors, "Overworld hero rail must not duplicate movement in the first view and adjacent command row")
+    if full_match is not None:
+        full_body = full_match.group("body")
+        for required_token in (
+            'var movement = _session.overworld.get("movement", {})',
+            'return "%s Lv%d | Move %d/%d | Mana %d/%d\\nA%d D%d P%d K%d | Scout %d" % [',
+            'HeroCommandRules.scouting_radius_for_hero(hero)',
+        ):
+            ensure(required_token in full_body, errors, f"Full hero-card tooltip authority drifted from the prior identity/movement/mana contract: {required_token}")
+        ensure("_hero_card_visible_text" not in full_body and "_short" not in full_body and "_compact" not in full_body, errors, "Full hero-card tooltip authority must remain complete and independent of visible compaction")
+    if visible_match is not None:
+        visible_body = visible_match.group("body")
+        visible_order = tuple(visible_body.find(token) for token in (
+            'var hero = _session.overworld.get("hero", {})',
+            'var command = hero.get("command", {})',
+            'var mana = hero.get("spellbook", {}).get("mana", {})',
+            'return "%s Lv%d | Mana %d/%d\\nA%d D%d P%d K%d | Scout %d" % [',
+            'String(hero.get("name", "Hero"))',
+            'int(hero.get("level", 1))',
+            'int(mana.get("current", 0))',
+            'int(mana.get("max", 0))',
+            'int(command.get("attack", 0))',
+            'int(command.get("defense", 0))',
+            'int(command.get("power", 0))',
+            'int(command.get("knowledge", 0))',
+            'HeroCommandRules.scouting_radius_for_hero(hero)',
+        ))
+        ensure(all(index >= 0 for index in visible_order) and list(visible_order) == sorted(visible_order), errors, "Visible hero card must retain exact name/level/mana then four stats/scouting order")
+        for forbidden_token in ("movement", "Move", "_hero_card_text", "_set_rail_text", "Label", "Control", "size", "tooltip", "sort(", "erase(", "await ", "call_deferred"):
+            ensure(forbidden_token not in visible_body, errors, f"Visible hero-card formatter must remain value-only and must not duplicate movement or mutate layout via {forbidden_token}")
+    ensure(visual_text.count("await _assert_hero_identity_progression_contract(shell)") == 1, errors, "Overworld visual smoke must run the responsive hero-card contract exactly once")
+    ensure('var hero_card_only := OS.get_environment("OVERWORLD_HERO_CARD_ONLY") == "1"' in visual_text, errors, "Overworld visual smoke must expose the bounded focused hero-card owner")
+    ensure(visual_text.find("await _assert_rail_word_boundary_ellipsis_contract(shell)") < visual_text.find("await _assert_hero_identity_progression_contract(shell)") < visual_text.find("_assert_wireframe_contract(shell)"), errors, "Focused hero-card proof must follow native rail setup and finish before broad visual mutations")
+    if focused_match is not None:
+        focused_body = focused_match.group("body")
+        focused_order = tuple(focused_body.find(token) for token in (
+            "session.to_dict()",
+            'session.overworld.get("hero", {})',
+            'session.overworld.get("movement", {})',
+            'HeroCommandRules.scouting_radius_for_hero(hero)',
+            'var expected_full := "%s Lv%d | Move %d/%d | Mana %d/%d',
+            'var expected_visible := "%s Lv%d | Mana %d/%d',
+            'var expected_command := "Command: Solo | Move %d/%d"',
+            'shell.get_node("%Hero")',
+            'shell.get_node("%HeroPanel")',
+            'shell.get_node("%SidebarShell")',
+            'shell.get_node("%HeroPortrait")',
+            'var portrait_contract := {',
+            "for width in [1280, 1920]:",
+            "get_window().size = requested_size",
+            'shell.call("validation_snapshot")',
+            "_visible_text_lines(hero_label.text)",
+            "hero_label.get_global_rect()",
+            "hero_portrait.get_global_rect()",
+            "hero_label.text != expected_visible",
+            "hero_label.tooltip_text != expected_full",
+            'String(snapshot.get("command_check_visible_text", "")) != expected_command',
+            'String(visible_lines[0]).contains("Move")',
+            'not String(visible_lines[0]).contains("Mana")',
+            "_themed_label_text_width(hero_label) > hero_label.size.x + 0.5",
+            "not sidebar_rect.encloses(panel_rect)",
+            "not panel_rect.encloses(identity_rect)",
+            "not identity_rect.encloses(hero_rect)",
+            "not identity_rect.encloses(portrait_rect)",
+            "portrait_rect.intersects(hero_rect)",
+            "current_portrait_contract != portrait_contract",
+            "get_window().size = original_window_size",
+            "session.to_dict() != authority_before",
+        ))
+        ensure(all(index >= 0 for index in focused_order) and list(focused_order) == sorted(focused_order), errors, "Focused hero-card proof must independently derive authority, inspect both live widths/text/geometry, restore, then verify session authority")
+        for required_token in (
+            "visible_lines.size() != 2",
+            "_themed_label_text_width(hero_label) <= 0.0",
+            "not hero_label.clip_text",
+            "hero_label.autowrap_mode != TextServer.AUTOWRAP_OFF",
+            "hero_label.text_overrun_behavior != TextServer.OVERRUN_TRIM_WORD_ELLIPSIS",
+            "not hero_portrait.is_visible_in_tree()",
+            '"custom_minimum_size": hero_portrait.custom_minimum_size',
+            '"expand_mode": hero_portrait.expand_mode',
+            '"stretch_mode": hero_portrait.stretch_mode',
+            '"Lyra Emberwell"',
+            '"XP 0/250"',
+            '"Wayfinder I"',
+        ):
+            ensure(required_token in focused_body, errors, f"Focused hero-card proof is missing exact first-view, portrait, or identity authority: {required_token}")
+        for forbidden_token in ('shell.call("_hero_card', 'shell.call("_refresh', "_set_rail_text", ".text =", ".tooltip_text =", "custom_minimum_size =", "sort(", "erase(", "SessionStateStore", "SaveService"):
+            ensure(forbidden_token not in focused_body, errors, f"Focused hero-card proof must remain public, independent, and observation-only; forbidden {forbidden_token}")
+
+
 def validate_overworld_rail_word_boundary_ellipsis(errors: list[str]) -> None:
     visual_path = ROOT / "tests" / "overworld_visual_smoke.gd"
     for path in (OVERWORLD_SCRIPT_PATH, visual_path):
@@ -49354,6 +49470,7 @@ def main() -> int:
     validate_overworld_field_readiness_progress_recap_reuse(errors)
     validate_overworld_full_refresh_end_turn_forecast_bundle_reuse(errors)
     validate_overworld_objective_brief_native_pixel_ellipsis(errors)
+    validate_overworld_hero_card_mana_first_view(errors)
     validate_overworld_rail_word_boundary_ellipsis(errors)
     validate_overworld_shell_release_polish(errors)
     validate_overworld_command_commitment_board(errors)
