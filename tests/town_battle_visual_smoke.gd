@@ -1328,7 +1328,8 @@ func _assert_battle_post_action_status_recap_contract(shell: Node, action_respon
 		return false
 	if _battle_action_context_word_text_control("Ready now", 9) != "Ready now" \
 			or _battle_action_context_word_text_control("overflow", 1) != "…" \
-			or _battle_action_context_word_text_control("unbrokenword", 6) != "…":
+			or _battle_action_context_word_text_control("unbrokenword", 6) != "…" \
+			or _battle_action_context_word_text_control("Move to a highlighted hex", 10) != "Move…":
 		push_error("Battle smoke: independent Battle action-context word-boundary controls failed.")
 		return false
 	if not String(snapshot.get("event_visible_text", "")).contains("Latest:"):
@@ -1367,7 +1368,11 @@ func _battle_action_context_word_text_control(text: String, max_chars: int) -> S
 	var boundary := prefix.rfind(" ")
 	if boundary <= 0:
 		return "…"
-	return "%s…" % prefix.left(boundary).strip_edges()
+	var fitted := prefix.left(boundary).strip_edges()
+	var trailing_connectors := ["a", "an", "the", "to", "of", "and", "or", "for", "with", "from"]
+	while fitted.contains(" ") and fitted.get_slice(" ", fitted.get_slice_count(" ") - 1).to_lower() in trailing_connectors:
+		fitted = fitted.left(fitted.rfind(" ")).strip_edges()
+	return "%s…" % fitted if fitted != "" else "…"
 
 func _assert_battle_entry_context(shell: Node) -> bool:
 	if not shell.has_method("validation_snapshot"):

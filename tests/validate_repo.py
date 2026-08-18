@@ -21589,13 +21589,15 @@ def validate_battle_action_context_word_boundary_ellipsis(errors: list[str]) -> 
         return match.group("body") if match is not None else ""
 
     smoke_path = ROOT / "tests" / "town_battle_visual_smoke.gd"
-    for path in (BATTLE_SCRIPT_PATH, smoke_path):
+    board_path = ROOT / "tests" / "battle_controller_board_navigation_smoke.gd"
+    for path in (BATTLE_SCRIPT_PATH, smoke_path, board_path):
         ensure(path.exists(), errors, f"Missing Battle action-context word-boundary owner: {path.relative_to(ROOT)}")
-    if not all(path.exists() for path in (BATTLE_SCRIPT_PATH, smoke_path)):
+    if not all(path.exists() for path in (BATTLE_SCRIPT_PATH, smoke_path, board_path)):
         return
 
     shell_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
     smoke_text = smoke_path.read_text(encoding="utf-8")
+    board_text = board_path.read_text(encoding="utf-8")
     helper = function_block(shell_text, "_battle_action_context_word_text")
     surface = function_block(shell_text, "_battle_action_context_surface")
     general_short = function_block(shell_text, "_short_text")
@@ -21612,7 +21614,11 @@ def validate_battle_action_context_word_boundary_ellipsis(errors: list[str]) -> 
             "var prefix := cleaned.left(max_chars - 1).strip_edges()",
             'var boundary := prefix.rfind(" ")',
             "if boundary <= 0:",
-            'return "%s…" % prefix.left(boundary).strip_edges()',
+            "var fitted := prefix.left(boundary).strip_edges()",
+            'var trailing_connectors := ["a", "an", "the", "to", "of", "and", "or", "for", "with", "from"]',
+            'while fitted.contains(" ") and fitted.get_slice(" ", fitted.get_slice_count(" ") - 1).to_lower() in trailing_connectors:',
+            'fitted = fitted.left(fitted.rfind(" ")).strip_edges()',
+            'return "%s…" % fitted if fitted != "" else "…"',
         ))
         ensure(all(index >= 0 for index in helper_order) and list(helper_order) == sorted(helper_order), errors, "Battle action-context compactor must normalize, preserve fitting text, fail closed at bounds, and return the last complete word plus one Unicode ellipsis")
         for forbidden in ('"..."', "_short_text", "Label", "Control", "font", "size.x", "tooltip", "sort(", "erase(", "await ", "call_deferred"):
@@ -21635,11 +21641,43 @@ def validate_battle_action_context_word_boundary_ellipsis(errors: list[str]) -> 
     if general_short:
         ensure('return "%s..." % cleaned.substr(0, max_chars - 1).strip_edges()' in general_short, errors, "General Battle _short_text behavior must remain unchanged outside the action-context slice")
 
+    event_setter = function_block(shell_text, "_set_battle_event_compact_label")
+    event_compact = function_block(shell_text, "_battle_event_compact_text")
+    ensure(event_setter and event_compact, errors, "BattleShell must isolate Event-only assignment and word-safe compact materialization")
+    if event_setter:
+        setter_order = tuple(event_setter.find(token) for token in (
+            "_event_label.tooltip_text = full_text",
+            "_event_label.text = _battle_event_compact_text(full_text, max_lines, 96)",
+        ))
+        ensure(all(index >= 0 for index in setter_order) and list(setter_order) == sorted(setter_order), errors, "Battle Event setter must retain the exact full tooltip before assigning the bounded word-safe visible surface")
+        ensure(event_setter.count("_event_label") == 2, errors, "Battle Event setter must change exactly the existing Label tooltip and text")
+    if event_compact:
+        compact_order = tuple(event_compact.find(token) for token in (
+            "var lines: Array[String] = []",
+            'full_text.split("\\n", false)',
+            "String(raw_line).strip_edges()",
+            'line.begins_with("- ")',
+            'line.trim_prefix("- ").strip_edges()',
+            "lines.append(_battle_action_context_word_text(line, max_chars))",
+            "if lines.is_empty():",
+            "return full_text.strip_edges()",
+            "if lines.size() > max_lines:",
+            "var hidden := lines.size() - max_lines",
+            "lines = lines.slice(0, max_lines)",
+            'lines.append("+ %d more" % hidden)',
+            'return "\\n".join(lines)',
+        ))
+        ensure(all(index >= 0 for index in compact_order) and list(compact_order) == sorted(compact_order), errors, "Battle Event compactor must preserve source-line order, prefix normalization, exact line limits/hidden count, and word-safe fitting")
+        for forbidden in ("FrontierVisualKit", "_event_label", "Label", "Control", "sort(", "erase(", "await ", "call_deferred"):
+            ensure(forbidden not in event_compact, errors, f"Battle Event compact materializer must remain detached and avoid {forbidden}")
+    ensure(shell_text.count("_set_battle_event_compact_label(") == 4, errors, "Battle Event word-safe setter must own exactly the briefing and two refresh paths plus its definition")
+    ensure("_set_compact_label(_event_label" not in shell_text and "FrontierVisualKit.set_compact_label(_event_label" not in shell_text, errors, "Battle Event must not fall back to the shared mid-token character compactor")
+
     control = function_block(smoke_text, "_battle_action_context_word_text_control")
     focused = function_block(smoke_text, "_assert_battle_post_action_status_recap_contract")
     ensure(control and focused, errors, "Focused Town/Battle smoke must own an independent action-context word-boundary control and live comparison")
     if control:
-        for token in ('text.strip_edges().replace("\\n", " ")', 'normalized = normalized.replace("  ", " ")', "if max_chars <= 0:", "if normalized.length() <= max_chars:", "if max_chars == 1:", "var prefix := normalized.left(max_chars - 1).strip_edges()", 'var boundary := prefix.rfind(" ")', 'return "%s…" % prefix.left(boundary).strip_edges()'):
+        for token in ('text.strip_edges().replace("\\n", " ")', 'normalized = normalized.replace("  ", " ")', "if max_chars <= 0:", "if normalized.length() <= max_chars:", "if max_chars == 1:", "var prefix := normalized.left(max_chars - 1).strip_edges()", 'var boundary := prefix.rfind(" ")', "var fitted := prefix.left(boundary).strip_edges()", 'var trailing_connectors := ["a", "an", "the", "to", "of", "and", "or", "for", "with", "from"]', 'fitted = fitted.left(fitted.rfind(" ")).strip_edges()', 'return "%s…" % fitted if fitted != "" else "…"'):
             ensure(token in control, errors, f"Independent Battle action-context control is missing exact token: {token}")
         for forbidden in ("shell", "BattleShell", "_battle_action_context_word_text", "_short_text", "Label", "Control", "sort(", "erase("):
             ensure(forbidden not in control, errors, f"Independent Battle action-context control must avoid production/layout dependency: {forbidden}")
@@ -21661,10 +21699,42 @@ def validate_battle_action_context_word_boundary_ellipsis(errors: list[str]) -> 
             '_battle_action_context_word_text_control("Ready now", 9)',
             '_battle_action_context_word_text_control("overflow", 1)',
             '_battle_action_context_word_text_control("unbrokenword", 6)',
+            '_battle_action_context_word_text_control("Move to a highlighted hex", 10)',
         ))
         ensure(all(index >= 0 for index in focused_order) and list(focused_order) == sorted(focused_order), errors, "Focused Battle action-context proof must derive the independent visible line, compare the live rail, retain full tooltip authority, then exercise fit and fail-closed controls")
         for forbidden in ('shell.call("_battle_action_context', "set_text", ".text =", "sort(", "erase("):
             ensure(forbidden not in focused, errors, f"Focused Battle action-context proof must remain public/read-only and avoid {forbidden}")
+
+    board_control = function_block(board_text, "_battle_event_word_text_control")
+    board_run = function_block(board_text, "_run")
+    ensure(board_control and board_run, errors, "Focused Board smoke must independently prove the shipped blocked-action Event fallback line")
+    if board_control:
+        for token in ('text.strip_edges().replace("\\n", " ")', 'normalized = normalized.replace("  ", " ")', "if max_chars <= 0:", "if normalized.length() <= max_chars:", "if max_chars == 1:", "var prefix := normalized.left(max_chars - 1).strip_edges()", 'var boundary := prefix.rfind(" ")', "var fitted := prefix.left(boundary).strip_edges()", 'var trailing_connectors := ["a", "an", "the", "to", "of", "and", "or", "for", "with", "from"]', 'fitted = fitted.left(fitted.rfind(" ")).strip_edges()', 'return "%s…" % fitted if fitted != "" else "…"'):
+            ensure(token in board_control, errors, f"Independent Board Event word control is missing exact token: {token}")
+        for forbidden in ("shell", "BattleShell", "_battle_action_context_word_text", "_battle_event_compact_text", "_short_text", "Label", "Control", "sort(", "erase("):
+            ensure(forbidden not in board_control, errors, f"Independent Board Event word control must avoid production/layout dependency: {forbidden}")
+    if board_run:
+        board_order = tuple(board_run.find(token) for token in (
+            'var blocked_result_message := String(shell.get("_last_message")).strip_edges()',
+            'var blocked_snapshot: Dictionary = shell.call("validation_snapshot")',
+            "var blocked_dispatch := BattleRules.describe_dispatch(session, blocked_result_message)",
+            'var blocked_full_latest := blocked_dispatch.get_slice("\\n", 0)',
+            "var blocked_expected_latest := _battle_event_word_text_control(blocked_full_latest, 96)",
+            'String(blocked_snapshot.get("event_visible_text", "")).split("\\n", false)',
+            'line.begins_with("Latest:")',
+            "blocked_full_latest.length() <= 96",
+            "blocked_latest_count != 1",
+            "blocked_visible_latest != blocked_expected_latest",
+            'blocked_visible_latest.contains("...")',
+            'not blocked_visible_latest.ends_with("…")',
+            '_battle_event_word_text_control("Move to a highlighted hex", 10)',
+            'not String(blocked_snapshot.get("event_tooltip_text", "")).contains(blocked_full_latest)',
+            'var blocked_result_text := _bounded_text("Battle board result: %s" % blocked_result_message, 320)',
+        ))
+        ensure(all(index >= 0 for index in board_order) and list(board_order) == sorted(board_order), errors, "Focused Board proof must derive the exact blocked dispatch, find one live Latest row, require whole-word overflow/full tooltip, then continue existing semantic-result ownership")
+        ensure(board_run.count("_battle_event_word_text_control(blocked_full_latest, 96)") == 1, errors, "Focused Board proof must independently fit the blocked Event row exactly once")
+        for forbidden in ('shell.call("_set_battle', 'shell.call("_battle_event', "set_text", ".text =", "sort(", "erase("):
+            ensure(forbidden not in board_run, errors, f"Focused Board Event proof must remain public/read-only and avoid {forbidden}")
 
 
 def validate_battle_info_tab_controller_navigation(errors: list[str]) -> None:
