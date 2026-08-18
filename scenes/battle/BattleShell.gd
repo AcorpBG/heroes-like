@@ -37,8 +37,12 @@ const BATTLE_SPELL_VISIBLE_NAME_CHAR_LIMIT := 16
 @onready var _player_panel: PanelContainer = %PlayerPanel
 @onready var _enemy_panel: PanelContainer = %EnemyPanel
 @onready var _footer_panel: PanelContainer = %Footer
+@onready var _footer_row: GridContainer = %FooterRow
 @onready var _action_panel: PanelContainer = %ActionPanel
+@onready var _action_pad: MarginContainer = %ActionPad
 @onready var _system_panel: PanelContainer = %SystemPanel
+@onready var _system_pad: MarginContainer = %SystemPad
+@onready var _speed_bar: HBoxContainer = %SpeedBar
 @onready var _header_label: Label = %Header
 @onready var _status_label: Label = %Status
 @onready var _pressure_label: Label = %Pressure
@@ -143,6 +147,9 @@ var _last_battle_keyboard_focus_tab_bar_occurrences := 0
 var _validation_battle_info_tab_resetting := false
 var _save_written_cue_presenter: SystemSaveWrittenCuePresenter
 var _load_resumed_cue_presenter: SystemLoadResumedCuePresenter
+var _compact_layout_active := false
+var _compact_system_panel_style := StyleBoxEmpty.new()
+var _action_guide_source_text := ""
 
 func _ready() -> void:
 	var profile_started := ProfileLogScript.begin_usec()
@@ -1374,7 +1381,7 @@ func _apply_battle_resolution_checkpoint_failure_surface(
 		_last_message = BATTLE_RESOLUTION_AUTOSAVE_FAILURE_MESSAGE
 	_status_label.text = _last_message
 	_event_label.text = _last_message
-	_system_body_label.visible = true
+	_system_body_label.visible = not _compact_layout_active
 	_system_body_label.text = _last_message
 	_system_body_label.tooltip_text = _last_message
 	_save_button.text = "Save Battle"
@@ -1392,7 +1399,7 @@ func _apply_briefing_consumption_autosave_failure_surface(focus_save: bool = tru
 		visible_surface = "%s\n%s" % [visible_surface, _tactical_briefing_text.strip_edges()]
 	_status_label.text = BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_MESSAGE
 	_set_battle_event_compact_label(visible_surface, 3)
-	_system_body_label.visible = true
+	_system_body_label.visible = not _compact_layout_active
 	_system_body_label.text = BRIEFING_CONSUMPTION_AUTOSAVE_FAILURE_MESSAGE
 	_system_body_label.tooltip_text = visible_surface
 	_save_button.text = "Save Battle"
@@ -1618,14 +1625,12 @@ func _refresh() -> void:
 	var objective_check := BattleRules.objective_check_cue_payload(_session)
 	var intent_forecast := BattleRules.intent_forecast_payload(_session)
 	_action_guide.visible = true
-	_set_compact_label(
-		_action_guide,
+	_set_battle_action_guide(
 		"%s\n%s\n%s" % [
 			String(intent_forecast.get("visible_text", BattleRules.describe_action_surface(_session))),
 			String(position_check.get("visible_text", "")),
 			String(objective_check.get("visible_text", "")),
-		],
-		3
+		]
 	)
 	_action_guide.tooltip_text = _join_tooltip_sections([
 		String(target_handoff.get("tooltip_text", BattleRules.describe_action_surface(_session))),
@@ -2807,7 +2812,7 @@ func _refresh_save_slot_picker() -> void:
 		status_lines.append(latest_context)
 	if status_lines.is_empty() and return_handoff != "":
 		status_lines.append(return_handoff)
-	_system_body_label.visible = not status_lines.is_empty()
+	_system_body_label.visible = not _compact_layout_active and not status_lines.is_empty()
 	_system_body_label.text = "\n".join(status_lines.slice(0, min(2, status_lines.size())))
 	var current_context := String(surface.get("current_context", ""))
 	var save_tooltip_lines := [latest_context]
@@ -3621,6 +3626,20 @@ func _make_placeholder_label(text: String) -> Label:
 func _set_compact_label(label: Label, full_text: String, max_lines: int) -> void:
 	FrontierVisualKit.set_compact_label(label, full_text, max_lines, 96, false)
 
+func _set_battle_action_guide(full_text: String) -> void:
+	_action_guide_source_text = full_text
+	_refit_battle_action_guide()
+	_action_guide.tooltip_text = full_text
+
+func _refit_battle_action_guide() -> void:
+	if _action_guide_source_text == "":
+		return
+	var visible_text := FrontierVisualKit.compact_text(_action_guide_source_text, 3, 96, false)
+	if _compact_layout_active:
+		var visible_lines := visible_text.split("\n", false)
+		visible_text = "\n".join(visible_lines.slice(0, min(2, visible_lines.size())))
+	_action_guide.text = visible_text
+
 func _set_battle_event_compact_label(full_text: String, max_lines: int) -> void:
 	_event_label.tooltip_text = full_text
 	_event_label.text = _battle_event_compact_text(full_text, max_lines, 96)
@@ -3663,12 +3682,26 @@ func _apply_responsive_layout() -> void:
 	if parent_control != null and parent_control.size.x > 0.0 and parent_control.size.y > 0.0:
 		available_size = parent_control.size
 	var compact_layout := available_size.x < 1360.0 or available_size.y < 760.0
+	_compact_layout_active = compact_layout
+	_refit_battle_action_guide()
 	_sidebar_shell_panel.visible = not compact_layout
 	_battle_context_label.visible = not compact_layout
 	_event_label.visible = not compact_layout
 	_status_label.visible = not compact_layout
 	_pressure_label.visible = not compact_layout
-	_system_panel.visible = not compact_layout
+	_footer_row.columns = 1 if compact_layout else 2
+	_footer_row.add_theme_constant_override("v_separation", 0 if compact_layout else 8)
+	_action_pad.add_theme_constant_override("margin_top", 0 if compact_layout else 6)
+	_action_pad.add_theme_constant_override("margin_bottom", 0 if compact_layout else 6)
+	if compact_layout:
+		_system_panel.add_theme_stylebox_override("panel", _compact_system_panel_style)
+	else:
+		_system_panel.remove_theme_stylebox_override("panel")
+	_system_panel.visible = true
+	_system_pad.add_theme_constant_override("margin_top", 0 if compact_layout else 6)
+	_system_pad.add_theme_constant_override("margin_bottom", 0 if compact_layout else 6)
+	_system_body_label.visible = not compact_layout and not _system_body_label.text.strip_edges().is_empty()
+	_speed_bar.visible = not compact_layout
 	_prev_target_button.visible = not compact_layout
 	_next_target_button.visible = not compact_layout
 	_battle_board_view.custom_minimum_size = Vector2(520.0, 240.0) if compact_layout else Vector2(620.0, 300.0)
