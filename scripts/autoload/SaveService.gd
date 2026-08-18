@@ -47,6 +47,7 @@ const PROGRESSION_STORAGE_STATUS_CURRENT_VALID := "current_valid"
 const PROGRESSION_STORAGE_STATUS_RECOVERED := "recovered"
 const PROGRESSION_STORAGE_STATUS_INVALID := "invalid"
 const PROGRESSION_STORAGE_STATUS_FUTURE_VERSION := "future_version"
+const MAIN_MENU_ACTION_LABEL := "Main Menu"
 
 var _selected_manual_slot := int(MANUAL_SLOT_IDS[0])
 var _slot_summary_cache := {}
@@ -3629,15 +3630,7 @@ func _resume_target_noun(target: String) -> String:
 func _return_to_menu_label(current_target: String, session: SessionStateStoreScript.SessionData = null) -> String:
 	if session != null and bool(session.flags.get("editor_working_copy", false)):
 		return "Editor"
-	match current_target:
-		"battle":
-			return "Menu: Battle"
-		"town":
-			return "Menu: Town"
-		"outcome":
-			return "Menu: Outcome"
-		_:
-			return "Menu: Field"
+	return MAIN_MENU_ACTION_LABEL
 
 func _in_session_save_label(current_target: String, selected_slot: int) -> String:
 	match current_target:

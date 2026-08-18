@@ -2745,7 +2745,7 @@ func _refresh_save_slot_picker() -> void:
 		save_check,
 		save_handoff,
 	])
-	_menu_button.text = String(surface.get("menu_button_label", "Return to Menu"))
+	_menu_button.text = String(surface.get("menu_button_label", "Main Menu"))
 	_menu_button.tooltip_text = String(surface.get("menu_button_tooltip", "Return to the main menu after updating autosave."))
 
 func validation_snapshot() -> Dictionary:

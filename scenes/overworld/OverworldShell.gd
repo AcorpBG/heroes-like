@@ -4138,7 +4138,7 @@ func _set_generated_opening_autosave_failure_surface() -> void:
 	_save_status_label.tooltip_text = GENERATED_OPENING_AUTOSAVE_FAILURE_MESSAGE
 	_save_button.text = "Save"
 	_save_button.tooltip_text = GENERATED_OPENING_AUTOSAVE_FAILURE_MESSAGE
-	_menu_button.text = "Menu: Field"
+	_menu_button.text = "Main Menu"
 	_menu_button.tooltip_text = "Return to the main menu. The generated opening checkpoint is not yet protected."
 
 func _configure_save_slot_picker(refresh_now: bool = true) -> void:
@@ -4173,7 +4173,7 @@ func _set_deferred_generated_save_status(text: String) -> void:
 	_save_status_label.tooltip_text = "Generated map refresh keeps save summary inspection off first-frame and routine movement paths."
 	_save_button.text = "Save"
 	_save_button.tooltip_text = "Save the active expedition to the selected manual slot." if save_ready else "Save is available after the generated-map opening autosave settles."
-	_menu_button.text = "Menu: Field"
+	_menu_button.text = "Main Menu"
 	_menu_button.tooltip_text = "Return to the main menu." if save_ready else "Return to the main menu after the generated-map opening autosave settles."
 
 func _set_town_return_compact_save_status() -> void:
@@ -4187,7 +4187,7 @@ func _set_town_return_compact_save_status() -> void:
 		_menu_button.text = "Editor"
 		_menu_button.tooltip_text = "Return to the map editor and restore the Play Copy launch snapshot."
 	else:
-		_menu_button.text = "Menu: Field"
+		_menu_button.text = "Main Menu"
 		_menu_button.tooltip_text = "Return to the main menu."
 
 func _refresh_save_slot_picker(refresh_watch_context: Dictionary = {}) -> void:
@@ -4235,7 +4235,7 @@ func _refresh_save_slot_picker(refresh_watch_context: Dictionary = {}) -> void:
 			return_handoff,
 		]
 	else:
-		_menu_button.text = String(surface.get("menu_button_label", "Menu: Field"))
+		_menu_button.text = String(surface.get("menu_button_label", "Main Menu"))
 		_menu_button.tooltip_text = String(surface.get("menu_button_tooltip", "Return to the main menu after updating autosave."))
 
 func _refresh_commitment_panel(refresh_watch_context: Dictionary = {}) -> void:

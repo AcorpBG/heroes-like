@@ -63,10 +63,24 @@ func _exercise_ordinary_entry(launch_mode: String, status: String) -> Dictionary
 	await _settle()
 	var session: SessionStateStoreScript.SessionData = _terminal_session(launch_mode, status)
 	session = SessionState.set_active_session(session)
+	var editor_control := SessionStateStoreScript.SessionData.new()
+	editor_control.from_dict(session.to_dict())
+	editor_control.flags["editor_working_copy"] = true
+	var editor_surface: Dictionary = SaveService.build_in_session_save_surface(editor_control)
+	if String(editor_surface.get("menu_button_label", "")) != "Editor":
+		return _fail_dictionary("%s/%s detached Map Editor Play Copy control lost its distinct Editor return label." % [launch_mode, status], {
+			"menu_button_label": editor_surface.get("menu_button_label", ""),
+		})
 	var shell = _instantiate_outcome_shell(viewport_size)
 	await _settle()
 
 	var entry: Dictionary = shell.validation_outcome_focus_snapshot()
+	var save_surface: Dictionary = shell.validation_snapshot()
+	if String(save_surface.get("menu_button_label", "")) != "Main Menu":
+		return _fail_dictionary("%s/%s ordinary Outcome did not label the active-play route by its Main Menu destination." % [launch_mode, status], {
+			"menu_button_label": save_surface.get("menu_button_label", ""),
+			"menu_button_tooltip": save_surface.get("menu_button_tooltip", ""),
+		})
 	var primary_id := String(entry.get("primary_action_id", ""))
 	if primary_id == "" \
 			or String(entry.get("focused_action_id", "")) != primary_id \
@@ -513,6 +527,7 @@ func _outcome_recap_copy_snapshot(shell: Control) -> Dictionary:
 		"save_status",
 		"save_status_tooltip",
 		"save_button_tooltip",
+		"menu_button_label",
 		"menu_button_tooltip",
 		"return_cue",
 		"return_cue_tooltip",
