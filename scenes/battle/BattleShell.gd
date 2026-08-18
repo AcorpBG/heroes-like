@@ -1226,7 +1226,10 @@ func _on_settings_pressed() -> void:
 	_active_play_settings_dialog.open_dialog()
 
 func _on_active_play_settings_closed() -> void:
-	_settings_button.call_deferred("grab_focus")
+	if _settings_button.is_visible_in_tree():
+		_settings_button.call_deferred("grab_focus")
+		return
+	call_deferred("_configure_battle_keyboard_focus", true)
 
 func _on_active_play_setting_changed(setting_id: String) -> void:
 	if setting_id == "battle_playback_speed":

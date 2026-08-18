@@ -14597,6 +14597,7 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         MAIN_MENU_SCENE_PATH,
         MAIN_MENU_SCRIPT_PATH,
         OVERWORLD_SCRIPT_PATH,
+        BATTLE_SCRIPT_PATH,
         active_play_dialog_path,
         active_play_report_path,
     )
@@ -14668,6 +14669,54 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         "content_scale_factor",
     ):
         ensure(required_token in settings_text, errors, f"SettingsService.gd is missing required settings/onboarding token: {required_token}")
+
+    apply_display_match = re.search(
+        r"func _apply_display_candidate\(mode_id: String, requested_size: Vector2i\) -> Vector2i:(?P<body>.*?)(?=\nfunc )",
+        settings_text,
+        flags=re.DOTALL,
+    )
+    ensure(apply_display_match is not None, errors, "Could not isolate SettingsService display candidate application")
+    if apply_display_match is not None:
+        apply_display_body = apply_display_match.group("body")
+        ensure(
+            apply_display_body.count("_set_runtime_window_size(applied_size)") == 3,
+            errors,
+            "SettingsService must synchronize root Window size for fullscreen, borderless, and windowed display application",
+        )
+        ensure(
+            "DisplayServer.window_set_size" not in apply_display_body,
+            errors,
+            "SettingsService display application must not resize only the native window and leave the root canvas stale",
+        )
+    runtime_size_match = re.search(
+        r"func _set_runtime_window_size\(size: Vector2i\) -> void:(?P<body>.*?)(?=\nfunc )",
+        settings_text,
+        flags=re.DOTALL,
+    )
+    ensure(runtime_size_match is not None, errors, "SettingsService is missing the root Window size synchronization helper")
+    if runtime_size_match is not None:
+        runtime_size_body = runtime_size_match.group("body")
+        for required_token in ("var root := get_tree().root", "if root != null:", "root.size = size", "root.content_scale_size = size", "return", "DisplayServer.window_set_size(size)"):
+            ensure(required_token in runtime_size_body, errors, f"Runtime Window size helper is missing fail-closed synchronization token: {required_token}")
+        ensure(
+            runtime_size_body.index("root.size = size") < runtime_size_body.index("DisplayServer.window_set_size(size)"),
+            errors,
+            "Runtime Window size helper must prefer the root Window property before the detached native fallback",
+        )
+    restore_runtime_match = re.search(
+        r"func _restore_runtime_display_state\(runtime_state: Variant\) -> void:(?P<body>.*?)(?=\nfunc )",
+        settings_text,
+        flags=re.DOTALL,
+    )
+    ensure(restore_runtime_match is not None, errors, "Could not isolate SettingsService runtime display rollback")
+    if restore_runtime_match is not None:
+        restore_runtime_body = restore_runtime_match.group("body")
+        ensure(
+            restore_runtime_body.count("_set_runtime_window_size(size)") == 1
+            and "DisplayServer.window_set_size" not in restore_runtime_body,
+            errors,
+            "SettingsService rollback must restore native/root/canvas size through the same synchronized boundary",
+        )
 
     active_play_dialog_text = active_play_dialog_path.read_text(encoding="utf-8")
     for required_token in (
@@ -14756,6 +14805,46 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         "movement_after == movement_before - 1",
     ):
         ensure(required_token in active_play_report_text, errors, f"active_play_settings_runtime_report.gd is missing focus-containment coverage token: {required_token}")
+
+    battle_shell_text = BATTLE_SCRIPT_PATH.read_text(encoding="utf-8")
+    battle_settings_close_match = re.search(
+        r"func _on_active_play_settings_closed\(\) -> void:(?P<body>.*?)(?=\nfunc )",
+        battle_shell_text,
+        flags=re.DOTALL,
+    )
+    ensure(battle_settings_close_match is not None, errors, "BattleShell.gd is missing active-play Settings focus restoration")
+    if battle_settings_close_match is not None:
+        battle_settings_close_body = battle_settings_close_match.group("body")
+        for required_token in (
+            "if _settings_button.is_visible_in_tree():",
+            '_settings_button.call_deferred("grab_focus")',
+            "return",
+            'call_deferred("_configure_battle_keyboard_focus", true)',
+        ):
+            ensure(required_token in battle_settings_close_body, errors, f"Battle Settings close focus restoration is missing token: {required_token}")
+        ensure(
+            battle_settings_close_body.index('_settings_button.call_deferred("grab_focus")')
+            < battle_settings_close_body.index('call_deferred("_configure_battle_keyboard_focus", true)'),
+            errors,
+            "Battle Settings close must retain its visible origin before falling back to the existing Battle focus cycle",
+        )
+        for forbidden_token in (".visible =", "show()", "hide()", "focus_mode ="):
+            ensure(forbidden_token not in battle_settings_close_body, errors, f"Battle Settings close fallback must not mutate layout or focusability: {forbidden_token}")
+
+    battle_focus_return_tokens = (
+        'var battle_settings_control := shell.get_node_or_null("%Settings") as Control',
+        "var battle_close_focus_owner := get_viewport().gui_get_focus_owner() as Control",
+        "var battle_focus_return_exact: bool = (",
+        "battle_settings_control.is_visible_in_tree() and battle_close_focus_owner == battle_settings_control",
+        "not battle_settings_control.is_visible_in_tree()",
+        "shell.is_ancestor_of(battle_close_focus_owner)",
+        "battle_close_focus_owner.is_visible_in_tree()",
+        "battle_close_focus_owner.focus_mode != Control.FOCUS_NONE",
+        '"Battle controller/keyboard Back did not restore a visible Battle focus target after the compact Settings origin changed visibility:',
+    )
+    for required_token in battle_focus_return_tokens:
+        ensure(required_token in active_play_report_text, errors, f"Active-play Settings report is missing compact Battle focus-return token: {required_token}")
+    ensure("var battle_focus_return_exact := (" not in active_play_report_text, errors, "Active-play Settings compact focus oracle must keep an explicit bool type")
 
     overworld_script_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
     ensure(
@@ -16380,9 +16469,72 @@ def validate_main_menu_first_view(errors: list[str]) -> None:
         '"res://art/ui/runtime/shared/button_secondary_%s.png" % state',
         "editor_rect.intersects(settings_rect)",
         "editor_rect.intersects(quit_rect)",
+        'for command_name in ["OpenCampaign", "OpenSkirmish", "OpenSaves", "OpenSettings", "OpenEditor", "Quit"]:',
+        "DisplayServer.window_get_size()",
+        "get_tree().root.size",
+        "get_tree().root.content_scale_size",
+        "var viewport_size := shell.size",
+        'SettingsService.call("_set_runtime_window_size", requested_size)',
+        'SettingsService.call("_set_runtime_window_size", original_size)',
+        "Vector2i(int(viewport_size.x), int(viewport_size.y)) != requested_size",
+        "command.get_global_rect().end.x > first_view_rect.end.x + 0.5",
+        "command.get_global_rect().end.y > first_view_rect.end.y + 0.5",
         'String(editor_utility_frame.get("style_class", "")) != "StyleBoxTexture"',
     ):
         ensure(required_token in menu_smoke_text, errors, f"menu_outcome_visual_smoke.gd is missing Editor utility-frame proof: {required_token}")
+    editor_frame_match = re.search(
+        r"func _assert_editor_utility_frame_at_supported_widths\(.*?\) -> bool:(?P<body>.*?)(?=\nfunc )",
+        menu_smoke_text,
+        flags=re.DOTALL,
+    )
+    ensure(editor_frame_match is not None, errors, "Could not isolate Main Menu supported-width first-view proof")
+    if editor_frame_match is not None:
+        editor_frame_body = editor_frame_match.group("body")
+        ensure("get_viewport_rect()" not in editor_frame_body, errors, "Main Menu first-view containment must use the live shell/root rectangle, not the authored content-scale base rectangle")
+        ensure("get_window().size = requested_size" not in editor_frame_body and "get_window().size = original_size" not in editor_frame_body, errors, "Main Menu size-sync proof must exercise the production SettingsService boundary instead of bypassing content-scale synchronization")
+    focus_scroll_match = re.search(
+        r"func _focus_settings_scroll_control\(shell: Node, control_name: StringName\) -> bool:(?P<body>.*?)(?=\nfunc )",
+        menu_smoke_text,
+        flags=re.DOTALL,
+    )
+    ensure(focus_scroll_match is not None, errors, "Main Menu visual smoke is missing its focus-driven settings-scroll helper")
+    if focus_scroll_match is not None:
+        focus_scroll_body = focus_scroll_match.group("body")
+        for required_token in (
+            "await get_tree().process_frame\n\tawait get_tree().process_frame\n\tawait get_tree().process_frame\n\tvar control := shell.get_node_or_null",
+            'shell.get_node_or_null("%%%s" % String(control_name)) as Control',
+            "control == null",
+            "not control.is_visible_in_tree()",
+            "control.focus_mode == Control.FOCUS_NONE",
+            "control.grab_focus()",
+            "await get_tree().process_frame\n\tawait get_tree().process_frame\n\tawait get_tree().process_frame",
+            "get_viewport().gui_get_focus_owner() == control",
+        ):
+            ensure(required_token in focus_scroll_body, errors, f"Main Menu visual focus-scroll helper is missing token: {required_token}")
+        ensure(focus_scroll_body.count("await get_tree().process_frame") == 6, errors, "Main Menu visual focus-scroll helper must passively drain fixture focus before the player focus action and then settle visibility")
+        for forbidden_token in (
+            "ensure_control_visible",
+            "scroll_vertical =",
+            "validation_reveal_",
+            "SettingsService.",
+        ):
+            ensure(forbidden_token not in focus_scroll_body, errors, f"Main Menu visual focus-scroll helper must exercise native focus without direct layout/settings mutation: {forbidden_token}")
+    expected_focus_calls = (
+        'await _focus_settings_scroll_control(shell, &"ReduceRepetitiveSoundsToggle")',
+        'await _focus_settings_scroll_control(shell, &"ReduceFlashesToggle")',
+        'await _focus_settings_scroll_control(shell, &"ExportSupportBundle")',
+        'await _focus_settings_scroll_control(shell, &"RestoreSettingsDefaults")',
+    )
+    for focus_call in expected_focus_calls:
+        ensure(focus_call in menu_smoke_text, errors, f"Main Menu settings-scroll proof is missing player-path focus call: {focus_call}")
+    ensure(menu_smoke_text.count(expected_focus_calls[1]) == 2, errors, "Main Menu visual smoke must focus Reduce Flashes before visibility proof and after Restore Defaults cancellation")
+    for forbidden_reveal in (
+        'shell.call("validation_reveal_reduced_repetitive_sounds")',
+        'shell.call("validation_reveal_reduced_flashes")',
+        'shell.call("validation_reveal_support_bundle")',
+        'shell.call("validation_reveal_restore_settings_defaults")',
+    ):
+        ensure(forbidden_reveal not in menu_smoke_text, errors, f"Main Menu visual smoke must not bypass player focus with legacy reveal observer: {forbidden_reveal}")
     for forbidden_token in (
         'glyph_id = "menu"',
         'script = ExtResource("3")',
@@ -16698,6 +16850,13 @@ def validate_main_menu_destructive_exclusive_parent_input(errors: list[str]) -> 
         "Second preview did not safely replace the first",
         "HEROES_LIKE_DISPLAY_CHANGE_FORCE_SAVE_FAILURE",
         "Injected save failure did not restore the exact runtime display state",
+        "func _assert_runtime_size_authority(expected: Vector2i, label: String) -> bool:",
+        '"native": DisplayServer.window_get_size()',
+        '"window": get_window().size',
+        '"root": root.size if root != null else Vector2i.ZERO',
+        '"content_scale": root.content_scale_size if root != null else Vector2i.ZERO',
+        '_assert_runtime_size_authority(Vector2i(1280, 720), "Committed fixture")',
+        '_assert_runtime_size_authority(applied, "Clamped preview")',
     ):
         ensure(required_token in display_control_text, errors, f"Display Change focused control is missing token: {required_token}")
 
@@ -45668,6 +45827,13 @@ def validate_packaged_settings_persistence_smoke(errors: list[str]) -> None:
             "usable_size_clamped",
             "aspect_preserved",
             "save_failure_restored_exact",
+            "func _assert_runtime_size_authority(expected: Vector2i, label: String) -> bool:",
+            '_assert_runtime_size_authority(Vector2i(1280, 720), "Committed fixture")',
+            '_assert_runtime_size_authority(applied, "Clamped preview")',
+            '"native": DisplayServer.window_get_size()',
+            '"window": get_window().size',
+            '"root": root.size if root != null else Vector2i.ZERO',
+            '"content_scale": root.content_scale_size if root != null else Vector2i.ZERO',
         ):
             ensure(required_token in display_regression_text, errors, f"Settings display-mode transaction regression is missing token: {required_token}")
 
