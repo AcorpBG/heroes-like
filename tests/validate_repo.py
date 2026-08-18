@@ -14918,6 +14918,7 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
             "speed_bar.is_visible_in_tree() == not compact",
             'action_guide.text.split("\\n", false).size() == (2 if compact else 3)',
             "not action_guide.tooltip_text.strip_edges().is_empty()",
+            "action_guide_word_safe",
             "command.focus_mode != Control.FOCUS_NONE",
             "viewport_rect.grow(1.0).encloses(command.get_global_rect())",
             "command_order_exact",
@@ -14955,19 +14956,29 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
         action_guide_refit_order = tuple(action_guide_refit_body.find(token) for token in (
             'if _action_guide_source_text == "":',
             "return",
-            "FrontierVisualKit.compact_text(_action_guide_source_text, 3, 96, false)",
-            "if _compact_layout_active:",
-            'visible_text.split("\\n", false)',
-            'visible_text = "\\n".join(visible_lines.slice(0, min(2, visible_lines.size())))',
-            "_action_guide.text = visible_text",
+            "var visible_lines: Array[String] = []",
+            'for raw_line in _action_guide_source_text.split("\\n", false):',
+            "var line := String(raw_line).strip_edges()",
+            'if line != "":',
+            "visible_lines.append(_battle_action_context_word_text(line, 96))",
+            "var line_limit := 2 if _compact_layout_active else 3",
+            '_action_guide.text = "\\n".join(visible_lines.slice(0, min(line_limit, visible_lines.size())))',
         ))
-        ensure(all(index >= 0 for index in action_guide_refit_order) and list(action_guide_refit_order) == sorted(action_guide_refit_order), errors, "Battle ActionGuide refit must preserve three wide source lines and select only the first two existing compact lines")
+        ensure(all(index >= 0 for index in action_guide_refit_order) and list(action_guide_refit_order) == sorted(action_guide_refit_order), errors, "Battle ActionGuide refit must preserve source order, apply the established whole-word ellipsis per line, and select exactly two compact or three wide lines")
         ensure("tooltip_text" not in action_guide_refit_body, errors, "Responsive ActionGuide refit must not replace the already-enriched exact tooltip")
-        for forbidden_token in ("replace(", "erase(", "normalize", "BattleRules", "SettingsService", "custom_minimum_size", "visible =", "await ", "call_deferred", "create_timer"):
+        for forbidden_token in ("FrontierVisualKit.compact_text", '"..."', "left(", "substr(", "replace(", "erase(", "normalize", "BattleRules", "SettingsService", "custom_minimum_size", "visible =", "await ", "call_deferred", "create_timer"):
             ensure(forbidden_token not in action_guide_refit_body, errors, f"Battle ActionGuide responsive refit must not rewrite semantics, mutate layout, or add timing via {forbidden_token}")
     ensure(battle_shell_text.count("_set_battle_action_guide(") == 2, errors, "Battle ActionGuide must have exactly one setter definition and one refresh call")
     ensure(battle_shell_text.count("_refit_battle_action_guide()") == 3, errors, "Battle ActionGuide refit must have one definition plus setter and responsive-layout calls")
     ensure(battle_shell_text.count("_action_guide.tooltip_text = _join_tooltip_sections([") == 1, errors, "Battle ActionGuide must preserve one exact enriched tactical tooltip after its compact setter")
+    action_guide_word_safe_match = re.search(r"func _battle_action_guide_visible_text_is_word_safe\(action_guide: Label, source_text: String\) -> bool:(?P<body>.*?)(?=\nfunc )", active_play_report_text, flags=re.DOTALL)
+    ensure(action_guide_word_safe_match is not None, errors, "Active-play Settings report must independently prove ActionGuide word-safe visible fitting")
+    if action_guide_word_safe_match is not None:
+        action_guide_word_safe_body = action_guide_word_safe_match.group("body")
+        for required_token in ('for raw_source_line in source_text.split("\\n", false):', "source_lines.append(source_line)", 'var visible_lines := action_guide.text.split("\\n", false)', "visible_lines.size() > source_lines.size()", 'line.contains("...")', 'line.ends_with("…")', 'line.trim_suffix("…")', "line != source_line", "source_line.begins_with(prefix)", 'source_line.substr(source_boundary_index, 1) != " "'):
+            ensure(required_token in action_guide_word_safe_body, errors, f"ActionGuide word-safe oracle is missing independent boundary token: {required_token}")
+        for forbidden_token in ("_battle_action_context_word_text", "_refit_battle_action_guide", "_set_battle_action_guide", "compact_text", "tooltip_text", "sort(", "erase(", "normalize", ".text ="):
+            ensure(forbidden_token not in action_guide_word_safe_body, errors, f"ActionGuide word-safe oracle must remain independent/read-only and avoid {forbidden_token}")
 
     layout_roundtrip_match = re.search(
         r"func _check_battle_system_command_layout_roundtrip\(shell, session, gameplay_before: String, command_semantics_before: Dictionary\) -> bool:(?P<body>.*?)(?=\nfunc )",

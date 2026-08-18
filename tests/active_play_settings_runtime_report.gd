@@ -304,6 +304,7 @@ func _battle_system_command_layout_contract(shell, compact: bool) -> Dictionary:
 			else system_panel.get_global_rect().position.x >= action_panel.get_global_rect().end.x - 1.0
 		)
 	var structural_nodes_present := footer_row != null and action_panel != null and action_bar != null and action_guide != null and system_panel != null and system_actions != null and system_body != null and speed_bar != null and board != null
+	var action_guide_word_safe := _battle_action_guide_visible_text_is_word_safe(action_guide, String(shell.get("_action_guide_source_text"))) if action_guide != null else false
 	var structural_containment_exact := false
 	var board_contract_exact := false
 	if structural_nodes_present:
@@ -325,6 +326,7 @@ func _battle_system_command_layout_contract(shell, compact: bool) -> Dictionary:
 		and speed_bar.is_visible_in_tree() == not compact
 		and action_guide.text.split("\n", false).size() == (2 if compact else 3)
 		and not action_guide.tooltip_text.strip_edges().is_empty()
+		and action_guide_word_safe
 		and required_visible_and_contained
 		and actions_visible_and_contained
 		and command_order_exact
@@ -340,6 +342,7 @@ func _battle_system_command_layout_contract(shell, compact: bool) -> Dictionary:
 		"footer_rect": footer_row.get_global_rect() if footer_row != null else Rect2(),
 		"action_panel_rect": action_panel.get_global_rect() if action_panel != null else Rect2(),
 		"action_guide_line_count": action_guide.text.split("\n", false).size() if action_guide != null else 0,
+		"action_guide_word_safe": action_guide_word_safe,
 		"system_panel_rect": system_panel.get_global_rect() if system_panel != null else Rect2(),
 		"system_panel_compact_style": system_panel.has_theme_stylebox_override("panel") if system_panel != null else false,
 		"system_actions_rect": system_actions.get_global_rect() if system_actions != null else Rect2(),
@@ -389,6 +392,32 @@ func _battle_system_command_semantics(shell) -> Dictionary:
 	var action_guide := shell.get_node_or_null("%ActionGuide") as Label
 	semantics["ActionGuideTooltip"] = action_guide.tooltip_text if action_guide != null else ""
 	return semantics
+
+func _battle_action_guide_visible_text_is_word_safe(action_guide: Label, source_text: String) -> bool:
+	var source_lines: Array[String] = []
+	for raw_source_line in source_text.split("\n", false):
+		var source_line := String(raw_source_line).strip_edges()
+		if source_line != "":
+			source_lines.append(source_line)
+	var visible_lines := action_guide.text.split("\n", false)
+	if source_lines.is_empty() or visible_lines.size() > source_lines.size():
+		return false
+	for line_index in range(visible_lines.size()):
+		var line := String(visible_lines[line_index]).strip_edges()
+		var source_line := source_lines[line_index]
+		if line == "" or line.contains("..."):
+			return false
+		if not line.ends_with("…"):
+			if line != source_line:
+				return false
+			continue
+		var prefix := line.trim_suffix("…")
+		if prefix == "" or not source_line.begins_with(prefix):
+			return false
+		var source_boundary_index := prefix.length()
+		if source_boundary_index >= source_line.length() or source_line.substr(source_boundary_index, 1) != " ":
+			return false
+	return true
 
 func _check_persisted_reload() -> bool:
 	SettingsService.settings = {}
