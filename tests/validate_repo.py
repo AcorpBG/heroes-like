@@ -43621,6 +43621,7 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             "native_rmg_runtime_document_validation_failed",
             'package_session_adoption_ready"] = true',
             "native_rmg_exact_chain_unimplemented_blocked_result",
+            'if (!projection.road_tiles.empty())',
         ):
             ensure(required_token in native_text, errors, f"Native MapPackageService is missing native-owned RMG runtime token: {required_token}")
         for forbidden_token in (
@@ -43650,6 +43651,19 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
     h3maped_catalog_path = ROOT / "src" / "gdextension" / "src" / "h3maped_rmg_template_catalog.cpp"
     h3maped_selftest_path = ROOT / "src" / "gdextension" / "src" / "h3maped_rmg_core_selftest.cpp"
     native_rmg_runtime_boundary_path = ROOT / "tests" / "native_rmg_end_to_end_runtime_boundary_report.gd"
+    if native_rmg_runtime_boundary_path.exists():
+        native_rmg_runtime_boundary_text = native_rmg_runtime_boundary_path.read_text(encoding="utf-8")
+        for required_token in (
+            "_validate_zero_road_projection(service)",
+            '"owner-corpus-small-random-players-land-10184"',
+            "ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO",
+            'int(first.get("runtime_road_cell_count", -1)) == 0',
+            'and roads.is_empty()',
+            'and bool(map_validation.get("ok", false))',
+            'and bool(scenario_validation.get("ok", false))',
+            'and exact_repeat',
+        ):
+            ensure(required_token in native_rmg_runtime_boundary_text, errors, f"Native RMG runtime boundary is missing zero-road projection gate: {required_token}")
     ensure(h3maped_catalog_path.exists(), errors, "Missing recovered H3MapEd RMG template catalog source")
     if native_core_path.exists():
         native_core_text = native_core_path.read_text(encoding="utf-8")

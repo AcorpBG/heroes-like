@@ -764,10 +764,12 @@ Dictionary runtime_terrain_layers(const aurelion::h3maped_rmg_core::RuntimeMapPa
 	layers["flags"] = runtime_layer(projection.tile_flags, projection.width, projection.height, projection.level_count);
 	layers["road_unique_tile_count"] = int32_t(projection.road_tiles.size());
 	Array roads;
-	Dictionary road;
-	road["id"] = "h3maped_native_roads";
-	road["tiles"] = runtime_tile_points(projection.road_tiles);
-	roads.append(road);
+	if (!projection.road_tiles.empty()) {
+		Dictionary road;
+		road["id"] = "h3maped_native_roads";
+		road["tiles"] = runtime_tile_points(projection.road_tiles);
+		roads.append(road);
+	}
 	layers["roads"] = roads;
 	return layers;
 }
