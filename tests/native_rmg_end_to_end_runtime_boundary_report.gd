@@ -55,7 +55,7 @@ func _run() -> void:
 		return
 	var xlarge := _generate_and_validate(
 		service,
-		_config("xlarge", 144, 2, "normal_water", "77"),
+		_config("homm3_extra_large", 144, 2, "normal_water", "77"),
 		365777,
 		2779
 	)
@@ -89,7 +89,7 @@ func _run() -> void:
 
 func _validate_supported_workflow_matrix(service: Variant) -> bool:
 	var supported_count := 0
-	for size_record in [["small", 36], ["medium", 72], ["large", 108], ["xlarge", 144]]:
+	for size_record in [["small", 36], ["medium", 72], ["large", 108], ["homm3_extra_large", 144]]:
 		for level_count in [1, 2]:
 			for water_mode in ["land", "normal_water", "islands"]:
 				var normalized: Dictionary = service.normalize_random_map_config(
@@ -106,7 +106,7 @@ func _validate_supported_workflow_matrix(service: Variant) -> bool:
 		_fail("Supported workflow matrix count mismatch: %d" % supported_count)
 		return false
 	var unsupported: Dictionary = service.generate_random_map(
-		_config("xlarge", 144, 2, "normal_water", "77", "impossible")
+		_config("homm3_extra_large", 144, 2, "normal_water", "77", "impossible")
 	)
 	if bool(unsupported.get("ok", true)) \
 			or String(unsupported.get("error_code", "")) != "native_rmg_monster_strength_unsupported":

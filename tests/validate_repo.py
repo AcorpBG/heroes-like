@@ -43611,6 +43611,7 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
     h3maped_core_path = ROOT / "src" / "gdextension" / "src" / "h3maped_rmg_core.cpp"
     h3maped_catalog_path = ROOT / "src" / "gdextension" / "src" / "h3maped_rmg_template_catalog.cpp"
     h3maped_selftest_path = ROOT / "src" / "gdextension" / "src" / "h3maped_rmg_core_selftest.cpp"
+    native_rmg_runtime_boundary_path = ROOT / "tests" / "native_rmg_end_to_end_runtime_boundary_report.gd"
     ensure(h3maped_catalog_path.exists(), errors, "Missing recovered H3MapEd RMG template catalog source")
     if native_core_path.exists():
         native_core_text = native_core_path.read_text(encoding="utf-8")
@@ -43663,6 +43664,16 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             ensure(forbidden_token not in native_cli_text, errors, f"Native RMG CLI manifest must not expose stale reconstruction token: {forbidden_token}")
     if h3maped_core_path.exists():
         h3maped_core_text = h3maped_core_path.read_text(encoding="utf-8")
+        ensure(
+            'size_class == "extra_large" || size_class == "homm3_extra_large" || size_class == "homm3_xlarge" || size_class == "xlarge"' in h3maped_core_text,
+            errors,
+            "Shared H3MapEd RMG core must map the canonical public Extra Large identity and retained aliases together",
+        )
+        ensure(
+            '\tif (size_class == "homm3_xlarge" || size_class == "xlarge") {' not in h3maped_core_text,
+            errors,
+            "Shared H3MapEd RMG core must not leave the public homm3_extra_large identity outside the recovered scope",
+        )
         for required_token in (
             "player_slot_assignment_4ac62a_4ac6ec",
             "runtime_seed_inputs_from_template_records_4a218c_4a1f3b",
@@ -43690,6 +43701,13 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
     if h3maped_selftest_path.exists():
         h3maped_selftest_text = h3maped_selftest_path.read_text(encoding="utf-8")
         for required_token in (
+            'map_width_for_size_class("extra_large") == 144',
+            'map_width_for_size_class("homm3_extra_large") == 144',
+            '"extra_large") == "strict_extra_large_144x144_one_level_land_only"',
+            "public and normalized Extra Large size identities did not retain the recovered 144x144 land scope",
+        ):
+            ensure(required_token in h3maped_selftest_text, errors, f"Shared H3MapEd RMG selftest is missing canonical Extra Large identity coverage: {required_token}")
+        for required_token in (
             "runtime_seed_inputs_from_template_records_4a218c_4a1f3b",
             "template_seed_result",
             "player_slot_assignment_4ac62a_4ac6ec",
@@ -43702,6 +43720,23 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             "coordinate_prune_span_budget_4a218c",
         ):
             ensure(required_token in h3maped_selftest_text, errors, f"Shared H3MapEd RMG selftest is missing typed producer coverage token: {required_token}")
+    if native_rmg_runtime_boundary_path.exists():
+        native_rmg_runtime_boundary_text = native_rmg_runtime_boundary_path.read_text(encoding="utf-8")
+        ensure(
+            '[["small", 36], ["medium", 72], ["large", 108], ["homm3_extra_large", 144]]' in native_rmg_runtime_boundary_text,
+            errors,
+            "Native RMG runtime boundary must exercise the public Extra Large size identity across the exact workflow matrix",
+        )
+        ensure(
+            native_rmg_runtime_boundary_text.count('_config("homm3_extra_large", 144, 2, "normal_water", "77"') == 2,
+            errors,
+            "Native RMG runtime boundary must use the public Extra Large identity for both live generation and fail-closed strength control",
+        )
+        ensure(
+            '[["small", 36], ["medium", 72], ["large", 108], ["xlarge", 144]]' not in native_rmg_runtime_boundary_text,
+            errors,
+            "Native RMG runtime boundary must not bypass the public Extra Large identity with the internal xlarge alias",
+        )
 
     if cmake_path.exists():
         cmake_text = cmake_path.read_text(encoding="utf-8")

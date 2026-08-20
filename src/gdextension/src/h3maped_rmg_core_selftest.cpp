@@ -3800,6 +3800,23 @@ int main() {
 			return 1;
 		}
 	}
+	if (!require(aurelion::h3maped_rmg_core::map_width_for_size_class("extra_large") == 144
+				&& aurelion::h3maped_rmg_core::map_width_for_size_class("homm3_extra_large") == 144
+				&& aurelion::h3maped_rmg_core::supports_recovered_workflow_execution_scope(
+						144,
+						144,
+						1,
+						"land",
+						"extra_large")
+				&& aurelion::h3maped_rmg_core::strict_scope_id(
+						144,
+						144,
+						1,
+						"land",
+						"extra_large") == "strict_extra_large_144x144_one_level_land_only",
+				"public and normalized Extra Large size identities did not retain the recovered 144x144 land scope")) {
+		return 1;
+	}
 	const std::array<ExpectedRecoveredScope, 3> expected_blocked_scopes = { {
 		{ 143, 2, "land", "xlarge", "", "" },
 		{ 144, 3, "normal_water", "xlarge", "", "" },

@@ -2179,7 +2179,7 @@ GeneratorSetupModeResult49ecf2 generator_setup_mode_49ecf2(
 }
 
 int32_t map_width_for_size_class(const std::string &size_class) {
-	if (size_class == "homm3_xlarge" || size_class == "xlarge") {
+	if (size_class == "extra_large" || size_class == "homm3_extra_large" || size_class == "homm3_xlarge" || size_class == "xlarge") {
 		return 144;
 	}
 	if (size_class == "homm3_large" || size_class == "large") {

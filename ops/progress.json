@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence."
+    "Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence; do not infer a heuristic Native RMG parity correction from owner-corpus output deltas."
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Cinder Burst 30->25 candidate was rejected after it alone reopened the authoritative active-scenario queue from clear signature 829808c9 to six medium watches at 6bf0bece. Production and test support remain unchanged; the last completed implementation is runtime native window-size authority.",
+  "currentNotes": "The public and normalized Extra Large identities now reach the recovered exact 144x144 workflow on Linux and Windows. The broader production parity audit still fails its mapped owner-H3M corpus comparison on object, town, guard, road, topology, and semantic-layout parity; no heuristic correction is selected.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "settings-runtime-native-window-size-authority-correction-10184",
-  "currentSliceId": "settings-runtime-native-window-size-authority-correction-10184",
-  "currentSliceNotes": "Native/root/content-scale sizing and live root rollback authority remain exact; the later Cinder Burst candidate was rejected and shipped content remains unchanged.",
+  "currentSlice": "native-rmg-extra-large-size-class-identity-alias-10184",
+  "currentSliceId": "native-rmg-extra-large-size-class-identity-alias-10184",
+  "currentSliceNotes": "Completed the exact public and normalized Extra Large size aliases at the recovered native width classifier, with synchronized Linux and Windows outputs and public generation/adoption proof. Broader owner-corpus parity remains fail-closed and outside this identity-only slice.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Runtime Native Window Size Authority Correction",
-  "currentSliceUpdatedAt": "2026-08-18T15:48:00Z",
+  "currentSliceTitle": "Native RMG Extra Large Size-Class Identity Alias",
+  "currentSliceUpdatedAt": "2026-08-20T09:04:42Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19784,7 +19784,7 @@
     ".artifacts/rmg_native_4a901a_identity/final_payload_compare.json"
   ],
   "latestEvidenceId": "native-rmg-4a7605-source-owned-monolith-dispatch-20260714",
-  "latestFinding": "Native RMG parity is exact for all 24 selected release workflows. Public MapPackageService generation and package-session adoption pass without authority files; unsupported inputs fail closed. Linux/Windows Debug and Release builds, Linux/Wine self-tests, Godot runtime boundary, and repository validation pass.",
+  "latestFinding": "The public homm3_extra_large identity and normalized extra_large identity now map to the already-recovered exact 144x144 workflow. Linux and Windows native self-tests, public runtime generation/adoption, core/editor/repository validation, and bounded export/startup gates pass. The production owner-corpus audit remains fail-closed on object/town/guard/road count, topology, and semantic-layout parity; broad Native RMG parity is not complete.",
   "metrics": {
     "native_rmg_end_to_end_parity_complete": false,
     "runtime_map_output_enabled": false,
@@ -90310,6 +90310,27 @@
       "blockedReason": null
     },
     {
+      "id": "native-rmg-extra-large-size-class-identity-alias-10184",
+      "title": "Native RMG Extra Large Size-Class Identity Alias",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Let the public homm3_extra_large identity and its normalized extra_large form reach the already-recovered exact 144x144 workflow instead of failing before native generation.",
+      "implementationTargets": ["src/gdextension/src/h3maped_rmg_core.cpp", "src/gdextension/src/h3maped_rmg_core_selftest.cpp", "tests/native_rmg_end_to_end_runtime_boundary_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json", "bin/h3maped_rmg_core_selftest", "bin/h3maped_rmg_core_selftest.exe", "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so", "bin/libaurelion_map_persistence.linux.template_release.x86_64.so", "bin/libaurelion_map_persistence.windows.template_debug.x86_64.dll", "bin/libaurelion_map_persistence.windows.template_release.x86_64.dll"],
+      "testOwners": ["bin/h3maped_rmg_core_selftest", "bin/h3maped_rmg_core_selftest.exe", "tests/native_random_map_production_parity_completion_audit_report.tscn", "tests/native_rmg_end_to_end_runtime_boundary_report.tscn", "tests/native_random_map_full_parity_gate_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/packaging_linux_export_smoke.py", "tests/packaging_windows_export_smoke.py", "tests/validate_repo.py"],
+      "completionCriteria": ["map_width_for_size_class maps homm3_extra_large, normalized extra_large, and the retained xlarge aliases to exact width 144 while every other identity remains unchanged", "The public five-player 144x144 one-level land case generates and adopts through the recovered native payload with exact normalized identity and no translated/heuristic fallback", "Unsupported dimensions, water/level shapes outside the recovered matrix, and unknown monster strengths remain explicit fail-closed results", "Linux and Windows native builds/self-tests, focused runtime, compatibility, repository/editor, and bounded export/startup gates pass"],
+      "nonGoals": ["new topology, object placement, density, retry, template, terrain, player, water, level, monster-strength, payload, or package conversion semantics", "translated template fallback, GDScript generator, brute-force retry, final-map delta tuning, or unsupported-input enablement", "packaged Random Map interaction, Native RMG broad parity/completion, controller/accessibility/native-hardware certification, signing/publication, whole-game, or release-readiness claims"],
+      "baseline": {"head": "2c564cbbc3d4f698fefd6f44262377e106472e0b", "artifact": "/tmp/heroes-readiness-owner-audit.F5mgK5", "firstCorrectedArtifact": "/tmp/heroes-xl-alias-production-audit.BeSGrC", "case": "extra_large_land_default", "publicSizeClass": "homm3_extra_large", "normalizedSizeClass": "extra_large", "normalizedSize": "144x144x1", "playerCount": 5, "failure": "native_rmg_exact_state_chain_not_ported", "sourceMismatch": "public homm3_extra_large becomes normalized extra_large while native recognizes only homm3_xlarge/xlarge aliases"},
+      "createdAt": "2026-08-20T07:29:28Z",
+      "startedAt": "2026-08-20T07:29:28Z",
+      "updatedAt": "2026-08-20T09:04:42Z",
+      "completedAt": "2026-08-20T09:04:42Z",
+      "notes": "Completed the exact public homm3_extra_large and normalized extra_large aliases at the recovered 144x144 classifier. Linux and Windows Release self-tests pass; the public 24-shape runtime boundary and live five-player Extra Large land generation/adoption pass; core/editor/repository and bounded Linux/Windows export-startup gates pass. The production owner-corpus audit advances through generation but remains fail-closed on mapped object/town/guard/road count, topology, and semantic-layout parity. No topology, placement, payload, retry, fallback, or support-policy broadening was made.",
+      "remainingWork": "None for this identity-only slice. Any broader Native RMG work must first recover or attribute the remaining owner-corpus object/town/guard/road/topology/semantic-layout mismatch to exact H3MapEd functions or private state.",
+      "blockedReason": null
+    },
+    {
       "id": "ux-battle-board-stack-caption-word-boundary-ellipsis-10184",
       "title": "Battle Board Stack Caption Word-Boundary Ellipsis",
       "status": "completed",
@@ -90360,7 +90381,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain. The game is not release-ready.",
-  "remainingWork": "Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence. Broader release-readiness gaps remain.",
+  "remainingWork": "Select the next source-backed release-readiness slice. Native RMG work must first attribute the remaining mapped owner-H3M object/town/guard/road/topology/semantic-layout mismatch to exact unrecovered H3MapEd functions or private state; do not tune final-map deltas.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -90791,8 +90812,8 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "overworld_empty_manual_save_slot_status_clarity_completed",
-  "status": "in_progress",
+  "result": "native_rmg_extra_large_size_class_identity_alias_completed",
+  "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
       "completed": "Implementation or documentation-only governance work satisfies the PLAN completion criteria and has validation/evidence.",
@@ -90892,10 +90913,10 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The runtime native-window size authority correction is completed with live apply/rollback behavior, strict X11 native equality, isolated headless compatibility, full Main Menu/compatibility/static evidence, and bounded Linux/Windows export-startup proof. The game is not release-ready.",
+  "summary": "The public and normalized Extra Large Native RMG identities now reach the already-recovered exact 144x144 workflow with synchronized Linux/Windows native and bounded export/startup proof. Broader owner-corpus parity remains fail-closed; the game is not release-ready.",
   "status": "completed",
   "taskId": "10184",
-  "updatedAt": "2026-08-18T13:57:24Z",
+  "updatedAt": "2026-08-20T09:04:42Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
