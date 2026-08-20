@@ -15301,6 +15301,154 @@ def validate_native_screen_reader_semantics(errors: list[str]) -> None:
             "Native semantic publication must be in-tree, tree-valid, accessibility-supported, and queue exactly one update",
         )
 
+    main_menu_text = MAIN_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
+    show_stage_match = re.search(
+        r"func _show_stage_dock\(\) -> void:\n(?P<body>.*?)(?=\nfunc _queue_stage_accessibility_refresh)",
+        main_menu_text,
+        re.S,
+    )
+    ensure(show_stage_match is not None, errors, "Could not isolate Main Menu secondary-board visibility transition")
+    ensure(
+        main_menu_text.count("func _queue_stage_accessibility_refresh() -> void:") == 1
+        and main_menu_text.count("func _finalize_stage_accessibility() -> void:") == 1
+        and main_menu_text.count("func _refresh_stage_accessibility() -> void:") == 1
+        and main_menu_text.count("_queue_stage_accessibility_refresh()") == 2
+        and main_menu_text.count('call_deferred("_finalize_stage_accessibility")') == 1
+        and main_menu_text.count('call_deferred("_refresh_stage_accessibility")') == 1,
+        errors,
+        "Main Menu must own exactly one post-focus secondary-board accessibility refresh chain",
+    )
+    if show_stage_match is not None:
+        show_stage_body = show_stage_match.group("body")
+        show_stage_tokens = (
+            "_stage_dock_panel.visible = true",
+            "_refresh_stage_dock_header()",
+            "_refresh_summary()",
+            "_sync_command_button_styles()",
+            "_sync_system_command_buttons()",
+            'call_deferred("_focus_stage_entry")',
+        )
+        ensure(
+            all(token in show_stage_body for token in show_stage_tokens)
+            and [show_stage_body.index(token) for token in show_stage_tokens]
+            == sorted(show_stage_body.index(token) for token in show_stage_tokens),
+            errors,
+            "Main Menu must preserve the complete stage refresh before deferring entry focus",
+        )
+        ensure(
+            "UiAccessibility.refresh_tree" not in show_stage_body
+            and "queue_accessibility_update" not in show_stage_body
+            and "_queue_stage_accessibility_refresh" not in show_stage_body
+            and "create_timer" not in show_stage_body,
+            errors,
+            "Main Menu stage visibility transition must leave publication to the completed focus handoff",
+        )
+    queue_stage_accessibility_match = re.search(
+        r"func _queue_stage_accessibility_refresh\(\) -> void:\n(?P<body>.*?)(?=\nfunc _finalize_stage_accessibility)",
+        main_menu_text,
+        re.S,
+    )
+    ensure(queue_stage_accessibility_match is not None, errors, "Could not isolate Main Menu second-stage accessibility queue")
+    if queue_stage_accessibility_match is not None:
+        queue_stage_accessibility_body = queue_stage_accessibility_match.group("body")
+        ensure(
+            queue_stage_accessibility_body.count('call_deferred("_finalize_stage_accessibility")') == 1
+            and "UiAccessibility.refresh_tree" not in queue_stage_accessibility_body
+            and "_ensure_settings_focus_control_visible" not in queue_stage_accessibility_body
+            and "queue_accessibility_update" not in queue_stage_accessibility_body
+            and "create_timer" not in queue_stage_accessibility_body
+            and "await " not in queue_stage_accessibility_body,
+            errors,
+            "Main Menu must use one lifecycle defer after exact entry focus without direct publication",
+        )
+    finalize_stage_accessibility_match = re.search(
+        r"func _finalize_stage_accessibility\(\) -> void:\n(?P<body>.*?)(?=\nfunc _refresh_stage_accessibility)",
+        main_menu_text,
+        re.S,
+    )
+    ensure(finalize_stage_accessibility_match is not None, errors, "Could not isolate Main Menu stage accessibility finalizer")
+    if finalize_stage_accessibility_match is not None:
+        finalize_stage_accessibility_body = finalize_stage_accessibility_match.group("body")
+        finalize_tokens = (
+            "is_inside_tree()",
+            "_stage_dock_panel.visible",
+            "_menu_tabs.current_tab == TAB_SETTINGS",
+            "get_viewport().gui_get_focus_owner() == _presentation_mode_picker",
+            "_settings_scroll.scroll_vertical = 0",
+            'call_deferred("_refresh_stage_accessibility")',
+        )
+        ensure(
+            all(token in finalize_stage_accessibility_body for token in finalize_tokens)
+            and [finalize_stage_accessibility_body.index(token) for token in finalize_tokens]
+            == sorted(finalize_stage_accessibility_body.index(token) for token in finalize_tokens)
+            and finalize_stage_accessibility_body.count("_settings_scroll.scroll_vertical = 0") == 1,
+            errors,
+            "Main Menu must reset the exact focused Settings entry to the canonical top before subtree publication",
+        )
+        ensure(
+            "_ensure_settings_focus_control_visible" not in finalize_stage_accessibility_body
+            and "UiAccessibility.refresh_tree" not in finalize_stage_accessibility_body
+            and "queue_accessibility_update" not in finalize_stage_accessibility_body
+            and "create_timer" not in finalize_stage_accessibility_body
+            and "await " not in finalize_stage_accessibility_body,
+            errors,
+            "Main Menu finalizer must use exact lifecycle state without heuristic scroll, timers, or direct publication",
+        )
+    stage_accessibility_match = re.search(
+        r"func _refresh_stage_accessibility\(\) -> void:\n(?P<body>.*?)(?=\nfunc _apply_stage_dock_layout)",
+        main_menu_text,
+        re.S,
+    )
+    ensure(stage_accessibility_match is not None, errors, "Could not isolate Main Menu stage accessibility refresh")
+    if stage_accessibility_match is not None:
+        stage_accessibility_body = stage_accessibility_match.group("body")
+        ensure(
+            "is_inside_tree()" in stage_accessibility_body
+            and "_stage_dock_panel.visible" in stage_accessibility_body
+            and stage_accessibility_body.count("UiAccessibility.refresh_tree(_stage_dock_panel)") == 1,
+            errors,
+            "Main Menu stage accessibility refresh must fail closed and reuse the exact live stage subtree",
+        )
+        ensure(
+            "queue_accessibility_update" not in stage_accessibility_body
+            and "find_child" not in stage_accessibility_body
+            and "find_children" not in stage_accessibility_body
+            and "create_timer" not in stage_accessibility_body
+            and "await " not in stage_accessibility_body,
+            errors,
+            "Main Menu stage accessibility refresh must not use per-control lists, native calls, or timing behavior",
+        )
+
+    focus_stage_entry_match = re.search(
+        r"func _focus_stage_entry\(\) -> void:\n(?P<body>.*?)(?=\nfunc _restore_first_view_focus)",
+        main_menu_text,
+        re.S,
+    )
+    ensure(focus_stage_entry_match is not None, errors, "Could not isolate Main Menu secondary-board focus handoff")
+    if focus_stage_entry_match is not None:
+        focus_stage_entry_body = focus_stage_entry_match.group("body")
+        focus_visibility_tokens = (
+            "target.grab_focus()",
+            "_queue_stage_accessibility_refresh()",
+        )
+        ensure(
+            all(token in focus_stage_entry_body for token in focus_visibility_tokens)
+            and [focus_stage_entry_body.index(token) for token in focus_visibility_tokens]
+            == sorted(focus_stage_entry_body.index(token) for token in focus_visibility_tokens)
+            and focus_stage_entry_body.count("_queue_stage_accessibility_refresh()") == 1,
+            errors,
+            "Main Menu Settings entry must reset its first field to the visible top before focus and subtree refresh",
+        )
+        ensure(
+            "scroll_vertical" not in focus_stage_entry_body
+            and "_ensure_settings_focus_control_visible" not in focus_stage_entry_body
+            and "create_timer" not in focus_stage_entry_body
+            and "await " not in focus_stage_entry_body
+            and "UiAccessibility.refresh_tree" not in focus_stage_entry_body,
+            errors,
+            "Main Menu focus handoff must reuse the guarded scroll helper without fixed offsets, delays, or direct publication",
+        )
+
     report_text = ACCESSIBILITY_SCREEN_READER_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
         "ACCESSIBILITY_SCREEN_READER_SEMANTICS_REPORT",
@@ -15329,6 +15477,19 @@ def validate_native_screen_reader_semantics(errors: list[str]) -> None:
         'Reports hero movement keybinding capture prompts and results.',
         'func _live_region_path_count(snapshot: Dictionary, suffix: String) -> int:',
         'reentered_binding_status.accessibility_live != DisplayServer.LIVE_POLITE',
+        'var settings_transaction_before: Dictionary = _canonical_settings_transaction(SettingsService.validation_settings_transaction_snapshot())',
+        'open_settings_button.pressed.emit()',
+        'String(menu_tabs.get_current_tab_control().name) == "Settings"',
+        'menu.find_child("SettingsScroll", true, false) as ScrollContainer',
+        'get_viewport().gui_get_focus_owner() == presentation_mode_picker',
+        'settings_scroll.scroll_vertical == 0',
+        'settings_scroll_rect.encloses(presentation_mode_rect)',
+        'settings_scroll_rect.encloses(render_quality_rect)',
+        'UiAccessibility.semantic_name(presentation_mode_picker) == "Presentation Mode"',
+        'UiAccessibility.semantic_name(render_quality_picker) == "Render Quality"',
+        '_canonical_settings_transaction(SettingsService.validation_settings_transaction_snapshot()) == settings_transaction_before',
+        'SaveService.validation_summary_cache_snapshot() == settings_save_cache_before',
+        'settings_stage_accessibility_refresh_exact',
         'res://scenes/overworld/OverworldShell.tscn',
         'overworld.find_children("RouteCursorLive", "Label", true, false)',
         'const OVERWORLD_LIVE_REGIONS: Array[Dictionary] = [',
@@ -15438,6 +15599,112 @@ def validate_native_screen_reader_semantics(errors: list[str]) -> None:
             and "delay" not in dynamic_insertion_body.lower(),
             errors,
             "Dynamic accessibility proof must observe production lifecycle semantics without direct configuration, semantic assignment, or timed delay",
+        )
+    settings_stage_match = re.search(
+        r"\tkeybindings_dialog\.close_dialog\(\)(?P<body>.*?)(?=\n\tfor node_name in \[\"OpenCampaign\")",
+        report_text,
+        re.S,
+    )
+    ensure(settings_stage_match is not None, errors, "Could not isolate Main Menu Settings secondary-board accessibility proof")
+    if settings_stage_match is not None:
+        settings_stage_body = settings_stage_match.group("body")
+        settings_stage_tokens = (
+            "await _settle()",
+            "var settings_transaction_before: Dictionary = _canonical_settings_transaction(SettingsService.validation_settings_transaction_snapshot())",
+            "var settings_session_before = SessionState.active_session",
+            "var settings_save_cache_before: Dictionary = SaveService.validation_summary_cache_snapshot()",
+            'menu.get_node("BackdropCommandHotspots/OpenSettings") as Button',
+            "open_settings_button.pressed.emit()",
+            "await _settle()",
+            'menu.get_node("StageDockPanel") as PanelContainer',
+            'menu.find_child("MenuTabs", true, false) as TabContainer',
+            'menu.find_child("SettingsScroll", true, false) as ScrollContainer',
+            'menu.find_child("PresentationModePicker", true, false) as OptionButton',
+            'menu.find_child("RenderQualityPicker", true, false) as OptionButton',
+            "var settings_scroll_rect := settings_scroll.get_global_rect()",
+            "var presentation_mode_rect := presentation_mode_picker.get_global_rect()",
+            "var render_quality_rect := render_quality_picker.get_global_rect()",
+            'String(menu_tabs.get_current_tab_control().name) == "Settings"',
+            "get_viewport().gui_get_focus_owner() == presentation_mode_picker",
+            "settings_scroll.scroll_vertical == 0",
+            "settings_scroll_rect.encloses(presentation_mode_rect)",
+            "settings_scroll_rect.encloses(render_quality_rect)",
+            'UiAccessibility.semantic_name(presentation_mode_picker) == "Presentation Mode"',
+            'presentation_mode_picker.accessibility_description.contains("Current value:")',
+            'UiAccessibility.semantic_name(render_quality_picker) == "Render Quality"',
+            'render_quality_picker.accessibility_description.contains("Current value:")',
+            '_canonical_settings_transaction(SettingsService.validation_settings_transaction_snapshot()) == settings_transaction_before',
+            "SessionState.active_session == settings_session_before",
+            'SaveService.validation_summary_cache_snapshot() == settings_save_cache_before',
+            "if not _checks_exact(settings_stage_checks):",
+        )
+        settings_stage_cursor = 0
+        settings_stage_ordered = True
+        for token in settings_stage_tokens:
+            token_index = settings_stage_body.find(token, settings_stage_cursor)
+            if token_index < 0:
+                settings_stage_ordered = False
+                break
+            settings_stage_cursor = token_index + len(token)
+        ensure(
+            settings_stage_ordered,
+            errors,
+            "Settings secondary-board proof must use the public action and preserve exact focus, semantics, and authority",
+        )
+        ensure(
+            "_on_open_settings_pressed" not in settings_stage_body
+            and "validation_open_settings_stage" not in settings_stage_body
+            and "UiAccessibility.refresh_tree" not in settings_stage_body
+            and "queue_accessibility_update" not in settings_stage_body
+            and "create_timer" not in settings_stage_body
+            and re.search(r"\.accessibility_(?:name|description)\s*=(?!=)", settings_stage_body) is None,
+            errors,
+            "Settings secondary-board proof must observe the public production lifecycle without direct helpers, publication, timing, or semantic assignment",
+        )
+    canonical_settings_match = re.search(
+        r"func _canonical_settings_transaction\(transaction: Dictionary\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc _canonical_stored_input_event)",
+        report_text,
+        re.S,
+    )
+    canonical_input_event_match = re.search(
+        r"func _canonical_stored_input_event\(event: InputEvent\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc _first_uncleared_encounter)",
+        report_text,
+        re.S,
+    )
+    ensure(
+        canonical_settings_match is not None and canonical_input_event_match is not None,
+        errors,
+        "Could not isolate exact Settings transaction canonicalization for accessibility authority",
+    )
+    if canonical_settings_match is not None and canonical_input_event_match is not None:
+        canonical_settings_body = canonical_settings_match.group("body")
+        canonical_input_event_body = canonical_input_event_match.group("body")
+        for required_token in (
+            "var canonical: Dictionary = transaction.duplicate(true)",
+            'transaction.get("input_map", {})',
+            "for action_value in input_map.keys():",
+            "for event_value in events:",
+            "_canonical_stored_input_event(event_value as InputEvent)",
+            'canonical["input_map"] = canonical_input_map',
+            "return canonical",
+        ):
+            ensure(required_token in canonical_settings_body, errors, f"Accessibility Settings authority canonicalizer is missing exact token: {required_token}")
+        for required_token in (
+            "event.get_property_list()",
+            "PROPERTY_USAGE_STORAGE",
+            'property_name == "script"',
+            'var_to_str(event.get(property_name))',
+            '"class": event.get_class()',
+            '"as_text": event.as_text()',
+        ):
+            ensure(required_token in canonical_input_event_body, errors, f"Accessibility input-event canonicalizer is missing exact token: {required_token}")
+        ensure(
+            ".erase(" not in canonical_settings_body
+            and ".erase(" not in canonical_input_event_body
+            and "runtime_display" not in canonical_settings_body
+            and "settings" not in canonical_settings_body.replace("canonical_settings", ""),
+            errors,
+            "Accessibility Settings authority canonicalization must retain the whole transaction and replace only InputEvent identity",
         )
     expected_overworld_live_paths = (
         "RouteCursorLive",
