@@ -14346,6 +14346,9 @@ def validate_campaign_browser(errors: list[str]) -> None:
         ("CampaignActions", "GridContainer"),
         ("CampaignIntelToggle", "Button"),
         ("RestartCampaignArc", "Button"),
+        ("CampaignLaunchRow", "HBoxContainer"),
+        ("CampaignDifficultyLabel", "Label"),
+        ("CampaignDifficultyPicker", "OptionButton"),
         ("CampaignPrimaryAction", "Button"),
         ("StartChapter", "Button"),
         ("CampaignRestartDialog", "ConfirmationDialog"),
@@ -14409,6 +14412,7 @@ def validate_campaign_browser(errors: list[str]) -> None:
         "_chapter_details_panel",
         "_campaign_intel_row",
         "_campaign_intel_toggle",
+        "@onready var _campaign_launch_row: HBoxContainer = %CampaignLaunchRow",
         "func _on_campaign_intel_toggle_pressed",
         "func _set_campaign_intel_expanded(expanded: bool)",
         '"Hide Intel" if expanded else "Show Intel"',
@@ -14425,13 +14429,15 @@ def validate_campaign_browser(errors: list[str]) -> None:
         "func _campaign_layout_snapshot() -> Dictionary",
         '"detail_surface_visibility"',
         '"uncovered_right_ratio"',
+        '"launch_row_visible": _campaign_launch_row.is_visible_in_tree()',
         "func _on_campaign_selected",
         "func _on_chapter_selected",
-        "func _on_campaign_primary_pressed",
-        "func _on_start_chapter_pressed",
+        "func _on_campaign_primary_pressed() -> void:",
+        "func _on_start_chapter_pressed() -> void:",
         "func _on_campaign_restart_pressed",
         "func _on_campaign_restart_confirmed",
         "func _launch_campaign_action",
+        "func _route_campaign_launch_after_accessibility_handoff() -> void:",
         "campaign_board_status",
         "archived_empty",
         "campaign_empty_state_text",
@@ -14459,16 +14465,34 @@ def validate_campaign_browser(errors: list[str]) -> None:
         '[node name="NextCampaignArc" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/ActionRow/CampaignArcNavigation"]',
         '[node name="PreviousCampaignChapter" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/ActionRow/CampaignChapterNavigation"]',
         '[node name="NextCampaignChapter" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/ActionRow/CampaignChapterNavigation"]',
+        '[node name="CampaignLaunchRow" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox"]',
+        '[node name="CampaignDifficultyPicker" type="OptionButton" parent="StageDockPanel/StageDockPad/StageDockBox/CampaignLaunchRow"]',
+        '[node name="CampaignPrimaryAction" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/CampaignLaunchRow"]',
+        '[node name="StartChapter" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/CampaignLaunchRow"]',
         '[node name="CampaignListTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignBrowser/CampaignListPanel/CampaignListPad/CampaignListBox"]',
         '[node name="ChapterListTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/ChapterBrowser/ChapterListPanel/ChapterListPad/ChapterListBox"]',
         'method="_on_previous_campaign_arc_pressed"',
         'method="_on_next_campaign_arc_pressed"',
         'method="_on_previous_campaign_chapter_pressed"',
         'method="_on_next_campaign_chapter_pressed"',
+        '[connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/CampaignLaunchRow/CampaignDifficultyPicker" to="." method="_on_campaign_difficulty_selected"]',
+        '[connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/CampaignLaunchRow/CampaignPrimaryAction" to="." method="_on_campaign_primary_pressed"]',
+        '[connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/CampaignLaunchRow/StartChapter" to="." method="_on_start_chapter_pressed"]',
     ):
         ensure(required_scene_token in main_menu_scene_text, errors, f"MainMenu.tscn is missing native Campaign navigation token: {required_scene_token}")
     for native_node in ("PreviousCampaignArc", "NextCampaignArc", "PreviousCampaignChapter", "NextCampaignChapter"):
         ensure(main_menu_scene_text.count(f'name="{native_node}"') == 1, errors, f"MainMenu.tscn must own exactly one {native_node} button")
+    for launch_node in ("CampaignLaunchRow", "CampaignDifficultyPicker", "CampaignPrimaryAction", "StartChapter"):
+        ensure(main_menu_scene_text.count(f'name="{launch_node}"') == 1, errors, f"MainMenu.tscn must own exactly one compact Campaign launch control {launch_node}")
+    for forbidden_parent in (
+        'parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignActions"',
+    ):
+        for launch_node in ("CampaignDifficultyPicker", "CampaignPrimaryAction", "StartChapter"):
+            ensure(
+                not re.search(rf'\[node name="{launch_node}"[^\n]*{re.escape(forbidden_parent)}', main_menu_scene_text),
+                errors,
+                f"MainMenu {launch_node} must not remain inside the clipped Campaign scroll-body action grid",
+            )
 
     for helper_name, entry_name, list_name, selected_name, delegate_name in (
         ("campaign_arc", "_campaign_entries", "_campaign_list", "_selected_campaign_arc_index", "_on_campaign_selected"),
@@ -14527,7 +14551,7 @@ def validate_campaign_browser(errors: list[str]) -> None:
     layout_snapshot_match = re.search(r"func _campaign_layout_snapshot\(\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc )", main_menu_script_text, re.S)
     ensure(layout_snapshot_match is not None, errors, "MainMenu.gd is missing the isolated Campaign layout snapshot")
     if layout_snapshot_match is not None:
-        for control_token in ("_previous_campaign_arc_button", "_next_campaign_arc_button", "_previous_campaign_chapter_button", "_next_campaign_chapter_button"):
+        for control_token in ("_previous_campaign_arc_button", "_next_campaign_arc_button", "_previous_campaign_chapter_button", "_next_campaign_chapter_button", "_campaign_launch_row", "_campaign_difficulty_picker", "_campaign_primary_button", "_start_chapter_button"):
             ensure(control_token in layout_snapshot_match.group("body"), errors, f"Campaign layout containment must include native navigation control {control_token}")
     stage_header_match = re.search(r"func _refresh_stage_dock_header\(\) -> void:\n(?P<body>.*?)(?=\nfunc )", main_menu_script_text, re.S)
     ensure(stage_header_match is not None, errors, "MainMenu.gd is missing the isolated secondary-board command-rail header refresh")
@@ -14538,11 +14562,25 @@ def validate_campaign_browser(errors: list[str]) -> None:
             "_stage_dock_hint_label.visible = not campaign_navigation_visible",
             "_campaign_arc_navigation.visible = campaign_navigation_visible",
             "_campaign_chapter_navigation.visible = campaign_navigation_visible",
+            "_campaign_launch_row.visible = campaign_navigation_visible",
         )
         stage_header_positions = [stage_header_body.find(token) for token in stage_header_tokens]
         ensure(min(stage_header_positions) >= 0 and stage_header_positions == sorted(stage_header_positions), errors, "Campaign native actions must replace the verbose command-rail hint only on the Campaign board")
         for forbidden_token in ("reparent", "remove_child", "add_child", "sort", "erase"):
             ensure(forbidden_token not in stage_header_body, errors, f"Campaign command-rail visibility must not reparent or reorder controls via {forbidden_token}")
+
+    campaign_difficulty_match = re.search(r"func _on_campaign_difficulty_selected\(index: int\) -> void:\n(?P<body>.*?)(?=\nfunc )", main_menu_script_text, re.S)
+    ensure(campaign_difficulty_match is not None, errors, "MainMenu.gd is missing the isolated Campaign difficulty public-action delegate")
+    if campaign_difficulty_match is not None:
+        campaign_difficulty_body = campaign_difficulty_match.group("body")
+        ordered_tokens = (
+            "_set_selected_difficulty_from_picker(_campaign_difficulty_picker, index)",
+            'call_deferred("_refresh_stage_accessibility")',
+        )
+        positions = [campaign_difficulty_body.find(token) for token in ordered_tokens]
+        ensure(min(positions) >= 0 and positions == sorted(positions), errors, "Campaign difficulty must delegate to established selection authority before republishing native semantics")
+        for forbidden_token in ("_selected_difficulty =", "SettingsService", "SessionState", "SaveService", "CampaignProgression", "remove_item", "sort"):
+            ensure(forbidden_token not in campaign_difficulty_body, errors, f"Campaign difficulty native action must not replace selection or unrelated authority via {forbidden_token}")
 
     campaign_dedup_start = main_menu_script_text.find("func _campaign_launch_actions_are_exact")
     campaign_dedup_end = main_menu_script_text.find("\nfunc ", campaign_dedup_start + 1) if campaign_dedup_start >= 0 else -1
@@ -14554,6 +14592,60 @@ def validate_campaign_browser(errors: list[str]) -> None:
     )
     for forbidden_token in (".get(", "scenario_id", "label", "summary", "disabled"):
         ensure(forbidden_token not in campaign_dedup_block, errors, f"MainMenu campaign launch deduplication must not use partial action identity: {forbidden_token}")
+
+    validation_launch_match = re.search(r"func validation_start_selected_campaign_chapter\(\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc )", main_menu_script_text, re.S)
+    ensure(validation_launch_match is not None, errors, "MainMenu.gd is missing the isolated selected Campaign launch validation path")
+    if validation_launch_match is not None:
+        validation_launch_body = validation_launch_match.group("body")
+        for required_token in (
+            "var primary_action := CampaignProgression.primary_campaign_action(requested_campaign_id, requested_difficulty)",
+            "if _campaign_launch_actions_are_exact(action, primary_action):",
+            "_campaign_primary_button.pressed.emit()",
+            "_start_chapter_button.pressed.emit()",
+            "var mutation_result := _campaign_last_mutation_result.duplicate(true)",
+        ):
+            ensure(required_token in validation_launch_body, errors, f"Selected Campaign launch validation must use the exact public visible-button authority: {required_token}")
+        for forbidden_token in ("_on_campaign_primary_pressed()", "_on_start_chapter_pressed()", "_launch_campaign_action("):
+            ensure(forbidden_token not in validation_launch_body, errors, f"Selected Campaign launch validation must not bypass public Button signals via {forbidden_token}")
+
+    campaign_launch_match = re.search(r"func _launch_campaign_action\(action: Dictionary\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc )", main_menu_script_text, re.S)
+    ensure(campaign_launch_match is not None, errors, "MainMenu.gd is missing the isolated Campaign launch authority")
+    if campaign_launch_match is not None:
+        campaign_launch_body = campaign_launch_match.group("body")
+        ensure("_route_campaign_launch_after_accessibility_handoff()" in campaign_launch_body, errors, "Successful Campaign launch must enter the accessibility-safe route handoff")
+        ensure("AppRouter.go_to_overworld()" not in campaign_launch_body, errors, "Campaign launch must not bypass its accessibility-safe route handoff")
+    campaign_handoff_match = re.search(r"func _route_campaign_launch_after_accessibility_handoff\(\) -> void:\n(?P<body>.*?)(?=\nfunc )", main_menu_script_text, re.S)
+    ensure(campaign_handoff_match is not None, errors, "MainMenu.gd is missing the isolated Campaign accessibility route handoff")
+    if campaign_handoff_match is not None:
+        handoff_body = campaign_handoff_match.group("body")
+        ordered_tokens = (
+            "var tree := get_tree()",
+            "if tree != null and tree.is_accessibility_supported():",
+            "visible = false",
+            "_queue_accessibility_subtree_update(self)",
+            "await tree.process_frame",
+            "await tree.process_frame",
+            "if is_inside_tree():",
+            "AppRouter.go_to_overworld()",
+        )
+        positions = [handoff_body.find(token) for token in ordered_tokens]
+        ensure(min(positions) >= 0 and positions == sorted(positions), errors, "Campaign accessibility handoff must hide, publish, cross exactly two frames, remain in-tree, and route in order")
+        ensure(handoff_body.count("await tree.process_frame") == 2, errors, "Campaign accessibility handoff must cross exactly two process frames")
+        for forbidden_token in ("create_timer", "Timer", "call_deferred", "queue_free", "change_scene", "SessionState", "CampaignProgression"):
+            ensure(forbidden_token not in handoff_body, errors, f"Campaign accessibility handoff must not change authority or add timing/scene shortcuts via {forbidden_token}")
+    campaign_subtree_match = re.search(r"func _queue_accessibility_subtree_update\(node: Node\) -> void:\n(?P<body>.*?)(?=\nfunc )", main_menu_script_text, re.S)
+    ensure(campaign_subtree_match is not None, errors, "MainMenu.gd is missing the isolated Campaign accessibility subtree publication helper")
+    if campaign_subtree_match is not None:
+        subtree_body = campaign_subtree_match.group("body")
+        ordered_tokens = (
+            "node.queue_accessibility_update()",
+            "for child in node.get_children():",
+            "_queue_accessibility_subtree_update(child)",
+        )
+        positions = [subtree_body.find(token) for token in ordered_tokens]
+        ensure(min(positions) >= 0 and positions == sorted(positions), errors, "Campaign accessibility handoff must publish every node in exact tree order")
+        for forbidden_token in ("visible", "hide", "show", "queue_free", "remove_child", "add_child", "sort", "erase"):
+            ensure(forbidden_token not in subtree_body, errors, f"Campaign accessibility subtree publication must remain observation-only via {forbidden_token}")
 
     campaign_disclosure_start = main_menu_script_text.find("func _set_campaign_intel_expanded")
     campaign_disclosure_end = main_menu_script_text.find("\nfunc ", campaign_disclosure_start + 1) if campaign_disclosure_start >= 0 else -1
@@ -14807,6 +14899,20 @@ def validate_campaign_browser(errors: list[str]) -> None:
             "func _expected_chapter_rows",
             'get_viewport().gui_get_focus_owner() != intel_toggle',
             "func _validate_native_campaign_navigation(shell: Control) -> bool:",
+            "func _validate_native_campaign_launch_setup(shell: Control) -> bool:",
+            'shell.find_child("CampaignLaunchRow", true, false)',
+            'shell.find_child("CampaignDifficultyPicker", true, false)',
+            'shell.find_child("CampaignPrimaryAction", true, false)',
+            'shell.find_child("StartChapter", true, false)',
+            "ScenarioSelectRules.build_difficulty_options()",
+            "difficulty_picker.item_selected.emit(next_index)",
+            "difficulty_picker.item_selected.emit(initial_index)",
+            "difficulty_picker.get_parent() != launch_row",
+            'shell.call("validation_open_skirmish_stage")',
+            'shell.call("validation_open_campaign_stage")',
+            'bool(layout.get("launch_row_visible", false))',
+            'for required_control in ["CampaignLaunchRow", "CampaignDifficultyPicker", "CampaignPrimaryAction"]',
+            'distinct_rects.has("StartChapter")',
             'shell.find_child("PreviousCampaignArc", true, false)',
             'shell.find_child("NextCampaignArc", true, false)',
             'shell.find_child("PreviousCampaignChapter", true, false)',
@@ -14860,6 +14966,9 @@ def validate_campaign_browser(errors: list[str]) -> None:
             "CampaignIntelRow.visible = true",
             "if not _visible_campaign_controls_contained(layout):",
             "queue_free()",
+            'shell.call("_on_campaign_difficulty_selected"',
+            "remove_item",
+            "sort_custom",
         ):
             ensure(forbidden_token not in smoke_text, errors, f"player-facing campaign layout smoke must remain observation/action-only: {forbidden_token}")
 
@@ -14888,12 +14997,29 @@ def validate_campaign_browser(errors: list[str]) -> None:
             "SaveService.validation_summary_cache_snapshot() != campaign_save_cache_before",
             "CampaignProgression.profile = CampaignRules.normalize_profile(campaign_profile_before)",
             "CampaignProgression.save_profile()",
+            'menu.find_child("CampaignLaunchRow", true, false)',
+            'menu.find_child("CampaignDifficultyPicker", true, false)',
+            'menu.find_child("CampaignPrimaryAction", true, false)',
+            'menu.find_child("StartChapter", true, false)',
+            'UiAccessibility.semantic_name(campaign_difficulty) == "Campaign Difficulty"',
+            'campaign_difficulty.accessibility_description.contains("Current value:")',
+            "func _bounded_semantic_text(value: String, maximum_length: int) -> String:",
+            'campaign_difficulty.accessibility_description == expected_campaign_difficulty_description',
+            'campaign_primary.accessibility_description == _bounded_semantic_text(campaign_primary.tooltip_text, 1000)',
+            "campaign_difficulty.item_selected.emit(next_difficulty_index)",
+            "campaign_difficulty.item_selected.emit(original_difficulty_index)",
+            "campaign_difficulty.get_parent() == campaign_launch_row",
+            "not campaign_start_chapter.is_visible_in_tree()",
         ):
             ensure(required_token in accessibility_text, errors, f"accessibility semantics report is missing native Campaign navigation token: {required_token}")
         for forbidden_token in (
             'menu.call("_select_relative_campaign',
             'menu.call("_on_campaign_selected',
             'menu.call("_on_chapter_selected',
+            'menu.call("_on_campaign_difficulty_selected',
+            'campaign_difficulty.remove_item',
+            'campaign_difficulty.clear()',
+            "UiAccessibility._bounded_text",
         ):
             ensure(forbidden_token not in accessibility_text, errors, f"accessibility Campaign semantics must exercise public native actions instead of {forbidden_token}")
 
@@ -15640,9 +15766,9 @@ def validate_native_screen_reader_semantics(errors: list[str]) -> None:
         and main_menu_text.count("func _refresh_stage_accessibility() -> void:") == 1
         and main_menu_text.count("_queue_stage_accessibility_refresh()") == 2
         and main_menu_text.count('call_deferred("_finalize_stage_accessibility")') == 1
-        and main_menu_text.count('call_deferred("_refresh_stage_accessibility")') == 4,
+        and main_menu_text.count('call_deferred("_refresh_stage_accessibility")') == 5,
         errors,
-        "Main Menu must own exactly one post-focus secondary-board accessibility chain plus exact Skirmish, Campaign-arc, and Campaign-chapter semantic refreshes",
+        "Main Menu must own exactly one post-focus secondary-board accessibility chain plus exact Skirmish, Campaign-arc, Campaign-chapter, and Campaign-difficulty semantic refreshes",
     )
     if show_stage_match is not None:
         show_stage_body = show_stage_match.group("body")

@@ -50,6 +50,7 @@ const TAB_HELP_TOPIC := {
 @onready var _stage_dock_hint_label: Label = %ActionHint
 @onready var _campaign_arc_navigation: HBoxContainer = %CampaignArcNavigation
 @onready var _campaign_chapter_navigation: HBoxContainer = %CampaignChapterNavigation
+@onready var _campaign_launch_row: HBoxContainer = %CampaignLaunchRow
 @onready var _stage_help_button: Button = %StageHelp
 @onready var _close_stage_dock_button: Button = %CloseStageDock
 @onready var _eyebrow_label: Label = %Eyebrow
@@ -452,11 +453,11 @@ func _set_campaign_intel_expanded(expanded: bool) -> void:
 		else "Show selected arc, chapter, commander, operational, and journal detail inside this campaign rail."
 	)
 
-func _on_campaign_primary_pressed() -> Dictionary:
-	return _launch_campaign_action(CampaignProgression.primary_campaign_action(_selected_campaign_id, _selected_difficulty))
+func _on_campaign_primary_pressed() -> void:
+	_launch_campaign_action(CampaignProgression.primary_campaign_action(_selected_campaign_id, _selected_difficulty))
 
-func _on_start_chapter_pressed() -> Dictionary:
-	return _launch_campaign_action(CampaignProgression.chapter_action(_selected_campaign_id, _selected_campaign_scenario_id, _selected_difficulty))
+func _on_start_chapter_pressed() -> void:
+	_launch_campaign_action(CampaignProgression.chapter_action(_selected_campaign_id, _selected_campaign_scenario_id, _selected_difficulty))
 
 func _on_campaign_restart_pressed() -> Dictionary:
 	if _campaign_storage_is_blocked_now():
@@ -595,8 +596,23 @@ func _launch_campaign_action(action: Dictionary) -> Dictionary:
 		"campaign_id": campaign_id,
 		"difficulty": _selected_difficulty,
 	}, session)
-	AppRouter.go_to_overworld()
+	_route_campaign_launch_after_accessibility_handoff()
 	return _campaign_last_mutation_result.duplicate(true)
+
+func _route_campaign_launch_after_accessibility_handoff() -> void:
+	var tree := get_tree()
+	if tree != null and tree.is_accessibility_supported():
+		visible = false
+		_queue_accessibility_subtree_update(self)
+		await tree.process_frame
+		await tree.process_frame
+	if is_inside_tree():
+		AppRouter.go_to_overworld()
+
+func _queue_accessibility_subtree_update(node: Node) -> void:
+	node.queue_accessibility_update()
+	for child in node.get_children():
+		_queue_accessibility_subtree_update(child)
 
 func _on_continue_pressed() -> void:
 	if not AppRouter.resume_latest_session():
@@ -767,6 +783,7 @@ func _on_difficulty_selected(index: int) -> void:
 
 func _on_campaign_difficulty_selected(index: int) -> void:
 	_set_selected_difficulty_from_picker(_campaign_difficulty_picker, index)
+	call_deferred("_refresh_stage_accessibility")
 
 func _set_selected_difficulty_from_picker(picker: OptionButton, index: int) -> void:
 	if index < 0 or index >= picker.get_item_count():
@@ -3138,6 +3155,7 @@ func _refresh_stage_dock_header() -> void:
 	_stage_dock_hint_label.visible = not campaign_navigation_visible
 	_campaign_arc_navigation.visible = campaign_navigation_visible
 	_campaign_chapter_navigation.visible = campaign_navigation_visible
+	_campaign_launch_row.visible = campaign_navigation_visible
 	_set_compact_label(_stage_dock_title_label, String(stage_copy.get("title", "Command board")), 1, 48)
 	_set_compact_label(_stage_dock_hint_label, String(stage_copy.get("hint", "")), 2, 92)
 	if _menu_tabs.current_tab == TAB_GUIDE:
@@ -3529,6 +3547,7 @@ func _campaign_layout_snapshot() -> Dictionary:
 		_campaign_intel_toggle,
 		_campaign_difficulty_picker,
 		_campaign_restart_button,
+		_campaign_launch_row,
 		_campaign_primary_button,
 		_start_chapter_button,
 	]:
@@ -3543,6 +3562,7 @@ func _campaign_layout_snapshot() -> Dictionary:
 		"intel_expanded": _campaign_intel_expanded,
 		"intel_toggle_text": _campaign_intel_toggle.text,
 		"intel_toggle_tooltip": _campaign_intel_toggle.tooltip_text,
+		"launch_row_visible": _campaign_launch_row.is_visible_in_tree(),
 		"detail_surface_visibility": surface_visibility,
 		"control_rects": control_rects,
 		"campaign_items": _campaign_item_rows(),
@@ -4351,7 +4371,13 @@ func validation_start_selected_campaign_chapter() -> Dictionary:
 	var requested_difficulty := _selected_difficulty
 	var action := CampaignProgression.chapter_action(requested_campaign_id, requested_scenario_id, requested_difficulty)
 	var action_disabled := _start_chapter_button.disabled or bool(action.get("disabled", false))
-	var mutation_result := _on_start_chapter_pressed()
+	var primary_action := CampaignProgression.primary_campaign_action(requested_campaign_id, requested_difficulty)
+	if _campaign_launch_actions_are_exact(action, primary_action):
+		action_disabled = _campaign_primary_button.disabled or bool(primary_action.get("disabled", false))
+		_campaign_primary_button.pressed.emit()
+	else:
+		_start_chapter_button.pressed.emit()
+	var mutation_result := _campaign_last_mutation_result.duplicate(true)
 	var active_session := SessionState.ensure_active_session()
 	var active_campaign_id := String(active_session.flags.get("campaign_id", ""))
 	return {

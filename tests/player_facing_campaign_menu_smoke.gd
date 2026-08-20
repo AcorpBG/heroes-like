@@ -38,6 +38,8 @@ func _run() -> void:
 	await get_tree().process_frame
 	if not await _validate_native_campaign_navigation(shell):
 		return
+	if not await _validate_native_campaign_launch_setup(shell):
+		return
 
 	if not bool(shell.call("validation_select_campaign", CAMPAIGN_ID)):
 		_fail("Main menu could not select the reactivated campaign.")
@@ -333,6 +335,85 @@ func _item_list_labels(list: ItemList) -> Array:
 		labels.append(list.get_item_text(index))
 	return labels
 
+func _validate_native_campaign_launch_setup(shell: Control) -> bool:
+	var launch_row := shell.find_child("CampaignLaunchRow", true, false) as HBoxContainer
+	var difficulty_picker := shell.find_child("CampaignDifficultyPicker", true, false) as OptionButton
+	var primary_action := shell.find_child("CampaignPrimaryAction", true, false) as Button
+	var start_chapter := shell.find_child("StartChapter", true, false) as Button
+	if launch_row == null or difficulty_picker == null or primary_action == null or start_chapter == null:
+		_fail("Campaign board is missing its native launch-setup row or controls.")
+		return false
+	if difficulty_picker.get_parent() != launch_row or primary_action.get_parent() != launch_row or start_chapter.get_parent() != launch_row:
+		_fail("Campaign launch controls are not direct children of the compact native launch row.")
+		return false
+	var expected_options: Array = ScenarioSelectRules.build_difficulty_options()
+	var expected_labels := []
+	var expected_ids := []
+	for option_value in expected_options:
+		var option: Dictionary = option_value if option_value is Dictionary else {}
+		expected_labels.append(String(option.get("label", option.get("id", "Difficulty"))))
+		expected_ids.append(String(option.get("id", ScenarioSelectRules.default_difficulty_id())))
+	var actual_labels := []
+	var actual_ids := []
+	for index in range(difficulty_picker.item_count):
+		actual_labels.append(difficulty_picker.get_item_text(index))
+		actual_ids.append(String(difficulty_picker.get_item_metadata(index)))
+	if not launch_row.is_visible_in_tree() \
+			or actual_labels != expected_labels \
+			or actual_ids != expected_ids \
+			or difficulty_picker.selected < 0 \
+			or difficulty_picker.disabled \
+			or primary_action.disabled:
+		_fail("Campaign launch row changed visibility, difficulty options, or launch authority.")
+		return false
+	var initial_snapshot: Dictionary = shell.call("validation_snapshot")
+	var initial_difficulty := String(initial_snapshot.get("selected_campaign_difficulty", ""))
+	var initial_index := difficulty_picker.selected
+	var next_index := (initial_index + 1) % difficulty_picker.item_count
+	if next_index == initial_index:
+		_fail("Campaign launch row needs at least two difficulty options for public native interaction proof.")
+		return false
+	var authority_before := {
+		"profile": CampaignProgression.ensure_profile().duplicate(true),
+		"session": SessionState.ensure_active_session().to_dict(),
+		"settings": SettingsService.ensure_settings().duplicate(true),
+		"save_cache": SaveService.validation_summary_cache_snapshot(),
+	}
+	difficulty_picker.grab_focus()
+	difficulty_picker.select(next_index)
+	difficulty_picker.item_selected.emit(next_index)
+	await _settle_frames(2)
+	var changed_snapshot: Dictionary = shell.call("validation_snapshot")
+	if String(changed_snapshot.get("selected_campaign_difficulty", "")) != String(expected_ids[next_index]) \
+			or String(changed_snapshot.get("campaign_difficulty_text", "")) != String(expected_labels[next_index]) \
+			or get_viewport().gui_get_focus_owner() != difficulty_picker \
+			or CampaignProgression.ensure_profile() != authority_before.get("profile", {}) \
+			or SessionState.ensure_active_session().to_dict() != authority_before.get("session", {}) \
+			or SettingsService.ensure_settings() != authority_before.get("settings", {}) \
+			or SaveService.validation_summary_cache_snapshot() != authority_before.get("save_cache", {}):
+		_fail("Campaign difficulty public native action changed selection, focus, or unrelated authority: %s" % changed_snapshot)
+		return false
+	difficulty_picker.select(initial_index)
+	difficulty_picker.item_selected.emit(initial_index)
+	await _settle_frames(2)
+	var restored_snapshot: Dictionary = shell.call("validation_snapshot")
+	if String(restored_snapshot.get("selected_campaign_difficulty", "")) != initial_difficulty \
+			or String(restored_snapshot.get("campaign_difficulty_text", "")) != String(expected_labels[initial_index]) \
+			or get_viewport().gui_get_focus_owner() != difficulty_picker:
+		_fail("Campaign difficulty public native action did not restore exact selection and focus: %s" % restored_snapshot)
+		return false
+	shell.call("validation_open_skirmish_stage")
+	await _settle_frames(2)
+	if launch_row.is_visible_in_tree():
+		_fail("Campaign launch row remained visible outside the Campaign stage.")
+		return false
+	shell.call("validation_open_campaign_stage")
+	await _settle_frames(2)
+	if not launch_row.is_visible_in_tree() or String((shell.call("validation_snapshot") as Dictionary).get("selected_campaign_difficulty", "")) != initial_difficulty:
+		_fail("Campaign launch row did not restore exact visibility and difficulty after stage return.")
+		return false
+	return true
+
 func _settle_frames(frame_count: int) -> void:
 	for _frame in range(frame_count):
 		await get_tree().process_frame
@@ -427,7 +508,8 @@ func _campaign_layout_contract_exact(snapshot: Dictionary, expanded: bool, expec
 	if primary_action != chapter_action \
 			or not bool(snapshot.get("campaign_primary_visible", false)) \
 			or bool(snapshot.get("start_chapter_visible", true)) \
-			or not bool(snapshot.get("campaign_launch_actions_deduplicated", false)):
+			or not bool(snapshot.get("campaign_launch_actions_deduplicated", false)) \
+			or not bool(layout.get("launch_row_visible", false)):
 		_fail("Campaign rail did not collapse the exact duplicate selected-chapter launch action: %s" % JSON.stringify(snapshot))
 		return false
 	for key in ["arc", "arc_status", "chapter", "commander", "operational", "journal"]:
@@ -440,6 +522,11 @@ func _campaign_layout_contract_exact(snapshot: Dictionary, expanded: bool, expec
 		return false
 	if not expanded and not _visible_campaign_controls_contained(layout):
 		return false
+	var control_rects: Dictionary = layout.get("control_rects", {}) if layout.get("control_rects", {}) is Dictionary else {}
+	for required_control in ["CampaignLaunchRow", "CampaignDifficultyPicker", "CampaignPrimaryAction"]:
+		if not control_rects.has(required_control):
+			_fail("Campaign compact launch row omitted visible bounded control %s: %s" % [required_control, JSON.stringify(control_rects)])
+			return false
 	return true
 
 func _validate_distinct_chapter_action(shell: Control, authority_before: Dictionary) -> bool:
@@ -473,6 +560,11 @@ func _validate_distinct_chapter_action(shell: Control, authority_before: Diction
 			or bool(distinct_snapshot.get("campaign_launch_actions_deduplicated", true)) \
 			or not bool(distinct_snapshot.get("start_chapter_disabled", false)):
 		_fail("Distinct locked chapter did not restore its exact selected-chapter affordance: %s" % JSON.stringify(distinct_snapshot))
+		return false
+	var distinct_layout: Dictionary = distinct_snapshot.get("campaign_layout", {}) if distinct_snapshot.get("campaign_layout", {}) is Dictionary else {}
+	var distinct_rects: Dictionary = distinct_layout.get("control_rects", {}) if distinct_layout.get("control_rects", {}) is Dictionary else {}
+	if not distinct_rects.has("StartChapter") or not _visible_campaign_controls_contained(distinct_layout):
+		_fail("Distinct selected-chapter action is not contained in the compact launch row: %s" % JSON.stringify(distinct_layout))
 		return false
 	if CampaignProgression.ensure_profile().duplicate(true) != expected_distinct_profile \
 			or SessionState.ensure_active_session().to_dict() != authority_before.get("session", {}):

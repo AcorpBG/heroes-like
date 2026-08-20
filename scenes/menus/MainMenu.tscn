@@ -168,6 +168,34 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Close"
 
+[node name="CampaignLaunchRow" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="CampaignDifficultyLabel" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/CampaignLaunchRow"]
+layout_mode = 2
+text = "Difficulty"
+
+[node name="CampaignDifficultyPicker" type="OptionButton" parent="StageDockPanel/StageDockPad/StageDockBox/CampaignLaunchRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(176, 0)
+layout_mode = 2
+
+[node name="CampaignLaunchSpacer" type="Control" parent="StageDockPanel/StageDockPad/StageDockBox/CampaignLaunchRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CampaignPrimaryAction" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/CampaignLaunchRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Advance Campaign"
+
+[node name="StartChapter" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/CampaignLaunchRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Start Chapter"
+
 [node name="MenuTabs" type="TabContainer" parent="StageDockPanel/StageDockPad/StageDockBox"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -451,25 +479,10 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Show Intel"
 
-[node name="CampaignDifficultyPicker" type="OptionButton" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignActions"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(176, 0)
-layout_mode = 2
-
 [node name="RestartCampaignArc" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignActions"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Restart Arc"
-
-[node name="CampaignPrimaryAction" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignActions"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Advance Campaign"
-
-[node name="StartChapter" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignActions"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Start Chapter"
 
 [node name="SkirmishPanel" type="VBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs"]
 layout_mode = 2
@@ -1415,10 +1428,10 @@ text = "Quit"
 [connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/ActionRow/CampaignChapterNavigation/NextCampaignChapter" to="." method="_on_next_campaign_chapter_pressed"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/ChapterBrowser/ChapterListPanel/ChapterListPad/ChapterListBox/ChapterList" to="." method="_on_chapter_selected"]
 [connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignActions/CampaignIntelToggle" to="." method="_on_campaign_intel_toggle_pressed"]
-[connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignActions/CampaignDifficultyPicker" to="." method="_on_campaign_difficulty_selected"]
+[connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/CampaignLaunchRow/CampaignDifficultyPicker" to="." method="_on_campaign_difficulty_selected"]
 [connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignActions/RestartCampaignArc" to="." method="_on_campaign_restart_pressed"]
-[connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignActions/CampaignPrimaryAction" to="." method="_on_campaign_primary_pressed"]
-[connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignActions/StartChapter" to="." method="_on_start_chapter_pressed"]
+[connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/CampaignLaunchRow/CampaignPrimaryAction" to="." method="_on_campaign_primary_pressed"]
+[connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/CampaignLaunchRow/StartChapter" to="." method="_on_start_chapter_pressed"]
 [connection signal="confirmed" from="CampaignRestartDialog" to="." method="_on_campaign_restart_confirmed"]
 [connection signal="canceled" from="CampaignRestartDialog" to="." method="_on_campaign_restart_canceled"]
 [connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/ActionRow/StageHelp" to="." method="_on_stage_help_pressed"]

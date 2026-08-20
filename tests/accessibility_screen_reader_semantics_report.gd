@@ -252,9 +252,15 @@ func _run() -> void:
 	var next_arc := menu.find_child("NextCampaignArc", true, false) as Button
 	var previous_chapter := menu.find_child("PreviousCampaignChapter", true, false) as Button
 	var next_chapter := menu.find_child("NextCampaignChapter", true, false) as Button
+	var campaign_launch_row := menu.find_child("CampaignLaunchRow", true, false) as HBoxContainer
+	var campaign_difficulty := menu.find_child("CampaignDifficultyPicker", true, false) as OptionButton
+	var campaign_primary := menu.find_child("CampaignPrimaryAction", true, false) as Button
+	var campaign_start_chapter := menu.find_child("StartChapter", true, false) as Button
 	var campaign_entries: Array = CampaignProgression.campaign_browser_entries()
-	if previous_arc == null or next_arc == null or previous_chapter == null or next_chapter == null or campaign_entries.size() < 2:
-		return _fail("Main-menu Campaign board is missing its native adjacent arc/chapter actions.")
+	if previous_arc == null or next_arc == null or previous_chapter == null or next_chapter == null \
+			or campaign_launch_row == null or campaign_difficulty == null or campaign_primary == null or campaign_start_chapter == null \
+			or campaign_entries.size() < 2:
+		return _fail("Main-menu Campaign board is missing its native adjacent navigation or launch-setup actions.")
 	var first_campaign_id := String((campaign_entries[0] as Dictionary).get("campaign_id", ""))
 	var second_campaign_id := String((campaign_entries[1] as Dictionary).get("campaign_id", ""))
 	if not bool(menu.call("validation_select_campaign", first_campaign_id)):
@@ -269,6 +275,15 @@ func _run() -> void:
 		return _fail("Main-menu Campaign native semantics could not establish the first chapter.")
 	await _settle()
 	var campaign_initial: Dictionary = menu.call("validation_snapshot")
+	var campaign_difficulty_value := campaign_difficulty.get_item_text(campaign_difficulty.selected)
+	var campaign_difficulty_clause := "Current value: %s." % campaign_difficulty_value
+	var expected_campaign_difficulty_description := _bounded_semantic_text(
+		"%s %s" % [
+			_bounded_semantic_text(campaign_difficulty.tooltip_text, 1000 - campaign_difficulty_clause.length() - 1),
+			campaign_difficulty_clause,
+		],
+		1000
+	)
 	var campaign_native_checks := {
 		"previous_arc_name": UiAccessibility.semantic_name(previous_arc) == "Previous Arc",
 		"next_arc_name": UiAccessibility.semantic_name(next_arc) == "Next Arc",
@@ -284,9 +299,43 @@ func _run() -> void:
 		"next_chapter_enabled": not next_chapter.disabled,
 		"first_arc_selected": String(campaign_initial.get("selected_campaign_id", "")) == first_campaign_id and int(campaign_initial.get("selected_campaign_index", -1)) == 0,
 		"first_chapter_selected": String(campaign_initial.get("selected_campaign_scenario_id", "")) == first_chapter_id and int(campaign_initial.get("selected_campaign_chapter_index", -1)) == 0,
+		"launch_row_visible": campaign_launch_row.is_visible_in_tree(),
+		"launch_controls_direct": campaign_difficulty.get_parent() == campaign_launch_row and campaign_primary.get_parent() == campaign_launch_row and campaign_start_chapter.get_parent() == campaign_launch_row,
+		"difficulty_name": UiAccessibility.semantic_name(campaign_difficulty) == "Campaign Difficulty",
+		"difficulty_current_value": campaign_difficulty.accessibility_description.contains("Current value:"),
+		"difficulty_tooltip": campaign_difficulty.accessibility_description == expected_campaign_difficulty_description,
+		"primary_name": UiAccessibility.semantic_name(campaign_primary) == campaign_primary.text,
+		"primary_description": campaign_primary.accessibility_description == _bounded_semantic_text(campaign_primary.tooltip_text, 1000),
+		"primary_visible_enabled": campaign_primary.is_visible_in_tree() and not campaign_primary.disabled,
+		"duplicate_start_hidden": not campaign_start_chapter.is_visible_in_tree(),
 	}
 	if not _checks_exact(campaign_native_checks):
 		return _fail("Main-menu Campaign adjacent arc/chapter actions lack exact native semantics: %s" % campaign_native_checks)
+	var difficulty_labels := []
+	var difficulty_ids := []
+	for difficulty_option in ScenarioSelectRules.build_difficulty_options():
+		difficulty_labels.append(String(difficulty_option.get("label", difficulty_option.get("id", "Difficulty"))))
+		difficulty_ids.append(String(difficulty_option.get("id", ScenarioSelectRules.default_difficulty_id())))
+	var original_difficulty_index := campaign_difficulty.selected
+	var next_difficulty_index := (original_difficulty_index + 1) % campaign_difficulty.item_count
+	campaign_difficulty.grab_focus()
+	campaign_difficulty.select(next_difficulty_index)
+	campaign_difficulty.item_selected.emit(next_difficulty_index)
+	await _settle()
+	var difficulty_changed: Dictionary = menu.call("validation_snapshot")
+	if (
+		String(difficulty_changed.get("selected_campaign_difficulty", "")) != String(difficulty_ids[next_difficulty_index])
+		or String(difficulty_changed.get("campaign_difficulty_text", "")) != String(difficulty_labels[next_difficulty_index])
+		or not campaign_difficulty.accessibility_description.contains("Current value: %s." % String(difficulty_labels[next_difficulty_index]))
+		or get_viewport().gui_get_focus_owner() != campaign_difficulty
+		or SessionState.active_session != campaign_session_before
+		or _canonical_settings_transaction(SettingsService.validation_settings_transaction_snapshot()) != campaign_settings_before
+		or SaveService.validation_summary_cache_snapshot() != campaign_save_cache_before
+	):
+		return _fail("Campaign Difficulty native action changed semantics or unrelated authority: %s" % difficulty_changed)
+	campaign_difficulty.select(original_difficulty_index)
+	campaign_difficulty.item_selected.emit(original_difficulty_index)
+	await _settle()
 	var profile_before_arc_action: Dictionary = CampaignProgression.ensure_profile().duplicate(true)
 	next_arc.pressed.emit()
 	await _settle()
@@ -656,6 +705,15 @@ func _checks_exact(checks: Dictionary) -> bool:
 		if not bool(value):
 			return false
 	return true
+
+
+func _bounded_semantic_text(value: String, maximum_length: int) -> String:
+	var normalized := " ".join(value.replace("\r", "\n").split("\n", false)).strip_edges()
+	while normalized.contains("  "):
+		normalized = normalized.replace("  ", " ")
+	if normalized.length() > maximum_length:
+		normalized = normalized.substr(0, maximum_length - 3).strip_edges() + "..."
+	return normalized
 
 
 func _fail(message: String) -> void:
