@@ -24,7 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none. Select the next tracker-approved release-readiness implementation slice with direct current behavior evidence.
+- Completed implementation slice: `accessibility-main-menu-secondary-board-native-tree-refresh-10184`. Main Menu Settings entry now completes the deferred focus handoff, restores the canonical top of its compact scroll surface, and only then republishes the live secondary-board subtree. A real 1280x720 Linux X11/AT-SPI action exposes exact Presentation Mode and Render Quality value rows with Action/Component interfaces; focused semantics, full Main Menu navigation, Settings restore, menu/outcome visual, shared active-play focus, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged accessibility interaction, speech-quality approval, Windows UIA, controller/native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved release-readiness implementation slice.
+  id: `accessibility-main-menu-secondary-board-native-tree-refresh-10184`
 - Completed implementation slice: `accessibility-linux-atspi-synchronous-control-semantics-10184`. Newly added live Controls now receive synchronous first-pass semantics, retain the existing deferred post-add refresh, and queue an engine accessibility update only when the live SceneTree supports native accessibility. A real 1280x720 Linux X11/AT-SPI run exposes the exact Campaign, Skirmish, Load, Settings, Editor, and Quit first-view commands in order as focusable role-43 buttons with exact production descriptions and Action/Component interfaces. Focused semantics, Main Menu keyboard/destructive/display focus, menu/outcome visual, shared active-play focus, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged AT-SPI interaction, screen-reader speech-quality approval, Windows UIA, controller/native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
   id: `accessibility-linux-atspi-synchronous-control-semantics-10184`
 - Completed implementation slice: `native-rmg-zero-road-runtime-layer-projection-10184`. Native payload projection now represents exact zero road cells with zero overlay records instead of one invalid empty overlay, while retaining the exact road type/art tile layers and unchanged strict validation for malformed authored overlays. The formerly failing Small owner-corpus land configuration now repeats exact payload `40aa5303` (24313 bytes, 303 objects), reports zero road cells/overlays, and passes map/scenario validation. The full 24-shape runtime boundary, Medium/ordinal-95/Extra Large cases, package round-trip/startup, malformed-road API, core, repository validation, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Broad owner-corpus count/topology/semantic parity remains unclaimed.
@@ -7734,6 +7735,38 @@ Completion evidence:
 - `/tmp/heroes-battle-guide-focused2.KrbfRR` exits naturally with `ACTIVE_PLAY_SETTINGS_RUNTIME_REPORT PASS`, independently comparing visible lines to the exact unabridged source, rejecting ASCII ellipses and mid-token boundaries, and preserving compact/wide line counts, enriched tooltip semantics, focus, layout, and battle authority;
 - Board navigation, shared keyboard/controller focus, accessibility semantics, core systems, and independent routed layout owners are green; the 1280 layout completes 16 stages in 277s and the 1920 layout completes 30 stages in 547s with final viewport markers and no selected diagnostics;
 - repository validation, Python compilation, JSON/diff checks, exact/generic editor parses, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. These are bounded export/startup claims only, not packaged Battle interaction or broader release certification.
+
+## Active Slice: Main Menu Secondary-Board Native Accessibility Refresh
+
+id: `accessibility-main-menu-secondary-board-native-tree-refresh-10184`
+
+Status: completed.
+
+Implementation boundary:
+- after the existing Main Menu secondary-board tab selection, dock visibility, header, summary, command-style, and system-command refreshes complete, preserve the deferred entry-focus handoff, restore the Settings board to its canonical top only when Presentation Mode owns entry focus, and queue one later `UiAccessibility.refresh_tree(_stage_dock_panel)` pass;
+- use the existing shared semantic materializer and native publication guard for the live secondary-board subtree; do not add per-control accessibility copy, persistent caches, timers, polling, or direct AT-SPI/AccessKit protocol code;
+- preserve exact tab selection, visibility, layout, focus target/order, mouse/controller/keyboard actions, picker items and selection, settings persistence, saves, campaign state, and session authority.
+
+Completion criteria:
+- the real 1280x720 X11 `--accessibility always` Settings action exposes Presentation Mode and Render Quality as native focusable OptionButton rows with exact current-value names, descriptions, Action/Component interfaces, and unchanged selection, alongside the existing Settings controls;
+- the focused semantics owner proves the real Settings board opens through its public action, retains exact initial Presentation Mode focus, semantic values, one signal connection per lifecycle edge, live-region ownership, and session/settings/save authority; source validation pins one centralized stage-subtree refresh after the existing state, focus, and compact scroll-visibility handoffs;
+- Main Menu keyboard/destructive/display/focus, menu/outcome visual, active-play focus, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass with bounded claims.
+
+Non-goals:
+- no first-view or secondary-board copy, tooltip, role, layout, tab, focus graph, command order, input action, picker item/selection, setting, save, campaign, gameplay, content, balance, AI, renderer, or Native RMG change;
+- no per-control native refresh list, global frame polling, packaged accessibility interaction, speech-quality approval, Windows UIA certification, controller/native hardware certification, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- `/tmp/heroes-atspi-settings-audit.eFZ094` opens the real Settings board through the native Settings Action and observes 27 focusable rows, but omits the actual initial-focus Presentation Mode and adjacent Render Quality controls while later OptionButtons are present;
+- `/tmp/heroes-atspi-settings-queue.jtN16N` changes no menu data or settings, queues only those two unchanged live controls after the same board transition, and observes exact native rows `Presentation Mode: Windowed` and `Render Quality: Balanced` with their production descriptions and Action/Component interfaces;
+- `/tmp/heroes-settings-geometry-1280.Kizk6C` proves the original 1280 Settings entry retained scroll position `209`, placing the focused Presentation Mode and adjacent Render Quality row above the scroll viewport; manually republishing clipped controls was therefore not a truthful fix;
+- `/tmp/heroes-focus-deferred-top-x11.uB4bwd` proves the final lifecycle keeps scroll position `0` and both complete controls inside the real 1280x720 scroll viewport before native publication.
+
+Completion evidence:
+- `/tmp/heroes-atspi-settings-focus-final.cGGo8e` opens Settings through the real AT-SPI Action and exposes exactly one role-62 `Presentation Mode: Windowed` row and one role-62 `Render Quality: Balanced` row, each with its exact production current-value description and Action/Component interfaces;
+- `/tmp/heroes-secondary-focus-final.otEfpF` passes the focused semantics owner with exact public Settings action, Presentation focus, canonical top scroll, both rectangles contained, semantic values, one lifecycle connection per edge, live-region ownership, and unchanged settings/session/save authority;
+- `/tmp/heroes-secondary-board-mainmenu-final.wMFLFJ` passes the complete Main Menu keyboard/destructive/display/focus matrix, while `/tmp/heroes-secondary-board-compat-final2.EpvYTd` keeps Settings restore, menu/outcome visual, shared active-play focus, and core green;
+- `/tmp/heroes-secondary-board-static-final2.zzNV8I` keeps repository validation, Python compilation, JSON/diff checks, exact/generic editor parses, tracker scope, and process cleanup green; `/tmp/heroes-secondary-board-platform-final2.1EvGZ7` records official Linux export/headless startup and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup green with bounded startup claims only.
 
 ## Completed Slice: Linux AT-SPI Synchronous Control Semantics
 

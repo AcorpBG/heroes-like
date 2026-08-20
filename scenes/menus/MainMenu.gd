@@ -2811,6 +2811,23 @@ func _show_stage_dock() -> void:
 	_sync_system_command_buttons()
 	call_deferred("_focus_stage_entry")
 
+func _queue_stage_accessibility_refresh() -> void:
+	call_deferred("_finalize_stage_accessibility")
+
+func _finalize_stage_accessibility() -> void:
+	if (
+		is_inside_tree()
+		and _stage_dock_panel.visible
+		and _menu_tabs.current_tab == TAB_SETTINGS
+		and get_viewport().gui_get_focus_owner() == _presentation_mode_picker
+	):
+		_settings_scroll.scroll_vertical = 0
+	call_deferred("_refresh_stage_accessibility")
+
+func _refresh_stage_accessibility() -> void:
+	if is_inside_tree() and _stage_dock_panel.visible:
+		UiAccessibility.refresh_tree(_stage_dock_panel)
+
 func _apply_stage_dock_layout() -> void:
 	var anchors := STANDARD_DOCK_ANCHORS
 	if _menu_tabs.current_tab == TAB_CAMPAIGN:
@@ -2953,6 +2970,7 @@ func _focus_stage_entry() -> void:
 			target = _presentation_mode_picker
 	if target != null and target.is_visible_in_tree() and target.focus_mode != Control.FOCUS_NONE:
 		target.grab_focus()
+		_queue_stage_accessibility_refresh()
 
 func _restore_first_view_focus() -> void:
 	if _stage_dock_panel.visible or not is_inside_tree():

@@ -14327,10 +14327,10 @@
   "currentNotes": "Native zero-road payloads now project zero overlay records while retaining exact raw road layers and strict malformed-road validation. Focused runtime, compatibility, static, and bounded Linux/Windows export-startup gates pass.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "native-rmg-zero-road-runtime-layer-projection-10184",
-  "currentSliceId": "accessibility-linux-atspi-synchronous-control-semantics-10184",
-  "currentSliceNotes": "Completed live behavior: UiAccessibility synchronously configures inserted Controls, retains deferred post-add refresh, and publishes generated, explicit, and live-region semantics through one in-tree/accessibility-supported native update guard. Final Linux X11 AT-SPI exposes exact ordered Campaign/Skirmish/Load/Settings/Editor/Quit role-43 buttons with full descriptions, Action/Component interfaces, and focusable state. Focused semantics, Main Menu keyboard/destructive/display focus, menu/outcome visual, shared active-play focus, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. Packaged AT-SPI interaction, speech-quality approval, Windows UIA, controller/native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+  "currentSliceId": "accessibility-main-menu-secondary-board-native-tree-refresh-10184",
+  "currentSliceNotes": "Completed live behavior: MainMenu now finishes real Settings entry focus, resets the compact Settings scroll to its canonical top under exact Presentation Mode focus, and only then republishes the shared stage subtree. Native 1280x720 Linux X11 AT-SPI exposes exact Presentation Mode: Windowed and Render Quality: Balanced role-62 rows with production descriptions and Action/Component interfaces. Focused semantics/geometry/authority, full Main Menu navigation, Settings restore, menu/outcome visual, active-play focus, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged accessibility interaction, speech-quality approval, Windows UIA, controller/native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "accessibility linux atspi synchronous control semantics 10184",
+  "currentSliceTitle": "accessibility main menu secondary board native tree refresh 10184",
   "currentSliceUpdatedAt": "2026-08-20T10:36:12Z",
   "deferredRiskRegister": [
     {
@@ -90853,6 +90853,16 @@
       "startedAt": "2026-08-20T11:29:52Z",
       "notes": "Completed live behavior: UiAccessibility synchronously configures inserted Controls, retains deferred post-add refresh, and publishes generated, explicit, and live-region semantics through one in-tree/accessibility-supported native update guard. Final Linux X11 AT-SPI exposes exact ordered Campaign/Skirmish/Load/Settings/Editor/Quit role-43 buttons with full descriptions, Action/Component interfaces, and focusable state. Focused semantics, Main Menu keyboard/destructive/display focus, menu/outcome visual, shared active-play focus, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. Packaged AT-SPI interaction, speech-quality approval, Windows UIA, controller/native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
       "completedAt": "2026-08-20T13:03:06Z"
+    },
+    {
+      "id": "accessibility-main-menu-secondary-board-native-tree-refresh-10184",
+      "title": "accessibility main menu secondary board native tree refresh 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-20T15:13:01Z",
+      "startedAt": "2026-08-20T13:18:22Z",
+      "notes": "Completed live behavior: MainMenu now finishes real Settings entry focus, resets the compact Settings scroll to its canonical top under exact Presentation Mode focus, and only then republishes the shared stage subtree. Native 1280x720 Linux X11 AT-SPI exposes exact Presentation Mode: Windowed and Render Quality: Balanced role-62 rows with production descriptions and Action/Component interfaces. Focused semantics/geometry/authority, full Main Menu navigation, Settings restore, menu/outcome visual, active-play focus, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged accessibility interaction, speech-quality approval, Windows UIA, controller/native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-20T15:13:01Z"
     }
   ],
   "project": "heroes-like",
@@ -91397,7 +91407,7 @@
   ],
   "summary": "The public and normalized Extra Large Native RMG identities now reach the already-recovered exact 144x144 workflow with synchronized Linux/Windows native and bounded export/startup proof. Broader owner-corpus parity remains fail-closed; the game is not release-ready.",
   "taskId": "10184",
-  "updatedAt": "2026-08-20T13:03:06Z",
+  "updatedAt": "2026-08-20T15:13:01Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

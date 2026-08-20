@@ -186,6 +186,45 @@ func _run() -> void:
 	var reentered_binding_status := menu.find_children("BindingStatus", "Label", true, false)[0] as Label
 	if reentered_binding_status.accessibility_live != DisplayServer.LIVE_POLITE or reentered_binding_status.accessibility_description != "Reports hero movement keybinding capture prompts and results." or reentered_binding_status.accessibility_description.length() > HeroesUiAccessibility.MAX_DESCRIPTION_LENGTH:
 		return _fail("Dialog re-entry or repeated scan replaced BindingStatus live semantics: %s / %s" % [reentered_binding_status.accessibility_live, reentered_binding_status.accessibility_description])
+	keybindings_dialog.close_dialog()
+	await _settle()
+	var settings_transaction_before: Dictionary = _canonical_settings_transaction(SettingsService.validation_settings_transaction_snapshot())
+	var settings_session_before = SessionState.active_session
+	var settings_save_cache_before: Dictionary = SaveService.validation_summary_cache_snapshot()
+	var open_settings_button := menu.get_node("BackdropCommandHotspots/OpenSettings") as Button
+	open_settings_button.pressed.emit()
+	await _settle()
+	var stage_dock_panel := menu.get_node("StageDockPanel") as PanelContainer
+	var menu_tabs := menu.find_child("MenuTabs", true, false) as TabContainer
+	var settings_scroll := menu.find_child("SettingsScroll", true, false) as ScrollContainer
+	var presentation_mode_picker := menu.find_child("PresentationModePicker", true, false) as OptionButton
+	var render_quality_picker := menu.find_child("RenderQualityPicker", true, false) as OptionButton
+	var settings_scroll_rect := settings_scroll.get_global_rect()
+	var presentation_mode_rect := presentation_mode_picker.get_global_rect()
+	var render_quality_rect := render_quality_picker.get_global_rect()
+	var settings_stage_checks := {
+		"stage_visible": stage_dock_panel.visible and stage_dock_panel.is_visible_in_tree(),
+		"settings_tab_active": menu_tabs.get_current_tab_control() != null and String(menu_tabs.get_current_tab_control().name) == "Settings",
+		"presentation_visible": presentation_mode_picker.is_visible_in_tree(),
+		"render_quality_visible": render_quality_picker.is_visible_in_tree(),
+		"presentation_focus": get_viewport().gui_get_focus_owner() == presentation_mode_picker,
+		"settings_scroll_at_entry": settings_scroll.scroll_vertical == 0,
+		"presentation_inside_scroll": settings_scroll_rect.encloses(presentation_mode_rect),
+		"render_quality_inside_scroll": settings_scroll_rect.encloses(render_quality_rect),
+		"presentation_name": UiAccessibility.semantic_name(presentation_mode_picker) == "Presentation Mode",
+		"presentation_current_value": presentation_mode_picker.accessibility_description.contains("Current value:"),
+		"render_quality_name": UiAccessibility.semantic_name(render_quality_picker) == "Render Quality",
+		"render_quality_current_value": render_quality_picker.accessibility_description.contains("Current value:"),
+		"presentation_focus_connection": _connection_count(presentation_mode_picker.focus_entered, "_on_control_refresh_requested") == 1,
+		"presentation_visibility_connection": _connection_count(presentation_mode_picker.visibility_changed, "_on_control_refresh_requested") == 1,
+		"render_focus_connection": _connection_count(render_quality_picker.focus_entered, "_on_control_refresh_requested") == 1,
+		"render_visibility_connection": _connection_count(render_quality_picker.visibility_changed, "_on_control_refresh_requested") == 1,
+		"settings_authority": _canonical_settings_transaction(SettingsService.validation_settings_transaction_snapshot()) == settings_transaction_before,
+		"session_authority": SessionState.active_session == settings_session_before,
+		"save_cache_authority": SaveService.validation_summary_cache_snapshot() == settings_save_cache_before,
+	}
+	if not _checks_exact(settings_stage_checks):
+		return _fail("Main-menu Settings secondary board did not preserve exact focus, semantics, lifecycle, and authority: %s" % settings_stage_checks)
 	for node_name in ["OpenCampaign", "OpenSkirmish", "OpenSaves", "OpenSettings", "OpenEditor", "Quit"]:
 		var control := menu.get_node_or_null("BackdropCommandHotspots/%s" % node_name) as Control
 		if control == null or UiAccessibility.semantic_name(control) == "" or control.accessibility_description == "":
@@ -385,6 +424,7 @@ func _run() -> void:
 		"reentry_connections_deduplicated": true,
 		"binding_status_polite": true,
 		"binding_status_exact_count": 1,
+		"settings_stage_accessibility_refresh_exact": true,
 		"overworld_route_context_live_exact_count": 1,
 		"overworld_existing_live_regions_unchanged": 4,
 		"overworld_route_context_rescan_exact": true,
@@ -417,6 +457,44 @@ func _connection_count(signal_value: Signal, method_name: String) -> int:
 		if callable.get_object() == UiAccessibility and callable.get_method() == method_name:
 			count += 1
 	return count
+
+
+func _canonical_settings_transaction(transaction: Dictionary) -> Dictionary:
+	var canonical: Dictionary = transaction.duplicate(true)
+	var canonical_input_map := {}
+	var input_map: Dictionary = transaction.get("input_map", {}) if transaction.get("input_map", {}) is Dictionary else {}
+	for action_value in input_map.keys():
+		var action := String(action_value)
+		var action_state: Dictionary = input_map.get(action_value, {}) if input_map.get(action_value, {}) is Dictionary else {}
+		var canonical_events: Array = []
+		var events: Array = action_state.get("events", []) if action_state.get("events", []) is Array else []
+		for event_value in events:
+			if event_value is InputEvent:
+				canonical_events.append(_canonical_stored_input_event(event_value as InputEvent))
+			else:
+				canonical_events.append({"class": "", "as_text": var_to_str(event_value), "stored_properties": []})
+		canonical_input_map[action] = {
+			"action": action,
+			"exists": bool(action_state.get("exists", false)),
+			"deadzone": float(action_state.get("deadzone", 0.5)),
+			"events": canonical_events,
+		}
+	canonical["input_map"] = canonical_input_map
+	return canonical
+
+
+func _canonical_stored_input_event(event: InputEvent) -> Dictionary:
+	var stored_properties: Array = []
+	for property_value in event.get_property_list():
+		if not (property_value is Dictionary):
+			continue
+		var property: Dictionary = property_value
+		var property_name := String(property.get("name", ""))
+		var property_usage := int(property.get("usage", 0))
+		if property_name == "script" or (property_usage & PROPERTY_USAGE_STORAGE) == 0:
+			continue
+		stored_properties.append({"name": property_name, "value": var_to_str(event.get(property_name))})
+	return {"class": event.get_class(), "as_text": event.as_text(), "stored_properties": stored_properties}
 
 
 func _first_uncleared_encounter(session) -> Dictionary:
