@@ -923,6 +923,9 @@ func _validate_turn_strip_identity_surface(board: Control, session, width: int) 
 		return _fail_bool("Battle initiative strip did not expose the exact visible live turn-order count at %d: expected=%s surface=%s." % [width, expected_ids, surface])
 	var field_rect: Rect2 = surface.get("field_rect", Rect2())
 	var previous_rect := Rect2()
+	var saw_full_fit := false
+	var saw_word_boundary_fit := false
+	var saw_character_fallback := false
 	for index in range(rows.size()):
 		var row: Dictionary = rows[index] if rows[index] is Dictionary else {}
 		var stack := _stack_by_battle_id(session.battle, expected_ids[index])
@@ -941,6 +944,12 @@ func _validate_turn_strip_identity_surface(board: Control, session, width: int) 
 			"current stack" if current else "queued stack",
 		]
 		var visible_label := String(row.get("visible_label", ""))
+		var label_control := _turn_strip_label_control(board, full_name, alive_count, float(row.get("visible_label_max_width", 0.0)))
+		var expected_visible_label := String(label_control.get("visible_label", ""))
+		var fit_mode := String(label_control.get("fit_mode", ""))
+		saw_full_fit = saw_full_fit or fit_mode == "full"
+		saw_word_boundary_fit = saw_word_boundary_fit or fit_mode == "word_boundary"
+		saw_character_fallback = saw_character_fallback or fit_mode == "character_fallback"
 		var initials_label := "%s x%d" % [_stack_initials_for_test(full_name), alive_count]
 		var rect: Rect2 = row.get("rect", Rect2())
 		if (
@@ -952,6 +961,7 @@ func _validate_turn_strip_identity_surface(board: Control, session, width: int) 
 			or bool(row.get("current", not current)) != current
 			or String(row.get("tooltip", "")) != expected_tooltip
 			or visible_label == initials_label
+			or visible_label != expected_visible_label
 			or not visible_label.begins_with(full_name.left(3))
 			or not visible_label.ends_with(" x%d" % alive_count)
 			or float(row.get("visible_label_width", INF)) > float(row.get("visible_label_max_width", 0.0)) + 0.01
@@ -960,11 +970,35 @@ func _validate_turn_strip_identity_surface(board: Control, session, width: int) 
 			or not field_rect.encloses(rect)
 			or (index > 0 and previous_rect.intersects(rect))
 		):
-			return _fail_bool("Battle initiative chip identity/geometry mismatch at %d row %d: expected=%s row=%s field=%s previous=%s." % [width, index, expected_tooltip, row, field_rect, previous_rect])
+			return _fail_bool("Battle initiative chip identity/fit/geometry mismatch at %d row %d: expected_tooltip=%s label_control=%s row=%s field=%s previous=%s." % [width, index, expected_tooltip, label_control, row, field_rect, previous_rect])
 		previous_rect = rect
+	if not saw_full_fit or not saw_word_boundary_fit or not saw_character_fallback:
+		return _fail_bool("Battle initiative strip did not exercise full, complete-word, and unbreakable-word fitting at %d: full=%s word=%s character=%s rows=%s." % [width, saw_full_fit, saw_word_boundary_fit, saw_character_fallback, rows])
 	if _battle_background_authority(session) != authority_before:
 		return _fail_bool("Inspecting Battle initiative-strip identity changed session/save/settings authority at %d." % width)
 	return true
+
+func _turn_strip_label_control(board: Control, full_name: String, alive_count: int, max_text_width: float) -> Dictionary:
+	var suffix := " x%d" % alive_count
+	var font = board.get_theme_default_font()
+	if font == null or max_text_width <= 0.0:
+		return {}
+	var candidate := "%s%s" % [full_name, suffix]
+	if font.get_string_size(candidate, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 10).x <= max_text_width:
+		return {"visible_label": candidate, "fit_mode": "full"}
+	var words := full_name.split(" ", false)
+	for word_count in range(words.size() - 1, 0, -1):
+		var word_prefix := " ".join(words.slice(0, word_count))
+		candidate = "%s…%s" % [word_prefix, suffix]
+		if font.get_string_size(candidate, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 10).x <= max_text_width:
+			return {"visible_label": candidate, "fit_mode": "word_boundary"}
+	var compact_name := String(words[0]) if not words.is_empty() else full_name
+	while compact_name.length() > 3:
+		candidate = "%s…%s" % [compact_name, suffix]
+		if font.get_string_size(candidate, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 10).x <= max_text_width:
+			return {"visible_label": candidate, "fit_mode": "character_fallback"}
+		compact_name = compact_name.left(compact_name.length() - 1)
+	return {"visible_label": "%s…%s" % [full_name.left(3), suffix], "fit_mode": "character_fallback"}
 
 func _validate_order_tab_compact_summary(shell: Control, session, width: int) -> bool:
 	var authority_before := _battle_background_authority(session)

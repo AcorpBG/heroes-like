@@ -3365,13 +3365,20 @@ func _turn_strip_chip_label(stack: Dictionary, chip_width: float) -> String:
 	var full_name := _stack_full_name(stack)
 	var suffix := " x%d" % _stack_alive_count(stack)
 	var font = get_theme_default_font()
+	var words := full_name.split(" ", false)
 	if font == null:
-		return "%s%s" % [full_name.left(6), suffix]
+		var fallback_name := full_name if full_name.length() <= 6 else full_name.left(6)
+		return "%s%s" % [fallback_name, suffix] if fallback_name == full_name else "%s…%s" % [fallback_name, suffix]
 	var max_text_width := maxf(24.0, chip_width - 12.0)
 	var candidate := "%s%s" % [full_name, suffix]
 	if font.get_string_size(candidate, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 10).x <= max_text_width:
 		return candidate
-	var compact_name := full_name
+	for word_count in range(words.size() - 1, 0, -1):
+		var word_prefix := " ".join(words.slice(0, word_count))
+		candidate = "%s…%s" % [word_prefix, suffix]
+		if font.get_string_size(candidate, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 10).x <= max_text_width:
+			return candidate
+	var compact_name := String(words[0]) if not words.is_empty() else full_name
 	while compact_name.length() > 3:
 		candidate = "%s…%s" % [compact_name, suffix]
 		if font.get_string_size(candidate, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 10).x <= max_text_width:
