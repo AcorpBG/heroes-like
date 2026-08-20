@@ -14036,6 +14036,9 @@ def validate_skirmish_setup(errors: list[str]) -> None:
         ("CampaignPanel", "VBoxContainer"),
         ("SkirmishPanel", "VBoxContainer"),
         ("SkirmishScroll", "ScrollContainer"),
+        ("SkirmishFrontNavigation", "HBoxContainer"),
+        ("PreviousSkirmishFront", "Button"),
+        ("NextSkirmishFront", "Button"),
         ("SkirmishList", "ItemList"),
         ("DifficultyPicker", "OptionButton"),
         ("SetupSummary", "Label"),
@@ -14058,8 +14061,72 @@ def validate_skirmish_setup(errors: list[str]) -> None:
         "func _on_difficulty_selected",
         "briefing_check",
         "- Briefing: %s",
+        "@onready var _previous_skirmish_front_button: Button = %PreviousSkirmishFront",
+        "@onready var _next_skirmish_front_button: Button = %NextSkirmishFront",
+        "func _on_previous_skirmish_front_pressed() -> void:",
+        "func _on_next_skirmish_front_pressed() -> void:",
+        "func _select_relative_skirmish_front(delta: int) -> void:",
+        "func _selected_skirmish_front_index() -> int:",
+        "func _sync_skirmish_front_navigation() -> void:",
+        '"selected_skirmish_index": _selected_skirmish_front_index()',
+        '"previous_skirmish_front_enabled": not _previous_skirmish_front_button.disabled',
+        '"next_skirmish_front_enabled": not _next_skirmish_front_button.disabled',
     ):
         ensure(required_token in main_menu_script_text, errors, f"MainMenu.gd is missing required skirmish setup token: {required_token}")
+
+    for required_scene_token in (
+        'text = "Previous Front"',
+        'text = "Next Front"',
+        'method="_on_previous_skirmish_front_pressed"',
+        'method="_on_next_skirmish_front_pressed"',
+    ):
+        ensure(required_scene_token in main_menu_scene_text, errors, f"MainMenu.tscn is missing native Skirmish navigation token: {required_scene_token}")
+    ensure(main_menu_scene_text.count('name="PreviousSkirmishFront"') == 1, errors, "MainMenu.tscn must own exactly one PreviousSkirmishFront button")
+    ensure(main_menu_scene_text.count('name="NextSkirmishFront"') == 1, errors, "MainMenu.tscn must own exactly one NextSkirmishFront button")
+
+    relative_match = re.search(
+        r"func _select_relative_skirmish_front\(delta: int\) -> void:\n(?P<body>.*?)(?=\nfunc )",
+        main_menu_script_text,
+        re.S,
+    )
+    ensure(relative_match is not None, errors, "MainMenu.gd is missing the isolated adjacent Skirmish selection helper")
+    if relative_match is not None:
+        relative_body = relative_match.group("body")
+        ordered_tokens = (
+            'if delta == 0 or _skirmish_entries.is_empty() or _skirmish_list.item_count != _skirmish_entries.size():',
+            "var selected_index := _selected_skirmish_front_index()",
+            "var next_index := selected_index + delta",
+            "if selected_index < 0 or next_index < 0 or next_index >= _skirmish_entries.size():",
+            "_sync_skirmish_front_navigation()",
+            "_skirmish_list.select(next_index)",
+            "_on_skirmish_selected(next_index)",
+            "_skirmish_list.ensure_current_is_visible()",
+            'call_deferred("_refresh_stage_accessibility")',
+        )
+        positions = [relative_body.find(token) for token in ordered_tokens]
+        ensure(min(positions) >= 0 and positions == sorted(positions), errors, "Adjacent Skirmish selection must fail closed, select exactly one bounded row, refresh established setup authority, reveal the row, and republish accessibility in order")
+        for forbidden_token in ("posmod", "wrap", "clampi", "_selected_skirmish_id =", "build_skirmish_setup", "start_skirmish_session"):
+            ensure(forbidden_token not in relative_body, errors, f"Adjacent Skirmish selection must not replace boundary or setup authority via {forbidden_token}")
+
+    sync_match = re.search(
+        r"func _sync_skirmish_front_navigation\(\) -> void:\n(?P<body>.*?)(?=\nfunc )",
+        main_menu_script_text,
+        re.S,
+    )
+    ensure(sync_match is not None, errors, "MainMenu.gd is missing the isolated Skirmish navigation state helper")
+    if sync_match is not None:
+        sync_body = sync_match.group("body")
+        for required_token in (
+            "_previous_skirmish_front_button.disabled = not has_selection or selected_index == 0",
+            "_next_skirmish_front_button.disabled = not has_selection or selected_index == _skirmish_entries.size() - 1",
+            '"Select the previous Skirmish front: %s."',
+            '"Select the next Skirmish front: %s."',
+            '"%s is the first Skirmish front."',
+            '"%s is the last Skirmish front."',
+        ):
+            ensure(required_token in sync_body, errors, f"Skirmish navigation state must expose exact native boundary semantics: {required_token}")
+        for forbidden_token in ("hide()", ".visible = false", "remove_item", "sort", "erase"):
+            ensure(forbidden_token not in sync_body, errors, f"Skirmish navigation state must not hide, reorder, or mutate browser rows via {forbidden_token}")
 
     menu_smoke_text = MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH.read_text(encoding="utf-8") if MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH.exists() else ""
     for required_token in (
@@ -14091,8 +14158,62 @@ def validate_skirmish_setup(errors: list[str]) -> None:
             "latest_loadable_summary",
             "latest_save_resume_target",
             "saved_from_launch_mode",
+            "func _validate_native_front_navigation(shell: Node, entries: Array) -> bool:",
+            'shell.find_child("PreviousSkirmishFront", true, false)',
+            'shell.find_child("NextSkirmishFront", true, false)',
+            "for viewport_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:",
+            "previous_button.pressed.emit()",
+            "next_button.pressed.emit()",
+            'list.get_selected_items() != PackedInt32Array([1])',
+            'SessionState.active_session != session_before',
+            'SettingsService.ensure_settings() != settings_before',
+            'SaveService.validation_summary_cache_snapshot() != save_cache_before',
+            'shell.call("validation_generated_random_map_snapshot") != generated_before',
+            'func _stage(stage: String) -> void:',
+            'PLAYER_FACING_SKIRMISH_BROWSER_STAGE',
+            '"ticks_msec": Time.get_ticks_msec()',
         ):
             ensure(required_token in smoke_text, errors, f"player_facing_skirmish_browser_smoke.gd is missing required token: {required_token}")
+        native_case_match = re.search(
+            r"func _validate_native_front_navigation\(shell: Node, entries: Array\) -> bool:\n(?P<body>.*?)(?=\nfunc )",
+            smoke_text,
+            re.S,
+        )
+        ensure(native_case_match is not None, errors, "player-facing Skirmish owner is missing isolated native navigation coverage")
+        if native_case_match is not None:
+            native_case_body = native_case_match.group("body")
+            for forbidden_token in (
+                'shell.call("_select_relative_skirmish_front"',
+                'shell.call("_on_skirmish_selected"',
+                "_skirmish_entries",
+                "remove_item",
+                "sort",
+            ):
+                ensure(forbidden_token not in native_case_body, errors, f"player-facing Skirmish owner must use public button/list authority instead of {forbidden_token}")
+        stage_match = re.search(r"func _stage\(stage: String\) -> void:\n(?P<body>.*?)(?=\nfunc )", smoke_text, re.S)
+        ensure(stage_match is not None, errors, "player-facing Skirmish owner is missing observation-only stage output")
+        if stage_match is not None:
+            stage_body = stage_match.group("body")
+            ensure(stage_body.count("print(") == 1 and "Time.get_ticks_msec()" in stage_body, errors, "Skirmish stage output must contain only one monotonic observation print")
+            for forbidden_token in ("await ", "create_timer", "call_deferred", "SessionState", "SaveService", "SettingsService", "shell.call"):
+                ensure(forbidden_token not in stage_body, errors, f"Skirmish stage output must not mutate or wait via {forbidden_token}")
+
+    accessibility_path = ROOT / "tests" / "accessibility_screen_reader_semantics_report.gd"
+    ensure(accessibility_path.exists(), errors, "Missing accessibility semantics report for native Skirmish navigation")
+    if accessibility_path.exists():
+        accessibility_text = accessibility_path.read_text(encoding="utf-8")
+        for required_token in (
+            'UiAccessibility.semantic_name(previous_front) == "Previous Front"',
+            'UiAccessibility.semantic_name(next_front) == "Next Front"',
+            'previous_front.accessibility_description == previous_front.tooltip_text',
+            'next_front.accessibility_description == next_front.tooltip_text',
+            "next_front.pressed.emit()",
+            "previous_front.pressed.emit()",
+            'String(skirmish_advanced.get("selected_skirmish_id", "")) != next_skirmish_id',
+            "SessionState.active_session != skirmish_session_before",
+            "SaveService.validation_summary_cache_snapshot() != skirmish_save_cache_before",
+        ):
+            ensure(required_token in accessibility_text, errors, f"accessibility semantics report is missing native Skirmish navigation token: {required_token}")
 
     authored_skirmish_doc_path = ROOT / "docs" / "player-facing-authored-skirmish-browser-report.md"
     ensure(authored_skirmish_doc_path.exists(), errors, "Missing player-facing authored skirmish browser report")
@@ -15314,9 +15435,9 @@ def validate_native_screen_reader_semantics(errors: list[str]) -> None:
         and main_menu_text.count("func _refresh_stage_accessibility() -> void:") == 1
         and main_menu_text.count("_queue_stage_accessibility_refresh()") == 2
         and main_menu_text.count('call_deferred("_finalize_stage_accessibility")') == 1
-        and main_menu_text.count('call_deferred("_refresh_stage_accessibility")') == 1,
+        and main_menu_text.count('call_deferred("_refresh_stage_accessibility")') == 2,
         errors,
-        "Main Menu must own exactly one post-focus secondary-board accessibility refresh chain",
+        "Main Menu must own exactly one post-focus secondary-board accessibility chain plus one adjacent-front semantic refresh",
     )
     if show_stage_match is not None:
         show_stage_body = show_stage_match.group("body")

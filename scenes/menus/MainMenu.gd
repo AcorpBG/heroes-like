@@ -80,6 +80,8 @@ const TAB_HELP_TOPIC := {
 @onready var _start_chapter_button: Button = %StartChapter
 @onready var _campaign_restart_dialog: ConfirmationDialog = $CampaignRestartDialog
 @onready var _skirmish_list: ItemList = %SkirmishList
+@onready var _previous_skirmish_front_button: Button = %PreviousSkirmishFront
+@onready var _next_skirmish_front_button: Button = %NextSkirmishFront
 @onready var _skirmish_details_label: Label = %SkirmishDetails
 @onready var _difficulty_picker: OptionButton = %DifficultyPicker
 @onready var _difficulty_summary_label: Label = %DifficultySummary
@@ -611,6 +613,52 @@ func _on_skirmish_selected(index: int) -> void:
 		return
 	_selected_skirmish_id = String(_skirmish_entries[index].get("scenario_id", ""))
 	_refresh_skirmish_setup()
+
+func _on_previous_skirmish_front_pressed() -> void:
+	_select_relative_skirmish_front(-1)
+
+func _on_next_skirmish_front_pressed() -> void:
+	_select_relative_skirmish_front(1)
+
+func _select_relative_skirmish_front(delta: int) -> void:
+	if delta == 0 or _skirmish_entries.is_empty() or _skirmish_list.item_count != _skirmish_entries.size():
+		return
+	var selected_index := _selected_skirmish_front_index()
+	var next_index := selected_index + delta
+	if selected_index < 0 or next_index < 0 or next_index >= _skirmish_entries.size():
+		_sync_skirmish_front_navigation()
+		return
+	_skirmish_list.select(next_index)
+	_on_skirmish_selected(next_index)
+	_skirmish_list.ensure_current_is_visible()
+	call_deferred("_refresh_stage_accessibility")
+
+func _selected_skirmish_front_index() -> int:
+	for index in range(_skirmish_entries.size()):
+		if String(_skirmish_entries[index].get("scenario_id", "")) == _selected_skirmish_id:
+			return index
+	return -1
+
+func _sync_skirmish_front_navigation() -> void:
+	var selected_index := _selected_skirmish_front_index()
+	var has_selection := selected_index >= 0 and selected_index < _skirmish_entries.size()
+	_previous_skirmish_front_button.disabled = not has_selection or selected_index == 0
+	_next_skirmish_front_button.disabled = not has_selection or selected_index == _skirmish_entries.size() - 1
+	if not has_selection:
+		_previous_skirmish_front_button.tooltip_text = "No Skirmish front is available to select."
+		_next_skirmish_front_button.tooltip_text = "No Skirmish front is available to select."
+		return
+	var current_label := String(_skirmish_entries[selected_index].get("label", _selected_skirmish_id))
+	if _previous_skirmish_front_button.disabled:
+		_previous_skirmish_front_button.tooltip_text = "%s is the first Skirmish front." % current_label
+	else:
+		var previous_label := String(_skirmish_entries[selected_index - 1].get("label", "previous front"))
+		_previous_skirmish_front_button.tooltip_text = "Select the previous Skirmish front: %s." % previous_label
+	if _next_skirmish_front_button.disabled:
+		_next_skirmish_front_button.tooltip_text = "%s is the last Skirmish front." % current_label
+	else:
+		var next_label := String(_skirmish_entries[selected_index + 1].get("label", "next front"))
+		_next_skirmish_front_button.tooltip_text = "Select the next Skirmish front: %s." % next_label
 
 func _on_difficulty_selected(index: int) -> void:
 	_set_selected_difficulty_from_picker(_difficulty_picker, index)
@@ -2230,9 +2278,11 @@ func _rebuild_skirmish_browser() -> void:
 		_selected_skirmish_id = String(_skirmish_entries[selected_index].get("scenario_id", ""))
 	else:
 		_selected_skirmish_id = ""
+	_sync_skirmish_front_navigation()
 
 func _refresh_skirmish_setup() -> void:
 	var selected_entry := _selected_skirmish_entry()
+	_sync_skirmish_front_navigation()
 	_set_compact_label(_difficulty_summary_label, ScenarioSelectRulesScript.difficulty_summary(_selected_difficulty), 3, 82)
 
 	if selected_entry.is_empty():
@@ -3143,6 +3193,13 @@ func validation_snapshot() -> Dictionary:
 		"help_details_full": _help_details_label.tooltip_text,
 		"skirmish_count": _skirmish_entries.size(),
 		"selected_skirmish_id": _selected_skirmish_id,
+		"selected_skirmish_index": _selected_skirmish_front_index(),
+		"previous_skirmish_front_text": _previous_skirmish_front_button.text,
+		"previous_skirmish_front_tooltip": _previous_skirmish_front_button.tooltip_text,
+		"previous_skirmish_front_enabled": not _previous_skirmish_front_button.disabled,
+		"next_skirmish_front_text": _next_skirmish_front_button.text,
+		"next_skirmish_front_tooltip": _next_skirmish_front_button.tooltip_text,
+		"next_skirmish_front_enabled": not _next_skirmish_front_button.disabled,
 		"selected_difficulty": _selected_difficulty,
 		"selected_skirmish_setup": selected_skirmish_setup.duplicate(true),
 		"skirmish_front_check": skirmish_front_check.duplicate(true),
@@ -4330,6 +4387,8 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_button(_campaign_restart_button, "secondary", 136.0, 40.0, 13)
 	FrontierVisualKit.apply_button(_campaign_primary_button, "primary", 208.0, 40.0, 14)
 	FrontierVisualKit.apply_button(_start_chapter_button, "secondary", 176.0, 40.0, 14)
+	FrontierVisualKit.apply_button(_previous_skirmish_front_button, "secondary", 112.0, 32.0, 12)
+	FrontierVisualKit.apply_button(_next_skirmish_front_button, "secondary", 112.0, 32.0, 12)
 	FrontierVisualKit.apply_button(_start_skirmish_button, "primary", 188.0, 40.0, 14)
 	FrontierVisualKit.apply_button(_start_generated_skirmish_button, "primary", 176.0, 34.0, 13)
 	FrontierVisualKit.apply_button(_delete_selected_save_button, "secondary", 132.0, 38.0, 13)

@@ -621,6 +621,22 @@ theme_override_constants/separation = 6
 layout_mode = 2
 text = "Fronts"
 
+[node name="SkirmishFrontNavigation" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/ModeSplit/SkirmishListPanel/SkirmishListPad/SkirmishListBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="PreviousSkirmishFront" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/ModeSplit/SkirmishListPanel/SkirmishListPad/SkirmishListBox/SkirmishFrontNavigation"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Previous Front"
+
+[node name="NextSkirmishFront" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/ModeSplit/SkirmishListPanel/SkirmishListPad/SkirmishListBox/SkirmishFrontNavigation"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Next Front"
+
 [node name="SkirmishList" type="ItemList" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/ModeSplit/SkirmishListPanel/SkirmishListPad/SkirmishListBox"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 154)
@@ -1373,6 +1389,8 @@ text = "Quit"
 [connection signal="canceled" from="CampaignRestartDialog" to="." method="_on_campaign_restart_canceled"]
 [connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/ActionRow/StageHelp" to="." method="_on_stage_help_pressed"]
 [connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/ActionRow/CloseStageDock" to="." method="_on_close_stage_dock_pressed"]
+[connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/ModeSplit/SkirmishListPanel/SkirmishListPad/SkirmishListBox/SkirmishFrontNavigation/PreviousSkirmishFront" to="." method="_on_previous_skirmish_front_pressed"]
+[connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/ModeSplit/SkirmishListPanel/SkirmishListPad/SkirmishListBox/SkirmishFrontNavigation/NextSkirmishFront" to="." method="_on_next_skirmish_front_pressed"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/ModeSplit/SkirmishListPanel/SkirmishListPad/SkirmishListBox/SkirmishList" to="." method="_on_skirmish_selected"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/SkirmishActionRow/DifficultyPicker" to="." method="_on_difficulty_selected"]
 [connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/SkirmishActionRow/StartSkirmish" to="." method="_on_start_skirmish_pressed"]

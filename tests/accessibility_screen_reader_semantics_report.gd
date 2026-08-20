@@ -242,6 +242,48 @@ func _run() -> void:
 		if not shipped_option.accessibility_description.contains("Current value:"):
 			return _fail("Shipped option control lacks current-value semantics: %s / %s" % [option_contract["node"], shipped_option.accessibility_description])
 
+	var skirmish_session_before = SessionState.active_session
+	var skirmish_settings_before: Dictionary = _canonical_settings_transaction(SettingsService.validation_settings_transaction_snapshot())
+	var skirmish_save_cache_before: Dictionary = SaveService.validation_summary_cache_snapshot()
+	menu.call("validation_open_skirmish_stage")
+	await _settle()
+	var previous_front := menu.find_child("PreviousSkirmishFront", true, false) as Button
+	var next_front := menu.find_child("NextSkirmishFront", true, false) as Button
+	var skirmish_entries: Array = ScenarioSelectRules.build_skirmish_browser_entries()
+	if previous_front == null or next_front == null or skirmish_entries.size() < 2:
+		return _fail("Main-menu Skirmish board is missing its native adjacent-front actions.")
+	var first_skirmish_id := String((skirmish_entries[0] as Dictionary).get("scenario_id", ""))
+	var next_skirmish_id := String((skirmish_entries[1] as Dictionary).get("scenario_id", ""))
+	var skirmish_initial: Dictionary = menu.call("validation_snapshot")
+	var native_front_checks := {
+		"previous_name": UiAccessibility.semantic_name(previous_front) == "Previous Front",
+		"next_name": UiAccessibility.semantic_name(next_front) == "Next Front",
+		"previous_description": previous_front.accessibility_description == previous_front.tooltip_text and previous_front.accessibility_description.contains("first Skirmish front"),
+		"next_description": next_front.accessibility_description == next_front.tooltip_text and next_front.accessibility_description.contains("Select the next Skirmish front:"),
+		"previous_disabled": previous_front.disabled,
+		"next_enabled": not next_front.disabled,
+		"first_selected": String(skirmish_initial.get("selected_skirmish_id", "")) == first_skirmish_id,
+		"first_index": int(skirmish_initial.get("selected_skirmish_index", -1)) == 0,
+	}
+	if not _checks_exact(native_front_checks):
+		return _fail("Main-menu Skirmish adjacent-front actions lack exact native semantics: %s" % native_front_checks)
+	next_front.pressed.emit()
+	await _settle()
+	var skirmish_advanced: Dictionary = menu.call("validation_snapshot")
+	if String(skirmish_advanced.get("selected_skirmish_id", "")) != next_skirmish_id or int(skirmish_advanced.get("selected_skirmish_index", -1)) != 1:
+		return _fail("Next Front native action did not select the exact adjacent Skirmish row: %s" % skirmish_advanced)
+	previous_front.pressed.emit()
+	await _settle()
+	var skirmish_returned: Dictionary = menu.call("validation_snapshot")
+	if (
+		String(skirmish_returned.get("selected_skirmish_id", "")) != first_skirmish_id
+		or int(skirmish_returned.get("selected_skirmish_index", -1)) != 0
+		or SessionState.active_session != skirmish_session_before
+		or _canonical_settings_transaction(SettingsService.validation_settings_transaction_snapshot()) != skirmish_settings_before
+		or SaveService.validation_summary_cache_snapshot() != skirmish_save_cache_before
+	):
+		return _fail("Skirmish adjacent-front native actions changed selection return or non-menu authority: %s" % skirmish_returned)
+
 	var original_session = SessionState.active_session
 	var original_summary_cache: Dictionary = SaveService.validation_summary_cache_snapshot()
 	var overworld_session = ScenarioFactory.create_session("river-pass", "normal", SessionState.LAUNCH_MODE_SKIRMISH)
