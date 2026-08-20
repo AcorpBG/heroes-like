@@ -67,6 +67,7 @@ func configure_control(control: Control) -> bool:
 		if control.accessibility_description != generated_description:
 			control.accessibility_description = generated_description
 		control.set_meta(AUTO_DESCRIPTION_META, true)
+	_queue_native_accessibility_update(control)
 	return true
 
 
@@ -82,6 +83,7 @@ func describe_control(control: Control, semantic_name: String, description: Stri
 	control.remove_meta(AUTO_NAME_META)
 	control.remove_meta(AUTO_DESCRIPTION_META)
 	_attach_control(control)
+	_queue_native_accessibility_update(control)
 	return true
 
 
@@ -96,6 +98,7 @@ func configure_live_region(label: Label, description: String = "") -> bool:
 	):
 		label.accessibility_description = normalized_description
 		label.set_meta(AUTO_DESCRIPTION_META, true)
+	_queue_native_accessibility_update(label)
 	return true
 
 
@@ -123,6 +126,15 @@ func semantic_name(control: Control) -> String:
 	if control.accessibility_name.strip_edges() != "" and not control.has_meta(AUTO_NAME_META):
 		return _bounded_text(control.accessibility_name, MAX_NAME_LENGTH)
 	return _control_name(control)
+
+
+func _queue_native_accessibility_update(control: Control) -> void:
+	if (
+		control.is_inside_tree()
+		and control.get_tree() != null
+		and control.get_tree().is_accessibility_supported()
+	):
+		control.queue_accessibility_update()
 
 
 func _scan_tree() -> void:
@@ -189,6 +201,7 @@ func _attach_control(control: Control) -> void:
 
 func _on_node_added(node: Node) -> void:
 	if node is Control:
+		configure_control(node as Control)
 		call_deferred("_configure_added_control", node.get_instance_id())
 
 
