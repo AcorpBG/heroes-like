@@ -36,6 +36,8 @@ func _run() -> void:
 		return
 	shell.call("validation_open_campaign_stage")
 	await get_tree().process_frame
+	if not await _validate_native_campaign_navigation(shell):
+		return
 
 	if not bool(shell.call("validation_select_campaign", CAMPAIGN_ID)):
 		_fail("Main menu could not select the reactivated campaign.")
@@ -137,6 +139,203 @@ func _run() -> void:
 		"latest_save_campaign_id": String(save_summary.get("campaign_id", "")),
 	})])
 	tree.quit(0)
+
+func _validate_native_campaign_navigation(shell: Control) -> bool:
+	var previous_arc := shell.find_child("PreviousCampaignArc", true, false) as Button
+	var next_arc := shell.find_child("NextCampaignArc", true, false) as Button
+	var previous_chapter := shell.find_child("PreviousCampaignChapter", true, false) as Button
+	var next_chapter := shell.find_child("NextCampaignChapter", true, false) as Button
+	var campaign_list := shell.find_child("CampaignList", true, false) as ItemList
+	var chapter_list := shell.find_child("ChapterList", true, false) as ItemList
+	if previous_arc == null or next_arc == null or previous_chapter == null or next_chapter == null or campaign_list == null or chapter_list == null:
+		_fail("Campaign board is missing native arc/chapter navigation controls.")
+		return false
+	var campaign_entries: Array = CampaignProgression.campaign_browser_entries()
+	if campaign_entries.size() < 2:
+		_fail("Campaign native navigation needs at least two authored arcs.")
+		return false
+	var campaign_ids := []
+	var campaign_labels := []
+	for entry_value in campaign_entries:
+		var entry: Dictionary = entry_value if entry_value is Dictionary else {}
+		campaign_ids.append(String(entry.get("campaign_id", "")))
+		campaign_labels.append(String(entry.get("label", entry.get("campaign_id", "Campaign"))))
+	if _item_list_labels(campaign_list) != campaign_labels:
+		_fail("Campaign native arc controls changed the exact authored arc order.")
+		return false
+	var first_campaign_id := String(campaign_ids[0])
+	var second_campaign_id := String(campaign_ids[1])
+	var last_campaign_id := String(campaign_ids[-1])
+	if not bool(shell.call("validation_select_campaign", first_campaign_id)):
+		_fail("Campaign native navigation could not establish its first arc boundary.")
+		return false
+	await _settle_frames(2)
+	var first_arc: Dictionary = shell.call("validation_snapshot")
+	if (
+		String(first_arc.get("selected_campaign_id", "")) != first_campaign_id
+		or int(first_arc.get("selected_campaign_index", -1)) != 0
+		or bool(first_arc.get("previous_campaign_arc_enabled", true))
+		or not bool(first_arc.get("next_campaign_arc_enabled", false))
+		or String(first_arc.get("previous_campaign_arc_text", "")) != "Previous Arc"
+		or String(first_arc.get("next_campaign_arc_text", "")) != "Next Arc"
+	):
+		_fail("Campaign native arc controls have the wrong first-row boundary: %s" % first_arc)
+		return false
+	var session_before = SessionState.active_session
+	var settings_before: Dictionary = SettingsService.ensure_settings().duplicate(true)
+	var save_cache_before: Dictionary = SaveService.validation_summary_cache_snapshot()
+	var profile_before_next: Dictionary = CampaignProgression.ensure_profile().duplicate(true)
+	previous_arc.pressed.emit()
+	await _settle_frames(2)
+	if CampaignProgression.ensure_profile() != profile_before_next or String((shell.call("validation_snapshot") as Dictionary).get("selected_campaign_id", "")) != first_campaign_id:
+		_fail("Previous Arc wrapped or changed campaign authority before the first row.")
+		return false
+	next_arc.grab_focus()
+	next_arc.pressed.emit()
+	await _settle_frames(2)
+	var second_arc: Dictionary = shell.call("validation_snapshot")
+	var expected_second_profile: Dictionary = CampaignRules.mark_selected_campaign(profile_before_next, second_campaign_id)
+	if (
+		String(second_arc.get("selected_campaign_id", "")) != second_campaign_id
+		or int(second_arc.get("selected_campaign_index", -1)) != 1
+		or CampaignProgression.ensure_profile() != expected_second_profile
+		or campaign_list.get_selected_items() != PackedInt32Array([1])
+		or get_viewport().gui_get_focus_owner() != next_arc
+	):
+		_fail("Next Arc did not use exact adjacent campaign selection authority: %s" % second_arc)
+		return false
+	previous_arc.grab_focus()
+	previous_arc.pressed.emit()
+	await _settle_frames(2)
+	var returned_arc: Dictionary = shell.call("validation_snapshot")
+	var expected_returned_profile: Dictionary = CampaignRules.mark_selected_campaign(expected_second_profile, first_campaign_id)
+	if (
+		String(returned_arc.get("selected_campaign_id", "")) != first_campaign_id
+		or int(returned_arc.get("selected_campaign_index", -1)) != 0
+		or CampaignProgression.ensure_profile() != expected_returned_profile
+		or get_viewport().gui_get_focus_owner() != previous_arc
+	):
+		_fail("Previous Arc did not restore the exact adjacent campaign authority: %s" % returned_arc)
+		return false
+	if not bool(shell.call("validation_select_campaign", last_campaign_id)):
+		_fail("Campaign native navigation could not establish its last arc boundary.")
+		return false
+	await _settle_frames(2)
+	var last_arc: Dictionary = shell.call("validation_snapshot")
+	var profile_before_last_noop: Dictionary = CampaignProgression.ensure_profile().duplicate(true)
+	if not bool(last_arc.get("previous_campaign_arc_enabled", false)) or bool(last_arc.get("next_campaign_arc_enabled", true)):
+		_fail("Campaign native arc controls have the wrong last-row boundary: %s" % last_arc)
+		return false
+	next_arc.pressed.emit()
+	await _settle_frames(2)
+	if CampaignProgression.ensure_profile() != profile_before_last_noop or String((shell.call("validation_snapshot") as Dictionary).get("selected_campaign_id", "")) != last_campaign_id:
+		_fail("Next Arc wrapped or changed campaign authority after the last row.")
+		return false
+	if not bool(shell.call("validation_select_campaign", first_campaign_id)):
+		_fail("Campaign native navigation could not restore the first arc.")
+		return false
+	await _settle_frames(2)
+
+	var chapter_entries: Array = CampaignProgression.campaign_chapter_entries(first_campaign_id)
+	if chapter_entries.size() < 2:
+		_fail("Campaign native navigation needs at least two authored chapters in the first arc.")
+		return false
+	var chapter_ids := []
+	var chapter_labels := []
+	for entry_value in chapter_entries:
+		var entry: Dictionary = entry_value if entry_value is Dictionary else {}
+		chapter_ids.append(String(entry.get("scenario_id", "")))
+		chapter_labels.append(String(entry.get("label", entry.get("scenario_id", "Chapter"))))
+	if _item_list_labels(chapter_list) != chapter_labels:
+		_fail("Campaign native chapter controls changed the exact authored chapter order.")
+		return false
+	var first_chapter_id := String(chapter_ids[0])
+	var second_chapter_id := String(chapter_ids[1])
+	var last_chapter_id := String(chapter_ids[-1])
+	if not bool(shell.call("validation_select_campaign_chapter", first_chapter_id)):
+		_fail("Campaign native navigation could not establish its first chapter boundary.")
+		return false
+	await _settle_frames(2)
+	var first_chapter: Dictionary = shell.call("validation_snapshot")
+	if (
+		String(first_chapter.get("selected_campaign_scenario_id", "")) != first_chapter_id
+		or int(first_chapter.get("selected_campaign_chapter_index", -1)) != 0
+		or bool(first_chapter.get("previous_campaign_chapter_enabled", true))
+		or not bool(first_chapter.get("next_campaign_chapter_enabled", false))
+		or String(first_chapter.get("previous_campaign_chapter_text", "")) != "Previous Chapter"
+		or String(first_chapter.get("next_campaign_chapter_text", "")) != "Next Chapter"
+	):
+		_fail("Campaign native chapter controls have the wrong first-row boundary: %s" % first_chapter)
+		return false
+	var profile_before_chapter: Dictionary = CampaignProgression.ensure_profile().duplicate(true)
+	previous_chapter.pressed.emit()
+	await _settle_frames(2)
+	if CampaignProgression.ensure_profile() != profile_before_chapter or String((shell.call("validation_snapshot") as Dictionary).get("selected_campaign_scenario_id", "")) != first_chapter_id:
+		_fail("Previous Chapter wrapped or changed campaign authority before the first row.")
+		return false
+	next_chapter.grab_focus()
+	next_chapter.pressed.emit()
+	await _settle_frames(2)
+	var second_chapter: Dictionary = shell.call("validation_snapshot")
+	var expected_second_chapter_profile: Dictionary = CampaignRules.mark_selected_scenario(profile_before_chapter, second_chapter_id, first_campaign_id)
+	if (
+		String(second_chapter.get("selected_campaign_scenario_id", "")) != second_chapter_id
+		or int(second_chapter.get("selected_campaign_chapter_index", -1)) != 1
+		or CampaignProgression.ensure_profile() != expected_second_chapter_profile
+		or chapter_list.get_selected_items() != PackedInt32Array([1])
+		or get_viewport().gui_get_focus_owner() != next_chapter
+	):
+		_fail("Next Chapter did not use exact adjacent chapter selection authority: %s" % second_chapter)
+		return false
+	previous_chapter.grab_focus()
+	previous_chapter.pressed.emit()
+	await _settle_frames(2)
+	var returned_chapter: Dictionary = shell.call("validation_snapshot")
+	var expected_returned_chapter_profile: Dictionary = CampaignRules.mark_selected_scenario(expected_second_chapter_profile, first_chapter_id, first_campaign_id)
+	if (
+		String(returned_chapter.get("selected_campaign_scenario_id", "")) != first_chapter_id
+		or int(returned_chapter.get("selected_campaign_chapter_index", -1)) != 0
+		or CampaignProgression.ensure_profile() != expected_returned_chapter_profile
+		or get_viewport().gui_get_focus_owner() != previous_chapter
+	):
+		_fail("Previous Chapter did not restore the exact adjacent chapter authority: %s" % returned_chapter)
+		return false
+	if not bool(shell.call("validation_select_campaign_chapter", last_chapter_id)):
+		_fail("Campaign native navigation could not establish its last chapter boundary.")
+		return false
+	await _settle_frames(2)
+	var last_chapter: Dictionary = shell.call("validation_snapshot")
+	var profile_before_last_chapter_noop: Dictionary = CampaignProgression.ensure_profile().duplicate(true)
+	if not bool(last_chapter.get("previous_campaign_chapter_enabled", false)) or bool(last_chapter.get("next_campaign_chapter_enabled", true)):
+		_fail("Campaign native chapter controls have the wrong last-row boundary: %s" % last_chapter)
+		return false
+	next_chapter.pressed.emit()
+	await _settle_frames(2)
+	if CampaignProgression.ensure_profile() != profile_before_last_chapter_noop or String((shell.call("validation_snapshot") as Dictionary).get("selected_campaign_scenario_id", "")) != last_chapter_id:
+		_fail("Next Chapter wrapped or changed campaign authority after the last row.")
+		return false
+	if not bool(shell.call("validation_select_campaign_chapter", first_chapter_id)):
+		_fail("Campaign native navigation could not restore the first chapter.")
+		return false
+	await _settle_frames(2)
+	if (
+		SessionState.active_session != session_before
+		or SettingsService.ensure_settings() != settings_before
+		or SaveService.validation_summary_cache_snapshot() != save_cache_before
+	):
+		_fail("Campaign native arc/chapter navigation changed non-campaign authority.")
+		return false
+	return true
+
+func _item_list_labels(list: ItemList) -> Array:
+	var labels := []
+	for index in range(list.item_count):
+		labels.append(list.get_item_text(index))
+	return labels
+
+func _settle_frames(frame_count: int) -> void:
+	for _frame in range(frame_count):
+		await get_tree().process_frame
 
 func _validate_scenery_first_campaign_layout(shell: Control, initial_snapshot: Dictionary) -> bool:
 	var original_window_size := get_window().size

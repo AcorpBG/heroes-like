@@ -48,6 +48,8 @@ const TAB_HELP_TOPIC := {
 @onready var _footer_pocket_panel: PanelContainer = $FooterPocketPanel
 @onready var _stage_dock_title_label: Label = %ActionLead
 @onready var _stage_dock_hint_label: Label = %ActionHint
+@onready var _campaign_arc_navigation: HBoxContainer = %CampaignArcNavigation
+@onready var _campaign_chapter_navigation: HBoxContainer = %CampaignChapterNavigation
 @onready var _stage_help_button: Button = %StageHelp
 @onready var _close_stage_dock_button: Button = %CloseStageDock
 @onready var _eyebrow_label: Label = %Eyebrow
@@ -62,10 +64,14 @@ const TAB_HELP_TOPIC := {
 @onready var _open_settings_button: Button = %OpenSettings
 @onready var _open_editor_button: Button = %OpenEditor
 @onready var _campaign_list: ItemList = %CampaignList
+@onready var _previous_campaign_arc_button: Button = %PreviousCampaignArc
+@onready var _next_campaign_arc_button: Button = %NextCampaignArc
 @onready var _campaign_details_panel: PanelContainer = %CampaignDetailsPanel
 @onready var _campaign_details_label: Label = %CampaignDetails
 @onready var _campaign_arc_status_label: Label = %CampaignArcStatus
 @onready var _chapter_list: ItemList = %ChapterList
+@onready var _previous_campaign_chapter_button: Button = %PreviousCampaignChapter
+@onready var _next_campaign_chapter_button: Button = %NextCampaignChapter
 @onready var _chapter_details_panel: PanelContainer = %ChapterDetailsPanel
 @onready var _chapter_details_label: Label = %ChapterDetails
 @onready var _campaign_intel_row: HBoxContainer = %CampaignIntelRow
@@ -333,6 +339,102 @@ func _on_chapter_selected(index: int) -> Dictionary:
 		)
 	_refresh_campaign_browser()
 	return result.duplicate(true)
+
+func _on_previous_campaign_arc_pressed() -> void:
+	_select_relative_campaign_arc(-1)
+
+func _on_next_campaign_arc_pressed() -> void:
+	_select_relative_campaign_arc(1)
+
+func _on_previous_campaign_chapter_pressed() -> void:
+	_select_relative_campaign_chapter(-1)
+
+func _on_next_campaign_chapter_pressed() -> void:
+	_select_relative_campaign_chapter(1)
+
+func _select_relative_campaign_arc(delta: int) -> void:
+	if delta == 0 or _campaign_entries.is_empty() or _campaign_list.item_count != _campaign_entries.size():
+		return
+	var selected_index := _selected_campaign_arc_index()
+	var next_index := selected_index + delta
+	if selected_index < 0 or next_index < 0 or next_index >= _campaign_entries.size():
+		_sync_campaign_native_navigation()
+		return
+	_campaign_list.select(next_index)
+	_on_campaign_selected(next_index)
+	_campaign_list.ensure_current_is_visible()
+	call_deferred("_refresh_stage_accessibility")
+
+func _select_relative_campaign_chapter(delta: int) -> void:
+	if delta == 0 or _campaign_chapter_entries.is_empty() or _chapter_list.item_count != _campaign_chapter_entries.size():
+		return
+	var selected_index := _selected_campaign_chapter_index()
+	var next_index := selected_index + delta
+	if selected_index < 0 or next_index < 0 or next_index >= _campaign_chapter_entries.size():
+		_sync_campaign_native_navigation()
+		return
+	_chapter_list.select(next_index)
+	_on_chapter_selected(next_index)
+	_chapter_list.ensure_current_is_visible()
+	call_deferred("_refresh_stage_accessibility")
+
+func _selected_campaign_arc_index() -> int:
+	for index in range(_campaign_entries.size()):
+		if String(_campaign_entries[index].get("campaign_id", "")) == _selected_campaign_id:
+			return index
+	return -1
+
+func _selected_campaign_chapter_index() -> int:
+	for index in range(_campaign_chapter_entries.size()):
+		if String(_campaign_chapter_entries[index].get("scenario_id", "")) == _selected_campaign_scenario_id:
+			return index
+	return -1
+
+func _sync_campaign_native_navigation() -> void:
+	_sync_campaign_arc_navigation()
+	_sync_campaign_chapter_navigation()
+
+func _sync_campaign_arc_navigation() -> void:
+	var selected_index := _selected_campaign_arc_index()
+	var has_selection := selected_index >= 0 and selected_index < _campaign_entries.size()
+	_previous_campaign_arc_button.disabled = not has_selection or selected_index == 0
+	_next_campaign_arc_button.disabled = not has_selection or selected_index == _campaign_entries.size() - 1
+	if not has_selection:
+		_previous_campaign_arc_button.tooltip_text = "No Campaign arc is available to select."
+		_next_campaign_arc_button.tooltip_text = "No Campaign arc is available to select."
+		return
+	var current_label := String(_campaign_entries[selected_index].get("label", _selected_campaign_id))
+	if _previous_campaign_arc_button.disabled:
+		_previous_campaign_arc_button.tooltip_text = "%s is the first Campaign arc." % current_label
+	else:
+		var previous_label := String(_campaign_entries[selected_index - 1].get("label", "previous arc"))
+		_previous_campaign_arc_button.tooltip_text = "Select the previous Campaign arc: %s." % previous_label
+	if _next_campaign_arc_button.disabled:
+		_next_campaign_arc_button.tooltip_text = "%s is the last Campaign arc." % current_label
+	else:
+		var next_label := String(_campaign_entries[selected_index + 1].get("label", "next arc"))
+		_next_campaign_arc_button.tooltip_text = "Select the next Campaign arc: %s." % next_label
+
+func _sync_campaign_chapter_navigation() -> void:
+	var selected_index := _selected_campaign_chapter_index()
+	var has_selection := selected_index >= 0 and selected_index < _campaign_chapter_entries.size()
+	_previous_campaign_chapter_button.disabled = not has_selection or selected_index == 0
+	_next_campaign_chapter_button.disabled = not has_selection or selected_index == _campaign_chapter_entries.size() - 1
+	if not has_selection:
+		_previous_campaign_chapter_button.tooltip_text = "No Campaign chapter is available to select."
+		_next_campaign_chapter_button.tooltip_text = "No Campaign chapter is available to select."
+		return
+	var current_label := String(_campaign_chapter_entries[selected_index].get("label", _selected_campaign_scenario_id))
+	if _previous_campaign_chapter_button.disabled:
+		_previous_campaign_chapter_button.tooltip_text = "%s is the first Campaign chapter." % current_label
+	else:
+		var previous_label := String(_campaign_chapter_entries[selected_index - 1].get("label", "previous chapter"))
+		_previous_campaign_chapter_button.tooltip_text = "Select the previous Campaign chapter: %s." % previous_label
+	if _next_campaign_chapter_button.disabled:
+		_next_campaign_chapter_button.tooltip_text = "%s is the last Campaign chapter." % current_label
+	else:
+		var next_label := String(_campaign_chapter_entries[selected_index + 1].get("label", "next chapter"))
+		_next_campaign_chapter_button.tooltip_text = "Select the next Campaign chapter: %s." % next_label
 
 func _on_campaign_intel_toggle_pressed() -> void:
 	_set_campaign_intel_expanded(not _campaign_intel_expanded)
@@ -1516,6 +1618,7 @@ func _rebuild_campaign_chapter_browser() -> void:
 
 func _refresh_campaign_browser() -> void:
 	_sync_campaign_storage_state()
+	_sync_campaign_native_navigation()
 	_refresh_campaign_row_tooltips()
 	if _campaign_entries.is_empty():
 		_set_commander_portrait(_campaign_commander_portrait, "")
@@ -3031,6 +3134,10 @@ func _restore_first_view_focus() -> void:
 
 func _refresh_stage_dock_header() -> void:
 	var stage_copy: Dictionary = TAB_STAGE_COPY.get(_menu_tabs.current_tab, TAB_STAGE_COPY[TAB_CAMPAIGN])
+	var campaign_navigation_visible := _menu_tabs.current_tab == TAB_CAMPAIGN
+	_stage_dock_hint_label.visible = not campaign_navigation_visible
+	_campaign_arc_navigation.visible = campaign_navigation_visible
+	_campaign_chapter_navigation.visible = campaign_navigation_visible
 	_set_compact_label(_stage_dock_title_label, String(stage_copy.get("title", "Command board")), 1, 48)
 	_set_compact_label(_stage_dock_hint_label, String(stage_copy.get("hint", "")), 2, 92)
 	if _menu_tabs.current_tab == TAB_GUIDE:
@@ -3132,6 +3239,20 @@ func validation_snapshot() -> Dictionary:
 		"campaign_empty_state_tooltip": _campaign_details_label.tooltip_text,
 		"selected_campaign_id": _selected_campaign_id,
 		"selected_campaign_scenario_id": _selected_campaign_scenario_id,
+		"selected_campaign_index": _selected_campaign_arc_index(),
+		"selected_campaign_chapter_index": _selected_campaign_chapter_index(),
+		"previous_campaign_arc_text": _previous_campaign_arc_button.text,
+		"previous_campaign_arc_tooltip": _previous_campaign_arc_button.tooltip_text,
+		"previous_campaign_arc_enabled": not _previous_campaign_arc_button.disabled,
+		"next_campaign_arc_text": _next_campaign_arc_button.text,
+		"next_campaign_arc_tooltip": _next_campaign_arc_button.tooltip_text,
+		"next_campaign_arc_enabled": not _next_campaign_arc_button.disabled,
+		"previous_campaign_chapter_text": _previous_campaign_chapter_button.text,
+		"previous_campaign_chapter_tooltip": _previous_campaign_chapter_button.tooltip_text,
+		"previous_campaign_chapter_enabled": not _previous_campaign_chapter_button.disabled,
+		"next_campaign_chapter_text": _next_campaign_chapter_button.text,
+		"next_campaign_chapter_tooltip": _next_campaign_chapter_button.tooltip_text,
+		"next_campaign_chapter_enabled": not _next_campaign_chapter_button.disabled,
 		"selected_campaign_difficulty": _selected_difficulty,
 		"campaign_difficulty_text": _campaign_difficulty_picker.get_item_text(_campaign_difficulty_picker.selected) if _campaign_difficulty_picker.selected >= 0 else "",
 		"campaign_difficulty_tooltip": _campaign_difficulty_picker.tooltip_text,
@@ -3400,7 +3521,11 @@ func _campaign_layout_snapshot() -> Dictionary:
 	var control_rects := {}
 	for control in [
 		_campaign_list,
+		_previous_campaign_arc_button,
+		_next_campaign_arc_button,
 		_chapter_list,
+		_previous_campaign_chapter_button,
+		_next_campaign_chapter_button,
 		_campaign_intel_toggle,
 		_campaign_difficulty_picker,
 		_campaign_restart_button,
@@ -4384,6 +4509,10 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_button(_stage_help_button, "secondary", 96.0, 34.0, 13)
 	FrontierVisualKit.apply_button(_close_stage_dock_button, "secondary", 112.0, 34.0, 13)
 	FrontierVisualKit.apply_button(_campaign_intel_toggle, "secondary", 116.0, 40.0, 13)
+	FrontierVisualKit.apply_button(_previous_campaign_arc_button, "secondary", 104.0, 30.0, 11)
+	FrontierVisualKit.apply_button(_next_campaign_arc_button, "secondary", 104.0, 30.0, 11)
+	FrontierVisualKit.apply_button(_previous_campaign_chapter_button, "secondary", 116.0, 30.0, 11)
+	FrontierVisualKit.apply_button(_next_campaign_chapter_button, "secondary", 116.0, 30.0, 11)
 	FrontierVisualKit.apply_button(_campaign_restart_button, "secondary", 136.0, 40.0, 13)
 	FrontierVisualKit.apply_button(_campaign_primary_button, "primary", 208.0, 40.0, 14)
 	FrontierVisualKit.apply_button(_start_chapter_button, "secondary", 176.0, 40.0, 14)
