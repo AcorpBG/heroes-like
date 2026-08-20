@@ -15797,13 +15797,21 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
         "_stack_full_name(stack)",
         'var suffix := " x%d" % _stack_alive_count(stack)',
         "get_theme_default_font()",
+        'var words := full_name.split(" ", false)',
         "font.get_string_size(candidate, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 10).x <= max_text_width",
+        "for word_count in range(words.size() - 1, 0, -1):",
+        'var word_prefix := " ".join(words.slice(0, word_count))',
+        'candidate = "%s…%s" % [word_prefix, suffix]',
+        'var compact_name := String(words[0]) if not words.is_empty() else full_name',
         "while compact_name.length() > 3:",
         'return "%s…%s" % [full_name.left(3), suffix]',
     ):
-        ensure(required_token in chip_label_body, errors, f"Battle initiative readable-label fitter is missing exact token: {required_token}")
-    for forbidden_token in ("split(\" \")", "to_upper", "_stack_initials", "stack[", "sort"):
-        ensure(forbidden_token not in chip_label_body, errors, f"Battle initiative readable-label fitter must preserve source identity and avoid {forbidden_token}")
+        ensure(required_token in chip_label_body, errors, f"Battle initiative word-boundary label fitter is missing exact token: {required_token}")
+    word_fit_index = chip_label_body.find("for word_count in range(words.size() - 1, 0, -1):")
+    character_fit_index = chip_label_body.find("while compact_name.length() > 3:")
+    ensure(0 <= word_fit_index < character_fit_index, errors, "Battle initiative label fitting must exhaust complete-word prefixes before the unbreakable-first-word character fallback")
+    for forbidden_token in ('"..."', "to_upper", "_stack_initials", "stack[", "sort", "erase(", "BattleRules", "Input."):
+        ensure(forbidden_token not in chip_label_body, errors, f"Battle initiative word-boundary label fitter must preserve source identity and avoid {forbidden_token}")
 
     draw_caption_body = bodies.get("_draw_stack_caption", "")
     ensure(draw_caption_body.count("_stack_caption_label(stack)") == 1 and "_stack_short_label(stack)" not in draw_caption_body, errors, "Painted BattleBoard stack captions must use only the dedicated word-boundary label")
@@ -16079,25 +16087,55 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
             '_battle_background_authority(session)',
             'board.call("validation_turn_strip_identity_surface")',
             'for battle_id_value in turn_order:',
+            'var saw_full_fit := false',
             'for index in range(rows.size()):',
             'var expected_tooltip := "Initiative Strip',
+            '_turn_strip_label_control(board, full_name, alive_count, float(row.get("visible_label_max_width", 0.0)))',
             'visible_label == initials_label',
             'not field_rect.encloses(rect)',
+            'if not saw_full_fit or not saw_word_boundary_fit or not saw_character_fallback:',
             '_battle_background_authority(session) != authority_before',
         ))
-        ensure(all(index >= 0 for index in focused_order) and list(focused_order) == sorted(focused_order), errors, "Focused initiative-strip proof must bracket exact ordered identity/tooltip/geometry checks with whole authority")
+        ensure(all(index >= 0 for index in focused_order) and list(focused_order) == sorted(focused_order), errors, "Focused initiative-strip proof must bracket exact ordered identity/fit/tooltip/geometry checks with whole authority")
         for required_token in (
             "expected_ids.size() >= 5",
             "rows.size() != expected_ids.size()",
+            'visible_label != expected_visible_label',
             'visible_label.begins_with(full_name.left(3))',
             'visible_label.ends_with(" x%d" % alive_count)',
             'float(row.get("visible_label_width", INF)) > float(row.get("visible_label_max_width", 0.0)) + 0.01',
             'String(row.get("tooltip", "")) != expected_tooltip',
             '(index > 0 and previous_rect.intersects(rect))',
+            'saw_word_boundary_fit = saw_word_boundary_fit or fit_mode == "word_boundary"',
+            'saw_character_fallback = saw_character_fallback or fit_mode == "character_fallback"',
         ):
             ensure(required_token in focused_body, errors, f"Focused initiative-strip proof is missing exact token: {required_token}")
         for forbidden_token in ("board.call(\"_draw", "Input.", "queue_redraw", "BattleRules.advance", "sort", "erase"):
             ensure(forbidden_token not in focused_body, errors, f"Focused initiative-strip proof must remain public/read-only and avoid {forbidden_token}")
+    turn_label_control_match = re.search(
+        r"func _turn_strip_label_control\(board: Control, full_name: String, alive_count: int, max_text_width: float\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc )",
+        smoke_text,
+        re.S,
+    )
+    ensure(turn_label_control_match is not None, errors, "Battle controller smoke must own an independent initiative-chip word-boundary fitting control")
+    if turn_label_control_match is not None:
+        control_body = turn_label_control_match.group("body")
+        control_order = tuple(control_body.find(token) for token in (
+            'var suffix := " x%d" % alive_count',
+            "board.get_theme_default_font()",
+            'var candidate := "%s%s" % [full_name, suffix]',
+            'return {"visible_label": candidate, "fit_mode": "full"}',
+            'var words := full_name.split(" ", false)',
+            "for word_count in range(words.size() - 1, 0, -1):",
+            'var word_prefix := " ".join(words.slice(0, word_count))',
+            'return {"visible_label": candidate, "fit_mode": "word_boundary"}',
+            'var compact_name := String(words[0]) if not words.is_empty() else full_name',
+            "while compact_name.length() > 3:",
+            'return {"visible_label": candidate, "fit_mode": "character_fallback"}',
+        ))
+        ensure(all(index >= 0 for index in control_order) and list(control_order) == sorted(control_order), errors, "Independent initiative-chip control must test full text, then longest complete words, then the unbreakable first word")
+        for forbidden_token in ("_turn_strip_chip_label", "validation_turn_strip_identity_surface", "BattleBoardView", "board.call", "sort(", "erase(", "Input.", "BattleRules"):
+            ensure(forbidden_token not in control_body, errors, f"Independent initiative-chip control must remain method-matched but production-independent: {forbidden_token}")
     width_case_match = re.search(r"func _validate_battle_board_semantics_width\(width: int\) -> bool:\n(?P<body>.*?)(?=\nfunc )", smoke_text, re.S)
     ensure(width_case_match is not None, errors, "Could not isolate focused BattleBoard two-width semantic owner")
     if width_case_match is not None:
