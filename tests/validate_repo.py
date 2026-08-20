@@ -15187,11 +15187,119 @@ def validate_native_screen_reader_semantics(errors: list[str]) -> None:
         "focus_entered.connect",
         "visibility_changed.connect",
         "item_selected.connect",
+        "_queue_native_accessibility_update",
         "func _option_field_name",
         "Current value:",
         '"ui_accessibility_semantics_v1"',
     ):
         ensure(required_token in service_text, errors, f"UiAccessibility.gd is missing required native semantics token: {required_token}")
+    node_added_match = re.search(
+        r"func _on_node_added\(node: Node\) -> void:\n(?P<body>.*?)(?=\nfunc _configure_added_control)",
+        service_text,
+        re.S,
+    )
+    ensure(node_added_match is not None, errors, "Could not isolate UiAccessibility node-added lifecycle")
+    ensure(
+        service_text.count("func _on_node_added(node: Node) -> void:") == 1,
+        errors,
+        "UiAccessibility must own exactly one node-added lifecycle handler",
+    )
+    if node_added_match is not None:
+        node_added_body = node_added_match.group("body")
+        node_added_tokens = (
+            "if node is Control:",
+            "configure_control(node as Control)",
+            'call_deferred("_configure_added_control", node.get_instance_id())',
+        )
+        ensure(
+            all(token in node_added_body for token in node_added_tokens)
+            and [node_added_body.index(token) for token in node_added_tokens]
+            == sorted(node_added_body.index(token) for token in node_added_tokens),
+            errors,
+            "UiAccessibility node-added lifecycle must configure synchronously before its deferred refresh",
+        )
+        ensure(
+            node_added_body.count("configure_control(node as Control)") == 1
+            and node_added_body.count('call_deferred("_configure_added_control", node.get_instance_id())') == 1,
+            errors,
+            "UiAccessibility node-added lifecycle must have one synchronous configuration and one deferred refresh",
+        )
+        ensure(
+            node_added_body.find("configure_control(node as Control)")
+            < node_added_body.find('call_deferred("_configure_added_control", node.get_instance_id())'),
+            errors,
+            "UiAccessibility must publish insertion-time semantics before deferring the post-add refresh",
+        )
+    configure_control_match = re.search(
+        r"func configure_control\(control: Control\) -> bool:\n(?P<body>.*?)(?=\nfunc describe_control)",
+        service_text,
+        re.S,
+    )
+    ensure(configure_control_match is not None, errors, "Could not isolate UiAccessibility control semantic writer")
+    if configure_control_match is not None:
+        configure_control_body = configure_control_match.group("body")
+        ensure(
+            configure_control_body.count("_queue_native_accessibility_update(control)") == 1
+            and 0 <= configure_control_body.find("control.set_meta(AUTO_DESCRIPTION_META, true)")
+            < configure_control_body.find("_queue_native_accessibility_update(control)")
+            < configure_control_body.rfind("return true"),
+            errors,
+            "UiAccessibility control semantics must queue one native update after semantic assignment",
+        )
+    describe_control_match = re.search(
+        r"func describe_control\(control: Control, semantic_name: String, description: String\) -> bool:\n(?P<body>.*?)(?=\nfunc configure_live_region)",
+        service_text,
+        re.S,
+    )
+    ensure(describe_control_match is not None, errors, "Could not isolate UiAccessibility explicit semantic writer")
+    if describe_control_match is not None:
+        describe_control_body = describe_control_match.group("body")
+        ensure(
+            describe_control_body.count("_queue_native_accessibility_update(control)") == 1
+            and 0 <= describe_control_body.find("_attach_control(control)")
+            < describe_control_body.find("_queue_native_accessibility_update(control)")
+            < describe_control_body.rfind("return true"),
+            errors,
+            "Explicit control semantics must queue one native update after assignment and lifecycle attachment",
+        )
+    configure_live_match = re.search(
+        r"func configure_live_region\(label: Label, description: String = \"\"\) -> bool:\n(?P<body>.*?)(?=\nfunc validation_snapshot)",
+        service_text,
+        re.S,
+    )
+    ensure(configure_live_match is not None, errors, "Could not isolate UiAccessibility live-region semantic writer")
+    if configure_live_match is not None:
+        configure_live_body = configure_live_match.group("body")
+        ensure(
+            configure_live_body.count("_queue_native_accessibility_update(label)") == 1
+            and 0 <= configure_live_body.find("label.accessibility_live = DisplayServer.LIVE_POLITE")
+            < configure_live_body.find("_queue_native_accessibility_update(label)")
+            < configure_live_body.rfind("return true"),
+            errors,
+            "Live-region semantics must queue one native update after live and description assignment",
+        )
+    native_update_match = re.search(
+        r"func _queue_native_accessibility_update\(control: Control\) -> void:\n(?P<body>.*?)(?=\nfunc _scan_tree)",
+        service_text,
+        re.S,
+    )
+    ensure(native_update_match is not None, errors, "Could not isolate UiAccessibility native publication guard")
+    if native_update_match is not None:
+        native_update_body = native_update_match.group("body")
+        native_update_tokens = (
+            "control.is_inside_tree()",
+            "control.get_tree() != null",
+            "control.get_tree().is_accessibility_supported()",
+            "control.queue_accessibility_update()",
+        )
+        ensure(
+            all(token in native_update_body for token in native_update_tokens)
+            and [native_update_body.index(token) for token in native_update_tokens]
+            == sorted(native_update_body.index(token) for token in native_update_tokens)
+            and native_update_body.count("control.queue_accessibility_update()") == 1,
+            errors,
+            "Native semantic publication must be in-tree, tree-valid, accessibility-supported, and queue exactly one update",
+        )
 
     report_text = ACCESSIBILITY_SCREEN_READER_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
@@ -15199,6 +15307,14 @@ def validate_native_screen_reader_semantics(errors: list[str]) -> None:
         '"accessibility_screen_reader_semantics_report_v1"',
         "authored_semantics_preserved",
         "dynamic_control_named",
+        "Dynamically inserted control did not receive synchronous first-pass semantics.",
+        '_connection_count(dynamic.focus_entered, "_on_control_refresh_requested") != 1',
+        '_connection_count(dynamic.visibility_changed, "_on_control_refresh_requested") != 1',
+        'post_add.name = "PostAddAction"',
+        'post_add.accessibility_description != "Activate Post Add Action."',
+        'post_add.text = "Inspect frontier"',
+        'post_add.tooltip_text = "Inspect the selected frontier tile."',
+        "Deferred semantics did not refresh values assigned after insertion",
         "option_field_semantics",
         "reentry_connections_deduplicated",
         "PresentationModePicker",
@@ -15269,6 +15385,60 @@ def validate_native_screen_reader_semantics(errors: list[str]) -> None:
         'battle_board_cursor_authored_semantics',
     ):
         ensure(required_token in report_text, errors, f"accessibility_screen_reader_semantics_report.gd is missing required token: {required_token}")
+    dynamic_insertion_match = re.search(
+        r"\tvar dynamic := Button\.new\(\)(?P<body>.*?)(?=\n\tvar menu =)",
+        report_text,
+        re.S,
+    )
+    ensure(dynamic_insertion_match is not None, errors, "Could not isolate dynamic accessibility insertion proof")
+    if dynamic_insertion_match is not None:
+        dynamic_insertion_body = dynamic_insertion_match.group("body")
+        dynamic_insertion_tokens = (
+            'dynamic.text = "Recruit wardens"',
+            'dynamic.tooltip_text = "Recruit the selected available stack."',
+            "fixture.add_child(dynamic)",
+            'UiAccessibility.semantic_name(dynamic) != "Recruit wardens"',
+            '_connection_count(dynamic.focus_entered, "_on_control_refresh_requested") != 1',
+            '_connection_count(dynamic.visibility_changed, "_on_control_refresh_requested") != 1',
+            "await _settle()",
+            "var post_add := Button.new()",
+            'post_add.name = "PostAddAction"',
+            "fixture.add_child(post_add)",
+            'post_add.accessibility_description != "Activate Post Add Action."',
+            'post_add.text = "Inspect frontier"',
+            'post_add.tooltip_text = "Inspect the selected frontier tile."',
+            "await _settle()",
+            'UiAccessibility.semantic_name(post_add) != "Inspect frontier"',
+            'post_add.accessibility_description != "Inspect the selected frontier tile."',
+        )
+        dynamic_insertion_cursor = 0
+        dynamic_insertion_ordered = True
+        for token in dynamic_insertion_tokens:
+            token_index = dynamic_insertion_body.find(token, dynamic_insertion_cursor)
+            if token_index < 0:
+                dynamic_insertion_ordered = False
+                break
+            dynamic_insertion_cursor = token_index + len(token)
+        ensure(
+            dynamic_insertion_ordered,
+            errors,
+            "Dynamic accessibility proof must cover insertion-time semantics and one deferred post-add value refresh",
+        )
+        ensure(
+            dynamic_insertion_body.count("fixture.add_child(dynamic)") == 1
+            and dynamic_insertion_body.count("fixture.add_child(post_add)") == 1,
+            errors,
+            "Dynamic accessibility proof must insert each control exactly once",
+        )
+        ensure(
+            "UiAccessibility.configure_control(" not in dynamic_insertion_body
+            and re.search(r"\.accessibility_(?:name|description)\s*=(?!=)", dynamic_insertion_body) is None
+            and "create_timer" not in dynamic_insertion_body
+            and "Timer" not in dynamic_insertion_body
+            and "delay" not in dynamic_insertion_body.lower(),
+            errors,
+            "Dynamic accessibility proof must observe production lifecycle semantics without direct configuration, semantic assignment, or timed delay",
+        )
     expected_overworld_live_paths = (
         "RouteCursorLive",
         "ShellMargin/Shell/ShellPad/Content/BodyRow/SidebarShell/SidebarPad/SidebarBox/EventPanel/EventPad/EventBox/Event",

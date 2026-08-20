@@ -24,7 +24,9 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Selected implementation slice: none. Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence; do not infer a heuristic Native RMG parity correction from owner-corpus output deltas.
+- Selected implementation slice: none. Select the next tracker-approved release-readiness implementation slice with direct current behavior evidence.
+- Completed implementation slice: `accessibility-linux-atspi-synchronous-control-semantics-10184`. Newly added live Controls now receive synchronous first-pass semantics, retain the existing deferred post-add refresh, and queue an engine accessibility update only when the live SceneTree supports native accessibility. A real 1280x720 Linux X11/AT-SPI run exposes the exact Campaign, Skirmish, Load, Settings, Editor, and Quit first-view commands in order as focusable role-43 buttons with exact production descriptions and Action/Component interfaces. Focused semantics, Main Menu keyboard/destructive/display focus, menu/outcome visual, shared active-play focus, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged AT-SPI interaction, screen-reader speech-quality approval, Windows UIA, controller/native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
+  id: `accessibility-linux-atspi-synchronous-control-semantics-10184`
 - Completed implementation slice: `native-rmg-zero-road-runtime-layer-projection-10184`. Native payload projection now represents exact zero road cells with zero overlay records instead of one invalid empty overlay, while retaining the exact road type/art tile layers and unchanged strict validation for malformed authored overlays. The formerly failing Small owner-corpus land configuration now repeats exact payload `40aa5303` (24313 bytes, 303 objects), reports zero road cells/overlays, and passes map/scenario validation. The full 24-shape runtime boundary, Medium/ordinal-95/Extra Large cases, package round-trip/startup, malformed-road API, core, repository validation, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Broad owner-corpus count/topology/semantic parity remains unclaimed.
   id: `native-rmg-zero-road-runtime-layer-projection-10184`
 - Completed implementation slice: `ux-battle-initiative-strip-word-boundary-ellipsis-10184`. The live Battle initiative strip now keeps fitting stack identities whole, ends overflowing multi-word names at the longest fitting complete word with one Unicode ellipsis, and uses a bounded character-prefix fallback only when the first word itself cannot fit. Exact alive-count suffixes, full identity tooltips, five-chip order/geometry/colors/current state, board token captions, input, and battle authority remain unchanged. Focused two-width behavior, inspected 1280 pixels, broad Battle visual, accessibility, animation, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
@@ -7732,6 +7734,38 @@ Completion evidence:
 - `/tmp/heroes-battle-guide-focused2.KrbfRR` exits naturally with `ACTIVE_PLAY_SETTINGS_RUNTIME_REPORT PASS`, independently comparing visible lines to the exact unabridged source, rejecting ASCII ellipses and mid-token boundaries, and preserving compact/wide line counts, enriched tooltip semantics, focus, layout, and battle authority;
 - Board navigation, shared keyboard/controller focus, accessibility semantics, core systems, and independent routed layout owners are green; the 1280 layout completes 16 stages in 277s and the 1920 layout completes 30 stages in 547s with final viewport markers and no selected diagnostics;
 - repository validation, Python compilation, JSON/diff checks, exact/generic editor parses, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. These are bounded export/startup claims only, not packaged Battle interaction or broader release certification.
+
+## Completed Slice: Linux AT-SPI Synchronous Control Semantics
+
+id: `accessibility-linux-atspi-synchronous-control-semantics-10184`
+
+Status: completed.
+
+Implementation boundary:
+- configure each newly added live `Control` synchronously from `UiAccessibility._on_node_added`, before Godot's AccessKit accessibility update can snapshot the node without semantics;
+- retain the existing deferred configuration pass so controls whose text, tooltip, or selected option is populated after insertion still refresh to exact current semantics;
+- queue the exact engine accessibility update after generated, explicit, or live-region semantics are written, guarded to in-tree Controls on an accessibility-supported SceneTree so headless validation does not perform native publication work;
+- preserve authored semantics, native text-button names, option-field identities, live-region policy, signal de-duplication, scene layout, focus, input, actions, and session/settings/save authority.
+
+Completion criteria:
+- a minimal current-engine control proves the host/AccessKit bridge is available, and a real 1280x720 X11 `--accessibility always` Main Menu exposes exact first-view Campaign, Skirmish, Load, Settings, Editor, and Quit button nodes instead of the current window-only tree;
+- the focused in-engine semantics owner proves synchronous first-pass semantics immediately after insertion, deferred changed-text/option refresh, no duplicate connections, exact existing live-region counts/order, and unchanged semantic validation across Main Menu, Overworld, Town, Battle, Outcome, and Map Editor;
+- keyboard/focus, menu visual, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass with bounded claims.
+
+Non-goals:
+- no button copy, tooltip, role, command order, scene composition, focus graph, input action, modal, settings, save, gameplay, content, balance, AI, map, renderer, or Native RMG change;
+- no packaged interaction automation, screen-reader speech-quality approval, Windows UIA certification, controller/native hardware certification, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- `/tmp/heroes-atspi-focus.p2b3_jsd` observes the focused production `Aurelion Reach` window through native AT-SPI but finds only application role 75 and window role 23 with zero child controls;
+- the same Godot 4.6.2 build and AT-SPI bus exposes a minimal authored-description button as a native role-43 child, while the same text button without insertion-time semantics exposes no application tree;
+- at baseline, `UiAccessibility._on_node_added` deferred the first `configure_control` call, so scene Controls entered AccessKit without the descriptions later required to materialize them; the deferred pass remains necessary for dynamic post-add values.
+
+Completion evidence:
+- `/tmp/heroes-atspi-native-final-guard.vLMW7s` observes the final guarded source through native AT-SPI and exposes exactly six ordered role-43 buttons named Campaign, Skirmish, Load, Settings, Editor, and Quit; every row has a nonempty exact production description, the Action and Component interfaces, and the AT-SPI focusable state bit;
+- `/tmp/heroes-atspi-focused-final.rOofmx` exits naturally with the focused semantics report green: immediate pre-populated insertion semantics, immediate fallback semantics, deferred post-add text/tooltip refresh, one signal connection per lifecycle edge, 62 Main Menu focusable Controls, and exact existing live-region ownership;
+- `/tmp/heroes-atspi-mainmenu-authoritative.x2Ue1H` exits naturally after the full Main Menu keyboard/destructive/display/focus matrix; `/tmp/heroes-atspi-compat-rest.mVrWNV` keeps menu/outcome visual, shared active-play focus, and core systems green;
+- `/tmp/heroes-atspi-final-static.3GC0En` keeps repository validation, Python compilation, JSON/diff checks, and exact/generic editor parses green; `/tmp/heroes-atspi-platform.indecL` records official Linux export/headless startup and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup green with bounded platform claims only.
 
 ## Progress Reconciliation
 

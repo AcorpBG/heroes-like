@@ -128,9 +128,27 @@ func _run() -> void:
 	dynamic.text = "Recruit wardens"
 	dynamic.tooltip_text = "Recruit the selected available stack."
 	fixture.add_child(dynamic)
+	if (
+		UiAccessibility.semantic_name(dynamic) != "Recruit wardens"
+		or dynamic.accessibility_description != "Recruit the selected available stack."
+		or _connection_count(dynamic.focus_entered, "_on_control_refresh_requested") != 1
+		or _connection_count(dynamic.visibility_changed, "_on_control_refresh_requested") != 1
+	):
+		return _fail("Dynamically inserted control did not receive synchronous first-pass semantics.")
 	await _settle()
 	if UiAccessibility.semantic_name(dynamic) != "Recruit wardens" or dynamic.accessibility_description == "":
 		return _fail("Dynamically inserted control did not receive semantics.")
+
+	var post_add := Button.new()
+	post_add.name = "PostAddAction"
+	fixture.add_child(post_add)
+	if post_add.accessibility_description != "Activate Post Add Action.":
+		return _fail("Post-add control did not receive synchronous fallback semantics: %s" % post_add.accessibility_description)
+	post_add.text = "Inspect frontier"
+	post_add.tooltip_text = "Inspect the selected frontier tile."
+	await _settle()
+	if UiAccessibility.semantic_name(post_add) != "Inspect frontier" or post_add.accessibility_description != "Inspect the selected frontier tile.":
+		return _fail("Deferred semantics did not refresh values assigned after insertion: %s / %s" % [UiAccessibility.semantic_name(post_add), post_add.accessibility_description])
 
 	var menu = load("res://scenes/menus/MainMenu.tscn").instantiate()
 	add_child(menu)
