@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence; do not infer a heuristic Native RMG parity correction from owner-corpus output deltas."
+    "Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence."
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Native zero-road payloads now project zero overlay records while retaining exact raw road layers and strict malformed-road validation. Focused runtime, compatibility, static, and bounded Linux/Windows export-startup gates pass.",
+  "currentNotes": "Completed live Skirmish native-action navigation with exact adjacent selection, honest boundaries, preserved setup/launch authority, focused 1280x720/1920x1080 validation, and a real Linux X11/AT-SPI River Pass to Causeway Stand and back action round trip. Select the next tracker-approved release-readiness implementation slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "native-rmg-zero-road-runtime-layer-projection-10184",
-  "currentSliceId": "accessibility-main-menu-secondary-board-native-tree-refresh-10184",
-  "currentSliceNotes": "Completed live behavior: MainMenu now finishes real Settings entry focus, resets the compact Settings scroll to its canonical top under exact Presentation Mode focus, and only then republishes the shared stage subtree. Native 1280x720 Linux X11 AT-SPI exposes exact Presentation Mode: Windowed and Render Quality: Balanced role-62 rows with production descriptions and Action/Component interfaces. Focused semantics/geometry/authority, full Main Menu navigation, Settings restore, menu/outcome visual, active-play focus, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged accessibility interaction, speech-quality approval, Windows UIA, controller/native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+  "currentSlice": "accessibility-main-menu-skirmish-front-native-action-navigation-10184",
+  "currentSliceId": "accessibility-main-menu-skirmish-front-native-action-navigation-10184",
+  "currentSliceNotes": "Completed live behavior: visible Previous Front and Next Front native actions move the exact existing selection one row without wrapping and preserve ItemList, launch, input, content, session, save, settings, and generated-package authority. Focused, real AT-SPI, compatibility, repository/editor, and bounded Linux/Windows export-startup gates pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "accessibility main menu secondary board native tree refresh 10184",
-  "currentSliceUpdatedAt": "2026-08-20T10:36:12Z",
+  "currentSliceTitle": "accessibility main menu skirmish front native action navigation 10184",
+  "currentSliceUpdatedAt": "2026-08-20T17:57:57Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -90863,6 +90863,60 @@
       "startedAt": "2026-08-20T13:18:22Z",
       "notes": "Completed live behavior: MainMenu now finishes real Settings entry focus, resets the compact Settings scroll to its canonical top under exact Presentation Mode focus, and only then republishes the shared stage subtree. Native 1280x720 Linux X11 AT-SPI exposes exact Presentation Mode: Windowed and Render Quality: Balanced role-62 rows with production descriptions and Action/Component interfaces. Focused semantics/geometry/authority, full Main Menu navigation, Settings restore, menu/outcome visual, active-play focus, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged accessibility interaction, speech-quality approval, Windows UIA, controller/native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
       "completedAt": "2026-08-20T15:13:01Z"
+    },
+    {
+      "id": "accessibility-main-menu-skirmish-front-native-action-navigation-10184",
+      "title": "accessibility main menu skirmish front native action navigation 10184",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Let a native accessibility action user select every existing authored Skirmish front while preserving the established browser, setup, launch, input, and state authority.",
+      "implementationTargets": [
+        "scenes/menus/MainMenu.gd",
+        "scenes/menus/MainMenu.tscn",
+        "tests/player_facing_skirmish_browser_smoke.gd",
+        "tests/main_menu_keyboard_navigation_smoke.gd",
+        "tests/accessibility_screen_reader_semantics_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/player_facing_skirmish_browser_smoke.tscn",
+        "tests/main_menu_keyboard_navigation_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/menu_outcome_visual_smoke.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "Visible Previous Front and Next Front buttons expose native Action semantics and select exactly one adjacent existing Skirmish row without wrapping or reordering",
+        "First and last boundaries disable the corresponding action; selection refreshes the exact existing setup, preview, difficulty, tooltip, and Launch Skirmish authority",
+        "Focused 1280x720 and 1920x1080 runtime proves containment, focus, keyboard/controller/mouse compatibility, exact scenario order, and unchanged session/save/settings/generated-map authority",
+        "A real Linux X11/AT-SPI action selects the next non-default front and returns to River Pass; repository/editor and bounded Linux/Windows export-startup gates pass"
+      ],
+      "nonGoals": [
+        "replacing or reordering the ItemList, scenario content, setup rules, launch routing, generated-map controls, focus policy, or input mappings",
+        "changing campaign, save, settings, gameplay, AI, balance, Native RMG, accessibility schema, or screen-reader speech behavior",
+        "packaged Skirmish interaction, Windows UIA, controller/native hardware certification, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "552d3dc2",
+        "screen": "1280x720",
+        "observerArtifact": "/tmp/heroes-atspi-skirmish-select2.D6fR8Y",
+        "failure": "AT-SPI enters Skirmish and exposes all authored ItemList children, but SelectChild cannot select Causeway Stand and Launch remains River Pass",
+        "existingAuthority": "ScenarioSelectRules.build_skirmish_browser_entries plus MainMenu _on_skirmish_selected and _refresh_skirmish_setup"
+      },
+      "createdAt": "2026-08-20T15:59:41Z",
+      "startedAt": "2026-08-20T15:59:41Z",
+      "updatedAt": "2026-08-20T17:57:57Z",
+      "completedAt": "2026-08-20T17:57:57Z",
+      "notes": "Completed live behavior, not diagnostics alone. MainMenu now exposes visible Previous Front and Next Front native Action buttons that select exactly one adjacent existing Skirmish row without wrapping, preserve the ItemList and established _on_skirmish_selected/_refresh_skirmish_setup authority, and expose exact first/last disabled boundaries and target descriptions. The focused owner passes at 1280x720 and 1920x1080 with exact content order, containment, focus, launch/setup state, and unchanged session/save/settings/generated-package authority. A real Linux X11/AT-SPI observer activated Next Front to move River Pass to Causeway Stand and Previous Front to restore River Pass while native Launch Skirmish descriptions updated exactly. Accessibility semantics, Main Menu keyboard, menu/outcome, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. Packaged Skirmish interaction, Windows UIA, controller/native hardware certification, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader release-readiness gaps remain.",
+      "blockedReason": null
     }
   ],
   "project": "heroes-like",
@@ -90873,7 +90927,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain. The game is not release-ready.",
-  "remainingWork": "Select the next source-backed release-readiness slice. Native RMG work must first attribute the remaining mapped owner-H3M object/town/guard/road/topology/semantic-layout mismatch to exact unrecovered H3MapEd functions or private state; do not tune final-map deltas.",
+  "remainingWork": "Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence. Native RMG work still requires exact recovered source/private-state attribution rather than final-map tuning.",
   "reportOnlyEvidence": [
     {
       "entries": [
