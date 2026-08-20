@@ -15,6 +15,10 @@ func _run() -> void:
 	var service: Variant = ClassDB.instantiate("MapPackageService")
 	if not _validate_supported_workflow_matrix(service):
 		return
+	var zero_road_projection := _validate_zero_road_projection(service)
+	if not bool(zero_road_projection.get("ok", false)):
+		_fail("Zero-road native payload projection failed: %s" % JSON.stringify(zero_road_projection))
+		return
 
 	var medium := _generate_and_validate(
 		service,
@@ -75,6 +79,7 @@ func _run() -> void:
 	print("%s %s" % [REPORT_ID, JSON.stringify({
 		"ok": true,
 		"workflow_shape_count": 24,
+		"zero_road_projection": zero_road_projection,
 		"medium": medium.get("summary", {}),
 		"medium_ordinal_95": ordinal_95.get("summary", {}),
 		"medium_ordinal_95_town_anchor": {"x": 31, "y": 10},
@@ -86,6 +91,48 @@ func _run() -> void:
 		"startup": startup,
 	})])
 	get_tree().quit(0)
+
+func _validate_zero_road_projection(service: Variant) -> Dictionary:
+	var config := ScenarioSelectRulesScript.build_random_map_player_config(
+		"owner-corpus-small-random-players-land-10184",
+		"",
+		"",
+		3,
+		"land",
+		false,
+		"homm3_small",
+		ScenarioSelectRulesScript.RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO
+	)
+	config["monster_strength"] = "weak"
+	var first: Dictionary = service.generate_random_map(config, {"startup_path": "zero_road_projection_first"})
+	var second: Dictionary = service.generate_random_map(config, {"startup_path": "zero_road_projection_repeat"})
+	var first_map: Variant = first.get("map_document", null)
+	var first_scenario: Variant = first.get("scenario_document", null)
+	var terrain_layers: Dictionary = first_map.get_terrain_layers() if first_map != null else {}
+	var roads: Array = terrain_layers.get("roads", []) if terrain_layers.get("roads", []) is Array else []
+	var map_validation: Dictionary = service.validate_map_document(first_map) if first_map != null else {"ok": false}
+	var scenario_validation: Dictionary = service.validate_scenario_document(first_scenario, first_map) if first_map != null and first_scenario != null else {"ok": false}
+	var exact_repeat := String(first.get("final_payload_fnv1a32", "")) != "" \
+			and String(first.get("final_payload_fnv1a32", "")) == String(second.get("final_payload_fnv1a32", "")) \
+			and int(first.get("final_payload_byte_count", -1)) == int(second.get("final_payload_byte_count", -2)) \
+			and int(first.get("runtime_object_count", -1)) == int(second.get("runtime_object_count", -2))
+	return {
+		"ok": bool(first.get("ok", false)) and bool(second.get("ok", false)) \
+				and int(first.get("runtime_road_cell_count", -1)) == 0 \
+				and int(terrain_layers.get("road_unique_tile_count", -1)) == 0 \
+				and roads.is_empty() \
+				and bool(map_validation.get("ok", false)) \
+				and bool(scenario_validation.get("ok", false)) \
+				and exact_repeat,
+		"payload_hash": first.get("final_payload_fnv1a32", ""),
+		"payload_bytes": first.get("final_payload_byte_count", -1),
+		"objects": first.get("runtime_object_count", -1),
+		"road_cells": first.get("runtime_road_cell_count", -1),
+		"road_overlay_count": roads.size(),
+		"map_validation": map_validation.get("ok", false),
+		"scenario_validation": scenario_validation.get("ok", false),
+		"exact_repeat": exact_repeat,
+	}
 
 func _validate_supported_workflow_matrix(service: Variant) -> bool:
 	var supported_count := 0

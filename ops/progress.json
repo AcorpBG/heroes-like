@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Battle initiative chips now fit full identities, complete-word prefixes, and unbreakable first-word fallbacks through independent themed-font measurement while preserving exact tooltip, count, geometry, order, color, current state, and authority. Focused, visual, compatibility, static/editor, and bounded Linux/Windows export-startup gates pass.",
+  "currentNotes": "Native zero-road payloads now project zero overlay records while retaining exact raw road layers and strict malformed-road validation. Focused runtime, compatibility, static, and bounded Linux/Windows export-startup gates pass.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-battle-initiative-strip-word-boundary-ellipsis-10184",
-  "currentSliceId": "ux-battle-initiative-strip-word-boundary-ellipsis-10184",
-  "currentSliceNotes": "Completed the chip-only word-boundary fitter with exact two-width independent control, inspected 1280 pixels, unchanged full tooltips/count/order/geometry/authority, compatibility, static/editor, and bounded Linux/Windows export-startup evidence.",
+  "currentSlice": "native-rmg-zero-road-runtime-layer-projection-10184",
+  "currentSliceId": "native-rmg-zero-road-runtime-layer-projection-10184",
+  "currentSliceNotes": "Completed exact zero-road runtime projection with deterministic payload identity, valid empty overlay representation, unchanged malformed-road rejection, compatibility, repository, and bounded Linux/Windows export-startup evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Battle Initiative Strip Word-Boundary Ellipsis",
-  "currentSliceUpdatedAt": "2026-08-20T09:40:25Z",
+  "currentSliceTitle": "Native RMG Zero-Road Runtime Layer Projection",
+  "currentSliceUpdatedAt": "2026-08-20T10:36:12Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -17788,7 +17788,7 @@
       "remainingWork": "Implement the exact recovered producer for 0x4a3a03 -> 0x4cca55 descriptor/source-cycle/seed ownership so it feeds materialize_boundary_source_handoffs_4a2777_4a325d as the native live owner-grid payload, then pass same-run after_boundary_span_fill_owner_words private-state comparison before terrain, relation, object, route, package, session, or public map output can consume owner words. Do not substitute SourceWalkPlain reconstruction, archived h3maped_small_rmg proxy artifacts, validator-gated package drafts, density scalars, final-map deltas, brute-force retries, Godot/GDScript exports, or Windows DLL churn.",
       "runtimeGenerationAllowed": false,
       "sliceId": "rmg-small-generalization-hardening-10184",
-      "status": "in_progress",
+      "status": "completed",
       "summary": "Native RMG checkpoint 2 remains pending. Default reachable proxy/reconstruction generation surfaces are now fenced or fail-closed: archived MapPackageService reconstruction helpers compile only behind AURELION_ENABLE_ARCHIVED_NATIVE_RMG_RECONSTRUCTION=1 (off by default), the rebuilt default Linux GDExtension and no-Godot CLI expose no old reconstruction helper symbols, and the GDScript compatibility shim private _generate_* helpers return _archived_native_rmg_reconstruction_blocked if invoked directly. This is not parity and does not enable generation: the exact recovered producer that feeds descriptor/source-cycle/seed ownership as the live payload, final payload ownership, and same-run private-state compare remain pending.",
       "validatedAt": "2026-06-18T19:58:08Z"
     },
@@ -19849,6 +19849,56 @@
   "nextActionGuardrailNote": "Select a source-backed release-readiness implementation slice with direct current behavior evidence; preserve the completed Battle initiative-chip fitting policy and its exact tooltip, count, geometry, order, color, input, and battle authority.",
   "notes": "The Town scenic-header pixel-fit slice is completed with exact two-width behavior, genuine-overflow fitting, fresh painted evidence, compatibility, static/editor, and bounded Linux/Windows export-startup evidence. Packaged Town interaction, hardware/accessibility certification, signing/publication, whole-game validation, and release readiness remain outside this slice.",
   "plannedSlices": [
+    {
+      "id": "native-rmg-zero-road-runtime-layer-projection-10184",
+      "title": "Native RMG Zero-Road Runtime Layer Projection",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Allow parity-owned native payloads with no road cells to adopt as valid runtime maps without weakening malformed nonempty-road validation.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "tests/native_rmg_end_to_end_runtime_boundary_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json",
+        "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
+        "bin/libaurelion_map_persistence.windows.template_debug.x86_64.dll"
+      ],
+      "testOwners": [
+        "tests/native_rmg_end_to_end_runtime_boundary_report.tscn",
+        "tests/native_random_map_homm3_owner_corpus_coverage_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "A native payload with exact zero road cells projects zero road overlays while retaining zero-valued road type/art layers",
+        "The current Small owner-corpus land configuration generates twice with exact payload identity and passes map/scenario validation",
+        "Nonempty roads and invalid empty authored road records retain existing behavior",
+        "Linux and Windows native, focused runtime, compatibility, repository/editor, and bounded export/startup gates pass"
+      ],
+      "nonGoals": [
+        "road generation, topology, density, template, seed, retry, object, town, guard, payload, H3MapEd parity, or validation-policy changes",
+        "owner-corpus count fitting or broad Native RMG parity claims"
+      ],
+      "baseline": {
+        "artifact": "/tmp/heroes-owner-corpus-current.HxZZUx",
+        "case": "owner_discovered_s_randomnumberofplayers",
+        "error": "invalid_road_tile_count",
+        "road_cell_count": 0,
+        "empty_overlay_count": 1
+      },
+      "createdAt": "2026-08-20T10:30:00Z",
+      "startedAt": "2026-08-20T10:30:00Z",
+      "updatedAt": "2026-08-20T10:36:12Z",
+      "completedAt": "2026-08-20T10:36:12Z",
+      "notes": "Completed exact zero-road runtime projection. Focused payload 40aa5303 repeats at 24313 bytes/303 objects with zero road cells and zero overlays; map/scenario validation, existing nonzero-road matrix, malformed-road API, core, repository, and bounded Linux/Windows export-startup gates pass.",
+      "remainingWork": "None for this projection-only slice. Broad owner-corpus count, topology, and semantic-layout parity remains source-recovery work and was not tuned or waived.",
+      "blockedReason": null
+    },
     {
       "id": "ux-battle-initiative-strip-word-boundary-ellipsis-10184",
       "title": "Battle Initiative Strip Word-Boundary Ellipsis",
@@ -90225,11 +90275,39 @@
       "classification": "implementation_slice",
       "source": "PLAN.md",
       "purpose": "Keep the shipped full-text Battle Status overflow at a complete word instead of Bramble Scre… without changing its tooltip, geometry, or semantics.",
-      "implementationTargets": ["scenes/battle/BattleShell.gd", "tests/battle_controller_board_navigation_smoke.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
-      "testOwners": ["tests/battle_controller_board_navigation_smoke.tscn", "tests/town_battle_visual_smoke.tscn", "tests/active_play_keyboard_focus_smoke.tscn", "tests/accessibility_screen_reader_semantics_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/packaging_linux_export_smoke.py", "tests/packaging_windows_export_smoke.py", "tests/validate_repo.py"],
-      "completionCriteria": ["Status retains exact full independent text and tooltip with native word ellipsis on overflow and full fit otherwise", "Header/Status/Pressure geometry plus Board/input/session authority remain exact", "Focused, compatibility, static/editor, Linux, and Windows startup gates pass"],
-      "nonGoals": ["status semantics, BattleRules, Header/Pressure, geometry, wrap, font, input/focus, combat, AI, balance, save/schema, or Native RMG changes", "new UI or shared compact-text changes", "packaged interaction or whole-release claims"],
-      "baseline": {"head": "c8f29051", "capture": ".artifacts/battle_controller_board_navigation_smoke/current_head_event_word_final.png", "visibleCut": "Bramble Scre…", "priorOwner": "ux-battle-status-native-pixel-ellipsis-10184"},
+      "implementationTargets": [
+        "scenes/battle/BattleShell.gd",
+        "tests/battle_controller_board_navigation_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/battle_controller_board_navigation_smoke.tscn",
+        "tests/town_battle_visual_smoke.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "Status retains exact full independent text and tooltip with native word ellipsis on overflow and full fit otherwise",
+        "Header/Status/Pressure geometry plus Board/input/session authority remain exact",
+        "Focused, compatibility, static/editor, Linux, and Windows startup gates pass"
+      ],
+      "nonGoals": [
+        "status semantics, BattleRules, Header/Pressure, geometry, wrap, font, input/focus, combat, AI, balance, save/schema, or Native RMG changes",
+        "new UI or shared compact-text changes",
+        "packaged interaction or whole-release claims"
+      ],
+      "baseline": {
+        "head": "c8f29051",
+        "capture": ".artifacts/battle_controller_board_navigation_smoke/current_head_event_word_final.png",
+        "visibleCut": "Bramble Scre…",
+        "priorOwner": "ux-battle-status-native-pixel-ellipsis-10184"
+      },
       "createdAt": "2026-08-18T05:12:29Z",
       "startedAt": "2026-08-18T05:12:29Z",
       "completedAt": "2026-08-18T05:21:52Z",
@@ -90246,11 +90324,44 @@
       "classification": "implementation_slice",
       "source": "PLAN.md",
       "purpose": "Keep the shipped Battle sidebar, footer controls, and all four info tabs contained at a real 1280x720 window with the supported 130% UI scale without reducing text size or changing Battle semantics.",
-      "implementationTargets": ["scenes/battle/BattleShell.tscn", "tests/battle_controller_board_navigation_smoke.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
-      "testOwners": ["tests/battle_controller_board_navigation_smoke.tscn", "tests/active_play_settings_runtime_report.tscn", "tests/town_battle_visual_smoke.tscn", "tests/active_play_keyboard_focus_smoke.tscn", "tests/accessibility_screen_reader_semantics_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/packaging_linux_export_smoke.py", "tests/packaging_windows_export_smoke.py", "tests/validate_repo.py"],
-      "completionCriteria": ["At 100% and 130% the two commander labels retain exactly two explicit visible lines, native word ellipsis, and exact full independent summary tooltips", "SaveSlot, Save, Settings, and Menu retain exact order/focus/actions in one contained footer row and all four Battle info pages remain within the initial tab allocation at 130%", "Footer, board, actions, settings, focus, session, and save authority stay exact; focused, compatibility, static/editor, Linux, and Windows startup gates pass"],
-      "nonGoals": ["SettingsService defaults/options/persistence, font reduction, sidebar or tab copy, commander data, combat, input/focus, AI, balance, content, save/schema, or Native RMG changes", "new panels, scrolling, breakpoints, hidden sidebar, shared compact-text changes, control removal/reordering, or broader Battle redesign", "packaged Battle interaction or whole-release claims"],
-      "baseline": {"head": "14266e16", "window": "1280x720", "uiScalePercent": 130, "orderTabHeight": 150.0, "focusTabHeight": 251.0, "commanderExplicitLines": 2, "commanderVisibleLines": 4, "failure": "Battle Focus/Spell compact body overflow/semantic mismatch"},
+      "implementationTargets": [
+        "scenes/battle/BattleShell.tscn",
+        "tests/battle_controller_board_navigation_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/battle_controller_board_navigation_smoke.tscn",
+        "tests/active_play_settings_runtime_report.tscn",
+        "tests/town_battle_visual_smoke.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "At 100% and 130% the two commander labels retain exactly two explicit visible lines, native word ellipsis, and exact full independent summary tooltips",
+        "SaveSlot, Save, Settings, and Menu retain exact order/focus/actions in one contained footer row and all four Battle info pages remain within the initial tab allocation at 130%",
+        "Footer, board, actions, settings, focus, session, and save authority stay exact; focused, compatibility, static/editor, Linux, and Windows startup gates pass"
+      ],
+      "nonGoals": [
+        "SettingsService defaults/options/persistence, font reduction, sidebar or tab copy, commander data, combat, input/focus, AI, balance, content, save/schema, or Native RMG changes",
+        "new panels, scrolling, breakpoints, hidden sidebar, shared compact-text changes, control removal/reordering, or broader Battle redesign",
+        "packaged Battle interaction or whole-release claims"
+      ],
+      "baseline": {
+        "head": "14266e16",
+        "window": "1280x720",
+        "uiScalePercent": 130,
+        "orderTabHeight": 150.0,
+        "focusTabHeight": 251.0,
+        "commanderExplicitLines": 2,
+        "commanderVisibleLines": 4,
+        "failure": "Battle Focus/Spell compact body overflow/semantic mismatch"
+      },
       "createdAt": "2026-08-18T05:29:31Z",
       "startedAt": "2026-08-18T05:29:31Z",
       "completedAt": "2026-08-18T05:48:00Z",
@@ -90267,11 +90378,47 @@
       "classification": "implementation_slice",
       "source": "PLAN.md",
       "purpose": "Keep the complete shipped Overworld footer inside a real 1920x1080 window with supported 130% UI scale and preserve its map allocation when dynamic cue text changes.",
-      "implementationTargets": ["scenes/overworld/OverworldShell.gd", "scenes/overworld/OverworldShell.tscn", "tests/overworld_visual_smoke.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
-      "testOwners": ["tests/overworld_visual_smoke.tscn", "tests/active_play_settings_runtime_report.tscn", "tests/active_play_keyboard_focus_smoke.tscn", "tests/accessibility_screen_reader_semantics_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/packaging_linux_export_smoke.py", "tests/packaging_windows_export_smoke.py", "tests/validate_repo.py"],
-      "completionCriteria": ["At persisted 130% UI scale the shell/footer and every resource/status/cue/order/system surface are inside the logical root with all controls visible in exact order", "The prompt-to-movement transition preserves the shell, footer, CueChip, and MapView allocation while Status/MapCue retain exact full independent values/tooltips behind native whole-word ellipsis", "Movement no longer triggers a session-static terrain rebuild through layout drift, while route/session/save authority and focused/compatibility/static/platform gates pass"],
-      "nonGoals": ["footer semantics/manual truncation, CueChip or system-control width/order, font/UI-scale option, breakpoint threshold, map/sidebar allocation policy, route/pathing, movement, combat, AI, balance, content, save/schema, or Native RMG changes", "new UI, shared helper, action feedback rewrite, or broader Overworld redesign", "packaged Overworld interaction or whole-release claims"],
-      "baseline": {"head": "e2e43e20", "window": "1920x1080", "uiScalePercent": 130, "logicalRootWidth": 1476.923, "commandBandWidth": 1616.0, "shellWidth": 1660.0, "leftClippedSurface": "ResourceChip", "rightClippedSurface": "Menu", "mapCueMinimumBefore": 127.0, "mapCueMinimumAfter": 230.0, "cacheFailure": "session_static_reason=resized"},
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/overworld/OverworldShell.tscn",
+        "tests/overworld_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/overworld_visual_smoke.tscn",
+        "tests/active_play_settings_runtime_report.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "At persisted 130% UI scale the shell/footer and every resource/status/cue/order/system surface are inside the logical root with all controls visible in exact order",
+        "The prompt-to-movement transition preserves the shell, footer, CueChip, and MapView allocation while Status/MapCue retain exact full independent values/tooltips behind native whole-word ellipsis",
+        "Movement no longer triggers a session-static terrain rebuild through layout drift, while route/session/save authority and focused/compatibility/static/platform gates pass"
+      ],
+      "nonGoals": [
+        "footer semantics/manual truncation, CueChip or system-control width/order, font/UI-scale option, breakpoint threshold, map/sidebar allocation policy, route/pathing, movement, combat, AI, balance, content, save/schema, or Native RMG changes",
+        "new UI, shared helper, action feedback rewrite, or broader Overworld redesign",
+        "packaged Overworld interaction or whole-release claims"
+      ],
+      "baseline": {
+        "head": "e2e43e20",
+        "window": "1920x1080",
+        "uiScalePercent": 130,
+        "logicalRootWidth": 1476.923,
+        "commandBandWidth": 1616.0,
+        "shellWidth": 1660.0,
+        "leftClippedSurface": "ResourceChip",
+        "rightClippedSurface": "Menu",
+        "mapCueMinimumBefore": 127.0,
+        "mapCueMinimumAfter": 230.0,
+        "cacheFailure": "session_static_reason=resized"
+      },
       "createdAt": "2026-08-18T06:01:52Z",
       "startedAt": "2026-08-18T06:01:52Z",
       "completedAt": "2026-08-18T06:31:45Z",
@@ -90288,11 +90435,50 @@
       "classification": "implementation_slice",
       "source": "PLAN.md",
       "purpose": "Keep the native window, root Godot Window, and live canvas at the same clamped size so a fresh 1280x720 launch exposes the complete Main Menu first view.",
-      "implementationTargets": ["scripts/autoload/SettingsService.gd", "scenes/battle/BattleShell.gd", "tests/settings_display_mode_transaction_regression.gd", "tests/menu_outcome_visual_smoke.gd", "tests/active_play_settings_runtime_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
-      "testOwners": ["tests/settings_display_mode_transaction_regression.tscn", "tests/menu_outcome_visual_smoke.tscn", "tests/main_menu_keyboard_navigation_smoke.tscn", "tests/settings_restore_defaults_regression.tscn", "tests/active_play_settings_runtime_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/packaging_linux_export_smoke.py", "tests/packaging_windows_export_smoke.py", "tests/validate_repo.py"],
-      "completionCriteria": ["A fresh 1280x720 X11 launch reports exact native/root/canvas size agreement and contains all six Main Menu commands in the first view", "1920x1080 and the full display preview/Keep/Revert/timeout/failure transaction preserve exact settings/config/runtime authority", "Compact Battle Settings close retains the visible Settings origin or restores the existing visible Battle focus cycle when that origin is hidden", "Focused, compatibility, static/editor, Linux export/startup, and Windows fresh-Wine startup gates pass"],
-      "nonGoals": ["presentation defaults/options, persistence/schema, arbitrary resolution, aspect/stretch, UI scale, Main Menu layout/copy/art, renderer, gameplay/content/balance, AI, or Native RMG changes", "new UI, breakpoints, command visibility, focus-cycle ordering, controller mapping, or confirmation-policy changes beyond the hidden-origin fail-closed focus fallback", "packaged controller interaction, AT-SPI/UIA, native Windows display hardware certification, signing/publication, whole-game, or release-readiness claims"],
-      "baseline": {"head": "aacb4bbf412aed84eed277b64fbcc89d34c1cdad", "screen": "1280x720", "nativeWindow": "1280x720", "rootWindow": "1920x1080", "rootCanvas": "1920x1080", "capture": "/tmp/heroes-packaged-mainmenu-audit2.LOsW7y/main_menu.png", "nativeGeometry": "/tmp/heroes-window-geometry.MHkZ8e", "sourceProbe": "/tmp/heroes-fit-probe-min.UMB21i", "methodControl": "/tmp/heroes-window-sync-probe.jTvDCm", "failure": "all six Main Menu command controls are outside the physical first view"},
+      "implementationTargets": [
+        "scripts/autoload/SettingsService.gd",
+        "scenes/battle/BattleShell.gd",
+        "tests/settings_display_mode_transaction_regression.gd",
+        "tests/menu_outcome_visual_smoke.gd",
+        "tests/active_play_settings_runtime_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/settings_display_mode_transaction_regression.tscn",
+        "tests/menu_outcome_visual_smoke.tscn",
+        "tests/main_menu_keyboard_navigation_smoke.tscn",
+        "tests/settings_restore_defaults_regression.tscn",
+        "tests/active_play_settings_runtime_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "A fresh 1280x720 X11 launch reports exact native/root/canvas size agreement and contains all six Main Menu commands in the first view",
+        "1920x1080 and the full display preview/Keep/Revert/timeout/failure transaction preserve exact settings/config/runtime authority",
+        "Compact Battle Settings close retains the visible Settings origin or restores the existing visible Battle focus cycle when that origin is hidden",
+        "Focused, compatibility, static/editor, Linux export/startup, and Windows fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "presentation defaults/options, persistence/schema, arbitrary resolution, aspect/stretch, UI scale, Main Menu layout/copy/art, renderer, gameplay/content/balance, AI, or Native RMG changes",
+        "new UI, breakpoints, command visibility, focus-cycle ordering, controller mapping, or confirmation-policy changes beyond the hidden-origin fail-closed focus fallback",
+        "packaged controller interaction, AT-SPI/UIA, native Windows display hardware certification, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "aacb4bbf412aed84eed277b64fbcc89d34c1cdad",
+        "screen": "1280x720",
+        "nativeWindow": "1280x720",
+        "rootWindow": "1920x1080",
+        "rootCanvas": "1920x1080",
+        "capture": "/tmp/heroes-packaged-mainmenu-audit2.LOsW7y/main_menu.png",
+        "nativeGeometry": "/tmp/heroes-window-geometry.MHkZ8e",
+        "sourceProbe": "/tmp/heroes-fit-probe-min.UMB21i",
+        "methodControl": "/tmp/heroes-window-sync-probe.jTvDCm",
+        "failure": "all six Main Menu command controls are outside the physical first view"
+      },
       "createdAt": "2026-08-18T07:50:39Z",
       "startedAt": "2026-08-18T07:50:39Z",
       "completedAt": "2026-08-18T09:56:52Z",
@@ -90309,11 +90495,52 @@
       "classification": "implementation_slice",
       "source": "PLAN.md",
       "purpose": "Keep Battle Save, Settings, and Main Menu commands visible and focusable at the established compact breakpoint without adding a new surface or changing wide-layout behavior.",
-      "implementationTargets": ["scenes/battle/BattleShell.gd", "scenes/battle/BattleShell.tscn", "tests/active_play_settings_runtime_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
-      "testOwners": ["tests/active_play_settings_runtime_report.tscn", "tests/battle_layout_smoke.tscn", "tests/active_play_keyboard_focus_smoke.tscn", "tests/accessibility_screen_reader_semantics_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/packaging_linux_export_smoke.py", "tests/packaging_windows_export_smoke.py", "tests/validate_repo.py"],
-      "completionCriteria": ["At 1280x720 and supported 130% UI scale the existing SaveSlot, Save, Settings, and Main Menu controls are visible, focusable, ordered, and contained without violating Battle board or action-control compact contracts", "Compact Settings open/close returns focus to the visible Settings origin and save/settings/menu/session authority remains exact", "At 1920x1080 the existing two-column footer, speed row, and complete system-command layout remain exact, and focused/compatibility/static/platform gates pass"],
-      "nonGoals": ["new commands, panels, overlays, drawers, scrolling, copy, tooltips, actions, shortcuts, breakpoints, UI-scale options, or settings policy", "Battle rules, board navigation, targeting, animation, save schema, route, content, balance, AI, renderer, or Native RMG changes", "packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"],
-      "baseline": {"head": "5cade7ac1ed91661cf1f2d425fee59af9fa76e9d", "screen": "1280x720", "uiScalePercent": 130, "logicalRoot": "984.615x553.846", "artifact": "/tmp/heroes-battle-compact-command-audit2.eF5Hcm", "hiddenExistingControls": ["SystemPanel", "SpeedNormal", "SpeedFast", "SpeedInstant", "SaveSlot", "Save", "Settings", "Menu"], "failure": "active compact Battle exposes no visible save, settings, or main-menu command"},
+      "implementationTargets": [
+        "scenes/battle/BattleShell.gd",
+        "scenes/battle/BattleShell.tscn",
+        "tests/active_play_settings_runtime_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/active_play_settings_runtime_report.tscn",
+        "tests/battle_layout_smoke.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "At 1280x720 and supported 130% UI scale the existing SaveSlot, Save, Settings, and Main Menu controls are visible, focusable, ordered, and contained without violating Battle board or action-control compact contracts",
+        "Compact Settings open/close returns focus to the visible Settings origin and save/settings/menu/session authority remains exact",
+        "At 1920x1080 the existing two-column footer, speed row, and complete system-command layout remain exact, and focused/compatibility/static/platform gates pass"
+      ],
+      "nonGoals": [
+        "new commands, panels, overlays, drawers, scrolling, copy, tooltips, actions, shortcuts, breakpoints, UI-scale options, or settings policy",
+        "Battle rules, board navigation, targeting, animation, save schema, route, content, balance, AI, renderer, or Native RMG changes",
+        "packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "5cade7ac1ed91661cf1f2d425fee59af9fa76e9d",
+        "screen": "1280x720",
+        "uiScalePercent": 130,
+        "logicalRoot": "984.615x553.846",
+        "artifact": "/tmp/heroes-battle-compact-command-audit2.eF5Hcm",
+        "hiddenExistingControls": [
+          "SystemPanel",
+          "SpeedNormal",
+          "SpeedFast",
+          "SpeedInstant",
+          "SaveSlot",
+          "Save",
+          "Settings",
+          "Menu"
+        ],
+        "failure": "active compact Battle exposes no visible save, settings, or main-menu command"
+      },
       "createdAt": "2026-08-18T10:07:19Z",
       "startedAt": "2026-08-18T10:07:19Z",
       "completedAt": "2026-08-18T10:55:12Z",
@@ -90330,17 +90557,64 @@
       "classification": "implementation_slice",
       "source": "PLAN.md",
       "purpose": "Keep native DisplayServer, root Window, and root content-scale sizes exact across presentation apply and rollback so Revert cannot restore a stale 0x0/64x64 native authority.",
-      "implementationTargets": ["scripts/autoload/SettingsService.gd", "tests/settings_display_mode_transaction_regression.gd", "tests/main_menu_keyboard_navigation_smoke.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
-      "testOwners": ["tests/settings_display_mode_transaction_regression.tscn", "tests/main_menu_keyboard_navigation_smoke.tscn", "tests/active_play_settings_runtime_report.tscn", "tests/menu_outcome_visual_smoke.tscn", "tests/core_systems_regression_smoke.tscn", "tests/packaging_linux_export_smoke.py", "tests/packaging_windows_export_smoke.py", "tests/validate_repo.py"],
-      "completionCriteria": ["Native/root/content-scale size agreement is exact at 1280x720 and throughout preview, Keep/reload, Revert, replacement, timeout, clamp, and save-failure rollback", "The unchanged Main Menu display matrix blocks parent input while visible and restores the identical parent probe exactly once after Revert at 1280/1920 with exact transaction/settings/file/focus/unrelated authority", "Focused, compatibility, core, repository/editor, Linux X11 and bounded official Linux/Windows export-startup gates pass"],
-      "nonGoals": ["presentation defaults/options, monitor/clamp/timeout/transaction/persistence/focus/dialog/layout/UI-scale policy", "renderer, gameplay, content, balance, AI, save schema, maps, or Native RMG", "packaged display interaction, native hardware/controller certification, AT-SPI/UIA, signing/publication, whole-game, or release-readiness claims"],
-      "baseline": {"head": "e3ee753a", "focusedArtifacts": ["/tmp/heroes-settings-display-current-head.cvs2kL", "/tmp/heroes-settings-display-exact-command.GEDRrm"], "focusedFailure": "native 0x0 while root/window/content scale are 1280x720", "inputDiagnostic": "/tmp/heroes-main-menu-probe-runtime.zaEdok", "revertFailure": "stale native 64x64 restored to root, leaving parent probe outside viewport", "negativeControls": ["exclusive release/re-arm", "canvas-transformed click coordinates"]},
+      "implementationTargets": [
+        "scripts/autoload/SettingsService.gd",
+        "tests/settings_display_mode_transaction_regression.gd",
+        "tests/main_menu_keyboard_navigation_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/settings_display_mode_transaction_regression.tscn",
+        "tests/main_menu_keyboard_navigation_smoke.tscn",
+        "tests/active_play_settings_runtime_report.tscn",
+        "tests/menu_outcome_visual_smoke.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "Native/root/content-scale size agreement is exact at 1280x720 and throughout preview, Keep/reload, Revert, replacement, timeout, clamp, and save-failure rollback",
+        "The unchanged Main Menu display matrix blocks parent input while visible and restores the identical parent probe exactly once after Revert at 1280/1920 with exact transaction/settings/file/focus/unrelated authority",
+        "Focused, compatibility, core, repository/editor, Linux X11 and bounded official Linux/Windows export-startup gates pass"
+      ],
+      "nonGoals": [
+        "presentation defaults/options, monitor/clamp/timeout/transaction/persistence/focus/dialog/layout/UI-scale policy",
+        "renderer, gameplay, content, balance, AI, save schema, maps, or Native RMG",
+        "packaged display interaction, native hardware/controller certification, AT-SPI/UIA, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "e3ee753a",
+        "focusedArtifacts": [
+          "/tmp/heroes-settings-display-current-head.cvs2kL",
+          "/tmp/heroes-settings-display-exact-command.GEDRrm"
+        ],
+        "focusedFailure": "native 0x0 while root/window/content scale are 1280x720",
+        "inputDiagnostic": "/tmp/heroes-main-menu-probe-runtime.zaEdok",
+        "revertFailure": "stale native 64x64 restored to root, leaving parent probe outside viewport",
+        "negativeControls": [
+          "exclusive release/re-arm",
+          "canvas-transformed click coordinates"
+        ]
+      },
       "createdAt": "2026-08-18T12:49:23Z",
       "startedAt": "2026-08-18T12:49:23Z",
       "updatedAt": "2026-08-18T13:57:24Z",
       "completedAt": "2026-08-18T13:57:24Z",
       "notes": "Completed with live runtime behavior, not report-only work. The shared setter updates native DisplayServer, root Window, and content-scale sizes; rollback capture uses live root authority with a native fallback only when no root exists. Headless unavailable 0x0 native geometry is accepted only on the headless DisplayServer, while X11 retains exact native equality. Focused transaction, full 1280/1920 Main Menu, active Settings, Restore Defaults, menu/outcome visual, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. Packaged display interaction and broader release claims remain unclaimed.",
-      "completionEvidence": ["/tmp/heroes-settings-runtime-authority-focused.ZsKduv", "/tmp/heroes-settings-runtime-size-x11.CfLcb1", "/tmp/heroes-main-menu-runtime-authority-final.ZoUWVW", "/tmp/heroes-runtime-size-compat.tVyCZK", "/tmp/heroes-menu-outcome-runtime-size-final.B0IZvv", "/tmp/heroes-runtime-size-core.hnnYGS", "/tmp/heroes-runtime-size-final-audit.uCkXdM", "/tmp/heroes-runtime-size-linux-package.IW7fqC", "/tmp/heroes-runtime-size-windows-package.3xmzPI"],
+      "completionEvidence": [
+        "/tmp/heroes-settings-runtime-authority-focused.ZsKduv",
+        "/tmp/heroes-settings-runtime-size-x11.CfLcb1",
+        "/tmp/heroes-main-menu-runtime-authority-final.ZoUWVW",
+        "/tmp/heroes-runtime-size-compat.tVyCZK",
+        "/tmp/heroes-menu-outcome-runtime-size-final.B0IZvv",
+        "/tmp/heroes-runtime-size-core.hnnYGS",
+        "/tmp/heroes-runtime-size-final-audit.uCkXdM",
+        "/tmp/heroes-runtime-size-linux-package.IW7fqC",
+        "/tmp/heroes-runtime-size-windows-package.3xmzPI"
+      ],
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader release-readiness gaps remain.",
       "blockedReason": null
     },
@@ -90352,11 +90626,44 @@
       "classification": "implementation_slice",
       "source": "PLAN.md",
       "purpose": "Release exclusive Window ownership when a display preview finishes so parent pointer input resumes immediately, while retaining exclusive input containment for every visible preview.",
-      "implementationTargets": ["scenes/menus/MainMenu.gd", "tests/main_menu_keyboard_navigation_smoke.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
-      "testOwners": ["tests/main_menu_keyboard_navigation_smoke.tscn", "tests/settings_display_transaction_regression.tscn", "tests/settings_restore_defaults_regression.tscn", "tests/core_systems_regression_smoke.tscn", "tests/packaging_linux_export_smoke.py", "tests/packaging_windows_export_smoke.py", "tests/validate_repo.py"],
-      "completionCriteria": ["1280/1920 mode/resolution previews block parent input while visible, release exclusivity after Keep/Revert, and allow the identical parent probe exactly once afterward", "Every later preview re-arms exclusivity while physical input, stale-generation/fingerprint, settings artifacts, transaction, focus, and unrelated authority remain exact", "Focused, compatibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass"],
-      "nonGoals": ["display options, timeout, transaction schema/paths, persistence, focus target, layout, copy/buttons, or other destructive-dialog changes", "gameplay, content, balance, AI, save schema, renderer policy, maps, or Native RMG changes", "packaged display interaction, native monitor/controller certification, AT-SPI/UIA, signing/publication, whole-game, or release-readiness claims"],
-      "baseline": {"head": "e3ee753a", "artifact": "/tmp/heroes-next-audit-main-menu.pf04m5", "case": "display_mode_1280", "exactFailure": "parent probe was not actionable after Revert", "greenFacts": ["background_authority_exact", "dialog_transaction_exact"], "redFact": "identical_parent_positive_once", "sourceBoundary": "_finish_display_change_ui hides but does not release exclusive; _show_display_change_confirmation does not explicitly re-arm"},
+      "implementationTargets": [
+        "scenes/menus/MainMenu.gd",
+        "tests/main_menu_keyboard_navigation_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/main_menu_keyboard_navigation_smoke.tscn",
+        "tests/settings_display_transaction_regression.tscn",
+        "tests/settings_restore_defaults_regression.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "1280/1920 mode/resolution previews block parent input while visible, release exclusivity after Keep/Revert, and allow the identical parent probe exactly once afterward",
+        "Every later preview re-arms exclusivity while physical input, stale-generation/fingerprint, settings artifacts, transaction, focus, and unrelated authority remain exact",
+        "Focused, compatibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass"
+      ],
+      "nonGoals": [
+        "display options, timeout, transaction schema/paths, persistence, focus target, layout, copy/buttons, or other destructive-dialog changes",
+        "gameplay, content, balance, AI, save schema, renderer policy, maps, or Native RMG changes",
+        "packaged display interaction, native monitor/controller certification, AT-SPI/UIA, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "e3ee753a",
+        "artifact": "/tmp/heroes-next-audit-main-menu.pf04m5",
+        "case": "display_mode_1280",
+        "exactFailure": "parent probe was not actionable after Revert",
+        "greenFacts": [
+          "background_authority_exact",
+          "dialog_transaction_exact"
+        ],
+        "redFact": "identical_parent_positive_once",
+        "sourceBoundary": "_finish_display_change_ui hides but does not release exclusive; _show_display_change_confirmation does not explicitly re-arm"
+      },
       "createdAt": "2026-08-18T12:04:34Z",
       "startedAt": "2026-08-18T12:04:34Z",
       "updatedAt": "2026-08-18T12:38:00Z",
@@ -90372,11 +90679,54 @@
       "classification": "implementation_slice",
       "source": "PLAN.md",
       "purpose": "Let the public homm3_extra_large identity and its normalized extra_large form reach the already-recovered exact 144x144 workflow instead of failing before native generation.",
-      "implementationTargets": ["src/gdextension/src/h3maped_rmg_core.cpp", "src/gdextension/src/h3maped_rmg_core_selftest.cpp", "tests/native_rmg_end_to_end_runtime_boundary_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json", "bin/h3maped_rmg_core_selftest", "bin/h3maped_rmg_core_selftest.exe", "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so", "bin/libaurelion_map_persistence.linux.template_release.x86_64.so", "bin/libaurelion_map_persistence.windows.template_debug.x86_64.dll", "bin/libaurelion_map_persistence.windows.template_release.x86_64.dll"],
-      "testOwners": ["bin/h3maped_rmg_core_selftest", "bin/h3maped_rmg_core_selftest.exe", "tests/native_random_map_production_parity_completion_audit_report.tscn", "tests/native_rmg_end_to_end_runtime_boundary_report.tscn", "tests/native_random_map_full_parity_gate_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/packaging_linux_export_smoke.py", "tests/packaging_windows_export_smoke.py", "tests/validate_repo.py"],
-      "completionCriteria": ["map_width_for_size_class maps homm3_extra_large, normalized extra_large, and the retained xlarge aliases to exact width 144 while every other identity remains unchanged", "The public five-player 144x144 one-level land case generates and adopts through the recovered native payload with exact normalized identity and no translated/heuristic fallback", "Unsupported dimensions, water/level shapes outside the recovered matrix, and unknown monster strengths remain explicit fail-closed results", "Linux and Windows native builds/self-tests, focused runtime, compatibility, repository/editor, and bounded export/startup gates pass"],
-      "nonGoals": ["new topology, object placement, density, retry, template, terrain, player, water, level, monster-strength, payload, or package conversion semantics", "translated template fallback, GDScript generator, brute-force retry, final-map delta tuning, or unsupported-input enablement", "packaged Random Map interaction, Native RMG broad parity/completion, controller/accessibility/native-hardware certification, signing/publication, whole-game, or release-readiness claims"],
-      "baseline": {"head": "2c564cbbc3d4f698fefd6f44262377e106472e0b", "artifact": "/tmp/heroes-readiness-owner-audit.F5mgK5", "firstCorrectedArtifact": "/tmp/heroes-xl-alias-production-audit.BeSGrC", "case": "extra_large_land_default", "publicSizeClass": "homm3_extra_large", "normalizedSizeClass": "extra_large", "normalizedSize": "144x144x1", "playerCount": 5, "failure": "native_rmg_exact_state_chain_not_ported", "sourceMismatch": "public homm3_extra_large becomes normalized extra_large while native recognizes only homm3_xlarge/xlarge aliases"},
+      "implementationTargets": [
+        "src/gdextension/src/h3maped_rmg_core.cpp",
+        "src/gdextension/src/h3maped_rmg_core_selftest.cpp",
+        "tests/native_rmg_end_to_end_runtime_boundary_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json",
+        "bin/h3maped_rmg_core_selftest",
+        "bin/h3maped_rmg_core_selftest.exe",
+        "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
+        "bin/libaurelion_map_persistence.linux.template_release.x86_64.so",
+        "bin/libaurelion_map_persistence.windows.template_debug.x86_64.dll",
+        "bin/libaurelion_map_persistence.windows.template_release.x86_64.dll"
+      ],
+      "testOwners": [
+        "bin/h3maped_rmg_core_selftest",
+        "bin/h3maped_rmg_core_selftest.exe",
+        "tests/native_random_map_production_parity_completion_audit_report.tscn",
+        "tests/native_rmg_end_to_end_runtime_boundary_report.tscn",
+        "tests/native_random_map_full_parity_gate_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "map_width_for_size_class maps homm3_extra_large, normalized extra_large, and the retained xlarge aliases to exact width 144 while every other identity remains unchanged",
+        "The public five-player 144x144 one-level land case generates and adopts through the recovered native payload with exact normalized identity and no translated/heuristic fallback",
+        "Unsupported dimensions, water/level shapes outside the recovered matrix, and unknown monster strengths remain explicit fail-closed results",
+        "Linux and Windows native builds/self-tests, focused runtime, compatibility, repository/editor, and bounded export/startup gates pass"
+      ],
+      "nonGoals": [
+        "new topology, object placement, density, retry, template, terrain, player, water, level, monster-strength, payload, or package conversion semantics",
+        "translated template fallback, GDScript generator, brute-force retry, final-map delta tuning, or unsupported-input enablement",
+        "packaged Random Map interaction, Native RMG broad parity/completion, controller/accessibility/native-hardware certification, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "2c564cbbc3d4f698fefd6f44262377e106472e0b",
+        "artifact": "/tmp/heroes-readiness-owner-audit.F5mgK5",
+        "firstCorrectedArtifact": "/tmp/heroes-xl-alias-production-audit.BeSGrC",
+        "case": "extra_large_land_default",
+        "publicSizeClass": "homm3_extra_large",
+        "normalizedSizeClass": "extra_large",
+        "normalizedSize": "144x144x1",
+        "playerCount": 5,
+        "failure": "native_rmg_exact_state_chain_not_ported",
+        "sourceMismatch": "public homm3_extra_large becomes normalized extra_large while native recognizes only homm3_xlarge/xlarge aliases"
+      },
       "createdAt": "2026-08-20T07:29:28Z",
       "startedAt": "2026-08-20T07:29:28Z",
       "updatedAt": "2026-08-20T09:04:42Z",
@@ -90393,11 +90743,46 @@
       "classification": "implementation_slice",
       "source": "PLAN.md",
       "purpose": "End painted BattleBoard token captions at a complete word with one Unicode ellipsis while preserving exact full stack identity, token geometry, input, and combat authority.",
-      "implementationTargets": ["scenes/battle/BattleBoardView.gd", "tests/battle_controller_board_navigation_smoke.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
-      "testOwners": ["tests/battle_controller_board_navigation_smoke.tscn", "tests/battle_layout_smoke.tscn", "tests/town_battle_visual_smoke.tscn", "tests/accessibility_screen_reader_semantics_report.tscn", "tests/battle_event_animation_state_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/packaging_linux_export_smoke.py", "tests/packaging_windows_export_smoke.py", "tests/validate_repo.py"],
-      "completionCriteria": ["Fresh 1280x720/130% painted Battle has no mid-token Blackbranch C or Mudglass Slin captions; fitting names remain exact and genuine multi-word overflow ends after a complete word with one Unicode ellipsis", "Focused Board validation independently proves every caption against its full live name while full tooltip/live context and the separate cursor/footer label remain exact", "Board navigation, Battle layout/visual, accessibility, animation, core, repository/editor, and bounded Linux/Windows export-startup gates pass with exact authority"],
-      "nonGoals": ["initiative-strip chips, cursor/footer label, live-region wording, names, caption budget/font/token geometry, tooltip, board/layout, or shared UI-kit changes", "combat rules, initiative, movement, targeting, actions, animation timing, content, balance, AI, save/schema, renderer, map, or Native RMG changes", "packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"],
-      "baseline": {"head": "6386b6ef", "screen": "1280x720", "uiScalePercent": 130, "capture": "/tmp/heroes-battle-guide-painted.s8jDZN/battle_compact_action_guide.png", "visibleFailures": ["Blackbranch C", "Mudglass Slin"], "sourceBoundary": "BattleBoardView._stack_short_label returns name.left(13) and _draw_stack_caption paints it directly", "overlapExclusion": "completed initiative-strip readable identity slice explicitly excluded board-token relabeling"},
+      "implementationTargets": [
+        "scenes/battle/BattleBoardView.gd",
+        "tests/battle_controller_board_navigation_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/battle_controller_board_navigation_smoke.tscn",
+        "tests/battle_layout_smoke.tscn",
+        "tests/town_battle_visual_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/battle_event_animation_state_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "Fresh 1280x720/130% painted Battle has no mid-token Blackbranch C or Mudglass Slin captions; fitting names remain exact and genuine multi-word overflow ends after a complete word with one Unicode ellipsis",
+        "Focused Board validation independently proves every caption against its full live name while full tooltip/live context and the separate cursor/footer label remain exact",
+        "Board navigation, Battle layout/visual, accessibility, animation, core, repository/editor, and bounded Linux/Windows export-startup gates pass with exact authority"
+      ],
+      "nonGoals": [
+        "initiative-strip chips, cursor/footer label, live-region wording, names, caption budget/font/token geometry, tooltip, board/layout, or shared UI-kit changes",
+        "combat rules, initiative, movement, targeting, actions, animation timing, content, balance, AI, save/schema, renderer, map, or Native RMG changes",
+        "packaged Battle interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "6386b6ef",
+        "screen": "1280x720",
+        "uiScalePercent": 130,
+        "capture": "/tmp/heroes-battle-guide-painted.s8jDZN/battle_compact_action_guide.png",
+        "visibleFailures": [
+          "Blackbranch C",
+          "Mudglass Slin"
+        ],
+        "sourceBoundary": "BattleBoardView._stack_short_label returns name.left(13) and _draw_stack_caption paints it directly",
+        "overlapExclusion": "completed initiative-strip readable identity slice explicitly excluded board-token relabeling"
+      },
       "createdAt": "2026-08-18T11:34:28Z",
       "startedAt": "2026-08-18T11:34:28Z",
       "updatedAt": "2026-08-18T11:49:05Z",
@@ -90414,11 +90799,43 @@
       "classification": "implementation_slice",
       "source": "PLAN.md",
       "purpose": "End genuine Battle ActionGuide overflow at a complete word with one Unicode ellipsis while preserving exact source text, tooltip, line budgets, layout, and gameplay authority.",
-      "implementationTargets": ["scenes/battle/BattleShell.gd", "tests/active_play_settings_runtime_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
-      "testOwners": ["tests/active_play_settings_runtime_report.tscn", "tests/battle_layout_smoke.tscn", "tests/battle_controller_board_navigation_smoke.tscn", "tests/active_play_keyboard_focus_smoke.tscn", "tests/accessibility_screen_reader_semantics_report.tscn", "tests/core_systems_regression_smoke.tscn", "tests/packaging_linux_export_smoke.py", "tests/packaging_windows_export_smoke.py", "tests/validate_repo.py"],
-      "completionCriteria": ["Fresh 1280x720/130% painted ActionGuide first view retains its two source lines and has no ASCII three-dot or mid-token ending while the exact complete guide and enriched detail remain in the tooltip", "Wide Battle retains all three source lines and exact fitting text; genuine overflow ends at the last whole-word boundary with one Unicode ellipsis through 1280-1920-1280 refit", "Focused, compatibility, repository/editor, and bounded Linux/Windows export-startup gates pass with guide/layout/focus/battle authority exact"],
-      "nonGoals": ["guide wording/source order/tooltip content, character or line budgets, font, geometry, commands, actions, or shared FrontierVisualKit changes", "Battle rules, board navigation, targeting, animation, save/schema, route, content, balance, AI, renderer, or Native RMG changes", "packaged Battle interaction, hardware/certification, signing/publication, whole-game, or release-readiness claims"],
-      "baseline": {"head": "8d6758f9", "screen": "1280x720", "uiScalePercent": 130, "capture": "/tmp/heroes-battle-compact-painted-final-pass.EOxc2A/battle-compact.png", "visibleFailure": "Position check ends with t...", "sourceBoundary": "_set_battle_action_guide uses generic character-cutting FrontierVisualKit.compact_text", "existingPolicy": "_battle_action_context_word_text"},
+      "implementationTargets": [
+        "scenes/battle/BattleShell.gd",
+        "tests/active_play_settings_runtime_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/active_play_settings_runtime_report.tscn",
+        "tests/battle_layout_smoke.tscn",
+        "tests/battle_controller_board_navigation_smoke.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "Fresh 1280x720/130% painted ActionGuide first view retains its two source lines and has no ASCII three-dot or mid-token ending while the exact complete guide and enriched detail remain in the tooltip",
+        "Wide Battle retains all three source lines and exact fitting text; genuine overflow ends at the last whole-word boundary with one Unicode ellipsis through 1280-1920-1280 refit",
+        "Focused, compatibility, repository/editor, and bounded Linux/Windows export-startup gates pass with guide/layout/focus/battle authority exact"
+      ],
+      "nonGoals": [
+        "guide wording/source order/tooltip content, character or line budgets, font, geometry, commands, actions, or shared FrontierVisualKit changes",
+        "Battle rules, board navigation, targeting, animation, save/schema, route, content, balance, AI, renderer, or Native RMG changes",
+        "packaged Battle interaction, hardware/certification, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "8d6758f9",
+        "screen": "1280x720",
+        "uiScalePercent": 130,
+        "capture": "/tmp/heroes-battle-compact-painted-final-pass.EOxc2A/battle-compact.png",
+        "visibleFailure": "Position check ends with t...",
+        "sourceBoundary": "_set_battle_action_guide uses generic character-cutting FrontierVisualKit.compact_text",
+        "existingPolicy": "_battle_action_context_word_text"
+      },
       "createdAt": "2026-08-18T10:57:00Z",
       "startedAt": "2026-08-18T10:57:00Z",
       "updatedAt": "2026-08-18T11:29:57Z",
@@ -90969,9 +91386,8 @@
     }
   ],
   "summary": "The public and normalized Extra Large Native RMG identities now reach the already-recovered exact 144x144 workflow with synchronized Linux/Windows native and bounded export/startup proof. Broader owner-corpus parity remains fail-closed; the game is not release-ready.",
-  "status": "completed",
   "taskId": "10184",
-  "updatedAt": "2026-08-20T09:04:42Z",
+  "updatedAt": "2026-08-20T10:33:57Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
