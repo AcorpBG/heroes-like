@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved release-readiness implementation slice."
+    "Select the next tracker-approved source-backed release-readiness implementation slice."
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Campaign command rail now exposes compact Previous/Next Arc and Previous/Next Chapter native actions with exact adjacent selection and boundary semantics. Focused 1280x720/1920x1080, real Linux AT-SPI, compatibility, static/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass with bounded claims.",
+  "currentNotes": "The Campaign launch-setup native command rail slice is complete. Select the next tracker-approved source-backed release-readiness implementation slice; no whole-game or release-readiness claim is made.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "accessibility-main-menu-campaign-arc-chapter-native-action-navigation-10184",
-  "currentSliceId": "accessibility-main-menu-campaign-arc-chapter-native-action-navigation-10184",
-  "currentSliceNotes": "Completed live Campaign command-rail arc/chapter actions with exact adjacent selection, native AT-SPI exposure, focused two-width authority, compatibility, static/editor, and bounded Linux/Windows export-startup evidence.",
+  "currentSlice": "accessibility-main-menu-campaign-launch-setup-native-command-rail-10184",
+  "currentSliceId": "accessibility-main-menu-campaign-launch-setup-native-command-rail-10184",
+  "currentSliceNotes": "Completed exact Campaign-only difficulty and launch controls outside the clipped scroll body, including the accessibility subtree handoff required for stable real Linux X11/AT-SPI launch routing. Focused, compatibility, static/editor, and bounded Linux/Windows export-startup gates pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "accessibility main menu campaign arc chapter native action navigation 10184",
-  "currentSliceUpdatedAt": "2026-08-20T19:12:21Z",
+  "currentSliceTitle": "accessibility main menu campaign launch setup native command rail 10184",
+  "currentSliceUpdatedAt": "2026-08-20T21:14:38Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19897,6 +19897,59 @@
       "completedAt": "2026-08-20T10:36:12Z",
       "notes": "Completed exact zero-road runtime projection. Focused payload 40aa5303 repeats at 24313 bytes/303 objects with zero road cells and zero overlays; map/scenario validation, existing nonzero-road matrix, malformed-road API, core, repository, and bounded Linux/Windows export-startup gates pass.",
       "remainingWork": "None for this projection-only slice. Broad owner-corpus count, topology, and semantic-layout parity remains source-recovery work and was not tuned or waived.",
+      "blockedReason": null
+    },
+    {
+      "id": "accessibility-main-menu-campaign-launch-setup-native-command-rail-10184",
+      "title": "accessibility main menu campaign launch setup native command rail 10184",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Expose the exact existing Campaign difficulty and launch controls as native actions while preserving their established selection, lock, deduplication, storage, and routing authority.",
+      "implementationTargets": [
+        "scenes/menus/MainMenu.gd",
+        "scenes/menus/MainMenu.tscn",
+        "tests/player_facing_campaign_menu_smoke.gd",
+        "tests/accessibility_screen_reader_semantics_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/player_facing_campaign_menu_smoke.tscn",
+        "tests/main_menu_keyboard_navigation_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/menu_outcome_visual_smoke.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "The exact single CampaignDifficultyPicker, CampaignPrimaryAction, and StartChapter nodes live in one Campaign-only command rail outside the clipped scroll body with their existing signals and no duplicate or replacement controls",
+        "Difficulty item order, selection, profile mutation, and tooltip semantics remain exact; primary versus selected-chapter visibility/deduplication, disabled/lock/storage state, text, tooltip, and launch routing remain exact",
+        "Focused 1280x720 and 1920x1080 runtime proves rail containment/no overlap, Campaign-only visibility, focus and input compatibility, exact launch setup, and unchanged ItemList/progression/session/settings/save authority outside established mutations",
+        "A real Linux X11/AT-SPI observer exposes the difficulty and active launch controls and performs a difficulty change and launch handoff; accessibility, compatibility, repository/editor, and bounded Linux/Windows export-startup gates pass"
+      ],
+      "nonGoals": [
+        "duplicating or replacing the existing picker or launch nodes, changing campaign/chapter/difficulty rules, item order, progression, lock, storage, routing, ItemLists, focus policy, or input mappings",
+        "changing save schema, gameplay, AI, balance, Native RMG, accessibility schema, or screen-reader speech behavior",
+        "packaged Campaign interaction, Windows UIA, controller/native hardware certification, signing/publication, whole-game, campaign-complete, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "c284d7ef",
+        "screen": "1280x720",
+        "observerArtifact": "/tmp/heroes-atspi-campaign-minimal.kC8S1n",
+        "failure": "The opened 25-node Campaign tree exposes four adjacent navigation actions plus Guide and Close, but no Campaign difficulty or launch Action",
+        "existingAuthority": "CampaignDifficultyPicker plus MainMenu _on_campaign_difficulty_selected, CampaignPrimaryAction/_on_campaign_primary_pressed, StartChapter/_on_start_chapter_pressed, and _refresh_campaign_browser"
+      },
+      "createdAt": "2026-08-20T19:21:34Z",
+      "startedAt": "2026-08-20T19:21:34Z",
+      "updatedAt": "2026-08-20T21:14:38Z",
+      "completedAt": "2026-08-20T21:14:38Z",
+      "notes": "Completed the exact existing-control move into one Campaign-only native launch-setup rail. Focused 1280x720/1920x1080 runtime proves public difficulty selection, conditional primary/chapter deduplication, focus, containment, launch routing, and save/session/settings authority. Real Linux X11/AT-SPI directly selects Campaign, selects Warlord, and launches the exact primary action; successful accessible launch hides and republishes the full Main Menu subtree before the two-frame route, preventing the reproduced AccessKit stale-interface panic. Main Menu keyboard, menu/outcome, accessibility, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup gates pass. The platform gates do not claim packaged Campaign interaction, Windows UIA, controller/native hardware certification, signing/publication, campaign completeness, whole-game, or release readiness.",
+      "remainingWork": "None for this Campaign launch-setup accessibility slice. Select the next tracker-approved source-backed release-readiness implementation slice.",
       "blockedReason": null
     },
     {
@@ -90981,7 +91034,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain. The game is not release-ready.",
-  "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Native RMG work still requires exact recovered source/private-state attribution rather than final-map tuning.",
+  "remainingWork": "Select the next tracker-approved source-backed release-readiness implementation slice. Native RMG work still requires exact recovered source/private-state attribution rather than final-map tuning.",
   "reportOnlyEvidence": [
     {
       "entries": [
