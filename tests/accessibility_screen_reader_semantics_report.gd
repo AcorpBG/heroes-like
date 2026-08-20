@@ -242,6 +242,90 @@ func _run() -> void:
 		if not shipped_option.accessibility_description.contains("Current value:"):
 			return _fail("Shipped option control lacks current-value semantics: %s / %s" % [option_contract["node"], shipped_option.accessibility_description])
 
+	var campaign_session_before = SessionState.active_session
+	var campaign_settings_before: Dictionary = _canonical_settings_transaction(SettingsService.validation_settings_transaction_snapshot())
+	var campaign_save_cache_before: Dictionary = SaveService.validation_summary_cache_snapshot()
+	var campaign_profile_before: Dictionary = CampaignProgression.ensure_profile().duplicate(true)
+	menu.call("validation_open_campaign_stage")
+	await _settle()
+	var previous_arc := menu.find_child("PreviousCampaignArc", true, false) as Button
+	var next_arc := menu.find_child("NextCampaignArc", true, false) as Button
+	var previous_chapter := menu.find_child("PreviousCampaignChapter", true, false) as Button
+	var next_chapter := menu.find_child("NextCampaignChapter", true, false) as Button
+	var campaign_entries: Array = CampaignProgression.campaign_browser_entries()
+	if previous_arc == null or next_arc == null or previous_chapter == null or next_chapter == null or campaign_entries.size() < 2:
+		return _fail("Main-menu Campaign board is missing its native adjacent arc/chapter actions.")
+	var first_campaign_id := String((campaign_entries[0] as Dictionary).get("campaign_id", ""))
+	var second_campaign_id := String((campaign_entries[1] as Dictionary).get("campaign_id", ""))
+	if not bool(menu.call("validation_select_campaign", first_campaign_id)):
+		return _fail("Main-menu Campaign native semantics could not establish the first arc.")
+	await _settle()
+	var chapter_entries: Array = CampaignProgression.campaign_chapter_entries(first_campaign_id)
+	if chapter_entries.size() < 2:
+		return _fail("Main-menu Campaign native semantics needs two chapters in the first arc.")
+	var first_chapter_id := String((chapter_entries[0] as Dictionary).get("scenario_id", ""))
+	var second_chapter_id := String((chapter_entries[1] as Dictionary).get("scenario_id", ""))
+	if not bool(menu.call("validation_select_campaign_chapter", first_chapter_id)):
+		return _fail("Main-menu Campaign native semantics could not establish the first chapter.")
+	await _settle()
+	var campaign_initial: Dictionary = menu.call("validation_snapshot")
+	var campaign_native_checks := {
+		"previous_arc_name": UiAccessibility.semantic_name(previous_arc) == "Previous Arc",
+		"next_arc_name": UiAccessibility.semantic_name(next_arc) == "Next Arc",
+		"previous_chapter_name": UiAccessibility.semantic_name(previous_chapter) == "Previous Chapter",
+		"next_chapter_name": UiAccessibility.semantic_name(next_chapter) == "Next Chapter",
+		"previous_arc_description": previous_arc.accessibility_description == previous_arc.tooltip_text and previous_arc.accessibility_description.contains("first Campaign arc"),
+		"next_arc_description": next_arc.accessibility_description == next_arc.tooltip_text and next_arc.accessibility_description.contains("Select the next Campaign arc:"),
+		"previous_chapter_description": previous_chapter.accessibility_description == previous_chapter.tooltip_text and previous_chapter.accessibility_description.contains("first Campaign chapter"),
+		"next_chapter_description": next_chapter.accessibility_description == next_chapter.tooltip_text and next_chapter.accessibility_description.contains("Select the next Campaign chapter:"),
+		"previous_arc_disabled": previous_arc.disabled,
+		"next_arc_enabled": not next_arc.disabled,
+		"previous_chapter_disabled": previous_chapter.disabled,
+		"next_chapter_enabled": not next_chapter.disabled,
+		"first_arc_selected": String(campaign_initial.get("selected_campaign_id", "")) == first_campaign_id and int(campaign_initial.get("selected_campaign_index", -1)) == 0,
+		"first_chapter_selected": String(campaign_initial.get("selected_campaign_scenario_id", "")) == first_chapter_id and int(campaign_initial.get("selected_campaign_chapter_index", -1)) == 0,
+	}
+	if not _checks_exact(campaign_native_checks):
+		return _fail("Main-menu Campaign adjacent arc/chapter actions lack exact native semantics: %s" % campaign_native_checks)
+	var profile_before_arc_action: Dictionary = CampaignProgression.ensure_profile().duplicate(true)
+	next_arc.pressed.emit()
+	await _settle()
+	var campaign_advanced: Dictionary = menu.call("validation_snapshot")
+	var expected_arc_profile: Dictionary = CampaignRules.mark_selected_campaign(profile_before_arc_action, second_campaign_id)
+	if String(campaign_advanced.get("selected_campaign_id", "")) != second_campaign_id or int(campaign_advanced.get("selected_campaign_index", -1)) != 1 or CampaignProgression.ensure_profile() != expected_arc_profile:
+		return _fail("Next Arc native action did not select the exact adjacent Campaign row: %s" % campaign_advanced)
+	previous_arc.pressed.emit()
+	await _settle()
+	var campaign_returned: Dictionary = menu.call("validation_snapshot")
+	var expected_arc_return_profile: Dictionary = CampaignRules.mark_selected_campaign(expected_arc_profile, first_campaign_id)
+	if String(campaign_returned.get("selected_campaign_id", "")) != first_campaign_id or int(campaign_returned.get("selected_campaign_index", -1)) != 0 or CampaignProgression.ensure_profile() != expected_arc_return_profile:
+		return _fail("Previous Arc native action did not restore the exact adjacent Campaign row: %s" % campaign_returned)
+	if not bool(menu.call("validation_select_campaign_chapter", first_chapter_id)):
+		return _fail("Main-menu Campaign native semantics could not restore the first chapter after arc navigation.")
+	await _settle()
+	var profile_before_chapter_action: Dictionary = CampaignProgression.ensure_profile().duplicate(true)
+	next_chapter.pressed.emit()
+	await _settle()
+	var chapter_advanced: Dictionary = menu.call("validation_snapshot")
+	var expected_chapter_profile: Dictionary = CampaignRules.mark_selected_scenario(profile_before_chapter_action, second_chapter_id, first_campaign_id)
+	if String(chapter_advanced.get("selected_campaign_scenario_id", "")) != second_chapter_id or int(chapter_advanced.get("selected_campaign_chapter_index", -1)) != 1 or CampaignProgression.ensure_profile() != expected_chapter_profile:
+		return _fail("Next Chapter native action did not select the exact adjacent Campaign row: %s" % chapter_advanced)
+	previous_chapter.pressed.emit()
+	await _settle()
+	var chapter_returned: Dictionary = menu.call("validation_snapshot")
+	var expected_chapter_return_profile: Dictionary = CampaignRules.mark_selected_scenario(expected_chapter_profile, first_chapter_id, first_campaign_id)
+	if (
+		String(chapter_returned.get("selected_campaign_scenario_id", "")) != first_chapter_id
+		or int(chapter_returned.get("selected_campaign_chapter_index", -1)) != 0
+		or CampaignProgression.ensure_profile() != expected_chapter_return_profile
+		or SessionState.active_session != campaign_session_before
+		or _canonical_settings_transaction(SettingsService.validation_settings_transaction_snapshot()) != campaign_settings_before
+		or SaveService.validation_summary_cache_snapshot() != campaign_save_cache_before
+	):
+		return _fail("Campaign adjacent arc/chapter native actions changed selection return or non-campaign authority: %s" % chapter_returned)
+	CampaignProgression.profile = CampaignRules.normalize_profile(campaign_profile_before)
+	CampaignProgression.save_profile()
+
 	var skirmish_session_before = SessionState.active_session
 	var skirmish_settings_before: Dictionary = _canonical_settings_transaction(SettingsService.validation_settings_transaction_snapshot())
 	var skirmish_save_cache_before: Dictionary = SaveService.validation_summary_cache_snapshot()

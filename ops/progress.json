@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence."
+    "Select the next tracker-approved release-readiness implementation slice."
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed live Skirmish native-action navigation with exact adjacent selection, honest boundaries, preserved setup/launch authority, focused 1280x720/1920x1080 validation, and a real Linux X11/AT-SPI River Pass to Causeway Stand and back action round trip. Select the next tracker-approved release-readiness implementation slice.",
+  "currentNotes": "The Campaign command rail now exposes compact Previous/Next Arc and Previous/Next Chapter native actions with exact adjacent selection and boundary semantics. Focused 1280x720/1920x1080, real Linux AT-SPI, compatibility, static/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass with bounded claims.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "accessibility-main-menu-skirmish-front-native-action-navigation-10184",
-  "currentSliceId": "accessibility-main-menu-skirmish-front-native-action-navigation-10184",
-  "currentSliceNotes": "Completed live behavior: visible Previous Front and Next Front native actions move the exact existing selection one row without wrapping and preserve ItemList, launch, input, content, session, save, settings, and generated-package authority. Focused, real AT-SPI, compatibility, repository/editor, and bounded Linux/Windows export-startup gates pass.",
+  "currentSlice": "accessibility-main-menu-campaign-arc-chapter-native-action-navigation-10184",
+  "currentSliceId": "accessibility-main-menu-campaign-arc-chapter-native-action-navigation-10184",
+  "currentSliceNotes": "Completed live Campaign command-rail arc/chapter actions with exact adjacent selection, native AT-SPI exposure, focused two-width authority, compatibility, static/editor, and bounded Linux/Windows export-startup evidence.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "accessibility main menu skirmish front native action navigation 10184",
-  "currentSliceUpdatedAt": "2026-08-20T17:57:57Z",
+  "currentSliceTitle": "accessibility main menu campaign arc chapter native action navigation 10184",
+  "currentSliceUpdatedAt": "2026-08-20T19:12:21Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -90917,6 +90917,60 @@
       "notes": "Completed live behavior, not diagnostics alone. MainMenu now exposes visible Previous Front and Next Front native Action buttons that select exactly one adjacent existing Skirmish row without wrapping, preserve the ItemList and established _on_skirmish_selected/_refresh_skirmish_setup authority, and expose exact first/last disabled boundaries and target descriptions. The focused owner passes at 1280x720 and 1920x1080 with exact content order, containment, focus, launch/setup state, and unchanged session/save/settings/generated-package authority. A real Linux X11/AT-SPI observer activated Next Front to move River Pass to Causeway Stand and Previous Front to restore River Pass while native Launch Skirmish descriptions updated exactly. Accessibility semantics, Main Menu keyboard, menu/outcome, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. Packaged Skirmish interaction, Windows UIA, controller/native hardware certification, signing/publication, whole-game, and release readiness remain unclaimed.",
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader release-readiness gaps remain.",
       "blockedReason": null
+    },
+    {
+      "id": "accessibility-main-menu-campaign-arc-chapter-native-action-navigation-10184",
+      "title": "accessibility main menu campaign arc chapter native action navigation 10184",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Let a native accessibility action user select every existing Campaign arc and chapter while preserving the established campaign browser, storage, progression, lock, and launch authority.",
+      "implementationTargets": [
+        "scenes/menus/MainMenu.gd",
+        "scenes/menus/MainMenu.tscn",
+        "tests/player_facing_campaign_menu_smoke.gd",
+        "tests/accessibility_screen_reader_semantics_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/player_facing_campaign_menu_smoke.tscn",
+        "tests/main_menu_keyboard_navigation_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/menu_outcome_visual_smoke.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "Visible Previous/Next Arc and Previous/Next Chapter buttons expose native Action semantics and select exactly one adjacent existing row without wrapping or reordering either ItemList",
+        "Arc actions delegate to the existing campaign selection mutation and rebuild authority; chapter actions delegate to the existing chapter selection mutation and refresh authority; first and last boundaries disable the corresponding action",
+        "Focused 1280x720 and 1920x1080 runtime proves containment, focus, keyboard/controller/mouse compatibility, exact arc/chapter order, storage and lock semantics, and unchanged session/save/settings authority outside the established selection mutation",
+        "A real Linux X11/AT-SPI action advances and restores both an arc and a chapter; repository/editor and bounded Linux/Windows export-startup gates pass"
+      ],
+      "nonGoals": [
+        "replacing or reordering either ItemList, campaign or chapter content, difficulty, progression, lock, storage, launch, focus, or input policy",
+        "changing campaign rules, save schema, gameplay, AI, balance, Native RMG, accessibility schema, or screen-reader speech behavior",
+        "packaged Campaign interaction, Windows UIA, controller/native hardware certification, signing/publication, whole-game, campaign-complete, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "12c9ce43",
+        "screen": "1280x720",
+        "observerArtifact": "/tmp/heroes-atspi-campaign-audit.JnPYbZ",
+        "failure": "AT-SPI activates Campaign, but the opened 22-node native tree contains only the Campaign board label, Guide, and Close from the secondary board; no arc, chapter, difficulty, or launch Action is present",
+        "campaignCount": 6,
+        "existingAuthority": "CampaignProgression campaign_browser_entries/campaign_chapter_entries plus MainMenu _on_campaign_selected, _on_chapter_selected, and _refresh_campaign_browser"
+      },
+      "createdAt": "2026-08-20T18:05:59Z",
+      "startedAt": "2026-08-20T18:05:59Z",
+      "updatedAt": "2026-08-20T19:12:21Z",
+      "completedAt": "2026-08-20T19:12:21Z",
+      "notes": "Completed live behavior, not diagnostics alone. MainMenu now exposes Previous/Next Arc and Previous/Next Chapter in the native command rail, moves exactly one adjacent existing ItemList row without wrapping, preserves established CampaignProgression selection/lock/launch authority, and publishes exact first/last and target descriptions. The focused owner passes at 1280x720 and 1920x1080 with exact containment, order, focus, profile mutation, and unchanged session/settings/save authority. A real Linux X11/AT-SPI observer sees all four controls exactly once as role-43 Action nodes; Next/Previous arc and chapter DoAction calls change and exactly restore their target descriptions. Accessibility semantics, shared Main Menu keyboard, menu/outcome, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. Packaged Campaign interaction, Windows UIA, controller/native hardware certification, signing/publication, whole-game, campaign-complete, and release readiness remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader release-readiness gaps remain.",
+      "blockedReason": null
     }
   ],
   "project": "heroes-like",
@@ -90927,7 +90981,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain. The game is not release-ready.",
-  "remainingWork": "Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence. Native RMG work still requires exact recovered source/private-state attribution rather than final-map tuning.",
+  "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Native RMG work still requires exact recovered source/private-state attribution rather than final-map tuning.",
   "reportOnlyEvidence": [
     {
       "entries": [

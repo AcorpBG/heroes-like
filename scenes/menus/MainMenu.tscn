@@ -128,6 +128,36 @@ custom_minimum_size = Vector2(8, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 
+[node name="CampaignArcNavigation" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/ActionRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="PreviousCampaignArc" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/ActionRow/CampaignArcNavigation"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Previous Arc"
+
+[node name="NextCampaignArc" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/ActionRow/CampaignArcNavigation"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Next Arc"
+
+[node name="CampaignChapterNavigation" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/ActionRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="PreviousCampaignChapter" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/ActionRow/CampaignChapterNavigation"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Previous Chapter"
+
+[node name="NextCampaignChapter" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/ActionRow/CampaignChapterNavigation"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Next Chapter"
+
 [node name="StageHelp" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/ActionRow"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -1378,7 +1408,11 @@ text = "Quit"
 [connection signal="pressed" from="BackdropCommandHotspots/OpenSettings" to="." method="_on_open_settings_pressed"]
 [connection signal="pressed" from="BackdropCommandHotspots/OpenEditor" to="." method="_on_open_editor_pressed"]
 [connection signal="pressed" from="BackdropCommandHotspots/Quit" to="." method="_on_quit_pressed"]
+[connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/ActionRow/CampaignArcNavigation/PreviousCampaignArc" to="." method="_on_previous_campaign_arc_pressed"]
+[connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/ActionRow/CampaignArcNavigation/NextCampaignArc" to="." method="_on_next_campaign_arc_pressed"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignBrowser/CampaignListPanel/CampaignListPad/CampaignListBox/CampaignList" to="." method="_on_campaign_selected"]
+[connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/ActionRow/CampaignChapterNavigation/PreviousCampaignChapter" to="." method="_on_previous_campaign_chapter_pressed"]
+[connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/ActionRow/CampaignChapterNavigation/NextCampaignChapter" to="." method="_on_next_campaign_chapter_pressed"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/ChapterBrowser/ChapterListPanel/ChapterListPad/ChapterListBox/ChapterList" to="." method="_on_chapter_selected"]
 [connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignActions/CampaignIntelToggle" to="." method="_on_campaign_intel_toggle_pressed"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignActions/CampaignDifficultyPicker" to="." method="_on_campaign_difficulty_selected"]

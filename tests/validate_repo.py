@@ -14321,12 +14321,18 @@ def validate_campaign_browser(errors: list[str]) -> None:
         ("CampaignPanel", "VBoxContainer"),
         ("CampaignScroll", "ScrollContainer"),
         ("CampaignBrowser", "HBoxContainer"),
+        ("CampaignArcNavigation", "HBoxContainer"),
+        ("PreviousCampaignArc", "Button"),
+        ("NextCampaignArc", "Button"),
         ("CampaignList", "ItemList"),
         ("CampaignDetailsPanel", "PanelContainer"),
         ("CampaignDetails", "Label"),
         ("CampaignArcTitle", "Label"),
         ("CampaignArcStatus", "Label"),
         ("ChapterBrowser", "HBoxContainer"),
+        ("CampaignChapterNavigation", "HBoxContainer"),
+        ("PreviousCampaignChapter", "Button"),
+        ("NextCampaignChapter", "Button"),
         ("ChapterList", "ItemList"),
         ("ChapterDetailsPanel", "PanelContainer"),
         ("ChapterDetails", "Label"),
@@ -14375,6 +14381,23 @@ def validate_campaign_browser(errors: list[str]) -> None:
         "CampaignProgression.select_scenario",
         "CampaignProgression.campaign_restart_action",
         "CampaignProgression.restart_campaign",
+        "@onready var _previous_campaign_arc_button: Button = %PreviousCampaignArc",
+        "@onready var _next_campaign_arc_button: Button = %NextCampaignArc",
+        "@onready var _campaign_arc_navigation: HBoxContainer = %CampaignArcNavigation",
+        "@onready var _previous_campaign_chapter_button: Button = %PreviousCampaignChapter",
+        "@onready var _next_campaign_chapter_button: Button = %NextCampaignChapter",
+        "@onready var _campaign_chapter_navigation: HBoxContainer = %CampaignChapterNavigation",
+        "func _on_previous_campaign_arc_pressed() -> void:",
+        "func _on_next_campaign_arc_pressed() -> void:",
+        "func _on_previous_campaign_chapter_pressed() -> void:",
+        "func _on_next_campaign_chapter_pressed() -> void:",
+        "func _select_relative_campaign_arc(delta: int) -> void:",
+        "func _select_relative_campaign_chapter(delta: int) -> void:",
+        "func _selected_campaign_arc_index() -> int:",
+        "func _selected_campaign_chapter_index() -> int:",
+        "func _sync_campaign_native_navigation() -> void:",
+        "func _sync_campaign_arc_navigation() -> void:",
+        "func _sync_campaign_chapter_navigation() -> void:",
         "_campaign_arc_status_label",
         "_campaign_commander_preview_label",
         "_campaign_operational_board_label",
@@ -14416,8 +14439,110 @@ def validate_campaign_browser(errors: list[str]) -> None:
         "start_chapter_disabled",
         "CampaignProgression.campaign_browser_entries",
         "CampaignProgression.primary_campaign_action",
+        '"selected_campaign_index": _selected_campaign_arc_index()',
+        '"selected_campaign_chapter_index": _selected_campaign_chapter_index()',
+        '"previous_campaign_arc_enabled": not _previous_campaign_arc_button.disabled',
+        '"next_campaign_arc_enabled": not _next_campaign_arc_button.disabled',
+        '"previous_campaign_chapter_enabled": not _previous_campaign_chapter_button.disabled',
+        '"next_campaign_chapter_enabled": not _next_campaign_chapter_button.disabled',
     ):
         ensure(required_token in main_menu_script_text, errors, f"MainMenu.gd is missing required campaign-browser token: {required_token}")
+
+    for required_scene_token in (
+        'text = "Previous Arc"',
+        'text = "Next Arc"',
+        'text = "Previous Chapter"',
+        'text = "Next Chapter"',
+        '[node name="CampaignArcNavigation" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/ActionRow"]',
+        '[node name="CampaignChapterNavigation" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/ActionRow"]',
+        '[node name="PreviousCampaignArc" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/ActionRow/CampaignArcNavigation"]',
+        '[node name="NextCampaignArc" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/ActionRow/CampaignArcNavigation"]',
+        '[node name="PreviousCampaignChapter" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/ActionRow/CampaignChapterNavigation"]',
+        '[node name="NextCampaignChapter" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/ActionRow/CampaignChapterNavigation"]',
+        '[node name="CampaignListTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignBrowser/CampaignListPanel/CampaignListPad/CampaignListBox"]',
+        '[node name="ChapterListTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/ChapterBrowser/ChapterListPanel/ChapterListPad/ChapterListBox"]',
+        'method="_on_previous_campaign_arc_pressed"',
+        'method="_on_next_campaign_arc_pressed"',
+        'method="_on_previous_campaign_chapter_pressed"',
+        'method="_on_next_campaign_chapter_pressed"',
+    ):
+        ensure(required_scene_token in main_menu_scene_text, errors, f"MainMenu.tscn is missing native Campaign navigation token: {required_scene_token}")
+    for native_node in ("PreviousCampaignArc", "NextCampaignArc", "PreviousCampaignChapter", "NextCampaignChapter"):
+        ensure(main_menu_scene_text.count(f'name="{native_node}"') == 1, errors, f"MainMenu.tscn must own exactly one {native_node} button")
+
+    for helper_name, entry_name, list_name, selected_name, delegate_name in (
+        ("campaign_arc", "_campaign_entries", "_campaign_list", "_selected_campaign_arc_index", "_on_campaign_selected"),
+        ("campaign_chapter", "_campaign_chapter_entries", "_chapter_list", "_selected_campaign_chapter_index", "_on_chapter_selected"),
+    ):
+        relative_match = re.search(
+            rf"func _select_relative_{helper_name}\(delta: int\) -> void:\n(?P<body>.*?)(?=\nfunc )",
+            main_menu_script_text,
+            re.S,
+        )
+        ensure(relative_match is not None, errors, f"MainMenu.gd is missing the isolated adjacent {helper_name} selection helper")
+        if relative_match is not None:
+            relative_body = relative_match.group("body")
+            ordered_tokens = (
+                f"if delta == 0 or {entry_name}.is_empty() or {list_name}.item_count != {entry_name}.size():",
+                f"var selected_index := {selected_name}()",
+                "var next_index := selected_index + delta",
+                f"if selected_index < 0 or next_index < 0 or next_index >= {entry_name}.size():",
+                "_sync_campaign_native_navigation()",
+                f"{list_name}.select(next_index)",
+                f"{delegate_name}(next_index)",
+                f"{list_name}.ensure_current_is_visible()",
+                'call_deferred("_refresh_stage_accessibility")',
+            )
+            positions = [relative_body.find(token) for token in ordered_tokens]
+            ensure(min(positions) >= 0 and positions == sorted(positions), errors, f"Adjacent {helper_name} selection must fail closed, select one bounded row, delegate to established Campaign authority, reveal it, and republish accessibility in order")
+            for forbidden_token in ("posmod", "wrap", "clampi", "_selected_campaign_id =", "_selected_campaign_scenario_id =", "CampaignProgression.select_campaign", "CampaignProgression.select_scenario", "_launch_campaign_action"):
+                ensure(forbidden_token not in relative_body, errors, f"Adjacent {helper_name} selection must not replace boundary, persistence, or launch authority via {forbidden_token}")
+
+    for sync_name, entries_name, selected_name, previous_name, next_name, noun in (
+        ("arc", "_campaign_entries", "_selected_campaign_arc_index", "_previous_campaign_arc_button", "_next_campaign_arc_button", "Campaign arc"),
+        ("chapter", "_campaign_chapter_entries", "_selected_campaign_chapter_index", "_previous_campaign_chapter_button", "_next_campaign_chapter_button", "Campaign chapter"),
+    ):
+        sync_match = re.search(
+            rf"func _sync_campaign_{sync_name}_navigation\(\) -> void:\n(?P<body>.*?)(?=\nfunc )",
+            main_menu_script_text,
+            re.S,
+        )
+        ensure(sync_match is not None, errors, f"MainMenu.gd is missing the isolated Campaign {sync_name} navigation state helper")
+        if sync_match is not None:
+            sync_body = sync_match.group("body")
+            for required_token in (
+                f"{previous_name}.disabled = not has_selection or selected_index == 0",
+                f"{next_name}.disabled = not has_selection or selected_index == {entries_name}.size() - 1",
+                f'"Select the previous {noun}: %s."',
+                f'"Select the next {noun}: %s."',
+                f'"%s is the first {noun}."',
+                f'"%s is the last {noun}."',
+            ):
+                ensure(required_token in sync_body, errors, f"Campaign {sync_name} navigation must expose exact native boundary semantics: {required_token}")
+            for forbidden_token in ("hide()", ".visible = false", "remove_item", "sort", "erase"):
+                ensure(forbidden_token not in sync_body, errors, f"Campaign {sync_name} navigation state must not hide, reorder, or mutate browser rows via {forbidden_token}")
+
+    refresh_campaign_match = re.search(r"func _refresh_campaign_browser\(\) -> void:\n(?P<body>.*?)(?=\nfunc )", main_menu_script_text, re.S)
+    ensure(refresh_campaign_match is not None and "_sync_campaign_native_navigation()" in refresh_campaign_match.group("body"), errors, "Campaign browser refresh must synchronize native arc/chapter boundary actions")
+    layout_snapshot_match = re.search(r"func _campaign_layout_snapshot\(\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc )", main_menu_script_text, re.S)
+    ensure(layout_snapshot_match is not None, errors, "MainMenu.gd is missing the isolated Campaign layout snapshot")
+    if layout_snapshot_match is not None:
+        for control_token in ("_previous_campaign_arc_button", "_next_campaign_arc_button", "_previous_campaign_chapter_button", "_next_campaign_chapter_button"):
+            ensure(control_token in layout_snapshot_match.group("body"), errors, f"Campaign layout containment must include native navigation control {control_token}")
+    stage_header_match = re.search(r"func _refresh_stage_dock_header\(\) -> void:\n(?P<body>.*?)(?=\nfunc )", main_menu_script_text, re.S)
+    ensure(stage_header_match is not None, errors, "MainMenu.gd is missing the isolated secondary-board command-rail header refresh")
+    if stage_header_match is not None:
+        stage_header_body = stage_header_match.group("body")
+        stage_header_tokens = (
+            "var campaign_navigation_visible := _menu_tabs.current_tab == TAB_CAMPAIGN",
+            "_stage_dock_hint_label.visible = not campaign_navigation_visible",
+            "_campaign_arc_navigation.visible = campaign_navigation_visible",
+            "_campaign_chapter_navigation.visible = campaign_navigation_visible",
+        )
+        stage_header_positions = [stage_header_body.find(token) for token in stage_header_tokens]
+        ensure(min(stage_header_positions) >= 0 and stage_header_positions == sorted(stage_header_positions), errors, "Campaign native actions must replace the verbose command-rail hint only on the Campaign board")
+        for forbidden_token in ("reparent", "remove_child", "add_child", "sort", "erase"):
+            ensure(forbidden_token not in stage_header_body, errors, f"Campaign command-rail visibility must not reparent or reorder controls via {forbidden_token}")
 
     campaign_dedup_start = main_menu_script_text.find("func _campaign_launch_actions_are_exact")
     campaign_dedup_end = main_menu_script_text.find("\nfunc ", campaign_dedup_start + 1) if campaign_dedup_start >= 0 else -1
@@ -14681,8 +14806,54 @@ def validate_campaign_browser(errors: list[str]) -> None:
             "func _expected_campaign_rows",
             "func _expected_chapter_rows",
             'get_viewport().gui_get_focus_owner() != intel_toggle',
+            "func _validate_native_campaign_navigation(shell: Control) -> bool:",
+            'shell.find_child("PreviousCampaignArc", true, false)',
+            'shell.find_child("NextCampaignArc", true, false)',
+            'shell.find_child("PreviousCampaignChapter", true, false)',
+            'shell.find_child("NextCampaignChapter", true, false)',
+            'previous_arc.pressed.emit()',
+            'next_arc.pressed.emit()',
+            'previous_chapter.pressed.emit()',
+            'next_chapter.pressed.emit()',
+            "CampaignRules.mark_selected_campaign(profile_before_next, second_campaign_id)",
+            "CampaignRules.mark_selected_scenario(profile_before_chapter, second_chapter_id, first_campaign_id)",
+            'campaign_list.get_selected_items() != PackedInt32Array([1])',
+            'chapter_list.get_selected_items() != PackedInt32Array([1])',
+            'SessionState.active_session != session_before',
+            'SettingsService.ensure_settings() != settings_before',
+            'SaveService.validation_summary_cache_snapshot() != save_cache_before',
+            "func _item_list_labels(list: ItemList) -> Array:",
         ):
             ensure(required_token in smoke_text, errors, f"player_facing_campaign_menu_smoke.gd is missing required token: {required_token}")
+        native_campaign_match = re.search(
+            r"func _validate_native_campaign_navigation\(shell: Control\) -> bool:\n(?P<body>.*?)(?=\nfunc )",
+            smoke_text,
+            re.S,
+        )
+        ensure(native_campaign_match is not None, errors, "player-facing Campaign owner is missing isolated native arc/chapter navigation coverage")
+        if native_campaign_match is not None:
+            native_campaign_body = native_campaign_match.group("body")
+            for required_token in (
+                "Previous Arc wrapped or changed campaign authority before the first row.",
+                "Next Arc wrapped or changed campaign authority after the last row.",
+                "Previous Chapter wrapped or changed campaign authority before the first row.",
+                "Next Chapter wrapped or changed campaign authority after the last row.",
+                "get_viewport().gui_get_focus_owner() != next_arc",
+                "get_viewport().gui_get_focus_owner() != previous_arc",
+                "get_viewport().gui_get_focus_owner() != next_chapter",
+                "get_viewport().gui_get_focus_owner() != previous_chapter",
+            ):
+                ensure(required_token in native_campaign_body, errors, f"player-facing Campaign native navigation is missing exact public boundary/focus authority: {required_token}")
+            for forbidden_token in (
+                'shell.call("_select_relative_campaign',
+                'shell.call("_on_campaign_selected',
+                'shell.call("_on_chapter_selected',
+                "_campaign_entries",
+                "_campaign_chapter_entries",
+                "remove_item",
+                "sort",
+            ):
+                ensure(forbidden_token not in native_campaign_body, errors, f"player-facing Campaign owner must use public button/list authority instead of {forbidden_token}")
         for forbidden_token in (
             "CampaignDetailsPanel.visible = true",
             "ChapterDetailsPanel.visible = true",
@@ -14691,6 +14862,40 @@ def validate_campaign_browser(errors: list[str]) -> None:
             "queue_free()",
         ):
             ensure(forbidden_token not in smoke_text, errors, f"player-facing campaign layout smoke must remain observation/action-only: {forbidden_token}")
+
+    accessibility_path = ROOT / "tests" / "accessibility_screen_reader_semantics_report.gd"
+    ensure(accessibility_path.exists(), errors, "Missing accessibility semantics report for native Campaign navigation")
+    if accessibility_path.exists():
+        accessibility_text = accessibility_path.read_text(encoding="utf-8")
+        for required_token in (
+            'UiAccessibility.semantic_name(previous_arc) == "Previous Arc"',
+            'UiAccessibility.semantic_name(next_arc) == "Next Arc"',
+            'UiAccessibility.semantic_name(previous_chapter) == "Previous Chapter"',
+            'UiAccessibility.semantic_name(next_chapter) == "Next Chapter"',
+            "previous_arc.accessibility_description == previous_arc.tooltip_text",
+            "next_arc.accessibility_description == next_arc.tooltip_text",
+            "previous_chapter.accessibility_description == previous_chapter.tooltip_text",
+            "next_chapter.accessibility_description == next_chapter.tooltip_text",
+            "next_arc.pressed.emit()",
+            "previous_arc.pressed.emit()",
+            "next_chapter.pressed.emit()",
+            "previous_chapter.pressed.emit()",
+            "CampaignRules.mark_selected_campaign(profile_before_arc_action, second_campaign_id)",
+            "CampaignRules.mark_selected_scenario(profile_before_chapter_action, second_chapter_id, first_campaign_id)",
+            'int(campaign_initial.get("selected_campaign_index", -1)) == 0',
+            'int(campaign_initial.get("selected_campaign_chapter_index", -1)) == 0',
+            "SessionState.active_session != campaign_session_before",
+            "SaveService.validation_summary_cache_snapshot() != campaign_save_cache_before",
+            "CampaignProgression.profile = CampaignRules.normalize_profile(campaign_profile_before)",
+            "CampaignProgression.save_profile()",
+        ):
+            ensure(required_token in accessibility_text, errors, f"accessibility semantics report is missing native Campaign navigation token: {required_token}")
+        for forbidden_token in (
+            'menu.call("_select_relative_campaign',
+            'menu.call("_on_campaign_selected',
+            'menu.call("_on_chapter_selected',
+        ):
+            ensure(forbidden_token not in accessibility_text, errors, f"accessibility Campaign semantics must exercise public native actions instead of {forbidden_token}")
 
     ensure(MAIN_MENU_CAMPAIGN_REACTIVATION_DOC_PATH.exists(), errors, "Missing player-facing campaign reactivation smoke report")
     if MAIN_MENU_CAMPAIGN_REACTIVATION_DOC_PATH.exists():
@@ -15435,9 +15640,9 @@ def validate_native_screen_reader_semantics(errors: list[str]) -> None:
         and main_menu_text.count("func _refresh_stage_accessibility() -> void:") == 1
         and main_menu_text.count("_queue_stage_accessibility_refresh()") == 2
         and main_menu_text.count('call_deferred("_finalize_stage_accessibility")') == 1
-        and main_menu_text.count('call_deferred("_refresh_stage_accessibility")') == 2,
+        and main_menu_text.count('call_deferred("_refresh_stage_accessibility")') == 4,
         errors,
-        "Main Menu must own exactly one post-focus secondary-board accessibility chain plus one adjacent-front semantic refresh",
+        "Main Menu must own exactly one post-focus secondary-board accessibility chain plus exact Skirmish, Campaign-arc, and Campaign-chapter semantic refreshes",
     )
     if show_stage_match is not None:
         show_stage_body = show_stage_match.group("body")
@@ -15516,7 +15721,7 @@ def validate_native_screen_reader_semantics(errors: list[str]) -> None:
             "Main Menu finalizer must use exact lifecycle state without heuristic scroll, timers, or direct publication",
         )
     stage_accessibility_match = re.search(
-        r"func _refresh_stage_accessibility\(\) -> void:\n(?P<body>.*?)(?=\nfunc _apply_stage_dock_layout)",
+        r"func _refresh_stage_accessibility\(\) -> void:\n(?P<body>.*?)(?=\nfunc )",
         main_menu_text,
         re.S,
     )
