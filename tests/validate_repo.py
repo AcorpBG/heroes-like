@@ -44842,6 +44842,36 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
     native_rmg_runtime_boundary_path = ROOT / "tests" / "native_rmg_end_to_end_runtime_boundary_report.gd"
     if native_rmg_runtime_boundary_path.exists():
         native_rmg_runtime_boundary_text = native_rmg_runtime_boundary_path.read_text(encoding="utf-8")
+        spell_scroll_source_path = ROOT / "art" / "overworld" / "source" / "generated" / "pickups" / "beacon_path_scroll_source.png"
+        spell_scroll_runtime_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "pickups" / "beacon_path_scroll.png"
+        spell_scroll_manifest = load_json(OVERWORLD_ART_MANIFEST_PATH)
+        spell_scroll_assets = spell_scroll_manifest.get("object_assets", {}) if isinstance(spell_scroll_manifest.get("object_assets", {}), dict) else {}
+        spell_scroll_site_sprites = spell_scroll_manifest.get("resource_site_sprites", {}) if isinstance(spell_scroll_manifest.get("resource_site_sprites", {}), dict) else {}
+        spell_scroll_asset = spell_scroll_assets.get("beacon_path_scroll", {}) if isinstance(spell_scroll_assets.get("beacon_path_scroll", {}), dict) else {}
+        spell_scroll_site_sprite = spell_scroll_site_sprites.get("site_beacon_path_scroll", {}) if isinstance(spell_scroll_site_sprites.get("site_beacon_path_scroll", {}), dict) else {}
+        ensure(spell_scroll_source_path.is_file() and png_size(spell_scroll_source_path) == (1254, 1254), errors, "Beacon Path scroll must retain its original generated 1254x1254 source image")
+        ensure(spell_scroll_runtime_path.is_file() and png_size(spell_scroll_runtime_path) == (512, 512), errors, "Beacon Path scroll must retain its 512x512 runtime field sprite")
+        if spell_scroll_source_path.is_file():
+            ensure(hashlib.sha256(spell_scroll_source_path.read_bytes()).hexdigest() == "9d50927a7de9441d811f1ae74afb11d05544b161581262b283698a9ae8c0c08c", errors, "Beacon Path scroll original generated source image drifted")
+        if spell_scroll_runtime_path.is_file():
+            spell_scroll_header = spell_scroll_runtime_path.read_bytes()[:26]
+            ensure(len(spell_scroll_header) >= 26 and spell_scroll_header[25] == 6, errors, "Beacon Path scroll runtime field sprite must retain an RGBA PNG alpha channel")
+            ensure(hashlib.sha256(spell_scroll_runtime_path.read_bytes()).hexdigest() == "ad34c0072461a2361d91776aa551c36a6e72da427cd0b6c2e05e21a1df6ba49b", errors, "Beacon Path scroll runtime field sprite drifted")
+        ensure(spell_scroll_asset == {
+            "path": "res://art/overworld/runtime/objects/pickups/beacon_path_scroll.png",
+            "source_generated": "res://art/overworld/source/generated/pickups/beacon_path_scroll_source.png",
+            "source_model": "built_in_image_gen",
+            "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+            "background": "transparent",
+            "assigned_resource_site_id": "site_beacon_path_scroll",
+        }, errors, "Beacon Path scroll manifest asset must retain exact original generated-art provenance")
+        ensure(spell_scroll_site_sprite == {
+            "asset_id": "beacon_path_scroll",
+            "fit": "Distinct original Beacon Path spell-scroll field sprite for the accepted one-time generated pickup.",
+        }, errors, "Beacon Path scroll site must retain its exact distinct field-sprite mapping")
+        resource_sites_by_id = items_index(load_json(CONTENT_DIR / "resource_sites.json"))
+        beacon_scroll_site = resource_sites_by_id.get("site_beacon_path_scroll", {})
+        ensure(isinstance(beacon_scroll_site, dict) and bool(beacon_scroll_site.get("runtime_boundary", {}).get("renderer_sprite_required", False)), errors, "Beacon Path scroll site must require its adopted renderer sprite")
         for required_token in (
             "_validate_zero_road_projection(service)",
             '"owner-corpus-small-random-players-land-10184"',
@@ -44851,7 +44881,7 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             'and bool(map_validation.get("ok", false))',
             'and bool(scenario_validation.get("ok", false))',
             'and exact_repeat',
-            '_validate_live_proxy_site_projection(service)',
+            'await _validate_live_proxy_site_projection(service)',
             'func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:',
             'var config := _config("small", 36, 1, "land", "1", "weak", 3)',
             '0: {"object_id": "object_brightwood_sawmill", "resource_id": "wood", "catalog_id": "mine_wood_sawmill_proxy"}',
@@ -44929,6 +44959,28 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             'and spell_scroll_count == 1',
             'and spell_scroll_rows_exact',
             'and live_spell_scrolls.size() == spell_scroll_count',
+            'const OverworldMapViewScript = preload("res://scenes/overworld/OverworldMapView.gd")',
+            'spell_scroll_presentation = await _validate_spell_scroll_presentation(session, scroll_node)',
+            'and bool(spell_scroll_presentation.get("ok", false))',
+            'func _validate_spell_scroll_presentation(session: SessionStateStoreScript.SessionData, scroll_node: Dictionary) -> Dictionary:',
+            'load("res://art/overworld/runtime/objects/pickups/beacon_path_scroll.png") as Texture2D',
+            'image.detect_alpha() != Image.ALPHA_NONE',
+            'if image.get_pixelv(corner).a > 0.01:',
+            'view_session.from_dict(session.to_dict())',
+            'for viewport_size in [Vector2(1280, 720), Vector2(1920, 1080)]:',
+            'var row_exact: bool = bool(visible.get("visible", false))',
+            'viewport_art.get("sprite_footprints", []) == [{"width": 1, "height": 1}]',
+            'and bool(viewport_art.get("mapped_sprite_grounding", false))',
+            'and bool(marker.get("mapped_sprite_settlement", false))',
+            'view_session.overworld["fog"] = _uniform_test_fog(map_size, true, true)',
+            'view_session.overworld["fog"] = _uniform_test_fog(map_size, false, true)',
+            'fallback_node["object_id"] = "missing_spell_scroll_object"',
+            'fallback_node["site_id"] = "missing_spell_scroll_site"',
+            'and "beacon_path_scroll" in visible_art.get("sprite_asset_ids", [])',
+            'and bool(permanently_explored.get("visible", false))',
+            'and not bool(permanently_explored.get("draws_remembered_object", true))',
+            'and "beacon_path_scroll" in permanently_explored_art.get("sprite_asset_ids", [])',
+            'and bool(fallback_art.get("fallback_procedural_marker", false))',
             'and bool(spell_scroll_interaction.get("ok", false))',
             'func _live_proxy_provenance_exact(object: Dictionary) -> bool:',
             'func _proxy_projection_object_authority(object: Dictionary) -> Dictionary:',
@@ -44988,7 +45040,20 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
         ensure(proxy_projection_block.find('artifact_proxy_placement_ids[String(object.get("placement_id", ""))] = true') < proxy_projection_block.find('artifact_proxy_placement_ids.has(String(artifact_node.get("placement_id", "")))') < proxy_projection_block.find("_collect_artifact_node_result(session, artifact_result, false)"), errors, "Native live artifact owner must correlate projected placements through package adoption before collection")
         ensure(proxy_projection_block.find('int(source.get("h3m_type_id", -1)) == 79') < proxy_projection_block.find('int(source.get("h3m_subtype", -1)) == 3') < proxy_projection_block.find("_collect_resource_node_result(session, selected_rare_resource, false)"), errors, "Native live resource owner must correlate an exact subtype-3 package node before real collection")
         ensure(proxy_projection_block.find('spell_scroll_placement_ids[String(object.get("placement_id", ""))] = true') < proxy_projection_block.find('spell_scroll_placement_ids.has(String(node.get("placement_id", "")))') < proxy_projection_block.find("_collect_resource_node_result(session, scroll_result, false)"), errors, "Native live Spell Scroll owner must correlate exact projection through package adoption before collection")
+        ensure(proxy_projection_block.find('spell_scroll_presentation = await _validate_spell_scroll_presentation(session, scroll_node)') < proxy_projection_block.find("_collect_resource_node_result(session, scroll_result, false)"), errors, "Native live Spell Scroll owner must validate the exact uncollected generated node presentation before collection")
         ensure(proxy_projection_block.find('var resource_nodes_before: Array = session.overworld.get("resource_nodes", []).duplicate(true)') < proxy_projection_block.find("_collect_resource_node_result(session, scroll_result, false)") < proxy_projection_block.find('var repeat_claim: Dictionary = OverworldRulesScript._collect_resource_node_result'), errors, "Native live Spell Scroll owner must bracket real collection with detached authority and repeat rejection")
+        spell_scroll_presentation_start = native_rmg_runtime_boundary_text.find("func _validate_spell_scroll_presentation(")
+        spell_scroll_presentation_end = native_rmg_runtime_boundary_text.find("func _uniform_test_fog(", spell_scroll_presentation_start)
+        spell_scroll_presentation_block = native_rmg_runtime_boundary_text[spell_scroll_presentation_start:spell_scroll_presentation_end]
+        ensure(spell_scroll_presentation_block.find("view_session.from_dict(session.to_dict())") < spell_scroll_presentation_block.find('fallback_node["object_id"] = "missing_spell_scroll_object"') < spell_scroll_presentation_block.find('bool(fallback_art.get("fallback_procedural_marker", false))'), errors, "Beacon Path scroll fallback proof must mutate only a detached view session before observing the established procedural fallback")
+        for forbidden_token in (
+            '\n\tsession.overworld["resource_nodes"] =',
+            '\n\tsession.overworld["fog"] =',
+            'ContentService._resource_sites',
+            'FileAccess.open(',
+            'art/overworld/manifest.json", FileAccess',
+        ):
+            ensure(forbidden_token not in spell_scroll_presentation_block, errors, f"Beacon Path scroll focused presentation proof must remain detached and non-mutating: {forbidden_token}")
         for forbidden_token in (
             "object.erase(",
             "sort()",
