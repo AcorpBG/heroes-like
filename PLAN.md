@@ -8566,6 +8566,37 @@ Completion evidence:
 - the packaged Linux profile `/tmp/heroes-main-menu-lazy-packaged-profile.CseUWl` records Main Menu refresh 2.495 ms and ready 31.472 ms, with hidden Campaign 0.049 ms and hidden Skirmish 0.0 ms, materially below the 3037.384 ms / 3071.869 ms baseline and the 500 ms acceptance ceiling;
 - menu/outcome visual, player-facing Campaign and Skirmish launch/save/resume, physical keyboard navigation, screen-reader semantics, core systems, repository validation, Python compilation, diff and exact/generic editor checks pass; official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. Claims remain bounded to focused first-view behavior, source-mode secondary-board interaction, and package export/startup, not packaged secondary-board interaction, certification, signing/publication, whole-game, or release readiness.
 
+## Completed Slice: Main Menu Selected Skirmish Package Entry Reuse
+
+id: `performance-main-menu-selected-skirmish-entry-reuse-10184`
+
+Status: completed.
+
+Implementation boundary:
+- reuse only the selected detached entry from the current Main Menu Skirmish browser for package setup previews, validation snapshots, and selected-package launch, while retaining the existing by-id public wrappers for callers without a current entry;
+- factor the existing maps-folder setup and session-start bodies into entry-owned helpers with exact fail-closed package identity/launchability/path checks and unchanged full selected-package load/normalization/session authority;
+- after a successful launch, route directly through the existing accessibility handoff without rebuilding the soon-to-be-discarded browser; failed launches retain the existing fresh refresh path.
+
+Completion criteria:
+- the current 388-entry maps-folder fixture proves whole setup and launched session parity between legacy by-id and entry-owned paths, with no second whole-folder scan for setup, snapshot, or launch and no successful pre-route browser refresh;
+- selected entry mutation/staleness fails closed, while directory mutation is observed by the next explicit browser rebuild and all entry order, labels, metadata, validation, native/package paths, generated controls, launch results, save/resume, focus, and authority remain exact;
+- the focused Main Menu flow materially improves from the current 52.818-second index plus 57.791-second duplicate setup scan, and player-facing Skirmish/browser integration, visual/keyboard, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no package format, native parser, Native RMG, package validation, content, item truncation/pagination, persistent/global/day/session cache, directory watcher, background thread/timer, authored scenario, difficulty, launch, save, gameplay, balance, or AI behavior change;
+- no packaged Skirmish interaction certification, controller/AT-SPI/UIA/native-hardware, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- `/tmp/heroes-skirmish-selected-entry-attribution-scene.JLeU3d` measures the current maps-folder index at 52817.714 ms and the redundant selected-package by-id setup at 57791.326 ms across 388 launchable entries, while the same setup from the already-selected entry is whole-dictionary exact in 0.14 ms;
+- `/tmp/heroes-skirmish-package-attribution.tgdZfT` independently measures 399 paired packages: inspect-only parsing costs 18334.484 ms and full document loading costs 49375.94 ms, confirming that repeated whole-folder package work—not UI layout—is the owned delay;
+- source shows `_refresh_skirmish_setup` and `validation_snapshot` already resolve `_selected_skirmish_entry` but then call `build_skirmish_setup` by id, selected launch also starts by id, and successful launch calls `_refresh_menu` before routing, causing avoidable whole-folder materialization despite an exact current entry.
+
+Completion evidence:
+- `ScenarioSelectRules.gd` now exposes fail-closed entry-owned setup and start helpers; browser entries carry exact map/scenario file identities, launch reload revalidates document references, and by-id callers retain their one-index compatibility wrappers. `MainMenu.gd` consumes only its selected detached entry for package setup, snapshots, and launch, and successful launch no longer rebuilds the discarded browser;
+- `/tmp/heroes-skirmish-entry-lean-authoritative.nFbSy8` passes the public Main Menu flow naturally in 66 seconds with a 719 ms first view, 411 Skirmish rows, exact entry-owned setup, and a selected-package launch in 2860 ms, materially removing the prior 57791.326 ms duplicate setup scan after the 52817.714 ms index;
+- `/tmp/heroes-skirmish-entry-integration-rerun.KSfzIO` passes whole setup/session parity between by-id and entry-owned paths, fail-closed stale-entry rejection, and existing Map Editor inspection compatibility. `/tmp/heroes-skirmish-entry-player-compat.pzTtRu` passes the broad authored Skirmish launch/autosave/generated-boundary flow; visual, keyboard, accessibility, core, repository validation, Python compilation, diff checks, and exact/generic editor parses are green;
+- official Linux export plus packaged headless startup and Windows export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. These are export/startup claims only: packaged Skirmish interaction, controller, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:

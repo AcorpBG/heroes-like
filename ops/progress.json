@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved release-readiness implementation slice from direct current behavior evidence."
+    "Select the next tracker-approved source-backed release-readiness implementation slice."
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the Main Menu secondary-browser lazy-first-view slice. Per-shell loaded guards defer hidden Campaign and Skirmish materialization while their public stage-open paths synchronously populate exact content before visibility/focus. Packaged Linux Main Menu refresh improved from 3037.384 ms to 2.495 ms and ready from 3071.869 ms to 31.472 ms; focused and compatibility behavior, repository/editor, and bounded Linux/Windows export-startup gates pass.",
+  "currentNotes": "Completed selected-entry reuse. Main Menu package setup, snapshot, and launch consume the current detached browser entry; stale file identity and loaded document references fail closed; successful launch skips the discarded browser refresh. Focused public launch is 2860 ms versus the prior 57791.326 ms duplicate setup scan, with whole setup/session parity, compatibility, static/editor, and bounded Linux/Windows export-startup gates green.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "performance-main-menu-secondary-browser-lazy-first-view-10184",
-  "currentSliceId": "performance-main-menu-secondary-browser-lazy-first-view-10184",
-  "currentSliceNotes": "Completed with exact deferred first-view and synchronous public-stage materialization. Focused live behavior, Campaign/Skirmish launch flows, keyboard/accessibility/core compatibility, static/editor gates, packaged Linux timing, and bounded Linux/Windows export-startup evidence are green. Packaged board interaction and release readiness remain unclaimed.",
+  "currentSlice": "performance-main-menu-selected-skirmish-entry-reuse-10184",
+  "currentSliceId": "performance-main-menu-selected-skirmish-entry-reuse-10184",
+  "currentSliceNotes": "Completed. Entry-owned setup/start helpers preserve by-id wrappers, file/ref freshness, whole setup/session authority, Map Editor inspection compatibility, and public Main Menu behavior. Focused launch is 2860 ms after selection versus the 57791.326 ms duplicate setup baseline; compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup pass. No packaged Skirmish interaction or broader release claim.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Main Menu Secondary Browser Lazy First View",
-  "currentSliceUpdatedAt": "2026-08-21T21:57:28Z",
+  "currentSliceTitle": "Main Menu Selected Skirmish Package Entry Reuse",
+  "currentSliceUpdatedAt": "2026-08-21T22:59:48Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -91914,6 +91914,37 @@
       ],
       "notes": "Completed. `MainMenu.gd` now keeps Campaign and Skirmish behind per-shell loaded flags, refreshes only previously opened owners, and synchronously loads a selected owner before stage visibility and deferred focus. `/tmp/heroes-main-menu-lazy-focused.ZKjYfx` passes with a 747 ms source first view, zero first-view save inspections, Campaign 6 rows, and Skirmish 412 rows. Packaged Linux `/tmp/heroes-main-menu-lazy-packaged-profile.CseUWl` records refresh 2.495 ms and ready 31.472 ms versus baseline 3037.384/3071.869 ms. Visual, Campaign, Skirmish, keyboard, accessibility, core, static/editor, official Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. No packaged board interaction, certification, signing/publication, whole-game, or release-readiness claim.",
       "completedAt": "2026-08-21T21:57:28Z"
+    },
+    {
+      "id": "performance-main-menu-selected-skirmish-entry-reuse-10184",
+      "title": "Main Menu Selected Skirmish Package Entry Reuse",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-6-production-alpha-layer",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-21T22:05:00Z",
+      "updatedAt": "2026-08-21T22:59:48Z",
+      "implementationTargets": [
+        "scripts/core/ScenarioSelectRules.gd",
+        "scenes/menus/MainMenu.gd",
+        "tests/maps_folder_package_browser_integration_report.gd",
+        "tests/main_menu_lean_boot_save_guard.gd",
+        "tests/player_facing_skirmish_browser_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Current 388-entry maps-folder fixture proves whole setup and launched-session parity between by-id and selected-entry paths without a second whole-folder setup, snapshot, or launch scan.",
+        "Selected entry mutation/staleness fails closed; the next explicit browser rebuild observes directory mutation; order, metadata, native/package validation, controls, launch/save/resume, focus, and authority remain exact.",
+        "Focused Main Menu flow materially improves from the measured 52817.714 ms index plus 57791.326 ms duplicate setup scan, and Skirmish/browser integration, visual/keyboard, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass."
+      ],
+      "nonGoals": [
+        "No package format/native parser/Native RMG/package validation/content/pagination/persistent cache/watcher/thread/timer/authored scenario/difficulty/save/gameplay/balance/AI change.",
+        "No packaged Skirmish interaction, controller, AT-SPI/UIA, native-hardware, signing/publication, whole-game, or release-readiness claim."
+      ],
+      "notes": "Completed. `ScenarioSelectRules.gd` adds entry-owned setup/start helpers with exact file identity, launchability, and loaded-reference guards while retaining by-id wrappers; `MainMenu.gd` reuses its selected entry and skips successful pre-route refresh. Focused `/tmp/heroes-skirmish-entry-lean-authoritative.nFbSy8` is natural rc0 with first view 719 ms and selected package launch 2860 ms versus the 57791.326 ms duplicate setup baseline. `/tmp/heroes-skirmish-entry-integration-rerun.KSfzIO` proves whole setup/session parity, stale rejection, and Map Editor compatibility; broad Skirmish, visual, keyboard, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Skirmish interaction, controller, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-21T22:59:48Z"
     }
   ],
   "project": "heroes-like",

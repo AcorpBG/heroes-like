@@ -6,6 +6,7 @@ func _ready() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	var tree := get_tree()
 	SessionState.reset_session()
 	SaveService.validation_begin_summary_inspection_trace()
 	var started_ms := Time.get_ticks_msec()
@@ -77,6 +78,20 @@ func _run() -> void:
 	if int(skirmish_snapshot.get("campaign_count", 0)) <= 0 or int(skirmish_snapshot.get("skirmish_count", 0)) <= 0:
 		_fail("Public secondary-stage browsers did not preserve populated rows.")
 		return
+	if not bool(shell.call("validation_select_first_maps_folder_skirmish")):
+		_fail("Skirmish board did not expose a current maps-folder package entry.")
+		return
+	var package_snapshot: Dictionary = shell.call("validation_snapshot")
+	var package_setup: Dictionary = package_snapshot.get("selected_skirmish_setup", {}) if package_snapshot.get("selected_skirmish_setup", {}) is Dictionary else {}
+	if String(package_setup.get("startup_source", "")) != "maps_folder_package":
+		_fail("Selected maps-folder package did not retain its entry-owned setup.")
+		return
+	var package_launch_started := Time.get_ticks_msec()
+	var package_launch: Dictionary = shell.call("validation_start_selected_skirmish")
+	var package_launch_ms := Time.get_ticks_msec() - package_launch_started
+	if not bool(package_launch.get("started", false)) or package_launch_ms > 30000:
+		_fail("Selected maps-folder package launch was not exact and bounded: %s in %d ms" % [JSON.stringify(package_launch), package_launch_ms])
+		return
 
 	print("%s %s" % [REPORT_ID, JSON.stringify({
 		"ok": true,
@@ -88,8 +103,10 @@ func _run() -> void:
 		"skirmish_items": int(skirmish_snapshot.get("skirmish_count", 0)),
 		"first_view_campaign_deferred": not bool(first_snapshot.get("campaign_browser_loaded", true)),
 		"first_view_skirmish_deferred": not bool(first_snapshot.get("skirmish_browser_loaded", true)),
+		"selected_package_setup_entry_owned": true,
+		"selected_package_launch_ms": package_launch_ms,
 	})])
-	get_tree().quit(0)
+	tree.quit(0)
 
 func _save_inspection_count(counts: Dictionary) -> int:
 	return (
