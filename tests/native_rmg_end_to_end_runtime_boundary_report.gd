@@ -7,6 +7,26 @@ const OverworldMapViewScript = preload("res://scenes/overworld/OverworldMapView.
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const REPORT_ID := "NATIVE_RMG_END_TO_END_RUNTIME_BOUNDARY_REPORT"
+const CREATURE_GENERATOR_ROWS := {
+	59: {
+		"source_row": 220,
+		"def_ref": "AVGpixie.def",
+		"object_id": "object_greenbranch_copse",
+		"site_id": "site_greenbranch_copse",
+		"catalog_id": "dwelling_creature_generator_pixie_greenbranch_proxy",
+		"gold": 105,
+		"recruits": {"unit_neutral_greenbranch_cudgels": 2, "unit_neutral_sapwhistle_callers": 1},
+	},
+	52: {
+		"source_row": 190,
+		"def_ref": "AVGlich0.def",
+		"object_id": "object_lantern_warren",
+		"site_id": "site_lantern_warren",
+		"catalog_id": "dwelling_creature_generator_lich_lantern_proxy",
+		"gold": 90,
+		"recruits": {"unit_neutral_tunnel_lanterns": 2, "unit_neutral_glimmercap_needlers": 1},
+	},
+}
 const LOOSE_RESOURCE_PRESENTATION_ROWS := [
 	{"site_id": "site_peatwax_reed_yard", "object_id": "object_marsh_peat_yard", "resource_id": "peatwax", "asset_id": "resource_pickup_peatwax", "mine_asset_id": "mapobj_marsh_peat_yard", "expected_footprint": {"width": 2, "height": 2}, "texture_path": "res://art/overworld/runtime/objects/pickups/peatwax_reed_bundle.png", "rewards": {"gold": 120, "peatwax": 1}, "current_small": false},
 	{"site_id": "site_embergrain_warm_granary", "object_id": "object_floodplain_sluice_camp", "resource_id": "embergrain", "asset_id": "resource_pickup_embergrain", "mine_asset_id": "mapobj_floodplain_sluice_camp", "expected_footprint": {"width": 2, "height": 3}, "texture_path": "res://art/overworld/runtime/objects/pickups/embergrain_sack.png", "rewards": {"gold": 120, "embergrain": 1}, "current_small": true},
@@ -133,7 +153,8 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 	var campfire_count := 0
 	var campfire_rows_exact := true
 	var creature_generator_count := 0
-	var unsupported_creature_rows_exact := true
+	var creature_generator_rows_exact := true
+	var creature_generator_placement_ids := {}
 	var creature_bank_count := 0
 	var unsupported_bank_rows_exact := true
 	var artifact_proxy_count := 0
@@ -193,10 +214,18 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 				campfire_rows_exact = false
 		elif type_id == 17:
 			creature_generator_count += 1
-			if String(object.get("kind", "")) != "h3m_object" \
-					or String(object.get("object_id", "")) != "" \
-					or String(object.get("homm3_re_reward_object_catalog_id", "")) != "":
-				unsupported_creature_rows_exact = false
+			creature_generator_placement_ids[String(object.get("placement_id", ""))] = true
+			var expected_dwelling: Dictionary = CREATURE_GENERATOR_ROWS.get(subtype, {}) if CREATURE_GENERATOR_ROWS.get(subtype, {}) is Dictionary else {}
+			if expected_dwelling.is_empty() \
+					or String(object.get("kind", "")) != "neutral_dwelling" \
+					or String(object.get("object_id", "")) != String(expected_dwelling.get("object_id", "")) \
+					or String(object.get("native_proxy_object_id", "")) != String(expected_dwelling.get("object_id", "")) \
+					or String(object.get("site_id", "")) != "" \
+					or int(object.get("homm3_re_object_source_row", -1)) != int(expected_dwelling.get("source_row", -2)) \
+					or String(object.get("homm3_re_object_def_ref", "")) != String(expected_dwelling.get("def_ref", "")) \
+					or String(object.get("homm3_re_reward_object_catalog_id", "")) != String(expected_dwelling.get("catalog_id", "")) \
+					or not _live_proxy_provenance_exact(object):
+				creature_generator_rows_exact = false
 		elif type_id == 16:
 			creature_bank_count += 1
 			if String(object.get("kind", "")) != "h3m_object" \
@@ -257,6 +286,7 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 	var live_mine_sites_exact := true
 	var loose_resource_mine_nodes_by_site := {}
 	var live_campfires := []
+	var live_creature_generators := []
 	var live_artifacts := []
 	var artifact_resource_node_count := 0
 	var live_resource_proxy_count := 0
@@ -283,6 +313,18 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 						loose_resource_mine_nodes_by_site[mine_site_id] = node.duplicate(true)
 			elif int(source.get("h3m_type_id", -1)) == 12:
 				live_campfires.append({"index": node_index, "node": node.duplicate(true)})
+			elif int(source.get("h3m_type_id", -1)) == 17:
+				var expected_dwelling: Dictionary = CREATURE_GENERATOR_ROWS.get(int(source.get("h3m_subtype", -1)), {}) if CREATURE_GENERATOR_ROWS.get(int(source.get("h3m_subtype", -1)), {}) is Dictionary else {}
+				if not expected_dwelling.is_empty() \
+						and creature_generator_placement_ids.has(String(node.get("placement_id", ""))) \
+						and String(node.get("kind", "")) == "neutral_dwelling" \
+						and String(node.get("object_id", "")) == String(expected_dwelling.get("object_id", "")) \
+						and String(node.get("site_id", "")) == String(expected_dwelling.get("site_id", "")):
+					live_creature_generators.append({
+						"index": node_index,
+						"subtype": int(source.get("h3m_subtype", -1)),
+						"node": node.duplicate(true),
+					})
 			elif int(source.get("h3m_type_id", -1)) in [67, 68]:
 				artifact_resource_node_count += 1
 			elif int(source.get("h3m_type_id", -1)) == 79:
@@ -315,6 +357,7 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 	var loose_resource_presentation := {}
 	if session != null:
 		loose_resource_presentation = await _validate_loose_resource_presentation(session, loose_resource_nodes_by_site, loose_resource_mine_nodes_by_site)
+	var creature_generator_interaction: Dictionary = _validate_creature_generator_interaction(adoption)
 	var interaction := {}
 	if session != null and not live_campfires.is_empty():
 		var campfire_result: Dictionary = live_campfires[0]
@@ -463,13 +506,16 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 			and exact_identity == repeat_identity
 	return {
 		"ok": bool(first.get("ok", false)) \
+				and String(first.get("final_payload_fnv1a32", "")) == "457dba6b" \
+				and int(first.get("final_payload_byte_count", -1)) == 23664 \
+				and int(first.get("runtime_object_count", -1)) == 294 \
 				and mine_count == 18 \
 				and mine_subtypes.size() == 7 \
 				and mine_rows_exact \
 				and campfire_count == 2 \
 				and campfire_rows_exact \
 				and creature_generator_count == 2 \
-				and unsupported_creature_rows_exact \
+				and creature_generator_rows_exact \
 				and creature_bank_count == 2 \
 				and unsupported_bank_rows_exact \
 				and artifact_proxy_count == 3 \
@@ -491,6 +537,8 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 				and live_mine_sites_exact \
 				and live_campfires.size() == campfire_count \
 				and bool(interaction.get("ok", false)) \
+				and live_creature_generators.size() == creature_generator_count \
+				and bool(creature_generator_interaction.get("ok", false)) \
 				and artifact_resource_node_count == 0 \
 				and live_artifacts.size() == artifact_proxy_count \
 				and bool(artifact_interaction.get("ok", false)) \
@@ -511,7 +559,9 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 		"campfire_count": campfire_count,
 		"campfire_rows_exact": campfire_rows_exact,
 		"creature_generator_count": creature_generator_count,
-		"unsupported_creature_rows_exact": unsupported_creature_rows_exact,
+		"creature_generator_rows_exact": creature_generator_rows_exact,
+		"live_creature_generator_count": live_creature_generators.size(),
+		"creature_generator_interaction": creature_generator_interaction,
 		"creature_bank_count": creature_bank_count,
 		"unsupported_bank_rows_exact": unsupported_bank_rows_exact,
 		"artifact_proxy_count": artifact_proxy_count,
@@ -537,6 +587,141 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 		"spell_scroll_interaction": spell_scroll_interaction,
 		"exact_repeat": exact_repeat,
 	}
+
+func _validate_creature_generator_interaction(adoption: Dictionary) -> Dictionary:
+	var session = NativeRandomMapPackageSessionBridgeScript.build_session_from_adoption(adoption)
+	if session == null:
+		return {"ok": false, "reason": "missing_adopted_session"}
+	var source_objects: Dictionary = session.overworld.get("package_source_objects_by_id", {}) if session.overworld.get("package_source_objects_by_id", {}) is Dictionary else {}
+	var nodes_before: Array = session.overworld.get("resource_nodes", []).duplicate(true) if session.overworld.get("resource_nodes", []) is Array else []
+	var resources_before: Dictionary = session.overworld.get("resources", {}).duplicate(true)
+	var army_before: Dictionary = session.overworld.get("army", {}).duplicate(true)
+	var artifacts_before: Array = session.overworld.get("artifact_nodes", []).duplicate(true) if session.overworld.get("artifact_nodes", []) is Array else []
+	var encounters_before: Array = session.overworld.get("encounters", []).duplicate(true) if session.overworld.get("encounters", []) is Array else []
+	var map_objects_before: Array = session.overworld.get("map_objects", []).duplicate(true) if session.overworld.get("map_objects", []) is Array else []
+	var package_ids_before: Array = session.overworld.get("package_source_object_ids", []).duplicate(true) if session.overworld.get("package_source_object_ids", []) is Array else []
+	var package_sources_before: Dictionary = source_objects.duplicate(true)
+	var owned_artifacts_before: Array = ArtifactRulesScript.owned_artifact_ids(session.overworld.get("hero", {}))
+	var live_rows := []
+	var target_indices := {}
+	for node_index in range(nodes_before.size()):
+		var node_value: Variant = nodes_before[node_index]
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		var source: Dictionary = source_objects.get(String(node.get("placement_id", "")), {}) if source_objects.get(String(node.get("placement_id", "")), {}) is Dictionary else {}
+		if int(source.get("h3m_type_id", -1)) != 17:
+			continue
+		var subtype := int(source.get("h3m_subtype", -1))
+		var expected: Dictionary = CREATURE_GENERATOR_ROWS.get(subtype, {}) if CREATURE_GENERATOR_ROWS.get(subtype, {}) is Dictionary else {}
+		if expected.is_empty():
+			return {"ok": false, "reason": "unexpected_creature_generator_subtype", "subtype": subtype}
+		live_rows.append({"index": node_index, "subtype": subtype, "node": node.duplicate(true)})
+		target_indices[node_index] = true
+	if live_rows.map(func(row: Dictionary) -> int: return int(row.get("subtype", -1))) != [59, 52]:
+		return {"ok": false, "reason": "ordered_creature_generator_rows_mismatch", "rows": live_rows}
+	var expected_recruits := {}
+	var expected_gold := 0
+	var claim_rows := []
+	var repeat_rejected := true
+	for row_value in live_rows:
+		var row: Dictionary = row_value
+		var subtype := int(row.get("subtype", -1))
+		var expected: Dictionary = CREATURE_GENERATOR_ROWS.get(subtype, {})
+		expected_gold += int(expected.get("gold", 0))
+		for unit_id_value in expected.get("recruits", {}).keys():
+			var unit_id := String(unit_id_value)
+			expected_recruits[unit_id] = int(expected_recruits.get(unit_id, 0)) + int(expected.get("recruits", {}).get(unit_id, 0))
+		var node_index := int(row.get("index", -1))
+		var current_nodes: Array = session.overworld.get("resource_nodes", []) if session.overworld.get("resource_nodes", []) is Array else []
+		var current_node: Dictionary = current_nodes[node_index] if node_index >= 0 and node_index < current_nodes.size() and current_nodes[node_index] is Dictionary else {}
+		var claim: Dictionary = OverworldRulesScript._collect_resource_node_result(session, {"index": node_index, "node": current_node}, false)
+		current_nodes = session.overworld.get("resource_nodes", []) if session.overworld.get("resource_nodes", []) is Array else []
+		var claimed_node: Dictionary = current_nodes[node_index] if node_index >= 0 and node_index < current_nodes.size() and current_nodes[node_index] is Dictionary else {}
+		var authority_before_repeat: Dictionary = session.to_dict()
+		var repeat_claim: Dictionary = OverworldRulesScript._collect_resource_node_result(session, {"index": node_index, "node": claimed_node}, false)
+		var repeat_authority_exact: bool = session.to_dict() == authority_before_repeat
+		repeat_rejected = repeat_rejected and not bool(repeat_claim.get("ok", false)) and repeat_authority_exact
+		claim_rows.append({
+			"subtype": subtype,
+			"placement_id": claimed_node.get("placement_id", ""),
+			"object_id": claimed_node.get("object_id", ""),
+			"site_id": claimed_node.get("site_id", ""),
+			"claim_ok": claim.get("ok", false),
+			"controller": claimed_node.get("collected_by_faction_id", ""),
+			"persistent": claimed_node.get("collected", false),
+			"repeat_rejected": not bool(repeat_claim.get("ok", false)),
+			"repeat_authority_exact": repeat_authority_exact,
+		})
+	var resources_after: Dictionary = session.overworld.get("resources", {}).duplicate(true)
+	var expected_resources: Dictionary = resources_before.duplicate(true)
+	expected_resources["gold"] = int(expected_resources.get("gold", 0)) + expected_gold
+	var army_after: Dictionary = session.overworld.get("army", {}).duplicate(true)
+	var army_counts_before := _army_stack_counts(army_before)
+	var army_counts_after := _army_stack_counts(army_after)
+	var expected_army_counts: Dictionary = army_counts_before.duplicate(true)
+	for unit_id_value in expected_recruits.keys():
+		var unit_id := String(unit_id_value)
+		expected_army_counts[unit_id] = int(expected_army_counts.get(unit_id, 0)) + int(expected_recruits.get(unit_id, 0))
+	var nodes_after: Array = session.overworld.get("resource_nodes", []) if session.overworld.get("resource_nodes", []) is Array else []
+	var unrelated_nodes_exact := nodes_after.size() == nodes_before.size()
+	if unrelated_nodes_exact:
+		for node_index in range(nodes_before.size()):
+			if not target_indices.has(node_index) and nodes_before[node_index] != nodes_after[node_index]:
+				unrelated_nodes_exact = false
+				break
+	var all_claims_exact := claim_rows.size() == CREATURE_GENERATOR_ROWS.size()
+	for claim_value in claim_rows:
+		var claim_row: Dictionary = claim_value
+		var expected: Dictionary = CREATURE_GENERATOR_ROWS.get(int(claim_row.get("subtype", -1)), {})
+		if not bool(claim_row.get("claim_ok", false)) \
+				or String(claim_row.get("controller", "")) != "player" \
+				or not bool(claim_row.get("persistent", false)) \
+				or String(claim_row.get("object_id", "")) != String(expected.get("object_id", "")) \
+				or String(claim_row.get("site_id", "")) != String(expected.get("site_id", "")):
+			all_claims_exact = false
+	var owned_artifacts_after: Array = ArtifactRulesScript.owned_artifact_ids(session.overworld.get("hero", {}))
+	var serialized_authority: Dictionary = session.to_dict()
+	var restored = SessionStateStoreScript.SessionData.new()
+	restored.from_dict(serialized_authority)
+	var save_round_trip_exact: bool = int(restored.save_version) == int(SessionStateStoreScript.SAVE_VERSION) and restored.to_dict() == serialized_authority
+	return {
+		"ok": all_claims_exact \
+				and resources_after == expected_resources \
+				and army_counts_after == expected_army_counts \
+				and session.overworld.get("hero", {}).get("army", {}) == army_after \
+				and owned_artifacts_after == owned_artifacts_before \
+				and session.overworld.get("artifact_nodes", []) == artifacts_before \
+				and session.overworld.get("encounters", []) == encounters_before \
+				and session.overworld.get("map_objects", []) == map_objects_before \
+				and session.overworld.get("package_source_object_ids", []) == package_ids_before \
+				and session.overworld.get("package_source_objects_by_id", {}) == package_sources_before \
+				and unrelated_nodes_exact \
+				and repeat_rejected \
+				and save_round_trip_exact,
+		"claim_rows": claim_rows,
+		"gold_delta": int(resources_after.get("gold", 0)) - int(resources_before.get("gold", 0)),
+		"expected_gold_delta": expected_gold,
+		"army_deltas": expected_recruits,
+		"army_exact": army_counts_after == expected_army_counts,
+		"artifacts_exact": owned_artifacts_after == owned_artifacts_before and session.overworld.get("artifact_nodes", []) == artifacts_before,
+		"unrelated_nodes_exact": unrelated_nodes_exact,
+		"encounters_exact": session.overworld.get("encounters", []) == encounters_before,
+		"map_objects_exact": session.overworld.get("map_objects", []) == map_objects_before,
+		"package_authority_exact": session.overworld.get("package_source_object_ids", []) == package_ids_before and session.overworld.get("package_source_objects_by_id", {}) == package_sources_before,
+		"repeat_rejected": repeat_rejected,
+		"save_version": int(restored.save_version),
+		"save_round_trip_exact": save_round_trip_exact,
+	}
+
+func _army_stack_counts(army: Dictionary) -> Dictionary:
+	var counts := {}
+	for stack_value in army.get("stacks", []):
+		if stack_value is Dictionary:
+			var unit_id := String(stack_value.get("unit_id", ""))
+			if unit_id != "":
+				counts[unit_id] = int(counts.get(unit_id, 0)) + int(stack_value.get("count", 0))
+	return counts
 
 func _validate_loose_resource_presentation(
 	session: SessionStateStoreScript.SessionData,

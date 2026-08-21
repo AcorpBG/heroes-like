@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `native-rmg-runtime-creature-generator-dwelling-projection-10184`. Fresh Small seed 1 retains its exact Native RMG payload and now projects the recovered type-17 subtype 59/`AVGpixie.def` and subtype 52/`AVGlich0.def` rows through the existing original Greenbranch Copse and Lantern Warren neutral-dwelling surfaces. Both adopted rows grant their exact existing gold/recruits, persist control, reject same-controller repeats, and round-trip through save version 9 without changing unrelated package/session authority. Focused runtime, current dwelling/AI/content/core compatibility, repository/editor, and bounded Linux/Windows export-startup gates pass. Two older generated-object reports remain excluded preexisting compatibility defects because they require removed legacy API/pathing surfaces and fail independently on rows with no selected type-17 mapping. Creature Banks, other Creature Generator subtypes, H3 art/content import, native generation/parity, balance, broad proxy policy, packaged interaction, certification, signing/publication, whole-game, and release readiness remain outside this slice. Select the next tracker-approved source-backed release-readiness implementation slice.
+  id: `native-rmg-runtime-creature-generator-dwelling-projection-10184`
 - Completed implementation slice: `presentation-native-rmg-loose-resource-distinct-field-sprites-10184`. The five accepted Native RMG loose-resource proxy identities now have distinct original field sprites through the existing site-scoped manifest mapping. Exact `reward_reference` site identity wins before its shared mine-object asset while real `mine` rows retain their existing structures. Focused 1280x720/1920x1080 rendering, current generated rows, detached Peatwax coverage, collection/repeat/save authority, broad Overworld/core compatibility, repository/editor checks, and bounded Linux/Windows export-startup gates pass. Native generation, mines, resource policy, values, balance, broad renderer architecture/parity, packaged interaction, hardware/accessibility certification, signing/publication, whole-game, and release readiness remain outside this slice. Select the next tracker-approved release-readiness implementation slice.
   id: `presentation-native-rmg-loose-resource-distinct-field-sprites-10184`
 - Completed implementation slice: `presentation-native-rmg-spell-scroll-field-sprite-10184`. The accepted Beacon Path scroll now resolves through one original transparent 512x512 Overworld field sprite instead of the generic procedural resource marker. The exact generated type-93 node uses the imported asset at 1280x720 and 1920x1080, retains permanent-explored visibility and detached procedural fallback, while payload `457dba6b`, all 294 objects, spell learning, repeat rejection, persistence, and every other Native RMG/gameplay authority remain exact. Focused, Overworld/core, repository/editor, and bounded Linux/Windows export-startup gates pass; both PCKs contain the new import and compiled texture. Packaged scroll interaction, broad Native RMG parity, hardware/accessibility certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
@@ -7948,7 +7950,39 @@ Completion evidence:
 - `/tmp/heroes-spell-scroll-core.r7WCx5` records core rc0; JSON, repository validation, Python compilation, diff checks, and exact/generic editor parses pass;
 - `/tmp/heroes-spell-scroll-linux-package.zpi2sS` and `/tmp/heroes-spell-scroll-windows-package.CUKi63` wrapper artifacts plus the official report JSON files record Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup green. These are export/startup claims only; no packaged scroll interaction is claimed.
 
-## Active Slice: Native RMG Loose-Resource Distinct Field Sprites
+## Completed Slice: Native RMG Creature-Generator Dwelling Projection
+
+id: `native-rmg-runtime-creature-generator-dwelling-projection-10184`
+
+Status: completed.
+
+Implementation boundary:
+- extend the existing runtime proxy catalog with exactly two source-identified type-17 rows: subtype 59/source row 220/`AVGpixie.def` to `object_greenbranch_copse`, and subtype 52/source row 190/`AVGlich0.def` to `object_lantern_warren`;
+- use the existing `neutral_dwelling` package/session path and existing site content without changing MapPackageService matching, the session bridge, Overworld rules, dwelling rewards, recruitment, rendering, save schema, or native generation;
+- retain recovered H3MapEd names only as provenance and expose only original-project dwelling, unit, art, and text identities at runtime.
+
+Completion criteria:
+- fresh Small seed 1 retains payload `457dba6b`, `23,664` bytes, `294` ordered objects, and exact placement/body/action/block masks while its two type-17 rows become exact catalog-provenanced Greenbranch Copse and Lantern Warren neutral dwellings instead of raw dropped `h3m_object` records;
+- package/session adoption gains exactly those two resource nodes, no source object is duplicated or lost, and current type-16 Creature Banks plus all unsupported/malformed/missing/duplicate catalog rows remain fail-closed;
+- real player claims grant only the existing site gold and exact recruit stacks, persist control, reject same-controller repeat collection, and round-trip through save version 9 without changing unrelated resources, army stacks, artifacts, map objects, encounters, or package authority;
+- focused end-to-end, neutral-dwelling/AI/content compatibility, core, repository/editor, and bounded official Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no recovered Native RMG function/private-state/writeout, payload bytes, RNG, count/order/placement, terrain, road, guard, footprint/mask, density, native code/binary, or parity claim;
+- no Creature Bank adoption, other type-17 subtype mapping, new dwelling/unit/art, H3M/DEF asset import, reward/recruit rebalance, AI policy change, schema/save-version change, broad catalog generalization, packaged dwelling interaction claim, hardware/accessibility certification, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- `/tmp/heroes-native-rmg-proxy-gap-audit-terrain.*` on pushed HEAD `5cd7f9cf` proves payload `457dba6b`/23,664 bytes/294 objects and exactly two current type-17 rows: placement 0263 subtype 59 at grass tile 2,33 and placement 0271 subtype 52 at dirt tile 18,32; both retain empty object/site/catalog identity and are absent from resource, artifact, encounter, and map-object live surfaces;
+- recovered object-catalog rows independently identify subtype 59 as source row 220/`AVGpixie.def` and subtype 52 as source row 190/`AVGlich0.def`; no generator or final-payload inference is needed;
+- `object_greenbranch_copse` and `object_lantern_warren` already own live, visitable neutral-dwelling sites with original-project identities, claim recruits, weekly control, rendering, AI, and save behavior.
+
+Completion evidence:
+- `/tmp/heroes-creature-generator-focused-rerun.N2cnRL` records the authoritative focused rc0 report: payload `457dba6b`, 23,664 bytes, 294 ordered objects, two exact catalog/source-provenanced type-17 rows, two adopted live dwellings, 195 total gold, exact four recruit-stack deltas, persistent player control, repeat rejection with unchanged authority, unrelated node/artifact/encounter/map-object/package authority, and save version 9 round-trip all pass;
+- `/tmp/heroes-creature-generator-compat.D4kUfn` records current `artifact_dwelling_reward_execution_report`, `ai_site_control_proof_report`, `faction_content_breadth_report`, and `core_systems_regression_smoke` green. The same artifact also records the excluded `native_random_map_homm3_re_object_table_proxy_report` and `random_map_generated_object_footprint_interaction_report` reds: the former requires removed legacy generation-result fields and contains no type-17 row, while the latter reports broad preexisting mine/pickup/required-source footprint failures plus no selected dwelling record;
+- JSON validation, `tests/validate_repo.py`, Python compilation, scoped/global diff checks, exact focused-scene parsing, and generic editor parsing pass; `/tmp/heroes-creature-generator-static.kqc9Q7`, `/tmp/heroes-creature-generator-restat.dSXLlN`, and `/tmp/heroes-creature-generator-final-editor.R4ld3f` preserve the editor evidence;
+- `/tmp/heroes-creature-generator-linux-package.pk7OEM` and `/tmp/heroes-creature-generator-windows-package.qWtSPc` plus the official packaging report JSON files record Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup green. These are export/startup claims only; no packaged dwelling interaction is claimed.
+
+## Completed Slice: Native RMG Loose-Resource Distinct Field Sprites
 
 id: `presentation-native-rmg-loose-resource-distinct-field-sprites-10184`
 

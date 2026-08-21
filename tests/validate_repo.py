@@ -44699,6 +44699,71 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
                 errors,
                 "H3M Spell Scroll proxy identity must remain exact and live-site-backed",
             )
+        expected_creature_generator_proxies = {
+            59: (220, "AVGpixie.def", "object_greenbranch_copse", "dwelling_creature_generator_pixie_greenbranch_proxy"),
+            52: (190, "AVGlich0.def", "object_lantern_warren", "dwelling_creature_generator_lich_lantern_proxy"),
+        }
+        type17_entries = [entry for entry in proxy_entries if isinstance(entry, dict) and int(entry.get("homm3_re_object_type_id", -1)) == 17]
+        ensure(len(type17_entries) == 2, errors, "H3M Creature Generator proxy catalog must contain exactly the two recovered Small-seed rows")
+        for subtype, expected in expected_creature_generator_proxies.items():
+            rows = [entry for entry in type17_entries if int(entry.get("homm3_re_object_subtype", -1)) == subtype]
+            ensure(len(rows) == 1, errors, f"H3M Creature Generator subtype {subtype} must have exactly one proxy row")
+            if len(rows) != 1:
+                continue
+            row = rows[0]
+            actual = (
+                int(row.get("homm3_re_object_source_row", -1)),
+                str(row.get("homm3_re_object_def_ref", "")),
+                str(row.get("native_proxy_object_id", "")),
+                str(row.get("id", "")),
+            )
+            ensure(actual == expected, errors, f"H3M Creature Generator subtype {subtype} proxy identity drifted: {actual}")
+            ensure(
+                str(row.get("generated_kind", "")) == "neutral_dwelling"
+                and str(row.get("source_kind", "")) == "homm3_re_map_object_type"
+                and str(row.get("homm3_re_object_type_name", "")) == "Creature Generator 1"
+                and str(row.get("homm3_re_reward_table_bucket", "")) == "creature_generator_dwelling"
+                and str(row.get("semantic_category", "")) == "dwelling"
+                and str(row.get("proxy_bucket", "")) == "neutral_dwelling"
+                and str(row.get("native_proxy_family", "")) == "neutral_dwelling"
+                and str(row.get("native_proxy_category", "")) == "dwelling"
+                and str(row.get("native_proxy_site_id", "")) == "",
+                errors,
+                f"H3M Creature Generator subtype {subtype} must use only the existing map-object-backed neutral-dwelling path",
+            )
+        map_objects_by_id = items_index(load_json(CONTENT_DIR / "map_objects.json"))
+        resource_sites_by_id = items_index(load_json(CONTENT_DIR / "resource_sites.json"))
+        expected_live_dwellings = {
+            "object_greenbranch_copse": ("site_greenbranch_copse", {"gold": 105}, {"unit_neutral_greenbranch_cudgels": 2, "unit_neutral_sapwhistle_callers": 1}),
+            "object_lantern_warren": ("site_lantern_warren", {"gold": 90}, {"unit_neutral_tunnel_lanterns": 2, "unit_neutral_glimmercap_needlers": 1}),
+        }
+        for object_id, expected in expected_live_dwellings.items():
+            map_object = map_objects_by_id.get(object_id, {})
+            site_id, rewards, recruits = expected
+            site = resource_sites_by_id.get(site_id, {})
+            ensure(
+                str(map_object.get("family", "")) == "neutral_dwelling"
+                and str(map_object.get("primary_class", "")) == "neutral_dwelling"
+                and str(map_object.get("resource_site_id", "")) == site_id
+                and bool(map_object.get("visitable", False))
+                and map_object.get("passable", True) is False,
+                errors,
+                f"{object_id} must remain an authored blocking-visitable neutral dwelling",
+            )
+            ensure(
+                str(site.get("family", "")) == "neutral_dwelling"
+                and bool(site.get("persistent_control", False))
+                and site.get("claim_rewards", {}) == rewards
+                and site.get("claim_recruits", {}) == recruits,
+                errors,
+                f"{site_id} must retain its exact live claim economy and recruit payload",
+            )
+        recovered_object_catalog_text = (ROOT / "src/gdextension/src/h3maped_rmg_object_catalog.cpp").read_text(encoding="utf-8")
+        for recovered_row in (
+            '{ 190, "objects.txt", "AVGlich0.def", 17, "Creature Generator 1", 17, 52,',
+            '{ 220, "objects.txt", "AVGpixie.def", 17, "Creature Generator 1", 17, 59,',
+        ):
+            ensure(recovered_object_catalog_text.count(recovered_row) == 1, errors, f"Recovered Creature Generator source identity must remain unique: {recovered_row}")
         spell_scroll_sites = [
             site for site in load_json(CONTENT_DIR / "resource_sites.json").get("items", [])
             if isinstance(site, dict) and str(site.get("id", "")) == "site_beacon_path_scroll"
@@ -44946,8 +45011,25 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             '0: {"object_id": "object_brightwood_sawmill", "resource_id": "wood", "catalog_id": "mine_wood_sawmill_proxy"}',
             '6: {"object_id": "object_reef_coin_assay", "resource_id": "gold", "catalog_id": "mine_gold_proxy"}',
             'or String(object.get("homm3_re_reward_object_catalog_id", "")) != "reward_campfire_minor_proxy"',
+            'const CREATURE_GENERATOR_ROWS := {',
+            '59: {',
+            '"source_row": 220,',
+            '"def_ref": "AVGpixie.def",',
+            '"object_id": "object_greenbranch_copse",',
+            '"site_id": "site_greenbranch_copse",',
+            '"catalog_id": "dwelling_creature_generator_pixie_greenbranch_proxy",',
+            '"recruits": {"unit_neutral_greenbranch_cudgels": 2, "unit_neutral_sapwhistle_callers": 1}',
+            '52: {',
+            '"source_row": 190,',
+            '"def_ref": "AVGlich0.def",',
+            '"object_id": "object_lantern_warren",',
+            '"site_id": "site_lantern_warren",',
+            '"catalog_id": "dwelling_creature_generator_lich_lantern_proxy",',
+            '"recruits": {"unit_neutral_tunnel_lanterns": 2, "unit_neutral_glimmercap_needlers": 1}',
             'elif type_id == 17:',
-            'unsupported_creature_rows_exact = false',
+            'creature_generator_placement_ids[String(object.get("placement_id", ""))] = true',
+            'or String(object.get("kind", "")) != "neutral_dwelling"',
+            'creature_generator_rows_exact = false',
             'elif type_id == 16:',
             'unsupported_bank_rows_exact = false',
             '67: {"artifact_id": "artifact_waymark_compass", "catalog_id": "reward_random_minor_artifact_proxy"}',
@@ -44966,6 +45048,27 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             'resource_proxy_subtypes[subtype] = true',
             'or String(object.get("site_id", "")) != String(expected_resource.get("site_id", ""))',
             'var package_source_objects: Dictionary = session.overworld.get("package_source_objects_by_id", {})',
+            'elif int(source.get("h3m_type_id", -1)) == 17:',
+            'live_creature_generators.append({',
+            'var creature_generator_interaction: Dictionary = _validate_creature_generator_interaction(adoption)',
+            'func _validate_creature_generator_interaction(adoption: Dictionary) -> Dictionary:',
+            'var session = NativeRandomMapPackageSessionBridgeScript.build_session_from_adoption(adoption)',
+            'if live_rows.map(func(row: Dictionary) -> int: return int(row.get("subtype", -1))) != [59, 52]:',
+            'var claim: Dictionary = OverworldRulesScript._collect_resource_node_result(session, {"index": node_index, "node": current_node}, false)',
+            'var authority_before_repeat: Dictionary = session.to_dict()',
+            'var repeat_claim: Dictionary = OverworldRulesScript._collect_resource_node_result(session, {"index": node_index, "node": claimed_node}, false)',
+            'var expected_resources: Dictionary = resources_before.duplicate(true)',
+            'expected_resources["gold"] = int(expected_resources.get("gold", 0)) + expected_gold',
+            'var expected_army_counts: Dictionary = army_counts_before.duplicate(true)',
+            'and owned_artifacts_after == owned_artifacts_before',
+            'and session.overworld.get("artifact_nodes", []) == artifacts_before',
+            'and session.overworld.get("encounters", []) == encounters_before',
+            'and session.overworld.get("map_objects", []) == map_objects_before',
+            'and session.overworld.get("package_source_object_ids", []) == package_ids_before',
+            'and session.overworld.get("package_source_objects_by_id", {}) == package_sources_before',
+            'and unrelated_nodes_exact',
+            'and repeat_rejected',
+            'var save_round_trip_exact: bool = int(restored.save_version) == int(SessionStateStoreScript.SAVE_VERSION) and restored.to_dict() == serialized_authority',
             'var claim: Dictionary = OverworldRulesScript._collect_resource_node_result(session, campfire_result, false)',
             'var artifact_nodes: Array = session.overworld.get("artifact_nodes", [])',
             'var claim: Dictionary = OverworldRulesScript._collect_artifact_node_result(session, artifact_result, false)',
@@ -44981,6 +45084,7 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             'and mine_subtypes.size() == 7',
             'and campfire_count == 2',
             'and creature_generator_count == 2',
+            'and creature_generator_rows_exact',
             'and creature_bank_count == 2',
             'and artifact_proxy_count == 3',
             'and artifact_proxy_rows_exact',
@@ -44990,6 +45094,8 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             'and live_mine_count == mine_count',
             'and live_campfires.size() == campfire_count',
             'and bool(interaction.get("ok", false))',
+            'and live_creature_generators.size() == creature_generator_count',
+            'and bool(creature_generator_interaction.get("ok", false))',
             'and artifact_resource_node_count == 0',
             'and live_artifacts.size() == artifact_proxy_count',
             'and bool(artifact_interaction.get("ok", false))',
@@ -45121,6 +45227,11 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
         proxy_projection_block = native_rmg_runtime_boundary_text[proxy_projection_start:proxy_projection_end]
         ensure(proxy_projection_block.count("service.generate_random_map(config,") == 2, errors, "Native live proxy owner must compare exactly two deterministic projections")
         ensure(proxy_projection_block.find("exact_identity.append(") < proxy_projection_block.find("repeat_identity.append(") < proxy_projection_block.find("exact_identity == repeat_identity"), errors, "Native live proxy owner must compare whole ordered object authority after both real projections")
+        type17_projection_start = proxy_projection_block.find("elif type_id == 17:")
+        type17_projection_end = proxy_projection_block.find("elif type_id == 16:", type17_projection_start)
+        type17_projection_block = proxy_projection_block[type17_projection_start:type17_projection_end]
+        ensure('or String(object.get("site_id", "")) != ""' in type17_projection_block, errors, "Native Creature Generator map-document projection must retain empty site identity before the bridge derives the authored dwelling site")
+        ensure('String(expected_dwelling.get("site_id", ""))' not in type17_projection_block, errors, "Native Creature Generator map-document projection must not claim that the catalog writes a direct site id")
         ensure(proxy_projection_block.find("build_session_from_adoption(adoption)") < proxy_projection_block.find("_collect_resource_node_result(session, campfire_result, false)"), errors, "Native live proxy interaction must use the adopted package session")
         ensure(proxy_projection_block.find("build_session_from_adoption(adoption)") < proxy_projection_block.find("_collect_artifact_node_result(session, artifact_result, false)") < proxy_projection_block.find("restored.from_dict(session.to_dict())"), errors, "Native live artifact proxy must use adopted collection authority before exact persistence restoration")
         ensure(proxy_projection_block.find('artifact_proxy_placement_ids[String(object.get("placement_id", ""))] = true') < proxy_projection_block.find('artifact_proxy_placement_ids.has(String(artifact_node.get("placement_id", "")))') < proxy_projection_block.find("_collect_artifact_node_result(session, artifact_result, false)"), errors, "Native live artifact owner must correlate projected placements through package adoption before collection")
@@ -45129,6 +45240,39 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
         ensure(proxy_projection_block.find('spell_scroll_placement_ids[String(object.get("placement_id", ""))] = true') < proxy_projection_block.find('spell_scroll_placement_ids.has(String(node.get("placement_id", "")))') < proxy_projection_block.find("_collect_resource_node_result(session, scroll_result, false)"), errors, "Native live Spell Scroll owner must correlate exact projection through package adoption before collection")
         ensure(proxy_projection_block.find('spell_scroll_presentation = await _validate_spell_scroll_presentation(session, scroll_node)') < proxy_projection_block.find("_collect_resource_node_result(session, scroll_result, false)"), errors, "Native live Spell Scroll owner must validate the exact uncollected generated node presentation before collection")
         ensure(proxy_projection_block.find('var resource_nodes_before: Array = session.overworld.get("resource_nodes", []).duplicate(true)') < proxy_projection_block.find("_collect_resource_node_result(session, scroll_result, false)") < proxy_projection_block.find('var repeat_claim: Dictionary = OverworldRulesScript._collect_resource_node_result'), errors, "Native live Spell Scroll owner must bracket real collection with detached authority and repeat rejection")
+        creature_interaction_start = native_rmg_runtime_boundary_text.find("func _validate_creature_generator_interaction(")
+        creature_interaction_end = native_rmg_runtime_boundary_text.find("func _army_stack_counts(", creature_interaction_start)
+        creature_interaction_block = native_rmg_runtime_boundary_text[creature_interaction_start:creature_interaction_end]
+        ensure(
+            creature_interaction_block.find("build_session_from_adoption(adoption)")
+            < creature_interaction_block.find('int(source.get("h3m_type_id", -1)) != 17')
+            < creature_interaction_block.find('!= [59, 52]')
+            < creature_interaction_block.find("_collect_resource_node_result(session,")
+            < creature_interaction_block.find("var authority_before_repeat: Dictionary = session.to_dict()")
+            < creature_interaction_block.find("var repeat_claim: Dictionary = OverworldRulesScript._collect_resource_node_result(session,")
+            < creature_interaction_block.find("var serialized_authority: Dictionary = session.to_dict()")
+            < creature_interaction_block.find("restored.from_dict(serialized_authority)")
+            < creature_interaction_block.find("restored.to_dict() == serialized_authority"),
+            errors,
+            "Native Creature Generator interaction must correlate adopted source rows, claim through live rules, reject repeats, and serialize exact final authority in order",
+        )
+        ensure(creature_interaction_block.count("_collect_resource_node_result(session,") == 2, errors, "Native Creature Generator interaction helper must contain exactly its real claim and repeat call sites")
+        for forbidden_token in (
+            'session.overworld["resource_nodes"] =',
+            'session.overworld["resources"] =',
+            'session.overworld["army"] =',
+            'session.overworld["hero"] =',
+            'node["collected"] =',
+            'node["collected_by_faction_id"] =',
+            'object["kind"] =',
+            'object["object_id"] =',
+            'object["site_id"] =',
+            "sort()",
+            "sort_custom",
+            "FileAccess.open(",
+            "SaveService.",
+        ):
+            ensure(forbidden_token not in creature_interaction_block, errors, f"Native Creature Generator focused interaction must use only live adopted authority: {forbidden_token}")
         loose_resource_presentation_start = native_rmg_runtime_boundary_text.find("func _validate_loose_resource_presentation(")
         loose_resource_presentation_end = native_rmg_runtime_boundary_text.find("func _validate_spell_scroll_presentation(", loose_resource_presentation_start)
         loose_resource_presentation_block = native_rmg_runtime_boundary_text[loose_resource_presentation_start:loose_resource_presentation_end]
