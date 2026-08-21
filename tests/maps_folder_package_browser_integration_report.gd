@@ -50,6 +50,24 @@ func _run() -> void:
 	var compact_map_path := String(compact_artifacts.get("map_path", ""))
 	var compact_scenario_path := String(compact_artifacts.get("scenario_path", ""))
 	var compact_package_id := String(compact_artifacts.get("package_id", ""))
+	var failure_fixture := _create_package_index_failure_fixture(map_path, scenario_path)
+	if not bool(failure_fixture.get("ok", false)):
+		_cleanup_many([[map_path, scenario_path], [compact_map_path, compact_scenario_path]])
+		_fail("Could not create exact package-index failure fixtures: %s" % JSON.stringify(failure_fixture))
+		return
+	var failure_index := ScenarioSelectRulesScript.maps_folder_package_index({
+		"package_dir": String(failure_fixture.get("package_dir", "")),
+	})
+	var failure_codes := _package_warning_codes_by_stem(failure_index.get("warnings", []))
+	if failure_codes != {
+		"legacy-pair": "legacy_json_package_rejected",
+		"malformed-pair": "package_inspect_failed",
+		"wrong-schema-pair": "package_load_failed",
+	} or int(failure_index.get("unpaired_map_count", -1)) != 1 or int(failure_index.get("unpaired_scenario_count", -1)) != 0:
+		_cleanup_package_index_failure_fixture(failure_fixture)
+		_cleanup_many([[map_path, scenario_path], [compact_map_path, compact_scenario_path]])
+		_fail("Single-read package index changed exact failure classification: %s" % JSON.stringify({"codes": failure_codes, "index": failure_index}))
+		return
 
 	var index := ScenarioSelectRulesScript.maps_folder_package_index()
 	var indexed_entry := _find_package_entry(index.get("entries", []), package_id)
@@ -182,6 +200,7 @@ func _run() -> void:
 		return
 
 	_cleanup_many([[map_path, scenario_path], [compact_map_path, compact_scenario_path]])
+	_cleanup_package_index_failure_fixture(failure_fixture)
 	ContentService.clear_generated_scenario_drafts()
 	print("%s %s" % [REPORT_ID, JSON.stringify({
 		"ok": true,
@@ -196,10 +215,78 @@ func _run() -> void:
 		"selected_entry_setup_exact": true,
 		"selected_entry_session_exact": true,
 		"stale_entry_rejected": true,
+		"single_read_failure_classification_exact": true,
 		"authored_json_scenarios_used": false,
 		"generated_draft_registry_used": false,
 	})])
 	get_tree().quit(0)
+
+func _create_package_index_failure_fixture(source_map_path: String, source_scenario_path: String) -> Dictionary:
+	var package_dir := "user://maps-folder-package-index-single-read-%d" % Time.get_ticks_usec()
+	var absolute_dir := ProjectSettings.globalize_path(package_dir)
+	if DirAccess.make_dir_recursive_absolute(absolute_dir) != OK:
+		return {"ok": false, "error": "create_dir_failed", "package_dir": package_dir}
+	var map_payload = JSON.parse_string(FileAccess.get_file_as_string(source_map_path))
+	var scenario_payload = JSON.parse_string(FileAccess.get_file_as_string(source_scenario_path))
+	if not (map_payload is Dictionary) or not (scenario_payload is Dictionary):
+		return {"ok": false, "error": "source_parse_failed", "package_dir": package_dir}
+	var paths := []
+	var malformed_paths := ["%s/malformed-pair.amap" % package_dir, "%s/malformed-pair.ascenario" % package_dir]
+	for path in malformed_paths:
+		if not _write_fixture_text(path, "{malformed-package"):
+			return {"ok": false, "error": "malformed_write_failed", "package_dir": package_dir, "paths": paths}
+		paths.append(path)
+	var wrong_map: Dictionary = map_payload.duplicate(true)
+	var wrong_scenario: Dictionary = scenario_payload.duplicate(true)
+	wrong_map["schema_id"] = "unsupported_map_package"
+	wrong_scenario["schema_id"] = "unsupported_scenario_package"
+	for row in [
+		["%s/wrong-schema-pair.amap" % package_dir, JSON.stringify(wrong_map)],
+		["%s/wrong-schema-pair.ascenario" % package_dir, JSON.stringify(wrong_scenario)],
+	]:
+		if not _write_fixture_text(String(row[0]), String(row[1])):
+			return {"ok": false, "error": "wrong_schema_write_failed", "package_dir": package_dir, "paths": paths}
+		paths.append(String(row[0]))
+	var legacy_map: Dictionary = map_payload.duplicate(true)
+	var legacy_scenario: Dictionary = scenario_payload.duplicate(true)
+	legacy_map["legacy_json_scenario_record"] = true
+	legacy_scenario["legacy_json_scenario_record"] = true
+	for row in [
+		["%s/legacy-pair.amap" % package_dir, JSON.stringify(legacy_map)],
+		["%s/legacy-pair.ascenario" % package_dir, JSON.stringify(legacy_scenario)],
+	]:
+		if not _write_fixture_text(String(row[0]), String(row[1])):
+			return {"ok": false, "error": "legacy_write_failed", "package_dir": package_dir, "paths": paths}
+		paths.append(String(row[0]))
+	var unpaired_path := "%s/unpaired-map.amap" % package_dir
+	if not _write_fixture_text(unpaired_path, JSON.stringify(map_payload)):
+		return {"ok": false, "error": "unpaired_write_failed", "package_dir": package_dir, "paths": paths}
+	paths.append(unpaired_path)
+	return {"ok": true, "package_dir": package_dir, "absolute_dir": absolute_dir, "paths": paths}
+
+func _write_fixture_text(path: String, text: String) -> bool:
+	var file := FileAccess.open(path, FileAccess.WRITE)
+	if file == null:
+		return false
+	file.store_string(text)
+	file.close()
+	return true
+
+func _package_warning_codes_by_stem(warnings: Array) -> Dictionary:
+	var result := {}
+	for warning_value in warnings:
+		if warning_value is Dictionary:
+			result[String(warning_value.get("package_stem", ""))] = String(warning_value.get("error_code", ""))
+	return result
+
+func _cleanup_package_index_failure_fixture(fixture: Dictionary) -> void:
+	for path_value in fixture.get("paths", []):
+		var path := String(path_value)
+		if FileAccess.file_exists(path):
+			DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+	var absolute_dir := String(fixture.get("absolute_dir", ""))
+	if absolute_dir != "" and DirAccess.dir_exists_absolute(absolute_dir):
+		DirAccess.remove_absolute(absolute_dir)
 
 func _session_authority_exact_ignoring_runtime_id(left, right) -> bool:
 	if left == null or right == null or left.scenario_id == "" or right.scenario_id == "":

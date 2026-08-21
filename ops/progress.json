@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed selected-entry reuse. Main Menu package setup, snapshot, and launch consume the current detached browser entry; stale file identity and loaded document references fail closed; successful launch skips the discarded browser refresh. Focused public launch is 2860 ms versus the prior 57791.326 ms duplicate setup scan, with whole setup/session parity, compatibility, static/editor, and bounded Linux/Windows export-startup gates green.",
+  "currentNotes": "Completed maps-folder package single-read indexing. Valid pairs load once; failed loads retain inspection-backed parse/legacy/document classification. Full integration improves from 480 to 344 seconds, Main Menu from 66 to 53 seconds, Map Editor Save Copy from 117 to 85 seconds, and broad Skirmish from 180 to 136 seconds with compatibility and platform startup gates green.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "performance-main-menu-selected-skirmish-entry-reuse-10184",
-  "currentSliceId": "performance-main-menu-selected-skirmish-entry-reuse-10184",
-  "currentSliceNotes": "Completed. Entry-owned setup/start helpers preserve by-id wrappers, file/ref freshness, whole setup/session authority, Map Editor inspection compatibility, and public Main Menu behavior. Focused launch is 2860 ms after selection versus the 57791.326 ms duplicate setup baseline; compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup pass. No packaged Skirmish interaction or broader release claim.",
+  "currentSlice": "performance-maps-folder-package-index-single-read-10184",
+  "currentSliceId": "performance-maps-folder-package-index-single-read-10184",
+  "currentSliceNotes": "Completed. Valid package pairs are parsed exactly once per file, while failed loads alone retain exact inspection classification. Full package integration, malformed/wrong-schema/legacy/unpaired controls, Map Editor, Main Menu, Skirmish, visual/keyboard/accessibility/core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup pass. No packaged Skirmish interaction or broader release claim.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Main Menu Selected Skirmish Package Entry Reuse",
-  "currentSliceUpdatedAt": "2026-08-21T22:59:48Z",
+  "currentSliceTitle": "Maps-Folder Package Index Single Read",
+  "currentSliceUpdatedAt": "2026-08-21T23:29:29Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -91945,6 +91945,35 @@
       ],
       "notes": "Completed. `ScenarioSelectRules.gd` adds entry-owned setup/start helpers with exact file identity, launchability, and loaded-reference guards while retaining by-id wrappers; `MainMenu.gd` reuses its selected entry and skips successful pre-route refresh. Focused `/tmp/heroes-skirmish-entry-lean-authoritative.nFbSy8` is natural rc0 with first view 719 ms and selected package launch 2860 ms versus the 57791.326 ms duplicate setup baseline. `/tmp/heroes-skirmish-entry-integration-rerun.KSfzIO` proves whole setup/session parity, stale rejection, and Map Editor compatibility; broad Skirmish, visual, keyboard, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Skirmish interaction, controller, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
       "completedAt": "2026-08-21T22:59:48Z"
+    },
+    {
+      "id": "performance-maps-folder-package-index-single-read-10184",
+      "title": "Maps-Folder Package Index Single Read",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-6-production-alpha-layer",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-21T23:04:01Z",
+      "updatedAt": "2026-08-21T23:29:29Z",
+      "implementationTargets": [
+        "scripts/core/ScenarioSelectRules.gd",
+        "tests/maps_folder_package_browser_integration_report.gd",
+        "tests/map_editor_package_save_copy_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Valid package indexing reads each paired package exactly once, preserves whole entry/selection authority, and materially improves the current 52817.714 ms index by removing the measured 18334.484 ms inspection lane.",
+        "Failed loads retain exact inspect/load/legacy classification; non-generated, compact, and Map Editor authored-copy rows preserve exact visibility and authority.",
+        "Main Menu, maps-folder, Map Editor, visual/keyboard/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass."
+      ],
+      "nonGoals": [
+        "No package schema/native service API/Native RMG/content/validation/order/pagination/cache/watcher/thread/timer/launch/save/gameplay/balance/AI change.",
+        "No packaged Skirmish interaction, controller, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claim."
+      ],
+      "notes": "Completed. `_maps_folder_package_record` loads each valid map/scenario package once and derives exact legacy/package/document authority from those results; only failed loads inspect to retain parse/legacy/document failure codes. `/tmp/heroes-package-single-read-focused.dCvcLb` passes in 344 seconds versus the prior 480-second integration while adding malformed/wrong-schema/legacy/unpaired controls. Main Menu improves 66->53 seconds, Map Editor Save Copy 117->85, and broad Skirmish 180->136; visual, keyboard, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. No packaged Skirmish interaction, certification, signing/publication, whole-game, or release-readiness claim.",
+      "completedAt": "2026-08-21T23:29:29Z"
     }
   ],
   "project": "heroes-like",

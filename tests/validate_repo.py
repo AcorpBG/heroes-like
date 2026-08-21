@@ -14099,6 +14099,7 @@ def validate_skirmish_setup(errors: list[str]) -> None:
     start_from_entry = function_block(scenario_select_text, "start_maps_folder_package_skirmish_session_from_entry")
     entry_current = function_block(scenario_select_text, "_maps_folder_package_entry_is_current")
     load_from_entry = function_block(scenario_select_text, "_load_maps_folder_package_session_from_entry")
+    package_record = function_block(scenario_select_text, "_maps_folder_package_record")
     ensure("maps_folder_package_entry(package_id, options)" in setup_by_id and "build_maps_folder_package_skirmish_setup_from_entry(entry, difficulty_id)" in setup_by_id, errors, "Package setup by-id wrapper must delegate its one indexed entry to the entry-owned setup")
     ensure("maps_folder_package_index" not in setup_from_entry and "maps_folder_package_entry(" not in setup_from_entry, errors, "Entry-owned package setup must not rescan the maps folder")
     ensure("_maps_folder_package_entry_is_current(entry)" in setup_from_entry, errors, "Entry-owned package setup must fail closed on stale entries")
@@ -14116,6 +14117,25 @@ def validate_skirmish_setup(errors: list[str]) -> None:
         '_maps_folder_package_ref_matches(scenario_ref, loaded_scenario_ref, ["package_hash", "scenario_id", "scenario_hash"])',
     ):
         ensure(required_token in load_from_entry, errors, f"Selected package load must revalidate loaded document authority: {required_token}")
+    for required_token in (
+        "var map_load: Dictionary = service.load_map_package(map_path)",
+        "var scenario_load: Dictionary = service.load_scenario_package(scenario_path)",
+        'var map_package: Dictionary = map_load.get("package", {})',
+        'var scenario_package: Dictionary = scenario_load.get("package", {})',
+        'bool(map_package.get("legacy_json_scenario_record", true))',
+        'bool(scenario_package.get("legacy_json_scenario_record", true))',
+    ):
+        ensure(required_token in package_record, errors, f"Maps-folder package record is missing single-read valid-path authority: {required_token}")
+    ensure(package_record.count("service.load_map_package(map_path)") == 1 and package_record.count("service.load_scenario_package(scenario_path)") == 1, errors, "Maps-folder package record must load each valid package exactly once")
+    ensure(package_record.count("service.inspect_package(map_path)") == 1 and package_record.count("service.inspect_package(scenario_path)") == 1, errors, "Maps-folder package record must retain one failure-only inspection per package")
+    load_failure_guard = 'if not bool(map_load.get("ok", false)) or not bool(scenario_load.get("ok", false)):'
+    ensure(load_failure_guard in package_record, errors, "Maps-folder package record is missing the failed-load inspection boundary")
+    if load_failure_guard in package_record:
+        guard_offset = package_record.index(load_failure_guard)
+        ensure(package_record.find("service.inspect_package(map_path)") > guard_offset and package_record.find("service.inspect_package(scenario_path)") > guard_offset, errors, "Maps-folder package inspection must occur only inside the failed-load path")
+        ensure(package_record.find("service.load_map_package(map_path)") < guard_offset and package_record.find("service.load_scenario_package(scenario_path)") < guard_offset, errors, "Maps-folder package loads must establish authority before failure-only inspection")
+    for error_code in ("package_inspect_failed", "legacy_json_package_rejected", "package_load_failed"):
+        ensure(error_code in package_record, errors, f"Maps-folder package single-read path must retain exact failure code: {error_code}")
 
     main_menu_script_text = MAIN_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
     selected_setup = function_block(main_menu_script_text, "_selected_skirmish_setup")
@@ -14178,6 +14198,12 @@ def validate_skirmish_setup(errors: list[str]) -> None:
             '"selected_entry_setup_exact": true',
             '"selected_entry_session_exact": true',
             '"stale_entry_rejected": true',
+            "_create_package_index_failure_fixture(map_path, scenario_path)",
+            '"legacy-pair": "legacy_json_package_rejected"',
+            '"malformed-pair": "package_inspect_failed"',
+            '"wrong-schema-pair": "package_load_failed"',
+            'int(failure_index.get("unpaired_map_count", -1)) != 1',
+            '"single_read_failure_classification_exact": true',
         ):
             ensure(required_token in integration_text, errors, f"Maps-folder package integration is missing selected-entry reuse proof token: {required_token}")
 

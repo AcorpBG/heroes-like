@@ -8597,6 +8597,37 @@ Completion evidence:
 - `/tmp/heroes-skirmish-entry-integration-rerun.KSfzIO` passes whole setup/session parity between by-id and entry-owned paths, fail-closed stale-entry rejection, and existing Map Editor inspection compatibility. `/tmp/heroes-skirmish-entry-player-compat.pzTtRu` passes the broad authored Skirmish launch/autosave/generated-boundary flow; visual, keyboard, accessibility, core, repository validation, Python compilation, diff checks, and exact/generic editor parses are green;
 - official Linux export plus packaged headless startup and Windows export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. These are export/startup claims only: packaged Skirmish interaction, controller, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.
 
+## Completed Slice: Maps-Folder Package Index Single Read
+
+id: `performance-maps-folder-package-index-single-read-10184`
+
+Status: completed.
+
+Implementation boundary:
+- make `_maps_folder_package_record` load each valid `.amap` and `.ascenario` exactly once, deriving the existing legacy/package/document/entry authority from those load results instead of first parsing both files through `inspect_package` and then parsing both again through the full loaders;
+- on a failed load only, use the existing inspection calls to preserve the exact distinction between `package_inspect_failed`, `legacy_json_package_rejected`, and `package_load_failed`, including the existing public failure payloads;
+- preserve exact entry order/content, launchability, Map Editor inspection-only rows, file/ref freshness, selected launch/session authority, explicit directory rebuild behavior, and the native public service contract.
+
+Completion criteria:
+- a focused valid-pair fixture proves exactly two package reads rather than four, whole index entries and selection are exact, and the current large maps-folder index materially improves from 52.818 seconds by removing the measured 18.334-second inspection lane;
+- malformed JSON/missing files, wrong schema/missing document, legacy JSON packages, non-generated packages, compact nonlaunchable packages, and Map Editor authored-copy rows retain their exact error/visibility/authority behavior;
+- Main Menu lean/public Skirmish, maps-folder integration, Map Editor package workflows, visual/keyboard/accessibility/core, repository/editor, and bounded official Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no package schema/native parser/MapPackageService API, Native RMG, package content, validation criteria, browser order/labels, pagination, persistent cache, watcher, thread/timer, launch/save/gameplay/balance/AI, or authored scenario change;
+- no packaged Skirmish interaction, controller, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- `/tmp/heroes-skirmish-package-attribution.tgdZfT` measures 399 paired packages at 18334.484 ms for the inspection reads and 49375.94 ms for the subsequent full loads; valid `_maps_folder_package_record` executes both lanes unconditionally;
+- `/tmp/heroes-skirmish-selected-entry-attribution-scene.JLeU3d` measures the current 388-entry index at 52817.714 ms, and the public Main Menu focused flow still spends roughly one minute materializing the explicit Skirmish board even after selected-entry reuse removed all later duplicate scans;
+- source proves full load results already contain the exact package dictionaries, documents, refs, legacy flag, storage policy, and hashes used after inspection, while inspection is required only to retain existing failure classification when a load cannot produce those values.
+
+Completion evidence:
+- `_maps_folder_package_record` now loads each valid map/scenario package exactly once and derives legacy/package/document authority from those results; only a failed load performs inspection, preserving exact `package_inspect_failed`, `legacy_json_package_rejected`, and `package_load_failed` classification without changing the public native service;
+- `/tmp/heroes-package-single-read-focused.dCvcLb` passes the full maps-folder/Skirmish/Map Editor integration in 344 seconds versus the prior 480-second run, while adding exact malformed, wrong-schema, legacy, and unpaired fixture gates. Whole setup/session parity, stale rejection, compact-package behavior, and inspection-only editor loading remain exact;
+- `/tmp/heroes-package-single-read-main-menu.jfnNrM` passes the public Main Menu flow in 53 seconds versus 66 seconds immediately before this slice, with first view 740 ms, 411 Skirmish rows, entry-owned setup, and selected-package launch 3030 ms. Map Editor Save Copy improves from 117 to 85 seconds and broad player-facing Skirmish from 180 to 136 seconds;
+- menu visual, physical keyboard navigation, screen-reader semantics, core systems, repository validation, Python compilation, JSON/diff checks, and exact/generic editor parses pass. Official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green; no packaged Skirmish interaction, certification, signing/publication, whole-game, or release-readiness claim is made.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:
