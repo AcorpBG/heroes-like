@@ -291,8 +291,8 @@ func _run_main_menu_smoke() -> bool:
 		return false
 
 	var skirmish_list = shell.get_node_or_null("%SkirmishList")
-	if skirmish_list == null or int(skirmish_list.get_item_count()) <= 0:
-		push_error("Main menu smoke: skirmish browser did not populate.")
+	if skirmish_list == null:
+		push_error("Main menu smoke: skirmish browser node is missing.")
 		get_tree().quit(1)
 		return false
 
@@ -425,6 +425,10 @@ func _run_main_menu_smoke() -> bool:
 		get_tree().quit(1)
 		return false
 	shell.call("validation_open_skirmish_stage")
+	if int(skirmish_list.get_item_count()) <= 0:
+		push_error("Main menu smoke: skirmish browser did not populate after its public stage opened.")
+		get_tree().quit(1)
+		return false
 	var initial_skirmish_snapshot: Dictionary = shell.call("validation_snapshot")
 	var selected_skirmish_id := String(initial_skirmish_snapshot.get("selected_skirmish_id", ""))
 	if selected_skirmish_id == "":

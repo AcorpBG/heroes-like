@@ -8534,6 +8534,38 @@ Completion evidence:
 - `/tmp/heroes-footer-keyboard-compat.KtGyaO` passes the full Main Menu keyboard/navigation matrix, `/tmp/heroes-footer-accessibility.wHM6gA` passes screen-reader semantics, and `/tmp/heroes-footer-core.csjhNK` passes core systems with no unexpected diagnostics;
 - repository validation, Python compilation, JSON/diff checks, and exact/generic editor parses pass; official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. Claims remain bounded to focused live Main Menu behavior and package export/startup, not packaged footer interaction, certification, signing/publication, whole-game, or release readiness.
 
+## Completed Slice: Main Menu Secondary Browser Lazy First View
+
+id: `performance-main-menu-secondary-browser-lazy-first-view-10184`
+
+Status: completed.
+
+Implementation boundary:
+- keep the hidden Campaign and Skirmish browser trees unmaterialized during Main Menu first-view construction, then populate each through its existing public stage-open path before focus enters that board;
+- after a browser has been opened, keep the existing refresh behavior fresh for subsequent menu refreshes while never sharing entries across shells, sessions, mutations, or browser owners;
+- preserve exact campaign/skirmish item order, selection, tooltips, launch actions, generated-map controls, save lean-boot behavior, first-view composition, focus, accessibility, and all session authority.
+
+Completion criteria:
+- a fresh first view performs no Campaign or Skirmish browser enumeration, reports both owners deferred, keeps save summary inspections at zero, and reaches Main Menu materially faster than the current package baseline;
+- opening Saves does not load Campaign or Skirmish; opening Campaign loads only Campaign with exact entries/selection/actions; opening Skirmish then loads its exact native/package entries and generated controls before focus/interaction;
+- current packaged Main Menu refresh improves from 3037 ms with 2602 ms Campaign plus 432 ms Skirmish work to a bounded first-view refresh under 500 ms, while explicit board-open behavior remains exact;
+- focused lean-boot, Main Menu visual/keyboard, campaign/skirmish/package, accessibility, core, repository/editor, and bounded official Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no campaign, skirmish, generated-map, save, focus, accessibility, map-folder, package, launch, session, content, gameplay, balance, strategic AI, or Native RMG behavior change;
+- no background thread, timer/delay, cross-shell/day/session cache, browser item truncation, removal of secondary content, packaged interaction certification, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- the fresh current packaged profile `/tmp/heroes-main-menu-lazy-baseline-live.NRMWWm` records Main Menu refresh 3037.384 ms and ready 3071.869 ms after router handoff, including 2602.066 ms for the hidden Campaign browser and 432.380 ms for hidden Skirmish setup;
+- `_refresh_menu` unconditionally calls `_rebuild_campaign_browser`, `_rebuild_skirmish_browser`, `_refresh_skirmish_setup`, and generated-map setup while `StageDockPanel` is hidden; only the Saves browser already uses an explicit loaded guard;
+- source-mode profiling also attributes roughly 49 seconds to hidden skirmish-package enumeration in the current large development maps folder, confirming the eager path is the owned cost rather than renderer or first-view composition work.
+
+Completion evidence:
+- `MainMenu.gd` now holds Campaign and Skirmish materialization behind per-shell loaded flags; `_refresh_menu` refreshes only previously opened owners, while `_show_stage_dock` synchronously loads the selected owner before the board becomes visible and before focus is deferred;
+- `/tmp/heroes-main-menu-lazy-focused.ZKjYfx` passes the focused live guard with a 747 ms source-mode first view, zero first-view save inspection, both secondary browsers deferred, Saves preserving that state, Campaign loading 6 exact rows, and Skirmish loading all 412 current rows through their public stage paths;
+- the packaged Linux profile `/tmp/heroes-main-menu-lazy-packaged-profile.CseUWl` records Main Menu refresh 2.495 ms and ready 31.472 ms, with hidden Campaign 0.049 ms and hidden Skirmish 0.0 ms, materially below the 3037.384 ms / 3071.869 ms baseline and the 500 ms acceptance ceiling;
+- menu/outcome visual, player-facing Campaign and Skirmish launch/save/resume, physical keyboard navigation, screen-reader semantics, core systems, repository validation, Python compilation, diff and exact/generic editor checks pass; official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. Claims remain bounded to focused first-view behavior, source-mode secondary-board interaction, and package export/startup, not packaged secondary-board interaction, certification, signing/publication, whole-game, or release readiness.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:

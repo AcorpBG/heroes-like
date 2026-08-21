@@ -163,6 +163,7 @@ const TAB_HELP_TOPIC := {
 var _save_summaries: Array = []
 var _selected_save_key := ""
 var _save_browser_loaded := false
+var _campaign_browser_loaded := false
 var _save_load_notice := ""
 var _pending_save_delete_identity := {}
 var _campaign_entries: Array = []
@@ -178,6 +179,7 @@ var _campaign_last_mutation_result: Dictionary = {}
 var _validation_campaign_blocked_command_count := 0
 var _campaign_intel_expanded := false
 var _skirmish_entries: Array = []
+var _skirmish_browser_loaded := false
 var _selected_skirmish_id := ""
 var _selected_difficulty: String = ScenarioSelectRulesScript.default_difficulty_id()
 var _generated_seed := ""
@@ -265,13 +267,15 @@ func _refresh_menu() -> void:
 	buckets["save_browser"] = ProfileLogScript.elapsed_ms(phase_started)
 	phase_started = ProfileLogScript.begin_usec()
 	_configure_difficulty_pickers()
-	_rebuild_campaign_browser()
+	if _campaign_browser_loaded:
+		_rebuild_campaign_browser()
 	buckets["campaign_browser"] = ProfileLogScript.elapsed_ms(phase_started)
 	phase_started = ProfileLogScript.begin_usec()
-	_configure_generated_random_map_controls()
-	_rebuild_skirmish_browser()
-	_refresh_skirmish_setup()
-	_refresh_generated_random_map_setup()
+	if _skirmish_browser_loaded:
+		_configure_generated_random_map_controls()
+		_rebuild_skirmish_browser()
+		_refresh_skirmish_setup()
+		_refresh_generated_random_map_setup()
 	buckets["skirmish_setup"] = ProfileLogScript.elapsed_ms(phase_started)
 	phase_started = ProfileLogScript.begin_usec()
 	_rebuild_help_browser()
@@ -1719,6 +1723,12 @@ func _rebuild_campaign_browser() -> void:
 	_rebuild_campaign_chapter_browser()
 	_refresh_campaign_browser()
 
+func _ensure_campaign_browser_loaded() -> void:
+	if _campaign_browser_loaded:
+		return
+	_rebuild_campaign_browser()
+	_campaign_browser_loaded = true
+
 func _rebuild_campaign_chapter_browser() -> void:
 	_campaign_chapter_entries = CampaignProgression.campaign_chapter_entries(_selected_campaign_id)
 	_chapter_list.clear()
@@ -2520,6 +2530,15 @@ func _rebuild_skirmish_browser() -> void:
 		_selected_skirmish_id = ""
 	_sync_skirmish_front_navigation()
 
+func _ensure_skirmish_browser_loaded() -> void:
+	if _skirmish_browser_loaded:
+		return
+	_configure_generated_random_map_controls()
+	_rebuild_skirmish_browser()
+	_refresh_skirmish_setup()
+	_refresh_generated_random_map_setup()
+	_skirmish_browser_loaded = true
+
 func _refresh_skirmish_setup() -> void:
 	var selected_entry := _selected_skirmish_entry()
 	_sync_skirmish_front_navigation()
@@ -3092,6 +3111,10 @@ func _toggle_stage_dock(index: int) -> void:
 	_show_stage_dock()
 
 func _show_stage_dock() -> void:
+	if _menu_tabs.current_tab == TAB_CAMPAIGN:
+		_ensure_campaign_browser_loaded()
+	elif _menu_tabs.current_tab == TAB_SKIRMISH:
+		_ensure_skirmish_browser_loaded()
 	_stage_dock_panel.visible = true
 	_footer_pocket_panel.visible = false
 	if _menu_tabs.current_tab == TAB_CAMPAIGN:
@@ -3407,8 +3430,9 @@ func validation_snapshot() -> Dictionary:
 		"stage_help_return_tab": _last_context_tab,
 		"has_generated_command_spine": get_node_or_null("CommandSpinePanel") != null,
 		"has_first_view_status_box": get_node_or_null("SpineStatusPanel") != null,
+		"campaign_browser_loaded": _campaign_browser_loaded,
 		"campaign_count": _campaign_entries.size(),
-		"campaign_board_status": "active" if not _campaign_entries.is_empty() else "archived_empty",
+		"campaign_board_status": "deferred" if not _campaign_browser_loaded else ("active" if not _campaign_entries.is_empty() else "archived_empty"),
 		"campaign_storage_state": _campaign_storage_state.duplicate(true),
 		"campaign_storage_blocked": _campaign_storage_blocked,
 		"campaign_storage_warning": _campaign_storage_warning,
@@ -3501,6 +3525,7 @@ func validation_snapshot() -> Dictionary:
 		"credits_notices_body_accessibility_description": _credits_notices_body.accessibility_description,
 		"credits_notices_body_scroll": _credits_notices_body.scroll_vertical,
 		"credits_notices_close_has_focus": _credits_notices_close_button.has_focus(),
+		"skirmish_browser_loaded": _skirmish_browser_loaded,
 		"skirmish_count": _skirmish_entries.size(),
 		"selected_skirmish_id": _selected_skirmish_id,
 		"selected_skirmish_index": _selected_skirmish_front_index(),
