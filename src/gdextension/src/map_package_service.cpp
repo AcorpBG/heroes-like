@@ -2254,6 +2254,42 @@ Dictionary MapPackageService::inspect_package(String path, Dictionary options) c
 	payload["path_policy"] = package.get("path_policy", "");
 	payload["authored_content_writeback"] = package.get("authored_content_writeback", false);
 	payload["legacy_json_scenario_record"] = package.get("legacy_json_scenario_record", false);
+	Variant document_value = package.get("document", Variant());
+	if (document_value.get_type() == Variant::DICTIONARY) {
+		Dictionary document = document_value;
+		Dictionary browser_manifest;
+		const String package_schema = package.get("schema_id", "");
+		const String document_schema = document.get("schema_id", "");
+		if (package_schema == MAP_PACKAGE_SCHEMA_ID && document_schema == MAP_SCHEMA_ID) {
+			Variant metadata_value = document.get("metadata", Variant());
+			Dictionary metadata = metadata_value.get_type() == Variant::DICTIONARY ? Dictionary(metadata_value) : Dictionary();
+			metadata = metadata.duplicate(true);
+			metadata["schema_id"] = MAP_SCHEMA_ID;
+			metadata["schema_version"] = 1;
+			Variant map_ref_value = package.get("map_ref", Variant());
+			Dictionary map_ref = map_ref_value.get_type() == Variant::DICTIONARY ? Dictionary(map_ref_value) : Dictionary();
+			browser_manifest["document_kind"] = "map";
+			browser_manifest["width"] = document.get("width", 0);
+			browser_manifest["height"] = document.get("height", 0);
+			browser_manifest["level_count"] = document.get("level_count", 1);
+			browser_manifest["metadata"] = metadata;
+			browser_manifest["map_ref"] = map_ref.duplicate(true);
+		} else if (package_schema == SCENARIO_PACKAGE_SCHEMA_ID && document_schema == SCENARIO_SCHEMA_ID) {
+			Variant selection_value = document.get("selection", Variant());
+			Dictionary selection = selection_value.get_type() == Variant::DICTIONARY ? Dictionary(selection_value) : Dictionary();
+			Variant slots_value = document.get("player_slots", Variant());
+			Array player_slots = slots_value.get_type() == Variant::ARRAY ? Array(slots_value) : Array();
+			Variant scenario_ref_value = package.get("scenario_ref", Variant());
+			Dictionary scenario_ref = scenario_ref_value.get_type() == Variant::DICTIONARY ? Dictionary(scenario_ref_value) : Dictionary();
+			browser_manifest["document_kind"] = "scenario";
+			browser_manifest["selection"] = selection.duplicate(true);
+			browser_manifest["player_count"] = player_slots.size();
+			browser_manifest["scenario_ref"] = scenario_ref.duplicate(true);
+		}
+		if (!browser_manifest.is_empty()) {
+			payload["browser_manifest"] = browser_manifest;
+		}
+	}
 	return package_success("inspect_package", path, payload);
 }
 

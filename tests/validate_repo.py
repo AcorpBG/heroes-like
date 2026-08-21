@@ -14118,24 +14118,55 @@ def validate_skirmish_setup(errors: list[str]) -> None:
     ):
         ensure(required_token in load_from_entry, errors, f"Selected package load must revalidate loaded document authority: {required_token}")
     for required_token in (
-        "var map_load: Dictionary = service.load_map_package(map_path)",
-        "var scenario_load: Dictionary = service.load_scenario_package(scenario_path)",
-        'var map_package: Dictionary = map_load.get("package", {})',
-        'var scenario_package: Dictionary = scenario_load.get("package", {})',
-        'bool(map_package.get("legacy_json_scenario_record", true))',
-        'bool(scenario_package.get("legacy_json_scenario_record", true))',
+        "var map_inspect: Dictionary = service.inspect_package(map_path)",
+        "var scenario_inspect: Dictionary = service.inspect_package(scenario_path)",
+        'var map_manifest: Dictionary = map_inspect.get("browser_manifest", {})',
+        'var scenario_manifest: Dictionary = scenario_inspect.get("browser_manifest", {})',
+        'String(map_manifest.get("document_kind", "")) != "map"',
+        'String(scenario_manifest.get("document_kind", "")) != "scenario"',
+        'var metadata: Dictionary = map_manifest.get("metadata", {})',
+        'var map_ref: Dictionary = map_manifest.get("map_ref", {})',
+        'var scenario_ref: Dictionary = scenario_manifest.get("scenario_ref", {})',
+        'var player_count := int(scenario_manifest.get("player_count", 1))',
     ):
-        ensure(required_token in package_record, errors, f"Maps-folder package record is missing single-read valid-path authority: {required_token}")
-    ensure(package_record.count("service.load_map_package(map_path)") == 1 and package_record.count("service.load_scenario_package(scenario_path)") == 1, errors, "Maps-folder package record must load each valid package exactly once")
-    ensure(package_record.count("service.inspect_package(map_path)") == 1 and package_record.count("service.inspect_package(scenario_path)") == 1, errors, "Maps-folder package record must retain one failure-only inspection per package")
-    load_failure_guard = 'if not bool(map_load.get("ok", false)) or not bool(scenario_load.get("ok", false)):'
-    ensure(load_failure_guard in package_record, errors, "Maps-folder package record is missing the failed-load inspection boundary")
-    if load_failure_guard in package_record:
-        guard_offset = package_record.index(load_failure_guard)
-        ensure(package_record.find("service.inspect_package(map_path)") > guard_offset and package_record.find("service.inspect_package(scenario_path)") > guard_offset, errors, "Maps-folder package inspection must occur only inside the failed-load path")
-        ensure(package_record.find("service.load_map_package(map_path)") < guard_offset and package_record.find("service.load_scenario_package(scenario_path)") < guard_offset, errors, "Maps-folder package loads must establish authority before failure-only inspection")
+        ensure(required_token in package_record, errors, f"Maps-folder package record is missing native browser-manifest authority: {required_token}")
+    ensure(package_record.count("service.inspect_package(map_path)") == 1 and package_record.count("service.inspect_package(scenario_path)") == 1, errors, "Maps-folder package record must inspect each valid package exactly once")
+    ensure(package_record.count("service.load_map_package(map_path)") == 1 and package_record.count("service.load_scenario_package(scenario_path)") == 1, errors, "Maps-folder package record must retain one invalid-manifest load for exact failure payloads")
+    manifest_failure_guard = 'if String(map_manifest.get("document_kind", "")) != "map" or String(scenario_manifest.get("document_kind", "")) != "scenario":'
+    ensure(manifest_failure_guard in package_record, errors, "Maps-folder package record is missing the invalid-manifest full-load boundary")
+    if manifest_failure_guard in package_record:
+        guard_offset = package_record.index(manifest_failure_guard)
+        ensure(package_record.find("service.load_map_package(map_path)") > guard_offset and package_record.find("service.load_scenario_package(scenario_path)") > guard_offset, errors, "Full package loads must occur only inside the invalid-manifest failure path")
+        ensure(package_record.find("service.inspect_package(map_path)") < guard_offset and package_record.find("service.inspect_package(scenario_path)") < guard_offset, errors, "Native manifests must establish browser authority before any failure-only full load")
     for error_code in ("package_inspect_failed", "legacy_json_package_rejected", "package_load_failed"):
-        ensure(error_code in package_record, errors, f"Maps-folder package single-read path must retain exact failure code: {error_code}")
+        ensure(error_code in package_record, errors, f"Maps-folder package manifest path must retain exact failure code: {error_code}")
+
+    native_map_service_path = ROOT / "src" / "gdextension" / "src" / "map_package_service.cpp"
+    ensure(native_map_service_path.exists(), errors, "Missing native MapPackageService source for browser-manifest validation")
+    if native_map_service_path.exists():
+        native_map_service_text = native_map_service_path.read_text(encoding="utf-8")
+        inspect_native = function_block(native_map_service_text, "MapPackageService::inspect_package")
+        if inspect_native == "":
+            inspect_match = re.search(r"Dictionary MapPackageService::inspect_package\([^\n]*\) const \{(?P<body>.*?)\n\}", native_map_service_text, flags=re.DOTALL)
+            inspect_native = inspect_match.group("body") if inspect_match is not None else ""
+        for required_token in (
+            'package_schema == MAP_PACKAGE_SCHEMA_ID && document_schema == MAP_SCHEMA_ID',
+            'package_schema == SCENARIO_PACKAGE_SCHEMA_ID && document_schema == SCENARIO_SCHEMA_ID',
+            'browser_manifest["width"] = document.get("width", 0)',
+            'browser_manifest["height"] = document.get("height", 0)',
+            'browser_manifest["level_count"] = document.get("level_count", 1)',
+            'metadata["schema_id"] = MAP_SCHEMA_ID',
+            'metadata["schema_version"] = 1',
+            'browser_manifest["metadata"] = metadata',
+            'browser_manifest["map_ref"] = map_ref.duplicate(true)',
+            'browser_manifest["selection"] = selection.duplicate(true)',
+            'browser_manifest["player_count"] = player_slots.size()',
+            'browser_manifest["scenario_ref"] = scenario_ref.duplicate(true)',
+            'payload["browser_manifest"] = browser_manifest',
+        ):
+            ensure(required_token in inspect_native, errors, f"Native package inspection is missing bounded detached browser-manifest token: {required_token}")
+        for forbidden_token in ('browser_manifest["objects"]', 'browser_manifest["terrain_layers"]', 'browser_manifest["script_hooks"]'):
+            ensure(forbidden_token not in inspect_native, errors, f"Native package browser manifest must not expose full document payload: {forbidden_token}")
 
     main_menu_script_text = MAIN_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
     selected_setup = function_block(main_menu_script_text, "_selected_skirmish_setup")
@@ -14204,6 +14235,12 @@ def validate_skirmish_setup(errors: list[str]) -> None:
             '"wrong-schema-pair": "package_load_failed"',
             'int(failure_index.get("unpaired_map_count", -1)) != 1',
             '"single_read_failure_classification_exact": true',
+            'package_service.inspect_package(map_path)',
+            'package_service.load_map_package(map_path)',
+            'map_manifest.get("metadata", {}) == map_document.get_metadata()',
+            'scenario_manifest.get("selection", {}) == scenario_document.get_selection()',
+            '"native_browser_manifest_exact": true',
+            '"native_browser_manifest_detached": true',
         ):
             ensure(required_token in integration_text, errors, f"Maps-folder package integration is missing selected-entry reuse proof token: {required_token}")
 

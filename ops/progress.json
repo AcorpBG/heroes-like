@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved source-backed release-readiness implementation slice."
+    "Select the next tracker-approved release-readiness implementation slice."
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed maps-folder package single-read indexing. Valid pairs load once; failed loads retain inspection-backed parse/legacy/document classification. Full integration improves from 480 to 344 seconds, Main Menu from 66 to 53 seconds, Map Editor Save Copy from 117 to 85 seconds, and broad Skirmish from 180 to 136 seconds with compatibility and platform startup gates green.",
+  "currentNotes": "The native package browser-manifest slice is completed. Valid package indexing now consumes synchronized Linux/Windows schema-gated detached manifests, invalid-manifest paths retain full-load failure authority, and selected launch still performs the full load. Focused integration improves 344 to 125 seconds, Main Menu 53 to 32, Save Copy 85 to 36, and broad Skirmish 136 to 64; compatibility, static/editor, native builds, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass under bounded claims.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "performance-maps-folder-package-index-single-read-10184",
-  "currentSliceId": "performance-maps-folder-package-index-single-read-10184",
-  "currentSliceNotes": "Completed. Valid package pairs are parsed exactly once per file, while failed loads alone retain exact inspection classification. Full package integration, malformed/wrong-schema/legacy/unpaired controls, Map Editor, Main Menu, Skirmish, visual/keyboard/accessibility/core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup pass. No packaged Skirmish interaction or broader release claim.",
+  "currentSlice": "performance-native-package-browser-manifest-10184",
+  "currentSliceId": "performance-native-package-browser-manifest-10184",
+  "currentSliceNotes": "Completed with bounded detached native browser manifests on synchronized Linux/Windows binaries, exact entry/failure/selected-load authority, focused runtime and broad compatibility, static/editor validation, and official export/startup gates. This does not claim packaged Skirmish interaction, certification, signing/publication, whole-game completion, or release readiness.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Maps-Folder Package Index Single Read",
-  "currentSliceUpdatedAt": "2026-08-21T23:29:29Z",
+  "currentSliceTitle": "Native Package Browser Manifest",
+  "currentSliceUpdatedAt": "2026-08-21T23:56:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -91974,6 +91974,39 @@
       ],
       "notes": "Completed. `_maps_folder_package_record` loads each valid map/scenario package once and derives exact legacy/package/document authority from those results; only failed loads inspect to retain parse/legacy/document failure codes. `/tmp/heroes-package-single-read-focused.dCvcLb` passes in 344 seconds versus the prior 480-second integration while adding malformed/wrong-schema/legacy/unpaired controls. Main Menu improves 66->53 seconds, Map Editor Save Copy 117->85, and broad Skirmish 180->136; visual, keyboard, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. No packaged Skirmish interaction, certification, signing/publication, whole-game, or release-readiness claim.",
       "completedAt": "2026-08-21T23:29:29Z"
+    },
+    {
+      "id": "performance-native-package-browser-manifest-10184",
+      "title": "Native Package Browser Manifest",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-6-production-alpha-layer",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-21T23:31:03Z",
+      "updatedAt": "2026-08-21T23:56:00Z",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "scripts/core/ScenarioSelectRules.gd",
+        "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
+        "bin/libaurelion_map_persistence.linux.template_release.x86_64.so",
+        "bin/aurelion_map_persistence.windows.template_debug.x86_64.dll",
+        "bin/aurelion_map_persistence.windows.template_release.x86_64.dll",
+        "tests/maps_folder_package_browser_integration_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Bounded detached native manifests reproduce exact current package browser entries while enumeration performs two inspections and no full document constructions per pair.",
+        "Malformed/wrong-schema/legacy/non-generated/compact/unpaired behavior and selected Map Editor/Skirmish load/session authority remain exact.",
+        "Synchronized Linux/Windows native builds, focused runtime, compatibility, static/editor, and official export-startup gates pass with material current-fixture improvement."
+      ],
+      "nonGoals": [
+        "No package/document schema, file format, full payload exposure, Native RMG, validation/content/order/load/session/cache/watcher/thread/timer/gameplay/balance/AI/save change.",
+        "No packaged Skirmish interaction, controller, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claim."
+      ],
+      "notes": "Completed. The cross-platform native service exposes schema-gated detached map/scenario browser manifests and valid indexing uses exactly those two bounded results; invalid-manifest paths retain full-load failure authority and selected launch still full-loads. Focused integration passes in 125 seconds versus 344, Main Menu 32 versus 53, Save Copy 36 versus 85, and broad Skirmish 64 versus 136. Visual, keyboard, accessibility, core, static/editor, synchronized native debug/release builds, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. No packaged Skirmish interaction, certification, signing/publication, whole-game, or release-readiness claim.",
+      "completedAt": "2026-08-21T23:56:00Z"
     }
   ],
   "project": "heroes-like",
