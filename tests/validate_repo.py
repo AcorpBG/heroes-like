@@ -44646,6 +44646,40 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
         ):
             ensure(forbidden_token not in wrapper_text, errors, f"RMG native batch wrapper must not expose Godot/full-export probe token: {forbidden_token}")
 
+    proxy_catalog_path = CONTENT_DIR / "homm3_re_reward_object_proxy_catalog.json"
+    ensure(proxy_catalog_path.exists(), errors, "Missing H3M reward object proxy catalog")
+    if proxy_catalog_path.exists():
+        proxy_catalog = load_json(proxy_catalog_path)
+        proxy_entries = proxy_catalog.get("entries", [])
+        ensure(isinstance(proxy_entries, list), errors, "H3M reward object proxy catalog entries must be an array")
+        expected_resource_proxies = {
+            0: (945, "AVTwood0.def", "object_wood_wagon", "site_wood_wagon", "wood", "reward_resource_wood_build_proxy"),
+            1: (940, "AVTmerc0.def", "object_marsh_peat_yard", "site_peatwax_reed_yard", "peatwax", "reward_resource_mercury_peatwax_proxy"),
+            2: (942, "AVTore0.def", "object_ore_crates", "site_ore_crates", "ore", "reward_resource_ore_build_proxy"),
+            3: (943, "AVTsulf0.def", "object_floodplain_sluice_camp", "site_embergrain_warm_granary", "embergrain", "reward_resource_sulfur_embergrain_proxy"),
+            4: (937, "AVTcrys0.def", "object_cinder_ore_face", "site_aetherglass_lens_house", "aetherglass", "reward_resource_crystal_aetherglass_proxy"),
+            5: (938, "AVTgems0.def", "object_badlands_coin_sluice", "site_memory_salt_pan", "memory_salt", "reward_resource_gems_memory_salt_proxy"),
+            6: (939, "AVTgold0.def", "object_reef_coin_assay", "site_reef_coin_assay", "gold", "reward_resource_gold_reef_coin_proxy"),
+        }
+        type79_entries = [entry for entry in proxy_entries if isinstance(entry, dict) and int(entry.get("homm3_re_object_type_id", -1)) == 79]
+        ensure(len(type79_entries) == 7, errors, "H3M loose-resource proxy catalog must contain exactly seven type-79 rows")
+        for subtype, expected in expected_resource_proxies.items():
+            rows = [entry for entry in type79_entries if int(entry.get("homm3_re_object_subtype", -1)) == subtype]
+            ensure(len(rows) == 1, errors, f"H3M loose-resource subtype {subtype} must have exactly one proxy row")
+            if len(rows) != 1:
+                continue
+            row = rows[0]
+            actual = (
+                int(row.get("homm3_re_object_source_row", -1)),
+                str(row.get("homm3_re_object_def_ref", "")),
+                str(row.get("native_proxy_object_id", "")),
+                str(row.get("native_proxy_site_id", "")),
+                str(row.get("native_resource_id", "")),
+                str(row.get("id", "")),
+            )
+            ensure(actual == expected, errors, f"H3M loose-resource subtype {subtype} proxy identity drifted: {actual}")
+            ensure(str(row.get("generated_kind", "")) == "reward_reference", errors, f"H3M loose-resource subtype {subtype} must remain a reward_reference")
+
     if native_map_service_path.exists():
         native_text = native_map_service_path.read_text(encoding="utf-8")
         for required_token in (
@@ -44786,10 +44820,19 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             'unsupported_bank_rows_exact = false',
             '67: {"artifact_id": "artifact_waymark_compass", "catalog_id": "reward_random_minor_artifact_proxy"}',
             '68: {"artifact_id": "artifact_warcrest_pennon", "catalog_id": "reward_random_major_artifact_proxy"}',
+            '0: {"object_id": "object_wood_wagon", "site_id": "site_wood_wagon", "resource_id": "wood", "catalog_id": "reward_resource_wood_build_proxy"}',
+            '1: {"object_id": "object_marsh_peat_yard", "site_id": "site_peatwax_reed_yard", "resource_id": "peatwax", "catalog_id": "reward_resource_mercury_peatwax_proxy"}',
+            '3: {"object_id": "object_floodplain_sluice_camp", "site_id": "site_embergrain_warm_granary", "resource_id": "embergrain", "catalog_id": "reward_resource_sulfur_embergrain_proxy"}',
+            '4: {"object_id": "object_cinder_ore_face", "site_id": "site_aetherglass_lens_house", "resource_id": "aetherglass", "catalog_id": "reward_resource_crystal_aetherglass_proxy"}',
+            '5: {"object_id": "object_badlands_coin_sluice", "site_id": "site_memory_salt_pan", "resource_id": "memory_salt", "catalog_id": "reward_resource_gems_memory_salt_proxy"}',
+            '6: {"object_id": "object_reef_coin_assay", "site_id": "site_reef_coin_assay", "resource_id": "gold", "catalog_id": "reward_resource_gold_reef_coin_proxy"}',
             'elif type_id in [67, 68]:',
             'artifact_proxy_placement_ids[String(object.get("placement_id", ""))] = true',
             'or String(object.get("artifact_id", "")) != String(expected_artifact.get("artifact_id", ""))',
             'or String(object.get("site_id", "")) != ""',
+            'elif type_id == 79:',
+            'resource_proxy_subtypes[subtype] = true',
+            'or String(object.get("site_id", "")) != String(expected_resource.get("site_id", ""))',
             'var package_source_objects: Dictionary = session.overworld.get("package_source_objects_by_id", {})',
             'var claim: Dictionary = OverworldRulesScript._collect_resource_node_result(session, campfire_result, false)',
             'var artifact_nodes: Array = session.overworld.get("artifact_nodes", [])',
@@ -44798,6 +44841,10 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             'var owned_after: Array = ArtifactRulesScript.owned_artifact_ids(session.overworld.get("hero", {}))',
             'restored.from_dict(session.to_dict())',
             '"save_round_trip_exact": restored_node == claimed_node',
+            'var claim: Dictionary = OverworldRulesScript._collect_resource_node_result(session, selected_rare_resource, false)',
+            'and int(resources_after.get("embergrain", 0)) == int(resources_before.get("embergrain", 0)) + 1',
+            'and int(resources_after.get("gold", 0)) == int(resources_before.get("gold", 0)) + 120',
+            'for resource_id in ["aetherglass", "brass_scrip", "memory_salt", "peatwax", "verdant_grafts"]:',
             'and mine_count == 18',
             'and mine_subtypes.size() == 7',
             'and campfire_count == 2',
@@ -44805,12 +44852,18 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             'and creature_bank_count == 2',
             'and artifact_proxy_count == 3',
             'and artifact_proxy_rows_exact',
+            'and resource_proxy_count == 28',
+            'and resource_proxy_subtypes.size() == 6',
+            'and resource_proxy_rows_exact',
             'and live_mine_count == mine_count',
             'and live_campfires.size() == campfire_count',
             'and bool(interaction.get("ok", false))',
             'and artifact_resource_node_count == 0',
             'and live_artifacts.size() == artifact_proxy_count',
             'and bool(artifact_interaction.get("ok", false))',
+            'and live_resource_proxy_count == resource_proxy_count',
+            'and live_resource_proxy_rows_exact',
+            'and bool(rare_resource_interaction.get("ok", false))',
             'func _live_proxy_provenance_exact(object: Dictionary) -> bool:',
             'func _proxy_projection_object_authority(object: Dictionary) -> Dictionary:',
             '_validate_guard_control_projection(medium.get("generated", {}))',
@@ -44867,6 +44920,7 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
         ensure(proxy_projection_block.find("build_session_from_adoption(adoption)") < proxy_projection_block.find("_collect_resource_node_result(session, campfire_result, false)"), errors, "Native live proxy interaction must use the adopted package session")
         ensure(proxy_projection_block.find("build_session_from_adoption(adoption)") < proxy_projection_block.find("_collect_artifact_node_result(session, artifact_result, false)") < proxy_projection_block.find("restored.from_dict(session.to_dict())"), errors, "Native live artifact proxy must use adopted collection authority before exact persistence restoration")
         ensure(proxy_projection_block.find('artifact_proxy_placement_ids[String(object.get("placement_id", ""))] = true') < proxy_projection_block.find('artifact_proxy_placement_ids.has(String(artifact_node.get("placement_id", "")))') < proxy_projection_block.find("_collect_artifact_node_result(session, artifact_result, false)"), errors, "Native live artifact owner must correlate projected placements through package adoption before collection")
+        ensure(proxy_projection_block.find('int(source.get("h3m_type_id", -1)) == 79') < proxy_projection_block.find('int(source.get("h3m_subtype", -1)) == 3') < proxy_projection_block.find("_collect_resource_node_result(session, selected_rare_resource, false)"), errors, "Native live resource owner must correlate an exact subtype-3 package node before real collection")
         for forbidden_token in (
             "object.erase(",
             "sort()",

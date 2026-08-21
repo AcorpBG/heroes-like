@@ -131,6 +131,9 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 	var artifact_proxy_count := 0
 	var artifact_proxy_rows_exact := true
 	var artifact_proxy_placement_ids := {}
+	var resource_proxy_count := 0
+	var resource_proxy_rows_exact := true
+	var resource_proxy_subtypes := {}
 	var expected_mines := {
 		0: {"object_id": "object_brightwood_sawmill", "resource_id": "wood", "catalog_id": "mine_wood_sawmill_proxy"},
 		1: {"object_id": "object_marsh_peat_yard", "resource_id": "gold", "catalog_id": "mine_alchemist_proxy"},
@@ -143,6 +146,15 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 	var expected_artifacts := {
 		67: {"artifact_id": "artifact_waymark_compass", "catalog_id": "reward_random_minor_artifact_proxy"},
 		68: {"artifact_id": "artifact_warcrest_pennon", "catalog_id": "reward_random_major_artifact_proxy"},
+	}
+	var expected_resources := {
+		0: {"object_id": "object_wood_wagon", "site_id": "site_wood_wagon", "resource_id": "wood", "catalog_id": "reward_resource_wood_build_proxy"},
+		1: {"object_id": "object_marsh_peat_yard", "site_id": "site_peatwax_reed_yard", "resource_id": "peatwax", "catalog_id": "reward_resource_mercury_peatwax_proxy"},
+		2: {"object_id": "object_ore_crates", "site_id": "site_ore_crates", "resource_id": "ore", "catalog_id": "reward_resource_ore_build_proxy"},
+		3: {"object_id": "object_floodplain_sluice_camp", "site_id": "site_embergrain_warm_granary", "resource_id": "embergrain", "catalog_id": "reward_resource_sulfur_embergrain_proxy"},
+		4: {"object_id": "object_cinder_ore_face", "site_id": "site_aetherglass_lens_house", "resource_id": "aetherglass", "catalog_id": "reward_resource_crystal_aetherglass_proxy"},
+		5: {"object_id": "object_badlands_coin_sluice", "site_id": "site_memory_salt_pan", "resource_id": "memory_salt", "catalog_id": "reward_resource_gems_memory_salt_proxy"},
+		6: {"object_id": "object_reef_coin_assay", "site_id": "site_reef_coin_assay", "resource_id": "gold", "catalog_id": "reward_resource_gold_reef_coin_proxy"},
 	}
 	for object_index in range(int(map_document.get_object_count())):
 		var object: Dictionary = map_document.get_object_by_index(object_index)
@@ -193,6 +205,18 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 					or String(object.get("homm3_re_reward_object_catalog_id", "")) != String(expected_artifact.get("catalog_id", "")) \
 					or not _live_proxy_provenance_exact(object):
 				artifact_proxy_rows_exact = false
+		elif type_id == 79:
+			resource_proxy_count += 1
+			resource_proxy_subtypes[subtype] = true
+			var expected_resource: Dictionary = expected_resources.get(subtype, {}) if expected_resources.get(subtype, {}) is Dictionary else {}
+			if expected_resource.is_empty() \
+					or String(object.get("kind", "")) != "reward_reference" \
+					or String(object.get("object_id", "")) != String(expected_resource.get("object_id", "")) \
+					or String(object.get("site_id", "")) != String(expected_resource.get("site_id", "")) \
+					or String(object.get("resource_id", "")) != String(expected_resource.get("resource_id", "")) \
+					or String(object.get("homm3_re_reward_object_catalog_id", "")) != String(expected_resource.get("catalog_id", "")) \
+					or not _live_proxy_provenance_exact(object):
+				resource_proxy_rows_exact = false
 	for object_index in range(int(second_map.get_object_count())):
 		repeat_identity.append(_proxy_projection_object_authority(second_map.get_object_by_index(object_index)))
 	var adoption: Dictionary = service.convert_generated_payload(first, {"feature_gate": REPORT_ID})
@@ -211,6 +235,9 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 	var live_campfires := []
 	var live_artifacts := []
 	var artifact_resource_node_count := 0
+	var live_resource_proxy_count := 0
+	var live_resource_proxy_rows_exact := true
+	var selected_rare_resource := {}
 	if session != null:
 		var resource_nodes: Array = session.overworld.get("resource_nodes", []) if session.overworld.get("resource_nodes", []) is Array else []
 		var package_source_objects: Dictionary = session.overworld.get("package_source_objects_by_id", {}) if session.overworld.get("package_source_objects_by_id", {}) is Dictionary else {}
@@ -228,6 +255,16 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 				live_campfires.append({"index": node_index, "node": node.duplicate(true)})
 			elif int(source.get("h3m_type_id", -1)) in [67, 68]:
 				artifact_resource_node_count += 1
+			elif int(source.get("h3m_type_id", -1)) == 79:
+				live_resource_proxy_count += 1
+				var expected_resource: Dictionary = expected_resources.get(int(source.get("h3m_subtype", -1)), {}) if expected_resources.get(int(source.get("h3m_subtype", -1)), {}) is Dictionary else {}
+				if expected_resource.is_empty() \
+						or String(node.get("object_id", "")) != String(expected_resource.get("object_id", "")) \
+						or String(node.get("site_id", "")) != String(expected_resource.get("site_id", "")) \
+						or String(node.get("resource_id", "")) != String(expected_resource.get("resource_id", "")):
+					live_resource_proxy_rows_exact = false
+				if int(source.get("h3m_subtype", -1)) == 3 and selected_rare_resource.is_empty():
+					selected_rare_resource = {"index": node_index, "node": node.duplicate(true)}
 		var artifact_nodes: Array = session.overworld.get("artifact_nodes", []) if session.overworld.get("artifact_nodes", []) is Array else []
 		for artifact_index in range(artifact_nodes.size()):
 			var artifact_value: Variant = artifact_nodes[artifact_index]
@@ -280,6 +317,36 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 			"collected": claimed_node.get("collected", false),
 			"save_round_trip_exact": restored_node == claimed_node,
 		}
+	var rare_resource_interaction := {}
+	if session != null and not selected_rare_resource.is_empty():
+		var resources_before: Dictionary = session.overworld.get("resources", {}).duplicate(true)
+		var claim: Dictionary = OverworldRulesScript._collect_resource_node_result(session, selected_rare_resource, false)
+		var resources_after: Dictionary = session.overworld.get("resources", {}).duplicate(true)
+		var restored = SessionStateStoreScript.SessionData.new()
+		restored.from_dict(session.to_dict())
+		var restored_nodes: Array = restored.overworld.get("resource_nodes", []) if restored.overworld.get("resource_nodes", []) is Array else []
+		var restored_node: Dictionary = restored_nodes[int(selected_rare_resource.get("index", -1))] if int(selected_rare_resource.get("index", -1)) >= 0 and int(selected_rare_resource.get("index", -1)) < restored_nodes.size() and restored_nodes[int(selected_rare_resource.get("index", -1))] is Dictionary else {}
+		var claimed_nodes: Array = session.overworld.get("resource_nodes", []) if session.overworld.get("resource_nodes", []) is Array else []
+		var claimed_node: Dictionary = claimed_nodes[int(selected_rare_resource.get("index", -1))] if int(selected_rare_resource.get("index", -1)) >= 0 and int(selected_rare_resource.get("index", -1)) < claimed_nodes.size() and claimed_nodes[int(selected_rare_resource.get("index", -1))] is Dictionary else {}
+		var other_rare_exact := true
+		for resource_id in ["aetherglass", "brass_scrip", "memory_salt", "peatwax", "verdant_grafts"]:
+			if resources_after.get(resource_id, 0) != resources_before.get(resource_id, 0):
+				other_rare_exact = false
+		rare_resource_interaction = {
+			"ok": bool(claim.get("ok", false)) \
+					and int(resources_after.get("embergrain", 0)) == int(resources_before.get("embergrain", 0)) + 1 \
+					and int(resources_after.get("gold", 0)) == int(resources_before.get("gold", 0)) + 120 \
+					and other_rare_exact \
+					and restored_node == claimed_node \
+					and restored.overworld.get("resources", {}) == resources_after,
+			"site_id": claimed_node.get("site_id", ""),
+			"resource_id": claimed_node.get("resource_id", ""),
+			"claim_ok": claim.get("ok", false),
+			"embergrain_delta": int(resources_after.get("embergrain", 0)) - int(resources_before.get("embergrain", 0)),
+			"gold_delta": int(resources_after.get("gold", 0)) - int(resources_before.get("gold", 0)),
+			"other_rare_exact": other_rare_exact,
+			"save_round_trip_exact": restored_node == claimed_node and restored.overworld.get("resources", {}) == resources_after,
+		}
 	var exact_repeat: bool = bool(second.get("ok", false)) \
 			and first.get("final_payload_fnv1a32", "") == second.get("final_payload_fnv1a32", "") \
 			and first.get("final_payload_byte_count", -1) == second.get("final_payload_byte_count", -2) \
@@ -297,6 +364,15 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 				and unsupported_bank_rows_exact \
 				and artifact_proxy_count == 3 \
 				and artifact_proxy_rows_exact \
+				and resource_proxy_count == 28 \
+				and resource_proxy_subtypes.size() == 6 \
+				and resource_proxy_subtypes.has(0) \
+				and resource_proxy_subtypes.has(2) \
+				and resource_proxy_subtypes.has(3) \
+				and resource_proxy_subtypes.has(4) \
+				and resource_proxy_subtypes.has(5) \
+				and resource_proxy_subtypes.has(6) \
+				and resource_proxy_rows_exact \
 				and bool(adoption.get("ok", false)) \
 				and session != null \
 				and live_mine_count == mine_count \
@@ -306,6 +382,9 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 				and artifact_resource_node_count == 0 \
 				and live_artifacts.size() == artifact_proxy_count \
 				and bool(artifact_interaction.get("ok", false)) \
+				and live_resource_proxy_count == resource_proxy_count \
+				and live_resource_proxy_rows_exact \
+				and bool(rare_resource_interaction.get("ok", false)) \
 				and exact_repeat,
 		"payload_hash": first.get("final_payload_fnv1a32", ""),
 		"payload_bytes": first.get("final_payload_byte_count", -1),
@@ -323,11 +402,17 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 		"artifact_proxy_rows_exact": artifact_proxy_rows_exact,
 		"artifact_resource_node_count": artifact_resource_node_count,
 		"live_artifact_count": live_artifacts.size(),
+		"resource_proxy_count": resource_proxy_count,
+		"resource_proxy_subtypes": resource_proxy_subtypes.keys(),
+		"resource_proxy_rows_exact": resource_proxy_rows_exact,
+		"live_resource_proxy_count": live_resource_proxy_count,
+		"live_resource_proxy_rows_exact": live_resource_proxy_rows_exact,
 		"live_mine_count": live_mine_count,
 		"live_mine_sites_exact": live_mine_sites_exact,
 		"live_campfire_count": live_campfires.size(),
 		"interaction": interaction,
 		"artifact_interaction": artifact_interaction,
+		"rare_resource_interaction": rare_resource_interaction,
 		"exact_repeat": exact_repeat,
 	}
 

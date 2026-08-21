@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `native-rmg-runtime-loose-resource-proxy-identity-projection-10184`. The accepted runtime proxy catalog now contains exact recovered type-79 rows for all seven H3M resource subtypes and maps them to the established original-project wood, peatwax, ore, embergrain, aetherglass, memory-salt, and gold fronts. Fresh Small keeps its 23,664-byte payload and 294 ordered objects while all 28 loose-resource records adopt exact identities; the prior 13 sulfur/crystal/gems/gold rows no longer become all-rare supply caches. Real Sulfur→Embergrain collection awards exactly +1 Embergrain and +120 gold, leaves every other rare stockpile unchanged, and persists. Focused/core/repository/editor and bounded Linux/Windows export-startup gates pass. Native binaries and generation remain unchanged. Packaged interaction, broad Native RMG parity, hardware certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
+  id: `native-rmg-runtime-loose-resource-proxy-identity-projection-10184`
 - Completed implementation slice: `native-rmg-runtime-artifact-proxy-pickup-projection-10184`. Exact catalog rows with a valid artifact identity now enter the existing one-time artifact pickup path instead of the persistent multi-resource supply-cache fallback. The fresh Small map retains its 23,664-byte payload and all 294 ordered objects while its one type-67 row becomes `artifact_waymark_compass` and both type-68 rows become `artifact_warcrest_pennon`; all three adopt as artifact nodes, none remains a resource node, and real collection awards the artifact and persists collected state. Spell, creature-bank/generator, malformed, missing, and ambiguous mappings remain fail-closed. Focused/core/repository/editor, four Linux/Windows native builds, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged pickup interaction, broad Native RMG parity, hardware certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
   id: `native-rmg-runtime-artifact-proxy-pickup-projection-10184`
 - Completed implementation slice: `native-rmg-runtime-object-proxy-site-identity-projection-10184`. Runtime object projection now loads the accepted proxy catalog once per projection, applies only unique exact H3M type/subtype rows with existing live-compatible surfaces, and carries exact proxy object/site/resource provenance into package/session adoption. Fresh Small runtime behavior maps all seven mine subtypes to their distinct original-project identities and makes both recovered Campfires collectible Waystone Cache sites; unsupported Creature Generator, Creature Bank without live site, artifact, and spell identities remain fail-closed. Recovered payload bytes, object order/placement/masks, generation/private state, roads, terrain, and guards remain unchanged. Focused interaction, repeat authority, package/session/save/startup, core, repository/editor, four Linux/Windows native builds, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged proxy interaction, broad Native RMG parity, hardware certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
@@ -7877,6 +7879,37 @@ Completion evidence:
 - `/tmp/heroes-artifact-proxy-focused.mydSvM` is natural rc0 and proves exact one type-67 plus two type-68 catalog projections, three live artifact nodes, zero selected resource nodes, real collection/inventory authority, collected-state session round trip, exact repeated object authority, and unchanged Small/Medium/ordinal-95/XLarge payload, object, guard, package, save, and startup gates;
 - `/tmp/heroes-artifact-proxy-core.31uC2O` records core regression rc0; repository validation, Python compilation, JSON/diff checks, and exact/generic editor parses pass;
 - all four Linux/Windows debug/release native libraries rebuild with the exact catalog and artifact field embedded; `/tmp/heroes-artifact-proxy-linux-package.mBK906` and `/tmp/heroes-artifact-proxy-windows-package.qYBorv` record official Linux export/headless startup and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup green. These are export/startup claims only.
+
+## Active Slice: Native RMG Runtime Loose Resource Proxy Identity Projection
+
+id: `native-rmg-runtime-loose-resource-proxy-identity-projection-10184`
+
+Status: completed.
+
+Implementation boundary:
+- add exact type-79 resource-subtype proxy rows for mercury/peatwax, sulfur/embergrain, crystal/aetherglass, gems/memory-salt, and gold to the accepted metadata catalog, using the recovered objects.txt source rows/DEF identities and the already-live original-project object/site/resource identities;
+- let the existing invocation-local unique catalog resolver and package/session resource-node bridge consume those rows without changing native code, generation, or fallback behavior;
+- preserve the existing wood and ore rows, and leave unknown, malformed, duplicate, spell, artifact, and creature identities fail-closed.
+
+Completion criteria:
+- fresh Small projects all observed type-79 subtypes 0/2/3/4/5/6 to their exact catalog object/site/resource identities; its current 13 subtype-3/4/5/6 rows no longer use the all-rare required-source cache, while exact placement/order/masks/serialization and repeat authority remain unchanged;
+- source validation pins all seven type-79 subtype rows, recovered source row/DEF identity, unique keys, exact original-project site/resource identity, and invalid/duplicate/missing fail-closed behavior;
+- focused live behavior proves exact package/session resource-node adoption, a real rare-resource claim changes only the selected rare stockpile plus its authored gold reward, and session/save authority persists without changing unrelated nodes;
+- repository/editor, core, and bounded official Linux/Windows export-startup gates pass with the existing synchronized native binaries.
+
+Non-goals:
+- no recovered H3MapEd generation/private-state/writeout, RNG, object count/order/placement, terrain, roads, guards, masks, density, balance, native-code, or audit-threshold change;
+- no new resource economy, invented H3M subtype mapping, spell/creature activation, copyrighted art/DEF import, packaged resource interaction claim, broad Native RMG parity, hardware certification, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- pushed HEAD `15d4d3a3` fresh Small map `maps/small-moon-pass-spring-baee5d8b.amap` contains two type-79/subtype-3, four subtype-4, two subtype-5, and five subtype-6 rows; all 13 currently have no object/resource identity and use `site_generated_town_required_source_cache`;
+- recovered source rows are exact in `h3maped_rmg_object_catalog.cpp`: subtype 4 row 937 `AVTcrys0.def`, subtype 5 row 938 `AVTgems0.def`, subtype 6 row 939 `AVTgold0.def`, subtype 1 row 940 `AVTmerc0.def`, and subtype 3 row 943 `AVTsulf0.def`;
+- the completed mine proxy path already establishes the original-project subtype identities, and live sites `site_peatwax_reed_yard`, `site_embergrain_warm_granary`, `site_aetherglass_lens_house`, `site_memory_salt_pan`, and `site_reef_coin_assay` own exact persistent resource behavior.
+
+Completion evidence:
+- `/tmp/heroes-resource-proxy-focused.NEvwlm` is natural rc0 and proves 28 exact loose-resource rows across observed subtypes 0/2/3/4/5/6, exact package/session node adoption, zero selected generic-cache fallback, a real subtype-3 claim with Embergrain +1/gold +120 and all other rare stockpiles exact, session round trip, repeat projection, and unchanged Small/Medium/ordinal-95/XLarge payload/object/guard/package/save/startup authority;
+- `/tmp/heroes-resource-proxy-core.bbBUHT` records core rc0; JSON, repository validation, Python compilation, diff checks, and exact/generic editor parses pass;
+- `/tmp/heroes-resource-proxy-linux-package.PVjQUh` and `/tmp/heroes-resource-proxy-windows-package.Xl0yGQ` record official Linux export/headless startup and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup green. These are export/startup claims only; no packaged resource interaction is claimed.
 
 ## Progress Reconciliation
 
