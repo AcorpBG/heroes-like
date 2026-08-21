@@ -22,6 +22,18 @@ func _run() -> void:
 	if bool(first_snapshot.get("save_browser_loaded", true)):
 		_fail("First-view boot marked the hidden save browser loaded.")
 		return
+	if bool(first_snapshot.get("campaign_browser_loaded", true)) or bool(first_snapshot.get("skirmish_browser_loaded", true)):
+		_fail("First-view boot materialized a hidden Campaign or Skirmish browser: %s" % JSON.stringify(first_snapshot))
+		return
+	if int(first_snapshot.get("campaign_count", -1)) != 0 or int(first_snapshot.get("skirmish_count", -1)) != 0:
+		_fail("First-view hidden browser rows were not deferred: %s" % JSON.stringify(first_snapshot))
+		return
+	if String(first_snapshot.get("campaign_board_status", "")) != "deferred":
+		_fail("First-view Campaign board did not expose the deferred state.")
+		return
+	if boot_display_ms > 15000:
+		_fail("First-view Main Menu display exceeded 15000 ms: %d" % boot_display_ms)
+		return
 	if not String(first_snapshot.get("active_expedition_full", first_snapshot.get("active_expedition", ""))).contains("Load: choose a saved expedition"):
 		_fail("First-view footer did not use cheap Load inspection copy: %s" % String(first_snapshot.get("active_expedition_full", "")))
 		return
@@ -42,6 +54,29 @@ func _run() -> void:
 	if (save_snapshot.get("save_browser_items", []) if save_snapshot.get("save_browser_items", []) is Array else []).is_empty():
 		_fail("Saves/Load stage did not populate save browser rows.")
 		return
+	if bool(save_snapshot.get("campaign_browser_loaded", true)) or bool(save_snapshot.get("skirmish_browser_loaded", true)):
+		_fail("Opening Saves unexpectedly materialized Campaign or Skirmish.")
+		return
+
+	shell.call("validation_open_campaign_stage")
+	await get_tree().process_frame
+	var campaign_snapshot: Dictionary = shell.call("validation_snapshot")
+	if not bool(campaign_snapshot.get("campaign_browser_loaded", false)) or bool(campaign_snapshot.get("skirmish_browser_loaded", true)):
+		_fail("Campaign public stage did not load only the Campaign browser.")
+		return
+	if int(campaign_snapshot.get("campaign_count", 0)) <= 0 or String(campaign_snapshot.get("campaign_board_status", "")) != "active":
+		_fail("Campaign public stage did not populate the active Campaign browser.")
+		return
+
+	shell.call("validation_open_skirmish_stage")
+	await get_tree().process_frame
+	var skirmish_snapshot: Dictionary = shell.call("validation_snapshot")
+	if not bool(skirmish_snapshot.get("campaign_browser_loaded", false)) or not bool(skirmish_snapshot.get("skirmish_browser_loaded", false)):
+		_fail("Skirmish public stage did not retain Campaign and load Skirmish.")
+		return
+	if int(skirmish_snapshot.get("campaign_count", 0)) <= 0 or int(skirmish_snapshot.get("skirmish_count", 0)) <= 0:
+		_fail("Public secondary-stage browsers did not preserve populated rows.")
+		return
 
 	print("%s %s" % [REPORT_ID, JSON.stringify({
 		"ok": true,
@@ -49,6 +84,10 @@ func _run() -> void:
 		"first_view_save_inspections": first_counts,
 		"explicit_load_save_inspections": final_counts,
 		"save_browser_items": (save_snapshot.get("save_browser_items", []) if save_snapshot.get("save_browser_items", []) is Array else []).size(),
+		"campaign_items": int(campaign_snapshot.get("campaign_count", 0)),
+		"skirmish_items": int(skirmish_snapshot.get("skirmish_count", 0)),
+		"first_view_campaign_deferred": not bool(first_snapshot.get("campaign_browser_loaded", true)),
+		"first_view_skirmish_deferred": not bool(first_snapshot.get("skirmish_browser_loaded", true)),
 	})])
 	get_tree().quit(0)
 

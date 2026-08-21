@@ -13170,6 +13170,14 @@ def validate_save_management(errors: list[str]) -> None:
         "Open Load to choose a saved expedition",
     ):
         ensure(required_token in main_menu_script_text, errors, f"MainMenu.gd is missing lazy save-browser boot boundary token: {required_token}")
+    for required_token in (
+        "var _campaign_browser_loaded := false",
+        "var _skirmish_browser_loaded := false",
+        "func _ensure_campaign_browser_loaded() -> void:",
+        "func _ensure_skirmish_browser_loaded() -> void:",
+        '"campaign_board_status": "deferred" if not _campaign_browser_loaded',
+    ):
+        ensure(required_token in main_menu_script_text, errors, f"MainMenu.gd is missing lazy secondary-browser boundary token: {required_token}")
     ensure(MAIN_MENU_LEAN_BOOT_SAVE_GUARD_SCENE_PATH.exists(), errors, "Missing focused main-menu lean boot save guard scene")
     ensure(MAIN_MENU_LEAN_BOOT_SAVE_GUARD_SCRIPT_PATH.exists(), errors, "Missing focused main-menu lean boot save guard script")
     if MAIN_MENU_LEAN_BOOT_SAVE_GUARD_SCRIPT_PATH.exists():
@@ -13178,9 +13186,74 @@ def validate_save_management(errors: list[str]) -> None:
             "validation_begin_summary_inspection_trace",
             "validation_summary_inspection_trace_snapshot",
             "validation_open_saves_stage",
+            "validation_open_campaign_stage",
+            "validation_open_skirmish_stage",
             "boot_display_ms",
+            '"first_view_campaign_deferred"',
+            '"first_view_skirmish_deferred"',
         ):
             ensure(required_token in guard_text, errors, f"main_menu_lean_boot_save_guard.gd is missing guard token: {required_token}")
+        ensure(
+            guard_text.find('shell.call("validation_open_saves_stage")')
+            < guard_text.find('shell.call("validation_open_campaign_stage")')
+            < guard_text.find('shell.call("validation_open_skirmish_stage")'),
+            errors,
+            "main_menu_lean_boot_save_guard.gd must prove Saves, Campaign, then Skirmish public-stage loading in order",
+        )
+
+    refresh_menu_match = re.search(
+        r"func _refresh_menu\(\) -> void:\n(?P<body>.*?)(?=\nfunc )",
+        main_menu_script_text,
+        flags=re.DOTALL,
+    )
+    ensure(refresh_menu_match is not None, errors, "MainMenu.gd is missing _refresh_menu for lazy secondary-browser validation")
+    if refresh_menu_match is not None:
+        refresh_body = refresh_menu_match.group("body")
+        ensure(
+            refresh_body.find("if _campaign_browser_loaded:") < refresh_body.find("_rebuild_campaign_browser()"),
+            errors,
+            "MainMenu._refresh_menu must guard Campaign materialization behind its loaded flag",
+        )
+        ensure(
+            refresh_body.find("if _skirmish_browser_loaded:") < refresh_body.find("_rebuild_skirmish_browser()"),
+            errors,
+            "MainMenu._refresh_menu must guard Skirmish materialization behind its loaded flag",
+        )
+    show_stage_match = re.search(
+        r"func _show_stage_dock\(\) -> void:\n(?P<body>.*?)(?=\nfunc )",
+        main_menu_script_text,
+        flags=re.DOTALL,
+    )
+    ensure(show_stage_match is not None, errors, "MainMenu.gd is missing _show_stage_dock for public-stage loading validation")
+    if show_stage_match is not None:
+        show_body = show_stage_match.group("body")
+        for ensure_call in ("_ensure_campaign_browser_loaded()", "_ensure_skirmish_browser_loaded()"):
+            ensure(
+                show_body.find(ensure_call) >= 0
+                and show_body.find(ensure_call) < show_body.find("_stage_dock_panel.visible = true"),
+                errors,
+                f"MainMenu._show_stage_dock must synchronously call {ensure_call} before showing the stage",
+            )
+        ensure(
+            show_body.find("_stage_dock_panel.visible = true") < show_body.find('call_deferred("_focus_stage_entry")'),
+            errors,
+            "MainMenu._show_stage_dock must show the populated stage before deferred focus",
+        )
+    for ensure_name in ("_ensure_campaign_browser_loaded", "_ensure_skirmish_browser_loaded"):
+        ensure_match = re.search(
+            rf"func {ensure_name}\(\) -> void:\n(?P<body>.*?)(?=\nfunc )",
+            main_menu_script_text,
+            flags=re.DOTALL,
+        )
+        ensure(ensure_match is not None, errors, f"MainMenu.gd is missing isolated {ensure_name}")
+        if ensure_match is not None:
+            ensure_body = ensure_match.group("body")
+            for forbidden_token in ("create_timer", "call_deferred", "Thread"):
+                ensure(
+                    forbidden_token not in ensure_body,
+                    errors,
+                    f"MainMenu.{ensure_name} must synchronously materialize without {forbidden_token}",
+                )
 
     ensure(MAIN_MENU_SCENE_PATH.exists(), errors, "Missing main menu scene for save browser validation")
     if MAIN_MENU_SCENE_PATH.exists():
