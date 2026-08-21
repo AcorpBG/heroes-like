@@ -949,6 +949,18 @@ func _run_main_menu_smoke() -> bool:
 		get_tree().quit(1)
 		return false
 
+	(close_stage_button as Button).pressed.emit()
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var returned_first_view_snapshot: Dictionary = shell.call("validation_snapshot")
+	if not bool(returned_first_view_snapshot.get("footer_pocket_visible", false)) \
+			or String(returned_first_view_snapshot.get("active_expedition", "")) != String(first_view_snapshot.get("active_expedition", "")) \
+			or String(returned_first_view_snapshot.get("active_expedition_full", "")) != String(first_view_snapshot.get("active_expedition_full", "")) \
+			or not _assert_footer_pocket_containment(shell, shell.size, "returned first view"):
+		push_error("Main menu smoke: Frontier Log did not return with its exact first-view content and containment: %s." % [returned_first_view_snapshot])
+		get_tree().quit(1)
+		return false
+
 	shell.queue_free()
 	await get_tree().process_frame
 	return true
@@ -1050,6 +1062,8 @@ func _assert_editor_utility_frame_at_supported_widths(shell: Control, logo_panel
 			push_error("Main menu smoke: native/root/canvas size authority diverged at %s: physical=%s window=%s root=%s content_scale=%s viewport=%s." % [requested_size, physical_size, get_window().size, root_size, content_scale_size, viewport_size])
 			return false
 		var first_view_rect := Rect2(Vector2.ZERO, viewport_size)
+		if not _assert_footer_pocket_containment(shell, viewport_size, "%s first view" % requested_size):
+			return false
 		for command_name in ["OpenCampaign", "OpenSkirmish", "OpenSaves", "OpenSettings", "OpenEditor", "Quit"]:
 			var command := shell.get_node_or_null("%%%s" % command_name) as Button
 			if command == null \
@@ -1091,6 +1105,45 @@ func _assert_editor_utility_frame_at_supported_widths(shell: Control, logo_panel
 	await get_tree().process_frame
 	await get_tree().process_frame
 	return true
+
+func _assert_footer_pocket_containment(shell: Control, viewport_size: Vector2, context: String) -> bool:
+	var footer_panel := shell.get_node_or_null("FooterPocketPanel") as PanelContainer
+	var footer_title := shell.get_node_or_null("FooterPocketPanel/FooterPocketPad/FooterPocketBox/FooterTitle") as Label
+	var footer_body := shell.get_node_or_null("%ActiveExpedition") as Label
+	if footer_panel == null or footer_title == null or footer_body == null:
+		push_error("Main menu smoke: Frontier Log nodes are missing at %s." % context)
+		return false
+	var viewport_rect := Rect2(Vector2.ZERO, viewport_size)
+	var footer_rect := footer_panel.get_global_rect()
+	var title_rect := footer_title.get_global_rect()
+	var body_rect := footer_body.get_global_rect()
+	var body_lines := footer_body.text.split("\n", false)
+	var tooltip_lines := footer_body.tooltip_text.split("\n", false)
+	if not footer_panel.is_visible_in_tree() \
+			or footer_panel.grow_vertical != Control.GROW_DIRECTION_BEGIN \
+			or not is_equal_approx(footer_panel.anchor_left, 0.032) \
+			or not is_equal_approx(footer_panel.anchor_top, 0.895) \
+			or not is_equal_approx(footer_panel.anchor_right, 0.372) \
+			or not is_equal_approx(footer_panel.anchor_bottom, 0.975) \
+			or footer_rect.size.y + 0.5 < footer_panel.get_combined_minimum_size().y \
+			or body_rect.size.y + 0.5 < footer_body.get_combined_minimum_size().y \
+			or not _rect_is_contained(viewport_rect, footer_rect) \
+			or not _rect_is_contained(footer_rect, title_rect) \
+			or not _rect_is_contained(footer_rect, body_rect) \
+			or footer_title.text != "Frontier Log" \
+			or body_lines != tooltip_lines \
+			or body_lines.size() < 3 \
+			or not footer_body.text.contains("Load: choose a saved expedition.") \
+			or not footer_body.text.contains("Quit check: save first automatically, then closes client."):
+		push_error("Main menu smoke: Frontier Log is clipped or changed at %s: viewport=%s footer=%s title=%s body=%s min=%s text=%s tooltip=%s." % [context, viewport_rect, footer_rect, title_rect, body_rect, footer_panel.get_combined_minimum_size(), footer_body.text, footer_body.tooltip_text])
+		return false
+	return true
+
+func _rect_is_contained(outer: Rect2, inner: Rect2, tolerance: float = 0.5) -> bool:
+	return inner.position.x >= outer.position.x - tolerance \
+		and inner.position.y >= outer.position.y - tolerance \
+		and inner.end.x <= outer.end.x + tolerance \
+		and inner.end.y <= outer.end.y + tolerance
 
 func _assert_text_only_plaque_style(button: Button, label: String) -> bool:
 	for style_name in ["normal", "hover", "pressed", "disabled"]:

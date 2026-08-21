@@ -17850,6 +17850,16 @@ def validate_main_menu_first_view(errors: list[str]) -> None:
         return
 
     main_menu_scene_text = MAIN_MENU_SCENE_PATH.read_text(encoding="utf-8")
+    footer_pocket_block = scene_node_block(main_menu_scene_text, "FooterPocketPanel", "PanelContainer")
+    for required_token in (
+        "anchor_left = 0.032",
+        "anchor_top = 0.895",
+        "anchor_right = 0.372",
+        "anchor_bottom = 0.975",
+        "grow_vertical = 0",
+    ):
+        ensure(required_token in footer_pocket_block, errors, f"Main Menu Frontier Log pocket is missing exact containment token: {required_token}")
+    ensure("grow_vertical = 1" not in footer_pocket_block and "grow_vertical = 2" not in footer_pocket_block, errors, "Main Menu Frontier Log must grow toward the viewport interior only")
     crest_bytes = MAIN_MENU_FRONTIER_CREST_PATH.read_bytes()
     ensure(png_size(MAIN_MENU_FRONTIER_CREST_PATH) == (1254, 1254), errors, "Aurelion Reach Main Menu crest must retain its authored 1254x1254 source dimensions")
     ensure(len(crest_bytes) > 25 and crest_bytes[:8] == b"\x89PNG\r\n\x1a\n" and crest_bytes[25] == 6, errors, "Aurelion Reach Main Menu crest must be an RGBA PNG with a real alpha channel")
@@ -17997,6 +18007,8 @@ def validate_main_menu_first_view(errors: list[str]) -> None:
     menu_smoke_text = MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH.read_text(encoding="utf-8") if MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH.exists() else ""
     for required_token in (
         "func _assert_editor_utility_frame_at_supported_widths",
+        "func _assert_footer_pocket_containment(shell: Control, viewport_size: Vector2, context: String) -> bool:",
+        "func _rect_is_contained(outer: Rect2, inner: Rect2, tolerance: float = 0.5) -> bool:",
         "func _assert_frontier_crest_asset(frontier_crest: TextureRect) -> bool:",
         "[Vector2i(1280, 720), Vector2i(1920, 1080)]",
         'crest_texture.resource_path != "res://art/ui/branding/aurelion_reach_frontier_crest.png"',
@@ -18020,6 +18032,17 @@ def validate_main_menu_first_view(errors: list[str]) -> None:
         "var viewport_size := shell.size",
         'SettingsService.call("_set_runtime_window_size", requested_size)',
         'SettingsService.call("_set_runtime_window_size", original_size)',
+        'if not _assert_footer_pocket_containment(shell, viewport_size, "%s first view" % requested_size):',
+        'footer_panel.grow_vertical != Control.GROW_DIRECTION_BEGIN',
+        'var body_lines := footer_body.text.split("\\n", false)',
+        'var tooltip_lines := footer_body.tooltip_text.split("\\n", false)',
+        'body_lines != tooltip_lines',
+        'body_lines.size() < 3',
+        'not _rect_is_contained(viewport_rect, footer_rect)',
+        'not _rect_is_contained(footer_rect, title_rect)',
+        'not _rect_is_contained(footer_rect, body_rect)',
+        '(close_stage_button as Button).pressed.emit()',
+        'not _assert_footer_pocket_containment(shell, shell.size, "returned first view")',
         "Vector2i(int(viewport_size.x), int(viewport_size.y)) != requested_size",
         "command.get_global_rect().end.x > first_view_rect.end.x + 0.5",
         "command.get_global_rect().end.y > first_view_rect.end.y + 0.5",
@@ -18038,6 +18061,27 @@ def validate_main_menu_first_view(errors: list[str]) -> None:
         ensure("physical_size != requested_size" not in editor_frame_body, errors, "Main Menu first-view proof must not require unavailable headless native-window geometry")
         ensure("get_viewport_rect()" not in editor_frame_body, errors, "Main Menu first-view containment must use the live shell/root rectangle, not the authored content-scale base rectangle")
         ensure("get_window().size = requested_size" not in editor_frame_body and "get_window().size = original_size" not in editor_frame_body, errors, "Main Menu size-sync proof must exercise the production SettingsService boundary instead of bypassing content-scale synchronization")
+    footer_containment_match = re.search(
+        r"func _assert_footer_pocket_containment\(.*?\) -> bool:(?P<body>.*?)(?=\nfunc )",
+        menu_smoke_text,
+        flags=re.DOTALL,
+    )
+    ensure(footer_containment_match is not None, errors, "Could not isolate Main Menu Frontier Log containment proof")
+    if footer_containment_match is not None:
+        footer_containment_body = footer_containment_match.group("body")
+        for forbidden_token in (
+            "anchor_left =",
+            "anchor_top =",
+            "anchor_right =",
+            "anchor_bottom =",
+            "grow_vertical =",
+            "custom_minimum_size =",
+            "footer_body.text =",
+            "footer_body.tooltip_text =",
+            "SettingsService.",
+            "create_timer",
+        ):
+            ensure(forbidden_token not in footer_containment_body, errors, f"Main Menu Frontier Log proof must remain a passive observer: {forbidden_token}")
     focus_scroll_match = re.search(
         r"func _focus_settings_scroll_control\(shell: Node, control_name: StringName\) -> bool:(?P<body>.*?)(?=\nfunc )",
         menu_smoke_text,

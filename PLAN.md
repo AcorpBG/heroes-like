@@ -8502,6 +8502,38 @@ Completion evidence:
 - `/tmp/heroes-credits-keyboard-compat.t80jlg` records the full Main Menu keyboard-navigation smoke natural rc0/PASS, and `/tmp/heroes-credits-remaining-compat.ZeerZL` records screen-reader semantics PASS plus core systems rc0;
 - `/tmp/heroes-credits-final-static.WBjJej` records repository, Python, JSON, progress, scoped/global diff, and exact/generic editor gates green; official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. These remain bounded export/startup claims only.
 
+## Completed Slice: Main Menu Frontier Log Upward Containment
+
+id: `ux-main-menu-footer-pocket-upward-containment-10184`
+
+Status: completed.
+
+Implementation boundary:
+- make the existing `FooterPocketPanel` satisfy its authored content minimum by growing vertically toward the viewport interior when its 1280x720 anchor band is shorter than the Frontier Log content;
+- retain the exact anchors, horizontal footprint, margins, title, three-line expedition summary, tooltip, first-view command geometry, scenic negative space, and secondary-board visibility lifecycle;
+- validate the live footer panel/title/body rectangles through the existing production window-size synchronization at 1280x720 and 1920x1080.
+
+Completion criteria:
+- at fresh 1280x720 and 1920x1080 Main Menu first views, the FooterPocketPanel, FooterTitle, and complete ActiveExpedition body are visible and contained within the live viewport, with the full three-line summary and tooltip exact;
+- the footer remains within its existing left pocket, hides for secondary boards, returns unchanged to the first view, and does not overlap the logo or painted command hotspots;
+- session, campaign, save, settings, InputMap, AppRouter, first-view command focus/actions, accessibility semantics, and Main Menu visual authority remain exact;
+- focused visual, keyboard/navigation, accessibility, core, repository/editor, and bounded official Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no text truncation, line removal, font or UI-scale change, new panel, first-view art/command rearrangement, anchor or horizontal-width change, secondary-board redesign, save/settings/input schema, gameplay, balance, strategic AI, or Native RMG change;
+- no timer/delay workaround, scripted per-resolution offsets, packaged interactive parity, controller/accessibility/native-hardware certification, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- the fresh official Linux package first-view capture `/tmp/heroes-packaged-first-view.erxoAy/main_menu.png` at 1280x720 visibly clips the bottom of the Frontier Log body, omitting the final Quit Check line;
+- `FooterPocketPanel` is anchored from 0.895 to 0.975 of the viewport (57.6 pixels at 720p), while its live combined minimum is 108 pixels and its default vertical grow direction expands past the bottom edge;
+- the existing Main Menu visual smoke already exercises 1280x720 and 1920x1080 through `SettingsService._set_runtime_window_size`, so the correction can be owned without adding production observers or redesigning the screen.
+
+Completion evidence:
+- `/tmp/heroes-footer-live-capture.GMHAOv` is the fresh real-renderer two-size capture: at 1280x720 the 108-pixel footer is y594..702 and at 1920x1080 it is y945..1053, with the title and all three body lines visible, body text equal to its full tooltip, and the scenic/command composition unchanged;
+- `/tmp/heroes-footer-visual-runtime.4Vrrb3` is the authoritative full menu/outcome visual smoke natural rc0, proving production size synchronization, combined minima, panel/title/body containment, exact anchors/content, secondary-board collapse, return-to-first-view content, and existing visual/session/settings authority;
+- `/tmp/heroes-footer-keyboard-compat.KtGyaO` passes the full Main Menu keyboard/navigation matrix, `/tmp/heroes-footer-accessibility.wHM6gA` passes screen-reader semantics, and `/tmp/heroes-footer-core.csjhNK` passes core systems with no unexpected diagnostics;
+- repository validation, Python compilation, JSON/diff checks, and exact/generic editor parses pass; official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. Claims remain bounded to focused live Main Menu behavior and package export/startup, not packaged footer interaction, certification, signing/publication, whole-game, or release readiness.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:
