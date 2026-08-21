@@ -44896,6 +44896,77 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
         )
 
 
+def validate_native_rmg_h3m_anchor_stream_alignment(errors: list[str]) -> None:
+    audit_path = ROOT / "tools" / "rmg_fast_audit.py"
+    regression_path = ROOT / "tests" / "rmg_fast_audit_h3m_anchor_regression.py"
+    plan_path = ROOT / "PLAN.md"
+    progress_path = ROOT / "ops" / "progress.json"
+    for path in (audit_path, regression_path, plan_path, progress_path):
+        ensure(path.exists(), errors, f"Missing Native RMG H3M anchor-alignment file: {path.relative_to(ROOT)}")
+
+    if audit_path.exists():
+        audit_text = audit_path.read_text(encoding="utf-8")
+        for required_token in (
+            "H3M_OBJECT_MASK_WIDTH = 8",
+            "H3M_OBJECT_MASK_HEIGHT = 6",
+            "H3M_OBJECT_ANCHOR_X_OVERHANG = H3M_OBJECT_MASK_WIDTH - 2",
+            "H3M_OBJECT_ANCHOR_Y_OVERHANG = H3M_OBJECT_MASK_HEIGHT - 2",
+            "H3M_OBJECT_INSTANCE_BASE_BYTES = 12",
+            "H3M_OBJECT_INSTANCE_MINIMUM_BYTES_BY_TYPE = {",
+            "98: 48,",
+            "83: 39,",
+            "x > width + H3M_OBJECT_ANCHOR_X_OVERHANG",
+            "y > width + H3M_OBJECT_ANCHOR_Y_OVERHANG",
+            "or z >= level_count",
+            "or template_index >= template_count",
+            "return all(data[pos + 7 + index] == 0 for index in range(5))",
+            "def h3m_object_instance_minimum_bytes(record: dict[str, Any]) -> int:",
+            "next_min = pos + h3m_object_instance_minimum_bytes(record)",
+            'REWARD_KINDS = {"artifact", "mine", "neutral_dwelling", "resource_site", "reward_reference"}',
+            "def object_identity_sha256(rows: list[dict[str, Any]]) -> str:",
+            '"object_identity_sha256": object_identity_sha256(identity_rows)',
+            "object_identity_match = bool(owner_identity) and owner_identity == native_identity",
+            '"object_identity_match": object_identity_match',
+        ):
+            ensure(required_token in audit_text, errors, f"RMG fast audit is missing H3M anchor-alignment token: {required_token}")
+        ensure(
+            "if x >= width or y >= width or z >= level_count or template_index >= template_count:" not in audit_text,
+            errors,
+            "RMG fast audit must not reject every lower-right anchor outside the nominal map bounds",
+        )
+
+    if regression_path.exists():
+        regression_text = regression_path.read_text(encoding="utf-8")
+        for required_token in (
+            "maximum_x = MAP_SIZE + rmg_fast_audit.H3M_OBJECT_ANCHOR_X_OVERHANG",
+            "maximum_y = MAP_SIZE + rmg_fast_audit.H3M_OBJECT_ANCHOR_Y_OVERHANG",
+            "assert_start(object_record(maximum_x, maximum_y), True)",
+            "assert_start(object_record(maximum_x + 1, maximum_y), False)",
+            "assert_start(object_record(maximum_x, maximum_y + 1), False)",
+            "assert_start(object_record(0, 0, z=LEVEL_COUNT), False)",
+            "assert_start(object_record(0, 0, template_index=1), False)",
+            'reserved=b"\\x00\\x00\\x01\\x00\\x00"',
+            'false_embedded_start = object_record(0, 0, template_index=0)',
+            'town_record = object_record(4, 5, template_index=0) + false_embedded_start + b"\\x00" * 24',
+            "actual_coordinates != expected_coordinates",
+            "identity_sha256 = rmg_fast_audit.object_identity_sha256(identity_rows)",
+            '"RMG_FAST_AUDIT_H3M_ANCHOR_REGRESSION "',
+        ):
+            ensure(required_token in regression_text, errors, f"RMG H3M anchor regression is missing boundary/order token: {required_token}")
+
+    slice_id = "native-rmg-h3m-off-map-anchor-stream-alignment-10184"
+    if plan_path.exists():
+        ensure(slice_id in plan_path.read_text(encoding="utf-8"), errors, "PLAN is missing the Native RMG H3M anchor-alignment slice")
+    if progress_path.exists():
+        progress = load_json(progress_path)
+        slices = [row for row in progress.get("plannedSlices", []) if isinstance(row, dict) and str(row.get("id", "")) == slice_id]
+        ensure(len(slices) == 1, errors, "Progress must contain exactly one Native RMG H3M anchor-alignment slice")
+        if len(slices) == 1:
+            targets = list(slices[0].get("implementationTargets", []))
+            ensure("tools/rmg_fast_audit.py" in targets, errors, "H3M anchor-alignment slice must own the production fast audit")
+            ensure("tests/rmg_fast_audit_h3m_anchor_regression.py" in targets, errors, "H3M anchor-alignment slice must own its focused regression")
+
+
 def validate_random_map_generated_setup_pending_retry_surface(errors: list[str]) -> None:
     for path in (
         RANDOM_MAP_PLAYER_SETUP_RETRY_UX_REPORT_SCRIPT_PATH,
@@ -52014,6 +52085,7 @@ def main() -> int:
     validate_legacy_scenario_package_conversion(errors)
     validate_map_editor_package_save_copy(errors)
     validate_native_rmg_no_godot_export_boundary(errors)
+    validate_native_rmg_h3m_anchor_stream_alignment(errors)
     validate_random_map_generated_setup_pending_retry_surface(errors)
     validate_random_map_post_open_autosave_completion(errors)
     validate_generated_opening_autosave_failure_retry(errors)
