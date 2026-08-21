@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Credits Window now starts hidden from its authored scene state, eliminating the native subwindow focus error while preserving physical keyboard/controller modal paging, focus cycle, close, and Guide focus return at both target sizes.",
+  "currentNotes": "The Frontier Log now grows upward into the viewport at constrained heights. Fresh 1280x720 and 1920x1080 rendered captures show the full title and three-line body, and focused visual, keyboard, accessibility, core, static/editor, and bounded Linux/Windows export-startup gates pass.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-main-menu-credits-hidden-dialog-focus-lifecycle-10184",
-  "currentSliceId": "ux-main-menu-credits-hidden-dialog-focus-lifecycle-10184",
-  "currentSliceNotes": "Completed the scene-owned hidden-state correction and removed the premature runtime Window transition. Fresh desktop startup, focused Credits, broad keyboard/accessibility/core compatibility, static/editor, and bounded Linux/Windows export-startup gates are green.",
+  "currentSlice": "ux-main-menu-footer-pocket-upward-containment-10184",
+  "currentSliceId": "ux-main-menu-footer-pocket-upward-containment-10184",
+  "currentSliceNotes": "Completed the scene-owned upward-growth correction. Live two-size geometry and renders prove complete footer containment without composition drift; broad Main Menu compatibility, static/editor, and bounded Linux/Windows package startup gates are green.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Main Menu Credits Hidden-Dialog Focus Lifecycle",
-  "currentSliceUpdatedAt": "2026-08-21T20:19:45Z",
+  "currentSliceTitle": "Main Menu Frontier Log Upward Containment",
+  "currentSliceUpdatedAt": "2026-08-21T21:11:04Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -91855,6 +91855,35 @@
       ],
       "notes": "Completed the direct pushed-HEAD startup correction. CreditsNoticesDialog now owns visible=false in MainMenu.tscn and runtime configuration no longer transitions the unregistered native Window. Fresh 1280x720/1920x1080 desktop startup in /tmp/heroes-credits-focus-desktop.Ft5cCB is free of the prior `_sub_window_grab_focus`/`index == -1` error. The focused report /tmp/heroes-credits-focus-runtime.iThffP is natural rc0/ok:true with startup-hidden/no-focus plus physical keyboard/controller open, paging, close, focus return, semantics, content, and authority exact. The full Main Menu keyboard smoke /tmp/heroes-credits-keyboard-compat.t80jlg passes; accessibility/core compatibility /tmp/heroes-credits-remaining-compat.ZeerZL and static/editor /tmp/heroes-credits-final-static.WBjJej pass. Official Linux export/headless startup and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. No packaged Credits interaction, certification, signing/publication, whole-game, or release readiness is claimed.",
       "completedAt": "2026-08-21T20:19:45Z"
+    },
+    {
+      "id": "ux-main-menu-footer-pocket-upward-containment-10184",
+      "title": "Main Menu Frontier Log Upward Containment",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-6-production-alpha-layer",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-21T20:37:52Z",
+      "updatedAt": "2026-08-21T21:11:04Z",
+      "implementationTargets": [
+        "scenes/menus/MainMenu.tscn",
+        "tests/menu_outcome_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "At fresh 1280x720 and 1920x1080 Main Menu first views, the FooterPocketPanel, FooterTitle, and complete ActiveExpedition body are visible and contained within the live viewport with the exact three-line summary and tooltip.",
+        "The footer retains its left-pocket anchors and horizontal footprint, hides for secondary boards, returns unchanged, and does not overlap the logo or painted command hotspots.",
+        "Session, campaign, save, settings, InputMap, AppRouter, first-view focus/actions, accessibility semantics, and Main Menu visual authority remain exact.",
+        "Focused visual, keyboard/navigation, accessibility, core, repository/editor, and bounded official Linux/Windows export-startup gates pass."
+      ],
+      "nonGoals": [
+        "No text truncation, line removal, font/UI-scale, new panel, first-view art/command, anchor/horizontal width, secondary-board, schema, gameplay, balance, strategic AI, or Native RMG change.",
+        "No timers, scripted resolution offsets, packaged interactive parity, certification, signing/publication, whole-game, or release-readiness claim."
+      ],
+      "notes": "Completed the direct packaged-visual defect. FooterPocketPanel now keeps its exact 0.032/0.895/0.372/0.975 anchors but uses BEGIN vertical growth, so the 108-pixel content minimum expands upward rather than below the viewport. Fresh real-renderer captures `/tmp/heroes-footer-live-capture.GMHAOv` show y594..702 at 1280x720 and y945..1053 at 1920x1080 with the complete three-line body and exact tooltip. The full visual smoke `/tmp/heroes-footer-visual-runtime.4Vrrb3`, keyboard matrix `/tmp/heroes-footer-keyboard-compat.KtGyaO`, accessibility `/tmp/heroes-footer-accessibility.wHM6gA`, core `/tmp/heroes-footer-core.csjhNK`, repository/editor gates, official Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. No packaged footer interaction, certification, signing/publication, whole-game, or release readiness is claimed.",
+      "completedAt": "2026-08-21T21:11:04Z"
     }
   ],
   "project": "heroes-like",
