@@ -532,6 +532,15 @@ bool runtime_proxy_entry_has_live_site_surface(const Dictionary &entry) {
 	return false;
 }
 
+bool runtime_proxy_entry_has_live_artifact_surface(const Dictionary &entry) {
+	const String artifact_id = String(entry.get("native_artifact_id", ""));
+	return String(entry.get("generated_kind", "")) == "reward_reference"
+			&& String(entry.get("semantic_category", "")) == "artifact"
+			&& !artifact_id.is_empty()
+			&& String(entry.get("native_proxy_object_id", "")) == artifact_id
+			&& String(entry.get("native_proxy_site_id", "")).is_empty();
+}
+
 Dictionary runtime_live_proxy_entry(
 		const Array &entries,
 		int32_t type_id,
@@ -543,7 +552,8 @@ Dictionary runtime_live_proxy_entry(
 		Dictionary entry = entries[index];
 		if (int32_t(entry.get("homm3_re_object_type_id", 0)) != type_id
 				|| int32_t(entry.get("homm3_re_object_subtype", -1)) != subtype
-				|| !runtime_proxy_entry_has_live_site_surface(entry)) {
+				|| (!runtime_proxy_entry_has_live_site_surface(entry)
+						&& !runtime_proxy_entry_has_live_artifact_surface(entry))) {
 			continue;
 		}
 		exact_entries.append(entry);
@@ -575,6 +585,10 @@ void apply_runtime_live_proxy_entry(Dictionary &object, const Dictionary &entry)
 	const String resource_id = String(entry.get("native_resource_id", ""));
 	if (!resource_id.is_empty()) {
 		object["resource_id"] = resource_id;
+	}
+	const String artifact_id = String(entry.get("native_artifact_id", ""));
+	if (!artifact_id.is_empty()) {
+		object["artifact_id"] = artifact_id;
 	}
 	for (const char *field : {
 				"native_proxy_family",

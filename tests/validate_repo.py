@@ -44675,10 +44675,17 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             'if (kind == "mine" || kind == "neutral_dwelling")',
             'if (kind == "reward_reference" || kind == "resource_site")',
             '&& !String(entry.get("native_proxy_site_id", "")).is_empty();',
+            "bool runtime_proxy_entry_has_live_artifact_surface(const Dictionary &entry)",
+            'const String artifact_id = String(entry.get("native_artifact_id", ""));',
+            '&& String(entry.get("semantic_category", "")) == "artifact"',
+            '&& String(entry.get("native_proxy_object_id", "")) == artifact_id',
+            '&& String(entry.get("native_proxy_site_id", "")).is_empty();',
             "Dictionary runtime_live_proxy_entry(",
+            '&& !runtime_proxy_entry_has_live_artifact_surface(entry)))',
             'if (kind_entries.size() == 1)',
             'if (kind_entries.is_empty() && exact_entries.size() == 1)',
             "void apply_runtime_live_proxy_entry(Dictionary &object, const Dictionary &entry)",
+            'object["artifact_id"] = artifact_id;',
             'object["homm3_re_art_asset_policy"] = "provenance_only_original_proxy_art";',
             "const Array live_proxy_catalog = runtime_live_proxy_catalog_entries();",
             "const Dictionary live_proxy = runtime_live_proxy_entry(",
@@ -44689,6 +44696,7 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             ensure(required_token in native_text, errors, f"Native MapPackageService is missing native-owned RMG runtime token: {required_token}")
         ensure(native_text.count("Array runtime_guard_control_tiles(") == 1, errors, "Native guard control projection helper must remain unique")
         ensure(native_text.count("Array runtime_live_proxy_catalog_entries()") == 1, errors, "Native live proxy catalog loader must remain unique")
+        ensure(native_text.count("bool runtime_proxy_entry_has_live_artifact_surface(const Dictionary &entry)") == 1, errors, "Native live artifact proxy eligibility helper must remain unique")
         ensure(native_text.count("Dictionary runtime_live_proxy_entry(") == 1, errors, "Native live proxy resolver must remain unique")
         ensure(native_text.count("void apply_runtime_live_proxy_entry(") == 1, errors, "Native live proxy projection helper must remain unique")
         proxy_loader_start = native_text.find("Array runtime_live_proxy_catalog_entries()")
@@ -44709,10 +44717,16 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             "rand",
             "hash",
             "Creature Generator",
-            "artifact_id",
             "spell_id",
         ):
             ensure(forbidden_token not in proxy_resolver_block + proxy_apply_block, errors, f"Native live proxy projection must not invent unsupported identity logic: {forbidden_token}")
+        for forbidden_token in (
+            "type_id == 67",
+            "type_id == 68",
+            "artifact_waymark_compass",
+            "artifact_warcrest_pennon",
+        ):
+            ensure(forbidden_token not in proxy_resolver_block + proxy_apply_block, errors, f"Native artifact proxy projection must remain catalog-driven: {forbidden_token}")
         for forbidden_token in (
             "static Array",
             "static Dictionary",
@@ -44770,16 +44784,33 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             'unsupported_creature_rows_exact = false',
             'elif type_id == 16:',
             'unsupported_bank_rows_exact = false',
+            '67: {"artifact_id": "artifact_waymark_compass", "catalog_id": "reward_random_minor_artifact_proxy"}',
+            '68: {"artifact_id": "artifact_warcrest_pennon", "catalog_id": "reward_random_major_artifact_proxy"}',
+            'elif type_id in [67, 68]:',
+            'artifact_proxy_placement_ids[String(object.get("placement_id", ""))] = true',
+            'or String(object.get("artifact_id", "")) != String(expected_artifact.get("artifact_id", ""))',
+            'or String(object.get("site_id", "")) != ""',
             'var package_source_objects: Dictionary = session.overworld.get("package_source_objects_by_id", {})',
             'var claim: Dictionary = OverworldRulesScript._collect_resource_node_result(session, campfire_result, false)',
+            'var artifact_nodes: Array = session.overworld.get("artifact_nodes", [])',
+            'var claim: Dictionary = OverworldRulesScript._collect_artifact_node_result(session, artifact_result, false)',
+            'var owned_before: Array = ArtifactRulesScript.owned_artifact_ids(session.overworld.get("hero", {}))',
+            'var owned_after: Array = ArtifactRulesScript.owned_artifact_ids(session.overworld.get("hero", {}))',
+            'restored.from_dict(session.to_dict())',
+            '"save_round_trip_exact": restored_node == claimed_node',
             'and mine_count == 18',
             'and mine_subtypes.size() == 7',
             'and campfire_count == 2',
             'and creature_generator_count == 2',
             'and creature_bank_count == 2',
+            'and artifact_proxy_count == 3',
+            'and artifact_proxy_rows_exact',
             'and live_mine_count == mine_count',
             'and live_campfires.size() == campfire_count',
             'and bool(interaction.get("ok", false))',
+            'and artifact_resource_node_count == 0',
+            'and live_artifacts.size() == artifact_proxy_count',
+            'and bool(artifact_interaction.get("ok", false))',
             'func _live_proxy_provenance_exact(object: Dictionary) -> bool:',
             'func _proxy_projection_object_authority(object: Dictionary) -> Dictionary:',
             '_validate_guard_control_projection(medium.get("generated", {}))',
@@ -44834,6 +44865,8 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
         ensure(proxy_projection_block.count("service.generate_random_map(config,") == 2, errors, "Native live proxy owner must compare exactly two deterministic projections")
         ensure(proxy_projection_block.find("exact_identity.append(") < proxy_projection_block.find("repeat_identity.append(") < proxy_projection_block.find("exact_identity == repeat_identity"), errors, "Native live proxy owner must compare whole ordered object authority after both real projections")
         ensure(proxy_projection_block.find("build_session_from_adoption(adoption)") < proxy_projection_block.find("_collect_resource_node_result(session, campfire_result, false)"), errors, "Native live proxy interaction must use the adopted package session")
+        ensure(proxy_projection_block.find("build_session_from_adoption(adoption)") < proxy_projection_block.find("_collect_artifact_node_result(session, artifact_result, false)") < proxy_projection_block.find("restored.from_dict(session.to_dict())"), errors, "Native live artifact proxy must use adopted collection authority before exact persistence restoration")
+        ensure(proxy_projection_block.find('artifact_proxy_placement_ids[String(object.get("placement_id", ""))] = true') < proxy_projection_block.find('artifact_proxy_placement_ids.has(String(artifact_node.get("placement_id", "")))') < proxy_projection_block.find("_collect_artifact_node_result(session, artifact_result, false)"), errors, "Native live artifact owner must correlate projected placements through package adoption before collection")
         for forbidden_token in (
             "object.erase(",
             "sort()",

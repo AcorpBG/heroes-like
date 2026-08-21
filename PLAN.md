@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `native-rmg-runtime-artifact-proxy-pickup-projection-10184`. Exact catalog rows with a valid artifact identity now enter the existing one-time artifact pickup path instead of the persistent multi-resource supply-cache fallback. The fresh Small map retains its 23,664-byte payload and all 294 ordered objects while its one type-67 row becomes `artifact_waymark_compass` and both type-68 rows become `artifact_warcrest_pennon`; all three adopt as artifact nodes, none remains a resource node, and real collection awards the artifact and persists collected state. Spell, creature-bank/generator, malformed, missing, and ambiguous mappings remain fail-closed. Focused/core/repository/editor, four Linux/Windows native builds, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged pickup interaction, broad Native RMG parity, hardware certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
+  id: `native-rmg-runtime-artifact-proxy-pickup-projection-10184`
 - Completed implementation slice: `native-rmg-runtime-object-proxy-site-identity-projection-10184`. Runtime object projection now loads the accepted proxy catalog once per projection, applies only unique exact H3M type/subtype rows with existing live-compatible surfaces, and carries exact proxy object/site/resource provenance into package/session adoption. Fresh Small runtime behavior maps all seven mine subtypes to their distinct original-project identities and makes both recovered Campfires collectible Waystone Cache sites; unsupported Creature Generator, Creature Bank without live site, artifact, and spell identities remain fail-closed. Recovered payload bytes, object order/placement/masks, generation/private state, roads, terrain, and guards remain unchanged. Focused interaction, repeat authority, package/session/save/startup, core, repository/editor, four Linux/Windows native builds, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged proxy interaction, broad Native RMG parity, hardware certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
   id: `native-rmg-runtime-object-proxy-site-identity-projection-10184`
 - Completed implementation slice: `native-rmg-runtime-guard-control-mask-projection-10184`. Generated runtime guards now expand their exact recovered action tiles into one ordered, clipped, duplicate-free 3x3 control/engagement surface consumed by live Overworld routing. The recovered same-run Medium authority retains its 79,333-byte payload, all 1,326 ordered objects, 41 guards, and exact identity SHA while runtime control now matches the H3MapEd 365-tile union and guarded-route topology exactly. Focused real movement starts the owning guard battle from a non-body control tile and authoritative clearance removes it; Linux/Windows native libraries, core, repository, and bounded export/startup gates pass. Broad Native RMG parity, packaged guard interaction, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
@@ -7844,6 +7846,37 @@ Completion evidence:
 - the same focused owner retains the Medium 79,333-byte/1,326-object authority, ordinal-95 76,831-byte/1,283-object authority, XLarge 365,777-byte/2,779-object authority, guard movement/battle clearance, package/session/save round trip, and startup behavior;
 - all four Linux/Windows debug/release native libraries embed the exact catalog path and validate as ELF64 or PE32+; repository validation, Python compilation, JSON/diff checks, focused/generic editor parses, and core regression pass;
 - `/tmp/heroes-proxy-linux-package.7QYWdI` records official Linux export plus packaged headless startup green, and `/tmp/heroes-proxy-windows-package.LjJlPt` records official Windows export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup green. These are export/startup claims only, not packaged proxy interaction or release certification.
+
+## Active Slice: Native RMG Runtime Artifact Proxy Pickup Projection
+
+id: `native-rmg-runtime-artifact-proxy-pickup-projection-10184`
+
+Status: completed.
+
+Implementation boundary:
+- extend the existing per-projection exact proxy-catalog resolver only for entries with a nonempty `native_artifact_id`, publishing that exact ID and catalog provenance on the recovered runtime object without adding a resource site;
+- retain the existing MapDocument -> package/session artifact-node bridge and `OverworldRules` collection authority so the generated pickup is one-time, persisted, and awarded through the same live artifact path as authored content;
+- keep catalog ambiguity, malformed/missing artifact IDs, spell scrolls, creature banks/generators, and uncatalogued artifact identities fail-closed, with no heuristic type/subtype translation.
+
+Completion criteria:
+- the fresh Small package projects its one type-67 row to `artifact_waymark_compass` and both type-68 rows to `artifact_warcrest_pennon`, removes those three rows from the generic required-source resource-node fallback, and preserves exact recovered placement/order/masks/serialization and repeat authority;
+- a focused live owner proves exact package/session artifact-node adoption, real one-time collection/equip-or-inventory authority, collected persistence/save round trip, and unchanged resource-node/session authority outside the selected records;
+- source validation pins exact artifact-catalog eligibility, unique type/subtype resolution, absence of site fallback for selected artifact rows, invalid/duplicate/missing fail-closed behavior, and continued spell/creature exclusion;
+- core, repository/editor, synchronized Linux/Windows debug/release native builds, and bounded official Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no recovered H3MapEd generation/private-state/writeout, RNG, object count/order/placement, terrain, roads, guards, masks, density, balance, or proxy-catalog content change;
+- no artifact reward randomization, spell proxy activation, creature-bank/generator mapping, copyrighted art/DEF import, packaged pickup-interaction claim, broad Native RMG parity, hardware certification, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- pushed HEAD `04376181` fresh Small map `maps/small-moon-pass-spring-baee5d8b.amap` contains one type-67 `AVArnd2.def` row and two type-68 `AVArnd3.def` rows; each currently has `kind=reward_reference`, `site_id=site_generated_town_required_source_cache`, and no `artifact_id`;
+- `content/homm3_re_reward_object_proxy_catalog.json` owns exact type-67/subtype-0 -> `artifact_waymark_compass` and type-68/subtype-0 -> `artifact_warcrest_pennon` rows through `native_artifact_id`;
+- `NativeRandomMapPackageSessionBridge._artifact_nodes_from_document` already adopts any projected `artifact_id`, and `OverworldRules._collect_artifact_node_result` already owns the persisted one-time reward mutation.
+
+Completion evidence:
+- `/tmp/heroes-artifact-proxy-focused.mydSvM` is natural rc0 and proves exact one type-67 plus two type-68 catalog projections, three live artifact nodes, zero selected resource nodes, real collection/inventory authority, collected-state session round trip, exact repeated object authority, and unchanged Small/Medium/ordinal-95/XLarge payload, object, guard, package, save, and startup gates;
+- `/tmp/heroes-artifact-proxy-core.31uC2O` records core regression rc0; repository validation, Python compilation, JSON/diff checks, and exact/generic editor parses pass;
+- all four Linux/Windows debug/release native libraries rebuild with the exact catalog and artifact field embedded; `/tmp/heroes-artifact-proxy-linux-package.mBK906` and `/tmp/heroes-artifact-proxy-windows-package.qYBorv` record official Linux export/headless startup and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup green. These are export/startup claims only.
 
 ## Progress Reconciliation
 
