@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `native-rmg-runtime-object-proxy-site-identity-projection-10184`. Runtime object projection now loads the accepted proxy catalog once per projection, applies only unique exact H3M type/subtype rows with existing live-compatible surfaces, and carries exact proxy object/site/resource provenance into package/session adoption. Fresh Small runtime behavior maps all seven mine subtypes to their distinct original-project identities and makes both recovered Campfires collectible Waystone Cache sites; unsupported Creature Generator, Creature Bank without live site, artifact, and spell identities remain fail-closed. Recovered payload bytes, object order/placement/masks, generation/private state, roads, terrain, and guards remain unchanged. Focused interaction, repeat authority, package/session/save/startup, core, repository/editor, four Linux/Windows native builds, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged proxy interaction, broad Native RMG parity, hardware certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
+  id: `native-rmg-runtime-object-proxy-site-identity-projection-10184`
 - Completed implementation slice: `native-rmg-runtime-guard-control-mask-projection-10184`. Generated runtime guards now expand their exact recovered action tiles into one ordered, clipped, duplicate-free 3x3 control/engagement surface consumed by live Overworld routing. The recovered same-run Medium authority retains its 79,333-byte payload, all 1,326 ordered objects, 41 guards, and exact identity SHA while runtime control now matches the H3MapEd 365-tile union and guarded-route topology exactly. Focused real movement starts the owning guard battle from a non-body control tile and authoritative clearance removes it; Linux/Windows native libraries, core, repository, and bounded export/startup gates pass. Broad Native RMG parity, packaged guard interaction, native hardware, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
   id: `native-rmg-runtime-guard-control-mask-projection-10184`
 - Completed tooling implementation slice: `native-rmg-h3m-off-map-anchor-stream-alignment-10184`. The fast H3M audit now accepts exact lower-right object anchors whose 8x6 footprint can still intersect the map (`x <= width + 6`, `y <= height + 4`), uses recovered conservative minimum record boundaries for supported generated object families, keeps unknown families on the guarded scan fallback, and hashes exact ordered object identity. The recovered same-run Medium payload now parses all 1,326 records with identity SHA `6b9b02ac69667c465eebca154a18e5b7dbab80473337cc82145ded02bf51d7a8` matching its runtime projection and zero category drift. The audit remains correctly red on the separate runtime guard-surface gap: H3M owns 365 guard-controlled tiles and one guarded reachable town pair while the runtime package exposes only 41 guard body tiles and four reachable pairs. Generation, recovered private state, runtime package bytes, content, density, balance, and broad Native RMG parity remain unchanged and unclaimed. Select the next tracker-approved source-backed slice.
@@ -7811,6 +7813,37 @@ Completion evidence:
 - `/tmp/heroes-atspi-focused-final.rOofmx` exits naturally with the focused semantics report green: immediate pre-populated insertion semantics, immediate fallback semantics, deferred post-add text/tooltip refresh, one signal connection per lifecycle edge, 62 Main Menu focusable Controls, and exact existing live-region ownership;
 - `/tmp/heroes-atspi-mainmenu-authoritative.x2Ue1H` exits naturally after the full Main Menu keyboard/destructive/display/focus matrix; `/tmp/heroes-atspi-compat-rest.mVrWNV` keeps menu/outcome visual, shared active-play focus, and core systems green;
 - `/tmp/heroes-atspi-final-static.3GC0En` keeps repository validation, Python compilation, JSON/diff checks, and exact/generic editor parses green; `/tmp/heroes-atspi-platform.indecL` records official Linux export/headless startup and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup green with bounded platform claims only.
+
+## Active Slice: Native RMG Runtime Object Proxy Site Identity Projection
+
+id: `native-rmg-runtime-object-proxy-site-identity-projection-10184`
+
+Status: completed.
+
+Implementation boundary:
+- load the accepted metadata-only `homm3_re_reward_object_proxy_catalog_v1` once per runtime object projection and resolve only exact H3M type/subtype rows whose original-project target has an existing live-compatible site surface;
+- publish the catalog's exact generated kind, proxy object/site/resource identity, and provenance on the corresponding recovered final-payload object while preserving its placement, ordered identity, body/action/block masks, and serialization fields;
+- retain the existing live MapDocument -> package/session bridge for mine, reward-site, and neutral-dwelling adoption, with unsupported artifact, spell, creature-bank-without-site, and Creature Generator identities remaining fail-closed instead of receiving invented mappings.
+
+Completion criteria:
+- the fresh Small package maps all H3M mine subtypes 0..6 to the exact existing original-project proxy identities instead of treating every non-ore mine as a sawmill, and materializes Campfire plus other catalog-backed reward sites through their exact catalog site IDs;
+- a focused runtime owner proves exact type/subtype matching, unsupported proxy exclusion, exact object order/placement/masks, package/session/save round trip, and real mine/reward interaction authority; source validation pins duplicate-key and missing/malformed-catalog fail-closed behavior;
+- the supported Native RMG workflow matrix retains exact recovered payload/object identity and guard/road/terrain authority, while core, repository/editor, Linux/Windows native builds, and bounded official Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no recovered H3MapEd generation/private-state/writeout, RNG, object count/order/placement, terrain, roads, guard, density, balance, or audit-threshold change;
+- no heuristic H3M creature subtype -> original unit/dwelling mapping, no unsupported artifact/spell proxy activation, no copyrighted art/DEF import, and no broad Native RMG parity, packaged interaction, hardware certification, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- pushed HEAD `65c2b849` generates a fresh 36x36 Small package with 18 mines, but subtypes 1/3/4/5/6 all publish `site_brightwood_sawmill`; its two recovered type-12 Campfires remain generic `h3m_object` records and cannot enter the existing resource-site interaction surface;
+- the accepted `content/homm3_re_reward_object_proxy_catalog.json` already contains exact type/subtype rows for all seven mine subtypes and live-compatible reward-site proxies, including Campfire -> Waystone Cache, while `NativeRandomMapPackageSessionBridge` already consumes exact proxy object/site identities;
+- Creature Generator subtype identities have no exact original-project dwelling mapping, so they are explicitly excluded rather than translated heuristically.
+
+Completion evidence:
+- `/tmp/heroes-proxy-focused2.N1KeEW` proves the fresh Small payload remains 23,664 bytes with 294 ordered objects while 18 mines cover all seven exact proxy identities, both type-12 Campfires become live `site_waystone_cache` nodes, unsupported type-17 Creature Generators and type-16 Creature Banks remain unmapped, repeat projection is exact, and real collection changes authoritative resources and collected state;
+- the same focused owner retains the Medium 79,333-byte/1,326-object authority, ordinal-95 76,831-byte/1,283-object authority, XLarge 365,777-byte/2,779-object authority, guard movement/battle clearance, package/session/save round trip, and startup behavior;
+- all four Linux/Windows debug/release native libraries embed the exact catalog path and validate as ELF64 or PE32+; repository validation, Python compilation, JSON/diff checks, focused/generic editor parses, and core regression pass;
+- `/tmp/heroes-proxy-linux-package.7QYWdI` records official Linux export plus packaged headless startup green, and `/tmp/heroes-proxy-windows-package.LjJlPt` records official Windows export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup green. These are export/startup claims only, not packaged proxy interaction or release certification.
 
 ## Progress Reconciliation
 

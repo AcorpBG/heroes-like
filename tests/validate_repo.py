@@ -44666,9 +44666,60 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             'object["package_guard_engagement_tiles"] = control_tiles;',
             'object["package_guard_control_zone_pathing_policy"] = "h3m_guard_control_forces_engagement_guard_body_remains_blocking_surface";',
             'object["package_guard_engagement_policy"] = "h3m_guard_control_forces_engagement";',
+            'constexpr const char *HOMM3_RE_PROXY_CATALOG_PATH = "res://content/homm3_re_reward_object_proxy_catalog.json";',
+            'constexpr const char *HOMM3_RE_PROXY_CATALOG_SCHEMA = "homm3_re_reward_object_proxy_catalog_v1";',
+            "Array runtime_live_proxy_catalog_entries()",
+            'String(catalog.get("schema_id", "")) != HOMM3_RE_PROXY_CATALOG_SCHEMA',
+            'String(catalog.get("asset_policy", "")) != "provenance_only_original_proxy_art"',
+            "bool runtime_proxy_entry_has_live_site_surface(const Dictionary &entry)",
+            'if (kind == "mine" || kind == "neutral_dwelling")',
+            'if (kind == "reward_reference" || kind == "resource_site")',
+            '&& !String(entry.get("native_proxy_site_id", "")).is_empty();',
+            "Dictionary runtime_live_proxy_entry(",
+            'if (kind_entries.size() == 1)',
+            'if (kind_entries.is_empty() && exact_entries.size() == 1)',
+            "void apply_runtime_live_proxy_entry(Dictionary &object, const Dictionary &entry)",
+            'object["homm3_re_art_asset_policy"] = "provenance_only_original_proxy_art";',
+            "const Array live_proxy_catalog = runtime_live_proxy_catalog_entries();",
+            "const Dictionary live_proxy = runtime_live_proxy_entry(",
+            "apply_runtime_live_proxy_entry(object, live_proxy);",
+            'if (live_proxy.is_empty()) {\n\t\t\t\tobject["site_id"] = source.subtype == 2 ? "site_ridge_quarry" : "site_brightwood_sawmill";',
+            'if (live_proxy.is_empty()) {\n\t\t\t\tobject["site_id"] = "site_generated_town_required_source_cache";',
         ):
             ensure(required_token in native_text, errors, f"Native MapPackageService is missing native-owned RMG runtime token: {required_token}")
         ensure(native_text.count("Array runtime_guard_control_tiles(") == 1, errors, "Native guard control projection helper must remain unique")
+        ensure(native_text.count("Array runtime_live_proxy_catalog_entries()") == 1, errors, "Native live proxy catalog loader must remain unique")
+        ensure(native_text.count("Dictionary runtime_live_proxy_entry(") == 1, errors, "Native live proxy resolver must remain unique")
+        ensure(native_text.count("void apply_runtime_live_proxy_entry(") == 1, errors, "Native live proxy projection helper must remain unique")
+        proxy_loader_start = native_text.find("Array runtime_live_proxy_catalog_entries()")
+        proxy_resolver_start = native_text.find("Dictionary runtime_live_proxy_entry(")
+        proxy_apply_start = native_text.find("void apply_runtime_live_proxy_entry(")
+        proxy_runtime_start = native_text.find("Array runtime_objects(")
+        proxy_runtime_end = native_text.find("Dictionary build_native_package_session_adoption(", proxy_runtime_start)
+        proxy_loader_block = native_text[proxy_loader_start:proxy_resolver_start]
+        proxy_resolver_block = native_text[proxy_resolver_start:proxy_apply_start]
+        proxy_apply_block = native_text[proxy_apply_start:proxy_runtime_start]
+        proxy_runtime_block = native_text[proxy_runtime_start:proxy_runtime_end]
+        ensure(proxy_runtime_block.find("const Array live_proxy_catalog") < proxy_runtime_block.find("for (const auto &source : projection.objects)"), errors, "Native proxy catalog must load once before the ordered runtime object projection")
+        ensure(proxy_runtime_block.find("const Dictionary live_proxy") < proxy_runtime_block.find("const String kind =") < proxy_runtime_block.find("apply_runtime_live_proxy_entry(object, live_proxy);"), errors, "Native proxy resolution must precede kind-specific live materialization")
+        for forbidden_token in (
+            "type_id == 17",
+            "type_id %",
+            "subtype %",
+            "rand",
+            "hash",
+            "Creature Generator",
+            "artifact_id",
+            "spell_id",
+        ):
+            ensure(forbidden_token not in proxy_resolver_block + proxy_apply_block, errors, f"Native live proxy projection must not invent unsupported identity logic: {forbidden_token}")
+        for forbidden_token in (
+            "static Array",
+            "static Dictionary",
+            "ProjectSettings",
+            "user://",
+        ):
+            ensure(forbidden_token not in proxy_loader_block, errors, f"Native live proxy catalog must remain invocation-local and project-authored: {forbidden_token}")
         ensure(native_text.find("origins = &source.action_tiles") < native_text.find("for (const auto &origin : *origins)") < native_text.find("for (int32_t dy = -1; dy <= 1; ++dy)") < native_text.find("for (int32_t dx = -1; dx <= 1; ++dx)"), errors, "Native guard control projection must retain source action order followed by row-major 3x3 expansion")
         ensure("town_clearance" not in native_text[native_text.find("Array runtime_guard_control_tiles("):native_text.find("Dictionary runtime_start_tile_for_slot(")], errors, "Native final-payload guard projection must not invent town-clearance exclusions")
         for forbidden_token in (
@@ -44709,6 +44760,28 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             'and bool(map_validation.get("ok", false))',
             'and bool(scenario_validation.get("ok", false))',
             'and exact_repeat',
+            '_validate_live_proxy_site_projection(service)',
+            'func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:',
+            'var config := _config("small", 36, 1, "land", "1", "weak", 3)',
+            '0: {"object_id": "object_brightwood_sawmill", "resource_id": "wood", "catalog_id": "mine_wood_sawmill_proxy"}',
+            '6: {"object_id": "object_reef_coin_assay", "resource_id": "gold", "catalog_id": "mine_gold_proxy"}',
+            'or String(object.get("homm3_re_reward_object_catalog_id", "")) != "reward_campfire_minor_proxy"',
+            'elif type_id == 17:',
+            'unsupported_creature_rows_exact = false',
+            'elif type_id == 16:',
+            'unsupported_bank_rows_exact = false',
+            'var package_source_objects: Dictionary = session.overworld.get("package_source_objects_by_id", {})',
+            'var claim: Dictionary = OverworldRulesScript._collect_resource_node_result(session, campfire_result, false)',
+            'and mine_count == 18',
+            'and mine_subtypes.size() == 7',
+            'and campfire_count == 2',
+            'and creature_generator_count == 2',
+            'and creature_bank_count == 2',
+            'and live_mine_count == mine_count',
+            'and live_campfires.size() == campfire_count',
+            'and bool(interaction.get("ok", false))',
+            'func _live_proxy_provenance_exact(object: Dictionary) -> bool:',
+            'func _proxy_projection_object_authority(object: Dictionary) -> Dictionary:',
             '_validate_guard_control_projection(medium.get("generated", {}))',
             "func _validate_guard_control_projection(generated: Dictionary) -> Dictionary:",
             'if String(object.get("kind", "")) != "guard":',
@@ -44755,6 +44828,24 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
         guard_live_block = native_rmg_runtime_boundary_text[guard_live_start:guard_live_end]
         ensure('var ok := bool(adoption.get("ok", false))' not in guard_live_block, errors, "Native RMG live guard behavior gate must retain an explicit bool type")
         ensure('perform_context_action(action_session, "enter_battle")' not in guard_live_block, errors, "Native RMG live guard behavior must enter the projected surface through real movement routing")
+        proxy_projection_start = native_rmg_runtime_boundary_text.find("func _validate_live_proxy_site_projection(")
+        proxy_projection_end = native_rmg_runtime_boundary_text.find("func _live_proxy_provenance_exact(", proxy_projection_start)
+        proxy_projection_block = native_rmg_runtime_boundary_text[proxy_projection_start:proxy_projection_end]
+        ensure(proxy_projection_block.count("service.generate_random_map(config,") == 2, errors, "Native live proxy owner must compare exactly two deterministic projections")
+        ensure(proxy_projection_block.find("exact_identity.append(") < proxy_projection_block.find("repeat_identity.append(") < proxy_projection_block.find("exact_identity == repeat_identity"), errors, "Native live proxy owner must compare whole ordered object authority after both real projections")
+        ensure(proxy_projection_block.find("build_session_from_adoption(adoption)") < proxy_projection_block.find("_collect_resource_node_result(session, campfire_result, false)"), errors, "Native live proxy interaction must use the adopted package session")
+        for forbidden_token in (
+            "object.erase(",
+            "sort()",
+            "sort_custom",
+            "type_id %",
+            "subtype %",
+            'object["kind"] =',
+            'object["object_id"] =',
+            'object["site_id"] =',
+            "perform_context_action",
+        ):
+            ensure(forbidden_token not in proxy_projection_block, errors, f"Native live proxy focused owner must remain an independent exact observer: {forbidden_token}")
     ensure(h3maped_catalog_path.exists(), errors, "Missing recovered H3MapEd RMG template catalog source")
     if native_core_path.exists():
         native_core_text = native_core_path.read_text(encoding="utf-8")
