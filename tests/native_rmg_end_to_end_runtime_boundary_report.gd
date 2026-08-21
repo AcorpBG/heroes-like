@@ -35,6 +35,15 @@ const CREATURE_GENERATOR_ROWS := {
 		"gold": 75,
 		"recruits": {"unit_neutral_kilnward_mallets": 2, "unit_neutral_cinderpot_hurlers": 1},
 	},
+	0: {
+		"source_row": 210,
+		"def_ref": "AVGbasl0.def",
+		"object_id": "object_bogbell_croft",
+		"site_id": "site_bogbell_croft",
+		"catalog_id": "dwelling_creature_generator_basilisk_bogbell_proxy",
+		"gold": 105,
+		"recruits": {"unit_neutral_bogbell_mauls": 2, "unit_neutral_peatflare_jarriers": 1},
+	},
 }
 const LOOSE_RESOURCE_PRESENTATION_ROWS := [
 	{"site_id": "site_peatwax_reed_yard", "object_id": "object_marsh_peat_yard", "resource_id": "peatwax", "asset_id": "resource_pickup_peatwax", "mine_asset_id": "mapobj_marsh_peat_yard", "expected_footprint": {"width": 2, "height": 2}, "texture_path": "res://art/overworld/runtime/objects/pickups/peatwax_reed_bundle.png", "rewards": {"gold": 120, "peatwax": 1}, "current_small": false},
@@ -646,8 +655,8 @@ func _validate_medium_cinder_kiln_projection(service: Variant, generated: Dictio
 				or object.get("action_tiles", []) != [] \
 				or not bool(object.get("blocking_body", false)):
 			rows_exact = false
-		if subtype == 22:
-			var expected_dwelling: Dictionary = CREATURE_GENERATOR_ROWS.get(22, {})
+		if subtype in [0, 22]:
+			var expected_dwelling: Dictionary = CREATURE_GENERATOR_ROWS.get(subtype, {})
 			if String(object.get("kind", "")) != "neutral_dwelling" \
 					or String(object.get("object_id", "")) != String(expected_dwelling.get("object_id", "")) \
 					or String(object.get("native_proxy_object_id", "")) != String(expected_dwelling.get("object_id", "")) \
@@ -679,7 +688,7 @@ func _validate_medium_cinder_kiln_projection(service: Variant, generated: Dictio
 			and int(repeat.get("runtime_object_count", -1)) == int(generated.get("runtime_object_count", -2)) \
 			and repeat_type17_authority == type17_authority
 	var adoption: Dictionary = service.convert_generated_payload(generated, {"feature_gate": REPORT_ID})
-	var interaction: Dictionary = _validate_creature_generator_interaction(adoption, [22])
+	var interaction: Dictionary = _validate_creature_generator_interaction(adoption, [0, 22])
 	return {
 		"ok": String(generated.get("final_payload_fnv1a32", "")) == "e76c8967" \
 				and int(generated.get("final_payload_byte_count", -1)) == 79333 \
