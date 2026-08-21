@@ -47928,6 +47928,21 @@ def validate_packaging_platform_readiness(errors: list[str]) -> None:
     for path in required_paths:
         ensure(path.exists(), errors, f"Missing packaging/platform readiness file: {path.relative_to(ROOT)}")
 
+    project_path = ROOT / "project.godot"
+    ensure(project_path.exists(), errors, "Missing project.godot for native boot-splash validation")
+    if project_path.exists():
+        project_text = project_path.read_text(encoding="utf-8")
+        for required_text in (
+            'boot_splash/bg_color=Color(0.00784314, 0.0156863, 0.027451, 1)',
+            'boot_splash/image="res://art/ui/branding/aurelion_reach_frontier_crest.png"',
+            'boot_splash/minimum_display_time=0',
+            'boot_splash/show_image=true',
+            'boot_splash/stretch_mode=1',
+            'boot_splash/use_filter=true',
+        ):
+            ensure(required_text in project_text, errors, f"project.godot is missing required native boot-splash token: {required_text}")
+        ensure("boot_splash/fullsize" not in project_text, errors, "Native boot splash must use Godot 4.6 stretch_mode rather than the removed fullsize setting")
+
     if EXPORT_PRESETS_PATH.exists():
         preset_text = EXPORT_PRESETS_PATH.read_text(encoding="utf-8")
         for required_text in (
@@ -48016,6 +48031,16 @@ def validate_packaging_platform_readiness(errors: list[str]) -> None:
             "SettingsService.SETTINGS_FILE",
             "ProfileLogScript.GENERAL_PROFILE_LOG_PATH",
             "application/run/main_scene",
+            'const BOOT_SPLASH_PATH := "res://art/ui/branding/aurelion_reach_frontier_crest.png"',
+            'const BOOT_SPLASH_SHA256 := "f6e04815c0e30640861b631fa9d5bc6720a4ee3d7492f31d1bc7a66a43e957d3"',
+            "FileAccess.get_sha256(boot_splash_path) == BOOT_SPLASH_SHA256",
+            "boot_splash_size == Vector2i(1254, 1254)",
+            "boot_splash_corners_transparent",
+            "boot_splash_background.to_html() == BOOT_SPLASH_BACKGROUND.to_html()",
+            "boot_splash_minimum_display_time == 0",
+            "boot_splash_show_image",
+            "boot_splash_stretch_mode == RenderingServer.SPLASH_STRETCH_MODE_KEEP",
+            "boot_splash_use_filter",
         ):
             ensure(required_token in script_text, errors, f"Packaging platform readiness report is missing required token: {required_token}")
 

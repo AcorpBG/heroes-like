@@ -8438,6 +8438,38 @@ Completion evidence:
 - `/tmp/heroes-scroll-sprite-overworld.fxleNX` and `/tmp/heroes-scroll-sprite-core.e9nrhf` record broad Overworld visual and core compatibility rc0; JSON, repository validation, Python compilation, diff checks, and exact/generic editor parses pass;
 - `/tmp/heroes-scroll-sprite-linux-package.eLBDq0` and `/tmp/heroes-scroll-sprite-windows-package.eA3VdS` plus the official report JSON files record Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup green; both PCKs contain `beacon_path_scroll.png.import` and its compiled texture. These remain export/startup claims only.
 
+## Selected Slice: Aurelion Reach Native Boot Splash
+
+id: `ux-aurelion-reach-native-boot-splash-10184`
+
+Status: completed.
+
+Implementation boundary:
+- replace the engine-default startup splash with the already-approved original `aurelion_reach_frontier_crest.png` through Godot's native `application/boot_splash` project settings;
+- render the crest with aspect-preserving filtered scaling on the established dark Aurelion Reach presentation ground, without introducing a second logo asset or a scripted loading screen;
+- preserve the technical project/user-data identity, Boot routing, public window title, Main Menu composition, startup duration, settings, saves, and package metadata.
+
+Completion criteria:
+- a fresh current-HEAD 1280x720 and 1920x1080 desktop launch visibly shows the complete Aurelion Reach crest during the native engine startup interval, with no stock Godot wordmark, clipping, distortion, or transparent-background leak;
+- the exact approved crest resource is loaded and the project settings retain `show_image=true`, aspect-preserving stretch, filtered high-resolution scaling, and no forced minimum display delay;
+- Boot still applies the exact public window title and routes once to Main Menu, while session, campaign, save, settings, InputMap, and AppRouter authority remain unchanged;
+- repository/editor, focused startup/platform readiness, Main Menu compatibility, official Linux export/headless startup, and official Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+Non-goals:
+- no new generated branding art, icon, wordmark, Main Menu composition, Boot scene, routing, loading progress UI, startup delay, compatibility project name, user-data path, save/settings schema, gameplay, content, balance, strategic AI, or Native RMG change;
+- no packaged visual interaction claim, platform splash beyond the current Linux/Windows Godot startup surface, controller/accessibility/hardware certification, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- fresh Xvfb capture `/tmp/heroes-boot-splash-probe.WJ8uZM/boot_2000ms.png` on pushed HEAD `4ecc6b32` visibly shows the stock Godot Engine splash at 1280x720;
+- `project.godot` has no `application/boot_splash/image`, so Godot falls back to its engine-default splash even though the approved original Aurelion Reach crest already ships and is used by the Main Menu;
+- the existing public-title, native-window-title, desktop icon, and package-identity slices deliberately preserve the compatibility-sensitive project name and do not own this native startup image.
+
+Completion evidence:
+- `/tmp/heroes-boot-splash-focused.05g6er/1280x720.png` and `1920x1080.png` are fresh real desktop captures that show the full approved crest centered on the exact dark presentation ground with aspect preserved, transparent corners correctly composited, and no stock Godot wordmark;
+- `/tmp/heroes-boot-splash-focused-rerun.iBthjF` is the authoritative focused platform-readiness report: exact crest path/SHA-256/1254x1254 dimensions, corner alpha, `020407ff` background, stretch mode `KEEP`, filtering, zero forced delay, Boot route, technical app identity, and public window title all pass;
+- `/tmp/heroes-boot-splash-compat.Nycd9r` keeps menu/outcome visual behavior and core systems green; repository validation, Python compilation, JSON/diff checks, and exact/generic editor parses pass;
+- official Linux export/headless startup and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass with the updated project settings. These are bounded export/startup claims only, not packaged splash inspection, hardware/accessibility certification, signing/publication, whole-game, or release readiness.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:

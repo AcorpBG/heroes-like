@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Credits & Notices controller paging is implemented: D-pad Up enters the body, shoulder buttons page down/up, and B closes with exact Guide focus return. Focused keyboard/controller, Main Menu navigation, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass. Packaged interaction and native controller hardware certification remain unclaimed.",
+  "currentNotes": "The Aurelion Reach native boot splash is implemented and validated: fresh 1280x720 and 1920x1080 desktop captures show the exact approved crest instead of the stock Godot wordmark, with focused, compatibility, static/editor, and bounded Linux/Windows export-startup gates green.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-main-menu-credits-controller-paging-10184",
-  "currentSliceId": "ux-main-menu-credits-controller-paging-10184",
-  "currentSliceNotes": "Implemented controller-only focus entry and bounded shoulder-button page navigation for the existing Credits & Notices modal while preserving keyboard paging, content, layout, focus return, and session/campaign/save/settings/input-map/router authority.",
+  "currentSlice": "ux-aurelion-reach-native-boot-splash-10184",
+  "currentSliceId": "ux-aurelion-reach-native-boot-splash-10184",
+  "currentSliceNotes": "Completed the native project-setting correction using the existing approved crest, exact dark background, aspect-preserving filtered scaling, and no forced delay; two-size desktop rendering and unchanged Boot/platform authority are green.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Main Menu Credits Controller Paging",
-  "currentSliceUpdatedAt": "2026-08-21T19:26:11Z",
+  "currentSliceTitle": "Aurelion Reach Native Boot Splash",
+  "currentSliceUpdatedAt": "2026-08-21T19:45:38Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -91796,6 +91796,35 @@
       ],
       "notes": "Completed the direct current-head controller defect without changing notice content or input mappings. The real modal handles physical right/left shoulder buttons as bounded page down/up, keeps physical cancel ownership, and publishes controller paging guidance through its authored accessibility description and Guide tooltip. The focused 1280x720 keyboard path pages 16->0; the 1920x1080 controller-only path opens with A, enters the body with D-pad Up, pages 17->0 with shoulder buttons, closes with B, restores Guide focus, and preserves exact session/campaign/save/settings/InputMap/AppRouter authority. Main Menu keyboard navigation, screen-reader semantics, core systems, validate_repo, py_compile, diff-check, exact/generic editor parses, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Claims remain bounded: no packaged Credits interaction, native controller hardware, AT-SPI/UIA, certification, signing/publication, whole-game, or release readiness.",
       "completedAt": "2026-08-21T19:26:11Z"
+    },
+    {
+      "id": "ux-aurelion-reach-native-boot-splash-10184",
+      "title": "Aurelion Reach Native Boot Splash",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-6-production-alpha-layer",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-21T19:35:10Z",
+      "updatedAt": "2026-08-21T19:45:38Z",
+      "implementationTargets": [
+        "project.godot",
+        "tests/packaging_platform_readiness_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Fresh 1280x720 and 1920x1080 desktop launches visibly show the complete approved Aurelion Reach crest during native startup with no stock Godot wordmark, clipping, distortion, or transparent-background leak.",
+        "The exact approved crest is loaded through native boot-splash settings with show_image true, aspect-preserving filtered scaling, and no forced minimum delay.",
+        "Boot public title, one Main Menu route, session, campaign, save, settings, InputMap, and AppRouter authority remain exact.",
+        "Focused startup/platform readiness, Main Menu compatibility, repository/editor, and bounded official Linux/Windows export-startup gates pass."
+      ],
+      "nonGoals": [
+        "No new branding art, icon, wordmark, Main Menu composition, Boot routing, loading UI, startup delay, compatibility identity, user-data path, save/settings schema, gameplay, content, balance, strategic AI, or Native RMG change.",
+        "No packaged visual interaction, controller/accessibility/native-hardware certification, signing/publication, whole-game, or release-readiness claim."
+      ],
+      "notes": "Completed the direct current first-view correction. Fresh 1280x720 and 1920x1080 Xvfb captures in /tmp/heroes-boot-splash-focused.05g6er show the full approved crest centered on 020407ff with no stock Godot wordmark. The focused platform report /tmp/heroes-boot-splash-focused-rerun.iBthjF pins exact path, SHA-256, dimensions, alpha, stretch/filter/no-delay settings, Boot title, and technical identity; menu/outcome visual and core compatibility pass in /tmp/heroes-boot-splash-compat.Nycd9r. validate_repo, py_compile, JSON/diff/editor gates and official Linux export/headless startup plus Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. Packaged splash inspection, certification, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-21T19:45:38Z"
     }
   ],
   "project": "heroes-like",
@@ -92338,9 +92367,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Exact metadata-only Native RMG proxy rows now fail closed at live projection while recovered source and payload authority remain unchanged.",
+  "summary": "The native startup now shows the approved original Aurelion Reach crest instead of the stock Godot splash while preserving Boot behavior and compatibility identity.",
   "taskId": "10184",
-  "updatedAt": "2026-08-21T17:43:51Z",
+  "updatedAt": "2026-08-21T19:45:38Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
