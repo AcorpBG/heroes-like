@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed exact Extra-Large subtype6 row165/AVGcent0.def projection to Prism Outrider Post. Focused 33610c0a/365777/2779 and ordered 12 type17 rows exact; subtypes29+6+26+40+50 mapped, other7 raw. Live claims total410 gold with exact Charcoal+Outrider+Cliffhawk+Obsidian+Kite recruits; duplicate roster counts exact; repeat/save-v9/unrelated authority green. Dwelling/AI/content/core, static/editor, Linux export/headless startup and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup green. Other subtypes, native parity, packaged interaction, certification, signing/publication, whole-game and release readiness excluded.",
+  "currentNotes": "Completed exact Extra-Large subtype30 row208/AVGlzrd0.def projection to Reedbarge Mooring. Focused 33610c0a/365777/2779 and ordered 12 type17 rows exact; subtypes30+29+6+26+40+50 mapped, other6 raw. Live claims total500 gold with exact Reedbarge+Charcoal+Outrider+Cliffhawk+Obsidian+Kite recruits; repeat/save-v9/unrelated authority green. Dwelling/AI/content/core, static/editor, Linux export/headless startup and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup green. Other subtypes, native parity, packaged interaction, certification, signing/publication, whole-game and release readiness excluded.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "native-rmg-runtime-centaur-prism-outrider-dwelling-projection-10184",
-  "currentSliceId": "native-rmg-runtime-centaur-prism-outrider-dwelling-projection-10184",
-  "currentSliceNotes": "Completed exact Extra-Large subtype6 row165/AVGcent0.def projection to Prism Outrider Post. Focused 33610c0a/365777/2779 and ordered 12 type17 rows exact; subtypes29+6+26+40+50 mapped, other7 raw. Live claims total410 gold with exact Charcoal+Outrider+Cliffhawk+Obsidian+Kite recruits; duplicate roster counts exact; repeat/save-v9/unrelated authority green. Dwelling/AI/content/core, static/editor, Linux export/headless startup and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup green. Other subtypes, native parity, packaged interaction, certification, signing/publication, whole-game and release readiness excluded.",
+  "currentSlice": "native-rmg-runtime-lizard-reedbarge-mooring-dwelling-projection-10184",
+  "currentSliceId": "native-rmg-runtime-lizard-reedbarge-mooring-dwelling-projection-10184",
+  "currentSliceNotes": "Completed exact Extra-Large subtype30 row208/AVGlzrd0.def projection to Reedbarge Mooring. Focused 33610c0a/365777/2779 and ordered 12 type17 rows exact; subtypes30+29+6+26+40+50 mapped, other6 raw. Live claims total500 gold with exact Reedbarge+Charcoal+Outrider+Cliffhawk+Obsidian+Kite recruits; repeat/save-v9/unrelated authority green. Dwelling/AI/content/core, static/editor, Linux export/headless startup and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup green. Other subtypes, native parity, packaged interaction, certification, signing/publication, whole-game and release readiness excluded.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "native rmg runtime centaur prism outrider dwelling projection 10184",
-  "currentSliceUpdatedAt": "2026-08-21T15:33:15Z",
+  "currentSliceTitle": "native rmg runtime lizard reedbarge mooring dwelling projection 10184",
+  "currentSliceUpdatedAt": "2026-08-21T15:49:40Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -91654,6 +91654,16 @@
       "startedAt": "2026-08-21T15:22:44Z",
       "notes": "Completed exact Extra-Large subtype6 row165/AVGcent0.def projection to Prism Outrider Post. Focused 33610c0a/365777/2779 and ordered 12 type17 rows exact; subtypes29+6+26+40+50 mapped, other7 raw. Live claims total410 gold with exact Charcoal+Outrider+Cliffhawk+Obsidian+Kite recruits; duplicate roster counts exact; repeat/save-v9/unrelated authority green. Dwelling/AI/content/core, static/editor, Linux export/headless startup and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup green. Other subtypes, native parity, packaged interaction, certification, signing/publication, whole-game and release readiness excluded.",
       "completedAt": "2026-08-21T15:33:15Z"
+    },
+    {
+      "id": "native-rmg-runtime-lizard-reedbarge-mooring-dwelling-projection-10184",
+      "title": "native rmg runtime lizard reedbarge mooring dwelling projection 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-21T15:49:40Z",
+      "startedAt": "2026-08-21T15:39:28Z",
+      "notes": "Completed exact Extra-Large subtype30 row208/AVGlzrd0.def projection to Reedbarge Mooring. Focused 33610c0a/365777/2779 and ordered 12 type17 rows exact; subtypes30+29+6+26+40+50 mapped, other6 raw. Live claims total500 gold with exact Reedbarge+Charcoal+Outrider+Cliffhawk+Obsidian+Kite recruits; repeat/save-v9/unrelated authority green. Dwelling/AI/content/core, static/editor, Linux export/headless startup and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup green. Other subtypes, native parity, packaged interaction, certification, signing/publication, whole-game and release readiness excluded.",
+      "completedAt": "2026-08-21T15:49:40Z"
     }
   ],
   "project": "heroes-like",
@@ -92198,7 +92208,7 @@
   ],
   "summary": "Implementing exact accepted proxy-catalog identity on live-compatible Native RMG runtime mine, reward-site, and neutral-dwelling records without changing recovered generation or claiming broad parity.",
   "taskId": "10184",
-  "updatedAt": "2026-08-21T15:33:15Z",
+  "updatedAt": "2026-08-21T15:49:40Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

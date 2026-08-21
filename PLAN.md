@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `native-rmg-runtime-lizard-reedbarge-mooring-dwelling-projection-10184`. Fixed Extra-Large seed 77 remains payload `33610c0a`/365,777 bytes/2,779 objects with exact 12-row type-17 order, placement, and masks; subtype 30 now uses the original Reedbarge Mooring contract alongside Charcoal, Prism Outrider, Cliffhawk, Obsidian, and Kite, while the other six rows stay raw. Their live claims grant exactly 500 gold plus the original recruits, persist control, reject repeats, round-trip save v9, and preserve unrelated authority. Focused, compatibility, static/editor, and bounded Linux/Windows export-startup gates pass. Other subtypes, native parity, packaged interaction, certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
+  id: `native-rmg-runtime-lizard-reedbarge-mooring-dwelling-projection-10184`
 - Completed implementation slice: `native-rmg-runtime-centaur-prism-outrider-dwelling-projection-10184`. Fixed Extra-Large seed 77 remains payload `33610c0a`/365,777 bytes/2,779 objects with exact 12-row type-17 order, placement, and masks; subtype 6 now uses the original Prism Outrider Post contract alongside Charcoal, Cliffhawk, Obsidian, and Kite, while the other seven rows stay raw. Their live claims grant exactly 410 gold plus the original recruits, persist control, reject repeats, round-trip save v9, and preserve unrelated authority. Focused, compatibility, static/editor, and bounded Linux/Windows export-startup gates pass. Other subtypes, native parity, packaged interaction, certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
   id: `native-rmg-runtime-centaur-prism-outrider-dwelling-projection-10184`
 - Completed implementation slice: `native-rmg-runtime-imp-charcoal-burners-dwelling-projection-10184`. Fixed Extra-Large seed 77 remains payload `33610c0a`/365,777 bytes/2,779 objects with exact 12-row type-17 order, placement, and masks; subtype 29 now uses the original Charcoal Burners contract alongside Cliffhawk, Obsidian, and Kite, while the other eight rows stay raw. Their live claims grant exactly 330 gold plus the original recruits, persist control, reject repeats, round-trip save v9, and preserve unrelated authority. Focused, compatibility, static/editor, and bounded Linux/Windows export-startup gates pass. Other subtypes, native parity, packaged interaction, certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
@@ -7965,6 +7967,33 @@ Completion evidence:
 - `/tmp/heroes-spell-scroll-focused.Q5GPQb` is natural rc0 and proves the sole exact type-93 row and live scroll node, `spell_beacon_path` as the only known-spell delta, exact resources/artifacts/army/other nodes, repeat rejection, session round trip, repeated generation authority, and unchanged Small/Medium/ordinal-95/Extra-Large payload/object/guard/package/save/startup gates;
 - `/tmp/heroes-spell-scroll-core.r7WCx5` records core rc0; JSON, repository validation, Python compilation, diff checks, and exact/generic editor parses pass;
 - `/tmp/heroes-spell-scroll-linux-package.zpi2sS` and `/tmp/heroes-spell-scroll-windows-package.CUKi63` wrapper artifacts plus the official report JSON files record Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup green. These are export/startup claims only; no packaged scroll interaction is claimed.
+
+## Completed Slice: Native RMG Lizard Reedbarge Mooring Dwelling Projection
+
+id: `native-rmg-runtime-lizard-reedbarge-mooring-dwelling-projection-10184`
+
+Status: completed.
+
+Implementation boundary:
+- add exactly type-17 subtype 30/source row 208/`AVGlzrd0.def` to the proxy catalog as existing `object_reedbarge_mooring`, deriving `site_reedbarge_mooring` through the unchanged bridge;
+- preserve native payload, generation, object order/placement/masks, all completed Creature Generator mappings, and all unrelated live/save authority; keep the other six unmapped Extra-Large type-17 placements raw.
+
+Completion criteria:
+- Extra-Large seed 77 remains `33610c0a`/365,777 bytes/2,779 objects and exact ordered subtype authority `[30,29,15,15,6,45,68,26,40,45,68,50]`; subtype 30 becomes Reedbarge Mooring at `native_h3maped_33610c0a_object_1932`, primary 90,81/body 89,81+90,81 on level 0, subtypes 29/6/26/40/50 remain Charcoal/Prism Outrider/Cliffhawk/Obsidian/Kite, and the other six rows stay raw;
+- live claims total exactly 500 gold and the original Reedbarge, Charcoal, Prism Outrider, Cliffhawk, Obsidian, and Kite recruit contracts, persist control, reject repeats, round-trip save v9, and preserve unrelated/package authority;
+- Small, Medium, ordinal-95, dwelling/AI/content/core, static/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no other subtype/Creature Bank, generation/private-state/parity, new/imported content, rebalance, broad proxy policy, packaged interaction, certification, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- pushed HEAD `e3ad23be` keeps Extra-Large subtype 30 raw at `native_h3maped_33610c0a_object_1932`, primary 90,81/body 89,81+90,81 on level 0; recovered catalog uniquely identifies source row 208/`AVGlzrd0.def`;
+- existing `object_reedbarge_mooring` derives live `site_reedbarge_mooring`, a 2x1 mire/coast blocking-visitable persistent dwelling whose mixed polefighter/ranged crew preserves the recovered marsh-ranged role without imported content, special artifact behavior, or footprint expansion.
+
+Completion evidence:
+- `/tmp/heroes-reedbarge-focused.Z0mWpO` is natural rc0 with one `ok:true` report and proves payload `33610c0a`/365,777 bytes/2,779 objects, exact ordered subtypes `[30,29,15,15,6,45,68,26,40,45,68,50]`, the other six rows raw, exact subtype-30 Reedbarge/subtype-29 Charcoal/subtype-6 Prism Outrider/subtype-26 Cliffhawk/subtype-40 Obsidian/subtype-50 Kite projections, 500 gold, exact recruits, persistent control, repeat rejection, save-v9 round trip, and unchanged unrelated/package authority;
+- `/tmp/heroes-reedbarge-compat.l8mSXX` records natural rc0 for dwelling reward execution, AI site control, faction content breadth, and core systems, with no unexpected diagnostics;
+- repository validation, Python compilation, JSON, scoped/global diff checks, and exact/generic editor parses pass; official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup reports are `ok:true`. These are export/startup claims only, not packaged Reedbarge interaction or native parity.
 
 ## Completed Slice: Native RMG Centaur Prism Outrider Dwelling Projection
 
