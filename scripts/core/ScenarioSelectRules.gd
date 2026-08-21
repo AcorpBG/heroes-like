@@ -1281,29 +1281,29 @@ static func _maps_folder_package_stems(dir: DirAccess) -> Dictionary:
 static func _maps_folder_package_record(service: Variant, package_dir: String, package_stem: String, options: Dictionary = {}) -> Dictionary:
 	var map_path := "%s/%s.amap" % [package_dir, package_stem]
 	var scenario_path := "%s/%s.ascenario" % [package_dir, package_stem]
-	var map_inspect: Dictionary = service.inspect_package(map_path)
-	var scenario_inspect: Dictionary = service.inspect_package(scenario_path)
-	if not bool(map_inspect.get("ok", false)) or not bool(scenario_inspect.get("ok", false)):
-		return {
-			"ok": false,
-			"package_stem": package_stem,
-			"map_path": map_path,
-			"scenario_path": scenario_path,
-			"error_code": "package_inspect_failed",
-			"map_inspect": _public_package_load_result(map_inspect),
-			"scenario_inspect": _public_package_load_result(scenario_inspect),
-		}
-	if bool(map_inspect.get("legacy_json_scenario_record", true)) or bool(scenario_inspect.get("legacy_json_scenario_record", true)):
-		return {
-			"ok": false,
-			"package_stem": package_stem,
-			"map_path": map_path,
-			"scenario_path": scenario_path,
-			"error_code": "legacy_json_package_rejected",
-		}
 	var map_load: Dictionary = service.load_map_package(map_path)
 	var scenario_load: Dictionary = service.load_scenario_package(scenario_path)
 	if not bool(map_load.get("ok", false)) or not bool(scenario_load.get("ok", false)):
+		var map_inspect: Dictionary = service.inspect_package(map_path)
+		var scenario_inspect: Dictionary = service.inspect_package(scenario_path)
+		if not bool(map_inspect.get("ok", false)) or not bool(scenario_inspect.get("ok", false)):
+			return {
+				"ok": false,
+				"package_stem": package_stem,
+				"map_path": map_path,
+				"scenario_path": scenario_path,
+				"error_code": "package_inspect_failed",
+				"map_inspect": _public_package_load_result(map_inspect),
+				"scenario_inspect": _public_package_load_result(scenario_inspect),
+			}
+		if bool(map_inspect.get("legacy_json_scenario_record", true)) or bool(scenario_inspect.get("legacy_json_scenario_record", true)):
+			return {
+				"ok": false,
+				"package_stem": package_stem,
+				"map_path": map_path,
+				"scenario_path": scenario_path,
+				"error_code": "legacy_json_package_rejected",
+			}
 		return {
 			"ok": false,
 			"package_stem": package_stem,
@@ -1312,6 +1312,16 @@ static func _maps_folder_package_record(service: Variant, package_dir: String, p
 			"error_code": "package_load_failed",
 			"map_load": _public_package_load_result(map_load),
 			"scenario_load": _public_package_load_result(scenario_load),
+		}
+	var map_package: Dictionary = map_load.get("package", {}) if map_load.get("package", {}) is Dictionary else {}
+	var scenario_package: Dictionary = scenario_load.get("package", {}) if scenario_load.get("package", {}) is Dictionary else {}
+	if bool(map_package.get("legacy_json_scenario_record", true)) or bool(scenario_package.get("legacy_json_scenario_record", true)):
+		return {
+			"ok": false,
+			"package_stem": package_stem,
+			"map_path": map_path,
+			"scenario_path": scenario_path,
+			"error_code": "legacy_json_package_rejected",
 		}
 	var map_document: Variant = map_load.get("map_document", null)
 	var scenario_document: Variant = scenario_load.get("scenario_document", null)
