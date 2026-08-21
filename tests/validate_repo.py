@@ -17736,7 +17736,7 @@ def validate_main_menu_credits_third_party_notices(errors: list[str]) -> None:
     for required_token in (
         "UiAccessibility.describe_control(",
         '"Credits and third-party notices"',
-        '"Scrollable credits and software license notices from this running build."',
+        '"Scrollable credits and software license notices from this running build. Use Page Up and Page Down or the controller shoulder buttons to scroll."',
         "FrontierVisualKit.configure_focus_cycle([_credits_notices_body, _credits_notices_close_button])",
     ):
         ensure(required_token in configure_body, errors, f"Credits modal configuration is missing accessibility/focus token: {required_token}")
@@ -17750,7 +17750,7 @@ def validate_main_menu_credits_third_party_notices(errors: list[str]) -> None:
     )
     ensure('_credits_notices_return_focus = _open_credits_notices_button' in open_body, errors, "Credits modal must capture its secondary Guide return focus")
     ensure('_credits_notices_return_focus.call_deferred("grab_focus")' in close_body, errors, "Credits modal must restore focus to its Guide command")
-    for required_token in ('event.is_action_pressed("ui_cancel")', 'event.keycode == KEY_PAGEDOWN', 'event.keycode == KEY_PAGEUP', '_scroll_credits_notices(1)', '_scroll_credits_notices(-1)'):
+    for required_token in ('event.is_action_pressed("ui_cancel")', 'event.keycode == KEY_PAGEDOWN', 'event.keycode == KEY_PAGEUP', 'event.button_index == JOY_BUTTON_RIGHT_SHOULDER', 'event.button_index == JOY_BUTTON_LEFT_SHOULDER', '_scroll_credits_notices(1)', '_scroll_credits_notices(-1)'):
         ensure(required_token in input_body, errors, f"Credits modal must retain physical close/page ownership: {required_token}")
     for required_token in ("get_v_scroll_bar()", "scroll_bar.page", "scroll_bar.max_value", "clampi("):
         ensure(required_token in scroll_body, errors, f"Credits modal page scrolling is missing bounded live-scroll token: {required_token}")
@@ -17791,8 +17791,12 @@ def validate_main_menu_credits_third_party_notices(errors: list[str]) -> None:
         'await _press_key(KEY_ENTER)',
         'await _press_joypad(JOY_BUTTON_A)',
         'await _press_key(KEY_TAB)',
+        'await _press_joypad(JOY_BUTTON_DPAD_UP)',
         'if not body.has_focus():',
         'await _press_key(KEY_PAGEDOWN)',
+        'await _press_key(KEY_PAGEUP)',
+        'await _press_joypad(JOY_BUTTON_RIGHT_SHOULDER)',
+        'await _press_joypad(JOY_BUTTON_LEFT_SHOULDER)',
         'await _press_key(KEY_ESCAPE)',
         'await _press_joypad(JOY_BUTTON_B)',
         'or not command.has_focus()',

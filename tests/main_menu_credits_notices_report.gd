@@ -119,15 +119,29 @@ func _run_viewport_case(viewport_size: Vector2i) -> Dictionary:
 			or not close_button.has_focus():
 		_fail("Credits modal content, containment, read-only state, semantics, or initial focus failed at %s: %s" % [viewport_size, JSON.stringify(open_snapshot)])
 		return {}
-	await _press_key(KEY_TAB)
+	if viewport_size.x == 1280:
+		await _press_key(KEY_TAB)
+	else:
+		await _press_joypad(JOY_BUTTON_DPAD_UP)
 	if not body.has_focus():
-		_fail("Credits notice focus cycle did not move from Close to the scrollable body at %s." % viewport_size)
+		_fail("Credits notice keyboard/controller focus cycle did not move from Close to the scrollable body at %s." % viewport_size)
 		return {}
-	await _press_key(KEY_PAGEDOWN)
+	if viewport_size.x == 1280:
+		await _press_key(KEY_PAGEDOWN)
+	else:
+		await _press_joypad(JOY_BUTTON_RIGHT_SHOULDER)
 	await _frames(2)
 	var scroll_after := body.scroll_vertical
 	if body.get_v_scroll_bar().max_value <= body.get_v_scroll_bar().page or scroll_after <= 0:
-		_fail("Credits notice body was not scrollable through keyboard input at %s: max=%s page=%s scroll=%s" % [viewport_size, body.get_v_scroll_bar().max_value, body.get_v_scroll_bar().page, scroll_after])
+		_fail("Credits notice body was not scrollable through keyboard/controller page input at %s: max=%s page=%s scroll=%s" % [viewport_size, body.get_v_scroll_bar().max_value, body.get_v_scroll_bar().page, scroll_after])
+		return {}
+	if viewport_size.x == 1280:
+		await _press_key(KEY_PAGEUP)
+	else:
+		await _press_joypad(JOY_BUTTON_LEFT_SHOULDER)
+	await _frames(2)
+	if body.scroll_vertical >= scroll_after:
+		_fail("Credits notice keyboard/controller page-up did not reverse page-down at %s: before=%s after=%s" % [viewport_size, scroll_after, body.scroll_vertical])
 		return {}
 	if viewport_size.x == 1280:
 		await _press_key(KEY_ESCAPE)
@@ -146,6 +160,7 @@ func _run_viewport_case(viewport_size: Vector2i) -> Dictionary:
 		"dialog_size": {"width": dialog.size.x, "height": dialog.size.y},
 		"notice_character_count": body.text.length(),
 		"scroll_after_page_down": scroll_after,
+		"scroll_after_page_up": body.scroll_vertical,
 		"keyboard_or_controller_close": true,
 		"focus_return_exact": true,
 		"authority_exact": true,

@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Credits & Notices is implemented as a secondary Guide-owned modal using exact runtime Godot Engine notices plus the exported exact godot-cpp MIT notice. Focused 1280x720/1920x1080 interaction, broad menu/navigation/layout/accessibility/core compatibility, payload hygiene, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. No project-license choice, packaged interaction, certification, signing/publication, whole-game, or release-readiness claim.",
+  "currentNotes": "Credits & Notices controller paging is implemented: D-pad Up enters the body, shoulder buttons page down/up, and B closes with exact Guide focus return. Focused keyboard/controller, Main Menu navigation, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass. Packaged interaction and native controller hardware certification remain unclaimed.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-main-menu-credits-third-party-notices-10184",
-  "currentSliceId": "ux-main-menu-credits-third-party-notices-10184",
-  "currentSliceNotes": "Implemented a player-readable Credits & Notices surface in the existing Guide secondary board, with runtime Godot notices, an exported exact godot-cpp MIT notice, bounded paging/focus/accessibility behavior, and unchanged session/campaign/save/settings/input-map/router authority. Focused, compatibility, payload, static/editor, and bounded Linux/Windows export-startup gates pass.",
+  "currentSlice": "ux-main-menu-credits-controller-paging-10184",
+  "currentSliceId": "ux-main-menu-credits-controller-paging-10184",
+  "currentSliceNotes": "Implemented controller-only focus entry and bounded shoulder-button page navigation for the existing Credits & Notices modal while preserving keyboard paging, content, layout, focus return, and session/campaign/save/settings/input-map/router authority.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Main Menu Credits And Third Party Notices",
-  "currentSliceUpdatedAt": "2026-08-21T18:48:59Z",
+  "currentSliceTitle": "Main Menu Credits Controller Paging",
+  "currentSliceUpdatedAt": "2026-08-21T19:26:11Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -91766,6 +91766,36 @@
       ],
       "notes": "Completed source-backed player notice access. The existing Guide board exposes the bounded Credits & Notices modal; Engine license/component text is runtime-sourced, the exported godot-cpp notice exactly matches the vendored MIT notice, Page Up/Page Down and keyboard/controller modal ownership preserve focus, and the focused 1280x720/1920x1080 report leaves session/campaign/settings/save/input-map/router authority exact. Main Menu keyboard navigation, player-comprehension and keyboard layouts, screen-reader semantics, core systems, release payload hygiene, validate_repo, py_compile, diff-check, exact/generic editor parses, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Platform claims are export/startup only; no packaged Credits interaction, project-license decision, legal/accessibility/controller/native-hardware certification, signing/publication, whole-game, or release-readiness claim.",
       "completedAt": "2026-08-21T18:48:59Z"
+    },
+    {
+      "id": "ux-main-menu-credits-controller-paging-10184",
+      "title": "Main Menu Credits Controller Paging",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-6-production-alpha-layer",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-21T18:58:11Z",
+      "updatedAt": "2026-08-21T19:26:11Z",
+      "implementationTargets": [
+        "scenes/menus/MainMenu.gd",
+        "tests/main_menu_credits_notices_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "A controller-only path enters the notice body from initial Close focus, pages the live scroll range in both directions, closes with physical B, and restores the secondary Guide command focus at 1280x720 and 1920x1080.",
+        "Keyboard Enter, Tab, Page Up/Page Down, Escape, body semantics, read-only state, modal containment, and focus return remain exact.",
+        "The existing runtime Godot and exact exported godot-cpp notices remain unchanged, and session, campaign, save, settings, InputMap, and AppRouter authority remain exact.",
+        "Focused, Main Menu keyboard/navigation, accessibility, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass."
+      ],
+      "nonGoals": [
+        "No notice content, project license, Guide topic, first-view composition, save/settings/input schema, gameplay, strategic AI, balance, or Native RMG change.",
+        "No custom controller mapping, input-remap policy, direct test scrolling, synthetic callback invocation, delay/timer workaround, or platform-specific input branch.",
+        "No packaged Credits interaction, native controller hardware, AT-SPI/UIA, legal certification, signing/publication, whole-game, or release-readiness claim."
+      ],
+      "notes": "Completed the direct current-head controller defect without changing notice content or input mappings. The real modal handles physical right/left shoulder buttons as bounded page down/up, keeps physical cancel ownership, and publishes controller paging guidance through its authored accessibility description and Guide tooltip. The focused 1280x720 keyboard path pages 16->0; the 1920x1080 controller-only path opens with A, enters the body with D-pad Up, pages 17->0 with shoulder buttons, closes with B, restores Guide focus, and preserves exact session/campaign/save/settings/InputMap/AppRouter authority. Main Menu keyboard navigation, screen-reader semantics, core systems, validate_repo, py_compile, diff-check, exact/generic editor parses, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Claims remain bounded: no packaged Credits interaction, native controller hardware, AT-SPI/UIA, certification, signing/publication, whole-game, or release readiness.",
+      "completedAt": "2026-08-21T19:26:11Z"
     }
   ],
   "project": "heroes-like",
