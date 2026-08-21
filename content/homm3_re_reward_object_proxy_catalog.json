@@ -622,6 +622,23 @@
       "native_proxy_object_id": "object_roadward_lodge"
     },
     {
+      "id": "dwelling_creature_generator_pegasus_kite_signal_eyrie_proxy",
+      "generated_kind": "neutral_dwelling",
+      "source_kind": "homm3_re_map_object_type",
+      "source_catalog_kind": "objects_txt_type_row",
+      "homm3_re_object_type_id": 17,
+      "homm3_re_object_type_name": "Creature Generator 1",
+      "homm3_re_object_subtype": 50,
+      "homm3_re_object_source_row": 168,
+      "homm3_re_object_def_ref": "AVGpega0.def",
+      "homm3_re_reward_table_bucket": "creature_generator_dwelling",
+      "semantic_category": "dwelling",
+      "proxy_bucket": "neutral_dwelling",
+      "native_proxy_family": "neutral_dwelling",
+      "native_proxy_category": "dwelling",
+      "native_proxy_object_id": "object_kite_signal_eyrie"
+    },
+    {
       "id": "dwelling_random_dwelling_proxy",
       "generated_kind": "neutral_dwelling",
       "source_kind": "homm3_re_map_object_type",
