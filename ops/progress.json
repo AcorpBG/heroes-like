@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved source-backed release-readiness implementation slice; the exact recovered same-run audit now identifies runtime guard-control projection as a separate product gap."
+    "Select the next tracker-approved source-backed release-readiness implementation slice; the runtime guard-control projection is completed and exact same-run topology now matches."
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed exact H3M lower-right anchor and supported-family record-boundary parsing. The same-run audit now proves exact 1326-object identity/category parity and retains the separate runtime guard-control projection gap fail-closed.",
+  "currentNotes": "Completed source-backed runtime guard-control projection. Exact recovered action masks now drive live control/engagement surfaces while generation and recovered payload authority remain unchanged.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "native-rmg-h3m-off-map-anchor-stream-alignment-10184",
-  "currentSliceId": "native-rmg-h3m-off-map-anchor-stream-alignment-10184",
-  "currentSliceNotes": "Completed tooling behavior: exact 8x6 lower-right anchors, recovered conservative supported-family minimum record boundaries, ordered identity hashing, and artifact reward classification now keep the recovered same-run 1326-object stream exact. Genuine runtime guard-control topology remains red and separate.",
+  "currentSlice": "native-rmg-runtime-guard-control-mask-projection-10184",
+  "currentSliceId": "native-rmg-runtime-guard-control-mask-projection-10184",
+  "currentSliceNotes": "Completed live runtime behavior: 41 guards expose 369 ordered per-guard entries whose exact union is 365 tiles, same-run H3MapEd/runtime audit is fully aligned, and real movement into a unique non-body control tile starts the owning battle while authoritative clearance removes it.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "native rmg h3m off map anchor stream alignment 10184",
-  "currentSliceUpdatedAt": "2026-08-21T08:11:56Z",
+  "currentSliceTitle": "native rmg runtime guard control mask projection 10184",
+  "currentSliceUpdatedAt": "2026-08-21T09:05:47Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -91126,6 +91126,68 @@
       "notes": "Completed production tooling behavior. Exact 8x6 anchor bounds and conservative recovered supported-family minimum record sizes prevent both off-map rejection and embedded zero-header resynchronization. The focused synthetic stream passes last-valid/first-invalid anchor, invalid level/template/reserved bytes, a false header inside a 48-byte town body, ordered identity, and exact count. All 18 owner H3Ms still parse. The recovered same-run Medium payload parses 1326/1326 objects with exact runtime identity SHA 6b9b02ac69667c465eebca154a18e5b7dbab80473337cc82145ded02bf51d7a8, exact category counts decoration753/guard41/object282/reward243/town7, exact road/object/terrain comparisons, and intentionally remains fail-closed on the separately classified runtime guard-control gap (owner365 control tiles/1 guarded reachable pair; runtime41/4, delta +3). Generation, recovered private state, runtime bytes, content, and parity policy are unchanged.",
       "remainingWork": "Select the next tracker-approved source-backed slice. A separate runtime implementation candidate must project exact H3M guard engagement/control tiles without changing object placement or generation.",
       "blockedReason": null
+    },
+    {
+      "id": "native-rmg-runtime-guard-control-mask-projection-10184",
+      "title": "native rmg runtime guard control mask projection 10184",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Project each generated guard's recovered action-mask anchors into the exact deterministic runtime control and engagement surface used by live Overworld routing, without changing Native RMG generation or recovered H3MapEd payload authority.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
+        "bin/libaurelion_map_persistence.linux.template_release.x86_64.so",
+        "bin/aurelion_map_persistence.windows.template_debug.x86_64.dll",
+        "bin/aurelion_map_persistence.windows.template_release.x86_64.dll",
+        "tests/native_rmg_end_to_end_runtime_boundary_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/native_rmg_end_to_end_runtime_boundary_report.tscn",
+        "tests/native_rmg_small_h3maped_guard_engagement_report.tscn",
+        "tests/native_rmg_small_h3maped_guarded_victory_playtest_report.tscn",
+        "tools/rmg_fast_audit.py --h3m <recovered same-run payload> --amap <same-run runtime package> --compare",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "Every generated runtime guard derives one ordered, clipped, duplicate-free 3x3 control surface from its exact recovered action tiles, with the primary tile as a fail-closed fallback only when no action tile exists",
+        "Runtime packages publish identical package_guard_control_zone_tiles and package_guard_engagement_tiles plus exact counts and established policy identities, and live Overworld guard routing consumes those fields without fallback",
+        "The recovered same-run Medium case retains the exact 79333-byte H3MapEd payload, 1326 ordered object identities, 41 guards, and identity SHA 6b9b02ac69667c465eebca154a18e5b7dbab80473337cc82145ded02bf51d7a8 while its runtime package exposes the exact 365-tile owner control union and zero guarded-route reachability delta",
+        "Focused runtime proves entering a projected guard control tile routes the existing guard encounter and clearing it removes control while preserving victory, session, save, and package authority",
+        "Linux and Windows debug/release native libraries, repository validation, focused compatibility, and bounded official Linux/Windows export-startup gates pass"
+      ],
+      "nonGoals": [
+        "changing recovered H3MapEd private state, generation rules, action masks, object placement/order/count, roads, terrain, rewards, guard strength, balance, density, package schema, or audit thresholds",
+        "inventing town-clearance exclusions, tuning from final-map deltas, broadening workflow support, or claiming broad Native RMG parity, packaged gameplay interaction, hardware certification, signing, publication, whole-game, or release readiness"
+      ],
+      "baseline": {
+        "head": "134432a21d3fd094f1de1a372ce97026e54c1101",
+        "recoveredPayload": ".artifacts/rmg_recovery/medium_seed10_weak_complete_same_run_full_payload_20260821a/full_final_payload.bin",
+        "runtimePackage": ".artifacts/rmg_recovery/medium_seed10_weak_complete_same_run_full_payload_20260821a/runtime_package_probe/medium_seed10_hc1_co1_weak.amap",
+        "payloadByteCount": 79333,
+        "declaredObjectCount": 1326,
+        "guardObjectCount": 41,
+        "h3mGuardControlledTileCount": 365,
+        "runtimeGuardControlledTileCount": 41,
+        "h3mGuardedReachableTownPairCount": 1,
+        "runtimeGuardedReachableTownPairCount": 4,
+        "guardedRouteReachablePairDelta": 3,
+        "orderedObjectIdentitySha256": "6b9b02ac69667c465eebca154a18e5b7dbab80473337cc82145ded02bf51d7a8"
+      },
+      "createdAt": "2026-08-21T08:16:53Z",
+      "startedAt": "2026-08-21T08:16:53Z",
+      "updatedAt": "2026-08-21T09:05:47Z",
+      "completedAt": "2026-08-21T09:05:47Z",
+      "notes": "Completed live runtime behavior. MapPackageService expands each exact recovered guard action tile in deterministic dy/dx row-major order, clips to the projection, deduplicates by exact flattened coordinate, and publishes identical established control and engagement fields while retaining body blocking. The focused 24-workflow owner passes with Medium payload79333/object1326/guard41, exact per-row projections totaling369 entries and union365, plus real try_move from 43,31 into unique non-body control tile44,30 routing the exact guard battle and authoritative resolution removing that control. The direct recovered H3M/runtime audit passes with identity SHA6b9b02ac69667c465eebca154a18e5b7dbab80473337cc82145ded02bf51d7a8, exact category counts, owner/runtime guard union365, guarded reachable town pairs1, and zero guarded-route/object/road/terrain deltas. Core, repository validation, Python compilation, diff checks, four Linux/Windows native libraries, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. The older Small seed1 guard-route and guarded-victory reports remain separately classified pre-existing fixture reds because their body/terrain-only BFS cannot reach its fixed hostile town before or after this field-only change; they do not exercise or contradict the focused live projection proof. Packaged guard interaction, hardware, broad Native RMG parity, signing/publication, whole-game, and release readiness are unclaimed.",
+      "remainingWork": "Select the next tracker-approved source-backed slice. Native RMG retains broader recovered private-state/parity and platform certification gaps outside this exact runtime projection.",
+      "blockedReason": null
     }
   ],
   "project": "heroes-like",
@@ -91136,7 +91198,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain. The game is not release-ready.",
-  "remainingWork": "Select the next tracker-approved source-backed release-readiness implementation slice. Native RMG still requires recovered source/private-state attribution rather than final-map tuning.",
+  "remainingWork": "Select the next tracker-approved source-backed release-readiness implementation slice. Native RMG still retains broader recovered source/private-state parity gaps outside the completed runtime guard projection.",
   "reportOnlyEvidence": [
     {
       "entries": [

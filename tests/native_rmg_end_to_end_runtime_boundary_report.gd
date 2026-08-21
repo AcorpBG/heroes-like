@@ -29,6 +29,14 @@ func _run() -> void:
 	if not bool(medium.get("ok", false)):
 		_fail("Medium public generation boundary failed: %s" % JSON.stringify(medium))
 		return
+	var medium_guard_projection := _validate_guard_control_projection(medium.get("generated", {}))
+	if not bool(medium_guard_projection.get("ok", false)):
+		_fail("Medium guard control projection failed: %s" % JSON.stringify(medium_guard_projection))
+		return
+	var medium_guard_live_behavior := _validate_guard_live_behavior(service, medium.get("generated", {}))
+	if not bool(medium_guard_live_behavior.get("ok", false)):
+		_fail("Medium guard control live behavior failed: %s" % JSON.stringify(medium_guard_live_behavior))
+		return
 	var ordinal_95 := _generate_and_validate(
 		service,
 		_config("medium", 72, 1, "land", "165429308", "weak", 4),
@@ -81,6 +89,8 @@ func _run() -> void:
 		"workflow_shape_count": 24,
 		"zero_road_projection": zero_road_projection,
 		"medium": medium.get("summary", {}),
+		"medium_guard_projection": medium_guard_projection,
+		"medium_guard_live_behavior": medium_guard_live_behavior,
 		"medium_ordinal_95": ordinal_95.get("summary", {}),
 		"medium_ordinal_95_town_anchor": {"x": 31, "y": 10},
 		"medium_ordinal_95_runtime_start": ordinal_95_runtime_start,
@@ -91,6 +101,197 @@ func _run() -> void:
 		"startup": startup,
 	})])
 	get_tree().quit(0)
+
+func _validate_guard_control_projection(generated: Dictionary) -> Dictionary:
+	var map_document: Variant = generated.get("map_document", null)
+	if map_document == null:
+		return {"ok": false, "reason": "missing_map_document"}
+	var width := int(map_document.get_width())
+	var height := int(map_document.get_height())
+	var level_count := int(map_document.get_level_count())
+	var guard_count := 0
+	var guard_control_tile_count := 0
+	var union_keys := {}
+	var exact_rows := true
+	for object_index in range(int(map_document.get_object_count())):
+		var object: Dictionary = map_document.get_object_by_index(object_index)
+		if String(object.get("kind", "")) != "guard":
+			continue
+		guard_count += 1
+		var origins: Array = object.get("package_visit_tiles", []) if object.get("package_visit_tiles", []) is Array else []
+		if origins.is_empty():
+			var primary: Dictionary = object.get("primary_tile", {}) if object.get("primary_tile", {}) is Dictionary else {}
+			if not primary.is_empty():
+				origins = [primary]
+		var expected := []
+		var expected_keys := {}
+		for origin_value in origins:
+			if not (origin_value is Dictionary):
+				continue
+			var origin: Dictionary = origin_value
+			for dy in range(-1, 2):
+				for dx in range(-1, 2):
+					var x := int(origin.get("x", -1)) + dx
+					var y := int(origin.get("y", -1)) + dy
+					var level := int(origin.get("level", -1))
+					if x < 0 or y < 0 or level < 0 or x >= width or y >= height or level >= level_count:
+						continue
+					var key := "%d,%d,%d" % [x, y, level]
+					if expected_keys.has(key):
+						continue
+					expected_keys[key] = true
+					expected.append({"x": x, "y": y, "level": level})
+					union_keys[key] = true
+		var control: Array = object.get("package_guard_control_zone_tiles", []) if object.get("package_guard_control_zone_tiles", []) is Array else []
+		var engagement: Array = object.get("package_guard_engagement_tiles", []) if object.get("package_guard_engagement_tiles", []) is Array else []
+		guard_control_tile_count += control.size()
+		if control != expected \
+				or engagement != expected \
+				or int(object.get("package_guard_control_zone_tile_count", -1)) != expected.size() \
+				or int(object.get("package_guard_engagement_tile_count", -1)) != expected.size() \
+				or String(object.get("package_guard_control_zone_pathing_policy", "")) != "h3m_guard_control_forces_engagement_guard_body_remains_blocking_surface" \
+				or String(object.get("package_guard_engagement_policy", "")) != "h3m_guard_control_forces_engagement":
+			exact_rows = false
+	return {
+		"ok": guard_count == 41 \
+				and guard_control_tile_count == 369 \
+				and union_keys.size() == 365 \
+				and exact_rows,
+		"guard_count": guard_count,
+		"guard_control_tile_count": guard_control_tile_count,
+		"guard_control_union_tile_count": union_keys.size(),
+		"exact_rows": exact_rows,
+		"payload_bytes": generated.get("final_payload_byte_count", -1),
+		"object_count": generated.get("runtime_object_count", -1),
+		"payload_hash": generated.get("final_payload_fnv1a32", ""),
+	}
+
+func _validate_guard_live_behavior(service: Variant, generated: Dictionary) -> Dictionary:
+	var map_document: Variant = generated.get("map_document", null)
+	if map_document == null:
+		return {"ok": false, "reason": "missing_map_document"}
+	var control_owners := {}
+	var guards := []
+	for object_index in range(int(map_document.get_object_count())):
+		var object: Dictionary = map_document.get_object_by_index(object_index)
+		if String(object.get("kind", "")) != "guard":
+			continue
+		guards.append(object)
+		var tiles: Array = object.get("package_guard_engagement_tiles", []) if object.get("package_guard_engagement_tiles", []) is Array else []
+		for tile_value in tiles:
+			if not (tile_value is Dictionary):
+				continue
+			var tile: Dictionary = tile_value
+			var key := "%d,%d,%d" % [int(tile.get("x", -1)), int(tile.get("y", -1)), int(tile.get("level", -1))]
+			control_owners[key] = int(control_owners.get(key, 0)) + 1
+	var selected_guard := {}
+	var selected_tile := {}
+	for guard_value in guards:
+		if not (guard_value is Dictionary):
+			continue
+		var guard: Dictionary = guard_value
+		var primary: Dictionary = guard.get("primary_tile", {}) if guard.get("primary_tile", {}) is Dictionary else {}
+		var tiles: Array = guard.get("package_guard_engagement_tiles", []) if guard.get("package_guard_engagement_tiles", []) is Array else []
+		for tile_value in tiles:
+			if not (tile_value is Dictionary):
+				continue
+			var tile: Dictionary = tile_value
+			var key := "%d,%d,%d" % [int(tile.get("x", -1)), int(tile.get("y", -1)), int(tile.get("level", -1))]
+			if int(control_owners.get(key, 0)) == 1 and tile != primary:
+				selected_guard = guard
+				selected_tile = tile
+				break
+		if not selected_guard.is_empty():
+			break
+	if selected_guard.is_empty() or selected_tile.is_empty():
+		return {"ok": false, "reason": "missing_unique_non_body_guard_control_tile"}
+	var adoption: Dictionary = service.convert_generated_payload(generated, {"feature_gate": REPORT_ID})
+	var action_session = NativeRandomMapPackageSessionBridgeScript.build_session_from_adoption(adoption)
+	var clear_session = NativeRandomMapPackageSessionBridgeScript.build_session_from_adoption(adoption)
+	if action_session == null or clear_session == null:
+		return {"ok": false, "reason": "session_adoption_failed"}
+	_set_fixture_hero_position(action_session, selected_tile)
+	var context_before: Dictionary = OverworldRulesScript.get_active_context(action_session)
+	var action_ids := []
+	for action_value in OverworldRulesScript.get_context_actions(action_session):
+		if action_value is Dictionary:
+			action_ids.append(String(action_value.get("id", "")))
+	var move_from := {}
+	var move_delta := Vector2i.ZERO
+	var control_position := Vector2i(int(selected_tile.get("x", -1)), int(selected_tile.get("y", -1)))
+	for dy in range(-1, 2):
+		for dx in range(-1, 2):
+			if dx == 0 and dy == 0:
+				continue
+			var delta := Vector2i(dx, dy)
+			var from := control_position - delta
+			if from.x < 0 or from.y < 0 or from.x >= int(map_document.get_width()) or from.y >= int(map_document.get_height()):
+				continue
+			_set_fixture_hero_position(action_session, {"x": from.x, "y": from.y})
+			if OverworldRulesScript.tile_is_blocked(action_session, from.x, from.y) \
+					or OverworldRulesScript.tile_has_route_interaction(action_session, from.x, from.y) \
+					or OverworldRulesScript.tile_step_cuts_blocked_corner(action_session, from, control_position):
+				continue
+			move_from = {"x": from.x, "y": from.y}
+			move_delta = delta
+			break
+		if not move_from.is_empty():
+			break
+	var battle_start := {}
+	if not move_from.is_empty():
+		_set_fixture_hero_position(action_session, move_from)
+		battle_start = OverworldRulesScript.try_move(action_session, move_delta.x, move_delta.y)
+	_set_fixture_hero_position(clear_session, selected_tile)
+	var resolved: Array = clear_session.overworld.get("resolved_encounters", []) if clear_session.overworld.get("resolved_encounters", []) is Array else []
+	resolved.append(String(selected_guard.get("placement_id", "")))
+	clear_session.overworld["resolved_encounters"] = resolved
+	var context_after: Dictionary = OverworldRulesScript.get_active_context(clear_session)
+	var guard_after: Dictionary = OverworldRulesScript.guard_engagement_encounter_at_tile(
+		clear_session,
+		int(selected_tile.get("x", -1)),
+		int(selected_tile.get("y", -1))
+	)
+	var ok: bool = bool(adoption.get("ok", false)) \
+			and String(context_before.get("type", "")) == "encounter" \
+			and String(context_before.get("encounter", {}).get("placement_id", "")) == String(selected_guard.get("placement_id", "")) \
+			and action_ids.has("enter_battle") \
+			and not move_from.is_empty() \
+			and bool(battle_start.get("ok", false)) \
+			and String(battle_start.get("route", "")) == "battle" \
+			and not action_session.battle.is_empty() \
+			and String(context_after.get("type", "")) != "encounter" \
+			and guard_after.is_empty()
+	return {
+		"ok": ok,
+		"placement_id": selected_guard.get("placement_id", ""),
+		"primary_tile": selected_guard.get("primary_tile", {}),
+		"control_tile": selected_tile,
+		"control_tile_is_non_body": selected_tile != selected_guard.get("primary_tile", {}),
+		"control_tile_owner_count": control_owners.get("%d,%d,%d" % [int(selected_tile.get("x", -1)), int(selected_tile.get("y", -1)), int(selected_tile.get("level", -1))], 0),
+		"context_before": context_before.get("type", ""),
+		"action_ids": action_ids,
+		"move_from": move_from,
+		"move_delta": {"x": move_delta.x, "y": move_delta.y},
+		"battle_started": not action_session.battle.is_empty(),
+		"battle_route": battle_start.get("route", ""),
+		"battle_message": battle_start.get("message", ""),
+		"context_after_clear": context_after.get("type", ""),
+		"guard_after_clear_empty": guard_after.is_empty(),
+	}
+
+func _set_fixture_hero_position(session: Variant, tile: Dictionary) -> void:
+	var position := {"x": int(tile.get("x", -1)), "y": int(tile.get("y", -1))}
+	session.overworld["hero_position"] = position.duplicate(true)
+	var active_hero: Dictionary = session.overworld.get("hero", {}) if session.overworld.get("hero", {}) is Dictionary else {}
+	active_hero["position"] = position.duplicate(true)
+	session.overworld["hero"] = active_hero
+	var heroes: Array = session.overworld.get("player_heroes", []) if session.overworld.get("player_heroes", []) is Array else []
+	for index in range(heroes.size()):
+		if heroes[index] is Dictionary and bool(heroes[index].get("is_active", false)):
+			var hero: Dictionary = heroes[index]
+			hero["position"] = position.duplicate(true)
+			heroes[index] = hero
+	session.overworld["player_heroes"] = heroes
 
 func _validate_zero_road_projection(service: Variant) -> Dictionary:
 	var config := ScenarioSelectRulesScript.build_random_map_player_config(
