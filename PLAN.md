@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `native-rmg-runtime-harpy-cliffhawk-roost-dwelling-projection-10184`. Fixed Extra-Large seed 77 remains payload `33610c0a`/365,777 bytes/2,779 objects with exact 12-row type-17 order, placement, and masks; subtype 26 now uses the original Cliffhawk Roost contract, subtype 50 remains Kite Signal Eyrie, and the other 10 rows stay raw. Their live claims grant exactly 150 gold plus the original recruits, persist control, reject repeats, round-trip save v9, and preserve unrelated authority. Focused, compatibility, static/editor, and bounded Linux/Windows export-startup gates pass. Other subtypes, native parity, packaged interaction, certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
+  id: `native-rmg-runtime-harpy-cliffhawk-roost-dwelling-projection-10184`
 - Completed implementation slice: `native-rmg-runtime-pegasus-kite-signal-eyrie-dwelling-projection-10184`. Fixed Extra-Large seed 77 remains payload `33610c0a`/365,777 bytes/2,779 objects with exact 12-row type-17 order, placement, and masks; subtype 50 alone now uses the original Kite Signal Eyrie contract while the other 11 rows stay raw. Its live claim grants exactly 75 gold, 2 Kitehook Runners, and 1 Ridgeflare Shot, persists control, rejects repeats, round-trips save v9, and preserves unrelated authority. Focused, compatibility, static/editor, and bounded Linux/Windows export-startup gates pass. Other subtypes, native parity, packaged interaction, certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
   id: `native-rmg-runtime-pegasus-kite-signal-eyrie-dwelling-projection-10184`
 - Completed implementation slice: `native-rmg-runtime-cavalier-roadward-dwelling-projection-10184`. Fixed Medium seed 10 remains payload `e76c8967`/79,333 bytes/1,326 objects with exact type-17 order, placement, and masks; subtype 5 now uses the original Roadward Lodge/Free Company Yard contract alongside Bogbell and Cinder. The three live claims grant exactly 260 gold plus their original recruits, persist control, reject repeats, round-trip save v9, and preserve unrelated authority. Focused, compatibility, static/editor, and bounded Linux/Windows export-startup gates pass. Other subtypes, native parity, packaged interaction, certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
@@ -7957,6 +7959,33 @@ Completion evidence:
 - `/tmp/heroes-spell-scroll-focused.Q5GPQb` is natural rc0 and proves the sole exact type-93 row and live scroll node, `spell_beacon_path` as the only known-spell delta, exact resources/artifacts/army/other nodes, repeat rejection, session round trip, repeated generation authority, and unchanged Small/Medium/ordinal-95/Extra-Large payload/object/guard/package/save/startup gates;
 - `/tmp/heroes-spell-scroll-core.r7WCx5` records core rc0; JSON, repository validation, Python compilation, diff checks, and exact/generic editor parses pass;
 - `/tmp/heroes-spell-scroll-linux-package.zpi2sS` and `/tmp/heroes-spell-scroll-windows-package.CUKi63` wrapper artifacts plus the official report JSON files record Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup green. These are export/startup claims only; no packaged scroll interaction is claimed.
+
+## Completed Slice: Native RMG Harpy Cliffhawk Roost Dwelling Projection
+
+id: `native-rmg-runtime-harpy-cliffhawk-roost-dwelling-projection-10184`
+
+Status: completed.
+
+Implementation boundary:
+- add exactly type-17 subtype 26/source row 194/`AVGharp0.def` to the proxy catalog as existing `object_cliffhawk_roost`, deriving `site_cliffhawk_roost` through the unchanged bridge;
+- preserve native payload, generation, object order/placement/masks, all completed Creature Generator mappings, and all unrelated live/save authority; keep the other ten unmapped Extra-Large type-17 placements raw.
+
+Completion criteria:
+- Extra-Large seed 77 remains `33610c0a`/365,777 bytes/2,779 objects and exact ordered subtype authority `[30,29,15,15,6,45,68,26,40,45,68,50]`; subtype 26 becomes Cliffhawk Roost at `native_h3maped_33610c0a_object_2206`, primary 86,63/body 85,63+86,63 on level 1, subtype 50 remains Kite, and the other ten rows stay raw;
+- live claims total exactly 150 gold and the original Cliffhawk plus Kite recruit contracts, persist control, reject repeats, round-trip save v9, and preserve unrelated/package authority;
+- Small, Medium, ordinal-95, dwelling/AI/content/core, static/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no other subtype/Creature Bank, generation/private-state/parity, new/imported content, rebalance, broad proxy policy, packaged interaction, certification, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- pushed HEAD `21d25846` keeps Extra-Large subtype 26 raw at `native_h3maped_33610c0a_object_2206`, primary 86,63/body 85,63+86,63 on level 1; recovered catalog uniquely identifies source row 194/`AVGharp0.def`;
+- existing `object_cliffhawk_roost` derives live `site_cliffhawk_roost`, a ridge-watch blocking-visitable persistent dwelling with original 75-gold, 2 Cliffhawk Warden/1 Windglass Slinger claim, AI, rendering, and save behavior.
+
+Completion evidence:
+- `/tmp/heroes-cliffhawk-focused.KTRCZy` is natural rc0 with one `ok:true` report and proves payload `33610c0a`/365,777 bytes/2,779 objects, exact ordered subtypes `[30,29,15,15,6,45,68,26,40,45,68,50]`, the other 10 rows raw, exact subtype-26 Cliffhawk and subtype-50 Kite projections, 150 gold, exact recruits, persistent control, repeat rejection, save-v9 round trip, and unchanged unrelated/package authority;
+- `/tmp/heroes-cliffhawk-compat.PqC6MZ` records natural rc0 for dwelling reward execution, AI site control, faction content breadth, and core systems, with no unexpected diagnostics;
+- repository validation, Python compilation, JSON, scoped/global diff checks, and exact/generic editor parses pass; official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup reports are `ok:true`. These are export/startup claims only, not packaged Cliffhawk interaction or native parity.
 
 ## Completed Slice: Native RMG Pegasus Kite Signal Eyrie Dwelling Projection
 
