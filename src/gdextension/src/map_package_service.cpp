@@ -521,6 +521,9 @@ Array runtime_live_proxy_catalog_entries() {
 }
 
 bool runtime_proxy_entry_has_live_site_surface(const Dictionary &entry) {
+	if (String(entry.get("runtime_projection_status", "live")) != "live") {
+		return false;
+	}
 	const String kind = String(entry.get("generated_kind", ""));
 	if (kind == "mine" || kind == "neutral_dwelling") {
 		return !String(entry.get("native_proxy_object_id", "")).is_empty();
