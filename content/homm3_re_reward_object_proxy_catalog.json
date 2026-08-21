@@ -707,6 +707,23 @@
       "native_proxy_object_id": "object_prism_outrider_post"
     },
     {
+      "id": "dwelling_creature_generator_lizard_reedbarge_mooring_proxy",
+      "generated_kind": "neutral_dwelling",
+      "source_kind": "homm3_re_map_object_type",
+      "source_catalog_kind": "objects_txt_type_row",
+      "homm3_re_object_type_id": 17,
+      "homm3_re_object_type_name": "Creature Generator 1",
+      "homm3_re_object_subtype": 30,
+      "homm3_re_object_source_row": 208,
+      "homm3_re_object_def_ref": "AVGlzrd0.def",
+      "homm3_re_reward_table_bucket": "creature_generator_dwelling",
+      "semantic_category": "dwelling",
+      "proxy_bucket": "neutral_dwelling",
+      "native_proxy_family": "neutral_dwelling",
+      "native_proxy_category": "dwelling",
+      "native_proxy_object_id": "object_reedbarge_mooring"
+    },
+    {
       "id": "dwelling_random_dwelling_proxy",
       "generated_kind": "neutral_dwelling",
       "source_kind": "homm3_re_map_object_type",
