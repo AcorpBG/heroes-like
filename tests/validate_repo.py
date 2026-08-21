@@ -17598,6 +17598,239 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
             ensure(forbidden_token not in ownership_helper_body, errors, f"B input ownership helpers must remain read-only and preserve order via {forbidden_token}")
 
 
+def validate_main_menu_credits_third_party_notices(errors: list[str]) -> None:
+    notice_path = ROOT / "content" / "third_party_notices.json"
+    godot_cpp_license_path = ROOT / "third_party" / "godot-cpp" / "LICENSE.md"
+    focused_script_path = ROOT / "tests" / "main_menu_credits_notices_report.gd"
+    focused_scene_path = ROOT / "tests" / "main_menu_credits_notices_report.tscn"
+    payload_hygiene_path = ROOT / "tests" / "packaging_release_payload_hygiene.py"
+    required_paths = (
+        notice_path,
+        godot_cpp_license_path,
+        SETTINGS_SERVICE_PATH,
+        MAIN_MENU_SCRIPT_PATH,
+        MAIN_MENU_SCENE_PATH,
+        focused_script_path,
+        focused_scene_path,
+        payload_hygiene_path,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Credits & Notices owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    try:
+        notice = json.loads(notice_path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError) as exc:
+        errors.append(f"Credits & Notices resource is not valid JSON: {exc}")
+        return
+    items = notice.get("items", []) if isinstance(notice.get("items", []), list) else []
+    product = notice.get("product", {}) if isinstance(notice.get("product", {}), dict) else {}
+    ensure(notice.get("schema_id") == "aurelion_third_party_notices", errors, "Credits & Notices resource must retain its exact schema id")
+    ensure(notice.get("schema_version") == 1, errors, "Credits & Notices resource must retain schema version 1")
+    ensure(product.get("name") == "Aurelion Reach", errors, "Credits & Notices resource must identify Aurelion Reach")
+    ensure("does not state or change a license for Aurelion Reach" in str(product.get("scope", "")), errors, "Credits & Notices must not imply a project-license decision")
+    ensure(len(items) == 1 and isinstance(items[0], dict), errors, "Credits & Notices must contain the single shipped godot-cpp notice")
+    if len(items) == 1 and isinstance(items[0], dict):
+        godot_cpp = items[0]
+        vendored_notice = godot_cpp_license_path.read_text(encoding="utf-8").removeprefix("# MIT License\n\n").strip()
+        ensure(godot_cpp.get("id") == "godot_cpp", errors, "Credits & Notices must identify the shipped godot-cpp binding")
+        ensure(godot_cpp.get("version") == "10.0.0-rc1", errors, "Credits & Notices must identify the exact shipped godot-cpp version")
+        ensure(godot_cpp.get("source_url") == "https://github.com/godotengine/godot-cpp", errors, "Credits & Notices must retain the godot-cpp source URL")
+        ensure(godot_cpp.get("license_id") == "MIT", errors, "Credits & Notices must identify the godot-cpp MIT license")
+        ensure(str(godot_cpp.get("license_text", "")).strip() == vendored_notice, errors, "Exported godot-cpp notice must exactly match the vendored license")
+
+    def gdscript_function_block(text: str, function_name: str) -> str:
+        match = re.search(
+            rf"^func {re.escape(function_name)}\([^\n]*\)(?: -> [^:]+)?:\n(?P<body>.*?)(?=^func |\Z)",
+            text,
+            re.MULTILINE | re.DOTALL,
+        )
+        return match.group("body") if match else ""
+
+    settings_text = SETTINGS_SERVICE_PATH.read_text(encoding="utf-8")
+    ensure(settings_text.count('"id": "credits_notices"') == 1, errors, "SettingsService must expose Credits & Notices through exactly one Guide topic")
+    ensure('const THIRD_PARTY_NOTICES_PATH := "res://content/third_party_notices.json"' in settings_text, errors, "SettingsService must own the exported notice resource path")
+    payload_body = gdscript_function_block(settings_text, "credits_notices_payload")
+    text_body = gdscript_function_block(settings_text, "credits_notices_text")
+    for required_token in (
+        "ContentService.load_json(THIRD_PARTY_NOTICES_PATH)",
+        "Engine.get_version_info().duplicate(true)",
+        "Engine.get_license_text()",
+        "Engine.get_license_info().duplicate(true)",
+        "Engine.get_copyright_info().duplicate(true)",
+        '"product": product.duplicate(true)',
+        '"authored_items": items.duplicate(true)',
+    ):
+        ensure(required_token in payload_body, errors, f"Credits notice payload must source live detached authority: {required_token}")
+    ensure("Permission is hereby granted" not in settings_text, errors, "SettingsService must not hardcode Godot or component license bodies")
+    for required_token in (
+        "license_ids.sort()",
+        '"Godot Engine component notices"',
+        '"Godot Engine component license texts"',
+        '"Aurelion Reach native binding notices"',
+        'String(payload.get("engine_license_text", ""))',
+        'String(item.get("license_text", ""))',
+    ):
+        ensure(required_token in text_body, errors, f"Credits notice text must retain ordered complete notice materialization: {required_token}")
+
+    menu_scene_text = MAIN_MENU_SCENE_PATH.read_text(encoding="utf-8")
+    ensure_scene_nodes(
+        menu_scene_text,
+        errors,
+        "MainMenu.tscn Credits & Notices",
+        [
+            ("OpenCreditsNotices", "Button"),
+            ("CreditsNoticesDialog", "Window"),
+            ("CreditsNoticesPanel", "PanelContainer"),
+            ("CreditsNoticesBody", "TextEdit"),
+            ("CreditsNoticesClose", "Button"),
+        ],
+    )
+    ensure(
+        scene_node_parent(menu_scene_text, "OpenCreditsNotices", "Button")
+        == "StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Guide/GuidePanel/GuidePad/GuideBox",
+        errors,
+        "Credits & Notices must remain a secondary Guide command rather than a first-view hotspot",
+    )
+    ensure('parent="BackdropCommandHotspots"' not in scene_node_block(menu_scene_text, "OpenCreditsNotices", "Button"), errors, "Credits & Notices must not occupy the scenery-first command surface")
+    command_block = scene_node_block(menu_scene_text, "OpenCreditsNotices", "Button")
+    dialog_block = scene_node_block(menu_scene_text, "CreditsNoticesDialog", "Window")
+    body_block = scene_node_block(menu_scene_text, "CreditsNoticesBody", "TextEdit")
+    for required_token in ('visible = false', 'text = "Open Credits & Notices"'):
+        ensure(required_token in command_block, errors, f"Credits secondary command is missing token: {required_token}")
+    for required_token in ('size = Vector2i(760, 560)', 'min_size = Vector2i(640, 480)', 'exclusive = true', 'transient = true', 'wrap_controls = true'):
+        ensure(required_token in dialog_block, errors, f"Credits modal is missing bounded modal token: {required_token}")
+    for required_token in ('editable = false', 'context_menu_enabled = false', 'wrap_mode = 1'):
+        ensure(required_token in body_block, errors, f"Credits notice body is missing read-only scroll token: {required_token}")
+    for connection in (
+        '[connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Guide/GuidePanel/GuidePad/GuideBox/OpenCreditsNotices" to="." method="_on_open_credits_notices_pressed"]',
+        '[connection signal="close_requested" from="CreditsNoticesDialog" to="." method="_on_credits_notices_close_requested"]',
+        '[connection signal="window_input" from="CreditsNoticesDialog" to="." method="_on_credits_notices_window_input"]',
+        '[connection signal="pressed" from="CreditsNoticesDialog/CreditsNoticesPanel/CreditsNoticesPad/CreditsNoticesBox/CreditsNoticesClose" to="." method="_on_credits_notices_close_pressed"]',
+    ):
+        ensure(connection in menu_scene_text, errors, f"Credits modal is missing live signal ownership: {connection}")
+
+    menu_script_text = MAIN_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
+    ensure_script_functions(
+        menu_script_text,
+        errors,
+        "MainMenu.gd Credits & Notices",
+        [
+            "_configure_credits_notices",
+            "_open_credits_notices",
+            "_close_credits_notices",
+            "_refresh_credits_notices_command",
+            "_on_credits_notices_window_input",
+            "_scroll_credits_notices",
+            "validation_open_credits_notices",
+            "validation_close_credits_notices",
+        ],
+    )
+    configure_body = gdscript_function_block(menu_script_text, "_configure_credits_notices")
+    open_body = gdscript_function_block(menu_script_text, "_open_credits_notices")
+    close_body = gdscript_function_block(menu_script_text, "_close_credits_notices")
+    input_body = gdscript_function_block(menu_script_text, "_on_credits_notices_window_input")
+    scroll_body = gdscript_function_block(menu_script_text, "_scroll_credits_notices")
+    refresh_body = gdscript_function_block(menu_script_text, "_refresh_credits_notices_command")
+    for required_token in (
+        "UiAccessibility.describe_control(",
+        '"Credits and third-party notices"',
+        '"Scrollable credits and software license notices from this running build."',
+        "FrontierVisualKit.configure_focus_cycle([_credits_notices_body, _credits_notices_close_button])",
+    ):
+        ensure(required_token in configure_body, errors, f"Credits modal configuration is missing accessibility/focus token: {required_token}")
+    ensure(".accessibility_name =" not in configure_body and ".accessibility_description =" not in configure_body, errors, "Credits modal must use authored accessibility semantics without leaving auto-semantic metadata")
+    ensure(
+        open_body.find("_credits_notices_body.text = SettingsService.credits_notices_text()")
+        < open_body.find("_credits_notices_dialog.popup_centered")
+        < open_body.find('_credits_notices_close_button.call_deferred("grab_focus")'),
+        errors,
+        "Credits modal must load complete runtime notices before popup and initial Close focus",
+    )
+    ensure('_credits_notices_return_focus = _open_credits_notices_button' in open_body, errors, "Credits modal must capture its secondary Guide return focus")
+    ensure('_credits_notices_return_focus.call_deferred("grab_focus")' in close_body, errors, "Credits modal must restore focus to its Guide command")
+    for required_token in ('event.is_action_pressed("ui_cancel")', 'event.keycode == KEY_PAGEDOWN', 'event.keycode == KEY_PAGEUP', '_scroll_credits_notices(1)', '_scroll_credits_notices(-1)'):
+        ensure(required_token in input_body, errors, f"Credits modal must retain physical close/page ownership: {required_token}")
+    for required_token in ("get_v_scroll_bar()", "scroll_bar.page", "scroll_bar.max_value", "clampi("):
+        ensure(required_token in scroll_body, errors, f"Credits modal page scrolling is missing bounded live-scroll token: {required_token}")
+    ensure('var selected := _selected_help_topic_id == "credits_notices"' in refresh_body, errors, "Credits command visibility must be owned by the selected Guide topic")
+    ensure('_open_credits_notices_button.visible = selected' in refresh_body and '_open_credits_notices_button.disabled = not selected' in refresh_body, errors, "Credits Guide command must fail closed outside its selected topic")
+    unhandled_body = gdscript_function_block(menu_script_text, "_unhandled_input")
+    ensure(
+        unhandled_body.find('if event.is_action_pressed("ui_cancel") and _credits_notices_dialog.visible:')
+        < unhandled_body.find('if event.is_action_pressed("ui_cancel") and _stage_dock_is_open():'),
+        errors,
+        "Credits modal must own ui_cancel before the underlying Main Menu stage",
+    )
+    credits_control_start = menu_script_text.find("func _on_open_credits_notices_pressed()")
+    credits_control_end = menu_script_text.find("\nfunc ", menu_script_text.find("func _refresh_credits_notices_command()") + 1)
+    credits_control_block = menu_script_text[credits_control_start:credits_control_end if credits_control_end >= 0 else len(menu_script_text)]
+    for forbidden_token in (
+        "SessionState.",
+        "SaveService.",
+        "CampaignProgression.",
+        "apply_settings(",
+        "AppRouter.",
+        "change_scene",
+        "create_timer(",
+    ):
+        ensure(forbidden_token not in credits_control_block, errors, f"Credits modal must not mutate play/settings/save/routing authority: {forbidden_token}")
+
+    focused_scene_text = focused_scene_path.read_text(encoding="utf-8")
+    ensure_scene_nodes(focused_scene_text, errors, "main_menu_credits_notices_report.tscn", [("MainMenuCreditsNoticesReport", "Node")])
+    focused_text = focused_script_path.read_text(encoding="utf-8")
+    for required_token in (
+        "const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]",
+        'const NOTICE_PATH := "res://content/third_party_notices.json"',
+        'const VENDORED_LICENSE_PATH := "res://third_party/godot-cpp/LICENSE.md"',
+        "Engine.get_license_text()",
+        "Engine.get_license_info()",
+        "Engine.get_copyright_info()",
+        'command.grab_focus()',
+        'await _press_key(KEY_ENTER)',
+        'await _press_joypad(JOY_BUTTON_A)',
+        'await _press_key(KEY_TAB)',
+        'if not body.has_focus():',
+        'await _press_key(KEY_PAGEDOWN)',
+        'await _press_key(KEY_ESCAPE)',
+        'await _press_joypad(JOY_BUTTON_B)',
+        'or not command.has_focus()',
+        '_authority_snapshot() != authority_before',
+        '"input_map": _input_map_snapshot()',
+        '"battle_resolution": AppRouter.validation_battle_resolution_checkpoint_snapshot()',
+        '"battle_entry": AppRouter.validation_battle_entry_snapshot()',
+        '"outcome": AppRouter.validation_scenario_outcome_route_snapshot()',
+        '"return_to_menu": AppRouter.validation_active_play_return_snapshot()',
+        '"safe_quit": AppRouter.validation_safe_quit_snapshot()',
+        'print("%s %s" % [REPORT_ID',
+    ):
+        ensure(required_token in focused_text, errors, f"Credits focused report is missing live proof token: {required_token}")
+    input_map_body = gdscript_function_block(focused_text, "_input_map_snapshot")
+    for required_token in (
+        "InputMap.get_actions()",
+        "InputMap.action_get_events(action)",
+        "input_event.as_text()",
+        "InputMap.action_get_deadzone(action)",
+    ):
+        ensure(required_token in input_map_body, errors, f"Credits focused report input-map authority is missing token: {required_token}")
+    for forbidden_token in ("sort", "erase", "action_add", "action_erase", "action_erase_events"):
+        ensure(forbidden_token not in input_map_body, errors, f"Credits focused input-map snapshot must be ordered and read-only: {forbidden_token}")
+    for forbidden_token in (
+        "validation_open_credits_notices()",
+        "validation_close_credits_notices()",
+        "_on_open_credits_notices_pressed(",
+        "_on_credits_notices_close_pressed(",
+        ".scroll_vertical =",
+        "create_timer(",
+    ):
+        ensure(forbidden_token not in focused_text, errors, f"Credits focused report must use physical UI input without direct behavior shortcuts: {forbidden_token}")
+
+    payload_hygiene_text = payload_hygiene_path.read_text(encoding="utf-8")
+    ensure('"content/third_party_notices.json",' in payload_hygiene_text, errors, "Release payload hygiene must require the exported Credits & Notices resource")
+    ensure('"third_party/",' in payload_hygiene_text, errors, "Release payload hygiene must continue excluding vendored source trees")
+
+
 def validate_main_menu_first_view(errors: list[str]) -> None:
     ensure(MAIN_MENU_SCENE_PATH.exists(), errors, "Missing main menu scene for first-view composition validation")
     ensure(MAIN_MENU_SCRIPT_PATH.exists(), errors, "Missing main menu script for first-view composition validation")
@@ -53119,6 +53352,7 @@ def main() -> int:
     validate_battle_focus_spell_tab_body_containment(errors)
     validate_battle_timing_tab_compact_summary(errors)
     validate_battle_timing_check_detail_prefix_deduplication(errors)
+    validate_main_menu_credits_third_party_notices(errors)
     validate_main_menu_first_view(errors)
     validate_map_editor_terrain_paint_normalization_deferral(errors)
     validate_main_menu_destructive_exclusive_parent_input(errors)

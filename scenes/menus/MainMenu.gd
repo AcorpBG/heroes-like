@@ -114,6 +114,12 @@ const TAB_HELP_TOPIC := {
 @onready var _help_intro_label: Label = %HelpIntro
 @onready var _help_list: ItemList = %HelpList
 @onready var _help_details_label: Label = %HelpDetails
+@onready var _open_credits_notices_button: Button = %OpenCreditsNotices
+@onready var _credits_notices_dialog: Window = %CreditsNoticesDialog
+@onready var _credits_notices_panel: PanelContainer = %CreditsNoticesPanel
+@onready var _credits_notices_title_label: Label = %CreditsNoticesTitle
+@onready var _credits_notices_body: TextEdit = %CreditsNoticesBody
+@onready var _credits_notices_close_button: Button = %CreditsNoticesClose
 @onready var _settings_summary_label: Label = %SettingsSummary
 @onready var _settings_handoff_label: Label = %SettingsHandoff
 @onready var _settings_scroll: ScrollContainer = %SettingsScroll
@@ -188,6 +194,7 @@ var _generated_generation_stage := {}
 var _generated_generation_snapshots := []
 var _help_entries: Array = []
 var _selected_help_topic_id := ""
+var _credits_notices_return_focus: Control
 var _last_context_tab := TAB_CAMPAIGN
 var _syncing_settings_ui := false
 var _menu_notice := ""
@@ -226,6 +233,7 @@ func _ready() -> void:
 	_configure_display_change_confirmation()
 	_configure_destructive_confirmations()
 	_configure_settings_focus_visibility()
+	_configure_credits_notices()
 	phase_started = ProfileLogScript.begin_usec()
 	_apply_visual_theme()
 	buckets["theme"] = ProfileLogScript.elapsed_ms(phase_started)
@@ -936,6 +944,73 @@ func _on_help_selected(index: int) -> void:
 		return
 	_selected_help_topic_id = String(_help_entries[index].get("id", ""))
 	_refresh_help_browser()
+
+func _on_open_credits_notices_pressed() -> void:
+	_open_credits_notices()
+
+func _on_credits_notices_close_requested() -> void:
+	_close_credits_notices()
+
+func _on_credits_notices_close_pressed() -> void:
+	_close_credits_notices()
+
+func _on_credits_notices_window_input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_cancel"):
+		_close_credits_notices()
+		_credits_notices_dialog.set_input_as_handled()
+		return
+	if event is InputEventKey and event.pressed and not event.echo:
+		if event.keycode == KEY_PAGEDOWN:
+			_scroll_credits_notices(1)
+			_credits_notices_dialog.set_input_as_handled()
+		elif event.keycode == KEY_PAGEUP:
+			_scroll_credits_notices(-1)
+			_credits_notices_dialog.set_input_as_handled()
+
+func _scroll_credits_notices(page_direction: int) -> void:
+	if not _credits_notices_dialog.visible or page_direction == 0:
+		return
+	var scroll_bar := _credits_notices_body.get_v_scroll_bar()
+	var page_step := maxi(1, int(floor(scroll_bar.page)))
+	_credits_notices_body.scroll_vertical = clampi(
+		_credits_notices_body.scroll_vertical + page_step * page_direction,
+		0,
+		maxi(0, int(ceil(scroll_bar.max_value - scroll_bar.page)))
+	)
+
+func _configure_credits_notices() -> void:
+	_credits_notices_dialog.visible = false
+	_credits_notices_body.editable = false
+	_credits_notices_body.context_menu_enabled = false
+	UiAccessibility.describe_control(
+		_credits_notices_body,
+		"Credits and third-party notices",
+		"Scrollable credits and software license notices from this running build."
+	)
+	_open_credits_notices_button.tooltip_text = "Open a scrollable, read-only list of Aurelion Reach credits and software notices. This does not change play, saves, or settings."
+	_credits_notices_close_button.tooltip_text = "Close Credits & Notices and return focus to the Guide command."
+	FrontierVisualKit.configure_focus_cycle([_credits_notices_body, _credits_notices_close_button])
+
+func _open_credits_notices() -> void:
+	if _credits_notices_dialog.visible:
+		return
+	_credits_notices_return_focus = _open_credits_notices_button
+	_credits_notices_body.text = SettingsService.credits_notices_text()
+	_credits_notices_body.scroll_vertical = 0
+	_credits_notices_dialog.popup_centered(Vector2i(760, 560))
+	_credits_notices_close_button.call_deferred("grab_focus")
+
+func _close_credits_notices() -> void:
+	if not _credits_notices_dialog.visible:
+		return
+	_credits_notices_dialog.hide()
+	if is_instance_valid(_credits_notices_return_focus) and _credits_notices_return_focus.is_visible_in_tree():
+		_credits_notices_return_focus.call_deferred("grab_focus")
+
+func _refresh_credits_notices_command() -> void:
+	var selected := _selected_help_topic_id == "credits_notices"
+	_open_credits_notices_button.visible = selected
+	_open_credits_notices_button.disabled = not selected
 
 func _configure_display_change_confirmation() -> void:
 	_display_change_confirmation_dialog.get_ok_button().text = "Keep"
@@ -1885,6 +1960,7 @@ func _rebuild_help_browser() -> void:
 func _refresh_help_browser() -> void:
 	if _help_entries.is_empty():
 		_set_compact_label(_help_details_label, "No guide entries are available.", 2, 84)
+		_refresh_credits_notices_command()
 		return
 
 	if _selected_help_topic_id == "":
@@ -1902,6 +1978,7 @@ func _refresh_help_browser() -> void:
 		String(handoff.get("tooltip_text", "")),
 		SettingsService.describe_help_topic(_selected_help_topic_id),
 	]
+	_refresh_credits_notices_command()
 
 func _refresh_help_intro() -> void:
 	_refresh_help_topic_tooltips()
@@ -3408,6 +3485,16 @@ func validation_snapshot() -> Dictionary:
 		"help_intro_full": _help_intro_label.tooltip_text,
 		"help_details": _help_details_label.text,
 		"help_details_full": _help_details_label.tooltip_text,
+		"credits_notices_command_visible": _open_credits_notices_button.visible,
+		"credits_notices_command_disabled": _open_credits_notices_button.disabled,
+		"credits_notices_dialog_visible": _credits_notices_dialog.visible,
+		"credits_notices_dialog_position": _credits_notices_dialog.position,
+		"credits_notices_dialog_size": _credits_notices_dialog.size,
+		"credits_notices_body_text": _credits_notices_body.text,
+		"credits_notices_body_accessibility_name": _credits_notices_body.accessibility_name,
+		"credits_notices_body_accessibility_description": _credits_notices_body.accessibility_description,
+		"credits_notices_body_scroll": _credits_notices_body.scroll_vertical,
+		"credits_notices_close_has_focus": _credits_notices_close_button.has_focus(),
 		"skirmish_count": _skirmish_entries.size(),
 		"selected_skirmish_id": _selected_skirmish_id,
 		"selected_skirmish_index": _selected_skirmish_front_index(),
@@ -3887,6 +3974,16 @@ func validation_refresh_save_browser() -> void:
 
 func validation_open_contextual_guide_stage() -> void:
 	_on_stage_help_pressed()
+
+func validation_select_help_topic(topic_id: String) -> void:
+	_select_help_topic(topic_id)
+
+func validation_open_credits_notices() -> void:
+	_select_help_topic("credits_notices")
+	_open_credits_notices()
+
+func validation_close_credits_notices() -> void:
+	_close_credits_notices()
 
 func validation_return_from_contextual_guide() -> void:
 	if _menu_tabs.current_tab == TAB_GUIDE:
@@ -4583,6 +4680,10 @@ func _plaque_button_style(fill: Color, border: Color, border_width: int) -> Styl
 	return style
 
 func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_cancel") and _credits_notices_dialog.visible:
+		_close_credits_notices()
+		get_viewport().set_input_as_handled()
+		return
 	if event.is_action_pressed("ui_cancel") and _stage_dock_is_open():
 		_hide_stage_dock()
 		get_viewport().set_input_as_handled()
@@ -4618,6 +4719,7 @@ func _apply_visual_theme() -> void:
 		"SaveListPanel": "smoke",
 		"SaveDetailPanel": "smoke",
 		"GuidePanel": "smoke",
+		"CreditsNoticesPanel": "ink",
 		"SettingsPanel": "smoke",
 		"MasterVolumePanel": "teal",
 		"MusicVolumePanel": "blue",
@@ -4632,6 +4734,10 @@ func _apply_visual_theme() -> void:
 		FrontierVisualKit.apply_item_list(list, "smoke")
 
 	FrontierVisualKit.apply_button(_stage_help_button, "secondary", 96.0, 34.0, 13)
+	FrontierVisualKit.apply_button(_open_credits_notices_button, "secondary", 220.0, 38.0, 13)
+	FrontierVisualKit.apply_button(_credits_notices_close_button, "secondary", 128.0, 38.0, 13)
+	_credits_notices_body.add_theme_font_size_override("font_size", 13)
+	_credits_notices_body.add_theme_color_override("font_color", FrontierVisualKit.text_color("body"))
 	FrontierVisualKit.apply_button(_close_stage_dock_button, "secondary", 112.0, 34.0, 13)
 	FrontierVisualKit.apply_button(_campaign_intel_toggle, "secondary", 116.0, 40.0, 13)
 	FrontierVisualKit.apply_button(_previous_campaign_arc_button, "secondary", 104.0, 30.0, 11)

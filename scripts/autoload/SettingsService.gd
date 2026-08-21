@@ -13,6 +13,7 @@ const SETTINGS_FILE := "%s/settings.cfg" % SETTINGS_DIR
 const SETTINGS_CANDIDATE_FILE := "%s.candidate" % SETTINGS_FILE
 const SETTINGS_BACKUP_FILE := "%s.backup" % SETTINGS_FILE
 const SETTINGS_TRANSACTION_FAILURE_ENV := "HEROES_LIKE_SETTINGS_FAIL_PHASE"
+const THIRD_PARTY_NOTICES_PATH := "res://content/third_party_notices.json"
 
 const PRESENTATION_WINDOWED := "windowed"
 const PRESENTATION_BORDERLESS := "borderless"
@@ -234,6 +235,12 @@ const HELP_TOPICS := [
 		"label": "Save Flow",
 		"summary": "Campaign progression and expedition saves are separate systems.",
 		"details": "Campaign unlocks and carryover live in progression data, while current expeditions live in manual slots plus autosave. Continue Latest resumes the freshest valid expedition. The Saves tab inspects manual slots and autosave metadata before loading. Settings are stored separately from both systems and survive restarts on their own.",
+	},
+	{
+		"id": "credits_notices",
+		"label": "Credits & Notices",
+		"summary": "Aurelion Reach contributor credit and the notices for software included in the desktop builds.",
+		"details": "Open Credits & Notices below to read the complete scrollable Godot Engine, engine-component, and godot-cpp notices sourced from the running build. This reference does not launch play, change settings, or state a license for Aurelion Reach.",
 	},
 ]
 
@@ -1082,6 +1089,79 @@ func describe_help_topic(topic_id: String) -> String:
 				String(topic.get("details", "")),
 			]
 	return "Select a guide topic to review its mode summary and controls."
+
+func credits_notices_payload() -> Dictionary:
+	var authored: Dictionary = ContentService.load_json(THIRD_PARTY_NOTICES_PATH)
+	var product: Dictionary = authored.get("product", {}) if authored.get("product", {}) is Dictionary else {}
+	var items: Array = authored.get("items", []) if authored.get("items", []) is Array else []
+	return {
+		"schema_id": String(authored.get("schema_id", "")),
+		"schema_version": int(authored.get("schema_version", 0)),
+		"product": product.duplicate(true),
+		"authored_items": items.duplicate(true),
+		"engine_version": Engine.get_version_info().duplicate(true),
+		"engine_license_text": Engine.get_license_text(),
+		"engine_license_info": Engine.get_license_info().duplicate(true),
+		"engine_copyright_info": Engine.get_copyright_info().duplicate(true),
+	}
+
+func credits_notices_text() -> String:
+	var payload: Dictionary = credits_notices_payload()
+	var product: Dictionary = payload.get("product", {}) if payload.get("product", {}) is Dictionary else {}
+	var version: Dictionary = payload.get("engine_version", {}) if payload.get("engine_version", {}) is Dictionary else {}
+	var lines: Array[String] = [
+		String(product.get("name", "Aurelion Reach")),
+		String(product.get("credit", "")),
+		String(product.get("scope", "")),
+		"",
+		"Godot Engine %s" % String(version.get("string", "runtime")),
+		"https://godotengine.org/license/",
+		"",
+		String(payload.get("engine_license_text", "")),
+		"",
+		"Godot Engine component notices",
+	]
+	var copyright_info: Array = payload.get("engine_copyright_info", []) if payload.get("engine_copyright_info", []) is Array else []
+	for component_value in copyright_info:
+		if not (component_value is Dictionary):
+			continue
+		var component: Dictionary = component_value
+		lines.append("")
+		lines.append(String(component.get("name", "Component")))
+		var parts: Array = component.get("parts", []) if component.get("parts", []) is Array else []
+		for part_value in parts:
+			if not (part_value is Dictionary):
+				continue
+			var part: Dictionary = part_value
+			var copyrights: Array = part.get("copyright", []) if part.get("copyright", []) is Array else []
+			for copyright_value in copyrights:
+				lines.append(String(copyright_value))
+			var license_id := String(part.get("license", "")).strip_edges()
+			if license_id != "":
+				lines.append("License: %s" % license_id)
+	var license_info: Dictionary = payload.get("engine_license_info", {}) if payload.get("engine_license_info", {}) is Dictionary else {}
+	var license_ids: Array = license_info.keys()
+	license_ids.sort()
+	lines.append("")
+	lines.append("Godot Engine component license texts")
+	for license_id_value in license_ids:
+		var license_id := String(license_id_value)
+		lines.append("")
+		lines.append(license_id)
+		lines.append(String(license_info.get(license_id_value, "")))
+	var authored_items: Array = payload.get("authored_items", []) if payload.get("authored_items", []) is Array else []
+	lines.append("")
+	lines.append("Aurelion Reach native binding notices")
+	for item_value in authored_items:
+		if not (item_value is Dictionary):
+			continue
+		var item: Dictionary = item_value
+		lines.append("")
+		lines.append("%s %s" % [String(item.get("name", "Component")), String(item.get("version", ""))])
+		lines.append(String(item.get("source_url", "")))
+		lines.append("License: %s" % String(item.get("license_id", "")))
+		lines.append(String(item.get("license_text", "")))
+	return "\n".join(lines)
 
 func apply_settings() -> void:
 	_apply_keyboard_navigation_layout()

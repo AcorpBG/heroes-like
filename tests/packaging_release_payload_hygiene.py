@@ -47,6 +47,7 @@ REQUIRED_FILES = (
     "project.binary",
     "src/gdextension/map_persistence.gdextension",
     "content/terrain_grammar.json",
+    "content/third_party_notices.json",
     "art/overworld/runtime/terrain_tiles/base/grass_open.png.import",
     "art/animation/runtime/units/unit_neutral_cliffhawk_wardens.png.import",
 )

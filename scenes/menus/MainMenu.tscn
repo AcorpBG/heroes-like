@@ -917,6 +917,14 @@ size_flags_vertical = 3
 autowrap_mode = 3
 text = "Help details"
 
+[node name="OpenCreditsNotices" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Guide/GuidePanel/GuidePad/GuideBox"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(220, 38)
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Open Credits & Notices"
+
 [node name="Settings" type="VBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -1342,6 +1350,57 @@ exclusive = true
 ok_button_text = "Keep"
 dialog_text = "Keep this display mode and resolution?"
 
+[node name="CreditsNoticesDialog" type="Window" parent="."]
+unique_name_in_owner = true
+title = "Credits & Notices"
+initial_position = 1
+size = Vector2i(760, 560)
+min_size = Vector2i(640, 480)
+exclusive = true
+transient = true
+wrap_controls = true
+
+[node name="CreditsNoticesPanel" type="PanelContainer" parent="CreditsNoticesDialog"]
+unique_name_in_owner = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CreditsNoticesPad" type="MarginContainer" parent="CreditsNoticesDialog/CreditsNoticesPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 18
+
+[node name="CreditsNoticesBox" type="VBoxContainer" parent="CreditsNoticesDialog/CreditsNoticesPanel/CreditsNoticesPad"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="CreditsNoticesTitle" type="Label" parent="CreditsNoticesDialog/CreditsNoticesPanel/CreditsNoticesPad/CreditsNoticesBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Credits & Notices"
+
+[node name="CreditsNoticesBody" type="TextEdit" parent="CreditsNoticesDialog/CreditsNoticesPanel/CreditsNoticesPad/CreditsNoticesBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(600, 390)
+layout_mode = 2
+size_flags_vertical = 3
+editable = false
+context_menu_enabled = false
+wrap_mode = 1
+text = "Credits and notices load from the running build."
+
+[node name="CreditsNoticesClose" type="Button" parent="CreditsNoticesDialog/CreditsNoticesPanel/CreditsNoticesPad/CreditsNoticesBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(128, 38)
+layout_mode = 2
+size_flags_horizontal = 8
+text = "Close"
+
 [node name="OpenEditor" type="Button" parent="BackdropCommandHotspots"]
 unique_name_in_owner = true
 layout_mode = 1
@@ -1473,6 +1532,7 @@ size_flags_horizontal = 3
 [connection signal="confirmed" from="SaveDeleteDialog" to="." method="_on_save_delete_confirmed"]
 [connection signal="canceled" from="SaveDeleteDialog" to="." method="_on_save_delete_canceled"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Guide/GuidePanel/GuidePad/GuideBox/GuideColumns/HelpList" to="." method="_on_help_selected"]
+[connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Guide/GuidePanel/GuidePad/GuideBox/OpenCreditsNotices" to="." method="_on_open_credits_notices_pressed"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/PresentationRow/PresentationModePicker" to="." method="_on_presentation_mode_selected"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/PresentationRow/RenderQualityPicker" to="." method="_on_render_quality_selected"]
 [connection signal="toggled" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/PresentationRow/VSyncToggle" to="." method="_on_vsync_toggled"]
@@ -1495,6 +1555,9 @@ size_flags_horizontal = 3
 [connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/Settings/SettingsScroll/SettingsPanel/SettingsPad/SettingsBox/RestoreDefaultsRow/RestoreSettingsDefaults" to="." method="_on_restore_settings_defaults_pressed"]
 [connection signal="confirmed" from="SettingsRestoreDefaultsDialog" to="." method="_on_settings_restore_defaults_confirmed"]
 [connection signal="canceled" from="SettingsRestoreDefaultsDialog" to="." method="_on_settings_restore_defaults_canceled"]
+[connection signal="close_requested" from="CreditsNoticesDialog" to="." method="_on_credits_notices_close_requested"]
+[connection signal="window_input" from="CreditsNoticesDialog" to="." method="_on_credits_notices_window_input"]
+[connection signal="pressed" from="CreditsNoticesDialog/CreditsNoticesPanel/CreditsNoticesPad/CreditsNoticesBox/CreditsNoticesClose" to="." method="_on_credits_notices_close_pressed"]
 [connection signal="confirmed" from="DisplayChangeConfirmationDialog" to="." method="_on_display_change_confirmed"]
 [connection signal="canceled" from="DisplayChangeConfirmationDialog" to="." method="_on_display_change_canceled"]
 [connection signal="dismissed" from="HeroKeybindingsDialog" to="." method="_on_hero_keybindings_dialog_dismissed"]
