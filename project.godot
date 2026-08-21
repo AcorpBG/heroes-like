@@ -14,6 +14,12 @@ run/main_scene="res://scenes/boot/Boot.tscn"
 run/flush_stdout_on_print=true
 config/features=PackedStringArray("4.2")
 config/icon="res://icon.svg"
+boot_splash/bg_color=Color(0.00784314, 0.0156863, 0.027451, 1)
+boot_splash/image="res://art/ui/branding/aurelion_reach_frontier_crest.png"
+boot_splash/minimum_display_time=0
+boot_splash/show_image=true
+boot_splash/stretch_mode=1
+boot_splash/use_filter=true
 
 [autoload]
 ContentService="*res://scripts/autoload/ContentService.gd"

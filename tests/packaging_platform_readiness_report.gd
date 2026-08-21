@@ -6,6 +6,9 @@ const REPORT_ID := "PACKAGING_PLATFORM_READINESS_REPORT"
 const OUTPUT_DIR := "res://.artifacts/packaging_platform_readiness_report"
 const EXPORT_PRESETS_PATH := "res://export_presets.cfg"
 const GDEXTENSION_PATH := "res://src/gdextension/map_persistence.gdextension"
+const BOOT_SPLASH_PATH := "res://art/ui/branding/aurelion_reach_frontier_crest.png"
+const BOOT_SPLASH_SHA256 := "f6e04815c0e30640861b631fa9d5bc6720a4ee3d7492f31d1bc7a66a43e957d3"
+const BOOT_SPLASH_BACKGROUND := Color8(2, 4, 7, 255)
 const REQUIRED_EXCLUDES := [".git/*", ".godot/*", ".artifacts/*", "tmp/*", "*.dll.a"]
 const REQUIRED_NATIVE_LIBRARIES := {
 	"linux.editor.x86_64": "res://bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
@@ -156,6 +159,23 @@ func _validate_project_boot() -> void:
 	var main_scene := String(ProjectSettings.get_setting("application/run/main_scene", ""))
 	var app_name := String(ProjectSettings.get_setting("application/config/name", ""))
 	var icon := String(ProjectSettings.get_setting("application/config/icon", ""))
+	var boot_splash_path := String(ProjectSettings.get_setting("application/boot_splash/image", ""))
+	var boot_splash_background: Color = ProjectSettings.get_setting("application/boot_splash/bg_color", Color.TRANSPARENT)
+	var boot_splash_minimum_display_time := int(ProjectSettings.get_setting("application/boot_splash/minimum_display_time", -1))
+	var boot_splash_show_image := bool(ProjectSettings.get_setting("application/boot_splash/show_image", false))
+	var boot_splash_stretch_mode := int(ProjectSettings.get_setting("application/boot_splash/stretch_mode", -1))
+	var boot_splash_use_filter := bool(ProjectSettings.get_setting("application/boot_splash/use_filter", false))
+	var boot_splash_texture := load(boot_splash_path) as Texture2D
+	var boot_splash_image := boot_splash_texture.get_image() if boot_splash_texture != null else null
+	var boot_splash_size := boot_splash_image.get_size() if boot_splash_image != null else Vector2i.ZERO
+	var boot_splash_corners_transparent := false
+	if boot_splash_image != null and boot_splash_size.x > 0 and boot_splash_size.y > 0:
+		boot_splash_corners_transparent = (
+			boot_splash_image.get_pixel(0, 0).a == 0.0
+			and boot_splash_image.get_pixel(boot_splash_size.x - 1, 0).a == 0.0
+			and boot_splash_image.get_pixel(0, boot_splash_size.y - 1).a == 0.0
+			and boot_splash_image.get_pixel(boot_splash_size.x - 1, boot_splash_size.y - 1).a == 0.0
+		)
 	var boot_window_title := ""
 	var boot_resource := load(main_scene) as PackedScene
 	if boot_resource != null:
@@ -169,6 +189,17 @@ func _validate_project_boot() -> void:
 		"app_name": app_name,
 		"icon": icon,
 		"window_title": boot_window_title,
+		"boot_splash": {
+			"path": boot_splash_path,
+			"sha256": FileAccess.get_sha256(boot_splash_path),
+			"background": boot_splash_background.to_html(),
+			"minimum_display_time": boot_splash_minimum_display_time,
+			"show_image": boot_splash_show_image,
+			"stretch_mode": boot_splash_stretch_mode,
+			"use_filter": boot_splash_use_filter,
+			"image_size": {"width": boot_splash_size.x, "height": boot_splash_size.y},
+			"corners_transparent": boot_splash_corners_transparent,
+		},
 	}
 	_expect(app_name == "heroes-like", "Project app name must remain heroes-like.")
 	_expect(boot_window_title == "Aurelion Reach", "Live Boot must set the public Aurelion Reach window title.")
@@ -176,6 +207,17 @@ func _validate_project_boot() -> void:
 	_expect(ResourceLoader.exists(main_scene), "Configured main scene does not exist: %s." % main_scene)
 	_expect(icon == "res://icon.svg", "Project icon must point at res://icon.svg.")
 	_expect(ResourceLoader.exists(icon), "Configured project icon does not exist: %s." % icon)
+	_expect(boot_splash_path == BOOT_SPLASH_PATH, "Native boot splash must use the approved Aurelion Reach crest.")
+	_expect(ResourceLoader.exists(boot_splash_path), "Configured native boot splash does not exist: %s." % boot_splash_path)
+	_expect(FileAccess.get_sha256(boot_splash_path) == BOOT_SPLASH_SHA256, "Native boot splash bytes changed from the approved crest.")
+	_expect(boot_splash_texture != null and boot_splash_image != null, "Native boot splash must load as an imported PNG texture.")
+	_expect(boot_splash_size == Vector2i(1254, 1254), "Native boot splash must retain the approved square source dimensions.")
+	_expect(boot_splash_corners_transparent, "Native boot splash must retain transparent source corners over its authored background.")
+	_expect(boot_splash_background.to_html() == BOOT_SPLASH_BACKGROUND.to_html(), "Native boot splash must use the approved dark presentation ground.")
+	_expect(boot_splash_minimum_display_time == 0, "Native boot splash must not force an artificial startup delay.")
+	_expect(boot_splash_show_image, "Native boot splash image must remain enabled.")
+	_expect(boot_splash_stretch_mode == RenderingServer.SPLASH_STRETCH_MODE_KEEP, "Native boot splash must preserve crest aspect ratio.")
+	_expect(boot_splash_use_filter, "Native boot splash must use filtered high-resolution scaling.")
 
 func _file_size(path: String) -> int:
 	if path == "" or not FileAccess.file_exists(path):
@@ -204,6 +246,7 @@ func _summary_payload() -> Dictionary:
 		"profile_log": String((_report.get("runtime_paths", {}) as Dictionary).get("profile_log", "")),
 		"main_scene": String((_report.get("project_boot", {}) as Dictionary).get("main_scene", "")),
 		"window_title": String((_report.get("project_boot", {}) as Dictionary).get("window_title", "")),
+		"boot_splash_path": String(((_report.get("project_boot", {}) as Dictionary).get("boot_splash", {}) as Dictionary).get("path", "")),
 	}
 
 func _expect(condition: bool, message: String) -> void:
