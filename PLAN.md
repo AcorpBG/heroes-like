@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `presentation-native-rmg-spell-scroll-field-sprite-10184`. The accepted Beacon Path scroll now resolves through one original transparent 512x512 Overworld field sprite instead of the generic procedural resource marker. The exact generated type-93 node uses the imported asset at 1280x720 and 1920x1080, retains permanent-explored visibility and detached procedural fallback, while payload `457dba6b`, all 294 objects, spell learning, repeat rejection, persistence, and every other Native RMG/gameplay authority remain exact. Focused, Overworld/core, repository/editor, and bounded Linux/Windows export-startup gates pass; both PCKs contain the new import and compiled texture. Packaged scroll interaction, broad Native RMG parity, hardware/accessibility certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
+  id: `presentation-native-rmg-spell-scroll-field-sprite-10184`
 - Completed implementation slice: `native-rmg-runtime-spell-scroll-proxy-pickup-projection-10184`. The sole recovered Small type-93 Spell Scroll (`AVA0001.def`) now projects through its accepted `spell_beacon_path` identity as a one-time live scroll pickup instead of the generic town-required source cache. Fresh Small retains payload `457dba6b`, 23,664 bytes, and all 294 ordered objects; real collection learns only Beacon Path, preserves resources/artifacts/army and every other node, persists, and rejects repeat collection. Focused/core/repository/editor and bounded Linux/Windows export-startup gates pass with unchanged native binaries and generation. Packaged scroll interaction, broad Native RMG parity, hardware certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
   id: `native-rmg-runtime-spell-scroll-proxy-pickup-projection-10184`
 - Completed implementation slice: `native-rmg-runtime-loose-resource-proxy-identity-projection-10184`. The accepted runtime proxy catalog now contains exact recovered type-79 rows for all seven H3M resource subtypes and maps them to the established original-project wood, peatwax, ore, embergrain, aetherglass, memory-salt, and gold fronts. Fresh Small keeps its 23,664-byte payload and 294 ordered objects while all 28 loose-resource records adopt exact identities; the prior 13 sulfur/crystal/gems/gold rows no longer become all-rare supply caches. Real Sulfur→Embergrain collection awards exactly +1 Embergrain and +120 gold, leaves every other rare stockpile unchanged, and persists. Focused/core/repository/editor and bounded Linux/Windows export-startup gates pass. Native binaries and generation remain unchanged. Packaged interaction, broad Native RMG parity, hardware certification, signing/publication, whole-game, and release readiness remain unclaimed.
@@ -7943,6 +7945,37 @@ Completion evidence:
 - `/tmp/heroes-spell-scroll-focused.Q5GPQb` is natural rc0 and proves the sole exact type-93 row and live scroll node, `spell_beacon_path` as the only known-spell delta, exact resources/artifacts/army/other nodes, repeat rejection, session round trip, repeated generation authority, and unchanged Small/Medium/ordinal-95/Extra-Large payload/object/guard/package/save/startup gates;
 - `/tmp/heroes-spell-scroll-core.r7WCx5` records core rc0; JSON, repository validation, Python compilation, diff checks, and exact/generic editor parses pass;
 - `/tmp/heroes-spell-scroll-linux-package.zpi2sS` and `/tmp/heroes-spell-scroll-windows-package.CUKi63` wrapper artifacts plus the official report JSON files record Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup green. These are export/startup claims only; no packaged scroll interaction is claimed.
+
+## Active Slice: Native RMG Spell Scroll Field Sprite
+
+id: `presentation-native-rmg-spell-scroll-field-sprite-10184`
+
+Status: completed.
+
+Implementation boundary:
+- create one original transparent Overworld field sprite for `site_beacon_path_scroll` and register it through the existing `art/overworld/manifest.json` resource-site sprite surface;
+- preserve the established resource-node draw path and procedural fallback; do not add a renderer branch or change the accepted proxy object/site/spell identities;
+- use only original project art and keep the recovered H3MapEd DEF as provenance, never as an imported visual asset.
+
+Completion criteria:
+- the exact live generated type-93 scroll resolves to the new imported texture at 1280x720 and 1920x1080, with transparent corners, contained 1x1 grounding, the established permanent-explored visibility treatment, and procedural fallback for missing or unloadable mapping;
+- collection still learns only `spell_beacon_path`, repeat collection remains rejected, and session/save plus all other generated nodes remain exact;
+- fresh Small retains payload `457dba6b`, `23,664` bytes, `294` ordered objects, and exact type-93 identity/order/placement/masks; Native RMG source, binaries, and generation remain unchanged;
+- focused runtime, broad Overworld visual/core compatibility, repository/editor validation, and bounded official Linux/Windows export-startup gates pass, with both PCKs containing the new imported texture.
+
+Non-goals:
+- no Native RMG recovered logic/private-state/writeout, payload, RNG, object count/order/placement, terrain, road, guard, mask, density, balance, native-code/binary, proxy identity, spell behavior/cost/AI, collection, route, or save-version change;
+- no H3M/DEF art import, new renderer system, other resource-site asset work, packaged scroll interaction claim, hardware/accessibility certification, signing/publication, broad Native RMG parity, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- pushed HEAD `8b1a5341` maps the exact type-93 row to `site_beacon_path_scroll`, but `_resource_asset_id` finds neither a `spell_beacon_path` map-object sprite nor a `site_beacon_path_scroll` resource-site sprite, so `_draw_resource_sprite` returns false and the live renderer uses `_draw_resource_marker`;
+- the prior behavior slice explicitly set `renderer_sprite_required=false`, making this a separate presentation increment rather than an incomplete behavior criterion;
+- the existing Overworld manifest/resource-site asset path already provides imported texture loading, memory modulation, 1x1 grounding, and procedural fallback without new runtime architecture.
+
+Completion evidence:
+- `/tmp/heroes-scroll-sprite-focused-authoritative.yiDU0I` is natural rc0 and proves the exact generated scroll at both target sizes, the original RGBA texture and transparent corners, 1x1 mapped grounding, permanent-explored treatment, detached procedural fallback, payload/object identity, real collection, repeat rejection, and save round trip;
+- `/tmp/heroes-scroll-sprite-overworld.fxleNX` and `/tmp/heroes-scroll-sprite-core.e9nrhf` record broad Overworld visual and core compatibility rc0; JSON, repository validation, Python compilation, diff checks, and exact/generic editor parses pass;
+- `/tmp/heroes-scroll-sprite-linux-package.eLBDq0` and `/tmp/heroes-scroll-sprite-windows-package.eA3VdS` plus the official report JSON files record Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup green; both PCKs contain `beacon_path_scroll.png.import` and its compiled texture. These remain export/startup claims only.
 
 ## Progress Reconciliation
 

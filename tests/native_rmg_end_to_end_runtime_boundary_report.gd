@@ -3,6 +3,7 @@ extends Node
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const NativeRandomMapPackageSessionBridgeScript = preload("res://scripts/persistence/NativeRandomMapPackageSessionBridge.gd")
 const OverworldRulesScript = preload("res://scripts/core/OverworldRules.gd")
+const OverworldMapViewScript = preload("res://scenes/overworld/OverworldMapView.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const REPORT_ID := "NATIVE_RMG_END_TO_END_RUNTIME_BOUNDARY_REPORT"
@@ -21,7 +22,7 @@ func _run() -> void:
 	if not bool(zero_road_projection.get("ok", false)):
 		_fail("Zero-road native payload projection failed: %s" % JSON.stringify(zero_road_projection))
 		return
-	var live_proxy_projection := _validate_live_proxy_site_projection(service)
+	var live_proxy_projection: Dictionary = await _validate_live_proxy_site_projection(service)
 	if not bool(live_proxy_projection.get("ok", false)):
 		_fail("Live proxy site projection failed: %s" % JSON.stringify(live_proxy_projection))
 		return
@@ -369,9 +370,11 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 			"save_round_trip_exact": restored_node == claimed_node and restored.overworld.get("resources", {}) == resources_after,
 		}
 	var spell_scroll_interaction := {}
+	var spell_scroll_presentation := {}
 	if session != null and live_spell_scrolls.size() == 1:
 		var scroll_result: Dictionary = live_spell_scrolls[0]
 		var scroll_node: Dictionary = scroll_result.get("node", {}) if scroll_result.get("node", {}) is Dictionary else {}
+		spell_scroll_presentation = await _validate_spell_scroll_presentation(session, scroll_node)
 		var scroll_index := int(scroll_result.get("index", -1))
 		var resources_before: Dictionary = session.overworld.get("resources", {}).duplicate(true)
 		var artifact_nodes_before: Array = session.overworld.get("artifact_nodes", []).duplicate(true) if session.overworld.get("artifact_nodes", []) is Array else []
@@ -475,6 +478,7 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 				and live_resource_proxy_rows_exact \
 				and bool(rare_resource_interaction.get("ok", false)) \
 				and live_spell_scrolls.size() == spell_scroll_count \
+				and bool(spell_scroll_presentation.get("ok", false)) \
 				and bool(spell_scroll_interaction.get("ok", false)) \
 				and exact_repeat,
 		"payload_hash": first.get("final_payload_fnv1a32", ""),
@@ -507,8 +511,122 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 		"interaction": interaction,
 		"artifact_interaction": artifact_interaction,
 		"rare_resource_interaction": rare_resource_interaction,
+		"spell_scroll_presentation": spell_scroll_presentation,
 		"spell_scroll_interaction": spell_scroll_interaction,
 		"exact_repeat": exact_repeat,
+	}
+
+func _validate_spell_scroll_presentation(session: SessionStateStoreScript.SessionData, scroll_node: Dictionary) -> Dictionary:
+	var map_size := OverworldRulesScript.derive_map_size(session)
+	var tile := Vector2i(int(scroll_node.get("x", -1)), int(scroll_node.get("y", -1)))
+	if map_size.x <= 0 or map_size.y <= 0 or tile.x < 0 or tile.y < 0:
+		return {"ok": false, "reason": "invalid_map_or_scroll_tile"}
+	var texture: Texture2D = load("res://art/overworld/runtime/objects/pickups/beacon_path_scroll.png") as Texture2D
+	if texture == null:
+		return {"ok": false, "reason": "missing_beacon_path_scroll_texture"}
+	var image: Image = texture.get_image()
+	var transparent_corners := image != null and image.get_size() == Vector2i(512, 512) and image.detect_alpha() != Image.ALPHA_NONE
+	if transparent_corners:
+		for corner in [Vector2i(0, 0), Vector2i(511, 0), Vector2i(0, 511), Vector2i(511, 511)]:
+			if image.get_pixelv(corner).a > 0.01:
+				transparent_corners = false
+				break
+	var view_session := SessionStateStoreScript.SessionData.new()
+	view_session.from_dict(session.to_dict())
+	view_session.overworld["fog"] = _uniform_test_fog(map_size, true, true)
+	var view: Variant = OverworldMapViewScript.new()
+	add_child(view)
+	var viewport_rows := []
+	var viewport_assets_exact := true
+	var visible := {}
+	for viewport_size in [Vector2(1280, 720), Vector2(1920, 1080)]:
+		view.size = viewport_size
+		view.set_map_state(view_session, view_session.overworld.get("map", []), map_size, tile)
+		await get_tree().process_frame
+		visible = view.validation_tile_presentation(tile)
+		var viewport_art: Dictionary = visible.get("art_presentation", {}) if visible.get("art_presentation", {}) is Dictionary else {}
+		var marker: Dictionary = visible.get("marker_readability", {}) if visible.get("marker_readability", {}) is Dictionary else {}
+		var row_exact: bool = bool(visible.get("visible", false)) \
+				and bool(visible.get("has_resource", false)) \
+				and bool(viewport_art.get("uses_asset_sprite", false)) \
+				and "beacon_path_scroll" in viewport_art.get("sprite_asset_ids", []) \
+				and viewport_art.get("sprite_footprints", []) == [{"width": 1, "height": 1}] \
+				and bool(viewport_art.get("mapped_sprite_grounding", false)) \
+				and bool(marker.get("mapped_sprite_settlement", false)) \
+				and not bool(viewport_art.get("fallback_procedural_marker", true))
+		viewport_assets_exact = viewport_assets_exact and row_exact
+		viewport_rows.append({
+			"width": int(viewport_size.x),
+			"height": int(viewport_size.y),
+			"asset_ids": viewport_art.get("sprite_asset_ids", []),
+			"footprints": viewport_art.get("sprite_footprints", []),
+			"mapped_grounding": viewport_art.get("mapped_sprite_grounding", false),
+			"exact": row_exact,
+		})
+	view_session.overworld["fog"] = _uniform_test_fog(map_size, false, true)
+	view.set_map_state(view_session, view_session.overworld.get("map", []), map_size, tile)
+	await get_tree().process_frame
+	var permanently_explored: Dictionary = view.validation_tile_presentation(tile)
+	var fallback_nodes: Array = view_session.overworld.get("resource_nodes", []).duplicate(true) if view_session.overworld.get("resource_nodes", []) is Array else []
+	for node_index in range(fallback_nodes.size()):
+		if fallback_nodes[node_index] is Dictionary and String(fallback_nodes[node_index].get("placement_id", "")) == String(scroll_node.get("placement_id", "")):
+			var fallback_node: Dictionary = fallback_nodes[node_index].duplicate(true)
+			fallback_node["object_id"] = "missing_spell_scroll_object"
+			fallback_node["site_id"] = "missing_spell_scroll_site"
+			fallback_nodes[node_index] = fallback_node
+			break
+	view_session.overworld["resource_nodes"] = fallback_nodes
+	view_session.overworld["fog"] = _uniform_test_fog(map_size, true, true)
+	view.set_map_state(view_session, view_session.overworld.get("map", []), map_size, tile)
+	await get_tree().process_frame
+	var fallback: Dictionary = view.validation_tile_presentation(tile)
+	remove_child(view)
+	view.queue_free()
+	var visible_art: Dictionary = visible.get("art_presentation", {}) if visible.get("art_presentation", {}) is Dictionary else {}
+	var permanently_explored_art: Dictionary = permanently_explored.get("art_presentation", {}) if permanently_explored.get("art_presentation", {}) is Dictionary else {}
+	var fallback_art: Dictionary = fallback.get("art_presentation", {}) if fallback.get("art_presentation", {}) is Dictionary else {}
+	return {
+		"ok": transparent_corners \
+				and viewport_assets_exact \
+				and bool(visible.get("visible", false)) \
+				and bool(visible.get("has_resource", false)) \
+				and bool(visible_art.get("uses_asset_sprite", false)) \
+				and "beacon_path_scroll" in visible_art.get("sprite_asset_ids", []) \
+				and not bool(visible_art.get("fallback_procedural_marker", true)) \
+				and bool(permanently_explored.get("explored", false)) \
+				and bool(permanently_explored.get("visible", false)) \
+				and not bool(permanently_explored.get("draws_remembered_object", true)) \
+				and "beacon_path_scroll" in permanently_explored_art.get("sprite_asset_ids", []) \
+				and bool(fallback.get("has_resource", false)) \
+				and not bool(fallback_art.get("uses_asset_sprite", true)) \
+				and bool(fallback_art.get("fallback_procedural_marker", false)),
+		"tile": {"x": tile.x, "y": tile.y},
+		"texture_size": {"width": image.get_width(), "height": image.get_height()},
+		"transparent_corners": transparent_corners,
+		"viewport_rows": viewport_rows,
+		"visible_asset_ids": visible_art.get("sprite_asset_ids", []),
+		"permanently_explored_asset_ids": permanently_explored_art.get("sprite_asset_ids", []),
+		"permanent_explored_visibility": permanently_explored.get("visible", false),
+		"fallback_procedural": fallback_art.get("fallback_procedural_marker", false),
+	}
+
+func _uniform_test_fog(map_size: Vector2i, visible_value: bool, explored_value: bool) -> Dictionary:
+	var visible_tiles := []
+	var explored_tiles := []
+	for _y in range(map_size.y):
+		var visible_row := []
+		var explored_row := []
+		for _x in range(map_size.x):
+			visible_row.append(visible_value)
+			explored_row.append(explored_value)
+		visible_tiles.append(visible_row)
+		explored_tiles.append(explored_row)
+	return {
+		"visible_tiles": visible_tiles,
+		"explored_tiles": explored_tiles,
+		"visible_count": map_size.x * map_size.y if visible_value else 0,
+		"explored_count": map_size.x * map_size.y if explored_value else 0,
+		"total_tiles": map_size.x * map_size.y,
 	}
 
 func _live_proxy_provenance_exact(object: Dictionary) -> bool:

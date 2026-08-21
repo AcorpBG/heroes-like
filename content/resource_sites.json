@@ -16,7 +16,7 @@
         "status": "spell_reward_live",
         "live_reward_grants": true,
         "save_payload_required": false,
-        "renderer_sprite_required": false,
+        "renderer_sprite_required": true,
         "pathing_runtime_adopted": false,
         "rare_resource_activation": false
       }

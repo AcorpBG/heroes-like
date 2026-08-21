@@ -156,6 +156,14 @@
       "path": "res://art/overworld/runtime/objects/pickups/adventurers_bundle.png",
       "source_trimmed": "res://art/overworld/source/trimmed/pickups/adventurers_bundle-trimmed.png"
     },
+    "beacon_path_scroll": {
+      "path": "res://art/overworld/runtime/objects/pickups/beacon_path_scroll.png",
+      "source_generated": "res://art/overworld/source/generated/pickups/beacon_path_scroll_source.png",
+      "source_model": "built_in_image_gen",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "background": "transparent",
+      "assigned_resource_site_id": "site_beacon_path_scroll"
+    },
     "artifact_field_trailsinger_boots": {
       "path": "res://art/overworld/runtime/objects/artifacts/trailsinger_boots.png",
       "source_icon": "res://art/artifacts/runtime/trailsinger_boots.png",
@@ -3830,6 +3838,10 @@
     }
   },
   "resource_site_sprites": {
+    "site_beacon_path_scroll": {
+      "asset_id": "beacon_path_scroll",
+      "fit": "Distinct original Beacon Path spell-scroll field sprite for the accepted one-time generated pickup."
+    },
     "site_waystone_cache": {
       "asset_id": "ruined_obelisk",
       "fit": "Waystone Cache is the closest current landmark-ish pickup for the ruined obelisk asset."
