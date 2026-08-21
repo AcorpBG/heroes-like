@@ -168,33 +168,9 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Close"
 
-[node name="CampaignLaunchRow" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox"]
-unique_name_in_owner = true
+[node name="StageCommandRailSlot" type="Control" parent="StageDockPanel/StageDockPad/StageDockBox"]
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="CampaignDifficultyLabel" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/CampaignLaunchRow"]
-layout_mode = 2
-text = "Difficulty"
-
-[node name="CampaignDifficultyPicker" type="OptionButton" parent="StageDockPanel/StageDockPad/StageDockBox/CampaignLaunchRow"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(176, 0)
-layout_mode = 2
-
-[node name="CampaignLaunchSpacer" type="Control" parent="StageDockPanel/StageDockPad/StageDockBox/CampaignLaunchRow"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="CampaignPrimaryAction" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/CampaignLaunchRow"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Advance Campaign"
-
-[node name="StartChapter" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/CampaignLaunchRow"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Start Chapter"
 
 [node name="MenuTabs" type="TabContainer" parent="StageDockPanel/StageDockPad/StageDockBox"]
 unique_name_in_owner = true
@@ -521,21 +497,6 @@ size_flags_horizontal = 3
 horizontal_alignment = 2
 text = "Single-front starts with difficulty and first-contact intel."
 
-[node name="SkirmishActionRow" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody"]
-layout_mode = 2
-alignment = 2
-theme_override_constants/separation = 10
-
-[node name="DifficultyPicker" type="OptionButton" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/SkirmishActionRow"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="StartSkirmish" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/SkirmishActionRow"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Launch Skirmish"
-
 [node name="DifficultyPanel" type="PanelContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody"]
 layout_mode = 2
 
@@ -663,22 +624,6 @@ theme_override_constants/separation = 6
 [node name="SkirmishListTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/ModeSplit/SkirmishListPanel/SkirmishListPad/SkirmishListBox"]
 layout_mode = 2
 text = "Fronts"
-
-[node name="SkirmishFrontNavigation" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/ModeSplit/SkirmishListPanel/SkirmishListPad/SkirmishListBox"]
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="PreviousSkirmishFront" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/ModeSplit/SkirmishListPanel/SkirmishListPad/SkirmishListBox/SkirmishFrontNavigation"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Previous Front"
-
-[node name="NextSkirmishFront" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/ModeSplit/SkirmishListPanel/SkirmishListPad/SkirmishListBox/SkirmishFrontNavigation"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Next Front"
 
 [node name="SkirmishList" type="ItemList" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/ModeSplit/SkirmishListPanel/SkirmishListPad/SkirmishListBox"]
 unique_name_in_owner = true
@@ -1415,6 +1360,79 @@ anchor_right = 0.975
 anchor_bottom = 0.798
 text = "Quit"
 
+[node name="CampaignCommandRail" type="Control" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchor_left = 0.0445
+anchor_top = 0.3385
+anchor_right = 0.5475
+anchor_bottom = 0.3385
+offset_bottom = 40.0
+
+[node name="CampaignLaunchRow" type="HBoxContainer" parent="CampaignCommandRail"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+
+[node name="CampaignDifficultyLabel" type="Label" parent="CampaignCommandRail/CampaignLaunchRow"]
+layout_mode = 2
+text = "Difficulty"
+
+[node name="CampaignDifficultyPicker" type="OptionButton" parent="CampaignCommandRail/CampaignLaunchRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(176, 0)
+layout_mode = 2
+
+[node name="CampaignLaunchSpacer" type="Control" parent="CampaignCommandRail/CampaignLaunchRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CampaignPrimaryAction" type="Button" parent="CampaignCommandRail/CampaignLaunchRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Advance Campaign"
+
+[node name="StartChapter" type="Button" parent="CampaignCommandRail/CampaignLaunchRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Start Chapter"
+
+[node name="SkirmishCommandRail" type="Control" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchor_left = 0.0445
+anchor_top = 0.3385
+anchor_right = 0.7523
+anchor_bottom = 0.3385
+offset_bottom = 40.0
+
+[node name="SkirmishLaunchRow" type="HBoxContainer" parent="SkirmishCommandRail"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+
+[node name="SkirmishDifficultyLabel" type="Label" parent="SkirmishCommandRail/SkirmishLaunchRow"]
+layout_mode = 2
+text = "Difficulty"
+
+[node name="DifficultyPicker" type="OptionButton" parent="SkirmishCommandRail/SkirmishLaunchRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(176, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+
 [connection signal="pressed" from="BackdropCommandHotspots/OpenCampaign" to="." method="_on_open_campaign_pressed"]
 [connection signal="pressed" from="BackdropCommandHotspots/OpenSkirmish" to="." method="_on_open_skirmish_pressed"]
 [connection signal="pressed" from="BackdropCommandHotspots/OpenSaves" to="." method="_on_open_saves_pressed"]
@@ -1428,19 +1446,16 @@ text = "Quit"
 [connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/ActionRow/CampaignChapterNavigation/NextCampaignChapter" to="." method="_on_next_campaign_chapter_pressed"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/ChapterBrowser/ChapterListPanel/ChapterListPad/ChapterListBox/ChapterList" to="." method="_on_chapter_selected"]
 [connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignActions/CampaignIntelToggle" to="." method="_on_campaign_intel_toggle_pressed"]
-[connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/CampaignLaunchRow/CampaignDifficultyPicker" to="." method="_on_campaign_difficulty_selected"]
+[connection signal="item_selected" from="CampaignCommandRail/CampaignLaunchRow/CampaignDifficultyPicker" to="." method="_on_campaign_difficulty_selected"]
 [connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignActions/RestartCampaignArc" to="." method="_on_campaign_restart_pressed"]
-[connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/CampaignLaunchRow/CampaignPrimaryAction" to="." method="_on_campaign_primary_pressed"]
-[connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/CampaignLaunchRow/StartChapter" to="." method="_on_start_chapter_pressed"]
+[connection signal="pressed" from="CampaignCommandRail/CampaignLaunchRow/CampaignPrimaryAction" to="." method="_on_campaign_primary_pressed"]
+[connection signal="pressed" from="CampaignCommandRail/CampaignLaunchRow/StartChapter" to="." method="_on_start_chapter_pressed"]
 [connection signal="confirmed" from="CampaignRestartDialog" to="." method="_on_campaign_restart_confirmed"]
 [connection signal="canceled" from="CampaignRestartDialog" to="." method="_on_campaign_restart_canceled"]
 [connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/ActionRow/StageHelp" to="." method="_on_stage_help_pressed"]
 [connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/ActionRow/CloseStageDock" to="." method="_on_close_stage_dock_pressed"]
-[connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/ModeSplit/SkirmishListPanel/SkirmishListPad/SkirmishListBox/SkirmishFrontNavigation/PreviousSkirmishFront" to="." method="_on_previous_skirmish_front_pressed"]
-[connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/ModeSplit/SkirmishListPanel/SkirmishListPad/SkirmishListBox/SkirmishFrontNavigation/NextSkirmishFront" to="." method="_on_next_skirmish_front_pressed"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/ModeSplit/SkirmishListPanel/SkirmishListPad/SkirmishListBox/SkirmishList" to="." method="_on_skirmish_selected"]
-[connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/SkirmishActionRow/DifficultyPicker" to="." method="_on_difficulty_selected"]
-[connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/SkirmishActionRow/StartSkirmish" to="." method="_on_start_skirmish_pressed"]
+[connection signal="item_selected" from="SkirmishCommandRail/SkirmishLaunchRow/DifficultyPicker" to="." method="_on_difficulty_selected"]
 [connection signal="text_changed" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/GeneratedMapPanel/GeneratedMapPad/GeneratedMapBox/GeneratedMapControls/GeneratedSeed" to="." method="_on_generated_seed_changed"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/GeneratedMapPanel/GeneratedMapPad/GeneratedMapBox/GeneratedMapControls/GeneratedSizePicker" to="." method="_on_generated_size_selected"]
 [connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/SkirmishPanel/SkirmishScroll/SkirmishScrollPad/SkirmishScrollBody/GeneratedMapPanel/GeneratedMapPad/GeneratedMapBox/GeneratedMapControls/GeneratedTemplatePicker" to="." method="_on_generated_template_selected"]

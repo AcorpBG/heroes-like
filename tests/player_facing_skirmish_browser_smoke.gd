@@ -45,7 +45,7 @@ func _run() -> void:
 	_stage("menu_scene_ready")
 	shell.call("validation_open_skirmish_stage")
 	await get_tree().process_frame
-	if not await _validate_native_front_navigation(shell, entries):
+	if not await _validate_native_skirmish_launch_setup(shell, entries):
 		return
 	_stage("native_navigation_ready")
 	if not bool(shell.call("validation_select_skirmish", AUTHORED_SCENARIO_ID)):
@@ -116,16 +116,41 @@ func _run() -> void:
 func _stage(stage: String) -> void:
 	print("PLAYER_FACING_SKIRMISH_BROWSER_STAGE %s" % JSON.stringify({"ticks_msec": Time.get_ticks_msec(), "stage": stage}))
 
-func _validate_native_front_navigation(shell: Node, entries: Array) -> bool:
+func _validate_native_skirmish_launch_setup(shell: Node, entries: Array) -> bool:
 	if entries.size() < 2:
 		_fail("Skirmish browser needs at least two fronts for native action navigation.")
 		return false
-	var previous_button := shell.find_child("PreviousSkirmishFront", true, false) as Button
-	var next_button := shell.find_child("NextSkirmishFront", true, false) as Button
+	var launch_row := shell.find_child("SkirmishLaunchRow", true, false) as HBoxContainer
+	var previous_button := shell.find_child("PreviousCampaignArc", true, false) as Button
+	var next_button := shell.find_child("NextCampaignArc", true, false) as Button
+	var difficulty_picker := shell.find_child("DifficultyPicker", true, false) as OptionButton
+	var difficulty_label := shell.find_child("SkirmishDifficultyLabel", true, false) as Label
+	var start_button := shell.find_child("NextCampaignChapter", true, false) as Button
+	var arc_navigation := shell.find_child("CampaignArcNavigation", true, false) as HBoxContainer
+	var chapter_navigation := shell.find_child("CampaignChapterNavigation", true, false) as HBoxContainer
 	var list := shell.find_child("SkirmishList", true, false) as ItemList
 	var stage := shell.get_node("StageDockPanel") as PanelContainer
-	if previous_button == null or next_button == null or list == null:
-		_fail("Skirmish browser is missing native Previous/Next front controls.")
+	var campaign_launch_row := shell.find_child("CampaignLaunchRow", true, false) as HBoxContainer
+	if launch_row == null or previous_button == null or next_button == null or difficulty_picker == null or difficulty_label == null or start_button == null or arc_navigation == null or chapter_navigation == null or list == null or campaign_launch_row == null:
+		_fail("Skirmish browser is missing its native launch row, front, difficulty, or launch controls.")
+		return false
+	if previous_button.get_parent() != arc_navigation or next_button.get_parent() != arc_navigation or start_button.get_parent() != chapter_navigation or difficulty_label.get_parent() != launch_row or difficulty_picker.get_parent() != launch_row:
+		_fail("Skirmish controls left the persistent native action row or compact difficulty rail.")
+		return false
+	var expected_options: Array = ScenarioSelectRules.build_difficulty_options()
+	var expected_difficulty_labels := []
+	var expected_difficulty_ids := []
+	for option_value in expected_options:
+		var option: Dictionary = option_value if option_value is Dictionary else {}
+		expected_difficulty_labels.append(String(option.get("label", option.get("id", "Difficulty"))))
+		expected_difficulty_ids.append(String(option.get("id", ScenarioSelectRules.default_difficulty_id())))
+	var actual_difficulty_labels := []
+	var actual_difficulty_ids := []
+	for index in range(difficulty_picker.item_count):
+		actual_difficulty_labels.append(difficulty_picker.get_item_text(index))
+		actual_difficulty_ids.append(String(difficulty_picker.get_item_metadata(index)))
+	if not launch_row.is_visible_in_tree() or campaign_launch_row.is_visible_in_tree() or actual_difficulty_labels != expected_difficulty_labels or actual_difficulty_ids != expected_difficulty_ids or difficulty_picker.disabled or start_button.disabled:
+		_fail("Skirmish launch row changed visibility, difficulty options, or launch authority.")
 		return false
 	var expected_labels := []
 	for entry_value in entries:
@@ -141,21 +166,37 @@ func _validate_native_front_navigation(shell: Node, entries: Array) -> bool:
 		var stage_rect := stage.get_global_rect()
 		var previous_rect := previous_button.get_global_rect()
 		var next_rect := next_button.get_global_rect()
+		var arc_navigation_rect := arc_navigation.get_global_rect()
+		var chapter_navigation_rect := chapter_navigation.get_global_rect()
+		var launch_row_rect := launch_row.get_global_rect()
+		var difficulty_rect := difficulty_picker.get_global_rect()
+		var start_rect := start_button.get_global_rect()
 		var list_rect := list.get_global_rect()
 		if (
-			not previous_button.is_visible_in_tree()
+			not launch_row.is_visible_in_tree()
+			or not previous_button.is_visible_in_tree()
 			or not next_button.is_visible_in_tree()
-			or not stage_rect.encloses(previous_rect)
-			or not stage_rect.encloses(next_rect)
+			or not difficulty_picker.is_visible_in_tree()
+			or not start_button.is_visible_in_tree()
+			or not stage_rect.encloses(launch_row_rect)
+			or not stage_rect.encloses(arc_navigation_rect)
+			or not stage_rect.encloses(chapter_navigation_rect)
+			or not arc_navigation_rect.encloses(previous_rect)
+			or not arc_navigation_rect.encloses(next_rect)
+			or not chapter_navigation_rect.encloses(start_rect)
+			or not launch_row_rect.encloses(difficulty_rect)
 			or previous_rect.intersects(next_rect)
 			or previous_rect.end.x > next_rect.position.x
+			or start_rect.end.y > launch_row_rect.position.y
 			or previous_rect.size.x < previous_button.get_combined_minimum_size().x
 			or next_rect.size.x < next_button.get_combined_minimum_size().x
-			or list_rect.position.y < maxf(previous_rect.end.y, next_rect.end.y)
+			or difficulty_rect.size.x < difficulty_picker.get_combined_minimum_size().x
+			or start_rect.size.x < start_button.get_combined_minimum_size().x
+			or list_rect.position.y < launch_row_rect.end.y
 		):
 			get_window().size = original_window_size
 			await _settle_frames(3)
-			_fail("Skirmish native front navigation escaped or overlapped its board at %s." % viewport_size)
+			_fail("Skirmish native launch row escaped or overlapped its board at %s." % viewport_size)
 			return false
 	get_window().size = original_window_size
 	await _settle_frames(3)
@@ -220,6 +261,38 @@ func _validate_native_front_navigation(shell: Node, entries: Array) -> bool:
 		return false
 	if not bool(shell.call("validation_select_skirmish", first_id)):
 		_fail("Could not restore the first Skirmish row after native navigation.")
+		return false
+	var initial_difficulty_snapshot: Dictionary = shell.call("validation_snapshot")
+	var initial_difficulty := String(initial_difficulty_snapshot.get("selected_difficulty", ""))
+	var initial_difficulty_index := difficulty_picker.selected
+	var next_difficulty_index := (initial_difficulty_index + 1) % difficulty_picker.item_count
+	if next_difficulty_index == initial_difficulty_index:
+		_fail("Skirmish native difficulty needs at least two options for public interaction proof.")
+		return false
+	difficulty_picker.grab_focus()
+	difficulty_picker.select(next_difficulty_index)
+	difficulty_picker.item_selected.emit(next_difficulty_index)
+	await _settle_frames(2)
+	var changed_difficulty_snapshot: Dictionary = shell.call("validation_snapshot")
+	if String(changed_difficulty_snapshot.get("selected_difficulty", "")) != String(expected_difficulty_ids[next_difficulty_index]) or get_viewport().gui_get_focus_owner() != difficulty_picker:
+		_fail("Skirmish public difficulty action did not publish exact selection and focus: %s" % changed_difficulty_snapshot)
+		return false
+	difficulty_picker.select(initial_difficulty_index)
+	difficulty_picker.item_selected.emit(initial_difficulty_index)
+	await _settle_frames(2)
+	var restored_difficulty_snapshot: Dictionary = shell.call("validation_snapshot")
+	if String(restored_difficulty_snapshot.get("selected_difficulty", "")) != initial_difficulty or get_viewport().gui_get_focus_owner() != difficulty_picker:
+		_fail("Skirmish public difficulty action did not restore exact selection and focus: %s" % restored_difficulty_snapshot)
+		return false
+	shell.call("validation_open_campaign_stage")
+	await _settle_frames(2)
+	if launch_row.is_visible_in_tree() or not campaign_launch_row.is_visible_in_tree():
+		_fail("Skirmish launch row remained visible outside the Skirmish stage.")
+		return false
+	shell.call("validation_open_skirmish_stage")
+	await _settle_frames(2)
+	if not launch_row.is_visible_in_tree() or campaign_launch_row.is_visible_in_tree():
+		_fail("Skirmish launch row did not restore exact stage-only visibility.")
 		return false
 	if (
 		SessionState.active_session != session_before

@@ -380,26 +380,76 @@ func _run() -> void:
 	var skirmish_save_cache_before: Dictionary = SaveService.validation_summary_cache_snapshot()
 	menu.call("validation_open_skirmish_stage")
 	await _settle()
-	var previous_front := menu.find_child("PreviousSkirmishFront", true, false) as Button
-	var next_front := menu.find_child("NextSkirmishFront", true, false) as Button
+	var skirmish_launch_row := menu.find_child("SkirmishLaunchRow", true, false) as HBoxContainer
+	var previous_front := menu.find_child("PreviousCampaignArc", true, false) as Button
+	var next_front := menu.find_child("NextCampaignArc", true, false) as Button
+	var skirmish_difficulty := menu.find_child("DifficultyPicker", true, false) as OptionButton
+	var skirmish_difficulty_label := menu.find_child("SkirmishDifficultyLabel", true, false) as Label
+	var start_skirmish := menu.find_child("NextCampaignChapter", true, false) as Button
+	var skirmish_arc_navigation := menu.find_child("CampaignArcNavigation", true, false) as HBoxContainer
+	var skirmish_chapter_navigation := menu.find_child("CampaignChapterNavigation", true, false) as HBoxContainer
 	var skirmish_entries: Array = ScenarioSelectRules.build_skirmish_browser_entries()
-	if previous_front == null or next_front == null or skirmish_entries.size() < 2:
-		return _fail("Main-menu Skirmish board is missing its native adjacent-front actions.")
+	if skirmish_launch_row == null or previous_front == null or next_front == null or skirmish_difficulty == null or skirmish_difficulty_label == null or start_skirmish == null or skirmish_arc_navigation == null or skirmish_chapter_navigation == null or skirmish_entries.size() < 2:
+		return _fail("Main-menu Skirmish board is missing its native front, difficulty, or launch actions.")
 	var first_skirmish_id := String((skirmish_entries[0] as Dictionary).get("scenario_id", ""))
 	var next_skirmish_id := String((skirmish_entries[1] as Dictionary).get("scenario_id", ""))
 	var skirmish_initial: Dictionary = menu.call("validation_snapshot")
+	var skirmish_difficulty_value := skirmish_difficulty.get_item_text(skirmish_difficulty.selected)
+	var skirmish_difficulty_clause := "Current value: %s." % skirmish_difficulty_value
+	var expected_skirmish_difficulty_description := _bounded_semantic_text(
+		"%s %s" % [
+			_bounded_semantic_text(skirmish_difficulty.tooltip_text, 1000 - skirmish_difficulty_clause.length() - 1),
+			skirmish_difficulty_clause,
+		],
+		1000
+	) if skirmish_difficulty.tooltip_text.strip_edges() != "" else _bounded_semantic_text(
+		"Choose an option for Difficulty. Current value: %s." % skirmish_difficulty_value,
+		1000
+	)
 	var native_front_checks := {
+		"launch_row_visible": skirmish_launch_row.is_visible_in_tree(),
+		"campaign_launch_row_hidden": not campaign_launch_row.is_visible_in_tree(),
+		"launch_controls_owned": previous_front.get_parent() == skirmish_arc_navigation and next_front.get_parent() == skirmish_arc_navigation and start_skirmish.get_parent() == skirmish_chapter_navigation and skirmish_difficulty_label.get_parent() == skirmish_launch_row and skirmish_difficulty.get_parent() == skirmish_launch_row,
 		"previous_name": UiAccessibility.semantic_name(previous_front) == "Previous Front",
 		"next_name": UiAccessibility.semantic_name(next_front) == "Next Front",
 		"previous_description": previous_front.accessibility_description == previous_front.tooltip_text and previous_front.accessibility_description.contains("first Skirmish front"),
 		"next_description": next_front.accessibility_description == next_front.tooltip_text and next_front.accessibility_description.contains("Select the next Skirmish front:"),
 		"previous_disabled": previous_front.disabled,
 		"next_enabled": not next_front.disabled,
+		"difficulty_name": UiAccessibility.semantic_name(skirmish_difficulty) == "Difficulty",
+		"difficulty_description": skirmish_difficulty.accessibility_description == expected_skirmish_difficulty_description,
+		"start_name": UiAccessibility.semantic_name(start_skirmish) == "Launch Skirmish",
+		"start_description": start_skirmish.accessibility_description == _bounded_semantic_text(start_skirmish.tooltip_text, 1000),
+		"start_enabled": not start_skirmish.disabled,
 		"first_selected": String(skirmish_initial.get("selected_skirmish_id", "")) == first_skirmish_id,
 		"first_index": int(skirmish_initial.get("selected_skirmish_index", -1)) == 0,
 	}
 	if not _checks_exact(native_front_checks):
-		return _fail("Main-menu Skirmish adjacent-front actions lack exact native semantics: %s" % native_front_checks)
+		return _fail("Main-menu Skirmish launch row lacks exact native semantics: %s" % native_front_checks)
+	var skirmish_difficulty_ids := []
+	var skirmish_difficulty_labels := []
+	for difficulty_option in ScenarioSelectRules.build_difficulty_options():
+		skirmish_difficulty_labels.append(String(difficulty_option.get("label", difficulty_option.get("id", "Difficulty"))))
+		skirmish_difficulty_ids.append(String(difficulty_option.get("id", ScenarioSelectRules.default_difficulty_id())))
+	var original_skirmish_difficulty_index := skirmish_difficulty.selected
+	var next_skirmish_difficulty_index := (original_skirmish_difficulty_index + 1) % skirmish_difficulty.item_count
+	skirmish_difficulty.grab_focus()
+	skirmish_difficulty.select(next_skirmish_difficulty_index)
+	skirmish_difficulty.item_selected.emit(next_skirmish_difficulty_index)
+	await _settle()
+	var skirmish_difficulty_changed: Dictionary = menu.call("validation_snapshot")
+	if (
+		String(skirmish_difficulty_changed.get("selected_difficulty", "")) != String(skirmish_difficulty_ids[next_skirmish_difficulty_index])
+		or not skirmish_difficulty.accessibility_description.contains("Current value: %s." % String(skirmish_difficulty_labels[next_skirmish_difficulty_index]))
+		or get_viewport().gui_get_focus_owner() != skirmish_difficulty
+		or SessionState.active_session != skirmish_session_before
+		or _canonical_settings_transaction(SettingsService.validation_settings_transaction_snapshot()) != skirmish_settings_before
+		or SaveService.validation_summary_cache_snapshot() != skirmish_save_cache_before
+	):
+		return _fail("Skirmish Difficulty native action changed semantics or unrelated authority: %s" % skirmish_difficulty_changed)
+	skirmish_difficulty.select(original_skirmish_difficulty_index)
+	skirmish_difficulty.item_selected.emit(original_skirmish_difficulty_index)
+	await _settle()
 	next_front.pressed.emit()
 	await _settle()
 	var skirmish_advanced: Dictionary = menu.call("validation_snapshot")
@@ -411,6 +461,7 @@ func _run() -> void:
 	if (
 		String(skirmish_returned.get("selected_skirmish_id", "")) != first_skirmish_id
 		or int(skirmish_returned.get("selected_skirmish_index", -1)) != 0
+		or String(skirmish_returned.get("selected_difficulty", "")) != String(skirmish_initial.get("selected_difficulty", ""))
 		or SessionState.active_session != skirmish_session_before
 		or _canonical_settings_transaction(SettingsService.validation_settings_transaction_snapshot()) != skirmish_settings_before
 		or SaveService.validation_summary_cache_snapshot() != skirmish_save_cache_before
