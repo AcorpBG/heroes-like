@@ -24,7 +24,9 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Completed implementation slice: `native-rmg-runtime-loose-resource-proxy-identity-projection-10184`. The accepted runtime proxy catalog now contains exact recovered type-79 rows for all seven H3M resource subtypes and maps them to the established original-project wood, peatwax, ore, embergrain, aetherglass, memory-salt, and gold fronts. Fresh Small keeps its 23,664-byte payload and 294 ordered objects while all 28 loose-resource records adopt exact identities; the prior 13 sulfur/crystal/gems/gold rows no longer become all-rare supply caches. Real Sulfur→Embergrain collection awards exactly +1 Embergrain and +120 gold, leaves every other rare stockpile unchanged, and persists. Focused/core/repository/editor and bounded Linux/Windows export-startup gates pass. Native binaries and generation remain unchanged. Packaged interaction, broad Native RMG parity, hardware certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
+- Completed implementation slice: `native-rmg-runtime-spell-scroll-proxy-pickup-projection-10184`. The sole recovered Small type-93 Spell Scroll (`AVA0001.def`) now projects through its accepted `spell_beacon_path` identity as a one-time live scroll pickup instead of the generic town-required source cache. Fresh Small retains payload `457dba6b`, 23,664 bytes, and all 294 ordered objects; real collection learns only Beacon Path, preserves resources/artifacts/army and every other node, persists, and rejects repeat collection. Focused/core/repository/editor and bounded Linux/Windows export-startup gates pass with unchanged native binaries and generation. Packaged scroll interaction, broad Native RMG parity, hardware certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
+  id: `native-rmg-runtime-spell-scroll-proxy-pickup-projection-10184`
+- Completed implementation slice: `native-rmg-runtime-loose-resource-proxy-identity-projection-10184`. The accepted runtime proxy catalog now contains exact recovered type-79 rows for all seven H3M resource subtypes and maps them to the established original-project wood, peatwax, ore, embergrain, aetherglass, memory-salt, and gold fronts. Fresh Small keeps its 23,664-byte payload and 294 ordered objects while all 28 loose-resource records adopt exact identities; the prior 13 sulfur/crystal/gems/gold rows no longer become all-rare supply caches. Real Sulfur→Embergrain collection awards exactly +1 Embergrain and +120 gold, leaves every other rare stockpile unchanged, and persists. Focused/core/repository/editor and bounded Linux/Windows export-startup gates pass. Native binaries and generation remain unchanged. Packaged interaction, broad Native RMG parity, hardware certification, signing/publication, whole-game, and release readiness remain unclaimed.
   id: `native-rmg-runtime-loose-resource-proxy-identity-projection-10184`
 - Completed implementation slice: `native-rmg-runtime-artifact-proxy-pickup-projection-10184`. Exact catalog rows with a valid artifact identity now enter the existing one-time artifact pickup path instead of the persistent multi-resource supply-cache fallback. The fresh Small map retains its 23,664-byte payload and all 294 ordered objects while its one type-67 row becomes `artifact_waymark_compass` and both type-68 rows become `artifact_warcrest_pennon`; all three adopt as artifact nodes, none remains a resource node, and real collection awards the artifact and persists collected state. Spell, creature-bank/generator, malformed, missing, and ambiguous mappings remain fail-closed. Focused/core/repository/editor, four Linux/Windows native builds, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged pickup interaction, broad Native RMG parity, hardware certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
   id: `native-rmg-runtime-artifact-proxy-pickup-projection-10184`
@@ -7910,6 +7912,37 @@ Completion evidence:
 - `/tmp/heroes-resource-proxy-focused.NEvwlm` is natural rc0 and proves 28 exact loose-resource rows across observed subtypes 0/2/3/4/5/6, exact package/session node adoption, zero selected generic-cache fallback, a real subtype-3 claim with Embergrain +1/gold +120 and all other rare stockpiles exact, session round trip, repeat projection, and unchanged Small/Medium/ordinal-95/XLarge payload/object/guard/package/save/startup authority;
 - `/tmp/heroes-resource-proxy-core.bbBUHT` records core rc0; JSON, repository validation, Python compilation, diff checks, and exact/generic editor parses pass;
 - `/tmp/heroes-resource-proxy-linux-package.PVjQUh` and `/tmp/heroes-resource-proxy-windows-package.Xl0yGQ` record official Linux export/headless startup and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup green. These are export/startup claims only; no packaged resource interaction is claimed.
+
+## Active Slice: Native RMG Runtime Spell Scroll Proxy Pickup Projection
+
+id: `native-rmg-runtime-spell-scroll-proxy-pickup-projection-10184`
+
+Status: completed.
+
+Implementation boundary:
+- add one original-project, one-time, non-persistent Beacon Path scroll site to `content/resource_sites.json` and assign its exact site identity only to the unique type-93/subtype-0 accepted proxy-catalog row;
+- reuse the existing resource-node collection and `SpellRules.learn_spell` authority without adding a runtime system or native-code branch;
+- preserve exact catalog provenance and leave every missing, malformed, duplicate, non-scroll, artifact, resource, and creature mapping on its established fail-closed path.
+
+Completion criteria:
+- fresh Small keeps payload `457dba6b`, `23,664` bytes, and `294` ordered objects; its sole type-93 row retains exact recovered source row `2`, `AVA0001.def`, order, placement, masks, and serialization, adopts as exactly one live scroll resource node, and no longer uses `site_generated_town_required_source_cache`;
+- real collection learns only `spell_beacon_path`, changes no resources, artifacts, or army, marks only the selected node collected, survives `SessionData` round trip, and rejects repeat collection;
+- existing mine, Campfire, artifact, loose-resource, guard, package, save, and startup authority remains exact;
+- repository/editor, core, and bounded official Linux/Windows export-startup gates pass with unchanged synchronized native binaries.
+
+Non-goals:
+- no recovered H3MapEd generation/private-state/writeout, RNG, payload, object count/order/placement, terrain, roads, guards, masks, density, balance, native-code/binary, spell-effect/cost/AI, other proxy mapping, or audit-threshold change;
+- no copyrighted art/DEF import, packaged scroll-interaction claim, broad Native RMG parity, hardware certification, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- pushed HEAD `a6ef1e7b` fresh Small map `maps/small-moon-pass-spring-baee5d8b.amap` contains exactly one type-93/subtype-0 `AVA0001.def` row at placement `native_h3maped_457dba6b_object_0267`; it currently has `site_id=site_generated_town_required_source_cache` and no live spell identity;
+- `content/homm3_re_reward_object_proxy_catalog.json` already owns the unique exact source row and `native_spell_id=spell_beacon_path`, while the session bridge adopts any exact `native_proxy_site_id` through the existing resource-node path;
+- one-time non-persistent resource sites already mark collected state and invoke `SpellRules.learn_spell`, providing the live behavior boundary without native or generation changes.
+
+Completion evidence:
+- `/tmp/heroes-spell-scroll-focused.Q5GPQb` is natural rc0 and proves the sole exact type-93 row and live scroll node, `spell_beacon_path` as the only known-spell delta, exact resources/artifacts/army/other nodes, repeat rejection, session round trip, repeated generation authority, and unchanged Small/Medium/ordinal-95/Extra-Large payload/object/guard/package/save/startup gates;
+- `/tmp/heroes-spell-scroll-core.r7WCx5` records core rc0; JSON, repository validation, Python compilation, diff checks, and exact/generic editor parses pass;
+- `/tmp/heroes-spell-scroll-linux-package.zpi2sS` and `/tmp/heroes-spell-scroll-windows-package.CUKi63` wrapper artifacts plus the official report JSON files record Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup green. These are export/startup claims only; no packaged scroll interaction is claimed.
 
 ## Progress Reconciliation
 

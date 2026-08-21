@@ -8,6 +8,20 @@
       }
     },
     {
+      "id": "site_beacon_path_scroll",
+      "name": "Beacon Path Scroll",
+      "family": "one_shot_pickup",
+      "learn_spell_id": "spell_beacon_path",
+      "runtime_boundary": {
+        "status": "spell_reward_live",
+        "live_reward_grants": true,
+        "save_payload_required": false,
+        "renderer_sprite_required": false,
+        "pathing_runtime_adopted": false,
+        "rare_resource_activation": false
+      }
+    },
+    {
       "id": "site_wood_wagon",
       "name": "Wood Wagon",
       "persistent_control": true,

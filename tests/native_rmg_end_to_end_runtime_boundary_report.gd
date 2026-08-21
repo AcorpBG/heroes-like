@@ -134,6 +134,9 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 	var resource_proxy_count := 0
 	var resource_proxy_rows_exact := true
 	var resource_proxy_subtypes := {}
+	var spell_scroll_count := 0
+	var spell_scroll_rows_exact := true
+	var spell_scroll_placement_ids := {}
 	var expected_mines := {
 		0: {"object_id": "object_brightwood_sawmill", "resource_id": "wood", "catalog_id": "mine_wood_sawmill_proxy"},
 		1: {"object_id": "object_marsh_peat_yard", "resource_id": "gold", "catalog_id": "mine_alchemist_proxy"},
@@ -217,6 +220,18 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 					or String(object.get("homm3_re_reward_object_catalog_id", "")) != String(expected_resource.get("catalog_id", "")) \
 					or not _live_proxy_provenance_exact(object):
 				resource_proxy_rows_exact = false
+		elif type_id == 93:
+			spell_scroll_count += 1
+			spell_scroll_placement_ids[String(object.get("placement_id", ""))] = true
+			if subtype != 0 \
+					or String(object.get("kind", "")) != "reward_reference" \
+					or String(object.get("object_id", "")) != "spell_beacon_path" \
+					or String(object.get("native_proxy_object_id", "")) != "spell_beacon_path" \
+					or String(object.get("site_id", "")) != "site_beacon_path_scroll" \
+					or String(object.get("homm3_re_reward_object_catalog_id", "")) != "reward_spell_scroll_proxy" \
+					or String(object.get("homm3_re_object_def_ref", "")) != "AVA0001.def" \
+					or not _live_proxy_provenance_exact(object):
+				spell_scroll_rows_exact = false
 	for object_index in range(int(second_map.get_object_count())):
 		repeat_identity.append(_proxy_projection_object_authority(second_map.get_object_by_index(object_index)))
 	var adoption: Dictionary = service.convert_generated_payload(first, {"feature_gate": REPORT_ID})
@@ -238,6 +253,7 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 	var live_resource_proxy_count := 0
 	var live_resource_proxy_rows_exact := true
 	var selected_rare_resource := {}
+	var live_spell_scrolls := []
 	if session != null:
 		var resource_nodes: Array = session.overworld.get("resource_nodes", []) if session.overworld.get("resource_nodes", []) is Array else []
 		var package_source_objects: Dictionary = session.overworld.get("package_source_objects_by_id", {}) if session.overworld.get("package_source_objects_by_id", {}) is Dictionary else {}
@@ -265,6 +281,11 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 					live_resource_proxy_rows_exact = false
 				if int(source.get("h3m_subtype", -1)) == 3 and selected_rare_resource.is_empty():
 					selected_rare_resource = {"index": node_index, "node": node.duplicate(true)}
+			elif int(source.get("h3m_type_id", -1)) == 93:
+				if String(node.get("object_id", "")) == "spell_beacon_path" \
+						and String(node.get("site_id", "")) == "site_beacon_path_scroll" \
+						and spell_scroll_placement_ids.has(String(node.get("placement_id", ""))):
+					live_spell_scrolls.append({"index": node_index, "node": node.duplicate(true)})
 		var artifact_nodes: Array = session.overworld.get("artifact_nodes", []) if session.overworld.get("artifact_nodes", []) is Array else []
 		for artifact_index in range(artifact_nodes.size()):
 			var artifact_value: Variant = artifact_nodes[artifact_index]
@@ -347,6 +368,72 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 			"other_rare_exact": other_rare_exact,
 			"save_round_trip_exact": restored_node == claimed_node and restored.overworld.get("resources", {}) == resources_after,
 		}
+	var spell_scroll_interaction := {}
+	if session != null and live_spell_scrolls.size() == 1:
+		var scroll_result: Dictionary = live_spell_scrolls[0]
+		var scroll_node: Dictionary = scroll_result.get("node", {}) if scroll_result.get("node", {}) is Dictionary else {}
+		var scroll_index := int(scroll_result.get("index", -1))
+		var resources_before: Dictionary = session.overworld.get("resources", {}).duplicate(true)
+		var artifact_nodes_before: Array = session.overworld.get("artifact_nodes", []).duplicate(true) if session.overworld.get("artifact_nodes", []) is Array else []
+		var resource_nodes_before: Array = session.overworld.get("resource_nodes", []).duplicate(true) if session.overworld.get("resource_nodes", []) is Array else []
+		var hero_before: Dictionary = session.overworld.get("hero", {}).duplicate(true)
+		var army_before: Dictionary = session.overworld.get("army", {}).duplicate(true)
+		var spellbook_before: Dictionary = hero_before.get("spellbook", {}).duplicate(true) if hero_before.get("spellbook", {}) is Dictionary else {}
+		var known_before: Array = spellbook_before.get("known_spell_ids", []).duplicate(true) if spellbook_before.get("known_spell_ids", []) is Array else []
+		var expected_known_after: Array = known_before.duplicate(true)
+		expected_known_after.append("spell_beacon_path")
+		var claim: Dictionary = OverworldRulesScript._collect_resource_node_result(session, scroll_result, false)
+		var resource_nodes_after: Array = session.overworld.get("resource_nodes", []) if session.overworld.get("resource_nodes", []) is Array else []
+		var claimed_node: Dictionary = resource_nodes_after[scroll_index] if scroll_index >= 0 and scroll_index < resource_nodes_after.size() and resource_nodes_after[scroll_index] is Dictionary else {}
+		var hero_after: Dictionary = session.overworld.get("hero", {}) if session.overworld.get("hero", {}) is Dictionary else {}
+		var spellbook_after: Dictionary = hero_after.get("spellbook", {}) if hero_after.get("spellbook", {}) is Dictionary else {}
+		var known_after: Array = spellbook_after.get("known_spell_ids", []) if spellbook_after.get("known_spell_ids", []) is Array else []
+		var spellbook_before_without_known: Dictionary = spellbook_before.duplicate(true)
+		var spellbook_after_without_known: Dictionary = spellbook_after.duplicate(true)
+		spellbook_before_without_known.erase("known_spell_ids")
+		spellbook_after_without_known.erase("known_spell_ids")
+		var hero_before_without_spellbook: Dictionary = hero_before.duplicate(true)
+		var hero_after_without_spellbook: Dictionary = hero_after.duplicate(true)
+		hero_before_without_spellbook.erase("spellbook")
+		hero_after_without_spellbook.erase("spellbook")
+		var unrelated_nodes_exact := resource_nodes_before.size() == resource_nodes_after.size()
+		if unrelated_nodes_exact:
+			for node_index in range(resource_nodes_before.size()):
+				if node_index != scroll_index and resource_nodes_before[node_index] != resource_nodes_after[node_index]:
+					unrelated_nodes_exact = false
+					break
+		var repeat_claim: Dictionary = OverworldRulesScript._collect_resource_node_result(session, {"index": scroll_index, "node": claimed_node}, false)
+		var restored = SessionStateStoreScript.SessionData.new()
+		restored.from_dict(session.to_dict())
+		var restored_nodes: Array = restored.overworld.get("resource_nodes", []) if restored.overworld.get("resource_nodes", []) is Array else []
+		var restored_node: Dictionary = restored_nodes[scroll_index] if scroll_index >= 0 and scroll_index < restored_nodes.size() and restored_nodes[scroll_index] is Dictionary else {}
+		var restored_hero: Dictionary = restored.overworld.get("hero", {}) if restored.overworld.get("hero", {}) is Dictionary else {}
+		spell_scroll_interaction = {
+			"ok": bool(claim.get("ok", false)) \
+					and not known_before.has("spell_beacon_path") \
+					and known_after == expected_known_after \
+					and bool(claimed_node.get("collected", false)) \
+					and session.overworld.get("resources", {}) == resources_before \
+					and session.overworld.get("artifact_nodes", []) == artifact_nodes_before \
+					and session.overworld.get("army", {}) == army_before \
+					and hero_before_without_spellbook == hero_after_without_spellbook \
+					and spellbook_before_without_known == spellbook_after_without_known \
+					and unrelated_nodes_exact \
+					and not bool(repeat_claim.get("ok", false)) \
+					and restored_node == claimed_node \
+					and restored_hero.get("spellbook", {}) == spellbook_after,
+			"placement_id": scroll_node.get("placement_id", ""),
+			"site_id": claimed_node.get("site_id", ""),
+			"claim_ok": claim.get("ok", false),
+			"known_before": known_before,
+			"known_after": known_after,
+			"resources_exact": session.overworld.get("resources", {}) == resources_before,
+			"artifacts_exact": session.overworld.get("artifact_nodes", []) == artifact_nodes_before,
+			"army_exact": session.overworld.get("army", {}) == army_before,
+			"unrelated_nodes_exact": unrelated_nodes_exact,
+			"repeat_rejected": not bool(repeat_claim.get("ok", false)),
+			"save_round_trip_exact": restored_node == claimed_node and restored_hero.get("spellbook", {}) == spellbook_after,
+		}
 	var exact_repeat: bool = bool(second.get("ok", false)) \
 			and first.get("final_payload_fnv1a32", "") == second.get("final_payload_fnv1a32", "") \
 			and first.get("final_payload_byte_count", -1) == second.get("final_payload_byte_count", -2) \
@@ -373,6 +460,8 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 				and resource_proxy_subtypes.has(5) \
 				and resource_proxy_subtypes.has(6) \
 				and resource_proxy_rows_exact \
+				and spell_scroll_count == 1 \
+				and spell_scroll_rows_exact \
 				and bool(adoption.get("ok", false)) \
 				and session != null \
 				and live_mine_count == mine_count \
@@ -385,6 +474,8 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 				and live_resource_proxy_count == resource_proxy_count \
 				and live_resource_proxy_rows_exact \
 				and bool(rare_resource_interaction.get("ok", false)) \
+				and live_spell_scrolls.size() == spell_scroll_count \
+				and bool(spell_scroll_interaction.get("ok", false)) \
 				and exact_repeat,
 		"payload_hash": first.get("final_payload_fnv1a32", ""),
 		"payload_bytes": first.get("final_payload_byte_count", -1),
@@ -407,12 +498,16 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 		"resource_proxy_rows_exact": resource_proxy_rows_exact,
 		"live_resource_proxy_count": live_resource_proxy_count,
 		"live_resource_proxy_rows_exact": live_resource_proxy_rows_exact,
+		"spell_scroll_count": spell_scroll_count,
+		"spell_scroll_rows_exact": spell_scroll_rows_exact,
+		"live_spell_scroll_count": live_spell_scrolls.size(),
 		"live_mine_count": live_mine_count,
 		"live_mine_sites_exact": live_mine_sites_exact,
 		"live_campfire_count": live_campfires.size(),
 		"interaction": interaction,
 		"artifact_interaction": artifact_interaction,
 		"rare_resource_interaction": rare_resource_interaction,
+		"spell_scroll_interaction": spell_scroll_interaction,
 		"exact_repeat": exact_repeat,
 	}
 

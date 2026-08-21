@@ -44679,6 +44679,49 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             )
             ensure(actual == expected, errors, f"H3M loose-resource subtype {subtype} proxy identity drifted: {actual}")
             ensure(str(row.get("generated_kind", "")) == "reward_reference", errors, f"H3M loose-resource subtype {subtype} must remain a reward_reference")
+        type93_entries = [entry for entry in proxy_entries if isinstance(entry, dict) and int(entry.get("homm3_re_object_type_id", -1)) == 93]
+        ensure(len(type93_entries) == 1, errors, "H3M Spell Scroll proxy catalog must contain exactly one type-93 row")
+        if len(type93_entries) == 1:
+            spell_scroll_row = type93_entries[0]
+            ensure(
+                (
+                    int(spell_scroll_row.get("homm3_re_object_subtype", -1)),
+                    int(spell_scroll_row.get("homm3_re_object_source_row", -1)),
+                    str(spell_scroll_row.get("homm3_re_object_def_ref", "")),
+                    str(spell_scroll_row.get("generated_kind", "")),
+                    str(spell_scroll_row.get("semantic_category", "")),
+                    str(spell_scroll_row.get("native_proxy_object_id", "")),
+                    str(spell_scroll_row.get("native_spell_id", "")),
+                    str(spell_scroll_row.get("native_proxy_site_id", "")),
+                    str(spell_scroll_row.get("id", "")),
+                )
+                == (0, 2, "AVA0001.def", "reward_reference", "spell_access", "spell_beacon_path", "spell_beacon_path", "site_beacon_path_scroll", "reward_spell_scroll_proxy"),
+                errors,
+                "H3M Spell Scroll proxy identity must remain exact and live-site-backed",
+            )
+        spell_scroll_sites = [
+            site for site in load_json(CONTENT_DIR / "resource_sites.json").get("items", [])
+            if isinstance(site, dict) and str(site.get("id", "")) == "site_beacon_path_scroll"
+        ]
+        ensure(len(spell_scroll_sites) == 1, errors, "Beacon Path scroll must have exactly one resource-site definition")
+        if len(spell_scroll_sites) == 1:
+            spell_scroll_site = spell_scroll_sites[0]
+            spell_scroll_boundary = spell_scroll_site.get("runtime_boundary", {})
+            ensure(
+                str(spell_scroll_site.get("name", "")) == "Beacon Path Scroll"
+                and str(spell_scroll_site.get("family", "")) == "one_shot_pickup"
+                and str(spell_scroll_site.get("learn_spell_id", "")) == "spell_beacon_path"
+                and not bool(spell_scroll_site.get("persistent_control", False))
+                and not bool(spell_scroll_site.get("repeatable", False))
+                and not spell_scroll_site.get("rewards", {})
+                and not spell_scroll_site.get("claim_rewards", {})
+                and not spell_scroll_site.get("artifact_reward_contract", {})
+                and isinstance(spell_scroll_boundary, dict)
+                and str(spell_scroll_boundary.get("status", "")) == "spell_reward_live"
+                and bool(spell_scroll_boundary.get("live_reward_grants", False)),
+                errors,
+                "Beacon Path scroll site must remain a one-time spell-only live pickup",
+            )
 
     if native_map_service_path.exists():
         native_text = native_map_service_path.read_text(encoding="utf-8")
@@ -44864,6 +44907,29 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             'and live_resource_proxy_count == resource_proxy_count',
             'and live_resource_proxy_rows_exact',
             'and bool(rare_resource_interaction.get("ok", false))',
+            'elif type_id == 93:',
+            'spell_scroll_placement_ids[String(object.get("placement_id", ""))] = true',
+            'or String(object.get("object_id", "")) != "spell_beacon_path"',
+            'or String(object.get("site_id", "")) != "site_beacon_path_scroll"',
+            'or String(object.get("homm3_re_reward_object_catalog_id", "")) != "reward_spell_scroll_proxy"',
+            'elif int(source.get("h3m_type_id", -1)) == 93:',
+            'spell_scroll_placement_ids.has(String(node.get("placement_id", "")))',
+            'var spellbook_before: Dictionary = hero_before.get("spellbook", {}).duplicate(true)',
+            'expected_known_after.append("spell_beacon_path")',
+            'var claim: Dictionary = OverworldRulesScript._collect_resource_node_result(session, scroll_result, false)',
+            'var repeat_claim: Dictionary = OverworldRulesScript._collect_resource_node_result(session, {"index": scroll_index, "node": claimed_node}, false)',
+            'and not known_before.has("spell_beacon_path")',
+            'and known_after == expected_known_after',
+            'and session.overworld.get("resources", {}) == resources_before',
+            'and session.overworld.get("artifact_nodes", []) == artifact_nodes_before',
+            'and session.overworld.get("army", {}) == army_before',
+            'and unrelated_nodes_exact',
+            'and not bool(repeat_claim.get("ok", false))',
+            'and restored_hero.get("spellbook", {}) == spellbook_after',
+            'and spell_scroll_count == 1',
+            'and spell_scroll_rows_exact',
+            'and live_spell_scrolls.size() == spell_scroll_count',
+            'and bool(spell_scroll_interaction.get("ok", false))',
             'func _live_proxy_provenance_exact(object: Dictionary) -> bool:',
             'func _proxy_projection_object_authority(object: Dictionary) -> Dictionary:',
             '_validate_guard_control_projection(medium.get("generated", {}))',
@@ -44921,6 +44987,8 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
         ensure(proxy_projection_block.find("build_session_from_adoption(adoption)") < proxy_projection_block.find("_collect_artifact_node_result(session, artifact_result, false)") < proxy_projection_block.find("restored.from_dict(session.to_dict())"), errors, "Native live artifact proxy must use adopted collection authority before exact persistence restoration")
         ensure(proxy_projection_block.find('artifact_proxy_placement_ids[String(object.get("placement_id", ""))] = true') < proxy_projection_block.find('artifact_proxy_placement_ids.has(String(artifact_node.get("placement_id", "")))') < proxy_projection_block.find("_collect_artifact_node_result(session, artifact_result, false)"), errors, "Native live artifact owner must correlate projected placements through package adoption before collection")
         ensure(proxy_projection_block.find('int(source.get("h3m_type_id", -1)) == 79') < proxy_projection_block.find('int(source.get("h3m_subtype", -1)) == 3') < proxy_projection_block.find("_collect_resource_node_result(session, selected_rare_resource, false)"), errors, "Native live resource owner must correlate an exact subtype-3 package node before real collection")
+        ensure(proxy_projection_block.find('spell_scroll_placement_ids[String(object.get("placement_id", ""))] = true') < proxy_projection_block.find('spell_scroll_placement_ids.has(String(node.get("placement_id", "")))') < proxy_projection_block.find("_collect_resource_node_result(session, scroll_result, false)"), errors, "Native live Spell Scroll owner must correlate exact projection through package adoption before collection")
+        ensure(proxy_projection_block.find('var resource_nodes_before: Array = session.overworld.get("resource_nodes", []).duplicate(true)') < proxy_projection_block.find("_collect_resource_node_result(session, scroll_result, false)") < proxy_projection_block.find('var repeat_claim: Dictionary = OverworldRulesScript._collect_resource_node_result'), errors, "Native live Spell Scroll owner must bracket real collection with detached authority and repeat rejection")
         for forbidden_token in (
             "object.erase(",
             "sort()",
