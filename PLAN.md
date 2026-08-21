@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `native-rmg-runtime-basilisk-bogbell-dwelling-projection-10184`. Medium seed 10 remains payload `e76c8967`/79,333 bytes/1,326 objects with exact type-17 order/placements/masks; subtype 0 now uses the original Bogbell Croft, subtype 22 remains Cinder Kiln, and subtype 5 stays raw. Exact live claims total 180 gold and the two existing dwelling recruit contracts, with persistent control, repeat rejection, save-v9 and unrelated authority exact. Focused, compatibility, static/editor, and bounded Linux/Windows export-startup gates pass. Other subtypes, native parity, packaged interaction, certification, signing/publication, whole-game and release readiness remain unclaimed. Select the next tracker-approved RMG-only slice.
+  id: `native-rmg-runtime-basilisk-bogbell-dwelling-projection-10184`
 - Completed implementation slice: `native-rmg-runtime-gog-cinder-kiln-dwelling-projection-10184`. Fixed Medium seed 10 retains payload `e76c8967`, 79,333 bytes, 1,326 ordered objects, and its exact type-17 row order/placement/masks while recovered subtype 22/source row 180/`AVGgogs0.def` now projects through the existing original Cinder Kiln neutral dwelling. Subtypes 0/5 remain raw and fail-closed. The live claim grants exactly 75 gold plus 2 Kilnward Mallets/1 Cinderpot Hurler, persists player control, rejects the repeat without mutation, and round-trips through save version 9 with unrelated authority exact. Focused, dwelling/AI/content/core, repository/editor, and bounded Linux/Windows export-startup gates pass. No other subtype, generation/parity, imported H3 identity, balance, packaged interaction, certification, signing/publication, whole-game, or release-readiness claim. Select the next tracker-approved RMG-only source-backed slice.
   id: `native-rmg-runtime-gog-cinder-kiln-dwelling-projection-10184`
 - Completed implementation slice: `native-rmg-runtime-creature-generator-dwelling-projection-10184`. Fresh Small seed 1 retains its exact Native RMG payload and now projects the recovered type-17 subtype 59/`AVGpixie.def` and subtype 52/`AVGlich0.def` rows through the existing original Greenbranch Copse and Lantern Warren neutral-dwelling surfaces. Both adopted rows grant their exact existing gold/recruits, persist control, reject same-controller repeats, and round-trip through save version 9 without changing unrelated package/session authority. Focused runtime, current dwelling/AI/content/core compatibility, repository/editor, and bounded Linux/Windows export-startup gates pass. Two older generated-object reports remain excluded preexisting compatibility defects because they require removed legacy API/pathing surfaces and fail independently on rows with no selected type-17 mapping. Creature Banks, other Creature Generator subtypes, H3 art/content import, native generation/parity, balance, broad proxy policy, packaged interaction, certification, signing/publication, whole-game, and release readiness remain outside this slice. Select the next tracker-approved source-backed release-readiness implementation slice.
@@ -7951,6 +7953,33 @@ Completion evidence:
 - `/tmp/heroes-spell-scroll-focused.Q5GPQb` is natural rc0 and proves the sole exact type-93 row and live scroll node, `spell_beacon_path` as the only known-spell delta, exact resources/artifacts/army/other nodes, repeat rejection, session round trip, repeated generation authority, and unchanged Small/Medium/ordinal-95/Extra-Large payload/object/guard/package/save/startup gates;
 - `/tmp/heroes-spell-scroll-core.r7WCx5` records core rc0; JSON, repository validation, Python compilation, diff checks, and exact/generic editor parses pass;
 - `/tmp/heroes-spell-scroll-linux-package.zpi2sS` and `/tmp/heroes-spell-scroll-windows-package.CUKi63` wrapper artifacts plus the official report JSON files record Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup green. These are export/startup claims only; no packaged scroll interaction is claimed.
+
+## Completed Slice: Native RMG Basilisk Bogbell Dwelling Projection
+
+id: `native-rmg-runtime-basilisk-bogbell-dwelling-projection-10184`
+
+Status: completed.
+
+Implementation boundary:
+- add exactly type-17 subtype 0/source row 210/`AVGbasl0.def` to the runtime proxy catalog as `object_bogbell_croft`, using the existing neutral-dwelling package/session path and original-project live content;
+- preserve completed subtype 22/59/52 mappings and leave subtype 5 plus every other unmapped row raw; do not change native generation, projection matching, session bridge, Overworld rules, economy, AI, rendering, or save schema.
+
+Completion criteria:
+- fixed Medium seed 10 remains payload `e76c8967`, 79,333 bytes, 1,326 objects with exact type-17 order/placements/masks; subtype 0 becomes Bogbell Croft, subtype 22 remains Cinder Kiln, and subtype 5 stays raw;
+- real live claims grant only the exact existing Bogbell 105 gold + 2 Bogbell Mauls/1 Peatflare Jarrier and Cinder 75 gold + 2 Kilnward/1 Cinderpot contracts, persist control, reject repeats, round-trip save v9, and preserve unrelated/package authority;
+- Small subtype 59/52, ordinal-95, XLarge, dwelling/AI/content/core, static/editor, and bounded official Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no other subtype/Creature Bank mapping, native recovery/private-state/writeout/parity, payload/RNG/count/order/placement/mask change, new content/art, H3 asset import, rebalance, broad policy, packaged interaction, certification, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- pushed HEAD `c1a21f59` keeps fixed Medium subtype 0 raw at exact placement `native_h3maped_e76c8967_object_1162`, primary 9,37 and body 8,37+9,37, while subtype 22 is live Cinder Kiln and subtype 5 remains raw;
+- recovered catalog row 210 uniquely identifies type 17/subtype 0/`AVGbasl0.def`; existing `object_bogbell_croft`/`site_bogbell_croft` is a mire/fen blocking-visitable persistent dwelling with exact original-project claim, recruits, AI, rendering, and save behavior.
+
+Completion evidence:
+- `/tmp/heroes-bogbell-focused.FfyuAk` is natural rc0 and proves exact Medium payload/object/type-17 authority, Bogbell+Cinder claims totaling 180 gold and exact recruits, subtype 5 raw, repeats/save/unrelated authority, Small projections, ordinal-95 and XLarge green;
+- `/tmp/heroes-bogbell-compat.gSbbqI` records dwelling/AI/content/core rc0; repository, Python, JSON, diff, and editor gates pass;
+- official Linux and Windows packaging reports are ok:true for export plus Linux headless startup and fresh-Wine Godot/Boot/MainMenu/native-DLL startup only; no packaged dwelling interaction is claimed.
 
 ## Completed Slice: Native RMG Gog Cinder-Kiln Dwelling Projection
 

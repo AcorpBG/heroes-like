@@ -44703,9 +44703,10 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             59: (220, "AVGpixie.def", "object_greenbranch_copse", "dwelling_creature_generator_pixie_greenbranch_proxy"),
             52: (190, "AVGlich0.def", "object_lantern_warren", "dwelling_creature_generator_lich_lantern_proxy"),
             22: (180, "AVGgogs0.def", "object_cinder_kiln", "dwelling_creature_generator_gog_cinder_kiln_proxy"),
+            0: (210, "AVGbasl0.def", "object_bogbell_croft", "dwelling_creature_generator_basilisk_bogbell_proxy"),
         }
         type17_entries = [entry for entry in proxy_entries if isinstance(entry, dict) and int(entry.get("homm3_re_object_type_id", -1)) == 17]
-        ensure(len(type17_entries) == 3, errors, "H3M Creature Generator proxy catalog must contain exactly the three selected recovered rows")
+        ensure(len(type17_entries) == 4, errors, "H3M Creature Generator proxy catalog must contain exactly the four selected recovered rows")
         for subtype, expected in expected_creature_generator_proxies.items():
             rows = [entry for entry in type17_entries if int(entry.get("homm3_re_object_subtype", -1)) == subtype]
             ensure(len(rows) == 1, errors, f"H3M Creature Generator subtype {subtype} must have exactly one proxy row")
@@ -44738,6 +44739,7 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             "object_greenbranch_copse": ("site_greenbranch_copse", {"gold": 105}, {"unit_neutral_greenbranch_cudgels": 2, "unit_neutral_sapwhistle_callers": 1}),
             "object_lantern_warren": ("site_lantern_warren", {"gold": 90}, {"unit_neutral_tunnel_lanterns": 2, "unit_neutral_glimmercap_needlers": 1}),
             "object_cinder_kiln": ("site_cinder_kiln", {"gold": 75}, {"unit_neutral_kilnward_mallets": 2, "unit_neutral_cinderpot_hurlers": 1}),
+            "object_bogbell_croft": ("site_bogbell_croft", {"gold": 105}, {"unit_neutral_bogbell_mauls": 2, "unit_neutral_peatflare_jarriers": 1}),
         }
         for object_id, expected in expected_live_dwellings.items():
             map_object = map_objects_by_id.get(object_id, {})
@@ -44764,6 +44766,7 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
         for recovered_row in (
             '{ 180, "objects.txt", "AVGgogs0.def", 17, "Creature Generator 1", 17, 22,',
             '{ 190, "objects.txt", "AVGlich0.def", 17, "Creature Generator 1", 17, 52,',
+            '{ 210, "objects.txt", "AVGbasl0.def", 17, "Creature Generator 1", 17, 0,',
             '{ 220, "objects.txt", "AVGpixie.def", 17, "Creature Generator 1", 17, 59,',
         ):
             ensure(recovered_object_catalog_text.count(recovered_row) == 1, errors, f"Recovered Creature Generator source identity must remain unique: {recovered_row}")
@@ -45036,6 +45039,13 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             '"site_id": "site_cinder_kiln",',
             '"catalog_id": "dwelling_creature_generator_gog_cinder_kiln_proxy",',
             '"recruits": {"unit_neutral_kilnward_mallets": 2, "unit_neutral_cinderpot_hurlers": 1}',
+            '0: {',
+            '"source_row": 210,',
+            '"def_ref": "AVGbasl0.def",',
+            '"object_id": "object_bogbell_croft",',
+            '"site_id": "site_bogbell_croft",',
+            '"catalog_id": "dwelling_creature_generator_basilisk_bogbell_proxy",',
+            '"recruits": {"unit_neutral_bogbell_mauls": 2, "unit_neutral_peatflare_jarriers": 1}',
             'elif type_id == 17:',
             'creature_generator_placement_ids[String(object.get("placement_id", ""))] = true',
             'or String(object.get("kind", "")) != "neutral_dwelling"',
@@ -45191,7 +45201,7 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             'func _validate_medium_cinder_kiln_projection(service: Variant, generated: Dictionary) -> Dictionary:',
             '"placement_id": "native_h3maped_e76c8967_object_1208"',
             'and ordered_subtypes == [0, 22, 5]',
-            'var interaction: Dictionary = _validate_creature_generator_interaction(adoption, [22])',
+            'var interaction: Dictionary = _validate_creature_generator_interaction(adoption, [0, 22])',
             '_validate_guard_control_projection(medium.get("generated", {}))',
             "func _validate_guard_control_projection(generated: Dictionary) -> Dictionary:",
             'if String(object.get("kind", "")) != "guard":',
@@ -45265,12 +45275,12 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             < medium_dwelling_block.find('22: {')
             < medium_dwelling_block.find('5: {')
             < medium_dwelling_block.find('if int(object.get("h3m_type_id", -1)) != 17:')
-            < medium_dwelling_block.find('if subtype == 22:')
+            < medium_dwelling_block.find('if subtype in [0, 22]:')
             < medium_dwelling_block.find('elif String(object.get("kind", "")) != "h3m_object"')
             < medium_dwelling_block.find('service.generate_random_map(_config("medium", 72, 1, "land", "10"),')
             < medium_dwelling_block.find('repeat_type17_authority == type17_authority')
             < medium_dwelling_block.find('service.convert_generated_payload(generated, {"feature_gate": REPORT_ID})')
-            < medium_dwelling_block.find('_validate_creature_generator_interaction(adoption, [22])')
+            < medium_dwelling_block.find('_validate_creature_generator_interaction(adoption, [0, 22])')
             < medium_dwelling_block.find('and ordered_subtypes == [0, 22, 5]')
             < medium_dwelling_block.find('and bool(interaction.get("ok", false))'),
             errors,
@@ -45297,7 +45307,6 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             'session.overworld[',
             'sort()',
             'sort_custom',
-            'AVGbasl0.def',
             'AVGcavl0.def',
         ):
             ensure(forbidden_token not in medium_dwelling_block, errors, f"Medium Cinder Kiln owner must remain an exact read-only projection/interaction oracle: {forbidden_token}")
