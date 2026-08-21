@@ -102,7 +102,26 @@ func _run() -> void:
 		_cleanup_many([[map_path, scenario_path], [compact_map_path, compact_scenario_path]])
 		_fail("Skirmish setup did not resolve through the maps-folder package path: %s" % JSON.stringify(package_setup))
 		return
-	var session = ScenarioSelectRulesScript.start_skirmish_session(package_id, "normal")
+	var entry_setup := ScenarioSelectRulesScript.build_maps_folder_package_skirmish_setup_from_entry(indexed_entry, "normal")
+	if entry_setup != package_setup:
+		_cleanup_many([[map_path, scenario_path], [compact_map_path, compact_scenario_path]])
+		_fail("Selected-entry Skirmish setup changed the exact by-id setup: %s" % JSON.stringify({"by_id": package_setup, "from_entry": entry_setup}))
+		return
+	var stale_entry: Dictionary = indexed_entry.duplicate(true)
+	var stale_map_identity: Dictionary = stale_entry.get("map_file_identity", {}).duplicate(true)
+	stale_map_identity["size"] = int(stale_map_identity.get("size", 0)) + 1
+	stale_entry["map_file_identity"] = stale_map_identity
+	if not ScenarioSelectRulesScript.build_maps_folder_package_skirmish_setup_from_entry(stale_entry, "normal").is_empty():
+		_cleanup_many([[map_path, scenario_path], [compact_map_path, compact_scenario_path]])
+		_fail("Selected-entry Skirmish setup accepted a stale package identity.")
+		return
+	var by_id_session = ScenarioSelectRulesScript.start_skirmish_session(package_id, "normal")
+	var entry_session = ScenarioSelectRulesScript.start_maps_folder_package_skirmish_session_from_entry(indexed_entry, "normal")
+	if not _session_authority_exact_ignoring_runtime_id(by_id_session, entry_session):
+		_cleanup_many([[map_path, scenario_path], [compact_map_path, compact_scenario_path]])
+		_fail("Selected-entry Skirmish launch changed by-id session authority.")
+		return
+	var session = entry_session
 	if session == null or session.scenario_id == "":
 		_cleanup_many([[map_path, scenario_path], [compact_map_path, compact_scenario_path]])
 		_fail("Maps-folder skirmish package did not start a session.")
@@ -174,10 +193,34 @@ func _run() -> void:
 		"editor_scenario_id": String(editor_snapshot.get("scenario_id", "")),
 		"empty_index_entries": empty_index.get("entries", []).size(),
 		"compact_package_rejected": compact_package_id != "",
+		"selected_entry_setup_exact": true,
+		"selected_entry_session_exact": true,
+		"stale_entry_rejected": true,
 		"authored_json_scenarios_used": false,
 		"generated_draft_registry_used": false,
 	})])
 	get_tree().quit(0)
+
+func _session_authority_exact_ignoring_runtime_id(left, right) -> bool:
+	if left == null or right == null or left.scenario_id == "" or right.scenario_id == "":
+		return false
+	var left_payload: Dictionary = left.to_dict()
+	var right_payload: Dictionary = right.to_dict()
+	_normalize_runtime_session_ids(left_payload)
+	_normalize_runtime_session_ids(right_payload)
+	return left_payload == right_payload
+
+func _normalize_runtime_session_ids(value: Variant) -> void:
+	if value is Dictionary:
+		for key_value in value.keys():
+			var key := String(key_value)
+			if key == "session_id":
+				value[key_value] = "selected-entry-parity"
+			else:
+				_normalize_runtime_session_ids(value[key_value])
+	elif value is Array:
+		for entry in value:
+			_normalize_runtime_session_ids(entry)
 
 func _generate_compact_package_artifact() -> Dictionary:
 	var service: Variant = ClassDB.instantiate("MapPackageService")

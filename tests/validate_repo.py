@@ -14019,6 +14019,10 @@ def validate_save_management(errors: list[str]) -> None:
 
 
 def validate_skirmish_setup(errors: list[str]) -> None:
+    def function_block(text: str, name: str) -> str:
+        match = re.search(rf"(?:static )?func {re.escape(name)}\([^\n]*\)(?: -> [^:]+)?:\n(?P<body>.*?)(?=\n(?:static )?func |\Z)", text, flags=re.DOTALL)
+        return match.group("body") if match is not None else ""
+
     ensure(SESSION_STATE_PATH.exists(), errors, f"Missing session state script: {SESSION_STATE_PATH.relative_to(ROOT)}")
     ensure(SCENARIO_SELECT_RULES_PATH.exists(), errors, f"Missing scenario select rules script: {SCENARIO_SELECT_RULES_PATH.relative_to(ROOT)}")
     ensure(SCENARIO_RULES_PATH.exists(), errors, f"Missing scenario rules script: {SCENARIO_RULES_PATH.relative_to(ROOT)}")
@@ -14080,8 +14084,102 @@ def validate_skirmish_setup(errors: list[str]) -> None:
         "ScenarioRulesScript.describe_scenario_operational_board",
         "ScenarioFactoryScript.create_session",
         "SessionStateStoreScript.LAUNCH_MODE_SKIRMISH",
+        "func build_maps_folder_package_skirmish_setup_from_entry",
+        "func start_maps_folder_package_skirmish_session_from_entry",
+        "func _maps_folder_package_entry_is_current",
+        '"map_file_identity": _maps_folder_package_file_identity(map_path)',
+        '"scenario_file_identity": _maps_folder_package_file_identity(scenario_path)',
+        "func _maps_folder_package_ref_matches",
     ):
         ensure(required_token in scenario_select_text, errors, f"ScenarioSelectRules.gd is missing required skirmish token: {required_token}")
+
+    setup_by_id = function_block(scenario_select_text, "build_maps_folder_package_skirmish_setup")
+    setup_from_entry = function_block(scenario_select_text, "build_maps_folder_package_skirmish_setup_from_entry")
+    start_by_id = function_block(scenario_select_text, "start_maps_folder_package_skirmish_session")
+    start_from_entry = function_block(scenario_select_text, "start_maps_folder_package_skirmish_session_from_entry")
+    entry_current = function_block(scenario_select_text, "_maps_folder_package_entry_is_current")
+    load_from_entry = function_block(scenario_select_text, "_load_maps_folder_package_session_from_entry")
+    ensure("maps_folder_package_entry(package_id, options)" in setup_by_id and "build_maps_folder_package_skirmish_setup_from_entry(entry, difficulty_id)" in setup_by_id, errors, "Package setup by-id wrapper must delegate its one indexed entry to the entry-owned setup")
+    ensure("maps_folder_package_index" not in setup_from_entry and "maps_folder_package_entry(" not in setup_from_entry, errors, "Entry-owned package setup must not rescan the maps folder")
+    ensure("_maps_folder_package_entry_is_current(entry)" in setup_from_entry, errors, "Entry-owned package setup must fail closed on stale entries")
+    ensure("maps_folder_package_entry(package_id)" in start_by_id and "start_maps_folder_package_skirmish_session_from_entry(entry, difficulty_id)" in start_by_id, errors, "Package start by-id wrapper must delegate its one indexed entry to the entry-owned start")
+    ensure("maps_folder_package_index" not in start_from_entry and "maps_folder_package_entry(" not in start_from_entry, errors, "Entry-owned package start must not rescan the maps folder")
+    for required_token in (
+        'entry.get("map_file_identity", {}) == _maps_folder_package_file_identity(map_path)',
+        'entry.get("scenario_file_identity", {}) == _maps_folder_package_file_identity(scenario_path)',
+        'maps_folder_package_stem_from_id(package_id) != package_stem',
+        'not bool(launch_validation.get("ok", false))',
+    ):
+        ensure(required_token in entry_current, errors, f"Selected package entry currentness guard is missing fail-closed token: {required_token}")
+    for required_token in (
+        '_maps_folder_package_ref_matches(map_ref, loaded_map_ref, ["package_hash", "map_id", "map_hash", "source_kind"])',
+        '_maps_folder_package_ref_matches(scenario_ref, loaded_scenario_ref, ["package_hash", "scenario_id", "scenario_hash"])',
+    ):
+        ensure(required_token in load_from_entry, errors, f"Selected package load must revalidate loaded document authority: {required_token}")
+
+    main_menu_script_text = MAIN_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
+    selected_setup = function_block(main_menu_script_text, "_selected_skirmish_setup")
+    ensure("build_maps_folder_package_skirmish_setup_from_entry(entry, _selected_difficulty)" in selected_setup, errors, "Main Menu selected package setup must consume its current entry")
+    ensure("maps_folder_package_index" not in selected_setup and "maps_folder_package_entry(" not in selected_setup, errors, "Main Menu selected setup must not rescan the maps folder")
+    start_handler = function_block(main_menu_script_text, "_on_start_skirmish_pressed")
+    ensure("start_maps_folder_package_skirmish_session_from_entry(selected_entry, _selected_difficulty)" in start_handler, errors, "Main Menu selected package launch must consume its current entry")
+    ensure(start_handler.count("_refresh_menu()") == 1, errors, "Main Menu Skirmish launch must refresh only the failed-launch path, never the successful pre-route path")
+    validation_start = function_block(main_menu_script_text, "validation_start_selected_skirmish")
+    for required_token in (
+        'active_session.flags.get("maps_folder_package_entry", {})',
+        'var active_package_id := String(package_entry.get("package_id", ""))',
+        "ScenarioSelectRulesScript.maps_folder_package_id_is_valid(requested_scenario_id)",
+        'active_package_id == requested_scenario_id and bool(active_session.flags.get("maps_folder_package_browser", false))',
+        "active_session.scenario_id == requested_scenario_id",
+        '"active_package_id": active_package_id',
+    ):
+        ensure(required_token in validation_start, errors, f"Main Menu Skirmish launch validation must distinguish package selection identity from runtime scenario identity: {required_token}")
+    select_first_package = function_block(main_menu_script_text, "validation_select_first_maps_folder_skirmish")
+    for required_token in (
+        "for entry in _skirmish_entries:",
+        'var scenario_id := String(entry.get("scenario_id", ""))',
+        "ScenarioSelectRulesScript.maps_folder_package_id_is_valid(scenario_id)",
+        "return validation_select_skirmish(scenario_id)",
+    ):
+        ensure(required_token in select_first_package, errors, f"Main Menu package selection validation hook is missing current-entry token: {required_token}")
+    for forbidden_token in (
+        "maps_folder_package_index",
+        "maps_folder_package_entry(",
+        "build_skirmish_browser_entries",
+    ):
+        ensure(forbidden_token not in select_first_package, errors, f"Main Menu package selection validation hook must not rebuild package authority: {forbidden_token}")
+
+    lean_guard_path = ROOT / "tests" / "main_menu_lean_boot_save_guard.gd"
+    ensure(lean_guard_path.exists(), errors, "Missing Main Menu lean-boot owner for selected-entry setup/launch proof")
+    if lean_guard_path.exists():
+        lean_guard_text = lean_guard_path.read_text(encoding="utf-8")
+        for required_token in (
+            "var tree := get_tree()",
+            'shell.call("validation_select_first_maps_folder_skirmish")',
+            'String(package_setup.get("startup_source", "")) != "maps_folder_package"',
+            'shell.call("validation_start_selected_skirmish")',
+            "package_launch_ms > 30000",
+            '"selected_package_setup_entry_owned": true',
+            '"selected_package_launch_ms": package_launch_ms',
+            "tree.quit(0)",
+        ):
+            ensure(required_token in lean_guard_text, errors, f"Main Menu lean-boot owner is missing selected-package proof token: {required_token}")
+
+    integration_path = ROOT / "tests" / "maps_folder_package_browser_integration_report.gd"
+    ensure(integration_path.exists(), errors, "Missing maps-folder package browser integration owner for selected-entry reuse")
+    if integration_path.exists():
+        integration_text = integration_path.read_text(encoding="utf-8")
+        for required_token in (
+            "build_maps_folder_package_skirmish_setup_from_entry(indexed_entry",
+            "entry_setup != package_setup",
+            "start_maps_folder_package_skirmish_session_from_entry(indexed_entry",
+            "_session_authority_exact_ignoring_runtime_id",
+            'stale_map_identity["size"] = int(stale_map_identity.get("size", 0)) + 1',
+            '"selected_entry_setup_exact": true',
+            '"selected_entry_session_exact": true',
+            '"stale_entry_rejected": true',
+        ):
+            ensure(required_token in integration_text, errors, f"Maps-folder package integration is missing selected-entry reuse proof token: {required_token}")
 
     scenario_rules_text = SCENARIO_RULES_PATH.read_text(encoding="utf-8")
     ensure_script_functions(

@@ -853,7 +853,10 @@ func _on_start_skirmish_pressed() -> void:
 		}, SessionState.ensure_active_session())
 		return
 	var launch_started := ProfileLogScript.begin_usec()
-	var session := ScenarioSelectRulesScript.start_skirmish_session(_selected_skirmish_id, _selected_difficulty)
+	var selected_entry := _selected_skirmish_entry()
+	var session = ScenarioSelectRulesScript.start_maps_folder_package_skirmish_session_from_entry(selected_entry, _selected_difficulty) \
+		if ScenarioSelectRulesScript.maps_folder_package_id_is_valid(_selected_skirmish_id) \
+		else ScenarioSelectRulesScript.start_skirmish_session(_selected_skirmish_id, _selected_difficulty)
 	buckets["start_skirmish_session"] = ProfileLogScript.elapsed_ms(launch_started)
 	if session.scenario_id == "":
 		var refresh_started := ProfileLogScript.begin_usec()
@@ -864,9 +867,6 @@ func _on_start_skirmish_pressed() -> void:
 			"difficulty": _selected_difficulty,
 		}, SessionState.ensure_active_session())
 		return
-	var refresh_started := ProfileLogScript.begin_usec()
-	_refresh_menu()
-	buckets["refresh_before_route"] = ProfileLogScript.elapsed_ms(refresh_started)
 	ProfileLogScript.emit_general("menu", "scenario_launch", "skirmish_launch", ProfileLogScript.elapsed_ms(started), buckets, {
 		"scenario_id": _selected_skirmish_id,
 		"difficulty": _selected_difficulty,
@@ -2555,7 +2555,7 @@ func _refresh_skirmish_setup() -> void:
 		return
 
 	_set_compact_label(_skirmish_details_label, String(selected_entry.get("summary", "")), 3, 84)
-	var setup := ScenarioSelectRulesScript.build_skirmish_setup(_selected_skirmish_id, _selected_difficulty)
+	var setup := _selected_skirmish_setup()
 	if setup.is_empty():
 		_set_commander_portrait(_skirmish_commander_portrait, "")
 		_set_compact_label(_setup_summary_label, "This front cannot be launched right now.", 3, 82)
@@ -3046,6 +3046,12 @@ func _selected_skirmish_entry() -> Dictionary:
 			return entry
 	return {}
 
+func _selected_skirmish_setup() -> Dictionary:
+	var entry := _selected_skirmish_entry()
+	if ScenarioSelectRulesScript.maps_folder_package_id_is_valid(_selected_skirmish_id):
+		return ScenarioSelectRulesScript.build_maps_folder_package_skirmish_setup_from_entry(entry, _selected_difficulty)
+	return ScenarioSelectRulesScript.build_skirmish_setup(_selected_skirmish_id, _selected_difficulty)
+
 func _build_campaign_pulse() -> String:
 	if _campaign_entries.is_empty():
 		return "No active campaign arcs loaded."
@@ -3402,7 +3408,7 @@ func validation_snapshot() -> Dictionary:
 	var selected_chapter_action := CampaignProgression.chapter_action(_selected_campaign_id, _selected_campaign_scenario_id, _selected_difficulty)
 	var campaign_restart_action := CampaignProgression.campaign_restart_action(_selected_campaign_id)
 	var campaign_chapter_check := _campaign_chapter_check_payload(selected_chapter_action, primary_campaign_action)
-	var selected_skirmish_setup := ScenarioSelectRulesScript.build_skirmish_setup(_selected_skirmish_id, _selected_difficulty)
+	var selected_skirmish_setup := _selected_skirmish_setup()
 	var skirmish_front_check := _skirmish_front_check_payload(selected_skirmish_setup)
 	var selected_save_summary := _active_save_board_selected_summary()
 	var latest_continue := _latest_continue_surface()
@@ -4068,6 +4074,13 @@ func validation_select_skirmish(scenario_id: String) -> bool:
 		return true
 	return false
 
+func validation_select_first_maps_folder_skirmish() -> bool:
+	for entry in _skirmish_entries:
+		var scenario_id := String(entry.get("scenario_id", ""))
+		if ScenarioSelectRulesScript.maps_folder_package_id_is_valid(scenario_id):
+			return validation_select_skirmish(scenario_id)
+	return false
+
 func validation_select_campaign(campaign_id: String) -> bool:
 	for index in range(_campaign_entries.size()):
 		if String(_campaign_entries[index].get("campaign_id", "")) != campaign_id:
@@ -4582,13 +4595,17 @@ func validation_start_selected_skirmish() -> Dictionary:
 	var requested_difficulty := _selected_difficulty
 	_start_skirmish_button.pressed.emit()
 	var active_session := SessionState.ensure_active_session()
+	var package_entry: Dictionary = active_session.flags.get("maps_folder_package_entry", {}) if active_session.flags.get("maps_folder_package_entry", {}) is Dictionary else {}
+	var active_package_id := String(package_entry.get("package_id", ""))
+	var package_request := ScenarioSelectRulesScript.maps_folder_package_id_is_valid(requested_scenario_id)
 	return {
 		"requested_scenario_id": requested_scenario_id,
 		"requested_difficulty": requested_difficulty,
-		"started": active_session.scenario_id == requested_scenario_id
+		"started": (active_package_id == requested_scenario_id and bool(active_session.flags.get("maps_folder_package_browser", false)) if package_request else active_session.scenario_id == requested_scenario_id)
 			and active_session.difficulty == requested_difficulty
 			and active_session.launch_mode == SessionState.LAUNCH_MODE_SKIRMISH,
 		"active_scenario_id": active_session.scenario_id,
+		"active_package_id": active_package_id,
 		"active_difficulty": active_session.difficulty,
 		"active_launch_mode": active_session.launch_mode,
 	}

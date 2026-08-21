@@ -655,8 +655,12 @@ static func maps_folder_package_entry(package_id: String, options: Dictionary = 
 
 static func build_maps_folder_package_skirmish_setup(package_id: String, difficulty_id: String = "normal", options: Dictionary = {}) -> Dictionary:
 	var entry := maps_folder_package_entry(package_id, options)
-	if entry.is_empty():
+	return build_maps_folder_package_skirmish_setup_from_entry(entry, difficulty_id)
+
+static func build_maps_folder_package_skirmish_setup_from_entry(entry: Dictionary, difficulty_id: String = "normal") -> Dictionary:
+	if not _maps_folder_package_entry_is_current(entry):
 		return {}
+	var package_id := String(entry.get("package_id", ""))
 	var normalized_difficulty := normalize_difficulty(difficulty_id)
 	var difficulty_label_text := difficulty_label(normalized_difficulty)
 	var briefing_check := _maps_folder_package_briefing_check(entry, normalized_difficulty)
@@ -711,7 +715,13 @@ static func load_maps_folder_package_session_from_entry(entry: Dictionary, diffi
 	return _load_maps_folder_package_session_from_entry(entry, normalize_difficulty(difficulty_id), options)
 
 static func start_maps_folder_package_skirmish_session(package_id: String, difficulty_id: String = "normal") -> SessionStateStoreScript.SessionData:
-	var session := load_maps_folder_package_session(package_id, difficulty_id, {"startup_source": "skirmish_browser_maps_folder"})
+	var entry := maps_folder_package_entry(package_id)
+	return start_maps_folder_package_skirmish_session_from_entry(entry, difficulty_id)
+
+static func start_maps_folder_package_skirmish_session_from_entry(entry: Dictionary, difficulty_id: String = "normal") -> SessionStateStoreScript.SessionData:
+	if not _maps_folder_package_entry_is_current(entry):
+		return SessionStateStoreScript.new_session_data()
+	var session := load_maps_folder_package_session_from_entry(entry, difficulty_id, {"startup_source": "skirmish_browser_maps_folder"})
 	if session.scenario_id == "":
 		return session
 	var boundary: Dictionary = session.flags.get("generated_random_map_boundary", {}) if session.flags.get("generated_random_map_boundary", {}) is Dictionary else {}
@@ -1420,6 +1430,8 @@ static func _maps_folder_package_entry_payload(
 		"scenario_path": scenario_path,
 		"map_ref": map_ref,
 		"scenario_ref": scenario_ref,
+		"map_file_identity": _maps_folder_package_file_identity(map_path),
+		"scenario_file_identity": _maps_folder_package_file_identity(scenario_path),
 		"map_size": {"width": width, "height": height, "x": width, "y": height, "level_count": max(1, level_count)},
 		"player_count": max(1, player_count),
 		"metadata": metadata,
@@ -1561,8 +1573,16 @@ static func _load_maps_folder_package_session_from_entry(entry: Dictionary, diff
 	var scenario_path := String(entry.get("scenario_path", ""))
 	var map_load: Dictionary = service.load_map_package(map_path)
 	var scenario_load: Dictionary = service.load_scenario_package(scenario_path)
+	if not bool(map_load.get("ok", false)) or not bool(scenario_load.get("ok", false)):
+		return SessionStateStoreScript.new_session_data()
 	var map_ref: Dictionary = entry.get("map_ref", {}) if entry.get("map_ref", {}) is Dictionary else {}
 	var scenario_ref: Dictionary = entry.get("scenario_ref", {}) if entry.get("scenario_ref", {}) is Dictionary else {}
+	var loaded_map_ref: Dictionary = map_load.get("map_ref", {}) if map_load.get("map_ref", {}) is Dictionary else {}
+	var loaded_scenario_ref: Dictionary = scenario_load.get("scenario_ref", {}) if scenario_load.get("scenario_ref", {}) is Dictionary else {}
+	if not _maps_folder_package_ref_matches(map_ref, loaded_map_ref, ["package_hash", "map_id", "map_hash", "source_kind"]):
+		return SessionStateStoreScript.new_session_data()
+	if not _maps_folder_package_ref_matches(scenario_ref, loaded_scenario_ref, ["package_hash", "scenario_id", "scenario_hash"]):
+		return SessionStateStoreScript.new_session_data()
 	var boundary := {
 		"scenario_id": String(scenario_ref.get("scenario_id", "")),
 		"session_id": "%s-%d" % [String(options.get("session_id_prefix", "maps_folder_package_session")), Time.get_ticks_msec()],
@@ -1603,6 +1623,50 @@ static func _load_maps_folder_package_session_from_entry(entry: Dictionary, diff
 	session.overworld["maps_folder_package_entry"] = entry.duplicate(true)
 	OverworldRulesScript.normalize_overworld_state(session)
 	return session
+
+static func _maps_folder_package_entry_is_current(entry: Dictionary) -> bool:
+	if entry.is_empty() or not bool(entry.get("ok", false)) or not bool(entry.get("launchable", false)):
+		return false
+	if bool(entry.get("editor_inspection_only", true)) or bool(entry.get("legacy_json_scenario_record", true)) or bool(entry.get("authored_json_scenarios_used", true)):
+		return false
+	var package_id := String(entry.get("package_id", ""))
+	var package_stem := String(entry.get("package_stem", ""))
+	if not maps_folder_package_id_is_valid(package_id) or maps_folder_package_stem_from_id(package_id) != package_stem:
+		return false
+	var map_path := String(entry.get("map_path", ""))
+	var scenario_path := String(entry.get("scenario_path", ""))
+	if map_path.get_file() != "%s.amap" % package_stem or scenario_path.get_file() != "%s.ascenario" % package_stem:
+		return false
+	var launch_validation: Dictionary = entry.get("maps_folder_launch_validation", {}) if entry.get("maps_folder_launch_validation", {}) is Dictionary else {}
+	if not bool(launch_validation.get("ok", false)):
+		return false
+	return (
+		entry.get("map_file_identity", {}) == _maps_folder_package_file_identity(map_path)
+		and entry.get("scenario_file_identity", {}) == _maps_folder_package_file_identity(scenario_path)
+	)
+
+static func _maps_folder_package_file_identity(path: String) -> Dictionary:
+	if path == "" or not FileAccess.file_exists(path):
+		return {}
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file == null:
+		return {}
+	var size := file.get_length()
+	file.close()
+	return {
+		"path": path,
+		"size": size,
+		"modified_time": FileAccess.get_modified_time(path),
+	}
+
+static func _maps_folder_package_ref_matches(expected: Dictionary, actual: Dictionary, keys: Array) -> bool:
+	if expected.is_empty() or actual.is_empty():
+		return false
+	for key_value in keys:
+		var key := String(key_value)
+		if String(expected.get(key, "")) == "" or expected.get(key) != actual.get(key):
+			return false
+	return true
 
 static func _map_document_metadata(map_document: Variant) -> Dictionary:
 	if map_document != null and map_document.has_method("get_metadata"):
