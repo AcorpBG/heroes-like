@@ -966,6 +966,13 @@ func _on_credits_notices_window_input(event: InputEvent) -> void:
 		elif event.keycode == KEY_PAGEUP:
 			_scroll_credits_notices(-1)
 			_credits_notices_dialog.set_input_as_handled()
+	elif event is InputEventJoypadButton and event.pressed:
+		if event.button_index == JOY_BUTTON_RIGHT_SHOULDER:
+			_scroll_credits_notices(1)
+			_credits_notices_dialog.set_input_as_handled()
+		elif event.button_index == JOY_BUTTON_LEFT_SHOULDER:
+			_scroll_credits_notices(-1)
+			_credits_notices_dialog.set_input_as_handled()
 
 func _scroll_credits_notices(page_direction: int) -> void:
 	if not _credits_notices_dialog.visible or page_direction == 0:
@@ -985,9 +992,9 @@ func _configure_credits_notices() -> void:
 	UiAccessibility.describe_control(
 		_credits_notices_body,
 		"Credits and third-party notices",
-		"Scrollable credits and software license notices from this running build."
+		"Scrollable credits and software license notices from this running build. Use Page Up and Page Down or the controller shoulder buttons to scroll."
 	)
-	_open_credits_notices_button.tooltip_text = "Open a scrollable, read-only list of Aurelion Reach credits and software notices. This does not change play, saves, or settings."
+	_open_credits_notices_button.tooltip_text = "Open a scrollable, read-only list of Aurelion Reach credits and software notices. Page with Page Up/Page Down or the controller shoulder buttons. This does not change play, saves, or settings."
 	_credits_notices_close_button.tooltip_text = "Close Credits & Notices and return focus to the Guide command."
 	FrontierVisualKit.configure_focus_cycle([_credits_notices_body, _credits_notices_close_button])
 
