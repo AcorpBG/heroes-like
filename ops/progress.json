@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the exact metadata-only proxy fail-closed correction. Fixed Medium e76c8967/79333/1326 retains both AVSwar20.def rows raw at placements 1110/1174 with exact masks, adopts zero type107 Reedscript Vow Shrine nodes, and retains 243 other live mapped rows. Focused /tmp/heroes-metadata-proxy-focused.IRnEPU, guarded/core compatibility /tmp/heroes-metadata-proxy-compat-final.nontvt, static/editor /tmp/heroes-metadata-proxy-static.WyMoTq, synchronized native builds, and bounded Linux/Windows export-startup gates are green. School/skill/reward semantics, native parity, packaged interaction, certification, signing/publication, whole-game, and release readiness remain excluded.",
+  "currentNotes": "Credits & Notices is implemented as a secondary Guide-owned modal using exact runtime Godot Engine notices plus the exported exact godot-cpp MIT notice. Focused 1280x720/1920x1080 interaction, broad menu/navigation/layout/accessibility/core compatibility, payload hygiene, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. No project-license choice, packaged interaction, certification, signing/publication, whole-game, or release-readiness claim.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "native-rmg-metadata-only-proxy-live-surface-fail-closed-10184",
-  "currentSliceId": "native-rmg-metadata-only-proxy-live-surface-fail-closed-10184",
-  "currentSliceNotes": "Completed exact metadata-only live-surface rejection: fixed Medium retains both recovered AVSwar20 rows raw with zero type107 live nodes and 243 unchanged live mapped rows. Focused, compatibility, static/editor, synchronized native builds, and bounded official Linux/Windows export-startup gates pass; no missing H3 interaction semantics or parity are inferred.",
+  "currentSlice": "ux-main-menu-credits-third-party-notices-10184",
+  "currentSliceId": "ux-main-menu-credits-third-party-notices-10184",
+  "currentSliceNotes": "Implemented a player-readable Credits & Notices surface in the existing Guide secondary board, with runtime Godot notices, an exported exact godot-cpp MIT notice, bounded paging/focus/accessibility behavior, and unchanged session/campaign/save/settings/input-map/router authority. Focused, compatibility, payload, static/editor, and bounded Linux/Windows export-startup gates pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "native rmg metadata only proxy live surface fail closed 10184",
-  "currentSliceUpdatedAt": "2026-08-21T17:43:51Z",
+  "currentSliceTitle": "Main Menu Credits And Third Party Notices",
+  "currentSliceUpdatedAt": "2026-08-21T18:48:59Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -91730,6 +91730,42 @@
       ],
       "notes": "Completed exact metadata-only fail-closed behavior. Fixed Medium e76c8967/79333/1326 keeps both AVSwar20.def rows raw at placements 1110/1174 with exact masks, zero live type107 nodes, and 243 unchanged live mapped rows. Focused /tmp/heroes-metadata-proxy-focused.IRnEPU, compatibility /tmp/heroes-metadata-proxy-compat-final.nontvt, static/editor /tmp/heroes-metadata-proxy-static.WyMoTq, synchronized Linux/Windows builds, and bounded official Linux/Windows export-startup gates pass. School/skill/reward semantics, native parity, packaged interaction, certification, signing/publication, whole-game, and release readiness remain excluded.",
       "completedAt": "2026-08-21T17:43:51Z"
+    },
+    {
+      "id": "ux-main-menu-credits-third-party-notices-10184",
+      "title": "Main Menu Credits And Third Party Notices",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-6-production-alpha-layer",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-21T18:00:11Z",
+      "updatedAt": "2026-08-21T18:48:59Z",
+      "implementationTargets": [
+        "content/third_party_notices.json",
+        "scripts/autoload/SettingsService.gd",
+        "scenes/menus/MainMenu.gd",
+        "scenes/menus/MainMenu.tscn",
+        "tests/main_menu_credits_notices_report.gd",
+        "tests/main_menu_credits_notices_report.tscn",
+        "tests/packaging_release_payload_hygiene.py",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "The existing Guide secondary board exposes one Credits & Notices command without adding another scenic first-view command or obscuring the menu art.",
+        "The scrollable modal displays Aurelion Reach contributor credit, the exact runtime Godot Engine license and engine third-party notices, and the exact vendored godot-cpp MIT notice from an exported data resource.",
+        "Keyboard, controller accept/cancel, modal focus ownership and return focus are exact at 1280x720 and 1920x1080, and the notice body has player-readable accessibility semantics.",
+        "Opening, scrolling, and closing notices do not mutate campaign, session, save, settings, input-map, or route authority.",
+        "The notice resource is present in the release payload; focused, compatibility, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass."
+      ],
+      "nonGoals": [
+        "No project-license selection or change, legal certification, contributor authorship adjudication, asset provenance rewrite, signing, publication, or whole-release claim.",
+        "No first-view button, scenic composition, campaign/skirmish/save/settings/editor/quit behavior, gameplay, save schema, content balance, strategic AI, or Native RMG change.",
+        "No packaged Credits interaction, screen-reader platform certification, controller hardware certification, AT-SPI/UIA certification, or native hardware claim."
+      ],
+      "notes": "Completed source-backed player notice access. The existing Guide board exposes the bounded Credits & Notices modal; Engine license/component text is runtime-sourced, the exported godot-cpp notice exactly matches the vendored MIT notice, Page Up/Page Down and keyboard/controller modal ownership preserve focus, and the focused 1280x720/1920x1080 report leaves session/campaign/settings/save/input-map/router authority exact. Main Menu keyboard navigation, player-comprehension and keyboard layouts, screen-reader semantics, core systems, release payload hygiene, validate_repo, py_compile, diff-check, exact/generic editor parses, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Platform claims are export/startup only; no packaged Credits interaction, project-license decision, legal/accessibility/controller/native-hardware certification, signing/publication, whole-game, or release-readiness claim.",
+      "completedAt": "2026-08-21T18:48:59Z"
     }
   ],
   "project": "heroes-like",
