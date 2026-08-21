@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `native-rmg-runtime-creature-bank-drowned-reliquary-projection-10184`. Fixed Small remains payload `457dba6b`/23,664 bytes/294 ordered objects; exact type-16 subtype-4/source-1118 `AVXbnk50.def` now projects through the original Drowned Reliquary 2x2 contract with one authored Tidepool Skiffyard Watch guard, while subtype 6 stays raw. The live path rejects pre-clear claims, resolves a real battle, grants exactly 520 gold/2 wood/2 ore plus one authored artifact once, rejects repeats, round-trips save v9, and preserves unrelated/package authority. Focused, guarded-site/core compatibility, static/editor, and bounded Linux/Windows export-startup gates pass. Native generation/parity, packaged interaction, certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
+  id: `native-rmg-runtime-creature-bank-drowned-reliquary-projection-10184`
 - Completed implementation slice: `native-rmg-runtime-unicorn-fenhound-kennels-dwelling-projection-10184`. Fixed Extra-Large seed 77 remains payload `33610c0a`/365,777 bytes/2,779 objects with exact 12-row type-17 order, placement, and masks; both subtype-68 rows now use the original Fenhound Kennels contract alongside Reedbarge, Charcoal, two Bramble, Prism Outrider, Cliffhawk, Obsidian, and Kite, while only the two subtype-45 rows stay raw. Their live claims grant exactly 760 gold plus the original recruits, persist control, reject repeats, round-trip save v9, and preserve unrelated authority. Focused, compatibility, static/editor, and bounded Linux/Windows export-startup gates pass. Subtype 45, native parity, packaged interaction, certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
   id: `native-rmg-runtime-unicorn-fenhound-kennels-dwelling-projection-10184`
 - Completed implementation slice: `native-rmg-runtime-elf-bramble-hedge-dwelling-projection-10184`. Fixed Extra-Large seed 77 remains payload `33610c0a`/365,777 bytes/2,779 objects with exact 12-row type-17 order, placement, and masks; both subtype-15 rows now use the original Bramble Hedge contract alongside Reedbarge, Charcoal, Prism Outrider, Cliffhawk, Obsidian, and Kite, while the other four rows stay raw. Their live claims grant exactly 620 gold plus the original recruits, persist control, reject repeats, round-trip save v9, and preserve unrelated authority. Focused, compatibility, static/editor, and bounded Linux/Windows export-startup gates pass. Other subtypes, native parity, packaged interaction, certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
@@ -7971,6 +7973,38 @@ Completion evidence:
 - `/tmp/heroes-spell-scroll-focused.Q5GPQb` is natural rc0 and proves the sole exact type-93 row and live scroll node, `spell_beacon_path` as the only known-spell delta, exact resources/artifacts/army/other nodes, repeat rejection, session round trip, repeated generation authority, and unchanged Small/Medium/ordinal-95/Extra-Large payload/object/guard/package/save/startup gates;
 - `/tmp/heroes-spell-scroll-core.r7WCx5` records core rc0; JSON, repository validation, Python compilation, diff checks, and exact/generic editor parses pass;
 - `/tmp/heroes-spell-scroll-linux-package.zpi2sS` and `/tmp/heroes-spell-scroll-windows-package.CUKi63` wrapper artifacts plus the official report JSON files record Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup green. These are export/startup claims only; no packaged scroll interaction is claimed.
+
+## Completed Slice: Native RMG Runtime Creature Bank Drowned Reliquary Projection
+
+id: `native-rmg-runtime-creature-bank-drowned-reliquary-projection-10184`
+
+Status: completed.
+
+Implementation boundary:
+- add exactly recovered Creature Bank type 16/subtype 4/source row 1118/`AVXbnk50.def` to the accepted runtime proxy catalog as the existing original `object_drowned_reliquary`/`site_drowned_reliquary` 2x2 live guarded-reward contract;
+- during package-to-session adoption, synthesize one exact linked guard only when the selected original site explicitly owns an adopted, non-metadata-only guarded-reward contract, using its authored guard encounter/army, the generated row's recovered placement/body/visit masks, and the established clipped 3x3 engagement surface around its exact visit tile;
+- preserve native payload bytes, generation/private state, ordered object stream, placement/masks, every completed proxy mapping, and all unrelated package/session/save authority; leave type 16/subtype 6 raw.
+
+Completion criteria:
+- fixed Small remains payload `457dba6b`, 23,664 bytes, and 294 ordered objects; subtype 4 at `native_h3maped_457dba6b_object_0272` retains primary 21,28, body 20,28+21,28, visit 20,28, and adopts exactly as Drowned Reliquary, while subtype 6 at `native_h3maped_457dba6b_object_0258` stays raw;
+- the adopted site starts with exactly one authored Tidepool Skiffyard Watch guard, collection is rejected before guard clearance, the real battle payload uses the authored guard army/encounter, and authoritative victory/clearance enables exactly one original Drowned Reliquary resource+artifact claim; repeat collection is rejected;
+- save-v9 round trip preserves the resolved guard, collected site, reward authority, and every unrelated node/resource/artifact/army/package field;
+- focused runtime, guarded-site/object-resolution/core compatibility, repository/editor checks, and bounded official Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no type 16/subtype 6 projection without a behavior-complete original 4x3 guarded-bank contract; no subtype 0 or other Creature Bank change;
+- no recovered H3MapEd generation/private-state/final-writeout, RNG, payload, object count/order/placement, terrain, roads, masks, density, reward/battle balance, native-code/binary, imported H3 names/art/DEFs, or heuristic parity change;
+- no packaged bank interaction, controller/hardware, AT-SPI/UIA, signing/publication, whole-game, broad Native RMG parity, or release-readiness claim.
+
+Baseline evidence:
+- pushed HEAD `9269f110` fixed Small contains two raw Creature Bank rows: subtype 6/source row 1120/`AVXbnk70.def` at `native_h3maped_457dba6b_object_0258` with recovered 4x3 source dimensions, and subtype 4/source row 1118/`AVXbnk50.def` at `native_h3maped_457dba6b_object_0272` with recovered 2x2 source dimensions;
+- `object_drowned_reliquary`/`site_drowned_reliquary` is an existing original 2x2 live guarded-reward contract with authored Tidepool Skiffyard Watch encounter/army, exact gold/wood/ore/xp and artifact reward behavior, one-time collection, and save authority;
+- current 4x3 creature-bank-like original sites are metadata-only and have no adopted guard/reward runtime contract, so subtype 6 has no source-valid live projection boundary.
+
+Completion evidence:
+- `/tmp/heroes-drowned-bank-final-e2e.VtJijw` exits naturally with exact Small `457dba6b`/23,664/294 authority, sole live subtype-4 Drowned Reliquary, raw subtype 6, exact recovered masks, real authored guard battle, 520 gold/2 wood/2 ore/artifact reward, repeat rejection, save-v9 round trip, and unchanged Medium/ordinal-95/XLarge/package/startup authority;
+- `/tmp/heroes-drowned-bank-compat-final.Jr4gHc` keeps guarded artifact/site behavior and core systems green; `/tmp/heroes-drowned-bank-static-final.J7njxo` plus repository validation, Python compilation, JSON, scoped/global diff, and exact/generic editor parses are green;
+- official Linux export/headless startup and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. These are bounded export/startup claims only, not packaged Drowned Reliquary interaction or broader release certification.
 
 ## Completed Slice: Native RMG Unicorn Fenhound Kennels Dwelling Projection
 

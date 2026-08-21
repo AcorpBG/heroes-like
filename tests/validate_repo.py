@@ -44699,6 +44699,27 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
                 errors,
                 "H3M Spell Scroll proxy identity must remain exact and live-site-backed",
             )
+        type16_entries = [entry for entry in proxy_entries if isinstance(entry, dict) and int(entry.get("homm3_re_object_type_id", -1)) == 16]
+        ensure(len(type16_entries) == 2, errors, "H3M Creature Bank catalog must retain only the legacy subtype-0 metadata row and selected subtype-4 live row")
+        subtype4_bank_entries = [entry for entry in type16_entries if int(entry.get("homm3_re_object_subtype", -1)) == 4]
+        ensure(len(subtype4_bank_entries) == 1, errors, "H3M Creature Bank subtype 4 must have exactly one live proxy row")
+        if len(subtype4_bank_entries) == 1:
+            subtype4_bank = subtype4_bank_entries[0]
+            ensure(
+                (
+                    int(subtype4_bank.get("homm3_re_object_source_row", -1)),
+                    str(subtype4_bank.get("homm3_re_object_def_ref", "")),
+                    str(subtype4_bank.get("generated_kind", "")),
+                    str(subtype4_bank.get("semantic_category", "")),
+                    str(subtype4_bank.get("native_proxy_object_id", "")),
+                    str(subtype4_bank.get("native_proxy_site_id", "")),
+                    str(subtype4_bank.get("id", "")),
+                )
+                == (1118, "AVXbnk50.def", "resource_site", "guarded_reward_site", "object_drowned_reliquary", "site_drowned_reliquary", "reward_creature_bank_drowned_reliquary_proxy"),
+                errors,
+                "H3M Creature Bank subtype 4 must retain its exact recovered Drowned Reliquary live identity",
+            )
+        ensure(not any(int(entry.get("homm3_re_object_subtype", -1)) == 6 for entry in type16_entries), errors, "H3M Creature Bank subtype 6 must remain unmapped without a live 4x3 guarded-bank contract")
         expected_creature_generator_proxies = {
             59: (220, "AVGpixie.def", "object_greenbranch_copse", "dwelling_creature_generator_pixie_greenbranch_proxy"),
             52: (190, "AVGlich0.def", "object_lantern_warren", "dwelling_creature_generator_lich_lantern_proxy"),
@@ -44804,6 +44825,24 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             errors,
             "Fenhound Kennels must remain an exact 2x1 dwelling without a special artifact reward",
         )
+        drowned_object = map_objects_by_id.get("object_drowned_reliquary", {})
+        drowned_site = resource_sites_by_id.get("site_drowned_reliquary", {})
+        drowned_contract = drowned_site.get("guarded_reward_contract", {}) if isinstance(drowned_site.get("guarded_reward_contract", {}), dict) else {}
+        drowned_guard_profile = drowned_site.get("guard_profile", {}) if isinstance(drowned_site.get("guard_profile", {}), dict) else {}
+        ensure(
+            drowned_object.get("footprint", {}) == {"width": 2, "height": 2, "anchor": "bottom_center", "tier": "medium"}
+            and str(drowned_object.get("resource_site_id", "")) == "site_drowned_reliquary"
+            and drowned_site.get("rewards", {}) == {"gold": 520, "wood": 2, "ore": 2, "experience": 220}
+            and str(drowned_contract.get("guard_encounter_id", "")) == "encounter_tidepool_skiffyard_watch"
+            and str(drowned_contract.get("guard_army_group_id", "")) == "army_neutral_tidepool_skiffyard_watch"
+            and bool(drowned_contract.get("clear_required_for_reward", False))
+            and bool(drowned_contract.get("runtime_guard_resolution_adopted", False))
+            and not bool(drowned_contract.get("metadata_only_guard_contract", True))
+            and bool(drowned_guard_profile.get("runtime_guard_resolution_adopted", False))
+            and not bool(drowned_guard_profile.get("metadata_only", True)),
+            errors,
+            "Drowned Reliquary must retain its exact 2x2 live guarded resource-and-artifact contract",
+        )
         recovered_object_catalog_text = (ROOT / "src/gdextension/src/h3maped_rmg_object_catalog.cpp").read_text(encoding="utf-8")
         for recovered_row in (
             '{ 163, "objects.txt", "AVGcavl0.def", 17, "Creature Generator 1", 17, 5,',
@@ -44821,6 +44860,11 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             '{ 229, "objects.txt", "AVG2uni.def", 17, "Creature Generator 1", 17, 68,',
         ):
             ensure(recovered_object_catalog_text.count(recovered_row) == 1, errors, f"Recovered Creature Generator source identity must remain unique: {recovered_row}")
+        for recovered_bank_row in (
+            '{ 1118, "objects.txt", "AVXbnk50.def", 16, "Creature Bank", 16, 4,',
+            '{ 1120, "objects.txt", "AVXbnk70.def", 16, "Creature Bank", 16, 6,',
+        ):
+            ensure(recovered_object_catalog_text.count(recovered_bank_row) == 1, errors, f"Recovered Creature Bank source identity must remain unique: {recovered_bank_row}")
         spell_scroll_sites = [
             site for site in load_json(CONTENT_DIR / "resource_sites.json").get("items", [])
             if isinstance(site, dict) and str(site.get("id", "")) == "site_beacon_path_scroll"
@@ -45165,7 +45209,18 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             'or String(object.get("kind", "")) != "neutral_dwelling"',
             'creature_generator_rows_exact = false',
             'elif type_id == 16:',
-            'unsupported_bank_rows_exact = false',
+            'if subtype == 4:',
+            'drowned_reliquary_placement_id = String(object.get("placement_id", ""))',
+            '"native_h3maped_457dba6b_object_0272"',
+            'or String(object.get("kind", "")) != "resource_site"',
+            'or String(object.get("object_id", "")) != "object_drowned_reliquary"',
+            'or String(object.get("site_id", "")) != "site_drowned_reliquary"',
+            'or int(object.get("homm3_re_object_source_row", -1)) != 1118',
+            'or String(object.get("homm3_re_object_def_ref", "")) != "AVXbnk50.def"',
+            'or String(object.get("homm3_re_reward_object_catalog_id", "")) != "reward_creature_bank_drowned_reliquary_proxy"',
+            'elif subtype == 6:',
+            '"native_h3maped_457dba6b_object_0258"',
+            'creature_bank_rows_exact = false',
             '67: {"artifact_id": "artifact_waymark_compass", "catalog_id": "reward_random_minor_artifact_proxy"}',
             '68: {"artifact_id": "artifact_warcrest_pennon", "catalog_id": "reward_random_major_artifact_proxy"}',
             '0: {"object_id": "object_wood_wagon", "site_id": "site_wood_wagon", "resource_id": "wood", "catalog_id": "reward_resource_wood_build_proxy"}',
@@ -45185,6 +45240,9 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             'elif int(source.get("h3m_type_id", -1)) == 17:',
             'live_creature_generators.append({',
             'var creature_generator_interaction: Dictionary = _validate_creature_generator_interaction(adoption, [59, 52])',
+            'var creature_bank_interaction: Dictionary = _validate_creature_bank_interaction(adoption, drowned_reliquary_placement_id)',
+            'and live_drowned_reliquaries.size() == 1',
+            'and bool(creature_bank_interaction.get("ok", false))',
             'func _validate_creature_generator_interaction(adoption: Dictionary, expected_subtypes: Array[int]) -> Dictionary:',
             'var session = NativeRandomMapPackageSessionBridgeScript.build_session_from_adoption(adoption)',
             'if live_rows.map(func(row: Dictionary) -> int: return int(row.get("subtype", -1))) != expected_subtypes:',
@@ -45580,6 +45638,135 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             "perform_context_action",
         ):
             ensure(forbidden_token not in proxy_projection_block, errors, f"Native live proxy focused owner must remain an independent exact observer: {forbidden_token}")
+
+        bank_interaction_start = native_rmg_runtime_boundary_text.find("func _validate_creature_bank_interaction(")
+        bank_interaction_end = native_rmg_runtime_boundary_text.find("func _force_player_guard_victory(", bank_interaction_start)
+        bank_interaction_block = native_rmg_runtime_boundary_text[bank_interaction_start:bank_interaction_end]
+        bank_force_end = native_rmg_runtime_boundary_text.find("func _resource_node_result(", bank_interaction_end)
+        bank_force_block = native_rmg_runtime_boundary_text[bank_interaction_end:bank_force_end]
+        bank_order = tuple(bank_interaction_block.find(token) for token in (
+            "build_session_from_adoption(adoption)",
+            'ContentService.get_resource_site("site_drowned_reliquary")',
+            'if linked_guards.size() != 1:',
+            'OverworldRulesScript.resource_site_blocking_guard(session, node, site) == guard',
+            "var session_before_blocked: Dictionary = session.to_dict()",
+            "var blocked: Dictionary = OverworldRulesScript._collect_resource_node_result(session, node_result, false)",
+            "session.battle = BattleRulesScript.create_battle_payload(session, guard)",
+            "var victory := _force_player_guard_victory(session)",
+            "OverworldRulesScript.is_encounter_resolved(session, guard)",
+            'var resources_before: Dictionary = session.overworld.get("resources", {}).duplicate(true)',
+            "var claim: Dictionary = OverworldRulesScript._collect_resource_node_result(session, _resource_node_result(session, placement_id), false)",
+            "var before_repeat: Dictionary = session.to_dict()",
+            "var repeat: Dictionary = OverworldRulesScript._collect_resource_node_result(session, _resource_node_result(session, placement_id), false)",
+            "restored.from_dict(after_repeat)",
+        ))
+        ensure(all(index >= 0 for index in bank_order) and list(bank_order) == sorted(bank_order), errors, "Native Creature Bank focused proof must adopt, block, resolve a real guard battle, claim once, reject repeat, and round-trip in order")
+        for required_token in (
+            '"encounter_tidepool_skiffyard_watch"',
+            '"army_neutral_tidepool_skiffyard_watch"',
+            'expected_body := [{"x": 20, "y": 28, "level": 0}, {"x": 21, "y": 28, "level": 0}]',
+            'expected_visit := [{"x": 20, "y": 28, "level": 0}]',
+            'var expected_engagement := [',
+            'and guard.get("package_guard_engagement_tiles", []) == expected_engagement',
+            'and guard.get("package_block_tiles", [{}]) == []',
+            'and not bool(guard.get("blocking_body", true))',
+            'int(resources_after.get("gold", 0)) == int(resources_before.get("gold", 0)) + 520',
+            'int(resources_after.get("wood", 0)) == int(resources_before.get("wood", 0)) + 2',
+            'int(resources_after.get("ore", 0)) == int(resources_before.get("ore", 0)) + 2',
+            'artifact_ids_after.size() == artifact_ids_before.size() + 1',
+            'and unrelated_nodes_exact',
+            'and package_authority_after == package_authority_before',
+            'restored.save_version == SessionStateStoreScript.SAVE_VERSION',
+        ):
+            ensure(required_token in bank_interaction_block, errors, f"Native Creature Bank focused proof is missing exact authority: {required_token}")
+        for forbidden_token in (
+            'session.overworld["resolved_encounters"] =',
+            'session.overworld["resources"] =',
+            'session.overworld["resource_nodes"] =',
+            'node["collected"] =',
+            'node["artifact_reward_id"] =',
+            'ContentService._',
+            'object["kind"] =',
+            'sort()',
+            'sort_custom',
+        ):
+            ensure(forbidden_token not in bank_interaction_block, errors, f"Native Creature Bank focused proof must use only live adopted behavior: {forbidden_token}")
+        ensure(bank_force_block.count('BattleRulesScript.resolve_if_battle_ready(session)') == 1, errors, "Native Creature Bank focused proof must resolve exactly one real BattleRules outcome")
+        ensure('resolved_encounters' not in bank_force_block, errors, "Native Creature Bank battle helper must not synthesize guard clearance")
+        ensure(native_rmg_runtime_boundary_text.count("_validate_creature_bank_interaction(") == 2, errors, "Native Creature Bank interaction must have one owner call and one definition")
+
+    if NATIVE_RANDOM_MAP_PACKAGE_SESSION_BRIDGE_PATH.exists():
+        native_package_bridge_text = NATIVE_RANDOM_MAP_PACKAGE_SESSION_BRIDGE_PATH.read_text(encoding="utf-8")
+        for required_signature in (
+            "static func _ensure_generated_guarded_reward_site_guards(resource_nodes: Array, encounters: Array, map_size: Variant) -> Array:",
+            "static func _supplemental_guarded_reward_site_guard(node: Dictionary, site: Dictionary, map_size: Variant) -> Dictionary:",
+            "static func _generated_guarded_reward_engagement_tiles(visit_tile: Dictionary, map_size: Variant) -> Array:",
+        ):
+            ensure(required_signature in native_package_bridge_text, errors, f"Generated guarded-reward adoption must accept the bridge's Dictionary-or-Vector map-size payload: {required_signature}")
+        ensure(
+            native_package_bridge_text.find("_ensure_generated_rare_source_guards(resource_nodes, _encounters_from_document(map_document))")
+            < native_package_bridge_text.find("static func _ensure_generated_guarded_reward_site_guards(resource_nodes: Array, encounters: Array, map_size: Variant) -> Array:"),
+            errors,
+            "Native package bridge must preserve existing generated guards before adding guarded-reward contract guards",
+        )
+        guarded_sites_start = native_package_bridge_text.find("static func _ensure_generated_guarded_reward_site_guards(")
+        guarded_sites_end = native_package_bridge_text.find("static func _generated_guarded_reward_site_contract_is_live(", guarded_sites_start)
+        guarded_sites_block = native_package_bridge_text[guarded_sites_start:guarded_sites_end]
+        guarded_contract_end = native_package_bridge_text.find("static func _supplemental_guarded_reward_site_guard(", guarded_sites_end)
+        guarded_contract_block = native_package_bridge_text[guarded_sites_end:guarded_contract_end]
+        guarded_guard_end = native_package_bridge_text.find("static func _generated_guarded_reward_engagement_tiles(", guarded_contract_end)
+        guarded_guard_block = native_package_bridge_text[guarded_contract_end:guarded_guard_end]
+        ensure(guarded_sites_block.find("ContentService.get_resource_site") < guarded_sites_block.find("_generated_guarded_reward_site_contract_is_live(site)") < guarded_sites_block.find("_resource_node_has_linked_guard(result, node)") < guarded_sites_block.find("_supplemental_guarded_reward_site_guard(node, site, map_size)"), errors, "Generated guarded-reward adoption must validate the live site, retain existing guard ownership, then materialize")
+        for required_token in (
+            'String(site.get("family", "")) != "guarded_reward_site"',
+            'bool(runtime_boundary.get("guard_resolution_runtime_adopted", false))',
+            'bool(contract.get("runtime_guard_resolution_adopted", false))',
+            'not bool(contract.get("metadata_only_guard_contract", true))',
+            'bool(contract.get("clear_required_for_reward", false))',
+            'bool(guard_profile.get("runtime_guard_resolution_adopted", false))',
+            'not bool(guard_profile.get("metadata_only", true))',
+            'not ContentService.get_encounter(encounter_id).is_empty()',
+            'not ContentService.get_army_group(army_group_id).is_empty()',
+        ):
+            ensure(required_token in guarded_contract_block, errors, f"Generated guarded-reward contract gate is missing fail-closed authority: {required_token}")
+        guard_order = tuple(guarded_guard_block.find(token) for token in (
+            'String(contract.get("resource_site_id", "")) != site_id',
+            'var visit_tiles: Array = node.get("package_visit_tiles", [])',
+            'if visit_tiles.is_empty():',
+            'var body_tiles: Array = node.get("package_body_tiles", [])',
+            '"target_body_tiles": body_tiles.duplicate(true)',
+            '"target_visit_tiles": visit_tiles.duplicate(true)',
+            '"encounter_id": encounter_id',
+            '"enemy_group_id": army_group_id',
+            '"package_block_tiles": []',
+            '"blocking_body": false',
+            '"package_guard_engagement_tiles": engagement_tiles',
+        ))
+        ensure(all(index >= 0 for index in guard_order) and list(guard_order) == sorted(guard_order), errors, "Generated guarded-reward guard must use exact site identity, source visit/body masks, authored encounter/army, and source visit engagement in order")
+        for forbidden_token in (
+            '"encounter_mire_raid"',
+            '"army_emberwell_vanguard"',
+            'Vector2i(',
+            'sort()',
+            'sort_custom',
+            'node[',
+            'site[',
+            'contract[',
+        ):
+            ensure(forbidden_token not in guarded_contract_block + guarded_guard_block, errors, f"Generated guarded-reward adoption must not invent or mutate contract authority: {forbidden_token}")
+        engagement_start = native_package_bridge_text.find("static func _generated_guarded_reward_engagement_tiles(", guarded_contract_end)
+        engagement_end = native_package_bridge_text.find("static func _generated_resource_node_is_rare_source(", engagement_start)
+        engagement_block = native_package_bridge_text[engagement_start:engagement_end]
+        engagement_order = tuple(engagement_block.find(token) for token in (
+            'var center := Vector2i(int(visit_tile.get("x", -1)), int(visit_tile.get("y", -1)))',
+            'if not _generated_source_in_bounds(center, map_size):',
+            'var result := [{"x": center.x, "y": center.y, "level": int(visit_tile.get("level", 0))}]',
+            'for neighbor in _generated_source_route_neighbors(center):',
+            'if _generated_source_in_bounds(neighbor, map_size):',
+            'result.append({"x": neighbor.x, "y": neighbor.y, "level": int(visit_tile.get("level", 0))})',
+        ))
+        ensure(all(index >= 0 for index in engagement_order) and list(engagement_order) == sorted(engagement_order), errors, "Generated guarded-reward engagement must expand the exact source visit tile through the established ordered eight-neighbor surface and clip to map bounds")
+
     ensure(h3maped_catalog_path.exists(), errors, "Missing recovered H3MapEd RMG template catalog source")
     if native_core_path.exists():
         native_core_text = native_core_path.read_text(encoding="utf-8")
