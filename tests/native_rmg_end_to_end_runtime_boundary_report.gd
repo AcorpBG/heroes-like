@@ -26,6 +26,15 @@ const CREATURE_GENERATOR_ROWS := {
 		"gold": 90,
 		"recruits": {"unit_neutral_tunnel_lanterns": 2, "unit_neutral_glimmercap_needlers": 1},
 	},
+	22: {
+		"source_row": 180,
+		"def_ref": "AVGgogs0.def",
+		"object_id": "object_cinder_kiln",
+		"site_id": "site_cinder_kiln",
+		"catalog_id": "dwelling_creature_generator_gog_cinder_kiln_proxy",
+		"gold": 75,
+		"recruits": {"unit_neutral_kilnward_mallets": 2, "unit_neutral_cinderpot_hurlers": 1},
+	},
 }
 const LOOSE_RESOURCE_PRESENTATION_ROWS := [
 	{"site_id": "site_peatwax_reed_yard", "object_id": "object_marsh_peat_yard", "resource_id": "peatwax", "asset_id": "resource_pickup_peatwax", "mine_asset_id": "mapobj_marsh_peat_yard", "expected_footprint": {"width": 2, "height": 2}, "texture_path": "res://art/overworld/runtime/objects/pickups/peatwax_reed_bundle.png", "rewards": {"gold": 120, "peatwax": 1}, "current_small": false},
@@ -62,6 +71,10 @@ func _run() -> void:
 	)
 	if not bool(medium.get("ok", false)):
 		_fail("Medium public generation boundary failed: %s" % JSON.stringify(medium))
+		return
+	var medium_cinder_kiln_projection: Dictionary = _validate_medium_cinder_kiln_projection(service, medium.get("generated", {}))
+	if not bool(medium_cinder_kiln_projection.get("ok", false)):
+		_fail("Medium Cinder Kiln dwelling projection failed: %s" % JSON.stringify(medium_cinder_kiln_projection))
 		return
 	var medium_guard_projection := _validate_guard_control_projection(medium.get("generated", {}))
 	if not bool(medium_guard_projection.get("ok", false)):
@@ -124,6 +137,7 @@ func _run() -> void:
 		"zero_road_projection": zero_road_projection,
 		"live_proxy_projection": live_proxy_projection,
 		"medium": medium.get("summary", {}),
+		"medium_cinder_kiln_projection": medium_cinder_kiln_projection,
 		"medium_guard_projection": medium_guard_projection,
 		"medium_guard_live_behavior": medium_guard_live_behavior,
 		"medium_ordinal_95": ordinal_95.get("summary", {}),
@@ -357,7 +371,7 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 	var loose_resource_presentation := {}
 	if session != null:
 		loose_resource_presentation = await _validate_loose_resource_presentation(session, loose_resource_nodes_by_site, loose_resource_mine_nodes_by_site)
-	var creature_generator_interaction: Dictionary = _validate_creature_generator_interaction(adoption)
+	var creature_generator_interaction: Dictionary = _validate_creature_generator_interaction(adoption, [59, 52])
 	var interaction := {}
 	if session != null and not live_campfires.is_empty():
 		var campfire_result: Dictionary = live_campfires[0]
@@ -588,7 +602,103 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 		"exact_repeat": exact_repeat,
 	}
 
-func _validate_creature_generator_interaction(adoption: Dictionary) -> Dictionary:
+func _validate_medium_cinder_kiln_projection(service: Variant, generated: Dictionary) -> Dictionary:
+	var map_document: Variant = generated.get("map_document", null)
+	if map_document == null:
+		return {"ok": false, "reason": "missing_medium_map_document"}
+	var expected_rows := {
+		0: {
+			"placement_id": "native_h3maped_e76c8967_object_1162",
+			"x": 9,
+			"y": 37,
+			"body_tiles": [{"x": 8, "y": 37, "level": 0}, {"x": 9, "y": 37, "level": 0}],
+		},
+		22: {
+			"placement_id": "native_h3maped_e76c8967_object_1208",
+			"x": 66,
+			"y": 10,
+			"body_tiles": [{"x": 65, "y": 10, "level": 0}, {"x": 66, "y": 10, "level": 0}],
+		},
+		5: {
+			"placement_id": "native_h3maped_e76c8967_object_1322",
+			"x": 21,
+			"y": 63,
+			"body_tiles": [{"x": 20, "y": 63, "level": 0}, {"x": 21, "y": 63, "level": 0}],
+		},
+	}
+	var ordered_subtypes: Array[int] = []
+	var type17_authority: Array[Dictionary] = []
+	var rows_exact := true
+	for object_index in range(int(map_document.get_object_count())):
+		var object: Dictionary = map_document.get_object_by_index(object_index)
+		if int(object.get("h3m_type_id", -1)) != 17:
+			continue
+		var subtype := int(object.get("h3m_subtype", -1))
+		ordered_subtypes.append(subtype)
+		type17_authority.append(_proxy_projection_object_authority(object))
+		var expected: Dictionary = expected_rows.get(subtype, {}) if expected_rows.get(subtype, {}) is Dictionary else {}
+		if expected.is_empty() \
+				or String(object.get("placement_id", "")) != String(expected.get("placement_id", "")) \
+				or int(object.get("x", -1)) != int(expected.get("x", -2)) \
+				or int(object.get("y", -1)) != int(expected.get("y", -2)) \
+				or int(object.get("level", -1)) != 0 \
+				or object.get("body_tiles", []) != expected.get("body_tiles", []) \
+				or object.get("action_tiles", []) != [] \
+				or not bool(object.get("blocking_body", false)):
+			rows_exact = false
+		if subtype == 22:
+			var expected_dwelling: Dictionary = CREATURE_GENERATOR_ROWS.get(22, {})
+			if String(object.get("kind", "")) != "neutral_dwelling" \
+					or String(object.get("object_id", "")) != String(expected_dwelling.get("object_id", "")) \
+					or String(object.get("native_proxy_object_id", "")) != String(expected_dwelling.get("object_id", "")) \
+					or String(object.get("site_id", "")) != "" \
+					or int(object.get("homm3_re_object_source_row", -1)) != int(expected_dwelling.get("source_row", -2)) \
+					or String(object.get("homm3_re_object_def_ref", "")) != String(expected_dwelling.get("def_ref", "")) \
+					or String(object.get("homm3_re_reward_object_catalog_id", "")) != String(expected_dwelling.get("catalog_id", "")) \
+					or not _live_proxy_provenance_exact(object):
+				rows_exact = false
+		elif String(object.get("kind", "")) != "h3m_object" \
+				or String(object.get("object_id", "")) != "" \
+				or String(object.get("native_proxy_object_id", "")) != "" \
+				or String(object.get("site_id", "")) != "" \
+				or int(object.get("homm3_re_object_source_row", -1)) != -1 \
+				or String(object.get("homm3_re_object_def_ref", "")) != "" \
+				or String(object.get("homm3_re_reward_object_catalog_id", "")) != "":
+			rows_exact = false
+	var repeat: Dictionary = service.generate_random_map(_config("medium", 72, 1, "land", "10"), {"startup_path": "medium_cinder_kiln_projection_repeat"})
+	var repeat_map: Variant = repeat.get("map_document", null)
+	var repeat_type17_authority: Array[Dictionary] = []
+	if repeat_map != null:
+		for object_index in range(int(repeat_map.get_object_count())):
+			var object: Dictionary = repeat_map.get_object_by_index(object_index)
+			if int(object.get("h3m_type_id", -1)) == 17:
+				repeat_type17_authority.append(_proxy_projection_object_authority(object))
+	var repeat_exact: bool = bool(repeat.get("ok", false)) \
+			and String(repeat.get("final_payload_fnv1a32", "")) == String(generated.get("final_payload_fnv1a32", "")) \
+			and int(repeat.get("final_payload_byte_count", -1)) == int(generated.get("final_payload_byte_count", -2)) \
+			and int(repeat.get("runtime_object_count", -1)) == int(generated.get("runtime_object_count", -2)) \
+			and repeat_type17_authority == type17_authority
+	var adoption: Dictionary = service.convert_generated_payload(generated, {"feature_gate": REPORT_ID})
+	var interaction: Dictionary = _validate_creature_generator_interaction(adoption, [22])
+	return {
+		"ok": String(generated.get("final_payload_fnv1a32", "")) == "e76c8967" \
+				and int(generated.get("final_payload_byte_count", -1)) == 79333 \
+				and int(generated.get("runtime_object_count", -1)) == 1326 \
+				and ordered_subtypes == [0, 22, 5] \
+				and rows_exact \
+				and repeat_exact \
+				and bool(adoption.get("ok", false)) \
+				and bool(interaction.get("ok", false)),
+		"payload_hash": generated.get("final_payload_fnv1a32", ""),
+		"payload_bytes": generated.get("final_payload_byte_count", -1),
+		"object_count": generated.get("runtime_object_count", -1),
+		"ordered_subtypes": ordered_subtypes,
+		"rows_exact": rows_exact,
+		"repeat_exact": repeat_exact,
+		"interaction": interaction,
+	}
+
+func _validate_creature_generator_interaction(adoption: Dictionary, expected_subtypes: Array[int]) -> Dictionary:
 	var session = NativeRandomMapPackageSessionBridgeScript.build_session_from_adoption(adoption)
 	if session == null:
 		return {"ok": false, "reason": "missing_adopted_session"}
@@ -618,7 +728,7 @@ func _validate_creature_generator_interaction(adoption: Dictionary) -> Dictionar
 			return {"ok": false, "reason": "unexpected_creature_generator_subtype", "subtype": subtype}
 		live_rows.append({"index": node_index, "subtype": subtype, "node": node.duplicate(true)})
 		target_indices[node_index] = true
-	if live_rows.map(func(row: Dictionary) -> int: return int(row.get("subtype", -1))) != [59, 52]:
+	if live_rows.map(func(row: Dictionary) -> int: return int(row.get("subtype", -1))) != expected_subtypes:
 		return {"ok": false, "reason": "ordered_creature_generator_rows_mismatch", "rows": live_rows}
 	var expected_recruits := {}
 	var expected_gold := 0
@@ -670,7 +780,7 @@ func _validate_creature_generator_interaction(adoption: Dictionary) -> Dictionar
 			if not target_indices.has(node_index) and nodes_before[node_index] != nodes_after[node_index]:
 				unrelated_nodes_exact = false
 				break
-	var all_claims_exact := claim_rows.size() == CREATURE_GENERATOR_ROWS.size()
+	var all_claims_exact := claim_rows.size() == expected_subtypes.size()
 	for claim_value in claim_rows:
 		var claim_row: Dictionary = claim_value
 		var expected: Dictionary = CREATURE_GENERATOR_ROWS.get(int(claim_row.get("subtype", -1)), {})
