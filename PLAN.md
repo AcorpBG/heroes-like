@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `native-rmg-runtime-gog-cinder-kiln-dwelling-projection-10184`. Fixed Medium seed 10 retains payload `e76c8967`, 79,333 bytes, 1,326 ordered objects, and its exact type-17 row order/placement/masks while recovered subtype 22/source row 180/`AVGgogs0.def` now projects through the existing original Cinder Kiln neutral dwelling. Subtypes 0/5 remain raw and fail-closed. The live claim grants exactly 75 gold plus 2 Kilnward Mallets/1 Cinderpot Hurler, persists player control, rejects the repeat without mutation, and round-trips through save version 9 with unrelated authority exact. Focused, dwelling/AI/content/core, repository/editor, and bounded Linux/Windows export-startup gates pass. No other subtype, generation/parity, imported H3 identity, balance, packaged interaction, certification, signing/publication, whole-game, or release-readiness claim. Select the next tracker-approved RMG-only source-backed slice.
+  id: `native-rmg-runtime-gog-cinder-kiln-dwelling-projection-10184`
 - Completed implementation slice: `native-rmg-runtime-creature-generator-dwelling-projection-10184`. Fresh Small seed 1 retains its exact Native RMG payload and now projects the recovered type-17 subtype 59/`AVGpixie.def` and subtype 52/`AVGlich0.def` rows through the existing original Greenbranch Copse and Lantern Warren neutral-dwelling surfaces. Both adopted rows grant their exact existing gold/recruits, persist control, reject same-controller repeats, and round-trip through save version 9 without changing unrelated package/session authority. Focused runtime, current dwelling/AI/content/core compatibility, repository/editor, and bounded Linux/Windows export-startup gates pass. Two older generated-object reports remain excluded preexisting compatibility defects because they require removed legacy API/pathing surfaces and fail independently on rows with no selected type-17 mapping. Creature Banks, other Creature Generator subtypes, H3 art/content import, native generation/parity, balance, broad proxy policy, packaged interaction, certification, signing/publication, whole-game, and release readiness remain outside this slice. Select the next tracker-approved source-backed release-readiness implementation slice.
   id: `native-rmg-runtime-creature-generator-dwelling-projection-10184`
 - Completed implementation slice: `presentation-native-rmg-loose-resource-distinct-field-sprites-10184`. The five accepted Native RMG loose-resource proxy identities now have distinct original field sprites through the existing site-scoped manifest mapping. Exact `reward_reference` site identity wins before its shared mine-object asset while real `mine` rows retain their existing structures. Focused 1280x720/1920x1080 rendering, current generated rows, detached Peatwax coverage, collection/repeat/save authority, broad Overworld/core compatibility, repository/editor checks, and bounded Linux/Windows export-startup gates pass. Native generation, mines, resource policy, values, balance, broad renderer architecture/parity, packaged interaction, hardware/accessibility certification, signing/publication, whole-game, and release readiness remain outside this slice. Select the next tracker-approved release-readiness implementation slice.
@@ -7949,6 +7951,37 @@ Completion evidence:
 - `/tmp/heroes-spell-scroll-focused.Q5GPQb` is natural rc0 and proves the sole exact type-93 row and live scroll node, `spell_beacon_path` as the only known-spell delta, exact resources/artifacts/army/other nodes, repeat rejection, session round trip, repeated generation authority, and unchanged Small/Medium/ordinal-95/Extra-Large payload/object/guard/package/save/startup gates;
 - `/tmp/heroes-spell-scroll-core.r7WCx5` records core rc0; JSON, repository validation, Python compilation, diff checks, and exact/generic editor parses pass;
 - `/tmp/heroes-spell-scroll-linux-package.zpi2sS` and `/tmp/heroes-spell-scroll-windows-package.CUKi63` wrapper artifacts plus the official report JSON files record Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup green. These are export/startup claims only; no packaged scroll interaction is claimed.
+
+## Completed Slice: Native RMG Gog Cinder-Kiln Dwelling Projection
+
+id: `native-rmg-runtime-gog-cinder-kiln-dwelling-projection-10184`
+
+Status: completed.
+
+Implementation boundary:
+- extend the existing runtime proxy catalog with exactly one source-identified type-17 row: subtype 22/source row 180/`AVGgogs0.def` to `object_cinder_kiln`;
+- use the existing `neutral_dwelling` package/session path and existing Cinder Kiln content without changing MapPackageService matching, the session bridge, Overworld rules, dwelling rewards, recruitment, rendering, AI policy, save schema, or native generation;
+- retain the recovered source identity only as provenance and expose only original-project Cinder Kiln, unit, art, and text identities at runtime.
+
+Completion criteria:
+- fixed Medium seed 10 retains payload `e76c8967`, `79,333` bytes, `1,326` ordered objects, and exact placement/body/action/block masks while its sole subtype-22 row becomes the exact catalog-provenanced Cinder Kiln neutral dwelling; subtype 0/5 and every other unmapped type-17 row remain raw and fail-closed;
+- package/session adoption gains exactly the subtype-22 live resource node without duplicating or losing source objects, and the completed Small seed-1 subtype 59/52 projections remain exact;
+- a real player claim grants only Cinder Kiln's existing 75 gold plus exact Kilnward/Cinderpot recruits, persists control, rejects a same-controller repeat without mutation, and round-trips through save version 9 without changing unrelated resources, army stacks, artifacts, map objects, encounters, or package authority;
+- focused end-to-end, neutral-dwelling/AI/content compatibility, core, repository/editor, and bounded official Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no recovered Native RMG function/private-state/writeout, payload bytes, RNG, count/order/placement, terrain, road, guard, footprint/mask, density, native code/binary, or parity claim;
+- no other Creature Generator or Creature Bank mapping, new dwelling/unit/art, H3M/DEF asset import, reward/recruit rebalance, AI policy change, schema/save-version change, broad catalog generalization, packaged dwelling interaction claim, hardware/accessibility certification, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- a fresh ignored diagnostic on pushed HEAD `b7cd6f34` proves fixed Medium seed 10 still has payload `e76c8967`/1,326 objects and exactly three raw type-17 rows in order: subtype 0 at 9,37, subtype 22 at 66,10, and subtype 5 at 21,63; all three currently retain empty object/site/catalog/source-row/DEF identity in the public map document;
+- the recovered objects.txt catalog independently and uniquely identifies subtype 22 as source row 180/`AVGgogs0.def`, so no placement, terrain, final-map delta, or heuristic identity inference is involved;
+- `object_cinder_kiln` already owns the live, visitable `site_cinder_kiln` persistent-control dwelling with original-project 75-gold claim, exact Kilnward/Cinderpot recruits, rendering, strategic-AI, and save behavior.
+
+Completion evidence:
+- `/tmp/heroes-cinder-focused.Nyzk13` records the authoritative focused natural rc0 report: Medium payload `e76c8967`, 79,333 bytes, 1,326 ordered objects, exact ordered type-17 subtypes `[0,22,5]`, exact placements/body/action/block authority, subtype 22 as the sole new catalog-provenanced Cinder Kiln row, subtypes 0/5 still raw, deterministic repeat, exact live 75-gold and 2-Kilnward/1-Cinderpot claim, persistent player control, mutation-free repeat rejection, unrelated authority, and save version 9 round trip all pass; completed Small subtype 59/52 behavior and the fixed ordinal-95/XLarge boundaries remain green in the same owner;
+- `/tmp/heroes-cinder-compat.VJ6tUy` records natural rc0 for artifact dwelling rewards, strategic-AI site control, faction content breadth, and core systems; JSON, repository validation, Python compilation, scoped/global diff checks, exact focused-scene parsing, and generic editor parsing pass;
+- official `.artifacts/packaging_linux_export_smoke/report.json` and `.artifacts/packaging_windows_export_smoke/report.json` record Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup green. These are export/startup claims only; no packaged Cinder Kiln interaction is claimed.
 
 ## Completed Slice: Native RMG Creature-Generator Dwelling Projection
 
