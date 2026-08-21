@@ -17699,7 +17699,7 @@ def validate_main_menu_credits_third_party_notices(errors: list[str]) -> None:
     body_block = scene_node_block(menu_scene_text, "CreditsNoticesBody", "TextEdit")
     for required_token in ('visible = false', 'text = "Open Credits & Notices"'):
         ensure(required_token in command_block, errors, f"Credits secondary command is missing token: {required_token}")
-    for required_token in ('size = Vector2i(760, 560)', 'min_size = Vector2i(640, 480)', 'exclusive = true', 'transient = true', 'wrap_controls = true'):
+    for required_token in ('visible = false', 'size = Vector2i(760, 560)', 'min_size = Vector2i(640, 480)', 'exclusive = true', 'transient = true', 'wrap_controls = true'):
         ensure(required_token in dialog_block, errors, f"Credits modal is missing bounded modal token: {required_token}")
     for required_token in ('editable = false', 'context_menu_enabled = false', 'wrap_mode = 1'):
         ensure(required_token in body_block, errors, f"Credits notice body is missing read-only scroll token: {required_token}")
@@ -17740,6 +17740,7 @@ def validate_main_menu_credits_third_party_notices(errors: list[str]) -> None:
         "FrontierVisualKit.configure_focus_cycle([_credits_notices_body, _credits_notices_close_button])",
     ):
         ensure(required_token in configure_body, errors, f"Credits modal configuration is missing accessibility/focus token: {required_token}")
+    ensure('_credits_notices_dialog.visible' not in configure_body, errors, "Credits modal configuration must not transition the native Window during Main Menu startup")
     ensure(".accessibility_name =" not in configure_body and ".accessibility_description =" not in configure_body, errors, "Credits modal must use authored accessibility semantics without leaving auto-semantic metadata")
     ensure(
         open_body.find("_credits_notices_body.text = SettingsService.credits_notices_text()")
@@ -17788,6 +17789,12 @@ def validate_main_menu_credits_third_party_notices(errors: list[str]) -> None:
         "Engine.get_license_info()",
         "Engine.get_copyright_info()",
         'command.grab_focus()',
+        'var startup_snapshot: Dictionary = shell.call("validation_snapshot")',
+        'or bool(startup_snapshot.get("credits_notices_dialog_visible", true))',
+        'or dialog.has_focus()',
+        'or body.has_focus()',
+        'or close_button.has_focus()',
+        '"startup_dialog_hidden_without_focus": true',
         'await _press_key(KEY_ENTER)',
         'await _press_joypad(JOY_BUTTON_A)',
         'await _press_key(KEY_TAB)',

@@ -1352,6 +1352,7 @@ dialog_text = "Keep this display mode and resolution?"
 
 [node name="CreditsNoticesDialog" type="Window" parent="."]
 unique_name_in_owner = true
+visible = false
 title = "Credits & Notices"
 initial_position = 1
 size = Vector2i(760, 560)

@@ -986,7 +986,6 @@ func _scroll_credits_notices(page_direction: int) -> void:
 	)
 
 func _configure_credits_notices() -> void:
-	_credits_notices_dialog.visible = false
 	_credits_notices_body.editable = false
 	_credits_notices_body.context_menu_enabled = false
 	UiAccessibility.describe_control(

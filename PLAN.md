@@ -8438,7 +8438,7 @@ Completion evidence:
 - `/tmp/heroes-scroll-sprite-overworld.fxleNX` and `/tmp/heroes-scroll-sprite-core.e9nrhf` record broad Overworld visual and core compatibility rc0; JSON, repository validation, Python compilation, diff checks, and exact/generic editor parses pass;
 - `/tmp/heroes-scroll-sprite-linux-package.eLBDq0` and `/tmp/heroes-scroll-sprite-windows-package.eA3VdS` plus the official report JSON files record Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup green; both PCKs contain `beacon_path_scroll.png.import` and its compiled texture. These remain export/startup claims only.
 
-## Selected Slice: Aurelion Reach Native Boot Splash
+## Completed Slice: Aurelion Reach Native Boot Splash
 
 id: `ux-aurelion-reach-native-boot-splash-10184`
 
@@ -8469,6 +8469,38 @@ Completion evidence:
 - `/tmp/heroes-boot-splash-focused-rerun.iBthjF` is the authoritative focused platform-readiness report: exact crest path/SHA-256/1254x1254 dimensions, corner alpha, `020407ff` background, stretch mode `KEEP`, filtering, zero forced delay, Boot route, technical app identity, and public window title all pass;
 - `/tmp/heroes-boot-splash-compat.Nycd9r` keeps menu/outcome visual behavior and core systems green; repository validation, Python compilation, JSON/diff checks, and exact/generic editor parses pass;
 - official Linux export/headless startup and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass with the updated project settings. These are bounded export/startup claims only, not packaged splash inspection, hardware/accessibility certification, signing/publication, whole-game, or release readiness.
+
+## Completed Slice: Main Menu Credits Hidden-Dialog Focus Lifecycle
+
+id: `ux-main-menu-credits-hidden-dialog-focus-lifecycle-10184`
+
+Status: completed.
+
+Implementation boundary:
+- author the existing Credits & Notices `Window` hidden in `MainMenu.tscn` so it never enters the native subwindow focus lifecycle during Main Menu startup;
+- remove only the redundant runtime visibility transition from `_configure_credits_notices`, while retaining popup-before-deferred-Close-focus and close-before-deferred-Guide-focus ordering;
+- preserve the existing notice content, Guide placement, read-only scrolling, keyboard/controller paging, modal containment, and focus return.
+
+Completion criteria:
+- fresh 1280x720 and 1920x1080 Main Menu launches reach the first view with no `_sub_window_grab_focus`, `index == -1`, or other unexpected startup diagnostic, while Credits & Notices remains hidden and owns no focus;
+- physical keyboard and controller paths still open the modal, give Close initial focus only after the popup is visible, cycle to the notice body, page in both directions, close, and restore the Guide command at both target sizes;
+- session, campaign, save, settings, InputMap, AppRouter, Main Menu composition, notice content, and accessibility semantics remain exact;
+- focused Credits, Main Menu compatibility, repository/editor, and bounded official Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no notice text/license, Guide information architecture, first-view composition, window size, scrolling/input mapping, accessibility wording, save/settings/input schema, gameplay, balance, strategic AI, or Native RMG change;
+- no timer/delay workaround, synthetic focus callback, custom modal system, packaged Credits interaction, controller/accessibility/native-hardware certification, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- fresh pushed-HEAD `c5885bb2` desktop launch `/tmp/heroes-current-first-view.BTvVWV` reaches Main Menu but logs `Condition \"index == -1\" is true` from `Viewport::_sub_window_grab_focus`, with the GDScript backtrace pointing to `_configure_credits_notices` line 989 during `_ready`;
+- `CreditsNoticesDialog` is authored without `visible = false`, and `_configure_credits_notices` performs `_credits_notices_dialog.visible = false` before the native subwindow is registered, while the actual open path already uses `popup_centered` followed by deferred Close focus;
+- the existing focused owner already proves the intended 1280x720/1920x1080 keyboard/controller modal behavior and authority boundaries, so this slice corrects the shipped startup lifecycle rather than redesigning the dialog.
+
+Completion evidence:
+- `/tmp/heroes-credits-focus-desktop.Ft5cCB` records fresh 1280x720 and 1920x1080 desktop startups with zero `_sub_window_grab_focus`, `index == -1`, or other selected startup diagnostics;
+- `/tmp/heroes-credits-focus-runtime.iThffP` is natural rc0 with one exact `MAIN_MENU_CREDITS_NOTICES_REPORT` ok:true marker: both target sizes start with the dialog hidden and no dialog/body/Close focus, then physical keyboard/controller open, focus cycle, paging, close, focus return, and full authority checks pass;
+- `/tmp/heroes-credits-keyboard-compat.t80jlg` records the full Main Menu keyboard-navigation smoke natural rc0/PASS, and `/tmp/heroes-credits-remaining-compat.ZeerZL` records screen-reader semantics PASS plus core systems rc0;
+- `/tmp/heroes-credits-final-static.WBjJej` records repository, Python, JSON, progress, scoped/global diff, and exact/generic editor gates green; official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. These remain bounded export/startup claims only.
 
 ## Progress Reconciliation
 

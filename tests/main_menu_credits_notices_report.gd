@@ -78,6 +78,18 @@ func _run_viewport_case(viewport_size: Vector2i) -> Dictionary:
 	var shell = load("res://scenes/menus/MainMenu.tscn").instantiate()
 	add_child(shell)
 	await _frames(4)
+	var dialog: Window = shell.get_node("CreditsNoticesDialog")
+	var body: TextEdit = shell.get_node("CreditsNoticesDialog/CreditsNoticesPanel/CreditsNoticesPad/CreditsNoticesBox/CreditsNoticesBody")
+	var close_button: Button = shell.get_node("CreditsNoticesDialog/CreditsNoticesPanel/CreditsNoticesPad/CreditsNoticesBox/CreditsNoticesClose")
+	var panel: PanelContainer = shell.get_node("CreditsNoticesDialog/CreditsNoticesPanel")
+	var startup_snapshot: Dictionary = shell.call("validation_snapshot")
+	if dialog.visible \
+			or bool(startup_snapshot.get("credits_notices_dialog_visible", true)) \
+			or dialog.has_focus() \
+			or body.has_focus() \
+			or close_button.has_focus():
+		_fail("Credits modal entered the native focus lifecycle before user open at %s: %s" % [viewport_size, JSON.stringify(startup_snapshot)])
+		return {}
 	shell.call("validation_open_contextual_guide_stage")
 	await _frames(2)
 	shell.call("validation_select_help_topic", "credits_notices")
@@ -102,10 +114,6 @@ func _run_viewport_case(viewport_size: Vector2i) -> Dictionary:
 		await _press_joypad(JOY_BUTTON_A)
 	await _frames(3)
 	var open_snapshot: Dictionary = shell.call("validation_snapshot")
-	var dialog: Window = shell.get_node("CreditsNoticesDialog")
-	var body: TextEdit = shell.get_node("CreditsNoticesDialog/CreditsNoticesPanel/CreditsNoticesPad/CreditsNoticesBox/CreditsNoticesBody")
-	var close_button: Button = shell.get_node("CreditsNoticesDialog/CreditsNoticesPanel/CreditsNoticesPad/CreditsNoticesBox/CreditsNoticesClose")
-	var panel: PanelContainer = shell.get_node("CreditsNoticesDialog/CreditsNoticesPanel")
 	if not dialog.visible \
 			or not bool(open_snapshot.get("credits_notices_dialog_visible", false)) \
 			or body.editable \
@@ -162,6 +170,7 @@ func _run_viewport_case(viewport_size: Vector2i) -> Dictionary:
 		"scroll_after_page_down": scroll_after,
 		"scroll_after_page_up": body.scroll_vertical,
 		"keyboard_or_controller_close": true,
+		"startup_dialog_hidden_without_focus": true,
 		"focus_return_exact": true,
 		"authority_exact": true,
 	}
