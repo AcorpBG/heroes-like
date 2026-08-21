@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import gzip
+import hashlib
 import json
 import re
 from collections import Counter, deque
@@ -23,6 +24,33 @@ HOMM3_RE_OBJECT_METADATA = Path(
 )
 OBJECT_TEMPLATE_RECORD_BYTES_AFTER_NAME = 42
 H3M_TILE_BYTES_PER_CELL = 7
+H3M_OBJECT_MASK_WIDTH = 8
+H3M_OBJECT_MASK_HEIGHT = 6
+H3M_OBJECT_ANCHOR_X_OVERHANG = H3M_OBJECT_MASK_WIDTH - 2
+H3M_OBJECT_ANCHOR_Y_OVERHANG = H3M_OBJECT_MASK_HEIGHT - 2
+H3M_OBJECT_INSTANCE_BASE_BYTES = 12
+# Conservative total record minima for the recovered H3MapEd serializer
+# families present in supported generated payloads. Variable-size families use
+# their smallest valid form; unknown families retain the guarded scan fallback.
+H3M_OBJECT_INSTANCE_MINIMUM_BYTES_BY_TYPE = {
+    5: 13,
+    6: 67,
+    17: 16,
+    53: 16,
+    54: 24,
+    66: 13,
+    67: 13,
+    68: 13,
+    76: 21,
+    79: 21,
+    83: 39,
+    88: 16,
+    89: 16,
+    90: 16,
+    93: 17,
+    98: 48,
+    113: 16,
+}
 OBJECT_INSTANCE_TAIL_PARSE_MISSING_COUNT_TOLERANCE = 32
 OBJECT_INSTANCE_TAIL_PARSE_BYTE_TOLERANCE = 64
 H3M_BLOCKING_TERRAIN_TYPE_IDS = {8, 9}
@@ -30,7 +58,7 @@ DECORATION_TYPE_IDS = {118, 119, 120, 134, 135, 136, 137, 147, 150, 155, 199, 20
 GUARD_TYPE_IDS = {54, 71}
 TOWN_TYPE_IDS = {98}
 RESOURCE_REWARD_TYPE_IDS = {5, 53, 66, 67, 68, 69, 76, 79, 83, 88, 89, 90, 93, 101}
-REWARD_KINDS = {"mine", "neutral_dwelling", "resource_site", "reward_reference"}
+REWARD_KINDS = {"artifact", "mine", "neutral_dwelling", "resource_site", "reward_reference"}
 
 
 def u32(data: bytes, offset: int) -> int:
@@ -46,6 +74,11 @@ def point_key(x: int, y: int) -> str:
 def point_from_key(key: str) -> tuple[int, int]:
     left, right = key.split(",", 1)
     return int(left), int(right)
+
+
+def object_identity_sha256(rows: list[dict[str, Any]]) -> str:
+    payload = json.dumps(rows, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return hashlib.sha256(payload).hexdigest()
 
 
 def load_bytes(path: Path) -> bytes:
@@ -132,9 +165,24 @@ def is_h3m_object_instance_start(data: bytes, pos: int, template_count: int, wid
         return False
     x, y, z = data[pos], data[pos + 1], data[pos + 2]
     template_index = u32(data, pos + 3)
-    if x >= width or y >= width or z >= level_count or template_index >= template_count:
+    # H3M object coordinates are the lower-right anchor of an 8x6 mask. The
+    # anchor may sit beyond the map edge while the mask still covers an
+    # in-bounds cell: x-(8-1) <= width-1 and y-(6-1) <= width-1.
+    if (
+        x > width + H3M_OBJECT_ANCHOR_X_OVERHANG
+        or y > width + H3M_OBJECT_ANCHOR_Y_OVERHANG
+        or z >= level_count
+        or template_index >= template_count
+    ):
         return False
     return all(data[pos + 7 + index] == 0 for index in range(5))
+
+
+def h3m_object_instance_minimum_bytes(record: dict[str, Any]) -> int:
+    return H3M_OBJECT_INSTANCE_MINIMUM_BYTES_BY_TYPE.get(
+        int(record.get("type_id", -1)),
+        H3M_OBJECT_INSTANCE_BASE_BYTES,
+    )
 
 
 def parse_h3m_object_instances(data: bytes, offset: int, templates: list[dict[str, Any]], width: int, level_count: int) -> dict[str, Any]:
@@ -150,7 +198,7 @@ def parse_h3m_object_instances(data: bytes, offset: int, templates: list[dict[st
         record = dict(templates[template_index])
         record.update({"object_index": index, "x": data[pos], "y": data[pos + 1], "level": data[pos + 2]})
         records.append(record)
-        next_min = pos + 12
+        next_min = pos + h3m_object_instance_minimum_bytes(record)
         if index == count - 1:
             pos = next_min
             break
@@ -365,6 +413,19 @@ def h3m_metrics(path: Path, data: bytes, records: list[dict[str, Any]], tile_off
         road = h3m_road_lookup(data, tile_offset, width, level)
         road_counts[str(level)] = len(road)
         road_components[str(level)] = component_sizes(road, width)
+    identity_rows = [
+        {
+            "index": index,
+            "x": int(record.get("x", 0)),
+            "y": int(record.get("y", 0)),
+            "level": int(record.get("level", 0)),
+            "definition_index": int(record.get("template_index", -1)),
+            "type_id": int(record.get("type_id", -1)),
+            "subtype": int(record.get("subtype", -1)),
+            "def_name": str(record.get("def_name", "")),
+        }
+        for index, record in enumerate(records)
+    ]
     return {
         "status": "parsed",
         "format": "h3m",
@@ -377,6 +438,7 @@ def h3m_metrics(path: Path, data: bytes, records: list[dict[str, Any]], tile_off
         "declared_object_count": objects.get("declared_object_count", len(records)),
         "parsed_object_count": objects.get("parsed_object_count", len(records)),
         "missing_object_instance_count": objects.get("missing_object_instance_count", 0),
+        "object_identity_sha256": object_identity_sha256(identity_rows),
         "counts_by_category": dict(sorted(counts_by_category.items())),
         "counts_by_level": {key: dict(sorted(value.items())) for key, value in sorted(counts_by_level.items())},
         "road_cell_count_by_level": road_counts,
@@ -422,6 +484,19 @@ def load_amap(path: Path) -> dict[str, Any]:
     for obj in objects:
         level_key = str(int(obj.get("level", 0)))
         counts_by_level.setdefault(level_key, Counter())[native_object_category(obj)] += 1
+    identity_rows = [
+        {
+            "index": index,
+            "x": int(obj.get("h3m_anchor_x", obj.get("x", 0))),
+            "y": int(obj.get("h3m_anchor_y", obj.get("y", 0))),
+            "level": int(obj.get("h3m_anchor_level", obj.get("level", 0))),
+            "definition_index": int(obj.get("h3m_definition_index", -1)),
+            "type_id": int(obj.get("h3m_type_id", -1)),
+            "subtype": int(obj.get("h3m_subtype", -1)),
+            "def_name": str(obj.get("h3m_def_name", "")),
+        }
+        for index, obj in enumerate(objects)
+    ]
     road_counts, road_components = native_roads(doc)
     return {
         "status": "parsed",
@@ -442,6 +517,7 @@ def load_amap(path: Path) -> dict[str, Any]:
             "source_template_name": selected_template.get("source_name", "") if isinstance(selected_template, dict) else "",
         },
         "object_count": len(objects),
+        "object_identity_sha256": object_identity_sha256(identity_rows),
         "counts_by_kind": dict(sorted(counts_by_kind.items())),
         "counts_by_category": dict(sorted(counts_by_category.items())),
         "counts_by_level": {key: dict(sorted(value.items())) for key, value in sorted(counts_by_level.items())},
@@ -768,9 +844,13 @@ def compare(owner: dict[str, Any], native: dict[str, Any]) -> dict[str, Any]:
         for level in native_sem.get("by_level", {}).values()
         if isinstance(level, dict)
     ) if isinstance(native_sem.get("by_level", {}), dict) else 0
+    owner_identity = str(owner.get("object_identity_sha256", ""))
+    native_identity = str(native.get("object_identity_sha256", ""))
+    object_identity_match = bool(owner_identity) and owner_identity == native_identity
     return {
         "status": "pass"
         if int(native.get("object_count", 0)) == int(owner.get("object_count", 0))
+        and object_identity_match
         and all(row["delta"] == 0 for row in category_delta.values())
         and native.get("road_component_sizes_by_level", {}) == owner.get("road_component_sizes_by_level", {})
         and int(native_sem.get("guarded_route_reachable_pair_count_total", 0)) <= int(owner_sem.get("guarded_route_reachable_pair_count_total", 0))
@@ -783,6 +863,9 @@ def compare(owner: dict[str, Any], native: dict[str, Any]) -> dict[str, Any]:
             "object_route_reachable_pair_delta": int(native_sem.get("object_route_reachable_pair_count_total", 0)) - int(owner_sem.get("object_route_reachable_pair_count_total", 0)),
         },
         "category_delta": category_delta,
+        "object_identity_match": object_identity_match,
+        "owner_object_identity_sha256": owner_identity,
+        "native_object_identity_sha256": native_identity,
         "road_component_sizes_match": native.get("road_component_sizes_by_level", {}) == owner.get("road_component_sizes_by_level", {}),
         "owner": owner,
         "native": native,

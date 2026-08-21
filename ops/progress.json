@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved source-backed release-readiness implementation slice."
+    "Select the next tracker-approved source-backed release-readiness implementation slice; the exact recovered same-run audit now identifies runtime guard-control projection as a separate product gap."
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the Main Menu Skirmish native command-rail slice with shared persistent Previous/Next Front and Launch Skirmish actions plus the exact existing difficulty picker; select the next source-backed slice.",
+  "currentNotes": "Completed exact H3M lower-right anchor and supported-family record-boundary parsing. The same-run audit now proves exact 1326-object identity/category parity and retains the separate runtime guard-control projection gap fail-closed.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "accessibility-main-menu-skirmish-launch-setup-native-command-rail-10184",
-  "currentSliceId": "accessibility-main-menu-skirmish-launch-setup-native-command-rail-10184",
-  "currentSliceNotes": "Completed with focused 1280/1920 public actions, real Linux AT-SPI launch routing, compatibility/static/editor, and bounded Linux/Windows export-startup evidence; broader release readiness remains open.",
+  "currentSlice": "native-rmg-h3m-off-map-anchor-stream-alignment-10184",
+  "currentSliceId": "native-rmg-h3m-off-map-anchor-stream-alignment-10184",
+  "currentSliceNotes": "Completed tooling behavior: exact 8x6 lower-right anchors, recovered conservative supported-family minimum record boundaries, ordered identity hashing, and artifact reward classification now keep the recovered same-run 1326-object stream exact. Genuine runtime guard-control topology remains red and separate.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "accessibility main menu skirmish launch setup native command rail 10184",
-  "currentSliceUpdatedAt": "2026-08-21T02:19:09Z",
+  "currentSliceTitle": "native rmg h3m off map anchor stream alignment 10184",
+  "currentSliceUpdatedAt": "2026-08-21T08:11:56Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -91079,6 +91079,52 @@
       "completedAt": "2026-08-20T19:12:21Z",
       "notes": "Completed live behavior, not diagnostics alone. MainMenu now exposes Previous/Next Arc and Previous/Next Chapter in the native command rail, moves exactly one adjacent existing ItemList row without wrapping, preserves established CampaignProgression selection/lock/launch authority, and publishes exact first/last and target descriptions. The focused owner passes at 1280x720 and 1920x1080 with exact containment, order, focus, profile mutation, and unchanged session/settings/save authority. A real Linux X11/AT-SPI observer sees all four controls exactly once as role-43 Action nodes; Next/Previous arc and chapter DoAction calls change and exactly restore their target descriptions. Accessibility semantics, shared Main Menu keyboard, menu/outcome, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. Packaged Campaign interaction, Windows UIA, controller/native hardware certification, signing/publication, whole-game, campaign-complete, and release readiness remain unclaimed.",
       "remainingWork": "Select the next tracker-approved release-readiness implementation slice. Broader release-readiness gaps remain.",
+      "blockedReason": null
+    },
+    {
+      "id": "native-rmg-h3m-off-map-anchor-stream-alignment-10184",
+      "title": "native rmg h3m off map anchor stream alignment 10184",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "tooling_implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Keep the production fast H3M audit aligned across exact lower-right object anchors whose 8x6 masks can still intersect the map and across zero-filled complex object bodies, so recovered same-run parity evidence is classified truthfully.",
+      "implementationTargets": [
+        "tools/rmg_fast_audit.py",
+        "tests/rmg_fast_audit_h3m_anchor_regression.py",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/rmg_fast_audit_h3m_anchor_regression.py",
+        "tools/rmg_fast_audit.py --h3m <recovered same-run payload> --amap <same-run runtime package> --compare",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "The parser accepts anchors through x=width+6 and y=height+4, the last coordinates whose 8x6 footprint can intersect the map, and rejects x=width+7 or y=height+5 plus invalid level/template/reserved-byte records",
+        "Recovered conservative minimum record sizes for supported generated object families prevent embedded zero-filled bytes from becoming false headers while unknown families retain the guarded scan fallback",
+        "A focused synthetic stream keeps ordered records aligned across an off-map lower-right anchor and an embedded false header in a 48-byte town payload; malformed-boundary controls fail closed",
+        "The recovered same-run Medium payload parses all 1326 declared objects with an exact ordered identity hash matching the runtime projection and no parser/classifier-induced category drift; any genuine runtime guard-topology delta remains fail-closed and separately classified",
+        "Repository validation, Python compilation, and scoped/global diff checks pass"
+      ],
+      "nonGoals": [
+        "changing Native RMG generation, recovered H3MapEd private state, object placement, runtime projection, package schema, content, density, balance, or audit thresholds",
+        "broadening supported workflows, waiving unrelated owner-corpus differences, or claiming broad Native RMG parity, packaged interaction, signing, publication, whole-game, or release readiness"
+      ],
+      "baseline": {
+        "head": "c1d420cd960ab55f8caf339b4f01b6da7421e645",
+        "recoveredPayload": ".artifacts/rmg_recovery/medium_seed10_weak_complete_same_run_full_payload_20260821a/full_final_payload.bin",
+        "runtimePackage": ".artifacts/rmg_recovery/medium_seed10_weak_complete_same_run_full_payload_20260821a/runtime_package_probe/medium_seed10_hc1_co1_weak.amap",
+        "declaredObjectCount": 1326,
+        "failure": "is_h3m_object_instance_start rejects x>=width or y>=width and the greedy 12-byte scan also accepts zero-filled bytes within complex records, resynchronizing on false boundaries and yielding false category and guard-topology deltas despite exact object-count and payload authority"
+      },
+      "createdAt": "2026-08-21T08:00:18Z",
+      "startedAt": "2026-08-21T08:00:18Z",
+      "updatedAt": "2026-08-21T08:11:56Z",
+      "completedAt": "2026-08-21T08:11:56Z",
+      "notes": "Completed production tooling behavior. Exact 8x6 anchor bounds and conservative recovered supported-family minimum record sizes prevent both off-map rejection and embedded zero-header resynchronization. The focused synthetic stream passes last-valid/first-invalid anchor, invalid level/template/reserved bytes, a false header inside a 48-byte town body, ordered identity, and exact count. All 18 owner H3Ms still parse. The recovered same-run Medium payload parses 1326/1326 objects with exact runtime identity SHA 6b9b02ac69667c465eebca154a18e5b7dbab80473337cc82145ded02bf51d7a8, exact category counts decoration753/guard41/object282/reward243/town7, exact road/object/terrain comparisons, and intentionally remains fail-closed on the separately classified runtime guard-control gap (owner365 control tiles/1 guarded reachable pair; runtime41/4, delta +3). Generation, recovered private state, runtime bytes, content, and parity policy are unchanged.",
+      "remainingWork": "Select the next tracker-approved source-backed slice. A separate runtime implementation candidate must project exact H3M guard engagement/control tiles without changing object placement or generation.",
       "blockedReason": null
     }
   ],
