@@ -44712,9 +44712,10 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             6: (165, "AVGcent0.def", "object_prism_outrider_post", "dwelling_creature_generator_centaur_prism_outrider_proxy"),
             30: (208, "AVGlzrd0.def", "object_reedbarge_mooring", "dwelling_creature_generator_lizard_reedbarge_mooring_proxy"),
             15: (167, "AVGelf0.def", "object_bramble_hedge", "dwelling_creature_generator_elf_bramble_hedge_proxy"),
+            68: (229, "AVG2uni.def", "object_fenhound_kennels", "dwelling_creature_generator_unicorn_fenhound_kennels_proxy"),
         }
         type17_entries = [entry for entry in proxy_entries if isinstance(entry, dict) and int(entry.get("homm3_re_object_type_id", -1)) == 17]
-        ensure(len(type17_entries) == 12, errors, "H3M Creature Generator proxy catalog must contain exactly the twelve selected recovered rows")
+        ensure(len(type17_entries) == 13, errors, "H3M Creature Generator proxy catalog must contain exactly the thirteen selected recovered rows")
         for subtype, expected in expected_creature_generator_proxies.items():
             rows = [entry for entry in type17_entries if int(entry.get("homm3_re_object_subtype", -1)) == subtype]
             ensure(len(rows) == 1, errors, f"H3M Creature Generator subtype {subtype} must have exactly one proxy row")
@@ -44756,6 +44757,7 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             "object_prism_outrider_post": ("site_prism_outrider_post", {"gold": 80}, {"unit_neutral_kitehook_runners": 2, "unit_neutral_ridgeflare_shots": 1}),
             "object_reedbarge_mooring": ("site_reedbarge_mooring", {"gold": 90}, {"unit_neutral_reedbarge_poles": 2, "unit_neutral_lanternet_throwers": 1}),
             "object_bramble_hedge": ("site_bramble_hedge", {"gold": 60}, {"unit_neutral_hedgehook_watch": 2, "unit_neutral_thornbow_scouts": 1}),
+            "object_fenhound_kennels": ("site_fenhound_kennels", {"gold": 70}, {"unit_neutral_fenhound_runners": 2, "unit_neutral_mossglass_sentinels": 1}),
         }
         for object_id, expected in expected_live_dwellings.items():
             map_object = map_objects_by_id.get(object_id, {})
@@ -44794,6 +44796,14 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             errors,
             "Bramble Hedge must remain an exact 2x1 dwelling without a special artifact reward",
         )
+        fenhound_object = map_objects_by_id.get("object_fenhound_kennels", {})
+        fenhound_site = resource_sites_by_id.get("site_fenhound_kennels", {})
+        ensure(
+            fenhound_object.get("footprint", {}) == {"width": 2, "height": 1, "anchor": "bottom_center", "tier": "small"}
+            and not fenhound_site.get("artifact_reward_contract", {}),
+            errors,
+            "Fenhound Kennels must remain an exact 2x1 dwelling without a special artifact reward",
+        )
         recovered_object_catalog_text = (ROOT / "src/gdextension/src/h3maped_rmg_object_catalog.cpp").read_text(encoding="utf-8")
         for recovered_row in (
             '{ 163, "objects.txt", "AVGcavl0.def", 17, "Creature Generator 1", 17, 5,',
@@ -44808,6 +44818,7 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             '{ 208, "objects.txt", "AVGlzrd0.def", 17, "Creature Generator 1", 17, 30,',
             '{ 210, "objects.txt", "AVGbasl0.def", 17, "Creature Generator 1", 17, 0,',
             '{ 220, "objects.txt", "AVGpixie.def", 17, "Creature Generator 1", 17, 59,',
+            '{ 229, "objects.txt", "AVG2uni.def", 17, "Creature Generator 1", 17, 68,',
         ):
             ensure(recovered_object_catalog_text.count(recovered_row) == 1, errors, f"Recovered Creature Generator source identity must remain unique: {recovered_row}")
         spell_scroll_sites = [
@@ -45142,6 +45153,13 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             '"site_id": "site_bramble_hedge",',
             '"catalog_id": "dwelling_creature_generator_elf_bramble_hedge_proxy",',
             '"recruits": {"unit_neutral_hedgehook_watch": 2, "unit_neutral_thornbow_scouts": 1}',
+            '68: {',
+            '"source_row": 229,',
+            '"def_ref": "AVG2uni.def",',
+            '"object_id": "object_fenhound_kennels",',
+            '"site_id": "site_fenhound_kennels",',
+            '"catalog_id": "dwelling_creature_generator_unicorn_fenhound_kennels_proxy",',
+            '"recruits": {"unit_neutral_fenhound_runners": 2, "unit_neutral_mossglass_sentinels": 1}',
             'elif type_id == 17:',
             'creature_generator_placement_ids[String(object.get("placement_id", ""))] = true',
             'or String(object.get("kind", "")) != "neutral_dwelling"',
@@ -45301,7 +45319,7 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             'var xlarge_creature_generator_projection: Dictionary = _validate_xlarge_creature_generator_projection(service, xlarge.get("generated", {}))',
             'func _validate_xlarge_creature_generator_projection(service: Variant, generated: Dictionary) -> Dictionary:',
             'and ordered_subtypes == [30, 29, 15, 15, 6, 45, 68, 26, 40, 45, 68, 50]',
-            'var interaction: Dictionary = _validate_creature_generator_interaction(adoption, [30, 29, 15, 15, 6, 26, 40, 50])',
+            'var interaction: Dictionary = _validate_creature_generator_interaction(adoption, [30, 29, 15, 15, 6, 68, 26, 40, 68, 50])',
             '_validate_guard_control_projection(medium.get("generated", {}))',
             "func _validate_guard_control_projection(generated: Dictionary) -> Dictionary:",
             'if String(object.get("kind", "")) != "guard":',
@@ -45435,16 +45453,16 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             < xlarge_dwelling_block.find('"subtype": 68, "placement_id": "native_h3maped_33610c0a_object_2626"')
             < xlarge_dwelling_block.find('"subtype": 50, "placement_id": "native_h3maped_33610c0a_object_2661"')
             < xlarge_dwelling_block.find('if int(object.get("h3m_type_id", -1)) != 17:')
-            < xlarge_dwelling_block.find('if subtype in [30, 29, 15, 6, 26, 40, 50]:')
+            < xlarge_dwelling_block.find('if subtype in [30, 29, 15, 6, 68, 26, 40, 50]:')
             < xlarge_dwelling_block.find('elif String(object.get("kind", "")) != "h3m_object"')
             < xlarge_dwelling_block.find('service.generate_random_map(_config("homm3_extra_large", 144, 2, "normal_water", "77"),')
             < xlarge_dwelling_block.find('repeat_type17_authority == type17_authority')
             < xlarge_dwelling_block.find('service.convert_generated_payload(generated, {"feature_gate": REPORT_ID})')
-            < xlarge_dwelling_block.find('_validate_creature_generator_interaction(adoption, [30, 29, 15, 15, 6, 26, 40, 50])')
+            < xlarge_dwelling_block.find('_validate_creature_generator_interaction(adoption, [30, 29, 15, 15, 6, 68, 26, 40, 68, 50])')
             < xlarge_dwelling_block.find('and ordered_subtypes == [30, 29, 15, 15, 6, 45, 68, 26, 40, 45, 68, 50]')
             < xlarge_dwelling_block.find('and bool(interaction.get("ok", false))'),
             errors,
-            "XLarge Lizard/Elf/Imp/Centaur/Harpy/Pit/Pegasus owner must preserve exact ordered rows/masks, keep all other rows raw, compare a fresh repeat, adopt, and exercise exactly both subtype-15 rows plus subtypes 30, 29, 6, 26, 40, and 50",
+            "XLarge Lizard/Elf/Unicorn/Imp/Centaur/Harpy/Pit/Pegasus owner must preserve exact ordered rows/masks, keep only subtype 45 raw, compare a fresh repeat, adopt, and exercise exactly both subtype-15 and subtype-68 rows plus subtypes 30, 29, 6, 26, 40, and 50",
         )
         for required_token in (
             'object.get("body_tiles", []) != expected.get("body_tiles", [])',
