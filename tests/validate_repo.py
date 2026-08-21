@@ -44656,8 +44656,21 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             'package_session_adoption_ready"] = true',
             "native_rmg_exact_chain_unimplemented_blocked_result",
             'if (!projection.road_tiles.empty())',
+            "Array runtime_guard_control_tiles(",
+            "const std::vector<aurelion::h3maped_rmg_core::RuntimeMapTilePoint> *origins = &source.action_tiles;",
+            "for (int32_t dy = -1; dy <= 1; ++dy)",
+            "for (int32_t dx = -1; dx <= 1; ++dx)",
+            "const int64_t flat = runtime_tile_flat(projection, x, y, level);",
+            "if (flat < 0 || !seen.insert(flat).second)",
+            'object["package_guard_control_zone_tiles"] = control_tiles;',
+            'object["package_guard_engagement_tiles"] = control_tiles;',
+            'object["package_guard_control_zone_pathing_policy"] = "h3m_guard_control_forces_engagement_guard_body_remains_blocking_surface";',
+            'object["package_guard_engagement_policy"] = "h3m_guard_control_forces_engagement";',
         ):
             ensure(required_token in native_text, errors, f"Native MapPackageService is missing native-owned RMG runtime token: {required_token}")
+        ensure(native_text.count("Array runtime_guard_control_tiles(") == 1, errors, "Native guard control projection helper must remain unique")
+        ensure(native_text.find("origins = &source.action_tiles") < native_text.find("for (const auto &origin : *origins)") < native_text.find("for (int32_t dy = -1; dy <= 1; ++dy)") < native_text.find("for (int32_t dx = -1; dx <= 1; ++dx)"), errors, "Native guard control projection must retain source action order followed by row-major 3x3 expansion")
+        ensure("town_clearance" not in native_text[native_text.find("Array runtime_guard_control_tiles("):native_text.find("Dictionary runtime_start_tile_for_slot(")], errors, "Native final-payload guard projection must not invent town-clearance exclusions")
         for forbidden_token in (
             "AURELION_ENABLE_ARCHIVED_NATIVE_RMG_RECONSTRUCTION",
             "native_rmg_archived_legacy_disabled_result",
@@ -44696,8 +44709,52 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             'and bool(map_validation.get("ok", false))',
             'and bool(scenario_validation.get("ok", false))',
             'and exact_repeat',
+            '_validate_guard_control_projection(medium.get("generated", {}))',
+            "func _validate_guard_control_projection(generated: Dictionary) -> Dictionary:",
+            'if String(object.get("kind", "")) != "guard":',
+            'var origins: Array = object.get("package_visit_tiles", []) if object.get("package_visit_tiles", []) is Array else []',
+            "for dy in range(-1, 2):",
+            "for dx in range(-1, 2):",
+            'var control: Array = object.get("package_guard_control_zone_tiles", []) if object.get("package_guard_control_zone_tiles", []) is Array else []',
+            'var engagement: Array = object.get("package_guard_engagement_tiles", []) if object.get("package_guard_engagement_tiles", []) is Array else []',
+            '"ok": guard_count == 41',
+            'and guard_control_tile_count == 369',
+            'and union_keys.size() == 365',
+            'and exact_rows',
+            "func _validate_guard_live_behavior(service: Variant, generated: Dictionary) -> Dictionary:",
+            'if int(control_owners.get(key, 0)) == 1 and tile != primary:',
+            'var action_session = NativeRandomMapPackageSessionBridgeScript.build_session_from_adoption(adoption)',
+            'var clear_session = NativeRandomMapPackageSessionBridgeScript.build_session_from_adoption(adoption)',
+            'var context_before: Dictionary = OverworldRulesScript.get_active_context(action_session)',
+            'or OverworldRulesScript.tile_has_route_interaction(action_session, from.x, from.y)',
+            'or OverworldRulesScript.tile_step_cuts_blocked_corner(action_session, from, control_position):',
+            'battle_start = OverworldRulesScript.try_move(action_session, move_delta.x, move_delta.y)',
+            'resolved.append(String(selected_guard.get("placement_id", "")))',
+            'var context_after: Dictionary = OverworldRulesScript.get_active_context(clear_session)',
+            'var ok: bool = bool(adoption.get("ok", false))',
+            'and String(battle_start.get("route", "")) == "battle"',
+            'and not action_session.battle.is_empty()',
+            'and guard_after.is_empty()',
+            "func _set_fixture_hero_position(session: Variant, tile: Dictionary) -> void:",
         ):
             ensure(required_token in native_rmg_runtime_boundary_text, errors, f"Native RMG runtime boundary is missing zero-road projection gate: {required_token}")
+        guard_projection_start = native_rmg_runtime_boundary_text.find("func _validate_guard_control_projection(")
+        guard_projection_end = native_rmg_runtime_boundary_text.find("func _validate_zero_road_projection(", guard_projection_start)
+        guard_projection_block = native_rmg_runtime_boundary_text[guard_projection_start:guard_projection_end]
+        for forbidden_token in (
+            "town_clearance",
+            "sort_custom",
+            "sort()",
+            "object.erase(",
+            "package_guard_control_zone_tiles] =",
+            "package_guard_engagement_tiles] =",
+        ):
+            ensure(forbidden_token not in guard_projection_block, errors, f"Native RMG focused guard projection must remain a read-only exact oracle: {forbidden_token}")
+        guard_live_start = native_rmg_runtime_boundary_text.find("func _validate_guard_live_behavior(")
+        guard_live_end = native_rmg_runtime_boundary_text.find("func _set_fixture_hero_position(", guard_live_start)
+        guard_live_block = native_rmg_runtime_boundary_text[guard_live_start:guard_live_end]
+        ensure('var ok := bool(adoption.get("ok", false))' not in guard_live_block, errors, "Native RMG live guard behavior gate must retain an explicit bool type")
+        ensure('perform_context_action(action_session, "enter_battle")' not in guard_live_block, errors, "Native RMG live guard behavior must enter the projected surface through real movement routing")
     ensure(h3maped_catalog_path.exists(), errors, "Missing recovered H3MapEd RMG template catalog source")
     if native_core_path.exists():
         native_core_text = native_core_path.read_text(encoding="utf-8")

@@ -514,6 +514,38 @@ int64_t runtime_tile_flat(
 			+ int64_t(y) * projection.width + x;
 }
 
+Array runtime_guard_control_tiles(
+		const aurelion::h3maped_rmg_core::RuntimeMapObjectProjection &source,
+		const aurelion::h3maped_rmg_core::RuntimeMapPayloadProjection &projection) {
+	Array result;
+	std::unordered_set<int64_t> seen;
+	std::vector<aurelion::h3maped_rmg_core::RuntimeMapTilePoint> fallback_origins;
+	const std::vector<aurelion::h3maped_rmg_core::RuntimeMapTilePoint> *origins = &source.action_tiles;
+	if (origins->empty()) {
+		fallback_origins.push_back({
+				std::clamp(source.x, 0, projection.width - 1),
+				std::clamp(source.y, 0, projection.height - 1),
+				std::clamp(source.level, 0, projection.level_count - 1),
+		});
+		origins = &fallback_origins;
+	}
+	for (const auto &origin : *origins) {
+		for (int32_t dy = -1; dy <= 1; ++dy) {
+			for (int32_t dx = -1; dx <= 1; ++dx) {
+				const int32_t x = origin.x + dx;
+				const int32_t y = origin.y + dy;
+				const int32_t level = origin.level;
+				const int64_t flat = runtime_tile_flat(projection, x, y, level);
+				if (flat < 0 || !seen.insert(flat).second) {
+					continue;
+				}
+				result.append(runtime_tile_point({x, y, level}));
+			}
+		}
+	}
+	return result;
+}
+
 Dictionary runtime_start_tile_for_slot(
 		const aurelion::h3maped_rmg_core::FinalHeaderPlayerSlot4ac857 &slot,
 		const aurelion::h3maped_rmg_core::RuntimeMapPayloadProjection &projection) {
@@ -836,6 +868,13 @@ Array runtime_objects(
 		} else if (kind == "guard") {
 			object["encounter_id"] = "encounter_mire_raid";
 			object["object_id"] = "encounter_mire_raid";
+			Array control_tiles = runtime_guard_control_tiles(source, projection);
+			object["package_guard_control_zone_tiles"] = control_tiles;
+			object["package_guard_control_zone_tile_count"] = control_tiles.size();
+			object["package_guard_engagement_tiles"] = control_tiles;
+			object["package_guard_engagement_tile_count"] = control_tiles.size();
+			object["package_guard_control_zone_pathing_policy"] = "h3m_guard_control_forces_engagement_guard_body_remains_blocking_surface";
+			object["package_guard_engagement_policy"] = "h3m_guard_control_forces_engagement";
 		} else if (kind == "mine") {
 			object["site_id"] = source.subtype == 2 ? "site_ridge_quarry" : "site_brightwood_sawmill";
 			object["owner"] = "neutral";
