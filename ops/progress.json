@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Aurelion Reach native boot splash is implemented and validated: fresh 1280x720 and 1920x1080 desktop captures show the exact approved crest instead of the stock Godot wordmark, with focused, compatibility, static/editor, and bounded Linux/Windows export-startup gates green.",
+  "currentNotes": "The Credits Window now starts hidden from its authored scene state, eliminating the native subwindow focus error while preserving physical keyboard/controller modal paging, focus cycle, close, and Guide focus return at both target sizes.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-aurelion-reach-native-boot-splash-10184",
-  "currentSliceId": "ux-aurelion-reach-native-boot-splash-10184",
-  "currentSliceNotes": "Completed the native project-setting correction using the existing approved crest, exact dark background, aspect-preserving filtered scaling, and no forced delay; two-size desktop rendering and unchanged Boot/platform authority are green.",
+  "currentSlice": "ux-main-menu-credits-hidden-dialog-focus-lifecycle-10184",
+  "currentSliceId": "ux-main-menu-credits-hidden-dialog-focus-lifecycle-10184",
+  "currentSliceNotes": "Completed the scene-owned hidden-state correction and removed the premature runtime Window transition. Fresh desktop startup, focused Credits, broad keyboard/accessibility/core compatibility, static/editor, and bounded Linux/Windows export-startup gates are green.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Aurelion Reach Native Boot Splash",
-  "currentSliceUpdatedAt": "2026-08-21T19:45:38Z",
+  "currentSliceTitle": "Main Menu Credits Hidden-Dialog Focus Lifecycle",
+  "currentSliceUpdatedAt": "2026-08-21T20:19:45Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -91825,6 +91825,36 @@
       ],
       "notes": "Completed the direct current first-view correction. Fresh 1280x720 and 1920x1080 Xvfb captures in /tmp/heroes-boot-splash-focused.05g6er show the full approved crest centered on 020407ff with no stock Godot wordmark. The focused platform report /tmp/heroes-boot-splash-focused-rerun.iBthjF pins exact path, SHA-256, dimensions, alpha, stretch/filter/no-delay settings, Boot title, and technical identity; menu/outcome visual and core compatibility pass in /tmp/heroes-boot-splash-compat.Nycd9r. validate_repo, py_compile, JSON/diff/editor gates and official Linux export/headless startup plus Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. Packaged splash inspection, certification, signing/publication, whole-game, and release readiness remain unclaimed.",
       "completedAt": "2026-08-21T19:45:38Z"
+    },
+    {
+      "id": "ux-main-menu-credits-hidden-dialog-focus-lifecycle-10184",
+      "title": "Main Menu Credits Hidden-Dialog Focus Lifecycle",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-6-production-alpha-layer",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-21T20:04:00Z",
+      "updatedAt": "2026-08-21T20:19:45Z",
+      "implementationTargets": [
+        "scenes/menus/MainMenu.gd",
+        "scenes/menus/MainMenu.tscn",
+        "tests/main_menu_credits_notices_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Fresh 1280x720 and 1920x1080 Main Menu launches have no native subwindow focus or other unexpected startup diagnostics while Credits & Notices remains hidden and owns no focus.",
+        "Keyboard and controller paths open the modal, focus Close only after popup visibility, cycle and page the body, close, and restore Guide focus at both target sizes.",
+        "Session, campaign, save, settings, InputMap, AppRouter, Main Menu composition, notice content, and accessibility semantics remain exact.",
+        "Focused Credits, Main Menu compatibility, repository/editor, and bounded official Linux/Windows export-startup gates pass."
+      ],
+      "nonGoals": [
+        "No notice/license content, Guide architecture, first-view composition, dialog sizing, input mapping, accessibility wording, schema, gameplay, balance, strategic AI, or Native RMG change.",
+        "No timer/delay workaround, synthetic focus callback, custom modal system, packaged Credits interaction, certification, signing/publication, whole-game, or release-readiness claim."
+      ],
+      "notes": "Completed the direct pushed-HEAD startup correction. CreditsNoticesDialog now owns visible=false in MainMenu.tscn and runtime configuration no longer transitions the unregistered native Window. Fresh 1280x720/1920x1080 desktop startup in /tmp/heroes-credits-focus-desktop.Ft5cCB is free of the prior `_sub_window_grab_focus`/`index == -1` error. The focused report /tmp/heroes-credits-focus-runtime.iThffP is natural rc0/ok:true with startup-hidden/no-focus plus physical keyboard/controller open, paging, close, focus return, semantics, content, and authority exact. The full Main Menu keyboard smoke /tmp/heroes-credits-keyboard-compat.t80jlg passes; accessibility/core compatibility /tmp/heroes-credits-remaining-compat.ZeerZL and static/editor /tmp/heroes-credits-final-static.WBjJej pass. Official Linux export/headless startup and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. No packaged Credits interaction, certification, signing/publication, whole-game, or release readiness is claimed.",
+      "completedAt": "2026-08-21T20:19:45Z"
     }
   ],
   "project": "heroes-like",
@@ -92369,7 +92399,7 @@
   ],
   "summary": "The native startup now shows the approved original Aurelion Reach crest instead of the stock Godot splash while preserving Boot behavior and compatibility identity.",
   "taskId": "10184",
-  "updatedAt": "2026-08-21T19:45:38Z",
+  "updatedAt": "2026-08-21T20:19:45Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
