@@ -14324,13 +14324,13 @@
       }
     }
   ],
-  "currentNotes": "Exact recovered loose-resource proxy identities are implemented through the accepted catalog and existing live resource fronts. Focused stockpile/persistence, core/static/editor, and bounded Linux/Windows export-startup gates pass; native generation and binaries remain unchanged and broader release gaps remain.",
+  "currentNotes": "The exact recovered Small type-93 Spell Scroll now projects through its accepted spell_beacon_path identity as a one-time live pickup. Focused collection/persistence, core/static/editor, and bounded Linux/Windows export-startup gates pass; native generation and binaries remain unchanged and broader release gaps remain.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "native-rmg-runtime-loose-resource-proxy-identity-projection-10184",
-  "currentSliceId": "native-rmg-runtime-loose-resource-proxy-identity-projection-10184",
-  "currentSliceNotes": "Completed shipped content/runtime behavior. The catalog now owns exact type-79 rows for all seven subtypes; fresh Small projects all 28 observed resource rows exactly, removes 13 rare/gold rows from the generic all-rare cache, and real Embergrain collection changes only Embergrain plus authored gold with persisted authority. Focused/core/static/editor and bounded Linux/Windows export-startup gates pass.",
+  "currentSlice": "native-rmg-runtime-spell-scroll-proxy-pickup-projection-10184",
+  "currentSliceId": "native-rmg-runtime-spell-scroll-proxy-pickup-projection-10184",
+  "currentSliceNotes": "Completed shipped content/runtime behavior. Fresh Small keeps payload 457dba6b/23664 bytes/294 objects while its sole exact type-93 row adopts as a one-time Beacon Path scroll. Real collection changes only the known-spell list, persists, and rejects a repeat; focused/core/static/editor and bounded Linux/Windows export-startup gates pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "native rmg runtime loose resource proxy identity projection 10184",
+  "currentSliceTitle": "native rmg runtime spell scroll proxy pickup projection 10184",
   "currentSliceUpdatedAt": "2026-08-21T11:05:00Z",
   "deferredRiskRegister": [
     {
@@ -91450,6 +91450,87 @@
       "notes": "Completed shipped catalog/runtime behavior. The proxy catalog now contains unique exact source rows and DEF identities for every type-79 subtype, reusing the original-project resource-front identities already established by the mine projection. The existing runtime resolver and package bridge consume them without native-code changes. Fresh Small projects all 28 observed rows exactly; 13 sulfur/crystal/gems/gold rows no longer use the all-rare cache. Real subtype-3 collection awards only Embergrain plus authored gold and persists. Recovered payload/order/placement/masks/serialization, generation/private state, terrain, roads, guards, binaries, and unsupported mappings remain unchanged. Focused/core/static/editor and bounded Linux/Windows export-startup gates pass. Packaged interaction, broad Native RMG parity, hardware certification, signing/publication, whole-game, and release readiness are unclaimed.",
       "remainingWork": "Select the next tracker-approved source-backed slice. Broader recovered Native RMG parity, packaged interaction, native hardware certification, signing/publication, and release readiness remain outside this completed resource projection.",
       "blockedReason": null
+    },
+    {
+      "id": "native-rmg-runtime-spell-scroll-proxy-pickup-projection-10184",
+      "title": "native rmg runtime spell scroll proxy pickup projection 10184",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Project the unique exact recovered H3M Spell Scroll proxy onto an original-project one-time spell pickup through the existing live site collection authority.",
+      "implementationTargets": [
+        "content/homm3_re_reward_object_proxy_catalog.json",
+        "content/resource_sites.json",
+        "tests/native_rmg_end_to_end_runtime_boundary_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/native_rmg_end_to_end_runtime_boundary_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "The accepted catalog retains exactly one type-93/subtype-0 source row 2 AVA0001.def identity, maps it to spell_beacon_path and one exact non-persistent scroll site, and keeps missing, malformed, duplicate, non-scroll, artifact, resource, and creature mappings fail-closed",
+        "Fresh Small retains payload 457dba6b, 23664 bytes, and 294 ordered objects while the sole type-93 placement adopts as exactly one live scroll resource node and no longer uses site_generated_town_required_source_cache",
+        "Real collection learns only spell_beacon_path, preserves resources, artifacts, and army, marks only the scroll node collected, survives SessionData round trip, and rejects repeat collection",
+        "Existing mine, Campfire, artifact, loose-resource, guard, package, save, startup, core, repository/editor, and bounded official Linux/Windows export-startup gates pass with unchanged native binaries"
+      ],
+      "nonGoals": [
+        "changing recovered H3MapEd private state, final payload bytes, RNG, generation, object count/order/placement, masks, roads, terrain, guards, density, balance, native code/binaries, other proxy mappings, or audit thresholds",
+        "changing spell effects, costs, AI, or spellbook schema; importing copyrighted art/DEF data; or claiming packaged scroll interaction, broad Native RMG parity, hardware certification, signing, publication, whole-game, or release readiness"
+      ],
+      "baseline": {
+        "head": "a6ef1e7b",
+        "freshSmallMap": "maps/small-moon-pass-spring-baee5d8b.amap",
+        "type93Count": 1,
+        "type93Subtype": 0,
+        "sourceRow": 2,
+        "defRef": "AVA0001.def",
+        "placementId": "native_h3maped_457dba6b_object_0267",
+        "currentSiteId": "site_generated_town_required_source_cache",
+        "catalogSpellId": "spell_beacon_path",
+        "existingCollectionAuthority": "OverworldRules._collect_resource_node_result plus SpellRules.learn_spell"
+      },
+      "createdAt": "2026-08-21T11:15:00Z",
+      "startedAt": "2026-08-21T11:15:00Z",
+      "updatedAt": "2026-08-21T11:30:00Z",
+      "completedAt": "2026-08-21T11:30:00Z",
+      "evidence": {
+        "focusedArtifact": "/tmp/heroes-spell-scroll-focused.Q5GPQb",
+        "focusedNaturalReturnCode": 0,
+        "smallPayloadHash": "457dba6b",
+        "smallPayloadBytes": 23664,
+        "smallObjectCount": 294,
+        "spellScrollCount": 1,
+        "liveSpellScrollCount": 1,
+        "placementId": "native_h3maped_457dba6b_object_0267",
+        "siteId": "site_beacon_path_scroll",
+        "knownSpellAdded": "spell_beacon_path",
+        "resourcesExact": true,
+        "artifactsExact": true,
+        "armyExact": true,
+        "unrelatedNodesExact": true,
+        "repeatRejected": true,
+        "sessionRoundTripExact": true,
+        "coreArtifact": "/tmp/heroes-spell-scroll-core.r7WCx5",
+        "linuxPackagingArtifact": "/tmp/heroes-spell-scroll-linux-package.zpi2sS",
+        "windowsPackagingArtifact": "/tmp/heroes-spell-scroll-windows-package.CUKi63",
+        "linuxExportStartupOk": true,
+        "windowsExportWineStartupOk": true,
+        "nativeCodeChanged": false,
+        "nativeBinariesChanged": false,
+        "packagedScrollInteractionClaimed": false,
+        "broadNativeRmgParityClaimed": false,
+        "releaseReadyClaimed": false
+      },
+      "notes": "Completed shipped content/runtime behavior. The unique exact type-93 Spell Scroll now owns a one-time non-persistent Beacon Path site through the accepted catalog and existing collection authority. Fresh Small preserves exact recovered payload/order/placement/masks/serialization. Real collection adds only spell_beacon_path, preserves resources/artifacts/army and other nodes, persists, and rejects repeat collection. Focused/core/static/editor and bounded Linux/Windows export-startup gates pass. Native generation/binaries, packaged interaction, broad Native RMG parity, hardware certification, signing/publication, whole-game, and release readiness remain unchanged or unclaimed.",
+      "remainingWork": "Select the next tracker-approved source-backed slice. Broader recovered Native RMG parity, packaged interaction, native hardware certification, signing/publication, and release readiness remain outside this completed scroll projection.",
+      "blockedReason": null
     }
   ],
   "project": "heroes-like",
@@ -91994,7 +92075,7 @@
   ],
   "summary": "Implementing exact accepted proxy-catalog identity on live-compatible Native RMG runtime mine, reward-site, and neutral-dwelling records without changing recovered generation or claiming broad parity.",
   "taskId": "10184",
-  "updatedAt": "2026-08-21T09:59:51Z",
+  "updatedAt": "2026-08-21T11:30:00Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
