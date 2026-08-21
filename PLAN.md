@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `presentation-native-rmg-loose-resource-distinct-field-sprites-10184`. The five accepted Native RMG loose-resource proxy identities now have distinct original field sprites through the existing site-scoped manifest mapping. Exact `reward_reference` site identity wins before its shared mine-object asset while real `mine` rows retain their existing structures. Focused 1280x720/1920x1080 rendering, current generated rows, detached Peatwax coverage, collection/repeat/save authority, broad Overworld/core compatibility, repository/editor checks, and bounded Linux/Windows export-startup gates pass. Native generation, mines, resource policy, values, balance, broad renderer architecture/parity, packaged interaction, hardware/accessibility certification, signing/publication, whole-game, and release readiness remain outside this slice. Select the next tracker-approved release-readiness implementation slice.
+  id: `presentation-native-rmg-loose-resource-distinct-field-sprites-10184`
 - Completed implementation slice: `presentation-native-rmg-spell-scroll-field-sprite-10184`. The accepted Beacon Path scroll now resolves through one original transparent 512x512 Overworld field sprite instead of the generic procedural resource marker. The exact generated type-93 node uses the imported asset at 1280x720 and 1920x1080, retains permanent-explored visibility and detached procedural fallback, while payload `457dba6b`, all 294 objects, spell learning, repeat rejection, persistence, and every other Native RMG/gameplay authority remain exact. Focused, Overworld/core, repository/editor, and bounded Linux/Windows export-startup gates pass; both PCKs contain the new import and compiled texture. Packaged scroll interaction, broad Native RMG parity, hardware/accessibility certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
   id: `presentation-native-rmg-spell-scroll-field-sprite-10184`
 - Completed implementation slice: `native-rmg-runtime-spell-scroll-proxy-pickup-projection-10184`. The sole recovered Small type-93 Spell Scroll (`AVA0001.def`) now projects through its accepted `spell_beacon_path` identity as a one-time live scroll pickup instead of the generic town-required source cache. Fresh Small retains payload `457dba6b`, 23,664 bytes, and all 294 ordered objects; real collection learns only Beacon Path, preserves resources/artifacts/army and every other node, persists, and rejects repeat collection. Focused/core/repository/editor and bounded Linux/Windows export-startup gates pass with unchanged native binaries and generation. Packaged scroll interaction, broad Native RMG parity, hardware certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
@@ -7946,7 +7948,38 @@ Completion evidence:
 - `/tmp/heroes-spell-scroll-core.r7WCx5` records core rc0; JSON, repository validation, Python compilation, diff checks, and exact/generic editor parses pass;
 - `/tmp/heroes-spell-scroll-linux-package.zpi2sS` and `/tmp/heroes-spell-scroll-windows-package.CUKi63` wrapper artifacts plus the official report JSON files record Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup green. These are export/startup claims only; no packaged scroll interaction is claimed.
 
-## Active Slice: Native RMG Spell Scroll Field Sprite
+## Active Slice: Native RMG Loose-Resource Distinct Field Sprites
+
+id: `presentation-native-rmg-loose-resource-distinct-field-sprites-10184`
+
+Status: completed.
+
+Implementation boundary:
+- create five original transparent Overworld field sprites for `site_peatwax_reed_yard`, `site_embergrain_warm_granary`, `site_aetherglass_lens_house`, `site_memory_salt_pan`, and `site_reef_coin_assay` and register them through the existing site-scoped `resource_site_sprites` surface;
+- preserve the established resource-node draw path and procedural fallback; add only the bounded `reward_reference` site-before-object precedence needed to distinguish pickups, and do not map the shared mine object ids globally or change `mine` rows;
+- use only original project art and keep recovered H3MapEd identities as provenance, never as imported visual assets.
+
+Completion criteria:
+- all five exact site identities resolve distinct imported 512x512 alpha textures at 1280x720 and 1920x1080, with transparent corners, the exact recovered runtime footprint for every present generated row, the authored 2x2 site footprint for the absent-in-this-seed Peatwax control, permanent-explored treatment, and procedural fallback for missing or unloadable mapping;
+- every currently present fresh-Small type-79 Embergrain, Aetherglass, Memory-Salt, and Gold row uses its exact site sprite; the catalog-valid Peatwax identity is independently exercised through the same live renderer path;
+- collection still awards only the exact existing resource/gold deltas, repeat collection and session/save behavior remain exact, and fresh Small retains payload `457dba6b`, `23,664` bytes, `294` ordered objects, all 28 type-79 rows, and exact proxy identities/order/placement/masks;
+- focused runtime, broad Overworld visual/core compatibility, repository/editor validation, and bounded official Linux/Windows export-startup gates pass, with both PCKs containing the five imported textures.
+
+Non-goals:
+- no Native RMG recovered logic/private-state/writeout, payload, RNG, object count/order/placement, terrain, road, guard, mask, density, balance, native-code/binary, proxy identity, resource value/income, collection, route, or save-version change;
+- no global mine-object asset mapping, H3M/DEF art import, new renderer system, other resource-site art, packaged pickup interaction claim, hardware/accessibility certification, signing/publication, broad Native RMG parity, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- pushed HEAD `356c2653` maps all five stable loose-resource proxy site identities into live resource nodes, but `_resource_asset_id` selects their shared mine `object_id` assets before the more specific pickup `site_id`, so the reward references render as mine structures instead of distinct resource pickups;
+- the current fresh Small payload contains 28 exact type-79 records across wood, ore, Embergrain, Aetherglass, Memory Salt, and Gold; only wood and ore currently resolve distinct pickup sprites, while Peatwax remains a catalog-valid shipped site identity exercised outside this one seed;
+- the existing manifest/resource-site draw path already provides imported texture loading, permanent-explored modulation, authored/recovered footprint grounding, and procedural fallback without runtime architecture changes.
+
+Completion evidence:
+- `/tmp/heroes-loose-resource-sprites-authoritative.qPkldA` is natural rc0 and proves the five exact site sprites at 1280x720 and 1920x1080, transparent 512x512 textures, exact present-row/generated footprints plus the authored Peatwax footprint, permanent-explored treatment, fallback, unchanged shared mine sprites, exact awards, repeat rejection, session/save authority, and unchanged Small payload `457dba6b`/23,664 bytes/294 ordered objects/all 28 type-79 rows;
+- `/tmp/heroes-loose-resource-compat.wzU3mo` records natural rc0 for broad Overworld visual and core-system compatibility; JSON, repository validation, Python compilation, diff checks, and exact/generic editor parses pass;
+- `/tmp/heroes-loose-resource-linux-package.KCK0Mc` and `/tmp/heroes-loose-resource-windows-package.r7xdA9`, together with the official report JSON files, record Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup green, with all five texture names present in both PCKs. These are export/startup claims only; no packaged pickup interaction is claimed.
+
+## Completed Slice: Native RMG Spell Scroll Field Sprite
 
 id: `presentation-native-rmg-spell-scroll-field-sprite-10184`
 

@@ -164,6 +164,46 @@
       "background": "transparent",
       "assigned_resource_site_id": "site_beacon_path_scroll"
     },
+    "resource_pickup_peatwax": {
+      "path": "res://art/overworld/runtime/objects/pickups/peatwax_reed_bundle.png",
+      "source_generated": "res://art/overworld/source/generated/pickups/peatwax_reed_bundle_source.png",
+      "source_model": "built_in_image_gen",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "background": "transparent",
+      "assigned_resource_site_id": "site_peatwax_reed_yard"
+    },
+    "resource_pickup_embergrain": {
+      "path": "res://art/overworld/runtime/objects/pickups/embergrain_sack.png",
+      "source_generated": "res://art/overworld/source/generated/pickups/embergrain_sack_source.png",
+      "source_model": "built_in_image_gen",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "background": "transparent",
+      "assigned_resource_site_id": "site_embergrain_warm_granary"
+    },
+    "resource_pickup_aetherglass": {
+      "path": "res://art/overworld/runtime/objects/pickups/aetherglass_lens_crate.png",
+      "source_generated": "res://art/overworld/source/generated/pickups/aetherglass_lens_crate_source.png",
+      "source_model": "built_in_image_gen",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "background": "transparent",
+      "assigned_resource_site_id": "site_aetherglass_lens_house"
+    },
+    "resource_pickup_memory_salt": {
+      "path": "res://art/overworld/runtime/objects/pickups/memory_salt_reliquary.png",
+      "source_generated": "res://art/overworld/source/generated/pickups/memory_salt_reliquary_source.png",
+      "source_model": "built_in_image_gen",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "background": "transparent",
+      "assigned_resource_site_id": "site_memory_salt_pan"
+    },
+    "resource_pickup_gold": {
+      "path": "res://art/overworld/runtime/objects/pickups/reef_coin_coffer.png",
+      "source_generated": "res://art/overworld/source/generated/pickups/reef_coin_coffer_source.png",
+      "source_model": "built_in_image_gen",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "background": "transparent",
+      "assigned_resource_site_id": "site_reef_coin_assay"
+    },
     "artifact_field_trailsinger_boots": {
       "path": "res://art/overworld/runtime/objects/artifacts/trailsinger_boots.png",
       "source_icon": "res://art/artifacts/runtime/trailsinger_boots.png",
@@ -3841,6 +3881,26 @@
     "site_beacon_path_scroll": {
       "asset_id": "beacon_path_scroll",
       "fit": "Distinct original Beacon Path spell-scroll field sprite for the accepted one-time generated pickup."
+    },
+    "site_peatwax_reed_yard": {
+      "asset_id": "resource_pickup_peatwax",
+      "fit": "Distinct original Peatwax reed-bundle field sprite for the accepted loose-resource identity."
+    },
+    "site_embergrain_warm_granary": {
+      "asset_id": "resource_pickup_embergrain",
+      "fit": "Distinct original Embergrain sack field sprite for the accepted loose-resource identity."
+    },
+    "site_aetherglass_lens_house": {
+      "asset_id": "resource_pickup_aetherglass",
+      "fit": "Distinct original Aetherglass lens-crate field sprite for the accepted loose-resource identity."
+    },
+    "site_memory_salt_pan": {
+      "asset_id": "resource_pickup_memory_salt",
+      "fit": "Distinct original Memory-Salt reliquary field sprite for the accepted loose-resource identity."
+    },
+    "site_reef_coin_assay": {
+      "asset_id": "resource_pickup_gold",
+      "fit": "Distinct original Reef coin-coffer field sprite for the accepted loose-resource identity."
     },
     "site_waystone_cache": {
       "asset_id": "ruined_obelisk",

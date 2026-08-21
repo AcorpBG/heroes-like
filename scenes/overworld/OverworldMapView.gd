@@ -7598,10 +7598,14 @@ func _resource_node_at(tile: Vector2i) -> Dictionary:
 func _resource_asset_id(node: Dictionary) -> String:
 	if node.is_empty():
 		return ""
+	var site_id := String(node.get("site_id", ""))
+	if String(node.get("kind", "")) == "reward_reference":
+		var reward_asset_id := String(_resource_site_asset_ids.get(site_id, ""))
+		if reward_asset_id != "":
+			return reward_asset_id
 	var object_id := String(node.get("object_id", "")).strip_edges()
 	if object_id != "" and _map_object_asset_ids.has(object_id):
 		return String(_map_object_asset_ids.get(object_id, ""))
-	var site_id := String(node.get("site_id", ""))
 	var map_object = ContentService.get_map_object_for_resource_site(site_id)
 	if map_object is Dictionary:
 		var mapped_object_id := String(map_object.get("id", "")).strip_edges()
