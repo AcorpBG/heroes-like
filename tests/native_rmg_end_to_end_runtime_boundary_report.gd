@@ -53,6 +53,15 @@ const CREATURE_GENERATOR_ROWS := {
 		"gold": 80,
 		"recruits": {"unit_neutral_roadwardens": 2, "unit_neutral_hearthbow_carriers": 1},
 	},
+	50: {
+		"source_row": 168,
+		"def_ref": "AVGpega0.def",
+		"object_id": "object_kite_signal_eyrie",
+		"site_id": "site_kite_signal_eyrie",
+		"catalog_id": "dwelling_creature_generator_pegasus_kite_signal_eyrie_proxy",
+		"gold": 75,
+		"recruits": {"unit_neutral_kitehook_runners": 2, "unit_neutral_ridgeflare_shots": 1},
+	},
 }
 const LOOSE_RESOURCE_PRESENTATION_ROWS := [
 	{"site_id": "site_peatwax_reed_yard", "object_id": "object_marsh_peat_yard", "resource_id": "peatwax", "asset_id": "resource_pickup_peatwax", "mine_asset_id": "mapobj_marsh_peat_yard", "expected_footprint": {"width": 2, "height": 2}, "texture_path": "res://art/overworld/runtime/objects/pickups/peatwax_reed_bundle.png", "rewards": {"gold": 120, "peatwax": 1}, "current_small": false},
@@ -139,6 +148,10 @@ func _run() -> void:
 	if not bool(xlarge.get("ok", false)):
 		_fail("XLarge public generation boundary failed: %s" % JSON.stringify(xlarge))
 		return
+	var xlarge_creature_generator_projection: Dictionary = _validate_xlarge_creature_generator_projection(service, xlarge.get("generated", {}))
+	if not bool(xlarge_creature_generator_projection.get("ok", false)):
+		_fail("XLarge Creature Generator dwelling projection failed: %s" % JSON.stringify(xlarge_creature_generator_projection))
+		return
 
 	var round_trip := _validate_round_trip(service, medium.get("generated", {}))
 	if not bool(round_trip.get("ok", false)):
@@ -164,6 +177,7 @@ func _run() -> void:
 		"medium_ordinal_95_hero_position": ordinal_95_hero_position,
 		"medium_ordinal_95_player_move": ordinal_95_player_move,
 		"xlarge": xlarge.get("summary", {}),
+		"xlarge_creature_generator_projection": xlarge_creature_generator_projection,
 		"round_trip": round_trip,
 		"startup": startup,
 	})])
@@ -703,6 +717,100 @@ func _validate_medium_creature_generator_projection(service: Variant, generated:
 				and int(generated.get("final_payload_byte_count", -1)) == 79333 \
 				and int(generated.get("runtime_object_count", -1)) == 1326 \
 				and ordered_subtypes == [0, 22, 5] \
+				and rows_exact \
+				and repeat_exact \
+				and bool(adoption.get("ok", false)) \
+				and bool(interaction.get("ok", false)),
+		"payload_hash": generated.get("final_payload_fnv1a32", ""),
+		"payload_bytes": generated.get("final_payload_byte_count", -1),
+		"object_count": generated.get("runtime_object_count", -1),
+		"ordered_subtypes": ordered_subtypes,
+		"rows_exact": rows_exact,
+		"repeat_exact": repeat_exact,
+		"interaction": interaction,
+	}
+
+func _validate_xlarge_creature_generator_projection(service: Variant, generated: Dictionary) -> Dictionary:
+	var map_document: Variant = generated.get("map_document", null)
+	if map_document == null:
+		return {"ok": false, "reason": "missing_xlarge_map_document"}
+	var expected_rows: Array[Dictionary] = [
+		{"subtype": 30, "placement_id": "native_h3maped_33610c0a_object_1932", "x": 90, "y": 81, "level": 0, "body_tiles": [{"x": 89, "y": 81, "level": 0}, {"x": 90, "y": 81, "level": 0}]},
+		{"subtype": 29, "placement_id": "native_h3maped_33610c0a_object_1976", "x": 53, "y": 84, "level": 1, "body_tiles": [{"x": 52, "y": 84, "level": 1}, {"x": 53, "y": 84, "level": 1}]},
+		{"subtype": 15, "placement_id": "native_h3maped_33610c0a_object_2015", "x": 5, "y": 93, "level": 0, "body_tiles": [{"x": 4, "y": 93, "level": 0}, {"x": 5, "y": 93, "level": 0}]},
+		{"subtype": 15, "placement_id": "native_h3maped_33610c0a_object_2026", "x": 20, "y": 94, "level": 0, "body_tiles": [{"x": 19, "y": 94, "level": 0}, {"x": 20, "y": 94, "level": 0}]},
+		{"subtype": 6, "placement_id": "native_h3maped_33610c0a_object_2085", "x": 118, "y": 86, "level": 0, "body_tiles": [{"x": 117, "y": 86, "level": 0}, {"x": 118, "y": 86, "level": 0}]},
+		{"subtype": 45, "placement_id": "native_h3maped_33610c0a_object_2124", "x": 118, "y": 106, "level": 0, "body_tiles": [{"x": 117, "y": 106, "level": 0}, {"x": 118, "y": 106, "level": 0}]},
+		{"subtype": 68, "placement_id": "native_h3maped_33610c0a_object_2169", "x": 125, "y": 119, "level": 0, "body_tiles": [{"x": 124, "y": 119, "level": 0}, {"x": 125, "y": 119, "level": 0}]},
+		{"subtype": 26, "placement_id": "native_h3maped_33610c0a_object_2206", "x": 86, "y": 63, "level": 1, "body_tiles": [{"x": 85, "y": 63, "level": 1}, {"x": 86, "y": 63, "level": 1}]},
+		{"subtype": 40, "placement_id": "native_h3maped_33610c0a_object_2458", "x": 128, "y": 28, "level": 0, "body_tiles": [{"x": 127, "y": 28, "level": 0}, {"x": 128, "y": 28, "level": 0}]},
+		{"subtype": 45, "placement_id": "native_h3maped_33610c0a_object_2614", "x": 16, "y": 42, "level": 0, "body_tiles": [{"x": 15, "y": 42, "level": 0}, {"x": 16, "y": 42, "level": 0}]},
+		{"subtype": 68, "placement_id": "native_h3maped_33610c0a_object_2626", "x": 13, "y": 51, "level": 0, "body_tiles": [{"x": 12, "y": 51, "level": 0}, {"x": 13, "y": 51, "level": 0}]},
+		{"subtype": 50, "placement_id": "native_h3maped_33610c0a_object_2661", "x": 23, "y": 52, "level": 0, "body_tiles": [{"x": 22, "y": 52, "level": 0}, {"x": 23, "y": 52, "level": 0}]},
+	]
+	var ordered_subtypes: Array[int] = []
+	var type17_authority: Array[Dictionary] = []
+	var rows_exact := true
+	var row_index := 0
+	for object_index in range(int(map_document.get_object_count())):
+		var object: Dictionary = map_document.get_object_by_index(object_index)
+		if int(object.get("h3m_type_id", -1)) != 17:
+			continue
+		var subtype := int(object.get("h3m_subtype", -1))
+		ordered_subtypes.append(subtype)
+		type17_authority.append(_proxy_projection_object_authority(object))
+		var expected: Dictionary = expected_rows[row_index] if row_index < expected_rows.size() else {}
+		row_index += 1
+		if expected.is_empty() \
+				or subtype != int(expected.get("subtype", -2)) \
+				or String(object.get("placement_id", "")) != String(expected.get("placement_id", "")) \
+				or int(object.get("x", -1)) != int(expected.get("x", -2)) \
+				or int(object.get("y", -1)) != int(expected.get("y", -2)) \
+				or int(object.get("level", -1)) != int(expected.get("level", -2)) \
+				or object.get("body_tiles", []) != expected.get("body_tiles", []) \
+				or object.get("action_tiles", []) != [] \
+				or not bool(object.get("blocking_body", false)):
+			rows_exact = false
+		if subtype == 50:
+			var expected_dwelling: Dictionary = CREATURE_GENERATOR_ROWS.get(subtype, {})
+			if String(object.get("kind", "")) != "neutral_dwelling" \
+					or String(object.get("object_id", "")) != String(expected_dwelling.get("object_id", "")) \
+					or String(object.get("native_proxy_object_id", "")) != String(expected_dwelling.get("object_id", "")) \
+					or String(object.get("site_id", "")) != "" \
+					or int(object.get("homm3_re_object_source_row", -1)) != int(expected_dwelling.get("source_row", -2)) \
+					or String(object.get("homm3_re_object_def_ref", "")) != String(expected_dwelling.get("def_ref", "")) \
+					or String(object.get("homm3_re_reward_object_catalog_id", "")) != String(expected_dwelling.get("catalog_id", "")) \
+					or not _live_proxy_provenance_exact(object):
+				rows_exact = false
+		elif String(object.get("kind", "")) != "h3m_object" \
+				or String(object.get("object_id", "")) != "" \
+				or String(object.get("native_proxy_object_id", "")) != "" \
+				or String(object.get("site_id", "")) != "" \
+				or int(object.get("homm3_re_object_source_row", -1)) != -1 \
+				or String(object.get("homm3_re_object_def_ref", "")) != "" \
+				or String(object.get("homm3_re_reward_object_catalog_id", "")) != "":
+			rows_exact = false
+	var repeat: Dictionary = service.generate_random_map(_config("homm3_extra_large", 144, 2, "normal_water", "77"), {"startup_path": "xlarge_creature_generator_projection_repeat"})
+	var repeat_map: Variant = repeat.get("map_document", null)
+	var repeat_type17_authority: Array[Dictionary] = []
+	if repeat_map != null:
+		for object_index in range(int(repeat_map.get_object_count())):
+			var object: Dictionary = repeat_map.get_object_by_index(object_index)
+			if int(object.get("h3m_type_id", -1)) == 17:
+				repeat_type17_authority.append(_proxy_projection_object_authority(object))
+	var repeat_exact: bool = bool(repeat.get("ok", false)) \
+			and String(repeat.get("final_payload_fnv1a32", "")) == String(generated.get("final_payload_fnv1a32", "")) \
+			and int(repeat.get("final_payload_byte_count", -1)) == int(generated.get("final_payload_byte_count", -2)) \
+			and int(repeat.get("runtime_object_count", -1)) == int(generated.get("runtime_object_count", -2)) \
+			and repeat_type17_authority == type17_authority
+	var adoption: Dictionary = service.convert_generated_payload(generated, {"feature_gate": REPORT_ID})
+	var interaction: Dictionary = _validate_creature_generator_interaction(adoption, [50])
+	return {
+		"ok": String(generated.get("final_payload_fnv1a32", "")) == "33610c0a" \
+				and int(generated.get("final_payload_byte_count", -1)) == 365777 \
+				and int(generated.get("runtime_object_count", -1)) == 2779 \
+				and ordered_subtypes == [30, 29, 15, 15, 6, 45, 68, 26, 40, 45, 68, 50] \
+				and row_index == expected_rows.size() \
 				and rows_exact \
 				and repeat_exact \
 				and bool(adoption.get("ok", false)) \
