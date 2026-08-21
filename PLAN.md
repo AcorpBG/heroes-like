@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `native-rmg-runtime-unicorn-fenhound-kennels-dwelling-projection-10184`. Fixed Extra-Large seed 77 remains payload `33610c0a`/365,777 bytes/2,779 objects with exact 12-row type-17 order, placement, and masks; both subtype-68 rows now use the original Fenhound Kennels contract alongside Reedbarge, Charcoal, two Bramble, Prism Outrider, Cliffhawk, Obsidian, and Kite, while only the two subtype-45 rows stay raw. Their live claims grant exactly 760 gold plus the original recruits, persist control, reject repeats, round-trip save v9, and preserve unrelated authority. Focused, compatibility, static/editor, and bounded Linux/Windows export-startup gates pass. Subtype 45, native parity, packaged interaction, certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
+  id: `native-rmg-runtime-unicorn-fenhound-kennels-dwelling-projection-10184`
 - Completed implementation slice: `native-rmg-runtime-elf-bramble-hedge-dwelling-projection-10184`. Fixed Extra-Large seed 77 remains payload `33610c0a`/365,777 bytes/2,779 objects with exact 12-row type-17 order, placement, and masks; both subtype-15 rows now use the original Bramble Hedge contract alongside Reedbarge, Charcoal, Prism Outrider, Cliffhawk, Obsidian, and Kite, while the other four rows stay raw. Their live claims grant exactly 620 gold plus the original recruits, persist control, reject repeats, round-trip save v9, and preserve unrelated authority. Focused, compatibility, static/editor, and bounded Linux/Windows export-startup gates pass. Other subtypes, native parity, packaged interaction, certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
   id: `native-rmg-runtime-elf-bramble-hedge-dwelling-projection-10184`
 - Completed implementation slice: `native-rmg-runtime-lizard-reedbarge-mooring-dwelling-projection-10184`. Fixed Extra-Large seed 77 remains payload `33610c0a`/365,777 bytes/2,779 objects with exact 12-row type-17 order, placement, and masks; subtype 30 now uses the original Reedbarge Mooring contract alongside Charcoal, Prism Outrider, Cliffhawk, Obsidian, and Kite, while the other six rows stay raw. Their live claims grant exactly 500 gold plus the original recruits, persist control, reject repeats, round-trip save v9, and preserve unrelated authority. Focused, compatibility, static/editor, and bounded Linux/Windows export-startup gates pass. Other subtypes, native parity, packaged interaction, certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
@@ -7969,6 +7971,33 @@ Completion evidence:
 - `/tmp/heroes-spell-scroll-focused.Q5GPQb` is natural rc0 and proves the sole exact type-93 row and live scroll node, `spell_beacon_path` as the only known-spell delta, exact resources/artifacts/army/other nodes, repeat rejection, session round trip, repeated generation authority, and unchanged Small/Medium/ordinal-95/Extra-Large payload/object/guard/package/save/startup gates;
 - `/tmp/heroes-spell-scroll-core.r7WCx5` records core rc0; JSON, repository validation, Python compilation, diff checks, and exact/generic editor parses pass;
 - `/tmp/heroes-spell-scroll-linux-package.zpi2sS` and `/tmp/heroes-spell-scroll-windows-package.CUKi63` wrapper artifacts plus the official report JSON files record Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup green. These are export/startup claims only; no packaged scroll interaction is claimed.
+
+## Completed Slice: Native RMG Unicorn Fenhound Kennels Dwelling Projection
+
+id: `native-rmg-runtime-unicorn-fenhound-kennels-dwelling-projection-10184`
+
+Status: completed.
+
+Implementation boundary:
+- add exactly type-17 subtype 68/source row 229/`AVG2uni.def` to the proxy catalog as existing `object_fenhound_kennels`, deriving `site_fenhound_kennels` through the unchanged bridge for both recovered placements;
+- preserve native payload, generation, object order/placement/masks, all completed Creature Generator mappings, and all unrelated live/save authority; keep both subtype-45 Extra-Large placements raw.
+
+Completion criteria:
+- Extra-Large seed 77 remains `33610c0a`/365,777 bytes/2,779 objects and exact ordered subtype authority `[30,29,15,15,6,45,68,26,40,45,68,50]`; both subtype-68 rows become Fenhound Kennels at `native_h3maped_33610c0a_object_2169` primary 125,119/body 124,119+125,119 and `native_h3maped_33610c0a_object_2626` primary 13,51/body 12,51+13,51 on level 0; all accepted mappings remain exact and only the two subtype-45 rows stay raw;
+- live claims total exactly 760 gold and the original two Fenhound, two Bramble, Reedbarge, Charcoal, Prism Outrider, Cliffhawk, Obsidian, and Kite recruit contracts, persist control, reject repeats, round-trip save v9, and preserve unrelated/package authority;
+- Small, Medium, ordinal-95, dwelling/AI/content/core, static/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no subtype-45/Creature Bank, generation/private-state/parity, new/imported content, rebalance, broad proxy policy, packaged interaction, certification, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- pushed HEAD `9a78a808` keeps both Extra-Large subtype-68 rows raw at the exact placements above; recovered catalog uniquely identifies source row 229/`AVG2uni.def`;
+- existing `object_fenhound_kennels` derives live `site_fenhound_kennels`, a distinct unused 2x1 forest/mire/coast blocking-visitable persistent beast dwelling with an original fast-runner/mossglass-sentinel roster, exact 70-gold claim, AI, rendering, and save behavior, and no special artifact reward.
+
+Completion evidence:
+- `/tmp/heroes-fenhound-focused.BWqDOw` exits naturally with exact Extra-Large `33610c0a`/365,777/2,779 authority, both subtype-68 Fenhound rows projected and claimed in source order, total 760 gold, exact recruits, repeat rejection, save-v9 round trip, unrelated/package authority, and only subtype 45 raw;
+- `/tmp/heroes-fenhound-compat.j3YbNk` keeps dwelling rewards, AI site control, faction content breadth, and core systems green; `/tmp/heroes-fenhound-static.GjucJ2` keeps repository validation, Python compilation, JSON and diff checks green;
+- official Linux export/headless startup and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. These are bounded export/startup claims only, not packaged Fenhound interaction or broader release certification.
 
 ## Completed Slice: Native RMG Elf Bramble Hedge Dwelling Projection
 
