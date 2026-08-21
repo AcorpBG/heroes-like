@@ -44872,6 +44872,65 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
         resource_sites_by_id = items_index(load_json(CONTENT_DIR / "resource_sites.json"))
         beacon_scroll_site = resource_sites_by_id.get("site_beacon_path_scroll", {})
         ensure(isinstance(beacon_scroll_site, dict) and bool(beacon_scroll_site.get("runtime_boundary", {}).get("renderer_sprite_required", False)), errors, "Beacon Path scroll site must require its adopted renderer sprite")
+        loose_resource_asset_rows = (
+            ("resource_pickup_peatwax", "site_peatwax_reed_yard", "peatwax_reed_bundle", "3b3b8cf505915a3eb20e9569a1d9fce83f6c335c555addc4a608965a82a4b221", "0a625464329950300f9bf5ea27c755af0a7bf65053fe079e380b3775c1eab633", "Distinct original Peatwax reed-bundle field sprite for the accepted loose-resource identity."),
+            ("resource_pickup_embergrain", "site_embergrain_warm_granary", "embergrain_sack", "dbede4c47acd2def5ae95046a7dc06ef13fd6780c1add20cee45ef195a1c16c2", "58d17d2985393eaf07480b149205dd310d3d5b837eeba091c1028fbc5aed5147", "Distinct original Embergrain sack field sprite for the accepted loose-resource identity."),
+            ("resource_pickup_aetherglass", "site_aetherglass_lens_house", "aetherglass_lens_crate", "aeb9f9f8a48b8dd81acbe159976d20705d852a8d0c101b8307888372f61bb66f", "3d1fca05d9f37255157b1b5da87d13f321f7367d678b85a48120d935bde41e1a", "Distinct original Aetherglass lens-crate field sprite for the accepted loose-resource identity."),
+            ("resource_pickup_memory_salt", "site_memory_salt_pan", "memory_salt_reliquary", "244eb6f02d6e80e27184e4d561aeff5da428b67f4157f0e46daea6b9aa11567b", "bb855b47c20d7eaef44086791ff4e5d993b66ac49f7963226fc5d89ab98874aa", "Distinct original Memory-Salt reliquary field sprite for the accepted loose-resource identity."),
+            ("resource_pickup_gold", "site_reef_coin_assay", "reef_coin_coffer", "33db723e55e0ad4969b3462fdcb1259ad3f5ee03384789912b0d8ad0565d554e", "7acedd3dd405224554576a82015265eb83cd7fe72a6934516772ce867eea7b2c", "Distinct original Reef coin-coffer field sprite for the accepted loose-resource identity."),
+        )
+        ensure(len({row[0] for row in loose_resource_asset_rows}) == 5 and len({row[1] for row in loose_resource_asset_rows}) == 5, errors, "Native loose-resource presentation must retain five distinct asset and site identities")
+        for asset_id, site_id, filename_stem, source_hash, runtime_hash, fit in loose_resource_asset_rows:
+            source_path = ROOT / "art" / "overworld" / "source" / "generated" / "pickups" / f"{filename_stem}_source.png"
+            runtime_path = ROOT / "art" / "overworld" / "runtime" / "objects" / "pickups" / f"{filename_stem}.png"
+            ensure(source_path.is_file() and png_size(source_path) == (1254, 1254), errors, f"{site_id} must retain its original generated 1254x1254 source image")
+            ensure(runtime_path.is_file() and png_size(runtime_path) == (512, 512), errors, f"{site_id} must retain its 512x512 runtime field sprite")
+            if source_path.is_file():
+                ensure(hashlib.sha256(source_path.read_bytes()).hexdigest() == source_hash, errors, f"{site_id} original generated source image drifted")
+            if runtime_path.is_file():
+                runtime_header = runtime_path.read_bytes()[:26]
+                ensure(len(runtime_header) >= 26 and runtime_header[25] == 6, errors, f"{site_id} runtime field sprite must retain an RGBA PNG alpha channel")
+                ensure(hashlib.sha256(runtime_path.read_bytes()).hexdigest() == runtime_hash, errors, f"{site_id} runtime field sprite drifted")
+            ensure(spell_scroll_assets.get(asset_id, {}) == {
+                "path": f"res://art/overworld/runtime/objects/pickups/{filename_stem}.png",
+                "source_generated": f"res://art/overworld/source/generated/pickups/{filename_stem}_source.png",
+                "source_model": "built_in_image_gen",
+                "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+                "background": "transparent",
+                "assigned_resource_site_id": site_id,
+            }, errors, f"{site_id} manifest asset must retain exact original generated-art provenance")
+            ensure(spell_scroll_site_sprites.get(site_id, {}) == {"asset_id": asset_id, "fit": fit}, errors, f"{site_id} must retain its exact distinct field-sprite mapping")
+        for shared_mine_object_id in (
+            "object_marsh_peat_yard",
+            "object_floodplain_sluice_camp",
+            "object_cinder_ore_face",
+            "object_badlands_coin_sluice",
+            "object_reef_coin_assay",
+        ):
+            ensure(shared_mine_object_id not in spell_scroll_assets, errors, f"Native loose-resource presentation must not globally remap shared mine object {shared_mine_object_id}")
+        loose_resource_map_view_text = OVERWORLD_MAP_VIEW_SCRIPT_PATH.read_text(encoding="utf-8")
+        resource_asset_start = loose_resource_map_view_text.find("func _resource_asset_id(node: Dictionary) -> String:")
+        resource_asset_end = loose_resource_map_view_text.find("func _artifact_sprite_asset_id(", resource_asset_start)
+        resource_asset_block = loose_resource_map_view_text[resource_asset_start:resource_asset_end]
+        ensure(
+            resource_asset_block.find('var site_id := String(node.get("site_id", ""))')
+            < resource_asset_block.find('if String(node.get("kind", "")) == "reward_reference":')
+            < resource_asset_block.find('var reward_asset_id := String(_resource_site_asset_ids.get(site_id, ""))')
+            < resource_asset_block.find('return reward_asset_id')
+            < resource_asset_block.find('var object_id := String(node.get("object_id", "")).strip_edges()')
+            < resource_asset_block.find('if object_id != "" and _map_object_asset_ids.has(object_id):'),
+            errors,
+            "Overworld resource asset resolution must prefer an exact site asset only for reward_reference rows before shared object assets",
+        )
+        ensure(resource_asset_block.count('if String(node.get("kind", "")) == "reward_reference":') == 1, errors, "Overworld resource asset resolution must contain one exact reward-reference precedence gate")
+        for forbidden_token in (
+            'if String(node.get("kind", "")) != "mine":',
+            'if String(node.get("kind", "")) in',
+            'node["kind"] =',
+            '_map_object_asset_ids.erase(',
+            '_resource_site_asset_ids.erase(',
+        ):
+            ensure(forbidden_token not in resource_asset_block, errors, f"Overworld loose-resource precedence must not broaden or mutate renderer identity: {forbidden_token}")
         for required_token in (
             "_validate_zero_road_projection(service)",
             '"owner-corpus-small-random-players-land-10184"',
@@ -44936,6 +44995,7 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             'and bool(artifact_interaction.get("ok", false))',
             'and live_resource_proxy_count == resource_proxy_count',
             'and live_resource_proxy_rows_exact',
+            'and bool(loose_resource_presentation.get("ok", false))',
             'and bool(rare_resource_interaction.get("ok", false))',
             'elif type_id == 93:',
             'spell_scroll_placement_ids[String(object.get("placement_id", ""))] = true',
@@ -44982,6 +45042,32 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             'and "beacon_path_scroll" in permanently_explored_art.get("sprite_asset_ids", [])',
             'and bool(fallback_art.get("fallback_procedural_marker", false))',
             'and bool(spell_scroll_interaction.get("ok", false))',
+            'const LOOSE_RESOURCE_PRESENTATION_ROWS := [',
+            '{"site_id": "site_peatwax_reed_yard", "object_id": "object_marsh_peat_yard", "resource_id": "peatwax", "asset_id": "resource_pickup_peatwax", "mine_asset_id": "mapobj_marsh_peat_yard", "expected_footprint": {"width": 2, "height": 2}, "texture_path": "res://art/overworld/runtime/objects/pickups/peatwax_reed_bundle.png", "rewards": {"gold": 120, "peatwax": 1}, "current_small": false}',
+            '{"site_id": "site_embergrain_warm_granary", "object_id": "object_floodplain_sluice_camp", "resource_id": "embergrain", "asset_id": "resource_pickup_embergrain", "mine_asset_id": "mapobj_floodplain_sluice_camp", "expected_footprint": {"width": 2, "height": 3}, "texture_path": "res://art/overworld/runtime/objects/pickups/embergrain_sack.png", "rewards": {"gold": 120, "embergrain": 1}, "current_small": true}',
+            '{"site_id": "site_aetherglass_lens_house", "object_id": "object_cinder_ore_face", "resource_id": "aetherglass", "asset_id": "resource_pickup_aetherglass", "mine_asset_id": "mapobj_cinder_ore_face", "expected_footprint": {"width": 2, "height": 2}, "texture_path": "res://art/overworld/runtime/objects/pickups/aetherglass_lens_crate.png", "rewards": {"gold": 120, "aetherglass": 1}, "current_small": true}',
+            '{"site_id": "site_memory_salt_pan", "object_id": "object_badlands_coin_sluice", "resource_id": "memory_salt", "asset_id": "resource_pickup_memory_salt", "mine_asset_id": "mapobj_badlands_coin_sluice", "expected_footprint": {"width": 3, "height": 3}, "texture_path": "res://art/overworld/runtime/objects/pickups/memory_salt_reliquary.png", "rewards": {"gold": 120, "memory_salt": 1}, "current_small": true}',
+            '{"site_id": "site_reef_coin_assay", "object_id": "object_reef_coin_assay", "resource_id": "gold", "asset_id": "resource_pickup_gold", "mine_asset_id": "mapobj_reef_coin_assay", "expected_footprint": {"width": 2, "height": 2}, "texture_path": "res://art/overworld/runtime/objects/pickups/reef_coin_coffer.png", "rewards": {"gold": 220}, "current_small": true}',
+            'func _validate_loose_resource_presentation(',
+            'var session_authority_before: Dictionary = session.to_dict()',
+            'if actual_current_sites != expected_current_sites or live_nodes_by_site.size() != expected_current_sites.size():',
+            'var template_node_value: Variant = live_nodes_by_site.values()[0]',
+            'if not (template_node_value is Dictionary) or template_node_value.is_empty():',
+            'var template_node: Dictionary = template_node_value.duplicate(true)',
+            'var node: Dictionary = live_nodes_by_site[site_id].duplicate(true) if live_nodes_by_site.has(site_id) else template_node.duplicate(true)',
+            'for viewport_size in [Vector2(1280, 720), Vector2(1920, 1080)]:',
+            'asset_ids.count(String(row.get("asset_id", ""))) == 1',
+            'if not bool(row.get("current_small", false)):',
+            'node.erase("runtime_footprint")',
+            'and art.get("sprite_footprints", []) == [row.get("expected_footprint", {})]',
+            'and bool(marker.get("mapped_sprite_settlement", false))',
+            'view_session.overworld["fog"] = _uniform_test_fog(map_size, false, true)',
+            'var claim: Dictionary = OverworldRulesScript._collect_resource_node_result(claim_session, {"index": 0, "node": node.duplicate(true)}, false)',
+            'var repeat_claim: Dictionary = OverworldRulesScript._collect_resource_node_result(claim_session, {"index": 0, "node": claimed_node}, false)',
+            'restored.from_dict(claim_session.to_dict())',
+            'fallback_node["object_id"] = "missing_loose_resource_object"',
+            'fallback_node["site_id"] = "missing_loose_resource_site"',
+            'and session.to_dict() == session_authority_before',
             'func _live_proxy_provenance_exact(object: Dictionary) -> bool:',
             'func _proxy_projection_object_authority(object: Dictionary) -> Dictionary:',
             '_validate_guard_control_projection(medium.get("generated", {}))',
@@ -45039,9 +45125,38 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
         ensure(proxy_projection_block.find("build_session_from_adoption(adoption)") < proxy_projection_block.find("_collect_artifact_node_result(session, artifact_result, false)") < proxy_projection_block.find("restored.from_dict(session.to_dict())"), errors, "Native live artifact proxy must use adopted collection authority before exact persistence restoration")
         ensure(proxy_projection_block.find('artifact_proxy_placement_ids[String(object.get("placement_id", ""))] = true') < proxy_projection_block.find('artifact_proxy_placement_ids.has(String(artifact_node.get("placement_id", "")))') < proxy_projection_block.find("_collect_artifact_node_result(session, artifact_result, false)"), errors, "Native live artifact owner must correlate projected placements through package adoption before collection")
         ensure(proxy_projection_block.find('int(source.get("h3m_type_id", -1)) == 79') < proxy_projection_block.find('int(source.get("h3m_subtype", -1)) == 3') < proxy_projection_block.find("_collect_resource_node_result(session, selected_rare_resource, false)"), errors, "Native live resource owner must correlate an exact subtype-3 package node before real collection")
+        ensure(proxy_projection_block.find('loose_resource_nodes_by_site[loose_site_id] = node.duplicate(true)') < proxy_projection_block.find('loose_resource_presentation = await _validate_loose_resource_presentation(session, loose_resource_nodes_by_site, loose_resource_mine_nodes_by_site)') < proxy_projection_block.find("_collect_resource_node_result(session, selected_rare_resource, false)"), errors, "Native loose-resource presentation must capture exact generated reward and mine rows before real collection")
         ensure(proxy_projection_block.find('spell_scroll_placement_ids[String(object.get("placement_id", ""))] = true') < proxy_projection_block.find('spell_scroll_placement_ids.has(String(node.get("placement_id", "")))') < proxy_projection_block.find("_collect_resource_node_result(session, scroll_result, false)"), errors, "Native live Spell Scroll owner must correlate exact projection through package adoption before collection")
         ensure(proxy_projection_block.find('spell_scroll_presentation = await _validate_spell_scroll_presentation(session, scroll_node)') < proxy_projection_block.find("_collect_resource_node_result(session, scroll_result, false)"), errors, "Native live Spell Scroll owner must validate the exact uncollected generated node presentation before collection")
         ensure(proxy_projection_block.find('var resource_nodes_before: Array = session.overworld.get("resource_nodes", []).duplicate(true)') < proxy_projection_block.find("_collect_resource_node_result(session, scroll_result, false)") < proxy_projection_block.find('var repeat_claim: Dictionary = OverworldRulesScript._collect_resource_node_result'), errors, "Native live Spell Scroll owner must bracket real collection with detached authority and repeat rejection")
+        loose_resource_presentation_start = native_rmg_runtime_boundary_text.find("func _validate_loose_resource_presentation(")
+        loose_resource_presentation_end = native_rmg_runtime_boundary_text.find("func _validate_spell_scroll_presentation(", loose_resource_presentation_start)
+        loose_resource_presentation_block = native_rmg_runtime_boundary_text[loose_resource_presentation_start:loose_resource_presentation_end]
+        ensure(loose_resource_presentation_block.find("var session_authority_before: Dictionary = session.to_dict()") < loose_resource_presentation_block.find('view_session.overworld["resource_nodes"] = [node]') < loose_resource_presentation_block.find('claim_session.overworld["resource_nodes"] = [node.duplicate(true)]') < loose_resource_presentation_block.find('and session.to_dict() == session_authority_before'), errors, "Native loose-resource presentation proof must retain detached view and collection authority before final whole-session equality")
+        ensure(loose_resource_presentation_block.count("await get_tree().process_frame") == 4, errors, "Native loose-resource presentation helper must use its bounded viewport, permanent-explored, mine, and fallback frame checkpoints")
+        ensure(loose_resource_presentation_block.find('mine_session.overworld["resource_nodes"] = [mine_node.duplicate(true)]') < loose_resource_presentation_block.find('String(mine_node.get("kind", "")) == "mine"') < loose_resource_presentation_block.find('String(row.get("asset_id", "")) not in mine_asset_ids'), errors, "Native loose-resource proof must preserve each exact mine row and exclude its pickup sprite")
+        ensure(loose_resource_presentation_block.find('if not bool(row.get("current_small", false)):') < loose_resource_presentation_block.find('node.erase("runtime_footprint")') < loose_resource_presentation_block.find('art.get("sprite_footprints", []) == [row.get("expected_footprint", {})]'), errors, "Native loose-resource proof must preserve live recovered footprints while bounding only the absent Peatwax control to its authored site footprint")
+        ensure('art.get("sprite_footprints", []) == [{"width": 1, "height": 1}]' not in loose_resource_presentation_block, errors, "Native loose-resource proof must not overwrite recovered generated footprints with a blanket one-tile oracle")
+        for site_id in (
+            "site_peatwax_reed_yard",
+            "site_embergrain_warm_granary",
+            "site_aetherglass_lens_house",
+            "site_memory_salt_pan",
+            "site_reef_coin_assay",
+        ):
+            ensure(loose_resource_presentation_block.count(f'"site_id": "{site_id}"') == 0, errors, f"Native loose-resource helper must consume the pinned top-level row for {site_id} instead of duplicating site policy")
+        for forbidden_token in (
+            '\n\tsession.overworld["resource_nodes"] =',
+            '\n\tsession.overworld["fog"] =',
+            'ContentService._resource_sites',
+            'FileAccess.open(',
+            'art/overworld/manifest.json", FileAccess',
+            'sort()',
+            'sort_custom',
+            '_resource_site_asset_ids[',
+            '_map_object_asset_ids[',
+        ):
+            ensure(forbidden_token not in loose_resource_presentation_block, errors, f"Native loose-resource focused proof must remain detached, ordered, and non-mutating: {forbidden_token}")
         spell_scroll_presentation_start = native_rmg_runtime_boundary_text.find("func _validate_spell_scroll_presentation(")
         spell_scroll_presentation_end = native_rmg_runtime_boundary_text.find("func _uniform_test_fog(", spell_scroll_presentation_start)
         spell_scroll_presentation_block = native_rmg_runtime_boundary_text[spell_scroll_presentation_start:spell_scroll_presentation_end]

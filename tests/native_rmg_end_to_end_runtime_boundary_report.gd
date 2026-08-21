@@ -7,6 +7,13 @@ const OverworldMapViewScript = preload("res://scenes/overworld/OverworldMapView.
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const REPORT_ID := "NATIVE_RMG_END_TO_END_RUNTIME_BOUNDARY_REPORT"
+const LOOSE_RESOURCE_PRESENTATION_ROWS := [
+	{"site_id": "site_peatwax_reed_yard", "object_id": "object_marsh_peat_yard", "resource_id": "peatwax", "asset_id": "resource_pickup_peatwax", "mine_asset_id": "mapobj_marsh_peat_yard", "expected_footprint": {"width": 2, "height": 2}, "texture_path": "res://art/overworld/runtime/objects/pickups/peatwax_reed_bundle.png", "rewards": {"gold": 120, "peatwax": 1}, "current_small": false},
+	{"site_id": "site_embergrain_warm_granary", "object_id": "object_floodplain_sluice_camp", "resource_id": "embergrain", "asset_id": "resource_pickup_embergrain", "mine_asset_id": "mapobj_floodplain_sluice_camp", "expected_footprint": {"width": 2, "height": 3}, "texture_path": "res://art/overworld/runtime/objects/pickups/embergrain_sack.png", "rewards": {"gold": 120, "embergrain": 1}, "current_small": true},
+	{"site_id": "site_aetherglass_lens_house", "object_id": "object_cinder_ore_face", "resource_id": "aetherglass", "asset_id": "resource_pickup_aetherglass", "mine_asset_id": "mapobj_cinder_ore_face", "expected_footprint": {"width": 2, "height": 2}, "texture_path": "res://art/overworld/runtime/objects/pickups/aetherglass_lens_crate.png", "rewards": {"gold": 120, "aetherglass": 1}, "current_small": true},
+	{"site_id": "site_memory_salt_pan", "object_id": "object_badlands_coin_sluice", "resource_id": "memory_salt", "asset_id": "resource_pickup_memory_salt", "mine_asset_id": "mapobj_badlands_coin_sluice", "expected_footprint": {"width": 3, "height": 3}, "texture_path": "res://art/overworld/runtime/objects/pickups/memory_salt_reliquary.png", "rewards": {"gold": 120, "memory_salt": 1}, "current_small": true},
+	{"site_id": "site_reef_coin_assay", "object_id": "object_reef_coin_assay", "resource_id": "gold", "asset_id": "resource_pickup_gold", "mine_asset_id": "mapobj_reef_coin_assay", "expected_footprint": {"width": 2, "height": 2}, "texture_path": "res://art/overworld/runtime/objects/pickups/reef_coin_coffer.png", "rewards": {"gold": 220}, "current_small": true},
+]
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -248,11 +255,13 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 	}
 	var live_mine_count := 0
 	var live_mine_sites_exact := true
+	var loose_resource_mine_nodes_by_site := {}
 	var live_campfires := []
 	var live_artifacts := []
 	var artifact_resource_node_count := 0
 	var live_resource_proxy_count := 0
 	var live_resource_proxy_rows_exact := true
+	var loose_resource_nodes_by_site := {}
 	var selected_rare_resource := {}
 	var live_spell_scrolls := []
 	if session != null:
@@ -268,6 +277,10 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 				live_mine_count += 1
 				if String(node.get("site_id", "")) != String(expected_site_by_subtype.get(int(source.get("h3m_subtype", -1)), "")):
 					live_mine_sites_exact = false
+				var mine_site_id := String(node.get("site_id", ""))
+				for presentation_row in LOOSE_RESOURCE_PRESENTATION_ROWS:
+					if presentation_row is Dictionary and String(presentation_row.get("site_id", "")) == mine_site_id and not loose_resource_mine_nodes_by_site.has(mine_site_id):
+						loose_resource_mine_nodes_by_site[mine_site_id] = node.duplicate(true)
 			elif int(source.get("h3m_type_id", -1)) == 12:
 				live_campfires.append({"index": node_index, "node": node.duplicate(true)})
 			elif int(source.get("h3m_type_id", -1)) in [67, 68]:
@@ -282,6 +295,10 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 					live_resource_proxy_rows_exact = false
 				if int(source.get("h3m_subtype", -1)) == 3 and selected_rare_resource.is_empty():
 					selected_rare_resource = {"index": node_index, "node": node.duplicate(true)}
+				var loose_site_id := String(node.get("site_id", ""))
+				for presentation_row in LOOSE_RESOURCE_PRESENTATION_ROWS:
+					if presentation_row is Dictionary and String(presentation_row.get("site_id", "")) == loose_site_id and not loose_resource_nodes_by_site.has(loose_site_id):
+						loose_resource_nodes_by_site[loose_site_id] = node.duplicate(true)
 			elif int(source.get("h3m_type_id", -1)) == 93:
 				if String(node.get("object_id", "")) == "spell_beacon_path" \
 						and String(node.get("site_id", "")) == "site_beacon_path_scroll" \
@@ -295,6 +312,9 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 			var artifact_node: Dictionary = artifact_value
 			if artifact_proxy_placement_ids.has(String(artifact_node.get("placement_id", ""))):
 				live_artifacts.append({"index": artifact_index, "node": artifact_node.duplicate(true)})
+	var loose_resource_presentation := {}
+	if session != null:
+		loose_resource_presentation = await _validate_loose_resource_presentation(session, loose_resource_nodes_by_site, loose_resource_mine_nodes_by_site)
 	var interaction := {}
 	if session != null and not live_campfires.is_empty():
 		var campfire_result: Dictionary = live_campfires[0]
@@ -476,6 +496,7 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 				and bool(artifact_interaction.get("ok", false)) \
 				and live_resource_proxy_count == resource_proxy_count \
 				and live_resource_proxy_rows_exact \
+				and bool(loose_resource_presentation.get("ok", false)) \
 				and bool(rare_resource_interaction.get("ok", false)) \
 				and live_spell_scrolls.size() == spell_scroll_count \
 				and bool(spell_scroll_presentation.get("ok", false)) \
@@ -502,6 +523,7 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 		"resource_proxy_rows_exact": resource_proxy_rows_exact,
 		"live_resource_proxy_count": live_resource_proxy_count,
 		"live_resource_proxy_rows_exact": live_resource_proxy_rows_exact,
+		"loose_resource_presentation": loose_resource_presentation,
 		"spell_scroll_count": spell_scroll_count,
 		"spell_scroll_rows_exact": spell_scroll_rows_exact,
 		"live_spell_scroll_count": live_spell_scrolls.size(),
@@ -514,6 +536,198 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 		"spell_scroll_presentation": spell_scroll_presentation,
 		"spell_scroll_interaction": spell_scroll_interaction,
 		"exact_repeat": exact_repeat,
+	}
+
+func _validate_loose_resource_presentation(
+	session: SessionStateStoreScript.SessionData,
+	live_nodes_by_site: Dictionary,
+	live_mine_nodes_by_site: Dictionary
+) -> Dictionary:
+	var session_authority_before: Dictionary = session.to_dict()
+	var expected_current_sites := []
+	var actual_current_sites := []
+	for row_value in LOOSE_RESOURCE_PRESENTATION_ROWS:
+		var row: Dictionary = row_value
+		var site_id := String(row.get("site_id", ""))
+		if bool(row.get("current_small", false)):
+			expected_current_sites.append(site_id)
+			if live_nodes_by_site.has(site_id):
+				actual_current_sites.append(site_id)
+	if actual_current_sites != expected_current_sites or live_nodes_by_site.size() != expected_current_sites.size():
+		return {
+			"ok": false,
+			"reason": "current_small_site_set_mismatch",
+			"expected": expected_current_sites,
+			"actual": actual_current_sites,
+		}
+	if live_mine_nodes_by_site.size() != LOOSE_RESOURCE_PRESENTATION_ROWS.size():
+		return {"ok": false, "reason": "current_small_mine_site_set_mismatch", "actual": live_mine_nodes_by_site.keys()}
+	var template_node_value: Variant = live_nodes_by_site.values()[0]
+	if not (template_node_value is Dictionary) or template_node_value.is_empty():
+		return {"ok": false, "reason": "missing_detached_template_node"}
+	var template_node: Dictionary = template_node_value.duplicate(true)
+	var map_size := OverworldRulesScript.derive_map_size(session)
+	var view: Variant = OverworldMapViewScript.new()
+	add_child(view)
+	var site_rows := []
+	var all_rows_exact := true
+	for row_value in LOOSE_RESOURCE_PRESENTATION_ROWS:
+		var row: Dictionary = row_value
+		var site_id := String(row.get("site_id", ""))
+		var node: Dictionary = live_nodes_by_site[site_id].duplicate(true) if live_nodes_by_site.has(site_id) else template_node.duplicate(true)
+		node["placement_id"] = "detached_presentation_%s" % site_id
+		node["object_id"] = String(row.get("object_id", ""))
+		node["site_id"] = site_id
+		node["resource_id"] = String(row.get("resource_id", ""))
+		node["collected"] = false
+		node["collected_by_faction_id"] = ""
+		node.erase("collected_day")
+		if not bool(row.get("current_small", false)):
+			node.erase("runtime_footprint")
+		var tile := Vector2i(int(node.get("x", -1)), int(node.get("y", -1)))
+		if tile.x < 0 or tile.y < 0 or tile.x >= map_size.x or tile.y >= map_size.y:
+			all_rows_exact = false
+			site_rows.append({"site_id": site_id, "exact": false, "reason": "invalid_tile", "tile": {"x": tile.x, "y": tile.y}, "map_size": {"x": map_size.x, "y": map_size.y}, "node_keys": node.keys()})
+			continue
+		var texture: Texture2D = load(String(row.get("texture_path", ""))) as Texture2D
+		var image: Image = texture.get_image() if texture != null else null
+		var texture_exact := image != null and image.get_size() == Vector2i(512, 512) and image.detect_alpha() != Image.ALPHA_NONE
+		if texture_exact:
+			for corner in [Vector2i(0, 0), Vector2i(511, 0), Vector2i(0, 511), Vector2i(511, 511)]:
+				if image.get_pixelv(corner).a > 0.01:
+					texture_exact = false
+					break
+		var view_session := SessionStateStoreScript.SessionData.new()
+		view_session.from_dict(session_authority_before)
+		view_session.overworld["resource_nodes"] = [node]
+		view_session.overworld["encounters"] = []
+		view_session.overworld["fog"] = _uniform_test_fog(map_size, true, true)
+		var viewport_rows := []
+		var viewport_exact := true
+		for viewport_size in [Vector2(1280, 720), Vector2(1920, 1080)]:
+			view.size = viewport_size
+			view.set_map_state(view_session, view_session.overworld.get("map", []), map_size, tile)
+			await get_tree().process_frame
+			var presentation: Dictionary = view.validation_tile_presentation(tile)
+			var art: Dictionary = presentation.get("art_presentation", {}) if presentation.get("art_presentation", {}) is Dictionary else {}
+			var marker: Dictionary = presentation.get("marker_readability", {}) if presentation.get("marker_readability", {}) is Dictionary else {}
+			var asset_ids: Array = art.get("sprite_asset_ids", []) if art.get("sprite_asset_ids", []) is Array else []
+			var row_exact: bool = bool(presentation.get("visible", false)) \
+					and bool(presentation.get("has_resource", false)) \
+					and bool(art.get("uses_asset_sprite", false)) \
+					and asset_ids.count(String(row.get("asset_id", ""))) == 1 \
+					and art.get("sprite_footprints", []) == [row.get("expected_footprint", {})] \
+					and bool(art.get("mapped_sprite_grounding", false)) \
+					and bool(marker.get("mapped_sprite_settlement", false)) \
+					and not bool(art.get("fallback_procedural_marker", true))
+			viewport_exact = viewport_exact and row_exact
+			viewport_rows.append({
+				"width": int(viewport_size.x),
+				"height": int(viewport_size.y),
+				"asset_ids": asset_ids,
+				"footprints": art.get("sprite_footprints", []),
+				"mapped_grounding": art.get("mapped_sprite_grounding", false),
+				"mapped_settlement": marker.get("mapped_sprite_settlement", false),
+				"fallback_procedural": art.get("fallback_procedural_marker", false),
+				"visible": presentation.get("visible", false),
+				"has_resource": presentation.get("has_resource", false),
+				"exact": row_exact,
+			})
+		view_session.overworld["fog"] = _uniform_test_fog(map_size, false, true)
+		view.set_map_state(view_session, view_session.overworld.get("map", []), map_size, tile)
+		await get_tree().process_frame
+		var permanently_explored: Dictionary = view.validation_tile_presentation(tile)
+		var permanently_explored_art: Dictionary = permanently_explored.get("art_presentation", {}) if permanently_explored.get("art_presentation", {}) is Dictionary else {}
+		var remembered_asset_ids: Array = permanently_explored_art.get("sprite_asset_ids", []) if permanently_explored_art.get("sprite_asset_ids", []) is Array else []
+		var permanent_explored_exact: bool = bool(permanently_explored.get("explored", false)) \
+				and bool(permanently_explored.get("visible", false)) \
+				and not bool(permanently_explored.get("draws_remembered_object", true)) \
+				and remembered_asset_ids.count(String(row.get("asset_id", ""))) == 1
+		var mine_node: Dictionary = live_mine_nodes_by_site.get(site_id, {}) if live_mine_nodes_by_site.get(site_id, {}) is Dictionary else {}
+		var mine_session := SessionStateStoreScript.SessionData.new()
+		mine_session.from_dict(session_authority_before)
+		mine_session.overworld["resource_nodes"] = [mine_node.duplicate(true)]
+		mine_session.overworld["encounters"] = []
+		mine_session.overworld["fog"] = _uniform_test_fog(map_size, true, true)
+		var mine_tile := Vector2i(int(mine_node.get("x", -1)), int(mine_node.get("y", -1)))
+		view.size = Vector2(1280, 720)
+		view.set_map_state(mine_session, mine_session.overworld.get("map", []), map_size, mine_tile)
+		await get_tree().process_frame
+		var mine_presentation: Dictionary = view.validation_tile_presentation(mine_tile)
+		var mine_art: Dictionary = mine_presentation.get("art_presentation", {}) if mine_presentation.get("art_presentation", {}) is Dictionary else {}
+		var mine_asset_ids: Array = mine_art.get("sprite_asset_ids", []) if mine_art.get("sprite_asset_ids", []) is Array else []
+		var mine_exact: bool = String(mine_node.get("kind", "")) == "mine" \
+				and mine_asset_ids.count(String(row.get("mine_asset_id", ""))) == 1 \
+				and String(row.get("asset_id", "")) not in mine_asset_ids \
+				and bool(mine_art.get("uses_asset_sprite", false))
+		var claim_session := SessionStateStoreScript.SessionData.new()
+		claim_session.from_dict(session_authority_before)
+		claim_session.overworld["resource_nodes"] = [node.duplicate(true)]
+		claim_session.overworld["encounters"] = []
+		var resources_before: Dictionary = claim_session.overworld.get("resources", {}).duplicate(true)
+		var claim: Dictionary = OverworldRulesScript._collect_resource_node_result(claim_session, {"index": 0, "node": node.duplicate(true)}, false)
+		var resources_after: Dictionary = claim_session.overworld.get("resources", {}).duplicate(true)
+		var reward_exact := bool(claim.get("ok", false))
+		var expected_rewards: Dictionary = row.get("rewards", {})
+		for resource_key in ["gold", "wood", "ore", "aetherglass", "brass_scrip", "embergrain", "memory_salt", "peatwax", "verdant_grafts"]:
+			if int(resources_after.get(resource_key, 0)) - int(resources_before.get(resource_key, 0)) != int(expected_rewards.get(resource_key, 0)):
+				reward_exact = false
+		var claimed_nodes: Array = claim_session.overworld.get("resource_nodes", []) if claim_session.overworld.get("resource_nodes", []) is Array else []
+		var claimed_node: Dictionary = claimed_nodes[0] if claimed_nodes.size() == 1 and claimed_nodes[0] is Dictionary else {}
+		var repeat_claim: Dictionary = OverworldRulesScript._collect_resource_node_result(claim_session, {"index": 0, "node": claimed_node}, false)
+		var restored := SessionStateStoreScript.SessionData.new()
+		restored.from_dict(claim_session.to_dict())
+		var restored_nodes: Array = restored.overworld.get("resource_nodes", []) if restored.overworld.get("resource_nodes", []) is Array else []
+		var save_exact: bool = restored.overworld.get("resources", {}) == resources_after \
+				and restored_nodes.size() == 1 \
+				and restored_nodes[0] == claimed_node
+		var exact: bool = texture_exact and viewport_exact and permanent_explored_exact and mine_exact and reward_exact \
+				and bool(claimed_node.get("collected", false)) \
+				and not bool(repeat_claim.get("ok", false)) \
+				and save_exact
+		all_rows_exact = all_rows_exact and exact
+		site_rows.append({
+			"site_id": site_id,
+			"resource_id": row.get("resource_id", ""),
+			"asset_id": row.get("asset_id", ""),
+			"current_small": row.get("current_small", false),
+			"texture_exact": texture_exact,
+			"viewport_rows": viewport_rows,
+			"permanent_explored_exact": permanent_explored_exact,
+			"mine_asset_ids": mine_asset_ids,
+			"mine_exact": mine_exact,
+			"reward_exact": reward_exact,
+			"repeat_rejected": not bool(repeat_claim.get("ok", false)),
+			"save_exact": save_exact,
+			"exact": exact,
+		})
+	var fallback_session := SessionStateStoreScript.SessionData.new()
+	fallback_session.from_dict(session_authority_before)
+	var fallback_node: Dictionary = template_node.duplicate(true)
+	fallback_node["object_id"] = "missing_loose_resource_object"
+	fallback_node["site_id"] = "missing_loose_resource_site"
+	fallback_session.overworld["resource_nodes"] = [fallback_node]
+	fallback_session.overworld["encounters"] = []
+	fallback_session.overworld["fog"] = _uniform_test_fog(map_size, true, true)
+	var fallback_tile := Vector2i(int(fallback_node.get("x", -1)), int(fallback_node.get("y", -1)))
+	view.size = Vector2(1280, 720)
+	view.set_map_state(fallback_session, fallback_session.overworld.get("map", []), map_size, fallback_tile)
+	await get_tree().process_frame
+	var fallback: Dictionary = view.validation_tile_presentation(fallback_tile)
+	var fallback_art: Dictionary = fallback.get("art_presentation", {}) if fallback.get("art_presentation", {}) is Dictionary else {}
+	remove_child(view)
+	view.queue_free()
+	var fallback_exact: bool = bool(fallback.get("has_resource", false)) \
+			and not bool(fallback_art.get("uses_asset_sprite", true)) \
+			and bool(fallback_art.get("fallback_procedural_marker", false))
+	return {
+		"ok": all_rows_exact \
+				and fallback_exact \
+				and session.to_dict() == session_authority_before,
+		"current_small_sites": actual_current_sites,
+		"site_rows": site_rows,
+		"fallback_procedural": fallback_exact,
+		"session_authority_exact": session.to_dict() == session_authority_before,
 	}
 
 func _validate_spell_scroll_presentation(session: SessionStateStoreScript.SessionData, scroll_node: Dictionary) -> Dictionary:
