@@ -14036,9 +14036,12 @@ def validate_skirmish_setup(errors: list[str]) -> None:
         ("CampaignPanel", "VBoxContainer"),
         ("SkirmishPanel", "VBoxContainer"),
         ("SkirmishScroll", "ScrollContainer"),
-        ("SkirmishFrontNavigation", "HBoxContainer"),
-        ("PreviousSkirmishFront", "Button"),
-        ("NextSkirmishFront", "Button"),
+        ("StageDockPanel", "PanelContainer"),
+        ("StageCommandRailSlot", "Control"),
+        ("CampaignCommandRail", "Control"),
+        ("SkirmishCommandRail", "Control"),
+        ("SkirmishLaunchRow", "HBoxContainer"),
+        ("SkirmishDifficultyLabel", "Label"),
         ("SkirmishList", "ItemList"),
         ("DifficultyPicker", "OptionButton"),
         ("SetupSummary", "Label"),
@@ -14046,11 +14049,16 @@ def validate_skirmish_setup(errors: list[str]) -> None:
         ("SkirmishCommanderPreview", "Label"),
         ("SkirmishOperationalBoardTitle", "Label"),
         ("SkirmishOperationalBoard", "Label"),
-        ("StartSkirmish", "Button"),
     ):
         ensure(scene_has_node(main_menu_scene_text, node_name, node_type), errors, f"MainMenu.tscn must define {node_name} ({node_type}) for skirmish setup")
 
     main_menu_script_text = MAIN_MENU_SCRIPT_PATH.read_text(encoding="utf-8")
+    for rail_name in ("CampaignCommandRail", "SkirmishCommandRail"):
+        rail_block = scene_node_block(main_menu_scene_text, rail_name, "Control")
+        ensure('parent="."' in rail_block and "visible = false" in rail_block and "offset_bottom = 40.0" in rail_block, errors, f"Main Menu {rail_name} must be an initially hidden root command rail with the reserved dock footprint")
+    ensure("anchor_left = 0.0445" in scene_node_block(main_menu_scene_text, "CampaignCommandRail", "Control") and "anchor_right = 0.5475" in scene_node_block(main_menu_scene_text, "CampaignCommandRail", "Control"), errors, "Campaign command rail must stay within the compact Campaign dock inner width")
+    ensure("anchor_left = 0.0445" in scene_node_block(main_menu_scene_text, "SkirmishCommandRail", "Control") and "anchor_right = 0.7523" in scene_node_block(main_menu_scene_text, "SkirmishCommandRail", "Control"), errors, "Skirmish command rail must stay within the standard dock inner width")
+    ensure('[node name="StageCommandRailSlot" type="Control" parent="StageDockPanel/StageDockPad/StageDockBox"]' in main_menu_scene_text, errors, "MainMenu.tscn must reserve the exact in-dock command-rail footprint")
     for required_token in (
         "ScenarioSelectRulesScript.build_skirmish_browser_entries",
         "ScenarioSelectRulesScript.build_skirmish_setup",
@@ -14061,8 +14069,12 @@ def validate_skirmish_setup(errors: list[str]) -> None:
         "func _on_difficulty_selected",
         "briefing_check",
         "- Briefing: %s",
-        "@onready var _previous_skirmish_front_button: Button = %PreviousSkirmishFront",
-        "@onready var _next_skirmish_front_button: Button = %NextSkirmishFront",
+        "@onready var _previous_skirmish_front_button: Button = %PreviousCampaignArc",
+        "@onready var _next_skirmish_front_button: Button = %NextCampaignArc",
+        "@onready var _start_skirmish_button: Button = %NextCampaignChapter",
+        "@onready var _campaign_command_rail: Control = %CampaignCommandRail",
+        "@onready var _skirmish_command_rail: Control = %SkirmishCommandRail",
+        "@onready var _skirmish_launch_row: HBoxContainer = %SkirmishLaunchRow",
         "func _on_previous_skirmish_front_pressed() -> void:",
         "func _on_next_skirmish_front_pressed() -> void:",
         "func _select_relative_skirmish_front(delta: int) -> void:",
@@ -14071,18 +14083,29 @@ def validate_skirmish_setup(errors: list[str]) -> None:
         '"selected_skirmish_index": _selected_skirmish_front_index()',
         '"previous_skirmish_front_enabled": not _previous_skirmish_front_button.disabled',
         '"next_skirmish_front_enabled": not _next_skirmish_front_button.disabled',
+        '"skirmish_layout": _skirmish_layout_snapshot()',
+        "func _skirmish_layout_snapshot() -> Dictionary:",
     ):
         ensure(required_token in main_menu_script_text, errors, f"MainMenu.gd is missing required skirmish setup token: {required_token}")
 
     for required_scene_token in (
-        'text = "Previous Front"',
-        'text = "Next Front"',
-        'method="_on_previous_skirmish_front_pressed"',
-        'method="_on_next_skirmish_front_pressed"',
+        '[node name="SkirmishCommandRail" type="Control" parent="."]',
+        '[node name="SkirmishLaunchRow" type="HBoxContainer" parent="SkirmishCommandRail"]',
+        '[node name="SkirmishDifficultyLabel" type="Label" parent="SkirmishCommandRail/SkirmishLaunchRow"]',
+        '[node name="DifficultyPicker" type="OptionButton" parent="SkirmishCommandRail/SkirmishLaunchRow"]',
+        '[connection signal="item_selected" from="SkirmishCommandRail/SkirmishLaunchRow/DifficultyPicker" to="." method="_on_difficulty_selected"]',
     ):
         ensure(required_scene_token in main_menu_scene_text, errors, f"MainMenu.tscn is missing native Skirmish navigation token: {required_scene_token}")
-    ensure(main_menu_scene_text.count('name="PreviousSkirmishFront"') == 1, errors, "MainMenu.tscn must own exactly one PreviousSkirmishFront button")
-    ensure(main_menu_scene_text.count('name="NextSkirmishFront"') == 1, errors, "MainMenu.tscn must own exactly one NextSkirmishFront button")
+    ensure(main_menu_scene_text.count('name="SkirmishLaunchRow"') == 1, errors, "MainMenu.tscn must own exactly one SkirmishLaunchRow")
+    skirmish_launch_row_block = scene_node_block(main_menu_scene_text, "SkirmishLaunchRow", "HBoxContainer")
+    ensure(
+        "visible = false" not in skirmish_launch_row_block,
+        errors,
+        "SkirmishLaunchRow must remain authored visible inside its root command rail",
+    )
+    ensure(main_menu_scene_text.count('name="DifficultyPicker"') == 1, errors, "MainMenu.tscn must own exactly one authored Skirmish DifficultyPicker")
+    for forbidden_name in ("LaunchRows", "NoLaunchRow", "PreviousSkirmishFront", "NextSkirmishFront", "StartSkirmish"):
+        ensure(f'name="{forbidden_name}"' not in main_menu_scene_text, errors, f"MainMenu must not duplicate shared command-rail ownership with {forbidden_name}")
 
     relative_match = re.search(
         r"func _select_relative_skirmish_front\(delta: int\) -> void:\n(?P<body>.*?)(?=\nfunc )",
@@ -14128,6 +14151,59 @@ def validate_skirmish_setup(errors: list[str]) -> None:
         for forbidden_token in ("hide()", ".visible = false", "remove_item", "sort", "erase"):
             ensure(forbidden_token not in sync_body, errors, f"Skirmish navigation state must not hide, reorder, or mutate browser rows via {forbidden_token}")
 
+    skirmish_layout_match = re.search(
+        r"func _skirmish_layout_snapshot\(\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc )",
+        main_menu_script_text,
+        re.S,
+    )
+    ensure(skirmish_layout_match is not None, errors, "MainMenu.gd is missing the isolated Skirmish launch-row layout snapshot")
+    if skirmish_layout_match is not None:
+        skirmish_layout_body = skirmish_layout_match.group("body")
+        for required_token in ("_skirmish_launch_row", "_previous_skirmish_front_button", "_next_skirmish_front_button", "_difficulty_picker", "_start_skirmish_button", "_skirmish_list"):
+            ensure(required_token in skirmish_layout_body, errors, f"Skirmish layout containment must include exact live control {required_token}")
+        for forbidden_token in ("reparent", "remove_child", "add_child", "hide()", "show()"):
+            ensure(forbidden_token not in skirmish_layout_body, errors, f"Skirmish layout snapshot must remain observation-only via {forbidden_token}")
+
+    skirmish_difficulty_match = re.search(
+        r"func _on_difficulty_selected\(index: int\) -> void:\n(?P<body>.*?)(?=\nfunc )",
+        main_menu_script_text,
+        re.S,
+    )
+    ensure(skirmish_difficulty_match is not None, errors, "MainMenu.gd is missing the isolated Skirmish difficulty public-action delegate")
+    if skirmish_difficulty_match is not None:
+        skirmish_difficulty_body = skirmish_difficulty_match.group("body")
+        ordered_tokens = (
+            "_set_selected_difficulty_from_picker(_difficulty_picker, index)",
+            'call_deferred("_refresh_stage_accessibility")',
+        )
+        positions = [skirmish_difficulty_body.find(token) for token in ordered_tokens]
+        ensure(min(positions) >= 0 and positions == sorted(positions), errors, "Skirmish difficulty must delegate to established selection authority before republishing native semantics")
+        for forbidden_token in ("_selected_difficulty =", "SettingsService", "SessionState", "SaveService", "remove_item", "sort"):
+            ensure(forbidden_token not in skirmish_difficulty_body, errors, f"Skirmish difficulty native action must not replace selection or unrelated authority via {forbidden_token}")
+
+    skirmish_launch_match = re.search(
+        r"func _on_start_skirmish_pressed\(\) -> void:\n(?P<body>.*?)(?=\nfunc )",
+        main_menu_script_text,
+        re.S,
+    )
+    ensure(skirmish_launch_match is not None, errors, "MainMenu.gd is missing the isolated Skirmish launch authority")
+    if skirmish_launch_match is not None:
+        skirmish_launch_body = skirmish_launch_match.group("body")
+        ensure("_route_menu_launch_after_accessibility_handoff()" in skirmish_launch_body, errors, "Successful Skirmish launch must enter the shared accessibility-safe route handoff")
+        ensure("AppRouter.go_to_overworld()" not in skirmish_launch_body, errors, "Skirmish launch must not bypass the accessibility-safe route handoff")
+
+    validation_skirmish_launch_match = re.search(
+        r"func validation_start_selected_skirmish\(\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc )",
+        main_menu_script_text,
+        re.S,
+    )
+    ensure(validation_skirmish_launch_match is not None, errors, "MainMenu.gd is missing the isolated selected Skirmish launch validation path")
+    if validation_skirmish_launch_match is not None:
+        validation_skirmish_launch_body = validation_skirmish_launch_match.group("body")
+        ensure("_start_skirmish_button.pressed.emit()" in validation_skirmish_launch_body, errors, "Selected Skirmish launch validation must use the public visible Button signal")
+        for forbidden_token in ("_on_start_skirmish_pressed()", "start_skirmish_session(", "AppRouter.go_to_overworld"):
+            ensure(forbidden_token not in validation_skirmish_launch_body, errors, f"Selected Skirmish launch validation must not bypass public Button authority via {forbidden_token}")
+
     menu_smoke_text = MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH.read_text(encoding="utf-8") if MENU_OUTCOME_VISUAL_SMOKE_SCRIPT_PATH.exists() else ""
     for required_token in (
         "Opening briefing:",
@@ -14158,9 +14234,15 @@ def validate_skirmish_setup(errors: list[str]) -> None:
             "latest_loadable_summary",
             "latest_save_resume_target",
             "saved_from_launch_mode",
-            "func _validate_native_front_navigation(shell: Node, entries: Array) -> bool:",
-            'shell.find_child("PreviousSkirmishFront", true, false)',
-            'shell.find_child("NextSkirmishFront", true, false)',
+            "func _validate_native_skirmish_launch_setup(shell: Node, entries: Array) -> bool:",
+            'shell.find_child("SkirmishLaunchRow", true, false)',
+            'shell.find_child("PreviousCampaignArc", true, false)',
+            'shell.find_child("NextCampaignArc", true, false)',
+            'shell.find_child("CampaignArcNavigation", true, false)',
+            'shell.find_child("CampaignChapterNavigation", true, false)',
+            'shell.find_child("DifficultyPicker", true, false)',
+            'shell.find_child("NextCampaignChapter", true, false)',
+            "difficulty_picker.item_selected.emit(next_difficulty_index)",
             "for viewport_size in [Vector2i(1280, 720), Vector2i(1920, 1080)]:",
             "previous_button.pressed.emit()",
             "next_button.pressed.emit()",
@@ -14175,7 +14257,7 @@ def validate_skirmish_setup(errors: list[str]) -> None:
         ):
             ensure(required_token in smoke_text, errors, f"player_facing_skirmish_browser_smoke.gd is missing required token: {required_token}")
         native_case_match = re.search(
-            r"func _validate_native_front_navigation\(shell: Node, entries: Array\) -> bool:\n(?P<body>.*?)(?=\nfunc )",
+            r"func _validate_native_skirmish_launch_setup\(shell: Node, entries: Array\) -> bool:\n(?P<body>.*?)(?=\nfunc )",
             smoke_text,
             re.S,
         )
@@ -14205,6 +14287,10 @@ def validate_skirmish_setup(errors: list[str]) -> None:
         for required_token in (
             'UiAccessibility.semantic_name(previous_front) == "Previous Front"',
             'UiAccessibility.semantic_name(next_front) == "Next Front"',
+            'UiAccessibility.semantic_name(skirmish_difficulty) == "Difficulty"',
+            'UiAccessibility.semantic_name(start_skirmish) == "Launch Skirmish"',
+            '"Choose an option for Difficulty. Current value: %s." % skirmish_difficulty_value',
+            "skirmish_difficulty.item_selected.emit(next_skirmish_difficulty_index)",
             'previous_front.accessibility_description == previous_front.tooltip_text',
             'next_front.accessibility_description == next_front.tooltip_text',
             "next_front.pressed.emit()",
@@ -14437,7 +14523,7 @@ def validate_campaign_browser(errors: list[str]) -> None:
         "func _on_campaign_restart_pressed",
         "func _on_campaign_restart_confirmed",
         "func _launch_campaign_action",
-        "func _route_campaign_launch_after_accessibility_handoff() -> void:",
+        "func _route_menu_launch_after_accessibility_handoff() -> void:",
         "campaign_board_status",
         "archived_empty",
         "campaign_empty_state_text",
@@ -14465,19 +14551,20 @@ def validate_campaign_browser(errors: list[str]) -> None:
         '[node name="NextCampaignArc" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/ActionRow/CampaignArcNavigation"]',
         '[node name="PreviousCampaignChapter" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/ActionRow/CampaignChapterNavigation"]',
         '[node name="NextCampaignChapter" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/ActionRow/CampaignChapterNavigation"]',
-        '[node name="CampaignLaunchRow" type="HBoxContainer" parent="StageDockPanel/StageDockPad/StageDockBox"]',
-        '[node name="CampaignDifficultyPicker" type="OptionButton" parent="StageDockPanel/StageDockPad/StageDockBox/CampaignLaunchRow"]',
-        '[node name="CampaignPrimaryAction" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/CampaignLaunchRow"]',
-        '[node name="StartChapter" type="Button" parent="StageDockPanel/StageDockPad/StageDockBox/CampaignLaunchRow"]',
+        '[node name="CampaignCommandRail" type="Control" parent="."]',
+        '[node name="CampaignLaunchRow" type="HBoxContainer" parent="CampaignCommandRail"]',
+        '[node name="CampaignDifficultyPicker" type="OptionButton" parent="CampaignCommandRail/CampaignLaunchRow"]',
+        '[node name="CampaignPrimaryAction" type="Button" parent="CampaignCommandRail/CampaignLaunchRow"]',
+        '[node name="StartChapter" type="Button" parent="CampaignCommandRail/CampaignLaunchRow"]',
         '[node name="CampaignListTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/CampaignBrowser/CampaignListPanel/CampaignListPad/CampaignListBox"]',
         '[node name="ChapterListTitle" type="Label" parent="StageDockPanel/StageDockPad/StageDockBox/MenuTabs/CampaignPanel/CampaignScroll/CampaignScrollPad/CampaignScrollBody/ChapterBrowser/ChapterListPanel/ChapterListPad/ChapterListBox"]',
         'method="_on_previous_campaign_arc_pressed"',
         'method="_on_next_campaign_arc_pressed"',
         'method="_on_previous_campaign_chapter_pressed"',
         'method="_on_next_campaign_chapter_pressed"',
-        '[connection signal="item_selected" from="StageDockPanel/StageDockPad/StageDockBox/CampaignLaunchRow/CampaignDifficultyPicker" to="." method="_on_campaign_difficulty_selected"]',
-        '[connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/CampaignLaunchRow/CampaignPrimaryAction" to="." method="_on_campaign_primary_pressed"]',
-        '[connection signal="pressed" from="StageDockPanel/StageDockPad/StageDockBox/CampaignLaunchRow/StartChapter" to="." method="_on_start_chapter_pressed"]',
+        '[connection signal="item_selected" from="CampaignCommandRail/CampaignLaunchRow/CampaignDifficultyPicker" to="." method="_on_campaign_difficulty_selected"]',
+        '[connection signal="pressed" from="CampaignCommandRail/CampaignLaunchRow/CampaignPrimaryAction" to="." method="_on_campaign_primary_pressed"]',
+        '[connection signal="pressed" from="CampaignCommandRail/CampaignLaunchRow/StartChapter" to="." method="_on_start_chapter_pressed"]',
     ):
         ensure(required_scene_token in main_menu_scene_text, errors, f"MainMenu.tscn is missing native Campaign navigation token: {required_scene_token}")
     for native_node in ("PreviousCampaignArc", "NextCampaignArc", "PreviousCampaignChapter", "NextCampaignChapter"):
@@ -14559,15 +14646,67 @@ def validate_campaign_browser(errors: list[str]) -> None:
         stage_header_body = stage_header_match.group("body")
         stage_header_tokens = (
             "var campaign_navigation_visible := _menu_tabs.current_tab == TAB_CAMPAIGN",
-            "_stage_dock_hint_label.visible = not campaign_navigation_visible",
-            "_campaign_arc_navigation.visible = campaign_navigation_visible",
-            "_campaign_chapter_navigation.visible = campaign_navigation_visible",
-            "_campaign_launch_row.visible = campaign_navigation_visible",
+            "_stage_dock_hint_label.visible = false",
+            "_campaign_arc_navigation.visible = true",
+            "_campaign_chapter_navigation.visible = campaign_navigation_visible or _menu_tabs.current_tab == TAB_SKIRMISH",
+            "_campaign_command_rail.visible = _stage_dock_is_open() and _menu_tabs.current_tab == TAB_CAMPAIGN",
+            "_skirmish_command_rail.visible = _stage_dock_is_open() and _menu_tabs.current_tab == TAB_SKIRMISH",
+            "_stage_dock_title_label.tooltip_text = String(stage_copy.get(\"hint\", \"\"))",
+            "_stage_dock_title_label.accessibility_description = String(stage_copy.get(\"hint\", \"\"))",
+            "elif _menu_tabs.current_tab == TAB_SKIRMISH:",
+            '_previous_campaign_arc_button.text = "Previous Front"',
+            '_next_campaign_arc_button.text = "Next Front"',
+            "_refresh_skirmish_setup()",
+            "_sync_skirmish_front_navigation()",
+            "_sync_skirmish_difficulty_navigation()",
+            '_next_campaign_chapter_button.text = "Launch Skirmish"',
         )
         stage_header_positions = [stage_header_body.find(token) for token in stage_header_tokens]
-        ensure(min(stage_header_positions) >= 0 and stage_header_positions == sorted(stage_header_positions), errors, "Campaign native actions must replace the verbose command-rail hint only on the Campaign board")
-        for forbidden_token in ("reparent", "remove_child", "add_child", "sort", "erase"):
+        ensure(min(stage_header_positions) >= 0 and stage_header_positions == sorted(stage_header_positions), errors, "Main Menu must expose shared Campaign/Skirmish command actions and restore live Skirmish launch state in exact order")
+        for forbidden_token in ("reparent", "remove_child", "add_child", "sort", "erase", "NOTIFICATION_ACCESSIBILITY_INVALIDATE", "_launch_rows", "_publish_launch_row_accessibility"):
             ensure(forbidden_token not in stage_header_body, errors, f"Campaign command-rail visibility must not reparent or reorder controls via {forbidden_token}")
+
+    for obsolete_token in ("func _publish_launch_row_accessibility", "func _prime_native_accessibility_tree", 'call_deferred("_prime_native_accessibility_tree")', "_launch_rows"):
+        ensure(obsolete_token not in main_menu_script_text, errors, f"MainMenu must not retain the obsolete nested launch-tab accessibility bridge: {obsolete_token}")
+
+    toggle_stage_match = re.search(r"func _toggle_stage_dock\(index: int\) -> void:\n(?P<body>.*?)(?=\nfunc )", main_menu_script_text, re.S)
+    ensure(toggle_stage_match is not None, errors, "MainMenu.gd is missing the isolated secondary-board visibility handoff")
+    if toggle_stage_match is not None:
+        toggle_stage_body = toggle_stage_match.group("body")
+        toggle_stage_tokens = (
+            "if _stage_dock_is_open() and _menu_tabs.current_tab == clamped_index:",
+            "_stage_return_focus = _first_view_button_for_tab(clamped_index)",
+            "_select_menu_tab(clamped_index)",
+            "_show_stage_dock()",
+        )
+        toggle_stage_positions = [toggle_stage_body.find(token) for token in toggle_stage_tokens]
+        ensure(min(toggle_stage_positions) >= 0 and toggle_stage_positions == sorted(toggle_stage_positions), errors, "MainMenu must prepare the exact secondary-board content before exposing its native accessibility root")
+        ensure("await " not in toggle_stage_body and "LaunchRows" not in toggle_stage_body, errors, "MainMenu secondary-board selection must not depend on nested-tab timing")
+        for forbidden_token in ("NOTIFICATION_ACCESSIBILITY_INVALIDATE", "propagate_notification", "reparent", "remove_child", "add_child"):
+            ensure(forbidden_token not in toggle_stage_body, errors, f"MainMenu secondary-board handoff must use the visible-parent tab lifecycle, not {forbidden_token}")
+
+    refresh_stage_accessibility_match = re.search(r"func _refresh_stage_accessibility\(\) -> void:\n(?P<body>.*?)(?=\nfunc )", main_menu_script_text, re.S)
+    ensure(refresh_stage_accessibility_match is not None, errors, "MainMenu.gd is missing the isolated secondary-board accessibility refresh")
+    if refresh_stage_accessibility_match is not None:
+        refresh_stage_accessibility_body = refresh_stage_accessibility_match.group("body")
+        refresh_stage_accessibility_tokens = (
+            "var tree := get_tree()",
+            "if tree == null:",
+            "return",
+            "await tree.process_frame",
+            "if is_inside_tree() and _stage_dock_is_open():",
+            "UiAccessibility.refresh_tree(_stage_dock_panel)",
+            "UiAccessibility.refresh_tree(_campaign_command_rail)",
+            "UiAccessibility.refresh_tree(_skirmish_command_rail)",
+            "_queue_accessibility_subtree_update(_stage_dock_panel)",
+            "_queue_accessibility_subtree_update(_campaign_command_rail)",
+            "_queue_accessibility_subtree_update(_skirmish_command_rail)",
+        )
+        refresh_stage_accessibility_positions = [refresh_stage_accessibility_body.find(token) for token in refresh_stage_accessibility_tokens]
+        ensure(min(refresh_stage_accessibility_positions) >= 0 and refresh_stage_accessibility_positions == sorted(refresh_stage_accessibility_positions), errors, "MainMenu must refresh stage semantics before queueing its native window hierarchy")
+        ensure(refresh_stage_accessibility_body.count("await tree.process_frame") == 1, errors, "MainMenu secondary-board accessibility refresh must cross exactly one frame")
+        for forbidden_token in ("NOTIFICATION_ACCESSIBILITY_INVALIDATE", "propagate_notification", "reparent", "remove_child", "add_child", "get_window()"):
+            ensure(forbidden_token not in refresh_stage_accessibility_body, errors, f"MainMenu secondary-board accessibility refresh must not invalidate or rebuild hierarchy via {forbidden_token}")
 
     campaign_difficulty_match = re.search(r"func _on_campaign_difficulty_selected\(index: int\) -> void:\n(?P<body>.*?)(?=\nfunc )", main_menu_script_text, re.S)
     ensure(campaign_difficulty_match is not None, errors, "MainMenu.gd is missing the isolated Campaign difficulty public-action delegate")
@@ -14612,12 +14751,12 @@ def validate_campaign_browser(errors: list[str]) -> None:
     ensure(campaign_launch_match is not None, errors, "MainMenu.gd is missing the isolated Campaign launch authority")
     if campaign_launch_match is not None:
         campaign_launch_body = campaign_launch_match.group("body")
-        ensure("_route_campaign_launch_after_accessibility_handoff()" in campaign_launch_body, errors, "Successful Campaign launch must enter the accessibility-safe route handoff")
+        ensure("_route_menu_launch_after_accessibility_handoff()" in campaign_launch_body, errors, "Successful Campaign launch must enter the shared accessibility-safe route handoff")
         ensure("AppRouter.go_to_overworld()" not in campaign_launch_body, errors, "Campaign launch must not bypass its accessibility-safe route handoff")
-    campaign_handoff_match = re.search(r"func _route_campaign_launch_after_accessibility_handoff\(\) -> void:\n(?P<body>.*?)(?=\nfunc )", main_menu_script_text, re.S)
-    ensure(campaign_handoff_match is not None, errors, "MainMenu.gd is missing the isolated Campaign accessibility route handoff")
-    if campaign_handoff_match is not None:
-        handoff_body = campaign_handoff_match.group("body")
+    menu_handoff_match = re.search(r"func _route_menu_launch_after_accessibility_handoff\(\) -> void:\n(?P<body>.*?)(?=\nfunc )", main_menu_script_text, re.S)
+    ensure(menu_handoff_match is not None, errors, "MainMenu.gd is missing the shared Campaign/Skirmish accessibility route handoff")
+    if menu_handoff_match is not None:
+        handoff_body = menu_handoff_match.group("body")
         ordered_tokens = (
             "var tree := get_tree()",
             "if tree != null and tree.is_accessibility_supported():",
@@ -14629,12 +14768,12 @@ def validate_campaign_browser(errors: list[str]) -> None:
             "AppRouter.go_to_overworld()",
         )
         positions = [handoff_body.find(token) for token in ordered_tokens]
-        ensure(min(positions) >= 0 and positions == sorted(positions), errors, "Campaign accessibility handoff must hide, publish, cross exactly two frames, remain in-tree, and route in order")
-        ensure(handoff_body.count("await tree.process_frame") == 2, errors, "Campaign accessibility handoff must cross exactly two process frames")
+        ensure(min(positions) >= 0 and positions == sorted(positions), errors, "Main Menu accessibility handoff must hide, publish, cross exactly two frames, remain in-tree, and route in order")
+        ensure(handoff_body.count("await tree.process_frame") == 2, errors, "Main Menu accessibility handoff must cross exactly two process frames")
         for forbidden_token in ("create_timer", "Timer", "call_deferred", "queue_free", "change_scene", "SessionState", "CampaignProgression"):
-            ensure(forbidden_token not in handoff_body, errors, f"Campaign accessibility handoff must not change authority or add timing/scene shortcuts via {forbidden_token}")
+            ensure(forbidden_token not in handoff_body, errors, f"Main Menu accessibility handoff must not change authority or add timing/scene shortcuts via {forbidden_token}")
     campaign_subtree_match = re.search(r"func _queue_accessibility_subtree_update\(node: Node\) -> void:\n(?P<body>.*?)(?=\nfunc )", main_menu_script_text, re.S)
-    ensure(campaign_subtree_match is not None, errors, "MainMenu.gd is missing the isolated Campaign accessibility subtree publication helper")
+    ensure(campaign_subtree_match is not None, errors, "MainMenu.gd is missing the shared launch accessibility subtree publication helper")
     if campaign_subtree_match is not None:
         subtree_body = campaign_subtree_match.group("body")
         ordered_tokens = (
@@ -14643,9 +14782,9 @@ def validate_campaign_browser(errors: list[str]) -> None:
             "_queue_accessibility_subtree_update(child)",
         )
         positions = [subtree_body.find(token) for token in ordered_tokens]
-        ensure(min(positions) >= 0 and positions == sorted(positions), errors, "Campaign accessibility handoff must publish every node in exact tree order")
+        ensure(min(positions) >= 0 and positions == sorted(positions), errors, "Main Menu accessibility handoff must publish every node in exact tree order")
         for forbidden_token in ("visible", "hide", "show", "queue_free", "remove_child", "add_child", "sort", "erase"):
-            ensure(forbidden_token not in subtree_body, errors, f"Campaign accessibility subtree publication must remain observation-only via {forbidden_token}")
+            ensure(forbidden_token not in subtree_body, errors, f"Main Menu accessibility subtree publication must remain observation-only via {forbidden_token}")
 
     campaign_disclosure_start = main_menu_script_text.find("func _set_campaign_intel_expanded")
     campaign_disclosure_end = main_menu_script_text.find("\nfunc ", campaign_disclosure_start + 1) if campaign_disclosure_start >= 0 else -1
@@ -15766,9 +15905,9 @@ def validate_native_screen_reader_semantics(errors: list[str]) -> None:
         and main_menu_text.count("func _refresh_stage_accessibility() -> void:") == 1
         and main_menu_text.count("_queue_stage_accessibility_refresh()") == 2
         and main_menu_text.count('call_deferred("_finalize_stage_accessibility")') == 1
-        and main_menu_text.count('call_deferred("_refresh_stage_accessibility")') == 5,
+        and main_menu_text.count('call_deferred("_refresh_stage_accessibility")') == 6,
         errors,
-        "Main Menu must own exactly one post-focus secondary-board accessibility chain plus exact Skirmish, Campaign-arc, Campaign-chapter, and Campaign-difficulty semantic refreshes",
+        "Main Menu must own exactly one post-focus secondary-board accessibility chain plus exact Skirmish-front, Skirmish-difficulty, Campaign-arc, Campaign-chapter, and Campaign-difficulty semantic refreshes",
     )
     if show_stage_match is not None:
         show_stage_body = show_stage_match.group("body")
@@ -15823,7 +15962,7 @@ def validate_native_screen_reader_semantics(errors: list[str]) -> None:
         finalize_stage_accessibility_body = finalize_stage_accessibility_match.group("body")
         finalize_tokens = (
             "is_inside_tree()",
-            "_stage_dock_panel.visible",
+            "_stage_dock_is_open()",
             "_menu_tabs.current_tab == TAB_SETTINGS",
             "get_viewport().gui_get_focus_owner() == _presentation_mode_picker",
             "_settings_scroll.scroll_vertical = 0",
@@ -15856,19 +15995,25 @@ def validate_native_screen_reader_semantics(errors: list[str]) -> None:
         stage_accessibility_body = stage_accessibility_match.group("body")
         ensure(
             "is_inside_tree()" in stage_accessibility_body
-            and "_stage_dock_panel.visible" in stage_accessibility_body
+            and "_stage_dock_is_open()" in stage_accessibility_body
             and stage_accessibility_body.count("UiAccessibility.refresh_tree(_stage_dock_panel)") == 1,
             errors,
             "Main Menu stage accessibility refresh must fail closed and reuse the exact live stage subtree",
         )
         ensure(
-            "queue_accessibility_update" not in stage_accessibility_body
-            and "find_child" not in stage_accessibility_body
+            "find_child" not in stage_accessibility_body
             and "find_children" not in stage_accessibility_body
             and "create_timer" not in stage_accessibility_body
-            and "await " not in stage_accessibility_body,
+            and stage_accessibility_body.count("await tree.process_frame") == 1
+            and stage_accessibility_body.count("UiAccessibility.refresh_tree(_stage_dock_panel)") == 1
+            and stage_accessibility_body.count("UiAccessibility.refresh_tree(_campaign_command_rail)") == 1
+            and stage_accessibility_body.count("UiAccessibility.refresh_tree(_skirmish_command_rail)") == 1
+            and stage_accessibility_body.count("_queue_accessibility_subtree_update(_stage_dock_panel)") == 1
+            and stage_accessibility_body.count("_queue_accessibility_subtree_update(_campaign_command_rail)") == 1
+            and stage_accessibility_body.count("_queue_accessibility_subtree_update(_skirmish_command_rail)") == 1
+            and "_queue_accessibility_subtree_update(get_window())" not in stage_accessibility_body,
             errors,
-            "Main Menu stage accessibility refresh must not use per-control lists, native calls, or timing behavior",
+            "Main Menu stage accessibility refresh must use one exact frame boundary and queue each live dock/command-rail root without whole-window discovery or timer heuristics",
         )
 
     focus_stage_entry_match = re.search(
@@ -18125,7 +18270,7 @@ def validate_main_menu_settings_focus_visibility(errors: list[str]) -> None:
         entered_body = entered_match.group(1)
         for token in (
             "is_inside_tree()",
-            "_stage_dock_panel.visible",
+            "_stage_dock_is_open()",
             "_menu_tabs.current_tab == TAB_SETTINGS",
             "_settings_scroll.is_ancestor_of(control)",
             'call_deferred("_ensure_settings_focus_control_visible", control)',
@@ -18143,7 +18288,7 @@ def validate_main_menu_settings_focus_visibility(errors: list[str]) -> None:
         queue_body = queue_match.group(1)
         for token in (
             "is_inside_tree()",
-            "_stage_dock_panel.visible",
+            "_stage_dock_is_open()",
             "_menu_tabs.current_tab == TAB_SETTINGS",
             "var control := get_viewport().gui_get_focus_owner() as Control",
             "control != null",
@@ -18165,7 +18310,7 @@ def validate_main_menu_settings_focus_visibility(errors: list[str]) -> None:
         for token in (
             "is_inside_tree()",
             "is_instance_valid(control)",
-            "_stage_dock_panel.visible",
+            "_stage_dock_is_open()",
             "_menu_tabs.current_tab == TAB_SETTINGS",
             "_settings_scroll.is_ancestor_of(control)",
             "get_viewport().gui_get_focus_owner() == control",

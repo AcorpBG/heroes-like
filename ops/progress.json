@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Campaign launch-setup native command rail slice is complete. Select the next tracker-approved source-backed release-readiness implementation slice; no whole-game or release-readiness claim is made.",
+  "currentNotes": "Completed the Main Menu Skirmish native command-rail slice with shared persistent Previous/Next Front and Launch Skirmish actions plus the exact existing difficulty picker; select the next source-backed slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "accessibility-main-menu-campaign-launch-setup-native-command-rail-10184",
-  "currentSliceId": "accessibility-main-menu-campaign-launch-setup-native-command-rail-10184",
-  "currentSliceNotes": "Completed exact Campaign-only difficulty and launch controls outside the clipped scroll body, including the accessibility subtree handoff required for stable real Linux X11/AT-SPI launch routing. Focused, compatibility, static/editor, and bounded Linux/Windows export-startup gates pass.",
+  "currentSlice": "accessibility-main-menu-skirmish-launch-setup-native-command-rail-10184",
+  "currentSliceId": "accessibility-main-menu-skirmish-launch-setup-native-command-rail-10184",
+  "currentSliceNotes": "Completed with focused 1280/1920 public actions, real Linux AT-SPI launch routing, compatibility/static/editor, and bounded Linux/Windows export-startup evidence; broader release readiness remains open.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "accessibility main menu campaign launch setup native command rail 10184",
-  "currentSliceUpdatedAt": "2026-08-20T21:14:38Z",
+  "currentSliceTitle": "accessibility main menu skirmish launch setup native command rail 10184",
+  "currentSliceUpdatedAt": "2026-08-21T02:19:09Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19897,6 +19897,62 @@
       "completedAt": "2026-08-20T10:36:12Z",
       "notes": "Completed exact zero-road runtime projection. Focused payload 40aa5303 repeats at 24313 bytes/303 objects with zero road cells and zero overlays; map/scenario validation, existing nonzero-road matrix, malformed-road API, core, repository, and bounded Linux/Windows export-startup gates pass.",
       "remainingWork": "None for this projection-only slice. Broad owner-corpus count, topology, and semantic-layout parity remains source-recovery work and was not tuned or waived.",
+      "blockedReason": null
+    },
+    {
+      "id": "accessibility-main-menu-skirmish-launch-setup-native-command-rail-10184",
+      "title": "accessibility main menu skirmish launch setup native command rail 10184",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Expose Skirmish front, difficulty, and launch as persistent native actions while preserving established selection, setup, generated-map, storage, and routing authority without duplicate controls.",
+      "implementationTargets": [
+        "scenes/menus/MainMenu.gd",
+        "scenes/menus/MainMenu.tscn",
+        "tests/player_facing_skirmish_browser_smoke.gd",
+        "tests/accessibility_screen_reader_semantics_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/player_facing_skirmish_browser_smoke.tscn",
+        "tests/player_facing_campaign_menu_smoke.tscn",
+        "tests/main_menu_keyboard_navigation_smoke.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/menu_outcome_visual_smoke.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "Persistent shared Campaign navigation buttons expose Previous/Next Front and Launch Skirmish on the Skirmish board, while the exact existing DifficultyPicker lives in one Skirmish-only root rail outside the clipped scroll body with no duplicate launch controls",
+        "Front order and adjacent no-wrap boundaries, difficulty item order and selection, setup previews, tooltips, focus, and authored launch routing remain exact; generated-map controls and authority remain unchanged",
+        "Focused 1280x720 and 1920x1080 runtime proves rail containment/no overlap, Skirmish-only visibility, public front and difficulty actions, launch handoff, and unchanged campaign/session/settings/save/generated-package authority outside established mutations",
+        "A real Linux X11/AT-SPI observer exposes and operates Next Front, the difficulty picker, Warlord, and Launch Skirmish through the accessibility-safe route handoff; Campaign, compatibility, repository/editor, and bounded Linux/Windows export-startup gates pass"
+      ],
+      "nonGoals": [
+        "duplicating or replacing existing controls, changing skirmish entries, difficulty rules, front order, generated-map setup, launch validation, focus policy, or input mappings",
+        "changing save schema, gameplay, AI, balance, Native RMG, accessibility schema, screen-reader speech behavior, campaign rules, or content",
+        "packaged Skirmish interaction, Windows UIA, controller/native hardware certification, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "1bfafa35",
+        "screen": "1280x720",
+        "observerArtifact": "/tmp/heroes-atspi-skirmish-baseline.K6sExw",
+        "controlArtifact": "/tmp/heroes-atspi-campaign-control.SNjRMv",
+        "failure": "The opened ten-node Skirmish tree exposes only the board title and hint; Previous Front, Next Front, difficulty, and Launch Skirmish are absent",
+        "control": "The Campaign control exposes its externalized navigation, Campaign Difficulty: Captain, and Start Chapter 1: Break the Pass actions",
+        "existingAuthority": "PreviousSkirmishFront/NextSkirmishFront plus MainMenu relative selection, DifficultyPicker/_on_difficulty_selected, StartSkirmish/_on_start_skirmish_pressed, and _refresh_skirmish_setup"
+      },
+      "createdAt": "2026-08-20T21:23:12Z",
+      "startedAt": "2026-08-20T21:23:12Z",
+      "updatedAt": "2026-08-21T02:19:09Z",
+      "completedAt": "2026-08-21T02:19:09Z",
+      "notes": "Completed the shipped Main Menu behavior change. Shared persistent Campaign navigation buttons become Previous/Next Front and Launch Skirmish on the Skirmish board; the existing DifficultyPicker lives in a Skirmish-only root rail. The header refresh reapplies live Skirmish setup before synchronizing shared actions, preserving disabled state and tooltip authority. Focused 1280x720/1920x1080 interaction and the accessibility report pass; real Linux X11/AT-SPI selects Next Front, Warlord, and Launch Skirmish and reaches the exact overworld session. Campaign, keyboard, menu/outcome, core, repository/editor, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup gates pass. Platform evidence does not claim packaged Skirmish interaction, Windows UIA, controller/native hardware certification, signing/publication, whole-game, or release readiness.",
+      "remainingWork": "None for this Skirmish native command-rail slice. Select the next tracker-approved source-backed release-readiness implementation slice.",
       "blockedReason": null
     },
     {
@@ -91034,7 +91090,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain. The game is not release-ready.",
-  "remainingWork": "Select the next tracker-approved source-backed release-readiness implementation slice. Native RMG work still requires exact recovered source/private-state attribution rather than final-map tuning.",
+  "remainingWork": "Select the next tracker-approved source-backed release-readiness implementation slice. Native RMG still requires recovered source/private-state attribution rather than final-map tuning.",
   "reportOnlyEvidence": [
     {
       "entries": [

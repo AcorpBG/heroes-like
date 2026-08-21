@@ -50,7 +50,10 @@ const TAB_HELP_TOPIC := {
 @onready var _stage_dock_hint_label: Label = %ActionHint
 @onready var _campaign_arc_navigation: HBoxContainer = %CampaignArcNavigation
 @onready var _campaign_chapter_navigation: HBoxContainer = %CampaignChapterNavigation
+@onready var _campaign_command_rail: Control = %CampaignCommandRail
+@onready var _skirmish_command_rail: Control = %SkirmishCommandRail
 @onready var _campaign_launch_row: HBoxContainer = %CampaignLaunchRow
+@onready var _skirmish_launch_row: HBoxContainer = %SkirmishLaunchRow
 @onready var _stage_help_button: Button = %StageHelp
 @onready var _close_stage_dock_button: Button = %CloseStageDock
 @onready var _eyebrow_label: Label = %Eyebrow
@@ -87,8 +90,8 @@ const TAB_HELP_TOPIC := {
 @onready var _start_chapter_button: Button = %StartChapter
 @onready var _campaign_restart_dialog: ConfirmationDialog = $CampaignRestartDialog
 @onready var _skirmish_list: ItemList = %SkirmishList
-@onready var _previous_skirmish_front_button: Button = %PreviousSkirmishFront
-@onready var _next_skirmish_front_button: Button = %NextSkirmishFront
+@onready var _previous_skirmish_front_button: Button = %PreviousCampaignArc
+@onready var _next_skirmish_front_button: Button = %NextCampaignArc
 @onready var _skirmish_details_label: Label = %SkirmishDetails
 @onready var _difficulty_picker: OptionButton = %DifficultyPicker
 @onready var _difficulty_summary_label: Label = %DifficultySummary
@@ -107,7 +110,7 @@ const TAB_HELP_TOPIC := {
 @onready var _skirmish_commander_portrait: HeroPortraitView = %SkirmishCommanderPortrait
 @onready var _skirmish_commander_preview_label: Label = %SkirmishCommanderPreview
 @onready var _skirmish_operational_board_label: Label = %SkirmishOperationalBoard
-@onready var _start_skirmish_button: Button = %StartSkirmish
+@onready var _start_skirmish_button: Button = %NextCampaignChapter
 @onready var _help_intro_label: Label = %HelpIntro
 @onready var _help_list: ItemList = %HelpList
 @onready var _help_details_label: Label = %HelpDetails
@@ -247,7 +250,7 @@ func _refresh_menu() -> void:
 	var buckets := {}
 	var phase_started := ProfileLogScript.begin_usec()
 	_menu_notice = AppRouter.consume_menu_notice()
-	if _stage_dock_panel.visible and _menu_tabs.current_tab == TAB_SAVES:
+	if _stage_dock_is_open() and _menu_tabs.current_tab == TAB_SAVES:
 		_rebuild_save_browser()
 	else:
 		_reset_save_browser_placeholder()
@@ -275,7 +278,7 @@ func _refresh_menu() -> void:
 	buckets["summary_commands"] = ProfileLogScript.elapsed_ms(phase_started)
 	ProfileLogScript.emit_general("menu", "refresh", "refresh_menu", ProfileLogScript.elapsed_ms(started), buckets, {
 		"current_tab": _menu_tabs.current_tab,
-		"stage_dock_visible": _stage_dock_panel.visible,
+		"stage_dock_visible": _stage_dock_is_open(),
 	}, SessionState.ensure_active_session())
 
 func _latest_continue_surface() -> Dictionary:
@@ -342,16 +345,35 @@ func _on_chapter_selected(index: int) -> Dictionary:
 	return result.duplicate(true)
 
 func _on_previous_campaign_arc_pressed() -> void:
-	_select_relative_campaign_arc(-1)
+	if _menu_tabs.current_tab == TAB_SKIRMISH:
+		_select_relative_skirmish_front(-1)
+	elif _menu_tabs.current_tab == TAB_CAMPAIGN:
+		_select_relative_campaign_arc(-1)
+	else:
+		_select_menu_tab(maxi(_menu_tabs.current_tab - 1, 0))
 
 func _on_next_campaign_arc_pressed() -> void:
-	_select_relative_campaign_arc(1)
+	if _menu_tabs.current_tab == TAB_SKIRMISH:
+		_select_relative_skirmish_front(1)
+	elif _menu_tabs.current_tab == TAB_CAMPAIGN:
+		_select_relative_campaign_arc(1)
+	else:
+		_select_menu_tab(mini(_menu_tabs.current_tab + 1, _menu_tabs.get_tab_count() - 1))
 
 func _on_previous_campaign_chapter_pressed() -> void:
-	_select_relative_campaign_chapter(-1)
+	if _menu_tabs.current_tab == TAB_SKIRMISH:
+		var selected_index := _difficulty_picker.selected
+		if selected_index > 0:
+			_difficulty_picker.select(selected_index - 1)
+			_on_difficulty_selected(selected_index - 1)
+	else:
+		_select_relative_campaign_chapter(-1)
 
 func _on_next_campaign_chapter_pressed() -> void:
-	_select_relative_campaign_chapter(1)
+	if _menu_tabs.current_tab == TAB_SKIRMISH:
+		_on_start_skirmish_pressed()
+	else:
+		_select_relative_campaign_chapter(1)
 
 func _select_relative_campaign_arc(delta: int) -> void:
 	if delta == 0 or _campaign_entries.is_empty() or _campaign_list.item_count != _campaign_entries.size():
@@ -596,10 +618,10 @@ func _launch_campaign_action(action: Dictionary) -> Dictionary:
 		"campaign_id": campaign_id,
 		"difficulty": _selected_difficulty,
 	}, session)
-	_route_campaign_launch_after_accessibility_handoff()
+	_route_menu_launch_after_accessibility_handoff()
 	return _campaign_last_mutation_result.duplicate(true)
 
-func _route_campaign_launch_after_accessibility_handoff() -> void:
+func _route_menu_launch_after_accessibility_handoff() -> void:
 	var tree := get_tree()
 	if tree != null and tree.is_accessibility_supported():
 		visible = false
@@ -626,7 +648,7 @@ func _on_open_skirmish_pressed() -> void:
 
 func _on_open_saves_pressed() -> void:
 	_toggle_stage_dock(TAB_SAVES)
-	if _stage_dock_panel.visible and _menu_tabs.current_tab == TAB_SAVES:
+	if _stage_dock_is_open() and _menu_tabs.current_tab == TAB_SAVES:
 		_ensure_save_browser_loaded()
 
 func _on_open_guide_pressed() -> void:
@@ -780,6 +802,21 @@ func _sync_skirmish_front_navigation() -> void:
 
 func _on_difficulty_selected(index: int) -> void:
 	_set_selected_difficulty_from_picker(_difficulty_picker, index)
+	_sync_skirmish_difficulty_navigation()
+	call_deferred("_refresh_stage_accessibility")
+
+func _sync_skirmish_difficulty_navigation() -> void:
+	var selected_index := _difficulty_picker.selected
+	_previous_campaign_chapter_button.text = "Previous Difficulty"
+	if _difficulty_picker.get_item_count() == 0 or selected_index < 0:
+		_previous_campaign_chapter_button.disabled = true
+		_previous_campaign_chapter_button.tooltip_text = "No Skirmish difficulty is available to select."
+		return
+	_previous_campaign_chapter_button.disabled = selected_index <= 0
+	if selected_index <= 0:
+		_previous_campaign_chapter_button.tooltip_text = "%s is the first difficulty." % _difficulty_picker.get_item_text(selected_index)
+	else:
+		_previous_campaign_chapter_button.tooltip_text = "Select the previous difficulty: %s." % _difficulty_picker.get_item_text(selected_index - 1)
 
 func _on_campaign_difficulty_selected(index: int) -> void:
 	_set_selected_difficulty_from_picker(_campaign_difficulty_picker, index)
@@ -822,7 +859,7 @@ func _on_start_skirmish_pressed() -> void:
 		"scenario_id": _selected_skirmish_id,
 		"difficulty": _selected_difficulty,
 	}, session)
-	AppRouter.go_to_overworld()
+	_route_menu_launch_after_accessibility_handoff()
 
 func _on_generated_seed_changed(new_text: String) -> void:
 	_generated_seed = new_text.strip_edges()
@@ -1271,7 +1308,7 @@ func _finish_display_change_ui(
 		call_deferred("_focus_display_change_origin")
 
 func _focus_display_change_origin() -> void:
-	if not is_inside_tree() or not _stage_dock_panel.visible or _menu_tabs.current_tab != TAB_SETTINGS:
+	if not is_inside_tree() or not _stage_dock_is_open() or _menu_tabs.current_tab != TAB_SETTINGS:
 		return
 	var target := get_node_or_null("%%%s" % String(_display_change_focus_name)) as Control
 	if target != null and target.is_visible_in_tree() and target.focus_mode != Control.FOCUS_NONE:
@@ -2234,12 +2271,12 @@ func _latest_loaded_save_summary() -> Dictionary:
 	return latest
 
 func _active_save_board_latest_summary() -> Dictionary:
-	if not _save_browser_loaded or not _stage_dock_panel.visible or _menu_tabs.current_tab != TAB_SAVES:
+	if not _save_browser_loaded or not _stage_dock_is_open() or _menu_tabs.current_tab != TAB_SAVES:
 		return {}
 	return _latest_loaded_save_summary()
 
 func _active_save_board_selected_summary() -> Dictionary:
-	if not _save_browser_loaded or not _stage_dock_panel.visible or _menu_tabs.current_tab != TAB_SAVES:
+	if not _save_browser_loaded or not _stage_dock_is_open() or _menu_tabs.current_tab != TAB_SAVES:
 		return {}
 	return _selected_summary()
 
@@ -2959,9 +2996,12 @@ func _select_menu_tab(index: int) -> void:
 	_refresh_stage_dock_header()
 	_sync_command_button_styles()
 
+func _stage_dock_is_open() -> bool:
+	return _stage_dock_panel.visible
+
 func _toggle_stage_dock(index: int) -> void:
 	var clamped_index := clampi(index, 0, maxi(_menu_tabs.get_tab_count() - 1, 0))
-	if _stage_dock_panel.visible and _menu_tabs.current_tab == clamped_index:
+	if _stage_dock_is_open() and _menu_tabs.current_tab == clamped_index:
 		_hide_stage_dock()
 		return
 	_stage_return_focus = _first_view_button_for_tab(clamped_index)
@@ -2987,7 +3027,7 @@ func _queue_stage_accessibility_refresh() -> void:
 func _finalize_stage_accessibility() -> void:
 	if (
 		is_inside_tree()
-		and _stage_dock_panel.visible
+		and _stage_dock_is_open()
 		and _menu_tabs.current_tab == TAB_SETTINGS
 		and get_viewport().gui_get_focus_owner() == _presentation_mode_picker
 	):
@@ -2995,8 +3035,17 @@ func _finalize_stage_accessibility() -> void:
 	call_deferred("_refresh_stage_accessibility")
 
 func _refresh_stage_accessibility() -> void:
-	if is_inside_tree() and _stage_dock_panel.visible:
+	var tree := get_tree()
+	if tree == null:
+		return
+	await tree.process_frame
+	if is_inside_tree() and _stage_dock_is_open():
 		UiAccessibility.refresh_tree(_stage_dock_panel)
+		UiAccessibility.refresh_tree(_campaign_command_rail)
+		UiAccessibility.refresh_tree(_skirmish_command_rail)
+		_queue_accessibility_subtree_update(_stage_dock_panel)
+		_queue_accessibility_subtree_update(_campaign_command_rail)
+		_queue_accessibility_subtree_update(_skirmish_command_rail)
 
 func _apply_stage_dock_layout() -> void:
 	var anchors := STANDARD_DOCK_ANCHORS
@@ -3011,6 +3060,8 @@ func _hide_stage_dock() -> void:
 	if SettingsService.display_change_pending() or _display_change_ui_active:
 		_revert_pending_display_change("menu_exit", false)
 	_stage_dock_panel.visible = false
+	_campaign_command_rail.visible = false
+	_skirmish_command_rail.visible = false
 	_footer_pocket_panel.visible = true
 	_refresh_summary()
 	_sync_command_button_styles()
@@ -3082,7 +3133,7 @@ func _configure_settings_focus_visibility() -> void:
 func _on_settings_focus_control_entered(control: Control) -> void:
 	if (
 		is_inside_tree()
-		and _stage_dock_panel.visible
+		and _stage_dock_is_open()
 		and _menu_tabs.current_tab == TAB_SETTINGS
 		and _settings_scroll.is_ancestor_of(control)
 	):
@@ -3091,7 +3142,7 @@ func _on_settings_focus_control_entered(control: Control) -> void:
 func _queue_current_settings_focus_visibility() -> void:
 	if (
 		is_inside_tree()
-		and _stage_dock_panel.visible
+		and _stage_dock_is_open()
 		and _menu_tabs.current_tab == TAB_SETTINGS
 	):
 		var control := get_viewport().gui_get_focus_owner() as Control
@@ -3102,7 +3153,7 @@ func _ensure_settings_focus_control_visible(control: Control) -> void:
 	if (
 		is_inside_tree()
 		and is_instance_valid(control)
-		and _stage_dock_panel.visible
+		and _stage_dock_is_open()
 		and _menu_tabs.current_tab == TAB_SETTINGS
 		and _settings_scroll.is_ancestor_of(control)
 		and get_viewport().gui_get_focus_owner() == control
@@ -3110,7 +3161,7 @@ func _ensure_settings_focus_control_visible(control: Control) -> void:
 		_settings_scroll.ensure_control_visible(control)
 
 func _focus_first_view_command() -> void:
-	if _stage_dock_panel.visible or not is_inside_tree():
+	if _stage_dock_is_open() or not is_inside_tree():
 		return
 	var focus_owner := get_viewport().gui_get_focus_owner()
 	if focus_owner == null or not is_ancestor_of(focus_owner):
@@ -3118,7 +3169,7 @@ func _focus_first_view_command() -> void:
 
 func _focus_stage_entry() -> void:
 	if (
-		not _stage_dock_panel.visible
+		not _stage_dock_is_open()
 		or not is_inside_tree()
 		or _display_change_confirmation_dialog.visible
 		or _settings_restore_defaults_dialog.visible
@@ -3143,7 +3194,7 @@ func _focus_stage_entry() -> void:
 		_queue_stage_accessibility_refresh()
 
 func _restore_first_view_focus() -> void:
-	if _stage_dock_panel.visible or not is_inside_tree():
+	if _stage_dock_is_open() or not is_inside_tree():
 		return
 	var target := _stage_return_focus if is_instance_valid(_stage_return_focus) else _open_campaign_button
 	if target != null and target.is_visible_in_tree():
@@ -3152,12 +3203,38 @@ func _restore_first_view_focus() -> void:
 func _refresh_stage_dock_header() -> void:
 	var stage_copy: Dictionary = TAB_STAGE_COPY.get(_menu_tabs.current_tab, TAB_STAGE_COPY[TAB_CAMPAIGN])
 	var campaign_navigation_visible := _menu_tabs.current_tab == TAB_CAMPAIGN
-	_stage_dock_hint_label.visible = not campaign_navigation_visible
-	_campaign_arc_navigation.visible = campaign_navigation_visible
-	_campaign_chapter_navigation.visible = campaign_navigation_visible
-	_campaign_launch_row.visible = campaign_navigation_visible
+	_stage_dock_hint_label.visible = false
+	_campaign_arc_navigation.visible = true
+	_campaign_chapter_navigation.visible = campaign_navigation_visible or _menu_tabs.current_tab == TAB_SKIRMISH
+	_campaign_command_rail.visible = _stage_dock_is_open() and _menu_tabs.current_tab == TAB_CAMPAIGN
+	_skirmish_command_rail.visible = _stage_dock_is_open() and _menu_tabs.current_tab == TAB_SKIRMISH
 	_set_compact_label(_stage_dock_title_label, String(stage_copy.get("title", "Command board")), 1, 48)
+	_stage_dock_title_label.tooltip_text = String(stage_copy.get("hint", ""))
+	_stage_dock_title_label.accessibility_description = String(stage_copy.get("hint", ""))
 	_set_compact_label(_stage_dock_hint_label, String(stage_copy.get("hint", "")), 2, 92)
+	if _menu_tabs.current_tab == TAB_CAMPAIGN:
+		_previous_campaign_arc_button.text = "Previous Arc"
+		_next_campaign_arc_button.text = "Next Arc"
+		_previous_campaign_chapter_button.text = "Previous Chapter"
+		_next_campaign_chapter_button.text = "Next Chapter"
+		_sync_campaign_native_navigation()
+	elif _menu_tabs.current_tab == TAB_SKIRMISH:
+		_previous_campaign_arc_button.text = "Previous Front"
+		_next_campaign_arc_button.text = "Next Front"
+		# The persistent chapter action is also the native Skirmish launch action.
+		# Reapply the live Skirmish setup after Campaign navigation may have changed
+		# its disabled state and tooltip while another board owned the control.
+		_refresh_skirmish_setup()
+		_sync_skirmish_front_navigation()
+		_sync_skirmish_difficulty_navigation()
+		_next_campaign_chapter_button.text = "Launch Skirmish"
+	else:
+		_previous_campaign_arc_button.text = "Previous Board"
+		_next_campaign_arc_button.text = "Next Board"
+		_previous_campaign_arc_button.disabled = _menu_tabs.current_tab <= 0
+		_next_campaign_arc_button.disabled = _menu_tabs.current_tab >= _menu_tabs.get_tab_count() - 1
+		_previous_campaign_arc_button.tooltip_text = "Open the previous Main Menu command board."
+		_next_campaign_arc_button.tooltip_text = "Open the next Main Menu command board."
 	if _menu_tabs.current_tab == TAB_GUIDE:
 		var return_copy: Dictionary = TAB_STAGE_COPY.get(_last_context_tab, TAB_STAGE_COPY[TAB_CAMPAIGN])
 		_stage_help_button.text = "Back"
@@ -3232,8 +3309,9 @@ func validation_snapshot() -> Dictionary:
 	return {
 		"scene_path": scene_file_path,
 		"music_audio": MusicAudio.validation_summary(),
-		"stage_dock_visible": _stage_dock_panel.visible,
+		"stage_dock_visible": _stage_dock_is_open(),
 		"campaign_layout": _campaign_layout_snapshot(),
+		"skirmish_layout": _skirmish_layout_snapshot(),
 		"footer_pocket_visible": _footer_pocket_panel.visible,
 		"current_tab": _menu_tabs.current_tab,
 		"first_view_command_surface": "painted_backdrop_hotspots",
@@ -3536,6 +3614,7 @@ func _campaign_layout_snapshot() -> Dictionary:
 		"operational": _campaign_operational_board_label.is_visible_in_tree(),
 		"journal": _campaign_journal_label.is_visible_in_tree(),
 	}
+
 	var control_rects := {}
 	for control in [
 		_campaign_list,
@@ -3567,6 +3646,27 @@ func _campaign_layout_snapshot() -> Dictionary:
 		"control_rects": control_rects,
 		"campaign_items": _campaign_item_rows(),
 		"chapter_items": _chapter_item_rows(),
+	}
+
+func _skirmish_layout_snapshot() -> Dictionary:
+	var viewport_size := get_viewport().get_visible_rect().size
+	var stage_rect := _stage_dock_panel.get_global_rect()
+	var control_rects := {}
+	for control in [
+		_skirmish_launch_row,
+		_previous_skirmish_front_button,
+		_next_skirmish_front_button,
+		_difficulty_picker,
+		_start_skirmish_button,
+		_skirmish_list,
+	]:
+		if control is Control and control.visible:
+			control_rects[String(control.name)] = _control_rect_snapshot(control)
+	return {
+		"viewport_size": {"x": viewport_size.x, "y": viewport_size.y},
+		"stage_rect": _rect_snapshot(stage_rect),
+		"launch_row_visible": _skirmish_launch_row.is_visible_in_tree(),
+		"control_rects": control_rects,
 	}
 
 func _campaign_item_rows() -> Array:
@@ -4055,7 +4155,7 @@ func validation_start_generated_skirmish_staged_route_to_overworld() -> Dictiona
 	return result
 
 func validation_select_resolution(resolution_id: String) -> bool:
-	if not _stage_dock_panel.visible or _menu_tabs.current_tab != TAB_SETTINGS:
+	if not _stage_dock_is_open() or _menu_tabs.current_tab != TAB_SETTINGS:
 		validation_open_settings_stage()
 	for index in range(_resolution_picker.get_item_count()):
 		if String(_resolution_picker.get_item_metadata(index)) != resolution_id:
@@ -4073,7 +4173,7 @@ func validation_select_resolution(resolution_id: String) -> bool:
 	return false
 
 func validation_select_presentation_mode(mode_id: String) -> bool:
-	if not _stage_dock_panel.visible or _menu_tabs.current_tab != TAB_SETTINGS:
+	if not _stage_dock_is_open() or _menu_tabs.current_tab != TAB_SETTINGS:
 		validation_open_settings_stage()
 	for index in range(_presentation_mode_picker.get_item_count()):
 		if String(_presentation_mode_picker.get_item_metadata(index)) != mode_id:
@@ -4352,7 +4452,7 @@ func _validation_expected_game_state_for_resume_target(resume_target: String) ->
 func validation_start_selected_skirmish() -> Dictionary:
 	var requested_scenario_id := _selected_skirmish_id
 	var requested_difficulty := _selected_difficulty
-	_on_start_skirmish_pressed()
+	_start_skirmish_button.pressed.emit()
 	var active_session := SessionState.ensure_active_session()
 	return {
 		"requested_scenario_id": requested_scenario_id,
@@ -4409,7 +4509,7 @@ func _sync_command_button_styles() -> void:
 	}
 	for tab_index in tab_buttons.keys():
 		for button in tab_buttons[tab_index]:
-			var is_active: bool = _stage_dock_panel.visible and _menu_tabs.current_tab == tab_index
+			var is_active: bool = _stage_dock_is_open() and _menu_tabs.current_tab == tab_index
 			_apply_backdrop_plaque_button(button, is_active, false)
 
 func _sync_system_command_buttons() -> void:
@@ -4483,7 +4583,7 @@ func _plaque_button_style(fill: Color, border: Color, border_width: int) -> Styl
 	return style
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_cancel") and _stage_dock_panel.visible:
+	if event.is_action_pressed("ui_cancel") and _stage_dock_is_open():
 		_hide_stage_dock()
 		get_viewport().set_input_as_handled()
 
@@ -4528,7 +4628,6 @@ func _apply_visual_theme() -> void:
 			FrontierVisualKit.apply_panel(panel, String(panel_tones.get(panel.name, "ink")))
 
 	FrontierVisualKit.apply_tab_container(_menu_tabs, "smoke")
-
 	for list in [_campaign_list, _chapter_list, _skirmish_list, _help_list, _save_list]:
 		FrontierVisualKit.apply_item_list(list, "smoke")
 
@@ -4542,8 +4641,6 @@ func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_button(_campaign_restart_button, "secondary", 136.0, 40.0, 13)
 	FrontierVisualKit.apply_button(_campaign_primary_button, "primary", 208.0, 40.0, 14)
 	FrontierVisualKit.apply_button(_start_chapter_button, "secondary", 176.0, 40.0, 14)
-	FrontierVisualKit.apply_button(_previous_skirmish_front_button, "secondary", 112.0, 32.0, 12)
-	FrontierVisualKit.apply_button(_next_skirmish_front_button, "secondary", 112.0, 32.0, 12)
 	FrontierVisualKit.apply_button(_start_skirmish_button, "primary", 188.0, 40.0, 14)
 	FrontierVisualKit.apply_button(_start_generated_skirmish_button, "primary", 176.0, 34.0, 13)
 	FrontierVisualKit.apply_button(_delete_selected_save_button, "secondary", 132.0, 38.0, 13)
