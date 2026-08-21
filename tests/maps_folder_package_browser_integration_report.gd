@@ -11,6 +11,10 @@ func _run() -> void:
 	if not ClassDB.class_exists("MapPackageService"):
 		_fail("MapPackageService native class is not available.")
 		return
+	var package_service: Variant = ClassDB.instantiate("MapPackageService")
+	if package_service == null:
+		_fail("MapPackageService native class could not be instantiated.")
+		return
 	ContentService.clear_generated_scenario_drafts()
 	var empty_index := ScenarioSelectRulesScript.maps_folder_package_index({
 		"package_dir": "user://maps-folder-package-browser-empty-%d" % Time.get_ticks_usec(),
@@ -75,6 +79,38 @@ func _run() -> void:
 		var generated_warning := _find_rejected_warning(index.get("warnings", []), package_id)
 		_cleanup_many([[map_path, scenario_path], [compact_map_path, compact_scenario_path]])
 		_fail("Generated package pair %s (%s) was rejected by maps folder index: %s" % [package_id, package_stem, JSON.stringify(generated_warning)])
+		return
+	var map_inspect: Dictionary = package_service.inspect_package(map_path)
+	var scenario_inspect: Dictionary = package_service.inspect_package(scenario_path)
+	var map_manifest: Dictionary = map_inspect.get("browser_manifest", {}) if map_inspect.get("browser_manifest", {}) is Dictionary else {}
+	var scenario_manifest: Dictionary = scenario_inspect.get("browser_manifest", {}) if scenario_inspect.get("browser_manifest", {}) is Dictionary else {}
+	var map_control: Dictionary = package_service.load_map_package(map_path)
+	var scenario_control: Dictionary = package_service.load_scenario_package(scenario_path)
+	var map_document: Variant = map_control.get("map_document", null)
+	var scenario_document: Variant = scenario_control.get("scenario_document", null)
+	var manifest_checks := {
+		"map_kind": String(map_manifest.get("document_kind", "")) == "map",
+		"map_width": int(map_manifest.get("width", 0)) == int(map_document.get_width()),
+		"map_height": int(map_manifest.get("height", 0)) == int(map_document.get_height()),
+		"map_levels": int(map_manifest.get("level_count", 0)) == int(map_document.get_level_count()),
+		"map_metadata": map_manifest.get("metadata", {}) == map_document.get_metadata(),
+		"map_ref": map_manifest.get("map_ref", {}) == map_control.get("map_ref", {}),
+		"scenario_kind": String(scenario_manifest.get("document_kind", "")) == "scenario",
+		"scenario_selection": scenario_manifest.get("selection", {}) == scenario_document.get_selection(),
+		"scenario_players": int(scenario_manifest.get("player_count", 0)) == scenario_document.get_player_slots().size(),
+		"scenario_ref": scenario_manifest.get("scenario_ref", {}) == scenario_control.get("scenario_ref", {}),
+	}
+	var manifest_exact: bool = not manifest_checks.values().has(false)
+	if not manifest_exact:
+		_cleanup_many([[map_path, scenario_path], [compact_map_path, compact_scenario_path]])
+		_fail("Native browser manifests changed full-load package authority: %s" % JSON.stringify({"checks": manifest_checks, "map": map_manifest, "scenario": scenario_manifest}))
+		return
+	var detached_manifest: Dictionary = map_manifest
+	detached_manifest["metadata"]["browser_manifest_detach_probe"] = true
+	var fresh_map_manifest: Dictionary = package_service.inspect_package(map_path).get("browser_manifest", {})
+	if bool(fresh_map_manifest.get("metadata", {}).get("browser_manifest_detach_probe", false)) or bool(indexed_entry.get("metadata", {}).get("browser_manifest_detach_probe", false)):
+		_cleanup_many([[map_path, scenario_path], [compact_map_path, compact_scenario_path]])
+		_fail("Native package browser manifest retained aliased metadata authority.")
 		return
 	if bool(indexed_entry.get("legacy_json_scenario_record", true)) or bool(indexed_entry.get("authored_json_scenarios_used", true)):
 		_cleanup_many([[map_path, scenario_path], [compact_map_path, compact_scenario_path]])
@@ -216,6 +252,8 @@ func _run() -> void:
 		"selected_entry_session_exact": true,
 		"stale_entry_rejected": true,
 		"single_read_failure_classification_exact": true,
+		"native_browser_manifest_exact": true,
+		"native_browser_manifest_detached": true,
 		"authored_json_scenarios_used": false,
 		"generated_draft_registry_used": false,
 	})])

@@ -1281,29 +1281,31 @@ static func _maps_folder_package_stems(dir: DirAccess) -> Dictionary:
 static func _maps_folder_package_record(service: Variant, package_dir: String, package_stem: String, options: Dictionary = {}) -> Dictionary:
 	var map_path := "%s/%s.amap" % [package_dir, package_stem]
 	var scenario_path := "%s/%s.ascenario" % [package_dir, package_stem]
-	var map_load: Dictionary = service.load_map_package(map_path)
-	var scenario_load: Dictionary = service.load_scenario_package(scenario_path)
-	if not bool(map_load.get("ok", false)) or not bool(scenario_load.get("ok", false)):
-		var map_inspect: Dictionary = service.inspect_package(map_path)
-		var scenario_inspect: Dictionary = service.inspect_package(scenario_path)
-		if not bool(map_inspect.get("ok", false)) or not bool(scenario_inspect.get("ok", false)):
-			return {
-				"ok": false,
-				"package_stem": package_stem,
-				"map_path": map_path,
-				"scenario_path": scenario_path,
-				"error_code": "package_inspect_failed",
-				"map_inspect": _public_package_load_result(map_inspect),
-				"scenario_inspect": _public_package_load_result(scenario_inspect),
-			}
-		if bool(map_inspect.get("legacy_json_scenario_record", true)) or bool(scenario_inspect.get("legacy_json_scenario_record", true)):
-			return {
-				"ok": false,
-				"package_stem": package_stem,
-				"map_path": map_path,
-				"scenario_path": scenario_path,
-				"error_code": "legacy_json_package_rejected",
-			}
+	var map_inspect: Dictionary = service.inspect_package(map_path)
+	var scenario_inspect: Dictionary = service.inspect_package(scenario_path)
+	if not bool(map_inspect.get("ok", false)) or not bool(scenario_inspect.get("ok", false)):
+		return {
+			"ok": false,
+			"package_stem": package_stem,
+			"map_path": map_path,
+			"scenario_path": scenario_path,
+			"error_code": "package_inspect_failed",
+			"map_inspect": _public_package_load_result(map_inspect),
+			"scenario_inspect": _public_package_load_result(scenario_inspect),
+		}
+	if bool(map_inspect.get("legacy_json_scenario_record", true)) or bool(scenario_inspect.get("legacy_json_scenario_record", true)):
+		return {
+			"ok": false,
+			"package_stem": package_stem,
+			"map_path": map_path,
+			"scenario_path": scenario_path,
+			"error_code": "legacy_json_package_rejected",
+		}
+	var map_manifest: Dictionary = map_inspect.get("browser_manifest", {}) if map_inspect.get("browser_manifest", {}) is Dictionary else {}
+	var scenario_manifest: Dictionary = scenario_inspect.get("browser_manifest", {}) if scenario_inspect.get("browser_manifest", {}) is Dictionary else {}
+	if String(map_manifest.get("document_kind", "")) != "map" or String(scenario_manifest.get("document_kind", "")) != "scenario":
+		var map_load: Dictionary = service.load_map_package(map_path)
+		var scenario_load: Dictionary = service.load_scenario_package(scenario_path)
 		return {
 			"ok": false,
 			"package_stem": package_stem,
@@ -1313,22 +1315,10 @@ static func _maps_folder_package_record(service: Variant, package_dir: String, p
 			"map_load": _public_package_load_result(map_load),
 			"scenario_load": _public_package_load_result(scenario_load),
 		}
-	var map_package: Dictionary = map_load.get("package", {}) if map_load.get("package", {}) is Dictionary else {}
-	var scenario_package: Dictionary = scenario_load.get("package", {}) if scenario_load.get("package", {}) is Dictionary else {}
-	if bool(map_package.get("legacy_json_scenario_record", true)) or bool(scenario_package.get("legacy_json_scenario_record", true)):
-		return {
-			"ok": false,
-			"package_stem": package_stem,
-			"map_path": map_path,
-			"scenario_path": scenario_path,
-			"error_code": "legacy_json_package_rejected",
-		}
-	var map_document: Variant = map_load.get("map_document", null)
-	var scenario_document: Variant = scenario_load.get("scenario_document", null)
-	var metadata := _map_document_metadata(map_document)
-	var map_ref: Dictionary = map_load.get("map_ref", {}) if map_load.get("map_ref", {}) is Dictionary else {}
-	var scenario_ref: Dictionary = scenario_load.get("scenario_ref", {}) if scenario_load.get("scenario_ref", {}) is Dictionary else {}
-	var player_count := _scenario_document_player_count(scenario_document)
+	var metadata: Dictionary = map_manifest.get("metadata", {}) if map_manifest.get("metadata", {}) is Dictionary else {}
+	var map_ref: Dictionary = map_manifest.get("map_ref", {}) if map_manifest.get("map_ref", {}) is Dictionary else {}
+	var scenario_ref: Dictionary = scenario_manifest.get("scenario_ref", {}) if scenario_manifest.get("scenario_ref", {}) is Dictionary else {}
+	var player_count := int(scenario_manifest.get("player_count", 1))
 	var source_kind := String(map_ref.get("source_kind", metadata.get("source_kind", "generated")))
 	var generated := source_kind == "generated" or source_kind.begins_with("generated_")
 	var editor_authored_copy := source_kind == "authored_legacy_scenario_conversion"
@@ -1338,8 +1328,8 @@ static func _maps_folder_package_record(service: Variant, package_dir: String, p
 				package_stem,
 				map_path,
 				scenario_path,
-				map_document,
-				scenario_document,
+				map_manifest,
+				scenario_manifest,
 				metadata,
 				map_ref,
 				scenario_ref,
@@ -1365,8 +1355,8 @@ static func _maps_folder_package_record(service: Variant, package_dir: String, p
 				package_stem,
 				map_path,
 				scenario_path,
-				map_document,
-				scenario_document,
+				map_manifest,
+				scenario_manifest,
 				metadata,
 				map_ref,
 				scenario_ref,
@@ -1386,8 +1376,8 @@ static func _maps_folder_package_record(service: Variant, package_dir: String, p
 		package_stem,
 		map_path,
 		scenario_path,
-		map_document,
-		scenario_document,
+		map_manifest,
+		scenario_manifest,
 		metadata,
 		map_ref,
 		scenario_ref,
@@ -1400,8 +1390,8 @@ static func _maps_folder_package_entry_payload(
 	package_stem: String,
 	map_path: String,
 	scenario_path: String,
-	map_document: Variant,
-	scenario_document: Variant,
+	map_manifest: Dictionary,
+	scenario_manifest: Dictionary,
 	metadata: Dictionary,
 	map_ref: Dictionary,
 	scenario_ref: Dictionary,
@@ -1409,11 +1399,12 @@ static func _maps_folder_package_entry_payload(
 	launch_validation: Dictionary,
 	launchable: bool
 ) -> Dictionary:
-	var width: int = map_document.get_width() if map_document != null else 0
-	var height: int = map_document.get_height() if map_document != null else 0
-	var level_count: int = map_document.get_level_count() if map_document != null else 1
+	var width := int(map_manifest.get("width", 0))
+	var height := int(map_manifest.get("height", 0))
+	var level_count := int(map_manifest.get("level_count", 1))
 	var package_id := maps_folder_package_id_for_stem(package_stem)
-	var display_name := _maps_folder_display_name(package_stem, metadata, scenario_document)
+	var selection: Dictionary = scenario_manifest.get("selection", {}) if scenario_manifest.get("selection", {}) is Dictionary else {}
+	var display_name := _maps_folder_display_name(package_stem, metadata, selection)
 	var source_kind := String(map_ref.get("source_kind", metadata.get("source_kind", "generated")))
 	var editor_authored_copy := source_kind == "authored_legacy_scenario_conversion"
 	var map_size_label := "%dx%d L%d" % [width, height, max(1, level_count)]
@@ -1691,15 +1682,13 @@ static func _scenario_document_player_count(scenario_document: Variant) -> int:
 			return player_slots.size()
 	return 1
 
-static func _maps_folder_display_name(package_stem: String, metadata: Dictionary, scenario_document: Variant) -> String:
+static func _maps_folder_display_name(package_stem: String, metadata: Dictionary, selection: Dictionary) -> String:
 	var candidate := String(metadata.get("display_name", metadata.get("name", ""))).strip_edges()
 	if candidate != "":
 		return candidate
-	if scenario_document != null and scenario_document.has_method("get_selection"):
-		var selection: Dictionary = scenario_document.get_selection()
-		candidate = String(selection.get("name", selection.get("label", ""))).strip_edges()
-		if candidate != "":
-			return candidate
+	candidate = String(selection.get("name", selection.get("label", ""))).strip_edges()
+	if candidate != "":
+		return candidate
 	return _title_from_package_stem(package_stem)
 
 static func _maps_folder_metadata_summary(metadata: Dictionary) -> String:

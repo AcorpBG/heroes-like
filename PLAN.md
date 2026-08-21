@@ -8628,6 +8628,37 @@ Completion evidence:
 - `/tmp/heroes-package-single-read-main-menu.jfnNrM` passes the public Main Menu flow in 53 seconds versus 66 seconds immediately before this slice, with first view 740 ms, 411 Skirmish rows, entry-owned setup, and selected-package launch 3030 ms. Map Editor Save Copy improves from 117 to 85 seconds and broad player-facing Skirmish from 180 to 136 seconds;
 - menu visual, physical keyboard navigation, screen-reader semantics, core systems, repository validation, Python compilation, JSON/diff checks, and exact/generic editor parses pass. Official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green; no packaged Skirmish interaction, certification, signing/publication, whole-game, or release-readiness claim is made.
 
+## Completed Slice: Native Package Browser Manifest
+
+id: `performance-native-package-browser-manifest-10184`
+
+Status: completed.
+
+Implementation boundary:
+- extend the existing cross-platform `MapPackageService.inspect_package` result with a bounded detached `browser_manifest` only when the package and embedded map/scenario document schemas are exact;
+- expose only the fields already consumed by maps-folder browsing: map dimensions/level count/metadata/map ref and scenario selection/player-slot count/scenario ref, while preserving every existing inspection field and failure behavior;
+- build maps-folder browser entries from the two inspection manifests and keep full package/document loading exclusively on selected Map Editor or Skirmish launch paths.
+
+Completion criteria:
+- every current generated and editor-authored package entry is whole-dictionary exact to the full-load control, while malformed/wrong-schema/legacy/non-generated/compact/unpaired behavior remains exact and selected load/session authority is unchanged;
+- the current Main Menu fixture materially improves beyond the completed 53-second single-read path, with exactly two inspections and zero full document constructions during index enumeration;
+- Linux and Windows native builds/tests remain synchronized; focused maps-folder/Main Menu/Map Editor, compatibility, static/editor, and official Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no package/document schema or file-format change, full document data exposure, Native RMG generation/parity, package validation rule, content, browser order/labels, selected load/session, cache/watcher/thread/timer, gameplay/balance/AI, or save change;
+- no packaged Skirmish interaction, controller, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- after single-read indexing, the full integration remains 344 seconds, public Main Menu 53 seconds, Map Editor Save Copy 85 seconds, and broad Skirmish 136 seconds because enumeration still constructs both complete native documents for every package pair;
+- the earlier 399-pair attribution measures inspection at 18334.484 ms versus 49375.94 ms for full document loading, establishing the source-owned remaining construction cost;
+- current `.amap`/`.ascenario` dictionaries already contain exact map/scenario refs and embedded document fields needed by `_maps_folder_package_entry_payload`; `inspect_package` parses that same root dictionary but currently discards those bounded browser fields.
+
+Completion evidence:
+- the synchronized Linux and Windows native service now returns schema-gated detached map/scenario browser manifests containing only the bounded fields consumed by package indexing; valid enumeration uses those two manifests, while invalid-manifest paths retain full-load failure authority and selected package launch still performs the full load;
+- `/tmp/heroes-native-browser-manifest-focused-final.NOL7gC` passes the exact generated/editor-authored, malformed, wrong-schema, legacy, compact, unpaired, stale, selected-session, detached-manifest, and Map Editor authority matrix in 125 seconds versus the prior 344-second single-read path;
+- `/tmp/heroes-native-browser-manifest-main-menu.vqtI9p` passes the public Main Menu flow in 32 seconds versus 53 seconds, with first view 732 ms, 411 Skirmish rows, and selected-package launch 2979 ms. Map Editor Save Copy improves 85 to 36 seconds and broad player-facing Skirmish improves 136 to 64 seconds;
+- menu visual, physical keyboard navigation, screen-reader semantics, core systems, repository validation, Python compilation, JSON/diff checks, exact/generic editor parses, and synchronized debug/release native builds pass. Official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green; no packaged Skirmish interaction, certification, signing/publication, whole-game, or release-readiness claim is made.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:
