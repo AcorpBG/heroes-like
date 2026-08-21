@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Medium seed 10 preserves payload e76c8967/79,333 bytes/1,326 objects and exact type-17 authority while subtype 0 now projects through Bogbell Croft, subtype 22 remains Cinder Kiln, and subtype 5 stays raw. Focused, compatibility, static/editor, and bounded Linux/Windows startup gates pass; broader parity and release claims remain excluded.",
+  "currentNotes": "Completed exact subtype5 row163/AVGcavl0.def projection to Roadward Lodge/Free Company Yard. Medium e76c8967/79333/1326 and ordered [0,22,5] remain exact; the three live claims total 260 gold with exact recruits, repeat rejection, save-v9 and unrelated authority. Focused, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Other subtypes, native parity, packaged interaction, certification, signing/publication, whole-game and release readiness remain excluded.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "native-rmg-runtime-basilisk-bogbell-dwelling-projection-10184",
-  "currentSliceId": "native-rmg-runtime-basilisk-bogbell-dwelling-projection-10184",
-  "currentSliceNotes": "Completed exact subtype0 row210/AVGbasl0.def projection to Bogbell Croft. Focused Medium e76c8967/79333/1326 exact; Bogbell+Cinder live claims 180 gold and exact recruits; subtype5 raw; repeats/save/unrelated authority green. Compatibility/static/editor/Linux/Windows startup gates green; broader parity/release claims excluded.",
+  "currentSlice": "native-rmg-runtime-cavalier-roadward-dwelling-projection-10184",
+  "currentSliceId": "native-rmg-runtime-cavalier-roadward-dwelling-projection-10184",
+  "currentSliceNotes": "Completed exact subtype5 row163/AVGcavl0.def projection to Roadward Lodge/Free Company Yard. Focused Medium e76c8967/79333/1326 exact with ordered [0,22,5]; Bogbell+Cinder+Roadward live claims total 260 gold and exact recruits; repeats/save-v9/unrelated authority green. Dwelling/AI/content/core, static/editor, Linux export/headless startup and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup green. Other subtypes, native parity, packaged interaction, certification, signing/publication, whole-game and release readiness remain excluded.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "native rmg runtime basilisk bogbell dwelling projection 10184",
-  "currentSliceUpdatedAt": "2026-08-21T13:56:39Z",
+  "currentSliceTitle": "native rmg runtime cavalier roadward dwelling projection 10184",
+  "currentSliceUpdatedAt": "2026-08-21T14:19:37Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -91594,6 +91594,16 @@
       "startedAt": "2026-08-21T13:58:10Z",
       "notes": "Completed exact subtype0 row210/AVGbasl0.def projection to Bogbell Croft. Focused Medium e76c8967/79333/1326 exact; Bogbell+Cinder live claims 180 gold and exact recruits; subtype5 raw; repeats/save/unrelated authority green. Compatibility/static/editor/Linux/Windows startup gates green; broader parity/release claims excluded.",
       "completedAt": "2026-08-21T14:06:20Z"
+    },
+    {
+      "id": "native-rmg-runtime-cavalier-roadward-dwelling-projection-10184",
+      "title": "native rmg runtime cavalier roadward dwelling projection 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-21T14:19:37Z",
+      "startedAt": "2026-08-21T14:08:03Z",
+      "notes": "Completed exact subtype5 row163/AVGcavl0.def projection to Roadward Lodge/Free Company Yard. Focused Medium e76c8967/79333/1326 exact with ordered [0,22,5]; Bogbell+Cinder+Roadward live claims total 260 gold and exact recruits; repeats/save-v9/unrelated authority green. Dwelling/AI/content/core, static/editor, Linux export/headless startup and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup green. Other subtypes, native parity, packaged interaction, certification, signing/publication, whole-game and release readiness remain excluded.",
+      "completedAt": "2026-08-21T14:19:37Z"
     }
   ],
   "project": "heroes-like",
@@ -92138,7 +92148,7 @@
   ],
   "summary": "Implementing exact accepted proxy-catalog identity on live-compatible Native RMG runtime mine, reward-site, and neutral-dwelling records without changing recovered generation or claiming broad parity.",
   "taskId": "10184",
-  "updatedAt": "2026-08-21T14:06:20Z",
+  "updatedAt": "2026-08-21T14:19:37Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

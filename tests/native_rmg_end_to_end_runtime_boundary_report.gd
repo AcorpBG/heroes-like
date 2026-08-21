@@ -44,6 +44,15 @@ const CREATURE_GENERATOR_ROWS := {
 		"gold": 105,
 		"recruits": {"unit_neutral_bogbell_mauls": 2, "unit_neutral_peatflare_jarriers": 1},
 	},
+	5: {
+		"source_row": 163,
+		"def_ref": "AVGcavl0.def",
+		"object_id": "object_roadward_lodge",
+		"site_id": "site_free_company_yard",
+		"catalog_id": "dwelling_creature_generator_cavalier_roadward_proxy",
+		"gold": 80,
+		"recruits": {"unit_neutral_roadwardens": 2, "unit_neutral_hearthbow_carriers": 1},
+	},
 }
 const LOOSE_RESOURCE_PRESENTATION_ROWS := [
 	{"site_id": "site_peatwax_reed_yard", "object_id": "object_marsh_peat_yard", "resource_id": "peatwax", "asset_id": "resource_pickup_peatwax", "mine_asset_id": "mapobj_marsh_peat_yard", "expected_footprint": {"width": 2, "height": 2}, "texture_path": "res://art/overworld/runtime/objects/pickups/peatwax_reed_bundle.png", "rewards": {"gold": 120, "peatwax": 1}, "current_small": false},
@@ -81,9 +90,9 @@ func _run() -> void:
 	if not bool(medium.get("ok", false)):
 		_fail("Medium public generation boundary failed: %s" % JSON.stringify(medium))
 		return
-	var medium_cinder_kiln_projection: Dictionary = _validate_medium_cinder_kiln_projection(service, medium.get("generated", {}))
-	if not bool(medium_cinder_kiln_projection.get("ok", false)):
-		_fail("Medium Cinder Kiln dwelling projection failed: %s" % JSON.stringify(medium_cinder_kiln_projection))
+	var medium_creature_generator_projection: Dictionary = _validate_medium_creature_generator_projection(service, medium.get("generated", {}))
+	if not bool(medium_creature_generator_projection.get("ok", false)):
+		_fail("Medium Creature Generator dwelling projection failed: %s" % JSON.stringify(medium_creature_generator_projection))
 		return
 	var medium_guard_projection := _validate_guard_control_projection(medium.get("generated", {}))
 	if not bool(medium_guard_projection.get("ok", false)):
@@ -146,7 +155,7 @@ func _run() -> void:
 		"zero_road_projection": zero_road_projection,
 		"live_proxy_projection": live_proxy_projection,
 		"medium": medium.get("summary", {}),
-		"medium_cinder_kiln_projection": medium_cinder_kiln_projection,
+		"medium_creature_generator_projection": medium_creature_generator_projection,
 		"medium_guard_projection": medium_guard_projection,
 		"medium_guard_live_behavior": medium_guard_live_behavior,
 		"medium_ordinal_95": ordinal_95.get("summary", {}),
@@ -611,7 +620,7 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 		"exact_repeat": exact_repeat,
 	}
 
-func _validate_medium_cinder_kiln_projection(service: Variant, generated: Dictionary) -> Dictionary:
+func _validate_medium_creature_generator_projection(service: Variant, generated: Dictionary) -> Dictionary:
 	var map_document: Variant = generated.get("map_document", null)
 	if map_document == null:
 		return {"ok": false, "reason": "missing_medium_map_document"}
@@ -655,7 +664,7 @@ func _validate_medium_cinder_kiln_projection(service: Variant, generated: Dictio
 				or object.get("action_tiles", []) != [] \
 				or not bool(object.get("blocking_body", false)):
 			rows_exact = false
-		if subtype in [0, 22]:
+		if subtype in [0, 22, 5]:
 			var expected_dwelling: Dictionary = CREATURE_GENERATOR_ROWS.get(subtype, {})
 			if String(object.get("kind", "")) != "neutral_dwelling" \
 					or String(object.get("object_id", "")) != String(expected_dwelling.get("object_id", "")) \
@@ -674,7 +683,7 @@ func _validate_medium_cinder_kiln_projection(service: Variant, generated: Dictio
 				or String(object.get("homm3_re_object_def_ref", "")) != "" \
 				or String(object.get("homm3_re_reward_object_catalog_id", "")) != "":
 			rows_exact = false
-	var repeat: Dictionary = service.generate_random_map(_config("medium", 72, 1, "land", "10"), {"startup_path": "medium_cinder_kiln_projection_repeat"})
+	var repeat: Dictionary = service.generate_random_map(_config("medium", 72, 1, "land", "10"), {"startup_path": "medium_creature_generator_projection_repeat"})
 	var repeat_map: Variant = repeat.get("map_document", null)
 	var repeat_type17_authority: Array[Dictionary] = []
 	if repeat_map != null:
@@ -688,7 +697,7 @@ func _validate_medium_cinder_kiln_projection(service: Variant, generated: Dictio
 			and int(repeat.get("runtime_object_count", -1)) == int(generated.get("runtime_object_count", -2)) \
 			and repeat_type17_authority == type17_authority
 	var adoption: Dictionary = service.convert_generated_payload(generated, {"feature_gate": REPORT_ID})
-	var interaction: Dictionary = _validate_creature_generator_interaction(adoption, [0, 22])
+	var interaction: Dictionary = _validate_creature_generator_interaction(adoption, [0, 22, 5])
 	return {
 		"ok": String(generated.get("final_payload_fnv1a32", "")) == "e76c8967" \
 				and int(generated.get("final_payload_byte_count", -1)) == 79333 \

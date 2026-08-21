@@ -44704,9 +44704,10 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             52: (190, "AVGlich0.def", "object_lantern_warren", "dwelling_creature_generator_lich_lantern_proxy"),
             22: (180, "AVGgogs0.def", "object_cinder_kiln", "dwelling_creature_generator_gog_cinder_kiln_proxy"),
             0: (210, "AVGbasl0.def", "object_bogbell_croft", "dwelling_creature_generator_basilisk_bogbell_proxy"),
+            5: (163, "AVGcavl0.def", "object_roadward_lodge", "dwelling_creature_generator_cavalier_roadward_proxy"),
         }
         type17_entries = [entry for entry in proxy_entries if isinstance(entry, dict) and int(entry.get("homm3_re_object_type_id", -1)) == 17]
-        ensure(len(type17_entries) == 4, errors, "H3M Creature Generator proxy catalog must contain exactly the four selected recovered rows")
+        ensure(len(type17_entries) == 5, errors, "H3M Creature Generator proxy catalog must contain exactly the five selected recovered rows")
         for subtype, expected in expected_creature_generator_proxies.items():
             rows = [entry for entry in type17_entries if int(entry.get("homm3_re_object_subtype", -1)) == subtype]
             ensure(len(rows) == 1, errors, f"H3M Creature Generator subtype {subtype} must have exactly one proxy row")
@@ -44740,6 +44741,7 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             "object_lantern_warren": ("site_lantern_warren", {"gold": 90}, {"unit_neutral_tunnel_lanterns": 2, "unit_neutral_glimmercap_needlers": 1}),
             "object_cinder_kiln": ("site_cinder_kiln", {"gold": 75}, {"unit_neutral_kilnward_mallets": 2, "unit_neutral_cinderpot_hurlers": 1}),
             "object_bogbell_croft": ("site_bogbell_croft", {"gold": 105}, {"unit_neutral_bogbell_mauls": 2, "unit_neutral_peatflare_jarriers": 1}),
+            "object_roadward_lodge": ("site_free_company_yard", {"gold": 80}, {"unit_neutral_roadwardens": 2, "unit_neutral_hearthbow_carriers": 1}),
         }
         for object_id, expected in expected_live_dwellings.items():
             map_object = map_objects_by_id.get(object_id, {})
@@ -44764,6 +44766,7 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             )
         recovered_object_catalog_text = (ROOT / "src/gdextension/src/h3maped_rmg_object_catalog.cpp").read_text(encoding="utf-8")
         for recovered_row in (
+            '{ 163, "objects.txt", "AVGcavl0.def", 17, "Creature Generator 1", 17, 5,',
             '{ 180, "objects.txt", "AVGgogs0.def", 17, "Creature Generator 1", 17, 22,',
             '{ 190, "objects.txt", "AVGlich0.def", 17, "Creature Generator 1", 17, 52,',
             '{ 210, "objects.txt", "AVGbasl0.def", 17, "Creature Generator 1", 17, 0,',
@@ -45046,6 +45049,13 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             '"site_id": "site_bogbell_croft",',
             '"catalog_id": "dwelling_creature_generator_basilisk_bogbell_proxy",',
             '"recruits": {"unit_neutral_bogbell_mauls": 2, "unit_neutral_peatflare_jarriers": 1}',
+            '5: {',
+            '"source_row": 163,',
+            '"def_ref": "AVGcavl0.def",',
+            '"object_id": "object_roadward_lodge",',
+            '"site_id": "site_free_company_yard",',
+            '"catalog_id": "dwelling_creature_generator_cavalier_roadward_proxy",',
+            '"recruits": {"unit_neutral_roadwardens": 2, "unit_neutral_hearthbow_carriers": 1}',
             'elif type_id == 17:',
             'creature_generator_placement_ids[String(object.get("placement_id", ""))] = true',
             'or String(object.get("kind", "")) != "neutral_dwelling"',
@@ -45197,11 +45207,11 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             'and session.to_dict() == session_authority_before',
             'func _live_proxy_provenance_exact(object: Dictionary) -> bool:',
             'func _proxy_projection_object_authority(object: Dictionary) -> Dictionary:',
-            'var medium_cinder_kiln_projection: Dictionary = _validate_medium_cinder_kiln_projection(service, medium.get("generated", {}))',
-            'func _validate_medium_cinder_kiln_projection(service: Variant, generated: Dictionary) -> Dictionary:',
+            'var medium_creature_generator_projection: Dictionary = _validate_medium_creature_generator_projection(service, medium.get("generated", {}))',
+            'func _validate_medium_creature_generator_projection(service: Variant, generated: Dictionary) -> Dictionary:',
             '"placement_id": "native_h3maped_e76c8967_object_1208"',
             'and ordered_subtypes == [0, 22, 5]',
-            'var interaction: Dictionary = _validate_creature_generator_interaction(adoption, [0, 22])',
+            'var interaction: Dictionary = _validate_creature_generator_interaction(adoption, [0, 22, 5])',
             '_validate_guard_control_projection(medium.get("generated", {}))',
             "func _validate_guard_control_projection(generated: Dictionary) -> Dictionary:",
             'if String(object.get("kind", "")) != "guard":',
@@ -45266,7 +45276,7 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
         ensure(proxy_projection_block.find('spell_scroll_placement_ids[String(object.get("placement_id", ""))] = true') < proxy_projection_block.find('spell_scroll_placement_ids.has(String(node.get("placement_id", "")))') < proxy_projection_block.find("_collect_resource_node_result(session, scroll_result, false)"), errors, "Native live Spell Scroll owner must correlate exact projection through package adoption before collection")
         ensure(proxy_projection_block.find('spell_scroll_presentation = await _validate_spell_scroll_presentation(session, scroll_node)') < proxy_projection_block.find("_collect_resource_node_result(session, scroll_result, false)"), errors, "Native live Spell Scroll owner must validate the exact uncollected generated node presentation before collection")
         ensure(proxy_projection_block.find('var resource_nodes_before: Array = session.overworld.get("resource_nodes", []).duplicate(true)') < proxy_projection_block.find("_collect_resource_node_result(session, scroll_result, false)") < proxy_projection_block.find('var repeat_claim: Dictionary = OverworldRulesScript._collect_resource_node_result'), errors, "Native live Spell Scroll owner must bracket real collection with detached authority and repeat rejection")
-        medium_dwelling_start = native_rmg_runtime_boundary_text.find("func _validate_medium_cinder_kiln_projection(")
+        medium_dwelling_start = native_rmg_runtime_boundary_text.find("func _validate_medium_creature_generator_projection(")
         medium_dwelling_end = native_rmg_runtime_boundary_text.find("func _validate_creature_generator_interaction(", medium_dwelling_start)
         medium_dwelling_block = native_rmg_runtime_boundary_text[medium_dwelling_start:medium_dwelling_end]
         ensure(
@@ -45275,12 +45285,12 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             < medium_dwelling_block.find('22: {')
             < medium_dwelling_block.find('5: {')
             < medium_dwelling_block.find('if int(object.get("h3m_type_id", -1)) != 17:')
-            < medium_dwelling_block.find('if subtype in [0, 22]:')
+            < medium_dwelling_block.find('if subtype in [0, 22, 5]:')
             < medium_dwelling_block.find('elif String(object.get("kind", "")) != "h3m_object"')
             < medium_dwelling_block.find('service.generate_random_map(_config("medium", 72, 1, "land", "10"),')
             < medium_dwelling_block.find('repeat_type17_authority == type17_authority')
             < medium_dwelling_block.find('service.convert_generated_payload(generated, {"feature_gate": REPORT_ID})')
-            < medium_dwelling_block.find('_validate_creature_generator_interaction(adoption, [0, 22])')
+            < medium_dwelling_block.find('_validate_creature_generator_interaction(adoption, [0, 22, 5])')
             < medium_dwelling_block.find('and ordered_subtypes == [0, 22, 5]')
             < medium_dwelling_block.find('and bool(interaction.get("ok", false))'),
             errors,
@@ -45307,13 +45317,12 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             'session.overworld[',
             'sort()',
             'sort_custom',
-            'AVGcavl0.def',
         ):
             ensure(forbidden_token not in medium_dwelling_block, errors, f"Medium Cinder Kiln owner must remain an exact read-only projection/interaction oracle: {forbidden_token}")
-        ensure(native_rmg_runtime_boundary_text.count("_validate_medium_cinder_kiln_projection(") == 2, errors, "Medium Cinder Kiln projection must have one owner call and one definition")
+        ensure(native_rmg_runtime_boundary_text.count("_validate_medium_creature_generator_projection(") == 2, errors, "Medium Creature Generator projection must have one owner call and one definition")
         ensure(
             native_rmg_runtime_boundary_text.find('var medium := _generate_and_validate(')
-            < native_rmg_runtime_boundary_text.find('var medium_cinder_kiln_projection: Dictionary = _validate_medium_cinder_kiln_projection(')
+            < native_rmg_runtime_boundary_text.find('var medium_creature_generator_projection: Dictionary = _validate_medium_creature_generator_projection(')
             < native_rmg_runtime_boundary_text.find('var medium_guard_projection := _validate_guard_control_projection('),
             errors,
             "Medium Cinder Kiln projection must validate the authoritative generated package before existing guard consumers",

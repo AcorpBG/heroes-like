@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `native-rmg-runtime-cavalier-roadward-dwelling-projection-10184`. Fixed Medium seed 10 remains payload `e76c8967`/79,333 bytes/1,326 objects with exact type-17 order, placement, and masks; subtype 5 now uses the original Roadward Lodge/Free Company Yard contract alongside Bogbell and Cinder. The three live claims grant exactly 260 gold plus their original recruits, persist control, reject repeats, round-trip save v9, and preserve unrelated authority. Focused, compatibility, static/editor, and bounded Linux/Windows export-startup gates pass. Other subtypes, native parity, packaged interaction, certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
+  id: `native-rmg-runtime-cavalier-roadward-dwelling-projection-10184`
 - Completed implementation slice: `native-rmg-runtime-basilisk-bogbell-dwelling-projection-10184`. Medium seed 10 remains payload `e76c8967`/79,333 bytes/1,326 objects with exact type-17 order/placements/masks; subtype 0 now uses the original Bogbell Croft, subtype 22 remains Cinder Kiln, and subtype 5 stays raw. Exact live claims total 180 gold and the two existing dwelling recruit contracts, with persistent control, repeat rejection, save-v9 and unrelated authority exact. Focused, compatibility, static/editor, and bounded Linux/Windows export-startup gates pass. Other subtypes, native parity, packaged interaction, certification, signing/publication, whole-game and release readiness remain unclaimed. Select the next tracker-approved RMG-only slice.
   id: `native-rmg-runtime-basilisk-bogbell-dwelling-projection-10184`
 - Completed implementation slice: `native-rmg-runtime-gog-cinder-kiln-dwelling-projection-10184`. Fixed Medium seed 10 retains payload `e76c8967`, 79,333 bytes, 1,326 ordered objects, and its exact type-17 row order/placement/masks while recovered subtype 22/source row 180/`AVGgogs0.def` now projects through the existing original Cinder Kiln neutral dwelling. Subtypes 0/5 remain raw and fail-closed. The live claim grants exactly 75 gold plus 2 Kilnward Mallets/1 Cinderpot Hurler, persists player control, rejects the repeat without mutation, and round-trips through save version 9 with unrelated authority exact. Focused, dwelling/AI/content/core, repository/editor, and bounded Linux/Windows export-startup gates pass. No other subtype, generation/parity, imported H3 identity, balance, packaged interaction, certification, signing/publication, whole-game, or release-readiness claim. Select the next tracker-approved RMG-only source-backed slice.
@@ -7953,6 +7955,33 @@ Completion evidence:
 - `/tmp/heroes-spell-scroll-focused.Q5GPQb` is natural rc0 and proves the sole exact type-93 row and live scroll node, `spell_beacon_path` as the only known-spell delta, exact resources/artifacts/army/other nodes, repeat rejection, session round trip, repeated generation authority, and unchanged Small/Medium/ordinal-95/Extra-Large payload/object/guard/package/save/startup gates;
 - `/tmp/heroes-spell-scroll-core.r7WCx5` records core rc0; JSON, repository validation, Python compilation, diff checks, and exact/generic editor parses pass;
 - `/tmp/heroes-spell-scroll-linux-package.zpi2sS` and `/tmp/heroes-spell-scroll-windows-package.CUKi63` wrapper artifacts plus the official report JSON files record Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup green. These are export/startup claims only; no packaged scroll interaction is claimed.
+
+## Completed Slice: Native RMG Cavalier Roadward Dwelling Projection
+
+id: `native-rmg-runtime-cavalier-roadward-dwelling-projection-10184`
+
+Status: completed.
+
+Implementation boundary:
+- add exactly type-17 subtype 5/source row 163/`AVGcavl0.def` to the proxy catalog as existing `object_roadward_lodge`, deriving `site_free_company_yard` through the unchanged bridge;
+- preserve native payload, generation, object order/placement/masks, subtype 0/22/52/59 mappings, and all unrelated live/save authority.
+
+Completion criteria:
+- Medium seed 10 remains `e76c8967`/79,333 bytes/1,326 objects and exact `[0,22,5]` authority, with all three rows mapped to Bogbell, Cinder, and Roadward respectively;
+- live claims total exactly 260 gold and the three existing dwelling recruit contracts, persist control, reject repeats, save-v9 round-trip, and preserve unrelated/package authority;
+- Small, ordinal-95, XLarge, dwelling/AI/content/core, static/editor, and bounded Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no other subtype/Creature Bank, generation/private-state/parity, new/imported content, rebalance, broad proxy policy, packaged interaction, certification, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- pushed HEAD `785c3742` keeps subtype 5 raw at `native_h3maped_e76c8967_object_1322`, primary 21,63/body 20,63+21,63; recovered catalog uniquely identifies row 163/`AVGcavl0.def`;
+- existing `object_roadward_lodge` derives live `site_free_company_yard`, a road-control blocking-visitable persistent dwelling with original 80-gold, 2 Roadwarden/1 Hearthbow claim, AI, rendering, and save behavior.
+
+Completion evidence:
+- `/tmp/heroes-roadward-focused.H7uAip` is natural rc0 with one `ok:true` report and proves payload `e76c8967`/79,333 bytes/1,326 objects, ordered subtypes `[0,22,5]`, exact Roadward projection, all three original dwelling claims totaling 260 gold, six exact recruit deltas, persistent control, repeat rejection, save-v9 round trip, and unchanged unrelated/package authority;
+- `/tmp/heroes-roadward-compat.ekmvMb` records natural rc0 for dwelling reward execution, AI site control, faction content breadth, and core systems, with no unexpected diagnostics;
+- repository validation, Python compilation, JSON, scoped/global diff checks, and exact/generic editor parses pass; official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup reports are `ok:true`. These are export/startup claims only, not packaged Roadward interaction or native parity.
 
 ## Completed Slice: Native RMG Basilisk Bogbell Dwelling Projection
 
