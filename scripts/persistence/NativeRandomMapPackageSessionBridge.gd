@@ -59,7 +59,11 @@ static func build_session_from_adoption(
 	var towns := _town_states_from_document(map_document)
 	var resource_nodes := _resource_nodes_from_document(map_document)
 	var artifact_nodes := _artifact_nodes_from_document(map_document)
-	var encounters := _ensure_generated_rare_source_guards(resource_nodes, _encounters_from_document(map_document))
+	var encounters := _ensure_generated_guarded_reward_site_guards(
+		resource_nodes,
+		_ensure_generated_rare_source_guards(resource_nodes, _encounters_from_document(map_document)),
+		map_size
+	)
 	var map_objects := _map_objects_from_document(map_document)
 	var package_source_object_ids := []
 	var package_source_objects_by_id := {}
@@ -445,6 +449,110 @@ static func _ensure_generated_rare_source_guards(resource_nodes: Array, encounte
 		if _resource_node_has_linked_guard(result, node):
 			continue
 		result.append(_supplemental_rare_source_guard(node))
+	return result
+
+static func _ensure_generated_guarded_reward_site_guards(resource_nodes: Array, encounters: Array, map_size: Variant) -> Array:
+	var result := encounters.duplicate(true)
+	for node_value in resource_nodes:
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		var site := ContentService.get_resource_site(String(node.get("site_id", "")))
+		if not _generated_guarded_reward_site_contract_is_live(site):
+			continue
+		if _resource_node_has_linked_guard(result, node):
+			continue
+		var guard := _supplemental_guarded_reward_site_guard(node, site, map_size)
+		if not guard.is_empty():
+			result.append(guard)
+	return result
+
+static func _generated_guarded_reward_site_contract_is_live(site: Dictionary) -> bool:
+	if site.is_empty() or String(site.get("family", "")) != "guarded_reward_site":
+		return false
+	var runtime_boundary: Dictionary = site.get("runtime_boundary", {}) if site.get("runtime_boundary", {}) is Dictionary else {}
+	var contract: Dictionary = site.get("guarded_reward_contract", {}) if site.get("guarded_reward_contract", {}) is Dictionary else {}
+	var guard_profile: Dictionary = site.get("guard_profile", {}) if site.get("guard_profile", {}) is Dictionary else {}
+	var encounter_id := String(contract.get("guard_encounter_id", "")).strip_edges()
+	var army_group_id := String(contract.get("guard_army_group_id", "")).strip_edges()
+	return bool(runtime_boundary.get("guard_resolution_runtime_adopted", false)) \
+		and bool(contract.get("runtime_guard_resolution_adopted", false)) \
+		and not bool(contract.get("metadata_only_guard_contract", true)) \
+		and bool(contract.get("clear_required_for_reward", false)) \
+		and bool(guard_profile.get("runtime_guard_resolution_adopted", false)) \
+		and not bool(guard_profile.get("metadata_only", true)) \
+		and encounter_id != "" \
+		and army_group_id != "" \
+		and not ContentService.get_encounter(encounter_id).is_empty() \
+		and not ContentService.get_army_group(army_group_id).is_empty()
+
+static func _supplemental_guarded_reward_site_guard(node: Dictionary, site: Dictionary, map_size: Variant) -> Dictionary:
+	var placement_id := String(node.get("placement_id", "")).strip_edges()
+	var site_id := String(site.get("id", node.get("site_id", ""))).strip_edges()
+	var contract: Dictionary = site.get("guarded_reward_contract", {}) if site.get("guarded_reward_contract", {}) is Dictionary else {}
+	if placement_id == "" or site_id == "" or String(contract.get("resource_site_id", "")) != site_id:
+		return {}
+	var encounter_id := String(contract.get("guard_encounter_id", "")).strip_edges()
+	var army_group_id := String(contract.get("guard_army_group_id", "")).strip_edges()
+	var visit_tiles: Array = node.get("package_visit_tiles", []) if node.get("package_visit_tiles", []) is Array else []
+	if visit_tiles.is_empty():
+		return {}
+	var visit_tile: Dictionary = visit_tiles[0].duplicate(true) if visit_tiles[0] is Dictionary else {}
+	if visit_tile.is_empty():
+		return {}
+	var level := int(visit_tile.get("level", node.get("level", 0)))
+	visit_tile["level"] = level
+	var engagement_tiles := _generated_guarded_reward_engagement_tiles(visit_tile, map_size)
+	if engagement_tiles.is_empty():
+		return {}
+	var body_tiles: Array = node.get("package_body_tiles", []) if node.get("package_body_tiles", []) is Array else []
+	var guard_link := {
+		"guard_role": "guards_resource_site",
+		"target_kind": "resource_node",
+		"target_id": site_id,
+		"target_placement_id": placement_id,
+		"blocks_approach": true,
+		"clear_required_for_target": true,
+		"guard_army_group_id": army_group_id,
+		"guard_encounter_id": encounter_id,
+		"source": "generated_package_live_guarded_reward_contract",
+		"target_body_tiles": body_tiles.duplicate(true),
+		"target_visit_tiles": visit_tiles.duplicate(true),
+	}
+	return {
+		"placement_id": "generated_guarded_reward_%s" % placement_id,
+		"kind": "guard",
+		"package_kind": "guard",
+		"encounter_id": encounter_id,
+		"object_id": encounter_id,
+		"enemy_group_id": army_group_id,
+		"generated_package_guard_policy": "live_guarded_reward_contract",
+		"target_kind": "resource",
+		"target_placement_id": placement_id,
+		"guard_link": guard_link,
+		"x": int(visit_tile.get("x", node.get("x", 0))),
+		"y": int(visit_tile.get("y", node.get("y", 0))),
+		"level": level,
+		"primary_tile": visit_tile.duplicate(true),
+		"body_tiles": [visit_tile.duplicate(true)],
+		"package_body_tiles": [visit_tile.duplicate(true)],
+		"package_block_tiles": [],
+		"package_visit_tiles": [visit_tile.duplicate(true)],
+		"visit_tile": visit_tile.duplicate(true),
+		"blocking_body": false,
+		"passability_class": "neutral_stack_blocking",
+		"package_guard_engagement_tiles": engagement_tiles,
+		"package_guard_engagement_tile_count": engagement_tiles.size(),
+	}
+
+static func _generated_guarded_reward_engagement_tiles(visit_tile: Dictionary, map_size: Variant) -> Array:
+	var center := Vector2i(int(visit_tile.get("x", -1)), int(visit_tile.get("y", -1)))
+	if not _generated_source_in_bounds(center, map_size):
+		return []
+	var result := [{"x": center.x, "y": center.y, "level": int(visit_tile.get("level", 0))}]
+	for neighbor in _generated_source_route_neighbors(center):
+		if _generated_source_in_bounds(neighbor, map_size):
+			result.append({"x": neighbor.x, "y": neighbor.y, "level": int(visit_tile.get("level", 0))})
 	return result
 
 static func _generated_resource_node_is_rare_source(node: Dictionary) -> bool:

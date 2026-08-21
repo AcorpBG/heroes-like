@@ -270,6 +270,25 @@
       "native_artifact_id": "artifact_bastion_gorget"
     },
     {
+      "id": "reward_creature_bank_drowned_reliquary_proxy",
+      "generated_kind": "resource_site",
+      "reward_value_tiers": ["major"],
+      "source_kind": "homm3_re_reward_object_type",
+      "source_catalog_kind": "objects_txt_type_row",
+      "homm3_re_object_type_id": 16,
+      "homm3_re_object_type_name": "Creature Bank",
+      "homm3_re_object_subtype": 4,
+      "homm3_re_object_source_row": 1118,
+      "homm3_re_object_def_ref": "AVXbnk50.def",
+      "homm3_re_reward_table_bucket": "high_guarded_creature_bank",
+      "semantic_category": "guarded_reward_site",
+      "proxy_bucket": "major_guarded_cache",
+      "native_proxy_family": "guarded_reward_site",
+      "native_proxy_category": "resource_and_artifact",
+      "native_proxy_object_id": "object_drowned_reliquary",
+      "native_proxy_site_id": "site_drowned_reliquary"
+    },
+    {
       "id": "reward_random_treasure_artifact_minor_proxy",
       "generated_kind": "reward_reference",
       "reward_value_tiers": ["minor"],
