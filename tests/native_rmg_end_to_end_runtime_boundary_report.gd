@@ -80,6 +80,15 @@ const CREATURE_GENERATOR_ROWS := {
 		"gold": 90,
 		"recruits": {"unit_neutral_scarshield_veterans": 2, "unit_neutral_ashdart_stalkers": 1},
 	},
+	29: {
+		"source_row": 179,
+		"def_ref": "AVGimp0.def",
+		"object_id": "object_charcoal_burners",
+		"site_id": "site_charcoal_burners",
+		"catalog_id": "dwelling_creature_generator_imp_charcoal_burners_proxy",
+		"gold": 90,
+		"recruits": {"unit_neutral_charcoal_mauls": 2, "unit_neutral_emberpack_lobbers": 1},
+	},
 }
 const LOOSE_RESOURCE_PRESENTATION_ROWS := [
 	{"site_id": "site_peatwax_reed_yard", "object_id": "object_marsh_peat_yard", "resource_id": "peatwax", "asset_id": "resource_pickup_peatwax", "mine_asset_id": "mapobj_marsh_peat_yard", "expected_footprint": {"width": 2, "height": 2}, "texture_path": "res://art/overworld/runtime/objects/pickups/peatwax_reed_bundle.png", "rewards": {"gold": 120, "peatwax": 1}, "current_small": false},
@@ -789,7 +798,7 @@ func _validate_xlarge_creature_generator_projection(service: Variant, generated:
 				or object.get("action_tiles", []) != [] \
 				or not bool(object.get("blocking_body", false)):
 			rows_exact = false
-		if subtype in [26, 40, 50]:
+		if subtype in [29, 26, 40, 50]:
 			var expected_dwelling: Dictionary = CREATURE_GENERATOR_ROWS.get(subtype, {})
 			if String(object.get("kind", "")) != "neutral_dwelling" \
 					or String(object.get("object_id", "")) != String(expected_dwelling.get("object_id", "")) \
@@ -822,7 +831,7 @@ func _validate_xlarge_creature_generator_projection(service: Variant, generated:
 			and int(repeat.get("runtime_object_count", -1)) == int(generated.get("runtime_object_count", -2)) \
 			and repeat_type17_authority == type17_authority
 	var adoption: Dictionary = service.convert_generated_payload(generated, {"feature_gate": REPORT_ID})
-	var interaction: Dictionary = _validate_creature_generator_interaction(adoption, [26, 40, 50])
+	var interaction: Dictionary = _validate_creature_generator_interaction(adoption, [29, 26, 40, 50])
 	return {
 		"ok": String(generated.get("final_payload_fnv1a32", "")) == "33610c0a" \
 				and int(generated.get("final_payload_byte_count", -1)) == 365777 \

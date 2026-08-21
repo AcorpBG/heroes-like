@@ -44708,9 +44708,10 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             50: (168, "AVGpega0.def", "object_kite_signal_eyrie", "dwelling_creature_generator_pegasus_kite_signal_eyrie_proxy"),
             26: (194, "AVGharp0.def", "object_cliffhawk_roost", "dwelling_creature_generator_harpy_cliffhawk_roost_proxy"),
             40: (183, "AVGpit0.def", "object_obsidian_scar", "dwelling_creature_generator_pit_lord_obsidian_scar_proxy"),
+            29: (179, "AVGimp0.def", "object_charcoal_burners", "dwelling_creature_generator_imp_charcoal_burners_proxy"),
         }
         type17_entries = [entry for entry in proxy_entries if isinstance(entry, dict) and int(entry.get("homm3_re_object_type_id", -1)) == 17]
-        ensure(len(type17_entries) == 8, errors, "H3M Creature Generator proxy catalog must contain exactly the eight selected recovered rows")
+        ensure(len(type17_entries) == 9, errors, "H3M Creature Generator proxy catalog must contain exactly the nine selected recovered rows")
         for subtype, expected in expected_creature_generator_proxies.items():
             rows = [entry for entry in type17_entries if int(entry.get("homm3_re_object_subtype", -1)) == subtype]
             ensure(len(rows) == 1, errors, f"H3M Creature Generator subtype {subtype} must have exactly one proxy row")
@@ -44748,6 +44749,7 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             "object_kite_signal_eyrie": ("site_kite_signal_eyrie", {"gold": 75}, {"unit_neutral_kitehook_runners": 2, "unit_neutral_ridgeflare_shots": 1}),
             "object_cliffhawk_roost": ("site_cliffhawk_roost", {"gold": 75}, {"unit_neutral_cliffhawk_wardens": 2, "unit_neutral_windglass_slingers": 1}),
             "object_obsidian_scar": ("site_obsidian_scar", {"gold": 90}, {"unit_neutral_scarshield_veterans": 2, "unit_neutral_ashdart_stalkers": 1}),
+            "object_charcoal_burners": ("site_charcoal_burners", {"gold": 90}, {"unit_neutral_charcoal_mauls": 2, "unit_neutral_emberpack_lobbers": 1}),
         }
         for object_id, expected in expected_live_dwellings.items():
             map_object = map_objects_by_id.get(object_id, {})
@@ -44774,6 +44776,7 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
         for recovered_row in (
             '{ 163, "objects.txt", "AVGcavl0.def", 17, "Creature Generator 1", 17, 5,',
             '{ 168, "objects.txt", "AVGpega0.def", 17, "Creature Generator 1", 17, 50,',
+            '{ 179, "objects.txt", "AVGimp0.def", 17, "Creature Generator 1", 17, 29,',
             '{ 180, "objects.txt", "AVGgogs0.def", 17, "Creature Generator 1", 17, 22,',
             '{ 183, "objects.txt", "AVGpit0.def", 17, "Creature Generator 1", 17, 40,',
             '{ 190, "objects.txt", "AVGlich0.def", 17, "Creature Generator 1", 17, 52,',
@@ -45086,6 +45089,13 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             '"site_id": "site_obsidian_scar",',
             '"catalog_id": "dwelling_creature_generator_pit_lord_obsidian_scar_proxy",',
             '"recruits": {"unit_neutral_scarshield_veterans": 2, "unit_neutral_ashdart_stalkers": 1}',
+            '29: {',
+            '"source_row": 179,',
+            '"def_ref": "AVGimp0.def",',
+            '"object_id": "object_charcoal_burners",',
+            '"site_id": "site_charcoal_burners",',
+            '"catalog_id": "dwelling_creature_generator_imp_charcoal_burners_proxy",',
+            '"recruits": {"unit_neutral_charcoal_mauls": 2, "unit_neutral_emberpack_lobbers": 1}',
             'elif type_id == 17:',
             'creature_generator_placement_ids[String(object.get("placement_id", ""))] = true',
             'or String(object.get("kind", "")) != "neutral_dwelling"',
@@ -45245,7 +45255,7 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             'var xlarge_creature_generator_projection: Dictionary = _validate_xlarge_creature_generator_projection(service, xlarge.get("generated", {}))',
             'func _validate_xlarge_creature_generator_projection(service: Variant, generated: Dictionary) -> Dictionary:',
             'and ordered_subtypes == [30, 29, 15, 15, 6, 45, 68, 26, 40, 45, 68, 50]',
-            'var interaction: Dictionary = _validate_creature_generator_interaction(adoption, [26, 40, 50])',
+            'var interaction: Dictionary = _validate_creature_generator_interaction(adoption, [29, 26, 40, 50])',
             '_validate_guard_control_projection(medium.get("generated", {}))',
             "func _validate_guard_control_projection(generated: Dictionary) -> Dictionary:",
             'if String(object.get("kind", "")) != "guard":',
@@ -45379,16 +45389,16 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             < xlarge_dwelling_block.find('"subtype": 68, "placement_id": "native_h3maped_33610c0a_object_2626"')
             < xlarge_dwelling_block.find('"subtype": 50, "placement_id": "native_h3maped_33610c0a_object_2661"')
             < xlarge_dwelling_block.find('if int(object.get("h3m_type_id", -1)) != 17:')
-            < xlarge_dwelling_block.find('if subtype in [26, 40, 50]:')
+            < xlarge_dwelling_block.find('if subtype in [29, 26, 40, 50]:')
             < xlarge_dwelling_block.find('elif String(object.get("kind", "")) != "h3m_object"')
             < xlarge_dwelling_block.find('service.generate_random_map(_config("homm3_extra_large", 144, 2, "normal_water", "77"),')
             < xlarge_dwelling_block.find('repeat_type17_authority == type17_authority')
             < xlarge_dwelling_block.find('service.convert_generated_payload(generated, {"feature_gate": REPORT_ID})')
-            < xlarge_dwelling_block.find('_validate_creature_generator_interaction(adoption, [26, 40, 50])')
+            < xlarge_dwelling_block.find('_validate_creature_generator_interaction(adoption, [29, 26, 40, 50])')
             < xlarge_dwelling_block.find('and ordered_subtypes == [30, 29, 15, 15, 6, 45, 68, 26, 40, 45, 68, 50]')
             < xlarge_dwelling_block.find('and bool(interaction.get("ok", false))'),
             errors,
-            "XLarge Harpy/Pit/Pegasus owner must preserve exact ordered rows/masks, keep all other rows raw, compare a fresh repeat, adopt, and exercise only subtypes 26, 40, and 50",
+            "XLarge Imp/Harpy/Pit/Pegasus owner must preserve exact ordered rows/masks, keep all other rows raw, compare a fresh repeat, adopt, and exercise only subtypes 29, 26, 40, and 50",
         )
         for required_token in (
             'object.get("body_tiles", []) != expected.get("body_tiles", [])',
