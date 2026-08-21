@@ -19,6 +19,10 @@ func _run() -> void:
 	if not bool(zero_road_projection.get("ok", false)):
 		_fail("Zero-road native payload projection failed: %s" % JSON.stringify(zero_road_projection))
 		return
+	var live_proxy_projection := _validate_live_proxy_site_projection(service)
+	if not bool(live_proxy_projection.get("ok", false)):
+		_fail("Live proxy site projection failed: %s" % JSON.stringify(live_proxy_projection))
+		return
 
 	var medium := _generate_and_validate(
 		service,
@@ -88,6 +92,7 @@ func _run() -> void:
 		"ok": true,
 		"workflow_shape_count": 24,
 		"zero_road_projection": zero_road_projection,
+		"live_proxy_projection": live_proxy_projection,
 		"medium": medium.get("summary", {}),
 		"medium_guard_projection": medium_guard_projection,
 		"medium_guard_live_behavior": medium_guard_live_behavior,
@@ -101,6 +106,187 @@ func _run() -> void:
 		"startup": startup,
 	})])
 	get_tree().quit(0)
+
+func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
+	var config := _config("small", 36, 1, "land", "1", "weak", 3)
+	var first: Dictionary = service.generate_random_map(config, {"startup_path": "live_proxy_projection_first"})
+	var second: Dictionary = service.generate_random_map(config, {"startup_path": "live_proxy_projection_repeat"})
+	var map_document: Variant = first.get("map_document", null)
+	var second_map: Variant = second.get("map_document", null)
+	if map_document == null or second_map == null:
+		return {"ok": false, "reason": "missing_map_document"}
+	var exact_identity := []
+	var repeat_identity := []
+	var mine_count := 0
+	var mine_subtypes := {}
+	var mine_rows_exact := true
+	var campfire_count := 0
+	var campfire_rows_exact := true
+	var creature_generator_count := 0
+	var unsupported_creature_rows_exact := true
+	var creature_bank_count := 0
+	var unsupported_bank_rows_exact := true
+	var expected_mines := {
+		0: {"object_id": "object_brightwood_sawmill", "resource_id": "wood", "catalog_id": "mine_wood_sawmill_proxy"},
+		1: {"object_id": "object_marsh_peat_yard", "resource_id": "gold", "catalog_id": "mine_alchemist_proxy"},
+		2: {"object_id": "object_ridge_quarry", "resource_id": "ore", "catalog_id": "mine_ore_pit_proxy"},
+		3: {"object_id": "object_floodplain_sluice_camp", "resource_id": "gold", "catalog_id": "mine_sulfur_proxy"},
+		4: {"object_id": "object_cinder_ore_face", "resource_id": "gold", "catalog_id": "mine_crystal_proxy"},
+		5: {"object_id": "object_badlands_coin_sluice", "resource_id": "gold", "catalog_id": "mine_gems_proxy"},
+		6: {"object_id": "object_reef_coin_assay", "resource_id": "gold", "catalog_id": "mine_gold_proxy"},
+	}
+	for object_index in range(int(map_document.get_object_count())):
+		var object: Dictionary = map_document.get_object_by_index(object_index)
+		exact_identity.append(_proxy_projection_object_authority(object))
+		var type_id := int(object.get("h3m_type_id", -1))
+		var subtype := int(object.get("h3m_subtype", -1))
+		if String(object.get("kind", "")) == "mine":
+			mine_count += 1
+			mine_subtypes[subtype] = true
+			var expected: Dictionary = expected_mines.get(subtype, {}) if expected_mines.get(subtype, {}) is Dictionary else {}
+			if expected.is_empty() \
+					or String(object.get("object_id", "")) != String(expected.get("object_id", "")) \
+					or String(object.get("native_proxy_object_id", "")) != String(expected.get("object_id", "")) \
+					or String(object.get("resource_id", "")) != String(expected.get("resource_id", "")) \
+					or String(object.get("homm3_re_reward_object_catalog_id", "")) != String(expected.get("catalog_id", "")) \
+					or not _live_proxy_provenance_exact(object):
+				mine_rows_exact = false
+		elif type_id == 12:
+			campfire_count += 1
+			if String(object.get("kind", "")) != "reward_reference" \
+					or String(object.get("object_id", "")) != "object_waystone_cache" \
+					or String(object.get("site_id", "")) != "site_waystone_cache" \
+					or String(object.get("homm3_re_reward_object_catalog_id", "")) != "reward_campfire_minor_proxy" \
+					or not _live_proxy_provenance_exact(object):
+				campfire_rows_exact = false
+		elif type_id == 17:
+			creature_generator_count += 1
+			if String(object.get("kind", "")) != "h3m_object" \
+					or String(object.get("object_id", "")) != "" \
+					or String(object.get("homm3_re_reward_object_catalog_id", "")) != "":
+				unsupported_creature_rows_exact = false
+		elif type_id == 16:
+			creature_bank_count += 1
+			if String(object.get("kind", "")) != "h3m_object" \
+					or String(object.get("object_id", "")) != "" \
+					or String(object.get("homm3_re_reward_object_catalog_id", "")) != "":
+				unsupported_bank_rows_exact = false
+	for object_index in range(int(second_map.get_object_count())):
+		repeat_identity.append(_proxy_projection_object_authority(second_map.get_object_by_index(object_index)))
+	var adoption: Dictionary = service.convert_generated_payload(first, {"feature_gate": REPORT_ID})
+	var session = NativeRandomMapPackageSessionBridgeScript.build_session_from_adoption(adoption)
+	var expected_site_by_subtype := {
+		0: "site_brightwood_sawmill",
+		1: "site_peatwax_reed_yard",
+		2: "site_ridge_quarry",
+		3: "site_embergrain_warm_granary",
+		4: "site_aetherglass_lens_house",
+		5: "site_memory_salt_pan",
+		6: "site_reef_coin_assay",
+	}
+	var live_mine_count := 0
+	var live_mine_sites_exact := true
+	var live_campfires := []
+	if session != null:
+		var resource_nodes: Array = session.overworld.get("resource_nodes", []) if session.overworld.get("resource_nodes", []) is Array else []
+		var package_source_objects: Dictionary = session.overworld.get("package_source_objects_by_id", {}) if session.overworld.get("package_source_objects_by_id", {}) is Dictionary else {}
+		for node_index in range(resource_nodes.size()):
+			var node_value: Variant = resource_nodes[node_index]
+			if not (node_value is Dictionary):
+				continue
+			var node: Dictionary = node_value
+			var source: Dictionary = package_source_objects.get(String(node.get("placement_id", "")), {}) if package_source_objects.get(String(node.get("placement_id", "")), {}) is Dictionary else {}
+			if int(source.get("h3m_type_id", -1)) == 53:
+				live_mine_count += 1
+				if String(node.get("site_id", "")) != String(expected_site_by_subtype.get(int(source.get("h3m_subtype", -1)), "")):
+					live_mine_sites_exact = false
+			elif int(source.get("h3m_type_id", -1)) == 12:
+				live_campfires.append({"index": node_index, "node": node.duplicate(true)})
+	var interaction := {}
+	if session != null and not live_campfires.is_empty():
+		var campfire_result: Dictionary = live_campfires[0]
+		var campfire: Dictionary = campfire_result.get("node", {}) if campfire_result.get("node", {}) is Dictionary else {}
+		var resources_before: Dictionary = session.overworld.get("resources", {}).duplicate(true)
+		var claim: Dictionary = OverworldRulesScript._collect_resource_node_result(session, campfire_result, false)
+		var claimed_nodes: Array = session.overworld.get("resource_nodes", []) if session.overworld.get("resource_nodes", []) is Array else []
+		var claimed_node: Dictionary = claimed_nodes[int(campfire_result.get("index", -1))] if int(campfire_result.get("index", -1)) >= 0 and int(campfire_result.get("index", -1)) < claimed_nodes.size() and claimed_nodes[int(campfire_result.get("index", -1))] is Dictionary else {}
+		interaction = {
+			"ok": bool(claim.get("ok", false)) and bool(claimed_node.get("collected", false)) and session.overworld.get("resources", {}) != resources_before,
+			"placement_id": campfire.get("placement_id", ""),
+			"site_id": campfire.get("site_id", ""),
+			"claim_ok": claim.get("ok", false),
+			"collected": claimed_node.get("collected", false),
+			"resources_changed": session.overworld.get("resources", {}) != resources_before,
+		}
+	var exact_repeat: bool = bool(second.get("ok", false)) \
+			and first.get("final_payload_fnv1a32", "") == second.get("final_payload_fnv1a32", "") \
+			and first.get("final_payload_byte_count", -1) == second.get("final_payload_byte_count", -2) \
+			and exact_identity == repeat_identity
+	return {
+		"ok": bool(first.get("ok", false)) \
+				and mine_count == 18 \
+				and mine_subtypes.size() == 7 \
+				and mine_rows_exact \
+				and campfire_count == 2 \
+				and campfire_rows_exact \
+				and creature_generator_count == 2 \
+				and unsupported_creature_rows_exact \
+				and creature_bank_count == 2 \
+				and unsupported_bank_rows_exact \
+				and bool(adoption.get("ok", false)) \
+				and session != null \
+				and live_mine_count == mine_count \
+				and live_mine_sites_exact \
+				and live_campfires.size() == campfire_count \
+				and bool(interaction.get("ok", false)) \
+				and exact_repeat,
+		"payload_hash": first.get("final_payload_fnv1a32", ""),
+		"payload_bytes": first.get("final_payload_byte_count", -1),
+		"objects": first.get("runtime_object_count", -1),
+		"mine_count": mine_count,
+		"mine_subtypes": mine_subtypes.keys(),
+		"mine_rows_exact": mine_rows_exact,
+		"campfire_count": campfire_count,
+		"campfire_rows_exact": campfire_rows_exact,
+		"creature_generator_count": creature_generator_count,
+		"unsupported_creature_rows_exact": unsupported_creature_rows_exact,
+		"creature_bank_count": creature_bank_count,
+		"unsupported_bank_rows_exact": unsupported_bank_rows_exact,
+		"live_mine_count": live_mine_count,
+		"live_mine_sites_exact": live_mine_sites_exact,
+		"live_campfire_count": live_campfires.size(),
+		"interaction": interaction,
+		"exact_repeat": exact_repeat,
+	}
+
+func _live_proxy_provenance_exact(object: Dictionary) -> bool:
+	return String(object.get("homm3_re_reward_object_catalog_path", "")) == "res://content/homm3_re_reward_object_proxy_catalog.json" \
+			and String(object.get("homm3_re_reward_object_catalog_schema", "")) == "homm3_re_reward_object_proxy_catalog_v1" \
+			and String(object.get("homm3_re_art_asset_policy", "")) == "provenance_only_original_proxy_art" \
+			and int(object.get("homm3_re_object_type_id", -1)) == int(object.get("h3m_type_id", -2)) \
+			and int(object.get("homm3_re_object_subtype", -1)) == int(object.get("h3m_subtype", -2)) \
+			and String(object.get("homm3_re_object_def_ref", "")) != ""
+
+func _proxy_projection_object_authority(object: Dictionary) -> Dictionary:
+	return {
+		"placement_id": object.get("placement_id", ""),
+		"h3m_type_id": object.get("h3m_type_id", -1),
+		"h3m_subtype": object.get("h3m_subtype", -1),
+		"h3m_definition_index": object.get("h3m_definition_index", -1),
+		"h3m_def_name": object.get("h3m_def_name", ""),
+		"h3m_serialization_pass": object.get("h3m_serialization_pass", -1),
+		"h3m_payload_offset": object.get("h3m_payload_offset", -1),
+		"h3m_payload_byte_count": object.get("h3m_payload_byte_count", -1),
+		"primary_tile": object.get("primary_tile", {}),
+		"body_tiles": object.get("body_tiles", []),
+		"package_block_tiles": object.get("package_block_tiles", []),
+		"package_visit_tiles": object.get("package_visit_tiles", []),
+		"kind": object.get("kind", ""),
+		"object_id": object.get("object_id", ""),
+		"site_id": object.get("site_id", ""),
+		"resource_id": object.get("resource_id", ""),
+		"catalog_id": object.get("homm3_re_reward_object_catalog_id", ""),
+	}
 
 func _validate_guard_control_projection(generated: Dictionary) -> Dictionary:
 	var map_document: Variant = generated.get("map_document", null)

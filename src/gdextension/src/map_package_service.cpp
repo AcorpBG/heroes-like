@@ -29,6 +29,8 @@ constexpr const char *MAP_PACKAGE_SCHEMA_ID = "aurelion_map_package";
 constexpr const char *SCENARIO_PACKAGE_SCHEMA_ID = "aurelion_scenario_package";
 constexpr const char *NATIVE_RMG_SCHEMA_ID = "aurelion_native_random_map_config_normalization";
 constexpr const char *NATIVE_RMG_VERSION = "native_rmg_exact_h3maped_state_chain_v1";
+constexpr const char *HOMM3_RE_PROXY_CATALOG_PATH = "res://content/homm3_re_reward_object_proxy_catalog.json";
+constexpr const char *HOMM3_RE_PROXY_CATALOG_SCHEMA = "homm3_re_reward_object_proxy_catalog_v1";
 constexpr uint64_t HASH_MODULUS = 4294967296ULL;
 
 PackedStringArray capabilities() {
@@ -471,6 +473,131 @@ const char *runtime_object_kind(int32_t type_id) {
 	}
 }
 
+Array runtime_live_proxy_catalog_entries() {
+	if (!FileAccess::file_exists(HOMM3_RE_PROXY_CATALOG_PATH)) {
+		return Array();
+	}
+	Ref<FileAccess> file = FileAccess::open(HOMM3_RE_PROXY_CATALOG_PATH, FileAccess::READ);
+	if (file.is_null() || !file->is_open()) {
+		return Array();
+	}
+	Ref<JSON> parser;
+	parser.instantiate();
+	if (parser->parse(file->get_as_text()) != OK) {
+		return Array();
+	}
+	Variant data = parser->get_data();
+	if (data.get_type() != Variant::DICTIONARY) {
+		return Array();
+	}
+	Dictionary catalog = data;
+	if (String(catalog.get("schema_id", "")) != HOMM3_RE_PROXY_CATALOG_SCHEMA
+			|| String(catalog.get("asset_policy", "")) != "provenance_only_original_proxy_art") {
+		return Array();
+	}
+	Variant entries_value = catalog.get("entries", Variant());
+	if (entries_value.get_type() != Variant::ARRAY) {
+		return Array();
+	}
+	Array entries = entries_value;
+	Array detached;
+	for (int64_t index = 0; index < entries.size(); ++index) {
+		if (entries[index].get_type() != Variant::DICTIONARY) {
+			return Array();
+		}
+		Dictionary entry = entries[index];
+		const String generated_kind = String(entry.get("generated_kind", ""));
+		const String proxy_object_id = String(entry.get("native_proxy_object_id", ""));
+		if (String(entry.get("id", "")).is_empty()
+				|| int32_t(entry.get("homm3_re_object_type_id", 0)) <= 0
+				|| int32_t(entry.get("homm3_re_object_subtype", -1)) < 0
+				|| generated_kind.is_empty()
+				|| proxy_object_id.is_empty()) {
+			return Array();
+		}
+		detached.append(entry.duplicate(true));
+	}
+	return detached;
+}
+
+bool runtime_proxy_entry_has_live_site_surface(const Dictionary &entry) {
+	const String kind = String(entry.get("generated_kind", ""));
+	if (kind == "mine" || kind == "neutral_dwelling") {
+		return !String(entry.get("native_proxy_object_id", "")).is_empty();
+	}
+	if (kind == "reward_reference" || kind == "resource_site") {
+		return !String(entry.get("native_proxy_object_id", "")).is_empty()
+				&& !String(entry.get("native_proxy_site_id", "")).is_empty();
+	}
+	return false;
+}
+
+Dictionary runtime_live_proxy_entry(
+		const Array &entries,
+		int32_t type_id,
+		int32_t subtype,
+		const String &base_kind) {
+	Array exact_entries;
+	Array kind_entries;
+	for (int64_t index = 0; index < entries.size(); ++index) {
+		Dictionary entry = entries[index];
+		if (int32_t(entry.get("homm3_re_object_type_id", 0)) != type_id
+				|| int32_t(entry.get("homm3_re_object_subtype", -1)) != subtype
+				|| !runtime_proxy_entry_has_live_site_surface(entry)) {
+			continue;
+		}
+		exact_entries.append(entry);
+		if (String(entry.get("generated_kind", "")) == base_kind) {
+			kind_entries.append(entry);
+		}
+	}
+	if (kind_entries.size() == 1) {
+		return Dictionary(kind_entries[0]).duplicate(true);
+	}
+	if (kind_entries.is_empty() && exact_entries.size() == 1) {
+		return Dictionary(exact_entries[0]).duplicate(true);
+	}
+	return Dictionary();
+}
+
+void apply_runtime_live_proxy_entry(Dictionary &object, const Dictionary &entry) {
+	if (entry.is_empty()) {
+		return;
+	}
+	object["kind"] = entry.get("generated_kind", "");
+	object["native_record_kind"] = entry.get("generated_kind", "");
+	object["object_id"] = entry.get("native_proxy_object_id", "");
+	object["native_proxy_object_id"] = entry.get("native_proxy_object_id", "");
+	const String site_id = String(entry.get("native_proxy_site_id", ""));
+	if (!site_id.is_empty()) {
+		object["site_id"] = site_id;
+	}
+	const String resource_id = String(entry.get("native_resource_id", ""));
+	if (!resource_id.is_empty()) {
+		object["resource_id"] = resource_id;
+	}
+	for (const char *field : {
+				"native_proxy_family",
+				"native_proxy_category",
+				"semantic_category",
+				"homm3_re_reward_table_bucket" }) {
+		const String value = String(entry.get(field, ""));
+		if (!value.is_empty()) {
+			object[field] = value;
+		}
+	}
+	object["homm3_re_reward_object_catalog_id"] = entry.get("id", "");
+	object["homm3_re_reward_object_catalog_path"] = HOMM3_RE_PROXY_CATALOG_PATH;
+	object["homm3_re_reward_object_catalog_schema"] = HOMM3_RE_PROXY_CATALOG_SCHEMA;
+	object["homm3_re_reward_object_source_kind"] = entry.get("source_kind", "");
+	object["homm3_re_object_type_id"] = entry.get("homm3_re_object_type_id", 0);
+	object["homm3_re_object_type_name"] = entry.get("homm3_re_object_type_name", "");
+	object["homm3_re_object_subtype"] = entry.get("homm3_re_object_subtype", 0);
+	object["homm3_re_object_source_row"] = entry.get("homm3_re_object_source_row", 0);
+	object["homm3_re_object_def_ref"] = entry.get("homm3_re_object_def_ref", "");
+	object["homm3_re_art_asset_policy"] = "provenance_only_original_proxy_art";
+}
+
 String runtime_faction_id(const aurelion::h3maped_rmg_core::FinalHeaderPlayerSlot4ac857 *slot) {
 	if (slot == nullptr || slot->human) {
 		return "faction_embercourt";
@@ -810,9 +937,18 @@ Array runtime_objects(
 		const String &map_id,
 		const aurelion::h3maped_rmg_core::RuntimeMapPayloadProjection &projection) {
 	Array result;
+	const Array live_proxy_catalog = runtime_live_proxy_catalog_entries();
 	for (const auto &source : projection.objects) {
 		Dictionary object;
-		const String kind = runtime_object_kind(source.type_id);
+		const String base_kind = runtime_object_kind(source.type_id);
+		const Dictionary live_proxy = runtime_live_proxy_entry(
+				live_proxy_catalog,
+				source.type_id,
+				source.subtype,
+				base_kind);
+		const String kind = live_proxy.is_empty()
+				? base_kind
+				: String(live_proxy.get("generated_kind", base_kind));
 		const int32_t x = std::clamp(source.x, 0, projection.width - 1);
 		const int32_t y = std::clamp(source.y, 0, projection.height - 1);
 		const int32_t level = std::clamp(source.level, 0, projection.level_count - 1);
@@ -855,6 +991,7 @@ Array runtime_objects(
 			object["visit_tile"] = visit_tiles[0];
 		}
 		object["blocking_body"] = !source.body_tiles.empty();
+		apply_runtime_live_proxy_entry(object, live_proxy);
 		if (kind == "town") {
 			const auto *slot = runtime_slot_for_town(source, projection);
 			object["owner"] = slot == nullptr ? "neutral" : (slot->human ? "player" : "enemy");
@@ -876,10 +1013,14 @@ Array runtime_objects(
 			object["package_guard_control_zone_pathing_policy"] = "h3m_guard_control_forces_engagement_guard_body_remains_blocking_surface";
 			object["package_guard_engagement_policy"] = "h3m_guard_control_forces_engagement";
 		} else if (kind == "mine") {
-			object["site_id"] = source.subtype == 2 ? "site_ridge_quarry" : "site_brightwood_sawmill";
+			if (live_proxy.is_empty()) {
+				object["site_id"] = source.subtype == 2 ? "site_ridge_quarry" : "site_brightwood_sawmill";
+			}
 			object["owner"] = "neutral";
 		} else if (kind == "reward_reference") {
-			object["site_id"] = "site_generated_town_required_source_cache";
+			if (live_proxy.is_empty()) {
+				object["site_id"] = "site_generated_town_required_source_cache";
+			}
 		}
 		result.append(object);
 	}

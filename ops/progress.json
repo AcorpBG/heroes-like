@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved source-backed release-readiness implementation slice; the runtime guard-control projection is completed and exact same-run topology now matches."
+    "Select the next tracker-approved source-backed release-readiness implementation slice."
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed source-backed runtime guard-control projection. Exact recovered action masks now drive live control/engagement surfaces while generation and recovered payload authority remain unchanged.",
+  "currentNotes": "Exact catalog-backed runtime object proxy identity is implemented for live-compatible mines and reward sites. Focused interaction, preserved recovered authority, core/static/editor, synchronized Linux/Windows native builds, and bounded official platform export/startup gates pass; broader Native RMG parity and release readiness remain unclaimed.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "native-rmg-runtime-guard-control-mask-projection-10184",
-  "currentSliceId": "native-rmg-runtime-guard-control-mask-projection-10184",
-  "currentSliceNotes": "Completed live runtime behavior: 41 guards expose 369 ordered per-guard entries whose exact union is 365 tiles, same-run H3MapEd/runtime audit is fully aligned, and real movement into a unique non-body control tile starts the owning battle while authoritative clearance removes it.",
+  "currentSlice": "native-rmg-runtime-object-proxy-site-identity-projection-10184",
+  "currentSliceId": "native-rmg-runtime-object-proxy-site-identity-projection-10184",
+  "currentSliceNotes": "Completed live runtime behavior. Fresh Small projection preserves its 23,664-byte payload and 294 ordered objects while 18 mines cover all seven exact proxy identities and both recovered type-12 Campfires become collectible Waystone Cache sites. Unsupported Creature Generator, Creature Bank without live site, artifact, and spell identities remain unmapped. Focused repeat, interaction, package/session/save/startup, core, static/editor, four Linux/Windows native builds, and bounded official Linux/Windows export-startup gates pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "native rmg runtime guard control mask projection 10184",
-  "currentSliceUpdatedAt": "2026-08-21T09:05:47Z",
+  "currentSliceTitle": "native rmg runtime object proxy site identity projection 10184",
+  "currentSliceUpdatedAt": "2026-08-21T10:28:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -91188,6 +91188,90 @@
       "notes": "Completed live runtime behavior. MapPackageService expands each exact recovered guard action tile in deterministic dy/dx row-major order, clips to the projection, deduplicates by exact flattened coordinate, and publishes identical established control and engagement fields while retaining body blocking. The focused 24-workflow owner passes with Medium payload79333/object1326/guard41, exact per-row projections totaling369 entries and union365, plus real try_move from 43,31 into unique non-body control tile44,30 routing the exact guard battle and authoritative resolution removing that control. The direct recovered H3M/runtime audit passes with identity SHA6b9b02ac69667c465eebca154a18e5b7dbab80473337cc82145ded02bf51d7a8, exact category counts, owner/runtime guard union365, guarded reachable town pairs1, and zero guarded-route/object/road/terrain deltas. Core, repository validation, Python compilation, diff checks, four Linux/Windows native libraries, official Linux export/headless startup, and official Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. The older Small seed1 guard-route and guarded-victory reports remain separately classified pre-existing fixture reds because their body/terrain-only BFS cannot reach its fixed hostile town before or after this field-only change; they do not exercise or contradict the focused live projection proof. Packaged guard interaction, hardware, broad Native RMG parity, signing/publication, whole-game, and release readiness are unclaimed.",
       "remainingWork": "Select the next tracker-approved source-backed slice. Native RMG retains broader recovered private-state/parity and platform certification gaps outside this exact runtime projection.",
       "blockedReason": null
+    },
+    {
+      "id": "native-rmg-runtime-object-proxy-site-identity-projection-10184",
+      "title": "native rmg runtime object proxy site identity projection 10184",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Project exact accepted H3M type/subtype proxy-catalog identity onto recovered final-payload objects only when the original-project target already has a live-compatible mine, reward-site, or neutral-dwelling surface.",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
+        "bin/libaurelion_map_persistence.linux.template_release.x86_64.so",
+        "bin/aurelion_map_persistence.windows.template_debug.x86_64.dll",
+        "bin/aurelion_map_persistence.windows.template_release.x86_64.dll",
+        "tests/native_rmg_end_to_end_runtime_boundary_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/native_rmg_end_to_end_runtime_boundary_report.tscn",
+        "tests/native_rmg_small_h3maped_guard_engagement_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "One detached catalog lookup per runtime projection accepts only exact type/subtype rows with a live-compatible original-project site surface; focused runtime proves unsupported artifact/spell/Creature Generator exclusion and source validation pins duplicate plus missing/malformed catalog fail-closed behavior",
+        "Every fresh Small H3M mine subtype 0 through 6 publishes the exact accepted original-project proxy object, resource, and resulting live site identity instead of collapsing all non-ore mines to a sawmill",
+        "Catalog-backed reward-site objects such as type-12 Campfire publish the exact original proxy object/site and enter the existing resource-site package/session interaction path, while recovered placement/order/body/action/block/serialization authority stays exact",
+        "The supported Native RMG workflow matrix preserves recovered payload/object identity, guard, road, terrain, package/session/save authority, and Linux/Windows debug/release native builds plus bounded official export-startup gates pass"
+      ],
+      "nonGoals": [
+        "changing recovered H3MapEd private state, final payload bytes, RNG, generation, object count/order/placement, masks, roads, terrain, guards, density, balance, or audit thresholds",
+        "heuristically translating H3M creature subtypes, activating unsupported artifact/spell proxies, importing copyrighted art/DEF data, or claiming broad Native RMG parity, packaged interaction, hardware certification, signing, publication, whole-game, or release readiness"
+      ],
+      "baseline": {
+        "head": "65c2b84968ed88c849cfa3705d6d52df641743ec",
+        "freshSmallArtifact": "/tmp/heroes-small-route-audit.I5MNwS",
+        "freshSmallMap": "maps/small-moon-pass-spring-baee5d8b.amap",
+        "mineCount": 18,
+        "mineSubtypeCount": 7,
+        "incorrectSawmillSubtypeIds": [1, 3, 4, 5, 6],
+        "type12CampfireCount": 2,
+        "type12RuntimeKind": "h3m_object",
+        "proxyCatalogSchema": "homm3_re_reward_object_proxy_catalog_v1",
+        "creatureGeneratorExactProjectMappingPresent": false
+      },
+      "createdAt": "2026-08-21T09:59:51Z",
+      "startedAt": "2026-08-21T09:59:51Z",
+      "updatedAt": "2026-08-21T10:28:00Z",
+      "completedAt": "2026-08-21T10:28:00Z",
+      "evidence": {
+        "focusedArtifact": "/tmp/heroes-proxy-focused2.N1KeEW",
+        "smallPayloadBytes": 23664,
+        "smallObjectCount": 294,
+        "mineCount": 18,
+        "mineSubtypeCount": 7,
+        "campfireCount": 2,
+        "campfireLiveSiteCount": 2,
+        "campfireSiteId": "site_waystone_cache",
+        "unsupportedCreatureGeneratorCount": 2,
+        "unsupportedCreatureBankCount": 2,
+        "repeatProjectionExact": true,
+        "realCollectionAuthorityExact": true,
+        "mediumPayloadBytes": 79333,
+        "mediumObjectCount": 1326,
+        "ordinal95PayloadBytes": 76831,
+        "ordinal95ObjectCount": 1283,
+        "xlargePayloadBytes": 365777,
+        "xlargeObjectCount": 2779,
+        "linuxPackagingArtifact": "/tmp/heroes-proxy-linux-package.7QYWdI",
+        "windowsPackagingArtifact": "/tmp/heroes-proxy-windows-package.LjJlPt",
+        "linuxExportStartupOk": true,
+        "windowsExportWineStartupOk": true,
+        "packagedProxyInteractionClaimed": false,
+        "broadNativeRmgParityClaimed": false,
+        "releaseReadyClaimed": false
+      },
+      "notes": "Completed live runtime behavior. MapPackageService loads the accepted catalog once per runtime projection and applies only a unique exact type/subtype row with an existing mine, reward-site, or neutral-dwelling surface. Fresh Small mines preserve all seven recovered resource identities, both Campfires adopt the exact Waystone Cache surface, and real collection changes authoritative resources and collected state. Unsupported Creature Generators, Creature Banks without a live site, artifacts, and spells remain fail-closed. Exact object order, placement, masks, serialization, recovered payload authority, generation/private state, terrain, roads, and guards are unchanged. Four synchronized native binaries, focused/core/static/editor validation, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged proxy interaction, broad Native RMG parity, hardware certification, signing/publication, whole-game, and release readiness are unclaimed.",
+      "remainingWork": "Select the next tracker-approved source-backed slice. Broader recovered Native RMG parity, packaged interaction, native hardware certification, signing/publication, and release readiness remain outside this completed runtime projection.",
+      "blockedReason": null
     }
   ],
   "project": "heroes-like",
@@ -91198,7 +91282,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain. The game is not release-ready.",
-  "remainingWork": "Select the next tracker-approved source-backed release-readiness implementation slice. Native RMG still retains broader recovered source/private-state parity gaps outside the completed runtime guard projection.",
+  "remainingWork": "Select the next tracker-approved source-backed release-readiness implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -91730,9 +91814,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The public and normalized Extra Large Native RMG identities now reach the already-recovered exact 144x144 workflow with synchronized Linux/Windows native and bounded export/startup proof. Broader owner-corpus parity remains fail-closed; the game is not release-ready.",
+  "summary": "Implementing exact accepted proxy-catalog identity on live-compatible Native RMG runtime mine, reward-site, and neutral-dwelling records without changing recovered generation or claiming broad parity.",
   "taskId": "10184",
-  "updatedAt": "2026-08-20T15:13:01Z",
+  "updatedAt": "2026-08-21T09:59:51Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
