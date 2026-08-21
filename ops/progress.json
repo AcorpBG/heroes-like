@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed exact Small type16 subtype4 row1118/AVXbnk50 Drowned Reliquary projection. Payload 457dba6b/23664/294 exact; subtype4 maps with one authored Tidepool guard, subtype6 stays raw. Real guard battle then one claim grants 520 gold, 2 wood, 2 ore and one artifact; repeat/save-v9/unrelated/package authority green. Focused /tmp/heroes-drowned-bank-final-e2e.VtJijw, compatibility /tmp/heroes-drowned-bank-compat-final.Jr4gHc, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup green. Native parity, packaged interaction, certification, signing/publication, whole-game and release readiness excluded.",
+  "currentNotes": "Completed the exact metadata-only proxy fail-closed correction. Fixed Medium e76c8967/79333/1326 retains both AVSwar20.def rows raw at placements 1110/1174 with exact masks, adopts zero type107 Reedscript Vow Shrine nodes, and retains 243 other live mapped rows. Focused /tmp/heroes-metadata-proxy-focused.IRnEPU, guarded/core compatibility /tmp/heroes-metadata-proxy-compat-final.nontvt, static/editor /tmp/heroes-metadata-proxy-static.WyMoTq, synchronized native builds, and bounded Linux/Windows export-startup gates are green. School/skill/reward semantics, native parity, packaged interaction, certification, signing/publication, whole-game, and release readiness remain excluded.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "native-rmg-runtime-creature-bank-drowned-reliquary-projection-10184",
-  "currentSliceId": "native-rmg-runtime-creature-bank-drowned-reliquary-projection-10184",
-  "currentSliceNotes": "Completed exact Small type16 subtype4 row1118/AVXbnk50 Drowned Reliquary projection. Payload 457dba6b/23664/294 exact; subtype4 maps with one authored Tidepool guard, subtype6 stays raw. Real guard battle then one claim grants 520 gold, 2 wood, 2 ore and one artifact; repeat/save-v9/unrelated/package authority green. Focused /tmp/heroes-drowned-bank-final-e2e.VtJijw, compatibility /tmp/heroes-drowned-bank-compat-final.Jr4gHc, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup green. Native parity, packaged interaction, certification, signing/publication, whole-game and release readiness excluded.",
+  "currentSlice": "native-rmg-metadata-only-proxy-live-surface-fail-closed-10184",
+  "currentSliceId": "native-rmg-metadata-only-proxy-live-surface-fail-closed-10184",
+  "currentSliceNotes": "Completed exact metadata-only live-surface rejection: fixed Medium retains both recovered AVSwar20 rows raw with zero type107 live nodes and 243 unchanged live mapped rows. Focused, compatibility, static/editor, synchronized native builds, and bounded official Linux/Windows export-startup gates pass; no missing H3 interaction semantics or parity are inferred.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "native rmg runtime creature bank drowned reliquary projection 10184",
-  "currentSliceUpdatedAt": "2026-08-21T17:11:31Z",
+  "currentSliceTitle": "native rmg metadata only proxy live surface fail closed 10184",
+  "currentSliceUpdatedAt": "2026-08-21T17:43:51Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -91694,6 +91694,42 @@
       "startedAt": "2026-08-21T16:25:06Z",
       "notes": "Completed exact Small type16 subtype4 row1118/AVXbnk50 Drowned Reliquary projection. Payload 457dba6b/23664/294 exact; subtype4 maps with one authored Tidepool guard, subtype6 stays raw. Real guard battle then one claim grants 520 gold, 2 wood, 2 ore and one artifact; repeat/save-v9/unrelated/package authority green. Focused /tmp/heroes-drowned-bank-final-e2e.VtJijw, compatibility /tmp/heroes-drowned-bank-compat-final.Jr4gHc, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup green. Native parity, packaged interaction, certification, signing/publication, whole-game and release readiness excluded.",
       "completedAt": "2026-08-21T17:11:31Z"
+    },
+    {
+      "id": "native-rmg-metadata-only-proxy-live-surface-fail-closed-10184",
+      "title": "native rmg metadata only proxy live surface fail closed 10184",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-6-production-alpha-layer",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-21T17:25:00Z",
+      "updatedAt": "2026-08-21T17:43:51Z",
+      "implementationTargets": [
+        "content/homm3_re_reward_object_proxy_catalog.json",
+        "src/gdextension/src/map_package_service.cpp",
+        "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
+        "bin/libaurelion_map_persistence.linux.template_release.x86_64.so",
+        "bin/aurelion_map_persistence.windows.template_debug.x86_64.dll",
+        "bin/aurelion_map_persistence.windows.template_release.x86_64.dll",
+        "tests/native_rmg_end_to_end_runtime_boundary_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Fixed Medium remains exact at payload e76c8967, 79333 bytes, and 1326 ordered objects with both type107 source rows preserved at their recovered placements.",
+        "The exact source933 AVSwar20 catalog row is explicitly metadata-only and native live-proxy eligibility rejects it before exact type/subtype selection.",
+        "No type107 Reedscript Vow Shrine resource node or collectible node is adopted, while both raw source rows remain in package source authority.",
+        "All other accepted live proxy mappings and package/session/save authority remain exact.",
+        "Focused runtime, Native RMG/core compatibility, synchronized Linux and Windows native builds, repository/editor checks, and bounded official Linux/Windows export-startup gates pass."
+      ],
+      "nonGoals": [
+        "No School-of-War, Reedscript Vow Shrine, hero skill/stat, route-vow, reward, AI, balance, or other metadata-only activation semantics.",
+        "No recovered H3MapEd generation/private-state/writeout, RNG, payload, object order/placement/mask, terrain, road, guard, source identity, imported art/DEF, or heuristic parity change.",
+        "No broad raw-object projection, other type/subtype mapping, packaged interaction, hardware/accessibility certification, signing/publication, whole-game, broad Native RMG parity, or release-readiness claim."
+      ],
+      "notes": "Completed exact metadata-only fail-closed behavior. Fixed Medium e76c8967/79333/1326 keeps both AVSwar20.def rows raw at placements 1110/1174 with exact masks, zero live type107 nodes, and 243 unchanged live mapped rows. Focused /tmp/heroes-metadata-proxy-focused.IRnEPU, compatibility /tmp/heroes-metadata-proxy-compat-final.nontvt, static/editor /tmp/heroes-metadata-proxy-static.WyMoTq, synchronized Linux/Windows builds, and bounded official Linux/Windows export-startup gates pass. School/skill/reward semantics, native parity, packaged interaction, certification, signing/publication, whole-game, and release readiness remain excluded.",
+      "completedAt": "2026-08-21T17:43:51Z"
     }
   ],
   "project": "heroes-like",
@@ -92135,7 +92171,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "native_rmg_extra_large_size_class_identity_alias_completed",
+  "result": "native_rmg_metadata_only_proxy_live_surface_fail_closed_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -92236,9 +92272,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Implementing exact accepted proxy-catalog identity on live-compatible Native RMG runtime mine, reward-site, and neutral-dwelling records without changing recovered generation or claiming broad parity.",
+  "summary": "Exact metadata-only Native RMG proxy rows now fail closed at live projection while recovered source and payload authority remain unchanged.",
   "taskId": "10184",
-  "updatedAt": "2026-08-21T17:11:31Z",
+  "updatedAt": "2026-08-21T17:43:51Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

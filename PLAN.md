@@ -24,7 +24,9 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
-- Completed implementation slice: `native-rmg-runtime-creature-bank-drowned-reliquary-projection-10184`. Fixed Small remains payload `457dba6b`/23,664 bytes/294 ordered objects; exact type-16 subtype-4/source-1118 `AVXbnk50.def` now projects through the original Drowned Reliquary 2x2 contract with one authored Tidepool Skiffyard Watch guard, while subtype 6 stays raw. The live path rejects pre-clear claims, resolves a real battle, grants exactly 520 gold/2 wood/2 ore plus one authored artifact once, rejects repeats, round-trips save v9, and preserves unrelated/package authority. Focused, guarded-site/core compatibility, static/editor, and bounded Linux/Windows export-startup gates pass. Native generation/parity, packaged interaction, certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
+- Completed implementation slice: `native-rmg-metadata-only-proxy-live-surface-fail-closed-10184`. The exact type-107/subtype-0/source-933 `AVSwar20.def` catalog row is now explicitly metadata-only, and native live-proxy selection rejects it before exact type/subtype adoption. Fixed Medium remains `e76c8967`/79,333 bytes/1,326 ordered objects with both recovered rows retained raw at placements 1110/1174, no type-107 Reedscript Vow Shrine live node, and 243 other live mapped rows unchanged. Focused runtime, guarded-site/core compatibility, synchronized Linux/Windows native builds, static/editor, and bounded Linux/Windows export-startup gates pass. School/skill/reward semantics, native parity, packaged interaction, certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
+  id: `native-rmg-metadata-only-proxy-live-surface-fail-closed-10184`
+- Completed implementation slice: `native-rmg-runtime-creature-bank-drowned-reliquary-projection-10184`. Fixed Small remains payload `457dba6b`/23,664 bytes/294 ordered objects; exact type-16 subtype-4/source-1118 `AVXbnk50.def` now projects through the original Drowned Reliquary 2x2 contract with one authored Tidepool Skiffyard Watch guard, while subtype 6 stays raw. The live path rejects pre-clear claims, resolves a real battle, grants exactly 520 gold/2 wood/2 ore plus one authored artifact once, rejects repeats, round-trips save v9, and preserves unrelated/package authority. Focused, guarded-site/core compatibility, static/editor, and bounded Linux/Windows export-startup gates pass. Native generation/parity, packaged interaction, certification, signing/publication, whole-game, and release readiness remain unclaimed.
   id: `native-rmg-runtime-creature-bank-drowned-reliquary-projection-10184`
 - Completed implementation slice: `native-rmg-runtime-unicorn-fenhound-kennels-dwelling-projection-10184`. Fixed Extra-Large seed 77 remains payload `33610c0a`/365,777 bytes/2,779 objects with exact 12-row type-17 order, placement, and masks; both subtype-68 rows now use the original Fenhound Kennels contract alongside Reedbarge, Charcoal, two Bramble, Prism Outrider, Cliffhawk, Obsidian, and Kite, while only the two subtype-45 rows stay raw. Their live claims grant exactly 760 gold plus the original recruits, persist control, reject repeats, round-trip save v9, and preserve unrelated authority. Focused, compatibility, static/editor, and bounded Linux/Windows export-startup gates pass. Subtype 45, native parity, packaged interaction, certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
   id: `native-rmg-runtime-unicorn-fenhound-kennels-dwelling-projection-10184`
@@ -7973,6 +7975,37 @@ Completion evidence:
 - `/tmp/heroes-spell-scroll-focused.Q5GPQb` is natural rc0 and proves the sole exact type-93 row and live scroll node, `spell_beacon_path` as the only known-spell delta, exact resources/artifacts/army/other nodes, repeat rejection, session round trip, repeated generation authority, and unchanged Small/Medium/ordinal-95/Extra-Large payload/object/guard/package/save/startup gates;
 - `/tmp/heroes-spell-scroll-core.r7WCx5` records core rc0; JSON, repository validation, Python compilation, diff checks, and exact/generic editor parses pass;
 - `/tmp/heroes-spell-scroll-linux-package.zpi2sS` and `/tmp/heroes-spell-scroll-windows-package.CUKi63` wrapper artifacts plus the official report JSON files record Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup green. These are export/startup claims only; no packaged scroll interaction is claimed.
+
+## Completed Slice: Native RMG Metadata-Only Proxy Live-Surface Fail-Closed
+
+id: `native-rmg-metadata-only-proxy-live-surface-fail-closed-10184`
+
+Status: completed.
+
+Implementation boundary:
+- mark only the exact type-107/subtype-0/source-row-933 `AVSwar20.def` School-of-War proxy catalog row as metadata-only for runtime projection, matching the existing original Reedscript Vow Shrine object/site runtime boundary and shrine contract;
+- make native live-proxy eligibility reject an explicitly metadata-only catalog row before exact type/subtype selection, leaving the recovered object raw and absent from live resource-site interaction instead of presenting an empty successful claim;
+- preserve the recovered Medium payload bytes, object count/order/placement/masks, all other catalog mappings, and package/session/save authority; keep the source catalog/provenance mapping without inventing a reward.
+
+Completion criteria:
+- fixed Medium remains payload `e76c8967`, 79,333 bytes, and 1,326 ordered objects; both exact type-107 rows remain in package source authority at their recovered placements but no Reedscript Vow Shrine resource node or collectible type-107 node is adopted;
+- every other currently accepted live proxy row remains byte/order/value exact, including Drowned Reliquary, dwelling, artifact, spell-scroll, resource, mine, Campfire, treasure, Pandora, Crypt, refugee-camp, and generic reward mappings;
+- metadata-only status is fail-closed and validator-pinned, with malformed/unknown status rejected rather than treated as live; focused runtime, current Native RMG/core compatibility, native Linux/Windows builds, repository/editor, and bounded official Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no School-of-War, Reedscript Vow Shrine, hero skill/stat, route-vow, reward, AI, balance, or new interaction semantics; no activation of any metadata-only object/site;
+- no change to recovered H3MapEd generation/private state/writeout, RNG, payload bytes, object count/order/placement/masks, terrain, roads, guards, native identity, source row, or imported H3 names/art/DEFs;
+- no broad raw-object projection, type 16/subtype 6 or type 17/subtype 45 mapping, broad Native RMG parity, packaged interaction, certification, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- read-only fixed-size audit `/tmp/heroes-native-rmg-all-sizes-audit.qeUNa5` confirms fixed Medium `e76c8967`/79,333/1,326 contains two catalog-mapped type-107 rows while its remaining raw visitables retain exact source identities;
+- direct runtime probe `/tmp/heroes-native-rmg-school-runtime-probe.tuDYL7` proves both type-107 rows currently adopt as `site_reedscript_vow_shrine`, each claim returns success and collected state, and neither claim changes hero, army, resources, or events;
+- `site_reedscript_vow_shrine` and `object_reedscript_vow_shrine` both explicitly declare `runtime_boundary.status=metadata_only`, no live reward/pathing/route/save adoption, and a metadata-only shrine contract, so a live claim is contradicted by existing original content authority.
+
+Completion evidence:
+- `/tmp/heroes-metadata-proxy-focused.IRnEPU` exits naturally with `ok:true` and proves exact Medium `e76c8967`/79,333/1,326 authority, exactly two raw `AVSwar20.def` source rows at placements 1110/1174 with recovered body/visit masks, zero live type-107 nodes, and 243 unchanged live mapped rows;
+- `/tmp/heroes-metadata-proxy-compat-final.nontvt` records guarded-site reward behavior and core systems green; `/tmp/heroes-metadata-proxy-static.WyMoTq` records repository validation, Python compilation, JSON, scoped/global diff, exact scene parses, generic editor parse, and synchronized ELF/PE native binary checks green;
+- official Linux report `.artifacts/packaging_linux_export_smoke/report.json` and Windows report `.artifacts/packaging_windows_export_smoke/report.json` are `ok:true` for Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup only. No packaged type-107 interaction, native parity, certification, signing/publication, whole-game, or release-readiness claim is made.
 
 ## Completed Slice: Native RMG Runtime Creature Bank Drowned Reliquary Projection
 

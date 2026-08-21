@@ -44699,6 +44699,52 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
                 errors,
                 "H3M Spell Scroll proxy identity must remain exact and live-site-backed",
             )
+        type107_entries = [entry for entry in proxy_entries if isinstance(entry, dict) and int(entry.get("homm3_re_object_type_id", -1)) == 107]
+        ensure(len(type107_entries) == 1, errors, "H3M School of War proxy catalog must contain exactly one source-provenance row")
+        if len(type107_entries) == 1:
+            school_row = type107_entries[0]
+            ensure(
+                (
+                    int(school_row.get("homm3_re_object_subtype", -1)),
+                    int(school_row.get("homm3_re_object_source_row", -1)),
+                    str(school_row.get("homm3_re_object_def_ref", "")),
+                    str(school_row.get("generated_kind", "")),
+                    str(school_row.get("semantic_category", "")),
+                    str(school_row.get("native_proxy_object_id", "")),
+                    str(school_row.get("native_proxy_site_id", "")),
+                    str(school_row.get("runtime_projection_status", "")),
+                    str(school_row.get("id", "")),
+                )
+                == (0, 933, "AVSwar20.def", "reward_reference", "skill_equivalent", "object_reedscript_vow_shrine", "site_reedscript_vow_shrine", "metadata_only", "reward_school_of_war_proxy"),
+                errors,
+                "H3M School of War proxy must retain exact source provenance while remaining metadata-only for runtime projection",
+            )
+        for proxy_entry in proxy_entries:
+            if not isinstance(proxy_entry, dict) or "runtime_projection_status" not in proxy_entry:
+                continue
+            ensure(
+                str(proxy_entry.get("runtime_projection_status", "")) in {"live", "metadata_only"},
+                errors,
+                f"H3M proxy {proxy_entry.get('id', '')} has unsupported runtime_projection_status",
+            )
+        proxy_map_objects = items_index(load_json(CONTENT_DIR / "map_objects.json"))
+        proxy_resource_sites = items_index(load_json(CONTENT_DIR / "resource_sites.json"))
+        reedscript_object = proxy_map_objects.get("object_reedscript_vow_shrine", {})
+        reedscript_site = proxy_resource_sites.get("site_reedscript_vow_shrine", {})
+        ensure(
+            str(reedscript_object.get("runtime_boundary", {}).get("status", "")) == "metadata_only"
+            and not bool(reedscript_object.get("runtime_boundary", {}).get("live_reward_grants", True))
+            and not bool(reedscript_object.get("runtime_boundary", {}).get("pathing_runtime_adopted", True))
+            and not bool(reedscript_object.get("runtime_boundary", {}).get("route_effect_runtime_adopted", True))
+            and bool(reedscript_object.get("shrine_contract", {}).get("metadata_only", False))
+            and str(reedscript_site.get("runtime_boundary", {}).get("status", "")) == "metadata_only"
+            and not bool(reedscript_site.get("runtime_boundary", {}).get("live_reward_grants", True))
+            and not bool(reedscript_site.get("runtime_boundary", {}).get("pathing_runtime_adopted", True))
+            and not bool(reedscript_site.get("runtime_boundary", {}).get("route_effect_runtime_adopted", True))
+            and bool(reedscript_site.get("shrine_contract", {}).get("metadata_only", False)),
+            errors,
+            "Reedscript Vow Shrine object/site must remain an explicitly metadata-only non-live contract",
+        )
         type16_entries = [entry for entry in proxy_entries if isinstance(entry, dict) and int(entry.get("homm3_re_object_type_id", -1)) == 16]
         ensure(len(type16_entries) == 2, errors, "H3M Creature Bank catalog must retain only the legacy subtype-0 metadata row and selected subtype-4 live row")
         subtype4_bank_entries = [entry for entry in type16_entries if int(entry.get("homm3_re_object_subtype", -1)) == 4]
@@ -44915,6 +44961,7 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             'String(catalog.get("schema_id", "")) != HOMM3_RE_PROXY_CATALOG_SCHEMA',
             'String(catalog.get("asset_policy", "")) != "provenance_only_original_proxy_art"',
             "bool runtime_proxy_entry_has_live_site_surface(const Dictionary &entry)",
+            'String(entry.get("runtime_projection_status", "live")) != "live"',
             'if (kind == "mine" || kind == "neutral_dwelling")',
             'if (kind == "reward_reference" || kind == "resource_site")',
             '&& !String(entry.get("native_proxy_site_id", "")).is_empty();',
@@ -44951,16 +44998,29 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
         proxy_resolver_block = native_text[proxy_resolver_start:proxy_apply_start]
         proxy_apply_block = native_text[proxy_apply_start:proxy_runtime_start]
         proxy_runtime_block = native_text[proxy_runtime_start:proxy_runtime_end]
+        live_site_start = proxy_loader_block.find("bool runtime_proxy_entry_has_live_site_surface(")
+        live_site_end = proxy_loader_block.find("bool runtime_proxy_entry_has_live_artifact_surface(", live_site_start)
+        live_site_block = proxy_loader_block[live_site_start:live_site_end]
+        ensure(
+            live_site_block.find('String(entry.get("runtime_projection_status", "live")) != "live"')
+            < live_site_block.find('const String kind = String(entry.get("generated_kind", ""))'),
+            errors,
+            "Native live-site proxy eligibility must reject metadata-only or unknown explicit status before kind/surface selection",
+        )
         ensure(proxy_runtime_block.find("const Array live_proxy_catalog") < proxy_runtime_block.find("for (const auto &source : projection.objects)"), errors, "Native proxy catalog must load once before the ordered runtime object projection")
         ensure(proxy_runtime_block.find("const Dictionary live_proxy") < proxy_runtime_block.find("const String kind =") < proxy_runtime_block.find("apply_runtime_live_proxy_entry(object, live_proxy);"), errors, "Native proxy resolution must precede kind-specific live materialization")
         for forbidden_token in (
             "type_id == 17",
+            "type_id == 107",
             "type_id %",
             "subtype %",
             "rand",
             "hash",
             "Creature Generator",
             "spell_id",
+            "reward_school_of_war_proxy",
+            "object_reedscript_vow_shrine",
+            "site_reedscript_vow_shrine",
         ):
             ensure(forbidden_token not in proxy_resolver_block + proxy_apply_block, errors, f"Native live proxy projection must not invent unsupported identity logic: {forbidden_token}")
         for forbidden_token in (
@@ -45442,6 +45502,57 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
         ensure(proxy_projection_block.find('spell_scroll_placement_ids[String(object.get("placement_id", ""))] = true') < proxy_projection_block.find('spell_scroll_placement_ids.has(String(node.get("placement_id", "")))') < proxy_projection_block.find("_collect_resource_node_result(session, scroll_result, false)"), errors, "Native live Spell Scroll owner must correlate exact projection through package adoption before collection")
         ensure(proxy_projection_block.find('spell_scroll_presentation = await _validate_spell_scroll_presentation(session, scroll_node)') < proxy_projection_block.find("_collect_resource_node_result(session, scroll_result, false)"), errors, "Native live Spell Scroll owner must validate the exact uncollected generated node presentation before collection")
         ensure(proxy_projection_block.find('var resource_nodes_before: Array = session.overworld.get("resource_nodes", []).duplicate(true)') < proxy_projection_block.find("_collect_resource_node_result(session, scroll_result, false)") < proxy_projection_block.find('var repeat_claim: Dictionary = OverworldRulesScript._collect_resource_node_result'), errors, "Native live Spell Scroll owner must bracket real collection with detached authority and repeat rejection")
+        metadata_only_start = native_rmg_runtime_boundary_text.find("func _validate_medium_metadata_only_proxy_projection(")
+        metadata_only_end = native_rmg_runtime_boundary_text.find("func _validate_live_proxy_site_projection(", metadata_only_start)
+        metadata_only_block = native_rmg_runtime_boundary_text[metadata_only_start:metadata_only_end]
+        for required_token in (
+            '"placement_id": "native_h3maped_e76c8967_object_1110"',
+            '"placement_id": "native_h3maped_e76c8967_object_1174"',
+            '"visit_tiles": [{"x": 28, "y": 6, "level": 0}]',
+            '"visit_tiles": [{"x": 5, "y": 21, "level": 0}]',
+            'if int(object.get("h3m_type_id", -1)) != 107 or int(object.get("h3m_subtype", -1)) != 0:',
+            'int(actual.get("definition_index", -1)) != 117',
+            'String(actual.get("def_name", "")) != "AVSwar20.def"',
+            'String(actual.get("kind", "")) != "h3m_object"',
+            'String(actual.get("native_kind", "")) != "h3m_object"',
+            'String(actual.get("catalog_id", "")) != ""',
+            'var source_objects: Dictionary = session.overworld.get("package_source_objects_by_id", {})',
+            'source.get("package_body_tiles", []) != expected.get("body_tiles", [])',
+            'source.get("package_visit_tiles", []) != expected.get("visit_tiles", [])',
+            'String(node.get("site_id", "")) == "site_reedscript_vow_shrine"',
+            'String(node.get("object_id", "")) == "object_reedscript_vow_shrine"',
+            'and live_catalog_row_count == 243',
+            'and raw_rows_exact',
+            'and source_rows_exact',
+            'and live_type_107_nodes.is_empty()',
+        ):
+            ensure(required_token in metadata_only_block, errors, f"Native metadata-only proxy focused owner is missing exact fail-closed authority: {required_token}")
+        ensure(
+            metadata_only_block.find('var expected_rows := [')
+            < metadata_only_block.find('for object_index in range(int(map_document.get_object_count())):')
+            < metadata_only_block.find('raw_rows.append({')
+            < metadata_only_block.find('service.convert_generated_payload(generated, {"feature_gate": REPORT_ID})')
+            < metadata_only_block.find('build_session_from_adoption(adoption)')
+            < metadata_only_block.find('var source_objects: Dictionary = session.overworld.get("package_source_objects_by_id", {})')
+            < metadata_only_block.find('var live_type_107_nodes: Array = []')
+            < metadata_only_block.find('and live_type_107_nodes.is_empty()'),
+            errors,
+            "Native metadata-only proxy owner must prove raw package rows before adoption and zero live nodes afterward",
+        )
+        for forbidden_token in (
+            "_collect_resource_node_result",
+            'object["kind"] =',
+            'object["object_id"] =',
+            'object["site_id"] =',
+            "object.erase(",
+            "map_document.add_",
+            "sort()",
+            "sort_custom",
+            "route_vow",
+            "hero",
+        ):
+            ensure(forbidden_token not in metadata_only_block, errors, f"Native metadata-only proxy focused owner must remain read-only and must not invent semantics: {forbidden_token}")
+        ensure(native_rmg_runtime_boundary_text.count("_validate_medium_metadata_only_proxy_projection(") == 2, errors, "Medium metadata-only proxy projection must have one owner call and one definition")
         medium_dwelling_start = native_rmg_runtime_boundary_text.find("func _validate_medium_creature_generator_projection(")
         medium_dwelling_end = native_rmg_runtime_boundary_text.find("func _validate_xlarge_creature_generator_projection(", medium_dwelling_start)
         medium_dwelling_block = native_rmg_runtime_boundary_text[medium_dwelling_start:medium_dwelling_end]
@@ -45488,6 +45599,7 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
         ensure(native_rmg_runtime_boundary_text.count("_validate_medium_creature_generator_projection(") == 2, errors, "Medium Creature Generator projection must have one owner call and one definition")
         ensure(
             native_rmg_runtime_boundary_text.find('var medium := _generate_and_validate(')
+            < native_rmg_runtime_boundary_text.find('var medium_metadata_only_proxy_projection: Dictionary = _validate_medium_metadata_only_proxy_projection(')
             < native_rmg_runtime_boundary_text.find('var medium_creature_generator_projection: Dictionary = _validate_medium_creature_generator_projection(')
             < native_rmg_runtime_boundary_text.find('var medium_guard_projection := _validate_guard_control_projection('),
             errors,

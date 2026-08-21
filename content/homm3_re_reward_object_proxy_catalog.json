@@ -387,6 +387,7 @@
     {
       "id": "reward_school_of_war_proxy",
       "generated_kind": "reward_reference",
+      "runtime_projection_status": "metadata_only",
       "reward_value_tiers": ["medium"],
       "source_kind": "homm3_re_reward_object_type",
       "source_catalog_kind": "objects_txt_type_row",

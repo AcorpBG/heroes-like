@@ -163,6 +163,13 @@ func _run() -> void:
 	if not bool(medium.get("ok", false)):
 		_fail("Medium public generation boundary failed: %s" % JSON.stringify(medium))
 		return
+	var medium_metadata_only_proxy_projection: Dictionary = _validate_medium_metadata_only_proxy_projection(
+		service,
+		medium.get("generated", {})
+	)
+	if not bool(medium_metadata_only_proxy_projection.get("ok", false)):
+		_fail("Medium metadata-only proxy fail-closed projection failed: %s" % JSON.stringify(medium_metadata_only_proxy_projection))
+		return
 	var medium_creature_generator_projection: Dictionary = _validate_medium_creature_generator_projection(service, medium.get("generated", {}))
 	if not bool(medium_creature_generator_projection.get("ok", false)):
 		_fail("Medium Creature Generator dwelling projection failed: %s" % JSON.stringify(medium_creature_generator_projection))
@@ -232,6 +239,7 @@ func _run() -> void:
 		"zero_road_projection": zero_road_projection,
 		"live_proxy_projection": live_proxy_projection,
 		"medium": medium.get("summary", {}),
+		"medium_metadata_only_proxy_projection": medium_metadata_only_proxy_projection,
 		"medium_creature_generator_projection": medium_creature_generator_projection,
 		"medium_guard_projection": medium_guard_projection,
 		"medium_guard_live_behavior": medium_guard_live_behavior,
@@ -246,6 +254,126 @@ func _run() -> void:
 		"startup": startup,
 	})])
 	get_tree().quit(0)
+
+func _validate_medium_metadata_only_proxy_projection(service: Variant, generated: Dictionary) -> Dictionary:
+	var map_document: Variant = generated.get("map_document", null)
+	if map_document == null:
+		return {"ok": false, "reason": "missing_medium_map_document"}
+	var expected_rows := [
+		{
+			"index": 1110,
+			"placement_id": "native_h3maped_e76c8967_object_1110",
+			"primary_tile": {"x": 29, "y": 6, "level": 0},
+			"body_tiles": [
+				{"x": 27, "y": 4, "level": 0}, {"x": 28, "y": 4, "level": 0},
+				{"x": 26, "y": 5, "level": 0}, {"x": 27, "y": 5, "level": 0},
+				{"x": 28, "y": 5, "level": 0}, {"x": 29, "y": 5, "level": 0},
+				{"x": 27, "y": 6, "level": 0}, {"x": 28, "y": 6, "level": 0},
+			],
+			"visit_tiles": [{"x": 28, "y": 6, "level": 0}],
+		},
+		{
+			"index": 1174,
+			"placement_id": "native_h3maped_e76c8967_object_1174",
+			"primary_tile": {"x": 6, "y": 21, "level": 0},
+			"body_tiles": [
+				{"x": 4, "y": 19, "level": 0}, {"x": 5, "y": 19, "level": 0},
+				{"x": 3, "y": 20, "level": 0}, {"x": 4, "y": 20, "level": 0},
+				{"x": 5, "y": 20, "level": 0}, {"x": 6, "y": 20, "level": 0},
+				{"x": 4, "y": 21, "level": 0}, {"x": 5, "y": 21, "level": 0},
+			],
+			"visit_tiles": [{"x": 5, "y": 21, "level": 0}],
+		},
+	]
+	var raw_rows: Array = []
+	var live_catalog_row_count := 0
+	for object_index in range(int(map_document.get_object_count())):
+		var object: Dictionary = map_document.get_object_by_index(object_index)
+		if String(object.get("homm3_re_reward_object_catalog_id", "")) != "":
+			live_catalog_row_count += 1
+		if int(object.get("h3m_type_id", -1)) != 107 or int(object.get("h3m_subtype", -1)) != 0:
+			continue
+		raw_rows.append({
+			"index": object_index,
+			"placement_id": object.get("placement_id", ""),
+			"primary_tile": object.get("primary_tile", {}),
+			"body_tiles": object.get("package_body_tiles", []),
+			"visit_tiles": object.get("package_visit_tiles", []),
+			"definition_index": object.get("h3m_definition_index", -1),
+			"def_name": object.get("h3m_def_name", ""),
+			"kind": object.get("kind", ""),
+			"native_kind": object.get("native_record_kind", ""),
+			"catalog_id": object.get("homm3_re_reward_object_catalog_id", ""),
+			"object_id": object.get("object_id", ""),
+			"site_id": object.get("site_id", ""),
+		})
+	var raw_rows_exact := raw_rows.size() == expected_rows.size()
+	if raw_rows_exact:
+		for row_index in range(expected_rows.size()):
+			var expected: Dictionary = expected_rows[row_index]
+			var actual: Dictionary = raw_rows[row_index]
+			if int(actual.get("index", -1)) != int(expected.get("index", -2)) \
+					or String(actual.get("placement_id", "")) != String(expected.get("placement_id", "")) \
+					or actual.get("primary_tile", {}) != expected.get("primary_tile", {}) \
+					or actual.get("body_tiles", []) != expected.get("body_tiles", []) \
+					or actual.get("visit_tiles", []) != expected.get("visit_tiles", []) \
+					or int(actual.get("definition_index", -1)) != 117 \
+					or String(actual.get("def_name", "")) != "AVSwar20.def" \
+					or String(actual.get("kind", "")) != "h3m_object" \
+					or String(actual.get("native_kind", "")) != "h3m_object" \
+					or String(actual.get("catalog_id", "")) != "" \
+					or String(actual.get("object_id", "")) != "" \
+					or String(actual.get("site_id", "")) != "":
+				raw_rows_exact = false
+				break
+	var adoption: Dictionary = service.convert_generated_payload(generated, {"feature_gate": REPORT_ID})
+	var session = NativeRandomMapPackageSessionBridgeScript.build_session_from_adoption(adoption)
+	if session == null:
+		return {"ok": false, "reason": "missing_adopted_session"}
+	var source_objects: Dictionary = session.overworld.get("package_source_objects_by_id", {}) if session.overworld.get("package_source_objects_by_id", {}) is Dictionary else {}
+	var source_rows_exact := true
+	for expected_value in expected_rows:
+		var expected: Dictionary = expected_value
+		var source: Dictionary = source_objects.get(String(expected.get("placement_id", "")), {}) if source_objects.get(String(expected.get("placement_id", "")), {}) is Dictionary else {}
+		if int(source.get("h3m_type_id", -1)) != 107 \
+				or int(source.get("h3m_subtype", -1)) != 0 \
+				or int(source.get("h3m_definition_index", -1)) != 117 \
+				or String(source.get("h3m_def_name", "")) != "AVSwar20.def" \
+				or String(source.get("kind", "")) != "h3m_object" \
+				or String(source.get("homm3_re_reward_object_catalog_id", "")) != "" \
+				or source.get("primary_tile", {}) != expected.get("primary_tile", {}) \
+				or source.get("package_body_tiles", []) != expected.get("body_tiles", []) \
+				or source.get("package_visit_tiles", []) != expected.get("visit_tiles", []):
+			source_rows_exact = false
+			break
+	var live_type_107_nodes: Array = []
+	var resource_nodes: Array = session.overworld.get("resource_nodes", []) if session.overworld.get("resource_nodes", []) is Array else []
+	for node_value in resource_nodes:
+		if not (node_value is Dictionary):
+			continue
+		var node: Dictionary = node_value
+		var source: Dictionary = source_objects.get(String(node.get("placement_id", "")), {}) if source_objects.get(String(node.get("placement_id", "")), {}) is Dictionary else {}
+		if int(source.get("h3m_type_id", -1)) == 107 \
+				or String(node.get("site_id", "")) == "site_reedscript_vow_shrine" \
+				or String(node.get("object_id", "")) == "object_reedscript_vow_shrine":
+			live_type_107_nodes.append(node.duplicate(true))
+	return {
+		"ok": String(generated.get("final_payload_fnv1a32", "")) == "e76c8967" \
+				and int(generated.get("final_payload_byte_count", -1)) == 79333 \
+				and int(map_document.get_object_count()) == 1326 \
+				and live_catalog_row_count == 243 \
+				and raw_rows_exact \
+				and source_rows_exact \
+				and live_type_107_nodes.is_empty(),
+		"payload_hash": generated.get("final_payload_fnv1a32", ""),
+		"payload_bytes": generated.get("final_payload_byte_count", -1),
+		"object_count": map_document.get_object_count(),
+		"live_catalog_row_count": live_catalog_row_count,
+		"raw_rows": raw_rows,
+		"raw_rows_exact": raw_rows_exact,
+		"source_rows_exact": source_rows_exact,
+		"live_type_107_node_count": live_type_107_nodes.size(),
+	}
 
 func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 	var config := _config("small", 36, 1, "land", "1", "weak", 3)
