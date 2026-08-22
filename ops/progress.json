@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Clauseworks Bridge Levies now use the exact 5/5/1 Fordhook/Bargebow/Sluicefire production line. Focused behavior, live chapter/campaign/breadth/unit/core compatibility, static/editor, and bounded Linux/Windows startup gates are green.",
+  "currentNotes": "Mireford Bridge Silt Hunters now use the exact count-preserving 6/9/5 production Mireclaw line. Focused behavior, skirmish/campaign/breadth/unit/core compatibility, static/editor, and bounded Linux/Windows startup gates are green.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-clauseworks-bridge-levies-production-line-10184",
-  "currentSliceId": "content-clauseworks-bridge-levies-production-line-10184",
-  "currentSliceNotes": "Completed. The exact 5/5/1 line proves 155 versus 151 health, six-round/12% extended normal and four-round/31% standard hard victories, independent legacy 30%/48% controls, exact public abilities and authority, and a clear 77-sample queue; compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
+  "currentSlice": "content-mireford-bridge-silt-hunters-production-line-10184",
+  "currentSliceId": "content-mireford-bridge-silt-hunters-production-line-10184",
+  "currentSliceNotes": "Completed. The exact 6/9/5 line proves 207 versus 180 health, exact public abilities, byte-exact production/legacy normal 48%/DPR42 and hard 41%/DPR40 controls, zero invalid orders, authority, a clear 77-sample queue, compatibility, static/editor, and bounded Linux/Windows startup.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Clauseworks Bridge Levies Production Line",
-  "currentSliceUpdatedAt": "2026-08-22T08:05:01Z",
+  "currentSliceTitle": "Mireford Bridge Silt Hunters Production Line",
+  "currentSliceUpdatedAt": "2026-08-22T08:24:39Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,53 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed release-readiness implementation slice; do not expand the completed Clauseworks Bridge Levies migration opportunistically.",
-  "notes": "Completed the bounded Clauseworks Bridge Levies production-line migration. The final Sluicefire line preserves local pressure and a clear breadth queue after the Lantern candidate was rejected; focused, compatibility, static/editor, and bounded Linux/Windows export-startup evidence are green without broader release claims.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed release-readiness implementation slice; do not expand the completed Mireford Bridge Silt Hunters migration opportunistically.",
+  "notes": "Completed the bounded Mireford Bridge Silt Hunters production-line migration. Focused exact production/legacy controls, live skirmish/campaign behavior, active breadth, unit/core compatibility, static/editor, and bounded Linux/Windows export-startup evidence are green without broader release claims.",
   "plannedSlices": [
+    {
+      "id": "content-mireford-bridge-silt-hunters-production-line-10184",
+      "title": "Mireford Bridge Silt Hunters Production Line",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/factions-content-bible.md"],
+      "purpose": "Replace only Mireford Skirmish's Bridge Silt Hunters legacy Mireclaw trio with the exact count-preserving production line while retaining authored battle pressure and scenario/campaign authority.",
+      "implementationTargets": ["content/scenarios.json", "tests/battle_mireford_bridge_silt_hunters_production_line_report.gd", "tests/battle_mireford_bridge_silt_hunters_production_line_report.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {
+        "scenario_id": "mireford-skirmish",
+        "encounter_placement_id": "bridge_silt_hunters",
+        "legacy_stack_ids": ["unit_bog_brute", "unit_blackbranch_cutthroat", "unit_mire_slinger"],
+        "legacy_stack_counts": [6, 9, 5],
+        "production_stack_ids": ["unit_mireclaw_bogplate_maulers", "unit_mireclaw_reedsnare_kin", "unit_mireclaw_mudglass_slingers"],
+        "production_stack_counts": [6, 9, 5],
+        "legacy_total_stack_health": 180,
+        "production_total_stack_health": 207,
+        "legacy_normal": {"outcome": "victory", "rounds": 4, "player_health_remaining_pct": 48, "enemy_damage_per_round": 42, "pacing_band": "standard"},
+        "production_normal": {"outcome": "victory", "rounds": 4, "player_health_remaining_pct": 48, "enemy_damage_per_round": 42, "pacing_band": "standard"},
+        "legacy_hard": {"outcome": "victory", "rounds": 4, "player_health_remaining_pct": 41, "enemy_damage_per_round": 40, "pacing_band": "standard"},
+        "production_hard": {"outcome": "victory", "rounds": 4, "player_health_remaining_pct": 41, "enemy_damage_per_round": 40, "pacing_band": "standard"},
+        "invalid_order_count": 0,
+        "screen_artifact": "/tmp/heroes-mireford-bridge-silt-attribution.BI32Kf/stdout.log",
+        "focused_sequence_artifact": "/tmp/heroes-mireford-silt-focused.HqJAdo/stdout.log"
+      },
+      "completionCriteria": [
+        "The exact Mireford Bridge Silt Hunters use only production Bogplate Maulers, Reedsnare Kin, and Mudglass Slingers at 6/9/5 while retaining encounter/army identity, placement, medium difficulty, combat seed, objective, and scenario authority",
+        "Public BattleRules payload and deterministic normal/hard autoplay expose exact shielding and both harry surfaces, retain byte-exact normal four-round/48 percent/DPR42 and hard four-round/41 percent/DPR40 standard victories with zero invalid orders, and retain an independent legacy control",
+        "Real Mireford behavior preserves adjacent fronts, town/resources, save/resume, reachable outcomes, skirmish/campaign progression/import, and scenario/session authority",
+        "Active scenario breadth remains complete with zero stalls or invalid orders and an exactly clear tuning queue; unit ability and core compatibility remain green",
+        "Repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "Adjacent Mireford fronts, counts beyond exact 6/9/5, shared unit stats/abilities, BattleRules, BattleAiRules, player army, reward/objective/route topology, difficulty thresholds, save schema, Native RMG, or packaging behavior changes",
+        "Broad faction balance, packaged encounter interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "createdAt": "2026-08-22T08:09:03Z",
+      "startedAt": "2026-08-22T08:09:03Z",
+      "completedAt": "2026-08-22T08:24:39Z",
+      "updatedAt": "2026-08-22T08:24:39Z",
+      "notes": "Completed with the exact count-preserving 6/9/5 Bogplate/Reedsnare/Mudglass production line. Focused runtime proves shielding and both harry surfaces, 207 versus 180 health, byte-exact production/legacy normal 4 rounds/48%/DPR42 and hard 4 rounds/41%/DPR40 standard victories, zero invalid orders, save/resume, reachable outcomes, adjacent fronts, towns/resources, progression, and scenario/session authority. Live Mireford skirmish and Frontier Claims campaign are green. Active breadth is 77/77 with queue signature 829808c9 and zero stalls/invalid orders/items; unit ability and core are green. Static/editor and official Linux export/headless startup plus Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. Adjacent fronts, shared rules/stats, packaged interaction, broad balance, certification, signing/publication, whole-game validation, and release readiness remain out of scope."
+    },
     {
       "id": "content-clauseworks-bridge-levies-production-line-10184",
       "title": "Clauseworks Bridge Levies Production Line",
@@ -93101,7 +93145,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "content_clauseworks_bridge_levies_production_line_completed",
+  "result": "content_mireford_bridge_silt_hunters_production_line_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -93202,9 +93246,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Clauseworks Counterclaim's Bridge Levies now use the pressure-matched production Embercourt 5/5/1 line with focused live, chapter/campaign, active-breadth, compatibility, static/editor, and bounded platform startup evidence.",
+  "summary": "Mireford Skirmish's Bridge Silt Hunters now use the count-preserving production Mireclaw 6/9/5 line with focused live, skirmish/campaign, active-breadth, compatibility, static/editor, and bounded platform startup evidence.",
   "taskId": "10184",
-  "updatedAt": "2026-08-22T08:05:01Z",
+  "updatedAt": "2026-08-22T08:24:39Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

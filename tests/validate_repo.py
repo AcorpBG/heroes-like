@@ -47478,6 +47478,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     clauseworks_beacon_production_scene_path = ROOT / "tests/battle_clauseworks_beacon_wardens_production_line_report.tscn"
     clauseworks_bridge_production_report_path = ROOT / "tests/battle_clauseworks_bridge_levies_production_line_report.gd"
     clauseworks_bridge_production_scene_path = ROOT / "tests/battle_clauseworks_bridge_levies_production_line_report.tscn"
+    mireford_silt_production_report_path = ROOT / "tests/battle_mireford_bridge_silt_hunters_production_line_report.gd"
+    mireford_silt_production_scene_path = ROOT / "tests/battle_mireford_bridge_silt_hunters_production_line_report.tscn"
     barrow_vault_report_path = ROOT / "tests/battle_ninefold_barrow_vault_balance_regression.gd"
     barrow_vault_scene_path = ROOT / "tests/battle_ninefold_barrow_vault_balance_regression.tscn"
     drowned_reliquary_report_path = ROOT / "tests/battle_ninefold_drowned_reliquary_balance_regression.gd"
@@ -47560,6 +47562,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         clauseworks_beacon_production_scene_path,
         clauseworks_bridge_production_report_path,
         clauseworks_bridge_production_scene_path,
+        mireford_silt_production_report_path,
+        mireford_silt_production_scene_path,
         ford_reavers_report_path,
         ford_reavers_scene_path,
         prismhearth_relay_report_path,
@@ -48203,6 +48207,103 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             errors,
             "Clauseworks Bridge Levies production-line scene is not wired exactly to its report script.",
         )
+    if mireford_silt_production_report_path.exists():
+        mireford_silt_production_text = mireford_silt_production_report_path.read_text(encoding="utf-8")
+        for required_token in (
+            'REPORT_ID := "BATTLE_MIREFORD_BRIDGE_SILT_HUNTERS_PRODUCTION_LINE_REPORT"',
+            'SCENARIO_ID := "mireford-skirmish"',
+            'PLACEMENT_ID := "bridge_silt_hunters"',
+            '"unit_mireclaw_bogplate_maulers", "count": 6',
+            '"unit_mireclaw_reedsnare_kin", "count": 9',
+            '"unit_mireclaw_mudglass_slingers", "count": 5',
+            '"unit_bog_brute", "count": 6',
+            '"unit_blackbranch_cutthroat", "count": 9',
+            '"unit_mire_slinger", "count": 5',
+            '"unit_mireclaw_bogplate_maulers": ["shielding"]',
+            '"unit_mireclaw_reedsnare_kin": ["harry"]',
+            '"unit_mireclaw_mudglass_slingers": ["harry"]',
+            '"purge_silt_hunters", "label": "Purge the Silt Hunters", "type": "encounter_resolved"',
+            "_stack_health(PRODUCTION_STACKS) != 207",
+            "_stack_health(LEGACY_STACKS) != 180",
+            'Harness.run_battle_sample(SCENARIO_ID, encounter, 72, "normal")',
+            'Harness.run_battle_sample(SCENARIO_ID, encounter, 72, "hard")',
+            'Harness.run_battle_sample(SCENARIO_ID, legacy_encounter, 72, "normal")',
+            'Harness.run_battle_sample(SCENARIO_ID, legacy_encounter, 72, "hard")',
+            "not _sample_exact(production_normal, 48, 42)",
+            "not _sample_exact(production_hard, 41, 40)",
+            "not _sample_exact(legacy_normal, 48, 42)",
+            "not _sample_exact(legacy_hard, 41, 40)",
+            "_compact_sample(production_normal) != _compact_sample(legacy_normal)",
+            "_compact_sample(production_hard) != _compact_sample(legacy_hard)",
+            "SAVE_SLOT := 10",
+            "SaveService.save_runtime_manual_session(session, SAVE_SLOT)",
+            "SaveService.restore_manual_session(SAVE_SLOT)",
+            'victory.overworld["resolved_encounters"] = ["bridge_ford_reavers", PLACEMENT_ID, "mireford_reed_totemists"]',
+            "defeat.day = 10",
+            '"towns_resources_exact": true',
+            '"adjacent_fronts_exact": true',
+            '"save_resume_exact": true',
+            '"campaign_progression_unchanged": true',
+            "get_tree().quit(0)",
+            "get_tree().quit(1)",
+        ):
+            ensure(required_token in mireford_silt_production_text, errors, f"Mireford Bridge Silt Hunters production-line report is missing token: {required_token}")
+        mireford_silt_run_match = re.search(r"func _run\(\) -> void:\n(?P<body>.*?)(?=\nfunc _scenario_encounter)", mireford_silt_production_text, re.S)
+        ensure(mireford_silt_run_match is not None, errors, "Could not isolate Mireford Bridge Silt Hunters production-line report run")
+        if mireford_silt_run_match is not None:
+            mireford_silt_run_body = mireford_silt_run_match.group("body")
+            ordered_tokens = (
+                "scenario_authority_before: Dictionary = scenario.duplicate(true)",
+                "ford_before: Dictionary",
+                "totemists_before: Dictionary",
+                "towns_before: Array",
+                "resources_before: Array",
+                "OverworldRules.normalize_overworld_state(session)",
+                "session_authority_before: Dictionary = session.to_dict()",
+                "BattleRules.create_battle_payload(session, encounter)",
+                "_save_restore(session)",
+                "legacy_encounter: Dictionary = encounter.duplicate(true)",
+                'legacy_army["stacks"] = LEGACY_STACKS.duplicate(true)',
+                'Harness.run_battle_sample(SCENARIO_ID, encounter, 72, "normal")',
+                'Harness.run_battle_sample(SCENARIO_ID, encounter, 72, "hard")',
+                'Harness.run_battle_sample(SCENARIO_ID, legacy_encounter, 72, "normal")',
+                'Harness.run_battle_sample(SCENARIO_ID, legacy_encounter, 72, "hard")',
+                "_outcome_contract()",
+                '_scenario_encounter(scenario, "bridge_ford_reavers") != ford_before',
+                '_scenario_encounter(scenario, "mireford_reed_totemists") != totemists_before',
+                'scenario.get("towns", []) != towns_before',
+                'scenario.get("resource_nodes", []) != resources_before',
+                "scenario != scenario_authority_before",
+            )
+            positions = [mireford_silt_run_body.find(token) for token in ordered_tokens]
+            ensure(min(positions) >= 0 and positions == sorted(positions), errors, "Mireford Bridge Silt Hunters production report must preserve payload, exact legacy controls, adjacent fronts, town/resources, and scenario authority in order")
+            ensure(mireford_silt_run_body.count("Harness.run_battle_sample(") == 4, errors, "Mireford Bridge Silt Hunters production report must run exactly four method-matched samples")
+            for forbidden_token in ('legacy_encounter["placement_id"]', 'legacy_army["id"]', "BattleRules.apply_action", "BattleAiRules", '\n\tencounter["enemy_army"] =', "session.battle =", "create_timer", "await "):
+                ensure(forbidden_token not in mireford_silt_run_body, errors, f"Mireford Bridge Silt Hunters production report must retain authored identity and remain observation-only, not use {forbidden_token}")
+    if mireford_silt_production_scene_path.exists():
+        mireford_silt_production_scene_text = mireford_silt_production_scene_path.read_text(encoding="utf-8")
+        ensure(
+            'path="res://tests/battle_mireford_bridge_silt_hunters_production_line_report.gd"' in mireford_silt_production_scene_text
+            and 'name="BattleMirefordBridgeSiltHuntersProductionLineReport" type="Node"' in mireford_silt_production_scene_text,
+            errors,
+            "Mireford Bridge Silt Hunters production-line scene is not wired exactly to its report script.",
+        )
+        scenarios = items_index(load_json(ROOT / "content/scenarios.json"))
+        mireford_encounters = {
+            str(row.get("placement_id", "")): row
+            for row in scenarios.get("mireford-skirmish", {}).get("encounters", [])
+            if isinstance(row, dict)
+        }
+        mireford_silt_stacks = [
+            {"unit_id": str(row.get("unit_id", "")), "count": int(row.get("count", 0))}
+            for row in mireford_encounters.get("bridge_silt_hunters", {}).get("enemy_army", {}).get("stacks", [])
+            if isinstance(row, dict)
+        ]
+        ensure(mireford_silt_stacks == [
+            {"unit_id": "unit_mireclaw_bogplate_maulers", "count": 6},
+            {"unit_id": "unit_mireclaw_reedsnare_kin", "count": 9},
+            {"unit_id": "unit_mireclaw_mudglass_slingers", "count": 5},
+        ], errors, "Mireford Bridge Silt Hunters must retain the exact screened production roster")
     if barrow_vault_report_path.exists():
         barrow_vault_text = barrow_vault_report_path.read_text(encoding="utf-8")
         for required_token in (
