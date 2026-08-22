@@ -11846,6 +11846,42 @@ def validate_content(errors: list[str]) -> None:
         "Rootbound Mireford must place Rootwatch Hollow for the Thornwake dwelling artifact reward",
     )
     bellwake = scenarios.get("bellwake-wreck-claim", {})
+    bellwake_relay = next(
+        (
+            encounter
+            for encounter in bellwake.get("encounters", [])
+            if isinstance(encounter, dict) and str(encounter.get("placement_id", "")) == "bellwake_relay_pickets"
+        ),
+        {},
+    )
+    ensure(
+        bellwake_relay.get("encounter_id") == "encounter_relay_pickets"
+        and bellwake_relay.get("difficulty") == "medium"
+        and int(bellwake_relay.get("combat_seed", 0)) == 18201
+        and bellwake_relay.get("enemy_army")
+        == {
+            "id": "army_bellwake_relay_pickets_watch",
+            "name": "Bellwake Relay Pickets Watch",
+            "faction_id": "faction_sunvault",
+            "stacks": [
+                {"unit_id": "unit_sunvault_shard_wardens", "count": 9},
+                {"unit_id": "unit_sunvault_prism_adepts", "count": 7},
+                {"unit_id": "unit_sunvault_mirror_duelists", "count": 8},
+            ],
+        },
+        errors,
+        "Bellwake Relay Pickets must keep its exact placement-owned 9/7/8 production Sunvault line",
+    )
+    bellwake_relay_guarded_resources = sorted(
+        str(node.get("placement_id", ""))
+        for node in bellwake.get("resource_nodes", [])
+        if isinstance(node, dict) and str(node.get("guard_front_id", "")) == "bellwake_relay_pickets"
+    )
+    ensure(
+        bellwake_relay_guarded_resources == ["bellwake_memory_salt_pan", "bellwake_wreck_claim_bellwake_harbor_rare_exchange"],
+        errors,
+        "Bellwake Relay Pickets must remain the exact guard front for its Memory Salt and rare-exchange routes",
+    )
     bellwake_salvage_encounters = [
         encounter
         for encounter in bellwake.get("encounters", [])
@@ -47434,6 +47470,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     glassroad_archive_scene_path = ROOT / "tests/battle_glassroad_archive_wardens_balance_regression.tscn"
     bellwake_wreck_report_path = ROOT / "tests/battle_bellwake_wreck_balance_regression.gd"
     bellwake_wreck_scene_path = ROOT / "tests/battle_bellwake_wreck_balance_regression.tscn"
+    bellwake_relay_production_report_path = ROOT / "tests/battle_bellwake_relay_pickets_production_line_report.gd"
+    bellwake_relay_production_scene_path = ROOT / "tests/battle_bellwake_relay_pickets_production_line_report.tscn"
     barrow_vault_report_path = ROOT / "tests/battle_ninefold_barrow_vault_balance_regression.gd"
     barrow_vault_scene_path = ROOT / "tests/battle_ninefold_barrow_vault_balance_regression.tscn"
     drowned_reliquary_report_path = ROOT / "tests/battle_ninefold_drowned_reliquary_balance_regression.gd"
@@ -47508,6 +47546,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         combat_balance_scene_path,
         active_breadth_report_path,
         active_breadth_scene_path,
+        bellwake_relay_production_report_path,
+        bellwake_relay_production_scene_path,
         ford_reavers_report_path,
         ford_reavers_scene_path,
         prismhearth_relay_report_path,
@@ -47826,7 +47866,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "MAX_COHORT_TERMINAL_MARGIN_PCT",
             "cohort_average_terminal_health_margin_pct",
             "damage_per_round",
-            '"bellwake_relay_pickets": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 66, "enemy_damage_per_round": 13}',
+            '"unit_sunvault_shard_wardens": 9, "unit_sunvault_prism_adepts": 7, "unit_sunvault_mirror_duelists": 8',
+            '"bellwake_relay_pickets": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 5, "terminal_health_margin_pct": 61, "enemy_damage_per_round": 16}',
             '"bellwake_mirror_lancers": {"outcome_state": "defeat", "pacing_band": "extended", "round_reached": 6, "terminal_health_margin_pct": 40, "enemy_damage_per_round": 49}',
             '"bellwake_aurora_battery": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 50, "enemy_damage_per_round": 25}',
             "get_tree().quit(1)",
@@ -47838,6 +47879,75 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "battle_bellwake_wreck_balance_regression.gd" in bellwake_wreck_scene_text,
             errors,
             "Bellwake Wreck balance regression scene is not wired to its script.",
+        )
+    if bellwake_relay_production_report_path.exists():
+        bellwake_relay_production_text = bellwake_relay_production_report_path.read_text(encoding="utf-8")
+        for required_token in (
+            'REPORT_ID := "BATTLE_BELLWAKE_RELAY_PICKETS_PRODUCTION_LINE_REPORT"',
+            'SCENARIO_ID := "bellwake-wreck-claim"',
+            'PLACEMENT_ID := "bellwake_relay_pickets"',
+            '"unit_sunvault_shard_wardens", "count": 9',
+            '"unit_sunvault_prism_adepts", "count": 7',
+            '"unit_sunvault_mirror_duelists", "count": 8',
+            '"unit_shard_guard", "count": 9',
+            '"unit_prism_adept", "count": 7',
+            '"unit_mirror_duelist", "count": 8',
+            '"unit_sunvault_shard_wardens": ["shielding"]',
+            '"unit_sunvault_prism_adepts": ["volley"]',
+            '"unit_sunvault_mirror_duelists": ["backstab", "reach"]',
+            '["bellwake_memory_salt_pan", "bellwake_wreck_claim_bellwake_harbor_rare_exchange"]',
+            '"break_relay_pickets", "label": "Break the Relay Pickets", "type": "encounter_resolved"',
+            "OverworldRules.normalize_overworld_state(session)",
+            '_stack_health(PRODUCTION_STACKS) != 255',
+            '_stack_health(LEGACY_STACKS) != 211',
+            'Harness.run_battle_sample(SCENARIO_ID, encounter, 72, "normal")',
+            'Harness.run_battle_sample(SCENARIO_ID, encounter, 72, "hard")',
+            'Harness.run_battle_sample(SCENARIO_ID, legacy_encounter, 72, "normal")',
+            'Harness.run_battle_sample(SCENARIO_ID, legacy_encounter, 72, "hard")',
+            'not _sample_exact(production_normal, 5, 61, 16)',
+            'not _sample_exact(production_hard, 4, 65, 17)',
+            'not _sample_exact(legacy_normal, 3, 66, 13)',
+            'not _sample_exact(legacy_hard, 4, 60, 14)',
+            '"adjacent_fronts_exact": true',
+            '"scenario_authority_exact": true',
+            '"session_authority_exact": true',
+            "get_tree().quit(0)",
+            "get_tree().quit(1)",
+        ):
+            ensure(required_token in bellwake_relay_production_text, errors, f"Bellwake Relay Pickets production-line report is missing token: {required_token}")
+        relay_run_match = re.search(r"func _run\(\) -> void:\n(?P<body>.*?)(?=\nfunc _scenario_encounter)", bellwake_relay_production_text, re.S)
+        ensure(relay_run_match is not None, errors, "Could not isolate Bellwake Relay Pickets production-line report run")
+        if relay_run_match is not None:
+            relay_run_body = relay_run_match.group("body")
+            ordered_tokens = (
+                "scenario_authority_before: Dictionary = scenario.duplicate(true)",
+                "mirror_lancers_before: Dictionary",
+                "aurora_battery_before: Dictionary",
+                "OverworldRules.normalize_overworld_state(session)",
+                "session_authority_before: Dictionary = session.to_dict()",
+                "BattleRules.create_battle_payload(session, encounter)",
+                "legacy_encounter: Dictionary = encounter.duplicate(true)",
+                'legacy_army["stacks"] = LEGACY_STACKS.duplicate(true)',
+                'Harness.run_battle_sample(SCENARIO_ID, encounter, 72, "normal")',
+                'Harness.run_battle_sample(SCENARIO_ID, encounter, 72, "hard")',
+                'Harness.run_battle_sample(SCENARIO_ID, legacy_encounter, 72, "normal")',
+                'Harness.run_battle_sample(SCENARIO_ID, legacy_encounter, 72, "hard")',
+                '_scenario_encounter(scenario, "bellwake_mirror_lancers") != mirror_lancers_before',
+                '_scenario_encounter(scenario, "bellwake_aurora_battery") != aurora_battery_before',
+                "scenario != scenario_authority_before",
+            )
+            positions = [relay_run_body.find(token) for token in ordered_tokens]
+            ensure(min(positions) >= 0 and positions == sorted(positions), errors, "Bellwake production report must preserve payload, independent controls, adjacent fronts, and scenario authority in exact order")
+            ensure(relay_run_body.count("Harness.run_battle_sample(") == 4, errors, "Bellwake production report must run exactly four method-matched samples")
+            for forbidden_token in ("BattleRules.apply_action", "BattleAiRules", '\n\tencounter["enemy_army"] =', "session.battle =", "create_timer", "await "):
+                ensure(forbidden_token not in relay_run_body, errors, f"Bellwake production report must remain method-matched and observation-only, not use {forbidden_token}")
+    if bellwake_relay_production_scene_path.exists():
+        bellwake_relay_production_scene_text = bellwake_relay_production_scene_path.read_text(encoding="utf-8")
+        ensure(
+            'path="res://tests/battle_bellwake_relay_pickets_production_line_report.gd"' in bellwake_relay_production_scene_text
+            and 'name="BattleBellwakeRelayPicketsProductionLineReport" type="Node"' in bellwake_relay_production_scene_text,
+            errors,
+            "Bellwake Relay Pickets production-line scene is not wired exactly to its report script.",
         )
     if barrow_vault_report_path.exists():
         barrow_vault_text = barrow_vault_report_path.read_text(encoding="utf-8")
@@ -53839,6 +53949,16 @@ def validate_frontier_claims_direct_encounter_objectives(errors: list[str]) -> N
     for relative_path, exact_array in focused_resolved.items():
         owner_text = (ROOT / relative_path).read_text(encoding="utf-8")
         ensure(exact_array in owner_text, errors, f"{relative_path} must resolve all three exact authored encounter placements")
+    bellwake_owner_text = (ROOT / "tests/veilmourn_bellwake_wreck_player_skirmish_report.gd").read_text(encoding="utf-8")
+    for token in (
+        'var expected_enemy_stacks := {"unit_sunvault_shard_wardens": 9, "unit_sunvault_prism_adepts": 7, "unit_sunvault_mirror_duelists": 8}',
+        'var expected_enemy_abilities := {"unit_sunvault_shard_wardens": ["shielding"], "unit_sunvault_prism_adepts": ["volley"], "unit_sunvault_mirror_duelists": ["backstab", "reach"]}',
+        "enemy_stacks != expected_enemy_stacks",
+        "enemy_abilities != expected_enemy_abilities",
+        '"enemy_stacks": enemy_stacks',
+        '"enemy_abilities": enemy_abilities',
+    ):
+        ensure(token in bellwake_owner_text, errors, f"Bellwake skirmish owner is missing exact production battle token: {token}")
 
 
 def validate_thornwake_rootgate_toll_chapter(errors: list[str]) -> None:
