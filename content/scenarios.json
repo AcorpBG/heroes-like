@@ -4060,9 +4060,9 @@
             "name": "Mireford Silt Hunters Watch",
             "faction_id": "faction_mireclaw",
             "stacks": [
-              {"unit_id": "unit_bog_brute", "count": 6},
-              {"unit_id": "unit_blackbranch_cutthroat", "count": 9},
-              {"unit_id": "unit_mire_slinger", "count": 5}
+              {"unit_id": "unit_mireclaw_bogplate_maulers", "count": 6},
+              {"unit_id": "unit_mireclaw_reedsnare_kin", "count": 9},
+              {"unit_id": "unit_mireclaw_mudglass_slingers", "count": 5}
             ]
           }
         },
