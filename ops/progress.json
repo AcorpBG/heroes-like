@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the Cliffhawk Roost art slice with two original transparent sources and exact reproducible runtime derivatives. Focused runtime proves the live 7/3 watch, authored and generated-map site authority, two BattleBoard entries, and 112 visible frames; two full 412-asset regenerations are byte-identical; compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Broader neutral art, packaged battle interaction, certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+  "currentNotes": "Completed the Greenbranch Copse art slice with two original transparent sources and exact reproducible runtime derivatives. Focused runtime proves the live 9/2 watch, authored/generated-map site authority, claim rewards/recruits, encounter graph, two BattleBoard entries, and 112 visible frames; two full 412-asset regenerations are byte-identical; compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Broader neutral art, packaged battle interaction, certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-neutral-cliffhawk-roost-curated-character-sources-10184",
-  "currentSliceId": "art-neutral-cliffhawk-roost-curated-character-sources-10184",
-  "currentSliceNotes": "Completed only the two original Cliffhawk Roost unit sources and exact existing-path derivatives; content, gameplay, random-map/Native-RMG mapping, and broader release authority remain frozen.",
+  "currentSlice": "art-neutral-greenbranch-copse-curated-character-sources-10184",
+  "currentSliceId": "art-neutral-greenbranch-copse-curated-character-sources-10184",
+  "currentSliceNotes": "Completed only the two original Greenbranch Copse unit sources and exact existing-path derivatives; content, gameplay, recruitment/reward, random-map/Native-RMG mapping, and broader release authority remain frozen.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Cliffhawk Roost Curated Character Sources",
-  "currentSliceUpdatedAt": "2026-08-22T22:45:38Z",
+  "currentSliceTitle": "Greenbranch Copse Curated Character Sources",
+  "currentSliceUpdatedAt": "2026-08-22T23:16:33Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,29 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed slice; do not infer broad neutral-art completion, packaged battle interaction parity, certification, signing/publication, whole-game validation, or release readiness from the completed Cliffhawk boundary.",
-  "notes": "The Cliffhawk Roost art slice is completed. Two original sources now own all eight existing-path runtime derivatives and exact manifest provenance; focused live BattleBoard, authored/generated-map dwelling authority, regeneration, compatibility, static/editor, and bounded Linux/Windows export-startup evidence are green. Broader product and release gaps remain.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed slice; do not infer broad neutral-art completion, packaged battle interaction parity, certification, signing/publication, whole-game validation, or release readiness from the completed Greenbranch boundary.",
+  "notes": "The Greenbranch Copse art slice is completed. Two original sources now own all eight existing-path runtime derivatives and exact manifest provenance; focused live BattleBoard, authored/generated-map dwelling, reward/recruitment and encounter authority, regeneration, compatibility, static/editor, and bounded Linux/Windows export-startup evidence are green. Broader product and release gaps remain.",
   "plannedSlices": [
+    {
+      "id": "art-neutral-greenbranch-copse-curated-character-sources-10184",
+      "title": "Greenbranch Copse Curated Character Sources",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md", "docs/animation-battle-troop-state-contract-report.md"],
+      "purpose": "Replace the generated Greenbranch Cudgels and Sapwhistle Callers emblems with two distinct character-readable original coppice-guard sources and exact reproducible existing-path derivatives while preserving their neutral dwelling graph, shared watch, authored placement, generated-map selection, reward/recruitment behavior, and all gameplay authority.",
+      "implementationTargets": ["art/units/source/curated/unit_neutral_greenbranch_cudgels.png", "art/units/source/curated/unit_neutral_sapwhistle_callers.png", "art/units/portraits/unit_neutral_greenbranch_cudgels.png", "art/units/portraits/unit_neutral_sapwhistle_callers.png", "art/units/battle_icons/unit_neutral_greenbranch_cudgels.png", "art/units/battle_icons/unit_neutral_sapwhistle_callers.png", "art/units/overworld_icons/unit_neutral_greenbranch_cudgels.png", "art/units/overworld_icons/unit_neutral_sapwhistle_callers.png", "art/animation/runtime/units/unit_neutral_greenbranch_cudgels.png", "art/animation/runtime/units/unit_neutral_sapwhistle_callers.png", "content/unit_art_manifest.json", "content/unit_animation_manifest.json", "tools/generate_unit_art_assets.py", "tests/unit_neutral_greenbranch_copse_curated_art_report.gd", "tests/unit_neutral_greenbranch_copse_curated_art_report.tscn", "tests/unit_art_reproducibility_report.py", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"unit_ids": ["unit_neutral_greenbranch_cudgels","unit_neutral_sapwhistle_callers"], "tiers": [1,2], "roles": ["melee","ranged"], "ability_ids": [["shielding"],["harry"]], "source_size": [512,512], "portrait_size": [384,512], "battle_icon_size": [160,160], "overworld_icon_size": [96,96], "animation_sheet_size": [256,896], "animation_state_count": 14, "frames_per_state": 4, "other_units_must_remain_byte_exact": 101, "neutral_dwelling_id": "neutral_dwelling_greenbranch_copse", "shared_army_id": "army_neutral_greenbranch_copse_watch", "shared_army_counts": [9,2], "authored_site_placement_ids": ["dwelling_greenbranch_copse"], "random_map_site_id": "site_greenbranch_copse", "claim_recruits": [2,1], "final_sprite_import": false},
+      "completionCriteria": ["Two distinct original transparent sources follow woven-greenwood cudgel-guardian and resin-dart sapwhistle-caller identities and own exact manifest provenance plus reproducible portrait, battle-icon, overworld-icon, and fourteen-state/four-frame animation-sheet derivatives", "Live neutral unit/dwelling lookup preserves exact stats, costs, growth, abilities, Greenbranch Copse graph, shared 9/2 watch, authored Ninefold placement, generated-map site family, claim rewards/recruits, and encounter authority; a production-rule BattleBoard loads both icon/sheet pairs and all 112 target frames remain visible", "Only two sources, eight target runtime payloads, and two records in each manifest change; all four surfaces for the other 101 units remain byte-exact; full regeneration/reproducibility, focused/neutral-dwelling/random-map/reward/AI compatibility, validator/editor, Linux, and Windows startup gates pass"],
+      "nonGoals": ["Another neutral dwelling/unit, unit stats/abilities/costs/growth, combat balance or AI tuning, encounter/dwelling/site/map-object/army-group content, neutral recruitment/reward rules, random-map or Native-RMG mapping rules, BattleRules/BattleAiRules, animation timing/order, save schema, rendering settings, or packaging behavior", "Broad/final neutral art, packaged battle interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game validation, or release readiness"],
+      "createdAt": "2026-08-22T22:49:00Z",
+      "startedAt": "2026-08-22T22:49:00Z",
+      "updatedAt": "2026-08-22T23:16:33Z",
+      "completedAt": "2026-08-22T23:16:33Z",
+      "notes": "Completed two distinct 512x512 original transparent sources using the built-in image-generation workflow with local chroma-key alpha extraction, plus eight exact existing-path portrait, battle-icon, overworld-icon, and 14-state/4-frame battle-sheet derivatives. Focused runtime /tmp/heroes-greenbranch-focused-final.Mj97NS is natural rc0 with one ok:true marker, exact live unit/dwelling stats and graph, shared 9/2 watch, claim rewards/recruits, encounter and authored/generated-map site authority, two BattleBoard entries, session authority, and 112 visible frames. Two complete 412-asset regeneration passes are byte-identical in /tmp/heroes-greenbranch-repro.amvfzu. Fifteen compatibility owners are rc0 in /tmp/heroes-greenbranch-compat.FaKSrw, including reward, AI, fixed-seed random-map, Native-RMG, battle, manifest and core gates. Static/editor checks pass in /tmp/heroes-greenbranch-static.Y5DJKn, and official Linux plus Windows/Wine export-startup reports are ok:true in /tmp/heroes-greenbranch-platform.MS8kwg. Platform evidence is bounded to export/startup only; broader neutral art, packaged battle interaction, certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "remainingWork": "None for this bounded slice; select the next tracker-approved source-backed release-readiness implementation slice."
+    },
     {
       "id": "art-neutral-cliffhawk-roost-curated-character-sources-10184",
       "title": "Cliffhawk Roost Curated Character Sources",
