@@ -47474,6 +47474,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     bellwake_relay_production_scene_path = ROOT / "tests/battle_bellwake_relay_pickets_production_line_report.tscn"
     glasswing_production_report_path = ROOT / "tests/battle_glassfen_glasswing_sortie_production_line_report.gd"
     glasswing_production_scene_path = ROOT / "tests/battle_glassfen_glasswing_sortie_production_line_report.tscn"
+    clauseworks_beacon_production_report_path = ROOT / "tests/battle_clauseworks_beacon_wardens_production_line_report.gd"
+    clauseworks_beacon_production_scene_path = ROOT / "tests/battle_clauseworks_beacon_wardens_production_line_report.tscn"
     barrow_vault_report_path = ROOT / "tests/battle_ninefold_barrow_vault_balance_regression.gd"
     barrow_vault_scene_path = ROOT / "tests/battle_ninefold_barrow_vault_balance_regression.tscn"
     drowned_reliquary_report_path = ROOT / "tests/battle_ninefold_drowned_reliquary_balance_regression.gd"
@@ -47552,6 +47554,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         bellwake_relay_production_scene_path,
         glasswing_production_report_path,
         glasswing_production_scene_path,
+        clauseworks_beacon_production_report_path,
+        clauseworks_beacon_production_scene_path,
         ford_reavers_report_path,
         ford_reavers_scene_path,
         prismhearth_relay_report_path,
@@ -48034,6 +48038,89 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             and 'name="BattleGlassfenGlasswingSortieProductionLineReport" type="Node"' in glasswing_production_scene_text,
             errors,
             "Glassfen Glasswing production-line scene is not wired exactly to its report script.",
+        )
+    if clauseworks_beacon_production_report_path.exists():
+        clauseworks_beacon_production_text = clauseworks_beacon_production_report_path.read_text(encoding="utf-8")
+        for required_token in (
+            'REPORT_ID := "BATTLE_CLAUSEWORKS_BEACON_WARDENS_PRODUCTION_LINE_REPORT"',
+            'SCENARIO_ID := "clauseworks-counterclaim"',
+            'PLACEMENT_ID := "clauseworks_beacon_wardens"',
+            '"unit_embercourt_lantern_sappers", "count": 6',
+            '"unit_embercourt_fordhook_cadets", "count": 7',
+            '"unit_embercourt_bargebow_crews", "count": 2',
+            '"unit_ember_archer", "count": 6',
+            '"unit_river_guard", "count": 7',
+            '"unit_citadel_pikeward", "count": 2',
+            '"unit_embercourt_lantern_sappers": ["counter_ambush_flare"]',
+            '"unit_embercourt_fordhook_cadets": ["brace", "reach"]',
+            '"unit_embercourt_bargebow_crews": ["volley"]',
+            '"clear_clauseworks_beacon_wardens", "label": "Clear the Clauseworks Beacon Wardens", "type": "encounter_resolved"',
+            "OverworldRules.normalize_overworld_state(session)",
+            "_stack_health(PRODUCTION_STACKS) != 142",
+            "_stack_health(LEGACY_STACKS) != 137",
+            'Harness.run_battle_sample(SCENARIO_ID, encounter, 72, "normal")',
+            'Harness.run_battle_sample(SCENARIO_ID, encounter, 72, "hard")',
+            'Harness.run_battle_sample(SCENARIO_ID, legacy_encounter, 72, "normal")',
+            'Harness.run_battle_sample(SCENARIO_ID, legacy_encounter, 72, "hard")',
+            "not _sample_exact(production_normal, 3, 69, 15)",
+            "not _sample_exact(production_hard, 4, 42, 25)",
+            "not _sample_exact(legacy_normal, 4, 45, 23)",
+            "not _sample_exact(legacy_hard, 3, 55, 24)",
+            'SAVE_SLOT := 7',
+            "SaveService.save_runtime_manual_session(session, SAVE_SLOT)",
+            "SaveService.restore_manual_session(SAVE_SLOT)",
+            'String(summary.get("resume_target", "")) != "overworld"',
+            'victory.overworld["resolved_encounters"] = ["clauseworks_archive_wardens", "clauseworks_bridge_levies", PLACEMENT_ID]',
+            'defeat.day = 13',
+            'ScenarioRules.evaluate_session(victory)',
+            'ScenarioRules.evaluate_session(defeat)',
+            '"guarded_resources_exact": true',
+            '"adjacent_fronts_exact": true',
+            '"scenario_authority_exact": true',
+            '"session_authority_exact": true',
+            '"save_resume_exact": true',
+            '"campaign_progression_unchanged": true',
+            "get_tree().quit(0)",
+            "get_tree().quit(1)",
+        ):
+            ensure(required_token in clauseworks_beacon_production_text, errors, f"Clauseworks Beacon Wardens production-line report is missing token: {required_token}")
+        clauseworks_beacon_run_match = re.search(r"func _run\(\) -> void:\n(?P<body>.*?)(?=\nfunc _scenario_encounter)", clauseworks_beacon_production_text, re.S)
+        ensure(clauseworks_beacon_run_match is not None, errors, "Could not isolate Clauseworks Beacon Wardens production-line report run")
+        if clauseworks_beacon_run_match is not None:
+            clauseworks_beacon_run_body = clauseworks_beacon_run_match.group("body")
+            ordered_tokens = (
+                "scenario_authority_before: Dictionary = scenario.duplicate(true)",
+                "archive_before: Dictionary",
+                "bridge_before: Dictionary",
+                "resources_before: Array",
+                "OverworldRules.normalize_overworld_state(session)",
+                "session_authority_before: Dictionary = session.to_dict()",
+                "BattleRules.create_battle_payload(session, encounter)",
+                "_save_restore(session)",
+                "legacy_encounter: Dictionary = encounter.duplicate(true)",
+                'legacy_army["stacks"] = LEGACY_STACKS.duplicate(true)',
+                'Harness.run_battle_sample(SCENARIO_ID, encounter, 72, "normal")',
+                'Harness.run_battle_sample(SCENARIO_ID, encounter, 72, "hard")',
+                'Harness.run_battle_sample(SCENARIO_ID, legacy_encounter, 72, "normal")',
+                'Harness.run_battle_sample(SCENARIO_ID, legacy_encounter, 72, "hard")',
+                "_outcome_contract()",
+                '_scenario_encounter(scenario, "clauseworks_archive_wardens") != archive_before',
+                '_scenario_encounter(scenario, "clauseworks_bridge_levies") != bridge_before',
+                'scenario.get("resource_nodes", []) != resources_before',
+                "scenario != scenario_authority_before",
+            )
+            positions = [clauseworks_beacon_run_body.find(token) for token in ordered_tokens]
+            ensure(min(positions) >= 0 and positions == sorted(positions), errors, "Clauseworks Beacon Wardens production report must preserve payload, independent controls, adjacent fronts, resources, and scenario authority in exact order")
+            ensure(clauseworks_beacon_run_body.count("Harness.run_battle_sample(") == 4, errors, "Clauseworks Beacon Wardens production report must run exactly four method-matched samples")
+            for forbidden_token in ("BattleRules.apply_action", "BattleAiRules", '\n\tencounter["enemy_army"] =', "session.battle =", "create_timer", "await "):
+                ensure(forbidden_token not in clauseworks_beacon_run_body, errors, f"Clauseworks Beacon Wardens production report must remain method-matched and observation-only, not use {forbidden_token}")
+    if clauseworks_beacon_production_scene_path.exists():
+        clauseworks_beacon_production_scene_text = clauseworks_beacon_production_scene_path.read_text(encoding="utf-8")
+        ensure(
+            'path="res://tests/battle_clauseworks_beacon_wardens_production_line_report.gd"' in clauseworks_beacon_production_scene_text
+            and 'name="BattleClauseworksBeaconWardensProductionLineReport" type="Node"' in clauseworks_beacon_production_scene_text,
+            errors,
+            "Clauseworks Beacon Wardens production-line scene is not wired exactly to its report script.",
         )
     if barrow_vault_report_path.exists():
         barrow_vault_text = barrow_vault_report_path.read_text(encoding="utf-8")
@@ -54378,7 +54465,7 @@ def validate_brasshollow_clauseworks_counterclaim_chapter(errors: list[str]) -> 
     ensure(stacks == {
         "clauseworks_archive_wardens": [{"unit_id": "unit_river_guard", "count": 8}, {"unit_id": "unit_ember_archer", "count": 8}, {"unit_id": "unit_citadel_pikeward", "count": 3}],
         "clauseworks_bridge_levies": [{"unit_id": "unit_river_guard", "count": 5}, {"unit_id": "unit_citadel_pikeward", "count": 4}, {"unit_id": "unit_ember_archer", "count": 6}],
-        "clauseworks_beacon_wardens": [{"unit_id": "unit_ember_archer", "count": 6}, {"unit_id": "unit_river_guard", "count": 7}, {"unit_id": "unit_citadel_pikeward", "count": 2}],
+        "clauseworks_beacon_wardens": [{"unit_id": "unit_embercourt_lantern_sappers", "count": 6}, {"unit_id": "unit_embercourt_fordhook_cadets", "count": 7}, {"unit_id": "unit_embercourt_bargebow_crews", "count": 2}],
     }, errors, "Clauseworks Counterclaim must retain its screened encounter rosters")
     objectives = scenario.get("objectives", {}) if isinstance(scenario.get("objectives", {}), dict) else {}
     victory = {str(row.get("id", "")): row for row in objectives.get("victory", []) if isinstance(row, dict)}

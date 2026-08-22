@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Glassfen Glasswing Sortie now uses the exact production 4/4/1 Sunvault line. Focused live behavior, active breadth, campaign/unit/core compatibility, static/editor, Linux, and Windows startup gates are green with bounded claims.",
+  "currentNotes": "Clauseworks Beacon Wardens now use the exact count-preserving 6/7/2 production Embercourt line. Focused live behavior, chapter/campaign/breadth/unit/core compatibility, static/editor, Linux, and Windows startup gates are green with bounded claims.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-glassfen-glasswing-sortie-production-line-10184",
-  "currentSliceId": "content-glassfen-glasswing-sortie-production-line-10184",
-  "currentSliceNotes": "Completed. The exact production 4/4/1 line retains standard defeats at 45% normal and 72% hard versus independent legacy 42%/74% controls; live scenario, breadth, compatibility, static, and bounded platform startup gates are green.",
+  "currentSlice": "content-clauseworks-beacon-wardens-production-line-10184",
+  "currentSliceId": "content-clauseworks-beacon-wardens-production-line-10184",
+  "currentSliceNotes": "Completed. The exact production 6/7/2 line retains standard victories at 69% normal and 42% hard versus independent legacy 45%/55% controls; live chapter, campaign, breadth, compatibility, static, and bounded platform startup gates are green.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Glassfen Glasswing Sortie Production Line",
-  "currentSliceUpdatedAt": "2026-08-22T07:05:50Z",
+  "currentSliceTitle": "Clauseworks Beacon Wardens Production Line",
+  "currentSliceUpdatedAt": "2026-08-22T07:32:46Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,52 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed release-readiness implementation slice; do not expand the completed Glasswing migration opportunistically.",
-  "notes": "Completed the bounded Glassfen Glasswing Sortie production-line migration. Exact focused production/legacy controls, live save/outcome behavior, active breadth, campaign/unit/core compatibility, static/editor, and Linux/Windows export-startup evidence are green; no broader balance, packaged interaction, certification, signing, whole-game, or release-readiness claim is made.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed release-readiness implementation slice; do not expand the completed Clauseworks Beacon Wardens migration opportunistically.",
+  "notes": "Completed the bounded Clauseworks Beacon Wardens production-line migration. Exact focused production/legacy controls, live chapter/campaign/save/outcome behavior, active breadth, unit/core compatibility, static/editor, and Linux/Windows export-startup evidence are green; no broader balance, packaged interaction, certification, signing, whole-game, or release-readiness claim is made.",
   "plannedSlices": [
+    {
+      "id": "content-clauseworks-beacon-wardens-production-line-10184",
+      "title": "Clauseworks Beacon Wardens Production Line",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/factions-content-bible.md"],
+      "purpose": "Replace only Clauseworks Counterclaim's Beacon Wardens legacy Embercourt trio with the count-preserving production T1-T3 line while retaining its authored victory pressure and chapter authority.",
+      "implementationTargets": ["content/scenarios.json", "tests/battle_clauseworks_beacon_wardens_production_line_report.gd", "tests/battle_clauseworks_beacon_wardens_production_line_report.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {
+        "scenario_id": "clauseworks-counterclaim",
+        "encounter_placement_id": "clauseworks_beacon_wardens",
+        "legacy_stack_ids": ["unit_ember_archer", "unit_river_guard", "unit_citadel_pikeward"],
+        "legacy_stack_counts": [6, 7, 2],
+        "production_stack_ids": ["unit_embercourt_lantern_sappers", "unit_embercourt_fordhook_cadets", "unit_embercourt_bargebow_crews"],
+        "production_stack_counts": [6, 7, 2],
+        "legacy_total_stack_health": 137,
+        "production_total_stack_health": 142,
+        "legacy_normal": {"outcome": "victory", "rounds": 4, "player_health_remaining_pct": 45, "enemy_damage_per_round": 23, "pacing_band": "standard"},
+        "production_normal": {"outcome": "victory", "rounds": 3, "player_health_remaining_pct": 69, "enemy_damage_per_round": 15, "pacing_band": "standard"},
+        "legacy_hard": {"outcome": "victory", "rounds": 3, "player_health_remaining_pct": 55, "enemy_damage_per_round": 24, "pacing_band": "standard"},
+        "production_hard": {"outcome": "victory", "rounds": 4, "player_health_remaining_pct": 42, "enemy_damage_per_round": 25, "pacing_band": "standard"},
+        "invalid_order_count": 0,
+        "screen_artifact": "/tmp/heroes-legacy-front-production-screen.HRpvD7/report.json"
+      },
+      "completionCriteria": [
+        "The exact Clauseworks Beacon Wardens use only production Lantern Sappers, Fordhook Cadets, and Bargebow Crews at 6/7/2 while retaining encounter/army identity, placement, high difficulty, combat seed, objective, and guarded chapter authority",
+        "Public BattleRules payload and deterministic normal/hard autoplay expose exact Counter-Ambush Flare, reach/brace, and volley abilities, retain standard victories at 69%/42% with zero invalid orders, and retain independent legacy controls at 45%/55%",
+        "Real Clauseworks behavior preserves adjacent fronts, guarded resources, town/economy, save/resume, reachable outcomes, campaign progression/import, and scenario/session authority",
+        "Active scenario breadth remains complete with zero stalls or invalid orders and no high-priority tuning item; unit ability and core compatibility remain green",
+        "Repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "Clauseworks Archive Wardens or Bridge Levies, counts beyond exact 6/7/2, shared unit stats/abilities, BattleRules, BattleAiRules, player army, reward/objective/route topology, difficulty thresholds, save schema, Native RMG, or packaging behavior changes",
+        "Broad faction balance, packaged encounter interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "createdAt": "2026-08-22T07:20:07Z",
+      "startedAt": "2026-08-22T07:20:07Z",
+      "updatedAt": "2026-08-22T07:32:46Z",
+      "completedAt": "2026-08-22T07:32:46Z",
+      "notes": "Completed with the exact count-preserving production 6/7/2 line. Focused runtime proves Counter-Ambush Flare, reach/brace, volley, 142 versus 137 health, production normal 3 rounds/69%/DPR15 and hard 4 rounds/42%/DPR25, independent legacy controls 4 rounds/45%/DPR23 and 3 rounds/55%/DPR24, and zero invalid orders. Live Clauseworks and full Frontier Claims flows preserve adjacent fronts, guarded resources, town/economy, save/resume, reachable outcomes, campaign progression/import, and scenario/session authority. Active breadth is 77/77 with queue signature 829808c9 and zero stalls/invalid orders/items; unit ability and core are green. Static/editor and official Linux export/headless startup plus Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. Adjacent fronts, shared content/rules, packaged interaction, broad balance, certification, signing/publication, whole-game validation, and release readiness remain out of scope."
+    },
     {
       "id": "content-glassfen-glasswing-sortie-production-line-10184",
       "title": "Glassfen Glasswing Sortie Production Line",
@@ -93011,7 +93054,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "content_glassfen_glasswing_sortie_production_line_completed",
+  "result": "content_clauseworks_beacon_wardens_production_line_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -93112,9 +93155,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Glassfen Breakers' Glasswing Sortie now uses a pressure-matched production Sunvault 4/4/1 roster with focused live, active-breadth, compatibility, static/editor, and bounded platform startup evidence.",
+  "summary": "Clauseworks Counterclaim's Beacon Wardens now use the count-preserving production Embercourt 6/7/2 line with focused live, chapter/campaign, active-breadth, compatibility, static/editor, and bounded platform startup evidence.",
   "taskId": "10184",
-  "updatedAt": "2026-08-22T07:05:50Z",
+  "updatedAt": "2026-08-22T07:32:46Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
