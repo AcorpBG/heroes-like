@@ -43090,6 +43090,76 @@ def validate_six_faction_biome_scenario_breadth(errors: list[str]) -> None:
     }
     ensure(required_new_encounters.issubset(encounters.keys()), errors, "Ninefold Confluence must keep narrow encounters for the new scaffold faction fronts")
 
+    prism_matrix_rows = [
+        encounter
+        for encounter in scenario.get("encounters", [])
+        if isinstance(encounter, dict) and str(encounter.get("placement_id", "")) == "ninefold_prism_matrix"
+    ]
+    ensure(len(prism_matrix_rows) == 1, errors, "Ninefold Confluence must keep exactly one Prism Matrix encounter")
+    if len(prism_matrix_rows) == 1:
+        prism_matrix = prism_matrix_rows[0]
+        prism_army = prism_matrix.get("enemy_army", {}) if isinstance(prism_matrix.get("enemy_army", {}), dict) else {}
+        ensure(
+            {
+                "encounter_id": str(prism_matrix.get("encounter_id", "")),
+                "x": int(prism_matrix.get("x", -1)),
+                "y": int(prism_matrix.get("y", -1)),
+                "difficulty": str(prism_matrix.get("difficulty", "")),
+                "combat_seed": int(prism_matrix.get("combat_seed", 0)),
+            }
+            == {"encounter_id": "encounter_daybreak_matrix", "x": 23, "y": 38, "difficulty": "high", "combat_seed": 16402},
+            errors,
+            "Ninefold Prism Matrix encounter identity, placement, difficulty, or seed drifted",
+        )
+        ensure(
+            {"id": str(prism_army.get("id", "")), "name": str(prism_army.get("name", "")), "faction_id": str(prism_army.get("faction_id", ""))}
+            == {"id": "army_ninefold_prism_matrix_watch", "name": "Ninefold Prism Matrix Watch", "faction_id": "faction_sunvault"},
+            errors,
+            "Ninefold Prism Matrix production army identity drifted",
+        )
+        ensure(
+            prism_army.get("stacks", [])
+            == [
+                {"unit_id": "unit_sunvault_shard_wardens", "count": 6},
+                {"unit_id": "unit_sunvault_prism_adepts", "count": 2},
+                {"unit_id": "unit_sunvault_mirror_duelists", "count": 2},
+            ],
+            errors,
+            "Ninefold Prism Matrix must retain the exact production Sunvault 6/2/2 line",
+        )
+
+    ninefold_smoke_text = (ROOT / "tests" / "ninefold_scenario_smoke.gd").read_text(encoding="utf-8")
+    for required_token in (
+        'const PRISM_MATRIX_PLACEMENT_ID := "ninefold_prism_matrix"',
+        'const PRISM_MATRIX_PRODUCTION_STACKS := [',
+        'const PRISM_MATRIX_LEGACY_STACKS := [',
+        'if not _assert_prism_matrix_production_line(scenario):',
+        'func _assert_prism_matrix_production_line(scenario: Dictionary) -> bool:',
+        'OverworldRules.normalize_overworld_state(payload_session)',
+        'var payload_authority_before: Dictionary = payload_session.to_dict()',
+        'var battle_payload: Dictionary = BattleRules.create_battle_payload(payload_session, encounter)',
+        'var actual_abilities: Dictionary = _battle_enemy_ability_contract(battle_payload)',
+        'if actual_abilities != expected_abilities:',
+        '"count": int(stack_value.get("base_count", 0))',
+        '_army_stack_health(PRISM_MATRIX_PRODUCTION_STACKS) != 96',
+        '_army_stack_health(PRISM_MATRIX_LEGACY_STACKS) != 92',
+        'run_battle_sample(SCENARIO_ID, encounter, 72, "normal")',
+        'legacy_encounter["placement_id"] = "%s:legacy_control" % PRISM_MATRIX_PLACEMENT_ID',
+        'run_battle_sample(SCENARIO_ID, legacy_encounter, 72, "normal")',
+        'int(production_sample.get("player_health_remaining_pct", -1)) != 36',
+        'int(legacy_sample.get("player_health_remaining_pct", -1)) != 46',
+        'abs(int(production_sample.get("player_health_remaining_pct", 0)) - int(legacy_sample.get("player_health_remaining_pct", 0))) > 10',
+    ):
+        ensure(required_token in ninefold_smoke_text, errors, f"Ninefold Prism Matrix focused production/legacy owner is missing: {required_token}")
+    for forbidden_token in (
+        'legacy_encounter["placement_id"] = PRISM_MATRIX_PLACEMENT_ID',
+        'PRISM_MATRIX_PRODUCTION_STACKS = PRISM_MATRIX_LEGACY_STACKS',
+        'BattleRules._',
+        'BattleAiRules._',
+        'create_timer(',
+    ):
+        ensure(forbidden_token not in ninefold_smoke_text, errors, f"Ninefold Prism Matrix focused owner must not bypass public deterministic authority: {forbidden_token}")
+
     placed_site_families: set[str] = set()
     placed_dwelling_family_ids: set[str] = set()
     mismatched_dwelling_placements: list[str] = []
