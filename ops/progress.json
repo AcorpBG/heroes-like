@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the Fenhound Kennels curated-character source slice with two original transparent sources, exact deterministic derivatives, preserved live dwelling/content/Native-RMG authority, focused BattleBoard proof, reproducible 412-asset manifests, relevant compatibility, static/editor, and bounded Linux/Windows export-startup gates. The independent fixed-seed random-map same-type-neutral-town fixture remains red and is not claimed by this art slice.",
+  "currentNotes": "Completed the test-only random-map same-type fixture refresh. The exact -b seed preserves the 30x22 frontier-spokes/player boundary and naturally passes with four towns, one same-type neutral town, minimum spacing 9 against required 8, nine mines, six dwellings, no conflicts, and all retained authority gates. Production RMG/Native-RMG/gameplay files are unchanged; no implementation progress is claimed.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-neutral-fenhound-kennels-curated-character-sources-10184",
-  "currentSliceId": "art-neutral-fenhound-kennels-curated-character-sources-10184",
-  "currentSliceNotes": "The two curated Fenhound Kennels unit sources and exact existing-path derivatives are complete; content, gameplay, Native-RMG mapping, and broader release authority remain unchanged. Select the next source-backed slice without inferring broad neutral-art or release completion.",
+  "currentSlice": "random-map-town-mine-dwelling-same-type-fixture-refresh-10184",
+  "currentSliceId": "random-map-town-mine-dwelling-same-type-fixture-refresh-10184",
+  "currentSliceNotes": "The stale focused seed is refreshed and validator-owned; the original seed remains a valid warning-level strict-spacing case, and all production/Native-RMG behavior remains frozen. Select the next source-backed implementation slice.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Fenhound Kennels Curated Character Sources",
-  "currentSliceUpdatedAt": "2026-08-22T22:08:20Z",
+  "currentSliceTitle": "Random Map Same-Type Town Fixture Refresh",
+  "currentSliceUpdatedAt": "2026-08-22T22:17:20Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,29 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed implementation slice; do not infer broad neutral-art completion, waive the independent fixed-seed random-map red, or claim release readiness.",
-  "notes": "The Fenhound Kennels art slice is completed. Two original sources own exact reproducible derivatives and manifests; live stats, abilities, dwelling graph, shared 7/2 watch, three authored placements, Native-RMG mapping, and BattleBoard authority remain exact. Focused/relevant compatibility/static/editor and bounded Linux/Windows export-startup gates are green. The separate random-map same-type-neutral-town fixture remains red and unclaimed.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed implementation slice; do not count the completed fixture-only correction as gameplay/RMG progress or infer Native-RMG parity or release readiness.",
+  "notes": "The random-map town/mine/dwelling same-type fixture refresh is completed as support work. Natural runtime rc0 reports four towns, one same-type neutral town, minimum distance 9/required 8, nine mines, six dwellings, no conflicts, and exact deterministic/fairness/metadata authority. Only the test seed, validator, PLAN, and tracker changed; production remains byte-exact.",
   "plannedSlices": [
+    {
+      "id": "random-map-town-mine-dwelling-same-type-fixture-refresh-10184",
+      "title": "Random Map Same-Type Town Fixture Refresh",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "test_compatibility_correction",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/random-map-homm3-parity-gap-audit.md"],
+      "purpose": "Refresh only the deterministic town/mine/dwelling focused fixture seed so it exercises the authored same-type neutral-town branch under the current strict town-spacing contract without changing production generation behavior.",
+      "implementationTargets": ["tests/random_map_town_mine_dwelling_placement_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"old_seed": "town-mine-dwelling-placement-10184", "old_generated_ok": true, "old_validation_status": "warning", "old_town_count": 3, "old_same_type_neutral_town_count": 0, "candidate_seed": "town-mine-dwelling-placement-10184-b", "candidate_generated_ok": true, "candidate_validation_status": "pass", "candidate_town_count": 4, "candidate_same_type_neutral_town_count": 1, "candidate_observed_minimum_town_distance": 9, "minimum_town_distance_required": 8, "map_size": [30,22], "production_change": false},
+      "completionCriteria": ["Focused report uses only the exact -b seed while retaining the 30x22 land/frontier-spokes/one-human-two-computer boundary and deterministic signature checks", "Runtime naturally passes with four towns, one same-type neutral town, required mine/dwelling/metadata/pathing/fairness boundaries, no conflicts, and strict spacing", "Validator pins the seed and retained semantics while production generator/template/catalog/Native-RMG/gameplay files remain unchanged"],
+      "nonGoals": ["Town placement, spacing, fallback, warning, template, catalog, generator, Native-RMG, topology, fairness, save, UI, packaging, or gameplay changes", "Implementation progress, RMG parity, whole-game validation, or release readiness claims"],
+      "createdAt": "2026-08-22T22:14:51Z",
+      "startedAt": "2026-08-22T22:14:51Z",
+      "updatedAt": "2026-08-22T22:17:20Z",
+      "completedAt": "2026-08-22T22:17:20Z",
+      "notes": "Completed as a test-only compatibility correction. The exact -b seed preserves the 30x22 land/frontier-spokes/one-human-two-computer boundary and naturally passes with four towns, one same-type neutral town, minimum distance 9 against required 8, nine mines, six dwellings, no conflicts, deterministic changed-seed coverage, and retained metadata/fairness assertions. Validator pins the exact seed and production strict-spacing semantics; no production, template/catalog, Native-RMG, or gameplay file changed.",
+      "remainingWork": "None for this support slice; select the next tracker-approved source-backed implementation slice."
+    },
     {
       "id": "art-neutral-fenhound-kennels-curated-character-sources-10184",
       "title": "Fenhound Kennels Curated Character Sources",
@@ -94535,7 +94555,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "art_neutral_fenhound_kennels_curated_character_sources_completed",
+  "result": "random_map_town_mine_dwelling_same_type_fixture_refresh_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
