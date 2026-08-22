@@ -17,6 +17,7 @@ ART_ROOT = ROOT / "art" / "units"
 ANIMATION_ROOT = ROOT / "art" / "animation" / "runtime" / "units"
 CURATED_SOURCE_ROOT = ART_ROOT / "source" / "curated"
 CURATED_CHARACTER_SOURCE_IDS = {
+    "unit_aurora_ballista",
     "unit_blackbranch_cutthroat",
     "unit_bog_brute",
     "unit_brasshollow_furnace_pavis_teams",

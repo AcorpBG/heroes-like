@@ -305,6 +305,9 @@ PRISM_ADEPT_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_sunvault_pris
 MIRROR_DUELIST_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_mirror_duelist.png"
 MIRROR_DUELIST_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_sunvault_mirror_duelist_curated_art_report.gd"
 MIRROR_DUELIST_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_sunvault_mirror_duelist_curated_art_report.tscn"
+AURORA_BALLISTA_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_aurora_ballista.png"
+AURORA_BALLISTA_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_sunvault_aurora_ballista_curated_art_report.gd"
+AURORA_BALLISTA_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_sunvault_aurora_ballista_curated_art_report.tscn"
 SCRIP_HAULERS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_brasshollow_scrip_haulers.png"
 SCRIP_HAULERS_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_brasshollow_scrip_haulers_curated_art_report.gd"
 SCRIP_HAULERS_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_brasshollow_scrip_haulers_curated_art_report.tscn"
@@ -42447,6 +42450,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     shard_guard_unit_id = "unit_shard_guard"
     prism_adept_unit_id = "unit_prism_adept"
     mirror_duelist_unit_id = "unit_mirror_duelist"
+    aurora_ballista_unit_id = "unit_aurora_ballista"
     scrip_haulers_unit_id = "unit_brasshollow_scrip_haulers"
     rivet_hounds_unit_id = "unit_brasshollow_rivet_hounds"
     furnace_pavis_unit_id = "unit_brasshollow_furnace_pavis_teams"
@@ -42509,6 +42513,10 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         errors,
         "Mirror Duelist curated character source bytes drifted",
     )
+    aurora_ballista_source_res_path = "res://art/units/source/curated/unit_aurora_ballista.png"
+    aurora_ballista_source_sha256 = "f41f6b46ab457267a870128b0bf2d5c4a15f1803e055625fe8db9cd7a85e7625"
+    ensure(png_size(AURORA_BALLISTA_CURATED_SOURCE_PATH) == (512, 512), errors, "Aurora Ballista curated character source must be a 512x512 PNG")
+    ensure(hashlib.sha256(AURORA_BALLISTA_CURATED_SOURCE_PATH.read_bytes()).hexdigest() == aurora_ballista_source_sha256, errors, "Aurora Ballista curated character source bytes drifted")
     scrip_haulers_source_res_path = "res://art/units/source/curated/unit_brasshollow_scrip_haulers.png"
     scrip_haulers_source_sha256 = "759022e21b7781df3c88ba853b32905b52a820cafe45d2814a2006629d26e028"
     ensure(png_size(SCRIP_HAULERS_CURATED_SOURCE_PATH) == (512, 512), errors, "Scrip Haulers curated character source must be a 512x512 PNG")
@@ -42605,14 +42613,14 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         if isinstance(record, dict) and str(record.get("art_source_kind", "")) == "curated_original_character_v1"
     ]
     ensure(
-        sorted(str(record.get("unit_id", "")) for record in curated_art_records) == sorted([fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, prism_adept_unit_id, mirror_duelist_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id]),
+        sorted(str(record.get("unit_id", "")) for record in curated_art_records) == sorted([aurora_ballista_unit_id, fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, prism_adept_unit_id, mirror_duelist_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id]),
         errors,
-        "Exactly the approved twenty-seven units, including distinct Mirror Duelist and Mirror Duelists records, may use the curated character-source branch",
+        "Exactly the approved twenty-eight units, including the distinct Aurora Ballista and Aurora Bastions records, may use the curated character-source branch",
     )
     ensure(
-        sorted(str(record.get("unit_id", "")) for record in curated_animation_records) == sorted([fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, prism_adept_unit_id, mirror_duelist_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id]),
+        sorted(str(record.get("unit_id", "")) for record in curated_animation_records) == sorted([aurora_ballista_unit_id, fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, prism_adept_unit_id, mirror_duelist_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id]),
         errors,
-        "Exactly the approved twenty-seven units, including distinct Mirror Duelist and Mirror Duelists animation records, may use the curated character-source branch",
+        "Exactly the approved twenty-eight units, including the distinct Aurora Ballista and Aurora Bastions animation records, may use the curated character-source branch",
     )
     for curated_record, label in (
         (records_by_unit_id.get(fordhook_unit_id, {}), "art"),
@@ -42644,6 +42652,12 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     ):
         ensure(str(curated_record.get("curated_source", "")) == mirror_duelist_source_res_path, errors, f"Mirror Duelist {label} manifest curated source path drifted")
         ensure(str(curated_record.get("curated_source_sha256", "")) == mirror_duelist_source_sha256, errors, f"Mirror Duelist {label} manifest curated source hash drifted")
+    for curated_record, label in (
+        (records_by_unit_id.get(aurora_ballista_unit_id, {}), "art"),
+        (animation_records_by_unit_id.get(aurora_ballista_unit_id, {}), "animation"),
+    ):
+        ensure(str(curated_record.get("curated_source", "")) == aurora_ballista_source_res_path, errors, f"Aurora Ballista {label} manifest curated source path drifted")
+        ensure(str(curated_record.get("curated_source_sha256", "")) == aurora_ballista_source_sha256, errors, f"Aurora Ballista {label} manifest curated source hash drifted")
     for curated_record, label in (
         (records_by_unit_id.get(scrip_haulers_unit_id, {}), "art"),
         (animation_records_by_unit_id.get(scrip_haulers_unit_id, {}), "animation"),
@@ -42735,6 +42749,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     ):
         ensure(required_token in generator_text, errors, f"Unit art generator is missing token {required_token}")
     expected_curated_id_block = '''CURATED_CHARACTER_SOURCE_IDS = {
+    "unit_aurora_ballista",
     "unit_blackbranch_cutthroat",
     "unit_bog_brute",
     "unit_brasshollow_furnace_pavis_teams",
@@ -42763,7 +42778,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     "unit_veilmourn_maskglass_corsairs",
     "unit_veilmourn_mourning_lanterns",
 }'''
-    ensure(generator_text.count(expected_curated_id_block) == 1, errors, "Unit art generator curated source id set must contain exactly the twenty-seven approved units in stable order")
+    ensure(generator_text.count(expected_curated_id_block) == 1, errors, "Unit art generator curated source id set must contain exactly the twenty-eight approved units in stable order")
     for required_branch in (
         '''if not preserve_authored_asset(unit_id, "portrait", portrait_path):
             if curated_source is None:
@@ -43110,6 +43125,45 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         errors,
         "Mirror Duelist curated art report scene must own the exact focused script",
     )
+    aurora_ballista_report_text = AURORA_BALLISTA_CURATED_ART_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'REPORT_ID := "UNIT_SUNVAULT_AURORA_BALLISTA_CURATED_ART_REPORT"',
+        'TARGET_IDS := ["unit_aurora_ballista"]',
+        'DISTINCT_PRESERVED_UNIT_ID := "unit_sunvault_aurora_ballistae"',
+        '"unit_id": "unit_aurora_ballista", "label": "Aurora Ballista", "ability_ids": ["volley", "formation_guard"]',
+        '"source_sha256": "f41f6b46ab457267a870128b0bf2d5c4a15f1803e055625fe8db9cd7a85e7625"',
+        '"portrait_sha256": "35c1045602eb08a02ebb32de1a95b553f081a0497991f219860f4d4eec89a1b8"',
+        '"icon_sha256": "696df33ddaf6167e5734cf2c1154cdfc1f253a97d816749691be7e20452cc1e3"',
+        '"overworld_icon_sha256": "de0a71c06650ed3d5e4e0029adf6cfa2c8ed4d38c326fc9d02051f7d37845a24"',
+        '"sheet_sha256": "956d0ba427786b6265a10a4a95e85868f3767334bf6e25795d9fe07835f4a1dc"',
+        '"old_portrait_sha256": "bdea0035a647cd368439aed86098b6e3bfdefd186932825876f0ada8a571e231"',
+        '"old_icon_sha256": "2f5eedae6f967f9036276603f92247a94489f6591d3b0ad85509030d91deac84"',
+        '"old_overworld_icon_sha256": "0c9a38841dd39ff792685aa1290c545b92f9abeeebbe2cac68e6df2047bc7ff4"',
+        '"old_sheet_sha256": "f7ee9cf7896f31e63157193b1e03f356494d43abb4e0805fadf68a90bbb2db22"',
+        '"scenario_id": "prismhearth-watch", "placement_id": "prismhearth_halo_reserve", "army_id": "army_prismhearth_halo_reserve_watch"',
+        '"scenario_id": "daybreak-spire", "placement_id": "daybreak_array", "army_id": "army_daybreak_array_watch"',
+        '"scenario_id": "bellwake-wreck-claim", "placement_id": "bellwake_aurora_battery", "army_id": "army_bellwake_aurora_battery_watch"',
+        '"scenario_id": "fogchart-mooring", "placement_id": "fogchart_aurora_battery", "army_id": "army_fogchart_aurora_battery"',
+        'String(distinct_art.get("unit_id", "")) == DISTINCT_PRESERVED_UNIT_ID',
+        'FileAccess.get_sha256(String(distinct_art.get("portrait", ""))) == "ffbc2c6dae600fc32aadb6720e21f9d682f4abb71c0fec3dadf8bdbf4ab10534"',
+        '_validate_assets_and_provenance()', 'await _validate_live_encounters_and_board()',
+        'source.get_size() == Vector2i(512, 512)', 'portrait.get_size() == Vector2i(384, 512)',
+        'icon.get_size() == Vector2i(160, 160)', 'overworld_icon.get_size() == Vector2i(96, 96)',
+        'sheet.get_size() == Vector2i(256, 896)', 'visible == FRAMES_PER_STATE and signatures.size() >= 2',
+        'BattleRulesScript.create_battle_payload(session, placement)', '_battle_stack_contract(enemy_stacks) == spec["stacks"]',
+        '_battle_target_ability_contract(enemy_stacks) == expected_abilities', 'session.to_dict() == authority_before',
+        'String(spec["placement_id"]) == "fogchart_aurora_battery"', 'board.validation_unit_art_summary()',
+        'String(entry.get("battle_icon", "")) == String(unit_spec["icon_path"])',
+        'String(entry.get("animation_sheet", "")) == String(unit_spec["sheet_path"])',
+        'board_session.to_dict() == board_authority_before',
+    ):
+        ensure(required_token in aurora_ballista_report_text, errors, f"Aurora Ballista curated art report is missing token {required_token}")
+    ensure(aurora_ballista_report_text.count('"scenario_id": ') == 6, errors, "Aurora Ballista focused report must own exactly four encounter rows plus one detached result row and one runtime summary scenario id")
+    for forbidden_token in ("draw_curated_portrait", "draw_curated_overworld_icon", "draw_curated_battle_icon", "draw_curated_battle_troop_animation_sheet", '"final_sprite_import": true', "ContentService._unit_art_manifest", "save_png", "generate_unit_art_assets", 'placement[', 'army[', 'enemy_stacks['):
+        ensure(forbidden_token not in aurora_ballista_report_text, errors, f"Aurora Ballista focused report must remain observation-only: {forbidden_token}")
+    aurora_ballista_scene_text = AURORA_BALLISTA_CURATED_ART_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure('path="res://tests/unit_sunvault_aurora_ballista_curated_art_report.gd"' in aurora_ballista_scene_text, errors, "Aurora Ballista curated art report scene must own the exact focused script")
+
     scrip_report_text = SCRIP_HAULERS_CURATED_ART_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
         'REPORT_ID := "UNIT_BRASSHOLLOW_SCRIP_HAULERS_CURATED_ART_REPORT"',
