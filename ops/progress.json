@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved source-backed release-readiness slice."
+    "Select the next tracker-approved source-backed production slice."
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the bounded Thornwake upper-ladder curated character-source slice with four original sources, exact existing-path runtime derivatives, live authority, reproducibility, compatibility, and bounded Linux/Windows export-startup evidence. Select the next tracker-approved source-backed slice.",
+  "currentNotes": "Completed the Veilmourn upper-ladder curated-character slice with four original sources, sixteen exact runtime derivatives, live Bellwake/BattleBoard authority, 412-asset reproducibility, compatibility, static/editor, and bounded Linux/Windows startup evidence. Broad/final art and release readiness remain unclaimed; select the next tracker-approved source-backed slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-thornwake-upper-ladder-curated-character-sources-10184",
-  "currentSliceId": "art-thornwake-upper-ladder-curated-character-sources-10184",
-  "currentSliceNotes": "The Thornwake tier-4 through tier-7 curated sources and exact existing-path derivatives are complete; the early ladder and every gameplay/content contract remain exact. Broader art and release-readiness work remains open.",
+  "currentSlice": "art-veilmourn-upper-ladder-curated-character-sources-10184",
+  "currentSliceId": "art-veilmourn-upper-ladder-curated-character-sources-10184",
+  "currentSliceNotes": "Four original Veilmourn upper-ladder sources and exact existing-path derivatives are live and reproducible; curated early-ladder and gameplay/content authority remain exact. Platform evidence is export/startup only.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Thornwake Upper-Ladder Curated Character Sources",
-  "currentSliceUpdatedAt": "2026-08-22T18:18:44Z",
+  "currentSliceTitle": "Veilmourn Upper-Ladder Curated Character Sources",
+  "currentSliceUpdatedAt": "2026-08-22T18:51:24Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,29 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select only a tracker-approved source-backed implementation slice. Do not infer broad/final art, whole-game completion, native parity, certification, publication, or release readiness from this bounded art slice.",
-  "notes": "The Thornwake upper-ladder art slice is complete. Four original transparent sources and sixteen exact runtime derivatives are live; recruitment, encounters, BattleBoard, early-ladder preservation, reproducibility, compatibility, and bounded Linux/Windows export-startup gates pass. Packaged battle interaction and broad release claims remain open.",
+  "nextActionGuardrailNote": "Select a tracker-approved source-backed production slice; do not infer broad/final art or release readiness from the completed Veilmourn art increment.",
+  "notes": "The Veilmourn upper-ladder art slice is complete: four original sources, sixteen exact runtime derivatives, live recruitment/player-army/BattleBoard authority, byte-exact non-target preservation, reproducibility, compatibility, and bounded Linux/Windows startup gates pass. Broad/final art and release readiness remain unclaimed.",
   "plannedSlices": [
+    {
+      "id": "art-veilmourn-upper-ladder-curated-character-sources-10184",
+      "title": "Veilmourn Upper-Ladder Curated Character Sources",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md", "docs/animation-battle-troop-state-contract-report.md", "docs/factions-content-bible.md"],
+      "purpose": "Replace the four production Veilmourn tier-4 through tier-7 generated emblems with distinct character-readable original sources and exact reproducible existing-path runtime derivatives while preserving the curated tier-1 through tier-3 line and all gameplay authority.",
+      "implementationTargets": ["art/units/source/curated/unit_veilmourn_undertow_harpooners.png", "art/units/source/curated/unit_veilmourn_obituary_scribes.png", "art/units/source/curated/unit_veilmourn_mirrorkeel_reavers.png", "art/units/source/curated/unit_veilmourn_fogbound_leviathan.png", "art/units/portraits/unit_veilmourn_undertow_harpooners.png", "art/units/portraits/unit_veilmourn_obituary_scribes.png", "art/units/portraits/unit_veilmourn_mirrorkeel_reavers.png", "art/units/portraits/unit_veilmourn_fogbound_leviathan.png", "art/units/battle_icons/unit_veilmourn_undertow_harpooners.png", "art/units/battle_icons/unit_veilmourn_obituary_scribes.png", "art/units/battle_icons/unit_veilmourn_mirrorkeel_reavers.png", "art/units/battle_icons/unit_veilmourn_fogbound_leviathan.png", "art/units/overworld_icons/unit_veilmourn_undertow_harpooners.png", "art/units/overworld_icons/unit_veilmourn_obituary_scribes.png", "art/units/overworld_icons/unit_veilmourn_mirrorkeel_reavers.png", "art/units/overworld_icons/unit_veilmourn_fogbound_leviathan.png", "art/animation/runtime/units/unit_veilmourn_undertow_harpooners.png", "art/animation/runtime/units/unit_veilmourn_obituary_scribes.png", "art/animation/runtime/units/unit_veilmourn_mirrorkeel_reavers.png", "art/animation/runtime/units/unit_veilmourn_fogbound_leviathan.png", "content/unit_art_manifest.json", "content/unit_animation_manifest.json", "tools/generate_unit_art_assets.py", "tests/unit_veilmourn_upper_ladder_curated_art_report.gd", "tests/unit_veilmourn_upper_ladder_curated_art_report.tscn", "tests/unit_art_reproducibility_report.py", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"unit_ids": ["unit_veilmourn_undertow_harpooners", "unit_veilmourn_obituary_scribes", "unit_veilmourn_mirrorkeel_reavers", "unit_veilmourn_fogbound_leviathan"], "tiers": [4,5,6,7], "roles": ["ranged","ranged","melee","melee"], "ability_ids": [["harry"],["obituary"],["reach","backstab"],["fogwake"]], "source_size": [512,512], "portrait_size": [384,512], "battle_icon_size": [160,160], "overworld_icon_size": [96,96], "animation_sheet_size": [256,896], "animation_state_count": 14, "frames_per_state": 4, "other_units_must_remain_byte_exact": 99, "preserved_early_ladder_ids": ["unit_veilmourn_bellwake_oars", "unit_veilmourn_mourning_lanterns", "unit_veilmourn_maskglass_corsairs"], "authored_player_army_id": "army_bellwake_wreck_claimants", "final_sprite_import": false},
+      "completionCriteria": ["Four distinct original transparent sources follow Veilmourn fog-lane harpoon, obituary hexer, reflected-keel phase-raider, and fogbound leviathan identities and own exact manifest provenance plus reproducible portrait, battle-icon, overworld-icon, and fourteen-state/four-frame animation-sheet derivatives", "Live faction/town/building recruitment preserves the exact four-unit upper ladder and costs/growth while the authored Bellwake Wreck Claim player army remains exact; a production-rule BattleBoard loads all four icon/sheet pairs and all 224 target frames remain visible", "Only four sources, sixteen target runtime payloads, and four records in each manifest change; all four surfaces for the other 99 units, including the curated Veilmourn early ladder, remain byte-exact; full regeneration/reproducibility, compatibility, validator/editor, Linux, and Windows startup gates pass"],
+      "nonGoals": ["Another faction or tier, army/encounter/town/building counts, unit stats/abilities/costs/growth/content, battle balance or AI tuning, BattleRules/BattleAiRules, animation timing/order, save schema, rendering settings, Native RMG, or packaging behavior", "Broad/final art, packaged battle interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game validation, or release readiness"],
+      "createdAt": "2026-08-22T18:21:58Z",
+      "startedAt": "2026-08-22T18:21:58Z",
+      "updatedAt": "2026-08-22T18:51:24Z",
+      "completedAt": "2026-08-22T18:51:24Z",
+      "notes": "Completed with four original transparent sources and sixteen exact existing-path derivatives. Focused live proof preserves Bellwake player army, all four content/building/ability contracts, four BattleBoard entries, session authority, and 224 visible frames. Two 412-asset reproducibility runs plus in-place regeneration are exact; twelve compatibility owners, validator/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. No packaged battle interaction, certification, signing/publication, broad/final art, whole-game validation, or release-readiness claim.",
+      "remainingWork": "Select the next tracker-approved source-backed production slice."
+    },
     {
       "id": "art-thornwake-upper-ladder-curated-character-sources-10184",
       "title": "Thornwake Upper-Ladder Curated Character Sources",
@@ -94375,8 +94395,8 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "art_thornwake_upper_ladder_curated_character_sources_completed",
-  "status": "completed",
+  "result": "art_veilmourn_upper_ladder_curated_character_sources_in_progress",
+  "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
       "completed": "Implementation or documentation-only governance work satisfies the PLAN completion criteria and has validation/evidence.",
