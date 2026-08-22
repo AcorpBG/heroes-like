@@ -49,19 +49,19 @@ CURATED_CHARACTER_SOURCE_IDS = {
     "unit_sunvault_prism_adepts",
     "unit_sunvault_resonant_choristers",
     "unit_sunvault_shard_wardens",
+    "unit_thornwake_barkmantle_rams",
+    "unit_thornwake_graft_matriarchs",
     "unit_thornwake_seedcutters",
     "unit_thornwake_sporeglass_menders",
+    "unit_thornwake_stagknot_runners",
     "unit_thornwake_thornwhip_carriers",
+    "unit_thornwake_worldroot_bastion",
     "unit_veilmourn_bellwake_oars",
     "unit_veilmourn_maskglass_corsairs",
     "unit_veilmourn_mourning_lanterns",
 }
 PRESERVED_AUTHORED_ASSET_SHA256 = {
     ("unit_sunvault_aurora_ballistae", "portrait"): "ffbc2c6dae600fc32aadb6720e21f9d682f4abb71c0fec3dadf8bdbf4ab10534",
-    ("unit_thornwake_graft_matriarchs", "portrait"): "5e9c93288f2c51539c038aa3bed3bd00d54c25318ef4073732454f276b678678",
-    ("unit_thornwake_graft_matriarchs", "battle_icon"): "d4fc476800ca8122c21cd71c9822075e68f49d92ab79747205108107f8c9e715",
-    ("unit_thornwake_graft_matriarchs", "overworld_icon"): "7ef4d0bebf2c6f8589e7894fee642658621ed7a1f954cc2ed8805d75e52ef4fc",
-    ("unit_thornwake_graft_matriarchs", "battle_animation_sheet"): "6d199e38ad8972256a10b21e6df953ef38383caa72051d35ae38b77e9b2d544f",
 }
 
 PORTRAIT_SIZE = (384, 512)

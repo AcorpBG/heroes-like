@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the four-source Embercourt upper-ladder art slice with sixteen reproducible runtime derivatives, exact live recruitment/content/Clauseworks authority, focused BattleBoard proof, full non-target preservation, compatibility/static validation, and bounded Linux/Windows export-startup evidence. Select the next tracker-approved source-backed slice.",
+  "currentNotes": "Completed the bounded Thornwake upper-ladder curated character-source slice with four original sources, exact existing-path runtime derivatives, live authority, reproducibility, compatibility, and bounded Linux/Windows export-startup evidence. Select the next tracker-approved source-backed slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-embercourt-upper-ladder-curated-character-sources-10184",
-  "currentSliceId": "art-embercourt-upper-ladder-curated-character-sources-10184",
-  "currentSliceNotes": "Four original Embercourt upper-ladder sources and all sixteen existing-path runtime surfaces are integrated and reproducible; live faction/town/building, ability, Clauseworks, and BattleBoard contracts remain exact. Platform evidence is export/startup only, not packaged battle interaction or release certification.",
+  "currentSlice": "art-thornwake-upper-ladder-curated-character-sources-10184",
+  "currentSliceId": "art-thornwake-upper-ladder-curated-character-sources-10184",
+  "currentSliceNotes": "The Thornwake tier-4 through tier-7 curated sources and exact existing-path derivatives are complete; the early ladder and every gameplay/content contract remain exact. Broader art and release-readiness work remains open.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Embercourt Upper-Ladder Curated Character Sources",
-  "currentSliceUpdatedAt": "2026-08-22T17:38:18Z",
+  "currentSliceTitle": "Thornwake Upper-Ladder Curated Character Sources",
+  "currentSliceUpdatedAt": "2026-08-22T18:18:44Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,29 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed release-readiness slice; do not infer broad/final art or release readiness from the completed Embercourt upper-ladder art slice.",
-  "notes": "Completed the Embercourt upper-ladder character-source slice with four original transparent sources, exact 412-asset reproducibility, focused and twelve-owner compatibility evidence, and bounded Linux/Windows export-startup smokes. Gameplay/balance/content are unchanged; packaged battle interaction, certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+  "nextActionGuardrailNote": "Select only a tracker-approved source-backed implementation slice. Do not infer broad/final art, whole-game completion, native parity, certification, publication, or release readiness from this bounded art slice.",
+  "notes": "The Thornwake upper-ladder art slice is complete. Four original transparent sources and sixteen exact runtime derivatives are live; recruitment, encounters, BattleBoard, early-ladder preservation, reproducibility, compatibility, and bounded Linux/Windows export-startup gates pass. Packaged battle interaction and broad release claims remain open.",
   "plannedSlices": [
+    {
+      "id": "art-thornwake-upper-ladder-curated-character-sources-10184",
+      "title": "Thornwake Upper-Ladder Curated Character Sources",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md", "docs/animation-battle-troop-state-contract-report.md", "docs/factions-content-bible.md"],
+      "purpose": "Replace the four production Thornwake tier-4 through tier-7 generated emblems with distinct character-readable original sources and exact reproducible existing-path runtime derivatives while preserving the curated tier-1 through tier-3 line and all gameplay authority.",
+      "implementationTargets": ["art/units/source/curated/unit_thornwake_barkmantle_rams.png", "art/units/source/curated/unit_thornwake_stagknot_runners.png", "art/units/source/curated/unit_thornwake_graft_matriarchs.png", "art/units/source/curated/unit_thornwake_worldroot_bastion.png", "art/units/portraits/unit_thornwake_barkmantle_rams.png", "art/units/portraits/unit_thornwake_stagknot_runners.png", "art/units/portraits/unit_thornwake_graft_matriarchs.png", "art/units/portraits/unit_thornwake_worldroot_bastion.png", "art/units/battle_icons/unit_thornwake_barkmantle_rams.png", "art/units/battle_icons/unit_thornwake_stagknot_runners.png", "art/units/battle_icons/unit_thornwake_graft_matriarchs.png", "art/units/battle_icons/unit_thornwake_worldroot_bastion.png", "art/units/overworld_icons/unit_thornwake_barkmantle_rams.png", "art/units/overworld_icons/unit_thornwake_stagknot_runners.png", "art/units/overworld_icons/unit_thornwake_graft_matriarchs.png", "art/units/overworld_icons/unit_thornwake_worldroot_bastion.png", "art/animation/runtime/units/unit_thornwake_barkmantle_rams.png", "art/animation/runtime/units/unit_thornwake_stagknot_runners.png", "art/animation/runtime/units/unit_thornwake_graft_matriarchs.png", "art/animation/runtime/units/unit_thornwake_worldroot_bastion.png", "content/unit_art_manifest.json", "content/unit_animation_manifest.json", "tools/generate_unit_art_assets.py", "tests/unit_thornwake_upper_ladder_curated_art_report.gd", "tests/unit_thornwake_upper_ladder_curated_art_report.tscn", "tests/unit_art_reproducibility_report.py", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"unit_ids": ["unit_thornwake_barkmantle_rams", "unit_thornwake_stagknot_runners", "unit_thornwake_graft_matriarchs", "unit_thornwake_worldroot_bastion"], "tiers": [4,5,6,7], "roles": ["melee","melee","ranged","melee"], "ability_ids": [["brace","shielding"],["reach"],["volley"],["shielding"]], "source_size": [512,512], "portrait_size": [384,512], "battle_icon_size": [160,160], "overworld_icon_size": [96,96], "animation_sheet_size": [256,896], "animation_state_count": 14, "frames_per_state": 4, "other_units_must_remain_byte_exact": 99, "preserved_early_ladder_ids": ["unit_thornwake_seedcutters", "unit_thornwake_thornwhip_carriers", "unit_thornwake_sporeglass_menders"], "authored_encounter_placement_id": "halo_barkmantle_bastion", "authored_player_army_id": "army_rootbound_mireford_wardens", "final_sprite_import": false},
+      "completionCriteria": ["Four distinct original transparent sources follow Thornwake living siege-line, bramble-lane flanker, ranged graft leader, and living-fortress identities and own exact manifest provenance plus reproducible portrait, battle-icon, overworld-icon, and fourteen-state/four-frame animation-sheet derivatives", "Live faction/town/building recruitment preserves the exact four-unit upper ladder and costs/growth while the authored Halo Barkmantle Bastion and Rootbound Mireford Wardens rosters remain exact; a production-rule BattleBoard loads all four icon/sheet pairs and all 224 target frames remain visible", "Only four sources, sixteen target runtime payloads, and four records in each manifest change; all four surfaces for the other 99 units, including the curated Thornwake early ladder, remain byte-exact; full regeneration/reproducibility, compatibility, validator/editor, Linux, and Windows startup gates pass"],
+      "nonGoals": ["Another faction or tier, army/encounter/town/building counts, unit stats/abilities/costs/growth/content, battle balance or AI tuning, BattleRules/BattleAiRules, animation timing/order, save schema, rendering settings, Native RMG, or packaging behavior", "Broad/final art, packaged battle interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game validation, or release readiness"],
+      "createdAt": "2026-08-22T17:45:32Z",
+      "startedAt": "2026-08-22T17:45:32Z",
+      "updatedAt": "2026-08-22T18:18:44Z",
+      "completedAt": "2026-08-22T18:18:44Z",
+      "notes": "Completed with four distinct original transparent Thornwake upper-ladder sources and sixteen exact existing-path runtime derivatives. The focused report proves exact faction/town/building recruitment, costs/growth, abilities, authored Halo Barkmantle and Rootbound Mireford rosters, four BattleBoard entries, 224 visible/varied frames, and session authority. Two independent reproducibility runs plus an in-place regeneration matched all 412 assets and both manifests byte-for-byte; exactly sixteen target runtime payloads changed and all four surfaces for the other 99 units, including the curated Thornwake early ladder, remained exact. Twelve compatibility owners, validator/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. No packaged battle interaction, controller/native hardware, AT-SPI/UIA, signing/publication, whole-game, broad/final art, Native RMG, or release-readiness claim.",
+      "remainingWork": "None for this bounded slice; select the next tracker-approved source-backed release-readiness slice."
+    },
     {
       "id": "art-embercourt-upper-ladder-curated-character-sources-10184",
       "title": "Embercourt Upper-Ladder Curated Character Sources",
@@ -94355,7 +94375,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "art_sunvault_aurora_ballista_curated_character_source_completed",
+  "result": "art_thornwake_upper_ladder_curated_character_sources_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
