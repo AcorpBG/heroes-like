@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved source-backed implementation slice."
+    "Select the next tracker-approved source-backed release-readiness slice."
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the four-source Brasshollow upper-ladder art slice with live BattleBoard authority, byte-exact reproducibility, compatibility, and bounded Linux/Windows export-startup evidence. Broad/final art and release readiness remain unclaimed.",
+  "currentNotes": "Completed the three-source Sunvault tier-5 through tier-7 curated art slice with exact existing-path derivatives, live Counterseal and BattleBoard authority, byte-exact non-target preservation, full reproducibility, compatibility, static/editor, and bounded Linux/Windows export/startup evidence.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-brasshollow-upper-ladder-curated-character-sources-10184",
-  "currentSliceId": "art-brasshollow-upper-ladder-curated-character-sources-10184",
-  "currentSliceNotes": "Four distinct Brasshollow tier-4 through tier-7 curated sources and exact existing-path derivatives are integrated; the early ladder and all gameplay/content authority remain exact.",
+  "currentSlice": "art-sunvault-upper-ladder-curated-character-sources-10184",
+  "currentSliceId": "art-sunvault-upper-ladder-curated-character-sources-10184",
+  "currentSliceNotes": "Completed with three original Sunvault upper-ladder sources and exact existing-path runtime derivatives; select the next tracker-approved source-backed slice.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Brasshollow Upper-Ladder Curated Character Sources",
-  "currentSliceUpdatedAt": "2026-08-22T19:25:28Z",
+  "currentSliceTitle": "Sunvault Upper-Ladder Curated Character Sources",
+  "currentSliceUpdatedAt": "2026-08-22T19:49:36Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,29 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select a tracker-approved source-backed implementation gap. Do not infer broad/final art or release readiness from this completed bounded art slice.",
-  "notes": "The Brasshollow upper-ladder art slice is complete: four original sources and sixteen exact runtime derivatives are live, all 224 target frames and the Orevein/BattleBoard authority are proven, all 412 unit-art runtime assets reproduce byte-exactly, and bounded compatibility/Linux/Windows startup gates pass. Packaged battle interaction, certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed release-readiness slice; do not infer broad/final art, packaged interaction parity, certification, or release readiness from this bounded completion.",
+  "notes": "The Sunvault upper-ladder art slice is complete. Three original sources, twelve exact runtime derivatives, live recruitment/Counterseal/BattleBoard authority, byte-exact preservation for the other 100 units, two full 412-asset reproducibility runs, thirteen compatibility owners, static/editor, and bounded Linux/Windows export/startup gates are green. Broad/final art, packaged battle interaction, certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
   "plannedSlices": [
+    {
+      "id": "art-sunvault-upper-ladder-curated-character-sources-10184",
+      "title": "Sunvault Upper-Ladder Curated Character Sources",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md", "docs/animation-battle-troop-state-contract-report.md", "docs/factions-content-bible.md"],
+      "purpose": "Replace the three production Sunvault tier-5 through tier-7 generated emblems with distinct character-readable original sources and exact reproducible existing-path runtime derivatives while preserving the curated tier-1 through tier-4 line and all gameplay authority.",
+      "implementationTargets": ["art/units/source/curated/unit_sunvault_solar_array_striders.png", "art/units/source/curated/unit_sunvault_aurora_ballistae.png", "art/units/source/curated/unit_sunvault_daybreak_colossus.png", "art/units/portraits/unit_sunvault_solar_array_striders.png", "art/units/portraits/unit_sunvault_aurora_ballistae.png", "art/units/portraits/unit_sunvault_daybreak_colossus.png", "art/units/battle_icons/unit_sunvault_solar_array_striders.png", "art/units/battle_icons/unit_sunvault_aurora_ballistae.png", "art/units/battle_icons/unit_sunvault_daybreak_colossus.png", "art/units/overworld_icons/unit_sunvault_solar_array_striders.png", "art/units/overworld_icons/unit_sunvault_aurora_ballistae.png", "art/units/overworld_icons/unit_sunvault_daybreak_colossus.png", "art/animation/runtime/units/unit_sunvault_solar_array_striders.png", "art/animation/runtime/units/unit_sunvault_aurora_ballistae.png", "art/animation/runtime/units/unit_sunvault_daybreak_colossus.png", "content/unit_art_manifest.json", "content/unit_animation_manifest.json", "tools/generate_unit_art_assets.py", "tests/unit_sunvault_upper_ladder_curated_art_report.gd", "tests/unit_sunvault_upper_ladder_curated_art_report.tscn", "tests/unit_art_reproducibility_report.py", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"unit_ids": ["unit_sunvault_solar_array_striders", "unit_sunvault_aurora_ballistae", "unit_sunvault_daybreak_colossus"], "tiers": [5,6,7], "roles": ["melee","melee","ranged"], "ability_ids": [["solar_array_lane"],["shielding"],["volley"]], "source_size": [512,512], "portrait_size": [384,512], "battle_icon_size": [160,160], "overworld_icon_size": [96,96], "animation_sheet_size": [256,896], "animation_state_count": 14, "frames_per_state": 4, "other_units_must_remain_byte_exact": 100, "preserved_curated_ladder_ids": ["unit_sunvault_shard_wardens", "unit_sunvault_prism_adepts", "unit_sunvault_mirror_duelists", "unit_sunvault_resonant_choristers"], "authored_encounter_id": "army_counterseal_aurora_battery", "final_sprite_import": false},
+      "completionCriteria": ["Three distinct original transparent sources follow Sunvault solar-array strider, aurora prism bastion, and daybreak relay-titan identities and own exact manifest provenance plus reproducible portrait, battle-icon, overworld-icon, and fourteen-state/four-frame animation-sheet derivatives", "Live faction/town/building recruitment preserves the exact tier-5 through tier-7 ladder and costs/growth while the authored Counterseal Aurora Battery remains exact; a production-rule BattleBoard loads all three icon/sheet pairs and all 168 target frames remain visible", "Only three sources, twelve target runtime payloads, and three records in each manifest change; all four surfaces for the other 100 units, including the curated Sunvault tier-1 through tier-4 line, remain byte-exact; full regeneration/reproducibility, compatibility, validator/editor, Linux, and Windows startup gates pass"],
+      "nonGoals": ["Another faction or tier, army/encounter/town/building counts, unit stats/abilities/costs/growth/content, battle balance or AI tuning, BattleRules/BattleAiRules, animation timing/order, save schema, rendering settings, Native RMG, or packaging behavior", "Broad/final art, packaged battle interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game validation, or release readiness"],
+      "createdAt": "2026-08-22T19:27:50Z",
+      "startedAt": "2026-08-22T19:27:50Z",
+      "updatedAt": "2026-08-22T19:49:36Z",
+      "completedAt": "2026-08-22T19:49:36Z",
+      "notes": "Completed with three distinct 512x512 transparent sources and twelve exact existing-path portrait/icon/overworld/sheet derivatives. Focused runtime /tmp/heroes-sunvault-upper-focused.NCIEtL is natural rc0 with one ok:true marker, three content rows, three live BattleBoard entries, exact Counterseal Aurora Battery authority, and 168 visible frames. Two full 412-asset regenerations and both manifests are byte-identical in /tmp/heroes-sunvault-repro.qDwrH8; all thirteen compatibility owners are rc0 in /tmp/heroes-sunvault-compat.sjYe9z. Validator/editor and official Linux export/headless startup plus Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass in /tmp/heroes-sunvault-platform.YtuXlc. Broad/final art, packaged battle interaction, certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "remainingWork": "None for this bounded slice. Select the next tracker-approved source-backed implementation slice."
+    },
     {
       "id": "art-brasshollow-upper-ladder-curated-character-sources-10184",
       "title": "Brasshollow Upper-Ladder Curated Character Sources",
