@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The tier-3 Gorefen Ripper now has one original transparent Mireclaw canal-hook predator source and four reproducible existing-path runtime derivatives. Five authored encounters, public abilities, focused BattleBoard presentation, reproducibility, compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
+  "currentNotes": "The Mireclaw tier-4 through tier-7 ladder now has four original transparent character sources and sixteen reproducible existing-path runtime derivatives. Live recruitment, the authored Mireford encounter, public content authority, focused BattleBoard presentation, reproducibility, compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-mireclaw-gorefen-ripper-curated-character-source-10184",
-  "currentSliceId": "art-mireclaw-gorefen-ripper-curated-character-source-10184",
-  "currentSliceNotes": "Completed one original transparent tier-3 Gorefen Ripper source and four existing-path runtime derivatives while preserving five authored encounter rosters, public backstab/bloodrush authority, and all 408 non-target runtime payloads byte-exact, including the distinct tier-6 production Gorefen Rippers.",
+  "currentSlice": "art-mireclaw-upper-ladder-curated-character-sources-10184",
+  "currentSliceId": "art-mireclaw-upper-ladder-curated-character-sources-10184",
+  "currentSliceNotes": "Completed four original transparent upper-ladder sources and sixteen existing-path runtime derivatives while preserving exact faction/town/building recruitment, authored Mireford roster, public abilities/stats/costs/growth, and all non-target runtime payloads, including the curated tier-3 Gorefen Ripper.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Mireclaw Gorefen Ripper Curated Character Source",
-  "currentSliceUpdatedAt": "2026-08-22T16:18:06Z",
+  "currentSliceTitle": "Mireclaw Upper-Ladder Curated Character Sources",
+  "currentSliceUpdatedAt": "2026-08-22T16:57:47Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,29 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed release-readiness slice; do not infer broad/final art or release readiness from this completed character-source increment.",
-  "notes": "Completed the tier-3 Gorefen Ripper character-source slice with one original transparent canal-hook predator source and four reproducible runtime derivatives. Five authored encounter rosters and public backstab/bloodrush authority remain exact; the distinct tier-6 production Gorefen Rippers remain byte-exact; focused, compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed release-readiness slice; do not infer broad/final art or release readiness from this completed four-unit character-source increment.",
+  "notes": "Completed the Mireclaw upper-ladder character-source slice with four original transparent sources and sixteen reproducible runtime derivatives. Live recruitment, the authored Mireford roster, public content authority, and all non-target runtime payloads remain exact; focused, compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
   "plannedSlices": [
+    {
+      "id": "art-mireclaw-upper-ladder-curated-character-sources-10184",
+      "title": "Mireclaw Upper-Ladder Curated Character Sources",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md", "docs/animation-battle-troop-state-contract-report.md", "docs/factions-content-bible.md"],
+      "purpose": "Replace the four production Mireclaw tier-4 through tier-7 generated emblems with distinct character-readable original sources and exact reproducible existing-path runtime derivatives while preserving the curated tier-3 Gorefen Ripper and all gameplay authority.",
+      "implementationTargets": ["art/units/source/curated/unit_mireclaw_ferrychain_lashers.png", "art/units/source/curated/unit_mireclaw_sporewake_chanters.png", "art/units/source/curated/unit_mireclaw_gorefen_rippers.png", "art/units/source/curated/unit_mireclaw_drowned_antler_sovereign.png", "art/units/portraits/unit_mireclaw_ferrychain_lashers.png", "art/units/portraits/unit_mireclaw_sporewake_chanters.png", "art/units/portraits/unit_mireclaw_gorefen_rippers.png", "art/units/portraits/unit_mireclaw_drowned_antler_sovereign.png", "art/units/battle_icons/unit_mireclaw_ferrychain_lashers.png", "art/units/battle_icons/unit_mireclaw_sporewake_chanters.png", "art/units/battle_icons/unit_mireclaw_gorefen_rippers.png", "art/units/battle_icons/unit_mireclaw_drowned_antler_sovereign.png", "art/units/overworld_icons/unit_mireclaw_ferrychain_lashers.png", "art/units/overworld_icons/unit_mireclaw_sporewake_chanters.png", "art/units/overworld_icons/unit_mireclaw_gorefen_rippers.png", "art/units/overworld_icons/unit_mireclaw_drowned_antler_sovereign.png", "art/animation/runtime/units/unit_mireclaw_ferrychain_lashers.png", "art/animation/runtime/units/unit_mireclaw_sporewake_chanters.png", "art/animation/runtime/units/unit_mireclaw_gorefen_rippers.png", "art/animation/runtime/units/unit_mireclaw_drowned_antler_sovereign.png", "content/unit_art_manifest.json", "content/unit_animation_manifest.json", "tools/generate_unit_art_assets.py", "tests/unit_mireclaw_upper_ladder_curated_art_report.gd", "tests/unit_mireclaw_upper_ladder_curated_art_report.tscn", "tests/unit_art_reproducibility_report.py", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"unit_ids": ["unit_mireclaw_ferrychain_lashers", "unit_mireclaw_sporewake_chanters", "unit_mireclaw_gorefen_rippers", "unit_mireclaw_drowned_antler_sovereign"], "tiers": [4,5,6,7], "roles": ["melee","ranged","melee","melee"], "ability_ids": [["hookline"],["rot_cant"],["bloodrush"],["bloodrush"]], "source_size": [512,512], "portrait_size": [384,512], "battle_icon_size": [160,160], "overworld_icon_size": [96,96], "animation_sheet_size": [256,896], "animation_state_count": 14, "frames_per_state": 4, "other_units_must_remain_byte_exact": 99, "preserved_tier3_unit_id": "unit_gorefen_ripper", "final_sprite_import": false},
+      "completionCriteria": ["Four distinct original transparent sources follow Mireclaw chain-lane, rot-support, wounded-prey finisher, and drowned-antler apex identities and own exact manifest provenance plus reproducible portrait, battle-icon, overworld-icon, and fourteen-state/four-frame animation-sheet derivatives", "Live town/building recruitment preserves the exact four-unit upper ladder and costs/growth while the authored Mireford Gorefen encounter remains exact; a production-rule BattleBoard loads all four icon/sheet pairs and all 224 target frames remain visible", "Only four sources, sixteen target runtime payloads, and four records in each manifest change; the curated tier-3 unit_gorefen_ripper and all four surfaces for the other 99 units remain byte-exact; full regeneration/reproducibility, compatibility, validator/editor, Linux, and Windows startup gates pass"],
+      "nonGoals": ["Another faction or tier, army/encounter/town/building counts, unit stats/abilities/costs/growth/content, Gorefen Cull Rush or Drowned Antler tuning, BattleRules/BattleAiRules, animation timing/order, save schema, rendering settings, Native RMG, or packaging behavior", "Broad/final art, packaged battle interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game validation, or release readiness"],
+      "createdAt": "2026-08-22T16:22:31Z",
+      "startedAt": "2026-08-22T16:22:31Z",
+      "updatedAt": "2026-08-22T16:57:47Z",
+      "completedAt": "2026-08-22T16:57:47Z",
+      "notes": "Completed with four original transparent Mireclaw upper-ladder sources and sixteen exact existing-path runtime derivatives. Live faction/town/building recruitment, costs/growth, public abilities, and the authored Mireford Ford Reavers roster remain exact; the BattleBoard loads all four curated entries and all 224 frames are visible. Two regeneration runs match all 412 assets and both manifests byte-for-byte; only sixteen target runtime payloads changed and all four surfaces for the other 99 units remained exact, including the curated tier-3 Gorefen Ripper. Fourteen compatibility owners, core, validator/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged battle interaction, certification, signing/publication, broad/final art, whole-game validation, and release readiness remain unclaimed.",
+      "remainingWork": "No work remains in this slice. Select the next tracker-approved source-backed release-readiness slice; broad/final art, packaged battle interaction, certification, signing/publication, whole-game validation, and overall release readiness remain open."
+    },
     {
       "id": "art-mireclaw-gorefen-ripper-curated-character-source-10184",
       "title": "Mireclaw Gorefen Ripper Curated Character Source",
