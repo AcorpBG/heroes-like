@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Mireclaw tier-4 through tier-7 ladder now has four original transparent character sources and sixteen reproducible existing-path runtime derivatives. Live recruitment, the authored Mireford encounter, public content authority, focused BattleBoard presentation, reproducibility, compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
+  "currentNotes": "Completed the four-source Embercourt upper-ladder art slice with sixteen reproducible runtime derivatives, exact live recruitment/content/Clauseworks authority, focused BattleBoard proof, full non-target preservation, compatibility/static validation, and bounded Linux/Windows export-startup evidence. Select the next tracker-approved source-backed slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-mireclaw-upper-ladder-curated-character-sources-10184",
-  "currentSliceId": "art-mireclaw-upper-ladder-curated-character-sources-10184",
-  "currentSliceNotes": "Completed four original transparent upper-ladder sources and sixteen existing-path runtime derivatives while preserving exact faction/town/building recruitment, authored Mireford roster, public abilities/stats/costs/growth, and all non-target runtime payloads, including the curated tier-3 Gorefen Ripper.",
+  "currentSlice": "art-embercourt-upper-ladder-curated-character-sources-10184",
+  "currentSliceId": "art-embercourt-upper-ladder-curated-character-sources-10184",
+  "currentSliceNotes": "Four original Embercourt upper-ladder sources and all sixteen existing-path runtime surfaces are integrated and reproducible; live faction/town/building, ability, Clauseworks, and BattleBoard contracts remain exact. Platform evidence is export/startup only, not packaged battle interaction or release certification.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Mireclaw Upper-Ladder Curated Character Sources",
-  "currentSliceUpdatedAt": "2026-08-22T16:57:47Z",
+  "currentSliceTitle": "Embercourt Upper-Ladder Curated Character Sources",
+  "currentSliceUpdatedAt": "2026-08-22T17:38:18Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,29 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed release-readiness slice; do not infer broad/final art or release readiness from this completed four-unit character-source increment.",
-  "notes": "Completed the Mireclaw upper-ladder character-source slice with four original transparent sources and sixteen reproducible runtime derivatives. Live recruitment, the authored Mireford roster, public content authority, and all non-target runtime payloads remain exact; focused, compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed release-readiness slice; do not infer broad/final art or release readiness from the completed Embercourt upper-ladder art slice.",
+  "notes": "Completed the Embercourt upper-ladder character-source slice with four original transparent sources, exact 412-asset reproducibility, focused and twelve-owner compatibility evidence, and bounded Linux/Windows export-startup smokes. Gameplay/balance/content are unchanged; packaged battle interaction, certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
   "plannedSlices": [
+    {
+      "id": "art-embercourt-upper-ladder-curated-character-sources-10184",
+      "title": "Embercourt Upper-Ladder Curated Character Sources",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md", "docs/animation-battle-troop-state-contract-report.md", "docs/factions-content-bible.md"],
+      "purpose": "Replace the four production Embercourt tier-4 through tier-7 generated emblems with distinct character-readable original sources and exact reproducible existing-path runtime derivatives while preserving all existing curated Embercourt sources and gameplay authority.",
+      "implementationTargets": ["art/units/source/curated/unit_embercourt_ash_oath_bailiffs.png", "art/units/source/curated/unit_embercourt_beacon_lectors.png", "art/units/source/curated/unit_embercourt_sluicefire_lindworms.png", "art/units/source/curated/unit_embercourt_charter_colossus.png", "art/units/portraits/unit_embercourt_ash_oath_bailiffs.png", "art/units/portraits/unit_embercourt_beacon_lectors.png", "art/units/portraits/unit_embercourt_sluicefire_lindworms.png", "art/units/portraits/unit_embercourt_charter_colossus.png", "art/units/battle_icons/unit_embercourt_ash_oath_bailiffs.png", "art/units/battle_icons/unit_embercourt_beacon_lectors.png", "art/units/battle_icons/unit_embercourt_sluicefire_lindworms.png", "art/units/battle_icons/unit_embercourt_charter_colossus.png", "art/units/overworld_icons/unit_embercourt_ash_oath_bailiffs.png", "art/units/overworld_icons/unit_embercourt_beacon_lectors.png", "art/units/overworld_icons/unit_embercourt_sluicefire_lindworms.png", "art/units/overworld_icons/unit_embercourt_charter_colossus.png", "art/animation/runtime/units/unit_embercourt_ash_oath_bailiffs.png", "art/animation/runtime/units/unit_embercourt_beacon_lectors.png", "art/animation/runtime/units/unit_embercourt_sluicefire_lindworms.png", "art/animation/runtime/units/unit_embercourt_charter_colossus.png", "content/unit_art_manifest.json", "content/unit_animation_manifest.json", "tools/generate_unit_art_assets.py", "tests/unit_embercourt_upper_ladder_curated_art_report.gd", "tests/unit_embercourt_upper_ladder_curated_art_report.tscn", "tests/unit_art_reproducibility_report.py", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"unit_ids": ["unit_embercourt_ash_oath_bailiffs", "unit_embercourt_beacon_lectors", "unit_embercourt_sluicefire_lindworms", "unit_embercourt_charter_colossus"], "tiers": [4,5,6,7], "roles": ["melee","ranged","melee","melee"], "ability_ids": [["brace"],["harry","readiness_writ"],["bloodrush"],["brace"]], "source_size": [512,512], "portrait_size": [384,512], "battle_icon_size": [160,160], "overworld_icon_size": [96,96], "animation_sheet_size": [256,896], "animation_state_count": 14, "frames_per_state": 4, "other_units_must_remain_byte_exact": 99, "final_sprite_import": false},
+      "completionCriteria": ["Four distinct original transparent sources follow Embercourt ash-writ line enforcement, beacon support, lock-bred fire shock, and walking charter-engine identities and own exact manifest provenance plus reproducible portrait, battle-icon, overworld-icon, and fourteen-state/four-frame animation-sheet derivatives", "Live faction/town/building recruitment preserves the exact four-unit upper ladder and costs/growth while the authored Clauseworks Bridge Levies encounter remains exact; a production-rule BattleBoard loads all four icon/sheet pairs and all 224 target frames remain visible", "Only four sources, sixteen target runtime payloads, and four records in each manifest change; all four surfaces for the other 99 units remain byte-exact; full regeneration/reproducibility, compatibility, validator/editor, Linux, and Windows startup gates pass"],
+      "nonGoals": ["Another faction or tier, army/encounter/town/building counts, unit stats/abilities/costs/growth/content, Ash-Writ Formation/Beacon Muster/Sluicefire Commitment/Charter Lock tuning, BattleRules/BattleAiRules, animation timing/order, save schema, rendering settings, Native RMG, or packaging behavior", "Broad/final art, packaged battle interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game validation, or release readiness"],
+      "createdAt": "2026-08-22T17:01:29Z",
+      "startedAt": "2026-08-22T17:01:29Z",
+      "updatedAt": "2026-08-22T17:38:18Z",
+      "completedAt": "2026-08-22T17:38:18Z",
+      "notes": "Completed with four distinct original transparent sources and exact curated provenance for all sixteen runtime surfaces. The focused report proves 224 visible/varied frames, exact faction/town/building recruitment and costs/growth, authored ability identity, the unchanged Clauseworks Bridge Levies roster, four BattleBoard icon/sheet pairs, and session authority. Two independent reproducibility runs matched all 412 assets and both manifests byte-for-byte; exactly the sixteen target runtime payloads changed and all four surfaces for the other 99 units remained exact. Twelve compatibility owners, validator/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green. No packaged battle interaction, controller/native hardware, AT-SPI/UIA, signing/publication, whole-game, broad/final art, Native RMG, or release-readiness claim.",
+      "remainingWork": "None for this bounded slice; select the next tracker-approved source-backed release-readiness slice."
+    },
     {
       "id": "art-mireclaw-upper-ladder-curated-character-sources-10184",
       "title": "Mireclaw Upper-Ladder Curated Character Sources",
