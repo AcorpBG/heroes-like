@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Causeway Reed Camp now uses the exact 7/4/1 production Mireclaw T1-T3 line. Focused battle, campaign/veteran, full routed arc, active breadth, unit ability, core, static/editor, Linux, and Windows startup gates are green with bounded claims.",
+  "currentNotes": "River Pass Hollow Mire now uses the exact 4/3 production Mireclaw line. Focused battle, real route/return, full routed campaign arc, active breadth, unit ability, core, static/editor, Linux, and Windows startup gates are green with bounded claims.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-causeway-reed-camp-production-line-10184",
-  "currentSliceId": "content-causeway-reed-camp-production-line-10184",
-  "currentSliceNotes": "Completed. The exact 7/4/1 production line retains three-round standard victories at 73% normal and 70% hard versus 72% legacy controls, with zero invalid orders; campaign, breadth, compatibility, static, and bounded platform startup gates are green.",
+  "currentSlice": "content-river-pass-hollow-mire-production-line-10184",
+  "currentSliceId": "content-river-pass-hollow-mire-production-line-10184",
+  "currentSliceNotes": "Completed. The exact 4/3 production line retains player-advantaged three-round standard victories at 32% normal and 31% hard versus 34% legacy controls; route, campaign, breadth, compatibility, static, and bounded platform startup gates are green.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Causeway Reed Camp Production Line",
-  "currentSliceUpdatedAt": "2026-08-22T05:41:29Z",
+  "currentSliceTitle": "River Pass Hollow Mire Production Line",
+  "currentSliceUpdatedAt": "2026-08-22T06:17:55Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,51 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed release-readiness implementation slice; do not expand the completed Causeway roster migration opportunistically.",
-  "notes": "Completed the bounded Causeway Reed Camp production-line migration. Exact focused production/legacy controls, the real three-chapter campaign arc, active breadth, compatibility, static/editor, and Linux/Windows export-startup evidence are green; no broader balance, packaged interaction, certification, signing, whole-game, or release-readiness claim is made.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed release-readiness implementation slice; do not expand the completed Hollow Mire migration opportunistically.",
+  "notes": "Completed the bounded River Pass Hollow Mire production-line migration. Exact focused production/legacy controls, real route/return behavior, the full three-chapter campaign arc, active breadth, compatibility, static/editor, and Linux/Windows export-startup evidence are green; no broader balance, packaged interaction, certification, signing, whole-game, or release-readiness claim is made.",
   "plannedSlices": [
+    {
+      "id": "content-river-pass-hollow-mire-production-line-10184",
+      "title": "River Pass Hollow Mire Production Line",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/factions-content-bible.md"],
+      "purpose": "Replace only River Pass's placement-owned Hollow Mire legacy Mireclaw pair with the count-preserving production Bogplate/Mudglass line while retaining its tuned route-block pressure and campaign authority.",
+      "implementationTargets": ["content/scenarios.json", "tests/battle_river_pass_hollow_mire_production_line_report.gd", "tests/battle_river_pass_hollow_mire_production_line_report.tscn", "tests/overworld_encounter_victory_return_feedback_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {
+        "scenario_id": "river-pass",
+        "encounter_placement_id": "river_pass_hollow_mire",
+        "legacy_stack_ids": ["unit_bog_brute", "unit_mire_slinger"],
+        "production_stack_ids": ["unit_mireclaw_bogplate_maulers", "unit_mireclaw_mudglass_slingers"],
+        "stack_counts": [4, 3],
+        "legacy_total_stack_health": 70,
+        "production_total_stack_health": 87,
+        "legacy_normal": {"outcome": "victory", "rounds": 3, "player_health_remaining_pct": 34, "enemy_damage_per_round": 27, "pacing_band": "standard"},
+        "production_normal": {"outcome": "victory", "rounds": 3, "player_health_remaining_pct": 32, "enemy_damage_per_round": 28, "pacing_band": "standard"},
+        "legacy_hard": {"outcome": "victory", "rounds": 3, "player_health_remaining_pct": 34, "enemy_damage_per_round": 28, "pacing_band": "standard"},
+        "production_hard": {"outcome": "victory", "rounds": 3, "player_health_remaining_pct": 31, "enemy_damage_per_round": 17, "pacing_band": "standard"},
+        "invalid_order_count": 0,
+        "rejected_other_legacy_mireclaw_fronts": "Other current-HEAD mixed Mireclaw candidates materially changed outcome/pacing or reopened already completed placement owners."
+      },
+      "completionCriteria": [
+        "The exact River Pass Hollow Mire uses only production Bogplate Maulers and Mudglass Slingers at 4/3 while retaining encounter/object/placement identity, medium difficulty, combat seed, route block, and guard links",
+        "Public BattleRules payload and deterministic normal/hard autoplay expose exact shielding and harry abilities, retain player-advantaged three-round standard victories at 32%/31% player health with zero invalid orders, and retain independent legacy controls at three rounds/34%",
+        "Real encounter resolution preserves route, guarded-resource, reward, checkpoint, save/resume, and return-feedback authority; the full Reedfall campaign arc, neighboring fronts, and shared content/rules remain exact",
+        "Active scenario breadth remains complete with zero stalls or invalid orders and no high-priority tuning item; unit ability and core compatibility remain green",
+        "Repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "Another legacy-front migration, count changes, shared unit stat/ability, BattleRules, BattleAiRules, reward, route/guard/object topology, difficulty-threshold, save-schema, Native RMG, or packaging behavior changes",
+        "Broad faction balance, packaged encounter interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "createdAt": "2026-08-22T05:49:33Z",
+      "startedAt": "2026-08-22T05:49:33Z",
+      "updatedAt": "2026-08-22T06:17:55Z",
+      "completedAt": "2026-08-22T06:17:55Z",
+      "notes": "Completed with the exact production 4/3 line. Focused runtime proves shielding/harry, 87 versus 70 health, production normal 3 rounds/32%/DPR28 and hard 3 rounds/31%/DPR17, independent legacy controls 3 rounds/34% with DPR27/28, and zero invalid orders. Real 1280/1920 route entry, victory, checkpoint, save, and return feedback preserve guarded-resource and session authority. The full Reedfall arc exits rc0 with ok:true and 121 routed steps; active breadth is 77/77 with queue signature 829808c9 and zero stalls/invalid orders/items; unit ability and core are green. Static/editor and official Linux export/headless startup plus Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. Other fronts, shared content/rules, packaged encounter interaction, broad balance, certification, signing/publication, whole-game validation, and release readiness remain out of scope."
+    },
     {
       "id": "content-causeway-reed-camp-production-line-10184",
       "title": "Causeway Reed Camp Production Line",

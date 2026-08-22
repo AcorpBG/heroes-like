@@ -353,7 +353,7 @@
           "y": 4,
           "difficulty": "medium",
           "combat_seed": 1202,
-          "enemy_army": {"id": "army_river_pass_hollow_mire_watch", "name": "River Pass Hollow Mire Watch", "faction_id": "faction_mireclaw", "stacks": [{"unit_id": "unit_bog_brute", "count": 4}, {"unit_id": "unit_mire_slinger", "count": 3}]},
+          "enemy_army": {"id": "army_river_pass_hollow_mire_watch", "name": "River Pass Hollow Mire Watch", "faction_id": "faction_mireclaw", "stacks": [{"unit_id": "unit_mireclaw_bogplate_maulers", "count": 4}, {"unit_id": "unit_mireclaw_mudglass_slingers", "count": 3}]},
           "object_id": "object_neutral_encounter_river_pass_hollow_mire_stack",
           "object_placement_id": "object_placement_river_pass_hollow_mire",
           "primary_class": "neutral_encounter",
