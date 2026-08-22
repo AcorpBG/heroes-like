@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Town failed-action invalid-audio slice is completed. One common Town result boundary now adds exactly one imported ui_invalid transient only for non-empty failed rule results while preserving blocked feedback, disabled and validation-only silence, automatic click audio, successful completion presentation, session authority, and Effects policy.",
+  "currentNotes": "The Battle Board failed-action invalid-audio slice is completed. The custom Board's result-publication boundary now adds one imported ui_invalid transient only for non-empty failed results while preserving exact Shell/live-region feedback, cancel, successful movement, semantic timing, focus, presentation, and battle authority.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-town-failed-action-invalid-audio-10184",
-  "currentSliceId": "presentation-town-failed-action-invalid-audio-10184",
-  "currentSliceNotes": "Completed. TownShell's common non-empty failed-result boundary now plays one imported ui_invalid transient. The real stale enabled tavern-button path proves invalid/click order, exact metadata and blocked feedback, unchanged session/presentation authority, disabled and validation-only silence, and unchanged successful hero-hire consequences across both viewports and all three presentation modes. UI-audio, focus, accessibility, Town visual, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. No packaged Town interaction/listening, certification, signing/publication, whole-game, or release-readiness claim.",
+  "currentSlice": "presentation-battle-board-failed-action-invalid-audio-10184",
+  "currentSliceId": "presentation-battle-board-failed-action-invalid-audio-10184",
+  "currentSliceNotes": "Completed. BattleShell's existing Board result-publication boundary now plays one imported ui_invalid transient for non-empty failed Board results. Real D-pad/physical-A blocked enemy paths at 1280 and 1920 prove exact cue metadata and unchanged Shell/live-region/timer/event/presentation authority; physical-B cancel and successful physical-A movement remain silent with exact focus/cursor/recap/battle consequences. UI-audio, withdrawal, animation, focus, accessibility, core, all three layout viewports, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. No packaged Board interaction/listening, native controller hardware, certification, signing/publication, whole-game, or release-readiness claim.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Town Failed Action Invalid Audio",
-  "currentSliceUpdatedAt": "2026-08-22T01:32:59Z",
+  "currentSliceTitle": "Battle Board Failed Action Invalid Audio",
+  "currentSliceUpdatedAt": "2026-08-22T01:55:05Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19847,7 +19847,7 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select a source-backed release-readiness implementation slice with direct current behavior evidence; preserve the completed Battle initiative-chip fitting policy and its exact tooltip, count, geometry, order, color, input, and battle authority.",
-  "notes": "The Town failed-action invalid-audio slice is completed. The common non-empty failed-result boundary now plays one imported ui_invalid transient while preserving blocked feedback, disabled and validation-only silence, automatic click audio, successful completion presentation, session authority, and Effects policy. Focused, compatibility, static/editor, and bounded Linux/Windows export-startup evidence is green; packaged Town interaction/listening, certification, signing/publication, whole-game validation, and release readiness remain outside this slice.",
+  "notes": "The Battle Board failed-action invalid-audio slice is completed. Non-empty failed Board results now produce exact visible/live-region feedback plus one imported invalid cue, while cancel and successful movement remain silent and target, semantic timer, focus, presentation, battle authority, and rules remain unchanged. Focused, compatibility, static/editor, and bounded Linux/Windows export-startup evidence is green; packaged interaction/listening, native controller hardware, certification, signing/publication, whole-game validation, and release readiness remain outside this slice.",
   "plannedSlices": [
     {
       "id": "native-rmg-zero-road-runtime-layer-projection-10184",
@@ -92095,6 +92095,34 @@
         "No Overworld/Battle/Editor expansion, packaged Town interaction/listening, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claim."
       ],
       "notes": "Completed. TownShell's common non-empty failed-result boundary now plays exactly one imported ui_invalid transient with detached lane, action-id, and message metadata. The focused real stale enabled tavern-button path proves exact invalid/click cue order, blocked feedback, unchanged session/presentation authority, disabled and validation-only silence, and unchanged successful hero-hire consequences and completion presentation at 1280x720 and 1920x1080 across normal, missing-asset, and reduced-motion modes. UI-audio, focus, accessibility, Town visual, core, validation/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. No packaged Town interaction/listening, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claim."
+    },
+    {
+      "id": "presentation-battle-board-failed-action-invalid-audio-10184",
+      "title": "Battle Board Failed Action Invalid Audio",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-6-production-alpha-layer",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-22T01:37:13Z",
+      "updatedAt": "2026-08-22T01:55:05Z",
+      "completedAt": "2026-08-22T01:55:05Z",
+      "implementationTargets": [
+        "scenes/battle/BattleShell.gd",
+        "tests/battle_controller_board_navigation_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "A real focused Battle Board physical-A action on a blocked enemy appends one exact imported ui_invalid record through the existing result-publication boundary while Board result text/timer, target selection, recent events, presentation, focus, and battle/session authority remain exact.",
+        "Physical-B cancel and the subsequent real physical-A legal movement add no invalid cue while retaining exact focus restoration, cursor/movement/event/recap consequences, and battle authority.",
+        "Focused Board/UI-audio and Battle layout/withdrawal/animation/focus/accessibility/core compatibility, static/editor, and official Linux/Windows export-startup gates pass."
+      ],
+      "nonGoals": [
+        "No Battle action legality, targeting, movement, Board geometry/cursor, semantic timing/coalescing, focus, recap, battle/session/save, cue asset, Effects setting, cooldown, voice-budget, or rule change.",
+        "No Battle command-button/spell/withdrawal invalid-audio expansion, Overworld/Town/Editor change, packaged Battle interaction/listening, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claim."
+      ],
+      "notes": "Completed. BattleShell's existing Board result-publication boundary now plays exactly one imported ui_invalid transient with detached action, target, state, and message metadata for non-empty failed results. The focused real D-pad/physical-A path proves exact cue/source/asset metadata and unchanged Shell/live-region/timer/event/presentation authority at 1280 and 1920; physical-B cancel and successful physical-A movement add no invalid cue and retain exact focus/cursor/event/recap/battle authority. UI-audio, withdrawal, animation, focus, accessibility, core, independent 1920/1280/1024 layout, validation/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. No command-button/spell/withdrawal expansion, packaged Board interaction/listening, native controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claim."
     }
   ],
   "project": "heroes-like",
@@ -92639,7 +92667,7 @@
   ],
   "summary": "The native startup now shows the approved original Aurelion Reach crest instead of the stock Godot splash while preserving Boot behavior and compatibility identity.",
   "taskId": "10184",
-  "updatedAt": "2026-08-22T01:32:59Z",
+  "updatedAt": "2026-08-22T01:55:05Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

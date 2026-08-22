@@ -11,6 +11,7 @@ func _ready() -> void:
 	call_deferred("_run")
 
 func _run() -> void:
+	UiAudio.validation_reset()
 	var original_window_size := get_window().size
 	var original_session = SessionState.active_session
 	for width in [1280, 1920]:
@@ -84,9 +85,16 @@ func _run() -> void:
 	if String(enemy_cursor_summary.get("controller_cursor_battle_id", "")) != String(enemy_target.get("battle_id", "")):
 		return _fail("Controller cursor did not reach the blocked enemy stack: target=%s board=%s." % [enemy_target, enemy_cursor_summary])
 	var target_events_before := int(session.battle.get("recent_events", []).size())
+	var blocked_presentation_audio_before: Array = PresentationAudio.validation_records()
+	UiAudio.validation_reset()
 	await _press_joypad_button(JOY_BUTTON_A)
 	await _settle()
 	var blocked_result_message := String(shell.get("_last_message")).strip_edges()
+	var blocked_ui_audio_records: Array = UiAudio.validation_records()
+	if not _invalid_board_audio_exact(blocked_ui_audio_records, "blocked_target", String(enemy_target.get("battle_id", "")), "invalid", blocked_result_message):
+		return _fail("Blocked enemy controller A did not emit one exact imported invalid cue: %s." % blocked_ui_audio_records)
+	if PresentationAudio.validation_records() != blocked_presentation_audio_before:
+		return _fail("Blocked enemy controller A changed Battle presentation audio: before=%s after=%s." % [blocked_presentation_audio_before, PresentationAudio.validation_records()])
 	var blocked_snapshot: Dictionary = shell.call("validation_snapshot")
 	var blocked_dispatch := BattleRules.describe_dispatch(session, blocked_result_message)
 	var blocked_full_latest := blocked_dispatch.get_slice("\n", 0)
@@ -116,6 +124,8 @@ func _run() -> void:
 	if not await _wait_for_result_clear(board, battle_live, battle_semantic_timer):
 		return _fail("Blocked enemy controller result did not clear through the real 1.2 second Timer.")
 	await _press_joypad_button(JOY_BUTTON_B)
+	if UiAudio.validation_records() != blocked_ui_audio_records or PresentationAudio.validation_records() != blocked_presentation_audio_before:
+		return _fail("Controller B changed the blocked Board audio record or Battle presentation audio.")
 	var cancel_focus := get_viewport().gui_get_focus_owner()
 	if cancel_focus == null or cancel_focus == board or not shell.is_ancestor_of(cancel_focus) or (cancel_focus is BaseButton and cancel_focus.disabled):
 		return _fail("Controller B did not restore a legal battle command focus: %s." % cancel_focus)
@@ -163,6 +173,8 @@ func _run() -> void:
 	var events_before := int(session.battle.get("recent_events", []).size())
 	await _press_joypad_button(JOY_BUTTON_A)
 	await _settle()
+	if UiAudio.validation_records() != blocked_ui_audio_records or PresentationAudio.validation_records() != blocked_presentation_audio_before:
+		return _fail("Successful controller Board movement emitted invalid audio or changed Battle presentation audio.")
 	var movement_result_message := String(shell.get("_last_message")).strip_edges()
 	var movement_result_text := _bounded_text("Battle board result: %s" % movement_result_message, 320)
 	var post_summary: Dictionary = shell.call("validation_snapshot").get("battle_board", {})
@@ -183,6 +195,7 @@ func _run() -> void:
 	await get_tree().process_frame
 	SessionState.active_session = original_session
 	get_window().size = original_window_size
+	UiAudio.validation_reset()
 	print("%s PASS" % REPORT_ID)
 	get_tree().quit(0)
 
@@ -299,12 +312,16 @@ func _validate_battle_board_semantics_width(width: int) -> bool:
 		return _fail_bool("Battle result fixture has no blocked enemy cell at %d." % width)
 	await _wait_for_semantic_context(board, live, semantic_timer)
 	var result_events_before := int(session.battle.get("recent_events", []).size())
+	var result_target_battle_id := _battle_id_at_cell(summary, result_enemy_cell)
+	var result_presentation_audio_before: Array = PresentationAudio.validation_records()
+	UiAudio.validation_reset()
 	await _press_joypad_button(JOY_BUTTON_A)
 	var result_message := String(shell.get("_last_message")).strip_edges()
+	var result_ui_audio_records: Array = UiAudio.validation_records()
 	var expected_result_text := _bounded_text("Battle board result: %s" % result_message, 320)
-	if result_message == "" or int(session.battle.get("recent_events", []).size()) != result_events_before or not _exact_result_pending(board, live, semantic_timer, expected_result_text):
+	if result_target_battle_id == "" or not _invalid_board_audio_exact(result_ui_audio_records, "blocked_target", result_target_battle_id, "invalid", result_message) or PresentationAudio.validation_records() != result_presentation_audio_before or result_message == "" or int(session.battle.get("recent_events", []).size()) != result_events_before or not _exact_result_pending(board, live, semantic_timer, expected_result_text):
 		shell.queue_free()
-		return _fail_bool("Physical A did not publish its exact independent Shell result at %d: message=%s text=%s expected=%s pending=%s." % [width, result_message, live.text, expected_result_text, _pending_compact(board.get("_battle_board_cursor_semantic_pending"))])
+		return _fail_bool("Physical A did not publish its exact independent Shell result and imported invalid cue at %d: target=%s audio=%s message=%s text=%s expected=%s pending=%s." % [width, result_target_battle_id, result_ui_audio_records, result_message, live.text, expected_result_text, _pending_compact(board.get("_battle_board_cursor_semantic_pending"))])
 	if not await _wait_for_result_clear(board, live, semantic_timer):
 		shell.queue_free()
 		return _fail_bool("Physical A result did not clear through the real 1.2 Timer at %d." % width)
@@ -383,6 +400,9 @@ func _validate_battle_board_semantics_width(width: int) -> bool:
 	await get_tree().process_frame
 	Input.parse_input_event(cancel_released)
 	await _settle()
+	if UiAudio.validation_records() != result_ui_audio_records or PresentationAudio.validation_records() != result_presentation_audio_before:
+		shell.queue_free()
+		return _fail_bool("Physical B changed the failed Board audio record or Battle presentation audio at %d." % width)
 	get_tree().root.window_input.disconnect(root_probe)
 	board.gui_input.disconnect(gui_probe)
 	board.focus_exited.disconnect(focus_probe)
@@ -712,6 +732,37 @@ func _first_blocked_enemy_cell(summary: Dictionary) -> Vector2i:
 		if entry_value is Dictionary and String(entry_value.get("side", "")) == "enemy" and not bool(entry_value.get("legal_attack_target", false)):
 			return Vector2i(int(entry_value.get("q", -1)), int(entry_value.get("r", -1)))
 	return Vector2i(-1, -1)
+
+func _battle_id_at_cell(summary: Dictionary, cell: Vector2i) -> String:
+	for entry_value in summary.get("stack_cells", []):
+		if entry_value is Dictionary and Vector2i(int(entry_value.get("q", -1)), int(entry_value.get("r", -1))) == cell:
+			return String(entry_value.get("battle_id", ""))
+	return ""
+
+func _invalid_board_audio_exact(records: Array, action: String, target_battle_id: String, state: String, message: String) -> bool:
+	if records.size() != 1 or not (records[0] is Dictionary):
+		return false
+	var record: Dictionary = records[0]
+	return (
+		String(record.get("cue_id", "")) == "ui_invalid"
+		and String(record.get("source", "")) == "BattleShell._return_board_cursor_action_result"
+		and bool(record.get("played", false))
+		and String(record.get("playback_source", "")) == "imported_wav"
+		and String(record.get("asset_path", "")) == "res://art/audio/runtime/ui/invalid.wav"
+		and String(record.get("role", "")) == "invalid_action"
+		and int(record.get("duration_msec", 0)) == 150
+		and int(record.get("stream_mix_rate", 0)) == 44100
+		and bool(record.get("stream_stereo", false))
+		and int(record.get("stream_loop_mode", -1)) == AudioStreamWAV.LOOP_DISABLED
+		and int(record.get("imported_asset_count", 0)) == 1
+		and int(record.get("generated_fallback_count", -1)) == 0
+		and Dictionary(record.get("metadata", {})) == {
+			"action": action,
+			"target_battle_id": target_battle_id,
+			"state": state,
+			"message": message,
+		}
+	)
 
 func _first_legal_destination(summary: Dictionary) -> Vector2i:
 	for destination_value in summary.get("legal_destinations", []):
