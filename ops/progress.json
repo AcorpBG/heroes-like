@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "River Pass Hollow Mire now uses the exact 4/3 production Mireclaw line. Focused battle, real route/return, full routed campaign arc, active breadth, unit ability, core, static/editor, Linux, and Windows startup gates are green with bounded claims.",
+  "currentNotes": "Bellwake Relay Pickets now use the exact 9/7/8 production Sunvault line. Focused battle, Bellwake skirmish/save, Frontier Claims, active breadth, unit ability, core, static/editor, Linux, and Windows startup gates are green with bounded claims.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-river-pass-hollow-mire-production-line-10184",
-  "currentSliceId": "content-river-pass-hollow-mire-production-line-10184",
-  "currentSliceNotes": "Completed. The exact 4/3 production line retains player-advantaged three-round standard victories at 32% normal and 31% hard versus 34% legacy controls; route, campaign, breadth, compatibility, static, and bounded platform startup gates are green.",
+  "currentSlice": "content-bellwake-relay-pickets-production-line-10184",
+  "currentSliceId": "content-bellwake-relay-pickets-production-line-10184",
+  "currentSliceNotes": "Completed. The exact 9/7/8 production line retains even, standard victories at 61% normal and 65% hard versus 66%/60% legacy controls; Bellwake, campaign, breadth, compatibility, static, and bounded platform startup gates are green.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "River Pass Hollow Mire Production Line",
-  "currentSliceUpdatedAt": "2026-08-22T06:17:55Z",
+  "currentSliceTitle": "Bellwake Relay Pickets Production Line",
+  "currentSliceUpdatedAt": "2026-08-22T06:37:14Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,51 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed release-readiness implementation slice; do not expand the completed Hollow Mire migration opportunistically.",
-  "notes": "Completed the bounded River Pass Hollow Mire production-line migration. Exact focused production/legacy controls, real route/return behavior, the full three-chapter campaign arc, active breadth, compatibility, static/editor, and Linux/Windows export-startup evidence are green; no broader balance, packaged interaction, certification, signing, whole-game, or release-readiness claim is made.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed release-readiness implementation slice; do not expand the completed Bellwake migration opportunistically.",
+  "notes": "Completed the bounded Bellwake Relay Pickets production-line migration. Exact focused production/legacy controls, Bellwake skirmish/save, Frontier Claims, active breadth, compatibility, static/editor, and Linux/Windows export-startup evidence are green; no complete Veilmourn campaign, broader balance, packaged interaction, certification, signing, whole-game, or release-readiness claim is made.",
   "plannedSlices": [
+    {
+      "id": "content-bellwake-relay-pickets-production-line-10184",
+      "title": "Bellwake Relay Pickets Production Line",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/factions-content-bible.md"],
+      "purpose": "Replace only Bellwake Wreck Claim's placement-owned Relay Pickets generic Sunvault T1-T3 ids with the count-preserving production line while retaining its tuned pressure and campaign/skirmish authority.",
+      "implementationTargets": ["content/scenarios.json", "tests/battle_bellwake_relay_pickets_production_line_report.gd", "tests/battle_bellwake_relay_pickets_production_line_report.tscn", "tests/veilmourn_bellwake_wreck_player_skirmish_report.gd", "tests/battle_bellwake_wreck_balance_regression.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {
+        "scenario_id": "bellwake-wreck-claim",
+        "encounter_placement_id": "bellwake_relay_pickets",
+        "legacy_stack_ids": ["unit_shard_guard", "unit_prism_adept", "unit_mirror_duelist"],
+        "production_stack_ids": ["unit_sunvault_shard_wardens", "unit_sunvault_prism_adepts", "unit_sunvault_mirror_duelists"],
+        "stack_counts": [9, 7, 8],
+        "legacy_total_stack_health": 211,
+        "production_total_stack_health": 255,
+        "legacy_normal": {"outcome": "victory", "rounds": 3, "player_health_remaining_pct": 66, "enemy_damage_per_round": 13, "pacing_band": "standard", "matchup_band": "even"},
+        "production_normal": {"outcome": "victory", "rounds": 5, "player_health_remaining_pct": 61, "enemy_damage_per_round": 16, "pacing_band": "standard", "matchup_band": "even"},
+        "legacy_hard": {"outcome": "victory", "rounds": 4, "player_health_remaining_pct": 60, "enemy_damage_per_round": 14, "pacing_band": "standard", "matchup_band": "even"},
+        "production_hard": {"outcome": "victory", "rounds": 4, "player_health_remaining_pct": 65, "enemy_damage_per_round": 17, "pacing_band": "standard", "matchup_band": "even"},
+        "invalid_order_count": 0,
+        "rejected_other_legacy_sunvault_fronts": "Other pushed-HEAD candidates materially changed outcome/pacing, reopened completed placement owners, or retained the intentionally production-mapped Aurora Ballista identity."
+      },
+      "completionCriteria": [
+        "The exact Bellwake Relay Pickets use only production Shard Wardens, Prism Adepts, and Mirror Duelists at 9/7/8 while retaining encounter/army identity, medium difficulty, combat seed, and objective link",
+        "Public BattleRules payload and deterministic normal/hard autoplay expose exact shielding/volley/reach/backstab abilities, retain even standard victories at 61%/65% with zero invalid orders, and retain independent legacy controls at 66%/60%",
+        "Real Bellwake scenario behavior preserves all three encounter objectives, registry capture, reward/economy, town recruitment/development, save/resume, and campaign-progression isolation; Mirror Lancers and Aurora Battery remain exact",
+        "Active scenario breadth remains complete with zero stalls or invalid orders and no high-priority tuning item; unit ability and core compatibility remain green",
+        "Repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "Bellwake Mirror Lancers/Aurora Battery or another front migration, count changes, shared unit stat/ability, BattleRules, BattleAiRules, player-army, reward, objective/route, difficulty-threshold, save-schema, Native RMG, or packaging behavior changes",
+        "A complete Veilmourn campaign, broad faction balance, packaged encounter interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "createdAt": "2026-08-22T06:23:48Z",
+      "startedAt": "2026-08-22T06:23:48Z",
+      "updatedAt": "2026-08-22T06:37:14Z",
+      "completedAt": "2026-08-22T06:37:14Z",
+      "notes": "Completed with the exact production 9/7/8 line. Focused runtime proves shielding/volley/reach/backstab, 255 versus 211 health, production normal 5 rounds/61%/DPR16 and hard 4 rounds/65%/DPR17, independent legacy controls 3 rounds/66%/DPR13 and 4 rounds/60%/DPR14, and zero invalid orders. Mirror Lancers/Aurora Battery remain exact. Bellwake skirmish proves live town recruitment, save/resume, exact battle entry, reachable outcomes, and campaign-progression isolation; Frontier Claims' nine-chapter order/direct objectives remain exact. Active breadth is 77/77 with queue signature 829808c9 and zero stalls/invalid orders/items; unit ability and core are green. Static/editor and official Linux export/headless startup plus Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. Other fronts, shared content/rules, a complete Veilmourn campaign, packaged interaction, broad balance, certification, signing/publication, whole-game validation, and release readiness remain out of scope."
+    },
     {
       "id": "content-river-pass-hollow-mire-production-line-10184",
       "title": "River Pass Hollow Mire Production Line",

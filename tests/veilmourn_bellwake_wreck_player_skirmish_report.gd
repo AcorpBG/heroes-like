@@ -161,18 +161,28 @@ func _exercise_battle_entry(session: SessionStateStoreScript.SessionData) -> Dic
 		_fail("Relay Pickets battle did not preserve Ivara as player commander.")
 		return {}
 	var player_stack_count := 0
-	var enemy_stack_count := 0
+	var enemy_stacks := {}
+	var enemy_abilities := {}
 	for stack in battle.get("stacks", []):
 		if not (stack is Dictionary):
 			continue
 		if String(stack.get("side", "")) == "player":
 			player_stack_count += 1
 		elif String(stack.get("side", "")) == "enemy":
-			enemy_stack_count += 1
-	if player_stack_count != 4 or enemy_stack_count != 3:
+			var unit_id := String(stack.get("unit_id", ""))
+			enemy_stacks[unit_id] = int(stack.get("base_count", 0))
+			var ability_ids: Array = []
+			for ability_value in stack.get("abilities", []):
+				if ability_value is Dictionary:
+					ability_ids.append(String(ability_value.get("id", "")))
+			ability_ids.sort()
+			enemy_abilities[unit_id] = ability_ids
+	var expected_enemy_stacks := {"unit_sunvault_shard_wardens": 9, "unit_sunvault_prism_adepts": 7, "unit_sunvault_mirror_duelists": 8}
+	var expected_enemy_abilities := {"unit_sunvault_shard_wardens": ["shielding"], "unit_sunvault_prism_adepts": ["volley"], "unit_sunvault_mirror_duelists": ["backstab", "reach"]}
+	if player_stack_count != 4 or enemy_stacks != expected_enemy_stacks or enemy_abilities != expected_enemy_abilities:
 		_fail("Relay Pickets battle missed authored armies: %s" % JSON.stringify(battle.get("stacks", [])))
 		return {}
-	return {"encounter_id": String(battle.get("encounter_id", "")), "player_stack_count": player_stack_count, "enemy_stack_count": enemy_stack_count}
+	return {"encounter_id": String(battle.get("encounter_id", "")), "player_stack_count": player_stack_count, "enemy_stacks": enemy_stacks, "enemy_abilities": enemy_abilities}
 
 func _exercise_outcomes() -> Dictionary:
 	var victory_session := ScenarioFactoryScript.create_session(SCENARIO_ID, "normal", SessionStateStoreScript.LAUNCH_MODE_SKIRMISH)
