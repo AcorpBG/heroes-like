@@ -24,6 +24,23 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `content-charter-counterseal-production-mirror-lancers-10184`. Charter Bastion Counterseal's second high-difficulty front now fields the production Shard Wardens, Prism Adepts, and Mirror Duelists at exact `6/5/3` counts. Its public payload exposes shielding, volley, Reflected-Lane Step, and Broken-Timing Cut, and deterministic autoplay resolves in four rounds at 61% player health with zero invalid orders. Relay Pickets and Aurora Battery remain exact; chapter/campaign/save/outcome authority, 24-scenario/77-encounter breadth, unit abilities, core, repository/editor, and bounded Linux/Windows export-startup gates pass. Aurora/other legacy migration, packaged encounter interaction, broad balance, certification, signing/publication, whole-game validation, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
+  id: `content-charter-counterseal-production-mirror-lancers-10184`
+
+  Implementation target:
+  - migrate only `counterseal_mirror_lancers` to production Shard Wardens, Prism Adepts, and Mirror Duelists at exact count-preserving `6/5/3` strength;
+  - prove shielding, volley, Reflected-Lane Step, and Broken-Timing Cut materialize through the public battle payload and deterministic autoplay path;
+  - retain Relay Pickets, Aurora Battery, scenario/campaign/save/outcome/town/resource/reward/script authority, and every shared unit/rule record exactly.
+
+  Completion criteria:
+  - focused runtime proves exact production unit ids/counts and ability payloads, a bounded four-round player-advantaged result, and unchanged neighboring/session authority;
+  - active-scenario autoplay breadth remains complete with zero stalls/invalid orders and a clear tuning queue;
+  - Counterseal, Frontier Claims, unit ability, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+  Non-goals:
+  - do not migrate Aurora Battery or any other legacy front in this slice;
+  - do not change unit stats/abilities, battle rules/AI, player army, rewards, difficulty thresholds, save schema, campaign structure, Native RMG, packaging behavior, broad balance, whole-game validation, or release-readiness claims.
+
 - Completed implementation slice: `content-charter-counterseal-production-relay-pickets-10184`. Charter Bastion Counterseal's first Sunvault front now fields the production Shard Wardens, Prism Adepts, and Resonant Choristers at exact `7/5/1` counts. The public battle payload exposes shielding, volley, Resonant Relay, and Calibration Cant; the deterministic medium autoplay resolves as a six-round player victory at 32% health with zero invalid orders. Neighboring fronts, scenario/campaign/save/outcome authority, all 24 active scenarios and 77 encounter samples, unit abilities, core systems, repository/editor checks, and bounded Linux/Windows export-startup gates pass. Other legacy-front migrations, packaged encounter interaction, broad balance, certification, signing/publication, whole-game validation, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
   id: `content-charter-counterseal-production-relay-pickets-10184`
 
