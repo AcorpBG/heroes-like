@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved source-backed implementation slice."
+    "Select the next tracker-approved source-backed release-readiness implementation slice."
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the test-only random-map same-type fixture refresh. The exact -b seed preserves the 30x22 frontier-spokes/player boundary and naturally passes with four towns, one same-type neutral town, minimum spacing 9 against required 8, nine mines, six dwellings, no conflicts, and all retained authority gates. Production RMG/Native-RMG/gameplay files are unchanged; no implementation progress is claimed.",
+  "currentNotes": "Completed the Cliffhawk Roost art slice with two original transparent sources and exact reproducible runtime derivatives. Focused runtime proves the live 7/3 watch, authored and generated-map site authority, two BattleBoard entries, and 112 visible frames; two full 412-asset regenerations are byte-identical; compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Broader neutral art, packaged battle interaction, certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "random-map-town-mine-dwelling-same-type-fixture-refresh-10184",
-  "currentSliceId": "random-map-town-mine-dwelling-same-type-fixture-refresh-10184",
-  "currentSliceNotes": "The stale focused seed is refreshed and validator-owned; the original seed remains a valid warning-level strict-spacing case, and all production/Native-RMG behavior remains frozen. Select the next source-backed implementation slice.",
+  "currentSlice": "art-neutral-cliffhawk-roost-curated-character-sources-10184",
+  "currentSliceId": "art-neutral-cliffhawk-roost-curated-character-sources-10184",
+  "currentSliceNotes": "Completed only the two original Cliffhawk Roost unit sources and exact existing-path derivatives; content, gameplay, random-map/Native-RMG mapping, and broader release authority remain frozen.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Random Map Same-Type Town Fixture Refresh",
-  "currentSliceUpdatedAt": "2026-08-22T22:17:20Z",
+  "currentSliceTitle": "Cliffhawk Roost Curated Character Sources",
+  "currentSliceUpdatedAt": "2026-08-22T22:45:38Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,29 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed implementation slice; do not count the completed fixture-only correction as gameplay/RMG progress or infer Native-RMG parity or release readiness.",
-  "notes": "The random-map town/mine/dwelling same-type fixture refresh is completed as support work. Natural runtime rc0 reports four towns, one same-type neutral town, minimum distance 9/required 8, nine mines, six dwellings, no conflicts, and exact deterministic/fairness/metadata authority. Only the test seed, validator, PLAN, and tracker changed; production remains byte-exact.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed slice; do not infer broad neutral-art completion, packaged battle interaction parity, certification, signing/publication, whole-game validation, or release readiness from the completed Cliffhawk boundary.",
+  "notes": "The Cliffhawk Roost art slice is completed. Two original sources now own all eight existing-path runtime derivatives and exact manifest provenance; focused live BattleBoard, authored/generated-map dwelling authority, regeneration, compatibility, static/editor, and bounded Linux/Windows export-startup evidence are green. Broader product and release gaps remain.",
   "plannedSlices": [
+    {
+      "id": "art-neutral-cliffhawk-roost-curated-character-sources-10184",
+      "title": "Cliffhawk Roost Curated Character Sources",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md", "docs/animation-battle-troop-state-contract-report.md"],
+      "purpose": "Replace the generated Cliffhawk Wardens and Windglass Slingers emblems with two distinct character-readable original ridge-roost sources and exact reproducible existing-path derivatives while preserving their neutral dwelling graph, shared watch, authored placement, generated-map and Native-RMG projections, and all gameplay authority.",
+      "implementationTargets": ["art/units/source/curated/unit_neutral_cliffhawk_wardens.png", "art/units/source/curated/unit_neutral_windglass_slingers.png", "art/units/portraits/unit_neutral_cliffhawk_wardens.png", "art/units/portraits/unit_neutral_windglass_slingers.png", "art/units/battle_icons/unit_neutral_cliffhawk_wardens.png", "art/units/battle_icons/unit_neutral_windglass_slingers.png", "art/units/overworld_icons/unit_neutral_cliffhawk_wardens.png", "art/units/overworld_icons/unit_neutral_windglass_slingers.png", "art/animation/runtime/units/unit_neutral_cliffhawk_wardens.png", "art/animation/runtime/units/unit_neutral_windglass_slingers.png", "content/unit_art_manifest.json", "content/unit_animation_manifest.json", "tools/generate_unit_art_assets.py", "tests/unit_neutral_cliffhawk_roost_curated_art_report.gd", "tests/unit_neutral_cliffhawk_roost_curated_art_report.tscn", "tests/unit_art_reproducibility_report.py", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"unit_ids": ["unit_neutral_cliffhawk_wardens","unit_neutral_windglass_slingers"], "tiers": [2,2], "roles": ["melee","ranged"], "ability_ids": [["reach"],["volley"]], "source_size": [512,512], "portrait_size": [384,512], "battle_icon_size": [160,160], "overworld_icon_size": [96,96], "animation_sheet_size": [256,896], "animation_state_count": 14, "frames_per_state": 4, "other_units_must_remain_byte_exact": 101, "neutral_dwelling_id": "neutral_dwelling_cliffhawk_roost", "shared_army_id": "army_neutral_cliffhawk_roost_watch", "shared_army_counts": [7,3], "authored_site_placement_ids": ["dwelling_cliffhawk_roost"], "random_map_site_id": "site_cliffhawk_roost", "native_rmg_object_id": "object_cliffhawk_roost", "final_sprite_import": false},
+      "completionCriteria": ["Two distinct original transparent sources follow hooked sky-pike ridge-warden and high-arc windglass-slinger identities and own exact manifest provenance plus reproducible portrait, battle-icon, overworld-icon, and fourteen-state/four-frame animation-sheet derivatives", "Live neutral unit/dwelling lookup preserves exact stats, costs, growth, abilities, Cliffhawk Roost graph, shared 7/3 watch, authored Ninefold placement, generated-map site family, and existing Native-RMG projection; a production-rule BattleBoard loads both icon/sheet pairs and all 112 target frames remain visible", "Only two sources, eight target runtime payloads, and two records in each manifest change; all four surfaces for the other 101 units remain byte-exact; full regeneration/reproducibility, focused/neutral-dwelling/random-map/Native-RMG compatibility, validator/editor, Linux, and Windows startup gates pass"],
+      "nonGoals": ["Another neutral dwelling/unit, unit stats/abilities/costs/growth, combat balance or AI tuning, encounter/dwelling/site/map-object/army-group content, neutral recruitment, random-map or Native-RMG mapping rules, BattleRules/BattleAiRules, animation timing/order, save schema, rendering settings, or packaging behavior", "Broad/final neutral art, packaged battle interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game validation, or release readiness"],
+      "createdAt": "2026-08-22T22:19:31Z",
+      "startedAt": "2026-08-22T22:19:31Z",
+      "updatedAt": "2026-08-22T22:45:38Z",
+      "completedAt": "2026-08-22T22:45:38Z",
+      "notes": "Completed two distinct 512x512 original transparent sources and eight exact existing-path portrait, battle-icon, overworld-icon, and 14-state/4-frame battle-sheet derivatives. Focused runtime /tmp/heroes-cliffhawk-focused.wIlQwM is natural rc0 with one ok:true marker, exact live unit/dwelling stats and graph, shared 7/3 watch, authored Ninefold placement, generated-map site family, two BattleBoard entries, session authority, and 112 visible frames. Two complete 412-asset regeneration passes are byte-identical in /tmp/heroes-cliffhawk-repro.7bmTTx. Fifteen compatibility owners are rc0 in /tmp/heroes-cliffhawk-compat.FsRQn8, including the refreshed fixed-seed random-map and Native-RMG boundary gates. Static/editor checks pass, and official Linux plus Windows/Wine export-startup reports are ok:true in /tmp/heroes-cliffhawk-platform.JCgYk5. Platform evidence is bounded to export/startup only; broader neutral art, packaged battle interaction, certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "remainingWork": "None for this bounded slice; select the next tracker-approved source-backed release-readiness implementation slice."
+    },
     {
       "id": "random-map-town-mine-dwelling-same-type-fixture-refresh-10184",
       "title": "Random Map Same-Type Town Fixture Refresh",
@@ -94555,8 +94575,8 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "random_map_town_mine_dwelling_same_type_fixture_refresh_completed",
-  "status": "completed",
+  "result": "art_neutral_cliffhawk_roost_curated_character_sources_in_progress",
+  "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
       "completed": "Implementation or documentation-only governance work satisfies the PLAN completion criteria and has validation/evidence.",
