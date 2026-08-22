@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Charter Counterseal production Aurora Battery slice is completed. The shipped final front now uses exact strength-matched production 5/2/1 Shard Wardens, Prism Adepts, and Aurora Bastion with focused legacy-control, full active-scenario breadth, campaign/unit/core, static/editor, and bounded Linux/Windows export-startup evidence green.",
+  "currentNotes": "The Ninefold Prism Matrix production-line slice is completed. The flagship scenario now uses exact production Sunvault 6/2/2 T1/T2/T3 stacks with focused legacy-control, full active-scenario breadth, Ninefold/Map Editor/unit/core, static/editor, and bounded Linux/Windows export-startup evidence green.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-charter-counterseal-production-aurora-battery-10184",
-  "currentSliceId": "content-charter-counterseal-production-aurora-battery-10184",
-  "currentSliceNotes": "Completed. Counterseal Aurora Battery now uses exact production 5/2/1 Shard Wardens, Prism Adepts, and Aurora Bastion at 108 stack health versus legacy 110. Focused public payload and independent legacy control preserve the deterministic defeat class at 41% versus 47% enemy health with zero invalid orders; all three Counterseal fronts are production-owned, active 24-scenario/77-encounter breadth stays queue-clear at 829808c9, and campaign/unit/core/static/editor/Linux/Windows startup gates pass. Packaged encounter interaction, broad balance, certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+  "currentSlice": "content-ninefold-prism-matrix-production-line-10184",
+  "currentSliceId": "content-ninefold-prism-matrix-production-line-10184",
+  "currentSliceNotes": "Completed. Ninefold Prism Matrix now uses exact production 6/2/2 Shard Wardens, Prism Adepts, and Mirror Duelists. Focused public payload and independent legacy control preserve four-round player victories at 36% versus 46% player health with zero invalid orders; active 24-scenario/77-encounter breadth stays queue-clear at 829808c9, and Ninefold/Map Editor/unit/core/static/editor/Linux/Windows startup gates pass. Packaged encounter interaction, broad balance, certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Charter Counterseal Production Aurora Battery",
-  "currentSliceUpdatedAt": "2026-08-22T03:52:59Z",
+  "currentSliceTitle": "Ninefold Prism Matrix Production Line",
+  "currentSliceUpdatedAt": "2026-08-22T04:14:53Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,52 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed release-readiness implementation slice; preserve the completed production Counterseal roster and exact scenario, campaign, save, battle, and breadth authority.",
-  "notes": "Completed the source-backed Charter Counterseal production Aurora Battery migration. Focused public-payload/legacy-control, active-scenario breadth, campaign/unit/core compatibility, static/editor, and bounded Linux/Windows export-startup evidence is green. This does not claim packaged encounter interaction, broad faction balance, certification, signing/publication, whole-game validation, or release readiness.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed release-readiness implementation slice; preserve the completed Ninefold production roster and exact scenario, save, battle, editor, and breadth authority.",
+  "notes": "Completed the source-backed Ninefold Prism Matrix production-line migration. Focused public-payload/legacy-control, active-scenario breadth, Ninefold/Map Editor/unit/core compatibility, static/editor, and bounded Linux/Windows export-startup evidence is green. This does not claim packaged encounter interaction, broad faction balance, certification, signing/publication, whole-game validation, or release readiness.",
   "plannedSlices": [
+    {
+      "id": "content-ninefold-prism-matrix-production-line-10184",
+      "title": "Ninefold Prism Matrix Production Line",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/factions-content-bible.md"],
+      "purpose": "Replace the flagship Ninefold Confluence scenario's sole remaining legacy faction encounter with the exact production Sunvault T1/T2/T3 line while preserving its authored three-stack topology and bounded battle pressure.",
+      "implementationTargets": ["content/scenarios.json", "tests/ninefold_scenario_smoke.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {
+        "scenario_id": "ninefold-confluence",
+        "encounter_placement_id": "ninefold_prism_matrix",
+        "legacy_stack_ids": ["unit_shard_guard", "unit_prism_adept", "unit_mirror_duelist"],
+        "production_stack_ids": ["unit_sunvault_shard_wardens", "unit_sunvault_prism_adepts", "unit_sunvault_mirror_duelists"],
+        "stack_counts": [6, 2, 2],
+        "legacy_total_stack_health": 92,
+        "production_total_stack_health": 96,
+        "legacy_outcome_state": "victory",
+        "production_outcome_state": "victory",
+        "legacy_rounds": 4,
+        "production_rounds": 4,
+        "legacy_player_health_remaining_pct": 46,
+        "production_player_health_remaining_pct": 36,
+        "invalid_order_count": 0
+      },
+      "completionCriteria": [
+        "The exact Ninefold Prism Matrix encounter uses only production Sunvault T1/T2/T3 ids at 6/2/2 while retaining encounter identity, three-stack shape, placement, high difficulty, and combat seed",
+        "Public BattleRules payload and deterministic autoplay expose exact production shielding, volley, reach, and backstab abilities, complete in four rounds with zero invalid orders, and retain the independent legacy control's outcome class and bounded pressure",
+        "All other scenario, encounter, guard-link, session, save, reward, map, shared unit, and battle-rule authority remains exact",
+        "Active scenario breadth remains complete with zero stalls or invalid orders and no high-priority tuning item; Ninefold, Map Editor encounter restoration, unit ability, and core compatibility remain green",
+        "Repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "Any other legacy-front migration or shared unit stat/ability, BattleRules, BattleAiRules, player-army, reward, difficulty-threshold, save-schema, scenario-topology, Native RMG, or packaging behavior change",
+        "Broad faction balance, packaged encounter interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "createdAt": "2026-08-22T03:58:05Z",
+      "startedAt": "2026-08-22T03:58:05Z",
+      "updatedAt": "2026-08-22T04:14:53Z",
+      "completedAt": "2026-08-22T04:14:53Z",
+      "notes": "Completed with exact production 6/2/2 Shard Wardens, Prism Adepts, and Mirror Duelists. Focused public payload plus an independent legacy 6/2/2 control proves 96 versus 92 stack health, the same deterministic four-round victory class, 36% versus 46% player health, exact production shielding/volley/reach/backstab identities, and zero invalid orders. The 24-scenario/77-encounter matrix remains queue-clear at 829808c9; Ninefold visual, full Map Editor edit/restore/Play Copy, unit ability, core, static/editor, and bounded Linux/Windows export-startup gates pass."
+    },
     {
       "id": "content-charter-counterseal-production-aurora-battery-10184",
       "title": "Charter Counterseal Production Aurora Battery",

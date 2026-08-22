@@ -1,6 +1,18 @@
 extends Node
 
 const SCENARIO_ID := "ninefold-confluence"
+const BattleAutoplayBalanceHarnessRulesScript = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd")
+const PRISM_MATRIX_PLACEMENT_ID := "ninefold_prism_matrix"
+const PRISM_MATRIX_PRODUCTION_STACKS := [
+	{"unit_id": "unit_sunvault_shard_wardens", "count": 6},
+	{"unit_id": "unit_sunvault_prism_adepts", "count": 2},
+	{"unit_id": "unit_sunvault_mirror_duelists", "count": 2},
+]
+const PRISM_MATRIX_LEGACY_STACKS := [
+	{"unit_id": "unit_shard_guard", "count": 6},
+	{"unit_id": "unit_prism_adept", "count": 2},
+	{"unit_id": "unit_mirror_duelist", "count": 2},
+]
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -9,6 +21,8 @@ func _run() -> void:
 	var scenario := ContentService.get_scenario(SCENARIO_ID)
 	if scenario.is_empty():
 		_fail("Ninefold smoke: scenario was not loaded by ContentService.")
+		return
+	if not _assert_prism_matrix_production_line(scenario):
 		return
 
 	var session = ScenarioFactory.create_session(
@@ -117,6 +131,123 @@ func _run() -> void:
 		return
 
 	get_tree().quit(0)
+
+func _assert_prism_matrix_production_line(scenario: Dictionary) -> bool:
+	var encounter: Dictionary = {}
+	for encounter_value in scenario.get("encounters", []):
+		if encounter_value is Dictionary and String(encounter_value.get("placement_id", "")) == PRISM_MATRIX_PLACEMENT_ID:
+			encounter = encounter_value.duplicate(true)
+			break
+	if encounter.is_empty():
+		_fail("Ninefold smoke: Prism Matrix encounter is missing.")
+		return false
+	var enemy_army: Dictionary = encounter.get("enemy_army", {}) if encounter.get("enemy_army", {}) is Dictionary else {}
+	if (
+		String(encounter.get("encounter_id", "")) != "encounter_daybreak_matrix"
+		or String(encounter.get("difficulty", "")) != "high"
+		or int(encounter.get("combat_seed", 0)) != 16402
+		or Vector2i(int(encounter.get("x", -1)), int(encounter.get("y", -1))) != Vector2i(23, 38)
+		or String(enemy_army.get("id", "")) != "army_ninefold_prism_matrix_watch"
+		or String(enemy_army.get("faction_id", "")) != "faction_sunvault"
+		or _army_stack_contract(enemy_army.get("stacks", [])) != PRISM_MATRIX_PRODUCTION_STACKS
+	):
+		_fail("Ninefold smoke: Prism Matrix production encounter identity or exact 6/2/2 line drifted: %s" % JSON.stringify(encounter))
+		return false
+	var payload_session = ScenarioFactory.create_session(SCENARIO_ID, "normal", SessionState.LAUNCH_MODE_SKIRMISH)
+	OverworldRules.normalize_overworld_state(payload_session)
+	var payload_authority_before: Dictionary = payload_session.to_dict()
+	var battle_payload: Dictionary = BattleRules.create_battle_payload(payload_session, encounter)
+	if payload_session.to_dict() != payload_authority_before:
+		_fail("Ninefold smoke: Prism Matrix public battle payload mutated its source session.")
+		return false
+	var expected_abilities := {
+		"unit_sunvault_shard_wardens": ["shielding"],
+		"unit_sunvault_prism_adepts": ["volley"],
+		"unit_sunvault_mirror_duelists": ["backstab", "reach"],
+	}
+	var actual_stacks: Array = _battle_enemy_stack_contract(battle_payload)
+	var actual_abilities: Dictionary = _battle_enemy_ability_contract(battle_payload)
+	if actual_stacks != _army_stack_contract(PRISM_MATRIX_PRODUCTION_STACKS):
+		_fail("Ninefold smoke: Prism Matrix public battle payload missed exact production counts: actual=%s expected=%s" % [JSON.stringify(actual_stacks), JSON.stringify(_army_stack_contract(PRISM_MATRIX_PRODUCTION_STACKS))])
+		return false
+	if actual_abilities != expected_abilities:
+		_fail("Ninefold smoke: Prism Matrix public battle payload missed exact production ability identities: actual=%s expected=%s" % [JSON.stringify(actual_abilities), JSON.stringify(expected_abilities)])
+		return false
+	if _army_stack_health(PRISM_MATRIX_PRODUCTION_STACKS) != 96 or _army_stack_health(PRISM_MATRIX_LEGACY_STACKS) != 92:
+		_fail("Ninefold smoke: Prism Matrix production/legacy stack-health contract drifted.")
+		return false
+	var production_sample: Dictionary = BattleAutoplayBalanceHarnessRulesScript.run_battle_sample(SCENARIO_ID, encounter, 72, "normal")
+	if (
+		not bool(production_sample.get("completed", false))
+		or String(production_sample.get("outcome_state", "")) != "victory"
+		or int(production_sample.get("round_reached", 0)) != 4
+		or int(production_sample.get("invalid_order_count", -1)) != 0
+		or int(production_sample.get("player_health_remaining_pct", -1)) != 36
+		or int(production_sample.get("enemy_health_remaining_pct", -1)) != 0
+		or production_sample.get("initial_stack_profile", {}).get("side_ability_counts", {}).get("enemy", {}) != {"backstab": 1, "reach": 1, "shielding": 1, "volley": 1}
+	):
+		_fail("Ninefold smoke: production Prism Matrix left its exact four-round player-advantaged control: %s" % JSON.stringify(production_sample))
+		return false
+	var production_consequences: Dictionary = production_sample.get("runtime_consequence_profile", {})
+	if not bool(production_consequences.get("has_ability_consequence", false)) or not bool(production_consequences.get("has_spell_consequence", false)) or not bool(production_consequences.get("has_status_consequence", false)):
+		_fail("Ninefold smoke: production Prism Matrix did not expose its live battle consequences.")
+		return false
+	var legacy_encounter: Dictionary = encounter.duplicate(true)
+	legacy_encounter["placement_id"] = "%s:legacy_control" % PRISM_MATRIX_PLACEMENT_ID
+	var legacy_army: Dictionary = enemy_army.duplicate(true)
+	legacy_army["id"] = "army_ninefold_prism_matrix_legacy_control"
+	legacy_army["stacks"] = PRISM_MATRIX_LEGACY_STACKS.duplicate(true)
+	legacy_encounter["enemy_army"] = legacy_army
+	var legacy_sample: Dictionary = BattleAutoplayBalanceHarnessRulesScript.run_battle_sample(SCENARIO_ID, legacy_encounter, 72, "normal")
+	if (
+		not bool(legacy_sample.get("completed", false))
+		or String(legacy_sample.get("outcome_state", "")) != "victory"
+		or int(legacy_sample.get("round_reached", 0)) != 4
+		or int(legacy_sample.get("invalid_order_count", -1)) != 0
+		or int(legacy_sample.get("player_health_remaining_pct", -1)) != 46
+		or int(legacy_sample.get("enemy_health_remaining_pct", -1)) != 0
+	):
+		_fail("Ninefold smoke: legacy Prism Matrix method control drifted: %s" % JSON.stringify(legacy_sample))
+		return false
+	if abs(int(production_sample.get("player_health_remaining_pct", 0)) - int(legacy_sample.get("player_health_remaining_pct", 0))) > 10:
+		_fail("Ninefold smoke: production Prism Matrix left the bounded legacy terminal margin.")
+		return false
+	return true
+
+func _army_stack_contract(stacks: Array) -> Array:
+	var result: Array = []
+	for stack_value in stacks:
+		if stack_value is Dictionary:
+			result.append({"unit_id": String(stack_value.get("unit_id", "")), "count": int(stack_value.get("count", 0))})
+	return result
+
+func _army_stack_health(stacks: Array) -> int:
+	var total := 0
+	for stack_value in stacks:
+		if stack_value is Dictionary:
+			var unit: Dictionary = ContentService.get_unit(String(stack_value.get("unit_id", "")))
+			total += int(stack_value.get("count", 0)) * int(unit.get("hp", 0))
+	return total
+
+func _battle_enemy_stack_contract(battle: Dictionary) -> Array:
+	var result: Array = []
+	for stack_value in battle.get("stacks", []):
+		if stack_value is Dictionary and String(stack_value.get("side", "")) == "enemy":
+			result.append({"unit_id": String(stack_value.get("unit_id", "")), "count": int(stack_value.get("base_count", 0))})
+	return result
+
+func _battle_enemy_ability_contract(battle: Dictionary) -> Dictionary:
+	var result := {}
+	for stack_value in battle.get("stacks", []):
+		if not (stack_value is Dictionary) or String(stack_value.get("side", "")) != "enemy":
+			continue
+		var ability_ids: Array = []
+		for ability_value in stack_value.get("abilities", []):
+			if ability_value is Dictionary:
+				ability_ids.append(String(ability_value.get("id", "")))
+		ability_ids.sort()
+		result[String(stack_value.get("unit_id", ""))] = ability_ids
+	return result
 
 func _assert_neighbor_terrain_transitions(shell: Node, session) -> bool:
 	var receiver_tile := Vector2i(27, 23)

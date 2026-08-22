@@ -24,6 +24,23 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `content-ninefold-prism-matrix-production-line-10184`. The flagship Ninefold Confluence scenario's sole remaining legacy faction encounter now uses the production Sunvault T1/T2/T3 line at the same exact 6/2/2 topology. Focused public-payload proof and an independent legacy control retain deterministic four-round player victories with zero invalid orders at 96 versus 92 stack health and 36% versus 46% player health. The full 24-scenario/77-encounter matrix remains queue-clear at `829808c9`; Ninefold visual, Map Editor edit/restore/Play Copy, unit ability, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Other legacy-front migration, packaged encounter interaction, broad balance, certification, signing/publication, whole-game validation, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
+  id: `content-ninefold-prism-matrix-production-line-10184`
+
+  Implementation target:
+  - migrate only `ninefold_prism_matrix` from legacy Shard Guard/Prism Adept/Mirror Duelist ids to production Shard Wardens/Prism Adepts/Mirror Duelists at exact `6/2/2` counts;
+  - prove the public battle payload exposes the exact production ability surface and retains the bounded deterministic four-round player-advantaged result against an independent legacy-content control;
+  - retain encounter identity, high difficulty, combat seed, map placement, guard links, scenario/session/save authority, all other encounters, and every shared unit/rule record exactly.
+
+  Completion criteria:
+  - focused runtime proves exact production ids/counts, 96 versus 92 stack health, exact public shielding/volley/reach/backstab abilities, a completed four-round victory with zero invalid orders, and the independent legacy control's exact four-round victory;
+  - the active-scenario autoplay breadth remains complete with zero stalls/invalid orders and no high-priority tuning item, while Ninefold, Map Editor encounter restoration, unit ability, and core compatibility remain green;
+  - repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+  Non-goals:
+  - do not migrate another encounter or change shared unit stats/abilities, BattleRules/BattleAiRules, player army, rewards, difficulty thresholds, save schema, scenario topology, Native RMG, or packaging behavior;
+  - do not claim broad faction balance, packaged encounter interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game validation, or release readiness.
+
 - Completed implementation slice: `content-charter-counterseal-production-aurora-battery-10184`. Charter Bastion Counterseal's final legacy Sunvault encounter now fields a strength-matched production T1/T2/T6 battery, so all three shipped finale fronts consistently exercise production faction identity. The exact three-stack seed keeps legacy `5/4/2` Shard Guard/Mirror Duelist/Aurora Ballista (110 stack health) method-matched against `5/2/1` Shard Wardens/Prism Adepts/Aurora Bastion (108 stack health); both deterministically remain high-front defeats, with production resolving in four rounds at 41% enemy health versus legacy three rounds at 47%. The public payload exposes exact production shielding/volley identities, and the 24-scenario/77-encounter breadth remains queue-clear at `829808c9` with zero stalls or invalid orders. Counterseal/Frontier Claims, unit ability, core, repository/editor, and bounded Linux/Windows export-startup gates pass. Other legacy-front migration, packaged encounter interaction, broad balance, certification, signing/publication, whole-game validation, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
   id: `content-charter-counterseal-production-aurora-battery-10184`
 
