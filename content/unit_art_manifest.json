@@ -1236,7 +1236,10 @@
       "motif": "melee",
       "portrait": "res://art/units/portraits/unit_neutral_greenbranch_cudgels.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_greenbranch_cudgels.png",
-      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_greenbranch_cudgels.png"
+      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_greenbranch_cudgels.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_neutral_greenbranch_cudgels.png",
+      "curated_source_sha256": "0dcdb52543120420ccd09c94453fa34d8b82288b873affc2f3dd7e8f98c6fb8d"
     },
     {
       "id": "unit_neutral_sapwhistle_callers",
@@ -1248,7 +1251,10 @@
       "motif": "caster",
       "portrait": "res://art/units/portraits/unit_neutral_sapwhistle_callers.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_sapwhistle_callers.png",
-      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_sapwhistle_callers.png"
+      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_sapwhistle_callers.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_neutral_sapwhistle_callers.png",
+      "curated_source_sha256": "45186f7199089c91b9e225d80e0581fdebf280f250c5221d41e1290f923b1fff"
     },
     {
       "id": "unit_neutral_harbor_polearms",
