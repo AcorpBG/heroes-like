@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the Greenbranch Copse art slice with two original transparent sources and exact reproducible runtime derivatives. Focused runtime proves the live 9/2 watch, authored/generated-map site authority, claim rewards/recruits, encounter graph, two BattleBoard entries, and 112 visible frames; two full 412-asset regenerations are byte-identical; compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Broader neutral art, packaged battle interaction, certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+  "currentNotes": "Completed the Bogbell Croft art slice with two original transparent sources and exact reproducible runtime derivatives. Focused runtime proves the live 9/3 watch, authored/generated-map site authority, rewards/recruits, encounter graph, two BattleBoard entries, and 112 visible frames; repeated full regeneration is byte-identical; compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Broader neutral art, packaged battle interaction, certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-neutral-greenbranch-copse-curated-character-sources-10184",
-  "currentSliceId": "art-neutral-greenbranch-copse-curated-character-sources-10184",
-  "currentSliceNotes": "Completed only the two original Greenbranch Copse unit sources and exact existing-path derivatives; content, gameplay, recruitment/reward, random-map/Native-RMG mapping, and broader release authority remain frozen.",
+  "currentSlice": "art-neutral-bogbell-croft-curated-character-sources-10184",
+  "currentSliceId": "art-neutral-bogbell-croft-curated-character-sources-10184",
+  "currentSliceNotes": "Completed only the two original Bogbell Croft unit sources and exact existing-path derivatives; content, gameplay, recruitment/reward, random-map/Native-RMG mapping, and broader release authority remain frozen.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Greenbranch Copse Curated Character Sources",
-  "currentSliceUpdatedAt": "2026-08-22T23:16:33Z",
+  "currentSliceTitle": "Bogbell Croft Curated Character Sources",
+  "currentSliceUpdatedAt": "2026-08-22T23:42:15Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,29 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed slice; do not infer broad neutral-art completion, packaged battle interaction parity, certification, signing/publication, whole-game validation, or release readiness from the completed Greenbranch boundary.",
-  "notes": "The Greenbranch Copse art slice is completed. Two original sources now own all eight existing-path runtime derivatives and exact manifest provenance; focused live BattleBoard, authored/generated-map dwelling, reward/recruitment and encounter authority, regeneration, compatibility, static/editor, and bounded Linux/Windows export-startup evidence are green. Broader product and release gaps remain.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed slice; do not infer broad neutral-art completion, packaged battle interaction parity, certification, signing/publication, whole-game validation, or release readiness from the completed Bogbell boundary.",
+  "notes": "The Bogbell Croft art slice is completed. Two original sources now own all eight existing-path runtime derivatives and exact manifest provenance; focused live BattleBoard, authored/generated-map dwelling, reward/recruitment and encounter authority, regeneration, compatibility, static/editor, and bounded Linux/Windows export-startup evidence are green. Broader product and release gaps remain.",
   "plannedSlices": [
+    {
+      "id": "art-neutral-bogbell-croft-curated-character-sources-10184",
+      "title": "Bogbell Croft Curated Character Sources",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md", "docs/animation-battle-troop-state-contract-report.md"],
+      "purpose": "Replace the generated Bogbell Mauls and Peatflare Jarriers emblems with two distinct character-readable original fen-crofter sources and exact reproducible existing-path derivatives while preserving their neutral dwelling graph, shared watch, authored placement, generated-map selection, reward/recruitment behavior, and all gameplay authority.",
+      "implementationTargets": ["art/units/source/curated/unit_neutral_bogbell_mauls.png", "art/units/source/curated/unit_neutral_peatflare_jarriers.png", "art/units/portraits/unit_neutral_bogbell_mauls.png", "art/units/portraits/unit_neutral_peatflare_jarriers.png", "art/units/battle_icons/unit_neutral_bogbell_mauls.png", "art/units/battle_icons/unit_neutral_peatflare_jarriers.png", "art/units/overworld_icons/unit_neutral_bogbell_mauls.png", "art/units/overworld_icons/unit_neutral_peatflare_jarriers.png", "art/animation/runtime/units/unit_neutral_bogbell_mauls.png", "art/animation/runtime/units/unit_neutral_peatflare_jarriers.png", "content/unit_art_manifest.json", "content/unit_animation_manifest.json", "tools/generate_unit_art_assets.py", "tests/unit_neutral_bogbell_croft_curated_art_report.gd", "tests/unit_neutral_bogbell_croft_curated_art_report.tscn", "tests/unit_art_reproducibility_report.py", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"unit_ids": ["unit_neutral_bogbell_mauls","unit_neutral_peatflare_jarriers"], "tiers": [2,2], "roles": ["melee","ranged"], "ability_ids": [["shielding"],["harry"]], "source_size": [512,512], "portrait_size": [384,512], "battle_icon_size": [160,160], "overworld_icon_size": [96,96], "animation_sheet_size": [256,896], "animation_state_count": 14, "frames_per_state": 4, "other_units_must_remain_byte_exact": 101, "neutral_dwelling_id": "neutral_dwelling_bogbell_croft", "shared_army_id": "army_neutral_bogbell_croft_watch", "shared_army_counts": [9,3], "authored_site_placement_ids": ["dwelling_bogbell_croft"], "random_map_site_id": "site_bogbell_croft", "claim_recruits": [2,1], "final_sprite_import": false},
+      "completionCriteria": ["Two distinct original transparent sources follow bell-mud maul-keeper and smoldering peat-jar skirmisher identities and own exact manifest provenance plus reproducible portrait, battle-icon, overworld-icon, and fourteen-state/four-frame animation-sheet derivatives", "Live neutral unit/dwelling lookup preserves exact stats, costs, growth, abilities, Bogbell Croft graph, shared 9/3 watch, authored Ninefold placement, generated-map site family, claim rewards/recruits, and encounter authority; a production-rule BattleBoard loads both icon/sheet pairs and all 112 target frames remain visible", "Only two sources, eight target runtime payloads, and two records in each manifest change; all four surfaces for the other 101 units remain byte-exact; full regeneration/reproducibility, focused/neutral-dwelling/random-map/reward/AI compatibility, validator/editor, Linux, and Windows startup gates pass"],
+      "nonGoals": ["Another neutral dwelling/unit, unit stats/abilities/costs/growth, combat balance or AI tuning, encounter/dwelling/site/map-object/army-group content, neutral recruitment/reward rules, random-map or Native-RMG mapping rules, BattleRules/BattleAiRules, animation timing/order, save schema, rendering settings, or packaging behavior", "Broad/final neutral art, packaged battle interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game validation, or release readiness"],
+      "createdAt": "2026-08-22T23:18:37Z",
+      "startedAt": "2026-08-22T23:18:37Z",
+      "updatedAt": "2026-08-22T23:42:15Z",
+      "completedAt": "2026-08-22T23:42:15Z",
+      "notes": "Completed two original transparent sources and exact deterministic derivatives/manifests. Focused report proves source alpha/provenance, live unit stats/abilities/costs/growth, Bogbell dwelling/site/object/encounter graph, shared 9/3 watch, authored Ninefold placement, generated-map selection, rewards/recruits, exact BattleBoard resources, session authority, and 112 visible frames. Repeated 412-asset plus two-manifest regeneration, the 15-owner compatibility chain, static/editor gates, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. Packaged Bogbell interaction, certification, hardware/accessibility platform parity, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "remainingWork": "None within the bounded Bogbell Croft two-unit curated-character source slice."
+    },
     {
       "id": "art-neutral-greenbranch-copse-curated-character-sources-10184",
       "title": "Greenbranch Copse Curated Character Sources",
