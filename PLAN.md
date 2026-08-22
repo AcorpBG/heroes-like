@@ -24,6 +24,23 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `presentation-map-editor-canvas-failed-action-invalid-audio-10184`. Real Map Editor canvas actions that fail with non-empty visible feedback now publish exactly one imported `ui_invalid` transient through the common tile-action boundary. The focused physical-A matrix passes at 1280x720 and 1920x1080 with exact cue metadata and unchanged session, working-copy, focus, cursor-semantic, settings, InputMap, and save-cache authority; successful Inspect, validation-only failure, and unavailable-editor controls remain silent. UI-audio, broad Map Editor workflow, dirty/focus/canvas, package Save Copy, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass. Non-canvas invalid-audio expansion, packaged Editor interaction/listening, hardware/controller certification, AT-SPI/UIA, native hardware, signing/publication, whole-game validation, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
+  id: `presentation-map-editor-canvas-failed-action-invalid-audio-10184`
+
+  Implementation target:
+  - make the existing `_on_map_tile_pressed` dispatch retain each canvas tool's boolean result and publish one `ui_invalid` cue only for a failed result with non-empty `_last_message`;
+  - keep every tool implementation, rule result, visible message, refresh, focus, semantic timing, and working-copy mutation exactly unchanged;
+  - prove a real focused physical-A failed remove action at 1280x720 and 1920x1080, plus silent successful Inspect, unavailable, and validation-only controls.
+
+  Completion criteria:
+  - the real focused Map canvas physical-A path on a tile without the selected object family appends one exact imported `ui_invalid` record with detached lane/tool/tile/message metadata and preserves exact working-copy/session/background authority;
+  - successful Inspect, a validation-only failed remove, and the empty-editor unavailable path add no invalid cue, while focus, cursor semantics, selected tile, visible feedback, and existing Map Editor actions remain exact;
+  - focused Map Editor/UI-audio, Map Editor smoke/package/focus/accessibility/core compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass.
+
+  Non-goals:
+  - do not change tool legality, placement/terrain/road/object/property rules, visible copy/layout, focus, semantic timers, working-copy/session/save/package authority, cue assets, Effects settings, cooldown, or voice budget;
+  - do not add invalid audio to Load/Save Copy/Play Copy/Menu/property/fill/restore buttons, Overworld/Town/Battle, packaged editor interaction/listening, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game validation, or release-readiness claims.
+
 - Completed implementation slice: `content-charter-counterseal-production-mirror-lancers-10184`. Charter Bastion Counterseal's second high-difficulty front now fields the production Shard Wardens, Prism Adepts, and Mirror Duelists at exact `6/5/3` counts. Its public payload exposes shielding, volley, Reflected-Lane Step, and Broken-Timing Cut, and deterministic autoplay resolves in four rounds at 61% player health with zero invalid orders. Relay Pickets and Aurora Battery remain exact; chapter/campaign/save/outcome authority, 24-scenario/77-encounter breadth, unit abilities, core, repository/editor, and bounded Linux/Windows export-startup gates pass. Aurora/other legacy migration, packaged encounter interaction, broad balance, certification, signing/publication, whole-game validation, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
   id: `content-charter-counterseal-production-mirror-lancers-10184`
 

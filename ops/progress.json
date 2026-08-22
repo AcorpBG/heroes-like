@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Charter Counterseal production Mirror Lancers slice is completed. The shipped second front now uses the production Sunvault T1/T2/T3 line at exact 6/5/3 counts, with focused payload/autoplay, neighboring authority, active breadth, unit ability, core, repository/editor, and bounded Linux/Windows export-startup evidence green.",
+  "currentNotes": "The Map Editor canvas failed-action invalid-audio slice is completed. Real failed canvas tool input now emits one imported invalid cue at the existing public tile-action boundary, with focused two-width authority, broad editor/focus/package/accessibility/core, static/editor, and bounded Linux/Windows export-startup evidence green.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-charter-counterseal-production-mirror-lancers-10184",
-  "currentSliceId": "content-charter-counterseal-production-mirror-lancers-10184",
-  "currentSliceNotes": "Completed. Counterseal Mirror Lancers now fields production Shard Wardens 6, Prism Adepts 5, and Mirror Duelists 3. The public payload exposes shielding, volley, reach, and backstab; deterministic autoplay wins in round 4 at 61% player health with zero invalid orders. Relay Pickets, Aurora Battery, and scenario/campaign/save/outcome authority remain exact; 24-scenario/77-encounter breadth is complete with queue signature 829808c9 and no stalls, invalid orders, or tuning items. Unit abilities, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged encounter interaction, Aurora/other legacy migration, broad balance, certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+  "currentSlice": "presentation-map-editor-canvas-failed-action-invalid-audio-10184",
+  "currentSliceId": "presentation-map-editor-canvas-failed-action-invalid-audio-10184",
+  "currentSliceNotes": "Completed. The public Map Editor tile-action dispatch retains every tool's existing boolean result and emits one imported ui_invalid cue only for non-empty failures. Physical A at 1280 and 1920 proves exact cue/source/asset/tile/tool/message metadata and exact working-copy, session, settings/InputMap, save-cache, focus, and cursor-semantic authority; successful Inspect, validation-only failure, and unavailable editor remain silent. UI-audio, Map Editor smoke, dirty/focus/canvas, package Save Copy, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Non-canvas expansion, packaged Editor interaction/listening, hardware/certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Charter Counterseal Production Mirror Lancers",
-  "currentSliceUpdatedAt": "2026-08-22T03:03:37Z",
+  "currentSliceTitle": "Map Editor Canvas Failed Action Invalid Audio",
+  "currentSliceUpdatedAt": "2026-08-22T03:33:22Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,40 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select a source-backed release-readiness implementation slice with direct current behavior evidence; preserve both completed Counterseal production fronts and exact Aurora/scenario/campaign/save authority.",
-  "notes": "Completed the source-backed Charter Counterseal production Mirror Lancers integration. Only the second Counterseal front changed to the production 6/5/3 Sunvault line; focused, breadth, compatibility, static/editor, and bounded Linux/Windows export-startup evidence is green. This does not claim Aurora/other legacy migration, packaged encounter interaction, broad balance, certification, signing/publication, whole-game validation, or release readiness.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed release-readiness implementation slice; preserve the completed Map Editor canvas invalid-audio boundary and exact tool, working-copy, session, focus, semantic, save, and package authority.",
+  "notes": "Completed the source-backed Map Editor canvas failed-action invalid-audio slice. Focused physical input, broad editor/focus/package/accessibility/core compatibility, static/editor, and bounded Linux/Windows export-startup evidence is green. This does not claim non-canvas invalid-audio expansion, packaged Editor interaction/listening, hardware/controller certification, AT-SPI/UIA, native hardware, signing/publication, whole-game validation, or release readiness.",
   "plannedSlices": [
+    {
+      "id": "presentation-map-editor-canvas-failed-action-invalid-audio-10184",
+      "title": "Map Editor Canvas Failed Action Invalid Audio",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md"],
+      "purpose": "Give real failed Map Editor canvas tool actions the same bounded invalid-action feedback already shipped in the Overworld, Town, and Battle without changing authoring behavior.",
+      "implementationTargets": ["scenes/editor/MapEditorShell.gd", "tests/map_editor_canvas_failed_action_audio_report.gd", "tests/map_editor_canvas_failed_action_audio_report.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {
+        "public_input_owner": "MapEditorShell._on_map_tile_pressed",
+        "failed_visible_feedback_present": true,
+        "invalid_audio_present": false,
+        "viewport_widths": [1280, 1920]
+      },
+      "completionCriteria": [
+        "A real focused physical-A failed remove action appends one exact imported ui_invalid record with detached canvas, tool, tile, and message metadata while working-copy/session/background authority remains exact",
+        "Successful Inspect, unavailable working-copy, and validation-only failure paths remain silent and all existing focus, cursor semantic, selected-tile, visible-feedback, and tool consequences remain exact",
+        "Focused Map Editor/UI-audio, Map Editor smoke/package/focus/accessibility/core compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass"
+      ],
+      "nonGoals": [
+        "Tool legality, terrain/road/object/property rules, visible copy/layout, focus, semantic timing, working-copy/session/save/package authority, cue assets, Effects settings, cooldown, or voice-budget changes",
+        "Load, Save Copy, Play Copy, Menu, property, fill, or restore button invalid-audio expansion; Overworld, Town, or Battle changes; packaged Editor interaction/listening; controller hardware; AT-SPI/UIA; native hardware; signing/publication; whole-game or release-readiness claims"
+      ],
+      "createdAt": "2026-08-22T03:11:03Z",
+      "startedAt": "2026-08-22T03:11:03Z",
+      "updatedAt": "2026-08-22T03:33:22Z",
+      "completedAt": "2026-08-22T03:33:22Z",
+      "notes": "Completed. The existing public tile-action dispatch now retains every canvas tool's exact boolean result and plays one imported ui_invalid cue only for a non-empty failure. Focused physical A at 1280/1920 proves exact cue metadata, visible feedback, focus/cursor semantic behavior, and unchanged working-copy/session/settings/InputMap/save-cache authority; successful Inspect, validation-only failure, and unavailable editor remain silent. UI-audio, broad Map Editor workflow, dirty/focus/canvas, package Save Copy, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass."
+    },
     {
       "id": "content-charter-counterseal-production-mirror-lancers-10184",
       "title": "Charter Counterseal Production Mirror Lancers",
@@ -92741,7 +92772,7 @@
   ],
   "summary": "The native startup now shows the approved original Aurelion Reach crest instead of the stock Godot splash while preserving Boot behavior and compatibility identity.",
   "taskId": "10184",
-  "updatedAt": "2026-08-22T03:03:37Z",
+  "updatedAt": "2026-08-22T03:33:22Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
