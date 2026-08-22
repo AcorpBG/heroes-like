@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Glassfen Relay Pickets now uses the exact production 6/2/1 Sunvault line. Focused public-payload and legacy-control proof, active breadth, compatibility, static/editor, and bounded Linux/Windows export-startup gates are green; broader release-readiness claims remain open.",
+  "currentNotes": "Fogchart Aurora Battery now uses the exact-strength production 5/5/2 Sunvault line. Focused public-payload and legacy-control proof, chapter/campaign/save authority, active breadth, ability/core compatibility, static/editor, and bounded Linux/Windows export-startup gates are green; broader release-readiness claims remain open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-glassfen-relay-pickets-production-line-10184",
-  "currentSliceId": "content-glassfen-relay-pickets-production-line-10184",
-  "currentSliceNotes": "Completed. Production Relay Pickets retains the exact standard four-round/70% victory against the five-round/69% legacy control, 81 versus 83 stack health, six enemy damage per round, and zero invalid orders. Active breadth is 77/77 queue-clear at 829808c9; unit ability, core, static/editor, and bounded Linux/Windows export-startup gates pass.",
+  "currentSlice": "content-fogchart-aurora-battery-production-line-10184",
+  "currentSliceId": "content-fogchart-aurora-battery-production-line-10184",
+  "currentSliceNotes": "Completed. Production Aurora Battery retains the exact standard four-round/41% defeat against the five-round/34% legacy control at identical 109 stack health and zero invalid orders. Active breadth is 77/77 queue-clear at 829808c9; unit ability, core, static/editor, and bounded Linux/Windows export-startup gates pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Glassfen Relay Pickets Production Line",
-  "currentSliceUpdatedAt": "2026-08-22T04:37:01Z",
+  "currentSliceTitle": "Fogchart Aurora Battery Production Line",
+  "currentSliceUpdatedAt": "2026-08-22T04:48:16Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19847,8 +19847,52 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next tracker-approved source-backed implementation slice; do not infer whole-release readiness from this bounded content migration.",
-  "notes": "Completed the source-backed Glassfen Relay Pickets production-line migration. Exact public-payload and legacy controls retain the tuned outcome; Glasswing, Aurora, shared armies, active breadth, ability/core compatibility, repository/editor, and bounded Linux/Windows export-startup authority remain green. Bellwake test fixtures were aligned to already-shipped production outcomes without content changes.",
+  "notes": "Completed the source-backed Fogchart Aurora Battery production-line migration. Exact public-payload and legacy controls retain the authored defeat at identical strength; Fogchart Relay/Mirror, chapter/campaign/save authority, active breadth, ability/core compatibility, repository/editor, and bounded Linux/Windows export-startup gates remain green.",
   "plannedSlices": [
+    {
+      "id": "content-fogchart-aurora-battery-production-line-10184",
+      "title": "Fogchart Aurora Battery Production Line",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/factions-content-bible.md"],
+      "purpose": "Replace only Fogchart Mooring's placement-owned Aurora Battery legacy T1/T2 stacks with the exact-strength production Sunvault line while retaining its tuned defeat pressure and all adjacent fronts.",
+      "implementationTargets": ["content/scenarios.json", "tests/veilmourn_fogchart_mooring_chapter_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {
+        "scenario_id": "fogchart-mooring",
+        "encounter_placement_id": "fogchart_aurora_battery",
+        "legacy_stack_ids": ["unit_shard_guard", "unit_prism_adept", "unit_aurora_ballista"],
+        "production_stack_ids": ["unit_sunvault_shard_wardens", "unit_sunvault_prism_adepts", "unit_aurora_ballista"],
+        "stack_counts": [5, 5, 2],
+        "legacy_total_stack_health": 109,
+        "production_total_stack_health": 109,
+        "legacy_rounds": 5,
+        "production_rounds": 4,
+        "legacy_enemy_health_remaining_pct": 34,
+        "production_enemy_health_remaining_pct": 41,
+        "legacy_enemy_damage_per_round": 31,
+        "production_enemy_damage_per_round": 39,
+        "invalid_order_count": 0,
+        "rejected_adjacent_candidates": ["fogchart_relay_pickets production line produced a high-margin 63% player victory", "fogchart_mirror_lancers production line produced a high-margin 65% player victory"]
+      },
+      "completionCriteria": [
+        "The exact Fogchart Aurora Battery uses production Shard Wardens and Prism Adepts at 5/5 plus two production Aurora Ballistas while retaining encounter identity, three-stack shape, placement, high difficulty, and combat seed",
+        "Public BattleRules payload and deterministic autoplay expose exact production shielding, volley, and formation-guard abilities, complete as a four-round defeat at 41% enemy health with zero invalid orders, and retain the independent legacy control's five-round/34% defeat",
+        "Fogchart Relay Pickets, Mirror Lancers, chapter/campaign/session/save authority, all other scenario content, and shared units/rules remain exact",
+        "Active scenario breadth remains complete with zero stalls or invalid orders and no high-priority tuning item; unit ability and core compatibility remain green",
+        "Repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "Fogchart Relay Pickets or Mirror Lancers migration, count, shared unit stat/ability, BattleRules, BattleAiRules, player-army, reward, objective, difficulty-threshold, save-schema, Native RMG, or packaging behavior changes",
+        "Broad faction balance, packaged encounter interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "createdAt": "2026-08-22T04:39:55Z",
+      "startedAt": "2026-08-22T04:39:55Z",
+      "updatedAt": "2026-08-22T04:48:16Z",
+      "completedAt": "2026-08-22T04:48:16Z",
+      "notes": "Completed with production Shard Wardens and Prism Adepts at exact 5/5 plus two Aurora Ballistas. Focused public payload plus an independent legacy 5/5/2 control proves identical 109 stack health, four-round/41% versus five-round/34% standard defeats, exact shielding/volley/formation-guard identities, and zero invalid orders. Fogchart Relay/Mirror, chapter/campaign/save authority, and the 24-scenario/77-encounter queue remain exact and clear at 829808c9. Unit ability, core, static/editor, and bounded Linux/Windows export-startup gates pass."
+    },
     {
       "id": "content-glassfen-relay-pickets-production-line-10184",
       "title": "Glassfen Relay Pickets Production Line",

@@ -5190,8 +5190,8 @@
             "name": "Fogchart Aurora Battery",
             "faction_id": "faction_sunvault",
             "stacks": [
-              {"unit_id": "unit_shard_guard", "count": 5},
-              {"unit_id": "unit_prism_adept", "count": 5},
+              {"unit_id": "unit_sunvault_shard_wardens", "count": 5},
+              {"unit_id": "unit_sunvault_prism_adepts", "count": 5},
               {"unit_id": "unit_aurora_ballista", "count": 2}
             ]
           }

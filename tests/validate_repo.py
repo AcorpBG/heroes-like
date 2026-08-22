@@ -53728,8 +53728,8 @@ def validate_veilmourn_fogchart_mooring_chapter(errors: list[str]) -> None:
             {"unit_id": "unit_sunvault_resonant_choristers", "count": 2},
         ],
         "fogchart_aurora_battery": [
-            {"unit_id": "unit_shard_guard", "count": 5},
-            {"unit_id": "unit_prism_adept", "count": 5},
+            {"unit_id": "unit_sunvault_shard_wardens", "count": 5},
+            {"unit_id": "unit_sunvault_prism_adepts", "count": 5},
             {"unit_id": "unit_aurora_ballista", "count": 2},
         ],
     }, errors, "Fogchart Mooring must retain its screened encounter rosters")
@@ -53780,6 +53780,20 @@ def validate_veilmourn_fogchart_mooring_chapter(errors: list[str]) -> None:
             "TownRulesScript.get_build_actions",
             "TownRulesScript.recruit_active_town",
             "BattleRulesScript.create_battle_payload",
+            "BattleAutoplayBalanceHarnessRulesScript.run_battle_sample",
+            "AURORA_PRODUCTION_STACKS",
+            "AURORA_LEGACY_STACKS",
+            '"fogchart_aurora_battery:legacy_control"',
+            '"army_fogchart_aurora_battery_legacy_control"',
+            '"unit_sunvault_shard_wardens": ["shielding"]',
+            '"unit_sunvault_prism_adepts": ["volley"]',
+            '"unit_aurora_ballista": ["formation_guard", "volley"]',
+            "production_stack_health != 109 or legacy_stack_health != 109",
+            'int(production_sample.get("round_reached", 0)) != 4',
+            'int(production_sample.get("enemy_health_remaining_pct", -1)) != 41',
+            'int(legacy_sample.get("round_reached", 0)) != 5',
+            'int(legacy_sample.get("enemy_health_remaining_pct", -1)) != 34',
+            "session.to_dict() != session_authority_before",
             "ScenarioRulesScript.evaluate_session",
             "CampaignRulesScript.build_chapter_action",
             "CampaignRulesScript.record_session_completion",
@@ -53794,7 +53808,9 @@ def validate_veilmourn_fogchart_mooring_chapter(errors: list[str]) -> None:
             'get_tree().quit(1)',
         ):
             ensure(token in report_text, errors, f"Fogchart focused report is missing token: {token}")
-        ensure("BattleRulesScript.resolve" not in report_text and "OverworldRules._" not in report_text, errors, "Fogchart focused owner must use public rules and not synthesize combat or call Overworld internals")
+        ensure("BattleRulesScript.resolve" not in report_text and "OverworldRules._" not in report_text and "BattleRulesScript._" not in report_text and "BattleAutoplayBalanceHarnessRulesScript._" not in report_text, errors, "Fogchart focused owner must use public rules and not synthesize combat or call private runtime helpers")
+        ensure(report_text.count('BattleAutoplayBalanceHarnessRulesScript.run_battle_sample(SCENARIO_ID, encounter, 72, "normal")') == 1, errors, "Fogchart focused owner must run exactly one production Aurora sample")
+        ensure(report_text.count('BattleAutoplayBalanceHarnessRulesScript.run_battle_sample(SCENARIO_ID, legacy_encounter, 72, "normal")') == 1, errors, "Fogchart focused owner must run exactly one legacy Aurora method control")
     if scene_path.exists():
         ensure('res://tests/veilmourn_fogchart_mooring_chapter_report.gd' in scene_path.read_text(encoding="utf-8"), errors, "Fogchart focused scene must load its exact report script")
     if frontier_report_path.exists():
