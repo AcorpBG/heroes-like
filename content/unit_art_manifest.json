@@ -822,7 +822,10 @@
       "motif": "shield",
       "portrait": "res://art/units/portraits/unit_neutral_roadwardens.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_roadwardens.png",
-      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_roadwardens.png"
+      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_roadwardens.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_neutral_roadwardens.png",
+      "curated_source_sha256": "625b2deb46cd667b28824cb2833338073406d411dc2adaea6e3a116d7a5c14b7"
     },
     {
       "id": "unit_neutral_hearthbow_carriers",
@@ -834,7 +837,10 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_neutral_hearthbow_carriers.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_hearthbow_carriers.png",
-      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_hearthbow_carriers.png"
+      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_hearthbow_carriers.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_neutral_hearthbow_carriers.png",
+      "curated_source_sha256": "6557279fcd3e442ed0baafe591073874a4242ce246f6e2722d736171ceb812a0"
     },
     {
       "id": "unit_neutral_fenhound_runners",

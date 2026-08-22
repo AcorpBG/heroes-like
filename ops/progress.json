@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the Bramble Hedge art slice with two original sources, eight exact runtime derivatives, live dwelling/shared-watch/Ninefold encounter/BattleBoard authority, two byte-identical 412-asset regeneration passes, thirteen compatibility owners, static/editor validation, and bounded Linux/Windows startup gates.",
+  "currentNotes": "Completed the Roadward Lodge art slice with two original sources, eight exact runtime derivatives, live dwelling/shared-watch/authored-site/BattleBoard authority, two byte-identical 412-asset regeneration passes, thirteen compatibility owners including neutral reward/AI/core/town behavior, static/editor validation, and bounded Linux/Windows startup gates.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-neutral-bramble-hedge-curated-character-sources-10184",
-  "currentSliceId": "art-neutral-bramble-hedge-curated-character-sources-10184",
-  "currentSliceNotes": "Hedgehook Watch and Thornbow Scouts now own distinct original sources and exact reproducible derivatives while neutral content, balance, dwelling, encounter, and gameplay authority remain exact. Packaged interaction and broad release claims remain excluded.",
+  "currentSlice": "art-neutral-roadward-lodge-curated-character-sources-10184",
+  "currentSliceId": "art-neutral-roadward-lodge-curated-character-sources-10184",
+  "currentSliceNotes": "Roadwardens and Hearthbow Carriers now own distinct original sources and exact reproducible derivatives while neutral content, dwelling, recruitment/muster, encounter, and gameplay authority remain exact. Packaged interaction and broad release claims remain excluded.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Bramble Hedge Curated Character Sources",
-  "currentSliceUpdatedAt": "2026-08-22T20:40:53Z",
+  "currentSliceTitle": "Roadward Lodge Curated Character Sources",
+  "currentSliceUpdatedAt": "2026-08-22T21:04:59Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,29 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed implementation slice; do not infer broad neutral-art completion or release readiness from this bounded Bramble Hedge result.",
-  "notes": "The Bramble Hedge art slice is complete. Focused runtime proves two content rows, two live BattleBoard entries, exact local 10/6 and shared 6/4 rosters, session authority, and 112 visible frames. Two full 412-asset regenerations and both manifests are byte-identical; thirteen compatibility owners, validator/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged battle interaction, certification, signing/publication, whole-game validation, broad neutral art, and release readiness remain unclaimed.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed implementation slice; do not infer broad neutral-art completion or release readiness from this bounded Roadward Lodge result.",
+  "notes": "The Roadward Lodge art slice is complete. Focused runtime proves two content rows, two live BattleBoard entries, exact shared 8/4 watch, three authored site placements, session authority, and 112 visible frames. Two full 412-asset regenerations and both manifests are byte-identical; thirteen compatibility owners including neutral reward/AI/core/town behavior, validator/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged battle interaction, certification, signing/publication, whole-game validation, broad neutral art, and release readiness remain unclaimed.",
   "plannedSlices": [
+    {
+      "id": "art-neutral-roadward-lodge-curated-character-sources-10184",
+      "title": "Roadward Lodge Curated Character Sources",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md", "docs/animation-battle-troop-state-contract-report.md"],
+      "purpose": "Replace the generated Roadwardens and Hearthbow Carriers emblems with two distinct character-readable original toll-road company sources and exact reproducible existing-path derivatives while preserving their neutral dwelling graph, authored placements, recruitment/muster behavior, and all gameplay authority.",
+      "implementationTargets": ["art/units/source/curated/unit_neutral_roadwardens.png", "art/units/source/curated/unit_neutral_hearthbow_carriers.png", "art/units/portraits/unit_neutral_roadwardens.png", "art/units/portraits/unit_neutral_hearthbow_carriers.png", "art/units/battle_icons/unit_neutral_roadwardens.png", "art/units/battle_icons/unit_neutral_hearthbow_carriers.png", "art/units/overworld_icons/unit_neutral_roadwardens.png", "art/units/overworld_icons/unit_neutral_hearthbow_carriers.png", "art/animation/runtime/units/unit_neutral_roadwardens.png", "art/animation/runtime/units/unit_neutral_hearthbow_carriers.png", "content/unit_art_manifest.json", "content/unit_animation_manifest.json", "tools/generate_unit_art_assets.py", "tests/unit_neutral_roadward_lodge_curated_art_report.gd", "tests/unit_neutral_roadward_lodge_curated_art_report.tscn", "tests/unit_art_reproducibility_report.py", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"unit_ids": ["unit_neutral_roadwardens", "unit_neutral_hearthbow_carriers"], "tiers": [1,2], "roles": ["melee","ranged"], "ability_ids": [["reach"],["harry"]], "source_size": [512,512], "portrait_size": [384,512], "battle_icon_size": [160,160], "overworld_icon_size": [96,96], "animation_sheet_size": [256,896], "animation_state_count": 14, "frames_per_state": 4, "other_units_must_remain_byte_exact": 101, "neutral_dwelling_id": "neutral_dwelling_roadward_lodge", "shared_army_id": "army_neutral_roadward_lodge_watch", "shared_army_counts": [8,4], "authored_site_placement_ids": ["river_free_company","surge_free_company","dwelling_roadward_lodge"], "core_neutral_claim_muster_green": true, "final_sprite_import": false},
+      "completionCriteria": ["Two distinct original transparent sources follow pikehook toll-road guard and compact hearthbow carrier identities and own exact manifest provenance plus reproducible portrait, battle-icon, overworld-icon, and fourteen-state/four-frame animation-sheet derivatives", "Live neutral unit/dwelling lookup preserves exact stats, costs, growth, abilities, Roadward Lodge graph, shared 8/4 watch, and authored River Pass/Lockmarsh/Ninefold sites; a production-rule BattleBoard loads both icon/sheet pairs, all 112 target frames remain visible, and neutral claim/muster behavior remains exact", "Only two sources, eight target runtime payloads, and two records in each manifest change; all four surfaces for the other 101 units remain byte-exact; full regeneration/reproducibility, focused/neutral-dwelling/compatibility, validator/editor, Linux, and Windows startup gates pass"],
+      "nonGoals": ["Another neutral dwelling/unit, unit stats/abilities/costs/growth, combat balance or AI tuning, encounter/dwelling/site/map-object/army-group content, neutral recruitment rules, BattleRules/BattleAiRules, animation timing/order, save schema, rendering settings, Native RMG, or packaging behavior", "Broad/final neutral art, packaged battle interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game validation, or release readiness"],
+      "createdAt": "2026-08-22T20:44:54Z",
+      "startedAt": "2026-08-22T20:44:54Z",
+      "updatedAt": "2026-08-22T21:04:59Z",
+      "completedAt": "2026-08-22T21:04:59Z",
+      "notes": "Completed with two distinct 512x512 original transparent sources and eight exact existing-path derivatives. Focused runtime /tmp/heroes-roadward-focused.0GICHK is natural rc0 with one ok:true marker, two content rows, two live BattleBoard entries, exact shared Roadward Lodge 8/4 roster, three authored site placements, session authority, and 112 visible frames. Two full 412-asset regenerations and both manifests are byte-identical in /tmp/heroes-roadward-repro.8JK565; thirteen compatibility owners including neutral reward/AI/core/town behavior are rc0 in /tmp/heroes-roadward-compat.FUQGmr. Validator/editor and official Linux export/headless startup plus Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Broad/final neutral art, packaged battle interaction, certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "remainingWork": "None for this bounded slice. Select the next tracker-approved source-backed implementation slice."
+    },
     {
       "id": "art-neutral-bramble-hedge-curated-character-sources-10184",
       "title": "Bramble Hedge Curated Character Sources",
@@ -94475,7 +94495,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "art_neutral_bramble_hedge_curated_character_sources_completed",
+  "result": "art_neutral_roadward_lodge_curated_character_sources_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
