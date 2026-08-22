@@ -69,7 +69,10 @@
       "motif": "blade",
       "portrait": "res://art/units/portraits/unit_blackbranch_cutthroat.png",
       "battle_icon": "res://art/units/battle_icons/unit_blackbranch_cutthroat.png",
-      "overworld_icon": "res://art/units/overworld_icons/unit_blackbranch_cutthroat.png"
+      "overworld_icon": "res://art/units/overworld_icons/unit_blackbranch_cutthroat.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_blackbranch_cutthroat.png",
+      "curated_source_sha256": "eb0af47ab0292c278335f76092420e9dba0073c84f3507f0b0d11b85b50fa143"
     },
     {
       "id": "unit_mire_slinger",
@@ -81,7 +84,10 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_mire_slinger.png",
       "battle_icon": "res://art/units/battle_icons/unit_mire_slinger.png",
-      "overworld_icon": "res://art/units/overworld_icons/unit_mire_slinger.png"
+      "overworld_icon": "res://art/units/overworld_icons/unit_mire_slinger.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_mire_slinger.png",
+      "curated_source_sha256": "21b98fd2f90d738b168ddb0b1b160dc6c8c731dd7a590d848255175589ac2c55"
     },
     {
       "id": "unit_bog_brute",
@@ -93,7 +99,10 @@
       "motif": "melee",
       "portrait": "res://art/units/portraits/unit_bog_brute.png",
       "battle_icon": "res://art/units/battle_icons/unit_bog_brute.png",
-      "overworld_icon": "res://art/units/overworld_icons/unit_bog_brute.png"
+      "overworld_icon": "res://art/units/overworld_icons/unit_bog_brute.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_bog_brute.png",
+      "curated_source_sha256": "6e971e93ab527beff8702d16ffe4e69b4e40a8e4b63ff9fe1d3411f8d2daea85"
     },
     {
       "id": "unit_gorefen_ripper",

@@ -17,11 +17,14 @@ ART_ROOT = ROOT / "art" / "units"
 ANIMATION_ROOT = ROOT / "art" / "animation" / "runtime" / "units"
 CURATED_SOURCE_ROOT = ART_ROOT / "source" / "curated"
 CURATED_CHARACTER_SOURCE_IDS = {
+    "unit_blackbranch_cutthroat",
+    "unit_bog_brute",
     "unit_brasshollow_furnace_pavis_teams",
     "unit_brasshollow_rivet_hounds",
     "unit_brasshollow_scrip_haulers",
     "unit_ember_archer",
     "unit_embercourt_fordhook_cadets",
+    "unit_mire_slinger",
     "unit_river_guard",
 }
 PRESERVED_AUTHORED_ASSET_SHA256 = {
