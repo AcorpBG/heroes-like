@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Ninefold Prism Matrix production-line slice is completed. The flagship scenario now uses exact production Sunvault 6/2/2 T1/T2/T3 stacks with focused legacy-control, full active-scenario breadth, Ninefold/Map Editor/unit/core, static/editor, and bounded Linux/Windows export-startup evidence green.",
+  "currentNotes": "Glassfen Relay Pickets now uses the exact production 6/2/1 Sunvault line. Focused public-payload and legacy-control proof, active breadth, compatibility, static/editor, and bounded Linux/Windows export-startup gates are green; broader release-readiness claims remain open.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-ninefold-prism-matrix-production-line-10184",
-  "currentSliceId": "content-ninefold-prism-matrix-production-line-10184",
-  "currentSliceNotes": "Completed. Ninefold Prism Matrix now uses exact production 6/2/2 Shard Wardens, Prism Adepts, and Mirror Duelists. Focused public payload and independent legacy control preserve four-round player victories at 36% versus 46% player health with zero invalid orders; active 24-scenario/77-encounter breadth stays queue-clear at 829808c9, and Ninefold/Map Editor/unit/core/static/editor/Linux/Windows startup gates pass. Packaged encounter interaction, broad balance, certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+  "currentSlice": "content-glassfen-relay-pickets-production-line-10184",
+  "currentSliceId": "content-glassfen-relay-pickets-production-line-10184",
+  "currentSliceNotes": "Completed. Production Relay Pickets retains the exact standard four-round/70% victory against the five-round/69% legacy control, 81 versus 83 stack health, six enemy damage per round, and zero invalid orders. Active breadth is 77/77 queue-clear at 829808c9; unit ability, core, static/editor, and bounded Linux/Windows export-startup gates pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Ninefold Prism Matrix Production Line",
-  "currentSliceUpdatedAt": "2026-08-22T04:14:53Z",
+  "currentSliceTitle": "Glassfen Relay Pickets Production Line",
+  "currentSliceUpdatedAt": "2026-08-22T04:37:01Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,52 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed release-readiness implementation slice; preserve the completed Ninefold production roster and exact scenario, save, battle, editor, and breadth authority.",
-  "notes": "Completed the source-backed Ninefold Prism Matrix production-line migration. Focused public-payload/legacy-control, active-scenario breadth, Ninefold/Map Editor/unit/core compatibility, static/editor, and bounded Linux/Windows export-startup evidence is green. This does not claim packaged encounter interaction, broad faction balance, certification, signing/publication, whole-game validation, or release readiness.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed implementation slice; do not infer whole-release readiness from this bounded content migration.",
+  "notes": "Completed the source-backed Glassfen Relay Pickets production-line migration. Exact public-payload and legacy controls retain the tuned outcome; Glasswing, Aurora, shared armies, active breadth, ability/core compatibility, repository/editor, and bounded Linux/Windows export-startup authority remain green. Bellwake test fixtures were aligned to already-shipped production outcomes without content changes.",
   "plannedSlices": [
+    {
+      "id": "content-glassfen-relay-pickets-production-line-10184",
+      "title": "Glassfen Relay Pickets Production Line",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/factions-content-bible.md"],
+      "purpose": "Replace only Glassfen Breakers' placement-owned Relay Pickets with the exact count-preserving production Sunvault T1/T2/T3 line while retaining its tuned pressure and all adjacent fronts.",
+      "implementationTargets": ["content/scenarios.json", "tests/battle_post_identity_active_outlier_regression.gd", "tests/battle_active_cohort_queue_clear_regression.gd", "tests/battle_bellwake_wreck_balance_regression.gd", "tests/battle_active_medium_sample_pressure_regression.gd", "tests/battle_active_outcome_diversity_clear_regression.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {
+        "scenario_id": "glassfen-breakers",
+        "encounter_placement_id": "glassfen_relay_pickets",
+        "legacy_stack_ids": ["unit_shard_guard", "unit_prism_adept", "unit_mirror_duelist"],
+        "production_stack_ids": ["unit_sunvault_shard_wardens", "unit_sunvault_prism_adepts", "unit_sunvault_mirror_duelists"],
+        "stack_counts": [6, 2, 1],
+        "legacy_total_stack_health": 83,
+        "production_total_stack_health": 81,
+        "legacy_rounds": 5,
+        "production_rounds": 4,
+        "legacy_player_health_remaining_pct": 69,
+        "production_player_health_remaining_pct": 70,
+        "enemy_damage_per_round": 6,
+        "invalid_order_count": 0,
+        "rejected_adjacent_candidate": "glassfen_glasswing_sortie count-preserving production line produced a two-round burst defeat instead of the authored four-round standard defeat"
+      },
+      "completionCriteria": [
+        "The exact Glassfen Relay Pickets encounter uses only production Sunvault T1/T2/T3 ids at 6/2/1 while retaining encounter identity, three-stack shape, placement, medium difficulty, combat seed, and field objectives",
+        "Public BattleRules payload and deterministic autoplay expose exact production shielding, volley, reach, and backstab abilities, complete as a four-round victory at 70% player health with zero invalid orders, and retain the independent legacy control's five-round/69% outcome and pressure class",
+        "Glasswing Sortie, Aurora Battery, shared Relay Pickets army, all other scenario/session/save content, and shared units/rules remain exact",
+        "Active scenario breadth remains complete with zero stalls or invalid orders and no high-priority tuning item; unit ability and core compatibility remain green",
+        "Repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "Glasswing Sortie, Aurora Battery, another scenario/front, shared unit stat/ability, BattleRules, BattleAiRules, player-army, reward, field-objective, difficulty-threshold, save-schema, Native RMG, or packaging behavior changes",
+        "Broad faction balance, packaged encounter interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "createdAt": "2026-08-22T04:20:21Z",
+      "startedAt": "2026-08-22T04:20:21Z",
+      "updatedAt": "2026-08-22T04:37:01Z",
+      "completedAt": "2026-08-22T04:37:01Z",
+      "notes": "Completed with the exact production 6/2/1 Shard Wardens, Prism Adepts, and Mirror Duelists. Focused public payload plus an independent legacy 6/2/1 control proves 81 versus 83 stack health, four-round/70% versus five-round/69% victories, exact shielding/volley/reach/backstab identities, six enemy damage per round, and zero invalid orders. Glasswing, Aurora, the shared Relay Pickets army, all other cohort rows, and the 24-scenario/77-encounter queue remain exact and clear at 829808c9. Unit ability, core, static/editor, and bounded Linux/Windows export-startup gates pass. Bellwake compatibility fixtures now match previously shipped deterministic production outcomes; Bellwake content was not changed."
+    },
     {
       "id": "content-ninefold-prism-matrix-production-line-10184",
       "title": "Ninefold Prism Matrix Production Line",

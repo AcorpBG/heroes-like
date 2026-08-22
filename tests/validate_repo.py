@@ -47701,6 +47701,9 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "MAX_COHORT_TERMINAL_MARGIN_PCT",
             "cohort_average_terminal_health_margin_pct",
             "damage_per_round",
+            '"bellwake_relay_pickets": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 66, "enemy_damage_per_round": 13}',
+            '"bellwake_mirror_lancers": {"outcome_state": "defeat", "pacing_band": "extended", "round_reached": 6, "terminal_health_margin_pct": 40, "enemy_damage_per_round": 49}',
+            '"bellwake_aurora_battery": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 50, "enemy_damage_per_round": 25}',
             "get_tree().quit(1)",
         ):
             ensure(required_token in bellwake_wreck_text, errors, f"Bellwake Wreck balance regression is missing token: {required_token}")
@@ -47757,15 +47760,112 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         post_identity_outlier_text = post_identity_outlier_report_path.read_text(encoding="utf-8")
         for required_token in (
             "BATTLE_POST_IDENTITY_ACTIVE_OUTLIER_REGRESSION",
+            "GLASSFEN_PRODUCTION_STACKS",
+            "GLASSFEN_LEGACY_STACKS",
             "glassfen_relay_pickets",
+            "glassfen_relay_pickets:legacy_control",
+            "army_glassfen_relay_pickets_legacy_control",
+            "unit_sunvault_shard_wardens",
+            "unit_sunvault_prism_adepts",
+            "unit_sunvault_mirror_duelists",
             "ninefold_drowned_reliquary_watch",
             "army_relay_pickets",
             "army_neutral_tidepool_skiffyard_watch",
             "player_advantaged",
+            "BattleRules.create_battle_payload(payload_session, encounter)",
+            'int(stack_value.get("base_count", 0))',
+            '"unit_sunvault_shard_wardens": ["shielding"]',
+            '"unit_sunvault_prism_adepts": ["volley"]',
+            '"unit_sunvault_mirror_duelists": ["backstab", "reach"]',
+            "production_stack_health != 81 or legacy_stack_health != 83",
+            'int(legacy_sample.get("round_reached", 0)) != 5',
+            'int(legacy_sample.get("player_health_remaining_pct", -1)) != 69',
+            'int(sample.get("player_health_remaining_pct", -1)) != 70',
+            'int(sample.get("invalid_order_count", -1)) != 0',
+            "payload_session.to_dict() != payload_authority_before",
+            "encounter != encounter_authority_before",
             "terminal_health_margin_pct",
             "get_tree().quit(1)",
         ):
             ensure(required_token in post_identity_outlier_text, errors, f"Post-identity active outlier regression is missing token: {required_token}")
+        for forbidden_token in (
+            "BattleRules._",
+            "Harness._",
+            "create_timer(",
+            "await get_tree().process_frame",
+        ):
+            ensure(forbidden_token not in post_identity_outlier_text, errors, f"Post-identity active outlier regression must not use direct private or timing shortcut: {forbidden_token}")
+        ensure(post_identity_outlier_text.count('Harness.run_battle_sample("glassfen-breakers", legacy_encounter, 72, "normal")') == 1, errors, "Post-identity active outlier regression must run exactly one Glassfen legacy method control")
+        ensure(post_identity_outlier_text.count("BattleRules.create_battle_payload(payload_session, encounter)") == 1, errors, "Post-identity active outlier regression must inspect exactly one public Glassfen payload")
+        scenarios = items_index(load_json(CONTENT_DIR / "scenarios.json"))
+        glassfen = scenarios.get("glassfen-breakers", {})
+        glassfen_encounters = {
+            str(row.get("placement_id", "")): row
+            for row in glassfen.get("encounters", [])
+            if isinstance(row, dict)
+        }
+        relay = glassfen_encounters.get("glassfen_relay_pickets", {})
+        relay_army = relay.get("enemy_army", {}) if isinstance(relay.get("enemy_army", {}), dict) else {}
+        ensure(
+            {
+                "placement_id": relay.get("placement_id"),
+                "encounter_id": relay.get("encounter_id"),
+                "x": relay.get("x"),
+                "y": relay.get("y"),
+                "difficulty": relay.get("difficulty"),
+                "combat_seed": relay.get("combat_seed"),
+                "army_id": relay_army.get("id"),
+                "army_name": relay_army.get("name"),
+                "faction_id": relay_army.get("faction_id"),
+                "stacks": relay_army.get("stacks"),
+                "field_objectives": relay.get("field_objectives"),
+            }
+            == {
+                "placement_id": "glassfen_relay_pickets",
+                "encounter_id": "encounter_relay_pickets",
+                "x": 4,
+                "y": 1,
+                "difficulty": "medium",
+                "combat_seed": 14201,
+                "army_id": "army_glassfen_relay_pickets_watch",
+                "army_name": "Glassfen Relay Pickets Watch",
+                "faction_id": "faction_sunvault",
+                "stacks": [
+                    {"unit_id": "unit_sunvault_shard_wardens", "count": 6},
+                    {"unit_id": "unit_sunvault_prism_adepts", "count": 2},
+                    {"unit_id": "unit_sunvault_mirror_duelists", "count": 1},
+                ],
+                "field_objectives": [
+                    {
+                        "id": "relay_kill_lane",
+                        "label": "Glassfen Firing Prism",
+                        "summary": "The fog-edge prism still turns the lane into a firing gallery unless it is overrun.",
+                        "capture_threshold": 3,
+                    },
+                    {
+                        "id": "relay_signal_beacon",
+                        "label": "Glassfen Watch Relay",
+                        "summary": "The watch relay keeps Sunvault command steadier through the marsh haze.",
+                    },
+                ],
+            },
+            errors,
+            "Glassfen Relay Pickets must retain its exact identity/objectives while using the 6/2/1 production line",
+        )
+        glasswing = glassfen_encounters.get("glassfen_glasswing_sortie", {})
+        glasswing_army = glasswing.get("enemy_army", {}) if isinstance(glasswing.get("enemy_army", {}), dict) else {}
+        ensure(
+            glasswing_army.get("stacks")
+            == [
+                {"unit_id": "unit_prism_adept", "count": 5},
+                {"unit_id": "unit_shard_guard", "count": 4},
+                {"unit_id": "unit_mirror_duelist", "count": 1},
+            ],
+            errors,
+            "Glassfen Glasswing Sortie must remain outside the Relay production-line migration",
+        )
+        aurora = glassfen_encounters.get("glassfen_aurora_battery", {})
+        ensure("enemy_army" not in aurora, errors, "Glassfen Aurora Battery must remain on its shared authored army")
     if post_identity_outlier_scene_path.exists():
         post_identity_outlier_scene_text = post_identity_outlier_scene_path.read_text(encoding="utf-8")
         ensure(
@@ -47778,6 +47878,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         for required_token in (
             "BATTLE_ACTIVE_MEDIUM_SAMPLE_PRESSURE_REGRESSION",
             "bellwake_mirror_lancers",
+            '"expected": {"outcome_state": "defeat", "matchup_band": "even", "pacing_band": "extended", "round_reached": 6, "terminal_health_margin_pct": 40, "enemy_damage_per_round": 49}',
             "bridge_ford_reavers",
             "orevein_bridgeward_levies",
             "ninefold_basalt_gatehouse_watch",
@@ -47805,6 +47906,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "daybreak_array",
             "bridge_ford_reavers",
             "bellwake_mirror_lancers",
+            '"expected": {"outcome_state": "defeat", "matchup_band": "even", "pacing_band": "extended", "round_reached": 6, "terminal_health_margin_pct": 40, "enemy_damage_per_round": 49}',
             "shared_army_id",
             "_sample_matches",
             "get_tree().quit(1)",
@@ -48184,6 +48286,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "bellwake_mirror_lancers",
             "fen_crown_watch",
             "glassfen_relay_pickets",
+            '"stack_counts": {"unit_sunvault_shard_wardens": 6, "unit_sunvault_prism_adepts": 2, "unit_sunvault_mirror_duelists": 1}',
+            '"sample": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 70, "enemy_damage_per_round": 6}',
             "orevein_archive_wardens",
             "bridge_ford_reavers",
             "_within_target_bounds",

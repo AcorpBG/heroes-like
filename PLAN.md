@@ -24,6 +24,23 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `content-glassfen-relay-pickets-production-line-10184`. Glassfen Breakers' placement-owned Relay Pickets roster now uses the count-preserving production Sunvault T1/T2/T3 line. The exact live control is method-matched at 81 versus 83 stack health: production remains a standard player victory in four rounds at 70% health versus legacy five rounds at 69%, with six enemy damage per round and zero invalid orders. Glasswing, Aurora, the shared Relay Pickets army, and all other active-scenario fronts remain exact; the 24-scenario/77-encounter matrix is queue-clear at `829808c9`. Unit ability, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Bellwake compatibility fixtures were aligned to the already-shipped production-line outcomes without changing Bellwake content. Packaged encounter interaction, broad balance, certification, signing/publication, whole-game validation, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
+  id: `content-glassfen-relay-pickets-production-line-10184`
+
+  Implementation target:
+  - migrate only `glassfen_relay_pickets` from legacy Shard Guard/Prism Adept/Mirror Duelist ids to production Shard Wardens/Prism Adepts/Mirror Duelists at exact `6/2/1` counts;
+  - prove the public battle payload exposes exact production shielding/volley/reach/backstab abilities and retains the bounded deterministic standard victory against an independent legacy-content control;
+  - retain encounter identity, field objectives, seed, difficulty, Glasswing Sortie, Aurora Battery, shared Relay Pickets army, scenario/session authority, and every shared unit/rule record exactly.
+
+  Completion criteria:
+  - focused runtime proves exact production ids/counts, 81 versus 83 stack health, exact public ability payloads, a completed four-round victory at 70% player health with zero invalid orders, and the independent legacy control's exact five-round/69% victory;
+  - the adjacent Glasswing/Aurora samples and shared army remain exact, and active-scenario breadth remains complete with zero stalls/invalid orders and no high-priority tuning item;
+  - unit ability, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+  Non-goals:
+  - do not migrate Glasswing Sortie, Aurora Battery, another scenario/front, or change shared unit stats/abilities, BattleRules/BattleAiRules, player army, rewards, field objectives, difficulty thresholds, save schema, Native RMG, or packaging behavior;
+  - do not claim broad faction balance, packaged encounter interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game validation, or release readiness.
+
 - Completed implementation slice: `content-ninefold-prism-matrix-production-line-10184`. The flagship Ninefold Confluence scenario's sole remaining legacy faction encounter now uses the production Sunvault T1/T2/T3 line at the same exact 6/2/2 topology. Focused public-payload proof and an independent legacy control retain deterministic four-round player victories with zero invalid orders at 96 versus 92 stack health and 36% versus 46% player health. The full 24-scenario/77-encounter matrix remains queue-clear at `829808c9`; Ninefold visual, Map Editor edit/restore/Play Copy, unit ability, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. Other legacy-front migration, packaged encounter interaction, broad balance, certification, signing/publication, whole-game validation, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
   id: `content-ninefold-prism-matrix-production-line-10184`
 

@@ -3586,9 +3586,9 @@
             "name": "Glassfen Relay Pickets Watch",
             "faction_id": "faction_sunvault",
             "stacks": [
-              {"unit_id": "unit_shard_guard", "count": 6},
-              {"unit_id": "unit_prism_adept", "count": 2},
-              {"unit_id": "unit_mirror_duelist", "count": 1}
+              {"unit_id": "unit_sunvault_shard_wardens", "count": 6},
+              {"unit_id": "unit_sunvault_prism_adepts", "count": 2},
+              {"unit_id": "unit_sunvault_mirror_duelists", "count": 1}
             ]
           },
           "field_objectives": [
