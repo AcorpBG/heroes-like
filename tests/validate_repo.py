@@ -17639,6 +17639,21 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
             shell_bodies[function_name] = match.group("body")
     return_body = shell_bodies.get("_return_board_cursor_action_result", "")
     ensure(return_body.count('has_method("publish_controller_action_result")') == 1 and return_body.count('_battle_board_view.call("publish_controller_action_result", result)') == 1 and return_body.rstrip().endswith("return result"), errors, "BattleShell result wrapper must notify BattleBoardView exactly once then return the unchanged Dictionary")
+    board_invalid_audio_order = tuple(return_body.find(token) for token in (
+        'if not result.is_empty() and not bool(result.get("ok", false)):',
+        'UiAudio.play_invalid("BattleShell._return_board_cursor_action_result", {',
+        '"action": String(result.get("action", ""))',
+        '"target_battle_id": String(result.get("target_battle_id", ""))',
+        '"state": String(result.get("state", ""))',
+        '"message": String(result.get("message", ""))',
+        'if _battle_board_view != null and _battle_board_view.has_method("publish_controller_action_result"):',
+        '_battle_board_view.call("publish_controller_action_result", result)',
+        'return result',
+    ))
+    ensure(all(index >= 0 for index in board_invalid_audio_order) and list(board_invalid_audio_order) == sorted(board_invalid_audio_order), errors, "BattleShell Board result boundary must classify one non-empty failed result, play exact detached invalid audio, publish the unchanged Board result, then return it")
+    ensure(return_body.count("UiAudio.play_invalid(") == 1, errors, "BattleShell Board result boundary must own exactly one invalid-audio call")
+    for forbidden_token in ("BattleRules", "PresentationAudio", "await ", "Timer", "create_timer", "call_deferred", "result.erase(", "result[", "_refresh("):
+        ensure(forbidden_token not in return_body, errors, f"BattleShell Board invalid-audio boundary must not change rules, result authority, presentation, timing, or refresh ownership through {forbidden_token}")
     ensure("return {" not in shell_bodies.get("_on_board_stack_focus_requested", "") and "return _movement_click_response" not in shell_bodies.get("_on_board_hex_destination_requested", "") and shell_bodies.get("_reject_board_stack_click", "").rstrip().endswith("return _return_board_cursor_action_result(response)"), errors, "Every BattleShell board stack/destination result path must converge on the controller-result wrapper")
 
     root_input_match = re.search(r"func _on_root_window_input\([^\n]*\) -> void:\n(?P<body>.*?)(?=\nfunc _battle_board_root_cancel_input_owned)", shell_text, re.S)
@@ -17702,6 +17717,15 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
         'var blocked_result_message := String(shell.get("_last_message")).strip_edges()',
         'var movement_result_message := String(shell.get("_last_message")).strip_edges()',
         'var result_message := String(shell.get("_last_message")).strip_edges()',
+        'var blocked_ui_audio_records: Array = UiAudio.validation_records()',
+        '_invalid_board_audio_exact(blocked_ui_audio_records, "blocked_target", String(enemy_target.get("battle_id", "")), "invalid", blocked_result_message)',
+        'var result_target_battle_id := _battle_id_at_cell(summary, result_enemy_cell)',
+        'var result_ui_audio_records: Array = UiAudio.validation_records()',
+        '_invalid_board_audio_exact(result_ui_audio_records, "blocked_target", result_target_battle_id, "invalid", result_message)',
+        'UiAudio.validation_records() != blocked_ui_audio_records',
+        'UiAudio.validation_records() != result_ui_audio_records',
+        'PresentationAudio.validation_records() != blocked_presentation_audio_before',
+        'PresentationAudio.validation_records() != result_presentation_audio_before',
         'var expected_result_text := _bounded_text("Battle board result: %s" % result_message, 320)',
         'live.text == expected_text',
         '"pending_battle_dictionary": pending.get("battle_ref") is Dictionary and not (pending.get("battle_ref") as Dictionary).is_empty()',
@@ -17737,6 +17761,62 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
         '"battle_resolution_route": AppRouter.validation_battle_resolution_checkpoint_snapshot()',
     ):
         ensure(required_token in smoke_text, errors, f"Battle controller semantic smoke is missing exact runtime authority token: {required_token}")
+
+    ensure(smoke_text.count("UiAudio.validation_reset()") == 4, errors, "Battle controller owner must reset UI audio at run entry, before main blocked A, before each width blocked A, and successful teardown")
+    audio_helper_match = re.search(
+        r'func _invalid_board_audio_exact\(records: Array, action: String, target_battle_id: String, state: String, message: String\) -> bool:(?P<body>.*?)(?=\nfunc )',
+        smoke_text,
+        re.S,
+    )
+    ensure(audio_helper_match is not None, errors, "Battle controller owner must independently validate the exact imported invalid-audio record")
+    if audio_helper_match is not None:
+        audio_helper_body = audio_helper_match.group("body")
+        for required_token in (
+            'records.size() != 1',
+            'records[0] is Dictionary',
+            'String(record.get("cue_id", "")) == "ui_invalid"',
+            'String(record.get("source", "")) == "BattleShell._return_board_cursor_action_result"',
+            'String(record.get("playback_source", "")) == "imported_wav"',
+            'String(record.get("asset_path", "")) == "res://art/audio/runtime/ui/invalid.wav"',
+            'String(record.get("role", "")) == "invalid_action"',
+            'int(record.get("duration_msec", 0)) == 150',
+            'int(record.get("stream_mix_rate", 0)) == 44100',
+            'bool(record.get("stream_stereo", false))',
+            'AudioStreamWAV.LOOP_DISABLED',
+            'int(record.get("imported_asset_count", 0)) == 1',
+            'int(record.get("generated_fallback_count", -1)) == 0',
+            'Dictionary(record.get("metadata", {})) == {',
+            '"action": action',
+            '"target_battle_id": target_battle_id',
+            '"state": state',
+            '"message": message',
+        ):
+            ensure(required_token in audio_helper_body, errors, f"Battle Board invalid-audio control is missing exact imported-record token: {required_token}")
+        for forbidden_token in ("UiAudio", "PresentationAudio", "emit_signal", "Input.", "BattleRules", "sort", "erase(", "normalize", "await ", "Timer"):
+            ensure(forbidden_token not in audio_helper_body, errors, f"Battle Board invalid-audio control must remain a detached read-only observer and avoid {forbidden_token}")
+
+    battle_id_helper_match = re.search(
+        r'func _battle_id_at_cell\(summary: Dictionary, cell: Vector2i\) -> String:(?P<body>.*?)(?=\nfunc )',
+        smoke_text,
+        re.S,
+    )
+    ensure(battle_id_helper_match is not None, errors, "Battle controller owner must resolve the blocked target id from the live detached Board summary")
+    if battle_id_helper_match is not None:
+        battle_id_helper_body = battle_id_helper_match.group("body")
+        for required_token in ('summary.get("stack_cells", [])', 'Vector2i(int(entry_value.get("q", -1)), int(entry_value.get("r", -1))) == cell', 'return String(entry_value.get("battle_id", ""))'):
+            ensure(required_token in battle_id_helper_body, errors, f"Battle Board target-id observer is missing exact live summary token: {required_token}")
+        for forbidden_token in ("BattleRules", "SessionState", "emit_signal", "Input.", "sort", "erase(", "normalize", "set("):
+            ensure(forbidden_token not in battle_id_helper_body, errors, f"Battle Board target-id observer must remain read-only and avoid {forbidden_token}")
+
+    main_audio_reset = smoke_text.find("UiAudio.validation_reset()", smoke_text.find("var target_events_before :="))
+    main_blocked_a = smoke_text.find("await _press_joypad_button(JOY_BUTTON_A)", main_audio_reset)
+    main_audio_capture = smoke_text.find("var blocked_ui_audio_records: Array = UiAudio.validation_records()", main_blocked_a)
+    main_audio_gate = smoke_text.find('_invalid_board_audio_exact(blocked_ui_audio_records, "blocked_target"', main_audio_capture)
+    main_cancel_b = smoke_text.find("await _press_joypad_button(JOY_BUTTON_B)", main_audio_gate)
+    main_cancel_silent = smoke_text.find("UiAudio.validation_records() != blocked_ui_audio_records", main_cancel_b)
+    main_success_a = smoke_text.find("await _press_joypad_button(JOY_BUTTON_A)", main_cancel_silent)
+    main_success_silent = smoke_text.find("UiAudio.validation_records() != blocked_ui_audio_records", main_success_a)
+    ensure(0 <= main_audio_reset < main_blocked_a < main_audio_capture < main_audio_gate < main_cancel_b < main_cancel_silent < main_success_a < main_success_silent, errors, "Battle controller main row must reset, physically fail, gate exact invalid audio, physically cancel without audio, then physically move successfully without invalid audio")
 
     stale_row_match = re.search(
         r'# A later physical cursor step must invalidate an older deferred A result before either publishes\.(?P<body>.*?)(?=\n\t# A real enemy turn)',

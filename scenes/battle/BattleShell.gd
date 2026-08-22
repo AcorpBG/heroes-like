@@ -590,6 +590,13 @@ func _on_board_hex_destination_requested(q: int, r: int) -> Dictionary:
 	return _return_board_cursor_action_result(_movement_click_response(result, movement_intent, q, r, false))
 
 func _return_board_cursor_action_result(result: Dictionary) -> Dictionary:
+	if not result.is_empty() and not bool(result.get("ok", false)):
+		UiAudio.play_invalid("BattleShell._return_board_cursor_action_result", {
+			"action": String(result.get("action", "")),
+			"target_battle_id": String(result.get("target_battle_id", "")),
+			"state": String(result.get("state", "")),
+			"message": String(result.get("message", "")),
+		})
 	if _battle_board_view != null and _battle_board_view.has_method("publish_controller_action_result"):
 		_battle_board_view.call("publish_controller_action_result", result)
 	return result

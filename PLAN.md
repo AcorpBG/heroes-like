@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `presentation-battle-board-failed-action-invalid-audio-10184`. Every non-empty failed Battle Board result now retains its exact Shell/live-region feedback and plays one imported `ui_invalid` transient through the existing result-publication boundary. The focused real D-pad/physical-A path proves exact cue metadata on blocked enemies at 1280x720 and 1920x720, while physical-B cancel and successful physical-A movement remain silent with exact focus, semantic timer, cursor, event, recap, and battle authority. UI-audio, withdrawal, animation, focus, accessibility, core, all three Battle layout viewports, repository/editor, and bounded Linux/Windows export-startup gates pass. Packaged Board interaction/listening, native controller hardware, certification, signing/publication, whole-game validation, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
+  id: `presentation-battle-board-failed-action-invalid-audio-10184`
 - Completed implementation slice: `presentation-town-failed-action-invalid-audio-10184`. Every non-empty failed Town rule result now retains its blocked feedback and plays exactly one imported `ui_invalid` transient through the common result boundary. The focused stale enabled tavern-button path proves exact invalid/click cue order and metadata, unchanged session/presentation authority, disabled and validation-only silence, and unchanged successful hero-hire completion across 1280x720 and 1920x1080 in normal, missing-asset, and reduced-motion modes. UI-audio, focus, accessibility, Town visual, core, repository/editor, and bounded Linux/Windows export-startup gates pass. Packaged Town interaction/listening, certification, signing/publication, whole-game validation, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
   id: `presentation-town-failed-action-invalid-audio-10184`
 - Completed implementation slice: `presentation-overworld-failed-command-invalid-audio-10184`. Every non-empty failed Overworld command result now retains its visible blocked feedback and plays exactly one imported `ui_invalid` transient through the common result-feedback boundary. The focused real failed field-spell path proves exact cue metadata and unchanged session/presentation authority at 1280x720 and 1920x1080 in normal and reduced-motion modes; UI-audio, focus, accessibility, overworld visual, core, repository/editor, and bounded Linux/Windows export-startup gates pass. Successful commands, specialized presentation audio, Effects policy, packaged interaction/listening, certification, signing/publication, whole-game validation, and release readiness remain outside the claim. Select the next tracker-approved source-backed slice.
@@ -8743,6 +8745,31 @@ Completion evidence:
 - the focused real stale-button report passes at both supported validation viewports across normal, missing-asset, and reduced-motion modes with one imported invalid cue followed by the unchanged click, exact blocked feedback, unchanged session/presentation authority, disabled and validation-only silence, and unchanged successful hero-hire consequences and completion presentation;
 - UI-audio, active-play keyboard focus, screen-reader semantics, Town visual, core, repository validation, Python/JSON/diff checks, exact/generic editor parses, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass;
 - packaged Town interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game validation, and release readiness remain unclaimed.
+
+## Battle Board Failed Action Invalid Audio
+
+id: `presentation-battle-board-failed-action-invalid-audio-10184`
+
+Status: completed.
+
+Implementation boundary:
+- when the existing `BattleShell._return_board_cursor_action_result` publishes a non-empty failed Board result, retain its exact result/live-region behavior and play the existing imported `ui_invalid` cue exactly once with detached action, target, state, and message metadata;
+- keep successful Board moves and controller cancel silent, retain the exact 1.2-second result timer, semantic coalescing, target selection, focus restoration, battle/session authority, and all `BattleRules` behavior;
+- prove the path through the existing real focused Board controller flow: D-pad to a blocked enemy, physical A for the failed result, physical B for cancel/focus restoration, then physical A on a legal destination for successful movement.
+
+Completion criteria:
+- a real physical-A blocked enemy Board action emits exactly one imported `ui_invalid` record whose source and detached metadata match the unchanged Shell result, while recent battle events, Board result text/timer, target selection, focus, and presentation authority remain exact;
+- physical B cancel and the subsequent real successful Board movement add no invalid cue and retain exact focus, cursor, movement, event, recap, and battle/session consequences;
+- focused Board navigation, UI-audio, Battle layout/withdrawal/animation, active-play focus, accessibility, core, repository/editor, and official Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no Battle action legality, targeting, movement, Board geometry/cursor, semantic timing/coalescing, focus, action recap, battle/session/save, cue asset, Effects setting, cooldown, voice-budget, or rule change;
+- no Battle command-button/spell/withdrawal invalid-audio expansion, Overworld/Town/Editor change, packaged Battle interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Completion evidence:
+- the focused real controller Board report passes at 1280x720 and 1920x720 with one exact imported invalid cue for blocked physical-A results, unchanged Shell/live-region text and real 1.2-second timer, no new event, and unchanged presentation authority; physical-B cancel and later successful movement add no invalid cue while retaining exact focus/cursor/event/recap/battle consequences;
+- UI-audio, withdrawal, battle-event animation, active-play focus, screen-reader semantics, core, independent 1920x1080/1280x720/1024x600 Battle layout gates, repository validation, Python/JSON/diff checks, exact/generic editor parses, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass;
+- packaged Battle Board interaction/listening, native controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game validation, and release readiness remain unclaimed.
 
 ## Progress Reconciliation
 
