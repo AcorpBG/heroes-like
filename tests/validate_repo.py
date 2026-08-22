@@ -357,6 +357,10 @@ SUNVAULT_AURORA_BALLISTAE_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "cura
 SUNVAULT_DAYBREAK_COLOSSUS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_sunvault_daybreak_colossus.png"
 SUNVAULT_UPPER_LADDER_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_sunvault_upper_ladder_curated_art_report.gd"
 SUNVAULT_UPPER_LADDER_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_sunvault_upper_ladder_curated_art_report.tscn"
+TIDEPOOL_CUTTERS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_neutral_tidepool_cutters.png"
+REEFBOLT_CREWS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_neutral_reefbolt_crews.png"
+TIDEPOOL_SKIFFYARD_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_neutral_tidepool_skiffyard_curated_art_report.gd"
+TIDEPOOL_SKIFFYARD_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_neutral_tidepool_skiffyard_curated_art_report.tscn"
 THORNWAKE_SEEDCUTTERS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_thornwake_seedcutters.png"
 THORNWAKE_THORNWHIP_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_thornwake_thornwhip_carriers.png"
 THORNWAKE_SPOREGLASS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_thornwake_sporeglass_menders.png"
@@ -42364,6 +42368,10 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         SUNVAULT_DAYBREAK_COLOSSUS_CURATED_SOURCE_PATH,
         SUNVAULT_UPPER_LADDER_CURATED_ART_REPORT_SCRIPT_PATH,
         SUNVAULT_UPPER_LADDER_CURATED_ART_REPORT_SCENE_PATH,
+        TIDEPOOL_CUTTERS_CURATED_SOURCE_PATH,
+        REEFBOLT_CREWS_CURATED_SOURCE_PATH,
+        TIDEPOOL_SKIFFYARD_CURATED_ART_REPORT_SCRIPT_PATH,
+        TIDEPOOL_SKIFFYARD_CURATED_ART_REPORT_SCENE_PATH,
         THORNWAKE_SEEDCUTTERS_CURATED_SOURCE_PATH,
         THORNWAKE_THORNWHIP_CURATED_SOURCE_PATH,
         THORNWAKE_SPOREGLASS_CURATED_SOURCE_PATH,
@@ -42551,6 +42559,8 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     sunvault_solar_array_striders_unit_id = "unit_sunvault_solar_array_striders"
     sunvault_aurora_ballistae_unit_id = "unit_sunvault_aurora_ballistae"
     sunvault_daybreak_colossus_unit_id = "unit_sunvault_daybreak_colossus"
+    tidepool_cutters_unit_id = "unit_neutral_tidepool_cutters"
+    reefbolt_crews_unit_id = "unit_neutral_reefbolt_crews"
     gorefen_ripper_unit_id = "unit_gorefen_ripper"
     thornwake_seedcutters_unit_id = "unit_thornwake_seedcutters"
     thornwake_thornwhip_unit_id = "unit_thornwake_thornwhip_carriers"
@@ -42710,6 +42720,13 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     for _unit_id, source_disk_path, _source_res_path, source_sha256, unit_label in sunvault_upper_ladder_curated_sources:
         ensure(png_size(source_disk_path) == (512, 512), errors, f"{unit_label} curated character source must be a 512x512 PNG")
         ensure(hashlib.sha256(source_disk_path.read_bytes()).hexdigest() == source_sha256, errors, f"{unit_label} curated character source bytes drifted")
+    tidepool_skiffyard_curated_sources = (
+        (reefbolt_crews_unit_id, REEFBOLT_CREWS_CURATED_SOURCE_PATH, "res://art/units/source/curated/unit_neutral_reefbolt_crews.png", "5b5a3914013dd48a07b661b8541be781fc0f56f1b8dc57cf1a2fa88df580b8f3", "Reefbolt Crews"),
+        (tidepool_cutters_unit_id, TIDEPOOL_CUTTERS_CURATED_SOURCE_PATH, "res://art/units/source/curated/unit_neutral_tidepool_cutters.png", "58b773cffd1684670dbc4fda36a1e01eff991a850d8038f88c266cd5184510f0", "Tidepool Cutters"),
+    )
+    for _unit_id, source_disk_path, _source_res_path, source_sha256, unit_label in tidepool_skiffyard_curated_sources:
+        ensure(png_size(source_disk_path) == (512, 512), errors, f"{unit_label} curated character source must be a 512x512 PNG")
+        ensure(hashlib.sha256(source_disk_path.read_bytes()).hexdigest() == source_sha256, errors, f"{unit_label} curated character source bytes drifted")
     thornwake_early_ladder_curated_sources = (
         (thornwake_seedcutters_unit_id, THORNWAKE_SEEDCUTTERS_CURATED_SOURCE_PATH, "res://art/units/source/curated/unit_thornwake_seedcutters.png", "360f2ec2f9baeab2d9243911abbbae9c4a5ce3e9cbc66fa3211f6264dcf20ace", "Seedcutters"),
         (thornwake_thornwhip_unit_id, THORNWAKE_THORNWHIP_CURATED_SOURCE_PATH, "res://art/units/source/curated/unit_thornwake_thornwhip_carriers.png", "65b539dd7ce63fdf410f3d9ce5466c20753664b3d760d8e91b6da0568eacf98b", "Thornwhip Carriers"),
@@ -42769,14 +42786,14 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         if isinstance(record, dict) and str(record.get("art_source_kind", "")) == "curated_original_character_v1"
     ]
     ensure(
-        sorted(str(record.get("unit_id", "")) for record in curated_art_records) == sorted([aurora_ballista_unit_id, fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, prism_adept_unit_id, mirror_duelist_unit_id, gorefen_ripper_unit_id, mireclaw_ferrychain_unit_id, mireclaw_sporewake_unit_id, mireclaw_gorefen_rippers_unit_id, mireclaw_drowned_antler_unit_id, embercourt_ash_oath_bailiffs_unit_id, embercourt_beacon_lectors_unit_id, embercourt_sluicefire_lindworms_unit_id, embercourt_charter_colossus_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, brasshollow_boiler_rivetcasters_unit_id, brasshollow_debt_engine_exactors_unit_id, brasshollow_crucible_crawlers_unit_id, brasshollow_foundry_saint_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, sunvault_resonant_choristers_unit_id, sunvault_solar_array_striders_unit_id, sunvault_aurora_ballistae_unit_id, sunvault_daybreak_colossus_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, thornwake_barkmantle_rams_unit_id, thornwake_stagknot_runners_unit_id, thornwake_graft_matriarchs_unit_id, thornwake_worldroot_bastion_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id, veilmourn_undertow_harpooners_unit_id, veilmourn_obituary_scribes_unit_id, veilmourn_mirrorkeel_reavers_unit_id, veilmourn_fogbound_leviathan_unit_id]),
+        sorted(str(record.get("unit_id", "")) for record in curated_art_records) == sorted([aurora_ballista_unit_id, fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, prism_adept_unit_id, mirror_duelist_unit_id, gorefen_ripper_unit_id, mireclaw_ferrychain_unit_id, mireclaw_sporewake_unit_id, mireclaw_gorefen_rippers_unit_id, mireclaw_drowned_antler_unit_id, embercourt_ash_oath_bailiffs_unit_id, embercourt_beacon_lectors_unit_id, embercourt_sluicefire_lindworms_unit_id, embercourt_charter_colossus_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, brasshollow_boiler_rivetcasters_unit_id, brasshollow_debt_engine_exactors_unit_id, brasshollow_crucible_crawlers_unit_id, brasshollow_foundry_saint_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, sunvault_resonant_choristers_unit_id, sunvault_solar_array_striders_unit_id, sunvault_aurora_ballistae_unit_id, sunvault_daybreak_colossus_unit_id, tidepool_cutters_unit_id, reefbolt_crews_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, thornwake_barkmantle_rams_unit_id, thornwake_stagknot_runners_unit_id, thornwake_graft_matriarchs_unit_id, thornwake_worldroot_bastion_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id, veilmourn_undertow_harpooners_unit_id, veilmourn_obituary_scribes_unit_id, veilmourn_mirrorkeel_reavers_unit_id, veilmourn_fogbound_leviathan_unit_id]),
         errors,
-        "Exactly the approved fifty-three units, including both distinct Gorefen tiers, may use the curated character-source branch",
+        "Exactly the approved fifty-five units, including both distinct Gorefen tiers, may use the curated character-source branch",
     )
     ensure(
-        sorted(str(record.get("unit_id", "")) for record in curated_animation_records) == sorted([aurora_ballista_unit_id, fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, prism_adept_unit_id, mirror_duelist_unit_id, gorefen_ripper_unit_id, mireclaw_ferrychain_unit_id, mireclaw_sporewake_unit_id, mireclaw_gorefen_rippers_unit_id, mireclaw_drowned_antler_unit_id, embercourt_ash_oath_bailiffs_unit_id, embercourt_beacon_lectors_unit_id, embercourt_sluicefire_lindworms_unit_id, embercourt_charter_colossus_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, brasshollow_boiler_rivetcasters_unit_id, brasshollow_debt_engine_exactors_unit_id, brasshollow_crucible_crawlers_unit_id, brasshollow_foundry_saint_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, sunvault_resonant_choristers_unit_id, sunvault_solar_array_striders_unit_id, sunvault_aurora_ballistae_unit_id, sunvault_daybreak_colossus_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, thornwake_barkmantle_rams_unit_id, thornwake_stagknot_runners_unit_id, thornwake_graft_matriarchs_unit_id, thornwake_worldroot_bastion_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id, veilmourn_undertow_harpooners_unit_id, veilmourn_obituary_scribes_unit_id, veilmourn_mirrorkeel_reavers_unit_id, veilmourn_fogbound_leviathan_unit_id]),
+        sorted(str(record.get("unit_id", "")) for record in curated_animation_records) == sorted([aurora_ballista_unit_id, fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, prism_adept_unit_id, mirror_duelist_unit_id, gorefen_ripper_unit_id, mireclaw_ferrychain_unit_id, mireclaw_sporewake_unit_id, mireclaw_gorefen_rippers_unit_id, mireclaw_drowned_antler_unit_id, embercourt_ash_oath_bailiffs_unit_id, embercourt_beacon_lectors_unit_id, embercourt_sluicefire_lindworms_unit_id, embercourt_charter_colossus_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, brasshollow_boiler_rivetcasters_unit_id, brasshollow_debt_engine_exactors_unit_id, brasshollow_crucible_crawlers_unit_id, brasshollow_foundry_saint_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, sunvault_resonant_choristers_unit_id, sunvault_solar_array_striders_unit_id, sunvault_aurora_ballistae_unit_id, sunvault_daybreak_colossus_unit_id, tidepool_cutters_unit_id, reefbolt_crews_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, thornwake_barkmantle_rams_unit_id, thornwake_stagknot_runners_unit_id, thornwake_graft_matriarchs_unit_id, thornwake_worldroot_bastion_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id, veilmourn_undertow_harpooners_unit_id, veilmourn_obituary_scribes_unit_id, veilmourn_mirrorkeel_reavers_unit_id, veilmourn_fogbound_leviathan_unit_id]),
         errors,
-        "Exactly the approved fifty-three units, including both distinct Gorefen tiers, may use the curated character-source animation branch",
+        "Exactly the approved fifty-five units, including both distinct Gorefen tiers, may use the curated character-source animation branch",
     )
     for curated_record, label in (
         (records_by_unit_id.get(fordhook_unit_id, {}), "art"),
@@ -42853,6 +42870,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in embercourt_upper_ladder_curated_sources),
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in sunvault_early_ladder_curated_sources),
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in sunvault_upper_ladder_curated_sources),
+        *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in tidepool_skiffyard_curated_sources),
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in thornwake_early_ladder_curated_sources),
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in thornwake_upper_ladder_curated_sources),
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in embercourt_production_early_ladder_curated_sources),
@@ -42952,6 +42970,8 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     "unit_mireclaw_reedsnare_kin",
     "unit_mireclaw_sporewake_chanters",
     "unit_mirror_duelist",
+    "unit_neutral_reefbolt_crews",
+    "unit_neutral_tidepool_cutters",
     "unit_prism_adept",
     "unit_river_guard",
     "unit_shard_guard",
@@ -42977,7 +42997,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     "unit_veilmourn_obituary_scribes",
     "unit_veilmourn_undertow_harpooners",
 }'''
-    ensure(generator_text.count(expected_curated_id_block) == 1, errors, "Unit art generator curated source id set must contain exactly the fifty-three approved units in stable order")
+    ensure(generator_text.count(expected_curated_id_block) == 1, errors, "Unit art generator curated source id set must contain exactly the fifty-five approved units in stable order")
     for required_branch in (
         '''if not preserve_authored_asset(unit_id, "portrait", portrait_path):
             if curated_source is None:
@@ -43802,6 +43822,57 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         ensure(forbidden_token not in sunvault_upper_report_text, errors, f"Sunvault upper-ladder focused report must remain observation-only: {forbidden_token}")
     sunvault_upper_scene_text = SUNVAULT_UPPER_LADDER_CURATED_ART_REPORT_SCENE_PATH.read_text(encoding="utf-8")
     ensure('path="res://tests/unit_sunvault_upper_ladder_curated_art_report.gd"' in sunvault_upper_scene_text, errors, "Sunvault upper-ladder curated art report scene must own the exact focused script")
+
+    tidepool_skiffyard_report_text = TIDEPOOL_SKIFFYARD_CURATED_ART_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'REPORT_ID := "UNIT_NEUTRAL_TIDEPOOL_SKIFFYARD_CURATED_ART_REPORT"',
+        'SCENARIO_ID := "ninefold-confluence"',
+        'PLACEMENT_ID := "ninefold_drowned_reliquary_watch"',
+        'LOCAL_ARMY_ID := "army_ninefold_drowned_reliquary_watch"',
+        'SHARED_ARMY_ID := "army_neutral_tidepool_skiffyard_watch"',
+        '"unit_id": "unit_neutral_tidepool_cutters", "label": "Tidepool Cutters", "count": 6, "shared_count": 7, "tier": 2, "role": "melee", "growth": 5, "cost": {"gold": 90}, "ability_ids": ["backstab"]',
+        '"unit_id": "unit_neutral_reefbolt_crews", "label": "Reefbolt Crews", "count": 11, "shared_count": 2, "tier": 2, "role": "ranged", "growth": 5, "cost": {"gold": 95}, "ability_ids": ["volley"]',
+        '"source_sha256": "58b773cffd1684670dbc4fda36a1e01eff991a850d8038f88c266cd5184510f0"',
+        '"source_sha256": "5b5a3914013dd48a07b661b8541be781fc0f56f1b8dc57cf1a2fa88df580b8f3"',
+        '"portrait_sha256": "3f69a298b3b9ed3f16bb45da94ea77a8e7a45c23d62440e7db8d2562210811ac"',
+        '"portrait_sha256": "68ff5b1807df9cb621c93f68fc8058c6e15f532221ec90f752bef4c047a7267d"',
+        '"old_portrait_sha256": "1c8d0452749c16737b46a514f7a2efae199a7da9b699d3e159cd531a15309945"',
+        '"old_portrait_sha256": "cac856a969af726c2554753c235f258872d8ba28ad5ca7e1ca352d32f65305f8"',
+        '"old_sheet_sha256": "e352adbba3ecd3e2ccffcdac41ae5ee1bf8fc4842653d9dc9eec0123954bbb2f"',
+        '"old_sheet_sha256": "455a083a2e1ae56bbe98baeb08e031f83c641655bfd3e13fb831a579f288f9c3"',
+        '_validate_assets_and_provenance()', '_validate_content_authority()', 'await _validate_live_tidepool_battle_board()',
+        'source.get_size() == Vector2i(512, 512)', 'portrait.get_size() == Vector2i(384, 512)',
+        'icon.get_size() == Vector2i(160, 160)', 'overworld_icon.get_size() == Vector2i(96, 96)',
+        'sheet.get_size() == Vector2i(256, 896)', 'visible == FRAMES_PER_STATE and signatures.size() >= 2',
+        'int(source_alpha.get("transparent", 0)) > 50000 and int(source_alpha.get("visible", 0)) > 40000 and int(source_alpha.get("strong", 0)) > 50000',
+        'if alpha >= 0.75:', '"strong": strong',
+        'bool(source_alpha.get("corners_transparent", false))',
+        'dwelling.get("unit_ids", []) == ["unit_neutral_tidepool_cutters", "unit_neutral_reefbolt_crews"]',
+        'dwelling.get("army_group_ids", []) == [SHARED_ARMY_ID] and dwelling.get("encounter_ids", []) == ["encounter_tidepool_skiffyard_watch"]',
+        'String(unit.get("affiliation", "")) == "neutral" and int(unit.get("tier", 0)) == int(spec["tier"]) and String(unit.get("role", "")) == String(spec["role"])',
+        'int(unit.get("growth", 0)) == int(spec["growth"]) and _resource_cost_contract(unit.get("cost", {})) == spec["cost"]',
+        'ability_ids == spec["ability_ids"]',
+        'ScenarioFactory.create_session(SCENARIO_ID, "normal", SessionStateStoreScript.LAUNCH_MODE_SKIRMISH)',
+        'var expected_local := {"unit_neutral_tidepool_cutters": 6, "unit_neutral_reefbolt_crews": 11}',
+        'var expected_shared := {"unit_neutral_tidepool_cutters": 7, "unit_neutral_reefbolt_crews": 2}',
+        'BattleRulesScript.create_battle_payload(session, placement)',
+        '_battle_stack_counts(enemy_stacks) == expected_local',
+        'ability_ids == spec["ability_ids"]',
+        'session.to_dict() == authority_before',
+        'board.validation_unit_art_summary()',
+        'String(entry.get("battle_icon", "")) == String(spec["icon_path"])',
+        'String(entry.get("animation_sheet", "")) == String(spec["sheet_path"])',
+        'session.to_dict() == authority_before',
+        '"visible_frame_count": UNITS.size() * STATES.size() * FRAMES_PER_STATE',
+    ):
+        ensure(required_token in tidepool_skiffyard_report_text, errors, f"Tidepool Skiffyard curated art report is missing token {required_token}")
+    ensure(tidepool_skiffyard_report_text.count('BattleRulesScript.create_battle_payload(') == 1, errors, "Tidepool Skiffyard report must use exactly one public Drowned Reliquary battle materialization")
+    ensure('unit.get("cost", {}) == spec["cost"]' not in tidepool_skiffyard_report_text, errors, "Tidepool Skiffyard cost oracle must compare the typed integer resource contract")
+    ensure('String(entry.get("side", "enemy")) != "player"' not in tidepool_skiffyard_report_text, errors, "Tidepool Skiffyard report must not infer a side field absent from the public Board art summary")
+    for forbidden_token in ("draw_curated_portrait", "draw_curated_overworld_icon", "draw_curated_battle_icon", "draw_curated_battle_troop_animation_sheet", '"final_sprite_import": true', "ContentService._unit_art_manifest", "save_png", "generate_unit_art_assets", 'unit["', 'dwelling["', 'placement["', 'local_army["', 'shared_army["', 'enemy_stacks['):
+        ensure(forbidden_token not in tidepool_skiffyard_report_text, errors, f"Tidepool Skiffyard focused report must remain observation-only: {forbidden_token}")
+    tidepool_skiffyard_scene_text = TIDEPOOL_SKIFFYARD_CURATED_ART_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure('path="res://tests/unit_neutral_tidepool_skiffyard_curated_art_report.gd"' in tidepool_skiffyard_scene_text, errors, "Tidepool Skiffyard curated art report scene must own the exact focused script")
 
     scrip_report_text = SCRIP_HAULERS_CURATED_ART_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (

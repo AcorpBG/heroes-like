@@ -46,6 +46,8 @@ CURATED_CHARACTER_SOURCE_IDS = {
     "unit_mireclaw_reedsnare_kin",
     "unit_mireclaw_sporewake_chanters",
     "unit_mirror_duelist",
+    "unit_neutral_reefbolt_crews",
+    "unit_neutral_tidepool_cutters",
     "unit_prism_adept",
     "unit_river_guard",
     "unit_shard_guard",

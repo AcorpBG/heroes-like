@@ -1062,7 +1062,10 @@
       "motif": "blade",
       "portrait": "res://art/units/portraits/unit_neutral_tidepool_cutters.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_tidepool_cutters.png",
-      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_tidepool_cutters.png"
+      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_tidepool_cutters.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_neutral_tidepool_cutters.png",
+      "curated_source_sha256": "58b773cffd1684670dbc4fda36a1e01eff991a850d8038f88c266cd5184510f0"
     },
     {
       "id": "unit_neutral_reefbolt_crews",
@@ -1074,7 +1077,10 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_neutral_reefbolt_crews.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_reefbolt_crews.png",
-      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_reefbolt_crews.png"
+      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_reefbolt_crews.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_neutral_reefbolt_crews.png",
+      "curated_source_sha256": "5b5a3914013dd48a07b661b8541be781fc0f56f1b8dc57cf1a2fa88df580b8f3"
     },
     {
       "id": "unit_neutral_switchback_pikes",

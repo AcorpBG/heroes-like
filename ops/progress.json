@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved source-backed release-readiness slice."
+    "Select the next tracker-approved source-backed implementation slice."
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the three-source Sunvault tier-5 through tier-7 curated art slice with exact existing-path derivatives, live Counterseal and BattleBoard authority, byte-exact non-target preservation, full reproducibility, compatibility, static/editor, and bounded Linux/Windows export/startup evidence.",
+  "currentNotes": "Completed the Tidepool Skiffyard art slice with two original sources, eight exact runtime derivatives, live dwelling/shared-watch/Ninefold encounter/BattleBoard authority, two byte-identical 412-asset regeneration passes, thirteen compatibility owners, static/editor validation, and bounded Linux/Windows startup gates.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-sunvault-upper-ladder-curated-character-sources-10184",
-  "currentSliceId": "art-sunvault-upper-ladder-curated-character-sources-10184",
-  "currentSliceNotes": "Completed with three original Sunvault upper-ladder sources and exact existing-path runtime derivatives; select the next tracker-approved source-backed slice.",
+  "currentSlice": "art-neutral-tidepool-skiffyard-curated-character-sources-10184",
+  "currentSliceId": "art-neutral-tidepool-skiffyard-curated-character-sources-10184",
+  "currentSliceNotes": "Tidepool Cutters and Reefbolt Crews now own distinct original sources and exact reproducible derivatives while neutral content, balance, dwelling, encounter, and gameplay authority remain exact. Packaged interaction and broad release claims remain excluded.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Sunvault Upper-Ladder Curated Character Sources",
-  "currentSliceUpdatedAt": "2026-08-22T19:49:36Z",
+  "currentSliceTitle": "Tidepool Skiffyard Curated Character Sources",
+  "currentSliceUpdatedAt": "2026-08-22T20:15:56Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,29 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed release-readiness slice; do not infer broad/final art, packaged interaction parity, certification, or release readiness from this bounded completion.",
-  "notes": "The Sunvault upper-ladder art slice is complete. Three original sources, twelve exact runtime derivatives, live recruitment/Counterseal/BattleBoard authority, byte-exact preservation for the other 100 units, two full 412-asset reproducibility runs, thirteen compatibility owners, static/editor, and bounded Linux/Windows export/startup gates are green. Broad/final art, packaged battle interaction, certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed implementation slice; do not infer broad neutral-art completion or release readiness from this bounded Tidepool result.",
+  "notes": "The Tidepool Skiffyard art slice is complete. Focused runtime proves two content rows, two live BattleBoard entries, exact local 6/11 and shared 7/2 rosters, session authority, and 112 visible frames. Two full 412-asset regenerations and both manifests are byte-identical; thirteen compatibility owners, validator/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged battle interaction, certification, signing/publication, whole-game validation, broad neutral art, and release readiness remain unclaimed.",
   "plannedSlices": [
+    {
+      "id": "art-neutral-tidepool-skiffyard-curated-character-sources-10184",
+      "title": "Tidepool Skiffyard Curated Character Sources",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md", "docs/animation-battle-troop-state-contract-report.md"],
+      "purpose": "Replace the generated Tidepool Cutters and Reefbolt Crews emblems with two distinct character-readable original shore-raider sources and exact reproducible existing-path derivatives while preserving their neutral dwelling graph, authored watches, balance, and all gameplay authority.",
+      "implementationTargets": ["art/units/source/curated/unit_neutral_tidepool_cutters.png", "art/units/source/curated/unit_neutral_reefbolt_crews.png", "art/units/portraits/unit_neutral_tidepool_cutters.png", "art/units/portraits/unit_neutral_reefbolt_crews.png", "art/units/battle_icons/unit_neutral_tidepool_cutters.png", "art/units/battle_icons/unit_neutral_reefbolt_crews.png", "art/units/overworld_icons/unit_neutral_tidepool_cutters.png", "art/units/overworld_icons/unit_neutral_reefbolt_crews.png", "art/animation/runtime/units/unit_neutral_tidepool_cutters.png", "art/animation/runtime/units/unit_neutral_reefbolt_crews.png", "content/unit_art_manifest.json", "content/unit_animation_manifest.json", "tools/generate_unit_art_assets.py", "tests/unit_neutral_tidepool_skiffyard_curated_art_report.gd", "tests/unit_neutral_tidepool_skiffyard_curated_art_report.tscn", "tests/unit_art_reproducibility_report.py", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"unit_ids": ["unit_neutral_tidepool_cutters", "unit_neutral_reefbolt_crews"], "tiers": [2,2], "roles": ["melee","ranged"], "ability_ids": [["backstab"],["volley"]], "source_size": [512,512], "portrait_size": [384,512], "battle_icon_size": [160,160], "overworld_icon_size": [96,96], "animation_sheet_size": [256,896], "animation_state_count": 14, "frames_per_state": 4, "other_units_must_remain_byte_exact": 101, "neutral_dwelling_id": "neutral_dwelling_tidepool_skiffyard", "shared_army_id": "army_neutral_tidepool_skiffyard_watch", "authored_encounter_army_id": "army_ninefold_drowned_reliquary_watch", "final_sprite_import": false},
+      "completionCriteria": ["Two distinct original transparent sources follow Tidepool low-tide cutter and Reefbolt braced shore-crew identities and own exact manifest provenance plus reproducible portrait, battle-icon, overworld-icon, and fourteen-state/four-frame animation-sheet derivatives", "Live neutral unit/dwelling lookup preserves exact stats, costs, growth, abilities, Tidepool Skiffyard graph, shared 7/2 watch, and Ninefold Drowned Reliquary 6/11 army; a production-rule BattleBoard loads both icon/sheet pairs and all 112 target frames remain visible", "Only two sources, eight target runtime payloads, and two records in each manifest change; all four surfaces for the other 101 units remain byte-exact; full regeneration/reproducibility, focused/balance/compatibility, validator/editor, Linux, and Windows startup gates pass"],
+      "nonGoals": ["Another neutral dwelling/unit, unit stats/abilities/costs/growth, combat balance or AI tuning, encounter/dwelling/site/map-object/army-group content, BattleRules/BattleAiRules, animation timing/order, save schema, rendering settings, Native RMG, or packaging behavior", "Broad/final neutral art, packaged battle interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game validation, or release readiness"],
+      "createdAt": "2026-08-22T19:52:31Z",
+      "startedAt": "2026-08-22T19:52:31Z",
+      "updatedAt": "2026-08-22T20:15:56Z",
+      "completedAt": "2026-08-22T20:15:56Z",
+      "notes": "Completed with two distinct 512x512 original transparent sources and eight exact existing-path derivatives. Focused runtime /tmp/heroes-tidepool-focused-final.cp7Qcs is natural rc0 with one ok:true marker, two content rows, two live BattleBoard entries, exact Drowned Reliquary 6/11 and shared Skiffyard 7/2 rosters, session authority, and 112 visible frames. Two full 412-asset regenerations and both manifests are byte-identical in /tmp/heroes-tidepool-repro.iEbY0h; thirteen compatibility owners are rc0 in /tmp/heroes-tidepool-compat.6hOkRT. Validator/editor and official Linux export/headless startup plus Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Broad/final neutral art, packaged battle interaction, certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "remainingWork": "None for this bounded slice. Select the next tracker-approved source-backed implementation slice."
+    },
     {
       "id": "art-sunvault-upper-ladder-curated-character-sources-10184",
       "title": "Sunvault Upper-Ladder Curated Character Sources",
@@ -94004,7 +94024,7 @@
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
   "remainingGap": "Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain. The game is not release-ready.",
-  "remainingWork": "Select the next tracker-approved source-backed implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, and Native RMG gaps remain.",
+  "remainingWork": "Select the next tracker-approved source-backed implementation slice. Broader strategic-AI, faction-balance, accessibility certification, content/performance, publication/signing, native Windows certification, broad neutral art, and Native RMG gaps remain.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -94435,8 +94455,8 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "art_veilmourn_upper_ladder_curated_character_sources_in_progress",
-  "status": "in_progress",
+  "result": "art_neutral_tidepool_skiffyard_curated_character_sources_completed",
+  "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
       "completed": "Implementation or documentation-only governance work satisfies the PLAN completion criteria and has validation/evidence.",
@@ -94536,9 +94556,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Aurora Ballista now has one original transparent siege-engine source and four reproducible runtime derivatives; four authored encounter rosters/public abilities, distinct Aurora Bastions portrait, and all 408 non-target payloads remain exact, with focused, compatibility, static/editor, and bounded Linux/Windows startup gates green.",
+  "summary": "Tidepool Cutters and Reefbolt Crews now have two distinct original transparent character sources and eight reproducible runtime derivatives; exact dwelling/shared-watch/Ninefold encounter/BattleBoard authority, all 101 non-target unit surfaces, two full regeneration passes, compatibility, static/editor, and bounded Linux/Windows startup gates are green.",
   "taskId": "10184",
-  "updatedAt": "2026-08-22T15:39:07Z",
+  "updatedAt": "2026-08-22T20:15:56Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
