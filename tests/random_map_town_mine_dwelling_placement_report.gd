@@ -8,7 +8,7 @@ func _ready() -> void:
 
 func _run() -> void:
 	var generator = RandomMapGeneratorRulesScript.new()
-	var config := _config("town-mine-dwelling-placement-10184")
+	var config := _config("town-mine-dwelling-placement-10184-b")
 	var generated: Dictionary = generator.generate(config)
 	if not bool(generated.get("ok", false)):
 		_fail("Generated town/mine/dwelling payload failed validation: %s" % JSON.stringify(generated.get("report", {})))

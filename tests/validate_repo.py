@@ -597,6 +597,7 @@ RANDOM_MAP_PLAYER_SETUP_RETRY_UX_REPORT_SCENE_PATH = ROOT / "tests" / "random_ma
 RANDOM_MAP_GENERATED_SETUP_PENDING_RETRY_DOC_PATH = ROOT / "docs" / "random-map-generated-setup-pending-retry-surface-report.md"
 RANDOM_MAP_POST_OPEN_TAIL_TIMING_REPORT_SCRIPT_PATH = ROOT / "tests" / "random_map_post_open_tail_timing_report.gd"
 RANDOM_MAP_POST_OPEN_TAIL_TIMING_REPORT_SCENE_PATH = ROOT / "tests" / "random_map_post_open_tail_timing_report.tscn"
+RANDOM_MAP_TOWN_MINE_DWELLING_REPORT_SCRIPT_PATH = ROOT / "tests" / "random_map_town_mine_dwelling_placement_report.gd"
 EXPORT_PRESETS_PATH = ROOT / "export_presets.cfg"
 PACKAGING_PLATFORM_READINESS_REPORT_SCRIPT_PATH = ROOT / "tests" / "packaging_platform_readiness_report.gd"
 PACKAGING_PLATFORM_READINESS_REPORT_SCENE_PATH = ROOT / "tests" / "packaging_platform_readiness_report.tscn"
@@ -12162,6 +12163,30 @@ def validate_content(errors: list[str]) -> None:
     )
 
     random_map_rules_text = (ROOT / "scripts" / "core" / "RandomMapGeneratorRules.gd").read_text(encoding="utf-8")
+    ensure(RANDOM_MAP_TOWN_MINE_DWELLING_REPORT_SCRIPT_PATH.exists(), errors, "Random-map town/mine/dwelling focused report script must exist")
+    if RANDOM_MAP_TOWN_MINE_DWELLING_REPORT_SCRIPT_PATH.exists():
+        town_mine_dwelling_report_text = RANDOM_MAP_TOWN_MINE_DWELLING_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+        ensure(town_mine_dwelling_report_text.count('_config("town-mine-dwelling-placement-10184-b")') == 1, errors, "Random-map town/mine/dwelling report must use the exact strict-spacing-compatible fixed seed once")
+        ensure('_config("town-mine-dwelling-placement-10184")' not in town_mine_dwelling_report_text, errors, "Random-map town/mine/dwelling report must not restore the stale warning-only fixed seed")
+        for token in [
+            '"width": 30, "height": 22, "water_mode": "land", "level_count": 1',
+            '"human_count": 1, "computer_count": 2',
+            '"template_id": "frontier_spokes_v1"',
+            'same_input_town_mine_dwelling_signature_equivalent',
+            'changed_seed_changes_town_mine_dwelling_signature',
+            'same_type_neutral_town_count',
+            'source_zone_choice_reused',
+            '_assert_conflict_boundaries(payload, placement)',
+            '_assert_fairness(payload.get("staging", {}).get("fairness_report", {}))',
+            '_assert_generated_boundaries(payload)',
+        ]:
+            ensure(token in town_mine_dwelling_report_text, errors, f"Random-map town/mine/dwelling report must retain compatibility authority: {token}")
+    for token in [
+        'fallback_policy": "retry_with_hard_spacing_then_skip_infeasible_town_no_unspaced_fallback"',
+        'warnings.append("no neutral same-type town was placed for this seed/template")',
+        'source_zone_choice_reused_for_neutral_town_when_same_type_flag_is_present',
+    ]:
+        ensure(token in random_map_rules_text, errors, f"Random-map production must retain strict-spacing/same-type semantics during the fixture-only correction: {token}")
     rmg_spell_ids = set(re.findall(r'"spell_id": "([^"]+)"', random_map_rules_text))
     ensure(rmg_spell_ids.issubset(set(spells.keys())), errors, f"RMG spell reward pool references missing spells: {sorted(rmg_spell_ids - set(spells.keys()))}")
     rmg_spell_tiers = {int(spells[spell_id].get("tier", 0)) for spell_id in rmg_spell_ids if spell_id in spells}

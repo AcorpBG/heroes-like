@@ -24,6 +24,16 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed test-compatibility slice: `random-map-town-mine-dwelling-same-type-fixture-refresh-10184`. The deterministic focused town/mine/dwelling fixture now uses suffix `-b`, preserving the exact 30x22 land/frontier-spokes/one-human-two-computer boundary while exercising the authored same-type neutral-town branch under current strict spacing. The report passes naturally with four towns, one same-type neutral town, minimum distance 9 against required 8, nine mines, six dwellings, no conflicts, and all fairness/metadata/signature gates. Production generator/template/catalog/Native-RMG/gameplay files are unchanged. The original seed remains a valid warning-level no-placement case. This is completed support work, not random-map implementation progress. Select the next tracker-approved source-backed slice.
+  id: `random-map-town-mine-dwelling-same-type-fixture-refresh-10184`
+
+  Completion criteria:
+  - the focused report uses exactly `town-mine-dwelling-placement-10184-b`, keeps the 30x22 land/frontier-spokes/one-human-two-computer configuration, and still requires deterministic same-input and changed-seed signatures;
+  - the runtime report naturally passes with exactly four towns, one same-type neutral town, all required mines/dwellings and metadata, no placement conflicts, and current strict town-spacing authority;
+  - validator pins the exact fixture seed and retained same-type/metadata/spacing assertions while production `RandomMapGeneratorRules.gd`, template/catalog data, Native-RMG code, and gameplay remain byte-exact.
+
+  Non-goals: changing town placement, spacing, fallback, warning, template, catalog, generator, native-RMG, map content, retry, topology, fairness, save, UI, packaging, or gameplay behavior; treating this test-only correction as implementation progress, RMG parity, whole-game validation, or release readiness.
+
 - Completed implementation slice: `art-neutral-fenhound-kennels-curated-character-sources-10184`. Fenhound Runners and Mossglass Sentinels now use two distinct original transparent marsh-kennel character sources with exact reproducible portrait, battle-icon, overworld-icon, and fourteen-state/four-frame battle-sheet derivatives. Live content preserves both unit records, the Fenhound Kennels graph, shared 7/2 watch, three authored scenario placements, and the existing Native-RMG projection; BattleBoard loads both curated icon/sheet pairs and all 112 frames remain visible. Two full 412-asset regenerations and both manifests are byte-identical, the focused and relevant compatibility owners plus validator/editor gates pass, and official Linux export/headless startup plus Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. The independent fixed-seed random-map same-type-neutral-town fixture remains red and is not claimed by this art slice. Broad/final neutral art, packaged battle interaction, certification, signing/publication, whole-game validation, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
   id: `art-neutral-fenhound-kennels-curated-character-sources-10184`
 
