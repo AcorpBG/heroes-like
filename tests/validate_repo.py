@@ -357,6 +357,12 @@ THORNWAKE_THORNWHIP_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" /
 THORNWAKE_SPOREGLASS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_thornwake_sporeglass_menders.png"
 THORNWAKE_EARLY_LADDER_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_thornwake_early_ladder_curated_art_report.gd"
 THORNWAKE_EARLY_LADDER_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_thornwake_early_ladder_curated_art_report.tscn"
+THORNWAKE_BARKMANTLE_RAMS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_thornwake_barkmantle_rams.png"
+THORNWAKE_STAGKNOT_RUNNERS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_thornwake_stagknot_runners.png"
+THORNWAKE_GRAFT_MATRIARCHS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_thornwake_graft_matriarchs.png"
+THORNWAKE_WORLDROOT_BASTION_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_thornwake_worldroot_bastion.png"
+THORNWAKE_UPPER_LADDER_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_thornwake_upper_ladder_curated_art_report.gd"
+THORNWAKE_UPPER_LADDER_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_thornwake_upper_ladder_curated_art_report.tscn"
 EMBERCOURT_LANTERN_SAPPERS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_embercourt_lantern_sappers.png"
 EMBERCOURT_BARGEBOW_CREWS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_embercourt_bargebow_crews.png"
 EMBERCOURT_PRODUCTION_EARLY_LADDER_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_embercourt_production_early_ladder_curated_art_report.gd"
@@ -42341,6 +42347,12 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         THORNWAKE_SPOREGLASS_CURATED_SOURCE_PATH,
         THORNWAKE_EARLY_LADDER_CURATED_ART_REPORT_SCRIPT_PATH,
         THORNWAKE_EARLY_LADDER_CURATED_ART_REPORT_SCENE_PATH,
+        THORNWAKE_BARKMANTLE_RAMS_CURATED_SOURCE_PATH,
+        THORNWAKE_STAGKNOT_RUNNERS_CURATED_SOURCE_PATH,
+        THORNWAKE_GRAFT_MATRIARCHS_CURATED_SOURCE_PATH,
+        THORNWAKE_WORLDROOT_BASTION_CURATED_SOURCE_PATH,
+        THORNWAKE_UPPER_LADDER_CURATED_ART_REPORT_SCRIPT_PATH,
+        THORNWAKE_UPPER_LADDER_CURATED_ART_REPORT_SCENE_PATH,
         EMBERCOURT_LANTERN_SAPPERS_CURATED_SOURCE_PATH,
         EMBERCOURT_BARGEBOW_CREWS_CURATED_SOURCE_PATH,
         EMBERCOURT_PRODUCTION_EARLY_LADDER_CURATED_ART_REPORT_SCRIPT_PATH,
@@ -42502,6 +42514,10 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     thornwake_seedcutters_unit_id = "unit_thornwake_seedcutters"
     thornwake_thornwhip_unit_id = "unit_thornwake_thornwhip_carriers"
     thornwake_sporeglass_unit_id = "unit_thornwake_sporeglass_menders"
+    thornwake_barkmantle_rams_unit_id = "unit_thornwake_barkmantle_rams"
+    thornwake_stagknot_runners_unit_id = "unit_thornwake_stagknot_runners"
+    thornwake_graft_matriarchs_unit_id = "unit_thornwake_graft_matriarchs"
+    thornwake_worldroot_bastion_unit_id = "unit_thornwake_worldroot_bastion"
     embercourt_lantern_sappers_unit_id = "unit_embercourt_lantern_sappers"
     embercourt_bargebow_crews_unit_id = "unit_embercourt_bargebow_crews"
     veilmourn_bellwake_oars_unit_id = "unit_veilmourn_bellwake_oars"
@@ -42649,6 +42665,15 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     for _unit_id, source_disk_path, _source_res_path, source_sha256, unit_label in thornwake_early_ladder_curated_sources:
         ensure(png_size(source_disk_path) == (512, 512), errors, f"{unit_label} curated character source must be a 512x512 PNG")
         ensure(hashlib.sha256(source_disk_path.read_bytes()).hexdigest() == source_sha256, errors, f"{unit_label} curated character source bytes drifted")
+    thornwake_upper_ladder_curated_sources = (
+        (thornwake_barkmantle_rams_unit_id, THORNWAKE_BARKMANTLE_RAMS_CURATED_SOURCE_PATH, "res://art/units/source/curated/unit_thornwake_barkmantle_rams.png", "e0f123ac134cc74a2e7d46428092f4d85fffaa31cda37b1fff11b5dc40350639", "Barkmantle Rams"),
+        (thornwake_stagknot_runners_unit_id, THORNWAKE_STAGKNOT_RUNNERS_CURATED_SOURCE_PATH, "res://art/units/source/curated/unit_thornwake_stagknot_runners.png", "78c5788c806a5f9f02e6518feb66a111946db0300dba218472f30a03a002585f", "Stag-Knot Runners"),
+        (thornwake_graft_matriarchs_unit_id, THORNWAKE_GRAFT_MATRIARCHS_CURATED_SOURCE_PATH, "res://art/units/source/curated/unit_thornwake_graft_matriarchs.png", "d4338c77cebd077fb261e8c3c9402d71071b8a993dbb761b1cd9971dc94e809b", "Graft Matriarchs"),
+        (thornwake_worldroot_bastion_unit_id, THORNWAKE_WORLDROOT_BASTION_CURATED_SOURCE_PATH, "res://art/units/source/curated/unit_thornwake_worldroot_bastion.png", "c6c10c9322cb00c5131ebdafbdbb6f1d7ed99dca8a291d5ec345249bf6e0196f", "Worldroot Bastion"),
+    )
+    for _unit_id, source_disk_path, _source_res_path, source_sha256, unit_label in thornwake_upper_ladder_curated_sources:
+        ensure(png_size(source_disk_path) == (512, 512), errors, f"{unit_label} curated character source must be a 512x512 PNG")
+        ensure(hashlib.sha256(source_disk_path.read_bytes()).hexdigest() == source_sha256, errors, f"{unit_label} curated character source bytes drifted")
     embercourt_production_early_ladder_curated_sources = (
         (embercourt_lantern_sappers_unit_id, EMBERCOURT_LANTERN_SAPPERS_CURATED_SOURCE_PATH, "res://art/units/source/curated/unit_embercourt_lantern_sappers.png", "94eafb9f33268e0213f5741a6009464df52542242b34ece6937c910142811fa7", "Lantern Sappers"),
         (embercourt_bargebow_crews_unit_id, EMBERCOURT_BARGEBOW_CREWS_CURATED_SOURCE_PATH, "res://art/units/source/curated/unit_embercourt_bargebow_crews.png", "cd6ac693e3adadef8729201fbcba35e1164fa03fa0bd5ded01dc8744b04ef6a1", "Bargebow Crews"),
@@ -42673,14 +42698,14 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         if isinstance(record, dict) and str(record.get("art_source_kind", "")) == "curated_original_character_v1"
     ]
     ensure(
-        sorted(str(record.get("unit_id", "")) for record in curated_art_records) == sorted([aurora_ballista_unit_id, fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, prism_adept_unit_id, mirror_duelist_unit_id, gorefen_ripper_unit_id, mireclaw_ferrychain_unit_id, mireclaw_sporewake_unit_id, mireclaw_gorefen_rippers_unit_id, mireclaw_drowned_antler_unit_id, embercourt_ash_oath_bailiffs_unit_id, embercourt_beacon_lectors_unit_id, embercourt_sluicefire_lindworms_unit_id, embercourt_charter_colossus_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, sunvault_resonant_choristers_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id]),
+        sorted(str(record.get("unit_id", "")) for record in curated_art_records) == sorted([aurora_ballista_unit_id, fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, prism_adept_unit_id, mirror_duelist_unit_id, gorefen_ripper_unit_id, mireclaw_ferrychain_unit_id, mireclaw_sporewake_unit_id, mireclaw_gorefen_rippers_unit_id, mireclaw_drowned_antler_unit_id, embercourt_ash_oath_bailiffs_unit_id, embercourt_beacon_lectors_unit_id, embercourt_sluicefire_lindworms_unit_id, embercourt_charter_colossus_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, sunvault_resonant_choristers_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, thornwake_barkmantle_rams_unit_id, thornwake_stagknot_runners_unit_id, thornwake_graft_matriarchs_unit_id, thornwake_worldroot_bastion_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id]),
         errors,
-        "Exactly the approved thirty-eight units, including both distinct Gorefen tiers, may use the curated character-source branch",
+        "Exactly the approved forty-two units, including both distinct Gorefen tiers, may use the curated character-source branch",
     )
     ensure(
-        sorted(str(record.get("unit_id", "")) for record in curated_animation_records) == sorted([aurora_ballista_unit_id, fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, prism_adept_unit_id, mirror_duelist_unit_id, gorefen_ripper_unit_id, mireclaw_ferrychain_unit_id, mireclaw_sporewake_unit_id, mireclaw_gorefen_rippers_unit_id, mireclaw_drowned_antler_unit_id, embercourt_ash_oath_bailiffs_unit_id, embercourt_beacon_lectors_unit_id, embercourt_sluicefire_lindworms_unit_id, embercourt_charter_colossus_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, sunvault_resonant_choristers_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id]),
+        sorted(str(record.get("unit_id", "")) for record in curated_animation_records) == sorted([aurora_ballista_unit_id, fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, prism_adept_unit_id, mirror_duelist_unit_id, gorefen_ripper_unit_id, mireclaw_ferrychain_unit_id, mireclaw_sporewake_unit_id, mireclaw_gorefen_rippers_unit_id, mireclaw_drowned_antler_unit_id, embercourt_ash_oath_bailiffs_unit_id, embercourt_beacon_lectors_unit_id, embercourt_sluicefire_lindworms_unit_id, embercourt_charter_colossus_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, sunvault_resonant_choristers_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, thornwake_barkmantle_rams_unit_id, thornwake_stagknot_runners_unit_id, thornwake_graft_matriarchs_unit_id, thornwake_worldroot_bastion_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id]),
         errors,
-        "Exactly the approved thirty-eight units, including both distinct Gorefen tiers, may use the curated character-source animation branch",
+        "Exactly the approved forty-two units, including both distinct Gorefen tiers, may use the curated character-source animation branch",
     )
     for curated_record, label in (
         (records_by_unit_id.get(fordhook_unit_id, {}), "art"),
@@ -42757,6 +42782,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in embercourt_upper_ladder_curated_sources),
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in sunvault_early_ladder_curated_sources),
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in thornwake_early_ladder_curated_sources),
+        *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in thornwake_upper_ladder_curated_sources),
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in embercourt_production_early_ladder_curated_sources),
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in veilmourn_early_ladder_curated_sources),
     ):
@@ -42855,14 +42881,18 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     "unit_sunvault_prism_adepts",
     "unit_sunvault_resonant_choristers",
     "unit_sunvault_shard_wardens",
+    "unit_thornwake_barkmantle_rams",
+    "unit_thornwake_graft_matriarchs",
     "unit_thornwake_seedcutters",
     "unit_thornwake_sporeglass_menders",
+    "unit_thornwake_stagknot_runners",
     "unit_thornwake_thornwhip_carriers",
+    "unit_thornwake_worldroot_bastion",
     "unit_veilmourn_bellwake_oars",
     "unit_veilmourn_maskglass_corsairs",
     "unit_veilmourn_mourning_lanterns",
 }'''
-    ensure(generator_text.count(expected_curated_id_block) == 1, errors, "Unit art generator curated source id set must contain exactly the thirty-eight approved units in stable order")
+    ensure(generator_text.count(expected_curated_id_block) == 1, errors, "Unit art generator curated source id set must contain exactly the forty-two approved units in stable order")
     for required_branch in (
         '''if not preserve_authored_asset(unit_id, "portrait", portrait_path):
             if curated_source is None:
@@ -43445,6 +43475,70 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         ensure(forbidden_token not in embercourt_upper_report_text, errors, f"Embercourt upper-ladder focused report must remain observation-only: {forbidden_token}")
     embercourt_upper_scene_text = EMBERCOURT_UPPER_LADDER_CURATED_ART_REPORT_SCENE_PATH.read_text(encoding="utf-8")
     ensure('path="res://tests/unit_embercourt_upper_ladder_curated_art_report.gd"' in embercourt_upper_scene_text, errors, "Embercourt upper-ladder curated art report scene must own the exact focused script")
+
+    thornwake_upper_report_text = THORNWAKE_UPPER_LADDER_CURATED_ART_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'REPORT_ID := "UNIT_THORNWAKE_UPPER_LADDER_CURATED_ART_REPORT"',
+        '"unit_id": "unit_thornwake_barkmantle_rams", "label": "Barkmantle Rams", "tier": 4, "role": "melee", "growth": 3, "ability_ids": ["brace", "shielding"]',
+        '"unit_id": "unit_thornwake_stagknot_runners", "label": "Stag-Knot Runners", "tier": 5, "role": "melee", "growth": 2, "ability_ids": ["reach"]',
+        '"unit_id": "unit_thornwake_graft_matriarchs", "label": "Graft Matriarchs", "tier": 6, "role": "ranged", "growth": 1, "ability_ids": ["volley"]',
+        '"unit_id": "unit_thornwake_worldroot_bastion", "label": "Worldroot Bastion", "tier": 7, "role": "melee", "growth": 1, "ability_ids": ["shielding"]',
+        '"source_sha256": "e0f123ac134cc74a2e7d46428092f4d85fffaa31cda37b1fff11b5dc40350639"',
+        '"source_sha256": "78c5788c806a5f9f02e6518feb66a111946db0300dba218472f30a03a002585f"',
+        '"source_sha256": "d4338c77cebd077fb261e8c3c9402d71071b8a993dbb761b1cd9971dc94e809b"',
+        '"source_sha256": "c6c10c9322cb00c5131ebdafbdbb6f1d7ed99dca8a291d5ec345249bf6e0196f"',
+        '"portrait_sha256": "82372ccd15e8477b6a646ee67445df375e96161e3360cb976b90714636104977"',
+        '"portrait_sha256": "6940ede6b28292c0ce78743c26fea9a1b0b4ac04c931fedeb284629b1fc1a47d"',
+        '"portrait_sha256": "fd7de476ca6b0ceedf9503236e948bd3c6d9f78260fe49aecbefa1bf1fd88e23"',
+        '"portrait_sha256": "8033080d74ae9532b47976c4742cc60d3825fe7d6d2352a63ad3e76470100d04"',
+        '"old_sheet_sha256": "55bd9d31469ace7a7805286705ac19cfcf1eee26b0b98813056a7e0b68153d46"',
+        '"old_sheet_sha256": "9f6890e910c81ae6116fde1275619539c20641ab24f78491ca7579c6d419fbaa"',
+        '"old_sheet_sha256": "6d199e38ad8972256a10b21e6df953ef38383caa72051d35ae38b77e9b2d544f"',
+        '"old_sheet_sha256": "482b1af6d5d87dd25c950a4b2e6d73b72182f1e0d813fab1bf7ba74055824974"',
+        '"unit_id": "unit_thornwake_seedcutters", "portrait_sha256": "79edec73359fca75e09d08bcc07261a6fa730946607610f6559117a8a1e72d63"',
+        '"unit_id": "unit_thornwake_thornwhip_carriers", "portrait_sha256": "c02715b5d765bbba66932e9c73f653cbf5da01264ab39e9ce0b467be95768564"',
+        '"unit_id": "unit_thornwake_sporeglass_menders", "portrait_sha256": "0ad63314f084b8e9e3bcea2834feba41285bdf5b7ff3b5a0a6e62e6921768687"',
+        'HALO_BARKMANTLE_STACKS := [{"unit_id": "unit_thornwake_seedcutters", "count": 9}, {"unit_id": "unit_thornwake_sporeglass_menders", "count": 7}, {"unit_id": "unit_thornwake_barkmantle_rams", "count": 4}]',
+        'ROOTBOUND_WARDEN_STACKS := [{"unit_id": "unit_thornwake_seedcutters", "count": 12}, {"unit_id": "unit_thornwake_thornwhip_carriers", "count": 8}, {"unit_id": "unit_thornwake_sporeglass_menders", "count": 4}, {"unit_id": "unit_thornwake_barkmantle_rams", "count": 3}]',
+        '_validate_assets_and_provenance()', '_validate_content_authority()', 'await _validate_live_thornwake_and_board()',
+        'source.get_size() == Vector2i(512, 512)', 'portrait.get_size() == Vector2i(384, 512)',
+        'icon.get_size() == Vector2i(160, 160)', 'overworld_icon.get_size() == Vector2i(96, 96)',
+        'sheet.get_size() == Vector2i(256, 896)', 'visible == FRAMES_PER_STATE and signatures.size() >= 2',
+        'int(source_alpha.get("transparent", 0)) > 50000 and int(source_alpha.get("visible", 0)) > 30000 and int(source_alpha.get("opaque", 0)) > 10000',
+        'bool(source_alpha.get("corners_transparent", false))',
+        'ladder.slice(3, 7) == _target_ids()', 'buildings.slice(3, 7) == _building_ids()',
+        'String(faction.get("seed_town_id", "")) == "town_thornwake_graftroot_caravan"',
+        'int(unit.get("growth", 0)) == int(spec["growth"]) and _resource_cost_contract(unit.get("cost", {})) == spec["cost"]',
+        '_ability_ids(unit.get("abilities", [])) == spec["ability_ids"]',
+        'String(building.get("unlock_unit_id", "")) == String(spec["unit_id"])',
+        'int(Dictionary(building.get("growth_bonus", {})).get(String(spec["unit_id"]), 0)) == int(spec["building_growth"])',
+        'int(Dictionary(building.get("recruitment_discount_percent", {})).get(String(spec["unit_id"]), 0)) == int(spec["building_discount"])',
+        'ScenarioFactory.create_session("halo-reserve-refraction-claim", "normal", SessionStateStoreScript.LAUNCH_MODE_SKIRMISH)',
+        '_encounter_placement(session, "halo_barkmantle_bastion")',
+        'String(authored_army.get("id", "")) == "army_halo_barkmantle_bastion" and _stack_contract(authored_army.get("stacks", [])) == HALO_BARKMANTLE_STACKS',
+        '_battle_stack_contract(authored_enemy) == HALO_BARKMANTLE_STACKS',
+        '_battle_target_ability_contract(authored_enemy) == {"unit_thornwake_barkmantle_rams": ["brace", "shielding"]}',
+        'ScenarioFactory.create_session("mireford-skirmish", "normal", SessionStateStoreScript.LAUNCH_MODE_SKIRMISH)',
+        'var rootbound_player_stacks: Array = []',
+        'mireford_session.overworld.get("army", {}) if mireford_session.overworld.get("army", {}) is Dictionary else {}',
+        'String(rootbound_player_army.get("id", "")) == "army_rootbound_mireford_wardens" and rootbound_player_stacks == ROOTBOUND_WARDEN_STACKS',
+        'fixture_placement["enemy_army"] = {"id": "army_thornwake_upper_ladder_art_fixture"',
+        'fixture_ability_contract == {"unit_thornwake_barkmantle_rams": ["brace", "shielding"], "unit_thornwake_stagknot_runners": ["reach"], "unit_thornwake_graft_matriarchs": ["volley"], "unit_thornwake_worldroot_bastion": ["shielding"]}',
+        'session.to_dict() == authority_before', 'session.to_dict() == board_authority_before',
+        'board.validation_unit_art_summary()',
+        'String(entry.get("battle_icon", "")) == String(spec["icon_path"])',
+        'String(entry.get("animation_sheet", "")) == String(spec["sheet_path"])',
+        'entries.size() == UNITS.size()',
+        '"visible_frame_count": UNITS.size() * STATES.size() * FRAMES_PER_STATE',
+    ):
+        ensure(required_token in thornwake_upper_report_text, errors, f"Thornwake upper-ladder curated art report is missing token {required_token}")
+    ensure(thornwake_upper_report_text.count('BattleRulesScript.create_battle_payload(') == 2, errors, "Thornwake upper-ladder report must use exactly one authored and one detached four-unit production battle materialization")
+    ensure('unit.get("cost", {}) == spec["cost"]' not in thornwake_upper_report_text, errors, "Thornwake upper-ladder cost oracle must compare the typed integer resource contract")
+    ensure('mireford_session.player_army' not in thornwake_upper_report_text, errors, "Thornwake upper-ladder report must observe the live SessionData overworld army surface")
+    for forbidden_token in ("draw_curated_portrait", "draw_curated_overworld_icon", "draw_curated_battle_icon", "draw_curated_battle_troop_animation_sheet", '"final_sprite_import": true', "ContentService._unit_art_manifest", "save_png", "generate_unit_art_assets", 'unit["', 'building["'):
+        ensure(forbidden_token not in thornwake_upper_report_text, errors, f"Thornwake upper-ladder focused report must remain observation-only: {forbidden_token}")
+    thornwake_upper_scene_text = THORNWAKE_UPPER_LADDER_CURATED_ART_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure('path="res://tests/unit_thornwake_upper_ladder_curated_art_report.gd"' in thornwake_upper_scene_text, errors, "Thornwake upper-ladder curated art report scene must own the exact focused script")
 
     scrip_report_text = SCRIP_HAULERS_CURATED_ART_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
