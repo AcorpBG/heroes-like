@@ -31,6 +31,7 @@ CURATED_CHARACTER_SOURCE_IDS = {
     "unit_mireclaw_bogplate_maulers",
     "unit_mireclaw_mudglass_slingers",
     "unit_mireclaw_reedsnare_kin",
+    "unit_mirror_duelist",
     "unit_prism_adept",
     "unit_river_guard",
     "unit_shard_guard",
