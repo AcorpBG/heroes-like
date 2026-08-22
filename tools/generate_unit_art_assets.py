@@ -20,7 +20,9 @@ CURATED_CHARACTER_SOURCE_IDS = {
     "unit_brasshollow_furnace_pavis_teams",
     "unit_brasshollow_rivet_hounds",
     "unit_brasshollow_scrip_haulers",
+    "unit_ember_archer",
     "unit_embercourt_fordhook_cadets",
+    "unit_river_guard",
 }
 PRESERVED_AUTHORED_ASSET_SHA256 = {
     ("unit_sunvault_aurora_ballistae", "portrait"): "ffbc2c6dae600fc32aadb6720e21f9d682f4abb71c0fec3dadf8bdbf4ab10534",

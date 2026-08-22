@@ -300,6 +300,10 @@ RIVET_HOUNDS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_
 FURNACE_PAVIS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_brasshollow_furnace_pavis_teams.png"
 BRASSHOLLOW_EARLY_LADDER_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_brasshollow_early_ladder_curated_art_report.gd"
 BRASSHOLLOW_EARLY_LADDER_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_brasshollow_early_ladder_curated_art_report.tscn"
+RIVER_GUARD_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_river_guard.png"
+EMBER_ARCHER_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_ember_archer.png"
+RIVER_PASS_STARTER_ARMY_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_river_pass_starter_army_curated_art_report.gd"
+RIVER_PASS_STARTER_ARMY_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_river_pass_starter_army_curated_art_report.tscn"
 UNIT_CURATED_CROSS_SURFACE_IDENTITY_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_curated_cross_surface_identity_report.gd"
 UNIT_CURATED_CROSS_SURFACE_IDENTITY_REPORT_SCENE_PATH = ROOT / "tests" / "unit_curated_cross_surface_identity_report.tscn"
 UNIT_PRODUCTION_READINESS_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_production_readiness_report.gd"
@@ -42239,6 +42243,10 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         FURNACE_PAVIS_CURATED_SOURCE_PATH,
         BRASSHOLLOW_EARLY_LADDER_CURATED_ART_REPORT_SCRIPT_PATH,
         BRASSHOLLOW_EARLY_LADDER_CURATED_ART_REPORT_SCENE_PATH,
+        RIVER_GUARD_CURATED_SOURCE_PATH,
+        EMBER_ARCHER_CURATED_SOURCE_PATH,
+        RIVER_PASS_STARTER_ARMY_CURATED_ART_REPORT_SCRIPT_PATH,
+        RIVER_PASS_STARTER_ARMY_CURATED_ART_REPORT_SCENE_PATH,
         UNIT_CURATED_CROSS_SURFACE_IDENTITY_REPORT_SCRIPT_PATH,
         UNIT_CURATED_CROSS_SURFACE_IDENTITY_REPORT_SCENE_PATH,
         CONTENT_SERVICE_PATH,
@@ -42362,6 +42370,8 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     scrip_haulers_unit_id = "unit_brasshollow_scrip_haulers"
     rivet_hounds_unit_id = "unit_brasshollow_rivet_hounds"
     furnace_pavis_unit_id = "unit_brasshollow_furnace_pavis_teams"
+    river_guard_unit_id = "unit_river_guard"
+    ember_archer_unit_id = "unit_ember_archer"
     fordhook_source_res_path = "res://art/units/source/curated/unit_embercourt_fordhook_cadets.png"
     fordhook_source_sha256 = "e9eddd43ef9b1b1a44a40fd609676bb31c8db90cd612a17bb3e87aef0fce6ff4"
     ensure(png_size(FORDHOOK_CURATED_SOURCE_PATH) == (512, 512), errors, "Fordhook curated character source must be a 512x512 PNG")
@@ -42394,6 +42404,22 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         errors,
         "Furnace Pavis Teams curated character source bytes drifted",
     )
+    river_guard_source_res_path = "res://art/units/source/curated/unit_river_guard.png"
+    river_guard_source_sha256 = "95e7c9fc8dfddeebe0d5cd7439347dc1e6538b4d0e1f52584dac8cbaf76354eb"
+    ensure(png_size(RIVER_GUARD_CURATED_SOURCE_PATH) == (512, 512), errors, "River Guard curated character source must be a 512x512 PNG")
+    ensure(
+        hashlib.sha256(RIVER_GUARD_CURATED_SOURCE_PATH.read_bytes()).hexdigest() == river_guard_source_sha256,
+        errors,
+        "River Guard curated character source bytes drifted",
+    )
+    ember_archer_source_res_path = "res://art/units/source/curated/unit_ember_archer.png"
+    ember_archer_source_sha256 = "d019d88e87184ac8b68c852444d4be3b1a7fbd54282c13aa61f78170b885ce83"
+    ensure(png_size(EMBER_ARCHER_CURATED_SOURCE_PATH) == (512, 512), errors, "Ember Archer curated character source must be a 512x512 PNG")
+    ensure(
+        hashlib.sha256(EMBER_ARCHER_CURATED_SOURCE_PATH.read_bytes()).hexdigest() == ember_archer_source_sha256,
+        errors,
+        "Ember Archer curated character source bytes drifted",
+    )
     curated_art_records = [
         record for record in manifest.get("items", [])
         if isinstance(record, dict) and str(record.get("art_source_kind", "")) == "curated_original_character_v1"
@@ -42403,14 +42429,14 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         if isinstance(record, dict) and str(record.get("art_source_kind", "")) == "curated_original_character_v1"
     ]
     ensure(
-        sorted(str(record.get("unit_id", "")) for record in curated_art_records) == sorted([fordhook_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id]),
+        sorted(str(record.get("unit_id", "")) for record in curated_art_records) == sorted([fordhook_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id]),
         errors,
-        "Exactly Fordhook and the Brasshollow T1-T3 art records may use the curated character-source branch",
+        "Exactly Fordhook, the Brasshollow T1-T3 units, and the River Pass starter army art records may use the curated character-source branch",
     )
     ensure(
-        sorted(str(record.get("unit_id", "")) for record in curated_animation_records) == sorted([fordhook_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id]),
+        sorted(str(record.get("unit_id", "")) for record in curated_animation_records) == sorted([fordhook_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id]),
         errors,
-        "Exactly Fordhook and the Brasshollow T1-T3 animation records may use the curated character-source branch",
+        "Exactly Fordhook, the Brasshollow T1-T3 units, and the River Pass starter army animation records may use the curated character-source branch",
     )
     for curated_record, label in (
         (records_by_unit_id.get(fordhook_unit_id, {}), "art"),
@@ -42436,6 +42462,16 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     ):
         ensure(str(curated_record.get("curated_source", "")) == furnace_pavis_source_res_path, errors, f"Furnace Pavis Teams {label} manifest curated source path drifted")
         ensure(str(curated_record.get("curated_source_sha256", "")) == furnace_pavis_source_sha256, errors, f"Furnace Pavis Teams {label} manifest curated source hash drifted")
+    for unit_id, source_path, source_sha256, unit_label in (
+        (river_guard_unit_id, river_guard_source_res_path, river_guard_source_sha256, "River Guard"),
+        (ember_archer_unit_id, ember_archer_source_res_path, ember_archer_source_sha256, "Ember Archer"),
+    ):
+        for curated_record, label in (
+            (records_by_unit_id.get(unit_id, {}), "art"),
+            (animation_records_by_unit_id.get(unit_id, {}), "animation"),
+        ):
+            ensure(str(curated_record.get("curated_source", "")) == source_path, errors, f"{unit_label} {label} manifest curated source path drifted")
+            ensure(str(curated_record.get("curated_source_sha256", "")) == source_sha256, errors, f"{unit_label} {label} manifest curated source hash drifted")
 
     used_surface_paths: dict[str, set[str]] = {surface: set() for surface in expected_sizes.keys()}
     used_animation_paths: set[str] = set()
@@ -42496,9 +42532,11 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     "unit_brasshollow_furnace_pavis_teams",
     "unit_brasshollow_rivet_hounds",
     "unit_brasshollow_scrip_haulers",
+    "unit_ember_archer",
     "unit_embercourt_fordhook_cadets",
+    "unit_river_guard",
 }'''
-    ensure(generator_text.count(expected_curated_id_block) == 1, errors, "Unit art generator curated source id set must contain exactly Fordhook and the Brasshollow T1-T3 line in stable order")
+    ensure(generator_text.count(expected_curated_id_block) == 1, errors, "Unit art generator curated source id set must contain exactly the six approved units in stable order")
     for required_branch in (
         '''if not preserve_authored_asset(unit_id, "portrait", portrait_path):
             if curated_source is None:
@@ -42648,6 +42686,68 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         'path="res://tests/unit_brasshollow_early_ladder_curated_art_report.gd"' in brasshollow_early_scene_text,
         errors,
         "Brasshollow early-ladder curated art report scene must own the exact focused script",
+    )
+
+    river_pass_report_text = RIVER_PASS_STARTER_ARMY_CURATED_ART_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'REPORT_ID := "UNIT_RIVER_PASS_STARTER_ARMY_CURATED_ART_REPORT"',
+        'SCENARIO_ID := "river-pass"',
+        'ARMY_ID := "army_emberwell_vanguard"',
+        '"unit_id": "unit_river_guard"',
+        '"count": 10',
+        '"source_sha256": "95e7c9fc8dfddeebe0d5cd7439347dc1e6538b4d0e1f52584dac8cbaf76354eb"',
+        '"portrait_sha256": "db56bc222683c9fc9b55e33626508488681fb9a214e6f0f8c0ee06190ee0cba5"',
+        '"icon_sha256": "375f75e8e3df69ae4f54037862705c448e366d3276aed9e3cc2698775112c027"',
+        '"overworld_icon_sha256": "fa0ba72bbe51430617ecf8aae15db442857f6a68f52edefcebd272a07e985581"',
+        '"sheet_sha256": "c951d9f589462f2753c16a575ccb9f4283bb9155f8eb00043ae4b55f7299c38d"',
+        '"ability_ids": ["reach", "brace"]',
+        '"unit_id": "unit_ember_archer"',
+        '"count": 5',
+        '"source_sha256": "d019d88e87184ac8b68c852444d4be3b1a7fbd54282c13aa61f78170b885ce83"',
+        '"portrait_sha256": "07a76383708521a8d61a146800f18b9d4eb82731b27661e5cfa5529e5f6e8a0f"',
+        '"icon_sha256": "7ccab2a36ce94f17cb7c3c9a14bed81125a08386acf5740b867e92bfd5034396"',
+        '"overworld_icon_sha256": "42a6d4bcff88e4d4348148a60941dd4908b824a8fb63e87c115b25a0a439069d"',
+        '"sheet_sha256": "81ff7d7ddf6b022e6f6ea6126510168669ab029cd243e1244a9f46ef1b35b68e"',
+        '"ability_ids": ["volley", "harry"]',
+        '_validate_assets_and_provenance()',
+        'await _validate_river_pass_battle_board_runtime()',
+        'source.get_size() == Vector2i(512, 512)',
+        'portrait.get_size() == Vector2i(384, 512)',
+        'icon.get_size() == Vector2i(160, 160)',
+        'overworld_icon.get_size() == Vector2i(96, 96)',
+        'sheet.get_size() == Vector2i(256, 896)',
+        'visible == FRAMES_PER_STATE and signatures.size() >= 2',
+        'String(scenario.get("player_army_id", "")) == ARMY_ID',
+        'ScenarioFactory.create_session(SCENARIO_ID, "normal", SessionStateStoreScript.LAUNCH_MODE_SKIRMISH)',
+        'String(live_army.get("id", "")) == ARMY_ID',
+        'var expected_stacks := [{"unit_id": "unit_river_guard", "count": 10}, {"unit_id": "unit_ember_archer", "count": 5}]',
+        'authored_stacks == expected_stacks and live_stacks == expected_stacks',
+        'BattleRulesScript._build_battle_stack(String(live_stack.get("unit_id", "")), int(live_stack.get("count", 0))',
+        'ability_ids == spec["ability_ids"]',
+        'var authority_before: Dictionary = session.to_dict()',
+        'board.validation_unit_art_summary()',
+        'String(entry.get("battle_icon", "")) == String(spec["icon_path"])',
+        'String(entry.get("animation_sheet", "")) == String(spec["sheet_path"])',
+        'session.to_dict() == authority_before',
+        '"visible_frame_count": UNITS.size() * STATES.size() * FRAMES_PER_STATE',
+    ):
+        ensure(required_token in river_pass_report_text, errors, f"River Pass starter-army curated art report is missing token {required_token}")
+    for forbidden_token in (
+        "draw_curated_portrait",
+        "draw_curated_overworld_icon",
+        "draw_curated_battle_icon",
+        "draw_curated_battle_troop_animation_sheet",
+        '"final_sprite_import": true',
+        "ContentService._unit_art_manifest",
+        "save_png",
+        "generate_unit_art_assets",
+    ):
+        ensure(forbidden_token not in river_pass_report_text, errors, f"River Pass starter-army focused report must remain observation-only: {forbidden_token}")
+    river_pass_scene_text = RIVER_PASS_STARTER_ARMY_CURATED_ART_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure(
+        'path="res://tests/unit_river_pass_starter_army_curated_art_report.gd"' in river_pass_scene_text,
+        errors,
+        "River Pass starter-army curated art report scene must own the exact focused script",
     )
 
     cross_surface_report_text = UNIT_CURATED_CROSS_SURFACE_IDENTITY_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
