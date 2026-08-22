@@ -26,8 +26,12 @@ const RELAY_PICKETS_STACKS := [
 	{"unit_id": "unit_sunvault_prism_adepts", "count": 5},
 	{"unit_id": "unit_sunvault_resonant_choristers", "count": 1},
 ]
+const MIRROR_LANCERS_STACKS := [
+	{"unit_id": "unit_sunvault_shard_wardens", "count": 6},
+	{"unit_id": "unit_sunvault_prism_adepts", "count": 5},
+	{"unit_id": "unit_sunvault_mirror_duelists", "count": 3},
+]
 const NEIGHBOR_ENCOUNTER_STACKS := {
-	"counterseal_mirror_lancers": [{"unit_id": "unit_shard_guard", "count": 6}, {"unit_id": "unit_prism_adept", "count": 5}, {"unit_id": "unit_mirror_duelist", "count": 3}],
 	"counterseal_aurora_battery": [{"unit_id": "unit_shard_guard", "count": 5}, {"unit_id": "unit_mirror_duelist", "count": 4}, {"unit_id": "unit_aurora_ballista", "count": 2}],
 }
 const REQUIRED_RESOURCE_PLACEMENT_IDS := ["charter_bastion_wood", "charter_bastion_ore", "counterseal_embergrain_granary", "counterseal_signal_post", "charter_bastion_counterseal_charter_rare_exchange", "halo_counterseal_wood", "halo_counterseal_ore", "halo_counterseal_lens_house", "charter_bastion_counterseal_halo_rare_exchange"]
@@ -93,6 +97,9 @@ func _assert_catalog_and_setup() -> Dictionary:
 	if _army_stack_contract(authored_encounters.get("counterseal_relay_pickets", {}).get("enemy_army", {}).get("stacks", [])) != RELAY_PICKETS_STACKS:
 		_fail("Counterseal Relay Pickets did not retain its exact production T1/T2/T4 formation.")
 		return {}
+	if _army_stack_contract(authored_encounters.get("counterseal_mirror_lancers", {}).get("enemy_army", {}).get("stacks", [])) != MIRROR_LANCERS_STACKS:
+		_fail("Counterseal Mirror Lancers did not retain its exact production T1/T2/T3 formation.")
+		return {}
 	for placement_id in NEIGHBOR_ENCOUNTER_STACKS:
 		if _army_stack_contract(authored_encounters.get(placement_id, {}).get("enemy_army", {}).get("stacks", [])) != NEIGHBOR_ENCOUNTER_STACKS[placement_id]:
 			_fail("Neighboring Counterseal encounter %s changed while integrating Relay Pickets." % placement_id)
@@ -101,7 +108,7 @@ func _assert_catalog_and_setup() -> Dictionary:
 	if setup.is_empty() or String(setup.get("scenario_id", "")) != SCENARIO_ID:
 		_fail("Live skirmish setup did not expose Charter Bastion Counterseal.")
 		return {}
-	return {"active_scenario_count": scenario_ids.size(), "campaign_available": true, "skirmish_available": true, "map_size": scenario.get("map_size", {}), "relay_pickets_stacks": RELAY_PICKETS_STACKS.duplicate(true), "neighbor_encounters_exact": true}
+	return {"active_scenario_count": scenario_ids.size(), "campaign_available": true, "skirmish_available": true, "map_size": scenario.get("map_size", {}), "relay_pickets_stacks": RELAY_PICKETS_STACKS.duplicate(true), "mirror_lancers_stacks": MIRROR_LANCERS_STACKS.duplicate(true), "neighbor_encounters_exact": true}
 
 func _assert_opening_session(session: SessionStateStoreScript.SessionData, launch_mode: String) -> Dictionary:
 	if session == null or session.scenario_id != SCENARIO_ID or session.launch_mode != launch_mode:
@@ -176,6 +183,7 @@ func _exercise_save_restore(session: SessionStateStoreScript.SessionData, slot: 
 func _exercise_battle_entries(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var rows := []
 	var relay_encounter: Dictionary = {}
+	var mirror_encounter: Dictionary = {}
 	for placement_id in ENCOUNTER_PLACEMENT_IDS:
 		var encounter: Dictionary = _encounter_by_placement(session, placement_id)
 		var battle: Dictionary = BattleRulesScript.create_battle_payload(session, encounter)
@@ -203,6 +211,16 @@ func _exercise_battle_entries(session: SessionStateStoreScript.SessionData) -> D
 			if _battle_unit_counts(enemy_contract) != {"unit_sunvault_shard_wardens": 7, "unit_sunvault_prism_adepts": 5, "unit_sunvault_resonant_choristers": 1} or _battle_ability_contract(enemy_contract) != expected_abilities:
 				_fail("Relay Pickets public battle payload missed exact production counts or shielding/volley/Resonant Relay/Calibration Cant abilities: %s" % JSON.stringify(enemy_contract))
 				return {}
+		elif placement_id == "counterseal_mirror_lancers":
+			mirror_encounter = encounter.duplicate(true)
+			var expected_abilities := {
+				"unit_sunvault_shard_wardens": ["shielding"],
+				"unit_sunvault_prism_adepts": ["volley"],
+				"unit_sunvault_mirror_duelists": ["reach", "backstab"],
+			}
+			if _battle_unit_counts(enemy_contract) != {"unit_sunvault_shard_wardens": 6, "unit_sunvault_prism_adepts": 5, "unit_sunvault_mirror_duelists": 3} or _battle_ability_contract(enemy_contract) != expected_abilities:
+				_fail("Mirror Lancers public battle payload missed exact production counts or shielding/volley/Reflected-Lane Step/Broken-Timing Cut abilities: %s" % JSON.stringify(enemy_contract))
+				return {}
 		rows.append({"placement_id": placement_id, "player_stacks": player_stacks, "enemy_stacks": enemy_stacks, "enemy_contract": enemy_contract})
 	if relay_encounter.is_empty():
 		_fail("Counterseal Relay Pickets was unavailable for live autoplay.")
@@ -222,7 +240,25 @@ func _exercise_battle_entries(session: SessionStateStoreScript.SessionData) -> D
 	if not bool(sample_consequences.get("has_spell_consequence", false)) or not bool(sample_consequences.get("has_status_consequence", false)) or int(sample_consequences.get("effect_observation_count", 0)) <= 0:
 		_fail("Production Relay Pickets autoplay did not expose live combat consequences.")
 		return {}
-	return {"case_count": rows.size(), "rows": rows, "relay_autoplay": {"completed": true, "outcome_state": "victory", "round_reached": int(sample.get("round_reached", 0)), "steps_sampled": int(sample.get("steps_sampled", 0)), "invalid_order_count": 0, "player_health_remaining_pct": int(sample.get("player_health_remaining_pct", 0)), "enemy_health_remaining_pct": 0, "enemy_ability_counts": sample_profile.get("side_ability_counts", {}).get("enemy", {}), "effect_observation_count": int(sample_consequences.get("effect_observation_count", 0))}}
+	if mirror_encounter.is_empty():
+		_fail("Counterseal Mirror Lancers was unavailable for live autoplay.")
+		return {}
+	var mirror_sample: Dictionary = BattleAutoplayBalanceHarnessRulesScript.run_battle_sample(SCENARIO_ID, mirror_encounter, 72, "normal")
+	var mirror_profile: Dictionary = mirror_sample.get("initial_stack_profile", {})
+	var mirror_consequences: Dictionary = mirror_sample.get("runtime_consequence_profile", {})
+	if not bool(mirror_sample.get("completed", false)) or String(mirror_sample.get("outcome_state", "")) != "victory" or int(mirror_sample.get("invalid_order_count", -1)) != 0:
+		_fail("Production Mirror Lancers autoplay did not finish as a valid player victory: %s" % JSON.stringify(mirror_sample))
+		return {}
+	if int(mirror_sample.get("round_reached", 0)) != 4 or int(mirror_sample.get("player_health_remaining_pct", 0)) < 40 or int(mirror_sample.get("player_health_remaining_pct", 0)) > 80 or int(mirror_sample.get("enemy_health_remaining_pct", -1)) != 0:
+		_fail("Production Mirror Lancers autoplay left its screened high-front player-advantaged pacing band: %s" % JSON.stringify(mirror_sample))
+		return {}
+	if mirror_profile.get("side_ability_counts", {}).get("enemy", {}) != {"backstab": 1, "reach": 1, "shielding": 1, "volley": 1}:
+		_fail("Production Mirror Lancers autoplay did not retain the exact live ability surface.")
+		return {}
+	if not bool(mirror_consequences.get("has_spell_consequence", false)) or not bool(mirror_consequences.get("has_status_consequence", false)) or int(mirror_consequences.get("effect_observation_count", 0)) <= 0:
+		_fail("Production Mirror Lancers autoplay did not expose live combat consequences.")
+		return {}
+	return {"case_count": rows.size(), "rows": rows, "relay_autoplay": {"completed": true, "outcome_state": "victory", "round_reached": int(sample.get("round_reached", 0)), "steps_sampled": int(sample.get("steps_sampled", 0)), "invalid_order_count": 0, "player_health_remaining_pct": int(sample.get("player_health_remaining_pct", 0)), "enemy_health_remaining_pct": 0, "enemy_ability_counts": sample_profile.get("side_ability_counts", {}).get("enemy", {}), "effect_observation_count": int(sample_consequences.get("effect_observation_count", 0))}, "mirror_lancers_autoplay": {"completed": true, "outcome_state": "victory", "round_reached": 4, "steps_sampled": int(mirror_sample.get("steps_sampled", 0)), "invalid_order_count": 0, "player_health_remaining_pct": int(mirror_sample.get("player_health_remaining_pct", 0)), "enemy_health_remaining_pct": 0, "enemy_ability_counts": mirror_profile.get("side_ability_counts", {}).get("enemy", {}), "effect_observation_count": int(mirror_consequences.get("effect_observation_count", 0))}}
 
 func _army_stack_contract(stacks: Array) -> Array:
 	var result: Array = []

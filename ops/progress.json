@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Charter Counterseal production Relay Pickets slice is completed. The shipped first front now uses the production Sunvault T1/T2/T4 relay line at exact 7/5/1 counts, with live payload/autoplay, chapter/campaign/save, active breadth, unit ability, core, repository/editor, and bounded Linux/Windows export-startup evidence green.",
+  "currentNotes": "The Charter Counterseal production Mirror Lancers slice is completed. The shipped second front now uses the production Sunvault T1/T2/T3 line at exact 6/5/3 counts, with focused payload/autoplay, neighboring authority, active breadth, unit ability, core, repository/editor, and bounded Linux/Windows export-startup evidence green.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-charter-counterseal-production-relay-pickets-10184",
-  "currentSliceId": "content-charter-counterseal-production-relay-pickets-10184",
-  "currentSliceNotes": "Completed. Counterseal Relay Pickets now fields production Shard Wardens 7, Prism Adepts 5, and Resonant Choristers 1. The public payload exposes shielding, volley, Resonant Relay, and Calibration Cant; deterministic autoplay wins in round 6 at 32% player health with zero invalid orders. Neighboring fronts and scenario/campaign/save/outcome authority remain exact; 24-scenario/77-encounter breadth is complete with queue signature 829808c9 and no stalls, invalid orders, or tuning items. Unit abilities, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged encounter interaction, broad migration/balance, certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+  "currentSlice": "content-charter-counterseal-production-mirror-lancers-10184",
+  "currentSliceId": "content-charter-counterseal-production-mirror-lancers-10184",
+  "currentSliceNotes": "Completed. Counterseal Mirror Lancers now fields production Shard Wardens 6, Prism Adepts 5, and Mirror Duelists 3. The public payload exposes shielding, volley, reach, and backstab; deterministic autoplay wins in round 4 at 61% player health with zero invalid orders. Relay Pickets, Aurora Battery, and scenario/campaign/save/outcome authority remain exact; 24-scenario/77-encounter breadth is complete with queue signature 829808c9 and no stalls, invalid orders, or tuning items. Unit abilities, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged encounter interaction, Aurora/other legacy migration, broad balance, certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Charter Counterseal Production Relay Pickets",
-  "currentSliceUpdatedAt": "2026-08-22T02:50:42Z",
+  "currentSliceTitle": "Charter Counterseal Production Mirror Lancers",
+  "currentSliceUpdatedAt": "2026-08-22T03:03:37Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,48 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select a source-backed release-readiness implementation slice with direct current behavior evidence; preserve the completed Counterseal production Relay Pickets formation and its exact content, battle, campaign, save, and bounded platform authority.",
-  "notes": "Completed the source-backed Charter Counterseal production Relay Pickets integration. Only the first Counterseal front changed to the production 7/5/1 Sunvault relay formation; focused, breadth, compatibility, static/editor, and bounded Linux/Windows export-startup evidence is green. This does not claim other legacy-front migration, packaged encounter interaction, broad balance, certification, signing/publication, whole-game validation, or release readiness.",
+  "nextActionGuardrailNote": "Select a source-backed release-readiness implementation slice with direct current behavior evidence; preserve both completed Counterseal production fronts and exact Aurora/scenario/campaign/save authority.",
+  "notes": "Completed the source-backed Charter Counterseal production Mirror Lancers integration. Only the second Counterseal front changed to the production 6/5/3 Sunvault line; focused, breadth, compatibility, static/editor, and bounded Linux/Windows export-startup evidence is green. This does not claim Aurora/other legacy migration, packaged encounter interaction, broad balance, certification, signing/publication, whole-game validation, or release readiness.",
   "plannedSlices": [
+    {
+      "id": "content-charter-counterseal-production-mirror-lancers-10184",
+      "title": "Charter Counterseal Production Mirror Lancers",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/factions-content-bible.md"],
+      "purpose": "Replace Charter Bastion Counterseal's legacy second Sunvault encounter with the production T1/T2/T3 Mirror line so the shipped finale exercises completed production faction identity.",
+      "implementationTargets": ["content/scenarios.json", "tests/embercourt_charter_bastion_counterseal_chapter_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {
+        "encounter_placement_id": "counterseal_mirror_lancers",
+        "legacy_stack_ids": ["unit_shard_guard", "unit_prism_adept", "unit_mirror_duelist"],
+        "legacy_stack_counts": [6, 5, 3],
+        "legacy_rounds": 4,
+        "legacy_player_health_remaining_pct": 48,
+        "candidate_stack_ids": ["unit_sunvault_shard_wardens", "unit_sunvault_prism_adepts", "unit_sunvault_mirror_duelists"],
+        "candidate_stack_counts": [6, 5, 3],
+        "candidate_rounds": 4,
+        "candidate_player_health_remaining_pct": 61,
+        "candidate_invalid_order_count": 0
+      },
+      "completionCriteria": [
+        "The exact Counterseal Mirror Lancers encounter uses only production Sunvault T1/T2/T3 ids at count-preserving 6/5/3 strength",
+        "Public BattleRules payload and autoplay expose shielding, volley, reach, and backstab with a bounded four-round player victory and zero invalid orders",
+        "Relay Pickets, Aurora Battery, and all scenario, campaign, save, outcome, town, resource, reward, script-hook, and content authority remain exact",
+        "Active scenario breadth remains complete with zero stalls or invalid orders and a clear tuning queue",
+        "Focused, compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass"
+      ],
+      "nonGoals": [
+        "Aurora Battery or other legacy-front migration",
+        "shared unit stat or ability changes, BattleRules or BattleAiRules changes, player-army or reward tuning, save schema, campaign structure, Native RMG, packaging behavior, broad balance, whole-game, or release-readiness claims"
+      ],
+      "createdAt": "2026-08-22T02:53:42Z",
+      "startedAt": "2026-08-22T02:53:42Z",
+      "updatedAt": "2026-08-22T03:03:37Z",
+      "completedAt": "2026-08-22T03:03:37Z",
+      "notes": "Completed with exact production 6/5/3 Shard Warden, Prism Adept, and Mirror Duelist stacks. Focused public payload/autoplay proves the four production ability identities and a bounded four-round 61%-health victory with zero invalid orders; neighboring authority, 24-scenario/77-encounter queue-clear breadth, unit abilities, core, static/editor, and bounded Linux/Windows export-startup gates pass."
+    },
     {
       "id": "content-charter-counterseal-production-relay-pickets-10184",
       "title": "Charter Counterseal Production Relay Pickets",
@@ -92702,7 +92741,7 @@
   ],
   "summary": "The native startup now shows the approved original Aurelion Reach crest instead of the stock Godot splash while preserving Boot behavior and compatibility identity.",
   "taskId": "10184",
-  "updatedAt": "2026-08-22T02:50:42Z",
+  "updatedAt": "2026-08-22T03:03:37Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
