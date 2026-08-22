@@ -7,8 +7,8 @@ const PLACEMENT_IDS := ["glassroad_archive_wardens", "glassroad_bridgeward_levie
 const LOCAL_STACK_COUNTS := {"unit_river_guard": 5, "unit_ember_archer": 7, "unit_citadel_pikeward": 3}
 const SHARED_STACK_COUNTS := {"unit_river_guard": 7, "unit_ember_archer": 7, "unit_citadel_pikeward": 2}
 const UNCHANGED_SAMPLE_CONTRACTS := {
-	"glassroad_bridgeward_levies": {"outcome_state": "victory", "pacing_band": "extended", "round_reached": 6, "terminal_health_margin_pct": 36, "enemy_damage_per_round": 15},
-	"glassroad_beacon_wardens": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 44, "enemy_damage_per_round": 20},
+	"glassroad_bridgeward_levies": {"outcome_state": "defeat", "pacing_band": "extended", "round_reached": 6, "terminal_health_margin_pct": 44, "enemy_damage_per_round": 24},
+	"glassroad_beacon_wardens": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 39, "enemy_damage_per_round": 22},
 }
 
 func _ready() -> void:

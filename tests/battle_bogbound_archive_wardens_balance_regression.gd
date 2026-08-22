@@ -10,7 +10,7 @@ const SHARED_ARMY_ID := "army_archive_wardens"
 const SHARED_STACK_COUNTS := {"unit_river_guard": 7, "unit_ember_archer": 7, "unit_citadel_pikeward": 2}
 const UNCHANGED_SAMPLE_CONTRACTS := {
 	"bogbound_lantern_patrol": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 71, "enemy_damage_per_round": 8},
-	"bogbound_survey_guard": {"outcome_state": "victory", "pacing_band": "extended", "round_reached": 8, "terminal_health_margin_pct": 16, "enemy_damage_per_round": 20},
+	"bogbound_survey_guard": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 5, "terminal_health_margin_pct": 33, "enemy_damage_per_round": 25},
 }
 
 func _ready() -> void:

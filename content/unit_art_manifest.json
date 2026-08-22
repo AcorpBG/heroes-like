@@ -57,7 +57,10 @@
       "motif": "shield",
       "portrait": "res://art/units/portraits/unit_citadel_pikeward.png",
       "battle_icon": "res://art/units/battle_icons/unit_citadel_pikeward.png",
-      "overworld_icon": "res://art/units/overworld_icons/unit_citadel_pikeward.png"
+      "overworld_icon": "res://art/units/overworld_icons/unit_citadel_pikeward.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_citadel_pikeward.png",
+      "curated_source_sha256": "92c79e97dea6f8261272874990bdb6d12255a6201e4dd3b53fff100a51d81ca0"
     },
     {
       "id": "unit_blackbranch_cutthroat",

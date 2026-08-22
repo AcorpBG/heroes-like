@@ -29,9 +29,9 @@ const SHARED_ARMY_CONTRACTS := {
 	"army_causeway_phalanx": {"unit_river_guard": 6, "unit_citadel_pikeward": 4, "unit_ember_archer": 4},
 }
 const SAMPLE_CONTRACTS := {
-	"orevein_archive_wardens": {"outcome_state": "defeat", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 53, "enemy_damage_per_round": 69},
-	"orevein_bridgeward_levies": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 62, "enemy_damage_per_round": 35},
-	"orevein_beacon_wardens": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 65, "enemy_damage_per_round": 27},
+	"orevein_archive_wardens": {"outcome_state": "defeat", "pacing_band": "standard", "round_reached": 5, "terminal_health_margin_pct": 45, "enemy_damage_per_round": 55},
+	"orevein_bridgeward_levies": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 74, "enemy_damage_per_round": 18},
+	"orevein_beacon_wardens": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 69, "enemy_damage_per_round": 23},
 }
 
 func _ready() -> void:
