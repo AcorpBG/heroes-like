@@ -24,6 +24,24 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `content-clauseworks-beacon-wardens-production-line-10184`. Clauseworks Counterclaim's Beacon Wardens now field the count-preserving production Embercourt T1-T3 line at exact `6/7/2`. Focused public BattleRules evidence proves Counter-Ambush Flare, reach/brace, and volley, 142 versus 137 stack health, normal three-round/69% and hard four-round/42% standard victories, zero invalid orders, and independent legacy four-round/45% and three-round/55% controls. Live Clauseworks and nine-chapter Frontier Claims flows, save/resume, outcomes, guarded resources, 24-scenario/77-encounter queue `829808c9`, unit abilities, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Adjacent fronts, shared content/rules, packaged interaction, broad balance, certification, signing/publication, whole-game validation, and release readiness remain unchanged or unclaimed. Select the next tracker-approved source-backed slice.
+  id: `content-clauseworks-beacon-wardens-production-line-10184`
+
+  Implemented boundary:
+  - migrate only `clauseworks_beacon_wardens` from six legacy Ember Archers, seven River Guards, and two Citadel Pikewards to six production Lantern Sappers, seven Fordhook Cadets, and two Bargebow Crews;
+  - prove the public battle payload exposes Counter-Ambush Flare, reach/brace, and volley while retaining standard player victories against an independent legacy `6/7/2` control;
+  - retain encounter/army identity, placement, high difficulty, seed, objective, adjacent fronts, scenario/session/save/campaign authority, and every shared unit/rule record exactly.
+
+  Completion criteria:
+  - focused runtime proves exact production ids/counts, 142 versus 137 stack health, normal three-round/69% and hard four-round/42% standard victories, zero invalid orders, and independent legacy normal four-round/45% and hard three-round/55% controls;
+  - the live Clauseworks chapter preserves all three encounter fronts, guarded resources, town/economy, save/resume, reachable victory/defeat, campaign progression/import, and adjacent-front authority;
+  - active scenario breadth remains complete with zero stalls or invalid orders and no high-priority tuning item; Embercourt unit ability and core compatibility remain green;
+  - repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+  Non-goals:
+  - do not change Clauseworks Archive Wardens or Bridge Levies, counts beyond exact `6/7/2`, shared unit stats/abilities, BattleRules, BattleAiRules, player army, rewards/objectives/routes, difficulty thresholds, save schema, Native RMG, or packaging behavior;
+  - do not claim broad faction balance, packaged encounter interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game validation, or release readiness.
+
 - Completed implementation slice: `content-glassfen-glasswing-sortie-production-line-10184`. Glassfen Breakers' placement-owned Glasswing Sortie now fields four production Prism Adepts, four production Shard Wardens, and one production Mirror Duelist. Focused public BattleRules evidence proves volley/shielding/reach/backstab, 83 versus 84 stack health, normal three-round/45% and hard three-round/72% standard defeats, zero invalid orders, and independent legacy four-round/42% and three-round/74% controls. Live save/resume, reachable victory/defeat, campaign-progression isolation, guarded rare-exchange and adjacent-front authority, 24-scenario/77-encounter queue `829808c9`, unit abilities, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Other fronts, shared content/rules, packaged interaction, broad balance, certification, signing/publication, whole-game validation, and release readiness remain unchanged or unclaimed. Select the next tracker-approved source-backed slice.
   id: `content-glassfen-glasswing-sortie-production-line-10184`
 
