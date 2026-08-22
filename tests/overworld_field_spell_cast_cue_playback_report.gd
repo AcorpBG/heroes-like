@@ -40,6 +40,7 @@ func _fail(message: String, original_window_size: Vector2i, original_reduced_mot
 
 func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 	PresentationAudio.validation_reset()
+	UiAudio.validation_reset()
 	get_window().size = viewport_size
 	await get_tree().process_frame
 	await get_tree().process_frame
@@ -179,15 +180,39 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 	)
 
 	var failed_authority_before: Dictionary = live_session.to_dict()
+	var ui_audio_before_failure: Array = UiAudio.validation_records()
 	var failed_result: Dictionary = shell.validation_cast_overworld_spell("spell_missing")
 	await get_tree().process_frame
 	var failed_presentation := _spell_presentation(shell)
+	var ui_audio_after_failure: Array = UiAudio.validation_records()
+	var invalid_record: Dictionary = ui_audio_after_failure[-1] if ui_audio_after_failure.size() == ui_audio_before_failure.size() + 1 and ui_audio_after_failure[-1] is Dictionary else {}
+	var invalid_audio_exact: bool = (
+		ui_audio_after_failure.slice(0, ui_audio_before_failure.size()) == ui_audio_before_failure
+		and String(invalid_record.get("cue_id", "")) == "ui_invalid"
+		and String(invalid_record.get("source", "")) == "OverworldShell._record_result_feedback"
+		and bool(invalid_record.get("played", false))
+		and String(invalid_record.get("playback_source", "")) == "imported_wav"
+		and String(invalid_record.get("asset_path", "")) == "res://art/audio/runtime/ui/invalid.wav"
+		and String(invalid_record.get("role", "")) == "invalid_action"
+		and int(invalid_record.get("duration_msec", 0)) == 150
+		and int(invalid_record.get("stream_mix_rate", 0)) == 44100
+		and bool(invalid_record.get("stream_stereo", false))
+		and int(invalid_record.get("stream_loop_mode", -1)) == AudioStreamWAV.LOOP_DISABLED
+		and int(invalid_record.get("imported_asset_count", 0)) == 1
+		and int(invalid_record.get("generated_fallback_count", -1)) == 0
+		and Dictionary(invalid_record.get("metadata", {})) == {
+			"kind": "cast",
+			"feedback_kind": "blocked",
+			"message": String(failed_result.get("message", "")),
+		}
+	)
 	var failed_cast_published_nothing: bool = (
 		not bool(failed_result.get("ok", true))
 		and int(failed_presentation.get("serial", 0)) == serial
 		and not bool(failed_presentation.get("active", true))
 		and live_session.to_dict() == failed_authority_before
 		and PresentationAudio.validation_records() == audio_records
+		and invalid_audio_exact
 	)
 
 	var row := {
@@ -203,6 +228,8 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		"refresh_exact": refresh_exact,
 		"completion_exact": completion_exact,
 		"failed_cast_published_nothing": failed_cast_published_nothing,
+		"failed_invalid_audio_exact": invalid_audio_exact,
+		"failed_invalid_audio_record": invalid_record,
 		"session_matches_independent_control": live_after == control.to_dict(),
 		"skipped": skipped,
 		"settle_frames": settle_frames,
@@ -267,6 +294,7 @@ func _finish_case(shell: Node, result: Dictionary) -> Dictionary:
 		shell.queue_free()
 		await get_tree().process_frame
 	PresentationAudio.validation_reset()
+	UiAudio.validation_reset()
 	return result
 
 func _audio_record_exact(snapshot: Dictionary, record: Dictionary, cue_id: String, asset_path: String, role: String, source: String, duration_msec: int) -> bool:

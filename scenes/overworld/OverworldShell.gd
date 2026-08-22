@@ -6681,6 +6681,12 @@ func _record_result_feedback(kind: String, result: Dictionary, fallback: String 
 	if not recap.is_empty() and String(recap.get("cue_text", "")).strip_edges() != "":
 		message = String(recap.get("cue_text", ""))
 	_record_action_feedback(feedback_kind, message, fallback, recap)
+	if feedback_kind == "blocked":
+		UiAudio.play_invalid("OverworldShell._record_result_feedback", {
+			"kind": kind,
+			"feedback_kind": feedback_kind,
+			"message": message,
+		})
 
 func _record_action_feedback(kind: String, message: String, fallback: String = "", recap: Dictionary = {}) -> void:
 	if recap.is_empty():
