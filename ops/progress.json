@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Aurora Ballista now has one original transparent Sunvault crystalline siege-engine source and four reproducible existing-path runtime derivatives. Four authored encounters, public abilities, focused BattleBoard presentation, distinct Aurora Bastions portrait, reproducibility, compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
+  "currentNotes": "Resonant Choristers now have one original transparent Sunvault resonance-support ensemble source and four reproducible existing-path runtime derivatives. Three authored encounters, public abilities, focused BattleBoard presentation, reproducibility, compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-sunvault-aurora-ballista-curated-character-source-10184",
-  "currentSliceId": "art-sunvault-aurora-ballista-curated-character-source-10184",
-  "currentSliceNotes": "Completed one original transparent Aurora Ballista source and four existing-path runtime derivatives while preserving four authored encounter rosters, public volley/formation_guard authority, the distinct unit_sunvault_aurora_ballistae portrait, and all 408 non-target runtime payloads byte-exact.",
+  "currentSlice": "art-sunvault-resonant-choristers-curated-character-source-10184",
+  "currentSliceId": "art-sunvault-resonant-choristers-curated-character-source-10184",
+  "currentSliceNotes": "Completed one original transparent Resonant Choristers source and four existing-path runtime derivatives while preserving three authored encounter rosters, public resonance_relay/harry authority, and all 408 non-target runtime payloads byte-exact.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Sunvault Aurora Ballista Curated Character Source",
-  "currentSliceUpdatedAt": "2026-08-22T15:39:07Z",
+  "currentSliceTitle": "Sunvault Resonant Choristers Curated Character Source",
+  "currentSliceUpdatedAt": "2026-08-22T15:59:43Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19847,8 +19847,28 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next tracker-approved source-backed release-readiness slice; do not infer broad/final art or release readiness from this completed character-source increment.",
-  "notes": "Completed the Aurora Ballista character-source slice with one original transparent siege-engine source and four reproducible runtime derivatives. Four authored encounter rosters and public volley/formation_guard authority remain exact, and the distinct unit_sunvault_aurora_ballistae portrait is preserved; focused, compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
+  "notes": "Completed the Resonant Choristers character-source slice with one original transparent ensemble source and four reproducible runtime derivatives. Three authored encounter rosters and public resonance_relay/harry authority remain exact; focused, compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
   "plannedSlices": [
+    {
+      "id": "art-sunvault-resonant-choristers-curated-character-source-10184",
+      "title": "Sunvault Resonant Choristers Curated Character Source",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md", "docs/animation-battle-troop-state-contract-report.md", "docs/factions-content-bible.md"],
+      "purpose": "Replace the live production unit_sunvault_resonant_choristers generated emblem with one character-readable original Sunvault resonance-support source and exact reproducible existing-path runtime derivatives.",
+      "implementationTargets": ["art/units/source/curated/unit_sunvault_resonant_choristers.png", "art/units/portraits/unit_sunvault_resonant_choristers.png", "art/units/battle_icons/unit_sunvault_resonant_choristers.png", "art/units/overworld_icons/unit_sunvault_resonant_choristers.png", "art/animation/runtime/units/unit_sunvault_resonant_choristers.png", "content/unit_art_manifest.json", "content/unit_animation_manifest.json", "tools/generate_unit_art_assets.py", "tests/unit_sunvault_resonant_choristers_curated_art_report.gd", "tests/unit_sunvault_resonant_choristers_curated_art_report.tscn", "tests/unit_art_reproducibility_report.py", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"unit_id": "unit_sunvault_resonant_choristers", "tier": 4, "role": "ranged", "ability_ids": ["resonance_relay", "harry"], "active_encounter_count": 3, "live_scenario_count": 3, "army_group_count": 0, "town_count": 0, "source_size": [512,512], "portrait_size": [384,512], "battle_icon_size": [160,160], "overworld_icon_size": [96,96], "animation_sheet_size": [256,896], "animation_state_count": 14, "frames_per_state": 4, "other_units_must_remain_byte_exact": 102, "final_sprite_import": false},
+      "completionCriteria": ["One original transparent Resonant Choristers source follows Sunvault crystalline resonance-support identity and owns exact manifest provenance plus reproducible portrait, battle-icon, overworld-icon, and fourteen-state/four-frame animation-sheet derivatives", "All three live authored encounter payloads preserve exact ids/counts and public resonance_relay/harry abilities while a representative BattleBoard loads the exact icon/sheet and all 56 target frames remain visible", "Only one source, four target runtime payloads, and one record in each manifest change; all four surfaces for the other 102 units remain byte-exact; full regeneration/reproducibility, compatibility, validator/editor, Linux, and Windows startup gates pass"],
+      "nonGoals": ["Another unit/tier, army/encounter counts, unit stats/abilities/content, BattleRules/BattleAiRules, balance tuning, animation timing/order, save schema, rendering settings, Native RMG, or packaging behavior", "Broad/final art, packaged battle interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game validation, or release readiness"],
+      "createdAt": "2026-08-22T15:43:02Z",
+      "startedAt": "2026-08-22T15:43:02Z",
+      "updatedAt": "2026-08-22T15:59:43Z",
+      "completedAt": "2026-08-22T15:59:43Z",
+      "notes": "Completed with one original transparent Sunvault resonance-support ensemble source and four exact existing-path runtime derivatives. Three authored encounter payloads retain exact ids/counts and public resonance_relay/harry authority; the Fogchart Mirror Lancers BattleBoard loads one exact curated entry and all 56 target frames are visible. Two regeneration runs match all 412 assets and both manifests byte-for-byte; only four target runtime payloads changed and all 408 non-target payloads remained exact. Fifteen compatibility owners, core, validator/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged battle interaction, certification, signing/publication, broad/final art, whole-game validation, and release readiness remain unclaimed.",
+      "remainingWork": "No work remains in this slice. Select the next tracker-approved source-backed release-readiness slice; broad/final art, packaged battle interaction, certification, signing/publication, whole-game validation, and overall release readiness remain open."
+    },
     {
       "id": "art-sunvault-aurora-ballista-curated-character-source-10184",
       "title": "Sunvault Aurora Ballista Curated Character Source",
