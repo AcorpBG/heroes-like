@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Citadel Pikeward now has one original transparent Embercourt civic fortress-line source and four reproducible existing-path runtime derivatives. Exact authored rosters, public abilities, focused BattleBoard presentation, reproducibility, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine startup gates pass; broad release claims remain excluded.",
+  "currentNotes": "Shard Guard now has one original transparent Sunvault crystalline shield-infantry source and four reproducible existing-path runtime derivatives. Seven authored encounters, public abilities, focused BattleBoard presentation, distinct Shard Wardens identity, reproducibility, compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-embercourt-citadel-pikeward-curated-character-source-10184",
-  "currentSliceId": "art-embercourt-citadel-pikeward-curated-character-source-10184",
-  "currentSliceNotes": "Completed one original transparent Citadel Pikeward source and four existing-path runtime derivatives while preserving all ten authored encounter rosters, public reach/formation_guard authority, and all 408 non-target runtime payloads byte-exact.",
+  "currentSlice": "art-sunvault-shard-guard-curated-character-source-10184",
+  "currentSliceId": "art-sunvault-shard-guard-curated-character-source-10184",
+  "currentSliceNotes": "Completed one original transparent Shard Guard source and four existing-path runtime derivatives while preserving seven authored encounter rosters, public brace/shielding authority, the distinct curated unit_sunvault_shard_wardens, and all 408 non-target runtime payloads byte-exact.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Embercourt Citadel Pikeward Curated Character Source",
-  "currentSliceUpdatedAt": "2026-08-22T14:23:43Z",
+  "currentSliceTitle": "Sunvault Shard Guard Curated Character Source",
+  "currentSliceUpdatedAt": "2026-08-22T14:47:51Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19847,8 +19847,28 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next tracker-approved source-backed release-readiness slice; do not infer broad/final art or release readiness from this completed character-source increment.",
-  "notes": "Completed the Citadel Pikeward character-source slice with one original transparent source and four reproducible runtime derivatives. All ten authored encounter rosters and public reach/formation_guard authority remain exact; focused BattleBoard, reproducibility, compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
+  "notes": "Completed the Shard Guard character-source slice with one original transparent source and four reproducible runtime derivatives. Seven authored encounter rosters and public brace/shielding authority remain exact, and the distinct curated unit_sunvault_shard_wardens is preserved; focused, compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
   "plannedSlices": [
+    {
+      "id": "art-sunvault-shard-guard-curated-character-source-10184",
+      "title": "Sunvault Shard Guard Curated Character Source",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md", "docs/animation-battle-troop-state-contract-report.md", "docs/factions-content-bible.md"],
+      "purpose": "Replace the live unit_shard_guard abstract emblem with one character-readable original Sunvault crystalline shield-infantry source and exact reproducible existing-path runtime derivatives.",
+      "implementationTargets": ["art/units/source/curated/unit_shard_guard.png", "art/units/portraits/unit_shard_guard.png", "art/units/battle_icons/unit_shard_guard.png", "art/units/overworld_icons/unit_shard_guard.png", "art/animation/runtime/units/unit_shard_guard.png", "content/unit_art_manifest.json", "content/unit_animation_manifest.json", "tools/generate_unit_art_assets.py", "tests/unit_sunvault_shard_guard_curated_art_report.gd", "tests/unit_sunvault_shard_guard_curated_art_report.tscn", "tests/unit_art_reproducibility_report.py", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"unit_id": "unit_shard_guard", "distinct_curated_unit_id": "unit_sunvault_shard_wardens", "tier": 1, "role": "melee", "ability_ids": ["brace", "shielding"], "active_encounter_count": 7, "live_scenario_count": 4, "army_group_count": 8, "town_count": 2, "source_size": [512,512], "portrait_size": [384,512], "battle_icon_size": [160,160], "overworld_icon_size": [96,96], "animation_sheet_size": [256,896], "animation_state_count": 14, "frames_per_state": 4, "other_units_must_remain_byte_exact": 102, "final_sprite_import": false},
+      "completionCriteria": ["One original transparent Shard Guard source follows Sunvault crystalline phalanx identity and owns exact manifest provenance plus reproducible portrait, battle-icon, overworld-icon, and fourteen-state/four-frame animation-sheet derivatives", "All seven live authored encounter payloads preserve exact ids/counts and public brace/shielding abilities while a representative BattleBoard loads the exact icon/sheet and all 56 target frames remain visible", "Only one source, four target runtime payloads, and one record in each manifest change; all four surfaces for the other 102 units remain byte-exact; full regeneration/reproducibility, compatibility, validator/editor, Linux, and Windows startup gates pass"],
+      "nonGoals": ["unit_sunvault_shard_wardens or another unit/tier, army/encounter counts, unit stats/abilities/content, BattleRules/BattleAiRules, balance tuning, animation timing/order, save schema, rendering settings, Native RMG, or packaging behavior", "Broad/final art, packaged battle interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game validation, or release readiness"],
+      "createdAt": "2026-08-22T14:28:24Z",
+      "startedAt": "2026-08-22T14:28:24Z",
+      "updatedAt": "2026-08-22T14:47:51Z",
+      "completedAt": "2026-08-22T14:47:51Z",
+      "notes": "Completed with one original transparent Sunvault crystalline shield-infantry source and four exact existing-path runtime derivatives. Seven authored encounter payloads retain exact ids/counts and public brace/shielding authority; the Fogchart Relay Pickets BattleBoard loads one exact curated Shard Guard entry and all 56 target frames are visible, while unit_sunvault_shard_wardens remains a distinct curated record. Two regeneration runs match all 412 assets and both manifests byte-for-byte; only the four target runtime payloads changed and all 408 non-target payloads remained exact. Sunvault encounter/balance, Fogchart, animation/navigation/cohort, core, validator/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged battle interaction, certification, signing/publication, broad/final art, whole-game validation, and release readiness remain unclaimed.",
+      "remainingWork": "No work remains in this slice. Select the next tracker-approved source-backed release-readiness slice; broad/final art, packaged battle interaction, certification, signing/publication, whole-game validation, and overall release readiness remain open."
+    },
     {
       "id": "art-embercourt-citadel-pikeward-curated-character-source-10184",
       "title": "Embercourt Citadel Pikeward Curated Character Source",
@@ -94195,7 +94215,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "art_embercourt_citadel_pikeward_curated_character_source_completed",
+  "result": "art_sunvault_shard_guard_curated_character_source_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -94296,9 +94316,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Citadel Pikeward now has one original transparent character source and four reproducible runtime derivatives; all ten authored encounter rosters/public abilities and all 408 non-target payloads remain exact, with focused, compatibility, static/editor, and bounded Linux/Windows startup gates green.",
+  "summary": "Shard Guard now has one original transparent character source and four reproducible runtime derivatives; seven authored encounter rosters/public abilities, distinct Shard Wardens identity, and all 408 non-target payloads remain exact, with focused, compatibility, static/editor, and bounded Linux/Windows startup gates green.",
   "taskId": "10184",
-  "updatedAt": "2026-08-22T14:23:43Z",
+  "updatedAt": "2026-08-22T14:47:51Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

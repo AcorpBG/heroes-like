@@ -296,6 +296,9 @@ FORDHOOK_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_embercourt_fordh
 CITADEL_PIKEWARD_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_citadel_pikeward.png"
 CITADEL_PIKEWARD_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_embercourt_citadel_pikeward_curated_art_report.gd"
 CITADEL_PIKEWARD_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_embercourt_citadel_pikeward_curated_art_report.tscn"
+SHARD_GUARD_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_shard_guard.png"
+SHARD_GUARD_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_sunvault_shard_guard_curated_art_report.gd"
+SHARD_GUARD_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_sunvault_shard_guard_curated_art_report.tscn"
 SCRIP_HAULERS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_brasshollow_scrip_haulers.png"
 SCRIP_HAULERS_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_brasshollow_scrip_haulers_curated_art_report.gd"
 SCRIP_HAULERS_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_brasshollow_scrip_haulers_curated_art_report.tscn"
@@ -42271,6 +42274,9 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         CITADEL_PIKEWARD_CURATED_SOURCE_PATH,
         CITADEL_PIKEWARD_CURATED_ART_REPORT_SCRIPT_PATH,
         CITADEL_PIKEWARD_CURATED_ART_REPORT_SCENE_PATH,
+        SHARD_GUARD_CURATED_SOURCE_PATH,
+        SHARD_GUARD_CURATED_ART_REPORT_SCRIPT_PATH,
+        SHARD_GUARD_CURATED_ART_REPORT_SCENE_PATH,
         SCRIP_HAULERS_CURATED_SOURCE_PATH,
         SCRIP_HAULERS_CURATED_ART_REPORT_SCRIPT_PATH,
         SCRIP_HAULERS_CURATED_ART_REPORT_SCENE_PATH,
@@ -42432,6 +42438,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
 
     fordhook_unit_id = "unit_embercourt_fordhook_cadets"
     citadel_pikeward_unit_id = "unit_citadel_pikeward"
+    shard_guard_unit_id = "unit_shard_guard"
     scrip_haulers_unit_id = "unit_brasshollow_scrip_haulers"
     rivet_hounds_unit_id = "unit_brasshollow_rivet_hounds"
     furnace_pavis_unit_id = "unit_brasshollow_furnace_pavis_teams"
@@ -42469,6 +42476,14 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         hashlib.sha256(CITADEL_PIKEWARD_CURATED_SOURCE_PATH.read_bytes()).hexdigest() == citadel_pikeward_source_sha256,
         errors,
         "Citadel Pikeward curated character source bytes drifted",
+    )
+    shard_guard_source_res_path = "res://art/units/source/curated/unit_shard_guard.png"
+    shard_guard_source_sha256 = "03f31b58e721b917e36394effbaf8b6fc23d0b1b40a6ebe38dc2e78f4de59c67"
+    ensure(png_size(SHARD_GUARD_CURATED_SOURCE_PATH) == (512, 512), errors, "Shard Guard curated character source must be a 512x512 PNG")
+    ensure(
+        hashlib.sha256(SHARD_GUARD_CURATED_SOURCE_PATH.read_bytes()).hexdigest() == shard_guard_source_sha256,
+        errors,
+        "Shard Guard curated character source bytes drifted",
     )
     scrip_haulers_source_res_path = "res://art/units/source/curated/unit_brasshollow_scrip_haulers.png"
     scrip_haulers_source_sha256 = "759022e21b7781df3c88ba853b32905b52a820cafe45d2814a2006629d26e028"
@@ -42566,14 +42581,14 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         if isinstance(record, dict) and str(record.get("art_source_kind", "")) == "curated_original_character_v1"
     ]
     ensure(
-        sorted(str(record.get("unit_id", "")) for record in curated_art_records) == sorted([fordhook_unit_id, citadel_pikeward_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id]),
+        sorted(str(record.get("unit_id", "")) for record in curated_art_records) == sorted([fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id]),
         errors,
-        "Exactly Fordhook, the Brasshollow T1-T3 units, the River Pass starter and Ghoul Grove core, and the Mireclaw, Sunvault, and Thornwake T1-T3 art records may use the curated character-source branch",
+        "Exactly the approved twenty-five units, including distinct Shard Guard and Shard Wardens records, may use the curated character-source branch",
     )
     ensure(
-        sorted(str(record.get("unit_id", "")) for record in curated_animation_records) == sorted([fordhook_unit_id, citadel_pikeward_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id]),
+        sorted(str(record.get("unit_id", "")) for record in curated_animation_records) == sorted([fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id]),
         errors,
-        "Exactly Fordhook, the Brasshollow T1-T3 units, the River Pass starter and Ghoul Grove core, and the Mireclaw, Sunvault, and Thornwake T1-T3 animation records may use the curated character-source branch",
+        "Exactly the approved twenty-five units, including distinct Shard Guard and Shard Wardens animation records, may use the curated character-source branch",
     )
     for curated_record, label in (
         (records_by_unit_id.get(fordhook_unit_id, {}), "art"),
@@ -42587,6 +42602,12 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     ):
         ensure(str(curated_record.get("curated_source", "")) == citadel_pikeward_source_res_path, errors, f"Citadel Pikeward {label} manifest curated source path drifted")
         ensure(str(curated_record.get("curated_source_sha256", "")) == citadel_pikeward_source_sha256, errors, f"Citadel Pikeward {label} manifest curated source hash drifted")
+    for curated_record, label in (
+        (records_by_unit_id.get(shard_guard_unit_id, {}), "art"),
+        (animation_records_by_unit_id.get(shard_guard_unit_id, {}), "animation"),
+    ):
+        ensure(str(curated_record.get("curated_source", "")) == shard_guard_source_res_path, errors, f"Shard Guard {label} manifest curated source path drifted")
+        ensure(str(curated_record.get("curated_source_sha256", "")) == shard_guard_source_sha256, errors, f"Shard Guard {label} manifest curated source hash drifted")
     for curated_record, label in (
         (records_by_unit_id.get(scrip_haulers_unit_id, {}), "art"),
         (animation_records_by_unit_id.get(scrip_haulers_unit_id, {}), "animation"),
@@ -42693,6 +42714,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     "unit_mireclaw_mudglass_slingers",
     "unit_mireclaw_reedsnare_kin",
     "unit_river_guard",
+    "unit_shard_guard",
     "unit_sunvault_mirror_duelists",
     "unit_sunvault_prism_adepts",
     "unit_sunvault_shard_wardens",
@@ -42703,7 +42725,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     "unit_veilmourn_maskglass_corsairs",
     "unit_veilmourn_mourning_lanterns",
 }'''
-    ensure(generator_text.count(expected_curated_id_block) == 1, errors, "Unit art generator curated source id set must contain exactly the twenty-four approved units in stable order")
+    ensure(generator_text.count(expected_curated_id_block) == 1, errors, "Unit art generator curated source id set must contain exactly the twenty-five approved units in stable order")
     for required_branch in (
         '''if not preserve_authored_asset(unit_id, "portrait", portrait_path):
             if curated_source is None:
@@ -42850,6 +42872,73 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         'path="res://tests/unit_embercourt_citadel_pikeward_curated_art_report.gd"' in citadel_scene_text,
         errors,
         "Citadel Pikeward curated art report scene must own the exact focused script",
+    )
+    shard_guard_report_text = SHARD_GUARD_CURATED_ART_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'REPORT_ID := "UNIT_SUNVAULT_SHARD_GUARD_CURATED_ART_REPORT"',
+        'TARGET_IDS := ["unit_shard_guard"]',
+        'DISTINCT_CURATED_UNIT_ID := "unit_sunvault_shard_wardens"',
+        '"unit_id": "unit_shard_guard", "label": "Shard Guard", "ability_ids": ["brace", "shielding"]',
+        '"source_sha256": "03f31b58e721b917e36394effbaf8b6fc23d0b1b40a6ebe38dc2e78f4de59c67"',
+        '"portrait_sha256": "6ea66d1c7224a9f5d523504dc8bbc311c63f6880469986eb679d3de531f2df53"',
+        '"icon_sha256": "1c5e279a5707c3dce76cbec0291267f75820807a9d0bafa983c8f42a29bda599"',
+        '"overworld_icon_sha256": "5ae6c7123ab76955411ada8a67e4327ba7f92c34cc614a2fcfecbd5c31dd2393"',
+        '"sheet_sha256": "540e8261d2f85c135a9c1c0928d10a3c49c514cd7426337db34e5cbc46ac9f63"',
+        '"old_portrait_sha256": "ca321ced0a16fdca3b2b98cf5c93bef58a19c1b27b76923b0930b46b96b04698"',
+        '"old_icon_sha256": "d1f5b1e467be40f7e4a0c56c45f8596f80638bb438cb79a759117e90ab3b86b5"',
+        '"old_overworld_icon_sha256": "1526f08ab4608f93bf82a6296b6f580c166ca7c2793aa7425d457cd58bb56c5e"',
+        '"old_sheet_sha256": "4ade95c14dabdaa905e7e69e2769d87fb93b5848b0d8f74a5deb71e55c347b57"',
+        '"scenario_id": "prismhearth-watch", "placement_id": "prismhearth_relay_pickets", "army_id": "army_prismhearth_relay_pickets_watch"',
+        '"scenario_id": "prismhearth-watch", "placement_id": "prismhearth_halo_reserve", "army_id": "army_prismhearth_halo_reserve_watch"',
+        '"scenario_id": "daybreak-spire", "placement_id": "daybreak_array", "army_id": "army_daybreak_array_watch"',
+        '"scenario_id": "bellwake-wreck-claim", "placement_id": "bellwake_mirror_lancers", "army_id": "army_bellwake_mirror_lancers_watch"',
+        '"scenario_id": "bellwake-wreck-claim", "placement_id": "bellwake_aurora_battery", "army_id": "army_bellwake_aurora_battery_watch"',
+        '"scenario_id": "fogchart-mooring", "placement_id": "fogchart_relay_pickets", "army_id": "army_fogchart_relay_pickets"',
+        '"scenario_id": "fogchart-mooring", "placement_id": "fogchart_mirror_lancers", "army_id": "army_fogchart_mirror_lancers"',
+        'String(distinct_art.get("unit_id", "")) == DISTINCT_CURATED_UNIT_ID',
+        'String(distinct_art.get("curated_source", "")) == "res://art/units/source/curated/unit_sunvault_shard_wardens.png"',
+        '_validate_assets_and_provenance()',
+        'await _validate_live_encounters_and_board()',
+        'source.get_size() == Vector2i(512, 512)',
+        'portrait.get_size() == Vector2i(384, 512)',
+        'icon.get_size() == Vector2i(160, 160)',
+        'overworld_icon.get_size() == Vector2i(96, 96)',
+        'sheet.get_size() == Vector2i(256, 896)',
+        'int(source_alpha.get("transparent", 0)) > 50000 and int(source_alpha.get("visible", 0)) > 50000 and int(source_alpha.get("opaque", 0)) > 0',
+        'visible == FRAMES_PER_STATE and signatures.size() >= 2',
+        'OverworldRules.normalize_overworld_state(session)',
+        'BattleRulesScript.create_battle_payload(session, placement)',
+        '_battle_stack_contract(enemy_stacks) == spec["stacks"]',
+        '_battle_target_ability_contract(enemy_stacks) == expected_abilities',
+        'session.to_dict() == authority_before',
+        'String(spec["placement_id"]) == "fogchart_relay_pickets"',
+        'board.validation_unit_art_summary()',
+        'String(entry.get("battle_icon", "")) == String(unit_spec["icon_path"])',
+        'String(entry.get("animation_sheet", "")) == String(unit_spec["sheet_path"])',
+        'board_session.to_dict() == board_authority_before',
+        '"visible_frame_count": UNITS.size() * STATES.size() * FRAMES_PER_STATE',
+    ):
+        ensure(required_token in shard_guard_report_text, errors, f"Shard Guard curated art report is missing token {required_token}")
+    ensure(shard_guard_report_text.count('"scenario_id": ') == 9, errors, "Shard Guard focused report must own exactly seven encounter rows plus one detached result row and one runtime summary scenario id")
+    for forbidden_token in (
+        "draw_curated_portrait",
+        "draw_curated_overworld_icon",
+        "draw_curated_battle_icon",
+        "draw_curated_battle_troop_animation_sheet",
+        '"final_sprite_import": true',
+        "ContentService._unit_art_manifest",
+        "save_png",
+        "generate_unit_art_assets",
+        'placement[',
+        'army[',
+        'enemy_stacks[',
+    ):
+        ensure(forbidden_token not in shard_guard_report_text, errors, f"Shard Guard focused report must remain observation-only: {forbidden_token}")
+    shard_guard_scene_text = SHARD_GUARD_CURATED_ART_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure(
+        'path="res://tests/unit_sunvault_shard_guard_curated_art_report.gd"' in shard_guard_scene_text,
+        errors,
+        "Shard Guard curated art report scene must own the exact focused script",
     )
     scrip_report_text = SCRIP_HAULERS_CURATED_ART_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
