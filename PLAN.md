@@ -24,6 +24,16 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `art-curated-unit-cross-surface-identity-10184`. Fordhook Cadets and Brasshollow Scrip Haulers, Rivet Hounds, and Furnace Pavis Teams now use their existing original transparent character sources across BattleBoard, TownShell recruitment portraits, and OverworldMap encounter icons. Exactly eight portrait/overworld payloads changed; all 206 battle payloads and every surface for the other 99 units remain byte-exact, while all 412 assets and both manifests reproduce. Focused live TownShell/Overworld loading, unit-art/runtime/Town/animation/core compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. `final_sprite_import` remains false; new source art, broad/final art, packaged interaction, certification, signing/publication, whole-game validation, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
+  id: `art-curated-unit-cross-surface-identity-10184`
+
+  Completion criteria:
+  - the generator reproducibly derives exact 384x512 portraits and 96x96 overworld icons from each curated source while preserving name/tier/role readability and distinct silhouettes;
+  - live TownShell recruitment rows and OverworldMap encounter rendering load the exact new paths for the four units; their battle icons/sheets and the other 99 units' four surfaces remain byte-exact;
+  - full 412-asset regeneration/reproducibility, focused runtime, unit-art/runtime compatibility, validator/editor, Linux, and Windows startup gates pass without gameplay/content or save changes.
+
+  Non-goals: new source art, another unit, battle icon/sheet changes, broad/final art, packaged encounter interaction, controller/native hardware, AT-SPI/UIA, signing/publication, whole-game validation, or release readiness.
+
 - Completed implementation slice: `art-brasshollow-early-ladder-curated-sprite-source-10184`. Brasshollow's live T1-T3 battle-line presentation is now character-readable: Rivet Hounds use an original low mechanical-skirmisher source, while Furnace Pavis Teams use an original shield-dominant operator source. Their four existing-path battle icon/sheet derivatives are reproducible, and full regeneration is byte-idempotent across all 412 unit-art payloads and both manifests; the other 101 unit pairs remain exact. Focused BattleBoard loading, all 112 target frames, ability preservation, unit-art/animation/readiness/Battle-event/core compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. `final_sprite_import` remains false; portraits/overworld icons, broad/final art, packaged battle interaction, certification, signing/publication, whole-game validation, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
   id: `art-brasshollow-early-ladder-curated-sprite-source-10184`
 

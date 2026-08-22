@@ -300,6 +300,8 @@ RIVET_HOUNDS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_
 FURNACE_PAVIS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_brasshollow_furnace_pavis_teams.png"
 BRASSHOLLOW_EARLY_LADDER_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_brasshollow_early_ladder_curated_art_report.gd"
 BRASSHOLLOW_EARLY_LADDER_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_brasshollow_early_ladder_curated_art_report.tscn"
+UNIT_CURATED_CROSS_SURFACE_IDENTITY_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_curated_cross_surface_identity_report.gd"
+UNIT_CURATED_CROSS_SURFACE_IDENTITY_REPORT_SCENE_PATH = ROOT / "tests" / "unit_curated_cross_surface_identity_report.tscn"
 UNIT_PRODUCTION_READINESS_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_production_readiness_report.gd"
 UNIT_PRODUCTION_READINESS_REPORT_SCENE_PATH = ROOT / "tests" / "unit_production_readiness_report.tscn"
 UNIT_ABILITY_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_ability_runtime_report.gd"
@@ -42233,6 +42235,12 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         SCRIP_HAULERS_CURATED_SOURCE_PATH,
         SCRIP_HAULERS_CURATED_ART_REPORT_SCRIPT_PATH,
         SCRIP_HAULERS_CURATED_ART_REPORT_SCENE_PATH,
+        RIVET_HOUNDS_CURATED_SOURCE_PATH,
+        FURNACE_PAVIS_CURATED_SOURCE_PATH,
+        BRASSHOLLOW_EARLY_LADDER_CURATED_ART_REPORT_SCRIPT_PATH,
+        BRASSHOLLOW_EARLY_LADDER_CURATED_ART_REPORT_SCENE_PATH,
+        UNIT_CURATED_CROSS_SURFACE_IDENTITY_REPORT_SCRIPT_PATH,
+        UNIT_CURATED_CROSS_SURFACE_IDENTITY_REPORT_SCENE_PATH,
         CONTENT_SERVICE_PATH,
         BATTLE_BOARD_VIEW_SCRIPT_PATH,
         OVERWORLD_MAP_VIEW_SCRIPT_PATH,
@@ -42474,7 +42482,9 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "CURATED_CHARACTER_SOURCE_IDS",
         '"unit_embercourt_fordhook_cadets"',
         "load_curated_character_source",
+        "draw_curated_portrait",
         "draw_curated_battle_icon",
+        "draw_curated_overworld_icon",
         "draw_curated_battle_troop_animation_sheet",
         '"art_source_kind": "curated_original_character_v1"',
         "curated_source_sha256",
@@ -42489,6 +42499,19 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     "unit_embercourt_fordhook_cadets",
 }'''
     ensure(generator_text.count(expected_curated_id_block) == 1, errors, "Unit art generator curated source id set must contain exactly Fordhook and the Brasshollow T1-T3 line in stable order")
+    for required_branch in (
+        '''if not preserve_authored_asset(unit_id, "portrait", portrait_path):
+            if curated_source is None:
+                draw_portrait(unit, palette, motif, initials, portrait_path)
+            else:
+                draw_curated_portrait(unit, palette, curated_source, portrait_path)''',
+        '''if not preserve_authored_asset(unit_id, "overworld_icon", overworld_path):
+            if curated_source is None:
+                draw_overworld_icon(unit, palette, motif, initials, overworld_path)
+            else:
+                draw_curated_overworld_icon(unit, palette, curated_source, overworld_path)''',
+    ):
+        ensure(generator_text.count(required_branch) == 1, errors, "Unit art generator must preserve authored assets before the exact curated portrait/overworld branch")
     ensure(
         'if str(state.get("state", "")) == "surrender_stand_down":' in generator_text
         and 'render_state["family"] = "retreat"' in generator_text,
@@ -42510,7 +42533,9 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "matching_asset_count",
         "matching_manifest_count",
         "load_curated_character_source",
+        "draw_curated_portrait",
         "draw_curated_battle_icon",
+        "draw_curated_overworld_icon",
         "draw_curated_battle_troop_animation_sheet",
         "curated_source_provenance",
         "preserve_authored_asset",
@@ -42623,6 +42648,64 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         'path="res://tests/unit_brasshollow_early_ladder_curated_art_report.gd"' in brasshollow_early_scene_text,
         errors,
         "Brasshollow early-ladder curated art report scene must own the exact focused script",
+    )
+
+    cross_surface_report_text = UNIT_CURATED_CROSS_SURFACE_IDENTITY_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'REPORT_ID := "UNIT_CURATED_CROSS_SURFACE_IDENTITY_REPORT"',
+        '"unit_id": "unit_embercourt_fordhook_cadets"',
+        '"portrait_sha256": "ea1cce2c724f85b39f44756a1cea689c6ed75cc2d9ca9a5143ed2803d6375d07"',
+        '"old_portrait_sha256": "936b792f1aadd9d489681492aa34b204c36ecfb0aaa325ed08264ee7528e00b8"',
+        '"overworld_sha256": "5b610954d52052f7e04e056af4ab84adf84a70bdb056ff711f4218e30472ed15"',
+        '"old_overworld_sha256": "f5f3c0df9c8abac63cdcf9d32d4ab2c09fa71eb92c5458d9815ebb7f1e57c641"',
+        '"battle_icon_sha256": "9ed1ac039d88abfd06d83ad1bcf7e5b970df999d245010be651b3cc3b96e1d87"',
+        '"battle_sheet_sha256": "1aa44e4b02fd4177b0d9980f19fe3d00c38865083e96fab1bec0166a6b6382a8"',
+        '"unit_id": "unit_brasshollow_scrip_haulers"',
+        '"portrait_sha256": "6c56e7484656c5badd866ae20fca2f12e7c4dee6497566b5d2a8f4996aa51a6c"',
+        '"old_portrait_sha256": "60a64abbe720dea5cad32fe903b7eb78174b01f898f1bd3c1b75b8db0dba8b76"',
+        '"overworld_sha256": "a82851c7a7bdbe50eec799e7afdadefaa7a0c491da54e19b99acc06a6f97559e"',
+        '"old_overworld_sha256": "9159c57f3e948e4cf946619e8501a7d6b3377f3f3503bf079958981cb220076f"',
+        '"battle_icon_sha256": "60ce46eee94ee9c180155bdcdc3fdb46e9ef4940e058007d36225856d4877c8c"',
+        '"battle_sheet_sha256": "2a20a26526eca2e50591c45cb4f0a07cfebfb310813cbf16832f1a59a6a052ae"',
+        '"unit_id": "unit_brasshollow_rivet_hounds"',
+        '"portrait_sha256": "45f5643f184395d443d2dff024611f6babf5f56549647155599bdfda2f0b24c8"',
+        '"old_portrait_sha256": "276871efb5cf50af0436adecde871d0293e0fa5c2532c68c9283a1721cf9c327"',
+        '"overworld_sha256": "0011ab3afe971268bf0f425fff22413c0588d42b32cb72d0d602aa4189df6819"',
+        '"old_overworld_sha256": "296733a2a609c45e0fc17e12c7161179e1b84bd0b0250d3002b01820c89e1a4f"',
+        '"battle_icon_sha256": "9a03cbf4ca07e1593d2f970373990da1b2e9774bbb3a07c7e427fcb76989c305"',
+        '"battle_sheet_sha256": "a21781b53811e4236e573d5d73cdef492ab30bc890360d18c15f4fd1172d5a0e"',
+        '"unit_id": "unit_brasshollow_furnace_pavis_teams"',
+        '"portrait_sha256": "100d509cbc5eadee35d0354532cc9d5a3192ef856d73cf62c93f947aa3595e2e"',
+        '"old_portrait_sha256": "20ef7fb91c6c085a0e494a3dd39ba08de4a4ebec8f3ef26c35f663c6ca0cc699"',
+        '"overworld_sha256": "e8b2a459ff0b50d10ca9ea7ea283e02c8389521595d375e5e2a3386c0270242f"',
+        '"old_overworld_sha256": "d9e857d799eba60abbb36d6c9956b1d654864b42e4ad6873735d3cd2f552da2f"',
+        '"battle_icon_sha256": "c8219bbc6e385dad5daedf72565f958205c588a1192588db3911a7d94f88e8ec"',
+        '"battle_sheet_sha256": "5ff92a28cdfba8fb62af0e8171fa9f6d8668bb4b9257c8c5778c718dc7a89bbe"',
+        '_report["town"].append(await _validate_town_case("faction_embercourt", ["unit_embercourt_fordhook_cadets"]))',
+        '_report["town"].append(await _validate_town_case("faction_brasshollow", ["unit_brasshollow_scrip_haulers", "unit_brasshollow_rivet_hounds", "unit_brasshollow_furnace_pavis_teams"]))',
+        'var summary: Dictionary = shell.call("validation_unit_art_summary")',
+        'int(summary.get("recruit_action_count", 0)) == 7',
+        'var summary: Dictionary = view.validation_unit_art_summary()',
+        'int(summary.get("overworld_icon_loaded_count", 0)) == UNITS.size()',
+        'String(art.get("art_source_kind", "")) == "curated_original_character_v1"',
+        'String(animation.get("art_source_kind", "")) == "curated_original_character_v1"',
+    ):
+        ensure(required_token in cross_surface_report_text, errors, f"Curated cross-surface identity report is missing token {required_token}")
+    for forbidden_token in (
+        "draw_curated_portrait",
+        "draw_curated_overworld_icon",
+        "draw_curated_battle_icon",
+        "draw_curated_battle_troop_animation_sheet",
+        '"final_sprite_import": true',
+        "ContentService._unit_art_manifest",
+        "save_png",
+    ):
+        ensure(forbidden_token not in cross_surface_report_text, errors, f"Curated cross-surface identity report must remain observation-only: {forbidden_token}")
+    cross_surface_scene_text = UNIT_CURATED_CROSS_SURFACE_IDENTITY_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure(
+        'path="res://tests/unit_curated_cross_surface_identity_report.gd"' in cross_surface_scene_text,
+        errors,
+        "Curated cross-surface identity report scene must own the exact focused script",
     )
 
     content_service_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")

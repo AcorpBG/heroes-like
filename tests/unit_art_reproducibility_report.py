@@ -135,14 +135,20 @@ def generate_temp_assets(generator, units: list[dict[str, Any]], temp_root: Path
 
         curated_source = generator.load_curated_character_source(unit_id)
         if not generator.preserve_authored_asset(unit_id, "portrait", portrait_path):
-            generator.draw_portrait(unit, palette, motif, initials, portrait_path)
+            if curated_source is None:
+                generator.draw_portrait(unit, palette, motif, initials, portrait_path)
+            else:
+                generator.draw_curated_portrait(unit, palette, curated_source, portrait_path)
         if not generator.preserve_authored_asset(unit_id, "battle_icon", battle_path):
             if curated_source is None:
                 generator.draw_battle_icon(unit, palette, motif, initials, battle_path)
             else:
                 generator.draw_curated_battle_icon(unit, palette, curated_source, battle_path)
         if not generator.preserve_authored_asset(unit_id, "overworld_icon", overworld_path):
-            generator.draw_overworld_icon(unit, palette, motif, initials, overworld_path)
+            if curated_source is None:
+                generator.draw_overworld_icon(unit, palette, motif, initials, overworld_path)
+            else:
+                generator.draw_curated_overworld_icon(unit, palette, curated_source, overworld_path)
         if not generator.preserve_authored_asset(unit_id, "battle_animation_sheet", animation_path):
             if curated_source is None:
                 generator.draw_battle_troop_animation_sheet(unit, palette, motif, initials, animation_path)

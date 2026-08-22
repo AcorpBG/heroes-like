@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Brasshollow early-ladder curated sprite-source slice is completed. Distinct original Rivet Hound and Furnace Pavis sources now complete the live T1-T3 character-readable battle line while preserving all other unit assets.",
+  "currentNotes": "The curated-unit cross-surface identity slice is completed. Four existing original character sources now own BattleBoard, TownShell recruitment, and OverworldMap encounter identity while all battle and non-target payloads remain exact.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-brasshollow-early-ladder-curated-sprite-source-10184",
-  "currentSliceId": "art-brasshollow-early-ladder-curated-sprite-source-10184",
-  "currentSliceNotes": "Completed two original transparent sources and four reproducible existing-path derivatives for Rivet Hounds and Furnace Pavis Teams. Full 412-asset regeneration, focused BattleBoard runtime over 112 target frames, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green; broad/final art and release readiness remain unclaimed.",
+  "currentSlice": "art-curated-unit-cross-surface-identity-10184",
+  "currentSliceId": "art-curated-unit-cross-surface-identity-10184",
+  "currentSliceNotes": "Completed eight reproducible portrait/overworld derivatives for the four curated units. Full 412-asset regeneration, focused live TownShell/Overworld ownership, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green; broad/final art and release readiness remain unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Brasshollow Early Ladder Curated Sprite Source",
-  "currentSliceUpdatedAt": "2026-08-22T10:21:30Z",
+  "currentSliceTitle": "Curated Unit Cross-Surface Identity",
+  "currentSliceUpdatedAt": "2026-08-22T10:40:44Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,50 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed slice; do not infer broad/final art or release readiness from the completed Brasshollow early-ladder vertical.",
-  "notes": "Completed the two-unit Brasshollow early-ladder curated art vertical with exact non-target preservation and bounded runtime/platform evidence.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed slice; do not infer broad/final art or release readiness from the completed four-unit cross-surface vertical.",
+  "notes": "Completed the four-unit curated cross-surface identity vertical with exact battle/non-target preservation and bounded live/runtime/platform evidence.",
   "plannedSlices": [
+    {
+      "id": "art-curated-unit-cross-surface-identity-10184",
+      "title": "Curated Unit Cross-Surface Identity",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md", "docs/animation-battle-troop-state-contract-report.md", "docs/factions-content-bible.md"],
+      "purpose": "Remove a shipped identity mismatch by making the four existing curated units use their original character sources for TownShell portraits and OverworldMap encounter icons as well as BattleBoard assets.",
+      "implementationTargets": [
+        "tools/generate_unit_art_assets.py",
+        "art/units/portraits/unit_embercourt_fordhook_cadets.png",
+        "art/units/portraits/unit_brasshollow_scrip_haulers.png",
+        "art/units/portraits/unit_brasshollow_rivet_hounds.png",
+        "art/units/portraits/unit_brasshollow_furnace_pavis_teams.png",
+        "art/units/overworld_icons/unit_embercourt_fordhook_cadets.png",
+        "art/units/overworld_icons/unit_brasshollow_scrip_haulers.png",
+        "art/units/overworld_icons/unit_brasshollow_rivet_hounds.png",
+        "art/units/overworld_icons/unit_brasshollow_furnace_pavis_teams.png",
+        "content/unit_art_manifest.json",
+        "content/unit_animation_manifest.json",
+        "tests/unit_curated_cross_surface_identity_report.gd",
+        "tests/unit_curated_cross_surface_identity_report.tscn",
+        "tests/unit_art_reproducibility_report.py",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {"unit_ids": ["unit_embercourt_fordhook_cadets", "unit_brasshollow_scrip_haulers", "unit_brasshollow_rivet_hounds", "unit_brasshollow_furnace_pavis_teams"], "portrait_size": [384,512], "overworld_icon_size": [96,96], "target_payload_count": 8, "other_units_must_remain_byte_exact": 99, "battle_payloads_must_remain_byte_exact": 206, "final_sprite_import": false},
+      "completionCriteria": [
+        "All four curated sources reproducibly own distinct portrait and overworld-icon derivatives with exact manifest provenance and existing runtime paths",
+        "Live TownShell recruit rows and OverworldMap encounter rendering load the exact target portraits/icons while BattleBoard payloads and content authority remain unchanged",
+        "Exactly eight target files change; all 206 battle payloads and all four surfaces for the other 99 units remain byte-exact; full regeneration/reproducibility, compatibility, validator/editor, Linux, and Windows startup gates pass"
+      ],
+      "nonGoals": ["New source art, another unit, battle icon/sheet changes, unit stats/abilities/content, TownRules/OverworldRules/BattleRules behavior, save schema, rendering settings, Native RMG, or packaging behavior", "Broad/final art, packaged encounter interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game validation, or release readiness"],
+      "createdAt": "2026-08-22T10:24:59Z",
+      "startedAt": "2026-08-22T10:24:59Z",
+      "updatedAt": "2026-08-22T10:40:44Z",
+      "completedAt": "2026-08-22T10:40:44Z",
+      "notes": "Completed deterministic curated portrait/overworld branches and exactly eight shipped asset replacements for Fordhook Cadets and Brasshollow Scrip Haulers, Rivet Hounds, and Furnace Pavis Teams. All 412 assets and both manifests reproduce; all 206 battle payloads and every surface for the other 99 units remain exact. Focused runtime proves exact TownShell and OverworldMap loading. Unit-art/runtime/Town/animation/core compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. final_sprite_import remains false; broad/final art, packaged interaction, certification, signing/publication, whole-game validation, and release readiness are not claimed."
+    },
     {
       "id": "art-brasshollow-early-ladder-curated-sprite-source-10184",
       "title": "Brasshollow Early Ladder Curated Sprite Source",
@@ -93860,7 +93901,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "art_brasshollow_early_ladder_curated_sprite_source_completed",
+  "result": "art_curated_unit_cross_surface_identity_in_progress",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -93961,9 +94002,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The Brasshollow early-ladder curated sprite-source vertical is completed with distinct original Rivet Hound and Furnace Pavis sources, reproducible existing-path derivatives, exact preservation of every other unit pair, focused runtime/compatibility validation, and bounded Linux/Windows export-startup evidence.",
+  "summary": "The curated-unit cross-surface identity slice is in progress, bounded to replacing eight abstract portrait/overworld payloads for the four existing curated units while preserving battle, content, and non-target authority.",
   "taskId": "10184",
-  "updatedAt": "2026-08-22T10:21:30Z",
+  "updatedAt": "2026-08-22T10:24:59Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
