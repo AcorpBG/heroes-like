@@ -28,6 +28,7 @@ CURATED_CHARACTER_SOURCE_IDS = {
     "unit_embercourt_bargebow_crews",
     "unit_embercourt_fordhook_cadets",
     "unit_embercourt_lantern_sappers",
+    "unit_gorefen_ripper",
     "unit_mire_slinger",
     "unit_mireclaw_bogplate_maulers",
     "unit_mireclaw_mudglass_slingers",

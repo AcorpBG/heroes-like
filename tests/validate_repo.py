@@ -311,6 +311,9 @@ AURORA_BALLISTA_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_sunvault_
 RESONANT_CHORISTERS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_sunvault_resonant_choristers.png"
 RESONANT_CHORISTERS_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_sunvault_resonant_choristers_curated_art_report.gd"
 RESONANT_CHORISTERS_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_sunvault_resonant_choristers_curated_art_report.tscn"
+GOREFEN_RIPPER_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_gorefen_ripper.png"
+GOREFEN_RIPPER_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_mireclaw_gorefen_ripper_curated_art_report.gd"
+GOREFEN_RIPPER_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_mireclaw_gorefen_ripper_curated_art_report.tscn"
 SCRIP_HAULERS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_brasshollow_scrip_haulers.png"
 SCRIP_HAULERS_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_brasshollow_scrip_haulers_curated_art_report.gd"
 SCRIP_HAULERS_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_brasshollow_scrip_haulers_curated_art_report.tscn"
@@ -42469,6 +42472,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     sunvault_prism_adepts_unit_id = "unit_sunvault_prism_adepts"
     sunvault_mirror_duelists_unit_id = "unit_sunvault_mirror_duelists"
     sunvault_resonant_choristers_unit_id = "unit_sunvault_resonant_choristers"
+    gorefen_ripper_unit_id = "unit_gorefen_ripper"
     thornwake_seedcutters_unit_id = "unit_thornwake_seedcutters"
     thornwake_thornwhip_unit_id = "unit_thornwake_thornwhip_carriers"
     thornwake_sporeglass_unit_id = "unit_thornwake_sporeglass_menders"
@@ -42525,6 +42529,10 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     resonant_choristers_source_sha256 = "ee39e131b5b80d7986b16314dd4e817ee97178d114f9baf3a8ddda0bb1e20fdf"
     ensure(png_size(RESONANT_CHORISTERS_CURATED_SOURCE_PATH) == (512, 512), errors, "Resonant Choristers curated character source must be a 512x512 PNG")
     ensure(hashlib.sha256(RESONANT_CHORISTERS_CURATED_SOURCE_PATH.read_bytes()).hexdigest() == resonant_choristers_source_sha256, errors, "Resonant Choristers curated character source bytes drifted")
+    gorefen_ripper_source_res_path = "res://art/units/source/curated/unit_gorefen_ripper.png"
+    gorefen_ripper_source_sha256 = "52d9ad6dd10b9b29b0b73447fafd73f07d418128632aa9662ed329e40cf5e7b3"
+    ensure(png_size(GOREFEN_RIPPER_CURATED_SOURCE_PATH) == (512, 512), errors, "Gorefen Ripper curated character source must be a 512x512 PNG")
+    ensure(hashlib.sha256(GOREFEN_RIPPER_CURATED_SOURCE_PATH.read_bytes()).hexdigest() == gorefen_ripper_source_sha256, errors, "Gorefen Ripper curated character source bytes drifted")
     scrip_haulers_source_res_path = "res://art/units/source/curated/unit_brasshollow_scrip_haulers.png"
     scrip_haulers_source_sha256 = "759022e21b7781df3c88ba853b32905b52a820cafe45d2814a2006629d26e028"
     ensure(png_size(SCRIP_HAULERS_CURATED_SOURCE_PATH) == (512, 512), errors, "Scrip Haulers curated character source must be a 512x512 PNG")
@@ -42621,14 +42629,14 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         if isinstance(record, dict) and str(record.get("art_source_kind", "")) == "curated_original_character_v1"
     ]
     ensure(
-        sorted(str(record.get("unit_id", "")) for record in curated_art_records) == sorted([aurora_ballista_unit_id, fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, prism_adept_unit_id, mirror_duelist_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, sunvault_resonant_choristers_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id]),
+        sorted(str(record.get("unit_id", "")) for record in curated_art_records) == sorted([aurora_ballista_unit_id, fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, prism_adept_unit_id, mirror_duelist_unit_id, gorefen_ripper_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, sunvault_resonant_choristers_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id]),
         errors,
-        "Exactly the approved twenty-nine units, including Resonant Choristers, may use the curated character-source branch",
+        "Exactly the approved thirty units, including the distinct tier-3 Gorefen Ripper, may use the curated character-source branch",
     )
     ensure(
-        sorted(str(record.get("unit_id", "")) for record in curated_animation_records) == sorted([aurora_ballista_unit_id, fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, prism_adept_unit_id, mirror_duelist_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, sunvault_resonant_choristers_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id]),
+        sorted(str(record.get("unit_id", "")) for record in curated_animation_records) == sorted([aurora_ballista_unit_id, fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, prism_adept_unit_id, mirror_duelist_unit_id, gorefen_ripper_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, sunvault_resonant_choristers_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id]),
         errors,
-        "Exactly the approved twenty-nine units, including Resonant Choristers, may use the curated character-source animation branch",
+        "Exactly the approved thirty units, including the distinct tier-3 Gorefen Ripper, may use the curated character-source animation branch",
     )
     for curated_record, label in (
         (records_by_unit_id.get(fordhook_unit_id, {}), "art"),
@@ -42672,6 +42680,12 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     ):
         ensure(str(curated_record.get("curated_source", "")) == resonant_choristers_source_res_path, errors, f"Resonant Choristers {label} manifest curated source path drifted")
         ensure(str(curated_record.get("curated_source_sha256", "")) == resonant_choristers_source_sha256, errors, f"Resonant Choristers {label} manifest curated source hash drifted")
+    for curated_record, label in (
+        (records_by_unit_id.get(gorefen_ripper_unit_id, {}), "art"),
+        (animation_records_by_unit_id.get(gorefen_ripper_unit_id, {}), "animation"),
+    ):
+        ensure(str(curated_record.get("curated_source", "")) == gorefen_ripper_source_res_path, errors, f"Gorefen Ripper {label} manifest curated source path drifted")
+        ensure(str(curated_record.get("curated_source_sha256", "")) == gorefen_ripper_source_sha256, errors, f"Gorefen Ripper {label} manifest curated source hash drifted")
     for curated_record, label in (
         (records_by_unit_id.get(scrip_haulers_unit_id, {}), "art"),
         (animation_records_by_unit_id.get(scrip_haulers_unit_id, {}), "animation"),
@@ -42774,6 +42788,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     "unit_embercourt_bargebow_crews",
     "unit_embercourt_fordhook_cadets",
     "unit_embercourt_lantern_sappers",
+    "unit_gorefen_ripper",
     "unit_mire_slinger",
     "unit_mireclaw_bogplate_maulers",
     "unit_mireclaw_mudglass_slingers",
@@ -42793,7 +42808,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     "unit_veilmourn_maskglass_corsairs",
     "unit_veilmourn_mourning_lanterns",
 }'''
-    ensure(generator_text.count(expected_curated_id_block) == 1, errors, "Unit art generator curated source id set must contain exactly the twenty-nine approved units in stable order")
+    ensure(generator_text.count(expected_curated_id_block) == 1, errors, "Unit art generator curated source id set must contain exactly the thirty approved units in stable order")
     for required_branch in (
         '''if not preserve_authored_asset(unit_id, "portrait", portrait_path):
             if curated_source is None:
@@ -43215,6 +43230,49 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         ensure(forbidden_token not in resonant_choristers_report_text, errors, f"Resonant Choristers focused report must remain observation-only: {forbidden_token}")
     resonant_choristers_scene_text = RESONANT_CHORISTERS_CURATED_ART_REPORT_SCENE_PATH.read_text(encoding="utf-8")
     ensure('path="res://tests/unit_sunvault_resonant_choristers_curated_art_report.gd"' in resonant_choristers_scene_text, errors, "Resonant Choristers curated art report scene must own the exact focused script")
+
+    gorefen_ripper_report_text = GOREFEN_RIPPER_CURATED_ART_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'REPORT_ID := "UNIT_MIRECLAW_GOREFEN_RIPPER_CURATED_ART_REPORT"',
+        'TARGET_IDS := ["unit_gorefen_ripper"]',
+        'DISTINCT_PRESERVED_UNIT_ID := "unit_mireclaw_gorefen_rippers"',
+        '"unit_id": "unit_gorefen_ripper", "label": "Gorefen Ripper", "ability_ids": ["backstab", "bloodrush"]',
+        '"source_sha256": "52d9ad6dd10b9b29b0b73447fafd73f07d418128632aa9662ed329e40cf5e7b3"',
+        '"portrait_sha256": "079071cd197c307a26e3cd23816a34e5c428aad6540c4d647947c57d39933d4c"',
+        '"icon_sha256": "cb46422658713dca7bf1fd507268c98b1b97d2ab01839f4f159fafb2ff6b1828"',
+        '"overworld_icon_sha256": "c527f5ddb16804cff7d4d9e398d6206261252a5ff026b6b8b19a4408d633a499"',
+        '"sheet_sha256": "d6795b67f7cd5e00ce4c7b6121cfa48521fb5099aa43674ddaa596b0528c5095"',
+        '"old_portrait_sha256": "1163b8c3f8bb2c299528b33f7dbda23c797cb081747c1b82c89a4d209b7eff45"',
+        '"old_icon_sha256": "764b2eacd8887c44da33a4ab6e064756c07a3d1afb15b43a6a9d215bd6d138a2"',
+        '"old_overworld_icon_sha256": "6610fe40c3d1c949593167f2af344fc91df131595879e502c918856cbe6adbe5"',
+        '"old_sheet_sha256": "0bca11f2b293087cbb03a4bd1520681a0843e85971d06da1a0640cd9849cedcb"',
+        '"scenario_id": "river-pass", "placement_id": "river_pass_reed_totemists", "army_id": "army_river_pass_reed_totemists_watch"',
+        '"scenario_id": "stonewake-watch", "placement_id": "sluice_band", "army_id": "army_stonewake_sluice_band"',
+        '"scenario_id": "nightglass-redoubt", "placement_id": "nightglass_drum_circle", "army_id": "army_nightglass_drum_circle_watch"',
+        '"scenario_id": "ironbridge-stand", "placement_id": "ironbridge_reed_totemists", "army_id": "army_ironbridge_reed_totemists_watch"',
+        '"scenario_id": "mireford-skirmish", "placement_id": "mireford_reed_totemists", "army_id": "army_mireford_reed_totemists_watch"',
+        'FileAccess.get_sha256(String(distinct_art.get("portrait", ""))) == "13efda6ff67e346b2b7c6504c32a16738b5723af1a022f0279c38374b3d9198d"',
+        'FileAccess.get_sha256(String(distinct_art.get("battle_icon", ""))) == "86017220c10f087ea99d74be9300bd2063df475190ffcdbde0de7dba927e3f3d"',
+        'FileAccess.get_sha256(String(distinct_art.get("overworld_icon", ""))) == "8bafe3428de52ac18c0a1ad53410249c92aeffdb85c35f5fac9aafd435921adf"',
+        'FileAccess.get_sha256(String(distinct_animation.get("sprite_sheet", ""))) == "45fe916168ed08b121a185c91e0c388952a0cf52c55c67da4d63972884214955"',
+        '_validate_assets_and_provenance()', 'await _validate_live_encounters_and_board()',
+        'source.get_size() == Vector2i(512, 512)', 'portrait.get_size() == Vector2i(384, 512)',
+        'icon.get_size() == Vector2i(160, 160)', 'overworld_icon.get_size() == Vector2i(96, 96)',
+        'sheet.get_size() == Vector2i(256, 896)', 'visible == FRAMES_PER_STATE and signatures.size() >= 2',
+        'BattleRulesScript.create_battle_payload(session, placement)', '_battle_stack_contract(enemy_stacks) == spec["stacks"]',
+        '_battle_target_ability_contract(enemy_stacks) == expected_abilities', 'session.to_dict() == authority_before',
+        'String(spec["placement_id"]) == "river_pass_reed_totemists"', 'board.validation_unit_art_summary()',
+        'String(entry.get("battle_icon", "")) == String(unit_spec["icon_path"])',
+        'String(entry.get("animation_sheet", "")) == String(unit_spec["sheet_path"])',
+        'board_session.to_dict() == board_authority_before',
+        '"visible_frame_count": UNITS.size() * STATES.size() * FRAMES_PER_STATE',
+    ):
+        ensure(required_token in gorefen_ripper_report_text, errors, f"Gorefen Ripper curated art report is missing token {required_token}")
+    ensure(gorefen_ripper_report_text.count('"scenario_id": ') == 7, errors, "Gorefen Ripper focused report must own exactly five encounter rows plus one detached result row and one runtime summary scenario id")
+    for forbidden_token in ("draw_curated_portrait", "draw_curated_overworld_icon", "draw_curated_battle_icon", "draw_curated_battle_troop_animation_sheet", '"final_sprite_import": true', "ContentService._unit_art_manifest", "save_png", "generate_unit_art_assets", 'placement[', 'army[', 'enemy_stacks['):
+        ensure(forbidden_token not in gorefen_ripper_report_text, errors, f"Gorefen Ripper focused report must remain observation-only: {forbidden_token}")
+    gorefen_ripper_scene_text = GOREFEN_RIPPER_CURATED_ART_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure('path="res://tests/unit_mireclaw_gorefen_ripper_curated_art_report.gd"' in gorefen_ripper_scene_text, errors, "Gorefen Ripper curated art report scene must own the exact focused script")
 
     scrip_report_text = SCRIP_HAULERS_CURATED_ART_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (

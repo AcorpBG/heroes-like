@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Resonant Choristers now have one original transparent Sunvault resonance-support ensemble source and four reproducible existing-path runtime derivatives. Three authored encounters, public abilities, focused BattleBoard presentation, reproducibility, compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
+  "currentNotes": "The tier-3 Gorefen Ripper now has one original transparent Mireclaw canal-hook predator source and four reproducible existing-path runtime derivatives. Five authored encounters, public abilities, focused BattleBoard presentation, reproducibility, compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-sunvault-resonant-choristers-curated-character-source-10184",
-  "currentSliceId": "art-sunvault-resonant-choristers-curated-character-source-10184",
-  "currentSliceNotes": "Completed one original transparent Resonant Choristers source and four existing-path runtime derivatives while preserving three authored encounter rosters, public resonance_relay/harry authority, and all 408 non-target runtime payloads byte-exact.",
+  "currentSlice": "art-mireclaw-gorefen-ripper-curated-character-source-10184",
+  "currentSliceId": "art-mireclaw-gorefen-ripper-curated-character-source-10184",
+  "currentSliceNotes": "Completed one original transparent tier-3 Gorefen Ripper source and four existing-path runtime derivatives while preserving five authored encounter rosters, public backstab/bloodrush authority, and all 408 non-target runtime payloads byte-exact, including the distinct tier-6 production Gorefen Rippers.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Sunvault Resonant Choristers Curated Character Source",
-  "currentSliceUpdatedAt": "2026-08-22T15:59:43Z",
+  "currentSliceTitle": "Mireclaw Gorefen Ripper Curated Character Source",
+  "currentSliceUpdatedAt": "2026-08-22T16:18:06Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19847,8 +19847,28 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next tracker-approved source-backed release-readiness slice; do not infer broad/final art or release readiness from this completed character-source increment.",
-  "notes": "Completed the Resonant Choristers character-source slice with one original transparent ensemble source and four reproducible runtime derivatives. Three authored encounter rosters and public resonance_relay/harry authority remain exact; focused, compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
+  "notes": "Completed the tier-3 Gorefen Ripper character-source slice with one original transparent canal-hook predator source and four reproducible runtime derivatives. Five authored encounter rosters and public backstab/bloodrush authority remain exact; the distinct tier-6 production Gorefen Rippers remain byte-exact; focused, compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
   "plannedSlices": [
+    {
+      "id": "art-mireclaw-gorefen-ripper-curated-character-source-10184",
+      "title": "Mireclaw Gorefen Ripper Curated Character Source",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md", "docs/animation-battle-troop-state-contract-report.md", "docs/factions-content-bible.md"],
+      "purpose": "Replace only the live tier-3 unit_gorefen_ripper generated beast emblem with one character-readable original Mireclaw canal-hook predator source and exact reproducible existing-path runtime derivatives while preserving the distinct tier-6 production Gorefen Rippers.",
+      "implementationTargets": ["art/units/source/curated/unit_gorefen_ripper.png", "art/units/portraits/unit_gorefen_ripper.png", "art/units/battle_icons/unit_gorefen_ripper.png", "art/units/overworld_icons/unit_gorefen_ripper.png", "art/animation/runtime/units/unit_gorefen_ripper.png", "content/unit_art_manifest.json", "content/unit_animation_manifest.json", "tools/generate_unit_art_assets.py", "tests/unit_mireclaw_gorefen_ripper_curated_art_report.gd", "tests/unit_mireclaw_gorefen_ripper_curated_art_report.tscn", "tests/unit_art_reproducibility_report.py", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"unit_id": "unit_gorefen_ripper", "distinct_preserved_unit_id": "unit_mireclaw_gorefen_rippers", "tier": 3, "role": "melee", "ability_ids": ["backstab", "bloodrush"], "active_encounter_count": 5, "live_scenario_count": 5, "army_group_count": 8, "town_count": 1, "source_size": [512,512], "portrait_size": [384,512], "battle_icon_size": [160,160], "overworld_icon_size": [96,96], "animation_sheet_size": [256,896], "animation_state_count": 14, "frames_per_state": 4, "other_units_must_remain_byte_exact": 102, "final_sprite_import": false},
+      "completionCriteria": ["One original transparent Gorefen Ripper source follows Mireclaw fast canal-hook wounded-prey finisher identity and owns exact manifest provenance plus reproducible portrait, battle-icon, overworld-icon, and fourteen-state/four-frame animation-sheet derivatives", "All five live authored encounter payloads preserve exact ids/counts and public backstab/bloodrush abilities while a representative BattleBoard loads the exact icon/sheet and all 56 target frames remain visible", "Only one source, four target runtime payloads, and one record in each manifest change; unit_mireclaw_gorefen_rippers and all four surfaces for the other 102 units remain byte-exact; full regeneration/reproducibility, compatibility, validator/editor, Linux, and Windows startup gates pass"],
+      "nonGoals": ["unit_mireclaw_gorefen_rippers or another unit/tier, army/encounter/town counts, unit stats/abilities/content, Gorefen Cull Rush, BattleRules/BattleAiRules, balance tuning, animation timing/order, save schema, rendering settings, Native RMG, or packaging behavior", "Broad/final art, packaged battle interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game validation, or release readiness"],
+      "createdAt": "2026-08-22T16:02:12Z",
+      "startedAt": "2026-08-22T16:02:12Z",
+      "updatedAt": "2026-08-22T16:18:06Z",
+      "completedAt": "2026-08-22T16:18:06Z",
+      "notes": "Completed with one original transparent tier-3 Gorefen Ripper source and four exact existing-path runtime derivatives. Five authored encounter payloads retain exact ids/counts and public backstab/bloodrush authority; the River Pass BattleBoard loads one exact curated entry and all 56 frames are visible. Two regeneration runs match all 412 assets and both manifests byte-for-byte; only four target runtime payloads changed and all 408 non-target payloads remained exact, including the distinct tier-6 production Gorefen Rippers. Fifteen compatibility owners, core, validator/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged battle interaction, certification, signing/publication, broad/final art, whole-game validation, and release readiness remain unclaimed.",
+      "remainingWork": "No work remains in this slice. Select the next tracker-approved source-backed release-readiness slice; broad/final art, packaged battle interaction, certification, signing/publication, whole-game validation, and overall release readiness remain open."
+    },
     {
       "id": "art-sunvault-resonant-choristers-curated-character-source-10184",
       "title": "Sunvault Resonant Choristers Curated Character Source",
