@@ -7,6 +7,7 @@ const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRule
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const TownRulesScript = preload("res://scripts/core/TownRules.gd")
 const BattleRulesScript = preload("res://scripts/core/BattleRules.gd")
+const BattleAutoplayBalanceHarnessRulesScript = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd")
 
 const REPORT_ID := "VEILMOURN_FOGCHART_MOORING_CHAPTER_REPORT"
 const SCENARIO_ID := "fogchart-mooring"
@@ -23,6 +24,16 @@ const ENCOUNTER_PLACEMENT_IDS := [
 	"fogchart_relay_pickets",
 	"fogchart_mirror_lancers",
 	"fogchart_aurora_battery",
+]
+const AURORA_PRODUCTION_STACKS := [
+	{"unit_id": "unit_sunvault_shard_wardens", "count": 5},
+	{"unit_id": "unit_sunvault_prism_adepts", "count": 5},
+	{"unit_id": "unit_aurora_ballista", "count": 2},
+]
+const AURORA_LEGACY_STACKS := [
+	{"unit_id": "unit_shard_guard", "count": 5},
+	{"unit_id": "unit_prism_adept", "count": 5},
+	{"unit_id": "unit_aurora_ballista", "count": 2},
 ]
 const REQUIRED_RESOURCE_PLACEMENT_IDS := [
 	"fogchart_wood",
@@ -67,6 +78,9 @@ func _run() -> void:
 	var battle_result := _exercise_battle_entries(skirmish_save.get("session", null))
 	if _failed:
 		return
+	var aurora_result := _exercise_aurora_production_line(skirmish_save.get("session", null))
+	if _failed:
+		return
 	var outcome_result := _exercise_outcomes()
 	if _failed:
 		return
@@ -87,6 +101,7 @@ func _run() -> void:
 		"town": town_result,
 		"skirmish_save_resume": skirmish_save.get("report", {}),
 		"battle_entries": battle_result,
+		"aurora_production_line": aurora_result,
 		"outcomes": outcome_result,
 		"campaign": campaign_result.get("report", {}),
 		"campaign_save_resume": campaign_save.get("report", {}),
@@ -205,6 +220,125 @@ func _exercise_battle_entries(session: SessionStateStoreScript.SessionData) -> D
 			return {}
 		rows.append({"placement_id": placement_id, "player_stacks": player_stacks, "enemy_stacks": enemy_stacks})
 	return {"case_count": rows.size(), "rows": rows}
+
+func _exercise_aurora_production_line(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	var encounter: Dictionary = _encounter_by_placement(session, "fogchart_aurora_battery")
+	var enemy_army: Dictionary = encounter.get("enemy_army", {}) if encounter.get("enemy_army", {}) is Dictionary else {}
+	if (
+		String(encounter.get("encounter_id", "")) != "encounter_aurora_battery"
+		or String(encounter.get("difficulty", "")) != "high"
+		or int(encounter.get("combat_seed", 0)) != 20103
+		or Vector2i(int(encounter.get("x", -1)), int(encounter.get("y", -1))) != Vector2i(8, 0)
+		or String(enemy_army.get("id", "")) != "army_fogchart_aurora_battery"
+		or String(enemy_army.get("faction_id", "")) != "faction_sunvault"
+		or _army_stack_contract(enemy_army.get("stacks", [])) != AURORA_PRODUCTION_STACKS
+	):
+		_fail("Fogchart Aurora Battery production encounter identity or exact 5/5/2 line drifted: %s" % JSON.stringify(encounter))
+		return {}
+	var session_authority_before: Dictionary = session.to_dict()
+	var battle_payload: Dictionary = BattleRulesScript.create_battle_payload(session, encounter)
+	if session.to_dict() != session_authority_before:
+		_fail("Fogchart Aurora Battery public battle payload mutated its source session.")
+		return {}
+	var expected_abilities := {
+		"unit_sunvault_shard_wardens": ["shielding"],
+		"unit_sunvault_prism_adepts": ["volley"],
+		"unit_aurora_ballista": ["formation_guard", "volley"],
+	}
+	if _battle_enemy_stack_contract(battle_payload) != AURORA_PRODUCTION_STACKS or _battle_enemy_ability_contract(battle_payload) != expected_abilities:
+		_fail("Fogchart Aurora Battery public battle payload missed exact production counts or abilities: %s" % JSON.stringify(battle_payload))
+		return {}
+	var production_stack_health := _army_stack_health(AURORA_PRODUCTION_STACKS)
+	var legacy_stack_health := _army_stack_health(AURORA_LEGACY_STACKS)
+	if production_stack_health != 109 or legacy_stack_health != 109:
+		_fail("Fogchart Aurora Battery production/legacy strength match drifted.")
+		return {}
+	var production_sample: Dictionary = BattleAutoplayBalanceHarnessRulesScript.run_battle_sample(SCENARIO_ID, encounter, 72, "normal")
+	if (
+		not bool(production_sample.get("completed", false))
+		or String(production_sample.get("outcome_state", "")) != "defeat"
+		or String(production_sample.get("pacing_band", "")) != "standard"
+		or int(production_sample.get("round_reached", 0)) != 4
+		or int(production_sample.get("invalid_order_count", -1)) != 0
+		or int(production_sample.get("player_health_remaining_pct", -1)) != 0
+		or int(production_sample.get("enemy_health_remaining_pct", -1)) != 41
+		or int(production_sample.get("damage_per_round", {}).get("enemy", -1)) != 39
+	):
+		_fail("Fogchart Aurora Battery production autoplay left its exact standard defeat control: %s" % JSON.stringify(production_sample))
+		return {}
+	var legacy_encounter: Dictionary = encounter.duplicate(true)
+	legacy_encounter["placement_id"] = "fogchart_aurora_battery:legacy_control"
+	var legacy_army: Dictionary = enemy_army.duplicate(true)
+	legacy_army["id"] = "army_fogchart_aurora_battery_legacy_control"
+	legacy_army["stacks"] = AURORA_LEGACY_STACKS.duplicate(true)
+	legacy_encounter["enemy_army"] = legacy_army
+	var legacy_sample: Dictionary = BattleAutoplayBalanceHarnessRulesScript.run_battle_sample(SCENARIO_ID, legacy_encounter, 72, "normal")
+	if (
+		not bool(legacy_sample.get("completed", false))
+		or String(legacy_sample.get("outcome_state", "")) != "defeat"
+		or String(legacy_sample.get("pacing_band", "")) != "standard"
+		or int(legacy_sample.get("round_reached", 0)) != 5
+		or int(legacy_sample.get("invalid_order_count", -1)) != 0
+		or int(legacy_sample.get("player_health_remaining_pct", -1)) != 0
+		or int(legacy_sample.get("enemy_health_remaining_pct", -1)) != 34
+		or int(legacy_sample.get("damage_per_round", {}).get("enemy", -1)) != 31
+	):
+		_fail("Fogchart Aurora Battery legacy method control drifted: %s" % JSON.stringify(legacy_sample))
+		return {}
+	return {
+		"production_stack_health": production_stack_health,
+		"legacy_stack_health": legacy_stack_health,
+		"production": _compact_battle_sample(production_sample),
+		"legacy_control": _compact_battle_sample(legacy_sample),
+		"public_enemy_abilities": expected_abilities,
+		"session_authority_unchanged": true,
+	}
+
+func _army_stack_contract(stacks: Array) -> Array:
+	var result: Array = []
+	for stack_value in stacks:
+		if stack_value is Dictionary:
+			result.append({"unit_id": String(stack_value.get("unit_id", "")), "count": int(stack_value.get("count", 0))})
+	return result
+
+func _army_stack_health(stacks: Array) -> int:
+	var total := 0
+	for stack_value in stacks:
+		if stack_value is Dictionary:
+			var unit: Dictionary = ContentService.get_unit(String(stack_value.get("unit_id", "")))
+			total += int(stack_value.get("count", 0)) * int(unit.get("hp", 0))
+	return total
+
+func _battle_enemy_stack_contract(battle: Dictionary) -> Array:
+	var result: Array = []
+	for stack_value in battle.get("stacks", []):
+		if stack_value is Dictionary and String(stack_value.get("side", "")) == "enemy":
+			result.append({"unit_id": String(stack_value.get("unit_id", "")), "count": int(stack_value.get("base_count", 0))})
+	return result
+
+func _battle_enemy_ability_contract(battle: Dictionary) -> Dictionary:
+	var result := {}
+	for stack_value in battle.get("stacks", []):
+		if not (stack_value is Dictionary) or String(stack_value.get("side", "")) != "enemy":
+			continue
+		var ability_ids: Array = []
+		for ability_value in stack_value.get("abilities", []):
+			if ability_value is Dictionary:
+				ability_ids.append(String(ability_value.get("id", "")))
+		ability_ids.sort()
+		result[String(stack_value.get("unit_id", ""))] = ability_ids
+	return result
+
+func _compact_battle_sample(sample: Dictionary) -> Dictionary:
+	return {
+		"outcome_state": String(sample.get("outcome_state", "")),
+		"pacing_band": String(sample.get("pacing_band", "")),
+		"round_reached": int(sample.get("round_reached", 0)),
+		"invalid_order_count": int(sample.get("invalid_order_count", -1)),
+		"player_health_remaining_pct": int(sample.get("player_health_remaining_pct", -1)),
+		"enemy_health_remaining_pct": int(sample.get("enemy_health_remaining_pct", -1)),
+		"enemy_damage_per_round": int(sample.get("damage_per_round", {}).get("enemy", -1)),
+	}
 
 func _exercise_outcomes() -> Dictionary:
 	var victory: SessionStateStoreScript.SessionData = ScenarioFactoryScript.create_session(SCENARIO_ID, "normal", SessionStateStoreScript.LAUNCH_MODE_SKIRMISH)
