@@ -320,6 +320,12 @@ MIRECLAW_GOREFEN_RIPPERS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curat
 MIRECLAW_DROWNED_ANTLER_SOVEREIGN_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_mireclaw_drowned_antler_sovereign.png"
 MIRECLAW_UPPER_LADDER_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_mireclaw_upper_ladder_curated_art_report.gd"
 MIRECLAW_UPPER_LADDER_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_mireclaw_upper_ladder_curated_art_report.tscn"
+EMBERCOURT_ASH_OATH_BAILIFFS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_embercourt_ash_oath_bailiffs.png"
+EMBERCOURT_BEACON_LECTORS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_embercourt_beacon_lectors.png"
+EMBERCOURT_SLUICEFIRE_LINDWORMS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_embercourt_sluicefire_lindworms.png"
+EMBERCOURT_CHARTER_COLOSSUS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_embercourt_charter_colossus.png"
+EMBERCOURT_UPPER_LADDER_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_embercourt_upper_ladder_curated_art_report.gd"
+EMBERCOURT_UPPER_LADDER_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_embercourt_upper_ladder_curated_art_report.tscn"
 SCRIP_HAULERS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_brasshollow_scrip_haulers.png"
 SCRIP_HAULERS_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_brasshollow_scrip_haulers_curated_art_report.gd"
 SCRIP_HAULERS_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_brasshollow_scrip_haulers_curated_art_report.tscn"
@@ -42319,6 +42325,12 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         MIRECLAW_BOGPLATE_CURATED_SOURCE_PATH,
         MIRECLAW_EARLY_LADDER_CURATED_ART_REPORT_SCRIPT_PATH,
         MIRECLAW_EARLY_LADDER_CURATED_ART_REPORT_SCENE_PATH,
+        EMBERCOURT_ASH_OATH_BAILIFFS_CURATED_SOURCE_PATH,
+        EMBERCOURT_BEACON_LECTORS_CURATED_SOURCE_PATH,
+        EMBERCOURT_SLUICEFIRE_LINDWORMS_CURATED_SOURCE_PATH,
+        EMBERCOURT_CHARTER_COLOSSUS_CURATED_SOURCE_PATH,
+        EMBERCOURT_UPPER_LADDER_CURATED_ART_REPORT_SCRIPT_PATH,
+        EMBERCOURT_UPPER_LADDER_CURATED_ART_REPORT_SCENE_PATH,
         SUNVAULT_SHARD_WARDENS_CURATED_SOURCE_PATH,
         SUNVAULT_PRISM_ADEPTS_CURATED_SOURCE_PATH,
         SUNVAULT_MIRROR_DUELISTS_CURATED_SOURCE_PATH,
@@ -42478,6 +42490,10 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     mireclaw_sporewake_unit_id = "unit_mireclaw_sporewake_chanters"
     mireclaw_gorefen_rippers_unit_id = "unit_mireclaw_gorefen_rippers"
     mireclaw_drowned_antler_unit_id = "unit_mireclaw_drowned_antler_sovereign"
+    embercourt_ash_oath_bailiffs_unit_id = "unit_embercourt_ash_oath_bailiffs"
+    embercourt_beacon_lectors_unit_id = "unit_embercourt_beacon_lectors"
+    embercourt_sluicefire_lindworms_unit_id = "unit_embercourt_sluicefire_lindworms"
+    embercourt_charter_colossus_unit_id = "unit_embercourt_charter_colossus"
     sunvault_shard_wardens_unit_id = "unit_sunvault_shard_wardens"
     sunvault_prism_adepts_unit_id = "unit_sunvault_prism_adepts"
     sunvault_mirror_duelists_unit_id = "unit_sunvault_mirror_duelists"
@@ -42550,6 +42566,15 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         (mireclaw_drowned_antler_unit_id, MIRECLAW_DROWNED_ANTLER_SOVEREIGN_CURATED_SOURCE_PATH, "res://art/units/source/curated/unit_mireclaw_drowned_antler_sovereign.png", "0e0fbb099326b16e32b3b79945e5af5f34a69819e7a1fe1c4156649e1ded97a2", "Drowned Antler Sovereign"),
     )
     for _unit_id, source_disk_path, _source_res_path, source_sha256, unit_label in mireclaw_upper_ladder_curated_sources:
+        ensure(png_size(source_disk_path) == (512, 512), errors, f"{unit_label} curated character source must be a 512x512 PNG")
+        ensure(hashlib.sha256(source_disk_path.read_bytes()).hexdigest() == source_sha256, errors, f"{unit_label} curated character source bytes drifted")
+    embercourt_upper_ladder_curated_sources = (
+        (embercourt_ash_oath_bailiffs_unit_id, EMBERCOURT_ASH_OATH_BAILIFFS_CURATED_SOURCE_PATH, "res://art/units/source/curated/unit_embercourt_ash_oath_bailiffs.png", "fe7e30b782f0034eff222a82c96d8c97be3a6d1a6bc49b1c5be54f1005dd43cb", "Ash-Oath Bailiffs"),
+        (embercourt_beacon_lectors_unit_id, EMBERCOURT_BEACON_LECTORS_CURATED_SOURCE_PATH, "res://art/units/source/curated/unit_embercourt_beacon_lectors.png", "eac36ce8dd45c0ba99bb363a16c5fdae1aa561e572ad2e431ec906b92df8cd27", "Beacon Lectors"),
+        (embercourt_sluicefire_lindworms_unit_id, EMBERCOURT_SLUICEFIRE_LINDWORMS_CURATED_SOURCE_PATH, "res://art/units/source/curated/unit_embercourt_sluicefire_lindworms.png", "1130c1b2ca3cf24264cfe21d54409401c365d18e71403180bc9f052134cd1f29", "Sluicefire Lindworms"),
+        (embercourt_charter_colossus_unit_id, EMBERCOURT_CHARTER_COLOSSUS_CURATED_SOURCE_PATH, "res://art/units/source/curated/unit_embercourt_charter_colossus.png", "3618421aabafc6112bd5b46e4bdf350bbe7826c87dbaaa2e34c6df24763d6478", "Charter Colossus"),
+    )
+    for _unit_id, source_disk_path, _source_res_path, source_sha256, unit_label in embercourt_upper_ladder_curated_sources:
         ensure(png_size(source_disk_path) == (512, 512), errors, f"{unit_label} curated character source must be a 512x512 PNG")
         ensure(hashlib.sha256(source_disk_path.read_bytes()).hexdigest() == source_sha256, errors, f"{unit_label} curated character source bytes drifted")
     scrip_haulers_source_res_path = "res://art/units/source/curated/unit_brasshollow_scrip_haulers.png"
@@ -42648,14 +42673,14 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         if isinstance(record, dict) and str(record.get("art_source_kind", "")) == "curated_original_character_v1"
     ]
     ensure(
-        sorted(str(record.get("unit_id", "")) for record in curated_art_records) == sorted([aurora_ballista_unit_id, fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, prism_adept_unit_id, mirror_duelist_unit_id, gorefen_ripper_unit_id, mireclaw_ferrychain_unit_id, mireclaw_sporewake_unit_id, mireclaw_gorefen_rippers_unit_id, mireclaw_drowned_antler_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, sunvault_resonant_choristers_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id]),
+        sorted(str(record.get("unit_id", "")) for record in curated_art_records) == sorted([aurora_ballista_unit_id, fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, prism_adept_unit_id, mirror_duelist_unit_id, gorefen_ripper_unit_id, mireclaw_ferrychain_unit_id, mireclaw_sporewake_unit_id, mireclaw_gorefen_rippers_unit_id, mireclaw_drowned_antler_unit_id, embercourt_ash_oath_bailiffs_unit_id, embercourt_beacon_lectors_unit_id, embercourt_sluicefire_lindworms_unit_id, embercourt_charter_colossus_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, sunvault_resonant_choristers_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id]),
         errors,
-        "Exactly the approved thirty-four units, including both distinct Gorefen tiers, may use the curated character-source branch",
+        "Exactly the approved thirty-eight units, including both distinct Gorefen tiers, may use the curated character-source branch",
     )
     ensure(
-        sorted(str(record.get("unit_id", "")) for record in curated_animation_records) == sorted([aurora_ballista_unit_id, fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, prism_adept_unit_id, mirror_duelist_unit_id, gorefen_ripper_unit_id, mireclaw_ferrychain_unit_id, mireclaw_sporewake_unit_id, mireclaw_gorefen_rippers_unit_id, mireclaw_drowned_antler_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, sunvault_resonant_choristers_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id]),
+        sorted(str(record.get("unit_id", "")) for record in curated_animation_records) == sorted([aurora_ballista_unit_id, fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, prism_adept_unit_id, mirror_duelist_unit_id, gorefen_ripper_unit_id, mireclaw_ferrychain_unit_id, mireclaw_sporewake_unit_id, mireclaw_gorefen_rippers_unit_id, mireclaw_drowned_antler_unit_id, embercourt_ash_oath_bailiffs_unit_id, embercourt_beacon_lectors_unit_id, embercourt_sluicefire_lindworms_unit_id, embercourt_charter_colossus_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, sunvault_resonant_choristers_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id]),
         errors,
-        "Exactly the approved thirty-four units, including both distinct Gorefen tiers, may use the curated character-source animation branch",
+        "Exactly the approved thirty-eight units, including both distinct Gorefen tiers, may use the curated character-source animation branch",
     )
     for curated_record, label in (
         (records_by_unit_id.get(fordhook_unit_id, {}), "art"),
@@ -42729,6 +42754,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in ghoul_grove_curated_sources),
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in mireclaw_early_ladder_curated_sources),
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in mireclaw_upper_ladder_curated_sources),
+        *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in embercourt_upper_ladder_curated_sources),
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in sunvault_early_ladder_curated_sources),
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in thornwake_early_ladder_curated_sources),
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in embercourt_production_early_ladder_curated_sources),
@@ -42805,9 +42831,13 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     "unit_brasshollow_scrip_haulers",
     "unit_citadel_pikeward",
     "unit_ember_archer",
+    "unit_embercourt_ash_oath_bailiffs",
     "unit_embercourt_bargebow_crews",
+    "unit_embercourt_beacon_lectors",
+    "unit_embercourt_charter_colossus",
     "unit_embercourt_fordhook_cadets",
     "unit_embercourt_lantern_sappers",
+    "unit_embercourt_sluicefire_lindworms",
     "unit_gorefen_ripper",
     "unit_mire_slinger",
     "unit_mireclaw_bogplate_maulers",
@@ -42832,7 +42862,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     "unit_veilmourn_maskglass_corsairs",
     "unit_veilmourn_mourning_lanterns",
 }'''
-    ensure(generator_text.count(expected_curated_id_block) == 1, errors, "Unit art generator curated source id set must contain exactly the thirty-four approved units in stable order")
+    ensure(generator_text.count(expected_curated_id_block) == 1, errors, "Unit art generator curated source id set must contain exactly the thirty-eight approved units in stable order")
     for required_branch in (
         '''if not preserve_authored_asset(unit_id, "portrait", portrait_path):
             if curated_source is None:
@@ -43357,6 +43387,64 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         ensure(forbidden_token not in mireclaw_upper_report_text, errors, f"Mireclaw upper-ladder focused report must remain observation-only: {forbidden_token}")
     mireclaw_upper_scene_text = MIRECLAW_UPPER_LADDER_CURATED_ART_REPORT_SCENE_PATH.read_text(encoding="utf-8")
     ensure('path="res://tests/unit_mireclaw_upper_ladder_curated_art_report.gd"' in mireclaw_upper_scene_text, errors, "Mireclaw upper-ladder curated art report scene must own the exact focused script")
+
+    embercourt_upper_report_text = EMBERCOURT_UPPER_LADDER_CURATED_ART_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'REPORT_ID := "UNIT_EMBERCOURT_UPPER_LADDER_CURATED_ART_REPORT"',
+        '"unit_id": "unit_embercourt_ash_oath_bailiffs", "label": "Ash-Oath Bailiffs", "tier": 4, "role": "melee", "growth": 3, "ability_ids": ["brace"]',
+        '"unit_id": "unit_embercourt_beacon_lectors", "label": "Beacon Lectors", "tier": 5, "role": "ranged", "growth": 2, "ability_ids": ["harry", "readiness_writ"]',
+        '"unit_id": "unit_embercourt_sluicefire_lindworms", "label": "Sluicefire Lindworms", "tier": 6, "role": "melee", "growth": 1, "ability_ids": ["bloodrush"]',
+        '"unit_id": "unit_embercourt_charter_colossus", "label": "Charter Colossus", "tier": 7, "role": "melee", "growth": 1, "ability_ids": ["brace"]',
+        '"source_sha256": "fe7e30b782f0034eff222a82c96d8c97be3a6d1a6bc49b1c5be54f1005dd43cb"',
+        '"source_sha256": "eac36ce8dd45c0ba99bb363a16c5fdae1aa561e572ad2e431ec906b92df8cd27"',
+        '"source_sha256": "1130c1b2ca3cf24264cfe21d54409401c365d18e71403180bc9f052134cd1f29"',
+        '"source_sha256": "3618421aabafc6112bd5b46e4bdf350bbe7826c87dbaaa2e34c6df24763d6478"',
+        '"portrait_sha256": "064af6ad7722b0e536fc0791afb6d50afc13e216a932084e3b3107349d44d212"',
+        '"portrait_sha256": "984465d0fe0540859f9477aadd91165a90efa0264fb073da6f16fadbfae1c538"',
+        '"portrait_sha256": "7f0a3a6cb8aa9dd10d541e7a2a452d40e5c1ad97e1b202826ae55f96d1886c4f"',
+        '"portrait_sha256": "612359cb3899cbcd55daf93f27e5eb149a6205d10d4fae600c9cad6cb512d767"',
+        '"old_sheet_sha256": "89cccfdb0e03eeddfa731c4b2346f0e207b3dc7bef5c94f14ddc9071e94bef3f"',
+        '"old_sheet_sha256": "af23c4f804b3ed8c3f797fb83de0f15efcf88bcc060828650e9da2466b799376"',
+        '"old_sheet_sha256": "14477a1a27be160ea8d4ac2b36866df6783e6dc15c525e7699362835320b87cf"',
+        '"old_sheet_sha256": "762ca19c2ec8e92592be2452f49993e458505195528e29d3da1bb7befdc0e547"',
+        '"unit_id": "unit_embercourt_fordhook_cadets", "portrait_sha256": "ea1cce2c724f85b39f44756a1cea689c6ed75cc2d9ca9a5143ed2803d6375d07"',
+        '"unit_id": "unit_embercourt_lantern_sappers", "portrait_sha256": "064e2d33e73565c29866b45d38bb16df10cb3bae48da44a4ebe9018c015d7977"',
+        '"unit_id": "unit_embercourt_bargebow_crews", "portrait_sha256": "ade82e81aa78fe54737a8f9642a0a71651ee9f17cba39ddcb34f89b9cad0164b"',
+        'CLAUSEWORKS_STACKS := [{"unit_id": "unit_embercourt_fordhook_cadets", "count": 5}, {"unit_id": "unit_embercourt_bargebow_crews", "count": 5}, {"unit_id": "unit_embercourt_sluicefire_lindworms", "count": 1}]',
+        '_validate_assets_and_provenance()', '_validate_content_authority()', 'await _validate_live_clauseworks_and_board()',
+        'source.get_size() == Vector2i(512, 512)', 'portrait.get_size() == Vector2i(384, 512)',
+        'icon.get_size() == Vector2i(160, 160)', 'overworld_icon.get_size() == Vector2i(96, 96)',
+        'sheet.get_size() == Vector2i(256, 896)', 'visible == FRAMES_PER_STATE and signatures.size() >= 2',
+        'ladder.slice(3, 7) == _target_ids()', 'buildings.slice(3, 7) == _building_ids()',
+        'String(faction.get("seed_town_id", "")) == "town_highwater_keep"',
+        'int(source_alpha.get("transparent", 0)) > 50000 and int(source_alpha.get("visible", 0)) > 30000 and int(source_alpha.get("opaque", 0)) > 10000',
+        'int(unit.get("growth", 0)) == int(spec["growth"]) and _resource_cost_contract(unit.get("cost", {})) == spec["cost"]',
+        'func _resource_cost_contract(cost_value: Variant) -> Dictionary:',
+        'result[String(resource_id)] = int(cost_value[resource_id])',
+        '_ability_ids(unit.get("abilities", [])) == spec["ability_ids"]',
+        'String(building.get("unlock_unit_id", "")) == String(spec["unit_id"])',
+        'int(Dictionary(building.get("growth_bonus", {})).get(String(spec["unit_id"]), 0)) == int(spec["building_growth"])',
+        'int(Dictionary(building.get("recruitment_discount_percent", {})).get(String(spec["unit_id"]), 0)) == int(spec["building_discount"])',
+        'ScenarioFactory.create_session("clauseworks-counterclaim", "normal", SessionStateStoreScript.LAUNCH_MODE_SKIRMISH)',
+        '_encounter_placement(session, "clauseworks_bridge_levies")',
+        'String(authored_army.get("id", "")) == "army_clauseworks_bridge_levies" and _stack_contract(authored_army.get("stacks", [])) == CLAUSEWORKS_STACKS',
+        '_battle_stack_contract(authored_enemy) == CLAUSEWORKS_STACKS',
+        '_battle_target_ability_contract(authored_enemy) == {"unit_embercourt_sluicefire_lindworms": ["bloodrush"]}',
+        'fixture_placement["enemy_army"] = {"id": "army_embercourt_upper_ladder_art_fixture"',
+        'fixture_ability_contract == {"unit_embercourt_ash_oath_bailiffs": ["brace"], "unit_embercourt_beacon_lectors": ["harry"], "unit_embercourt_sluicefire_lindworms": ["bloodrush"], "unit_embercourt_charter_colossus": ["brace"]}',
+        'session.to_dict() == authority_before', 'session.to_dict() == board_authority_before',
+        'board.validation_unit_art_summary()',
+        'String(entry.get("battle_icon", "")) == String(spec["icon_path"])',
+        'String(entry.get("animation_sheet", "")) == String(spec["sheet_path"])',
+        '"visible_frame_count": UNITS.size() * STATES.size() * FRAMES_PER_STATE',
+    ):
+        ensure(required_token in embercourt_upper_report_text, errors, f"Embercourt upper-ladder curated art report is missing token {required_token}")
+    ensure(embercourt_upper_report_text.count('BattleRulesScript.create_battle_payload(') == 2, errors, "Embercourt upper-ladder report must use exactly one authored and one detached four-unit production battle materialization")
+    ensure('unit.get("cost", {}) == spec["cost"]' not in embercourt_upper_report_text, errors, "Embercourt upper-ladder cost oracle must compare the typed integer resource contract")
+    for forbidden_token in ("draw_curated_portrait", "draw_curated_overworld_icon", "draw_curated_battle_icon", "draw_curated_battle_troop_animation_sheet", '"final_sprite_import": true', "ContentService._unit_art_manifest", "save_png", "generate_unit_art_assets", 'unit["', 'building["'):
+        ensure(forbidden_token not in embercourt_upper_report_text, errors, f"Embercourt upper-ladder focused report must remain observation-only: {forbidden_token}")
+    embercourt_upper_scene_text = EMBERCOURT_UPPER_LADDER_CURATED_ART_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure('path="res://tests/unit_embercourt_upper_ladder_curated_art_report.gd"' in embercourt_upper_scene_text, errors, "Embercourt upper-ladder curated art report scene must own the exact focused script")
 
     scrip_report_text = SCRIP_HAULERS_CURATED_ART_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
