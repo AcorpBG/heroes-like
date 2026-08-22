@@ -498,7 +498,10 @@
       "motif": "melee",
       "portrait": "res://art/units/portraits/unit_brasshollow_scrip_haulers.png",
       "battle_icon": "res://art/units/battle_icons/unit_brasshollow_scrip_haulers.png",
-      "overworld_icon": "res://art/units/overworld_icons/unit_brasshollow_scrip_haulers.png"
+      "overworld_icon": "res://art/units/overworld_icons/unit_brasshollow_scrip_haulers.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_brasshollow_scrip_haulers.png",
+      "curated_source_sha256": "759022e21b7781df3c88ba853b32905b52a820cafe45d2814a2006629d26e028"
     },
     {
       "id": "unit_brasshollow_rivet_hounds",
