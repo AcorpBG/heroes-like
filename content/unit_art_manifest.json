@@ -144,7 +144,10 @@
       "motif": "caster",
       "portrait": "res://art/units/portraits/unit_prism_adept.png",
       "battle_icon": "res://art/units/battle_icons/unit_prism_adept.png",
-      "overworld_icon": "res://art/units/overworld_icons/unit_prism_adept.png"
+      "overworld_icon": "res://art/units/overworld_icons/unit_prism_adept.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_prism_adept.png",
+      "curated_source_sha256": "78c1bdf762d1dbbd6a2538e38f1e4041f1bf712383e4bd98efb51cd12597b42e"
     },
     {
       "id": "unit_mirror_duelist",

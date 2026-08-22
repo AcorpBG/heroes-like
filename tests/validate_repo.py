@@ -299,6 +299,9 @@ CITADEL_PIKEWARD_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_embercou
 SHARD_GUARD_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_shard_guard.png"
 SHARD_GUARD_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_sunvault_shard_guard_curated_art_report.gd"
 SHARD_GUARD_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_sunvault_shard_guard_curated_art_report.tscn"
+PRISM_ADEPT_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_prism_adept.png"
+PRISM_ADEPT_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_sunvault_prism_adept_curated_art_report.gd"
+PRISM_ADEPT_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_sunvault_prism_adept_curated_art_report.tscn"
 SCRIP_HAULERS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_brasshollow_scrip_haulers.png"
 SCRIP_HAULERS_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_brasshollow_scrip_haulers_curated_art_report.gd"
 SCRIP_HAULERS_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_brasshollow_scrip_haulers_curated_art_report.tscn"
@@ -42439,6 +42442,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     fordhook_unit_id = "unit_embercourt_fordhook_cadets"
     citadel_pikeward_unit_id = "unit_citadel_pikeward"
     shard_guard_unit_id = "unit_shard_guard"
+    prism_adept_unit_id = "unit_prism_adept"
     scrip_haulers_unit_id = "unit_brasshollow_scrip_haulers"
     rivet_hounds_unit_id = "unit_brasshollow_rivet_hounds"
     furnace_pavis_unit_id = "unit_brasshollow_furnace_pavis_teams"
@@ -42484,6 +42488,14 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         hashlib.sha256(SHARD_GUARD_CURATED_SOURCE_PATH.read_bytes()).hexdigest() == shard_guard_source_sha256,
         errors,
         "Shard Guard curated character source bytes drifted",
+    )
+    prism_adept_source_res_path = "res://art/units/source/curated/unit_prism_adept.png"
+    prism_adept_source_sha256 = "78c1bdf762d1dbbd6a2538e38f1e4041f1bf712383e4bd98efb51cd12597b42e"
+    ensure(png_size(PRISM_ADEPT_CURATED_SOURCE_PATH) == (512, 512), errors, "Prism Adept curated character source must be a 512x512 PNG")
+    ensure(
+        hashlib.sha256(PRISM_ADEPT_CURATED_SOURCE_PATH.read_bytes()).hexdigest() == prism_adept_source_sha256,
+        errors,
+        "Prism Adept curated character source bytes drifted",
     )
     scrip_haulers_source_res_path = "res://art/units/source/curated/unit_brasshollow_scrip_haulers.png"
     scrip_haulers_source_sha256 = "759022e21b7781df3c88ba853b32905b52a820cafe45d2814a2006629d26e028"
@@ -42581,14 +42593,14 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         if isinstance(record, dict) and str(record.get("art_source_kind", "")) == "curated_original_character_v1"
     ]
     ensure(
-        sorted(str(record.get("unit_id", "")) for record in curated_art_records) == sorted([fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id]),
+        sorted(str(record.get("unit_id", "")) for record in curated_art_records) == sorted([fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, prism_adept_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id]),
         errors,
-        "Exactly the approved twenty-five units, including distinct Shard Guard and Shard Wardens records, may use the curated character-source branch",
+        "Exactly the approved twenty-six units, including distinct Prism Adept and Prism Adepts records, may use the curated character-source branch",
     )
     ensure(
-        sorted(str(record.get("unit_id", "")) for record in curated_animation_records) == sorted([fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id]),
+        sorted(str(record.get("unit_id", "")) for record in curated_animation_records) == sorted([fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, prism_adept_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id]),
         errors,
-        "Exactly the approved twenty-five units, including distinct Shard Guard and Shard Wardens animation records, may use the curated character-source branch",
+        "Exactly the approved twenty-six units, including distinct Prism Adept and Prism Adepts animation records, may use the curated character-source branch",
     )
     for curated_record, label in (
         (records_by_unit_id.get(fordhook_unit_id, {}), "art"),
@@ -42608,6 +42620,12 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     ):
         ensure(str(curated_record.get("curated_source", "")) == shard_guard_source_res_path, errors, f"Shard Guard {label} manifest curated source path drifted")
         ensure(str(curated_record.get("curated_source_sha256", "")) == shard_guard_source_sha256, errors, f"Shard Guard {label} manifest curated source hash drifted")
+    for curated_record, label in (
+        (records_by_unit_id.get(prism_adept_unit_id, {}), "art"),
+        (animation_records_by_unit_id.get(prism_adept_unit_id, {}), "animation"),
+    ):
+        ensure(str(curated_record.get("curated_source", "")) == prism_adept_source_res_path, errors, f"Prism Adept {label} manifest curated source path drifted")
+        ensure(str(curated_record.get("curated_source_sha256", "")) == prism_adept_source_sha256, errors, f"Prism Adept {label} manifest curated source hash drifted")
     for curated_record, label in (
         (records_by_unit_id.get(scrip_haulers_unit_id, {}), "art"),
         (animation_records_by_unit_id.get(scrip_haulers_unit_id, {}), "animation"),
@@ -42713,6 +42731,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     "unit_mireclaw_bogplate_maulers",
     "unit_mireclaw_mudglass_slingers",
     "unit_mireclaw_reedsnare_kin",
+    "unit_prism_adept",
     "unit_river_guard",
     "unit_shard_guard",
     "unit_sunvault_mirror_duelists",
@@ -42725,7 +42744,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     "unit_veilmourn_maskglass_corsairs",
     "unit_veilmourn_mourning_lanterns",
 }'''
-    ensure(generator_text.count(expected_curated_id_block) == 1, errors, "Unit art generator curated source id set must contain exactly the twenty-five approved units in stable order")
+    ensure(generator_text.count(expected_curated_id_block) == 1, errors, "Unit art generator curated source id set must contain exactly the twenty-six approved units in stable order")
     for required_branch in (
         '''if not preserve_authored_asset(unit_id, "portrait", portrait_path):
             if curated_source is None:
@@ -42939,6 +42958,73 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         'path="res://tests/unit_sunvault_shard_guard_curated_art_report.gd"' in shard_guard_scene_text,
         errors,
         "Shard Guard curated art report scene must own the exact focused script",
+    )
+    prism_adept_report_text = PRISM_ADEPT_CURATED_ART_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'REPORT_ID := "UNIT_SUNVAULT_PRISM_ADEPT_CURATED_ART_REPORT"',
+        'TARGET_IDS := ["unit_prism_adept"]',
+        'DISTINCT_CURATED_UNIT_ID := "unit_sunvault_prism_adepts"',
+        '"unit_id": "unit_prism_adept", "label": "Prism Adept", "ability_ids": ["volley", "harry"]',
+        '"source_sha256": "78c1bdf762d1dbbd6a2538e38f1e4041f1bf712383e4bd98efb51cd12597b42e"',
+        '"portrait_sha256": "5f17ba9aa053e322a440882eaeb21d3511f4c3e313b9ac1d4f494601c2b06711"',
+        '"icon_sha256": "a16b771a049bce70a317ff3c74362bb88cbbbad0ef4f059e4eb83e4f48341d60"',
+        '"overworld_icon_sha256": "c39a4230e83e3078725437b5b05bef860877e82a336ddfbaf6b2a3081965f35e"',
+        '"sheet_sha256": "a0a5b3a66a45c0655329317c564a3f5d9dfb183f6166f5cd4c31af44bc6aa474"',
+        '"old_portrait_sha256": "6193e697a8d798a8b326472e39014b1fe47cc65c48d16ba877e532d28ab9f57b"',
+        '"old_icon_sha256": "c4ef37fc303fe2f12c8e6f46a7a73cae396b7f14b49dd0272720a1a532bfca5e"',
+        '"old_overworld_icon_sha256": "4b7e93deb5759a2cdbeb6b8daa944eeabeae7e8d8b7985ac6bc29d3c16e9e23a"',
+        '"old_sheet_sha256": "443d5df2bc0df88c19d2953f957d024e2860162cbb0d1483b4e4ab92fa3761d1"',
+        '"scenario_id": "prismhearth-watch", "placement_id": "prismhearth_relay_pickets", "army_id": "army_prismhearth_relay_pickets_watch"',
+        '"scenario_id": "prismhearth-watch", "placement_id": "prismhearth_halo_reserve", "army_id": "army_prismhearth_halo_reserve_watch"',
+        '"scenario_id": "daybreak-spire", "placement_id": "daybreak_array", "army_id": "army_daybreak_array_watch"',
+        '"scenario_id": "bellwake-wreck-claim", "placement_id": "bellwake_mirror_lancers", "army_id": "army_bellwake_mirror_lancers_watch"',
+        '"scenario_id": "bellwake-wreck-claim", "placement_id": "bellwake_aurora_battery", "army_id": "army_bellwake_aurora_battery_watch"',
+        '"scenario_id": "fogchart-mooring", "placement_id": "fogchart_relay_pickets", "army_id": "army_fogchart_relay_pickets"',
+        '"scenario_id": "fogchart-mooring", "placement_id": "fogchart_mirror_lancers", "army_id": "army_fogchart_mirror_lancers"',
+        'String(distinct_art.get("unit_id", "")) == DISTINCT_CURATED_UNIT_ID',
+        'String(distinct_art.get("curated_source", "")) == "res://art/units/source/curated/unit_sunvault_prism_adepts.png"',
+        '_validate_assets_and_provenance()',
+        'await _validate_live_encounters_and_board()',
+        'source.get_size() == Vector2i(512, 512)',
+        'portrait.get_size() == Vector2i(384, 512)',
+        'icon.get_size() == Vector2i(160, 160)',
+        'overworld_icon.get_size() == Vector2i(96, 96)',
+        'sheet.get_size() == Vector2i(256, 896)',
+        'int(source_alpha.get("transparent", 0)) > 50000 and int(source_alpha.get("visible", 0)) > 50000 and int(source_alpha.get("opaque", 0)) > 0',
+        'visible == FRAMES_PER_STATE and signatures.size() >= 2',
+        'OverworldRules.normalize_overworld_state(session)',
+        'BattleRulesScript.create_battle_payload(session, placement)',
+        '_battle_stack_contract(enemy_stacks) == spec["stacks"]',
+        '_battle_target_ability_contract(enemy_stacks) == expected_abilities',
+        'session.to_dict() == authority_before',
+        'String(spec["placement_id"]) == "fogchart_relay_pickets"',
+        'board.validation_unit_art_summary()',
+        'String(entry.get("battle_icon", "")) == String(unit_spec["icon_path"])',
+        'String(entry.get("animation_sheet", "")) == String(unit_spec["sheet_path"])',
+        'board_session.to_dict() == board_authority_before',
+        '"visible_frame_count": UNITS.size() * STATES.size() * FRAMES_PER_STATE',
+    ):
+        ensure(required_token in prism_adept_report_text, errors, f"Prism Adept curated art report is missing token {required_token}")
+    ensure(prism_adept_report_text.count('"scenario_id": ') == 9, errors, "Prism Adept focused report must own exactly seven encounter rows plus one detached result row and one runtime summary scenario id")
+    for forbidden_token in (
+        "draw_curated_portrait",
+        "draw_curated_overworld_icon",
+        "draw_curated_battle_icon",
+        "draw_curated_battle_troop_animation_sheet",
+        '"final_sprite_import": true',
+        "ContentService._unit_art_manifest",
+        "save_png",
+        "generate_unit_art_assets",
+        'placement[',
+        'army[',
+        'enemy_stacks[',
+    ):
+        ensure(forbidden_token not in prism_adept_report_text, errors, f"Prism Adept focused report must remain observation-only: {forbidden_token}")
+    prism_adept_scene_text = PRISM_ADEPT_CURATED_ART_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure(
+        'path="res://tests/unit_sunvault_prism_adept_curated_art_report.gd"' in prism_adept_scene_text,
+        errors,
+        "Prism Adept curated art report scene must own the exact focused script",
     )
     scrip_report_text = SCRIP_HAULERS_CURATED_ART_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
