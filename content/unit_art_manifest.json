@@ -1338,7 +1338,10 @@
       "motif": "melee",
       "portrait": "res://art/units/portraits/unit_neutral_bogbell_mauls.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_bogbell_mauls.png",
-      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_bogbell_mauls.png"
+      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_bogbell_mauls.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_neutral_bogbell_mauls.png",
+      "curated_source_sha256": "ad9a6d26e356b804501a8089a9f0f472627be7025cd4df70db69555aa4256882"
     },
     {
       "id": "unit_neutral_peatflare_jarriers",
@@ -1350,7 +1353,10 @@
       "motif": "ranged",
       "portrait": "res://art/units/portraits/unit_neutral_peatflare_jarriers.png",
       "battle_icon": "res://art/units/battle_icons/unit_neutral_peatflare_jarriers.png",
-      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_peatflare_jarriers.png"
+      "overworld_icon": "res://art/units/overworld_icons/unit_neutral_peatflare_jarriers.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_neutral_peatflare_jarriers.png",
+      "curated_source_sha256": "8d04392a2b9abece6a2e991395976f67e44b2492c2b2c6e424cc930e78fd6ff5"
     },
     {
       "id": "unit_neutral_milestone_bucklers",
