@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved source-backed production slice."
+    "Select the next tracker-approved source-backed implementation slice."
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the Veilmourn upper-ladder curated-character slice with four original sources, sixteen exact runtime derivatives, live Bellwake/BattleBoard authority, 412-asset reproducibility, compatibility, static/editor, and bounded Linux/Windows startup evidence. Broad/final art and release readiness remain unclaimed; select the next tracker-approved source-backed slice.",
+  "currentNotes": "Completed the four-source Brasshollow upper-ladder art slice with live BattleBoard authority, byte-exact reproducibility, compatibility, and bounded Linux/Windows export-startup evidence. Broad/final art and release readiness remain unclaimed.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-veilmourn-upper-ladder-curated-character-sources-10184",
-  "currentSliceId": "art-veilmourn-upper-ladder-curated-character-sources-10184",
-  "currentSliceNotes": "Four original Veilmourn upper-ladder sources and exact existing-path derivatives are live and reproducible; curated early-ladder and gameplay/content authority remain exact. Platform evidence is export/startup only.",
+  "currentSlice": "art-brasshollow-upper-ladder-curated-character-sources-10184",
+  "currentSliceId": "art-brasshollow-upper-ladder-curated-character-sources-10184",
+  "currentSliceNotes": "Four distinct Brasshollow tier-4 through tier-7 curated sources and exact existing-path derivatives are integrated; the early ladder and all gameplay/content authority remain exact.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Veilmourn Upper-Ladder Curated Character Sources",
-  "currentSliceUpdatedAt": "2026-08-22T18:51:24Z",
+  "currentSliceTitle": "Brasshollow Upper-Ladder Curated Character Sources",
+  "currentSliceUpdatedAt": "2026-08-22T19:25:28Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,29 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select a tracker-approved source-backed production slice; do not infer broad/final art or release readiness from the completed Veilmourn art increment.",
-  "notes": "The Veilmourn upper-ladder art slice is complete: four original sources, sixteen exact runtime derivatives, live recruitment/player-army/BattleBoard authority, byte-exact non-target preservation, reproducibility, compatibility, and bounded Linux/Windows startup gates pass. Broad/final art and release readiness remain unclaimed.",
+  "nextActionGuardrailNote": "Select a tracker-approved source-backed implementation gap. Do not infer broad/final art or release readiness from this completed bounded art slice.",
+  "notes": "The Brasshollow upper-ladder art slice is complete: four original sources and sixteen exact runtime derivatives are live, all 224 target frames and the Orevein/BattleBoard authority are proven, all 412 unit-art runtime assets reproduce byte-exactly, and bounded compatibility/Linux/Windows startup gates pass. Packaged battle interaction, certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
   "plannedSlices": [
+    {
+      "id": "art-brasshollow-upper-ladder-curated-character-sources-10184",
+      "title": "Brasshollow Upper-Ladder Curated Character Sources",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md", "docs/animation-battle-troop-state-contract-report.md", "docs/factions-content-bible.md"],
+      "purpose": "Replace the four production Brasshollow tier-4 through tier-7 generated emblems with distinct character-readable original sources and exact reproducible existing-path runtime derivatives while preserving the curated tier-1 through tier-3 line and all gameplay authority.",
+      "implementationTargets": ["art/units/source/curated/unit_brasshollow_boiler_rivetcasters.png", "art/units/source/curated/unit_brasshollow_debt_engine_exactors.png", "art/units/source/curated/unit_brasshollow_crucible_crawlers.png", "art/units/source/curated/unit_brasshollow_foundry_saint.png", "art/units/portraits/unit_brasshollow_boiler_rivetcasters.png", "art/units/portraits/unit_brasshollow_debt_engine_exactors.png", "art/units/portraits/unit_brasshollow_crucible_crawlers.png", "art/units/portraits/unit_brasshollow_foundry_saint.png", "art/units/battle_icons/unit_brasshollow_boiler_rivetcasters.png", "art/units/battle_icons/unit_brasshollow_debt_engine_exactors.png", "art/units/battle_icons/unit_brasshollow_crucible_crawlers.png", "art/units/battle_icons/unit_brasshollow_foundry_saint.png", "art/units/overworld_icons/unit_brasshollow_boiler_rivetcasters.png", "art/units/overworld_icons/unit_brasshollow_debt_engine_exactors.png", "art/units/overworld_icons/unit_brasshollow_crucible_crawlers.png", "art/units/overworld_icons/unit_brasshollow_foundry_saint.png", "art/animation/runtime/units/unit_brasshollow_boiler_rivetcasters.png", "art/animation/runtime/units/unit_brasshollow_debt_engine_exactors.png", "art/animation/runtime/units/unit_brasshollow_crucible_crawlers.png", "art/animation/runtime/units/unit_brasshollow_foundry_saint.png", "content/unit_art_manifest.json", "content/unit_animation_manifest.json", "tools/generate_unit_art_assets.py", "tests/unit_brasshollow_upper_ladder_curated_art_report.gd", "tests/unit_brasshollow_upper_ladder_curated_art_report.tscn", "tests/unit_art_reproducibility_report.py", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"unit_ids": ["unit_brasshollow_boiler_rivetcasters", "unit_brasshollow_debt_engine_exactors", "unit_brasshollow_crucible_crawlers", "unit_brasshollow_foundry_saint"], "tiers": [4,5,6,7], "roles": ["ranged","melee","ranged","melee"], "ability_ids": [["pressure_artillery"],["overheat"],["volley"],["foundry_aura"]], "source_size": [512,512], "portrait_size": [384,512], "battle_icon_size": [160,160], "overworld_icon_size": [96,96], "animation_sheet_size": [256,896], "animation_state_count": 14, "frames_per_state": 4, "other_units_must_remain_byte_exact": 99, "preserved_early_ladder_ids": ["unit_brasshollow_scrip_haulers", "unit_brasshollow_rivet_hounds", "unit_brasshollow_furnace_pavis_teams"], "authored_player_army_id": "army_orevein_contract_column", "final_sprite_import": false},
+      "completionCriteria": ["Four distinct original transparent sources follow Brasshollow pressure-artillery, overheated debt-engine, crucible-crawler, and walking furnace-saint identities and own exact manifest provenance plus reproducible portrait, battle-icon, overworld-icon, and fourteen-state/four-frame animation-sheet derivatives", "Live faction/town/building recruitment preserves the exact four-unit upper ladder and costs/growth while the authored Orevein Contract Column player army remains exact; a production-rule BattleBoard loads all four icon/sheet pairs and all 224 target frames remain visible", "Only four sources, sixteen target runtime payloads, and four records in each manifest change; all four surfaces for the other 99 units, including the curated Brasshollow early ladder, remain byte-exact; full regeneration/reproducibility, compatibility, validator/editor, Linux, and Windows startup gates pass"],
+      "nonGoals": ["Another faction or tier, army/encounter/town/building counts, unit stats/abilities/costs/growth/content, battle balance or AI tuning, BattleRules/BattleAiRules, animation timing/order, save schema, rendering settings, Native RMG, or packaging behavior", "Broad/final art, packaged battle interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game validation, or release readiness"],
+      "createdAt": "2026-08-22T18:54:06Z",
+      "startedAt": "2026-08-22T18:54:06Z",
+      "updatedAt": "2026-08-22T19:25:28Z",
+      "completedAt": "2026-08-22T19:25:28Z",
+      "notes": "Completed with four distinct 512x512 transparent sources and exact existing-path portrait/icon/overworld/sheet derivatives. Focused runtime /tmp/heroes-brass-upper-focused-final.XlAMuv is natural rc0 with one ok:true marker, four live Board entries, four content rows, and 224 visible frames. Two full 412-asset regenerations plus both manifests are byte-identical; all twelve compatibility owners are rc0 in /tmp/heroes-brass-compat-final.pAk5Id. Validator/editor and official Linux export/headless startup plus Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. The test-only alpha oracle was corrected to measure the anti-aliased strong silhouette; production bytes were unchanged. Broad/final art, packaged battle interaction, certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "remainingWork": "None for this bounded slice. Select the next tracker-approved source-backed implementation slice."
+    },
     {
       "id": "art-veilmourn-upper-ladder-curated-character-sources-10184",
       "title": "Veilmourn Upper-Ladder Curated Character Sources",

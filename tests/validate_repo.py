@@ -369,6 +369,12 @@ VEILMOURN_MIRRORKEEL_REAVERS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "c
 VEILMOURN_FOGBOUND_LEVIATHAN_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_veilmourn_fogbound_leviathan.png"
 VEILMOURN_UPPER_LADDER_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_veilmourn_upper_ladder_curated_art_report.gd"
 VEILMOURN_UPPER_LADDER_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_veilmourn_upper_ladder_curated_art_report.tscn"
+BRASSHOLLOW_BOILER_RIVETCASTERS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_brasshollow_boiler_rivetcasters.png"
+BRASSHOLLOW_DEBT_ENGINE_EXACTORS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_brasshollow_debt_engine_exactors.png"
+BRASSHOLLOW_CRUCIBLE_CRAWLERS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_brasshollow_crucible_crawlers.png"
+BRASSHOLLOW_FOUNDRY_SAINT_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_brasshollow_foundry_saint.png"
+BRASSHOLLOW_UPPER_LADDER_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_brasshollow_upper_ladder_curated_art_report.gd"
+BRASSHOLLOW_UPPER_LADDER_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_brasshollow_upper_ladder_curated_art_report.tscn"
 EMBERCOURT_LANTERN_SAPPERS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_embercourt_lantern_sappers.png"
 EMBERCOURT_BARGEBOW_CREWS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_embercourt_bargebow_crews.png"
 EMBERCOURT_PRODUCTION_EARLY_LADDER_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_embercourt_production_early_ladder_curated_art_report.gd"
@@ -42365,6 +42371,12 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         VEILMOURN_FOGBOUND_LEVIATHAN_CURATED_SOURCE_PATH,
         VEILMOURN_UPPER_LADDER_CURATED_ART_REPORT_SCRIPT_PATH,
         VEILMOURN_UPPER_LADDER_CURATED_ART_REPORT_SCENE_PATH,
+        BRASSHOLLOW_BOILER_RIVETCASTERS_CURATED_SOURCE_PATH,
+        BRASSHOLLOW_DEBT_ENGINE_EXACTORS_CURATED_SOURCE_PATH,
+        BRASSHOLLOW_CRUCIBLE_CRAWLERS_CURATED_SOURCE_PATH,
+        BRASSHOLLOW_FOUNDRY_SAINT_CURATED_SOURCE_PATH,
+        BRASSHOLLOW_UPPER_LADDER_CURATED_ART_REPORT_SCRIPT_PATH,
+        BRASSHOLLOW_UPPER_LADDER_CURATED_ART_REPORT_SCENE_PATH,
         EMBERCOURT_LANTERN_SAPPERS_CURATED_SOURCE_PATH,
         EMBERCOURT_BARGEBOW_CREWS_CURATED_SOURCE_PATH,
         EMBERCOURT_PRODUCTION_EARLY_LADDER_CURATED_ART_REPORT_SCRIPT_PATH,
@@ -42502,6 +42514,10 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     scrip_haulers_unit_id = "unit_brasshollow_scrip_haulers"
     rivet_hounds_unit_id = "unit_brasshollow_rivet_hounds"
     furnace_pavis_unit_id = "unit_brasshollow_furnace_pavis_teams"
+    brasshollow_boiler_rivetcasters_unit_id = "unit_brasshollow_boiler_rivetcasters"
+    brasshollow_debt_engine_exactors_unit_id = "unit_brasshollow_debt_engine_exactors"
+    brasshollow_crucible_crawlers_unit_id = "unit_brasshollow_crucible_crawlers"
+    brasshollow_foundry_saint_unit_id = "unit_brasshollow_foundry_saint"
     river_guard_unit_id = "unit_river_guard"
     ember_archer_unit_id = "unit_ember_archer"
     blackbranch_cutthroat_unit_id = "unit_blackbranch_cutthroat"
@@ -42714,6 +42730,15 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     for _unit_id, source_disk_path, _source_res_path, source_sha256, unit_label in veilmourn_upper_ladder_curated_sources:
         ensure(png_size(source_disk_path) == (512, 512), errors, f"{unit_label} curated character source must be a 512x512 PNG")
         ensure(hashlib.sha256(source_disk_path.read_bytes()).hexdigest() == source_sha256, errors, f"{unit_label} curated character source bytes drifted")
+    brasshollow_upper_ladder_curated_sources = (
+        (brasshollow_boiler_rivetcasters_unit_id, BRASSHOLLOW_BOILER_RIVETCASTERS_CURATED_SOURCE_PATH, "res://art/units/source/curated/unit_brasshollow_boiler_rivetcasters.png", "27df82ca15c6a231a065a421f5663590a74b5cd9ec0654d62b715f57881f3292", "Boiler Rivetcasters"),
+        (brasshollow_debt_engine_exactors_unit_id, BRASSHOLLOW_DEBT_ENGINE_EXACTORS_CURATED_SOURCE_PATH, "res://art/units/source/curated/unit_brasshollow_debt_engine_exactors.png", "b12d450fa159032b87b9a1d3c24b43b08bf840881b76c0a17998bd46cb1861b7", "Debt-Engine Exactors"),
+        (brasshollow_crucible_crawlers_unit_id, BRASSHOLLOW_CRUCIBLE_CRAWLERS_CURATED_SOURCE_PATH, "res://art/units/source/curated/unit_brasshollow_crucible_crawlers.png", "4bd38c1d4a6240c77ebcc62cfea8713c583e825c4cb435859808b4d2de8a68b4", "Crucible Crawlers"),
+        (brasshollow_foundry_saint_unit_id, BRASSHOLLOW_FOUNDRY_SAINT_CURATED_SOURCE_PATH, "res://art/units/source/curated/unit_brasshollow_foundry_saint.png", "f1ec065a27c9eda3111505577a685ebd5a91929794240a386b5df061e6488615", "Foundry Saint"),
+    )
+    for _unit_id, source_disk_path, _source_res_path, source_sha256, unit_label in brasshollow_upper_ladder_curated_sources:
+        ensure(png_size(source_disk_path) == (512, 512), errors, f"{unit_label} curated character source must be a 512x512 PNG")
+        ensure(hashlib.sha256(source_disk_path.read_bytes()).hexdigest() == source_sha256, errors, f"{unit_label} curated character source bytes drifted")
     curated_art_records = [
         record for record in manifest.get("items", [])
         if isinstance(record, dict) and str(record.get("art_source_kind", "")) == "curated_original_character_v1"
@@ -42723,14 +42748,14 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         if isinstance(record, dict) and str(record.get("art_source_kind", "")) == "curated_original_character_v1"
     ]
     ensure(
-        sorted(str(record.get("unit_id", "")) for record in curated_art_records) == sorted([aurora_ballista_unit_id, fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, prism_adept_unit_id, mirror_duelist_unit_id, gorefen_ripper_unit_id, mireclaw_ferrychain_unit_id, mireclaw_sporewake_unit_id, mireclaw_gorefen_rippers_unit_id, mireclaw_drowned_antler_unit_id, embercourt_ash_oath_bailiffs_unit_id, embercourt_beacon_lectors_unit_id, embercourt_sluicefire_lindworms_unit_id, embercourt_charter_colossus_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, sunvault_resonant_choristers_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, thornwake_barkmantle_rams_unit_id, thornwake_stagknot_runners_unit_id, thornwake_graft_matriarchs_unit_id, thornwake_worldroot_bastion_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id, veilmourn_undertow_harpooners_unit_id, veilmourn_obituary_scribes_unit_id, veilmourn_mirrorkeel_reavers_unit_id, veilmourn_fogbound_leviathan_unit_id]),
+        sorted(str(record.get("unit_id", "")) for record in curated_art_records) == sorted([aurora_ballista_unit_id, fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, prism_adept_unit_id, mirror_duelist_unit_id, gorefen_ripper_unit_id, mireclaw_ferrychain_unit_id, mireclaw_sporewake_unit_id, mireclaw_gorefen_rippers_unit_id, mireclaw_drowned_antler_unit_id, embercourt_ash_oath_bailiffs_unit_id, embercourt_beacon_lectors_unit_id, embercourt_sluicefire_lindworms_unit_id, embercourt_charter_colossus_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, brasshollow_boiler_rivetcasters_unit_id, brasshollow_debt_engine_exactors_unit_id, brasshollow_crucible_crawlers_unit_id, brasshollow_foundry_saint_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, sunvault_resonant_choristers_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, thornwake_barkmantle_rams_unit_id, thornwake_stagknot_runners_unit_id, thornwake_graft_matriarchs_unit_id, thornwake_worldroot_bastion_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id, veilmourn_undertow_harpooners_unit_id, veilmourn_obituary_scribes_unit_id, veilmourn_mirrorkeel_reavers_unit_id, veilmourn_fogbound_leviathan_unit_id]),
         errors,
-        "Exactly the approved forty-six units, including both distinct Gorefen tiers, may use the curated character-source branch",
+        "Exactly the approved fifty units, including both distinct Gorefen tiers, may use the curated character-source branch",
     )
     ensure(
-        sorted(str(record.get("unit_id", "")) for record in curated_animation_records) == sorted([aurora_ballista_unit_id, fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, prism_adept_unit_id, mirror_duelist_unit_id, gorefen_ripper_unit_id, mireclaw_ferrychain_unit_id, mireclaw_sporewake_unit_id, mireclaw_gorefen_rippers_unit_id, mireclaw_drowned_antler_unit_id, embercourt_ash_oath_bailiffs_unit_id, embercourt_beacon_lectors_unit_id, embercourt_sluicefire_lindworms_unit_id, embercourt_charter_colossus_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, sunvault_resonant_choristers_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, thornwake_barkmantle_rams_unit_id, thornwake_stagknot_runners_unit_id, thornwake_graft_matriarchs_unit_id, thornwake_worldroot_bastion_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id, veilmourn_undertow_harpooners_unit_id, veilmourn_obituary_scribes_unit_id, veilmourn_mirrorkeel_reavers_unit_id, veilmourn_fogbound_leviathan_unit_id]),
+        sorted(str(record.get("unit_id", "")) for record in curated_animation_records) == sorted([aurora_ballista_unit_id, fordhook_unit_id, citadel_pikeward_unit_id, shard_guard_unit_id, prism_adept_unit_id, mirror_duelist_unit_id, gorefen_ripper_unit_id, mireclaw_ferrychain_unit_id, mireclaw_sporewake_unit_id, mireclaw_gorefen_rippers_unit_id, mireclaw_drowned_antler_unit_id, embercourt_ash_oath_bailiffs_unit_id, embercourt_beacon_lectors_unit_id, embercourt_sluicefire_lindworms_unit_id, embercourt_charter_colossus_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, brasshollow_boiler_rivetcasters_unit_id, brasshollow_debt_engine_exactors_unit_id, brasshollow_crucible_crawlers_unit_id, brasshollow_foundry_saint_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, sunvault_resonant_choristers_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, thornwake_barkmantle_rams_unit_id, thornwake_stagknot_runners_unit_id, thornwake_graft_matriarchs_unit_id, thornwake_worldroot_bastion_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id, veilmourn_undertow_harpooners_unit_id, veilmourn_obituary_scribes_unit_id, veilmourn_mirrorkeel_reavers_unit_id, veilmourn_fogbound_leviathan_unit_id]),
         errors,
-        "Exactly the approved forty-six units, including both distinct Gorefen tiers, may use the curated character-source animation branch",
+        "Exactly the approved fifty units, including both distinct Gorefen tiers, may use the curated character-source animation branch",
     )
     for curated_record, label in (
         (records_by_unit_id.get(fordhook_unit_id, {}), "art"),
@@ -42811,6 +42836,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in embercourt_production_early_ladder_curated_sources),
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in veilmourn_early_ladder_curated_sources),
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in veilmourn_upper_ladder_curated_sources),
+        *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in brasshollow_upper_ladder_curated_sources),
     ):
         for curated_record, label in (
             (records_by_unit_id.get(unit_id, {}), "art"),
@@ -42878,6 +42904,10 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     "unit_aurora_ballista",
     "unit_blackbranch_cutthroat",
     "unit_bog_brute",
+    "unit_brasshollow_boiler_rivetcasters",
+    "unit_brasshollow_crucible_crawlers",
+    "unit_brasshollow_debt_engine_exactors",
+    "unit_brasshollow_foundry_saint",
     "unit_brasshollow_furnace_pavis_teams",
     "unit_brasshollow_rivet_hounds",
     "unit_brasshollow_scrip_haulers",
@@ -42922,7 +42952,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     "unit_veilmourn_obituary_scribes",
     "unit_veilmourn_undertow_harpooners",
 }'''
-    ensure(generator_text.count(expected_curated_id_block) == 1, errors, "Unit art generator curated source id set must contain exactly the forty-six approved units in stable order")
+    ensure(generator_text.count(expected_curated_id_block) == 1, errors, "Unit art generator curated source id set must contain exactly the fifty approved units in stable order")
     for required_branch in (
         '''if not preserve_authored_asset(unit_id, "portrait", portrait_path):
             if curated_source is None:
@@ -43417,7 +43447,8 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         'sheet.get_size() == Vector2i(256, 896)', 'visible == FRAMES_PER_STATE and signatures.size() >= 2',
         'ladder.slice(3, 7) == _target_ids()', 'buildings.slice(3, 7) == _building_ids()',
         'String(faction.get("seed_town_id", "")) == "town_nightglass_redoubt"',
-        'int(source_alpha.get("transparent", 0)) > 50000 and int(source_alpha.get("visible", 0)) > 30000 and int(source_alpha.get("opaque", 0)) > 10000',
+        'int(source_alpha.get("transparent", 0)) > 50000 and int(source_alpha.get("visible", 0)) > 30000 and int(source_alpha.get("strong", 0)) > 50000',
+        'if alpha >= 0.5:', 'strong += 1', '"strong": strong',
         'int(unit.get("growth", 0)) == int(spec["growth"]) and _resource_cost_contract(unit.get("cost", {})) == spec["cost"]',
         'func _resource_cost_contract(cost_value: Variant) -> Dictionary:',
         'result[String(resource_id)] = int(cost_value[resource_id])',
@@ -43435,7 +43466,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         'BattleRulesScript.create_battle_payload(session, fixture_placement)',
         'session.to_dict() == authority_before', 'session.to_dict() == board_authority_before',
         'board.validation_unit_art_summary()',
-        'String(entry.get("battle_id", "")).begins_with("enemy_")',
+        'String(entry.get("side", "enemy")) != "player"',
         'String(entry.get("battle_icon", "")) == String(spec["icon_path"])',
         'String(entry.get("animation_sheet", "")) == String(spec["sheet_path"])',
         '"visible_frame_count": UNITS.size() * STATES.size() * FRAMES_PER_STATE',
@@ -43630,6 +43661,67 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         ensure(forbidden_token not in veilmourn_upper_report_text, errors, f"Veilmourn upper-ladder focused report must remain observation-only: {forbidden_token}")
     veilmourn_upper_scene_text = VEILMOURN_UPPER_LADDER_CURATED_ART_REPORT_SCENE_PATH.read_text(encoding="utf-8")
     ensure('path="res://tests/unit_veilmourn_upper_ladder_curated_art_report.gd"' in veilmourn_upper_scene_text, errors, "Veilmourn upper-ladder curated art report scene must own the exact focused script")
+
+    brasshollow_upper_report_text = BRASSHOLLOW_UPPER_LADDER_CURATED_ART_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'REPORT_ID := "UNIT_BRASSHOLLOW_UPPER_LADDER_CURATED_ART_REPORT"',
+        '"unit_id": "unit_brasshollow_boiler_rivetcasters", "label": "Boiler Rivetcasters", "tier": 4, "role": "ranged", "growth": 3, "ability_ids": ["pressure_artillery"]',
+        '"unit_id": "unit_brasshollow_debt_engine_exactors", "label": "Debt-Engine Exactors", "tier": 5, "role": "melee", "growth": 2, "ability_ids": ["overheat"]',
+        '"unit_id": "unit_brasshollow_crucible_crawlers", "label": "Crucible Crawlers", "tier": 6, "role": "ranged", "growth": 1, "ability_ids": ["volley"]',
+        '"unit_id": "unit_brasshollow_foundry_saint", "label": "Foundry Saint", "tier": 7, "role": "melee", "growth": 1, "ability_ids": ["foundry_aura"]',
+        '"source_sha256": "27df82ca15c6a231a065a421f5663590a74b5cd9ec0654d62b715f57881f3292"',
+        '"source_sha256": "b12d450fa159032b87b9a1d3c24b43b08bf840881b76c0a17998bd46cb1861b7"',
+        '"source_sha256": "4bd38c1d4a6240c77ebcc62cfea8713c583e825c4cb435859808b4d2de8a68b4"',
+        '"source_sha256": "f1ec065a27c9eda3111505577a685ebd5a91929794240a386b5df061e6488615"',
+        '"portrait_sha256": "ab8acae9680e8d7543029a435a20ba1358dd3fa3e5009a1be677b72235390045"',
+        '"portrait_sha256": "7e7f00dd422d017963e4e7732104eafcad36fa03df881ee1288c7a561b679a33"',
+        '"portrait_sha256": "46e94288a7c8c560d99c435b519d3dd5d7e6d693c537762d74faa5e4943bfde8"',
+        '"portrait_sha256": "deeefd76a89ff008784e121e1007906f5428b45518937705d225da08cc5f8b9b"',
+        '"old_sheet_sha256": "485001c8616ba09677b8b6b76488036cc0a3a4e9fcfdd44adc69faa8532383e0"',
+        '"old_sheet_sha256": "3840404fcf620190aea74989d1ed31d4dbb9fd5a287c10d14b86615e15361e86"',
+        '"old_sheet_sha256": "8ffa8d1a99296edaaf41d208bbf5d2b5d6611678b927b977cd7059d920343bdb"',
+        '"old_sheet_sha256": "966e675b684aaeb949218f50e457ee3f72002258399ad6684339e855069a5177"',
+        '"unit_id": "unit_brasshollow_scrip_haulers", "portrait_sha256": "6c56e7484656c5badd866ae20fca2f12e7c4dee6497566b5d2a8f4996aa51a6c"',
+        '"unit_id": "unit_brasshollow_rivet_hounds", "portrait_sha256": "45f5643f184395d443d2dff024611f6babf5f56549647155599bdfda2f0b24c8"',
+        '"unit_id": "unit_brasshollow_furnace_pavis_teams", "portrait_sha256": "100d509cbc5eadee35d0354532cc9d5a3192ef856d73cf62c93f947aa3595e2e"',
+        'OREVEIN_PLAYER_STACKS := [{"unit_id": "unit_brasshollow_scrip_haulers", "count": 12}, {"unit_id": "unit_brasshollow_rivet_hounds", "count": 8}, {"unit_id": "unit_brasshollow_furnace_pavis_teams", "count": 5}, {"unit_id": "unit_brasshollow_boiler_rivetcasters", "count": 2}]',
+        '_validate_assets_and_provenance()', '_validate_content_authority()', 'await _validate_live_brasshollow_and_board()',
+        'source.get_size() == Vector2i(512, 512)', 'portrait.get_size() == Vector2i(384, 512)',
+        'icon.get_size() == Vector2i(160, 160)', 'overworld_icon.get_size() == Vector2i(96, 96)',
+        'sheet.get_size() == Vector2i(256, 896)', 'visible == FRAMES_PER_STATE and signatures.size() >= 2',
+        'int(source_alpha.get("transparent", 0)) > 50000 and int(source_alpha.get("visible", 0)) > 30000 and int(source_alpha.get("opaque", 0)) > 10000',
+        'bool(source_alpha.get("corners_transparent", false))',
+        'ladder.slice(3, 7) == _target_ids()', 'buildings.slice(3, 7) == _building_ids()',
+        'String(faction.get("seed_town_id", "")) == "town_brasshollow_orevein_gantry"',
+        'int(unit.get("growth", 0)) == int(spec["growth"]) and _resource_cost_contract(unit.get("cost", {})) == spec["cost"]',
+        '_ability_ids(unit.get("abilities", [])) == spec["ability_ids"]',
+        'String(building.get("unlock_unit_id", "")) == String(spec["unit_id"])',
+        'int(Dictionary(building.get("growth_bonus", {})).get(String(spec["unit_id"]), 0)) == int(spec["building_growth"])',
+        'int(Dictionary(building.get("recruitment_discount_percent", {})).get(String(spec["unit_id"]), 0)) == int(spec["building_discount"])',
+        'ScenarioFactory.create_session("orevein-contract", "normal", SessionStateStoreScript.LAUNCH_MODE_SKIRMISH)',
+        'session.overworld.get("army", {}) if session.overworld.get("army", {}) is Dictionary else {}',
+        'String(player_army.get("id", "")) == "army_orevein_contract_column"',
+        'player_stacks == OREVEIN_PLAYER_STACKS',
+        '_encounter_placement(session, "orevein_archive_wardens")',
+        'fixture_placement["enemy_army"] = {"id": "army_brasshollow_upper_ladder_art_fixture"',
+        'fixture_ability_contract == {"unit_brasshollow_boiler_rivetcasters": ["pressure_artillery"], "unit_brasshollow_debt_engine_exactors": ["overheat"], "unit_brasshollow_crucible_crawlers": ["volley"], "unit_brasshollow_foundry_saint": ["foundry_aura"]}',
+        'session.to_dict() == authority_before', 'session.to_dict() == board_authority_before',
+        'board.validation_unit_art_summary()',
+        'String(entry.get("battle_id", "")).begins_with("enemy_")',
+        'String(entry.get("battle_icon", "")) == String(spec["icon_path"])',
+        'String(entry.get("animation_sheet", "")) == String(spec["sheet_path"])',
+        'entries.size() == UNITS.size()',
+        '"visible_frame_count": UNITS.size() * STATES.size() * FRAMES_PER_STATE',
+    ):
+        ensure(required_token in brasshollow_upper_report_text, errors, f"Brasshollow upper-ladder curated art report is missing token {required_token}")
+    ensure(brasshollow_upper_report_text.count('BattleRulesScript.create_battle_payload(') == 1, errors, "Brasshollow upper-ladder report must use exactly one detached four-unit production battle materialization")
+    ensure('unit.get("cost", {}) == spec["cost"]' not in brasshollow_upper_report_text, errors, "Brasshollow upper-ladder cost oracle must compare the typed integer resource contract")
+    ensure('session.player_army' not in brasshollow_upper_report_text, errors, "Brasshollow upper-ladder report must observe the live SessionData overworld army surface")
+    ensure('String(entry.get("side", "enemy")) != "player"' not in brasshollow_upper_report_text, errors, "Brasshollow upper-ladder report must not infer a side field absent from the public Board art summary")
+    for forbidden_token in ("draw_curated_portrait", "draw_curated_overworld_icon", "draw_curated_battle_icon", "draw_curated_battle_troop_animation_sheet", '"final_sprite_import": true', "ContentService._unit_art_manifest", "save_png", "generate_unit_art_assets", 'unit["', 'building["'):
+        ensure(forbidden_token not in brasshollow_upper_report_text, errors, f"Brasshollow upper-ladder focused report must remain observation-only: {forbidden_token}")
+    brasshollow_upper_scene_text = BRASSHOLLOW_UPPER_LADDER_CURATED_ART_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure('path="res://tests/unit_brasshollow_upper_ladder_curated_art_report.gd"' in brasshollow_upper_scene_text, errors, "Brasshollow upper-ladder curated art report scene must own the exact focused script")
 
     scrip_report_text = SCRIP_HAULERS_CURATED_ART_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
