@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Mirror Duelist now has one original transparent Sunvault reflective skirmisher source and four reproducible existing-path runtime derivatives. Five authored encounters, public abilities, focused BattleBoard presentation, distinct Mirror Duelists identity, reproducibility, compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
+  "currentNotes": "Aurora Ballista now has one original transparent Sunvault crystalline siege-engine source and four reproducible existing-path runtime derivatives. Four authored encounters, public abilities, focused BattleBoard presentation, distinct Aurora Bastions portrait, reproducibility, compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-sunvault-mirror-duelist-curated-character-source-10184",
-  "currentSliceId": "art-sunvault-mirror-duelist-curated-character-source-10184",
-  "currentSliceNotes": "Completed one original transparent Mirror Duelist source and four existing-path runtime derivatives while preserving five authored encounter rosters, public reach/backstab authority, the distinct curated unit_sunvault_mirror_duelists, and all 408 non-target runtime payloads byte-exact.",
+  "currentSlice": "art-sunvault-aurora-ballista-curated-character-source-10184",
+  "currentSliceId": "art-sunvault-aurora-ballista-curated-character-source-10184",
+  "currentSliceNotes": "Completed one original transparent Aurora Ballista source and four existing-path runtime derivatives while preserving four authored encounter rosters, public volley/formation_guard authority, the distinct unit_sunvault_aurora_ballistae portrait, and all 408 non-target runtime payloads byte-exact.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Sunvault Mirror Duelist Curated Character Source",
-  "currentSliceUpdatedAt": "2026-08-22T15:22:05Z",
+  "currentSliceTitle": "Sunvault Aurora Ballista Curated Character Source",
+  "currentSliceUpdatedAt": "2026-08-22T15:39:07Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19847,8 +19847,28 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next tracker-approved source-backed release-readiness slice; do not infer broad/final art or release readiness from this completed character-source increment.",
-  "notes": "Completed the Mirror Duelist character-source slice with one original transparent source and four reproducible runtime derivatives. Five authored encounter rosters and public reach/backstab authority remain exact, and the distinct curated unit_sunvault_mirror_duelists is preserved; focused, compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
+  "notes": "Completed the Aurora Ballista character-source slice with one original transparent siege-engine source and four reproducible runtime derivatives. Four authored encounter rosters and public volley/formation_guard authority remain exact, and the distinct unit_sunvault_aurora_ballistae portrait is preserved; focused, compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
   "plannedSlices": [
+    {
+      "id": "art-sunvault-aurora-ballista-curated-character-source-10184",
+      "title": "Sunvault Aurora Ballista Curated Character Source",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md", "docs/animation-battle-troop-state-contract-report.md", "docs/factions-content-bible.md"],
+      "purpose": "Replace the live unit_aurora_ballista abstract emblem with one character-readable original Sunvault crystalline siege-engine source and exact reproducible existing-path runtime derivatives.",
+      "implementationTargets": ["art/units/source/curated/unit_aurora_ballista.png", "art/units/portraits/unit_aurora_ballista.png", "art/units/battle_icons/unit_aurora_ballista.png", "art/units/overworld_icons/unit_aurora_ballista.png", "art/animation/runtime/units/unit_aurora_ballista.png", "content/unit_art_manifest.json", "content/unit_animation_manifest.json", "tools/generate_unit_art_assets.py", "tests/unit_sunvault_aurora_ballista_curated_art_report.gd", "tests/unit_sunvault_aurora_ballista_curated_art_report.tscn", "tests/unit_art_reproducibility_report.py", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"unit_id": "unit_aurora_ballista", "distinct_preserved_unit_id": "unit_sunvault_aurora_ballistae", "tier": 3, "role": "ranged", "ability_ids": ["volley", "formation_guard"], "active_encounter_count": 4, "live_scenario_count": 4, "army_group_count": 4, "town_count": 1, "source_size": [512,512], "portrait_size": [384,512], "battle_icon_size": [160,160], "overworld_icon_size": [96,96], "animation_sheet_size": [256,896], "animation_state_count": 14, "frames_per_state": 4, "other_units_must_remain_byte_exact": 102, "final_sprite_import": false},
+      "completionCriteria": ["One original transparent Aurora Ballista source follows Sunvault crystalline siege-engine identity and owns exact manifest provenance plus reproducible portrait, battle-icon, overworld-icon, and fourteen-state/four-frame animation-sheet derivatives", "All four live authored encounter payloads preserve exact ids/counts and public volley/formation_guard abilities while a representative BattleBoard loads the exact icon/sheet and all 56 target frames remain visible", "Only one source, four target runtime payloads, and one record in each manifest change; all four surfaces for the other 102 units remain byte-exact; full regeneration/reproducibility, compatibility, validator/editor, Linux, and Windows startup gates pass"],
+      "nonGoals": ["unit_sunvault_aurora_ballistae or another unit/tier, army/encounter counts, unit stats/abilities/content, BattleRules/BattleAiRules, balance tuning, animation timing/order, save schema, rendering settings, Native RMG, or packaging behavior", "Broad/final art, packaged battle interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game validation, or release readiness"],
+      "createdAt": "2026-08-22T15:25:11Z",
+      "startedAt": "2026-08-22T15:25:11Z",
+      "updatedAt": "2026-08-22T15:39:07Z",
+      "completedAt": "2026-08-22T15:39:07Z",
+      "notes": "Completed with one original transparent Sunvault crystalline siege-engine source and four exact existing-path runtime derivatives. Four authored encounter payloads retain exact ids/counts and public volley/formation_guard authority; the Fogchart Aurora Battery BattleBoard loads one exact curated entry and all 56 target frames are visible, while unit_sunvault_aurora_ballistae retains its authored portrait. Two regeneration runs match all 412 assets and both manifests byte-for-byte; only four target runtime payloads changed and all 408 non-target payloads remained exact. Compatibility, core, validator/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged battle interaction, certification, signing/publication, broad/final art, whole-game validation, and release readiness remain unclaimed.",
+      "remainingWork": "No work remains in this slice. Select the next tracker-approved source-backed release-readiness slice; broad/final art, packaged battle interaction, certification, signing/publication, whole-game validation, and overall release readiness remain open."
+    },
     {
       "id": "art-sunvault-mirror-duelist-curated-character-source-10184",
       "title": "Sunvault Mirror Duelist Curated Character Source",
@@ -94255,7 +94275,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "art_sunvault_mirror_duelist_curated_character_source_completed",
+  "result": "art_sunvault_aurora_ballista_curated_character_source_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -94356,9 +94376,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Mirror Duelist now has one original transparent character source and four reproducible runtime derivatives; five authored encounter rosters/public abilities, distinct Mirror Duelists identity, and all 408 non-target payloads remain exact, with focused, compatibility, static/editor, and bounded Linux/Windows startup gates green.",
+  "summary": "Aurora Ballista now has one original transparent siege-engine source and four reproducible runtime derivatives; four authored encounter rosters/public abilities, distinct Aurora Bastions portrait, and all 408 non-target payloads remain exact, with focused, compatibility, static/editor, and bounded Linux/Windows startup gates green.",
   "taskId": "10184",
-  "updatedAt": "2026-08-22T15:22:05Z",
+  "updatedAt": "2026-08-22T15:39:07Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

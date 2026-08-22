@@ -174,7 +174,10 @@
       "motif": "engine",
       "portrait": "res://art/units/portraits/unit_aurora_ballista.png",
       "battle_icon": "res://art/units/battle_icons/unit_aurora_ballista.png",
-      "overworld_icon": "res://art/units/overworld_icons/unit_aurora_ballista.png"
+      "overworld_icon": "res://art/units/overworld_icons/unit_aurora_ballista.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_aurora_ballista.png",
+      "curated_source_sha256": "f41f6b46ab457267a870128b0bf2d5c4a15f1803e055625fe8db9cd7a85e7625"
     },
     {
       "id": "unit_embercourt_fordhook_cadets",
