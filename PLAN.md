@@ -24,6 +24,8 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `presentation-town-failed-action-invalid-audio-10184`. Every non-empty failed Town rule result now retains its blocked feedback and plays exactly one imported `ui_invalid` transient through the common result boundary. The focused stale enabled tavern-button path proves exact invalid/click cue order and metadata, unchanged session/presentation authority, disabled and validation-only silence, and unchanged successful hero-hire completion across 1280x720 and 1920x1080 in normal, missing-asset, and reduced-motion modes. UI-audio, focus, accessibility, Town visual, core, repository/editor, and bounded Linux/Windows export-startup gates pass. Packaged Town interaction/listening, certification, signing/publication, whole-game validation, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
+  id: `presentation-town-failed-action-invalid-audio-10184`
 - Completed implementation slice: `presentation-overworld-failed-command-invalid-audio-10184`. Every non-empty failed Overworld command result now retains its visible blocked feedback and plays exactly one imported `ui_invalid` transient through the common result-feedback boundary. The focused real failed field-spell path proves exact cue metadata and unchanged session/presentation authority at 1280x720 and 1920x1080 in normal and reduced-motion modes; UI-audio, focus, accessibility, overworld visual, core, repository/editor, and bounded Linux/Windows export-startup gates pass. Successful commands, specialized presentation audio, Effects policy, packaged interaction/listening, certification, signing/publication, whole-game validation, and release readiness remain outside the claim. Select the next tracker-approved source-backed slice.
   id: `presentation-overworld-failed-command-invalid-audio-10184`
 - Completed implementation slice: `ux-main-menu-credits-controller-paging-10184`. The Credits & Notices modal now pages down/up through physical controller shoulder buttons, while D-pad Up enters the body from initial Close focus and physical B closes and restores the secondary Guide command. The focused report proves keyboard paging 16->0 and controller-only paging 17->0 at 1280x720 and 1920x1080 with exact notice content, modal semantics, and session/campaign/save/settings/input-map/router authority. Main Menu navigation, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass. Packaged interaction, native controller hardware, AT-SPI/UIA, certification, signing/publication, whole-game, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
@@ -8716,6 +8718,31 @@ Completion evidence:
 - the real failed field-spell command appends one exact imported `ui_invalid` record with the common feedback source and detached failure metadata while session bytes, spell presentation, and `PresentationAudio` remain unchanged across 1280x720 and 1920x1080 in normal and reduced-motion modes;
 - UI-audio, keyboard focus, screen-reader semantics, overworld visual, core, repository validation, Python/JSON/diff checks, exact/generic editor parses, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass;
 - packaged Overworld interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game validation, and release readiness remain unclaimed.
+
+## Town Failed Action Invalid Audio
+
+id: `presentation-town-failed-action-invalid-audio-10184`
+
+Status: completed.
+
+Implementation boundary:
+- when the existing `TownShell._record_town_action_result` receives a non-empty failed rule result, retain its exact visible message/recap behavior and play the existing imported `ui_invalid` cue exactly once with detached lane, action-id, and message metadata;
+- keep disabled controls and validation-only unknown ids silent, retain the automatic button-click cue for a real press, and leave successful Town completion VFX/audio, Effects mute/reduced-repetition policy, session/save authority, and all Town rules unchanged;
+- prove the real race through an enabled tavern button whose resources become insufficient after render but before press, then restore resources and prove the same button's successful hero-hire path.
+
+Completion criteria:
+- a real enabled Town button pressed after its resource authority becomes stale emits the unchanged click plus one exact imported `ui_invalid` record, publishes blocked feedback, changes no session authority, and publishes no Town completion presentation or `PresentationAudio` cue;
+- disabled and unknown-id paths remain silent, while the restored successful hero-hire path retains exact roster/cost consequences and imported/fallback completion VFX/audio at 1280x720 and 1920x1080 across normal, missing-asset, and reduced-motion modes;
+- focused Town/UI-audio, active-play focus, accessibility, Town visual, core, repository/editor, and official Linux/Windows export-startup gates pass.
+
+Non-goals:
+- no Town action availability, cost, hero, build, recruit, market, response, study, transfer, artifact, specialty, rule result, feedback copy/layout, focus, session, save, cue asset, Effects setting, cooldown, voice-budget, or completion-presentation change;
+- no Overworld/Battle/Editor expansion, packaged Town interaction or listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Completion evidence:
+- the focused real stale-button report passes at both supported validation viewports across normal, missing-asset, and reduced-motion modes with one imported invalid cue followed by the unchanged click, exact blocked feedback, unchanged session/presentation authority, disabled and validation-only silence, and unchanged successful hero-hire consequences and completion presentation;
+- UI-audio, active-play keyboard focus, screen-reader semantics, Town visual, core, repository validation, Python/JSON/diff checks, exact/generic editor parses, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass;
+- packaged Town interaction/listening, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game validation, and release readiness remain unclaimed.
 
 ## Progress Reconciliation
 
