@@ -293,6 +293,9 @@ UNIT_ANIMATION_ROOT = ROOT / "art" / "animation" / "runtime" / "units"
 FORDHOOK_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_embercourt_fordhook_cadets.png"
 FORDHOOK_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_embercourt_fordhook_curated_art_report.gd"
 FORDHOOK_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_embercourt_fordhook_curated_art_report.tscn"
+CITADEL_PIKEWARD_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_citadel_pikeward.png"
+CITADEL_PIKEWARD_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_embercourt_citadel_pikeward_curated_art_report.gd"
+CITADEL_PIKEWARD_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_embercourt_citadel_pikeward_curated_art_report.tscn"
 SCRIP_HAULERS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_brasshollow_scrip_haulers.png"
 SCRIP_HAULERS_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_brasshollow_scrip_haulers_curated_art_report.gd"
 SCRIP_HAULERS_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_brasshollow_scrip_haulers_curated_art_report.tscn"
@@ -42265,6 +42268,9 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         FORDHOOK_CURATED_SOURCE_PATH,
         FORDHOOK_CURATED_ART_REPORT_SCRIPT_PATH,
         FORDHOOK_CURATED_ART_REPORT_SCENE_PATH,
+        CITADEL_PIKEWARD_CURATED_SOURCE_PATH,
+        CITADEL_PIKEWARD_CURATED_ART_REPORT_SCRIPT_PATH,
+        CITADEL_PIKEWARD_CURATED_ART_REPORT_SCENE_PATH,
         SCRIP_HAULERS_CURATED_SOURCE_PATH,
         SCRIP_HAULERS_CURATED_ART_REPORT_SCRIPT_PATH,
         SCRIP_HAULERS_CURATED_ART_REPORT_SCENE_PATH,
@@ -42425,6 +42431,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     ensure(not extra_animation_unit_ids, errors, "Unit animation manifest references unknown units: " + ", ".join(extra_animation_unit_ids[:12]))
 
     fordhook_unit_id = "unit_embercourt_fordhook_cadets"
+    citadel_pikeward_unit_id = "unit_citadel_pikeward"
     scrip_haulers_unit_id = "unit_brasshollow_scrip_haulers"
     rivet_hounds_unit_id = "unit_brasshollow_rivet_hounds"
     furnace_pavis_unit_id = "unit_brasshollow_furnace_pavis_teams"
@@ -42454,6 +42461,14 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         hashlib.sha256(FORDHOOK_CURATED_SOURCE_PATH.read_bytes()).hexdigest() == fordhook_source_sha256,
         errors,
         "Fordhook curated character source bytes drifted",
+    )
+    citadel_pikeward_source_res_path = "res://art/units/source/curated/unit_citadel_pikeward.png"
+    citadel_pikeward_source_sha256 = "92c79e97dea6f8261272874990bdb6d12255a6201e4dd3b53fff100a51d81ca0"
+    ensure(png_size(CITADEL_PIKEWARD_CURATED_SOURCE_PATH) == (512, 512), errors, "Citadel Pikeward curated character source must be a 512x512 PNG")
+    ensure(
+        hashlib.sha256(CITADEL_PIKEWARD_CURATED_SOURCE_PATH.read_bytes()).hexdigest() == citadel_pikeward_source_sha256,
+        errors,
+        "Citadel Pikeward curated character source bytes drifted",
     )
     scrip_haulers_source_res_path = "res://art/units/source/curated/unit_brasshollow_scrip_haulers.png"
     scrip_haulers_source_sha256 = "759022e21b7781df3c88ba853b32905b52a820cafe45d2814a2006629d26e028"
@@ -42551,12 +42566,12 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         if isinstance(record, dict) and str(record.get("art_source_kind", "")) == "curated_original_character_v1"
     ]
     ensure(
-        sorted(str(record.get("unit_id", "")) for record in curated_art_records) == sorted([fordhook_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id]),
+        sorted(str(record.get("unit_id", "")) for record in curated_art_records) == sorted([fordhook_unit_id, citadel_pikeward_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id]),
         errors,
         "Exactly Fordhook, the Brasshollow T1-T3 units, the River Pass starter and Ghoul Grove core, and the Mireclaw, Sunvault, and Thornwake T1-T3 art records may use the curated character-source branch",
     )
     ensure(
-        sorted(str(record.get("unit_id", "")) for record in curated_animation_records) == sorted([fordhook_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id]),
+        sorted(str(record.get("unit_id", "")) for record in curated_animation_records) == sorted([fordhook_unit_id, citadel_pikeward_unit_id, embercourt_lantern_sappers_unit_id, embercourt_bargebow_crews_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id, sunvault_shard_wardens_unit_id, sunvault_prism_adepts_unit_id, sunvault_mirror_duelists_unit_id, thornwake_seedcutters_unit_id, thornwake_thornwhip_unit_id, thornwake_sporeglass_unit_id, veilmourn_bellwake_oars_unit_id, veilmourn_mourning_lanterns_unit_id, veilmourn_maskglass_corsairs_unit_id]),
         errors,
         "Exactly Fordhook, the Brasshollow T1-T3 units, the River Pass starter and Ghoul Grove core, and the Mireclaw, Sunvault, and Thornwake T1-T3 animation records may use the curated character-source branch",
     )
@@ -42566,6 +42581,12 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     ):
         ensure(str(curated_record.get("curated_source", "")) == fordhook_source_res_path, errors, f"Fordhook {label} manifest curated source path drifted")
         ensure(str(curated_record.get("curated_source_sha256", "")) == fordhook_source_sha256, errors, f"Fordhook {label} manifest curated source hash drifted")
+    for curated_record, label in (
+        (records_by_unit_id.get(citadel_pikeward_unit_id, {}), "art"),
+        (animation_records_by_unit_id.get(citadel_pikeward_unit_id, {}), "animation"),
+    ):
+        ensure(str(curated_record.get("curated_source", "")) == citadel_pikeward_source_res_path, errors, f"Citadel Pikeward {label} manifest curated source path drifted")
+        ensure(str(curated_record.get("curated_source_sha256", "")) == citadel_pikeward_source_sha256, errors, f"Citadel Pikeward {label} manifest curated source hash drifted")
     for curated_record, label in (
         (records_by_unit_id.get(scrip_haulers_unit_id, {}), "art"),
         (animation_records_by_unit_id.get(scrip_haulers_unit_id, {}), "animation"),
@@ -42662,6 +42683,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     "unit_brasshollow_furnace_pavis_teams",
     "unit_brasshollow_rivet_hounds",
     "unit_brasshollow_scrip_haulers",
+    "unit_citadel_pikeward",
     "unit_ember_archer",
     "unit_embercourt_bargebow_crews",
     "unit_embercourt_fordhook_cadets",
@@ -42681,7 +42703,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     "unit_veilmourn_maskglass_corsairs",
     "unit_veilmourn_mourning_lanterns",
 }'''
-    ensure(generator_text.count(expected_curated_id_block) == 1, errors, "Unit art generator curated source id set must contain exactly the twenty-three approved units in stable order")
+    ensure(generator_text.count(expected_curated_id_block) == 1, errors, "Unit art generator curated source id set must contain exactly the twenty-four approved units in stable order")
     for required_branch in (
         '''if not preserve_authored_asset(unit_id, "portrait", portrait_path):
             if curated_source is None:
@@ -42762,6 +42784,72 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         'path="res://tests/unit_embercourt_fordhook_curated_art_report.gd"' in fordhook_scene_text,
         errors,
         "Fordhook curated art report scene must own the exact focused script",
+    )
+    citadel_report_text = CITADEL_PIKEWARD_CURATED_ART_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'REPORT_ID := "UNIT_EMBERCOURT_CITADEL_PIKEWARD_CURATED_ART_REPORT"',
+        'TARGET_IDS := ["unit_citadel_pikeward"]',
+        '"unit_id": "unit_citadel_pikeward", "label": "Citadel Pikeward", "ability_ids": ["reach", "formation_guard"]',
+        '"source_sha256": "92c79e97dea6f8261272874990bdb6d12255a6201e4dd3b53fff100a51d81ca0"',
+        '"portrait_sha256": "a4a860c5bcd813599260e50bcf7f4400940701d9bdba4716af27a4830e2cc6ce"',
+        '"icon_sha256": "35992c391ef181e5dfe867657b2d68d86a3930b47bdee5d0c5753413de12ba9a"',
+        '"overworld_icon_sha256": "fc4096a34c96ce4fc75657ada31fa2f2421c80ba4b8fc9bdd819bd0ac1301641"',
+        '"sheet_sha256": "482ad10ff59237dc65af3377f59576275a59f35157c947b0959b5da6ca7864c9"',
+        '"old_portrait_sha256": "9f22286d608bdfaf94d32ac443c91199456c26c3195fba57059e542f2a05820d"',
+        '"old_icon_sha256": "43a3cf5b58e207c538b19d3e4dd1598410a1ea826f84278f43561afced9153bc"',
+        '"old_overworld_icon_sha256": "abc74debb461f2ad8a98c394f80c1a6f6c01b66f0b920cabcec2ef7f48cde0d8"',
+        '"old_sheet_sha256": "248a293ed3609c82dfc29c1d36c43f64596401af0570426ee499c408dcb3be35"',
+        '"scenario_id": "bogbound-oath", "placement_id": "bogbound_archive_wardens", "army_id": "army_bogbound_archive_wardens_watch"',
+        '"scenario_id": "charter-pyre", "placement_id": "charter_granary_levies", "army_id": "army_charter_granary_levies_watch"',
+        '"scenario_id": "lockmarsh-surge", "placement_id": "surge_road_chaplains", "army_id": "army_lockmarsh_road_chaplains_watch"',
+        '"scenario_id": "lockmarsh-surge", "placement_id": "surge_charter_guard", "army_id": "army_lockmarsh_charter_guard_watch"',
+        '"scenario_id": "lockmarsh-surge", "placement_id": "lockmarsh_archive_wardens", "army_id": "army_lockmarsh_archive_wardens_watch"',
+        '"scenario_id": "glassroad-sundering", "placement_id": "glassroad_archive_wardens", "army_id": "army_glassroad_archive_line_watch"',
+        '"scenario_id": "orevein-contract", "placement_id": "orevein_archive_wardens", "army_id": "army_orevein_archive_wardens_watch"',
+        '"scenario_id": "orevein-contract", "placement_id": "orevein_bridgeward_levies", "army_id": "army_orevein_bridgeward_levies"',
+        '"scenario_id": "orevein-contract", "placement_id": "orevein_beacon_wardens", "army_id": "army_orevein_beacon_wardens"',
+        '"scenario_id": "clauseworks-counterclaim", "placement_id": "clauseworks_archive_wardens", "army_id": "army_clauseworks_archive_wardens"',
+        '_validate_assets_and_provenance()',
+        'await _validate_live_encounters_and_board()',
+        'source.get_size() == Vector2i(512, 512)',
+        'portrait.get_size() == Vector2i(384, 512)',
+        'icon.get_size() == Vector2i(160, 160)',
+        'overworld_icon.get_size() == Vector2i(96, 96)',
+        'sheet.get_size() == Vector2i(256, 896)',
+        'int(source_alpha.get("transparent", 0)) > 50000 and int(source_alpha.get("visible", 0)) > 50000 and int(source_alpha.get("opaque", 0)) > 0',
+        'visible == FRAMES_PER_STATE and signatures.size() >= 2',
+        'OverworldRules.normalize_overworld_state(session)',
+        'BattleRulesScript.create_battle_payload(session, placement)',
+        '_battle_stack_contract(enemy_stacks) == spec["stacks"]',
+        '_battle_target_ability_contract(enemy_stacks) == expected_abilities',
+        'session.to_dict() == authority_before',
+        'board.validation_unit_art_summary()',
+        'String(entry.get("battle_icon", "")) == String(unit_spec["icon_path"])',
+        'String(entry.get("animation_sheet", "")) == String(unit_spec["sheet_path"])',
+        'board_session.to_dict() == board_authority_before',
+        '"visible_frame_count": UNITS.size() * STATES.size() * FRAMES_PER_STATE',
+    ):
+        ensure(required_token in citadel_report_text, errors, f"Citadel Pikeward curated art report is missing token {required_token}")
+    ensure(citadel_report_text.count('"scenario_id": ') == 12, errors, "Citadel Pikeward focused report must own exactly ten encounter rows plus one detached result row and one runtime summary scenario id")
+    for forbidden_token in (
+        "draw_curated_portrait",
+        "draw_curated_overworld_icon",
+        "draw_curated_battle_icon",
+        "draw_curated_battle_troop_animation_sheet",
+        '"final_sprite_import": true',
+        "ContentService._unit_art_manifest",
+        "save_png",
+        "generate_unit_art_assets",
+        'placement[',
+        'army[',
+        'enemy_stacks[',
+    ):
+        ensure(forbidden_token not in citadel_report_text, errors, f"Citadel Pikeward focused report must remain observation-only: {forbidden_token}")
+    citadel_scene_text = CITADEL_PIKEWARD_CURATED_ART_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure(
+        'path="res://tests/unit_embercourt_citadel_pikeward_curated_art_report.gd"' in citadel_scene_text,
+        errors,
+        "Citadel Pikeward curated art report scene must own the exact focused script",
     )
     scrip_report_text = SCRIP_HAULERS_CURATED_ART_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
     for required_token in (
@@ -49482,6 +49570,9 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         orevein_contract_text = orevein_contract_report_path.read_text(encoding="utf-8")
         for required_token in (
             "BATTLE_OREVEIN_CONTRACT_BALANCE_REGRESSION",
+            '"orevein_archive_wardens": {"outcome_state": "defeat", "pacing_band": "standard", "round_reached": 5, "terminal_health_margin_pct": 45, "enemy_damage_per_round": 55}',
+            '"orevein_bridgeward_levies": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 74, "enemy_damage_per_round": 18}',
+            '"orevein_beacon_wardens": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 69, "enemy_damage_per_round": 23}',
             "orevein_archive_wardens",
             "orevein_bridgeward_levies",
             "orevein_beacon_wardens",
@@ -49568,6 +49659,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "LOCAL_STACK_COUNTS",
             "SHARED_STACK_COUNTS",
             "UNCHANGED_SAMPLE_CONTRACTS",
+            '"glassroad_bridgeward_levies": {"outcome_state": "defeat", "pacing_band": "extended", "round_reached": 6, "terminal_health_margin_pct": 44, "enemy_damage_per_round": 24}',
+            '"glassroad_beacon_wardens": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 39, "enemy_damage_per_round": 22}',
             "terminal_health_margin_pct",
             "damage_per_round",
             "get_tree().quit(1)",
@@ -49639,6 +49732,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "LOCAL_STACK_COUNTS",
             "SHARED_STACK_COUNTS",
             "UNCHANGED_SAMPLE_CONTRACTS",
+            '"bogbound_survey_guard": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 5, "terminal_health_margin_pct": 33, "enemy_damage_per_round": 25}',
             "player_disadvantaged",
             "get_tree().quit(1)",
         ):
@@ -49666,6 +49760,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             "LOCAL_ARMY_CONTRACTS",
             "SHARED_ARMY_CONTRACTS",
             "UNCHANGED_SAMPLE_CONTRACTS",
+            '"surge_charter_guard": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 54, "enemy_damage_per_round": 22}',
+            '"lockmarsh_archive_wardens": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 65, "enemy_damage_per_round": 22}',
             "Road Chaplains do not resolve as a bounded defeat",
             "player_enemy_power_ratio_pct",
             "pacing_band",

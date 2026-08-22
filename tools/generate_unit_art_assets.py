@@ -22,6 +22,7 @@ CURATED_CHARACTER_SOURCE_IDS = {
     "unit_brasshollow_furnace_pavis_teams",
     "unit_brasshollow_rivet_hounds",
     "unit_brasshollow_scrip_haulers",
+    "unit_citadel_pikeward",
     "unit_ember_archer",
     "unit_embercourt_bargebow_crews",
     "unit_embercourt_fordhook_cadets",

@@ -23,8 +23,8 @@ const LOCAL_ARMY_CONTRACTS := {
 	},
 }
 const UNCHANGED_SAMPLE_CONTRACTS := {
-	"surge_charter_guard": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 65, "enemy_damage_per_round": 17},
-	"lockmarsh_archive_wardens": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 70, "enemy_damage_per_round": 19},
+	"surge_charter_guard": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 54, "enemy_damage_per_round": 22},
+	"lockmarsh_archive_wardens": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 65, "enemy_damage_per_round": 22},
 }
 const SHARED_ARMY_CONTRACTS := {
 	"army_riverwatch_relief": {"unit_river_guard": 8, "unit_ember_archer": 6},
