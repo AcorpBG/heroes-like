@@ -145,14 +145,20 @@ def main() -> int:
 
         curated_source = load_curated_character_source(unit_id)
         if not preserve_authored_asset(unit_id, "portrait", portrait_path):
-            draw_portrait(unit, palette, motif, initials, portrait_path)
+            if curated_source is None:
+                draw_portrait(unit, palette, motif, initials, portrait_path)
+            else:
+                draw_curated_portrait(unit, palette, curated_source, portrait_path)
         if not preserve_authored_asset(unit_id, "battle_icon", battle_path):
             if curated_source is None:
                 draw_battle_icon(unit, palette, motif, initials, battle_path)
             else:
                 draw_curated_battle_icon(unit, palette, curated_source, battle_path)
         if not preserve_authored_asset(unit_id, "overworld_icon", overworld_path):
-            draw_overworld_icon(unit, palette, motif, initials, overworld_path)
+            if curated_source is None:
+                draw_overworld_icon(unit, palette, motif, initials, overworld_path)
+            else:
+                draw_curated_overworld_icon(unit, palette, curated_source, overworld_path)
         if not preserve_authored_asset(unit_id, "battle_animation_sheet", animation_path):
             if curated_source is None:
                 draw_battle_troop_animation_sheet(unit, palette, motif, initials, animation_path)
@@ -403,6 +409,26 @@ def draw_portrait(unit: dict, palette: dict, motif: str, initials: str, path: Pa
     image.save(path)
 
 
+def draw_curated_portrait(unit: dict, palette: dict, source: Image.Image, path: Path) -> None:
+    image, draw = canvas(PORTRAIT_SIZE)
+    primary = palette["primary"]
+    shadow = palette["shadow"]
+    metal = palette["metal"]
+    draw_gradient(draw, PORTRAIT_SIZE, scale_color(primary, 0.42), scale_color(shadow, 0.74))
+    draw_hash_marks(draw, str(unit["id"]), PORTRAIT_SIZE, metal, 30)
+    draw.rectangle([20, 20, 364, 492], outline=with_alpha(metal, 235), width=5)
+    draw.rectangle([30, 30, 354, 482], outline=with_alpha(scale_color(shadow, 0.72), 235), width=3)
+    draw.ellipse([54, 306, 330, 390], fill=with_alpha(scale_color(shadow, 0.48), 105))
+    figure = _fit_curated_source(source, (314, 342))
+    image.alpha_composite(figure, ((PORTRAIT_SIZE[0] - figure.width) // 2, 382 - figure.height))
+    draw.rectangle([42, 392, 342, 460], fill=with_alpha(scale_color(shadow, 0.72), 225), outline=with_alpha(metal, 190), width=2)
+    draw_centered_text(draw, str(unit.get("name", unit["id"]))[:28], (48, 400, 336, 430), font(24, True), (245, 238, 218, 245))
+    subtitle = f"T{int(unit.get('tier', 1))} {str(unit.get('role', '')).upper()}"
+    draw_centered_text(draw, subtitle, (48, 430, 336, 458), font(17), (218, 224, 219, 230))
+    draw_tier_pips(draw, int(unit.get("tier", 1)), (54, 62), metal, 5)
+    image.save(path)
+
+
 def draw_battle_icon(unit: dict, palette: dict, motif: str, initials: str, path: Path) -> None:
     image, draw = canvas(BATTLE_ICON_SIZE)
     primary = palette["primary"]
@@ -451,6 +477,24 @@ def draw_overworld_icon(unit: dict, palette: dict, motif: str, initials: str, pa
     draw_motif(draw, motif, (48, 44), 24, palette, str(unit["id"]))
     draw_unit_signature(draw, str(unit["id"]), OVERWORLD_ICON_SIZE, metal, (16, 18), 8)
     draw_centered_text(draw, initials, (20, 66, 76, 90), font(12, True), (20, 22, 24, 230))
+    image.save(path)
+
+
+def draw_curated_overworld_icon(unit: dict, palette: dict, source: Image.Image, path: Path) -> None:
+    image, draw = canvas(OVERWORLD_ICON_SIZE)
+    primary = palette["primary"]
+    shadow = palette["shadow"]
+    metal = palette["metal"]
+    draw.polygon(
+        [(48, 3), (90, 27), (83, 89), (13, 89), (6, 27)],
+        fill=with_alpha(scale_color(shadow, 0.72), 244),
+        outline=with_alpha(metal, 235),
+    )
+    draw.polygon([(48, 10), (82, 31), (76, 80), (20, 80), (14, 31)], fill=with_alpha(scale_color(primary, 0.72), 205))
+    draw.ellipse([16, 68, 80, 86], fill=with_alpha(scale_color(shadow, 0.45), 98))
+    figure = _fit_curated_source(source, (82, 76))
+    image.alpha_composite(figure, ((OVERWORLD_ICON_SIZE[0] - figure.width) // 2, 85 - figure.height))
+    draw_tier_pips(draw, int(unit.get("tier", 1)), (17, 84), metal, 2)
     image.save(path)
 
 
