@@ -4438,6 +4438,12 @@ func _record_town_action_result(
 	_last_action_recap = TownRules.build_town_action_recap(_session, lane, action_id, action, result, before)
 	if bool(_last_action_recap.get("active", false)):
 		_session.flags["last_town_action_recap"] = _last_action_recap.duplicate(true)
+	if not result.is_empty() and not bool(result.get("ok", false)):
+		UiAudio.play_invalid("TownShell._record_town_action_result", {
+			"lane": lane,
+			"action_id": action_id,
+			"message": _last_message,
+		})
 	ProfileLogScript.emit_general("town", "action", lane, ProfileLogScript.elapsed_ms(profile_started), {
 		"recap": ProfileLogScript.elapsed_ms(profile_started),
 	}, _town_profile_metadata(false).merged({

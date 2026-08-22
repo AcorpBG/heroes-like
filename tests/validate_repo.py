@@ -26895,6 +26895,31 @@ def validate_town_hero_hire_completion_feedback(errors: list[str]) -> None:
     ensure('"audio_placeholder_town_hero_hire": {"frequency": 440.0, "duration": 0.42, "gain": 0.12}' in PRESENTATION_AUDIO_PATH.read_text(encoding="utf-8"), errors, "Town hero-hire generated fallback drifted")
 
     shell_text = TOWN_SCRIPT_PATH.read_text(encoding="utf-8")
+    result_recorder_match = re.search(r"func _record_town_action_result\(.*?\n(?P<body>.*?)(?=\nfunc )", shell_text, re.DOTALL)
+    ensure(result_recorder_match is not None, errors, "Town common action-result boundary is missing")
+    result_recorder = result_recorder_match.group("body") if result_recorder_match is not None else ""
+    for token in (
+        '_last_message = String(result.get("message", ""))',
+        "TownRules.build_town_action_recap",
+        'if not result.is_empty() and not bool(result.get("ok", false)):',
+        'UiAudio.play_invalid("TownShell._record_town_action_result", {',
+        '"lane": lane',
+        '"action_id": action_id',
+        '"message": _last_message',
+        'ProfileLogScript.emit_general("town", "action", lane',
+    ):
+        ensure(token in result_recorder, errors, f"Town failed-action feedback is missing exact invalid-audio ownership: {token}")
+    result_audio_order = [
+        result_recorder.find('_last_message = String(result.get("message", ""))'),
+        result_recorder.find("TownRules.build_town_action_recap"),
+        result_recorder.find('if not result.is_empty() and not bool(result.get("ok", false)):'),
+        result_recorder.find('UiAudio.play_invalid("TownShell._record_town_action_result", {'),
+        result_recorder.find('ProfileLogScript.emit_general("town", "action", lane'),
+    ]
+    ensure(all(index >= 0 for index in result_audio_order) and result_audio_order == sorted(result_audio_order), errors, "Town invalid audio must follow exact non-empty failed-rule classification and precede result-only profiling")
+    ensure(result_recorder.count("UiAudio.play_invalid(") == 1, errors, "Town common action-result boundary must own exactly one invalid-audio call")
+    for forbidden in ("UiAudio.play_confirm", "UiAudio.play_cue", "PresentationAudio", "await ", "create_timer", "TownRules.get_", "result.erase(", "action.erase("):
+        ensure(forbidden not in result_recorder, errors, f"Town failed-action audio must not change rule, presentation, timing, or payload ownership through {forbidden}")
     handler = re.search(r"func _on_tavern_action_pressed\(action_id: String\) -> void:\n(?P<body>.*?)(?=\nfunc )", shell_text, re.DOTALL)
     ensure(handler is not None, errors, "Town hero-hire presenter is missing the public tavern handler")
     if handler is not None:
@@ -26918,8 +26943,30 @@ def validate_town_hero_hire_completion_feedback(errors: list[str]) -> None:
     scene_text = TOWN_HERO_HIRE_FEEDBACK_REPORT_SCENE_PATH.read_text(encoding="utf-8")
     ensure_scene_nodes(scene_text, errors, "town_hero_hire_completion_feedback_report.tscn", [("TownHeroHireCompletionFeedbackReport", "Node")])
     report_text = TOWN_HERO_HIRE_FEEDBACK_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
-    for token in ('const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]', '_seed_tavern_fixture(authored_session, authored_town)', '_move_active_hero_to_town(session, town)', 'session.overworld["hero_position"] = position.duplicate(true)', '"building_wayfarers_hall"', 'stage.present_town_action({"event_id": "town_hero_hired"})', 'var control_result: Dictionary = TownRules.hire_hero_at_active_town(control, hero_id)', 'var public_result: Dictionary = shell.validation_perform_town_action(action_id)', 'live_after == control.to_dict()', 'after_hero_ids.size() == before_hero_ids.size() + 1', 'recruited_hero == control_hero', '_cost_deltas_exact(expected_deltas, recruit_cost)', 'String(active.get("event_id", "")) == "town_hero_hired"', 'String(audio_record.get("cue_id", "")) == "audio_placeholder_town_hero_hire"', 'unavailable_silent', 'var invalid_result: Dictionary = shell.validation_perform_town_action(action_id)', 'print("TOWN_HERO_HIRE_COMPLETION_FEEDBACK_REPORT %s"'):
+    for token in ('const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]', '_seed_tavern_fixture(authored_session, authored_town)', '_move_active_hero_to_town(session, town)', 'session.overworld["hero_position"] = position.duplicate(true)', '"building_wayfarers_hall"', 'var management_tabs := shell.get_node_or_null("%ManagementTabs") as TabContainer', 'management_tabs.current_tab = 4', 'if management_tabs.current_tab != 4:', 'stage.present_town_action({"event_id": "town_hero_hired"})', 'var stale_button := _button_for_label(tavern_actions, String(selected_action.get("label", "")))', 'var stale_control_result: Dictionary = TownRules.hire_hero_at_active_town(stale_control, hero_id)', 'stale_button.emit_signal("pressed")', 'String(stale_invalid_record.get("cue_id", "")) == "ui_invalid"', 'String(stale_invalid_record.get("source", "")) == "TownShell._record_town_action_result"', 'String(stale_invalid_record.get("asset_path", "")) == "res://art/audio/runtime/ui/invalid.wav"', 'String(stale_invalid_record.get("role", "")) == "invalid_action"', 'String(stale_click_record.get("cue_id", "")) == "ui_click"', 'String(stale_click_record.get("asset_path", "")) == "res://art/audio/runtime/ui/click.wav"', 'String(Dictionary(stale_click_record.get("metadata", {})).get("class", "")) == "Button"', 'String(stale_click_record.get("source", "")).contains("/TavernActions/")', 'String(stale_snapshot.get("return_to_menu_visible_message", "")) == String(stale_control_result.get("message", ""))', 'and Dictionary(stale_invalid_record.get("metadata", {})) == {', '"lane": "order"', 'and stale_invalid_audio_exact', 'var disabled_button := _button_for_label', 'and disabled_button.disabled', 'UiAudio.validation_records() == unavailable_audio_before', 'var control_result: Dictionary = TownRules.hire_hero_at_active_town(control, hero_id)', 'var public_result: Dictionary = shell.validation_perform_town_action(action_id)', 'live_after == control.to_dict()', 'after_hero_ids.size() == before_hero_ids.size() + 1', 'recruited_hero == control_hero', '_cost_deltas_exact(expected_deltas, recruit_cost)', 'and ui_audio_after_success == stale_audio_records', 'String(active.get("event_id", "")) == "town_hero_hired"', 'String(audio_record.get("cue_id", "")) == "audio_placeholder_town_hero_hire"', 'unavailable_silent', 'var invalid_result: Dictionary = shell.validation_perform_town_action(action_id)', 'print("TOWN_HERO_HIRE_COMPLETION_FEEDBACK_REPORT %s"'):
         ensure(token in report_text, errors, f"Town hero-hire focused report is missing method-matched proof: {token}")
+    logistics_tab_index = report_text.find("management_tabs.current_tab = 4")
+    stale_button_index = report_text.find('var stale_button := _button_for_label(tavern_actions, String(selected_action.get("label", "")))', logistics_tab_index)
+    zero_resources_index = report_text.find('live_session.overworld["resources"] = unavailable_resources', stale_button_index)
+    stale_authority_index = report_text.find("var stale_authority_before: Dictionary = live_session.to_dict()", zero_resources_index)
+    stale_control_index = report_text.find("var stale_control_result: Dictionary = TownRules.hire_hero_at_active_town(stale_control, hero_id)", stale_authority_index)
+    ui_reset_index = report_text.find("UiAudio.validation_reset()", stale_control_index)
+    stale_press_index = report_text.find('stale_button.emit_signal("pressed")', ui_reset_index)
+    stale_records_index = report_text.find("var stale_audio_records: Array = UiAudio.validation_records()", stale_press_index)
+    stale_gate_index = report_text.find("var stale_failure_exact: bool", stale_records_index)
+    disabled_index = report_text.find("var disabled_button := _button_for_label", stale_gate_index)
+    unavailable_index = report_text.find("var unavailable_result: Dictionary = shell.validation_perform_town_action(action_id)", disabled_index)
+    restore_index = report_text.find('live_session.overworld["resources"] = fixture_resources', unavailable_index)
+    success_index = report_text.find("var public_result: Dictionary = shell.validation_perform_town_action(action_id)", restore_index)
+    ensure(0 <= logistics_tab_index < stale_button_index < zero_resources_index < stale_authority_index < stale_control_index < ui_reset_index < stale_press_index < stale_records_index < stale_gate_index < disabled_index < unavailable_index < restore_index < success_index, errors, "Town focused owner must enter the public Logistics tab, capture an enabled button, make only its live resources stale, press it, gate exact failure/audio/disabled silence, restore, then run success")
+    ensure(report_text.count("UiAudio.validation_reset()") == 3, errors, "Town hero-hire report must reset UI audio at row start, immediately before stale press, and teardown")
+    button_helper_match = re.search(r"func _button_for_label\(.*?\n(?P<body>.*?)(?=\nfunc )", report_text, re.DOTALL)
+    ensure(button_helper_match is not None, errors, "Town focused stale-button lookup helper is missing")
+    button_helper = button_helper_match.group("body") if button_helper_match is not None else ""
+    for token in ("container.get_children()", "child is Button", "(child as Button).text == label", "return child as Button"):
+        ensure(token in button_helper, errors, f"Town stale-button lookup must remain a read-only live control observer: {token}")
+    for forbidden in ("emit_signal", "call(", "set(", "queue_free", "sort", "UiAudio", "TownRules", "SessionState"):
+        ensure(forbidden not in button_helper, errors, f"Town stale-button lookup must not mutate or bypass production ownership through {forbidden}")
     for forbidden in ("_on_tavern_action_pressed(", "_record_town_action_presentation(", "_town_hero_hire_vfx_asset_state(", "_draw_town_hero_hire_presentation(", "create_timer", "create_tween"):
         ensure(forbidden not in report_text, errors, f"Town hero-hire report bypasses public ownership: {forbidden}")
 

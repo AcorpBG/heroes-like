@@ -45,6 +45,7 @@ func _run() -> void:
 
 func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 	PresentationAudio.validation_reset()
+	UiAudio.validation_reset()
 	get_window().size = viewport_size
 	await get_tree().process_frame
 	await get_tree().process_frame
@@ -68,8 +69,15 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 	var live_town: Dictionary = TownRules.get_active_town(live_session)
 	var stage = shell.get_node_or_null("%TownStage")
 	var blocker := shell.get_node_or_null("%TownActionInputBlocker") as Control
-	if stage == null or blocker == null:
+	var management_tabs := shell.get_node_or_null("%ManagementTabs") as TabContainer
+	var tavern_actions := shell.get_node_or_null("%TavernActions") as Container
+	if stage == null or blocker == null or management_tabs == null or tavern_actions == null:
 		return await _finish_case(shell, {"ok": false, "failure": "live_surface_missing"})
+	management_tabs.current_tab = 4
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if management_tabs.current_tab != 4:
+		return await _finish_case(shell, {"ok": false, "failure": "logistics_tab_unavailable"})
 	var malformed_before: Dictionary = stage.validation_town_action_presentation_snapshot()
 	var malformed_after: Dictionary = stage.present_town_action({"event_id": "town_hero_hired"})
 	var malformed_fail_closed: bool = malformed_after == malformed_before and not blocker.visible and PresentationAudio.validation_records().is_empty()
@@ -83,6 +91,9 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 	var recruit_cost := HeroCommandRules.hero_recruit_cost(hero_template)
 	if hero_id == "" or hero_id == action_id or hero_template.is_empty() or recruit_cost.is_empty():
 		return await _finish_case(shell, {"ok": false, "failure": "hero_contract_missing", "action": selected_action})
+	var stale_button := _button_for_label(tavern_actions, String(selected_action.get("label", "")))
+	if stale_button == null or stale_button.disabled:
+		return await _finish_case(shell, {"ok": false, "failure": "enabled_tavern_button_missing", "action": selected_action})
 	if bool(mode.get("missing_asset", false)):
 		stage.set("_town_vfx_texture_missing", {TEXTURE_PATH: true})
 
@@ -91,13 +102,92 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 	for resource_id_value in recruit_cost:
 		unavailable_resources[String(resource_id_value)] = 0
 	live_session.overworld["resources"] = unavailable_resources
-	shell.validation_force_refresh()
+	var stale_authority_before: Dictionary = live_session.to_dict()
+	var stale_control = SessionDataScript.SessionData.new()
+	stale_control.from_dict(stale_authority_before.duplicate(true))
+	var stale_control_result: Dictionary = TownRules.hire_hero_at_active_town(stale_control, hero_id)
+	var stale_presentation_before: Dictionary = stage.validation_town_action_presentation_snapshot()
+	UiAudio.validation_reset()
+	stale_button.emit_signal("pressed")
 	await get_tree().process_frame
+	await get_tree().process_frame
+	var stale_audio_records: Array = UiAudio.validation_records()
+	var stale_invalid_record: Dictionary = stale_audio_records[0] if stale_audio_records.size() == 2 and stale_audio_records[0] is Dictionary else {}
+	var stale_click_record: Dictionary = stale_audio_records[1] if stale_audio_records.size() == 2 and stale_audio_records[1] is Dictionary else {}
+	var stale_snapshot: Dictionary = shell.validation_snapshot()
+	var stale_recap: Dictionary = stale_snapshot.get("town_action_recap", {}) if stale_snapshot.get("town_action_recap", {}) is Dictionary else {}
+	var stale_presentation_after: Dictionary = stage.validation_town_action_presentation_snapshot()
+	var stale_invalid_audio_exact: bool = (
+		stale_audio_records.size() == 2
+		and String(stale_invalid_record.get("cue_id", "")) == "ui_invalid"
+		and String(stale_invalid_record.get("source", "")) == "TownShell._record_town_action_result"
+		and bool(stale_invalid_record.get("played", false))
+		and String(stale_invalid_record.get("playback_source", "")) == "imported_wav"
+		and String(stale_invalid_record.get("asset_path", "")) == "res://art/audio/runtime/ui/invalid.wav"
+		and String(stale_invalid_record.get("role", "")) == "invalid_action"
+		and int(stale_invalid_record.get("duration_msec", 0)) == 150
+		and int(stale_invalid_record.get("stream_mix_rate", 0)) == 44100
+		and bool(stale_invalid_record.get("stream_stereo", false))
+		and int(stale_invalid_record.get("stream_loop_mode", -1)) == AudioStreamWAV.LOOP_DISABLED
+		and int(stale_invalid_record.get("imported_asset_count", 0)) == 1
+		and int(stale_invalid_record.get("generated_fallback_count", -1)) == 0
+		and Dictionary(stale_invalid_record.get("metadata", {})) == {
+			"lane": "order",
+			"action_id": action_id,
+			"message": String(stale_control_result.get("message", "")),
+		}
+		and String(stale_click_record.get("cue_id", "")) == "ui_click"
+		and bool(stale_click_record.get("played", false))
+		and String(stale_click_record.get("playback_source", "")) == "imported_wav"
+		and String(stale_click_record.get("asset_path", "")) == "res://art/audio/runtime/ui/click.wav"
+		and String(stale_click_record.get("role", "")) == "button_click"
+		and String(Dictionary(stale_click_record.get("metadata", {})).get("class", "")) == "Button"
+		and not bool(Dictionary(stale_click_record.get("metadata", {})).get("disabled", true))
+		and String(Dictionary(stale_click_record.get("metadata", {})).get("name", "")) != ""
+		and String(stale_click_record.get("source", "")).contains("/TavernActions/")
+		and String(stale_click_record.get("source", "")).ends_with("/%s" % String(Dictionary(stale_click_record.get("metadata", {})).get("name", "")))
+	)
+	var stale_failure_exact: bool = (
+		not bool(stale_control_result.get("ok", true))
+		and stale_control.to_dict() == stale_authority_before
+		and live_session.to_dict() == stale_authority_before
+		and stale_presentation_after == stale_presentation_before
+		and PresentationAudio.validation_records().is_empty()
+		and String(stale_snapshot.get("return_to_menu_visible_message", "")) == String(stale_control_result.get("message", ""))
+		and not bool(stale_recap.get("active", true))
+		and String(stale_recap.get("kind", "")) == "order"
+		and String(stale_recap.get("action_id", "")) == action_id
+		and String(stale_recap.get("message", "")) == String(stale_control_result.get("message", ""))
+		and stale_invalid_audio_exact
+	)
+	var stale_failure_diagnostics := {
+		"audio_record_count_exact": stale_audio_records.size() == 2,
+		"invalid_metadata_exact": Dictionary(stale_invalid_record.get("metadata", {})) == {"lane": "order", "action_id": action_id, "message": String(stale_control_result.get("message", ""))},
+		"click_metadata_exact": String(Dictionary(stale_click_record.get("metadata", {})).get("class", "")) == "Button" and not bool(Dictionary(stale_click_record.get("metadata", {})).get("disabled", true)) and String(Dictionary(stale_click_record.get("metadata", {})).get("name", "")) != "",
+		"click_source_exact": String(stale_click_record.get("source", "")).contains("/TavernActions/") and String(stale_click_record.get("source", "")).ends_with("/%s" % String(Dictionary(stale_click_record.get("metadata", {})).get("name", ""))),
+		"control_unchanged": stale_control.to_dict() == stale_authority_before,
+		"session_unchanged": live_session.to_dict() == stale_authority_before,
+		"session_differences": _recursive_exact_differences(stale_authority_before, live_session.to_dict()),
+		"presentation_unchanged": stale_presentation_after == stale_presentation_before,
+		"presentation_audio_empty": PresentationAudio.validation_records().is_empty(),
+		"visible_message_exact": String(stale_snapshot.get("return_to_menu_visible_message", "")) == String(stale_control_result.get("message", "")),
+		"recap_exact": not bool(stale_recap.get("active", true)) and String(stale_recap.get("kind", "")) == "order" and String(stale_recap.get("action_id", "")) == action_id and String(stale_recap.get("message", "")) == String(stale_control_result.get("message", "")),
+	}
+	var disabled_button := _button_for_label(shell.get_node_or_null("%TavernActions") as Container, String(selected_action.get("label", "")))
 	var unavailable_before: Dictionary = live_session.to_dict()
+	var unavailable_audio_before: Array = UiAudio.validation_records()
 	var unavailable_result: Dictionary = shell.validation_perform_town_action(action_id)
 	await get_tree().process_frame
 	var unavailable_after: Dictionary = stage.validation_town_action_presentation_snapshot()
-	var unavailable_silent: bool = not bool(unavailable_result.get("ok", true)) and unavailable_after == malformed_before and live_session.to_dict() == unavailable_before and PresentationAudio.validation_records().is_empty()
+	var unavailable_silent: bool = (
+		disabled_button != null
+		and disabled_button.disabled
+		and not bool(unavailable_result.get("ok", true))
+		and unavailable_after == stale_presentation_after
+		and live_session.to_dict() == unavailable_before
+		and PresentationAudio.validation_records().is_empty()
+		and UiAudio.validation_records() == unavailable_audio_before
+	)
 	live_session.overworld["resources"] = fixture_resources
 	shell.validation_force_refresh()
 	await get_tree().process_frame
@@ -123,6 +213,7 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 	var recruited_hero := _player_hero_snapshot(live_after, hero_id)
 	var control_hero := _player_hero_snapshot(control.to_dict(), hero_id)
 	var audio_records: Array = PresentationAudio.validation_records()
+	var ui_audio_after_success: Array = UiAudio.validation_records()
 
 	var roster_exact: bool = (
 		hero_id not in before_hero_ids
@@ -166,6 +257,7 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 		and String(Dictionary(public_result.get("town_action_recap", {})).get("kind", "")) == "order"
 		and live_after == control.to_dict()
 		and roster_exact
+		and ui_audio_after_success == stale_audio_records
 	)
 	var presentation_exact: bool = (
 		bool(active.get("active", false))
@@ -200,20 +292,25 @@ func _run_case(viewport_size: Vector2i, mode: Dictionary) -> Dictionary:
 	var refresh_result: Dictionary = shell.validation_force_refresh()
 	await get_tree().process_frame
 	var after_refresh: Dictionary = stage.validation_town_action_presentation_snapshot()
-	var refresh_silent: bool = not refresh_result.is_empty() and int(after_refresh.get("serial", 0)) == serial and live_session.to_dict() == authority_before_refresh and PresentationAudio.validation_records() == audio_records
+	var refresh_silent: bool = not refresh_result.is_empty() and int(after_refresh.get("serial", 0)) == serial and live_session.to_dict() == authority_before_refresh and PresentationAudio.validation_records() == audio_records and UiAudio.validation_records() == stale_audio_records
 	var authority_before_invalid: Dictionary = live_session.to_dict()
 	var invalid_result: Dictionary = shell.validation_perform_town_action(action_id)
 	await get_tree().process_frame
 	var after_invalid: Dictionary = stage.validation_town_action_presentation_snapshot()
-	var invalid_silent: bool = not bool(invalid_result.get("ok", true)) and int(after_invalid.get("serial", 0)) == serial and live_session.to_dict() == authority_before_invalid and PresentationAudio.validation_records() == audio_records
+	var invalid_silent: bool = not bool(invalid_result.get("ok", true)) and int(after_invalid.get("serial", 0)) == serial and live_session.to_dict() == authority_before_invalid and PresentationAudio.validation_records() == audio_records and UiAudio.validation_records() == stale_audio_records
 	var row := {
-		"ok": malformed_fail_closed and unavailable_silent and consequence_exact and presentation_exact and refresh_silent and invalid_silent and SessionDataScript.SAVE_VERSION == 9,
+		"ok": malformed_fail_closed and stale_failure_exact and unavailable_silent and consequence_exact and presentation_exact and refresh_silent and invalid_silent and SessionDataScript.SAVE_VERSION == 9,
 		"viewport": [viewport_size.x, viewport_size.y],
 		"mode": String(mode.get("id", "")),
 		"action_id": action_id,
 		"hero_id": hero_id,
 		"player_hero_count": after_hero_ids.size(),
 		"malformed_fail_closed": malformed_fail_closed,
+		"stale_failure_exact": stale_failure_exact,
+		"stale_invalid_audio_exact": stale_invalid_audio_exact,
+		"stale_invalid_audio_record": stale_invalid_record,
+		"stale_click_audio_record": stale_click_record,
+		"stale_failure_diagnostics": stale_failure_diagnostics,
 		"unavailable_silent": unavailable_silent,
 		"roster_exact": roster_exact,
 		"consequence_exact": consequence_exact,
@@ -239,6 +336,14 @@ func _enabled_tavern_action(session) -> Dictionary:
 		if action_value is Dictionary and String(action_value.get("id", "")).begins_with("hire_hero:") and not bool(action_value.get("disabled", true)):
 			return action_value.duplicate(true)
 	return {}
+
+func _button_for_label(container: Container, label: String) -> Button:
+	if container == null:
+		return null
+	for child in container.get_children():
+		if child is Button and (child as Button).text == label:
+			return child as Button
+	return null
 
 func _first_player_town(session) -> Dictionary:
 	for town_value in session.overworld.get("towns", []):
@@ -327,6 +432,7 @@ func _finish_case(shell: Node, result: Dictionary) -> Dictionary:
 		shell.queue_free()
 		await get_tree().process_frame
 	PresentationAudio.validation_reset()
+	UiAudio.validation_reset()
 	return result
 
 func _recursive_exact_differences(expected: Variant, actual: Variant, path: String = "$") -> Array:
