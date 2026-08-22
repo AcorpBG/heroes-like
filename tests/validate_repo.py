@@ -309,6 +309,11 @@ MIRE_SLINGER_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_
 BOG_BRUTE_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_bog_brute.png"
 GHOUL_GROVE_CORE_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_river_pass_ghoul_grove_core_curated_art_report.gd"
 GHOUL_GROVE_CORE_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_river_pass_ghoul_grove_core_curated_art_report.tscn"
+MIRECLAW_REEDSNARE_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_mireclaw_reedsnare_kin.png"
+MIRECLAW_MUDGLASS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_mireclaw_mudglass_slingers.png"
+MIRECLAW_BOGPLATE_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_mireclaw_bogplate_maulers.png"
+MIRECLAW_EARLY_LADDER_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_mireclaw_early_ladder_curated_art_report.gd"
+MIRECLAW_EARLY_LADDER_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_mireclaw_early_ladder_curated_art_report.tscn"
 UNIT_CURATED_CROSS_SURFACE_IDENTITY_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_curated_cross_surface_identity_report.gd"
 UNIT_CURATED_CROSS_SURFACE_IDENTITY_REPORT_SCENE_PATH = ROOT / "tests" / "unit_curated_cross_surface_identity_report.tscn"
 UNIT_PRODUCTION_READINESS_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_production_readiness_report.gd"
@@ -42257,6 +42262,11 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         BOG_BRUTE_CURATED_SOURCE_PATH,
         GHOUL_GROVE_CORE_CURATED_ART_REPORT_SCRIPT_PATH,
         GHOUL_GROVE_CORE_CURATED_ART_REPORT_SCENE_PATH,
+        MIRECLAW_REEDSNARE_CURATED_SOURCE_PATH,
+        MIRECLAW_MUDGLASS_CURATED_SOURCE_PATH,
+        MIRECLAW_BOGPLATE_CURATED_SOURCE_PATH,
+        MIRECLAW_EARLY_LADDER_CURATED_ART_REPORT_SCRIPT_PATH,
+        MIRECLAW_EARLY_LADDER_CURATED_ART_REPORT_SCENE_PATH,
         UNIT_CURATED_CROSS_SURFACE_IDENTITY_REPORT_SCRIPT_PATH,
         UNIT_CURATED_CROSS_SURFACE_IDENTITY_REPORT_SCENE_PATH,
         CONTENT_SERVICE_PATH,
@@ -42385,6 +42395,9 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     blackbranch_cutthroat_unit_id = "unit_blackbranch_cutthroat"
     mire_slinger_unit_id = "unit_mire_slinger"
     bog_brute_unit_id = "unit_bog_brute"
+    mireclaw_reedsnare_unit_id = "unit_mireclaw_reedsnare_kin"
+    mireclaw_mudglass_unit_id = "unit_mireclaw_mudglass_slingers"
+    mireclaw_bogplate_unit_id = "unit_mireclaw_bogplate_maulers"
     fordhook_source_res_path = "res://art/units/source/curated/unit_embercourt_fordhook_cadets.png"
     fordhook_source_sha256 = "e9eddd43ef9b1b1a44a40fd609676bb31c8db90cd612a17bb3e87aef0fce6ff4"
     ensure(png_size(FORDHOOK_CURATED_SOURCE_PATH) == (512, 512), errors, "Fordhook curated character source must be a 512x512 PNG")
@@ -42441,6 +42454,14 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     for _unit_id, source_disk_path, _source_res_path, source_sha256, unit_label in ghoul_grove_curated_sources:
         ensure(png_size(source_disk_path) == (512, 512), errors, f"{unit_label} curated character source must be a 512x512 PNG")
         ensure(hashlib.sha256(source_disk_path.read_bytes()).hexdigest() == source_sha256, errors, f"{unit_label} curated character source bytes drifted")
+    mireclaw_early_ladder_curated_sources = (
+        (mireclaw_reedsnare_unit_id, MIRECLAW_REEDSNARE_CURATED_SOURCE_PATH, "res://art/units/source/curated/unit_mireclaw_reedsnare_kin.png", "f13f170113fe2d8ae0ccd354c8332ba293e376c764f95d2c7de491ccf8b4c68c", "Reedsnare Kin"),
+        (mireclaw_mudglass_unit_id, MIRECLAW_MUDGLASS_CURATED_SOURCE_PATH, "res://art/units/source/curated/unit_mireclaw_mudglass_slingers.png", "838808890927847fecb1e74c9bf1fde0a1bb434927b40152ed6b2e849874aaf5", "Mudglass Slingers"),
+        (mireclaw_bogplate_unit_id, MIRECLAW_BOGPLATE_CURATED_SOURCE_PATH, "res://art/units/source/curated/unit_mireclaw_bogplate_maulers.png", "c77d8b089bf4a8aa352825621db0a65efac291bb5ada040a67feb13d73150ecd", "Bogplate Maulers"),
+    )
+    for _unit_id, source_disk_path, _source_res_path, source_sha256, unit_label in mireclaw_early_ladder_curated_sources:
+        ensure(png_size(source_disk_path) == (512, 512), errors, f"{unit_label} curated character source must be a 512x512 PNG")
+        ensure(hashlib.sha256(source_disk_path.read_bytes()).hexdigest() == source_sha256, errors, f"{unit_label} curated character source bytes drifted")
     curated_art_records = [
         record for record in manifest.get("items", [])
         if isinstance(record, dict) and str(record.get("art_source_kind", "")) == "curated_original_character_v1"
@@ -42450,14 +42471,14 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         if isinstance(record, dict) and str(record.get("art_source_kind", "")) == "curated_original_character_v1"
     ]
     ensure(
-        sorted(str(record.get("unit_id", "")) for record in curated_art_records) == sorted([fordhook_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id]),
+        sorted(str(record.get("unit_id", "")) for record in curated_art_records) == sorted([fordhook_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id]),
         errors,
-        "Exactly Fordhook, the Brasshollow T1-T3 units, and the River Pass starter and Ghoul Grove core art records may use the curated character-source branch",
+        "Exactly Fordhook, the Brasshollow T1-T3 units, the River Pass starter and Ghoul Grove core, and the Mireclaw T1-T3 art records may use the curated character-source branch",
     )
     ensure(
-        sorted(str(record.get("unit_id", "")) for record in curated_animation_records) == sorted([fordhook_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id]),
+        sorted(str(record.get("unit_id", "")) for record in curated_animation_records) == sorted([fordhook_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id, mireclaw_reedsnare_unit_id, mireclaw_mudglass_unit_id, mireclaw_bogplate_unit_id]),
         errors,
-        "Exactly Fordhook, the Brasshollow T1-T3 units, and the River Pass starter and Ghoul Grove core animation records may use the curated character-source branch",
+        "Exactly Fordhook, the Brasshollow T1-T3 units, the River Pass starter and Ghoul Grove core, and the Mireclaw T1-T3 animation records may use the curated character-source branch",
     )
     for curated_record, label in (
         (records_by_unit_id.get(fordhook_unit_id, {}), "art"),
@@ -42487,6 +42508,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         (river_guard_unit_id, river_guard_source_res_path, river_guard_source_sha256, "River Guard"),
         (ember_archer_unit_id, ember_archer_source_res_path, ember_archer_source_sha256, "Ember Archer"),
         *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in ghoul_grove_curated_sources),
+        *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in mireclaw_early_ladder_curated_sources),
     ):
         for curated_record, label in (
             (records_by_unit_id.get(unit_id, {}), "art"),
@@ -42559,9 +42581,12 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     "unit_ember_archer",
     "unit_embercourt_fordhook_cadets",
     "unit_mire_slinger",
+    "unit_mireclaw_bogplate_maulers",
+    "unit_mireclaw_mudglass_slingers",
+    "unit_mireclaw_reedsnare_kin",
     "unit_river_guard",
 }'''
-    ensure(generator_text.count(expected_curated_id_block) == 1, errors, "Unit art generator curated source id set must contain exactly the nine approved units in stable order")
+    ensure(generator_text.count(expected_curated_id_block) == 1, errors, "Unit art generator curated source id set must contain exactly the twelve approved units in stable order")
     for required_branch in (
         '''if not preserve_authored_asset(unit_id, "portrait", portrait_path):
             if curated_source is None:
@@ -42844,6 +42869,77 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         'path="res://tests/unit_river_pass_ghoul_grove_core_curated_art_report.gd"' in ghoul_grove_scene_text,
         errors,
         "Ghoul Grove core curated art report scene must own the exact focused script",
+    )
+
+    mireclaw_report_text = MIRECLAW_EARLY_LADDER_CURATED_ART_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'REPORT_ID := "UNIT_MIRECLAW_EARLY_LADDER_CURATED_ART_REPORT"',
+        '"unit_id": "unit_mireclaw_reedsnare_kin", "label": "Reedsnare Kin", "ability_ids": ["harry"]',
+        '"source_sha256": "f13f170113fe2d8ae0ccd354c8332ba293e376c764f95d2c7de491ccf8b4c68c"',
+        '"portrait_sha256": "de351dd6a31c66fdecaa968a9585ca89c200d5c4675acf0fc8482d6bff3b82db"',
+        '"icon_sha256": "5ccfd386ead4d0d09cb9f98110b447f246b52c32731843eac49eec8bf55d417a"',
+        '"overworld_icon_sha256": "7e1ce98553a7d2f4cc4430ab68b9b48d918a734df45a1bd671688494fe0a7135"',
+        '"sheet_sha256": "362464d9e7587bd0ac8c3a2cd6bbc19467e4bcd8363c16939a98ae1ad0ad1dbc"',
+        '"old_portrait_sha256": "04b988d594c1eb6b7a3441e925eb877fcfaa2b5b35c1f36d4643bbc83aa0050d"',
+        '"unit_id": "unit_mireclaw_mudglass_slingers", "label": "Mudglass Slingers", "ability_ids": ["harry"]',
+        '"source_sha256": "838808890927847fecb1e74c9bf1fde0a1bb434927b40152ed6b2e849874aaf5"',
+        '"portrait_sha256": "46ef6708018099cb9ec71439eb86144af3ff4719190c9c4792208e2c4f646734"',
+        '"icon_sha256": "a6f3bee140a6324879e2cf80581267529a6088fc64f70dd4092e8c4d2ce75008"',
+        '"overworld_icon_sha256": "f3a044e380a5f4cd12a6001e85c66a4184f500a5914631f8b6220d07e3d5abc6"',
+        '"sheet_sha256": "ce95c827903ec85065093bb110e857b98e88a8dd1f1f441738d4d36cdbbba1c8"',
+        '"old_portrait_sha256": "8e4740a1f5426fae61673d09e542a27904b9c7f14e06a89a4882bf9e4dd1f9fd"',
+        '"unit_id": "unit_mireclaw_bogplate_maulers", "label": "Bogplate Maulers", "ability_ids": ["shielding"]',
+        '"source_sha256": "c77d8b089bf4a8aa352825621db0a65efac291bb5ada040a67feb13d73150ecd"',
+        '"portrait_sha256": "579311b6d40327d62ec8fa5656f1cc0603a64bc03aad08735bea60eb271ec07b"',
+        '"icon_sha256": "9b7b6a0ee7e9eb562e138f7a9f8c9ca6a5c5b5915c87cbe47cc75e8fc6dad16f"',
+        '"overworld_icon_sha256": "7dda59077c755bb3a35d34602005b22018cf3f4c5b69fce94b5d5caf7e44a6f8"',
+        '"sheet_sha256": "f377cf60369681cf214564de0348648107f662804f251f9e698dee0fcf7e18d5"',
+        '"old_portrait_sha256": "094d4afce534381caa7480515256b51a605ca4f2e21b932b4949fe117827d898"',
+        '"placement_id": "river_pass_ghoul_grove", "army_id": "army_river_pass_ghoul_grove_watch"',
+        '"stacks": [{"unit_id": "unit_mireclaw_bogplate_maulers", "count": 4}, {"unit_id": "unit_mireclaw_mudglass_slingers", "count": 3}]',
+        '"placement_id": "causeway_reed_camp", "army_id": "army_causeway_reed_camp_pickets"',
+        '"stacks": [{"unit_id": "unit_mireclaw_reedsnare_kin", "count": 7}, {"unit_id": "unit_mireclaw_mudglass_slingers", "count": 4}, {"unit_id": "unit_mireclaw_bogplate_maulers", "count": 1}]',
+        '"placement_id": "bridge_silt_hunters", "army_id": "army_mireford_silt_hunters_watch"',
+        '"stacks": [{"unit_id": "unit_mireclaw_bogplate_maulers", "count": 6}, {"unit_id": "unit_mireclaw_reedsnare_kin", "count": 9}, {"unit_id": "unit_mireclaw_mudglass_slingers", "count": 5}]',
+        '_validate_assets_and_provenance()',
+        'await _validate_live_encounters_and_board()',
+        'source.get_size() == Vector2i(512, 512)',
+        'portrait.get_size() == Vector2i(384, 512)',
+        'icon.get_size() == Vector2i(160, 160)',
+        'overworld_icon.get_size() == Vector2i(96, 96)',
+        'sheet.get_size() == Vector2i(256, 896)',
+        'int(source_alpha.get("transparent", 0)) > 50000 and int(source_alpha.get("visible", 0)) > 40000 and int(source_alpha.get("opaque", 0)) > 30000',
+        'visible == FRAMES_PER_STATE and signatures.size() >= 2',
+        'OverworldRules.normalize_overworld_state(session)',
+        'BattleRulesScript.create_battle_payload(session, placement)',
+        '_battle_target_ability_contract(enemy_stacks) == expected_abilities',
+        'session.to_dict() == authority_before',
+        'board.validation_unit_art_summary()',
+        'String(entry.get("battle_icon", "")) == String(unit_spec["icon_path"])',
+        'String(entry.get("animation_sheet", "")) == String(unit_spec["sheet_path"])',
+        'causeway_session.to_dict() == board_authority_before',
+        '"visible_frame_count": UNITS.size() * STATES.size() * FRAMES_PER_STATE',
+    ):
+        ensure(required_token in mireclaw_report_text, errors, f"Mireclaw early-ladder curated art report is missing token {required_token}")
+    for forbidden_token in (
+        "draw_curated_portrait",
+        "draw_curated_overworld_icon",
+        "draw_curated_battle_icon",
+        "draw_curated_battle_troop_animation_sheet",
+        '"final_sprite_import": true',
+        "ContentService._unit_art_manifest",
+        "save_png",
+        "generate_unit_art_assets",
+        'placement[',
+        'army[',
+        'enemy_stacks[',
+    ):
+        ensure(forbidden_token not in mireclaw_report_text, errors, f"Mireclaw early-ladder focused report must remain observation-only: {forbidden_token}")
+    mireclaw_scene_text = MIRECLAW_EARLY_LADDER_CURATED_ART_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure(
+        'path="res://tests/unit_mireclaw_early_ladder_curated_art_report.gd"' in mireclaw_scene_text,
+        errors,
+        "Mireclaw early-ladder curated art report scene must own the exact focused script",
     )
 
     cross_surface_report_text = UNIT_CURATED_CROSS_SURFACE_IDENTITY_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")

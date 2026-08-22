@@ -25,6 +25,9 @@ CURATED_CHARACTER_SOURCE_IDS = {
     "unit_ember_archer",
     "unit_embercourt_fordhook_cadets",
     "unit_mire_slinger",
+    "unit_mireclaw_bogplate_maulers",
+    "unit_mireclaw_mudglass_slingers",
+    "unit_mireclaw_reedsnare_kin",
     "unit_river_guard",
 }
 PRESERVED_AUTHORED_ASSET_SHA256 = {
