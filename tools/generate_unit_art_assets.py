@@ -57,8 +57,12 @@ CURATED_CHARACTER_SOURCE_IDS = {
     "unit_thornwake_thornwhip_carriers",
     "unit_thornwake_worldroot_bastion",
     "unit_veilmourn_bellwake_oars",
+    "unit_veilmourn_fogbound_leviathan",
     "unit_veilmourn_maskglass_corsairs",
+    "unit_veilmourn_mirrorkeel_reavers",
     "unit_veilmourn_mourning_lanterns",
+    "unit_veilmourn_obituary_scribes",
+    "unit_veilmourn_undertow_harpooners",
 }
 PRESERVED_AUTHORED_ASSET_SHA256 = {
     ("unit_sunvault_aurora_ballistae", "portrait"): "ffbc2c6dae600fc32aadb6720e21f9d682f4abb71c0fec3dadf8bdbf4ab10534",
