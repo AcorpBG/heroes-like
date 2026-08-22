@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Completed the Roadward Lodge art slice with two original sources, eight exact runtime derivatives, live dwelling/shared-watch/authored-site/BattleBoard authority, two byte-identical 412-asset regeneration passes, thirteen compatibility owners including neutral reward/AI/core/town behavior, static/editor validation, and bounded Linux/Windows startup gates.",
+  "currentNotes": "Completed the Basalt Gatehouse art slice with two original sources, eight exact runtime derivatives, live dwelling/shared-watch/Ninefold-required-encounter/BattleBoard authority, two byte-identical 412-asset regeneration passes, thirteen compatibility owners, static/editor validation, and bounded Linux/Windows startup gates. The stale dedicated Basalt oracle now matches the authoritative 170375d9 result without a combat production change.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-neutral-roadward-lodge-curated-character-sources-10184",
-  "currentSliceId": "art-neutral-roadward-lodge-curated-character-sources-10184",
-  "currentSliceNotes": "Roadwardens and Hearthbow Carriers now own distinct original sources and exact reproducible derivatives while neutral content, dwelling, recruitment/muster, encounter, and gameplay authority remain exact. Packaged interaction and broad release claims remain excluded.",
+  "currentSlice": "art-neutral-basalt-gatehouse-curated-character-sources-10184",
+  "currentSliceId": "art-neutral-basalt-gatehouse-curated-character-sources-10184",
+  "currentSliceNotes": "Basalt Wardens and Tunnelmark Bolters now own distinct original sources and exact reproducible derivatives while neutral content, the shared and Ninefold encounter armies, required objective, and gameplay authority remain exact. Packaged interaction and broad release claims remain excluded.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Roadward Lodge Curated Character Sources",
-  "currentSliceUpdatedAt": "2026-08-22T21:04:59Z",
+  "currentSliceTitle": "Basalt Gatehouse Curated Character Sources",
+  "currentSliceUpdatedAt": "2026-08-22T21:34:42Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,29 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed implementation slice; do not infer broad neutral-art completion or release readiness from this bounded Roadward Lodge result.",
-  "notes": "The Roadward Lodge art slice is complete. Focused runtime proves two content rows, two live BattleBoard entries, exact shared 8/4 watch, three authored site placements, session authority, and 112 visible frames. Two full 412-asset regenerations and both manifests are byte-identical; thirteen compatibility owners including neutral reward/AI/core/town behavior, validator/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged battle interaction, certification, signing/publication, whole-game validation, broad neutral art, and release readiness remain unclaimed.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed implementation slice; do not infer broad neutral-art completion or release readiness from this bounded Basalt Gatehouse result.",
+  "notes": "The Basalt Gatehouse art slice is complete. Focused runtime proves two content rows, two live BattleBoard entries, exact shared 8/3 watch, Ninefold 11/6 required encounter, session authority, and 112 visible frames. Two full 412-asset regenerations and both manifests are byte-identical; thirteen compatibility owners, validator/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. The dedicated Rough Exactors Basalt sample now matches the already-authoritative 170375d9 round-5/margin-59/DPR-31 result; combat production was unchanged. Packaged battle interaction, certification, signing/publication, whole-game validation, broad neutral art, and release readiness remain unclaimed.",
   "plannedSlices": [
+    {
+      "id": "art-neutral-basalt-gatehouse-curated-character-sources-10184",
+      "title": "Basalt Gatehouse Curated Character Sources",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md", "docs/animation-battle-troop-state-contract-report.md"],
+      "purpose": "Replace the generated Basalt Wardens and Tunnelmark Bolters emblems with two distinct character-readable original undergate-custodian sources and exact reproducible existing-path derivatives while preserving their neutral dwelling graph, shared and authored encounter armies, required Ninefold objective, and all gameplay authority.",
+      "implementationTargets": ["art/units/source/curated/unit_neutral_basalt_wardens.png", "art/units/source/curated/unit_neutral_tunnelmark_bolters.png", "art/units/portraits/unit_neutral_basalt_wardens.png", "art/units/portraits/unit_neutral_tunnelmark_bolters.png", "art/units/battle_icons/unit_neutral_basalt_wardens.png", "art/units/battle_icons/unit_neutral_tunnelmark_bolters.png", "art/units/overworld_icons/unit_neutral_basalt_wardens.png", "art/units/overworld_icons/unit_neutral_tunnelmark_bolters.png", "art/animation/runtime/units/unit_neutral_basalt_wardens.png", "art/animation/runtime/units/unit_neutral_tunnelmark_bolters.png", "content/unit_art_manifest.json", "content/unit_animation_manifest.json", "tools/generate_unit_art_assets.py", "tests/unit_neutral_basalt_gatehouse_curated_art_report.gd", "tests/unit_neutral_basalt_gatehouse_curated_art_report.tscn", "tests/battle_ninefold_rough_exactors_balance_regression.gd", "tests/unit_art_reproducibility_report.py", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"unit_ids": ["unit_neutral_basalt_wardens", "unit_neutral_tunnelmark_bolters"], "tiers": [3,3], "roles": ["melee","ranged"], "ability_ids": [["shielding"],["volley"]], "source_size": [512,512], "portrait_size": [384,512], "battle_icon_size": [160,160], "overworld_icon_size": [96,96], "animation_sheet_size": [256,896], "animation_state_count": 14, "frames_per_state": 4, "other_units_must_remain_byte_exact": 101, "neutral_dwelling_id": "neutral_dwelling_basalt_gatehouse", "shared_army_id": "army_neutral_basalt_gatehouse_watch", "shared_army_counts": [8,3], "authored_scenario_id": "ninefold-confluence", "authored_placement_id": "ninefold_basalt_gatehouse_watch", "authored_local_army_id": "army_ninefold_basalt_gatehouse_watch", "authored_local_army_counts": [11,6], "authoritative_sample": {"outcome_state":"defeat","round_reached":5,"terminal_health_margin_pct":59,"enemy_damage_per_round":31}, "core_active_medium_green": true, "final_sprite_import": false},
+      "completionCriteria": ["Two distinct original transparent sources follow basalt-mantlet undergate warden and compact tunnel-marked bolt crew identities and own exact manifest provenance plus reproducible portrait, battle-icon, overworld-icon, and fourteen-state/four-frame animation-sheet derivatives", "Live neutral unit/dwelling lookup preserves exact stats, costs, growth, abilities, Basalt Gatehouse graph, shared 8/3 watch, and Ninefold 11/6 required encounter; a production-rule BattleBoard loads both icon/sheet pairs and all 112 target frames remain visible", "The stale dedicated Basalt sample oracle adopts only the authoritative round-5/margin-59/DPR-31 result already pinned by the active Medium owner, while combat production stays frozen; only two sources, eight target runtime payloads, and two records in each manifest change; all four surfaces for the other 101 units remain byte-exact; full regeneration/reproducibility, focused/balance/compatibility, validator/editor, Linux, and Windows startup gates pass"],
+      "nonGoals": ["Another neutral dwelling/unit, unit stats/abilities/costs/growth, combat behavior/balance or AI tuning, encounter/dwelling/site/map-object/army-group content, BattleRules/BattleAiRules, animation timing/order, save schema, rendering settings, Native RMG, or packaging behavior", "Broad/final neutral art, packaged battle interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game validation, or release readiness"],
+      "createdAt": "2026-08-22T21:10:16Z",
+      "startedAt": "2026-08-22T21:10:16Z",
+      "updatedAt": "2026-08-22T21:34:42Z",
+      "completedAt": "2026-08-22T21:34:42Z",
+      "notes": "Completed with two distinct 512x512 original transparent sources and eight exact existing-path derivatives. Focused runtime /tmp/heroes-basalt-focused.LTAvd4 is natural rc0 with one ok:true marker, two exact content rows, two live BattleBoard entries, shared 8/3 watch, Ninefold 11/6 required encounter, session authority, and 112 visible frames. Two full 412-asset regeneration passes are byte-identical in /tmp/heroes-basalt-repro.0zEQ3t; thirteen compatibility owners including the authoritative active Medium sample and corrected Rough Exactors owner are rc0 in /tmp/heroes-basalt-compat.HzvUyz. Static/editor audit /tmp/heroes-basalt-final-audit.GR6PJG and official Linux /tmp/heroes-basalt-linux-package.yrnXTD plus Windows /tmp/heroes-basalt-windows-package.4qvNwl export/startup gates pass. Broad/final neutral art, packaged battle interaction, certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "remainingWork": "None for this bounded slice. Select the next tracker-approved source-backed implementation slice."
+    },
     {
       "id": "art-neutral-roadward-lodge-curated-character-sources-10184",
       "title": "Roadward Lodge Curated Character Sources",
@@ -94495,7 +94515,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "art_neutral_roadward_lodge_curated_character_sources_completed",
+  "result": "art_neutral_basalt_gatehouse_curated_character_sources_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {

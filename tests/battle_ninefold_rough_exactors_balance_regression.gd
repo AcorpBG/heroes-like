@@ -24,9 +24,9 @@ const SHARED_EXACTORS_CONTRACT := {
 }
 const GATEHOUSE_SAMPLE_CONTRACT := {
 	"outcome_state": "defeat",
-	"round_reached": 4,
-	"terminal_health_margin_pct": 73,
-	"enemy_damage_per_round": 38,
+	"round_reached": 5,
+	"terminal_health_margin_pct": 59,
+	"enemy_damage_per_round": 31,
 }
 
 func _ready() -> void:
