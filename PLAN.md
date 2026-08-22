@@ -8659,6 +8659,37 @@ Completion evidence:
 - `/tmp/heroes-native-browser-manifest-main-menu.vqtI9p` passes the public Main Menu flow in 32 seconds versus 53 seconds, with first view 732 ms, 411 Skirmish rows, and selected-package launch 2979 ms. Map Editor Save Copy improves 85 to 36 seconds and broad player-facing Skirmish improves 136 to 64 seconds;
 - menu visual, physical keyboard navigation, screen-reader semantics, core systems, repository validation, Python compilation, JSON/diff checks, exact/generic editor parses, and synchronized debug/release native builds pass. Official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green; no packaged Skirmish interaction, certification, signing/publication, whole-game, or release-readiness claim is made.
 
+## Completed Slice: Native Package Browser Content-Addressed Manifest Cache
+
+id: `performance-native-package-browser-content-addressed-manifest-cache-10184`
+
+Status: completed.
+
+Implementation boundary:
+- cache only the bounded native browser-inspection payload under `user://` by the exact SHA-256 of the complete package file, and prepopulate that cache after successful native map/scenario package saves;
+- let `inspect_package` use a schema-checked exact-hash cache hit without parsing the complete JSON document, while missing, corrupt, mismatched, legacy, or unsupported entries fall back to the unchanged full inspection and exact failure classification;
+- keep cache values detached, result-only, and content-addressed so source package changes cannot reuse stale browser metadata and no cache state enters package/session/save authority.
+
+Completion criteria:
+- direct cached versus uncached inspection is whole-payload exact for current map/scenario packages; save-created, first-read, repeated-read, changed-content, corrupt-cache, malformed, wrong-schema, legacy, and missing-package paths retain exact behavior and cache lifecycle authority;
+- the 796-file current corpus retains exact browser entries while the cached path materially improves on the measured 14348-18315 ms full JSON inspection lane and remains close to the measured 2135-2162 ms whole-file SHA lane; public Main Menu/package browser and selected Map Editor/Skirmish authority remain exact;
+- synchronized Linux/Windows native builds, focused package/browser, compatibility, static/editor, and official export-startup gates pass.
+
+Non-goals:
+- no package/document schema or package file-format change, manifest payload expansion, cache use without exact content hash, cache state in gameplay/session/save authority, Native RMG generation/parity, content, browser order/labels, selected load/session, watcher/thread/timer, gameplay/balance/AI, or broad cache-policy redesign;
+- no packaged Skirmish interaction, controller, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claim.
+
+Baseline evidence:
+- `/tmp/heroes-package-index-hash-attribution.43WfWZ` measures exact SHA-256 verification for all 796 current `.amap`/`.ascenario` files at 2162 and 2135 ms, versus complete native JSON inspection at 18315 and 14348 ms in the same process;
+- the completed bounded-manifest slice reduces public Main Menu from 53 to 32 seconds but `inspect_package` still calls `read_package_dictionary` before it can reach the bounded fields, so every browser open parses about 608 MB of package JSON;
+- native save already owns the complete package dictionary and successful file write, making a detached content-addressed manifest cache a same-boundary acceleration rather than a package or gameplay format change.
+
+Completion evidence:
+- native save now prepopulates a bounded JSON-normalized browser-manifest cache under `user://`, keyed by a bounded path identity and accepted only when exact source path, whole-file SHA-256, cache schema, payload kind, and payload-integrity hash match; cache misses, corruption, content changes, malformed/legacy/unsupported packages, and bypass controls retain the original full parser and failure authority;
+- `/tmp/heroes-native-browser-cache-focused4.xb6kWY` passes save prepopulation, whole cached-versus-parser payload parity, detached returns, corrupted-cache rebuild, changed-content invalidation/restoration, exact package entry/failure/session authority, and Map Editor integration. The full focused matrix improves from 125 to about 49 seconds;
+- `/tmp/heroes-native-browser-cache-corpus.XDxMnS` measures 796-file cached inspection at 2714/2710 ms versus the 18315/14348 ms full-parser baseline and within the 2162/2135 ms exact-hash lane. Public Main Menu improves 32 to 22 seconds, Save Copy 36 to 30, and broad player-facing Skirmish 64 to 50 while exact behavior markers remain green;
+- menu visual, physical keyboard navigation, screen-reader semantics, core systems, repository validation, Python compilation, JSON/diff checks, exact/generic editor parses, and synchronized debug/release native builds pass. Official Linux export/headless startup and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup are green; no packaged Skirmish interaction, certification, signing/publication, whole-game, or release-readiness claim is made.
+
 ## Progress Reconciliation
 
 Use this after PLAN/progress changes:
