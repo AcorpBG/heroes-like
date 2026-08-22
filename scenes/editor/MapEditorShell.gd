@@ -4511,32 +4511,46 @@ func _on_map_tile_pressed(tile: Vector2i) -> void:
 		return
 	_cancel_editor_map_cursor_semantic()
 	_selected_tile = tile
+	var action_succeeded: bool = true
 	match _tool:
 		TOOL_TERRAIN:
-			_paint_terrain(tile, _selected_terrain_id)
+			action_succeeded = _paint_terrain(tile, _selected_terrain_id)
 		TOOL_TERRAIN_LINE:
-			_terrain_line_tool_click(tile)
+			action_succeeded = _terrain_line_tool_click(tile)
 		TOOL_TERRAIN_RECTANGLE:
-			_terrain_rectangle_tool_click(tile)
+			action_succeeded = _terrain_rectangle_tool_click(tile)
 		TOOL_ROAD:
-			_toggle_road(tile)
+			action_succeeded = _toggle_road(tile)
 		TOOL_ROAD_PATH:
-			_road_path_tool_click(tile)
+			action_succeeded = _road_path_tool_click(tile)
 		TOOL_HERO_START:
-			_set_hero_start(tile)
+			action_succeeded = _set_hero_start(tile)
 		TOOL_PLACE_OBJECT:
-			_place_object(tile)
+			action_succeeded = _place_object(tile)
 		TOOL_REMOVE_OBJECT:
-			_remove_object(tile)
+			action_succeeded = _remove_object(tile)
 		TOOL_MOVE_OBJECT:
-			_move_object_tool_click(tile)
+			action_succeeded = _move_object_tool_click(tile)
 		TOOL_DUPLICATE_OBJECT:
-			_duplicate_object_tool_click(tile)
+			action_succeeded = _duplicate_object_tool_click(tile)
 		TOOL_RETHEME_OBJECT:
-			_retheme_object(tile)
+			action_succeeded = _retheme_object(tile)
 		_:
 			_last_message = "Inspected tile %d,%d." % [tile.x, tile.y]
+	_record_editor_map_action_result(action_succeeded, tile)
 	_refresh_state()
+
+
+func _record_editor_map_action_result(action_succeeded: bool, tile: Vector2i) -> void:
+	var message := _last_message.strip_edges()
+	if action_succeeded or message == "":
+		return
+	UiAudio.play_invalid("MapEditorShell._record_editor_map_action_result", {
+		"lane": "canvas",
+		"tool": _tool,
+		"tile": _editor_tile_payload(tile),
+		"message": message,
+	})
 
 func _paint_terrain(tile: Vector2i, terrain_id: String) -> bool:
 	if not _tile_in_bounds(tile) or terrain_id == "":

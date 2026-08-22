@@ -129,6 +129,8 @@ MAP_EDITOR_SMOKE_SCENE_PATH = ROOT / "tests" / "map_editor_smoke.tscn"
 MAP_EDITOR_SMOKE_SCRIPT_PATH = ROOT / "tests" / "map_editor_smoke.gd"
 MAP_EDITOR_DIRTY_TRANSITION_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "map_editor_dirty_working_copy_destructive_transition_regression.gd"
 MAP_EDITOR_DIRTY_TRANSITION_REGRESSION_SCENE_PATH = ROOT / "tests" / "map_editor_dirty_working_copy_destructive_transition_regression.tscn"
+MAP_EDITOR_CANVAS_FAILED_ACTION_AUDIO_SCRIPT_PATH = ROOT / "tests" / "map_editor_canvas_failed_action_audio_report.gd"
+MAP_EDITOR_CANVAS_FAILED_ACTION_AUDIO_SCENE_PATH = ROOT / "tests" / "map_editor_canvas_failed_action_audio_report.tscn"
 OVERWORLD_SCENE_PATH = ROOT / "scenes" / "overworld" / "OverworldShell.tscn"
 OVERWORLD_SCRIPT_PATH = ROOT / "scenes" / "overworld" / "OverworldShell.gd"
 OVERWORLD_MAP_VIEW_SCRIPT_PATH = ROOT / "scenes" / "overworld" / "OverworldMapView.gd"
@@ -20557,6 +20559,153 @@ def validate_overworld_full_refresh_end_turn_forecast_bundle_reuse(errors: list[
         ensure(token in report_text, errors, f"Overworld forecast-bundle focused owner is missing token: {token}")
     for forbidden in ("await get_tree().create_timer", "OS.delay", "set_process", 'erase("forecast', "sort_custom", "normalized_forecast", "forecast_cache"):
         ensure(forbidden not in report_text, errors, f"Overworld forecast-bundle proof must remain passive and exact: {forbidden}")
+
+
+def validate_map_editor_canvas_failed_action_audio(errors: list[str]) -> None:
+    required_paths = (
+        MAP_EDITOR_SCRIPT_PATH,
+        MAP_EDITOR_CANVAS_FAILED_ACTION_AUDIO_SCRIPT_PATH,
+        MAP_EDITOR_CANVAS_FAILED_ACTION_AUDIO_SCENE_PATH,
+    )
+    for path in required_paths:
+        ensure(path.exists(), errors, f"Missing Map Editor canvas invalid-audio owner: {path.relative_to(ROOT)}")
+    if not all(path.exists() for path in required_paths):
+        return
+
+    editor_text = MAP_EDITOR_SCRIPT_PATH.read_text(encoding="utf-8")
+    report_text = MAP_EDITOR_CANVAS_FAILED_ACTION_AUDIO_SCRIPT_PATH.read_text(encoding="utf-8")
+    scene_text = MAP_EDITOR_CANVAS_FAILED_ACTION_AUDIO_SCENE_PATH.read_text(encoding="utf-8")
+    ensure(
+        'path="res://tests/map_editor_canvas_failed_action_audio_report.gd"' in scene_text,
+        errors,
+        "Map Editor canvas invalid-audio scene must own the exact focused report script",
+    )
+
+    def function_block(text: str, name: str) -> str:
+        match = re.search(
+            rf"func {re.escape(name)}\([^\n]*\)(?: -> [^:]+)?:\n(?P<body>.*?)(?=\nfunc |\Z)",
+            text,
+            re.S,
+        )
+        ensure(match is not None, errors, f"Could not isolate Map Editor canvas invalid-audio function {name}")
+        return match.group("body") if match is not None else ""
+
+    dispatch = function_block(editor_text, "_on_map_tile_pressed")
+    recorder = function_block(editor_text, "_record_editor_map_action_result")
+    dispatch_order = tuple(dispatch.find(token) for token in (
+        "if _session == null or not _tile_in_bounds(tile):",
+        "_cancel_editor_map_cursor_semantic()",
+        "_selected_tile = tile",
+        "var action_succeeded: bool = true",
+        "match _tool:",
+        "action_succeeded = _paint_terrain(tile, _selected_terrain_id)",
+        "action_succeeded = _terrain_line_tool_click(tile)",
+        "action_succeeded = _terrain_rectangle_tool_click(tile)",
+        "action_succeeded = _toggle_road(tile)",
+        "action_succeeded = _road_path_tool_click(tile)",
+        "action_succeeded = _set_hero_start(tile)",
+        "action_succeeded = _place_object(tile)",
+        "action_succeeded = _remove_object(tile)",
+        "action_succeeded = _move_object_tool_click(tile)",
+        "action_succeeded = _duplicate_object_tool_click(tile)",
+        "action_succeeded = _retheme_object(tile)",
+        '_last_message = "Inspected tile %d,%d." % [tile.x, tile.y]',
+        "_record_editor_map_action_result(action_succeeded, tile)",
+        "_refresh_state()",
+    ))
+    ensure(
+        all(index >= 0 for index in dispatch_order) and list(dispatch_order) == sorted(dispatch_order),
+        errors,
+        "Map Editor public tile dispatch must retain each exact tool result, classify once, then preserve the existing refresh",
+    )
+    ensure(dispatch.count("_record_editor_map_action_result(") == 1, errors, "Map Editor tile dispatch must record its result exactly once")
+    ensure(dispatch.count("UiAudio.play_invalid(") == 0, errors, "Map Editor tile dispatch must delegate exact invalid-audio classification to one helper")
+    recorder_order = tuple(recorder.find(token) for token in (
+        "var message := _last_message.strip_edges()",
+        'if action_succeeded or message == "":',
+        "return",
+        'UiAudio.play_invalid("MapEditorShell._record_editor_map_action_result", {',
+        '"lane": "canvas"',
+        '"tool": _tool',
+        '"tile": _editor_tile_payload(tile)',
+        '"message": message',
+    ))
+    ensure(
+        all(index >= 0 for index in recorder_order) and list(recorder_order) == sorted(recorder_order),
+        errors,
+        "Map Editor canvas result helper must fail closed on success/empty feedback then publish exact detached metadata",
+    )
+    ensure(recorder.count("UiAudio.play_invalid(") == 1, errors, "Map Editor canvas result helper must own exactly one invalid-audio call")
+    for forbidden in ("BattleRules", "OverworldRules", "TerrainPlacementRules", "_refresh_state", "await ", "Timer", "call_deferred", "_last_message =", "_session.", "Input."):
+        ensure(forbidden not in recorder, errors, f"Map Editor invalid-audio helper must not change rules, state, message, refresh, timing, or input through {forbidden}")
+    for helper_name in (
+        "_paint_terrain",
+        "_terrain_line_tool_click",
+        "_terrain_rectangle_tool_click",
+        "_toggle_road",
+        "_road_path_tool_click",
+        "_set_hero_start",
+        "_place_object",
+        "_remove_object",
+        "_move_object_tool_click",
+        "_duplicate_object_tool_click",
+        "_retheme_object",
+    ):
+        ensure("UiAudio.play_invalid(" not in function_block(editor_text, helper_name), errors, f"Map Editor tool helper {helper_name} must remain free of presentation-audio ownership")
+
+    for token in (
+        "const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]",
+        'const SCENARIO_ID := "ninefold-confluence"',
+        'shell.set("validation_skip_initial_package_index", true)',
+        'map_view.grab_focus()',
+        'await _press_joypad_button(JOY_BUTTON_A)',
+        'var unavailable_silent: bool = UiAudio.validation_records().is_empty() and shell.get("_session") == null',
+        'shell.call("validation_load_legacy_authored_scenario_for_dev", SCENARIO_ID)',
+        'shell.call("validation_remove_object", empty_tile.x, empty_tile.y, "town")',
+        'and UiAudio.validation_records().is_empty()',
+        'shell.call("validation_select_object_family", "town")',
+        'shell.call("validation_set_tool", "remove_object")',
+        'var validation_only_silent: bool = (',
+        'var working_before_failure: Dictionary = working_session.to_dict()',
+        'var active_before_failure: Dictionary = SessionState.current_payload()',
+        'var settings_before_failure: Dictionary = _canonical_settings_transaction()',
+        'var cache_before_failure: Dictionary = SaveService.validation_summary_cache_snapshot()',
+        'var failed_exact: bool = (',
+        'String(invalid_record.get("cue_id", "")) == "ui_invalid"',
+        'String(invalid_record.get("source", "")) == "MapEditorShell._record_editor_map_action_result"',
+        'String(invalid_record.get("playback_source", "")) == "imported_wav"',
+        'String(invalid_record.get("asset_path", "")) == "res://art/audio/runtime/ui/invalid.wav"',
+        'String(invalid_record.get("role", "")) == "invalid_action"',
+        'int(invalid_record.get("duration_msec", 0)) == 150',
+        'int(invalid_record.get("stream_mix_rate", 0)) == 44100',
+        'AudioStreamWAV.LOOP_DISABLED',
+        '"lane": "canvas"',
+        '"tool": "remove_object"',
+        '"tile": {"x": empty_tile.x, "y": empty_tile.y}',
+        '"message": expected_message',
+        'working_session.to_dict() == working_before_failure',
+        'SessionState.current_payload() == active_before_failure',
+        '_canonical_settings_transaction() == settings_before_failure',
+        'SaveService.validation_summary_cache_snapshot() == cache_before_failure',
+        'String(semantic_pending.get("kind", "")) == "result_clear"',
+        'is_equal_approx(semantic_timer.wait_time, 1.2)',
+        'shell.call("validation_set_tool", "inspect")',
+        'var success_silent: bool = (',
+        'UiAudio.validation_records().is_empty()',
+        '"success_unavailable_validation_silent": true',
+        'print("MAP_EDITOR_CANVAS_FAILED_ACTION_AUDIO_REPORT %s"',
+    ):
+        ensure(token in report_text, errors, f"Map Editor canvas invalid-audio focused proof is missing exact token: {token}")
+    ensure(report_text.count("await _press_joypad_button(JOY_BUTTON_A)") == 3, errors, "Map Editor focused proof must use physical A exactly for unavailable, failed remove, and successful Inspect")
+    ensure(report_text.count("UiAudio.validation_reset()") == 4, errors, "Map Editor focused proof must reset UI audio at unavailable, validation-only, failed, and successful action boundaries")
+    canonical_settings = function_block(report_text, "_canonical_settings_transaction")
+    ensure('SettingsService.validation_settings_transaction_snapshot()' in canonical_settings and 'transaction["input_map"] = _canonical_input_map(transaction.get("input_map", {}))' in canonical_settings and "return transaction" in canonical_settings, errors, "Map Editor focused proof must canonicalize only duplicated InputMap events while retaining every settings/runtime field")
+    for forbidden in ('erase("runtime_display")', 'erase("size")', 'erase("position")', 'erase("input_map")', "SettingsService.set_", "InputMap.action_"):
+        ensure(forbidden not in canonical_settings, errors, f"Map Editor settings authority must retain all live fields and remain read-only: {forbidden}")
+    for untyped in ("var unavailable_silent :=", "var validation_only_silent :=", "var failed_exact :=", "var success_silent :="):
+        ensure(untyped not in report_text, errors, f"Map Editor focused dynamic compound checks must remain explicitly typed: {untyped}")
+    for forbidden in ("shell.call(\"_record_editor_map_action_result\"", "shell.call(\"_on_map_tile_pressed\"", "UiAudio.play_invalid(", "emit_signal(\"tile_pressed\"", "create_timer", "OS.delay", "sort", "erase(\"audio"):
+        ensure(forbidden not in report_text, errors, f"Map Editor focused proof must use real public input and exact authority without shortcuts through {forbidden}")
 
 
 def validate_map_editor_shell_slice(errors: list[str]) -> None:
@@ -53907,6 +54056,7 @@ def main() -> int:
     validate_main_menu_settings_focus_visibility(errors)
     validate_main_menu_settings_summary_word_ellipsis(errors)
     validate_map_editor_shell_slice(errors)
+    validate_map_editor_canvas_failed_action_audio(errors)
     validate_map_editor_dirty_transition_regression(errors)
     validate_scenario_outcome_shell(errors)
     validate_difficulty_integration(errors)
