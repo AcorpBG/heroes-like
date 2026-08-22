@@ -24,6 +24,9 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Superseded candidate: `content-ironbridge-bridge-silt-hunters-production-line-10184`. The count-preserving `8/12/6` production Mireclaw line was byte-exact to its legacy focused control at normal four-round/77%/DPR38 and hard four-round/67%/DPR38 standard defeats, but the authoritative 24-scenario/77-encounter breadth gate reopened two medium watches: Ironbridge cohort terminal margin 72 and Silt Hunters sample terminal margin 77 (`a27a1dc5`). The slice forbade count, stat, ability, and threshold tuning, so the candidate was rejected and shipped Ironbridge content remains unchanged. Select another tracker-approved source-backed slice rather than reopening completed adjacent owners or weakening the queue.
+  id: `content-ironbridge-bridge-silt-hunters-production-line-10184`
+
 - Completed implementation slice: `content-mireford-bridge-silt-hunters-production-line-10184`. Mireford Skirmish's Bridge Silt Hunters now field the exact count-preserving production Mireclaw `6/9/5` Bogplate/Reedsnare/Mudglass line. Focused public BattleRules evidence proves shielding and both harry surfaces, 207 versus 180 stack health, byte-exact production/legacy normal four-round/48%/DPR42 and hard four-round/41%/DPR40 standard victories, zero invalid orders, save/resume, outcomes, and whole authority. Live Mireford skirmish, nine-chapter campaign, 24-scenario/77-encounter queue `829808c9`, unit abilities, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. Adjacent fronts, shared rules/stats, packaged encounter interaction, broad balance, certification, signing/publication, whole-game validation, and release readiness remain unchanged or unclaimed. Select the next tracker-approved source-backed slice.
   id: `content-mireford-bridge-silt-hunters-production-line-10184`
 
