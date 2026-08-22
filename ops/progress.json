@@ -1,6 +1,6 @@
 {
   "actionableNextTasks": [
-    "Select the next tracker-approved source-backed release-readiness slice."
+    "Select the next tracker-approved source-backed implementation slice."
   ],
   "active_slice": {
     "alignmentCheckpoints": [
@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The production Sunvault early-ladder curated character-source slice is active. Shard Wardens, Prism Adepts, and Mirror Duelists still ship as abstract emblems across eight authored fronts and Sunvault recruitment.",
+  "currentNotes": "The production Embercourt early-ladder curated character-source slice is completed. Lantern Sappers and Bargebow Crews now ship from distinct original sources across all four existing runtime surfaces while Fordhook and every non-target asset remain byte-exact.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-veilmourn-early-ladder-curated-character-sources-10184",
-  "currentSliceId": "art-veilmourn-early-ladder-curated-character-sources-10184",
-  "currentSliceNotes": "Three original Veilmourn fog-route character sources now own the T1-T3 ladder's existing-path runtime surfaces; the other 100 units remain byte-exact and focused/compatibility/static/platform gates are green without gameplay changes.",
+  "currentSlice": "art-embercourt-production-early-ladder-curated-character-sources-10184",
+  "currentSliceId": "art-embercourt-production-early-ladder-curated-character-sources-10184",
+  "currentSliceNotes": "Focused Clauseworks/BattleBoard proof is green with 112 visible target frames and exact public battle/session authority. Two reproducibility runs match all 412 assets and both manifests, exactly eight target surfaces changed, and all 404 non-target surfaces remained byte-exact. Compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green; packaged battle interaction and release readiness remain unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Veilmourn Early Ladder Curated Character Sources",
-  "currentSliceUpdatedAt": "2026-08-22T13:29:03Z",
+  "currentSliceTitle": "Embercourt Production Early Ladder Curated Character Sources",
+  "currentSliceUpdatedAt": "2026-08-22T13:50:32Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,28 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed slice; do not imply broad/final art or release readiness from this completed three-unit vertical.",
-  "notes": "Completed the three-unit production Veilmourn T1-T3 art vertical with exact live army/battle, reproducibility, compatibility, static/editor, and bounded platform-startup evidence. Broad/final art and release readiness remain unclaimed.",
+  "nextActionGuardrailNote": "Select only a tracker-approved source-backed product slice from direct current evidence; do not imply broad/final art or release readiness.",
+  "notes": "Completed the production Embercourt early-ladder character-source slice with two original transparent sources, eight reproducible existing-path runtime assets, exact live Clauseworks and BattleBoard authority, and bounded Linux/Windows export-startup evidence.",
   "plannedSlices": [
+    {
+      "id": "art-embercourt-production-early-ladder-curated-character-sources-10184",
+      "title": "Embercourt Production Early Ladder Curated Character Sources",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md", "docs/animation-battle-troop-state-contract-report.md", "docs/factions-content-bible.md"],
+      "purpose": "Complete the production Embercourt T1-T3 character-readable ladder by replacing its two remaining abstract generated emblems with distinct original sources and reproducible existing-path runtime derivatives while preserving curated Fordhook Cadets.",
+      "implementationTargets": ["art/units/source/curated/unit_embercourt_lantern_sappers.png", "art/units/source/curated/unit_embercourt_bargebow_crews.png", "art/units/portraits/unit_embercourt_lantern_sappers.png", "art/units/portraits/unit_embercourt_bargebow_crews.png", "art/units/battle_icons/unit_embercourt_lantern_sappers.png", "art/units/battle_icons/unit_embercourt_bargebow_crews.png", "art/units/overworld_icons/unit_embercourt_lantern_sappers.png", "art/units/overworld_icons/unit_embercourt_bargebow_crews.png", "art/animation/runtime/units/unit_embercourt_lantern_sappers.png", "art/animation/runtime/units/unit_embercourt_bargebow_crews.png", "content/unit_art_manifest.json", "content/unit_animation_manifest.json", "tools/generate_unit_art_assets.py", "tests/unit_embercourt_production_early_ladder_curated_art_report.gd", "tests/unit_embercourt_production_early_ladder_curated_art_report.tscn", "tests/unit_art_reproducibility_report.py", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {"unit_ids": ["unit_embercourt_lantern_sappers", "unit_embercourt_bargebow_crews"], "tiers": [2,3], "roles": ["melee","ranged"], "preserved_curated_unit_id": "unit_embercourt_fordhook_cadets", "active_encounter_count": 2, "live_scenario_ids": ["clauseworks-counterclaim"], "source_size": [512,512], "portrait_size": [384,512], "battle_icon_size": [160,160], "overworld_icon_size": [96,96], "animation_sheet_size": [256,896], "animation_state_count": 14, "frames_per_state": 4, "other_units_must_remain_byte_exact": 101, "final_sprite_import": false},
+      "completionCriteria": ["Two distinct original transparent sources follow Embercourt civic river-military identity and own exact manifest provenance and reproducible portrait, battle-icon, overworld-icon, and fourteen-state/four-frame animation-sheet derivatives", "Both live Clauseworks battle payloads preserve exact ids/counts/abilities while the all-three production ladder BattleBoard loads both new curated icon/sheet pairs and all 112 target frames remain visible and character-readable", "Only two sources, eight target runtime payloads, and two records in each manifest change; all four surfaces for the other 101 units including Fordhook remain byte-exact; full regeneration/reproducibility, compatibility, validator/editor, Linux, and Windows startup gates pass"],
+      "nonGoals": ["Fordhook or another unit/tier, army/encounter counts, unit stats/abilities/content, BattleRules/BattleAiRules, animation timing/order, save schema, rendering settings, Native RMG, or packaging behavior", "Broad/final art, packaged battle interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game validation, or release readiness"],
+      "createdAt": "2026-08-22T13:32:13Z",
+      "startedAt": "2026-08-22T13:32:13Z",
+      "updatedAt": "2026-08-22T13:50:32Z",
+      "completedAt": "2026-08-22T13:50:32Z",
+      "notes": "Completed with two original transparent Embercourt sources and eight exact existing-path runtime derivatives. Focused Clauseworks/BattleBoard runtime is green with both exact live rosters/public abilities, session authority, two loaded target icon/sheet pairs, and 112 visible frames. Two reproducibility runs match all 412 assets and both manifests byte-for-byte; exactly eight target surfaces changed and all 404 non-target surfaces including Fordhook remained exact. Compatibility, validator/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. Packaged battle interaction, certification, signing/publication, broad/final art, whole-game validation, and release readiness remain unclaimed."
+    },
     {
       "id": "art-veilmourn-early-ladder-curated-character-sources-10184",
       "title": "Veilmourn Early Ladder Curated Character Sources",
@@ -94156,7 +94175,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "art_sunvault_early_ladder_curated_character_sources_in_progress",
+  "result": "art_embercourt_production_early_ladder_curated_character_sources_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -94257,9 +94276,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The production Veilmourn early-ladder curated character-source slice is completed with three original sources, twelve exact existing-path runtime derivatives, exact live player-army and Ninefold battle authority, and bounded compatibility/platform startup evidence while broad/final art and release readiness remain unclaimed.",
+  "summary": "The production Embercourt T1-T3 ladder is character-readable: Lantern Sappers and Bargebow Crews now use distinct original sources and reproducible runtime assets while Fordhook, gameplay, and every non-target asset remain exact. Focused, compatibility, static/editor, and bounded Linux/Windows export-startup evidence is green; release readiness remains unmet.",
   "taskId": "10184",
-  "updatedAt": "2026-08-22T13:29:03Z",
+  "updatedAt": "2026-08-22T13:50:32Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
