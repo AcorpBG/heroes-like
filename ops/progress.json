@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The River Pass Ghoul Grove core curated character-source slice is completed with exact source provenance, live BattleBoard ownership, 412-asset reproducibility, compatibility, and bounded Linux/Windows startup evidence. Select the next tracker-approved source-backed slice.",
+  "currentNotes": "The production Mireclaw T1-T3 curated character-source slice is completed with exact source provenance, four live encounter payloads, BattleBoard ownership, 412-asset reproducibility, compatibility, and bounded Linux/Windows startup evidence. Select the next tracker-approved source-backed slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-river-pass-ghoul-grove-core-curated-character-sources-10184",
-  "currentSliceId": "art-river-pass-ghoul-grove-core-curated-character-sources-10184",
-  "currentSliceNotes": "Three original character sources now own the Ghoul Grove core's existing-path runtime surfaces; the other 100 units remain byte-exact and focused/compatibility/static/platform gates are green without gameplay changes.",
+  "currentSlice": "art-mireclaw-early-ladder-curated-character-sources-10184",
+  "currentSliceId": "art-mireclaw-early-ladder-curated-character-sources-10184",
+  "currentSliceNotes": "Three original human wetland-fighter sources now own the Mireclaw T1-T3 ladder's existing-path runtime surfaces; the other 100 units remain byte-exact and focused/compatibility/static/platform gates are green without gameplay changes.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "River Pass Ghoul Grove Core Curated Character Sources",
-  "currentSliceUpdatedAt": "2026-08-22T11:40:42Z",
+  "currentSliceTitle": "Mireclaw Early Ladder Curated Character Sources",
+  "currentSliceUpdatedAt": "2026-08-22T12:14:16Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19847,8 +19847,56 @@
   },
   "native_cli_required_next_slice": "",
   "nextActionGuardrailNote": "Select the next tracker-approved source-backed slice; do not imply broad/final art or release readiness from this completed three-unit vertical.",
-  "notes": "Completed the three-unit River Pass Ghoul Grove core art vertical with exact live battle, reproducibility, compatibility, static/editor, and bounded platform-startup evidence. Broad/final art and release readiness remain unclaimed.",
+  "notes": "Completed the three-unit production Mireclaw T1-T3 art vertical with exact live battle, reproducibility, compatibility, static/editor, and bounded platform-startup evidence. Broad/final art and release readiness remain unclaimed.",
   "plannedSlices": [
+    {
+      "id": "art-mireclaw-early-ladder-curated-character-sources-10184",
+      "title": "Mireclaw Early Ladder Curated Character Sources",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md", "docs/animation-battle-troop-state-contract-report.md", "docs/factions-content-bible.md"],
+      "purpose": "Make the complete production Mireclaw T1-T3 ladder character-readable across its live scenario and town surfaces by replacing three abstract generated motifs with distinct original sources and reproducible existing-path runtime derivatives.",
+      "implementationTargets": [
+        "art/units/source/curated/unit_mireclaw_reedsnare_kin.png",
+        "art/units/source/curated/unit_mireclaw_mudglass_slingers.png",
+        "art/units/source/curated/unit_mireclaw_bogplate_maulers.png",
+        "art/units/portraits/unit_mireclaw_reedsnare_kin.png",
+        "art/units/portraits/unit_mireclaw_mudglass_slingers.png",
+        "art/units/portraits/unit_mireclaw_bogplate_maulers.png",
+        "art/units/battle_icons/unit_mireclaw_reedsnare_kin.png",
+        "art/units/battle_icons/unit_mireclaw_mudglass_slingers.png",
+        "art/units/battle_icons/unit_mireclaw_bogplate_maulers.png",
+        "art/units/overworld_icons/unit_mireclaw_reedsnare_kin.png",
+        "art/units/overworld_icons/unit_mireclaw_mudglass_slingers.png",
+        "art/units/overworld_icons/unit_mireclaw_bogplate_maulers.png",
+        "art/animation/runtime/units/unit_mireclaw_reedsnare_kin.png",
+        "art/animation/runtime/units/unit_mireclaw_mudglass_slingers.png",
+        "art/animation/runtime/units/unit_mireclaw_bogplate_maulers.png",
+        "content/unit_art_manifest.json",
+        "content/unit_animation_manifest.json",
+        "tools/generate_unit_art_assets.py",
+        "tests/unit_mireclaw_early_ladder_curated_art_report.gd",
+        "tests/unit_mireclaw_early_ladder_curated_art_report.tscn",
+        "tests/unit_art_reproducibility_report.py",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {"unit_ids": ["unit_mireclaw_reedsnare_kin", "unit_mireclaw_mudglass_slingers", "unit_mireclaw_bogplate_maulers"], "tiers": [1,2,3], "roles": ["melee","ranged","melee"], "active_encounter_count": 4, "live_scenario_ids": ["river-pass","causeway-stand","mireford-skirmish"], "source_size": [512,512], "portrait_size": [384,512], "battle_icon_size": [160,160], "overworld_icon_size": [96,96], "animation_sheet_size": [256,896], "animation_state_count": 14, "frames_per_state": 4, "other_units_must_remain_byte_exact": 100, "final_sprite_import": false},
+      "completionCriteria": [
+        "Three distinct original transparent sources own exact manifest provenance and reproducible portrait, battle-icon, overworld-icon, and fourteen-state/four-frame animation-sheet derivatives",
+        "Live River Pass, Causeway Stand, and Mireford battle payloads preserve exact target ids/counts/abilities while BattleBoard loads all three curated icon/sheet pairs and all 168 target frames remain visible and character-readable",
+        "Only the three sources, twelve target runtime payloads, and three records in each manifest change; all four surfaces for the other 100 units remain byte-exact; full regeneration/reproducibility, compatibility, validator/editor, Linux, and Windows startup gates pass"
+      ],
+      "nonGoals": ["Another unit or tier, army/encounter counts, unit stats/abilities/content, BattleRules/BattleAiRules, animation timing/order, save schema, rendering settings, Native RMG, or packaging behavior", "Broad/final art, packaged battle interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game validation, or release readiness"],
+      "createdAt": "2026-08-22T11:45:29Z",
+      "startedAt": "2026-08-22T11:45:29Z",
+      "updatedAt": "2026-08-22T12:14:16Z",
+      "completedAt": "2026-08-22T12:14:16Z",
+      "notes": "Completed with three original transparent character sources, twelve exact existing-path runtime derivatives, and three exact records in each manifest. Full 412-asset regeneration matched twice; only the target 12 runtime payloads changed and the other 400 remained byte-exact. The focused report passed with 3 units, 4 authored encounter fronts, exact public ids/counts/abilities, 168 visible frames, BattleBoard icon/sheet loading, and session authority. Unit art/runtime/animation/readiness/ability, Hollow Mire/Causeway/Silt Hunters/Ghoul Grove, Battle animation/navigation/active-cohort, core, validator/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates passed. Platform claims are export/startup only; broad/final art, packaged battle interaction, controller/native hardware, AT-SPI/UIA, signing/publication, whole-game validation, and release readiness remain unclaimed."
+    },
     {
       "id": "art-river-pass-ghoul-grove-core-curated-character-sources-10184",
       "title": "River Pass Ghoul Grove Core Curated Character Sources",
@@ -93993,7 +94041,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "art_river_pass_ghoul_grove_core_curated_character_sources_completed",
+  "result": "art_mireclaw_early_ladder_curated_character_sources_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -94094,9 +94142,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The River Pass Ghoul Grove core curated character-source slice is completed: three original sources now own all twelve existing-path runtime derivatives with exact non-target/gameplay authority and bounded validation claims.",
+  "summary": "The production Mireclaw early-ladder curated character-source slice is in progress, bounded to three original sources and twelve exact existing-path runtime derivatives while preserving encounter/gameplay and non-target authority.",
   "taskId": "10184",
-  "updatedAt": "2026-08-22T11:40:42Z",
+  "updatedAt": "2026-08-22T11:45:29Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
