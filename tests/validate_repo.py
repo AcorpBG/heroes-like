@@ -12620,6 +12620,14 @@ def validate_content(errors: list[str]) -> None:
         if causeway_contract_match is not None:
             causeway_contract_body = causeway_contract_match.group("body")
             causeway_contract_tokens = (
+                'var reed_camp := _encounter_by_placement(scenario, "causeway_reed_camp")',
+                'String(reed_camp.get("encounter_id", "")) != "encounter_reedward_camp"',
+                'String(reed_camp.get("difficulty", "")) != "medium"',
+                'int(reed_camp.get("combat_seed", 0)) != 2201',
+                '_army_stack_contract(reed_camp_army.get("stacks", [])) != [',
+                '{"unit_id": "unit_mireclaw_reedsnare_kin", "count": 7}',
+                '{"unit_id": "unit_mireclaw_mudglass_slingers", "count": 4}',
+                '{"unit_id": "unit_mireclaw_bogplate_maulers", "count": 1}',
                 'var veteran_recruits := _hook_town_recruits(scenario, "veteran_supply_train", "duskfen_staging")',
                 'var veteran_garrison := _hook_town_garrison(scenario, "veteran_supply_train", "duskfen_staging")',
                 'veteran_recruits.size() != 1',
@@ -12635,6 +12643,7 @@ def validate_content(errors: list[str]) -> None:
                 'var duskfen_after := _town_by_placement(session, "duskfen_staging")',
                 '"base_staging_garrison": garrison_before.duplicate(true)',
                 '"reinforced_staging_garrison": garrison_after.duplicate(true)',
+                '"reed_camp_stacks": reed_camp_army.get("stacks", []).duplicate(true)',
                 '"screened_totemist_entry": {"unit_river_guard": 20}',
                 '"screened_totemist_survivors": {"unit_river_guard": 17}',
             )
@@ -12657,6 +12666,13 @@ def validate_content(errors: list[str]) -> None:
                     errors,
                     f"Causeway veteran/staging proof must remain observation-only and not use {forbidden_token}",
                 )
+            ensure(
+                'func _army_stack_contract(stacks_value: Variant) -> Array:' in report_text
+                and '"unit_id": String(stack_value.get("unit_id", ""))' in report_text
+                and '"count": int(stack_value.get("count", 0))' in report_text,
+                errors,
+                "Causeway content proof must normalize only observed stack ids/counts before exact comparison",
+            )
         fen_contract_match = re.search(
             r"func _fen_crown_final_march_reserve_contract\(\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc _objective_by_id)",
             report_text,
@@ -12818,6 +12834,33 @@ def validate_content(errors: list[str]) -> None:
     causeway = scenarios.get("causeway-stand", {})
     ensure(bool(causeway), errors, "Causeway Stand scenario is missing")
     if isinstance(causeway, dict):
+        causeway_encounters = causeway.get("encounters", []) if isinstance(causeway.get("encounters", []), list) else []
+        causeway_reed_camp = next(
+            (
+                encounter
+                for encounter in causeway_encounters
+                if isinstance(encounter, dict) and str(encounter.get("placement_id", "")) == "causeway_reed_camp"
+            ),
+            {},
+        )
+        ensure(
+            causeway_reed_camp.get("encounter_id") == "encounter_reedward_camp"
+            and causeway_reed_camp.get("difficulty") == "medium"
+            and int(causeway_reed_camp.get("combat_seed", 0)) == 2201
+            and causeway_reed_camp.get("enemy_army")
+            == {
+                "id": "army_causeway_reed_camp_pickets",
+                "name": "Causeway Reed Camp Pickets",
+                "faction_id": "faction_mireclaw",
+                "stacks": [
+                    {"unit_id": "unit_mireclaw_reedsnare_kin", "count": 7},
+                    {"unit_id": "unit_mireclaw_mudglass_slingers", "count": 4},
+                    {"unit_id": "unit_mireclaw_bogplate_maulers", "count": 1},
+                ],
+            },
+            errors,
+            "Causeway Reed Camp must keep its exact placement-owned 7/4/1 production Mireclaw line",
+        )
         causeway_hooks = causeway.get("script_hooks", []) if isinstance(causeway.get("script_hooks", []), list) else []
         veteran_hook = next((hook for hook in causeway_hooks if isinstance(hook, dict) and str(hook.get("id", "")) == "veteran_supply_train"), {})
         veteran_recruit_effects = [
@@ -44081,6 +44124,35 @@ def validate_live_client_harness(errors: list[str]) -> None:
     ):
         ensure(required_token in harness_text, errors, f"LiveValidationHarness.gd is missing required routed-harness token: {required_token}")
 
+    campaign_entry_match = re.search(
+        r"func _enter_live_campaign_overworld\(\) -> Dictionary:\n(?P<body>.*?)(?=\nfunc _enter_live_skirmish_overworld)",
+        harness_text,
+        re.S,
+    )
+    ensure(campaign_entry_match is not None, errors, "Could not isolate the routed campaign entry flow")
+    if campaign_entry_match is not None:
+        campaign_entry_body = campaign_entry_match.group("body")
+        campaign_entry_tokens = (
+            "await _settle_frames(8)",
+            'menu.call("validation_open_campaign_stage")',
+            "await _settle_frames(4)",
+            "var menu_snapshot: Dictionary = menu.call(\"validation_snapshot\")",
+            'int(menu_snapshot.get("campaign_count", 0)) > 0',
+            'menu.call("validation_select_campaign", campaign_id)',
+            'menu.call("validation_select_campaign_chapter", scenario_id)',
+        )
+        campaign_entry_positions = [campaign_entry_body.find(token) for token in campaign_entry_tokens]
+        ensure(
+            min(campaign_entry_positions) >= 0 and campaign_entry_positions == sorted(campaign_entry_positions),
+            errors,
+            "Routed campaign entry must open and settle the lazy campaign board before observing its populated browser and selecting the chapter",
+        )
+        ensure(
+            campaign_entry_body.count('menu.call("validation_open_campaign_stage")') == 1,
+            errors,
+            "Routed campaign entry must open the lazy campaign board exactly once",
+        )
+
     skirmish_town_battle_match = re.search(
         r"func _execute_boot_to_skirmish_town_battle_flow\(\).*?\n(?P<body>.*?)(?=\nfunc )",
         harness_text,
@@ -47347,6 +47419,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     tuning_queue_scene_path = ROOT / "tests/battle_autoplay_balance_tuning_queue_report.tscn"
     difficulty_sweep_report_path = ROOT / "tests/battle_autoplay_difficulty_sweep_report.gd"
     difficulty_sweep_scene_path = ROOT / "tests/battle_autoplay_difficulty_sweep_report.tscn"
+    causeway_production_report_path = ROOT / "tests/battle_causeway_reed_camp_production_line_report.gd"
+    causeway_production_scene_path = ROOT / "tests/battle_causeway_reed_camp_production_line_report.tscn"
     runtime_consequence_report_path = ROOT / "tests/battle_autoplay_runtime_consequence_report.gd"
     runtime_consequence_scene_path = ROOT / "tests/battle_autoplay_runtime_consequence_report.tscn"
     runtime_consequence_matrix_report_path = ROOT / "tests/battle_autoplay_runtime_consequence_matrix_report.gd"
@@ -47411,6 +47485,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         tuning_queue_scene_path,
         difficulty_sweep_report_path,
         difficulty_sweep_scene_path,
+        causeway_production_report_path,
+        causeway_production_scene_path,
         runtime_consequence_report_path,
         runtime_consequence_scene_path,
         runtime_consequence_matrix_report_path,
@@ -48196,6 +48272,91 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     if difficulty_sweep_scene_path.exists():
         difficulty_sweep_scene_text = difficulty_sweep_scene_path.read_text(encoding="utf-8")
         ensure("battle_autoplay_difficulty_sweep_report.gd" in difficulty_sweep_scene_text, errors, "Battle autoplay difficulty sweep scene is not wired to its script.")
+    if causeway_production_report_path.exists():
+        causeway_production_text = causeway_production_report_path.read_text(encoding="utf-8")
+        for required_token in (
+            'REPORT_ID := "BATTLE_CAUSEWAY_REED_CAMP_PRODUCTION_LINE_REPORT"',
+            'SCENARIO_ID := "causeway-stand"',
+            'PLACEMENT_ID := "causeway_reed_camp"',
+            '"unit_mireclaw_reedsnare_kin", "count": 7',
+            '"unit_mireclaw_mudglass_slingers", "count": 4',
+            '"unit_mireclaw_bogplate_maulers", "count": 1',
+            '"unit_blackbranch_cutthroat", "count": 7',
+            '"unit_mire_slinger", "count": 4',
+            '"unit_bog_brute", "count": 1',
+            '"unit_mireclaw_reedsnare_kin": ["harry"]',
+            '"unit_mireclaw_mudglass_slingers": ["harry"]',
+            '"unit_mireclaw_bogplate_maulers": ["shielding"]',
+            "OverworldRules.normalize_overworld_state(session)",
+            '_stack_health(PRODUCTION_STACKS) != 107',
+            '_stack_health(LEGACY_STACKS) != 93',
+            'Harness.run_battle_sample(SCENARIO_ID, encounter, 72, "normal")',
+            'Harness.run_battle_sample(SCENARIO_ID, encounter, 72, "hard")',
+            'Harness.run_battle_sample(SCENARIO_ID, legacy_encounter, 72, "normal")',
+            'Harness.run_battle_sample(SCENARIO_ID, legacy_encounter, 72, "hard")',
+            '_sample_exact(production_normal, "victory", "player_advantaged", "standard", 3, 73, 0, 11)',
+            '_sample_exact(production_hard, "victory", "player_advantaged", "standard", 3, 70, 0, 7)',
+            '_sample_exact(legacy_normal, "victory", "player_advantaged", "standard", 3, 72, 0, 12)',
+            '_sample_exact(legacy_hard, "victory", "player_advantaged", "standard", 3, 72, 0, 12)',
+            '"scenario_authority_exact": true',
+            '"session_authority_exact": true',
+            "get_tree().quit(0)",
+            "get_tree().quit(1)",
+        ):
+            ensure(required_token in causeway_production_text, errors, f"Causeway production-line report is missing token: {required_token}")
+        causeway_run_match = re.search(
+            r"func _run\(\) -> void:\n(?P<body>.*?)(?=\nfunc _scenario_encounter)",
+            causeway_production_text,
+            re.S,
+        )
+        ensure(causeway_run_match is not None, errors, "Could not isolate Causeway Reed Camp production-line report run")
+        if causeway_run_match is not None:
+            causeway_run_body = causeway_run_match.group("body")
+            ordered_tokens = (
+                "scenario_authority_before: Dictionary = scenario.duplicate(true)",
+                "OverworldRules.normalize_overworld_state(session)",
+                "session_authority_before: Dictionary = session.to_dict()",
+                "BattleRules.create_battle_payload(session, encounter)",
+                "session.to_dict() != session_authority_before",
+                "_battle_enemy_stack_contract(battle_payload) != PRODUCTION_STACKS",
+                "_battle_enemy_ability_contract(battle_payload)",
+                "legacy_encounter: Dictionary = encounter.duplicate(true)",
+                'legacy_army["stacks"] = LEGACY_STACKS.duplicate(true)',
+                'Harness.run_battle_sample(SCENARIO_ID, encounter, 72, "normal")',
+                'Harness.run_battle_sample(SCENARIO_ID, encounter, 72, "hard")',
+                'Harness.run_battle_sample(SCENARIO_ID, legacy_encounter, 72, "normal")',
+                'Harness.run_battle_sample(SCENARIO_ID, legacy_encounter, 72, "hard")',
+                "scenario != scenario_authority_before",
+            )
+            positions = [causeway_run_body.find(token) for token in ordered_tokens]
+            ensure(
+                min(positions) >= 0 and positions == sorted(positions),
+                errors,
+                "Causeway production-line report must preserve public payload, independent legacy controls, and authority in exact order",
+            )
+            ensure(causeway_run_body.count("Harness.run_battle_sample(") == 4, errors, "Causeway production-line report must run exactly four method-matched samples")
+            for forbidden_token in (
+                "BattleRules.apply_action",
+                "BattleAiRules",
+                '\n\tencounter["enemy_army"] =',
+                'session.battle =',
+                'session.scenario_status =',
+                "create_timer",
+                "await ",
+            ):
+                ensure(
+                    forbidden_token not in causeway_run_body,
+                    errors,
+                    f"Causeway production-line report must remain method-matched and observation-only, not use {forbidden_token}",
+                )
+    if causeway_production_scene_path.exists():
+        causeway_production_scene_text = causeway_production_scene_path.read_text(encoding="utf-8")
+        ensure(
+            'path="res://tests/battle_causeway_reed_camp_production_line_report.gd"' in causeway_production_scene_text
+            and 'name="BattleCausewayReedCampProductionLineReport" type="Node"' in causeway_production_scene_text,
+            errors,
+            "Causeway production-line scene is not wired exactly to its report script.",
+        )
     if runtime_consequence_report_path.exists():
         runtime_consequence_text = runtime_consequence_report_path.read_text(encoding="utf-8")
         for required_token in (

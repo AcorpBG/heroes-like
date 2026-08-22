@@ -703,7 +703,7 @@
         {"placement_id": "blackfen_gorget", "artifact_id": "artifact_bastion_gorget", "x": 8, "y": 4}
       ],
       "encounters": [
-        {"placement_id": "causeway_reed_camp", "encounter_id": "encounter_reedward_camp", "x": 4, "y": 1, "difficulty": "medium", "combat_seed": 2201, "enemy_army": {"id": "army_causeway_reed_camp_pickets", "name": "Causeway Reed Camp Pickets", "faction_id": "faction_mireclaw", "stacks": [{"unit_id": "unit_blackbranch_cutthroat", "count": 7}, {"unit_id": "unit_mire_slinger", "count": 4}, {"unit_id": "unit_bog_brute", "count": 1}]}},
+        {"placement_id": "causeway_reed_camp", "encounter_id": "encounter_reedward_camp", "x": 4, "y": 1, "difficulty": "medium", "combat_seed": 2201, "enemy_army": {"id": "army_causeway_reed_camp_pickets", "name": "Causeway Reed Camp Pickets", "faction_id": "faction_mireclaw", "stacks": [{"unit_id": "unit_mireclaw_reedsnare_kin", "count": 7}, {"unit_id": "unit_mireclaw_mudglass_slingers", "count": 4}, {"unit_id": "unit_mireclaw_bogplate_maulers", "count": 1}]}},
         {"placement_id": "causeway_gate_marshals", "encounter_id": "encounter_gate_marshals", "x": 7, "y": 2, "difficulty": "high", "combat_seed": 2202},
         {
           "placement_id": "causeway_levee_cutters",

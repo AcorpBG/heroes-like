@@ -341,6 +341,21 @@ func _river_pass_objective_chain() -> Dictionary:
 
 func _causeway_veteran_staging_contract() -> Dictionary:
 	var scenario := ContentService.get_scenario(CAUSEWAY_SCENARIO_ID)
+	var reed_camp := _encounter_by_placement(scenario, "causeway_reed_camp")
+	var reed_camp_army: Dictionary = reed_camp.get("enemy_army", {}) if reed_camp.get("enemy_army", {}) is Dictionary else {}
+	if (
+		String(reed_camp.get("encounter_id", "")) != "encounter_reedward_camp"
+		or String(reed_camp.get("difficulty", "")) != "medium"
+		or int(reed_camp.get("combat_seed", 0)) != 2201
+		or String(reed_camp_army.get("id", "")) != "army_causeway_reed_camp_pickets"
+		or _army_stack_contract(reed_camp_army.get("stacks", [])) != [
+			{"unit_id": "unit_mireclaw_reedsnare_kin", "count": 7},
+			{"unit_id": "unit_mireclaw_mudglass_slingers", "count": 4},
+			{"unit_id": "unit_mireclaw_bogplate_maulers", "count": 1},
+		]
+	):
+		_fail("Causeway Reed Camp must retain the exact placement-owned production Mireclaw line: %s" % JSON.stringify(reed_camp))
+		return {}
 	var veteran_recruits := _hook_town_recruits(scenario, "veteran_supply_train", "duskfen_staging")
 	var veteran_garrison := _hook_town_garrison(scenario, "veteran_supply_train", "duskfen_staging")
 	if veteran_recruits.size() != 1 or int(veteran_recruits.get("unit_river_guard", -1)) != CAUSEWAY_VETERAN_RIVER_GUARDS:
@@ -388,6 +403,7 @@ func _causeway_veteran_staging_contract() -> Dictionary:
 		"staging_placement_id": "duskfen_staging",
 		"base_staging_garrison": garrison_before.duplicate(true),
 		"reinforced_staging_garrison": garrison_after.duplicate(true),
+		"reed_camp_stacks": reed_camp_army.get("stacks", []).duplicate(true),
 		"screened_totemist_entry": {"unit_river_guard": 20},
 		"screened_totemist_survivors": {"unit_river_guard": 17},
 	}
@@ -421,6 +437,23 @@ func _objective_by_id(objectives: Array, objective_id: String) -> Dictionary:
 		if objective is Dictionary and String(objective.get("id", "")) == objective_id:
 			return objective.duplicate(true)
 	return {}
+
+func _encounter_by_placement(scenario: Dictionary, placement_id: String) -> Dictionary:
+	for encounter in scenario.get("encounters", []):
+		if encounter is Dictionary and String(encounter.get("placement_id", "")) == placement_id:
+			return encounter.duplicate(true)
+	return {}
+
+func _army_stack_contract(stacks_value: Variant) -> Array:
+	var result: Array = []
+	var stacks: Array = stacks_value if stacks_value is Array else []
+	for stack_value in stacks:
+		if stack_value is Dictionary:
+			result.append({
+				"unit_id": String(stack_value.get("unit_id", "")),
+				"count": int(stack_value.get("count", 0)),
+			})
+	return result
 
 func _town_by_placement(session: SessionStateStoreScript.SessionData, placement_id: String) -> Dictionary:
 	for town in session.overworld.get("towns", []):

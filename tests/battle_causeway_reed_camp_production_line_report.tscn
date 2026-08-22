@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource path="res://tests/battle_causeway_reed_camp_production_line_report.gd" type="Script" id="1"]
+
+[node name="BattleCausewayReedCampProductionLineReport" type="Node"]
+script = ExtResource("1")
