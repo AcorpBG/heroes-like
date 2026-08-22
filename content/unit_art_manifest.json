@@ -159,7 +159,10 @@
       "motif": "blade",
       "portrait": "res://art/units/portraits/unit_mirror_duelist.png",
       "battle_icon": "res://art/units/battle_icons/unit_mirror_duelist.png",
-      "overworld_icon": "res://art/units/overworld_icons/unit_mirror_duelist.png"
+      "overworld_icon": "res://art/units/overworld_icons/unit_mirror_duelist.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_mirror_duelist.png",
+      "curated_source_sha256": "63045e93b1224aa4463d85de151b35274f4ac01aeaa69ae4b78f55554dad4ebf"
     },
     {
       "id": "unit_aurora_ballista",
