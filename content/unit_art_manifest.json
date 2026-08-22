@@ -159,7 +159,10 @@
       "motif": "melee",
       "portrait": "res://art/units/portraits/unit_embercourt_fordhook_cadets.png",
       "battle_icon": "res://art/units/battle_icons/unit_embercourt_fordhook_cadets.png",
-      "overworld_icon": "res://art/units/overworld_icons/unit_embercourt_fordhook_cadets.png"
+      "overworld_icon": "res://art/units/overworld_icons/unit_embercourt_fordhook_cadets.png",
+      "art_source_kind": "curated_original_character_v1",
+      "curated_source": "res://art/units/source/curated/unit_embercourt_fordhook_cadets.png",
+      "curated_source_sha256": "e9eddd43ef9b1b1a44a40fd609676bb31c8db90cd612a17bb3e87aef0fce6ff4"
     },
     {
       "id": "unit_embercourt_lantern_sappers",

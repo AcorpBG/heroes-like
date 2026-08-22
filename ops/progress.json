@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Ironbridge Bridge Silt Hunters production-line candidate was rejected after it reopened the mandatory active-scenario tuning queue; shipped content remains unchanged.",
+  "currentNotes": "The Fordhook Cadet curated sprite-source vertical slice is complete: one original transparent source now reproducibly owns its battle icon and fourteen-state sheet, all other unit assets remain exact, and focused/compatibility/static/platform gates are green with bounded claims.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-ironbridge-bridge-silt-hunters-production-line-10184",
-  "currentSliceId": "content-ironbridge-bridge-silt-hunters-production-line-10184",
-  "currentSliceNotes": "Rejected after authoritative active-scenario breadth: the count-preserving production Mireclaw line was byte-exact to the legacy focused control at normal 4 rounds/77%/DPR38 and hard 4 rounds/67%/DPR38, but reopened two medium tuning watches (Ironbridge cohort average terminal margin 72 and encounter_silt_hunters sample terminal margin 77; queue signature a27a1dc5). Production content remains legacy; no count/stat/ability/threshold tuning was authorized.",
-  "currentSliceStatus": "superseded",
-  "currentSliceTitle": "Ironbridge Bridge Silt Hunters Production Line",
-  "currentSliceUpdatedAt": "2026-08-22T08:29:31Z",
+  "currentSlice": "art-embercourt-fordhook-cadets-curated-sprite-source-10184",
+  "currentSliceId": "art-embercourt-fordhook-cadets-curated-sprite-source-10184",
+  "currentSliceNotes": "Completed one original transparent Fordhook Cadet source and reproducible battle-icon/fourteen-state-sheet derivatives. Full regeneration matches all 412 assets and both manifests; exactly the Fordhook icon/sheet differ from the pre-slice baseline. Focused BattleBoard, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. final_sprite_import remains false and broad/final art or release readiness is unclaimed.",
+  "currentSliceStatus": "completed",
+  "currentSliceTitle": "Embercourt Fordhook Cadets Curated Sprite Source",
+  "currentSliceUpdatedAt": "2026-08-22T09:42:31Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,61 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed release-readiness implementation slice; do not tune the rejected Ironbridge candidate or weaken the active queue.",
-  "notes": "Rejected the bounded Ironbridge Bridge Silt Hunters production-line candidate. Focused production and legacy controls were exact, but the authoritative breadth gate reopened cohort and sample terminal-margin watches; production content remains unchanged.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed release-readiness implementation slice; do not infer broad/final art or release readiness from the completed Fordhook vertical slice.",
+  "notes": "Completed the source-backed Fordhook Cadet curated character-art vertical slice with one original transparent source, reproducible existing-path runtime derivatives, exact non-target preservation, and bounded cross-platform startup evidence.",
   "plannedSlices": [
+    {
+      "id": "art-embercourt-fordhook-cadets-curated-sprite-source-10184",
+      "title": "Embercourt Fordhook Cadets Curated Sprite Source",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "PLAN.md",
+        "docs/concept-art-pipeline.md",
+        "docs/animation-battle-troop-state-contract-report.md"
+      ],
+      "purpose": "Replace the generated abstract Fordhook Cadet emblem/motif with one original curated full-body character source and reproducibly derive its shipped battle icon and existing fourteen-state runtime sheet without changing any other unit asset or runtime animation semantics.",
+      "implementationTargets": [
+        "art/units/source/curated/unit_embercourt_fordhook_cadets.png",
+        "art/units/battle_icons/unit_embercourt_fordhook_cadets.png",
+        "art/animation/runtime/units/unit_embercourt_fordhook_cadets.png",
+        "content/unit_art_manifest.json",
+        "content/unit_animation_manifest.json",
+        "tools/generate_unit_art_assets.py",
+        "tests/unit_embercourt_fordhook_curated_art_report.gd",
+        "tests/unit_embercourt_fordhook_curated_art_report.tscn",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {
+        "unit_id": "unit_embercourt_fordhook_cadets",
+        "battle_icon_size": [160, 160],
+        "animation_sheet_size": [256, 896],
+        "animation_state_count": 14,
+        "frames_per_state": 4,
+        "other_unit_assets_must_remain_byte_exact": 102,
+        "final_sprite_import": false
+      },
+      "completionCriteria": [
+        "A transparent original Fordhook Cadet source is committed under art/units/source/curated and the production generator consumes it only for unit_embercourt_fordhook_cadets",
+        "The existing 160x160 battle-icon path and 256x896 fourteen-state/four-frame animation-sheet path are reproducibly derived from the curated source and remain loadable through manifest, ContentService, and BattleBoard ownership",
+        "Every non-Fordhook battle icon and unit animation sheet remains byte-exact while manifest provenance, focused runtime, animation compatibility, reproducibility, core, validator, JSON/Python, and editor gates pass",
+        "Official Linux export/headless startup and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass with claims bounded to packaging startup"
+      ],
+      "nonGoals": [
+        "Another unit asset, Fordhook stats/abilities/content, BattleRules, BattleAiRules, animation state order/timing, save schema, project rendering settings, Native RMG, or packaging behavior changes",
+        "Setting final sprite/VFX/audio import flags or claiming broad/final art, packaged battle interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game validation, or release readiness"
+      ],
+      "createdAt": "2026-08-22T09:10:28Z",
+      "startedAt": "2026-08-22T09:10:28Z",
+      "updatedAt": "2026-08-22T09:42:31Z",
+      "completedAt": "2026-08-22T09:42:31Z",
+      "notes": "Completed with source/icon/sheet SHA256 e9eddd43/9ed1ac03/1aa44e4b. Focused runtime loads the exact paths in BattleBoard and validates all fourteen states/four frames. Full generator and reproducibility checks match all 412 assets/two manifests; pre/post hashes prove all 102 non-Fordhook battle-icon/sheet pairs exact. Unit art/animation/readiness, event cue, Battle animation through the headless compatibility renderer, core, validator/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. The default headless renderer's broad Battle animation owner timed out CPU-bound with no diagnostics, then the exact unchanged owner passed naturally under gl_compatibility; this is retained as host-renderer evidence, not a product or packaged-interaction claim. final_sprite_import remains false."
+    },
     {
       "id": "content-ironbridge-bridge-silt-hunters-production-line-10184",
       "title": "Ironbridge Bridge Silt Hunters Production Line",
@@ -93733,7 +93785,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "content_ironbridge_bridge_silt_hunters_production_line_superseded",
+  "result": "art_embercourt_fordhook_cadets_curated_sprite_source_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -93834,9 +93886,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Ironbridge Stand's count-preserving production Mireclaw candidate was rejected because it reopened the mandatory active-scenario tuning queue; shipped content remains legacy and the tracker is ready for a different source-backed slice.",
+  "summary": "Fordhook Cadets now use one original curated character source for reproducible existing-path battle-icon and fourteen-state-sheet derivatives; every other unit asset remains exact and focused, compatibility, static/editor, and bounded Linux/Windows startup gates are green.",
   "taskId": "10184",
-  "updatedAt": "2026-08-22T08:41:24Z",
+  "updatedAt": "2026-08-22T09:42:31Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

@@ -15,6 +15,17 @@ MANIFEST_PATH = ROOT / "content" / "unit_art_manifest.json"
 ANIMATION_MANIFEST_PATH = ROOT / "content" / "unit_animation_manifest.json"
 ART_ROOT = ROOT / "art" / "units"
 ANIMATION_ROOT = ROOT / "art" / "animation" / "runtime" / "units"
+CURATED_SOURCE_ROOT = ART_ROOT / "source" / "curated"
+CURATED_CHARACTER_SOURCE_IDS = {
+    "unit_embercourt_fordhook_cadets",
+}
+PRESERVED_AUTHORED_ASSET_SHA256 = {
+    ("unit_sunvault_aurora_ballistae", "portrait"): "ffbc2c6dae600fc32aadb6720e21f9d682f4abb71c0fec3dadf8bdbf4ab10534",
+    ("unit_thornwake_graft_matriarchs", "portrait"): "5e9c93288f2c51539c038aa3bed3bd00d54c25318ef4073732454f276b678678",
+    ("unit_thornwake_graft_matriarchs", "battle_icon"): "d4fc476800ca8122c21cd71c9822075e68f49d92ab79747205108107f8c9e715",
+    ("unit_thornwake_graft_matriarchs", "overworld_icon"): "7ef4d0bebf2c6f8589e7894fee642658621ed7a1f954cc2ed8805d75e52ef4fc",
+    ("unit_thornwake_graft_matriarchs", "battle_animation_sheet"): "6d199e38ad8972256a10b21e6df953ef38383caa72051d35ae38b77e9b2d544f",
+}
 
 PORTRAIT_SIZE = (384, 512)
 BATTLE_ICON_SIZE = (160, 160)
@@ -129,38 +140,51 @@ def main() -> int:
         overworld_path = ART_ROOT / "overworld_icons" / f"{unit_id}.png"
         animation_path = ANIMATION_ROOT / f"{unit_id}.png"
 
-        draw_portrait(unit, palette, motif, initials, portrait_path)
-        draw_battle_icon(unit, palette, motif, initials, battle_path)
-        draw_overworld_icon(unit, palette, motif, initials, overworld_path)
-        draw_battle_troop_animation_sheet(unit, palette, motif, initials, animation_path)
+        curated_source = load_curated_character_source(unit_id)
+        if not preserve_authored_asset(unit_id, "portrait", portrait_path):
+            draw_portrait(unit, palette, motif, initials, portrait_path)
+        if not preserve_authored_asset(unit_id, "battle_icon", battle_path):
+            if curated_source is None:
+                draw_battle_icon(unit, palette, motif, initials, battle_path)
+            else:
+                draw_curated_battle_icon(unit, palette, curated_source, battle_path)
+        if not preserve_authored_asset(unit_id, "overworld_icon", overworld_path):
+            draw_overworld_icon(unit, palette, motif, initials, overworld_path)
+        if not preserve_authored_asset(unit_id, "battle_animation_sheet", animation_path):
+            if curated_source is None:
+                draw_battle_troop_animation_sheet(unit, palette, motif, initials, animation_path)
+            else:
+                draw_curated_battle_troop_animation_sheet(unit, palette, curated_source, animation_path)
 
-        manifest["items"].append(
-            {
-                "id": unit_id,
-                "unit_id": unit_id,
-                "name": str(unit.get("name", unit_id)),
-                "faction_id": faction_key,
-                "tier": int(unit.get("tier", 1)),
-                "role": str(unit.get("role", "")),
-                "motif": motif,
-                "portrait": to_res_path(portrait_path),
-                "battle_icon": to_res_path(battle_path),
-                "overworld_icon": to_res_path(overworld_path),
-            }
-        )
-        animation_manifest["items"].append(
-            {
-                "id": unit_id,
-                "unit_id": unit_id,
-                "name": str(unit.get("name", unit_id)),
-                "faction_id": faction_key,
-                "tier": int(unit.get("tier", 1)),
-                "role": str(unit.get("role", "")),
-                "motif": motif,
-                "sprite_sheet": to_res_path(animation_path),
-                "states": [state["state"] for state in BATTLE_TROOP_ANIMATION_STATES],
-            }
-        )
+        art_record = {
+            "id": unit_id,
+            "unit_id": unit_id,
+            "name": str(unit.get("name", unit_id)),
+            "faction_id": faction_key,
+            "tier": int(unit.get("tier", 1)),
+            "role": str(unit.get("role", "")),
+            "motif": motif,
+            "portrait": to_res_path(portrait_path),
+            "battle_icon": to_res_path(battle_path),
+            "overworld_icon": to_res_path(overworld_path),
+        }
+        animation_record = {
+            "id": unit_id,
+            "unit_id": unit_id,
+            "name": str(unit.get("name", unit_id)),
+            "faction_id": faction_key,
+            "tier": int(unit.get("tier", 1)),
+            "role": str(unit.get("role", "")),
+            "motif": motif,
+            "sprite_sheet": to_res_path(animation_path),
+            "states": [state["state"] for state in BATTLE_TROOP_ANIMATION_STATES],
+        }
+        provenance = curated_source_provenance(unit_id)
+        if provenance:
+            art_record.update(provenance)
+            animation_record.update(provenance)
+        manifest["items"].append(art_record)
+        animation_manifest["items"].append(animation_record)
 
     MANIFEST_PATH.write_text(json.dumps(manifest, indent=2, sort_keys=False) + "\n", encoding="utf-8")
     ANIMATION_MANIFEST_PATH.write_text(json.dumps(animation_manifest, indent=2, sort_keys=False) + "\n", encoding="utf-8")
@@ -171,6 +195,69 @@ def main() -> int:
 
 def to_res_path(path: Path) -> str:
     return "res://" + path.relative_to(ROOT).as_posix()
+
+
+def curated_character_source_path(unit_id: str) -> Path | None:
+    if unit_id not in CURATED_CHARACTER_SOURCE_IDS:
+        return None
+    return CURATED_SOURCE_ROOT / f"{unit_id}.png"
+
+
+def load_curated_character_source(unit_id: str) -> Image.Image | None:
+    source_path = curated_character_source_path(unit_id)
+    if source_path is None:
+        return None
+    if not source_path.exists():
+        raise FileNotFoundError(f"Curated character source is missing for {unit_id}: {source_path}")
+    source = Image.open(source_path).convert("RGBA")
+    if source.size != (512, 512):
+        raise ValueError(f"Curated character source for {unit_id} must be 512x512, got {source.size}")
+    alpha = source.getchannel("A")
+    if alpha.getbbox() is None or alpha.getextrema() != (0, 255):
+        raise ValueError(f"Curated character source for {unit_id} must contain transparent and opaque pixels")
+    return source
+
+
+def curated_source_provenance(unit_id: str) -> dict[str, str]:
+    source_path = curated_character_source_path(unit_id)
+    if source_path is None:
+        return {}
+    return {
+        "art_source_kind": "curated_original_character_v1",
+        "curated_source": to_res_path(source_path),
+        "curated_source_sha256": hashlib.sha256(source_path.read_bytes()).hexdigest(),
+    }
+
+
+def preserve_authored_asset(unit_id: str, surface: str, destination: Path) -> bool:
+    expected_hash = PRESERVED_AUTHORED_ASSET_SHA256.get((unit_id, surface), "")
+    if expected_hash == "":
+        return False
+    source = runtime_asset_path(unit_id, surface)
+    if not source.exists():
+        raise FileNotFoundError(f"Preserved authored asset is missing for {unit_id} {surface}: {source}")
+    payload = source.read_bytes()
+    actual_hash = hashlib.sha256(payload).hexdigest()
+    if actual_hash != expected_hash:
+        raise ValueError(
+            f"Preserved authored asset hash drifted for {unit_id} {surface}: "
+            f"expected {expected_hash}, got {actual_hash}"
+        )
+    if destination.resolve() != source.resolve():
+        destination.write_bytes(payload)
+    return True
+
+
+def runtime_asset_path(unit_id: str, surface: str) -> Path:
+    if surface == "portrait":
+        return ART_ROOT / "portraits" / f"{unit_id}.png"
+    if surface == "battle_icon":
+        return ART_ROOT / "battle_icons" / f"{unit_id}.png"
+    if surface == "overworld_icon":
+        return ART_ROOT / "overworld_icons" / f"{unit_id}.png"
+    if surface == "battle_animation_sheet":
+        return ANIMATION_ROOT / f"{unit_id}.png"
+    raise ValueError(f"Unknown unit art surface: {surface}")
 
 
 def motif_for_unit(unit: dict) -> str:
@@ -330,6 +417,25 @@ def draw_battle_icon(unit: dict, palette: dict, motif: str, initials: str, path:
     image.save(path)
 
 
+def draw_curated_battle_icon(unit: dict, palette: dict, source: Image.Image, path: Path) -> None:
+    image, draw = canvas(BATTLE_ICON_SIZE)
+    primary = palette["primary"]
+    shadow = palette["shadow"]
+    metal = palette["metal"]
+    draw.ellipse(
+        [7, 7, 153, 153],
+        fill=with_alpha(scale_color(shadow, 0.78), 232),
+        outline=with_alpha(metal, 238),
+        width=4,
+    )
+    draw.ellipse([16, 16, 144, 144], fill=with_alpha(scale_color(primary, 0.72), 165))
+    draw.ellipse([31, 132, 129, 151], fill=with_alpha(scale_color(shadow, 0.48), 105))
+    figure = _fit_curated_source(source, (146, 146))
+    image.alpha_composite(figure, ((160 - figure.width) // 2, 7 + (146 - figure.height)))
+    draw_tier_pips(draw, int(unit.get("tier", 1)), (22, 142), metal, 3)
+    image.save(path)
+
+
 def draw_overworld_icon(unit: dict, palette: dict, motif: str, initials: str, path: Path) -> None:
     image, draw = canvas(OVERWORLD_ICON_SIZE)
     primary = palette["primary"]
@@ -353,7 +459,15 @@ def draw_battle_troop_animation_sheet(unit: dict, palette: dict, motif: str, ini
     sheet = Image.new("RGBA", sheet_size, (0, 0, 0, 0))
     for state_index, state in enumerate(BATTLE_TROOP_ANIMATION_STATES):
         for frame_index in range(ANIMATION_FRAMES_PER_STATE):
-            frame = draw_animation_frame(unit, palette, motif, initials, state, state_index, frame_index)
+            render_state = state
+            if str(state.get("state", "")) == "surrender_stand_down":
+                # Existing generated sheets predate the manifest's semantic
+                # surrender-family correction and use retreat motion for this
+                # row. Preserve those bytes for non-curated units; the runtime
+                # manifest still owns the state as the surrender family.
+                render_state = dict(state)
+                render_state["family"] = "retreat"
+            frame = draw_animation_frame(unit, palette, motif, initials, render_state, state_index, frame_index)
             sheet.alpha_composite(
                 frame,
                 (
@@ -362,6 +476,108 @@ def draw_battle_troop_animation_sheet(unit: dict, palette: dict, motif: str, ini
                 ),
             )
     sheet.save(path)
+
+
+def draw_curated_battle_troop_animation_sheet(unit: dict, palette: dict, source: Image.Image, path: Path) -> None:
+    sheet_size = (
+        ANIMATION_FRAME_SIZE[0] * ANIMATION_FRAMES_PER_STATE,
+        ANIMATION_FRAME_SIZE[1] * len(BATTLE_TROOP_ANIMATION_STATES),
+    )
+    sheet = Image.new("RGBA", sheet_size, (0, 0, 0, 0))
+    for state_index, state in enumerate(BATTLE_TROOP_ANIMATION_STATES):
+        for frame_index in range(ANIMATION_FRAMES_PER_STATE):
+            frame = draw_curated_animation_frame(unit, palette, source, state, state_index, frame_index)
+            sheet.alpha_composite(
+                frame,
+                (
+                    frame_index * ANIMATION_FRAME_SIZE[0],
+                    state_index * ANIMATION_FRAME_SIZE[1],
+                ),
+            )
+    sheet.save(path)
+
+
+def draw_curated_animation_frame(
+    unit: dict,
+    palette: dict,
+    source: Image.Image,
+    state: dict,
+    state_index: int,
+    frame_index: int,
+) -> Image.Image:
+    image, draw = canvas(ANIMATION_FRAME_SIZE)
+    unit_id = str(unit["id"])
+    family = str(state["family"])
+    state_name = str(state["state"])
+    seed = hash_int(f"{unit_id}:{state_name}:{frame_index}")
+    shadow = palette["shadow"]
+    metal = palette["metal"]
+    draw.ellipse([8, 50, 56, 61], fill=with_alpha(scale_color(shadow, 0.50), 92))
+    draw_animation_state_accent(draw, state, frame_index, palette, seed)
+
+    height = 58
+    angle = 0.0
+    opacity = 255
+    if family == "move":
+        height = [55, 58, 56, 59][frame_index]
+        angle = [-2.0, 1.0, -1.0, 2.0][frame_index]
+    elif state_name == "melee_windup_release":
+        angle = [-8.0, -3.0, 8.0, 2.0][frame_index]
+    elif state_name == "ranged_aim_release":
+        angle = [-3.0, -1.0, 2.0, 4.0][frame_index]
+    elif family == "hit":
+        angle = [-6.0, 8.0, -4.0, 2.0][frame_index]
+    elif family == "death":
+        height = [54, 50, 46, 42][frame_index]
+        angle = [8.0, 31.0, 58.0, 82.0][frame_index]
+        opacity = [255, 230, 195, 155][frame_index]
+    elif family == "retreat":
+        opacity = [255, 235, 210, 180][frame_index]
+        angle = [2.0, 1.0, -2.0, -4.0][frame_index]
+    elif state_name == "surrender_stand_down":
+        height = [57, 55, 53, 51][frame_index]
+        angle = [0.0, 2.0, 4.0, 6.0][frame_index]
+    elif family == "cast":
+        height = [55, 57, 60, 58][frame_index]
+        angle = [-2.0, 0.0, 3.0, 1.0][frame_index]
+    elif family == "defend":
+        angle = [0.0, -2.0, -3.0, -1.0][frame_index]
+    else:
+        height = [57, 58, 57, 56][frame_index]
+        angle = [-1.0, 0.0, 1.0, 0.0][frame_index]
+
+    figure = _fit_curated_source(source, (60, height))
+    if angle != 0.0:
+        figure = figure.rotate(angle, resample=Image.Resampling.BICUBIC, expand=True)
+    if opacity < 255:
+        alpha = figure.getchannel("A").point(lambda value: (value * opacity) // 255)
+        figure.putalpha(alpha)
+
+    offset_x = animation_offset_x(family, state_name, frame_index, seed)
+    offset_y = animation_offset_y(family, state_name, frame_index, seed)
+    if family == "death":
+        offset_y += 3 + frame_index * 2
+    if state_name == "surrender_stand_down":
+        offset_y += frame_index
+    destination = (
+        (ANIMATION_FRAME_SIZE[0] - figure.width) // 2 + offset_x,
+        ANIMATION_FRAME_SIZE[1] - figure.height - 2 + offset_y,
+    )
+    image.alpha_composite(figure, destination)
+    draw_animation_frame_signature(draw, unit_id, state_index, frame_index, metal)
+    draw_animation_palette_marks(draw, palette, seed, frame_index)
+    return image
+
+
+def _fit_curated_source(source: Image.Image, bounds: tuple[int, int]) -> Image.Image:
+    alpha = source.getchannel("A")
+    bbox = alpha.getbbox()
+    if bbox is None:
+        raise ValueError("Curated character source has no visible pixels")
+    figure = source.crop(bbox)
+    scale = min(bounds[0] / figure.width, bounds[1] / figure.height)
+    size = (max(1, round(figure.width * scale)), max(1, round(figure.height * scale)))
+    return figure.resize(size, Image.Resampling.LANCZOS)
 
 
 def draw_animation_frame(
