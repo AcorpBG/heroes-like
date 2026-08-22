@@ -7,6 +7,7 @@ const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRule
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const TownRulesScript = preload("res://scripts/core/TownRules.gd")
 const BattleRulesScript = preload("res://scripts/core/BattleRules.gd")
+const BattleAutoplayBalanceHarnessRulesScript = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd")
 
 const REPORT_ID := "EMBERCOURT_CHARTER_BASTION_COUNTERSEAL_CHAPTER_REPORT"
 const SCENARIO_ID := "charter-bastion-counterseal"
@@ -20,6 +21,15 @@ const PLAYER_TOWN_ID := "town_highwater_keep"
 const ENEMY_TOWN_PLACEMENT_ID := "halo_counterseal_front"
 const ENEMY_TOWN_ID := "town_halo_spire"
 const ENCOUNTER_PLACEMENT_IDS := ["counterseal_relay_pickets", "counterseal_mirror_lancers", "counterseal_aurora_battery"]
+const RELAY_PICKETS_STACKS := [
+	{"unit_id": "unit_sunvault_shard_wardens", "count": 7},
+	{"unit_id": "unit_sunvault_prism_adepts", "count": 5},
+	{"unit_id": "unit_sunvault_resonant_choristers", "count": 1},
+]
+const NEIGHBOR_ENCOUNTER_STACKS := {
+	"counterseal_mirror_lancers": [{"unit_id": "unit_shard_guard", "count": 6}, {"unit_id": "unit_prism_adept", "count": 5}, {"unit_id": "unit_mirror_duelist", "count": 3}],
+	"counterseal_aurora_battery": [{"unit_id": "unit_shard_guard", "count": 5}, {"unit_id": "unit_mirror_duelist", "count": 4}, {"unit_id": "unit_aurora_ballista", "count": 2}],
+}
 const REQUIRED_RESOURCE_PLACEMENT_IDS := ["charter_bastion_wood", "charter_bastion_ore", "counterseal_embergrain_granary", "counterseal_signal_post", "charter_bastion_counterseal_charter_rare_exchange", "halo_counterseal_wood", "halo_counterseal_ore", "halo_counterseal_lens_house", "charter_bastion_counterseal_halo_rare_exchange"]
 const SKIRMISH_SAVE_SLOT := 2
 const CAMPAIGN_SAVE_SLOT := 3
@@ -76,11 +86,22 @@ func _assert_catalog_and_setup() -> Dictionary:
 	if String(scenario.get("player_faction_id", "")) != "faction_embercourt" or String(scenario.get("hero_id", "")) != HERO_ID or String(scenario.get("player_army_id", "")) != ARMY_ID:
 		_fail("Charter Bastion Counterseal changed its authored Embercourt commander or army identity.")
 		return {}
+	var authored_encounters: Dictionary = {}
+	for encounter in scenario.get("encounters", []):
+		if encounter is Dictionary:
+			authored_encounters[String(encounter.get("placement_id", ""))] = encounter
+	if _army_stack_contract(authored_encounters.get("counterseal_relay_pickets", {}).get("enemy_army", {}).get("stacks", [])) != RELAY_PICKETS_STACKS:
+		_fail("Counterseal Relay Pickets did not retain its exact production T1/T2/T4 formation.")
+		return {}
+	for placement_id in NEIGHBOR_ENCOUNTER_STACKS:
+		if _army_stack_contract(authored_encounters.get(placement_id, {}).get("enemy_army", {}).get("stacks", [])) != NEIGHBOR_ENCOUNTER_STACKS[placement_id]:
+			_fail("Neighboring Counterseal encounter %s changed while integrating Relay Pickets." % placement_id)
+			return {}
 	var setup: Dictionary = ScenarioSelectRulesScript.build_skirmish_setup(SCENARIO_ID, "normal")
 	if setup.is_empty() or String(setup.get("scenario_id", "")) != SCENARIO_ID:
 		_fail("Live skirmish setup did not expose Charter Bastion Counterseal.")
 		return {}
-	return {"active_scenario_count": scenario_ids.size(), "campaign_available": true, "skirmish_available": true, "map_size": scenario.get("map_size", {})}
+	return {"active_scenario_count": scenario_ids.size(), "campaign_available": true, "skirmish_available": true, "map_size": scenario.get("map_size", {}), "relay_pickets_stacks": RELAY_PICKETS_STACKS.duplicate(true), "neighbor_encounters_exact": true}
 
 func _assert_opening_session(session: SessionStateStoreScript.SessionData, launch_mode: String) -> Dictionary:
 	if session == null or session.scenario_id != SCENARIO_ID or session.launch_mode != launch_mode:
@@ -154,8 +175,10 @@ func _exercise_save_restore(session: SessionStateStoreScript.SessionData, slot: 
 
 func _exercise_battle_entries(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	var rows := []
+	var relay_encounter: Dictionary = {}
 	for placement_id in ENCOUNTER_PLACEMENT_IDS:
-		var battle: Dictionary = BattleRulesScript.create_battle_payload(session, _encounter_by_placement(session, placement_id))
+		var encounter: Dictionary = _encounter_by_placement(session, placement_id)
+		var battle: Dictionary = BattleRulesScript.create_battle_payload(session, encounter)
 		if battle.is_empty() or String(battle.get("player_commander_state", {}).get("id", "")) != HERO_ID:
 			_fail("%s did not create a Seren-owned battle payload." % placement_id)
 			return {}
@@ -169,8 +192,69 @@ func _exercise_battle_entries(session: SessionStateStoreScript.SessionData) -> D
 		if player_stacks != 3 or enemy_stacks != 3:
 			_fail("%s battle missed exact authored stack counts." % placement_id)
 			return {}
-		rows.append({"placement_id": placement_id, "player_stacks": player_stacks, "enemy_stacks": enemy_stacks})
-	return {"case_count": rows.size(), "rows": rows}
+		var enemy_contract := _battle_enemy_contract(battle)
+		if placement_id == "counterseal_relay_pickets":
+			relay_encounter = encounter.duplicate(true)
+			var expected_abilities := {
+				"unit_sunvault_shard_wardens": ["shielding"],
+				"unit_sunvault_prism_adepts": ["volley"],
+				"unit_sunvault_resonant_choristers": ["resonance_relay", "harry"],
+			}
+			if _battle_unit_counts(enemy_contract) != {"unit_sunvault_shard_wardens": 7, "unit_sunvault_prism_adepts": 5, "unit_sunvault_resonant_choristers": 1} or _battle_ability_contract(enemy_contract) != expected_abilities:
+				_fail("Relay Pickets public battle payload missed exact production counts or shielding/volley/Resonant Relay/Calibration Cant abilities: %s" % JSON.stringify(enemy_contract))
+				return {}
+		rows.append({"placement_id": placement_id, "player_stacks": player_stacks, "enemy_stacks": enemy_stacks, "enemy_contract": enemy_contract})
+	if relay_encounter.is_empty():
+		_fail("Counterseal Relay Pickets was unavailable for live autoplay.")
+		return {}
+	var sample: Dictionary = BattleAutoplayBalanceHarnessRulesScript.run_battle_sample(SCENARIO_ID, relay_encounter, 72, "normal")
+	var sample_profile: Dictionary = sample.get("initial_stack_profile", {})
+	var sample_consequences: Dictionary = sample.get("runtime_consequence_profile", {})
+	if not bool(sample.get("completed", false)) or String(sample.get("outcome_state", "")) != "victory" or int(sample.get("invalid_order_count", -1)) != 0:
+		_fail("Production Relay Pickets autoplay did not finish as a valid player victory: %s" % JSON.stringify(sample))
+		return {}
+	if int(sample.get("round_reached", 0)) < 4 or int(sample.get("round_reached", 0)) > 8 or int(sample.get("player_health_remaining_pct", 0)) < 20 or int(sample.get("player_health_remaining_pct", 0)) > 80 or int(sample.get("enemy_health_remaining_pct", -1)) != 0:
+		_fail("Production Relay Pickets autoplay left the authored medium player-advantaged pacing band: %s" % JSON.stringify(sample))
+		return {}
+	if sample_profile.get("side_ability_counts", {}).get("enemy", {}) != {"harry": 1, "resonance_relay": 1, "shielding": 1, "volley": 1}:
+		_fail("Production Relay Pickets autoplay did not retain the exact live ability surface.")
+		return {}
+	if not bool(sample_consequences.get("has_spell_consequence", false)) or not bool(sample_consequences.get("has_status_consequence", false)) or int(sample_consequences.get("effect_observation_count", 0)) <= 0:
+		_fail("Production Relay Pickets autoplay did not expose live combat consequences.")
+		return {}
+	return {"case_count": rows.size(), "rows": rows, "relay_autoplay": {"completed": true, "outcome_state": "victory", "round_reached": int(sample.get("round_reached", 0)), "steps_sampled": int(sample.get("steps_sampled", 0)), "invalid_order_count": 0, "player_health_remaining_pct": int(sample.get("player_health_remaining_pct", 0)), "enemy_health_remaining_pct": 0, "enemy_ability_counts": sample_profile.get("side_ability_counts", {}).get("enemy", {}), "effect_observation_count": int(sample_consequences.get("effect_observation_count", 0))}}
+
+func _army_stack_contract(stacks: Array) -> Array:
+	var result: Array = []
+	for stack in stacks:
+		if stack is Dictionary:
+			result.append({"unit_id": String(stack.get("unit_id", "")), "count": int(stack.get("count", 0))})
+	return result
+
+func _battle_enemy_contract(battle: Dictionary) -> Array:
+	var result: Array = []
+	for stack in battle.get("stacks", []):
+		if stack is Dictionary and String(stack.get("side", "")) == "enemy":
+			var ability_ids: Array = []
+			for ability in stack.get("abilities", []):
+				if ability is Dictionary:
+					ability_ids.append(String(ability.get("id", "")))
+			result.append({"unit_id": String(stack.get("unit_id", "")), "count": int(stack.get("base_count", 0)), "ability_ids": ability_ids})
+	return result
+
+func _battle_unit_counts(contract: Array) -> Dictionary:
+	var result := {}
+	for row in contract:
+		if row is Dictionary:
+			result[String(row.get("unit_id", ""))] = int(row.get("count", 0))
+	return result
+
+func _battle_ability_contract(contract: Array) -> Dictionary:
+	var result := {}
+	for row in contract:
+		if row is Dictionary:
+			result[String(row.get("unit_id", ""))] = row.get("ability_ids", []).duplicate()
+	return result
 
 func _exercise_outcomes() -> Dictionary:
 	var victory: SessionStateStoreScript.SessionData = ScenarioFactoryScript.create_session(SCENARIO_ID, "normal", SessionStateStoreScript.LAUNCH_MODE_SKIRMISH)
