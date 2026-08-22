@@ -49,10 +49,13 @@ CURATED_CHARACTER_SOURCE_IDS = {
     "unit_prism_adept",
     "unit_river_guard",
     "unit_shard_guard",
+    "unit_sunvault_aurora_ballistae",
+    "unit_sunvault_daybreak_colossus",
     "unit_sunvault_mirror_duelists",
     "unit_sunvault_prism_adepts",
     "unit_sunvault_resonant_choristers",
     "unit_sunvault_shard_wardens",
+    "unit_sunvault_solar_array_striders",
     "unit_thornwake_barkmantle_rams",
     "unit_thornwake_graft_matriarchs",
     "unit_thornwake_seedcutters",
@@ -68,9 +71,7 @@ CURATED_CHARACTER_SOURCE_IDS = {
     "unit_veilmourn_obituary_scribes",
     "unit_veilmourn_undertow_harpooners",
 }
-PRESERVED_AUTHORED_ASSET_SHA256 = {
-    ("unit_sunvault_aurora_ballistae", "portrait"): "ffbc2c6dae600fc32aadb6720e21f9d682f4abb71c0fec3dadf8bdbf4ab10534",
-}
+PRESERVED_AUTHORED_ASSET_SHA256 = {}
 
 PORTRAIT_SIZE = (384, 512)
 BATTLE_ICON_SIZE = (160, 160)
