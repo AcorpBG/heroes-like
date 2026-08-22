@@ -1188,13 +1188,13 @@ func _enter_live_campaign_overworld() -> Dictionary:
 
 	var scenario_id := String(_config.get("scenario_id", ""))
 	var campaign_id := _configured_campaign_id()
+	menu.call("validation_open_campaign_stage")
+	await _settle_frames(4)
 	var menu_snapshot: Dictionary = menu.call("validation_snapshot")
 	if not _require(int(menu_snapshot.get("campaign_count", 0)) > 0, "Main menu campaign browser did not populate.", menu_snapshot):
 		return {"ok": false}
 	if not _require(campaign_id != "", "No authored campaign id was available for the requested campaign live validation scenario.", menu_snapshot):
 		return {"ok": false}
-	menu.call("validation_open_campaign_stage")
-	await _settle_frames(4)
 	if not _require(
 		bool(menu.call("validation_select_campaign", campaign_id)),
 		"Requested campaign is not available in the live campaign browser.",

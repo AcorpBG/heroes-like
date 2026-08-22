@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Fogchart Aurora Battery now uses the exact-strength production 5/5/2 Sunvault line. Focused public-payload and legacy-control proof, chapter/campaign/save authority, active breadth, ability/core compatibility, static/editor, and bounded Linux/Windows export-startup gates are green; broader release-readiness claims remain open.",
+  "currentNotes": "Causeway Reed Camp now uses the exact 7/4/1 production Mireclaw T1-T3 line. Focused battle, campaign/veteran, full routed arc, active breadth, unit ability, core, static/editor, Linux, and Windows startup gates are green with bounded claims.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-fogchart-aurora-battery-production-line-10184",
-  "currentSliceId": "content-fogchart-aurora-battery-production-line-10184",
-  "currentSliceNotes": "Completed. Production Aurora Battery retains the exact standard four-round/41% defeat against the five-round/34% legacy control at identical 109 stack health and zero invalid orders. Active breadth is 77/77 queue-clear at 829808c9; unit ability, core, static/editor, and bounded Linux/Windows export-startup gates pass.",
+  "currentSlice": "content-causeway-reed-camp-production-line-10184",
+  "currentSliceId": "content-causeway-reed-camp-production-line-10184",
+  "currentSliceNotes": "Completed. The exact 7/4/1 production line retains three-round standard victories at 73% normal and 70% hard versus 72% legacy controls, with zero invalid orders; campaign, breadth, compatibility, static, and bounded platform startup gates are green.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Fogchart Aurora Battery Production Line",
-  "currentSliceUpdatedAt": "2026-08-22T04:48:16Z",
+  "currentSliceTitle": "Causeway Reed Camp Production Line",
+  "currentSliceUpdatedAt": "2026-08-22T05:41:29Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,51 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed implementation slice; do not infer whole-release readiness from this bounded content migration.",
-  "notes": "Completed the source-backed Fogchart Aurora Battery production-line migration. Exact public-payload and legacy controls retain the authored defeat at identical strength; Fogchart Relay/Mirror, chapter/campaign/save authority, active breadth, ability/core compatibility, repository/editor, and bounded Linux/Windows export-startup gates remain green.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed release-readiness implementation slice; do not expand the completed Causeway roster migration opportunistically.",
+  "notes": "Completed the bounded Causeway Reed Camp production-line migration. Exact focused production/legacy controls, the real three-chapter campaign arc, active breadth, compatibility, static/editor, and Linux/Windows export-startup evidence are green; no broader balance, packaged interaction, certification, signing, whole-game, or release-readiness claim is made.",
   "plannedSlices": [
+    {
+      "id": "content-causeway-reed-camp-production-line-10184",
+      "title": "Causeway Reed Camp Production Line",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/factions-content-bible.md"],
+      "purpose": "Replace only Causeway Stand's placement-owned Reed Camp legacy Mireclaw scaffold with the count-preserving production T1-T3 line while retaining its tuned normal/hard battle pressure and campaign authority.",
+      "implementationTargets": ["content/scenarios.json", "scripts/autoload/LiveValidationHarness.gd", "tests/battle_causeway_reed_camp_production_line_report.gd", "tests/battle_causeway_reed_camp_production_line_report.tscn", "tests/scenario_deadline_loss_variety_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {
+        "scenario_id": "causeway-stand",
+        "encounter_placement_id": "causeway_reed_camp",
+        "legacy_stack_ids": ["unit_blackbranch_cutthroat", "unit_mire_slinger", "unit_bog_brute"],
+        "production_stack_ids": ["unit_mireclaw_reedsnare_kin", "unit_mireclaw_mudglass_slingers", "unit_mireclaw_bogplate_maulers"],
+        "stack_counts": [7, 4, 1],
+        "legacy_total_stack_health": 93,
+        "production_total_stack_health": 107,
+        "legacy_normal": {"outcome": "victory", "rounds": 3, "player_health_remaining_pct": 72, "enemy_damage_per_round": 12, "pacing_band": "standard"},
+        "production_normal": {"outcome": "victory", "rounds": 3, "player_health_remaining_pct": 73, "enemy_damage_per_round": 11, "pacing_band": "standard"},
+        "legacy_hard": {"outcome": "victory", "rounds": 3, "player_health_remaining_pct": 72, "enemy_damage_per_round": 12, "pacing_band": "standard"},
+        "production_hard": {"outcome": "victory", "rounds": 3, "player_health_remaining_pct": 70, "enemy_damage_per_round": 7, "pacing_band": "standard"},
+        "invalid_order_count": 0,
+        "rejected_other_legacy_mireclaw_fronts": "Every other exact count-preserving role-matched candidate changed outcome, pacing, or pressure materially."
+      },
+      "completionCriteria": [
+        "The exact Causeway Reed Camp uses only production Reedsnare Kin, Mudglass Slingers, and Bogplate Maulers at 7/4/1 while retaining encounter identity, placement, medium difficulty, combat seed, and guard links",
+        "Public BattleRules payload and deterministic normal/hard autoplay expose exact production harry and shielding abilities, retain three-round standard victories at 73%/70% player health with zero invalid orders, and retain independent legacy controls at three rounds/72%",
+        "Causeway chapter, full campaign arc, save/resume, veteran field/staging support, neighboring encounters, all other scenario content, and shared units/rules remain exact",
+        "Active scenario breadth remains complete with zero stalls or invalid orders and no high-priority tuning item; unit ability and core compatibility remain green",
+        "Repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "Another legacy-front migration, count changes, shared unit stat/ability, BattleRules, BattleAiRules, player-army, reward, veteran-support, objective, difficulty-threshold, save-schema, Native RMG, or packaging behavior changes",
+        "Broad faction balance, packaged encounter interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "createdAt": "2026-08-22T05:02:54Z",
+      "startedAt": "2026-08-22T05:02:54Z",
+      "updatedAt": "2026-08-22T05:41:29Z",
+      "completedAt": "2026-08-22T05:41:29Z",
+      "notes": "Completed with the exact production 7/4/1 line. Focused runtime proves harry/harry/shielding, 107 versus 93 health, production normal 3 rounds/73%/DPR11 and hard 3 rounds/70%/DPR7, independent legacy controls 3 rounds/72%/DPR12, and zero invalid orders. Scenario deadline/veteran staging is exact; the real Reedfall full arc exits rc0 with ok:true, 121 routed steps, campaign save/resume, and completed browser authority. Active breadth is 77/77 with queue signature 829808c9, zero stalls/invalid orders/items; unit ability and core are green. Static/editor and official Linux export/headless startup plus Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. The broad historical difficulty sweep remains independently stale on unchanged queue thresholds and its exact legacy-content control reproduced the same red, so it is not claimed. Other fronts, shared content/rules, packaged encounter interaction, broad balance, certification, signing/publication, whole-game validation, and release readiness remain out of scope."
+    },
     {
       "id": "content-fogchart-aurora-battery-production-line-10184",
       "title": "Fogchart Aurora Battery Production Line",
