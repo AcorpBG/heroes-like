@@ -35,6 +35,9 @@ CURATED_CHARACTER_SOURCE_IDS = {
     "unit_thornwake_seedcutters",
     "unit_thornwake_sporeglass_menders",
     "unit_thornwake_thornwhip_carriers",
+    "unit_veilmourn_bellwake_oars",
+    "unit_veilmourn_maskglass_corsairs",
+    "unit_veilmourn_mourning_lanterns",
 }
 PRESERVED_AUTHORED_ASSET_SHA256 = {
     ("unit_sunvault_aurora_ballistae", "portrait"): "ffbc2c6dae600fc32aadb6720e21f9d682f4abb71c0fec3dadf8bdbf4ab10534",
