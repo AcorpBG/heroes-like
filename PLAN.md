@@ -24,6 +24,16 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `art-neutral-cliffhawk-roost-curated-character-sources-10184`. Two distinct original transparent ridge-roost character sources now replace the generated Cliffhawk Wardens and Windglass Slingers emblems through exact reproducible existing-path derivatives. The live Cliffhawk Roost graph, shared 7/3 watch, authored Ninefold placement, generated-map site selection, existing Native-RMG subtype-26 projection, and gameplay authority remain exact. Focused runtime proves both live BattleBoard entries and all 112 target frames; two complete 412-asset regenerations are byte-identical; the dwelling/random-map/Native-RMG/battle/manifest/core compatibility chain and official Linux plus Windows/Wine export-startup gates pass. Select the next tracker-approved source-backed implementation slice.
+  id: `art-neutral-cliffhawk-roost-curated-character-sources-10184`
+
+  Completion criteria:
+  - two distinct 512x512 transparent original sources follow a hooked sky-pike ridge warden and a high-arc windglass slinger identity and own exact generated-manifest provenance plus reproducible portraits, battle icons, overworld icons, and fourteen-state/four-frame battle sheets;
+  - live neutral-dwelling/content lookup preserves both unit stats/costs/growth/abilities, the Cliffhawk Roost graph, shared 7/3 watch, authored Ninefold placement, generated-map site family, and existing Native-RMG claim projection; a production-rule BattleBoard loads both curated icon/sheet pairs and all 112 target frames remain visible and machine-readable;
+  - exactly two sources, eight target runtime payloads, and two records in each manifest change; all four surfaces for the other 101 units remain byte-exact, and full regeneration/reproducibility plus focused/neutral-dwelling/random-map/Native-RMG compatibility/validator/editor/Linux/Windows startup gates pass.
+
+  Non-goals: another neutral dwelling/unit, unit stats/abilities/costs/growth, combat balance or AI tuning, encounter/dwelling/site/map-object/army-group content, neutral recruitment, random-map or Native-RMG mapping rules, BattleRules/BattleAiRules, animation timing/order, save schema, rendering settings, or packaging behavior; broad/final neutral art, packaged battle interaction, controller/native hardware, AT-SPI/UIA, signing/publication, whole-game validation, or release readiness.
+
 - Completed test-compatibility slice: `random-map-town-mine-dwelling-same-type-fixture-refresh-10184`. The deterministic focused town/mine/dwelling fixture now uses suffix `-b`, preserving the exact 30x22 land/frontier-spokes/one-human-two-computer boundary while exercising the authored same-type neutral-town branch under current strict spacing. The report passes naturally with four towns, one same-type neutral town, minimum distance 9 against required 8, nine mines, six dwellings, no conflicts, and all fairness/metadata/signature gates. Production generator/template/catalog/Native-RMG/gameplay files are unchanged. The original seed remains a valid warning-level no-placement case. This is completed support work, not random-map implementation progress. Select the next tracker-approved source-backed slice.
   id: `random-map-town-mine-dwelling-same-type-fixture-refresh-10184`
 
