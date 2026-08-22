@@ -5,6 +5,10 @@ const OVERWORLD_SCENE := preload("res://scenes/overworld/OverworldShell.tscn")
 const TARGET_WIDTHS := [1280, 1920]
 const ENCOUNTER_PLACEMENT_ID := "river_pass_hollow_mire"
 const GUARDED_RESOURCE_PLACEMENT_ID := "duskfen_bastion_peatwax_front"
+const PRODUCTION_STACKS := [
+	{"unit_id": "unit_mireclaw_bogplate_maulers", "count": 4},
+	{"unit_id": "unit_mireclaw_mudglass_slingers", "count": 3},
+]
 
 var _evidence: Array = []
 
@@ -263,6 +267,12 @@ func _resolved_static_encounter() -> Dictionary:
 	if session.battle.is_empty() or String(session.battle.get("context", {}).get("type", "")) != "encounter":
 		_fail("River Pass guard did not enter a real ordinary encounter battle.", session.battle)
 		return {}
+	if _battle_enemy_stack_contract(session.battle) != PRODUCTION_STACKS or _battle_enemy_ability_contract(session.battle) != {
+		"unit_mireclaw_bogplate_maulers": ["shielding"],
+		"unit_mireclaw_mudglass_slingers": ["harry"],
+	}:
+		_fail("River Pass route did not enter the exact Hollow Mire production battle.", {"stacks": _battle_enemy_stack_contract(session.battle), "abilities": _battle_enemy_ability_contract(session.battle)})
+		return {}
 	for index in range(session.battle.get("stacks", []).size()):
 		var stack = session.battle.get("stacks", [])[index]
 		if stack is Dictionary and String(stack.get("side", "")) == "enemy":
@@ -301,6 +311,26 @@ func _set_active_hero_position(session, tile: Vector2i) -> void:
 			hero["position"] = position.duplicate(true)
 			heroes[index] = hero
 	session.overworld["player_heroes"] = heroes
+
+func _battle_enemy_stack_contract(battle: Dictionary) -> Array:
+	var result: Array = []
+	for stack_value in battle.get("stacks", []):
+		if stack_value is Dictionary and String(stack_value.get("side", "")) == "enemy":
+			result.append({"unit_id": String(stack_value.get("unit_id", "")), "count": int(stack_value.get("base_count", 0))})
+	return result
+
+func _battle_enemy_ability_contract(battle: Dictionary) -> Dictionary:
+	var result := {}
+	for stack_value in battle.get("stacks", []):
+		if not stack_value is Dictionary or String(stack_value.get("side", "")) != "enemy":
+			continue
+		var ability_ids: Array = []
+		for ability_value in stack_value.get("abilities", []):
+			if ability_value is Dictionary:
+				ability_ids.append(String(ability_value.get("id", "")))
+		ability_ids.sort()
+		result[String(stack_value.get("unit_id", ""))] = ability_ids
+	return result
 
 func _set_encounter_field(session, placement_id: String, field: String, value: Variant) -> void:
 	var encounters: Array = session.overworld.get("encounters", [])

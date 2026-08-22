@@ -12742,6 +12742,51 @@ def validate_content(errors: list[str]) -> None:
             "ContentService must materialize script-spawned encounter placement ids exactly once per scenario validation",
         )
     if isinstance(river_pass, dict):
+        river_encounters = river_pass.get("encounters", []) if isinstance(river_pass.get("encounters", []), list) else []
+        hollow_mire = next(
+            (
+                encounter
+                for encounter in river_encounters
+                if isinstance(encounter, dict) and str(encounter.get("placement_id", "")) == "river_pass_hollow_mire"
+            ),
+            {},
+        )
+        ensure(
+            hollow_mire.get("encounter_id") == "encounter_hollow_mire"
+            and hollow_mire.get("difficulty") == "medium"
+            and int(hollow_mire.get("combat_seed", 0)) == 1202
+            and hollow_mire.get("enemy_army")
+            == {
+                "id": "army_river_pass_hollow_mire_watch",
+                "name": "River Pass Hollow Mire Watch",
+                "faction_id": "faction_mireclaw",
+                "stacks": [
+                    {"unit_id": "unit_mireclaw_bogplate_maulers", "count": 4},
+                    {"unit_id": "unit_mireclaw_mudglass_slingers", "count": 3},
+                ],
+            }
+            and hollow_mire.get("guard_link")
+            == {
+                "guard_role": "route_block",
+                "target_kind": "route",
+                "target_id": "river_pass_mire_lane",
+                "target_placement_id": "",
+                "blocks_approach": True,
+                "clear_required_for_target": False,
+            },
+            errors,
+            "River Pass Hollow Mire must keep its exact placement-owned 4/3 production line and route-block authority",
+        )
+        hollow_guarded_resource_ids = sorted(
+            str(resource.get("placement_id", ""))
+            for resource in river_pass.get("resource_nodes", [])
+            if isinstance(resource, dict) and str(resource.get("guard_front_id", "")) == "river_pass_hollow_mire"
+        )
+        ensure(
+            hollow_guarded_resource_ids == ["duskfen_bastion_peatwax_front", "river_pass_duskfen_bastion_rare_exchange"],
+            errors,
+            "River Pass Hollow Mire must remain the exact guard front for both authored Duskfen resources",
+        )
         river_objectives = river_pass.get("objectives", {})
         river_victory = river_objectives.get("victory", []) if isinstance(river_objectives, dict) else []
         river_defeat = river_objectives.get("defeat", []) if isinstance(river_objectives, dict) else []
@@ -47421,6 +47466,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
     difficulty_sweep_scene_path = ROOT / "tests/battle_autoplay_difficulty_sweep_report.tscn"
     causeway_production_report_path = ROOT / "tests/battle_causeway_reed_camp_production_line_report.gd"
     causeway_production_scene_path = ROOT / "tests/battle_causeway_reed_camp_production_line_report.tscn"
+    hollow_mire_production_report_path = ROOT / "tests/battle_river_pass_hollow_mire_production_line_report.gd"
+    hollow_mire_production_scene_path = ROOT / "tests/battle_river_pass_hollow_mire_production_line_report.tscn"
     runtime_consequence_report_path = ROOT / "tests/battle_autoplay_runtime_consequence_report.gd"
     runtime_consequence_scene_path = ROOT / "tests/battle_autoplay_runtime_consequence_report.tscn"
     runtime_consequence_matrix_report_path = ROOT / "tests/battle_autoplay_runtime_consequence_matrix_report.gd"
@@ -47487,6 +47534,8 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
         difficulty_sweep_scene_path,
         causeway_production_report_path,
         causeway_production_scene_path,
+        hollow_mire_production_report_path,
+        hollow_mire_production_scene_path,
         runtime_consequence_report_path,
         runtime_consequence_scene_path,
         runtime_consequence_matrix_report_path,
@@ -48356,6 +48405,94 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             and 'name="BattleCausewayReedCampProductionLineReport" type="Node"' in causeway_production_scene_text,
             errors,
             "Causeway production-line scene is not wired exactly to its report script.",
+        )
+    if hollow_mire_production_report_path.exists():
+        hollow_mire_production_text = hollow_mire_production_report_path.read_text(encoding="utf-8")
+        for required_token in (
+            'REPORT_ID := "BATTLE_RIVER_PASS_HOLLOW_MIRE_PRODUCTION_LINE_REPORT"',
+            'SCENARIO_ID := "river-pass"',
+            'PLACEMENT_ID := "river_pass_hollow_mire"',
+            '"unit_mireclaw_bogplate_maulers", "count": 4',
+            '"unit_mireclaw_mudglass_slingers", "count": 3',
+            '"unit_bog_brute", "count": 4',
+            '"unit_mire_slinger", "count": 3',
+            '"unit_mireclaw_bogplate_maulers": ["shielding"]',
+            '"unit_mireclaw_mudglass_slingers": ["harry"]',
+            '"guard_role": "route_block"',
+            '"target_id": "river_pass_mire_lane"',
+            '"object_id", "")) != "object_neutral_encounter_river_pass_hollow_mire_stack"',
+            '"object_placement_id", "")) != "object_placement_river_pass_hollow_mire"',
+            '["duskfen_bastion_peatwax_front", "river_pass_duskfen_bastion_rare_exchange"]',
+            "OverworldRules.normalize_overworld_state(session)",
+            '_stack_health(PRODUCTION_STACKS) != 87',
+            '_stack_health(LEGACY_STACKS) != 70',
+            'Harness.run_battle_sample(SCENARIO_ID, encounter, 72, "normal")',
+            'Harness.run_battle_sample(SCENARIO_ID, encounter, 72, "hard")',
+            'Harness.run_battle_sample(SCENARIO_ID, legacy_encounter, 72, "normal")',
+            'Harness.run_battle_sample(SCENARIO_ID, legacy_encounter, 72, "hard")',
+            '_sample_exact(production_normal, "victory", "player_advantaged", "standard", 3, 32, 0, 28)',
+            '_sample_exact(production_hard, "victory", "player_advantaged", "standard", 3, 31, 0, 17)',
+            '_sample_exact(legacy_normal, "victory", "player_advantaged", "standard", 3, 34, 0, 27)',
+            '_sample_exact(legacy_hard, "victory", "player_advantaged", "standard", 3, 34, 0, 28)',
+            '"scenario_authority_exact": true',
+            '"session_authority_exact": true',
+            "get_tree().quit(0)",
+            "get_tree().quit(1)",
+        ):
+            ensure(required_token in hollow_mire_production_text, errors, f"Hollow Mire production-line report is missing token: {required_token}")
+        hollow_mire_run_match = re.search(
+            r"func _run\(\) -> void:\n(?P<body>.*?)(?=\nfunc _scenario_encounter)",
+            hollow_mire_production_text,
+            re.S,
+        )
+        ensure(hollow_mire_run_match is not None, errors, "Could not isolate River Pass Hollow Mire production-line report run")
+        if hollow_mire_run_match is not None:
+            hollow_mire_run_body = hollow_mire_run_match.group("body")
+            ordered_tokens = (
+                "scenario_authority_before: Dictionary = scenario.duplicate(true)",
+                "_guarded_resource_ids(scenario, PLACEMENT_ID)",
+                "OverworldRules.normalize_overworld_state(session)",
+                "session_authority_before: Dictionary = session.to_dict()",
+                "BattleRules.create_battle_payload(session, encounter)",
+                "session.to_dict() != session_authority_before",
+                "_battle_enemy_stack_contract(battle_payload) != PRODUCTION_STACKS",
+                "_battle_enemy_ability_contract(battle_payload)",
+                "legacy_encounter: Dictionary = encounter.duplicate(true)",
+                'legacy_army["stacks"] = LEGACY_STACKS.duplicate(true)',
+                'Harness.run_battle_sample(SCENARIO_ID, encounter, 72, "normal")',
+                'Harness.run_battle_sample(SCENARIO_ID, encounter, 72, "hard")',
+                'Harness.run_battle_sample(SCENARIO_ID, legacy_encounter, 72, "normal")',
+                'Harness.run_battle_sample(SCENARIO_ID, legacy_encounter, 72, "hard")',
+                "scenario != scenario_authority_before",
+            )
+            positions = [hollow_mire_run_body.find(token) for token in ordered_tokens]
+            ensure(
+                min(positions) >= 0 and positions == sorted(positions),
+                errors,
+                "Hollow Mire production-line report must preserve guard topology, public payload, independent legacy controls, and authority in exact order",
+            )
+            ensure(hollow_mire_run_body.count("Harness.run_battle_sample(") == 4, errors, "Hollow Mire production-line report must run exactly four method-matched samples")
+            for forbidden_token in (
+                "BattleRules.apply_action",
+                "BattleAiRules",
+                '\n\tencounter["enemy_army"] =',
+                'session.battle =',
+                'session.scenario_status =',
+                "create_timer",
+                "await ",
+            ):
+                ensure(
+                    forbidden_token not in hollow_mire_run_body,
+                    errors,
+                    f"Hollow Mire production-line report must remain method-matched and observation-only, not use {forbidden_token}",
+                )
+    if hollow_mire_production_scene_path.exists():
+        hollow_mire_production_scene_text = hollow_mire_production_scene_path.read_text(encoding="utf-8")
+        ensure(
+            'path="res://tests/battle_river_pass_hollow_mire_production_line_report.gd"' in hollow_mire_production_scene_text
+            and 'name="BattleRiverPassHollowMireProductionLineReport" type="Node"' in hollow_mire_production_scene_text,
+            errors,
+            "Hollow Mire production-line scene is not wired exactly to its report script.",
         )
     if runtime_consequence_report_path.exists():
         runtime_consequence_text = runtime_consequence_report_path.read_text(encoding="utf-8")
@@ -53562,9 +53699,14 @@ def validate_overworld_encounter_victory_return_feedback(errors: list[str]) -> N
         'const TARGET_WIDTHS := [1280, 1920]',
         'const ENCOUNTER_PLACEMENT_ID := "river_pass_hollow_mire"',
         'const GUARDED_RESOURCE_PLACEMENT_ID := "duskfen_bastion_peatwax_front"',
+        '"unit_mireclaw_bogplate_maulers", "count": 4',
+        '"unit_mireclaw_mudglass_slingers", "count": 3',
         'var route_start := encounter_tile + Vector2i(-1, 0)',
         'OverworldRules.try_move_along_route(session, [route_start, encounter_tile], 4)',
         'String(route_result.get("route", "")) != "battle"',
+        '_battle_enemy_stack_contract(session.battle) != PRODUCTION_STACKS',
+        '"unit_mireclaw_bogplate_maulers": ["shielding"]',
+        '"unit_mireclaw_mudglass_slingers": ["harry"]',
         'BattleRules.resolve_if_battle_ready(session)',
         'OverworldRules.is_encounter_resolved(session, encounter)',
         '_resource_by_placement(session, GUARDED_RESOURCE_PLACEMENT_ID) != guarded_resource',
