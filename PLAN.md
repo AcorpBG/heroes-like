@@ -24,6 +24,16 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `art-brasshollow-scrip-haulers-curated-sprite-source-10184`. The heavily reused Scrip Haulers' generated abstract emblem/motif is replaced by one original transparent armored-labor character source and reproducible shipped battle-icon and fourteen-state/four-frame runtime-sheet derivatives. Full regeneration is byte-idempotent across all 412 unit-art payloads and both manifests; exactly the Scrip battle icon and sheet changed from the pre-slice baseline, while curated Fordhook and the other 102 unit pairs remain exact. Focused BattleBoard loading, all 56 Scrip frames, unit-art/animation/readiness/Battle-event/core compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. `final_sprite_import` remains false; broad/final art, packaged battle interaction, certification, signing/publication, whole-game validation, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
+  id: `art-brasshollow-scrip-haulers-curated-sprite-source-10184`
+
+  Completion criteria:
+  - the original transparent source and derived existing-path icon/sheet are reproducible, loadable, and manifest-provenanced with exact dimensions, state order, frame count, and BattleBoard ownership;
+  - all 102 non-Scrip unit battle icons and sheets, including the curated Fordhook pair, remain byte-exact; full regeneration/reproducibility, focused runtime, animation/unit-art/core compatibility, validator/editor, Linux, and Windows startup gates pass;
+  - no content/stat/ability, animation timing/order, save, rendering-setting, Native RMG, or packaging behavior changes occur.
+
+  Non-goals: another unit, broad/final art, packaged battle interaction, controller/native hardware, AT-SPI/UIA, signing/publication, whole-game validation, or release readiness.
+
 - Completed implementation slice: `art-embercourt-fordhook-cadets-curated-sprite-source-10184`. The generated abstract Fordhook Cadet emblem/motif is replaced by one original transparent full-body character source and reproducible shipped battle-icon and fourteen-state/four-frame runtime-sheet derivatives. Full regeneration is byte-idempotent across all 412 unit-art payloads and both manifests; exactly the Fordhook battle icon and sheet changed from the pre-slice baseline, while five existing authored overrides and the other 102 unit battle-icon/sheet pairs remain exact. Focused BattleBoard loading, all 56 Fordhook frames, unit-art/animation/readiness/event-cue/core compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. `final_sprite_import` remains false; broad/final art, packaged battle interaction, certification, signing/publication, whole-game validation, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
   id: `art-embercourt-fordhook-cadets-curated-sprite-source-10184`
 

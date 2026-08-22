@@ -293,6 +293,9 @@ UNIT_ANIMATION_ROOT = ROOT / "art" / "animation" / "runtime" / "units"
 FORDHOOK_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_embercourt_fordhook_cadets.png"
 FORDHOOK_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_embercourt_fordhook_curated_art_report.gd"
 FORDHOOK_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_embercourt_fordhook_curated_art_report.tscn"
+SCRIP_HAULERS_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_brasshollow_scrip_haulers.png"
+SCRIP_HAULERS_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_brasshollow_scrip_haulers_curated_art_report.gd"
+SCRIP_HAULERS_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_brasshollow_scrip_haulers_curated_art_report.tscn"
 UNIT_PRODUCTION_READINESS_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_production_readiness_report.gd"
 UNIT_PRODUCTION_READINESS_REPORT_SCENE_PATH = ROOT / "tests" / "unit_production_readiness_report.tscn"
 UNIT_ABILITY_RUNTIME_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_ability_runtime_report.gd"
@@ -42223,6 +42226,9 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         FORDHOOK_CURATED_SOURCE_PATH,
         FORDHOOK_CURATED_ART_REPORT_SCRIPT_PATH,
         FORDHOOK_CURATED_ART_REPORT_SCENE_PATH,
+        SCRIP_HAULERS_CURATED_SOURCE_PATH,
+        SCRIP_HAULERS_CURATED_ART_REPORT_SCRIPT_PATH,
+        SCRIP_HAULERS_CURATED_ART_REPORT_SCENE_PATH,
         CONTENT_SERVICE_PATH,
         BATTLE_BOARD_VIEW_SCRIPT_PATH,
         OVERWORLD_MAP_VIEW_SCRIPT_PATH,
@@ -42341,6 +42347,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     ensure(not extra_animation_unit_ids, errors, "Unit animation manifest references unknown units: " + ", ".join(extra_animation_unit_ids[:12]))
 
     fordhook_unit_id = "unit_embercourt_fordhook_cadets"
+    scrip_haulers_unit_id = "unit_brasshollow_scrip_haulers"
     fordhook_source_res_path = "res://art/units/source/curated/unit_embercourt_fordhook_cadets.png"
     fordhook_source_sha256 = "e9eddd43ef9b1b1a44a40fd609676bb31c8db90cd612a17bb3e87aef0fce6ff4"
     ensure(png_size(FORDHOOK_CURATED_SOURCE_PATH) == (512, 512), errors, "Fordhook curated character source must be a 512x512 PNG")
@@ -42348,6 +42355,14 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         hashlib.sha256(FORDHOOK_CURATED_SOURCE_PATH.read_bytes()).hexdigest() == fordhook_source_sha256,
         errors,
         "Fordhook curated character source bytes drifted",
+    )
+    scrip_haulers_source_res_path = "res://art/units/source/curated/unit_brasshollow_scrip_haulers.png"
+    scrip_haulers_source_sha256 = "759022e21b7781df3c88ba853b32905b52a820cafe45d2814a2006629d26e028"
+    ensure(png_size(SCRIP_HAULERS_CURATED_SOURCE_PATH) == (512, 512), errors, "Scrip Haulers curated character source must be a 512x512 PNG")
+    ensure(
+        hashlib.sha256(SCRIP_HAULERS_CURATED_SOURCE_PATH.read_bytes()).hexdigest() == scrip_haulers_source_sha256,
+        errors,
+        "Scrip Haulers curated character source bytes drifted",
     )
     curated_art_records = [
         record for record in manifest.get("items", [])
@@ -42358,14 +42373,14 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         if isinstance(record, dict) and str(record.get("art_source_kind", "")) == "curated_original_character_v1"
     ]
     ensure(
-        [str(record.get("unit_id", "")) for record in curated_art_records] == [fordhook_unit_id],
+        sorted(str(record.get("unit_id", "")) for record in curated_art_records) == sorted([fordhook_unit_id, scrip_haulers_unit_id]),
         errors,
-        "Exactly the Fordhook art record may use the curated character-source branch",
+        "Exactly Fordhook and Scrip Haulers art records may use the curated character-source branch",
     )
     ensure(
-        [str(record.get("unit_id", "")) for record in curated_animation_records] == [fordhook_unit_id],
+        sorted(str(record.get("unit_id", "")) for record in curated_animation_records) == sorted([fordhook_unit_id, scrip_haulers_unit_id]),
         errors,
-        "Exactly the Fordhook animation record may use the curated character-source branch",
+        "Exactly Fordhook and Scrip Haulers animation records may use the curated character-source branch",
     )
     for curated_record, label in (
         (records_by_unit_id.get(fordhook_unit_id, {}), "art"),
@@ -42373,6 +42388,12 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     ):
         ensure(str(curated_record.get("curated_source", "")) == fordhook_source_res_path, errors, f"Fordhook {label} manifest curated source path drifted")
         ensure(str(curated_record.get("curated_source_sha256", "")) == fordhook_source_sha256, errors, f"Fordhook {label} manifest curated source hash drifted")
+    for curated_record, label in (
+        (records_by_unit_id.get(scrip_haulers_unit_id, {}), "art"),
+        (animation_records_by_unit_id.get(scrip_haulers_unit_id, {}), "animation"),
+    ):
+        ensure(str(curated_record.get("curated_source", "")) == scrip_haulers_source_res_path, errors, f"Scrip Haulers {label} manifest curated source path drifted")
+        ensure(str(curated_record.get("curated_source_sha256", "")) == scrip_haulers_source_sha256, errors, f"Scrip Haulers {label} manifest curated source hash drifted")
 
     used_surface_paths: dict[str, set[str]] = {surface: set() for surface in expected_sizes.keys()}
     used_animation_paths: set[str] = set()
@@ -42427,11 +42448,11 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "preserve_authored_asset",
     ):
         ensure(required_token in generator_text, errors, f"Unit art generator is missing token {required_token}")
-    ensure(
-        generator_text.count('"unit_embercourt_fordhook_cadets",\n}') == 1,
-        errors,
-        "Unit art generator curated source id set must contain exactly the Fordhook unit",
-    )
+    expected_curated_id_block = '''CURATED_CHARACTER_SOURCE_IDS = {
+    "unit_brasshollow_scrip_haulers",
+    "unit_embercourt_fordhook_cadets",
+}'''
+    ensure(generator_text.count(expected_curated_id_block) == 1, errors, "Unit art generator curated source id set must contain exactly Fordhook and Scrip Haulers in stable order")
     ensure(
         'if str(state.get("state", "")) == "surrender_stand_down":' in generator_text
         and 'render_state["family"] = "retreat"' in generator_text,
@@ -42498,6 +42519,28 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         errors,
         "Fordhook curated art report scene must own the exact focused script",
     )
+    scrip_report_text = SCRIP_HAULERS_CURATED_ART_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'REPORT_ID := "UNIT_BRASSHOLLOW_SCRIP_HAULERS_CURATED_ART_REPORT"',
+        'UNIT_ID := "unit_brasshollow_scrip_haulers"',
+        'SOURCE_SHA256 := "759022e21b7781df3c88ba853b32905b52a820cafe45d2814a2006629d26e028"',
+        'ICON_SHA256 := "60ce46eee94ee9c180155bdcdc3fdb46e9ef4940e058007d36225856d4877c8c"',
+        'SHEET_SHA256 := "2a20a26526eca2e50591c45cb4f0a07cfebfb310813cbf16832f1a59a6a052ae"',
+        'OLD_ICON_SHA256 := "94970bfed26ba60b29d27bf1f20a1a5182cbecae3fa61a2db5d720a33b239776"',
+        'OLD_SHEET_SHA256 := "16e0441527706acc743bfb7bcc2d728f0dd72de086de8d5729fb2135bfa05fae"',
+        "_validate_assets_and_provenance()",
+        "await _validate_battle_board_runtime()",
+        'signatures[hash(frame.get_data())] = true',
+        'visible == FRAMES_PER_STATE and signatures.size() >= 2',
+        'board.validation_unit_art_summary()',
+        'String(entry.get("battle_icon", "")) == ICON_PATH',
+        'String(entry.get("animation_sheet", "")) == SHEET_PATH',
+    ):
+        ensure(required_token in scrip_report_text, errors, f"Scrip Haulers curated art report is missing token {required_token}")
+    for forbidden_token in ("draw_curated_battle_icon", "draw_curated_battle_troop_animation_sheet", '"final_sprite_import": true'):
+        ensure(forbidden_token not in scrip_report_text, errors, f"Scrip Haulers focused report must remain observation-only: {forbidden_token}")
+    scrip_scene_text = SCRIP_HAULERS_CURATED_ART_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure('path="res://tests/unit_brasshollow_scrip_haulers_curated_art_report.gd"' in scrip_scene_text, errors, "Scrip Haulers curated art report scene must own the exact focused script")
 
     content_service_text = CONTENT_SERVICE_PATH.read_text(encoding="utf-8")
     for required_token in (

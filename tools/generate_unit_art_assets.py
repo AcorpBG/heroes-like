@@ -17,6 +17,7 @@ ART_ROOT = ROOT / "art" / "units"
 ANIMATION_ROOT = ROOT / "art" / "animation" / "runtime" / "units"
 CURATED_SOURCE_ROOT = ART_ROOT / "source" / "curated"
 CURATED_CHARACTER_SOURCE_IDS = {
+    "unit_brasshollow_scrip_haulers",
     "unit_embercourt_fordhook_cadets",
 }
 PRESERVED_AUTHORED_ASSET_SHA256 = {
