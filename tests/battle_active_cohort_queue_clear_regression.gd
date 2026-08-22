@@ -57,7 +57,7 @@ const CONTROL_SAMPLE_CONTRACTS := {
 	"glassfen-breakers/glassfen_aurora_battery": {"outcome_state": "defeat", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 68, "enemy_damage_per_round": 29},
 	"orevein-contract/orevein_bridgeward_levies": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 74, "enemy_damage_per_round": 18},
 	"orevein-contract/orevein_beacon_wardens": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 69, "enemy_damage_per_round": 23},
-	"mireford-skirmish/bridge_silt_hunters": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 59, "enemy_damage_per_round": 28},
+	"mireford-skirmish/bridge_silt_hunters": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 48, "enemy_damage_per_round": 42},
 	"mireford-skirmish/mireford_reed_totemists": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 3, "terminal_health_margin_pct": 67, "enemy_damage_per_round": 35},
 }
 const SHARED_ARMY_CONTRACTS := {

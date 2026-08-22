@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The River Pass starter-army curated character-source slice is completed with exact generated provenance, live River Pass BattleBoard proof, compatibility/static checks, and bounded Linux/Windows export-startup evidence.",
+  "currentNotes": "The River Pass Ghoul Grove core curated character-source slice is completed with exact source provenance, live BattleBoard ownership, 412-asset reproducibility, compatibility, and bounded Linux/Windows startup evidence. Select the next tracker-approved source-backed slice.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-river-pass-starter-army-curated-character-sources-10184",
-  "currentSliceId": "art-river-pass-starter-army-curated-character-sources-10184",
-  "currentSliceNotes": "River Guard and Ember Archer now use distinct original transparent sources across all four existing-path runtime surfaces. The other 101 units remain byte-exact; gameplay/content authority is unchanged.",
+  "currentSlice": "art-river-pass-ghoul-grove-core-curated-character-sources-10184",
+  "currentSliceId": "art-river-pass-ghoul-grove-core-curated-character-sources-10184",
+  "currentSliceNotes": "Three original character sources now own the Ghoul Grove core's existing-path runtime surfaces; the other 100 units remain byte-exact and focused/compatibility/static/platform gates are green without gameplay changes.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "River Pass Starter Army Curated Character Sources",
-  "currentSliceUpdatedAt": "2026-08-22T11:09:00Z",
+  "currentSliceTitle": "River Pass Ghoul Grove Core Curated Character Sources",
+  "currentSliceUpdatedAt": "2026-08-22T11:40:42Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,58 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select a tracker-approved source-backed release-readiness slice; do not infer broad/final art or release readiness from this bounded completion.",
-  "notes": "Completed the River Pass first-play army art vertical: two original sources, eight exact runtime replacements, live BattleBoard identity/ability/session authority, full 412-asset reproducibility, compatibility/static checks, and bounded Linux/Windows export-startup evidence.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed slice; do not imply broad/final art or release readiness from this completed three-unit vertical.",
+  "notes": "Completed the three-unit River Pass Ghoul Grove core art vertical with exact live battle, reproducibility, compatibility, static/editor, and bounded platform-startup evidence. Broad/final art and release readiness remain unclaimed.",
   "plannedSlices": [
+    {
+      "id": "art-river-pass-ghoul-grove-core-curated-character-sources-10184",
+      "title": "River Pass Ghoul Grove Core Curated Character Sources",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/concept-art-pipeline.md", "docs/animation-battle-troop-state-contract-report.md", "docs/factions-content-bible.md"],
+      "purpose": "Make River Pass's mandatory first enemy objective and the heavily reused Blackbranch Raiders core character-readable by replacing three abstract generated motifs with distinct original sources and reproducible existing-path runtime derivatives.",
+      "implementationTargets": [
+        "art/units/source/curated/unit_blackbranch_cutthroat.png",
+        "art/units/source/curated/unit_mire_slinger.png",
+        "art/units/source/curated/unit_bog_brute.png",
+        "art/units/portraits/unit_blackbranch_cutthroat.png",
+        "art/units/portraits/unit_mire_slinger.png",
+        "art/units/portraits/unit_bog_brute.png",
+        "art/units/battle_icons/unit_blackbranch_cutthroat.png",
+        "art/units/battle_icons/unit_mire_slinger.png",
+        "art/units/battle_icons/unit_bog_brute.png",
+        "art/units/overworld_icons/unit_blackbranch_cutthroat.png",
+        "art/units/overworld_icons/unit_mire_slinger.png",
+        "art/units/overworld_icons/unit_bog_brute.png",
+        "art/animation/runtime/units/unit_blackbranch_cutthroat.png",
+        "art/animation/runtime/units/unit_mire_slinger.png",
+        "art/animation/runtime/units/unit_bog_brute.png",
+        "content/unit_art_manifest.json",
+        "content/unit_animation_manifest.json",
+        "tools/generate_unit_art_assets.py",
+        "tests/unit_river_pass_ghoul_grove_core_curated_art_report.gd",
+        "tests/unit_river_pass_ghoul_grove_core_curated_art_report.tscn",
+        "tests/unit_art_reproducibility_report.py",
+        "tests/battle_active_cohort_queue_clear_regression.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "baseline": {"scenario_id": "river-pass", "placement_id": "river_pass_ghoul_grove", "shared_army_group_id": "army_blackbranch_raiders", "unit_ids": ["unit_blackbranch_cutthroat", "unit_mire_slinger", "unit_bog_brute"], "placement_counts": [8,17,2], "shared_group_counts": [11,6,2], "repository_reference_counts": [111,129,164], "source_size": [512,512], "portrait_size": [384,512], "battle_icon_size": [160,160], "overworld_icon_size": [96,96], "animation_sheet_size": [256,896], "animation_state_count": 14, "frames_per_state": 4, "other_units_must_remain_byte_exact": 100, "final_sprite_import": false},
+      "completionCriteria": [
+        "Three distinct original transparent sources own exact manifest provenance and reproducible portrait, battle-icon, overworld-icon, and fourteen-state/four-frame animation-sheet derivatives",
+        "A live River Pass Ghoul Grove battle preserves exact target ids/counts/abilities and its production Mudglass control while BattleBoard loads all three curated icon/sheet pairs and all 168 target frames remain visible and character-readable",
+        "Only the three sources, twelve target runtime payloads, and three records in each manifest change; all four surfaces for the other 100 units remain byte-exact; full regeneration/reproducibility, compatibility, validator/editor, Linux, and Windows startup gates pass"
+      ],
+      "nonGoals": ["Another unit, army/encounter counts, unit stats/abilities/content, BattleRules/BattleAiRules, animation timing/order, save schema, rendering settings, Native RMG, or packaging behavior", "Broad/final art, packaged battle interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game validation, or release readiness"],
+      "createdAt": "2026-08-22T11:12:00Z",
+      "startedAt": "2026-08-22T11:12:00Z",
+      "updatedAt": "2026-08-22T11:40:42Z",
+      "completedAt": "2026-08-22T11:40:42Z",
+      "notes": "Completed three distinct original transparent sources and all twelve existing-path derivatives for Blackbranch Cutthroat, Mire Slinger, and Bog Brute. Exact pre/post hashing proves only those twelve of 412 runtime assets changed and the other 400 remain byte-exact; a second generation pass reproduces all 412 assets and both manifests. Focused River Pass runtime preserves the Ghoul Grove 8/17/2 roster, exact backstab/harry/shielding abilities, production Mudglass x1 control, all 168 visible/varied target frames, exact BattleBoard icon/sheet loading, and whole session authority. Unit-art/runtime/animation/BattleBoard/Ghoul-Grove-balance/core compatibility and repository/editor checks pass. A stale Mireford Silt Hunters aggregate test-only control was aligned to its existing production-line 48-percent/42-DPR authority and both owners pass; no gameplay source changed. Linux evidence is export plus packaged headless startup only; Windows evidence is export plus fresh-Wine Godot/Boot/MainMenu/native-DLL startup only. Broad/final art, packaged battle interaction, controller/native hardware, AT-SPI/UIA, signing/publication, whole-game validation, Native RMG parity, and release readiness remain unclaimed."
+    },
     {
       "id": "art-river-pass-starter-army-curated-character-sources-10184",
       "title": "River Pass Starter Army Curated Character Sources",
@@ -93944,7 +93993,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "art_river_pass_starter_army_curated_character_sources_completed",
+  "result": "art_river_pass_ghoul_grove_core_curated_character_sources_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -94045,9 +94094,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The River Pass starter-army curated character-source slice is completed: River Guard and Ember Archer now have original source-backed identity across all four runtime surfaces, with exact non-target/gameplay authority and bounded validation claims.",
+  "summary": "The River Pass Ghoul Grove core curated character-source slice is completed: three original sources now own all twelve existing-path runtime derivatives with exact non-target/gameplay authority and bounded validation claims.",
   "taskId": "10184",
-  "updatedAt": "2026-08-22T11:09:00Z",
+  "updatedAt": "2026-08-22T11:40:42Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

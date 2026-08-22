@@ -304,6 +304,11 @@ RIVER_GUARD_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_r
 EMBER_ARCHER_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_ember_archer.png"
 RIVER_PASS_STARTER_ARMY_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_river_pass_starter_army_curated_art_report.gd"
 RIVER_PASS_STARTER_ARMY_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_river_pass_starter_army_curated_art_report.tscn"
+BLACKBRANCH_CUTTHROAT_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_blackbranch_cutthroat.png"
+MIRE_SLINGER_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_mire_slinger.png"
+BOG_BRUTE_CURATED_SOURCE_PATH = UNIT_ART_ROOT / "source" / "curated" / "unit_bog_brute.png"
+GHOUL_GROVE_CORE_CURATED_ART_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_river_pass_ghoul_grove_core_curated_art_report.gd"
+GHOUL_GROVE_CORE_CURATED_ART_REPORT_SCENE_PATH = ROOT / "tests" / "unit_river_pass_ghoul_grove_core_curated_art_report.tscn"
 UNIT_CURATED_CROSS_SURFACE_IDENTITY_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_curated_cross_surface_identity_report.gd"
 UNIT_CURATED_CROSS_SURFACE_IDENTITY_REPORT_SCENE_PATH = ROOT / "tests" / "unit_curated_cross_surface_identity_report.tscn"
 UNIT_PRODUCTION_READINESS_REPORT_SCRIPT_PATH = ROOT / "tests" / "unit_production_readiness_report.gd"
@@ -42247,6 +42252,11 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         EMBER_ARCHER_CURATED_SOURCE_PATH,
         RIVER_PASS_STARTER_ARMY_CURATED_ART_REPORT_SCRIPT_PATH,
         RIVER_PASS_STARTER_ARMY_CURATED_ART_REPORT_SCENE_PATH,
+        BLACKBRANCH_CUTTHROAT_CURATED_SOURCE_PATH,
+        MIRE_SLINGER_CURATED_SOURCE_PATH,
+        BOG_BRUTE_CURATED_SOURCE_PATH,
+        GHOUL_GROVE_CORE_CURATED_ART_REPORT_SCRIPT_PATH,
+        GHOUL_GROVE_CORE_CURATED_ART_REPORT_SCENE_PATH,
         UNIT_CURATED_CROSS_SURFACE_IDENTITY_REPORT_SCRIPT_PATH,
         UNIT_CURATED_CROSS_SURFACE_IDENTITY_REPORT_SCENE_PATH,
         CONTENT_SERVICE_PATH,
@@ -42372,6 +42382,9 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     furnace_pavis_unit_id = "unit_brasshollow_furnace_pavis_teams"
     river_guard_unit_id = "unit_river_guard"
     ember_archer_unit_id = "unit_ember_archer"
+    blackbranch_cutthroat_unit_id = "unit_blackbranch_cutthroat"
+    mire_slinger_unit_id = "unit_mire_slinger"
+    bog_brute_unit_id = "unit_bog_brute"
     fordhook_source_res_path = "res://art/units/source/curated/unit_embercourt_fordhook_cadets.png"
     fordhook_source_sha256 = "e9eddd43ef9b1b1a44a40fd609676bb31c8db90cd612a17bb3e87aef0fce6ff4"
     ensure(png_size(FORDHOOK_CURATED_SOURCE_PATH) == (512, 512), errors, "Fordhook curated character source must be a 512x512 PNG")
@@ -42420,6 +42433,14 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         errors,
         "Ember Archer curated character source bytes drifted",
     )
+    ghoul_grove_curated_sources = (
+        (blackbranch_cutthroat_unit_id, BLACKBRANCH_CUTTHROAT_CURATED_SOURCE_PATH, "res://art/units/source/curated/unit_blackbranch_cutthroat.png", "eb0af47ab0292c278335f76092420e9dba0073c84f3507f0b0d11b85b50fa143", "Blackbranch Cutthroat"),
+        (mire_slinger_unit_id, MIRE_SLINGER_CURATED_SOURCE_PATH, "res://art/units/source/curated/unit_mire_slinger.png", "21b98fd2f90d738b168ddb0b1b160dc6c8c731dd7a590d848255175589ac2c55", "Mire Slinger"),
+        (bog_brute_unit_id, BOG_BRUTE_CURATED_SOURCE_PATH, "res://art/units/source/curated/unit_bog_brute.png", "6e971e93ab527beff8702d16ffe4e69b4e40a8e4b63ff9fe1d3411f8d2daea85", "Bog Brute"),
+    )
+    for _unit_id, source_disk_path, _source_res_path, source_sha256, unit_label in ghoul_grove_curated_sources:
+        ensure(png_size(source_disk_path) == (512, 512), errors, f"{unit_label} curated character source must be a 512x512 PNG")
+        ensure(hashlib.sha256(source_disk_path.read_bytes()).hexdigest() == source_sha256, errors, f"{unit_label} curated character source bytes drifted")
     curated_art_records = [
         record for record in manifest.get("items", [])
         if isinstance(record, dict) and str(record.get("art_source_kind", "")) == "curated_original_character_v1"
@@ -42429,14 +42450,14 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         if isinstance(record, dict) and str(record.get("art_source_kind", "")) == "curated_original_character_v1"
     ]
     ensure(
-        sorted(str(record.get("unit_id", "")) for record in curated_art_records) == sorted([fordhook_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id]),
+        sorted(str(record.get("unit_id", "")) for record in curated_art_records) == sorted([fordhook_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id]),
         errors,
-        "Exactly Fordhook, the Brasshollow T1-T3 units, and the River Pass starter army art records may use the curated character-source branch",
+        "Exactly Fordhook, the Brasshollow T1-T3 units, and the River Pass starter and Ghoul Grove core art records may use the curated character-source branch",
     )
     ensure(
-        sorted(str(record.get("unit_id", "")) for record in curated_animation_records) == sorted([fordhook_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id]),
+        sorted(str(record.get("unit_id", "")) for record in curated_animation_records) == sorted([fordhook_unit_id, scrip_haulers_unit_id, rivet_hounds_unit_id, furnace_pavis_unit_id, river_guard_unit_id, ember_archer_unit_id, blackbranch_cutthroat_unit_id, mire_slinger_unit_id, bog_brute_unit_id]),
         errors,
-        "Exactly Fordhook, the Brasshollow T1-T3 units, and the River Pass starter army animation records may use the curated character-source branch",
+        "Exactly Fordhook, the Brasshollow T1-T3 units, and the River Pass starter and Ghoul Grove core animation records may use the curated character-source branch",
     )
     for curated_record, label in (
         (records_by_unit_id.get(fordhook_unit_id, {}), "art"),
@@ -42465,6 +42486,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     for unit_id, source_path, source_sha256, unit_label in (
         (river_guard_unit_id, river_guard_source_res_path, river_guard_source_sha256, "River Guard"),
         (ember_archer_unit_id, ember_archer_source_res_path, ember_archer_source_sha256, "Ember Archer"),
+        *((unit_id, source_res_path, source_sha256, unit_label) for unit_id, _source_disk_path, source_res_path, source_sha256, unit_label in ghoul_grove_curated_sources),
     ):
         for curated_record, label in (
             (records_by_unit_id.get(unit_id, {}), "art"),
@@ -42529,14 +42551,17 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     ):
         ensure(required_token in generator_text, errors, f"Unit art generator is missing token {required_token}")
     expected_curated_id_block = '''CURATED_CHARACTER_SOURCE_IDS = {
+    "unit_blackbranch_cutthroat",
+    "unit_bog_brute",
     "unit_brasshollow_furnace_pavis_teams",
     "unit_brasshollow_rivet_hounds",
     "unit_brasshollow_scrip_haulers",
     "unit_ember_archer",
     "unit_embercourt_fordhook_cadets",
+    "unit_mire_slinger",
     "unit_river_guard",
 }'''
-    ensure(generator_text.count(expected_curated_id_block) == 1, errors, "Unit art generator curated source id set must contain exactly the six approved units in stable order")
+    ensure(generator_text.count(expected_curated_id_block) == 1, errors, "Unit art generator curated source id set must contain exactly the nine approved units in stable order")
     for required_branch in (
         '''if not preserve_authored_asset(unit_id, "portrait", portrait_path):
             if curated_source is None:
@@ -42748,6 +42773,77 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         'path="res://tests/unit_river_pass_starter_army_curated_art_report.gd"' in river_pass_scene_text,
         errors,
         "River Pass starter-army curated art report scene must own the exact focused script",
+    )
+
+    ghoul_grove_report_text = GHOUL_GROVE_CORE_CURATED_ART_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
+    for required_token in (
+        'REPORT_ID := "UNIT_RIVER_PASS_GHOUL_GROVE_CORE_CURATED_ART_REPORT"',
+        'SCENARIO_ID := "river-pass"',
+        'PLACEMENT_ID := "river_pass_ghoul_grove"',
+        'LOCAL_ARMY_ID := "army_river_pass_ghoul_grove_watch"',
+        'SHARED_ARMY_ID := "army_blackbranch_raiders"',
+        '"unit_id": "unit_blackbranch_cutthroat", "label": "Blackbranch Cutthroat", "count": 8, "shared_count": 11',
+        '"source_sha256": "eb0af47ab0292c278335f76092420e9dba0073c84f3507f0b0d11b85b50fa143"',
+        '"portrait_sha256": "1fbc28056c6e891c777e3db21b0c2281eb797fd47099747ed79ba17df9d17643"',
+        '"icon_sha256": "170f13ace6d36b528ce492227af28f24fd5ce307b458f7008e6a731bd1f0d82e"',
+        '"overworld_icon_sha256": "a450211867d43e4b73b0e0928624fe9f5ac26ace2424d00e3cb487940538d0a6"',
+        '"sheet_sha256": "6a5f8443d3b7882a2638f7bb9c5d4426497506fc5f3cd665102b9aeafff33c87"',
+        '"ability_ids": ["backstab"]',
+        '"unit_id": "unit_mire_slinger", "label": "Mire Slinger", "count": 17, "shared_count": 6',
+        '"source_sha256": "21b98fd2f90d738b168ddb0b1b160dc6c8c731dd7a590d848255175589ac2c55"',
+        '"portrait_sha256": "aa6f1fd3000a589fcfb6bf03224cb375730b435ba7ff124f36937b009c834af4"',
+        '"icon_sha256": "905e3d7af90ec7f95206d6bdc2ace68df79cc14d3ac87c9f51cd4f17b259c5f4"',
+        '"overworld_icon_sha256": "2e9a3b15e91f0d9d0c9efe15ae0e9a4e0c571cd9165b70df74f34cff1b381bd0"',
+        '"sheet_sha256": "e3fecd429cf8b8ec5ef59afff7335840f7179ed96ee7c8719c135e9c80d7b16e"',
+        '"ability_ids": ["harry"]',
+        '"unit_id": "unit_bog_brute", "label": "Bog Brute", "count": 2, "shared_count": 2',
+        '"source_sha256": "6e971e93ab527beff8702d16ffe4e69b4e40a8e4b63ff9fe1d3411f8d2daea85"',
+        '"portrait_sha256": "25a6ad9fef1f54b4c64ce5ed6e26129f4b665d438214724853ccd7145f1e8661"',
+        '"icon_sha256": "7f45f2824f16d1fd9f884f430221cb3e329b0d6a5a211193620d2b73ef291410"',
+        '"overworld_icon_sha256": "acb0c66d430682bb68754af61572e75088e8890159f5f9031078f320ec1aadf7"',
+        '"sheet_sha256": "709c79ae82d281db4da8119c36a9a93f16422856bf2ee3b6942710b56582516b"',
+        '"ability_ids": ["shielding"]',
+        '_validate_assets_and_provenance()',
+        'await _validate_live_ghoul_grove_battle_board()',
+        'source.get_size() == Vector2i(512, 512)',
+        'portrait.get_size() == Vector2i(384, 512)',
+        'icon.get_size() == Vector2i(160, 160)',
+        'overworld_icon.get_size() == Vector2i(96, 96)',
+        'sheet.get_size() == Vector2i(256, 896)',
+        'visible == FRAMES_PER_STATE and signatures.size() >= 2',
+        'ScenarioFactory.create_session(SCENARIO_ID, "normal", SessionStateStoreScript.LAUNCH_MODE_SKIRMISH)',
+        'var expected_local := {"unit_blackbranch_cutthroat": 8, "unit_mire_slinger": 17, "unit_bog_brute": 2, "unit_mireclaw_mudglass_slingers": 1}',
+        'var expected_shared := {"unit_blackbranch_cutthroat": 11, "unit_mire_slinger": 6, "unit_bog_brute": 2}',
+        'BattleRulesScript.create_battle_payload(session, placement)',
+        'ability_ids == spec["ability_ids"]',
+        'unit_mireclaw_mudglass_slingers',
+        'var authority_before: Dictionary = session.to_dict()',
+        'board.validation_unit_art_summary()',
+        'String(entry.get("battle_icon", "")) == String(spec["icon_path"])',
+        'String(entry.get("animation_sheet", "")) == String(spec["sheet_path"])',
+        'session.to_dict() == authority_before',
+        '"visible_frame_count": UNITS.size() * STATES.size() * FRAMES_PER_STATE',
+    ):
+        ensure(required_token in ghoul_grove_report_text, errors, f"Ghoul Grove core curated art report is missing token {required_token}")
+    for forbidden_token in (
+        "draw_curated_portrait",
+        "draw_curated_overworld_icon",
+        "draw_curated_battle_icon",
+        "draw_curated_battle_troop_animation_sheet",
+        '"final_sprite_import": true',
+        "ContentService._unit_art_manifest",
+        "save_png",
+        "generate_unit_art_assets",
+        'local_army[',
+        'shared_army[',
+        'session.battle[',
+    ):
+        ensure(forbidden_token not in ghoul_grove_report_text, errors, f"Ghoul Grove focused report must remain observation-only: {forbidden_token}")
+    ghoul_grove_scene_text = GHOUL_GROVE_CORE_CURATED_ART_REPORT_SCENE_PATH.read_text(encoding="utf-8")
+    ensure(
+        'path="res://tests/unit_river_pass_ghoul_grove_core_curated_art_report.gd"' in ghoul_grove_scene_text,
+        errors,
+        "Ghoul Grove core curated art report scene must own the exact focused script",
     )
 
     cross_surface_report_text = UNIT_CURATED_CROSS_SURFACE_IDENTITY_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
@@ -49466,6 +49562,7 @@ def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
             '"sample": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 70, "enemy_damage_per_round": 6}',
             "orevein_archive_wardens",
             "bridge_ford_reavers",
+            '"mireford-skirmish/bridge_silt_hunters": {"outcome_state": "victory", "pacing_band": "standard", "round_reached": 4, "terminal_health_margin_pct": 48, "enemy_damage_per_round": 42}',
             "_within_target_bounds",
             "get_tree().quit(1)",
         ):
