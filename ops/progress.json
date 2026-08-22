@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "The Map Editor canvas failed-action invalid-audio slice is completed. Real failed canvas tool input now emits one imported invalid cue at the existing public tile-action boundary, with focused two-width authority, broad editor/focus/package/accessibility/core, static/editor, and bounded Linux/Windows export-startup evidence green.",
+  "currentNotes": "The Charter Counterseal production Aurora Battery slice is completed. The shipped final front now uses exact strength-matched production 5/2/1 Shard Wardens, Prism Adepts, and Aurora Bastion with focused legacy-control, full active-scenario breadth, campaign/unit/core, static/editor, and bounded Linux/Windows export-startup evidence green.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "presentation-map-editor-canvas-failed-action-invalid-audio-10184",
-  "currentSliceId": "presentation-map-editor-canvas-failed-action-invalid-audio-10184",
-  "currentSliceNotes": "Completed. The public Map Editor tile-action dispatch retains every tool's existing boolean result and emits one imported ui_invalid cue only for non-empty failures. Physical A at 1280 and 1920 proves exact cue/source/asset/tile/tool/message metadata and exact working-copy, session, settings/InputMap, save-cache, focus, and cursor-semantic authority; successful Inspect, validation-only failure, and unavailable editor remain silent. UI-audio, Map Editor smoke, dirty/focus/canvas, package Save Copy, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Non-canvas expansion, packaged Editor interaction/listening, hardware/certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+  "currentSlice": "content-charter-counterseal-production-aurora-battery-10184",
+  "currentSliceId": "content-charter-counterseal-production-aurora-battery-10184",
+  "currentSliceNotes": "Completed. Counterseal Aurora Battery now uses exact production 5/2/1 Shard Wardens, Prism Adepts, and Aurora Bastion at 108 stack health versus legacy 110. Focused public payload and independent legacy control preserve the deterministic defeat class at 41% versus 47% enemy health with zero invalid orders; all three Counterseal fronts are production-owned, active 24-scenario/77-encounter breadth stays queue-clear at 829808c9, and campaign/unit/core/static/editor/Linux/Windows startup gates pass. Packaged encounter interaction, broad balance, certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Map Editor Canvas Failed Action Invalid Audio",
-  "currentSliceUpdatedAt": "2026-08-22T03:33:22Z",
+  "currentSliceTitle": "Charter Counterseal Production Aurora Battery",
+  "currentSliceUpdatedAt": "2026-08-22T03:52:59Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,52 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed release-readiness implementation slice; preserve the completed Map Editor canvas invalid-audio boundary and exact tool, working-copy, session, focus, semantic, save, and package authority.",
-  "notes": "Completed the source-backed Map Editor canvas failed-action invalid-audio slice. Focused physical input, broad editor/focus/package/accessibility/core compatibility, static/editor, and bounded Linux/Windows export-startup evidence is green. This does not claim non-canvas invalid-audio expansion, packaged Editor interaction/listening, hardware/controller certification, AT-SPI/UIA, native hardware, signing/publication, whole-game validation, or release readiness.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed release-readiness implementation slice; preserve the completed production Counterseal roster and exact scenario, campaign, save, battle, and breadth authority.",
+  "notes": "Completed the source-backed Charter Counterseal production Aurora Battery migration. Focused public-payload/legacy-control, active-scenario breadth, campaign/unit/core compatibility, static/editor, and bounded Linux/Windows export-startup evidence is green. This does not claim packaged encounter interaction, broad faction balance, certification, signing/publication, whole-game validation, or release readiness.",
   "plannedSlices": [
+    {
+      "id": "content-charter-counterseal-production-aurora-battery-10184",
+      "title": "Charter Counterseal Production Aurora Battery",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/factions-content-bible.md"],
+      "purpose": "Replace Charter Bastion Counterseal's final legacy Sunvault encounter with a strength-matched production T1/T2/T6 battery so the shipped finale consistently exercises production faction identity.",
+      "implementationTargets": ["content/scenarios.json", "tests/embercourt_charter_bastion_counterseal_chapter_report.gd", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {
+        "encounter_placement_id": "counterseal_aurora_battery",
+        "legacy_stack_ids": ["unit_shard_guard", "unit_mirror_duelist", "unit_aurora_ballista"],
+        "legacy_stack_counts": [5, 4, 2],
+        "legacy_total_stack_health": 110,
+        "legacy_outcome_state": "defeat",
+        "legacy_rounds": 3,
+        "legacy_enemy_health_remaining_pct": 47,
+        "candidate_stack_ids": ["unit_sunvault_shard_wardens", "unit_sunvault_prism_adepts", "unit_sunvault_aurora_ballistae"],
+        "candidate_stack_counts": [5, 2, 1],
+        "candidate_total_stack_health": 108,
+        "candidate_outcome_state": "defeat",
+        "candidate_rounds": 4,
+        "candidate_enemy_health_remaining_pct": 41,
+        "candidate_invalid_order_count": 0
+      },
+      "completionCriteria": [
+        "The exact Counterseal Aurora Battery encounter uses only production Sunvault T1/T2/T6 ids at strength-matched 5/2/1 while retaining its three-stack shape, encounter identity, seed, and high difficulty",
+        "Public BattleRules payload and deterministic autoplay expose production shielding and volley identities, complete with zero invalid orders, and retain the legacy outcome class within a bounded terminal margin",
+        "Relay Pickets, Mirror Lancers, and all scenario, campaign, save, outcome, town, resource, reward, script-hook, and shared content/rule authority remain exact",
+        "Active scenario breadth remains complete with zero stalls or invalid orders and no new high-priority tuning item",
+        "Focused, compatibility, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass"
+      ],
+      "nonGoals": [
+        "Other legacy-front migration or any shared unit stat/ability, BattleRules, BattleAiRules, player-army, reward, difficulty-threshold, save-schema, campaign, Native RMG, or packaging behavior change",
+        "Broad faction balance, packaged encounter interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "createdAt": "2026-08-22T03:43:20Z",
+      "startedAt": "2026-08-22T03:43:20Z",
+      "updatedAt": "2026-08-22T03:52:59Z",
+      "completedAt": "2026-08-22T03:52:59Z",
+      "notes": "Completed with exact production 5/2/1 Shard Warden, Prism Adept, and Aurora Bastion stacks. Focused public payload plus an independent legacy 5/4/2 control proves 108 versus 110 stack health, the same deterministic defeat class, four rounds/41% versus three rounds/47% enemy health, exact production shielding/volley identities, and zero invalid orders. All three Counterseal fronts are production-owned; the 24-scenario/77-encounter matrix remains queue-clear at 829808c9, and campaign/unit/core/static/editor plus bounded Linux/Windows export-startup gates pass."
+    },
     {
       "id": "presentation-map-editor-canvas-failed-action-invalid-audio-10184",
       "title": "Map Editor Canvas Failed Action Invalid Audio",
@@ -92770,9 +92813,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "The native startup now shows the approved original Aurelion Reach crest instead of the stock Godot splash while preserving Boot behavior and compatibility identity.",
+  "summary": "Charter Bastion Counterseal's final legacy Sunvault front now uses an exact strength-matched production roster with focused and active-scenario runtime evidence.",
   "taskId": "10184",
-  "updatedAt": "2026-08-22T03:33:22Z",
+  "updatedAt": "2026-08-22T03:52:59Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",

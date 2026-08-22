@@ -24,6 +24,23 @@ Rules:
 
 Current phase: **Phase 6 - Production Alpha Layer**.
 
+- Completed implementation slice: `content-charter-counterseal-production-aurora-battery-10184`. Charter Bastion Counterseal's final legacy Sunvault encounter now fields a strength-matched production T1/T2/T6 battery, so all three shipped finale fronts consistently exercise production faction identity. The exact three-stack seed keeps legacy `5/4/2` Shard Guard/Mirror Duelist/Aurora Ballista (110 stack health) method-matched against `5/2/1` Shard Wardens/Prism Adepts/Aurora Bastion (108 stack health); both deterministically remain high-front defeats, with production resolving in four rounds at 41% enemy health versus legacy three rounds at 47%. The public payload exposes exact production shielding/volley identities, and the 24-scenario/77-encounter breadth remains queue-clear at `829808c9` with zero stalls or invalid orders. Counterseal/Frontier Claims, unit ability, core, repository/editor, and bounded Linux/Windows export-startup gates pass. Other legacy-front migration, packaged encounter interaction, broad balance, certification, signing/publication, whole-game validation, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
+  id: `content-charter-counterseal-production-aurora-battery-10184`
+
+  Implementation target:
+  - migrate only `counterseal_aurora_battery` to `unit_sunvault_shard_wardens`, `unit_sunvault_prism_adepts`, and `unit_sunvault_aurora_ballistae` at exact `5/2/1` strength;
+  - prove the public battle payload exposes the production Facet Reprisal, Prism Volley, and Aurora Facet Wall surface and retains the bounded deterministic high-front result;
+  - retain Relay Pickets, Mirror Lancers, scenario/campaign/save/outcome/town/resource/reward/script authority, and every shared unit/rule record exactly.
+
+  Completion criteria:
+  - focused runtime proves exact production ids/counts, exact public ability payloads, a completed deterministic battle with zero invalid orders, and method-matched legacy control bounded to the same outcome class and a close terminal margin;
+  - the active-scenario autoplay breadth remains complete with zero stalls/invalid orders and no new high-priority tuning item;
+  - Counterseal, Frontier Claims, unit ability, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass.
+
+  Non-goals:
+  - do not migrate any other legacy front or change shared unit stats/abilities, BattleRules/BattleAiRules, player army, rewards, difficulty thresholds, save schema, campaign structure, Native RMG, or packaging behavior;
+  - do not claim broad faction balance, packaged encounter interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game validation, or release readiness.
+
 - Completed implementation slice: `presentation-map-editor-canvas-failed-action-invalid-audio-10184`. Real Map Editor canvas actions that fail with non-empty visible feedback now publish exactly one imported `ui_invalid` transient through the common tile-action boundary. The focused physical-A matrix passes at 1280x720 and 1920x1080 with exact cue metadata and unchanged session, working-copy, focus, cursor-semantic, settings, InputMap, and save-cache authority; successful Inspect, validation-only failure, and unavailable-editor controls remain silent. UI-audio, broad Map Editor workflow, dirty/focus/canvas, package Save Copy, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass. Non-canvas invalid-audio expansion, packaged Editor interaction/listening, hardware/controller certification, AT-SPI/UIA, native hardware, signing/publication, whole-game validation, and release readiness remain unclaimed. Select the next tracker-approved source-backed slice.
   id: `presentation-map-editor-canvas-failed-action-invalid-audio-10184`
 

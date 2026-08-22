@@ -31,9 +31,16 @@ const MIRROR_LANCERS_STACKS := [
 	{"unit_id": "unit_sunvault_prism_adepts", "count": 5},
 	{"unit_id": "unit_sunvault_mirror_duelists", "count": 3},
 ]
-const NEIGHBOR_ENCOUNTER_STACKS := {
-	"counterseal_aurora_battery": [{"unit_id": "unit_shard_guard", "count": 5}, {"unit_id": "unit_mirror_duelist", "count": 4}, {"unit_id": "unit_aurora_ballista", "count": 2}],
-}
+const AURORA_BATTERY_STACKS := [
+	{"unit_id": "unit_sunvault_shard_wardens", "count": 5},
+	{"unit_id": "unit_sunvault_prism_adepts", "count": 2},
+	{"unit_id": "unit_sunvault_aurora_ballistae", "count": 1},
+]
+const LEGACY_AURORA_BATTERY_STACKS := [
+	{"unit_id": "unit_shard_guard", "count": 5},
+	{"unit_id": "unit_mirror_duelist", "count": 4},
+	{"unit_id": "unit_aurora_ballista", "count": 2},
+]
 const REQUIRED_RESOURCE_PLACEMENT_IDS := ["charter_bastion_wood", "charter_bastion_ore", "counterseal_embergrain_granary", "counterseal_signal_post", "charter_bastion_counterseal_charter_rare_exchange", "halo_counterseal_wood", "halo_counterseal_ore", "halo_counterseal_lens_house", "charter_bastion_counterseal_halo_rare_exchange"]
 const SKIRMISH_SAVE_SLOT := 2
 const CAMPAIGN_SAVE_SLOT := 3
@@ -100,15 +107,14 @@ func _assert_catalog_and_setup() -> Dictionary:
 	if _army_stack_contract(authored_encounters.get("counterseal_mirror_lancers", {}).get("enemy_army", {}).get("stacks", [])) != MIRROR_LANCERS_STACKS:
 		_fail("Counterseal Mirror Lancers did not retain its exact production T1/T2/T3 formation.")
 		return {}
-	for placement_id in NEIGHBOR_ENCOUNTER_STACKS:
-		if _army_stack_contract(authored_encounters.get(placement_id, {}).get("enemy_army", {}).get("stacks", [])) != NEIGHBOR_ENCOUNTER_STACKS[placement_id]:
-			_fail("Neighboring Counterseal encounter %s changed while integrating Relay Pickets." % placement_id)
-			return {}
+	if _army_stack_contract(authored_encounters.get("counterseal_aurora_battery", {}).get("enemy_army", {}).get("stacks", [])) != AURORA_BATTERY_STACKS:
+		_fail("Counterseal Aurora Battery did not retain its exact strength-matched production T1/T2/T6 formation.")
+		return {}
 	var setup: Dictionary = ScenarioSelectRulesScript.build_skirmish_setup(SCENARIO_ID, "normal")
 	if setup.is_empty() or String(setup.get("scenario_id", "")) != SCENARIO_ID:
 		_fail("Live skirmish setup did not expose Charter Bastion Counterseal.")
 		return {}
-	return {"active_scenario_count": scenario_ids.size(), "campaign_available": true, "skirmish_available": true, "map_size": scenario.get("map_size", {}), "relay_pickets_stacks": RELAY_PICKETS_STACKS.duplicate(true), "mirror_lancers_stacks": MIRROR_LANCERS_STACKS.duplicate(true), "neighbor_encounters_exact": true}
+	return {"active_scenario_count": scenario_ids.size(), "campaign_available": true, "skirmish_available": true, "map_size": scenario.get("map_size", {}), "relay_pickets_stacks": RELAY_PICKETS_STACKS.duplicate(true), "mirror_lancers_stacks": MIRROR_LANCERS_STACKS.duplicate(true), "aurora_battery_stacks": AURORA_BATTERY_STACKS.duplicate(true), "all_counterseal_fronts_production": true}
 
 func _assert_opening_session(session: SessionStateStoreScript.SessionData, launch_mode: String) -> Dictionary:
 	if session == null or session.scenario_id != SCENARIO_ID or session.launch_mode != launch_mode:
@@ -184,6 +190,7 @@ func _exercise_battle_entries(session: SessionStateStoreScript.SessionData) -> D
 	var rows := []
 	var relay_encounter: Dictionary = {}
 	var mirror_encounter: Dictionary = {}
+	var aurora_encounter: Dictionary = {}
 	for placement_id in ENCOUNTER_PLACEMENT_IDS:
 		var encounter: Dictionary = _encounter_by_placement(session, placement_id)
 		var battle: Dictionary = BattleRulesScript.create_battle_payload(session, encounter)
@@ -220,6 +227,16 @@ func _exercise_battle_entries(session: SessionStateStoreScript.SessionData) -> D
 			}
 			if _battle_unit_counts(enemy_contract) != {"unit_sunvault_shard_wardens": 6, "unit_sunvault_prism_adepts": 5, "unit_sunvault_mirror_duelists": 3} or _battle_ability_contract(enemy_contract) != expected_abilities:
 				_fail("Mirror Lancers public battle payload missed exact production counts or shielding/volley/Reflected-Lane Step/Broken-Timing Cut abilities: %s" % JSON.stringify(enemy_contract))
+				return {}
+		elif placement_id == "counterseal_aurora_battery":
+			aurora_encounter = encounter.duplicate(true)
+			var expected_abilities := {
+				"unit_sunvault_shard_wardens": ["shielding"],
+				"unit_sunvault_prism_adepts": ["volley"],
+				"unit_sunvault_aurora_ballistae": ["shielding"],
+			}
+			if _battle_unit_counts(enemy_contract) != {"unit_sunvault_shard_wardens": 5, "unit_sunvault_prism_adepts": 2, "unit_sunvault_aurora_ballistae": 1} or _battle_ability_contract(enemy_contract) != expected_abilities:
+				_fail("Aurora Battery public battle payload missed exact strength-matched production counts or Facet Reprisal/Prism Volley/Aurora Facet Wall abilities: %s" % JSON.stringify(enemy_contract))
 				return {}
 		rows.append({"placement_id": placement_id, "player_stacks": player_stacks, "enemy_stacks": enemy_stacks, "enemy_contract": enemy_contract})
 	if relay_encounter.is_empty():
@@ -258,7 +275,46 @@ func _exercise_battle_entries(session: SessionStateStoreScript.SessionData) -> D
 	if not bool(mirror_consequences.get("has_spell_consequence", false)) or not bool(mirror_consequences.get("has_status_consequence", false)) or int(mirror_consequences.get("effect_observation_count", 0)) <= 0:
 		_fail("Production Mirror Lancers autoplay did not expose live combat consequences.")
 		return {}
-	return {"case_count": rows.size(), "rows": rows, "relay_autoplay": {"completed": true, "outcome_state": "victory", "round_reached": int(sample.get("round_reached", 0)), "steps_sampled": int(sample.get("steps_sampled", 0)), "invalid_order_count": 0, "player_health_remaining_pct": int(sample.get("player_health_remaining_pct", 0)), "enemy_health_remaining_pct": 0, "enemy_ability_counts": sample_profile.get("side_ability_counts", {}).get("enemy", {}), "effect_observation_count": int(sample_consequences.get("effect_observation_count", 0))}, "mirror_lancers_autoplay": {"completed": true, "outcome_state": "victory", "round_reached": 4, "steps_sampled": int(mirror_sample.get("steps_sampled", 0)), "invalid_order_count": 0, "player_health_remaining_pct": int(mirror_sample.get("player_health_remaining_pct", 0)), "enemy_health_remaining_pct": 0, "enemy_ability_counts": mirror_profile.get("side_ability_counts", {}).get("enemy", {}), "effect_observation_count": int(mirror_consequences.get("effect_observation_count", 0))}}
+	if aurora_encounter.is_empty():
+		_fail("Counterseal Aurora Battery was unavailable for live autoplay.")
+		return {}
+	var candidate_stack_health: int = _army_stack_health(AURORA_BATTERY_STACKS)
+	var legacy_stack_health: int = _army_stack_health(LEGACY_AURORA_BATTERY_STACKS)
+	if candidate_stack_health != 108 or legacy_stack_health != 110 or abs(candidate_stack_health - legacy_stack_health) > 2:
+		_fail("Production Aurora Battery did not retain its exact strength-matched stack-health boundary: candidate=%d legacy=%d." % [candidate_stack_health, legacy_stack_health])
+		return {}
+	var aurora_sample: Dictionary = BattleAutoplayBalanceHarnessRulesScript.run_battle_sample(SCENARIO_ID, aurora_encounter, 72, "normal")
+	var aurora_profile: Dictionary = aurora_sample.get("initial_stack_profile", {})
+	var aurora_consequences: Dictionary = aurora_sample.get("runtime_consequence_profile", {})
+	if not bool(aurora_sample.get("completed", false)) or String(aurora_sample.get("outcome_state", "")) != "defeat" or int(aurora_sample.get("invalid_order_count", -1)) != 0:
+		_fail("Production Aurora Battery autoplay did not complete as the exact bounded high-front defeat control: %s" % JSON.stringify(aurora_sample))
+		return {}
+	if int(aurora_sample.get("round_reached", 0)) != 4 or int(aurora_sample.get("player_health_remaining_pct", -1)) != 0 or int(aurora_sample.get("enemy_health_remaining_pct", -1)) != 41:
+		_fail("Production Aurora Battery autoplay left its exact strength-matched high-front pacing boundary: %s" % JSON.stringify(aurora_sample))
+		return {}
+	if aurora_profile.get("side_ability_counts", {}).get("enemy", {}) != {"shielding": 2, "volley": 1}:
+		_fail("Production Aurora Battery autoplay did not retain the exact live production ability surface.")
+		return {}
+	if not bool(aurora_consequences.get("has_spell_consequence", false)) or not bool(aurora_consequences.get("has_status_consequence", false)) or int(aurora_consequences.get("effect_observation_count", 0)) != 2:
+		_fail("Production Aurora Battery autoplay did not expose its exact deterministic live consequences.")
+		return {}
+	var legacy_encounter: Dictionary = aurora_encounter.duplicate(true)
+	legacy_encounter["placement_id"] = "counterseal_aurora_battery:legacy_control"
+	var legacy_army: Dictionary = legacy_encounter.get("enemy_army", {}).duplicate(true)
+	legacy_army["id"] = "army_counterseal_aurora_battery_legacy_control"
+	legacy_army["stacks"] = LEGACY_AURORA_BATTERY_STACKS.duplicate(true)
+	legacy_encounter["enemy_army"] = legacy_army
+	var legacy_sample: Dictionary = BattleAutoplayBalanceHarnessRulesScript.run_battle_sample(SCENARIO_ID, legacy_encounter, 72, "normal")
+	if not bool(legacy_sample.get("completed", false)) or String(legacy_sample.get("outcome_state", "")) != "defeat" or int(legacy_sample.get("invalid_order_count", -1)) != 0:
+		_fail("Legacy Aurora Battery method control did not complete with its exact authored outcome class: %s" % JSON.stringify(legacy_sample))
+		return {}
+	if int(legacy_sample.get("round_reached", 0)) != 3 or int(legacy_sample.get("player_health_remaining_pct", -1)) != 0 or int(legacy_sample.get("enemy_health_remaining_pct", -1)) != 47:
+		_fail("Legacy Aurora Battery method control changed its exact deterministic pacing authority: %s" % JSON.stringify(legacy_sample))
+		return {}
+	if String(legacy_sample.get("outcome_state", "")) != String(aurora_sample.get("outcome_state", "")) or abs(int(legacy_sample.get("enemy_health_remaining_pct", 0)) - int(aurora_sample.get("enemy_health_remaining_pct", 0))) > 10:
+		_fail("Production Aurora Battery did not preserve the legacy outcome class within the bounded terminal margin: production=%s legacy=%s" % [JSON.stringify(aurora_sample), JSON.stringify(legacy_sample)])
+		return {}
+	return {"case_count": rows.size(), "rows": rows, "relay_autoplay": {"completed": true, "outcome_state": "victory", "round_reached": int(sample.get("round_reached", 0)), "steps_sampled": int(sample.get("steps_sampled", 0)), "invalid_order_count": 0, "player_health_remaining_pct": int(sample.get("player_health_remaining_pct", 0)), "enemy_health_remaining_pct": 0, "enemy_ability_counts": sample_profile.get("side_ability_counts", {}).get("enemy", {}), "effect_observation_count": int(sample_consequences.get("effect_observation_count", 0))}, "mirror_lancers_autoplay": {"completed": true, "outcome_state": "victory", "round_reached": 4, "steps_sampled": int(mirror_sample.get("steps_sampled", 0)), "invalid_order_count": 0, "player_health_remaining_pct": int(mirror_sample.get("player_health_remaining_pct", 0)), "enemy_health_remaining_pct": 0, "enemy_ability_counts": mirror_profile.get("side_ability_counts", {}).get("enemy", {}), "effect_observation_count": int(mirror_consequences.get("effect_observation_count", 0))}, "aurora_battery_autoplay": {"completed": true, "outcome_state": "defeat", "round_reached": 4, "steps_sampled": int(aurora_sample.get("steps_sampled", 0)), "invalid_order_count": 0, "player_health_remaining_pct": 0, "enemy_health_remaining_pct": 41, "enemy_ability_counts": aurora_profile.get("side_ability_counts", {}).get("enemy", {}), "effect_observation_count": 2, "stack_health": candidate_stack_health}, "aurora_battery_legacy_control": {"completed": true, "outcome_state": "defeat", "round_reached": 3, "steps_sampled": int(legacy_sample.get("steps_sampled", 0)), "invalid_order_count": 0, "player_health_remaining_pct": 0, "enemy_health_remaining_pct": 47, "stack_health": legacy_stack_health}, "aurora_battery_strength_matched": true}
 
 func _army_stack_contract(stacks: Array) -> Array:
 	var result: Array = []
@@ -266,6 +322,15 @@ func _army_stack_contract(stacks: Array) -> Array:
 		if stack is Dictionary:
 			result.append({"unit_id": String(stack.get("unit_id", "")), "count": int(stack.get("count", 0))})
 	return result
+
+func _army_stack_health(stacks: Array) -> int:
+	var total := 0
+	for stack in stacks:
+		if not (stack is Dictionary):
+			continue
+		var unit: Dictionary = ContentService.get_unit(String(stack.get("unit_id", "")))
+		total += max(0, int(stack.get("count", 0))) * max(0, int(unit.get("hp", 0)))
+	return total
 
 func _battle_enemy_contract(battle: Dictionary) -> Array:
 	var result: Array = []
