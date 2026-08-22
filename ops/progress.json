@@ -14324,14 +14324,14 @@
       }
     }
   ],
-  "currentNotes": "Clauseworks Beacon Wardens now use the exact count-preserving 6/7/2 production Embercourt line. Focused live behavior, chapter/campaign/breadth/unit/core compatibility, static/editor, Linux, and Windows startup gates are green with bounded claims.",
+  "currentNotes": "Clauseworks Bridge Levies now use the exact 5/5/1 Fordhook/Bargebow/Sluicefire production line. Focused behavior, live chapter/campaign/breadth/unit/core compatibility, static/editor, and bounded Linux/Windows startup gates are green.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "content-clauseworks-beacon-wardens-production-line-10184",
-  "currentSliceId": "content-clauseworks-beacon-wardens-production-line-10184",
-  "currentSliceNotes": "Completed. The exact production 6/7/2 line retains standard victories at 69% normal and 42% hard versus independent legacy 45%/55% controls; live chapter, campaign, breadth, compatibility, static, and bounded platform startup gates are green.",
+  "currentSlice": "content-clauseworks-bridge-levies-production-line-10184",
+  "currentSliceId": "content-clauseworks-bridge-levies-production-line-10184",
+  "currentSliceNotes": "Completed. The exact 5/5/1 line proves 155 versus 151 health, six-round/12% extended normal and four-round/31% standard hard victories, independent legacy 30%/48% controls, exact public abilities and authority, and a clear 77-sample queue; compatibility, static/editor, and bounded Linux/Windows startup gates pass.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Clauseworks Beacon Wardens Production Line",
-  "currentSliceUpdatedAt": "2026-08-22T07:32:46Z",
+  "currentSliceTitle": "Clauseworks Bridge Levies Production Line",
+  "currentSliceUpdatedAt": "2026-08-22T08:05:01Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -19846,9 +19846,56 @@
     "h3maped_expected_first_cell_art_row": 54
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Select the next tracker-approved source-backed release-readiness implementation slice; do not expand the completed Clauseworks Beacon Wardens migration opportunistically.",
-  "notes": "Completed the bounded Clauseworks Beacon Wardens production-line migration. Exact focused production/legacy controls, live chapter/campaign/save/outcome behavior, active breadth, unit/core compatibility, static/editor, and Linux/Windows export-startup evidence are green; no broader balance, packaged interaction, certification, signing, whole-game, or release-readiness claim is made.",
+  "nextActionGuardrailNote": "Select the next tracker-approved source-backed release-readiness implementation slice; do not expand the completed Clauseworks Bridge Levies migration opportunistically.",
+  "notes": "Completed the bounded Clauseworks Bridge Levies production-line migration. The final Sluicefire line preserves local pressure and a clear breadth queue after the Lantern candidate was rejected; focused, compatibility, static/editor, and bounded Linux/Windows export-startup evidence are green without broader release claims.",
   "plannedSlices": [
+    {
+      "id": "content-clauseworks-bridge-levies-production-line-10184",
+      "title": "Clauseworks Bridge Levies Production Line",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "PLAN.md", "docs/factions-content-bible.md"],
+      "purpose": "Replace only Clauseworks Counterclaim's Bridge Levies legacy Embercourt trio with a pressure-matched production line while retaining its authored extended normal victory, hard victory pressure, and clear active-breadth queue.",
+      "implementationTargets": ["content/scenarios.json", "tests/battle_clauseworks_bridge_levies_production_line_report.gd", "tests/battle_clauseworks_bridge_levies_production_line_report.tscn", "tests/validate_repo.py", "PLAN.md", "ops/progress.json"],
+      "baseline": {
+        "scenario_id": "clauseworks-counterclaim",
+        "encounter_placement_id": "clauseworks_bridge_levies",
+        "legacy_stack_ids": ["unit_river_guard", "unit_citadel_pikeward", "unit_ember_archer"],
+        "legacy_stack_counts": [5, 4, 6],
+        "production_stack_ids": ["unit_embercourt_fordhook_cadets", "unit_embercourt_bargebow_crews", "unit_embercourt_sluicefire_lindworms"],
+        "production_stack_counts": [5, 5, 1],
+        "legacy_total_stack_health": 151,
+        "production_total_stack_health": 155,
+        "legacy_normal": {"outcome": "victory", "rounds": 6, "player_health_remaining_pct": 30, "enemy_damage_per_round": 21, "pacing_band": "extended"},
+        "production_normal": {"outcome": "victory", "rounds": 6, "player_health_remaining_pct": 12, "enemy_damage_per_round": 24, "pacing_band": "extended"},
+        "legacy_hard": {"outcome": "victory", "rounds": 4, "player_health_remaining_pct": 48, "enemy_damage_per_round": 21, "pacing_band": "standard"},
+        "production_hard": {"outcome": "victory", "rounds": 4, "player_health_remaining_pct": 31, "enemy_damage_per_round": 26, "pacing_band": "standard"},
+        "invalid_order_count": 0,
+        "screen_artifact": "/tmp/heroes-clauseworks-remaining-fronts.5VmCUB/report.json",
+        "refinement_artifact": "/tmp/heroes-clauseworks-bridge-substitute-screen.7diyWe/report-line.txt",
+        "active_breadth_artifact": "/tmp/heroes-clauseworks-bridge-sluice-breadth.exoRdI/stdout.log",
+        "rejected_lantern_candidate": "The 5/5/6 Lantern line preserved local pressure but added a second Counter-Ambush Flare sample with 100 percent primary outcomes, reopening the mandatory cohort queue.",
+        "rejected_archive_front": "No screened production control preserved Archive Wardens' extended normal pacing."
+      },
+      "completionCriteria": [
+        "The exact Clauseworks Bridge Levies use only production Fordhook Cadets, Bargebow Crews, and Sluicefire Lindworms at 5/5/1 while retaining encounter/army identity, placement, high difficulty, combat seed, objective, and guarded chapter authority",
+        "Public BattleRules payload and deterministic normal/hard autoplay expose exact reach/brace, volley, and Bloodrush abilities, retain six-round extended and four-round standard victories at 12%/31% with zero invalid orders, and retain independent legacy controls at 30%/48%",
+        "Real Clauseworks behavior preserves Archive Wardens, production Beacon Wardens, guarded resources, town/economy, save/resume, reachable outcomes, campaign progression/import, and scenario/session authority",
+        "Active scenario breadth remains complete with zero stalls or invalid orders and an exactly clear tuning queue; unit ability and core compatibility remain green",
+        "Repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass"
+      ],
+      "nonGoals": [
+        "Clauseworks Archive Wardens or production Beacon Wardens, counts beyond exact 5/5/1, shared unit stats/abilities, BattleRules, BattleAiRules, player army, reward/objective/route topology, difficulty thresholds, save schema, Native RMG, or packaging behavior changes",
+        "Broad faction balance, packaged encounter interaction, controller/native hardware certification, AT-SPI/UIA, signing/publication, whole-game, or release-readiness claims"
+      ],
+      "createdAt": "2026-08-22T07:39:51Z",
+      "startedAt": "2026-08-22T07:39:51Z",
+      "completedAt": "2026-08-22T08:05:01Z",
+      "updatedAt": "2026-08-22T08:05:01Z",
+      "notes": "Completed with the exact authored-identity 5/5/1 Fordhook/Bargebow/Sluicefire line. Focused runtime proves reach/brace, volley, Bloodrush, 155 versus 151 health, production normal 6 rounds/12%/DPR24 and hard 4 rounds/31%/DPR26, independent legacy controls 6 rounds/30%/DPR21 and 4 rounds/48%/DPR21, and zero invalid orders. The initial 5/5/6 Lantern line was rejected after it reopened the live Counter-Ambush Flare cohort queue; the shipped roster restores the 77-sample queue to clear signature 829808c9 with zero stalls or invalid orders. Live Clauseworks and campaign flows preserve adjacent fronts, guarded resources, town/economy, save/resume, reachable outcomes, progression/import, and scenario/session authority. Unit ability, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates are green. Archive Wardens remains legacy because no bounded candidate preserved pacing. Shared rules/stats, packaged interaction, broad balance, certification, signing/publication, whole-game validation, and release readiness remain out of scope."
+    },
     {
       "id": "content-clauseworks-beacon-wardens-production-line-10184",
       "title": "Clauseworks Beacon Wardens Production Line",
@@ -93054,7 +93101,7 @@
       "type": "native_rmg_alignment_checkpoint_narrowing"
     }
   ],
-  "result": "content_clauseworks_beacon_wardens_production_line_completed",
+  "result": "content_clauseworks_bridge_levies_production_line_completed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -93155,9 +93202,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Clauseworks Counterclaim's Beacon Wardens now use the count-preserving production Embercourt 6/7/2 line with focused live, chapter/campaign, active-breadth, compatibility, static/editor, and bounded platform startup evidence.",
+  "summary": "Clauseworks Counterclaim's Bridge Levies now use the pressure-matched production Embercourt 5/5/1 line with focused live, chapter/campaign, active-breadth, compatibility, static/editor, and bounded platform startup evidence.",
   "taskId": "10184",
-  "updatedAt": "2026-08-22T07:32:46Z",
+  "updatedAt": "2026-08-22T08:05:01Z",
   "validation": {
     "id": "native-rmg-4a901a-source-identity-20260708",
     "title": "Align recovered 0x4a901a source identity and selected wrapper inputs",
